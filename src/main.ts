@@ -1,4 +1,4 @@
-import { FileSpec, InterfaceSpec, Modifier, PropertySpec, TypeName, TypeNames } from "ts-poet";
+import { FileSpec, FunctionSpec, InterfaceSpec, Modifier, PropertySpec, TypeName, TypeNames } from "ts-poet";
 import { google } from "../build/pbjs";
 import CodeGeneratorRequest = google.protobuf.compiler.CodeGeneratorRequest;
 import IFileDescriptorProto = google.protobuf.IFileDescriptorProto;
@@ -54,7 +54,35 @@ function generateMessage(file: FileSpec, messageDesc: DescriptorProto, outerMess
       file = generateMessage(file, nestedDesc, outerMessagePrefix + messageDesc.name + "_");
     }
   }
-  return file.addInterface(message);
+  return file.addFunction(generateDecode(messageDesc)).addInterface(message);
+}
+
+/** Creates a function to decode a message by loop overing the tags. */
+function generateDecode(messageDesc: DescriptorProto): FunctionSpec {
+  let func = FunctionSpec.create('decode')
+    .addModifiers(Modifier.EXPORT)
+    .addParameter('reader', 'Reader@protobufjs')
+    .addParameter('length?', 'number')
+    .returns(messageDesc.name)
+    .addStatement("let end = length === undefined ? reader.len : reader.pos + length")
+    .addStatement("const message = {} as %L", messageDesc.name)
+    .beginControlFlow("while (reader.pos < end)")
+    .addStatement("const tag = reader.uint32()")
+    .beginControlFlow('switch (tag >>> 3)');
+  messageDesc.field.forEach(field => {
+    func = func
+      .addCode('case %L:\n', field.number)
+      .addStatement('message.%L = reader.string()', field.name)
+      .addStatement('break')
+  });
+  func = func
+    .addCode('default:\n')
+    .addStatement('reader.skipType(tag & 7)')
+    .addStatement('break');
+  func = func.endControlFlow()
+    .endControlFlow()
+    .addStatement("return message");
+  return func;
 }
 
 function toJsType(field: FieldDescriptorProto): TypeName {
