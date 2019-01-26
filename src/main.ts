@@ -1,17 +1,46 @@
-import { CodeBlock, FileSpec, FunctionSpec, InterfaceSpec, Modifier, PropertySpec, TypeName, TypeNames } from 'ts-poet';
+import {
+  CodeBlock,
+  EnumSpec,
+  FileSpec,
+  FunctionSpec,
+  InterfaceSpec,
+  Modifier,
+  PropertySpec,
+  TypeName,
+  TypeNames
+} from 'ts-poet';
 import { google } from '../build/pbjs';
+import { basicWireType } from './types';
 import DescriptorProto = google.protobuf.DescriptorProto;
 import FieldDescriptorProto = google.protobuf.FieldDescriptorProto;
 import FileDescriptorProto = google.protobuf.FileDescriptorProto;
-import { basicWireType } from './types';
+import EnumDescriptorProto = google.protobuf.EnumDescriptorProto;
 
 export function generateFile(fileDesc: FileDescriptorProto): FileSpec {
   let file = FileSpec.create(fileDesc.package);
-  if (fileDesc.messageType) {
-    for (const messageDesc of fileDesc.messageType) {
-      file = generateMessage(file, messageDesc);
-    }
+  for (const messageDesc of fileDesc.messageType) {
+    file = generateMessage(file, messageDesc);
   }
+  for (const enumDesc of fileDesc.enumType) {
+    file = generateEnum(file, enumDesc);
+  }
+  return file;
+}
+
+function generateEnum(file: FileSpec, enumDesc: EnumDescriptorProto): FileSpec {
+  let spec = EnumSpec.create(enumDesc.name).addModifiers(Modifier.EXPORT);
+  for (const valueDesc of enumDesc.value) {
+    spec = spec.addConstant(valueDesc.name, valueDesc.number.toString());
+  }
+  file = file.addEnum(spec);
+  const enumDictType = TypeNames.anonymousType(['[key: number]', TypeNames.anyType(enumDesc.name)]);
+  const map = PropertySpec.create(enumDesc.name + 'Values', enumDictType).addModifiers(Modifier.CONST);
+  let block = CodeBlock.empty().beginControlFlow('');
+  for (const valueDesc of enumDesc.value) {
+    block = block.add('%L: %L.%L,\n', valueDesc.number, enumDesc.name, valueDesc.name);
+  }
+  block = block.endControlFlow();
+  file = file.addProperty(map.initializerBlock(block));
   return file;
 }
 
@@ -21,10 +50,8 @@ function generateMessage(file: FileSpec, messageDesc: DescriptorProto, outerMess
     const type = toTypeName(fieldDesc);
     message = message.addProperty(PropertySpec.create(fieldDesc.name!, type));
   }
-  if (messageDesc.nestedType) {
-    for (const nestedDesc of messageDesc.nestedType) {
-      file = generateMessage(file, nestedDesc, outerMessagePrefix + messageDesc.name + '_');
-    }
+  for (const nestedDesc of messageDesc.nestedType) {
+    file = generateMessage(file, nestedDesc, outerMessagePrefix + messageDesc.name + '_');
   }
   return file
     .addFunction(generateDecode(messageDesc))
@@ -55,6 +82,9 @@ function generateDecode(messageDesc: DescriptorProto): FunctionSpec {
     } else if (isMessage(field)) {
       const [module, type] = toModuleAndType(field.typeName);
       func = func.addStatement('message.%L = %L(reader, reader.uint32())', field.name, 'decode' + type);
+    } else if (isEnum(field)) {
+      const [module, type] = toModuleAndType(field.typeName);
+      func = func.addStatement('message.%L = %L[reader.int32()]', field.name, type + 'Values');
     }
     func = func.addStatement('break');
   });
@@ -138,6 +168,7 @@ function toBaseTypeName(field: FieldDescriptorProto): TypeName {
     case FieldDescriptorProto.Type.TYPE_BYTES:
       return TypeNames.anyType('Uint8Array');
     case FieldDescriptorProto.Type.TYPE_MESSAGE:
+    case FieldDescriptorProto.Type.TYPE_ENUM:
       return mapMessageType(field.typeName);
     default:
       return TypeNames.anyType(field.typeName);

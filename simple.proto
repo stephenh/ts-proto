@@ -5,8 +5,15 @@ message Simple {
   string name = 1;
   int32 age = 2;
   Child child = 3;
+  StateEnum state = 4;
 }
 
 message Child {
   string name = 1;
+}
+
+enum StateEnum {
+  UNKNOWN = 0;
+  ON = 1;
+  OFF = 2;
 }

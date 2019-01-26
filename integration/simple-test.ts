@@ -1,24 +1,40 @@
-import { Reader, Writer } from 'protobufjs';
-import { decodeSimple, encodeSimple, Simple } from '../build/ts_proto_tests';
+import { Reader } from 'protobufjs';
+import { decodeSimple, encodeSimple, Simple, StateEnum } from '../build/ts_proto_tests';
 import { ts_proto_tests as pbjs } from '../build/pbjs';
 import ISimple = pbjs.ISimple;
-import PbSimple = pbjs.Simple;
 import PbChild = pbjs.Simple;
+import PbSimple = pbjs.Simple;
+import PbState = pbjs.StateEnum;
 
 describe('simple', () => {
   it('generates types correctly', () => {
-    const simple: Simple = { name: 'asdf', age: 1, child: { name: 'child' } };
+    const simple: Simple = {
+      name: 'asdf',
+      age: 1,
+      child: { name: 'child' },
+      state: StateEnum.ON
+    };
     expect(simple.name).toEqual('asdf');
   });
 
   it('can decode', () => {
-    const s1: ISimple = { name: 'asdf', age: 1, child: PbChild.fromObject({ name: 'foo' }) };
+    const s1: ISimple = {
+      name: 'asdf',
+      age: 1,
+      child: PbChild.fromObject({ name: 'foo' }),
+      state: PbState.ON
+    };
     const s2 = decodeSimple(Reader.create(PbSimple.encode(PbSimple.fromObject(s1)).finish()));
     expect(s2).toEqual(s1);
   });
 
   it('can encode', () => {
-    const s1: Simple = { name: 'asdf', age: 1, child: { name: 'foo' } };
+    const s1: Simple = {
+      name: 'asdf',
+      age: 1,
+      child: { name: 'foo' },
+      state: StateEnum.ON
+    };
     const s2 = PbSimple.toObject(PbSimple.decode(encodeSimple(s1).finish()));
     expect(s2).toEqual(s1);
   });
