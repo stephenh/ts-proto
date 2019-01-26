@@ -4,7 +4,7 @@ exports[`vector-tile works 1`] = `
 "import {Tile_Feature, Tile_Value, Tile_Layer} from 'vector_tile';
 
 
-interface Value {
+interface Tile_Value {
 
   string_value: string;
 
@@ -22,7 +22,7 @@ interface Value {
 
 }
 
-interface Feature {
+interface Tile_Feature {
 
   id: number;
 
@@ -34,7 +34,7 @@ interface Feature {
 
 }
 
-interface Layer {
+interface Tile_Layer {
 
   version: number;
 

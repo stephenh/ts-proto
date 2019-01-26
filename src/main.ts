@@ -43,15 +43,15 @@ export function generateFile(fileDesc: IFileDescriptorProto): FileSpec {
   return file;
 }
 
-function generateMessage(file: FileSpec, messageDesc: DescriptorProto): FileSpec {
-  let message = InterfaceSpec.create(messageDesc.name!);
+function generateMessage(file: FileSpec, messageDesc: DescriptorProto, outerMessagePrefix: string = ""): FileSpec {
+  let message = InterfaceSpec.create(outerMessagePrefix + messageDesc.name!);
   for (const fieldDesc of messageDesc.field) {
     const type = toJsType(fieldDesc);
     message = message.addProperty(PropertySpec.create(fieldDesc.name!, type));
   }
   if (messageDesc.nestedType) {
     for (const nestedDesc of messageDesc.nestedType) {
-      file = generateMessage(file, nestedDesc);
+      file = generateMessage(file, nestedDesc, outerMessagePrefix + messageDesc.name + "_");
     }
   }
   return file.addInterface(message);
