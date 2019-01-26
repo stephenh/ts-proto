@@ -1,7 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`vector-tile works 1`] = `
-"
+"import {Tile_Feature, Tile_Value, Tile_Layer} from 'vector_tile';
+
+
 interface Value {
 
   string_value: string;
@@ -38,11 +40,11 @@ interface Layer {
 
   name: string;
 
-  features: Array<.vector_tile.Tile.Feature>;
+  features: Array<Tile_Feature>;
 
   keys: Array<string>;
 
-  values: Array<.vector_tile.Tile.Value>;
+  values: Array<Tile_Value>;
 
   extent: number;
 
@@ -50,7 +52,7 @@ interface Layer {
 
 interface Tile {
 
-  layers: Array<.vector_tile.Tile.Layer>;
+  layers: Array<Tile_Layer>;
 
 }
 "

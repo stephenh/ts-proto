@@ -89,7 +89,7 @@ function toJsType2(field: FieldDescriptorProto): TypeName {
     case FieldDescriptorProto.Type.TYPE_BYTES:
       return TypeNames.anyType("Uint8Array");
     case FieldDescriptorProto.Type.TYPE_MESSAGE:
-      return TypeNames.anyType(field.typeName);
+      return mapMessageType(field.typeName);
     default:
       return TypeNames.anyType(field.typeName);
     // if (field.resolve().resolvedType)
@@ -98,6 +98,18 @@ function toJsType2(field: FieldDescriptorProto): TypeName {
     //   type = "*"; // should not happen
     // break;
   }
+}
+
+/** Maps `.some_proto_namespace.Message` to a TypeName. */
+export function mapMessageType(protoType: string): TypeName {
+  const parts = protoType.split('.');
+  parts.shift(); // drop the empty space before the first dot
+  const namespace = parts.shift();
+  let message = parts.shift();
+  while (parts.length > 0) {
+    message += '_' + parts.shift();
+  }
+  return TypeNames.importedType(`${message}@${namespace}`);
 }
 
 main().then(() => {
