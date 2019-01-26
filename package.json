@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "yarn jest -c jest.config.js",
     "start": "npm run build:live",
     "build:live": "nodemon --exec ./node_modules/.bin/ts-node -- ./index.ts"
   },
@@ -24,6 +24,6 @@
   },
   "dependencies": {
     "protobufjs": "^6.8.8",
-    "ts-poet": "^0.2.3"
+    "ts-poet": "^0.2.4"
   }
 }
