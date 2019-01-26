@@ -1,5 +1,5 @@
 {
-  "name": "js-sandbox",
+  "name": "ts-proto",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -12,14 +12,23 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/jest": "^23.3.13",
     "@types/node": "^10.7.0",
+    "jest": "^24.0.0",
     "nodemon": "^1.18.3",
     "protobuf.js": "^1.1.2",
+    "ts-jest": "^23.10.5",
     "ts-node": "^7.0.1",
     "typescript": "^3.0.1"
   },
   "dependencies": {
     "protobufjs": "^6.8.8",
     "ts-poet": "^0.2.2"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "(/tests/.*-(test|spec))\\.tsx?$"
   }
 }

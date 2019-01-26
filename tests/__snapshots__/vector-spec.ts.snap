@@ -1,0 +1,57 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`vector-tile works 1`] = `
+"
+interface Value {
+
+  string_value: [object Object];
+
+  float_value: [object Object];
+
+  double_value: [object Object];
+
+  int_value: [object Object];
+
+  uint_value: [object Object];
+
+  sint_value: [object Object];
+
+  bool_value: [object Object];
+
+}
+
+interface Feature {
+
+  id: [object Object];
+
+  tags: Array<[object Object]>;
+
+  type: [object Object];
+
+  geometry: Array<[object Object]>;
+
+}
+
+interface Layer {
+
+  version: [object Object];
+
+  name: [object Object];
+
+  features: Array<[object Object]>;
+
+  keys: Array<[object Object]>;
+
+  values: Array<[object Object]>;
+
+  extent: [object Object];
+
+}
+
+interface Tile {
+
+  layers: Array<[object Object]>;
+
+}
+"
+`;

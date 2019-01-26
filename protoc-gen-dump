@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+# ----------------------------------------------------------------------------------------------------------------------
+# Testing utility to dump a serialised CodeGeneratorRequest object which can then be fed into plugin tests to drive
+# generation.
+#
+# Example Usage:
+#   protoc \
+#       --plugin=${PWD}/protoc-gen-dump \
+#       --dump_out=target=server,type=undertow:../java  \
+#       ./helloworld.proto
+#
+# In the above example, we need to pass in arguments to the dump plugin - different types can be used to test different
+# flows in the plugin generator resolution as well as asserting errors for incorrect/missing params.
+#
+# After generation, rename the file to something useful and then import in tests.
+# ----------------------------------------------------------------------------------------------------------------------
+cat >| file.bin
