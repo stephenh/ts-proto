@@ -1,11 +1,11 @@
 import { FileSpec, FunctionSpec, InterfaceSpec, Modifier, PropertySpec, TypeName, TypeNames } from "ts-poet";
 import { google } from "../build/pbjs";
-import IFileDescriptorProto = google.protobuf.IFileDescriptorProto;
 import DescriptorProto = google.protobuf.DescriptorProto;
 import FieldDescriptorProto = google.protobuf.FieldDescriptorProto;
+import FileDescriptorProto = google.protobuf.FileDescriptorProto;
 
-export function generateFile(fileDesc: IFileDescriptorProto): FileSpec {
-  let file = FileSpec.create(fileDesc.name!);
+export function generateFile(fileDesc: FileDescriptorProto): FileSpec {
+  let file = FileSpec.create(fileDesc.package);
   if (fileDesc.messageType) {
     for (const messageDesc of fileDesc.messageType) {
       file = generateMessage(file, messageDesc);
@@ -31,7 +31,7 @@ function generateMessage(file: FileSpec, messageDesc: DescriptorProto, outerMess
 /** Creates a function to decode a message by loop overing the tags. */
 function generateDecode(messageDesc: DescriptorProto): FunctionSpec {
   // create the basic function declaration
-  let func = FunctionSpec.create('decode')
+  let func = FunctionSpec.create('decode' + messageDesc.name)
     .addModifiers(Modifier.EXPORT)
     .addParameter('reader', 'Reader@protobufjs')
     .addParameter('length?', 'number')
@@ -45,10 +45,14 @@ function generateDecode(messageDesc: DescriptorProto): FunctionSpec {
     .beginControlFlow('switch (tag >>> 3)');
   // then add a case for each field
   messageDesc.field.forEach(field => {
-    func = func
-      .addCode('case %L:\n', field.number)
-      .addStatement('message.%L = reader.%L', field.name, toReaderCall(field))
-      .addStatement('break')
+    func = func.addCode('case %L:\n', field.number);
+    if (isPrimitive(field)) {
+      func = func.addStatement('message.%L = reader.%L', field.name, toReaderCall(field))
+    } else if (isMessage(field)) {
+      const [module, type] = toModuleAndType(field.typeName);
+      func = func.addStatement('message.%L = %L(reader, reader.uint32())', field.name, 'decode' + type);
+    }
+    func = func.addStatement('break');
   });
   func = func
     .addCode('default:\n')
@@ -59,6 +63,18 @@ function generateDecode(messageDesc: DescriptorProto): FunctionSpec {
     .endControlFlow()
     .addStatement("return message");
   return func;
+}
+
+function isPrimitive(field: FieldDescriptorProto): boolean {
+  return !isEnum(field) && !isMessage(field);
+}
+
+function isEnum(field: FieldDescriptorProto): boolean {
+  return field.type == FieldDescriptorProto.Type.TYPE_ENUM;
+}
+
+function isMessage(field: FieldDescriptorProto): boolean {
+  return field.type == FieldDescriptorProto.Type.TYPE_MESSAGE;
 }
 
 /** Return the type name. */
@@ -143,14 +159,20 @@ function toReaderCall(field: FieldDescriptorProto): string {
 
 /** Maps `.some_proto_namespace.Message` to a TypeName. */
 export function mapMessageType(protoType: string): TypeName {
+  const [ module, type ] = toModuleAndType(protoType);
+  return TypeNames.importedType(`${type}@${module}`);
+}
+
+/** Breaks `.some_proto_namespace.Some.Message` into `['some_proto_namespace', 'Some_Message']. */
+export function toModuleAndType(protoType: string): [string, string] {
   const parts = protoType.split('.');
   parts.shift(); // drop the empty space before the first dot
-  const namespace = parts.shift();
-  let message = parts.shift();
+  const namespace = parts.shift() || fail(`No namespace found for ${protoType}`);
+  let message = parts.shift() || fail(`No message found for ${protoType}`);
   while (parts.length > 0) {
     message += '_' + parts.shift();
   }
-  return TypeNames.importedType(`${message}@${namespace}`);
+  return [namespace, message];
 }
 
 

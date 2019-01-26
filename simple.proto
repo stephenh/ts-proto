@@ -4,4 +4,9 @@ package ts_proto_tests;
 message Simple {
   string name = 1;
   int32 age = 2;
+  Child child = 3;
+}
+
+message Child {
+  string name = 1;
 }

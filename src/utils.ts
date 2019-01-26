@@ -16,3 +16,7 @@ export function readToBuffer(stream: ReadStream): Promise<Buffer> {
     });
   });
 }
+
+export function fail(message: string): never {
+  throw new Error(message);
+}
