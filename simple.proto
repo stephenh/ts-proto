@@ -1,0 +1,6 @@
+syntax = "proto3";
+package ts_proto_tests;
+
+message Simple {
+  string name = 1;
+}
