@@ -1,4 +1,4 @@
-import { FileSpec, InterfaceSpec, PropertySpec, TypeName, TypeNames } from "ts-poet";
+import { FileSpec, InterfaceSpec, Modifier, PropertySpec, TypeName, TypeNames } from "ts-poet";
 import { google } from "../build/pbjs";
 import CodeGeneratorRequest = google.protobuf.compiler.CodeGeneratorRequest;
 import IFileDescriptorProto = google.protobuf.IFileDescriptorProto;
@@ -44,7 +44,7 @@ export function generateFile(fileDesc: IFileDescriptorProto): FileSpec {
 }
 
 function generateMessage(file: FileSpec, messageDesc: DescriptorProto, outerMessagePrefix: string = ""): FileSpec {
-  let message = InterfaceSpec.create(outerMessagePrefix + messageDesc.name!);
+  let message = InterfaceSpec.create(outerMessagePrefix + messageDesc.name!).addModifiers(Modifier.EXPORT);
   for (const fieldDesc of messageDesc.field) {
     const type = toJsType(fieldDesc);
     message = message.addProperty(PropertySpec.create(fieldDesc.name!, type));
@@ -111,9 +111,5 @@ export function mapMessageType(protoType: string): TypeName {
   }
   return TypeNames.importedType(`${message}@${namespace}`);
 }
-
-main().then(() => {
-  console.log('done');
-});
 
 

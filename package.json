@@ -24,11 +24,5 @@
   "dependencies": {
     "protobufjs": "^6.8.8",
     "ts-poet": "^0.2.3"
-  },
-  "jest": {
-    "transform": {
-      "^.+\\.tsx?$": "ts-jest"
-    },
-    "testRegex": "(/tests/.*-(test|spec))\\.tsx?$"
   }
 }

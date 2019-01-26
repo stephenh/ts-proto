@@ -14,6 +14,5 @@ describe('vector-tile', () => {
       spec.emit(out);
       expect(out.toString()).toMatchSnapshot();
     }
-    console.log(request.protoFile.length);
   });
 });
