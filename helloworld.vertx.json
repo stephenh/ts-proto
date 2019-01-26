@@ -1,0 +1,49 @@
+{
+  "fileToGenerate": ["helloworld.proto"],
+  "parameter": "target=server,type=vertx",
+  "compilerVersion": {
+    "major": 3,
+    "minor": 5,
+    "patch": 1,
+    "suffix": ""
+  },
+  "protoFile": [{
+    "name": "helloworld.proto",
+    "package": "com.example.helloworld",
+    "messageType": [{
+      "name": "HelloReq",
+      "field": [{
+        "name": "subject",
+        "number": 1,
+        "label": "LABEL_OPTIONAL",
+        "type": "TYPE_STRING",
+        "jsonName": "subject"
+      }]
+    }, {
+      "name": "HelloResp",
+      "field": [{
+        "name": "text",
+        "number": 1,
+        "label": "LABEL_OPTIONAL",
+        "type": "TYPE_STRING",
+        "jsonName": "text"
+      }]
+    }],
+    "service": [{
+      "name": "HelloWorld",
+      "method": [{
+        "name": "Hello",
+        "inputType": ".com.example.helloworld.HelloReq",
+        "outputType": ".com.example.helloworld.HelloResp"
+      }, {
+        "name": "HelloAgain",
+        "inputType": ".com.example.helloworld.HelloReq",
+        "outputType": ".com.example.helloworld.HelloResp"
+      }]
+    }],
+    "options": {
+      "javaPackage": "com.example.helloworld"
+    },
+    "syntax": "proto3"
+  }]
+}
