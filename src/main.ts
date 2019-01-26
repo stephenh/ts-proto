@@ -10,7 +10,7 @@ import {
   TypeNames
 } from 'ts-poet';
 import { google } from '../build/pbjs';
-import { basicWireType } from './types';
+import { basicWireType, basicTypeName, toReaderCall } from './types';
 import DescriptorProto = google.protobuf.DescriptorProto;
 import FieldDescriptorProto = google.protobuf.FieldDescriptorProto;
 import FileDescriptorProto = google.protobuf.FileDescriptorProto;
@@ -136,81 +136,11 @@ function isMessage(field: FieldDescriptorProto): boolean {
 
 /** Return the type name. */
 function toTypeName(field: FieldDescriptorProto): TypeName {
-  const type = toBaseTypeName(field);
+  const type = basicTypeName(field);
   if (field.label === FieldDescriptorProto.Label.LABEL_REPEATED) {
     return TypeNames.arrayType(type);
   }
   return type;
-}
-
-/** Returns the type name without any repeated/required/etc. labels. */
-function toBaseTypeName(field: FieldDescriptorProto): TypeName {
-  switch (field.type) {
-    case FieldDescriptorProto.Type.TYPE_DOUBLE:
-    case FieldDescriptorProto.Type.TYPE_FLOAT:
-    case FieldDescriptorProto.Type.TYPE_INT32:
-    case FieldDescriptorProto.Type.TYPE_UINT32:
-    case FieldDescriptorProto.Type.TYPE_SINT32:
-    case FieldDescriptorProto.Type.TYPE_FIXED32:
-    case FieldDescriptorProto.Type.TYPE_SFIXED32:
-      return TypeNames.NUMBER;
-    case FieldDescriptorProto.Type.TYPE_INT64:
-    case FieldDescriptorProto.Type.TYPE_UINT64:
-    case FieldDescriptorProto.Type.TYPE_SINT64:
-    case FieldDescriptorProto.Type.TYPE_FIXED64:
-    case FieldDescriptorProto.Type.TYPE_SFIXED64:
-      // type = config.forceLong ? "Long" : config.forceNumber ? "number" : "number|Long";
-      return TypeNames.NUMBER;
-    case FieldDescriptorProto.Type.TYPE_BOOL:
-      return TypeNames.BOOLEAN;
-    case FieldDescriptorProto.Type.TYPE_STRING:
-      return TypeNames.STRING;
-    case FieldDescriptorProto.Type.TYPE_BYTES:
-      return TypeNames.anyType('Uint8Array');
-    case FieldDescriptorProto.Type.TYPE_MESSAGE:
-    case FieldDescriptorProto.Type.TYPE_ENUM:
-      return mapMessageType(field.typeName);
-    default:
-      return TypeNames.anyType(field.typeName);
-  }
-}
-
-/** Returns the type name without any repeated/required/etc. labels. */
-function toReaderCall(field: FieldDescriptorProto): string {
-  switch (field.type) {
-    case FieldDescriptorProto.Type.TYPE_DOUBLE:
-      return 'double';
-    case FieldDescriptorProto.Type.TYPE_FLOAT:
-      return 'float';
-    case FieldDescriptorProto.Type.TYPE_INT32:
-      return 'int32';
-    case FieldDescriptorProto.Type.TYPE_UINT32:
-      return 'uint32';
-    case FieldDescriptorProto.Type.TYPE_SINT32:
-      return 'sint32';
-    case FieldDescriptorProto.Type.TYPE_FIXED32:
-      return 'fixed32';
-    case FieldDescriptorProto.Type.TYPE_SFIXED32:
-      return 'sfixed32';
-    case FieldDescriptorProto.Type.TYPE_INT64:
-      return 'int64';
-    case FieldDescriptorProto.Type.TYPE_UINT64:
-      return 'uint64';
-    case FieldDescriptorProto.Type.TYPE_SINT64:
-      return 'sint64';
-    case FieldDescriptorProto.Type.TYPE_FIXED64:
-      return 'fixed64';
-    case FieldDescriptorProto.Type.TYPE_SFIXED64:
-      return 'sfixed64';
-    case FieldDescriptorProto.Type.TYPE_BOOL:
-      return 'bool';
-    case FieldDescriptorProto.Type.TYPE_STRING:
-      return 'string';
-    case FieldDescriptorProto.Type.TYPE_BYTES:
-      return 'bytes';
-    default:
-      throw new Error(`Not a primitive field ${field}`);
-  }
 }
 
 /** Maps `.some_proto_namespace.Message` to a TypeName. */
