@@ -1,5 +1,5 @@
-import { mapMessageType } from "../src/main";
-import { TypeNames } from "ts-poet";
+import { mapMessageType } from '../src/main';
+import { TypeNames } from 'ts-poet';
 
 describe('main', () => {
   describe('mapMessageType', () => {

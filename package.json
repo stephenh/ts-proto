@@ -16,6 +16,7 @@
     "@types/node": "^10.7.0",
     "jest": "^24.0.0",
     "nodemon": "^1.18.3",
+    "prettier": "^1.16.1",
     "protobuf.js": "^1.1.2",
     "ts-jest": "^23.10.5",
     "ts-node": "^7.0.1",

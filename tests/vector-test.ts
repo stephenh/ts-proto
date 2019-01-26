@@ -1,8 +1,8 @@
-import { google } from "../build/pbjs";
+import { google } from '../build/pbjs';
 import CodeGeneratorRequest = google.protobuf.compiler.CodeGeneratorRequest;
-import { readFileSync } from "fs";
-import { generateFile } from "../src/main";
-import { StringBuffer } from "ts-poet/build/StringBuffer";
+import { readFileSync } from 'fs';
+import { generateFile } from '../src/main';
+import { StringBuffer } from 'ts-poet/build/StringBuffer';
 
 describe('vector-tile', () => {
   it('works', () => {

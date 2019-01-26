@@ -1,7 +1,7 @@
-import { ts_proto_tests } from "../build/pbjs";
+import { ts_proto_tests } from '../build/pbjs';
 import ISimple = ts_proto_tests.ISimple;
 import PbSimple = ts_proto_tests.Simple;
-import { Reader } from "protobufjs";
+import { Reader } from 'protobufjs';
 
 interface Simple {
   name: string;
@@ -25,7 +25,7 @@ function decode(reader: Reader, length?: number): Simple {
 }
 
 function main() {
-  const s: ISimple = { name: "asdf" };
+  const s: ISimple = { name: 'asdf' };
   const ss = new PbSimple(s);
   const writer = PbSimple.encode(ss);
   const bytes = writer.finish();
@@ -36,8 +36,6 @@ function main() {
 
   const s3 = decode(Reader.create(bytes));
   console.log(s3.name);
-
 }
-
 
 main();

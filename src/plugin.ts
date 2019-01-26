@@ -1,7 +1,7 @@
-import { readToBuffer } from "./utils";
-import { google } from "../build/pbjs";
+import { readToBuffer } from './utils';
+import { google } from '../build/pbjs';
 import CodeGeneratorRequest = google.protobuf.compiler.CodeGeneratorRequest;
-import { generateFile } from "./main";
+import { generateFile } from './main';
 
 // this would be the plugin called by the protoc compiler
 async function main() {
@@ -14,5 +14,3 @@ async function main() {
   }
   // TODO write to stdout
 }
-
-
