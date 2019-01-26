@@ -47,7 +47,7 @@ function generateDecode(messageDesc: DescriptorProto): FunctionSpec {
   messageDesc.field.forEach(field => {
     func = func
       .addCode('case %L:\n', field.number)
-      .addStatement('message.%L = reader.string()', field.name)
+      .addStatement('message.%L = reader.%L', field.name, toReaderCall(field))
       .addStatement('break')
   });
   func = func
@@ -98,11 +98,46 @@ function toBaseTypeName(field: FieldDescriptorProto): TypeName {
       return mapMessageType(field.typeName);
     default:
       return TypeNames.anyType(field.typeName);
-    // if (field.resolve().resolvedType)
-    //   type = exportName(field.resolvedType, !(field.resolvedType instanceof protobuf.Enum || config.forceMessage));
-    // else
-    //   type = "*"; // should not happen
-    // break;
+  }
+}
+
+/** Returns the type name without any repeated/required/etc. labels. */
+function toReaderCall(field: FieldDescriptorProto): string {
+  switch (field.type) {
+    case FieldDescriptorProto.Type.TYPE_DOUBLE:
+      return 'double()';
+    case FieldDescriptorProto.Type.TYPE_FLOAT:
+      return 'float()';
+    case FieldDescriptorProto.Type.TYPE_INT32:
+      return 'int32()';
+    case FieldDescriptorProto.Type.TYPE_UINT32:
+      return 'uint32()';
+    case FieldDescriptorProto.Type.TYPE_SINT32:
+      return 'sint32()';
+    case FieldDescriptorProto.Type.TYPE_FIXED32:
+      return 'fixed32()';
+    case FieldDescriptorProto.Type.TYPE_SFIXED32:
+      return 'sfixed32()';
+    case FieldDescriptorProto.Type.TYPE_INT64:
+      return 'int64()';
+    case FieldDescriptorProto.Type.TYPE_UINT64:
+      return 'uint64()';
+    case FieldDescriptorProto.Type.TYPE_SINT64:
+      return 'sint64()';
+    case FieldDescriptorProto.Type.TYPE_FIXED64:
+      return 'fixed64()';
+    case FieldDescriptorProto.Type.TYPE_SFIXED64:
+      return 'sfixed64()';
+    case FieldDescriptorProto.Type.TYPE_BOOL:
+      return 'bool()';
+    case FieldDescriptorProto.Type.TYPE_STRING:
+      return 'string()';
+    case FieldDescriptorProto.Type.TYPE_BYTES:
+      return 'bytes()';
+    case FieldDescriptorProto.Type.TYPE_MESSAGE:
+      return '...';
+    default:
+      return '...';
   }
 }
 

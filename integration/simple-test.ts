@@ -6,12 +6,12 @@ import { Reader } from "protobufjs";
 
 describe('simple', () => {
   it('generates types correctly', () => {
-    const simple: Simple = { name: 'asdf' };
+    const simple: Simple = { name: 'asdf', age: 1 };
     expect(simple.name).toEqual('asdf');
   });
 
   it('can decode', () => {
-    const s: ISimple = { name: "asdf" };
+    const s: ISimple = { name: "asdf", age: 1 };
     const writer = PbSimple.encode(PbSimple.fromObject(s));
     const bytes = writer.finish();
 
