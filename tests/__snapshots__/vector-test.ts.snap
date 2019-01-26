@@ -81,6 +81,7 @@ export function decodeFeature(reader: Reader, length?: number): Feature {
       message.tags = reader.uint32();
       break;
       case 3:
+      message.type = reader.int32();
       break;
       case 4:
       message.geometry = reader.uint32();
@@ -96,6 +97,7 @@ export function decodeFeature(reader: Reader, length?: number): Feature {
 export function encodeFeature(message: Feature, writer: Writer = new Writer()): Writer {
   writer.uint32(8).uint64(message.id);
   writer.uint32(16).uint32(message.tags);
+  writer.uint32(24).int32(message.type);
   writer.uint32(32).uint32(message.geometry);
   return writer;
 }
@@ -106,7 +108,7 @@ export interface Tile_Feature {
 
   tags: Array<number>;
 
-  type: .vector_tile.Tile.GeomType;
+  type: Tile_GeomType;
 
   geometry: Array<number>;
 

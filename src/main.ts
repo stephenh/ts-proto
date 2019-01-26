@@ -10,7 +10,7 @@ import {
   TypeNames
 } from 'ts-poet';
 import { google } from '../build/pbjs';
-import { basicWireType, basicTypeName, toReaderCall } from './types';
+import { basicTypeName, basicWireType, toReaderCall } from './types';
 import DescriptorProto = google.protobuf.DescriptorProto;
 import FieldDescriptorProto = google.protobuf.FieldDescriptorProto;
 import FileDescriptorProto = google.protobuf.FileDescriptorProto;
@@ -32,16 +32,7 @@ function generateEnum(file: FileSpec, enumDesc: EnumDescriptorProto): FileSpec {
   for (const valueDesc of enumDesc.value) {
     spec = spec.addConstant(valueDesc.name, valueDesc.number.toString());
   }
-  file = file.addEnum(spec);
-  const enumDictType = TypeNames.anonymousType(['[key: number]', TypeNames.anyType(enumDesc.name)]);
-  const map = PropertySpec.create(enumDesc.name + 'Values', enumDictType).addModifiers(Modifier.CONST);
-  let block = CodeBlock.empty().beginControlFlow('');
-  for (const valueDesc of enumDesc.value) {
-    block = block.add('%L: %L.%L,\n', valueDesc.number, enumDesc.name, valueDesc.name);
-  }
-  block = block.endControlFlow();
-  file = file.addProperty(map.initializerBlock(block));
-  return file;
+  return file.addEnum(spec);
 }
 
 function generateMessage(file: FileSpec, messageDesc: DescriptorProto, outerMessagePrefix: string = ''): FileSpec {
@@ -50,6 +41,8 @@ function generateMessage(file: FileSpec, messageDesc: DescriptorProto, outerMess
     const type = toTypeName(fieldDesc);
     message = message.addProperty(PropertySpec.create(fieldDesc.name!, type));
   }
+  // TODO not handling other nested, like enums
+  // TODO not handling oneOfs
   for (const nestedDesc of messageDesc.nestedType) {
     file = generateMessage(file, nestedDesc, outerMessagePrefix + messageDesc.name + '_');
   }
@@ -83,8 +76,7 @@ function generateDecode(messageDesc: DescriptorProto): FunctionSpec {
       const [module, type] = toModuleAndType(field.typeName);
       func = func.addStatement('message.%L = %L(reader, reader.uint32())', field.name, 'decode' + type);
     } else if (isEnum(field)) {
-      const [module, type] = toModuleAndType(field.typeName);
-      func = func.addStatement('message.%L = %L[reader.int32()]', field.name, type + 'Values');
+      func = func.addStatement('message.%L = reader.int32()', field.name);
     }
     func = func.addStatement('break');
   });
@@ -117,6 +109,9 @@ function generateEncode(messageDesc: DescriptorProto): FunctionSpec {
       const tag = ((field.number << 3) | 2) >>> 0;
       const [module, type] = toModuleAndType(field.typeName);
       func = func.addStatement('%L(message.%L, writer.uint32(%L).fork()).ldelim()', 'encode' + type, field.name, tag);
+    } else if (isEnum(field)) {
+      const tag = ((field.number << 3) | basicWireType(FieldDescriptorProto.Type.TYPE_INT32)) >>> 0;
+      func = func.addStatement('writer.uint32(%L).int32(message.%L)', tag, field.name);
     }
   });
   return func.addStatement('return writer');

@@ -14,6 +14,6 @@ message Child {
 
 enum StateEnum {
   UNKNOWN = 0;
-  ON = 1;
-  OFF = 2;
+  ON = 2;
+  OFF = 3;
 }
