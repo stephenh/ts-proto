@@ -1,37 +1,8 @@
 import { FileSpec, FunctionSpec, InterfaceSpec, Modifier, PropertySpec, TypeName, TypeNames } from "ts-poet";
 import { google } from "../build/pbjs";
-import CodeGeneratorRequest = google.protobuf.compiler.CodeGeneratorRequest;
 import IFileDescriptorProto = google.protobuf.IFileDescriptorProto;
 import DescriptorProto = google.protobuf.DescriptorProto;
 import FieldDescriptorProto = google.protobuf.FieldDescriptorProto;
-
-function readStdin(): Promise<Buffer> {
-  return new Promise(resolve => {
-    const ret: Array<Buffer | string> = [];
-    let len = 0;
-    const stdin = process.stdin;
-    stdin.on('readable', () => {
-      let chunk;
-      while ((chunk = stdin.read())) {
-        ret.push(chunk);
-        len += chunk.length;
-      }
-    });
-    stdin.on('end', () => {
-      resolve(Buffer.concat(ret as any, len));
-    });
-  });
-}
-
-async function main() {
-  const stdin = await readStdin();
-  // const json = JSON.parse(stdin.toString());
-  // const request = CodeGeneratorRequest.fromObject(json);
-  const request = CodeGeneratorRequest.decode(stdin);
-  for (let file of request.protoFile) {
-    generateFile(file);
-  }
-}
 
 export function generateFile(fileDesc: IFileDescriptorProto): FileSpec {
   let file = FileSpec.create(fileDesc.name!);
@@ -46,7 +17,7 @@ export function generateFile(fileDesc: IFileDescriptorProto): FileSpec {
 function generateMessage(file: FileSpec, messageDesc: DescriptorProto, outerMessagePrefix: string = ""): FileSpec {
   let message = InterfaceSpec.create(outerMessagePrefix + messageDesc.name!).addModifiers(Modifier.EXPORT);
   for (const fieldDesc of messageDesc.field) {
-    const type = toJsType(fieldDesc);
+    const type = toTypeName(fieldDesc);
     message = message.addProperty(PropertySpec.create(fieldDesc.name!, type));
   }
   if (messageDesc.nestedType) {
@@ -59,16 +30,20 @@ function generateMessage(file: FileSpec, messageDesc: DescriptorProto, outerMess
 
 /** Creates a function to decode a message by loop overing the tags. */
 function generateDecode(messageDesc: DescriptorProto): FunctionSpec {
+  // create the basic function declaration
   let func = FunctionSpec.create('decode')
     .addModifiers(Modifier.EXPORT)
     .addParameter('reader', 'Reader@protobufjs')
     .addParameter('length?', 'number')
-    .returns(messageDesc.name)
+    .returns(messageDesc.name);
+  // now add the initial end/message/while setup
+  func = func
     .addStatement("let end = length === undefined ? reader.len : reader.pos + length")
     .addStatement("const message = {} as %L", messageDesc.name)
     .beginControlFlow("while (reader.pos < end)")
     .addStatement("const tag = reader.uint32()")
     .beginControlFlow('switch (tag >>> 3)');
+  // then add a case for each field
   messageDesc.field.forEach(field => {
     func = func
       .addCode('case %L:\n', field.number)
@@ -79,21 +54,24 @@ function generateDecode(messageDesc: DescriptorProto): FunctionSpec {
     .addCode('default:\n')
     .addStatement('reader.skipType(tag & 7)')
     .addStatement('break');
+  // and then wrap up the switch/while/return
   func = func.endControlFlow()
     .endControlFlow()
     .addStatement("return message");
   return func;
 }
 
-function toJsType(field: FieldDescriptorProto): TypeName {
-  const type = toJsType2(field);
+/** Return the type name. */
+function toTypeName(field: FieldDescriptorProto): TypeName {
+  const type = toBaseTypeName(field);
   if (field.label === FieldDescriptorProto.Label.LABEL_REPEATED) {
     return TypeNames.arrayType(type);
   }
   return type;
 }
 
-function toJsType2(field: FieldDescriptorProto): TypeName {
+/** Returns the type name without any repeated/required/etc. labels. */
+function toBaseTypeName(field: FieldDescriptorProto): TypeName {
   switch (field.type) {
     case FieldDescriptorProto.Type.TYPE_DOUBLE:
     case FieldDescriptorProto.Type.TYPE_FLOAT:
