@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "protobufjs": "^6.8.8",
-    "ts-poet": "^0.2.2"
+    "ts-poet": "^0.2.3"
   },
   "jest": {
     "transform": {

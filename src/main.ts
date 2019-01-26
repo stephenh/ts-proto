@@ -28,11 +28,9 @@ async function main() {
   // const json = JSON.parse(stdin.toString());
   // const request = CodeGeneratorRequest.fromObject(json);
   const request = CodeGeneratorRequest.decode(stdin);
-  console.log(request.fileToGenerate);
   for (let file of request.protoFile) {
     generateFile(file);
   }
-  console.log(request.protoFile.length);
 }
 
 export function generateFile(fileDesc: IFileDescriptorProto): FileSpec {
@@ -46,11 +44,10 @@ export function generateFile(fileDesc: IFileDescriptorProto): FileSpec {
 }
 
 function generateMessage(file: FileSpec, messageDesc: DescriptorProto): FileSpec {
-  console.log(messageDesc.name);
   let message = InterfaceSpec.create(messageDesc.name!);
   for (const fieldDesc of messageDesc.field) {
     const type = toJsType(fieldDesc);
-    message = message.addProperty(PropertySpec.create(fieldDesc.name!, TypeNames.anyType(type)));
+    message = message.addProperty(PropertySpec.create(fieldDesc.name!, type));
   }
   if (messageDesc.nestedType) {
     for (const nestedDesc of messageDesc.nestedType) {
@@ -60,12 +57,12 @@ function generateMessage(file: FileSpec, messageDesc: DescriptorProto): FileSpec
   return file.addInterface(message);
 }
 
-function toJsType(field: FieldDescriptorProto): string {
+function toJsType(field: FieldDescriptorProto): TypeName {
   const type = toJsType2(field);
   if (field.label === FieldDescriptorProto.Label.LABEL_REPEATED) {
-    return `Array<${type.toString()}>`;
+    return TypeNames.arrayType(type);
   }
-  return type.toString();
+  return type;
 }
 
 function toJsType2(field: FieldDescriptorProto): TypeName {

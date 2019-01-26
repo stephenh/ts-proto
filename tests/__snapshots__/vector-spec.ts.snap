@@ -4,53 +4,53 @@ exports[`vector-tile works 1`] = `
 "
 interface Value {
 
-  string_value: [object Object];
+  string_value: string;
 
-  float_value: [object Object];
+  float_value: number;
 
-  double_value: [object Object];
+  double_value: number;
 
-  int_value: [object Object];
+  int_value: number;
 
-  uint_value: [object Object];
+  uint_value: number;
 
-  sint_value: [object Object];
+  sint_value: number;
 
-  bool_value: [object Object];
+  bool_value: boolean;
 
 }
 
 interface Feature {
 
-  id: [object Object];
+  id: number;
 
-  tags: Array<[object Object]>;
+  tags: Array<number>;
 
-  type: [object Object];
+  type: .vector_tile.Tile.GeomType;
 
-  geometry: Array<[object Object]>;
+  geometry: Array<number>;
 
 }
 
 interface Layer {
 
-  version: [object Object];
+  version: number;
 
-  name: [object Object];
+  name: string;
 
-  features: Array<[object Object]>;
+  features: Array<.vector_tile.Tile.Feature>;
 
-  keys: Array<[object Object]>;
+  keys: Array<string>;
 
-  values: Array<[object Object]>;
+  values: Array<.vector_tile.Tile.Value>;
 
-  extent: [object Object];
+  extent: number;
 
 }
 
 interface Tile {
 
-  layers: Array<[object Object]>;
+  layers: Array<.vector_tile.Tile.Layer>;
 
 }
 "
