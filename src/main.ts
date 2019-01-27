@@ -56,7 +56,7 @@ function generateMessage(file: FileSpec, messageDesc: DescriptorProto, prefix: s
 }
 
 /** Creates a function to decode a message by loop overing the tags. */
-function generateDecode(prefix: String, messageDesc: DescriptorProto): FunctionSpec {
+function generateDecode(prefix: string, messageDesc: DescriptorProto): FunctionSpec {
   // create the basic function declaration
   let func = FunctionSpec.create('decode' + prefix + messageDesc.name)
     .addModifiers(Modifier.EXPORT)
@@ -128,7 +128,7 @@ function generateDecode(prefix: String, messageDesc: DescriptorProto): FunctionS
 }
 
 /** Creates a function to encode a message by loop overing the tags. */
-function generateEncode(prefix: String, messageDesc: DescriptorProto): FunctionSpec {
+function generateEncode(prefix: string, messageDesc: DescriptorProto): FunctionSpec {
   // create the basic function declaration
   let func = FunctionSpec.create('encode' + prefix + messageDesc.name)
     .addModifiers(Modifier.EXPORT)
