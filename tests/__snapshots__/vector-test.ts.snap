@@ -157,14 +157,7 @@ export function decodeLayer(reader: Reader, length?: number): Layer {
       message.features.push(decodeTile_Feature(reader, reader.uint32()));
       break;
       case 3:
-      if ((tag & 7) === 2) {
-        const end2 = reader.uint32() + reader.pos;
-        while (reader.pos < end2) {
-          message.keys.push(reader.string());
-        }
-      } else {
-        message.keys.push(reader.string());
-      }
+      message.keys.push(reader.string());
       break;
       case 4:
       message.values.push(decodeTile_Value(reader, reader.uint32()));
@@ -186,11 +179,9 @@ export function encodeLayer(message: Layer, writer: Writer = new Writer()): Writ
   for (const v of message.features) {
     encodeTile_Feature(v, writer.uint32(18).fork()).ldelim();
   }
-  writer.uint32(26).fork();
   for (const v of message.keys) {
-    writer.string(v);
+    writer.uint32(26).string(v);
   }
-  writer.ldelim();
   for (const v of message.values) {
     encodeTile_Value(v, writer.uint32(34).fork()).ldelim();
   }

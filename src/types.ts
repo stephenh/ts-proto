@@ -110,3 +110,36 @@ export function toReaderCall(field: FieldDescriptorProto): string {
       throw new Error(`Not a primitive field ${field}`);
   }
 }
+
+export function packedType(type: FieldDescriptorProto.Type): number | undefined {
+  switch (type) {
+    case FieldDescriptorProto.Type.TYPE_DOUBLE:
+      return 1;
+    case FieldDescriptorProto.Type.TYPE_FLOAT:
+      return 5;
+    case FieldDescriptorProto.Type.TYPE_INT32:
+      return 0;
+    case FieldDescriptorProto.Type.TYPE_UINT32:
+      return 0;
+    case FieldDescriptorProto.Type.TYPE_SINT32:
+      return 0;
+    case FieldDescriptorProto.Type.TYPE_FIXED32:
+      return 5;
+    case FieldDescriptorProto.Type.TYPE_SFIXED32:
+      return 5;
+    case FieldDescriptorProto.Type.TYPE_INT64:
+      return 0;
+    case FieldDescriptorProto.Type.TYPE_UINT64:
+      return 0;
+    case FieldDescriptorProto.Type.TYPE_SINT64:
+      return 0;
+    case FieldDescriptorProto.Type.TYPE_FIXED64:
+      return 1;
+    case FieldDescriptorProto.Type.TYPE_SFIXED64:
+      return 1;
+    case FieldDescriptorProto.Type.TYPE_BOOL:
+      return 0;
+    default:
+      return undefined;
+  }
+}

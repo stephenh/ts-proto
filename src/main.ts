@@ -10,7 +10,7 @@ import {
   TypeNames
 } from 'ts-poet';
 import { google } from '../build/pbjs';
-import { basicTypeName, basicWireType, toReaderCall } from './types';
+import { basicTypeName, basicWireType, packedType, toReaderCall } from './types';
 import DescriptorProto = google.protobuf.DescriptorProto;
 import FieldDescriptorProto = google.protobuf.FieldDescriptorProto;
 import FileDescriptorProto = google.protobuf.FileDescriptorProto;
@@ -96,7 +96,7 @@ function generateDecode(messageDesc: DescriptorProto): FunctionSpec {
     }
 
     if (field.label === FieldDescriptorProto.Label.LABEL_REPEATED) {
-      if (isMessage(field)) {
+      if (packedType(field.type) === undefined) {
         func = func.addStatement('message.%L.push(%L)', field.name, readSnippet);
       } else {
         func = func.beginControlFlow('if ((tag & 7) === 2)')
@@ -151,7 +151,7 @@ function generateEncode(messageDesc: DescriptorProto): FunctionSpec {
     }
 
     if (field.label === FieldDescriptorProto.Label.LABEL_REPEATED) {
-      if (isMessage(field)) {
+      if (packedType(field.type) === undefined) {
         func = func
           .beginControlFlow('for (const v of message.%L)', field.name)
           .addStatement(writeSnippet, 'v')
