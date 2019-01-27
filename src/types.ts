@@ -81,6 +81,7 @@ export function toReaderCall(field: FieldDescriptorProto): string {
     case FieldDescriptorProto.Type.TYPE_FLOAT:
       return 'float';
     case FieldDescriptorProto.Type.TYPE_INT32:
+    case FieldDescriptorProto.Type.TYPE_ENUM:
       return 'int32';
     case FieldDescriptorProto.Type.TYPE_UINT32:
       return 'uint32';

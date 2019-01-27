@@ -15,7 +15,8 @@ describe('simple', () => {
       state: StateEnum.ON,
       grandchildren: [{ name: 'grand1' }, { name: 'grand2' }],
       coins: [2, 4, 6],
-      snacks: ['a', 'b']
+      snacks: ['a', 'b'],
+      oldStates: [StateEnum.ON, StateEnum.OFF],
     };
     expect(simple.name).toEqual('asdf');
   });
@@ -28,7 +29,8 @@ describe('simple', () => {
       state: PbState.ON,
       grandchildren: [PbChild.fromObject({ name: 'grand1' }), PbChild.fromObject({ name: 'grand2' })],
       coins: [2, 4, 6],
-      snacks: ['a', 'b']
+      snacks: ['a', 'b'],
+      oldStates: [PbState.ON, PbState.OFF],
     };
     const s2 = decodeSimple(Reader.create(PbSimple.encode(PbSimple.fromObject(s1)).finish()));
     expect(s2).toEqual(s1);
@@ -42,7 +44,8 @@ describe('simple', () => {
       state: StateEnum.ON,
       grandchildren: [{ name: 'grand1' }, { name: 'grand2' }],
       coins: [2, 4, 6],
-      snacks: ['a', 'b']
+      snacks: ['a', 'b'],
+      oldStates: [StateEnum.ON, StateEnum.OFF],
     };
     const s2 = PbSimple.toObject(PbSimple.decode(encodeSimple(s1).finish()));
     expect(s2).toEqual(s1);

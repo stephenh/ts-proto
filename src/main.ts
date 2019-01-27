@@ -96,10 +96,11 @@ function generateDecode(messageDesc: DescriptorProto): FunctionSpec {
     }
 
     if (field.label === FieldDescriptorProto.Label.LABEL_REPEATED) {
-      if (packedType(field.type) === undefined) {
+      if (packedType(field.type) === undefined && !isEnum(field)) {
         func = func.addStatement('message.%L.push(%L)', field.name, readSnippet);
       } else {
-        func = func.beginControlFlow('if ((tag & 7) === 2)')
+        func = func
+          .beginControlFlow('if ((tag & 7) === 2)')
           .addStatement('const end2 = reader.uint32() + reader.pos')
           .beginControlFlow('while (reader.pos < end2)')
           .addStatement('message.%L.push(%L)', field.name, readSnippet)
@@ -151,13 +152,13 @@ function generateEncode(messageDesc: DescriptorProto): FunctionSpec {
     }
 
     if (field.label === FieldDescriptorProto.Label.LABEL_REPEATED) {
-      if (packedType(field.type) === undefined) {
+      if (packedType(field.type) === undefined && !isEnum(field)) {
         func = func
           .beginControlFlow('for (const v of message.%L)', field.name)
           .addStatement(writeSnippet, 'v')
           .endControlFlow();
       } else {
-        const tag = (field.number << 3 | 2) >>> 0;
+        const tag = ((field.number << 3) | 2) >>> 0;
         func = func
           .addStatement('writer.uint32(%L).fork()', tag)
           .beginControlFlow('for (const v of message.%L)', field.name)

@@ -9,6 +9,7 @@ message Simple {
   repeated Child grandchildren = 5;
   repeated int32 coins = 6;
   repeated string snacks = 7;
+  repeated StateEnum oldStates = 8;
 }
 
 message Child {
