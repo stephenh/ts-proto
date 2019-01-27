@@ -11,26 +11,26 @@ export function decodeValue(reader: Reader, length?: number): Value {
     const tag = reader.uint32();
     switch (tag >>> 3) {
       case 1:
-      message.string_value = reader.string();
-      break;
+        message.string_value = reader.string();
+        break;
       case 2:
-      message.float_value = reader.float();
-      break;
+        message.float_value = reader.float();
+        break;
       case 3:
-      message.double_value = reader.double();
-      break;
+        message.double_value = reader.double();
+        break;
       case 4:
-      message.int_value = reader.int64();
-      break;
+        message.int_value = reader.int64();
+        break;
       case 5:
-      message.uint_value = reader.uint64();
-      break;
+        message.uint_value = reader.uint64();
+        break;
       case 6:
-      message.sint_value = reader.sint64();
-      break;
+        message.sint_value = reader.sint64();
+        break;
       case 7:
-      message.bool_value = reader.bool();
-      break;
+        message.bool_value = reader.bool();
+        break;
       default:
       reader.skipType(tag & 7);
       break;
@@ -77,31 +77,31 @@ export function decodeFeature(reader: Reader, length?: number): Feature {
     const tag = reader.uint32();
     switch (tag >>> 3) {
       case 1:
-      message.id = reader.uint64();
-      break;
+        message.id = reader.uint64();
+        break;
       case 2:
-      if ((tag & 7) === 2) {
-        const end2 = reader.uint32() + reader.pos;
-        while (reader.pos < end2) {
+        if ((tag & 7) === 2) {
+          const end2 = reader.uint32() + reader.pos;
+          while (reader.pos < end2) {
+            message.tags.push(reader.uint32());
+          }
+        } else {
           message.tags.push(reader.uint32());
         }
-      } else {
-        message.tags.push(reader.uint32());
-      }
-      break;
+        break;
       case 3:
-      message.type = reader.int32();
-      break;
+        message.type = reader.int32();
+        break;
       case 4:
-      if ((tag & 7) === 2) {
-        const end2 = reader.uint32() + reader.pos;
-        while (reader.pos < end2) {
+        if ((tag & 7) === 2) {
+          const end2 = reader.uint32() + reader.pos;
+          while (reader.pos < end2) {
+            message.geometry.push(reader.uint32());
+          }
+        } else {
           message.geometry.push(reader.uint32());
         }
-      } else {
-        message.geometry.push(reader.uint32());
-      }
-      break;
+        break;
       default:
       reader.skipType(tag & 7);
       break;
@@ -148,23 +148,23 @@ export function decodeLayer(reader: Reader, length?: number): Layer {
     const tag = reader.uint32();
     switch (tag >>> 3) {
       case 15:
-      message.version = reader.uint32();
-      break;
+        message.version = reader.uint32();
+        break;
       case 1:
-      message.name = reader.string();
-      break;
+        message.name = reader.string();
+        break;
       case 2:
-      message.features.push(decodeTile_Feature(reader, reader.uint32()));
-      break;
+        message.features.push(decodeTile_Feature(reader, reader.uint32()));
+        break;
       case 3:
-      message.keys.push(reader.string());
-      break;
+        message.keys.push(reader.string());
+        break;
       case 4:
-      message.values.push(decodeTile_Value(reader, reader.uint32()));
-      break;
+        message.values.push(decodeTile_Value(reader, reader.uint32()));
+        break;
       case 5:
-      message.extent = reader.uint32();
-      break;
+        message.extent = reader.uint32();
+        break;
       default:
       reader.skipType(tag & 7);
       break;
@@ -213,8 +213,8 @@ export function decodeTile(reader: Reader, length?: number): Tile {
     const tag = reader.uint32();
     switch (tag >>> 3) {
       case 3:
-      message.layers.push(decodeTile_Layer(reader, reader.uint32()));
-      break;
+        message.layers.push(decodeTile_Layer(reader, reader.uint32()));
+        break;
       default:
       reader.skipType(tag & 7);
       break;

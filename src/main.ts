@@ -81,7 +81,7 @@ function generateDecode(messageDesc: DescriptorProto): FunctionSpec {
 
   // add a case for each incoming field
   messageDesc.field.forEach(field => {
-    func = func.addCode('case %L:\n', field.number);
+    func = func.addCode('case %L:%>\n', field.number);
 
     let readSnippet: string;
     if (isPrimitive(field)) {
@@ -111,7 +111,7 @@ function generateDecode(messageDesc: DescriptorProto): FunctionSpec {
     } else {
       func = func.addStatement('message.%L = %L', field.name, readSnippet);
     }
-    func = func.addStatement('break');
+    func = func.addStatement('break%<');
   });
   func = func
     .addCode('default:\n')
