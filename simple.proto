@@ -7,6 +7,7 @@ message Simple {
   Child child = 3;
   StateEnum state = 4;
   repeated Child grandchildren = 5;
+  repeated int32 coins = 6;
 }
 
 message Child {

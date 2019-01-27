@@ -80,13 +80,27 @@ export function decodeFeature(reader: Reader, length?: number): Feature {
       message.id = reader.uint64();
       break;
       case 2:
-      message.tags.push(reader.uint32());
+      if ((tag & 7) === 2) {
+        const end2 = reader.uint32() + reader.pos;
+        while (reader.pos < end2) {
+          message.tags.push(reader.uint32());
+        }
+      } else {
+        message.tags.push(reader.uint32());
+      }
       break;
       case 3:
       message.type = reader.int32();
       break;
       case 4:
-      message.geometry.push(reader.uint32());
+      if ((tag & 7) === 2) {
+        const end2 = reader.uint32() + reader.pos;
+        while (reader.pos < end2) {
+          message.geometry.push(reader.uint32());
+        }
+      } else {
+        message.geometry.push(reader.uint32());
+      }
       break;
       default:
       reader.skipType(tag & 7);
@@ -98,13 +112,17 @@ export function decodeFeature(reader: Reader, length?: number): Feature {
 
 export function encodeFeature(message: Feature, writer: Writer = new Writer()): Writer {
   writer.uint32(8).uint64(message.id);
-  for (let v of message.tags) {
-    writer.uint32(16).uint32(v);
+  writer.uint32(18).fork();
+  for (const v of message.tags) {
+    writer.uint32(v);
   }
+  writer.ldelim();
   writer.uint32(24).int32(message.type);
-  for (let v of message.geometry) {
-    writer.uint32(32).uint32(v);
+  writer.uint32(34).fork();
+  for (const v of message.geometry) {
+    writer.uint32(v);
   }
+  writer.ldelim();
   return writer;
 }
 
@@ -139,7 +157,14 @@ export function decodeLayer(reader: Reader, length?: number): Layer {
       message.features.push(decodeTile_Feature(reader, reader.uint32()));
       break;
       case 3:
-      message.keys.push(reader.string());
+      if ((tag & 7) === 2) {
+        const end2 = reader.uint32() + reader.pos;
+        while (reader.pos < end2) {
+          message.keys.push(reader.string());
+        }
+      } else {
+        message.keys.push(reader.string());
+      }
       break;
       case 4:
       message.values.push(decodeTile_Value(reader, reader.uint32()));
@@ -158,13 +183,15 @@ export function decodeLayer(reader: Reader, length?: number): Layer {
 export function encodeLayer(message: Layer, writer: Writer = new Writer()): Writer {
   writer.uint32(120).uint32(message.version);
   writer.uint32(10).string(message.name);
-  for (let v of message.features) {
+  for (const v of message.features) {
     encodeTile_Feature(v, writer.uint32(18).fork()).ldelim();
   }
-  for (let v of message.keys) {
-    writer.uint32(26).string(v);
+  writer.uint32(26).fork();
+  for (const v of message.keys) {
+    writer.string(v);
   }
-  for (let v of message.values) {
+  writer.ldelim();
+  for (const v of message.values) {
     encodeTile_Value(v, writer.uint32(34).fork()).ldelim();
   }
   writer.uint32(40).uint32(message.extent);
@@ -206,7 +233,7 @@ export function decodeTile(reader: Reader, length?: number): Tile {
 }
 
 export function encodeTile(message: Tile, writer: Writer = new Writer()): Writer {
-  for (let v of message.layers) {
+  for (const v of message.layers) {
     encodeTile_Layer(v, writer.uint32(26).fork()).ldelim();
   }
   return writer;

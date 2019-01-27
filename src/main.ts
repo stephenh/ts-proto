@@ -74,7 +74,8 @@ function generateDecode(messageDesc: DescriptorProto): FunctionSpec {
   });
 
   // start the tag loop
-  func = func.beginControlFlow('while (reader.pos < end)')
+  func = func
+    .beginControlFlow('while (reader.pos < end)')
     .addStatement('const tag = reader.uint32()')
     .beginControlFlow('switch (tag >>> 3)');
 
@@ -95,7 +96,18 @@ function generateDecode(messageDesc: DescriptorProto): FunctionSpec {
     }
 
     if (field.label === FieldDescriptorProto.Label.LABEL_REPEATED) {
-      func = func.addStatement('message.%L.push(%L)', field.name, readSnippet);
+      if (isMessage(field)) {
+        func = func.addStatement('message.%L.push(%L)', field.name, readSnippet);
+      } else {
+        func = func.beginControlFlow('if ((tag & 7) === 2)')
+          .addStatement('const end2 = reader.uint32() + reader.pos')
+          .beginControlFlow('while (reader.pos < end2)')
+          .addStatement('message.%L.push(%L)', field.name, readSnippet)
+          .endControlFlow()
+          .nextControlFlow('else')
+          .addStatement('message.%L.push(%L)', field.name, readSnippet)
+          .endControlFlow();
+      }
     } else {
       func = func.addStatement('message.%L = %L', field.name, readSnippet);
     }
@@ -139,10 +151,20 @@ function generateEncode(messageDesc: DescriptorProto): FunctionSpec {
     }
 
     if (field.label === FieldDescriptorProto.Label.LABEL_REPEATED) {
-      func = func
-        .beginControlFlow('for (let v of %L)', `message.${field.name}`)
-        .addStatement(writeSnippet, 'v')
-        .endControlFlow();
+      if (isMessage(field)) {
+        func = func
+          .beginControlFlow('for (const v of message.%L)', field.name)
+          .addStatement(writeSnippet, 'v')
+          .endControlFlow();
+      } else {
+        const tag = (field.number << 3 | 2) >>> 0;
+        func = func
+          .addStatement('writer.uint32(%L).fork()', tag)
+          .beginControlFlow('for (const v of message.%L)', field.name)
+          .addStatement('writer.%L(v)', toReaderCall(field))
+          .endControlFlow()
+          .addStatement('writer.ldelim()');
+      }
     } else {
       func = func.addStatement(writeSnippet, `message.${field.name}`);
     }
