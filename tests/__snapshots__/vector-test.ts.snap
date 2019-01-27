@@ -4,9 +4,25 @@ exports[`vector-tile works 1`] = `
 "import {Reader, Writer} from 'protobufjs';
 
 
+const baseTile: object = {
+  layers: null,
+}
+;
+
+const baseTile_Value: object = {
+  string_value: \\"\\",
+  float_value: 0,
+  double_value: 0,
+  int_value: 0,
+  uint_value: 0,
+  sint_value: 0,
+  bool_value: false,
+}
+;
+
 export function decodeTile_Value(reader: Reader, length?: number): Tile_Value {
   let end = length === undefined ? reader.len : reader.pos + length;
-  const message = {} as Tile_Value;
+  const message = Object.create(baseTile_Value) as Tile_Value;
   while (reader.pos < end) {
     const tag = reader.uint32();
     switch (tag >>> 3) {
@@ -60,9 +76,17 @@ export interface Tile_Value {
   bool_value: boolean;
 }
 
+const baseTile_Feature: object = {
+  id: 0,
+  tags: 0,
+  type: 0,
+  geometry: 0,
+}
+;
+
 export function decodeTile_Feature(reader: Reader, length?: number): Tile_Feature {
   let end = length === undefined ? reader.len : reader.pos + length;
-  const message = {} as Tile_Feature;
+  const message = Object.create(baseTile_Feature) as Tile_Feature;
   message.tags = [];
   message.geometry = [];
   while (reader.pos < end) {
@@ -125,9 +149,19 @@ export interface Tile_Feature {
   geometry: Array<number>;
 }
 
+const baseTile_Layer: object = {
+  version: 0,
+  name: \\"\\",
+  features: null,
+  keys: \\"\\",
+  values: null,
+  extent: 0,
+}
+;
+
 export function decodeTile_Layer(reader: Reader, length?: number): Tile_Layer {
   let end = length === undefined ? reader.len : reader.pos + length;
-  const message = {} as Tile_Layer;
+  const message = Object.create(baseTile_Layer) as Tile_Layer;
   message.features = [];
   message.keys = [];
   message.values = [];
@@ -187,7 +221,7 @@ export interface Tile_Layer {
 
 export function decodeTile(reader: Reader, length?: number): Tile {
   let end = length === undefined ? reader.len : reader.pos + length;
-  const message = {} as Tile;
+  const message = Object.create(baseTile) as Tile;
   message.layers = [];
   while (reader.pos < end) {
     const tag = reader.uint32();

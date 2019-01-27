@@ -12,29 +12,22 @@ export function basicWireType(type: FieldDescriptorProto.Type): number {
       return 5;
     case FieldDescriptorProto.Type.TYPE_INT32:
     case FieldDescriptorProto.Type.TYPE_ENUM:
-      return 0;
     case FieldDescriptorProto.Type.TYPE_UINT32:
-      return 0;
     case FieldDescriptorProto.Type.TYPE_SINT32:
       return 0;
     case FieldDescriptorProto.Type.TYPE_FIXED32:
-      return 5;
     case FieldDescriptorProto.Type.TYPE_SFIXED32:
       return 5;
     case FieldDescriptorProto.Type.TYPE_INT64:
-      return 0;
     case FieldDescriptorProto.Type.TYPE_UINT64:
-      return 0;
     case FieldDescriptorProto.Type.TYPE_SINT64:
       return 0;
     case FieldDescriptorProto.Type.TYPE_FIXED64:
-      return 1;
     case FieldDescriptorProto.Type.TYPE_SFIXED64:
       return 1;
     case FieldDescriptorProto.Type.TYPE_BOOL:
       return 0;
     case FieldDescriptorProto.Type.TYPE_STRING:
-      return 2;
     case FieldDescriptorProto.Type.TYPE_BYTES:
       return 2;
     default:
@@ -121,23 +114,17 @@ export function packedType(type: FieldDescriptorProto.Type): number | undefined 
       return 5;
     case FieldDescriptorProto.Type.TYPE_INT32:
     case FieldDescriptorProto.Type.TYPE_ENUM:
-      return 0;
     case FieldDescriptorProto.Type.TYPE_UINT32:
-      return 0;
     case FieldDescriptorProto.Type.TYPE_SINT32:
       return 0;
     case FieldDescriptorProto.Type.TYPE_FIXED32:
-      return 5;
     case FieldDescriptorProto.Type.TYPE_SFIXED32:
       return 5;
     case FieldDescriptorProto.Type.TYPE_INT64:
-      return 0;
     case FieldDescriptorProto.Type.TYPE_UINT64:
-      return 0;
     case FieldDescriptorProto.Type.TYPE_SINT64:
       return 0;
     case FieldDescriptorProto.Type.TYPE_FIXED64:
-      return 1;
     case FieldDescriptorProto.Type.TYPE_SFIXED64:
       return 1;
     case FieldDescriptorProto.Type.TYPE_BOOL:
@@ -146,3 +133,32 @@ export function packedType(type: FieldDescriptorProto.Type): number | undefined 
       return undefined;
   }
 }
+
+export function defaultValue(type: FieldDescriptorProto.Type): any {
+  switch (type) {
+    case FieldDescriptorProto.Type.TYPE_DOUBLE:
+    case FieldDescriptorProto.Type.TYPE_FLOAT:
+    case FieldDescriptorProto.Type.TYPE_INT32:
+    case FieldDescriptorProto.Type.TYPE_ENUM:
+    case FieldDescriptorProto.Type.TYPE_UINT32:
+    case FieldDescriptorProto.Type.TYPE_SINT32:
+    case FieldDescriptorProto.Type.TYPE_FIXED32:
+    case FieldDescriptorProto.Type.TYPE_SFIXED32:
+    case FieldDescriptorProto.Type.TYPE_INT64:
+    case FieldDescriptorProto.Type.TYPE_UINT64:
+    case FieldDescriptorProto.Type.TYPE_SINT64:
+    case FieldDescriptorProto.Type.TYPE_FIXED64:
+    case FieldDescriptorProto.Type.TYPE_SFIXED64:
+      return 0;
+    case FieldDescriptorProto.Type.TYPE_BOOL:
+      return false;
+    case FieldDescriptorProto.Type.TYPE_STRING:
+      return '""';
+    case FieldDescriptorProto.Type.TYPE_BYTES:
+    case FieldDescriptorProto.Type.TYPE_MESSAGE:
+      return null;
+    default:
+      return null;
+  }
+}
+

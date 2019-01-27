@@ -10,7 +10,7 @@ import {
   TypeNames
 } from 'ts-poet';
 import { google } from '../build/pbjs';
-import { basicTypeName, basicWireType, packedType, toReaderCall } from './types';
+import { basicTypeName, basicWireType, defaultValue, packedType, toReaderCall } from './types';
 import DescriptorProto = google.protobuf.DescriptorProto;
 import FieldDescriptorProto = google.protobuf.FieldDescriptorProto;
 import FileDescriptorProto = google.protobuf.FileDescriptorProto;
@@ -36,11 +36,19 @@ function generateEnum(file: FileSpec, enumDesc: EnumDescriptorProto, prefix: str
 }
 
 function generateMessage(file: FileSpec, messageDesc: DescriptorProto, prefix: string = ''): FileSpec {
-  let message = InterfaceSpec.create(prefix + messageDesc.name!).addModifiers(Modifier.EXPORT);
+  const fullName = prefix + messageDesc.name;
+  let message = InterfaceSpec.create(fullName).addModifiers(Modifier.EXPORT);
   for (const fieldDesc of messageDesc.field) {
     const type = toTypeName(fieldDesc);
     message = message.addProperty(PropertySpec.create(fieldDesc.name!, type));
   }
+  // Create default values for decode to use as a prototype
+  let baseMessage = PropertySpec.create('base' + fullName, TypeNames.anyType('object')).addModifiers(Modifier.CONST);
+  let baseMessageInit = CodeBlock.empty().beginHash();
+  for (const fieldDesc of messageDesc.field) {
+    baseMessageInit = baseMessageInit.addHashEntry(fieldDesc.name, defaultValue(fieldDesc.type));
+  }
+  file = file.addProperty(baseMessage.initializerBlock(baseMessageInit.endHash()));
   // TODO not handling oneOfs
   for (const nestedDesc of messageDesc.nestedType) {
     file = generateMessage(file, nestedDesc, prefix + messageDesc.name + '_');
@@ -57,17 +65,18 @@ function generateMessage(file: FileSpec, messageDesc: DescriptorProto, prefix: s
 
 /** Creates a function to decode a message by loop overing the tags. */
 function generateDecode(prefix: string, messageDesc: DescriptorProto): FunctionSpec {
+  const fullName = prefix + messageDesc.name;
   // create the basic function declaration
-  let func = FunctionSpec.create('decode' + prefix + messageDesc.name)
+  let func = FunctionSpec.create('decode' + fullName)
     .addModifiers(Modifier.EXPORT)
     .addParameter('reader', 'Reader@protobufjs')
     .addParameter('length?', 'number')
-    .returns(prefix + messageDesc.name);
+    .returns(fullName);
 
   // add the initial end/message
   func = func
     .addStatement('let end = length === undefined ? reader.len : reader.pos + length')
-    .addStatement('const message = {} as %L', prefix + messageDesc.name);
+    .addStatement('const message = Object.create(base%L) as %L', fullName, fullName);
 
   // initialize all lists
   messageDesc.field.forEach(field => {

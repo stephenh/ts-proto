@@ -12,3 +12,10 @@ Assumptions
 * Proto package is a single snake case, e.g. `foo_bar` not `company.division.project`;
   * Could be changed but for now
 * TS/ES6 module name is the proto package
+
+Todo
+====
+
+* Long
+* OneOf
+* RPC

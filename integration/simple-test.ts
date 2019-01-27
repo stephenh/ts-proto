@@ -66,6 +66,18 @@ describe('simple', () => {
     expect(s2).toEqual(s1);
   });
 
+  it('can decode and fallback to default values', () => {
+    const s1: ISimple = {};
+    const s2 = decodeSimple(Reader.create(PbSimple.encode(PbSimple.fromObject(s1)).finish()));
+    expect(s2.name).toEqual("");
+    expect(s2.age).toEqual(0);
+    expect(s2.state).toEqual(StateEnum.UNKNOWN);
+    expect(s2.grandchildren).toEqual([]);
+    expect(s2.coins).toEqual([]);
+    expect(s2.snacks).toEqual([]);
+    expect(s2.oldStates).toEqual([]);
+  });
+
   it('can encode inner types', () => {
     const s1: Nested = {
       name: 'asdf',
