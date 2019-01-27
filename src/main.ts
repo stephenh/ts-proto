@@ -125,9 +125,9 @@ function generateDecode(prefix: string, messageDesc: DescriptorProto): FunctionS
     func = func.addStatement('break%<');
   });
   func = func
-    .addCode('default:\n')
+    .addCode('default:%>\n')
     .addStatement('reader.skipType(tag & 7)')
-    .addStatement('break');
+    .addStatement('break%<');
   // and then wrap up the switch/while/return
   func = func
     .endControlFlow()

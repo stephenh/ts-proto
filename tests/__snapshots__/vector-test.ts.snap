@@ -48,8 +48,8 @@ export function decodeTile_Value(reader: Reader, length?: number): Tile_Value {
         message.bool_value = reader.bool();
         break;
       default:
-      reader.skipType(tag & 7);
-      break;
+        reader.skipType(tag & 7);
+        break;
     }
   }
   return message;
@@ -119,8 +119,8 @@ export function decodeTile_Feature(reader: Reader, length?: number): Tile_Featur
         }
         break;
       default:
-      reader.skipType(tag & 7);
-      break;
+        reader.skipType(tag & 7);
+        break;
     }
   }
   return message;
@@ -187,8 +187,8 @@ export function decodeTile_Layer(reader: Reader, length?: number): Tile_Layer {
         message.extent = reader.uint32();
         break;
       default:
-      reader.skipType(tag & 7);
-      break;
+        reader.skipType(tag & 7);
+        break;
     }
   }
   return message;
@@ -230,8 +230,8 @@ export function decodeTile(reader: Reader, length?: number): Tile {
         message.layers.push(decodeTile_Layer(reader, reader.uint32()));
         break;
       default:
-      reader.skipType(tag & 7);
-      break;
+        reader.skipType(tag & 7);
+        break;
     }
   }
   return message;

@@ -62,8 +62,8 @@ export function decodeSimple(reader: Reader, length?: number): Simple {
         }
         break;
       default:
-      reader.skipType(tag & 7);
-      break;
+        reader.skipType(tag & 7);
+        break;
     }
   }
   return message;
@@ -119,8 +119,8 @@ export function decodeChild(reader: Reader, length?: number): Child {
         message.name = reader.string();
         break;
       default:
-      reader.skipType(tag & 7);
-      break;
+        reader.skipType(tag & 7);
+        break;
     }
   }
   return message;
@@ -163,8 +163,8 @@ export function decodeNested_InnerMessage_DeepMessage(reader: Reader, length?: n
         message.name = reader.string();
         break;
       default:
-      reader.skipType(tag & 7);
-      break;
+        reader.skipType(tag & 7);
+        break;
     }
   }
   return message;
@@ -192,8 +192,8 @@ export function decodeNested_InnerMessage(reader: Reader, length?: number): Nest
         message.deep = decodeNested_InnerMessage_DeepMessage(reader, reader.uint32());
         break;
       default:
-      reader.skipType(tag & 7);
-      break;
+        reader.skipType(tag & 7);
+        break;
     }
   }
   return message;
@@ -226,8 +226,8 @@ export function decodeNested(reader: Reader, length?: number): Nested {
         message.state = reader.int32();
         break;
       default:
-      reader.skipType(tag & 7);
-      break;
+        reader.skipType(tag & 7);
+        break;
     }
   }
   return message;
