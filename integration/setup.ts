@@ -6,13 +6,16 @@ import { StringBuffer } from 'ts-poet/build/StringBuffer';
 import { promisify } from 'util';
 
 async function main() {
-  const stdin = await promisify(readFile)('./simple.bin');
+  await generate('./simple.bin');
+  await generate('./vector_tile.bin');
+}
+
+async function generate(path: string) {
+  const stdin = await promisify(readFile)(path);
   const request = CodeGeneratorRequest.decode(stdin);
   for (let file of request.protoFile) {
     const spec = generateFile(file);
-    const out = new StringBuffer();
-    spec.emit(out);
-    await promisify(writeFile)('./build/ts_proto_tests.ts', out.toString());
+    await promisify(writeFile)(`./build/${spec.path}.ts`, spec.toString());
   }
 }
 
