@@ -89,14 +89,12 @@ function generateDecode(messageDesc: DescriptorProto): FunctionSpec {
     } else if (isMessage(field)) {
       const [module, type] = toModuleAndType(field.typeName);
       readSnippet = `decode${type}(reader, reader.uint32())`;
-    } else if (isEnum(field)) {
-      readSnippet = `reader.int32()`;
     } else {
       throw new Error(`Unhandled field ${field}`);
     }
 
     if (field.label === FieldDescriptorProto.Label.LABEL_REPEATED) {
-      if (packedType(field.type) === undefined && !isEnum(field)) {
+      if (packedType(field.type) === undefined) {
         func = func.addStatement('message.%L.push(%L)', field.name, readSnippet);
       } else {
         func = func
@@ -144,15 +142,12 @@ function generateEncode(messageDesc: DescriptorProto): FunctionSpec {
       const tag = ((field.number << 3) | 2) >>> 0;
       const [module, type] = toModuleAndType(field.typeName);
       writeSnippet = `encode${type}(%L, writer.uint32(${tag}).fork()).ldelim()`;
-    } else if (isEnum(field)) {
-      const tag = ((field.number << 3) | basicWireType(FieldDescriptorProto.Type.TYPE_INT32)) >>> 0;
-      writeSnippet = `writer.uint32(${tag}).int32(%L)`;
     } else {
       throw new Error(`Unhandled field ${field}`);
     }
 
     if (field.label === FieldDescriptorProto.Label.LABEL_REPEATED) {
-      if (packedType(field.type) === undefined && !isEnum(field)) {
+      if (packedType(field.type) === undefined) {
         func = func
           .beginControlFlow('for (const v of message.%L)', field.name)
           .addStatement(writeSnippet, 'v')
@@ -174,11 +169,7 @@ function generateEncode(messageDesc: DescriptorProto): FunctionSpec {
 }
 
 function isPrimitive(field: FieldDescriptorProto): boolean {
-  return !isEnum(field) && !isMessage(field);
-}
-
-function isEnum(field: FieldDescriptorProto): boolean {
-  return field.type == FieldDescriptorProto.Type.TYPE_ENUM;
+  return !isMessage(field);
 }
 
 function isMessage(field: FieldDescriptorProto): boolean {

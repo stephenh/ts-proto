@@ -11,6 +11,7 @@ export function basicWireType(type: FieldDescriptorProto.Type): number {
     case FieldDescriptorProto.Type.TYPE_FLOAT:
       return 5;
     case FieldDescriptorProto.Type.TYPE_INT32:
+    case FieldDescriptorProto.Type.TYPE_ENUM:
       return 0;
     case FieldDescriptorProto.Type.TYPE_UINT32:
       return 0;
@@ -119,6 +120,7 @@ export function packedType(type: FieldDescriptorProto.Type): number | undefined 
     case FieldDescriptorProto.Type.TYPE_FLOAT:
       return 5;
     case FieldDescriptorProto.Type.TYPE_INT32:
+    case FieldDescriptorProto.Type.TYPE_ENUM:
       return 0;
     case FieldDescriptorProto.Type.TYPE_UINT32:
       return 0;
