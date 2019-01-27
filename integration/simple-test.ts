@@ -2,7 +2,7 @@ import { Reader } from 'protobufjs';
 import { decodeSimple, encodeSimple, Simple, StateEnum } from '../build/ts_proto_tests';
 import { ts_proto_tests as pbjs } from '../build/pbjs';
 import ISimple = pbjs.ISimple;
-import PbChild = pbjs.Simple;
+import PbChild = pbjs.Child;
 import PbSimple = pbjs.Simple;
 import PbState = pbjs.StateEnum;
 
@@ -12,7 +12,8 @@ describe('simple', () => {
       name: 'asdf',
       age: 1,
       child: { name: 'child' },
-      state: StateEnum.ON
+      state: StateEnum.ON,
+      grandchildren: [{ name: 'grand1' }, { name: 'grand2' }]
     };
     expect(simple.name).toEqual('asdf');
   });
@@ -22,7 +23,8 @@ describe('simple', () => {
       name: 'asdf',
       age: 1,
       child: PbChild.fromObject({ name: 'foo' }),
-      state: PbState.ON
+      state: PbState.ON,
+      grandchildren: [PbChild.fromObject({ name: 'grand1' }), PbChild.fromObject({ name: 'grand2' })]
     };
     const s2 = decodeSimple(Reader.create(PbSimple.encode(PbSimple.fromObject(s1)).finish()));
     expect(s2).toEqual(s1);
@@ -33,7 +35,8 @@ describe('simple', () => {
       name: 'asdf',
       age: 1,
       child: { name: 'foo' },
-      state: StateEnum.ON
+      state: StateEnum.ON,
+      grandchildren: [{ name: 'grand1' }, { name: 'grand2' }]
     };
     const s2 = PbSimple.toObject(PbSimple.decode(encodeSimple(s1).finish()));
     expect(s2).toEqual(s1);

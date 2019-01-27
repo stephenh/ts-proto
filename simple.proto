@@ -6,6 +6,7 @@ message Simple {
   int32 age = 2;
   Child child = 3;
   StateEnum state = 4;
+  repeated Child grandchildren = 5;
 }
 
 message Child {

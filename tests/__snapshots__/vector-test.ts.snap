@@ -71,6 +71,8 @@ export interface Tile_Value {
 export function decodeFeature(reader: Reader, length?: number): Feature {
   let end = length === undefined ? reader.len : reader.pos + length;
   const message = {} as Feature;
+  message.tags = [];
+  message.geometry = [];
   while (reader.pos < end) {
     const tag = reader.uint32();
     switch (tag >>> 3) {
@@ -78,13 +80,13 @@ export function decodeFeature(reader: Reader, length?: number): Feature {
       message.id = reader.uint64();
       break;
       case 2:
-      message.tags = reader.uint32();
+      message.tags.push(reader.uint32());
       break;
       case 3:
       message.type = reader.int32();
       break;
       case 4:
-      message.geometry = reader.uint32();
+      message.geometry.push(reader.uint32());
       break;
       default:
       reader.skipType(tag & 7);
@@ -96,9 +98,13 @@ export function decodeFeature(reader: Reader, length?: number): Feature {
 
 export function encodeFeature(message: Feature, writer: Writer = new Writer()): Writer {
   writer.uint32(8).uint64(message.id);
-  writer.uint32(16).uint32(message.tags);
+  for (let v of message.tags) {
+    writer.uint32(16).uint32(v);
+  }
   writer.uint32(24).int32(message.type);
-  writer.uint32(32).uint32(message.geometry);
+  for (let v of message.geometry) {
+    writer.uint32(32).uint32(v);
+  }
   return writer;
 }
 
@@ -117,6 +123,9 @@ export interface Tile_Feature {
 export function decodeLayer(reader: Reader, length?: number): Layer {
   let end = length === undefined ? reader.len : reader.pos + length;
   const message = {} as Layer;
+  message.features = [];
+  message.keys = [];
+  message.values = [];
   while (reader.pos < end) {
     const tag = reader.uint32();
     switch (tag >>> 3) {
@@ -127,13 +136,13 @@ export function decodeLayer(reader: Reader, length?: number): Layer {
       message.name = reader.string();
       break;
       case 2:
-      message.features = decodeTile_Feature(reader, reader.uint32());
+      message.features.push(decodeTile_Feature(reader, reader.uint32()));
       break;
       case 3:
-      message.keys = reader.string();
+      message.keys.push(reader.string());
       break;
       case 4:
-      message.values = decodeTile_Value(reader, reader.uint32());
+      message.values.push(decodeTile_Value(reader, reader.uint32()));
       break;
       case 5:
       message.extent = reader.uint32();
@@ -149,9 +158,15 @@ export function decodeLayer(reader: Reader, length?: number): Layer {
 export function encodeLayer(message: Layer, writer: Writer = new Writer()): Writer {
   writer.uint32(120).uint32(message.version);
   writer.uint32(10).string(message.name);
-  encodeTile_Feature(message.features, writer.uint32(18).fork()).ldelim();
-  writer.uint32(26).string(message.keys);
-  encodeTile_Value(message.values, writer.uint32(34).fork()).ldelim();
+  for (let v of message.features) {
+    encodeTile_Feature(v, writer.uint32(18).fork()).ldelim();
+  }
+  for (let v of message.keys) {
+    writer.uint32(26).string(v);
+  }
+  for (let v of message.values) {
+    encodeTile_Value(v, writer.uint32(34).fork()).ldelim();
+  }
   writer.uint32(40).uint32(message.extent);
   return writer;
 }
@@ -175,11 +190,12 @@ export interface Tile_Layer {
 export function decodeTile(reader: Reader, length?: number): Tile {
   let end = length === undefined ? reader.len : reader.pos + length;
   const message = {} as Tile;
+  message.layers = [];
   while (reader.pos < end) {
     const tag = reader.uint32();
     switch (tag >>> 3) {
       case 3:
-      message.layers = decodeTile_Layer(reader, reader.uint32());
+      message.layers.push(decodeTile_Layer(reader, reader.uint32()));
       break;
       default:
       reader.skipType(tag & 7);
@@ -190,7 +206,9 @@ export function decodeTile(reader: Reader, length?: number): Tile {
 }
 
 export function encodeTile(message: Tile, writer: Writer = new Writer()): Writer {
-  encodeTile_Layer(message.layers, writer.uint32(26).fork()).ldelim();
+  for (let v of message.layers) {
+    encodeTile_Layer(v, writer.uint32(26).fork()).ldelim();
+  }
   return writer;
 }
 

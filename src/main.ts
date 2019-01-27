@@ -60,23 +60,44 @@ function generateDecode(messageDesc: DescriptorProto): FunctionSpec {
     .addParameter('reader', 'Reader@protobufjs')
     .addParameter('length?', 'number')
     .returns(messageDesc.name);
-  // now add the initial end/message/while setup
+
+  // add the initial end/message
   func = func
     .addStatement('let end = length === undefined ? reader.len : reader.pos + length')
-    .addStatement('const message = {} as %L', messageDesc.name)
-    .beginControlFlow('while (reader.pos < end)')
+    .addStatement('const message = {} as %L', messageDesc.name);
+
+  // initialize all lists
+  messageDesc.field.forEach(field => {
+    if (field.label === FieldDescriptorProto.Label.LABEL_REPEATED) {
+      func = func.addStatement('message.%L = []', field.name);
+    }
+  });
+
+  // start the tag loop
+  func = func.beginControlFlow('while (reader.pos < end)')
     .addStatement('const tag = reader.uint32()')
     .beginControlFlow('switch (tag >>> 3)');
-  // then add a case for each field
+
+  // add a case for each incoming field
   messageDesc.field.forEach(field => {
     func = func.addCode('case %L:\n', field.number);
+
+    let readSnippet: string;
     if (isPrimitive(field)) {
-      func = func.addStatement('message.%L = reader.%L()', field.name, toReaderCall(field));
+      readSnippet = `reader.${toReaderCall(field)}()`;
     } else if (isMessage(field)) {
       const [module, type] = toModuleAndType(field.typeName);
-      func = func.addStatement('message.%L = %L(reader, reader.uint32())', field.name, 'decode' + type);
+      readSnippet = `decode${type}(reader, reader.uint32())`;
     } else if (isEnum(field)) {
-      func = func.addStatement('message.%L = reader.int32()', field.name);
+      readSnippet = `reader.int32()`;
+    } else {
+      throw new Error(`Unhandled field ${field}`);
+    }
+
+    if (field.label === FieldDescriptorProto.Label.LABEL_REPEATED) {
+      func = func.addStatement('message.%L.push(%L)', field.name, readSnippet);
+    } else {
+      func = func.addStatement('message.%L = %L', field.name, readSnippet);
     }
     func = func.addStatement('break');
   });
@@ -102,16 +123,28 @@ function generateEncode(messageDesc: DescriptorProto): FunctionSpec {
     .returns('Writer@protobufjs');
   // then add a case for each field
   messageDesc.field.forEach(field => {
+    let writeSnippet: string;
     if (isPrimitive(field)) {
       const tag = ((field.number << 3) | basicWireType(field.type)) >>> 0;
-      func = func.addStatement('writer.uint32(%L).%L(message.%L)', tag, toReaderCall(field), field.name);
+      writeSnippet = `writer.uint32(${tag}).${toReaderCall(field)}(%L)`;
     } else if (isMessage(field)) {
       const tag = ((field.number << 3) | 2) >>> 0;
       const [module, type] = toModuleAndType(field.typeName);
-      func = func.addStatement('%L(message.%L, writer.uint32(%L).fork()).ldelim()', 'encode' + type, field.name, tag);
+      writeSnippet = `encode${type}(%L, writer.uint32(${tag}).fork()).ldelim()`;
     } else if (isEnum(field)) {
       const tag = ((field.number << 3) | basicWireType(FieldDescriptorProto.Type.TYPE_INT32)) >>> 0;
-      func = func.addStatement('writer.uint32(%L).int32(message.%L)', tag, field.name);
+      writeSnippet = `writer.uint32(${tag}).int32(%L)`;
+    } else {
+      throw new Error(`Unhandled field ${field}`);
+    }
+
+    if (field.label === FieldDescriptorProto.Label.LABEL_REPEATED) {
+      func = func
+        .beginControlFlow('for (let v of %L)', `message.${field.name}`)
+        .addStatement(writeSnippet, 'v')
+        .endControlFlow();
+    } else {
+      func = func.addStatement(writeSnippet, `message.${field.name}`);
     }
   });
   return func.addStatement('return writer');
