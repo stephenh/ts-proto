@@ -21,3 +21,24 @@ enum StateEnum {
   ON = 2;
   OFF = 3;
 }
+
+message Nested {
+  string name = 1;
+  InnerMessage message = 2;
+  InnerEnum state = 3;
+
+  message InnerMessage {
+    string name = 1;
+    DeepMessage deep = 2;
+
+    message DeepMessage {
+      string name = 1;
+    }
+  }
+
+  enum InnerEnum {
+    UNKNOWN_INNER = 0;
+    GOOD = 100;
+    BAD = 1000;
+  }
+}

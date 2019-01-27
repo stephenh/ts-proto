@@ -27,44 +27,47 @@ export function generateFile(fileDesc: FileDescriptorProto): FileSpec {
   return file;
 }
 
-function generateEnum(file: FileSpec, enumDesc: EnumDescriptorProto): FileSpec {
-  let spec = EnumSpec.create(enumDesc.name).addModifiers(Modifier.EXPORT);
+function generateEnum(file: FileSpec, enumDesc: EnumDescriptorProto, prefix: string = ''): FileSpec {
+  let spec = EnumSpec.create(prefix + enumDesc.name).addModifiers(Modifier.EXPORT);
   for (const valueDesc of enumDesc.value) {
     spec = spec.addConstant(valueDesc.name, valueDesc.number.toString());
   }
   return file.addEnum(spec);
 }
 
-function generateMessage(file: FileSpec, messageDesc: DescriptorProto, outerMessagePrefix: string = ''): FileSpec {
-  let message = InterfaceSpec.create(outerMessagePrefix + messageDesc.name!).addModifiers(Modifier.EXPORT);
+function generateMessage(file: FileSpec, messageDesc: DescriptorProto, prefix: string = ''): FileSpec {
+  let message = InterfaceSpec.create(prefix + messageDesc.name!).addModifiers(Modifier.EXPORT);
   for (const fieldDesc of messageDesc.field) {
     const type = toTypeName(fieldDesc);
     message = message.addProperty(PropertySpec.create(fieldDesc.name!, type));
   }
-  // TODO not handling other nested, like enums
   // TODO not handling oneOfs
   for (const nestedDesc of messageDesc.nestedType) {
-    file = generateMessage(file, nestedDesc, outerMessagePrefix + messageDesc.name + '_');
+    file = generateMessage(file, nestedDesc, prefix + messageDesc.name + '_');
   }
-  return file
-    .addFunction(generateDecode(messageDesc))
-    .addFunction(generateEncode(messageDesc))
+  file = file
+    .addFunction(generateDecode(prefix, messageDesc))
+    .addFunction(generateEncode(prefix, messageDesc))
     .addInterface(message);
+  for (const enumDesc of messageDesc.enumType) {
+    file = generateEnum(file, enumDesc, prefix + messageDesc.name + '_');
+  }
+  return file;
 }
 
 /** Creates a function to decode a message by loop overing the tags. */
-function generateDecode(messageDesc: DescriptorProto): FunctionSpec {
+function generateDecode(prefix: String, messageDesc: DescriptorProto): FunctionSpec {
   // create the basic function declaration
-  let func = FunctionSpec.create('decode' + messageDesc.name)
+  let func = FunctionSpec.create('decode' + prefix + messageDesc.name)
     .addModifiers(Modifier.EXPORT)
     .addParameter('reader', 'Reader@protobufjs')
     .addParameter('length?', 'number')
-    .returns(messageDesc.name);
+    .returns(prefix + messageDesc.name);
 
   // add the initial end/message
   func = func
     .addStatement('let end = length === undefined ? reader.len : reader.pos + length')
-    .addStatement('const message = {} as %L', messageDesc.name);
+    .addStatement('const message = {} as %L', prefix + messageDesc.name);
 
   // initialize all lists
   messageDesc.field.forEach(field => {
@@ -125,11 +128,11 @@ function generateDecode(messageDesc: DescriptorProto): FunctionSpec {
 }
 
 /** Creates a function to encode a message by loop overing the tags. */
-function generateEncode(messageDesc: DescriptorProto): FunctionSpec {
+function generateEncode(prefix: String, messageDesc: DescriptorProto): FunctionSpec {
   // create the basic function declaration
-  let func = FunctionSpec.create('encode' + messageDesc.name)
+  let func = FunctionSpec.create('encode' + prefix + messageDesc.name)
     .addModifiers(Modifier.EXPORT)
-    .addParameter('message', messageDesc.name)
+    .addParameter('message', prefix + messageDesc.name)
     .addParameter('writer', 'Writer@protobufjs', { defaultValueField: CodeBlock.of('new Writer()') })
     .returns('Writer@protobufjs');
   // then add a case for each field
