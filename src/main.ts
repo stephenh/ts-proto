@@ -10,7 +10,7 @@ import {
   TypeNames
 } from 'ts-poet';
 import { google } from '../build/pbjs';
-import { basicTypeName, basicWireType, defaultValue, packedType, toReaderCall } from './types';
+import { basicLongWireType, basicTypeName, basicWireType, defaultValue, packedType, toReaderCall } from './types';
 import DescriptorProto = google.protobuf.DescriptorProto;
 import FieldDescriptorProto = google.protobuf.FieldDescriptorProto;
 import FileDescriptorProto = google.protobuf.FileDescriptorProto;
@@ -24,7 +24,22 @@ export function generateFile(fileDesc: FileDescriptorProto): FileSpec {
   for (const enumDesc of fileDesc.enumType) {
     file = generateEnum(file, enumDesc);
   }
+  file = addLongUtilityMethod(file);
   return file;
+}
+
+function addLongUtilityMethod(file: FileSpec): FileSpec {
+  return file.addFunction(
+    FunctionSpec.create('longToNumber')
+      .addParameter('long', 'Long*long')
+      .addCodeBlock(
+        CodeBlock.empty()
+          .beginControlFlow('if (long.gt(Number.MAX_VALUE))')
+          .addStatement('throw new Error("Value is larger than Number.MAX_VALUE");')
+          .endControlFlow()
+          .addStatement('return long.toNumber()')
+      )
+  );
 }
 
 function generateEnum(file: FileSpec, enumDesc: EnumDescriptorProto, prefix: string = ''): FileSpec {
@@ -37,16 +52,17 @@ function generateEnum(file: FileSpec, enumDesc: EnumDescriptorProto, prefix: str
 
 function generateMessage(file: FileSpec, messageDesc: DescriptorProto, prefix: string = ''): FileSpec {
   const fullName = prefix + messageDesc.name;
+  // Create the interface with properties
   let message = InterfaceSpec.create(fullName).addModifiers(Modifier.EXPORT);
   for (const fieldDesc of messageDesc.field) {
     const type = toTypeName(fieldDesc);
-    message = message.addProperty(PropertySpec.create(fieldDesc.name!, type));
+    message = message.addProperty(PropertySpec.create(snakeToCamel(fieldDesc.name), type));
   }
-  // Create default values for decode to use as a prototype
+  // Create a 'base' instance with default values for decode to use as a prototype
   let baseMessage = PropertySpec.create('base' + fullName, TypeNames.anyType('object')).addModifiers(Modifier.CONST);
   let baseMessageInit = CodeBlock.empty().beginHash();
   for (const fieldDesc of messageDesc.field) {
-    baseMessageInit = baseMessageInit.addHashEntry(fieldDesc.name, defaultValue(fieldDesc.type));
+    baseMessageInit = baseMessageInit.addHashEntry(snakeToCamel(fieldDesc.name), defaultValue(fieldDesc.type));
   }
   file = file.addProperty(baseMessage.initializerBlock(baseMessageInit.endHash()));
   // TODO not handling oneOfs
@@ -69,7 +85,7 @@ function generateDecode(prefix: string, messageDesc: DescriptorProto): FunctionS
   // create the basic function declaration
   let func = FunctionSpec.create('decode' + fullName)
     .addModifiers(Modifier.EXPORT)
-    .addParameter('reader', 'Reader@protobufjs')
+    .addParameter('reader', 'Reader@protobufjs/minimal')
     .addParameter('length?', 'number')
     .returns(fullName);
 
@@ -80,8 +96,9 @@ function generateDecode(prefix: string, messageDesc: DescriptorProto): FunctionS
 
   // initialize all lists
   messageDesc.field.forEach(field => {
+    const fieldName = snakeToCamel(field.name);
     if (field.label === FieldDescriptorProto.Label.LABEL_REPEATED) {
-      func = func.addStatement('message.%L = []', field.name);
+      func = func.addStatement('message.%L = []', fieldName);
     }
   });
 
@@ -93,11 +110,15 @@ function generateDecode(prefix: string, messageDesc: DescriptorProto): FunctionS
 
   // add a case for each incoming field
   messageDesc.field.forEach(field => {
+    const fieldName = snakeToCamel(field.name);
     func = func.addCode('case %L:%>\n', field.number);
 
     let readSnippet: string;
     if (isPrimitive(field)) {
       readSnippet = `reader.${toReaderCall(field)}()`;
+      if (basicLongWireType(field.type) !== undefined) {
+        readSnippet = `longToNumber(${readSnippet} as Long)`;
+      }
     } else if (isMessage(field)) {
       const [module, type] = toModuleAndType(field.typeName);
       readSnippet = `decode${type}(reader, reader.uint32())`;
@@ -107,20 +128,20 @@ function generateDecode(prefix: string, messageDesc: DescriptorProto): FunctionS
 
     if (field.label === FieldDescriptorProto.Label.LABEL_REPEATED) {
       if (packedType(field.type) === undefined) {
-        func = func.addStatement('message.%L.push(%L)', field.name, readSnippet);
+        func = func.addStatement('message.%L.push(%L)', fieldName, readSnippet);
       } else {
         func = func
           .beginControlFlow('if ((tag & 7) === 2)')
           .addStatement('const end2 = reader.uint32() + reader.pos')
           .beginControlFlow('while (reader.pos < end2)')
-          .addStatement('message.%L.push(%L)', field.name, readSnippet)
+          .addStatement('message.%L.push(%L)', fieldName, readSnippet)
           .endControlFlow()
           .nextControlFlow('else')
-          .addStatement('message.%L.push(%L)', field.name, readSnippet)
+          .addStatement('message.%L.push(%L)', fieldName, readSnippet)
           .endControlFlow();
       }
     } else {
-      func = func.addStatement('message.%L = %L', field.name, readSnippet);
+      func = func.addStatement('message.%L = %L', fieldName, readSnippet);
     }
     func = func.addStatement('break%<');
   });
@@ -142,10 +163,11 @@ function generateEncode(prefix: string, messageDesc: DescriptorProto): FunctionS
   let func = FunctionSpec.create('encode' + prefix + messageDesc.name)
     .addModifiers(Modifier.EXPORT)
     .addParameter('message', prefix + messageDesc.name)
-    .addParameter('writer', 'Writer@protobufjs', { defaultValueField: CodeBlock.of('new Writer()') })
-    .returns('Writer@protobufjs');
+    .addParameter('writer', 'Writer@protobufjs/minimal', { defaultValueField: CodeBlock.of('new Writer()') })
+    .returns('Writer@protobufjs/minimal');
   // then add a case for each field
   messageDesc.field.forEach(field => {
+    const fieldName = snakeToCamel(field.name);
     let writeSnippet: string;
     if (isPrimitive(field)) {
       const tag = ((field.number << 3) | basicWireType(field.type)) >>> 0;
@@ -161,20 +183,20 @@ function generateEncode(prefix: string, messageDesc: DescriptorProto): FunctionS
     if (field.label === FieldDescriptorProto.Label.LABEL_REPEATED) {
       if (packedType(field.type) === undefined) {
         func = func
-          .beginControlFlow('for (const v of message.%L)', field.name)
+          .beginControlFlow('for (const v of message.%L)', fieldName)
           .addStatement(writeSnippet, 'v')
           .endControlFlow();
       } else {
         const tag = ((field.number << 3) | 2) >>> 0;
         func = func
           .addStatement('writer.uint32(%L).fork()', tag)
-          .beginControlFlow('for (const v of message.%L)', field.name)
+          .beginControlFlow('for (const v of message.%L)', fieldName)
           .addStatement('writer.%L(v)', toReaderCall(field))
           .endControlFlow()
           .addStatement('writer.ldelim()');
       }
     } else {
-      func = func.addStatement(writeSnippet, `message.${field.name}`);
+      func = func.addStatement(writeSnippet, `message.${fieldName}`);
     }
   });
   return func.addStatement('return writer');
@@ -213,4 +235,8 @@ export function toModuleAndType(protoType: string): [string, string] {
     message += '_' + parts.shift();
   }
   return [namespace, message];
+}
+
+function snakeToCamel(s: string): string {
+  return s.replace(/(\_\w)/g, m => m[1].toUpperCase());
 }

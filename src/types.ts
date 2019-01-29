@@ -35,6 +35,21 @@ export function basicWireType(type: FieldDescriptorProto.Type): number {
   }
 }
 
+export function basicLongWireType(type: FieldDescriptorProto.Type): number | undefined {
+  switch (type) {
+    case FieldDescriptorProto.Type.TYPE_INT64:
+    case FieldDescriptorProto.Type.TYPE_UINT64:
+    case FieldDescriptorProto.Type.TYPE_SINT64:
+      return 0;
+    case FieldDescriptorProto.Type.TYPE_FIXED64:
+    case FieldDescriptorProto.Type.TYPE_SFIXED64:
+      return 1;
+    default:
+      return undefined;
+  }
+}
+
+
 /** Returns the type name without any repeated/required/etc. labels. */
 export function basicTypeName(field: FieldDescriptorProto): TypeName {
   switch (field.type) {
@@ -51,7 +66,7 @@ export function basicTypeName(field: FieldDescriptorProto): TypeName {
     case FieldDescriptorProto.Type.TYPE_SINT64:
     case FieldDescriptorProto.Type.TYPE_FIXED64:
     case FieldDescriptorProto.Type.TYPE_SFIXED64:
-      // type = config.forceLong ? "Long" : config.forceNumber ? "number" : "number|Long";
+      // this handles 2^53, Long is only needed for 2^64; this is effectively pbjs's forceNumber
       return TypeNames.NUMBER;
     case FieldDescriptorProto.Type.TYPE_BOOL:
       return TypeNames.BOOLEAN;
