@@ -1,4 +1,5 @@
-import {Reader, Writer} from 'protobufjs';
+import {Reader, Writer} from 'protobufjs/minimal';
+import * as Long from 'long';
 
 
 const baseSimple: object = {
@@ -256,4 +257,11 @@ export enum StateEnum {
   UNKNOWN = 0,
   ON = 2,
   OFF = 3,
+}
+
+function longToNumber(long: Long) {
+  if (long.gt(Number.MAX_VALUE)) {
+    throw new Error("Value is larger than Number.MAX_VALUE");;
+  }
+  return long.toNumber();
 }

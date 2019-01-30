@@ -1,7 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`vector-tile works 1`] = `
-"import {Reader, Writer} from 'protobufjs';
+"import {Reader, Writer} from 'protobufjs/minimal';
+import * as Long from 'long';
 
 
 const baseTile: object = {
@@ -10,13 +11,13 @@ const baseTile: object = {
 ;
 
 const baseTile_Value: object = {
-  string_value: \\"\\",
-  float_value: 0,
-  double_value: 0,
-  int_value: 0,
-  uint_value: 0,
-  sint_value: 0,
-  bool_value: false,
+  stringValue: \\"\\",
+  floatValue: 0,
+  doubleValue: 0,
+  intValue: 0,
+  uintValue: 0,
+  sintValue: 0,
+  boolValue: false,
 }
 ;
 
@@ -27,25 +28,25 @@ export function decodeTile_Value(reader: Reader, length?: number): Tile_Value {
     const tag = reader.uint32();
     switch (tag >>> 3) {
       case 1:
-        message.string_value = reader.string();
+        message.stringValue = reader.string();
         break;
       case 2:
-        message.float_value = reader.float();
+        message.floatValue = reader.float();
         break;
       case 3:
-        message.double_value = reader.double();
+        message.doubleValue = reader.double();
         break;
       case 4:
-        message.int_value = reader.int64();
+        message.intValue = longToNumber(reader.int64() as Long);
         break;
       case 5:
-        message.uint_value = reader.uint64();
+        message.uintValue = longToNumber(reader.uint64() as Long);
         break;
       case 6:
-        message.sint_value = reader.sint64();
+        message.sintValue = longToNumber(reader.sint64() as Long);
         break;
       case 7:
-        message.bool_value = reader.bool();
+        message.boolValue = reader.bool();
         break;
       default:
         reader.skipType(tag & 7);
@@ -56,24 +57,24 @@ export function decodeTile_Value(reader: Reader, length?: number): Tile_Value {
 }
 
 export function encodeTile_Value(message: Tile_Value, writer: Writer = new Writer()): Writer {
-  writer.uint32(10).string(message.string_value);
-  writer.uint32(21).float(message.float_value);
-  writer.uint32(25).double(message.double_value);
-  writer.uint32(32).int64(message.int_value);
-  writer.uint32(40).uint64(message.uint_value);
-  writer.uint32(48).sint64(message.sint_value);
-  writer.uint32(56).bool(message.bool_value);
+  writer.uint32(10).string(message.stringValue);
+  writer.uint32(21).float(message.floatValue);
+  writer.uint32(25).double(message.doubleValue);
+  writer.uint32(32).int64(message.intValue);
+  writer.uint32(40).uint64(message.uintValue);
+  writer.uint32(48).sint64(message.sintValue);
+  writer.uint32(56).bool(message.boolValue);
   return writer;
 }
 
 export interface Tile_Value {
-  string_value: string;
-  float_value: number;
-  double_value: number;
-  int_value: number;
-  uint_value: number;
-  sint_value: number;
-  bool_value: boolean;
+  stringValue: string;
+  floatValue: number;
+  doubleValue: number;
+  intValue: number;
+  uintValue: number;
+  sintValue: number;
+  boolValue: boolean;
 }
 
 const baseTile_Feature: object = {
@@ -93,7 +94,7 @@ export function decodeTile_Feature(reader: Reader, length?: number): Tile_Featur
     const tag = reader.uint32();
     switch (tag >>> 3) {
       case 1:
-        message.id = reader.uint64();
+        message.id = longToNumber(reader.uint64() as Long);
         break;
       case 2:
         if ((tag & 7) === 2) {
@@ -253,6 +254,13 @@ export enum Tile_GeomType {
   POINT = 1,
   LINESTRING = 2,
   POLYGON = 3,
+}
+
+function longToNumber(long: Long) {
+  if (long.gt(Number.MAX_VALUE)) {
+    throw new Error(\\"Value is larger than Number.MAX_VALUE\\");;
+  }
+  return long.toNumber();
 }
 "
 `;
