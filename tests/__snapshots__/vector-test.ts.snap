@@ -7,8 +7,7 @@ import * as Long from 'long';
 
 const baseTile: object = {
   layers: null,
-}
-;
+};
 
 const baseTile_Value: object = {
   stringValue: \\"\\",
@@ -18,8 +17,7 @@ const baseTile_Value: object = {
   uintValue: 0,
   sintValue: 0,
   boolValue: false,
-}
-;
+};
 
 export function decodeTile_Value(reader: Reader, length?: number): Tile_Value {
   let end = length === undefined ? reader.len : reader.pos + length;
@@ -82,8 +80,7 @@ const baseTile_Feature: object = {
   tags: 0,
   type: 0,
   geometry: 0,
-}
-;
+};
 
 export function decodeTile_Feature(reader: Reader, length?: number): Tile_Feature {
   let end = length === undefined ? reader.len : reader.pos + length;
@@ -157,8 +154,7 @@ const baseTile_Layer: object = {
   keys: \\"\\",
   values: null,
   extent: 0,
-}
-;
+};
 
 export function decodeTile_Layer(reader: Reader, length?: number): Tile_Layer {
   let end = length === undefined ? reader.len : reader.pos + length;
@@ -220,6 +216,13 @@ export interface Tile_Layer {
   extent: number;
 }
 
+export enum Tile_GeomType {
+  UNKNOWN = 0,
+  POINT = 1,
+  LINESTRING = 2,
+  POLYGON = 3,
+}
+
 export function decodeTile(reader: Reader, length?: number): Tile {
   let end = length === undefined ? reader.len : reader.pos + length;
   const message = Object.create(baseTile) as Tile;
@@ -247,13 +250,6 @@ export function encodeTile(message: Tile, writer: Writer = new Writer()): Writer
 
 export interface Tile {
   layers: Array<Tile_Layer>;
-}
-
-export enum Tile_GeomType {
-  UNKNOWN = 0,
-  POINT = 1,
-  LINESTRING = 2,
-  POLYGON = 3,
 }
 
 function longToNumber(long: Long) {

@@ -22,7 +22,8 @@
     "typescript": "^3.0.1"
   },
   "dependencies": {
-    "ts-poet": "^0.2.6",
-    "protobufjs": "^6.8.8"
+    "protobufjs": "^6.8.8",
+    "sequency": "^0.19.2",
+    "ts-poet": "^0.3.0"
   }
 }

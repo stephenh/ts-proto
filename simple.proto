@@ -42,3 +42,10 @@ message Nested {
     BAD = 1000;
   }
 }
+
+message OneOfMessage {
+  oneof name_fields {
+    string first = 1;
+    string last = 2;
+  }
+}

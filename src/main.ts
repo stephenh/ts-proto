@@ -4,6 +4,7 @@ import {
   FileSpec,
   FunctionSpec,
   InterfaceSpec,
+  Member,
   Modifier,
   PropertySpec,
   TypeName,
@@ -15,6 +16,7 @@ import DescriptorProto = google.protobuf.DescriptorProto;
 import FieldDescriptorProto = google.protobuf.FieldDescriptorProto;
 import FileDescriptorProto = google.protobuf.FileDescriptorProto;
 import EnumDescriptorProto = google.protobuf.EnumDescriptorProto;
+import { asSequence } from 'sequency';
 
 export function generateFile(fileDesc: FileDescriptorProto): FileSpec {
   let file = FileSpec.create(fileDesc.package);
@@ -52,31 +54,44 @@ function generateEnum(file: FileSpec, enumDesc: EnumDescriptorProto, prefix: str
 
 function generateMessage(file: FileSpec, messageDesc: DescriptorProto, prefix: string = ''): FileSpec {
   const fullName = prefix + messageDesc.name;
+
   // Create the interface with properties
   let message = InterfaceSpec.create(fullName).addModifiers(Modifier.EXPORT);
+
   for (const fieldDesc of messageDesc.field) {
-    const type = toTypeName(fieldDesc);
-    message = message.addProperty(PropertySpec.create(snakeToCamel(fieldDesc.name), type));
+    if (!isWithinOneOf(fieldDesc)) {
+      message = message.addProperty(PropertySpec.create(snakeToCamel(fieldDesc.name), toTypeName(fieldDesc)));
+    }
   }
+
+  // Create oneOfs as ADTs
+  const oneOfs = createOneOfsMap(messageDesc);
+  for (const [name, fields] of oneOfs.entries()) {
+    message = message.addProperty(generateOneOfProperty(name, fields));
+  }
+
   // Create a 'base' instance with default values for decode to use as a prototype
   let baseMessage = PropertySpec.create('base' + fullName, TypeNames.anyType('object')).addModifiers(Modifier.CONST);
   let baseMessageInit = CodeBlock.empty().beginHash();
   for (const fieldDesc of messageDesc.field) {
-    baseMessageInit = baseMessageInit.addHashEntry(snakeToCamel(fieldDesc.name), defaultValue(fieldDesc.type));
+    if (!isWithinOneOf(fieldDesc)) {
+      baseMessageInit = baseMessageInit.addHashEntry(snakeToCamel(fieldDesc.name), defaultValue(fieldDesc.type));
+    }
   }
   file = file.addProperty(baseMessage.initializerBlock(baseMessageInit.endHash()));
-  // TODO not handling oneOfs
+
+  // Recurse into nested types
   for (const nestedDesc of messageDesc.nestedType) {
     file = generateMessage(file, nestedDesc, prefix + messageDesc.name + '_');
   }
-  file = file
-    .addFunction(generateDecode(prefix, messageDesc))
-    .addFunction(generateEncode(prefix, messageDesc))
-    .addInterface(message);
   for (const enumDesc of messageDesc.enumType) {
     file = generateEnum(file, enumDesc, prefix + messageDesc.name + '_');
   }
-  return file;
+
+  return file
+    .addFunction(generateDecode(prefix, messageDesc))
+    .addFunction(generateEncode(prefix, messageDesc))
+    .addInterface(message);
 }
 
 /** Creates a function to decode a message by loop overing the tags. */
@@ -126,7 +141,15 @@ function generateDecode(prefix: string, messageDesc: DescriptorProto): FunctionS
       throw new Error(`Unhandled field ${field}`);
     }
 
-    if (field.label === FieldDescriptorProto.Label.LABEL_REPEATED) {
+    if (isWithinOneOf(field)) {
+      const oneOf = messageDesc.oneofDecl[field.oneofIndex];
+      func = func.addStatement(
+        "message.%L = { field: '%L', value: %L }",
+        snakeToCamel(oneOf.name),
+        field.name,
+        readSnippet
+      );
+    } else if (isRepeated(field)) {
       if (packedType(field.type) === undefined) {
         func = func.addStatement('message.%L.push(%L)', fieldName, readSnippet);
       } else {
@@ -180,7 +203,14 @@ function generateEncode(prefix: string, messageDesc: DescriptorProto): FunctionS
       throw new Error(`Unhandled field ${field}`);
     }
 
-    if (field.label === FieldDescriptorProto.Label.LABEL_REPEATED) {
+    if (isWithinOneOf(field)) {
+      const oneof = messageDesc.oneofDecl[field.oneofIndex];
+      func = func
+        .beginControlFlow('if (message.%L.field === %S)', snakeToCamel(oneof.name), field.name)
+        .addStatement(writeSnippet, `message.${snakeToCamel(oneof.name)}.value`)
+        .endControlFlow();
+      // we'll do oneofs later
+    } else if (isRepeated(field)) {
       if (packedType(field.type) === undefined) {
         func = func
           .beginControlFlow('for (const v of message.%L)', fieldName)
@@ -202,12 +232,39 @@ function generateEncode(prefix: string, messageDesc: DescriptorProto): FunctionS
   return func.addStatement('return writer');
 }
 
+function generateOneOfProperty(name: string, fields: FieldDescriptorProto[]): PropertySpec {
+  const adtType = TypeNames.unionType(
+    ...fields.map(f => {
+      const kind = new Member('field', TypeNames.anyType(`'${f.name}'`), false);
+      const value = new Member('value', toTypeName(f), false);
+      return TypeNames.anonymousType(kind, value);
+    })
+  );
+  return PropertySpec.create(snakeToCamel(name), adtType);
+}
+
 function isPrimitive(field: FieldDescriptorProto): boolean {
   return !isMessage(field);
 }
 
 function isMessage(field: FieldDescriptorProto): boolean {
   return field.type == FieldDescriptorProto.Type.TYPE_MESSAGE;
+}
+
+function isWithinOneOf(field: FieldDescriptorProto): boolean {
+  return field.hasOwnProperty('oneofIndex');
+}
+
+function isRepeated(field: FieldDescriptorProto): boolean {
+  return field.label === FieldDescriptorProto.Label.LABEL_REPEATED;
+}
+
+function createOneOfsMap(message: DescriptorProto): Map<string, FieldDescriptorProto[]> {
+  return asSequence(message.field)
+    .filter(isWithinOneOf)
+    .groupBy(f => {
+      return message.oneofDecl[f.oneofIndex].name;
+    });
 }
 
 /** Return the type name. */

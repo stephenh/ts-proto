@@ -1,12 +1,15 @@
 import { Reader } from 'protobufjs';
 import {
   decodeNested,
+  decodeOneOfMessage,
   decodeSimple,
   encodeNested,
+  encodeOneOfMessage,
   encodeSimple,
   Nested,
   Nested_InnerEnum,
   Nested_InnerMessage,
+  OneOfMessage,
   Simple,
   StateEnum
 } from '../build/ts_proto_tests';
@@ -14,6 +17,7 @@ import { ts_proto_tests as pbjs } from '../build/pbjs';
 import ISimple = pbjs.ISimple;
 import PbChild = pbjs.Child;
 import PbSimple = pbjs.Simple;
+import PbOneOfMessage = pbjs.OneOfMessage;
 import PbState = pbjs.StateEnum;
 import PbNested = pbjs.Nested;
 import PbNested_InnerMessage = pbjs.Nested.InnerMessage;
@@ -69,7 +73,7 @@ describe('simple', () => {
   it('can decode and fallback to default values', () => {
     const s1: ISimple = {};
     const s2 = decodeSimple(Reader.create(PbSimple.encode(PbSimple.fromObject(s1)).finish()));
-    expect(s2.name).toEqual("");
+    expect(s2.name).toEqual('');
     expect(s2.age).toEqual(0);
     expect(s2.state).toEqual(StateEnum.UNKNOWN);
     expect(s2.grandchildren).toEqual([]);
@@ -120,5 +124,32 @@ describe('simple', () => {
     const s2 = PbSimple.decode(PbSimple.encode(s1).finish());
     expect(s2.name).toEqual('');
     expect(s2.age).toEqual(0);
+  });
+
+  it('can encode oneofs', () => {
+    const s1: OneOfMessage = {
+      nameFields: { field: 'first', value: 'bob' }
+    };
+    const s2 = PbOneOfMessage.toObject(PbOneOfMessage.decode(encodeOneOfMessage(s1).finish()));
+    expect(s2).toMatchInlineSnapshot(`
+Object {
+  "first": "bob",
+}
+`);
+  });
+
+  it('can decode oneofs', () => {
+    const s1 = PbOneOfMessage.fromObject({
+      last: 'smith'
+    });
+    const s2 = decodeOneOfMessage(Reader.create(PbOneOfMessage.encode(s1).finish()));
+    expect(s2).toMatchInlineSnapshot(`
+Object {
+  "nameFields": Object {
+    "field": "last",
+    "value": "smith",
+  },
+}
+`);
   });
 });

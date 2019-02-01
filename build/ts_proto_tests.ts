@@ -11,8 +11,7 @@ const baseSimple: object = {
   coins: 0,
   snacks: "",
   oldStates: 0,
-}
-;
+};
 
 export function decodeSimple(reader: Reader, length?: number): Simple {
   let end = length === undefined ? reader.len : reader.pos + length;
@@ -107,8 +106,7 @@ export interface Simple {
 
 const baseChild: object = {
   name: "",
-}
-;
+};
 
 export function decodeChild(reader: Reader, length?: number): Child {
   let end = length === undefined ? reader.len : reader.pos + length;
@@ -140,19 +138,16 @@ const baseNested: object = {
   name: "",
   message: null,
   state: 0,
-}
-;
+};
 
 const baseNested_InnerMessage: object = {
   name: "",
   deep: null,
-}
-;
+};
 
 const baseNested_InnerMessage_DeepMessage: object = {
   name: "",
-}
-;
+};
 
 export function decodeNested_InnerMessage_DeepMessage(reader: Reader, length?: number): Nested_InnerMessage_DeepMessage {
   let end = length === undefined ? reader.len : reader.pos + length;
@@ -211,6 +206,12 @@ export interface Nested_InnerMessage {
   deep: Nested_InnerMessage_DeepMessage;
 }
 
+export enum Nested_InnerEnum {
+  UNKNOWN_INNER = 0,
+  GOOD = 100,
+  BAD = 1000,
+}
+
 export function decodeNested(reader: Reader, length?: number): Nested {
   let end = length === undefined ? reader.len : reader.pos + length;
   const message = Object.create(baseNested) as Nested;
@@ -247,10 +248,41 @@ export interface Nested {
   state: Nested_InnerEnum;
 }
 
-export enum Nested_InnerEnum {
-  UNKNOWN_INNER = 0,
-  GOOD = 100,
-  BAD = 1000,
+const baseOneOfMessage: object = {
+};
+
+export function decodeOneOfMessage(reader: Reader, length?: number): OneOfMessage {
+  let end = length === undefined ? reader.len : reader.pos + length;
+  const message = Object.create(baseOneOfMessage) as OneOfMessage;
+  while (reader.pos < end) {
+    const tag = reader.uint32();
+    switch (tag >>> 3) {
+      case 1:
+        message.nameFields = { field: 'first', value: reader.string() };
+        break;
+      case 2:
+        message.nameFields = { field: 'last', value: reader.string() };
+        break;
+      default:
+        reader.skipType(tag & 7);
+        break;
+    }
+  }
+  return message;
+}
+
+export function encodeOneOfMessage(message: OneOfMessage, writer: Writer = new Writer()): Writer {
+  if (message.nameFields.field === "first") {
+    writer.uint32(10).string(message.nameFields.value);
+  }
+  if (message.nameFields.field === "last") {
+    writer.uint32(18).string(message.nameFields.value);
+  }
+  return writer;
+}
+
+export interface OneOfMessage {
+  nameFields: { field: 'first', value: string } | { field: 'last', value: string };
 }
 
 export enum StateEnum {
