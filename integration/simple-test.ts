@@ -1,11 +1,5 @@
 import { Reader } from 'protobufjs';
 import {
-  decodeNested,
-  decodeOneOfMessage,
-  decodeSimple,
-  encodeNested,
-  encodeOneOfMessage,
-  encodeSimple,
   Nested,
   Nested_InnerEnum,
   Nested_InnerMessage,
@@ -51,7 +45,7 @@ describe('simple', () => {
       snacks: ['a', 'b'],
       oldStates: [PbState.ON, PbState.OFF]
     };
-    const s2 = decodeSimple(Reader.create(PbSimple.encode(PbSimple.fromObject(s1)).finish()));
+    const s2 = Simple.decode(Reader.create(PbSimple.encode(PbSimple.fromObject(s1)).finish()));
     expect(s2).toEqual(s1);
   });
 
@@ -66,13 +60,13 @@ describe('simple', () => {
       snacks: ['a', 'b'],
       oldStates: [StateEnum.ON, StateEnum.OFF]
     };
-    const s2 = PbSimple.toObject(PbSimple.decode(encodeSimple(s1).finish()));
+    const s2 = PbSimple.toObject(PbSimple.decode(Simple.encode(s1).finish()));
     expect(s2).toEqual(s1);
   });
 
   it('can decode and fallback to default values', () => {
     const s1: ISimple = {};
-    const s2 = decodeSimple(Reader.create(PbSimple.encode(PbSimple.fromObject(s1)).finish()));
+    const s2 = Simple.decode(Reader.create(PbSimple.encode(PbSimple.fromObject(s1)).finish()));
     expect(s2.name).toEqual('');
     expect(s2.age).toEqual(0);
     expect(s2.state).toEqual(StateEnum.UNKNOWN);
@@ -91,7 +85,7 @@ describe('simple', () => {
       } as Nested_InnerMessage,
       state: Nested_InnerEnum.GOOD
     };
-    const s2 = PbNested.toObject(PbNested.decode(encodeNested(s1).finish()));
+    const s2 = PbNested.toObject(PbNested.decode(Nested.encode(s1).finish()));
     expect(s2).toEqual(s1);
   });
 
@@ -104,7 +98,7 @@ describe('simple', () => {
       }),
       state: PbNested_InnerEnum.GOOD
     };
-    const s2 = decodeNested(Reader.create(PbNested.encode(PbNested.fromObject(s1)).finish()));
+    const s2 = Nested.decode(Reader.create(PbNested.encode(PbNested.fromObject(s1)).finish()));
     expect(s2).toEqual(s1);
   });
 
@@ -130,7 +124,7 @@ describe('simple', () => {
     const s1: OneOfMessage = {
       nameFields: { field: 'first', value: 'bob' }
     };
-    const s2 = PbOneOfMessage.toObject(PbOneOfMessage.decode(encodeOneOfMessage(s1).finish()));
+    const s2 = PbOneOfMessage.toObject(PbOneOfMessage.decode(OneOfMessage.encode(s1).finish()));
     expect(s2).toMatchInlineSnapshot(`
 Object {
   "first": "bob",
@@ -142,7 +136,7 @@ Object {
     const s1 = PbOneOfMessage.fromObject({
       last: 'smith'
     });
-    const s2 = decodeOneOfMessage(Reader.create(PbOneOfMessage.encode(s1).finish()));
+    const s2 = OneOfMessage.decode(Reader.create(PbOneOfMessage.encode(s1).finish()));
     expect(s2).toMatchInlineSnapshot(`
 Object {
   "nameFields": Object {

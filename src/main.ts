@@ -34,10 +34,16 @@ export function generateFile(fileDesc: FileDescriptorProto): FileSpec {
 
   // then add the encoder/decoder/base instance
   visit(fileDesc, (fullName, message) => {
-    file = file
-      .addProperty(generateBaseInstance(fullName, message))
-      .addFunction(generateEncode(fullName, message))
-      .addFunction(generateDecode(fullName, message));
+    file = file.addProperty(generateBaseInstance(fullName, message));
+    let staticMethods = CodeBlock.empty()
+      .add('export const %L = ', fullName)
+      .beginHash()
+      .addHashEntry('encode', generateEncode(fullName, message))
+      .addHashEntry('decode', generateDecode(fullName, message))
+      .endHash()
+      .add(';')
+      .newLine();
+    file = file.addCode(staticMethods);
   });
 
   file = addLongUtilityMethod(file);
@@ -119,7 +125,6 @@ function visit(
 function generateDecode(fullName: string, messageDesc: DescriptorProto): FunctionSpec {
   // create the basic function declaration
   let func = FunctionSpec.create('decode' + fullName)
-    .addModifiers(Modifier.EXPORT)
     .addParameter('reader', 'Reader@protobufjs/minimal')
     .addParameter('length?', 'number')
     .returns(fullName);
@@ -153,7 +158,7 @@ function generateDecode(fullName: string, messageDesc: DescriptorProto): Functio
       }
     } else if (isMessage(field)) {
       const [module, type] = toModuleAndType(field.typeName);
-      readSnippet = `decode${type}(reader, reader.uint32())`;
+      readSnippet = `${type}.decode(reader, reader.uint32())`;
     } else {
       throw new Error(`Unhandled field ${field}`);
     }
@@ -201,7 +206,6 @@ function generateDecode(fullName: string, messageDesc: DescriptorProto): Functio
 function generateEncode(fullName: string, messageDesc: DescriptorProto): FunctionSpec {
   // create the basic function declaration
   let func = FunctionSpec.create('encode' + fullName)
-    .addModifiers(Modifier.EXPORT)
     .addParameter('message', fullName)
     .addParameter('writer', 'Writer@protobufjs/minimal', { defaultValueField: CodeBlock.of('new Writer()') })
     .returns('Writer@protobufjs/minimal');
@@ -215,7 +219,7 @@ function generateEncode(fullName: string, messageDesc: DescriptorProto): Functio
     } else if (isMessage(field)) {
       const tag = ((field.number << 3) | 2) >>> 0;
       const [module, type] = toModuleAndType(field.typeName);
-      writeSnippet = `encode${type}(%L, writer.uint32(${tag}).fork()).ldelim()`;
+      writeSnippet = `${type}.encode(%L, writer.uint32(${tag}).fork()).ldelim()`;
     } else {
       throw new Error(`Unhandled field ${field}`);
     }
