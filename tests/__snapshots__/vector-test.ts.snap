@@ -1,13 +1,75 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`vector-tile works 1`] = `
-"import {Reader, Writer} from 'protobufjs/minimal';
+"import {Writer, Reader} from 'protobufjs/minimal';
 import * as Long from 'long';
 
+
+export interface Tile {
+  layers: Array<Tile_Layer>;
+}
+
+export enum Tile_GeomType {
+  UNKNOWN = 0,
+  POINT = 1,
+  LINESTRING = 2,
+  POLYGON = 3,
+}
+
+export interface Tile_Value {
+  stringValue: string;
+  floatValue: number;
+  doubleValue: number;
+  intValue: number;
+  uintValue: number;
+  sintValue: number;
+  boolValue: boolean;
+}
+
+export interface Tile_Feature {
+  id: number;
+  tags: Array<number>;
+  type: Tile_GeomType;
+  geometry: Array<number>;
+}
+
+export interface Tile_Layer {
+  version: number;
+  name: string;
+  features: Array<Tile_Feature>;
+  keys: Array<string>;
+  values: Array<Tile_Value>;
+  extent: number;
+}
 
 const baseTile: object = {
   layers: null,
 };
+
+export function encodeTile(message: Tile, writer: Writer = new Writer()): Writer {
+  for (const v of message.layers) {
+    encodeTile_Layer(v, writer.uint32(26).fork()).ldelim();
+  }
+  return writer;
+}
+
+export function decodeTile(reader: Reader, length?: number): Tile {
+  let end = length === undefined ? reader.len : reader.pos + length;
+  const message = Object.create(baseTile) as Tile;
+  message.layers = [];
+  while (reader.pos < end) {
+    const tag = reader.uint32();
+    switch (tag >>> 3) {
+      case 3:
+        message.layers.push(decodeTile_Layer(reader, reader.uint32()));
+        break;
+      default:
+        reader.skipType(tag & 7);
+        break;
+    }
+  }
+  return message;
+}
 
 const baseTile_Value: object = {
   stringValue: \\"\\",
@@ -18,6 +80,17 @@ const baseTile_Value: object = {
   sintValue: 0,
   boolValue: false,
 };
+
+export function encodeTile_Value(message: Tile_Value, writer: Writer = new Writer()): Writer {
+  writer.uint32(10).string(message.stringValue);
+  writer.uint32(21).float(message.floatValue);
+  writer.uint32(25).double(message.doubleValue);
+  writer.uint32(32).int64(message.intValue);
+  writer.uint32(40).uint64(message.uintValue);
+  writer.uint32(48).sint64(message.sintValue);
+  writer.uint32(56).bool(message.boolValue);
+  return writer;
+}
 
 export function decodeTile_Value(reader: Reader, length?: number): Tile_Value {
   let end = length === undefined ? reader.len : reader.pos + length;
@@ -54,33 +127,28 @@ export function decodeTile_Value(reader: Reader, length?: number): Tile_Value {
   return message;
 }
 
-export function encodeTile_Value(message: Tile_Value, writer: Writer = new Writer()): Writer {
-  writer.uint32(10).string(message.stringValue);
-  writer.uint32(21).float(message.floatValue);
-  writer.uint32(25).double(message.doubleValue);
-  writer.uint32(32).int64(message.intValue);
-  writer.uint32(40).uint64(message.uintValue);
-  writer.uint32(48).sint64(message.sintValue);
-  writer.uint32(56).bool(message.boolValue);
-  return writer;
-}
-
-export interface Tile_Value {
-  stringValue: string;
-  floatValue: number;
-  doubleValue: number;
-  intValue: number;
-  uintValue: number;
-  sintValue: number;
-  boolValue: boolean;
-}
-
 const baseTile_Feature: object = {
   id: 0,
   tags: 0,
   type: 0,
   geometry: 0,
 };
+
+export function encodeTile_Feature(message: Tile_Feature, writer: Writer = new Writer()): Writer {
+  writer.uint32(8).uint64(message.id);
+  writer.uint32(18).fork();
+  for (const v of message.tags) {
+    writer.uint32(v);
+  }
+  writer.ldelim();
+  writer.uint32(24).int32(message.type);
+  writer.uint32(34).fork();
+  for (const v of message.geometry) {
+    writer.uint32(v);
+  }
+  writer.ldelim();
+  return writer;
+}
 
 export function decodeTile_Feature(reader: Reader, length?: number): Tile_Feature {
   let end = length === undefined ? reader.len : reader.pos + length;
@@ -124,29 +192,6 @@ export function decodeTile_Feature(reader: Reader, length?: number): Tile_Featur
   return message;
 }
 
-export function encodeTile_Feature(message: Tile_Feature, writer: Writer = new Writer()): Writer {
-  writer.uint32(8).uint64(message.id);
-  writer.uint32(18).fork();
-  for (const v of message.tags) {
-    writer.uint32(v);
-  }
-  writer.ldelim();
-  writer.uint32(24).int32(message.type);
-  writer.uint32(34).fork();
-  for (const v of message.geometry) {
-    writer.uint32(v);
-  }
-  writer.ldelim();
-  return writer;
-}
-
-export interface Tile_Feature {
-  id: number;
-  tags: Array<number>;
-  type: Tile_GeomType;
-  geometry: Array<number>;
-}
-
 const baseTile_Layer: object = {
   version: 0,
   name: \\"\\",
@@ -155,6 +200,22 @@ const baseTile_Layer: object = {
   values: null,
   extent: 0,
 };
+
+export function encodeTile_Layer(message: Tile_Layer, writer: Writer = new Writer()): Writer {
+  writer.uint32(120).uint32(message.version);
+  writer.uint32(10).string(message.name);
+  for (const v of message.features) {
+    encodeTile_Feature(v, writer.uint32(18).fork()).ldelim();
+  }
+  for (const v of message.keys) {
+    writer.uint32(26).string(v);
+  }
+  for (const v of message.values) {
+    encodeTile_Value(v, writer.uint32(34).fork()).ldelim();
+  }
+  writer.uint32(40).uint32(message.extent);
+  return writer;
+}
 
 export function decodeTile_Layer(reader: Reader, length?: number): Tile_Layer {
   let end = length === undefined ? reader.len : reader.pos + length;
@@ -189,67 +250,6 @@ export function decodeTile_Layer(reader: Reader, length?: number): Tile_Layer {
     }
   }
   return message;
-}
-
-export function encodeTile_Layer(message: Tile_Layer, writer: Writer = new Writer()): Writer {
-  writer.uint32(120).uint32(message.version);
-  writer.uint32(10).string(message.name);
-  for (const v of message.features) {
-    encodeTile_Feature(v, writer.uint32(18).fork()).ldelim();
-  }
-  for (const v of message.keys) {
-    writer.uint32(26).string(v);
-  }
-  for (const v of message.values) {
-    encodeTile_Value(v, writer.uint32(34).fork()).ldelim();
-  }
-  writer.uint32(40).uint32(message.extent);
-  return writer;
-}
-
-export interface Tile_Layer {
-  version: number;
-  name: string;
-  features: Array<Tile_Feature>;
-  keys: Array<string>;
-  values: Array<Tile_Value>;
-  extent: number;
-}
-
-export enum Tile_GeomType {
-  UNKNOWN = 0,
-  POINT = 1,
-  LINESTRING = 2,
-  POLYGON = 3,
-}
-
-export function decodeTile(reader: Reader, length?: number): Tile {
-  let end = length === undefined ? reader.len : reader.pos + length;
-  const message = Object.create(baseTile) as Tile;
-  message.layers = [];
-  while (reader.pos < end) {
-    const tag = reader.uint32();
-    switch (tag >>> 3) {
-      case 3:
-        message.layers.push(decodeTile_Layer(reader, reader.uint32()));
-        break;
-      default:
-        reader.skipType(tag & 7);
-        break;
-    }
-  }
-  return message;
-}
-
-export function encodeTile(message: Tile, writer: Writer = new Writer()): Writer {
-  for (const v of message.layers) {
-    encodeTile_Layer(v, writer.uint32(26).fork()).ldelim();
-  }
-  return writer;
-}
-
-export interface Tile {
-  layers: Array<Tile_Layer>;
 }
 
 function longToNumber(long: Long) {

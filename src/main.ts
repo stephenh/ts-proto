@@ -20,13 +20,28 @@ import { asSequence } from 'sequency';
 
 export function generateFile(fileDesc: FileDescriptorProto): FileSpec {
   let file = FileSpec.create(fileDesc.package);
-  for (const messageDesc of fileDesc.messageType) {
-    file = generateMessage(file, messageDesc);
-  }
-  for (const enumDesc of fileDesc.enumType) {
-    file = generateEnum(file, enumDesc);
-  }
+
+  // first make all the type declarations
+  visit(
+    fileDesc,
+    (fullName, message) => {
+      file = file.addInterface(generateInterfaceDeclaration(fullName, message));
+    },
+    (fullName, enumDesc) => {
+      file = file.addEnum(generateEnum(fullName, enumDesc));
+    }
+  );
+
+  // then add the encoder/decoder/base instance
+  visit(fileDesc, (fullName, message) => {
+    file = file
+      .addProperty(generateBaseInstance(fullName, message))
+      .addFunction(generateEncode(fullName, message))
+      .addFunction(generateDecode(fullName, message));
+  });
+
   file = addLongUtilityMethod(file);
+
   return file;
 }
 
@@ -44,59 +59,64 @@ function addLongUtilityMethod(file: FileSpec): FileSpec {
   );
 }
 
-function generateEnum(file: FileSpec, enumDesc: EnumDescriptorProto, prefix: string = ''): FileSpec {
-  let spec = EnumSpec.create(prefix + enumDesc.name).addModifiers(Modifier.EXPORT);
+function generateEnum(fullName: string, enumDesc: EnumDescriptorProto): EnumSpec {
+  let spec = EnumSpec.create(fullName).addModifiers(Modifier.EXPORT);
   for (const valueDesc of enumDesc.value) {
     spec = spec.addConstant(valueDesc.name, valueDesc.number.toString());
   }
-  return file.addEnum(spec);
+  return spec;
 }
 
-function generateMessage(file: FileSpec, messageDesc: DescriptorProto, prefix: string = ''): FileSpec {
-  const fullName = prefix + messageDesc.name;
-
-  // Create the interface with properties
+// Create the interface with properties
+function generateInterfaceDeclaration(fullName: string, messageDesc: DescriptorProto) {
   let message = InterfaceSpec.create(fullName).addModifiers(Modifier.EXPORT);
-
   for (const fieldDesc of messageDesc.field) {
     if (!isWithinOneOf(fieldDesc)) {
       message = message.addProperty(PropertySpec.create(snakeToCamel(fieldDesc.name), toTypeName(fieldDesc)));
     }
   }
-
   // Create oneOfs as ADTs
   const oneOfs = createOneOfsMap(messageDesc);
   for (const [name, fields] of oneOfs.entries()) {
     message = message.addProperty(generateOneOfProperty(name, fields));
   }
+  return message;
+}
 
+function generateBaseInstance(fullName: string, messageDesc: DescriptorProto) {
   // Create a 'base' instance with default values for decode to use as a prototype
   let baseMessage = PropertySpec.create('base' + fullName, TypeNames.anyType('object')).addModifiers(Modifier.CONST);
-  let baseMessageInit = CodeBlock.empty().beginHash();
-  for (const fieldDesc of messageDesc.field) {
-    if (!isWithinOneOf(fieldDesc)) {
-      baseMessageInit = baseMessageInit.addHashEntry(snakeToCamel(fieldDesc.name), defaultValue(fieldDesc.type));
-    }
-  }
-  file = file.addProperty(baseMessage.initializerBlock(baseMessageInit.endHash()));
+  let initialValue = CodeBlock.empty().beginHash();
+  asSequence(messageDesc.field)
+    .filterNot(isWithinOneOf)
+    .forEach(field => {
+      initialValue = initialValue.addHashEntry(snakeToCamel(field.name), defaultValue(field.type));
+    });
+  return baseMessage.initializerBlock(initialValue.endHash());
+}
 
-  // Recurse into nested types
-  for (const nestedDesc of messageDesc.nestedType) {
-    file = generateMessage(file, nestedDesc, prefix + messageDesc.name + '_');
+type MessageVisitor = (fullName: string, desc: DescriptorProto) => void;
+type EnumVisitor = (fullName: string, desc: EnumDescriptorProto) => void;
+function visit(
+  proto: FileDescriptorProto | DescriptorProto,
+  messageFn: MessageVisitor,
+  enumFn: EnumVisitor = () => {},
+  prefix: string = ''
+): void {
+  for (const enumDesc of proto.enumType) {
+    const fullName = prefix + snakeToCamel(enumDesc.name);
+    enumFn(fullName, enumDesc);
   }
-  for (const enumDesc of messageDesc.enumType) {
-    file = generateEnum(file, enumDesc, prefix + messageDesc.name + '_');
+  const messages = proto instanceof FileDescriptorProto ? proto.messageType : proto.nestedType;
+  for (const message of messages) {
+    const fullName = prefix + snakeToCamel(message.name);
+    messageFn(fullName, message);
+    visit(message, messageFn, enumFn, fullName + '_');
   }
-
-  return file
-    .addFunction(generateDecode(prefix, messageDesc))
-    .addFunction(generateEncode(prefix, messageDesc))
-    .addInterface(message);
 }
 
 /** Creates a function to decode a message by loop overing the tags. */
-function generateDecode(prefix: string, messageDesc: DescriptorProto): FunctionSpec {
-  const fullName = prefix + messageDesc.name;
+function generateDecode(fullName: string, messageDesc: DescriptorProto): FunctionSpec {
   // create the basic function declaration
   let func = FunctionSpec.create('decode' + fullName)
     .addModifiers(Modifier.EXPORT)
@@ -110,11 +130,8 @@ function generateDecode(prefix: string, messageDesc: DescriptorProto): FunctionS
     .addStatement('const message = Object.create(base%L) as %L', fullName, fullName);
 
   // initialize all lists
-  messageDesc.field.forEach(field => {
-    const fieldName = snakeToCamel(field.name);
-    if (field.label === FieldDescriptorProto.Label.LABEL_REPEATED) {
-      func = func.addStatement('message.%L = []', fieldName);
-    }
+  messageDesc.field.filter(isRepeated).forEach(field => {
+    func = func.addStatement('message.%L = []', snakeToCamel(field.name));
   });
 
   // start the tag loop
@@ -181,11 +198,11 @@ function generateDecode(prefix: string, messageDesc: DescriptorProto): FunctionS
 }
 
 /** Creates a function to encode a message by loop overing the tags. */
-function generateEncode(prefix: string, messageDesc: DescriptorProto): FunctionSpec {
+function generateEncode(fullName: string, messageDesc: DescriptorProto): FunctionSpec {
   // create the basic function declaration
-  let func = FunctionSpec.create('encode' + prefix + messageDesc.name)
+  let func = FunctionSpec.create('encode' + fullName)
     .addModifiers(Modifier.EXPORT)
-    .addParameter('message', prefix + messageDesc.name)
+    .addParameter('message', fullName)
     .addParameter('writer', 'Writer@protobufjs/minimal', { defaultValueField: CodeBlock.of('new Writer()') })
     .returns('Writer@protobufjs/minimal');
   // then add a case for each field

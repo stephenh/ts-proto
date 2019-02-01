@@ -1,6 +1,52 @@
-import {Reader, Writer} from 'protobufjs/minimal';
+import {Writer, Reader} from 'protobufjs/minimal';
 import * as Long from 'long';
 
+
+export enum StateEnum {
+  UNKNOWN = 0,
+  ON = 2,
+  OFF = 3,
+}
+
+export interface Simple {
+  name: string;
+  age: number;
+  child: Child;
+  state: StateEnum;
+  grandchildren: Array<Child>;
+  coins: Array<number>;
+  snacks: Array<string>;
+  oldStates: Array<StateEnum>;
+}
+
+export interface Child {
+  name: string;
+}
+
+export interface Nested {
+  name: string;
+  message: Nested_InnerMessage;
+  state: Nested_InnerEnum;
+}
+
+export enum Nested_InnerEnum {
+  UNKNOWN_INNER = 0,
+  GOOD = 100,
+  BAD = 1000,
+}
+
+export interface Nested_InnerMessage {
+  name: string;
+  deep: Nested_InnerMessage_DeepMessage;
+}
+
+export interface Nested_InnerMessage_DeepMessage {
+  name: string;
+}
+
+export interface OneOfMessage {
+  nameFields: { field: 'first', value: string } | { field: 'last', value: string };
+}
 
 const baseSimple: object = {
   name: "",
@@ -12,6 +58,30 @@ const baseSimple: object = {
   snacks: "",
   oldStates: 0,
 };
+
+export function encodeSimple(message: Simple, writer: Writer = new Writer()): Writer {
+  writer.uint32(10).string(message.name);
+  writer.uint32(16).int32(message.age);
+  encodeChild(message.child, writer.uint32(26).fork()).ldelim();
+  writer.uint32(32).int32(message.state);
+  for (const v of message.grandchildren) {
+    encodeChild(v, writer.uint32(42).fork()).ldelim();
+  }
+  writer.uint32(50).fork();
+  for (const v of message.coins) {
+    writer.int32(v);
+  }
+  writer.ldelim();
+  for (const v of message.snacks) {
+    writer.uint32(58).string(v);
+  }
+  writer.uint32(66).fork();
+  for (const v of message.oldStates) {
+    writer.int32(v);
+  }
+  writer.ldelim();
+  return writer;
+}
 
 export function decodeSimple(reader: Reader, length?: number): Simple {
   let end = length === undefined ? reader.len : reader.pos + length;
@@ -69,44 +139,14 @@ export function decodeSimple(reader: Reader, length?: number): Simple {
   return message;
 }
 
-export function encodeSimple(message: Simple, writer: Writer = new Writer()): Writer {
-  writer.uint32(10).string(message.name);
-  writer.uint32(16).int32(message.age);
-  encodeChild(message.child, writer.uint32(26).fork()).ldelim();
-  writer.uint32(32).int32(message.state);
-  for (const v of message.grandchildren) {
-    encodeChild(v, writer.uint32(42).fork()).ldelim();
-  }
-  writer.uint32(50).fork();
-  for (const v of message.coins) {
-    writer.int32(v);
-  }
-  writer.ldelim();
-  for (const v of message.snacks) {
-    writer.uint32(58).string(v);
-  }
-  writer.uint32(66).fork();
-  for (const v of message.oldStates) {
-    writer.int32(v);
-  }
-  writer.ldelim();
-  return writer;
-}
-
-export interface Simple {
-  name: string;
-  age: number;
-  child: Child;
-  state: StateEnum;
-  grandchildren: Array<Child>;
-  coins: Array<number>;
-  snacks: Array<string>;
-  oldStates: Array<StateEnum>;
-}
-
 const baseChild: object = {
   name: "",
 };
+
+export function encodeChild(message: Child, writer: Writer = new Writer()): Writer {
+  writer.uint32(10).string(message.name);
+  return writer;
+}
 
 export function decodeChild(reader: Reader, length?: number): Child {
   let end = length === undefined ? reader.len : reader.pos + length;
@@ -125,91 +165,17 @@ export function decodeChild(reader: Reader, length?: number): Child {
   return message;
 }
 
-export function encodeChild(message: Child, writer: Writer = new Writer()): Writer {
-  writer.uint32(10).string(message.name);
-  return writer;
-}
-
-export interface Child {
-  name: string;
-}
-
 const baseNested: object = {
   name: "",
   message: null,
   state: 0,
 };
 
-const baseNested_InnerMessage: object = {
-  name: "",
-  deep: null,
-};
-
-const baseNested_InnerMessage_DeepMessage: object = {
-  name: "",
-};
-
-export function decodeNested_InnerMessage_DeepMessage(reader: Reader, length?: number): Nested_InnerMessage_DeepMessage {
-  let end = length === undefined ? reader.len : reader.pos + length;
-  const message = Object.create(baseNested_InnerMessage_DeepMessage) as Nested_InnerMessage_DeepMessage;
-  while (reader.pos < end) {
-    const tag = reader.uint32();
-    switch (tag >>> 3) {
-      case 1:
-        message.name = reader.string();
-        break;
-      default:
-        reader.skipType(tag & 7);
-        break;
-    }
-  }
-  return message;
-}
-
-export function encodeNested_InnerMessage_DeepMessage(message: Nested_InnerMessage_DeepMessage, writer: Writer = new Writer()): Writer {
+export function encodeNested(message: Nested, writer: Writer = new Writer()): Writer {
   writer.uint32(10).string(message.name);
+  encodeNested_InnerMessage(message.message, writer.uint32(18).fork()).ldelim();
+  writer.uint32(24).int32(message.state);
   return writer;
-}
-
-export interface Nested_InnerMessage_DeepMessage {
-  name: string;
-}
-
-export function decodeNested_InnerMessage(reader: Reader, length?: number): Nested_InnerMessage {
-  let end = length === undefined ? reader.len : reader.pos + length;
-  const message = Object.create(baseNested_InnerMessage) as Nested_InnerMessage;
-  while (reader.pos < end) {
-    const tag = reader.uint32();
-    switch (tag >>> 3) {
-      case 1:
-        message.name = reader.string();
-        break;
-      case 2:
-        message.deep = decodeNested_InnerMessage_DeepMessage(reader, reader.uint32());
-        break;
-      default:
-        reader.skipType(tag & 7);
-        break;
-    }
-  }
-  return message;
-}
-
-export function encodeNested_InnerMessage(message: Nested_InnerMessage, writer: Writer = new Writer()): Writer {
-  writer.uint32(10).string(message.name);
-  encodeNested_InnerMessage_DeepMessage(message.deep, writer.uint32(18).fork()).ldelim();
-  return writer;
-}
-
-export interface Nested_InnerMessage {
-  name: string;
-  deep: Nested_InnerMessage_DeepMessage;
-}
-
-export enum Nested_InnerEnum {
-  UNKNOWN_INNER = 0,
-  GOOD = 100,
-  BAD = 1000,
 }
 
 export function decodeNested(reader: Reader, length?: number): Nested {
@@ -235,21 +201,75 @@ export function decodeNested(reader: Reader, length?: number): Nested {
   return message;
 }
 
-export function encodeNested(message: Nested, writer: Writer = new Writer()): Writer {
+const baseNested_InnerMessage: object = {
+  name: "",
+  deep: null,
+};
+
+export function encodeNested_InnerMessage(message: Nested_InnerMessage, writer: Writer = new Writer()): Writer {
   writer.uint32(10).string(message.name);
-  encodeNested_InnerMessage(message.message, writer.uint32(18).fork()).ldelim();
-  writer.uint32(24).int32(message.state);
+  encodeNested_InnerMessage_DeepMessage(message.deep, writer.uint32(18).fork()).ldelim();
   return writer;
 }
 
-export interface Nested {
-  name: string;
-  message: Nested_InnerMessage;
-  state: Nested_InnerEnum;
+export function decodeNested_InnerMessage(reader: Reader, length?: number): Nested_InnerMessage {
+  let end = length === undefined ? reader.len : reader.pos + length;
+  const message = Object.create(baseNested_InnerMessage) as Nested_InnerMessage;
+  while (reader.pos < end) {
+    const tag = reader.uint32();
+    switch (tag >>> 3) {
+      case 1:
+        message.name = reader.string();
+        break;
+      case 2:
+        message.deep = decodeNested_InnerMessage_DeepMessage(reader, reader.uint32());
+        break;
+      default:
+        reader.skipType(tag & 7);
+        break;
+    }
+  }
+  return message;
+}
+
+const baseNested_InnerMessage_DeepMessage: object = {
+  name: "",
+};
+
+export function encodeNested_InnerMessage_DeepMessage(message: Nested_InnerMessage_DeepMessage, writer: Writer = new Writer()): Writer {
+  writer.uint32(10).string(message.name);
+  return writer;
+}
+
+export function decodeNested_InnerMessage_DeepMessage(reader: Reader, length?: number): Nested_InnerMessage_DeepMessage {
+  let end = length === undefined ? reader.len : reader.pos + length;
+  const message = Object.create(baseNested_InnerMessage_DeepMessage) as Nested_InnerMessage_DeepMessage;
+  while (reader.pos < end) {
+    const tag = reader.uint32();
+    switch (tag >>> 3) {
+      case 1:
+        message.name = reader.string();
+        break;
+      default:
+        reader.skipType(tag & 7);
+        break;
+    }
+  }
+  return message;
 }
 
 const baseOneOfMessage: object = {
 };
+
+export function encodeOneOfMessage(message: OneOfMessage, writer: Writer = new Writer()): Writer {
+  if (message.nameFields.field === "first") {
+    writer.uint32(10).string(message.nameFields.value);
+  }
+  if (message.nameFields.field === "last") {
+    writer.uint32(18).string(message.nameFields.value);
+  }
+  return writer;
+}
 
 export function decodeOneOfMessage(reader: Reader, length?: number): OneOfMessage {
   let end = length === undefined ? reader.len : reader.pos + length;
@@ -269,26 +289,6 @@ export function decodeOneOfMessage(reader: Reader, length?: number): OneOfMessag
     }
   }
   return message;
-}
-
-export function encodeOneOfMessage(message: OneOfMessage, writer: Writer = new Writer()): Writer {
-  if (message.nameFields.field === "first") {
-    writer.uint32(10).string(message.nameFields.value);
-  }
-  if (message.nameFields.field === "last") {
-    writer.uint32(18).string(message.nameFields.value);
-  }
-  return writer;
-}
-
-export interface OneOfMessage {
-  nameFields: { field: 'first', value: string } | { field: 'last', value: string };
-}
-
-export enum StateEnum {
-  UNKNOWN = 0,
-  ON = 2,
-  OFF = 3,
 }
 
 function longToNumber(long: Long) {
