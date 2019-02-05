@@ -6,8 +6,8 @@ import {
   OneOfMessage,
   Simple,
   StateEnum
-} from '../build/ts_proto_tests';
-import { ts_proto_tests as pbjs } from '../build/pbjs';
+} from '../build/simple';
+import { simple as pbjs } from '../build/pbjs';
 import ISimple = pbjs.ISimple;
 import PbChild = pbjs.Child;
 import PbSimple = pbjs.Simple;
@@ -122,7 +122,8 @@ describe('simple', () => {
 
   it('can encode oneofs', () => {
     const s1: OneOfMessage = {
-      nameFields: { field: 'first', value: 'bob' }
+      first: 'bob',
+      last: undefined
     };
     const s2 = PbOneOfMessage.toObject(PbOneOfMessage.decode(OneOfMessage.encode(s1).finish()));
     expect(s2).toMatchInlineSnapshot(`
@@ -139,11 +140,27 @@ Object {
     const s2 = OneOfMessage.decode(Reader.create(PbOneOfMessage.encode(s1).finish()));
     expect(s2).toMatchInlineSnapshot(`
 Object {
-  "nameFields": Object {
-    "field": "last",
-    "value": "smith",
-  },
+  "last": "smith",
 }
 `);
+  });
+
+  it('can encode oneofs to json', () => {
+    const s1: OneOfMessage = {
+      first: 'bob',
+      last: undefined
+    };
+    const ourJson = s1;
+    const pbJson = PbOneOfMessage.decode(OneOfMessage.encode(s1).finish()).toJSON();
+    expect(ourJson).toEqual(pbJson);
+  });
+
+  it('can decode oneofs from json', () => {
+    const s1 = PbOneOfMessage.fromObject({
+      last: 'smith'
+    });
+    const fromJson = s1.toJSON() as OneOfMessage;
+    const fromPb = OneOfMessage.decode(Reader.create(PbOneOfMessage.encode(s1).finish()));
+    expect(fromJson).toEqual(fromPb);
   });
 });

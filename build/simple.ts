@@ -1,3 +1,4 @@
+import {StringValue, Int32Value, BoolValue} from 'google_protobuf_wrappers';
 import * as Long from 'long';
 import {Writer, Reader} from 'protobufjs/minimal';
 
@@ -45,7 +46,16 @@ export interface Nested_InnerMessage_DeepMessage {
 }
 
 export interface OneOfMessage {
-  nameFields: { field: 'first', value: string } | { field: 'last', value: string };
+  first: string | undefined;
+  last: string | undefined;
+}
+
+export interface SimpleWithWrappers {
+  name: StringValue;
+  age: Int32Value;
+  enabled: BoolValue;
+  coins: Array<Int32Value>;
+  snacks: Array<StringValue>;
 }
 
 const baseSimple: object = {
@@ -79,6 +89,14 @@ const baseNested_InnerMessage_DeepMessage: object = {
 };
 
 const baseOneOfMessage: object = {
+};
+
+const baseSimpleWithWrappers: object = {
+  name: null,
+  age: null,
+  enabled: null,
+  coins: null,
+  snacks: null,
 };
 
 function longToNumber(long: Long) {
@@ -285,11 +303,11 @@ export const Nested_InnerMessage_DeepMessage = {
 
 export const OneOfMessage = {
   encode: function encodeOneOfMessage(message: OneOfMessage, writer: Writer = new Writer()): Writer {
-    if (message.nameFields.field === "first") {
-      writer.uint32(10).string(message.nameFields.value);
+    if (message.hasOwnProperty("first")) {
+      writer.uint32(10).string(message.first!);
     }
-    if (message.nameFields.field === "last") {
-      writer.uint32(18).string(message.nameFields.value);
+    if (message.hasOwnProperty("last")) {
+      writer.uint32(18).string(message.last!);
     }
     return writer;
   }
@@ -301,10 +319,57 @@ export const OneOfMessage = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.nameFields = { field: 'first', value: reader.string() };
+          message.first = reader.string();
           break;
         case 2:
-          message.nameFields = { field: 'last', value: reader.string() };
+          message.last = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  }
+  ,
+};
+
+export const SimpleWithWrappers = {
+  encode: function encodeSimpleWithWrappers(message: SimpleWithWrappers, writer: Writer = new Writer()): Writer {
+    StringValue.encode(message.name, writer.uint32(10).fork()).ldelim();
+    Int32Value.encode(message.age, writer.uint32(18).fork()).ldelim();
+    BoolValue.encode(message.enabled, writer.uint32(26).fork()).ldelim();
+    for (const v of message.coins) {
+      Int32Value.encode(v, writer.uint32(50).fork()).ldelim();
+    }
+    for (const v of message.snacks) {
+      StringValue.encode(v, writer.uint32(58).fork()).ldelim();
+    }
+    return writer;
+  }
+  ,
+  decode: function decodeSimpleWithWrappers(reader: Reader, length?: number): SimpleWithWrappers {
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = Object.create(baseSimpleWithWrappers) as SimpleWithWrappers;
+    message.coins = [];
+    message.snacks = [];
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.name = StringValue.decode(reader, reader.uint32());
+          break;
+        case 2:
+          message.age = Int32Value.decode(reader, reader.uint32());
+          break;
+        case 3:
+          message.enabled = BoolValue.decode(reader, reader.uint32());
+          break;
+        case 6:
+          message.coins.push(Int32Value.decode(reader, reader.uint32()));
+          break;
+        case 7:
+          message.snacks.push(StringValue.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);

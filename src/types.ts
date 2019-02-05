@@ -1,7 +1,8 @@
 import { google } from '../build/pbjs';
 import { TypeName, TypeNames } from 'ts-poet';
-import { mapMessageType } from './main';
+import { mapMessageType, visit } from './main';
 import FieldDescriptorProto = google.protobuf.FieldDescriptorProto;
+import CodeGeneratorRequest = google.protobuf.compiler.CodeGeneratorRequest;
 
 /** Based on https://github.com/dcodeIO/protobuf.js/blob/master/src/types.js#L37. */
 export function basicWireType(type: FieldDescriptorProto.Type): number {
@@ -49,9 +50,8 @@ export function basicLongWireType(type: FieldDescriptorProto.Type): number | und
   }
 }
 
-
 /** Returns the type name without any repeated/required/etc. labels. */
-export function basicTypeName(field: FieldDescriptorProto): TypeName {
+export function basicTypeName(typeMap: TypeMap, field: FieldDescriptorProto): TypeName {
   switch (field.type) {
     case FieldDescriptorProto.Type.TYPE_DOUBLE:
     case FieldDescriptorProto.Type.TYPE_FLOAT:
@@ -76,7 +76,7 @@ export function basicTypeName(field: FieldDescriptorProto): TypeName {
       return TypeNames.anyType('Uint8Array');
     case FieldDescriptorProto.Type.TYPE_MESSAGE:
     case FieldDescriptorProto.Type.TYPE_ENUM:
-      return mapMessageType(field.typeName);
+      return mapMessageType(typeMap, field.typeName);
     default:
       return TypeNames.anyType(field.typeName);
   }
@@ -177,3 +177,16 @@ export function defaultValue(type: FieldDescriptorProto.Type): any {
   }
 }
 
+export type TypeMap = Map<string, [string, string]>;
+
+export function createTypeMap(request: CodeGeneratorRequest): TypeMap {
+  const typeMap = new Map<string, [string, string]>();
+  for (const file of request.protoFile) {
+    const moduleName = file.name.replace('.proto', '').replace(/\//g, '_');
+    function saveMapping(fullName: string): void {
+      typeMap.set(file.package + '.' + fullName.replace(/_/g, '.'), [moduleName, fullName]);
+    }
+    visit(file, saveMapping, saveMapping);
+  }
+  return typeMap;
+}

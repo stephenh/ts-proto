@@ -1,5 +1,6 @@
 syntax = "proto3";
-package ts_proto_tests;
+import "google/protobuf/wrappers.proto";
+package simple;
 
 message Simple {
   string name = 1;
@@ -48,4 +49,12 @@ message OneOfMessage {
     string first = 1;
     string last = 2;
   }
+}
+
+message SimpleWithWrappers {
+  google.protobuf.StringValue name = 1;
+  google.protobuf.Int32Value age = 2;
+  google.protobuf.BoolValue enabled = 3;
+  repeated google.protobuf.Int32Value coins = 6;
+  repeated google.protobuf.StringValue snacks = 7;
 }

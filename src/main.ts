@@ -11,21 +11,31 @@ import {
   TypeNames
 } from 'ts-poet';
 import { google } from '../build/pbjs';
-import { basicLongWireType, basicTypeName, basicWireType, defaultValue, packedType, toReaderCall } from './types';
+import { fail } from './utils';
+import {
+  basicLongWireType,
+  basicTypeName,
+  basicWireType,
+  defaultValue,
+  packedType,
+  toReaderCall,
+  TypeMap
+} from './types';
+import { asSequence } from 'sequency';
 import DescriptorProto = google.protobuf.DescriptorProto;
 import FieldDescriptorProto = google.protobuf.FieldDescriptorProto;
 import FileDescriptorProto = google.protobuf.FileDescriptorProto;
 import EnumDescriptorProto = google.protobuf.EnumDescriptorProto;
-import { asSequence } from 'sequency';
 
-export function generateFile(fileDesc: FileDescriptorProto): FileSpec {
-  let file = FileSpec.create(fileDesc.package);
+export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto): FileSpec {
+  const moduleName = fileDesc.name.replace('.proto', '').replace(/\//g, '_');
+  let file = FileSpec.create(moduleName);
 
   // first make all the type declarations
   visit(
     fileDesc,
     (fullName, message) => {
-      file = file.addInterface(generateInterfaceDeclaration(fullName, message));
+      file = file.addInterface(generateInterfaceDeclaration(typeMap, fullName, message));
     },
     (fullName, enumDesc) => {
       file = file.addEnum(generateEnum(fullName, enumDesc));
@@ -38,8 +48,8 @@ export function generateFile(fileDesc: FileDescriptorProto): FileSpec {
     let staticMethods = CodeBlock.empty()
       .add('export const %L = ', fullName)
       .beginHash()
-      .addHashEntry('encode', generateEncode(fullName, message))
-      .addHashEntry('decode', generateDecode(fullName, message))
+      .addHashEntry('encode', generateEncode(typeMap, fullName, message))
+      .addHashEntry('decode', generateDecode(typeMap, fullName, message))
       .endHash()
       .add(';')
       .newLine();
@@ -74,17 +84,10 @@ function generateEnum(fullName: string, enumDesc: EnumDescriptorProto): EnumSpec
 }
 
 // Create the interface with properties
-function generateInterfaceDeclaration(fullName: string, messageDesc: DescriptorProto) {
+function generateInterfaceDeclaration(typeMap: TypeMap, fullName: string, messageDesc: DescriptorProto) {
   let message = InterfaceSpec.create(fullName).addModifiers(Modifier.EXPORT);
   for (const fieldDesc of messageDesc.field) {
-    if (!isWithinOneOf(fieldDesc)) {
-      message = message.addProperty(PropertySpec.create(snakeToCamel(fieldDesc.name), toTypeName(fieldDesc)));
-    }
-  }
-  // Create oneOfs as ADTs
-  const oneOfs = createOneOfsMap(messageDesc);
-  for (const [name, fields] of oneOfs.entries()) {
-    message = message.addProperty(generateOneOfProperty(name, fields));
+    message = message.addProperty(PropertySpec.create(snakeToCamel(fieldDesc.name), toTypeName(typeMap, fieldDesc)));
   }
   return message;
 }
@@ -103,7 +106,7 @@ function generateBaseInstance(fullName: string, messageDesc: DescriptorProto) {
 
 type MessageVisitor = (fullName: string, desc: DescriptorProto) => void;
 type EnumVisitor = (fullName: string, desc: EnumDescriptorProto) => void;
-function visit(
+export function visit(
   proto: FileDescriptorProto | DescriptorProto,
   messageFn: MessageVisitor,
   enumFn: EnumVisitor = () => {},
@@ -122,7 +125,7 @@ function visit(
 }
 
 /** Creates a function to decode a message by loop overing the tags. */
-function generateDecode(fullName: string, messageDesc: DescriptorProto): FunctionSpec {
+function generateDecode(typeMap: TypeMap, fullName: string, messageDesc: DescriptorProto): FunctionSpec {
   // create the basic function declaration
   let func = FunctionSpec.create('decode' + fullName)
     .addParameter('reader', 'Reader@protobufjs/minimal')
@@ -157,21 +160,13 @@ function generateDecode(fullName: string, messageDesc: DescriptorProto): Functio
         readSnippet = `longToNumber(${readSnippet} as Long)`;
       }
     } else if (isMessage(field)) {
-      const [module, type] = toModuleAndType(field.typeName);
+      const [module, type] = toModuleAndType(typeMap, field.typeName);
       readSnippet = `${type}.decode(reader, reader.uint32())`;
     } else {
       throw new Error(`Unhandled field ${field}`);
     }
 
-    if (isWithinOneOf(field)) {
-      const oneOf = messageDesc.oneofDecl[field.oneofIndex];
-      func = func.addStatement(
-        "message.%L = { field: '%L', value: %L }",
-        snakeToCamel(oneOf.name),
-        field.name,
-        readSnippet
-      );
-    } else if (isRepeated(field)) {
+    if (isRepeated(field)) {
       if (packedType(field.type) === undefined) {
         func = func.addStatement('message.%L.push(%L)', fieldName, readSnippet);
       } else {
@@ -203,7 +198,7 @@ function generateDecode(fullName: string, messageDesc: DescriptorProto): Functio
 }
 
 /** Creates a function to encode a message by loop overing the tags. */
-function generateEncode(fullName: string, messageDesc: DescriptorProto): FunctionSpec {
+function generateEncode(typeMap: TypeMap, fullName: string, messageDesc: DescriptorProto): FunctionSpec {
   // create the basic function declaration
   let func = FunctionSpec.create('encode' + fullName)
     .addParameter('message', fullName)
@@ -218,19 +213,17 @@ function generateEncode(fullName: string, messageDesc: DescriptorProto): Functio
       writeSnippet = `writer.uint32(${tag}).${toReaderCall(field)}(%L)`;
     } else if (isMessage(field)) {
       const tag = ((field.number << 3) | 2) >>> 0;
-      const [module, type] = toModuleAndType(field.typeName);
+      const [module, type] = toModuleAndType(typeMap, field.typeName);
       writeSnippet = `${type}.encode(%L, writer.uint32(${tag}).fork()).ldelim()`;
     } else {
       throw new Error(`Unhandled field ${field}`);
     }
 
     if (isWithinOneOf(field)) {
-      const oneof = messageDesc.oneofDecl[field.oneofIndex];
       func = func
-        .beginControlFlow('if (message.%L.field === %S)', snakeToCamel(oneof.name), field.name)
-        .addStatement(writeSnippet, `message.${snakeToCamel(oneof.name)}.value`)
+        .beginControlFlow('if (message.hasOwnProperty(%S))', fieldName)
+        .addStatement(writeSnippet, `message.${fieldName}!`)
         .endControlFlow();
-      // we'll do oneofs later
     } else if (isRepeated(field)) {
       if (packedType(field.type) === undefined) {
         func = func
@@ -253,11 +246,11 @@ function generateEncode(fullName: string, messageDesc: DescriptorProto): Functio
   return func.addStatement('return writer');
 }
 
-function generateOneOfProperty(name: string, fields: FieldDescriptorProto[]): PropertySpec {
+function generateOneOfProperty(typeMap: TypeMap, name: string, fields: FieldDescriptorProto[]): PropertySpec {
   const adtType = TypeNames.unionType(
     ...fields.map(f => {
       const kind = new Member('field', TypeNames.anyType(`'${f.name}'`), false);
-      const value = new Member('value', toTypeName(f), false);
+      const value = new Member('value', toTypeName(typeMap, f), false);
       return TypeNames.anonymousType(kind, value);
     })
   );
@@ -289,30 +282,25 @@ function createOneOfsMap(message: DescriptorProto): Map<string, FieldDescriptorP
 }
 
 /** Return the type name. */
-function toTypeName(field: FieldDescriptorProto): TypeName {
-  const type = basicTypeName(field);
-  if (field.label === FieldDescriptorProto.Label.LABEL_REPEATED) {
+function toTypeName(typeMap: TypeMap, field: FieldDescriptorProto): TypeName {
+  const type = basicTypeName(typeMap, field);
+  if (isWithinOneOf(field)) {
+    return TypeNames.unionType(type, TypeNames.UNDEFINED);
+  } else if (isRepeated(field)) {
     return TypeNames.arrayType(type);
   }
   return type;
 }
 
 /** Maps `.some_proto_namespace.Message` to a TypeName. */
-export function mapMessageType(protoType: string): TypeName {
-  const [module, type] = toModuleAndType(protoType);
+export function mapMessageType(typeMap: TypeMap, protoType: string): TypeName {
+  const [module, type] = toModuleAndType(typeMap, protoType);
   return TypeNames.importedType(`${type}@${module}`);
 }
 
 /** Breaks `.some_proto_namespace.Some.Message` into `['some_proto_namespace', 'Some_Message']. */
-export function toModuleAndType(protoType: string): [string, string] {
-  const parts = protoType.split('.');
-  parts.shift(); // drop the empty space before the first dot
-  const namespace = parts.shift() || fail(`No namespace found for ${protoType}`);
-  let message = parts.shift() || fail(`No message found for ${protoType}`);
-  while (parts.length > 0) {
-    message += '_' + parts.shift();
-  }
-  return [namespace, message];
+function toModuleAndType(typeMap: TypeMap, protoType: string): [string, string] {
+  return typeMap.get(protoType.substring(1)) || fail(`No type found for ${protoType}`);
 }
 
 function snakeToCamel(s: string): string {

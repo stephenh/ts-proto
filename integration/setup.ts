@@ -1,11 +1,12 @@
 import { readFile, writeFile } from 'fs';
 import { google } from '../build/pbjs';
-import CodeGeneratorRequest = google.protobuf.compiler.CodeGeneratorRequest;
 import { generateFile } from '../src/main';
-import { StringBuffer } from 'ts-poet/build/StringBuffer';
 import { promisify } from 'util';
+import { createTypeMap } from "../src/types";
+import CodeGeneratorRequest = google.protobuf.compiler.CodeGeneratorRequest;
 
 async function main() {
+  await generate('./google/protobuf/wrappers.bin');
   await generate('./simple.bin');
   await generate('./vector_tile.bin');
 }
@@ -13,8 +14,9 @@ async function main() {
 async function generate(path: string) {
   const stdin = await promisify(readFile)(path);
   const request = CodeGeneratorRequest.decode(stdin);
+  const map = createTypeMap(request);
   for (let file of request.protoFile) {
-    const spec = generateFile(file);
+    const spec = generateFile(map, file);
     await promisify(writeFile)(`./build/${spec.path}.ts`, spec.toString());
   }
 }
