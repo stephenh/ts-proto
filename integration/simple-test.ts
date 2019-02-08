@@ -5,12 +5,14 @@ import {
   Nested_InnerMessage,
   OneOfMessage,
   Simple,
+  SimpleWithWrappers,
   StateEnum
 } from '../build/simple';
-import { simple as pbjs } from '../build/pbjs';
+import { simple as pbjs, google } from '../build/pbjs';
 import ISimple = pbjs.ISimple;
 import PbChild = pbjs.Child;
 import PbSimple = pbjs.Simple;
+import PbSimpleWithWrappers = pbjs.SimpleWithWrappers;
 import PbOneOfMessage = pbjs.OneOfMessage;
 import PbState = pbjs.StateEnum;
 import PbNested = pbjs.Nested;
@@ -18,6 +20,9 @@ import PbNested_InnerMessage = pbjs.Nested.InnerMessage;
 import PbNested_DeepMessage = pbjs.Nested.InnerMessage.DeepMessage;
 import PbNested_InnerEnum = pbjs.Nested.InnerEnum;
 import INested = pbjs.INested;
+import PbStringValue = google.protobuf.StringValue;
+import PbInt32Value = google.protobuf.Int32Value;
+import PbBoolValue = google.protobuf.BoolValue;
 
 describe('simple', () => {
   it('generates types correctly', () => {
@@ -162,5 +167,114 @@ Object {
     const fromJson = s1.toJSON() as OneOfMessage;
     const fromPb = OneOfMessage.decode(Reader.create(PbOneOfMessage.encode(s1).finish()));
     expect(fromJson).toEqual(fromPb);
+  });
+
+  it('can encode value wrappers as proto', () => {
+    const s1: SimpleWithWrappers = {
+      name: 'first',
+      age: 1,
+      enabled: true,
+      coins: [1, 2],
+      snacks: ['a', 'b']
+    };
+    const s2 = PbSimpleWithWrappers.decode(Reader.create(SimpleWithWrappers.encode(s1).finish()));
+    // pbjs toJSON still uses the wrapper objects, so we can't compare directly against s1
+    expect(s2).toMatchInlineSnapshot(`
+Object {
+  "age": Object {
+    "value": 1,
+  },
+  "coins": Array [
+    Object {
+      "value": 1,
+    },
+    Object {
+      "value": 2,
+    },
+  ],
+  "enabled": Object {
+    "value": true,
+  },
+  "name": Object {
+    "value": "first",
+  },
+  "snacks": Array [
+    Object {
+      "value": "a",
+    },
+    Object {
+      "value": "b",
+    },
+  ],
+}
+`);
+  });
+
+  it('can encode null value wrappers as proto', () => {
+    const s1: SimpleWithWrappers = {
+      name: undefined,
+      age: undefined,
+      enabled: undefined,
+      coins: [], // should be undefined
+      snacks: [],
+    };
+    const s2 = PbSimpleWithWrappers.decode(Reader.create(SimpleWithWrappers.encode(s1).finish()));
+    // pbjs toJSON still uses the wrapper objects, so we can't compare directly against s1
+    expect(s2).toMatchInlineSnapshot(`
+Object {
+  "age": Object {
+    "value": 1,
+  },
+  "coins": Array [
+    Object {
+      "value": 1,
+    },
+    Object {
+      "value": 2,
+    },
+  ],
+  "enabled": Object {
+    "value": true,
+  },
+  "name": Object {
+    "value": "first",
+  },
+  "snacks": Array [
+    Object {
+      "value": "a",
+    },
+    Object {
+      "value": "b",
+    },
+  ],
+}
+`);
+  });
+
+  it('can decode value wrappers as proto', () => {
+    const s1 = PbSimpleWithWrappers.create({
+      name: PbStringValue.create({ value: 'asdf' }),
+      age: PbInt32Value.create({ value: 1 })
+    });
+    const s2 = SimpleWithWrappers.decode(Reader.create(PbSimpleWithWrappers.encode(s1).finish()));
+    expect(s2).toMatchInlineSnapshot(`
+Object {
+  "age": 1,
+  "coins": Array [],
+  "name": "asdf",
+  "snacks": Array [],
+}
+`);
+  });
+
+  it('can decode null value wrappers as proto', () => {
+    const s1 = PbSimpleWithWrappers.create({});
+    const s2 = SimpleWithWrappers.decode(Reader.create(PbSimpleWithWrappers.encode(s1).finish()));
+    expect(s2).toMatchInlineSnapshot(`
+Object {
+  "coins": Array [],
+  "snacks": Array [],
+}
+`);
   });
 });

@@ -153,35 +153,38 @@ function generateDecode(typeMap: TypeMap, fullName: string, messageDesc: Descrip
     const fieldName = snakeToCamel(field.name);
     func = func.addCode('case %L:%>\n', field.number);
 
-    let readSnippet: string;
+    // get a generic 'reader.doSomething' bit that is specific to the basic type
+    let readSnippet: CodeBlock;
     if (isPrimitive(field)) {
-      readSnippet = `reader.${toReaderCall(field)}()`;
+      readSnippet = CodeBlock.of('reader.%L()', toReaderCall(field));
       if (basicLongWireType(field.type) !== undefined) {
-        readSnippet = `longToNumber(${readSnippet} as Long)`;
+        readSnippet = CodeBlock.of('longToNumber(%L as Long)', readSnippet);
       }
+    } else if (isValueType(field)) {
+      readSnippet = CodeBlock.of('%T.decode(reader, reader.uint32()).value', basicTypeName(typeMap, field, true));
     } else if (isMessage(field)) {
-      const [module, type] = toModuleAndType(typeMap, field.typeName);
-      readSnippet = `${type}.decode(reader, reader.uint32())`;
+      readSnippet = CodeBlock.of('%T.decode(reader, reader.uint32())', basicTypeName(typeMap, field));
     } else {
       throw new Error(`Unhandled field ${field}`);
     }
 
+    // and then use the snippet to handle repeated fields if necessary
     if (isRepeated(field)) {
       if (packedType(field.type) === undefined) {
-        func = func.addStatement('message.%L.push(%L)', fieldName, readSnippet);
+        func = func.addStatement(`message.%L.push(%L)`, fieldName, readSnippet);
       } else {
         func = func
           .beginControlFlow('if ((tag & 7) === 2)')
           .addStatement('const end2 = reader.uint32() + reader.pos')
           .beginControlFlow('while (reader.pos < end2)')
-          .addStatement('message.%L.push(%L)', fieldName, readSnippet)
+          .addStatement(`message.%L.push(%L)`, fieldName, readSnippet)
           .endControlFlow()
           .nextControlFlow('else')
-          .addStatement('message.%L.push(%L)', fieldName, readSnippet)
+          .addStatement(`message.%L.push(%L)`, fieldName, readSnippet)
           .endControlFlow();
       }
     } else {
-      func = func.addStatement('message.%L = %L', fieldName, readSnippet);
+      func = func.addStatement(`message.%L = %L`, fieldName, readSnippet);
     }
     func = func.addStatement('break%<');
   });
@@ -207,28 +210,44 @@ function generateEncode(typeMap: TypeMap, fullName: string, messageDesc: Descrip
   // then add a case for each field
   messageDesc.field.forEach(field => {
     const fieldName = snakeToCamel(field.name);
-    let writeSnippet: string;
+
+    // get a generic writer.doSomething based on the basic type
+    let writeSnippet: (place: string) => CodeBlock;
     if (isPrimitive(field)) {
       const tag = ((field.number << 3) | basicWireType(field.type)) >>> 0;
-      writeSnippet = `writer.uint32(${tag}).${toReaderCall(field)}(%L)`;
+      writeSnippet = place => CodeBlock.of('writer.uint32(%L).%L(%L)', tag, toReaderCall(field), place);
+    } else if (isValueType(field)) {
+      const tag = ((field.number << 3) | 2) >>> 0;
+      writeSnippet = place =>
+        CodeBlock.of(
+          '%T.encode({ value: %L! }, writer.uint32(%L).fork()).ldelim()',
+          basicTypeName(typeMap, field, true),
+          place,
+          tag
+        );
     } else if (isMessage(field)) {
       const tag = ((field.number << 3) | 2) >>> 0;
-      const [module, type] = toModuleAndType(typeMap, field.typeName);
-      writeSnippet = `${type}.encode(%L, writer.uint32(${tag}).fork()).ldelim()`;
+      writeSnippet = place =>
+        CodeBlock.of('%T.encode(%L, writer.uint32(%L).fork()).ldelim()', basicTypeName(typeMap, field), place, tag);
     } else {
       throw new Error(`Unhandled field ${field}`);
     }
 
     if (isWithinOneOf(field)) {
       func = func
-        .beginControlFlow('if (message.hasOwnProperty(%S))', fieldName)
-        .addStatement(writeSnippet, `message.${fieldName}!`)
+        .beginControlFlow(
+          'if (message.%L !== undefined && message.%L != %L)',
+          fieldName,
+          fieldName,
+          defaultValue(field.type)
+        )
+        .addStatement('%L', writeSnippet(`message.${fieldName}!`))
         .endControlFlow();
     } else if (isRepeated(field)) {
       if (packedType(field.type) === undefined) {
         func = func
           .beginControlFlow('for (const v of message.%L)', fieldName)
-          .addStatement(writeSnippet, 'v')
+          .addStatement('%L', writeSnippet('v'))
           .endControlFlow();
       } else {
         const tag = ((field.number << 3) | 2) >>> 0;
@@ -240,7 +259,7 @@ function generateEncode(typeMap: TypeMap, fullName: string, messageDesc: Descrip
           .addStatement('writer.ldelim()');
       }
     } else {
-      func = func.addStatement(writeSnippet, `message.${fieldName}`);
+      func = func.addStatement('%L', writeSnippet(`message.${fieldName}`));
     }
   });
   return func.addStatement('return writer');
@@ -292,10 +311,23 @@ function toTypeName(typeMap: TypeMap, field: FieldDescriptorProto): TypeName {
   return type;
 }
 
+const valueTypes: { [key: string]: TypeName } = {
+  '.google.protobuf.StringValue': TypeNames.unionType(TypeNames.STRING, TypeNames.UNDEFINED),
+  '.google.protobuf.Int32Value': TypeNames.unionType(TypeNames.NUMBER, TypeNames.UNDEFINED),
+  '.google.protobuf.BoolValue': TypeNames.unionType(TypeNames.BOOLEAN, TypeNames.UNDEFINED)
+};
+
+function isValueType(field: FieldDescriptorProto): boolean {
+  return field.typeName in valueTypes;
+}
+
 /** Maps `.some_proto_namespace.Message` to a TypeName. */
-export function mapMessageType(typeMap: TypeMap, protoType: string): TypeName {
+export function mapMessageType(typeMap: TypeMap, protoType: string, keepValueType: boolean = false): TypeName {
+  if (!keepValueType && protoType in valueTypes) {
+    return valueTypes[protoType];
+  }
   const [module, type] = toModuleAndType(typeMap, protoType);
-  return TypeNames.importedType(`${type}@${module}`);
+  return TypeNames.importedType(`${type}@./${module}`);
 }
 
 /** Breaks `.some_proto_namespace.Some.Message` into `['some_proto_namespace', 'Some_Message']. */

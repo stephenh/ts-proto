@@ -1,6 +1,6 @@
-import {StringValue, Int32Value, BoolValue} from 'google_protobuf_wrappers';
 import * as Long from 'long';
 import {Writer, Reader} from 'protobufjs/minimal';
+import {StringValue, Int32Value, BoolValue} from './google_protobuf_wrappers';
 
 
 export enum StateEnum {
@@ -51,11 +51,11 @@ export interface OneOfMessage {
 }
 
 export interface SimpleWithWrappers {
-  name: StringValue;
-  age: Int32Value;
-  enabled: BoolValue;
-  coins: Array<Int32Value>;
-  snacks: Array<StringValue>;
+  name: string | undefined;
+  age: number | undefined;
+  enabled: boolean | undefined;
+  coins: Array<number | undefined>;
+  snacks: Array<string | undefined>;
 }
 
 const baseSimple: object = {
@@ -303,10 +303,10 @@ export const Nested_InnerMessage_DeepMessage = {
 
 export const OneOfMessage = {
   encode: function encodeOneOfMessage(message: OneOfMessage, writer: Writer = new Writer()): Writer {
-    if (message.hasOwnProperty("first")) {
+    if (message.first !== undefined && message.first != "") {
       writer.uint32(10).string(message.first!);
     }
-    if (message.hasOwnProperty("last")) {
+    if (message.last !== undefined && message.last != "") {
       writer.uint32(18).string(message.last!);
     }
     return writer;
@@ -336,14 +336,14 @@ export const OneOfMessage = {
 
 export const SimpleWithWrappers = {
   encode: function encodeSimpleWithWrappers(message: SimpleWithWrappers, writer: Writer = new Writer()): Writer {
-    StringValue.encode(message.name, writer.uint32(10).fork()).ldelim();
-    Int32Value.encode(message.age, writer.uint32(18).fork()).ldelim();
-    BoolValue.encode(message.enabled, writer.uint32(26).fork()).ldelim();
+    StringValue.encode({ value: message.name! }, writer.uint32(10).fork()).ldelim();
+    Int32Value.encode({ value: message.age! }, writer.uint32(18).fork()).ldelim();
+    BoolValue.encode({ value: message.enabled! }, writer.uint32(26).fork()).ldelim();
     for (const v of message.coins) {
-      Int32Value.encode(v, writer.uint32(50).fork()).ldelim();
+      Int32Value.encode({ value: v! }, writer.uint32(50).fork()).ldelim();
     }
     for (const v of message.snacks) {
-      StringValue.encode(v, writer.uint32(58).fork()).ldelim();
+      StringValue.encode({ value: v! }, writer.uint32(58).fork()).ldelim();
     }
     return writer;
   }
@@ -357,19 +357,19 @@ export const SimpleWithWrappers = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.name = StringValue.decode(reader, reader.uint32());
+          message.name = StringValue.decode(reader, reader.uint32()).value;
           break;
         case 2:
-          message.age = Int32Value.decode(reader, reader.uint32());
+          message.age = Int32Value.decode(reader, reader.uint32()).value;
           break;
         case 3:
-          message.enabled = BoolValue.decode(reader, reader.uint32());
+          message.enabled = BoolValue.decode(reader, reader.uint32()).value;
           break;
         case 6:
-          message.coins.push(Int32Value.decode(reader, reader.uint32()));
+          message.coins.push(Int32Value.decode(reader, reader.uint32()).value);
           break;
         case 7:
-          message.snacks.push(StringValue.decode(reader, reader.uint32()));
+          message.snacks.push(StringValue.decode(reader, reader.uint32()).value);
           break;
         default:
           reader.skipType(tag & 7);

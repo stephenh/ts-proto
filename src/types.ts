@@ -51,7 +51,7 @@ export function basicLongWireType(type: FieldDescriptorProto.Type): number | und
 }
 
 /** Returns the type name without any repeated/required/etc. labels. */
-export function basicTypeName(typeMap: TypeMap, field: FieldDescriptorProto): TypeName {
+export function basicTypeName(typeMap: TypeMap, field: FieldDescriptorProto, keepValueType: boolean = false): TypeName {
   switch (field.type) {
     case FieldDescriptorProto.Type.TYPE_DOUBLE:
     case FieldDescriptorProto.Type.TYPE_FLOAT:
@@ -76,7 +76,7 @@ export function basicTypeName(typeMap: TypeMap, field: FieldDescriptorProto): Ty
       return TypeNames.anyType('Uint8Array');
     case FieldDescriptorProto.Type.TYPE_MESSAGE:
     case FieldDescriptorProto.Type.TYPE_ENUM:
-      return mapMessageType(typeMap, field.typeName);
+      return mapMessageType(typeMap, field.typeName, keepValueType);
     default:
       return TypeNames.anyType(field.typeName);
   }
