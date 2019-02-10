@@ -216,39 +216,11 @@ Object {
       age: undefined,
       enabled: undefined,
       coins: [], // should be undefined
-      snacks: [],
+      snacks: []
     };
     const s2 = PbSimpleWithWrappers.decode(Reader.create(SimpleWithWrappers.encode(s1).finish()));
     // pbjs toJSON still uses the wrapper objects, so we can't compare directly against s1
-    expect(s2).toMatchInlineSnapshot(`
-Object {
-  "age": Object {
-    "value": 1,
-  },
-  "coins": Array [
-    Object {
-      "value": 1,
-    },
-    Object {
-      "value": 2,
-    },
-  ],
-  "enabled": Object {
-    "value": true,
-  },
-  "name": Object {
-    "value": "first",
-  },
-  "snacks": Array [
-    Object {
-      "value": "a",
-    },
-    Object {
-      "value": "b",
-    },
-  ],
-}
-`);
+    expect(s2).toMatchInlineSnapshot(`Object {}`);
   });
 
   it('can decode value wrappers as proto', () => {

@@ -12,9 +12,9 @@ export enum StateEnum {
 export interface Simple {
   name: string;
   age: number;
-  child: Child;
+  child: Child | undefined;
   state: StateEnum;
-  grandchildren: Array<Child>;
+  grandchildren: Array<Child | undefined>;
   coins: Array<number>;
   snacks: Array<string>;
   oldStates: Array<StateEnum>;
@@ -26,7 +26,7 @@ export interface Child {
 
 export interface Nested {
   name: string;
-  message: Nested_InnerMessage;
+  message: Nested_InnerMessage | undefined;
   state: Nested_InnerEnum;
 }
 
@@ -38,7 +38,7 @@ export enum Nested_InnerEnum {
 
 export interface Nested_InnerMessage {
   name: string;
-  deep: Nested_InnerMessage_DeepMessage;
+  deep: Nested_InnerMessage_DeepMessage | undefined;
 }
 
 export interface Nested_InnerMessage_DeepMessage {
@@ -51,11 +51,11 @@ export interface OneOfMessage {
 }
 
 export interface SimpleWithWrappers {
-  name: string | undefined;
-  age: number | undefined;
-  enabled: boolean | undefined;
-  coins: Array<number | undefined>;
-  snacks: Array<string | undefined>;
+  name: string | undefined | undefined;
+  age: number | undefined | undefined;
+  enabled: boolean | undefined | undefined;
+  coins: Array<number | undefined | undefined>;
+  snacks: Array<string | undefined | undefined>;
 }
 
 const baseSimple: object = {
@@ -110,10 +110,12 @@ export const Simple = {
   encode: function encodeSimple(message: Simple, writer: Writer = new Writer()): Writer {
     writer.uint32(10).string(message.name);
     writer.uint32(16).int32(message.age);
-    Child.encode(message.child, writer.uint32(26).fork()).ldelim();
+    if (message.child !== undefined && message.child !== null) {
+      Child.encode(message.child!, writer.uint32(26).fork()).ldelim();
+    }
     writer.uint32(32).int32(message.state);
     for (const v of message.grandchildren) {
-      Child.encode(v, writer.uint32(42).fork()).ldelim();
+      Child.encode(v!, writer.uint32(42).fork()).ldelim();
     }
     writer.uint32(50).fork();
     for (const v of message.coins) {
@@ -121,7 +123,7 @@ export const Simple = {
     }
     writer.ldelim();
     for (const v of message.snacks) {
-      writer.uint32(58).string(v);
+      writer.uint32(58).string(v!);
     }
     writer.uint32(66).fork();
     for (const v of message.oldStates) {
@@ -217,7 +219,9 @@ export const Child = {
 export const Nested = {
   encode: function encodeNested(message: Nested, writer: Writer = new Writer()): Writer {
     writer.uint32(10).string(message.name);
-    Nested_InnerMessage.encode(message.message, writer.uint32(18).fork()).ldelim();
+    if (message.message !== undefined && message.message !== null) {
+      Nested_InnerMessage.encode(message.message!, writer.uint32(18).fork()).ldelim();
+    }
     writer.uint32(24).int32(message.state);
     return writer;
   }
@@ -250,7 +254,9 @@ export const Nested = {
 export const Nested_InnerMessage = {
   encode: function encodeNested_InnerMessage(message: Nested_InnerMessage, writer: Writer = new Writer()): Writer {
     writer.uint32(10).string(message.name);
-    Nested_InnerMessage_DeepMessage.encode(message.deep, writer.uint32(18).fork()).ldelim();
+    if (message.deep !== undefined && message.deep !== null) {
+      Nested_InnerMessage_DeepMessage.encode(message.deep!, writer.uint32(18).fork()).ldelim();
+    }
     return writer;
   }
   ,
@@ -303,10 +309,10 @@ export const Nested_InnerMessage_DeepMessage = {
 
 export const OneOfMessage = {
   encode: function encodeOneOfMessage(message: OneOfMessage, writer: Writer = new Writer()): Writer {
-    if (message.first !== undefined && message.first != "") {
+    if (message.first !== undefined && message.first !== "") {
       writer.uint32(10).string(message.first!);
     }
-    if (message.last !== undefined && message.last != "") {
+    if (message.last !== undefined && message.last !== "") {
       writer.uint32(18).string(message.last!);
     }
     return writer;
@@ -336,14 +342,20 @@ export const OneOfMessage = {
 
 export const SimpleWithWrappers = {
   encode: function encodeSimpleWithWrappers(message: SimpleWithWrappers, writer: Writer = new Writer()): Writer {
-    StringValue.encode({ value: message.name! }, writer.uint32(10).fork()).ldelim();
-    Int32Value.encode({ value: message.age! }, writer.uint32(18).fork()).ldelim();
-    BoolValue.encode({ value: message.enabled! }, writer.uint32(26).fork()).ldelim();
+    if (message.name !== undefined && message.name !== null) {
+      StringValue.encode({ value: message.name!! }, writer.uint32(10).fork()).ldelim();
+    }
+    if (message.age !== undefined && message.age !== null) {
+      Int32Value.encode({ value: message.age!! }, writer.uint32(18).fork()).ldelim();
+    }
+    if (message.enabled !== undefined && message.enabled !== null) {
+      BoolValue.encode({ value: message.enabled!! }, writer.uint32(26).fork()).ldelim();
+    }
     for (const v of message.coins) {
-      Int32Value.encode({ value: v! }, writer.uint32(50).fork()).ldelim();
+      Int32Value.encode({ value: v!! }, writer.uint32(50).fork()).ldelim();
     }
     for (const v of message.snacks) {
-      StringValue.encode({ value: v! }, writer.uint32(58).fork()).ldelim();
+      StringValue.encode({ value: v!! }, writer.uint32(58).fork()).ldelim();
     }
     return writer;
   }

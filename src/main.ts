@@ -233,21 +233,11 @@ function generateEncode(typeMap: TypeMap, fullName: string, messageDesc: Descrip
       throw new Error(`Unhandled field ${field}`);
     }
 
-    if (isWithinOneOf(field)) {
-      func = func
-        .beginControlFlow(
-          'if (message.%L !== undefined && message.%L != %L)',
-          fieldName,
-          fieldName,
-          defaultValue(field.type)
-        )
-        .addStatement('%L', writeSnippet(`message.${fieldName}!`))
-        .endControlFlow();
-    } else if (isRepeated(field)) {
+    if (isRepeated(field)) {
       if (packedType(field.type) === undefined) {
         func = func
           .beginControlFlow('for (const v of message.%L)', fieldName)
-          .addStatement('%L', writeSnippet('v'))
+          .addStatement('%L', writeSnippet('v!'))
           .endControlFlow();
       } else {
         const tag = ((field.number << 3) | 2) >>> 0;
@@ -258,6 +248,16 @@ function generateEncode(typeMap: TypeMap, fullName: string, messageDesc: Descrip
           .endControlFlow()
           .addStatement('writer.ldelim()');
       }
+    } else if (isWithinOneOf(field) || isMessage(field)) {
+      func = func
+        .beginControlFlow(
+          'if (message.%L !== undefined && message.%L !== %L)',
+          fieldName,
+          fieldName,
+          defaultValue(field.type)
+        )
+        .addStatement('%L', writeSnippet(`message.${fieldName}!`))
+        .endControlFlow();
     } else {
       func = func.addStatement('%L', writeSnippet(`message.${fieldName}`));
     }
@@ -300,13 +300,16 @@ function createOneOfsMap(message: DescriptorProto): Map<string, FieldDescriptorP
     });
 }
 
-/** Return the type name. */
+/** Return the type name (...for use in the interface). */
 function toTypeName(typeMap: TypeMap, field: FieldDescriptorProto): TypeName {
-  const type = basicTypeName(typeMap, field);
+  let type = basicTypeName(typeMap, field);
   if (isWithinOneOf(field)) {
     return TypeNames.unionType(type, TypeNames.UNDEFINED);
-  } else if (isRepeated(field)) {
-    return TypeNames.arrayType(type);
+  } else if (isMessage(field)) {
+    type = TypeNames.unionType(type, TypeNames.UNDEFINED);
+  }
+  if (isRepeated(field)) {
+    type = TypeNames.arrayType(type);
   }
   return type;
 }
@@ -323,6 +326,7 @@ function isValueType(field: FieldDescriptorProto): boolean {
 
 /** Maps `.some_proto_namespace.Message` to a TypeName. */
 export function mapMessageType(typeMap: TypeMap, protoType: string, keepValueType: boolean = false): TypeName {
+  // turn .google.protobuf.StringValue --> string | undefined
   if (!keepValueType && protoType in valueTypes) {
     return valueTypes[protoType];
   }

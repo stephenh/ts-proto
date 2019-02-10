@@ -6,7 +6,7 @@ import {Writer, Reader} from 'protobufjs/minimal';
 
 
 export interface Tile {
-  layers: Array<Tile_Layer>;
+  layers: Array<Tile_Layer | undefined>;
 }
 
 export enum Tile_GeomType {
@@ -36,9 +36,9 @@ export interface Tile_Feature {
 export interface Tile_Layer {
   version: number;
   name: string;
-  features: Array<Tile_Feature>;
+  features: Array<Tile_Feature | undefined>;
   keys: Array<string>;
-  values: Array<Tile_Value>;
+  values: Array<Tile_Value | undefined>;
   extent: number;
 }
 
@@ -82,7 +82,7 @@ function longToNumber(long: Long) {
 export const Tile = {
   encode: function encodeTile(message: Tile, writer: Writer = new Writer()): Writer {
     for (const v of message.layers) {
-      Tile_Layer.encode(v, writer.uint32(26).fork()).ldelim();
+      Tile_Layer.encode(v!, writer.uint32(26).fork()).ldelim();
     }
     return writer;
   }
@@ -222,13 +222,13 @@ export const Tile_Layer = {
     writer.uint32(120).uint32(message.version);
     writer.uint32(10).string(message.name);
     for (const v of message.features) {
-      Tile_Feature.encode(v, writer.uint32(18).fork()).ldelim();
+      Tile_Feature.encode(v!, writer.uint32(18).fork()).ldelim();
     }
     for (const v of message.keys) {
-      writer.uint32(26).string(v);
+      writer.uint32(26).string(v!);
     }
     for (const v of message.values) {
-      Tile_Value.encode(v, writer.uint32(34).fork()).ldelim();
+      Tile_Value.encode(v!, writer.uint32(34).fork()).ldelim();
     }
     writer.uint32(40).uint32(message.extent);
     return writer;
