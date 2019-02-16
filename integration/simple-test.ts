@@ -111,5 +111,28 @@ describe('simple', () => {
     expect(s2.name).toEqual('');
     expect(s2.age).toEqual(0);
   });
+
+  it('observes how pbjs handles collections of default values', () => {
+    const s1 = PbSimple.create({
+      coins: [0, 1, 2],
+    });
+    const s2 = PbSimple.decode(PbSimple.encode(s1).finish());
+    expect(s2.coins).toEqual([0, 1, 2]);
+  });
+
+  it('can encode collections with default values', () => {
+    const s1: Simple = {
+      name: 'asdf',
+      age: 1,
+      child: { name: 'foo' },
+      state: StateEnum.ON,
+      grandchildren: [{ name: 'grand2' }],
+      coins: [0, 4, 6],
+      snacks: ['', 'b'],
+      oldStates: [StateEnum.UNKNOWN, StateEnum.OFF]
+    };
+    const s2 = PbSimple.toObject(PbSimple.decode(Simple.encode(s1).finish()));
+    expect(s2).toEqual(s1);
+  });
 });
 

@@ -6,7 +6,7 @@ import {Writer, Reader} from 'protobufjs/minimal';
 
 
 export interface Tile {
-  layers: Array<Tile_Layer | undefined>;
+  layers: Array<Tile_Layer>;
 }
 
 export enum Tile_GeomType {
@@ -36,9 +36,9 @@ export interface Tile_Feature {
 export interface Tile_Layer {
   version: number;
   name: string;
-  features: Array<Tile_Feature | undefined>;
+  features: Array<Tile_Feature>;
   keys: Array<string>;
-  values: Array<Tile_Value | undefined>;
+  values: Array<Tile_Value>;
   extent: number;
 }
 

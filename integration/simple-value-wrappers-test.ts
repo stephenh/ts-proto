@@ -86,5 +86,12 @@ Object {
 }
 `);
   });
-});
 
+  it('observes how pbjs handles collections of default values', () => {
+    const s1 = PbSimpleWithWrappers.create({
+      coins: [PbInt32Value.create({ value: 1 })]
+    });
+    const s2 = PbSimpleWithWrappers.decode(PbSimpleWithWrappers.encode(s1).finish());
+    expect(s2.coins.map(c => c.value)).toEqual([1]);
+  });
+});

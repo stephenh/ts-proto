@@ -256,7 +256,7 @@ function generateEncode(typeMap: TypeMap, fullName: string, messageDesc: Descrip
           fieldName,
           defaultValue(field.type)
         )
-        .addStatement('%L', writeSnippet(`message.${fieldName}!`))
+        .addStatement('%L', writeSnippet(`message.${fieldName}`))
         .endControlFlow();
     } else {
       func = func.addStatement('%L', writeSnippet(`message.${fieldName}`));
@@ -303,13 +303,10 @@ function createOneOfsMap(message: DescriptorProto): Map<string, FieldDescriptorP
 /** Return the type name (...for use in the interface). */
 function toTypeName(typeMap: TypeMap, field: FieldDescriptorProto): TypeName {
   let type = basicTypeName(typeMap, field);
-  if (isWithinOneOf(field)) {
-    return TypeNames.unionType(type, TypeNames.UNDEFINED);
-  } else if (isMessage(field)) {
-    type = TypeNames.unionType(type, TypeNames.UNDEFINED);
-  }
   if (isRepeated(field)) {
     type = TypeNames.arrayType(type);
+  } else if ((isWithinOneOf(field) || isMessage(field)) && !isValueType(field)) {
+    type = TypeNames.unionType(type, TypeNames.UNDEFINED);
   }
   return type;
 }
