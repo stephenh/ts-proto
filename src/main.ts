@@ -58,15 +58,7 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto): F
   });
 
   visitServices(fileDesc, serviceDesc => {
-    let service = InterfaceSpec.create(serviceDesc.name);
-    for (const methodDesc of serviceDesc.method) {
-      service = service.addFunction(
-        FunctionSpec.create(methodDesc.name)
-          .addModifiers(Modifier.ABSTRACT)
-          .addParameter('request', mapMessageType(typeMap, methodDesc.inputType))
-          .returns(mapMessageType(typeMap, methodDesc.outputType)));
-    }
-    file = file.addInterface(service);
+    file = file.addInterface(generateService(typeMap, serviceDesc));
   });
 
   file = addLongUtilityMethod(file);
@@ -284,6 +276,18 @@ function generateEncode(typeMap: TypeMap, fullName: string, messageDesc: Descrip
   return func.addStatement('return writer');
 }
 
+function generateService(typeMap: TypeMap, serviceDesc: ServiceDescriptorProto): InterfaceSpec {
+  let service = InterfaceSpec.create(serviceDesc.name);
+  for (const methodDesc of serviceDesc.method) {
+    service = service.addFunction(
+      FunctionSpec.create(methodDesc.name)
+        .addModifiers(Modifier.ABSTRACT)
+        .addParameter('request', mapMessageType(typeMap, methodDesc.inputType))
+        .returns(mapMessageType(typeMap, methodDesc.outputType))
+    );
+  }
+  return service;
+}
 function generateOneOfProperty(typeMap: TypeMap, name: string, fields: FieldDescriptorProto[]): PropertySpec {
   const adtType = TypeNames.unionType(
     ...fields.map(f => {
