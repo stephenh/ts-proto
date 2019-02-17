@@ -14,10 +14,10 @@ export interface Simple {
   age: number;
   child: Child | undefined;
   state: StateEnum;
-  grandchildren: Array<Child>;
-  coins: Array<number>;
-  snacks: Array<string>;
-  oldStates: Array<StateEnum>;
+  grandchildren: Child[];
+  coins: number[];
+  snacks: string[];
+  oldStates: StateEnum[];
 }
 
 export interface Child {
