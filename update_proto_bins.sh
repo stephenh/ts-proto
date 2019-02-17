@@ -12,3 +12,5 @@ mv file.bin vector_tile.bin
 protoc --plugin=$(pwd)/protoc-gen-dump --dump_out=. ./simple.proto -I.
 mv file.bin simple.bin
 
+protoc --plugin=$(pwd)/protoc-gen-dump --dump_out=. ./batching.proto -I.
+mv file.bin batching.bin

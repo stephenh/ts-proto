@@ -1,0 +1,19 @@
+syntax = "proto3";
+package batching;
+
+service EntityService {
+  rpc BatchQuery(BatchQueryRequest) returns (BatchQueryResponse);
+}
+
+message BatchQueryRequest {
+  repeated string ids = 1;
+}
+
+message BatchQueryResponse {
+  repeated Entity entities = 1;
+}
+
+message Entity {
+  string id = 1;
+  string name = 2;
+}

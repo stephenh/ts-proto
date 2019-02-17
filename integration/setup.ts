@@ -9,6 +9,7 @@ async function main() {
   await generate('./google/protobuf/wrappers.bin');
   await generate('./simple.bin');
   await generate('./vector_tile.bin');
+  await generate('./batching.bin');
 }
 
 async function generate(path: string) {
