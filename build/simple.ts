@@ -58,6 +58,14 @@ export interface SimpleWithWrappers {
   snacks: Array<string | undefined>;
 }
 
+export interface PingRequest {
+  input: string;
+}
+
+export interface PingResponse {
+  output: string;
+}
+
 const baseSimple: object = {
   name: "",
   age: 0,
@@ -98,6 +106,20 @@ const baseSimpleWithWrappers: object = {
   coins: null,
   snacks: null,
 };
+
+const basePingRequest: object = {
+  input: "",
+};
+
+const basePingResponse: object = {
+  output: "",
+};
+
+interface PingService {
+
+  ping(request: PingRequest): PingResponse;
+
+}
 
 function longToNumber(long: Long) {
   if (long.gt(Number.MAX_VALUE)) {
@@ -382,6 +404,56 @@ export const SimpleWithWrappers = {
           break;
         case 7:
           message.snacks.push(StringValue.decode(reader, reader.uint32()).value);
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  }
+  ,
+};
+
+export const PingRequest = {
+  encode: function encodePingRequest(message: PingRequest, writer: Writer = new Writer()): Writer {
+    writer.uint32(10).string(message.input);
+    return writer;
+  }
+  ,
+  decode: function decodePingRequest(reader: Reader, length?: number): PingRequest {
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = Object.create(basePingRequest) as PingRequest;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.input = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  }
+  ,
+};
+
+export const PingResponse = {
+  encode: function encodePingResponse(message: PingResponse, writer: Writer = new Writer()): Writer {
+    writer.uint32(10).string(message.output);
+    return writer;
+  }
+  ,
+  decode: function decodePingResponse(reader: Reader, length?: number): PingResponse {
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = Object.create(basePingResponse) as PingResponse;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.output = reader.string();
           break;
         default:
           reader.skipType(tag & 7);

@@ -26,6 +26,7 @@ import DescriptorProto = google.protobuf.DescriptorProto;
 import FieldDescriptorProto = google.protobuf.FieldDescriptorProto;
 import FileDescriptorProto = google.protobuf.FileDescriptorProto;
 import EnumDescriptorProto = google.protobuf.EnumDescriptorProto;
+import ServiceDescriptorProto = google.protobuf.ServiceDescriptorProto;
 
 export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto): FileSpec {
   const moduleName = fileDesc.name.replace('.proto', '').replace(/\//g, '_');
@@ -54,6 +55,18 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto): F
       .add(';')
       .newLine();
     file = file.addCode(staticMethods);
+  });
+
+  visitServices(fileDesc, serviceDesc => {
+    let service = InterfaceSpec.create(serviceDesc.name);
+    for (const methodDesc of serviceDesc.method) {
+      service = service.addFunction(
+        FunctionSpec.create(methodDesc.name)
+          .addModifiers(Modifier.ABSTRACT)
+          .addParameter('request', mapMessageType(typeMap, methodDesc.inputType))
+          .returns(mapMessageType(typeMap, methodDesc.outputType)));
+    }
+    file = file.addInterface(service);
   });
 
   file = addLongUtilityMethod(file);
@@ -121,6 +134,12 @@ export function visit(
     const fullName = prefix + snakeToCamel(message.name);
     messageFn(fullName, message);
     visit(message, messageFn, enumFn, fullName + '_');
+  }
+}
+
+function visitServices(proto: FileDescriptorProto, serviceFn: (desc: ServiceDescriptorProto) => void): void {
+  for (const serviceDesc of proto.service) {
+    serviceFn(serviceDesc);
   }
 }
 
