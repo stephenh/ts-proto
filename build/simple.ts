@@ -151,7 +151,7 @@ function longToNumber(long: Long) {
 }
 
 export const Simple = {
-  encode: function encodeSimple(message: Simple, writer: Writer = new Writer()): Writer {
+  encode(message: Simple, writer: Writer = new Writer()): Writer {
     writer.uint32(10).string(message.name);
     writer.uint32(16).int32(message.age);
     if (message.child !== undefined && message.child !== null) {
@@ -175,9 +175,8 @@ export const Simple = {
     }
     writer.ldelim();
     return writer;
-  }
-  ,
-  decode: function decodeSimple(reader: Reader, length?: number): Simple {
+  },
+  decode(reader: Reader, length?: number): Simple {
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = Object.create(baseSimple) as Simple;
     message.grandchildren = [];
@@ -231,17 +230,15 @@ export const Simple = {
       }
     }
     return message;
-  }
-  ,
+  },
 };
 
 export const Child = {
-  encode: function encodeChild(message: Child, writer: Writer = new Writer()): Writer {
+  encode(message: Child, writer: Writer = new Writer()): Writer {
     writer.uint32(10).string(message.name);
     return writer;
-  }
-  ,
-  decode: function decodeChild(reader: Reader, length?: number): Child {
+  },
+  decode(reader: Reader, length?: number): Child {
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = Object.create(baseChild) as Child;
     while (reader.pos < end) {
@@ -256,21 +253,19 @@ export const Child = {
       }
     }
     return message;
-  }
-  ,
+  },
 };
 
 export const Nested = {
-  encode: function encodeNested(message: Nested, writer: Writer = new Writer()): Writer {
+  encode(message: Nested, writer: Writer = new Writer()): Writer {
     writer.uint32(10).string(message.name);
     if (message.message !== undefined && message.message !== null) {
       Nested_InnerMessage.encode(message.message, writer.uint32(18).fork()).ldelim();
     }
     writer.uint32(24).int32(message.state);
     return writer;
-  }
-  ,
-  decode: function decodeNested(reader: Reader, length?: number): Nested {
+  },
+  decode(reader: Reader, length?: number): Nested {
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = Object.create(baseNested) as Nested;
     while (reader.pos < end) {
@@ -291,20 +286,18 @@ export const Nested = {
       }
     }
     return message;
-  }
-  ,
+  },
 };
 
 export const Nested_InnerMessage = {
-  encode: function encodeNested_InnerMessage(message: Nested_InnerMessage, writer: Writer = new Writer()): Writer {
+  encode(message: Nested_InnerMessage, writer: Writer = new Writer()): Writer {
     writer.uint32(10).string(message.name);
     if (message.deep !== undefined && message.deep !== null) {
       Nested_InnerMessage_DeepMessage.encode(message.deep, writer.uint32(18).fork()).ldelim();
     }
     return writer;
-  }
-  ,
-  decode: function decodeNested_InnerMessage(reader: Reader, length?: number): Nested_InnerMessage {
+  },
+  decode(reader: Reader, length?: number): Nested_InnerMessage {
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = Object.create(baseNested_InnerMessage) as Nested_InnerMessage;
     while (reader.pos < end) {
@@ -322,17 +315,15 @@ export const Nested_InnerMessage = {
       }
     }
     return message;
-  }
-  ,
+  },
 };
 
 export const Nested_InnerMessage_DeepMessage = {
-  encode: function encodeNested_InnerMessage_DeepMessage(message: Nested_InnerMessage_DeepMessage, writer: Writer = new Writer()): Writer {
+  encode(message: Nested_InnerMessage_DeepMessage, writer: Writer = new Writer()): Writer {
     writer.uint32(10).string(message.name);
     return writer;
-  }
-  ,
-  decode: function decodeNested_InnerMessage_DeepMessage(reader: Reader, length?: number): Nested_InnerMessage_DeepMessage {
+  },
+  decode(reader: Reader, length?: number): Nested_InnerMessage_DeepMessage {
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = Object.create(baseNested_InnerMessage_DeepMessage) as Nested_InnerMessage_DeepMessage;
     while (reader.pos < end) {
@@ -347,12 +338,11 @@ export const Nested_InnerMessage_DeepMessage = {
       }
     }
     return message;
-  }
-  ,
+  },
 };
 
 export const OneOfMessage = {
-  encode: function encodeOneOfMessage(message: OneOfMessage, writer: Writer = new Writer()): Writer {
+  encode(message: OneOfMessage, writer: Writer = new Writer()): Writer {
     if (message.first !== undefined && message.first !== "") {
       writer.uint32(10).string(message.first);
     }
@@ -360,9 +350,8 @@ export const OneOfMessage = {
       writer.uint32(18).string(message.last);
     }
     return writer;
-  }
-  ,
-  decode: function decodeOneOfMessage(reader: Reader, length?: number): OneOfMessage {
+  },
+  decode(reader: Reader, length?: number): OneOfMessage {
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = Object.create(baseOneOfMessage) as OneOfMessage;
     while (reader.pos < end) {
@@ -380,12 +369,11 @@ export const OneOfMessage = {
       }
     }
     return message;
-  }
-  ,
+  },
 };
 
 export const SimpleWithWrappers = {
-  encode: function encodeSimpleWithWrappers(message: SimpleWithWrappers, writer: Writer = new Writer()): Writer {
+  encode(message: SimpleWithWrappers, writer: Writer = new Writer()): Writer {
     if (message.name !== undefined && message.name !== null) {
       StringValue.encode({ value: message.name! }, writer.uint32(10).fork()).ldelim();
     }
@@ -402,9 +390,8 @@ export const SimpleWithWrappers = {
       StringValue.encode({ value: v!! }, writer.uint32(58).fork()).ldelim();
     }
     return writer;
-  }
-  ,
-  decode: function decodeSimpleWithWrappers(reader: Reader, length?: number): SimpleWithWrappers {
+  },
+  decode(reader: Reader, length?: number): SimpleWithWrappers {
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = Object.create(baseSimpleWithWrappers) as SimpleWithWrappers;
     message.coins = [];
@@ -433,17 +420,15 @@ export const SimpleWithWrappers = {
       }
     }
     return message;
-  }
-  ,
+  },
 };
 
 export const PingRequest = {
-  encode: function encodePingRequest(message: PingRequest, writer: Writer = new Writer()): Writer {
+  encode(message: PingRequest, writer: Writer = new Writer()): Writer {
     writer.uint32(10).string(message.input);
     return writer;
-  }
-  ,
-  decode: function decodePingRequest(reader: Reader, length?: number): PingRequest {
+  },
+  decode(reader: Reader, length?: number): PingRequest {
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = Object.create(basePingRequest) as PingRequest;
     while (reader.pos < end) {
@@ -458,17 +443,15 @@ export const PingRequest = {
       }
     }
     return message;
-  }
-  ,
+  },
 };
 
 export const PingResponse = {
-  encode: function encodePingResponse(message: PingResponse, writer: Writer = new Writer()): Writer {
+  encode(message: PingResponse, writer: Writer = new Writer()): Writer {
     writer.uint32(10).string(message.output);
     return writer;
-  }
-  ,
-  decode: function decodePingResponse(reader: Reader, length?: number): PingResponse {
+  },
+  decode(reader: Reader, length?: number): PingResponse {
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = Object.create(basePingResponse) as PingResponse;
     while (reader.pos < end) {
@@ -483,6 +466,5 @@ export const PingResponse = {
       }
     }
     return message;
-  }
-  ,
+  },
 };

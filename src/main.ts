@@ -57,8 +57,8 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto): F
     let staticMethods = CodeBlock.empty()
       .add('export const %L = ', fullName)
       .beginHash()
-      .addHashEntry('encode', generateEncode(typeMap, fullName, message))
-      .addHashEntry('decode', generateDecode(typeMap, fullName, message))
+      .addHashEntry(generateEncode(typeMap, fullName, message))
+      .addHashEntry(generateDecode(typeMap, fullName, message))
       .endHash()
       .add(';')
       .newLine();
@@ -148,7 +148,7 @@ function visitServices(proto: FileDescriptorProto, serviceFn: (desc: ServiceDesc
 /** Creates a function to decode a message by loop overing the tags. */
 function generateDecode(typeMap: TypeMap, fullName: string, messageDesc: DescriptorProto): FunctionSpec {
   // create the basic function declaration
-  let func = FunctionSpec.create('decode' + fullName)
+  let func = FunctionSpec.create('decode')
     .addParameter('reader', 'Reader@protobufjs/minimal')
     .addParameter('length?', 'number')
     .returns(fullName);
@@ -224,7 +224,7 @@ function generateDecode(typeMap: TypeMap, fullName: string, messageDesc: Descrip
 /** Creates a function to encode a message by loop overing the tags. */
 function generateEncode(typeMap: TypeMap, fullName: string, messageDesc: DescriptorProto): FunctionSpec {
   // create the basic function declaration
-  let func = FunctionSpec.create('encode' + fullName)
+  let func = FunctionSpec.create('encode')
     .addParameter('message', fullName)
     .addParameter('writer', 'Writer@protobufjs/minimal', { defaultValueField: CodeBlock.of('new Writer()') })
     .returns('Writer@protobufjs/minimal');

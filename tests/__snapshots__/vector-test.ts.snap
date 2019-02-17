@@ -86,14 +86,13 @@ function longToNumber(long: Long) {
 }
 
 export const Tile = {
-  encode: function encodeTile(message: Tile, writer: Writer = new Writer()): Writer {
+  encode(message: Tile, writer: Writer = new Writer()): Writer {
     for (const v of message.layers) {
       Tile_Layer.encode(v!, writer.uint32(26).fork()).ldelim();
     }
     return writer;
-  }
-  ,
-  decode: function decodeTile(reader: Reader, length?: number): Tile {
+  },
+  decode(reader: Reader, length?: number): Tile {
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = Object.create(baseTile) as Tile;
     message.layers = [];
@@ -109,12 +108,11 @@ export const Tile = {
       }
     }
     return message;
-  }
-  ,
+  },
 };
 
 export const Tile_Value = {
-  encode: function encodeTile_Value(message: Tile_Value, writer: Writer = new Writer()): Writer {
+  encode(message: Tile_Value, writer: Writer = new Writer()): Writer {
     writer.uint32(10).string(message.stringValue);
     writer.uint32(21).float(message.floatValue);
     writer.uint32(25).double(message.doubleValue);
@@ -123,9 +121,8 @@ export const Tile_Value = {
     writer.uint32(48).sint64(message.sintValue);
     writer.uint32(56).bool(message.boolValue);
     return writer;
-  }
-  ,
-  decode: function decodeTile_Value(reader: Reader, length?: number): Tile_Value {
+  },
+  decode(reader: Reader, length?: number): Tile_Value {
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = Object.create(baseTile_Value) as Tile_Value;
     while (reader.pos < end) {
@@ -158,12 +155,11 @@ export const Tile_Value = {
       }
     }
     return message;
-  }
-  ,
+  },
 };
 
 export const Tile_Feature = {
-  encode: function encodeTile_Feature(message: Tile_Feature, writer: Writer = new Writer()): Writer {
+  encode(message: Tile_Feature, writer: Writer = new Writer()): Writer {
     writer.uint32(8).uint64(message.id);
     writer.uint32(18).fork();
     for (const v of message.tags) {
@@ -177,9 +173,8 @@ export const Tile_Feature = {
     }
     writer.ldelim();
     return writer;
-  }
-  ,
-  decode: function decodeTile_Feature(reader: Reader, length?: number): Tile_Feature {
+  },
+  decode(reader: Reader, length?: number): Tile_Feature {
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = Object.create(baseTile_Feature) as Tile_Feature;
     message.tags = [];
@@ -219,12 +214,11 @@ export const Tile_Feature = {
       }
     }
     return message;
-  }
-  ,
+  },
 };
 
 export const Tile_Layer = {
-  encode: function encodeTile_Layer(message: Tile_Layer, writer: Writer = new Writer()): Writer {
+  encode(message: Tile_Layer, writer: Writer = new Writer()): Writer {
     writer.uint32(120).uint32(message.version);
     writer.uint32(10).string(message.name);
     for (const v of message.features) {
@@ -238,9 +232,8 @@ export const Tile_Layer = {
     }
     writer.uint32(40).uint32(message.extent);
     return writer;
-  }
-  ,
-  decode: function decodeTile_Layer(reader: Reader, length?: number): Tile_Layer {
+  },
+  decode(reader: Reader, length?: number): Tile_Layer {
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = Object.create(baseTile_Layer) as Tile_Layer;
     message.features = [];
@@ -273,8 +266,7 @@ export const Tile_Layer = {
       }
     }
     return message;
-  }
-  ,
+  },
 };
 "
 `;
