@@ -1,8 +1,11 @@
 import { google } from '../build/pbjs';
 import { TypeName, TypeNames } from 'ts-poet';
-import { mapMessageType, visit } from './main';
+import { visit } from './main';
+import { fail } from "./utils";
+import { asSequence } from "sequency";
 import FieldDescriptorProto = google.protobuf.FieldDescriptorProto;
 import CodeGeneratorRequest = google.protobuf.compiler.CodeGeneratorRequest;
+import DescriptorProto = google.protobuf.DescriptorProto;
 
 /** Based on https://github.com/dcodeIO/protobuf.js/blob/master/src/types.js#L37. */
 export function basicWireType(type: FieldDescriptorProto.Type): number {
@@ -76,7 +79,7 @@ export function basicTypeName(typeMap: TypeMap, field: FieldDescriptorProto, kee
       return TypeNames.anyType('Uint8Array');
     case FieldDescriptorProto.Type.TYPE_MESSAGE:
     case FieldDescriptorProto.Type.TYPE_ENUM:
-      return mapMessageType(typeMap, field.typeName, keepValueType);
+      return messageToTypeName(typeMap, field.typeName, keepValueType);
     default:
       return TypeNames.anyType(field.typeName);
   }
@@ -177,8 +180,10 @@ export function defaultValue(type: FieldDescriptorProto.Type): any {
   }
 }
 
+/** A map of proto type name, e.g. `foo.Message.Inner`, to module/class name, e.g. `foo`, `Message_Inner`. */
 export type TypeMap = Map<string, [string, string]>;
 
+/** Scans all of the proto files in `request` and builds a map of proto typeName -> TS module/name. */
 export function createTypeMap(request: CodeGeneratorRequest): TypeMap {
   const typeMap = new Map<string, [string, string]>();
   for (const file of request.protoFile) {
@@ -189,4 +194,64 @@ export function createTypeMap(request: CodeGeneratorRequest): TypeMap {
     visit(file, saveMapping, saveMapping);
   }
   return typeMap;
+}
+
+export function isPrimitive(field: FieldDescriptorProto): boolean {
+  return !isMessage(field);
+}
+
+export function isMessage(field: FieldDescriptorProto): boolean {
+  return field.type == FieldDescriptorProto.Type.TYPE_MESSAGE;
+}
+
+export function isWithinOneOf(field: FieldDescriptorProto): boolean {
+  return field.hasOwnProperty('oneofIndex');
+}
+
+export function isRepeated(field: FieldDescriptorProto): boolean {
+  return field.label === FieldDescriptorProto.Label.LABEL_REPEATED;
+}
+
+const valueTypes: { [key: string]: TypeName } = {
+  '.google.protobuf.StringValue': TypeNames.unionType(TypeNames.STRING, TypeNames.UNDEFINED),
+  '.google.protobuf.Int32Value': TypeNames.unionType(TypeNames.NUMBER, TypeNames.UNDEFINED),
+  '.google.protobuf.BoolValue': TypeNames.unionType(TypeNames.BOOLEAN, TypeNames.UNDEFINED)
+};
+
+export function isValueType(field: FieldDescriptorProto): boolean {
+  return field.typeName in valueTypes;
+}
+
+/** Maps `.some_proto_namespace.Message` to a TypeName. */
+export function messageToTypeName(typeMap: TypeMap, protoType: string, keepValueType: boolean = false): TypeName {
+  // turn .google.protobuf.StringValue --> string | undefined
+  if (!keepValueType && protoType in valueTypes) {
+    return valueTypes[protoType];
+  }
+  const [module, type] = toModuleAndType(typeMap, protoType);
+  return TypeNames.importedType(`${type}@./${module}`);
+}
+
+/** Breaks `.some_proto_namespace.Some.Message` into `['some_proto_namespace', 'Some_Message']. */
+function toModuleAndType(typeMap: TypeMap, protoType: string): [string, string] {
+  return typeMap.get(protoType.substring(1)) || fail(`No type found for ${protoType}`);
+}
+
+/** Return the TypeName for any field (primitive/message/etc.) as exposed in the interface. */
+export function toTypeName(typeMap: TypeMap, field: FieldDescriptorProto): TypeName {
+  let type = basicTypeName(typeMap, field);
+  if (isRepeated(field)) {
+    type = TypeNames.arrayType(type);
+  } else if ((isWithinOneOf(field) || isMessage(field)) && !isValueType(field)) {
+    type = TypeNames.unionType(type, TypeNames.UNDEFINED);
+  }
+  return type;
+}
+
+function createOneOfsMap(message: DescriptorProto): Map<string, FieldDescriptorProto[]> {
+  return asSequence(message.field)
+    .filter(isWithinOneOf)
+    .groupBy(f => {
+      return message.oneofDecl[f.oneofIndex].name;
+    });
 }

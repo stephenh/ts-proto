@@ -7,18 +7,23 @@ import {
   Member,
   Modifier,
   PropertySpec,
-  TypeName,
   TypeNames
 } from 'ts-poet';
 import { google } from '../build/pbjs';
-import { fail } from './utils';
 import {
   basicLongWireType,
   basicTypeName,
   basicWireType,
   defaultValue,
+  isMessage,
+  isPrimitive,
+  isRepeated,
+  isValueType,
+  isWithinOneOf,
+  messageToTypeName,
   packedType,
   toReaderCall,
+  toTypeName,
   TypeMap
 } from './types';
 import { asSequence } from 'sequency';
@@ -282,8 +287,8 @@ function generateService(typeMap: TypeMap, serviceDesc: ServiceDescriptorProto):
     service = service.addFunction(
       FunctionSpec.create(methodDesc.name)
         .addModifiers(Modifier.ABSTRACT)
-        .addParameter('request', mapMessageType(typeMap, methodDesc.inputType))
-        .returns(mapMessageType(typeMap, methodDesc.outputType))
+        .addParameter('request', messageToTypeName(typeMap, methodDesc.inputType))
+        .returns(messageToTypeName(typeMap, methodDesc.outputType))
     );
   }
   return service;
@@ -297,66 +302,6 @@ function generateOneOfProperty(typeMap: TypeMap, name: string, fields: FieldDesc
     })
   );
   return PropertySpec.create(snakeToCamel(name), adtType);
-}
-
-function isPrimitive(field: FieldDescriptorProto): boolean {
-  return !isMessage(field);
-}
-
-function isMessage(field: FieldDescriptorProto): boolean {
-  return field.type == FieldDescriptorProto.Type.TYPE_MESSAGE;
-}
-
-function isWithinOneOf(field: FieldDescriptorProto): boolean {
-  return field.hasOwnProperty('oneofIndex');
-}
-
-function isRepeated(field: FieldDescriptorProto): boolean {
-  return field.label === FieldDescriptorProto.Label.LABEL_REPEATED;
-}
-
-function createOneOfsMap(message: DescriptorProto): Map<string, FieldDescriptorProto[]> {
-  return asSequence(message.field)
-    .filter(isWithinOneOf)
-    .groupBy(f => {
-      return message.oneofDecl[f.oneofIndex].name;
-    });
-}
-
-/** Return the type name (...for use in the interface). */
-function toTypeName(typeMap: TypeMap, field: FieldDescriptorProto): TypeName {
-  let type = basicTypeName(typeMap, field);
-  if (isRepeated(field)) {
-    type = TypeNames.arrayType(type);
-  } else if ((isWithinOneOf(field) || isMessage(field)) && !isValueType(field)) {
-    type = TypeNames.unionType(type, TypeNames.UNDEFINED);
-  }
-  return type;
-}
-
-const valueTypes: { [key: string]: TypeName } = {
-  '.google.protobuf.StringValue': TypeNames.unionType(TypeNames.STRING, TypeNames.UNDEFINED),
-  '.google.protobuf.Int32Value': TypeNames.unionType(TypeNames.NUMBER, TypeNames.UNDEFINED),
-  '.google.protobuf.BoolValue': TypeNames.unionType(TypeNames.BOOLEAN, TypeNames.UNDEFINED)
-};
-
-function isValueType(field: FieldDescriptorProto): boolean {
-  return field.typeName in valueTypes;
-}
-
-/** Maps `.some_proto_namespace.Message` to a TypeName. */
-export function mapMessageType(typeMap: TypeMap, protoType: string, keepValueType: boolean = false): TypeName {
-  // turn .google.protobuf.StringValue --> string | undefined
-  if (!keepValueType && protoType in valueTypes) {
-    return valueTypes[protoType];
-  }
-  const [module, type] = toModuleAndType(typeMap, protoType);
-  return TypeNames.importedType(`${type}@./${module}`);
-}
-
-/** Breaks `.some_proto_namespace.Some.Message` into `['some_proto_namespace', 'Some_Message']. */
-function toModuleAndType(typeMap: TypeMap, protoType: string): [string, string] {
-  return typeMap.get(protoType.substring(1)) || fail(`No type found for ${protoType}`);
 }
 
 function snakeToCamel(s: string): string {
