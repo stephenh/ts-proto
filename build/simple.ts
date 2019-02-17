@@ -115,9 +115,31 @@ const basePingResponse: object = {
   output: "",
 };
 
-interface PingService {
+export interface PingService {
 
-  ping(request: PingRequest): PingResponse;
+  ping(request: PingRequest): Promise<PingResponse>;
+
+}
+
+export class PingServiceClientImpl {
+
+  private readonly rpc: Rpc;
+
+  constructor(rpc: Rpc) {
+    this.rpc = rpc;
+  }
+
+  ping(request: PingRequest): Promise<PingResponse> {
+    const data = PingRequest.encode(request).finish();
+    const promise = this.rpc.request("PingService", "ping", data);
+    return promise.then(data => PingResponse.decode(new Reader(data)));
+  }
+
+}
+
+export interface Rpc {
+
+  request(service: string, method: string, data: Uint8Array): Promise<Uint8Array>;
 
 }
 

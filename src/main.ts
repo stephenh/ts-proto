@@ -1,4 +1,5 @@
 import {
+  ClassSpec,
   CodeBlock,
   EnumSpec,
   FileSpec,
@@ -7,6 +8,7 @@ import {
   Member,
   Modifier,
   PropertySpec,
+  TypeName,
   TypeNames
 } from 'ts-poet';
 import { google } from '../build/pbjs';
@@ -32,6 +34,7 @@ import FieldDescriptorProto = google.protobuf.FieldDescriptorProto;
 import FileDescriptorProto = google.protobuf.FileDescriptorProto;
 import EnumDescriptorProto = google.protobuf.EnumDescriptorProto;
 import ServiceDescriptorProto = google.protobuf.ServiceDescriptorProto;
+import MethodDescriptorProto = google.protobuf.MethodDescriptorProto;
 
 export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto): FileSpec {
   const moduleName = fileDesc.name.replace('.proto', '').replace(/\//g, '_');
@@ -64,7 +67,9 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto): F
 
   visitServices(fileDesc, serviceDesc => {
     file = file.addInterface(generateService(typeMap, serviceDesc));
+    file = file.addClass(generateServiceClientImpl(typeMap, serviceDesc));
   });
+  file = file.addInterface(generateRpcType());
 
   file = addLongUtilityMethod(file);
 
@@ -282,17 +287,65 @@ function generateEncode(typeMap: TypeMap, fullName: string, messageDesc: Descrip
 }
 
 function generateService(typeMap: TypeMap, serviceDesc: ServiceDescriptorProto): InterfaceSpec {
-  let service = InterfaceSpec.create(serviceDesc.name);
+  let service = InterfaceSpec.create(serviceDesc.name).addModifiers(Modifier.EXPORT);
   for (const methodDesc of serviceDesc.method) {
     service = service.addFunction(
       FunctionSpec.create(methodDesc.name)
         .addModifiers(Modifier.ABSTRACT)
-        .addParameter('request', messageToTypeName(typeMap, methodDesc.inputType))
-        .returns(messageToTypeName(typeMap, methodDesc.outputType))
+        .addParameter('request', requestType(typeMap, methodDesc))
+        .returns(responsePromise(typeMap, methodDesc))
     );
   }
   return service;
 }
+
+function generateServiceClientImpl(typeMap: TypeMap, serviceDesc: ServiceDescriptorProto): ClassSpec {
+  let client = ClassSpec.create(`${serviceDesc.name}ClientImpl`).addModifiers(Modifier.EXPORT);
+  client = client.addFunction(
+    FunctionSpec.createConstructor()
+      .addParameter('rpc', 'Rpc')
+      .addStatement('this.rpc = rpc')
+  );
+  client = client.addProperty('rpc', 'Rpc', { modifiers: [Modifier.PRIVATE, Modifier.READONLY] });
+  for (const methodDesc of serviceDesc.method) {
+    client = client.addFunction(
+      FunctionSpec.create(methodDesc.name)
+        .addParameter('request', requestType(typeMap, methodDesc))
+        .addStatement('const data = %L.encode(request).finish()', requestType(typeMap, methodDesc))
+        .addStatement('const promise = this.rpc.request(%S, %S, %L)', serviceDesc.name, methodDesc.name, 'data')
+        .addStatement('return promise.then(data => %L.decode(new Reader(data)))', responseType(typeMap, methodDesc))
+        .returns(responsePromise(typeMap, methodDesc))
+    );
+  }
+  return client;
+}
+
+function generateRpcType(): InterfaceSpec {
+  const data = TypeNames.anyType('Uint8Array');
+  return InterfaceSpec.create('Rpc')
+    .addModifiers(Modifier.EXPORT)
+    .addFunction(
+      FunctionSpec.create('request')
+        .addModifiers(Modifier.ABSTRACT)
+        .addParameter('service', TypeNames.STRING)
+        .addParameter('method', TypeNames.STRING)
+        .addParameter('data', data)
+        .returns(TypeNames.PROMISE.param(data))
+    );
+}
+
+function requestType(typeMap: TypeMap, methodDesc: MethodDescriptorProto): TypeName {
+  return messageToTypeName(typeMap, methodDesc.inputType);
+}
+
+function responseType(typeMap: TypeMap, methodDesc: MethodDescriptorProto): TypeName {
+  return messageToTypeName(typeMap, methodDesc.outputType);
+}
+
+function responsePromise(typeMap: TypeMap, methodDesc: MethodDescriptorProto): TypeName {
+  return TypeNames.PROMISE.param(responseType(typeMap, methodDesc));
+}
+
 function generateOneOfProperty(typeMap: TypeMap, name: string, fields: FieldDescriptorProto[]): PropertySpec {
   const adtType = TypeNames.unionType(
     ...fields.map(f => {
