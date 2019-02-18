@@ -66,8 +66,8 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto): F
   });
 
   visitServices(fileDesc, serviceDesc => {
-    file = file.addInterface(generateService(typeMap, serviceDesc));
-    file = file.addClass(generateServiceClientImpl(typeMap, serviceDesc));
+    file = file.addInterface(generateService(typeMap, fileDesc, serviceDesc));
+    file = file.addClass(generateServiceClientImpl(typeMap, fileDesc, serviceDesc));
   });
   file = file.addInterface(generateRpcType());
 
@@ -286,7 +286,11 @@ function generateEncode(typeMap: TypeMap, fullName: string, messageDesc: Descrip
   return func.addStatement('return writer');
 }
 
-function generateService(typeMap: TypeMap, serviceDesc: ServiceDescriptorProto): InterfaceSpec {
+function generateService(
+  typeMap: TypeMap,
+  fileDesc: FileDescriptorProto,
+  serviceDesc: ServiceDescriptorProto
+): InterfaceSpec {
   let service = InterfaceSpec.create(serviceDesc.name).addModifiers(Modifier.EXPORT);
   for (const methodDesc of serviceDesc.method) {
     service = service.addFunction(
@@ -296,10 +300,50 @@ function generateService(typeMap: TypeMap, serviceDesc: ServiceDescriptorProto):
         .returns(responsePromise(typeMap, methodDesc))
     );
   }
+  for (const batchMethod of findBatchMethods(fileDesc, serviceDesc)) {
+    const name = batchMethod.methodDesc.name.replace('Batch', 'Get');
+    const inputField = batchMethod.inputTypeDesc.field[0];
+    const outputField = batchMethod.outputTypeDesc.field[0];
+    service = service.addFunction(
+      FunctionSpec.create(name)
+        .addModifiers(Modifier.ABSTRACT)
+        .addParameter(singular(inputField.name), basicTypeName(typeMap, inputField))
+        .returns(TypeNames.PROMISE.param(basicTypeName(typeMap, outputField)))
+    );
+  }
   return service;
 }
 
-function generateServiceClientImpl(typeMap: TypeMap, serviceDesc: ServiceDescriptorProto): ClassSpec {
+function singular(name: string): string {
+  return name.substring(0, name.length - 1);
+}
+interface BatchMethod {
+  methodDesc: MethodDescriptorProto;
+  inputTypeDesc: DescriptorProto;
+  outputTypeDesc: DescriptorProto;
+}
+
+function getBatchMethod(fileDesc: FileDescriptorProto, methodDesc: MethodDescriptorProto): BatchMethod | undefined {
+  const nameMatches = methodDesc.name.startsWith('Batch');
+  const inputTypeDesc = fileDesc.messageType.find(m => `.${fileDesc.package}.${m.name}` === methodDesc.inputType);
+  const outputTypeDesc = fileDesc.messageType.find(m => `.${fileDesc.package}.${m.name}` === methodDesc.outputType);
+  if (nameMatches && inputTypeDesc && outputTypeDesc) {
+    if (hasSingleRepeatedField(inputTypeDesc) && hasSingleRepeatedField(outputTypeDesc)) {
+      return { methodDesc, inputTypeDesc, outputTypeDesc };
+    }
+  }
+  return undefined;
+}
+
+function hasSingleRepeatedField(messageDesc: DescriptorProto): boolean {
+  return messageDesc.field.length == 1 && messageDesc.field[0].label === FieldDescriptorProto.Label.LABEL_REPEATED;
+}
+
+function generateServiceClientImpl(
+  typeMap: TypeMap,
+  fileDesc: FileDescriptorProto,
+  serviceDesc: ServiceDescriptorProto
+): ClassSpec {
   let client = ClassSpec.create(`${serviceDesc.name}ClientImpl`).addModifiers(Modifier.EXPORT);
   client = client.addFunction(
     FunctionSpec.createConstructor()
@@ -316,6 +360,25 @@ function generateServiceClientImpl(typeMap: TypeMap, serviceDesc: ServiceDescrip
         .addStatement('return promise.then(data => %L.decode(new Reader(data)))', responseType(typeMap, methodDesc))
         .returns(responsePromise(typeMap, methodDesc))
     );
+    // add a batch method if this fuzzy matches to a batch lookup method
+    const batchMethod = getBatchMethod(fileDesc, methodDesc);
+    if (batchMethod) {
+      const name = batchMethod.methodDesc.name.replace('Batch', 'Get');
+      const inputField = batchMethod.inputTypeDesc.field[0];
+      const outputField = batchMethod.outputTypeDesc.field[0];
+      client = client.addFunction(
+        FunctionSpec.create(name)
+          .addParameter(singular(inputField.name), basicTypeName(typeMap, inputField))
+          .addStatement(
+            'const request: %L = { %L: [%L] }',
+            messageToTypeName(typeMap, batchMethod.methodDesc.inputType),
+            inputField.name,
+            singular(inputField.name)
+          )
+          .addStatement('return this.%L(request).then(res => res.%L[0])', batchMethod.methodDesc.name, outputField.name)
+          .returns(TypeNames.PROMISE.param(basicTypeName(typeMap, outputField)))
+      );
+    }
   }
   return client;
 }
