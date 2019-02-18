@@ -14,6 +14,7 @@
   "devDependencies": {
     "@types/jest": "^23.3.13",
     "@types/node": "^10.7.0",
+    "dataloader": "^1.4.0",
     "jest": "^24.0.0",
     "nodemon": "^1.18.3",
     "prettier": "^1.16.1",
@@ -24,6 +25,6 @@
   "dependencies": {
     "protobufjs": "^6.8.8",
     "sequency": "^0.19.2",
-    "ts-poet": "^0.4.2"
+    "ts-poet": "^0.4.5"
   }
 }

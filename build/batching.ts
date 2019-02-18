@@ -1,5 +1,6 @@
+import DataLoader from 'dataloader';
 import * as Long from 'long';
-import {Writer, Reader} from 'protobufjs/minimal';
+import { Writer, Reader } from 'protobufjs/minimal';
 
 
 export interface BatchQueryRequest {
@@ -40,6 +41,11 @@ export class EntityServiceClientImpl {
 
   private readonly rpc: Rpc;
 
+  private queryLoader = new DataLoader<string, Entity>((ids) => {
+    const request: BatchQueryRequest = { ids };
+    return this.BatchQuery(request).then(res => res.entities);
+  });
+
   constructor(rpc: Rpc) {
     this.rpc = rpc;
   }
@@ -51,8 +57,7 @@ export class EntityServiceClientImpl {
   }
 
   GetQuery(id: string): Promise<Entity> {
-    const request: BatchQueryRequest = { ids: [id] };
-    return this.BatchQuery(request).then(res => res.entities[0]);
+    return this.queryLoader.load(id);
   }
 
 }

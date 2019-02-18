@@ -2,7 +2,7 @@
 
 exports[`vector-tile works 1`] = `
 "import * as Long from 'long';
-import {Writer, Reader} from 'protobufjs/minimal';
+import { Writer, Reader } from 'protobufjs/minimal';
 
 
 export interface Tile {

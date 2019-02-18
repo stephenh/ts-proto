@@ -1,6 +1,6 @@
 import * as Long from 'long';
-import {Writer, Reader} from 'protobufjs/minimal';
-import {StringValue, Int32Value, BoolValue} from './google_protobuf_wrappers';
+import { Writer, Reader } from 'protobufjs/minimal';
+import { StringValue, Int32Value, BoolValue } from './google_protobuf_wrappers';
 
 
 export enum StateEnum {
