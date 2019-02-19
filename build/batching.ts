@@ -50,14 +50,14 @@ export class EntityServiceClientImpl {
     this.rpc = rpc;
   }
 
+  GetQuery(id: string): Promise<Entity> {
+    return this.queryLoader.load(id);
+  }
+
   BatchQuery(request: BatchQueryRequest): Promise<BatchQueryResponse> {
     const data = BatchQueryRequest.encode(request).finish();
     const promise = this.rpc.request("EntityService", "BatchQuery", data);
     return promise.then(data => BatchQueryResponse.decode(new Reader(data)));
-  }
-
-  GetQuery(id: string): Promise<Entity> {
-    return this.queryLoader.load(id);
   }
 
 }

@@ -302,7 +302,7 @@ function generateService(
         .addParameter('request', requestType(typeMap, methodDesc))
         .returns(responsePromise(typeMap, methodDesc))
     );
-    const batchMethod = getBatchMethod(fileDesc, methodDesc);
+    const batchMethod = detectArrayBatchMethod(fileDesc, methodDesc);
     if (batchMethod) {
       const name = batchMethod.methodDesc.name.replace('Batch', 'Get');
       const inputField = batchMethod.inputTypeDesc.field[0];
@@ -324,18 +324,6 @@ interface BatchMethod {
   outputTypeDesc: DescriptorProto;
 }
 
-function getBatchMethod(fileDesc: FileDescriptorProto, methodDesc: MethodDescriptorProto): BatchMethod | undefined {
-  const nameMatches = methodDesc.name.startsWith('Batch');
-  const inputTypeDesc = fileDesc.messageType.find(m => `.${fileDesc.package}.${m.name}` === methodDesc.inputType);
-  const outputTypeDesc = fileDesc.messageType.find(m => `.${fileDesc.package}.${m.name}` === methodDesc.outputType);
-  if (nameMatches && inputTypeDesc && outputTypeDesc) {
-    if (hasSingleRepeatedField(inputTypeDesc) && hasSingleRepeatedField(outputTypeDesc)) {
-      return { methodDesc, inputTypeDesc, outputTypeDesc };
-    }
-  }
-  return undefined;
-}
-
 function hasSingleRepeatedField(messageDesc: DescriptorProto): boolean {
   return messageDesc.field.length == 1 && messageDesc.field[0].label === FieldDescriptorProto.Label.LABEL_REPEATED;
 }
@@ -353,6 +341,11 @@ function generateServiceClientImpl(
   );
   client = client.addProperty('rpc', 'Rpc', { modifiers: [Modifier.PRIVATE, Modifier.READONLY] });
   for (const methodDesc of serviceDesc.method) {
+    // add a batch method if this fuzzy matches to a batch lookup method
+    const arrayBatchMethod = detectArrayBatchMethod(fileDesc, methodDesc);
+    if (arrayBatchMethod) {
+      client = generateArrayBatchMethod(typeMap, client, arrayBatchMethod);
+    }
     // generate the regular method
     client = client.addFunction(
       FunctionSpec.create(methodDesc.name)
@@ -362,46 +355,58 @@ function generateServiceClientImpl(
         .addStatement('return promise.then(data => %L.decode(new Reader(data)))', responseType(typeMap, methodDesc))
         .returns(responsePromise(typeMap, methodDesc))
     );
-    // add a batch method if this fuzzy matches to a batch lookup method
-    const batchMethod = getBatchMethod(fileDesc, methodDesc);
-    if (batchMethod) {
-      const name = batchMethod.methodDesc.name.replace('Batch', '');
-      const loaderFieldName = `${lowerFirst(name)}Loader`;
-      const singleMethodName = `Get${name}`;
-      // get the batch fields/types
-      const inputField = batchMethod.inputTypeDesc.field[0];
-      const inputType = basicTypeName(typeMap, inputField); // e.g. repeated string -> string
-      const outputField = batchMethod.outputTypeDesc.field[0];
-      const outputType = basicTypeName(typeMap, outputField); // e.g. repeated Entity -> Entity
-      // add a dataloader field
-      client = client.addProperty(
-        PropertySpec.create(loaderFieldName, dataloader.param(inputType, outputType))
-          .addModifiers(Modifier.PRIVATE)
-          .setImplicitlyTyped()
-          .initializer(
-            'new %T(%L)',
-            dataloader.param(inputType, outputType),
-            CodeBlock.lambda(inputField.name)
-              .addStatement(
-                'const request: %L = { %L }',
-                messageToTypeName(typeMap, batchMethod.methodDesc.inputType),
-                inputField.name
-              )
-              .addStatement(
-                'return this.%L(request).then(res => res.%L)',
-                batchMethod.methodDesc.name,
-                outputField.name
-              )
-          )
-      );
-      client = client.addFunction(
-        FunctionSpec.create(singleMethodName)
-          .addParameter(singular(inputField.name), inputType)
-          .addStatement('return this.%L.load(%L)', loaderFieldName, singular(inputField.name))
-          .returns(TypeNames.PROMISE.param(outputType))
-      );
+  }
+  return client;
+}
+
+function detectArrayBatchMethod(fileDesc: FileDescriptorProto, methodDesc: MethodDescriptorProto): BatchMethod | undefined {
+  const nameMatches = methodDesc.name.startsWith('Batch');
+  const inputTypeDesc = fileDesc.messageType.find(m => `.${fileDesc.package}.${m.name}` === methodDesc.inputType);
+  const outputTypeDesc = fileDesc.messageType.find(m => `.${fileDesc.package}.${m.name}` === methodDesc.outputType);
+  if (nameMatches && inputTypeDesc && outputTypeDesc) {
+    if (hasSingleRepeatedField(inputTypeDesc) && hasSingleRepeatedField(outputTypeDesc)) {
+      return { methodDesc, inputTypeDesc, outputTypeDesc };
     }
   }
+  return undefined;
+}
+
+function generateArrayBatchMethod(typeMap: TypeMap, client: ClassSpec, batchMethod: BatchMethod): ClassSpec {
+  const name = batchMethod.methodDesc.name.replace('Batch', '');
+  const loaderFieldName = `${lowerFirst(name)}Loader`;
+  const singleMethodName = `Get${name}`;
+  // get the batch fields/types
+  const inputField = batchMethod.inputTypeDesc.field[0];
+  const inputType = basicTypeName(typeMap, inputField); // e.g. repeated string -> string
+  const outputField = batchMethod.outputTypeDesc.field[0];
+  const outputType = basicTypeName(typeMap, outputField); // e.g. repeated Entity -> Entity
+  // add a dataloader field
+  client = client.addProperty(
+    PropertySpec.create(loaderFieldName, dataloader.param(inputType, outputType))
+      .addModifiers(Modifier.PRIVATE)
+      .setImplicitlyTyped()
+      .initializer(
+        'new %T(%L)',
+        dataloader.param(inputType, outputType),
+        CodeBlock.lambda(inputField.name)
+          .addStatement(
+            'const request: %L = { %L }',
+            messageToTypeName(typeMap, batchMethod.methodDesc.inputType),
+            inputField.name
+          )
+          .addStatement(
+            'return this.%L(request).then(res => res.%L)',
+            batchMethod.methodDesc.name,
+            outputField.name
+          )
+      )
+  );
+  client = client.addFunction(
+    FunctionSpec.create(singleMethodName)
+      .addParameter(singular(inputField.name), inputType)
+      .addStatement('return this.%L.load(%L)', loaderFieldName, singular(inputField.name))
+      .returns(TypeNames.PROMISE.param(outputType))
+  );
   return client;
 }
 
