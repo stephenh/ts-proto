@@ -28,3 +28,7 @@ export function singular(name: string): string {
 export function lowerFirst(name: string): string {
   return name.substring(0, 1).toLowerCase() + name.substring(1);
 }
+
+export function upperFirst(name: string): string {
+  return name.substring(0, 1).toUpperCase() + name.substring(1);
+}

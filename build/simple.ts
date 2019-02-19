@@ -58,6 +58,19 @@ export interface SimpleWithWrappers {
   snacks: Array<string | undefined>;
 }
 
+export interface Entity {
+  id: number;
+}
+
+export interface SimpleWithMap {
+  entitiesById: { [key: number]: Entity };
+}
+
+export interface SimpleWithMap_EntitiesByIdEntry {
+  key: number;
+  value: Entity | undefined;
+}
+
 export interface PingRequest {
   input: string;
 }
@@ -105,6 +118,19 @@ const baseSimpleWithWrappers: object = {
   enabled: null,
   coins: null,
   snacks: null,
+};
+
+const baseEntity: object = {
+  id: 0,
+};
+
+const baseSimpleWithMap: object = {
+  entitiesById: null,
+};
+
+const baseSimpleWithMap_EntitiesByIdEntry: object = {
+  key: 0,
+  value: null,
 };
 
 const basePingRequest: object = {
@@ -413,6 +439,87 @@ export const SimpleWithWrappers = {
           break;
         case 7:
           message.snacks.push(StringValue.decode(reader, reader.uint32()).value);
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+};
+
+export const Entity = {
+  encode(message: Entity, writer: Writer = new Writer()): Writer {
+    writer.uint32(8).int32(message.id);
+    return writer;
+  },
+  decode(reader: Reader, length?: number): Entity {
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = Object.create(baseEntity) as Entity;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.id = reader.int32();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+};
+
+export const SimpleWithMap = {
+  encode(message: SimpleWithMap, writer: Writer = new Writer()): Writer {
+    Object.entries(message.entitiesById).forEach(([key, value]) => {
+      SimpleWithMap_EntitiesByIdEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).ldelim();
+    })
+    return writer;
+  },
+  decode(reader: Reader, length?: number): SimpleWithMap {
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = Object.create(baseSimpleWithMap) as SimpleWithMap;
+    message.entitiesById = {};
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          const entry = SimpleWithMap_EntitiesByIdEntry.decode(reader, reader.uint32());
+          if (entry.value) {
+            message.entitiesById[entry.key] = entry.value;
+          }
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+};
+
+export const SimpleWithMap_EntitiesByIdEntry = {
+  encode(message: SimpleWithMap_EntitiesByIdEntry, writer: Writer = new Writer()): Writer {
+    writer.uint32(8).int32(message.key);
+    if (message.value !== undefined && message.value !== null) {
+      Entity.encode(message.value, writer.uint32(18).fork()).ldelim();
+    }
+    return writer;
+  },
+  decode(reader: Reader, length?: number): SimpleWithMap_EntitiesByIdEntry {
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = Object.create(baseSimpleWithMap_EntitiesByIdEntry) as SimpleWithMap_EntitiesByIdEntry;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.key = reader.int32();
+          break;
+        case 2:
+          message.value = Entity.decode(reader, reader.uint32());
           break;
         default:
           reader.skipType(tag & 7);

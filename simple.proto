@@ -59,6 +59,14 @@ message SimpleWithWrappers {
   repeated google.protobuf.StringValue snacks = 7;
 }
 
+message Entity {
+  int32 id = 1;
+}
+
+message SimpleWithMap {
+  map<int32, Entity> entitiesById = 1;
+}
+
 service PingService {
   rpc ping(PingRequest) returns (PingResponse);
 }

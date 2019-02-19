@@ -1,11 +1,13 @@
 import { google } from '../build/pbjs';
-import { TypeName, TypeNames } from 'ts-poet';
+import { Member, TypeName, TypeNames } from 'ts-poet';
 import { visit } from './main';
-import { fail } from "./utils";
-import { asSequence } from "sequency";
+import { fail, upperFirst } from './utils';
+import { asSequence } from 'sequency';
 import FieldDescriptorProto = google.protobuf.FieldDescriptorProto;
 import CodeGeneratorRequest = google.protobuf.compiler.CodeGeneratorRequest;
 import DescriptorProto = google.protobuf.DescriptorProto;
+import { types } from 'protobufjs';
+import basic = types.basic;
 
 /** Based on https://github.com/dcodeIO/protobuf.js/blob/master/src/types.js#L37. */
 export function basicWireType(type: FieldDescriptorProto.Type): number {
@@ -212,6 +214,10 @@ export function isRepeated(field: FieldDescriptorProto): boolean {
   return field.label === FieldDescriptorProto.Label.LABEL_REPEATED;
 }
 
+export function isMapType(messageDesc: DescriptorProto, field: FieldDescriptorProto): boolean {
+  return detectMapType(messageDesc, field) !== undefined;
+}
+
 const valueTypes: { [key: string]: TypeName } = {
   '.google.protobuf.StringValue': TypeNames.unionType(TypeNames.STRING, TypeNames.UNDEFINED),
   '.google.protobuf.Int32Value': TypeNames.unionType(TypeNames.NUMBER, TypeNames.UNDEFINED),
@@ -238,14 +244,36 @@ function toModuleAndType(typeMap: TypeMap, protoType: string): [string, string] 
 }
 
 /** Return the TypeName for any field (primitive/message/etc.) as exposed in the interface. */
-export function toTypeName(typeMap: TypeMap, field: FieldDescriptorProto): TypeName {
+export function toTypeName(typeMap: TypeMap, messageDesc: DescriptorProto, field: FieldDescriptorProto): TypeName {
   let type = basicTypeName(typeMap, field);
   if (isRepeated(field)) {
-    type = TypeNames.arrayType(type);
+    const mapType = detectMapType(messageDesc, field);
+    if (mapType) {
+      const keyType = toTypeName(typeMap, messageDesc, mapType.field[0]);
+      // use basicTypeName because we don't need the '| undefined'
+      const valueType = basicTypeName(typeMap, mapType.field[1]);
+      type = TypeNames.anonymousType(new Member(`[key: ${keyType}]`, valueType));
+    } else {
+      type = TypeNames.arrayType(type);
+    }
   } else if ((isWithinOneOf(field) || isMessage(field)) && !isValueType(field)) {
     type = TypeNames.unionType(type, TypeNames.UNDEFINED);
   }
   return type;
+}
+
+function detectMapType(messageDesc: DescriptorProto, fieldDesc: FieldDescriptorProto) {
+  if (
+    fieldDesc.label === FieldDescriptorProto.Label.LABEL_REPEATED &&
+    fieldDesc.type === FieldDescriptorProto.Type.TYPE_MESSAGE
+  ) {
+    return messageDesc.nestedType.find(
+      t =>
+        t.name === `${upperFirst(fieldDesc.name)}Entry` &&
+        (t.options !== undefined && t.options != null && t.options.mapEntry)
+    );
+  }
+  return undefined;
 }
 
 function createOneOfsMap(message: DescriptorProto): Map<string, FieldDescriptorProto[]> {

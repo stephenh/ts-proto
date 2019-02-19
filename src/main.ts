@@ -5,7 +5,6 @@ import {
   FileSpec,
   FunctionSpec,
   InterfaceSpec,
-  Member,
   Modifier,
   PropertySpec,
   TypeName,
@@ -17,6 +16,7 @@ import {
   basicTypeName,
   basicWireType,
   defaultValue,
+  isMapType,
   isMessage,
   isPrimitive,
   isRepeated,
@@ -105,7 +105,9 @@ function generateEnum(fullName: string, enumDesc: EnumDescriptorProto): EnumSpec
 function generateInterfaceDeclaration(typeMap: TypeMap, fullName: string, messageDesc: DescriptorProto) {
   let message = InterfaceSpec.create(fullName).addModifiers(Modifier.EXPORT);
   for (const fieldDesc of messageDesc.field) {
-    message = message.addProperty(PropertySpec.create(snakeToCamel(fieldDesc.name), toTypeName(typeMap, fieldDesc)));
+    message = message.addProperty(
+      PropertySpec.create(snakeToCamel(fieldDesc.name), toTypeName(typeMap, messageDesc, fieldDesc))
+    );
   }
   return message;
 }
@@ -163,7 +165,8 @@ function generateDecode(typeMap: TypeMap, fullName: string, messageDesc: Descrip
 
   // initialize all lists
   messageDesc.field.filter(isRepeated).forEach(field => {
-    func = func.addStatement('message.%L = []', snakeToCamel(field.name));
+    const value = isMapType(messageDesc, field) ? '{}' : '[]';
+    func = func.addStatement('message.%L = %L', snakeToCamel(field.name), value);
   });
 
   // start the tag loop
@@ -194,7 +197,13 @@ function generateDecode(typeMap: TypeMap, fullName: string, messageDesc: Descrip
 
     // and then use the snippet to handle repeated fields if necessary
     if (isRepeated(field)) {
-      if (packedType(field.type) === undefined) {
+      if (isMapType(messageDesc, field)) {
+        func = func
+          .addStatement(`const entry = %L`, readSnippet)
+          .beginControlFlow('if (entry.value)')
+          .addStatement('message.%L[entry.key] = entry.value', fieldName)
+          .endControlFlow();
+      } else if (packedType(field.type) === undefined) {
         func = func.addStatement(`message.%L.push(%L)`, fieldName, readSnippet);
       } else {
         func = func
@@ -258,7 +267,12 @@ function generateEncode(typeMap: TypeMap, fullName: string, messageDesc: Descrip
     }
 
     if (isRepeated(field)) {
-      if (packedType(field.type) === undefined) {
+      if (isMapType(messageDesc, field)) {
+        func = func
+          .beginLambda('Object.entries(message.%L).forEach(([key, value]) =>', fieldName)
+          .addStatement('%L', writeSnippet('{ key: key as any, value }'))
+          .endLambda(')');
+      } else if (packedType(field.type) === undefined) {
         func = func
           .beginControlFlow('for (const v of message.%L)', fieldName)
           .addStatement('%L', writeSnippet('v!'))
@@ -359,7 +373,10 @@ function generateServiceClientImpl(
   return client;
 }
 
-function detectArrayBatchMethod(fileDesc: FileDescriptorProto, methodDesc: MethodDescriptorProto): BatchMethod | undefined {
+function detectArrayBatchMethod(
+  fileDesc: FileDescriptorProto,
+  methodDesc: MethodDescriptorProto
+): BatchMethod | undefined {
   const nameMatches = methodDesc.name.startsWith('Batch');
   const inputTypeDesc = fileDesc.messageType.find(m => `.${fileDesc.package}.${m.name}` === methodDesc.inputType);
   const outputTypeDesc = fileDesc.messageType.find(m => `.${fileDesc.package}.${m.name}` === methodDesc.outputType);
@@ -394,11 +411,7 @@ function generateArrayBatchMethod(typeMap: TypeMap, client: ClassSpec, batchMeth
             messageToTypeName(typeMap, batchMethod.methodDesc.inputType),
             inputField.name
           )
-          .addStatement(
-            'return this.%L(request).then(res => res.%L)',
-            batchMethod.methodDesc.name,
-            outputField.name
-          )
+          .addStatement('return this.%L(request).then(res => res.%L)', batchMethod.methodDesc.name, outputField.name)
       )
   );
   client = client.addFunction(
@@ -436,16 +449,16 @@ function responsePromise(typeMap: TypeMap, methodDesc: MethodDescriptorProto): T
   return TypeNames.PROMISE.param(responseType(typeMap, methodDesc));
 }
 
-function generateOneOfProperty(typeMap: TypeMap, name: string, fields: FieldDescriptorProto[]): PropertySpec {
-  const adtType = TypeNames.unionType(
-    ...fields.map(f => {
-      const kind = new Member('field', TypeNames.anyType(`'${f.name}'`), false);
-      const value = new Member('value', toTypeName(typeMap, f), false);
-      return TypeNames.anonymousType(kind, value);
-    })
-  );
-  return PropertySpec.create(snakeToCamel(name), adtType);
-}
+// function generateOneOfProperty(typeMap: TypeMap, name: string, fields: FieldDescriptorProto[]): PropertySpec {
+//   const adtType = TypeNames.unionType(
+//     ...fields.map(f => {
+//       const kind = new Member('field', TypeNames.anyType(`'${f.name}'`), false);
+//       const value = new Member('value', toTypeName(typeMap, f), false);
+//       return TypeNames.anonymousType(kind, value);
+//     })
+//   );
+//   return PropertySpec.create(snakeToCamel(name), adtType);
+// }
 
 function snakeToCamel(s: string): string {
   return s.replace(/(\_\w)/g, m => m[1].toUpperCase());

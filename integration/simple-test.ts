@@ -1,9 +1,18 @@
 import { Reader } from 'protobufjs';
-import { Nested, Nested_InnerEnum, Nested_InnerMessage, Simple, StateEnum } from '../build/simple';
-import { google, simple as pbjs } from '../build/pbjs';
+import {
+  Entity,
+  Nested,
+  Nested_InnerEnum,
+  Nested_InnerMessage,
+  Simple,
+  StateEnum,
+  SimpleWithMap
+} from '../build/simple';
+import { simple as pbjs } from '../build/pbjs';
 import ISimple = pbjs.ISimple;
 import PbChild = pbjs.Child;
 import PbSimple = pbjs.Simple;
+import PbSimpleWithMap = pbjs.SimpleWithMap;
 import PbState = pbjs.StateEnum;
 import PbNested = pbjs.Nested;
 import PbNested_InnerMessage = pbjs.Nested.InnerMessage;
@@ -114,7 +123,7 @@ describe('simple', () => {
 
   it('observes how pbjs handles collections of default values', () => {
     const s1 = PbSimple.create({
-      coins: [0, 1, 2],
+      coins: [0, 1, 2]
     });
     const s2 = PbSimple.decode(PbSimple.encode(s1).finish());
     expect(s2.coins).toEqual([0, 1, 2]);
@@ -134,5 +143,26 @@ describe('simple', () => {
     const s2 = PbSimple.toObject(PbSimple.decode(Simple.encode(s1).finish()));
     expect(s2).toEqual(s1);
   });
-});
 
+  it('can encode maps', () => {
+    const s1: SimpleWithMap = {
+      entitiesById: {
+        1: { id: 1 },
+        2: { id: 2 },
+      }
+    };
+    const s2 = PbSimpleWithMap.toObject(PbSimpleWithMap.decode(SimpleWithMap.encode(s1).finish()));
+    expect(s2).toEqual(s1);
+  });
+
+  it('can decode maps', () => {
+    const s1 = PbSimpleWithMap.fromObject({
+      entitiesById: {
+        1: { id: 1 },
+        2: { id: 2 },
+      }
+    });
+    const s2 = SimpleWithMap.decode(new Reader(PbSimpleWithMap.encode(s1).finish()));
+    expect(s2).toEqual(s1);
+  });
+});

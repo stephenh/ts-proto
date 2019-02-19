@@ -16,7 +16,7 @@ export interface BatchMapQueryRequest {
 }
 
 export interface BatchMapQueryResponse {
-  entities: BatchMapQueryResponse_EntitiesEntry[];
+  entities: { [key: string]: Entity };
 }
 
 export interface BatchMapQueryResponse_EntitiesEntry {
@@ -200,20 +200,23 @@ export const BatchMapQueryRequest = {
 
 export const BatchMapQueryResponse = {
   encode(message: BatchMapQueryResponse, writer: Writer = new Writer()): Writer {
-    for (const v of message.entities) {
-      BatchMapQueryResponse_EntitiesEntry.encode(v!, writer.uint32(10).fork()).ldelim();
-    }
+    Object.entries(message.entities).forEach(([key, value]) => {
+      BatchMapQueryResponse_EntitiesEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).ldelim();
+    })
     return writer;
   },
   decode(reader: Reader, length?: number): BatchMapQueryResponse {
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = Object.create(baseBatchMapQueryResponse) as BatchMapQueryResponse;
-    message.entities = [];
+    message.entities = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.entities.push(BatchMapQueryResponse_EntitiesEntry.decode(reader, reader.uint32()));
+          const entry = BatchMapQueryResponse_EntitiesEntry.decode(reader, reader.uint32());
+          if (entry.value) {
+            message.entities[entry.key] = entry.value;
+          }
           break;
         default:
           reader.skipType(tag & 7);
