@@ -6,8 +6,6 @@ import { asSequence } from 'sequency';
 import FieldDescriptorProto = google.protobuf.FieldDescriptorProto;
 import CodeGeneratorRequest = google.protobuf.compiler.CodeGeneratorRequest;
 import DescriptorProto = google.protobuf.DescriptorProto;
-import { types } from 'protobufjs';
-import basic = types.basic;
 
 /** Based on https://github.com/dcodeIO/protobuf.js/blob/master/src/types.js#L37. */
 export function basicWireType(type: FieldDescriptorProto.Type): number {
@@ -214,8 +212,8 @@ export function isRepeated(field: FieldDescriptorProto): boolean {
   return field.label === FieldDescriptorProto.Label.LABEL_REPEATED;
 }
 
-export function isMapType(messageDesc: DescriptorProto, field: FieldDescriptorProto): boolean {
-  return detectMapType(messageDesc, field) !== undefined;
+export function isMapType(typeMap: TypeMap, messageDesc: DescriptorProto, field: FieldDescriptorProto): boolean {
+  return detectMapType(typeMap, messageDesc, field) !== undefined;
 }
 
 const valueTypes: { [key: string]: TypeName } = {
@@ -247,11 +245,9 @@ function toModuleAndType(typeMap: TypeMap, protoType: string): [string, string] 
 export function toTypeName(typeMap: TypeMap, messageDesc: DescriptorProto, field: FieldDescriptorProto): TypeName {
   let type = basicTypeName(typeMap, field);
   if (isRepeated(field)) {
-    const mapType = detectMapType(messageDesc, field);
+    const mapType = detectMapType(typeMap, messageDesc, field);
     if (mapType) {
-      const keyType = toTypeName(typeMap, messageDesc, mapType.field[0]);
-      // use basicTypeName because we don't need the '| undefined'
-      const valueType = basicTypeName(typeMap, mapType.field[1]);
+      const { keyType, valueType } = mapType;
       type = TypeNames.anonymousType(new Member(`[key: ${keyType}]`, valueType));
     } else {
       type = TypeNames.arrayType(type);
@@ -262,16 +258,26 @@ export function toTypeName(typeMap: TypeMap, messageDesc: DescriptorProto, field
   return type;
 }
 
-function detectMapType(messageDesc: DescriptorProto, fieldDesc: FieldDescriptorProto) {
+export function detectMapType(
+  typeMap: TypeMap,
+  messageDesc: DescriptorProto,
+  fieldDesc: FieldDescriptorProto
+): { messageDesc: DescriptorProto, keyType: TypeName, valueType: TypeName } | undefined {
   if (
     fieldDesc.label === FieldDescriptorProto.Label.LABEL_REPEATED &&
     fieldDesc.type === FieldDescriptorProto.Type.TYPE_MESSAGE
   ) {
-    return messageDesc.nestedType.find(
-      t =>
-        t.name === `${upperFirst(fieldDesc.name)}Entry` &&
-        (t.options !== undefined && t.options != null && t.options.mapEntry)
-    );
+    return messageDesc.nestedType
+      .filter(
+        t =>
+          t.name === `${upperFirst(fieldDesc.name)}Entry` &&
+          (t.options !== undefined && t.options != null && t.options.mapEntry)
+      ).map(mapType => {
+        const keyType = toTypeName(typeMap, messageDesc, mapType.field[0]);
+        // use basicTypeName because we don't need the '| undefined'
+        const valueType = basicTypeName(typeMap, mapType.field[1]);
+        return { messageDesc: mapType, keyType, valueType };
+      }).find(_ => true);
   }
   return undefined;
 }

@@ -16,6 +16,7 @@ import {
   basicTypeName,
   basicWireType,
   defaultValue,
+  detectMapType,
   isMapType,
   isMessage,
   isPrimitive,
@@ -165,7 +166,7 @@ function generateDecode(typeMap: TypeMap, fullName: string, messageDesc: Descrip
 
   // initialize all lists
   messageDesc.field.filter(isRepeated).forEach(field => {
-    const value = isMapType(messageDesc, field) ? '{}' : '[]';
+    const value = isMapType(typeMap, messageDesc, field) ? '{}' : '[]';
     func = func.addStatement('message.%L = %L', snakeToCamel(field.name), value);
   });
 
@@ -197,7 +198,7 @@ function generateDecode(typeMap: TypeMap, fullName: string, messageDesc: Descrip
 
     // and then use the snippet to handle repeated fields if necessary
     if (isRepeated(field)) {
-      if (isMapType(messageDesc, field)) {
+      if (isMapType(typeMap, messageDesc, field)) {
         func = func
           .addStatement(`const entry = %L`, readSnippet)
           .beginControlFlow('if (entry.value)')
@@ -267,7 +268,7 @@ function generateEncode(typeMap: TypeMap, fullName: string, messageDesc: Descrip
     }
 
     if (isRepeated(field)) {
-      if (isMapType(messageDesc, field)) {
+      if (isMapType(typeMap, messageDesc, field)) {
         func = func
           .beginLambda('Object.entries(message.%L).forEach(([key, value]) =>', fieldName)
           .addStatement('%L', writeSnippet('{ key: key as any, value }'))
@@ -312,20 +313,16 @@ function generateService(
   for (const methodDesc of serviceDesc.method) {
     service = service.addFunction(
       FunctionSpec.create(methodDesc.name)
-        .addModifiers(Modifier.ABSTRACT)
         .addParameter('request', requestType(typeMap, methodDesc))
         .returns(responsePromise(typeMap, methodDesc))
     );
-    const batchMethod = detectArrayBatchMethod(fileDesc, methodDesc);
+    const batchMethod = detectBatchMethod(typeMap, fileDesc, methodDesc);
     if (batchMethod) {
       const name = batchMethod.methodDesc.name.replace('Batch', 'Get');
-      const inputField = batchMethod.inputTypeDesc.field[0];
-      const outputField = batchMethod.outputTypeDesc.field[0];
       service = service.addFunction(
         FunctionSpec.create(name)
-          .addModifiers(Modifier.ABSTRACT)
-          .addParameter(singular(inputField.name), basicTypeName(typeMap, inputField))
-          .returns(TypeNames.PROMISE.param(basicTypeName(typeMap, outputField)))
+          .addParameter(singular(batchMethod.inputFieldName), batchMethod.inputType)
+          .returns(TypeNames.PROMISE.param(batchMethod.outputType))
       );
     }
   }
@@ -334,8 +331,12 @@ function generateService(
 
 interface BatchMethod {
   methodDesc: MethodDescriptorProto;
-  inputTypeDesc: DescriptorProto;
-  outputTypeDesc: DescriptorProto;
+  singleMethodName: string;
+  inputFieldName: string;
+  inputType: TypeName;
+  outputFieldName: string;
+  outputType: TypeName;
+  mapType: boolean;
 }
 
 function hasSingleRepeatedField(messageDesc: DescriptorProto): boolean {
@@ -356,9 +357,9 @@ function generateServiceClientImpl(
   client = client.addProperty('rpc', 'Rpc', { modifiers: [Modifier.PRIVATE, Modifier.READONLY] });
   for (const methodDesc of serviceDesc.method) {
     // add a batch method if this fuzzy matches to a batch lookup method
-    const arrayBatchMethod = detectArrayBatchMethod(fileDesc, methodDesc);
+    const arrayBatchMethod = detectBatchMethod(typeMap, fileDesc, methodDesc);
     if (arrayBatchMethod) {
-      client = generateArrayBatchMethod(typeMap, client, arrayBatchMethod);
+      client = generateBatchingMethod(typeMap, client, arrayBatchMethod);
     }
     // generate the regular method
     client = client.addFunction(
@@ -373,7 +374,8 @@ function generateServiceClientImpl(
   return client;
 }
 
-function detectArrayBatchMethod(
+function detectBatchMethod(
+  typeMap: TypeMap,
   fileDesc: FileDescriptorProto,
   methodDesc: MethodDescriptorProto
 ): BatchMethod | undefined {
@@ -382,42 +384,54 @@ function detectArrayBatchMethod(
   const outputTypeDesc = fileDesc.messageType.find(m => `.${fileDesc.package}.${m.name}` === methodDesc.outputType);
   if (nameMatches && inputTypeDesc && outputTypeDesc) {
     if (hasSingleRepeatedField(inputTypeDesc) && hasSingleRepeatedField(outputTypeDesc)) {
-      return { methodDesc, inputTypeDesc, outputTypeDesc };
+      const singleMethodName = methodDesc.name.replace('Batch', 'Get');
+      const inputFieldName = inputTypeDesc.field[0].name;
+      const inputType = basicTypeName(typeMap, inputTypeDesc.field[0]); // e.g. repeated string -> string
+      const outputFieldName = outputTypeDesc.field[0].name;
+      let outputType = basicTypeName(typeMap, outputTypeDesc.field[0]); // e.g. repeated Entity -> Entity
+      const mapType = detectMapType(typeMap, outputTypeDesc, outputTypeDesc.field[0]);
+      if (mapType) {
+        outputType = mapType.valueType;
+      }
+      return {
+        methodDesc,
+        singleMethodName,
+        inputFieldName,
+        inputType,
+        outputFieldName,
+        outputType,
+        mapType: !!mapType
+      };
     }
   }
   return undefined;
 }
 
-function generateArrayBatchMethod(typeMap: TypeMap, client: ClassSpec, batchMethod: BatchMethod): ClassSpec {
-  const name = batchMethod.methodDesc.name.replace('Batch', '');
+function generateBatchingMethod(typeMap: TypeMap, client: ClassSpec, batchMethod: BatchMethod): ClassSpec {
+  const name = batchMethod.singleMethodName.replace('Get', '');
   const loaderFieldName = `${lowerFirst(name)}Loader`;
-  const singleMethodName = `Get${name}`;
-  // get the batch fields/types
-  const inputField = batchMethod.inputTypeDesc.field[0];
-  const inputType = basicTypeName(typeMap, inputField); // e.g. repeated string -> string
-  const outputField = batchMethod.outputTypeDesc.field[0];
-  const outputType = basicTypeName(typeMap, outputField); // e.g. repeated Entity -> Entity
+  const { methodDesc, singleMethodName, inputFieldName, inputType, outputFieldName, outputType, mapType } = batchMethod;
   // add a dataloader field
+  let lambda = CodeBlock.lambda(inputFieldName) // e.g. keys
+    .addStatement('const request = { %L }', inputFieldName);
+  if (mapType) {
+    lambda = lambda
+      .beginLambda('return this.%L(request).then(res =>', methodDesc.name)
+      .addStatement('return %L.map(e => res.%L[e])', inputFieldName, outputFieldName)
+      .endLambda(')');
+  } else {
+    lambda = lambda.addStatement('return this.%L(request).then(res => res.%L)', methodDesc.name, outputFieldName);
+  }
   client = client.addProperty(
     PropertySpec.create(loaderFieldName, dataloader.param(inputType, outputType))
       .addModifiers(Modifier.PRIVATE)
       .setImplicitlyTyped()
-      .initializer(
-        'new %T(%L)',
-        dataloader.param(inputType, outputType),
-        CodeBlock.lambda(inputField.name)
-          .addStatement(
-            'const request: %L = { %L }',
-            messageToTypeName(typeMap, batchMethod.methodDesc.inputType),
-            inputField.name
-          )
-          .addStatement('return this.%L(request).then(res => res.%L)', batchMethod.methodDesc.name, outputField.name)
-      )
+      .initializer('new %T(%L)', dataloader.param(inputType, outputType), lambda)
   );
   client = client.addFunction(
     FunctionSpec.create(singleMethodName)
-      .addParameter(singular(inputField.name), inputType)
-      .addStatement('return this.%L.load(%L)', loaderFieldName, singular(inputField.name))
+      .addParameter(singular(inputFieldName), inputType)
+      .addStatement('return this.%L.load(%L)', loaderFieldName, singular(inputFieldName))
       .returns(TypeNames.PROMISE.param(outputType))
   );
   return client;
@@ -429,7 +443,6 @@ function generateRpcType(): InterfaceSpec {
     .addModifiers(Modifier.EXPORT)
     .addFunction(
       FunctionSpec.create('request')
-        .addModifiers(Modifier.ABSTRACT)
         .addParameter('service', TypeNames.STRING)
         .addParameter('method', TypeNames.STRING)
         .addParameter('data', data)

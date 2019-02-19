@@ -63,7 +63,7 @@ export interface EntityService {
 
   BatchMapQuery(request: BatchMapQueryRequest): Promise<BatchMapQueryResponse>;
 
-  GetMapQuery(id: string): Promise<BatchMapQueryResponse_EntitiesEntry>;
+  GetMapQuery(id: string): Promise<Entity>;
 
 }
 
@@ -72,13 +72,15 @@ export class EntityServiceClientImpl {
   private readonly rpc: Rpc;
 
   private queryLoader = new DataLoader<string, Entity>((ids) => {
-    const request: BatchQueryRequest = { ids };
+    const request = { ids };
     return this.BatchQuery(request).then(res => res.entities);
   });
 
-  private mapQueryLoader = new DataLoader<string, BatchMapQueryResponse_EntitiesEntry>((ids) => {
-    const request: BatchMapQueryRequest = { ids };
-    return this.BatchMapQuery(request).then(res => res.entities);
+  private mapQueryLoader = new DataLoader<string, Entity>((ids) => {
+    const request = { ids };
+    return this.BatchMapQuery(request).then(res => {
+      return ids.map(e => res.entities[e]);
+    })
   });
 
   constructor(rpc: Rpc) {
@@ -95,7 +97,7 @@ export class EntityServiceClientImpl {
     return promise.then(data => BatchQueryResponse.decode(new Reader(data)));
   }
 
-  GetMapQuery(id: string): Promise<BatchMapQueryResponse_EntitiesEntry> {
+  GetMapQuery(id: string): Promise<Entity> {
     return this.mapQueryLoader.load(id);
   }
 

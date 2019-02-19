@@ -1,6 +1,5 @@
 import { Reader } from 'protobufjs';
 import {
-  Entity,
   Nested,
   Nested_InnerEnum,
   Nested_InnerMessage,
