@@ -3,6 +3,8 @@ package batching;
 
 service EntityService {
   rpc BatchQuery(BatchQueryRequest) returns (BatchQueryResponse);
+
+  rpc BatchMapQuery(BatchMapQueryRequest) returns (BatchMapQueryResponse);
 }
 
 message BatchQueryRequest {
@@ -11,6 +13,14 @@ message BatchQueryRequest {
 
 message BatchQueryResponse {
   repeated Entity entities = 1;
+}
+
+message BatchMapQueryRequest {
+  repeated string ids = 1;
+}
+
+message BatchMapQueryResponse {
+  map<string, Entity> entities = 1;
 }
 
 message Entity {

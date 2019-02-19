@@ -11,6 +11,19 @@ export interface BatchQueryResponse {
   entities: Entity[];
 }
 
+export interface BatchMapQueryRequest {
+  ids: string[];
+}
+
+export interface BatchMapQueryResponse {
+  entities: BatchMapQueryResponse_EntitiesEntry[];
+}
+
+export interface BatchMapQueryResponse_EntitiesEntry {
+  key: string;
+  value: Entity | undefined;
+}
+
 export interface Entity {
   id: string;
   name: string;
@@ -24,6 +37,19 @@ const baseBatchQueryResponse: object = {
   entities: null,
 };
 
+const baseBatchMapQueryRequest: object = {
+  ids: "",
+};
+
+const baseBatchMapQueryResponse: object = {
+  entities: null,
+};
+
+const baseBatchMapQueryResponse_EntitiesEntry: object = {
+  key: "",
+  value: null,
+};
+
 const baseEntity: object = {
   id: "",
   name: "",
@@ -35,6 +61,10 @@ export interface EntityService {
 
   GetQuery(id: string): Promise<Entity>;
 
+  BatchMapQuery(request: BatchMapQueryRequest): Promise<BatchMapQueryResponse>;
+
+  GetMapQuery(id: string): Promise<BatchMapQueryResponse_EntitiesEntry>;
+
 }
 
 export class EntityServiceClientImpl {
@@ -44,6 +74,11 @@ export class EntityServiceClientImpl {
   private queryLoader = new DataLoader<string, Entity>((ids) => {
     const request: BatchQueryRequest = { ids };
     return this.BatchQuery(request).then(res => res.entities);
+  });
+
+  private mapQueryLoader = new DataLoader<string, BatchMapQueryResponse_EntitiesEntry>((ids) => {
+    const request: BatchMapQueryRequest = { ids };
+    return this.BatchMapQuery(request).then(res => res.entities);
   });
 
   constructor(rpc: Rpc) {
@@ -58,6 +93,16 @@ export class EntityServiceClientImpl {
     const data = BatchQueryRequest.encode(request).finish();
     const promise = this.rpc.request("EntityService", "BatchQuery", data);
     return promise.then(data => BatchQueryResponse.decode(new Reader(data)));
+  }
+
+  GetMapQuery(id: string): Promise<BatchMapQueryResponse_EntitiesEntry> {
+    return this.mapQueryLoader.load(id);
+  }
+
+  BatchMapQuery(request: BatchMapQueryRequest): Promise<BatchMapQueryResponse> {
+    const data = BatchMapQueryRequest.encode(request).finish();
+    const promise = this.rpc.request("EntityService", "BatchMapQuery", data);
+    return promise.then(data => BatchMapQueryResponse.decode(new Reader(data)));
   }
 
 }
@@ -117,6 +162,87 @@ export const BatchQueryResponse = {
       switch (tag >>> 3) {
         case 1:
           message.entities.push(Entity.decode(reader, reader.uint32()));
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+};
+
+export const BatchMapQueryRequest = {
+  encode(message: BatchMapQueryRequest, writer: Writer = new Writer()): Writer {
+    for (const v of message.ids) {
+      writer.uint32(10).string(v!);
+    }
+    return writer;
+  },
+  decode(reader: Reader, length?: number): BatchMapQueryRequest {
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = Object.create(baseBatchMapQueryRequest) as BatchMapQueryRequest;
+    message.ids = [];
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.ids.push(reader.string());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+};
+
+export const BatchMapQueryResponse = {
+  encode(message: BatchMapQueryResponse, writer: Writer = new Writer()): Writer {
+    for (const v of message.entities) {
+      BatchMapQueryResponse_EntitiesEntry.encode(v!, writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+  decode(reader: Reader, length?: number): BatchMapQueryResponse {
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = Object.create(baseBatchMapQueryResponse) as BatchMapQueryResponse;
+    message.entities = [];
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.entities.push(BatchMapQueryResponse_EntitiesEntry.decode(reader, reader.uint32()));
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+};
+
+export const BatchMapQueryResponse_EntitiesEntry = {
+  encode(message: BatchMapQueryResponse_EntitiesEntry, writer: Writer = new Writer()): Writer {
+    writer.uint32(10).string(message.key);
+    if (message.value !== undefined && message.value !== null) {
+      Entity.encode(message.value, writer.uint32(18).fork()).ldelim();
+    }
+    return writer;
+  },
+  decode(reader: Reader, length?: number): BatchMapQueryResponse_EntitiesEntry {
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = Object.create(baseBatchMapQueryResponse_EntitiesEntry) as BatchMapQueryResponse_EntitiesEntry;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.key = reader.string();
+          break;
+        case 2:
+          message.value = Entity.decode(reader, reader.uint32());
           break;
         default:
           reader.skipType(tag & 7);
