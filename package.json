@@ -1,6 +1,6 @@
 {
   "name": "ts-proto",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "build/plugin.js",
   "scripts": {
@@ -20,9 +20,9 @@
     "typescript": "^3.4.1"
   },
   "dependencies": {
+    "dataloader": "^1.4.0",
     "protobufjs": "^6.8.8",
     "sequency": "^0.19.2",
-    "ts-poet": "^0.5.3",
-    "dataloader": "^1.4.0"
+    "ts-poet": "^0.5.3"
   }
 }
