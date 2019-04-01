@@ -5,6 +5,7 @@
   "main": "build/plugin.js",
   "scripts": {
     "setup": "./pbjs.sh && mkdir -p build/integration && yarn ts-node integration/setup.ts",
+    "setup-ours": "yarn ts-node integration/setup.ts",
     "test": "yarn jest -c jest.config.js"
   },
   "keywords": [],

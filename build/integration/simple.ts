@@ -157,7 +157,7 @@ export class PingServiceClientImpl {
 
   ping(request: PingRequest): Promise<PingResponse> {
     const data = PingRequest.encode(request).finish();
-    const promise = this.rpc.request("PingService", "ping", data);
+    const promise = this.rpc.request("simple.PingService", "ping", data);
     return promise.then(data => PingResponse.decode(new Reader(data)));
   }
 

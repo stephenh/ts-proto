@@ -366,7 +366,13 @@ function generateServiceClientImpl(
       FunctionSpec.create(methodDesc.name)
         .addParameter('request', requestType(typeMap, methodDesc))
         .addStatement('const data = %L.encode(request).finish()', requestType(typeMap, methodDesc))
-        .addStatement('const promise = this.rpc.request(%S, %S, %L)', serviceDesc.name, methodDesc.name, 'data')
+        .addStatement(
+          'const promise = this.rpc.request("%L.%L", %S, %L)',
+          fileDesc.package,
+          serviceDesc.name,
+          methodDesc.name,
+          'data'
+        )
         .addStatement('return promise.then(data => %L.decode(new Reader(data)))', responseType(typeMap, methodDesc))
         .returns(responsePromise(typeMap, methodDesc))
     );

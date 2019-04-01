@@ -93,7 +93,7 @@ export class EntityServiceClientImpl {
 
   BatchQuery(request: BatchQueryRequest): Promise<BatchQueryResponse> {
     const data = BatchQueryRequest.encode(request).finish();
-    const promise = this.rpc.request("EntityService", "BatchQuery", data);
+    const promise = this.rpc.request("batching.EntityService", "BatchQuery", data);
     return promise.then(data => BatchQueryResponse.decode(new Reader(data)));
   }
 
@@ -103,7 +103,7 @@ export class EntityServiceClientImpl {
 
   BatchMapQuery(request: BatchMapQueryRequest): Promise<BatchMapQueryResponse> {
     const data = BatchMapQueryRequest.encode(request).finish();
-    const promise = this.rpc.request("EntityService", "BatchMapQuery", data);
+    const promise = this.rpc.request("batching.EntityService", "BatchMapQuery", data);
     return promise.then(data => BatchMapQueryResponse.decode(new Reader(data)));
   }
 
