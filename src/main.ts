@@ -41,7 +41,7 @@ import MethodDescriptorProto = google.protobuf.MethodDescriptorProto;
 const dataloader = TypeNames.anyType('DataLoader=dataloader');
 
 export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto): FileSpec {
-  const moduleName = fileDesc.name.replace('.proto', '').replace(/\//g, '_');
+  const moduleName = fileDesc.name.replace('.proto', '.ts').replace(/\//g, '_');
   let file = FileSpec.create(moduleName);
 
   // first make all the type declarations
