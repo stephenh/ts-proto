@@ -1,6 +1,6 @@
 import { Reader } from 'protobufjs';
-import { SimpleWithWrappers } from '../build/simple';
-import { google, simple as pbjs } from '../build/pbjs';
+import { SimpleWithWrappers } from '../build/integration/simple';
+import { google, simple as pbjs } from '../build/integration/pbjs';
 import PbSimpleWithWrappers = pbjs.SimpleWithWrappers;
 import PbStringValue = google.protobuf.StringValue;
 import PbInt32Value = google.protobuf.Int32Value;

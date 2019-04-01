@@ -6,8 +6,8 @@ import {
   Simple,
   StateEnum,
   SimpleWithMap
-} from '../build/simple';
-import { simple as pbjs } from '../build/pbjs';
+} from '../build/integration/simple';
+import { simple as pbjs } from '../build/integration/pbjs';
 import ISimple = pbjs.ISimple;
 import PbChild = pbjs.Child;
 import PbSimple = pbjs.Simple;

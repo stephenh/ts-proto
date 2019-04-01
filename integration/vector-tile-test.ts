@@ -1,6 +1,6 @@
 import { Reader } from "protobufjs/minimal";
-import { vector_tile } from "../build/pbjs";
-import { Tile_Value } from "../build/vector_tile";
+import { vector_tile } from "../build/integration/pbjs";
+import { Tile_Value } from "../build/integration/vector_tile";
 import IValue = vector_tile.Tile.IValue;
 import PbValue = vector_tile.Tile.Value;
 

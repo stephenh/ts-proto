@@ -1,6 +1,6 @@
 import { Reader } from 'protobufjs';
-import { OneOfMessage } from '../build/simple';
-import { simple as pbjs } from '../build/pbjs';
+import { OneOfMessage } from '../build/integration/simple';
+import { simple as pbjs } from '../build/integration/pbjs';
 import PbOneOfMessage = pbjs.OneOfMessage;
 
 describe('simple', () => {

@@ -4,9 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "yarn jest -c jest.config.js",
-    "start": "npm run build:live",
-    "build:live": "nodemon --exec ./node_modules/.bin/ts-node -- ./index.ts"
+    "setup": "./pbjs.sh && mkdir -p build/integration && yarn ts-node integration/setup.ts",
+    "test": "yarn jest -c jest.config.js"
   },
   "keywords": [],
   "author": "",
@@ -16,7 +15,6 @@
     "@types/node": "^10.7.0",
     "dataloader": "^1.4.0",
     "jest": "^24.0.0",
-    "nodemon": "^1.18.3",
     "prettier": "^1.16.1",
     "ts-jest": "^23.10.5",
     "ts-node": "^7.0.1",
@@ -25,6 +23,6 @@
   "dependencies": {
     "protobufjs": "^6.8.8",
     "sequency": "^0.19.2",
-    "ts-poet": "^0.5.1"
+    "ts-poet": "^0.5.3"
   }
 }
