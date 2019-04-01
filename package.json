@@ -2,7 +2,7 @@
   "name": "ts-proto",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "build/plugin.js",
   "scripts": {
     "setup": "./pbjs.sh && mkdir -p build/integration && yarn ts-node integration/setup.ts",
     "test": "yarn jest -c jest.config.js"
