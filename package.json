@@ -3,7 +3,12 @@
   "version": "1.0.5",
   "description": "",
   "main": "build/plugin.js",
+  "bin": {
+    "protoc-gen-ts_proto": "./protoc-gen-ts_proto"
+  },
   "scripts": {
+    "prepare": "yarn build && yarn test",
+    "build": "yarn tsc",
     "setup": "./pbjs.sh && mkdir -p build/integration && ./update_proto_bins.sh && yarn codegen",
     "codegen": "mkdir -p build/integration && yarn ts-node integration/setup.ts",
     "test": "yarn jest -c jest.config.js"
