@@ -41,7 +41,18 @@ import MethodDescriptorProto = google.protobuf.MethodDescriptorProto;
 const dataloader = TypeNames.anyType('DataLoader=dataloader');
 
 export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto): FileSpec {
-  const moduleName = fileDesc.name.replace('.proto', '.ts').replace(/\//g, '_');
+  // Google's protofiles are organized like Java, where package == the folder the file
+  // is in, and file == a specific service within the package. I.e. you can have multiple
+  // company/foo.proto and company/bar.proto files, where package would be 'company'.
+  //
+  // We'll match that stucture by setting up the module path as:
+  //
+  // company/foo.proto --> company/foo.ts
+  // company/bar.proto --> company/bar.ts
+  //
+  // We'll also assume that the fileDesc.name is already the `company/foo.proto` path, with
+  // the package already implicitly in it, so we won't re-append/strip/etc. it out/back in.
+  const moduleName = fileDesc.name.replace('\.proto', '.ts');
   let file = FileSpec.create(moduleName);
 
   // first make all the type declarations

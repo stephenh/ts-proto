@@ -7,7 +7,7 @@ import { createTypeMap } from "../src/types";
 
 describe('vector-tile', () => {
   it('works', () => {
-    const stdin = readFileSync('./integration/vector_tile.bin');
+    const stdin = readFileSync('./vector_tile.bin');
     const request = CodeGeneratorRequest.decode(stdin);
     const typeMap = createTypeMap(request);
     for (let file of request.protoFile) {

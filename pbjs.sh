@@ -16,7 +16,7 @@ yarn pbts --no-comments -o build/pbjs.d.ts build/pbjs.js
 # for our test suite to use.
 mkdir -p build/integration
 yarn pbjs --force-message -t static-module -o build/integration/pbjs.js \
-  integration/simple.proto \
-  integration/vector_tile.proto
+  simple.proto \
+  vector_tile.proto
 yarn pbts --no-comments -o build/integration/pbjs.d.ts build/integration/pbjs.js
 
