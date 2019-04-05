@@ -250,7 +250,7 @@ function generateEncode(typeMap: TypeMap, fullName: string, messageDesc: Descrip
   // create the basic function declaration
   let func = FunctionSpec.create('encode')
     .addParameter('message', fullName)
-    .addParameter('writer', 'Writer@protobufjs/minimal', { defaultValueField: CodeBlock.of('new Writer()') })
+    .addParameter('writer', 'Writer@protobufjs/minimal', { defaultValueField: CodeBlock.of('Writer.create()') })
     .returns('Writer@protobufjs/minimal');
   // then add a case for each field
   messageDesc.field.forEach(field => {

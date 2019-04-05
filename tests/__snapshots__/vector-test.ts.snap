@@ -86,7 +86,7 @@ function longToNumber(long: Long) {
 }
 
 export const Tile = {
-  encode(message: Tile, writer: Writer = new Writer()): Writer {
+  encode(message: Tile, writer: Writer = Writer.create()): Writer {
     for (const v of message.layers) {
       Tile_Layer.encode(v!, writer.uint32(26).fork()).ldelim();
     }
@@ -112,7 +112,7 @@ export const Tile = {
 };
 
 export const Tile_Value = {
-  encode(message: Tile_Value, writer: Writer = new Writer()): Writer {
+  encode(message: Tile_Value, writer: Writer = Writer.create()): Writer {
     writer.uint32(10).string(message.stringValue);
     writer.uint32(21).float(message.floatValue);
     writer.uint32(25).double(message.doubleValue);
@@ -159,7 +159,7 @@ export const Tile_Value = {
 };
 
 export const Tile_Feature = {
-  encode(message: Tile_Feature, writer: Writer = new Writer()): Writer {
+  encode(message: Tile_Feature, writer: Writer = Writer.create()): Writer {
     writer.uint32(8).uint64(message.id);
     writer.uint32(18).fork();
     for (const v of message.tags) {
@@ -218,7 +218,7 @@ export const Tile_Feature = {
 };
 
 export const Tile_Layer = {
-  encode(message: Tile_Layer, writer: Writer = new Writer()): Writer {
+  encode(message: Tile_Layer, writer: Writer = Writer.create()): Writer {
     writer.uint32(120).uint32(message.version);
     writer.uint32(10).string(message.name);
     for (const v of message.features) {
