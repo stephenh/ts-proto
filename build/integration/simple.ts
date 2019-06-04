@@ -177,7 +177,7 @@ function longToNumber(long: Long) {
 }
 
 export const Simple = {
-  encode(message: Simple, writer: Writer = new Writer()): Writer {
+  encode(message: Simple, writer: Writer = Writer.create()): Writer {
     writer.uint32(10).string(message.name);
     writer.uint32(16).int32(message.age);
     if (message.child !== undefined && message.child !== null) {
@@ -260,7 +260,7 @@ export const Simple = {
 };
 
 export const Child = {
-  encode(message: Child, writer: Writer = new Writer()): Writer {
+  encode(message: Child, writer: Writer = Writer.create()): Writer {
     writer.uint32(10).string(message.name);
     return writer;
   },
@@ -283,7 +283,7 @@ export const Child = {
 };
 
 export const Nested = {
-  encode(message: Nested, writer: Writer = new Writer()): Writer {
+  encode(message: Nested, writer: Writer = Writer.create()): Writer {
     writer.uint32(10).string(message.name);
     if (message.message !== undefined && message.message !== null) {
       Nested_InnerMessage.encode(message.message, writer.uint32(18).fork()).ldelim();
@@ -316,7 +316,7 @@ export const Nested = {
 };
 
 export const Nested_InnerMessage = {
-  encode(message: Nested_InnerMessage, writer: Writer = new Writer()): Writer {
+  encode(message: Nested_InnerMessage, writer: Writer = Writer.create()): Writer {
     writer.uint32(10).string(message.name);
     if (message.deep !== undefined && message.deep !== null) {
       Nested_InnerMessage_DeepMessage.encode(message.deep, writer.uint32(18).fork()).ldelim();
@@ -345,7 +345,7 @@ export const Nested_InnerMessage = {
 };
 
 export const Nested_InnerMessage_DeepMessage = {
-  encode(message: Nested_InnerMessage_DeepMessage, writer: Writer = new Writer()): Writer {
+  encode(message: Nested_InnerMessage_DeepMessage, writer: Writer = Writer.create()): Writer {
     writer.uint32(10).string(message.name);
     return writer;
   },
@@ -368,7 +368,7 @@ export const Nested_InnerMessage_DeepMessage = {
 };
 
 export const OneOfMessage = {
-  encode(message: OneOfMessage, writer: Writer = new Writer()): Writer {
+  encode(message: OneOfMessage, writer: Writer = Writer.create()): Writer {
     if (message.first !== undefined && message.first !== "") {
       writer.uint32(10).string(message.first);
     }
@@ -399,7 +399,7 @@ export const OneOfMessage = {
 };
 
 export const SimpleWithWrappers = {
-  encode(message: SimpleWithWrappers, writer: Writer = new Writer()): Writer {
+  encode(message: SimpleWithWrappers, writer: Writer = Writer.create()): Writer {
     if (message.name !== undefined && message.name !== null) {
       StringValue.encode({ value: message.name! }, writer.uint32(10).fork()).ldelim();
     }
@@ -450,7 +450,7 @@ export const SimpleWithWrappers = {
 };
 
 export const Entity = {
-  encode(message: Entity, writer: Writer = new Writer()): Writer {
+  encode(message: Entity, writer: Writer = Writer.create()): Writer {
     writer.uint32(8).int32(message.id);
     return writer;
   },
@@ -473,7 +473,7 @@ export const Entity = {
 };
 
 export const SimpleWithMap = {
-  encode(message: SimpleWithMap, writer: Writer = new Writer()): Writer {
+  encode(message: SimpleWithMap, writer: Writer = Writer.create()): Writer {
     Object.entries(message.entitiesById).forEach(([key, value]) => {
       SimpleWithMap_EntitiesByIdEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).ldelim();
     })
@@ -502,7 +502,7 @@ export const SimpleWithMap = {
 };
 
 export const SimpleWithMap_EntitiesByIdEntry = {
-  encode(message: SimpleWithMap_EntitiesByIdEntry, writer: Writer = new Writer()): Writer {
+  encode(message: SimpleWithMap_EntitiesByIdEntry, writer: Writer = Writer.create()): Writer {
     writer.uint32(8).int32(message.key);
     if (message.value !== undefined && message.value !== null) {
       Entity.encode(message.value, writer.uint32(18).fork()).ldelim();
@@ -531,7 +531,7 @@ export const SimpleWithMap_EntitiesByIdEntry = {
 };
 
 export const PingRequest = {
-  encode(message: PingRequest, writer: Writer = new Writer()): Writer {
+  encode(message: PingRequest, writer: Writer = Writer.create()): Writer {
     writer.uint32(10).string(message.input);
     return writer;
   },
@@ -554,7 +554,7 @@ export const PingRequest = {
 };
 
 export const PingResponse = {
-  encode(message: PingResponse, writer: Writer = new Writer()): Writer {
+  encode(message: PingResponse, writer: Writer = Writer.create()): Writer {
     writer.uint32(10).string(message.output);
     return writer;
   },

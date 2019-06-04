@@ -123,7 +123,7 @@ function longToNumber(long: Long) {
 }
 
 export const BatchQueryRequest = {
-  encode(message: BatchQueryRequest, writer: Writer = new Writer()): Writer {
+  encode(message: BatchQueryRequest, writer: Writer = Writer.create()): Writer {
     for (const v of message.ids) {
       writer.uint32(10).string(v!);
     }
@@ -149,7 +149,7 @@ export const BatchQueryRequest = {
 };
 
 export const BatchQueryResponse = {
-  encode(message: BatchQueryResponse, writer: Writer = new Writer()): Writer {
+  encode(message: BatchQueryResponse, writer: Writer = Writer.create()): Writer {
     for (const v of message.entities) {
       Entity.encode(v!, writer.uint32(10).fork()).ldelim();
     }
@@ -175,7 +175,7 @@ export const BatchQueryResponse = {
 };
 
 export const BatchMapQueryRequest = {
-  encode(message: BatchMapQueryRequest, writer: Writer = new Writer()): Writer {
+  encode(message: BatchMapQueryRequest, writer: Writer = Writer.create()): Writer {
     for (const v of message.ids) {
       writer.uint32(10).string(v!);
     }
@@ -201,7 +201,7 @@ export const BatchMapQueryRequest = {
 };
 
 export const BatchMapQueryResponse = {
-  encode(message: BatchMapQueryResponse, writer: Writer = new Writer()): Writer {
+  encode(message: BatchMapQueryResponse, writer: Writer = Writer.create()): Writer {
     Object.entries(message.entities).forEach(([key, value]) => {
       BatchMapQueryResponse_EntitiesEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).ldelim();
     })
@@ -230,7 +230,7 @@ export const BatchMapQueryResponse = {
 };
 
 export const BatchMapQueryResponse_EntitiesEntry = {
-  encode(message: BatchMapQueryResponse_EntitiesEntry, writer: Writer = new Writer()): Writer {
+  encode(message: BatchMapQueryResponse_EntitiesEntry, writer: Writer = Writer.create()): Writer {
     writer.uint32(10).string(message.key);
     if (message.value !== undefined && message.value !== null) {
       Entity.encode(message.value, writer.uint32(18).fork()).ldelim();
@@ -259,7 +259,7 @@ export const BatchMapQueryResponse_EntitiesEntry = {
 };
 
 export const Entity = {
-  encode(message: Entity, writer: Writer = new Writer()): Writer {
+  encode(message: Entity, writer: Writer = Writer.create()): Writer {
     writer.uint32(10).string(message.id);
     writer.uint32(18).string(message.name);
     return writer;
