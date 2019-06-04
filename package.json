@@ -29,6 +29,6 @@
     "dataloader": "^1.4.0",
     "protobufjs": "^6.8.8",
     "sequency": "^0.19.2",
-    "ts-poet": "^0.5.3"
+    "ts-poet": "^0.5.4"
   }
 }
