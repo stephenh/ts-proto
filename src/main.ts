@@ -52,7 +52,7 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto): F
   //
   // We'll also assume that the fileDesc.name is already the `company/foo.proto` path, with
   // the package already implicitly in it, so we won't re-append/strip/etc. it out/back in.
-  const moduleName = fileDesc.name.replace('\.proto', '.ts');
+  const moduleName = fileDesc.name.replace('.proto', '.ts');
   let file = FileSpec.create(moduleName);
 
   // first make all the type declarations
@@ -384,7 +384,11 @@ function generateServiceClientImpl(
           methodDesc.name,
           'data'
         )
-        .addStatement('return promise.then(data => %L.decode(new Reader(data)))', responseType(typeMap, methodDesc))
+        .addStatement(
+          'return promise.then(data => %L.decode(new %T(data)))',
+          responseType(typeMap, methodDesc),
+          'Reader@protobufjs/minimal'
+        )
         .returns(responsePromise(typeMap, methodDesc))
     );
   }
