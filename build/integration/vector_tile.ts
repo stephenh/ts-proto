@@ -69,12 +69,6 @@ const baseTile_Layer: object = {
   extent: 0,
 };
 
-export interface Rpc {
-
-  request(service: string, method: string, data: Uint8Array): Promise<Uint8Array>;
-
-}
-
 function longToNumber(long: Long) {
   if (long.gt(Number.MAX_VALUE)) {
     throw new Error("Value is larger than Number.MAX_VALUE");;

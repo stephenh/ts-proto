@@ -1,5 +1,5 @@
+import { Reader, Writer } from 'protobufjs/minimal';
 import * as Long from 'long';
-import { Writer, Reader } from 'protobufjs/minimal';
 import { StringValue, Int32Value, BoolValue } from './google/protobuf/wrappers';
 
 
@@ -163,7 +163,7 @@ export class PingServiceClientImpl {
 
 }
 
-export interface Rpc {
+interface Rpc {
 
   request(service: string, method: string, data: Uint8Array): Promise<Uint8Array>;
 

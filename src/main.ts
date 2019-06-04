@@ -84,7 +84,10 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto): F
     file = file.addInterface(generateService(typeMap, fileDesc, serviceDesc));
     file = file.addClass(generateServiceClientImpl(typeMap, fileDesc, serviceDesc));
   });
-  file = file.addInterface(generateRpcType());
+
+  if (fileDesc.service.length > 0) {
+    file = file.addInterface(generateRpcType());
+  }
 
   file = addLongUtilityMethod(file);
 
@@ -458,17 +461,24 @@ function generateBatchingMethod(typeMap: TypeMap, client: ClassSpec, batchMethod
   return client;
 }
 
+/**
+ * Creates an `Rpc.request(service, method, data)` abstraction.
+ *
+ * This lets clients pass in their own request-promise-ish client.
+ *
+ * We don't export this because if a project uses multiple `*.proto` files,
+ * we don't want our the barrel imports in `index.ts` to have multiple `Rpc`
+ * types.
+ */
 function generateRpcType(): InterfaceSpec {
   const data = TypeNames.anyType('Uint8Array');
-  return InterfaceSpec.create('Rpc')
-    .addModifiers(Modifier.EXPORT)
-    .addFunction(
-      FunctionSpec.create('request')
-        .addParameter('service', TypeNames.STRING)
-        .addParameter('method', TypeNames.STRING)
-        .addParameter('data', data)
-        .returns(TypeNames.PROMISE.param(data))
-    );
+  return InterfaceSpec.create('Rpc').addFunction(
+    FunctionSpec.create('request')
+      .addParameter('service', TypeNames.STRING)
+      .addParameter('method', TypeNames.STRING)
+      .addParameter('data', data)
+      .returns(TypeNames.PROMISE.param(data))
+  );
 }
 
 function requestType(typeMap: TypeMap, methodDesc: MethodDescriptorProto): TypeName {

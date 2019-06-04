@@ -28,7 +28,7 @@ async function generate(path: string) {
     const spec = generateFile(map, file);
     const filePath = `./build/integration/${spec.path}`;
     const dirPath = parse(filePath).dir;
-    await promisify(mkdir)(dirPath, { recursive: true });
+    await promisify(mkdir)(dirPath, { recursive: true }).catch(() => {});
     await promisify(writeFile)(filePath, spec.toString());
   }
 }

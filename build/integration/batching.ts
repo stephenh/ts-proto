@@ -1,6 +1,6 @@
 import DataLoader from 'dataloader';
+import { Reader, Writer } from 'protobufjs/minimal';
 import * as Long from 'long';
-import { Writer, Reader } from 'protobufjs/minimal';
 
 
 export interface BatchQueryRequest {
@@ -109,7 +109,7 @@ export class EntityServiceClientImpl {
 
 }
 
-export interface Rpc {
+interface Rpc {
 
   request(service: string, method: string, data: Uint8Array): Promise<Uint8Array>;
 
