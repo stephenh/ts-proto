@@ -2,9 +2,9 @@
 Goals
 =====
 
-* Pure TypeScript/ES6 modules
-* Only codegen import, no runtime reflection support (just simpler)
-* Currently ambivalent about browser support (we use GraphQL instead)
+* Pure/idiomatic TypeScript/ES6 modules
+* Only supports codegen `*.proto`-to-`*.ts` workflow, currently no runtime reflection/loading of dynamic `.proto` files
+* Currently ambivalent about browser support, current focus is on Node/server-side use cases
 
 Assumptions
 ===========
@@ -14,7 +14,7 @@ Assumptions
 Todo
 ====
 
-* Better Long support; currently any values greater than Number.MAX blow up at runtime
+* Better Long support; currently any values greater than `Number.MAX_SAFE_INTEGER` blow up at runtime
 * Model OneOfs as an ADT
 
 Typing Approach
@@ -74,8 +74,8 @@ This hides some of the `StringValue` mess and gives a more idiomatic way of acce
 
 Granted, it's unfortunate this is not as simple as marking the `string` as `optional`. 
 
-Optional Values
-===============
+Current Status of Optional Values
+=================================
 
 * Required primitives: use as-is, i.e. `string name = 1`.
 * Optional primitives: use wrapper types, i.e. `StringValue name = 1`.

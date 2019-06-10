@@ -1,12 +1,5 @@
 import { Reader } from 'protobufjs';
-import {
-  Nested,
-  Nested_InnerEnum,
-  Nested_InnerMessage,
-  Simple,
-  StateEnum,
-  SimpleWithMap
-} from '../build/integration/simple';
+import { Nested, Nested_InnerEnum, Simple, StateEnum, SimpleWithMap } from '../build/integration/simple';
 import { simple as pbjs } from '../build/integration/pbjs';
 import ISimple = pbjs.ISimple;
 import PbChild = pbjs.Child;
@@ -82,7 +75,7 @@ describe('simple', () => {
       message: {
         name: 'asdf',
         deep: { name: 'asdf' }
-      } as Nested_InnerMessage,
+      },
       state: Nested_InnerEnum.GOOD
     };
     const s2 = PbNested.toObject(PbNested.decode(Nested.encode(s1).finish()));
@@ -147,7 +140,7 @@ describe('simple', () => {
     const s1: SimpleWithMap = {
       entitiesById: {
         1: { id: 1 },
-        2: { id: 2 },
+        2: { id: 2 }
       }
     };
     const s2 = PbSimpleWithMap.toObject(PbSimpleWithMap.decode(SimpleWithMap.encode(s1).finish()));
@@ -158,7 +151,7 @@ describe('simple', () => {
     const s1 = PbSimpleWithMap.fromObject({
       entitiesById: {
         1: { id: 1 },
-        2: { id: 2 },
+        2: { id: 2 }
       }
     });
     const s2 = SimpleWithMap.decode(new Reader(PbSimpleWithMap.encode(s1).finish()));

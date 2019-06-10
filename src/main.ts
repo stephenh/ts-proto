@@ -100,8 +100,8 @@ function addLongUtilityMethod(file: FileSpec): FileSpec {
       .addParameter('long', 'Long*long')
       .addCodeBlock(
         CodeBlock.empty()
-          .beginControlFlow('if (long.gt(Number.MAX_VALUE))')
-          .addStatement('throw new Error("Value is larger than Number.MAX_VALUE");')
+          .beginControlFlow('if (long.gt(Number.MAX_SAFE_INTEGER))')
+          .addStatement('throw new Error("Value is larger than Number.MAX_SAFE_INTEGER")')
           .endControlFlow()
           .addStatement('return long.toNumber()')
       )

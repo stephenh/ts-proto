@@ -116,8 +116,8 @@ interface Rpc {
 }
 
 function longToNumber(long: Long) {
-  if (long.gt(Number.MAX_VALUE)) {
-    throw new Error("Value is larger than Number.MAX_VALUE");;
+  if (long.gt(Number.MAX_SAFE_INTEGER)) {
+    throw new Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
   return long.toNumber();
 }
