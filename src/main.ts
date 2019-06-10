@@ -17,6 +17,7 @@ import {
   basicWireType,
   defaultValue,
   detectMapType,
+  isEnum,
   isMapType,
   isMessage,
   isPrimitive,
@@ -67,18 +68,29 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto): F
   );
 
   // then add the encoder/decoder/base instance
-  visit(fileDesc, (fullName, message) => {
-    file = file.addProperty(generateBaseInstance(fullName, message));
-    let staticMethods = CodeBlock.empty()
-      .add('export const %L = ', fullName)
-      .beginHash()
-      .addHashEntry(generateEncode(typeMap, fullName, message))
-      .addHashEntry(generateDecode(typeMap, fullName, message))
-      .endHash()
-      .add(';')
-      .newLine();
-    file = file.addCode(staticMethods);
-  });
+  visit(
+    fileDesc,
+    (fullName, message) => {
+      file = file.addProperty(generateBaseInstance(fullName, message));
+      let staticMethods = CodeBlock.empty()
+        .add('export const %L = ', fullName)
+        .beginHash()
+        .addHashEntry(generateEncode(typeMap, fullName, message))
+        .addHashEntry(generateDecode(typeMap, fullName, message))
+        .addHashEntry(generateFromJson(typeMap, fullName, message))
+        .endHash()
+        .add(';')
+        .newLine();
+      file = file.addCode(staticMethods);
+    },
+    (fullName, enumDesc) => {
+      let staticMethods = CodeBlock.empty()
+        .beginControlFlow('export namespace %L', fullName)
+        .addFunction(generateEnumFromJson(fullName, enumDesc))
+        .endControlFlow();
+      file = file.addCode(staticMethods);
+    }
+  );
 
   visitServices(fileDesc, serviceDesc => {
     file = file.addInterface(generateService(typeMap, fileDesc, serviceDesc));
@@ -114,6 +126,25 @@ function generateEnum(fullName: string, enumDesc: EnumDescriptorProto): EnumSpec
     spec = spec.addConstant(valueDesc.name, valueDesc.number.toString());
   }
   return spec;
+}
+
+function generateEnumFromJson(fullName: string, enumDesc: EnumDescriptorProto): FunctionSpec {
+  let func = FunctionSpec.create('fromJSON')
+    .addParameter('object', 'any')
+    .addModifiers(Modifier.EXPORT)
+    .returns(fullName);
+  let body = CodeBlock.empty().beginControlFlow('switch (object)');
+  for (const valueDesc of enumDesc.value) {
+    body = body
+      .add('case %L:\n', valueDesc.number)
+      .add('case %S:%>\n', valueDesc.name)
+      .addStatement('return %L.%L%<', fullName, valueDesc.name);
+  }
+  body = body
+    .add('default:%>\n')
+    .addStatement('throw new Error(`Invalid value ${object}`)%<')
+    .endControlFlow();
+  return func.addCodeBlock(body);
 }
 
 // Create the interface with properties
@@ -316,6 +347,74 @@ function generateEncode(typeMap: TypeMap, fullName: string, messageDesc: Descrip
     }
   });
   return func.addStatement('return writer');
+}
+
+/**
+ * Creates a function to decode a message from JSON.
+ *
+ * This is very similar to decode, we loop through looking for properties, with
+ * a few special cases for https://developers.google.com/protocol-buffers/docs/proto3#json.
+ * */
+function generateFromJson(typeMap: TypeMap, fullName: string, messageDesc: DescriptorProto): FunctionSpec {
+  // create the basic function declaration
+  let func = FunctionSpec.create('fromJSON')
+    .addParameter('object', 'any')
+    .returns(fullName);
+
+  // add the message
+  func = func.addStatement('const message = Object.create(base%L) as %L', fullName, fullName);
+
+  // initialize all lists
+  messageDesc.field.filter(isRepeated).forEach(field => {
+    const value = isMapType(typeMap, messageDesc, field) ? '{}' : '[]';
+    func = func.addStatement('message.%L = %L', snakeToCamel(field.name), value);
+  });
+
+  // add a check for each incoming field
+  messageDesc.field.forEach(field => {
+    const fieldName = snakeToCamel(field.name);
+
+    // get a generic 'reader.doSomething' bit that is specific to the basic type
+    const readSnippet = (from: string): CodeBlock => {
+      if (isEnum(field)) {
+        return CodeBlock.of('%T.fromJSON(%L)', basicTypeName(typeMap, field, true), from);
+      } else if (isPrimitive(field)) {
+        return CodeBlock.of(from);
+        // if (basicLongWireType(field.type) !== undefined) {
+        //   readSnippet = CodeBlock.of('longToNumber(%L as Long)', readSnippet);
+        // }
+      } else if (isValueType(field)) {
+        return CodeBlock.of('%T.fromJSON(%L).value', basicTypeName(typeMap, field, true), from);
+      } else if (isMessage(field)) {
+        return CodeBlock.of('%T.fromJSON(%L)', basicTypeName(typeMap, field), from);
+      } else {
+        throw new Error(`Unhandled field ${field}`);
+      }
+    };
+
+    // and then use the snippet to handle repeated fields if necessary
+    func = func.beginControlFlow('if (%S in object)', fieldName);
+    if (isRepeated(field)) {
+      if (isMapType(typeMap, messageDesc, field)) {
+        func = func
+          .addStatement(`const entry = %L`, readSnippet(`object.${fieldName}`))
+          .beginControlFlow('if (entry.value)')
+          .addStatement('message.%L[entry.key] = entry.value', fieldName)
+          .endControlFlow();
+      } else {
+        func = func
+          .beginControlFlow('for (const e of object.%L)', fieldName)
+          .addStatement(`message.%L.push(%L)`, fieldName, readSnippet('e'))
+          .endControlFlow();
+      }
+    } else {
+      func = func.addStatement(`message.%L = %L`, fieldName, readSnippet(`object.${fieldName}`));
+    }
+    func = func.endControlFlow();
+  });
+  // and then wrap up the switch/while/return
+  func = func.addStatement('return message');
+  return func;
 }
 
 function generateService(

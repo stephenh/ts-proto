@@ -257,6 +257,38 @@ export const Simple = {
     }
     return message;
   },
+  fromJSON(object: any): Simple {
+    const message = Object.create(baseSimple) as Simple;
+    message.grandChildren = [];
+    message.coins = [];
+    message.snacks = [];
+    message.oldStates = [];
+    if ("name" in object) {
+      message.name = object.name;
+    }
+    if ("age" in object) {
+      message.age = object.age;
+    }
+    if ("child" in object) {
+      message.child = Child.fromJSON(object.child);
+    }
+    if ("state" in object) {
+      message.state = object.state;
+    }
+    if ("grandChildren" in object) {
+      message.grandChildren.push(Child.fromJSON(object.grandChildren));
+    }
+    if ("coins" in object) {
+      message.coins.push(object.coins);
+    }
+    if ("snacks" in object) {
+      message.snacks.push(object.snacks);
+    }
+    if ("oldStates" in object) {
+      message.oldStates.push(object.oldStates);
+    }
+    return message;
+  },
 };
 
 export const Child = {
@@ -277,6 +309,13 @@ export const Child = {
           reader.skipType(tag & 7);
           break;
       }
+    }
+    return message;
+  },
+  fromJSON(object: any): Child {
+    const message = Object.create(baseChild) as Child;
+    if ("name" in object) {
+      message.name = object.name;
     }
     return message;
   },
@@ -313,6 +352,19 @@ export const Nested = {
     }
     return message;
   },
+  fromJSON(object: any): Nested {
+    const message = Object.create(baseNested) as Nested;
+    if ("name" in object) {
+      message.name = object.name;
+    }
+    if ("message" in object) {
+      message.message = Nested_InnerMessage.fromJSON(object.message);
+    }
+    if ("state" in object) {
+      message.state = object.state;
+    }
+    return message;
+  },
 };
 
 export const Nested_InnerMessage = {
@@ -342,6 +394,16 @@ export const Nested_InnerMessage = {
     }
     return message;
   },
+  fromJSON(object: any): Nested_InnerMessage {
+    const message = Object.create(baseNested_InnerMessage) as Nested_InnerMessage;
+    if ("name" in object) {
+      message.name = object.name;
+    }
+    if ("deep" in object) {
+      message.deep = Nested_InnerMessage_DeepMessage.fromJSON(object.deep);
+    }
+    return message;
+  },
 };
 
 export const Nested_InnerMessage_DeepMessage = {
@@ -362,6 +424,13 @@ export const Nested_InnerMessage_DeepMessage = {
           reader.skipType(tag & 7);
           break;
       }
+    }
+    return message;
+  },
+  fromJSON(object: any): Nested_InnerMessage_DeepMessage {
+    const message = Object.create(baseNested_InnerMessage_DeepMessage) as Nested_InnerMessage_DeepMessage;
+    if ("name" in object) {
+      message.name = object.name;
     }
     return message;
   },
@@ -393,6 +462,16 @@ export const OneOfMessage = {
           reader.skipType(tag & 7);
           break;
       }
+    }
+    return message;
+  },
+  fromJSON(object: any): OneOfMessage {
+    const message = Object.create(baseOneOfMessage) as OneOfMessage;
+    if ("first" in object) {
+      message.first = object.first;
+    }
+    if ("last" in object) {
+      message.last = object.last;
     }
     return message;
   },
@@ -447,6 +526,27 @@ export const SimpleWithWrappers = {
     }
     return message;
   },
+  fromJSON(object: any): SimpleWithWrappers {
+    const message = Object.create(baseSimpleWithWrappers) as SimpleWithWrappers;
+    message.coins = [];
+    message.snacks = [];
+    if ("name" in object) {
+      message.name = StringValue.fromJSON(object.name).value;
+    }
+    if ("age" in object) {
+      message.age = Int32Value.fromJSON(object.age).value;
+    }
+    if ("enabled" in object) {
+      message.enabled = BoolValue.fromJSON(object.enabled).value;
+    }
+    if ("coins" in object) {
+      message.coins.push(Int32Value.fromJSON(object.coins).value);
+    }
+    if ("snacks" in object) {
+      message.snacks.push(StringValue.fromJSON(object.snacks).value);
+    }
+    return message;
+  },
 };
 
 export const Entity = {
@@ -467,6 +567,13 @@ export const Entity = {
           reader.skipType(tag & 7);
           break;
       }
+    }
+    return message;
+  },
+  fromJSON(object: any): Entity {
+    const message = Object.create(baseEntity) as Entity;
+    if ("id" in object) {
+      message.id = object.id;
     }
     return message;
   },
@@ -495,6 +602,17 @@ export const SimpleWithMap = {
         default:
           reader.skipType(tag & 7);
           break;
+      }
+    }
+    return message;
+  },
+  fromJSON(object: any): SimpleWithMap {
+    const message = Object.create(baseSimpleWithMap) as SimpleWithMap;
+    message.entitiesById = {};
+    if ("entitiesById" in object) {
+      const entry = SimpleWithMap_EntitiesByIdEntry.fromJSON(object.entitiesById);
+      if (entry.value) {
+        message.entitiesById[entry.key] = entry.value;
       }
     }
     return message;
@@ -528,6 +646,16 @@ export const SimpleWithMap_EntitiesByIdEntry = {
     }
     return message;
   },
+  fromJSON(object: any): SimpleWithMap_EntitiesByIdEntry {
+    const message = Object.create(baseSimpleWithMap_EntitiesByIdEntry) as SimpleWithMap_EntitiesByIdEntry;
+    if ("key" in object) {
+      message.key = object.key;
+    }
+    if ("value" in object) {
+      message.value = Entity.fromJSON(object.value);
+    }
+    return message;
+  },
 };
 
 export const PingRequest = {
@@ -551,6 +679,13 @@ export const PingRequest = {
     }
     return message;
   },
+  fromJSON(object: any): PingRequest {
+    const message = Object.create(basePingRequest) as PingRequest;
+    if ("input" in object) {
+      message.input = object.input;
+    }
+    return message;
+  },
 };
 
 export const PingResponse = {
@@ -571,6 +706,13 @@ export const PingResponse = {
           reader.skipType(tag & 7);
           break;
       }
+    }
+    return message;
+  },
+  fromJSON(object: any): PingResponse {
+    const message = Object.create(basePingResponse) as PingResponse;
+    if ("output" in object) {
+      message.output = object.output;
     }
     return message;
   },

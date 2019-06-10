@@ -100,6 +100,14 @@ export const Tile = {
     }
     return message;
   },
+  fromJSON(object: any): Tile {
+    const message = Object.create(baseTile) as Tile;
+    message.layers = [];
+    if ("layers" in object) {
+      message.layers.push(Tile_Layer.fromJSON(object.layers));
+    }
+    return message;
+  },
 };
 
 export const Tile_Value = {
@@ -144,6 +152,31 @@ export const Tile_Value = {
           reader.skipType(tag & 7);
           break;
       }
+    }
+    return message;
+  },
+  fromJSON(object: any): Tile_Value {
+    const message = Object.create(baseTile_Value) as Tile_Value;
+    if ("stringValue" in object) {
+      message.stringValue = object.stringValue;
+    }
+    if ("floatValue" in object) {
+      message.floatValue = object.floatValue;
+    }
+    if ("doubleValue" in object) {
+      message.doubleValue = object.doubleValue;
+    }
+    if ("intValue" in object) {
+      message.intValue = object.intValue;
+    }
+    if ("uintValue" in object) {
+      message.uintValue = object.uintValue;
+    }
+    if ("sintValue" in object) {
+      message.sintValue = object.sintValue;
+    }
+    if ("boolValue" in object) {
+      message.boolValue = object.boolValue;
     }
     return message;
   },
@@ -206,6 +239,24 @@ export const Tile_Feature = {
     }
     return message;
   },
+  fromJSON(object: any): Tile_Feature {
+    const message = Object.create(baseTile_Feature) as Tile_Feature;
+    message.tags = [];
+    message.geometry = [];
+    if ("id" in object) {
+      message.id = object.id;
+    }
+    if ("tags" in object) {
+      message.tags.push(object.tags);
+    }
+    if ("type" in object) {
+      message.type = object.type;
+    }
+    if ("geometry" in object) {
+      message.geometry.push(object.geometry);
+    }
+    return message;
+  },
 };
 
 export const Tile_Layer = {
@@ -255,6 +306,31 @@ export const Tile_Layer = {
           reader.skipType(tag & 7);
           break;
       }
+    }
+    return message;
+  },
+  fromJSON(object: any): Tile_Layer {
+    const message = Object.create(baseTile_Layer) as Tile_Layer;
+    message.features = [];
+    message.keys = [];
+    message.values = [];
+    if ("version" in object) {
+      message.version = object.version;
+    }
+    if ("name" in object) {
+      message.name = object.name;
+    }
+    if ("features" in object) {
+      message.features.push(Tile_Feature.fromJSON(object.features));
+    }
+    if ("keys" in object) {
+      message.keys.push(object.keys);
+    }
+    if ("values" in object) {
+      message.values.push(Tile_Value.fromJSON(object.values));
+    }
+    if ("extent" in object) {
+      message.extent = object.extent;
     }
     return message;
   },

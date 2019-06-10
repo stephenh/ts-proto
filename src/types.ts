@@ -206,6 +206,10 @@ export function isMessage(field: FieldDescriptorProto): boolean {
   return field.type == FieldDescriptorProto.Type.TYPE_MESSAGE;
 }
 
+export function isEnum(field: FieldDescriptorProto): boolean {
+  return field.type == FieldDescriptorProto.Type.TYPE_ENUM;
+}
+
 export function isWithinOneOf(field: FieldDescriptorProto): boolean {
   return field.hasOwnProperty('oneofIndex');
 }
