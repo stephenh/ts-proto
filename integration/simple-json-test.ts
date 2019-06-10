@@ -1,4 +1,4 @@
-import { Simple } from '../build/integration/simple';
+import { Simple, StateEnum } from '../build/integration/simple';
 import { simple as pbjs } from '../build/integration/pbjs';
 import ISimple = pbjs.ISimple;
 import PbChild = pbjs.Child;
@@ -23,5 +23,27 @@ describe('simple', () => {
     // then it matches the original pbjs object
     // (even though its really our object/representation
     expect(s2).toEqual(s1);
+  });
+
+  it('can decode json with numeric enum values', () => {
+    // given state is mapped as 2 instead of ON
+    const s1 = { state: 2 };
+    // when it goes to json and back to us
+    const s2 = Simple.fromJSON(s1);
+    expect(s2.state).toEqual(StateEnum.ON);
+  });
+
+  it('fails decode json with invalid numeric enum values', () => {
+    // given state is mapped as 1, which is not a valid numeric value
+    const s1 = { state: 1 };
+    // then we fail fast
+    expect(() => Simple.fromJSON(s1)).toThrow('Invalid value 1');
+  });
+
+  it('fails decode json with invalid string enum values', () => {
+    // given state is mapped as an invalid string
+    const s1 = { state: "INVALID" };
+    // then we fail fast
+    expect(() => Simple.fromJSON(s1)).toThrow('Invalid value INVALID');
   });
 });
