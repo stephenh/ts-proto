@@ -19,7 +19,7 @@ describe('simple', () => {
       age: 1,
       child: { name: 'child' },
       state: StateEnum.ON,
-      grandchildren: [{ name: 'grand1' }, { name: 'grand2' }],
+      grandChildren: [{ name: 'grand1' }, { name: 'grand2' }],
       coins: [2, 4, 6],
       snacks: ['a', 'b'],
       oldStates: [StateEnum.ON, StateEnum.OFF]
@@ -33,7 +33,7 @@ describe('simple', () => {
       age: 1,
       child: PbChild.fromObject({ name: 'foo' }),
       state: PbState.ON,
-      grandchildren: [PbChild.fromObject({ name: 'grand1' }), PbChild.fromObject({ name: 'grand2' })],
+      grandChildren: [PbChild.fromObject({ name: 'grand1' }), PbChild.fromObject({ name: 'grand2' })],
       coins: [2, 4, 6],
       snacks: ['a', 'b'],
       oldStates: [PbState.ON, PbState.OFF]
@@ -48,7 +48,7 @@ describe('simple', () => {
       age: 1,
       child: { name: 'foo' },
       state: StateEnum.ON,
-      grandchildren: [{ name: 'grand1' }, { name: 'grand2' }],
+      grandChildren: [{ name: 'grand1' }, { name: 'grand2' }],
       coins: [2, 4, 6],
       snacks: ['a', 'b'],
       oldStates: [StateEnum.ON, StateEnum.OFF]
@@ -63,7 +63,7 @@ describe('simple', () => {
     expect(s2.name).toEqual('');
     expect(s2.age).toEqual(0);
     expect(s2.state).toEqual(StateEnum.UNKNOWN);
-    expect(s2.grandchildren).toEqual([]);
+    expect(s2.grandChildren).toEqual([]);
     expect(s2.coins).toEqual([]);
     expect(s2.snacks).toEqual([]);
     expect(s2.oldStates).toEqual([]);
@@ -127,7 +127,7 @@ describe('simple', () => {
       age: 1,
       child: { name: 'foo' },
       state: StateEnum.ON,
-      grandchildren: [{ name: 'grand2' }],
+      grandChildren: [{ name: 'grand2' }],
       coins: [0, 4, 6],
       snacks: ['', 'b'],
       oldStates: [StateEnum.UNKNOWN, StateEnum.OFF]

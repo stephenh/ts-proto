@@ -7,7 +7,7 @@ message Simple {
   int32 age = 2;
   Child child = 3;
   StateEnum state = 4;
-  repeated Child grandchildren = 5;
+  repeated Child grand_children = 5;
   repeated int32 coins = 6;
   repeated string snacks = 7;
   repeated StateEnum oldStates = 8;

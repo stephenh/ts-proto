@@ -14,7 +14,7 @@ export interface Simple {
   age: number;
   child: Child | undefined;
   state: StateEnum;
-  grandchildren: Child[];
+  grandChildren: Child[];
   coins: number[];
   snacks: string[];
   oldStates: StateEnum[];
@@ -84,7 +84,7 @@ const baseSimple: object = {
   age: 0,
   child: null,
   state: 0,
-  grandchildren: null,
+  grandChildren: null,
   coins: 0,
   snacks: "",
   oldStates: 0,
@@ -184,7 +184,7 @@ export const Simple = {
       Child.encode(message.child, writer.uint32(26).fork()).ldelim();
     }
     writer.uint32(32).int32(message.state);
-    for (const v of message.grandchildren) {
+    for (const v of message.grandChildren) {
       Child.encode(v!, writer.uint32(42).fork()).ldelim();
     }
     writer.uint32(50).fork();
@@ -205,7 +205,7 @@ export const Simple = {
   decode(reader: Reader, length?: number): Simple {
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = Object.create(baseSimple) as Simple;
-    message.grandchildren = [];
+    message.grandChildren = [];
     message.coins = [];
     message.snacks = [];
     message.oldStates = [];
@@ -225,7 +225,7 @@ export const Simple = {
           message.state = reader.int32();
           break;
         case 5:
-          message.grandchildren.push(Child.decode(reader, reader.uint32()));
+          message.grandChildren.push(Child.decode(reader, reader.uint32()));
           break;
         case 6:
           if ((tag & 7) === 2) {
