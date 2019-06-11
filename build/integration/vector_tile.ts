@@ -104,11 +104,36 @@ export const Tile = {
     const message = Object.create(baseTile) as Tile;
     message.layers = [];
     if ("layers" in object) {
-      message.layers.push(Tile_Layer.fromJSON(object.layers));
+      if (object.layers !== null) {
+        for (const e of object.layers) {
+          message.layers.push(Tile_Layer.fromJSON(e));
+        }
+      }
     }
     return message;
   },
 };
+
+export namespace Tile_GeomType {
+  export function fromJSON(object: any): Tile_GeomType {
+    switch (object) {
+      case 0:
+      case "UNKNOWN":
+        return Tile_GeomType.UNKNOWN;
+      case 1:
+      case "POINT":
+        return Tile_GeomType.POINT;
+      case 2:
+      case "LINESTRING":
+        return Tile_GeomType.LINESTRING;
+      case 3:
+      case "POLYGON":
+        return Tile_GeomType.POLYGON;
+      default:
+        throw new Error(`Invalid value ${object}`);
+    }
+  }
+}
 
 export const Tile_Value = {
   encode(message: Tile_Value, writer: Writer = Writer.create()): Writer {
@@ -158,25 +183,25 @@ export const Tile_Value = {
   fromJSON(object: any): Tile_Value {
     const message = Object.create(baseTile_Value) as Tile_Value;
     if ("stringValue" in object) {
-      message.stringValue = object.stringValue;
+      message.stringValue = String(object.stringValue);
     }
     if ("floatValue" in object) {
-      message.floatValue = object.floatValue;
+      message.floatValue = Number(object.floatValue);
     }
     if ("doubleValue" in object) {
-      message.doubleValue = object.doubleValue;
+      message.doubleValue = Number(object.doubleValue);
     }
     if ("intValue" in object) {
-      message.intValue = object.intValue;
+      message.intValue = Number(object.intValue);
     }
     if ("uintValue" in object) {
-      message.uintValue = object.uintValue;
+      message.uintValue = Number(object.uintValue);
     }
     if ("sintValue" in object) {
-      message.sintValue = object.sintValue;
+      message.sintValue = Number(object.sintValue);
     }
     if ("boolValue" in object) {
-      message.boolValue = object.boolValue;
+      message.boolValue = Boolean(object.boolValue);
     }
     return message;
   },
@@ -244,16 +269,24 @@ export const Tile_Feature = {
     message.tags = [];
     message.geometry = [];
     if ("id" in object) {
-      message.id = object.id;
+      message.id = Number(object.id);
     }
     if ("tags" in object) {
-      message.tags.push(object.tags);
+      if (object.tags !== null) {
+        for (const e of object.tags) {
+          message.tags.push(Number(e));
+        }
+      }
     }
     if ("type" in object) {
-      message.type = object.type;
+      message.type = Tile_GeomType.fromJSON(object.type);
     }
     if ("geometry" in object) {
-      message.geometry.push(object.geometry);
+      if (object.geometry !== null) {
+        for (const e of object.geometry) {
+          message.geometry.push(Number(e));
+        }
+      }
     }
     return message;
   },
@@ -315,22 +348,34 @@ export const Tile_Layer = {
     message.keys = [];
     message.values = [];
     if ("version" in object) {
-      message.version = object.version;
+      message.version = Number(object.version);
     }
     if ("name" in object) {
-      message.name = object.name;
+      message.name = String(object.name);
     }
     if ("features" in object) {
-      message.features.push(Tile_Feature.fromJSON(object.features));
+      if (object.features !== null) {
+        for (const e of object.features) {
+          message.features.push(Tile_Feature.fromJSON(e));
+        }
+      }
     }
     if ("keys" in object) {
-      message.keys.push(object.keys);
+      if (object.keys !== null) {
+        for (const e of object.keys) {
+          message.keys.push(String(e));
+        }
+      }
     }
     if ("values" in object) {
-      message.values.push(Tile_Value.fromJSON(object.values));
+      if (object.values !== null) {
+        for (const e of object.values) {
+          message.values.push(Tile_Value.fromJSON(e));
+        }
+      }
     }
     if ("extent" in object) {
-      message.extent = object.extent;
+      message.extent = Number(object.extent);
     }
     return message;
   },

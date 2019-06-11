@@ -150,7 +150,11 @@ export const BatchQueryRequest = {
     const message = Object.create(baseBatchQueryRequest) as BatchQueryRequest;
     message.ids = [];
     if ("ids" in object) {
-      message.ids.push(object.ids);
+      if (object.ids !== null) {
+        for (const e of object.ids) {
+          message.ids.push(String(e));
+        }
+      }
     }
     return message;
   },
@@ -184,7 +188,11 @@ export const BatchQueryResponse = {
     const message = Object.create(baseBatchQueryResponse) as BatchQueryResponse;
     message.entities = [];
     if ("entities" in object) {
-      message.entities.push(Entity.fromJSON(object.entities));
+      if (object.entities !== null) {
+        for (const e of object.entities) {
+          message.entities.push(Entity.fromJSON(e));
+        }
+      }
     }
     return message;
   },
@@ -218,7 +226,11 @@ export const BatchMapQueryRequest = {
     const message = Object.create(baseBatchMapQueryRequest) as BatchMapQueryRequest;
     message.ids = [];
     if ("ids" in object) {
-      message.ids.push(object.ids);
+      if (object.ids !== null) {
+        for (const e of object.ids) {
+          message.ids.push(String(e));
+        }
+      }
     }
     return message;
   },
@@ -294,7 +306,7 @@ export const BatchMapQueryResponse_EntitiesEntry = {
   fromJSON(object: any): BatchMapQueryResponse_EntitiesEntry {
     const message = Object.create(baseBatchMapQueryResponse_EntitiesEntry) as BatchMapQueryResponse_EntitiesEntry;
     if ("key" in object) {
-      message.key = object.key;
+      message.key = String(object.key);
     }
     if ("value" in object) {
       message.value = Entity.fromJSON(object.value);
@@ -331,10 +343,10 @@ export const Entity = {
   fromJSON(object: any): Entity {
     const message = Object.create(baseEntity) as Entity;
     if ("id" in object) {
-      message.id = object.id;
+      message.id = String(object.id);
     }
     if ("name" in object) {
-      message.name = object.name;
+      message.name = String(object.name);
     }
     return message;
   },

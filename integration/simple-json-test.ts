@@ -1,5 +1,7 @@
 import { Simple, StateEnum } from '../build/integration/simple';
+import { SimpleWithWrappers } from '../build/integration/simple';
 import { simple as pbjs } from '../build/integration/pbjs';
+import { Tile_Value } from '../build/integration/vector_tile';
 import ISimple = pbjs.ISimple;
 import PbChild = pbjs.Child;
 import PbSimple = pbjs.Simple;
@@ -42,8 +44,90 @@ describe('simple', () => {
 
   it('fails decode json with invalid string enum values', () => {
     // given state is mapped as an invalid string
-    const s1 = { state: "INVALID" };
+    const s1 = { state: 'INVALID' };
     // then we fail fast
     expect(() => Simple.fromJSON(s1)).toThrow('Invalid value INVALID');
+  });
+
+  it('decodes a null list as empty', () => {
+    const s1 = { grandChildren: null };
+    expect(Simple.fromJSON(s1).grandChildren).toEqual([]);
+  });
+
+  it('decodes numbers', () => {
+    const tile = {
+      intValue: 1,
+      uintValue: 2,
+      sintValue: -3,
+      floatValue: 1.1,
+      doubleValue: -2.2
+    };
+    expect(Tile_Value.fromJSON(tile)).toMatchInlineSnapshot(`
+Object {
+  "doubleValue": -2.2,
+  "floatValue": 1.1,
+  "intValue": 1,
+  "sintValue": -3,
+  "uintValue": 2,
+}
+`);
+  });
+
+  it('decodes numbers that are strings', () => {
+    const tile = {
+      intValue: '1',
+      uintValue: '2',
+      sintValue: '-3',
+      floatValue: '1.1',
+      doubleValue: '-2.2'
+    };
+    expect(Tile_Value.fromJSON(tile)).toMatchInlineSnapshot(`
+Object {
+  "doubleValue": -2.2,
+  "floatValue": 1.1,
+  "intValue": 1,
+  "sintValue": -3,
+  "uintValue": 2,
+}
+`);
+  });
+
+  it('decodes numbers that are weird', () => {
+    const tile = {
+      floatValue: 'NaN',
+      doubleValue: 'Infinity'
+    };
+    expect(Tile_Value.fromJSON(tile)).toMatchInlineSnapshot(`
+Object {
+  "doubleValue": Infinity,
+  "floatValue": NaN,
+}
+`);
+  });
+
+  it('can decode value wrappers as json', () => {
+    const s1 = {
+      name: 'first',
+      age: 1,
+      enabled: true,
+      coins: [1, 2],
+      snacks: ['a', 'b']
+    };
+    const s2 = SimpleWithWrappers.fromJSON(s1);
+    expect(s2).toMatchInlineSnapshot(`
+Object {
+  "age": 1,
+  "coins": Array [
+    1,
+    2,
+  ],
+  "enabled": true,
+  "name": "first",
+  "snacks": Array [
+    "a",
+    "b",
+  ],
+}
+`);
   });
 });

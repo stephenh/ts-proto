@@ -202,12 +202,16 @@ export function isPrimitive(field: FieldDescriptorProto): boolean {
   return !isMessage(field);
 }
 
+export function isBytes(field: FieldDescriptorProto): boolean {
+  return field.type === FieldDescriptorProto.Type.TYPE_BYTES;
+}
+
 export function isMessage(field: FieldDescriptorProto): boolean {
-  return field.type == FieldDescriptorProto.Type.TYPE_MESSAGE;
+  return field.type === FieldDescriptorProto.Type.TYPE_MESSAGE;
 }
 
 export function isEnum(field: FieldDescriptorProto): boolean {
-  return field.type == FieldDescriptorProto.Type.TYPE_ENUM;
+  return field.type === FieldDescriptorProto.Type.TYPE_ENUM;
 }
 
 export function isWithinOneOf(field: FieldDescriptorProto): boolean {

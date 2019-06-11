@@ -8,7 +8,8 @@ import {
   Modifier,
   PropertySpec,
   TypeName,
-  TypeNames
+  TypeNames,
+  Union
 } from 'ts-poet';
 import { google } from '../build/pbjs';
 import {
@@ -17,6 +18,7 @@ import {
   basicWireType,
   defaultValue,
   detectMapType,
+  isBytes,
   isEnum,
   isMapType,
   isMessage,
@@ -379,12 +381,19 @@ function generateFromJson(typeMap: TypeMap, fullName: string, messageDesc: Descr
       if (isEnum(field)) {
         return CodeBlock.of('%T.fromJSON(%L)', basicTypeName(typeMap, field, true), from);
       } else if (isPrimitive(field)) {
-        return CodeBlock.of(from);
+        // Convert primitives using the String(value)/Number(value) cstr, except for bytes
+        if (isBytes(field)) {
+          return CodeBlock.of('%L', from);
+        } else {
+          const cstr = capitalize(basicTypeName(typeMap, field, true).toString());
+          return CodeBlock.of('%L(%L)', cstr, from);
+        }
         // if (basicLongWireType(field.type) !== undefined) {
         //   readSnippet = CodeBlock.of('longToNumber(%L as Long)', readSnippet);
         // }
       } else if (isValueType(field)) {
-        return CodeBlock.of('%T.fromJSON(%L).value', basicTypeName(typeMap, field, true), from);
+        const cstr = capitalize((basicTypeName(typeMap, field, false) as Union).typeChoices[0].toString());
+        return CodeBlock.of('%L(%L)', cstr, from);
       } else if (isMessage(field)) {
         return CodeBlock.of('%T.fromJSON(%L)', basicTypeName(typeMap, field), from);
       } else {
@@ -403,8 +412,10 @@ function generateFromJson(typeMap: TypeMap, fullName: string, messageDesc: Descr
           .endControlFlow();
       } else {
         func = func
+          .beginControlFlow('if (object.%L !== null)', fieldName)
           .beginControlFlow('for (const e of object.%L)', fieldName)
           .addStatement(`message.%L.push(%L)`, fieldName, readSnippet('e'))
+          .endControlFlow()
           .endControlFlow();
       }
     } else {
@@ -605,4 +616,8 @@ function responsePromise(typeMap: TypeMap, methodDesc: MethodDescriptorProto): T
 
 function snakeToCamel(s: string): string {
   return s.replace(/(\_\w)/g, m => m[1].toUpperCase());
+}
+
+function capitalize(s: string): string {
+  return s.substring(0, 1).toUpperCase() + s.substring(1);
 }
