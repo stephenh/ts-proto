@@ -103,7 +103,38 @@ export const Tile = {
     }
     return message;
   },
+  fromJSON(object: any): Tile {
+    const message = Object.create(baseTile) as Tile;
+    message.layers = [];
+    if (object.layers) {
+      for (const e of object.layers) {
+        message.layers.push(Tile_Layer.fromJSON(e));
+      }
+    }
+    return message;
+  },
 };
+
+export namespace Tile_GeomType {
+  export function fromJSON(object: any): Tile_GeomType {
+    switch (object) {
+      case 0:
+      case \\"UNKNOWN\\":
+        return Tile_GeomType.UNKNOWN;
+      case 1:
+      case \\"POINT\\":
+        return Tile_GeomType.POINT;
+      case 2:
+      case \\"LINESTRING\\":
+        return Tile_GeomType.LINESTRING;
+      case 3:
+      case \\"POLYGON\\":
+        return Tile_GeomType.POLYGON;
+      default:
+        throw new Error(\`Invalid value \${object}\`);
+    }
+  }
+}
 
 export const Tile_Value = {
   encode(message: Tile_Value, writer: Writer = Writer.create()): Writer {
@@ -147,6 +178,31 @@ export const Tile_Value = {
           reader.skipType(tag & 7);
           break;
       }
+    }
+    return message;
+  },
+  fromJSON(object: any): Tile_Value {
+    const message = Object.create(baseTile_Value) as Tile_Value;
+    if (object.stringValue) {
+      message.stringValue = String(object.stringValue);
+    }
+    if (object.floatValue) {
+      message.floatValue = Number(object.floatValue);
+    }
+    if (object.doubleValue) {
+      message.doubleValue = Number(object.doubleValue);
+    }
+    if (object.intValue) {
+      message.intValue = Number(object.intValue);
+    }
+    if (object.uintValue) {
+      message.uintValue = Number(object.uintValue);
+    }
+    if (object.sintValue) {
+      message.sintValue = Number(object.sintValue);
+    }
+    if (object.boolValue) {
+      message.boolValue = Boolean(object.boolValue);
     }
     return message;
   },
@@ -209,6 +265,28 @@ export const Tile_Feature = {
     }
     return message;
   },
+  fromJSON(object: any): Tile_Feature {
+    const message = Object.create(baseTile_Feature) as Tile_Feature;
+    message.tags = [];
+    message.geometry = [];
+    if (object.id) {
+      message.id = Number(object.id);
+    }
+    if (object.tags) {
+      for (const e of object.tags) {
+        message.tags.push(Number(e));
+      }
+    }
+    if (object.type) {
+      message.type = Tile_GeomType.fromJSON(object.type);
+    }
+    if (object.geometry) {
+      for (const e of object.geometry) {
+        message.geometry.push(Number(e));
+      }
+    }
+    return message;
+  },
 };
 
 export const Tile_Layer = {
@@ -258,6 +336,37 @@ export const Tile_Layer = {
           reader.skipType(tag & 7);
           break;
       }
+    }
+    return message;
+  },
+  fromJSON(object: any): Tile_Layer {
+    const message = Object.create(baseTile_Layer) as Tile_Layer;
+    message.features = [];
+    message.keys = [];
+    message.values = [];
+    if (object.version) {
+      message.version = Number(object.version);
+    }
+    if (object.name) {
+      message.name = String(object.name);
+    }
+    if (object.features) {
+      for (const e of object.features) {
+        message.features.push(Tile_Feature.fromJSON(e));
+      }
+    }
+    if (object.keys) {
+      for (const e of object.keys) {
+        message.keys.push(String(e));
+      }
+    }
+    if (object.values) {
+      for (const e of object.values) {
+        message.values.push(Tile_Value.fromJSON(e));
+      }
+    }
+    if (object.extent) {
+      message.extent = Number(object.extent);
     }
     return message;
   },

@@ -130,4 +130,26 @@ Object {
 }
 `);
   });
+
+  it('can decode json with null values', () => {
+    const s1 = {
+      name: null,
+      age: null,
+      child: null,
+      state: null,
+      grandChildren: null,
+      coins: null,
+      snacks: null,
+      oldStates: null
+    };
+    const s2 = Simple.fromJSON(s1);
+    expect(s2).toMatchInlineSnapshot(`
+Object {
+  "coins": Array [],
+  "grandChildren": Array [],
+  "oldStates": Array [],
+  "snacks": Array [],
+}
+`);
+  });
 });

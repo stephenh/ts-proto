@@ -149,11 +149,9 @@ export const BatchQueryRequest = {
   fromJSON(object: any): BatchQueryRequest {
     const message = Object.create(baseBatchQueryRequest) as BatchQueryRequest;
     message.ids = [];
-    if ("ids" in object) {
-      if (object.ids !== null) {
-        for (const e of object.ids) {
-          message.ids.push(String(e));
-        }
+    if (object.ids) {
+      for (const e of object.ids) {
+        message.ids.push(String(e));
       }
     }
     return message;
@@ -187,11 +185,9 @@ export const BatchQueryResponse = {
   fromJSON(object: any): BatchQueryResponse {
     const message = Object.create(baseBatchQueryResponse) as BatchQueryResponse;
     message.entities = [];
-    if ("entities" in object) {
-      if (object.entities !== null) {
-        for (const e of object.entities) {
-          message.entities.push(Entity.fromJSON(e));
-        }
+    if (object.entities) {
+      for (const e of object.entities) {
+        message.entities.push(Entity.fromJSON(e));
       }
     }
     return message;
@@ -225,11 +221,9 @@ export const BatchMapQueryRequest = {
   fromJSON(object: any): BatchMapQueryRequest {
     const message = Object.create(baseBatchMapQueryRequest) as BatchMapQueryRequest;
     message.ids = [];
-    if ("ids" in object) {
-      if (object.ids !== null) {
-        for (const e of object.ids) {
-          message.ids.push(String(e));
-        }
+    if (object.ids) {
+      for (const e of object.ids) {
+        message.ids.push(String(e));
       }
     }
     return message;
@@ -266,7 +260,7 @@ export const BatchMapQueryResponse = {
   fromJSON(object: any): BatchMapQueryResponse {
     const message = Object.create(baseBatchMapQueryResponse) as BatchMapQueryResponse;
     message.entities = {};
-    if ("entities" in object) {
+    if (object.entities) {
       const entry = BatchMapQueryResponse_EntitiesEntry.fromJSON(object.entities);
       if (entry.value) {
         message.entities[entry.key] = entry.value;
@@ -305,10 +299,10 @@ export const BatchMapQueryResponse_EntitiesEntry = {
   },
   fromJSON(object: any): BatchMapQueryResponse_EntitiesEntry {
     const message = Object.create(baseBatchMapQueryResponse_EntitiesEntry) as BatchMapQueryResponse_EntitiesEntry;
-    if ("key" in object) {
+    if (object.key) {
       message.key = String(object.key);
     }
-    if ("value" in object) {
+    if (object.value) {
       message.value = Entity.fromJSON(object.value);
     }
     return message;
@@ -342,10 +336,10 @@ export const Entity = {
   },
   fromJSON(object: any): Entity {
     const message = Object.create(baseEntity) as Entity;
-    if ("id" in object) {
+    if (object.id) {
       message.id = String(object.id);
     }
-    if ("name" in object) {
+    if (object.name) {
       message.name = String(object.name);
     }
     return message;

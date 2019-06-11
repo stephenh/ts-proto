@@ -281,44 +281,36 @@ export const Simple = {
     message.coins = [];
     message.snacks = [];
     message.oldStates = [];
-    if ("name" in object) {
+    if (object.name) {
       message.name = String(object.name);
     }
-    if ("age" in object) {
+    if (object.age) {
       message.age = Number(object.age);
     }
-    if ("child" in object) {
+    if (object.child) {
       message.child = Child.fromJSON(object.child);
     }
-    if ("state" in object) {
+    if (object.state) {
       message.state = StateEnum.fromJSON(object.state);
     }
-    if ("grandChildren" in object) {
-      if (object.grandChildren !== null) {
-        for (const e of object.grandChildren) {
-          message.grandChildren.push(Child.fromJSON(e));
-        }
+    if (object.grandChildren) {
+      for (const e of object.grandChildren) {
+        message.grandChildren.push(Child.fromJSON(e));
       }
     }
-    if ("coins" in object) {
-      if (object.coins !== null) {
-        for (const e of object.coins) {
-          message.coins.push(Number(e));
-        }
+    if (object.coins) {
+      for (const e of object.coins) {
+        message.coins.push(Number(e));
       }
     }
-    if ("snacks" in object) {
-      if (object.snacks !== null) {
-        for (const e of object.snacks) {
-          message.snacks.push(String(e));
-        }
+    if (object.snacks) {
+      for (const e of object.snacks) {
+        message.snacks.push(String(e));
       }
     }
-    if ("oldStates" in object) {
-      if (object.oldStates !== null) {
-        for (const e of object.oldStates) {
-          message.oldStates.push(StateEnum.fromJSON(e));
-        }
+    if (object.oldStates) {
+      for (const e of object.oldStates) {
+        message.oldStates.push(StateEnum.fromJSON(e));
       }
     }
     return message;
@@ -348,7 +340,7 @@ export const Child = {
   },
   fromJSON(object: any): Child {
     const message = Object.create(baseChild) as Child;
-    if ("name" in object) {
+    if (object.name) {
       message.name = String(object.name);
     }
     return message;
@@ -388,13 +380,13 @@ export const Nested = {
   },
   fromJSON(object: any): Nested {
     const message = Object.create(baseNested) as Nested;
-    if ("name" in object) {
+    if (object.name) {
       message.name = String(object.name);
     }
-    if ("message" in object) {
+    if (object.message) {
       message.message = Nested_InnerMessage.fromJSON(object.message);
     }
-    if ("state" in object) {
+    if (object.state) {
       message.state = Nested_InnerEnum.fromJSON(object.state);
     }
     return message;
@@ -448,10 +440,10 @@ export const Nested_InnerMessage = {
   },
   fromJSON(object: any): Nested_InnerMessage {
     const message = Object.create(baseNested_InnerMessage) as Nested_InnerMessage;
-    if ("name" in object) {
+    if (object.name) {
       message.name = String(object.name);
     }
-    if ("deep" in object) {
+    if (object.deep) {
       message.deep = Nested_InnerMessage_DeepMessage.fromJSON(object.deep);
     }
     return message;
@@ -481,7 +473,7 @@ export const Nested_InnerMessage_DeepMessage = {
   },
   fromJSON(object: any): Nested_InnerMessage_DeepMessage {
     const message = Object.create(baseNested_InnerMessage_DeepMessage) as Nested_InnerMessage_DeepMessage;
-    if ("name" in object) {
+    if (object.name) {
       message.name = String(object.name);
     }
     return message;
@@ -519,10 +511,10 @@ export const OneOfMessage = {
   },
   fromJSON(object: any): OneOfMessage {
     const message = Object.create(baseOneOfMessage) as OneOfMessage;
-    if ("first" in object) {
+    if (object.first) {
       message.first = String(object.first);
     }
-    if ("last" in object) {
+    if (object.last) {
       message.last = String(object.last);
     }
     return message;
@@ -582,27 +574,23 @@ export const SimpleWithWrappers = {
     const message = Object.create(baseSimpleWithWrappers) as SimpleWithWrappers;
     message.coins = [];
     message.snacks = [];
-    if ("name" in object) {
+    if (object.name) {
       message.name = String(object.name);
     }
-    if ("age" in object) {
+    if (object.age) {
       message.age = Number(object.age);
     }
-    if ("enabled" in object) {
+    if (object.enabled) {
       message.enabled = Boolean(object.enabled);
     }
-    if ("coins" in object) {
-      if (object.coins !== null) {
-        for (const e of object.coins) {
-          message.coins.push(Number(e));
-        }
+    if (object.coins) {
+      for (const e of object.coins) {
+        message.coins.push(Number(e));
       }
     }
-    if ("snacks" in object) {
-      if (object.snacks !== null) {
-        for (const e of object.snacks) {
-          message.snacks.push(String(e));
-        }
+    if (object.snacks) {
+      for (const e of object.snacks) {
+        message.snacks.push(String(e));
       }
     }
     return message;
@@ -632,7 +620,7 @@ export const Entity = {
   },
   fromJSON(object: any): Entity {
     const message = Object.create(baseEntity) as Entity;
-    if ("id" in object) {
+    if (object.id) {
       message.id = Number(object.id);
     }
     return message;
@@ -669,7 +657,7 @@ export const SimpleWithMap = {
   fromJSON(object: any): SimpleWithMap {
     const message = Object.create(baseSimpleWithMap) as SimpleWithMap;
     message.entitiesById = {};
-    if ("entitiesById" in object) {
+    if (object.entitiesById) {
       const entry = SimpleWithMap_EntitiesByIdEntry.fromJSON(object.entitiesById);
       if (entry.value) {
         message.entitiesById[entry.key] = entry.value;
@@ -708,10 +696,10 @@ export const SimpleWithMap_EntitiesByIdEntry = {
   },
   fromJSON(object: any): SimpleWithMap_EntitiesByIdEntry {
     const message = Object.create(baseSimpleWithMap_EntitiesByIdEntry) as SimpleWithMap_EntitiesByIdEntry;
-    if ("key" in object) {
+    if (object.key) {
       message.key = Number(object.key);
     }
-    if ("value" in object) {
+    if (object.value) {
       message.value = Entity.fromJSON(object.value);
     }
     return message;
@@ -741,7 +729,7 @@ export const PingRequest = {
   },
   fromJSON(object: any): PingRequest {
     const message = Object.create(basePingRequest) as PingRequest;
-    if ("input" in object) {
+    if (object.input) {
       message.input = String(object.input);
     }
     return message;
@@ -771,7 +759,7 @@ export const PingResponse = {
   },
   fromJSON(object: any): PingResponse {
     const message = Object.create(basePingResponse) as PingResponse;
-    if ("output" in object) {
+    if (object.output) {
       message.output = String(object.output);
     }
     return message;

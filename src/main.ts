@@ -402,7 +402,7 @@ function generateFromJson(typeMap: TypeMap, fullName: string, messageDesc: Descr
     };
 
     // and then use the snippet to handle repeated fields if necessary
-    func = func.beginControlFlow('if (%S in object)', fieldName);
+    func = func.beginControlFlow('if (object.%L)', fieldName);
     if (isRepeated(field)) {
       if (isMapType(typeMap, messageDesc, field)) {
         func = func
@@ -412,10 +412,8 @@ function generateFromJson(typeMap: TypeMap, fullName: string, messageDesc: Descr
           .endControlFlow();
       } else {
         func = func
-          .beginControlFlow('if (object.%L !== null)', fieldName)
           .beginControlFlow('for (const e of object.%L)', fieldName)
           .addStatement(`message.%L.push(%L)`, fieldName, readSnippet('e'))
-          .endControlFlow()
           .endControlFlow();
       }
     } else {
