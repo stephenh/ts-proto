@@ -349,6 +349,19 @@ export const Simple = {
     }
     return message;
   },
+  toJSON(message: Simple): unknown {
+    const obj: any = {};
+    obj.name = message.name;
+    obj.age = message.age;
+    obj.createdAt = message.createdAt;
+    obj.child = message.child;
+    obj.state = message.state;
+    obj.grandChildren = message.grandChildren;
+    obj.coins = message.coins;
+    obj.snacks = message.snacks;
+    obj.oldStates = message.oldStates;
+    return obj;
+  },
 };
 
 export const Child = {
@@ -378,6 +391,11 @@ export const Child = {
       message.name = String(object.name);
     }
     return message;
+  },
+  toJSON(message: Child): unknown {
+    const obj: any = {};
+    obj.name = message.name;
+    return obj;
   },
 };
 
@@ -424,6 +442,13 @@ export const Nested = {
       message.state = Nested_InnerEnum.fromJSON(object.state);
     }
     return message;
+  },
+  toJSON(message: Nested): unknown {
+    const obj: any = {};
+    obj.name = message.name;
+    obj.message = message.message;
+    obj.state = message.state;
+    return obj;
   },
 };
 
@@ -482,6 +507,12 @@ export const Nested_InnerMessage = {
     }
     return message;
   },
+  toJSON(message: Nested_InnerMessage): unknown {
+    const obj: any = {};
+    obj.name = message.name;
+    obj.deep = message.deep;
+    return obj;
+  },
 };
 
 export const Nested_InnerMessage_DeepMessage = {
@@ -511,6 +542,11 @@ export const Nested_InnerMessage_DeepMessage = {
       message.name = String(object.name);
     }
     return message;
+  },
+  toJSON(message: Nested_InnerMessage_DeepMessage): unknown {
+    const obj: any = {};
+    obj.name = message.name;
+    return obj;
   },
 };
 
@@ -552,6 +588,12 @@ export const OneOfMessage = {
       message.last = String(object.last);
     }
     return message;
+  },
+  toJSON(message: OneOfMessage): unknown {
+    const obj: any = {};
+    obj.first = message.first;
+    obj.last = message.last;
+    return obj;
   },
 };
 
@@ -629,6 +671,15 @@ export const SimpleWithWrappers = {
     }
     return message;
   },
+  toJSON(message: SimpleWithWrappers): unknown {
+    const obj: any = {};
+    obj.name = message.name;
+    obj.age = message.age;
+    obj.enabled = message.enabled;
+    obj.coins = message.coins;
+    obj.snacks = message.snacks;
+    return obj;
+  },
 };
 
 export const Entity = {
@@ -658,6 +709,11 @@ export const Entity = {
       message.id = Number(object.id);
     }
     return message;
+  },
+  toJSON(message: Entity): unknown {
+    const obj: any = {};
+    obj.id = message.id;
+    return obj;
   },
 };
 
@@ -699,6 +755,11 @@ export const SimpleWithMap = {
     }
     return message;
   },
+  toJSON(message: SimpleWithMap): unknown {
+    const obj: any = {};
+    obj.entitiesById = message.entitiesById;
+    return obj;
+  },
 };
 
 export const SimpleWithMap_EntitiesByIdEntry = {
@@ -738,6 +799,12 @@ export const SimpleWithMap_EntitiesByIdEntry = {
     }
     return message;
   },
+  toJSON(message: SimpleWithMap_EntitiesByIdEntry): unknown {
+    const obj: any = {};
+    obj.key = message.key;
+    obj.value = message.value;
+    return obj;
+  },
 };
 
 export const PingRequest = {
@@ -768,6 +835,11 @@ export const PingRequest = {
     }
     return message;
   },
+  toJSON(message: PingRequest): unknown {
+    const obj: any = {};
+    obj.input = message.input;
+    return obj;
+  },
 };
 
 export const PingResponse = {
@@ -797,5 +869,10 @@ export const PingResponse = {
       message.output = String(object.output);
     }
     return message;
+  },
+  toJSON(message: PingResponse): unknown {
+    const obj: any = {};
+    obj.output = message.output;
+    return obj;
   },
 };

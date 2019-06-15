@@ -156,6 +156,11 @@ export const BatchQueryRequest = {
     }
     return message;
   },
+  toJSON(message: BatchQueryRequest): unknown {
+    const obj: any = {};
+    obj.ids = message.ids;
+    return obj;
+  },
 };
 
 export const BatchQueryResponse = {
@@ -192,6 +197,11 @@ export const BatchQueryResponse = {
     }
     return message;
   },
+  toJSON(message: BatchQueryResponse): unknown {
+    const obj: any = {};
+    obj.entities = message.entities;
+    return obj;
+  },
 };
 
 export const BatchMapQueryRequest = {
@@ -227,6 +237,11 @@ export const BatchMapQueryRequest = {
       }
     }
     return message;
+  },
+  toJSON(message: BatchMapQueryRequest): unknown {
+    const obj: any = {};
+    obj.ids = message.ids;
+    return obj;
   },
 };
 
@@ -268,6 +283,11 @@ export const BatchMapQueryResponse = {
     }
     return message;
   },
+  toJSON(message: BatchMapQueryResponse): unknown {
+    const obj: any = {};
+    obj.entities = message.entities;
+    return obj;
+  },
 };
 
 export const BatchMapQueryResponse_EntitiesEntry = {
@@ -307,6 +327,12 @@ export const BatchMapQueryResponse_EntitiesEntry = {
     }
     return message;
   },
+  toJSON(message: BatchMapQueryResponse_EntitiesEntry): unknown {
+    const obj: any = {};
+    obj.key = message.key;
+    obj.value = message.value;
+    return obj;
+  },
 };
 
 export const Entity = {
@@ -343,5 +369,11 @@ export const Entity = {
       message.name = String(object.name);
     }
     return message;
+  },
+  toJSON(message: Entity): unknown {
+    const obj: any = {};
+    obj.id = message.id;
+    obj.name = message.name;
+    return obj;
   },
 };

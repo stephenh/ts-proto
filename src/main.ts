@@ -81,6 +81,7 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto): F
         .addHashEntry(generateEncode(typeMap, fullName, message))
         .addHashEntry(generateDecode(typeMap, fullName, message))
         .addHashEntry(generateFromJson(typeMap, fullName, message))
+        .addHashEntry(generateToJson(typeMap, fullName, message))
         .endHash()
         .add(';')
         .newLine();
@@ -491,6 +492,20 @@ function generateFromJson(typeMap: TypeMap, fullName: string, messageDesc: Descr
   // and then wrap up the switch/while/return
   func = func.addStatement('return message');
   return func;
+}
+
+function generateToJson(typeMap: TypeMap, fullName: string, messageDesc: DescriptorProto): FunctionSpec {
+  // create the basic function declaration
+  let func = FunctionSpec.create('toJSON')
+    .addParameter('message', fullName)
+    .returns('unknown');
+  func = func.addCodeBlock(CodeBlock.empty().addStatement('const obj: any = {}'));
+  // then add a case for each field
+  messageDesc.field.forEach(field => {
+    const fieldName = snakeToCamel(field.name);
+    func = func.addStatement("obj.%L = message.%L", fieldName, fieldName);
+  });
+  return func.addStatement('return obj');
 }
 
 function generateService(

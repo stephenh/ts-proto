@@ -110,6 +110,11 @@ export const Tile = {
     }
     return message;
   },
+  toJSON(message: Tile): unknown {
+    const obj: any = {};
+    obj.layers = message.layers;
+    return obj;
+  },
 };
 
 export namespace Tile_GeomType {
@@ -203,6 +208,17 @@ export const Tile_Value = {
     }
     return message;
   },
+  toJSON(message: Tile_Value): unknown {
+    const obj: any = {};
+    obj.stringValue = message.stringValue;
+    obj.floatValue = message.floatValue;
+    obj.doubleValue = message.doubleValue;
+    obj.intValue = message.intValue;
+    obj.uintValue = message.uintValue;
+    obj.sintValue = message.sintValue;
+    obj.boolValue = message.boolValue;
+    return obj;
+  },
 };
 
 export const Tile_Feature = {
@@ -283,6 +299,14 @@ export const Tile_Feature = {
       }
     }
     return message;
+  },
+  toJSON(message: Tile_Feature): unknown {
+    const obj: any = {};
+    obj.id = message.id;
+    obj.tags = message.tags;
+    obj.type = message.type;
+    obj.geometry = message.geometry;
+    return obj;
   },
 };
 
@@ -366,5 +390,15 @@ export const Tile_Layer = {
       message.extent = Number(object.extent);
     }
     return message;
+  },
+  toJSON(message: Tile_Layer): unknown {
+    const obj: any = {};
+    obj.version = message.version;
+    obj.name = message.name;
+    obj.features = message.features;
+    obj.keys = message.keys;
+    obj.values = message.values;
+    obj.extent = message.extent;
+    return obj;
   },
 };
