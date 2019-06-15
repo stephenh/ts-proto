@@ -197,7 +197,7 @@ function fromJsonTimestamp(o: any): Date {
   } else if (typeof o === "string") {
     return new Date(o);
   } else {
-    throw new Error(`Invalid date ${o}`);
+    return fromTimestamp(Timestamp.fromJSON(o));
   }
 }
 

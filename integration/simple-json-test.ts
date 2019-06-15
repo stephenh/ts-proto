@@ -1,11 +1,12 @@
 import { Simple, StateEnum } from '../build/integration/simple';
 import { SimpleWithWrappers } from '../build/integration/simple';
-import { simple as pbjs } from '../build/integration/pbjs';
+import { simple as pbjs, google } from '../build/integration/pbjs';
 import { Tile_Value } from '../build/integration/vector_tile';
 import ISimple = pbjs.ISimple;
 import PbChild = pbjs.Child;
 import PbSimple = pbjs.Simple;
 import PbState = pbjs.StateEnum;
+import Timestamp = google.protobuf.Timestamp;
 
 describe('simple', () => {
   it('can decode json', () => {
@@ -151,5 +152,26 @@ Object {
   "snacks": Array [],
 }
 `);
+  });
+
+  it('can decode dates that are canonical format', () => {
+    const s1: ISimple = {
+      createdAt: Timestamp.create({ seconds: 1_000 })
+    };
+    const json = PbSimple.fromObject(s1).toJSON();
+    const s2 = Simple.fromJSON(json);
+    expect(s2.createdAt).toMatchInlineSnapshot(`1970-01-01T00:16:40.000Z`);
+  });
+
+  it('can decode dates that are iso strings', () => {
+    const d = new Date('1970-01-01T00:16:40.000Z');
+    const s2 = Simple.fromJSON({ createdAt: d.toISOString() });
+    expect(s2.createdAt).toEqual(d);
+  });
+
+  it('can decode dates that are already dates', () => {
+    const d = new Date('1970-01-01T00:16:40.000Z');
+    const s2 = Simple.fromJSON({ createdAt: d });
+    expect(s2.createdAt).toEqual(d);
   });
 });

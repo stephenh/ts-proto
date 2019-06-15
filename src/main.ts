@@ -167,7 +167,7 @@ function addTimestampMethods(file: FileSpec): FileSpec {
             .nextControlFlow('else if (typeof o === "string")')
             .addStatement('return new Date(o)')
             .nextControlFlow('else')
-            .addStatement('throw new Error(`Invalid date ${o}`)')
+            .addStatement('return fromTimestamp(Timestamp.fromJSON(o))')
             .endControlFlow()
         )
     );
