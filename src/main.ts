@@ -24,6 +24,7 @@ import {
   isMessage,
   isPrimitive,
   isRepeated,
+  isTimestamp,
   isValueType,
   isWithinOneOf,
   messageToTypeName,
@@ -105,6 +106,14 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto): F
 
   file = addLongUtilityMethod(file);
 
+  let hasAnyTimestamps = false;
+  visit(fileDesc, (_, messageType) => {
+    hasAnyTimestamps = hasAnyTimestamps || asSequence(messageType.field).any(isTimestamp);
+  });
+  if (hasAnyTimestamps) {
+    file = addTimestampMethods(file);
+  }
+
   return file;
 }
 
@@ -120,6 +129,48 @@ function addLongUtilityMethod(file: FileSpec): FileSpec {
           .addStatement('return long.toNumber()')
       )
   );
+}
+
+function addTimestampMethods(file: FileSpec): FileSpec {
+  const timestampType = 'Timestamp@./google/protobuf/timestamp';
+  return file
+    .addFunction(
+      FunctionSpec.create('toTimestamp')
+        .addParameter('date', 'Date')
+        .returns(timestampType)
+        .addCodeBlock(
+          CodeBlock.empty()
+            .addStatement('const seconds = date.getTime() / 1_000')
+            .addStatement('const nanos = (date.getTime() %% 1_000) * 1_000_000')
+            .addStatement('return { seconds, nanos }')
+        )
+    )
+    .addFunction(
+      FunctionSpec.create('fromTimestamp')
+        .addParameter('t', timestampType)
+        .returns('Date')
+        .addCodeBlock(
+          CodeBlock.empty()
+            .addStatement('let millis = t.seconds * 1_000')
+            .addStatement('millis += t.nanos / 1_000_000')
+            .addStatement('return new Date(millis)')
+        )
+    )
+    .addFunction(
+      FunctionSpec.create('fromJsonTimestamp')
+        .addParameter('o', 'any')
+        .returns('Date')
+        .addCodeBlock(
+          CodeBlock.empty()
+            .beginControlFlow('if (o instanceof Date)')
+            .addStatement('return o')
+            .nextControlFlow('else if (typeof o === "string")')
+            .addStatement('return new Date(o)')
+            .nextControlFlow('else')
+            .addStatement('throw new Error(`Invalid date ${o}`)')
+            .endControlFlow()
+        )
+    );
 }
 
 function generateEnum(fullName: string, enumDesc: EnumDescriptorProto): EnumSpec {
@@ -237,6 +288,11 @@ function generateDecode(typeMap: TypeMap, fullName: string, messageDesc: Descrip
       }
     } else if (isValueType(field)) {
       readSnippet = CodeBlock.of('%T.decode(reader, reader.uint32()).value', basicTypeName(typeMap, field, true));
+    } else if (isTimestamp(field)) {
+      readSnippet = CodeBlock.of(
+        'fromTimestamp(%T.decode(reader, reader.uint32()))',
+        basicTypeName(typeMap, field, true)
+      );
     } else if (isMessage(field)) {
       readSnippet = CodeBlock.of('%T.decode(reader, reader.uint32())', basicTypeName(typeMap, field));
     } else {
@@ -297,6 +353,15 @@ function generateEncode(typeMap: TypeMap, fullName: string, messageDesc: Descrip
     if (isPrimitive(field)) {
       const tag = ((field.number << 3) | basicWireType(field.type)) >>> 0;
       writeSnippet = place => CodeBlock.of('writer.uint32(%L).%L(%L)', tag, toReaderCall(field), place);
+    } else if (isTimestamp(field)) {
+      const tag = ((field.number << 3) | 2) >>> 0;
+      writeSnippet = place =>
+        CodeBlock.of(
+          '%T.encode(toTimestamp(%L), writer.uint32(%L).fork()).ldelim()',
+          basicTypeName(typeMap, field, true),
+          place,
+          tag
+        );
     } else if (isValueType(field)) {
       const tag = ((field.number << 3) | 2) >>> 0;
       writeSnippet = place =>
@@ -391,6 +456,8 @@ function generateFromJson(typeMap: TypeMap, fullName: string, messageDesc: Descr
         // if (basicLongWireType(field.type) !== undefined) {
         //   readSnippet = CodeBlock.of('longToNumber(%L as Long)', readSnippet);
         // }
+      } else if (isTimestamp(field)) {
+        return CodeBlock.of('fromJsonTimestamp(%L)', from);
       } else if (isValueType(field)) {
         const cstr = capitalize((basicTypeName(typeMap, field, false) as Union).typeChoices[0].toString());
         return CodeBlock.of('%L(%L)', cstr, from);

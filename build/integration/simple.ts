@@ -1,5 +1,6 @@
 import { Reader, Writer } from 'protobufjs/minimal';
 import * as Long from 'long';
+import { Timestamp } from './google/protobuf/timestamp';
 import { StringValue, Int32Value, BoolValue } from './google/protobuf/wrappers';
 
 
@@ -12,6 +13,7 @@ export enum StateEnum {
 export interface Simple {
   name: string;
   age: number;
+  createdAt: Date | undefined | undefined;
   child: Child | undefined;
   state: StateEnum;
   grandChildren: Child[];
@@ -82,6 +84,7 @@ export interface PingResponse {
 const baseSimple: object = {
   name: "",
   age: 0,
+  createdAt: null,
   child: null,
   state: 0,
   grandChildren: null,
@@ -176,6 +179,28 @@ function longToNumber(long: Long) {
   return long.toNumber();
 }
 
+function toTimestamp(date: Date): Timestamp {
+  const seconds = date.getTime() / 1_000;
+  const nanos = (date.getTime() % 1_000) * 1_000_000;
+  return { seconds, nanos };
+}
+
+function fromTimestamp(t: Timestamp): Date {
+  let millis = t.seconds * 1_000;
+  millis += t.nanos / 1_000_000;
+  return new Date(millis);
+}
+
+function fromJsonTimestamp(o: any): Date {
+  if (o instanceof Date) {
+    return o;
+  } else if (typeof o === "string") {
+    return new Date(o);
+  } else {
+    throw new Error(`Invalid date ${o}`);
+  }
+}
+
 export namespace StateEnum {
   export function fromJSON(object: any): StateEnum {
     switch (object) {
@@ -198,6 +223,9 @@ export const Simple = {
   encode(message: Simple, writer: Writer = Writer.create()): Writer {
     writer.uint32(10).string(message.name);
     writer.uint32(16).int32(message.age);
+    if (message.createdAt !== undefined && message.createdAt !== null) {
+      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(74).fork()).ldelim();
+    }
     if (message.child !== undefined && message.child !== null) {
       Child.encode(message.child, writer.uint32(26).fork()).ldelim();
     }
@@ -235,6 +263,9 @@ export const Simple = {
           break;
         case 2:
           message.age = reader.int32();
+          break;
+        case 9:
+          message.createdAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           break;
         case 3:
           message.child = Child.decode(reader, reader.uint32());
@@ -286,6 +317,9 @@ export const Simple = {
     }
     if (object.age) {
       message.age = Number(object.age);
+    }
+    if (object.createdAt) {
+      message.createdAt = fromJsonTimestamp(object.createdAt);
     }
     if (object.child) {
       message.child = Child.fromJSON(object.child);

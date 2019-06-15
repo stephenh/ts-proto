@@ -232,15 +232,27 @@ const valueTypes: { [key: string]: TypeName } = {
   '.google.protobuf.BoolValue': TypeNames.unionType(TypeNames.BOOLEAN, TypeNames.UNDEFINED)
 };
 
+const mappedTypes: { [key: string]: TypeName } = {
+  '.google.protobuf.Timestamp': TypeNames.unionType(TypeNames.DATE, TypeNames.UNDEFINED)
+};
+
+export function isTimestamp(field: FieldDescriptorProto): boolean {
+  return field.typeName === '.google.protobuf.Timestamp';
+}
+
 export function isValueType(field: FieldDescriptorProto): boolean {
   return field.typeName in valueTypes;
 }
 
 /** Maps `.some_proto_namespace.Message` to a TypeName. */
 export function messageToTypeName(typeMap: TypeMap, protoType: string, keepValueType: boolean = false): TypeName {
-  // turn .google.protobuf.StringValue --> string | undefined
+  // Watch for the wrapper types `.google.protobuf.StringValue` and map to `string | undefined`
   if (!keepValueType && protoType in valueTypes) {
     return valueTypes[protoType];
+  }
+  // Look for other special prototypes like Timestamp that aren't technically wrapper types
+  if (!keepValueType && protoType in mappedTypes) {
+    return mappedTypes[protoType];
   }
   const [module, type] = toModuleAndType(typeMap, protoType);
   return TypeNames.importedType(`${type}@./${module}`);
@@ -253,7 +265,7 @@ function toModuleAndType(typeMap: TypeMap, protoType: string): [string, string] 
 
 /** Return the TypeName for any field (primitive/message/etc.) as exposed in the interface. */
 export function toTypeName(typeMap: TypeMap, messageDesc: DescriptorProto, field: FieldDescriptorProto): TypeName {
-  let type = basicTypeName(typeMap, field);
+  let type = basicTypeName(typeMap, field, false);
   if (isRepeated(field)) {
     const mapType = detectMapType(typeMap, messageDesc, field);
     if (mapType) {
@@ -272,7 +284,7 @@ export function detectMapType(
   typeMap: TypeMap,
   messageDesc: DescriptorProto,
   fieldDesc: FieldDescriptorProto
-): { messageDesc: DescriptorProto, keyType: TypeName, valueType: TypeName } | undefined {
+): { messageDesc: DescriptorProto; keyType: TypeName; valueType: TypeName } | undefined {
   if (
     fieldDesc.label === FieldDescriptorProto.Label.LABEL_REPEATED &&
     fieldDesc.type === FieldDescriptorProto.Type.TYPE_MESSAGE
@@ -282,12 +294,14 @@ export function detectMapType(
         t =>
           t.name === `${upperFirst(fieldDesc.name)}Entry` &&
           (t.options !== undefined && t.options != null && t.options.mapEntry)
-      ).map(mapType => {
+      )
+      .map(mapType => {
         const keyType = toTypeName(typeMap, messageDesc, mapType.field[0]);
         // use basicTypeName because we don't need the '| undefined'
         const valueType = basicTypeName(typeMap, mapType.field[1]);
         return { messageDesc: mapType, keyType, valueType };
-      }).find(_ => true);
+      })
+      .find(_ => true);
   }
   return undefined;
 }

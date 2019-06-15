@@ -1,10 +1,12 @@
 syntax = "proto3";
 import "google/protobuf/wrappers.proto";
+import "google/protobuf/timestamp.proto";
 package simple;
 
 message Simple {
   string name = 1;
   int32 age = 2;
+  google.protobuf.Timestamp created_at = 9;
   Child child = 3;
   StateEnum state = 4;
   repeated Child grand_children = 5;
