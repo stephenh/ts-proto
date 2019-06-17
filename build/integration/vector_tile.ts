@@ -136,6 +136,20 @@ export namespace Tile_GeomType {
         throw new Error(`Invalid value ${object}`);
     }
   }
+  export function toJSON(object: Tile_GeomType): string {
+    switch (object) {
+      case Tile_GeomType.UNKNOWN:
+        return "UNKNOWN";
+      case Tile_GeomType.POINT:
+        return "POINT";
+      case Tile_GeomType.LINESTRING:
+        return "LINESTRING";
+      case Tile_GeomType.POLYGON:
+        return "POLYGON";
+      default:
+        throw new Error(`Invalid value ${object}`);
+    }
+  }
 }
 
 export const Tile_Value = {
@@ -304,7 +318,7 @@ export const Tile_Feature = {
     const obj: any = {};
     obj.id = message.id;
     obj.tags = message.tags;
-    obj.type = message.type;
+    obj.type = Tile_GeomType.toJSON(message.type);
     obj.geometry = message.geometry;
     return obj;
   },

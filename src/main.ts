@@ -91,6 +91,7 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto): F
       let staticMethods = CodeBlock.empty()
         .beginControlFlow('export namespace %L', fullName)
         .addFunction(generateEnumFromJson(fullName, enumDesc))
+        .addFunction(generateEnumToJson(fullName, enumDesc))
         .endControlFlow();
       file = file.addCode(staticMethods);
     }
@@ -193,6 +194,22 @@ function generateEnumFromJson(fullName: string, enumDesc: EnumDescriptorProto): 
       .add('case %L:\n', valueDesc.number)
       .add('case %S:%>\n', valueDesc.name)
       .addStatement('return %L.%L%<', fullName, valueDesc.name);
+  }
+  body = body
+    .add('default:%>\n')
+    .addStatement('throw new Error(`Invalid value ${object}`)%<')
+    .endControlFlow();
+  return func.addCodeBlock(body);
+}
+
+function generateEnumToJson(fullName: string, enumDesc: EnumDescriptorProto): FunctionSpec {
+  let func = FunctionSpec.create('toJSON')
+    .addParameter('object', fullName)
+    .addModifiers(Modifier.EXPORT)
+    .returns('string');
+  let body = CodeBlock.empty().beginControlFlow('switch (object)');
+  for (const valueDesc of enumDesc.value) {
+    body = body.add('case %L.%L:%>\n', fullName, valueDesc.name).addStatement('return %S%<', valueDesc.name);
   }
   body = body
     .add('default:%>\n')
@@ -445,7 +462,7 @@ function generateFromJson(typeMap: TypeMap, fullName: string, messageDesc: Descr
     // get a generic 'reader.doSomething' bit that is specific to the basic type
     const readSnippet = (from: string): CodeBlock => {
       if (isEnum(field)) {
-        return CodeBlock.of('%T.fromJSON(%L)', basicTypeName(typeMap, field, true), from);
+        return CodeBlock.of('%T.fromJSON(%L)', basicTypeName(typeMap, field), from);
       } else if (isPrimitive(field)) {
         // Convert primitives using the String(value)/Number(value) cstr, except for bytes
         if (isBytes(field)) {
@@ -503,7 +520,25 @@ function generateToJson(typeMap: TypeMap, fullName: string, messageDesc: Descrip
   // then add a case for each field
   messageDesc.field.forEach(field => {
     const fieldName = snakeToCamel(field.name);
-    func = func.addStatement("obj.%L = message.%L", fieldName, fieldName);
+    if (isEnum(field)) {
+      if (isRepeated(field)) {
+        func = func
+          .beginControlFlow('if (message.%L)', fieldName)
+          .addStatement(
+            'obj.%L = message.%L.map(e => %T.toJSON(e))',
+            fieldName,
+            fieldName,
+            basicTypeName(typeMap, field)
+          )
+          .nextControlFlow('else')
+          .addStatement('obj.%L = []', fieldName)
+          .endControlFlow();
+      } else {
+        func = func.addStatement('obj.%L = %T.toJSON(message.%L)', fieldName, basicTypeName(typeMap, field), fieldName);
+      }
+    } else {
+      func = func.addStatement('obj.%L = message.%L', fieldName, fieldName);
+    }
   });
   return func.addStatement('return obj');
 }

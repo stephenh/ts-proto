@@ -217,6 +217,18 @@ export namespace StateEnum {
         throw new Error(`Invalid value ${object}`);
     }
   }
+  export function toJSON(object: StateEnum): string {
+    switch (object) {
+      case StateEnum.UNKNOWN:
+        return "UNKNOWN";
+      case StateEnum.ON:
+        return "ON";
+      case StateEnum.OFF:
+        return "OFF";
+      default:
+        throw new Error(`Invalid value ${object}`);
+    }
+  }
 }
 
 export const Simple = {
@@ -355,11 +367,15 @@ export const Simple = {
     obj.age = message.age;
     obj.createdAt = message.createdAt;
     obj.child = message.child;
-    obj.state = message.state;
+    obj.state = StateEnum.toJSON(message.state);
     obj.grandChildren = message.grandChildren;
     obj.coins = message.coins;
     obj.snacks = message.snacks;
-    obj.oldStates = message.oldStates;
+    if (message.oldStates) {
+      obj.oldStates = message.oldStates.map(e => StateEnum.toJSON(e));
+    } else {
+      obj.oldStates = [];
+    }
     return obj;
   },
 };
@@ -447,7 +463,7 @@ export const Nested = {
     const obj: any = {};
     obj.name = message.name;
     obj.message = message.message;
-    obj.state = message.state;
+    obj.state = Nested_InnerEnum.toJSON(message.state);
     return obj;
   },
 };
@@ -464,6 +480,18 @@ export namespace Nested_InnerEnum {
       case 1000:
       case "BAD":
         return Nested_InnerEnum.BAD;
+      default:
+        throw new Error(`Invalid value ${object}`);
+    }
+  }
+  export function toJSON(object: Nested_InnerEnum): string {
+    switch (object) {
+      case Nested_InnerEnum.UNKNOWN_INNER:
+        return "UNKNOWN_INNER";
+      case Nested_InnerEnum.GOOD:
+        return "GOOD";
+      case Nested_InnerEnum.BAD:
+        return "BAD";
       default:
         throw new Error(`Invalid value ${object}`);
     }
