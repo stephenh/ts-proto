@@ -520,24 +520,24 @@ function generateToJson(typeMap: TypeMap, fullName: string, messageDesc: Descrip
   // then add a case for each field
   messageDesc.field.forEach(field => {
     const fieldName = snakeToCamel(field.name);
-    if (isEnum(field)) {
-      if (isRepeated(field)) {
-        func = func
-          .beginControlFlow('if (message.%L)', fieldName)
-          .addStatement(
-            'obj.%L = message.%L.map(e => %T.toJSON(e))',
-            fieldName,
-            fieldName,
-            basicTypeName(typeMap, field)
-          )
-          .nextControlFlow('else')
-          .addStatement('obj.%L = []', fieldName)
-          .endControlFlow();
+
+    const readSnippet = (from: string): CodeBlock => {
+      if (isEnum(field)) {
+        return CodeBlock.of('%T.toJSON(%L)', basicTypeName(typeMap, field), from);
       } else {
-        func = func.addStatement('obj.%L = %T.toJSON(message.%L)', fieldName, basicTypeName(typeMap, field), fieldName);
+        return CodeBlock.of('%L || %L', from, defaultValue(field.type));
       }
+    };
+
+    if (isRepeated(field) && !isMapType(typeMap, messageDesc, field)) {
+      func = func
+        .beginControlFlow('if (message.%L)', fieldName)
+        .addStatement('obj.%L = message.%L.map(e => %L)', fieldName, fieldName, readSnippet('e'))
+        .nextControlFlow('else')
+        .addStatement('obj.%L = []', fieldName)
+        .endControlFlow();
     } else {
-      func = func.addStatement('obj.%L = message.%L || %L', fieldName, fieldName, defaultValue(field.type));
+      func = func.addStatement('obj.%L = %L', fieldName, readSnippet(`message.${fieldName}`));
     }
   });
   return func.addStatement('return obj');

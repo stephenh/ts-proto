@@ -368,9 +368,21 @@ export const Simple = {
     obj.createdAt = message.createdAt || null;
     obj.child = message.child || null;
     obj.state = StateEnum.toJSON(message.state);
-    obj.grandChildren = message.grandChildren || null;
-    obj.coins = message.coins || 0;
-    obj.snacks = message.snacks || "";
+    if (message.grandChildren) {
+      obj.grandChildren = message.grandChildren.map(e => e || null);
+    } else {
+      obj.grandChildren = [];
+    }
+    if (message.coins) {
+      obj.coins = message.coins.map(e => e || 0);
+    } else {
+      obj.coins = [];
+    }
+    if (message.snacks) {
+      obj.snacks = message.snacks.map(e => e || "");
+    } else {
+      obj.snacks = [];
+    }
     if (message.oldStates) {
       obj.oldStates = message.oldStates.map(e => StateEnum.toJSON(e));
     } else {
@@ -704,8 +716,16 @@ export const SimpleWithWrappers = {
     obj.name = message.name || null;
     obj.age = message.age || null;
     obj.enabled = message.enabled || null;
-    obj.coins = message.coins || null;
-    obj.snacks = message.snacks || null;
+    if (message.coins) {
+      obj.coins = message.coins.map(e => e || null);
+    } else {
+      obj.coins = [];
+    }
+    if (message.snacks) {
+      obj.snacks = message.snacks.map(e => e || null);
+    } else {
+      obj.snacks = [];
+    }
     return obj;
   },
 };

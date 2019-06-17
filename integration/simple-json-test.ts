@@ -226,12 +226,12 @@ Object {
 Object {
   "age": 0,
   "child": null,
-  "coins": 0,
+  "coins": Array [],
   "createdAt": null,
-  "grandChildren": null,
+  "grandChildren": Array [],
   "name": "",
   "oldStates": Array [],
-  "snacks": "",
+  "snacks": Array [],
   "state": "UNKNOWN",
 }
 `);

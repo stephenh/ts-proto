@@ -158,7 +158,11 @@ export const BatchQueryRequest = {
   },
   toJSON(message: BatchQueryRequest): unknown {
     const obj: any = {};
-    obj.ids = message.ids || "";
+    if (message.ids) {
+      obj.ids = message.ids.map(e => e || "");
+    } else {
+      obj.ids = [];
+    }
     return obj;
   },
 };
@@ -199,7 +203,11 @@ export const BatchQueryResponse = {
   },
   toJSON(message: BatchQueryResponse): unknown {
     const obj: any = {};
-    obj.entities = message.entities || null;
+    if (message.entities) {
+      obj.entities = message.entities.map(e => e || null);
+    } else {
+      obj.entities = [];
+    }
     return obj;
   },
 };
@@ -240,7 +248,11 @@ export const BatchMapQueryRequest = {
   },
   toJSON(message: BatchMapQueryRequest): unknown {
     const obj: any = {};
-    obj.ids = message.ids || "";
+    if (message.ids) {
+      obj.ids = message.ids.map(e => e || "");
+    } else {
+      obj.ids = [];
+    }
     return obj;
   },
 };
