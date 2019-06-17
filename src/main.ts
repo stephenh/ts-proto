@@ -524,6 +524,8 @@ function generateToJson(typeMap: TypeMap, fullName: string, messageDesc: Descrip
     const readSnippet = (from: string): CodeBlock => {
       if (isEnum(field)) {
         return CodeBlock.of('%T.toJSON(%L)', basicTypeName(typeMap, field), from);
+      } else if (isTimestamp(field)) {
+        return CodeBlock.of('%L !== undefined ? %L.toISOString() : null', from, from);
       } else {
         return CodeBlock.of('%L || %L', from, defaultValue(field.type));
       }

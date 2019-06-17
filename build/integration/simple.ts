@@ -365,7 +365,7 @@ export const Simple = {
     const obj: any = {};
     obj.name = message.name || "";
     obj.age = message.age || 0;
-    obj.createdAt = message.createdAt || null;
+    obj.createdAt = message.createdAt !== undefined ? message.createdAt.toISOString() : null;
     obj.child = message.child || null;
     obj.state = StateEnum.toJSON(message.state);
     if (message.grandChildren) {

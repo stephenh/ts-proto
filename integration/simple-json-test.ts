@@ -198,7 +198,7 @@ Object {
     4,
     6,
   ],
-  "createdAt": 1970-01-01T00:00:01.000Z,
+  "createdAt": "1970-01-01T00:00:01.000Z",
   "grandChildren": Array [
     Object {
       "name": "grand1",
