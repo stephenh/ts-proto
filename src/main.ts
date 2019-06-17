@@ -213,7 +213,7 @@ function generateEnumToJson(fullName: string, enumDesc: EnumDescriptorProto): Fu
   }
   body = body
     .add('default:%>\n')
-    .addStatement('throw new Error(`Invalid value ${object}`)%<')
+    .addStatement('return "UNKNOWN"%<')
     .endControlFlow();
   return func.addCodeBlock(body);
 }
@@ -537,7 +537,7 @@ function generateToJson(typeMap: TypeMap, fullName: string, messageDesc: Descrip
         func = func.addStatement('obj.%L = %T.toJSON(message.%L)', fieldName, basicTypeName(typeMap, field), fieldName);
       }
     } else {
-      func = func.addStatement('obj.%L = message.%L', fieldName, fieldName);
+      func = func.addStatement('obj.%L = message.%L || %L', fieldName, fieldName, defaultValue(field.type));
     }
   });
   return func.addStatement('return obj');

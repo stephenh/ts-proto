@@ -112,7 +112,7 @@ export const Tile = {
   },
   toJSON(message: Tile): unknown {
     const obj: any = {};
-    obj.layers = message.layers;
+    obj.layers = message.layers || null;
     return obj;
   },
 };
@@ -147,7 +147,7 @@ export namespace Tile_GeomType {
       case Tile_GeomType.POLYGON:
         return "POLYGON";
       default:
-        throw new Error(`Invalid value ${object}`);
+        return "UNKNOWN";
     }
   }
 }
@@ -224,13 +224,13 @@ export const Tile_Value = {
   },
   toJSON(message: Tile_Value): unknown {
     const obj: any = {};
-    obj.stringValue = message.stringValue;
-    obj.floatValue = message.floatValue;
-    obj.doubleValue = message.doubleValue;
-    obj.intValue = message.intValue;
-    obj.uintValue = message.uintValue;
-    obj.sintValue = message.sintValue;
-    obj.boolValue = message.boolValue;
+    obj.stringValue = message.stringValue || "";
+    obj.floatValue = message.floatValue || 0;
+    obj.doubleValue = message.doubleValue || 0;
+    obj.intValue = message.intValue || 0;
+    obj.uintValue = message.uintValue || 0;
+    obj.sintValue = message.sintValue || 0;
+    obj.boolValue = message.boolValue || false;
     return obj;
   },
 };
@@ -316,10 +316,10 @@ export const Tile_Feature = {
   },
   toJSON(message: Tile_Feature): unknown {
     const obj: any = {};
-    obj.id = message.id;
-    obj.tags = message.tags;
+    obj.id = message.id || 0;
+    obj.tags = message.tags || 0;
     obj.type = Tile_GeomType.toJSON(message.type);
-    obj.geometry = message.geometry;
+    obj.geometry = message.geometry || 0;
     return obj;
   },
 };
@@ -407,12 +407,12 @@ export const Tile_Layer = {
   },
   toJSON(message: Tile_Layer): unknown {
     const obj: any = {};
-    obj.version = message.version;
-    obj.name = message.name;
-    obj.features = message.features;
-    obj.keys = message.keys;
-    obj.values = message.values;
-    obj.extent = message.extent;
+    obj.version = message.version || 0;
+    obj.name = message.name || "";
+    obj.features = message.features || null;
+    obj.keys = message.keys || "";
+    obj.values = message.values || null;
+    obj.extent = message.extent || 0;
     return obj;
   },
 };

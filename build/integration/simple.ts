@@ -226,7 +226,7 @@ export namespace StateEnum {
       case StateEnum.OFF:
         return "OFF";
       default:
-        throw new Error(`Invalid value ${object}`);
+        return "UNKNOWN";
     }
   }
 }
@@ -363,14 +363,14 @@ export const Simple = {
   },
   toJSON(message: Simple): unknown {
     const obj: any = {};
-    obj.name = message.name;
-    obj.age = message.age;
-    obj.createdAt = message.createdAt;
-    obj.child = message.child;
+    obj.name = message.name || "";
+    obj.age = message.age || 0;
+    obj.createdAt = message.createdAt || null;
+    obj.child = message.child || null;
     obj.state = StateEnum.toJSON(message.state);
-    obj.grandChildren = message.grandChildren;
-    obj.coins = message.coins;
-    obj.snacks = message.snacks;
+    obj.grandChildren = message.grandChildren || null;
+    obj.coins = message.coins || 0;
+    obj.snacks = message.snacks || "";
     if (message.oldStates) {
       obj.oldStates = message.oldStates.map(e => StateEnum.toJSON(e));
     } else {
@@ -410,7 +410,7 @@ export const Child = {
   },
   toJSON(message: Child): unknown {
     const obj: any = {};
-    obj.name = message.name;
+    obj.name = message.name || "";
     return obj;
   },
 };
@@ -461,8 +461,8 @@ export const Nested = {
   },
   toJSON(message: Nested): unknown {
     const obj: any = {};
-    obj.name = message.name;
-    obj.message = message.message;
+    obj.name = message.name || "";
+    obj.message = message.message || null;
     obj.state = Nested_InnerEnum.toJSON(message.state);
     return obj;
   },
@@ -493,7 +493,7 @@ export namespace Nested_InnerEnum {
       case Nested_InnerEnum.BAD:
         return "BAD";
       default:
-        throw new Error(`Invalid value ${object}`);
+        return "UNKNOWN";
     }
   }
 }
@@ -537,8 +537,8 @@ export const Nested_InnerMessage = {
   },
   toJSON(message: Nested_InnerMessage): unknown {
     const obj: any = {};
-    obj.name = message.name;
-    obj.deep = message.deep;
+    obj.name = message.name || "";
+    obj.deep = message.deep || null;
     return obj;
   },
 };
@@ -573,7 +573,7 @@ export const Nested_InnerMessage_DeepMessage = {
   },
   toJSON(message: Nested_InnerMessage_DeepMessage): unknown {
     const obj: any = {};
-    obj.name = message.name;
+    obj.name = message.name || "";
     return obj;
   },
 };
@@ -619,8 +619,8 @@ export const OneOfMessage = {
   },
   toJSON(message: OneOfMessage): unknown {
     const obj: any = {};
-    obj.first = message.first;
-    obj.last = message.last;
+    obj.first = message.first || "";
+    obj.last = message.last || "";
     return obj;
   },
 };
@@ -701,11 +701,11 @@ export const SimpleWithWrappers = {
   },
   toJSON(message: SimpleWithWrappers): unknown {
     const obj: any = {};
-    obj.name = message.name;
-    obj.age = message.age;
-    obj.enabled = message.enabled;
-    obj.coins = message.coins;
-    obj.snacks = message.snacks;
+    obj.name = message.name || null;
+    obj.age = message.age || null;
+    obj.enabled = message.enabled || null;
+    obj.coins = message.coins || null;
+    obj.snacks = message.snacks || null;
     return obj;
   },
 };
@@ -740,7 +740,7 @@ export const Entity = {
   },
   toJSON(message: Entity): unknown {
     const obj: any = {};
-    obj.id = message.id;
+    obj.id = message.id || 0;
     return obj;
   },
 };
@@ -785,7 +785,7 @@ export const SimpleWithMap = {
   },
   toJSON(message: SimpleWithMap): unknown {
     const obj: any = {};
-    obj.entitiesById = message.entitiesById;
+    obj.entitiesById = message.entitiesById || null;
     return obj;
   },
 };
@@ -829,8 +829,8 @@ export const SimpleWithMap_EntitiesByIdEntry = {
   },
   toJSON(message: SimpleWithMap_EntitiesByIdEntry): unknown {
     const obj: any = {};
-    obj.key = message.key;
-    obj.value = message.value;
+    obj.key = message.key || 0;
+    obj.value = message.value || null;
     return obj;
   },
 };
@@ -865,7 +865,7 @@ export const PingRequest = {
   },
   toJSON(message: PingRequest): unknown {
     const obj: any = {};
-    obj.input = message.input;
+    obj.input = message.input || "";
     return obj;
   },
 };
@@ -900,7 +900,7 @@ export const PingResponse = {
   },
   toJSON(message: PingResponse): unknown {
     const obj: any = {};
-    obj.output = message.output;
+    obj.output = message.output || "";
     return obj;
   },
 };

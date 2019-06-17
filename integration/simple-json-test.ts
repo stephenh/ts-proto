@@ -220,4 +220,20 @@ Object {
 }
 `);
   });
+
+  it('can encode empty objects', () => {
+    expect(Simple.toJSON({} as Simple)).toMatchInlineSnapshot(`
+Object {
+  "age": 0,
+  "child": null,
+  "coins": 0,
+  "createdAt": null,
+  "grandChildren": null,
+  "name": "",
+  "oldStates": Array [],
+  "snacks": "",
+  "state": "UNKNOWN",
+}
+`);
+  });
 });

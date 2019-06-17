@@ -158,7 +158,7 @@ export const BatchQueryRequest = {
   },
   toJSON(message: BatchQueryRequest): unknown {
     const obj: any = {};
-    obj.ids = message.ids;
+    obj.ids = message.ids || "";
     return obj;
   },
 };
@@ -199,7 +199,7 @@ export const BatchQueryResponse = {
   },
   toJSON(message: BatchQueryResponse): unknown {
     const obj: any = {};
-    obj.entities = message.entities;
+    obj.entities = message.entities || null;
     return obj;
   },
 };
@@ -240,7 +240,7 @@ export const BatchMapQueryRequest = {
   },
   toJSON(message: BatchMapQueryRequest): unknown {
     const obj: any = {};
-    obj.ids = message.ids;
+    obj.ids = message.ids || "";
     return obj;
   },
 };
@@ -285,7 +285,7 @@ export const BatchMapQueryResponse = {
   },
   toJSON(message: BatchMapQueryResponse): unknown {
     const obj: any = {};
-    obj.entities = message.entities;
+    obj.entities = message.entities || null;
     return obj;
   },
 };
@@ -329,8 +329,8 @@ export const BatchMapQueryResponse_EntitiesEntry = {
   },
   toJSON(message: BatchMapQueryResponse_EntitiesEntry): unknown {
     const obj: any = {};
-    obj.key = message.key;
-    obj.value = message.value;
+    obj.key = message.key || "";
+    obj.value = message.value || null;
     return obj;
   },
 };
@@ -372,8 +372,8 @@ export const Entity = {
   },
   toJSON(message: Entity): unknown {
     const obj: any = {};
-    obj.id = message.id;
-    obj.name = message.name;
+    obj.id = message.id || "";
+    obj.name = message.name || "";
     return obj;
   },
 };
