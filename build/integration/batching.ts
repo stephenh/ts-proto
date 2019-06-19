@@ -204,7 +204,7 @@ export const BatchQueryResponse = {
   toJSON(message: BatchQueryResponse): unknown {
     const obj: any = {};
     if (message.entities) {
-      obj.entities = message.entities.map(e => e || null);
+      obj.entities = message.entities.map(e => e ? Entity.toJSON(e) : null);
     } else {
       obj.entities = [];
     }
@@ -342,7 +342,7 @@ export const BatchMapQueryResponse_EntitiesEntry = {
   toJSON(message: BatchMapQueryResponse_EntitiesEntry): unknown {
     const obj: any = {};
     obj.key = message.key || "";
-    obj.value = message.value || null;
+    obj.value = message.value ? Entity.toJSON(message.value) : null;
     return obj;
   },
 };

@@ -1,6 +1,5 @@
-import { Simple, StateEnum } from '../build/integration/simple';
-import { SimpleWithWrappers } from '../build/integration/simple';
-import { simple as pbjs, google } from '../build/integration/pbjs';
+import { Child_Type, Simple, SimpleWithWrappers, StateEnum } from '../build/integration/simple';
+import { google, simple as pbjs } from '../build/integration/pbjs';
 import { Tile_Value } from '../build/integration/vector_tile';
 import ISimple = pbjs.ISimple;
 import PbChild = pbjs.Child;
@@ -8,7 +7,7 @@ import PbSimple = pbjs.Simple;
 import PbState = pbjs.StateEnum;
 import Timestamp = google.protobuf.Timestamp;
 
-describe('simple', () => {
+describe('simple json', () => {
   it('can decode json', () => {
     // given a pbjs object
     const s1: ISimple = {
@@ -48,6 +47,12 @@ describe('simple', () => {
     const s1 = { state: 'INVALID' };
     // then we fail fast
     expect(() => Simple.fromJSON(s1)).toThrow('Invalid value INVALID');
+  });
+
+  it('can decode nested enums', () => {
+    const s1 = { child: { type: 'GOOD' } };
+    const s2 = Simple.fromJSON(s1);
+    expect(s2.child!.type).toEqual(Child_Type.GOOD);
   });
 
   it('decodes a null list as empty', () => {
@@ -179,9 +184,9 @@ Object {
     const s1: Simple = {
       name: 'asdf',
       age: 1,
-      child: { name: 'foo' },
+      child: { name: 'foo', type: Child_Type.UNKNOWN },
       state: StateEnum.ON,
-      grandChildren: [{ name: 'grand1' }, { name: 'grand2' }],
+      grandChildren: [{ name: 'grand1', type: Child_Type.UNKNOWN }, { name: 'grand2', type: Child_Type.UNKNOWN }],
       coins: [2, 4, 6],
       snacks: ['a', 'b'],
       oldStates: [StateEnum.ON, StateEnum.OFF],
@@ -192,6 +197,7 @@ Object {
   "age": 1,
   "child": Object {
     "name": "foo",
+    "type": "UNKNOWN",
   },
   "coins": Array [
     2,
@@ -202,9 +208,11 @@ Object {
   "grandChildren": Array [
     Object {
       "name": "grand1",
+      "type": "UNKNOWN",
     },
     Object {
       "name": "grand2",
+      "type": "UNKNOWN",
     },
   ],
   "name": "asdf",
@@ -226,6 +234,27 @@ Object {
 Object {
   "age": 0,
   "child": null,
+  "coins": Array [],
+  "createdAt": null,
+  "grandChildren": Array [],
+  "name": "",
+  "oldStates": Array [],
+  "snacks": Array [],
+  "state": "UNKNOWN",
+}
+`);
+  });
+
+  it('can encode nested enums', () => {
+    const s1 = { child: { name: 'a', type: Child_Type.GOOD } } as Simple;
+    const s2 = Simple.toJSON(s1);
+    expect(s2).toMatchInlineSnapshot(`
+Object {
+  "age": 0,
+  "child": Object {
+    "name": "a",
+    "type": "GOOD",
+  },
   "coins": Array [],
   "createdAt": null,
   "grandChildren": Array [],

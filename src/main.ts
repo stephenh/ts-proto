@@ -526,6 +526,14 @@ function generateToJson(typeMap: TypeMap, fullName: string, messageDesc: Descrip
         return CodeBlock.of('%T.toJSON(%L)', basicTypeName(typeMap, field), from);
       } else if (isTimestamp(field)) {
         return CodeBlock.of('%L !== undefined ? %L.toISOString() : null', from, from);
+      } else if (isMessage(field) && !isValueType(field) && !isMapType(typeMap, messageDesc, field)) {
+        return CodeBlock.of(
+          '%L ? %T.toJSON(%L) : %L',
+          from,
+          basicTypeName(typeMap, field, true),
+          from,
+          defaultValue(field.type)
+        );
       } else {
         return CodeBlock.of('%L || %L', from, defaultValue(field.type));
       }

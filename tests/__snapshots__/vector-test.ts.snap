@@ -113,6 +113,15 @@ export const Tile = {
     }
     return message;
   },
+  toJSON(message: Tile): unknown {
+    const obj: any = {};
+    if (message.layers) {
+      obj.layers = message.layers.map(e => e ? Tile_Layer.toJSON(e) : null);
+    } else {
+      obj.layers = [];
+    }
+    return obj;
+  },
 };
 
 export namespace Tile_GeomType {
@@ -132,6 +141,20 @@ export namespace Tile_GeomType {
         return Tile_GeomType.POLYGON;
       default:
         throw new Error(\`Invalid value \${object}\`);
+    }
+  }
+  export function toJSON(object: Tile_GeomType): string {
+    switch (object) {
+      case Tile_GeomType.UNKNOWN:
+        return \\"UNKNOWN\\";
+      case Tile_GeomType.POINT:
+        return \\"POINT\\";
+      case Tile_GeomType.LINESTRING:
+        return \\"LINESTRING\\";
+      case Tile_GeomType.POLYGON:
+        return \\"POLYGON\\";
+      default:
+        return \\"UNKNOWN\\";
     }
   }
 }
@@ -205,6 +228,17 @@ export const Tile_Value = {
       message.boolValue = Boolean(object.boolValue);
     }
     return message;
+  },
+  toJSON(message: Tile_Value): unknown {
+    const obj: any = {};
+    obj.stringValue = message.stringValue || \\"\\";
+    obj.floatValue = message.floatValue || 0;
+    obj.doubleValue = message.doubleValue || 0;
+    obj.intValue = message.intValue || 0;
+    obj.uintValue = message.uintValue || 0;
+    obj.sintValue = message.sintValue || 0;
+    obj.boolValue = message.boolValue || false;
+    return obj;
   },
 };
 
@@ -286,6 +320,22 @@ export const Tile_Feature = {
       }
     }
     return message;
+  },
+  toJSON(message: Tile_Feature): unknown {
+    const obj: any = {};
+    obj.id = message.id || 0;
+    if (message.tags) {
+      obj.tags = message.tags.map(e => e || 0);
+    } else {
+      obj.tags = [];
+    }
+    obj.type = Tile_GeomType.toJSON(message.type);
+    if (message.geometry) {
+      obj.geometry = message.geometry.map(e => e || 0);
+    } else {
+      obj.geometry = [];
+    }
+    return obj;
   },
 };
 
@@ -369,6 +419,28 @@ export const Tile_Layer = {
       message.extent = Number(object.extent);
     }
     return message;
+  },
+  toJSON(message: Tile_Layer): unknown {
+    const obj: any = {};
+    obj.version = message.version || 0;
+    obj.name = message.name || \\"\\";
+    if (message.features) {
+      obj.features = message.features.map(e => e ? Tile_Feature.toJSON(e) : null);
+    } else {
+      obj.features = [];
+    }
+    if (message.keys) {
+      obj.keys = message.keys.map(e => e || \\"\\");
+    } else {
+      obj.keys = [];
+    }
+    if (message.values) {
+      obj.values = message.values.map(e => e ? Tile_Value.toJSON(e) : null);
+    } else {
+      obj.values = [];
+    }
+    obj.extent = message.extent || 0;
+    return obj;
   },
 };
 "

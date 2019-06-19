@@ -1,6 +1,6 @@
 import { Reader } from 'protobufjs';
-import { Nested, Nested_InnerEnum, Simple, StateEnum, SimpleWithMap } from '../build/integration/simple';
-import { simple as pbjs } from '../build/integration/pbjs';
+import { Child_Type, Nested, Nested_InnerEnum, Simple, SimpleWithMap, StateEnum } from '../build/integration/simple';
+import { simple as pbjs, google } from '../build/integration/pbjs';
 import ISimple = pbjs.ISimple;
 import PbChild = pbjs.Child;
 import PbSimple = pbjs.Simple;
@@ -11,18 +11,23 @@ import PbNested_InnerMessage = pbjs.Nested.InnerMessage;
 import PbNested_DeepMessage = pbjs.Nested.InnerMessage.DeepMessage;
 import PbNested_InnerEnum = pbjs.Nested.InnerEnum;
 import INested = pbjs.INested;
+import PbTimestamp = google.protobuf.Timestamp;
+import Long from 'long';
+
+const jan1 = new Date('1970-01-01T00:00:00.000Z');
 
 describe('simple', () => {
   it('generates types correctly', () => {
     const simple: Simple = {
       name: 'asdf',
       age: 1,
-      child: { name: 'child' },
+      child: { name: 'child', type: Child_Type.UNKNOWN },
       state: StateEnum.ON,
-      grandChildren: [{ name: 'grand1' }, { name: 'grand2' }],
+      grandChildren: [{ name: 'grand1', type: Child_Type.UNKNOWN }, { name: 'grand2', type: Child_Type.UNKNOWN }],
       coins: [2, 4, 6],
       snacks: ['a', 'b'],
-      oldStates: [StateEnum.ON, StateEnum.OFF]
+      oldStates: [StateEnum.ON, StateEnum.OFF],
+      createdAt: jan1
     };
     expect(simple.name).toEqual('asdf');
   });
@@ -46,15 +51,19 @@ describe('simple', () => {
     const s1: Simple = {
       name: 'asdf',
       age: 1,
-      child: { name: 'foo' },
+      child: { name: 'foo', type: Child_Type.UNKNOWN },
       state: StateEnum.ON,
-      grandChildren: [{ name: 'grand1' }, { name: 'grand2' }],
+      grandChildren: [{ name: 'grand1', type: Child_Type.UNKNOWN }, { name: 'grand2', type: Child_Type.UNKNOWN }],
       coins: [2, 4, 6],
       snacks: ['a', 'b'],
-      oldStates: [StateEnum.ON, StateEnum.OFF]
+      oldStates: [StateEnum.ON, StateEnum.OFF],
+      createdAt: jan1
     };
     const s2 = PbSimple.toObject(PbSimple.decode(Simple.encode(s1).finish()));
-    expect(s2).toEqual(s1);
+    expect(s2).toEqual({
+      ...s1,
+      createdAt: new PbTimestamp({ nanos: 0, seconds: new Long(0) })
+    });
   });
 
   it('can decode and fallback to default values', () => {
@@ -125,15 +134,19 @@ describe('simple', () => {
     const s1: Simple = {
       name: 'asdf',
       age: 1,
-      child: { name: 'foo' },
+      child: { name: 'foo', type: Child_Type.UNKNOWN },
       state: StateEnum.ON,
-      grandChildren: [{ name: 'grand2' }],
+      grandChildren: [{ name: 'grand2', type: Child_Type.UNKNOWN }],
       coins: [0, 4, 6],
       snacks: ['', 'b'],
-      oldStates: [StateEnum.UNKNOWN, StateEnum.OFF]
+      oldStates: [StateEnum.UNKNOWN, StateEnum.OFF],
+      createdAt: jan1
     };
     const s2 = PbSimple.toObject(PbSimple.decode(Simple.encode(s1).finish()));
-    expect(s2).toEqual(s1);
+    expect(s2).toEqual({
+      ...s1,
+      createdAt: new PbTimestamp({ nanos: 0, seconds: new Long(0) })
+    });
   });
 
   it('can encode maps', () => {

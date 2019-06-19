@@ -113,7 +113,7 @@ export const Tile = {
   toJSON(message: Tile): unknown {
     const obj: any = {};
     if (message.layers) {
-      obj.layers = message.layers.map(e => e || null);
+      obj.layers = message.layers.map(e => e ? Tile_Layer.toJSON(e) : null);
     } else {
       obj.layers = [];
     }
@@ -422,7 +422,7 @@ export const Tile_Layer = {
     obj.version = message.version || 0;
     obj.name = message.name || "";
     if (message.features) {
-      obj.features = message.features.map(e => e || null);
+      obj.features = message.features.map(e => e ? Tile_Feature.toJSON(e) : null);
     } else {
       obj.features = [];
     }
@@ -432,7 +432,7 @@ export const Tile_Layer = {
       obj.keys = [];
     }
     if (message.values) {
-      obj.values = message.values.map(e => e || null);
+      obj.values = message.values.map(e => e ? Tile_Value.toJSON(e) : null);
     } else {
       obj.values = [];
     }

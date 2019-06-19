@@ -16,7 +16,13 @@ message Simple {
 }
 
 message Child {
+  enum Type {
+    UNKNOWN = 0;
+    GOOD = 1;
+    BAD = 2;
+  }
   string name = 1;
+  Type type = 2;
 }
 
 enum StateEnum {

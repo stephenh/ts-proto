@@ -24,6 +24,13 @@ export interface Simple {
 
 export interface Child {
   name: string;
+  type: Child_Type;
+}
+
+export enum Child_Type {
+  UNKNOWN = 0,
+  GOOD = 1,
+  BAD = 2,
 }
 
 export interface Nested {
@@ -95,6 +102,7 @@ const baseSimple: object = {
 
 const baseChild: object = {
   name: "",
+  type: 0,
 };
 
 const baseNested: object = {
@@ -366,10 +374,10 @@ export const Simple = {
     obj.name = message.name || "";
     obj.age = message.age || 0;
     obj.createdAt = message.createdAt !== undefined ? message.createdAt.toISOString() : null;
-    obj.child = message.child || null;
+    obj.child = message.child ? Child.toJSON(message.child) : null;
     obj.state = StateEnum.toJSON(message.state);
     if (message.grandChildren) {
-      obj.grandChildren = message.grandChildren.map(e => e || null);
+      obj.grandChildren = message.grandChildren.map(e => e ? Child.toJSON(e) : null);
     } else {
       obj.grandChildren = [];
     }
@@ -395,6 +403,7 @@ export const Simple = {
 export const Child = {
   encode(message: Child, writer: Writer = Writer.create()): Writer {
     writer.uint32(10).string(message.name);
+    writer.uint32(16).int32(message.type);
     return writer;
   },
   decode(reader: Reader, length?: number): Child {
@@ -405,6 +414,9 @@ export const Child = {
       switch (tag >>> 3) {
         case 1:
           message.name = reader.string();
+          break;
+        case 2:
+          message.type = reader.int32();
           break;
         default:
           reader.skipType(tag & 7);
@@ -418,14 +430,48 @@ export const Child = {
     if (object.name) {
       message.name = String(object.name);
     }
+    if (object.type) {
+      message.type = Child_Type.fromJSON(object.type);
+    }
     return message;
   },
   toJSON(message: Child): unknown {
     const obj: any = {};
     obj.name = message.name || "";
+    obj.type = Child_Type.toJSON(message.type);
     return obj;
   },
 };
+
+export namespace Child_Type {
+  export function fromJSON(object: any): Child_Type {
+    switch (object) {
+      case 0:
+      case "UNKNOWN":
+        return Child_Type.UNKNOWN;
+      case 1:
+      case "GOOD":
+        return Child_Type.GOOD;
+      case 2:
+      case "BAD":
+        return Child_Type.BAD;
+      default:
+        throw new Error(`Invalid value ${object}`);
+    }
+  }
+  export function toJSON(object: Child_Type): string {
+    switch (object) {
+      case Child_Type.UNKNOWN:
+        return "UNKNOWN";
+      case Child_Type.GOOD:
+        return "GOOD";
+      case Child_Type.BAD:
+        return "BAD";
+      default:
+        return "UNKNOWN";
+    }
+  }
+}
 
 export const Nested = {
   encode(message: Nested, writer: Writer = Writer.create()): Writer {
@@ -474,7 +520,7 @@ export const Nested = {
   toJSON(message: Nested): unknown {
     const obj: any = {};
     obj.name = message.name || "";
-    obj.message = message.message || null;
+    obj.message = message.message ? Nested_InnerMessage.toJSON(message.message) : null;
     obj.state = Nested_InnerEnum.toJSON(message.state);
     return obj;
   },
@@ -550,7 +596,7 @@ export const Nested_InnerMessage = {
   toJSON(message: Nested_InnerMessage): unknown {
     const obj: any = {};
     obj.name = message.name || "";
-    obj.deep = message.deep || null;
+    obj.deep = message.deep ? Nested_InnerMessage_DeepMessage.toJSON(message.deep) : null;
     return obj;
   },
 };
@@ -850,7 +896,7 @@ export const SimpleWithMap_EntitiesByIdEntry = {
   toJSON(message: SimpleWithMap_EntitiesByIdEntry): unknown {
     const obj: any = {};
     obj.key = message.key || 0;
-    obj.value = message.value || null;
+    obj.value = message.value ? Entity.toJSON(message.value) : null;
     return obj;
   },
 };
