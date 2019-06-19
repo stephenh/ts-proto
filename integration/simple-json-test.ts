@@ -265,4 +265,50 @@ Object {
 }
 `);
   });
+
+  it('can encode value wrappers as json', () => {
+    const s1: SimpleWithWrappers = {
+      name: 'first',
+      age: 1,
+      enabled: true,
+      coins: [1, 2],
+      snacks: ['a', 'b']
+    };
+    const s2 = SimpleWithWrappers.toJSON(s1);
+    expect(s2).toMatchInlineSnapshot(`
+Object {
+  "age": 1,
+  "coins": Array [
+    1,
+    2,
+  ],
+  "enabled": true,
+  "name": "first",
+  "snacks": Array [
+    "a",
+    "b",
+  ],
+}
+`);
+  });
+
+  it('can encode null value wrappers', () => {
+    const s1: SimpleWithWrappers = {
+      name: undefined,
+      age: undefined,
+      enabled: undefined,
+      coins: [], // should be undefined
+      snacks: []
+    };
+    const s2 = SimpleWithWrappers.toJSON(s1);
+    expect(s2).toMatchInlineSnapshot(`
+Object {
+  "age": null,
+  "coins": Array [],
+  "enabled": null,
+  "name": null,
+  "snacks": Array [],
+}
+`);
+  });
 });
