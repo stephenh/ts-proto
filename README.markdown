@@ -6,6 +6,13 @@ Goals
 * Only supports codegen `*.proto`-to-`*.ts` workflow, currently no runtime reflection/loading of dynamic `.proto` files
 * Currently ambivalent about browser support, current focus is on Node/server-side use cases
 
+Highlights
+==========
+
+* Wrapper types, i.e. `google.protobuf.StringValue`, are mapped as optional values, i.e. `string | undefined`
+* Timestamp is mapped as Date
+* `fromJSON`/`toJSON` support the [canonical Protobuf JS](https://developers.google.com/protocol-buffers/docs/proto3#json) format (i.e. timestamps are ISO strings)
+
 Assumptions
 ===========
 
@@ -16,6 +23,9 @@ Todo
 
 * Better Long support; currently any values greater than `Number.MAX_SAFE_INTEGER` blow up at runtime
 * Model OneOfs as an ADT
+* Support the string-based encoding of duration in `fromJSON`/`toJSON`
+* Support bytes as base64 encoded strings in `fromJSON`/`toJSON`
+* Support the `json_name` annotation
 
 Typing Approach
 ===============
