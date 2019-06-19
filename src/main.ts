@@ -126,7 +126,7 @@ function addLongUtilityMethod(file: FileSpec): FileSpec {
       .addCodeBlock(
         CodeBlock.empty()
           .beginControlFlow('if (long.gt(Number.MAX_SAFE_INTEGER))')
-          .addStatement('throw new Error("Value is larger than Number.MAX_SAFE_INTEGER")')
+          .addStatement('throw new global.Error("Value is larger than Number.MAX_SAFE_INTEGER")')
           .endControlFlow()
           .addStatement('return long.toNumber()')
       )
@@ -197,7 +197,7 @@ function generateEnumFromJson(fullName: string, enumDesc: EnumDescriptorProto): 
   }
   body = body
     .add('default:%>\n')
-    .addStatement('throw new Error(`Invalid value ${object}`)%<')
+    .addStatement('throw new global.Error(`Invalid value ${object}`)%<')
     .endControlFlow();
   return func.addCodeBlock(body);
 }

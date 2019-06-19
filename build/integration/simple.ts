@@ -182,7 +182,7 @@ interface Rpc {
 
 function longToNumber(long: Long) {
   if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new Error("Value is larger than Number.MAX_SAFE_INTEGER");
+    throw new global.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
   return long.toNumber();
 }
@@ -222,7 +222,7 @@ export namespace StateEnum {
       case "OFF":
         return StateEnum.OFF;
       default:
-        throw new Error(`Invalid value ${object}`);
+        throw new global.Error(`Invalid value ${object}`);
     }
   }
   export function toJSON(object: StateEnum): string {
@@ -456,7 +456,7 @@ export namespace Child_Type {
       case "BAD":
         return Child_Type.BAD;
       default:
-        throw new Error(`Invalid value ${object}`);
+        throw new global.Error(`Invalid value ${object}`);
     }
   }
   export function toJSON(object: Child_Type): string {
@@ -539,7 +539,7 @@ export namespace Nested_InnerEnum {
       case "BAD":
         return Nested_InnerEnum.BAD;
       default:
-        throw new Error(`Invalid value ${object}`);
+        throw new global.Error(`Invalid value ${object}`);
     }
   }
   export function toJSON(object: Nested_InnerEnum): string {

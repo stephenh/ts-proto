@@ -71,7 +71,7 @@ const baseTile_Layer: object = {
 
 function longToNumber(long: Long) {
   if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new Error("Value is larger than Number.MAX_SAFE_INTEGER");
+    throw new global.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
   return long.toNumber();
 }
@@ -137,7 +137,7 @@ export namespace Tile_GeomType {
       case "POLYGON":
         return Tile_GeomType.POLYGON;
       default:
-        throw new Error(`Invalid value ${object}`);
+        throw new global.Error(`Invalid value ${object}`);
     }
   }
   export function toJSON(object: Tile_GeomType): string {
