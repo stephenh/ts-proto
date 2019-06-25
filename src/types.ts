@@ -5,6 +5,7 @@ import { fail, upperFirst } from './utils';
 import { asSequence } from 'sequency';
 import FieldDescriptorProto = google.protobuf.FieldDescriptorProto;
 import CodeGeneratorRequest = google.protobuf.compiler.CodeGeneratorRequest;
+import EnumDescriptorProto = google.protobuf.EnumDescriptorProto;
 import DescriptorProto = google.protobuf.DescriptorProto;
 
 /** Based on https://github.com/dcodeIO/protobuf.js/blob/master/src/types.js#L37. */
@@ -181,17 +182,17 @@ export function defaultValue(type: FieldDescriptorProto.Type): any {
 }
 
 /** A map of proto type name, e.g. `foo.Message.Inner`, to module/class name, e.g. `foo`, `Message_Inner`. */
-export type TypeMap = Map<string, [string, string]>;
+export type TypeMap = Map<string, [string, string, DescriptorProto | EnumDescriptorProto]>;
 
 /** Scans all of the proto files in `request` and builds a map of proto typeName -> TS module/name. */
 export function createTypeMap(request: CodeGeneratorRequest): TypeMap {
-  const typeMap = new Map<string, [string, string]>();
+  const typeMap: TypeMap = new Map();
   for (const file of request.protoFile) {
     // We assume a file.name of google/protobuf/wrappers.proto --> a module path of google/protobuf/wrapper.ts
     const moduleName = file.name.replace('.proto', '');
     // So given a fullName like FooMessage_InnerMessage, proto will see that as package.name.FooMessage.InnerMessage
-    function saveMapping(fullName: string): void {
-      typeMap.set(file.package + '.' + fullName.replace(/_/g, '.'), [moduleName, fullName]);
+    function saveMapping(fullName: string, desc: DescriptorProto | EnumDescriptorProto): void {
+      typeMap.set(file.package + '.' + fullName.replace(/_/g, '.'), [moduleName, fullName, desc]);
     }
     visit(file, saveMapping, saveMapping);
   }
@@ -258,8 +259,8 @@ export function messageToTypeName(typeMap: TypeMap, protoType: string, keepValue
   return TypeNames.importedType(`${type}@./${module}`);
 }
 
-/** Breaks `.some_proto_namespace.Some.Message` into `['some_proto_namespace', 'Some_Message']. */
-function toModuleAndType(typeMap: TypeMap, protoType: string): [string, string] {
+/** Breaks `.some_proto_namespace.Some.Message` into `['some_proto_namespace', 'Some_Message', Descriptor]. */
+function toModuleAndType(typeMap: TypeMap, protoType: string): [string, string, DescriptorProto | EnumDescriptorProto] {
   return typeMap.get(protoType.substring(1)) || fail(`No type found for ${protoType}`);
 }
 
