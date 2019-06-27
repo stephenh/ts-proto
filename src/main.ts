@@ -138,7 +138,7 @@ function addLongUtilityMethod(file: FileSpec): FileSpec {
 function addDeepPartialType(file: FileSpec): FileSpec {
   return file.addCode(
     CodeBlock.empty()
-      .add('export type DeepPartial<T> = {%>\n')
+      .add('type DeepPartial<T> = {%>\n')
       .add('[P in keyof T]?: T[P] extends Array<infer U>\n')
       .add('? Array<DeepPartial<U>>\n')
       .add(': T[P] extends ReadonlyArray<infer U>\n')
