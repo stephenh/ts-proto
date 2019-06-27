@@ -156,6 +156,16 @@ export const BatchQueryRequest = {
     }
     return message;
   },
+  fromPartial(object: DeepPartial<BatchQueryRequest>): BatchQueryRequest {
+    const message = Object.create(baseBatchQueryRequest) as BatchQueryRequest;
+    message.ids = [];
+    if (object.ids) {
+      for (const e of object.ids) {
+        message.ids.push(e);
+      }
+    }
+    return message;
+  },
   toJSON(message: BatchQueryRequest): unknown {
     const obj: any = {};
     if (message.ids) {
@@ -201,6 +211,16 @@ export const BatchQueryResponse = {
     }
     return message;
   },
+  fromPartial(object: DeepPartial<BatchQueryResponse>): BatchQueryResponse {
+    const message = Object.create(baseBatchQueryResponse) as BatchQueryResponse;
+    message.entities = [];
+    if (object.entities) {
+      for (const e of object.entities) {
+        message.entities.push(Entity.fromPartial(e));
+      }
+    }
+    return message;
+  },
   toJSON(message: BatchQueryResponse): unknown {
     const obj: any = {};
     if (message.entities) {
@@ -242,6 +262,16 @@ export const BatchMapQueryRequest = {
     if (object.ids) {
       for (const e of object.ids) {
         message.ids.push(String(e));
+      }
+    }
+    return message;
+  },
+  fromPartial(object: DeepPartial<BatchMapQueryRequest>): BatchMapQueryRequest {
+    const message = Object.create(baseBatchMapQueryRequest) as BatchMapQueryRequest;
+    message.ids = [];
+    if (object.ids) {
+      for (const e of object.ids) {
+        message.ids.push(e);
       }
     }
     return message;
@@ -295,6 +325,17 @@ export const BatchMapQueryResponse = {
     }
     return message;
   },
+  fromPartial(object: DeepPartial<BatchMapQueryResponse>): BatchMapQueryResponse {
+    const message = Object.create(baseBatchMapQueryResponse) as BatchMapQueryResponse;
+    message.entities = {};
+    if (object.entities) {
+      const entry = BatchMapQueryResponse_EntitiesEntry.fromPartial(object.entities);
+      if (entry.value) {
+        message.entities[entry.key] = entry.value;
+      }
+    }
+    return message;
+  },
   toJSON(message: BatchMapQueryResponse): unknown {
     const obj: any = {};
     obj.entities = message.entities || null;
@@ -336,6 +377,16 @@ export const BatchMapQueryResponse_EntitiesEntry = {
     }
     if (object.value) {
       message.value = Entity.fromJSON(object.value);
+    }
+    return message;
+  },
+  fromPartial(object: DeepPartial<BatchMapQueryResponse_EntitiesEntry>): BatchMapQueryResponse_EntitiesEntry {
+    const message = Object.create(baseBatchMapQueryResponse_EntitiesEntry) as BatchMapQueryResponse_EntitiesEntry;
+    if (object.key) {
+      message.key = object.key;
+    }
+    if (object.value) {
+      message.value = Entity.fromPartial(object.value);
     }
     return message;
   },
@@ -382,10 +433,34 @@ export const Entity = {
     }
     return message;
   },
+  fromPartial(object: DeepPartial<Entity>): Entity {
+    const message = Object.create(baseEntity) as Entity;
+    if (object.id) {
+      message.id = object.id;
+    }
+    if (object.name) {
+      message.name = object.name;
+    }
+    return message;
+  },
   toJSON(message: Entity): unknown {
     const obj: any = {};
     obj.id = message.id || "";
     obj.name = message.name || "";
     return obj;
   },
+};
+
+export type DeepPartial<T> = {
+  [P in keyof T]?: T[P] extends Array<infer U>
+  ? Array<DeepPartial<U>>
+  : T[P] extends ReadonlyArray<infer U>
+  ? ReadonlyArray<DeepPartial<U>>
+  : T[P] extends Date | Function | Uint8Array | undefined
+  ? T[P]
+  : T[P] extends infer U | undefined
+  ? DeepPartial<U>
+  : T[P] extends object
+  ? DeepPartial<T[P]>
+  : T[P]
 };

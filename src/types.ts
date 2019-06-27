@@ -234,7 +234,7 @@ const valueTypes: { [key: string]: TypeName } = {
 };
 
 const mappedTypes: { [key: string]: TypeName } = {
-  '.google.protobuf.Timestamp': TypeNames.unionType(TypeNames.DATE, TypeNames.UNDEFINED)
+  '.google.protobuf.Timestamp': TypeNames.DATE
 };
 
 export function isTimestamp(field: FieldDescriptorProto): boolean {

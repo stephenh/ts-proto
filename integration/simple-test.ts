@@ -170,4 +170,16 @@ describe('simple', () => {
     const s2 = SimpleWithMap.decode(new Reader(PbSimpleWithMap.encode(s1).finish()));
     expect(s2).toEqual(s1);
   });
+
+  it('has fromPartial', () => {
+    const s1 = Simple.fromPartial({});
+    expect(s1).toMatchInlineSnapshot(`
+Object {
+  "coins": Array [],
+  "grandChildren": Array [],
+  "oldStates": Array [],
+  "snacks": Array [],
+}
+`);
+  });
 });

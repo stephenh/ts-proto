@@ -13,7 +13,7 @@ export enum StateEnum {
 export interface Simple {
   name: string;
   age: number;
-  createdAt: Date | undefined | undefined;
+  createdAt: Date | undefined;
   child: Child | undefined;
   state: StateEnum;
   grandChildren: Child[];
@@ -369,6 +369,49 @@ export const Simple = {
     }
     return message;
   },
+  fromPartial(object: DeepPartial<Simple>): Simple {
+    const message = Object.create(baseSimple) as Simple;
+    message.grandChildren = [];
+    message.coins = [];
+    message.snacks = [];
+    message.oldStates = [];
+    if (object.name) {
+      message.name = object.name;
+    }
+    if (object.age) {
+      message.age = object.age;
+    }
+    if (object.createdAt) {
+      message.createdAt = object.createdAt;
+    }
+    if (object.child) {
+      message.child = Child.fromPartial(object.child);
+    }
+    if (object.state) {
+      message.state = object.state;
+    }
+    if (object.grandChildren) {
+      for (const e of object.grandChildren) {
+        message.grandChildren.push(Child.fromPartial(e));
+      }
+    }
+    if (object.coins) {
+      for (const e of object.coins) {
+        message.coins.push(e);
+      }
+    }
+    if (object.snacks) {
+      for (const e of object.snacks) {
+        message.snacks.push(e);
+      }
+    }
+    if (object.oldStates) {
+      for (const e of object.oldStates) {
+        message.oldStates.push(e);
+      }
+    }
+    return message;
+  },
   toJSON(message: Simple): unknown {
     const obj: any = {};
     obj.name = message.name || "";
@@ -432,6 +475,16 @@ export const Child = {
     }
     if (object.type) {
       message.type = Child_Type.fromJSON(object.type);
+    }
+    return message;
+  },
+  fromPartial(object: DeepPartial<Child>): Child {
+    const message = Object.create(baseChild) as Child;
+    if (object.name) {
+      message.name = object.name;
+    }
+    if (object.type) {
+      message.type = object.type;
     }
     return message;
   },
@@ -517,6 +570,19 @@ export const Nested = {
     }
     return message;
   },
+  fromPartial(object: DeepPartial<Nested>): Nested {
+    const message = Object.create(baseNested) as Nested;
+    if (object.name) {
+      message.name = object.name;
+    }
+    if (object.message) {
+      message.message = Nested_InnerMessage.fromPartial(object.message);
+    }
+    if (object.state) {
+      message.state = object.state;
+    }
+    return message;
+  },
   toJSON(message: Nested): unknown {
     const obj: any = {};
     obj.name = message.name || "";
@@ -593,6 +659,16 @@ export const Nested_InnerMessage = {
     }
     return message;
   },
+  fromPartial(object: DeepPartial<Nested_InnerMessage>): Nested_InnerMessage {
+    const message = Object.create(baseNested_InnerMessage) as Nested_InnerMessage;
+    if (object.name) {
+      message.name = object.name;
+    }
+    if (object.deep) {
+      message.deep = Nested_InnerMessage_DeepMessage.fromPartial(object.deep);
+    }
+    return message;
+  },
   toJSON(message: Nested_InnerMessage): unknown {
     const obj: any = {};
     obj.name = message.name || "";
@@ -626,6 +702,13 @@ export const Nested_InnerMessage_DeepMessage = {
     const message = Object.create(baseNested_InnerMessage_DeepMessage) as Nested_InnerMessage_DeepMessage;
     if (object.name) {
       message.name = String(object.name);
+    }
+    return message;
+  },
+  fromPartial(object: DeepPartial<Nested_InnerMessage_DeepMessage>): Nested_InnerMessage_DeepMessage {
+    const message = Object.create(baseNested_InnerMessage_DeepMessage) as Nested_InnerMessage_DeepMessage;
+    if (object.name) {
+      message.name = object.name;
     }
     return message;
   },
@@ -672,6 +755,16 @@ export const OneOfMessage = {
     }
     if (object.last) {
       message.last = String(object.last);
+    }
+    return message;
+  },
+  fromPartial(object: DeepPartial<OneOfMessage>): OneOfMessage {
+    const message = Object.create(baseOneOfMessage) as OneOfMessage;
+    if (object.first) {
+      message.first = object.first;
+    }
+    if (object.last) {
+      message.last = object.last;
     }
     return message;
   },
@@ -757,6 +850,31 @@ export const SimpleWithWrappers = {
     }
     return message;
   },
+  fromPartial(object: DeepPartial<SimpleWithWrappers>): SimpleWithWrappers {
+    const message = Object.create(baseSimpleWithWrappers) as SimpleWithWrappers;
+    message.coins = [];
+    message.snacks = [];
+    if (object.name) {
+      message.name = object.name;
+    }
+    if (object.age) {
+      message.age = object.age;
+    }
+    if (object.enabled) {
+      message.enabled = object.enabled;
+    }
+    if (object.coins) {
+      for (const e of object.coins) {
+        message.coins.push(e);
+      }
+    }
+    if (object.snacks) {
+      for (const e of object.snacks) {
+        message.snacks.push(e);
+      }
+    }
+    return message;
+  },
   toJSON(message: SimpleWithWrappers): unknown {
     const obj: any = {};
     obj.name = message.name || null;
@@ -804,6 +922,13 @@ export const Entity = {
     }
     return message;
   },
+  fromPartial(object: DeepPartial<Entity>): Entity {
+    const message = Object.create(baseEntity) as Entity;
+    if (object.id) {
+      message.id = object.id;
+    }
+    return message;
+  },
   toJSON(message: Entity): unknown {
     const obj: any = {};
     obj.id = message.id || 0;
@@ -843,6 +968,17 @@ export const SimpleWithMap = {
     message.entitiesById = {};
     if (object.entitiesById) {
       const entry = SimpleWithMap_EntitiesByIdEntry.fromJSON(object.entitiesById);
+      if (entry.value) {
+        message.entitiesById[entry.key] = entry.value;
+      }
+    }
+    return message;
+  },
+  fromPartial(object: DeepPartial<SimpleWithMap>): SimpleWithMap {
+    const message = Object.create(baseSimpleWithMap) as SimpleWithMap;
+    message.entitiesById = {};
+    if (object.entitiesById) {
+      const entry = SimpleWithMap_EntitiesByIdEntry.fromPartial(object.entitiesById);
       if (entry.value) {
         message.entitiesById[entry.key] = entry.value;
       }
@@ -893,6 +1029,16 @@ export const SimpleWithMap_EntitiesByIdEntry = {
     }
     return message;
   },
+  fromPartial(object: DeepPartial<SimpleWithMap_EntitiesByIdEntry>): SimpleWithMap_EntitiesByIdEntry {
+    const message = Object.create(baseSimpleWithMap_EntitiesByIdEntry) as SimpleWithMap_EntitiesByIdEntry;
+    if (object.key) {
+      message.key = object.key;
+    }
+    if (object.value) {
+      message.value = Entity.fromPartial(object.value);
+    }
+    return message;
+  },
   toJSON(message: SimpleWithMap_EntitiesByIdEntry): unknown {
     const obj: any = {};
     obj.key = message.key || 0;
@@ -926,6 +1072,13 @@ export const PingRequest = {
     const message = Object.create(basePingRequest) as PingRequest;
     if (object.input) {
       message.input = String(object.input);
+    }
+    return message;
+  },
+  fromPartial(object: DeepPartial<PingRequest>): PingRequest {
+    const message = Object.create(basePingRequest) as PingRequest;
+    if (object.input) {
+      message.input = object.input;
     }
     return message;
   },
@@ -964,9 +1117,30 @@ export const PingResponse = {
     }
     return message;
   },
+  fromPartial(object: DeepPartial<PingResponse>): PingResponse {
+    const message = Object.create(basePingResponse) as PingResponse;
+    if (object.output) {
+      message.output = object.output;
+    }
+    return message;
+  },
   toJSON(message: PingResponse): unknown {
     const obj: any = {};
     obj.output = message.output || "";
     return obj;
   },
+};
+
+export type DeepPartial<T> = {
+  [P in keyof T]?: T[P] extends Array<infer U>
+  ? Array<DeepPartial<U>>
+  : T[P] extends ReadonlyArray<infer U>
+  ? ReadonlyArray<DeepPartial<U>>
+  : T[P] extends Date | Function | Uint8Array | undefined
+  ? T[P]
+  : T[P] extends infer U | undefined
+  ? DeepPartial<U>
+  : T[P] extends object
+  ? DeepPartial<T[P]>
+  : T[P]
 };

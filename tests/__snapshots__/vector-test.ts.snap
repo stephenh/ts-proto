@@ -113,6 +113,16 @@ export const Tile = {
     }
     return message;
   },
+  fromPartial(object: DeepPartial<Tile>): Tile {
+    const message = Object.create(baseTile) as Tile;
+    message.layers = [];
+    if (object.layers) {
+      for (const e of object.layers) {
+        message.layers.push(Tile_Layer.fromPartial(e));
+      }
+    }
+    return message;
+  },
   toJSON(message: Tile): unknown {
     const obj: any = {};
     if (message.layers) {
@@ -229,6 +239,31 @@ export const Tile_Value = {
     }
     return message;
   },
+  fromPartial(object: DeepPartial<Tile_Value>): Tile_Value {
+    const message = Object.create(baseTile_Value) as Tile_Value;
+    if (object.stringValue) {
+      message.stringValue = object.stringValue;
+    }
+    if (object.floatValue) {
+      message.floatValue = object.floatValue;
+    }
+    if (object.doubleValue) {
+      message.doubleValue = object.doubleValue;
+    }
+    if (object.intValue) {
+      message.intValue = object.intValue;
+    }
+    if (object.uintValue) {
+      message.uintValue = object.uintValue;
+    }
+    if (object.sintValue) {
+      message.sintValue = object.sintValue;
+    }
+    if (object.boolValue) {
+      message.boolValue = object.boolValue;
+    }
+    return message;
+  },
   toJSON(message: Tile_Value): unknown {
     const obj: any = {};
     obj.stringValue = message.stringValue || \\"\\";
@@ -317,6 +352,28 @@ export const Tile_Feature = {
     if (object.geometry) {
       for (const e of object.geometry) {
         message.geometry.push(Number(e));
+      }
+    }
+    return message;
+  },
+  fromPartial(object: DeepPartial<Tile_Feature>): Tile_Feature {
+    const message = Object.create(baseTile_Feature) as Tile_Feature;
+    message.tags = [];
+    message.geometry = [];
+    if (object.id) {
+      message.id = object.id;
+    }
+    if (object.tags) {
+      for (const e of object.tags) {
+        message.tags.push(e);
+      }
+    }
+    if (object.type) {
+      message.type = object.type;
+    }
+    if (object.geometry) {
+      for (const e of object.geometry) {
+        message.geometry.push(e);
       }
     }
     return message;
@@ -420,6 +477,37 @@ export const Tile_Layer = {
     }
     return message;
   },
+  fromPartial(object: DeepPartial<Tile_Layer>): Tile_Layer {
+    const message = Object.create(baseTile_Layer) as Tile_Layer;
+    message.features = [];
+    message.keys = [];
+    message.values = [];
+    if (object.version) {
+      message.version = object.version;
+    }
+    if (object.name) {
+      message.name = object.name;
+    }
+    if (object.features) {
+      for (const e of object.features) {
+        message.features.push(Tile_Feature.fromPartial(e));
+      }
+    }
+    if (object.keys) {
+      for (const e of object.keys) {
+        message.keys.push(e);
+      }
+    }
+    if (object.values) {
+      for (const e of object.values) {
+        message.values.push(Tile_Value.fromPartial(e));
+      }
+    }
+    if (object.extent) {
+      message.extent = object.extent;
+    }
+    return message;
+  },
   toJSON(message: Tile_Layer): unknown {
     const obj: any = {};
     obj.version = message.version || 0;
@@ -443,5 +531,18 @@ export const Tile_Layer = {
     return obj;
   },
 };
-"
+
+export type DeepPartial<T> = {
+  [P in keyof T]?: T[P] extends Array<infer U>
+  ? Array<DeepPartial<U>>
+  : T[P] extends ReadonlyArray<infer U>
+  ? ReadonlyArray<DeepPartial<U>>
+  : T[P] extends Date | Function | Uint8Array | undefined
+  ? T[P]
+  : T[P] extends infer U | undefined
+  ? DeepPartial<U>
+  : T[P] extends object
+  ? DeepPartial<T[P]>
+  : T[P]
+};"
 `;

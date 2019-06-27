@@ -81,6 +81,7 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto): F
         .addHashEntry(generateEncode(typeMap, fullName, message))
         .addHashEntry(generateDecode(typeMap, fullName, message))
         .addHashEntry(generateFromJson(typeMap, fullName, message))
+        .addHashEntry(generateFromPartial(typeMap, fullName, message))
         .addHashEntry(generateToJson(typeMap, fullName, message))
         .endHash()
         .add(';')
@@ -107,6 +108,7 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto): F
   }
 
   file = addLongUtilityMethod(file);
+  file = addDeepPartialType(file);
 
   let hasAnyTimestamps = false;
   visit(fileDesc, (_, messageType) => {
@@ -130,6 +132,25 @@ function addLongUtilityMethod(file: FileSpec): FileSpec {
           .endControlFlow()
           .addStatement('return long.toNumber()')
       )
+  );
+}
+
+function addDeepPartialType(file: FileSpec): FileSpec {
+  return file.addCode(
+    CodeBlock.empty()
+      .add('export type DeepPartial<T> = {%>\n')
+      .add('[P in keyof T]?: T[P] extends Array<infer U>\n')
+      .add('? Array<DeepPartial<U>>\n')
+      .add(': T[P] extends ReadonlyArray<infer U>\n')
+      .add('? ReadonlyArray<DeepPartial<U>>\n')
+      .add(': T[P] extends Date | Function | Uint8Array | undefined\n')
+      .add('? T[P]\n')
+      .add(': T[P] extends infer U | undefined\n')
+      .add('? DeepPartial<U>\n')
+      .add(': T[P] extends object\n')
+      .add('? DeepPartial<T[P]>\n')
+      .add(': T[P]\n%<')
+      .add('};')
   );
 }
 
@@ -553,6 +574,58 @@ function generateToJson(typeMap: TypeMap, fullName: string, messageDesc: Descrip
   return func.addStatement('return obj');
 }
 
+function generateFromPartial(typeMap: TypeMap, fullName: string, messageDesc: DescriptorProto): FunctionSpec {
+  // create the basic function declaration
+  let func = FunctionSpec.create('fromPartial')
+    .addParameter('object', `DeepPartial<${fullName}>`)
+    .returns(fullName);
+  func = func.addStatement('const message = Object.create(base%L) as %L', fullName, fullName);
+
+  // initialize all lists
+  messageDesc.field.filter(isRepeated).forEach(field => {
+    const value = isMapType(typeMap, messageDesc, field) ? '{}' : '[]';
+    func = func.addStatement('message.%L = %L', snakeToCamel(field.name), value);
+  });
+
+  // add a check for each incoming field
+  messageDesc.field.forEach(field => {
+    const fieldName = snakeToCamel(field.name);
+    const readSnippet = (from: string): CodeBlock => {
+      if (isEnum(field) || isPrimitive(field) || isTimestamp(field) || isValueType(field)) {
+        return CodeBlock.of(from);
+      } else if (isMessage(field)) {
+        return CodeBlock.of('%T.fromPartial(%L)', basicTypeName(typeMap, field), from);
+      } else {
+        throw new Error(`Unhandled field ${field}`);
+      }
+    };
+
+    // and then use the snippet to handle repeated fields if necessary
+    func = func.beginControlFlow('if (object.%L)', fieldName);
+    if (isRepeated(field)) {
+      if (isMapType(typeMap, messageDesc, field)) {
+        func = func
+          .addStatement(`const entry = %L`, readSnippet(`object.${fieldName}`))
+          .beginControlFlow('if (entry.value)')
+          .addStatement('message.%L[entry.key] = entry.value', fieldName)
+          .endControlFlow();
+      } else {
+        func = func
+          .beginControlFlow('for (const e of object.%L)', fieldName)
+          .addStatement(`message.%L.push(%L)`, fieldName, readSnippet('e'))
+          .endControlFlow();
+      }
+    } else {
+      func = func.addStatement(`message.%L = %L`, fieldName, readSnippet(`object.${fieldName}`));
+    }
+
+    func = func.endControlFlow();
+  });
+
+  // and then wrap up the switch/while/return
+  return func.addStatement('return message');
+}
+
 function generateService(
   typeMap: TypeMap,
   fileDesc: FileDescriptorProto,
@@ -644,7 +717,7 @@ function detectBatchMethod(
   if (nameMatches && inputType && outputType) {
     // TODO: This might be enums?
     const inputTypeDesc = inputType[2] as DescriptorProto;
-    const outputTypeDesc= outputType[2] as DescriptorProto;
+    const outputTypeDesc = outputType[2] as DescriptorProto;
     if (hasSingleRepeatedField(inputTypeDesc) && hasSingleRepeatedField(outputTypeDesc)) {
       const singleMethodName = methodDesc.name.replace('Batch', 'Get');
       const inputFieldName = inputTypeDesc.field[0].name;
