@@ -233,7 +233,7 @@ Object {
     expect(Simple.toJSON({} as Simple)).toMatchInlineSnapshot(`
 Object {
   "age": 0,
-  "child": null,
+  "child": undefined,
   "coins": Array [],
   "createdAt": null,
   "grandChildren": Array [],
@@ -303,10 +303,10 @@ Object {
     const s2 = SimpleWithWrappers.toJSON(s1);
     expect(s2).toMatchInlineSnapshot(`
 Object {
-  "age": null,
+  "age": undefined,
   "coins": Array [],
-  "enabled": null,
-  "name": null,
+  "enabled": undefined,
+  "name": undefined,
   "snacks": Array [],
 }
 `);

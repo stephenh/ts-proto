@@ -175,9 +175,8 @@ export function defaultValue(type: FieldDescriptorProto.Type): any {
       return '""';
     case FieldDescriptorProto.Type.TYPE_BYTES:
     case FieldDescriptorProto.Type.TYPE_MESSAGE:
-      return null;
     default:
-      return null;
+      return "undefined";
   }
 }
 
