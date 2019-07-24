@@ -9,6 +9,7 @@ import {
   PropertySpec,
   TypeName,
   TypeNames,
+  TypeVariable,
   Union
 } from 'ts-poet';
 import { google } from '../build/pbjs';
@@ -44,7 +45,16 @@ import MethodDescriptorProto = google.protobuf.MethodDescriptorProto;
 
 const dataloader = TypeNames.anyType('DataLoader=dataloader');
 
-export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto): FileSpec {
+export type Options = {
+  useContext: boolean;
+};
+
+export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, parameter?: string): FileSpec {
+  const options: Options = { useContext: false };
+  if (parameter && parameter.includes('context=true')) {
+    options.useContext = true;
+  }
+
   // Google's protofiles are organized like Java, where package == the folder the file
   // is in, and file == a specific service within the package. I.e. you can have multiple
   // company/foo.proto and company/bar.proto files, where package would be 'company'.
@@ -99,12 +109,15 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto): F
   );
 
   visitServices(fileDesc, serviceDesc => {
-    file = file.addInterface(generateService(typeMap, fileDesc, serviceDesc));
-    file = file.addClass(generateServiceClientImpl(typeMap, fileDesc, serviceDesc));
+    file = file.addInterface(generateService(typeMap, fileDesc, serviceDesc, options));
+    file = file.addClass(generateServiceClientImpl(typeMap, fileDesc, serviceDesc, options));
   });
 
   if (fileDesc.service.length > 0) {
-    file = file.addInterface(generateRpcType());
+    file = file.addInterface(generateRpcType(options));
+    if (options.useContext) {
+      file = file.addInterface(generateDataLoadersType(options));
+    }
   }
 
   file = addLongUtilityMethod(file);
@@ -626,26 +639,39 @@ function generateFromPartial(typeMap: TypeMap, fullName: string, messageDesc: De
   return func.addStatement('return message');
 }
 
+const contextTypeVar = TypeNames.typeVariable('Context', TypeNames.bound('DataLoaders'));
+
 function generateService(
   typeMap: TypeMap,
   fileDesc: FileDescriptorProto,
-  serviceDesc: ServiceDescriptorProto
+  serviceDesc: ServiceDescriptorProto,
+  options: Options
 ): InterfaceSpec {
   let service = InterfaceSpec.create(serviceDesc.name).addModifiers(Modifier.EXPORT);
+  if (options.useContext) {
+    service = service.addTypeVariable(contextTypeVar);
+  }
   for (const methodDesc of serviceDesc.method) {
-    service = service.addFunction(
-      FunctionSpec.create(methodDesc.name)
-        .addParameter('request', requestType(typeMap, methodDesc))
-        .returns(responsePromise(typeMap, methodDesc))
-    );
-    const batchMethod = detectBatchMethod(typeMap, fileDesc, methodDesc);
-    if (batchMethod) {
-      const name = batchMethod.methodDesc.name.replace('Batch', 'Get');
-      service = service.addFunction(
-        FunctionSpec.create(name)
-          .addParameter(singular(batchMethod.inputFieldName), batchMethod.inputType)
-          .returns(TypeNames.PROMISE.param(batchMethod.outputType))
-      );
+    let requestFn = FunctionSpec.create(methodDesc.name);
+    if (options.useContext) {
+      requestFn = requestFn.addParameter('ctx', TypeNames.typeVariable('Context'));
+    }
+    requestFn = requestFn.addParameter('request', requestType(typeMap, methodDesc));
+    requestFn = requestFn.returns(responsePromise(typeMap, methodDesc));
+    service = service.addFunction(requestFn);
+
+    if (options.useContext) {
+      const batchMethod = detectBatchMethod(typeMap, fileDesc, serviceDesc, methodDesc);
+      if (batchMethod) {
+        const name = batchMethod.methodDesc.name.replace('Batch', 'Get');
+        let batchFn = FunctionSpec.create(name);
+        if (options.useContext) {
+          batchFn = batchFn.addParameter('ctx', TypeNames.typeVariable('Context'));
+        }
+        batchFn = batchFn.addParameter(singular(batchMethod.inputFieldName), batchMethod.inputType);
+        batchFn = batchFn.returns(TypeNames.PROMISE.param(batchMethod.outputType));
+        service = service.addFunction(batchFn);
+      }
     }
   }
   return service;
@@ -653,6 +679,8 @@ function generateService(
 
 interface BatchMethod {
   methodDesc: MethodDescriptorProto;
+  // a ${package + service + method name} key to identify this method in caches
+  uniqueIdentifier: string;
   singleMethodName: string;
   inputFieldName: string;
   inputType: TypeName;
@@ -668,40 +696,60 @@ function hasSingleRepeatedField(messageDesc: DescriptorProto): boolean {
 function generateServiceClientImpl(
   typeMap: TypeMap,
   fileDesc: FileDescriptorProto,
-  serviceDesc: ServiceDescriptorProto
+  serviceDesc: ServiceDescriptorProto,
+  options: Options
 ): ClassSpec {
+  // Define the FooServiceImpl class
   let client = ClassSpec.create(`${serviceDesc.name}ClientImpl`).addModifiers(Modifier.EXPORT);
+  if (options.useContext) {
+    client = client.addTypeVariable(contextTypeVar);
+    client = client.addInterface(`${serviceDesc.name}<Context>`);
+  } else {
+    client = client.addInterface(serviceDesc.name);
+  }
+
+  // Create the constructor(rpc: Rpc)
+  const rpcType = options.useContext ? 'Rpc<Context>' : 'Rpc';
   client = client.addFunction(
     FunctionSpec.createConstructor()
-      .addParameter('rpc', 'Rpc')
+      .addParameter('rpc', rpcType)
       .addStatement('this.rpc = rpc')
   );
-  client = client.addProperty('rpc', 'Rpc', { modifiers: [Modifier.PRIVATE, Modifier.READONLY] });
+  client = client.addProperty('rpc', rpcType, { modifiers: [Modifier.PRIVATE, Modifier.READONLY] });
+
+  // Create a method for each FooService method
   for (const methodDesc of serviceDesc.method) {
-    // add a batch method if this fuzzy matches to a batch lookup method
-    const arrayBatchMethod = detectBatchMethod(typeMap, fileDesc, methodDesc);
-    if (arrayBatchMethod) {
-      client = generateBatchingMethod(typeMap, client, arrayBatchMethod);
+    // See if this this fuzzy matches to a batchable method
+    if (options.useContext) {
+      const batchMethod = detectBatchMethod(typeMap, fileDesc, serviceDesc, methodDesc);
+      if (batchMethod) {
+        client = generateBatchingMethod(typeMap, client, batchMethod);
+      }
     }
-    // generate the regular method
-    client = client.addFunction(
-      FunctionSpec.create(methodDesc.name)
-        .addParameter('request', requestType(typeMap, methodDesc))
-        .addStatement('const data = %L.encode(request).finish()', requestType(typeMap, methodDesc))
-        .addStatement(
-          'const promise = this.rpc.request("%L.%L", %S, %L)',
-          fileDesc.package,
-          serviceDesc.name,
-          methodDesc.name,
-          'data'
-        )
-        .addStatement(
-          'return promise.then(data => %L.decode(new %T(data)))',
-          responseType(typeMap, methodDesc),
-          'Reader@protobufjs/minimal'
-        )
-        .returns(responsePromise(typeMap, methodDesc))
-    );
+
+    // Generate the regular RPC method
+    let requestFn = FunctionSpec.create(methodDesc.name);
+    if (options.useContext) {
+      requestFn = requestFn.addParameter('ctx', TypeNames.typeVariable('Context'));
+    }
+    requestFn = requestFn
+      .addParameter('request', requestType(typeMap, methodDesc))
+      .addStatement('const data = %L.encode(request).finish()', requestType(typeMap, methodDesc))
+      .addStatement(
+        'const promise = this.rpc.request(%L"%L.%L", %S, %L)',
+        options.useContext ? 'ctx, ' : '', // sneak ctx in as the 1st parameter to our rpc call
+        fileDesc.package,
+        serviceDesc.name,
+        methodDesc.name,
+        'data'
+      )
+      .addStatement(
+        'return promise.then(data => %L.decode(new %T(data)))',
+        responseType(typeMap, methodDesc),
+        'Reader@protobufjs/minimal'
+      )
+      .returns(responsePromise(typeMap, methodDesc));
+    client = client.addFunction(requestFn);
   }
   return client;
 }
@@ -709,6 +757,7 @@ function generateServiceClientImpl(
 function detectBatchMethod(
   typeMap: TypeMap,
   fileDesc: FileDescriptorProto,
+  serviceDesc: ServiceDescriptorProto,
   methodDesc: MethodDescriptorProto
 ): BatchMethod | undefined {
   const nameMatches = methodDesc.name.startsWith('Batch');
@@ -728,8 +777,10 @@ function detectBatchMethod(
       if (mapType) {
         outputType = mapType.valueType;
       }
+      const uniqueIdentifier = `${fileDesc.package}.${serviceDesc.name}.${methodDesc.name}`;
       return {
         methodDesc,
+        uniqueIdentifier,
         singleMethodName,
         inputFieldName,
         inputType,
@@ -744,29 +795,37 @@ function detectBatchMethod(
 
 function generateBatchingMethod(typeMap: TypeMap, client: ClassSpec, batchMethod: BatchMethod): ClassSpec {
   const name = batchMethod.singleMethodName.replace('Get', '');
-  const loaderFieldName = `${lowerFirst(name)}Loader`;
-  const { methodDesc, singleMethodName, inputFieldName, inputType, outputFieldName, outputType, mapType } = batchMethod;
-  // add a dataloader field
+  const {
+    methodDesc,
+    singleMethodName,
+    inputFieldName,
+    inputType,
+    outputFieldName,
+    outputType,
+    mapType,
+    uniqueIdentifier
+  } = batchMethod;
+  // Create the `(keys) => ...` lambda we'll pass to the DataLoader constructor
   let lambda = CodeBlock.lambda(inputFieldName) // e.g. keys
     .addStatement('const request = { %L }', inputFieldName);
   if (mapType) {
+    // If the return type is a map, lookup each key in the result
     lambda = lambda
-      .beginLambda('return this.%L(request).then(res =>', methodDesc.name)
-      .addStatement('return %L.map(e => res.%L[e])', inputFieldName, outputFieldName)
+      .beginLambda('return this.%L(ctx, request).then(res =>', methodDesc.name)
+      .addStatement('return %L.map(key => res.%L[key])', inputFieldName, outputFieldName)
       .endLambda(')');
   } else {
-    lambda = lambda.addStatement('return this.%L(request).then(res => res.%L)', methodDesc.name, outputFieldName);
+    // Otherwise assume they come back in order
+    lambda = lambda.addStatement('return this.%L(ctx, request).then(res => res.%L)', methodDesc.name, outputFieldName);
   }
-  client = client.addProperty(
-    PropertySpec.create(loaderFieldName, dataloader.param(inputType, outputType))
-      .addModifiers(Modifier.PRIVATE)
-      .setImplicitlyTyped()
-      .initializer('new %T(%L)', dataloader.param(inputType, outputType), lambda)
-  );
   client = client.addFunction(
     FunctionSpec.create(singleMethodName)
+      .addParameter('ctx', 'Context')
       .addParameter(singular(inputFieldName), inputType)
-      .addStatement('return this.%L.load(%L)', loaderFieldName, singular(inputFieldName))
+      .addCode('const dl = ctx.getDataLoader(%S, () => {%>\n', uniqueIdentifier)
+      .addCode('return new %T<%T, %T>(%L);\n', dataloader, inputType, outputType, lambda)
+      .addCode('%<});\n')
+      .addStatement('return dl.load(%L)', singular(inputFieldName))
       .returns(TypeNames.PROMISE.param(outputType))
   );
   return client;
@@ -781,15 +840,33 @@ function generateBatchingMethod(typeMap: TypeMap, client: ClassSpec, batchMethod
  * we don't want our the barrel imports in `index.ts` to have multiple `Rpc`
  * types.
  */
-function generateRpcType(): InterfaceSpec {
+function generateRpcType(options: Options): InterfaceSpec {
   const data = TypeNames.anyType('Uint8Array');
-  return InterfaceSpec.create('Rpc').addFunction(
-    FunctionSpec.create('request')
-      .addParameter('service', TypeNames.STRING)
-      .addParameter('method', TypeNames.STRING)
-      .addParameter('data', data)
-      .returns(TypeNames.PROMISE.param(data))
-  );
+  let fn = FunctionSpec.create('request');
+  if (options.useContext) {
+    fn = fn.addParameter('ctx', 'Context');
+  }
+  fn = fn
+    .addParameter('service', TypeNames.STRING)
+    .addParameter('method', TypeNames.STRING)
+    .addParameter('data', data)
+    .returns(TypeNames.PROMISE.param(data));
+  let rpc = InterfaceSpec.create('Rpc');
+  if (options.useContext) {
+    rpc = rpc.addTypeVariable(TypeNames.typeVariable('Context'));
+  }
+  rpc = rpc.addFunction(fn);
+  return rpc;
+}
+
+function generateDataLoadersType(options: Options): InterfaceSpec {
+  // TODO Maybe should be a generic `Context.get<T>(id, () => T): T` method
+  let fn = FunctionSpec.create('getDataLoader')
+    .addTypeVariable(TypeNames.typeVariable('T'))
+    .addParameter('identifier', TypeNames.STRING)
+    .addParameter('cstrFn', TypeNames.lambda2([], TypeNames.typeVariable('T')))
+    .returns(TypeNames.typeVariable('T'));
+  return InterfaceSpec.create('DataLoaders').addFunction(fn);
 }
 
 function requestType(typeMap: TypeMap, methodDesc: MethodDescriptorProto): TypeName {

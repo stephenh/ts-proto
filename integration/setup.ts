@@ -1,7 +1,7 @@
 import { mkdir, readFile, writeFile } from 'fs';
 import { parse } from 'path';
 import { google } from '../build/pbjs';
-import { generateFile } from '../src/main';
+import { generateFile, Options } from '../src/main';
 import { promisify } from 'util';
 import { createTypeMap } from '../src/types';
 import CodeGeneratorRequest = google.protobuf.compiler.CodeGeneratorRequest;
@@ -18,15 +18,19 @@ async function main() {
   await generate('./simple.bin');
   await generate('./vector_tile.bin');
   await generate('./batching.bin');
+  await generate('./batching.bin', './build/integration-context/', 'context=true');
 }
 
-async function generate(path: string) {
-  const stdin = await promisify(readFile)(path);
+async function generate(binFile: string, baseDir: string = './build/integration', parameter?: string) {
+  const stdin = await promisify(readFile)(binFile);
   const request = CodeGeneratorRequest.decode(stdin);
+  if (parameter) {
+    request.parameter = parameter;
+  }
   const map = createTypeMap(request);
   for (let file of request.protoFile) {
-    const spec = generateFile(map, file);
-    const filePath = `./build/integration/${spec.path}`;
+    const spec = generateFile(map, file, request.parameter);
+    const filePath = `${baseDir}/${spec.path}`;
     const dirPath = parse(filePath).dir;
     await promisify(mkdir)(dirPath, { recursive: true }).catch(() => {});
     await promisify(writeFile)(filePath, spec.toString());
