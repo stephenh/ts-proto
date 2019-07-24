@@ -1,5 +1,8 @@
-import { EntityServiceClientImpl } from '../build/integration-context/batching';
-import { BatchQueryResponse } from '../build/integration/batching';
+import {
+  EntityServiceClientImpl,
+  GetOnlyMethodResponse,
+  WriteMethodResponse
+} from '../build/integration-context/batching';
 
 /** A sample application context. */
 class Context {
@@ -43,5 +46,27 @@ describe('batching', () => {
     const ctx = new Context();
     await Promise.all([service.GetMapQuery(ctx, '1'), service.GetMapQuery(ctx, '2')]);
     expect(request.mock.calls.length).toBe(1);
+  });
+
+  it('caches get calls', async () => {
+    const rpc = new Rpc();
+    const service = new EntityServiceClientImpl<Context>(rpc);
+    const request = (rpc.request = jest.fn(() => {
+      return Promise.resolve(GetOnlyMethodResponse.encode({ entity: { id: '1', name: 'one' } }).finish());
+    }));
+    const ctx = new Context();
+    await Promise.all([service.GetOnlyMethod(ctx, { id: '1' }), service.GetOnlyMethod(ctx, { id: '1' })]);
+    expect(request.mock.calls.length).toBe(1);
+  });
+
+  it('does not cache non-get calls', async () => {
+    const rpc = new Rpc();
+    const service = new EntityServiceClientImpl<Context>(rpc);
+    const request = (rpc.request = jest.fn(() => {
+      return Promise.resolve(WriteMethodResponse.encode({}).finish());
+    }));
+    const ctx = new Context();
+    await Promise.all([service.WriteMethod(ctx, { id: '1' }), service.WriteMethod(ctx, { id: '1' })]);
+    expect(request.mock.calls.length).toBe(2);
   });
 });

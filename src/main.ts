@@ -9,7 +9,6 @@ import {
   PropertySpec,
   TypeName,
   TypeNames,
-  TypeVariable,
   Union
 } from 'ts-poet';
 import { google } from '../build/pbjs';
@@ -35,7 +34,7 @@ import {
   TypeMap
 } from './types';
 import { asSequence } from 'sequency';
-import { lowerFirst, singular } from './utils';
+import { singular } from './utils';
 import DescriptorProto = google.protobuf.DescriptorProto;
 import FieldDescriptorProto = google.protobuf.FieldDescriptorProto;
 import FileDescriptorProto = google.protobuf.FileDescriptorProto;
@@ -693,6 +692,36 @@ function hasSingleRepeatedField(messageDesc: DescriptorProto): boolean {
   return messageDesc.field.length == 1 && messageDesc.field[0].label === FieldDescriptorProto.Label.LABEL_REPEATED;
 }
 
+function generateRegularRpcMethod(
+  options: Options,
+  typeMap: TypeMap,
+  fileDesc: google.protobuf.FileDescriptorProto,
+  serviceDesc: google.protobuf.ServiceDescriptorProto,
+  methodDesc: google.protobuf.MethodDescriptorProto
+) {
+  let requestFn = FunctionSpec.create(methodDesc.name);
+  if (options.useContext) {
+    requestFn = requestFn.addParameter('ctx', TypeNames.typeVariable('Context'));
+  }
+  return requestFn
+    .addParameter('request', requestType(typeMap, methodDesc))
+    .addStatement('const data = %L.encode(request).finish()', requestType(typeMap, methodDesc))
+    .addStatement(
+      'const promise = this.rpc.request(%L"%L.%L", %S, %L)',
+      options.useContext ? 'ctx, ' : '', // sneak ctx in as the 1st parameter to our rpc call
+      fileDesc.package,
+      serviceDesc.name,
+      methodDesc.name,
+      'data'
+    )
+    .addStatement(
+      'return promise.then(data => %L.decode(new %T(data)))',
+      responseType(typeMap, methodDesc),
+      'Reader@protobufjs/minimal'
+    )
+    .returns(responsePromise(typeMap, methodDesc));
+}
+
 function generateServiceClientImpl(
   typeMap: TypeMap,
   fileDesc: FileDescriptorProto,
@@ -723,33 +752,15 @@ function generateServiceClientImpl(
     if (options.useContext) {
       const batchMethod = detectBatchMethod(typeMap, fileDesc, serviceDesc, methodDesc);
       if (batchMethod) {
-        client = generateBatchingMethod(typeMap, client, batchMethod);
+        client = client.addFunction(generateBatchingRpcMethod(typeMap, batchMethod));
       }
     }
 
-    // Generate the regular RPC method
-    let requestFn = FunctionSpec.create(methodDesc.name);
-    if (options.useContext) {
-      requestFn = requestFn.addParameter('ctx', TypeNames.typeVariable('Context'));
+    if (options.useContext && methodDesc.name.match(/^Get[A-Z]/)) {
+      client = client.addFunction(generateCachingRpcMethod(typeMap, fileDesc, serviceDesc, methodDesc));
+    } else {
+      client = client.addFunction(generateRegularRpcMethod(options, typeMap, fileDesc, serviceDesc, methodDesc));
     }
-    requestFn = requestFn
-      .addParameter('request', requestType(typeMap, methodDesc))
-      .addStatement('const data = %L.encode(request).finish()', requestType(typeMap, methodDesc))
-      .addStatement(
-        'const promise = this.rpc.request(%L"%L.%L", %S, %L)',
-        options.useContext ? 'ctx, ' : '', // sneak ctx in as the 1st parameter to our rpc call
-        fileDesc.package,
-        serviceDesc.name,
-        methodDesc.name,
-        'data'
-      )
-      .addStatement(
-        'return promise.then(data => %L.decode(new %T(data)))',
-        responseType(typeMap, methodDesc),
-        'Reader@protobufjs/minimal'
-      )
-      .returns(responsePromise(typeMap, methodDesc));
-    client = client.addFunction(requestFn);
   }
   return client;
 }
@@ -793,8 +804,8 @@ function detectBatchMethod(
   return undefined;
 }
 
-function generateBatchingMethod(typeMap: TypeMap, client: ClassSpec, batchMethod: BatchMethod): ClassSpec {
-  const name = batchMethod.singleMethodName.replace('Get', '');
+/** We've found a BatchXxx method, create a synthetic GetXxx method that calls it. */
+function generateBatchingRpcMethod(typeMap: TypeMap, batchMethod: BatchMethod): FunctionSpec {
   const {
     methodDesc,
     singleMethodName,
@@ -818,17 +829,61 @@ function generateBatchingMethod(typeMap: TypeMap, client: ClassSpec, batchMethod
     // Otherwise assume they come back in order
     lambda = lambda.addStatement('return this.%L(ctx, request).then(res => res.%L)', methodDesc.name, outputFieldName);
   }
-  client = client.addFunction(
-    FunctionSpec.create(singleMethodName)
-      .addParameter('ctx', 'Context')
-      .addParameter(singular(inputFieldName), inputType)
-      .addCode('const dl = ctx.getDataLoader(%S, () => {%>\n', uniqueIdentifier)
-      .addCode('return new %T<%T, %T>(%L);\n', dataloader, inputType, outputType, lambda)
-      .addCode('%<});\n')
-      .addStatement('return dl.load(%L)', singular(inputFieldName))
-      .returns(TypeNames.PROMISE.param(outputType))
-  );
-  return client;
+  return FunctionSpec.create(singleMethodName)
+    .addParameter('ctx', 'Context')
+    .addParameter(singular(inputFieldName), inputType)
+    .addCode('const dl = ctx.getDataLoader(%S, () => {%>\n', uniqueIdentifier)
+    .addCode(
+      'return new %T<%T, %T>(%L, { cacheKeyFn: %T });\n',
+      dataloader,
+      inputType,
+      outputType,
+      lambda,
+      TypeNames.anyType('hash=object-hash')
+    )
+    .addCode('%<});\n')
+    .addStatement('return dl.load(%L)', singular(inputFieldName))
+    .returns(TypeNames.PROMISE.param(outputType));
+}
+
+/** We're not going to batch, but use DataLoader for per-request caching. */
+function generateCachingRpcMethod(
+  typeMap: TypeMap,
+  fileDesc: FileDescriptorProto,
+  serviceDesc: ServiceDescriptorProto,
+  methodDesc: MethodDescriptorProto
+): FunctionSpec {
+  const inputType = requestType(typeMap, methodDesc);
+  const outputType = responseType(typeMap, methodDesc);
+  let lambda = CodeBlock.lambda('requests')
+    .beginLambda('const responses = requests.map(async request =>')
+    .addStatement('const data = %L.encode(request).finish()', inputType)
+    .addStatement(
+      'const response = await this.rpc.request(ctx, "%L.%L", %S, %L)',
+      fileDesc.package,
+      serviceDesc.name,
+      methodDesc.name,
+      'data'
+    )
+    .addStatement('return %L.decode(new %T(response))', responseType(typeMap, methodDesc), 'Reader@protobufjs/minimal')
+    .endLambda(')')
+    .addStatement('return Promise.all(responses)');
+  const uniqueIdentifier = `${fileDesc.package}.${serviceDesc.name}.${methodDesc.name}`;
+  return FunctionSpec.create(methodDesc.name)
+    .addParameter('ctx', 'Context')
+    .addParameter('request', requestType(typeMap, methodDesc))
+    .addCode('const dl = ctx.getDataLoader(%S, () => {%>\n', uniqueIdentifier)
+    .addCode(
+      'return new %T<%T, %T>(%L, { cacheKeyFn: %T });\n',
+      dataloader,
+      inputType,
+      outputType,
+      lambda,
+      TypeNames.anyType('hash=object-hash')
+    )
+    .addCode('%<});\n')
+    .addStatement('return dl.load(request)')
+    .returns(TypeNames.PROMISE.param(outputType));
 }
 
 /**

@@ -5,6 +5,12 @@ service EntityService {
   rpc BatchQuery(BatchQueryRequest) returns (BatchQueryResponse);
 
   rpc BatchMapQuery(BatchMapQueryRequest) returns (BatchMapQueryResponse);
+
+  // Add a method that is not batchable to show it's still cached
+  rpc GetOnlyMethod(GetOnlyMethodRequest) returns (GetOnlyMethodResponse);
+
+  // Add a method that won't get cached
+  rpc WriteMethod(WriteMethodRequest) returns (WriteMethodResponse);
 }
 
 message BatchQueryRequest {
@@ -21,6 +27,21 @@ message BatchMapQueryRequest {
 
 message BatchMapQueryResponse {
   map<string, Entity> entities = 1;
+}
+
+message GetOnlyMethodRequest {
+  string id = 1;
+}
+
+message GetOnlyMethodResponse {
+  Entity entity = 1;
+}
+
+message WriteMethodRequest {
+  string id = 1;
+}
+
+message WriteMethodResponse {
 }
 
 message Entity {
