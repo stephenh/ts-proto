@@ -34,7 +34,7 @@ const baseBatchQueryRequest: object = {
 };
 
 const baseBatchQueryResponse: object = {
-  entities: null,
+  entities: undefined,
 };
 
 const baseBatchMapQueryRequest: object = {
@@ -42,12 +42,12 @@ const baseBatchMapQueryRequest: object = {
 };
 
 const baseBatchMapQueryResponse: object = {
-  entities: null,
+  entities: undefined,
 };
 
 const baseBatchMapQueryResponse_EntitiesEntry: object = {
   key: "",
-  value: null,
+  value: undefined,
 };
 
 const baseEntity: object = {
@@ -67,7 +67,7 @@ export interface EntityService {
 
 }
 
-export class EntityServiceClientImpl {
+export class EntityServiceClientImpl implements EntityService {
 
   private readonly rpc: Rpc;
 
@@ -224,7 +224,7 @@ export const BatchQueryResponse = {
   toJSON(message: BatchQueryResponse): unknown {
     const obj: any = {};
     if (message.entities) {
-      obj.entities = message.entities.map(e => e ? Entity.toJSON(e) : null);
+      obj.entities = message.entities.map(e => e ? Entity.toJSON(e) : undefined);
     } else {
       obj.entities = [];
     }
@@ -338,7 +338,7 @@ export const BatchMapQueryResponse = {
   },
   toJSON(message: BatchMapQueryResponse): unknown {
     const obj: any = {};
-    obj.entities = message.entities || null;
+    obj.entities = message.entities || undefined;
     return obj;
   },
 };
@@ -346,7 +346,7 @@ export const BatchMapQueryResponse = {
 export const BatchMapQueryResponse_EntitiesEntry = {
   encode(message: BatchMapQueryResponse_EntitiesEntry, writer: Writer = Writer.create()): Writer {
     writer.uint32(10).string(message.key);
-    if (message.value !== undefined && message.value !== null) {
+    if (message.value !== undefined && message.value !== undefined) {
       Entity.encode(message.value, writer.uint32(18).fork()).ldelim();
     }
     return writer;
@@ -393,7 +393,7 @@ export const BatchMapQueryResponse_EntitiesEntry = {
   toJSON(message: BatchMapQueryResponse_EntitiesEntry): unknown {
     const obj: any = {};
     obj.key = message.key || "";
-    obj.value = message.value ? Entity.toJSON(message.value) : null;
+    obj.value = message.value ? Entity.toJSON(message.value) : undefined;
     return obj;
   },
 };
@@ -451,7 +451,7 @@ export const Entity = {
   },
 };
 
-export type DeepPartial<T> = {
+type DeepPartial<T> = {
   [P in keyof T]?: T[P] extends Array<infer U>
   ? Array<DeepPartial<U>>
   : T[P] extends ReadonlyArray<infer U>

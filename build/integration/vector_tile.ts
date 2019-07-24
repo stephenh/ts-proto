@@ -40,7 +40,7 @@ export interface Tile_Layer {
 }
 
 const baseTile: object = {
-  layers: null,
+  layers: undefined,
 };
 
 const baseTile_Value: object = {
@@ -63,9 +63,9 @@ const baseTile_Feature: object = {
 const baseTile_Layer: object = {
   version: 0,
   name: "",
-  features: null,
+  features: undefined,
   keys: "",
-  values: null,
+  values: undefined,
   extent: 0,
 };
 
@@ -123,7 +123,7 @@ export const Tile = {
   toJSON(message: Tile): unknown {
     const obj: any = {};
     if (message.layers) {
-      obj.layers = message.layers.map(e => e ? Tile_Layer.toJSON(e) : null);
+      obj.layers = message.layers.map(e => e ? Tile_Layer.toJSON(e) : undefined);
     } else {
       obj.layers = [];
     }
@@ -510,7 +510,7 @@ export const Tile_Layer = {
     obj.version = message.version || 0;
     obj.name = message.name || "";
     if (message.features) {
-      obj.features = message.features.map(e => e ? Tile_Feature.toJSON(e) : null);
+      obj.features = message.features.map(e => e ? Tile_Feature.toJSON(e) : undefined);
     } else {
       obj.features = [];
     }
@@ -520,7 +520,7 @@ export const Tile_Layer = {
       obj.keys = [];
     }
     if (message.values) {
-      obj.values = message.values.map(e => e ? Tile_Value.toJSON(e) : null);
+      obj.values = message.values.map(e => e ? Tile_Value.toJSON(e) : undefined);
     } else {
       obj.values = [];
     }
@@ -529,7 +529,7 @@ export const Tile_Layer = {
   },
 };
 
-export type DeepPartial<T> = {
+type DeepPartial<T> = {
   [P in keyof T]?: T[P] extends Array<infer U>
   ? Array<DeepPartial<U>>
   : T[P] extends ReadonlyArray<infer U>

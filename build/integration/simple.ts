@@ -91,10 +91,10 @@ export interface PingResponse {
 const baseSimple: object = {
   name: "",
   age: 0,
-  createdAt: null,
-  child: null,
+  createdAt: undefined,
+  child: undefined,
   state: 0,
-  grandChildren: null,
+  grandChildren: undefined,
   coins: 0,
   snacks: "",
   oldStates: 0,
@@ -107,13 +107,13 @@ const baseChild: object = {
 
 const baseNested: object = {
   name: "",
-  message: null,
+  message: undefined,
   state: 0,
 };
 
 const baseNested_InnerMessage: object = {
   name: "",
-  deep: null,
+  deep: undefined,
 };
 
 const baseNested_InnerMessage_DeepMessage: object = {
@@ -124,11 +124,11 @@ const baseOneOfMessage: object = {
 };
 
 const baseSimpleWithWrappers: object = {
-  name: null,
-  age: null,
-  enabled: null,
-  coins: null,
-  snacks: null,
+  name: undefined,
+  age: undefined,
+  enabled: undefined,
+  coins: undefined,
+  snacks: undefined,
 };
 
 const baseEntity: object = {
@@ -136,12 +136,12 @@ const baseEntity: object = {
 };
 
 const baseSimpleWithMap: object = {
-  entitiesById: null,
+  entitiesById: undefined,
 };
 
 const baseSimpleWithMap_EntitiesByIdEntry: object = {
   key: 0,
-  value: null,
+  value: undefined,
 };
 
 const basePingRequest: object = {
@@ -158,7 +158,7 @@ export interface PingService {
 
 }
 
-export class PingServiceClientImpl {
+export class PingServiceClientImpl implements PingService {
 
   private readonly rpc: Rpc;
 
@@ -243,10 +243,10 @@ export const Simple = {
   encode(message: Simple, writer: Writer = Writer.create()): Writer {
     writer.uint32(10).string(message.name);
     writer.uint32(16).int32(message.age);
-    if (message.createdAt !== undefined && message.createdAt !== null) {
+    if (message.createdAt !== undefined && message.createdAt !== undefined) {
       Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(74).fork()).ldelim();
     }
-    if (message.child !== undefined && message.child !== null) {
+    if (message.child !== undefined && message.child !== undefined) {
       Child.encode(message.child, writer.uint32(26).fork()).ldelim();
     }
     writer.uint32(32).int32(message.state);
@@ -417,10 +417,10 @@ export const Simple = {
     obj.name = message.name || "";
     obj.age = message.age || 0;
     obj.createdAt = message.createdAt !== undefined ? message.createdAt.toISOString() : null;
-    obj.child = message.child ? Child.toJSON(message.child) : null;
+    obj.child = message.child ? Child.toJSON(message.child) : undefined;
     obj.state = StateEnum.toJSON(message.state);
     if (message.grandChildren) {
-      obj.grandChildren = message.grandChildren.map(e => e ? Child.toJSON(e) : null);
+      obj.grandChildren = message.grandChildren.map(e => e ? Child.toJSON(e) : undefined);
     } else {
       obj.grandChildren = [];
     }
@@ -529,7 +529,7 @@ export namespace Child_Type {
 export const Nested = {
   encode(message: Nested, writer: Writer = Writer.create()): Writer {
     writer.uint32(10).string(message.name);
-    if (message.message !== undefined && message.message !== null) {
+    if (message.message !== undefined && message.message !== undefined) {
       Nested_InnerMessage.encode(message.message, writer.uint32(18).fork()).ldelim();
     }
     writer.uint32(24).int32(message.state);
@@ -586,7 +586,7 @@ export const Nested = {
   toJSON(message: Nested): unknown {
     const obj: any = {};
     obj.name = message.name || "";
-    obj.message = message.message ? Nested_InnerMessage.toJSON(message.message) : null;
+    obj.message = message.message ? Nested_InnerMessage.toJSON(message.message) : undefined;
     obj.state = Nested_InnerEnum.toJSON(message.state);
     return obj;
   },
@@ -625,7 +625,7 @@ export namespace Nested_InnerEnum {
 export const Nested_InnerMessage = {
   encode(message: Nested_InnerMessage, writer: Writer = Writer.create()): Writer {
     writer.uint32(10).string(message.name);
-    if (message.deep !== undefined && message.deep !== null) {
+    if (message.deep !== undefined && message.deep !== undefined) {
       Nested_InnerMessage_DeepMessage.encode(message.deep, writer.uint32(18).fork()).ldelim();
     }
     return writer;
@@ -672,7 +672,7 @@ export const Nested_InnerMessage = {
   toJSON(message: Nested_InnerMessage): unknown {
     const obj: any = {};
     obj.name = message.name || "";
-    obj.deep = message.deep ? Nested_InnerMessage_DeepMessage.toJSON(message.deep) : null;
+    obj.deep = message.deep ? Nested_InnerMessage_DeepMessage.toJSON(message.deep) : undefined;
     return obj;
   },
 };
@@ -778,13 +778,13 @@ export const OneOfMessage = {
 
 export const SimpleWithWrappers = {
   encode(message: SimpleWithWrappers, writer: Writer = Writer.create()): Writer {
-    if (message.name !== undefined && message.name !== null) {
+    if (message.name !== undefined && message.name !== undefined) {
       StringValue.encode({ value: message.name! }, writer.uint32(10).fork()).ldelim();
     }
-    if (message.age !== undefined && message.age !== null) {
+    if (message.age !== undefined && message.age !== undefined) {
       Int32Value.encode({ value: message.age! }, writer.uint32(18).fork()).ldelim();
     }
-    if (message.enabled !== undefined && message.enabled !== null) {
+    if (message.enabled !== undefined && message.enabled !== undefined) {
       BoolValue.encode({ value: message.enabled! }, writer.uint32(26).fork()).ldelim();
     }
     for (const v of message.coins) {
@@ -877,16 +877,16 @@ export const SimpleWithWrappers = {
   },
   toJSON(message: SimpleWithWrappers): unknown {
     const obj: any = {};
-    obj.name = message.name || null;
-    obj.age = message.age || null;
-    obj.enabled = message.enabled || null;
+    obj.name = message.name || undefined;
+    obj.age = message.age || undefined;
+    obj.enabled = message.enabled || undefined;
     if (message.coins) {
-      obj.coins = message.coins.map(e => e || null);
+      obj.coins = message.coins.map(e => e || undefined);
     } else {
       obj.coins = [];
     }
     if (message.snacks) {
-      obj.snacks = message.snacks.map(e => e || null);
+      obj.snacks = message.snacks.map(e => e || undefined);
     } else {
       obj.snacks = [];
     }
@@ -987,7 +987,7 @@ export const SimpleWithMap = {
   },
   toJSON(message: SimpleWithMap): unknown {
     const obj: any = {};
-    obj.entitiesById = message.entitiesById || null;
+    obj.entitiesById = message.entitiesById || undefined;
     return obj;
   },
 };
@@ -995,7 +995,7 @@ export const SimpleWithMap = {
 export const SimpleWithMap_EntitiesByIdEntry = {
   encode(message: SimpleWithMap_EntitiesByIdEntry, writer: Writer = Writer.create()): Writer {
     writer.uint32(8).int32(message.key);
-    if (message.value !== undefined && message.value !== null) {
+    if (message.value !== undefined && message.value !== undefined) {
       Entity.encode(message.value, writer.uint32(18).fork()).ldelim();
     }
     return writer;
@@ -1042,7 +1042,7 @@ export const SimpleWithMap_EntitiesByIdEntry = {
   toJSON(message: SimpleWithMap_EntitiesByIdEntry): unknown {
     const obj: any = {};
     obj.key = message.key || 0;
-    obj.value = message.value ? Entity.toJSON(message.value) : null;
+    obj.value = message.value ? Entity.toJSON(message.value) : undefined;
     return obj;
   },
 };
@@ -1131,7 +1131,7 @@ export const PingResponse = {
   },
 };
 
-export type DeepPartial<T> = {
+type DeepPartial<T> = {
   [P in keyof T]?: T[P] extends Array<infer U>
   ? Array<DeepPartial<U>>
   : T[P] extends ReadonlyArray<infer U>
