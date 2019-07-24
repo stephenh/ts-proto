@@ -1,4 +1,3 @@
-import DataLoader from 'dataloader';
 import { Reader, Writer } from 'protobufjs/minimal';
 import * as Long from 'long';
 
@@ -59,11 +58,7 @@ export interface EntityService {
 
   BatchQuery(request: BatchQueryRequest): Promise<BatchQueryResponse>;
 
-  GetQuery(id: string): Promise<Entity>;
-
   BatchMapQuery(request: BatchMapQueryRequest): Promise<BatchMapQueryResponse>;
-
-  GetMapQuery(id: string): Promise<Entity>;
 
 }
 
@@ -71,34 +66,14 @@ export class EntityServiceClientImpl implements EntityService {
 
   private readonly rpc: Rpc;
 
-  private queryLoader = new DataLoader<string, Entity>((ids) => {
-    const request = { ids };
-    return this.BatchQuery(request).then(res => res.entities);
-  });
-
-  private mapQueryLoader = new DataLoader<string, Entity>((ids) => {
-    const request = { ids };
-    return this.BatchMapQuery(request).then(res => {
-      return ids.map(e => res.entities[e]);
-    })
-  });
-
   constructor(rpc: Rpc) {
     this.rpc = rpc;
-  }
-
-  GetQuery(id: string): Promise<Entity> {
-    return this.queryLoader.load(id);
   }
 
   BatchQuery(request: BatchQueryRequest): Promise<BatchQueryResponse> {
     const data = BatchQueryRequest.encode(request).finish();
     const promise = this.rpc.request("batching.EntityService", "BatchQuery", data);
     return promise.then(data => BatchQueryResponse.decode(new Reader(data)));
-  }
-
-  GetMapQuery(id: string): Promise<Entity> {
-    return this.mapQueryLoader.load(id);
   }
 
   BatchMapQuery(request: BatchMapQueryRequest): Promise<BatchMapQueryResponse> {

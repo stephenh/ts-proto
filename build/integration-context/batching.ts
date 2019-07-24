@@ -55,7 +55,7 @@ const baseEntity: object = {
   name: "",
 };
 
-export interface EntityService<Context> {
+export interface EntityService<Context extends DataLoaders> {
 
   BatchQuery(ctx: Context, request: BatchQueryRequest): Promise<BatchQueryResponse>;
 
@@ -67,28 +67,22 @@ export interface EntityService<Context> {
 
 }
 
-export class EntityServiceClientImpl<Context> implements EntityService<Context> {
+export class EntityServiceClientImpl<Context extends DataLoaders> implements EntityService<Context> {
 
   private readonly rpc: Rpc<Context>;
-
-  private queryLoader = new DataLoader<string, Entity>((ids) => {
-    const request = { ids };
-    return this.BatchQuery(request).then(res => res.entities);
-  });
-
-  private mapQueryLoader = new DataLoader<string, Entity>((ids) => {
-    const request = { ids };
-    return this.BatchMapQuery(request).then(res => {
-      return ids.map(e => res.entities[e]);
-    })
-  });
 
   constructor(rpc: Rpc<Context>) {
     this.rpc = rpc;
   }
 
-  GetQuery(id: string): Promise<Entity> {
-    return this.queryLoader.load(id);
+  GetQuery(ctx: Context, id: string): Promise<Entity> {
+    const dl = ctx.getDataLoader("batching.EntityService.BatchQuery", () => {
+      return new DataLoader<string, Entity>((ids) => {
+        const request = { ids };
+        return this.BatchQuery(ctx, request).then(res => res.entities);
+      });
+    });
+    return dl.load(id);
   }
 
   BatchQuery(ctx: Context, request: BatchQueryRequest): Promise<BatchQueryResponse> {
@@ -97,8 +91,16 @@ export class EntityServiceClientImpl<Context> implements EntityService<Context> 
     return promise.then(data => BatchQueryResponse.decode(new Reader(data)));
   }
 
-  GetMapQuery(id: string): Promise<Entity> {
-    return this.mapQueryLoader.load(id);
+  GetMapQuery(ctx: Context, id: string): Promise<Entity> {
+    const dl = ctx.getDataLoader("batching.EntityService.BatchMapQuery", () => {
+      return new DataLoader<string, Entity>((ids) => {
+        const request = { ids };
+        return this.BatchMapQuery(ctx, request).then(res => {
+          return ids.map(key => res.entities[key]);
+        })
+      });
+    });
+    return dl.load(id);
   }
 
   BatchMapQuery(ctx: Context, request: BatchMapQueryRequest): Promise<BatchMapQueryResponse> {
@@ -112,6 +114,12 @@ export class EntityServiceClientImpl<Context> implements EntityService<Context> 
 interface Rpc<Context> {
 
   request(ctx: Context, service: string, method: string, data: Uint8Array): Promise<Uint8Array>;
+
+}
+
+interface DataLoaders {
+
+  getDataLoader<T>(identifier: string, cstrFn: () => T): T;
 
 }
 
