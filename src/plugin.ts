@@ -14,7 +14,7 @@ async function main() {
   const request = CodeGeneratorRequest.decode(stdin);
   const typeMap = createTypeMap(request);
   const files = request.protoFile.map(file => {
-    const spec = generateFile(typeMap, file);
+    const spec = generateFile(typeMap, file, request.parameter);
     return new CodeGeneratorResponse.File({
       name: spec.path,
       content: spec.toString(),

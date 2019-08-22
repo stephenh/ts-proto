@@ -48,7 +48,7 @@ export type Options = {
   useContext: boolean;
 };
 
-export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, parameter?: string): FileSpec {
+export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, parameter: string): FileSpec {
   const options: Options = { useContext: false };
   if (parameter && parameter.includes('context=true')) {
     options.useContext = true;
