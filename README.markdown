@@ -2,8 +2,8 @@
 Goals
 =====
 
-* Pure/idiomatic TypeScript/ES6 modules
-* Data structures over classes
+* Idiomatic TypeScript/ES6 types
+* Interfaces over classes
   * As much as possible, types are just interfaces (sometimes with prototype-driven defaults) so you can work with messages just like regular hashes/data structures.
 * Only supports codegen `*.proto`-to-`*.ts` workflow, currently no runtime reflection/loading of dynamic `.proto` files
 * Currently ambivalent about browser support, current focus is on Node/server-side use cases
@@ -12,8 +12,26 @@ Highlights
 ==========
 
 * Wrapper types, i.e. `google.protobuf.StringValue`, are mapped as optional values, i.e. `string | undefined`
-* Timestamp is mapped as Date
+* Timestamp is mapped as `Date`
 * `fromJSON`/`toJSON` support the [canonical Protobuf JS](https://developers.google.com/protocol-buffers/docs/proto3#json) format (i.e. timestamps are ISO strings)
+
+Usage
+=====
+
+`ts-proto` is a protoc plugin, so you run it by:
+
+* Add `ts-proto` to your `package.json`
+* Run `npm install` to download it
+* Invoke `protoc` with a `plugin` like
+
+```bash
+protoc --plugin=node_modules/ts-proto/protoc-gen-ts_proto ./batching.proto -I.
+```
+
+Options:
+
+* Right now, `ts-proto` always generates Twirp service types; simply because the project we wrote ts-proto for uses Twirp. We need to add an option to disable Twirp and also add an option to support GRPC.
+* If you pass `--custom_opt=context=true`, the Twirp services will have a Go-style `ctx` parameter, which is useful for tracing/logging/etc. if you're not using the async api due to performance reasons.
 
 Assumptions
 ===========
