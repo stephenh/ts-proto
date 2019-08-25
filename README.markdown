@@ -18,20 +18,20 @@ Highlights
 Usage
 =====
 
-`ts-proto` is a protoc plugin, so you run it by:
+`ts-proto` is a `protoc` plugin, so you run it by (either directly in your project, or more likely in your mono-repo schema pipeline, i.e. [this](https://medium.com/building-ibotta/building-a-scaleable-protocol-buffers-grpc-artifact-pipeline-5265c5118c9d) or [this](https://medium.com/namely-labs/how-we-build-grpc-services-at-namely-52a3ae9e7c35)):
 
 * Add `ts-proto` to your `package.json`
 * Run `npm install` to download it
-* Invoke `protoc` with a `plugin` like
+* Invoke `protoc` with a `plugin` parameter like:
 
 ```bash
 protoc --plugin=node_modules/ts-proto/protoc-gen-ts_proto ./batching.proto -I.
 ```
 
-Options:
+Supported options:
 
-* Right now, `ts-proto` always generates Twirp service types; simply because the project we wrote ts-proto for uses Twirp. We need to add an option to disable Twirp and also add an option to support GRPC.
-* If you pass `--custom_opt=context=true`, the Twirp services will have a Go-style `ctx` parameter, which is useful for tracing/logging/etc. if you're not using the async api due to performance reasons.
+* Right now, `ts-proto` always generates Twirp service implementations for any RPC services, simply because that is what we use. Adding an option to disable Twirp and support GRPC is on the todo list.
+* If you pass `--ts_proto_opt=context=true`, the Twirp services will have a Go-style `ctx` parameter, which is useful for tracing/logging/etc. if you're not using node's `async_hooks` api due to performance reasons.
 
 Assumptions
 ===========
@@ -100,7 +100,7 @@ Protobuf has several built-in types for this pattern, i.e. `google.protobuf.Stri
 
 `ts-proto` understands these wrapper types and will generate `google.protobuf.StringValue name = 1` as a `name: string | undefined`.
 
-This hides some of the `StringValue` mess and gives a more idiomatic way of access them.
+This hides some of the `StringValue` mess and gives a more idiomatic way of using them.
 
 Granted, it's unfortunate this is not as simple as marking the `string` as `optional`. 
 
