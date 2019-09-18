@@ -1,6 +1,7 @@
 syntax = "proto3";
 import "google/protobuf/wrappers.proto";
 import "google/protobuf/timestamp.proto";
+import "import_dir/thing.proto";
 package simple;
 
 message Simple {
@@ -13,6 +14,7 @@ message Simple {
   repeated int32 coins = 6;
   repeated string snacks = 7;
   repeated StateEnum oldStates = 8;
+  ImportedThing s = 10;
 }
 
 message Child {
