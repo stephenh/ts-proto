@@ -190,7 +190,8 @@ Object {
       coins: [2, 4, 6],
       snacks: ['a', 'b'],
       oldStates: [StateEnum.ON, StateEnum.OFF],
-      createdAt: new Date(1_000)
+      createdAt: new Date(1_000),
+      thing: undefined,
     };
     expect(Simple.toJSON(s1)).toMatchInlineSnapshot(`
 Object {
@@ -225,6 +226,7 @@ Object {
     "b",
   ],
   "state": "ON",
+  "thing": undefined,
 }
 `);
   });
@@ -241,6 +243,7 @@ Object {
   "oldStates": Array [],
   "snacks": Array [],
   "state": "UNKNOWN",
+  "thing": undefined,
 }
 `);
   });
@@ -262,6 +265,7 @@ Object {
   "oldStates": Array [],
   "snacks": Array [],
   "state": "UNKNOWN",
+  "thing": undefined,
 }
 `);
   });
