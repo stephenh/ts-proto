@@ -1,3 +1,4 @@
+import { ImportedThing } from './import_dir/thing';
 import { Reader, Writer } from 'protobufjs/minimal';
 import * as Long from 'long';
 import { Timestamp } from './google/protobuf/timestamp';
@@ -20,6 +21,7 @@ export interface Simple {
   coins: number[];
   snacks: string[];
   oldStates: StateEnum[];
+  thing: ImportedThing | undefined;
 }
 
 export interface Child {
@@ -98,6 +100,7 @@ const baseSimple: object = {
   coins: 0,
   snacks: "",
   oldStates: 0,
+  thing: undefined,
 };
 
 const baseChild: object = {
@@ -266,6 +269,9 @@ export const Simple = {
       writer.int32(v);
     }
     writer.ldelim();
+    if (message.thing !== undefined && message.thing !== undefined) {
+      ImportedThing.encode(message.thing, writer.uint32(82).fork()).ldelim();
+    }
     return writer;
   },
   decode(reader: Reader, length?: number): Simple {
@@ -319,6 +325,9 @@ export const Simple = {
             message.oldStates.push(reader.int32());
           }
           break;
+        case 10:
+          message.thing = ImportedThing.decode(reader, reader.uint32());
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -367,6 +376,9 @@ export const Simple = {
         message.oldStates.push(StateEnum.fromJSON(e));
       }
     }
+    if (object.thing) {
+      message.thing = ImportedThing.fromJSON(object.thing);
+    }
     return message;
   },
   fromPartial(object: DeepPartial<Simple>): Simple {
@@ -410,6 +422,9 @@ export const Simple = {
         message.oldStates.push(e);
       }
     }
+    if (object.thing) {
+      message.thing = ImportedThing.fromPartial(object.thing);
+    }
     return message;
   },
   toJSON(message: Simple): unknown {
@@ -439,6 +454,7 @@ export const Simple = {
     } else {
       obj.oldStates = [];
     }
+    obj.thing = message.thing ? ImportedThing.toJSON(message.thing) : undefined;
     return obj;
   },
 };

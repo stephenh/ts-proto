@@ -27,7 +27,8 @@ describe('simple', () => {
       coins: [2, 4, 6],
       snacks: ['a', 'b'],
       oldStates: [StateEnum.ON, StateEnum.OFF],
-      createdAt: jan1
+      createdAt: jan1,
+      thing: undefined,
     };
     expect(simple.name).toEqual('asdf');
   });
@@ -57,7 +58,8 @@ describe('simple', () => {
       coins: [2, 4, 6],
       snacks: ['a', 'b'],
       oldStates: [StateEnum.ON, StateEnum.OFF],
-      createdAt: jan1
+      createdAt: jan1,
+      thing: undefined,
     };
     const s2 = PbSimple.toObject(PbSimple.decode(Simple.encode(s1).finish()));
     expect(s2).toEqual({
@@ -140,7 +142,8 @@ describe('simple', () => {
       coins: [0, 4, 6],
       snacks: ['', 'b'],
       oldStates: [StateEnum.UNKNOWN, StateEnum.OFF],
-      createdAt: jan1
+      createdAt: jan1,
+      thing: undefined,
     };
     const s2 = PbSimple.toObject(PbSimple.decode(Simple.encode(s1).finish()));
     expect(s2).toEqual({
