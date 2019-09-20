@@ -14,7 +14,7 @@ message Simple {
   repeated int32 coins = 6;
   repeated string snacks = 7;
   repeated StateEnum oldStates = 8;
-  ImportedThing s = 10;
+  ImportedThing thing = 10;
 }
 
 message Child {
