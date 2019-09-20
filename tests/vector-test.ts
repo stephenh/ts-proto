@@ -11,7 +11,7 @@ describe('vector-tile', () => {
     const request = CodeGeneratorRequest.decode(stdin);
     const typeMap = createTypeMap(request);
     for (let file of request.protoFile) {
-      const spec = generateFile(typeMap, file);
+      const spec = generateFile(typeMap, file, "");
       const out = new StringBuffer();
       spec.emit(out);
       expect(out.toString()).toMatchSnapshot();
