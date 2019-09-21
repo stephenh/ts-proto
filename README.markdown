@@ -3,16 +3,79 @@ Goals
 =====
 
 * Idiomatic TypeScript/ES6 types
+  * `ts-proto` is a clean break from either the built-in Google/Java-esque JS of `protoc` and `protobufjs` 
+  * (Techically the `protobufjs/minimal` package is used for actually reading/writing bytes.)
+* TypeScript-first output
 * Interfaces over classes
   * As much as possible, types are just interfaces (sometimes with prototype-driven defaults) so you can work with messages just like regular hashes/data structures.
 * Only supports codegen `*.proto`-to-`*.ts` workflow, currently no runtime reflection/loading of dynamic `.proto` files
 * Currently ambivalent about browser support, current focus is on Node/server-side use cases
 
+Example Types
+=============
+
+The generated types are "just data", i.e.:
+
+```typescript
+export interface Simple {
+  name: string;
+  age: number;
+  createdAt: Date | undefined;
+  child: Child | undefined;
+  state: StateEnum;
+  grandChildren: Child[];
+  coins: number[];
+}
+```
+
+Along with `encode`/`decode` factory methods:
+
+```typescript
+export const Simple = {
+  encode(message: Simple, writer: Writer = Writer.create()): Writer {
+    ...
+  },
+
+  decode(reader: Reader, length?: number): Simple {
+    ...
+  },
+
+  fromJSON(object: any): Simple {
+    ...
+  },
+
+  fromPartial(object: DeepPartial<Simple>): Simple {
+    ...
+  },
+
+  toJSON(message: Simple): unknown {
+    ...
+  },
+};
+```
+
+This allows idiomatic TS/JS usage like:
+
+```typescript
+const bytes = Simple.encode({ name: ..., age: ..., ... }).finish();
+const simple = Simple.decode(Reader.create(bytes));
+const { name, age } = simple;
+```
+
+Which can dramatically ease integration when converting to/from other layers without
+creating a class and calling the right getters/setters.
+
 Highlights
 ==========
 
-* Wrapper types, i.e. `google.protobuf.StringValue`, are mapped as optional values, i.e. `string | undefined`
+* A poor man's attempt at "please give us back optional types"
+
+  Wrapper types, i.e. `google.protobuf.StringValue`, are mapped as optional values,
+  i.e. `string | undefined`, which means for primitives we can kind of pretend that
+  the protobuf type system has optional types.
+  
 * Timestamp is mapped as `Date`
+
 * `fromJSON`/`toJSON` support the [canonical Protobuf JS](https://developers.google.com/protocol-buffers/docs/proto3#json) format (i.e. timestamps are ISO strings)
 
 Usage
