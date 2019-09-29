@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+message Point {
+  double lat = 1;
+  double lng = 2;
+}
+
+message Area {
+  Point nw = 1;
+  Point se = 2;
+}

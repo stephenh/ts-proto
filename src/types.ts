@@ -176,7 +176,7 @@ export function defaultValue(type: FieldDescriptorProto.Type): any {
     case FieldDescriptorProto.Type.TYPE_BYTES:
     case FieldDescriptorProto.Type.TYPE_MESSAGE:
     default:
-      return "undefined";
+      return 'undefined';
   }
 }
 
@@ -191,7 +191,10 @@ export function createTypeMap(request: CodeGeneratorRequest): TypeMap {
     const moduleName = file.name.replace('.proto', '');
     // So given a fullName like FooMessage_InnerMessage, proto will see that as package.name.FooMessage.InnerMessage
     function saveMapping(fullName: string, desc: DescriptorProto | EnumDescriptorProto): void {
-      typeMap.set(file.package + '.' + fullName.replace(/_/g, '.'), [moduleName, fullName, desc]);
+      // package is optional, but make sure we have a dot-prefixed type name either way
+      const prefix = file.package.length === 0 ? '' : `.${file.package}`;
+      const name = fullName.replace(/_/g, '.');
+      typeMap.set(`${prefix}.${name}`, [moduleName, fullName, desc]);
     }
     visit(file, saveMapping, saveMapping);
   }
@@ -260,7 +263,7 @@ export function messageToTypeName(typeMap: TypeMap, protoType: string, keepValue
 
 /** Breaks `.some_proto_namespace.Some.Message` into `['some_proto_namespace', 'Some_Message', Descriptor]. */
 function toModuleAndType(typeMap: TypeMap, protoType: string): [string, string, DescriptorProto | EnumDescriptorProto] {
-  return typeMap.get(protoType.substring(1)) || fail(`No type found for ${protoType}`);
+  return typeMap.get(protoType) || fail(`No type found for ${protoType}`);
 }
 
 /** Return the TypeName for any field (primitive/message/etc.) as exposed in the interface. */

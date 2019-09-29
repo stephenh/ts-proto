@@ -772,8 +772,8 @@ function detectBatchMethod(
   methodDesc: MethodDescriptorProto
 ): BatchMethod | undefined {
   const nameMatches = methodDesc.name.startsWith('Batch');
-  const inputType = typeMap.get(methodDesc.inputType.substring(1)); // drop the `.` prefix
-  const outputType = typeMap.get(methodDesc.outputType.substring(1));
+  const inputType = typeMap.get(methodDesc.inputType);
+  const outputType = typeMap.get(methodDesc.outputType);
   if (nameMatches && inputType && outputType) {
     // TODO: This might be enums?
     const inputTypeDesc = inputType[2] as DescriptorProto;

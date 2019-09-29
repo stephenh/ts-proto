@@ -19,6 +19,7 @@ async function main() {
   await generate('./vector_tile.bin');
   await generate('./batching.bin');
   await generate('./batching.bin', './build/integration-context/', 'context=true');
+  await generate('./point.bin');
 }
 
 async function generate(binFile: string, baseDir: string = './build/integration', parameter?: string) {

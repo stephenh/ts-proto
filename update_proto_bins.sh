@@ -14,3 +14,6 @@ mv file.bin simple.bin
 
 protoc --plugin=$(pwd)/protoc-gen-dump --dump_out=. ./batching.proto -I.
 mv file.bin batching.bin
+
+protoc --plugin=$(pwd)/protoc-gen-dump --dump_out=. ./point.proto -I.
+mv file.bin point.bin
