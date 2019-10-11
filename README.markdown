@@ -1,4 +1,12 @@
 
+QuickStart
+==========
+
+* `npm install ts-proto`
+* `protoc --plugin=./protoc-gen-ts_proto --ts_proto_out=. ./simple.proto`
+
+If you want to package the `ts-proto` output into npm package to distribute to clients, run `tsc` to generate the `.d.ts` files (i.e. unlike pbjs/pbts, `ts-proto` creates `*.ts` files which can then directly be used/compiled by `tsc`.)
+
 Goals
 =====
 
