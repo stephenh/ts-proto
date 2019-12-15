@@ -104,6 +104,15 @@ Supported options:
 * Right now, `ts-proto` always generates Twirp service implementations for any RPC services, simply because that is what we use. Adding an option to disable Twirp and support GRPC is on the todo list.
 * If you pass `--ts_proto_opt=context=true`, the Twirp services will have a Go-style `ctx` parameter, which is useful for tracing/logging/etc. if you're not using node's `async_hooks` api due to performance reasons.
 
+Building
+========
+
+`ts-proto` does not use `pbjs` at runtime, but we do use it as the `ts-proto` build process (to bootstrap the types used to parse the incoming protobuf metadata types), as well as for the test suite to ensure the `ts-proto` implementations match the `ts-proto`.
+
+After running `yarn install`, run `./pbjs.sh` to create the bootstrap types and the integration test types.
+
+The test suite also uses several test proto files (`simple.proto`, `batching.proto`, etc.); serialized copies of these are currently checked into git as `simple.bin`, `batching.bin`, etc., so that the test suite can run without having to invoke the `protoc` build chain. If you change the `simple.proto`/etc. files, run `./update_proto_bins.sh`. This does require having the `protoc` executable available.
+
 Assumptions
 ===========
 
