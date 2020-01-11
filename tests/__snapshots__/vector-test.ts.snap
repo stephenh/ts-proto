@@ -106,7 +106,7 @@ export const Tile = {
   fromJSON(object: any): Tile {
     const message = Object.create(baseTile) as Tile;
     message.layers = [];
-    if (object.layers) {
+    if (object.layers !== undefined && object.layers !== null) {
       for (const e of object.layers) {
         message.layers.push(Tile_Layer.fromJSON(e));
       }
@@ -116,7 +116,7 @@ export const Tile = {
   fromPartial(object: DeepPartial<Tile>): Tile {
     const message = Object.create(baseTile) as Tile;
     message.layers = [];
-    if (object.layers) {
+    if (object.layers !== undefined && object.layers !== null) {
       for (const e of object.layers) {
         message.layers.push(Tile_Layer.fromPartial(e));
       }
@@ -216,51 +216,79 @@ export const Tile_Value = {
   },
   fromJSON(object: any): Tile_Value {
     const message = Object.create(baseTile_Value) as Tile_Value;
-    if (object.stringValue) {
+    if (object.stringValue !== undefined && object.stringValue !== null) {
       message.stringValue = String(object.stringValue);
+    } else {
+      message.stringValue = \\"\\";
     }
-    if (object.floatValue) {
+    if (object.floatValue !== undefined && object.floatValue !== null) {
       message.floatValue = Number(object.floatValue);
+    } else {
+      message.floatValue = 0;
     }
-    if (object.doubleValue) {
+    if (object.doubleValue !== undefined && object.doubleValue !== null) {
       message.doubleValue = Number(object.doubleValue);
+    } else {
+      message.doubleValue = 0;
     }
-    if (object.intValue) {
+    if (object.intValue !== undefined && object.intValue !== null) {
       message.intValue = Number(object.intValue);
+    } else {
+      message.intValue = 0;
     }
-    if (object.uintValue) {
+    if (object.uintValue !== undefined && object.uintValue !== null) {
       message.uintValue = Number(object.uintValue);
+    } else {
+      message.uintValue = 0;
     }
-    if (object.sintValue) {
+    if (object.sintValue !== undefined && object.sintValue !== null) {
       message.sintValue = Number(object.sintValue);
+    } else {
+      message.sintValue = 0;
     }
-    if (object.boolValue) {
+    if (object.boolValue !== undefined && object.boolValue !== null) {
       message.boolValue = Boolean(object.boolValue);
+    } else {
+      message.boolValue = false;
     }
     return message;
   },
   fromPartial(object: DeepPartial<Tile_Value>): Tile_Value {
     const message = Object.create(baseTile_Value) as Tile_Value;
-    if (object.stringValue) {
+    if (object.stringValue !== undefined && object.stringValue !== null) {
       message.stringValue = object.stringValue;
+    } else {
+      message.stringValue = \\"\\";
     }
-    if (object.floatValue) {
+    if (object.floatValue !== undefined && object.floatValue !== null) {
       message.floatValue = object.floatValue;
+    } else {
+      message.floatValue = 0;
     }
-    if (object.doubleValue) {
+    if (object.doubleValue !== undefined && object.doubleValue !== null) {
       message.doubleValue = object.doubleValue;
+    } else {
+      message.doubleValue = 0;
     }
-    if (object.intValue) {
+    if (object.intValue !== undefined && object.intValue !== null) {
       message.intValue = object.intValue;
+    } else {
+      message.intValue = 0;
     }
-    if (object.uintValue) {
+    if (object.uintValue !== undefined && object.uintValue !== null) {
       message.uintValue = object.uintValue;
+    } else {
+      message.uintValue = 0;
     }
-    if (object.sintValue) {
+    if (object.sintValue !== undefined && object.sintValue !== null) {
       message.sintValue = object.sintValue;
+    } else {
+      message.sintValue = 0;
     }
-    if (object.boolValue) {
+    if (object.boolValue !== undefined && object.boolValue !== null) {
       message.boolValue = object.boolValue;
+    } else {
+      message.boolValue = false;
     }
     return message;
   },
@@ -338,18 +366,22 @@ export const Tile_Feature = {
     const message = Object.create(baseTile_Feature) as Tile_Feature;
     message.tags = [];
     message.geometry = [];
-    if (object.id) {
+    if (object.id !== undefined && object.id !== null) {
       message.id = Number(object.id);
+    } else {
+      message.id = 0;
     }
-    if (object.tags) {
+    if (object.tags !== undefined && object.tags !== null) {
       for (const e of object.tags) {
         message.tags.push(Number(e));
       }
     }
-    if (object.type) {
+    if (object.type !== undefined && object.type !== null) {
       message.type = Tile_GeomType.fromJSON(object.type);
+    } else {
+      message.type = 0;
     }
-    if (object.geometry) {
+    if (object.geometry !== undefined && object.geometry !== null) {
       for (const e of object.geometry) {
         message.geometry.push(Number(e));
       }
@@ -360,18 +392,22 @@ export const Tile_Feature = {
     const message = Object.create(baseTile_Feature) as Tile_Feature;
     message.tags = [];
     message.geometry = [];
-    if (object.id) {
+    if (object.id !== undefined && object.id !== null) {
       message.id = object.id;
+    } else {
+      message.id = 0;
     }
-    if (object.tags) {
+    if (object.tags !== undefined && object.tags !== null) {
       for (const e of object.tags) {
         message.tags.push(e);
       }
     }
-    if (object.type) {
+    if (object.type !== undefined && object.type !== null) {
       message.type = object.type;
+    } else {
+      message.type = 0;
     }
-    if (object.geometry) {
+    if (object.geometry !== undefined && object.geometry !== null) {
       for (const e of object.geometry) {
         message.geometry.push(e);
       }
@@ -451,29 +487,35 @@ export const Tile_Layer = {
     message.features = [];
     message.keys = [];
     message.values = [];
-    if (object.version) {
+    if (object.version !== undefined && object.version !== null) {
       message.version = Number(object.version);
+    } else {
+      message.version = 0;
     }
-    if (object.name) {
+    if (object.name !== undefined && object.name !== null) {
       message.name = String(object.name);
+    } else {
+      message.name = \\"\\";
     }
-    if (object.features) {
+    if (object.features !== undefined && object.features !== null) {
       for (const e of object.features) {
         message.features.push(Tile_Feature.fromJSON(e));
       }
     }
-    if (object.keys) {
+    if (object.keys !== undefined && object.keys !== null) {
       for (const e of object.keys) {
         message.keys.push(String(e));
       }
     }
-    if (object.values) {
+    if (object.values !== undefined && object.values !== null) {
       for (const e of object.values) {
         message.values.push(Tile_Value.fromJSON(e));
       }
     }
-    if (object.extent) {
+    if (object.extent !== undefined && object.extent !== null) {
       message.extent = Number(object.extent);
+    } else {
+      message.extent = 0;
     }
     return message;
   },
@@ -482,29 +524,35 @@ export const Tile_Layer = {
     message.features = [];
     message.keys = [];
     message.values = [];
-    if (object.version) {
+    if (object.version !== undefined && object.version !== null) {
       message.version = object.version;
+    } else {
+      message.version = 0;
     }
-    if (object.name) {
+    if (object.name !== undefined && object.name !== null) {
       message.name = object.name;
+    } else {
+      message.name = \\"\\";
     }
-    if (object.features) {
+    if (object.features !== undefined && object.features !== null) {
       for (const e of object.features) {
         message.features.push(Tile_Feature.fromPartial(e));
       }
     }
-    if (object.keys) {
+    if (object.keys !== undefined && object.keys !== null) {
       for (const e of object.keys) {
         message.keys.push(e);
       }
     }
-    if (object.values) {
+    if (object.values !== undefined && object.values !== null) {
       for (const e of object.values) {
         message.values.push(Tile_Value.fromPartial(e));
       }
     }
-    if (object.extent) {
+    if (object.extent !== undefined && object.extent !== null) {
       message.extent = object.extent;
+    } else {
+      message.extent = 0;
     }
     return message;
   },

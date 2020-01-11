@@ -212,7 +212,7 @@ export const BatchQueryRequest = {
   fromJSON(object: any): BatchQueryRequest {
     const message = Object.create(baseBatchQueryRequest) as BatchQueryRequest;
     message.ids = [];
-    if (object.ids) {
+    if (object.ids !== undefined && object.ids !== null) {
       for (const e of object.ids) {
         message.ids.push(String(e));
       }
@@ -222,7 +222,7 @@ export const BatchQueryRequest = {
   fromPartial(object: DeepPartial<BatchQueryRequest>): BatchQueryRequest {
     const message = Object.create(baseBatchQueryRequest) as BatchQueryRequest;
     message.ids = [];
-    if (object.ids) {
+    if (object.ids !== undefined && object.ids !== null) {
       for (const e of object.ids) {
         message.ids.push(e);
       }
@@ -267,7 +267,7 @@ export const BatchQueryResponse = {
   fromJSON(object: any): BatchQueryResponse {
     const message = Object.create(baseBatchQueryResponse) as BatchQueryResponse;
     message.entities = [];
-    if (object.entities) {
+    if (object.entities !== undefined && object.entities !== null) {
       for (const e of object.entities) {
         message.entities.push(Entity.fromJSON(e));
       }
@@ -277,7 +277,7 @@ export const BatchQueryResponse = {
   fromPartial(object: DeepPartial<BatchQueryResponse>): BatchQueryResponse {
     const message = Object.create(baseBatchQueryResponse) as BatchQueryResponse;
     message.entities = [];
-    if (object.entities) {
+    if (object.entities !== undefined && object.entities !== null) {
       for (const e of object.entities) {
         message.entities.push(Entity.fromPartial(e));
       }
@@ -322,7 +322,7 @@ export const BatchMapQueryRequest = {
   fromJSON(object: any): BatchMapQueryRequest {
     const message = Object.create(baseBatchMapQueryRequest) as BatchMapQueryRequest;
     message.ids = [];
-    if (object.ids) {
+    if (object.ids !== undefined && object.ids !== null) {
       for (const e of object.ids) {
         message.ids.push(String(e));
       }
@@ -332,7 +332,7 @@ export const BatchMapQueryRequest = {
   fromPartial(object: DeepPartial<BatchMapQueryRequest>): BatchMapQueryRequest {
     const message = Object.create(baseBatchMapQueryRequest) as BatchMapQueryRequest;
     message.ids = [];
-    if (object.ids) {
+    if (object.ids !== undefined && object.ids !== null) {
       for (const e of object.ids) {
         message.ids.push(e);
       }
@@ -380,7 +380,7 @@ export const BatchMapQueryResponse = {
   fromJSON(object: any): BatchMapQueryResponse {
     const message = Object.create(baseBatchMapQueryResponse) as BatchMapQueryResponse;
     message.entities = {};
-    if (object.entities) {
+    if (object.entities !== undefined && object.entities !== null) {
       const entry = BatchMapQueryResponse_EntitiesEntry.fromJSON(object.entities);
       if (entry.value) {
         message.entities[entry.key] = entry.value;
@@ -391,7 +391,7 @@ export const BatchMapQueryResponse = {
   fromPartial(object: DeepPartial<BatchMapQueryResponse>): BatchMapQueryResponse {
     const message = Object.create(baseBatchMapQueryResponse) as BatchMapQueryResponse;
     message.entities = {};
-    if (object.entities) {
+    if (object.entities !== undefined && object.entities !== null) {
       const entry = BatchMapQueryResponse_EntitiesEntry.fromPartial(object.entities);
       if (entry.value) {
         message.entities[entry.key] = entry.value;
@@ -435,21 +435,29 @@ export const BatchMapQueryResponse_EntitiesEntry = {
   },
   fromJSON(object: any): BatchMapQueryResponse_EntitiesEntry {
     const message = Object.create(baseBatchMapQueryResponse_EntitiesEntry) as BatchMapQueryResponse_EntitiesEntry;
-    if (object.key) {
+    if (object.key !== undefined && object.key !== null) {
       message.key = String(object.key);
+    } else {
+      message.key = "";
     }
-    if (object.value) {
+    if (object.value !== undefined && object.value !== null) {
       message.value = Entity.fromJSON(object.value);
+    } else {
+      message.value = undefined;
     }
     return message;
   },
   fromPartial(object: DeepPartial<BatchMapQueryResponse_EntitiesEntry>): BatchMapQueryResponse_EntitiesEntry {
     const message = Object.create(baseBatchMapQueryResponse_EntitiesEntry) as BatchMapQueryResponse_EntitiesEntry;
-    if (object.key) {
+    if (object.key !== undefined && object.key !== null) {
       message.key = object.key;
+    } else {
+      message.key = "";
     }
-    if (object.value) {
+    if (object.value !== undefined && object.value !== null) {
       message.value = Entity.fromPartial(object.value);
+    } else {
+      message.value = undefined;
     }
     return message;
   },
@@ -484,15 +492,19 @@ export const GetOnlyMethodRequest = {
   },
   fromJSON(object: any): GetOnlyMethodRequest {
     const message = Object.create(baseGetOnlyMethodRequest) as GetOnlyMethodRequest;
-    if (object.id) {
+    if (object.id !== undefined && object.id !== null) {
       message.id = String(object.id);
+    } else {
+      message.id = "";
     }
     return message;
   },
   fromPartial(object: DeepPartial<GetOnlyMethodRequest>): GetOnlyMethodRequest {
     const message = Object.create(baseGetOnlyMethodRequest) as GetOnlyMethodRequest;
-    if (object.id) {
+    if (object.id !== undefined && object.id !== null) {
       message.id = object.id;
+    } else {
+      message.id = "";
     }
     return message;
   },
@@ -528,15 +540,19 @@ export const GetOnlyMethodResponse = {
   },
   fromJSON(object: any): GetOnlyMethodResponse {
     const message = Object.create(baseGetOnlyMethodResponse) as GetOnlyMethodResponse;
-    if (object.entity) {
+    if (object.entity !== undefined && object.entity !== null) {
       message.entity = Entity.fromJSON(object.entity);
+    } else {
+      message.entity = undefined;
     }
     return message;
   },
   fromPartial(object: DeepPartial<GetOnlyMethodResponse>): GetOnlyMethodResponse {
     const message = Object.create(baseGetOnlyMethodResponse) as GetOnlyMethodResponse;
-    if (object.entity) {
+    if (object.entity !== undefined && object.entity !== null) {
       message.entity = Entity.fromPartial(object.entity);
+    } else {
+      message.entity = undefined;
     }
     return message;
   },
@@ -570,15 +586,19 @@ export const WriteMethodRequest = {
   },
   fromJSON(object: any): WriteMethodRequest {
     const message = Object.create(baseWriteMethodRequest) as WriteMethodRequest;
-    if (object.id) {
+    if (object.id !== undefined && object.id !== null) {
       message.id = String(object.id);
+    } else {
+      message.id = "";
     }
     return message;
   },
   fromPartial(object: DeepPartial<WriteMethodRequest>): WriteMethodRequest {
     const message = Object.create(baseWriteMethodRequest) as WriteMethodRequest;
-    if (object.id) {
+    if (object.id !== undefined && object.id !== null) {
       message.id = object.id;
+    } else {
+      message.id = "";
     }
     return message;
   },
@@ -647,21 +667,29 @@ export const Entity = {
   },
   fromJSON(object: any): Entity {
     const message = Object.create(baseEntity) as Entity;
-    if (object.id) {
+    if (object.id !== undefined && object.id !== null) {
       message.id = String(object.id);
+    } else {
+      message.id = "";
     }
-    if (object.name) {
+    if (object.name !== undefined && object.name !== null) {
       message.name = String(object.name);
+    } else {
+      message.name = "";
     }
     return message;
   },
   fromPartial(object: DeepPartial<Entity>): Entity {
     const message = Object.create(baseEntity) as Entity;
-    if (object.id) {
+    if (object.id !== undefined && object.id !== null) {
       message.id = object.id;
+    } else {
+      message.id = "";
     }
-    if (object.name) {
+    if (object.name !== undefined && object.name !== null) {
       message.name = object.name;
+    } else {
+      message.name = "";
     }
     return message;
   },

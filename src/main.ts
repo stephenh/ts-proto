@@ -479,7 +479,7 @@ function generateFromJson(typeMap: TypeMap, fullName: string, messageDesc: Descr
     .addParameter('object', 'any')
     .returns(fullName);
 
-  // add the message
+  // create the message
   func = func.addStatement('const message = Object.create(base%L) as %L', fullName, fullName);
 
   // initialize all lists
@@ -520,7 +520,7 @@ function generateFromJson(typeMap: TypeMap, fullName: string, messageDesc: Descr
     };
 
     // and then use the snippet to handle repeated fields if necessary
-    func = func.beginControlFlow('if (object.%L)', fieldName);
+    func = func.beginControlFlow('if (object.%L !== undefined && object.%L !== null)', fieldName, fieldName);
     if (isRepeated(field)) {
       if (isMapType(typeMap, messageDesc, field)) {
         func = func
@@ -537,6 +537,13 @@ function generateFromJson(typeMap: TypeMap, fullName: string, messageDesc: Descr
     } else {
       func = func.addStatement(`message.%L = %L`, fieldName, readSnippet(`object.${fieldName}`));
     }
+
+    // set the default value (TODO Support bytes)
+    if (!isRepeated(field) && field.type !== FieldDescriptorProto.Type.TYPE_BYTES) {
+      func = func.nextControlFlow('else');
+      func = func.addStatement(`message.%L = %L`, fieldName, defaultValue(field.type));
+    }
+
     func = func.endControlFlow();
   });
   // and then wrap up the switch/while/return
@@ -591,6 +598,8 @@ function generateFromPartial(typeMap: TypeMap, fullName: string, messageDesc: De
   let func = FunctionSpec.create('fromPartial')
     .addParameter('object', `DeepPartial<${fullName}>`)
     .returns(fullName);
+
+  // create the message
   func = func.addStatement('const message = Object.create(base%L) as %L', fullName, fullName);
 
   // initialize all lists
@@ -602,6 +611,7 @@ function generateFromPartial(typeMap: TypeMap, fullName: string, messageDesc: De
   // add a check for each incoming field
   messageDesc.field.forEach(field => {
     const fieldName = snakeToCamel(field.name);
+
     const readSnippet = (from: string): CodeBlock => {
       if (isEnum(field) || isPrimitive(field) || isTimestamp(field) || isValueType(field)) {
         return CodeBlock.of(from);
@@ -613,7 +623,7 @@ function generateFromPartial(typeMap: TypeMap, fullName: string, messageDesc: De
     };
 
     // and then use the snippet to handle repeated fields if necessary
-    func = func.beginControlFlow('if (object.%L)', fieldName);
+    func = func.beginControlFlow('if (object.%L !== undefined && object.%L !== null)', fieldName, fieldName);
     if (isRepeated(field)) {
       if (isMapType(typeMap, messageDesc, field)) {
         func = func
@@ -629,6 +639,12 @@ function generateFromPartial(typeMap: TypeMap, fullName: string, messageDesc: De
       }
     } else {
       func = func.addStatement(`message.%L = %L`, fieldName, readSnippet(`object.${fieldName}`));
+    }
+
+    // set the default value (TODO Support bytes)
+    if (!isRepeated(field) && field.type !== FieldDescriptorProto.Type.TYPE_BYTES) {
+      func = func.nextControlFlow('else');
+      func = func.addStatement(`message.%L = %L`, fieldName, defaultValue(field.type));
     }
 
     func = func.endControlFlow();

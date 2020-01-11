@@ -65,15 +65,19 @@ export const ImportedThing = {
   },
   fromJSON(object: any): ImportedThing {
     const message = Object.create(baseImportedThing) as ImportedThing;
-    if (object.createdAt) {
+    if (object.createdAt !== undefined && object.createdAt !== null) {
       message.createdAt = fromJsonTimestamp(object.createdAt);
+    } else {
+      message.createdAt = undefined;
     }
     return message;
   },
   fromPartial(object: DeepPartial<ImportedThing>): ImportedThing {
     const message = Object.create(baseImportedThing) as ImportedThing;
-    if (object.createdAt) {
+    if (object.createdAt !== undefined && object.createdAt !== null) {
       message.createdAt = object.createdAt;
+    } else {
+      message.createdAt = undefined;
     }
     return message;
   },

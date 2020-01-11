@@ -46,21 +46,29 @@ export const Timestamp = {
   },
   fromJSON(object: any): Timestamp {
     const message = Object.create(baseTimestamp) as Timestamp;
-    if (object.seconds) {
+    if (object.seconds !== undefined && object.seconds !== null) {
       message.seconds = Number(object.seconds);
+    } else {
+      message.seconds = 0;
     }
-    if (object.nanos) {
+    if (object.nanos !== undefined && object.nanos !== null) {
       message.nanos = Number(object.nanos);
+    } else {
+      message.nanos = 0;
     }
     return message;
   },
   fromPartial(object: DeepPartial<Timestamp>): Timestamp {
     const message = Object.create(baseTimestamp) as Timestamp;
-    if (object.seconds) {
+    if (object.seconds !== undefined && object.seconds !== null) {
       message.seconds = object.seconds;
+    } else {
+      message.seconds = 0;
     }
-    if (object.nanos) {
+    if (object.nanos !== undefined && object.nanos !== null) {
       message.nanos = object.nanos;
+    } else {
+      message.nanos = 0;
     }
     return message;
   },

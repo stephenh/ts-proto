@@ -13,9 +13,9 @@ describe('simple json', () => {
     const s1: ISimple = {
       name: 'asdf',
       age: 1,
-      child: PbChild.fromObject({ name: 'foo' }),
+      child: PbChild.fromObject({ name: 'foo', type: 0 }),
       state: PbState.ON,
-      grandChildren: [PbChild.fromObject({ name: 'grand1' }), PbChild.fromObject({ name: 'grand2' })],
+      grandChildren: [PbChild.fromObject({ name: 'grand1', type: 0 }), PbChild.fromObject({ name: 'grand2', type: 0 })],
       coins: [2, 4, 6],
       snacks: ['a', 'b'],
       oldStates: [PbState.ON, PbState.OFF]
@@ -24,7 +24,11 @@ describe('simple json', () => {
     const s2 = Simple.fromJSON(PbSimple.fromObject(s1).toJSON());
     // then it matches the original pbjs object
     // (even though its really our object/representation
-    expect(s2).toEqual(s1);
+    expect(s2).toEqual({
+      ...s1,
+      createdAt: undefined,
+      thing: undefined
+    });
   });
 
   it('can decode json with numeric enum values', () => {
@@ -70,11 +74,34 @@ describe('simple json', () => {
     };
     expect(Tile_Value.fromJSON(tile)).toMatchInlineSnapshot(`
 Object {
+  "boolValue": false,
   "doubleValue": -2.2,
   "floatValue": 1.1,
   "intValue": 1,
   "sintValue": -3,
+  "stringValue": "",
   "uintValue": 2,
+}
+`);
+  });
+
+  it('decodes numbers that are falsey', () => {
+    const tile = {
+      intValue: 0,
+      uintValue: 0,
+      sintValue: -0,
+      floatValue: 0,
+      doubleValue: 0
+    };
+    expect(Tile_Value.fromJSON(tile)).toMatchInlineSnapshot(`
+Object {
+  "boolValue": false,
+  "doubleValue": 0,
+  "floatValue": 0,
+  "intValue": 0,
+  "sintValue": -0,
+  "stringValue": "",
+  "uintValue": 0,
 }
 `);
   });
@@ -89,10 +116,12 @@ Object {
     };
     expect(Tile_Value.fromJSON(tile)).toMatchInlineSnapshot(`
 Object {
+  "boolValue": false,
   "doubleValue": -2.2,
   "floatValue": 1.1,
   "intValue": 1,
   "sintValue": -3,
+  "stringValue": "",
   "uintValue": 2,
 }
 `);
@@ -105,8 +134,13 @@ Object {
     };
     expect(Tile_Value.fromJSON(tile)).toMatchInlineSnapshot(`
 Object {
+  "boolValue": false,
   "doubleValue": Infinity,
   "floatValue": NaN,
+  "intValue": 0,
+  "sintValue": 0,
+  "stringValue": "",
+  "uintValue": 0,
 }
 `);
   });
@@ -151,10 +185,35 @@ Object {
     const s2 = Simple.fromJSON(s1);
     expect(s2).toMatchInlineSnapshot(`
 Object {
+  "age": 0,
+  "child": undefined,
   "coins": Array [],
+  "createdAt": undefined,
   "grandChildren": Array [],
+  "name": "",
   "oldStates": Array [],
   "snacks": Array [],
+  "state": 0,
+  "thing": undefined,
+}
+`);
+  });
+
+  it('can decode json with no values', () => {
+    const s1 = {};
+    const s2 = Simple.fromJSON(s1);
+    expect(s2).toMatchInlineSnapshot(`
+Object {
+  "age": 0,
+  "child": undefined,
+  "coins": Array [],
+  "createdAt": undefined,
+  "grandChildren": Array [],
+  "name": "",
+  "oldStates": Array [],
+  "snacks": Array [],
+  "state": 0,
+  "thing": undefined,
 }
 `);
   });
@@ -191,7 +250,7 @@ Object {
       snacks: ['a', 'b'],
       oldStates: [StateEnum.ON, StateEnum.OFF],
       createdAt: new Date(1_000),
-      thing: undefined,
+      thing: undefined
     };
     expect(Simple.toJSON(s1)).toMatchInlineSnapshot(`
 Object {
@@ -314,5 +373,11 @@ Object {
   "snacks": Array [],
 }
 `);
+  });
+
+  it('can decode enum falsey values', () => {
+    const s1: Partial<Simple> = { state: StateEnum.UNKNOWN };
+    const s2 = Simple.fromJSON(s1);
+    expect(s2.state).toEqual(StateEnum.UNKNOWN);
   });
 });

@@ -341,43 +341,55 @@ export const Simple = {
     message.coins = [];
     message.snacks = [];
     message.oldStates = [];
-    if (object.name) {
+    if (object.name !== undefined && object.name !== null) {
       message.name = String(object.name);
+    } else {
+      message.name = "";
     }
-    if (object.age) {
+    if (object.age !== undefined && object.age !== null) {
       message.age = Number(object.age);
+    } else {
+      message.age = 0;
     }
-    if (object.createdAt) {
+    if (object.createdAt !== undefined && object.createdAt !== null) {
       message.createdAt = fromJsonTimestamp(object.createdAt);
+    } else {
+      message.createdAt = undefined;
     }
-    if (object.child) {
+    if (object.child !== undefined && object.child !== null) {
       message.child = Child.fromJSON(object.child);
+    } else {
+      message.child = undefined;
     }
-    if (object.state) {
+    if (object.state !== undefined && object.state !== null) {
       message.state = StateEnum.fromJSON(object.state);
+    } else {
+      message.state = 0;
     }
-    if (object.grandChildren) {
+    if (object.grandChildren !== undefined && object.grandChildren !== null) {
       for (const e of object.grandChildren) {
         message.grandChildren.push(Child.fromJSON(e));
       }
     }
-    if (object.coins) {
+    if (object.coins !== undefined && object.coins !== null) {
       for (const e of object.coins) {
         message.coins.push(Number(e));
       }
     }
-    if (object.snacks) {
+    if (object.snacks !== undefined && object.snacks !== null) {
       for (const e of object.snacks) {
         message.snacks.push(String(e));
       }
     }
-    if (object.oldStates) {
+    if (object.oldStates !== undefined && object.oldStates !== null) {
       for (const e of object.oldStates) {
         message.oldStates.push(StateEnum.fromJSON(e));
       }
     }
-    if (object.thing) {
+    if (object.thing !== undefined && object.thing !== null) {
       message.thing = ImportedThing.fromJSON(object.thing);
+    } else {
+      message.thing = undefined;
     }
     return message;
   },
@@ -387,43 +399,55 @@ export const Simple = {
     message.coins = [];
     message.snacks = [];
     message.oldStates = [];
-    if (object.name) {
+    if (object.name !== undefined && object.name !== null) {
       message.name = object.name;
+    } else {
+      message.name = "";
     }
-    if (object.age) {
+    if (object.age !== undefined && object.age !== null) {
       message.age = object.age;
+    } else {
+      message.age = 0;
     }
-    if (object.createdAt) {
+    if (object.createdAt !== undefined && object.createdAt !== null) {
       message.createdAt = object.createdAt;
+    } else {
+      message.createdAt = undefined;
     }
-    if (object.child) {
+    if (object.child !== undefined && object.child !== null) {
       message.child = Child.fromPartial(object.child);
+    } else {
+      message.child = undefined;
     }
-    if (object.state) {
+    if (object.state !== undefined && object.state !== null) {
       message.state = object.state;
+    } else {
+      message.state = 0;
     }
-    if (object.grandChildren) {
+    if (object.grandChildren !== undefined && object.grandChildren !== null) {
       for (const e of object.grandChildren) {
         message.grandChildren.push(Child.fromPartial(e));
       }
     }
-    if (object.coins) {
+    if (object.coins !== undefined && object.coins !== null) {
       for (const e of object.coins) {
         message.coins.push(e);
       }
     }
-    if (object.snacks) {
+    if (object.snacks !== undefined && object.snacks !== null) {
       for (const e of object.snacks) {
         message.snacks.push(e);
       }
     }
-    if (object.oldStates) {
+    if (object.oldStates !== undefined && object.oldStates !== null) {
       for (const e of object.oldStates) {
         message.oldStates.push(e);
       }
     }
-    if (object.thing) {
+    if (object.thing !== undefined && object.thing !== null) {
       message.thing = ImportedThing.fromPartial(object.thing);
+    } else {
+      message.thing = undefined;
     }
     return message;
   },
@@ -486,21 +510,29 @@ export const Child = {
   },
   fromJSON(object: any): Child {
     const message = Object.create(baseChild) as Child;
-    if (object.name) {
+    if (object.name !== undefined && object.name !== null) {
       message.name = String(object.name);
+    } else {
+      message.name = "";
     }
-    if (object.type) {
+    if (object.type !== undefined && object.type !== null) {
       message.type = Child_Type.fromJSON(object.type);
+    } else {
+      message.type = 0;
     }
     return message;
   },
   fromPartial(object: DeepPartial<Child>): Child {
     const message = Object.create(baseChild) as Child;
-    if (object.name) {
+    if (object.name !== undefined && object.name !== null) {
       message.name = object.name;
+    } else {
+      message.name = "";
     }
-    if (object.type) {
+    if (object.type !== undefined && object.type !== null) {
       message.type = object.type;
+    } else {
+      message.type = 0;
     }
     return message;
   },
@@ -575,27 +607,39 @@ export const Nested = {
   },
   fromJSON(object: any): Nested {
     const message = Object.create(baseNested) as Nested;
-    if (object.name) {
+    if (object.name !== undefined && object.name !== null) {
       message.name = String(object.name);
+    } else {
+      message.name = "";
     }
-    if (object.message) {
+    if (object.message !== undefined && object.message !== null) {
       message.message = Nested_InnerMessage.fromJSON(object.message);
+    } else {
+      message.message = undefined;
     }
-    if (object.state) {
+    if (object.state !== undefined && object.state !== null) {
       message.state = Nested_InnerEnum.fromJSON(object.state);
+    } else {
+      message.state = 0;
     }
     return message;
   },
   fromPartial(object: DeepPartial<Nested>): Nested {
     const message = Object.create(baseNested) as Nested;
-    if (object.name) {
+    if (object.name !== undefined && object.name !== null) {
       message.name = object.name;
+    } else {
+      message.name = "";
     }
-    if (object.message) {
+    if (object.message !== undefined && object.message !== null) {
       message.message = Nested_InnerMessage.fromPartial(object.message);
+    } else {
+      message.message = undefined;
     }
-    if (object.state) {
+    if (object.state !== undefined && object.state !== null) {
       message.state = object.state;
+    } else {
+      message.state = 0;
     }
     return message;
   },
@@ -667,21 +711,29 @@ export const Nested_InnerMessage = {
   },
   fromJSON(object: any): Nested_InnerMessage {
     const message = Object.create(baseNested_InnerMessage) as Nested_InnerMessage;
-    if (object.name) {
+    if (object.name !== undefined && object.name !== null) {
       message.name = String(object.name);
+    } else {
+      message.name = "";
     }
-    if (object.deep) {
+    if (object.deep !== undefined && object.deep !== null) {
       message.deep = Nested_InnerMessage_DeepMessage.fromJSON(object.deep);
+    } else {
+      message.deep = undefined;
     }
     return message;
   },
   fromPartial(object: DeepPartial<Nested_InnerMessage>): Nested_InnerMessage {
     const message = Object.create(baseNested_InnerMessage) as Nested_InnerMessage;
-    if (object.name) {
+    if (object.name !== undefined && object.name !== null) {
       message.name = object.name;
+    } else {
+      message.name = "";
     }
-    if (object.deep) {
+    if (object.deep !== undefined && object.deep !== null) {
       message.deep = Nested_InnerMessage_DeepMessage.fromPartial(object.deep);
+    } else {
+      message.deep = undefined;
     }
     return message;
   },
@@ -716,15 +768,19 @@ export const Nested_InnerMessage_DeepMessage = {
   },
   fromJSON(object: any): Nested_InnerMessage_DeepMessage {
     const message = Object.create(baseNested_InnerMessage_DeepMessage) as Nested_InnerMessage_DeepMessage;
-    if (object.name) {
+    if (object.name !== undefined && object.name !== null) {
       message.name = String(object.name);
+    } else {
+      message.name = "";
     }
     return message;
   },
   fromPartial(object: DeepPartial<Nested_InnerMessage_DeepMessage>): Nested_InnerMessage_DeepMessage {
     const message = Object.create(baseNested_InnerMessage_DeepMessage) as Nested_InnerMessage_DeepMessage;
-    if (object.name) {
+    if (object.name !== undefined && object.name !== null) {
       message.name = object.name;
+    } else {
+      message.name = "";
     }
     return message;
   },
@@ -766,21 +822,29 @@ export const OneOfMessage = {
   },
   fromJSON(object: any): OneOfMessage {
     const message = Object.create(baseOneOfMessage) as OneOfMessage;
-    if (object.first) {
+    if (object.first !== undefined && object.first !== null) {
       message.first = String(object.first);
+    } else {
+      message.first = "";
     }
-    if (object.last) {
+    if (object.last !== undefined && object.last !== null) {
       message.last = String(object.last);
+    } else {
+      message.last = "";
     }
     return message;
   },
   fromPartial(object: DeepPartial<OneOfMessage>): OneOfMessage {
     const message = Object.create(baseOneOfMessage) as OneOfMessage;
-    if (object.first) {
+    if (object.first !== undefined && object.first !== null) {
       message.first = object.first;
+    } else {
+      message.first = "";
     }
-    if (object.last) {
+    if (object.last !== undefined && object.last !== null) {
       message.last = object.last;
+    } else {
+      message.last = "";
     }
     return message;
   },
@@ -845,21 +909,27 @@ export const SimpleWithWrappers = {
     const message = Object.create(baseSimpleWithWrappers) as SimpleWithWrappers;
     message.coins = [];
     message.snacks = [];
-    if (object.name) {
+    if (object.name !== undefined && object.name !== null) {
       message.name = String(object.name);
+    } else {
+      message.name = undefined;
     }
-    if (object.age) {
+    if (object.age !== undefined && object.age !== null) {
       message.age = Number(object.age);
+    } else {
+      message.age = undefined;
     }
-    if (object.enabled) {
+    if (object.enabled !== undefined && object.enabled !== null) {
       message.enabled = Boolean(object.enabled);
+    } else {
+      message.enabled = undefined;
     }
-    if (object.coins) {
+    if (object.coins !== undefined && object.coins !== null) {
       for (const e of object.coins) {
         message.coins.push(Number(e));
       }
     }
-    if (object.snacks) {
+    if (object.snacks !== undefined && object.snacks !== null) {
       for (const e of object.snacks) {
         message.snacks.push(String(e));
       }
@@ -870,21 +940,27 @@ export const SimpleWithWrappers = {
     const message = Object.create(baseSimpleWithWrappers) as SimpleWithWrappers;
     message.coins = [];
     message.snacks = [];
-    if (object.name) {
+    if (object.name !== undefined && object.name !== null) {
       message.name = object.name;
+    } else {
+      message.name = undefined;
     }
-    if (object.age) {
+    if (object.age !== undefined && object.age !== null) {
       message.age = object.age;
+    } else {
+      message.age = undefined;
     }
-    if (object.enabled) {
+    if (object.enabled !== undefined && object.enabled !== null) {
       message.enabled = object.enabled;
+    } else {
+      message.enabled = undefined;
     }
-    if (object.coins) {
+    if (object.coins !== undefined && object.coins !== null) {
       for (const e of object.coins) {
         message.coins.push(e);
       }
     }
-    if (object.snacks) {
+    if (object.snacks !== undefined && object.snacks !== null) {
       for (const e of object.snacks) {
         message.snacks.push(e);
       }
@@ -933,15 +1009,19 @@ export const Entity = {
   },
   fromJSON(object: any): Entity {
     const message = Object.create(baseEntity) as Entity;
-    if (object.id) {
+    if (object.id !== undefined && object.id !== null) {
       message.id = Number(object.id);
+    } else {
+      message.id = 0;
     }
     return message;
   },
   fromPartial(object: DeepPartial<Entity>): Entity {
     const message = Object.create(baseEntity) as Entity;
-    if (object.id) {
+    if (object.id !== undefined && object.id !== null) {
       message.id = object.id;
+    } else {
+      message.id = 0;
     }
     return message;
   },
@@ -982,7 +1062,7 @@ export const SimpleWithMap = {
   fromJSON(object: any): SimpleWithMap {
     const message = Object.create(baseSimpleWithMap) as SimpleWithMap;
     message.entitiesById = {};
-    if (object.entitiesById) {
+    if (object.entitiesById !== undefined && object.entitiesById !== null) {
       const entry = SimpleWithMap_EntitiesByIdEntry.fromJSON(object.entitiesById);
       if (entry.value) {
         message.entitiesById[entry.key] = entry.value;
@@ -993,7 +1073,7 @@ export const SimpleWithMap = {
   fromPartial(object: DeepPartial<SimpleWithMap>): SimpleWithMap {
     const message = Object.create(baseSimpleWithMap) as SimpleWithMap;
     message.entitiesById = {};
-    if (object.entitiesById) {
+    if (object.entitiesById !== undefined && object.entitiesById !== null) {
       const entry = SimpleWithMap_EntitiesByIdEntry.fromPartial(object.entitiesById);
       if (entry.value) {
         message.entitiesById[entry.key] = entry.value;
@@ -1037,21 +1117,29 @@ export const SimpleWithMap_EntitiesByIdEntry = {
   },
   fromJSON(object: any): SimpleWithMap_EntitiesByIdEntry {
     const message = Object.create(baseSimpleWithMap_EntitiesByIdEntry) as SimpleWithMap_EntitiesByIdEntry;
-    if (object.key) {
+    if (object.key !== undefined && object.key !== null) {
       message.key = Number(object.key);
+    } else {
+      message.key = 0;
     }
-    if (object.value) {
+    if (object.value !== undefined && object.value !== null) {
       message.value = Entity.fromJSON(object.value);
+    } else {
+      message.value = undefined;
     }
     return message;
   },
   fromPartial(object: DeepPartial<SimpleWithMap_EntitiesByIdEntry>): SimpleWithMap_EntitiesByIdEntry {
     const message = Object.create(baseSimpleWithMap_EntitiesByIdEntry) as SimpleWithMap_EntitiesByIdEntry;
-    if (object.key) {
+    if (object.key !== undefined && object.key !== null) {
       message.key = object.key;
+    } else {
+      message.key = 0;
     }
-    if (object.value) {
+    if (object.value !== undefined && object.value !== null) {
       message.value = Entity.fromPartial(object.value);
+    } else {
+      message.value = undefined;
     }
     return message;
   },
@@ -1086,15 +1174,19 @@ export const PingRequest = {
   },
   fromJSON(object: any): PingRequest {
     const message = Object.create(basePingRequest) as PingRequest;
-    if (object.input) {
+    if (object.input !== undefined && object.input !== null) {
       message.input = String(object.input);
+    } else {
+      message.input = "";
     }
     return message;
   },
   fromPartial(object: DeepPartial<PingRequest>): PingRequest {
     const message = Object.create(basePingRequest) as PingRequest;
-    if (object.input) {
+    if (object.input !== undefined && object.input !== null) {
       message.input = object.input;
+    } else {
+      message.input = "";
     }
     return message;
   },
@@ -1128,15 +1220,19 @@ export const PingResponse = {
   },
   fromJSON(object: any): PingResponse {
     const message = Object.create(basePingResponse) as PingResponse;
-    if (object.output) {
+    if (object.output !== undefined && object.output !== null) {
       message.output = String(object.output);
+    } else {
+      message.output = "";
     }
     return message;
   },
   fromPartial(object: DeepPartial<PingResponse>): PingResponse {
     const message = Object.create(basePingResponse) as PingResponse;
-    if (object.output) {
+    if (object.output !== undefined && object.output !== null) {
       message.output = object.output;
+    } else {
+      message.output = "";
     }
     return message;
   },

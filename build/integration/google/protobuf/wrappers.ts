@@ -104,15 +104,19 @@ export const DoubleValue = {
   },
   fromJSON(object: any): DoubleValue {
     const message = Object.create(baseDoubleValue) as DoubleValue;
-    if (object.value) {
+    if (object.value !== undefined && object.value !== null) {
       message.value = Number(object.value);
+    } else {
+      message.value = 0;
     }
     return message;
   },
   fromPartial(object: DeepPartial<DoubleValue>): DoubleValue {
     const message = Object.create(baseDoubleValue) as DoubleValue;
-    if (object.value) {
+    if (object.value !== undefined && object.value !== null) {
       message.value = object.value;
+    } else {
+      message.value = 0;
     }
     return message;
   },
@@ -146,15 +150,19 @@ export const FloatValue = {
   },
   fromJSON(object: any): FloatValue {
     const message = Object.create(baseFloatValue) as FloatValue;
-    if (object.value) {
+    if (object.value !== undefined && object.value !== null) {
       message.value = Number(object.value);
+    } else {
+      message.value = 0;
     }
     return message;
   },
   fromPartial(object: DeepPartial<FloatValue>): FloatValue {
     const message = Object.create(baseFloatValue) as FloatValue;
-    if (object.value) {
+    if (object.value !== undefined && object.value !== null) {
       message.value = object.value;
+    } else {
+      message.value = 0;
     }
     return message;
   },
@@ -188,15 +196,19 @@ export const Int64Value = {
   },
   fromJSON(object: any): Int64Value {
     const message = Object.create(baseInt64Value) as Int64Value;
-    if (object.value) {
+    if (object.value !== undefined && object.value !== null) {
       message.value = Number(object.value);
+    } else {
+      message.value = 0;
     }
     return message;
   },
   fromPartial(object: DeepPartial<Int64Value>): Int64Value {
     const message = Object.create(baseInt64Value) as Int64Value;
-    if (object.value) {
+    if (object.value !== undefined && object.value !== null) {
       message.value = object.value;
+    } else {
+      message.value = 0;
     }
     return message;
   },
@@ -230,15 +242,19 @@ export const UInt64Value = {
   },
   fromJSON(object: any): UInt64Value {
     const message = Object.create(baseUInt64Value) as UInt64Value;
-    if (object.value) {
+    if (object.value !== undefined && object.value !== null) {
       message.value = Number(object.value);
+    } else {
+      message.value = 0;
     }
     return message;
   },
   fromPartial(object: DeepPartial<UInt64Value>): UInt64Value {
     const message = Object.create(baseUInt64Value) as UInt64Value;
-    if (object.value) {
+    if (object.value !== undefined && object.value !== null) {
       message.value = object.value;
+    } else {
+      message.value = 0;
     }
     return message;
   },
@@ -272,15 +288,19 @@ export const Int32Value = {
   },
   fromJSON(object: any): Int32Value {
     const message = Object.create(baseInt32Value) as Int32Value;
-    if (object.value) {
+    if (object.value !== undefined && object.value !== null) {
       message.value = Number(object.value);
+    } else {
+      message.value = 0;
     }
     return message;
   },
   fromPartial(object: DeepPartial<Int32Value>): Int32Value {
     const message = Object.create(baseInt32Value) as Int32Value;
-    if (object.value) {
+    if (object.value !== undefined && object.value !== null) {
       message.value = object.value;
+    } else {
+      message.value = 0;
     }
     return message;
   },
@@ -314,15 +334,19 @@ export const UInt32Value = {
   },
   fromJSON(object: any): UInt32Value {
     const message = Object.create(baseUInt32Value) as UInt32Value;
-    if (object.value) {
+    if (object.value !== undefined && object.value !== null) {
       message.value = Number(object.value);
+    } else {
+      message.value = 0;
     }
     return message;
   },
   fromPartial(object: DeepPartial<UInt32Value>): UInt32Value {
     const message = Object.create(baseUInt32Value) as UInt32Value;
-    if (object.value) {
+    if (object.value !== undefined && object.value !== null) {
       message.value = object.value;
+    } else {
+      message.value = 0;
     }
     return message;
   },
@@ -356,15 +380,19 @@ export const BoolValue = {
   },
   fromJSON(object: any): BoolValue {
     const message = Object.create(baseBoolValue) as BoolValue;
-    if (object.value) {
+    if (object.value !== undefined && object.value !== null) {
       message.value = Boolean(object.value);
+    } else {
+      message.value = false;
     }
     return message;
   },
   fromPartial(object: DeepPartial<BoolValue>): BoolValue {
     const message = Object.create(baseBoolValue) as BoolValue;
-    if (object.value) {
+    if (object.value !== undefined && object.value !== null) {
       message.value = object.value;
+    } else {
+      message.value = false;
     }
     return message;
   },
@@ -398,15 +426,19 @@ export const StringValue = {
   },
   fromJSON(object: any): StringValue {
     const message = Object.create(baseStringValue) as StringValue;
-    if (object.value) {
+    if (object.value !== undefined && object.value !== null) {
       message.value = String(object.value);
+    } else {
+      message.value = "";
     }
     return message;
   },
   fromPartial(object: DeepPartial<StringValue>): StringValue {
     const message = Object.create(baseStringValue) as StringValue;
-    if (object.value) {
+    if (object.value !== undefined && object.value !== null) {
       message.value = object.value;
+    } else {
+      message.value = "";
     }
     return message;
   },
@@ -440,14 +472,14 @@ export const BytesValue = {
   },
   fromJSON(object: any): BytesValue {
     const message = Object.create(baseBytesValue) as BytesValue;
-    if (object.value) {
+    if (object.value !== undefined && object.value !== null) {
       message.value = object.value;
     }
     return message;
   },
   fromPartial(object: DeepPartial<BytesValue>): BytesValue {
     const message = Object.create(baseBytesValue) as BytesValue;
-    if (object.value) {
+    if (object.value !== undefined && object.value !== null) {
       message.value = object.value;
     }
     return message;

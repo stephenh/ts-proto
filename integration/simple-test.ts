@@ -28,7 +28,7 @@ describe('simple', () => {
       snacks: ['a', 'b'],
       oldStates: [StateEnum.ON, StateEnum.OFF],
       createdAt: jan1,
-      thing: undefined,
+      thing: undefined
     };
     expect(simple.name).toEqual('asdf');
   });
@@ -59,7 +59,7 @@ describe('simple', () => {
       snacks: ['a', 'b'],
       oldStates: [StateEnum.ON, StateEnum.OFF],
       createdAt: jan1,
-      thing: undefined,
+      thing: undefined
     };
     const s2 = PbSimple.toObject(PbSimple.decode(Simple.encode(s1).finish()));
     expect(s2).toEqual({
@@ -143,7 +143,7 @@ describe('simple', () => {
       snacks: ['', 'b'],
       oldStates: [StateEnum.UNKNOWN, StateEnum.OFF],
       createdAt: jan1,
-      thing: undefined,
+      thing: undefined
     };
     const s2 = PbSimple.toObject(PbSimple.decode(Simple.encode(s1).finish()));
     expect(s2).toEqual({
@@ -178,10 +178,16 @@ describe('simple', () => {
     const s1 = Simple.fromPartial({});
     expect(s1).toMatchInlineSnapshot(`
 Object {
+  "age": 0,
+  "child": undefined,
   "coins": Array [],
+  "createdAt": undefined,
   "grandChildren": Array [],
+  "name": "",
   "oldStates": Array [],
   "snacks": Array [],
+  "state": 0,
+  "thing": undefined,
 }
 `);
   });
