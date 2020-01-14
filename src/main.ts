@@ -513,7 +513,17 @@ function generateFromJson(typeMap: TypeMap, fullName: string, messageDesc: Descr
         const cstr = capitalize((basicTypeName(typeMap, field, false) as Union).typeChoices[0].toString());
         return CodeBlock.of('%L(%L)', cstr, from);
       } else if (isMessage(field)) {
-        return CodeBlock.of('%T.fromJSON(%L)', basicTypeName(typeMap, field), from);
+        if (isRepeated(field) && isMapType(typeMap, messageDesc, field)) {
+          const valueType = (typeMap.get(field.typeName)![2] as DescriptorProto).field[1];
+          if (isPrimitive(valueType)) {
+            const cstr = capitalize(basicTypeName(typeMap, FieldDescriptorProto.create({type: valueType.type})).toString());
+            return CodeBlock.of('%L(%L)', cstr, from);
+          } else {
+            return CodeBlock.of('%T.fromJSON(%L)', basicTypeName(typeMap, valueType).toString(), from);
+          }
+        } else {
+          return CodeBlock.of('%T.fromJSON(%L)', basicTypeName(typeMap, field), from);
+        }
       } else {
         throw new Error(`Unhandled field ${field}`);
       }
@@ -524,10 +534,9 @@ function generateFromJson(typeMap: TypeMap, fullName: string, messageDesc: Descr
     if (isRepeated(field)) {
       if (isMapType(typeMap, messageDesc, field)) {
         func = func
-          .addStatement(`const entry = %L`, readSnippet(`object.${fieldName}`))
-          .beginControlFlow('if (entry.value)')
-          .addStatement('message.%L[entry.key] = entry.value', fieldName)
-          .endControlFlow();
+            .beginLambda('Object.entries(object.%L).forEach(([key, value]) =>', fieldName)
+            .addStatement(`message.%L[key] = %L`, fieldName, readSnippet('value'))
+            .endLambda(')');
       } else {
         func = func
           .beginControlFlow('for (const e of object.%L)', fieldName)
@@ -616,7 +625,17 @@ function generateFromPartial(typeMap: TypeMap, fullName: string, messageDesc: De
       if (isEnum(field) || isPrimitive(field) || isTimestamp(field) || isValueType(field)) {
         return CodeBlock.of(from);
       } else if (isMessage(field)) {
-        return CodeBlock.of('%T.fromPartial(%L)', basicTypeName(typeMap, field), from);
+        if (isRepeated(field) && isMapType(typeMap, messageDesc, field)) {
+          const valueType = (typeMap.get(field.typeName)![2] as DescriptorProto).field[1];
+          if (isPrimitive(valueType)) {
+            const cstr = capitalize(basicTypeName(typeMap, FieldDescriptorProto.create({type: valueType.type})).toString());
+            return CodeBlock.of('%L(%L)', cstr, from);
+          } else {
+            return CodeBlock.of('%T.fromPartial(%L)', basicTypeName(typeMap, valueType).toString(), from);
+          }
+        } else {
+          return CodeBlock.of('%T.fromPartial(%L)', basicTypeName(typeMap, field), from);
+        }
       } else {
         throw new Error(`Unhandled field ${field}`);
       }
@@ -627,10 +646,11 @@ function generateFromPartial(typeMap: TypeMap, fullName: string, messageDesc: De
     if (isRepeated(field)) {
       if (isMapType(typeMap, messageDesc, field)) {
         func = func
-          .addStatement(`const entry = %L`, readSnippet(`object.${fieldName}`))
-          .beginControlFlow('if (entry.value)')
-          .addStatement('message.%L[entry.key] = entry.value', fieldName)
-          .endControlFlow();
+            .beginLambda('Object.entries(object.%L).forEach(([key, value]) =>', fieldName)
+            .beginControlFlow('if (value)')
+            .addStatement(`message.%L[key] = %L`, fieldName, readSnippet('value'))
+            .endControlFlow()
+            .endLambda(')');
       } else {
         func = func
           .beginControlFlow('for (const e of object.%L)', fieldName)
