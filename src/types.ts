@@ -1,7 +1,7 @@
 import { google } from '../build/pbjs';
 import { Member, TypeName, TypeNames } from 'ts-poet';
 import { visit } from './main';
-import { fail, upperFirst } from './utils';
+import { fail } from './utils';
 import { asSequence } from 'sequency';
 import FieldDescriptorProto = google.protobuf.FieldDescriptorProto;
 import CodeGeneratorRequest = google.protobuf.compiler.CodeGeneratorRequest;
@@ -298,19 +298,12 @@ export function detectMapType(
     fieldDesc.label === FieldDescriptorProto.Label.LABEL_REPEATED &&
     fieldDesc.type === FieldDescriptorProto.Type.TYPE_MESSAGE
   ) {
-    return messageDesc.nestedType
-      .filter(
-        t =>
-          t.name === `${upperFirst(fieldDesc.name)}Entry` &&
-          (t.options !== undefined && t.options != null && t.options.mapEntry)
-      )
-      .map(mapType => {
-        const keyType = toTypeName(typeMap, messageDesc, mapType.field[0]);
-        // use basicTypeName because we don't need the '| undefined'
-        const valueType = basicTypeName(typeMap, mapType.field[1]);
-        return { messageDesc: mapType, keyType, valueType };
-      })
-      .find(_ => true);
+    const mapType = typeMap.get(fieldDesc.typeName)![2] as DescriptorProto;
+    if (!mapType.options?.mapEntry) return undefined;
+    const keyType = toTypeName(typeMap, messageDesc, mapType.field[0]);
+    // use basicTypeName because we don't need the '| undefined'
+    const valueType = basicTypeName(typeMap, mapType.field[1]);
+    return { messageDesc: mapType, keyType, valueType };
   }
   return undefined;
 }
