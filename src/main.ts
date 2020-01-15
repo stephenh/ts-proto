@@ -518,7 +518,9 @@ function generateFromJson(typeMap: TypeMap, fullName: string, messageDesc: Descr
         if (isRepeated(field) && isMapType(typeMap, messageDesc, field)) {
           const valueType = (typeMap.get(field.typeName)![2] as DescriptorProto).field[1];
           if (isPrimitive(valueType)) {
-            const cstr = capitalize(basicTypeName(typeMap, FieldDescriptorProto.create({type: valueType.type})).toString());
+            const cstr = capitalize(
+              basicTypeName(typeMap, FieldDescriptorProto.create({ type: valueType.type })).toString()
+            );
             return CodeBlock.of('%L(%L)', cstr, from);
           } else {
             return CodeBlock.of('%T.fromJSON(%L)', basicTypeName(typeMap, valueType).toString(), from);
@@ -536,9 +538,14 @@ function generateFromJson(typeMap: TypeMap, fullName: string, messageDesc: Descr
     if (isRepeated(field)) {
       if (isMapType(typeMap, messageDesc, field)) {
         func = func
-            .beginLambda('Object.entries(object.%L).forEach(([key, value]) =>', fieldName)
-            .addStatement(`message.%L[%L] = %L`, fieldName, maybeCastToNumber(typeMap, messageDesc, field, "key"), readSnippet('value'))
-            .endLambda(')');
+          .beginLambda('Object.entries(object.%L).forEach(([key, value]) =>', fieldName)
+          .addStatement(
+            `message.%L[%L] = %L`,
+            fieldName,
+            maybeCastToNumber(typeMap, messageDesc, field, 'key'),
+            readSnippet('value')
+          )
+          .endLambda(')');
       } else {
         func = func
           .beginControlFlow('for (const e of object.%L)', fieldName)
@@ -630,7 +637,9 @@ function generateFromPartial(typeMap: TypeMap, fullName: string, messageDesc: De
         if (isRepeated(field) && isMapType(typeMap, messageDesc, field)) {
           const valueType = (typeMap.get(field.typeName)![2] as DescriptorProto).field[1];
           if (isPrimitive(valueType)) {
-            const cstr = capitalize(basicTypeName(typeMap, FieldDescriptorProto.create({type: valueType.type})).toString());
+            const cstr = capitalize(
+              basicTypeName(typeMap, FieldDescriptorProto.create({ type: valueType.type })).toString()
+            );
             return CodeBlock.of('%L(%L)', cstr, from);
           } else {
             return CodeBlock.of('%T.fromPartial(%L)', basicTypeName(typeMap, valueType).toString(), from);
@@ -648,11 +657,16 @@ function generateFromPartial(typeMap: TypeMap, fullName: string, messageDesc: De
     if (isRepeated(field)) {
       if (isMapType(typeMap, messageDesc, field)) {
         func = func
-            .beginLambda('Object.entries(object.%L).forEach(([key, value]) =>', fieldName)
-            .beginControlFlow('if (value)')
-            .addStatement(`message.%L[%L] = %L`, fieldName, maybeCastToNumber(typeMap, messageDesc, field, "key"), readSnippet('value'))
-            .endControlFlow()
-            .endLambda(')');
+          .beginLambda('Object.entries(object.%L).forEach(([key, value]) =>', fieldName)
+          .beginControlFlow('if (value)')
+          .addStatement(
+            `message.%L[%L] = %L`,
+            fieldName,
+            maybeCastToNumber(typeMap, messageDesc, field, 'key'),
+            readSnippet('value')
+          )
+          .endControlFlow()
+          .endLambda(')');
       } else {
         func = func
           .beginControlFlow('for (const e of object.%L)', fieldName)
@@ -993,7 +1007,12 @@ function capitalize(s: string): string {
   return s.substring(0, 1).toUpperCase() + s.substring(1);
 }
 
-function maybeCastToNumber(typeMap: TypeMap, messageDesc: DescriptorProto, field: FieldDescriptorProto, variableName: string): string {
+function maybeCastToNumber(
+  typeMap: TypeMap,
+  messageDesc: DescriptorProto,
+  field: FieldDescriptorProto,
+  variableName: string
+): string {
   const { keyType } = detectMapType(typeMap, messageDesc, field)!;
   if (keyType === TypeNames.STRING) {
     return variableName;
