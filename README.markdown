@@ -1,5 +1,6 @@
 
 ![npm](https://img.shields.io/npm/v/ts-proto)
+[![CircleCI](https://circleci.com/gh/stephenh/ts-proto.svg?style=svg)](https://circleci.com/gh/stephenh/ts-proto)
 
 QuickStart
 ==========
