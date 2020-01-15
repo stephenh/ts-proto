@@ -5,7 +5,8 @@
     "module": "commonjs",
     "strict": true,
     "esModuleInterop": true,
-    "outDir": "build"
+    "outDir": "build",
+    "skipLibCheck": true
   },
   "include": ["src"]
 }
