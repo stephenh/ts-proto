@@ -77,6 +77,10 @@ message SimpleWithMap {
   map<int32, Entity> entitiesById = 1;
 }
 
+message SimpleWithSnakeCaseMap {
+  map<int32, Entity> entities_by_id = 1;
+}
+
 service PingService {
   rpc ping(PingRequest) returns (PingResponse);
 }
