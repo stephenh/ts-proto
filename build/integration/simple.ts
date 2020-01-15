@@ -75,11 +75,23 @@ export interface Entity {
 
 export interface SimpleWithMap {
   entitiesById: { [key: number]: Entity };
+  nameLookup: { [key: string]: string };
+  intLookup: { [key: number]: number };
 }
 
 export interface SimpleWithMap_EntitiesByIdEntry {
   key: number;
   value: Entity | undefined;
+}
+
+export interface SimpleWithMap_NameLookupEntry {
+  key: string;
+  value: string;
+}
+
+export interface SimpleWithMap_IntLookupEntry {
+  key: number;
+  value: number;
 }
 
 export interface SimpleWithSnakeCaseMap {
@@ -149,11 +161,23 @@ const baseEntity: object = {
 
 const baseSimpleWithMap: object = {
   entitiesById: undefined,
+  nameLookup: undefined,
+  intLookup: undefined,
 };
 
 const baseSimpleWithMap_EntitiesByIdEntry: object = {
   key: 0,
   value: undefined,
+};
+
+const baseSimpleWithMap_NameLookupEntry: object = {
+  key: "",
+  value: "",
+};
+
+const baseSimpleWithMap_IntLookupEntry: object = {
+  key: 0,
+  value: 0,
 };
 
 const baseSimpleWithSnakeCaseMap: object = {
@@ -1055,12 +1079,20 @@ export const SimpleWithMap = {
     Object.entries(message.entitiesById).forEach(([key, value]) => {
       SimpleWithMap_EntitiesByIdEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).ldelim();
     })
+    Object.entries(message.nameLookup).forEach(([key, value]) => {
+      SimpleWithMap_NameLookupEntry.encode({ key: key as any, value }, writer.uint32(18).fork()).ldelim();
+    })
+    Object.entries(message.intLookup).forEach(([key, value]) => {
+      SimpleWithMap_IntLookupEntry.encode({ key: key as any, value }, writer.uint32(26).fork()).ldelim();
+    })
     return writer;
   },
   decode(reader: Reader, length?: number): SimpleWithMap {
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = Object.create(baseSimpleWithMap) as SimpleWithMap;
     message.entitiesById = {};
+    message.nameLookup = {};
+    message.intLookup = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -1068,6 +1100,18 @@ export const SimpleWithMap = {
           const entry = SimpleWithMap_EntitiesByIdEntry.decode(reader, reader.uint32());
           if (entry.value) {
             message.entitiesById[entry.key] = entry.value;
+          }
+          break;
+        case 2:
+          const entry = SimpleWithMap_NameLookupEntry.decode(reader, reader.uint32());
+          if (entry.value) {
+            message.nameLookup[entry.key] = entry.value;
+          }
+          break;
+        case 3:
+          const entry = SimpleWithMap_IntLookupEntry.decode(reader, reader.uint32());
+          if (entry.value) {
+            message.intLookup[entry.key] = entry.value;
           }
           break;
         default:
@@ -1080,28 +1124,58 @@ export const SimpleWithMap = {
   fromJSON(object: any): SimpleWithMap {
     const message = Object.create(baseSimpleWithMap) as SimpleWithMap;
     message.entitiesById = {};
+    message.nameLookup = {};
+    message.intLookup = {};
     if (object.entitiesById !== undefined && object.entitiesById !== null) {
-      const entry = SimpleWithMap_EntitiesByIdEntry.fromJSON(object.entitiesById);
-      if (entry.value) {
-        message.entitiesById[entry.key] = entry.value;
-      }
+      Object.entries(object.entitiesById).forEach(([key, value]) => {
+        message.entitiesById[Number(key)] = Entity.fromJSON(value);
+      })
+    }
+    if (object.nameLookup !== undefined && object.nameLookup !== null) {
+      Object.entries(object.nameLookup).forEach(([key, value]) => {
+        message.nameLookup[key] = String(value);
+      })
+    }
+    if (object.intLookup !== undefined && object.intLookup !== null) {
+      Object.entries(object.intLookup).forEach(([key, value]) => {
+        message.intLookup[Number(key)] = Number(value);
+      })
     }
     return message;
   },
   fromPartial(object: DeepPartial<SimpleWithMap>): SimpleWithMap {
     const message = Object.create(baseSimpleWithMap) as SimpleWithMap;
     message.entitiesById = {};
+    message.nameLookup = {};
+    message.intLookup = {};
     if (object.entitiesById !== undefined && object.entitiesById !== null) {
-      const entry = SimpleWithMap_EntitiesByIdEntry.fromPartial(object.entitiesById);
-      if (entry.value) {
-        message.entitiesById[entry.key] = entry.value;
-      }
+      Object.entries(object.entitiesById).forEach(([key, value]) => {
+        if (value) {
+          message.entitiesById[Number(key)] = Entity.fromPartial(value);
+        }
+      })
+    }
+    if (object.nameLookup !== undefined && object.nameLookup !== null) {
+      Object.entries(object.nameLookup).forEach(([key, value]) => {
+        if (value) {
+          message.nameLookup[key] = String(value);
+        }
+      })
+    }
+    if (object.intLookup !== undefined && object.intLookup !== null) {
+      Object.entries(object.intLookup).forEach(([key, value]) => {
+        if (value) {
+          message.intLookup[Number(key)] = Number(value);
+        }
+      })
     }
     return message;
   },
   toJSON(message: SimpleWithMap): unknown {
     const obj: any = {};
     obj.entitiesById = message.entitiesById || undefined;
+    obj.nameLookup = message.nameLookup || undefined;
+    obj.intLookup = message.intLookup || undefined;
     return obj;
   },
 };
@@ -1169,6 +1243,128 @@ export const SimpleWithMap_EntitiesByIdEntry = {
   },
 };
 
+export const SimpleWithMap_NameLookupEntry = {
+  encode(message: SimpleWithMap_NameLookupEntry, writer: Writer = Writer.create()): Writer {
+    writer.uint32(10).string(message.key);
+    writer.uint32(18).string(message.value);
+    return writer;
+  },
+  decode(reader: Reader, length?: number): SimpleWithMap_NameLookupEntry {
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = Object.create(baseSimpleWithMap_NameLookupEntry) as SimpleWithMap_NameLookupEntry;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.key = reader.string();
+          break;
+        case 2:
+          message.value = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+  fromJSON(object: any): SimpleWithMap_NameLookupEntry {
+    const message = Object.create(baseSimpleWithMap_NameLookupEntry) as SimpleWithMap_NameLookupEntry;
+    if (object.key !== undefined && object.key !== null) {
+      message.key = String(object.key);
+    } else {
+      message.key = "";
+    }
+    if (object.value !== undefined && object.value !== null) {
+      message.value = String(object.value);
+    } else {
+      message.value = "";
+    }
+    return message;
+  },
+  fromPartial(object: DeepPartial<SimpleWithMap_NameLookupEntry>): SimpleWithMap_NameLookupEntry {
+    const message = Object.create(baseSimpleWithMap_NameLookupEntry) as SimpleWithMap_NameLookupEntry;
+    if (object.key !== undefined && object.key !== null) {
+      message.key = object.key;
+    } else {
+      message.key = "";
+    }
+    if (object.value !== undefined && object.value !== null) {
+      message.value = object.value;
+    } else {
+      message.value = "";
+    }
+    return message;
+  },
+  toJSON(message: SimpleWithMap_NameLookupEntry): unknown {
+    const obj: any = {};
+    obj.key = message.key || "";
+    obj.value = message.value || "";
+    return obj;
+  },
+};
+
+export const SimpleWithMap_IntLookupEntry = {
+  encode(message: SimpleWithMap_IntLookupEntry, writer: Writer = Writer.create()): Writer {
+    writer.uint32(8).int32(message.key);
+    writer.uint32(16).int32(message.value);
+    return writer;
+  },
+  decode(reader: Reader, length?: number): SimpleWithMap_IntLookupEntry {
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = Object.create(baseSimpleWithMap_IntLookupEntry) as SimpleWithMap_IntLookupEntry;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.key = reader.int32();
+          break;
+        case 2:
+          message.value = reader.int32();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+  fromJSON(object: any): SimpleWithMap_IntLookupEntry {
+    const message = Object.create(baseSimpleWithMap_IntLookupEntry) as SimpleWithMap_IntLookupEntry;
+    if (object.key !== undefined && object.key !== null) {
+      message.key = Number(object.key);
+    } else {
+      message.key = 0;
+    }
+    if (object.value !== undefined && object.value !== null) {
+      message.value = Number(object.value);
+    } else {
+      message.value = 0;
+    }
+    return message;
+  },
+  fromPartial(object: DeepPartial<SimpleWithMap_IntLookupEntry>): SimpleWithMap_IntLookupEntry {
+    const message = Object.create(baseSimpleWithMap_IntLookupEntry) as SimpleWithMap_IntLookupEntry;
+    if (object.key !== undefined && object.key !== null) {
+      message.key = object.key;
+    } else {
+      message.key = 0;
+    }
+    if (object.value !== undefined && object.value !== null) {
+      message.value = object.value;
+    } else {
+      message.value = 0;
+    }
+    return message;
+  },
+  toJSON(message: SimpleWithMap_IntLookupEntry): unknown {
+    const obj: any = {};
+    obj.key = message.key || 0;
+    obj.value = message.value || 0;
+    return obj;
+  },
+};
+
 export const SimpleWithSnakeCaseMap = {
   encode(message: SimpleWithSnakeCaseMap, writer: Writer = Writer.create()): Writer {
     Object.entries(message.entitiesById).forEach(([key, value]) => {
@@ -1200,10 +1396,9 @@ export const SimpleWithSnakeCaseMap = {
     const message = Object.create(baseSimpleWithSnakeCaseMap) as SimpleWithSnakeCaseMap;
     message.entitiesById = {};
     if (object.entitiesById !== undefined && object.entitiesById !== null) {
-      const entry = SimpleWithSnakeCaseMap_EntitiesByIdEntry.fromJSON(object.entitiesById);
-      if (entry.value) {
-        message.entitiesById[entry.key] = entry.value;
-      }
+      Object.entries(object.entitiesById).forEach(([key, value]) => {
+        message.entitiesById[Number(key)] = Entity.fromJSON(value);
+      })
     }
     return message;
   },
@@ -1211,10 +1406,11 @@ export const SimpleWithSnakeCaseMap = {
     const message = Object.create(baseSimpleWithSnakeCaseMap) as SimpleWithSnakeCaseMap;
     message.entitiesById = {};
     if (object.entitiesById !== undefined && object.entitiesById !== null) {
-      const entry = SimpleWithSnakeCaseMap_EntitiesByIdEntry.fromPartial(object.entitiesById);
-      if (entry.value) {
-        message.entitiesById[entry.key] = entry.value;
-      }
+      Object.entries(object.entitiesById).forEach(([key, value]) => {
+        if (value) {
+          message.entitiesById[Number(key)] = Entity.fromPartial(value);
+        }
+      })
     }
     return message;
   },

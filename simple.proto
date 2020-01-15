@@ -75,6 +75,8 @@ message Entity {
 
 message SimpleWithMap {
   map<int32, Entity> entitiesById = 1;
+  map<string, string> nameLookup = 2;
+  map<int32, int32> intLookup = 3;
 }
 
 message SimpleWithSnakeCaseMap {

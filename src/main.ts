@@ -535,7 +535,7 @@ function generateFromJson(typeMap: TypeMap, fullName: string, messageDesc: Descr
       if (isMapType(typeMap, messageDesc, field)) {
         func = func
             .beginLambda('Object.entries(object.%L).forEach(([key, value]) =>', fieldName)
-            .addStatement(`message.%L[key] = %L`, fieldName, readSnippet('value'))
+            .addStatement(`message.%L[%L] = %L`, fieldName, maybeCastToNumber(typeMap, messageDesc, field, "key"), readSnippet('value'))
             .endLambda(')');
       } else {
         func = func
@@ -648,7 +648,7 @@ function generateFromPartial(typeMap: TypeMap, fullName: string, messageDesc: De
         func = func
             .beginLambda('Object.entries(object.%L).forEach(([key, value]) =>', fieldName)
             .beginControlFlow('if (value)')
-            .addStatement(`message.%L[key] = %L`, fieldName, readSnippet('value'))
+            .addStatement(`message.%L[%L] = %L`, fieldName, maybeCastToNumber(typeMap, messageDesc, field, "key"), readSnippet('value'))
             .endControlFlow()
             .endLambda(')');
       } else {
@@ -989,4 +989,13 @@ function snakeToCamel(s: string): string {
 
 function capitalize(s: string): string {
   return s.substring(0, 1).toUpperCase() + s.substring(1);
+}
+
+function maybeCastToNumber(typeMap: TypeMap, messageDesc: DescriptorProto, field: FieldDescriptorProto, variableName: string): string {
+  const { keyType } = detectMapType(typeMap, messageDesc, field)!;
+  if (keyType === TypeNames.STRING) {
+    return variableName;
+  } else {
+    return `Number(${variableName})`;
+  }
 }

@@ -191,4 +191,9 @@ Object {
 }
 `);
   });
+
+  it('can fromPartial with maps', () => {
+    const s1 = SimpleWithMap.fromPartial({ entitiesById: { 1: { id: 1 } } });
+    expect(s1.entitiesById[1].id).toEqual(1);
+  });
 });

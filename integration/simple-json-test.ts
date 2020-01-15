@@ -1,4 +1,4 @@
-import { Child_Type, Simple, SimpleWithWrappers, StateEnum } from '../build/integration/simple';
+import { Child_Type, Simple, SimpleWithWrappers, StateEnum, SimpleWithMap } from '../build/integration/simple';
 import { google, simple as pbjs } from '../build/integration/pbjs';
 import { Tile_Value } from '../build/integration/vector_tile';
 import ISimple = pbjs.ISimple;
@@ -73,16 +73,16 @@ describe('simple json', () => {
       doubleValue: -2.2
     };
     expect(Tile_Value.fromJSON(tile)).toMatchInlineSnapshot(`
-Object {
-  "boolValue": false,
-  "doubleValue": -2.2,
-  "floatValue": 1.1,
-  "intValue": 1,
-  "sintValue": -3,
-  "stringValue": "",
-  "uintValue": 2,
-}
-`);
+      Object {
+        "boolValue": false,
+        "doubleValue": -2.2,
+        "floatValue": 1.1,
+        "intValue": 1,
+        "sintValue": -3,
+        "stringValue": "",
+        "uintValue": 2,
+      }
+    `);
   });
 
   it('decodes numbers that are falsey', () => {
@@ -94,16 +94,16 @@ Object {
       doubleValue: 0
     };
     expect(Tile_Value.fromJSON(tile)).toMatchInlineSnapshot(`
-Object {
-  "boolValue": false,
-  "doubleValue": 0,
-  "floatValue": 0,
-  "intValue": 0,
-  "sintValue": -0,
-  "stringValue": "",
-  "uintValue": 0,
-}
-`);
+      Object {
+        "boolValue": false,
+        "doubleValue": 0,
+        "floatValue": 0,
+        "intValue": 0,
+        "sintValue": -0,
+        "stringValue": "",
+        "uintValue": 0,
+      }
+    `);
   });
 
   it('decodes numbers that are strings', () => {
@@ -115,16 +115,16 @@ Object {
       doubleValue: '-2.2'
     };
     expect(Tile_Value.fromJSON(tile)).toMatchInlineSnapshot(`
-Object {
-  "boolValue": false,
-  "doubleValue": -2.2,
-  "floatValue": 1.1,
-  "intValue": 1,
-  "sintValue": -3,
-  "stringValue": "",
-  "uintValue": 2,
-}
-`);
+      Object {
+        "boolValue": false,
+        "doubleValue": -2.2,
+        "floatValue": 1.1,
+        "intValue": 1,
+        "sintValue": -3,
+        "stringValue": "",
+        "uintValue": 2,
+      }
+    `);
   });
 
   it('decodes numbers that are weird', () => {
@@ -133,16 +133,16 @@ Object {
       doubleValue: 'Infinity'
     };
     expect(Tile_Value.fromJSON(tile)).toMatchInlineSnapshot(`
-Object {
-  "boolValue": false,
-  "doubleValue": Infinity,
-  "floatValue": NaN,
-  "intValue": 0,
-  "sintValue": 0,
-  "stringValue": "",
-  "uintValue": 0,
-}
-`);
+      Object {
+        "boolValue": false,
+        "doubleValue": Infinity,
+        "floatValue": NaN,
+        "intValue": 0,
+        "sintValue": 0,
+        "stringValue": "",
+        "uintValue": 0,
+      }
+    `);
   });
 
   it('can decode value wrappers as json', () => {
@@ -155,20 +155,20 @@ Object {
     };
     const s2 = SimpleWithWrappers.fromJSON(s1);
     expect(s2).toMatchInlineSnapshot(`
-Object {
-  "age": 1,
-  "coins": Array [
-    1,
-    2,
-  ],
-  "enabled": true,
-  "name": "first",
-  "snacks": Array [
-    "a",
-    "b",
-  ],
-}
-`);
+      Object {
+        "age": 1,
+        "coins": Array [
+          1,
+          2,
+        ],
+        "enabled": true,
+        "name": "first",
+        "snacks": Array [
+          "a",
+          "b",
+        ],
+      }
+    `);
   });
 
   it('can decode json with null values', () => {
@@ -184,38 +184,38 @@ Object {
     };
     const s2 = Simple.fromJSON(s1);
     expect(s2).toMatchInlineSnapshot(`
-Object {
-  "age": 0,
-  "child": undefined,
-  "coins": Array [],
-  "createdAt": undefined,
-  "grandChildren": Array [],
-  "name": "",
-  "oldStates": Array [],
-  "snacks": Array [],
-  "state": 0,
-  "thing": undefined,
-}
-`);
+      Object {
+        "age": 0,
+        "child": undefined,
+        "coins": Array [],
+        "createdAt": undefined,
+        "grandChildren": Array [],
+        "name": "",
+        "oldStates": Array [],
+        "snacks": Array [],
+        "state": 0,
+        "thing": undefined,
+      }
+    `);
   });
 
   it('can decode json with no values', () => {
     const s1 = {};
     const s2 = Simple.fromJSON(s1);
     expect(s2).toMatchInlineSnapshot(`
-Object {
-  "age": 0,
-  "child": undefined,
-  "coins": Array [],
-  "createdAt": undefined,
-  "grandChildren": Array [],
-  "name": "",
-  "oldStates": Array [],
-  "snacks": Array [],
-  "state": 0,
-  "thing": undefined,
-}
-`);
+      Object {
+        "age": 0,
+        "child": undefined,
+        "coins": Array [],
+        "createdAt": undefined,
+        "grandChildren": Array [],
+        "name": "",
+        "oldStates": Array [],
+        "snacks": Array [],
+        "state": 0,
+        "thing": undefined,
+      }
+    `);
   });
 
   it('can decode dates that are canonical format', () => {
@@ -239,6 +239,21 @@ Object {
     expect(s2.createdAt).toEqual(d);
   });
 
+  it('decodes maps', () => {
+    const s1 = { entitiesById: { '1': { id: '1' } } };
+    expect(SimpleWithMap.fromJSON(s1)).toMatchInlineSnapshot(`
+      Object {
+        "entitiesById": Object {
+          "1": Object {
+            "id": 1,
+          },
+        },
+      }
+    `);
+    // Ensure lookups by the id as a number work
+    expect(SimpleWithMap.fromJSON(s1).entitiesById[1].id).toEqual(1);
+  });
+
   it('can encode json', () => {
     const s1: Simple = {
       name: 'asdf',
@@ -253,80 +268,80 @@ Object {
       thing: undefined
     };
     expect(Simple.toJSON(s1)).toMatchInlineSnapshot(`
-Object {
-  "age": 1,
-  "child": Object {
-    "name": "foo",
-    "type": "UNKNOWN",
-  },
-  "coins": Array [
-    2,
-    4,
-    6,
-  ],
-  "createdAt": "1970-01-01T00:00:01.000Z",
-  "grandChildren": Array [
-    Object {
-      "name": "grand1",
-      "type": "UNKNOWN",
-    },
-    Object {
-      "name": "grand2",
-      "type": "UNKNOWN",
-    },
-  ],
-  "name": "asdf",
-  "oldStates": Array [
-    "ON",
-    "OFF",
-  ],
-  "snacks": Array [
-    "a",
-    "b",
-  ],
-  "state": "ON",
-  "thing": undefined,
-}
-`);
+      Object {
+        "age": 1,
+        "child": Object {
+          "name": "foo",
+          "type": "UNKNOWN",
+        },
+        "coins": Array [
+          2,
+          4,
+          6,
+        ],
+        "createdAt": "1970-01-01T00:00:01.000Z",
+        "grandChildren": Array [
+          Object {
+            "name": "grand1",
+            "type": "UNKNOWN",
+          },
+          Object {
+            "name": "grand2",
+            "type": "UNKNOWN",
+          },
+        ],
+        "name": "asdf",
+        "oldStates": Array [
+          "ON",
+          "OFF",
+        ],
+        "snacks": Array [
+          "a",
+          "b",
+        ],
+        "state": "ON",
+        "thing": undefined,
+      }
+    `);
   });
 
   it('can encode empty objects', () => {
     expect(Simple.toJSON({} as Simple)).toMatchInlineSnapshot(`
-Object {
-  "age": 0,
-  "child": undefined,
-  "coins": Array [],
-  "createdAt": null,
-  "grandChildren": Array [],
-  "name": "",
-  "oldStates": Array [],
-  "snacks": Array [],
-  "state": "UNKNOWN",
-  "thing": undefined,
-}
-`);
+      Object {
+        "age": 0,
+        "child": undefined,
+        "coins": Array [],
+        "createdAt": null,
+        "grandChildren": Array [],
+        "name": "",
+        "oldStates": Array [],
+        "snacks": Array [],
+        "state": "UNKNOWN",
+        "thing": undefined,
+      }
+    `);
   });
 
   it('can encode nested enums', () => {
     const s1 = { child: { name: 'a', type: Child_Type.GOOD } } as Simple;
     const s2 = Simple.toJSON(s1);
     expect(s2).toMatchInlineSnapshot(`
-Object {
-  "age": 0,
-  "child": Object {
-    "name": "a",
-    "type": "GOOD",
-  },
-  "coins": Array [],
-  "createdAt": null,
-  "grandChildren": Array [],
-  "name": "",
-  "oldStates": Array [],
-  "snacks": Array [],
-  "state": "UNKNOWN",
-  "thing": undefined,
-}
-`);
+      Object {
+        "age": 0,
+        "child": Object {
+          "name": "a",
+          "type": "GOOD",
+        },
+        "coins": Array [],
+        "createdAt": null,
+        "grandChildren": Array [],
+        "name": "",
+        "oldStates": Array [],
+        "snacks": Array [],
+        "state": "UNKNOWN",
+        "thing": undefined,
+      }
+    `);
   });
 
   it('can encode value wrappers as json', () => {
@@ -339,20 +354,20 @@ Object {
     };
     const s2 = SimpleWithWrappers.toJSON(s1);
     expect(s2).toMatchInlineSnapshot(`
-Object {
-  "age": 1,
-  "coins": Array [
-    1,
-    2,
-  ],
-  "enabled": true,
-  "name": "first",
-  "snacks": Array [
-    "a",
-    "b",
-  ],
-}
-`);
+      Object {
+        "age": 1,
+        "coins": Array [
+          1,
+          2,
+        ],
+        "enabled": true,
+        "name": "first",
+        "snacks": Array [
+          "a",
+          "b",
+        ],
+      }
+    `);
   });
 
   it('can encode null value wrappers', () => {
@@ -365,14 +380,14 @@ Object {
     };
     const s2 = SimpleWithWrappers.toJSON(s1);
     expect(s2).toMatchInlineSnapshot(`
-Object {
-  "age": undefined,
-  "coins": Array [],
-  "enabled": undefined,
-  "name": undefined,
-  "snacks": Array [],
-}
-`);
+      Object {
+        "age": undefined,
+        "coins": Array [],
+        "enabled": undefined,
+        "name": undefined,
+        "snacks": Array [],
+      }
+    `);
   });
 
   it('can decode enum falsey values', () => {

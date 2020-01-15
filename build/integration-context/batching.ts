@@ -381,10 +381,9 @@ export const BatchMapQueryResponse = {
     const message = Object.create(baseBatchMapQueryResponse) as BatchMapQueryResponse;
     message.entities = {};
     if (object.entities !== undefined && object.entities !== null) {
-      const entry = BatchMapQueryResponse_EntitiesEntry.fromJSON(object.entities);
-      if (entry.value) {
-        message.entities[entry.key] = entry.value;
-      }
+      Object.entries(object.entities).forEach(([key, value]) => {
+        message.entities[key] = Entity.fromJSON(value);
+      })
     }
     return message;
   },
@@ -392,10 +391,11 @@ export const BatchMapQueryResponse = {
     const message = Object.create(baseBatchMapQueryResponse) as BatchMapQueryResponse;
     message.entities = {};
     if (object.entities !== undefined && object.entities !== null) {
-      const entry = BatchMapQueryResponse_EntitiesEntry.fromPartial(object.entities);
-      if (entry.value) {
-        message.entities[entry.key] = entry.value;
-      }
+      Object.entries(object.entities).forEach(([key, value]) => {
+        if (value) {
+          message.entities[key] = Entity.fromPartial(value);
+        }
+      })
     }
     return message;
   },
