@@ -1097,21 +1097,21 @@ export const SimpleWithMap = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          const entry = SimpleWithMap_EntitiesByIdEntry.decode(reader, reader.uint32());
-          if (entry.value) {
-            message.entitiesById[entry.key] = entry.value;
+          const entry1 = SimpleWithMap_EntitiesByIdEntry.decode(reader, reader.uint32());
+          if (entry1.value) {
+            message.entitiesById[entry1.key] = entry1.value;
           }
           break;
         case 2:
-          const entry = SimpleWithMap_NameLookupEntry.decode(reader, reader.uint32());
-          if (entry.value) {
-            message.nameLookup[entry.key] = entry.value;
+          const entry2 = SimpleWithMap_NameLookupEntry.decode(reader, reader.uint32());
+          if (entry2.value) {
+            message.nameLookup[entry2.key] = entry2.value;
           }
           break;
         case 3:
-          const entry = SimpleWithMap_IntLookupEntry.decode(reader, reader.uint32());
-          if (entry.value) {
-            message.intLookup[entry.key] = entry.value;
+          const entry3 = SimpleWithMap_IntLookupEntry.decode(reader, reader.uint32());
+          if (entry3.value) {
+            message.intLookup[entry3.key] = entry3.value;
           }
           break;
         default:

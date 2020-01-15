@@ -353,10 +353,12 @@ function generateDecode(typeMap: TypeMap, fullName: string, messageDesc: Descrip
     // and then use the snippet to handle repeated fields if necessary
     if (isRepeated(field)) {
       if (isMapType(typeMap, messageDesc, field)) {
+        // We need a unique const within the `cast` statement
+        const entryVariableName = `entry${field.number}`;
         func = func
-          .addStatement(`const entry = %L`, readSnippet)
-          .beginControlFlow('if (entry.value)')
-          .addStatement('message.%L[entry.key] = entry.value', fieldName)
+          .addStatement(`const %L = %L`, entryVariableName, readSnippet)
+          .beginControlFlow('if (%L.value)', entryVariableName)
+          .addStatement('message.%L[%L.key] = %L.value', fieldName, entryVariableName, entryVariableName)
           .endControlFlow();
       } else if (packedType(field.type) === undefined) {
         func = func.addStatement(`message.%L.push(%L)`, fieldName, readSnippet);

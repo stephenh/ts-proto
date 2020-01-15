@@ -365,9 +365,9 @@ export const BatchMapQueryResponse = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          const entry = BatchMapQueryResponse_EntitiesEntry.decode(reader, reader.uint32());
-          if (entry.value) {
-            message.entities[entry.key] = entry.value;
+          const entry1 = BatchMapQueryResponse_EntitiesEntry.decode(reader, reader.uint32());
+          if (entry1.value) {
+            message.entities[entry1.key] = entry1.value;
           }
           break;
         default:
