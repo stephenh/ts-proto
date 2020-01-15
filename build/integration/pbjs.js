@@ -2246,6 +2246,8 @@
              * @memberof simple
              * @interface ISimpleWithMap
              * @property {Object.<string,simple.Entity>|null} [entitiesById] SimpleWithMap entitiesById
+             * @property {Object.<string,string>|null} [nameLookup] SimpleWithMap nameLookup
+             * @property {Object.<string,number>|null} [intLookup] SimpleWithMap intLookup
              */
     
             /**
@@ -2258,6 +2260,8 @@
              */
             function SimpleWithMap(properties) {
                 this.entitiesById = {};
+                this.nameLookup = {};
+                this.intLookup = {};
                 if (properties)
                     for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
                         if (properties[keys[i]] != null)
@@ -2271,6 +2275,22 @@
              * @instance
              */
             SimpleWithMap.prototype.entitiesById = $util.emptyObject;
+    
+            /**
+             * SimpleWithMap nameLookup.
+             * @member {Object.<string,string>} nameLookup
+             * @memberof simple.SimpleWithMap
+             * @instance
+             */
+            SimpleWithMap.prototype.nameLookup = $util.emptyObject;
+    
+            /**
+             * SimpleWithMap intLookup.
+             * @member {Object.<string,number>} intLookup
+             * @memberof simple.SimpleWithMap
+             * @instance
+             */
+            SimpleWithMap.prototype.intLookup = $util.emptyObject;
     
             /**
              * Creates a new SimpleWithMap instance using the specified properties.
@@ -2301,6 +2321,12 @@
                         writer.uint32(/* id 1, wireType 2 =*/10).fork().uint32(/* id 1, wireType 0 =*/8).int32(keys[i]);
                         $root.simple.Entity.encode(message.entitiesById[keys[i]], writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim().ldelim();
                     }
+                if (message.nameLookup != null && message.hasOwnProperty("nameLookup"))
+                    for (var keys = Object.keys(message.nameLookup), i = 0; i < keys.length; ++i)
+                        writer.uint32(/* id 2, wireType 2 =*/18).fork().uint32(/* id 1, wireType 2 =*/10).string(keys[i]).uint32(/* id 2, wireType 2 =*/18).string(message.nameLookup[keys[i]]).ldelim();
+                if (message.intLookup != null && message.hasOwnProperty("intLookup"))
+                    for (var keys = Object.keys(message.intLookup), i = 0; i < keys.length; ++i)
+                        writer.uint32(/* id 3, wireType 2 =*/26).fork().uint32(/* id 1, wireType 0 =*/8).int32(keys[i]).uint32(/* id 2, wireType 0 =*/16).int32(message.intLookup[keys[i]]).ldelim();
                 return writer;
             };
     
@@ -2342,6 +2368,22 @@
                         key = reader.int32();
                         reader.pos++;
                         message.entitiesById[key] = $root.simple.Entity.decode(reader, reader.uint32());
+                        break;
+                    case 2:
+                        reader.skip().pos++;
+                        if (message.nameLookup === $util.emptyObject)
+                            message.nameLookup = {};
+                        key = reader.string();
+                        reader.pos++;
+                        message.nameLookup[key] = reader.string();
+                        break;
+                    case 3:
+                        reader.skip().pos++;
+                        if (message.intLookup === $util.emptyObject)
+                            message.intLookup = {};
+                        key = reader.int32();
+                        reader.pos++;
+                        message.intLookup[key] = reader.int32();
                         break;
                     default:
                         reader.skipType(tag & 7);
@@ -2392,6 +2434,25 @@
                         }
                     }
                 }
+                if (message.nameLookup != null && message.hasOwnProperty("nameLookup")) {
+                    if (!$util.isObject(message.nameLookup))
+                        return "nameLookup: object expected";
+                    var key = Object.keys(message.nameLookup);
+                    for (var i = 0; i < key.length; ++i)
+                        if (!$util.isString(message.nameLookup[key[i]]))
+                            return "nameLookup: string{k:string} expected";
+                }
+                if (message.intLookup != null && message.hasOwnProperty("intLookup")) {
+                    if (!$util.isObject(message.intLookup))
+                        return "intLookup: object expected";
+                    var key = Object.keys(message.intLookup);
+                    for (var i = 0; i < key.length; ++i) {
+                        if (!$util.key32Re.test(key[i]))
+                            return "intLookup: integer key{k:int32} expected";
+                        if (!$util.isInteger(message.intLookup[key[i]]))
+                            return "intLookup: integer{k:int32} expected";
+                    }
+                }
                 return null;
             };
     
@@ -2417,6 +2478,20 @@
                         message.entitiesById[keys[i]] = $root.simple.Entity.fromObject(object.entitiesById[keys[i]]);
                     }
                 }
+                if (object.nameLookup) {
+                    if (typeof object.nameLookup !== "object")
+                        throw TypeError(".simple.SimpleWithMap.nameLookup: object expected");
+                    message.nameLookup = {};
+                    for (var keys = Object.keys(object.nameLookup), i = 0; i < keys.length; ++i)
+                        message.nameLookup[keys[i]] = String(object.nameLookup[keys[i]]);
+                }
+                if (object.intLookup) {
+                    if (typeof object.intLookup !== "object")
+                        throw TypeError(".simple.SimpleWithMap.intLookup: object expected");
+                    message.intLookup = {};
+                    for (var keys = Object.keys(object.intLookup), i = 0; i < keys.length; ++i)
+                        message.intLookup[keys[i]] = object.intLookup[keys[i]] | 0;
+                }
                 return message;
             };
     
@@ -2433,13 +2508,26 @@
                 if (!options)
                     options = {};
                 var object = {};
-                if (options.objects || options.defaults)
+                if (options.objects || options.defaults) {
                     object.entitiesById = {};
+                    object.nameLookup = {};
+                    object.intLookup = {};
+                }
                 var keys2;
                 if (message.entitiesById && (keys2 = Object.keys(message.entitiesById)).length) {
                     object.entitiesById = {};
                     for (var j = 0; j < keys2.length; ++j)
                         object.entitiesById[keys2[j]] = $root.simple.Entity.toObject(message.entitiesById[keys2[j]], options);
+                }
+                if (message.nameLookup && (keys2 = Object.keys(message.nameLookup)).length) {
+                    object.nameLookup = {};
+                    for (var j = 0; j < keys2.length; ++j)
+                        object.nameLookup[keys2[j]] = message.nameLookup[keys2[j]];
+                }
+                if (message.intLookup && (keys2 = Object.keys(message.intLookup)).length) {
+                    object.intLookup = {};
+                    for (var j = 0; j < keys2.length; ++j)
+                        object.intLookup[keys2[j]] = message.intLookup[keys2[j]];
                 }
                 return object;
             };

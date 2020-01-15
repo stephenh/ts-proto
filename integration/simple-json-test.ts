@@ -248,6 +248,8 @@ describe('simple json', () => {
             "id": 1,
           },
         },
+        "intLookup": Object {},
+        "nameLookup": Object {},
       }
     `);
     // Ensure lookups by the id as a number work

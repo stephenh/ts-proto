@@ -211,11 +211,15 @@ export namespace simple {
 
     interface ISimpleWithMap {
         entitiesById?: ({ [k: string]: simple.Entity }|null);
+        nameLookup?: ({ [k: string]: string }|null);
+        intLookup?: ({ [k: string]: number }|null);
     }
 
     class SimpleWithMap implements ISimpleWithMap {
         constructor(properties?: simple.ISimpleWithMap);
         public entitiesById: { [k: string]: simple.Entity };
+        public nameLookup: { [k: string]: string };
+        public intLookup: { [k: string]: number };
         public static create(properties?: simple.ISimpleWithMap): simple.SimpleWithMap;
         public static encode(message: simple.SimpleWithMap, writer?: $protobuf.Writer): $protobuf.Writer;
         public static encodeDelimited(message: simple.SimpleWithMap, writer?: $protobuf.Writer): $protobuf.Writer;
