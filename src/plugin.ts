@@ -1,5 +1,5 @@
 import { promisify } from 'util';
-import { readToBuffer } from './utils';
+import {optionsFromParameter, readToBuffer} from './utils';
 import { google } from '../build/pbjs';
 import { generateFile } from './main';
 import { createTypeMap } from './types';
@@ -12,7 +12,7 @@ async function main() {
   // const json = JSON.parse(stdin.toString());
   // const request = CodeGeneratorRequest.fromObject(json);
   const request = CodeGeneratorRequest.decode(stdin);
-  const typeMap = createTypeMap(request);
+  const typeMap = createTypeMap(request, optionsFromParameter(request.parameter));
   const files = request.protoFile.map(file => {
     const spec = generateFile(typeMap, file, request.parameter);
     return new CodeGeneratorResponse.File({

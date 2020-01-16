@@ -1,10 +1,11 @@
 import { mkdir, readFile, writeFile } from 'fs';
 import { parse } from 'path';
 import { google } from '../build/pbjs';
-import { generateFile, Options } from '../src/main';
+import { generateFile } from '../src/main';
 import { promisify } from 'util';
 import { createTypeMap } from '../src/types';
 import CodeGeneratorRequest = google.protobuf.compiler.CodeGeneratorRequest;
+import { optionsFromParameter } from "../src/utils";
 
 /**
  * Generates output from our example proto files.
@@ -28,7 +29,7 @@ async function generate(binFile: string, baseDir: string = './build/integration'
   if (parameter) {
     request.parameter = parameter;
   }
-  const map = createTypeMap(request);
+  const map = createTypeMap(request, optionsFromParameter(parameter));
   for (let file of request.protoFile) {
     const spec = generateFile(map, file, request.parameter);
     const filePath = `${baseDir}/${spec.path}`;

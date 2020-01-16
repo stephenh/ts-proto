@@ -34,7 +34,7 @@ import {
   TypeMap
 } from './types';
 import { asSequence } from 'sequency';
-import { singular } from './utils';
+import { optionsFromParameter, singular } from './utils';
 import DescriptorProto = google.protobuf.DescriptorProto;
 import FieldDescriptorProto = google.protobuf.FieldDescriptorProto;
 import FileDescriptorProto = google.protobuf.FileDescriptorProto;
@@ -46,13 +46,11 @@ const dataloader = TypeNames.anyType('DataLoader=dataloader');
 
 export type Options = {
   useContext: boolean;
+  snakeToCamel: boolean;
 };
 
 export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, parameter: string): FileSpec {
-  const options: Options = { useContext: false };
-  if (parameter && parameter.includes('context=true')) {
-    options.useContext = true;
-  }
+  const options = optionsFromParameter(parameter);
 
   // Google's protofiles are organized like Java, where package == the folder the file
   // is in, and file == a specific service within the package. I.e. you can have multiple
@@ -72,8 +70,9 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
   visit(
     fileDesc,
     (fullName, message) => {
-      file = file.addInterface(generateInterfaceDeclaration(typeMap, fullName, message));
+      file = file.addInterface(generateInterfaceDeclaration(typeMap, fullName, message, options));
     },
+      options,
     (fullName, enumDesc) => {
       file = file.addEnum(generateEnum(fullName, enumDesc));
     }
@@ -83,20 +82,21 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
   visit(
     fileDesc,
     (fullName, message) => {
-      file = file.addProperty(generateBaseInstance(fullName, message));
+      file = file.addProperty(generateBaseInstance(fullName, message, options));
       let staticMethods = CodeBlock.empty()
         .add('export const %L = ', fullName)
         .beginHash()
-        .addHashEntry(generateEncode(typeMap, fullName, message))
-        .addHashEntry(generateDecode(typeMap, fullName, message))
-        .addHashEntry(generateFromJson(typeMap, fullName, message))
-        .addHashEntry(generateFromPartial(typeMap, fullName, message))
-        .addHashEntry(generateToJson(typeMap, fullName, message))
+        .addHashEntry(generateEncode(typeMap, fullName, message, options))
+        .addHashEntry(generateDecode(typeMap, fullName, message, options))
+        .addHashEntry(generateFromJson(typeMap, fullName, message, options))
+        .addHashEntry(generateFromPartial(typeMap, fullName, message, options))
+        .addHashEntry(generateToJson(typeMap, fullName, message, options))
         .endHash()
         .add(';')
         .newLine();
       file = file.addCode(staticMethods);
     },
+      options,
     (fullName, enumDesc) => {
       let staticMethods = CodeBlock.empty()
         .beginControlFlow('export namespace %L', fullName)
@@ -125,7 +125,7 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
   let hasAnyTimestamps = false;
   visit(fileDesc, (_, messageType) => {
     hasAnyTimestamps = hasAnyTimestamps || asSequence(messageType.field).any(isTimestamp);
-  });
+  }, options);
   if (hasAnyTimestamps) {
     file = addTimestampMethods(file);
   }
@@ -252,24 +252,24 @@ function generateEnumToJson(fullName: string, enumDesc: EnumDescriptorProto): Fu
 }
 
 // Create the interface with properties
-function generateInterfaceDeclaration(typeMap: TypeMap, fullName: string, messageDesc: DescriptorProto) {
+function generateInterfaceDeclaration(typeMap: TypeMap, fullName: string, messageDesc: DescriptorProto, options: Options) {
   let message = InterfaceSpec.create(fullName).addModifiers(Modifier.EXPORT);
   for (const fieldDesc of messageDesc.field) {
     message = message.addProperty(
-      PropertySpec.create(snakeToCamel(fieldDesc.name), toTypeName(typeMap, messageDesc, fieldDesc))
+      PropertySpec.create(maybeSnakeToCamel(fieldDesc.name, options), toTypeName(typeMap, messageDesc, fieldDesc))
     );
   }
   return message;
 }
 
-function generateBaseInstance(fullName: string, messageDesc: DescriptorProto) {
+function generateBaseInstance(fullName: string, messageDesc: DescriptorProto, options: Options) {
   // Create a 'base' instance with default values for decode to use as a prototype
   let baseMessage = PropertySpec.create('base' + fullName, TypeNames.anyType('object')).addModifiers(Modifier.CONST);
   let initialValue = CodeBlock.empty().beginHash();
   asSequence(messageDesc.field)
     .filterNot(isWithinOneOf)
     .forEach(field => {
-      initialValue = initialValue.addHashEntry(snakeToCamel(field.name), defaultValue(field.type));
+      initialValue = initialValue.addHashEntry(maybeSnakeToCamel(field.name, options), defaultValue(field.type));
     });
   return baseMessage.initializerBlock(initialValue.endHash());
 }
@@ -279,18 +279,19 @@ type EnumVisitor = (fullName: string, desc: EnumDescriptorProto) => void;
 export function visit(
   proto: FileDescriptorProto | DescriptorProto,
   messageFn: MessageVisitor,
+  options: Options,
   enumFn: EnumVisitor = () => {},
   prefix: string = ''
 ): void {
   for (const enumDesc of proto.enumType) {
-    const fullName = prefix + snakeToCamel(enumDesc.name);
+    const fullName = prefix + maybeSnakeToCamel(enumDesc.name, options);
     enumFn(fullName, enumDesc);
   }
   const messages = proto instanceof FileDescriptorProto ? proto.messageType : proto.nestedType;
   for (const message of messages) {
-    const fullName = prefix + snakeToCamel(message.name);
+    const fullName = prefix + maybeSnakeToCamel(message.name, options);
     messageFn(fullName, message);
-    visit(message, messageFn, enumFn, fullName + '_');
+    visit(message, messageFn, options, enumFn, fullName + '_');
   }
 }
 
@@ -301,7 +302,7 @@ function visitServices(proto: FileDescriptorProto, serviceFn: (desc: ServiceDesc
 }
 
 /** Creates a function to decode a message by loop overing the tags. */
-function generateDecode(typeMap: TypeMap, fullName: string, messageDesc: DescriptorProto): FunctionSpec {
+function generateDecode(typeMap: TypeMap, fullName: string, messageDesc: DescriptorProto, options: Options): FunctionSpec {
   // create the basic function declaration
   let func = FunctionSpec.create('decode')
     .addParameter('reader', 'Reader@protobufjs/minimal')
@@ -316,7 +317,7 @@ function generateDecode(typeMap: TypeMap, fullName: string, messageDesc: Descrip
   // initialize all lists
   messageDesc.field.filter(isRepeated).forEach(field => {
     const value = isMapType(typeMap, messageDesc, field) ? '{}' : '[]';
-    func = func.addStatement('message.%L = %L', snakeToCamel(field.name), value);
+    func = func.addStatement('message.%L = %L', maybeSnakeToCamel(field.name, options), value);
   });
 
   // start the tag loop
@@ -327,7 +328,7 @@ function generateDecode(typeMap: TypeMap, fullName: string, messageDesc: Descrip
 
   // add a case for each incoming field
   messageDesc.field.forEach(field => {
-    const fieldName = snakeToCamel(field.name);
+    const fieldName = maybeSnakeToCamel(field.name, options);
     func = func.addCode('case %L:%>\n', field.number);
 
     // get a generic 'reader.doSomething' bit that is specific to the basic type
@@ -391,7 +392,7 @@ function generateDecode(typeMap: TypeMap, fullName: string, messageDesc: Descrip
 }
 
 /** Creates a function to encode a message by loop overing the tags. */
-function generateEncode(typeMap: TypeMap, fullName: string, messageDesc: DescriptorProto): FunctionSpec {
+function generateEncode(typeMap: TypeMap, fullName: string, messageDesc: DescriptorProto, options: Options): FunctionSpec {
   // create the basic function declaration
   let func = FunctionSpec.create('encode')
     .addParameter('message', fullName)
@@ -399,7 +400,7 @@ function generateEncode(typeMap: TypeMap, fullName: string, messageDesc: Descrip
     .returns('Writer@protobufjs/minimal');
   // then add a case for each field
   messageDesc.field.forEach(field => {
-    const fieldName = snakeToCamel(field.name);
+    const fieldName = maybeSnakeToCamel(field.name, options);
 
     // get a generic writer.doSomething based on the basic type
     let writeSnippet: (place: string) => CodeBlock;
@@ -475,7 +476,7 @@ function generateEncode(typeMap: TypeMap, fullName: string, messageDesc: Descrip
  * This is very similar to decode, we loop through looking for properties, with
  * a few special cases for https://developers.google.com/protocol-buffers/docs/proto3#json.
  * */
-function generateFromJson(typeMap: TypeMap, fullName: string, messageDesc: DescriptorProto): FunctionSpec {
+function generateFromJson(typeMap: TypeMap, fullName: string, messageDesc: DescriptorProto, options: Options): FunctionSpec {
   // create the basic function declaration
   let func = FunctionSpec.create('fromJSON')
     .addParameter('object', 'any')
@@ -487,12 +488,12 @@ function generateFromJson(typeMap: TypeMap, fullName: string, messageDesc: Descr
   // initialize all lists
   messageDesc.field.filter(isRepeated).forEach(field => {
     const value = isMapType(typeMap, messageDesc, field) ? '{}' : '[]';
-    func = func.addStatement('message.%L = %L', snakeToCamel(field.name), value);
+    func = func.addStatement('message.%L = %L', maybeSnakeToCamel(field.name, options), value);
   });
 
   // add a check for each incoming field
   messageDesc.field.forEach(field => {
-    const fieldName = snakeToCamel(field.name);
+    const fieldName = maybeSnakeToCamel(field.name, options);
 
     // get a generic 'reader.doSomething' bit that is specific to the basic type
     const readSnippet = (from: string): CodeBlock => {
@@ -569,7 +570,7 @@ function generateFromJson(typeMap: TypeMap, fullName: string, messageDesc: Descr
   return func;
 }
 
-function generateToJson(typeMap: TypeMap, fullName: string, messageDesc: DescriptorProto): FunctionSpec {
+function generateToJson(typeMap: TypeMap, fullName: string, messageDesc: DescriptorProto, options: Options): FunctionSpec {
   // create the basic function declaration
   let func = FunctionSpec.create('toJSON')
     .addParameter('message', fullName)
@@ -577,7 +578,7 @@ function generateToJson(typeMap: TypeMap, fullName: string, messageDesc: Descrip
   func = func.addCodeBlock(CodeBlock.empty().addStatement('const obj: any = {}'));
   // then add a case for each field
   messageDesc.field.forEach(field => {
-    const fieldName = snakeToCamel(field.name);
+    const fieldName = maybeSnakeToCamel(field.name, options);
 
     const readSnippet = (from: string): CodeBlock => {
       if (isEnum(field)) {
@@ -611,7 +612,7 @@ function generateToJson(typeMap: TypeMap, fullName: string, messageDesc: Descrip
   return func.addStatement('return obj');
 }
 
-function generateFromPartial(typeMap: TypeMap, fullName: string, messageDesc: DescriptorProto): FunctionSpec {
+function generateFromPartial(typeMap: TypeMap, fullName: string, messageDesc: DescriptorProto, options: Options): FunctionSpec {
   // create the basic function declaration
   let func = FunctionSpec.create('fromPartial')
     .addParameter('object', `DeepPartial<${fullName}>`)
@@ -623,12 +624,12 @@ function generateFromPartial(typeMap: TypeMap, fullName: string, messageDesc: De
   // initialize all lists
   messageDesc.field.filter(isRepeated).forEach(field => {
     const value = isMapType(typeMap, messageDesc, field) ? '{}' : '[]';
-    func = func.addStatement('message.%L = %L', snakeToCamel(field.name), value);
+    func = func.addStatement('message.%L = %L', maybeSnakeToCamel(field.name, options), value);
   });
 
   // add a check for each incoming field
   messageDesc.field.forEach(field => {
-    const fieldName = snakeToCamel(field.name);
+    const fieldName = maybeSnakeToCamel(field.name, options);
 
     const readSnippet = (from: string): CodeBlock => {
       if (isEnum(field) || isPrimitive(field) || isTimestamp(field) || isValueType(field)) {
@@ -999,8 +1000,12 @@ function responsePromise(typeMap: TypeMap, methodDesc: MethodDescriptorProto): T
 //   return PropertySpec.create(snakeToCamel(name), adtType);
 // }
 
-function snakeToCamel(s: string): string {
-  return s.replace(/(\_\w)/g, m => m[1].toUpperCase());
+function maybeSnakeToCamel(s: string, options: Options): string {
+  if(options.snakeToCamel) {
+    return s.replace(/(\_\w)/g, m => m[1].toUpperCase());
+  } else {
+    return s;
+  }
 }
 
 function capitalize(s: string): string {

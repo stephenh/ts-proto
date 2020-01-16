@@ -1,4 +1,5 @@
 import ReadStream = NodeJS.ReadStream;
+import {Options} from "./main";
 
 export function readToBuffer(stream: ReadStream): Promise<Buffer> {
   return new Promise(resolve => {
@@ -31,4 +32,17 @@ export function lowerFirst(name: string): string {
 
 export function upperFirst(name: string): string {
   return name.substring(0, 1).toUpperCase() + name.substring(1);
+}
+
+export function optionsFromParameter(parameter: string): Options {
+  const options: Options = { useContext: false, snakeToCamel: true };
+  if (parameter) {
+    if (parameter.includes('context=true')) {
+      options.useContext = true;
+    }
+    if (parameter.includes('snakeToCamel=false')) {
+      options.snakeToCamel = false;
+    }
+  }
+  return options;
 }

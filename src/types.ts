@@ -1,6 +1,6 @@
 import { google } from '../build/pbjs';
 import { Member, TypeName, TypeNames } from 'ts-poet';
-import { visit } from './main';
+import { Options, visit } from './main';
 import { fail } from './utils';
 import { asSequence } from 'sequency';
 import FieldDescriptorProto = google.protobuf.FieldDescriptorProto;
@@ -184,7 +184,7 @@ export function defaultValue(type: FieldDescriptorProto.Type): any {
 export type TypeMap = Map<string, [string, string, DescriptorProto | EnumDescriptorProto]>;
 
 /** Scans all of the proto files in `request` and builds a map of proto typeName -> TS module/name. */
-export function createTypeMap(request: CodeGeneratorRequest): TypeMap {
+export function createTypeMap(request: CodeGeneratorRequest, options: Options): TypeMap {
   const typeMap: TypeMap = new Map();
   for (const file of request.protoFile) {
     // We assume a file.name of google/protobuf/wrappers.proto --> a module path of google/protobuf/wrapper.ts
@@ -196,7 +196,7 @@ export function createTypeMap(request: CodeGeneratorRequest): TypeMap {
       const name = fullName.replace(/_/g, '.');
       typeMap.set(`${prefix}.${name}`, [moduleName, fullName, desc]);
     }
-    visit(file, saveMapping, saveMapping);
+    visit(file, saveMapping, options, saveMapping);
   }
   return typeMap;
 }
