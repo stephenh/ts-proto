@@ -5,7 +5,7 @@ import { generateFile } from '../src/main';
 import { promisify } from 'util';
 import { createTypeMap } from '../src/types';
 import CodeGeneratorRequest = google.protobuf.compiler.CodeGeneratorRequest;
-import { optionsFromParameter } from "../src/utils";
+import { optionsFromParameter } from '../src/utils';
 
 /**
  * Generates output from our example proto files.
@@ -16,7 +16,9 @@ import { optionsFromParameter } from "../src/utils";
  */
 async function main() {
   await generate('./google/protobuf/wrappers.bin');
+  await generate('./google/protobuf/wrappers.bin', './build/integration-snake');
   await generate('./simple.bin');
+  await generate('./simple.bin', './build/integration-snake', 'snakeToCamel=false');
   await generate('./vector_tile.bin');
   await generate('./batching.bin');
   await generate('./batching.bin', './build/integration-context/', 'context=true');
@@ -29,7 +31,7 @@ async function generate(binFile: string, baseDir: string = './build/integration'
   if (parameter) {
     request.parameter = parameter;
   }
-  const map = createTypeMap(request, optionsFromParameter(parameter));
+  const map = createTypeMap(request, optionsFromParameter(parameter || ''));
   for (let file of request.protoFile) {
     const spec = generateFile(map, file, request.parameter);
     const filePath = `${baseDir}/${spec.path}`;

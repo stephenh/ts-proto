@@ -13,7 +13,7 @@ message Simple {
   repeated Child grand_children = 5;
   repeated int32 coins = 6;
   repeated string snacks = 7;
-  repeated StateEnum oldStates = 8;
+  repeated StateEnum old_states = 8;
   ImportedThing thing = 10;
 }
 

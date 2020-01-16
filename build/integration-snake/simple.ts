@@ -14,13 +14,13 @@ export enum StateEnum {
 export interface Simple {
   name: string;
   age: number;
-  createdAt: Date | undefined;
+  created_at: Date | undefined;
   child: Child | undefined;
   state: StateEnum;
-  grandChildren: Child[];
+  grand_children: Child[];
   coins: number[];
   snacks: string[];
-  oldStates: StateEnum[];
+  old_states: StateEnum[];
   thing: ImportedThing | undefined;
 }
 
@@ -95,7 +95,7 @@ export interface SimpleWithMap_IntLookupEntry {
 }
 
 export interface SimpleWithSnakeCaseMap {
-  entitiesById: { [key: number]: Entity };
+  entities_by_id: { [key: number]: Entity };
 }
 
 export interface SimpleWithSnakeCaseMap_EntitiesByIdEntry {
@@ -114,13 +114,13 @@ export interface PingResponse {
 const baseSimple: object = {
   name: "",
   age: 0,
-  createdAt: undefined,
+  created_at: undefined,
   child: undefined,
   state: 0,
-  grandChildren: undefined,
+  grand_children: undefined,
   coins: 0,
   snacks: "",
-  oldStates: 0,
+  old_states: 0,
   thing: undefined,
 };
 
@@ -181,7 +181,7 @@ const baseSimpleWithMap_IntLookupEntry: object = {
 };
 
 const baseSimpleWithSnakeCaseMap: object = {
-  entitiesById: undefined,
+  entities_by_id: undefined,
 };
 
 const baseSimpleWithSnakeCaseMap_EntitiesByIdEntry: object = {
@@ -288,14 +288,14 @@ export const Simple = {
   encode(message: Simple, writer: Writer = Writer.create()): Writer {
     writer.uint32(10).string(message.name);
     writer.uint32(16).int32(message.age);
-    if (message.createdAt !== undefined && message.createdAt !== undefined) {
-      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(74).fork()).ldelim();
+    if (message.created_at !== undefined && message.created_at !== undefined) {
+      Timestamp.encode(toTimestamp(message.created_at), writer.uint32(74).fork()).ldelim();
     }
     if (message.child !== undefined && message.child !== undefined) {
       Child.encode(message.child, writer.uint32(26).fork()).ldelim();
     }
     writer.uint32(32).int32(message.state);
-    for (const v of message.grandChildren) {
+    for (const v of message.grand_children) {
       Child.encode(v!, writer.uint32(42).fork()).ldelim();
     }
     writer.uint32(50).fork();
@@ -307,7 +307,7 @@ export const Simple = {
       writer.uint32(58).string(v!);
     }
     writer.uint32(66).fork();
-    for (const v of message.oldStates) {
+    for (const v of message.old_states) {
       writer.int32(v);
     }
     writer.ldelim();
@@ -319,10 +319,10 @@ export const Simple = {
   decode(reader: Reader, length?: number): Simple {
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = Object.create(baseSimple) as Simple;
-    message.grandChildren = [];
+    message.grand_children = [];
     message.coins = [];
     message.snacks = [];
-    message.oldStates = [];
+    message.old_states = [];
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -333,7 +333,7 @@ export const Simple = {
           message.age = reader.int32();
           break;
         case 9:
-          message.createdAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.created_at = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           break;
         case 3:
           message.child = Child.decode(reader, reader.uint32());
@@ -342,7 +342,7 @@ export const Simple = {
           message.state = reader.int32();
           break;
         case 5:
-          message.grandChildren.push(Child.decode(reader, reader.uint32()));
+          message.grand_children.push(Child.decode(reader, reader.uint32()));
           break;
         case 6:
           if ((tag & 7) === 2) {
@@ -361,10 +361,10 @@ export const Simple = {
           if ((tag & 7) === 2) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
-              message.oldStates.push(reader.int32());
+              message.old_states.push(reader.int32());
             }
           } else {
-            message.oldStates.push(reader.int32());
+            message.old_states.push(reader.int32());
           }
           break;
         case 10:
@@ -379,10 +379,10 @@ export const Simple = {
   },
   fromJSON(object: any): Simple {
     const message = Object.create(baseSimple) as Simple;
-    message.grandChildren = [];
+    message.grand_children = [];
     message.coins = [];
     message.snacks = [];
-    message.oldStates = [];
+    message.old_states = [];
     if (object.name !== undefined && object.name !== null) {
       message.name = String(object.name);
     } else {
@@ -393,10 +393,10 @@ export const Simple = {
     } else {
       message.age = 0;
     }
-    if (object.createdAt !== undefined && object.createdAt !== null) {
-      message.createdAt = fromJsonTimestamp(object.createdAt);
+    if (object.created_at !== undefined && object.created_at !== null) {
+      message.created_at = fromJsonTimestamp(object.created_at);
     } else {
-      message.createdAt = undefined;
+      message.created_at = undefined;
     }
     if (object.child !== undefined && object.child !== null) {
       message.child = Child.fromJSON(object.child);
@@ -408,9 +408,9 @@ export const Simple = {
     } else {
       message.state = 0;
     }
-    if (object.grandChildren !== undefined && object.grandChildren !== null) {
-      for (const e of object.grandChildren) {
-        message.grandChildren.push(Child.fromJSON(e));
+    if (object.grand_children !== undefined && object.grand_children !== null) {
+      for (const e of object.grand_children) {
+        message.grand_children.push(Child.fromJSON(e));
       }
     }
     if (object.coins !== undefined && object.coins !== null) {
@@ -423,9 +423,9 @@ export const Simple = {
         message.snacks.push(String(e));
       }
     }
-    if (object.oldStates !== undefined && object.oldStates !== null) {
-      for (const e of object.oldStates) {
-        message.oldStates.push(StateEnum.fromJSON(e));
+    if (object.old_states !== undefined && object.old_states !== null) {
+      for (const e of object.old_states) {
+        message.old_states.push(StateEnum.fromJSON(e));
       }
     }
     if (object.thing !== undefined && object.thing !== null) {
@@ -437,10 +437,10 @@ export const Simple = {
   },
   fromPartial(object: DeepPartial<Simple>): Simple {
     const message = Object.create(baseSimple) as Simple;
-    message.grandChildren = [];
+    message.grand_children = [];
     message.coins = [];
     message.snacks = [];
-    message.oldStates = [];
+    message.old_states = [];
     if (object.name !== undefined && object.name !== null) {
       message.name = object.name;
     } else {
@@ -451,10 +451,10 @@ export const Simple = {
     } else {
       message.age = 0;
     }
-    if (object.createdAt !== undefined && object.createdAt !== null) {
-      message.createdAt = object.createdAt;
+    if (object.created_at !== undefined && object.created_at !== null) {
+      message.created_at = object.created_at;
     } else {
-      message.createdAt = undefined;
+      message.created_at = undefined;
     }
     if (object.child !== undefined && object.child !== null) {
       message.child = Child.fromPartial(object.child);
@@ -466,9 +466,9 @@ export const Simple = {
     } else {
       message.state = 0;
     }
-    if (object.grandChildren !== undefined && object.grandChildren !== null) {
-      for (const e of object.grandChildren) {
-        message.grandChildren.push(Child.fromPartial(e));
+    if (object.grand_children !== undefined && object.grand_children !== null) {
+      for (const e of object.grand_children) {
+        message.grand_children.push(Child.fromPartial(e));
       }
     }
     if (object.coins !== undefined && object.coins !== null) {
@@ -481,9 +481,9 @@ export const Simple = {
         message.snacks.push(e);
       }
     }
-    if (object.oldStates !== undefined && object.oldStates !== null) {
-      for (const e of object.oldStates) {
-        message.oldStates.push(e);
+    if (object.old_states !== undefined && object.old_states !== null) {
+      for (const e of object.old_states) {
+        message.old_states.push(e);
       }
     }
     if (object.thing !== undefined && object.thing !== null) {
@@ -497,13 +497,13 @@ export const Simple = {
     const obj: any = {};
     obj.name = message.name || "";
     obj.age = message.age || 0;
-    obj.createdAt = message.createdAt !== undefined ? message.createdAt.toISOString() : null;
+    obj.created_at = message.created_at !== undefined ? message.created_at.toISOString() : null;
     obj.child = message.child ? Child.toJSON(message.child) : undefined;
     obj.state = StateEnum.toJSON(message.state);
-    if (message.grandChildren) {
-      obj.grandChildren = message.grandChildren.map(e => e ? Child.toJSON(e) : undefined);
+    if (message.grand_children) {
+      obj.grand_children = message.grand_children.map(e => e ? Child.toJSON(e) : undefined);
     } else {
-      obj.grandChildren = [];
+      obj.grand_children = [];
     }
     if (message.coins) {
       obj.coins = message.coins.map(e => e || 0);
@@ -515,10 +515,10 @@ export const Simple = {
     } else {
       obj.snacks = [];
     }
-    if (message.oldStates) {
-      obj.oldStates = message.oldStates.map(e => StateEnum.toJSON(e));
+    if (message.old_states) {
+      obj.old_states = message.old_states.map(e => StateEnum.toJSON(e));
     } else {
-      obj.oldStates = [];
+      obj.old_states = [];
     }
     obj.thing = message.thing ? ImportedThing.toJSON(message.thing) : undefined;
     return obj;
@@ -1367,7 +1367,7 @@ export const SimpleWithMap_IntLookupEntry = {
 
 export const SimpleWithSnakeCaseMap = {
   encode(message: SimpleWithSnakeCaseMap, writer: Writer = Writer.create()): Writer {
-    Object.entries(message.entitiesById).forEach(([key, value]) => {
+    Object.entries(message.entities_by_id).forEach(([key, value]) => {
       SimpleWithSnakeCaseMap_EntitiesByIdEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).ldelim();
     })
     return writer;
@@ -1375,14 +1375,14 @@ export const SimpleWithSnakeCaseMap = {
   decode(reader: Reader, length?: number): SimpleWithSnakeCaseMap {
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = Object.create(baseSimpleWithSnakeCaseMap) as SimpleWithSnakeCaseMap;
-    message.entitiesById = {};
+    message.entities_by_id = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
           const entry1 = SimpleWithSnakeCaseMap_EntitiesByIdEntry.decode(reader, reader.uint32());
           if (entry1.value) {
-            message.entitiesById[entry1.key] = entry1.value;
+            message.entities_by_id[entry1.key] = entry1.value;
           }
           break;
         default:
@@ -1394,21 +1394,21 @@ export const SimpleWithSnakeCaseMap = {
   },
   fromJSON(object: any): SimpleWithSnakeCaseMap {
     const message = Object.create(baseSimpleWithSnakeCaseMap) as SimpleWithSnakeCaseMap;
-    message.entitiesById = {};
-    if (object.entitiesById !== undefined && object.entitiesById !== null) {
-      Object.entries(object.entitiesById).forEach(([key, value]) => {
-        message.entitiesById[Number(key)] = Entity.fromJSON(value);
+    message.entities_by_id = {};
+    if (object.entities_by_id !== undefined && object.entities_by_id !== null) {
+      Object.entries(object.entities_by_id).forEach(([key, value]) => {
+        message.entities_by_id[Number(key)] = Entity.fromJSON(value);
       })
     }
     return message;
   },
   fromPartial(object: DeepPartial<SimpleWithSnakeCaseMap>): SimpleWithSnakeCaseMap {
     const message = Object.create(baseSimpleWithSnakeCaseMap) as SimpleWithSnakeCaseMap;
-    message.entitiesById = {};
-    if (object.entitiesById !== undefined && object.entitiesById !== null) {
-      Object.entries(object.entitiesById).forEach(([key, value]) => {
+    message.entities_by_id = {};
+    if (object.entities_by_id !== undefined && object.entities_by_id !== null) {
+      Object.entries(object.entities_by_id).forEach(([key, value]) => {
         if (value) {
-          message.entitiesById[Number(key)] = Entity.fromPartial(value);
+          message.entities_by_id[Number(key)] = Entity.fromPartial(value);
         }
       })
     }
@@ -1416,7 +1416,7 @@ export const SimpleWithSnakeCaseMap = {
   },
   toJSON(message: SimpleWithSnakeCaseMap): unknown {
     const obj: any = {};
-    obj.entitiesById = message.entitiesById || undefined;
+    obj.entities_by_id = message.entities_by_id || undefined;
     return obj;
   },
 };
