@@ -47,7 +47,7 @@ export const Timestamp = {
   fromJSON(object: any): Timestamp {
     const message = Object.create(baseTimestamp) as Timestamp;
     if (object.seconds !== undefined && object.seconds !== null) {
-      message.seconds = Number.fromString(object.seconds);
+      message.seconds = Number(object.seconds);
     } else {
       message.seconds = 0;
     }
@@ -74,7 +74,7 @@ export const Timestamp = {
   },
   toJSON(message: Timestamp): unknown {
     const obj: any = {};
-    obj.seconds = (message.seconds || 0).toString();
+    obj.seconds = message.seconds || 0;
     obj.nanos = message.nanos || 0;
     return obj;
   },

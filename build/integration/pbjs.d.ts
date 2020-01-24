@@ -297,6 +297,46 @@ export namespace simple {
         public toJSON(): { [k: string]: any };
     }
 
+    interface INumbers {
+        double?: (number|null);
+        float?: (number|null);
+        int32?: (number|null);
+        int64?: (number|null);
+        uint32?: (number|null);
+        uint64?: (number|null);
+        sint32?: (number|null);
+        sint64?: (number|null);
+        fixed32?: (number|null);
+        fixed64?: (number|null);
+        sfixed32?: (number|null);
+        sfixed64?: (number|null);
+    }
+
+    class Numbers implements INumbers {
+        constructor(properties?: simple.INumbers);
+        public double: number;
+        public float: number;
+        public int32: number;
+        public int64: number;
+        public uint32: number;
+        public uint64: number;
+        public sint32: number;
+        public sint64: number;
+        public fixed32: number;
+        public fixed64: number;
+        public sfixed32: number;
+        public sfixed64: number;
+        public static create(properties?: simple.INumbers): simple.Numbers;
+        public static encode(message: simple.Numbers, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encodeDelimited(message: simple.Numbers, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): simple.Numbers;
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): simple.Numbers;
+        public static verify(message: { [k: string]: any }): (string|null);
+        public static fromObject(object: { [k: string]: any }): simple.Numbers;
+        public static toObject(message: simple.Numbers, options?: $protobuf.IConversionOptions): { [k: string]: any };
+        public toJSON(): { [k: string]: any };
+    }
+
     interface IImportedThing {
         createdAt?: (google.protobuf.Timestamp|null);
     }
@@ -357,12 +397,12 @@ export namespace google {
         }
 
         interface IInt64Value {
-            value?: (number|Long|null);
+            value?: (number|null);
         }
 
         class Int64Value implements IInt64Value {
             constructor(properties?: google.protobuf.IInt64Value);
-            public value: (number|Long);
+            public value: number;
             public static create(properties?: google.protobuf.IInt64Value): google.protobuf.Int64Value;
             public static encode(message: google.protobuf.Int64Value, writer?: $protobuf.Writer): $protobuf.Writer;
             public static encodeDelimited(message: google.protobuf.Int64Value, writer?: $protobuf.Writer): $protobuf.Writer;
@@ -375,12 +415,12 @@ export namespace google {
         }
 
         interface IUInt64Value {
-            value?: (number|Long|null);
+            value?: (number|null);
         }
 
         class UInt64Value implements IUInt64Value {
             constructor(properties?: google.protobuf.IUInt64Value);
-            public value: (number|Long);
+            public value: number;
             public static create(properties?: google.protobuf.IUInt64Value): google.protobuf.UInt64Value;
             public static encode(message: google.protobuf.UInt64Value, writer?: $protobuf.Writer): $protobuf.Writer;
             public static encodeDelimited(message: google.protobuf.UInt64Value, writer?: $protobuf.Writer): $protobuf.Writer;
@@ -483,13 +523,13 @@ export namespace google {
         }
 
         interface ITimestamp {
-            seconds?: (number|Long|null);
+            seconds?: (number|null);
             nanos?: (number|null);
         }
 
         class Timestamp implements ITimestamp {
             constructor(properties?: google.protobuf.ITimestamp);
-            public seconds: (number|Long);
+            public seconds: number;
             public nanos: number;
             public static create(properties?: google.protobuf.ITimestamp): google.protobuf.Timestamp;
             public static encode(message: google.protobuf.Timestamp, writer?: $protobuf.Writer): $protobuf.Writer;
@@ -537,9 +577,9 @@ export namespace vector_tile {
             stringValue?: (string|null);
             floatValue?: (number|null);
             doubleValue?: (number|null);
-            intValue?: (number|Long|null);
-            uintValue?: (number|Long|null);
-            sintValue?: (number|Long|null);
+            intValue?: (number|null);
+            uintValue?: (number|null);
+            sintValue?: (number|null);
             boolValue?: (boolean|null);
         }
 
@@ -548,9 +588,9 @@ export namespace vector_tile {
             public stringValue: string;
             public floatValue: number;
             public doubleValue: number;
-            public intValue: (number|Long);
-            public uintValue: (number|Long);
-            public sintValue: (number|Long);
+            public intValue: number;
+            public uintValue: number;
+            public sintValue: number;
             public boolValue: boolean;
             public static create(properties?: vector_tile.Tile.IValue): vector_tile.Tile.Value;
             public static encode(message: vector_tile.Tile.Value, writer?: $protobuf.Writer): $protobuf.Writer;
@@ -564,7 +604,7 @@ export namespace vector_tile {
         }
 
         interface IFeature {
-            id?: (number|Long|null);
+            id?: (number|null);
             tags?: (number[]|null);
             type?: (vector_tile.Tile.GeomType|null);
             geometry?: (number[]|null);
@@ -572,7 +612,7 @@ export namespace vector_tile {
 
         class Feature implements IFeature {
             constructor(properties?: vector_tile.Tile.IFeature);
-            public id: (number|Long);
+            public id: number;
             public tags: number[];
             public type: vector_tile.Tile.GeomType;
             public geometry: number[];

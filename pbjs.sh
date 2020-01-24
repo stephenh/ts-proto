@@ -15,8 +15,15 @@ yarn pbts --no-comments -o build/pbjs.d.ts build/pbjs.js
 # We generate pbjs files of our test files as known-good behavior
 # for our test suite to use.
 mkdir -p build/integration
-yarn pbjs --force-message -t static-module -o build/integration/pbjs.js \
+yarn pbjs --force-message --force-number -t static-module -o build/integration/pbjs.js \
   simple.proto \
   vector_tile.proto
 yarn pbts --no-comments -o build/integration/pbjs.d.ts build/integration/pbjs.js
 
+# We generate pbjs files of our test files as known-good behavior
+# for our test suite to use.
+mkdir -p build/integration
+yarn pbjs --force-message --force-long -t static-module -o build/integration-long/pbjs.js \
+  simple.proto \
+  vector_tile.proto
+yarn pbts --no-comments -o build/integration-long/pbjs.d.ts build/integration-long/pbjs.js

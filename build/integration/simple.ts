@@ -492,7 +492,7 @@ export const Simple = {
       message.child = undefined;
     }
     if (object.state !== undefined && object.state !== null) {
-      message.state = object.state as StateEnum;
+      message.state = object.state;
     } else {
       message.state = 0;
     }
@@ -602,7 +602,7 @@ export const Child = {
       message.name = "";
     }
     if (object.type !== undefined && object.type !== null) {
-      message.type = object.type as Child_Type;
+      message.type = object.type;
     } else {
       message.type = 0;
     }
@@ -709,7 +709,7 @@ export const Nested = {
       message.message = undefined;
     }
     if (object.state !== undefined && object.state !== null) {
-      message.state = object.state as Nested_InnerEnum;
+      message.state = object.state;
     } else {
       message.state = 0;
     }
@@ -1689,7 +1689,7 @@ export const Numbers = {
       message.int32 = 0;
     }
     if (object.int64 !== undefined && object.int64 !== null) {
-      message.int64 = Number.fromString(object.int64);
+      message.int64 = Number(object.int64);
     } else {
       message.int64 = 0;
     }
@@ -1699,7 +1699,7 @@ export const Numbers = {
       message.uint32 = 0;
     }
     if (object.uint64 !== undefined && object.uint64 !== null) {
-      message.uint64 = Number.fromString(object.uint64);
+      message.uint64 = Number(object.uint64);
     } else {
       message.uint64 = 0;
     }
@@ -1709,7 +1709,7 @@ export const Numbers = {
       message.sint32 = 0;
     }
     if (object.sint64 !== undefined && object.sint64 !== null) {
-      message.sint64 = Number.fromString(object.sint64);
+      message.sint64 = Number(object.sint64);
     } else {
       message.sint64 = 0;
     }
@@ -1719,7 +1719,7 @@ export const Numbers = {
       message.fixed32 = 0;
     }
     if (object.fixed64 !== undefined && object.fixed64 !== null) {
-      message.fixed64 = Number.fromString(object.fixed64);
+      message.fixed64 = Number(object.fixed64);
     } else {
       message.fixed64 = 0;
     }
@@ -1729,7 +1729,7 @@ export const Numbers = {
       message.sfixed32 = 0;
     }
     if (object.sfixed64 !== undefined && object.sfixed64 !== null) {
-      message.sfixed64 = Number.fromString(object.sfixed64);
+      message.sfixed64 = Number(object.sfixed64);
     } else {
       message.sfixed64 = 0;
     }
@@ -1804,15 +1804,15 @@ export const Numbers = {
     obj.double = message.double || 0;
     obj.float = message.float || 0;
     obj.int32 = message.int32 || 0;
-    obj.int64 = (message.int64 || 0).toString();
+    obj.int64 = message.int64 || 0;
     obj.uint32 = message.uint32 || 0;
-    obj.uint64 = (message.uint64 || 0).toString();
+    obj.uint64 = message.uint64 || 0;
     obj.sint32 = message.sint32 || 0;
-    obj.sint64 = (message.sint64 || 0).toString();
+    obj.sint64 = message.sint64 || 0;
     obj.fixed32 = message.fixed32 || 0;
-    obj.fixed64 = (message.fixed64 || 0).toString();
+    obj.fixed64 = message.fixed64 || 0;
     obj.sfixed32 = message.sfixed32 || 0;
-    obj.sfixed64 = (message.sfixed64 || 0).toString();
+    obj.sfixed64 = message.sfixed64 || 0;
     return obj;
   },
 };

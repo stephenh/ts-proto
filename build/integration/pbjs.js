@@ -3207,6 +3207,506 @@
             return PingResponse;
         })();
     
+        simple.Numbers = (function() {
+    
+            /**
+             * Properties of a Numbers.
+             * @memberof simple
+             * @interface INumbers
+             * @property {number|null} [double] Numbers double
+             * @property {number|null} [float] Numbers float
+             * @property {number|null} [int32] Numbers int32
+             * @property {number|null} [int64] Numbers int64
+             * @property {number|null} [uint32] Numbers uint32
+             * @property {number|null} [uint64] Numbers uint64
+             * @property {number|null} [sint32] Numbers sint32
+             * @property {number|null} [sint64] Numbers sint64
+             * @property {number|null} [fixed32] Numbers fixed32
+             * @property {number|null} [fixed64] Numbers fixed64
+             * @property {number|null} [sfixed32] Numbers sfixed32
+             * @property {number|null} [sfixed64] Numbers sfixed64
+             */
+    
+            /**
+             * Constructs a new Numbers.
+             * @memberof simple
+             * @classdesc Represents a Numbers.
+             * @implements INumbers
+             * @constructor
+             * @param {simple.INumbers=} [properties] Properties to set
+             */
+            function Numbers(properties) {
+                if (properties)
+                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
+            }
+    
+            /**
+             * Numbers double.
+             * @member {number} double
+             * @memberof simple.Numbers
+             * @instance
+             */
+            Numbers.prototype.double = 0;
+    
+            /**
+             * Numbers float.
+             * @member {number} float
+             * @memberof simple.Numbers
+             * @instance
+             */
+            Numbers.prototype.float = 0;
+    
+            /**
+             * Numbers int32.
+             * @member {number} int32
+             * @memberof simple.Numbers
+             * @instance
+             */
+            Numbers.prototype.int32 = 0;
+    
+            /**
+             * Numbers int64.
+             * @member {number} int64
+             * @memberof simple.Numbers
+             * @instance
+             */
+            Numbers.prototype.int64 = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+    
+            /**
+             * Numbers uint32.
+             * @member {number} uint32
+             * @memberof simple.Numbers
+             * @instance
+             */
+            Numbers.prototype.uint32 = 0;
+    
+            /**
+             * Numbers uint64.
+             * @member {number} uint64
+             * @memberof simple.Numbers
+             * @instance
+             */
+            Numbers.prototype.uint64 = $util.Long ? $util.Long.fromBits(0,0,true) : 0;
+    
+            /**
+             * Numbers sint32.
+             * @member {number} sint32
+             * @memberof simple.Numbers
+             * @instance
+             */
+            Numbers.prototype.sint32 = 0;
+    
+            /**
+             * Numbers sint64.
+             * @member {number} sint64
+             * @memberof simple.Numbers
+             * @instance
+             */
+            Numbers.prototype.sint64 = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+    
+            /**
+             * Numbers fixed32.
+             * @member {number} fixed32
+             * @memberof simple.Numbers
+             * @instance
+             */
+            Numbers.prototype.fixed32 = 0;
+    
+            /**
+             * Numbers fixed64.
+             * @member {number} fixed64
+             * @memberof simple.Numbers
+             * @instance
+             */
+            Numbers.prototype.fixed64 = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+    
+            /**
+             * Numbers sfixed32.
+             * @member {number} sfixed32
+             * @memberof simple.Numbers
+             * @instance
+             */
+            Numbers.prototype.sfixed32 = 0;
+    
+            /**
+             * Numbers sfixed64.
+             * @member {number} sfixed64
+             * @memberof simple.Numbers
+             * @instance
+             */
+            Numbers.prototype.sfixed64 = $util.Long ? $util.Long.fromBits(0,0,false) : 0;
+    
+            /**
+             * Creates a new Numbers instance using the specified properties.
+             * @function create
+             * @memberof simple.Numbers
+             * @static
+             * @param {simple.INumbers=} [properties] Properties to set
+             * @returns {simple.Numbers} Numbers instance
+             */
+            Numbers.create = function create(properties) {
+                return new Numbers(properties);
+            };
+    
+            /**
+             * Encodes the specified Numbers message. Does not implicitly {@link simple.Numbers.verify|verify} messages.
+             * @function encode
+             * @memberof simple.Numbers
+             * @static
+             * @param {simple.Numbers} message Numbers message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            Numbers.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (message.double != null && message.hasOwnProperty("double"))
+                    writer.uint32(/* id 1, wireType 1 =*/9).double(message.double);
+                if (message.float != null && message.hasOwnProperty("float"))
+                    writer.uint32(/* id 2, wireType 5 =*/21).float(message.float);
+                if (message.int32 != null && message.hasOwnProperty("int32"))
+                    writer.uint32(/* id 3, wireType 0 =*/24).int32(message.int32);
+                if (message.int64 != null && message.hasOwnProperty("int64"))
+                    writer.uint32(/* id 4, wireType 0 =*/32).int64(message.int64);
+                if (message.uint32 != null && message.hasOwnProperty("uint32"))
+                    writer.uint32(/* id 5, wireType 0 =*/40).uint32(message.uint32);
+                if (message.uint64 != null && message.hasOwnProperty("uint64"))
+                    writer.uint32(/* id 6, wireType 0 =*/48).uint64(message.uint64);
+                if (message.sint32 != null && message.hasOwnProperty("sint32"))
+                    writer.uint32(/* id 7, wireType 0 =*/56).sint32(message.sint32);
+                if (message.sint64 != null && message.hasOwnProperty("sint64"))
+                    writer.uint32(/* id 8, wireType 0 =*/64).sint64(message.sint64);
+                if (message.fixed32 != null && message.hasOwnProperty("fixed32"))
+                    writer.uint32(/* id 9, wireType 5 =*/77).fixed32(message.fixed32);
+                if (message.fixed64 != null && message.hasOwnProperty("fixed64"))
+                    writer.uint32(/* id 10, wireType 1 =*/81).fixed64(message.fixed64);
+                if (message.sfixed32 != null && message.hasOwnProperty("sfixed32"))
+                    writer.uint32(/* id 11, wireType 5 =*/93).sfixed32(message.sfixed32);
+                if (message.sfixed64 != null && message.hasOwnProperty("sfixed64"))
+                    writer.uint32(/* id 12, wireType 1 =*/97).sfixed64(message.sfixed64);
+                return writer;
+            };
+    
+            /**
+             * Encodes the specified Numbers message, length delimited. Does not implicitly {@link simple.Numbers.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof simple.Numbers
+             * @static
+             * @param {simple.Numbers} message Numbers message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            Numbers.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
+            };
+    
+            /**
+             * Decodes a Numbers message from the specified reader or buffer.
+             * @function decode
+             * @memberof simple.Numbers
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {simple.Numbers} Numbers
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            Numbers.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.simple.Numbers();
+                while (reader.pos < end) {
+                    var tag = reader.uint32();
+                    switch (tag >>> 3) {
+                    case 1:
+                        message.double = reader.double();
+                        break;
+                    case 2:
+                        message.float = reader.float();
+                        break;
+                    case 3:
+                        message.int32 = reader.int32();
+                        break;
+                    case 4:
+                        message.int64 = reader.int64();
+                        break;
+                    case 5:
+                        message.uint32 = reader.uint32();
+                        break;
+                    case 6:
+                        message.uint64 = reader.uint64();
+                        break;
+                    case 7:
+                        message.sint32 = reader.sint32();
+                        break;
+                    case 8:
+                        message.sint64 = reader.sint64();
+                        break;
+                    case 9:
+                        message.fixed32 = reader.fixed32();
+                        break;
+                    case 10:
+                        message.fixed64 = reader.fixed64();
+                        break;
+                    case 11:
+                        message.sfixed32 = reader.sfixed32();
+                        break;
+                    case 12:
+                        message.sfixed64 = reader.sfixed64();
+                        break;
+                    default:
+                        reader.skipType(tag & 7);
+                        break;
+                    }
+                }
+                return message;
+            };
+    
+            /**
+             * Decodes a Numbers message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof simple.Numbers
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {simple.Numbers} Numbers
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            Numbers.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+    
+            /**
+             * Verifies a Numbers message.
+             * @function verify
+             * @memberof simple.Numbers
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            Numbers.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (message.double != null && message.hasOwnProperty("double"))
+                    if (typeof message.double !== "number")
+                        return "double: number expected";
+                if (message.float != null && message.hasOwnProperty("float"))
+                    if (typeof message.float !== "number")
+                        return "float: number expected";
+                if (message.int32 != null && message.hasOwnProperty("int32"))
+                    if (!$util.isInteger(message.int32))
+                        return "int32: integer expected";
+                if (message.int64 != null && message.hasOwnProperty("int64"))
+                    if (!$util.isInteger(message.int64) && !(message.int64 && $util.isInteger(message.int64.low) && $util.isInteger(message.int64.high)))
+                        return "int64: integer|Long expected";
+                if (message.uint32 != null && message.hasOwnProperty("uint32"))
+                    if (!$util.isInteger(message.uint32))
+                        return "uint32: integer expected";
+                if (message.uint64 != null && message.hasOwnProperty("uint64"))
+                    if (!$util.isInteger(message.uint64) && !(message.uint64 && $util.isInteger(message.uint64.low) && $util.isInteger(message.uint64.high)))
+                        return "uint64: integer|Long expected";
+                if (message.sint32 != null && message.hasOwnProperty("sint32"))
+                    if (!$util.isInteger(message.sint32))
+                        return "sint32: integer expected";
+                if (message.sint64 != null && message.hasOwnProperty("sint64"))
+                    if (!$util.isInteger(message.sint64) && !(message.sint64 && $util.isInteger(message.sint64.low) && $util.isInteger(message.sint64.high)))
+                        return "sint64: integer|Long expected";
+                if (message.fixed32 != null && message.hasOwnProperty("fixed32"))
+                    if (!$util.isInteger(message.fixed32))
+                        return "fixed32: integer expected";
+                if (message.fixed64 != null && message.hasOwnProperty("fixed64"))
+                    if (!$util.isInteger(message.fixed64) && !(message.fixed64 && $util.isInteger(message.fixed64.low) && $util.isInteger(message.fixed64.high)))
+                        return "fixed64: integer|Long expected";
+                if (message.sfixed32 != null && message.hasOwnProperty("sfixed32"))
+                    if (!$util.isInteger(message.sfixed32))
+                        return "sfixed32: integer expected";
+                if (message.sfixed64 != null && message.hasOwnProperty("sfixed64"))
+                    if (!$util.isInteger(message.sfixed64) && !(message.sfixed64 && $util.isInteger(message.sfixed64.low) && $util.isInteger(message.sfixed64.high)))
+                        return "sfixed64: integer|Long expected";
+                return null;
+            };
+    
+            /**
+             * Creates a Numbers message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof simple.Numbers
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {simple.Numbers} Numbers
+             */
+            Numbers.fromObject = function fromObject(object) {
+                if (object instanceof $root.simple.Numbers)
+                    return object;
+                var message = new $root.simple.Numbers();
+                if (object.double != null)
+                    message.double = Number(object.double);
+                if (object.float != null)
+                    message.float = Number(object.float);
+                if (object.int32 != null)
+                    message.int32 = object.int32 | 0;
+                if (object.int64 != null)
+                    if ($util.Long)
+                        (message.int64 = $util.Long.fromValue(object.int64)).unsigned = false;
+                    else if (typeof object.int64 === "string")
+                        message.int64 = parseInt(object.int64, 10);
+                    else if (typeof object.int64 === "number")
+                        message.int64 = object.int64;
+                    else if (typeof object.int64 === "object")
+                        message.int64 = new $util.LongBits(object.int64.low >>> 0, object.int64.high >>> 0).toNumber();
+                if (object.uint32 != null)
+                    message.uint32 = object.uint32 >>> 0;
+                if (object.uint64 != null)
+                    if ($util.Long)
+                        (message.uint64 = $util.Long.fromValue(object.uint64)).unsigned = true;
+                    else if (typeof object.uint64 === "string")
+                        message.uint64 = parseInt(object.uint64, 10);
+                    else if (typeof object.uint64 === "number")
+                        message.uint64 = object.uint64;
+                    else if (typeof object.uint64 === "object")
+                        message.uint64 = new $util.LongBits(object.uint64.low >>> 0, object.uint64.high >>> 0).toNumber(true);
+                if (object.sint32 != null)
+                    message.sint32 = object.sint32 | 0;
+                if (object.sint64 != null)
+                    if ($util.Long)
+                        (message.sint64 = $util.Long.fromValue(object.sint64)).unsigned = false;
+                    else if (typeof object.sint64 === "string")
+                        message.sint64 = parseInt(object.sint64, 10);
+                    else if (typeof object.sint64 === "number")
+                        message.sint64 = object.sint64;
+                    else if (typeof object.sint64 === "object")
+                        message.sint64 = new $util.LongBits(object.sint64.low >>> 0, object.sint64.high >>> 0).toNumber();
+                if (object.fixed32 != null)
+                    message.fixed32 = object.fixed32 >>> 0;
+                if (object.fixed64 != null)
+                    if ($util.Long)
+                        (message.fixed64 = $util.Long.fromValue(object.fixed64)).unsigned = false;
+                    else if (typeof object.fixed64 === "string")
+                        message.fixed64 = parseInt(object.fixed64, 10);
+                    else if (typeof object.fixed64 === "number")
+                        message.fixed64 = object.fixed64;
+                    else if (typeof object.fixed64 === "object")
+                        message.fixed64 = new $util.LongBits(object.fixed64.low >>> 0, object.fixed64.high >>> 0).toNumber();
+                if (object.sfixed32 != null)
+                    message.sfixed32 = object.sfixed32 | 0;
+                if (object.sfixed64 != null)
+                    if ($util.Long)
+                        (message.sfixed64 = $util.Long.fromValue(object.sfixed64)).unsigned = false;
+                    else if (typeof object.sfixed64 === "string")
+                        message.sfixed64 = parseInt(object.sfixed64, 10);
+                    else if (typeof object.sfixed64 === "number")
+                        message.sfixed64 = object.sfixed64;
+                    else if (typeof object.sfixed64 === "object")
+                        message.sfixed64 = new $util.LongBits(object.sfixed64.low >>> 0, object.sfixed64.high >>> 0).toNumber();
+                return message;
+            };
+    
+            /**
+             * Creates a plain object from a Numbers message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof simple.Numbers
+             * @static
+             * @param {simple.Numbers} message Numbers
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            Numbers.toObject = function toObject(message, options) {
+                if (!options)
+                    options = {};
+                var object = {};
+                if (options.defaults) {
+                    object.double = 0;
+                    object.float = 0;
+                    object.int32 = 0;
+                    if ($util.Long) {
+                        var long = new $util.Long(0, 0, false);
+                        object.int64 = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                    } else
+                        object.int64 = options.longs === String ? "0" : 0;
+                    object.uint32 = 0;
+                    if ($util.Long) {
+                        var long = new $util.Long(0, 0, true);
+                        object.uint64 = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                    } else
+                        object.uint64 = options.longs === String ? "0" : 0;
+                    object.sint32 = 0;
+                    if ($util.Long) {
+                        var long = new $util.Long(0, 0, false);
+                        object.sint64 = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                    } else
+                        object.sint64 = options.longs === String ? "0" : 0;
+                    object.fixed32 = 0;
+                    if ($util.Long) {
+                        var long = new $util.Long(0, 0, false);
+                        object.fixed64 = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                    } else
+                        object.fixed64 = options.longs === String ? "0" : 0;
+                    object.sfixed32 = 0;
+                    if ($util.Long) {
+                        var long = new $util.Long(0, 0, false);
+                        object.sfixed64 = options.longs === String ? long.toString() : options.longs === Number ? long.toNumber() : long;
+                    } else
+                        object.sfixed64 = options.longs === String ? "0" : 0;
+                }
+                if (message.double != null && message.hasOwnProperty("double"))
+                    object.double = options.json && !isFinite(message.double) ? String(message.double) : message.double;
+                if (message.float != null && message.hasOwnProperty("float"))
+                    object.float = options.json && !isFinite(message.float) ? String(message.float) : message.float;
+                if (message.int32 != null && message.hasOwnProperty("int32"))
+                    object.int32 = message.int32;
+                if (message.int64 != null && message.hasOwnProperty("int64"))
+                    if (typeof message.int64 === "number")
+                        object.int64 = options.longs === String ? String(message.int64) : message.int64;
+                    else
+                        object.int64 = options.longs === String ? $util.Long.prototype.toString.call(message.int64) : options.longs === Number ? new $util.LongBits(message.int64.low >>> 0, message.int64.high >>> 0).toNumber() : message.int64;
+                if (message.uint32 != null && message.hasOwnProperty("uint32"))
+                    object.uint32 = message.uint32;
+                if (message.uint64 != null && message.hasOwnProperty("uint64"))
+                    if (typeof message.uint64 === "number")
+                        object.uint64 = options.longs === String ? String(message.uint64) : message.uint64;
+                    else
+                        object.uint64 = options.longs === String ? $util.Long.prototype.toString.call(message.uint64) : options.longs === Number ? new $util.LongBits(message.uint64.low >>> 0, message.uint64.high >>> 0).toNumber(true) : message.uint64;
+                if (message.sint32 != null && message.hasOwnProperty("sint32"))
+                    object.sint32 = message.sint32;
+                if (message.sint64 != null && message.hasOwnProperty("sint64"))
+                    if (typeof message.sint64 === "number")
+                        object.sint64 = options.longs === String ? String(message.sint64) : message.sint64;
+                    else
+                        object.sint64 = options.longs === String ? $util.Long.prototype.toString.call(message.sint64) : options.longs === Number ? new $util.LongBits(message.sint64.low >>> 0, message.sint64.high >>> 0).toNumber() : message.sint64;
+                if (message.fixed32 != null && message.hasOwnProperty("fixed32"))
+                    object.fixed32 = message.fixed32;
+                if (message.fixed64 != null && message.hasOwnProperty("fixed64"))
+                    if (typeof message.fixed64 === "number")
+                        object.fixed64 = options.longs === String ? String(message.fixed64) : message.fixed64;
+                    else
+                        object.fixed64 = options.longs === String ? $util.Long.prototype.toString.call(message.fixed64) : options.longs === Number ? new $util.LongBits(message.fixed64.low >>> 0, message.fixed64.high >>> 0).toNumber() : message.fixed64;
+                if (message.sfixed32 != null && message.hasOwnProperty("sfixed32"))
+                    object.sfixed32 = message.sfixed32;
+                if (message.sfixed64 != null && message.hasOwnProperty("sfixed64"))
+                    if (typeof message.sfixed64 === "number")
+                        object.sfixed64 = options.longs === String ? String(message.sfixed64) : message.sfixed64;
+                    else
+                        object.sfixed64 = options.longs === String ? $util.Long.prototype.toString.call(message.sfixed64) : options.longs === Number ? new $util.LongBits(message.sfixed64.low >>> 0, message.sfixed64.high >>> 0).toNumber() : message.sfixed64;
+                return object;
+            };
+    
+            /**
+             * Converts this Numbers to JSON.
+             * @function toJSON
+             * @memberof simple.Numbers
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            Numbers.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+            };
+    
+            return Numbers;
+        })();
+    
         simple.ImportedThing = (function() {
     
             /**
@@ -3800,7 +4300,7 @@
                  * Properties of an Int64Value.
                  * @memberof google.protobuf
                  * @interface IInt64Value
-                 * @property {number|Long|null} [value] Int64Value value
+                 * @property {number|null} [value] Int64Value value
                  */
     
                 /**
@@ -3820,7 +4320,7 @@
     
                 /**
                  * Int64Value value.
-                 * @member {number|Long} value
+                 * @member {number} value
                  * @memberof google.protobuf.Int64Value
                  * @instance
                  */
@@ -4001,7 +4501,7 @@
                  * Properties of a UInt64Value.
                  * @memberof google.protobuf
                  * @interface IUInt64Value
-                 * @property {number|Long|null} [value] UInt64Value value
+                 * @property {number|null} [value] UInt64Value value
                  */
     
                 /**
@@ -4021,7 +4521,7 @@
     
                 /**
                  * UInt64Value value.
-                 * @member {number|Long} value
+                 * @member {number} value
                  * @memberof google.protobuf.UInt64Value
                  * @instance
                  */
@@ -5146,7 +5646,7 @@
                  * Properties of a Timestamp.
                  * @memberof google.protobuf
                  * @interface ITimestamp
-                 * @property {number|Long|null} [seconds] Timestamp seconds
+                 * @property {number|null} [seconds] Timestamp seconds
                  * @property {number|null} [nanos] Timestamp nanos
                  */
     
@@ -5167,7 +5667,7 @@
     
                 /**
                  * Timestamp seconds.
-                 * @member {number|Long} seconds
+                 * @member {number} seconds
                  * @memberof google.protobuf.Timestamp
                  * @instance
                  */
@@ -5611,9 +6111,9 @@
                  * @property {string|null} [stringValue] Value stringValue
                  * @property {number|null} [floatValue] Value floatValue
                  * @property {number|null} [doubleValue] Value doubleValue
-                 * @property {number|Long|null} [intValue] Value intValue
-                 * @property {number|Long|null} [uintValue] Value uintValue
-                 * @property {number|Long|null} [sintValue] Value sintValue
+                 * @property {number|null} [intValue] Value intValue
+                 * @property {number|null} [uintValue] Value uintValue
+                 * @property {number|null} [sintValue] Value sintValue
                  * @property {boolean|null} [boolValue] Value boolValue
                  */
     
@@ -5658,7 +6158,7 @@
     
                 /**
                  * Value intValue.
-                 * @member {number|Long} intValue
+                 * @member {number} intValue
                  * @memberof vector_tile.Tile.Value
                  * @instance
                  */
@@ -5666,7 +6166,7 @@
     
                 /**
                  * Value uintValue.
-                 * @member {number|Long} uintValue
+                 * @member {number} uintValue
                  * @memberof vector_tile.Tile.Value
                  * @instance
                  */
@@ -5674,7 +6174,7 @@
     
                 /**
                  * Value sintValue.
-                 * @member {number|Long} sintValue
+                 * @member {number} sintValue
                  * @memberof vector_tile.Tile.Value
                  * @instance
                  */
@@ -5970,7 +6470,7 @@
                  * Properties of a Feature.
                  * @memberof vector_tile.Tile
                  * @interface IFeature
-                 * @property {number|Long|null} [id] Feature id
+                 * @property {number|null} [id] Feature id
                  * @property {Array.<number>|null} [tags] Feature tags
                  * @property {vector_tile.Tile.GeomType|null} [type] Feature type
                  * @property {Array.<number>|null} [geometry] Feature geometry
@@ -5995,7 +6495,7 @@
     
                 /**
                  * Feature id.
-                 * @member {number|Long} id
+                 * @member {number} id
                  * @memberof vector_tile.Tile.Feature
                  * @instance
                  */

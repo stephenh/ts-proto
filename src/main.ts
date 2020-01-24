@@ -43,6 +43,7 @@ import FileDescriptorProto = google.protobuf.FileDescriptorProto;
 import EnumDescriptorProto = google.protobuf.EnumDescriptorProto;
 import ServiceDescriptorProto = google.protobuf.ServiceDescriptorProto;
 import MethodDescriptorProto = google.protobuf.MethodDescriptorProto;
+import { SymbolSpec } from 'ts-poet/build/SymbolSpecs';
 
 const dataloader = TypeNames.anyType('DataLoader=dataloader');
 
@@ -122,7 +123,7 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
     }
   }
 
-  file = addLongUtilityMethod(file);
+  file = addLongUtilityMethod(file, options);
   file = addDeepPartialType(file);
 
   let hasAnyTimestamps = false;
@@ -136,18 +137,29 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
   return file;
 }
 
-function addLongUtilityMethod(file: FileSpec): FileSpec {
-  return file.addFunction(
-    FunctionSpec.create('longToNumber')
+function addLongUtilityMethod(file: FileSpec, options: Options): FileSpec {
+  if(options.forceLong){
+    return file.addFunction(
+      FunctionSpec.create('numberToLong')
+        .addParameter('number', 'number')
+        .addCodeBlock(
+          CodeBlock.empty()
+            .addStatement('return %T.fromNumber(number)', 'Long*long')
+        )
+    );  
+  } else {
+    return file.addFunction(
+      FunctionSpec.create('longToNumber')
       .addParameter('long', 'Long*long')
       .addCodeBlock(
         CodeBlock.empty()
-          .beginControlFlow('if (long.gt(Number.MAX_SAFE_INTEGER))')
-          .addStatement('throw new global.Error("Value is larger than Number.MAX_SAFE_INTEGER")')
-          .endControlFlow()
-          .addStatement('return long.toNumber()')
+        .beginControlFlow('if (long.gt(Number.MAX_SAFE_INTEGER))')
+        .addStatement('throw new global.Error("Value is larger than Number.MAX_SAFE_INTEGER")')
+        .endControlFlow()
+        .addStatement('return long.toNumber()')
       )
-  );
+    );
+  }
 }
 
 function addDeepPartialType(file: FileSpec): FileSpec {
@@ -171,6 +183,11 @@ function addDeepPartialType(file: FileSpec): FileSpec {
 
 function addTimestampMethods(file: FileSpec, options: Options): FileSpec {
   const timestampType = 'Timestamp@./google/protobuf/timestamp';
+
+  let secondsCodeLine = 'const seconds = date.getTime() / 1_000';
+  if(options.forceLong){
+    secondsCodeLine = 'const seconds = numberToLong(date.getTime() / 1_000)';
+  }
   return file
     .addFunction(
       FunctionSpec.create('toTimestamp')
@@ -178,7 +195,7 @@ function addTimestampMethods(file: FileSpec, options: Options): FileSpec {
         .returns(timestampType)
         .addCodeBlock(
           CodeBlock.empty()
-            .addStatement('const seconds = %Ldate.getTime() / 1_000%L', options.forceLong ? 'Long.fromNumber(' : '', options.forceLong ? ')' : '')
+            .addStatement(secondsCodeLine)
             .addStatement('const nanos = (date.getTime() %% 1_000) * 1_000_000')
             .addStatement('return { seconds, nanos }')
         )
@@ -510,7 +527,7 @@ function generateFromJson(typeMap: TypeMap, fullName: string, messageDesc: Descr
         // Convert primitives using the String(value)/Number(value) cstr, except for bytes
         if (isBytes(field)) {
           return CodeBlock.of('%L', from);
-        } else if(isLong(field)) {
+        } else if(isLong(field) && options.forceLong) {
           const cstr = capitalize(basicTypeName(typeMap, field, options, true).toString());
           return CodeBlock.of('%L.fromString(%L)', cstr, from);
         } else {
@@ -604,7 +621,7 @@ function generateToJson(typeMap: TypeMap, fullName: string, messageDesc: Descrip
           defaultValue(field.type, options)
         );
       } else {
-        if(isLong(field)){
+        if(isLong(field) && options.forceLong){
           return CodeBlock.of('(%L || %L).toString()', from, defaultValue(field.type, options));
         } else {
           return CodeBlock.of('%L || %L', from, defaultValue(field.type, options));

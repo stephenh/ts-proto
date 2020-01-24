@@ -164,10 +164,11 @@ export function defaultValue(type: FieldDescriptorProto.Type, options: Options):
     case FieldDescriptorProto.Type.TYPE_FIXED32:
     case FieldDescriptorProto.Type.TYPE_SFIXED32:
       return 0;
-    case FieldDescriptorProto.Type.TYPE_INT64:
     case FieldDescriptorProto.Type.TYPE_UINT64:
-    case FieldDescriptorProto.Type.TYPE_SINT64:
     case FieldDescriptorProto.Type.TYPE_FIXED64:
+      return options.forceLong ? 'Long.UZERO' : 0;
+    case FieldDescriptorProto.Type.TYPE_INT64:
+    case FieldDescriptorProto.Type.TYPE_SINT64:
     case FieldDescriptorProto.Type.TYPE_SFIXED64:
       return options.forceLong ? 'Long.ZERO' : 0;
     case FieldDescriptorProto.Type.TYPE_BOOL:
@@ -231,7 +232,7 @@ export function isLong(field: FieldDescriptorProto): boolean {
 }
 
 export function isSimple(typeMap: TypeMap, field: FieldDescriptorProto, options: Options): boolean {
-  return Object.values(TypeNames).includes(basicTypeName(typeMap, field, options));
+  return Object.values(TypeNames).includes(basicTypeName(typeMap, field, options)) || isEnum(field);
 }
 
 export function isMapType(typeMap: TypeMap, messageDesc: DescriptorProto, field: FieldDescriptorProto, options: Options): boolean {
