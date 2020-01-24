@@ -197,7 +197,7 @@ export const Int64Value = {
   fromJSON(object: any): Int64Value {
     const message = Object.create(baseInt64Value) as Int64Value;
     if (object.value !== undefined && object.value !== null) {
-      message.value = Number.fromString(object.value);
+      message.value = Number(object.value);
     } else {
       message.value = 0;
     }
@@ -214,7 +214,7 @@ export const Int64Value = {
   },
   toJSON(message: Int64Value): unknown {
     const obj: any = {};
-    obj.value = (message.value || 0).toString();
+    obj.value = message.value || 0;
     return obj;
   },
 };
@@ -243,7 +243,7 @@ export const UInt64Value = {
   fromJSON(object: any): UInt64Value {
     const message = Object.create(baseUInt64Value) as UInt64Value;
     if (object.value !== undefined && object.value !== null) {
-      message.value = Number.fromString(object.value);
+      message.value = Number(object.value);
     } else {
       message.value = 0;
     }
@@ -260,7 +260,7 @@ export const UInt64Value = {
   },
   toJSON(message: UInt64Value): unknown {
     const obj: any = {};
-    obj.value = (message.value || 0).toString();
+    obj.value = message.value || 0;
     return obj;
   },
 };

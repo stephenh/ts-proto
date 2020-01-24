@@ -2,4 +2,5 @@
 /*.lock
 /build/
 !/build/integration/
+!/build/integration-long/
 /.idea
