@@ -111,6 +111,21 @@ export interface PingResponse {
   output: string;
 }
 
+export interface Numbers {
+  double: number;
+  float: number;
+  int32: number;
+  int64: number;
+  uint32: number;
+  uint64: number;
+  sint32: number;
+  sint64: number;
+  fixed32: number;
+  fixed64: number;
+  sfixed32: number;
+  sfixed64: number;
+}
+
 const baseSimple: object = {
   name: "",
   age: 0,
@@ -195,6 +210,21 @@ const basePingRequest: object = {
 
 const basePingResponse: object = {
   output: "",
+};
+
+const baseNumbers: object = {
+  double: 0,
+  float: 0,
+  int32: 0,
+  int64: 0,
+  uint32: 0,
+  uint64: 0,
+  sint32: 0,
+  sint64: 0,
+  fixed32: 0,
+  fixed64: 0,
+  sfixed32: 0,
+  sfixed64: 0,
 };
 
 export interface PingService {
@@ -457,12 +487,12 @@ export const Simple = {
       message.createdAt = undefined;
     }
     if (object.child !== undefined && object.child !== null) {
-      message.child = Child.fromPartial(object.child);
+      message.child = Child.fromPartial(object.child) as Child;
     } else {
       message.child = undefined;
     }
     if (object.state !== undefined && object.state !== null) {
-      message.state = object.state;
+      message.state = object.state as StateEnum;
     } else {
       message.state = 0;
     }
@@ -487,7 +517,7 @@ export const Simple = {
       }
     }
     if (object.thing !== undefined && object.thing !== null) {
-      message.thing = ImportedThing.fromPartial(object.thing);
+      message.thing = ImportedThing.fromPartial(object.thing) as ImportedThing;
     } else {
       message.thing = undefined;
     }
@@ -572,7 +602,7 @@ export const Child = {
       message.name = "";
     }
     if (object.type !== undefined && object.type !== null) {
-      message.type = object.type;
+      message.type = object.type as Child_Type;
     } else {
       message.type = 0;
     }
@@ -674,12 +704,12 @@ export const Nested = {
       message.name = "";
     }
     if (object.message !== undefined && object.message !== null) {
-      message.message = Nested_InnerMessage.fromPartial(object.message);
+      message.message = Nested_InnerMessage.fromPartial(object.message) as Nested_InnerMessage;
     } else {
       message.message = undefined;
     }
     if (object.state !== undefined && object.state !== null) {
-      message.state = object.state;
+      message.state = object.state as Nested_InnerEnum;
     } else {
       message.state = 0;
     }
@@ -773,7 +803,7 @@ export const Nested_InnerMessage = {
       message.name = "";
     }
     if (object.deep !== undefined && object.deep !== null) {
-      message.deep = Nested_InnerMessage_DeepMessage.fromPartial(object.deep);
+      message.deep = Nested_InnerMessage_DeepMessage.fromPartial(object.deep) as Nested_InnerMessage_DeepMessage;
     } else {
       message.deep = undefined;
     }
@@ -983,17 +1013,17 @@ export const SimpleWithWrappers = {
     message.coins = [];
     message.snacks = [];
     if (object.name !== undefined && object.name !== null) {
-      message.name = object.name;
+      message.name = object.name as string | undefined;
     } else {
       message.name = undefined;
     }
     if (object.age !== undefined && object.age !== null) {
-      message.age = object.age;
+      message.age = object.age as number | undefined;
     } else {
       message.age = undefined;
     }
     if (object.enabled !== undefined && object.enabled !== null) {
-      message.enabled = object.enabled;
+      message.enabled = object.enabled as boolean | undefined;
     } else {
       message.enabled = undefined;
     }
@@ -1229,7 +1259,7 @@ export const SimpleWithMap_EntitiesByIdEntry = {
       message.key = 0;
     }
     if (object.value !== undefined && object.value !== null) {
-      message.value = Entity.fromPartial(object.value);
+      message.value = Entity.fromPartial(object.value) as Entity;
     } else {
       message.value = undefined;
     }
@@ -1470,7 +1500,7 @@ export const SimpleWithSnakeCaseMap_EntitiesByIdEntry = {
       message.key = 0;
     }
     if (object.value !== undefined && object.value !== null) {
-      message.value = Entity.fromPartial(object.value);
+      message.value = Entity.fromPartial(object.value) as Entity;
     } else {
       message.value = undefined;
     }
@@ -1572,6 +1602,217 @@ export const PingResponse = {
   toJSON(message: PingResponse): unknown {
     const obj: any = {};
     obj.output = message.output || "";
+    return obj;
+  },
+};
+
+export const Numbers = {
+  encode(message: Numbers, writer: Writer = Writer.create()): Writer {
+    writer.uint32(9).double(message.double);
+    writer.uint32(21).float(message.float);
+    writer.uint32(24).int32(message.int32);
+    writer.uint32(32).int64(message.int64);
+    writer.uint32(40).uint32(message.uint32);
+    writer.uint32(48).uint64(message.uint64);
+    writer.uint32(56).sint32(message.sint32);
+    writer.uint32(64).sint64(message.sint64);
+    writer.uint32(77).fixed32(message.fixed32);
+    writer.uint32(81).fixed64(message.fixed64);
+    writer.uint32(93).sfixed32(message.sfixed32);
+    writer.uint32(97).sfixed64(message.sfixed64);
+    return writer;
+  },
+  decode(reader: Reader, length?: number): Numbers {
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = Object.create(baseNumbers) as Numbers;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.double = reader.double();
+          break;
+        case 2:
+          message.float = reader.float();
+          break;
+        case 3:
+          message.int32 = reader.int32();
+          break;
+        case 4:
+          message.int64 = longToNumber(reader.int64() as Long);
+          break;
+        case 5:
+          message.uint32 = reader.uint32();
+          break;
+        case 6:
+          message.uint64 = longToNumber(reader.uint64() as Long);
+          break;
+        case 7:
+          message.sint32 = reader.sint32();
+          break;
+        case 8:
+          message.sint64 = longToNumber(reader.sint64() as Long);
+          break;
+        case 9:
+          message.fixed32 = reader.fixed32();
+          break;
+        case 10:
+          message.fixed64 = longToNumber(reader.fixed64() as Long);
+          break;
+        case 11:
+          message.sfixed32 = reader.sfixed32();
+          break;
+        case 12:
+          message.sfixed64 = longToNumber(reader.sfixed64() as Long);
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+  fromJSON(object: any): Numbers {
+    const message = Object.create(baseNumbers) as Numbers;
+    if (object.double !== undefined && object.double !== null) {
+      message.double = Number(object.double);
+    } else {
+      message.double = 0;
+    }
+    if (object.float !== undefined && object.float !== null) {
+      message.float = Number(object.float);
+    } else {
+      message.float = 0;
+    }
+    if (object.int32 !== undefined && object.int32 !== null) {
+      message.int32 = Number(object.int32);
+    } else {
+      message.int32 = 0;
+    }
+    if (object.int64 !== undefined && object.int64 !== null) {
+      message.int64 = Number.fromString(object.int64);
+    } else {
+      message.int64 = 0;
+    }
+    if (object.uint32 !== undefined && object.uint32 !== null) {
+      message.uint32 = Number(object.uint32);
+    } else {
+      message.uint32 = 0;
+    }
+    if (object.uint64 !== undefined && object.uint64 !== null) {
+      message.uint64 = Number.fromString(object.uint64);
+    } else {
+      message.uint64 = 0;
+    }
+    if (object.sint32 !== undefined && object.sint32 !== null) {
+      message.sint32 = Number(object.sint32);
+    } else {
+      message.sint32 = 0;
+    }
+    if (object.sint64 !== undefined && object.sint64 !== null) {
+      message.sint64 = Number.fromString(object.sint64);
+    } else {
+      message.sint64 = 0;
+    }
+    if (object.fixed32 !== undefined && object.fixed32 !== null) {
+      message.fixed32 = Number(object.fixed32);
+    } else {
+      message.fixed32 = 0;
+    }
+    if (object.fixed64 !== undefined && object.fixed64 !== null) {
+      message.fixed64 = Number.fromString(object.fixed64);
+    } else {
+      message.fixed64 = 0;
+    }
+    if (object.sfixed32 !== undefined && object.sfixed32 !== null) {
+      message.sfixed32 = Number(object.sfixed32);
+    } else {
+      message.sfixed32 = 0;
+    }
+    if (object.sfixed64 !== undefined && object.sfixed64 !== null) {
+      message.sfixed64 = Number.fromString(object.sfixed64);
+    } else {
+      message.sfixed64 = 0;
+    }
+    return message;
+  },
+  fromPartial(object: DeepPartial<Numbers>): Numbers {
+    const message = Object.create(baseNumbers) as Numbers;
+    if (object.double !== undefined && object.double !== null) {
+      message.double = object.double;
+    } else {
+      message.double = 0;
+    }
+    if (object.float !== undefined && object.float !== null) {
+      message.float = object.float;
+    } else {
+      message.float = 0;
+    }
+    if (object.int32 !== undefined && object.int32 !== null) {
+      message.int32 = object.int32;
+    } else {
+      message.int32 = 0;
+    }
+    if (object.int64 !== undefined && object.int64 !== null) {
+      message.int64 = object.int64;
+    } else {
+      message.int64 = 0;
+    }
+    if (object.uint32 !== undefined && object.uint32 !== null) {
+      message.uint32 = object.uint32;
+    } else {
+      message.uint32 = 0;
+    }
+    if (object.uint64 !== undefined && object.uint64 !== null) {
+      message.uint64 = object.uint64;
+    } else {
+      message.uint64 = 0;
+    }
+    if (object.sint32 !== undefined && object.sint32 !== null) {
+      message.sint32 = object.sint32;
+    } else {
+      message.sint32 = 0;
+    }
+    if (object.sint64 !== undefined && object.sint64 !== null) {
+      message.sint64 = object.sint64;
+    } else {
+      message.sint64 = 0;
+    }
+    if (object.fixed32 !== undefined && object.fixed32 !== null) {
+      message.fixed32 = object.fixed32;
+    } else {
+      message.fixed32 = 0;
+    }
+    if (object.fixed64 !== undefined && object.fixed64 !== null) {
+      message.fixed64 = object.fixed64;
+    } else {
+      message.fixed64 = 0;
+    }
+    if (object.sfixed32 !== undefined && object.sfixed32 !== null) {
+      message.sfixed32 = object.sfixed32;
+    } else {
+      message.sfixed32 = 0;
+    }
+    if (object.sfixed64 !== undefined && object.sfixed64 !== null) {
+      message.sfixed64 = object.sfixed64;
+    } else {
+      message.sfixed64 = 0;
+    }
+    return message;
+  },
+  toJSON(message: Numbers): unknown {
+    const obj: any = {};
+    obj.double = message.double || 0;
+    obj.float = message.float || 0;
+    obj.int32 = message.int32 || 0;
+    obj.int64 = (message.int64 || 0).toString();
+    obj.uint32 = message.uint32 || 0;
+    obj.uint64 = (message.uint64 || 0).toString();
+    obj.sint32 = message.sint32 || 0;
+    obj.sint64 = (message.sint64 || 0).toString();
+    obj.fixed32 = message.fixed32 || 0;
+    obj.fixed64 = (message.fixed64 || 0).toString();
+    obj.sfixed32 = message.sfixed32 || 0;
+    obj.sfixed64 = (message.sfixed64 || 0).toString();
     return obj;
   },
 };

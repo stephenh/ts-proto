@@ -231,6 +231,24 @@ export namespace simple {
         public toJSON(): { [k: string]: any };
     }
 
+    interface ISimpleWithSnakeCaseMap {
+        entitiesById?: ({ [k: string]: simple.Entity }|null);
+    }
+
+    class SimpleWithSnakeCaseMap implements ISimpleWithSnakeCaseMap {
+        constructor(properties?: simple.ISimpleWithSnakeCaseMap);
+        public entitiesById: { [k: string]: simple.Entity };
+        public static create(properties?: simple.ISimpleWithSnakeCaseMap): simple.SimpleWithSnakeCaseMap;
+        public static encode(message: simple.SimpleWithSnakeCaseMap, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static encodeDelimited(message: simple.SimpleWithSnakeCaseMap, writer?: $protobuf.Writer): $protobuf.Writer;
+        public static decode(reader: ($protobuf.Reader|Uint8Array), length?: number): simple.SimpleWithSnakeCaseMap;
+        public static decodeDelimited(reader: ($protobuf.Reader|Uint8Array)): simple.SimpleWithSnakeCaseMap;
+        public static verify(message: { [k: string]: any }): (string|null);
+        public static fromObject(object: { [k: string]: any }): simple.SimpleWithSnakeCaseMap;
+        public static toObject(message: simple.SimpleWithSnakeCaseMap, options?: $protobuf.IConversionOptions): { [k: string]: any };
+        public toJSON(): { [k: string]: any };
+    }
+
     class PingService extends $protobuf.rpc.Service {
         constructor(rpcImpl: $protobuf.RPCImpl, requestDelimited?: boolean, responseDelimited?: boolean);
         public static create(rpcImpl: $protobuf.RPCImpl, requestDelimited?: boolean, responseDelimited?: boolean): PingService;

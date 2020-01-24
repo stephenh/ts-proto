@@ -229,17 +229,17 @@ export const Tile_Value = {
       message.doubleValue = 0;
     }
     if (object.intValue !== undefined && object.intValue !== null) {
-      message.intValue = Number(object.intValue);
+      message.intValue = Number.fromString(object.intValue);
     } else {
       message.intValue = 0;
     }
     if (object.uintValue !== undefined && object.uintValue !== null) {
-      message.uintValue = Number(object.uintValue);
+      message.uintValue = Number.fromString(object.uintValue);
     } else {
       message.uintValue = 0;
     }
     if (object.sintValue !== undefined && object.sintValue !== null) {
-      message.sintValue = Number(object.sintValue);
+      message.sintValue = Number.fromString(object.sintValue);
     } else {
       message.sintValue = 0;
     }
@@ -294,9 +294,9 @@ export const Tile_Value = {
     obj.stringValue = message.stringValue || "";
     obj.floatValue = message.floatValue || 0;
     obj.doubleValue = message.doubleValue || 0;
-    obj.intValue = message.intValue || 0;
-    obj.uintValue = message.uintValue || 0;
-    obj.sintValue = message.sintValue || 0;
+    obj.intValue = (message.intValue || 0).toString();
+    obj.uintValue = (message.uintValue || 0).toString();
+    obj.sintValue = (message.sintValue || 0).toString();
     obj.boolValue = message.boolValue || false;
     return obj;
   },
@@ -364,7 +364,7 @@ export const Tile_Feature = {
     message.tags = [];
     message.geometry = [];
     if (object.id !== undefined && object.id !== null) {
-      message.id = Number(object.id);
+      message.id = Number.fromString(object.id);
     } else {
       message.id = 0;
     }
@@ -400,7 +400,7 @@ export const Tile_Feature = {
       }
     }
     if (object.type !== undefined && object.type !== null) {
-      message.type = object.type;
+      message.type = object.type as Tile_GeomType;
     } else {
       message.type = 0;
     }
@@ -413,7 +413,7 @@ export const Tile_Feature = {
   },
   toJSON(message: Tile_Feature): unknown {
     const obj: any = {};
-    obj.id = message.id || 0;
+    obj.id = (message.id || 0).toString();
     if (message.tags) {
       obj.tags = message.tags.map(e => e || 0);
     } else {

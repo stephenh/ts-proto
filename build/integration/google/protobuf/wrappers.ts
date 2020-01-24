@@ -197,7 +197,7 @@ export const Int64Value = {
   fromJSON(object: any): Int64Value {
     const message = Object.create(baseInt64Value) as Int64Value;
     if (object.value !== undefined && object.value !== null) {
-      message.value = Number(object.value);
+      message.value = Number.fromString(object.value);
     } else {
       message.value = 0;
     }
@@ -214,7 +214,7 @@ export const Int64Value = {
   },
   toJSON(message: Int64Value): unknown {
     const obj: any = {};
-    obj.value = message.value || 0;
+    obj.value = (message.value || 0).toString();
     return obj;
   },
 };
@@ -243,7 +243,7 @@ export const UInt64Value = {
   fromJSON(object: any): UInt64Value {
     const message = Object.create(baseUInt64Value) as UInt64Value;
     if (object.value !== undefined && object.value !== null) {
-      message.value = Number(object.value);
+      message.value = Number.fromString(object.value);
     } else {
       message.value = 0;
     }
@@ -260,7 +260,7 @@ export const UInt64Value = {
   },
   toJSON(message: UInt64Value): unknown {
     const obj: any = {};
-    obj.value = message.value || 0;
+    obj.value = (message.value || 0).toString();
     return obj;
   },
 };
@@ -480,7 +480,7 @@ export const BytesValue = {
   fromPartial(object: DeepPartial<BytesValue>): BytesValue {
     const message = Object.create(baseBytesValue) as BytesValue;
     if (object.value !== undefined && object.value !== null) {
-      message.value = object.value;
+      message.value = object.value as Uint8Array;
     }
     return message;
   },
