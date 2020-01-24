@@ -31,7 +31,9 @@ import {
   packedType,
   toReaderCall,
   toTypeName,
-  TypeMap
+  TypeMap,
+  isLong,
+  isSimple
 } from './types';
 import { asSequence } from 'sequency';
 import { optionsFromParameter, singular } from './utils';
@@ -47,6 +49,7 @@ const dataloader = TypeNames.anyType('DataLoader=dataloader');
 export type Options = {
   useContext: boolean;
   snakeToCamel: boolean;
+  forceLong: boolean;
 };
 
 export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, parameter: string): FileSpec {
@@ -127,7 +130,7 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
     hasAnyTimestamps = hasAnyTimestamps || asSequence(messageType.field).any(isTimestamp);
   }, options);
   if (hasAnyTimestamps) {
-    file = addTimestampMethods(file);
+    file = addTimestampMethods(file, options);
   }
 
   return file;
@@ -166,7 +169,7 @@ function addDeepPartialType(file: FileSpec): FileSpec {
   );
 }
 
-function addTimestampMethods(file: FileSpec): FileSpec {
+function addTimestampMethods(file: FileSpec, options: Options): FileSpec {
   const timestampType = 'Timestamp@./google/protobuf/timestamp';
   return file
     .addFunction(
@@ -175,7 +178,7 @@ function addTimestampMethods(file: FileSpec): FileSpec {
         .returns(timestampType)
         .addCodeBlock(
           CodeBlock.empty()
-            .addStatement('const seconds = date.getTime() / 1_000')
+            .addStatement('const seconds = %Ldate.getTime() / 1_000%L', options.forceLong ? 'Long.fromNumber(' : '', options.forceLong ? ')' : '')
             .addStatement('const nanos = (date.getTime() %% 1_000) * 1_000_000')
             .addStatement('return { seconds, nanos }')
         )
@@ -186,7 +189,7 @@ function addTimestampMethods(file: FileSpec): FileSpec {
         .returns('Date')
         .addCodeBlock(
           CodeBlock.empty()
-            .addStatement('let millis = t.seconds * 1_000')
+            .addStatement('let millis = t.seconds%L * 1_000', options.forceLong ? '.toNumber()' : '')
             .addStatement('millis += t.nanos / 1_000_000')
             .addStatement('return new Date(millis)')
         )
@@ -256,7 +259,7 @@ function generateInterfaceDeclaration(typeMap: TypeMap, fullName: string, messag
   let message = InterfaceSpec.create(fullName).addModifiers(Modifier.EXPORT);
   for (const fieldDesc of messageDesc.field) {
     message = message.addProperty(
-      PropertySpec.create(maybeSnakeToCamel(fieldDesc.name, options), toTypeName(typeMap, messageDesc, fieldDesc))
+      PropertySpec.create(maybeSnakeToCamel(fieldDesc.name, options), toTypeName(typeMap, messageDesc, fieldDesc, options))
     );
   }
   return message;
@@ -269,7 +272,7 @@ function generateBaseInstance(fullName: string, messageDesc: DescriptorProto, op
   asSequence(messageDesc.field)
     .filterNot(isWithinOneOf)
     .forEach(field => {
-      initialValue = initialValue.addHashEntry(maybeSnakeToCamel(field.name, options), defaultValue(field.type));
+      initialValue = initialValue.addHashEntry(maybeSnakeToCamel(field.name, options), defaultValue(field.type, options));
     });
   return baseMessage.initializerBlock(initialValue.endHash());
 }
@@ -316,7 +319,7 @@ function generateDecode(typeMap: TypeMap, fullName: string, messageDesc: Descrip
 
   // initialize all lists
   messageDesc.field.filter(isRepeated).forEach(field => {
-    const value = isMapType(typeMap, messageDesc, field) ? '{}' : '[]';
+    const value = isMapType(typeMap, messageDesc, field, options) ? '{}' : '[]';
     func = func.addStatement('message.%L = %L', maybeSnakeToCamel(field.name, options), value);
   });
 
@@ -336,24 +339,28 @@ function generateDecode(typeMap: TypeMap, fullName: string, messageDesc: Descrip
     if (isPrimitive(field)) {
       readSnippet = CodeBlock.of('reader.%L()', toReaderCall(field));
       if (basicLongWireType(field.type) !== undefined) {
-        readSnippet = CodeBlock.of('longToNumber(%L as Long)', readSnippet);
+        if(options.forceLong){
+          readSnippet = CodeBlock.of('%L as Long', readSnippet);
+        } else {
+          readSnippet = CodeBlock.of('longToNumber(%L as Long)', readSnippet);
+        }
       }
     } else if (isValueType(field)) {
-      readSnippet = CodeBlock.of('%T.decode(reader, reader.uint32()).value', basicTypeName(typeMap, field, true));
+      readSnippet = CodeBlock.of('%T.decode(reader, reader.uint32()).value', basicTypeName(typeMap, field, options, true));
     } else if (isTimestamp(field)) {
       readSnippet = CodeBlock.of(
         'fromTimestamp(%T.decode(reader, reader.uint32()))',
-        basicTypeName(typeMap, field, true)
+        basicTypeName(typeMap, field, options, true)
       );
     } else if (isMessage(field)) {
-      readSnippet = CodeBlock.of('%T.decode(reader, reader.uint32())', basicTypeName(typeMap, field));
+      readSnippet = CodeBlock.of('%T.decode(reader, reader.uint32())', basicTypeName(typeMap, field, options));
     } else {
       throw new Error(`Unhandled field ${field}`);
     }
 
     // and then use the snippet to handle repeated fields if necessary
     if (isRepeated(field)) {
-      if (isMapType(typeMap, messageDesc, field)) {
+      if (isMapType(typeMap, messageDesc, field, options)) {
         // We need a unique const within the `cast` statement
         const entryVariableName = `entry${field.number}`;
         func = func
@@ -412,7 +419,7 @@ function generateEncode(typeMap: TypeMap, fullName: string, messageDesc: Descrip
       writeSnippet = place =>
         CodeBlock.of(
           '%T.encode(toTimestamp(%L), writer.uint32(%L).fork()).ldelim()',
-          basicTypeName(typeMap, field, true),
+          basicTypeName(typeMap, field, options, true),
           place,
           tag
         );
@@ -421,20 +428,20 @@ function generateEncode(typeMap: TypeMap, fullName: string, messageDesc: Descrip
       writeSnippet = place =>
         CodeBlock.of(
           '%T.encode({ value: %L! }, writer.uint32(%L).fork()).ldelim()',
-          basicTypeName(typeMap, field, true),
+          basicTypeName(typeMap, field, options, true),
           place,
           tag
         );
     } else if (isMessage(field)) {
       const tag = ((field.number << 3) | 2) >>> 0;
       writeSnippet = place =>
-        CodeBlock.of('%T.encode(%L, writer.uint32(%L).fork()).ldelim()', basicTypeName(typeMap, field), place, tag);
+        CodeBlock.of('%T.encode(%L, writer.uint32(%L).fork()).ldelim()', basicTypeName(typeMap, field, options), place, tag);
     } else {
       throw new Error(`Unhandled field ${field}`);
     }
 
     if (isRepeated(field)) {
-      if (isMapType(typeMap, messageDesc, field)) {
+      if (isMapType(typeMap, messageDesc, field, options)) {
         func = func
           .beginLambda('Object.entries(message.%L).forEach(([key, value]) =>', fieldName)
           .addStatement('%L', writeSnippet('{ key: key as any, value }'))
@@ -459,7 +466,7 @@ function generateEncode(typeMap: TypeMap, fullName: string, messageDesc: Descrip
           'if (message.%L !== undefined && message.%L !== %L)',
           fieldName,
           fieldName,
-          defaultValue(field.type)
+          defaultValue(field.type, options)
         )
         .addStatement('%L', writeSnippet(`message.${fieldName}`))
         .endControlFlow();
@@ -487,7 +494,7 @@ function generateFromJson(typeMap: TypeMap, fullName: string, messageDesc: Descr
 
   // initialize all lists
   messageDesc.field.filter(isRepeated).forEach(field => {
-    const value = isMapType(typeMap, messageDesc, field) ? '{}' : '[]';
+    const value = isMapType(typeMap, messageDesc, field, options) ? '{}' : '[]';
     func = func.addStatement('message.%L = %L', maybeSnakeToCamel(field.name, options), value);
   });
 
@@ -498,13 +505,16 @@ function generateFromJson(typeMap: TypeMap, fullName: string, messageDesc: Descr
     // get a generic 'reader.doSomething' bit that is specific to the basic type
     const readSnippet = (from: string): CodeBlock => {
       if (isEnum(field)) {
-        return CodeBlock.of('%T.fromJSON(%L)', basicTypeName(typeMap, field), from);
+        return CodeBlock.of('%T.fromJSON(%L)', basicTypeName(typeMap, field, options), from);
       } else if (isPrimitive(field)) {
         // Convert primitives using the String(value)/Number(value) cstr, except for bytes
         if (isBytes(field)) {
           return CodeBlock.of('%L', from);
+        } else if(isLong(field)) {
+          const cstr = capitalize(basicTypeName(typeMap, field, options, true).toString());
+          return CodeBlock.of('%L.fromString(%L)', cstr, from);
         } else {
-          const cstr = capitalize(basicTypeName(typeMap, field, true).toString());
+          const cstr = capitalize(basicTypeName(typeMap, field, options, true).toString());
           return CodeBlock.of('%L(%L)', cstr, from);
         }
         // if (basicLongWireType(field.type) !== undefined) {
@@ -513,21 +523,21 @@ function generateFromJson(typeMap: TypeMap, fullName: string, messageDesc: Descr
       } else if (isTimestamp(field)) {
         return CodeBlock.of('fromJsonTimestamp(%L)', from);
       } else if (isValueType(field)) {
-        const cstr = capitalize((basicTypeName(typeMap, field, false) as Union).typeChoices[0].toString());
+        const cstr = capitalize((basicTypeName(typeMap, field, options, false) as Union).typeChoices[0].toString());
         return CodeBlock.of('%L(%L)', cstr, from);
       } else if (isMessage(field)) {
-        if (isRepeated(field) && isMapType(typeMap, messageDesc, field)) {
+        if (isRepeated(field) && isMapType(typeMap, messageDesc, field, options)) {
           const valueType = (typeMap.get(field.typeName)![2] as DescriptorProto).field[1];
           if (isPrimitive(valueType)) {
             const cstr = capitalize(
-              basicTypeName(typeMap, FieldDescriptorProto.create({ type: valueType.type })).toString()
+              basicTypeName(typeMap, FieldDescriptorProto.create({ type: valueType.type }), options).toString()
             );
             return CodeBlock.of('%L(%L)', cstr, from);
           } else {
-            return CodeBlock.of('%T.fromJSON(%L)', basicTypeName(typeMap, valueType).toString(), from);
+            return CodeBlock.of('%T.fromJSON(%L)', basicTypeName(typeMap, valueType, options).toString(), from);
           }
         } else {
-          return CodeBlock.of('%T.fromJSON(%L)', basicTypeName(typeMap, field), from);
+          return CodeBlock.of('%T.fromJSON(%L)', basicTypeName(typeMap, field, options), from);
         }
       } else {
         throw new Error(`Unhandled field ${field}`);
@@ -537,13 +547,13 @@ function generateFromJson(typeMap: TypeMap, fullName: string, messageDesc: Descr
     // and then use the snippet to handle repeated fields if necessary
     func = func.beginControlFlow('if (object.%L !== undefined && object.%L !== null)', fieldName, fieldName);
     if (isRepeated(field)) {
-      if (isMapType(typeMap, messageDesc, field)) {
+      if (isMapType(typeMap, messageDesc, field, options)) {
         func = func
           .beginLambda('Object.entries(object.%L).forEach(([key, value]) =>', fieldName)
           .addStatement(
             `message.%L[%L] = %L`,
             fieldName,
-            maybeCastToNumber(typeMap, messageDesc, field, 'key'),
+            maybeCastToNumber(typeMap, messageDesc, field, 'key', options),
             readSnippet('value')
           )
           .endLambda(')');
@@ -560,7 +570,7 @@ function generateFromJson(typeMap: TypeMap, fullName: string, messageDesc: Descr
     // set the default value (TODO Support bytes)
     if (!isRepeated(field) && field.type !== FieldDescriptorProto.Type.TYPE_BYTES) {
       func = func.nextControlFlow('else');
-      func = func.addStatement(`message.%L = %L`, fieldName, defaultValue(field.type));
+      func = func.addStatement(`message.%L = %L`, fieldName, defaultValue(field.type, options));
     }
 
     func = func.endControlFlow();
@@ -582,23 +592,27 @@ function generateToJson(typeMap: TypeMap, fullName: string, messageDesc: Descrip
 
     const readSnippet = (from: string): CodeBlock => {
       if (isEnum(field)) {
-        return CodeBlock.of('%T.toJSON(%L)', basicTypeName(typeMap, field), from);
+        return CodeBlock.of('%T.toJSON(%L)', basicTypeName(typeMap, field, options), from);
       } else if (isTimestamp(field)) {
         return CodeBlock.of('%L !== undefined ? %L.toISOString() : null', from, from);
-      } else if (isMessage(field) && !isValueType(field) && !isMapType(typeMap, messageDesc, field)) {
+      } else if (isMessage(field) && !isValueType(field) && !isMapType(typeMap, messageDesc, field, options)) {
         return CodeBlock.of(
           '%L ? %T.toJSON(%L) : %L',
           from,
-          basicTypeName(typeMap, field, true),
+          basicTypeName(typeMap, field, options, true),
           from,
-          defaultValue(field.type)
+          defaultValue(field.type, options)
         );
       } else {
-        return CodeBlock.of('%L || %L', from, defaultValue(field.type));
+        if(isLong(field)){
+          return CodeBlock.of('(%L || %L).toString()', from, defaultValue(field.type, options));
+        } else {
+          return CodeBlock.of('%L || %L', from, defaultValue(field.type, options));
+        }
       }
     };
 
-    if (isRepeated(field) && !isMapType(typeMap, messageDesc, field)) {
+    if (isRepeated(field) && !isMapType(typeMap, messageDesc, field, options)) {
       func = func
         .beginControlFlow('if (message.%L)', fieldName)
         .addStatement('obj.%L = message.%L.map(e => %L)', fieldName, fieldName, readSnippet('e'))
@@ -623,7 +637,7 @@ function generateFromPartial(typeMap: TypeMap, fullName: string, messageDesc: De
 
   // initialize all lists
   messageDesc.field.filter(isRepeated).forEach(field => {
-    const value = isMapType(typeMap, messageDesc, field) ? '{}' : '[]';
+    const value = isMapType(typeMap, messageDesc, field, options) ? '{}' : '[]';
     func = func.addStatement('message.%L = %L', maybeSnakeToCamel(field.name, options), value);
   });
 
@@ -635,18 +649,18 @@ function generateFromPartial(typeMap: TypeMap, fullName: string, messageDesc: De
       if (isEnum(field) || isPrimitive(field) || isTimestamp(field) || isValueType(field)) {
         return CodeBlock.of(from);
       } else if (isMessage(field)) {
-        if (isRepeated(field) && isMapType(typeMap, messageDesc, field)) {
+        if (isRepeated(field) && isMapType(typeMap, messageDesc, field, options)) {
           const valueType = (typeMap.get(field.typeName)![2] as DescriptorProto).field[1];
           if (isPrimitive(valueType)) {
             const cstr = capitalize(
-              basicTypeName(typeMap, FieldDescriptorProto.create({ type: valueType.type })).toString()
+              basicTypeName(typeMap, FieldDescriptorProto.create({ type: valueType.type }), options).toString()
             );
             return CodeBlock.of('%L(%L)', cstr, from);
           } else {
-            return CodeBlock.of('%T.fromPartial(%L)', basicTypeName(typeMap, valueType).toString(), from);
+            return CodeBlock.of('%T.fromPartial(%L)', basicTypeName(typeMap, valueType, options).toString(), from);
           }
         } else {
-          return CodeBlock.of('%T.fromPartial(%L)', basicTypeName(typeMap, field), from);
+          return CodeBlock.of('%T.fromPartial(%L)', basicTypeName(typeMap, field, options), from);
         }
       } else {
         throw new Error(`Unhandled field ${field}`);
@@ -656,14 +670,14 @@ function generateFromPartial(typeMap: TypeMap, fullName: string, messageDesc: De
     // and then use the snippet to handle repeated fields if necessary
     func = func.beginControlFlow('if (object.%L !== undefined && object.%L !== null)', fieldName, fieldName);
     if (isRepeated(field)) {
-      if (isMapType(typeMap, messageDesc, field)) {
+      if (isMapType(typeMap, messageDesc, field, options)) {
         func = func
           .beginLambda('Object.entries(object.%L).forEach(([key, value]) =>', fieldName)
           .beginControlFlow('if (value)')
           .addStatement(
             `message.%L[%L] = %L`,
             fieldName,
-            maybeCastToNumber(typeMap, messageDesc, field, 'key'),
+            maybeCastToNumber(typeMap, messageDesc, field, 'key', options),
             readSnippet('value')
           )
           .endControlFlow()
@@ -675,13 +689,17 @@ function generateFromPartial(typeMap: TypeMap, fullName: string, messageDesc: De
           .endControlFlow();
       }
     } else {
-      func = func.addStatement(`message.%L = %L`, fieldName, readSnippet(`object.${fieldName}`));
+      if(isSimple(typeMap, field, options)){
+        func = func.addStatement(`message.%L = %L`, fieldName, readSnippet(`object.${fieldName}`));
+      } else {
+        func = func.addStatement(`message.%L = %L as %L`, fieldName, readSnippet(`object.${fieldName}`), basicTypeName(typeMap, field, options));
+      }
     }
 
     // set the default value (TODO Support bytes)
     if (!isRepeated(field) && field.type !== FieldDescriptorProto.Type.TYPE_BYTES) {
       func = func.nextControlFlow('else');
-      func = func.addStatement(`message.%L = %L`, fieldName, defaultValue(field.type));
+      func = func.addStatement(`message.%L = %L`, fieldName, defaultValue(field.type, options));
     }
 
     func = func.endControlFlow();
@@ -713,7 +731,7 @@ function generateService(
     service = service.addFunction(requestFn);
 
     if (options.useContext) {
-      const batchMethod = detectBatchMethod(typeMap, fileDesc, serviceDesc, methodDesc);
+      const batchMethod = detectBatchMethod(typeMap, fileDesc, serviceDesc, methodDesc, options);
       if (batchMethod) {
         const name = batchMethod.methodDesc.name.replace('Batch', 'Get');
         let batchFn = FunctionSpec.create(name);
@@ -803,7 +821,7 @@ function generateServiceClientImpl(
   for (const methodDesc of serviceDesc.method) {
     // See if this this fuzzy matches to a batchable method
     if (options.useContext) {
-      const batchMethod = detectBatchMethod(typeMap, fileDesc, serviceDesc, methodDesc);
+      const batchMethod = detectBatchMethod(typeMap, fileDesc, serviceDesc, methodDesc, options);
       if (batchMethod) {
         client = client.addFunction(generateBatchingRpcMethod(typeMap, batchMethod));
       }
@@ -822,7 +840,8 @@ function detectBatchMethod(
   typeMap: TypeMap,
   fileDesc: FileDescriptorProto,
   serviceDesc: ServiceDescriptorProto,
-  methodDesc: MethodDescriptorProto
+  methodDesc: MethodDescriptorProto,
+  options: Options
 ): BatchMethod | undefined {
   const nameMatches = methodDesc.name.startsWith('Batch');
   const inputType = typeMap.get(methodDesc.inputType);
@@ -834,10 +853,10 @@ function detectBatchMethod(
     if (hasSingleRepeatedField(inputTypeDesc) && hasSingleRepeatedField(outputTypeDesc)) {
       const singleMethodName = methodDesc.name.replace('Batch', 'Get');
       const inputFieldName = inputTypeDesc.field[0].name;
-      const inputType = basicTypeName(typeMap, inputTypeDesc.field[0]); // e.g. repeated string -> string
+      const inputType = basicTypeName(typeMap, inputTypeDesc.field[0], options); // e.g. repeated string -> string
       const outputFieldName = outputTypeDesc.field[0].name;
-      let outputType = basicTypeName(typeMap, outputTypeDesc.field[0]); // e.g. repeated Entity -> Entity
-      const mapType = detectMapType(typeMap, outputTypeDesc, outputTypeDesc.field[0]);
+      let outputType = basicTypeName(typeMap, outputTypeDesc.field[0], options); // e.g. repeated Entity -> Entity
+      const mapType = detectMapType(typeMap, outputTypeDesc, outputTypeDesc.field[0], options);
       if (mapType) {
         outputType = mapType.valueType;
       }
@@ -1016,9 +1035,10 @@ function maybeCastToNumber(
   typeMap: TypeMap,
   messageDesc: DescriptorProto,
   field: FieldDescriptorProto,
-  variableName: string
+  variableName: string,
+  options: Options
 ): string {
-  const { keyType } = detectMapType(typeMap, messageDesc, field)!;
+  const { keyType } = detectMapType(typeMap, messageDesc, field, options)!;
   if (keyType === TypeNames.STRING) {
     return variableName;
   } else {

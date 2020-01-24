@@ -455,7 +455,7 @@ export const BatchMapQueryResponse_EntitiesEntry = {
       message.key = "";
     }
     if (object.value !== undefined && object.value !== null) {
-      message.value = Entity.fromPartial(object.value);
+      message.value = Entity.fromPartial(object.value) as Entity;
     } else {
       message.value = undefined;
     }
@@ -550,7 +550,7 @@ export const GetOnlyMethodResponse = {
   fromPartial(object: DeepPartial<GetOnlyMethodResponse>): GetOnlyMethodResponse {
     const message = Object.create(baseGetOnlyMethodResponse) as GetOnlyMethodResponse;
     if (object.entity !== undefined && object.entity !== null) {
-      message.entity = Entity.fromPartial(object.entity);
+      message.entity = Entity.fromPartial(object.entity) as Entity;
     } else {
       message.entity = undefined;
     }

@@ -55,7 +55,7 @@ export function basicLongWireType(type: FieldDescriptorProto.Type): number | und
 }
 
 /** Returns the type name without any repeated/required/etc. labels. */
-export function basicTypeName(typeMap: TypeMap, field: FieldDescriptorProto, keepValueType: boolean = false): TypeName {
+export function basicTypeName(typeMap: TypeMap, field: FieldDescriptorProto, options: Options, keepValueType: boolean = false): TypeName {
   switch (field.type) {
     case FieldDescriptorProto.Type.TYPE_DOUBLE:
     case FieldDescriptorProto.Type.TYPE_FLOAT:
@@ -71,7 +71,7 @@ export function basicTypeName(typeMap: TypeMap, field: FieldDescriptorProto, kee
     case FieldDescriptorProto.Type.TYPE_FIXED64:
     case FieldDescriptorProto.Type.TYPE_SFIXED64:
       // this handles 2^53, Long is only needed for 2^64; this is effectively pbjs's forceNumber
-      return TypeNames.NUMBER;
+      return options.forceLong ? TypeNames.anyType('Long') : TypeNames.NUMBER;
     case FieldDescriptorProto.Type.TYPE_BOOL:
       return TypeNames.BOOLEAN;
     case FieldDescriptorProto.Type.TYPE_STRING:
@@ -153,7 +153,7 @@ export function packedType(type: FieldDescriptorProto.Type): number | undefined 
   }
 }
 
-export function defaultValue(type: FieldDescriptorProto.Type): any {
+export function defaultValue(type: FieldDescriptorProto.Type, options: Options): any {
   switch (type) {
     case FieldDescriptorProto.Type.TYPE_DOUBLE:
     case FieldDescriptorProto.Type.TYPE_FLOAT:
@@ -163,12 +163,13 @@ export function defaultValue(type: FieldDescriptorProto.Type): any {
     case FieldDescriptorProto.Type.TYPE_SINT32:
     case FieldDescriptorProto.Type.TYPE_FIXED32:
     case FieldDescriptorProto.Type.TYPE_SFIXED32:
+      return 0;
     case FieldDescriptorProto.Type.TYPE_INT64:
     case FieldDescriptorProto.Type.TYPE_UINT64:
     case FieldDescriptorProto.Type.TYPE_SINT64:
     case FieldDescriptorProto.Type.TYPE_FIXED64:
     case FieldDescriptorProto.Type.TYPE_SFIXED64:
-      return 0;
+      return options.forceLong ? 'Long.ZERO' : 0;
     case FieldDescriptorProto.Type.TYPE_BOOL:
       return false;
     case FieldDescriptorProto.Type.TYPE_STRING:
@@ -225,8 +226,16 @@ export function isRepeated(field: FieldDescriptorProto): boolean {
   return field.label === FieldDescriptorProto.Label.LABEL_REPEATED;
 }
 
-export function isMapType(typeMap: TypeMap, messageDesc: DescriptorProto, field: FieldDescriptorProto): boolean {
-  return detectMapType(typeMap, messageDesc, field) !== undefined;
+export function isLong(field: FieldDescriptorProto): boolean {
+  return basicLongWireType(field.type) !== undefined; 
+}
+
+export function isSimple(typeMap: TypeMap, field: FieldDescriptorProto, options: Options): boolean {
+  return Object.values(TypeNames).includes(basicTypeName(typeMap, field, options));
+}
+
+export function isMapType(typeMap: TypeMap, messageDesc: DescriptorProto, field: FieldDescriptorProto, options: Options): boolean {
+  return detectMapType(typeMap, messageDesc, field, options) !== undefined;
 }
 
 const valueTypes: { [key: string]: TypeName } = {
@@ -273,10 +282,10 @@ function toModuleAndType(typeMap: TypeMap, protoType: string): [string, string, 
 }
 
 /** Return the TypeName for any field (primitive/message/etc.) as exposed in the interface. */
-export function toTypeName(typeMap: TypeMap, messageDesc: DescriptorProto, field: FieldDescriptorProto): TypeName {
-  let type = basicTypeName(typeMap, field, false);
+export function toTypeName(typeMap: TypeMap, messageDesc: DescriptorProto, field: FieldDescriptorProto, options: Options): TypeName {
+  let type = basicTypeName(typeMap, field, options, false);
   if (isRepeated(field)) {
-    const mapType = detectMapType(typeMap, messageDesc, field);
+    const mapType = detectMapType(typeMap, messageDesc, field, options);
     if (mapType) {
       const { keyType, valueType } = mapType;
       type = TypeNames.anonymousType(new Member(`[key: ${keyType}]`, valueType));
@@ -292,7 +301,8 @@ export function toTypeName(typeMap: TypeMap, messageDesc: DescriptorProto, field
 export function detectMapType(
   typeMap: TypeMap,
   messageDesc: DescriptorProto,
-  fieldDesc: FieldDescriptorProto
+  fieldDesc: FieldDescriptorProto,
+  options: Options
 ): { messageDesc: DescriptorProto; keyType: TypeName; valueType: TypeName } | undefined {
   if (
     fieldDesc.label === FieldDescriptorProto.Label.LABEL_REPEATED &&
@@ -300,9 +310,9 @@ export function detectMapType(
   ) {
     const mapType = typeMap.get(fieldDesc.typeName)![2] as DescriptorProto;
     if (!mapType.options?.mapEntry) return undefined;
-    const keyType = toTypeName(typeMap, messageDesc, mapType.field[0]);
+    const keyType = toTypeName(typeMap, messageDesc, mapType.field[0], options);
     // use basicTypeName because we don't need the '| undefined'
-    const valueType = basicTypeName(typeMap, mapType.field[1]);
+    const valueType = basicTypeName(typeMap, mapType.field[1], options);
     return { messageDesc: mapType, keyType, valueType };
   }
   return undefined;

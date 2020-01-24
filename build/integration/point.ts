@@ -136,12 +136,12 @@ export const Area = {
   fromPartial(object: DeepPartial<Area>): Area {
     const message = Object.create(baseArea) as Area;
     if (object.nw !== undefined && object.nw !== null) {
-      message.nw = Point.fromPartial(object.nw);
+      message.nw = Point.fromPartial(object.nw) as Point;
     } else {
       message.nw = undefined;
     }
     if (object.se !== undefined && object.se !== null) {
-      message.se = Point.fromPartial(object.se);
+      message.se = Point.fromPartial(object.se) as Point;
     } else {
       message.se = undefined;
     }

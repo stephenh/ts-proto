@@ -35,13 +35,16 @@ export function upperFirst(name: string): string {
 }
 
 export function optionsFromParameter(parameter: string): Options {
-  const options: Options = { useContext: false, snakeToCamel: true };
+  const options: Options = { useContext: false, snakeToCamel: true, forceLong: false };
   if (parameter) {
     if (parameter.includes('context=true')) {
       options.useContext = true;
     }
     if (parameter.includes('snakeToCamel=false')) {
       options.snakeToCamel = false;
+    }
+    if (parameter.includes('forceLong=true')) {
+      options.forceLong = true;
     }
   }
   return options;

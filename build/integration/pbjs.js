@@ -2546,6 +2546,225 @@
             return SimpleWithMap;
         })();
     
+        simple.SimpleWithSnakeCaseMap = (function() {
+    
+            /**
+             * Properties of a SimpleWithSnakeCaseMap.
+             * @memberof simple
+             * @interface ISimpleWithSnakeCaseMap
+             * @property {Object.<string,simple.Entity>|null} [entitiesById] SimpleWithSnakeCaseMap entitiesById
+             */
+    
+            /**
+             * Constructs a new SimpleWithSnakeCaseMap.
+             * @memberof simple
+             * @classdesc Represents a SimpleWithSnakeCaseMap.
+             * @implements ISimpleWithSnakeCaseMap
+             * @constructor
+             * @param {simple.ISimpleWithSnakeCaseMap=} [properties] Properties to set
+             */
+            function SimpleWithSnakeCaseMap(properties) {
+                this.entitiesById = {};
+                if (properties)
+                    for (var keys = Object.keys(properties), i = 0; i < keys.length; ++i)
+                        if (properties[keys[i]] != null)
+                            this[keys[i]] = properties[keys[i]];
+            }
+    
+            /**
+             * SimpleWithSnakeCaseMap entitiesById.
+             * @member {Object.<string,simple.Entity>} entitiesById
+             * @memberof simple.SimpleWithSnakeCaseMap
+             * @instance
+             */
+            SimpleWithSnakeCaseMap.prototype.entitiesById = $util.emptyObject;
+    
+            /**
+             * Creates a new SimpleWithSnakeCaseMap instance using the specified properties.
+             * @function create
+             * @memberof simple.SimpleWithSnakeCaseMap
+             * @static
+             * @param {simple.ISimpleWithSnakeCaseMap=} [properties] Properties to set
+             * @returns {simple.SimpleWithSnakeCaseMap} SimpleWithSnakeCaseMap instance
+             */
+            SimpleWithSnakeCaseMap.create = function create(properties) {
+                return new SimpleWithSnakeCaseMap(properties);
+            };
+    
+            /**
+             * Encodes the specified SimpleWithSnakeCaseMap message. Does not implicitly {@link simple.SimpleWithSnakeCaseMap.verify|verify} messages.
+             * @function encode
+             * @memberof simple.SimpleWithSnakeCaseMap
+             * @static
+             * @param {simple.SimpleWithSnakeCaseMap} message SimpleWithSnakeCaseMap message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            SimpleWithSnakeCaseMap.encode = function encode(message, writer) {
+                if (!writer)
+                    writer = $Writer.create();
+                if (message.entitiesById != null && message.hasOwnProperty("entitiesById"))
+                    for (var keys = Object.keys(message.entitiesById), i = 0; i < keys.length; ++i) {
+                        writer.uint32(/* id 1, wireType 2 =*/10).fork().uint32(/* id 1, wireType 0 =*/8).int32(keys[i]);
+                        $root.simple.Entity.encode(message.entitiesById[keys[i]], writer.uint32(/* id 2, wireType 2 =*/18).fork()).ldelim().ldelim();
+                    }
+                return writer;
+            };
+    
+            /**
+             * Encodes the specified SimpleWithSnakeCaseMap message, length delimited. Does not implicitly {@link simple.SimpleWithSnakeCaseMap.verify|verify} messages.
+             * @function encodeDelimited
+             * @memberof simple.SimpleWithSnakeCaseMap
+             * @static
+             * @param {simple.SimpleWithSnakeCaseMap} message SimpleWithSnakeCaseMap message or plain object to encode
+             * @param {$protobuf.Writer} [writer] Writer to encode to
+             * @returns {$protobuf.Writer} Writer
+             */
+            SimpleWithSnakeCaseMap.encodeDelimited = function encodeDelimited(message, writer) {
+                return this.encode(message, writer).ldelim();
+            };
+    
+            /**
+             * Decodes a SimpleWithSnakeCaseMap message from the specified reader or buffer.
+             * @function decode
+             * @memberof simple.SimpleWithSnakeCaseMap
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @param {number} [length] Message length if known beforehand
+             * @returns {simple.SimpleWithSnakeCaseMap} SimpleWithSnakeCaseMap
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            SimpleWithSnakeCaseMap.decode = function decode(reader, length) {
+                if (!(reader instanceof $Reader))
+                    reader = $Reader.create(reader);
+                var end = length === undefined ? reader.len : reader.pos + length, message = new $root.simple.SimpleWithSnakeCaseMap(), key;
+                while (reader.pos < end) {
+                    var tag = reader.uint32();
+                    switch (tag >>> 3) {
+                    case 1:
+                        reader.skip().pos++;
+                        if (message.entitiesById === $util.emptyObject)
+                            message.entitiesById = {};
+                        key = reader.int32();
+                        reader.pos++;
+                        message.entitiesById[key] = $root.simple.Entity.decode(reader, reader.uint32());
+                        break;
+                    default:
+                        reader.skipType(tag & 7);
+                        break;
+                    }
+                }
+                return message;
+            };
+    
+            /**
+             * Decodes a SimpleWithSnakeCaseMap message from the specified reader or buffer, length delimited.
+             * @function decodeDelimited
+             * @memberof simple.SimpleWithSnakeCaseMap
+             * @static
+             * @param {$protobuf.Reader|Uint8Array} reader Reader or buffer to decode from
+             * @returns {simple.SimpleWithSnakeCaseMap} SimpleWithSnakeCaseMap
+             * @throws {Error} If the payload is not a reader or valid buffer
+             * @throws {$protobuf.util.ProtocolError} If required fields are missing
+             */
+            SimpleWithSnakeCaseMap.decodeDelimited = function decodeDelimited(reader) {
+                if (!(reader instanceof $Reader))
+                    reader = new $Reader(reader);
+                return this.decode(reader, reader.uint32());
+            };
+    
+            /**
+             * Verifies a SimpleWithSnakeCaseMap message.
+             * @function verify
+             * @memberof simple.SimpleWithSnakeCaseMap
+             * @static
+             * @param {Object.<string,*>} message Plain object to verify
+             * @returns {string|null} `null` if valid, otherwise the reason why it is not
+             */
+            SimpleWithSnakeCaseMap.verify = function verify(message) {
+                if (typeof message !== "object" || message === null)
+                    return "object expected";
+                if (message.entitiesById != null && message.hasOwnProperty("entitiesById")) {
+                    if (!$util.isObject(message.entitiesById))
+                        return "entitiesById: object expected";
+                    var key = Object.keys(message.entitiesById);
+                    for (var i = 0; i < key.length; ++i) {
+                        if (!$util.key32Re.test(key[i]))
+                            return "entitiesById: integer key{k:int32} expected";
+                        {
+                            var error = $root.simple.Entity.verify(message.entitiesById[key[i]]);
+                            if (error)
+                                return "entitiesById." + error;
+                        }
+                    }
+                }
+                return null;
+            };
+    
+            /**
+             * Creates a SimpleWithSnakeCaseMap message from a plain object. Also converts values to their respective internal types.
+             * @function fromObject
+             * @memberof simple.SimpleWithSnakeCaseMap
+             * @static
+             * @param {Object.<string,*>} object Plain object
+             * @returns {simple.SimpleWithSnakeCaseMap} SimpleWithSnakeCaseMap
+             */
+            SimpleWithSnakeCaseMap.fromObject = function fromObject(object) {
+                if (object instanceof $root.simple.SimpleWithSnakeCaseMap)
+                    return object;
+                var message = new $root.simple.SimpleWithSnakeCaseMap();
+                if (object.entitiesById) {
+                    if (typeof object.entitiesById !== "object")
+                        throw TypeError(".simple.SimpleWithSnakeCaseMap.entitiesById: object expected");
+                    message.entitiesById = {};
+                    for (var keys = Object.keys(object.entitiesById), i = 0; i < keys.length; ++i) {
+                        if (typeof object.entitiesById[keys[i]] !== "object")
+                            throw TypeError(".simple.SimpleWithSnakeCaseMap.entitiesById: object expected");
+                        message.entitiesById[keys[i]] = $root.simple.Entity.fromObject(object.entitiesById[keys[i]]);
+                    }
+                }
+                return message;
+            };
+    
+            /**
+             * Creates a plain object from a SimpleWithSnakeCaseMap message. Also converts values to other types if specified.
+             * @function toObject
+             * @memberof simple.SimpleWithSnakeCaseMap
+             * @static
+             * @param {simple.SimpleWithSnakeCaseMap} message SimpleWithSnakeCaseMap
+             * @param {$protobuf.IConversionOptions} [options] Conversion options
+             * @returns {Object.<string,*>} Plain object
+             */
+            SimpleWithSnakeCaseMap.toObject = function toObject(message, options) {
+                if (!options)
+                    options = {};
+                var object = {};
+                if (options.objects || options.defaults)
+                    object.entitiesById = {};
+                var keys2;
+                if (message.entitiesById && (keys2 = Object.keys(message.entitiesById)).length) {
+                    object.entitiesById = {};
+                    for (var j = 0; j < keys2.length; ++j)
+                        object.entitiesById[keys2[j]] = $root.simple.Entity.toObject(message.entitiesById[keys2[j]], options);
+                }
+                return object;
+            };
+    
+            /**
+             * Converts this SimpleWithSnakeCaseMap to JSON.
+             * @function toJSON
+             * @memberof simple.SimpleWithSnakeCaseMap
+             * @instance
+             * @returns {Object.<string,*>} JSON object
+             */
+            SimpleWithSnakeCaseMap.prototype.toJSON = function toJSON() {
+                return this.constructor.toObject(this, $protobuf.util.toJSONOptions);
+            };
+    
+            return SimpleWithSnakeCaseMap;
+        })();
+    
         simple.PingService = (function() {
     
             /**

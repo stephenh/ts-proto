@@ -19,6 +19,7 @@ async function main() {
   await generate('./google/protobuf/wrappers.bin', './build/integration-snake');
   await generate('./simple.bin');
   await generate('./simple.bin', './build/integration-snake', 'snakeToCamel=false');
+  await generate('./simple.bin', './build/integration-long', 'forceLong=true');
   await generate('./vector_tile.bin');
   await generate('./batching.bin');
   await generate('./batching.bin', './build/integration-context/', 'context=true');
