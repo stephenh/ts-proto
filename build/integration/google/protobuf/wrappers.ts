@@ -480,7 +480,7 @@ export const BytesValue = {
   fromPartial(object: DeepPartial<BytesValue>): BytesValue {
     const message = Object.create(baseBytesValue) as BytesValue;
     if (object.value !== undefined && object.value !== null) {
-      message.value = object.value as Uint8Array;
+      message.value = object.value;
     }
     return message;
   },

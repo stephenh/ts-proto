@@ -32,8 +32,7 @@ import {
   toReaderCall,
   toTypeName,
   TypeMap,
-  isLong,
-  isSimple
+  isLong
 } from './types';
 import { asSequence } from 'sequency';
 import { optionsFromParameter, singular } from './utils';
@@ -43,7 +42,6 @@ import FileDescriptorProto = google.protobuf.FileDescriptorProto;
 import EnumDescriptorProto = google.protobuf.EnumDescriptorProto;
 import ServiceDescriptorProto = google.protobuf.ServiceDescriptorProto;
 import MethodDescriptorProto = google.protobuf.MethodDescriptorProto;
-import { SymbolSpec } from 'ts-poet/build/SymbolSpecs';
 
 const dataloader = TypeNames.anyType('DataLoader=dataloader');
 
@@ -706,10 +704,10 @@ function generateFromPartial(typeMap: TypeMap, fullName: string, messageDesc: De
           .endControlFlow();
       }
     } else {
-      if(isSimple(typeMap, field, options)){
-        func = func.addStatement(`message.%L = %L`, fieldName, readSnippet(`object.${fieldName}`));
-      } else {
+      if(isLong(field) && options.forceLong){
         func = func.addStatement(`message.%L = %L as %L`, fieldName, readSnippet(`object.${fieldName}`), basicTypeName(typeMap, field, options));
+      } else {
+        func = func.addStatement(`message.%L = %L`, fieldName, readSnippet(`object.${fieldName}`));
       }
     }
 

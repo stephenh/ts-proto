@@ -231,10 +231,6 @@ export function isLong(field: FieldDescriptorProto): boolean {
   return basicLongWireType(field.type) !== undefined; 
 }
 
-export function isSimple(typeMap: TypeMap, field: FieldDescriptorProto, options: Options): boolean {
-  return Object.values(TypeNames).includes(basicTypeName(typeMap, field, options)) || isEnum(field);
-}
-
 export function isMapType(typeMap: TypeMap, messageDesc: DescriptorProto, field: FieldDescriptorProto, options: Options): boolean {
   return detectMapType(typeMap, messageDesc, field, options) !== undefined;
 }

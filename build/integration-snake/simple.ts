@@ -487,7 +487,7 @@ export const Simple = {
       message.created_at = undefined;
     }
     if (object.child !== undefined && object.child !== null) {
-      message.child = Child.fromPartial(object.child) as Child;
+      message.child = Child.fromPartial(object.child);
     } else {
       message.child = undefined;
     }
@@ -517,7 +517,7 @@ export const Simple = {
       }
     }
     if (object.thing !== undefined && object.thing !== null) {
-      message.thing = ImportedThing.fromPartial(object.thing) as ImportedThing;
+      message.thing = ImportedThing.fromPartial(object.thing);
     } else {
       message.thing = undefined;
     }
@@ -704,7 +704,7 @@ export const Nested = {
       message.name = "";
     }
     if (object.message !== undefined && object.message !== null) {
-      message.message = Nested_InnerMessage.fromPartial(object.message) as Nested_InnerMessage;
+      message.message = Nested_InnerMessage.fromPartial(object.message);
     } else {
       message.message = undefined;
     }
@@ -803,7 +803,7 @@ export const Nested_InnerMessage = {
       message.name = "";
     }
     if (object.deep !== undefined && object.deep !== null) {
-      message.deep = Nested_InnerMessage_DeepMessage.fromPartial(object.deep) as Nested_InnerMessage_DeepMessage;
+      message.deep = Nested_InnerMessage_DeepMessage.fromPartial(object.deep);
     } else {
       message.deep = undefined;
     }
@@ -1013,17 +1013,17 @@ export const SimpleWithWrappers = {
     message.coins = [];
     message.snacks = [];
     if (object.name !== undefined && object.name !== null) {
-      message.name = object.name as string | undefined;
+      message.name = object.name;
     } else {
       message.name = undefined;
     }
     if (object.age !== undefined && object.age !== null) {
-      message.age = object.age as number | undefined;
+      message.age = object.age;
     } else {
       message.age = undefined;
     }
     if (object.enabled !== undefined && object.enabled !== null) {
-      message.enabled = object.enabled as boolean | undefined;
+      message.enabled = object.enabled;
     } else {
       message.enabled = undefined;
     }
@@ -1259,7 +1259,7 @@ export const SimpleWithMap_EntitiesByIdEntry = {
       message.key = 0;
     }
     if (object.value !== undefined && object.value !== null) {
-      message.value = Entity.fromPartial(object.value) as Entity;
+      message.value = Entity.fromPartial(object.value);
     } else {
       message.value = undefined;
     }
@@ -1500,7 +1500,7 @@ export const SimpleWithSnakeCaseMap_EntitiesByIdEntry = {
       message.key = 0;
     }
     if (object.value !== undefined && object.value !== null) {
-      message.value = Entity.fromPartial(object.value) as Entity;
+      message.value = Entity.fromPartial(object.value);
     } else {
       message.value = undefined;
     }
