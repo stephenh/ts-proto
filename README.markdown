@@ -110,6 +110,7 @@ Supported options:
 
 * Right now, `ts-proto` always generates Twirp service implementations for any RPC services, simply because that is what we use. Adding an option to disable Twirp and support GRPC is on the todo list.
 * If you pass `--ts_proto_opt=context=true`, the Twirp services will have a Go-style `ctx` parameter, which is useful for tracing/logging/etc. if you're not using node's `async_hooks` api due to performance reasons.
+* If you pass `--ts_proto_opt=forceLong=true`, all 64 bit numbers will be parsed as instances of `Long`.
 
 Building
 ========
@@ -130,7 +131,7 @@ Assumptions
 Todo
 ====
 
-* Better Long support; currently any values greater than `Number.MAX_SAFE_INTEGER` blow up at runtime
+* Better Long support; currently any values greater than `Number.MAX_SAFE_INTEGER` blow up at runtime by default. Use `forceLong` to force all 64 bit numbers to be `Long`.
 * Model OneOfs as an ADT
 * Support the string-based encoding of duration in `fromJSON`/`toJSON`
 * Support bytes as base64 encoded strings in `fromJSON`/`toJSON`
