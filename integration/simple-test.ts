@@ -158,8 +158,8 @@ describe('simple', () => {
         1: { id: 1 },
         2: { id: 2 }
       },
-      nameLookup: { "foo": "bar" },
-      intLookup: { 1 : 2 },
+      nameLookup: { foo: 'bar' },
+      intLookup: { 1: 2 }
     };
     const s2 = PbSimpleWithMap.toObject(PbSimpleWithMap.decode(SimpleWithMap.encode(s1).finish()));
     expect(s2).toEqual(s1);
