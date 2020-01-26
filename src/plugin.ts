@@ -1,5 +1,5 @@
 import { promisify } from 'util';
-import {optionsFromParameter, readToBuffer} from './utils';
+import { optionsFromParameter, readToBuffer } from './utils';
 import { google } from '../build/pbjs';
 import { generateFile } from './main';
 import { createTypeMap } from './types';
@@ -17,7 +17,7 @@ async function main() {
     const spec = generateFile(typeMap, file, request.parameter);
     return new CodeGeneratorResponse.File({
       name: spec.path,
-      content: spec.toString(),
+      content: spec.toString()
     });
   });
   const response = new CodeGeneratorResponse({ file: files });
@@ -26,12 +26,14 @@ async function main() {
   await write(Buffer.from(buffer));
 }
 
-main().then(() => {
-  process.stderr.write('DONE');
-  process.exit(0);
-}).catch(e => {
-  process.stderr.write('FAILED!');
-  process.stderr.write(e.message);
-  process.stderr.write(e.stack);
-  process.exit(1);
-});
+main()
+  .then(() => {
+    process.stderr.write('DONE');
+    process.exit(0);
+  })
+  .catch(e => {
+    process.stderr.write('FAILED!');
+    process.stderr.write(e.message);
+    process.stderr.write(e.stack);
+    process.exit(1);
+  });
