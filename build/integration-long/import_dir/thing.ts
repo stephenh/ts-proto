@@ -1,4 +1,4 @@
-import * as Long from 'long';
+import Long from 'long';
 import { Timestamp } from '../google/protobuf/timestamp';
 import { Writer, Reader } from 'protobufjs/minimal';
 

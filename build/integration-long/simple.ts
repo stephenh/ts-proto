@@ -1,6 +1,6 @@
 import { ImportedThing } from './import_dir/thing';
 import { Reader, Writer } from 'protobufjs/minimal';
-import * as Long from 'long';
+import Long from 'long';
 import { Timestamp } from './google/protobuf/timestamp';
 import { StringValue, Int32Value, BoolValue } from './google/protobuf/wrappers';
 

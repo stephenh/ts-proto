@@ -1,5 +1,5 @@
+import Long from 'long';
 import { Reader } from 'protobufjs';
-import * as Long from 'long';
 import { Numbers } from '../build/integration-long/simple';
 import { simple as pbjs, google } from '../build/integration-long/pbjs';
 import INumbers = pbjs.INumbers;
