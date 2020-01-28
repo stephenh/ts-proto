@@ -1,5 +1,5 @@
-import DataLoader from 'dataloader';
-import hash from 'object-hash';
+import * as DataLoader from 'dataloader';
+import * as hash from 'object-hash';
 import { Reader, Writer } from 'protobufjs/minimal';
 import * as Long from 'long';
 

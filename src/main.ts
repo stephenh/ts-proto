@@ -43,7 +43,7 @@ import EnumDescriptorProto = google.protobuf.EnumDescriptorProto;
 import ServiceDescriptorProto = google.protobuf.ServiceDescriptorProto;
 import MethodDescriptorProto = google.protobuf.MethodDescriptorProto;
 
-const dataloader = TypeNames.anyType('DataLoader=dataloader');
+const dataloader = TypeNames.anyType('DataLoader*dataloader');
 
 export type Options = {
   useContext: boolean;
@@ -976,7 +976,7 @@ function generateBatchingRpcMethod(typeMap: TypeMap, batchMethod: BatchMethod): 
       inputType,
       outputType,
       lambda,
-      TypeNames.anyType('hash=object-hash')
+      TypeNames.anyType('hash*object-hash')
     )
     .addCode('%<});\n')
     .addStatement('return dl.load(%L)', singular(inputFieldName))
@@ -1016,7 +1016,7 @@ function generateCachingRpcMethod(
       inputType,
       outputType,
       lambda,
-      TypeNames.anyType('hash=object-hash')
+      TypeNames.anyType('hash*object-hash')
     )
     .addCode('%<});\n')
     .addStatement('return dl.load(request)')

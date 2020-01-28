@@ -4,7 +4,6 @@
     "lib": ["es2018"],
     "module": "commonjs",
     "strict": true,
-    "esModuleInterop": true,
     "outDir": "build",
     "skipLibCheck": true
   },
