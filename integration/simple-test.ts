@@ -1,7 +1,6 @@
-import Long from 'long';
 import { Reader } from 'protobufjs';
 import { Child_Type, Nested, Nested_InnerEnum, Simple, SimpleWithMap, StateEnum } from '../build/integration/simple';
-import { google, simple as pbjs } from '../build/integration/pbjs';
+import { simple as pbjs, google } from '../build/integration/pbjs';
 import ISimple = pbjs.ISimple;
 import PbChild = pbjs.Child;
 import PbSimple = pbjs.Simple;
@@ -13,6 +12,7 @@ import PbNested_DeepMessage = pbjs.Nested.InnerMessage.DeepMessage;
 import PbNested_InnerEnum = pbjs.Nested.InnerEnum;
 import INested = pbjs.INested;
 import PbTimestamp = google.protobuf.Timestamp;
+import Long from 'long';
 
 const jan1 = new Date('1970-01-01T00:00:00.000Z');
 
@@ -64,7 +64,7 @@ describe('simple', () => {
     const s2 = PbSimple.toObject(PbSimple.decode(Simple.encode(s1).finish()));
     expect(s2).toEqual({
       ...s1,
-      createdAt: new PbTimestamp({ nanos: 0, seconds: Long.fromNumber(0) as any })
+      createdAt: new PbTimestamp({ nanos: 0, seconds: new Long(0) })
     });
   });
 
@@ -148,7 +148,7 @@ describe('simple', () => {
     const s2 = PbSimple.toObject(PbSimple.decode(Simple.encode(s1).finish()));
     expect(s2).toEqual({
       ...s1,
-      createdAt: new PbTimestamp({ nanos: 0, seconds: Long.fromNumber(0) as any })
+      createdAt: new PbTimestamp({ nanos: 0, seconds: new Long(0) })
     });
   });
 
