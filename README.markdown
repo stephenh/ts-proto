@@ -131,7 +131,6 @@ Assumptions
 Todo
 ====
 
-* Better Long support; currently any values greater than `Number.MAX_SAFE_INTEGER` blow up at runtime by default. Use `forceLong` to force all 64 bit numbers to be `Long`.
 * Model OneOfs as an ADT
 * Support the string-based encoding of duration in `fromJSON`/`toJSON`
 * Support bytes as base64 encoded strings in `fromJSON`/`toJSON`
@@ -193,6 +192,30 @@ Protobuf has several built-in types for this pattern, i.e. `google.protobuf.Stri
 This hides some of the `StringValue` mess and gives a more idiomatic way of using them.
 
 Granted, it's unfortunate this is not as simple as marking the `string` as `optional`. 
+
+Number Types
+============
+
+Numbers are by default assumed to be plain JavaScript `numbers`. Since protobuf supports 64 bit numbers, but JavaScript doesn't, default behaviour is to throw an error if a number is detected to be larger than `Number.MAX_SAFE_INTEGER`. If 64 bit numbers are expected to be used, then use the `forceLong` option.
+
+Each of the protobuf basic number types maps as following depending on option used.
+
+| Protobuf number types  | Default Typescript types | `forceLong` Typescript types |
+| ----------------------- | ----------------------- | ---------------------------- |
+|  double | number | number  |
+|  float | number | number |
+|  int32 | number | number |
+|  int64 | number* | Long |
+|  uint32 | number | number |
+|  uint64 | number* | Unsigned Long |
+|  sint32 | number | number |
+|  sint64 | number* | Long |
+|  fixed32 | number | number |
+|  fixed64 | number* | Unsigned Long |
+|  sfixed32 | number | number |
+|  sfixed64 | number* |  Long |
+
+Where (*) indicates they might throw an error at runtime.
 
 Current Status of Optional Values
 =================================
