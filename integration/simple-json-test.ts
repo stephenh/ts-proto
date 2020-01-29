@@ -1,4 +1,11 @@
-import { Child_Type, Simple, SimpleWithWrappers, StateEnum, SimpleWithMap } from '../build/integration/simple';
+import {
+  Child_Type,
+  Simple,
+  SimpleWithWrappers,
+  StateEnum,
+  SimpleWithMap,
+  OneOfMessage
+} from '../build/integration/simple';
 import { google, simple as pbjs } from '../build/integration/pbjs';
 import { Tile_Value } from '../build/integration/vector_tile';
 import ISimple = pbjs.ISimple;
@@ -396,5 +403,15 @@ describe('simple json', () => {
     const s1: Partial<Simple> = { state: StateEnum.UNKNOWN };
     const s2 = Simple.fromJSON(s1);
     expect(s2.state).toEqual(StateEnum.UNKNOWN);
+  });
+
+  it('can encode oneofs of primitives', () => {
+    const s1: OneOfMessage = { first: 'first', last: undefined };
+    expect(OneOfMessage.toJSON(s1)).toMatchInlineSnapshot(`
+      Object {
+        "first": "first",
+        "last": undefined,
+      }
+    `);
   });
 });

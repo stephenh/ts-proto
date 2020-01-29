@@ -894,12 +894,12 @@ export const OneOfMessage = {
     if (object.first !== undefined && object.first !== null) {
       message.first = String(object.first);
     } else {
-      message.first = "";
+      message.first = undefined;
     }
     if (object.last !== undefined && object.last !== null) {
       message.last = String(object.last);
     } else {
-      message.last = "";
+      message.last = undefined;
     }
     return message;
   },
@@ -908,19 +908,19 @@ export const OneOfMessage = {
     if (object.first !== undefined && object.first !== null) {
       message.first = object.first;
     } else {
-      message.first = "";
+      message.first = undefined;
     }
     if (object.last !== undefined && object.last !== null) {
       message.last = object.last;
     } else {
-      message.last = "";
+      message.last = undefined;
     }
     return message;
   },
   toJSON(message: OneOfMessage): unknown {
     const obj: any = {};
-    obj.first = message.first || "";
-    obj.last = message.last || "";
+    obj.first = message.first || undefined;
+    obj.last = message.last || undefined;
     return obj;
   },
 };

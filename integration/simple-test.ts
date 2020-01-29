@@ -1,5 +1,13 @@
 import { Reader } from 'protobufjs';
-import { Child_Type, Nested, Nested_InnerEnum, Simple, SimpleWithMap, StateEnum } from '../build/integration/simple';
+import {
+  Child_Type,
+  Nested,
+  Nested_InnerEnum,
+  OneOfMessage,
+  Simple,
+  SimpleWithMap,
+  StateEnum
+} from '../build/integration/simple';
 import { simple as pbjs, google } from '../build/integration/pbjs';
 import ISimple = pbjs.ISimple;
 import PbChild = pbjs.Child;
@@ -179,23 +187,27 @@ describe('simple', () => {
   it('has fromPartial', () => {
     const s1 = Simple.fromPartial({});
     expect(s1).toMatchInlineSnapshot(`
-Object {
-  "age": 0,
-  "child": undefined,
-  "coins": Array [],
-  "createdAt": undefined,
-  "grandChildren": Array [],
-  "name": "",
-  "oldStates": Array [],
-  "snacks": Array [],
-  "state": 0,
-  "thing": undefined,
-}
-`);
+      Object {
+        "age": 0,
+        "child": undefined,
+        "coins": Array [],
+        "createdAt": undefined,
+        "grandChildren": Array [],
+        "name": "",
+        "oldStates": Array [],
+        "snacks": Array [],
+        "state": 0,
+        "thing": undefined,
+      }
+    `);
   });
 
-  it('can fromPartial with maps', () => {
-    const s1 = SimpleWithMap.fromPartial({ entitiesById: { 1: { id: 1 } } });
-    expect(s1.entitiesById[1].id).toEqual(1);
+  it('can fromPartial with oneofs of primitives', () => {
+    expect(OneOfMessage.fromPartial({ first: 'first' })).toMatchInlineSnapshot(`
+      Object {
+        "first": "first",
+        "last": undefined,
+      }
+    `);
   });
 });
