@@ -620,7 +620,7 @@ function generateFromJson(
     // set the default value (TODO Support bytes)
     if (!isRepeated(field) && field.type !== FieldDescriptorProto.Type.TYPE_BYTES) {
       func = func.nextControlFlow('else');
-      func = func.addStatement(`message.%L = %L`, fieldName, defaultValue(field.type, options));
+      func = func.addStatement(`message.%L = %L`, fieldName, isWithinOneOf(field) ? "undefined" : defaultValue(field.type, options));
     }
 
     func = func.endControlFlow();
@@ -660,9 +660,9 @@ function generateToJson(
         );
       } else {
         if (isLong(field) && options.forceLong) {
-          return CodeBlock.of('(%L || %L).toString()', from, defaultValue(field.type, options));
+          return CodeBlock.of('(%L || %L).toString()', from, isWithinOneOf(field) ? "undefined" : defaultValue(field.type, options));
         } else {
-          return CodeBlock.of('%L || %L', from, defaultValue(field.type, options));
+          return CodeBlock.of('%L || %L', from, isWithinOneOf(field) ? "undefined" : defaultValue(field.type, options));
         }
       }
     };
@@ -764,7 +764,7 @@ function generateFromPartial(
     // set the default value (TODO Support bytes)
     if (!isRepeated(field) && field.type !== FieldDescriptorProto.Type.TYPE_BYTES) {
       func = func.nextControlFlow('else');
-      func = func.addStatement(`message.%L = %L`, fieldName, defaultValue(field.type, options));
+      func = func.addStatement(`message.%L = %L`, fieldName, isWithinOneOf(field) ? "undefined" : defaultValue(field.type, options));
     }
 
     func = func.endControlFlow();
