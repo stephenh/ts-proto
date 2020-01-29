@@ -12,7 +12,7 @@ import PbNested_DeepMessage = pbjs.Nested.InnerMessage.DeepMessage;
 import PbNested_InnerEnum = pbjs.Nested.InnerEnum;
 import INested = pbjs.INested;
 import PbTimestamp = google.protobuf.Timestamp;
-import Long from 'long';
+import * as Long from 'long';
 
 const jan1 = new Date('1970-01-01T00:00:00.000Z');
 
@@ -64,7 +64,7 @@ describe('simple', () => {
     const s2 = PbSimple.toObject(PbSimple.decode(Simple.encode(s1).finish()));
     expect(s2).toEqual({
       ...s1,
-      createdAt: new PbTimestamp({ nanos: 0, seconds: new Long(0) })
+      createdAt: new PbTimestamp({ nanos: 0, seconds: new Long(0) as any })
     });
   });
 
@@ -148,7 +148,7 @@ describe('simple', () => {
     const s2 = PbSimple.toObject(PbSimple.decode(Simple.encode(s1).finish()));
     expect(s2).toEqual({
       ...s1,
-      createdAt: new PbTimestamp({ nanos: 0, seconds: new Long(0) })
+      createdAt: new PbTimestamp({ nanos: 0, seconds: new Long(0) as any })
     });
   });
 
@@ -158,8 +158,8 @@ describe('simple', () => {
         1: { id: 1 },
         2: { id: 2 }
       },
-      nameLookup: { "foo": "bar" },
-      intLookup: { 1 : 2 },
+      nameLookup: { foo: 'bar' },
+      intLookup: { 1: 2 }
     };
     const s2 = PbSimpleWithMap.toObject(PbSimpleWithMap.decode(SimpleWithMap.encode(s1).finish()));
     expect(s2).toEqual(s1);

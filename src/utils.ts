@@ -1,5 +1,5 @@
 import ReadStream = NodeJS.ReadStream;
-import {Options} from "./main";
+import { Options } from './main';
 
 export function readToBuffer(stream: ReadStream): Promise<Buffer> {
   return new Promise(resolve => {

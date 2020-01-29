@@ -17,6 +17,7 @@ import { optionsFromParameter } from '../src/utils';
 async function main() {
   await generate('./google/protobuf/wrappers.bin');
   await generate('./google/protobuf/wrappers.bin', './build/integration-snake');
+  await generate('./google/protobuf/wrappers.bin', './build/integration-long');
   await generate('./simple.bin');
   await generate('./simple.bin', './build/integration-snake', 'snakeToCamel=false');
   await generate('./simple.bin', './build/integration-long', 'forceLong=true');

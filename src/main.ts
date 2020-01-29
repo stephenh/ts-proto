@@ -43,7 +43,7 @@ import EnumDescriptorProto = google.protobuf.EnumDescriptorProto;
 import ServiceDescriptorProto = google.protobuf.ServiceDescriptorProto;
 import MethodDescriptorProto = google.protobuf.MethodDescriptorProto;
 
-const dataloader = TypeNames.anyType('DataLoader=dataloader');
+const dataloader = TypeNames.anyType('DataLoader*dataloader');
 
 export type Options = {
   useContext: boolean;
@@ -74,7 +74,7 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
     (fullName, message) => {
       file = file.addInterface(generateInterfaceDeclaration(typeMap, fullName, message, options));
     },
-      options,
+    options,
     (fullName, enumDesc) => {
       file = file.addEnum(generateEnum(fullName, enumDesc));
     }
@@ -98,7 +98,7 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
         .newLine();
       file = file.addCode(staticMethods);
     },
-      options,
+    options,
     (fullName, enumDesc) => {
       let staticMethods = CodeBlock.empty()
         .beginControlFlow('export namespace %L', fullName)
@@ -125,9 +125,13 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
   file = addDeepPartialType(file);
 
   let hasAnyTimestamps = false;
-  visit(fileDesc, (_, messageType) => {
-    hasAnyTimestamps = hasAnyTimestamps || asSequence(messageType.field).any(isTimestamp);
-  }, options);
+  visit(
+    fileDesc,
+    (_, messageType) => {
+      hasAnyTimestamps = hasAnyTimestamps || asSequence(messageType.field).any(isTimestamp);
+    },
+    options
+  );
   if (hasAnyTimestamps) {
     file = addTimestampMethods(file, options);
   }
@@ -136,26 +140,23 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
 }
 
 function addLongUtilityMethod(file: FileSpec, options: Options): FileSpec {
-  if(options.forceLong){
+  if (options.forceLong) {
     return file.addFunction(
       FunctionSpec.create('numberToLong')
         .addParameter('number', 'number')
-        .addCodeBlock(
-          CodeBlock.empty()
-            .addStatement('return %T.fromNumber(number)', 'Long*long')
-        )
-    );  
+        .addCodeBlock(CodeBlock.empty().addStatement('return %T.fromNumber(number)', 'Long*long'))
+    );
   } else {
     return file.addFunction(
       FunctionSpec.create('longToNumber')
-      .addParameter('long', 'Long*long')
-      .addCodeBlock(
-        CodeBlock.empty()
-        .beginControlFlow('if (long.gt(Number.MAX_SAFE_INTEGER))')
-        .addStatement('throw new global.Error("Value is larger than Number.MAX_SAFE_INTEGER")')
-        .endControlFlow()
-        .addStatement('return long.toNumber()')
-      )
+        .addParameter('long', 'Long*long')
+        .addCodeBlock(
+          CodeBlock.empty()
+            .beginControlFlow('if (long.gt(Number.MAX_SAFE_INTEGER))')
+            .addStatement('throw new global.Error("Value is larger than Number.MAX_SAFE_INTEGER")')
+            .endControlFlow()
+            .addStatement('return long.toNumber()')
+        )
     );
   }
 }
@@ -183,7 +184,7 @@ function addTimestampMethods(file: FileSpec, options: Options): FileSpec {
   const timestampType = 'Timestamp@./google/protobuf/timestamp';
 
   let secondsCodeLine = 'const seconds = date.getTime() / 1_000';
-  if(options.forceLong){
+  if (options.forceLong) {
     secondsCodeLine = 'const seconds = numberToLong(date.getTime() / 1_000)';
   }
   return file
@@ -270,11 +271,19 @@ function generateEnumToJson(fullName: string, enumDesc: EnumDescriptorProto): Fu
 }
 
 // Create the interface with properties
-function generateInterfaceDeclaration(typeMap: TypeMap, fullName: string, messageDesc: DescriptorProto, options: Options) {
+function generateInterfaceDeclaration(
+  typeMap: TypeMap,
+  fullName: string,
+  messageDesc: DescriptorProto,
+  options: Options
+) {
   let message = InterfaceSpec.create(fullName).addModifiers(Modifier.EXPORT);
   for (const fieldDesc of messageDesc.field) {
     message = message.addProperty(
-      PropertySpec.create(maybeSnakeToCamel(fieldDesc.name, options), toTypeName(typeMap, messageDesc, fieldDesc, options))
+      PropertySpec.create(
+        maybeSnakeToCamel(fieldDesc.name, options),
+        toTypeName(typeMap, messageDesc, fieldDesc, options)
+      )
     );
   }
   return message;
@@ -287,7 +296,10 @@ function generateBaseInstance(fullName: string, messageDesc: DescriptorProto, op
   asSequence(messageDesc.field)
     .filterNot(isWithinOneOf)
     .forEach(field => {
-      initialValue = initialValue.addHashEntry(maybeSnakeToCamel(field.name, options), defaultValue(field.type, options));
+      initialValue = initialValue.addHashEntry(
+        maybeSnakeToCamel(field.name, options),
+        defaultValue(field.type, options)
+      );
     });
   return baseMessage.initializerBlock(initialValue.endHash());
 }
@@ -320,7 +332,12 @@ function visitServices(proto: FileDescriptorProto, serviceFn: (desc: ServiceDesc
 }
 
 /** Creates a function to decode a message by loop overing the tags. */
-function generateDecode(typeMap: TypeMap, fullName: string, messageDesc: DescriptorProto, options: Options): FunctionSpec {
+function generateDecode(
+  typeMap: TypeMap,
+  fullName: string,
+  messageDesc: DescriptorProto,
+  options: Options
+): FunctionSpec {
   // create the basic function declaration
   let func = FunctionSpec.create('decode')
     .addParameter('reader', 'Reader@protobufjs/minimal')
@@ -354,14 +371,17 @@ function generateDecode(typeMap: TypeMap, fullName: string, messageDesc: Descrip
     if (isPrimitive(field)) {
       readSnippet = CodeBlock.of('reader.%L()', toReaderCall(field));
       if (basicLongWireType(field.type) !== undefined) {
-        if(options.forceLong){
+        if (options.forceLong) {
           readSnippet = CodeBlock.of('%L as Long', readSnippet);
         } else {
           readSnippet = CodeBlock.of('longToNumber(%L as Long)', readSnippet);
         }
       }
     } else if (isValueType(field)) {
-      readSnippet = CodeBlock.of('%T.decode(reader, reader.uint32()).value', basicTypeName(typeMap, field, options, true));
+      readSnippet = CodeBlock.of(
+        '%T.decode(reader, reader.uint32()).value',
+        basicTypeName(typeMap, field, options, true)
+      );
     } else if (isTimestamp(field)) {
       readSnippet = CodeBlock.of(
         'fromTimestamp(%T.decode(reader, reader.uint32()))',
@@ -414,7 +434,12 @@ function generateDecode(typeMap: TypeMap, fullName: string, messageDesc: Descrip
 }
 
 /** Creates a function to encode a message by loop overing the tags. */
-function generateEncode(typeMap: TypeMap, fullName: string, messageDesc: DescriptorProto, options: Options): FunctionSpec {
+function generateEncode(
+  typeMap: TypeMap,
+  fullName: string,
+  messageDesc: DescriptorProto,
+  options: Options
+): FunctionSpec {
   // create the basic function declaration
   let func = FunctionSpec.create('encode')
     .addParameter('message', fullName)
@@ -450,7 +475,12 @@ function generateEncode(typeMap: TypeMap, fullName: string, messageDesc: Descrip
     } else if (isMessage(field)) {
       const tag = ((field.number << 3) | 2) >>> 0;
       writeSnippet = place =>
-        CodeBlock.of('%T.encode(%L, writer.uint32(%L).fork()).ldelim()', basicTypeName(typeMap, field, options), place, tag);
+        CodeBlock.of(
+          '%T.encode(%L, writer.uint32(%L).fork()).ldelim()',
+          basicTypeName(typeMap, field, options),
+          place,
+          tag
+        );
     } else {
       throw new Error(`Unhandled field ${field}`);
     }
@@ -498,7 +528,12 @@ function generateEncode(typeMap: TypeMap, fullName: string, messageDesc: Descrip
  * This is very similar to decode, we loop through looking for properties, with
  * a few special cases for https://developers.google.com/protocol-buffers/docs/proto3#json.
  * */
-function generateFromJson(typeMap: TypeMap, fullName: string, messageDesc: DescriptorProto, options: Options): FunctionSpec {
+function generateFromJson(
+  typeMap: TypeMap,
+  fullName: string,
+  messageDesc: DescriptorProto,
+  options: Options
+): FunctionSpec {
   // create the basic function declaration
   let func = FunctionSpec.create('fromJSON')
     .addParameter('object', 'any')
@@ -525,7 +560,7 @@ function generateFromJson(typeMap: TypeMap, fullName: string, messageDesc: Descr
         // Convert primitives using the String(value)/Number(value) cstr, except for bytes
         if (isBytes(field)) {
           return CodeBlock.of('%L', from);
-        } else if(isLong(field) && options.forceLong) {
+        } else if (isLong(field) && options.forceLong) {
           const cstr = capitalize(basicTypeName(typeMap, field, options, true).toString());
           return CodeBlock.of('%L.fromString(%L)', cstr, from);
         } else {
@@ -595,7 +630,12 @@ function generateFromJson(typeMap: TypeMap, fullName: string, messageDesc: Descr
   return func;
 }
 
-function generateToJson(typeMap: TypeMap, fullName: string, messageDesc: DescriptorProto, options: Options): FunctionSpec {
+function generateToJson(
+  typeMap: TypeMap,
+  fullName: string,
+  messageDesc: DescriptorProto,
+  options: Options
+): FunctionSpec {
   // create the basic function declaration
   let func = FunctionSpec.create('toJSON')
     .addParameter('message', fullName)
@@ -619,7 +659,7 @@ function generateToJson(typeMap: TypeMap, fullName: string, messageDesc: Descrip
           defaultValue(field.type, options)
         );
       } else {
-        if(isLong(field) && options.forceLong){
+        if (isLong(field) && options.forceLong) {
           return CodeBlock.of('(%L || %L).toString()', from, defaultValue(field.type, options));
         } else {
           return CodeBlock.of('%L || %L', from, defaultValue(field.type, options));
@@ -641,7 +681,12 @@ function generateToJson(typeMap: TypeMap, fullName: string, messageDesc: Descrip
   return func.addStatement('return obj');
 }
 
-function generateFromPartial(typeMap: TypeMap, fullName: string, messageDesc: DescriptorProto, options: Options): FunctionSpec {
+function generateFromPartial(
+  typeMap: TypeMap,
+  fullName: string,
+  messageDesc: DescriptorProto,
+  options: Options
+): FunctionSpec {
   // create the basic function declaration
   let func = FunctionSpec.create('fromPartial')
     .addParameter('object', `DeepPartial<${fullName}>`)
@@ -704,8 +749,13 @@ function generateFromPartial(typeMap: TypeMap, fullName: string, messageDesc: De
           .endControlFlow();
       }
     } else {
-      if(isLong(field) && options.forceLong){
-        func = func.addStatement(`message.%L = %L as %L`, fieldName, readSnippet(`object.${fieldName}`), basicTypeName(typeMap, field, options));
+      if (isLong(field) && options.forceLong) {
+        func = func.addStatement(
+          `message.%L = %L as %L`,
+          fieldName,
+          readSnippet(`object.${fieldName}`),
+          basicTypeName(typeMap, field, options)
+        );
       } else {
         func = func.addStatement(`message.%L = %L`, fieldName, readSnippet(`object.${fieldName}`));
       }
@@ -926,7 +976,7 @@ function generateBatchingRpcMethod(typeMap: TypeMap, batchMethod: BatchMethod): 
       inputType,
       outputType,
       lambda,
-      TypeNames.anyType('hash=object-hash')
+      TypeNames.anyType('hash*object-hash')
     )
     .addCode('%<});\n')
     .addStatement('return dl.load(%L)', singular(inputFieldName))
@@ -966,7 +1016,7 @@ function generateCachingRpcMethod(
       inputType,
       outputType,
       lambda,
-      TypeNames.anyType('hash=object-hash')
+      TypeNames.anyType('hash*object-hash')
     )
     .addCode('%<});\n')
     .addStatement('return dl.load(request)')
@@ -1035,7 +1085,7 @@ function responsePromise(typeMap: TypeMap, methodDesc: MethodDescriptorProto): T
 // }
 
 function maybeSnakeToCamel(s: string, options: Options): string {
-  if(options.snakeToCamel) {
+  if (options.snakeToCamel) {
     return s.replace(/(\_\w)/g, m => m[1].toUpperCase());
   } else {
     return s;
