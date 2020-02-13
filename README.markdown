@@ -93,6 +93,27 @@ Highlights
 
 * `fromJSON`/`toJSON` support the [canonical Protobuf JS](https://developers.google.com/protocol-buffers/docs/proto3#json) format (i.e. timestamps are ISO strings)
 
+Auto-Batching / N+1 Prevention
+==============================
+
+Similar to the N+1 problem in SQL applications, it is easy for micro-service clients to trigger multiple separate RPC calls for "load entity X" that should really be batched into a single "load entities [1, 2, 3]", assuming the backend supports a batch-oriented RPC method.
+
+If you implement your RPC methods with the convention of:
+
+* A method name of `Batch<OperationName>`
+* The `Batch<OperationName>` input type has a single repeated field (i.e. `repeated string ids = 1`)
+* The `Batch<OperationName>` output type has either a:
+  * A single repeated field (i.e. `repeated Foo foos = 1`) _where the output order is the same as the input `ids` order_, or
+  * A map of the input to an output (i.e. `map<string, Entity> entities = 1;`)
+
+Then ts-proto will synthesis a "non-batch" version of `<OperationName>` for the client, i.e. `client.Get<OperationName>` that takes a single id and returns a single result.
+
+You should generally also enable the `useContext=true` build-time parameter, which will give all client methods a Go-style `ctx` parameter with a `getDataLoaders` method to provide the clients a "per-request" scope of [DataLoaders](https://github.com/graphql/dataloader) to provide the batch detection/flushing behavior.
+
+See the `batching.proto` file and related tests for examples/more details.
+
+But the net effect is that ts-proto can provide SQL-/ORM-style N+1 prevention for GRPC clients calls, which can be critical especially in high-volume / highly-parallel implementations like GraphQL servers calling backend GRPC services.
+
 Usage
 =====
 
