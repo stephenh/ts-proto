@@ -49,3 +49,19 @@ export function optionsFromParameter(parameter: string): Options {
   }
   return options;
 }
+
+// addJavadoc will attempt to expand unescaped percent %, so we replace these within source comments.
+const PercentAll = /\%/g;
+// Since we don't know what form the comment originally took, it may contain closing block comments.
+const CloseComment = /\*\//g;
+
+/**
+ * Removes potentially harmful characters from comments
+ * @param text {string} original text
+ * @returns {string} scrubbed text
+ */
+export function cleanComment(text: string) {
+  return (text || '')
+    .replace(PercentAll, '%%')
+    .replace(CloseComment, '* /');
+}
