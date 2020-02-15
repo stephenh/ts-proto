@@ -5,6 +5,15 @@ import { generateFile } from './main';
 import { createTypeMap } from './types';
 import CodeGeneratorRequest = google.protobuf.compiler.CodeGeneratorRequest;
 import CodeGeneratorResponse = google.protobuf.compiler.CodeGeneratorResponse;
+import { FileSpec } from 'ts-poet';
+
+// Comment block at the top of every source file, since these comments require specific
+// syntax incompatible with ts-poet, we will hard-code the string and prepend to the
+// generator output.
+const formatSourceFile = (spec: FileSpec) => 
+`// @ts-nocheck
+/* eslint-disable */
+${spec}`;
 
 // this would be the plugin called by the protoc compiler
 async function main() {
@@ -17,7 +26,7 @@ async function main() {
     const spec = generateFile(typeMap, file, request.parameter);
     return new CodeGeneratorResponse.File({
       name: spec.path,
-      content: spec.toString()
+      content: formatSourceFile(spec)
     });
   });
   const response = new CodeGeneratorResponse({ file: files });

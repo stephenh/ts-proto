@@ -36,7 +36,15 @@ export function upperFirst(name: string): string {
 }
 
 export function optionsFromParameter(parameter: string): Options {
-  const options: Options = { useContext: false, snakeToCamel: true, forceLong: false };
+  const options: Options = { 
+    useContext: false, 
+    snakeToCamel: true, 
+    forceLong: false,
+    serializers: true,
+    toFromJson: true,
+    serviceStub: true,
+  };
+
   if (parameter) {
     if (parameter.includes('context=true')) {
       options.useContext = true;
@@ -46,6 +54,15 @@ export function optionsFromParameter(parameter: string): Options {
     }
     if (parameter.includes('forceLong=true')) {
       options.forceLong = true;
+    }
+    if (parameter.includes('serializers=false')) {
+      options.serializers = false;
+    }
+    if (parameter.includes('toFromJson=false')) {
+      options.toFromJson = false;
+    }
+    if (parameter.includes('serviceStub=false')) {
+      options.serviceStub = false;
     }
   }
   return options;

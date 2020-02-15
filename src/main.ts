@@ -50,6 +50,9 @@ export type Options = {
   useContext: boolean;
   snakeToCamel: boolean;
   forceLong: boolean;
+  serializers: boolean;
+  toFromJson: boolean;
+  serviceStub: boolean;
 };
 
 export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, parameter: string): FileSpec {
@@ -70,11 +73,11 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
   let file = FileSpec.create(moduleName);
 
   const sourceInfo = SourceInfo.fromDescriptor(fileDesc);
-  
+
   // Syntax, unlike most fields, is not repeated and thus does not use an index
   const headerComment = sourceInfo.lookup(Fields.file.syntax, undefined);
   maybeAddComment(headerComment, text => (file = file.addComment(text)));
-  
+
   // first make all the type declarations
   visit(
     fileDesc,
@@ -88,65 +91,81 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
     }
   );
 
-  // then add the encoder/decoder/base instance
-  visit(
-    fileDesc,
-    sourceInfo,
-    (fullName, message) => {
-      file = file.addProperty(generateBaseInstance(fullName, message, options));
-      let staticMethods = CodeBlock.empty()
-        .add('export const %L = ', fullName)
-        .beginHash()
-        .addHashEntry(generateEncode(typeMap, fullName, message, options))
-        .addHashEntry(generateDecode(typeMap, fullName, message, options))
-        .addHashEntry(generateFromJson(typeMap, fullName, message, options))
-        .addHashEntry(generateFromPartial(typeMap, fullName, message, options))
-        .addHashEntry(generateToJson(typeMap, fullName, message, options))
-        .endHash()
-        .add(';')
-        .newLine();
-      file = file.addCode(staticMethods);
-    },
-    options,
-    (fullName, enumDesc) => {
-      let staticMethods = CodeBlock.empty()
-        .beginControlFlow('export namespace %L', fullName)
-        .addFunction(generateEnumFromJson(fullName, enumDesc))
-        .addFunction(generateEnumToJson(fullName, enumDesc))
-        .endControlFlow();
-      file = file.addCode(staticMethods);
-    }
-  );
+  if (options.serializers || options.toFromJson) {
+    // then add the encoder/decoder/base instance
+    visit(
+      fileDesc,
+      sourceInfo,
+      (fullName, message) => {
+        file = file.addProperty(generateBaseInstance(fullName, message, options));
+        let staticMethods = CodeBlock.empty()
+          .add('export const %L = ', fullName)
+          .beginHash();
 
-  visitServices(
-    fileDesc, 
-    sourceInfo,
-    (serviceDesc, sInfo) => {
+        staticMethods = !options.serializers
+          ? staticMethods
+          : staticMethods
+              .addHashEntry(generateEncode(typeMap, fullName, message, options))
+              .addHashEntry(generateDecode(typeMap, fullName, message, options));
+
+        staticMethods = !options.toFromJson
+          ? staticMethods
+          : staticMethods
+              .addHashEntry(generateFromJson(typeMap, fullName, message, options))
+              .addHashEntry(generateFromPartial(typeMap, fullName, message, options))
+              .addHashEntry(generateToJson(typeMap, fullName, message, options));
+
+        staticMethods = staticMethods
+          .endHash()
+          .add(';')
+          .newLine();
+        file = file.addCode(staticMethods);
+      },
+      options,
+      (fullName, enumDesc) => {
+        if (!options.toFromJson) {
+          return;
+        }
+        let staticMethods = CodeBlock.empty()
+          .beginControlFlow('export namespace %L', fullName)
+          .addFunction(generateEnumFromJson(fullName, enumDesc))
+          .addFunction(generateEnumToJson(fullName, enumDesc))
+          .endControlFlow();
+        file = file.addCode(staticMethods);
+      }
+    );
+  }
+
+  visitServices(fileDesc, sourceInfo, (serviceDesc, sInfo) => {
     file = file.addInterface(generateService(typeMap, fileDesc, sInfo, serviceDesc, options));
-    file = file.addClass(generateServiceClientImpl(typeMap, fileDesc, serviceDesc, options));
+    file = !options.serviceStub
+      ? file
+      : file.addClass(generateServiceClientImpl(typeMap, fileDesc, serviceDesc, options));
   });
 
-  if (fileDesc.service.length > 0) {
+  if (options.serviceStub && fileDesc.service.length > 0) {
     file = file.addInterface(generateRpcType(options));
     if (options.useContext) {
       file = file.addInterface(generateDataLoadersType(options));
     }
   }
 
-  file = addLongUtilityMethod(file, options);
-  file = addDeepPartialType(file);
+  if (options.serializers || options.toFromJson) {
+    file = addLongUtilityMethod(file, options);
+    file = addDeepPartialType(file);
 
-  let hasAnyTimestamps = false;
-  visit(
-    fileDesc,
-    sourceInfo,
-    (_, messageType) => {
-      hasAnyTimestamps = hasAnyTimestamps || asSequence(messageType.field).any(isTimestamp);
-    },
-    options
-  );
-  if (hasAnyTimestamps) {
-    file = addTimestampMethods(file, options);
+    let hasAnyTimestamps = false;
+    visit(
+      fileDesc,
+      sourceInfo,
+      (_, messageType) => {
+        hasAnyTimestamps = hasAnyTimestamps || asSequence(messageType.field).any(isTimestamp);
+      },
+      options
+    );
+    if (hasAnyTimestamps) {
+      file = addTimestampMethods(file, options);
+    }
   }
 
   return file;
@@ -351,7 +370,7 @@ export function visit(
 
   const messages = proto instanceof FileDescriptorProto ? proto.messageType : proto.nestedType;
   const childType = isRootFile ? Fields.file.message_type : Fields.message.nested_type;
-  
+
   index = 0;
   for (const message of messages) {
     const fullName = prefix + maybeSnakeToCamel(message.name, options);
@@ -362,9 +381,10 @@ export function visit(
 }
 
 function visitServices(
-  proto: FileDescriptorProto, 
+  proto: FileDescriptorProto,
   sourceInfo: SourceInfo,
-  serviceFn: (desc: ServiceDescriptorProto, sourceInfo: SourceInfo) => void): void {
+  serviceFn: (desc: ServiceDescriptorProto, sourceInfo: SourceInfo) => void
+): void {
   let index = 0;
   for (const serviceDesc of proto.service) {
     const nestedSourceInfo = sourceInfo.open(Fields.file.service, index++);
@@ -661,7 +681,11 @@ function generateFromJson(
     // set the default value (TODO Support bytes)
     if (!isRepeated(field) && field.type !== FieldDescriptorProto.Type.TYPE_BYTES) {
       func = func.nextControlFlow('else');
-      func = func.addStatement(`message.%L = %L`, fieldName, isWithinOneOf(field) ? "undefined" : defaultValue(field.type, options));
+      func = func.addStatement(
+        `message.%L = %L`,
+        fieldName,
+        isWithinOneOf(field) ? 'undefined' : defaultValue(field.type, options)
+      );
     }
 
     func = func.endControlFlow();
@@ -701,9 +725,13 @@ function generateToJson(
         );
       } else {
         if (isLong(field) && options.forceLong) {
-          return CodeBlock.of('(%L || %L).toString()', from, isWithinOneOf(field) ? "undefined" : defaultValue(field.type, options));
+          return CodeBlock.of(
+            '(%L || %L).toString()',
+            from,
+            isWithinOneOf(field) ? 'undefined' : defaultValue(field.type, options)
+          );
         } else {
-          return CodeBlock.of('%L || %L', from, isWithinOneOf(field) ? "undefined" : defaultValue(field.type, options));
+          return CodeBlock.of('%L || %L', from, isWithinOneOf(field) ? 'undefined' : defaultValue(field.type, options));
         }
       }
     };
@@ -805,7 +833,11 @@ function generateFromPartial(
     // set the default value (TODO Support bytes)
     if (!isRepeated(field) && field.type !== FieldDescriptorProto.Type.TYPE_BYTES) {
       func = func.nextControlFlow('else');
-      func = func.addStatement(`message.%L = %L`, fieldName, isWithinOneOf(field) ? "undefined" : defaultValue(field.type, options));
+      func = func.addStatement(
+        `message.%L = %L`,
+        fieldName,
+        isWithinOneOf(field) ? 'undefined' : defaultValue(field.type, options)
+      );
     }
 
     func = func.endControlFlow();
@@ -838,7 +870,7 @@ function generateService(
     }
     const info = sourceInfo.lookup(Fields.service.method, index++);
     maybeAddComment(info, text => (requestFn = requestFn.addJavadoc(text)));
-    
+
     requestFn = requestFn.addParameter('request', requestType(typeMap, methodDesc));
     requestFn = requestFn.returns(responsePromise(typeMap, methodDesc));
     service = service.addFunction(requestFn);
