@@ -35,6 +35,7 @@ import {
   isLong
 } from './types';
 import { asSequence } from 'sequency';
+import SourceInfo, { Fields } from './sourceInfo';
 import { optionsFromParameter, singular } from './utils';
 import DescriptorProto = google.protobuf.DescriptorProto;
 import FieldDescriptorProto = google.protobuf.FieldDescriptorProto;
@@ -68,21 +69,26 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
   const moduleName = fileDesc.name.replace('.proto', '.ts');
   let file = FileSpec.create(moduleName);
 
+  const sourceInfo = SourceInfo.fromDescriptor(fileDesc);
+  console.error(sourceInfo.open(Fields.file.message_type, 0).lookup(Fields.message.field, 3));
+
   // first make all the type declarations
   visit(
     fileDesc,
-    (fullName, message) => {
-      file = file.addInterface(generateInterfaceDeclaration(typeMap, fullName, message, options));
+    sourceInfo,
+    (fullName, message, sInfo) => {
+      file = file.addInterface(generateInterfaceDeclaration(typeMap, fullName, message, sInfo, options));
     },
     options,
-    (fullName, enumDesc) => {
-      file = file.addEnum(generateEnum(fullName, enumDesc));
+    (fullName, enumDesc, sInfo) => {
+      file = file.addEnum(generateEnum(fullName, enumDesc, sInfo));
     }
   );
 
   // then add the encoder/decoder/base instance
   visit(
     fileDesc,
+    sourceInfo,
     (fullName, message) => {
       file = file.addProperty(generateBaseInstance(fullName, message, options));
       let staticMethods = CodeBlock.empty()
@@ -109,8 +115,11 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
     }
   );
 
-  visitServices(fileDesc, serviceDesc => {
-    file = file.addInterface(generateService(typeMap, fileDesc, serviceDesc, options));
+  visitServices(
+    fileDesc, 
+    sourceInfo,
+    (serviceDesc, sInfo) => {
+    file = file.addInterface(generateService(typeMap, fileDesc, sInfo, serviceDesc, options));
     file = file.addClass(generateServiceClientImpl(typeMap, fileDesc, serviceDesc, options));
   });
 
@@ -127,6 +136,7 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
   let hasAnyTimestamps = false;
   visit(
     fileDesc,
+    sourceInfo,
     (_, messageType) => {
       hasAnyTimestamps = hasAnyTimestamps || asSequence(messageType.field).any(isTimestamp);
     },
@@ -227,9 +237,18 @@ function addTimestampMethods(file: FileSpec, options: Options): FileSpec {
     );
 }
 
-function generateEnum(fullName: string, enumDesc: EnumDescriptorProto): EnumSpec {
+function generateEnum(fullName: string, enumDesc: EnumDescriptorProto, sourceInfo: SourceInfo): EnumSpec {
   let spec = EnumSpec.create(fullName).addModifiers(Modifier.EXPORT);
+  if (sourceInfo.leadingComments) {
+    spec = spec.addJavadoc(sourceInfo.leadingComments);
+  }
+
+  let index = 0;
   for (const valueDesc of enumDesc.value) {
+    const info = sourceInfo.lookup(Fields.enum.value, index++);
+    if (info.leadingComments) {
+      spec = spec.addJavadoc(`${valueDesc.name} - ${info.leadingComments.trim()}\n`);
+    }
     spec = spec.addConstant(valueDesc.name, valueDesc.number.toString());
   }
   return spec;
@@ -275,16 +294,27 @@ function generateInterfaceDeclaration(
   typeMap: TypeMap,
   fullName: string,
   messageDesc: DescriptorProto,
+  sourceInfo: SourceInfo,
   options: Options
 ) {
   let message = InterfaceSpec.create(fullName).addModifiers(Modifier.EXPORT);
+  if (sourceInfo.leadingComments) {
+    message = message.addJavadoc(sourceInfo.leadingComments);
+  }
+
+  let index = 0;
   for (const fieldDesc of messageDesc.field) {
-    message = message.addProperty(
-      PropertySpec.create(
-        maybeSnakeToCamel(fieldDesc.name, options),
-        toTypeName(typeMap, messageDesc, fieldDesc, options)
-      )
+    let prop = PropertySpec.create(
+      maybeSnakeToCamel(fieldDesc.name, options),
+      toTypeName(typeMap, messageDesc, fieldDesc, options)
     );
+
+    const info = sourceInfo.lookup(Fields.message.field, index++);
+    if (info.leadingComments) {
+      prop = prop.addJavadoc(info.leadingComments);
+    }
+
+    message = message.addProperty(prop);
   }
   return message;
 }
@@ -304,30 +334,46 @@ function generateBaseInstance(fullName: string, messageDesc: DescriptorProto, op
   return baseMessage.initializerBlock(initialValue.endHash());
 }
 
-type MessageVisitor = (fullName: string, desc: DescriptorProto) => void;
-type EnumVisitor = (fullName: string, desc: EnumDescriptorProto) => void;
+type MessageVisitor = (fullName: string, desc: DescriptorProto, sourceInfo: SourceInfo) => void;
+type EnumVisitor = (fullName: string, desc: EnumDescriptorProto, sourceInfo: SourceInfo) => void;
 export function visit(
   proto: FileDescriptorProto | DescriptorProto,
+  sourceInfo: SourceInfo,
   messageFn: MessageVisitor,
   options: Options,
   enumFn: EnumVisitor = () => {},
   prefix: string = ''
 ): void {
+  const isRootFile = proto instanceof FileDescriptorProto;
+  const childEnumType = isRootFile ? Fields.file.enum_type : Fields.message.enum_type;
+
+  let index = 0;
   for (const enumDesc of proto.enumType) {
     const fullName = prefix + maybeSnakeToCamel(enumDesc.name, options);
-    enumFn(fullName, enumDesc);
+    const nestedSourceInfo = sourceInfo.open(childEnumType, index++);
+    enumFn(fullName, enumDesc, nestedSourceInfo);
   }
+
   const messages = proto instanceof FileDescriptorProto ? proto.messageType : proto.nestedType;
+  const childType = isRootFile ? Fields.file.message_type : Fields.message.nested_type;
+  
+  index = 0;
   for (const message of messages) {
     const fullName = prefix + maybeSnakeToCamel(message.name, options);
-    messageFn(fullName, message);
-    visit(message, messageFn, options, enumFn, fullName + '_');
+    const nestedSourceInfo = sourceInfo.open(childType, index++);
+    messageFn(fullName, message, nestedSourceInfo);
+    visit(message, nestedSourceInfo, messageFn, options, enumFn, fullName + '_');
   }
 }
 
-function visitServices(proto: FileDescriptorProto, serviceFn: (desc: ServiceDescriptorProto) => void): void {
+function visitServices(
+  proto: FileDescriptorProto, 
+  sourceInfo: SourceInfo,
+  serviceFn: (desc: ServiceDescriptorProto, sourceInfo: SourceInfo) => void): void {
+  let index = 0;
   for (const serviceDesc of proto.service) {
-    serviceFn(serviceDesc);
+    const nestedSourceInfo = sourceInfo.open(Fields.file.service, index++);
+    serviceFn(serviceDesc, nestedSourceInfo);
   }
 }
 
@@ -779,6 +825,7 @@ const contextTypeVar = TypeNames.typeVariable('Context', TypeNames.bound('DataLo
 function generateService(
   typeMap: TypeMap,
   fileDesc: FileDescriptorProto,
+  sourceInfo: SourceInfo,
   serviceDesc: ServiceDescriptorProto,
   options: Options
 ): InterfaceSpec {
@@ -786,10 +833,19 @@ function generateService(
   if (options.useContext) {
     service = service.addTypeVariable(contextTypeVar);
   }
+  if (sourceInfo.leadingComments) {
+    service = service.addJavadoc(sourceInfo.leadingComments);
+  }
+
+  let index = 0;
   for (const methodDesc of serviceDesc.method) {
     let requestFn = FunctionSpec.create(methodDesc.name);
     if (options.useContext) {
       requestFn = requestFn.addParameter('ctx', TypeNames.typeVariable('Context'));
+    }
+    const info = sourceInfo.lookup(Fields.service.method, index++);
+    if (info.leadingComments) {
+      requestFn = requestFn.addJavadoc(info.leadingComments);
     }
     requestFn = requestFn.addParameter('request', requestType(typeMap, methodDesc));
     requestFn = requestFn.returns(responsePromise(typeMap, methodDesc));
