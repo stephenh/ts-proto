@@ -49,6 +49,9 @@ export type Options = {
   useContext: boolean;
   snakeToCamel: boolean;
   forceLong: boolean;
+  serializers: boolean;
+  toFromJson: boolean;
+  serviceStub: boolean;
 };
 
 export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, parameter: string): FileSpec {
@@ -80,60 +83,75 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
     }
   );
 
-  // then add the encoder/decoder/base instance
-  visit(
-    fileDesc,
-    (fullName, message) => {
-      file = file.addProperty(generateBaseInstance(fullName, message, options));
-      let staticMethods = CodeBlock.empty()
-        .add('export const %L = ', fullName)
-        .beginHash()
-        .addHashEntry(generateEncode(typeMap, fullName, message, options))
-        .addHashEntry(generateDecode(typeMap, fullName, message, options))
-        .addHashEntry(generateFromJson(typeMap, fullName, message, options))
-        .addHashEntry(generateFromPartial(typeMap, fullName, message, options))
-        .addHashEntry(generateToJson(typeMap, fullName, message, options))
-        .endHash()
-        .add(';')
-        .newLine();
-      file = file.addCode(staticMethods);
-    },
-    options,
-    (fullName, enumDesc) => {
-      let staticMethods = CodeBlock.empty()
-        .beginControlFlow('export namespace %L', fullName)
-        .addFunction(generateEnumFromJson(fullName, enumDesc))
-        .addFunction(generateEnumToJson(fullName, enumDesc))
-        .endControlFlow();
-      file = file.addCode(staticMethods);
-    }
-  );
+  if (options.serializers || options.toFromJson) {
+    // then add the encoder/decoder/base instance
+    visit(
+      fileDesc,
+      (fullName, message) => {
+        file = file.addProperty(generateBaseInstance(fullName, message, options));
+        let staticMethods = CodeBlock.empty()
+          .add('export const %L = ', fullName)
+          .beginHash();
+        
+        staticMethods = !options.serializers 
+          ? staticMethods 
+          : staticMethods.addHashEntry(generateEncode(typeMap, fullName, message, options))
+            .addHashEntry(generateDecode(typeMap, fullName, message, options));
+          
+        staticMethods = !options.toFromJson 
+          ? staticMethods 
+          : staticMethods.addHashEntry(generateFromJson(typeMap, fullName, message, options))
+            .addHashEntry(generateFromPartial(typeMap, fullName, message, options))
+            .addHashEntry(generateToJson(typeMap, fullName, message, options))
+          
+        staticMethods = staticMethods.endHash()
+          .add(';')
+          .newLine();
+        file = file.addCode(staticMethods);
+      },
+      options,
+      (fullName, enumDesc) => {
+        if (!options.toFromJson) {
+          return;
+        }
+        let staticMethods = CodeBlock.empty()
+          .beginControlFlow('export namespace %L', fullName)
+          .addFunction(generateEnumFromJson(fullName, enumDesc))
+          .addFunction(generateEnumToJson(fullName, enumDesc))
+          .endControlFlow();
+        file = file.addCode(staticMethods);
+      }
+    );
+  }
 
   visitServices(fileDesc, serviceDesc => {
     file = file.addInterface(generateService(typeMap, fileDesc, serviceDesc, options));
-    file = file.addClass(generateServiceClientImpl(typeMap, fileDesc, serviceDesc, options));
+    file = !options.serviceStub ? file : 
+      file.addClass(generateServiceClientImpl(typeMap, fileDesc, serviceDesc, options));
   });
 
-  if (fileDesc.service.length > 0) {
+  if (options.serviceStub && fileDesc.service.length > 0) {
     file = file.addInterface(generateRpcType(options));
     if (options.useContext) {
       file = file.addInterface(generateDataLoadersType(options));
     }
   }
 
-  file = addLongUtilityMethod(file, options);
-  file = addDeepPartialType(file);
+  if (options.serializers || options.toFromJson) {
+    file = addLongUtilityMethod(file, options);
+    file = addDeepPartialType(file);
 
-  let hasAnyTimestamps = false;
-  visit(
-    fileDesc,
-    (_, messageType) => {
-      hasAnyTimestamps = hasAnyTimestamps || asSequence(messageType.field).any(isTimestamp);
-    },
-    options
-  );
-  if (hasAnyTimestamps) {
-    file = addTimestampMethods(file, options);
+    let hasAnyTimestamps = false;
+    visit(
+      fileDesc,
+      (_, messageType) => {
+        hasAnyTimestamps = hasAnyTimestamps || asSequence(messageType.field).any(isTimestamp);
+      },
+      options
+    );
+    if (hasAnyTimestamps) {
+      file = addTimestampMethods(file, options);
+    }
   }
 
   return file;
