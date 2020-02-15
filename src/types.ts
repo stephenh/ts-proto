@@ -7,6 +7,7 @@ import FieldDescriptorProto = google.protobuf.FieldDescriptorProto;
 import CodeGeneratorRequest = google.protobuf.compiler.CodeGeneratorRequest;
 import EnumDescriptorProto = google.protobuf.EnumDescriptorProto;
 import DescriptorProto = google.protobuf.DescriptorProto;
+import SourceInfo from './sourceInfo';
 
 /** Based on https://github.com/dcodeIO/protobuf.js/blob/master/src/types.js#L37. */
 export function basicWireType(type: FieldDescriptorProto.Type): number {
@@ -198,7 +199,7 @@ export function createTypeMap(request: CodeGeneratorRequest, options: Options): 
       const name = fullName.replace(/_/g, '.');
       typeMap.set(`${prefix}.${name}`, [moduleName, fullName, desc]);
     }
-    visit(file, saveMapping, options, saveMapping);
+    visit(file, SourceInfo.empty(), saveMapping, options, saveMapping);
   }
   return typeMap;
 }
