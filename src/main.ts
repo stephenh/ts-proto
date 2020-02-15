@@ -70,7 +70,6 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
   let file = FileSpec.create(moduleName);
 
   const sourceInfo = SourceInfo.fromDescriptor(fileDesc);
-  console.error(sourceInfo.open(Fields.file.message_type, 0).lookup(Fields.message.field, 3));
 
   // first make all the type declarations
   visit(
