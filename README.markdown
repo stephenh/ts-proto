@@ -132,6 +132,11 @@ Supported options:
 * Right now, `ts-proto` always generates Twirp service implementations for any RPC services, simply because that is what we use. Adding an option to disable Twirp and support GRPC is on the todo list.
 * If you pass `--ts_proto_opt=context=true`, the Twirp services will have a Go-style `ctx` parameter, which is useful for tracing/logging/etc. if you're not using node's `async_hooks` api due to performance reasons.
 * If you pass `--ts_proto_opt=forceLong=true`, all 64 bit numbers will be parsed as instances of `Long`.
+* If you pass `--ts_proto_opt=outputEncodeMethods=false`, the `Message.encode` and `Message.decode` methods for working with protobuff-encoded data will not be output.
+* If you pass `--ts_proto_opt=outputJsonMethods=false`, the `Message.fromJSON` and `Message.toJSON` methods for working with JSON-coded data will not be output.
+* If you pass `--ts_proto_opt=outputServiceImpl=false`, the `ServiceImpl` classes that implement the RPC interfaces will not be output. 
+
+(I.e. you want only interface declarations for your Protobuf types, then pass all three of `outputEncodeMethods`, `outputJsonMethods`, and `outputServiceImpl` as `false`, i.e. `--ts_proto_opt=outputEncodeMethods=false,outputJsonMethods=false,outputServiceImpl=false`.)
 
 Building
 ========
