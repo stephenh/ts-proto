@@ -1,14 +1,15 @@
 import { google } from '../build/pbjs';
 import FileDescriptorProto = google.protobuf.FileDescriptorProto;
 
-/** This type is expecting a value from the Fields constant */
+/** This type is expecting a value from the Fields constant. */
 export type FieldID = number;
 
 /**
  * The field values here represent the proto field IDs associated with the types
  * (file,message,enum,service).
+ *
  * For more information read the comments for SourceCodeInfo declared in
- * google's 'descriptor.proto' file.
+ * google's 'descriptor.proto' file, see:
  * https://github.com/protocolbuffers/protobuf/blob/master/src/google/protobuf/descriptor.proto#L730
  */
 export const Fields = {
@@ -33,7 +34,7 @@ export const Fields = {
 };
 
 /**
- * This type is simply an interface on the SourceCodeInfo.Location message
+ * This type is simply an interface on the SourceCodeInfo.Location message.
  */
 export interface SourceDescription {
   readonly span: number[];
@@ -42,7 +43,7 @@ export interface SourceDescription {
   readonly leadingDetachedComments: string[];
 }
 
-/** An empty SourceDescription for when one is not available */
+/** An empty SourceDescription for when one is not available. */
 class EmptyDescription implements SourceDescription {
   span = [];
   leadingComments = '';
@@ -76,11 +77,10 @@ export default class SourceInfo implements SourceDescription {
    */
   static fromDescriptor(file: FileDescriptorProto) {
     let map: SourceInfoMap = {};
-    if (file && file.sourceCodeInfo && file.sourceCodeInfo.location) {
-      file.sourceCodeInfo.location.reduce((m, loc) => {
-        m[loc.path.join('.')] = loc;
-        return m;
-      }, map);
+    if (file.sourceCodeInfo && file.sourceCodeInfo.location) {
+      file.sourceCodeInfo.location.forEach(loc => {
+        map[loc.path.join('.')] = loc;
+      });
     }
     return new SourceInfo(map, new EmptyDescription());
   }
@@ -95,21 +95,24 @@ export default class SourceInfo implements SourceDescription {
   get span() {
     return this.selfDescription.span;
   }
+
   /** Leading consecutive comment lines prior to the current element */
   get leadingComments() {
     return this.selfDescription.leadingComments;
   }
+
   /** Documentation is unclear about what exactly this is */
   get trailingComments() {
     return this.selfDescription.trailingComments;
   }
+
   /** Detached comments are those preceeding but separated by a blank non-comment line */
   get leadingDetachedComments() {
     return this.selfDescription.leadingDetachedComments;
   }
 
   /** Return the source info for the field id and index specficied */
-  lookup(type: FieldID, index: number | undefined): SourceDescription {
+  lookup(type: FieldID, index?: number): SourceDescription {
     if (index === undefined) {
       return this.sourceCode[`${type}`] || new EmptyDescription();
     }
@@ -122,11 +125,9 @@ export default class SourceInfo implements SourceDescription {
     const map: SourceInfoMap = {};
     Object.keys(this.sourceCode)
       .filter(key => key.startsWith(prefix))
-      .reduce((m, key) => {
-        m[key.substr(prefix.length)] = this.sourceCode[key];
-        return m;
-      }, map);
-
+      .forEach(key => {
+        map[key.substr(prefix.length)] = this.sourceCode[key];
+      });
     return new SourceInfo(map, this.lookup(type, index));
   }
 }
