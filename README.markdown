@@ -117,7 +117,7 @@ But the net effect is that ts-proto can provide SQL-/ORM-style N+1 prevention fo
 Usage
 =====
 
-`ts-proto` is a `protoc` plugin, so you run it by (either directly in your project, or more likely in your mono-repo schema pipeline, i.e. [this](https://medium.com/building-ibotta/building-a-scaleable-protocol-buffers-grpc-artifact-pipeline-5265c5118c9d) or [this](https://medium.com/namely-labs/how-we-build-grpc-services-at-namely-52a3ae9e7c35)):
+`ts-proto` is a `protoc` plugin, so you run it by (either directly in your project, or more likely in your mono-repo schema pipeline, i.e. like [Ibotta](https://medium.com/building-ibotta/building-a-scaleable-protocol-buffers-grpc-artifact-pipeline-5265c5118c9d) or [Namely](https://medium.com/namely-labs/how-we-build-grpc-services-at-namely-52a3ae9e7c35)):
 
 * Add `ts-proto` to your `package.json`
 * Run `npm install` to download it
