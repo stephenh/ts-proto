@@ -105,9 +105,11 @@ ts-proto also does not currently have any infrastructure to help implement the s
 Auto-Batching / N+1 Prevention
 ==============================
 
-Similar to the N+1 problem in SQL applications, it is easy for micro-service clients to trigger multiple separate RPC calls for "load entity X" that should really be batched into a single "load entities [1, 2, 3]", assuming the backend supports a batch-oriented RPC method.
+If you're using ts-proto's (Twirp) clients to call backend micro-services, similar to the N+1 problem in SQL applications, it is easy for micro-service clients to (when serving an individual request) inadvertantly trigger multiple separate RPC calls for "get entity X1", "get entity X2", "get entity X3", that should really be batched into a single "get entities [X1, X2, X3]" (assuming the backend supports a batch-oriented RPC method).
 
-If you implement your RPC methods with the convention of:
+ts-proto can help with this, and essentially auto-batch your individual "get entity X1" calls into batch "get entities" calls.
+
+For ts-proto to do this automatically, you need to implement your service's RPC methods with the batching convention of:
 
 * A method name of `Batch<OperationName>`
 * The `Batch<OperationName>` input type has a single repeated field (i.e. `repeated string ids = 1`)
@@ -115,13 +117,15 @@ If you implement your RPC methods with the convention of:
   * A single repeated field (i.e. `repeated Foo foos = 1`) _where the output order is the same as the input `ids` order_, or
   * A map of the input to an output (i.e. `map<string, Entity> entities = 1;`)
 
-Then ts-proto will synthesis a "non-batch" version of `<OperationName>` for the client, i.e. `client.Get<OperationName>` that takes a single id and returns a single result.
+When ts-proto recognizes methods of this pattern, it will automatically create a "non-batch" version of `<OperationName>` for the client, i.e. `client.Get<OperationName>` that takes a single id and returns a single result.
 
-You should generally also enable the `useContext=true` build-time parameter, which will give all client methods a Go-style `ctx` parameter with a `getDataLoaders` method to provide the clients a "per-request" scope of [DataLoaders](https://github.com/graphql/dataloader) to provide the batch detection/flushing behavior.
+This provides the client code with the illusion that it can make individual `Get<OperationName>` calls (which is generally preferrable/easier when implementing the client's business logic), but the actual implementation that ts-proto provides will end up making `Batch<OperationName>` calls to the backend service.
+
+You also need to enable the `useContext=true` build-time parameter, which gives all client methods a Go-style `ctx` parameter, with a `getDataLoaders` method that is how callers can given ts-proto access to request-scoped [DataLoaders](https://github.com/graphql/dataloader), which provide the fundamental auto-batch detection/flushing behavior.
 
 See the `batching.proto` file and related tests for examples/more details.
 
-But the net effect is that ts-proto can provide SQL-/ORM-style N+1 prevention for GRPC clients calls, which can be critical especially in high-volume / highly-parallel implementations like GraphQL servers calling backend GRPC services.
+But the net effect is that ts-proto can provide SQL-/ORM-style N+1 prevention for clients calls, which can be critical especially in high-volume / highly-parallel implementations like GraphQL front-end gateways calling backend micro-services.
 
 Usage
 =====
