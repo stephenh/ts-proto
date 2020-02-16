@@ -1,4 +1,5 @@
 import { Timestamp } from '../google/protobuf/timestamp';
+import * as Long from 'long';
 import { Writer, Reader } from 'protobufjs/minimal';
 
 
@@ -30,6 +31,10 @@ function fromJsonTimestamp(o: any): Date {
   } else {
     return fromTimestamp(Timestamp.fromJSON(o));
   }
+}
+
+function numberToLong(number: number) {
+  return Long.fromNumber(number);
 }
 
 export const ImportedThing = {

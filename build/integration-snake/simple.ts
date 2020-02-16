@@ -3,8 +3,8 @@
 //
 import { ImportedThing } from './import_dir/thing';
 import { Reader, Writer } from 'protobufjs/minimal';
-import * as Long from 'long';
 import { Timestamp } from './google/protobuf/timestamp';
+import * as Long from 'long';
 import { StringValue, Int32Value, BoolValue } from './google/protobuf/wrappers';
 
 
@@ -274,13 +274,6 @@ interface Rpc {
 
 }
 
-function longToNumber(long: Long) {
-  if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new global.Error("Value is larger than Number.MAX_SAFE_INTEGER");
-  }
-  return long.toNumber();
-}
-
 function toTimestamp(date: Date): Timestamp {
   const seconds = date.getTime() / 1_000;
   const nanos = (date.getTime() % 1_000) * 1_000_000;
@@ -301,6 +294,13 @@ function fromJsonTimestamp(o: any): Date {
   } else {
     return fromTimestamp(Timestamp.fromJSON(o));
   }
+}
+
+function longToNumber(long: Long) {
+  if (long.gt(Number.MAX_SAFE_INTEGER)) {
+    throw new global.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+  }
+  return long.toNumber();
 }
 
 export namespace StateEnum {

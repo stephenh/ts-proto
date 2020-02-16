@@ -296,6 +296,10 @@ function fromJsonTimestamp(o: any): Date {
   }
 }
 
+function numberToLong(number: number) {
+  return Long.fromNumber(number);
+}
+
 export namespace StateEnum {
   export function fromJSON(object: any): StateEnum {
     switch (object) {
