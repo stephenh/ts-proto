@@ -36,7 +36,7 @@ import {
 } from './types';
 import { asSequence } from 'sequency';
 import SourceInfo, { Fields } from './sourceInfo';
-import { optionsFromParameter, singular, withComment } from './utils';
+import { optionsFromParameter, singular, maybeAddComment } from './utils';
 import DescriptorProto = google.protobuf.DescriptorProto;
 import FieldDescriptorProto = google.protobuf.FieldDescriptorProto;
 import FileDescriptorProto = google.protobuf.FileDescriptorProto;
@@ -73,7 +73,7 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
   
   // Syntax, unlike most fields, is not repeated and thus does not use an index
   const headerComment = sourceInfo.lookup(Fields.file.syntax, undefined);
-  withComment(headerComment, text => (file = file.addComment(text)));
+  maybeAddComment(headerComment, text => (file = file.addComment(text)));
   
   // first make all the type declarations
   visit(
@@ -242,12 +242,12 @@ function addTimestampMethods(file: FileSpec, options: Options): FileSpec {
 
 function generateEnum(fullName: string, enumDesc: EnumDescriptorProto, sourceInfo: SourceInfo): EnumSpec {
   let spec = EnumSpec.create(fullName).addModifiers(Modifier.EXPORT);
-  withComment(sourceInfo, text => (spec = spec.addJavadoc(text)));
+  maybeAddComment(sourceInfo, text => (spec = spec.addJavadoc(text)));
 
   let index = 0;
   for (const valueDesc of enumDesc.value) {
     const info = sourceInfo.lookup(Fields.enum.value, index++);
-    withComment(info, text => (spec = spec.addJavadoc(`${valueDesc.name} - ${text}\n`)));
+    maybeAddComment(info, text => (spec = spec.addJavadoc(`${valueDesc.name} - ${text}\n`)));
     spec = spec.addConstant(valueDesc.name, valueDesc.number.toString());
   }
   return spec;
@@ -297,7 +297,7 @@ function generateInterfaceDeclaration(
   options: Options
 ) {
   let message = InterfaceSpec.create(fullName).addModifiers(Modifier.EXPORT);
-  withComment(sourceInfo, text => (message = message.addJavadoc(text)));
+  maybeAddComment(sourceInfo, text => (message = message.addJavadoc(text)));
 
   let index = 0;
   for (const fieldDesc of messageDesc.field) {
@@ -307,7 +307,7 @@ function generateInterfaceDeclaration(
     );
 
     const info = sourceInfo.lookup(Fields.message.field, index++);
-    withComment(info, text => (prop = prop.addJavadoc(text)));
+    maybeAddComment(info, text => (prop = prop.addJavadoc(text)));
 
     message = message.addProperty(prop);
   }
@@ -828,7 +828,7 @@ function generateService(
   if (options.useContext) {
     service = service.addTypeVariable(contextTypeVar);
   }
-  withComment(sourceInfo, text => (service = service.addJavadoc(text)));
+  maybeAddComment(sourceInfo, text => (service = service.addJavadoc(text)));
 
   let index = 0;
   for (const methodDesc of serviceDesc.method) {
@@ -837,7 +837,7 @@ function generateService(
       requestFn = requestFn.addParameter('ctx', TypeNames.typeVariable('Context'));
     }
     const info = sourceInfo.lookup(Fields.service.method, index++);
-    withComment(info, text => (requestFn = requestFn.addJavadoc(text)));
+    maybeAddComment(info, text => (requestFn = requestFn.addJavadoc(text)));
     
     requestFn = requestFn.addParameter('request', requestType(typeMap, methodDesc));
     requestFn = requestFn.returns(responsePromise(typeMap, methodDesc));

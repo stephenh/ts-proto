@@ -62,13 +62,10 @@ const CloseComment = /\*\//g;
  * @param process {(comment: string) => void} called if a comment exists
  * @returns {string} scrubbed text
  */
-export function withComment(desc: SourceDescription, process: (comment: string) => void) {
-  if (process && (desc.leadingComments || desc.trailingComments)) {
+export function maybeAddComment(desc: SourceDescription, process: (comment: string) => void): void {
+  if (desc.leadingComments || desc.trailingComments) {
     return process(
-      (desc.leadingComments || desc.trailingComments || '')
-    .replace(PercentAll, '%%')
-    .replace(CloseComment, '* /')
+      (desc.leadingComments || desc.trailingComments || '').replace(PercentAll, '%%').replace(CloseComment, '* /')
     );
   }
-  
 }
