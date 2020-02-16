@@ -141,7 +141,7 @@ Supported options:
 Building
 ========
 
-`ts-proto` does not use `pbjs` at runtime, but we do use it as the `ts-proto` build process (to bootstrap the types used to parse the incoming protobuf metadata types, as well as for the test suite to ensure the `ts-proto` implementations match the `ts-proto`).
+`ts-proto` does not use `pbjs` at runtime, but we do use it in the `ts-proto` build process (to bootstrap the types used to parse the incoming protobuf metadata types, as well as for the test suite to ensure the `ts-proto` implementations match the `ts-proto`).
 
 After running `yarn install` (which will fail in `yarn test` on the first time), run `./pbjs.sh` to create the bootstrap types and the integration test types.
 
