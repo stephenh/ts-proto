@@ -50,9 +50,9 @@ export type Options = {
   useContext: boolean;
   snakeToCamel: boolean;
   forceLong: boolean;
-  serializers: boolean;
-  toFromJson: boolean;
-  serviceStub: boolean;
+  outputEncodeMethods: boolean;
+  outputJsonMethods: boolean;
+  outputServiceImpl: boolean;
 };
 
 export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, parameter: string): FileSpec {
@@ -91,7 +91,7 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
     }
   );
 
-  if (options.serializers || options.toFromJson) {
+  if (options.outputEncodeMethods || options.outputJsonMethods) {
     // then add the encoder/decoder/base instance
     visit(
       fileDesc,
@@ -102,28 +102,25 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
           .add('export const %L = ', fullName)
           .beginHash();
 
-        staticMethods = !options.serializers
-          ? staticMethods
-          : staticMethods
-              .addHashEntry(generateEncode(typeMap, fullName, message, options))
-              .addHashEntry(generateDecode(typeMap, fullName, message, options));
-
-        staticMethods = !options.toFromJson
-          ? staticMethods
-          : staticMethods
-              .addHashEntry(generateFromJson(typeMap, fullName, message, options))
-              .addHashEntry(generateFromPartial(typeMap, fullName, message, options))
-              .addHashEntry(generateToJson(typeMap, fullName, message, options));
-
-        staticMethods = staticMethods
-          .endHash()
+        staticMethods = !options.outputEncodeMethods 
+          ? staticMethods 
+          : staticMethods.addHashEntry(generateEncode(typeMap, fullName, message, options))
+            .addHashEntry(generateDecode(typeMap, fullName, message, options));
+          
+        staticMethods = !options.outputJsonMethods 
+          ? staticMethods 
+          : staticMethods.addHashEntry(generateFromJson(typeMap, fullName, message, options))
+            .addHashEntry(generateFromPartial(typeMap, fullName, message, options))
+            .addHashEntry(generateToJson(typeMap, fullName, message, options));
+          
+        staticMethods = staticMethods.endHash()
           .add(';')
           .newLine();
         file = file.addCode(staticMethods);
       },
       options,
       (fullName, enumDesc) => {
-        if (!options.toFromJson) {
+        if (!options.outputJsonMethods) {
           return;
         }
         let staticMethods = CodeBlock.empty()
@@ -138,19 +135,19 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
 
   visitServices(fileDesc, sourceInfo, (serviceDesc, sInfo) => {
     file = file.addInterface(generateService(typeMap, fileDesc, sInfo, serviceDesc, options));
-    file = !options.serviceStub
+    file = !options.outputServiceImpl
       ? file
       : file.addClass(generateServiceClientImpl(typeMap, fileDesc, serviceDesc, options));
   });
 
-  if (options.serviceStub && fileDesc.service.length > 0) {
+  if (options.outputServiceImpl && fileDesc.service.length > 0) {
     file = file.addInterface(generateRpcType(options));
     if (options.useContext) {
       file = file.addInterface(generateDataLoadersType(options));
     }
   }
 
-  if (options.serializers || options.toFromJson) {
+  if (options.outputEncodeMethods || options.outputJsonMethods) {
     file = addLongUtilityMethod(file, options);
     file = addDeepPartialType(file);
 
