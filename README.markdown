@@ -105,9 +105,9 @@ ts-proto also does not currently have any infrastructure to help implement the s
 Auto-Batching / N+1 Prevention
 ==============================
 
-If you're using ts-proto's (Twirp) clients to call backend micro-services, similar to the N+1 problem in SQL applications, it is easy for micro-service clients to (when serving an individual request) inadvertantly trigger multiple separate RPC calls for "get entity X1", "get entity X2", "get entity X3", that should really be batched into a single "get entities [X1, X2, X3]" (assuming the backend supports a batch-oriented RPC method).
+If you're using ts-proto's (currently Twirp only) clients to call backend micro-services, similar to the N+1 problem in SQL applications, it is easy for micro-service clients to (when serving an individual request) inadvertantly trigger multiple separate RPC calls for "get book 1", "get book 2", "get book 3", that should really be batched into a single "get books [1, 2, 3]" (assuming the backend supports a batch-oriented RPC method).
 
-ts-proto can help with this, and essentially auto-batch your individual "get entity X1" calls into batch "get entities" calls.
+ts-proto can help with this, and essentially auto-batch your individual "get book" calls into batched "get books" calls.
 
 For ts-proto to do this automatically, you need to implement your service's RPC methods with the batching convention of:
 
