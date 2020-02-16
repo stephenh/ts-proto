@@ -109,7 +109,10 @@ export default class SourceInfo implements SourceDescription {
   }
 
   /** Return the source info for the field id and index specficied */
-  lookup(type: FieldID, index: number): SourceDescription {
+  lookup(type: FieldID, index: number | undefined): SourceDescription {
+    if (index === undefined) {
+      return this.sourceCode[`${type}`] || new EmptyDescription();
+    }
     return this.sourceCode[`${type}.${index}`] || new EmptyDescription();
   }
 

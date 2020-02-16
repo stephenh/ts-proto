@@ -1,5 +1,6 @@
 import ReadStream = NodeJS.ReadStream;
 import { Options } from './main';
+import { SourceDescription } from './sourceInfo';
 
 export function readToBuffer(stream: ReadStream): Promise<Buffer> {
   return new Promise(resolve => {
@@ -56,12 +57,18 @@ const PercentAll = /\%/g;
 const CloseComment = /\*\//g;
 
 /**
- * Removes potentially harmful characters from comments
- * @param text {string} original text
+ * Removes potentially harmful characters from comments and calls the provided expression
+ * @param desc {SourceDescription} original comment information
+ * @param process {(comment: string) => void} called if a comment exists
  * @returns {string} scrubbed text
  */
-export function cleanComment(text: string) {
-  return (text || '')
+export function withComment(desc: SourceDescription, process: (comment: string) => void) {
+  if (process && (desc.leadingComments || desc.trailingComments)) {
+    return process(
+      (desc.leadingComments || desc.trailingComments || '')
     .replace(PercentAll, '%%')
-    .replace(CloseComment, '* /');
+    .replace(CloseComment, '* /')
+    );
+  }
+  
 }
