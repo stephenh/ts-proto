@@ -93,6 +93,15 @@ Highlights
 
 * `fromJSON`/`toJSON` support the [canonical Protobuf JS](https://developers.google.com/protocol-buffers/docs/proto3#json) format (i.e. timestamps are ISO strings)
 
+Current Disclaimers
+===================
+
+ts-proto was originally developed for [Twirp](https://github.com/twitchtv/twirp), so the clients it generates (if your `*.proto` files use the GRPC `service` constructs) assume they're talking to Twirp HTTP endpoints. There is an issue filed (#2) to support GRPC endpoints, but no work currently in progress.
+
+That said, the message/interface types that ts-proto generates are not coupled to Twirp and should be fully usable in other Protobuf environments (either GRPC-based or even just reading protobuf files from disk/etc.). The client-related output can also be disabled (see the Usage section).
+
+ts-proto also does not currently have any infrastructure to help implement the server-side of a GRPC (either Twirp or pure GRPC) service, i.e. built-in Express bindings or something like that. However, again, the types/interfaces that ts-proto generates for your messages and services are still generally very helpful in setting up your own server-side implementations.
+
 Auto-Batching / N+1 Prevention
 ==============================
 
@@ -129,14 +138,13 @@ protoc --plugin=node_modules/ts-proto/protoc-gen-ts_proto ./batching.proto -I.
 
 Supported options:
 
-* Right now, `ts-proto` always generates Twirp service implementations for any RPC services, simply because that is what we use. Adding an option to disable Twirp and support GRPC is on the todo list.
 * If you pass `--ts_proto_opt=context=true`, the Twirp services will have a Go-style `ctx` parameter, which is useful for tracing/logging/etc. if you're not using node's `async_hooks` api due to performance reasons.
 * If you pass `--ts_proto_opt=forceLong=true`, all 64 bit numbers will be parsed as instances of `Long`.
 * If you pass `--ts_proto_opt=outputEncodeMethods=false`, the `Message.encode` and `Message.decode` methods for working with protobuff-encoded data will not be output.
 * If you pass `--ts_proto_opt=outputJsonMethods=false`, the `Message.fromJSON` and `Message.toJSON` methods for working with JSON-coded data will not be output.
-* If you pass `--ts_proto_opt=outputServiceImpl=false`, the `ServiceImpl` classes that implement the RPC interfaces will not be output. 
+* If you pass `--ts_proto_opt=outputClientImpl=false`, the `FooServiceClientImpl` classes that implement the client-side (currently Twirp-only) RPC interfaces will not be output. 
 
-(I.e. you want only interface declarations for your Protobuf types, then pass all three of `outputEncodeMethods`, `outputJsonMethods`, and `outputServiceImpl` as `false`, i.e. `--ts_proto_opt=outputEncodeMethods=false,outputJsonMethods=false,outputServiceImpl=false`.)
+(I.e. you want only interface declarations for your Protobuf types, then pass all three of `outputEncodeMethods`, `outputJsonMethods`, and `outputClientImpl` as `false`, i.e. `--ts_proto_opt=outputEncodeMethods=false,outputJsonMethods=false,outputClientImpl=false`.)
 
 Building
 ========

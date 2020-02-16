@@ -42,7 +42,7 @@ export function optionsFromParameter(parameter: string): Options {
     forceLong: false,
     outputEncodeMethods: true,
     outputJsonMethods: true,
-    outputServiceImpl: true,
+    outputClientImpl: true,
   };
 
   if (parameter) {
@@ -61,8 +61,8 @@ export function optionsFromParameter(parameter: string): Options {
     if (parameter.includes('outputJsonMethods=false')) {
       options.outputJsonMethods = false;
     }
-    if (parameter.includes('outputServiceImpl=false')) {
-      options.outputServiceImpl = false;
+    if (parameter.includes('outputClientImpl=false')) {
+      options.outputClientImpl = false;
     }
   }
   return options;

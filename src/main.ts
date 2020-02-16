@@ -52,7 +52,7 @@ export type Options = {
   forceLong: boolean;
   outputEncodeMethods: boolean;
   outputJsonMethods: boolean;
-  outputServiceImpl: boolean;
+  outputClientImpl: boolean;
 };
 
 export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, parameter: string): FileSpec {
@@ -138,12 +138,12 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
 
   visitServices(fileDesc, sourceInfo, (serviceDesc, sInfo) => {
     file = file.addInterface(generateService(typeMap, fileDesc, sInfo, serviceDesc, options));
-    file = !options.outputServiceImpl
+    file = !options.outputClientImpl
       ? file
       : file.addClass(generateServiceClientImpl(typeMap, fileDesc, serviceDesc, options));
   });
 
-  if (options.outputServiceImpl && fileDesc.service.length > 0) {
+  if (options.outputClientImpl && fileDesc.service.length > 0) {
     file = file.addInterface(generateRpcType(options));
     if (options.useContext) {
       file = file.addInterface(generateDataLoadersType(options));
