@@ -109,7 +109,7 @@ If you're using ts-proto's (currently Twirp only) clients to call backend micro-
 
 ts-proto can help with this, and essentially auto-batch your individual "get book" calls into batched "get books" calls.
 
-For ts-proto to do this automatically, you need to implement your service's RPC methods with the batching convention of:
+For ts-proto to do this, you need to implement your service's RPC methods with the batching convention of:
 
 * A method name of `Batch<OperationName>`
 * The `Batch<OperationName>` input type has a single repeated field (i.e. `repeated string ids = 1`)
