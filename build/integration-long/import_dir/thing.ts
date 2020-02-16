@@ -1,4 +1,3 @@
-import * as Long from 'long';
 import { Timestamp } from '../google/protobuf/timestamp';
 import { Writer, Reader } from 'protobufjs/minimal';
 
@@ -10,10 +9,6 @@ export interface ImportedThing {
 const baseImportedThing: object = {
   createdAt: undefined,
 };
-
-function numberToLong(number: number) {
-  return Long.fromNumber(number);
-}
 
 function toTimestamp(date: Date): Timestamp {
   const seconds = numberToLong(date.getTime() / 1_000);

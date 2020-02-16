@@ -1,5 +1,4 @@
 import { Reader, Writer } from 'protobufjs/minimal';
-import * as Long from 'long';
 
 
 export interface BatchQueryRequest {
@@ -140,13 +139,6 @@ interface Rpc {
 
   request(service: string, method: string, data: Uint8Array): Promise<Uint8Array>;
 
-}
-
-function longToNumber(long: Long) {
-  if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new global.Error("Value is larger than Number.MAX_SAFE_INTEGER");
-  }
-  return long.toNumber();
 }
 
 export const BatchQueryRequest = {

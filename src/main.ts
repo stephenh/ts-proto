@@ -151,8 +151,16 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
   }
 
   if (options.outputEncodeMethods || options.outputJsonMethods) {
-    file = addLongUtilityMethod(file, options);
-    file = addDeepPartialType(file);
+    const initialOutput = file.toString();
+    // This includes is a pretty fuzzy way of detecting whether we use this method.
+    // In theory we should be able to lean on the code generation library more to do
+    // this sort of "output only if used", similar to what it does for auto-imports.
+    if (initialOutput.includes("longToNumber")) {
+      file = addLongUtilityMethod(file, options);
+    }
+    if (initialOutput.includes("DeepPartial")) {
+      file = addDeepPartialType(file);
+    }
 
     let hasAnyTimestamps = false;
     visit(

@@ -1,4 +1,3 @@
-import * as Long from 'long';
 import { Writer, Reader } from 'protobufjs/minimal';
 
 
@@ -21,13 +20,6 @@ const baseArea: object = {
   nw: undefined,
   se: undefined,
 };
-
-function longToNumber(long: Long) {
-  if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new global.Error("Value is larger than Number.MAX_SAFE_INTEGER");
-  }
-  return long.toNumber();
-}
 
 export const Point = {
   encode(message: Point, writer: Writer = Writer.create()): Writer {

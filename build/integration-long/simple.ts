@@ -3,7 +3,6 @@
 //
 import { ImportedThing } from './import_dir/thing';
 import { Reader, Writer } from 'protobufjs/minimal';
-import * as Long from 'long';
 import { Timestamp } from './google/protobuf/timestamp';
 import { StringValue, Int32Value, BoolValue } from './google/protobuf/wrappers';
 
@@ -272,10 +271,6 @@ interface Rpc {
 
   request(service: string, method: string, data: Uint8Array): Promise<Uint8Array>;
 
-}
-
-function numberToLong(number: number) {
-  return Long.fromNumber(number);
 }
 
 function toTimestamp(date: Date): Timestamp {

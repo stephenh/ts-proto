@@ -1,4 +1,3 @@
-import * as Long from 'long';
 import { Writer, Reader } from 'protobufjs/minimal';
 
 
@@ -108,10 +107,6 @@ const baseTimestamp: object = {
   seconds: Long.ZERO,
   nanos: 0,
 };
-
-function numberToLong(number: number) {
-  return Long.fromNumber(number);
-}
 
 export const Timestamp = {
   encode(message: Timestamp, writer: Writer = Writer.create()): Writer {

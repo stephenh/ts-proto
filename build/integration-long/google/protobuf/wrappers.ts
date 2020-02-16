@@ -1,4 +1,3 @@
-import * as Long from 'long';
 import { Writer, Reader } from 'protobufjs/minimal';
 
 
@@ -145,10 +144,6 @@ const baseStringValue: object = {
 const baseBytesValue: object = {
   value: undefined,
 };
-
-function numberToLong(number: number) {
-  return Long.fromNumber(number);
-}
 
 export const DoubleValue = {
   encode(message: DoubleValue, writer: Writer = Writer.create()): Writer {

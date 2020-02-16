@@ -1,4 +1,3 @@
-import * as Long from 'long';
 import { Timestamp } from '../google/protobuf/timestamp';
 import { Writer, Reader } from 'protobufjs/minimal';
 
@@ -10,13 +9,6 @@ export interface ImportedThing {
 const baseImportedThing: object = {
   createdAt: undefined,
 };
-
-function longToNumber(long: Long) {
-  if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new global.Error("Value is larger than Number.MAX_SAFE_INTEGER");
-  }
-  return long.toNumber();
-}
 
 function toTimestamp(date: Date): Timestamp {
   const seconds = date.getTime() / 1_000;

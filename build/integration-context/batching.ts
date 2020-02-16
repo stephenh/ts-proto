@@ -1,7 +1,6 @@
 import * as DataLoader from 'dataloader';
 import * as hash from 'object-hash';
 import { Reader, Writer } from 'protobufjs/minimal';
-import * as Long from 'long';
 
 
 export interface BatchQueryRequest {
@@ -182,13 +181,6 @@ interface DataLoaders {
 
   getDataLoader<T>(identifier: string, cstrFn: () => T): T;
 
-}
-
-function longToNumber(long: Long) {
-  if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new global.Error("Value is larger than Number.MAX_SAFE_INTEGER");
-  }
-  return long.toNumber();
 }
 
 export const BatchQueryRequest = {
