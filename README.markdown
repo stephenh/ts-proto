@@ -18,7 +18,7 @@ Goals
 =====
 
 * Idiomatic TypeScript/ES6 types
-  * `ts-proto` is a clean break from either the built-in Google/Java-esque JS of `protoc` and `protobufjs` 
+  * `ts-proto` is a clean break from either the built-in Google/Java-esque JS code of `protoc` or the "make `.d.ts` files the `*.js` comments" approach of `protobufjs` 
   * (Techically the `protobufjs/minimal` package is used for actually reading/writing bytes.)
 * TypeScript-first output
 * Interfaces over classes
