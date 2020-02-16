@@ -102,18 +102,21 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
           .add('export const %L = ', fullName)
           .beginHash();
 
-        staticMethods = !options.outputEncodeMethods 
-          ? staticMethods 
-          : staticMethods.addHashEntry(generateEncode(typeMap, fullName, message, options))
-            .addHashEntry(generateDecode(typeMap, fullName, message, options));
-          
-        staticMethods = !options.outputJsonMethods 
-          ? staticMethods 
-          : staticMethods.addHashEntry(generateFromJson(typeMap, fullName, message, options))
-            .addHashEntry(generateFromPartial(typeMap, fullName, message, options))
-            .addHashEntry(generateToJson(typeMap, fullName, message, options));
-          
-        staticMethods = staticMethods.endHash()
+        staticMethods = !options.outputEncodeMethods
+          ? staticMethods
+          : staticMethods
+              .addHashEntry(generateEncode(typeMap, fullName, message, options))
+              .addHashEntry(generateDecode(typeMap, fullName, message, options));
+
+        staticMethods = !options.outputJsonMethods
+          ? staticMethods
+          : staticMethods
+              .addHashEntry(generateFromJson(typeMap, fullName, message, options))
+              .addHashEntry(generateFromPartial(typeMap, fullName, message, options))
+              .addHashEntry(generateToJson(typeMap, fullName, message, options));
+
+        staticMethods = staticMethods
+          .endHash()
           .add(';')
           .newLine();
         file = file.addCode(staticMethods);

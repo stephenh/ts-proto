@@ -7,14 +7,6 @@ import CodeGeneratorRequest = google.protobuf.compiler.CodeGeneratorRequest;
 import CodeGeneratorResponse = google.protobuf.compiler.CodeGeneratorResponse;
 import { FileSpec } from 'ts-poet';
 
-// Comment block at the top of every source file, since these comments require specific
-// syntax incompatible with ts-poet, we will hard-code the string and prepend to the
-// generator output.
-const formatSourceFile = (spec: FileSpec) => 
-`// @ts-nocheck
-/* eslint-disable */
-${spec}`;
-
 // this would be the plugin called by the protoc compiler
 async function main() {
   const stdin = await readToBuffer(process.stdin);
@@ -26,7 +18,7 @@ async function main() {
     const spec = generateFile(typeMap, file, request.parameter);
     return new CodeGeneratorResponse.File({
       name: spec.path,
-      content: formatSourceFile(spec)
+      content: prefixDisableLinter(spec)
     });
   });
   const response = new CodeGeneratorResponse({ file: files });
@@ -46,3 +38,11 @@ main()
     process.stderr.write(e.stack);
     process.exit(1);
   });
+
+// Comment block at the top of every source file, since these comments require specific
+// syntax incompatible with ts-poet, we will hard-code the string and prepend to the
+// generator output.
+function prefixDisableLinter(spec: FileSpec): string {
+  return `/* eslint-disable */
+${spec}`;
+}
