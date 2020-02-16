@@ -96,8 +96,14 @@ export interface EntityService<Context extends DataLoaders> {
 
   GetMapQuery(ctx: Context, id: string): Promise<Entity>;
 
+  /**
+   *  Add a method that is not batchable to show it's still cached
+   */
   GetOnlyMethod(ctx: Context, request: GetOnlyMethodRequest): Promise<GetOnlyMethodResponse>;
 
+  /**
+   *  Add a method that won't get cached
+   */
   WriteMethod(ctx: Context, request: WriteMethodRequest): Promise<WriteMethodResponse>;
 
 }

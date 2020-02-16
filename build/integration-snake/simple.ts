@@ -1,3 +1,6 @@
+//  Adding a comment to the syntax will become the first
+//  comment in the output source file.
+//
 import { ImportedThing } from './import_dir/thing';
 import { Reader, Writer } from 'protobufjs/minimal';
 import * as Long from 'long';
@@ -11,9 +14,19 @@ export enum StateEnum {
   OFF = 3,
 }
 
+/**
+ * * Example comment on the Simple message  */
 export interface Simple {
+  /**
+   *  Name field
+   */
   name: string;
+  /**
+   *  Age  */
   age: number;
+  /**
+   *  This comment will also attach
+   */
   created_at: Date | undefined;
   child: Child | undefined;
   state: StateEnum;
@@ -21,6 +34,9 @@ export interface Simple {
   coins: number[];
   snacks: string[];
   old_states: StateEnum[];
+  /**
+   *  A thing (imported from thing)
+   */
   thing: ImportedThing | undefined;
 }
 
@@ -47,6 +63,9 @@ export enum Nested_InnerEnum {
   BAD = 1000,
 }
 
+/**
+ *  Comment for a nested message * /
+ */
 export interface Nested_InnerMessage {
   name: string;
   deep: Nested_InnerMessage_DeepMessage | undefined;

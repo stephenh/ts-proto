@@ -90,8 +90,14 @@ export interface EntityService {
 
   BatchMapQuery(request: BatchMapQueryRequest): Promise<BatchMapQueryResponse>;
 
+  /**
+   *  Add a method that is not batchable to show it's still cached
+   */
   GetOnlyMethod(request: GetOnlyMethodRequest): Promise<GetOnlyMethodResponse>;
 
+  /**
+   *  Add a method that won't get cached
+   */
   WriteMethod(request: WriteMethodRequest): Promise<WriteMethodResponse>;
 
 }

@@ -46,7 +46,7 @@
             /**
              * Constructs a new Simple.
              * @memberof simple
-             * @classdesc Represents a Simple.
+             * @classdesc Example comment on the Simple message
              * @implements ISimple
              * @constructor
              * @param {simple.ISimple=} [properties] Properties to set
