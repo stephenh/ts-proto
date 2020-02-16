@@ -39,9 +39,9 @@ export function optionsFromParameter(parameter: string): Options {
     useContext: false, 
     snakeToCamel: true, 
     forceLong: false,
-    serializers: true,
-    toFromJson: true,
-    serviceStub: true,
+    outputEncodeMethods: true,
+    outputJsonMethods: true,
+    outputServiceImpl: true,
   };
 
   if (parameter) {
@@ -54,14 +54,14 @@ export function optionsFromParameter(parameter: string): Options {
     if (parameter.includes('forceLong=true')) {
       options.forceLong = true;
     }
-    if (parameter.includes('serializers=false')) {
-      options.serializers = false;
+    if (parameter.includes('outputEncodeMethods=false')) {
+      options.outputEncodeMethods = false;
     }
-    if (parameter.includes('toFromJson=false')) {
-      options.toFromJson = false;
+    if (parameter.includes('outputJsonMethods=false')) {
+      options.outputJsonMethods = false;
     }
-    if (parameter.includes('serviceStub=false')) {
-      options.serviceStub = false;
+    if (parameter.includes('outputServiceImpl=false')) {
+      options.outputServiceImpl = false;
     }
   }
   return options;
