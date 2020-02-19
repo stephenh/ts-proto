@@ -1143,9 +1143,11 @@ function generateDataLoadersType(options: Options): InterfaceSpec {
   let fn = FunctionSpec.create('getDataLoader')
     .addTypeVariable(TypeNames.typeVariable('T'))
     .addParameter('identifier', TypeNames.STRING)
-    .addParameter('cstrFn', TypeNames.lambda2([], TypeNames.typeVariable('T')))
+    .addParameter('constructorFn', TypeNames.lambda2([], TypeNames.typeVariable('T')))
     .returns(TypeNames.typeVariable('T'));
-  return InterfaceSpec.create('DataLoaders').addFunction(fn);
+  return InterfaceSpec.create('DataLoaders')
+    .addModifiers(Modifier.EXPORT)
+    .addFunction(fn);
 }
 
 function requestType(typeMap: TypeMap, methodDesc: MethodDescriptorProto): TypeName {
