@@ -8,6 +8,8 @@ QuickStart
 * `npm install ts-proto`
 * `protoc --plugin=./node_modules/.bin/protoc-gen-ts_proto --ts_proto_out=. ./simple.proto`
 
+(Note that the output param, `ts_proto_out`, is named based on the plugin's name, i.e. from the `ts_proto` suffix in the `--plugin=./node_modules/.bin/protoc-gen-ts_proto` argument becomes the `_out` prefix, per `protoc`'s CLI conventions.)
+
 On Windows, you may need to do this instead:
 
 * `protoc --plugin=protoc-gen-ts_proto=.\node_modules\.bin\protoc-gen-ts_proto --ts_proto_out=. ./imple.proto`
