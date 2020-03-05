@@ -7,14 +7,13 @@ QuickStart
 
 * `npm install ts-proto`
 * `protoc --plugin=./node_modules/.bin/protoc-gen-ts_proto --ts_proto_out=. ./simple.proto`
-
-(Note that the output param, `ts_proto_out`, is named based on the plugin's name, i.e. from the `ts_proto` suffix in the `--plugin=./node_modules/.bin/protoc-gen-ts_proto` argument becomes the `_out` prefix, per `protoc`'s CLI conventions.)
+  * (Note that the output param, `ts_proto_out`, is named based on the plugin's name, i.e. from the `ts_proto` suffix in the `--plugin=./node_modules/.bin/protoc-gen-ts_proto` argument becomes the `_out` prefix, per `protoc`'s CLI conventions.)
 
 On Windows, you may need to do this instead:
 
 * `protoc --plugin=protoc-gen-ts_proto=.\node_modules\.bin\protoc-gen-ts_proto --ts_proto_out=. ./imple.proto`
 
-If you want to package the `ts-proto` output into npm package to distribute to clients, run `tsc` to generate the `.d.ts` files (i.e. unlike pbjs/pbts, `ts-proto` creates `*.ts` files which can then directly be used/compiled by `tsc`.)
+If you want to package the `ts-proto`-generated output into an npm package to distribute to clients, just run `tsc`, treating the `ts-proto`-generated files as source files, to generate the `.d.ts` files, and deploy the output as a regular npm package. (I.e. unlike pbjs/pbts, `ts-proto` creates `*.ts` source files which can then directly be used/compiled by `tsc`.)
 
 Goals
 =====
