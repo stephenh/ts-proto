@@ -1,6 +1,6 @@
 /node_modules/
 /*.lock
 /build/
-!/build/integration/
-!/build/integration-long/
 /.idea
+/integration/*/pbjs.js
+/integration/*/pbjs.d.ts

@@ -156,11 +156,13 @@ Building
 
 `ts-proto` does not use `pbjs` at runtime, but we do use it in the `ts-proto` build process (to bootstrap the types used to parse the incoming protobuf metadata types, as well as for the test suite to ensure the `ts-proto` implementations match the `ts-proto`).
 
-After running `yarn install` (which will fail in `yarn test` on the first time), run `./pbjs.sh` to create the bootstrap types and the integration test types.
+After running `yarn install` (which will fail in `yarn test` on the first time), run `./pbjs.sh` to create the bootstrap types, and `./integration/pbjs.sh` to create the integration test types. These pbjs-generated files are not currently checked in.
 
-After making changes to `ts-proto`, you can run `yarn codegen` to re-generate the test case files that are in `build/integration`.
+After this the tests should pass.
 
-The test suite also uses several test proto files (`simple.proto`, `batching.proto`, etc.); serialized copies of these are currently checked into git as `simple.bin`, `batching.bin`, etc., so that the test suite can run without having to invoke the `protoc` build chain. If you change the `simple.proto`/etc. files, run `./update_proto_bins.sh`. This does require having the `protoc` executable available.
+After making changes to `ts-proto`, you can run `./integration/codegen.sh` to re-generate the test case `*.ts` output files that are in each `integration/<test-case>/` directory.
+
+The test suite's proto files (i.e. `simple.proto`, `batching.proto`, etc.) currently have serialized/`.bin` copies checked into git (i.e. `simple.bin`, `batching.bin`, etc.), so that the test suite can run without having to invoke the `protoc` build chain. I.e. if you change the `simple.proto`/etc. files, you'll need to run `./integration/update-bins.sh`, which does require having the `protoc` executable available.
 
 Assumptions
 ===========

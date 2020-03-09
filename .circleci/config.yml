@@ -13,6 +13,7 @@ jobs:
 
       - run: yarn install || echo "ignore failure"
       - run: ./pbjs.sh
+      - run: ./integration/pbjs.sh
 
       - save_cache:
           paths:

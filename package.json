@@ -10,8 +10,7 @@
   "scripts": {
     "prepare": "yarn build && yarn test",
     "build": "yarn tsc",
-    "setup": "./pbjs.sh && mkdir -p build/integration && ./update_proto_bins.sh && yarn codegen",
-    "codegen": "mkdir -p build/integration && yarn ts-node integration/setup.ts",
+    "setup": "./pbjs.sh && ./integration/pbjs.sh && ./integration/update-bins.sh && ./integration/codegen.sh",
     "test": "yarn jest -c jest.config.js"
   },
   "keywords": [],
@@ -20,9 +19,9 @@
   "devDependencies": {
     "@types/jest": "^24.0.11",
     "@types/node": "^10.7.0",
-    "jest": "^24.5.0",
+    "jest": "^25.1.0",
     "prettier": "^1.16.4",
-    "ts-jest": "^24.0.2",
+    "ts-jest": "^25.2.1",
     "ts-node": "^8.3.0",
     "typescript": "^3.7.4"
   },
