@@ -381,9 +381,9 @@ export function visit(
 
   let index = 0;
   for (const enumDesc of proto.enumType) {
-    // I.e. Foo_Bar.Inner
+    // I.e. Foo_Bar.Zaz_Inner
     const protoFullName = protoPrefix + enumDesc.name;
-    // I.e. Foo_Bar_Inner
+    // I.e. FooBar_ZazInner
     const tsFullName = tsPrefix + maybeSnakeToCamel(enumDesc.name, options);
     const nestedSourceInfo = sourceInfo.open(childEnumType, index++);
     enumFn(tsFullName, enumDesc, nestedSourceInfo, protoFullName);
@@ -394,9 +394,9 @@ export function visit(
 
   index = 0;
   for (const message of messages) {
-    // I.e. Foo_Bar.Inner
+    // I.e. Foo_Bar.Zaz_Inner
     const protoFullName = protoPrefix + message.name;
-    // I.e. Foo_Bar_Inner
+    // I.e. FooBar_ZazInner
     const tsFullName = tsPrefix + maybeSnakeToCamel(message.name, options);
     const nestedSourceInfo = sourceInfo.open(childType, index++);
     messageFn(tsFullName, message, nestedSourceInfo, protoFullName);
