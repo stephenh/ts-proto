@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+message Baz {
+  oneof type {
+    Foo_Bar foo = 1;
+  }
+}
+
+message Foo_Bar {
+}

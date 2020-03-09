@@ -193,11 +193,10 @@ export function createTypeMap(request: CodeGeneratorRequest, options: Options): 
     // We assume a file.name of google/protobuf/wrappers.proto --> a module path of google/protobuf/wrapper.ts
     const moduleName = file.name.replace('.proto', '');
     // So given a fullName like FooMessage_InnerMessage, proto will see that as package.name.FooMessage.InnerMessage
-    function saveMapping(fullName: string, desc: DescriptorProto | EnumDescriptorProto): void {
+    function saveMapping(tsFullName: string, desc: DescriptorProto | EnumDescriptorProto, s: SourceInfo, protoFullName: string): void {
       // package is optional, but make sure we have a dot-prefixed type name either way
       const prefix = file.package.length === 0 ? '' : `.${file.package}`;
-      const name = fullName.replace(/_/g, '.');
-      typeMap.set(`${prefix}.${name}`, [moduleName, fullName, desc]);
+      typeMap.set(`${prefix}.${protoFullName}`, [moduleName, tsFullName, desc]);
     }
     visit(file, SourceInfo.empty(), saveMapping, options, saveMapping);
   }

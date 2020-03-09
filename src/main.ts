@@ -355,24 +355,38 @@ function generateBaseInstance(fullName: string, messageDesc: DescriptorProto, op
   return baseMessage.initializerBlock(initialValue.endHash());
 }
 
-type MessageVisitor = (fullName: string, desc: DescriptorProto, sourceInfo: SourceInfo) => void;
-type EnumVisitor = (fullName: string, desc: EnumDescriptorProto, sourceInfo: SourceInfo) => void;
+type MessageVisitor = (
+  fullName: string,
+  desc: DescriptorProto,
+  sourceInfo: SourceInfo,
+  fullProtoTypeName: string
+) => void;
+type EnumVisitor = (
+  fullName: string,
+  desc: EnumDescriptorProto,
+  sourceInfo: SourceInfo,
+  fullProtoTypeName: string
+) => void;
 export function visit(
   proto: FileDescriptorProto | DescriptorProto,
   sourceInfo: SourceInfo,
   messageFn: MessageVisitor,
   options: Options,
   enumFn: EnumVisitor = () => {},
-  prefix: string = ''
+  tsPrefix: string = '',
+  protoPrefix: string = ''
 ): void {
   const isRootFile = proto instanceof FileDescriptorProto;
   const childEnumType = isRootFile ? Fields.file.enum_type : Fields.message.enum_type;
 
   let index = 0;
   for (const enumDesc of proto.enumType) {
-    const fullName = prefix + maybeSnakeToCamel(enumDesc.name, options);
+    // I.e. Foo_Bar.Inner
+    const protoFullName = protoPrefix + enumDesc.name;
+    // I.e. Foo_Bar_Inner
+    const tsFullName = tsPrefix + maybeSnakeToCamel(enumDesc.name, options);
     const nestedSourceInfo = sourceInfo.open(childEnumType, index++);
-    enumFn(fullName, enumDesc, nestedSourceInfo);
+    enumFn(tsFullName, enumDesc, nestedSourceInfo, protoFullName);
   }
 
   const messages = proto instanceof FileDescriptorProto ? proto.messageType : proto.nestedType;
@@ -380,10 +394,13 @@ export function visit(
 
   index = 0;
   for (const message of messages) {
-    const fullName = prefix + maybeSnakeToCamel(message.name, options);
+    // I.e. Foo_Bar.Inner
+    const protoFullName = protoPrefix + message.name;
+    // I.e. Foo_Bar_Inner
+    const tsFullName = tsPrefix + maybeSnakeToCamel(message.name, options);
     const nestedSourceInfo = sourceInfo.open(childType, index++);
-    messageFn(fullName, message, nestedSourceInfo);
-    visit(message, nestedSourceInfo, messageFn, options, enumFn, fullName + '_');
+    messageFn(tsFullName, message, nestedSourceInfo, protoFullName);
+    visit(message, nestedSourceInfo, messageFn, options, enumFn, tsFullName + '_', protoFullName + '.');
   }
 }
 
@@ -980,7 +997,7 @@ function generateServiceClientImpl(
     }
 
     if (options.useContext && methodDesc.name.match(/^Get[A-Z]/)) {
-      client = client.addFunction(generateCachingRpcMethod(typeMap, fileDesc, serviceDesc, methodDesc));
+      client = client.addFunction(generateCachingRpcMethod(options, typeMap, fileDesc, serviceDesc, methodDesc));
     } else {
       client = client.addFunction(generateRegularRpcMethod(options, typeMap, fileDesc, serviceDesc, methodDesc));
     }
@@ -1072,6 +1089,7 @@ function generateBatchingRpcMethod(typeMap: TypeMap, batchMethod: BatchMethod): 
 
 /** We're not going to batch, but use DataLoader for per-request caching. */
 function generateCachingRpcMethod(
+  options: Options,
   typeMap: TypeMap,
   fileDesc: FileDescriptorProto,
   serviceDesc: ServiceDescriptorProto,
