@@ -11,7 +11,7 @@ QuickStart
 
 On Windows, you may need to do this instead:
 
-* `protoc --plugin=protoc-gen-ts_proto=.\node_modules\.bin\protoc-gen-ts_proto --ts_proto_out=. ./imple.proto`
+* `protoc --plugin=protoc-gen-ts_proto=.\node_modules\.bin\protoc-gen-ts_proto.cmd --ts_proto_out=. ./imple.proto`
 
 If you want to package the `ts-proto`-generated output into an npm package to distribute to clients, just run `tsc`, treating the `ts-proto`-generated files as source files, to generate the `.d.ts` files, and deploy the output as a regular npm package. (I.e. unlike pbjs/pbts, `ts-proto` creates `*.ts` source files which can then directly be used/compiled by `tsc`.)
 
