@@ -53,6 +53,7 @@ export type Options = {
   outputEncodeMethods: boolean;
   outputJsonMethods: boolean;
   outputClientImpl: boolean;
+  useEnumNames: boolean;
 };
 
 export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, parameter: string): FileSpec {
@@ -87,7 +88,7 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
     },
     options,
     (fullName, enumDesc, sInfo) => {
-      file = file.addEnum(generateEnum(fullName, enumDesc, sInfo));
+      file = file.addEnum(generateEnum(fullName, enumDesc, sInfo, options));
     }
   );
 
@@ -266,7 +267,7 @@ function addTimestampMethods(file: FileSpec, options: Options): FileSpec {
     );
 }
 
-function generateEnum(fullName: string, enumDesc: EnumDescriptorProto, sourceInfo: SourceInfo): EnumSpec {
+function generateEnum(fullName: string, enumDesc: EnumDescriptorProto, sourceInfo: SourceInfo, options: Options): EnumSpec {
   let spec = EnumSpec.create(fullName).addModifiers(Modifier.EXPORT);
   maybeAddComment(sourceInfo, text => (spec = spec.addJavadoc(text)));
 
@@ -274,7 +275,7 @@ function generateEnum(fullName: string, enumDesc: EnumDescriptorProto, sourceInf
   for (const valueDesc of enumDesc.value) {
     const info = sourceInfo.lookup(Fields.enum.value, index++);
     maybeAddComment(info, text => (spec = spec.addJavadoc(`${valueDesc.name} - ${text}\n`)));
-    spec = spec.addConstant(valueDesc.name, valueDesc.number.toString());
+    spec = spec.addConstant(valueDesc.name, options.useEnumNames ? `"${valueDesc.name}"` : valueDesc.number.toString());
   }
   return spec;
 }

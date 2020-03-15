@@ -147,7 +147,8 @@ Supported options:
 * If you pass `--ts_proto_opt=forceLong=true`, all 64 bit numbers will be parsed as instances of `Long` (using the [long](https://www.npmjs.com/package/long) library).
 * If you pass `--ts_proto_opt=outputEncodeMethods=false`, the `Message.encode` and `Message.decode` methods for working with protobuff-encoded data will not be output.
 * If you pass `--ts_proto_opt=outputJsonMethods=false`, the `Message.fromJSON` and `Message.toJSON` methods for working with JSON-coded data will not be output.
-* If you pass `--ts_proto_opt=outputClientImpl=false`, the `FooServiceClientImpl` classes that implement the client-side (currently Twirp-only) RPC interfaces will not be output. 
+* If you pass `--ts_proto_opt=outputClientImpl=false`, the `FooServiceClientImpl` classes that implement the client-side (currently Twirp-only) RPC interfaces will not be output.
+* If you pass `--useEnumNames=true`, enum names will be used as values in the generated typescript interfaces instead of the integer values.
 
 (I.e. you want only interface declarations for your Protobuf types, then pass all three of `outputEncodeMethods`, `outputJsonMethods`, and `outputClientImpl` as `false`, i.e. `--ts_proto_opt=outputEncodeMethods=false,outputJsonMethods=false,outputClientImpl=false`.)
 

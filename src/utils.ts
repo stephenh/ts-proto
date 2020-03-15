@@ -43,6 +43,7 @@ export function optionsFromParameter(parameter: string): Options {
     outputEncodeMethods: true,
     outputJsonMethods: true,
     outputClientImpl: true,
+    useEnumNames: false,
   };
 
   if (parameter) {
@@ -63,6 +64,9 @@ export function optionsFromParameter(parameter: string): Options {
     }
     if (parameter.includes('outputClientImpl=false')) {
       options.outputClientImpl = false;
+    }
+    if (parameter.includes('useEnumNames=true')) {
+      options.useEnumNames = true;
     }
   }
   return options;
