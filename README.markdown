@@ -19,7 +19,7 @@ Goals
 =====
 
 * Idiomatic TypeScript/ES6 types
-  * `ts-proto` is a clean break from either the built-in Google/Java-esque JS code of `protoc` or the "make `.d.ts` files the `*.js` comments" approach of `protobufjs` 
+  * `ts-proto` is a clean break from either the built-in Google/Java-esque JS code of `protoc` or the "make `.d.ts` files the `*.js` comments" approach of `protobufjs`
   * (Techically the `protobufjs/minimal` package is used for actually reading/writing bytes.)
 * TypeScript-first output
 * Interfaces over classes
@@ -89,7 +89,7 @@ Highlights
   Wrapper types, i.e. `google.protobuf.StringValue`, are mapped as optional values,
   i.e. `string | undefined`, which means for primitives we can kind of pretend that
   the protobuf type system has optional types.
-  
+
 * Timestamp is mapped as `Date`
 
 * `fromJSON`/`toJSON` support the [canonical Protobuf JS](https://developers.google.com/protocol-buffers/docs/proto3#json) format (i.e. timestamps are ISO strings)
@@ -145,6 +145,7 @@ Supported options:
 
 * If you pass `--ts_proto_opt=context=true`, the Twirp services will have a Go-style `ctx` parameter, which is useful for tracing/logging/etc. if you're not using node's `async_hooks` api due to performance reasons.
 * If you pass `--ts_proto_opt=forceLong=true`, all 64 bit numbers will be parsed as instances of `Long` (using the [long](https://www.npmjs.com/package/long) library).
+* If you pass `--ts_proto_opt=forceLongString=true`, all 64 bit numbers will be outputted as strings.
 * If you pass `--ts_proto_opt=outputEncodeMethods=false`, the `Message.encode` and `Message.decode` methods for working with protobuff-encoded data will not be output.
 * If you pass `--ts_proto_opt=outputJsonMethods=false`, the `Message.fromJSON` and `Message.toJSON` methods for working with JSON-coded data will not be output.
 * If you pass `--ts_proto_opt=outputClientImpl=false`, the `FooServiceClientImpl` classes that implement the client-side (currently Twirp-only) RPC interfaces will not be output. 
@@ -232,7 +233,7 @@ Protobuf has several built-in types for this pattern, i.e. `google.protobuf.Stri
 
 This hides some of the `StringValue` mess and gives a more idiomatic way of using them.
 
-Granted, it's unfortunate this is not as simple as marking the `string` as `optional`. 
+Granted, it's unfortunate this is not as simple as marking the `string` as `optional`.
 
 Number Types
 ============
@@ -241,20 +242,20 @@ Numbers are by default assumed to be plain JavaScript `numbers`. Since protobuf 
 
 Each of the protobuf basic number types maps as following depending on option used.
 
-| Protobuf number types  | Default Typescript types | `forceLong` Typescript types |
-| ----------------------- | ----------------------- | ---------------------------- |
-|  double | number | number  |
-|  float | number | number |
-|  int32 | number | number |
-|  int64 | number* | Long |
-|  uint32 | number | number |
-|  uint64 | number* | Unsigned Long |
-|  sint32 | number | number |
-|  sint64 | number* | Long |
-|  fixed32 | number | number |
-|  fixed64 | number* | Unsigned Long |
-|  sfixed32 | number | number |
-|  sfixed64 | number* |  Long |
+| Protobuf number types  | Default Typescript types | `forceLong` Typescript types | `forceLongString` Typescript types |
+| ----------------------- | ----------------------- | ---------------------------- | ---------------------------------- |
+|  double | number | number | number |
+|  float | number | number | number |
+|  int32 | number | number | number |
+|  int64 | number* | Long | string |
+|  uint32 | number | number | number |
+|  uint64 | number* | Unsigned Long | string |
+|  sint32 | number | number | number |
+|  sint64 | number* | Long | string |
+|  fixed32 | number | number | number |
+|  fixed64 | number* | Unsigned Long | string |
+|  sfixed32 | number | number | number |
+|  sfixed64 | number* |  Long | string |
 
 Where (*) indicates they might throw an error at runtime.
 

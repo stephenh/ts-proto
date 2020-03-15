@@ -72,7 +72,13 @@ export function basicTypeName(typeMap: TypeMap, field: FieldDescriptorProto, opt
     case FieldDescriptorProto.Type.TYPE_FIXED64:
     case FieldDescriptorProto.Type.TYPE_SFIXED64:
       // this handles 2^53, Long is only needed for 2^64; this is effectively pbjs's forceNumber
-      return options.forceLong ? TypeNames.anyType('Long*long') : TypeNames.NUMBER;
+      if (options.forceLong) {
+        return TypeNames.anyType('Long*long');
+      } else if (options.forceLongString) {
+        return TypeNames.STRING;
+      } else {
+        return TypeNames.NUMBER;
+      }
     case FieldDescriptorProto.Type.TYPE_BOOL:
       return TypeNames.BOOLEAN;
     case FieldDescriptorProto.Type.TYPE_STRING:
@@ -167,11 +173,23 @@ export function defaultValue(type: FieldDescriptorProto.Type, options: Options):
       return 0;
     case FieldDescriptorProto.Type.TYPE_UINT64:
     case FieldDescriptorProto.Type.TYPE_FIXED64:
-      return options.forceLong ? CodeBlock.of('%T.UZERO', 'Long*long') : 0;
+      if (options.forceLong) {
+        return CodeBlock.of('%T.UZERO', 'Long*long');
+      } else if (options.forceLongString) {
+        return '""';
+      } else {
+        return 0;
+      }
     case FieldDescriptorProto.Type.TYPE_INT64:
     case FieldDescriptorProto.Type.TYPE_SINT64:
     case FieldDescriptorProto.Type.TYPE_SFIXED64:
-      return options.forceLong ? CodeBlock.of('%T.ZERO', 'Long*long') : 0;
+        if (options.forceLong) {
+          return CodeBlock.of('%T.ZERO', 'Long*long');
+        } else if (options.forceLongString) {
+          return '""';
+        } else {
+          return 0;
+        }
     case FieldDescriptorProto.Type.TYPE_BOOL:
       return false;
     case FieldDescriptorProto.Type.TYPE_STRING:
@@ -228,7 +246,7 @@ export function isRepeated(field: FieldDescriptorProto): boolean {
 }
 
 export function isLong(field: FieldDescriptorProto): boolean {
-  return basicLongWireType(field.type) !== undefined; 
+  return basicLongWireType(field.type) !== undefined;
 }
 
 export function isMapType(typeMap: TypeMap, messageDesc: DescriptorProto, field: FieldDescriptorProto, options: Options): boolean {
