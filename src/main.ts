@@ -50,6 +50,7 @@ export type Options = {
   useContext: boolean;
   snakeToCamel: boolean;
   forceLong: boolean;
+  forceLongString: boolean;
   outputEncodeMethods: boolean;
   outputJsonMethods: boolean;
   outputClientImpl: boolean;
@@ -185,6 +186,12 @@ function addLongUtilityMethod(file: FileSpec, options: Options): FileSpec {
         .addParameter('number', 'number')
         .addCodeBlock(CodeBlock.empty().addStatement('return %T.fromNumber(number)', 'Long*long'))
     );
+  } else if (options.forceLongString) {
+    return file.addFunction(
+      FunctionSpec.create('longToString')
+        .addParameter('long', 'Long*long')
+        .addCodeBlock(CodeBlock.empty().addStatement('return long.toString()'))
+    );
   } else {
     return file.addFunction(
       FunctionSpec.create('longToNumber')
@@ -223,9 +230,15 @@ function addTimestampMethods(file: FileSpec, options: Options): FileSpec {
   const timestampType = 'Timestamp@./google/protobuf/timestamp';
 
   let secondsCodeLine = 'const seconds = date.getTime() / 1_000';
+  let toNumberCode = 't.seconds';
   if (options.forceLong) {
+    toNumberCode = 't.seconds.toNumber()';
     secondsCodeLine = 'const seconds = numberToLong(date.getTime() / 1_000)';
+  } else if (options.forceLongString) {
+    toNumberCode = 'Number(t.seconds)';
+    secondsCodeLine = 'const seconds = (date.getTime() / 1_000).toString()';
   }
+
   return file
     .addFunction(
       FunctionSpec.create('toTimestamp')
@@ -244,7 +257,7 @@ function addTimestampMethods(file: FileSpec, options: Options): FileSpec {
         .returns('Date')
         .addCodeBlock(
           CodeBlock.empty()
-            .addStatement('let millis = t.seconds%L * 1_000', options.forceLong ? '.toNumber()' : '')
+            .addStatement('let millis = %L * 1_000', toNumberCode)
             .addStatement('millis += t.nanos / 1_000_000')
             .addStatement('return new Date(millis)')
         )
@@ -458,6 +471,8 @@ function generateDecode(
       if (basicLongWireType(field.type) !== undefined) {
         if (options.forceLong) {
           readSnippet = CodeBlock.of('%L as Long', readSnippet);
+        } else if (options.forceLongString) {
+          readSnippet = CodeBlock.of('longToString(%L as Long)', readSnippet);
         } else {
           readSnippet = CodeBlock.of('longToNumber(%L as Long)', readSnippet);
         }
