@@ -160,7 +160,7 @@ After running `yarn install` (which will fail in `yarn test` on the first time),
 
 After this the tests should pass.
 
-After making changes to `ts-proto`, you can run `./integration/codegen.sh` to re-generate the test case `*.ts` output files that are in each `integration/<test-case>/` directory.
+After making changes to `ts-proto`, you can run `cd integration` and `./codegen.sh` to re-generate the test case `*.ts` output files that are in each `integration/<test-case>/` directory.
 
 The test suite's proto files (i.e. `simple.proto`, `batching.proto`, etc.) currently have serialized/`.bin` copies checked into git (i.e. `simple.bin`, `batching.bin`, etc.), so that the test suite can run without having to invoke the `protoc` build chain. I.e. if you change the `simple.proto`/etc. files, you'll need to run `./integration/update-bins.sh`, which does require having the `protoc` executable available.
 
