@@ -1,6 +1,6 @@
 import { google } from '../build/pbjs';
 import { CodeBlock, Member, TypeName, TypeNames } from 'ts-poet';
-import { Options, visit } from './main';
+import { Options, visit, LongOption } from './main';
 import { fail } from './utils';
 import { asSequence } from 'sequency';
 import FieldDescriptorProto = google.protobuf.FieldDescriptorProto;
@@ -72,9 +72,9 @@ export function basicTypeName(typeMap: TypeMap, field: FieldDescriptorProto, opt
     case FieldDescriptorProto.Type.TYPE_FIXED64:
     case FieldDescriptorProto.Type.TYPE_SFIXED64:
       // this handles 2^53, Long is only needed for 2^64; this is effectively pbjs's forceNumber
-      if (options.forceLong) {
+      if (options.forceLong === LongOption.LONG) {
         return TypeNames.anyType('Long*long');
-      } else if (options.forceLongString) {
+      } else if (options.forceLong === LongOption.STRING) {
         return TypeNames.STRING;
       } else {
         return TypeNames.NUMBER;
@@ -173,20 +173,20 @@ export function defaultValue(type: FieldDescriptorProto.Type, options: Options):
       return 0;
     case FieldDescriptorProto.Type.TYPE_UINT64:
     case FieldDescriptorProto.Type.TYPE_FIXED64:
-      if (options.forceLong) {
+      if (options.forceLong === LongOption.LONG) {
         return CodeBlock.of('%T.UZERO', 'Long*long');
-      } else if (options.forceLongString) {
-        return '""';
+      } else if (options.forceLong === LongOption.STRING) {
+        return '"0"';
       } else {
         return 0;
       }
     case FieldDescriptorProto.Type.TYPE_INT64:
     case FieldDescriptorProto.Type.TYPE_SINT64:
     case FieldDescriptorProto.Type.TYPE_SFIXED64:
-        if (options.forceLong) {
+        if (options.forceLong === LongOption.LONG) {
           return CodeBlock.of('%T.ZERO', 'Long*long');
-        } else if (options.forceLongString) {
-          return '""';
+        } else if (options.forceLong === LongOption.STRING) {
+          return '"0"';
         } else {
           return 0;
         }
