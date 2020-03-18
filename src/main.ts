@@ -46,11 +46,16 @@ import MethodDescriptorProto = google.protobuf.MethodDescriptorProto;
 
 const dataloader = TypeNames.anyType('DataLoader*dataloader');
 
+export enum LongOption {
+  NUMBER = "number",
+  LONG = "long",
+  STRING = "string",
+}
+
 export type Options = {
   useContext: boolean;
   snakeToCamel: boolean;
-  forceLong: boolean;
-  forceLongString: boolean;
+  forceLong: LongOption;
   outputEncodeMethods: boolean;
   outputJsonMethods: boolean;
   outputClientImpl: boolean;
@@ -169,7 +174,9 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
   // methods (to prevent outputting them if its not necessary). In theory, we should be able
   // to lean on the code generation library more to do this sort of "output only if used",
   // similar to what it does for auto-imports.
-  if (initialOutput.includes('longToNumber') || initialOutput.includes('numberToLong')) {
+  if (initialOutput.includes('longToNumber')
+      || initialOutput.includes('numberToLong')
+      || initialOutput.includes('longToString')) {
     file = addLongUtilityMethod(file, options);
   }
   if (initialOutput.includes('DeepPartial')) {
@@ -180,13 +187,13 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
 }
 
 function addLongUtilityMethod(file: FileSpec, options: Options): FileSpec {
-  if (options.forceLong) {
+  if (options.forceLong === LongOption.LONG) {
     return file.addFunction(
       FunctionSpec.create('numberToLong')
         .addParameter('number', 'number')
         .addCodeBlock(CodeBlock.empty().addStatement('return %T.fromNumber(number)', 'Long*long'))
     );
-  } else if (options.forceLongString) {
+  } else if (options.forceLong === LongOption.STRING) {
     return file.addFunction(
       FunctionSpec.create('longToString')
         .addParameter('long', 'Long*long')
@@ -231,10 +238,10 @@ function addTimestampMethods(file: FileSpec, options: Options): FileSpec {
 
   let secondsCodeLine = 'const seconds = date.getTime() / 1_000';
   let toNumberCode = 't.seconds';
-  if (options.forceLong) {
+  if (options.forceLong === LongOption.LONG) {
     toNumberCode = 't.seconds.toNumber()';
     secondsCodeLine = 'const seconds = numberToLong(date.getTime() / 1_000)';
-  } else if (options.forceLongString) {
+  } else if (options.forceLong === LongOption.STRING) {
     toNumberCode = 'Number(t.seconds)';
     secondsCodeLine = 'const seconds = (date.getTime() / 1_000).toString()';
   }
@@ -469,9 +476,9 @@ function generateDecode(
     if (isPrimitive(field)) {
       readSnippet = CodeBlock.of('reader.%L()', toReaderCall(field));
       if (basicLongWireType(field.type) !== undefined) {
-        if (options.forceLong) {
+        if (options.forceLong === LongOption.LONG) {
           readSnippet = CodeBlock.of('%L as Long', readSnippet);
-        } else if (options.forceLongString) {
+        } else if (options.forceLong === LongOption.STRING) {
           readSnippet = CodeBlock.of('longToString(%L as Long)', readSnippet);
         } else {
           readSnippet = CodeBlock.of('longToNumber(%L as Long)', readSnippet);
@@ -660,7 +667,7 @@ function generateFromJson(
         // Convert primitives using the String(value)/Number(value) cstr, except for bytes
         if (isBytes(field)) {
           return CodeBlock.of('%L', from);
-        } else if (isLong(field) && options.forceLong) {
+        } else if (isLong(field) && options.forceLong === LongOption.LONG) {
           const cstr = capitalize(basicTypeName(typeMap, field, options, true).toString());
           return CodeBlock.of('%L.fromString(%L)', cstr, from);
         } else {
@@ -763,7 +770,7 @@ function generateToJson(
           defaultValue(field.type, options)
         );
       } else {
-        if (isLong(field) && options.forceLong) {
+        if (isLong(field) && options.forceLong === LongOption.LONG) {
           return CodeBlock.of(
             '(%L || %L).toString()',
             from,
@@ -857,7 +864,7 @@ function generateFromPartial(
           .endControlFlow();
       }
     } else {
-      if (isLong(field) && options.forceLong) {
+      if (isLong(field) && options.forceLong === LongOption.LONG) {
         func = func.addStatement(
           `message.%L = %L as %L`,
           fieldName,

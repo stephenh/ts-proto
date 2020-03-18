@@ -3,15 +3,15 @@ shopt -s globstar
 
 # Runs the local code generator for each of our .bin test files (as created/kept
 # up-to-date by ./update-bins.sh). Good for local iteration of WIP changes.
+int_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-for file in **/*.bin; do
+for file in $int_dir/**/*.bin; do
   echo "${file}"
-  # Strip the longest suffix starting at the 1st slash
-  dir="${file%%/*}"
+  dir=$(dirname "${file}")
   params=""
   if [ -f "${dir}/parameters.txt" ]; then
     params=$(cat "${dir}/parameters.txt")
   fi
-  ../node_modules/.bin/ts-node ./codegen.ts "${dir}" "${file}" "${params}"
+  $(npm root)/.bin/ts-node $int_dir/codegen.ts "${dir}" "${file}" "${params}"
 done
 

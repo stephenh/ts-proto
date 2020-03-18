@@ -144,11 +144,10 @@ protoc --plugin=node_modules/ts-proto/protoc-gen-ts_proto ./batching.proto -I.
 Supported options:
 
 * If you pass `--ts_proto_opt=context=true`, the Twirp services will have a Go-style `ctx` parameter, which is useful for tracing/logging/etc. if you're not using node's `async_hooks` api due to performance reasons.
-* If you pass `--ts_proto_opt=forceLong=true`, all 64 bit numbers will be parsed as instances of `Long` (using the [long](https://www.npmjs.com/package/long) library).
-* If you pass `--ts_proto_opt=forceLongString=true`, all 64 bit numbers will be outputted as strings.
+* If you pass `--ts_proto_opt=forceLong=long`, all 64 bit numbers will be parsed as instances of `Long` (using the [long](https://www.npmjs.com/package/long) library). Alternatively, if you pass `--ts_proto_opt=forceLong=string`, all 64 bit numbers will be outputted as strings.
 * If you pass `--ts_proto_opt=outputEncodeMethods=false`, the `Message.encode` and `Message.decode` methods for working with protobuff-encoded data will not be output.
 * If you pass `--ts_proto_opt=outputJsonMethods=false`, the `Message.fromJSON` and `Message.toJSON` methods for working with JSON-coded data will not be output.
-* If you pass `--ts_proto_opt=outputClientImpl=false`, the `FooServiceClientImpl` classes that implement the client-side (currently Twirp-only) RPC interfaces will not be output. 
+* If you pass `--ts_proto_opt=outputClientImpl=false`, the `FooServiceClientImpl` classes that implement the client-side (currently Twirp-only) RPC interfaces will not be output.
 
 (I.e. you want only interface declarations for your Protobuf types, then pass all three of `outputEncodeMethods`, `outputJsonMethods`, and `outputClientImpl` as `false`, i.e. `--ts_proto_opt=outputEncodeMethods=false,outputJsonMethods=false,outputClientImpl=false`.)
 
@@ -242,7 +241,7 @@ Numbers are by default assumed to be plain JavaScript `numbers`. Since protobuf 
 
 Each of the protobuf basic number types maps as following depending on option used.
 
-| Protobuf number types  | Default Typescript types | `forceLong` Typescript types | `forceLongString` Typescript types |
+| Protobuf number types  | Default Typescript types | `forceLong=long` types | `forceLong=string` types |
 | ----------------------- | ----------------------- | ---------------------------- | ---------------------------------- |
 |  double | number | number | number |
 |  float | number | number | number |
