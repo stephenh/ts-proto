@@ -6,13 +6,6 @@ export interface Tile {
   layers: Tile_Layer[];
 }
 
-export enum Tile_GeomType {
-  UNKNOWN = 0,
-  POINT = 1,
-  LINESTRING = 2,
-  POLYGON = 3,
-}
-
 export interface Tile_Value {
   stringValue: string;
   floatValue: number;
@@ -75,6 +68,47 @@ function longToNumber(long: Long) {
   }
   return long.toNumber();
 }
+
+export const Tile_GeomType = {
+  UNKNOWN: 0 as Tile_GeomType,
+  POINT: 1 as Tile_GeomType,
+  LINESTRING: 2 as Tile_GeomType,
+  POLYGON: 3 as Tile_GeomType,
+  fromJSON(object: any): Tile_GeomType {
+    switch (object) {
+      case 0:
+      case "UNKNOWN":
+        return Tile_GeomType.UNKNOWN;
+      case 1:
+      case "POINT":
+        return Tile_GeomType.POINT;
+      case 2:
+      case "LINESTRING":
+        return Tile_GeomType.LINESTRING;
+      case 3:
+      case "POLYGON":
+        return Tile_GeomType.POLYGON;
+      default:
+        throw new global.Error(`Invalid value ${object}`);
+    }
+  },
+  toJSON(object: Tile_GeomType): string {
+    switch (object) {
+      case Tile_GeomType.UNKNOWN:
+        return "UNKNOWN";
+      case Tile_GeomType.POINT:
+        return "POINT";
+      case Tile_GeomType.LINESTRING:
+        return "LINESTRING";
+      case Tile_GeomType.POLYGON:
+        return "POLYGON";
+      default:
+        return "UNKNOWN";
+    }
+  },
+}
+
+export type Tile_GeomType = 0 | 1 | 2 | 3;
 
 export const Tile = {
   encode(message: Tile, writer: Writer = Writer.create()): Writer {
@@ -305,7 +339,7 @@ export const Tile_Feature = {
           }
           break;
         case 3:
-          message.type = reader.int32();
+          message.type = reader.int32() as any;
           break;
         case 4:
           if ((tag & 7) === 2) {
@@ -339,7 +373,7 @@ export const Tile_Feature = {
       }
     }
     if (object.type !== undefined && object.type !== null) {
-      message.type = Enums.tileGeomTypeFromJSON(object.type);
+      message.type = Tile_GeomType.fromJSON(object.type);
     } else {
       message.type = 0;
     }
@@ -384,7 +418,7 @@ export const Tile_Feature = {
     } else {
       obj.tags = [];
     }
-    obj.type = Enums.tileGeomTypeToJSON(message.type);
+    obj.type = Tile_GeomType.toJSON(message.type);
     if (message.geometry) {
       obj.geometry = message.geometry.map(e => e || 0);
     } else {
@@ -542,40 +576,6 @@ export const Tile_Layer = {
   },
 };
 
-export const Enums = {
-  tileGeomTypeFromJSON(object: any): Tile_GeomType {
-    switch (object) {
-      case 0:
-      case "UNKNOWN":
-        return Tile_GeomType.UNKNOWN;
-      case 1:
-      case "POINT":
-        return Tile_GeomType.POINT;
-      case 2:
-      case "LINESTRING":
-        return Tile_GeomType.LINESTRING;
-      case 3:
-      case "POLYGON":
-        return Tile_GeomType.POLYGON;
-      default:
-        throw new global.Error(`Invalid value ${object}`);
-    }
-  },
-  tileGeomTypeToJSON(object: Tile_GeomType): string {
-    switch (object) {
-      case Tile_GeomType.UNKNOWN:
-        return "UNKNOWN";
-      case Tile_GeomType.POINT:
-        return "POINT";
-      case Tile_GeomType.LINESTRING:
-        return "LINESTRING";
-      case Tile_GeomType.POLYGON:
-        return "POLYGON";
-      default:
-        return "UNKNOWN";
-    }
-  },
-}
 type DeepPartial<T> = {
   [P in keyof T]?: T[P] extends Array<infer U>
   ? Array<DeepPartial<U>>

@@ -1,7 +1,6 @@
 import {
   ClassSpec,
   CodeBlock,
-  EnumSpec,
   FileSpec,
   FunctionSpec,
   InterfaceSpec,
@@ -20,6 +19,7 @@ import {
   detectMapType,
   isBytes,
   isEnum,
+  isLong,
   isMapType,
   isMessage,
   isPrimitive,
@@ -31,13 +31,11 @@ import {
   packedType,
   toReaderCall,
   toTypeName,
-  TypeMap,
-  isLong,
-  toModuleAndType
+  TypeMap
 } from './types';
 import { asSequence } from 'sequency';
 import SourceInfo, { Fields } from './sourceInfo';
-import { optionsFromParameter, singular, maybeAddComment, lowerFirst } from './utils';
+import { maybeAddComment, optionsFromParameter, singular } from './utils';
 import DescriptorProto = google.protobuf.DescriptorProto;
 import FieldDescriptorProto = google.protobuf.FieldDescriptorProto;
 import FileDescriptorProto = google.protobuf.FileDescriptorProto;
@@ -94,16 +92,11 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
     },
     options,
     (fullName, enumDesc, sInfo) => {
-      file = file.addEnum(generateEnum(fullName, enumDesc, sInfo));
+      file = file.addCode(generateEnum(options, fullName, enumDesc, sInfo));
     }
   );
 
   if (options.outputEncodeMethods || options.outputJsonMethods) {
-    let enumMethods = CodeBlock.empty()
-      .add('export const Enums = ')
-      .beginHash();
-    let hasEnumMethods = false;
-
     // then add the encoder/decoder/base instance
     visit(
       fileDesc,
@@ -133,20 +126,8 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
           .newLine();
         file = file.addCode(staticMethods);
       },
-      options,
-      (fullName, enumDesc) => {
-        if (!options.outputJsonMethods) {
-          return;
-        }
-        enumMethods = enumMethods.addHashEntry(generateEnumFromJson(fullName, enumDesc));
-        enumMethods = enumMethods.addHashEntry(generateEnumToJson(fullName, enumDesc));
-        hasEnumMethods = true;
-      }
+      options
     );
-
-    if (hasEnumMethods) {
-      file = file.addCode(enumMethods.endHash());
-    }
   }
 
   visitServices(fileDesc, sourceInfo, (serviceDesc, sInfo) => {
@@ -295,21 +276,39 @@ function addTimestampMethods(file: FileSpec, options: Options): FileSpec {
     );
 }
 
-function generateEnum(fullName: string, enumDesc: EnumDescriptorProto, sourceInfo: SourceInfo): EnumSpec {
-  let spec = EnumSpec.create(fullName).addModifiers(Modifier.EXPORT);
-  maybeAddComment(sourceInfo, text => (spec = spec.addJavadoc(text)));
+function generateEnum(
+  options: Options,
+  fullName: string,
+  enumDesc: EnumDescriptorProto,
+  sourceInfo: SourceInfo
+): CodeBlock {
+  let code = CodeBlock.empty();
+  maybeAddComment(sourceInfo, text => (code = code.add(`/** %L */\n`, text)));
+  code = code.beginControlFlow('export const %L =', fullName);
 
   let index = 0;
   for (const valueDesc of enumDesc.value) {
     const info = sourceInfo.lookup(Fields.enum.value, index++);
-    maybeAddComment(info, text => (spec = spec.addJavadoc(`${valueDesc.name} - ${text}\n`)));
-    spec = spec.addConstant(valueDesc.name, valueDesc.number.toString());
+    maybeAddComment(info, text => (code = code.add(`/** ${valueDesc.name} - ${text} */\n`)));
+    code = code.add('%L: %L as %L,\n', valueDesc.name, valueDesc.number.toString(), fullName);
   }
-  return spec;
+
+  if (options.outputJsonMethods) {
+    code = code.addHashEntry(generateEnumFromJson(fullName, enumDesc));
+    code = code.addHashEntry(generateEnumToJson(fullName, enumDesc));
+  }
+
+  code = code.endControlFlow();
+  code = code.add('\n');
+
+  code = code.add('export type %L = %L;', fullName, enumDesc.value.map(v => v.number.toString()).join(' | '));
+  code = code.add('\n');
+
+  return code;
 }
 
 function generateEnumFromJson(fullName: string, enumDesc: EnumDescriptorProto): FunctionSpec {
-  let func = FunctionSpec.create(`${lowerFirst(fullName).replace('_', '')}FromJSON`)
+  let func = FunctionSpec.create('fromJSON')
     .addParameter('object', 'any')
     .returns(fullName);
   let body = CodeBlock.empty().beginControlFlow('switch (object)');
@@ -327,7 +326,7 @@ function generateEnumFromJson(fullName: string, enumDesc: EnumDescriptorProto): 
 }
 
 function generateEnumToJson(fullName: string, enumDesc: EnumDescriptorProto): FunctionSpec {
-  let func = FunctionSpec.create(`${lowerFirst(fullName).replace('_', '')}ToJSON`)
+  let func = FunctionSpec.create('toJSON')
     .addParameter('object', fullName)
     .returns('string');
   let body = CodeBlock.empty().beginControlFlow('switch (object)');
@@ -490,6 +489,8 @@ function generateDecode(
         } else {
           readSnippet = CodeBlock.of('longToNumber(%L as Long)', readSnippet);
         }
+      } else if (isEnum(field)) {
+        readSnippet = readSnippet.add(' as any');
       }
     } else if (isValueType(field)) {
       readSnippet = CodeBlock.of(
@@ -669,8 +670,7 @@ function generateFromJson(
     // get a generic 'reader.doSomething' bit that is specific to the basic type
     const readSnippet = (from: string): CodeBlock => {
       if (isEnum(field)) {
-        const [enumType, methodName] = enumTypeAndMethod(typeMap, field, 'FromJSON');
-        return CodeBlock.of('%T.%L(%L)', enumType, methodName, from);
+        return CodeBlock.of('%T.fromJSON(%L)', basicTypeName(typeMap, field, options), from);
       } else if (isPrimitive(field)) {
         // Convert primitives using the String(value)/Number(value) cstr, except for bytes
         if (isBytes(field)) {
@@ -766,8 +766,7 @@ function generateToJson(
 
     const readSnippet = (from: string): CodeBlock => {
       if (isEnum(field)) {
-        const [enumType, methodName] = enumTypeAndMethod(typeMap, field, 'ToJSON');
-        return CodeBlock.of('%T.%L(%L)', enumType, methodName, from);
+        return CodeBlock.of('%T.toJSON(%L)', basicTypeName(typeMap, field, options), from);
       } else if (isTimestamp(field)) {
         return CodeBlock.of('%L !== undefined ? %L.toISOString() : null', from, from);
       } else if (isMessage(field) && !isValueType(field) && !isMapType(typeMap, messageDesc, field, options)) {
@@ -1232,12 +1231,6 @@ function maybeSnakeToCamel(s: string, options: Options): string {
 
 function capitalize(s: string): string {
   return s.substring(0, 1).toUpperCase() + s.substring(1);
-}
-
-function enumTypeAndMethod(typeMap: TypeMap, field: FieldDescriptorProto, suffix: string): [TypeName, string] {
-  const [module, type] = toModuleAndType(typeMap, field.typeName);
-  const enumType = TypeNames.importedType(`Enums@./${module}`);
-  return [enumType, `${lowerFirst(type).replace('_', '')}${suffix}`];
 }
 
 function maybeCastToNumber(
