@@ -303,36 +303,6 @@ function longToNumber(long: Long) {
   return long.toNumber();
 }
 
-export namespace StateEnum {
-  export function fromJSON(object: any): StateEnum {
-    switch (object) {
-      case 0:
-      case "UNKNOWN":
-        return StateEnum.UNKNOWN;
-      case 2:
-      case "ON":
-        return StateEnum.ON;
-      case 3:
-      case "OFF":
-        return StateEnum.OFF;
-      default:
-        throw new global.Error(`Invalid value ${object}`);
-    }
-  }
-  export function toJSON(object: StateEnum): string {
-    switch (object) {
-      case StateEnum.UNKNOWN:
-        return "UNKNOWN";
-      case StateEnum.ON:
-        return "ON";
-      case StateEnum.OFF:
-        return "OFF";
-      default:
-        return "UNKNOWN";
-    }
-  }
-}
-
 export const Simple = {
   encode(message: Simple, writer: Writer = Writer.create()): Writer {
     writer.uint32(10).string(message.name);
@@ -453,7 +423,7 @@ export const Simple = {
       message.child = undefined;
     }
     if (object.state !== undefined && object.state !== null) {
-      message.state = StateEnum.fromJSON(object.state);
+      message.state = Enums.stateEnumFromJSON(object.state);
     } else {
       message.state = 0;
     }
@@ -474,7 +444,7 @@ export const Simple = {
     }
     if (object.old_states !== undefined && object.old_states !== null) {
       for (const e of object.old_states) {
-        message.old_states.push(StateEnum.fromJSON(e));
+        message.old_states.push(Enums.stateEnumFromJSON(e));
       }
     }
     if (object.thing !== undefined && object.thing !== null) {
@@ -548,7 +518,7 @@ export const Simple = {
     obj.age = message.age || 0;
     obj.created_at = message.created_at !== undefined ? message.created_at.toISOString() : null;
     obj.child = message.child ? Child.toJSON(message.child) : undefined;
-    obj.state = StateEnum.toJSON(message.state);
+    obj.state = Enums.stateEnumToJSON(message.state);
     if (message.grand_children) {
       obj.grand_children = message.grand_children.map(e => e ? Child.toJSON(e) : undefined);
     } else {
@@ -565,7 +535,7 @@ export const Simple = {
       obj.snacks = [];
     }
     if (message.old_states) {
-      obj.old_states = message.old_states.map(e => StateEnum.toJSON(e));
+      obj.old_states = message.old_states.map(e => Enums.stateEnumToJSON(e));
     } else {
       obj.old_states = [];
     }
@@ -607,7 +577,7 @@ export const Child = {
       message.name = "";
     }
     if (object.type !== undefined && object.type !== null) {
-      message.type = Child_Type.fromJSON(object.type);
+      message.type = Enums.childTypeFromJSON(object.type);
     } else {
       message.type = 0;
     }
@@ -630,40 +600,10 @@ export const Child = {
   toJSON(message: Child): unknown {
     const obj: any = {};
     obj.name = message.name || "";
-    obj.type = Child_Type.toJSON(message.type);
+    obj.type = Enums.childTypeToJSON(message.type);
     return obj;
   },
 };
-
-export namespace Child_Type {
-  export function fromJSON(object: any): Child_Type {
-    switch (object) {
-      case 0:
-      case "UNKNOWN":
-        return Child_Type.UNKNOWN;
-      case 1:
-      case "GOOD":
-        return Child_Type.GOOD;
-      case 2:
-      case "BAD":
-        return Child_Type.BAD;
-      default:
-        throw new global.Error(`Invalid value ${object}`);
-    }
-  }
-  export function toJSON(object: Child_Type): string {
-    switch (object) {
-      case Child_Type.UNKNOWN:
-        return "UNKNOWN";
-      case Child_Type.GOOD:
-        return "GOOD";
-      case Child_Type.BAD:
-        return "BAD";
-      default:
-        return "UNKNOWN";
-    }
-  }
-}
 
 export const Nested = {
   encode(message: Nested, writer: Writer = Writer.create()): Writer {
@@ -709,7 +649,7 @@ export const Nested = {
       message.message = undefined;
     }
     if (object.state !== undefined && object.state !== null) {
-      message.state = Nested_InnerEnum.fromJSON(object.state);
+      message.state = Enums.nestedInnerEnumFromJSON(object.state);
     } else {
       message.state = 0;
     }
@@ -738,40 +678,10 @@ export const Nested = {
     const obj: any = {};
     obj.name = message.name || "";
     obj.message = message.message ? Nested_InnerMessage.toJSON(message.message) : undefined;
-    obj.state = Nested_InnerEnum.toJSON(message.state);
+    obj.state = Enums.nestedInnerEnumToJSON(message.state);
     return obj;
   },
 };
-
-export namespace Nested_InnerEnum {
-  export function fromJSON(object: any): Nested_InnerEnum {
-    switch (object) {
-      case 0:
-      case "UNKNOWN_INNER":
-        return Nested_InnerEnum.UNKNOWN_INNER;
-      case 100:
-      case "GOOD":
-        return Nested_InnerEnum.GOOD;
-      case 1000:
-      case "BAD":
-        return Nested_InnerEnum.BAD;
-      default:
-        throw new global.Error(`Invalid value ${object}`);
-    }
-  }
-  export function toJSON(object: Nested_InnerEnum): string {
-    switch (object) {
-      case Nested_InnerEnum.UNKNOWN_INNER:
-        return "UNKNOWN_INNER";
-      case Nested_InnerEnum.GOOD:
-        return "GOOD";
-      case Nested_InnerEnum.BAD:
-        return "BAD";
-      default:
-        return "UNKNOWN";
-    }
-  }
-}
 
 export const Nested_InnerMessage = {
   encode(message: Nested_InnerMessage, writer: Writer = Writer.create()): Writer {
@@ -1836,6 +1746,89 @@ export const Numbers = {
   },
 };
 
+export const Enums = {
+  stateEnumFromJSON(object: any): StateEnum {
+    switch (object) {
+      case 0:
+      case "UNKNOWN":
+        return StateEnum.UNKNOWN;
+      case 2:
+      case "ON":
+        return StateEnum.ON;
+      case 3:
+      case "OFF":
+        return StateEnum.OFF;
+      default:
+        throw new global.Error(`Invalid value ${object}`);
+    }
+  },
+  stateEnumToJSON(object: StateEnum): string {
+    switch (object) {
+      case StateEnum.UNKNOWN:
+        return "UNKNOWN";
+      case StateEnum.ON:
+        return "ON";
+      case StateEnum.OFF:
+        return "OFF";
+      default:
+        return "UNKNOWN";
+    }
+  },
+  childTypeFromJSON(object: any): Child_Type {
+    switch (object) {
+      case 0:
+      case "UNKNOWN":
+        return Child_Type.UNKNOWN;
+      case 1:
+      case "GOOD":
+        return Child_Type.GOOD;
+      case 2:
+      case "BAD":
+        return Child_Type.BAD;
+      default:
+        throw new global.Error(`Invalid value ${object}`);
+    }
+  },
+  childTypeToJSON(object: Child_Type): string {
+    switch (object) {
+      case Child_Type.UNKNOWN:
+        return "UNKNOWN";
+      case Child_Type.GOOD:
+        return "GOOD";
+      case Child_Type.BAD:
+        return "BAD";
+      default:
+        return "UNKNOWN";
+    }
+  },
+  nestedInnerEnumFromJSON(object: any): Nested_InnerEnum {
+    switch (object) {
+      case 0:
+      case "UNKNOWN_INNER":
+        return Nested_InnerEnum.UNKNOWN_INNER;
+      case 100:
+      case "GOOD":
+        return Nested_InnerEnum.GOOD;
+      case 1000:
+      case "BAD":
+        return Nested_InnerEnum.BAD;
+      default:
+        throw new global.Error(`Invalid value ${object}`);
+    }
+  },
+  nestedInnerEnumToJSON(object: Nested_InnerEnum): string {
+    switch (object) {
+      case Nested_InnerEnum.UNKNOWN_INNER:
+        return "UNKNOWN_INNER";
+      case Nested_InnerEnum.GOOD:
+        return "GOOD";
+      case Nested_InnerEnum.BAD:
+        return "BAD";
+      default:
+        return "UNKNOWN";
+    }
+  },
+}
 type DeepPartial<T> = {
   [P in keyof T]?: T[P] extends Array<infer U>
   ? Array<DeepPartial<U>>

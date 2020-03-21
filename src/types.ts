@@ -292,7 +292,7 @@ export function messageToTypeName(typeMap: TypeMap, protoType: string, keepValue
 }
 
 /** Breaks `.some_proto_namespace.Some.Message` into `['some_proto_namespace', 'Some_Message', Descriptor]. */
-function toModuleAndType(typeMap: TypeMap, protoType: string): [string, string, DescriptorProto | EnumDescriptorProto] {
+export function toModuleAndType(typeMap: TypeMap, protoType: string): [string, string, DescriptorProto | EnumDescriptorProto] {
   return typeMap.get(protoType) || fail(`No type found for ${protoType}`);
 }
 
