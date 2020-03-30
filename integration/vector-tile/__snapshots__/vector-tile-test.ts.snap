@@ -114,7 +114,7 @@ export const Tile_GeomType = {
   },
 }
 
-export type Tile_GeomType = 0 | 1 | 2 | 3;
+export type Tile_GeomType = 0 | 1 | 2 | 3 | -1;
 
 export const Tile = {
   encode(message: Tile, writer: Writer = Writer.create()): Writer {

@@ -305,7 +305,8 @@ function generateEnum(
   code = code.endControlFlow();
   code = code.add('\n');
 
-  code = code.add('export type %L = %L;', fullName, enumDesc.value.map(v => v.number.toString()).join(' | '));
+  const enumTypes = [...enumDesc.value.map(v => v.number.toString()), UNRECOGNIZED_ENUM_VALUE.toString()];
+  code = code.add('export type %L = %L;', fullName, enumTypes.join(' | '));
   code = code.add('\n');
 
   return code;

@@ -321,7 +321,7 @@ export const StateEnum = {
   },
 }
 
-export type StateEnum = 0 | 2 | 3;
+export type StateEnum = 0 | 2 | 3 | -1;
 
 export const Child_Type = {
   UNKNOWN: 0 as Child_Type,
@@ -359,7 +359,7 @@ export const Child_Type = {
   },
 }
 
-export type Child_Type = 0 | 1 | 2;
+export type Child_Type = 0 | 1 | 2 | -1;
 
 export const Nested_InnerEnum = {
   UNKNOWN_INNER: 0 as Nested_InnerEnum,
@@ -397,7 +397,7 @@ export const Nested_InnerEnum = {
   },
 }
 
-export type Nested_InnerEnum = 0 | 100 | 1000;
+export type Nested_InnerEnum = 0 | 100 | 1000 | -1;
 
 export const Simple = {
   encode(message: Simple, writer: Writer = Writer.create()): Writer {
