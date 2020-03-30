@@ -286,6 +286,7 @@ export const StateEnum = {
   UNKNOWN: 0 as StateEnum,
   ON: 2 as StateEnum,
   OFF: 3 as StateEnum,
+  UNRECOGNIZED: -1 as StateEnum,
   fromJSON(object: any): StateEnum {
     switch (object) {
       case 0:
@@ -297,8 +298,10 @@ export const StateEnum = {
       case 3:
       case "OFF":
         return StateEnum.OFF;
+      case -1:
+      case "UNRECOGNIZED":
       default:
-        throw new global.Error(`Invalid value ${object}`);
+        return StateEnum.UNRECOGNIZED;
     }
   },
   toJSON(object: StateEnum): string {
@@ -315,12 +318,13 @@ export const StateEnum = {
   },
 }
 
-export type StateEnum = 0 | 2 | 3;
+export type StateEnum = 0 | 2 | 3 | -1;
 
 export const Child_Type = {
   UNKNOWN: 0 as Child_Type,
   GOOD: 1 as Child_Type,
   BAD: 2 as Child_Type,
+  UNRECOGNIZED: -1 as Child_Type,
   fromJSON(object: any): Child_Type {
     switch (object) {
       case 0:
@@ -332,8 +336,10 @@ export const Child_Type = {
       case 2:
       case "BAD":
         return Child_Type.BAD;
+      case -1:
+      case "UNRECOGNIZED":
       default:
-        throw new global.Error(`Invalid value ${object}`);
+        return Child_Type.UNRECOGNIZED;
     }
   },
   toJSON(object: Child_Type): string {
@@ -350,12 +356,13 @@ export const Child_Type = {
   },
 }
 
-export type Child_Type = 0 | 1 | 2;
+export type Child_Type = 0 | 1 | 2 | -1;
 
 export const Nested_InnerEnum = {
   UNKNOWN_INNER: 0 as Nested_InnerEnum,
   GOOD: 100 as Nested_InnerEnum,
   BAD: 1000 as Nested_InnerEnum,
+  UNRECOGNIZED: -1 as Nested_InnerEnum,
   fromJSON(object: any): Nested_InnerEnum {
     switch (object) {
       case 0:
@@ -367,8 +374,10 @@ export const Nested_InnerEnum = {
       case 1000:
       case "BAD":
         return Nested_InnerEnum.BAD;
+      case -1:
+      case "UNRECOGNIZED":
       default:
-        throw new global.Error(`Invalid value ${object}`);
+        return Nested_InnerEnum.UNRECOGNIZED;
     }
   },
   toJSON(object: Nested_InnerEnum): string {
@@ -385,7 +394,7 @@ export const Nested_InnerEnum = {
   },
 }
 
-export type Nested_InnerEnum = 0 | 100 | 1000;
+export type Nested_InnerEnum = 0 | 100 | 1000 | -1;
 
 export const Simple = {
   encode(message: Simple, writer: Writer = Writer.create()): Writer {

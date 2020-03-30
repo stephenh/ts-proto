@@ -45,18 +45,18 @@ describe('simple json', () => {
     expect(s2.state).toEqual(StateEnum.ON);
   });
 
-  it('fails decode json with invalid numeric enum values', () => {
+  it('can decode json with unrecognized numeric enum values', () => {
     // given state is mapped as 1, which is not a valid numeric value
     const s1 = { state: 1 };
-    // then we fail fast
-    expect(() => Simple.fromJSON(s1)).toThrow('Invalid value 1');
+    // then we decode to UNRECOGNIZED
+    expect(Simple.fromJSON(s1).state).toEqual(StateEnum.UNRECOGNIZED);
   });
 
-  it('fails decode json with invalid string enum values', () => {
+  it('can decode json with unrecognized string enum values', () => {
     // given state is mapped as an invalid string
     const s1 = { state: 'INVALID' };
     // then we fail fast
-    expect(() => Simple.fromJSON(s1)).toThrow('Invalid value INVALID');
+    expect(Simple.fromJSON(s1).state).toEqual(StateEnum.UNRECOGNIZED);
   });
 
   it('can decode nested enums', () => {

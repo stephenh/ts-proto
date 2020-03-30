@@ -276,6 +276,9 @@ function addTimestampMethods(file: FileSpec, options: Options): FileSpec {
     );
 }
 
+const UNRECOGNIZED_ENUM_NAME = "UNRECOGNIZED";
+const UNRECOGNIZED_ENUM_VALUE = -1;
+
 function generateEnum(
   options: Options,
   fullName: string,
@@ -292,6 +295,7 @@ function generateEnum(
     maybeAddComment(info, text => (code = code.add(`/** ${valueDesc.name} - ${text} */\n`)));
     code = code.add('%L: %L as %L,\n', valueDesc.name, valueDesc.number.toString(), fullName);
   }
+  code = code.add('%L: %L as %L,\n', UNRECOGNIZED_ENUM_NAME, UNRECOGNIZED_ENUM_VALUE.toString(), fullName);
 
   if (options.outputJsonMethods) {
     code = code.addHashEntry(generateEnumFromJson(fullName, enumDesc));
@@ -301,7 +305,8 @@ function generateEnum(
   code = code.endControlFlow();
   code = code.add('\n');
 
-  code = code.add('export type %L = %L;', fullName, enumDesc.value.map(v => v.number.toString()).join(' | '));
+  const enumTypes = [...enumDesc.value.map(v => v.number.toString()), UNRECOGNIZED_ENUM_VALUE.toString()];
+  code = code.add('export type %L = %L;', fullName, enumTypes.join(' | '));
   code = code.add('\n');
 
   return code;
@@ -319,8 +324,10 @@ function generateEnumFromJson(fullName: string, enumDesc: EnumDescriptorProto): 
       .addStatement('return %L.%L%<', fullName, valueDesc.name);
   }
   body = body
+    .add('case %L:\n', UNRECOGNIZED_ENUM_VALUE)
+    .add('case %S:\n', UNRECOGNIZED_ENUM_NAME)
     .add('default:%>\n')
-    .addStatement('throw new global.Error(`Invalid value ${object}`)%<')
+    .addStatement('return %L.%L%<', fullName, UNRECOGNIZED_ENUM_NAME)
     .endControlFlow();
   return func.addCodeBlock(body);
 }
