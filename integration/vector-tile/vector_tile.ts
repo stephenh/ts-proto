@@ -74,6 +74,7 @@ export const Tile_GeomType = {
   POINT: 1 as Tile_GeomType,
   LINESTRING: 2 as Tile_GeomType,
   POLYGON: 3 as Tile_GeomType,
+  UNRECOGNIZED: -1 as Tile_GeomType,
   fromJSON(object: any): Tile_GeomType {
     switch (object) {
       case 0:
@@ -88,8 +89,10 @@ export const Tile_GeomType = {
       case 3:
       case "POLYGON":
         return Tile_GeomType.POLYGON;
+      case -1:
+      case "UNRECOGNIZED":
       default:
-        throw new global.Error(`Invalid value ${object}`);
+        return Tile_GeomType.UNRECOGNIZED;
     }
   },
   toJSON(object: Tile_GeomType): string {
