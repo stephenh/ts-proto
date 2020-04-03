@@ -43,6 +43,8 @@ export function optionsFromParameter(parameter: string): Options {
     outputEncodeMethods: true,
     outputJsonMethods: true,
     outputClientImpl: true,
+    returnObservable: false,
+    useMetadata: false
   };
 
   if (parameter) {
@@ -66,6 +68,12 @@ export function optionsFromParameter(parameter: string): Options {
     }
     if (parameter.includes('outputClientImpl=false')) {
       options.outputClientImpl = false;
+    }
+    if (parameter.includes('useMetadata=true')) {
+      options.useMetadata = true;
+    }
+    if (parameter.includes('returnObservable=true')) {
+      options.returnObservable = true;
     }
   }
   return options;

@@ -58,6 +58,8 @@ export type Options = {
   outputEncodeMethods: boolean;
   outputJsonMethods: boolean;
   outputClientImpl: boolean;
+  useMetadata: boolean;
+  returnObservable: boolean;
 };
 
 export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, parameter: string): FileSpec {
@@ -975,7 +977,19 @@ function generateService(
     maybeAddComment(info, text => (requestFn = requestFn.addJavadoc(text)));
 
     requestFn = requestFn.addParameter('request', requestType(typeMap, methodDesc));
-    requestFn = requestFn.returns(responsePromise(typeMap, methodDesc));
+
+    // Use metadata as last argument for interface only configuration
+    if (!options.outputClientImpl && !options.outputEncodeMethods && !options.outputJsonMethods && options.useMetadata) {
+      requestFn = requestFn.addParameter('metadata', "Metadata@grpc");
+    }
+
+    // Return observable for interface only configuration and passing returnObservable=true
+    if (!options.outputClientImpl && !options.outputEncodeMethods && !options.outputJsonMethods && options.returnObservable) {
+      requestFn = requestFn.returns(responseObservable(typeMap, methodDesc));
+    } else {
+      requestFn = requestFn.returns(responsePromise(typeMap, methodDesc));
+    }
+
     service = service.addFunction(requestFn);
 
     if (options.useContext) {
@@ -1257,6 +1271,10 @@ function responseType(typeMap: TypeMap, methodDesc: MethodDescriptorProto): Type
 
 function responsePromise(typeMap: TypeMap, methodDesc: MethodDescriptorProto): TypeName {
   return TypeNames.PROMISE.param(responseType(typeMap, methodDesc));
+}
+
+function responseObservable(typeMap: TypeMap, methodDesc: MethodDescriptorProto): TypeName {
+  return TypeNames.anyType("Observable@rxjs").param(responseType(typeMap, methodDesc));
 }
 
 // function generateOneOfProperty(typeMap: TypeMap, name: string, fields: FieldDescriptorProto[]): PropertySpec {
