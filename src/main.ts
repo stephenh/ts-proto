@@ -986,7 +986,7 @@ function generateService(
 
     // Use metadata as last argument for interface only configuration
     if (!options.outputClientImpl && !options.outputEncodeMethods && !options.outputJsonMethods && options.addGrpcMetadata) {
-      requestFn = requestFn.addParameter('metadata', "Metadata@grpc");
+      requestFn = requestFn.addParameter('metadata?', "Metadata@grpc");
     }
 
     // Return observable for interface only configuration and passing returnObservable=true
