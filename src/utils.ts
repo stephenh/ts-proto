@@ -44,7 +44,8 @@ export function optionsFromParameter(parameter: string): Options {
     outputJsonMethods: true,
     outputClientImpl: true,
     returnObservable: false,
-    addGrpcMetadata: false
+    addGrpcMetadata: false,
+    camelCaseMethodNames: false,
   };
 
   if (parameter) {
@@ -74,6 +75,9 @@ export function optionsFromParameter(parameter: string): Options {
     }
     if (parameter.includes('returnObservable=true')) {
       options.returnObservable = true;
+    }
+    if (parameter.includes('camelCaseMethodNames=true')) {
+      options.camelCaseMethodNames = true;
     }
   }
   return options;

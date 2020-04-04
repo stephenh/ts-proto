@@ -60,6 +60,7 @@ export type Options = {
   outputClientImpl: boolean;
   addGrpcMetadata: boolean;
   returnObservable: boolean;
+  camelCaseMethodNames: boolean;
 };
 
 export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, parameter: string): FileSpec {
@@ -927,6 +928,11 @@ function generateService(
 
   let index = 0;
   for (const methodDesc of serviceDesc.method) {
+
+    if (options.camelCaseMethodNames) {
+      methodDesc.name = camelCase(methodDesc.name)
+    }
+
     let requestFn = FunctionSpec.create(methodDesc.name);
     if (options.useContext) {
       requestFn = requestFn.addParameter('ctx', TypeNames.typeVariable('Context'));
@@ -990,6 +996,7 @@ function generateRegularRpcMethod(
   serviceDesc: google.protobuf.ServiceDescriptorProto,
   methodDesc: google.protobuf.MethodDescriptorProto
 ) {
+
   let requestFn = FunctionSpec.create(methodDesc.name);
   if (options.useContext) {
     requestFn = requestFn.addParameter('ctx', TypeNames.typeVariable('Context'));
@@ -1256,6 +1263,10 @@ function maybeSnakeToCamel(s: string, options: Options): string {
 
 function capitalize(s: string): string {
   return s.substring(0, 1).toUpperCase() + s.substring(1);
+}
+
+function camelCase(s: string): string {
+  return s.substring(0, 1).toLowerCase() + s.substring(1);
 }
 
 function maybeCastToNumber(
