@@ -44,7 +44,7 @@ export function optionsFromParameter(parameter: string): Options {
     outputJsonMethods: true,
     outputClientImpl: true,
     returnObservable: false,
-    useMetadata: false
+    addGrpcMetadata: false
   };
 
   if (parameter) {
@@ -69,8 +69,8 @@ export function optionsFromParameter(parameter: string): Options {
     if (parameter.includes('outputClientImpl=false')) {
       options.outputClientImpl = false;
     }
-    if (parameter.includes('useMetadata=true')) {
-      options.useMetadata = true;
+    if (parameter.includes('addGrpcMetadata=true')) {
+      options.addGrpcMetadata = true;
     }
     if (parameter.includes('returnObservable=true')) {
       options.returnObservable = true;
