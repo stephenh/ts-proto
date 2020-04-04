@@ -58,7 +58,7 @@ export type Options = {
   outputEncodeMethods: boolean;
   outputJsonMethods: boolean;
   outputClientImpl: boolean;
-  useMetadata: boolean;
+  addGrpcMetadata: boolean;
   returnObservable: boolean;
 };
 
@@ -937,7 +937,7 @@ function generateService(
     requestFn = requestFn.addParameter('request', requestType(typeMap, methodDesc));
 
     // Use metadata as last argument for interface only configuration
-    if (!options.outputClientImpl && !options.outputEncodeMethods && !options.outputJsonMethods && options.useMetadata) {
+    if (!options.outputClientImpl && !options.outputEncodeMethods && !options.outputJsonMethods && options.addGrpcMetadata) {
       requestFn = requestFn.addParameter('metadata', "Metadata@grpc");
     }
 
