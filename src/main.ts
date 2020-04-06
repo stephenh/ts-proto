@@ -276,7 +276,7 @@ function addTimestampMethods(file: FileSpec, options: Options): FileSpec {
     );
 }
 
-const UNRECOGNIZED_ENUM_NAME = "UNRECOGNIZED";
+const UNRECOGNIZED_ENUM_NAME = 'UNRECOGNIZED';
 const UNRECOGNIZED_ENUM_VALUE = -1;
 
 function generateEnum(
@@ -293,9 +293,9 @@ function generateEnum(
   for (const valueDesc of enumDesc.value) {
     const info = sourceInfo.lookup(Fields.enum.value, index++);
     maybeAddComment(info, text => (code = code.add(`/** ${valueDesc.name} - ${text} */\n`)));
-    code = code.add('%L: %L as %L,\n', valueDesc.name, valueDesc.number.toString(), fullName);
+    code = code.add('%L: %L as const,\n', valueDesc.name, valueDesc.number.toString());
   }
-  code = code.add('%L: %L as %L,\n', UNRECOGNIZED_ENUM_NAME, UNRECOGNIZED_ENUM_VALUE.toString(), fullName);
+  code = code.add('%L: %L as const,\n', UNRECOGNIZED_ENUM_NAME, UNRECOGNIZED_ENUM_VALUE.toString());
 
   if (options.outputJsonMethods) {
     code = code.addHashEntry(generateEnumFromJson(fullName, enumDesc));
