@@ -283,10 +283,10 @@ function longToString(long: Long) {
 }
 
 export const StateEnum = {
-  UNKNOWN: 0 as StateEnum,
-  ON: 2 as StateEnum,
-  OFF: 3 as StateEnum,
-  UNRECOGNIZED: -1 as StateEnum,
+  UNKNOWN: 0 as const,
+  ON: 2 as const,
+  OFF: 3 as const,
+  UNRECOGNIZED: -1 as const,
   fromJSON(object: any): StateEnum {
     switch (object) {
       case 0:
@@ -321,10 +321,10 @@ export const StateEnum = {
 export type StateEnum = 0 | 2 | 3 | -1;
 
 export const Child_Type = {
-  UNKNOWN: 0 as Child_Type,
-  GOOD: 1 as Child_Type,
-  BAD: 2 as Child_Type,
-  UNRECOGNIZED: -1 as Child_Type,
+  UNKNOWN: 0 as const,
+  GOOD: 1 as const,
+  BAD: 2 as const,
+  UNRECOGNIZED: -1 as const,
   fromJSON(object: any): Child_Type {
     switch (object) {
       case 0:
@@ -359,10 +359,10 @@ export const Child_Type = {
 export type Child_Type = 0 | 1 | 2 | -1;
 
 export const Nested_InnerEnum = {
-  UNKNOWN_INNER: 0 as Nested_InnerEnum,
-  GOOD: 100 as Nested_InnerEnum,
-  BAD: 1000 as Nested_InnerEnum,
-  UNRECOGNIZED: -1 as Nested_InnerEnum,
+  UNKNOWN_INNER: 0 as const,
+  GOOD: 100 as const,
+  BAD: 1000 as const,
+  UNRECOGNIZED: -1 as const,
   fromJSON(object: any): Nested_InnerEnum {
     switch (object) {
       case 0:
