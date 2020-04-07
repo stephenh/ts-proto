@@ -70,11 +70,11 @@ function longToNumber(long: Long) {
 }
 
 export const Tile_GeomType = {
-  UNKNOWN: 0 as Tile_GeomType,
-  POINT: 1 as Tile_GeomType,
-  LINESTRING: 2 as Tile_GeomType,
-  POLYGON: 3 as Tile_GeomType,
-  UNRECOGNIZED: -1 as Tile_GeomType,
+  UNKNOWN: 0 as const,
+  POINT: 1 as const,
+  LINESTRING: 2 as const,
+  POLYGON: 3 as const,
+  UNRECOGNIZED: -1 as const,
   fromJSON(object: any): Tile_GeomType {
     switch (object) {
       case 0:
