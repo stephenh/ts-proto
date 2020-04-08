@@ -4,7 +4,7 @@ shopt -s globstar
 # To avoid running the protoc pipeline all the time, we capture the incoming Plugin
 # proto requests into .bin files that then unit tests can pull in directly as needed.
 
-for file in **/*.proto; do
+for file in simple/simple.proto; do
   echo "${file}"
   # Strip the longest suffix starting at the 1st slash
   dir="${file%%/*}"

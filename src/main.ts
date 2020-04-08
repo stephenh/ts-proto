@@ -205,21 +205,18 @@ function addLongUtilityMethod(file: FileSpec, options: Options): FileSpec {
 }
 
 function addDeepPartialType(file: FileSpec): FileSpec {
+  // Based on the type from ts-essentials
   return file.addCode(
-    CodeBlock.empty()
-      .add('type DeepPartial<T> = {%>\n')
-      .add('[P in keyof T]?: T[P] extends Array<infer U>\n')
-      .add('? Array<DeepPartial<U>>\n')
-      .add(': T[P] extends ReadonlyArray<infer U>\n')
-      .add('? ReadonlyArray<DeepPartial<U>>\n')
-      .add(': T[P] extends Date | Function | Uint8Array | undefined\n')
-      .add('? T[P]\n')
-      .add(': T[P] extends infer U | undefined\n')
-      .add('? DeepPartial<U>\n')
-      .add(': T[P] extends object\n')
-      .add('? DeepPartial<T[P]>\n')
-      .add(': T[P]\n%<')
-      .add('};')
+    CodeBlock.empty().add(`type Builtin = Date | Function | Uint8Array | string | number | undefined;
+type DeepPartial<T> = T extends Builtin
+  ? T
+  : T extends Array<infer U>
+  ? Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U>
+  ? ReadonlyArray<DeepPartial<U>>
+  : T extends {}
+  ? { [K in keyof T]?: DeepPartial<T[K]> }
+  : Partial<T>;`)
   );
 }
 

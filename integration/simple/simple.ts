@@ -32,6 +32,7 @@ export interface Simple {
    *  A thing (imported from thing)
    */
   thing: ImportedThing | undefined;
+  blobs: Uint8Array[];
 }
 
 export interface Child {
@@ -138,6 +139,7 @@ const baseSimple: object = {
   snacks: "",
   oldStates: 0,
   thing: undefined,
+  blobs: undefined,
 };
 
 const baseChild: object = {
@@ -429,6 +431,9 @@ export const Simple = {
     if (message.thing !== undefined && message.thing !== undefined) {
       ImportedThing.encode(message.thing, writer.uint32(82).fork()).ldelim();
     }
+    for (const v of message.blobs) {
+      writer.uint32(90).bytes(v!);
+    }
     return writer;
   },
   decode(reader: Reader, length?: number): Simple {
@@ -438,6 +443,7 @@ export const Simple = {
     message.coins = [];
     message.snacks = [];
     message.oldStates = [];
+    message.blobs = [];
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -485,6 +491,9 @@ export const Simple = {
         case 10:
           message.thing = ImportedThing.decode(reader, reader.uint32());
           break;
+        case 11:
+          message.blobs.push(reader.bytes());
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -498,6 +507,7 @@ export const Simple = {
     message.coins = [];
     message.snacks = [];
     message.oldStates = [];
+    message.blobs = [];
     if (object.name !== undefined && object.name !== null) {
       message.name = String(object.name);
     } else {
@@ -548,6 +558,11 @@ export const Simple = {
     } else {
       message.thing = undefined;
     }
+    if (object.blobs !== undefined && object.blobs !== null) {
+      for (const e of object.blobs) {
+        message.blobs.push(e);
+      }
+    }
     return message;
   },
   fromPartial(object: DeepPartial<Simple>): Simple {
@@ -556,6 +571,7 @@ export const Simple = {
     message.coins = [];
     message.snacks = [];
     message.oldStates = [];
+    message.blobs = [];
     if (object.name !== undefined && object.name !== null) {
       message.name = object.name;
     } else {
@@ -606,6 +622,11 @@ export const Simple = {
     } else {
       message.thing = undefined;
     }
+    if (object.blobs !== undefined && object.blobs !== null) {
+      for (const e of object.blobs) {
+        message.blobs.push(e);
+      }
+    }
     return message;
   },
   toJSON(message: Simple): unknown {
@@ -636,6 +657,11 @@ export const Simple = {
       obj.oldStates = [];
     }
     obj.thing = message.thing ? ImportedThing.toJSON(message.thing) : undefined;
+    if (message.blobs) {
+      obj.blobs = message.blobs.map(e => e || undefined);
+    } else {
+      obj.blobs = [];
+    }
     return obj;
   },
 };
@@ -1842,16 +1868,13 @@ export const Numbers = {
   },
 };
 
-type DeepPartial<T> = {
-  [P in keyof T]?: T[P] extends Array<infer U>
+type Builtin = Date | Function | Uint8Array | string | number | undefined;
+type DeepPartial<T> = T extends Builtin
+  ? T
+  : T extends Array<infer U>
   ? Array<DeepPartial<U>>
-  : T[P] extends ReadonlyArray<infer U>
+  : T extends ReadonlyArray<infer U>
   ? ReadonlyArray<DeepPartial<U>>
-  : T[P] extends Date | Function | Uint8Array | undefined
-  ? T[P]
-  : T[P] extends infer U | undefined
-  ? DeepPartial<U>
-  : T[P] extends object
-  ? DeepPartial<T[P]>
-  : T[P]
-};
+  : T extends {}
+  ? { [K in keyof T]?: DeepPartial<T[K]> }
+  : Partial<T>;
