@@ -169,8 +169,7 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
   ) {
     file = addLongUtilityMethod(file, options);
   }
-  if (initialOutput.includes('bytesFromBase64') ||
-      initialOutput.includes('base64FromBytes')) {
+  if (initialOutput.includes('bytesFromBase64') || initialOutput.includes('base64FromBytes')) {
     file = addBytesUtilityMethods(file, options);
   }
   if (initialOutput.includes('DeepPartial')) {
@@ -209,7 +208,8 @@ function addLongUtilityMethod(file: FileSpec, options: Options): FileSpec {
 }
 
 function addBytesUtilityMethods(file: FileSpec, options: Options): FileSpec {
-  return file.addCode(CodeBlock.of(`interface WindowBase64 {
+  return file.addCode(
+    CodeBlock.of(`interface WindowBase64 {
   atob(b64: string): string;
   btoa(bin: string): string;
 }
@@ -233,7 +233,8 @@ function base64FromBytes(arr: Uint8Array): string {
     bin.push(String.fromCharCode(arr[i]));
   }
   return btoa(bin.join(''));
-}`));
+}`)
+  );
 }
 
 function addDeepPartialType(file: FileSpec): FileSpec {
@@ -266,8 +267,7 @@ function addTimestampMethods(file: FileSpec, options: Options): FileSpec {
   }
 
   if (options.outputJsonMethods) {
-    file
-    .addFunction(
+    file = file.addFunction(
       FunctionSpec.create('fromJsonTimestamp')
         .addParameter('o', 'any')
         .returns('Date')
@@ -822,7 +822,8 @@ function generateToJson(
           '%L !== undefined ? base64FromBytes(%L) : %L',
           from,
           from,
-          isWithinOneOf(field) ? 'undefined' : defaultValue(field.type, options));
+          isWithinOneOf(field) ? 'undefined' : defaultValue(field.type, options)
+        );
       } else if (isLong(field) && options.forceLong === LongOption.LONG) {
         return CodeBlock.of(
           '(%L || %L).toString()',
