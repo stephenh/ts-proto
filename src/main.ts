@@ -169,6 +169,10 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
   ) {
     file = addLongUtilityMethod(file, options);
   }
+  if (initialOutput.includes('bytesFromBase64') ||
+      initialOutput.includes('base64FromBytes')) {
+    file = addBytesUtilityMethods(file, options);
+  }
   if (initialOutput.includes('DeepPartial')) {
     file = addDeepPartialType(file);
   }
@@ -202,6 +206,34 @@ function addLongUtilityMethod(file: FileSpec, options: Options): FileSpec {
         )
     );
   }
+}
+
+function addBytesUtilityMethods(file: FileSpec, options: Options): FileSpec {
+  return file.addCode(CodeBlock.of(`interface WindowBase64 {
+  atob(b64: string): string;
+  btoa(bin: string): string;
+}
+
+const windowBase64 = (globalThis as unknown as WindowBase64);
+const atob = windowBase64.atob || ((b64: string) => Buffer.from(b64, 'base64').toString('binary'));
+const btoa = windowBase64.btoa || ((bin: string) => Buffer.from(bin, 'binary').toString('base64'));
+
+function bytesFromBase64(b64: string): Uint8Array {
+  const bin = atob(b64);
+  const arr = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; ++i) {
+      arr[i] = bin.charCodeAt(i);
+  }
+  return arr;
+}
+
+function base64FromBytes(arr: Uint8Array): string {
+  const bin: string[] = [];
+  for (let i = 0; i < arr.byteLength; ++i) {
+    bin.push(String.fromCharCode(arr[i]));
+  }
+  return btoa(bin.join(''));
+}`));
 }
 
 function addDeepPartialType(file: FileSpec): FileSpec {
@@ -676,9 +708,9 @@ function generateFromJson(
       if (isEnum(field)) {
         return CodeBlock.of('%T.fromJSON(%L)', basicTypeName(typeMap, field, options), from);
       } else if (isPrimitive(field)) {
-        // Convert primitives using the String(value)/Number(value) cstr, except for bytes
+        // Convert primitives using the String(value)/Number(value)/bytesFromBase64(value)
         if (isBytes(field)) {
-          return CodeBlock.of('%L', from);
+          return CodeBlock.of('bytesFromBase64(%L)', from);
         } else if (isLong(field) && options.forceLong === LongOption.LONG) {
           const cstr = capitalize(basicTypeName(typeMap, field, options, true).toString());
           return CodeBlock.of('%L.fromString(%L)', cstr, from);
@@ -781,16 +813,20 @@ function generateToJson(
           from,
           defaultValue(field.type, options)
         );
+      } else if (isBytes(field)) {
+        return CodeBlock.of(
+          '%L !== undefined ? base64FromBytes(%L) : %L',
+          from,
+          from,
+          isWithinOneOf(field) ? 'undefined' : defaultValue(field.type, options));
+      } else if (isLong(field) && options.forceLong === LongOption.LONG) {
+        return CodeBlock.of(
+          '(%L || %L).toString()',
+          from,
+          isWithinOneOf(field) ? 'undefined' : defaultValue(field.type, options)
+        );
       } else {
-        if (isLong(field) && options.forceLong === LongOption.LONG) {
-          return CodeBlock.of(
-            '(%L || %L).toString()',
-            from,
-            isWithinOneOf(field) ? 'undefined' : defaultValue(field.type, options)
-          );
-        } else {
-          return CodeBlock.of('%L || %L', from, isWithinOneOf(field) ? 'undefined' : defaultValue(field.type, options));
-        }
+        return CodeBlock.of('%L || %L', from, isWithinOneOf(field) ? 'undefined' : defaultValue(field.type, options));
       }
     };
 
