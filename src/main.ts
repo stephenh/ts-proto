@@ -153,7 +153,7 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
     },
     options
   );
-  if (hasAnyTimestamps) {
+  if (hasAnyTimestamps && options.outputJsonMethods) {
     file = addTimestampMethods(file, options);
   }
 
