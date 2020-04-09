@@ -153,7 +153,7 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
     },
     options
   );
-  if (hasAnyTimestamps && options.outputJsonMethods) {
+  if (hasAnyTimestamps && (options.outputJsonMethods || options.outputEncodeMethods)) {
     file = addTimestampMethods(file, options);
   }
 
@@ -265,6 +265,25 @@ function addTimestampMethods(file: FileSpec, options: Options): FileSpec {
     secondsCodeLine = 'const seconds = (date.getTime() / 1_000).toString()';
   }
 
+  if (options.outputJsonMethods) {
+    file
+    .addFunction(
+      FunctionSpec.create('fromJsonTimestamp')
+        .addParameter('o', 'any')
+        .returns('Date')
+        .addCodeBlock(
+          CodeBlock.empty()
+            .beginControlFlow('if (o instanceof Date)')
+            .addStatement('return o')
+            .nextControlFlow('else if (typeof o === "string")')
+            .addStatement('return new Date(o)')
+            .nextControlFlow('else')
+            .addStatement('return fromTimestamp(Timestamp.fromJSON(o))')
+            .endControlFlow()
+        )
+    );
+  }
+
   return file
     .addFunction(
       FunctionSpec.create('toTimestamp')
@@ -286,21 +305,6 @@ function addTimestampMethods(file: FileSpec, options: Options): FileSpec {
             .addStatement('let millis = %L * 1_000', toNumberCode)
             .addStatement('millis += t.nanos / 1_000_000')
             .addStatement('return new Date(millis)')
-        )
-    )
-    .addFunction(
-      FunctionSpec.create('fromJsonTimestamp')
-        .addParameter('o', 'any')
-        .returns('Date')
-        .addCodeBlock(
-          CodeBlock.empty()
-            .beginControlFlow('if (o instanceof Date)')
-            .addStatement('return o')
-            .nextControlFlow('else if (typeof o === "string")')
-            .addStatement('return new Date(o)')
-            .nextControlFlow('else')
-            .addStatement('return fromTimestamp(Timestamp.fromJSON(o))')
-            .endControlFlow()
         )
     );
 }
