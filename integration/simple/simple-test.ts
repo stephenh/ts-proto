@@ -209,4 +209,10 @@ describe('simple', () => {
       }
     `);
   });
+
+  it('shows that enums are strongly typed', () => {
+    function mustBeOn(a: typeof StateEnum.ON) {}
+    // @ts-expect-error
+    mustBeOn(StateEnum.OFF);
+  });
 });
