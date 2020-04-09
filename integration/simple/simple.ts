@@ -560,7 +560,7 @@ export const Simple = {
     }
     if (object.blobs !== undefined && object.blobs !== null) {
       for (const e of object.blobs) {
-        message.blobs.push(e);
+        message.blobs.push(bytesFromBase64(e));
       }
     }
     return message;
@@ -658,7 +658,7 @@ export const Simple = {
     }
     obj.thing = message.thing ? ImportedThing.toJSON(message.thing) : undefined;
     if (message.blobs) {
-      obj.blobs = message.blobs.map(e => e || undefined);
+      obj.blobs = message.blobs.map(e => e !== undefined ? base64FromBytes(e) : undefined);
     } else {
       obj.blobs = [];
     }
@@ -1868,6 +1868,31 @@ export const Numbers = {
   },
 };
 
+interface WindowBase64 {
+  atob(b64: string): string;
+  btoa(bin: string): string;
+}
+
+const windowBase64 = (globalThis as unknown as WindowBase64);
+const atob = windowBase64.atob || ((b64: string) => Buffer.from(b64, 'base64').toString('binary'));
+const btoa = windowBase64.btoa || ((bin: string) => Buffer.from(bin, 'binary').toString('base64'));
+
+function bytesFromBase64(b64: string): Uint8Array {
+  const bin = atob(b64);
+  const arr = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; ++i) {
+      arr[i] = bin.charCodeAt(i);
+  }
+  return arr;
+}
+
+function base64FromBytes(arr: Uint8Array): string {
+  const bin: string[] = [];
+  for (let i = 0; i < arr.byteLength; ++i) {
+    bin.push(String.fromCharCode(arr[i]));
+  }
+  return btoa(bin.join(''));
+}
 type Builtin = Date | Function | Uint8Array | string | number | undefined;
 type DeepPartial<T> = T extends Builtin
   ? T
