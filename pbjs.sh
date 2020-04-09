@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Generates JS/TS objects of the protoc plugin descriptors with pbjs, which ts-proto
 # uses to understand the incoming protoc codegen request objects.

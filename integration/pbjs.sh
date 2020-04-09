@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # We generate pbjs files of our test files as known-good behavior for our test suite to use.
 #
