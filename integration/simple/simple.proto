@@ -120,3 +120,5 @@ message Numbers {
   sfixed32 sfixed32 = 11;
   sfixed64 sfixed64 = 12;
 }
+
+message Empty {}
