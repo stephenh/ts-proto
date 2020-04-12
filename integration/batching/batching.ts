@@ -566,7 +566,7 @@ export const WriteMethodRequest = {
 };
 
 export const WriteMethodResponse = {
-  encode(message: WriteMethodResponse, writer: Writer = Writer.create()): Writer {
+  encode(_: WriteMethodResponse, writer: Writer = Writer.create()): Writer {
     return writer;
   },
   decode(reader: Reader, length?: number): WriteMethodResponse {
@@ -582,15 +582,15 @@ export const WriteMethodResponse = {
     }
     return message;
   },
-  fromJSON(object: any): WriteMethodResponse {
+  fromJSON(_: any): WriteMethodResponse {
     const message = Object.create(baseWriteMethodResponse) as WriteMethodResponse;
     return message;
   },
-  fromPartial(object: DeepPartial<WriteMethodResponse>): WriteMethodResponse {
+  fromPartial(_: DeepPartial<WriteMethodResponse>): WriteMethodResponse {
     const message = Object.create(baseWriteMethodResponse) as WriteMethodResponse;
     return message;
   },
-  toJSON(message: WriteMethodResponse): unknown {
+  toJSON(_: WriteMethodResponse): unknown {
     const obj: any = {};
     return obj;
   },

@@ -597,7 +597,7 @@ function generateEncode(
 ): FunctionSpec {
   // create the basic function declaration
   let func = FunctionSpec.create('encode')
-    .addParameter('message', fullName)
+    .addParameter(messageDesc.field.length > 0 ? 'message' : '_', fullName)
     .addParameter('writer', 'Writer@protobufjs/minimal', { defaultValueField: CodeBlock.of('Writer.create()') })
     .returns('Writer@protobufjs/minimal');
   // then add a case for each field
@@ -691,7 +691,7 @@ function generateFromJson(
 ): FunctionSpec {
   // create the basic function declaration
   let func = FunctionSpec.create('fromJSON')
-    .addParameter('object', 'any')
+    .addParameter(messageDesc.field.length > 0 ? 'object' : '_', 'any')
     .returns(fullName);
 
   // create the message
@@ -797,7 +797,7 @@ function generateToJson(
 ): FunctionSpec {
   // create the basic function declaration
   let func = FunctionSpec.create('toJSON')
-    .addParameter('message', fullName)
+    .addParameter(messageDesc.field.length > 0 ? 'message' : '_', fullName)
     .returns('unknown');
   func = func.addCodeBlock(CodeBlock.empty().addStatement('const obj: any = {}'));
   // then add a case for each field
@@ -857,7 +857,7 @@ function generateFromPartial(
 ): FunctionSpec {
   // create the basic function declaration
   let func = FunctionSpec.create('fromPartial')
-    .addParameter('object', `DeepPartial<${fullName}>`)
+    .addParameter(messageDesc.field.length > 0 ? 'object' : '_', `DeepPartial<${fullName}>`)
     .returns(fullName);
 
   // create the message

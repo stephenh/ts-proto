@@ -63,7 +63,7 @@ export const Baz = {
 };
 
 export const FooBar = {
-  encode(message: FooBar, writer: Writer = Writer.create()): Writer {
+  encode(_: FooBar, writer: Writer = Writer.create()): Writer {
     return writer;
   },
   decode(reader: Reader, length?: number): FooBar {
@@ -79,15 +79,15 @@ export const FooBar = {
     }
     return message;
   },
-  fromJSON(object: any): FooBar {
+  fromJSON(_: any): FooBar {
     const message = Object.create(baseFooBar) as FooBar;
     return message;
   },
-  fromPartial(object: DeepPartial<FooBar>): FooBar {
+  fromPartial(_: DeepPartial<FooBar>): FooBar {
     const message = Object.create(baseFooBar) as FooBar;
     return message;
   },
-  toJSON(message: FooBar): unknown {
+  toJSON(_: FooBar): unknown {
     const obj: any = {};
     return obj;
   },

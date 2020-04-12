@@ -128,6 +128,9 @@ export interface Numbers {
   sfixed64: number;
 }
 
+export interface Empty {
+}
+
 const baseSimple: object = {
   name: "",
   age: 0,
@@ -228,6 +231,9 @@ const baseNumbers: object = {
   fixed64: 0,
   sfixed32: 0,
   sfixed64: 0,
+};
+
+const baseEmpty: object = {
 };
 
 export interface PingService {
@@ -1864,6 +1870,37 @@ export const Numbers = {
     obj.fixed64 = message.fixed64 || 0;
     obj.sfixed32 = message.sfixed32 || 0;
     obj.sfixed64 = message.sfixed64 || 0;
+    return obj;
+  },
+};
+
+export const Empty = {
+  encode(_: Empty, writer: Writer = Writer.create()): Writer {
+    return writer;
+  },
+  decode(reader: Reader, length?: number): Empty {
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = Object.create(baseEmpty) as Empty;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+  fromJSON(_: any): Empty {
+    const message = Object.create(baseEmpty) as Empty;
+    return message;
+  },
+  fromPartial(_: DeepPartial<Empty>): Empty {
+    const message = Object.create(baseEmpty) as Empty;
+    return message;
+  },
+  toJSON(_: Empty): unknown {
+    const obj: any = {};
     return obj;
   },
 };
