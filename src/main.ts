@@ -102,7 +102,7 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
       fileDesc,
       sourceInfo,
       (fullName, message) => {
-        file = file.addProperty(generateBaseInstance(fullName, message, options));
+        file = file.addProperty(generateBaseInstance(typeMap, fullName, message, options));
         let staticMethods = CodeBlock.empty()
           .add('export const %L = ', fullName)
           .beginHash();
@@ -140,7 +140,7 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
   if (options.outputClientImpl && fileDesc.service.length > 0) {
     file = file.addInterface(generateRpcType(options));
     if (options.useContext) {
-      file = file.addInterface(generateDataLoadersType(options));
+      file = file.addInterface(generateDataLoadersType());
     }
   }
 
@@ -170,7 +170,7 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
     file = addLongUtilityMethod(file, options);
   }
   if (initialOutput.includes('bytesFromBase64') || initialOutput.includes('base64FromBytes')) {
-    file = addBytesUtilityMethods(file, options);
+    file = addBytesUtilityMethods(file);
   }
   if (initialOutput.includes('DeepPartial')) {
     file = addDeepPartialType(file);
@@ -207,7 +207,7 @@ function addLongUtilityMethod(file: FileSpec, options: Options): FileSpec {
   }
 }
 
-function addBytesUtilityMethods(file: FileSpec, options: Options): FileSpec {
+function addBytesUtilityMethods(file: FileSpec): FileSpec {
   return file.addCode(
     CodeBlock.of(`interface WindowBase64 {
   atob(b64: string): string;
@@ -406,7 +406,7 @@ function generateInterfaceDeclaration(
   return message;
 }
 
-function generateBaseInstance(fullName: string, messageDesc: DescriptorProto, options: Options) {
+function generateBaseInstance(typeMap: TypeMap, fullName: string, messageDesc: DescriptorProto, options: Options) {
   // Create a 'base' instance with default values for decode to use as a prototype
   let baseMessage = PropertySpec.create('base' + fullName, TypeNames.anyType('object')).addModifiers(Modifier.CONST);
   let initialValue = CodeBlock.empty().beginHash();
@@ -415,7 +415,7 @@ function generateBaseInstance(fullName: string, messageDesc: DescriptorProto, op
     .forEach(field => {
       initialValue = initialValue.addHashEntry(
         maybeSnakeToCamel(field.name, options),
-        defaultValue(field.type, options)
+        defaultValue(typeMap, field, options)
       );
     });
   return baseMessage.initializerBlock(initialValue.endHash());
@@ -666,7 +666,7 @@ function generateEncode(
           'if (message.%L !== undefined && message.%L !== %L)',
           fieldName,
           fieldName,
-          defaultValue(field.type, options)
+          defaultValue(typeMap, field, options)
         )
         .addStatement('%L', writeSnippet(`message.${fieldName}`))
         .endControlFlow();
@@ -778,7 +778,7 @@ function generateFromJson(
       func = func.addStatement(
         `message.%L = %L`,
         fieldName,
-        isWithinOneOf(field) ? 'undefined' : defaultValue(field.type, options)
+        isWithinOneOf(field) ? 'undefined' : defaultValue(typeMap, field, options)
       );
     }
 
@@ -815,23 +815,27 @@ function generateToJson(
           from,
           basicTypeName(typeMap, field, options, true),
           from,
-          defaultValue(field.type, options)
+          defaultValue(typeMap, field, options)
         );
       } else if (isBytes(field)) {
         return CodeBlock.of(
           '%L !== undefined ? base64FromBytes(%L) : %L',
           from,
           from,
-          isWithinOneOf(field) ? 'undefined' : defaultValue(field.type, options)
+          isWithinOneOf(field) ? 'undefined' : defaultValue(typeMap, field, options)
         );
       } else if (isLong(field) && options.forceLong === LongOption.LONG) {
         return CodeBlock.of(
           '(%L || %L).toString()',
           from,
-          isWithinOneOf(field) ? 'undefined' : defaultValue(field.type, options)
+          isWithinOneOf(field) ? 'undefined' : defaultValue(typeMap, field, options)
         );
       } else {
-        return CodeBlock.of('%L || %L', from, isWithinOneOf(field) ? 'undefined' : defaultValue(field.type, options));
+        return CodeBlock.of(
+          '%L || %L',
+          from,
+          isWithinOneOf(field) ? 'undefined' : defaultValue(typeMap, field, options)
+        );
       }
     };
 
@@ -935,7 +939,7 @@ function generateFromPartial(
       func = func.addStatement(
         `message.%L = %L`,
         fieldName,
-        isWithinOneOf(field) ? 'undefined' : defaultValue(field.type, options)
+        isWithinOneOf(field) ? 'undefined' : defaultValue(typeMap, field, options)
       );
     }
 
@@ -1231,7 +1235,7 @@ function generateRpcType(options: Options): InterfaceSpec {
   return rpc;
 }
 
-function generateDataLoadersType(options: Options): InterfaceSpec {
+function generateDataLoadersType(): InterfaceSpec {
   // TODO Maybe should be a generic `Context.get<T>(id, () => T): T` method
   let fn = FunctionSpec.create('getDataLoader')
     .addTypeVariable(TypeNames.typeVariable('T'))

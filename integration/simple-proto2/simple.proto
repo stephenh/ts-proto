@@ -1,0 +1,11 @@
+syntax = "proto2";
+package simple;
+
+enum EnumWithoutZero {
+  A = 1;
+  B = 2;
+}
+
+message Issue56 {
+  required EnumWithoutZero test = 1;
+}

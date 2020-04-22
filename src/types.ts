@@ -160,17 +160,24 @@ export function packedType(type: FieldDescriptorProto.Type): number | undefined 
   }
 }
 
-export function defaultValue(type: FieldDescriptorProto.Type, options: Options): any {
-  switch (type) {
+export function defaultValue(typeMap: TypeMap, field: FieldDescriptorProto, options: Options): any {
+  switch (field.type) {
     case FieldDescriptorProto.Type.TYPE_DOUBLE:
     case FieldDescriptorProto.Type.TYPE_FLOAT:
     case FieldDescriptorProto.Type.TYPE_INT32:
-    case FieldDescriptorProto.Type.TYPE_ENUM:
     case FieldDescriptorProto.Type.TYPE_UINT32:
     case FieldDescriptorProto.Type.TYPE_SINT32:
     case FieldDescriptorProto.Type.TYPE_FIXED32:
     case FieldDescriptorProto.Type.TYPE_SFIXED32:
       return 0;
+    case FieldDescriptorProto.Type.TYPE_ENUM:
+      // proto3 enforces enums starting at 0, however proto2 does not, so we have
+      // to probe and see if zero is an allowed value. If it's not, pick the first one.
+      // This is probably not great, but it's only used in fromJSON and fromPartial,
+      // and I believe the semantics of those in the proto2 world are generally undefined.
+      const enumProto = typeMap.get(field.typeName)![2] as EnumDescriptorProto;
+      const hasZero = enumProto.value.find(v => v.number === 0);
+      return hasZero ? 0 : enumProto.value[0].number;
     case FieldDescriptorProto.Type.TYPE_UINT64:
     case FieldDescriptorProto.Type.TYPE_FIXED64:
       if (options.forceLong === LongOption.LONG) {
