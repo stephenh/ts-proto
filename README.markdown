@@ -150,9 +150,9 @@ Supported options:
 
 (I.e. you want only interface declarations for your Protobuf types, then pass all three of `outputEncodeMethods`, `outputJsonMethods`, and `outputClientImpl` as `false`, i.e. `--ts_proto_opt=outputEncodeMethods=false,outputJsonMethods=false,outputClientImpl=false`.)
 
-The following options are very useful for NestJS and available if `outputEncodeMethods`, `outputJsonMethods`, and `outputClientImpl` are set as `false`
+The following options are very useful for NestJS and available if `nestJs` is set as `true`
 
-* If you pass `--ts_proto_opt=addGrpcMetadata=true`, the last argument accepts grpc metadata
+* If you pass `--ts_proto_opt=addGrpcMetadata=true`, the last argument accepts the grpc metadata
 * If you pass `--ts_proto_opt=returnObservable=true`, the return type will be of type Observable<T> rather than Promise<T>
 
 Building
