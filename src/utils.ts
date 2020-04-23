@@ -70,15 +70,21 @@ export function optionsFromParameter(parameter: string): Options {
     if (parameter.includes('outputClientImpl=false')) {
       options.outputClientImpl = false;
     }
-    if (parameter.includes('addGrpcMetadata=true')) {
-      options.addGrpcMetadata = true;
-    }
-    if (parameter.includes('returnObservable=true')) {
-      options.returnObservable = true;
-    }
-    if (parameter.includes('camelCaseMethodNames=true')) {
+
+    if (parameter.includes('nestJs=true')) {
+      options.outputEncodeMethods=false;
+      options.outputJsonMethods=false;
+      options.outputClientImpl=false;
       options.camelCaseMethodNames = true;
+
+      if (parameter.includes('addGrpcMetadata=true')) {
+        options.addGrpcMetadata = true;
+      }
+      if (parameter.includes('returnObservable=true')) {
+        options.returnObservable = true;
+      }
     }
+
   }
   return options;
 }
