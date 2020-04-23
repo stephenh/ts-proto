@@ -154,10 +154,13 @@ The following options are very useful for NestJS and available if `nestJs` is se
 
 (Setting `nestJs` as `true` will implicitly set `outputEncodeMethods`, `outputJsonMethods`, and `outputClientImpl` as `false`)
 
-* If you pass `--ts_proto_opt=addGrpcMetadata=true`, the last argument accepts the grpc metadata
+* If you pass `--ts_proto_opt=addGrpcMetadata=true`, the last argument accepts the grpc metadata, this is useful to send additional information with the call.
 * If you pass `--ts_proto_opt=returnObservable=true`, the return type will be of type Observable<T> rather than Promise<T>
 
 The NestJS option will output an interface declaration that is specifically compatible with NestJS and can be used both on the client and server.
+
+The grpc metadata parameter is generated as an optional and is really useful for passing down extra information (meta data) with the call (from the client ot the server). There are many use cases for generating the metadata parameter, for example, to send down a JWT Access Token.
+As it is generated as an optional you are not required to send anything down with each call, if you find that you would never use this feature then you can choose not to have it generated.
 
 Building
 ========
