@@ -21,3 +21,6 @@ yarn pbts --no-comments -o integration/simple-long-string/pbjs.d.ts integration/
 yarn pbjs --force-message --force-number -t static-module -o integration/vector-tile/pbjs.js integration/vector-tile/vector_tile.proto
 yarn pbts --no-comments -o integration/vector-tile/pbjs.d.ts integration/vector-tile/pbjs.js
 
+# nestjs/
+yarn pbjs --force-message --force-number -t static-module -o integration/nestjs/pbjs.js integration/nestjs/hero.proto
+yarn pbts --no-comments -o integration/nestjs/pbjs.d.ts integration/nestjs/pbjs.js
