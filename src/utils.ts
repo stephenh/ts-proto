@@ -45,7 +45,7 @@ export function optionsFromParameter(parameter: string): Options {
     outputClientImpl: true,
     returnObservable: false,
     addGrpcMetadata: false,
-    camelCaseMethodNames: false,
+    nestJs: false,
   };
 
   if (parameter) {
@@ -72,10 +72,11 @@ export function optionsFromParameter(parameter: string): Options {
     }
 
     if (parameter.includes('nestJs=true')) {
-      options.outputEncodeMethods=false;
-      options.outputJsonMethods=false;
-      options.outputClientImpl=false;
-      options.camelCaseMethodNames = true;
+      options.outputEncodeMethods = false;
+      options.outputJsonMethods = false;
+      options.outputClientImpl = false;
+
+      options.nestJs = true;
 
       if (parameter.includes('addGrpcMetadata=true')) {
         options.addGrpcMetadata = true;

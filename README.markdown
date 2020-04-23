@@ -152,8 +152,12 @@ Supported options:
 
 The following options are very useful for NestJS and available if `nestJs` is set as `true`
 
+(Setting `nestJs` as `true` will implicitly set `outputEncodeMethods`, `outputJsonMethods`, and `outputClientImpl` as `false`)
+
 * If you pass `--ts_proto_opt=addGrpcMetadata=true`, the last argument accepts the grpc metadata
 * If you pass `--ts_proto_opt=returnObservable=true`, the return type will be of type Observable<T> rather than Promise<T>
+
+The NestJS option will output an interface declaration that is specifically compatible with NestJS and can be used both on the client and server.
 
 Building
 ========
