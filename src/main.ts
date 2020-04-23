@@ -60,7 +60,7 @@ export type Options = {
   outputClientImpl: boolean;
   addGrpcMetadata: boolean;
   returnObservable: boolean;
-  camelCaseMethodNames: boolean;
+  nestJs: boolean;
 };
 
 export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, parameter: string): FileSpec {
@@ -971,7 +971,7 @@ function generateService(
   let index = 0;
   for (const methodDesc of serviceDesc.method) {
 
-    if (options.camelCaseMethodNames) {
+    if (options.nestJs) {
       methodDesc.name = camelCase(methodDesc.name)
     }
 
