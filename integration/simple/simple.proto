@@ -24,6 +24,7 @@ message Simple {
   repeated StateEnum old_states = 8;
   // A thing (imported from thing)
   ImportedThing thing = 10;
+  repeated bytes blobs = 11;
 }
 
 message Child {
@@ -119,3 +120,5 @@ message Numbers {
   sfixed32 sfixed32 = 11;
   sfixed64 sfixed64 = 12;
 }
+
+message Empty {}

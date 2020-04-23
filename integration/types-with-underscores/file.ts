@@ -63,7 +63,7 @@ export const Baz = {
 };
 
 export const FooBar = {
-  encode(message: FooBar, writer: Writer = Writer.create()): Writer {
+  encode(_: FooBar, writer: Writer = Writer.create()): Writer {
     return writer;
   },
   decode(reader: Reader, length?: number): FooBar {
@@ -79,30 +79,27 @@ export const FooBar = {
     }
     return message;
   },
-  fromJSON(object: any): FooBar {
+  fromJSON(_: any): FooBar {
     const message = Object.create(baseFooBar) as FooBar;
     return message;
   },
-  fromPartial(object: DeepPartial<FooBar>): FooBar {
+  fromPartial(_: DeepPartial<FooBar>): FooBar {
     const message = Object.create(baseFooBar) as FooBar;
     return message;
   },
-  toJSON(message: FooBar): unknown {
+  toJSON(_: FooBar): unknown {
     const obj: any = {};
     return obj;
   },
 };
 
-type DeepPartial<T> = {
-  [P in keyof T]?: T[P] extends Array<infer U>
+type Builtin = Date | Function | Uint8Array | string | number | undefined;
+type DeepPartial<T> = T extends Builtin
+  ? T
+  : T extends Array<infer U>
   ? Array<DeepPartial<U>>
-  : T[P] extends ReadonlyArray<infer U>
+  : T extends ReadonlyArray<infer U>
   ? ReadonlyArray<DeepPartial<U>>
-  : T[P] extends Date | Function | Uint8Array | undefined
-  ? T[P]
-  : T[P] extends infer U | undefined
-  ? DeepPartial<U>
-  : T[P] extends object
-  ? DeepPartial<T[P]>
-  : T[P]
-};
+  : T extends {}
+  ? { [K in keyof T]?: DeepPartial<T[K]> }
+  : Partial<T>;

@@ -105,7 +105,7 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
       fileDesc,
       sourceInfo,
       (fullName, message) => {
-        file = file.addProperty(generateBaseInstance(fullName, message, options));
+        file = file.addProperty(generateBaseInstance(typeMap, fullName, message, options));
         let staticMethods = CodeBlock.empty()
           .add('export const %L = ', fullName)
           .beginHash();
@@ -143,7 +143,7 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
   if (options.outputClientImpl && fileDesc.service.length > 0) {
     file = file.addInterface(generateRpcType(options));
     if (options.useContext) {
-      file = file.addInterface(generateDataLoadersType(options));
+      file = file.addInterface(generateDataLoadersType());
     }
   }
 
@@ -156,7 +156,7 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
     },
     options
   );
-  if (hasAnyTimestamps) {
+  if (hasAnyTimestamps && (options.outputJsonMethods || options.outputEncodeMethods)) {
     file = addTimestampMethods(file, options);
   }
 
@@ -171,6 +171,9 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
     initialOutput.includes('longToString')
   ) {
     file = addLongUtilityMethod(file, options);
+  }
+  if (initialOutput.includes('bytesFromBase64') || initialOutput.includes('base64FromBytes')) {
+    file = addBytesUtilityMethods(file);
   }
   if (initialOutput.includes('DeepPartial')) {
     file = addDeepPartialType(file);
@@ -207,22 +210,49 @@ function addLongUtilityMethod(file: FileSpec, options: Options): FileSpec {
   }
 }
 
-function addDeepPartialType(file: FileSpec): FileSpec {
+function addBytesUtilityMethods(file: FileSpec): FileSpec {
   return file.addCode(
-    CodeBlock.empty()
-      .add('type DeepPartial<T> = {%>\n')
-      .add('[P in keyof T]?: T[P] extends Array<infer U>\n')
-      .add('? Array<DeepPartial<U>>\n')
-      .add(': T[P] extends ReadonlyArray<infer U>\n')
-      .add('? ReadonlyArray<DeepPartial<U>>\n')
-      .add(': T[P] extends Date | Function | Uint8Array | undefined\n')
-      .add('? T[P]\n')
-      .add(': T[P] extends infer U | undefined\n')
-      .add('? DeepPartial<U>\n')
-      .add(': T[P] extends object\n')
-      .add('? DeepPartial<T[P]>\n')
-      .add(': T[P]\n%<')
-      .add('};')
+    CodeBlock.of(`interface WindowBase64 {
+  atob(b64: string): string;
+  btoa(bin: string): string;
+}
+
+const windowBase64 = (globalThis as unknown as WindowBase64);
+const atob = windowBase64.atob || ((b64: string) => Buffer.from(b64, 'base64').toString('binary'));
+const btoa = windowBase64.btoa || ((bin: string) => Buffer.from(bin, 'binary').toString('base64'));
+
+function bytesFromBase64(b64: string): Uint8Array {
+  const bin = atob(b64);
+  const arr = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; ++i) {
+      arr[i] = bin.charCodeAt(i);
+  }
+  return arr;
+}
+
+function base64FromBytes(arr: Uint8Array): string {
+  const bin: string[] = [];
+  for (let i = 0; i < arr.byteLength; ++i) {
+    bin.push(String.fromCharCode(arr[i]));
+  }
+  return btoa(bin.join(''));
+}`)
+  );
+}
+
+function addDeepPartialType(file: FileSpec): FileSpec {
+  // Based on the type from ts-essentials
+  return file.addCode(
+    CodeBlock.empty().add(`type Builtin = Date | Function | Uint8Array | string | number | undefined;
+type DeepPartial<T> = T extends Builtin
+  ? T
+  : T extends Array<infer U>
+  ? Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U>
+  ? ReadonlyArray<DeepPartial<U>>
+  : T extends {}
+  ? { [K in keyof T]?: DeepPartial<T[K]> }
+  : Partial<T>;`)
   );
 }
 
@@ -237,6 +267,24 @@ function addTimestampMethods(file: FileSpec, options: Options): FileSpec {
   } else if (options.forceLong === LongOption.STRING) {
     toNumberCode = 'Number(t.seconds)';
     secondsCodeLine = 'const seconds = (date.getTime() / 1_000).toString()';
+  }
+
+  if (options.outputJsonMethods) {
+    file = file.addFunction(
+      FunctionSpec.create('fromJsonTimestamp')
+        .addParameter('o', 'any')
+        .returns('Date')
+        .addCodeBlock(
+          CodeBlock.empty()
+            .beginControlFlow('if (o instanceof Date)')
+            .addStatement('return o')
+            .nextControlFlow('else if (typeof o === "string")')
+            .addStatement('return new Date(o)')
+            .nextControlFlow('else')
+            .addStatement('return fromTimestamp(Timestamp.fromJSON(o))')
+            .endControlFlow()
+        )
+    );
   }
 
   return file
@@ -260,21 +308,6 @@ function addTimestampMethods(file: FileSpec, options: Options): FileSpec {
             .addStatement('let millis = %L * 1_000', toNumberCode)
             .addStatement('millis += t.nanos / 1_000_000')
             .addStatement('return new Date(millis)')
-        )
-    )
-    .addFunction(
-      FunctionSpec.create('fromJsonTimestamp')
-        .addParameter('o', 'any')
-        .returns('Date')
-        .addCodeBlock(
-          CodeBlock.empty()
-            .beginControlFlow('if (o instanceof Date)')
-            .addStatement('return o')
-            .nextControlFlow('else if (typeof o === "string")')
-            .addStatement('return new Date(o)')
-            .nextControlFlow('else')
-            .addStatement('return fromTimestamp(Timestamp.fromJSON(o))')
-            .endControlFlow()
         )
     );
 }
@@ -376,7 +409,7 @@ function generateInterfaceDeclaration(
   return message;
 }
 
-function generateBaseInstance(fullName: string, messageDesc: DescriptorProto, options: Options) {
+function generateBaseInstance(typeMap: TypeMap, fullName: string, messageDesc: DescriptorProto, options: Options) {
   // Create a 'base' instance with default values for decode to use as a prototype
   let baseMessage = PropertySpec.create('base' + fullName, TypeNames.anyType('object')).addModifiers(Modifier.CONST);
   let initialValue = CodeBlock.empty().beginHash();
@@ -385,7 +418,7 @@ function generateBaseInstance(fullName: string, messageDesc: DescriptorProto, op
     .forEach(field => {
       initialValue = initialValue.addHashEntry(
         maybeSnakeToCamel(field.name, options),
-        defaultValue(field.type, options)
+        defaultValue(typeMap, field, options)
       );
     });
   return baseMessage.initializerBlock(initialValue.endHash());
@@ -567,7 +600,7 @@ function generateEncode(
 ): FunctionSpec {
   // create the basic function declaration
   let func = FunctionSpec.create('encode')
-    .addParameter('message', fullName)
+    .addParameter(messageDesc.field.length > 0 ? 'message' : '_', fullName)
     .addParameter('writer', 'Writer@protobufjs/minimal', { defaultValueField: CodeBlock.of('Writer.create()') })
     .returns('Writer@protobufjs/minimal');
   // then add a case for each field
@@ -636,7 +669,7 @@ function generateEncode(
           'if (message.%L !== undefined && message.%L !== %L)',
           fieldName,
           fieldName,
-          defaultValue(field.type, options)
+          defaultValue(typeMap, field, options)
         )
         .addStatement('%L', writeSnippet(`message.${fieldName}`))
         .endControlFlow();
@@ -661,7 +694,7 @@ function generateFromJson(
 ): FunctionSpec {
   // create the basic function declaration
   let func = FunctionSpec.create('fromJSON')
-    .addParameter('object', 'any')
+    .addParameter(messageDesc.field.length > 0 ? 'object' : '_', 'any')
     .returns(fullName);
 
   // create the message
@@ -682,9 +715,9 @@ function generateFromJson(
       if (isEnum(field)) {
         return CodeBlock.of('%T.fromJSON(%L)', basicTypeName(typeMap, field, options), from);
       } else if (isPrimitive(field)) {
-        // Convert primitives using the String(value)/Number(value) cstr, except for bytes
+        // Convert primitives using the String(value)/Number(value)/bytesFromBase64(value)
         if (isBytes(field)) {
-          return CodeBlock.of('%L', from);
+          return CodeBlock.of('bytesFromBase64(%L)', from);
         } else if (isLong(field) && options.forceLong === LongOption.LONG) {
           const cstr = capitalize(basicTypeName(typeMap, field, options, true).toString());
           return CodeBlock.of('%L.fromString(%L)', cstr, from);
@@ -748,7 +781,7 @@ function generateFromJson(
       func = func.addStatement(
         `message.%L = %L`,
         fieldName,
-        isWithinOneOf(field) ? 'undefined' : defaultValue(field.type, options)
+        isWithinOneOf(field) ? 'undefined' : defaultValue(typeMap, field, options)
       );
     }
 
@@ -767,7 +800,7 @@ function generateToJson(
 ): FunctionSpec {
   // create the basic function declaration
   let func = FunctionSpec.create('toJSON')
-    .addParameter('message', fullName)
+    .addParameter(messageDesc.field.length > 0 ? 'message' : '_', fullName)
     .returns('unknown');
   func = func.addCodeBlock(CodeBlock.empty().addStatement('const obj: any = {}'));
   // then add a case for each field
@@ -785,18 +818,27 @@ function generateToJson(
           from,
           basicTypeName(typeMap, field, options, true),
           from,
-          defaultValue(field.type, options)
+          defaultValue(typeMap, field, options)
+        );
+      } else if (isBytes(field)) {
+        return CodeBlock.of(
+          '%L !== undefined ? base64FromBytes(%L) : %L',
+          from,
+          from,
+          isWithinOneOf(field) ? 'undefined' : defaultValue(typeMap, field, options)
+        );
+      } else if (isLong(field) && options.forceLong === LongOption.LONG) {
+        return CodeBlock.of(
+          '(%L || %L).toString()',
+          from,
+          isWithinOneOf(field) ? 'undefined' : defaultValue(typeMap, field, options)
         );
       } else {
-        if (isLong(field) && options.forceLong === LongOption.LONG) {
-          return CodeBlock.of(
-            '(%L || %L).toString()',
-            from,
-            isWithinOneOf(field) ? 'undefined' : defaultValue(field.type, options)
-          );
-        } else {
-          return CodeBlock.of('%L || %L', from, isWithinOneOf(field) ? 'undefined' : defaultValue(field.type, options));
-        }
+        return CodeBlock.of(
+          '%L || %L',
+          from,
+          isWithinOneOf(field) ? 'undefined' : defaultValue(typeMap, field, options)
+        );
       }
     };
 
@@ -822,7 +864,7 @@ function generateFromPartial(
 ): FunctionSpec {
   // create the basic function declaration
   let func = FunctionSpec.create('fromPartial')
-    .addParameter('object', `DeepPartial<${fullName}>`)
+    .addParameter(messageDesc.field.length > 0 ? 'object' : '_', `DeepPartial<${fullName}>`)
     .returns(fullName);
 
   // create the message
@@ -900,7 +942,7 @@ function generateFromPartial(
       func = func.addStatement(
         `message.%L = %L`,
         fieldName,
-        isWithinOneOf(field) ? 'undefined' : defaultValue(field.type, options)
+        isWithinOneOf(field) ? 'undefined' : defaultValue(typeMap, field, options)
       );
     }
 
@@ -1214,7 +1256,7 @@ function generateRpcType(options: Options): InterfaceSpec {
   return rpc;
 }
 
-function generateDataLoadersType(options: Options): InterfaceSpec {
+function generateDataLoadersType(): InterfaceSpec {
   // TODO Maybe should be a generic `Context.get<T>(id, () => T): T` method
   let fn = FunctionSpec.create('getDataLoader')
     .addTypeVariable(TypeNames.typeVariable('T'))

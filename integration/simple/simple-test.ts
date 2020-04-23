@@ -1,13 +1,5 @@
 import { Reader } from 'protobufjs';
-import {
-  Child_Type,
-  Nested,
-  Nested_InnerEnum,
-  OneOfMessage,
-  Simple,
-  SimpleWithMap,
-  StateEnum
-} from './simple';
+import { Child_Type, Nested, Nested_InnerEnum, OneOfMessage, Simple, SimpleWithMap, StateEnum } from './simple';
 import { simple as pbjs, google } from './pbjs';
 import ISimple = pbjs.ISimple;
 import PbChild = pbjs.Child;
@@ -36,7 +28,8 @@ describe('simple', () => {
       snacks: ['a', 'b'],
       oldStates: [StateEnum.ON, StateEnum.OFF],
       createdAt: jan1,
-      thing: undefined
+      thing: undefined,
+      blobs: []
     };
     expect(simple.name).toEqual('asdf');
   });
@@ -50,7 +43,8 @@ describe('simple', () => {
       grandChildren: [PbChild.fromObject({ name: 'grand1' }), PbChild.fromObject({ name: 'grand2' })],
       coins: [2, 4, 6],
       snacks: ['a', 'b'],
-      oldStates: [PbState.ON, PbState.OFF]
+      oldStates: [PbState.ON, PbState.OFF],
+      blobs: []
     };
     const s2 = Simple.decode(Reader.create(PbSimple.encode(PbSimple.fromObject(s1)).finish()));
     expect(s2).toEqual(s1);
@@ -67,9 +61,11 @@ describe('simple', () => {
       snacks: ['a', 'b'],
       oldStates: [StateEnum.ON, StateEnum.OFF],
       createdAt: jan1,
-      thing: undefined
+      thing: undefined,
+      blobs: []
     };
     const s2 = PbSimple.toObject(PbSimple.decode(Simple.encode(s1).finish()));
+    delete s1.blobs;
     expect(s2).toEqual({
       ...s1,
       createdAt: new PbTimestamp({ nanos: 0, seconds: new Long(0) as any })
@@ -151,9 +147,11 @@ describe('simple', () => {
       snacks: ['', 'b'],
       oldStates: [StateEnum.UNKNOWN, StateEnum.OFF],
       createdAt: jan1,
-      thing: undefined
+      thing: undefined,
+      blobs: []
     };
     const s2 = PbSimple.toObject(PbSimple.decode(Simple.encode(s1).finish()));
+    delete s1.blobs;
     expect(s2).toEqual({
       ...s1,
       createdAt: new PbTimestamp({ nanos: 0, seconds: new Long(0) as any })
@@ -189,6 +187,7 @@ describe('simple', () => {
     expect(s1).toMatchInlineSnapshot(`
       Object {
         "age": 0,
+        "blobs": Array [],
         "child": undefined,
         "coins": Array [],
         "createdAt": undefined,
@@ -209,5 +208,11 @@ describe('simple', () => {
         "last": undefined,
       }
     `);
+  });
+
+  it('shows that enums are strongly typed', () => {
+    function mustBeOn(a: typeof StateEnum.ON) {}
+    // @ts-expect-error
+    mustBeOn(StateEnum.OFF);
   });
 });

@@ -24,7 +24,7 @@ describe('simple json', () => {
       grandChildren: [PbChild.fromObject({ name: 'grand1', type: 0 }), PbChild.fromObject({ name: 'grand2', type: 0 })],
       coins: [2, 4, 6],
       snacks: ['a', 'b'],
-      oldStates: [PbState.ON, PbState.OFF]
+      oldStates: [PbState.ON, PbState.OFF],
     };
     // when it goes to json and back to us
     const s2 = Simple.fromJSON(PbSimple.fromObject(s1).toJSON());
@@ -32,6 +32,7 @@ describe('simple json', () => {
     // (even though its really our object/representation
     expect(s2).toEqual({
       ...s1,
+      blobs: [],
       createdAt: undefined,
       thing: undefined
     });
@@ -111,6 +112,7 @@ describe('simple json', () => {
     expect(s2).toMatchInlineSnapshot(`
       Object {
         "age": 0,
+        "blobs": Array [],
         "child": undefined,
         "coins": Array [],
         "createdAt": undefined,
@@ -130,6 +132,7 @@ describe('simple json', () => {
     expect(s2).toMatchInlineSnapshot(`
       Object {
         "age": 0,
+        "blobs": Array [],
         "child": undefined,
         "coins": Array [],
         "createdAt": undefined,
@@ -192,11 +195,13 @@ describe('simple json', () => {
       snacks: ['a', 'b'],
       oldStates: [StateEnum.ON, StateEnum.OFF],
       createdAt: new Date(1_000),
-      thing: undefined
+      thing: undefined,
+      blobs: [],
     };
     expect(Simple.toJSON(s1)).toMatchInlineSnapshot(`
       Object {
         "age": 1,
+        "blobs": Array [],
         "child": Object {
           "name": "foo",
           "type": "UNKNOWN",
@@ -236,6 +241,7 @@ describe('simple json', () => {
     expect(Simple.toJSON({} as Simple)).toMatchInlineSnapshot(`
       Object {
         "age": 0,
+        "blobs": Array [],
         "child": undefined,
         "coins": Array [],
         "createdAt": null,
@@ -255,6 +261,7 @@ describe('simple json', () => {
     expect(s2).toMatchInlineSnapshot(`
       Object {
         "age": 0,
+        "blobs": Array [],
         "child": Object {
           "name": "a",
           "type": "GOOD",

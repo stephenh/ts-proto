@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 shopt -s globstar
 
 # To avoid running the protoc pipeline all the time, we capture the incoming Plugin

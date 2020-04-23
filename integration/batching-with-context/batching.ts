@@ -608,7 +608,7 @@ export const WriteMethodRequest = {
 };
 
 export const WriteMethodResponse = {
-  encode(message: WriteMethodResponse, writer: Writer = Writer.create()): Writer {
+  encode(_: WriteMethodResponse, writer: Writer = Writer.create()): Writer {
     return writer;
   },
   decode(reader: Reader, length?: number): WriteMethodResponse {
@@ -624,15 +624,15 @@ export const WriteMethodResponse = {
     }
     return message;
   },
-  fromJSON(object: any): WriteMethodResponse {
+  fromJSON(_: any): WriteMethodResponse {
     const message = Object.create(baseWriteMethodResponse) as WriteMethodResponse;
     return message;
   },
-  fromPartial(object: DeepPartial<WriteMethodResponse>): WriteMethodResponse {
+  fromPartial(_: DeepPartial<WriteMethodResponse>): WriteMethodResponse {
     const message = Object.create(baseWriteMethodResponse) as WriteMethodResponse;
     return message;
   },
-  toJSON(message: WriteMethodResponse): unknown {
+  toJSON(_: WriteMethodResponse): unknown {
     const obj: any = {};
     return obj;
   },
@@ -699,16 +699,13 @@ export const Entity = {
   },
 };
 
-type DeepPartial<T> = {
-  [P in keyof T]?: T[P] extends Array<infer U>
+type Builtin = Date | Function | Uint8Array | string | number | undefined;
+type DeepPartial<T> = T extends Builtin
+  ? T
+  : T extends Array<infer U>
   ? Array<DeepPartial<U>>
-  : T[P] extends ReadonlyArray<infer U>
+  : T extends ReadonlyArray<infer U>
   ? ReadonlyArray<DeepPartial<U>>
-  : T[P] extends Date | Function | Uint8Array | undefined
-  ? T[P]
-  : T[P] extends infer U | undefined
-  ? DeepPartial<U>
-  : T[P] extends object
-  ? DeepPartial<T[P]>
-  : T[P]
-};
+  : T extends {}
+  ? { [K in keyof T]?: DeepPartial<T[K]> }
+  : Partial<T>;

@@ -538,7 +538,7 @@ export const BytesValue = {
   fromJSON(object: any): BytesValue {
     const message = Object.create(baseBytesValue) as BytesValue;
     if (object.value !== undefined && object.value !== null) {
-      message.value = object.value;
+      message.value = bytesFromBase64(object.value);
     }
     return message;
   },
@@ -551,21 +551,43 @@ export const BytesValue = {
   },
   toJSON(message: BytesValue): unknown {
     const obj: any = {};
-    obj.value = message.value || undefined;
+    obj.value = message.value !== undefined ? base64FromBytes(message.value) : undefined;
     return obj;
   },
 };
 
-type DeepPartial<T> = {
-  [P in keyof T]?: T[P] extends Array<infer U>
+interface WindowBase64 {
+  atob(b64: string): string;
+  btoa(bin: string): string;
+}
+
+const windowBase64 = (globalThis as unknown as WindowBase64);
+const atob = windowBase64.atob || ((b64: string) => Buffer.from(b64, 'base64').toString('binary'));
+const btoa = windowBase64.btoa || ((bin: string) => Buffer.from(bin, 'binary').toString('base64'));
+
+function bytesFromBase64(b64: string): Uint8Array {
+  const bin = atob(b64);
+  const arr = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; ++i) {
+      arr[i] = bin.charCodeAt(i);
+  }
+  return arr;
+}
+
+function base64FromBytes(arr: Uint8Array): string {
+  const bin: string[] = [];
+  for (let i = 0; i < arr.byteLength; ++i) {
+    bin.push(String.fromCharCode(arr[i]));
+  }
+  return btoa(bin.join(''));
+}
+type Builtin = Date | Function | Uint8Array | string | number | undefined;
+type DeepPartial<T> = T extends Builtin
+  ? T
+  : T extends Array<infer U>
   ? Array<DeepPartial<U>>
-  : T[P] extends ReadonlyArray<infer U>
+  : T extends ReadonlyArray<infer U>
   ? ReadonlyArray<DeepPartial<U>>
-  : T[P] extends Date | Function | Uint8Array | undefined
-  ? T[P]
-  : T[P] extends infer U | undefined
-  ? DeepPartial<U>
-  : T[P] extends object
-  ? DeepPartial<T[P]>
-  : T[P]
-};
+  : T extends {}
+  ? { [K in keyof T]?: DeepPartial<T[K]> }
+  : Partial<T>;

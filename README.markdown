@@ -178,7 +178,6 @@ Todo
 
 * Model OneOfs as an ADT
 * Support the string-based encoding of duration in `fromJSON`/`toJSON`
-* Support bytes as base64 encoded strings in `fromJSON`/`toJSON`
 * Support the `json_name` annotation
 
 Typing Approach
