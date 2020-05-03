@@ -2,6 +2,43 @@
 ![npm](https://img.shields.io/npm/v/ts-proto)
 [![CircleCI](https://circleci.com/gh/stephenh/ts-proto.svg?style=svg)](https://circleci.com/gh/stephenh/ts-proto)
 
+Overview
+========
+
+ts-proto generates TypeScript types from protobuf schemas.
+
+I.e. given a `person.proto` schema like:
+
+```proto
+message Person {
+  string name = 1;
+}
+```
+
+ts-proto will generate a `person.ts` file like:
+
+```typescript
+interface Person {
+  name: string
+}
+
+const Person = {
+  encode(person): Writer { ... }
+  decode(reader): Person { ... }
+  toJSON(person): unknown { ... }
+  fromJSON(data): Person { ... }
+}
+```
+
+It also knows about services and will generate types for them as well, i.e.:
+
+```typescript
+export interface PingService {
+  ping(request: PingRequest): Promise<PingResponse>;
+}
+
+```
+
 QuickStart
 ==========
 
