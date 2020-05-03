@@ -985,12 +985,12 @@ function generateService(
     requestFn = requestFn.addParameter('request', requestType(typeMap, methodDesc));
 
     // Use metadata as last argument for interface only configuration
-    if (!options.outputClientImpl && !options.outputEncodeMethods && !options.outputJsonMethods && options.addGrpcMetadata) {
+    if (options.addGrpcMetadata) {
       requestFn = requestFn.addParameter('metadata?', "Metadata@grpc");
     }
 
     // Return observable for interface only configuration and passing returnObservable=true
-    if (!options.outputClientImpl && !options.outputEncodeMethods && !options.outputJsonMethods && options.returnObservable) {
+    if (options.returnObservable) {
       requestFn = requestFn.returns(responseObservable(typeMap, methodDesc));
     } else {
       requestFn = requestFn.returns(responsePromise(typeMap, methodDesc));
