@@ -148,6 +148,8 @@ protoc --plugin=node_modules/ts-proto/protoc-gen-ts_proto ./batching.proto -I.
  
   Alternatively, if you pass `--ts_proto_opt=forceLong=string`, all 64 bit numbers will be outputted as strings.
 
+* With `--ts_proto_opt=lowerCaseServiceMethods=true`, the method names of service methods will be lowered/camel-case, i.e. `service.findFoo` instead of `service.FindFoo`.
+
 * With `--ts_proto_opt=outputEncodeMethods=false`, the `Message.encode` and `Message.decode` methods for working with protobuf-encoded/binary data will not be output.
 
   This is useful if you want "only types".
@@ -166,7 +168,7 @@ protoc --plugin=node_modules/ts-proto/protoc-gen-ts_proto ./batching.proto -I.
 
 * With `--ts_proto_opt=nestJs=true`, the defaults will change to generate NestJS-friendly types & service interfaces that can be used in both the client-side and server-side of NestJS protobuf implementations.
 
-  Specifically `outputEncodeMethods`, `outputJsonMethods`, and `outputClientImpl` will all be false.
+  Specifically `outputEncodeMethods`, `outputJsonMethods`, and `outputClientImpl` will all be false, and `lowerCaseServiceMethods` will be true.
   
   Note that `addGrpcMetadata` and `returnObservable` will still be false.
 

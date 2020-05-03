@@ -60,6 +60,7 @@ export type Options = {
   outputClientImpl: boolean;
   addGrpcMetadata: boolean;
   returnObservable: boolean;
+  lowerCaseServiceMethods: boolean;
   nestJs: boolean;
 };
 
@@ -971,7 +972,7 @@ function generateService(
   let index = 0;
   for (const methodDesc of serviceDesc.method) {
 
-    if (options.nestJs) {
+    if (options.lowerCaseServiceMethods) {
       methodDesc.name = camelCase(methodDesc.name)
     }
 
