@@ -39,6 +39,8 @@ export interface PingService {
 
 ```
 
+It will also generate client implementations of `PingService`, but currently only [Twirp](https://github.com/twitchtv/twirp) clients are supported (see [issue 2](https://github.com/stephenh/ts-proto/issues/2) for wider/native GRPC support).
+
 QuickStart
 ==========
 
