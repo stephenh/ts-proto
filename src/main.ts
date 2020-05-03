@@ -990,8 +990,8 @@ function generateService(
       requestFn = requestFn.addParameter('metadata?', "Metadata@grpc");
     }
 
-    // Return observable for interface only configuration and passing returnObservable=true
-    if (options.returnObservable) {
+    // Return observable for interface only configuration, passing returnObservable=true and methodDesc.serverStreaming=true
+    if (options.returnObservable || methodDesc.serverStreaming) {
       requestFn = requestFn.returns(responseObservable(typeMap, methodDesc));
     } else {
       requestFn = requestFn.returns(responsePromise(typeMap, methodDesc));
@@ -1270,6 +1270,9 @@ function generateDataLoadersType(): InterfaceSpec {
 }
 
 function requestType(typeMap: TypeMap, methodDesc: MethodDescriptorProto): TypeName {
+  if(methodDesc.clientStreaming) {
+    return TypeNames.anyType("Observable@rxjs").param(messageToTypeName(typeMap, methodDesc.inputType));
+  }
   return messageToTypeName(typeMap, methodDesc.inputType);
 }
 
