@@ -140,27 +140,41 @@ Usage
 protoc --plugin=node_modules/ts-proto/protoc-gen-ts_proto ./batching.proto -I.
 ```
 
-Supported options:
+### Supported options
 
-* If you pass `--ts_proto_opt=context=true`, the Twirp services will have a Go-style `ctx` parameter, which is useful for tracing/logging/etc. if you're not using node's `async_hooks` api due to performance reasons.
-* If you pass `--ts_proto_opt=forceLong=long`, all 64 bit numbers will be parsed as instances of `Long` (using the [long](https://www.npmjs.com/package/long) library). Alternatively, if you pass `--ts_proto_opt=forceLong=string`, all 64 bit numbers will be outputted as strings.
-* If you pass `--ts_proto_opt=outputEncodeMethods=false`, the `Message.encode` and `Message.decode` methods for working with protobuff-encoded data will not be output.
-* If you pass `--ts_proto_opt=outputJsonMethods=false`, the `Message.fromJSON` and `Message.toJSON` methods for working with JSON-coded data will not be output.
-* If you pass `--ts_proto_opt=outputClientImpl=false`, the `FooServiceClientImpl` classes that implement the client-side (currently Twirp-only) RPC interfaces will not be output.
+* With `--ts_proto_opt=context=true`, the services will have a Go-style `ctx` parameter, which is useful for tracing/logging/etc. if you're not using node's `async_hooks` api due to performance reasons.
 
-(I.e. you want only interface declarations for your Protobuf types, then pass all three of `outputEncodeMethods`, `outputJsonMethods`, and `outputClientImpl` as `false`, i.e. `--ts_proto_opt=outputEncodeMethods=false,outputJsonMethods=false,outputClientImpl=false`.)
+* With `--ts_proto_opt=forceLong=long`, all 64 bit numbers will be parsed as instances of `Long` (using the [long](https://www.npmjs.com/package/long) library).
+ 
+  Alternatively, if you pass `--ts_proto_opt=forceLong=string`, all 64 bit numbers will be outputted as strings.
 
-The following options are very useful for NestJS and available if `nestJs` is set as `true`
+* With `--ts_proto_opt=outputEncodeMethods=false`, the `Message.encode` and `Message.decode` methods for working with protobuf-encoded/binary data will not be output.
 
-(Setting `nestJs` as `true` will implicitly set `outputEncodeMethods`, `outputJsonMethods`, and `outputClientImpl` as `false`)
+  This is useful if you want "only types".
 
-* If you pass `--ts_proto_opt=addGrpcMetadata=true`, the last argument accepts the grpc metadata, this is useful to send additional information with the call.
-* If you pass `--ts_proto_opt=returnObservable=true`, the return type will be of type Observable<T> rather than Promise<T>
+* With `--ts_proto_opt=outputJsonMethods=false`, the `Message.fromJSON` and `Message.toJSON` methods for working with JSON-coded data will not be output.
 
-The NestJS option will output an interface declaration that is specifically compatible with NestJS and can be used both on the client and server.
+  This is also useful if you want "only types".
 
-The grpc metadata parameter is generated as an optional and is really useful for passing down extra information (meta data) with the call (from the client ot the server). There are many use cases for generating the metadata parameter, for example, to send down a JWT Access Token.
-As it is generated as an optional you are not required to send anything down with each call, if you find that you would never use this feature then you can choose not to have it generated.
+* With `--ts_proto_opt=outputClientImpl=false`, the client implementations, i.e. `FooServiceClientImpl`, that implement the client-side (currently Twirp-only) RPC interfaces will not be output.
+
+* With `--ts_proto_opt=returnObservable=true`, the return type of service methods will be `Observable<T>` instead of `Promise<T>`.
+
+* With`--ts_proto_opt=addGrpcMetadata=true`, the last argument of service methods will accept the grpc `Metadata` type, which contains additional information with the call (i.e. access tokens/etc.).
+
+  (Requires `nestJs=true`.)
+
+* With `--ts_proto_opt=nestJs=true`, the defaults will change to generate NestJS-friendly types & service interfaces that can be used in both the client-side and server-side of NestJS protobuf implementations.
+
+  Specifically `outputEncodeMethods`, `outputJsonMethods`, and `outputClientImpl` will all be false.
+  
+  Note that `addGrpcMetadata` and `returnObservable` will still be false.
+
+### "Only Types"
+
+If you're looking for `ts-proto` to generate only types for your Protobuf types then passing all three of `outputEncodeMethods`, `outputJsonMethods`, and `outputClientImpl` as `false` is probably what you want, i.e.:
+ 
+`--ts_proto_opt=outputEncodeMethods=false,outputJsonMethods=false,outputClientImpl=false`.
 
 Building
 ========
