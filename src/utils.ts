@@ -40,9 +40,13 @@ export function optionsFromParameter(parameter: string): Options {
     useContext: false,
     snakeToCamel: true,
     forceLong: LongOption.NUMBER,
+    lowerCaseServiceMethods: false,
     outputEncodeMethods: true,
     outputJsonMethods: true,
     outputClientImpl: true,
+    returnObservable: false,
+    addGrpcMetadata: false,
+    nestJs: false,
   };
 
   if (parameter) {
@@ -58,6 +62,9 @@ export function optionsFromParameter(parameter: string): Options {
     if (parameter.includes('forceLong=string')) {
       options.forceLong = LongOption.STRING;
     }
+    if (parameter.includes('lowerCaseServiceMethods=true')) {
+      options.lowerCaseServiceMethods = true;
+    }
     if (parameter.includes('outputEncodeMethods=false')) {
       options.outputEncodeMethods = false;
     }
@@ -67,6 +74,23 @@ export function optionsFromParameter(parameter: string): Options {
     if (parameter.includes('outputClientImpl=false')) {
       options.outputClientImpl = false;
     }
+
+    if (parameter.includes('nestJs=true')) {
+      options.nestJs = true;
+
+      options.lowerCaseServiceMethods = true;
+      options.outputEncodeMethods = false;
+      options.outputJsonMethods = false;
+      options.outputClientImpl = false;
+
+      if (parameter.includes('addGrpcMetadata=true')) {
+        options.addGrpcMetadata = true;
+      }
+      if (parameter.includes('returnObservable=true')) {
+        options.returnObservable = true;
+      }
+    }
+
   }
   return options;
 }

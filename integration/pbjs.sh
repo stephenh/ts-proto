@@ -21,3 +21,18 @@ yarn pbts --no-comments -o integration/simple-long-string/pbjs.d.ts integration/
 yarn pbjs --force-message --force-number -t static-module -o integration/vector-tile/pbjs.js integration/vector-tile/vector_tile.proto
 yarn pbts --no-comments -o integration/vector-tile/pbjs.d.ts integration/vector-tile/pbjs.js
 
+# nestjs-metadata/
+yarn pbjs --force-message --force-number -t static-module -o integration/nestjs-metadata/pbjs.js integration/nestjs-metadata/hero.proto
+yarn pbts --no-comments -o integration/nestjs-metadata/pbjs.d.ts integration/nestjs-metadata/pbjs.js
+
+# nestjs-metadata-observables/
+yarn pbjs --force-message --force-number -t static-module -o integration/nestjs-metadata-observables/pbjs.js integration/nestjs-metadata-observables/hero.proto
+yarn pbts --no-comments -o integration/nestjs-metadata-observables/pbjs.d.ts integration/nestjs-metadata-observables/pbjs.js
+
+# nestjs-simple/
+yarn pbjs --force-message --force-number -t static-module -o integration/nestjs-simple/pbjs.js integration/nestjs-simple/hero.proto
+yarn pbts --no-comments -o integration/nestjs-simple/pbjs.d.ts integration/nestjs-simple/pbjs.js
+
+# nestjs-simple-observables/
+yarn pbjs --force-message --force-number -t static-module -o integration/nestjs-simple-observables/pbjs.js integration/nestjs-simple-observables/hero.proto
+yarn pbts --no-comments -o integration/nestjs-simple-observables/pbjs.d.ts integration/nestjs-simple-observables/pbjs.js

@@ -58,6 +58,10 @@ export type Options = {
   outputEncodeMethods: boolean;
   outputJsonMethods: boolean;
   outputClientImpl: boolean;
+  addGrpcMetadata: boolean;
+  returnObservable: boolean;
+  lowerCaseServiceMethods: boolean;
+  nestJs: boolean;
 };
 
 export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, parameter: string): FileSpec {
@@ -967,6 +971,11 @@ function generateService(
 
   let index = 0;
   for (const methodDesc of serviceDesc.method) {
+
+    if (options.lowerCaseServiceMethods) {
+      methodDesc.name = camelCase(methodDesc.name)
+    }
+
     let requestFn = FunctionSpec.create(methodDesc.name);
     if (options.useContext) {
       requestFn = requestFn.addParameter('ctx', TypeNames.typeVariable('Context'));
@@ -975,7 +984,19 @@ function generateService(
     maybeAddComment(info, text => (requestFn = requestFn.addJavadoc(text)));
 
     requestFn = requestFn.addParameter('request', requestType(typeMap, methodDesc));
-    requestFn = requestFn.returns(responsePromise(typeMap, methodDesc));
+
+    // Use metadata as last argument for interface only configuration
+    if (options.addGrpcMetadata) {
+      requestFn = requestFn.addParameter('metadata?', "Metadata@grpc");
+    }
+
+    // Return observable for interface only configuration and passing returnObservable=true
+    if (options.returnObservable) {
+      requestFn = requestFn.returns(responseObservable(typeMap, methodDesc));
+    } else {
+      requestFn = requestFn.returns(responsePromise(typeMap, methodDesc));
+    }
+
     service = service.addFunction(requestFn);
 
     if (options.useContext) {
@@ -1018,6 +1039,7 @@ function generateRegularRpcMethod(
   serviceDesc: google.protobuf.ServiceDescriptorProto,
   methodDesc: google.protobuf.MethodDescriptorProto
 ) {
+
   let requestFn = FunctionSpec.create(methodDesc.name);
   if (options.useContext) {
     requestFn = requestFn.addParameter('ctx', TypeNames.typeVariable('Context'));
@@ -1259,6 +1281,10 @@ function responsePromise(typeMap: TypeMap, methodDesc: MethodDescriptorProto): T
   return TypeNames.PROMISE.param(responseType(typeMap, methodDesc));
 }
 
+function responseObservable(typeMap: TypeMap, methodDesc: MethodDescriptorProto): TypeName {
+  return TypeNames.anyType("Observable@rxjs").param(responseType(typeMap, methodDesc));
+}
+
 // function generateOneOfProperty(typeMap: TypeMap, name: string, fields: FieldDescriptorProto[]): PropertySpec {
 //   const adtType = TypeNames.unionType(
 //     ...fields.map(f => {
@@ -1280,6 +1306,10 @@ function maybeSnakeToCamel(s: string, options: Options): string {
 
 function capitalize(s: string): string {
   return s.substring(0, 1).toUpperCase() + s.substring(1);
+}
+
+function camelCase(s: string): string {
+  return s.substring(0, 1).toLowerCase() + s.substring(1);
 }
 
 function maybeCastToNumber(

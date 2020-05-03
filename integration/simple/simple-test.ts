@@ -65,6 +65,7 @@ describe('simple', () => {
       blobs: []
     };
     const s2 = PbSimple.toObject(PbSimple.decode(Simple.encode(s1).finish()));
+
     delete s1.blobs;
     expect(s2).toEqual({
       ...s1,
