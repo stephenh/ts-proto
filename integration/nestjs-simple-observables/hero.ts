@@ -25,4 +25,6 @@ export interface HeroService {
 
   findOneVillain(request: VillainById): Observable<Villain>;
 
+  findManyVillain(request: Observable<VillainById>): Observable<Villain>;
+
 }

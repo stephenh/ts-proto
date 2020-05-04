@@ -1,3 +1,4 @@
+import { Observable } from 'rxjs';
 
 
 export interface HeroById {
@@ -23,5 +24,7 @@ export interface HeroService {
   findOneHero(request: HeroById): Promise<Hero>;
 
   findOneVillain(request: VillainById): Promise<Villain>;
+
+  findManyVillain(request: Observable<VillainById>): Observable<Villain>;
 
 }

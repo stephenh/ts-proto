@@ -1,4 +1,5 @@
 import { Metadata } from 'grpc';
+import { Observable } from 'rxjs';
 
 
 export interface HeroById {
@@ -24,5 +25,7 @@ export interface HeroService {
   findOneHero(request: HeroById, metadata?: Metadata): Promise<Hero>;
 
   findOneVillain(request: VillainById, metadata?: Metadata): Promise<Villain>;
+
+  findManyVillain(request: Observable<VillainById>, metadata?: Metadata): Observable<Villain>;
 
 }
