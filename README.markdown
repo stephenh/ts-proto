@@ -83,15 +83,19 @@ The controller interface name would be `HeroServiceController`.
 The client interface name would  `HeroServiceClient`.
 
 ### implementation
-To implement the typescript file in your `nestjs` project you need to add the `controller` interface to your controller.
+To implement the typescript file in your `nestjs` project you need to add the `controller` interface to your controller. We also generate a `decorator` for you controller. For example: `HeroServiceControllerMethods`, when you apply this to your controller we add all the method decorators you normally should do but doing it this way is safer.
 
 For the client we simply pass the `client` interface to the `client.getService<?>();`.
 
 ##### Controller
 
 ```typescript
+import { HeroById, Hero, HeroServiceController, VillainById, Villain, HeroServiceControllerMethods } from '../hero';
+
 @Controller('hero')
-export class HeroController extends HeroServiceController implements OnModuleInit {
+// Generated decorator that applies all the @GrpcMethod and @GrpcStreamMethod to the right methods
+@HeroServiceControllerMethods()
+export class HeroController implements HeroServiceController {
   private readonly heroes: Hero[] = [
     { id: 1, name: 'Stephenh' },
     { id: 2, name: 'Iangregsondev' }
@@ -102,19 +106,14 @@ export class HeroController extends HeroServiceController implements OnModuleIni
     { id: 2, name: 'Doe' }
   ];
 
-  onModuleInit() {}
-
-  @GrpcMethod('HeroService')
   async findOneHero(data: HeroById): Promise<Hero> {
     return this.heroes.find(({ id }) => id === data.id)!;
   }
 
-  @GrpcMethod('HeroService')
   async findOneVillain(data: VillainById): Promise<Villain> {
     return this.villains.find(({ id }) => id === data.id)!;
   }
 
-  @GrpcStreamMethod('HeroService')
   findManyVillain(request: Observable<VillainById>): Observable<Villain> {
     const hero$ = new Subject<Villain>();
 

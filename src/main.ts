@@ -8,7 +8,8 @@ import {
   PropertySpec,
   TypeName,
   TypeNames,
-  Union
+  Union,
+  DecoratorSpec
 } from 'ts-poet';
 import { google } from '../build/pbjs';
 import {
@@ -42,6 +43,7 @@ import FileDescriptorProto = google.protobuf.FileDescriptorProto;
 import EnumDescriptorProto = google.protobuf.EnumDescriptorProto;
 import ServiceDescriptorProto = google.protobuf.ServiceDescriptorProto;
 import MethodDescriptorProto = google.protobuf.MethodDescriptorProto;
+import { Encloser } from 'ts-poet/build/FunctionSpec';
 
 const dataloader = TypeNames.anyType('DataLoader*dataloader');
 
@@ -141,7 +143,11 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
         : generateService(typeMap, fileDesc, sInfo, serviceDesc, options)
     );
     if (options.nestJs) {
+      // generate nestjs grpc client interface
       file = file.addInterface(generateNestjsServiceClient(typeMap, fileDesc, sInfo, serviceDesc, options));
+
+      // generate nestjs grpc service controller decorator
+      file = file.addFunction(generateNestjsGrpcServiceMethodsDecorator(serviceDesc, options));
     }
     file = !options.outputClientImpl
       ? file
@@ -1230,6 +1236,55 @@ function generateNestjsServiceClient(
     }
   }
   return service;
+}
+
+function generateNestjsGrpcServiceMethodsDecorator(
+  serviceDesc: ServiceDescriptorProto,
+  options: Options,
+): FunctionSpec {
+  let grpcServiceDecorator = FunctionSpec.create(`${serviceDesc.name}ControllerMethods`).addModifiers(Modifier.EXPORT);
+
+  const grpcMethods = serviceDesc.method
+    .filter(m => !m.serverStreaming && !m.clientStreaming)
+    .map(m => `'${options.lowerCaseServiceMethods ? camelCase(m.name) : m.name}'`)
+    .join(', ');
+
+  const grpcStreamMethods = serviceDesc.method
+    .filter(m => m.serverStreaming || m.clientStreaming)
+    .map(m => `'${options.lowerCaseServiceMethods ? camelCase(m.name) : m.name}'`)
+    .join(', ');
+
+  const grpcMethodType = TypeNames.importedType('GrpcMethod@@nestjs/microservices');
+  const grpcStreamMethodType = TypeNames.importedType('GrpcStreamMethod@@nestjs/microservices');
+
+  let decoratorFunction = FunctionSpec.createCallable().addParameter('constructor', TypeNames.typeVariable('Function'))
+  
+  // add loop for applying @GrpcMethod decorators to functions
+  decoratorFunction = generateGrpcMethodDecoratorLoop(decoratorFunction, serviceDesc, 'grpcMethods', grpcMethods, grpcMethodType);
+  
+  // add loop for applying @GrpcStreamMethod decorators to functions
+  decoratorFunction = generateGrpcMethodDecoratorLoop(decoratorFunction, serviceDesc, 'grpcStreamMethods', grpcStreamMethods, grpcStreamMethodType);
+  
+  const body = CodeBlock.empty().add('return function %F', decoratorFunction);
+  
+  grpcServiceDecorator = grpcServiceDecorator.addCodeBlock(body);
+  
+  return grpcServiceDecorator;
+}
+
+function generateGrpcMethodDecoratorLoop(
+  decoratorFunction: FunctionSpec,
+  serviceDesc: ServiceDescriptorProto,
+  grpcMethodsName: string,
+  grpcMethods: string,
+  grpcType: any
+): FunctionSpec {
+  return decoratorFunction
+    .addStatement('const %L: string[] = [%L]', grpcMethodsName, grpcMethods)
+    .beginControlFlow('for (const method of %L)', grpcMethodsName)
+    .addStatement(`const %L: any = %L`, 'descriptor', `Reflect.getOwnPropertyDescriptor(constructor.prototype, method)`)
+    .addStatement(`%T('${serviceDesc.name}', method)(constructor.prototype[method], method, descriptor)`, grpcType)
+    .endControlFlow();
 }
 
 function detectBatchMethod(
