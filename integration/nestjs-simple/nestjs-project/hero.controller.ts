@@ -17,6 +17,7 @@ export class HeroController extends HeroServiceController implements OnModuleIni
 
   onModuleInit() {}
 
+  @GrpcMethod('HeroService')
   async findOneHero(data: HeroById): Promise<Hero> {
     return this.heroes.find(({ id }) => id === data.id)!;
   }
