@@ -53,6 +53,100 @@ This will generate `*.ts` source files for the given `*.proto` types.
 
 If you want to package these source files into an npm package to distribute to clients, just run `tsc` on them as usual to generate the `.js`/`.d.ts` files, and deploy the output as a regular npm package.
 
+NestJS
+=====
+With the use of NestJS it's easy to implement an GRPC Microservice ([example](https://docs.nestjs.com/microservices/grpc)). But as you can see you have a lot of boilerplating to define your GRPC interfaces correctly. This approach works fine but is a bit tricky, because it doesn't support type checks. If you change your proto file you also need to update your interface.
+
+By using `ts-proto` you have strong type checks and compiler errors!
+
+To generate `ts` files for your `.proto` files you can use the `--ts_proto_opt=nestJs=true` option.
+
+### Naming convention
+For each service in your `.proto` file we generate two `interfaces` on to implement in your nestjs `controller` and one for the `client`.
+
+The name of the `controller` interface is base on the name of the service inside the `.proto`.
+
+If we have to following `.proto` file:
+```protobuf
+syntax = "proto3";
+
+package hero;
+
+service HeroService {
+    rpc FindOneHero (HeroById) returns (Hero) {}
+    rpc FindOneVillain (VillainById) returns (Villain) {}
+    rpc FindManyVillain (stream VillainById) returns (stream Villain) {}
+}
+```
+
+The controller interface name would be `HeroServiceController`.
+The client interface name would  `HeroServiceClient`.
+
+### implementation
+To implement the typescript file in your `nestjs` project you need to add the `controller` interface to your controller.
+
+For the client we simply pass the `client` interface to the `client.getService<?>();`.
+
+##### Controller
+
+```typescript
+@Controller('hero')
+export class HeroController extends HeroServiceController implements OnModuleInit {
+  private readonly heroes: Hero[] = [
+    { id: 1, name: 'Stephenh' },
+    { id: 2, name: 'Iangregsondev' }
+  ];
+
+  private readonly villains: Villain[] = [
+    { id: 1, name: 'John' },
+    { id: 2, name: 'Doe' }
+  ];
+
+  onModuleInit() {}
+
+  async findOneHero(data: HeroById): Promise<Hero> {
+    return this.heroes.find(({ id }) => id === data.id)!;
+  }
+
+  @GrpcMethod('HeroService')
+  async findOneVillain(data: VillainById): Promise<Villain> {
+    return this.villains.find(({ id }) => id === data.id)!;
+  }
+
+  @GrpcStreamMethod('HeroService')
+  findManyVillain(request: Observable<VillainById>): Observable<Villain> {
+    const hero$ = new Subject<Villain>();
+
+    const onNext = (villainById: VillainById) => {
+      const item = this.villains.find(({ id }) => id === villainById.id);
+      hero$.next(item);
+    };
+    const onComplete = () => hero$.complete();
+    request.subscribe(onNext, null, onComplete);
+
+    return hero$.asObservable();
+  }
+}
+```
+
+##### Client
+```typescript
+@Injectable()
+export class AppService implements OnModuleInit {
+  private heroesService: HeroesService;
+
+  constructor(@Inject('HERO_PACKAGE') private client: ClientGrpc) {}
+
+  onModuleInit() {
+    this.heroesService = this.client.getService<HeroesService>('HeroesService');
+  }
+
+  getHero(): Observable<string> {
+    return this.heroesService.findOne({ id: 1 });
+  }
+}
+```
+
 Goals
 =====
 

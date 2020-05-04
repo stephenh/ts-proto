@@ -4,7 +4,7 @@ import { Observable, Subject } from 'rxjs';
 import { HeroById, Hero, HeroServiceController, VillainById, Villain } from '../hero';
 
 @Controller('hero')
-export class HeroController implements OnModuleInit, HeroServiceController {
+export class HeroController extends HeroServiceController implements OnModuleInit {
   private readonly heroes: Hero[] = [
     { id: 1, name: 'Stephenh' },
     { id: 2, name: 'Iangregsondev' }
@@ -17,7 +17,6 @@ export class HeroController implements OnModuleInit, HeroServiceController {
 
   onModuleInit() {}
 
-  @GrpcMethod('HeroService')
   async findOneHero(data: HeroById): Promise<Hero> {
     return this.heroes.find(({ id }) => id === data.id)!;
   }
@@ -25,20 +24,6 @@ export class HeroController implements OnModuleInit, HeroServiceController {
   @GrpcMethod('HeroService')
   async findOneVillain(data: VillainById): Promise<Villain> {
     return this.villains.find(({ id }) => id === data.id)!;
-  }
-
-  @GrpcStreamMethod('HeroService')
-  findManyVillain(request: Observable<VillainById>): Observable<Villain> {
-    const hero$ = new Subject<Villain>();
-
-    const onNext = (villainById: VillainById) => {
-      const item = this.villains.find(({ id }) => id === villainById.id);
-      hero$.next(item);
-    };
-    const onComplete = () => hero$.complete();
-    request.subscribe(onNext, null, onComplete);
-
-    return hero$.asObservable();
   }
 
   @GrpcStreamMethod('HeroService')
