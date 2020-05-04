@@ -87,7 +87,7 @@ To implement the typescript file in your `nestjs` project you need to add the `c
 
 For the client we simply pass the `client` interface to the `client.getService<?>();`.
 
-> note: based on the `.proto` we'll generate a `const` for example `HERO_PACKAGE_NAME` and `HERO_SERVICE_NAME` this way your code breaks if you accidentally change your package or service name. (It's safer to have compiler errors than runtime errors)
+> note: based on the `.proto` we'll generate a `const` for example `HERO_PACKAGE_NAME` and `HERO_SERVICE_NAME` this way your code breaks if you change your package or service name. (It's safer to have compiler errors than runtime errors)
 
 ##### Controller
 
