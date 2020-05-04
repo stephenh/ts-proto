@@ -135,7 +135,14 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
   }
 
   visitServices(fileDesc, sourceInfo, (serviceDesc, sInfo) => {
-    file = file.addInterface(generateService(typeMap, fileDesc, sInfo, serviceDesc, options));
+    file = file.addInterface(
+      options.nestJs
+        ? generateNestjsService(typeMap, fileDesc, sInfo, serviceDesc, options)
+        : generateService(typeMap, fileDesc, sInfo, serviceDesc, options)
+    );
+    if (options.nestJs) {
+      file = file.addInterface(generateNestjsServiceClient(typeMap, fileDesc, sInfo, serviceDesc, options));
+    }
     file = !options.outputClientImpl
       ? file
       : file.addClass(generateServiceClientImpl(typeMap, fileDesc, serviceDesc, options));
@@ -971,9 +978,8 @@ function generateService(
 
   let index = 0;
   for (const methodDesc of serviceDesc.method) {
-
     if (options.lowerCaseServiceMethods) {
-      methodDesc.name = camelCase(methodDesc.name)
+      methodDesc.name = camelCase(methodDesc.name);
     }
 
     let requestFn = FunctionSpec.create(methodDesc.name);
@@ -987,7 +993,7 @@ function generateService(
 
     // Use metadata as last argument for interface only configuration
     if (options.addGrpcMetadata) {
-      requestFn = requestFn.addParameter('metadata?', "Metadata@grpc");
+      requestFn = requestFn.addParameter('metadata?', 'Metadata@grpc');
     }
 
     // Return observable for interface only configuration, passing returnObservable=true and methodDesc.serverStreaming=true
@@ -1039,7 +1045,6 @@ function generateRegularRpcMethod(
   serviceDesc: google.protobuf.ServiceDescriptorProto,
   methodDesc: google.protobuf.MethodDescriptorProto
 ) {
-
   let requestFn = FunctionSpec.create(methodDesc.name);
   if (options.useContext) {
     requestFn = requestFn.addParameter('ctx', TypeNames.typeVariable('Context'));
@@ -1104,6 +1109,127 @@ function generateServiceClientImpl(
     }
   }
   return client;
+}
+
+function generateNestjsService(
+  typeMap: TypeMap,
+  fileDesc: FileDescriptorProto,
+  sourceInfo: SourceInfo,
+  serviceDesc: ServiceDescriptorProto,
+  options: Options
+): InterfaceSpec {
+  let service = InterfaceSpec.create(`${serviceDesc.name}Controller`).addModifiers(Modifier.EXPORT);
+  if (options.useContext) {
+    service = service.addTypeVariable(contextTypeVar);
+  }
+  maybeAddComment(sourceInfo, text => (service = service.addJavadoc(text)));
+
+  let index = 0;
+  for (const methodDesc of serviceDesc.method) {
+    if (options.lowerCaseServiceMethods) {
+      methodDesc.name = camelCase(methodDesc.name);
+    }
+
+    let requestFn = FunctionSpec.create(methodDesc.name);
+    if (options.useContext) {
+      requestFn = requestFn.addParameter('ctx', TypeNames.typeVariable('Context'));
+    }
+    const info = sourceInfo.lookup(Fields.service.method, index++);
+    maybeAddComment(info, text => (requestFn = requestFn.addJavadoc(text)));
+
+    requestFn = requestFn.addParameter('request', requestType(typeMap, methodDesc));
+
+    // Use metadata as last argument for interface only configuration
+    if (options.addGrpcMetadata) {
+      requestFn = requestFn.addParameter('metadata?', 'Metadata@grpc');
+    }
+
+    // Return observable for interface only configuration, passing returnObservable=true and methodDesc.serverStreaming=true
+    if (options.returnObservable || methodDesc.serverStreaming) {
+      requestFn = requestFn.returns(responseObservable(typeMap, methodDesc));
+    } else {
+      // generate nestjs union type
+      requestFn = requestFn.returns(
+        TypeNames.unionType(
+          responsePromise(typeMap, methodDesc),
+          responseObservable(typeMap, methodDesc),
+          responseType(typeMap, methodDesc)
+        )
+      );
+    }
+
+    service = service.addFunction(requestFn);
+
+    if (options.useContext) {
+      const batchMethod = detectBatchMethod(typeMap, fileDesc, serviceDesc, methodDesc, options);
+      if (batchMethod) {
+        const name = batchMethod.methodDesc.name.replace('Batch', 'Get');
+        let batchFn = FunctionSpec.create(name);
+        if (options.useContext) {
+          batchFn = batchFn.addParameter('ctx', TypeNames.typeVariable('Context'));
+        }
+        batchFn = batchFn.addParameter(singular(batchMethod.inputFieldName), batchMethod.inputType);
+        batchFn = batchFn.returns(TypeNames.PROMISE.param(batchMethod.outputType));
+        service = service.addFunction(batchFn);
+      }
+    }
+  }
+  return service;
+}
+
+function generateNestjsServiceClient(
+  typeMap: TypeMap,
+  fileDesc: FileDescriptorProto,
+  sourceInfo: SourceInfo,
+  serviceDesc: ServiceDescriptorProto,
+  options: Options
+): InterfaceSpec {
+  let service = InterfaceSpec.create(`${serviceDesc.name}Client`).addModifiers(Modifier.EXPORT);
+  if (options.useContext) {
+    service = service.addTypeVariable(contextTypeVar);
+  }
+  maybeAddComment(sourceInfo, text => (service = service.addJavadoc(text)));
+
+  let index = 0;
+  for (const methodDesc of serviceDesc.method) {
+    if (options.lowerCaseServiceMethods) {
+      methodDesc.name = camelCase(methodDesc.name);
+    }
+
+    let requestFn = FunctionSpec.create(methodDesc.name);
+    if (options.useContext) {
+      requestFn = requestFn.addParameter('ctx', TypeNames.typeVariable('Context'));
+    }
+    const info = sourceInfo.lookup(Fields.service.method, index++);
+    maybeAddComment(info, text => (requestFn = requestFn.addJavadoc(text)));
+
+    requestFn = requestFn.addParameter('request', requestType(typeMap, methodDesc));
+
+    // Use metadata as last argument for interface only configuration
+    if (options.addGrpcMetadata) {
+      requestFn = requestFn.addParameter('metadata?', 'Metadata@grpc');
+    }
+
+    // Return observable since nestjs client always returns an Observable
+    requestFn = requestFn.returns(responseObservable(typeMap, methodDesc));
+
+    service = service.addFunction(requestFn);
+
+    if (options.useContext) {
+      const batchMethod = detectBatchMethod(typeMap, fileDesc, serviceDesc, methodDesc, options);
+      if (batchMethod) {
+        const name = batchMethod.methodDesc.name.replace('Batch', 'Get');
+        let batchFn = FunctionSpec.create(name);
+        if (options.useContext) {
+          batchFn = batchFn.addParameter('ctx', TypeNames.typeVariable('Context'));
+        }
+        batchFn = batchFn.addParameter(singular(batchMethod.inputFieldName), batchMethod.inputType);
+        batchFn = batchFn.returns(TypeNames.PROMISE.param(batchMethod.outputType));
+        service = service.addFunction(batchFn);
+      }
+    }
+  }
+  return service;
 }
 
 function detectBatchMethod(
@@ -1270,8 +1396,8 @@ function generateDataLoadersType(): InterfaceSpec {
 }
 
 function requestType(typeMap: TypeMap, methodDesc: MethodDescriptorProto): TypeName {
-  if(methodDesc.clientStreaming) {
-    return TypeNames.anyType("Observable@rxjs").param(messageToTypeName(typeMap, methodDesc.inputType));
+  if (methodDesc.clientStreaming) {
+    return TypeNames.anyType('Observable@rxjs').param(messageToTypeName(typeMap, methodDesc.inputType));
   }
   return messageToTypeName(typeMap, methodDesc.inputType);
 }
@@ -1285,7 +1411,7 @@ function responsePromise(typeMap: TypeMap, methodDesc: MethodDescriptorProto): T
 }
 
 function responseObservable(typeMap: TypeMap, methodDesc: MethodDescriptorProto): TypeName {
-  return TypeNames.anyType("Observable@rxjs").param(responseType(typeMap, methodDesc));
+  return TypeNames.anyType('Observable@rxjs').param(responseType(typeMap, methodDesc));
 }
 
 // function generateOneOfProperty(typeMap: TypeMap, name: string, fields: FieldDescriptorProto[]): PropertySpec {

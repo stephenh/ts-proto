@@ -20,7 +20,17 @@ export interface Villain {
   name: string;
 }
 
-export interface HeroService {
+export interface HeroServiceController {
+
+  findOneHero(request: HeroById, metadata?: Metadata): Observable<Hero>;
+
+  findOneVillain(request: VillainById, metadata?: Metadata): Observable<Villain>;
+
+  findManyVillain(request: Observable<VillainById>, metadata?: Metadata): Observable<Villain>;
+
+}
+
+export interface HeroServiceClient {
 
   findOneHero(request: HeroById, metadata?: Metadata): Observable<Hero>;
 

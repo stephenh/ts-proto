@@ -1,25 +1,21 @@
 import { Controller, OnModuleInit } from '@nestjs/common';
-import {
-  GrpcMethod,
-  GrpcStreamMethod,
-} from '@nestjs/microservices';
+import { GrpcMethod, GrpcStreamMethod } from '@nestjs/microservices';
 import { Observable, Subject } from 'rxjs';
-import { HeroById, Hero, HeroService, VillainById, Villain } from '../hero';
+import { HeroById, Hero, HeroServiceController, VillainById, Villain } from '../hero';
 
 @Controller('hero')
-export class HeroController implements OnModuleInit, HeroService {
+export class HeroController implements OnModuleInit, HeroServiceController {
   private readonly heroes: Hero[] = [
     { id: 1, name: 'Stephenh' },
-    { id: 2, name: 'Iangregsondev' },
+    { id: 2, name: 'Iangregsondev' }
   ];
 
   private readonly villains: Villain[] = [
     { id: 1, name: 'John' },
-    { id: 2, name: 'Doe' },
+    { id: 2, name: 'Doe' }
   ];
 
-  onModuleInit() {
-  }
+  onModuleInit() {}
 
   @GrpcMethod('HeroService')
   async findOneHero(data: HeroById): Promise<Hero> {
@@ -30,7 +26,7 @@ export class HeroController implements OnModuleInit, HeroService {
   async findOneVillain(data: VillainById): Promise<Villain> {
     return this.villains.find(({ id }) => id === data.id)!;
   }
-  
+
   @GrpcStreamMethod('HeroService')
   findManyVillain(request: Observable<VillainById>): Observable<Villain> {
     const hero$ = new Subject<Villain>();
