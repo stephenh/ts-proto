@@ -40,4 +40,18 @@ export class HeroController implements OnModuleInit, HeroServiceController {
 
     return hero$.asObservable();
   }
+
+  @GrpcStreamMethod('HeroService')
+  findManyVillain(request: Observable<VillainById>): Observable<Villain> {
+    const hero$ = new Subject<Villain>();
+
+    const onNext = (villainById: VillainById) => {
+      const item = this.villains.find(({ id }) => id === villainById.id);
+      hero$.next(item);
+    };
+    const onComplete = () => hero$.complete();
+    request.subscribe(onNext, null, onComplete);
+
+    return hero$.asObservable();
+  }
 }
