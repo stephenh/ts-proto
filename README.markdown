@@ -87,6 +87,8 @@ To implement the typescript file in your `nestjs` project you need to add the `c
 
 For the client we simply pass the `client` interface to the `client.getService<?>();`.
 
+> note: based on the `.proto` we'll generate a `const` for example `HERO_PACKAGE_NAME` and `HERO_SERVICE_NAME` this way your code breaks if you accidentally change your package or service name. (It's safer to have compiler errors than runtime errors)
+
 ##### Controller
 
 ```typescript
@@ -130,18 +132,21 @@ export class HeroController implements HeroServiceController {
 ```
 
 ##### Client
+
 ```typescript
+import { HeroById, Hero, HeroServiceController, HeroesService, HERO_SERVICE_NAME, HERO_PACKAGE_NAME } from '../hero';
+
 @Injectable()
 export class AppService implements OnModuleInit {
   private heroesService: HeroesService;
 
-  constructor(@Inject('HERO_PACKAGE') private client: ClientGrpc) {}
+  constructor(@Inject(HERO_PACKAGE_NAME) private client: ClientGrpc) {}
 
   onModuleInit() {
-    this.heroesService = this.client.getService<HeroesService>('HeroesService');
+    this.heroesService = this.client.getService<HeroesService>(HERO_SERVICE_NAME);
   }
 
-  getHero(): Observable<string> {
+  getHero(): Observable<Hero> {
     return this.heroesService.findOne({ id: 1 });
   }
 }

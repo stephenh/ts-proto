@@ -2,8 +2,8 @@ import { SampleService } from './sample-service';
 import { createApp } from './nestjs-project/main';
 import { INestMicroservice } from '@nestjs/common';
 import { ClientGrpc } from '@nestjs/microservices';
-import { HeroServiceClient, VillainById, Villain } from './hero';
-import { Observable, Subject } from 'rxjs';
+import { HeroServiceClient, VillainById, Villain, HERO_SERVICE_NAME, HERO_PACKAGE_NAME } from './hero';
+import { Subject } from 'rxjs';
 
 describe('nestjs-simple-test', () => {
   it('compiles', () => {
@@ -19,8 +19,8 @@ describe('nestjs-simple-test nestjs', () => {
 
   beforeAll(async () => {
     app = await createApp();
-    client = app.get('HERO_PACKAGE');
-    heroService = client.getService<HeroServiceClient>('HeroService');
+    client = app.get(HERO_PACKAGE_NAME);
+    heroService = client.getService<HeroServiceClient>(HERO_SERVICE_NAME);
     await app.listenAsync();
   });
 

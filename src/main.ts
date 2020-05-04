@@ -102,6 +102,11 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
     }
   );
 
+  // If nestJs=true export [package]_PACKAGE_NAME and [service]_SERVICE_NAME const
+  if(options.nestJs) {
+    file = file.addCode(CodeBlock.empty().add(`export const %L = '%L'`, `${camelToSnake(fileDesc.package)}_PACKAGE_NAME`, fileDesc.package));
+  }
+
   if (options.outputEncodeMethods || options.outputJsonMethods) {
     // then add the encoder/decoder/base instance
     visit(
@@ -148,6 +153,13 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
 
       // generate nestjs grpc service controller decorator
       file = file.addFunction(generateNestjsGrpcServiceMethodsDecorator(serviceDesc, options));
+
+      let serviceConstName =  `${camelToSnake(serviceDesc.name)}_NAME`;
+      if(!serviceDesc.name.toLowerCase().endsWith('service')){
+        serviceConstName = `${camelToSnake(serviceDesc.name)}_SERVICE_NAME`;
+      }
+
+      file = file.addCode(CodeBlock.empty().add(`export const %L = '%L'`, serviceConstName, serviceDesc.name));
     }
     file = !options.outputClientImpl
       ? file
@@ -1486,6 +1498,13 @@ function maybeSnakeToCamel(s: string, options: Options): string {
   } else {
     return s;
   }
+}
+
+function camelToSnake(s: string): string {
+  console.log('convert to snake', s);
+  return s.replace(/[\w]([A-Z])/g, function(m) {
+    return m[0] + "_" + m[1];
+  }).toUpperCase();
 }
 
 function capitalize(s: string): string {
