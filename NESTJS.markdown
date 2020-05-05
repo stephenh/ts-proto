@@ -30,7 +30,7 @@ The client interface name would  `HeroServiceClient`.
 ### implementation
 To implement the typescript file in your `nestjs` project you need to add the `controller` interface to your controller. We also generate a `decorator` for you controller. For example: `HeroServiceControllerMethods`, when you apply this to your controller we add all the method decorators you normally should do but doing it this way is safer.
 
-For the client we simply pass the `client` interface to the `client.getService<?>();`.
+For the client we simply pass the `client` interface to the `client.getService<?>();` (see below).
 
 > Note: Based on the `.proto` we'll generate a `const` for example `HERO_PACKAGE_NAME` and `HERO_SERVICE_NAME` this way your code breaks if you change your package or service name. (It's safer to have compiler errors than runtime errors)
 
