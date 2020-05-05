@@ -15,6 +15,10 @@ export class HeroController implements HeroServiceController {
     { id: 2, name: 'Doe' }
   ];
 
+  addOneHero(request: Hero) {
+    this.heroes.push(request);
+  }
+
   async findOneHero(data: HeroById): Promise<Hero> {
     return this.heroes.find(({ id }) => id === data.id)!;
   }

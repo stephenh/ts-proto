@@ -2,6 +2,9 @@ import { HeroServiceController, HeroById, Hero, Villain, VillainById } from './h
 import { Observable, Subject } from 'rxjs';
 
 export class SampleService implements HeroServiceController {
+  
+  addOneHero(request: Hero): void {}
+
   findOneHero(request: HeroById): Promise<Hero> {
     return Promise.resolve({ id: 1, name: 'test' });
   }

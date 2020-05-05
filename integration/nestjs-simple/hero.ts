@@ -1,4 +1,5 @@
 import { Observable } from 'rxjs';
+import { Empty } from './google/protobuf/empty';
 import { GrpcMethod, GrpcStreamMethod } from '@nestjs/microservices';
 
 
@@ -22,6 +23,8 @@ export interface Villain {
 
 export interface HeroServiceController {
 
+  addOneHero(request: Hero): void;
+
   findOneHero(request: HeroById): Promise<Hero> | Observable<Hero> | Hero;
 
   findOneVillain(request: VillainById): Promise<Villain> | Observable<Villain> | Villain;
@@ -31,6 +34,8 @@ export interface HeroServiceController {
 }
 
 export interface HeroServiceClient {
+
+  addOneHero(request: Hero): Observable<Empty>;
 
   findOneHero(request: HeroById): Observable<Hero>;
 
@@ -42,7 +47,7 @@ export interface HeroServiceClient {
 
 export function HeroServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ['findOneHero', 'findOneVillain'];
+    const grpcMethods: string[] = ['addOneHero', 'findOneHero', 'findOneVillain'];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod('HeroService', method)(constructor.prototype[method], method, descriptor);

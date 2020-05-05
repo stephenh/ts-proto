@@ -36,6 +36,12 @@ describe('nestjs-simple-test nestjs', () => {
     expect(heroService).not.toBeUndefined();
   });
 
+  it('should addOneHero', async () => {
+    const emptyResponse = await heroService.addOneHero({ id: 3, name: 'Toon' }).toPromise();
+    expect(emptyResponse).toEqual({});
+  });
+
+
   it('should findOneHero', async () => {
     const hero = await heroService.findOneHero({ id: 1 }).toPromise();
     expect(hero).toEqual({ id: 1, name: 'Stephenh' });

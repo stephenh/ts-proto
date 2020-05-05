@@ -32,7 +32,8 @@ import {
   packedType,
   toReaderCall,
   toTypeName,
-  TypeMap
+  TypeMap,
+  isEmptyType
 } from './types';
 import { asSequence } from 'sequency';
 import SourceInfo, { Fields } from './sourceInfo';
@@ -1163,7 +1164,9 @@ function generateNestjsServiceController(
     }
 
     // Return observable for interface only configuration, passing returnObservable=true and methodDesc.serverStreaming=true
-    if (options.returnObservable || methodDesc.serverStreaming) {
+    if (isEmptyType(methodDesc.outputType)) {
+      requestFn = requestFn.returns(TypeNames.anyType('void'));
+    }else if (options.returnObservable || methodDesc.serverStreaming) {
       requestFn = requestFn.returns(responseObservable(typeMap, methodDesc));
     } else {
       // generate nestjs union type

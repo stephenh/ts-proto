@@ -284,6 +284,10 @@ export function isValueType(field: FieldDescriptorProto): boolean {
   return field.typeName in valueTypes;
 }
 
+export function isEmptyType(typeName: string): boolean {
+  return typeName === '.google.protobuf.Empty';
+}
+
 /** Maps `.some_proto_namespace.Message` to a TypeName. */
 export function messageToTypeName(typeMap: TypeMap, protoType: string, keepValueType: boolean = false): TypeName {
   // Watch for the wrapper types `.google.protobuf.StringValue` and map to `string | undefined`
