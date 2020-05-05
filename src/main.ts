@@ -160,7 +160,7 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
         serviceConstName = `${camelToSnake(serviceDesc.name)}_SERVICE_NAME`;
       }
 
-      file = file.addCode(CodeBlock.empty().add(`export const %L = '%L'`, serviceConstName, serviceDesc.name));
+      file = file.addCode(CodeBlock.empty().add(`export const %L = '%L';`, serviceConstName, serviceDesc.name));
     }
     file = !options.outputClientImpl
       ? file
