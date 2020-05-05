@@ -1,7 +1,7 @@
-import { HeroService, HeroById, Hero, Villain, VillainById } from './hero';
+import { HeroServiceController, HeroById, Hero, Villain, VillainById } from './hero';
 import { Observable, of, Subject } from 'rxjs';
 
-export class SampleService implements HeroService {
+export class SampleService implements HeroServiceController {
   findOneHero(request: HeroById): Observable<Hero> {
     return of({ id: 1, name: 'test' });
   }
