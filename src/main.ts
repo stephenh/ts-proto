@@ -144,7 +144,7 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
   visitServices(fileDesc, sourceInfo, (serviceDesc, sInfo) => {
     file = file.addInterface(
       options.nestJs
-        ? generateNestjsService(typeMap, fileDesc, sInfo, serviceDesc, options)
+        ? generateNestjsServiceController(typeMap, fileDesc, sInfo, serviceDesc, options)
         : generateService(typeMap, fileDesc, sInfo, serviceDesc, options)
     );
     if (options.nestJs) {
@@ -1129,7 +1129,7 @@ function generateServiceClientImpl(
   return client;
 }
 
-function generateNestjsService(
+function generateNestjsServiceController(
   typeMap: TypeMap,
   fileDesc: FileDescriptorProto,
   sourceInfo: SourceInfo,
@@ -1501,7 +1501,6 @@ function maybeSnakeToCamel(s: string, options: Options): string {
 }
 
 function camelToSnake(s: string): string {
-  console.log('convert to snake', s);
   return s.replace(/[\w]([A-Z])/g, function(m) {
     return m[0] + "_" + m[1];
   }).toUpperCase();

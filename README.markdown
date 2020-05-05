@@ -2,6 +2,32 @@
 [![npm](https://img.shields.io/npm/v/ts-proto)](https://www.npmjs.com/package/ts-proto)
 [![CircleCI](https://circleci.com/gh/stephenh/ts-proto.svg?style=svg)](https://circleci.com/gh/stephenh/ts-proto)
 
+# ts-proto
+
+> `ts-proto` transforms your `.proto` files into strong typed `typescript` files!
+
+## Table of contents
+
+- [QuickStart](#quickstart)
+- [Goals](#goals)
+- [Example Types](#example-types)
+- [Highlights](#highlights)
+- [Current Disclaimers](#current-disclaimers)
+- [Auto-Batching / N+1 Prevention](#auto-batching---n-1-prevention)
+- [Usage](#usage)
+    + [Supported options](#supported-options)
+    + [Only Types](#only-types)
+    + [NestJS Support](NESTJS.markdown)
+- [Building](#building)
+- [Assumptions](#assumptions)
+- [Todo](#todo)
+- [Typing Approach](#typing-approach)
+- [OneOf Handling](#oneof-handling)
+- [Primitive Types](#primitive-types)
+- [Wrapper Types](#wrapper-types)
+- [Number Types](#number-types)
+- [Current Status of Optional Values](#current-status-of-optional-values)
+
 Overview
 ========
 
@@ -52,105 +78,6 @@ QuickStart
 This will generate `*.ts` source files for the given `*.proto` types.
 
 If you want to package these source files into an npm package to distribute to clients, just run `tsc` on them as usual to generate the `.js`/`.d.ts` files, and deploy the output as a regular npm package.
-
-NestJS
-=====
-With the use of NestJS it's easy to implement an GRPC Microservice ([example](https://docs.nestjs.com/microservices/grpc)). But as you can see you have a lot of boilerplating to define your GRPC interfaces correctly. This approach works fine but is a bit tricky, because it doesn't support type checks. If you change your proto file you also need to update your interface.
-
-By using `ts-proto` you have strong type checks and compiler errors!
-
-To generate `ts` files for your `.proto` files you can use the `--ts_proto_opt=nestJs=true` option.
-
-### Naming convention
-For each service in your `.proto` file we generate two `interfaces` on to implement in your nestjs `controller` and one for the `client`.
-
-The name of the `controller` interface is base on the name of the service inside the `.proto`.
-
-If we have to following `.proto` file:
-```protobuf
-syntax = "proto3";
-
-package hero;
-
-service HeroService {
-    rpc FindOneHero (HeroById) returns (Hero) {}
-    rpc FindOneVillain (VillainById) returns (Villain) {}
-    rpc FindManyVillain (stream VillainById) returns (stream Villain) {}
-}
-```
-
-The controller interface name would be `HeroServiceController`.
-The client interface name would  `HeroServiceClient`.
-
-### implementation
-To implement the typescript file in your `nestjs` project you need to add the `controller` interface to your controller. We also generate a `decorator` for you controller. For example: `HeroServiceControllerMethods`, when you apply this to your controller we add all the method decorators you normally should do but doing it this way is safer.
-
-For the client we simply pass the `client` interface to the `client.getService<?>();`.
-
-> Note: Based on the `.proto` we'll generate a `const` for example `HERO_PACKAGE_NAME` and `HERO_SERVICE_NAME` this way your code breaks if you change your package or service name. (It's safer to have compiler errors than runtime errors)
-
-##### Controller
-
-```typescript
-import { HeroById, Hero, HeroServiceController, VillainById, Villain, HeroServiceControllerMethods } from '../hero';
-
-@Controller('hero')
-// Generated decorator that applies all the @GrpcMethod and @GrpcStreamMethod to the right methods
-@HeroServiceControllerMethods()
-export class HeroController implements HeroServiceController {
-  private readonly heroes: Hero[] = [
-    { id: 1, name: 'Stephenh' },
-    { id: 2, name: 'Iangregsondev' }
-  ];
-
-  private readonly villains: Villain[] = [
-    { id: 1, name: 'John' },
-    { id: 2, name: 'Doe' }
-  ];
-
-  async findOneHero(data: HeroById): Promise<Hero> {
-    return this.heroes.find(({ id }) => id === data.id)!;
-  }
-
-  async findOneVillain(data: VillainById): Promise<Villain> {
-    return this.villains.find(({ id }) => id === data.id)!;
-  }
-
-  findManyVillain(request: Observable<VillainById>): Observable<Villain> {
-    const hero$ = new Subject<Villain>();
-
-    const onNext = (villainById: VillainById) => {
-      const item = this.villains.find(({ id }) => id === villainById.id);
-      hero$.next(item);
-    };
-    const onComplete = () => hero$.complete();
-    request.subscribe(onNext, null, onComplete);
-
-    return hero$.asObservable();
-  }
-}
-```
-
-##### Client
-
-```typescript
-import { HeroById, Hero, HeroServiceController, HeroesService, HERO_SERVICE_NAME, HERO_PACKAGE_NAME } from '../hero';
-
-@Injectable()
-export class AppService implements OnModuleInit {
-  private heroesService: HeroesService;
-
-  constructor(@Inject(HERO_PACKAGE_NAME) private client: ClientGrpc) {}
-
-  onModuleInit() {
-    this.heroesService = this.client.getService<HeroesService>(HERO_SERVICE_NAME);
-  }
-
-  getHero(): Observable<Hero> {
-    return this.heroesService.findOne({ id: 1 });
-  }
-}
-```
 
 Goals
 =====
@@ -310,11 +237,14 @@ protoc --plugin=node_modules/ts-proto/protoc-gen-ts_proto ./batching.proto -I.
   
   Note that `addGrpcMetadata` and `returnObservable` will still be false.
 
-### "Only Types"
+### Only Types
 
 If you're looking for `ts-proto` to generate only types for your Protobuf types then passing all three of `outputEncodeMethods`, `outputJsonMethods`, and `outputClientImpl` as `false` is probably what you want, i.e.:
  
 `--ts_proto_opt=outputEncodeMethods=false,outputJsonMethods=false,outputClientImpl=false`.
+
+### NestJS Support
+We have a great way of working together with [nestjs](https://docs.nestjs.com/microservices/grpc). `ts-proto` generates `interfaces` and `decorators` for you controller, client. For more information see the [nestjs readme](NESTJS.markdown).
 
 Building
 ========
