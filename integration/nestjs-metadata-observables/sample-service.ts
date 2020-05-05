@@ -1,8 +1,8 @@
-import { HeroService, HeroById, Hero, Villain, VillainById } from './hero';
+import { HeroServiceController, HeroById, Hero, Villain, VillainById } from './hero';
 import { Observable, of, Subject } from 'rxjs';
 import { Metadata } from 'grpc';
 
-export class SampleService implements HeroService {
+export class SampleService implements HeroServiceController {
   findOneHero(request: HeroById, metadata?: Metadata): Observable<Hero> {
     return of({ id: 1, name: 'test' });
   }
