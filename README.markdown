@@ -2,6 +2,32 @@
 [![npm](https://img.shields.io/npm/v/ts-proto)](https://www.npmjs.com/package/ts-proto)
 [![CircleCI](https://circleci.com/gh/stephenh/ts-proto.svg?style=svg)](https://circleci.com/gh/stephenh/ts-proto)
 
+# ts-proto
+
+> `ts-proto` transforms your `.proto` files into strong typed `typescript` files!
+
+## Table of contents
+
+- [QuickStart](#quickstart)
+- [Goals](#goals)
+- [Example Types](#example-types)
+- [Highlights](#highlights)
+- [Current Disclaimers](#current-disclaimers)
+- [Auto-Batching / N+1 Prevention](#auto-batching---n-1-prevention)
+- [Usage](#usage)
+    + [Supported options](#supported-options)
+    + [Only Types](#only-types)
+    + [NestJS Support](NESTJS.markdown)
+- [Building](#building)
+- [Assumptions](#assumptions)
+- [Todo](#todo)
+- [Typing Approach](#typing-approach)
+- [OneOf Handling](#oneof-handling)
+- [Primitive Types](#primitive-types)
+- [Wrapper Types](#wrapper-types)
+- [Number Types](#number-types)
+- [Current Status of Optional Values](#current-status-of-optional-values)
+
 Overview
 ========
 
@@ -205,17 +231,20 @@ protoc --plugin=node_modules/ts-proto/protoc-gen-ts_proto ./batching.proto -I.
 
   (Requires `nestJs=true`.)
 
-* With `--ts_proto_opt=nestJs=true`, the defaults will change to generate [NestJS protobuf](https://docs.nestjs.com/microservices/grpc) friendly types & service interfaces that can be used in both the client-side and server-side of NestJS protobuf implementations.
+* With `--ts_proto_opt=nestJs=true`, the defaults will change to generate [NestJS protobuf](https://docs.nestjs.com/microservices/grpc) friendly types & service interfaces that can be used in both the client-side and server-side of NestJS protobuf implementations. See the [nestjs readme](NESTJS.markdown) for more information and implementation examples.
 
   Specifically `outputEncodeMethods`, `outputJsonMethods`, and `outputClientImpl` will all be false, and `lowerCaseServiceMethods` will be true.
   
   Note that `addGrpcMetadata` and `returnObservable` will still be false.
 
-### "Only Types"
+### Only Types
 
 If you're looking for `ts-proto` to generate only types for your Protobuf types then passing all three of `outputEncodeMethods`, `outputJsonMethods`, and `outputClientImpl` as `false` is probably what you want, i.e.:
  
 `--ts_proto_opt=outputEncodeMethods=false,outputJsonMethods=false,outputClientImpl=false`.
+
+### NestJS Support
+We have a great way of working together with [nestjs](https://docs.nestjs.com/microservices/grpc). `ts-proto` generates `interfaces` and `decorators` for you controller, client. For more information see the [nestjs readme](NESTJS.markdown).
 
 Building
 ========

@@ -1,10 +1,14 @@
 syntax = "proto3";
 
+import "google/protobuf/empty.proto";
+
 package hero;
 
 service HeroService {
+    rpc AddOneHero (Hero) returns (google.protobuf.Empty) {}
     rpc FindOneHero (HeroById) returns (Hero) {}
     rpc FindOneVillain (VillainById) returns (Villain) {}
+    rpc FindManyVillain (stream VillainById) returns (stream Villain) {}
 }
 
 message HeroById {

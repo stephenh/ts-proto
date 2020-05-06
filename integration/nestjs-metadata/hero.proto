@@ -5,6 +5,7 @@ package hero;
 service HeroService {
     rpc FindOneHero (HeroById) returns (Hero) {}
     rpc FindOneVillain (VillainById) returns (Villain) {}
+    rpc FindManyVillain (stream VillainById) returns (stream Villain) {}
 }
 
 message HeroById {
