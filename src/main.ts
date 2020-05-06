@@ -105,7 +105,7 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
 
   // If nestJs=true export [package]_PACKAGE_NAME and [service]_SERVICE_NAME const
   if(options.nestJs) {
-    file = file.addCode(CodeBlock.empty().add(`export const %L = '%L'`, `${camelToSnake(fileDesc.package.replace('.', '_'))}_PACKAGE_NAME`, fileDesc.package));
+    file = file.addCode(CodeBlock.empty().add(`export const %L = '%L';`, `${camelToSnake(fileDesc.package.replace('.', '_'))}_PACKAGE_NAME`, fileDesc.package));
   }
 
   if (options.outputEncodeMethods || options.outputJsonMethods) {

@@ -55,5 +55,5 @@ export function HeroServiceControllerMethods() {
   }
 }
 
-export const HERO_PACKAGE_NAME = 'hero'
+export const HERO_PACKAGE_NAME = 'hero';
 export const HERO_SERVICE_NAME = 'HeroService';
