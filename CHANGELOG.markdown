@@ -1,3 +1,10 @@
+## v1.20.2
+
+* Another fix for NestJS-related `PACKAGE_NAME` consts
+
+## v1.20.1
+
+* Fix for NestJS-related `PACKAGE_NAME` consts
 
 ## v1.20.0
 
