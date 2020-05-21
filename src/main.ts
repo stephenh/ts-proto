@@ -521,12 +521,13 @@ function generateDecode(
 ): FunctionSpec {
   // create the basic function declaration
   let func = FunctionSpec.create('decode')
-    .addParameter('reader', 'Reader@protobufjs/minimal')
+    .addParameter('input', TypeNames.unionType('Uint8Array', 'Reader@protobufjs/minimal'))
     .addParameter('length?', 'number')
     .returns(fullName);
 
   // add the initial end/message
   func = func
+    .addStatement('const reader = input instanceof Uint8Array ? new Reader(input) : input')
     .addStatement('let end = length === undefined ? reader.len : reader.pos + length')
     .addStatement('const message = Object.create(base%L) as %L', fullName, fullName);
 

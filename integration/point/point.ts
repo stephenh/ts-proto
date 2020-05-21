@@ -27,7 +27,8 @@ export const Point = {
     writer.uint32(17).double(message.lng);
     return writer;
   },
-  decode(reader: Reader, length?: number): Point {
+  decode(input: Uint8Array | Reader, length?: number): Point {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = Object.create(basePoint) as Point;
     while (reader.pos < end) {
@@ -92,7 +93,8 @@ export const Area = {
     }
     return writer;
   },
-  decode(reader: Reader, length?: number): Area {
+  decode(input: Uint8Array | Reader, length?: number): Area {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = Object.create(baseArea) as Area;
     while (reader.pos < end) {

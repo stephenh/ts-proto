@@ -119,7 +119,8 @@ export const Timestamp = {
     writer.uint32(16).int32(message.nanos);
     return writer;
   },
-  decode(reader: Reader, length?: number): Timestamp {
+  decode(input: Uint8Array | Reader, length?: number): Timestamp {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = Object.create(baseTimestamp) as Timestamp;
     while (reader.pos < end) {
