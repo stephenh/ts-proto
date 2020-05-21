@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package hero;
+
+service HeroService {
+    rpc RegularMethod (HeroRequest) returns (Hero) {}
+    rpc ClientStreamingMethod (stream HeroRequest) returns (Hero) {}
+    rpc ServerStreamingMethod (HeroRequest) returns (stream Hero) {}
+    rpc TwoWayStreamingMethod (stream HeroRequest) returns (stream Hero) {}
+}
+
+message HeroRequest {}
+
+message Hero {
+    int32 random = 1;
+}
