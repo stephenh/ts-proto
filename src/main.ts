@@ -1261,12 +1261,12 @@ function generateNestjsGrpcServiceMethodsDecorator(
   let grpcServiceDecorator = FunctionSpec.create(`${serviceDesc.name}ControllerMethods`).addModifiers(Modifier.EXPORT);
 
   const grpcMethods = serviceDesc.method
-    .filter(m => !m.serverStreaming && !m.clientStreaming)
+    .filter(m => !m.clientStreaming)
     .map(m => `'${options.lowerCaseServiceMethods ? camelCase(m.name) : m.name}'`)
     .join(', ');
 
   const grpcStreamMethods = serviceDesc.method
-    .filter(m => m.serverStreaming || m.clientStreaming)
+    .filter(m => m.clientStreaming)
     .map(m => `'${options.lowerCaseServiceMethods ? camelCase(m.name) : m.name}'`)
     .join(', ');
 

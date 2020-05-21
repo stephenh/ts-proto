@@ -8,7 +8,7 @@
     "protoc-gen-ts_proto": "./protoc-gen-ts_proto"
   },
   "scripts": {
-    "prepare": "yarn setup && yarn build && yarn test",
+    "prepare": "yarn build && yarn test",
     "build": "yarn tsc",
     "setup": "./pbjs.sh && ./integration/pbjs.sh && ./integration/update-bins.sh && ./integration/codegen.sh",
     "test": "yarn jest -c jest.config.js"
