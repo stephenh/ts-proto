@@ -46,7 +46,8 @@ export const Issue56 = {
     writer.uint32(8).int32(message.test);
     return writer;
   },
-  decode(reader: Reader, length?: number): Issue56 {
+  decode(input: Uint8Array | Reader, length?: number): Issue56 {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = Object.create(baseIssue56) as Issue56;
     while (reader.pos < end) {

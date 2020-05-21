@@ -21,7 +21,8 @@ export const Baz = {
     }
     return writer;
   },
-  decode(reader: Reader, length?: number): Baz {
+  decode(input: Uint8Array | Reader, length?: number): Baz {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = Object.create(baseBaz) as Baz;
     while (reader.pos < end) {
@@ -66,7 +67,8 @@ export const FooBar = {
   encode(_: FooBar, writer: Writer = Writer.create()): Writer {
     return writer;
   },
-  decode(reader: Reader, length?: number): FooBar {
+  decode(input: Uint8Array | Reader, length?: number): FooBar {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = Object.create(baseFooBar) as FooBar;
     while (reader.pos < end) {

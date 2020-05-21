@@ -120,7 +120,8 @@ export const Tile = {
     }
     return writer;
   },
-  decode(reader: Reader, length?: number): Tile {
+  decode(input: Uint8Array | Reader, length?: number): Tile {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = Object.create(baseTile) as Tile;
     message.layers = [];
@@ -179,7 +180,8 @@ export const Tile_Value = {
     writer.uint32(56).bool(message.boolValue);
     return writer;
   },
-  decode(reader: Reader, length?: number): Tile_Value {
+  decode(input: Uint8Array | Reader, length?: number): Tile_Value {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = Object.create(baseTile_Value) as Tile_Value;
     while (reader.pos < end) {
@@ -320,7 +322,8 @@ export const Tile_Feature = {
     writer.ldelim();
     return writer;
   },
-  decode(reader: Reader, length?: number): Tile_Feature {
+  decode(input: Uint8Array | Reader, length?: number): Tile_Feature {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = Object.create(baseTile_Feature) as Tile_Feature;
     message.tags = [];
@@ -447,7 +450,8 @@ export const Tile_Layer = {
     writer.uint32(40).uint32(message.extent);
     return writer;
   },
-  decode(reader: Reader, length?: number): Tile_Layer {
+  decode(input: Uint8Array | Reader, length?: number): Tile_Layer {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = Object.create(baseTile_Layer) as Tile_Layer;
     message.features = [];

@@ -39,7 +39,8 @@ export const ImportedThing = {
     }
     return writer;
   },
-  decode(reader: Reader, length?: number): ImportedThing {
+  decode(input: Uint8Array | Reader, length?: number): ImportedThing {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = Object.create(baseImportedThing) as ImportedThing;
     while (reader.pos < end) {

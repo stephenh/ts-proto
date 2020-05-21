@@ -151,7 +151,8 @@ export const DoubleValue = {
     writer.uint32(9).double(message.value);
     return writer;
   },
-  decode(reader: Reader, length?: number): DoubleValue {
+  decode(input: Uint8Array | Reader, length?: number): DoubleValue {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = Object.create(baseDoubleValue) as DoubleValue;
     while (reader.pos < end) {
@@ -197,7 +198,8 @@ export const FloatValue = {
     writer.uint32(13).float(message.value);
     return writer;
   },
-  decode(reader: Reader, length?: number): FloatValue {
+  decode(input: Uint8Array | Reader, length?: number): FloatValue {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = Object.create(baseFloatValue) as FloatValue;
     while (reader.pos < end) {
@@ -243,7 +245,8 @@ export const Int64Value = {
     writer.uint32(8).int64(message.value);
     return writer;
   },
-  decode(reader: Reader, length?: number): Int64Value {
+  decode(input: Uint8Array | Reader, length?: number): Int64Value {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = Object.create(baseInt64Value) as Int64Value;
     while (reader.pos < end) {
@@ -289,7 +292,8 @@ export const UInt64Value = {
     writer.uint32(8).uint64(message.value);
     return writer;
   },
-  decode(reader: Reader, length?: number): UInt64Value {
+  decode(input: Uint8Array | Reader, length?: number): UInt64Value {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = Object.create(baseUInt64Value) as UInt64Value;
     while (reader.pos < end) {
@@ -335,7 +339,8 @@ export const Int32Value = {
     writer.uint32(8).int32(message.value);
     return writer;
   },
-  decode(reader: Reader, length?: number): Int32Value {
+  decode(input: Uint8Array | Reader, length?: number): Int32Value {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = Object.create(baseInt32Value) as Int32Value;
     while (reader.pos < end) {
@@ -381,7 +386,8 @@ export const UInt32Value = {
     writer.uint32(8).uint32(message.value);
     return writer;
   },
-  decode(reader: Reader, length?: number): UInt32Value {
+  decode(input: Uint8Array | Reader, length?: number): UInt32Value {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = Object.create(baseUInt32Value) as UInt32Value;
     while (reader.pos < end) {
@@ -427,7 +433,8 @@ export const BoolValue = {
     writer.uint32(8).bool(message.value);
     return writer;
   },
-  decode(reader: Reader, length?: number): BoolValue {
+  decode(input: Uint8Array | Reader, length?: number): BoolValue {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = Object.create(baseBoolValue) as BoolValue;
     while (reader.pos < end) {
@@ -473,7 +480,8 @@ export const StringValue = {
     writer.uint32(10).string(message.value);
     return writer;
   },
-  decode(reader: Reader, length?: number): StringValue {
+  decode(input: Uint8Array | Reader, length?: number): StringValue {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = Object.create(baseStringValue) as StringValue;
     while (reader.pos < end) {
@@ -519,7 +527,8 @@ export const BytesValue = {
     writer.uint32(10).bytes(message.value);
     return writer;
   },
-  decode(reader: Reader, length?: number): BytesValue {
+  decode(input: Uint8Array | Reader, length?: number): BytesValue {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = Object.create(baseBytesValue) as BytesValue;
     while (reader.pos < end) {
