@@ -33,6 +33,27 @@ describe('vector-tile', () => {
     expect(v2).toEqual(v1);
   });
 
+  it('can decode Uint8Array input directly', () => {
+    const v1: IValue = {
+      intValue: 1_000,
+      uintValue: 2_000
+    };
+    const bytes = PbValue.encode(PbValue.fromObject(v1)).finish()
+    const v2 = Tile_Value.decode(bytes);
+    expect(v2).toEqual(v1);
+  });
+
+  it('can decode Buffer input', () => {
+    const v1: IValue = {
+      intValue: 1_000,
+      uintValue: 2_000
+    };
+    const bytes = PbValue.encode(PbValue.fromObject(v1)).finish()
+    const buffer = Buffer.from(bytes)
+    const v2 = Tile_Value.decode(buffer);
+    expect(v2).toEqual(v1);
+  });
+
   it('decodes numbers', () => {
     const tile = {
       intValue: 1,
