@@ -127,8 +127,9 @@ export class EntityServiceClientImpl<Context extends DataLoaders> implements Ent
 
   BatchQuery(ctx: Context, request: BatchQueryRequest): Promise<BatchQueryResponse> {
     const data = BatchQueryRequest.encode(request).finish();
-    const promise = this.rpc.request(ctx, "batching.EntityService", "BatchQuery", data);
-    return promise.then(data => BatchQueryResponse.decode(new Reader(data)));
+    const response = this.rpc.request(ctx, "batching.EntityService", "BatchQuery", data);
+    if (!(response instanceof Promise)) throw new Error(`Stream response expected to be Promise. ${response.constructor.name} encountered.`);
+    return response.then(data => BatchQueryResponse.decode(new Reader(data)));
   }
 
   GetMapQuery(ctx: Context, id: string): Promise<Entity> {
@@ -145,8 +146,9 @@ export class EntityServiceClientImpl<Context extends DataLoaders> implements Ent
 
   BatchMapQuery(ctx: Context, request: BatchMapQueryRequest): Promise<BatchMapQueryResponse> {
     const data = BatchMapQueryRequest.encode(request).finish();
-    const promise = this.rpc.request(ctx, "batching.EntityService", "BatchMapQuery", data);
-    return promise.then(data => BatchMapQueryResponse.decode(new Reader(data)));
+    const response = this.rpc.request(ctx, "batching.EntityService", "BatchMapQuery", data);
+    if (!(response instanceof Promise)) throw new Error(`Stream response expected to be Promise. ${response.constructor.name} encountered.`);
+    return response.then(data => BatchMapQueryResponse.decode(new Reader(data)));
   }
 
   GetOnlyMethod(ctx: Context, request: GetOnlyMethodRequest): Promise<GetOnlyMethodResponse> {
@@ -165,15 +167,16 @@ export class EntityServiceClientImpl<Context extends DataLoaders> implements Ent
 
   WriteMethod(ctx: Context, request: WriteMethodRequest): Promise<WriteMethodResponse> {
     const data = WriteMethodRequest.encode(request).finish();
-    const promise = this.rpc.request(ctx, "batching.EntityService", "WriteMethod", data);
-    return promise.then(data => WriteMethodResponse.decode(new Reader(data)));
+    const response = this.rpc.request(ctx, "batching.EntityService", "WriteMethod", data);
+    if (!(response instanceof Promise)) throw new Error(`Stream response expected to be Promise. ${response.constructor.name} encountered.`);
+    return response.then(data => WriteMethodResponse.decode(new Reader(data)));
   }
 
 }
 
 interface Rpc<Context> {
 
-  request(ctx: Context, service: string, method: string, data: Uint8Array): Promise<Uint8Array>;
+  request(ctx: Context, service: string, method: string, data: Uint8Array|Observable<Uint8Array>, expectObservable?: boolean): Promise<Uint8Array>|Observable<Uint8Array>;
 
 }
 

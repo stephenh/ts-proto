@@ -244,15 +244,16 @@ export class PingServiceClientImpl implements PingService {
 
   ping(request: PingRequest): Promise<PingResponse> {
     const data = PingRequest.encode(request).finish();
-    const promise = this.rpc.request("simple.PingService", "ping", data);
-    return promise.then(data => PingResponse.decode(new Reader(data)));
+    const response = this.rpc.request("simple.PingService", "ping", data);
+    if (!(response instanceof Promise)) throw new Error(`Stream response expected to be Promise. ${response.constructor.name} encountered.`);
+    return response.then(data => PingResponse.decode(new Reader(data)));
   }
 
 }
 
 interface Rpc {
 
-  request(service: string, method: string, data: Uint8Array): Promise<Uint8Array>;
+  request(service: string, method: string, data: Uint8Array|Observable<Uint8Array>, expectObservable?: boolean): Promise<Uint8Array>|Observable<Uint8Array>;
 
 }
 
