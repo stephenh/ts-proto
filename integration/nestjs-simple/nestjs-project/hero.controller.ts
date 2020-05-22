@@ -5,15 +5,9 @@ import { HeroById, Hero, HeroServiceController, VillainById, Villain, HeroServic
 @Controller('hero')
 @HeroServiceControllerMethods()
 export class HeroController implements HeroServiceController {
-  private readonly heroes: Hero[] = [
-    { id: 1, name: 'Stephenh' },
-    { id: 2, name: 'Iangregsondev' }
-  ];
+  private readonly heroes: Hero[] = [{ id: 1, name: 'Stephenh' }, { id: 2, name: 'Iangregsondev' }];
 
-  private readonly villains: Villain[] = [
-    { id: 1, name: 'John' },
-    { id: 2, name: 'Doe' }
-  ];
+  private readonly villains: Villain[] = [{ id: 1, name: 'John' }, { id: 2, name: 'Doe' }];
 
   addOneHero(request: Hero) {
     this.heroes.push(request);
@@ -38,5 +32,13 @@ export class HeroController implements HeroServiceController {
     request.subscribe(onNext, null, onComplete);
 
     return hero$.asObservable();
+  }
+
+  findManyVillainStreamIn(request: Observable<VillainById>): Observable<Villain> {
+    return null!;
+  }
+
+  findManyVillainStreamOut(request: VillainById): Observable<Villain> {
+    return null!;
   }
 }

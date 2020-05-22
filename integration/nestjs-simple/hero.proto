@@ -9,6 +9,8 @@ service HeroService {
     rpc FindOneHero (HeroById) returns (Hero) {}
     rpc FindOneVillain (VillainById) returns (Villain) {}
     rpc FindManyVillain (stream VillainById) returns (stream Villain) {}
+    rpc FindManyVillainStreamIn (stream VillainById) returns (Villain) {}
+    rpc FindManyVillainStreamOut (VillainById) returns (stream Villain) {}
 }
 
 message HeroById {

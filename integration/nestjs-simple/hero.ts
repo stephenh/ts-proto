@@ -31,6 +31,10 @@ export interface HeroServiceController {
 
   findManyVillain(request: Observable<VillainById>): Observable<Villain>;
 
+  findManyVillainStreamIn(request: Observable<VillainById>): Promise<Villain> | Observable<Villain> | Villain;
+
+  findManyVillainStreamOut(request: VillainById): Observable<Villain>;
+
 }
 
 export interface HeroServiceClient {
@@ -43,16 +47,20 @@ export interface HeroServiceClient {
 
   findManyVillain(request: Observable<VillainById>): Observable<Villain>;
 
+  findManyVillainStreamIn(request: Observable<VillainById>): Observable<Villain>;
+
+  findManyVillainStreamOut(request: VillainById): Observable<Villain>;
+
 }
 
 export function HeroServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ['addOneHero', 'findOneHero', 'findOneVillain'];
+    const grpcMethods: string[] = ['addOneHero', 'findOneHero', 'findOneVillain', 'findManyVillainStreamOut'];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod('HeroService', method)(constructor.prototype[method], method, descriptor);
     }
-    const grpcStreamMethods: string[] = ['findManyVillain'];
+    const grpcStreamMethods: string[] = ['findManyVillain', 'findManyVillainStreamIn'];
     for (const method of grpcStreamMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcStreamMethod('HeroService', method)(constructor.prototype[method], method, descriptor);
