@@ -40,28 +40,28 @@ export class HeroServiceClientImpl implements HeroService {
   RegularMethod(request: HeroRequest): Promise<Hero> {
     const data = HeroRequest.encode(request).finish();
     const response = this.rpc.request("hero.HeroService", "RegularMethod", data);
-    if (!(response instanceof Promise)) throw new Error(`Stream response expected to be Promise. ${response.constructor.name} encountered.`);
+    if (!(response instanceof Promise)) throw new Error(`Unary response expected to be a Promise. ${response.constructor.name} encountered.`);
     return response.then(data => Hero.decode(new Reader(data)));
   }
 
   ClientStreamingMethod(request: Observable<HeroRequest>): Promise<Hero> {
     const data = request.pipe(map(value => HeroRequest.encode(value).finish()));
     const response = this.rpc.request("hero.HeroService", "ClientStreamingMethod", data);
-    if (!(response instanceof Promise)) throw new Error(`Stream response expected to be Promise. ${response.constructor.name} encountered.`);
+    if (!(response instanceof Promise)) throw new Error(`Unary response expected to be a Promise. ${response.constructor.name} encountered.`);
     return response.then(data => Hero.decode(new Reader(data)));
   }
 
   ServerStreamingMethod(request: HeroRequest): Observable<Hero> {
     const data = HeroRequest.encode(request).finish();
     const response = this.rpc.request("hero.HeroService", "ServerStreamingMethod", data, true);
-    if (!(response instanceof Observable)) throw new Error(`Stream response expected to be Observable. ${response.constructor.name} encountered.`);
+    if (!(response instanceof Observable)) throw new Error(`Stream response expected to be an Observable. ${response.constructor.name} encountered.`);
     return response.pipe(map(data => Hero.decode(new Reader(data))));
   }
 
   TwoWayStreamingMethod(request: Observable<HeroRequest>): Observable<Hero> {
     const data = request.pipe(map(value => HeroRequest.encode(value).finish()));
     const response = this.rpc.request("hero.HeroService", "TwoWayStreamingMethod", data, true);
-    if (!(response instanceof Observable)) throw new Error(`Stream response expected to be Observable. ${response.constructor.name} encountered.`);
+    if (!(response instanceof Observable)) throw new Error(`Stream response expected to be an Observable. ${response.constructor.name} encountered.`);
     return response.pipe(map(data => Hero.decode(new Reader(data))));
   }
 
@@ -69,7 +69,7 @@ export class HeroServiceClientImpl implements HeroService {
 
 interface Rpc {
 
-  request(service: string, method: string, data: Uint8Array|Observable<Uint8Array>, expectObservable?: boolean): Promise<Uint8Array>|Observable<Uint8Array>;
+  request(service: string, method: string, data: Uint8Array | Observable<Uint8Array>, expectObservable?: boolean): Promise<Uint8Array> | Observable<Uint8Array>;
 
 }
 

@@ -9,7 +9,7 @@ import {
   TypeName,
   TypeNames,
   Union,
-  DecoratorSpec
+  DecoratorSpec,
 } from 'ts-poet';
 import { google } from '../build/pbjs';
 import {
@@ -45,6 +45,7 @@ import EnumDescriptorProto = google.protobuf.EnumDescriptorProto;
 import ServiceDescriptorProto = google.protobuf.ServiceDescriptorProto;
 import MethodDescriptorProto = google.protobuf.MethodDescriptorProto;
 import { Encloser } from 'ts-poet/build/FunctionSpec';
+import { observable } from 'rxjs';
 
 const dataloader = TypeNames.anyType('DataLoader*dataloader');
 
@@ -1068,23 +1069,48 @@ function generateRegularRpcMethod(
   if (options.useContext) {
     requestFn = requestFn.addParameter('ctx', TypeNames.typeVariable('Context'));
   }
-  return requestFn
-    .addParameter('request', requestType(typeMap, methodDesc))
-    .addStatement('const data = %L.encode(request).finish()', requestType(typeMap, methodDesc))
+  requestFn = requestFn
+    .addParameter('request', requestType(typeMap, methodDesc));
+
+  if (methodDesc.clientStreaming) {
+    requestFn = requestFn
+      .addStatement('const data = request.pipe(map(value => %L.encode(value).finish()))', messageToTypeName(typeMap, methodDesc.inputType));
+  } else {
+    requestFn = requestFn
+      .addStatement('const data = %L.encode(request).finish()', requestType(typeMap, methodDesc));
+  }
+
+  requestFn = requestFn
     .addStatement(
-      'const promise = this.rpc.request(%L"%L.%L", %S, %L)',
+      'const response = this.rpc.request(%L"%L.%L", %S, %L%L)',
       options.useContext ? 'ctx, ' : '', // sneak ctx in as the 1st parameter to our rpc call
       fileDesc.package,
       serviceDesc.name,
       methodDesc.name,
-      'data'
-    )
-    .addStatement(
-      'return promise.then(data => %L.decode(new %T(data)))',
-      responseType(typeMap, methodDesc),
-      'Reader@protobufjs/minimal'
-    )
-    .returns(responsePromise(typeMap, methodDesc));
+      'data',
+      (options.returnObservable || methodDesc.serverStreaming) ? ', true' : '',
+    );
+
+  if (options.returnObservable || methodDesc.serverStreaming) {
+    requestFn = requestFn.returns(responseObservable(typeMap, methodDesc))
+      .addStatement('if (!(response instanceof Observable)) throw new Error(`Stream response expected to be an Observable. ${response.constructor.name} encountered.`)')
+      .addStatement(
+        'return response.pipe(%T(data => %L.decode(new %T(data))))',
+        'map@rxjs/operators',
+        responseType(typeMap, methodDesc),
+        'Reader@protobufjs/minimal',
+      );
+  } else {
+    requestFn = requestFn.returns(responsePromise(typeMap, methodDesc))
+      .addStatement('if (!(response instanceof Promise)) throw new Error(`Unary response expected to be a Promise. ${response.constructor.name} encountered.`)')
+      .addStatement(
+        'return response.then(data => %L.decode(new %T(data)))',
+        responseType(typeMap, methodDesc),
+        'Reader@protobufjs/minimal'
+      );
+  }
+
+  return requestFn;
 }
 
 function generateServiceClientImpl(
@@ -1404,6 +1430,7 @@ function generateCachingRpcMethod(
       methodDesc.name,
       'data'
     )
+    .addStatement('if (!(response instanceof Uint8Array)) throw new Error(`Response expected to be a Uint8Array. ${response.constructor.name} encountered.`)')
     .addStatement('return %L.decode(new %T(response))', responseType(typeMap, methodDesc), 'Reader@protobufjs/minimal')
     .endLambda(')')
     .addStatement('return Promise.all(responses)');
@@ -1435,7 +1462,8 @@ function generateCachingRpcMethod(
  * types.
  */
 function generateRpcType(options: Options): InterfaceSpec {
-  const data = TypeNames.anyType('Uint8Array');
+  const observableTypeName = TypeNames.anyType('Observable@rxjs').param(TypeNames.anyType(('Uint8Array')));
+  const data = TypeNames.unionType(TypeNames.anyType('Uint8Array'), observableTypeName);
   let fn = FunctionSpec.create('request');
   if (options.useContext) {
     fn = fn.addParameter('ctx', 'Context');
@@ -1444,7 +1472,8 @@ function generateRpcType(options: Options): InterfaceSpec {
     .addParameter('service', TypeNames.STRING)
     .addParameter('method', TypeNames.STRING)
     .addParameter('data', data)
-    .returns(TypeNames.PROMISE.param(data));
+    .addParameter('expectObservable?',TypeNames.BOOLEAN)
+    .returns(TypeNames.unionType(TypeNames.anyType('Promise<Uint8Array>'), observableTypeName));
   let rpc = InterfaceSpec.create('Rpc');
   if (options.useContext) {
     rpc = rpc.addTypeVariable(TypeNames.typeVariable('Context'));

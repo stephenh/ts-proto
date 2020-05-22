@@ -1,4 +1,5 @@
 import { Reader, Writer } from 'protobufjs/minimal';
+import { Observable } from 'rxjs';
 
 
 export interface BatchQueryRequest {
@@ -112,28 +113,28 @@ export class EntityServiceClientImpl implements EntityService {
   BatchQuery(request: BatchQueryRequest): Promise<BatchQueryResponse> {
     const data = BatchQueryRequest.encode(request).finish();
     const response = this.rpc.request("batching.EntityService", "BatchQuery", data);
-    if (!(response instanceof Promise)) throw new Error(`Stream response expected to be Promise. ${response.constructor.name} encountered.`);
+    if (!(response instanceof Promise)) throw new Error(`Unary response expected to be a Promise. ${response.constructor.name} encountered.`);
     return response.then(data => BatchQueryResponse.decode(new Reader(data)));
   }
 
   BatchMapQuery(request: BatchMapQueryRequest): Promise<BatchMapQueryResponse> {
     const data = BatchMapQueryRequest.encode(request).finish();
     const response = this.rpc.request("batching.EntityService", "BatchMapQuery", data);
-    if (!(response instanceof Promise)) throw new Error(`Stream response expected to be Promise. ${response.constructor.name} encountered.`);
+    if (!(response instanceof Promise)) throw new Error(`Unary response expected to be a Promise. ${response.constructor.name} encountered.`);
     return response.then(data => BatchMapQueryResponse.decode(new Reader(data)));
   }
 
   GetOnlyMethod(request: GetOnlyMethodRequest): Promise<GetOnlyMethodResponse> {
     const data = GetOnlyMethodRequest.encode(request).finish();
     const response = this.rpc.request("batching.EntityService", "GetOnlyMethod", data);
-    if (!(response instanceof Promise)) throw new Error(`Stream response expected to be Promise. ${response.constructor.name} encountered.`);
+    if (!(response instanceof Promise)) throw new Error(`Unary response expected to be a Promise. ${response.constructor.name} encountered.`);
     return response.then(data => GetOnlyMethodResponse.decode(new Reader(data)));
   }
 
   WriteMethod(request: WriteMethodRequest): Promise<WriteMethodResponse> {
     const data = WriteMethodRequest.encode(request).finish();
     const response = this.rpc.request("batching.EntityService", "WriteMethod", data);
-    if (!(response instanceof Promise)) throw new Error(`Stream response expected to be Promise. ${response.constructor.name} encountered.`);
+    if (!(response instanceof Promise)) throw new Error(`Unary response expected to be a Promise. ${response.constructor.name} encountered.`);
     return response.then(data => WriteMethodResponse.decode(new Reader(data)));
   }
 
@@ -141,7 +142,7 @@ export class EntityServiceClientImpl implements EntityService {
 
 interface Rpc {
 
-  request(service: string, method: string, data: Uint8Array|Observable<Uint8Array>, expectObservable?: boolean): Promise<Uint8Array>|Observable<Uint8Array>;
+  request(service: string, method: string, data: Uint8Array | Observable<Uint8Array>, expectObservable?: boolean): Promise<Uint8Array> | Observable<Uint8Array>;
 
 }
 

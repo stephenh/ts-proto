@@ -1,6 +1,7 @@
 import * as DataLoader from 'dataloader';
 import * as hash from 'object-hash';
 import { Reader, Writer } from 'protobufjs/minimal';
+import { Observable } from 'rxjs';
 
 
 export interface BatchQueryRequest {
@@ -128,7 +129,7 @@ export class EntityServiceClientImpl<Context extends DataLoaders> implements Ent
   BatchQuery(ctx: Context, request: BatchQueryRequest): Promise<BatchQueryResponse> {
     const data = BatchQueryRequest.encode(request).finish();
     const response = this.rpc.request(ctx, "batching.EntityService", "BatchQuery", data);
-    if (!(response instanceof Promise)) throw new Error(`Stream response expected to be Promise. ${response.constructor.name} encountered.`);
+    if (!(response instanceof Promise)) throw new Error(`Unary response expected to be a Promise. ${response.constructor.name} encountered.`);
     return response.then(data => BatchQueryResponse.decode(new Reader(data)));
   }
 
@@ -147,7 +148,7 @@ export class EntityServiceClientImpl<Context extends DataLoaders> implements Ent
   BatchMapQuery(ctx: Context, request: BatchMapQueryRequest): Promise<BatchMapQueryResponse> {
     const data = BatchMapQueryRequest.encode(request).finish();
     const response = this.rpc.request(ctx, "batching.EntityService", "BatchMapQuery", data);
-    if (!(response instanceof Promise)) throw new Error(`Stream response expected to be Promise. ${response.constructor.name} encountered.`);
+    if (!(response instanceof Promise)) throw new Error(`Unary response expected to be a Promise. ${response.constructor.name} encountered.`);
     return response.then(data => BatchMapQueryResponse.decode(new Reader(data)));
   }
 
@@ -157,6 +158,7 @@ export class EntityServiceClientImpl<Context extends DataLoaders> implements Ent
         const responses = requests.map(async request => {
           const data = GetOnlyMethodRequest.encode(request).finish();
           const response = await this.rpc.request(ctx, "batching.EntityService", "GetOnlyMethod", data);
+          if (!(response instanceof Uint8Array)) throw new Error(`Response expected to be a Uint8Array. ${response.constructor.name} encountered.`);
           return GetOnlyMethodResponse.decode(new Reader(response));
         })
         return Promise.all(responses);
@@ -168,7 +170,7 @@ export class EntityServiceClientImpl<Context extends DataLoaders> implements Ent
   WriteMethod(ctx: Context, request: WriteMethodRequest): Promise<WriteMethodResponse> {
     const data = WriteMethodRequest.encode(request).finish();
     const response = this.rpc.request(ctx, "batching.EntityService", "WriteMethod", data);
-    if (!(response instanceof Promise)) throw new Error(`Stream response expected to be Promise. ${response.constructor.name} encountered.`);
+    if (!(response instanceof Promise)) throw new Error(`Unary response expected to be a Promise. ${response.constructor.name} encountered.`);
     return response.then(data => WriteMethodResponse.decode(new Reader(data)));
   }
 
@@ -176,7 +178,7 @@ export class EntityServiceClientImpl<Context extends DataLoaders> implements Ent
 
 interface Rpc<Context> {
 
-  request(ctx: Context, service: string, method: string, data: Uint8Array|Observable<Uint8Array>, expectObservable?: boolean): Promise<Uint8Array>|Observable<Uint8Array>;
+  request(ctx: Context, service: string, method: string, data: Uint8Array | Observable<Uint8Array>, expectObservable?: boolean): Promise<Uint8Array> | Observable<Uint8Array>;
 
 }
 

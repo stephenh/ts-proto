@@ -4,6 +4,7 @@
 import { ImportedThing } from './import_dir/thing';
 import * as Long from 'long';
 import { Reader, Writer } from 'protobufjs/minimal';
+import { Observable } from 'rxjs';
 import { Timestamp } from './google/protobuf/timestamp';
 import { StringValue, Int32Value, BoolValue } from './google/protobuf/wrappers';
 
@@ -245,7 +246,7 @@ export class PingServiceClientImpl implements PingService {
   ping(request: PingRequest): Promise<PingResponse> {
     const data = PingRequest.encode(request).finish();
     const response = this.rpc.request("simple.PingService", "ping", data);
-    if (!(response instanceof Promise)) throw new Error(`Stream response expected to be Promise. ${response.constructor.name} encountered.`);
+    if (!(response instanceof Promise)) throw new Error(`Unary response expected to be a Promise. ${response.constructor.name} encountered.`);
     return response.then(data => PingResponse.decode(new Reader(data)));
   }
 
@@ -253,7 +254,7 @@ export class PingServiceClientImpl implements PingService {
 
 interface Rpc {
 
-  request(service: string, method: string, data: Uint8Array|Observable<Uint8Array>, expectObservable?: boolean): Promise<Uint8Array>|Observable<Uint8Array>;
+  request(service: string, method: string, data: Uint8Array | Observable<Uint8Array>, expectObservable?: boolean): Promise<Uint8Array> | Observable<Uint8Array>;
 
 }
 
