@@ -30,7 +30,7 @@
     "rxjs": "^6.5.5",
     "ts-jest": "^25.2.1",
     "ts-node": "^8.3.0",
-    "typescript": "^3.9.0-beta",
+    "typescript": "^3.9.3",
     "uglify-js": "^3.9.2"
   },
   "dependencies": {
