@@ -229,7 +229,8 @@ function addLongUtilityMethod(file: FileSpec, options: Options): FileSpec {
         .addCodeBlock(
           CodeBlock.empty()
             .beginControlFlow('if (long.gt(Number.MAX_SAFE_INTEGER))')
-            .addStatement('throw new Error("Value is larger than Number.MAX_SAFE_INTEGER")')
+            // We use globalThis to avoid conflicts on protobuf types named `Error`.
+            .addStatement('throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER")')
             .endControlFlow()
             .addStatement('return long.toNumber()')
         )
