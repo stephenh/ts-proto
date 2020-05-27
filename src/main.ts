@@ -55,6 +55,11 @@ export enum LongOption {
   STRING = 'string'
 }
 
+export enum EnvOption {
+  NODE = 'node',
+  BROWSER = 'browser'
+}
+
 export type Options = {
   useContext: boolean;
   snakeToCamel: boolean;
@@ -66,6 +71,7 @@ export type Options = {
   returnObservable: boolean;
   lowerCaseServiceMethods: boolean;
   nestJs: boolean;
+  env: EnvOption;
 };
 
 export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, parameter: string): FileSpec {
@@ -1275,17 +1281,17 @@ function generateNestjsGrpcServiceMethodsDecorator(
   const grpcStreamMethodType = TypeNames.importedType('GrpcStreamMethod@@nestjs/microservices');
 
   let decoratorFunction = FunctionSpec.createCallable().addParameter('constructor', TypeNames.typeVariable('Function'))
-  
+
   // add loop for applying @GrpcMethod decorators to functions
   decoratorFunction = generateGrpcMethodDecoratorLoop(decoratorFunction, serviceDesc, 'grpcMethods', grpcMethods, grpcMethodType);
-  
+
   // add loop for applying @GrpcStreamMethod decorators to functions
   decoratorFunction = generateGrpcMethodDecoratorLoop(decoratorFunction, serviceDesc, 'grpcStreamMethods', grpcStreamMethods, grpcStreamMethodType);
-  
+
   const body = CodeBlock.empty().add('return function %F', decoratorFunction);
-  
+
   grpcServiceDecorator = grpcServiceDecorator.addCodeBlock(body);
-  
+
   return grpcServiceDecorator;
 }
 

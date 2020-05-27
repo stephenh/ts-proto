@@ -1,6 +1,6 @@
 import { google } from '../build/pbjs';
 import { CodeBlock, Member, TypeName, TypeNames } from 'ts-poet';
-import { Options, visit, LongOption } from './main';
+import { Options, visit, LongOption, EnvOption } from './main';
 import { fail } from './utils';
 import { asSequence } from 'sequency';
 import FieldDescriptorProto = google.protobuf.FieldDescriptorProto;
@@ -84,7 +84,11 @@ export function basicTypeName(typeMap: TypeMap, field: FieldDescriptorProto, opt
     case FieldDescriptorProto.Type.TYPE_STRING:
       return TypeNames.STRING;
     case FieldDescriptorProto.Type.TYPE_BYTES:
-      return TypeNames.anyType('Uint8Array');
+      if (options.env === EnvOption.NODE) {
+        return TypeNames.BUFFER;
+      } else {
+        return TypeNames.anyType('Uint8Array');
+      }
     case FieldDescriptorProto.Type.TYPE_MESSAGE:
     case FieldDescriptorProto.Type.TYPE_ENUM:
       return messageToTypeName(typeMap, field.typeName, keepValueType, isRepeated(field));
@@ -190,13 +194,13 @@ export function defaultValue(typeMap: TypeMap, field: FieldDescriptorProto, opti
     case FieldDescriptorProto.Type.TYPE_INT64:
     case FieldDescriptorProto.Type.TYPE_SINT64:
     case FieldDescriptorProto.Type.TYPE_SFIXED64:
-        if (options.forceLong === LongOption.LONG) {
-          return CodeBlock.of('%T.ZERO', 'Long*long');
-        } else if (options.forceLong === LongOption.STRING) {
-          return '"0"';
-        } else {
-          return 0;
-        }
+      if (options.forceLong === LongOption.LONG) {
+        return CodeBlock.of('%T.ZERO', 'Long*long');
+      } else if (options.forceLong === LongOption.STRING) {
+        return '"0"';
+      } else {
+        return 0;
+      }
     case FieldDescriptorProto.Type.TYPE_BOOL:
       return false;
     case FieldDescriptorProto.Type.TYPE_STRING:
