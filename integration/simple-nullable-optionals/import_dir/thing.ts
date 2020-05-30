@@ -1,14 +1,12 @@
 import { Timestamp } from '../google/protobuf/timestamp';
-import * as Long from 'long';
 import { Writer, Reader } from 'protobufjs/minimal';
 
 
 export interface ImportedThing {
-  createdAt: Date | undefined;
+  createdAt?: Date | null;
 }
 
 const baseImportedThing: object = {
-  createdAt: undefined,
 };
 
 function fromJsonTimestamp(o: any): Date {
@@ -22,24 +20,20 @@ function fromJsonTimestamp(o: any): Date {
 }
 
 function toTimestamp(date: Date): Timestamp {
-  const seconds = numberToLong(date.getTime() / 1_000);
+  const seconds = date.getTime() / 1_000;
   const nanos = (date.getTime() % 1_000) * 1_000_000;
   return { seconds, nanos };
 }
 
 function fromTimestamp(t: Timestamp): Date {
-  let millis = t.seconds.toNumber() * 1_000;
+  let millis = t.seconds * 1_000;
   millis += t.nanos / 1_000_000;
   return new Date(millis);
 }
 
-function numberToLong(number: number) {
-  return Long.fromNumber(number);
-}
-
 export const ImportedThing = {
   encode(message: ImportedThing, writer: Writer = Writer.create()): Writer {
-    if (message.createdAt !== undefined && message.createdAt !== undefined) {
+    if (message.createdAt !== undefined && message.createdAt !== null) {
       Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(10).fork()).ldelim();
     }
     return writer;
@@ -66,7 +60,7 @@ export const ImportedThing = {
     if (object.createdAt !== undefined && object.createdAt !== null) {
       message.createdAt = fromJsonTimestamp(object.createdAt);
     } else {
-      message.createdAt = undefined;
+      message.createdAt = null;
     }
     return message;
   },
@@ -75,7 +69,7 @@ export const ImportedThing = {
     if (object.createdAt !== undefined && object.createdAt !== null) {
       message.createdAt = object.createdAt;
     } else {
-      message.createdAt = undefined;
+      message.createdAt = null;
     }
     return message;
   },

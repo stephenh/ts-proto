@@ -87,7 +87,7 @@ export function basicTypeName(typeMap: TypeMap, field: FieldDescriptorProto, opt
       return TypeNames.anyType('Uint8Array');
     case FieldDescriptorProto.Type.TYPE_MESSAGE:
     case FieldDescriptorProto.Type.TYPE_ENUM:
-      return messageToTypeName(typeMap, field.typeName, keepValueType);
+      return messageToTypeName(typeMap, field.typeName, options, keepValueType);
     default:
       return TypeNames.anyType(field.typeName);
   }
@@ -161,6 +161,9 @@ export function packedType(type: FieldDescriptorProto.Type): number | undefined 
 }
 
 export function defaultValue(typeMap: TypeMap, field: FieldDescriptorProto, options: Options): any {
+  if (options.nullableOptionals && isOptional(field)) {
+    return 'null';
+  }
   switch (field.type) {
     case FieldDescriptorProto.Type.TYPE_DOUBLE:
     case FieldDescriptorProto.Type.TYPE_FLOAT:
@@ -260,16 +263,20 @@ export function isMapType(typeMap: TypeMap, messageDesc: DescriptorProto, field:
   return detectMapType(typeMap, messageDesc, field, options) !== undefined;
 }
 
+export function isOptional(field: FieldDescriptorProto): boolean {
+  return isWithinOneOf(field) || isMessage(field);
+}
+
 const valueTypes: { [key: string]: TypeName } = {
-  '.google.protobuf.StringValue': TypeNames.unionType(TypeNames.STRING, TypeNames.UNDEFINED),
-  '.google.protobuf.Int32Value': TypeNames.unionType(TypeNames.NUMBER, TypeNames.UNDEFINED),
-  '.google.protobuf.Int64Value': TypeNames.unionType(TypeNames.NUMBER, TypeNames.UNDEFINED),
-  '.google.protobuf.UInt32Value': TypeNames.unionType(TypeNames.NUMBER, TypeNames.UNDEFINED),
-  '.google.protobuf.UInt64Value': TypeNames.unionType(TypeNames.NUMBER, TypeNames.UNDEFINED),
-  '.google.protobuf.BoolValue': TypeNames.unionType(TypeNames.BOOLEAN, TypeNames.UNDEFINED),
-  '.google.protobuf.DoubleValue': TypeNames.unionType(TypeNames.NUMBER, TypeNames.UNDEFINED),
-  '.google.protobuf.FloatValue': TypeNames.unionType(TypeNames.NUMBER, TypeNames.UNDEFINED),
-  '.google.protobuf.BytesValue': TypeNames.unionType(TypeNames.anyType('Uint8Array'), TypeNames.UNDEFINED)
+  '.google.protobuf.StringValue': TypeNames.STRING,
+  '.google.protobuf.Int32Value': TypeNames.NUMBER,
+  '.google.protobuf.Int64Value': TypeNames.NUMBER,
+  '.google.protobuf.UInt32Value': TypeNames.NUMBER,
+  '.google.protobuf.UInt64Value': TypeNames.NUMBER,
+  '.google.protobuf.BoolValue': TypeNames.BOOLEAN,
+  '.google.protobuf.DoubleValue': TypeNames.NUMBER,
+  '.google.protobuf.FloatValue': TypeNames.NUMBER,
+  '.google.protobuf.BytesValue': TypeNames.anyType('Uint8Array'),
 };
 
 const mappedTypes: { [key: string]: TypeName } = {
@@ -288,11 +295,26 @@ export function isEmptyType(typeName: string): boolean {
   return typeName === '.google.protobuf.Empty';
 }
 
+export function valueTypeName(field: FieldDescriptorProto): TypeName {
+  if (!isValueType(field)) {
+    throw new Error('Type is not a valueType: ' + field.typeName)
+  }
+  return valueTypes[field.typeName]
+}
+
 /** Maps `.some_proto_namespace.Message` to a TypeName. */
-export function messageToTypeName(typeMap: TypeMap, protoType: string, keepValueType: boolean = false): TypeName {
+export function messageToTypeName(typeMap: TypeMap, protoType: string, options: (Options | null) = null, keepValueType: boolean = false): TypeName {
   // Watch for the wrapper types `.google.protobuf.StringValue` and map to `string | undefined`
   if (!keepValueType && protoType in valueTypes) {
-    return valueTypes[protoType];
+    let typeName = valueTypes[protoType];
+    if (!options || !options.nullableOptionals) {
+      // When nullableOptionals=false (the default), we union the type with
+      // undefined to indicate the value is optional. If nullableOptionals=true,
+      // all message types are already optional properties and their values are
+      // nullable, so there's no need for it here.
+      typeName = TypeNames.unionType(typeName, TypeNames.UNDEFINED);
+    }
+    return typeName;
   }
   // Look for other special prototypes like Timestamp that aren't technically wrapper types
   if (!keepValueType && protoType in mappedTypes) {
@@ -318,7 +340,15 @@ export function toTypeName(typeMap: TypeMap, messageDesc: DescriptorProto, field
     } else {
       type = TypeNames.arrayType(type);
     }
-  } else if ((isWithinOneOf(field) || isMessage(field)) && !isValueType(field)) {
+  } else if (isOptional(field) && !isValueType(field) && !options.nullableOptionals) {
+    // When nullableOptionals=false (the default), message fields and fields
+    // within a oneof clause need to be unioned with undefined to indicate the
+    // value is optional. One exception is google.protobuf.*Value types, which
+    // are already unioned to undefined in messageToTypeName.
+    // 
+    // When nullableOptionals=true, message fields and fields within a oneof
+    // clause are already optional and their values are nullable, so no need
+    // for the type union here.
     type = TypeNames.unionType(type, TypeNames.UNDEFINED);
   }
   return type;

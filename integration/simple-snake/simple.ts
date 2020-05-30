@@ -613,7 +613,7 @@ export const Simple = {
     const obj: any = {};
     obj.name = message.name || "";
     obj.age = message.age || 0;
-    obj.created_at = message.created_at !== undefined ? message.created_at.toISOString() : null;
+    obj.created_at = (message.created_at !== undefined && message.created_at !== null) ? message.created_at.toISOString() : null;
     obj.child = message.child ? Child.toJSON(message.child) : undefined;
     obj.state = StateEnum.toJSON(message.state);
     if (message.grand_children) {
