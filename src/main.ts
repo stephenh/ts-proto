@@ -23,6 +23,7 @@ import {
   isLong,
   isMapType,
   isMessage,
+  isOptional,
   isPrimitive,
   isRepeated,
   isTimestamp,
@@ -33,7 +34,8 @@ import {
   toReaderCall,
   toTypeName,
   TypeMap,
-  isEmptyType
+  isEmptyType,
+  valueTypeName,
 } from './types';
 import { asSequence } from 'sequency';
 import SourceInfo, { Fields } from './sourceInfo';
@@ -58,6 +60,7 @@ export type Options = {
   useContext: boolean;
   snakeToCamel: boolean;
   forceLong: LongOption;
+  useOptionals: boolean;
   outputEncodeMethods: boolean;
   outputJsonMethods: boolean;
   outputClientImpl: boolean;
@@ -424,9 +427,13 @@ function generateInterfaceDeclaration(
 
   let index = 0;
   for (const fieldDesc of messageDesc.field) {
+    // When useOptionals=true, non-scalar fields and fields within a oneof
+    // clause are translated into optional properties.
+    let optional = options.useOptionals && isOptional(fieldDesc) && !isRepeated(fieldDesc)
     let prop = PropertySpec.create(
       maybeSnakeToCamel(fieldDesc.name, options),
-      toTypeName(typeMap, messageDesc, fieldDesc, options)
+      toTypeName(typeMap, messageDesc, fieldDesc, options),
+      optional
     );
 
     const info = sourceInfo.lookup(Fields.message.field, index++);
@@ -442,7 +449,7 @@ function generateBaseInstance(typeMap: TypeMap, fullName: string, messageDesc: D
   let baseMessage = PropertySpec.create('base' + fullName, TypeNames.anyType('object')).addModifiers(Modifier.CONST);
   let initialValue = CodeBlock.empty().beginHash();
   asSequence(messageDesc.field)
-    .filterNot(isWithinOneOf)
+    .filterNot(options.useOptionals ? isOptional : isWithinOneOf)
     .forEach(field => {
       initialValue = initialValue.addHashEntry(
         maybeSnakeToCamel(field.name, options),
@@ -692,7 +699,7 @@ function generateEncode(
           .endControlFlow()
           .addStatement('writer.ldelim()');
       }
-    } else if (isWithinOneOf(field) || isMessage(field)) {
+    } else if (isOptional(field)) {
       func = func
         .beginControlFlow(
           'if (message.%L !== undefined && message.%L !== %L)',
@@ -760,8 +767,7 @@ function generateFromJson(
       } else if (isTimestamp(field)) {
         return CodeBlock.of('fromJsonTimestamp(%L)', from);
       } else if (isValueType(field)) {
-        const cstr = capitalize((basicTypeName(typeMap, field, options, false) as Union).typeChoices[0].toString());
-        return CodeBlock.of('%L(%L)', cstr, from);
+        return CodeBlock.of('%L(%L)', capitalize(valueTypeName(field).toString()), from);
       } else if (isMessage(field)) {
         if (isRepeated(field) && isMapType(typeMap, messageDesc, field, options)) {
           const valueType = (typeMap.get(field.typeName)![2] as DescriptorProto).field[1];
