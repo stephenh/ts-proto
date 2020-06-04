@@ -67,8 +67,8 @@ export interface SimpleWithWrappers {
   name: string | undefined;
   age: number | undefined;
   enabled: boolean | undefined;
-  coins: Array<number | undefined>;
-  snacks: Array<string | undefined>;
+  coins: number[];
+  snacks: string[];
 }
 
 export interface Entity {

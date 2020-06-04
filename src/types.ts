@@ -87,7 +87,7 @@ export function basicTypeName(typeMap: TypeMap, field: FieldDescriptorProto, opt
       return TypeNames.anyType('Uint8Array');
     case FieldDescriptorProto.Type.TYPE_MESSAGE:
     case FieldDescriptorProto.Type.TYPE_ENUM:
-      return messageToTypeName(typeMap, field.typeName, keepValueType);
+      return messageToTypeName(typeMap, field.typeName, keepValueType, isRepeated(field));
     default:
       return TypeNames.anyType(field.typeName);
   }
@@ -261,15 +261,15 @@ export function isMapType(typeMap: TypeMap, messageDesc: DescriptorProto, field:
 }
 
 const valueTypes: { [key: string]: TypeName } = {
-  '.google.protobuf.StringValue': TypeNames.unionType(TypeNames.STRING, TypeNames.UNDEFINED),
-  '.google.protobuf.Int32Value': TypeNames.unionType(TypeNames.NUMBER, TypeNames.UNDEFINED),
-  '.google.protobuf.Int64Value': TypeNames.unionType(TypeNames.NUMBER, TypeNames.UNDEFINED),
-  '.google.protobuf.UInt32Value': TypeNames.unionType(TypeNames.NUMBER, TypeNames.UNDEFINED),
-  '.google.protobuf.UInt64Value': TypeNames.unionType(TypeNames.NUMBER, TypeNames.UNDEFINED),
-  '.google.protobuf.BoolValue': TypeNames.unionType(TypeNames.BOOLEAN, TypeNames.UNDEFINED),
-  '.google.protobuf.DoubleValue': TypeNames.unionType(TypeNames.NUMBER, TypeNames.UNDEFINED),
-  '.google.protobuf.FloatValue': TypeNames.unionType(TypeNames.NUMBER, TypeNames.UNDEFINED),
-  '.google.protobuf.BytesValue': TypeNames.unionType(TypeNames.anyType('Uint8Array'), TypeNames.UNDEFINED)
+  '.google.protobuf.StringValue': TypeNames.STRING,
+  '.google.protobuf.Int32Value': TypeNames.NUMBER,
+  '.google.protobuf.Int64Value': TypeNames.NUMBER,
+  '.google.protobuf.UInt32Value': TypeNames.NUMBER,
+  '.google.protobuf.UInt64Value': TypeNames.NUMBER,
+  '.google.protobuf.BoolValue': TypeNames.BOOLEAN,
+  '.google.protobuf.DoubleValue': TypeNames.NUMBER,
+  '.google.protobuf.FloatValue': TypeNames.NUMBER,
+  '.google.protobuf.BytesValue': TypeNames.anyType('Uint8Array'),
 };
 
 const mappedTypes: { [key: string]: TypeName } = {
@@ -288,11 +288,22 @@ export function isEmptyType(typeName: string): boolean {
   return typeName === '.google.protobuf.Empty';
 }
 
+export function valueTypeName(field: FieldDescriptorProto): TypeName {
+  if (!isValueType(field)) {
+    throw new Error('Type is not a valueType: ' + field.typeName)
+  }
+  return valueTypes[field.typeName]
+}
+
 /** Maps `.some_proto_namespace.Message` to a TypeName. */
-export function messageToTypeName(typeMap: TypeMap, protoType: string, keepValueType: boolean = false): TypeName {
+export function messageToTypeName(typeMap: TypeMap, protoType: string, keepValueType: boolean = false, repeated: boolean = false): TypeName {
   // Watch for the wrapper types `.google.protobuf.StringValue` and map to `string | undefined`
   if (!keepValueType && protoType in valueTypes) {
-    return valueTypes[protoType];
+    let typeName = valueTypes[protoType];
+    if (repeated) {
+      return typeName;
+    }
+    return TypeNames.unionType(typeName, TypeNames.UNDEFINED);
   }
   // Look for other special prototypes like Timestamp that aren't technically wrapper types
   if (!keepValueType && protoType in mappedTypes) {
