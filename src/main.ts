@@ -33,7 +33,8 @@ import {
   toReaderCall,
   toTypeName,
   TypeMap,
-  isEmptyType
+  isEmptyType,
+  valueTypeName,
 } from './types';
 import { asSequence } from 'sequency';
 import SourceInfo, { Fields } from './sourceInfo';
@@ -760,8 +761,7 @@ function generateFromJson(
       } else if (isTimestamp(field)) {
         return CodeBlock.of('fromJsonTimestamp(%L)', from);
       } else if (isValueType(field)) {
-        const cstr = capitalize((basicTypeName(typeMap, field, options, false) as Union).typeChoices[0].toString());
-        return CodeBlock.of('%L(%L)', cstr, from);
+        return CodeBlock.of('%L(%L)', capitalize(valueTypeName(field).toString()), from);
       } else if (isMessage(field)) {
         if (isRepeated(field) && isMapType(typeMap, messageDesc, field, options)) {
           const valueType = (typeMap.get(field.typeName)![2] as DescriptorProto).field[1];
