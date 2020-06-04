@@ -1,4 +1,8 @@
 
+## v1.12.4
+
+* Repeated fields cannot be optional, fixes #80
+
 ## v1.21.2 and v1.21.3
 
 * Use `globalThis.Error` instead of `global.Error` for browsers, fix for #70 
