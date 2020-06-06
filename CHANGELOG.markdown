@@ -1,3 +1,7 @@
+## v1.13.0
+
+* Added a `env=node`/`env=browser` option that defaults to `env=node`
+* Currently `env=node` only changes the types of `bytes` from `Uint8Array` to `Buffer`, as a convenience for Node programming where `Buffer` (which is the defacto subclass of `Uint8Array`) is more widely used
 
 ## v1.12.5
 

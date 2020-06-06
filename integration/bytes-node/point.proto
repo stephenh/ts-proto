@@ -1,0 +1,6 @@
+syntax = "proto3";
+
+message Point {
+  bytes data = 1;
+}
+

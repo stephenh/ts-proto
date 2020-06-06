@@ -1,5 +1,5 @@
 import ReadStream = NodeJS.ReadStream;
-import { Options, LongOption } from './main';
+import { Options, LongOption, EnvOption } from './main';
 import { SourceDescription } from './sourceInfo';
 
 export function readToBuffer(stream: ReadStream): Promise<Buffer> {
@@ -47,6 +47,7 @@ export function optionsFromParameter(parameter: string): Options {
     returnObservable: false,
     addGrpcMetadata: false,
     nestJs: false,
+    env: EnvOption.NODE,
   };
 
   if (parameter) {
@@ -91,6 +92,12 @@ export function optionsFromParameter(parameter: string): Options {
       }
     }
 
+    if (parameter.includes('env=node')) {
+      options.env = EnvOption.NODE;
+    }
+    if (parameter.includes('env=browser')) {
+      options.env = EnvOption.BROWSER;
+    }
   }
   return options;
 }

@@ -213,6 +213,8 @@ protoc --plugin=node_modules/ts-proto/protoc-gen-ts_proto ./batching.proto -I.
  
   Alternatively, if you pass `--ts_proto_opt=forceLong=string`, all 64 bit numbers will be outputted as strings.
 
+* With `--ts_proto_out=env=node` or `browser`, ts-proto will make environment-specific assumptions in your output. This defaults to `node`. Currently the only thing this effectsis is using `Buffer` for `bytes` fields instead of `Uint8Array`.
+
 * With `--ts_proto_opt=lowerCaseServiceMethods=true`, the method names of service methods will be lowered/camel-case, i.e. `service.findFoo` instead of `service.FindFoo`.
 
 * With `--ts_proto_opt=outputEncodeMethods=false`, the `Message.encode` and `Message.decode` methods for working with protobuf-encoded/binary data will not be output.
