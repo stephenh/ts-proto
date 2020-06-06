@@ -7,9 +7,7 @@ import {
   Modifier,
   PropertySpec,
   TypeName,
-  TypeNames,
-  Union,
-  DecoratorSpec
+  TypeNames
 } from 'ts-poet';
 import { google } from '../build/pbjs';
 import {
@@ -19,6 +17,7 @@ import {
   defaultValue,
   detectMapType,
   isBytes,
+  isEmptyType,
   isEnum,
   isLong,
   isMapType,
@@ -33,8 +32,7 @@ import {
   toReaderCall,
   toTypeName,
   TypeMap,
-  isEmptyType,
-  valueTypeName,
+  valueTypeName
 } from './types';
 import { asSequence } from 'sequency';
 import SourceInfo, { Fields } from './sourceInfo';
@@ -45,7 +43,6 @@ import FileDescriptorProto = google.protobuf.FileDescriptorProto;
 import EnumDescriptorProto = google.protobuf.EnumDescriptorProto;
 import ServiceDescriptorProto = google.protobuf.ServiceDescriptorProto;
 import MethodDescriptorProto = google.protobuf.MethodDescriptorProto;
-import { Encloser } from 'ts-poet/build/FunctionSpec';
 
 const dataloader = TypeNames.anyType('DataLoader*dataloader');
 
@@ -111,8 +108,14 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
   );
 
   // If nestJs=true export [package]_PACKAGE_NAME and [service]_SERVICE_NAME const
-  if(options.nestJs) {
-    file = file.addCode(CodeBlock.empty().add(`export const %L = '%L'`, `${camelToSnake(fileDesc.package.replace(/\./g, '_'))}_PACKAGE_NAME`, fileDesc.package));
+  if (options.nestJs) {
+    file = file.addCode(
+      CodeBlock.empty().add(
+        `export const %L = '%L'`,
+        `${camelToSnake(fileDesc.package.replace(/\./g, '_'))}_PACKAGE_NAME`,
+        fileDesc.package
+      )
+    );
   }
 
   if (options.outputEncodeMethods || options.outputJsonMethods) {
@@ -162,8 +165,8 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
       // generate nestjs grpc service controller decorator
       file = file.addFunction(generateNestjsGrpcServiceMethodsDecorator(serviceDesc, options));
 
-      let serviceConstName =  `${camelToSnake(serviceDesc.name)}_NAME`;
-      if(!serviceDesc.name.toLowerCase().endsWith('service')){
+      let serviceConstName = `${camelToSnake(serviceDesc.name)}_NAME`;
+      if (!serviceDesc.name.toLowerCase().endsWith('service')) {
         serviceConstName = `${camelToSnake(serviceDesc.name)}_SERVICE_NAME`;
       }
 
@@ -560,7 +563,9 @@ function generateDecode(
     let readSnippet: CodeBlock;
     if (isPrimitive(field)) {
       readSnippet = CodeBlock.of('reader.%L()', toReaderCall(field));
-      if (basicLongWireType(field.type) !== undefined) {
+      if (isBytes(field)) {
+        readSnippet = readSnippet.add(' as Buffer');
+      } else if (basicLongWireType(field.type) !== undefined) {
         if (options.forceLong === LongOption.LONG) {
           readSnippet = CodeBlock.of('%L as Long', readSnippet);
         } else if (options.forceLong === LongOption.STRING) {
@@ -753,7 +758,11 @@ function generateFromJson(
       } else if (isPrimitive(field)) {
         // Convert primitives using the String(value)/Number(value)/bytesFromBase64(value)
         if (isBytes(field)) {
-          return CodeBlock.of('bytesFromBase64(%L)', from);
+          if (options.env === EnvOption.NODE) {
+            return CodeBlock.of('Buffer.from(bytesFromBase64(%L))', from);
+          } else {
+            return CodeBlock.of('bytesFromBase64(%L)', from);
+          }
         } else if (isLong(field) && options.forceLong === LongOption.LONG) {
           const cstr = capitalize(basicTypeName(typeMap, field, options, true).toString());
           return CodeBlock.of('%L.fromString(%L)', cstr, from);
@@ -1174,7 +1183,7 @@ function generateNestjsServiceController(
     // Return observable for interface only configuration, passing returnObservable=true and methodDesc.serverStreaming=true
     if (isEmptyType(methodDesc.outputType)) {
       requestFn = requestFn.returns(TypeNames.anyType('void'));
-    }else if (options.returnObservable || methodDesc.serverStreaming) {
+    } else if (options.returnObservable || methodDesc.serverStreaming) {
       requestFn = requestFn.returns(responseObservable(typeMap, methodDesc));
     } else {
       // generate nestjs union type
@@ -1263,7 +1272,7 @@ function generateNestjsServiceClient(
 
 function generateNestjsGrpcServiceMethodsDecorator(
   serviceDesc: ServiceDescriptorProto,
-  options: Options,
+  options: Options
 ): FunctionSpec {
   let grpcServiceDecorator = FunctionSpec.create(`${serviceDesc.name}ControllerMethods`).addModifiers(Modifier.EXPORT);
 
@@ -1280,13 +1289,25 @@ function generateNestjsGrpcServiceMethodsDecorator(
   const grpcMethodType = TypeNames.importedType('GrpcMethod@@nestjs/microservices');
   const grpcStreamMethodType = TypeNames.importedType('GrpcStreamMethod@@nestjs/microservices');
 
-  let decoratorFunction = FunctionSpec.createCallable().addParameter('constructor', TypeNames.typeVariable('Function'))
+  let decoratorFunction = FunctionSpec.createCallable().addParameter('constructor', TypeNames.typeVariable('Function'));
 
   // add loop for applying @GrpcMethod decorators to functions
-  decoratorFunction = generateGrpcMethodDecoratorLoop(decoratorFunction, serviceDesc, 'grpcMethods', grpcMethods, grpcMethodType);
+  decoratorFunction = generateGrpcMethodDecoratorLoop(
+    decoratorFunction,
+    serviceDesc,
+    'grpcMethods',
+    grpcMethods,
+    grpcMethodType
+  );
 
   // add loop for applying @GrpcStreamMethod decorators to functions
-  decoratorFunction = generateGrpcMethodDecoratorLoop(decoratorFunction, serviceDesc, 'grpcStreamMethods', grpcStreamMethods, grpcStreamMethodType);
+  decoratorFunction = generateGrpcMethodDecoratorLoop(
+    decoratorFunction,
+    serviceDesc,
+    'grpcStreamMethods',
+    grpcStreamMethods,
+    grpcStreamMethodType
+  );
 
   const body = CodeBlock.empty().add('return function %F', decoratorFunction);
 
@@ -1512,9 +1533,11 @@ function maybeSnakeToCamel(s: string, options: Options): string {
 }
 
 function camelToSnake(s: string): string {
-  return s.replace(/[\w]([A-Z])/g, function(m) {
-    return m[0] + "_" + m[1];
-  }).toUpperCase();
+  return s
+    .replace(/[\w]([A-Z])/g, function(m) {
+      return m[0] + '_' + m[1];
+    })
+    .toUpperCase();
 }
 
 function capitalize(s: string): string {
