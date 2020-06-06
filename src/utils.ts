@@ -47,7 +47,7 @@ export function optionsFromParameter(parameter: string): Options {
     returnObservable: false,
     addGrpcMetadata: false,
     nestJs: false,
-    env: EnvOption.NODE,
+    env: EnvOption.BOTH,
   };
 
   if (parameter) {

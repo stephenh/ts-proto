@@ -54,7 +54,8 @@ export enum LongOption {
 
 export enum EnvOption {
   NODE = 'node',
-  BROWSER = 'browser'
+  BROWSER = 'browser',
+  BOTH = 'both'
 }
 
 export type Options = {
@@ -564,7 +565,9 @@ function generateDecode(
     if (isPrimitive(field)) {
       readSnippet = CodeBlock.of('reader.%L()', toReaderCall(field));
       if (isBytes(field)) {
-        readSnippet = readSnippet.add(' as Buffer');
+        if (options.env === EnvOption.NODE) {
+          readSnippet = readSnippet.add(' as Buffer');
+        }
       } else if (basicLongWireType(field.type) !== undefined) {
         if (options.forceLong === LongOption.LONG) {
           readSnippet = CodeBlock.of('%L as Long', readSnippet);
