@@ -48,6 +48,7 @@ export function optionsFromParameter(parameter: string): Options {
     addGrpcMetadata: false,
     nestJs: false,
     env: EnvOption.BOTH,
+    nullPrototypes: false,
   };
 
   if (parameter) {
@@ -74,6 +75,10 @@ export function optionsFromParameter(parameter: string): Options {
     }
     if (parameter.includes('outputClientImpl=false')) {
       options.outputClientImpl = false;
+    }
+
+    if (parameter.includes('nullPrototypes=true')) {
+      options.nullPrototypes = true;
     }
 
     if (parameter.includes('nestJs=true')) {

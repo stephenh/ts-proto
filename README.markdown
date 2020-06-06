@@ -233,6 +233,8 @@ protoc --plugin=node_modules/ts-proto/protoc-gen-ts_proto ./batching.proto -I.
 
 * With `--ts_proto_opt=returnObservable=true`, the return type of service methods will be `Observable<T>` instead of `Promise<T>`.
 
+* With `--ts_proto_opt=nullPrototypes=true`, a custom prototype will not be used, this will increase memory usage.
+
 * With`--ts_proto_opt=addGrpcMetadata=true`, the last argument of service methods will accept the grpc `Metadata` type, which contains additional information with the call (i.e. access tokens/etc.).
 
   (Requires `nestJs=true`.)

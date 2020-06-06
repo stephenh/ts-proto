@@ -66,6 +66,7 @@ export type Options = {
   outputJsonMethods: boolean;
   outputClientImpl: boolean;
   addGrpcMetadata: boolean;
+  nullPrototypes: boolean;
   returnObservable: boolean;
   lowerCaseServiceMethods: boolean;
   nestJs: boolean;
@@ -524,6 +525,14 @@ function visitServices(
   }
 }
 
+function generateObjectInitStatement(func: FunctionSpec, fullName: string, nullPrototypes: boolean) {
+  if (nullPrototypes) {
+    return func.addStatement('const message = {...base%L} as %L', fullName, fullName);
+  } else {
+    return func.addStatement('const message = Object.create(base%L) as %L', fullName, fullName);
+  }
+}
+
 /** Creates a function to decode a message by loop overing the tags. */
 function generateDecode(
   typeMap: TypeMap,
@@ -540,8 +549,8 @@ function generateDecode(
   // add the initial end/message
   func = func
     .addStatement('const reader = input instanceof Uint8Array ? new Reader(input) : input')
-    .addStatement('let end = length === undefined ? reader.len : reader.pos + length')
-    .addStatement('const message = Object.create(base%L) as %L', fullName, fullName);
+    .addStatement('let end = length === undefined ? reader.len : reader.pos + length');
+  func = generateObjectInitStatement(func, fullName, options.nullPrototypes);
 
   // initialize all lists
   messageDesc.field.filter(isRepeated).forEach(field => {
@@ -742,7 +751,7 @@ function generateFromJson(
     .returns(fullName);
 
   // create the message
-  func = func.addStatement('const message = Object.create(base%L) as %L', fullName, fullName);
+  func = generateObjectInitStatement(func, fullName, options.nullPrototypes);
 
   // initialize all lists
   messageDesc.field.filter(isRepeated).forEach(field => {
@@ -915,7 +924,7 @@ function generateFromPartial(
     .returns(fullName);
 
   // create the message
-  func = func.addStatement('const message = Object.create(base%L) as %L', fullName, fullName);
+  func = generateObjectInitStatement(func, fullName, options.nullPrototypes);
 
   // initialize all lists
   messageDesc.field.filter(isRepeated).forEach(field => {

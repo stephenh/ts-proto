@@ -9,6 +9,10 @@
 yarn pbjs --force-message --force-number -t static-module -o integration/simple/pbjs.js integration/simple/simple.proto
 yarn pbts --no-comments -o integration/simple/pbjs.d.ts integration/simple/pbjs.js
 
+# simple-nullprototypes/
+yarn pbjs --force-message --force-number -t static-module -o integration/simple-nullprototypes/pbjs.js integration/simple-nullprototypes/simple.proto
+yarn pbts --no-comments -o integration/simple-nullprototypes/pbjs.d.ts integration/simple-nullprototypes/pbjs.js
+
 # simple-long
 yarn pbjs --force-message --force-long -t static-module -o integration/simple-long/pbjs.js integration/simple-long/simple.proto
 yarn pbts --no-comments -o integration/simple-long/pbjs.d.ts integration/simple-long/pbjs.js
