@@ -588,7 +588,7 @@ function generateDecode(
         const entryVariableName = `entry${field.number}`;
         func = func
           .addStatement(`const %L = %L`, entryVariableName, readSnippet)
-          .beginControlFlow('if (%L.value)', entryVariableName)
+          .beginControlFlow('if (%L.value !== undefined)', entryVariableName)
           .addStatement('message.%L[%L.key] = %L.value', fieldName, entryVariableName, entryVariableName)
           .endControlFlow();
       } else if (packedType(field.type) === undefined) {
@@ -937,7 +937,7 @@ function generateFromPartial(
       if (isMapType(typeMap, messageDesc, field, options)) {
         func = func
           .beginLambda('Object.entries(object.%L).forEach(([key, value]) =>', fieldName)
-          .beginControlFlow('if (value)')
+          .beginControlFlow('if (value !== undefined)')
           .addStatement(
             `message.%L[%L] = %L`,
             fieldName,

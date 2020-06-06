@@ -1,4 +1,8 @@
 
+## v1.12.5
+
+* Drop drop falsey values in maps in `decode` and `fromPartial`. Fixes #79.
+
 ## v1.12.4
 
 * Repeated fields cannot be optional, fixes #80

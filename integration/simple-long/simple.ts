@@ -1159,19 +1159,19 @@ export const SimpleWithMap = {
       switch (tag >>> 3) {
         case 1:
           const entry1 = SimpleWithMap_EntitiesByIdEntry.decode(reader, reader.uint32());
-          if (entry1.value) {
+          if (entry1.value !== undefined) {
             message.entitiesById[entry1.key] = entry1.value;
           }
           break;
         case 2:
           const entry2 = SimpleWithMap_NameLookupEntry.decode(reader, reader.uint32());
-          if (entry2.value) {
+          if (entry2.value !== undefined) {
             message.nameLookup[entry2.key] = entry2.value;
           }
           break;
         case 3:
           const entry3 = SimpleWithMap_IntLookupEntry.decode(reader, reader.uint32());
-          if (entry3.value) {
+          if (entry3.value !== undefined) {
             message.intLookup[entry3.key] = entry3.value;
           }
           break;
@@ -1211,21 +1211,21 @@ export const SimpleWithMap = {
     message.intLookup = {};
     if (object.entitiesById !== undefined && object.entitiesById !== null) {
       Object.entries(object.entitiesById).forEach(([key, value]) => {
-        if (value) {
+        if (value !== undefined) {
           message.entitiesById[Number(key)] = Entity.fromPartial(value);
         }
       })
     }
     if (object.nameLookup !== undefined && object.nameLookup !== null) {
       Object.entries(object.nameLookup).forEach(([key, value]) => {
-        if (value) {
+        if (value !== undefined) {
           message.nameLookup[key] = String(value);
         }
       })
     }
     if (object.intLookup !== undefined && object.intLookup !== null) {
       Object.entries(object.intLookup).forEach(([key, value]) => {
-        if (value) {
+        if (value !== undefined) {
           message.intLookup[Number(key)] = Number(value);
         }
       })
@@ -1446,7 +1446,7 @@ export const SimpleWithSnakeCaseMap = {
       switch (tag >>> 3) {
         case 1:
           const entry1 = SimpleWithSnakeCaseMap_EntitiesByIdEntry.decode(reader, reader.uint32());
-          if (entry1.value) {
+          if (entry1.value !== undefined) {
             message.entitiesById[entry1.key] = entry1.value;
           }
           break;
@@ -1472,7 +1472,7 @@ export const SimpleWithSnakeCaseMap = {
     message.entitiesById = {};
     if (object.entitiesById !== undefined && object.entitiesById !== null) {
       Object.entries(object.entitiesById).forEach(([key, value]) => {
-        if (value) {
+        if (value !== undefined) {
           message.entitiesById[Number(key)] = Entity.fromPartial(value);
         }
       })

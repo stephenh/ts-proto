@@ -326,7 +326,7 @@ export const BatchMapQueryResponse = {
       switch (tag >>> 3) {
         case 1:
           const entry1 = BatchMapQueryResponse_EntitiesEntry.decode(reader, reader.uint32());
-          if (entry1.value) {
+          if (entry1.value !== undefined) {
             message.entities[entry1.key] = entry1.value;
           }
           break;
@@ -352,7 +352,7 @@ export const BatchMapQueryResponse = {
     message.entities = {};
     if (object.entities !== undefined && object.entities !== null) {
       Object.entries(object.entities).forEach(([key, value]) => {
-        if (value) {
+        if (value !== undefined) {
           message.entities[key] = Entity.fromPartial(value);
         }
       })
