@@ -4,7 +4,6 @@ export interface Message {
 }
 
 const baseMessage: object = {
-  data: undefined,
 };
 
 export const Message = {

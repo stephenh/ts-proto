@@ -7,7 +7,6 @@ export interface ImportedThing {
 }
 
 const baseImportedThing: object = {
-  createdAt: undefined,
 };
 
 function fromJsonTimestamp(o: any): Date {

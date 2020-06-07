@@ -70,7 +70,6 @@ describe('simple value types', () => {
       Object {
         "age": 1,
         "coins": Array [],
-        "enabled": undefined,
         "name": "asdf",
         "snacks": Array [],
       }
@@ -82,10 +81,7 @@ describe('simple value types', () => {
     const s2 = SimpleWithWrappers.decode(Reader.create(PbSimpleWithWrappers.encode(s1).finish()));
     expect(s2).toMatchInlineSnapshot(`
       Object {
-        "age": undefined,
         "coins": Array [],
-        "enabled": undefined,
-        "name": undefined,
         "snacks": Array [],
       }
     `);

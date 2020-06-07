@@ -17,8 +17,6 @@ const basePoint: object = {
 };
 
 const baseArea: object = {
-  nw: undefined,
-  se: undefined,
 };
 
 export const Point = {

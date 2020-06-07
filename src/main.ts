@@ -441,10 +441,11 @@ function generateBaseInstance(typeMap: TypeMap, fullName: string, messageDesc: D
   asSequence(messageDesc.field)
     .filterNot(isWithinOneOf)
     .forEach((field) => {
-      initialValue = initialValue.addHashEntry(
-        maybeSnakeToCamel(field.name, options),
-        defaultValue(typeMap, field, options)
-      );
+      let val = defaultValue(typeMap, field, options);
+      if (val === 'undefined') {
+        return;
+      }
+      initialValue = initialValue.addHashEntry(maybeSnakeToCamel(field.name, options), val);
     });
   return baseMessage.initializerBlock(initialValue.endHash());
 }

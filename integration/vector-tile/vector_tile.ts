@@ -33,7 +33,6 @@ export interface Tile_Layer {
 }
 
 const baseTile: object = {
-  layers: undefined,
 };
 
 const baseTile_Value: object = {
@@ -56,9 +55,7 @@ const baseTile_Feature: object = {
 const baseTile_Layer: object = {
   version: 0,
   name: "",
-  features: undefined,
   keys: "",
-  values: undefined,
   extent: 0,
 };
 
