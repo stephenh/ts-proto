@@ -527,7 +527,7 @@ function generateDecode(
   func = func
     .addStatement('const reader = input instanceof Uint8Array ? new Reader(input) : input')
     .addStatement('let end = length === undefined ? reader.len : reader.pos + length')
-    .addStatement('const message = Object.create(base%L) as %L', fullName, fullName);
+    .addStatement('const message = { ...base%L } as %L', fullName, fullName);
 
   // initialize all lists
   messageDesc.field.filter(isRepeated).forEach((field) => {
@@ -722,7 +722,7 @@ function generateFromJson(
     .returns(fullName);
 
   // create the message
-  func = func.addStatement('const message = Object.create(base%L) as %L', fullName, fullName);
+  func = func.addStatement('const message = { ...base%L } as %L', fullName, fullName);
 
   // initialize all lists
   messageDesc.field.filter(isRepeated).forEach((field) => {
@@ -893,9 +893,8 @@ function generateFromPartial(
   let func = FunctionSpec.create('fromPartial')
     .addParameter(messageDesc.field.length > 0 ? 'object' : '_', `DeepPartial<${fullName}>`)
     .returns(fullName);
-
   // create the message
-  func = func.addStatement('const message = Object.create(base%L) as %L', fullName, fullName);
+  func = func.addStatement('const message = { ...base%L } as %L', fullName, fullName);
 
   // initialize all lists
   messageDesc.field.filter(isRepeated).forEach((field) => {

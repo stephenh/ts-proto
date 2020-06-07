@@ -30,7 +30,7 @@ export const Point = {
   decode(input: Uint8Array | Reader, length?: number): Point {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = Object.create(basePoint) as Point;
+    const message = { ...basePoint } as Point;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -48,7 +48,7 @@ export const Point = {
     return message;
   },
   fromJSON(object: any): Point {
-    const message = Object.create(basePoint) as Point;
+    const message = { ...basePoint } as Point;
     if (object.lat !== undefined && object.lat !== null) {
       message.lat = Number(object.lat);
     } else {
@@ -62,7 +62,7 @@ export const Point = {
     return message;
   },
   fromPartial(object: DeepPartial<Point>): Point {
-    const message = Object.create(basePoint) as Point;
+    const message = { ...basePoint } as Point;
     if (object.lat !== undefined && object.lat !== null) {
       message.lat = object.lat;
     } else {
@@ -96,7 +96,7 @@ export const Area = {
   decode(input: Uint8Array | Reader, length?: number): Area {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = Object.create(baseArea) as Area;
+    const message = { ...baseArea } as Area;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -114,7 +114,7 @@ export const Area = {
     return message;
   },
   fromJSON(object: any): Area {
-    const message = Object.create(baseArea) as Area;
+    const message = { ...baseArea } as Area;
     if (object.nw !== undefined && object.nw !== null) {
       message.nw = Point.fromJSON(object.nw);
     } else {
@@ -128,7 +128,7 @@ export const Area = {
     return message;
   },
   fromPartial(object: DeepPartial<Area>): Area {
-    const message = Object.create(baseArea) as Area;
+    const message = { ...baseArea } as Area;
     if (object.nw !== undefined && object.nw !== null) {
       message.nw = Point.fromPartial(object.nw);
     } else {

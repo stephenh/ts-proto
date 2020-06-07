@@ -26,8 +26,13 @@ describe('vector-tile', () => {
 
   it('can decode', () => {
     const v1: IValue = {
+      boolValue: false,
+      doubleValue: 0,
+      floatValue: 0,
       intValue: 1_000,
-      uintValue: 2_000
+      sintValue: 0,
+      stringValue: "",
+      uintValue: 2_000,
     };
     const v2 = Tile_Value.decode(Reader.create(PbValue.encode(PbValue.fromObject(v1)).finish()));
     expect(v2).toEqual(v1);
@@ -35,8 +40,13 @@ describe('vector-tile', () => {
 
   it('can decode Uint8Array input directly', () => {
     const v1: IValue = {
+      boolValue: false,
+      doubleValue: 0,
+      floatValue: 0,
       intValue: 1_000,
-      uintValue: 2_000
+      sintValue: 0,
+      stringValue: "",
+      uintValue: 2_000,
     };
     const bytes = PbValue.encode(PbValue.fromObject(v1)).finish()
     const v2 = Tile_Value.decode(bytes);
@@ -45,8 +55,13 @@ describe('vector-tile', () => {
 
   it('can decode Buffer input', () => {
     const v1: IValue = {
+      boolValue: false,
+      doubleValue: 0,
+      floatValue: 0,
       intValue: 1_000,
-      uintValue: 2_000
+      sintValue: 0,
+      stringValue: "",
+      uintValue: 2_000,
     };
     const bytes = PbValue.encode(PbValue.fromObject(v1)).finish()
     const buffer = Buffer.from(bytes)
