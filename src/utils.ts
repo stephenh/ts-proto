@@ -35,8 +35,8 @@ export function upperFirst(name: string): string {
   return name.substring(0, 1).toUpperCase() + name.substring(1);
 }
 
-export function optionsFromParameter(parameter: string): Options {
-  const options: Options = {
+export function defaultOptions(): Options {
+  return {
     useContext: false,
     snakeToCamel: true,
     forceLong: LongOption.NUMBER,
@@ -50,6 +50,10 @@ export function optionsFromParameter(parameter: string): Options {
     nestJs: false,
     env: EnvOption.BOTH,
   };
+}
+
+export function optionsFromParameter(parameter: string): Options {
+  const options = defaultOptions();
 
   if (parameter) {
     if (parameter.includes('context=true')) {

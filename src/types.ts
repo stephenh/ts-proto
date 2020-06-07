@@ -318,7 +318,7 @@ export function valueTypeName(field: FieldDescriptorProto): TypeName {
 export function messageToTypeName(
   typeMap: TypeMap,
   protoType: string,
-  options: Options | null = null,
+  options: Options,
   keepValueType: boolean = false,
   repeated: boolean = false
 ): TypeName {
@@ -330,7 +330,7 @@ export function messageToTypeName(
   //   properties, so there's no need for that union.
   if (!keepValueType && protoType in valueTypes) {
     let typeName = valueTypes[protoType];
-    if (repeated || (options && options.useOptionals)) {
+    if (repeated || options.useOptionals) {
       return typeName;
     }
     return TypeNames.unionType(typeName, TypeNames.UNDEFINED);
