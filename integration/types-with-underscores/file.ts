@@ -24,7 +24,7 @@ export const Baz = {
   decode(input: Uint8Array | Reader, length?: number): Baz {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = Object.create(baseBaz) as Baz;
+    const message = {...baseBaz} as Baz;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -39,7 +39,7 @@ export const Baz = {
     return message;
   },
   fromJSON(object: any): Baz {
-    const message = Object.create(baseBaz) as Baz;
+    const message = {...baseBaz} as Baz;
     if (object.foo !== undefined && object.foo !== null) {
       message.foo = FooBar.fromJSON(object.foo);
     } else {
@@ -48,7 +48,7 @@ export const Baz = {
     return message;
   },
   fromPartial(object: DeepPartial<Baz>): Baz {
-    const message = Object.create(baseBaz) as Baz;
+    const message = {...baseBaz} as Baz;
     if (object.foo !== undefined && object.foo !== null) {
       message.foo = FooBar.fromPartial(object.foo);
     } else {
@@ -70,7 +70,7 @@ export const FooBar = {
   decode(input: Uint8Array | Reader, length?: number): FooBar {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = Object.create(baseFooBar) as FooBar;
+    const message = {...baseFooBar} as FooBar;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -82,11 +82,11 @@ export const FooBar = {
     return message;
   },
   fromJSON(_: any): FooBar {
-    const message = Object.create(baseFooBar) as FooBar;
+    const message = {...baseFooBar} as FooBar;
     return message;
   },
   fromPartial(_: DeepPartial<FooBar>): FooBar {
-    const message = Object.create(baseFooBar) as FooBar;
+    const message = {...baseFooBar} as FooBar;
     return message;
   },
   toJSON(_: FooBar): unknown {
