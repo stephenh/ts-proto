@@ -41,11 +41,12 @@ describe('simple', () => {
     const s1: ISimple = {
       name: 'asdf',
       age: 1,
-      child: PbChild.fromObject({ name: 'foo' }),
+      child: PbChild.fromObject({ name: 'foo', type: Child_Type.UNKNOWN }),
       state: PbState.ON,
-      grandChildren: [PbChild.fromObject({ name: 'grand1' }), PbChild.fromObject({ name: 'grand2' })],
+      grandChildren: [PbChild.fromObject({ name: 'grand1', type: Child_Type.UNKNOWN }), PbChild.fromObject({ name: 'grand2', type: Child_Type.UNKNOWN })],
       coins: [2, 4, 6],
       snacks: ['a', 'b'],
+      thing: undefined,
       oldStates: [PbState.ON, PbState.OFF],
       blobs: []
     };
