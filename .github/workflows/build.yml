@@ -20,7 +20,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - name: install dependencies
-        run: yarn install || echo "ignore failure"
+        run: yarn install
       - name: pbjs
         run: ./pbjs.sh
       - name: Prepare Integration
