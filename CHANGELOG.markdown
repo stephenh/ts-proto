@@ -7,14 +7,15 @@
 
 * Added a `env=both` option and made that the default
 
-  This restores the pre-1.13.0 behavior that bytes are `Uint8Array` so that the `Buffer` support is not a breaking change. Users have to opt-in with `env=node`.
+  This restores the pre-1.22.0 behavior that bytes are `Uint8Array` so that the `Buffer` support is not a breaking change. Users have to opt-in with `env=node`.
 
-  Also fixes a bug introduced in 1.13.0 that output an `as Buffer` without first checking `env=node`.
+  Also fixes a bug introduced in 1.22.0 that output an `as Buffer` without first checking `env=node`.
 
 ## v1.22.0
 
 * Added a `env=node`/`env=browser` option that defaults to `env=node`
-* Currently `env=node` only changes the types of `bytes` from `Uint8Array` to `Buffer`, as a convenience for Node programming where `Buffer` (which is the defacto subclass of `Uint8Array`) is more widely used (@dolsup)
+
+  Currently `env=node` only changes the types of `bytes` from `Uint8Array` to `Buffer`, as a convenience for Node programming where `Buffer` (which is the defacto subclass of `Uint8Array`) is more widely used (@dolsup)
 
 ## v1.21.5
 
