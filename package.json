@@ -11,7 +11,9 @@
     "prepare": "yarn build && yarn test",
     "build": "yarn tsc",
     "setup": "./pbjs.sh && ./integration/pbjs.sh && ./integration/update-bins.sh && ./integration/codegen.sh",
-    "test": "yarn jest -c jest.config.js"
+    "test": "yarn jest -c jest.config.js",
+    "prettier": "prettier --write {src,tests}/**/*.ts",
+    "prettier:check": "prettier --list-different {src,tests}/**/*.ts"
   },
   "keywords": [],
   "author": "",
@@ -25,7 +27,7 @@
     "@types/node": "^10.7.0",
     "grpc": "^1.24.2",
     "jest": "^25.1.0",
-    "prettier": "^1.16.4",
+    "prettier": "^2.0.5",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^6.5.5",
     "ts-jest": "^25.2.1",

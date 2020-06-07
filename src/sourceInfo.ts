@@ -18,19 +18,19 @@ export const Fields = {
     message_type: 4,
     enum_type: 5,
     service: 6,
-    extension: 7
+    extension: 7,
   },
   message: {
     field: 2,
     nested_type: 3,
-    enum_type: 4
+    enum_type: 4,
   },
   enum: {
-    value: 2
+    value: 2,
   },
   service: {
-    method: 2
-  }
+    method: 2,
+  },
 };
 
 /**
@@ -78,7 +78,7 @@ export default class SourceInfo implements SourceDescription {
   static fromDescriptor(file: FileDescriptorProto) {
     let map: SourceInfoMap = {};
     if (file.sourceCodeInfo && file.sourceCodeInfo.location) {
-      file.sourceCodeInfo.location.forEach(loc => {
+      file.sourceCodeInfo.location.forEach((loc) => {
         map[loc.path.join('.')] = loc;
       });
     }
@@ -124,8 +124,8 @@ export default class SourceInfo implements SourceDescription {
     const prefix = `${type}.${index}.`;
     const map: SourceInfoMap = {};
     Object.keys(this.sourceCode)
-      .filter(key => key.startsWith(prefix))
-      .forEach(key => {
+      .filter((key) => key.startsWith(prefix))
+      .forEach((key) => {
         map[key.substr(prefix.length)] = this.sourceCode[key];
       });
     return new SourceInfo(map, this.lookup(type, index));

@@ -56,7 +56,12 @@ export function basicLongWireType(type: FieldDescriptorProto.Type): number | und
 }
 
 /** Returns the type name without any repeated/required/etc. labels. */
-export function basicTypeName(typeMap: TypeMap, field: FieldDescriptorProto, options: Options, keepValueType: boolean = false): TypeName {
+export function basicTypeName(
+  typeMap: TypeMap,
+  field: FieldDescriptorProto,
+  options: Options,
+  keepValueType: boolean = false
+): TypeName {
   switch (field.type) {
     case FieldDescriptorProto.Type.TYPE_DOUBLE:
     case FieldDescriptorProto.Type.TYPE_FLOAT:
@@ -180,7 +185,7 @@ export function defaultValue(typeMap: TypeMap, field: FieldDescriptorProto, opti
       // This is probably not great, but it's only used in fromJSON and fromPartial,
       // and I believe the semantics of those in the proto2 world are generally undefined.
       const enumProto = typeMap.get(field.typeName)![2] as EnumDescriptorProto;
-      const hasZero = enumProto.value.find(v => v.number === 0);
+      const hasZero = enumProto.value.find((v) => v.number === 0);
       return hasZero ? 0 : enumProto.value[0].number;
     case FieldDescriptorProto.Type.TYPE_UINT64:
     case FieldDescriptorProto.Type.TYPE_FIXED64:
@@ -222,7 +227,12 @@ export function createTypeMap(request: CodeGeneratorRequest, options: Options): 
     // We assume a file.name of google/protobuf/wrappers.proto --> a module path of google/protobuf/wrapper.ts
     const moduleName = file.name.replace('.proto', '');
     // So given a fullName like FooMessage_InnerMessage, proto will see that as package.name.FooMessage.InnerMessage
-    function saveMapping(tsFullName: string, desc: DescriptorProto | EnumDescriptorProto, s: SourceInfo, protoFullName: string): void {
+    function saveMapping(
+      tsFullName: string,
+      desc: DescriptorProto | EnumDescriptorProto,
+      s: SourceInfo,
+      protoFullName: string
+    ): void {
       // package is optional, but make sure we have a dot-prefixed type name either way
       const prefix = file.package.length === 0 ? '' : `.${file.package}`;
       typeMap.set(`${prefix}.${protoFullName}`, [moduleName, tsFullName, desc]);
@@ -260,7 +270,12 @@ export function isLong(field: FieldDescriptorProto): boolean {
   return basicLongWireType(field.type) !== undefined;
 }
 
-export function isMapType(typeMap: TypeMap, messageDesc: DescriptorProto, field: FieldDescriptorProto, options: Options): boolean {
+export function isMapType(
+  typeMap: TypeMap,
+  messageDesc: DescriptorProto,
+  field: FieldDescriptorProto,
+  options: Options
+): boolean {
   return detectMapType(typeMap, messageDesc, field, options) !== undefined;
 }
 
@@ -277,7 +292,7 @@ const valueTypes: { [key: string]: TypeName } = {
 };
 
 const mappedTypes: { [key: string]: TypeName } = {
-  '.google.protobuf.Timestamp': TypeNames.DATE
+  '.google.protobuf.Timestamp': TypeNames.DATE,
 };
 
 export function isTimestamp(field: FieldDescriptorProto): boolean {
@@ -294,13 +309,18 @@ export function isEmptyType(typeName: string): boolean {
 
 export function valueTypeName(field: FieldDescriptorProto): TypeName {
   if (!isValueType(field)) {
-    throw new Error('Type is not a valueType: ' + field.typeName)
+    throw new Error('Type is not a valueType: ' + field.typeName);
   }
-  return valueTypes[field.typeName]
+  return valueTypes[field.typeName];
 }
 
 /** Maps `.some_proto_namespace.Message` to a TypeName. */
-export function messageToTypeName(typeMap: TypeMap, protoType: string, keepValueType: boolean = false, repeated: boolean = false): TypeName {
+export function messageToTypeName(
+  typeMap: TypeMap,
+  protoType: string,
+  keepValueType: boolean = false,
+  repeated: boolean = false
+): TypeName {
   // Watch for the wrapper types `.google.protobuf.StringValue` and map to `string | undefined`
   if (!keepValueType && protoType in valueTypes) {
     let typeName = valueTypes[protoType];
@@ -323,7 +343,12 @@ function toModuleAndType(typeMap: TypeMap, protoType: string): [string, string, 
 }
 
 /** Return the TypeName for any field (primitive/message/etc.) as exposed in the interface. */
-export function toTypeName(typeMap: TypeMap, messageDesc: DescriptorProto, field: FieldDescriptorProto, options: Options): TypeName {
+export function toTypeName(
+  typeMap: TypeMap,
+  messageDesc: DescriptorProto,
+  field: FieldDescriptorProto,
+  options: Options
+): TypeName {
   let type = basicTypeName(typeMap, field, options, false);
   if (isRepeated(field)) {
     const mapType = detectMapType(typeMap, messageDesc, field, options);
@@ -362,7 +387,7 @@ export function detectMapType(
 function createOneOfsMap(message: DescriptorProto): Map<string, FieldDescriptorProto[]> {
   return asSequence(message.field)
     .filter(isWithinOneOf)
-    .groupBy(f => {
+    .groupBy((f) => {
       return message.oneofDecl[f.oneofIndex].name;
     });
 }

@@ -14,11 +14,11 @@ async function main() {
   // const request = CodeGeneratorRequest.fromObject(json);
   const request = CodeGeneratorRequest.decode(stdin);
   const typeMap = createTypeMap(request, optionsFromParameter(request.parameter));
-  const files = request.protoFile.map(file => {
+  const files = request.protoFile.map((file) => {
     const spec = generateFile(typeMap, file, request.parameter);
     return new CodeGeneratorResponse.File({
       name: spec.path,
-      content: prefixDisableLinter(spec)
+      content: prefixDisableLinter(spec),
     });
   });
   const response = new CodeGeneratorResponse({ file: files });
@@ -32,7 +32,7 @@ main()
     process.stderr.write('DONE');
     process.exit(0);
   })
-  .catch(e => {
+  .catch((e) => {
     process.stderr.write('FAILED!');
     process.stderr.write(e.message);
     process.stderr.write(e.stack);
