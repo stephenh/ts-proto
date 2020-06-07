@@ -1,5 +1,5 @@
-#!/usr/bin/env zsh
-# shopt -s globstar
+#!/usr/bin/env bash
+shopt -s globstar
 
 # Runs the local code generator for each of our .bin test files (as created/kept
 # up-to-date by ./update-bins.sh). Good for local iteration of WIP changes.

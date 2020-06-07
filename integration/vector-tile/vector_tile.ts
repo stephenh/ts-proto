@@ -123,7 +123,7 @@ export const Tile = {
   decode(input: Uint8Array | Reader, length?: number): Tile {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = {...baseTile} as Tile;
+    const message = { ...baseTile } as Tile;
     message.layers = [];
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -139,7 +139,7 @@ export const Tile = {
     return message;
   },
   fromJSON(object: any): Tile {
-    const message = {...baseTile} as Tile;
+    const message = { ...baseTile } as Tile;
     message.layers = [];
     if (object.layers !== undefined && object.layers !== null) {
       for (const e of object.layers) {
@@ -149,7 +149,7 @@ export const Tile = {
     return message;
   },
   fromPartial(object: DeepPartial<Tile>): Tile {
-    const message = {...baseTile} as Tile;
+    const message = { ...baseTile } as Tile;
     message.layers = [];
     if (object.layers !== undefined && object.layers !== null) {
       for (const e of object.layers) {
@@ -183,7 +183,7 @@ export const Tile_Value = {
   decode(input: Uint8Array | Reader, length?: number): Tile_Value {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = {...baseTile_Value} as Tile_Value;
+    const message = { ...baseTile_Value } as Tile_Value;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -216,7 +216,7 @@ export const Tile_Value = {
     return message;
   },
   fromJSON(object: any): Tile_Value {
-    const message = {...baseTile_Value} as Tile_Value;
+    const message = { ...baseTile_Value } as Tile_Value;
     if (object.stringValue !== undefined && object.stringValue !== null) {
       message.stringValue = String(object.stringValue);
     } else {
@@ -255,7 +255,7 @@ export const Tile_Value = {
     return message;
   },
   fromPartial(object: DeepPartial<Tile_Value>): Tile_Value {
-    const message = {...baseTile_Value} as Tile_Value;
+    const message = { ...baseTile_Value } as Tile_Value;
     if (object.stringValue !== undefined && object.stringValue !== null) {
       message.stringValue = object.stringValue;
     } else {
@@ -325,7 +325,7 @@ export const Tile_Feature = {
   decode(input: Uint8Array | Reader, length?: number): Tile_Feature {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = {...baseTile_Feature} as Tile_Feature;
+    const message = { ...baseTile_Feature } as Tile_Feature;
     message.tags = [];
     message.geometry = [];
     while (reader.pos < end) {
@@ -365,7 +365,7 @@ export const Tile_Feature = {
     return message;
   },
   fromJSON(object: any): Tile_Feature {
-    const message = {...baseTile_Feature} as Tile_Feature;
+    const message = { ...baseTile_Feature } as Tile_Feature;
     message.tags = [];
     message.geometry = [];
     if (object.id !== undefined && object.id !== null) {
@@ -391,7 +391,7 @@ export const Tile_Feature = {
     return message;
   },
   fromPartial(object: DeepPartial<Tile_Feature>): Tile_Feature {
-    const message = {...baseTile_Feature} as Tile_Feature;
+    const message = { ...baseTile_Feature } as Tile_Feature;
     message.tags = [];
     message.geometry = [];
     if (object.id !== undefined && object.id !== null) {
@@ -453,7 +453,7 @@ export const Tile_Layer = {
   decode(input: Uint8Array | Reader, length?: number): Tile_Layer {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = {...baseTile_Layer} as Tile_Layer;
+    const message = { ...baseTile_Layer } as Tile_Layer;
     message.features = [];
     message.keys = [];
     message.values = [];
@@ -486,7 +486,7 @@ export const Tile_Layer = {
     return message;
   },
   fromJSON(object: any): Tile_Layer {
-    const message = {...baseTile_Layer} as Tile_Layer;
+    const message = { ...baseTile_Layer } as Tile_Layer;
     message.features = [];
     message.keys = [];
     message.values = [];
@@ -523,7 +523,7 @@ export const Tile_Layer = {
     return message;
   },
   fromPartial(object: DeepPartial<Tile_Layer>): Tile_Layer {
-    const message = {...baseTile_Layer} as Tile_Layer;
+    const message = { ...baseTile_Layer } as Tile_Layer;
     message.features = [];
     message.keys = [];
     message.values = [];
