@@ -6,7 +6,6 @@ export interface Point {
 }
 
 const basePoint: object = {
-  data: undefined,
 };
 
 export const Point = {

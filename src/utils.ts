@@ -40,6 +40,7 @@ export function optionsFromParameter(parameter: string): Options {
     useContext: false,
     snakeToCamel: true,
     forceLong: LongOption.NUMBER,
+    useOptionals: false,
     lowerCaseServiceMethods: false,
     outputEncodeMethods: true,
     outputJsonMethods: true,
@@ -62,6 +63,9 @@ export function optionsFromParameter(parameter: string): Options {
     }
     if (parameter.includes('forceLong=string')) {
       options.forceLong = LongOption.STRING;
+    }
+    if (parameter.includes('useOptionals=true')) {
+      options.useOptionals = true;
     }
     if (parameter.includes('lowerCaseServiceMethods=true')) {
       options.lowerCaseServiceMethods = true;

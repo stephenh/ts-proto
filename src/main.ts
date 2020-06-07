@@ -62,6 +62,7 @@ export type Options = {
   useContext: boolean;
   snakeToCamel: boolean;
   forceLong: LongOption;
+  useOptionals: boolean;
   outputEncodeMethods: boolean;
   outputJsonMethods: boolean;
   outputClientImpl: boolean;
@@ -421,9 +422,12 @@ function generateInterfaceDeclaration(
 
   let index = 0;
   for (const fieldDesc of messageDesc.field) {
+    // When useOptionals=true, non-scalar fields are translated into optional properties.
+    let optional = options.useOptionals && isMessage(fieldDesc) && !isRepeated(fieldDesc);
     let prop = PropertySpec.create(
       maybeSnakeToCamel(fieldDesc.name, options),
-      toTypeName(typeMap, messageDesc, fieldDesc, options)
+      toTypeName(typeMap, messageDesc, fieldDesc, options),
+      optional
     );
 
     const info = sourceInfo.lookup(Fields.message.field, index++);
