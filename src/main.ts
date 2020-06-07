@@ -528,9 +528,9 @@ function visitServices(
 function generateObjectInitStatement(func: FunctionSpec, fullName: string, nullPrototypes: boolean) {
   if (nullPrototypes) {
     return func.addStatement('const message = {...base%L} as %L', fullName, fullName);
-  } else {
-    return func.addStatement('const message = Object.create(base%L) as %L', fullName, fullName);
   }
+  
+  return func.addStatement('const message = Object.create(base%L) as %L', fullName, fullName);
 }
 
 /** Creates a function to decode a message by loop overing the tags. */
