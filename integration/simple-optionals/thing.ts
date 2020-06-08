@@ -1,9 +1,9 @@
-import { Timestamp } from '../google/protobuf/timestamp';
+import { Timestamp } from './google/protobuf/timestamp';
 import { Writer, Reader } from 'protobufjs/minimal';
 
 
 export interface ImportedThing {
-  createdAt: Date | undefined;
+  createdAt?: Date;
 }
 
 const baseImportedThing: object = {
@@ -20,13 +20,13 @@ function fromJsonTimestamp(o: any): Date {
 }
 
 function toTimestamp(date: Date): Timestamp {
-  const seconds = (date.getTime() / 1_000).toString();
+  const seconds = date.getTime() / 1_000;
   const nanos = (date.getTime() % 1_000) * 1_000_000;
   return { seconds, nanos };
 }
 
 function fromTimestamp(t: Timestamp): Date {
-  let millis = Number(t.seconds) * 1_000;
+  let millis = t.seconds * 1_000;
   millis += t.nanos / 1_000_000;
   return new Date(millis);
 }

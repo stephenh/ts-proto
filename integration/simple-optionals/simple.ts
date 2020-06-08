@@ -2,9 +2,9 @@
 //  comment in the output source file.
 //
 import { ImportedThing } from './import_dir/thing';
-import * as Long from 'long';
 import { Reader, Writer } from 'protobufjs/minimal';
 import { Timestamp } from './google/protobuf/timestamp';
+import * as Long from 'long';
 import { StringValue, Int32Value, BoolValue } from './google/protobuf/wrappers';
 
 
@@ -21,8 +21,8 @@ export interface Simple {
   /**
    *  This comment will also attach
    */
-  createdAt: Date | undefined;
-  child: Child | undefined;
+  createdAt?: Date;
+  child?: Child;
   state: StateEnum;
   grandChildren: Child[];
   coins: number[];
@@ -31,7 +31,7 @@ export interface Simple {
   /**
    *  A thing (imported from thing)
    */
-  thing: ImportedThing | undefined;
+  thing?: ImportedThing;
 }
 
 export interface Child {
@@ -41,7 +41,7 @@ export interface Child {
 
 export interface Nested {
   name: string;
-  message: Nested_InnerMessage | undefined;
+  message?: Nested_InnerMessage;
   state: Nested_InnerEnum;
 }
 
@@ -50,7 +50,7 @@ export interface Nested {
  */
 export interface Nested_InnerMessage {
   name: string;
-  deep: Nested_InnerMessage_DeepMessage | undefined;
+  deep?: Nested_InnerMessage_DeepMessage;
 }
 
 export interface Nested_InnerMessage_DeepMessage {
@@ -63,9 +63,9 @@ export interface OneOfMessage {
 }
 
 export interface SimpleWithWrappers {
-  name: string | undefined;
-  age: number | undefined;
-  enabled: boolean | undefined;
+  name?: string;
+  age?: number;
+  enabled?: boolean;
   coins: number[];
   snacks: string[];
 }
@@ -82,7 +82,7 @@ export interface SimpleWithMap {
 
 export interface SimpleWithMap_EntitiesByIdEntry {
   key: number;
-  value: Entity | undefined;
+  value?: Entity;
 }
 
 export interface SimpleWithMap_NameLookupEntry {
@@ -101,7 +101,7 @@ export interface SimpleWithSnakeCaseMap {
 
 export interface SimpleWithSnakeCaseMap_EntitiesByIdEntry {
   key: number;
-  value: Entity | undefined;
+  value?: Entity;
 }
 
 export interface PingRequest {
@@ -116,15 +116,15 @@ export interface Numbers {
   double: number;
   float: number;
   int32: number;
-  int64: Long;
+  int64: number;
   uint32: number;
-  uint64: Long;
+  uint64: number;
   sint32: number;
-  sint64: Long;
+  sint64: number;
   fixed32: number;
-  fixed64: Long;
+  fixed64: number;
   sfixed32: number;
-  sfixed64: Long;
+  sfixed64: number;
 }
 
 const baseSimple: object = {
@@ -200,15 +200,15 @@ const baseNumbers: object = {
   double: 0,
   float: 0,
   int32: 0,
-  int64: Long.ZERO,
+  int64: 0,
   uint32: 0,
-  uint64: Long.UZERO,
+  uint64: 0,
   sint32: 0,
-  sint64: Long.ZERO,
+  sint64: 0,
   fixed32: 0,
-  fixed64: Long.UZERO,
+  fixed64: 0,
   sfixed32: 0,
-  sfixed64: Long.ZERO,
+  sfixed64: 0,
 };
 
 export interface PingService {
@@ -250,19 +250,22 @@ function fromJsonTimestamp(o: any): Date {
 }
 
 function toTimestamp(date: Date): Timestamp {
-  const seconds = numberToLong(date.getTime() / 1_000);
+  const seconds = date.getTime() / 1_000;
   const nanos = (date.getTime() % 1_000) * 1_000_000;
   return { seconds, nanos };
 }
 
 function fromTimestamp(t: Timestamp): Date {
-  let millis = t.seconds.toNumber() * 1_000;
+  let millis = t.seconds * 1_000;
   millis += t.nanos / 1_000_000;
   return new Date(millis);
 }
 
-function numberToLong(number: number) {
-  return Long.fromNumber(number);
+function longToNumber(long: Long) {
+  if (long.gt(Number.MAX_SAFE_INTEGER)) {
+    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+  }
+  return long.toNumber();
 }
 
 export const StateEnum = {
@@ -1660,31 +1663,31 @@ export const Numbers = {
           message.int32 = reader.int32();
           break;
         case 4:
-          message.int64 = reader.int64() as Long;
+          message.int64 = longToNumber(reader.int64() as Long);
           break;
         case 5:
           message.uint32 = reader.uint32();
           break;
         case 6:
-          message.uint64 = reader.uint64() as Long;
+          message.uint64 = longToNumber(reader.uint64() as Long);
           break;
         case 7:
           message.sint32 = reader.sint32();
           break;
         case 8:
-          message.sint64 = reader.sint64() as Long;
+          message.sint64 = longToNumber(reader.sint64() as Long);
           break;
         case 9:
           message.fixed32 = reader.fixed32();
           break;
         case 10:
-          message.fixed64 = reader.fixed64() as Long;
+          message.fixed64 = longToNumber(reader.fixed64() as Long);
           break;
         case 11:
           message.sfixed32 = reader.sfixed32();
           break;
         case 12:
-          message.sfixed64 = reader.sfixed64() as Long;
+          message.sfixed64 = longToNumber(reader.sfixed64() as Long);
           break;
         default:
           reader.skipType(tag & 7);
@@ -1711,9 +1714,9 @@ export const Numbers = {
       message.int32 = 0;
     }
     if (object.int64 !== undefined && object.int64 !== null) {
-      message.int64 = Long.fromString(object.int64);
+      message.int64 = Number(object.int64);
     } else {
-      message.int64 = Long.ZERO;
+      message.int64 = 0;
     }
     if (object.uint32 !== undefined && object.uint32 !== null) {
       message.uint32 = Number(object.uint32);
@@ -1721,9 +1724,9 @@ export const Numbers = {
       message.uint32 = 0;
     }
     if (object.uint64 !== undefined && object.uint64 !== null) {
-      message.uint64 = Long.fromString(object.uint64);
+      message.uint64 = Number(object.uint64);
     } else {
-      message.uint64 = Long.UZERO;
+      message.uint64 = 0;
     }
     if (object.sint32 !== undefined && object.sint32 !== null) {
       message.sint32 = Number(object.sint32);
@@ -1731,9 +1734,9 @@ export const Numbers = {
       message.sint32 = 0;
     }
     if (object.sint64 !== undefined && object.sint64 !== null) {
-      message.sint64 = Long.fromString(object.sint64);
+      message.sint64 = Number(object.sint64);
     } else {
-      message.sint64 = Long.ZERO;
+      message.sint64 = 0;
     }
     if (object.fixed32 !== undefined && object.fixed32 !== null) {
       message.fixed32 = Number(object.fixed32);
@@ -1741,9 +1744,9 @@ export const Numbers = {
       message.fixed32 = 0;
     }
     if (object.fixed64 !== undefined && object.fixed64 !== null) {
-      message.fixed64 = Long.fromString(object.fixed64);
+      message.fixed64 = Number(object.fixed64);
     } else {
-      message.fixed64 = Long.UZERO;
+      message.fixed64 = 0;
     }
     if (object.sfixed32 !== undefined && object.sfixed32 !== null) {
       message.sfixed32 = Number(object.sfixed32);
@@ -1751,9 +1754,9 @@ export const Numbers = {
       message.sfixed32 = 0;
     }
     if (object.sfixed64 !== undefined && object.sfixed64 !== null) {
-      message.sfixed64 = Long.fromString(object.sfixed64);
+      message.sfixed64 = Number(object.sfixed64);
     } else {
-      message.sfixed64 = Long.ZERO;
+      message.sfixed64 = 0;
     }
     return message;
   },
@@ -1775,9 +1778,9 @@ export const Numbers = {
       message.int32 = 0;
     }
     if (object.int64 !== undefined && object.int64 !== null) {
-      message.int64 = object.int64 as Long;
+      message.int64 = object.int64;
     } else {
-      message.int64 = Long.ZERO;
+      message.int64 = 0;
     }
     if (object.uint32 !== undefined && object.uint32 !== null) {
       message.uint32 = object.uint32;
@@ -1785,9 +1788,9 @@ export const Numbers = {
       message.uint32 = 0;
     }
     if (object.uint64 !== undefined && object.uint64 !== null) {
-      message.uint64 = object.uint64 as Long;
+      message.uint64 = object.uint64;
     } else {
-      message.uint64 = Long.UZERO;
+      message.uint64 = 0;
     }
     if (object.sint32 !== undefined && object.sint32 !== null) {
       message.sint32 = object.sint32;
@@ -1795,9 +1798,9 @@ export const Numbers = {
       message.sint32 = 0;
     }
     if (object.sint64 !== undefined && object.sint64 !== null) {
-      message.sint64 = object.sint64 as Long;
+      message.sint64 = object.sint64;
     } else {
-      message.sint64 = Long.ZERO;
+      message.sint64 = 0;
     }
     if (object.fixed32 !== undefined && object.fixed32 !== null) {
       message.fixed32 = object.fixed32;
@@ -1805,9 +1808,9 @@ export const Numbers = {
       message.fixed32 = 0;
     }
     if (object.fixed64 !== undefined && object.fixed64 !== null) {
-      message.fixed64 = object.fixed64 as Long;
+      message.fixed64 = object.fixed64;
     } else {
-      message.fixed64 = Long.UZERO;
+      message.fixed64 = 0;
     }
     if (object.sfixed32 !== undefined && object.sfixed32 !== null) {
       message.sfixed32 = object.sfixed32;
@@ -1815,9 +1818,9 @@ export const Numbers = {
       message.sfixed32 = 0;
     }
     if (object.sfixed64 !== undefined && object.sfixed64 !== null) {
-      message.sfixed64 = object.sfixed64 as Long;
+      message.sfixed64 = object.sfixed64;
     } else {
-      message.sfixed64 = Long.ZERO;
+      message.sfixed64 = 0;
     }
     return message;
   },
@@ -1826,15 +1829,15 @@ export const Numbers = {
     obj.double = message.double || 0;
     obj.float = message.float || 0;
     obj.int32 = message.int32 || 0;
-    obj.int64 = (message.int64 || Long.ZERO).toString();
+    obj.int64 = message.int64 || 0;
     obj.uint32 = message.uint32 || 0;
-    obj.uint64 = (message.uint64 || Long.UZERO).toString();
+    obj.uint64 = message.uint64 || 0;
     obj.sint32 = message.sint32 || 0;
-    obj.sint64 = (message.sint64 || Long.ZERO).toString();
+    obj.sint64 = message.sint64 || 0;
     obj.fixed32 = message.fixed32 || 0;
-    obj.fixed64 = (message.fixed64 || Long.UZERO).toString();
+    obj.fixed64 = message.fixed64 || 0;
     obj.sfixed32 = message.sfixed32 || 0;
-    obj.sfixed64 = (message.sfixed64 || Long.ZERO).toString();
+    obj.sfixed64 = message.sfixed64 || 0;
     return obj;
   },
 };

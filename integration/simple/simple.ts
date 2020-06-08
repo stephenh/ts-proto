@@ -134,15 +134,10 @@ export interface Empty {
 const baseSimple: object = {
   name: "",
   age: 0,
-  createdAt: undefined,
-  child: undefined,
   state: 0,
-  grandChildren: undefined,
   coins: 0,
   snacks: "",
   oldStates: 0,
-  thing: undefined,
-  blobs: undefined,
 };
 
 const baseChild: object = {
@@ -152,13 +147,11 @@ const baseChild: object = {
 
 const baseNested: object = {
   name: "",
-  message: undefined,
   state: 0,
 };
 
 const baseNested_InnerMessage: object = {
   name: "",
-  deep: undefined,
 };
 
 const baseNested_InnerMessage_DeepMessage: object = {
@@ -169,11 +162,6 @@ const baseOneOfMessage: object = {
 };
 
 const baseSimpleWithWrappers: object = {
-  name: undefined,
-  age: undefined,
-  enabled: undefined,
-  coins: undefined,
-  snacks: undefined,
 };
 
 const baseEntity: object = {
@@ -181,14 +169,10 @@ const baseEntity: object = {
 };
 
 const baseSimpleWithMap: object = {
-  entitiesById: undefined,
-  nameLookup: undefined,
-  intLookup: undefined,
 };
 
 const baseSimpleWithMap_EntitiesByIdEntry: object = {
   key: 0,
-  value: undefined,
 };
 
 const baseSimpleWithMap_NameLookupEntry: object = {
@@ -202,12 +186,10 @@ const baseSimpleWithMap_IntLookupEntry: object = {
 };
 
 const baseSimpleWithSnakeCaseMap: object = {
-  entitiesById: undefined,
 };
 
 const baseSimpleWithSnakeCaseMap_EntitiesByIdEntry: object = {
   key: 0,
-  value: undefined,
 };
 
 const basePingRequest: object = {

@@ -47,7 +47,6 @@ const baseBatchQueryRequest: object = {
 };
 
 const baseBatchQueryResponse: object = {
-  entities: undefined,
 };
 
 const baseBatchMapQueryRequest: object = {
@@ -55,12 +54,10 @@ const baseBatchMapQueryRequest: object = {
 };
 
 const baseBatchMapQueryResponse: object = {
-  entities: undefined,
 };
 
 const baseBatchMapQueryResponse_EntitiesEntry: object = {
   key: "",
-  value: undefined,
 };
 
 const baseGetOnlyMethodRequest: object = {
@@ -68,7 +65,6 @@ const baseGetOnlyMethodRequest: object = {
 };
 
 const baseGetOnlyMethodResponse: object = {
-  entity: undefined,
 };
 
 const baseWriteMethodRequest: object = {

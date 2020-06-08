@@ -62,6 +62,7 @@ export type Options = {
   useContext: boolean;
   snakeToCamel: boolean;
   forceLong: LongOption;
+  useOptionals: boolean;
   outputEncodeMethods: boolean;
   outputJsonMethods: boolean;
   outputClientImpl: boolean;
@@ -421,9 +422,12 @@ function generateInterfaceDeclaration(
 
   let index = 0;
   for (const fieldDesc of messageDesc.field) {
+    // When useOptionals=true, non-scalar fields are translated into optional properties.
+    let optional = options.useOptionals && isMessage(fieldDesc) && !isRepeated(fieldDesc);
     let prop = PropertySpec.create(
       maybeSnakeToCamel(fieldDesc.name, options),
-      toTypeName(typeMap, messageDesc, fieldDesc, options)
+      toTypeName(typeMap, messageDesc, fieldDesc, options),
+      optional
     );
 
     const info = sourceInfo.lookup(Fields.message.field, index++);
@@ -441,10 +445,11 @@ function generateBaseInstance(typeMap: TypeMap, fullName: string, messageDesc: D
   asSequence(messageDesc.field)
     .filterNot(isWithinOneOf)
     .forEach((field) => {
-      initialValue = initialValue.addHashEntry(
-        maybeSnakeToCamel(field.name, options),
-        defaultValue(typeMap, field, options)
-      );
+      let val = defaultValue(typeMap, field, options);
+      if (val === 'undefined') {
+        return;
+      }
+      initialValue = initialValue.addHashEntry(maybeSnakeToCamel(field.name, options), val);
     });
   return baseMessage.initializerBlock(initialValue.endHash());
 }
@@ -1007,7 +1012,7 @@ function generateService(
     const info = sourceInfo.lookup(Fields.service.method, index++);
     maybeAddComment(info, (text) => (requestFn = requestFn.addJavadoc(text)));
 
-    requestFn = requestFn.addParameter('request', requestType(typeMap, methodDesc));
+    requestFn = requestFn.addParameter('request', requestType(typeMap, methodDesc, options));
 
     // Use metadata as last argument for interface only configuration
     if (options.addGrpcMetadata) {
@@ -1016,9 +1021,9 @@ function generateService(
 
     // Return observable for interface only configuration, passing returnObservable=true and methodDesc.serverStreaming=true
     if (options.returnObservable || methodDesc.serverStreaming) {
-      requestFn = requestFn.returns(responseObservable(typeMap, methodDesc));
+      requestFn = requestFn.returns(responseObservable(typeMap, methodDesc, options));
     } else {
-      requestFn = requestFn.returns(responsePromise(typeMap, methodDesc));
+      requestFn = requestFn.returns(responsePromise(typeMap, methodDesc, options));
     }
 
     service = service.addFunction(requestFn);
@@ -1067,9 +1072,10 @@ function generateRegularRpcMethod(
   if (options.useContext) {
     requestFn = requestFn.addParameter('ctx', TypeNames.typeVariable('Context'));
   }
+  let inputType = requestType(typeMap, methodDesc, options);
   return requestFn
-    .addParameter('request', requestType(typeMap, methodDesc))
-    .addStatement('const data = %L.encode(request).finish()', requestType(typeMap, methodDesc))
+    .addParameter('request', inputType)
+    .addStatement('const data = %L.encode(request).finish()', inputType)
     .addStatement(
       'const promise = this.rpc.request(%L"%L.%L", %S, %L)',
       options.useContext ? 'ctx, ' : '', // sneak ctx in as the 1st parameter to our rpc call
@@ -1080,10 +1086,10 @@ function generateRegularRpcMethod(
     )
     .addStatement(
       'return promise.then(data => %L.decode(new %T(data)))',
-      responseType(typeMap, methodDesc),
+      responseType(typeMap, methodDesc, options),
       'Reader@protobufjs/minimal'
     )
-    .returns(responsePromise(typeMap, methodDesc));
+    .returns(responsePromise(typeMap, methodDesc, options));
 }
 
 function generateServiceClientImpl(
@@ -1153,7 +1159,7 @@ function generateNestjsServiceController(
     const info = sourceInfo.lookup(Fields.service.method, index++);
     maybeAddComment(info, (text) => (requestFn = requestFn.addJavadoc(text)));
 
-    requestFn = requestFn.addParameter('request', requestType(typeMap, methodDesc));
+    requestFn = requestFn.addParameter('request', requestType(typeMap, methodDesc, options));
 
     // Use metadata as last argument for interface only configuration
     if (options.addGrpcMetadata) {
@@ -1164,14 +1170,14 @@ function generateNestjsServiceController(
     if (isEmptyType(methodDesc.outputType)) {
       requestFn = requestFn.returns(TypeNames.anyType('void'));
     } else if (options.returnObservable || methodDesc.serverStreaming) {
-      requestFn = requestFn.returns(responseObservable(typeMap, methodDesc));
+      requestFn = requestFn.returns(responseObservable(typeMap, methodDesc, options));
     } else {
       // generate nestjs union type
       requestFn = requestFn.returns(
         TypeNames.unionType(
-          responsePromise(typeMap, methodDesc),
-          responseObservable(typeMap, methodDesc),
-          responseType(typeMap, methodDesc)
+          responsePromise(typeMap, methodDesc, options),
+          responseObservable(typeMap, methodDesc, options),
+          responseType(typeMap, methodDesc, options)
         )
       );
     }
@@ -1221,7 +1227,7 @@ function generateNestjsServiceClient(
     const info = sourceInfo.lookup(Fields.service.method, index++);
     maybeAddComment(info, (text) => (requestFn = requestFn.addJavadoc(text)));
 
-    requestFn = requestFn.addParameter('request', requestType(typeMap, methodDesc));
+    requestFn = requestFn.addParameter('request', requestType(typeMap, methodDesc, options));
 
     // Use metadata as last argument for interface only configuration
     if (options.addGrpcMetadata) {
@@ -1229,7 +1235,7 @@ function generateNestjsServiceClient(
     }
 
     // Return observable since nestjs client always returns an Observable
-    requestFn = requestFn.returns(responseObservable(typeMap, methodDesc));
+    requestFn = requestFn.returns(responseObservable(typeMap, methodDesc, options));
 
     service = service.addFunction(requestFn);
 
@@ -1401,8 +1407,8 @@ function generateCachingRpcMethod(
   serviceDesc: ServiceDescriptorProto,
   methodDesc: MethodDescriptorProto
 ): FunctionSpec {
-  const inputType = requestType(typeMap, methodDesc);
-  const outputType = responseType(typeMap, methodDesc);
+  const inputType = requestType(typeMap, methodDesc, options);
+  const outputType = responseType(typeMap, methodDesc, options);
   let lambda = CodeBlock.lambda('requests')
     .beginLambda('const responses = requests.map(async request =>')
     .addStatement('const data = %L.encode(request).finish()', inputType)
@@ -1413,13 +1419,13 @@ function generateCachingRpcMethod(
       methodDesc.name,
       'data'
     )
-    .addStatement('return %L.decode(new %T(response))', responseType(typeMap, methodDesc), 'Reader@protobufjs/minimal')
+    .addStatement('return %L.decode(new %T(response))', outputType, 'Reader@protobufjs/minimal')
     .endLambda(')')
     .addStatement('return Promise.all(responses)');
   const uniqueIdentifier = `${fileDesc.package}.${serviceDesc.name}.${methodDesc.name}`;
   return FunctionSpec.create(methodDesc.name)
     .addParameter('ctx', 'Context')
-    .addParameter('request', requestType(typeMap, methodDesc))
+    .addParameter('request', inputType)
     .addCode('const dl = ctx.getDataLoader(%S, () => {%>\n', uniqueIdentifier)
     .addCode(
       'return new %T<%T, %T>(%L, { cacheKeyFn: %T });\n',
@@ -1472,23 +1478,24 @@ function generateDataLoadersType(): InterfaceSpec {
   return InterfaceSpec.create('DataLoaders').addModifiers(Modifier.EXPORT).addFunction(fn);
 }
 
-function requestType(typeMap: TypeMap, methodDesc: MethodDescriptorProto): TypeName {
+function requestType(typeMap: TypeMap, methodDesc: MethodDescriptorProto, options: Options): TypeName {
+  let typeName = messageToTypeName(typeMap, methodDesc.inputType, options);
   if (methodDesc.clientStreaming) {
-    return TypeNames.anyType('Observable@rxjs').param(messageToTypeName(typeMap, methodDesc.inputType));
+    return TypeNames.anyType('Observable@rxjs').param(typeName);
   }
-  return messageToTypeName(typeMap, methodDesc.inputType);
+  return typeName;
 }
 
-function responseType(typeMap: TypeMap, methodDesc: MethodDescriptorProto): TypeName {
-  return messageToTypeName(typeMap, methodDesc.outputType);
+function responseType(typeMap: TypeMap, methodDesc: MethodDescriptorProto, options: Options): TypeName {
+  return messageToTypeName(typeMap, methodDesc.outputType, options);
 }
 
-function responsePromise(typeMap: TypeMap, methodDesc: MethodDescriptorProto): TypeName {
-  return TypeNames.PROMISE.param(responseType(typeMap, methodDesc));
+function responsePromise(typeMap: TypeMap, methodDesc: MethodDescriptorProto, options: Options): TypeName {
+  return TypeNames.PROMISE.param(responseType(typeMap, methodDesc, options));
 }
 
-function responseObservable(typeMap: TypeMap, methodDesc: MethodDescriptorProto): TypeName {
-  return TypeNames.anyType('Observable@rxjs').param(responseType(typeMap, methodDesc));
+function responseObservable(typeMap: TypeMap, methodDesc: MethodDescriptorProto, options: Options): TypeName {
+  return TypeNames.anyType('Observable@rxjs').param(responseType(typeMap, methodDesc, options));
 }
 
 // function generateOneOfProperty(typeMap: TypeMap, name: string, fields: FieldDescriptorProto[]): PropertySpec {

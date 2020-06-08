@@ -143,7 +143,6 @@ const baseStringValue: object = {
 };
 
 const baseBytesValue: object = {
-  value: undefined,
 };
 
 function longToNumber(long: Long) {

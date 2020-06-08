@@ -96,7 +96,7 @@ export function basicTypeName(
       }
     case FieldDescriptorProto.Type.TYPE_MESSAGE:
     case FieldDescriptorProto.Type.TYPE_ENUM:
-      return messageToTypeName(typeMap, field.typeName, keepValueType, isRepeated(field));
+      return messageToTypeName(typeMap, field.typeName, options, keepValueType, isRepeated(field));
     default:
       return TypeNames.anyType(field.typeName);
   }
@@ -318,13 +318,19 @@ export function valueTypeName(field: FieldDescriptorProto): TypeName {
 export function messageToTypeName(
   typeMap: TypeMap,
   protoType: string,
+  options: Options,
   keepValueType: boolean = false,
   repeated: boolean = false
 ): TypeName {
-  // Watch for the wrapper types `.google.protobuf.StringValue` and map to `string | undefined`
+  // Watch for the wrapper types `.google.protobuf.*Value`. If we're mapping
+  // them to basic built-in types, we union the type with undefined to
+  // indicate the value is optional. Exceptions:
+  // - If the field is repeated, values cannot be undefined.
+  // - If useOptionals=true, all non-scalar types are already optional
+  //   properties, so there's no need for that union.
   if (!keepValueType && protoType in valueTypes) {
     let typeName = valueTypes[protoType];
-    if (repeated) {
+    if (repeated || options.useOptionals) {
       return typeName;
     }
     return TypeNames.unionType(typeName, TypeNames.UNDEFINED);
@@ -359,7 +365,16 @@ export function toTypeName(
       type = TypeNames.arrayType(type);
     }
   } else if ((isWithinOneOf(field) || isMessage(field)) && !isValueType(field)) {
-    type = TypeNames.unionType(type, TypeNames.UNDEFINED);
+    // When useOptionals=false (the default), non-scalar fields and fields
+    // within a oneof clause need to be unioned with undefined to indicate the
+    // value is optional. One exception is google.protobuf.*Value types, which
+    // are already unioned to undefined in messageToTypeName.
+    //
+    // When useOptionals=true, non-scalar fields are already optional, so no
+    // need for the type union here.
+    if (!isMessage(field) || !options.useOptionals) {
+      type = TypeNames.unionType(type, TypeNames.UNDEFINED);
+    }
   }
   return type;
 }
