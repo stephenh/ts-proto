@@ -1,4 +1,8 @@
 
+## v1.25.0
+
+* Added a `useOptionals=true` option that makes non-scaler/oneof fields optional, i.e. `message?: Message` instead of `message: Message | undefined` (@philikon)
+
 ## v1.24.0
 
 * Messages no longer use a base prototype to get default values. (@cliedeman)
