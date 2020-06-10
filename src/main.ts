@@ -568,12 +568,12 @@ function generateDecode(
     } else if (isValueType(field)) {
       readSnippet = CodeBlock.of(
         '%T.decode(reader, reader.uint32()).value',
-        basicTypeName(typeMap, field, options, true)
+        basicTypeName(typeMap, field, options, { keepValueType: true })
       );
     } else if (isTimestamp(field)) {
       readSnippet = CodeBlock.of(
         'fromTimestamp(%T.decode(reader, reader.uint32()))',
-        basicTypeName(typeMap, field, options, true)
+        basicTypeName(typeMap, field, options, { keepValueType: true })
       );
     } else if (isMessage(field)) {
       readSnippet = CodeBlock.of('%T.decode(reader, reader.uint32())', basicTypeName(typeMap, field, options));
@@ -641,7 +641,7 @@ function generateEncode(
       writeSnippet = (place) =>
         CodeBlock.of(
           '%T.encode(toTimestamp(%L), writer.uint32(%L).fork()).ldelim()',
-          basicTypeName(typeMap, field, options, true),
+          basicTypeName(typeMap, field, options, { keepValueType: true }),
           place,
           tag
         );
@@ -650,7 +650,7 @@ function generateEncode(
       writeSnippet = (place) =>
         CodeBlock.of(
           '%T.encode({ value: %L! }, writer.uint32(%L).fork()).ldelim()',
-          basicTypeName(typeMap, field, options, true),
+          basicTypeName(typeMap, field, options, { keepValueType: true }),
           place,
           tag
         );
@@ -747,10 +747,10 @@ function generateFromJson(
             return CodeBlock.of('bytesFromBase64(%L)', from);
           }
         } else if (isLong(field) && options.forceLong === LongOption.LONG) {
-          const cstr = capitalize(basicTypeName(typeMap, field, options, true).toString());
+          const cstr = capitalize(basicTypeName(typeMap, field, options, { keepValueType: true }).toString());
           return CodeBlock.of('%L.fromString(%L)', cstr, from);
         } else {
-          const cstr = capitalize(basicTypeName(typeMap, field, options, true).toString());
+          const cstr = capitalize(basicTypeName(typeMap, field, options, { keepValueType: true }).toString());
           return CodeBlock.of('%L(%L)', cstr, from);
         }
         // if (basicLongWireType(field.type) !== undefined) {
@@ -843,7 +843,7 @@ function generateToJson(
         return CodeBlock.of(
           '%L ? %T.toJSON(%L) : %L',
           from,
-          basicTypeName(typeMap, field, options, true),
+          basicTypeName(typeMap, field, options, { keepValueType: true }),
           from,
           defaultValue(typeMap, field, options)
         );

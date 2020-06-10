@@ -60,7 +60,7 @@ export function basicTypeName(
   typeMap: TypeMap,
   field: FieldDescriptorProto,
   options: Options,
-  keepValueType: boolean = false
+  typeOptions: { keepValueType?: boolean } = {}
 ): TypeName {
   switch (field.type) {
     case FieldDescriptorProto.Type.TYPE_DOUBLE:
@@ -96,7 +96,7 @@ export function basicTypeName(
       }
     case FieldDescriptorProto.Type.TYPE_MESSAGE:
     case FieldDescriptorProto.Type.TYPE_ENUM:
-      return messageToTypeName(typeMap, field.typeName, options, keepValueType, isRepeated(field));
+      return messageToTypeName(typeMap, field.typeName, options, { ...typeOptions, repeated: isRepeated(field) });
     default:
       return TypeNames.anyType(field.typeName);
   }
@@ -319,8 +319,7 @@ export function messageToTypeName(
   typeMap: TypeMap,
   protoType: string,
   options: Options,
-  keepValueType: boolean = false,
-  repeated: boolean = false
+  typeOptions: { keepValueType?: boolean; repeated?: boolean } = {}
 ): TypeName {
   // Watch for the wrapper types `.google.protobuf.*Value`. If we're mapping
   // them to basic built-in types, we union the type with undefined to
@@ -328,15 +327,15 @@ export function messageToTypeName(
   // - If the field is repeated, values cannot be undefined.
   // - If useOptionals=true, all non-scalar types are already optional
   //   properties, so there's no need for that union.
-  if (!keepValueType && protoType in valueTypes) {
+  if (!typeOptions.keepValueType && protoType in valueTypes) {
     let typeName = valueTypes[protoType];
-    if (repeated || options.useOptionals) {
+    if (!!typeOptions.repeated || options.useOptionals) {
       return typeName;
     }
     return TypeNames.unionType(typeName, TypeNames.UNDEFINED);
   }
   // Look for other special prototypes like Timestamp that aren't technically wrapper types
-  if (!keepValueType && protoType in mappedTypes) {
+  if (!typeOptions.keepValueType && protoType in mappedTypes) {
     return mappedTypes[protoType];
   }
   const [module, type] = toModuleAndType(typeMap, protoType);
@@ -355,7 +354,7 @@ export function toTypeName(
   field: FieldDescriptorProto,
   options: Options
 ): TypeName {
-  let type = basicTypeName(typeMap, field, options, false);
+  let type = basicTypeName(typeMap, field, options, { keepValueType: false });
   if (isRepeated(field)) {
     const mapType = detectMapType(typeMap, messageDesc, field, options);
     if (mapType) {
