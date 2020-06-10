@@ -358,12 +358,11 @@ function generateEnum(
   maybeAddComment(sourceInfo, (text) => (code = code.add(`/** %L */\n`, text)));
   code = code.beginControlFlow('export const %L =', fullName);
 
-  let index = 0;
-  for (const valueDesc of enumDesc.value) {
-    const info = sourceInfo.lookup(Fields.enum.value, index++);
+  enumDesc.value.forEach((valueDesc, index) => {
+    const info = sourceInfo.lookup(Fields.enum.value, index);
     maybeAddComment(info, (text) => (code = code.add(`/** ${valueDesc.name} - ${text} */\n`)));
     code = code.add('%L: %L as const,\n', valueDesc.name, valueDesc.number.toString());
-  }
+  });
   code = code.add('%L: %L as const,\n', UNRECOGNIZED_ENUM_NAME, UNRECOGNIZED_ENUM_VALUE.toString());
 
   if (options.outputJsonMethods) {
@@ -420,8 +419,7 @@ function generateInterfaceDeclaration(
   let message = InterfaceSpec.create(fullName).addModifiers(Modifier.EXPORT);
   maybeAddComment(sourceInfo, (text) => (message = message.addJavadoc(text)));
 
-  let index = 0;
-  for (const fieldDesc of messageDesc.field) {
+  messageDesc.field.forEach((fieldDesc, index) => {
     // When useOptionals=true, non-scalar fields are translated into optional properties.
     let optional = options.useOptionals && isMessage(fieldDesc) && !isRepeated(fieldDesc);
     let prop = PropertySpec.create(
@@ -430,11 +428,11 @@ function generateInterfaceDeclaration(
       optional
     );
 
-    const info = sourceInfo.lookup(Fields.message.field, index++);
+    const info = sourceInfo.lookup(Fields.message.field, index);
     maybeAddComment(info, (text) => (prop = prop.addJavadoc(text)));
 
     message = message.addProperty(prop);
-  }
+  });
   return message;
 }
 
@@ -478,29 +476,27 @@ export function visit(
   const isRootFile = proto instanceof FileDescriptorProto;
   const childEnumType = isRootFile ? Fields.file.enum_type : Fields.message.enum_type;
 
-  let index = 0;
-  for (const enumDesc of proto.enumType) {
+  proto.enumType.forEach((enumDesc, index) => {
     // I.e. Foo_Bar.Zaz_Inner
     const protoFullName = protoPrefix + enumDesc.name;
     // I.e. FooBar_ZazInner
     const tsFullName = tsPrefix + maybeSnakeToCamel(enumDesc.name, options);
-    const nestedSourceInfo = sourceInfo.open(childEnumType, index++);
+    const nestedSourceInfo = sourceInfo.open(childEnumType, index);
     enumFn(tsFullName, enumDesc, nestedSourceInfo, protoFullName);
-  }
+  });
 
   const messages = proto instanceof FileDescriptorProto ? proto.messageType : proto.nestedType;
   const childType = isRootFile ? Fields.file.message_type : Fields.message.nested_type;
 
-  index = 0;
-  for (const message of messages) {
+  messages.forEach((message, index) => {
     // I.e. Foo_Bar.Zaz_Inner
     const protoFullName = protoPrefix + message.name;
     // I.e. FooBar_ZazInner
     const tsFullName = tsPrefix + maybeSnakeToCamel(message.name, options);
-    const nestedSourceInfo = sourceInfo.open(childType, index++);
+    const nestedSourceInfo = sourceInfo.open(childType, index);
     messageFn(tsFullName, message, nestedSourceInfo, protoFullName);
     visit(message, nestedSourceInfo, messageFn, options, enumFn, tsFullName + '_', protoFullName + '.');
-  }
+  });
 }
 
 function visitServices(
@@ -508,11 +504,10 @@ function visitServices(
   sourceInfo: SourceInfo,
   serviceFn: (desc: ServiceDescriptorProto, sourceInfo: SourceInfo) => void
 ): void {
-  let index = 0;
-  for (const serviceDesc of proto.service) {
-    const nestedSourceInfo = sourceInfo.open(Fields.file.service, index++);
+  proto.service.forEach((serviceDesc, index) => {
+    const nestedSourceInfo = sourceInfo.open(Fields.file.service, index);
     serviceFn(serviceDesc, nestedSourceInfo);
-  }
+  });
 }
 
 /** Creates a function to decode a message by loop overing the tags. */
@@ -573,12 +568,12 @@ function generateDecode(
     } else if (isValueType(field)) {
       readSnippet = CodeBlock.of(
         '%T.decode(reader, reader.uint32()).value',
-        basicTypeName(typeMap, field, options, true)
+        basicTypeName(typeMap, field, options, { keepValueType: true })
       );
     } else if (isTimestamp(field)) {
       readSnippet = CodeBlock.of(
         'fromTimestamp(%T.decode(reader, reader.uint32()))',
-        basicTypeName(typeMap, field, options, true)
+        basicTypeName(typeMap, field, options, { keepValueType: true })
       );
     } else if (isMessage(field)) {
       readSnippet = CodeBlock.of('%T.decode(reader, reader.uint32())', basicTypeName(typeMap, field, options));
@@ -646,7 +641,7 @@ function generateEncode(
       writeSnippet = (place) =>
         CodeBlock.of(
           '%T.encode(toTimestamp(%L), writer.uint32(%L).fork()).ldelim()',
-          basicTypeName(typeMap, field, options, true),
+          basicTypeName(typeMap, field, options, { keepValueType: true }),
           place,
           tag
         );
@@ -655,7 +650,7 @@ function generateEncode(
       writeSnippet = (place) =>
         CodeBlock.of(
           '%T.encode({ value: %L! }, writer.uint32(%L).fork()).ldelim()',
-          basicTypeName(typeMap, field, options, true),
+          basicTypeName(typeMap, field, options, { keepValueType: true }),
           place,
           tag
         );
@@ -752,10 +747,10 @@ function generateFromJson(
             return CodeBlock.of('bytesFromBase64(%L)', from);
           }
         } else if (isLong(field) && options.forceLong === LongOption.LONG) {
-          const cstr = capitalize(basicTypeName(typeMap, field, options, true).toString());
+          const cstr = capitalize(basicTypeName(typeMap, field, options, { keepValueType: true }).toString());
           return CodeBlock.of('%L.fromString(%L)', cstr, from);
         } else {
-          const cstr = capitalize(basicTypeName(typeMap, field, options, true).toString());
+          const cstr = capitalize(basicTypeName(typeMap, field, options, { keepValueType: true }).toString());
           return CodeBlock.of('%L(%L)', cstr, from);
         }
         // if (basicLongWireType(field.type) !== undefined) {
@@ -848,7 +843,7 @@ function generateToJson(
         return CodeBlock.of(
           '%L ? %T.toJSON(%L) : %L',
           from,
-          basicTypeName(typeMap, field, options, true),
+          basicTypeName(typeMap, field, options, { keepValueType: true }),
           from,
           defaultValue(typeMap, field, options)
         );
@@ -999,8 +994,7 @@ function generateService(
   }
   maybeAddComment(sourceInfo, (text) => (service = service.addJavadoc(text)));
 
-  let index = 0;
-  for (const methodDesc of serviceDesc.method) {
+  serviceDesc.method.forEach((methodDesc, index) => {
     if (options.lowerCaseServiceMethods) {
       methodDesc.name = camelCase(methodDesc.name);
     }
@@ -1009,7 +1003,7 @@ function generateService(
     if (options.useContext) {
       requestFn = requestFn.addParameter('ctx', TypeNames.typeVariable('Context'));
     }
-    const info = sourceInfo.lookup(Fields.service.method, index++);
+    const info = sourceInfo.lookup(Fields.service.method, index);
     maybeAddComment(info, (text) => (requestFn = requestFn.addJavadoc(text)));
 
     requestFn = requestFn.addParameter('request', requestType(typeMap, methodDesc, options));
@@ -1041,7 +1035,7 @@ function generateService(
         service = service.addFunction(batchFn);
       }
     }
-  }
+  });
   return service;
 }
 
@@ -1146,8 +1140,7 @@ function generateNestjsServiceController(
   }
   maybeAddComment(sourceInfo, (text) => (service = service.addJavadoc(text)));
 
-  let index = 0;
-  for (const methodDesc of serviceDesc.method) {
+  serviceDesc.method.forEach((methodDesc, index) => {
     if (options.lowerCaseServiceMethods) {
       methodDesc.name = camelCase(methodDesc.name);
     }
@@ -1156,7 +1149,7 @@ function generateNestjsServiceController(
     if (options.useContext) {
       requestFn = requestFn.addParameter('ctx', TypeNames.typeVariable('Context'));
     }
-    const info = sourceInfo.lookup(Fields.service.method, index++);
+    const info = sourceInfo.lookup(Fields.service.method, index);
     maybeAddComment(info, (text) => (requestFn = requestFn.addJavadoc(text)));
 
     requestFn = requestFn.addParameter('request', requestType(typeMap, methodDesc, options));
@@ -1197,7 +1190,7 @@ function generateNestjsServiceController(
         service = service.addFunction(batchFn);
       }
     }
-  }
+  });
   return service;
 }
 
@@ -1214,8 +1207,7 @@ function generateNestjsServiceClient(
   }
   maybeAddComment(sourceInfo, (text) => (service = service.addJavadoc(text)));
 
-  let index = 0;
-  for (const methodDesc of serviceDesc.method) {
+  serviceDesc.method.forEach((methodDesc, index) => {
     if (options.lowerCaseServiceMethods) {
       methodDesc.name = camelCase(methodDesc.name);
     }
@@ -1224,7 +1216,7 @@ function generateNestjsServiceClient(
     if (options.useContext) {
       requestFn = requestFn.addParameter('ctx', TypeNames.typeVariable('Context'));
     }
-    const info = sourceInfo.lookup(Fields.service.method, index++);
+    const info = sourceInfo.lookup(Fields.service.method, index);
     maybeAddComment(info, (text) => (requestFn = requestFn.addJavadoc(text)));
 
     requestFn = requestFn.addParameter('request', requestType(typeMap, methodDesc, options));
@@ -1252,7 +1244,7 @@ function generateNestjsServiceClient(
         service = service.addFunction(batchFn);
       }
     }
-  }
+  });
   return service;
 }
 
