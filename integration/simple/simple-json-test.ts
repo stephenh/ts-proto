@@ -1,11 +1,4 @@
-import {
-  Child_Type,
-  Simple,
-  SimpleWithWrappers,
-  StateEnum,
-  SimpleWithMap,
-  OneOfMessage
-} from './simple';
+import { Child_Type, Simple, SimpleWithWrappers, StateEnum, SimpleWithMap, OneOfMessage } from './simple';
 import { google, simple as pbjs } from './pbjs';
 import ISimple = pbjs.ISimple;
 import PbChild = pbjs.Child;
@@ -24,7 +17,7 @@ describe('simple json', () => {
       grandChildren: [PbChild.fromObject({ name: 'grand1', type: 0 }), PbChild.fromObject({ name: 'grand2', type: 0 })],
       coins: [2, 4, 6],
       snacks: ['a', 'b'],
-      oldStates: [PbState.ON, PbState.OFF],
+      oldStates: [PbState.ON, PbState.OFF]
     };
     // when it goes to json and back to us
     const s2 = Simple.fromJSON(PbSimple.fromObject(s1).toJSON());
@@ -168,7 +161,10 @@ describe('simple json', () => {
   });
 
   it('decodes maps', () => {
-    const s1 = { entitiesById: { '1': { id: '1' } } };
+    const s1 = {
+      entitiesById: { '1': { id: '1' } },
+      intLookup: { 1: 0 }
+    };
     expect(SimpleWithMap.fromJSON(s1)).toMatchInlineSnapshot(`
       Object {
         "entitiesById": Object {
@@ -176,7 +172,9 @@ describe('simple json', () => {
             "id": 1,
           },
         },
-        "intLookup": Object {},
+        "intLookup": Object {
+          "1": 0,
+        },
         "nameLookup": Object {},
       }
     `);
@@ -190,13 +188,16 @@ describe('simple json', () => {
       age: 1,
       child: { name: 'foo', type: Child_Type.UNKNOWN },
       state: StateEnum.ON,
-      grandChildren: [{ name: 'grand1', type: Child_Type.UNKNOWN }, { name: 'grand2', type: Child_Type.UNKNOWN }],
+      grandChildren: [
+        { name: 'grand1', type: Child_Type.UNKNOWN },
+        { name: 'grand2', type: Child_Type.UNKNOWN }
+      ],
       coins: [2, 4, 6],
       snacks: ['a', 'b'],
       oldStates: [StateEnum.ON, StateEnum.OFF],
       createdAt: new Date(1_000),
       thing: undefined,
-      blobs: [],
+      blobs: []
     };
     expect(Simple.toJSON(s1)).toMatchInlineSnapshot(`
       Object {

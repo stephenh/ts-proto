@@ -8,8 +8,6 @@ import {
   PropertySpec,
   TypeName,
   TypeNames,
-  Union,
-  DecoratorSpec
 } from 'ts-poet';
 import { google } from '../build/pbjs';
 import {
@@ -19,6 +17,7 @@ import {
   defaultValue,
   detectMapType,
   isBytes,
+  isEmptyType,
   isEnum,
   isLong,
   isMapType,
@@ -33,7 +32,7 @@ import {
   toReaderCall,
   toTypeName,
   TypeMap,
-  isEmptyType
+  valueTypeName,
 } from './types';
 import { asSequence } from 'sequency';
 import SourceInfo, { Fields } from './sourceInfo';
@@ -44,20 +43,26 @@ import FileDescriptorProto = google.protobuf.FileDescriptorProto;
 import EnumDescriptorProto = google.protobuf.EnumDescriptorProto;
 import ServiceDescriptorProto = google.protobuf.ServiceDescriptorProto;
 import MethodDescriptorProto = google.protobuf.MethodDescriptorProto;
-import { Encloser } from 'ts-poet/build/FunctionSpec';
 
 const dataloader = TypeNames.anyType('DataLoader*dataloader');
 
 export enum LongOption {
   NUMBER = 'number',
   LONG = 'long',
-  STRING = 'string'
+  STRING = 'string',
+}
+
+export enum EnvOption {
+  NODE = 'node',
+  BROWSER = 'browser',
+  BOTH = 'both',
 }
 
 export type Options = {
   useContext: boolean;
   snakeToCamel: boolean;
   forceLong: LongOption;
+  useOptionals: boolean;
   outputEncodeMethods: boolean;
   outputJsonMethods: boolean;
   outputClientImpl: boolean;
@@ -65,6 +70,7 @@ export type Options = {
   returnObservable: boolean;
   lowerCaseServiceMethods: boolean;
   nestJs: boolean;
+  env: EnvOption;
 };
 
 export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, parameter: string): FileSpec {
@@ -88,7 +94,7 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
 
   // Syntax, unlike most fields, is not repeated and thus does not use an index
   const headerComment = sourceInfo.lookup(Fields.file.syntax, undefined);
-  maybeAddComment(headerComment, text => (file = file.addComment(text)));
+  maybeAddComment(headerComment, (text) => (file = file.addComment(text)));
 
   // first make all the type declarations
   visit(
@@ -104,8 +110,14 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
   );
 
   // If nestJs=true export [package]_PACKAGE_NAME and [service]_SERVICE_NAME const
-  if(options.nestJs) {
-    file = file.addCode(CodeBlock.empty().add(`export const %L = '%L'`, `${camelToSnake(fileDesc.package.replace(/\./g, '_'))}_PACKAGE_NAME`, fileDesc.package));
+  if (options.nestJs) {
+    file = file.addCode(
+      CodeBlock.empty().add(
+        `export const %L = '%L'`,
+        `${camelToSnake(fileDesc.package.replace(/\./g, '_'))}_PACKAGE_NAME`,
+        fileDesc.package
+      )
+    );
   }
 
   if (options.outputEncodeMethods || options.outputJsonMethods) {
@@ -115,9 +127,7 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
       sourceInfo,
       (fullName, message) => {
         file = file.addProperty(generateBaseInstance(typeMap, fullName, message, options));
-        let staticMethods = CodeBlock.empty()
-          .add('export const %L = ', fullName)
-          .beginHash();
+        let staticMethods = CodeBlock.empty().add('export const %L = ', fullName).beginHash();
 
         staticMethods = !options.outputEncodeMethods
           ? staticMethods
@@ -132,10 +142,7 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
               .addHashEntry(generateFromPartial(typeMap, fullName, message, options))
               .addHashEntry(generateToJson(typeMap, fullName, message, options));
 
-        staticMethods = staticMethods
-          .endHash()
-          .add(';')
-          .newLine();
+        staticMethods = staticMethods.endHash().add(';').newLine();
         file = file.addCode(staticMethods);
       },
       options
@@ -155,8 +162,8 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
       // generate nestjs grpc service controller decorator
       file = file.addFunction(generateNestjsGrpcServiceMethodsDecorator(serviceDesc, options));
 
-      let serviceConstName =  `${camelToSnake(serviceDesc.name)}_NAME`;
-      if(!serviceDesc.name.toLowerCase().endsWith('service')){
+      let serviceConstName = `${camelToSnake(serviceDesc.name)}_NAME`;
+      if (!serviceDesc.name.toLowerCase().endsWith('service')) {
         serviceConstName = `${camelToSnake(serviceDesc.name)}_SERVICE_NAME`;
       }
 
@@ -224,16 +231,14 @@ function addLongUtilityMethod(file: FileSpec, options: Options): FileSpec {
     );
   } else {
     return file.addFunction(
-      FunctionSpec.create('longToNumber')
-        .addParameter('long', 'Long*long')
-        .addCodeBlock(
-          CodeBlock.empty()
-            .beginControlFlow('if (long.gt(Number.MAX_SAFE_INTEGER))')
-            // We use globalThis to avoid conflicts on protobuf types named `Error`.
-            .addStatement('throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER")')
-            .endControlFlow()
-            .addStatement('return long.toNumber()')
-        )
+      FunctionSpec.create('longToNumber').addParameter('long', 'Long*long').addCodeBlock(
+        CodeBlock.empty()
+          .beginControlFlow('if (long.gt(Number.MAX_SAFE_INTEGER))')
+          // We use globalThis to avoid conflicts on protobuf types named `Error`.
+          .addStatement('throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER")')
+          .endControlFlow()
+          .addStatement('return long.toNumber()')
+      )
     );
   }
 }
@@ -350,15 +355,14 @@ function generateEnum(
   sourceInfo: SourceInfo
 ): CodeBlock {
   let code = CodeBlock.empty();
-  maybeAddComment(sourceInfo, text => (code = code.add(`/** %L */\n`, text)));
+  maybeAddComment(sourceInfo, (text) => (code = code.add(`/** %L */\n`, text)));
   code = code.beginControlFlow('export const %L =', fullName);
 
-  let index = 0;
-  for (const valueDesc of enumDesc.value) {
-    const info = sourceInfo.lookup(Fields.enum.value, index++);
-    maybeAddComment(info, text => (code = code.add(`/** ${valueDesc.name} - ${text} */\n`)));
+  enumDesc.value.forEach((valueDesc, index) => {
+    const info = sourceInfo.lookup(Fields.enum.value, index);
+    maybeAddComment(info, (text) => (code = code.add(`/** ${valueDesc.name} - ${text} */\n`)));
     code = code.add('%L: %L as const,\n', valueDesc.name, valueDesc.number.toString());
-  }
+  });
   code = code.add('%L: %L as const,\n', UNRECOGNIZED_ENUM_NAME, UNRECOGNIZED_ENUM_VALUE.toString());
 
   if (options.outputJsonMethods) {
@@ -369,7 +373,7 @@ function generateEnum(
   code = code.endControlFlow();
   code = code.add('\n');
 
-  const enumTypes = [...enumDesc.value.map(v => v.number.toString()), UNRECOGNIZED_ENUM_VALUE.toString()];
+  const enumTypes = [...enumDesc.value.map((v) => v.number.toString()), UNRECOGNIZED_ENUM_VALUE.toString()];
   code = code.add('export type %L = %L;', fullName, enumTypes.join(' | '));
   code = code.add('\n');
 
@@ -377,9 +381,7 @@ function generateEnum(
 }
 
 function generateEnumFromJson(fullName: string, enumDesc: EnumDescriptorProto): FunctionSpec {
-  let func = FunctionSpec.create('fromJSON')
-    .addParameter('object', 'any')
-    .returns(fullName);
+  let func = FunctionSpec.create('fromJSON').addParameter('object', 'any').returns(fullName);
   let body = CodeBlock.empty().beginControlFlow('switch (object)');
   for (const valueDesc of enumDesc.value) {
     body = body
@@ -397,17 +399,12 @@ function generateEnumFromJson(fullName: string, enumDesc: EnumDescriptorProto): 
 }
 
 function generateEnumToJson(fullName: string, enumDesc: EnumDescriptorProto): FunctionSpec {
-  let func = FunctionSpec.create('toJSON')
-    .addParameter('object', fullName)
-    .returns('string');
+  let func = FunctionSpec.create('toJSON').addParameter('object', fullName).returns('string');
   let body = CodeBlock.empty().beginControlFlow('switch (object)');
   for (const valueDesc of enumDesc.value) {
     body = body.add('case %L.%L:%>\n', fullName, valueDesc.name).addStatement('return %S%<', valueDesc.name);
   }
-  body = body
-    .add('default:%>\n')
-    .addStatement('return "UNKNOWN"%<')
-    .endControlFlow();
+  body = body.add('default:%>\n').addStatement('return "UNKNOWN"%<').endControlFlow();
   return func.addCodeBlock(body);
 }
 
@@ -420,20 +417,22 @@ function generateInterfaceDeclaration(
   options: Options
 ) {
   let message = InterfaceSpec.create(fullName).addModifiers(Modifier.EXPORT);
-  maybeAddComment(sourceInfo, text => (message = message.addJavadoc(text)));
+  maybeAddComment(sourceInfo, (text) => (message = message.addJavadoc(text)));
 
-  let index = 0;
-  for (const fieldDesc of messageDesc.field) {
+  messageDesc.field.forEach((fieldDesc, index) => {
+    // When useOptionals=true, non-scalar fields are translated into optional properties.
+    let optional = options.useOptionals && isMessage(fieldDesc) && !isRepeated(fieldDesc);
     let prop = PropertySpec.create(
       maybeSnakeToCamel(fieldDesc.name, options),
-      toTypeName(typeMap, messageDesc, fieldDesc, options)
+      toTypeName(typeMap, messageDesc, fieldDesc, options),
+      optional
     );
 
-    const info = sourceInfo.lookup(Fields.message.field, index++);
-    maybeAddComment(info, text => (prop = prop.addJavadoc(text)));
+    const info = sourceInfo.lookup(Fields.message.field, index);
+    maybeAddComment(info, (text) => (prop = prop.addJavadoc(text)));
 
     message = message.addProperty(prop);
-  }
+  });
   return message;
 }
 
@@ -443,11 +442,12 @@ function generateBaseInstance(typeMap: TypeMap, fullName: string, messageDesc: D
   let initialValue = CodeBlock.empty().beginHash();
   asSequence(messageDesc.field)
     .filterNot(isWithinOneOf)
-    .forEach(field => {
-      initialValue = initialValue.addHashEntry(
-        maybeSnakeToCamel(field.name, options),
-        defaultValue(typeMap, field, options)
-      );
+    .forEach((field) => {
+      let val = defaultValue(typeMap, field, options);
+      if (val === 'undefined') {
+        return;
+      }
+      initialValue = initialValue.addHashEntry(maybeSnakeToCamel(field.name, options), val);
     });
   return baseMessage.initializerBlock(initialValue.endHash());
 }
@@ -476,29 +476,27 @@ export function visit(
   const isRootFile = proto instanceof FileDescriptorProto;
   const childEnumType = isRootFile ? Fields.file.enum_type : Fields.message.enum_type;
 
-  let index = 0;
-  for (const enumDesc of proto.enumType) {
+  proto.enumType.forEach((enumDesc, index) => {
     // I.e. Foo_Bar.Zaz_Inner
     const protoFullName = protoPrefix + enumDesc.name;
     // I.e. FooBar_ZazInner
     const tsFullName = tsPrefix + maybeSnakeToCamel(enumDesc.name, options);
-    const nestedSourceInfo = sourceInfo.open(childEnumType, index++);
+    const nestedSourceInfo = sourceInfo.open(childEnumType, index);
     enumFn(tsFullName, enumDesc, nestedSourceInfo, protoFullName);
-  }
+  });
 
   const messages = proto instanceof FileDescriptorProto ? proto.messageType : proto.nestedType;
   const childType = isRootFile ? Fields.file.message_type : Fields.message.nested_type;
 
-  index = 0;
-  for (const message of messages) {
+  messages.forEach((message, index) => {
     // I.e. Foo_Bar.Zaz_Inner
     const protoFullName = protoPrefix + message.name;
     // I.e. FooBar_ZazInner
     const tsFullName = tsPrefix + maybeSnakeToCamel(message.name, options);
-    const nestedSourceInfo = sourceInfo.open(childType, index++);
+    const nestedSourceInfo = sourceInfo.open(childType, index);
     messageFn(tsFullName, message, nestedSourceInfo, protoFullName);
     visit(message, nestedSourceInfo, messageFn, options, enumFn, tsFullName + '_', protoFullName + '.');
-  }
+  });
 }
 
 function visitServices(
@@ -506,11 +504,10 @@ function visitServices(
   sourceInfo: SourceInfo,
   serviceFn: (desc: ServiceDescriptorProto, sourceInfo: SourceInfo) => void
 ): void {
-  let index = 0;
-  for (const serviceDesc of proto.service) {
-    const nestedSourceInfo = sourceInfo.open(Fields.file.service, index++);
+  proto.service.forEach((serviceDesc, index) => {
+    const nestedSourceInfo = sourceInfo.open(Fields.file.service, index);
     serviceFn(serviceDesc, nestedSourceInfo);
-  }
+  });
 }
 
 /** Creates a function to decode a message by loop overing the tags. */
@@ -530,10 +527,10 @@ function generateDecode(
   func = func
     .addStatement('const reader = input instanceof Uint8Array ? new Reader(input) : input')
     .addStatement('let end = length === undefined ? reader.len : reader.pos + length')
-    .addStatement('const message = Object.create(base%L) as %L', fullName, fullName);
+    .addStatement('const message = { ...base%L } as %L', fullName, fullName);
 
   // initialize all lists
-  messageDesc.field.filter(isRepeated).forEach(field => {
+  messageDesc.field.filter(isRepeated).forEach((field) => {
     const value = isMapType(typeMap, messageDesc, field, options) ? '{}' : '[]';
     func = func.addStatement('message.%L = %L', maybeSnakeToCamel(field.name, options), value);
   });
@@ -545,7 +542,7 @@ function generateDecode(
     .beginControlFlow('switch (tag >>> 3)');
 
   // add a case for each incoming field
-  messageDesc.field.forEach(field => {
+  messageDesc.field.forEach((field) => {
     const fieldName = maybeSnakeToCamel(field.name, options);
     func = func.addCode('case %L:%>\n', field.number);
 
@@ -553,7 +550,11 @@ function generateDecode(
     let readSnippet: CodeBlock;
     if (isPrimitive(field)) {
       readSnippet = CodeBlock.of('reader.%L()', toReaderCall(field));
-      if (basicLongWireType(field.type) !== undefined) {
+      if (isBytes(field)) {
+        if (options.env === EnvOption.NODE) {
+          readSnippet = readSnippet.add(' as Buffer');
+        }
+      } else if (basicLongWireType(field.type) !== undefined) {
         if (options.forceLong === LongOption.LONG) {
           readSnippet = CodeBlock.of('%L as Long', readSnippet);
         } else if (options.forceLong === LongOption.STRING) {
@@ -567,12 +568,12 @@ function generateDecode(
     } else if (isValueType(field)) {
       readSnippet = CodeBlock.of(
         '%T.decode(reader, reader.uint32()).value',
-        basicTypeName(typeMap, field, options, true)
+        basicTypeName(typeMap, field, options, { keepValueType: true })
       );
     } else if (isTimestamp(field)) {
       readSnippet = CodeBlock.of(
         'fromTimestamp(%T.decode(reader, reader.uint32()))',
-        basicTypeName(typeMap, field, options, true)
+        basicTypeName(typeMap, field, options, { keepValueType: true })
       );
     } else if (isMessage(field)) {
       readSnippet = CodeBlock.of('%T.decode(reader, reader.uint32())', basicTypeName(typeMap, field, options));
@@ -587,7 +588,7 @@ function generateDecode(
         const entryVariableName = `entry${field.number}`;
         func = func
           .addStatement(`const %L = %L`, entryVariableName, readSnippet)
-          .beginControlFlow('if (%L.value)', entryVariableName)
+          .beginControlFlow('if (%L.value !== undefined)', entryVariableName)
           .addStatement('message.%L[%L.key] = %L.value', fieldName, entryVariableName, entryVariableName)
           .endControlFlow();
       } else if (packedType(field.type) === undefined) {
@@ -608,15 +609,9 @@ function generateDecode(
     }
     func = func.addStatement('break%<');
   });
-  func = func
-    .addCode('default:%>\n')
-    .addStatement('reader.skipType(tag & 7)')
-    .addStatement('break%<');
+  func = func.addCode('default:%>\n').addStatement('reader.skipType(tag & 7)').addStatement('break%<');
   // and then wrap up the switch/while/return
-  func = func
-    .endControlFlow()
-    .endControlFlow()
-    .addStatement('return message');
+  func = func.endControlFlow().endControlFlow().addStatement('return message');
   return func;
 }
 
@@ -633,35 +628,35 @@ function generateEncode(
     .addParameter('writer', 'Writer@protobufjs/minimal', { defaultValueField: CodeBlock.of('Writer.create()') })
     .returns('Writer@protobufjs/minimal');
   // then add a case for each field
-  messageDesc.field.forEach(field => {
+  messageDesc.field.forEach((field) => {
     const fieldName = maybeSnakeToCamel(field.name, options);
 
     // get a generic writer.doSomething based on the basic type
     let writeSnippet: (place: string) => CodeBlock;
     if (isPrimitive(field)) {
       const tag = ((field.number << 3) | basicWireType(field.type)) >>> 0;
-      writeSnippet = place => CodeBlock.of('writer.uint32(%L).%L(%L)', tag, toReaderCall(field), place);
+      writeSnippet = (place) => CodeBlock.of('writer.uint32(%L).%L(%L)', tag, toReaderCall(field), place);
     } else if (isTimestamp(field)) {
       const tag = ((field.number << 3) | 2) >>> 0;
-      writeSnippet = place =>
+      writeSnippet = (place) =>
         CodeBlock.of(
           '%T.encode(toTimestamp(%L), writer.uint32(%L).fork()).ldelim()',
-          basicTypeName(typeMap, field, options, true),
+          basicTypeName(typeMap, field, options, { keepValueType: true }),
           place,
           tag
         );
     } else if (isValueType(field)) {
       const tag = ((field.number << 3) | 2) >>> 0;
-      writeSnippet = place =>
+      writeSnippet = (place) =>
         CodeBlock.of(
           '%T.encode({ value: %L! }, writer.uint32(%L).fork()).ldelim()',
-          basicTypeName(typeMap, field, options, true),
+          basicTypeName(typeMap, field, options, { keepValueType: true }),
           place,
           tag
         );
     } else if (isMessage(field)) {
       const tag = ((field.number << 3) | 2) >>> 0;
-      writeSnippet = place =>
+      writeSnippet = (place) =>
         CodeBlock.of(
           '%T.encode(%L, writer.uint32(%L).fork()).ldelim()',
           basicTypeName(typeMap, field, options),
@@ -727,16 +722,16 @@ function generateFromJson(
     .returns(fullName);
 
   // create the message
-  func = func.addStatement('const message = Object.create(base%L) as %L', fullName, fullName);
+  func = func.addStatement('const message = { ...base%L } as %L', fullName, fullName);
 
   // initialize all lists
-  messageDesc.field.filter(isRepeated).forEach(field => {
+  messageDesc.field.filter(isRepeated).forEach((field) => {
     const value = isMapType(typeMap, messageDesc, field, options) ? '{}' : '[]';
     func = func.addStatement('message.%L = %L', maybeSnakeToCamel(field.name, options), value);
   });
 
   // add a check for each incoming field
-  messageDesc.field.forEach(field => {
+  messageDesc.field.forEach((field) => {
     const fieldName = maybeSnakeToCamel(field.name, options);
 
     // get a generic 'reader.doSomething' bit that is specific to the basic type
@@ -746,12 +741,16 @@ function generateFromJson(
       } else if (isPrimitive(field)) {
         // Convert primitives using the String(value)/Number(value)/bytesFromBase64(value)
         if (isBytes(field)) {
-          return CodeBlock.of('bytesFromBase64(%L)', from);
+          if (options.env === EnvOption.NODE) {
+            return CodeBlock.of('Buffer.from(bytesFromBase64(%L))', from);
+          } else {
+            return CodeBlock.of('bytesFromBase64(%L)', from);
+          }
         } else if (isLong(field) && options.forceLong === LongOption.LONG) {
-          const cstr = capitalize(basicTypeName(typeMap, field, options, true).toString());
+          const cstr = capitalize(basicTypeName(typeMap, field, options, { keepValueType: true }).toString());
           return CodeBlock.of('%L.fromString(%L)', cstr, from);
         } else {
-          const cstr = capitalize(basicTypeName(typeMap, field, options, true).toString());
+          const cstr = capitalize(basicTypeName(typeMap, field, options, { keepValueType: true }).toString());
           return CodeBlock.of('%L(%L)', cstr, from);
         }
         // if (basicLongWireType(field.type) !== undefined) {
@@ -760,8 +759,7 @@ function generateFromJson(
       } else if (isTimestamp(field)) {
         return CodeBlock.of('fromJsonTimestamp(%L)', from);
       } else if (isValueType(field)) {
-        const cstr = capitalize((basicTypeName(typeMap, field, options, false) as Union).typeChoices[0].toString());
-        return CodeBlock.of('%L(%L)', cstr, from);
+        return CodeBlock.of('%L(%L)', capitalize(valueTypeName(field).toString()), from);
       } else if (isMessage(field)) {
         if (isRepeated(field) && isMapType(typeMap, messageDesc, field, options)) {
           const valueType = (typeMap.get(field.typeName)![2] as DescriptorProto).field[1];
@@ -833,7 +831,7 @@ function generateToJson(
     .returns('unknown');
   func = func.addCodeBlock(CodeBlock.empty().addStatement('const obj: any = {}'));
   // then add a case for each field
-  messageDesc.field.forEach(field => {
+  messageDesc.field.forEach((field) => {
     const fieldName = maybeSnakeToCamel(field.name, options);
 
     const readSnippet = (from: string): CodeBlock => {
@@ -845,7 +843,7 @@ function generateToJson(
         return CodeBlock.of(
           '%L ? %T.toJSON(%L) : %L',
           from,
-          basicTypeName(typeMap, field, options, true),
+          basicTypeName(typeMap, field, options, { keepValueType: true }),
           from,
           defaultValue(typeMap, field, options)
         );
@@ -895,18 +893,17 @@ function generateFromPartial(
   let func = FunctionSpec.create('fromPartial')
     .addParameter(messageDesc.field.length > 0 ? 'object' : '_', `DeepPartial<${fullName}>`)
     .returns(fullName);
-
   // create the message
-  func = func.addStatement('const message = Object.create(base%L) as %L', fullName, fullName);
+  func = func.addStatement('const message = { ...base%L } as %L', fullName, fullName);
 
   // initialize all lists
-  messageDesc.field.filter(isRepeated).forEach(field => {
+  messageDesc.field.filter(isRepeated).forEach((field) => {
     const value = isMapType(typeMap, messageDesc, field, options) ? '{}' : '[]';
     func = func.addStatement('message.%L = %L', maybeSnakeToCamel(field.name, options), value);
   });
 
   // add a check for each incoming field
-  messageDesc.field.forEach(field => {
+  messageDesc.field.forEach((field) => {
     const fieldName = maybeSnakeToCamel(field.name, options);
 
     const readSnippet = (from: string): CodeBlock => {
@@ -937,7 +934,7 @@ function generateFromPartial(
       if (isMapType(typeMap, messageDesc, field, options)) {
         func = func
           .beginLambda('Object.entries(object.%L).forEach(([key, value]) =>', fieldName)
-          .beginControlFlow('if (value)')
+          .beginControlFlow('if (value !== undefined)')
           .addStatement(
             `message.%L[%L] = %L`,
             fieldName,
@@ -995,10 +992,9 @@ function generateService(
   if (options.useContext) {
     service = service.addTypeVariable(contextTypeVar);
   }
-  maybeAddComment(sourceInfo, text => (service = service.addJavadoc(text)));
+  maybeAddComment(sourceInfo, (text) => (service = service.addJavadoc(text)));
 
-  let index = 0;
-  for (const methodDesc of serviceDesc.method) {
+  serviceDesc.method.forEach((methodDesc, index) => {
     if (options.lowerCaseServiceMethods) {
       methodDesc.name = camelCase(methodDesc.name);
     }
@@ -1007,10 +1003,10 @@ function generateService(
     if (options.useContext) {
       requestFn = requestFn.addParameter('ctx', TypeNames.typeVariable('Context'));
     }
-    const info = sourceInfo.lookup(Fields.service.method, index++);
-    maybeAddComment(info, text => (requestFn = requestFn.addJavadoc(text)));
+    const info = sourceInfo.lookup(Fields.service.method, index);
+    maybeAddComment(info, (text) => (requestFn = requestFn.addJavadoc(text)));
 
-    requestFn = requestFn.addParameter('request', requestType(typeMap, methodDesc));
+    requestFn = requestFn.addParameter('request', requestType(typeMap, methodDesc, options));
 
     // Use metadata as last argument for interface only configuration
     if (options.addGrpcMetadata) {
@@ -1019,9 +1015,9 @@ function generateService(
 
     // Return observable for interface only configuration, passing returnObservable=true and methodDesc.serverStreaming=true
     if (options.returnObservable || methodDesc.serverStreaming) {
-      requestFn = requestFn.returns(responseObservable(typeMap, methodDesc));
+      requestFn = requestFn.returns(responseObservable(typeMap, methodDesc, options));
     } else {
-      requestFn = requestFn.returns(responsePromise(typeMap, methodDesc));
+      requestFn = requestFn.returns(responsePromise(typeMap, methodDesc, options));
     }
 
     service = service.addFunction(requestFn);
@@ -1039,7 +1035,7 @@ function generateService(
         service = service.addFunction(batchFn);
       }
     }
-  }
+  });
   return service;
 }
 
@@ -1070,9 +1066,10 @@ function generateRegularRpcMethod(
   if (options.useContext) {
     requestFn = requestFn.addParameter('ctx', TypeNames.typeVariable('Context'));
   }
+  let inputType = requestType(typeMap, methodDesc, options);
   return requestFn
-    .addParameter('request', requestType(typeMap, methodDesc))
-    .addStatement('const data = %L.encode(request).finish()', requestType(typeMap, methodDesc))
+    .addParameter('request', inputType)
+    .addStatement('const data = %L.encode(request).finish()', inputType)
     .addStatement(
       'const promise = this.rpc.request(%L"%L.%L", %S, %L)',
       options.useContext ? 'ctx, ' : '', // sneak ctx in as the 1st parameter to our rpc call
@@ -1083,10 +1080,10 @@ function generateRegularRpcMethod(
     )
     .addStatement(
       'return promise.then(data => %L.decode(new %T(data)))',
-      responseType(typeMap, methodDesc),
+      responseType(typeMap, methodDesc, options),
       'Reader@protobufjs/minimal'
     )
-    .returns(responsePromise(typeMap, methodDesc));
+    .returns(responsePromise(typeMap, methodDesc, options));
 }
 
 function generateServiceClientImpl(
@@ -1107,9 +1104,7 @@ function generateServiceClientImpl(
   // Create the constructor(rpc: Rpc)
   const rpcType = options.useContext ? 'Rpc<Context>' : 'Rpc';
   client = client.addFunction(
-    FunctionSpec.createConstructor()
-      .addParameter('rpc', rpcType)
-      .addStatement('this.rpc = rpc')
+    FunctionSpec.createConstructor().addParameter('rpc', rpcType).addStatement('this.rpc = rpc')
   );
   client = client.addProperty('rpc', rpcType, { modifiers: [Modifier.PRIVATE, Modifier.READONLY] });
 
@@ -1143,10 +1138,9 @@ function generateNestjsServiceController(
   if (options.useContext) {
     service = service.addTypeVariable(contextTypeVar);
   }
-  maybeAddComment(sourceInfo, text => (service = service.addJavadoc(text)));
+  maybeAddComment(sourceInfo, (text) => (service = service.addJavadoc(text)));
 
-  let index = 0;
-  for (const methodDesc of serviceDesc.method) {
+  serviceDesc.method.forEach((methodDesc, index) => {
     if (options.lowerCaseServiceMethods) {
       methodDesc.name = camelCase(methodDesc.name);
     }
@@ -1155,10 +1149,10 @@ function generateNestjsServiceController(
     if (options.useContext) {
       requestFn = requestFn.addParameter('ctx', TypeNames.typeVariable('Context'));
     }
-    const info = sourceInfo.lookup(Fields.service.method, index++);
-    maybeAddComment(info, text => (requestFn = requestFn.addJavadoc(text)));
+    const info = sourceInfo.lookup(Fields.service.method, index);
+    maybeAddComment(info, (text) => (requestFn = requestFn.addJavadoc(text)));
 
-    requestFn = requestFn.addParameter('request', requestType(typeMap, methodDesc));
+    requestFn = requestFn.addParameter('request', requestType(typeMap, methodDesc, options));
 
     // Use metadata as last argument for interface only configuration
     if (options.addGrpcMetadata) {
@@ -1168,15 +1162,15 @@ function generateNestjsServiceController(
     // Return observable for interface only configuration, passing returnObservable=true and methodDesc.serverStreaming=true
     if (isEmptyType(methodDesc.outputType)) {
       requestFn = requestFn.returns(TypeNames.anyType('void'));
-    }else if (options.returnObservable || methodDesc.serverStreaming) {
-      requestFn = requestFn.returns(responseObservable(typeMap, methodDesc));
+    } else if (options.returnObservable || methodDesc.serverStreaming) {
+      requestFn = requestFn.returns(responseObservable(typeMap, methodDesc, options));
     } else {
       // generate nestjs union type
       requestFn = requestFn.returns(
         TypeNames.unionType(
-          responsePromise(typeMap, methodDesc),
-          responseObservable(typeMap, methodDesc),
-          responseType(typeMap, methodDesc)
+          responsePromise(typeMap, methodDesc, options),
+          responseObservable(typeMap, methodDesc, options),
+          responseType(typeMap, methodDesc, options)
         )
       );
     }
@@ -1196,7 +1190,7 @@ function generateNestjsServiceController(
         service = service.addFunction(batchFn);
       }
     }
-  }
+  });
   return service;
 }
 
@@ -1211,10 +1205,9 @@ function generateNestjsServiceClient(
   if (options.useContext) {
     service = service.addTypeVariable(contextTypeVar);
   }
-  maybeAddComment(sourceInfo, text => (service = service.addJavadoc(text)));
+  maybeAddComment(sourceInfo, (text) => (service = service.addJavadoc(text)));
 
-  let index = 0;
-  for (const methodDesc of serviceDesc.method) {
+  serviceDesc.method.forEach((methodDesc, index) => {
     if (options.lowerCaseServiceMethods) {
       methodDesc.name = camelCase(methodDesc.name);
     }
@@ -1223,10 +1216,10 @@ function generateNestjsServiceClient(
     if (options.useContext) {
       requestFn = requestFn.addParameter('ctx', TypeNames.typeVariable('Context'));
     }
-    const info = sourceInfo.lookup(Fields.service.method, index++);
-    maybeAddComment(info, text => (requestFn = requestFn.addJavadoc(text)));
+    const info = sourceInfo.lookup(Fields.service.method, index);
+    maybeAddComment(info, (text) => (requestFn = requestFn.addJavadoc(text)));
 
-    requestFn = requestFn.addParameter('request', requestType(typeMap, methodDesc));
+    requestFn = requestFn.addParameter('request', requestType(typeMap, methodDesc, options));
 
     // Use metadata as last argument for interface only configuration
     if (options.addGrpcMetadata) {
@@ -1234,7 +1227,7 @@ function generateNestjsServiceClient(
     }
 
     // Return observable since nestjs client always returns an Observable
-    requestFn = requestFn.returns(responseObservable(typeMap, methodDesc));
+    requestFn = requestFn.returns(responseObservable(typeMap, methodDesc, options));
 
     service = service.addFunction(requestFn);
 
@@ -1251,41 +1244,53 @@ function generateNestjsServiceClient(
         service = service.addFunction(batchFn);
       }
     }
-  }
+  });
   return service;
 }
 
 function generateNestjsGrpcServiceMethodsDecorator(
   serviceDesc: ServiceDescriptorProto,
-  options: Options,
+  options: Options
 ): FunctionSpec {
   let grpcServiceDecorator = FunctionSpec.create(`${serviceDesc.name}ControllerMethods`).addModifiers(Modifier.EXPORT);
 
   const grpcMethods = serviceDesc.method
-    .filter(m => !m.clientStreaming)
-    .map(m => `'${options.lowerCaseServiceMethods ? camelCase(m.name) : m.name}'`)
+    .filter((m) => !m.clientStreaming)
+    .map((m) => `'${options.lowerCaseServiceMethods ? camelCase(m.name) : m.name}'`)
     .join(', ');
 
   const grpcStreamMethods = serviceDesc.method
-    .filter(m => m.clientStreaming)
-    .map(m => `'${options.lowerCaseServiceMethods ? camelCase(m.name) : m.name}'`)
+    .filter((m) => m.clientStreaming)
+    .map((m) => `'${options.lowerCaseServiceMethods ? camelCase(m.name) : m.name}'`)
     .join(', ');
 
   const grpcMethodType = TypeNames.importedType('GrpcMethod@@nestjs/microservices');
   const grpcStreamMethodType = TypeNames.importedType('GrpcStreamMethod@@nestjs/microservices');
 
-  let decoratorFunction = FunctionSpec.createCallable().addParameter('constructor', TypeNames.typeVariable('Function'))
-  
+  let decoratorFunction = FunctionSpec.createCallable().addParameter('constructor', TypeNames.typeVariable('Function'));
+
   // add loop for applying @GrpcMethod decorators to functions
-  decoratorFunction = generateGrpcMethodDecoratorLoop(decoratorFunction, serviceDesc, 'grpcMethods', grpcMethods, grpcMethodType);
-  
+  decoratorFunction = generateGrpcMethodDecoratorLoop(
+    decoratorFunction,
+    serviceDesc,
+    'grpcMethods',
+    grpcMethods,
+    grpcMethodType
+  );
+
   // add loop for applying @GrpcStreamMethod decorators to functions
-  decoratorFunction = generateGrpcMethodDecoratorLoop(decoratorFunction, serviceDesc, 'grpcStreamMethods', grpcStreamMethods, grpcStreamMethodType);
-  
+  decoratorFunction = generateGrpcMethodDecoratorLoop(
+    decoratorFunction,
+    serviceDesc,
+    'grpcStreamMethods',
+    grpcStreamMethods,
+    grpcStreamMethodType
+  );
+
   const body = CodeBlock.empty().add('return function %F', decoratorFunction);
-  
+
   grpcServiceDecorator = grpcServiceDecorator.addCodeBlock(body);
-  
+
   return grpcServiceDecorator;
 }
 
@@ -1337,7 +1342,7 @@ function detectBatchMethod(
         inputType,
         outputFieldName,
         outputType,
-        mapType: !!mapType
+        mapType: !!mapType,
       };
     }
   }
@@ -1354,7 +1359,7 @@ function generateBatchingRpcMethod(typeMap: TypeMap, batchMethod: BatchMethod): 
     outputFieldName,
     outputType,
     mapType,
-    uniqueIdentifier
+    uniqueIdentifier,
   } = batchMethod;
   // Create the `(keys) => ...` lambda we'll pass to the DataLoader constructor
   let lambda = CodeBlock.lambda(inputFieldName) // e.g. keys
@@ -1394,8 +1399,8 @@ function generateCachingRpcMethod(
   serviceDesc: ServiceDescriptorProto,
   methodDesc: MethodDescriptorProto
 ): FunctionSpec {
-  const inputType = requestType(typeMap, methodDesc);
-  const outputType = responseType(typeMap, methodDesc);
+  const inputType = requestType(typeMap, methodDesc, options);
+  const outputType = responseType(typeMap, methodDesc, options);
   let lambda = CodeBlock.lambda('requests')
     .beginLambda('const responses = requests.map(async request =>')
     .addStatement('const data = %L.encode(request).finish()', inputType)
@@ -1406,13 +1411,13 @@ function generateCachingRpcMethod(
       methodDesc.name,
       'data'
     )
-    .addStatement('return %L.decode(new %T(response))', responseType(typeMap, methodDesc), 'Reader@protobufjs/minimal')
+    .addStatement('return %L.decode(new %T(response))', outputType, 'Reader@protobufjs/minimal')
     .endLambda(')')
     .addStatement('return Promise.all(responses)');
   const uniqueIdentifier = `${fileDesc.package}.${serviceDesc.name}.${methodDesc.name}`;
   return FunctionSpec.create(methodDesc.name)
     .addParameter('ctx', 'Context')
-    .addParameter('request', requestType(typeMap, methodDesc))
+    .addParameter('request', inputType)
     .addCode('const dl = ctx.getDataLoader(%S, () => {%>\n', uniqueIdentifier)
     .addCode(
       'return new %T<%T, %T>(%L, { cacheKeyFn: %T });\n',
@@ -1462,28 +1467,27 @@ function generateDataLoadersType(): InterfaceSpec {
     .addParameter('identifier', TypeNames.STRING)
     .addParameter('constructorFn', TypeNames.lambda2([], TypeNames.typeVariable('T')))
     .returns(TypeNames.typeVariable('T'));
-  return InterfaceSpec.create('DataLoaders')
-    .addModifiers(Modifier.EXPORT)
-    .addFunction(fn);
+  return InterfaceSpec.create('DataLoaders').addModifiers(Modifier.EXPORT).addFunction(fn);
 }
 
-function requestType(typeMap: TypeMap, methodDesc: MethodDescriptorProto): TypeName {
+function requestType(typeMap: TypeMap, methodDesc: MethodDescriptorProto, options: Options): TypeName {
+  let typeName = messageToTypeName(typeMap, methodDesc.inputType, options);
   if (methodDesc.clientStreaming) {
-    return TypeNames.anyType('Observable@rxjs').param(messageToTypeName(typeMap, methodDesc.inputType));
+    return TypeNames.anyType('Observable@rxjs').param(typeName);
   }
-  return messageToTypeName(typeMap, methodDesc.inputType);
+  return typeName;
 }
 
-function responseType(typeMap: TypeMap, methodDesc: MethodDescriptorProto): TypeName {
-  return messageToTypeName(typeMap, methodDesc.outputType);
+function responseType(typeMap: TypeMap, methodDesc: MethodDescriptorProto, options: Options): TypeName {
+  return messageToTypeName(typeMap, methodDesc.outputType, options);
 }
 
-function responsePromise(typeMap: TypeMap, methodDesc: MethodDescriptorProto): TypeName {
-  return TypeNames.PROMISE.param(responseType(typeMap, methodDesc));
+function responsePromise(typeMap: TypeMap, methodDesc: MethodDescriptorProto, options: Options): TypeName {
+  return TypeNames.PROMISE.param(responseType(typeMap, methodDesc, options));
 }
 
-function responseObservable(typeMap: TypeMap, methodDesc: MethodDescriptorProto): TypeName {
-  return TypeNames.anyType('Observable@rxjs').param(responseType(typeMap, methodDesc));
+function responseObservable(typeMap: TypeMap, methodDesc: MethodDescriptorProto, options: Options): TypeName {
+  return TypeNames.anyType('Observable@rxjs').param(responseType(typeMap, methodDesc, options));
 }
 
 // function generateOneOfProperty(typeMap: TypeMap, name: string, fields: FieldDescriptorProto[]): PropertySpec {
@@ -1499,16 +1503,18 @@ function responseObservable(typeMap: TypeMap, methodDesc: MethodDescriptorProto)
 
 function maybeSnakeToCamel(s: string, options: Options): string {
   if (options.snakeToCamel) {
-    return s.replace(/(\_\w)/g, m => m[1].toUpperCase());
+    return s.replace(/(\_\w)/g, (m) => m[1].toUpperCase());
   } else {
     return s;
   }
 }
 
 function camelToSnake(s: string): string {
-  return s.replace(/[\w]([A-Z])/g, function(m) {
-    return m[0] + "_" + m[1];
-  }).toUpperCase();
+  return s
+    .replace(/[\w]([A-Z])/g, function (m) {
+      return m[0] + '_' + m[1];
+    })
+    .toUpperCase();
 }
 
 function capitalize(s: string): string {

@@ -1,6 +1,6 @@
 import { google } from '../build/pbjs';
 import { CodeBlock, Member, TypeName, TypeNames } from 'ts-poet';
-import { Options, visit, LongOption } from './main';
+import { Options, visit, LongOption, EnvOption } from './main';
 import { fail } from './utils';
 import { asSequence } from 'sequency';
 import FieldDescriptorProto = google.protobuf.FieldDescriptorProto;
@@ -56,7 +56,12 @@ export function basicLongWireType(type: FieldDescriptorProto.Type): number | und
 }
 
 /** Returns the type name without any repeated/required/etc. labels. */
-export function basicTypeName(typeMap: TypeMap, field: FieldDescriptorProto, options: Options, keepValueType: boolean = false): TypeName {
+export function basicTypeName(
+  typeMap: TypeMap,
+  field: FieldDescriptorProto,
+  options: Options,
+  typeOptions: { keepValueType?: boolean } = {}
+): TypeName {
   switch (field.type) {
     case FieldDescriptorProto.Type.TYPE_DOUBLE:
     case FieldDescriptorProto.Type.TYPE_FLOAT:
@@ -84,10 +89,14 @@ export function basicTypeName(typeMap: TypeMap, field: FieldDescriptorProto, opt
     case FieldDescriptorProto.Type.TYPE_STRING:
       return TypeNames.STRING;
     case FieldDescriptorProto.Type.TYPE_BYTES:
-      return TypeNames.anyType('Uint8Array');
+      if (options.env === EnvOption.NODE) {
+        return TypeNames.BUFFER;
+      } else {
+        return TypeNames.anyType('Uint8Array');
+      }
     case FieldDescriptorProto.Type.TYPE_MESSAGE:
     case FieldDescriptorProto.Type.TYPE_ENUM:
-      return messageToTypeName(typeMap, field.typeName, keepValueType);
+      return messageToTypeName(typeMap, field.typeName, options, { ...typeOptions, repeated: isRepeated(field) });
     default:
       return TypeNames.anyType(field.typeName);
   }
@@ -176,7 +185,7 @@ export function defaultValue(typeMap: TypeMap, field: FieldDescriptorProto, opti
       // This is probably not great, but it's only used in fromJSON and fromPartial,
       // and I believe the semantics of those in the proto2 world are generally undefined.
       const enumProto = typeMap.get(field.typeName)![2] as EnumDescriptorProto;
-      const hasZero = enumProto.value.find(v => v.number === 0);
+      const hasZero = enumProto.value.find((v) => v.number === 0);
       return hasZero ? 0 : enumProto.value[0].number;
     case FieldDescriptorProto.Type.TYPE_UINT64:
     case FieldDescriptorProto.Type.TYPE_FIXED64:
@@ -190,13 +199,13 @@ export function defaultValue(typeMap: TypeMap, field: FieldDescriptorProto, opti
     case FieldDescriptorProto.Type.TYPE_INT64:
     case FieldDescriptorProto.Type.TYPE_SINT64:
     case FieldDescriptorProto.Type.TYPE_SFIXED64:
-        if (options.forceLong === LongOption.LONG) {
-          return CodeBlock.of('%T.ZERO', 'Long*long');
-        } else if (options.forceLong === LongOption.STRING) {
-          return '"0"';
-        } else {
-          return 0;
-        }
+      if (options.forceLong === LongOption.LONG) {
+        return CodeBlock.of('%T.ZERO', 'Long*long');
+      } else if (options.forceLong === LongOption.STRING) {
+        return '"0"';
+      } else {
+        return 0;
+      }
     case FieldDescriptorProto.Type.TYPE_BOOL:
       return false;
     case FieldDescriptorProto.Type.TYPE_STRING:
@@ -218,7 +227,12 @@ export function createTypeMap(request: CodeGeneratorRequest, options: Options): 
     // We assume a file.name of google/protobuf/wrappers.proto --> a module path of google/protobuf/wrapper.ts
     const moduleName = file.name.replace('.proto', '');
     // So given a fullName like FooMessage_InnerMessage, proto will see that as package.name.FooMessage.InnerMessage
-    function saveMapping(tsFullName: string, desc: DescriptorProto | EnumDescriptorProto, s: SourceInfo, protoFullName: string): void {
+    function saveMapping(
+      tsFullName: string,
+      desc: DescriptorProto | EnumDescriptorProto,
+      s: SourceInfo,
+      protoFullName: string
+    ): void {
       // package is optional, but make sure we have a dot-prefixed type name either way
       const prefix = file.package.length === 0 ? '' : `.${file.package}`;
       typeMap.set(`${prefix}.${protoFullName}`, [moduleName, tsFullName, desc]);
@@ -256,24 +270,29 @@ export function isLong(field: FieldDescriptorProto): boolean {
   return basicLongWireType(field.type) !== undefined;
 }
 
-export function isMapType(typeMap: TypeMap, messageDesc: DescriptorProto, field: FieldDescriptorProto, options: Options): boolean {
+export function isMapType(
+  typeMap: TypeMap,
+  messageDesc: DescriptorProto,
+  field: FieldDescriptorProto,
+  options: Options
+): boolean {
   return detectMapType(typeMap, messageDesc, field, options) !== undefined;
 }
 
 const valueTypes: { [key: string]: TypeName } = {
-  '.google.protobuf.StringValue': TypeNames.unionType(TypeNames.STRING, TypeNames.UNDEFINED),
-  '.google.protobuf.Int32Value': TypeNames.unionType(TypeNames.NUMBER, TypeNames.UNDEFINED),
-  '.google.protobuf.Int64Value': TypeNames.unionType(TypeNames.NUMBER, TypeNames.UNDEFINED),
-  '.google.protobuf.UInt32Value': TypeNames.unionType(TypeNames.NUMBER, TypeNames.UNDEFINED),
-  '.google.protobuf.UInt64Value': TypeNames.unionType(TypeNames.NUMBER, TypeNames.UNDEFINED),
-  '.google.protobuf.BoolValue': TypeNames.unionType(TypeNames.BOOLEAN, TypeNames.UNDEFINED),
-  '.google.protobuf.DoubleValue': TypeNames.unionType(TypeNames.NUMBER, TypeNames.UNDEFINED),
-  '.google.protobuf.FloatValue': TypeNames.unionType(TypeNames.NUMBER, TypeNames.UNDEFINED),
-  '.google.protobuf.BytesValue': TypeNames.unionType(TypeNames.anyType('Uint8Array'), TypeNames.UNDEFINED)
+  '.google.protobuf.StringValue': TypeNames.STRING,
+  '.google.protobuf.Int32Value': TypeNames.NUMBER,
+  '.google.protobuf.Int64Value': TypeNames.NUMBER,
+  '.google.protobuf.UInt32Value': TypeNames.NUMBER,
+  '.google.protobuf.UInt64Value': TypeNames.NUMBER,
+  '.google.protobuf.BoolValue': TypeNames.BOOLEAN,
+  '.google.protobuf.DoubleValue': TypeNames.NUMBER,
+  '.google.protobuf.FloatValue': TypeNames.NUMBER,
+  '.google.protobuf.BytesValue': TypeNames.anyType('Uint8Array'),
 };
 
 const mappedTypes: { [key: string]: TypeName } = {
-  '.google.protobuf.Timestamp': TypeNames.DATE
+  '.google.protobuf.Timestamp': TypeNames.DATE,
 };
 
 export function isTimestamp(field: FieldDescriptorProto): boolean {
@@ -288,14 +307,35 @@ export function isEmptyType(typeName: string): boolean {
   return typeName === '.google.protobuf.Empty';
 }
 
+export function valueTypeName(field: FieldDescriptorProto): TypeName {
+  if (!isValueType(field)) {
+    throw new Error('Type is not a valueType: ' + field.typeName);
+  }
+  return valueTypes[field.typeName];
+}
+
 /** Maps `.some_proto_namespace.Message` to a TypeName. */
-export function messageToTypeName(typeMap: TypeMap, protoType: string, keepValueType: boolean = false): TypeName {
-  // Watch for the wrapper types `.google.protobuf.StringValue` and map to `string | undefined`
-  if (!keepValueType && protoType in valueTypes) {
-    return valueTypes[protoType];
+export function messageToTypeName(
+  typeMap: TypeMap,
+  protoType: string,
+  options: Options,
+  typeOptions: { keepValueType?: boolean; repeated?: boolean } = {}
+): TypeName {
+  // Watch for the wrapper types `.google.protobuf.*Value`. If we're mapping
+  // them to basic built-in types, we union the type with undefined to
+  // indicate the value is optional. Exceptions:
+  // - If the field is repeated, values cannot be undefined.
+  // - If useOptionals=true, all non-scalar types are already optional
+  //   properties, so there's no need for that union.
+  if (!typeOptions.keepValueType && protoType in valueTypes) {
+    let typeName = valueTypes[protoType];
+    if (!!typeOptions.repeated || options.useOptionals) {
+      return typeName;
+    }
+    return TypeNames.unionType(typeName, TypeNames.UNDEFINED);
   }
   // Look for other special prototypes like Timestamp that aren't technically wrapper types
-  if (!keepValueType && protoType in mappedTypes) {
+  if (!typeOptions.keepValueType && protoType in mappedTypes) {
     return mappedTypes[protoType];
   }
   const [module, type] = toModuleAndType(typeMap, protoType);
@@ -308,8 +348,13 @@ function toModuleAndType(typeMap: TypeMap, protoType: string): [string, string, 
 }
 
 /** Return the TypeName for any field (primitive/message/etc.) as exposed in the interface. */
-export function toTypeName(typeMap: TypeMap, messageDesc: DescriptorProto, field: FieldDescriptorProto, options: Options): TypeName {
-  let type = basicTypeName(typeMap, field, options, false);
+export function toTypeName(
+  typeMap: TypeMap,
+  messageDesc: DescriptorProto,
+  field: FieldDescriptorProto,
+  options: Options
+): TypeName {
+  let type = basicTypeName(typeMap, field, options, { keepValueType: false });
   if (isRepeated(field)) {
     const mapType = detectMapType(typeMap, messageDesc, field, options);
     if (mapType) {
@@ -319,7 +364,16 @@ export function toTypeName(typeMap: TypeMap, messageDesc: DescriptorProto, field
       type = TypeNames.arrayType(type);
     }
   } else if ((isWithinOneOf(field) || isMessage(field)) && !isValueType(field)) {
-    type = TypeNames.unionType(type, TypeNames.UNDEFINED);
+    // When useOptionals=false (the default), non-scalar fields and fields
+    // within a oneof clause need to be unioned with undefined to indicate the
+    // value is optional. One exception is google.protobuf.*Value types, which
+    // are already unioned to undefined in messageToTypeName.
+    //
+    // When useOptionals=true, non-scalar fields are already optional, so no
+    // need for the type union here.
+    if (!isMessage(field) || !options.useOptionals) {
+      type = TypeNames.unionType(type, TypeNames.UNDEFINED);
+    }
   }
   return type;
 }
@@ -347,7 +401,7 @@ export function detectMapType(
 function createOneOfsMap(message: DescriptorProto): Map<string, FieldDescriptorProto[]> {
   return asSequence(message.field)
     .filter(isWithinOneOf)
-    .groupBy(f => {
+    .groupBy((f) => {
       return message.oneofDecl[f.oneofIndex].name;
     });
 }

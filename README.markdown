@@ -1,6 +1,7 @@
 
 [![npm](https://img.shields.io/npm/v/ts-proto)](https://www.npmjs.com/package/ts-proto)
 [![CircleCI](https://circleci.com/gh/stephenh/ts-proto.svg?style=svg)](https://circleci.com/gh/stephenh/ts-proto)
+[![GitHub Actions](https://github.com/stephenh/ts-proto/workflows/Build/badge.svg)](https://github.com/stephenh/ts-proto/actions)
 
 # ts-proto
 
@@ -87,7 +88,7 @@ Goals
   * (Techically the `protobufjs/minimal` package is used for actually reading/writing bytes.)
 * TypeScript-first output
 * Interfaces over classes
-  * As much as possible, types are just interfaces (sometimes with prototype-driven defaults) so you can work with messages just like regular hashes/data structures.
+  * As much as possible, types are just interfaces, so you can work with messages just like regular hashes/data structures.
 * Only supports codegen `*.proto`-to-`*.ts` workflow, currently no runtime reflection/loading of dynamic `.proto` files
 * Currently ambivalent about browser support, current focus is on Node/server-side use cases
 
@@ -213,6 +214,14 @@ protoc --plugin=node_modules/ts-proto/protoc-gen-ts_proto ./batching.proto -I.
  
   Alternatively, if you pass `--ts_proto_opt=forceLong=string`, all 64 bit numbers will be outputted as strings.
 
+* With `--ts_proto_out=env=node` or `browser` or `both`, ts-proto will make environment-specific assumptions in your output. This defaults to `both`, which makes no environment-specific assumptions.
+ 
+  Using `node` changes the types of `bytes` from `Uint8Array` to `Buffer` for easier integration with the node ecosystem which generally uses `Buffer`.
+
+  Currently `browser` doesn't have any specific behavior other than being "not `node`". It probably will soon/at some point.
+
+* With `--ts_proto_opt=useOptionals=true`, non-scalar fields are declared as optional TypeScript properties, e.g. `field?: Message` instead of `field: Message | undefined`.
+
 * With `--ts_proto_opt=lowerCaseServiceMethods=true`, the method names of service methods will be lowered/camel-case, i.e. `service.findFoo` instead of `service.FindFoo`.
 
 * With `--ts_proto_opt=outputEncodeMethods=false`, the `Message.encode` and `Message.decode` methods for working with protobuf-encoded/binary data will not be output.
@@ -251,7 +260,7 @@ Building
 
 `ts-proto` does not use `pbjs` at runtime, but we do use it in the `ts-proto` build process (to bootstrap the types used to parse the incoming protobuf metadata types, as well as for the test suite to ensure the `ts-proto` implementations match the `ts-proto`).
 
-After running `yarn install` (which will fail in `yarn test` on the first time), run `./pbjs.sh` to create the bootstrap types, and `./integration/pbjs.sh` to create the integration test types. These pbjs-generated files are not currently checked in.
+After running `yarn install`, run `./pbjs.sh` to create the bootstrap types, and `./integration/pbjs.sh` to create the integration test types. These pbjs-generated files are not currently checked in.
 
 After this the tests should pass.
 
@@ -275,8 +284,7 @@ Typing Approach
 ===============
 
 * Missing fields on read
-  * When decoding from binary, we setup a prototype for our returned object, which has default values.
-    * This assumes missing keys trigger the default value, e.g. storing `key=undefined` would subvert the approach
+  * When decoding from binary, we set default values for all primitives
   * When decoding from JSON, we may have missing keys.
     * We could convert them to our prototype.
   * When using an instantiated object, our types enforce all keys to be set.

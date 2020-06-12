@@ -8,7 +8,6 @@ export interface ImportedThing {
 }
 
 const baseImportedThing: object = {
-  createdAt: undefined,
 };
 
 function fromJsonTimestamp(o: any): Date {
@@ -47,7 +46,7 @@ export const ImportedThing = {
   decode(input: Uint8Array | Reader, length?: number): ImportedThing {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = Object.create(baseImportedThing) as ImportedThing;
+    const message = { ...baseImportedThing } as ImportedThing;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -62,7 +61,7 @@ export const ImportedThing = {
     return message;
   },
   fromJSON(object: any): ImportedThing {
-    const message = Object.create(baseImportedThing) as ImportedThing;
+    const message = { ...baseImportedThing } as ImportedThing;
     if (object.createdAt !== undefined && object.createdAt !== null) {
       message.createdAt = fromJsonTimestamp(object.createdAt);
     } else {
@@ -71,7 +70,7 @@ export const ImportedThing = {
     return message;
   },
   fromPartial(object: DeepPartial<ImportedThing>): ImportedThing {
-    const message = Object.create(baseImportedThing) as ImportedThing;
+    const message = { ...baseImportedThing } as ImportedThing;
     if (object.createdAt !== undefined && object.createdAt !== null) {
       message.createdAt = object.createdAt;
     } else {

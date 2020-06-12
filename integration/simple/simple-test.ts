@@ -23,7 +23,10 @@ describe('simple', () => {
       age: 1,
       child: { name: 'child', type: Child_Type.UNKNOWN },
       state: StateEnum.ON,
-      grandChildren: [{ name: 'grand1', type: Child_Type.UNKNOWN }, { name: 'grand2', type: Child_Type.UNKNOWN }],
+      grandChildren: [
+        { name: 'grand1', type: Child_Type.UNKNOWN },
+        { name: 'grand2', type: Child_Type.UNKNOWN }
+      ],
       coins: [2, 4, 6],
       snacks: ['a', 'b'],
       oldStates: [StateEnum.ON, StateEnum.OFF],
@@ -38,11 +41,12 @@ describe('simple', () => {
     const s1: ISimple = {
       name: 'asdf',
       age: 1,
-      child: PbChild.fromObject({ name: 'foo' }),
+      child: PbChild.fromObject({ name: 'foo', type: Child_Type.UNKNOWN }),
       state: PbState.ON,
-      grandChildren: [PbChild.fromObject({ name: 'grand1' }), PbChild.fromObject({ name: 'grand2' })],
+      grandChildren: [PbChild.fromObject({ name: 'grand1', type: Child_Type.UNKNOWN }), PbChild.fromObject({ name: 'grand2', type: Child_Type.UNKNOWN })],
       coins: [2, 4, 6],
       snacks: ['a', 'b'],
+      thing: undefined,
       oldStates: [PbState.ON, PbState.OFF],
       blobs: []
     };
@@ -56,7 +60,10 @@ describe('simple', () => {
       age: 1,
       child: { name: 'foo', type: Child_Type.UNKNOWN },
       state: StateEnum.ON,
-      grandChildren: [{ name: 'grand1', type: Child_Type.UNKNOWN }, { name: 'grand2', type: Child_Type.UNKNOWN }],
+      grandChildren: [
+        { name: 'grand1', type: Child_Type.UNKNOWN },
+        { name: 'grand2', type: Child_Type.UNKNOWN }
+      ],
       coins: [2, 4, 6],
       snacks: ['a', 'b'],
       oldStates: [StateEnum.ON, StateEnum.OFF],
@@ -166,7 +173,7 @@ describe('simple', () => {
         2: { id: 2 }
       },
       nameLookup: { foo: 'bar' },
-      intLookup: { 1: 2 }
+      intLookup: { 1: 2, 2: 0 }
     };
     const s2 = PbSimpleWithMap.toObject(PbSimpleWithMap.decode(SimpleWithMap.encode(s1).finish()));
     expect(s2).toEqual(s1);
@@ -177,7 +184,8 @@ describe('simple', () => {
       entitiesById: {
         1: { id: 1 },
         2: { id: 2 }
-      }
+      },
+      intLookup: { 1: 2, 2: 0 }
     });
     const s2 = SimpleWithMap.decode(new Reader(PbSimpleWithMap.encode(s1).finish()));
     expect(s2).toEqual(s1);
@@ -198,6 +206,20 @@ describe('simple', () => {
         "snacks": Array [],
         "state": 0,
         "thing": undefined,
+      }
+    `);
+  });
+
+  it('can fromPartial on maps with falsey values', () => {
+    const s1 = SimpleWithMap.fromPartial({ intLookup: { 1: 2, 2: 0 } });
+    expect(s1).toMatchInlineSnapshot(`
+      Object {
+        "entitiesById": Object {},
+        "intLookup": Object {
+          "1": 2,
+          "2": 0,
+        },
+        "nameLookup": Object {},
       }
     `);
   });
