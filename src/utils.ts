@@ -1,5 +1,5 @@
 import ReadStream = NodeJS.ReadStream;
-import { Options, LongOption, EnvOption } from './main';
+import { Options, LongOption, EnvOption, OneofOption } from './main';
 import { SourceDescription } from './sourceInfo';
 
 export function readToBuffer(stream: ReadStream): Promise<Buffer> {
@@ -41,6 +41,7 @@ export function defaultOptions(): Options {
     snakeToCamel: true,
     forceLong: LongOption.NUMBER,
     useOptionals: false,
+    oneof: OneofOption.PROPERTIES,
     lowerCaseServiceMethods: false,
     outputEncodeMethods: true,
     outputJsonMethods: true,
@@ -70,6 +71,12 @@ export function optionsFromParameter(parameter: string): Options {
     }
     if (parameter.includes('useOptionals=true')) {
       options.useOptionals = true;
+    }
+    if (parameter.includes('oneof=properties')) {
+      options.oneof = OneofOption.PROPERTIES;
+    }
+    if (parameter.includes('oneof=unions')) {
+      options.oneof = OneofOption.UNIONS;
     }
     if (parameter.includes('lowerCaseServiceMethods=true')) {
       options.lowerCaseServiceMethods = true;

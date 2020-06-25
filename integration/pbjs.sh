@@ -36,3 +36,11 @@ yarn pbts --no-comments -o integration/nestjs-simple/pbjs.d.ts integration/nestj
 # nestjs-simple-observables/
 yarn pbjs --force-message --force-number -t static-module -o integration/nestjs-simple-observables/pbjs.js integration/nestjs-simple-observables/hero.proto
 yarn pbts --no-comments -o integration/nestjs-simple-observables/pbjs.d.ts integration/nestjs-simple-observables/pbjs.js
+
+# oneof-proprties/
+yarn pbjs --force-message --force-number -t static-module -o integration/oneof-properties/pbjs.js integration/oneof-properties/oneof.proto
+yarn pbts --no-comments -o integration/oneof-properties/pbjs.d.ts integration/oneof-properties/pbjs.js
+
+# oneof-unions/
+yarn pbjs --force-message --force-number -t static-module -o integration/oneof-unions/pbjs.js integration/oneof-unions/oneof.proto
+yarn pbts --no-comments -o integration/oneof-unions/pbjs.d.ts integration/oneof-unions/pbjs.js

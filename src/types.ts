@@ -1,6 +1,6 @@
 import { google } from '../build/pbjs';
 import { CodeBlock, Member, TypeName, TypeNames } from 'ts-poet';
-import { Options, visit, LongOption, EnvOption } from './main';
+import { Options, visit, LongOption, EnvOption, OneofOption } from './main';
 import { fail } from './utils';
 import { asSequence } from 'sequency';
 import FieldDescriptorProto = google.protobuf.FieldDescriptorProto;
@@ -359,22 +359,34 @@ export function toTypeName(
     const mapType = detectMapType(typeMap, messageDesc, field, options);
     if (mapType) {
       const { keyType, valueType } = mapType;
-      type = TypeNames.anonymousType(new Member(`[key: ${keyType}]`, valueType));
-    } else {
-      type = TypeNames.arrayType(type);
+      return TypeNames.anonymousType(new Member(`[key: ${keyType}]`, valueType));
     }
-  } else if ((isWithinOneOf(field) || isMessage(field)) && !isValueType(field)) {
-    // When useOptionals=false (the default), non-scalar fields and fields
-    // within a oneof clause need to be unioned with undefined to indicate the
-    // value is optional. One exception is google.protobuf.*Value types, which
-    // are already unioned to undefined in messageToTypeName.
-    //
-    // When useOptionals=true, non-scalar fields are already optional, so no
-    // need for the type union here.
-    if (!isMessage(field) || !options.useOptionals) {
-      type = TypeNames.unionType(type, TypeNames.UNDEFINED);
-    }
+    return TypeNames.arrayType(type);
   }
+
+  if (isValueType(field)) {
+    // google.protobuf.*Value types are already unioned with `undefined`
+    // in messageToTypeName, so no need to consider them for that here.
+    return type;
+  }
+
+  // By default (useOptionals=false, oneof=properties), non-scalar fields
+  // outside oneofs and all fields within a oneof clause need to be unioned
+  // with `undefined` to indicate the value is optional.
+  //
+  // When useOptionals=true, non-scalar fields are translated to optional
+  // properties, so no need for the union with `undefined` here.
+  //
+  // When oneof=unions, we generate a single property for the entire `oneof`
+  // clause, spelling each option out inside a large type union. No need for
+  // union with `undefined` here, either.
+  if (
+    (!isWithinOneOf(field) && isMessage(field) && !options.useOptionals) ||
+    (isWithinOneOf(field) && options.oneof === OneofOption.PROPERTIES)
+  ) {
+    return TypeNames.unionType(type, TypeNames.UNDEFINED);
+  }
+
   return type;
 }
 
@@ -396,12 +408,4 @@ export function detectMapType(
     return { messageDesc: mapType, keyType, valueType };
   }
   return undefined;
-}
-
-function createOneOfsMap(message: DescriptorProto): Map<string, FieldDescriptorProto[]> {
-  return asSequence(message.field)
-    .filter(isWithinOneOf)
-    .groupBy((f) => {
-      return message.oneofDecl[f.oneofIndex].name;
-    });
 }
