@@ -222,6 +222,30 @@ protoc --plugin=node_modules/ts-proto/protoc-gen-ts_proto ./batching.proto -I.
 
 * With `--ts_proto_opt=useOptionals=true`, non-scalar fields are declared as optional TypeScript properties, e.g. `field?: Message` instead of `field: Message | undefined`.
 
+  ts-proto defaults to `useOptionals=false`, e.g. `field: Message | undefined`, because it is the "most-safe" for use cases like:
+  
+  ```typescript
+  interface SomeMessage {
+    firstName: string | undefined;
+    lastName: string | undefined;
+  }
+  
+  const data = { firstName: "a", lastTypo: "b" };
+  
+  // This will compile even though `lastTypo` means that `lastName` is not assigned
+  const message: SomeMessage = {
+    ...data
+  };
+  ```
+  
+  However, the type-safety of `useOptionals=false` is admittedly tedious if you have many inherently-unused fields, so you can use `useOptionals=true` if that trade-off makes sense for your project.
+  
+  Eventually if TypesCript supports [Exact Types](https://github.com/microsoft/TypeScript/issues/12936), that should allow ts-proto to switch to `useOptionals=true` as the default/only behavior, have the generated `Message.encode`/`Message.toPartial`/etc. methods accept `Exact<T>` versions of the message types, and the result would be both safe + succinct.
+
+* With `--ts_proto_opt=oneof=unions`, `oneof` fields will be generated as ADTs.
+
+  See the "OneOf Handling" section.
+
 * With `--ts_proto_opt=lowerCaseServiceMethods=true`, the method names of service methods will be lowered/camel-case, i.e. `service.findFoo` instead of `service.FindFoo`.
 
 * With `--ts_proto_opt=outputEncodeMethods=false`, the `Message.encode` and `Message.decode` methods for working with protobuf-encoded/binary data will not be output.
@@ -276,9 +300,9 @@ Assumptions
 Todo
 ====
 
-* Model OneOfs as an ADT
 * Support the string-based encoding of duration in `fromJSON`/`toJSON`
 * Support the `json_name` annotation
+* Make `oneof=unions` the default behavior in 2.0
 
 Typing Approach
 ===============
@@ -292,23 +316,23 @@ Typing Approach
 OneOf Handling
 ==============
 
-Currently fields that are modeled with `oneof either_field { string field_a; string field_b }` are generated as `field_a: string | undefined; field_b: string | undefined`.
+By default, `oneof` fields are modeled "flatly" in the message, i.e. `oneof either_field { string field_a; string field_b }` means that the message will have `field_a: string | undefined; field_b: string | undefined`.
 
-This means you'll have to check `if object.field_a` and `if object.field_b`, and if you set one, you'll have to remember to unset the other.
+With this output, you'll have to check both `if object.field_a` and `if object.field_b`, and if you set one, you'll have to remember to unset the other.
 
-It would be nice/preferable to model this as an ADT, so it would be:
+It's generally recommended to use the `oneof=unions` option, which will change the output to be an Abstract Data Type/ADT like:
 
 ```typescript
-object.either_field = { kind: 'field_a', value: 'name' };
+interface YourMessage {
+  eitherField:
+    { $case: "field_a"; field_a: string }
+    | { $case: "field_b"; field_b: string }
+}
 ```
 
-However this differs sufficiently from the wire-level format that there might be wrinkles.
+As this will automatically enforce only one of `field_a` or `field_b` "being set" at a time, because the values are stored in the `eitherField` field that can only have a single value at a time.
 
-An original design notion of `ts-proto` was that ideally we could get JSON off the wire and immediately cast it to the generated `ts-proto` types, but features like oneof ADTs require walking the JSON looking for things to massage.
-
-Similarily, writing a `ts-proto` object as protobuf-compliant JSON would not be a straight `JSON.stringify(tsProtoObject)`.
-
-(Idea: maybe `either_field` exists in the prototype, and wraps/manages the underlying primitive values.)
+In ts-proto's currently-unplanned 2.x release, `oneof=unions` will become the default behavior.
 
 Primitive Types
 ===============
