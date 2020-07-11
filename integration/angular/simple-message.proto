@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+package angular;
+
+message SimpleMessage {
+  int32 number_field = 1;
+}
+
