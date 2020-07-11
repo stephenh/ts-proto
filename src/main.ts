@@ -4,6 +4,7 @@ import {
   FileSpec,
   FunctionSpec,
   InterfaceSpec,
+  Member,
   Modifier,
   PropertySpec,
   TypeName,
@@ -58,11 +59,17 @@ export enum EnvOption {
   BOTH = 'both',
 }
 
+export enum OneofOption {
+  PROPERTIES = 'properties',
+  UNIONS = 'unions',
+}
+
 export type Options = {
   useContext: boolean;
   snakeToCamel: boolean;
   forceLong: LongOption;
   useOptionals: boolean;
+  oneof: OneofOption;
   outputEncodeMethods: boolean;
   outputJsonMethods: boolean;
   outputClientImpl: boolean;
@@ -210,7 +217,7 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
     file = addBytesUtilityMethods(file);
   }
   if (initialOutput.includes('DeepPartial')) {
-    file = addDeepPartialType(file);
+    file = addDeepPartialType(file, options);
   }
 
   return file;
@@ -273,7 +280,13 @@ function base64FromBytes(arr: Uint8Array): string {
   );
 }
 
-function addDeepPartialType(file: FileSpec): FileSpec {
+function addDeepPartialType(file: FileSpec, options: Options): FileSpec {
+  let oneofCase = '';
+  if (options.oneof === OneofOption.UNIONS) {
+    oneofCase = `
+  : T extends { $case: string }
+  ? { [K in keyof Omit<T, '$case'>]?: DeepPartial<T[K]> } & { $case: T['$case'] }`;
+  }
   // Based on the type from ts-essentials
   return file.addCode(
     CodeBlock.empty().add(`type Builtin = Date | Function | Uint8Array | string | number | undefined;
@@ -282,7 +295,7 @@ type DeepPartial<T> = T extends Builtin
   : T extends Array<infer U>
   ? Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U>
-  ? ReadonlyArray<DeepPartial<U>>
+  ? ReadonlyArray<DeepPartial<U>>${oneofCase}
   : T extends {}
   ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;`)
@@ -408,6 +421,11 @@ function generateEnumToJson(fullName: string, enumDesc: EnumDescriptorProto): Fu
   return func.addCodeBlock(body);
 }
 
+// When useOptionals=true, non-scalar fields are translated into optional properties.
+function isOptionalProperty(field: FieldDescriptorProto, options: Options): boolean {
+  return options.useOptionals && isMessage(field) && !isRepeated(field);
+}
+
 // Create the interface with properties
 function generateInterfaceDeclaration(
   typeMap: TypeMap,
@@ -419,13 +437,24 @@ function generateInterfaceDeclaration(
   let message = InterfaceSpec.create(fullName).addModifiers(Modifier.EXPORT);
   maybeAddComment(sourceInfo, (text) => (message = message.addJavadoc(text)));
 
+  let processedOneofs = new Set<number>();
   messageDesc.field.forEach((fieldDesc, index) => {
-    // When useOptionals=true, non-scalar fields are translated into optional properties.
-    let optional = options.useOptionals && isMessage(fieldDesc) && !isRepeated(fieldDesc);
+    // When oneof=unions, we generate a single property with an algebraic
+    // datatype (ADT) per `oneof` clause.
+    if (options.oneof === OneofOption.UNIONS && isWithinOneOf(fieldDesc)) {
+      const { oneofIndex } = fieldDesc;
+      if (!processedOneofs.has(oneofIndex)) {
+        processedOneofs.add(oneofIndex);
+        const prop = generateOneofProperty(typeMap, messageDesc, oneofIndex, sourceInfo, options);
+        message = message.addProperty(prop);
+      }
+      return;
+    }
+
     let prop = PropertySpec.create(
       maybeSnakeToCamel(fieldDesc.name, options),
       toTypeName(typeMap, messageDesc, fieldDesc, options),
-      optional
+      isOptionalProperty(fieldDesc, options)
     );
 
     const info = sourceInfo.lookup(Fields.message.field, index);
@@ -434,6 +463,52 @@ function generateInterfaceDeclaration(
     message = message.addProperty(prop);
   });
   return message;
+}
+
+function generateOneofProperty(
+  typeMap: TypeMap,
+  messageDesc: DescriptorProto,
+  oneofIndex: number,
+  sourceInfo: SourceInfo,
+  options: Options
+): PropertySpec {
+  let fields = messageDesc.field.filter((field) => {
+    return isWithinOneOf(field) && field.oneofIndex === oneofIndex;
+  });
+  let unionType = TypeNames.unionType(
+    ...fields.map((f) => {
+      let fieldName = maybeSnakeToCamel(f.name, options);
+      let typeName = toTypeName(typeMap, messageDesc, f, options);
+      return TypeNames.anonymousType(
+        new Member('$case', TypeNames.typeLiteral(fieldName), false),
+        new Member(fieldName, typeName, /* optional */ false)
+      );
+    })
+  );
+  let prop = PropertySpec.create(
+    maybeSnakeToCamel(messageDesc.oneofDecl[oneofIndex].name, options),
+    unionType,
+    true // optional
+  );
+
+  // Ideally we'd put the comments for each oneof field next to the anonymous
+  // type we've created in the type union above, but ts-poet currently lacks
+  // that ability. For now just concatenate all comments into one big one.
+  let comments: Array<string> = [];
+  const info = sourceInfo.lookup(Fields.message.oneof_decl, oneofIndex);
+  maybeAddComment(info, (text) => comments.push(text));
+  messageDesc.field.forEach((field, index) => {
+    if (!isWithinOneOf(field) || field.oneofIndex !== oneofIndex) {
+      return;
+    }
+    const info = sourceInfo.lookup(Fields.message.field, index);
+    const name = maybeSnakeToCamel(field.name, options);
+    maybeAddComment(info, (text) => comments.push(field.name + '\n' + text));
+  });
+  if (comments.length) {
+    prop = prop.addJavadoc(comments.join('\n'));
+  }
+  return prop;
 }
 
 function generateBaseInstance(typeMap: TypeMap, fullName: string, messageDesc: DescriptorProto, options: Options) {
@@ -604,6 +679,9 @@ function generateDecode(
           .addStatement(`message.%L.push(%L)`, fieldName, readSnippet)
           .endControlFlow();
       }
+    } else if (isWithinOneOf(field) && options.oneof === OneofOption.UNIONS) {
+      let oneofName = maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options);
+      func = func.addStatement(`message.%L = {$case: '%L', %L: %L}`, oneofName, fieldName, fieldName, readSnippet);
     } else {
       func = func.addStatement(`message.%L = %L`, fieldName, readSnippet);
     }
@@ -687,6 +765,19 @@ function generateEncode(
           .endControlFlow()
           .addStatement('writer.ldelim()');
       }
+    } else if (isWithinOneOf(field) && options.oneof === OneofOption.UNIONS) {
+      let oneofName = maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options);
+      func = func
+        .beginControlFlow(
+          `if (message.%L?.$case === '%L' && message.%L?.%L !== %L)`,
+          oneofName,
+          fieldName,
+          oneofName,
+          fieldName,
+          defaultValue(typeMap, field, options)
+        )
+        .addStatement('%L', writeSnippet(`message.${oneofName}.${fieldName}`))
+        .endControlFlow();
     } else if (isWithinOneOf(field) || isMessage(field)) {
       func = func
         .beginControlFlow(
@@ -798,12 +889,25 @@ function generateFromJson(
           .addStatement(`message.%L.push(%L)`, fieldName, readSnippet('e'))
           .endControlFlow();
       }
+    } else if (isWithinOneOf(field) && options.oneof === OneofOption.UNIONS) {
+      let oneofName = maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options);
+      func = func.addStatement(
+        `message.%L = {$case: '%L', %L: %L}`,
+        oneofName,
+        fieldName,
+        fieldName,
+        readSnippet(`object.${fieldName}`)
+      );
     } else {
       func = func.addStatement(`message.%L = %L`, fieldName, readSnippet(`object.${fieldName}`));
     }
 
     // set the default value (TODO Support bytes)
-    if (!isRepeated(field) && field.type !== FieldDescriptorProto.Type.TYPE_BYTES) {
+    if (
+      !isRepeated(field) &&
+      field.type !== FieldDescriptorProto.Type.TYPE_BYTES &&
+      options.oneof !== OneofOption.UNIONS
+    ) {
       func = func.nextControlFlow('else');
       func = func.addStatement(
         `message.%L = %L`,
@@ -876,6 +980,15 @@ function generateToJson(
         .nextControlFlow('else')
         .addStatement('obj.%L = []', fieldName)
         .endControlFlow();
+    } else if (isWithinOneOf(field) && options.oneof === OneofOption.UNIONS) {
+      let oneofName = maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options);
+      func = func.addStatement(
+        `obj.%L = message.%L?.$case === '%L' && %L`,
+        fieldName,
+        oneofName,
+        fieldName,
+        readSnippet(`message.${oneofName}?.${fieldName}`)
+      );
     } else {
       func = func.addStatement('obj.%L = %L', fieldName, readSnippet(`message.${fieldName}`));
     }
@@ -929,8 +1042,8 @@ function generateFromPartial(
     };
 
     // and then use the snippet to handle repeated fields if necessary
-    func = func.beginControlFlow('if (object.%L !== undefined && object.%L !== null)', fieldName, fieldName);
     if (isRepeated(field)) {
+      func = func.beginControlFlow('if (object.%L !== undefined && object.%L !== null)', fieldName, fieldName);
       if (isMapType(typeMap, messageDesc, field, options)) {
         func = func
           .beginLambda('Object.entries(object.%L).forEach(([key, value]) =>', fieldName)
@@ -949,7 +1062,27 @@ function generateFromPartial(
           .addStatement(`message.%L.push(%L)`, fieldName, readSnippet('e'))
           .endControlFlow();
       }
+    } else if (isWithinOneOf(field) && options.oneof === OneofOption.UNIONS) {
+      let oneofName = maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options);
+      func = func
+        .beginControlFlow(
+          `if (object.%L?.$case === '%L' && object.%L?.%L !== undefined && object.%L?.%L !== null)`,
+          oneofName,
+          fieldName,
+          oneofName,
+          fieldName,
+          oneofName,
+          fieldName
+        )
+        .addStatement(
+          `message.%L = {$case: '%L', %L: %L}`,
+          oneofName,
+          fieldName,
+          fieldName,
+          readSnippet(`object.${oneofName}.${fieldName}`)
+        );
     } else {
+      func = func.beginControlFlow('if (object.%L !== undefined && object.%L !== null)', fieldName, fieldName);
       if (isLong(field) && options.forceLong === LongOption.LONG) {
         func = func.addStatement(
           `message.%L = %L as %L`,
@@ -963,7 +1096,11 @@ function generateFromPartial(
     }
 
     // set the default value (TODO Support bytes)
-    if (!isRepeated(field) && field.type !== FieldDescriptorProto.Type.TYPE_BYTES) {
+    if (
+      !isRepeated(field) &&
+      field.type !== FieldDescriptorProto.Type.TYPE_BYTES &&
+      options.oneof !== OneofOption.UNIONS
+    ) {
       func = func.nextControlFlow('else');
       func = func.addStatement(
         `message.%L = %L`,
@@ -1489,17 +1626,6 @@ function responsePromise(typeMap: TypeMap, methodDesc: MethodDescriptorProto, op
 function responseObservable(typeMap: TypeMap, methodDesc: MethodDescriptorProto, options: Options): TypeName {
   return TypeNames.anyType('Observable@rxjs').param(responseType(typeMap, methodDesc, options));
 }
-
-// function generateOneOfProperty(typeMap: TypeMap, name: string, fields: FieldDescriptorProto[]): PropertySpec {
-//   const adtType = TypeNames.unionType(
-//     ...fields.map(f => {
-//       const kind = new Member('field', TypeNames.anyType(`'${f.name}'`), false);
-//       const value = new Member('value', toTypeName(typeMap, f), false);
-//       return TypeNames.anonymousType(kind, value);
-//     })
-//   );
-//   return PropertySpec.create(snakeToCamel(name), adtType);
-// }
 
 function maybeSnakeToCamel(s: string, options: Options): string {
   if (options.snakeToCamel) {

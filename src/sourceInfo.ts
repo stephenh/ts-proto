@@ -24,6 +24,7 @@ export const Fields = {
     field: 2,
     nested_type: 3,
     enum_type: 4,
+    oneof_decl: 8,
   },
   enum: {
     value: 2,
