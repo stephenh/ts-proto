@@ -9,6 +9,12 @@ message PleaseChoose {
     string name = 1;
   }
 
+  enum StateEnum {
+    UNKNOWN = 0;
+    ON = 2;
+    OFF = 3;
+  }
+
   // Please to be choosing one of the fields within this oneof clause.
   // This text exists to ensure we transpose comments correctly.
   oneof choice {
@@ -28,6 +34,8 @@ message PleaseChoose {
     bool a_bool = 6;
 
     bytes buncha_bytes = 10;
+
+    StateEnum anEnum = 11;
   }
 
   uint32 age = 5;

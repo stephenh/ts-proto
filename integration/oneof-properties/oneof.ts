@@ -20,6 +20,7 @@ export interface PleaseChoose {
    */
   aBool: boolean | undefined;
   bunchaBytes: Uint8Array | undefined;
+  anEnum: PleaseChoose_StateEnum | undefined;
   age: number;
   either: string | undefined;
   or: string | undefined;
@@ -39,6 +40,44 @@ const basePleaseChoose_Submessage: object = {
   name: "",
 };
 
+export const PleaseChoose_StateEnum = {
+  UNKNOWN: 0 as const,
+  ON: 2 as const,
+  OFF: 3 as const,
+  UNRECOGNIZED: -1 as const,
+  fromJSON(object: any): PleaseChoose_StateEnum {
+    switch (object) {
+      case 0:
+      case "UNKNOWN":
+        return PleaseChoose_StateEnum.UNKNOWN;
+      case 2:
+      case "ON":
+        return PleaseChoose_StateEnum.ON;
+      case 3:
+      case "OFF":
+        return PleaseChoose_StateEnum.OFF;
+      case -1:
+      case "UNRECOGNIZED":
+      default:
+        return PleaseChoose_StateEnum.UNRECOGNIZED;
+    }
+  },
+  toJSON(object: PleaseChoose_StateEnum): string {
+    switch (object) {
+      case PleaseChoose_StateEnum.UNKNOWN:
+        return "UNKNOWN";
+      case PleaseChoose_StateEnum.ON:
+        return "ON";
+      case PleaseChoose_StateEnum.OFF:
+        return "OFF";
+      default:
+        return "UNKNOWN";
+    }
+  },
+}
+
+export type PleaseChoose_StateEnum = 0 | 2 | 3 | -1;
+
 export const PleaseChoose = {
   encode(message: PleaseChoose, writer: Writer = Writer.create()): Writer {
     writer.uint32(10).string(message.name);
@@ -56,6 +95,9 @@ export const PleaseChoose = {
     }
     if (message.bunchaBytes !== undefined && message.bunchaBytes !== undefined) {
       writer.uint32(82).bytes(message.bunchaBytes);
+    }
+    if (message.anEnum !== undefined && message.anEnum !== 0) {
+      writer.uint32(88).int32(message.anEnum);
     }
     writer.uint32(40).uint32(message.age);
     if (message.either !== undefined && message.either !== "") {
@@ -93,6 +135,9 @@ export const PleaseChoose = {
           break;
         case 10:
           message.bunchaBytes = reader.bytes();
+          break;
+        case 11:
+          message.anEnum = reader.int32() as any;
           break;
         case 5:
           message.age = reader.uint32();
@@ -142,6 +187,11 @@ export const PleaseChoose = {
     }
     if (object.bunchaBytes !== undefined && object.bunchaBytes !== null) {
       message.bunchaBytes = bytesFromBase64(object.bunchaBytes);
+    }
+    if (object.anEnum !== undefined && object.anEnum !== null) {
+      message.anEnum = PleaseChoose_StateEnum.fromJSON(object.anEnum);
+    } else {
+      message.anEnum = undefined;
     }
     if (object.age !== undefined && object.age !== null) {
       message.age = Number(object.age);
@@ -195,6 +245,11 @@ export const PleaseChoose = {
     if (object.bunchaBytes !== undefined && object.bunchaBytes !== null) {
       message.bunchaBytes = object.bunchaBytes;
     }
+    if (object.anEnum !== undefined && object.anEnum !== null) {
+      message.anEnum = object.anEnum;
+    } else {
+      message.anEnum = undefined;
+    }
     if (object.age !== undefined && object.age !== null) {
       message.age = object.age;
     } else {
@@ -225,6 +280,7 @@ export const PleaseChoose = {
     obj.aMessage = message.aMessage ? PleaseChoose_Submessage.toJSON(message.aMessage) : undefined;
     obj.aBool = message.aBool || undefined;
     obj.bunchaBytes = message.bunchaBytes !== undefined ? base64FromBytes(message.bunchaBytes) : undefined;
+    obj.anEnum = message.anEnum !== undefined ? PleaseChoose_StateEnum.toJSON(message.anEnum) : undefined;
     obj.age = message.age || 0;
     obj.either = message.either || undefined;
     obj.or = message.or || undefined;
