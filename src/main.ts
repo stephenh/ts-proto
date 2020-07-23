@@ -74,7 +74,7 @@ export type Options = {
   outputJsonMethods: boolean;
   outputClientImpl: boolean;
   addGrpcMetadata: boolean;
-  addRestParameter: boolean;
+  addNestjsRestParameter: boolean;
   returnObservable: boolean;
   lowerCaseServiceMethods: boolean;
   nestJs: boolean;
@@ -1148,9 +1148,9 @@ function generateService(
 
     // Use metadata as last argument for interface only configuration
     if (options.addGrpcMetadata) {
-      requestFn = requestFn.addParameter(options.addRestParameter ? 'metadata' : 'metadata?', 'Metadata@grpc');
+      requestFn = requestFn.addParameter(options.addNestjsRestParameter ? 'metadata' : 'metadata?', 'Metadata@grpc');
     }
-    if (options.addRestParameter) {
+    if (options.addNestjsRestParameter) {
       requestFn = requestFn.addParameter('...rest', 'any');
     }
 
@@ -1297,9 +1297,9 @@ function generateNestjsServiceController(
 
     // Use metadata as last argument for interface only configuration
     if (options.addGrpcMetadata) {
-      requestFn = requestFn.addParameter(options.addRestParameter ? 'metadata' : 'metadata?', 'Metadata@grpc');
+      requestFn = requestFn.addParameter(options.addNestjsRestParameter ? 'metadata' : 'metadata?', 'Metadata@grpc');
     }
-    if (options.addRestParameter) {
+    if (options.addNestjsRestParameter) {
       requestFn = requestFn.addParameter('...rest', 'any');
     }
 
@@ -1367,9 +1367,9 @@ function generateNestjsServiceClient(
 
     // Use metadata as last argument for interface only configuration
     if (options.addGrpcMetadata) {
-      requestFn = requestFn.addParameter(options.addRestParameter ? 'metadata' : 'metadata?', 'Metadata@grpc');
+      requestFn = requestFn.addParameter(options.addNestjsRestParameter ? 'metadata' : 'metadata?', 'Metadata@grpc');
     }
-    if (options.addRestParameter) {
+    if (options.addNestjsRestParameter) {
       requestFn = requestFn.addParameter('...rest', 'any');
     }
 

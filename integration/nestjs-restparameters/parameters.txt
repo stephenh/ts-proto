@@ -1,1 +1,1 @@
-nestJs=true,addRestParameter=true
+nestJs=true,addNestjsRestParameter=true

@@ -1,1 +1,1 @@
-nestJs=true,addGrpcMetadata=true,addRestParameter=true
+nestJs=true,addGrpcMetadata=true,addNestjsRestParameter=true
