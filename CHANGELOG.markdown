@@ -1,3 +1,10 @@
+## v1.27.1
+
+* Extra release to ensure the build output is correct.
+
+## v1.27.0
+
+* Added a `addNestjsRestParameter=true` that adds a `...rest: any` parameter to use NestJS decorators like `@CurrentUser` (@ToonvanStrijp)
 
 ## v1.26.0
 
