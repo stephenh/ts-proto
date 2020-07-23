@@ -1150,7 +1150,7 @@ function generateService(
     if (options.addGrpcMetadata) {
       requestFn = requestFn.addParameter(options.addRestParameter ? 'metadata' : 'metadata?', 'Metadata@grpc');
     }
-    if(options.addRestParameter) {
+    if (options.addRestParameter) {
       requestFn = requestFn.addParameter('...rest', 'any');
     }
 
@@ -1299,7 +1299,7 @@ function generateNestjsServiceController(
     if (options.addGrpcMetadata) {
       requestFn = requestFn.addParameter(options.addRestParameter ? 'metadata' : 'metadata?', 'Metadata@grpc');
     }
-    if(options.addRestParameter) {
+    if (options.addRestParameter) {
       requestFn = requestFn.addParameter('...rest', 'any');
     }
 
@@ -1369,7 +1369,7 @@ function generateNestjsServiceClient(
     if (options.addGrpcMetadata) {
       requestFn = requestFn.addParameter(options.addRestParameter ? 'metadata' : 'metadata?', 'Metadata@grpc');
     }
-    if(options.addRestParameter) {
+    if (options.addRestParameter) {
       requestFn = requestFn.addParameter('...rest', 'any');
     }
 
