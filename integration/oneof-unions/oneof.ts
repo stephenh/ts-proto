@@ -19,7 +19,7 @@ export interface PleaseChoose {
    *  We also added a bool option! This was added after the 'age'
    *  field, so it has a higher number.
    */
-  choice?: { $case: 'aNumber', aNumber: number } | { $case: 'aString', aString: string } | { $case: 'aMessage', aMessage: PleaseChoose_Submessage } | { $case: 'aBool', aBool: boolean } | { $case: 'bunchaBytes', bunchaBytes: Uint8Array };
+  choice?: { $case: 'aNumber', aNumber: number } | { $case: 'aString', aString: string } | { $case: 'aMessage', aMessage: PleaseChoose_Submessage } | { $case: 'aBool', aBool: boolean } | { $case: 'bunchaBytes', bunchaBytes: Uint8Array } | { $case: 'anEnum', anEnum: PleaseChoose_StateEnum };
   age: number;
   eitherOr?: { $case: 'either', either: string } | { $case: 'or', or: string } | { $case: 'thirdOption', thirdOption: string };
 }
@@ -36,6 +36,44 @@ const basePleaseChoose: object = {
 const basePleaseChoose_Submessage: object = {
   name: "",
 };
+
+export const PleaseChoose_StateEnum = {
+  UNKNOWN: 0 as const,
+  ON: 2 as const,
+  OFF: 3 as const,
+  UNRECOGNIZED: -1 as const,
+  fromJSON(object: any): PleaseChoose_StateEnum {
+    switch (object) {
+      case 0:
+      case "UNKNOWN":
+        return PleaseChoose_StateEnum.UNKNOWN;
+      case 2:
+      case "ON":
+        return PleaseChoose_StateEnum.ON;
+      case 3:
+      case "OFF":
+        return PleaseChoose_StateEnum.OFF;
+      case -1:
+      case "UNRECOGNIZED":
+      default:
+        return PleaseChoose_StateEnum.UNRECOGNIZED;
+    }
+  },
+  toJSON(object: PleaseChoose_StateEnum): string {
+    switch (object) {
+      case PleaseChoose_StateEnum.UNKNOWN:
+        return "UNKNOWN";
+      case PleaseChoose_StateEnum.ON:
+        return "ON";
+      case PleaseChoose_StateEnum.OFF:
+        return "OFF";
+      default:
+        return "UNKNOWN";
+    }
+  },
+}
+
+export type PleaseChoose_StateEnum = 0 | 2 | 3 | -1;
 
 export const PleaseChoose = {
   encode(message: PleaseChoose, writer: Writer = Writer.create()): Writer {
@@ -54,6 +92,9 @@ export const PleaseChoose = {
     }
     if (message.choice?.$case === 'bunchaBytes' && message.choice?.bunchaBytes !== undefined) {
       writer.uint32(82).bytes(message.choice.bunchaBytes);
+    }
+    if (message.choice?.$case === 'anEnum' && message.choice?.anEnum !== 0) {
+      writer.uint32(88).int32(message.choice.anEnum);
     }
     writer.uint32(40).uint32(message.age);
     if (message.eitherOr?.$case === 'either' && message.eitherOr?.either !== "") {
@@ -91,6 +132,9 @@ export const PleaseChoose = {
           break;
         case 10:
           message.choice = {$case: 'bunchaBytes', bunchaBytes: reader.bytes()};
+          break;
+        case 11:
+          message.choice = {$case: 'anEnum', anEnum: reader.int32() as any};
           break;
         case 5:
           message.age = reader.uint32();
@@ -131,6 +175,9 @@ export const PleaseChoose = {
     if (object.bunchaBytes !== undefined && object.bunchaBytes !== null) {
       message.choice = {$case: 'bunchaBytes', bunchaBytes: bytesFromBase64(object.bunchaBytes)};
     }
+    if (object.anEnum !== undefined && object.anEnum !== null) {
+      message.choice = {$case: 'anEnum', anEnum: PleaseChoose_StateEnum.fromJSON(object.anEnum)};
+    }
     if (object.age !== undefined && object.age !== null) {
       message.age = Number(object.age);
     }
@@ -165,6 +212,9 @@ export const PleaseChoose = {
     if (object.choice?.$case === 'bunchaBytes' && object.choice?.bunchaBytes !== undefined && object.choice?.bunchaBytes !== null) {
       message.choice = {$case: 'bunchaBytes', bunchaBytes: object.choice.bunchaBytes};
     }
+    if (object.choice?.$case === 'anEnum' && object.choice?.anEnum !== undefined && object.choice?.anEnum !== null) {
+      message.choice = {$case: 'anEnum', anEnum: object.choice.anEnum};
+    }
     if (object.age !== undefined && object.age !== null) {
       message.age = object.age;
     }
@@ -187,6 +237,7 @@ export const PleaseChoose = {
     obj.aMessage = message.choice?.$case === 'aMessage' && message.choice?.aMessage ? PleaseChoose_Submessage.toJSON(message.choice?.aMessage) : undefined;
     obj.aBool = message.choice?.$case === 'aBool' && message.choice?.aBool || undefined;
     obj.bunchaBytes = message.choice?.$case === 'bunchaBytes' && message.choice?.bunchaBytes !== undefined ? base64FromBytes(message.choice?.bunchaBytes) : undefined;
+    obj.anEnum = message.choice?.$case === 'anEnum' && message.choice?.anEnum !== undefined ? PleaseChoose_StateEnum.toJSON(message.choice?.anEnum) : undefined;
     obj.age = message.age || 0;
     obj.either = message.eitherOr?.$case === 'either' && message.eitherOr?.either || undefined;
     obj.or = message.eitherOr?.$case === 'or' && message.eitherOr?.or || undefined;

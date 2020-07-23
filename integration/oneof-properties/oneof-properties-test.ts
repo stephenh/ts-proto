@@ -1,5 +1,5 @@
 import { oneof as pbjs } from './pbjs';
-import { PleaseChoose } from './oneof'
+import { PleaseChoose } from './oneof';
 
 describe('oneof=properties (default)', () => {
   it('generates types correctly', () => {
@@ -11,6 +11,7 @@ describe('oneof=properties (default)', () => {
       aMessage: undefined,
       aBool: undefined,
       bunchaBytes: undefined,
+      anEnum: undefined,
       either: undefined,
       or: undefined,
       thirdOption: undefined,
@@ -23,6 +24,7 @@ describe('oneof=properties (default)', () => {
       aMessage: undefined,
       aBool: undefined,
       bunchaBytes: undefined,
+      anEnum: undefined,
       either: undefined,
       or: undefined,
       thirdOption: undefined,
@@ -30,12 +32,14 @@ describe('oneof=properties (default)', () => {
   });
 
   it('decode', () => {
-    let encoded = pbjs.PleaseChoose.encode(new pbjs.PleaseChoose({
-      name: 'Debbie',
-      aBool: true,
-      age: 37,
-      or: 'perhaps not',
-    })).finish();
+    let encoded = pbjs.PleaseChoose.encode(
+      new pbjs.PleaseChoose({
+        name: 'Debbie',
+        aBool: true,
+        age: 37,
+        or: 'perhaps not',
+      })
+    ).finish();
     let decoded = PleaseChoose.decode(encoded);
     expect(decoded).toEqual({
       name: 'Debbie',
@@ -60,11 +64,12 @@ describe('oneof=properties (default)', () => {
       aMessage: undefined,
       aBool: true,
       bunchaBytes: undefined,
+      anEnum: undefined,
       either: undefined,
       or: 'perhaps not',
       thirdOption: undefined,
     }).finish();
-    let decoded =  pbjs.PleaseChoose.decode(encoded);
+    let decoded = pbjs.PleaseChoose.decode(encoded);
     expect(decoded).toEqual({
       name: 'Debbie',
       aBool: true,
@@ -74,7 +79,7 @@ describe('oneof=properties (default)', () => {
   });
 
   it('fromPartial', () => {
-    let empty = PleaseChoose.fromPartial({})
+    let empty = PleaseChoose.fromPartial({});
     expect(empty).toEqual({
       name: '',
       age: 0,
@@ -115,6 +120,7 @@ describe('oneof=properties (default)', () => {
       aMessage: undefined,
       aBool: true,
       bunchaBytes: undefined,
+      anEnum: undefined,
       either: undefined,
       or: 'perhaps not',
       thirdOption: undefined,
@@ -125,7 +131,7 @@ describe('oneof=properties (default)', () => {
   });
 
   it('fromJSON', () => {
-    let empty = PleaseChoose.fromJSON({})
+    let empty = PleaseChoose.fromJSON({});
     expect(empty).toEqual({
       name: '',
       age: 0,
@@ -136,7 +142,7 @@ describe('oneof=properties (default)', () => {
       either: undefined,
       or: undefined,
       thirdOption: undefined,
-    })
+    });
 
     let debbie: PleaseChoose = {
       name: 'Debbie',
@@ -146,12 +152,13 @@ describe('oneof=properties (default)', () => {
       aMessage: undefined,
       aBool: true,
       bunchaBytes: undefined,
+      anEnum: undefined,
       either: undefined,
       or: 'perhaps not',
       thirdOption: undefined,
     };
     let pbjsJson = pbjs.PleaseChoose.decode(PleaseChoose.encode(debbie).finish()).toJSON();
-    let fromJson = PleaseChoose.fromJSON(pbjsJson)
-    expect(fromJson).toEqual(debbie)
+    let fromJson = PleaseChoose.fromJSON(pbjsJson);
+    expect(fromJson).toEqual(debbie);
   });
 });

@@ -940,7 +940,14 @@ function generateToJson(
 
     const readSnippet = (from: string): CodeBlock => {
       if (isEnum(field)) {
-        return CodeBlock.of('%T.toJSON(%L)', basicTypeName(typeMap, field, options), from);
+        return isWithinOneOf(field)
+          ? CodeBlock.of(
+              '%L !== undefined ? %T.toJSON(%L) : undefined',
+              from,
+              basicTypeName(typeMap, field, options),
+              from
+            )
+          : CodeBlock.of('%T.toJSON(%L)', basicTypeName(typeMap, field, options), from);
       } else if (isTimestamp(field)) {
         return CodeBlock.of('%L !== undefined ? %L.toISOString() : null', from, from);
       } else if (isMessage(field) && !isValueType(field) && !isMapType(typeMap, messageDesc, field, options)) {
