@@ -264,11 +264,15 @@ protoc --plugin=node_modules/ts-proto/protoc-gen-ts_proto ./batching.proto -I.
 
   (Requires `nestJs=true`.)
 
+* With`--ts_proto_opt=addRestParameter=true`, the last argument of service methods will be an rest parameter with type any. This way you can use custom decorators you could normally use in nestjs.
+
+  (Requires `nestJs=true`.)
+
 * With `--ts_proto_opt=nestJs=true`, the defaults will change to generate [NestJS protobuf](https://docs.nestjs.com/microservices/grpc) friendly types & service interfaces that can be used in both the client-side and server-side of NestJS protobuf implementations. See the [nestjs readme](NESTJS.markdown) for more information and implementation examples.
 
   Specifically `outputEncodeMethods`, `outputJsonMethods`, and `outputClientImpl` will all be false, and `lowerCaseServiceMethods` will be true.
   
-  Note that `addGrpcMetadata` and `returnObservable` will still be false.
+  Note that `addGrpcMetadata`, `addRestParameter` and `returnObservable` will still be false.
 
 ### Only Types
 

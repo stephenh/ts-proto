@@ -103,4 +103,8 @@ export class AppService implements OnModuleInit {
 
   (Requires `nestJs=true`.)
 
+* With`--ts_proto_opt=addRestParameter=true`, the last argument of service methods will be an rest parameter with type any. This way you can use custom decorators you could normally use in nestjs.
+
+  (Requires `nestJs=true`.)
+
 * With `--ts_proto_opt=nestJs=true`, the defaults will change to generate [NestJS protobuf](https://docs.nestjs.com/microservices/grpc) friendly types & service interfaces that can be used in both the client-side and server-side of NestJS protobuf implementations.
