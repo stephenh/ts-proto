@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+package hero;
+
+service HeroService {
+    rpc FindCurrentUser (google.protobuf.Empty) returns (User) {}
+}
+
+message User {
+    int32 id = 1;
+    string name = 2;
+}
