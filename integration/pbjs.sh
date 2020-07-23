@@ -29,6 +29,10 @@ yarn pbts --no-comments -o integration/nestjs-metadata/pbjs.d.ts integration/nes
 yarn pbjs --force-message --force-number -t static-module -o integration/nestjs-metadata-observables/pbjs.js integration/nestjs-metadata-observables/hero.proto
 yarn pbts --no-comments -o integration/nestjs-metadata-observables/pbjs.d.ts integration/nestjs-metadata-observables/pbjs.js
 
+# nestjs-metadata-restparameters/
+yarn pbjs --force-message --force-number -t static-module -o integration/nestjs-metadata-restparameters/pbjs.js integration/nestjs-metadata-restparameters/hero.proto
+yarn pbts --no-comments -o integration/nestjs-metadata-restparameters/pbjs.d.ts integration/nestjs-metadata-restparameters/pbjs.js
+
 # nestjs-simple/
 yarn pbjs --force-message --force-number -t static-module -o integration/nestjs-simple/pbjs.js integration/nestjs-simple/hero.proto
 yarn pbts --no-comments -o integration/nestjs-simple/pbjs.d.ts integration/nestjs-simple/pbjs.js
@@ -36,6 +40,10 @@ yarn pbts --no-comments -o integration/nestjs-simple/pbjs.d.ts integration/nestj
 # nestjs-simple-observables/
 yarn pbjs --force-message --force-number -t static-module -o integration/nestjs-simple-observables/pbjs.js integration/nestjs-simple-observables/hero.proto
 yarn pbts --no-comments -o integration/nestjs-simple-observables/pbjs.d.ts integration/nestjs-simple-observables/pbjs.js
+
+# nestjs-simple-restparameters/
+yarn pbjs --force-message --force-number -t static-module -o integration/nestjs-simple-restparameters/pbjs.js integration/nestjs-simple-restparameters/hero.proto
+yarn pbts --no-comments -o integration/nestjs-simple-restparameters/pbjs.d.ts integration/nestjs-simple-restparameters/pbjs.js
 
 # oneof-proprties/
 yarn pbjs --force-message --force-number -t static-module -o integration/oneof-properties/pbjs.js integration/oneof-properties/oneof.proto

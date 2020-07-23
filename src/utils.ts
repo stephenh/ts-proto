@@ -48,6 +48,7 @@ export function defaultOptions(): Options {
     outputClientImpl: true,
     returnObservable: false,
     addGrpcMetadata: false,
+    addRestParameter: false,
     nestJs: false,
     env: EnvOption.BOTH,
   };
@@ -101,6 +102,9 @@ export function optionsFromParameter(parameter: string): Options {
 
       if (parameter.includes('addGrpcMetadata=true')) {
         options.addGrpcMetadata = true;
+      }
+      if(parameter.includes('addRestParameter=true')) {
+        options.addRestParameter = true;
       }
       if (parameter.includes('returnObservable=true')) {
         options.returnObservable = true;
