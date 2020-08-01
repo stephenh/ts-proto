@@ -15,7 +15,7 @@ export class SimpleServiceClientImpl implements SimpleService {
   Echo(request: Simple): Promise<Simple> {
     const data = Simple.encode(request).finish();
     const promise = this.rpc.request('simple.SimpleService', 'Echo', data);
-    return promise.then(data => Simple.decode(new Reader(data)));
+    return promise.then((data) => Simple.decode(new Reader(data)));
   }
 }
 
@@ -29,7 +29,7 @@ export class SimpleServiceJsonClientImpl implements SimpleService {
   Echo(request: Simple): Promise<Simple> {
     const data = Simple.toJSON(request);
     const promise = this.rpc.requestJson('simple.SimpleService', 'Echo', data);
-    return promise.then(data => Simple.fromJSON(data));
+    return promise.then((data) => Simple.fromJSON(data));
   }
 }
 

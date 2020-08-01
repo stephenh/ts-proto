@@ -7,7 +7,6 @@ import { Timestamp } from './google/protobuf/timestamp';
 import * as Long from 'long';
 import { StringValue, Int32Value, BoolValue } from './google/protobuf/wrappers';
 
-
 /**
  * * Example comment on the Simple message  */
 export interface Simple {
@@ -128,56 +127,52 @@ export interface Numbers {
   sfixed64: number;
 }
 
-export interface Empty {
-}
+export interface Empty {}
 
 const baseSimple: object = {
-  name: "",
+  name: '',
   age: 0,
   state: 0,
   coins: 0,
-  snacks: "",
+  snacks: '',
   oldStates: 0,
 };
 
 const baseChild: object = {
-  name: "",
+  name: '',
   type: 0,
 };
 
 const baseNested: object = {
-  name: "",
+  name: '',
   state: 0,
 };
 
 const baseNested_InnerMessage: object = {
-  name: "",
+  name: '',
 };
 
 const baseNested_InnerMessage_DeepMessage: object = {
-  name: "",
+  name: '',
 };
 
-const baseOneOfMessage: object = {
-};
+const baseOneOfMessage: object = {};
 
-const baseSimpleWithWrappers: object = {
-};
+const baseSimpleWithWrappers: object = {};
 
 const baseEntity: object = {
   id: 0,
 };
 
-const baseSimpleWithMap: object = {
-};
+const baseSimpleWithMap: object = {};
 
 const baseSimpleWithMap_EntitiesByIdEntry: object = {
   key: 0,
 };
 
 const baseSimpleWithMap_NameLookupEntry: object = {
-  key: "",
-  value: "",
+  key: '',
+  value: '',
 };
 
 const baseSimpleWithMap_IntLookupEntry: object = {
@@ -185,19 +180,18 @@ const baseSimpleWithMap_IntLookupEntry: object = {
   value: 0,
 };
 
-const baseSimpleWithSnakeCaseMap: object = {
-};
+const baseSimpleWithSnakeCaseMap: object = {};
 
 const baseSimpleWithSnakeCaseMap_EntitiesByIdEntry: object = {
   key: 0,
 };
 
 const basePingRequest: object = {
-  input: "",
+  input: '',
 };
 
 const basePingResponse: object = {
-  output: "",
+  output: '',
 };
 
 const baseNumbers: object = {
@@ -215,17 +209,13 @@ const baseNumbers: object = {
   sfixed64: 0,
 };
 
-const baseEmpty: object = {
-};
+const baseEmpty: object = {};
 
 export interface PingService {
-
   ping(request: PingRequest): Promise<PingResponse>;
-
 }
 
 export class PingServiceClientImpl implements PingService {
-
   private readonly rpc: Rpc;
 
   constructor(rpc: Rpc) {
@@ -234,14 +224,12 @@ export class PingServiceClientImpl implements PingService {
 
   ping(request: PingRequest): Promise<PingResponse> {
     const data = PingRequest.encode(request).finish();
-    const promise = this.rpc.request("simple.PingService", "ping", data);
-    return promise.then(data => PingResponse.decode(new Reader(data)));
+    const promise = this.rpc.request('simple.PingService', 'ping', data);
+    return promise.then((data) => PingResponse.decode(new Reader(data)));
   }
-
 }
 
 export class PingServiceJsonClientImpl implements PingService {
-
   private readonly rpc: Rpc;
 
   constructor(rpc: Rpc) {
@@ -250,24 +238,21 @@ export class PingServiceJsonClientImpl implements PingService {
 
   ping(request: PingRequest): Promise<PingResponse> {
     const data = PingRequest.toJSON(request);
-    const promise = this.rpc.requestJson("simple.PingService", "ping", data);
-    return promise.then(data => PingResponse.fromJSON(data));
+    const promise = this.rpc.requestJson('simple.PingService', 'ping', data);
+    return promise.then((data) => PingResponse.fromJSON(data));
   }
-
 }
 
 interface Rpc {
-
   request(service: string, method: string, data: Uint8Array): Promise<Uint8Array>;
 
   requestJson(service: string, method: string, data: unknown): Promise<unknown>;
-
 }
 
 function fromJsonTimestamp(o: any): Date {
   if (o instanceof Date) {
     return o;
-  } else if (typeof o === "string") {
+  } else if (typeof o === 'string') {
     return new Date(o);
   } else {
     return fromTimestamp(Timestamp.fromJSON(o));
@@ -288,7 +273,7 @@ function fromTimestamp(t: Timestamp): Date {
 
 function longToNumber(long: Long) {
   if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+    throw new globalThis.Error('Value is larger than Number.MAX_SAFE_INTEGER');
   }
   return long.toNumber();
 }
@@ -301,16 +286,16 @@ export const StateEnum = {
   fromJSON(object: any): StateEnum {
     switch (object) {
       case 0:
-      case "UNKNOWN":
+      case 'UNKNOWN':
         return StateEnum.UNKNOWN;
       case 2:
-      case "ON":
+      case 'ON':
         return StateEnum.ON;
       case 3:
-      case "OFF":
+      case 'OFF':
         return StateEnum.OFF;
       case -1:
-      case "UNRECOGNIZED":
+      case 'UNRECOGNIZED':
       default:
         return StateEnum.UNRECOGNIZED;
     }
@@ -318,16 +303,16 @@ export const StateEnum = {
   toJSON(object: StateEnum): string {
     switch (object) {
       case StateEnum.UNKNOWN:
-        return "UNKNOWN";
+        return 'UNKNOWN';
       case StateEnum.ON:
-        return "ON";
+        return 'ON';
       case StateEnum.OFF:
-        return "OFF";
+        return 'OFF';
       default:
-        return "UNKNOWN";
+        return 'UNKNOWN';
     }
   },
-}
+};
 
 export type StateEnum = 0 | 2 | 3 | -1;
 
@@ -339,16 +324,16 @@ export const Child_Type = {
   fromJSON(object: any): Child_Type {
     switch (object) {
       case 0:
-      case "UNKNOWN":
+      case 'UNKNOWN':
         return Child_Type.UNKNOWN;
       case 1:
-      case "GOOD":
+      case 'GOOD':
         return Child_Type.GOOD;
       case 2:
-      case "BAD":
+      case 'BAD':
         return Child_Type.BAD;
       case -1:
-      case "UNRECOGNIZED":
+      case 'UNRECOGNIZED':
       default:
         return Child_Type.UNRECOGNIZED;
     }
@@ -356,16 +341,16 @@ export const Child_Type = {
   toJSON(object: Child_Type): string {
     switch (object) {
       case Child_Type.UNKNOWN:
-        return "UNKNOWN";
+        return 'UNKNOWN';
       case Child_Type.GOOD:
-        return "GOOD";
+        return 'GOOD';
       case Child_Type.BAD:
-        return "BAD";
+        return 'BAD';
       default:
-        return "UNKNOWN";
+        return 'UNKNOWN';
     }
   },
-}
+};
 
 export type Child_Type = 0 | 1 | 2 | -1;
 
@@ -377,16 +362,16 @@ export const Nested_InnerEnum = {
   fromJSON(object: any): Nested_InnerEnum {
     switch (object) {
       case 0:
-      case "UNKNOWN_INNER":
+      case 'UNKNOWN_INNER':
         return Nested_InnerEnum.UNKNOWN_INNER;
       case 100:
-      case "GOOD":
+      case 'GOOD':
         return Nested_InnerEnum.GOOD;
       case 1000:
-      case "BAD":
+      case 'BAD':
         return Nested_InnerEnum.BAD;
       case -1:
-      case "UNRECOGNIZED":
+      case 'UNRECOGNIZED':
       default:
         return Nested_InnerEnum.UNRECOGNIZED;
     }
@@ -394,16 +379,16 @@ export const Nested_InnerEnum = {
   toJSON(object: Nested_InnerEnum): string {
     switch (object) {
       case Nested_InnerEnum.UNKNOWN_INNER:
-        return "UNKNOWN_INNER";
+        return 'UNKNOWN_INNER';
       case Nested_InnerEnum.GOOD:
-        return "GOOD";
+        return 'GOOD';
       case Nested_InnerEnum.BAD:
-        return "BAD";
+        return 'BAD';
       default:
-        return "UNKNOWN";
+        return 'UNKNOWN';
     }
   },
-}
+};
 
 export type Nested_InnerEnum = 0 | 100 | 1000 | -1;
 
@@ -518,7 +503,7 @@ export const Simple = {
     if (object.name !== undefined && object.name !== null) {
       message.name = String(object.name);
     } else {
-      message.name = "";
+      message.name = '';
     }
     if (object.age !== undefined && object.age !== null) {
       message.age = Number(object.age);
@@ -582,7 +567,7 @@ export const Simple = {
     if (object.name !== undefined && object.name !== null) {
       message.name = object.name;
     } else {
-      message.name = "";
+      message.name = '';
     }
     if (object.age !== undefined && object.age !== null) {
       message.age = object.age;
@@ -638,34 +623,34 @@ export const Simple = {
   },
   toJSON(message: Simple): unknown {
     const obj: any = {};
-    obj.name = message.name || "";
+    obj.name = message.name || '';
     obj.age = message.age || 0;
     obj.createdAt = message.createdAt !== undefined ? message.createdAt.toISOString() : null;
     obj.child = message.child ? Child.toJSON(message.child) : undefined;
     obj.state = StateEnum.toJSON(message.state);
     if (message.grandChildren) {
-      obj.grandChildren = message.grandChildren.map(e => e ? Child.toJSON(e) : undefined);
+      obj.grandChildren = message.grandChildren.map((e) => (e ? Child.toJSON(e) : undefined));
     } else {
       obj.grandChildren = [];
     }
     if (message.coins) {
-      obj.coins = message.coins.map(e => e || 0);
+      obj.coins = message.coins.map((e) => e || 0);
     } else {
       obj.coins = [];
     }
     if (message.snacks) {
-      obj.snacks = message.snacks.map(e => e || "");
+      obj.snacks = message.snacks.map((e) => e || '');
     } else {
       obj.snacks = [];
     }
     if (message.oldStates) {
-      obj.oldStates = message.oldStates.map(e => StateEnum.toJSON(e));
+      obj.oldStates = message.oldStates.map((e) => StateEnum.toJSON(e));
     } else {
       obj.oldStates = [];
     }
     obj.thing = message.thing ? ImportedThing.toJSON(message.thing) : undefined;
     if (message.blobs) {
-      obj.blobs = message.blobs.map(e => e !== undefined ? base64FromBytes(e) : undefined);
+      obj.blobs = message.blobs.map((e) => (e !== undefined ? base64FromBytes(e) : undefined));
     } else {
       obj.blobs = [];
     }
@@ -704,7 +689,7 @@ export const Child = {
     if (object.name !== undefined && object.name !== null) {
       message.name = String(object.name);
     } else {
-      message.name = "";
+      message.name = '';
     }
     if (object.type !== undefined && object.type !== null) {
       message.type = Child_Type.fromJSON(object.type);
@@ -718,7 +703,7 @@ export const Child = {
     if (object.name !== undefined && object.name !== null) {
       message.name = object.name;
     } else {
-      message.name = "";
+      message.name = '';
     }
     if (object.type !== undefined && object.type !== null) {
       message.type = object.type;
@@ -729,7 +714,7 @@ export const Child = {
   },
   toJSON(message: Child): unknown {
     const obj: any = {};
-    obj.name = message.name || "";
+    obj.name = message.name || '';
     obj.type = Child_Type.toJSON(message.type);
     return obj;
   },
@@ -772,7 +757,7 @@ export const Nested = {
     if (object.name !== undefined && object.name !== null) {
       message.name = String(object.name);
     } else {
-      message.name = "";
+      message.name = '';
     }
     if (object.message !== undefined && object.message !== null) {
       message.message = Nested_InnerMessage.fromJSON(object.message);
@@ -791,7 +776,7 @@ export const Nested = {
     if (object.name !== undefined && object.name !== null) {
       message.name = object.name;
     } else {
-      message.name = "";
+      message.name = '';
     }
     if (object.message !== undefined && object.message !== null) {
       message.message = Nested_InnerMessage.fromPartial(object.message);
@@ -807,7 +792,7 @@ export const Nested = {
   },
   toJSON(message: Nested): unknown {
     const obj: any = {};
-    obj.name = message.name || "";
+    obj.name = message.name || '';
     obj.message = message.message ? Nested_InnerMessage.toJSON(message.message) : undefined;
     obj.state = Nested_InnerEnum.toJSON(message.state);
     return obj;
@@ -847,7 +832,7 @@ export const Nested_InnerMessage = {
     if (object.name !== undefined && object.name !== null) {
       message.name = String(object.name);
     } else {
-      message.name = "";
+      message.name = '';
     }
     if (object.deep !== undefined && object.deep !== null) {
       message.deep = Nested_InnerMessage_DeepMessage.fromJSON(object.deep);
@@ -861,7 +846,7 @@ export const Nested_InnerMessage = {
     if (object.name !== undefined && object.name !== null) {
       message.name = object.name;
     } else {
-      message.name = "";
+      message.name = '';
     }
     if (object.deep !== undefined && object.deep !== null) {
       message.deep = Nested_InnerMessage_DeepMessage.fromPartial(object.deep);
@@ -872,7 +857,7 @@ export const Nested_InnerMessage = {
   },
   toJSON(message: Nested_InnerMessage): unknown {
     const obj: any = {};
-    obj.name = message.name || "";
+    obj.name = message.name || '';
     obj.deep = message.deep ? Nested_InnerMessage_DeepMessage.toJSON(message.deep) : undefined;
     return obj;
   },
@@ -905,7 +890,7 @@ export const Nested_InnerMessage_DeepMessage = {
     if (object.name !== undefined && object.name !== null) {
       message.name = String(object.name);
     } else {
-      message.name = "";
+      message.name = '';
     }
     return message;
   },
@@ -914,23 +899,23 @@ export const Nested_InnerMessage_DeepMessage = {
     if (object.name !== undefined && object.name !== null) {
       message.name = object.name;
     } else {
-      message.name = "";
+      message.name = '';
     }
     return message;
   },
   toJSON(message: Nested_InnerMessage_DeepMessage): unknown {
     const obj: any = {};
-    obj.name = message.name || "";
+    obj.name = message.name || '';
     return obj;
   },
 };
 
 export const OneOfMessage = {
   encode(message: OneOfMessage, writer: Writer = Writer.create()): Writer {
-    if (message.first !== undefined && message.first !== "") {
+    if (message.first !== undefined && message.first !== '') {
       writer.uint32(10).string(message.first);
     }
-    if (message.last !== undefined && message.last !== "") {
+    if (message.last !== undefined && message.last !== '') {
       writer.uint32(18).string(message.last);
     }
     return writer;
@@ -1109,12 +1094,12 @@ export const SimpleWithWrappers = {
     obj.age = message.age || undefined;
     obj.enabled = message.enabled || undefined;
     if (message.coins) {
-      obj.coins = message.coins.map(e => e || undefined);
+      obj.coins = message.coins.map((e) => e || undefined);
     } else {
       obj.coins = [];
     }
     if (message.snacks) {
-      obj.snacks = message.snacks.map(e => e || undefined);
+      obj.snacks = message.snacks.map((e) => e || undefined);
     } else {
       obj.snacks = [];
     }
@@ -1173,13 +1158,13 @@ export const SimpleWithMap = {
   encode(message: SimpleWithMap, writer: Writer = Writer.create()): Writer {
     Object.entries(message.entitiesById).forEach(([key, value]) => {
       SimpleWithMap_EntitiesByIdEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).ldelim();
-    })
+    });
     Object.entries(message.nameLookup).forEach(([key, value]) => {
       SimpleWithMap_NameLookupEntry.encode({ key: key as any, value }, writer.uint32(18).fork()).ldelim();
-    })
+    });
     Object.entries(message.intLookup).forEach(([key, value]) => {
       SimpleWithMap_IntLookupEntry.encode({ key: key as any, value }, writer.uint32(26).fork()).ldelim();
-    })
+    });
     return writer;
   },
   decode(input: Uint8Array | Reader, length?: number): SimpleWithMap {
@@ -1225,17 +1210,17 @@ export const SimpleWithMap = {
     if (object.entitiesById !== undefined && object.entitiesById !== null) {
       Object.entries(object.entitiesById).forEach(([key, value]) => {
         message.entitiesById[Number(key)] = Entity.fromJSON(value);
-      })
+      });
     }
     if (object.nameLookup !== undefined && object.nameLookup !== null) {
       Object.entries(object.nameLookup).forEach(([key, value]) => {
         message.nameLookup[key] = String(value);
-      })
+      });
     }
     if (object.intLookup !== undefined && object.intLookup !== null) {
       Object.entries(object.intLookup).forEach(([key, value]) => {
         message.intLookup[Number(key)] = Number(value);
-      })
+      });
     }
     return message;
   },
@@ -1249,21 +1234,21 @@ export const SimpleWithMap = {
         if (value !== undefined) {
           message.entitiesById[Number(key)] = Entity.fromPartial(value);
         }
-      })
+      });
     }
     if (object.nameLookup !== undefined && object.nameLookup !== null) {
       Object.entries(object.nameLookup).forEach(([key, value]) => {
         if (value !== undefined) {
           message.nameLookup[key] = String(value);
         }
-      })
+      });
     }
     if (object.intLookup !== undefined && object.intLookup !== null) {
       Object.entries(object.intLookup).forEach(([key, value]) => {
         if (value !== undefined) {
           message.intLookup[Number(key)] = Number(value);
         }
-      })
+      });
     }
     return message;
   },
@@ -1371,12 +1356,12 @@ export const SimpleWithMap_NameLookupEntry = {
     if (object.key !== undefined && object.key !== null) {
       message.key = String(object.key);
     } else {
-      message.key = "";
+      message.key = '';
     }
     if (object.value !== undefined && object.value !== null) {
       message.value = String(object.value);
     } else {
-      message.value = "";
+      message.value = '';
     }
     return message;
   },
@@ -1385,19 +1370,19 @@ export const SimpleWithMap_NameLookupEntry = {
     if (object.key !== undefined && object.key !== null) {
       message.key = object.key;
     } else {
-      message.key = "";
+      message.key = '';
     }
     if (object.value !== undefined && object.value !== null) {
       message.value = object.value;
     } else {
-      message.value = "";
+      message.value = '';
     }
     return message;
   },
   toJSON(message: SimpleWithMap_NameLookupEntry): unknown {
     const obj: any = {};
-    obj.key = message.key || "";
-    obj.value = message.value || "";
+    obj.key = message.key || '';
+    obj.value = message.value || '';
     return obj;
   },
 };
@@ -1468,7 +1453,7 @@ export const SimpleWithSnakeCaseMap = {
   encode(message: SimpleWithSnakeCaseMap, writer: Writer = Writer.create()): Writer {
     Object.entries(message.entitiesById).forEach(([key, value]) => {
       SimpleWithSnakeCaseMap_EntitiesByIdEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).ldelim();
-    })
+    });
     return writer;
   },
   decode(input: Uint8Array | Reader, length?: number): SimpleWithSnakeCaseMap {
@@ -1498,7 +1483,7 @@ export const SimpleWithSnakeCaseMap = {
     if (object.entitiesById !== undefined && object.entitiesById !== null) {
       Object.entries(object.entitiesById).forEach(([key, value]) => {
         message.entitiesById[Number(key)] = Entity.fromJSON(value);
-      })
+      });
     }
     return message;
   },
@@ -1510,7 +1495,7 @@ export const SimpleWithSnakeCaseMap = {
         if (value !== undefined) {
           message.entitiesById[Number(key)] = Entity.fromPartial(value);
         }
-      })
+      });
     }
     return message;
   },
@@ -1612,7 +1597,7 @@ export const PingRequest = {
     if (object.input !== undefined && object.input !== null) {
       message.input = String(object.input);
     } else {
-      message.input = "";
+      message.input = '';
     }
     return message;
   },
@@ -1621,13 +1606,13 @@ export const PingRequest = {
     if (object.input !== undefined && object.input !== null) {
       message.input = object.input;
     } else {
-      message.input = "";
+      message.input = '';
     }
     return message;
   },
   toJSON(message: PingRequest): unknown {
     const obj: any = {};
-    obj.input = message.input || "";
+    obj.input = message.input || '';
     return obj;
   },
 };
@@ -1659,7 +1644,7 @@ export const PingResponse = {
     if (object.output !== undefined && object.output !== null) {
       message.output = String(object.output);
     } else {
-      message.output = "";
+      message.output = '';
     }
     return message;
   },
@@ -1668,13 +1653,13 @@ export const PingResponse = {
     if (object.output !== undefined && object.output !== null) {
       message.output = object.output;
     } else {
-      message.output = "";
+      message.output = '';
     }
     return message;
   },
   toJSON(message: PingResponse): unknown {
     const obj: any = {};
-    obj.output = message.output || "";
+    obj.output = message.output || '';
     return obj;
   },
 };
@@ -1928,7 +1913,7 @@ interface WindowBase64 {
   btoa(bin: string): string;
 }
 
-const windowBase64 = (globalThis as unknown as WindowBase64);
+const windowBase64 = (globalThis as unknown) as WindowBase64;
 const atob = windowBase64.atob || ((b64: string) => Buffer.from(b64, 'base64').toString('binary'));
 const btoa = windowBase64.btoa || ((bin: string) => Buffer.from(bin, 'binary').toString('base64'));
 
@@ -1936,7 +1921,7 @@ function bytesFromBase64(b64: string): Uint8Array {
   const bin = atob(b64);
   const arr = new Uint8Array(bin.length);
   for (let i = 0; i < bin.length; ++i) {
-      arr[i] = bin.charCodeAt(i);
+    arr[i] = bin.charCodeAt(i);
   }
   return arr;
 }

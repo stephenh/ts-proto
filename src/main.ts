@@ -1267,9 +1267,7 @@ function generateServiceClientImpl(
   // Create the constructor(rpc: Rpc)
   const rpcType = options.useContext ? 'Rpc<Context>' : 'Rpc';
   client = client.addFunction(
-    FunctionSpec.createConstructor()
-      .addParameter('rpc', rpcType)
-      .addStatement('this.rpc = rpc')
+    FunctionSpec.createConstructor().addParameter('rpc', rpcType).addStatement('this.rpc = rpc')
   );
   client = client.addProperty('rpc', rpcType, { modifiers: [Modifier.PRIVATE, Modifier.READONLY] });
 
