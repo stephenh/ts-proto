@@ -1,0 +1,7 @@
+syntax = "proto3";
+import "google/protobuf/timestamp.proto";
+package simple;
+
+message ImportedThing {
+  google.protobuf.Timestamp created_at = 1;
+}

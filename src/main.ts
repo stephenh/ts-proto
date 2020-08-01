@@ -73,6 +73,7 @@ export type Options = {
   outputEncodeMethods: boolean;
   outputJsonMethods: boolean;
   outputClientImpl: boolean;
+  outputJsonClientImpl: boolean;
   addGrpcMetadata: boolean;
   addNestjsRestParameter: boolean;
   returnObservable: boolean;
@@ -177,9 +178,14 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
 
       file = file.addCode(CodeBlock.empty().add(`export const %L = '%L';`, serviceConstName, serviceDesc.name));
     }
-    file = !options.outputClientImpl
-      ? file
-      : file.addClass(generateServiceClientImpl(typeMap, fileDesc, serviceDesc, options));
+    if (options.outputClientImpl) {
+      file = file.addClass(
+        generateServiceClientImpl(typeMap, fileDesc, serviceDesc, { ...options, outputJsonClientImpl: false })
+      );
+      if (options.outputJsonClientImpl) {
+        file = file.addClass(generateServiceClientImpl(typeMap, fileDesc, serviceDesc, options));
+      }
+    }
   });
 
   if (options.outputClientImpl && fileDesc.service.length > 0) {
@@ -1215,23 +1221,31 @@ function generateRegularRpcMethod(
     requestFn = requestFn.addParameter('ctx', TypeNames.typeVariable('Context'));
   }
   let inputType = requestType(typeMap, methodDesc, options);
-  return requestFn
-    .addParameter('request', inputType)
-    .addStatement('const data = %L.encode(request).finish()', inputType)
-    .addStatement(
-      'const promise = this.rpc.request(%L"%L.%L", %S, %L)',
-      options.useContext ? 'ctx, ' : '', // sneak ctx in as the 1st parameter to our rpc call
-      fileDesc.package,
-      serviceDesc.name,
-      methodDesc.name,
-      'data'
-    )
-    .addStatement(
-      'return promise.then(data => %L.decode(new %T(data)))',
-      responseType(typeMap, methodDesc, options),
-      'Reader@protobufjs/minimal'
-    )
-    .returns(responsePromise(typeMap, methodDesc, options));
+  requestFn = requestFn.addParameter('request', inputType);
+  requestFn = options.outputJsonClientImpl
+    ? requestFn.addStatement('const data = %L.toJSON(request)', inputType)
+    : requestFn.addStatement('const data = %L.encode(request).finish()', inputType);
+
+  const rpcMethod = options.outputJsonClientImpl ? 'requestJson' : 'request';
+  requestFn = requestFn.addStatement(
+    `const promise = this.rpc.${rpcMethod}(%L"%L.%L", %S, %L)`,
+    options.useContext ? 'ctx, ' : '', // sneak ctx in as the 1st parameter to our rpc call
+    fileDesc.package,
+    serviceDesc.name,
+    methodDesc.name,
+    'data'
+  );
+  requestFn = options.outputJsonClientImpl
+    ? requestFn.addStatement(
+        'return promise.then(data => %L.fromJSON(data))',
+        responseType(typeMap, methodDesc, options)
+      )
+    : requestFn.addStatement(
+        'return promise.then(data => %L.decode(new %T(data)))',
+        responseType(typeMap, methodDesc, options),
+        'Reader@protobufjs/minimal'
+      );
+  return requestFn.returns(responsePromise(typeMap, methodDesc, options));
 }
 
 function generateServiceClientImpl(
@@ -1241,7 +1255,8 @@ function generateServiceClientImpl(
   options: Options
 ): ClassSpec {
   // Define the FooServiceImpl class
-  let client = ClassSpec.create(`${serviceDesc.name}ClientImpl`).addModifiers(Modifier.EXPORT);
+  const className = `${serviceDesc.name}${options.outputJsonClientImpl ? 'Json' : ''}ClientImpl`;
+  let client = ClassSpec.create(className).addModifiers(Modifier.EXPORT);
   if (options.useContext) {
     client = client.addTypeVariable(contextTypeVar);
     client = client.addInterface(`${serviceDesc.name}<Context>`);
@@ -1252,7 +1267,9 @@ function generateServiceClientImpl(
   // Create the constructor(rpc: Rpc)
   const rpcType = options.useContext ? 'Rpc<Context>' : 'Rpc';
   client = client.addFunction(
-    FunctionSpec.createConstructor().addParameter('rpc', rpcType).addStatement('this.rpc = rpc')
+    FunctionSpec.createConstructor()
+      .addParameter('rpc', rpcType)
+      .addStatement('this.rpc = rpc')
   );
   client = client.addProperty('rpc', rpcType, { modifiers: [Modifier.PRIVATE, Modifier.READONLY] });
 
@@ -1596,22 +1613,29 @@ function generateCachingRpcMethod(
  * types.
  */
 function generateRpcType(options: Options): InterfaceSpec {
-  const data = TypeNames.anyType('Uint8Array');
-  let fn = FunctionSpec.create('request');
-  if (options.useContext) {
-    fn = fn.addParameter('ctx', 'Context');
-  }
-  fn = fn
-    .addParameter('service', TypeNames.STRING)
-    .addParameter('method', TypeNames.STRING)
-    .addParameter('data', data)
-    .returns(TypeNames.PROMISE.param(data));
   let rpc = InterfaceSpec.create('Rpc');
   if (options.useContext) {
     rpc = rpc.addTypeVariable(TypeNames.typeVariable('Context'));
   }
-  rpc = rpc.addFunction(fn);
+  rpc = rpc.addFunction(generateRpcRequestFn({ ...options, outputJsonClientImpl: false }));
+  if (options.outputJsonClientImpl) {
+    rpc = rpc.addFunction(generateRpcRequestFn(options));
+  }
   return rpc;
+}
+
+function generateRpcRequestFn(options: Options): FunctionSpec {
+  const { outputJsonClientImpl: json } = options;
+  const data = TypeNames.anyType(json ? 'unknown' : 'Uint8Array');
+  let fn = FunctionSpec.create(json ? 'requestJson' : 'request');
+  if (options.useContext) {
+    fn = fn.addParameter('ctx', 'Context');
+  }
+  return fn
+    .addParameter('service', TypeNames.STRING)
+    .addParameter('method', TypeNames.STRING)
+    .addParameter('data', data)
+    .returns(TypeNames.PROMISE.param(data));
 }
 
 function generateDataLoadersType(): InterfaceSpec {

@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+import "simple.proto";
+
+package simple;
+
+service SimpleService { rpc Echo(Simple) returns (Simple); }

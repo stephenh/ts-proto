@@ -46,6 +46,7 @@ export function defaultOptions(): Options {
     outputEncodeMethods: true,
     outputJsonMethods: true,
     outputClientImpl: true,
+    outputJsonClientImpl: false,
     returnObservable: false,
     addGrpcMetadata: false,
     addNestjsRestParameter: false,
@@ -90,6 +91,9 @@ export function optionsFromParameter(parameter: string): Options {
     }
     if (parameter.includes('outputClientImpl=false')) {
       options.outputClientImpl = false;
+    }
+    if (parameter.includes('outputJsonClientImpl=true')) {
+      options.outputJsonClientImpl = true;
     }
 
     if (parameter.includes('nestJs=true')) {
