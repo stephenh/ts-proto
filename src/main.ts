@@ -189,6 +189,10 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
     }
   }
 
+  if (options.useContext) {
+    file = file.addInterface(generateDataLoadersType());
+  }
+
   let hasAnyTimestamps = false;
   visit(
     fileDesc,
