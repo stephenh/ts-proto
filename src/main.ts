@@ -184,9 +184,6 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
 
   if (options.outputClientImpl && fileDesc.service.length > 0) {
     file = file.addInterface(generateRpcType(options));
-    if (options.useContext) {
-      file = file.addInterface(generateDataLoadersType());
-    }
   }
 
   if (options.useContext) {
