@@ -139,7 +139,7 @@ const CloseComment = /\*\//g;
 export function maybeAddComment(desc: SourceDescription, process: (comment: string) => void): void {
   if (desc.leadingComments || desc.trailingComments) {
     return process(
-        (desc.leadingComments || desc.trailingComments || '').replace(PercentAll, '%%').replace(CloseComment, '* /')
+      (desc.leadingComments || desc.trailingComments || '').replace(PercentAll, '%%').replace(CloseComment, '* /')
     );
   }
 }
