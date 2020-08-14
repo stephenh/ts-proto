@@ -50,6 +50,7 @@ export function defaultOptions(): Options {
     addGrpcMetadata: false,
     addNestjsRestParameter: false,
     nestJs: false,
+    configureProtobuf: false,
     env: EnvOption.BOTH,
   };
 }
@@ -111,6 +112,9 @@ export function optionsFromParameter(parameter: string): Options {
       }
     }
 
+    if (parameter.includes('configureProtobuf=true')) {
+      options.configureProtobuf = true;
+    }
     if (parameter.includes('env=node')) {
       options.env = EnvOption.NODE;
     }
@@ -135,7 +139,7 @@ const CloseComment = /\*\//g;
 export function maybeAddComment(desc: SourceDescription, process: (comment: string) => void): void {
   if (desc.leadingComments || desc.trailingComments) {
     return process(
-      (desc.leadingComments || desc.trailingComments || '').replace(PercentAll, '%%').replace(CloseComment, '* /')
+        (desc.leadingComments || desc.trailingComments || '').replace(PercentAll, '%%').replace(CloseComment, '* /')
     );
   }
 }
