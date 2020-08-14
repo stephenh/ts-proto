@@ -7,6 +7,8 @@ import PbNumbers = pbjs.Numbers;
 describe('numbers-long', () => {
   it('runs in the browser', async () => {
     console.log('sadf');
+
+    console.log('sadf');
   });
 
   it('can decode', () => {

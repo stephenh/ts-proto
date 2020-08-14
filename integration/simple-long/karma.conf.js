@@ -2,9 +2,9 @@ module.exports = function (config) {
   config.set({
     basePath: '',
     frameworks: ['jasmine', 'karma-typescript'],
-    files: ['**/*.ts', '*.js'],
+    files: [{ pattern: '**/*.ts', type: 'js' }, '*.js'],
     preprocessors: {
-      '**/*.ts': 'karma-typescript',
+      '**/*.(js|ts)': 'karma-typescript',
     },
     reporters: ['progress', 'karma-typescript'],
     port: 9876,
