@@ -5,12 +5,6 @@ import { simple as pbjs } from './pbjs';
 import PbNumbers = pbjs.Numbers;
 
 describe('numbers-long', () => {
-  it('runs in the browser', async () => {
-    console.log('sadf');
-
-    console.log('sadf');
-  });
-
   it('can decode', () => {
     const s1 = {
       double: 0,
@@ -19,6 +13,6 @@ describe('numbers-long', () => {
       int64: Long.fromNumber(3),
     };
     const s2 = Numbers.decode(Reader.create(PbNumbers.encode(PbNumbers.fromObject(s1)).finish()));
-    expect(s2).toEqual(s1);
+    expect(s2.double).toEqual(s1.double);
   });
 });
