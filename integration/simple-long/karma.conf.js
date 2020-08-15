@@ -2,17 +2,21 @@ module.exports = function (config) {
   config.set({
     basePath: '',
     frameworks: ['jasmine', 'karma-typescript'],
-    files: [{ pattern: '**/*.ts', type: 'js' }, '*.js'],
+    files: [
+      { pattern: '*.+(js|ts)' },
+      { pattern: 'google/**/*.+(js|ts)' },
+      { pattern: 'import_dir/**/*.+(js|ts)' },
+    ],
     preprocessors: {
-      '**/*.(js|ts)': 'karma-typescript',
+      '*.+(js|ts)': 'karma-typescript',
+      'google/**/*.+(js|ts)': 'karma-typescript',
+      'import_dir/**/*.+(js|ts)': 'karma-typescript',
     },
     reporters: ['progress', 'karma-typescript'],
-    port: 9876,
-    colors: true,
-    logLevel: config.LOG_INFO,
-    autoWatch: true,
-    browsers: ['Chrome'],
-    singleRun: false, // Continuous Integration mode, if true, Karma captures browsers, runs the tests and exits
-    concurrency: Infinity,
+    browsers: ['ChromeHeadless'],
+    singleRun: true,
+    karmaTypescriptConfig: {
+      tsconfig: './tsconfig.json',
+    },
   });
 };
