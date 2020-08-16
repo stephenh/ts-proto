@@ -11,6 +11,7 @@
     "build": "yarn tsc",
     "setup": "./pbjs.sh && ./integration/pbjs.sh && ./integration/update-bins.sh && ./integration/codegen.sh",
     "test": "yarn jest -c jest.config.js --maxWorkers=2",
+    "karma": "karma start ./integration/simple-long/karma.conf.js",
     "prettier": "prettier --write {src,tests}/**/*.ts",
     "prettier:check": "prettier --list-different {src,tests}/**/*.ts"
   },
