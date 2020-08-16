@@ -348,10 +348,9 @@ function toModuleAndType(typeMap: TypeMap, protoType: string): [string, string, 
 }
 
 export function getEnumMethod(typeMap: TypeMap, enumProtoType: string, methodSuffix: string): TypeName {
-  const [module, type] = toModuleAndType(typeMap, enumProtoType)
+  const [module, type] = toModuleAndType(typeMap, enumProtoType);
   return TypeNames.importedType(`${camelCase(type)}${methodSuffix}@./${module}`);
 }
-
 
 /** Return the TypeName for any field (primitive/message/etc.) as exposed in the interface. */
 export function toTypeName(
