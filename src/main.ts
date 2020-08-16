@@ -869,6 +869,8 @@ function generateFromJson(
               basicTypeName(typeMap, FieldDescriptorProto.create({ type: valueType.type }), options).toString()
             );
             return CodeBlock.of('%L(%L)', cstr, from);
+          } else if (isTimestamp(valueType)) {
+            return CodeBlock.of('fromJsonTimestamp(%L)', from);
           } else {
             return CodeBlock.of('%T.fromJSON(%L)', basicTypeName(typeMap, valueType, options).toString(), from);
           }
@@ -1043,6 +1045,8 @@ function generateFromPartial(
               basicTypeName(typeMap, FieldDescriptorProto.create({ type: valueType.type }), options).toString()
             );
             return CodeBlock.of('%L(%L)', cstr, from);
+          } else if (isTimestamp(valueType)) {
+            return CodeBlock.of('%L', from);
           } else {
             return CodeBlock.of('%T.fromPartial(%L)', basicTypeName(typeMap, valueType, options).toString(), from);
           }
