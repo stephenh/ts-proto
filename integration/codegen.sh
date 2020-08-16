@@ -19,7 +19,7 @@ shopt -s globstar
 
 dir=${1:-*}
 
-for file in ${dir}/*.bin; do
+for file in ${dir}/**/*.bin; do
   echo "${file}"
   # Strip the longest suffix starting at the 1st slash
   dir="${file%%/*}"

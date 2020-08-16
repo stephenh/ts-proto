@@ -576,7 +576,7 @@ export function visit(
     // I.e. Foo_Bar.Zaz_Inner
     const protoFullName = protoPrefix + message.name;
     // I.e. FooBar_ZazInner
-    const tsFullName = tsPrefix + maybeSnakeToCamel(message.name, options);
+    const tsFullName = tsPrefix + maybeSnakeToCamel(messageName(message), options);
     const nestedSourceInfo = sourceInfo.open(childType, index);
     messageFn(tsFullName, message, nestedSourceInfo, protoFullName);
     visit(message, nestedSourceInfo, messageFn, options, enumFn, tsFullName + '_', protoFullName + '.');
@@ -1666,4 +1666,12 @@ function maybeCastToNumber(
   } else {
     return `Number(${variableName})`;
   }
+}
+
+const builtInNames = ['Date'];
+
+/** Potentially suffixes `Message` to names to avoid conflicts, i.e. with `Date`. */
+function messageName(message: DescriptorProto): string {
+  const { name } = message;
+  return builtInNames.includes(name) ? `${name}Message` : name;
 }

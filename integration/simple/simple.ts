@@ -2,6 +2,7 @@
 //  comment in the output source file.
 //
 import { ImportedThing } from './import_dir/thing';
+import { DateMessage } from './google/type/date';
 import { Reader, Writer } from 'protobufjs/minimal';
 import { Timestamp } from './google/protobuf/timestamp';
 import * as Long from 'long';
@@ -33,6 +34,7 @@ export interface Simple {
    */
   thing: ImportedThing | undefined;
   blobs: Uint8Array[];
+  birthday: DateMessage | undefined;
 }
 
 export interface Child {
@@ -432,6 +434,9 @@ export const Simple = {
     for (const v of message.blobs) {
       writer.uint32(90).bytes(v!);
     }
+    if (message.birthday !== undefined && message.birthday !== undefined) {
+      DateMessage.encode(message.birthday, writer.uint32(98).fork()).ldelim();
+    }
     return writer;
   },
   decode(input: Uint8Array | Reader, length?: number): Simple {
@@ -492,6 +497,9 @@ export const Simple = {
           break;
         case 11:
           message.blobs.push(reader.bytes());
+          break;
+        case 12:
+          message.birthday = DateMessage.decode(reader, reader.uint32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -562,6 +570,11 @@ export const Simple = {
         message.blobs.push(bytesFromBase64(e));
       }
     }
+    if (object.birthday !== undefined && object.birthday !== null) {
+      message.birthday = DateMessage.fromJSON(object.birthday);
+    } else {
+      message.birthday = undefined;
+    }
     return message;
   },
   fromPartial(object: DeepPartial<Simple>): Simple {
@@ -626,6 +639,11 @@ export const Simple = {
         message.blobs.push(e);
       }
     }
+    if (object.birthday !== undefined && object.birthday !== null) {
+      message.birthday = DateMessage.fromPartial(object.birthday);
+    } else {
+      message.birthday = undefined;
+    }
     return message;
   },
   toJSON(message: Simple): unknown {
@@ -661,6 +679,7 @@ export const Simple = {
     } else {
       obj.blobs = [];
     }
+    obj.birthday = message.birthday ? DateMessage.toJSON(message.birthday) : undefined;
     return obj;
   },
 };

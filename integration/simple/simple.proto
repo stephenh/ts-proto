@@ -1,6 +1,7 @@
 // Adding a comment to the syntax will become the first
 // comment in the output source file.
 syntax = "proto3";
+import "google/type/date.proto";
 import "google/protobuf/wrappers.proto";
 import "google/protobuf/timestamp.proto";
 import "import_dir/thing.proto";
@@ -25,6 +26,7 @@ message Simple {
   // A thing (imported from thing)
   ImportedThing thing = 10;
   repeated bytes blobs = 11;
+  google.type.Date birthday = 12;
 }
 
 message Child {
