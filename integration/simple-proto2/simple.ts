@@ -9,37 +9,37 @@ const baseIssue56: object = {
   test: 1,
 };
 
-export const EnumWithoutZero = {
-  A: 1 as const,
-  B: 2 as const,
-  UNRECOGNIZED: -1 as const,
-  fromJSON(object: any): EnumWithoutZero {
-    switch (object) {
-      case 1:
-      case "A":
-        return EnumWithoutZero.A;
-      case 2:
-      case "B":
-        return EnumWithoutZero.B;
-      case -1:
-      case "UNRECOGNIZED":
-      default:
-        return EnumWithoutZero.UNRECOGNIZED;
-    }
-  },
-  toJSON(object: EnumWithoutZero): string {
-    switch (object) {
-      case EnumWithoutZero.A:
-        return "A";
-      case EnumWithoutZero.B:
-        return "B";
-      default:
-        return "UNKNOWN";
-    }
-  },
+export enum EnumWithoutZero {
+  A = 1,
+  B = 2,
+  UNRECOGNIZED = -1,
 }
 
-export type EnumWithoutZero = 1 | 2 | -1;
+export function enumWithoutZeroFromJSON(object: any): EnumWithoutZero {
+  switch (object) {
+    case 1:
+    case "A":
+      return EnumWithoutZero.A;
+    case 2:
+    case "B":
+      return EnumWithoutZero.B;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return EnumWithoutZero.UNRECOGNIZED;
+  }
+}
+
+export function enumWithoutZeroToJSON(object: EnumWithoutZero): string {
+  switch (object) {
+    case EnumWithoutZero.A:
+      return "A";
+    case EnumWithoutZero.B:
+      return "B";
+    default:
+      return "UNKNOWN";
+  }
+}
 
 export const Issue56 = {
   encode(message: Issue56, writer: Writer = Writer.create()): Writer {
@@ -66,7 +66,7 @@ export const Issue56 = {
   fromJSON(object: any): Issue56 {
     const message = { ...baseIssue56 } as Issue56;
     if (object.test !== undefined && object.test !== null) {
-      message.test = EnumWithoutZero.fromJSON(object.test);
+      message.test = enumWithoutZeroFromJSON(object.test);
     } else {
       message.test = 1;
     }
@@ -83,7 +83,7 @@ export const Issue56 = {
   },
   toJSON(message: Issue56): unknown {
     const obj: any = {};
-    obj.test = EnumWithoutZero.toJSON(message.test);
+    obj.test = enumWithoutZeroToJSON(message.test);
     return obj;
   },
 };

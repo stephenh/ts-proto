@@ -7,15 +7,15 @@ export interface PleaseChoose {
    *  Please to be choosing one of the fields within this oneof clause.
    *  This text exists to ensure we transpose comments correctly.
    *
-   * a_number
+   * aNumber
    *  Use this if you want a number. Numbers are great. Who doesn't
    *  like them?
    *
-   * a_string
+   * aString
    *  Use this if you want a string. Strings are also nice. Not as
    *  nice as numbers, but what are you going to do...
    *
-   * a_bool
+   * aBool
    *  We also added a bool option! This was added after the 'age'
    *  field, so it has a higher number.
    */
@@ -37,43 +37,43 @@ const basePleaseChoose_Submessage: object = {
   name: "",
 };
 
-export const PleaseChoose_StateEnum = {
-  UNKNOWN: 0 as const,
-  ON: 2 as const,
-  OFF: 3 as const,
-  UNRECOGNIZED: -1 as const,
-  fromJSON(object: any): PleaseChoose_StateEnum {
-    switch (object) {
-      case 0:
-      case "UNKNOWN":
-        return PleaseChoose_StateEnum.UNKNOWN;
-      case 2:
-      case "ON":
-        return PleaseChoose_StateEnum.ON;
-      case 3:
-      case "OFF":
-        return PleaseChoose_StateEnum.OFF;
-      case -1:
-      case "UNRECOGNIZED":
-      default:
-        return PleaseChoose_StateEnum.UNRECOGNIZED;
-    }
-  },
-  toJSON(object: PleaseChoose_StateEnum): string {
-    switch (object) {
-      case PleaseChoose_StateEnum.UNKNOWN:
-        return "UNKNOWN";
-      case PleaseChoose_StateEnum.ON:
-        return "ON";
-      case PleaseChoose_StateEnum.OFF:
-        return "OFF";
-      default:
-        return "UNKNOWN";
-    }
-  },
+export enum PleaseChoose_StateEnum {
+  UNKNOWN = 0,
+  ON = 2,
+  OFF = 3,
+  UNRECOGNIZED = -1,
 }
 
-export type PleaseChoose_StateEnum = 0 | 2 | 3 | -1;
+export function pleaseChoose_StateEnumFromJSON(object: any): PleaseChoose_StateEnum {
+  switch (object) {
+    case 0:
+    case "UNKNOWN":
+      return PleaseChoose_StateEnum.UNKNOWN;
+    case 2:
+    case "ON":
+      return PleaseChoose_StateEnum.ON;
+    case 3:
+    case "OFF":
+      return PleaseChoose_StateEnum.OFF;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return PleaseChoose_StateEnum.UNRECOGNIZED;
+  }
+}
+
+export function pleaseChoose_StateEnumToJSON(object: PleaseChoose_StateEnum): string {
+  switch (object) {
+    case PleaseChoose_StateEnum.UNKNOWN:
+      return "UNKNOWN";
+    case PleaseChoose_StateEnum.ON:
+      return "ON";
+    case PleaseChoose_StateEnum.OFF:
+      return "OFF";
+    default:
+      return "UNKNOWN";
+  }
+}
 
 export const PleaseChoose = {
   encode(message: PleaseChoose, writer: Writer = Writer.create()): Writer {
@@ -176,7 +176,7 @@ export const PleaseChoose = {
       message.choice = {$case: 'bunchaBytes', bunchaBytes: bytesFromBase64(object.bunchaBytes)};
     }
     if (object.anEnum !== undefined && object.anEnum !== null) {
-      message.choice = {$case: 'anEnum', anEnum: PleaseChoose_StateEnum.fromJSON(object.anEnum)};
+      message.choice = {$case: 'anEnum', anEnum: pleaseChoose_StateEnumFromJSON(object.anEnum)};
     }
     if (object.age !== undefined && object.age !== null) {
       message.age = Number(object.age);
@@ -237,7 +237,7 @@ export const PleaseChoose = {
     obj.aMessage = message.choice?.$case === 'aMessage' && message.choice?.aMessage ? PleaseChoose_Submessage.toJSON(message.choice?.aMessage) : undefined;
     obj.aBool = message.choice?.$case === 'aBool' && message.choice?.aBool || undefined;
     obj.bunchaBytes = message.choice?.$case === 'bunchaBytes' && message.choice?.bunchaBytes !== undefined ? base64FromBytes(message.choice?.bunchaBytes) : undefined;
-    obj.anEnum = message.choice?.$case === 'anEnum' && message.choice?.anEnum !== undefined ? PleaseChoose_StateEnum.toJSON(message.choice?.anEnum) : undefined;
+    obj.anEnum = message.choice?.$case === 'anEnum' && message.choice?.anEnum !== undefined ? pleaseChoose_StateEnumToJSON(message.choice?.anEnum) : undefined;
     obj.age = message.age || 0;
     obj.either = message.eitherOr?.$case === 'either' && message.eitherOr?.either || undefined;
     obj.or = message.eitherOr?.$case === 'or' && message.eitherOr?.or || undefined;

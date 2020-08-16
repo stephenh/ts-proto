@@ -17,6 +17,7 @@ import {
   basicWireType,
   defaultValue,
   detectMapType,
+  getEnumMethod,
   isBytes,
   isEmptyType,
   isEnum,
@@ -44,6 +45,7 @@ import FileDescriptorProto = google.protobuf.FileDescriptorProto;
 import EnumDescriptorProto = google.protobuf.EnumDescriptorProto;
 import ServiceDescriptorProto = google.protobuf.ServiceDescriptorProto;
 import MethodDescriptorProto = google.protobuf.MethodDescriptorProto;
+import { camelCase, camelToSnake, capitalize, maybeSnakeToCamel } from './case';
 
 const dataloader = TypeNames.anyType('DataLoader*dataloader');
 
@@ -370,33 +372,34 @@ function generateEnum(
   sourceInfo: SourceInfo
 ): CodeBlock {
   let code = CodeBlock.empty();
-  maybeAddComment(sourceInfo, (text) => (code = code.add(`/** %L */\n`, text)));
-  code = code.beginControlFlow('export const %L =', fullName);
 
+  // Output the `enum { Foo, A = 0, B = 1 }`
+  maybeAddComment(sourceInfo, (text) => (code = code.add(`/** %L */\n`, text)));
+  code = code.beginControlFlow('export enum %L', fullName);
   enumDesc.value.forEach((valueDesc, index) => {
     const info = sourceInfo.lookup(Fields.enum.value, index);
     maybeAddComment(info, (text) => (code = code.add(`/** ${valueDesc.name} - ${text} */\n`)));
-    code = code.add('%L: %L as const,\n', valueDesc.name, valueDesc.number.toString());
+    code = code.add('%L = %L,\n', valueDesc.name, valueDesc.number.toString());
   });
-  code = code.add('%L: %L as const,\n', UNRECOGNIZED_ENUM_NAME, UNRECOGNIZED_ENUM_VALUE.toString());
+  code = code.add('%L = %L,\n', UNRECOGNIZED_ENUM_NAME, UNRECOGNIZED_ENUM_VALUE.toString());
+  code = code.endControlFlow();
 
   if (options.outputJsonMethods) {
-    code = code.addHashEntry(generateEnumFromJson(fullName, enumDesc));
-    code = code.addHashEntry(generateEnumToJson(fullName, enumDesc));
+    code = code.add('\n');
+    code = code.addFunction(generateEnumFromJson(fullName, enumDesc));
+    code = code.add('\n');
+    code = code.addFunction(generateEnumToJson(fullName, enumDesc));
   }
-
-  code = code.endControlFlow();
-  code = code.add('\n');
-
-  const enumTypes = [...enumDesc.value.map((v) => v.number.toString()), UNRECOGNIZED_ENUM_VALUE.toString()];
-  code = code.add('export type %L = %L;', fullName, enumTypes.join(' | '));
-  code = code.add('\n');
 
   return code;
 }
 
+/** Generates a function with a big switch statement to decode JSON -> our enum. */
 function generateEnumFromJson(fullName: string, enumDesc: EnumDescriptorProto): FunctionSpec {
-  let func = FunctionSpec.create('fromJSON').addParameter('object', 'any').returns(fullName);
+  let func = FunctionSpec.create(`${camelCase(fullName)}FromJSON`)
+    .addModifiers(Modifier.EXPORT)
+    .addParameter('object', 'any')
+    .returns(fullName);
   let body = CodeBlock.empty().beginControlFlow('switch (object)');
   for (const valueDesc of enumDesc.value) {
     body = body
@@ -413,8 +416,12 @@ function generateEnumFromJson(fullName: string, enumDesc: EnumDescriptorProto): 
   return func.addCodeBlock(body);
 }
 
+/** Generates a function with a big switch statement to encode our enum -> JSON. */
 function generateEnumToJson(fullName: string, enumDesc: EnumDescriptorProto): FunctionSpec {
-  let func = FunctionSpec.create('toJSON').addParameter('object', fullName).returns('string');
+  let func = FunctionSpec.create(`${camelCase(fullName)}ToJSON`)
+    .addModifiers(Modifier.EXPORT)
+    .addParameter('object', fullName)
+    .returns('string');
   let body = CodeBlock.empty().beginControlFlow('switch (object)');
   for (const valueDesc of enumDesc.value) {
     body = body.add('case %L.%L:%>\n', fullName, valueDesc.name).addStatement('return %S%<', valueDesc.name);
@@ -505,7 +512,7 @@ function generateOneofProperty(
     }
     const info = sourceInfo.lookup(Fields.message.field, index);
     const name = maybeSnakeToCamel(field.name, options);
-    maybeAddComment(info, (text) => comments.push(field.name + '\n' + text));
+    maybeAddComment(info, (text) => comments.push(name + '\n' + text));
   });
   if (comments.length) {
     prop = prop.addJavadoc(comments.join('\n'));
@@ -830,7 +837,8 @@ function generateFromJson(
     // get a generic 'reader.doSomething' bit that is specific to the basic type
     const readSnippet = (from: string): CodeBlock => {
       if (isEnum(field)) {
-        return CodeBlock.of('%T.fromJSON(%L)', basicTypeName(typeMap, field, options), from);
+        const fromJson = getEnumMethod(typeMap, field.typeName, 'FromJSON');
+        return CodeBlock.of('%T(%L)', fromJson, from);
       } else if (isPrimitive(field)) {
         // Convert primitives using the String(value)/Number(value)/bytesFromBase64(value)
         if (isBytes(field)) {
@@ -942,14 +950,10 @@ function generateToJson(
 
     const readSnippet = (from: string): CodeBlock => {
       if (isEnum(field)) {
+        const toJson = getEnumMethod(typeMap, field.typeName, 'ToJSON');
         return isWithinOneOf(field)
-          ? CodeBlock.of(
-              '%L !== undefined ? %T.toJSON(%L) : undefined',
-              from,
-              basicTypeName(typeMap, field, options),
-              from
-            )
-          : CodeBlock.of('%T.toJSON(%L)', basicTypeName(typeMap, field, options), from);
+          ? CodeBlock.of('%L !== undefined ? %T(%L) : undefined', from, toJson, from)
+          : CodeBlock.of('%T(%L)', toJson, from);
       } else if (isTimestamp(field)) {
         return CodeBlock.of('%L !== undefined ? %L.toISOString() : null', from, from);
       } else if (isMessage(field) && !isValueType(field) && !isMapType(typeMap, messageDesc, field, options)) {
@@ -1643,30 +1647,6 @@ function responsePromise(typeMap: TypeMap, methodDesc: MethodDescriptorProto, op
 
 function responseObservable(typeMap: TypeMap, methodDesc: MethodDescriptorProto, options: Options): TypeName {
   return TypeNames.anyType('Observable@rxjs').param(responseType(typeMap, methodDesc, options));
-}
-
-function maybeSnakeToCamel(s: string, options: Options): string {
-  if (options.snakeToCamel) {
-    return s.replace(/(\_\w)/g, (m) => m[1].toUpperCase());
-  } else {
-    return s;
-  }
-}
-
-function camelToSnake(s: string): string {
-  return s
-    .replace(/[\w]([A-Z])/g, function (m) {
-      return m[0] + '_' + m[1];
-    })
-    .toUpperCase();
-}
-
-function capitalize(s: string): string {
-  return s.substring(0, 1).toUpperCase() + s.substring(1);
-}
-
-function camelCase(s: string): string {
-  return s.substring(0, 1).toLowerCase() + s.substring(1);
 }
 
 function maybeCastToNumber(
