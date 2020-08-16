@@ -357,7 +357,12 @@ export const BatchMapQueryResponse = {
   },
   toJSON(message: BatchMapQueryResponse): unknown {
     const obj: any = {};
-    obj.entities = message.entities || undefined;
+    obj.entities = {};
+    if (message.entities) {
+      Object.entries(message.entities).forEach(([k, v]) => {
+        obj.entities[k] = v;
+      })
+    }
     return obj;
   },
 };

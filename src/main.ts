@@ -854,9 +854,6 @@ function generateFromJson(
           const cstr = capitalize(basicTypeName(typeMap, field, options, { keepValueType: true }).toString());
           return CodeBlock.of('%L(%L)', cstr, from);
         }
-        // if (basicLongWireType(field.type) !== undefined) {
-        //   readSnippet = CodeBlock.of('longToNumber(%L as Long)', readSnippet);
-        // }
       } else if (isTimestamp(field)) {
         return CodeBlock.of('fromJsonTimestamp(%L)', from);
       } else if (isValueType(field)) {
@@ -865,10 +862,19 @@ function generateFromJson(
         if (isRepeated(field) && isMapType(typeMap, messageDesc, field, options)) {
           const valueType = (typeMap.get(field.typeName)![2] as DescriptorProto).field[1];
           if (isPrimitive(valueType)) {
-            const cstr = capitalize(
-              basicTypeName(typeMap, FieldDescriptorProto.create({ type: valueType.type }), options).toString()
-            );
-            return CodeBlock.of('%L(%L)', cstr, from);
+            // TODO Can we not copy/paste this from ^?
+            if (isBytes(valueType)) {
+              if (options.env === EnvOption.NODE) {
+                return CodeBlock.of('Buffer.from(bytesFromBase64(%L as string))', from);
+              } else {
+                return CodeBlock.of('bytesFromBase64(%L as string)', from);
+              }
+            } else {
+              const cstr = capitalize(
+                basicTypeName(typeMap, FieldDescriptorProto.create({ type: valueType.type }), options).toString()
+              );
+              return CodeBlock.of('%L(%L)', cstr, from);
+            }
           } else if (isTimestamp(valueType)) {
             return CodeBlock.of('fromJsonTimestamp(%L)', from);
           } else {
@@ -958,6 +964,19 @@ function generateToJson(
           : CodeBlock.of('%T(%L)', toJson, from);
       } else if (isTimestamp(field)) {
         return CodeBlock.of('%L !== undefined ? %L.toISOString() : null', from, from);
+      } else if (isMapType(typeMap, messageDesc, field, options)) {
+        // For map types, drill-in and then admittedly re-hard-code our per-value-type logic
+        const valueType = (typeMap.get(field.typeName)![2] as DescriptorProto).field[1];
+        if (isEnum(valueType)) {
+          const toJson = getEnumMethod(typeMap, field.typeName, 'ToJSON');
+          return CodeBlock.of('%T(%L)', toJson, from);
+        } else if (isBytes(valueType)) {
+          return CodeBlock.of('base64FromBytes(%L)', from);
+        } else if (isTimestamp(valueType)) {
+          return CodeBlock.of('%L.toISOString()', from);
+        } else {
+          return CodeBlock.of('%L', from);
+        }
       } else if (isMessage(field) && !isValueType(field) && !isMapType(typeMap, messageDesc, field, options)) {
         return CodeBlock.of(
           '%L ? %T.toJSON(%L) : %L',
@@ -988,7 +1007,17 @@ function generateToJson(
       }
     };
 
-    if (isRepeated(field) && !isMapType(typeMap, messageDesc, field, options)) {
+    if (isMapType(typeMap, messageDesc, field, options)) {
+      // Maps might need their values transformed, i.e. bytes --> base64
+      func = func
+        .addStatement('obj.%L = {}', fieldName)
+        .beginControlFlow('if (message.%L)', fieldName)
+        .beginLambda('Object.entries(message.%L).forEach(([k, v]) =>', fieldName)
+        .addStatement('obj.%L[k] = %L', fieldName, readSnippet('v'))
+        .endLambda(')')
+        .endControlFlow();
+    } else if (isRepeated(field)) {
+      // Arrays might need their elements transformed
       func = func
         .beginControlFlow('if (message.%L)', fieldName)
         .addStatement('obj.%L = message.%L.map(e => %L)', fieldName, fieldName, readSnippet('e'))
@@ -996,6 +1025,7 @@ function generateToJson(
         .addStatement('obj.%L = []', fieldName)
         .endControlFlow();
     } else if (isWithinOneOf(field) && options.oneof === OneofOption.UNIONS) {
+      // oneofs in a union are only output as `oneof name = ...`
       let oneofName = maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options);
       func = func.addStatement(
         `obj.%L = message.%L?.$case === '%L' && %L`,
@@ -1041,10 +1071,14 @@ function generateFromPartial(
         if (isRepeated(field) && isMapType(typeMap, messageDesc, field, options)) {
           const valueType = (typeMap.get(field.typeName)![2] as DescriptorProto).field[1];
           if (isPrimitive(valueType)) {
-            const cstr = capitalize(
-              basicTypeName(typeMap, FieldDescriptorProto.create({ type: valueType.type }), options).toString()
-            );
-            return CodeBlock.of('%L(%L)', cstr, from);
+            if (isBytes(valueType)) {
+              return CodeBlock.of('%L', from);
+            } else {
+              const cstr = capitalize(
+                basicTypeName(typeMap, FieldDescriptorProto.create({ type: valueType.type }), options).toString()
+              );
+              return CodeBlock.of('%L(%L)', cstr, from);
+            }
           } else if (isTimestamp(valueType)) {
             return CodeBlock.of('%L', from);
           } else {

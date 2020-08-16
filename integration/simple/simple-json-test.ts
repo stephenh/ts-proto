@@ -5,6 +5,7 @@ import PbChild = pbjs.Child;
 import PbSimple = pbjs.Simple;
 import PbState = pbjs.StateEnum;
 import Timestamp = google.protobuf.Timestamp;
+import { base64FromBytes } from './utils';
 
 describe('simple json', () => {
   it('can decode json', () => {
@@ -177,6 +178,7 @@ describe('simple json', () => {
         "intLookup": Object {
           "1": 0,
         },
+        "mapOfBytes": Object {},
         "mapOfTimestamps": Object {},
         "nameLookup": Object {},
       }
@@ -197,6 +199,7 @@ describe('simple json', () => {
       Object {
         "entitiesById": Object {},
         "intLookup": Object {},
+        "mapOfBytes": Object {},
         "mapOfTimestamps": Object {
           "a": 1970-01-01T00:16:40.000Z,
           "b": 1970-01-01T00:33:20.000Z,
@@ -206,6 +209,61 @@ describe('simple json', () => {
     `);
     expect(s1.mapOfTimestamps['a']).toBeInstanceOf(Date);
     expect(s1.mapOfTimestamps['b']).toBeInstanceOf(Date);
+  });
+
+  it('encodes maps of bytes', () => {
+    const s1: SimpleWithMap = {
+      entitiesById: {},
+      intLookup: {},
+      nameLookup: {},
+      mapOfTimestamps: {},
+      mapOfBytes: {
+        a: new Uint8Array([1, 2]),
+        b: new Uint8Array([1, 2, 3]),
+      },
+    };
+    const json = SimpleWithMap.toJSON(s1);
+    expect(json).toMatchInlineSnapshot(`
+      Object {
+        "entitiesById": Object {},
+        "intLookup": Object {},
+        "mapOfBytes": Object {
+          "a": "AQI=",
+          "b": "AQID",
+        },
+        "mapOfTimestamps": Object {},
+        "nameLookup": Object {},
+      }
+    `);
+  });
+
+  it('decodes maps of bytes', () => {
+    const json = {
+      mapOfBytes: {
+        a: base64FromBytes(new Uint8Array([1, 2])),
+        b: base64FromBytes(new Uint8Array([1, 2, 3])),
+      },
+    };
+    const s1 = SimpleWithMap.fromJSON(json);
+    expect(s1).toMatchInlineSnapshot(`
+      Object {
+        "entitiesById": Object {},
+        "intLookup": Object {},
+        "mapOfBytes": Object {
+          "a": Uint8Array [
+            1,
+            2,
+          ],
+          "b": Uint8Array [
+            1,
+            2,
+            3,
+          ],
+        },
+        "mapOfTimestamps": Object {},
+        "nameLookup": Object {},
+      }
+    `);
   });
 
   it('can encode json', () => {

@@ -82,6 +82,7 @@ export interface SimpleWithMap {
   nameLookup: { [key: string]: string };
   intLookup: { [key: number]: number };
   mapOfTimestamps: { [key: string]: Date };
+  mapOfBytes: { [key: string]: Uint8Array };
 }
 
 export interface SimpleWithMap_EntitiesByIdEntry {
@@ -102,6 +103,11 @@ export interface SimpleWithMap_IntLookupEntry {
 export interface SimpleWithMap_MapOfTimestampsEntry {
   key: string;
   value: Date | undefined;
+}
+
+export interface SimpleWithMap_MapOfBytesEntry {
+  key: string;
+  value: Uint8Array;
 }
 
 export interface SimpleWithSnakeCaseMap {
@@ -194,6 +200,10 @@ const baseSimpleWithMap_IntLookupEntry: object = {
 };
 
 const baseSimpleWithMap_MapOfTimestampsEntry: object = {
+  key: "",
+};
+
+const baseSimpleWithMap_MapOfBytesEntry: object = {
   key: "",
 };
 
@@ -1194,6 +1204,9 @@ export const SimpleWithMap = {
     Object.entries(message.mapOfTimestamps).forEach(([key, value]) => {
       SimpleWithMap_MapOfTimestampsEntry.encode({ key: key as any, value }, writer.uint32(34).fork()).ldelim();
     })
+    Object.entries(message.mapOfBytes).forEach(([key, value]) => {
+      SimpleWithMap_MapOfBytesEntry.encode({ key: key as any, value }, writer.uint32(42).fork()).ldelim();
+    })
     return writer;
   },
   decode(input: Uint8Array | Reader, length?: number): SimpleWithMap {
@@ -1204,6 +1217,7 @@ export const SimpleWithMap = {
     message.nameLookup = {};
     message.intLookup = {};
     message.mapOfTimestamps = {};
+    message.mapOfBytes = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -1231,6 +1245,12 @@ export const SimpleWithMap = {
             message.mapOfTimestamps[entry4.key] = entry4.value;
           }
           break;
+        case 5:
+          const entry5 = SimpleWithMap_MapOfBytesEntry.decode(reader, reader.uint32());
+          if (entry5.value !== undefined) {
+            message.mapOfBytes[entry5.key] = entry5.value;
+          }
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -1244,6 +1264,7 @@ export const SimpleWithMap = {
     message.nameLookup = {};
     message.intLookup = {};
     message.mapOfTimestamps = {};
+    message.mapOfBytes = {};
     if (object.entitiesById !== undefined && object.entitiesById !== null) {
       Object.entries(object.entitiesById).forEach(([key, value]) => {
         message.entitiesById[Number(key)] = Entity.fromJSON(value);
@@ -1264,6 +1285,11 @@ export const SimpleWithMap = {
         message.mapOfTimestamps[key] = fromJsonTimestamp(value);
       })
     }
+    if (object.mapOfBytes !== undefined && object.mapOfBytes !== null) {
+      Object.entries(object.mapOfBytes).forEach(([key, value]) => {
+        message.mapOfBytes[key] = bytesFromBase64(value as string);
+      })
+    }
     return message;
   },
   fromPartial(object: DeepPartial<SimpleWithMap>): SimpleWithMap {
@@ -1272,6 +1298,7 @@ export const SimpleWithMap = {
     message.nameLookup = {};
     message.intLookup = {};
     message.mapOfTimestamps = {};
+    message.mapOfBytes = {};
     if (object.entitiesById !== undefined && object.entitiesById !== null) {
       Object.entries(object.entitiesById).forEach(([key, value]) => {
         if (value !== undefined) {
@@ -1300,14 +1327,47 @@ export const SimpleWithMap = {
         }
       })
     }
+    if (object.mapOfBytes !== undefined && object.mapOfBytes !== null) {
+      Object.entries(object.mapOfBytes).forEach(([key, value]) => {
+        if (value !== undefined) {
+          message.mapOfBytes[key] = value;
+        }
+      })
+    }
     return message;
   },
   toJSON(message: SimpleWithMap): unknown {
     const obj: any = {};
-    obj.entitiesById = message.entitiesById || undefined;
-    obj.nameLookup = message.nameLookup || undefined;
-    obj.intLookup = message.intLookup || undefined;
-    obj.mapOfTimestamps = message.mapOfTimestamps || undefined;
+    obj.entitiesById = {};
+    if (message.entitiesById) {
+      Object.entries(message.entitiesById).forEach(([k, v]) => {
+        obj.entitiesById[k] = v;
+      })
+    }
+    obj.nameLookup = {};
+    if (message.nameLookup) {
+      Object.entries(message.nameLookup).forEach(([k, v]) => {
+        obj.nameLookup[k] = v;
+      })
+    }
+    obj.intLookup = {};
+    if (message.intLookup) {
+      Object.entries(message.intLookup).forEach(([k, v]) => {
+        obj.intLookup[k] = v;
+      })
+    }
+    obj.mapOfTimestamps = {};
+    if (message.mapOfTimestamps) {
+      Object.entries(message.mapOfTimestamps).forEach(([k, v]) => {
+        obj.mapOfTimestamps[k] = v.toISOString();
+      })
+    }
+    obj.mapOfBytes = {};
+    if (message.mapOfBytes) {
+      Object.entries(message.mapOfBytes).forEach(([k, v]) => {
+        obj.mapOfBytes[k] = base64FromBytes(v);
+      })
+    }
     return obj;
   },
 };
@@ -1564,6 +1624,64 @@ export const SimpleWithMap_MapOfTimestampsEntry = {
   },
 };
 
+export const SimpleWithMap_MapOfBytesEntry = {
+  encode(message: SimpleWithMap_MapOfBytesEntry, writer: Writer = Writer.create()): Writer {
+    writer.uint32(10).string(message.key);
+    writer.uint32(18).bytes(message.value);
+    return writer;
+  },
+  decode(input: Uint8Array | Reader, length?: number): SimpleWithMap_MapOfBytesEntry {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseSimpleWithMap_MapOfBytesEntry } as SimpleWithMap_MapOfBytesEntry;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.key = reader.string();
+          break;
+        case 2:
+          message.value = reader.bytes();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+  fromJSON(object: any): SimpleWithMap_MapOfBytesEntry {
+    const message = { ...baseSimpleWithMap_MapOfBytesEntry } as SimpleWithMap_MapOfBytesEntry;
+    if (object.key !== undefined && object.key !== null) {
+      message.key = String(object.key);
+    } else {
+      message.key = "";
+    }
+    if (object.value !== undefined && object.value !== null) {
+      message.value = bytesFromBase64(object.value);
+    }
+    return message;
+  },
+  fromPartial(object: DeepPartial<SimpleWithMap_MapOfBytesEntry>): SimpleWithMap_MapOfBytesEntry {
+    const message = { ...baseSimpleWithMap_MapOfBytesEntry } as SimpleWithMap_MapOfBytesEntry;
+    if (object.key !== undefined && object.key !== null) {
+      message.key = object.key;
+    } else {
+      message.key = "";
+    }
+    if (object.value !== undefined && object.value !== null) {
+      message.value = object.value;
+    }
+    return message;
+  },
+  toJSON(message: SimpleWithMap_MapOfBytesEntry): unknown {
+    const obj: any = {};
+    obj.key = message.key || "";
+    obj.value = message.value !== undefined ? base64FromBytes(message.value) : undefined;
+    return obj;
+  },
+};
+
 export const SimpleWithSnakeCaseMap = {
   encode(message: SimpleWithSnakeCaseMap, writer: Writer = Writer.create()): Writer {
     Object.entries(message.entitiesById).forEach(([key, value]) => {
@@ -1616,7 +1734,12 @@ export const SimpleWithSnakeCaseMap = {
   },
   toJSON(message: SimpleWithSnakeCaseMap): unknown {
     const obj: any = {};
-    obj.entitiesById = message.entitiesById || undefined;
+    obj.entitiesById = {};
+    if (message.entitiesById) {
+      Object.entries(message.entitiesById).forEach(([k, v]) => {
+        obj.entitiesById[k] = v;
+      })
+    }
     return obj;
   },
 };

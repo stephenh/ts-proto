@@ -181,9 +181,11 @@ describe('simple', () => {
       nameLookup: { foo: 'bar' },
       intLookup: { 1: 2, 2: 0 },
       mapOfTimestamps: {},
+      mapOfBytes: {},
     };
     const s2 = PbSimpleWithMap.toObject(PbSimpleWithMap.decode(SimpleWithMap.encode(s1).finish()));
     delete s1.mapOfTimestamps;
+    delete s1.mapOfBytes;
     expect(s2).toEqual(s1);
   });
 
@@ -200,6 +202,7 @@ describe('simple', () => {
       ...s1,
       nameLookup: {},
       mapOfTimestamps: {},
+      mapOfBytes: {},
     });
   });
 
@@ -232,6 +235,7 @@ describe('simple', () => {
           "1": 2,
           "2": 0,
         },
+        "mapOfBytes": Object {},
         "mapOfTimestamps": Object {},
         "nameLookup": Object {},
       }

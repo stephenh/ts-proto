@@ -1220,9 +1220,24 @@ export const SimpleWithMap = {
   },
   toJSON(message: SimpleWithMap): unknown {
     const obj: any = {};
-    obj.entitiesById = message.entitiesById || undefined;
-    obj.nameLookup = message.nameLookup || undefined;
-    obj.intLookup = message.intLookup || undefined;
+    obj.entitiesById = {};
+    if (message.entitiesById) {
+      Object.entries(message.entitiesById).forEach(([k, v]) => {
+        obj.entitiesById[k] = v;
+      })
+    }
+    obj.nameLookup = {};
+    if (message.nameLookup) {
+      Object.entries(message.nameLookup).forEach(([k, v]) => {
+        obj.nameLookup[k] = v;
+      })
+    }
+    obj.intLookup = {};
+    if (message.intLookup) {
+      Object.entries(message.intLookup).forEach(([k, v]) => {
+        obj.intLookup[k] = v;
+      })
+    }
     return obj;
   },
 };
@@ -1467,7 +1482,12 @@ export const SimpleWithSnakeCaseMap = {
   },
   toJSON(message: SimpleWithSnakeCaseMap): unknown {
     const obj: any = {};
-    obj.entitiesById = message.entitiesById || undefined;
+    obj.entitiesById = {};
+    if (message.entitiesById) {
+      Object.entries(message.entitiesById).forEach(([k, v]) => {
+        obj.entitiesById[k] = v;
+      })
+    }
     return obj;
   },
 };
