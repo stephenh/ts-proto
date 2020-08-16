@@ -66,49 +66,49 @@ function longToNumber(long: Long) {
   return long.toNumber();
 }
 
-export const Tile_GeomType = {
-  UNKNOWN: 0 as const,
-  POINT: 1 as const,
-  LINESTRING: 2 as const,
-  POLYGON: 3 as const,
-  UNRECOGNIZED: -1 as const,
-  fromJSON(object: any): Tile_GeomType {
-    switch (object) {
-      case 0:
-      case "UNKNOWN":
-        return Tile_GeomType.UNKNOWN;
-      case 1:
-      case "POINT":
-        return Tile_GeomType.POINT;
-      case 2:
-      case "LINESTRING":
-        return Tile_GeomType.LINESTRING;
-      case 3:
-      case "POLYGON":
-        return Tile_GeomType.POLYGON;
-      case -1:
-      case "UNRECOGNIZED":
-      default:
-        return Tile_GeomType.UNRECOGNIZED;
-    }
-  },
-  toJSON(object: Tile_GeomType): string {
-    switch (object) {
-      case Tile_GeomType.UNKNOWN:
-        return "UNKNOWN";
-      case Tile_GeomType.POINT:
-        return "POINT";
-      case Tile_GeomType.LINESTRING:
-        return "LINESTRING";
-      case Tile_GeomType.POLYGON:
-        return "POLYGON";
-      default:
-        return "UNKNOWN";
-    }
-  },
+export enum Tile_GeomType {
+  UNKNOWN = 0,
+  POINT = 1,
+  LINESTRING = 2,
+  POLYGON = 3,
+  UNRECOGNIZED = -1,
 }
 
-export type Tile_GeomType = 0 | 1 | 2 | 3 | -1;
+export function tile_GeomTypeFromJSON(object: any): Tile_GeomType {
+  switch (object) {
+    case 0:
+    case "UNKNOWN":
+      return Tile_GeomType.UNKNOWN;
+    case 1:
+    case "POINT":
+      return Tile_GeomType.POINT;
+    case 2:
+    case "LINESTRING":
+      return Tile_GeomType.LINESTRING;
+    case 3:
+    case "POLYGON":
+      return Tile_GeomType.POLYGON;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return Tile_GeomType.UNRECOGNIZED;
+  }
+}
+
+export function tile_GeomTypeToJSON(object: Tile_GeomType): string {
+  switch (object) {
+    case Tile_GeomType.UNKNOWN:
+      return "UNKNOWN";
+    case Tile_GeomType.POINT:
+      return "POINT";
+    case Tile_GeomType.LINESTRING:
+      return "LINESTRING";
+    case Tile_GeomType.POLYGON:
+      return "POLYGON";
+    default:
+      return "UNKNOWN";
+  }
+}
 
 export const Tile = {
   encode(message: Tile, writer: Writer = Writer.create()): Writer {
@@ -376,7 +376,7 @@ export const Tile_Feature = {
       }
     }
     if (object.type !== undefined && object.type !== null) {
-      message.type = Tile_GeomType.fromJSON(object.type);
+      message.type = tile_GeomTypeFromJSON(object.type);
     } else {
       message.type = 0;
     }
@@ -421,7 +421,7 @@ export const Tile_Feature = {
     } else {
       obj.tags = [];
     }
-    obj.type = Tile_GeomType.toJSON(message.type);
+    obj.type = tile_GeomTypeToJSON(message.type);
     if (message.geometry) {
       obj.geometry = message.geometry.map(e => e || 0);
     } else {

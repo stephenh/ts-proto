@@ -2,12 +2,12 @@ import { google } from '../build/pbjs';
 import { CodeBlock, Member, TypeName, TypeNames } from 'ts-poet';
 import { Options, visit, LongOption, EnvOption, OneofOption } from './main';
 import { fail } from './utils';
-import { asSequence } from 'sequency';
 import FieldDescriptorProto = google.protobuf.FieldDescriptorProto;
 import CodeGeneratorRequest = google.protobuf.compiler.CodeGeneratorRequest;
 import EnumDescriptorProto = google.protobuf.EnumDescriptorProto;
 import DescriptorProto = google.protobuf.DescriptorProto;
 import SourceInfo from './sourceInfo';
+import { camelCase } from './case';
 
 /** Based on https://github.com/dcodeIO/protobuf.js/blob/master/src/types.js#L37. */
 export function basicWireType(type: FieldDescriptorProto.Type): number {
@@ -346,6 +346,12 @@ export function messageToTypeName(
 function toModuleAndType(typeMap: TypeMap, protoType: string): [string, string, DescriptorProto | EnumDescriptorProto] {
   return typeMap.get(protoType) || fail(`No type found for ${protoType}`);
 }
+
+export function getEnumMethod(typeMap: TypeMap, enumProtoType: string, methodSuffix: string): TypeName {
+  const [module, type] = toModuleAndType(typeMap, enumProtoType)
+  return TypeNames.importedType(`${camelCase(type)}${methodSuffix}@./${module}`);
+}
+
 
 /** Return the TypeName for any field (primitive/message/etc.) as exposed in the interface. */
 export function toTypeName(

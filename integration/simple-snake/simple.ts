@@ -268,119 +268,119 @@ function longToNumber(long: Long) {
   return long.toNumber();
 }
 
-export const StateEnum = {
-  UNKNOWN: 0 as const,
-  ON: 2 as const,
-  OFF: 3 as const,
-  UNRECOGNIZED: -1 as const,
-  fromJSON(object: any): StateEnum {
-    switch (object) {
-      case 0:
-      case "UNKNOWN":
-        return StateEnum.UNKNOWN;
-      case 2:
-      case "ON":
-        return StateEnum.ON;
-      case 3:
-      case "OFF":
-        return StateEnum.OFF;
-      case -1:
-      case "UNRECOGNIZED":
-      default:
-        return StateEnum.UNRECOGNIZED;
-    }
-  },
-  toJSON(object: StateEnum): string {
-    switch (object) {
-      case StateEnum.UNKNOWN:
-        return "UNKNOWN";
-      case StateEnum.ON:
-        return "ON";
-      case StateEnum.OFF:
-        return "OFF";
-      default:
-        return "UNKNOWN";
-    }
-  },
+export enum StateEnum {
+  UNKNOWN = 0,
+  ON = 2,
+  OFF = 3,
+  UNRECOGNIZED = -1,
 }
 
-export type StateEnum = 0 | 2 | 3 | -1;
-
-export const Child_Type = {
-  UNKNOWN: 0 as const,
-  GOOD: 1 as const,
-  BAD: 2 as const,
-  UNRECOGNIZED: -1 as const,
-  fromJSON(object: any): Child_Type {
-    switch (object) {
-      case 0:
-      case "UNKNOWN":
-        return Child_Type.UNKNOWN;
-      case 1:
-      case "GOOD":
-        return Child_Type.GOOD;
-      case 2:
-      case "BAD":
-        return Child_Type.BAD;
-      case -1:
-      case "UNRECOGNIZED":
-      default:
-        return Child_Type.UNRECOGNIZED;
-    }
-  },
-  toJSON(object: Child_Type): string {
-    switch (object) {
-      case Child_Type.UNKNOWN:
-        return "UNKNOWN";
-      case Child_Type.GOOD:
-        return "GOOD";
-      case Child_Type.BAD:
-        return "BAD";
-      default:
-        return "UNKNOWN";
-    }
-  },
+export function stateEnumFromJSON(object: any): StateEnum {
+  switch (object) {
+    case 0:
+    case "UNKNOWN":
+      return StateEnum.UNKNOWN;
+    case 2:
+    case "ON":
+      return StateEnum.ON;
+    case 3:
+    case "OFF":
+      return StateEnum.OFF;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return StateEnum.UNRECOGNIZED;
+  }
 }
 
-export type Child_Type = 0 | 1 | 2 | -1;
-
-export const Nested_InnerEnum = {
-  UNKNOWN_INNER: 0 as const,
-  GOOD: 100 as const,
-  BAD: 1000 as const,
-  UNRECOGNIZED: -1 as const,
-  fromJSON(object: any): Nested_InnerEnum {
-    switch (object) {
-      case 0:
-      case "UNKNOWN_INNER":
-        return Nested_InnerEnum.UNKNOWN_INNER;
-      case 100:
-      case "GOOD":
-        return Nested_InnerEnum.GOOD;
-      case 1000:
-      case "BAD":
-        return Nested_InnerEnum.BAD;
-      case -1:
-      case "UNRECOGNIZED":
-      default:
-        return Nested_InnerEnum.UNRECOGNIZED;
-    }
-  },
-  toJSON(object: Nested_InnerEnum): string {
-    switch (object) {
-      case Nested_InnerEnum.UNKNOWN_INNER:
-        return "UNKNOWN_INNER";
-      case Nested_InnerEnum.GOOD:
-        return "GOOD";
-      case Nested_InnerEnum.BAD:
-        return "BAD";
-      default:
-        return "UNKNOWN";
-    }
-  },
+export function stateEnumToJSON(object: StateEnum): string {
+  switch (object) {
+    case StateEnum.UNKNOWN:
+      return "UNKNOWN";
+    case StateEnum.ON:
+      return "ON";
+    case StateEnum.OFF:
+      return "OFF";
+    default:
+      return "UNKNOWN";
+  }
 }
 
-export type Nested_InnerEnum = 0 | 100 | 1000 | -1;
+export enum Child_Type {
+  UNKNOWN = 0,
+  GOOD = 1,
+  BAD = 2,
+  UNRECOGNIZED = -1,
+}
+
+export function child_TypeFromJSON(object: any): Child_Type {
+  switch (object) {
+    case 0:
+    case "UNKNOWN":
+      return Child_Type.UNKNOWN;
+    case 1:
+    case "GOOD":
+      return Child_Type.GOOD;
+    case 2:
+    case "BAD":
+      return Child_Type.BAD;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return Child_Type.UNRECOGNIZED;
+  }
+}
+
+export function child_TypeToJSON(object: Child_Type): string {
+  switch (object) {
+    case Child_Type.UNKNOWN:
+      return "UNKNOWN";
+    case Child_Type.GOOD:
+      return "GOOD";
+    case Child_Type.BAD:
+      return "BAD";
+    default:
+      return "UNKNOWN";
+  }
+}
+
+export enum Nested_InnerEnum {
+  UNKNOWN_INNER = 0,
+  GOOD = 100,
+  BAD = 1000,
+  UNRECOGNIZED = -1,
+}
+
+export function nested_InnerEnumFromJSON(object: any): Nested_InnerEnum {
+  switch (object) {
+    case 0:
+    case "UNKNOWN_INNER":
+      return Nested_InnerEnum.UNKNOWN_INNER;
+    case 100:
+    case "GOOD":
+      return Nested_InnerEnum.GOOD;
+    case 1000:
+    case "BAD":
+      return Nested_InnerEnum.BAD;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return Nested_InnerEnum.UNRECOGNIZED;
+  }
+}
+
+export function nested_InnerEnumToJSON(object: Nested_InnerEnum): string {
+  switch (object) {
+    case Nested_InnerEnum.UNKNOWN_INNER:
+      return "UNKNOWN_INNER";
+    case Nested_InnerEnum.GOOD:
+      return "GOOD";
+    case Nested_InnerEnum.BAD:
+      return "BAD";
+    default:
+      return "UNKNOWN";
+  }
+}
 
 export const Simple = {
   encode(message: Simple, writer: Writer = Writer.create()): Writer {
@@ -503,7 +503,7 @@ export const Simple = {
       message.child = undefined;
     }
     if (object.state !== undefined && object.state !== null) {
-      message.state = StateEnum.fromJSON(object.state);
+      message.state = stateEnumFromJSON(object.state);
     } else {
       message.state = 0;
     }
@@ -524,7 +524,7 @@ export const Simple = {
     }
     if (object.old_states !== undefined && object.old_states !== null) {
       for (const e of object.old_states) {
-        message.old_states.push(StateEnum.fromJSON(e));
+        message.old_states.push(stateEnumFromJSON(e));
       }
     }
     if (object.thing !== undefined && object.thing !== null) {
@@ -598,7 +598,7 @@ export const Simple = {
     obj.age = message.age || 0;
     obj.created_at = message.created_at !== undefined ? message.created_at.toISOString() : null;
     obj.child = message.child ? Child.toJSON(message.child) : undefined;
-    obj.state = StateEnum.toJSON(message.state);
+    obj.state = stateEnumToJSON(message.state);
     if (message.grand_children) {
       obj.grand_children = message.grand_children.map(e => e ? Child.toJSON(e) : undefined);
     } else {
@@ -615,7 +615,7 @@ export const Simple = {
       obj.snacks = [];
     }
     if (message.old_states) {
-      obj.old_states = message.old_states.map(e => StateEnum.toJSON(e));
+      obj.old_states = message.old_states.map(e => stateEnumToJSON(e));
     } else {
       obj.old_states = [];
     }
@@ -658,7 +658,7 @@ export const Child = {
       message.name = "";
     }
     if (object.type !== undefined && object.type !== null) {
-      message.type = Child_Type.fromJSON(object.type);
+      message.type = child_TypeFromJSON(object.type);
     } else {
       message.type = 0;
     }
@@ -681,7 +681,7 @@ export const Child = {
   toJSON(message: Child): unknown {
     const obj: any = {};
     obj.name = message.name || "";
-    obj.type = Child_Type.toJSON(message.type);
+    obj.type = child_TypeToJSON(message.type);
     return obj;
   },
 };
@@ -731,7 +731,7 @@ export const Nested = {
       message.message = undefined;
     }
     if (object.state !== undefined && object.state !== null) {
-      message.state = Nested_InnerEnum.fromJSON(object.state);
+      message.state = nested_InnerEnumFromJSON(object.state);
     } else {
       message.state = 0;
     }
@@ -760,7 +760,7 @@ export const Nested = {
     const obj: any = {};
     obj.name = message.name || "";
     obj.message = message.message ? Nested_InnerMessage.toJSON(message.message) : undefined;
-    obj.state = Nested_InnerEnum.toJSON(message.state);
+    obj.state = nested_InnerEnumToJSON(message.state);
     return obj;
   },
 };

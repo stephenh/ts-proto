@@ -40,43 +40,43 @@ const basePleaseChoose_Submessage: object = {
   name: "",
 };
 
-export const PleaseChoose_StateEnum = {
-  UNKNOWN: 0 as const,
-  ON: 2 as const,
-  OFF: 3 as const,
-  UNRECOGNIZED: -1 as const,
-  fromJSON(object: any): PleaseChoose_StateEnum {
-    switch (object) {
-      case 0:
-      case "UNKNOWN":
-        return PleaseChoose_StateEnum.UNKNOWN;
-      case 2:
-      case "ON":
-        return PleaseChoose_StateEnum.ON;
-      case 3:
-      case "OFF":
-        return PleaseChoose_StateEnum.OFF;
-      case -1:
-      case "UNRECOGNIZED":
-      default:
-        return PleaseChoose_StateEnum.UNRECOGNIZED;
-    }
-  },
-  toJSON(object: PleaseChoose_StateEnum): string {
-    switch (object) {
-      case PleaseChoose_StateEnum.UNKNOWN:
-        return "UNKNOWN";
-      case PleaseChoose_StateEnum.ON:
-        return "ON";
-      case PleaseChoose_StateEnum.OFF:
-        return "OFF";
-      default:
-        return "UNKNOWN";
-    }
-  },
+export enum PleaseChoose_StateEnum {
+  UNKNOWN = 0,
+  ON = 2,
+  OFF = 3,
+  UNRECOGNIZED = -1,
 }
 
-export type PleaseChoose_StateEnum = 0 | 2 | 3 | -1;
+export function pleaseChoose_StateEnumFromJSON(object: any): PleaseChoose_StateEnum {
+  switch (object) {
+    case 0:
+    case "UNKNOWN":
+      return PleaseChoose_StateEnum.UNKNOWN;
+    case 2:
+    case "ON":
+      return PleaseChoose_StateEnum.ON;
+    case 3:
+    case "OFF":
+      return PleaseChoose_StateEnum.OFF;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return PleaseChoose_StateEnum.UNRECOGNIZED;
+  }
+}
+
+export function pleaseChoose_StateEnumToJSON(object: PleaseChoose_StateEnum): string {
+  switch (object) {
+    case PleaseChoose_StateEnum.UNKNOWN:
+      return "UNKNOWN";
+    case PleaseChoose_StateEnum.ON:
+      return "ON";
+    case PleaseChoose_StateEnum.OFF:
+      return "OFF";
+    default:
+      return "UNKNOWN";
+  }
+}
 
 export const PleaseChoose = {
   encode(message: PleaseChoose, writer: Writer = Writer.create()): Writer {
@@ -189,7 +189,7 @@ export const PleaseChoose = {
       message.bunchaBytes = bytesFromBase64(object.bunchaBytes);
     }
     if (object.anEnum !== undefined && object.anEnum !== null) {
-      message.anEnum = PleaseChoose_StateEnum.fromJSON(object.anEnum);
+      message.anEnum = pleaseChoose_StateEnumFromJSON(object.anEnum);
     } else {
       message.anEnum = undefined;
     }
@@ -280,7 +280,7 @@ export const PleaseChoose = {
     obj.aMessage = message.aMessage ? PleaseChoose_Submessage.toJSON(message.aMessage) : undefined;
     obj.aBool = message.aBool || undefined;
     obj.bunchaBytes = message.bunchaBytes !== undefined ? base64FromBytes(message.bunchaBytes) : undefined;
-    obj.anEnum = message.anEnum !== undefined ? PleaseChoose_StateEnum.toJSON(message.anEnum) : undefined;
+    obj.anEnum = message.anEnum !== undefined ? pleaseChoose_StateEnumToJSON(message.anEnum) : undefined;
     obj.age = message.age || 0;
     obj.either = message.either || undefined;
     obj.or = message.or || undefined;
