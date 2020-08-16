@@ -105,6 +105,7 @@ describe('simple json', () => {
     expect(s2).toMatchInlineSnapshot(`
       Object {
         "age": 0,
+        "birthday": undefined,
         "blobs": Array [],
         "child": undefined,
         "coins": Array [],
@@ -125,6 +126,7 @@ describe('simple json', () => {
     expect(s2).toMatchInlineSnapshot(`
       Object {
         "age": 0,
+        "birthday": undefined,
         "blobs": Array [],
         "child": undefined,
         "coins": Array [],
@@ -175,6 +177,7 @@ describe('simple json', () => {
         "intLookup": Object {
           "1": 0,
         },
+        "mapOfTimestamps": Object {},
         "nameLookup": Object {},
       }
     `);
@@ -201,8 +204,8 @@ describe('simple json', () => {
         "nameLookup": Object {},
       }
     `);
-    expect(s1.mapOfTimestamps["a"]).toBeInstanceOf(Date);
-    expect(s1.mapOfTimestamps["b"]).toBeInstanceOf(Date);
+    expect(s1.mapOfTimestamps['a']).toBeInstanceOf(Date);
+    expect(s1.mapOfTimestamps['b']).toBeInstanceOf(Date);
   });
 
   it('can encode json', () => {
@@ -221,10 +224,12 @@ describe('simple json', () => {
       createdAt: new Date(1_000),
       thing: undefined,
       blobs: [],
+      birthday: undefined,
     };
     expect(Simple.toJSON(s1)).toMatchInlineSnapshot(`
       Object {
         "age": 1,
+        "birthday": undefined,
         "blobs": Array [],
         "child": Object {
           "name": "foo",
@@ -265,6 +270,7 @@ describe('simple json', () => {
     expect(Simple.toJSON({} as Simple)).toMatchInlineSnapshot(`
       Object {
         "age": 0,
+        "birthday": undefined,
         "blobs": Array [],
         "child": undefined,
         "coins": Array [],
@@ -285,6 +291,7 @@ describe('simple json', () => {
     expect(s2).toMatchInlineSnapshot(`
       Object {
         "age": 0,
+        "birthday": undefined,
         "blobs": Array [],
         "child": Object {
           "name": "a",

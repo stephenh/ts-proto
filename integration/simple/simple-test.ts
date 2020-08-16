@@ -33,6 +33,7 @@ describe('simple', () => {
       createdAt: jan1,
       thing: undefined,
       blobs: [],
+      birthday: undefined,
     };
     expect(simple.name).toEqual('asdf');
   });
@@ -73,6 +74,7 @@ describe('simple', () => {
       createdAt: jan1,
       thing: undefined,
       blobs: [],
+      birthday: undefined,
     };
     const s2 = PbSimple.toObject(PbSimple.decode(Simple.encode(s1).finish()));
 
@@ -160,6 +162,7 @@ describe('simple', () => {
       createdAt: jan1,
       thing: undefined,
       blobs: [],
+      birthday: undefined,
     };
     const s2 = PbSimple.toObject(PbSimple.decode(Simple.encode(s1).finish()));
     delete s1.blobs;
@@ -180,6 +183,7 @@ describe('simple', () => {
       mapOfTimestamps: {},
     };
     const s2 = PbSimpleWithMap.toObject(PbSimpleWithMap.decode(SimpleWithMap.encode(s1).finish()));
+    delete s1.mapOfTimestamps;
     expect(s2).toEqual(s1);
   });
 
@@ -192,7 +196,11 @@ describe('simple', () => {
       intLookup: { 1: 2, 2: 0 },
     });
     const s2 = SimpleWithMap.decode(new Reader(PbSimpleWithMap.encode(s1).finish()));
-    expect(s2).toEqual(s1);
+    expect(s2).toEqual({
+      ...s1,
+      nameLookup: {},
+      mapOfTimestamps: {},
+    });
   });
 
   it('has fromPartial', () => {
@@ -200,6 +208,7 @@ describe('simple', () => {
     expect(s1).toMatchInlineSnapshot(`
       Object {
         "age": 0,
+        "birthday": undefined,
         "blobs": Array [],
         "child": undefined,
         "coins": Array [],
@@ -223,6 +232,7 @@ describe('simple', () => {
           "1": 2,
           "2": 0,
         },
+        "mapOfTimestamps": Object {},
         "nameLookup": Object {},
       }
     `);
