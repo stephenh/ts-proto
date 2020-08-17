@@ -7,7 +7,6 @@ import {
   Member,
   Modifier,
   PropertySpec,
-  TypeName,
   TypeNames,
 } from 'ts-poet';
 import { google } from '../build/pbjs';
@@ -15,11 +14,12 @@ import {
   basicLongWireType,
   basicTypeName,
   basicWireType,
+  BatchMethod,
   defaultValue,
+  detectBatchMethod,
   detectMapType,
   getEnumMethod,
   isBytes,
-  isEmptyType,
   isEnum,
   isLong,
   isMapType,
@@ -29,8 +29,11 @@ import {
   isTimestamp,
   isValueType,
   isWithinOneOf,
-  messageToTypeName,
   packedType,
+  requestType,
+  responseObservable,
+  responsePromise,
+  responseType,
   toReaderCall,
   toTypeName,
   TypeMap,
@@ -39,13 +42,18 @@ import {
 import { asSequence } from 'sequency';
 import SourceInfo, { Fields } from './sourceInfo';
 import { maybeAddComment, optionsFromParameter, singular } from './utils';
+import { camelCase, camelToSnake, capitalize, maybeSnakeToCamel } from './case';
+import {
+  generateNestjsGrpcServiceMethodsDecorator,
+  generateNestjsServiceClient,
+  generateNestjsServiceController,
+} from './nestjs';
 import DescriptorProto = google.protobuf.DescriptorProto;
 import FieldDescriptorProto = google.protobuf.FieldDescriptorProto;
 import FileDescriptorProto = google.protobuf.FileDescriptorProto;
 import EnumDescriptorProto = google.protobuf.EnumDescriptorProto;
 import ServiceDescriptorProto = google.protobuf.ServiceDescriptorProto;
 import MethodDescriptorProto = google.protobuf.MethodDescriptorProto;
-import { camelCase, camelToSnake, capitalize, maybeSnakeToCamel } from './case';
 
 const dataloader = TypeNames.anyType('DataLoader*dataloader');
 
@@ -1167,7 +1175,7 @@ function generateFromPartial(
   return func.addStatement('return message');
 }
 
-const contextTypeVar = TypeNames.typeVariable('Context', TypeNames.bound('DataLoaders'));
+export const contextTypeVar = TypeNames.typeVariable('Context', TypeNames.bound('DataLoaders'));
 
 function generateService(
   typeMap: TypeMap,
@@ -1228,22 +1236,6 @@ function generateService(
     }
   });
   return service;
-}
-
-interface BatchMethod {
-  methodDesc: MethodDescriptorProto;
-  // a ${package + service + method name} key to identify this method in caches
-  uniqueIdentifier: string;
-  singleMethodName: string;
-  inputFieldName: string;
-  inputType: TypeName;
-  outputFieldName: string;
-  outputType: TypeName;
-  mapType: boolean;
-}
-
-function hasSingleRepeatedField(messageDesc: DescriptorProto): boolean {
-  return messageDesc.field.length == 1 && messageDesc.field[0].label === FieldDescriptorProto.Label.LABEL_REPEATED;
 }
 
 function generateRegularRpcMethod(
@@ -1316,234 +1308,6 @@ function generateServiceClientImpl(
     }
   }
   return client;
-}
-
-function generateNestjsServiceController(
-  typeMap: TypeMap,
-  fileDesc: FileDescriptorProto,
-  sourceInfo: SourceInfo,
-  serviceDesc: ServiceDescriptorProto,
-  options: Options
-): InterfaceSpec {
-  let service = InterfaceSpec.create(`${serviceDesc.name}Controller`).addModifiers(Modifier.EXPORT);
-  if (options.useContext) {
-    service = service.addTypeVariable(contextTypeVar);
-  }
-  maybeAddComment(sourceInfo, (text) => (service = service.addJavadoc(text)));
-
-  serviceDesc.method.forEach((methodDesc, index) => {
-    if (options.lowerCaseServiceMethods) {
-      methodDesc.name = camelCase(methodDesc.name);
-    }
-
-    let requestFn = FunctionSpec.create(methodDesc.name);
-    if (options.useContext) {
-      requestFn = requestFn.addParameter('ctx', TypeNames.typeVariable('Context'));
-    }
-    const info = sourceInfo.lookup(Fields.service.method, index);
-    maybeAddComment(info, (text) => (requestFn = requestFn.addJavadoc(text)));
-
-    requestFn = requestFn.addParameter('request', requestType(typeMap, methodDesc, options));
-
-    // Use metadata as last argument for interface only configuration
-    if (options.addGrpcMetadata) {
-      requestFn = requestFn.addParameter(options.addNestjsRestParameter ? 'metadata' : 'metadata?', 'Metadata@grpc');
-    }
-    if (options.addNestjsRestParameter) {
-      requestFn = requestFn.addParameter('...rest', 'any');
-    }
-
-    // Return observable for interface only configuration, passing returnObservable=true and methodDesc.serverStreaming=true
-    if (isEmptyType(methodDesc.outputType)) {
-      requestFn = requestFn.returns(TypeNames.anyType('void'));
-    } else if (options.returnObservable || methodDesc.serverStreaming) {
-      requestFn = requestFn.returns(responseObservable(typeMap, methodDesc, options));
-    } else {
-      // generate nestjs union type
-      requestFn = requestFn.returns(
-        TypeNames.unionType(
-          responsePromise(typeMap, methodDesc, options),
-          responseObservable(typeMap, methodDesc, options),
-          responseType(typeMap, methodDesc, options)
-        )
-      );
-    }
-
-    service = service.addFunction(requestFn);
-
-    if (options.useContext) {
-      const batchMethod = detectBatchMethod(typeMap, fileDesc, serviceDesc, methodDesc, options);
-      if (batchMethod) {
-        const name = batchMethod.methodDesc.name.replace('Batch', 'Get');
-        let batchFn = FunctionSpec.create(name);
-        if (options.useContext) {
-          batchFn = batchFn.addParameter('ctx', TypeNames.typeVariable('Context'));
-        }
-        batchFn = batchFn.addParameter(singular(batchMethod.inputFieldName), batchMethod.inputType);
-        batchFn = batchFn.returns(TypeNames.PROMISE.param(batchMethod.outputType));
-        service = service.addFunction(batchFn);
-      }
-    }
-  });
-  return service;
-}
-
-function generateNestjsServiceClient(
-  typeMap: TypeMap,
-  fileDesc: FileDescriptorProto,
-  sourceInfo: SourceInfo,
-  serviceDesc: ServiceDescriptorProto,
-  options: Options
-): InterfaceSpec {
-  let service = InterfaceSpec.create(`${serviceDesc.name}Client`).addModifiers(Modifier.EXPORT);
-  if (options.useContext) {
-    service = service.addTypeVariable(contextTypeVar);
-  }
-  maybeAddComment(sourceInfo, (text) => (service = service.addJavadoc(text)));
-
-  serviceDesc.method.forEach((methodDesc, index) => {
-    if (options.lowerCaseServiceMethods) {
-      methodDesc.name = camelCase(methodDesc.name);
-    }
-
-    let requestFn = FunctionSpec.create(methodDesc.name);
-    if (options.useContext) {
-      requestFn = requestFn.addParameter('ctx', TypeNames.typeVariable('Context'));
-    }
-    const info = sourceInfo.lookup(Fields.service.method, index);
-    maybeAddComment(info, (text) => (requestFn = requestFn.addJavadoc(text)));
-
-    requestFn = requestFn.addParameter('request', requestType(typeMap, methodDesc, options));
-
-    // Use metadata as last argument for interface only configuration
-    if (options.addGrpcMetadata) {
-      requestFn = requestFn.addParameter(options.addNestjsRestParameter ? 'metadata' : 'metadata?', 'Metadata@grpc');
-    }
-    if (options.addNestjsRestParameter) {
-      requestFn = requestFn.addParameter('...rest', 'any');
-    }
-
-    // Return observable since nestjs client always returns an Observable
-    requestFn = requestFn.returns(responseObservable(typeMap, methodDesc, options));
-
-    service = service.addFunction(requestFn);
-
-    if (options.useContext) {
-      const batchMethod = detectBatchMethod(typeMap, fileDesc, serviceDesc, methodDesc, options);
-      if (batchMethod) {
-        const name = batchMethod.methodDesc.name.replace('Batch', 'Get');
-        let batchFn = FunctionSpec.create(name);
-        if (options.useContext) {
-          batchFn = batchFn.addParameter('ctx', TypeNames.typeVariable('Context'));
-        }
-        batchFn = batchFn.addParameter(singular(batchMethod.inputFieldName), batchMethod.inputType);
-        batchFn = batchFn.returns(TypeNames.PROMISE.param(batchMethod.outputType));
-        service = service.addFunction(batchFn);
-      }
-    }
-  });
-  return service;
-}
-
-function generateNestjsGrpcServiceMethodsDecorator(
-  serviceDesc: ServiceDescriptorProto,
-  options: Options
-): FunctionSpec {
-  let grpcServiceDecorator = FunctionSpec.create(`${serviceDesc.name}ControllerMethods`).addModifiers(Modifier.EXPORT);
-
-  const grpcMethods = serviceDesc.method
-    .filter((m) => !m.clientStreaming)
-    .map((m) => `'${options.lowerCaseServiceMethods ? camelCase(m.name) : m.name}'`)
-    .join(', ');
-
-  const grpcStreamMethods = serviceDesc.method
-    .filter((m) => m.clientStreaming)
-    .map((m) => `'${options.lowerCaseServiceMethods ? camelCase(m.name) : m.name}'`)
-    .join(', ');
-
-  const grpcMethodType = TypeNames.importedType('GrpcMethod@@nestjs/microservices');
-  const grpcStreamMethodType = TypeNames.importedType('GrpcStreamMethod@@nestjs/microservices');
-
-  let decoratorFunction = FunctionSpec.createCallable().addParameter('constructor', TypeNames.typeVariable('Function'));
-
-  // add loop for applying @GrpcMethod decorators to functions
-  decoratorFunction = generateGrpcMethodDecoratorLoop(
-    decoratorFunction,
-    serviceDesc,
-    'grpcMethods',
-    grpcMethods,
-    grpcMethodType
-  );
-
-  // add loop for applying @GrpcStreamMethod decorators to functions
-  decoratorFunction = generateGrpcMethodDecoratorLoop(
-    decoratorFunction,
-    serviceDesc,
-    'grpcStreamMethods',
-    grpcStreamMethods,
-    grpcStreamMethodType
-  );
-
-  const body = CodeBlock.empty().add('return function %F', decoratorFunction);
-
-  grpcServiceDecorator = grpcServiceDecorator.addCodeBlock(body);
-
-  return grpcServiceDecorator;
-}
-
-function generateGrpcMethodDecoratorLoop(
-  decoratorFunction: FunctionSpec,
-  serviceDesc: ServiceDescriptorProto,
-  grpcMethodsName: string,
-  grpcMethods: string,
-  grpcType: any
-): FunctionSpec {
-  return decoratorFunction
-    .addStatement('const %L: string[] = [%L]', grpcMethodsName, grpcMethods)
-    .beginControlFlow('for (const method of %L)', grpcMethodsName)
-    .addStatement(`const %L: any = %L`, 'descriptor', `Reflect.getOwnPropertyDescriptor(constructor.prototype, method)`)
-    .addStatement(`%T('${serviceDesc.name}', method)(constructor.prototype[method], method, descriptor)`, grpcType)
-    .endControlFlow();
-}
-
-function detectBatchMethod(
-  typeMap: TypeMap,
-  fileDesc: FileDescriptorProto,
-  serviceDesc: ServiceDescriptorProto,
-  methodDesc: MethodDescriptorProto,
-  options: Options
-): BatchMethod | undefined {
-  const nameMatches = methodDesc.name.startsWith('Batch');
-  const inputType = typeMap.get(methodDesc.inputType);
-  const outputType = typeMap.get(methodDesc.outputType);
-  if (nameMatches && inputType && outputType) {
-    // TODO: This might be enums?
-    const inputTypeDesc = inputType[2] as DescriptorProto;
-    const outputTypeDesc = outputType[2] as DescriptorProto;
-    if (hasSingleRepeatedField(inputTypeDesc) && hasSingleRepeatedField(outputTypeDesc)) {
-      const singleMethodName = methodDesc.name.replace('Batch', 'Get');
-      const inputFieldName = inputTypeDesc.field[0].name;
-      const inputType = basicTypeName(typeMap, inputTypeDesc.field[0], options); // e.g. repeated string -> string
-      const outputFieldName = outputTypeDesc.field[0].name;
-      let outputType = basicTypeName(typeMap, outputTypeDesc.field[0], options); // e.g. repeated Entity -> Entity
-      const mapType = detectMapType(typeMap, outputTypeDesc, outputTypeDesc.field[0], options);
-      if (mapType) {
-        outputType = mapType.valueType;
-      }
-      const uniqueIdentifier = `${fileDesc.package}.${serviceDesc.name}.${methodDesc.name}`;
-      return {
-        methodDesc,
-        uniqueIdentifier,
-        singleMethodName,
-        inputFieldName,
-        inputType,
-        outputFieldName,
-        outputType,
-        mapType: !!mapType,
-      };
-    }
-  }
-  return undefined;
 }
 
 /** We've found a BatchXxx method, create a synthetic GetXxx method that calls it. */
@@ -1665,26 +1429,6 @@ function generateDataLoadersType(): InterfaceSpec {
     .addParameter('constructorFn', TypeNames.lambda2([], TypeNames.typeVariable('T')))
     .returns(TypeNames.typeVariable('T'));
   return InterfaceSpec.create('DataLoaders').addModifiers(Modifier.EXPORT).addFunction(fn);
-}
-
-function requestType(typeMap: TypeMap, methodDesc: MethodDescriptorProto, options: Options): TypeName {
-  let typeName = messageToTypeName(typeMap, methodDesc.inputType, options);
-  if (methodDesc.clientStreaming) {
-    return TypeNames.anyType('Observable@rxjs').param(typeName);
-  }
-  return typeName;
-}
-
-function responseType(typeMap: TypeMap, methodDesc: MethodDescriptorProto, options: Options): TypeName {
-  return messageToTypeName(typeMap, methodDesc.outputType, options);
-}
-
-function responsePromise(typeMap: TypeMap, methodDesc: MethodDescriptorProto, options: Options): TypeName {
-  return TypeNames.PROMISE.param(responseType(typeMap, methodDesc, options));
-}
-
-function responseObservable(typeMap: TypeMap, methodDesc: MethodDescriptorProto, options: Options): TypeName {
-  return TypeNames.anyType('Observable@rxjs').param(responseType(typeMap, methodDesc, options));
 }
 
 function maybeCastToNumber(
