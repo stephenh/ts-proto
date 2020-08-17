@@ -168,15 +168,13 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
   }
 
   visitServices(fileDesc, sourceInfo, (serviceDesc, sInfo) => {
-    file = file.addInterface(
-      options.nestJs
-        ? generateNestjsServiceController(typeMap, fileDesc, sInfo, serviceDesc, options)
-        : generateService(typeMap, fileDesc, sInfo, serviceDesc, options)
-    );
     if (options.nestJs) {
+      // NestJS is sufficiently different that we special case all of the client/server interfaces
+
       // generate nestjs grpc client interface
       file = file.addInterface(generateNestjsServiceClient(typeMap, fileDesc, sInfo, serviceDesc, options));
-
+      // and the service controller interface
+      file = file.addInterface(generateNestjsServiceController(typeMap, fileDesc, sInfo, serviceDesc, options));
       // generate nestjs grpc service controller decorator
       file = file.addFunction(generateNestjsGrpcServiceMethodsDecorator(serviceDesc, options));
 
@@ -186,10 +184,15 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
       }
 
       file = file.addCode(CodeBlock.empty().add(`export const %L = '%L';`, serviceConstName, serviceDesc.name));
+    } else {
+      // This could be twirp or grpc-web or JSON (maybe). So far all of their interaces
+      // are fairly similar.
+      file = file.addInterface(generateService(typeMap, fileDesc, sInfo, serviceDesc, options));
+
+      if (options.outputClientImpl) {
+        file = file.addClass(generateServiceClientImpl(typeMap, fileDesc, serviceDesc, options));
+      }
     }
-    file = !options.outputClientImpl
-      ? file
-      : file.addClass(generateServiceClientImpl(typeMap, fileDesc, serviceDesc, options));
   });
 
   if (options.outputClientImpl && fileDesc.service.length > 0) {
