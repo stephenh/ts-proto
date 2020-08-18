@@ -31,7 +31,7 @@ import {
   generateNestjsGrpcServiceMethodsDecorator,
   generateNestjsServiceClient,
   generateNestjsServiceController
-} from './nestjs';
+} from './generate-nestjs';
 import { generateDataLoadersType, generateRpcType, generateService, generateServiceClientImpl } from './generate-services';
 import DescriptorProto = google.protobuf.DescriptorProto;
 import FieldDescriptorProto = google.protobuf.FieldDescriptorProto;
