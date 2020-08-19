@@ -3,10 +3,7 @@ syntax = "proto3";
 package rpx;
 option go_package = "lib/rpx";
 
-
-import "github.com/gogo/protobuf/gogoproto/gogo.proto";
 import "types.proto";
-
 
 service DashState {
   rpc UserSettings(pb.Empty) returns (DashUserSettingsState);
@@ -26,7 +23,7 @@ message DashFlash {
 
 message DashUserSettingsState {
   string email = 1;
-  URLs urls = 6 [(gogoproto.customname) = "URLs"];
+  URLs urls = 6;
   repeated DashFlash flashes = 7;
 
   message URLs {
@@ -49,7 +46,7 @@ message DashCred {
   string description = 2;
   string metadata = 3;
   string token = 4;
-  pb.ID id = 7 [(gogoproto.customname) = "ID"];
+  pb.ID id = 7;
 }
 
 message DashAPICredsCreateReq {
@@ -58,13 +55,13 @@ message DashAPICredsCreateReq {
 }
 
 message DashAPICredsUpdateReq {
-  string cred_sid = 1 [(gogoproto.customname) = "CredSID"];
+  string cred_sid = 1;
   string description = 2;
   string metadata = 3;
-  pb.ID id = 5 [(gogoproto.customname) = "ID"];
+  pb.ID id = 5;
 }
 
 message DashAPICredsDeleteReq {
-  string cred_sid = 1 [(gogoproto.customname) = "CredSID"];
-  pb.ID id = 3 [(gogoproto.customname) = "ID"];
+  string cred_sid = 1;
+  pb.ID id = 3;
 }

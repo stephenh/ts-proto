@@ -4,8 +4,6 @@ package pb;
 
 option go_package = "../pb";
 
-import "github.com/gogo/protobuf/gogoproto/gogo.proto";
-
 //-----------------
 // Shared datatypes
 //-----------------
@@ -47,12 +45,10 @@ message OptBool {
 }
 
 message IPNet {
-  bytes ip = 1 [(gogoproto.customname) = "IP"];
+  bytes ip = 1;
   bytes mask = 2;
 }
 
 message ID {
-  option (gogoproto.equal) = true;
-
-  string id = 1 [(gogoproto.customname) = "ID"];
+  string id = 1;
 }
