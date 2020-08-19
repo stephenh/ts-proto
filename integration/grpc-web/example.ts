@@ -154,7 +154,7 @@ export class GrpcWebImpl implements Rpc {
 
   unary<T extends UnaryMethodDefinitionish>(metadata: T, _request: any): Promise<any> {
     const request = { ..._request, ...metadata.requestType };
-    return new Promise((reject, resolve) => {
+    return new Promise((resolve, reject) => {
       grpc.unary(metadata, {
         request,
         host: this.host,

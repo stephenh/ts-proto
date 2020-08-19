@@ -170,7 +170,7 @@ function generateGrpcWebImpl(options: Options): ClassSpec {
         .addCodeBlock(
           CodeBlock.empty().add(
             `const request = { ..._request, ...metadata.requestType };
-return new Promise((reject, resolve) => {
+return new Promise((resolve, reject) => {
   %T.unary(metadata, {
     request,
     host: this.host,
