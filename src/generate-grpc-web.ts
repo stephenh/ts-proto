@@ -37,7 +37,7 @@ export function generateGrpcClientImpl(
 
   // Create a method for each FooService method
   for (const methodDesc of serviceDesc.method) {
-    client = client.addFunction(generateRpcMethod(options, typeMap, fileDesc, serviceDesc, methodDesc));
+    client = client.addFunction(generateRpcMethod(options, typeMap, serviceDesc, methodDesc));
   }
 
   return client;
@@ -47,7 +47,6 @@ export function generateGrpcClientImpl(
 function generateRpcMethod(
   options: Options,
   typeMap: TypeMap,
-  fileDesc: FileDescriptorProto,
   serviceDesc: ServiceDescriptorProto,
   methodDesc: MethodDescriptorProto
 ) {
@@ -55,7 +54,8 @@ function generateRpcMethod(
   let inputType = requestType(typeMap, methodDesc, options);
   return requestFn
     .addParameter('request', inputType)
-    .addStatement('return this.rpc.unary(%L, request)', methodDescName(serviceDesc, methodDesc))
+    .addParameter('metadata?', TypeNames.anyType('grpc.Metadata'))
+    .addStatement('return this.rpc.unary(%L, request, metadata)', methodDescName(serviceDesc, methodDesc))
     .returns(responsePromise(typeMap, methodDesc, options));
 }
 
@@ -158,8 +158,9 @@ function generateGrpcWebRpcType(): InterfaceSpec {
   const t = TypeNames.typeVariable('T', TypeNames.bound('UnaryMethodDefinitionish'));
   fn = fn
     .addTypeVariable(t)
-    .addParameter('metadata', t)
+    .addParameter('methodDesc', t)
     .addParameter('request', TypeNames.ANY)
+    .addParameter('metadata', TypeNames.unionType(TypeNames.anyType('grpc.Metadata'), TypeNames.UNDEFINED))
     .returns(TypeNames.PROMISE.param(TypeNames.ANY));
   rpc = rpc.addFunction(fn);
   return rpc;
@@ -189,6 +190,7 @@ function generateGrpcWebImpl(): ClassSpec {
         .addTypeVariable(t)
         .addParameter('methodDesc', t)
         .addParameter('_request', TypeNames.ANY)
+        .addParameter('metadata', TypeNames.unionType(TypeNames.anyType('grpc.Metadata'), TypeNames.UNDEFINED))
         .returns(TypeNames.PROMISE.param(TypeNames.ANY))
         .addCodeBlock(
           CodeBlock.empty().add(
@@ -197,7 +199,7 @@ return new Promise((resolve, reject) => {
   %T.unary(methodDesc, {
     request,
     host: this.host,
-    metadata: null,
+    metadata: metadata,
     transport: this.options.transport,
     debug: this.options.debug,
     onEnd: function (response) {

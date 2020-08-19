@@ -80,7 +80,7 @@ const baseDashAPICredsDeleteReq: object = {
 
 export interface DashState {
 
-  UserSettings(request: Empty): Promise<DashUserSettingsState>;
+  UserSettings(request: Empty, metadata?: grpc.Metadata): Promise<DashUserSettingsState>;
 
 }
 
@@ -92,8 +92,8 @@ export class DashStateClientImpl implements DashState {
     this.rpc = rpc;
   }
 
-  UserSettings(request: Empty): Promise<DashUserSettingsState> {
-    return this.rpc.unary(DashStateUserSettingsDesc, request);
+  UserSettings(request: Empty, metadata?: grpc.Metadata): Promise<DashUserSettingsState> {
+    return this.rpc.unary(DashStateUserSettingsDesc, request, metadata);
   }
 
 }
@@ -105,11 +105,11 @@ export class DashStateClientImpl implements DashState {
  */
 export interface DashAPICreds {
 
-  Create(request: DashAPICredsCreateReq): Promise<DashCred>;
+  Create(request: DashAPICredsCreateReq, metadata?: grpc.Metadata): Promise<DashCred>;
 
-  Update(request: DashAPICredsUpdateReq): Promise<DashCred>;
+  Update(request: DashAPICredsUpdateReq, metadata?: grpc.Metadata): Promise<DashCred>;
 
-  Delete(request: DashAPICredsDeleteReq): Promise<DashCred>;
+  Delete(request: DashAPICredsDeleteReq, metadata?: grpc.Metadata): Promise<DashCred>;
 
 }
 
@@ -121,23 +121,23 @@ export class DashAPICredsClientImpl implements DashAPICreds {
     this.rpc = rpc;
   }
 
-  Create(request: DashAPICredsCreateReq): Promise<DashCred> {
-    return this.rpc.unary(DashAPICredsCreateDesc, request);
+  Create(request: DashAPICredsCreateReq, metadata?: grpc.Metadata): Promise<DashCred> {
+    return this.rpc.unary(DashAPICredsCreateDesc, request, metadata);
   }
 
-  Update(request: DashAPICredsUpdateReq): Promise<DashCred> {
-    return this.rpc.unary(DashAPICredsUpdateDesc, request);
+  Update(request: DashAPICredsUpdateReq, metadata?: grpc.Metadata): Promise<DashCred> {
+    return this.rpc.unary(DashAPICredsUpdateDesc, request, metadata);
   }
 
-  Delete(request: DashAPICredsDeleteReq): Promise<DashCred> {
-    return this.rpc.unary(DashAPICredsDeleteDesc, request);
+  Delete(request: DashAPICredsDeleteReq, metadata?: grpc.Metadata): Promise<DashCred> {
+    return this.rpc.unary(DashAPICredsDeleteDesc, request, metadata);
   }
 
 }
 
 interface Rpc {
 
-  unary<T extends UnaryMethodDefinitionish>(metadata: T, request: any): Promise<any>;
+  unary<T extends UnaryMethodDefinitionish>(methodDesc: T, request: any, metadata: grpc.Metadata | undefined): Promise<any>;
 
 }
 
@@ -152,13 +152,13 @@ export class GrpcWebImpl implements Rpc {
     this.options = options;
   }
 
-  unary<T extends UnaryMethodDefinitionish>(methodDesc: T, _request: any): Promise<any> {
+  unary<T extends UnaryMethodDefinitionish>(methodDesc: T, _request: any, metadata: grpc.Metadata | undefined): Promise<any> {
     const request = { ..._request, ...methodDesc.requestType };
     return new Promise((resolve, reject) => {
       grpc.unary(methodDesc, {
         request,
         host: this.host,
-        metadata: null,
+        metadata: metadata,
         transport: this.options.transport,
         debug: this.options.debug,
         onEnd: function (response) {

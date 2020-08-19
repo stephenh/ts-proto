@@ -57,7 +57,9 @@ export function generateService(
     requestFn = requestFn.addParameter('request', requestType(typeMap, methodDesc, options));
 
     // Use metadata as last argument for interface only configuration
-    if (options.addGrpcMetadata) {
+    if (options.outputClientImpl === 'grpc-web') {
+      requestFn = requestFn.addParameter('metadata?', 'grpc.Metadata');
+    } else if (options.addGrpcMetadata) {
       requestFn = requestFn.addParameter(options.addNestjsRestParameter ? 'metadata' : 'metadata?', 'Metadata@grpc');
     }
     if (options.addNestjsRestParameter) {
