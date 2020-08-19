@@ -46,7 +46,7 @@ import ServiceDescriptorProto = google.protobuf.ServiceDescriptorProto;
 import {
   addGrpcWebMisc,
   generateGrpcClientImpl,
-  generateGrpcMethodMetadata, generateGrpcServiceMetadata
+  generateGrpcMethodDesc, generateGrpcServiceDesc
 } from './generate-grpc-web';
 
 export enum LongOption {
@@ -185,9 +185,9 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
         file = file.addClass(generateServiceClientImpl(typeMap, fileDesc, serviceDesc, options));
       } else if (options.outputClientImpl === 'grpc-web') {
         file = file.addClass(generateGrpcClientImpl(typeMap, fileDesc, serviceDesc, options));
-        file = file.addCode(generateGrpcServiceMetadata(fileDesc, serviceDesc));
+        file = file.addCode(generateGrpcServiceDesc(fileDesc, serviceDesc));
         serviceDesc.method.forEach((method) => {
-          file = file.addCode(generateGrpcMethodMetadata(options, typeMap, serviceDesc, method));
+          file = file.addCode(generateGrpcMethodDesc(options, typeMap, serviceDesc, method));
         });
       }
     }

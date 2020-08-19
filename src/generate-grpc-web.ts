@@ -52,38 +52,33 @@ function generateRegularRpcMethod(
 ) {
   let requestFn = FunctionSpec.create(methodDesc.name);
   let inputType = requestType(typeMap, methodDesc, options);
-  const metadataName = methodMetadataName(serviceDesc, methodDesc);
   return requestFn
     .addParameter('request', inputType)
-    .addStatement('return this.rpc.unary(%L, request)', metadataName)
+    .addStatement('return this.rpc.unary(%L, request)', methodDescName(serviceDesc, methodDesc))
     .returns(responsePromise(typeMap, methodDesc, options));
 }
 
-export function generateGrpcServiceMetadata(
-  fileDesc: FileDescriptorProto,
-  serviceDesc: ServiceDescriptorProto
-): CodeBlock {
+export function generateGrpcServiceDesc(fileDesc: FileDescriptorProto, serviceDesc: ServiceDescriptorProto): CodeBlock {
   return CodeBlock.empty()
-    .add('const %LMetadata = ', serviceDesc.name)
+    .add('const %LDesc = ', serviceDesc.name)
     .beginHash()
     .addHashEntry('serviceName', CodeBlock.empty().add('%S', `${fileDesc.package}.${serviceDesc.name}`))
     .endHash();
 }
 
-export function generateGrpcMethodMetadata(
+export function generateGrpcMethodDesc(
   options: Options,
   typeMap: TypeMap,
   serviceDesc: ServiceDescriptorProto,
   methodDesc: MethodDescriptorProto
 ): CodeBlock {
-  const metadataName = methodMetadataName(serviceDesc, methodDesc);
   let inputType = requestType(typeMap, methodDesc, options);
   let outputType = responseType(typeMap, methodDesc, options);
   return CodeBlock.empty()
-    .add('const %L: UnaryMethodDefinitionish = ', metadataName)
+    .add('const %L: UnaryMethodDefinitionish = ', methodDescName(serviceDesc, methodDesc))
     .beginHash()
     .addHashEntry('methodName', CodeBlock.empty().add('%S', methodDesc.name))
-    .addHashEntry('service', `${serviceDesc.name}Metadata`)
+    .addHashEntry('service', `${serviceDesc.name}Desc`)
     .addHashEntry('requestStream', 'false')
     .addHashEntry('responseStream', 'false')
     .addHashEntry(
@@ -113,8 +108,8 @@ export function generateGrpcMethodMetadata(
     .endHash();
 }
 
-function methodMetadataName(serviceDesc: ServiceDescriptorProto, methodDesc: MethodDescriptorProto): string {
-  return `${serviceDesc.name}${methodDesc.name}Metadata`;
+function methodDescName(serviceDesc: ServiceDescriptorProto, methodDesc: MethodDescriptorProto): string {
+  return `${serviceDesc.name}${methodDesc.name}Desc`;
 }
 
 export function addGrpcWebMisc(options: Options, _file: FileSpec): FileSpec {
@@ -124,13 +119,13 @@ export function addGrpcWebMisc(options: Options, _file: FileSpec): FileSpec {
       .addStatement('import UnaryMethodDefinition = grpc.UnaryMethodDefinition')
       .addStatement('type UnaryMethodDefinitionish = UnaryMethodDefinition<any, any>')
   );
-  file = file.addInterface(generateGrpcWebRpcType(options));
-  file = file.addClass(generateGrpcWebImpl(options));
+  file = file.addInterface(generateGrpcWebRpcType());
+  file = file.addClass(generateGrpcWebImpl());
   return file;
 }
 
 /** Makes an `Rpc` adapter to the grpc-web `grpc.unary`/etc. method. */
-function generateGrpcWebRpcType(options: Options): InterfaceSpec {
+function generateGrpcWebRpcType(): InterfaceSpec {
   let rpc = InterfaceSpec.create('Rpc');
   let fn = FunctionSpec.create('unary');
   const t = TypeNames.typeVariable('T', TypeNames.bound('UnaryMethodDefinitionish'));
@@ -143,7 +138,7 @@ function generateGrpcWebRpcType(options: Options): InterfaceSpec {
   return rpc;
 }
 
-function generateGrpcWebImpl(options: Options): ClassSpec {
+function generateGrpcWebImpl(): ClassSpec {
   const optionsParam = TypeNames.anonymousType(
     ['transport?', TypeNames.anyType('grpc.TransportFactory')],
     ['debug?', TypeNames.BOOLEAN]
@@ -164,17 +159,17 @@ function generateGrpcWebImpl(options: Options): ClassSpec {
     .addFunction(
       FunctionSpec.create('unary')
         .addTypeVariable(t)
-        .addParameter('metadata', t)
+        .addParameter('methodDesc', t)
         .addParameter('_request', TypeNames.ANY)
         .returns(TypeNames.PROMISE.param(TypeNames.ANY))
         .addCodeBlock(
           CodeBlock.empty().add(
-            `const request = { ..._request, ...metadata.requestType };
+            `const request = { ..._request, ...methodDesc.requestType };
 return new Promise((resolve, reject) => {
-  %T.unary(metadata, {
+  %T.unary(methodDesc, {
     request,
     host: this.host,
-    metadata: metadata,
+    metadata: null,
     transport: this.options.transport,
     debug: this.options.debug,
     onEnd: function (response) {

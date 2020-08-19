@@ -93,7 +93,7 @@ export class DashStateClientImpl implements DashState {
   }
 
   UserSettings(request: Empty): Promise<DashUserSettingsState> {
-    return this.rpc.unary(DashStateUserSettingsMetadata, request);
+    return this.rpc.unary(DashStateUserSettingsDesc, request);
   }
 
 }
@@ -122,15 +122,15 @@ export class DashAPICredsClientImpl implements DashAPICreds {
   }
 
   Create(request: DashAPICredsCreateReq): Promise<DashCred> {
-    return this.rpc.unary(DashAPICredsCreateMetadata, request);
+    return this.rpc.unary(DashAPICredsCreateDesc, request);
   }
 
   Update(request: DashAPICredsUpdateReq): Promise<DashCred> {
-    return this.rpc.unary(DashAPICredsUpdateMetadata, request);
+    return this.rpc.unary(DashAPICredsUpdateDesc, request);
   }
 
   Delete(request: DashAPICredsDeleteReq): Promise<DashCred> {
-    return this.rpc.unary(DashAPICredsDeleteMetadata, request);
+    return this.rpc.unary(DashAPICredsDeleteDesc, request);
   }
 
 }
@@ -152,13 +152,13 @@ export class GrpcWebImpl implements Rpc {
     this.options = options;
   }
 
-  unary<T extends UnaryMethodDefinitionish>(metadata: T, _request: any): Promise<any> {
-    const request = { ..._request, ...metadata.requestType };
+  unary<T extends UnaryMethodDefinitionish>(methodDesc: T, _request: any): Promise<any> {
+    const request = { ..._request, ...methodDesc.requestType };
     return new Promise((resolve, reject) => {
-      grpc.unary(metadata, {
+      grpc.unary(methodDesc, {
         request,
         host: this.host,
-        metadata: metadata,
+        metadata: null,
         transport: this.options.transport,
         debug: this.options.debug,
         onEnd: function (response) {
@@ -747,12 +747,12 @@ export const DashAPICredsDeleteReq = {
   },
 };
 
-const DashStateMetadata = {
+const DashStateDesc = {
   serviceName: "rpx.DashState",
 }
-const DashStateUserSettingsMetadata: UnaryMethodDefinitionish = {
+const DashStateUserSettingsDesc: UnaryMethodDefinitionish = {
   methodName: "UserSettings",
-  service: DashStateMetadata,
+  service: DashStateDesc,
   requestStream: false,
   responseStream: false,
   requestType: {
@@ -768,12 +768,12 @@ const DashStateUserSettingsMetadata: UnaryMethodDefinitionish = {
     ,
   } as any,
 }
-const DashAPICredsMetadata = {
+const DashAPICredsDesc = {
   serviceName: "rpx.DashAPICreds",
 }
-const DashAPICredsCreateMetadata: UnaryMethodDefinitionish = {
+const DashAPICredsCreateDesc: UnaryMethodDefinitionish = {
   methodName: "Create",
-  service: DashAPICredsMetadata,
+  service: DashAPICredsDesc,
   requestStream: false,
   responseStream: false,
   requestType: {
@@ -789,9 +789,9 @@ const DashAPICredsCreateMetadata: UnaryMethodDefinitionish = {
     ,
   } as any,
 }
-const DashAPICredsUpdateMetadata: UnaryMethodDefinitionish = {
+const DashAPICredsUpdateDesc: UnaryMethodDefinitionish = {
   methodName: "Update",
-  service: DashAPICredsMetadata,
+  service: DashAPICredsDesc,
   requestStream: false,
   responseStream: false,
   requestType: {
@@ -807,9 +807,9 @@ const DashAPICredsUpdateMetadata: UnaryMethodDefinitionish = {
     ,
   } as any,
 }
-const DashAPICredsDeleteMetadata: UnaryMethodDefinitionish = {
+const DashAPICredsDeleteDesc: UnaryMethodDefinitionish = {
   methodName: "Delete",
-  service: DashAPICredsMetadata,
+  service: DashAPICredsDesc,
   requestStream: false,
   responseStream: false,
   requestType: {
