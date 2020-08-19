@@ -13,10 +13,8 @@ import { maybeAddComment, singular } from './utils';
 import SourceInfo, { Fields } from './sourceInfo';
 import { camelCase } from './case';
 import { contextTypeVar, Options } from './main';
-import DescriptorProto = google.protobuf.DescriptorProto;
-import FieldDescriptorProto = google.protobuf.FieldDescriptorProto;
+import MethodDescriptorProto = google.protobuf.MethodDescriptorProto;
 import FileDescriptorProto = google.protobuf.FileDescriptorProto;
-import EnumDescriptorProto = google.protobuf.EnumDescriptorProto;
 import ServiceDescriptorProto = google.protobuf.ServiceDescriptorProto;
 
 const dataloader = TypeNames.anyType('DataLoader*dataloader');

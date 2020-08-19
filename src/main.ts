@@ -21,7 +21,7 @@ import {
   toReaderCall,
   toTypeName,
   TypeMap,
-  valueTypeName
+  valueTypeName,
 } from './types';
 import { asSequence } from 'sequency';
 import SourceInfo, { Fields } from './sourceInfo';
@@ -30,14 +30,24 @@ import { camelCase, camelToSnake, capitalize, maybeSnakeToCamel } from './case';
 import {
   generateNestjsGrpcServiceMethodsDecorator,
   generateNestjsServiceClient,
-  generateNestjsServiceController
+  generateNestjsServiceController,
 } from './generate-nestjs';
-import { generateDataLoadersType, generateRpcType, generateService, generateServiceClientImpl } from './generate-services';
+import {
+  generateDataLoadersType,
+  generateRpcType,
+  generateService,
+  generateServiceClientImpl,
+} from './generate-services';
 import DescriptorProto = google.protobuf.DescriptorProto;
 import FieldDescriptorProto = google.protobuf.FieldDescriptorProto;
 import FileDescriptorProto = google.protobuf.FileDescriptorProto;
 import EnumDescriptorProto = google.protobuf.EnumDescriptorProto;
 import ServiceDescriptorProto = google.protobuf.ServiceDescriptorProto;
+import {
+  addGrpcWebMisc,
+  generateGrpcClientImpl,
+  generateGrpcMethodMetadata, generateGrpcServiceMetadata
+} from './generate-grpc-web';
 
 export enum LongOption {
   NUMBER = 'number',
@@ -64,7 +74,7 @@ export type Options = {
   oneof: OneofOption;
   outputEncodeMethods: boolean;
   outputJsonMethods: boolean;
-  outputClientImpl: boolean;
+  outputClientImpl: boolean | 'grpc-web';
   addGrpcMetadata: boolean;
   addNestjsRestParameter: boolean;
   returnObservable: boolean;
@@ -171,14 +181,24 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
       // are fairly similar.
       file = file.addInterface(generateService(typeMap, fileDesc, sInfo, serviceDesc, options));
 
-      if (options.outputClientImpl) {
+      if (options.outputClientImpl === true) {
         file = file.addClass(generateServiceClientImpl(typeMap, fileDesc, serviceDesc, options));
+      } else if (options.outputClientImpl === 'grpc-web') {
+        file = file.addClass(generateGrpcClientImpl(typeMap, fileDesc, serviceDesc, options));
+        file = file.addCode(generateGrpcServiceMetadata(fileDesc, serviceDesc));
+        serviceDesc.method.forEach((method) => {
+          file = file.addCode(generateGrpcMethodMetadata(options, typeMap, serviceDesc, method));
+        });
       }
     }
   });
 
   if (options.outputClientImpl && fileDesc.service.length > 0) {
-    file = file.addInterface(generateRpcType(options));
+    if (options.outputClientImpl === true) {
+      file = file.addInterface(generateRpcType(options));
+    } else if (options.outputClientImpl === 'grpc-web') {
+      file = addGrpcWebMisc(options, file);
+    }
   }
 
   if (options.useContext) {
