@@ -46,7 +46,8 @@ import ServiceDescriptorProto = google.protobuf.ServiceDescriptorProto;
 import {
   addGrpcWebMisc,
   generateGrpcClientImpl,
-  generateGrpcMethodDesc, generateGrpcServiceDesc
+  generateGrpcMethodDesc,
+  generateGrpcServiceDesc,
 } from './generate-grpc-web';
 
 export enum LongOption {
