@@ -20,11 +20,15 @@ async function main() {
   console.log(cred);
 
   console.log('calling creds.Delete');
-  const del = await creds.Delete({
-    id: cred.id,
-    credSid: '...not included in original example...',
-  });
+  const del = await creds.Delete({ id: cred.id, credSid: '' });
   console.log(del);
+
+  console.log('calling creds.Update');
+  try {
+    await creds.Update({ description: 'test desc2', credSid: '', id: undefined, metadata: '' });
+  } catch (e) {
+    console.log('expected error', e.message);
+  }
 }
 
 main().then(
