@@ -17,7 +17,7 @@ import ServiceDescriptorProto = google.protobuf.ServiceDescriptorProto;
 
 const grpc = TypeNames.anyType('grpc@@improbable-eng/grpc-web');
 
-/** Generates a client that uses the improbable-web grpc-web library. */
+/** Generates a client that uses the `@improbable-web/grpc-web` library. */
 export function generateGrpcClientImpl(
   typeMap: TypeMap,
   fileDesc: FileDescriptorProto,
@@ -30,20 +30,21 @@ export function generateGrpcClientImpl(
     .addInterface(serviceDesc.name);
 
   // Create the constructor(rpc: Rpc)
-  const rpcType = options.useContext ? 'Rpc<Context>' : 'Rpc';
   client = client.addFunction(
-    FunctionSpec.createConstructor().addParameter('rpc', rpcType).addStatement('this.rpc = rpc')
+    FunctionSpec.createConstructor().addParameter('rpc', 'Rpc').addStatement('this.rpc = rpc')
   );
-  client = client.addProperty('rpc', rpcType, { modifiers: [Modifier.PRIVATE, Modifier.READONLY] });
+  client = client.addProperty('rpc', 'Rpc', { modifiers: [Modifier.PRIVATE, Modifier.READONLY] });
 
   // Create a method for each FooService method
   for (const methodDesc of serviceDesc.method) {
-    client = client.addFunction(generateRegularRpcMethod(options, typeMap, fileDesc, serviceDesc, methodDesc));
+    client = client.addFunction(generateRpcMethod(options, typeMap, fileDesc, serviceDesc, methodDesc));
   }
+
   return client;
 }
 
-function generateRegularRpcMethod(
+/** Creates the RPC methods that client code actually calls. */
+function generateRpcMethod(
   options: Options,
   typeMap: TypeMap,
   fileDesc: FileDescriptorProto,
@@ -58,6 +59,7 @@ function generateRegularRpcMethod(
     .returns(responsePromise(typeMap, methodDesc, options));
 }
 
+/** Creates the service descriptor that grpc-web needs at runtime. */
 export function generateGrpcServiceDesc(fileDesc: FileDescriptorProto, serviceDesc: ServiceDescriptorProto): CodeBlock {
   return CodeBlock.empty()
     .add('const %LDesc = ', serviceDesc.name)
@@ -66,6 +68,13 @@ export function generateGrpcServiceDesc(fileDesc: FileDescriptorProto, serviceDe
     .endHash();
 }
 
+/**
+ * Creates the method descriptor that grpc-web needs at runtime to make `unary` calls.
+ *
+ * Note that we take a few liberties in the implementation give we don't 100% match
+ * what grpc-web's existing output is, but it works out; see comments in the method
+ * implementation.
+ */
 export function generateGrpcMethodDesc(
   options: Options,
   typeMap: TypeMap,
@@ -74,44 +83,62 @@ export function generateGrpcMethodDesc(
 ): CodeBlock {
   let inputType = requestType(typeMap, methodDesc, options);
   let outputType = responseType(typeMap, methodDesc, options);
-  return CodeBlock.empty()
-    .add('const %L: UnaryMethodDefinitionish = ', methodDescName(serviceDesc, methodDesc))
-    .beginHash()
-    .addHashEntry('methodName', CodeBlock.empty().add('%S', methodDesc.name))
-    .addHashEntry('service', `${serviceDesc.name}Desc`)
-    .addHashEntry('requestStream', 'false')
-    .addHashEntry('responseStream', 'false')
-    .addHashEntry(
-      'requestType',
-      CodeBlock.empty()
-        .beginHash()
-        .addHashEntry(
-          'serializeBinary',
-          FunctionSpec.create('serializeBinary').addStatement('return %T.encode(this).finish()', inputType)
-        )
-        .endHash()
-        .add(' as any')
-    )
-    .addHashEntry(
-      'responseType',
-      CodeBlock.empty()
-        .beginHash()
-        .addHashEntry(
-          'deserializeBinary',
-          FunctionSpec.create('deserializeBinary')
-            .addParameter('data', 'Uint8Array')
-            .addStatement('return { ...%T.decode(data), toObject() { return this; } }', outputType)
-        )
-        .endHash()
-        .add(' as any')
-    )
-    .endHash();
+  return (
+    CodeBlock.empty()
+      .add('const %L: UnaryMethodDefinitionish = ', methodDescName(serviceDesc, methodDesc))
+      .beginHash()
+      .addHashEntry('methodName', CodeBlock.empty().add('%S', methodDesc.name))
+      .addHashEntry('service', `${serviceDesc.name}Desc`)
+      .addHashEntry('requestStream', 'false')
+      .addHashEntry('responseStream', 'false')
+      // grpc-web expects this to be a class, but the ts-proto messages are just interfaces.
+      //
+      // That said, grpc-web's runtime doesn't really use this (at least so far for what ts-proto
+      // does), so we could potentially set it to `null!`.
+      //
+      // However, grpc-web does want messages to have a `.serializeBinary()` method, which again
+      // due to the class-less nature of ts-proto's messages, we don't have. So we appropriate
+      // this `requestType` as a placeholder for our GrpcWebImpl to Object.assign-in this request
+      // message's `serializeBinary` method into the data before handing it off to grpc-web.
+      //
+      // This makes our data look enough like an object/class that grpc-web works just fine.
+      .addHashEntry(
+        'requestType',
+        CodeBlock.empty()
+          .beginHash()
+          .addHashEntry(
+            'serializeBinary',
+            FunctionSpec.create('serializeBinary').addStatement('return %T.encode(this).finish()', inputType)
+          )
+          .endHash()
+          .add(' as any')
+      )
+      // grpc-web also expects this to be a class, but with a static `deserializeBinary` method to
+      // create new instances of messages. We again don't have an actual class constructor/symbol
+      // to pass to it, but we can make up a lambda that has a `deserializeBinary` that does what
+      // we want/what grpc-web's runtime needs.
+      .addHashEntry(
+        'responseType',
+        CodeBlock.empty()
+          .beginHash()
+          .addHashEntry(
+            'deserializeBinary',
+            FunctionSpec.create('deserializeBinary')
+              .addParameter('data', 'Uint8Array')
+              .addStatement('return { ...%T.decode(data), toObject() { return this; } }', outputType)
+          )
+          .endHash()
+          .add(' as any')
+      )
+      .endHash()
+  );
 }
 
 function methodDescName(serviceDesc: ServiceDescriptorProto, methodDesc: MethodDescriptorProto): string {
   return `${serviceDesc.name}${methodDesc.name}Desc`;
 }
 
+/** Adds misc top-level definitions for grpc-web functionality. */
 export function addGrpcWebMisc(options: Options, _file: FileSpec): FileSpec {
   let file = _file;
   file = file.addCode(
@@ -124,7 +151,7 @@ export function addGrpcWebMisc(options: Options, _file: FileSpec): FileSpec {
   return file;
 }
 
-/** Makes an `Rpc` adapter to the grpc-web `grpc.unary`/etc. method. */
+/** Makes an `Rpc` interface to decouple from the low-level grpc-web `grpc.unary`/etc. methods. */
 function generateGrpcWebRpcType(): InterfaceSpec {
   let rpc = InterfaceSpec.create('Rpc');
   let fn = FunctionSpec.create('unary');
@@ -138,6 +165,7 @@ function generateGrpcWebRpcType(): InterfaceSpec {
   return rpc;
 }
 
+/** Implements the `Rpc` interface by making calls using the `grpc.unary` method. */
 function generateGrpcWebImpl(): ClassSpec {
   const optionsParam = TypeNames.anonymousType(
     ['transport?', TypeNames.anyType('grpc.TransportFactory')],
