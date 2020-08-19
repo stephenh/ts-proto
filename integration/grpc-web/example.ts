@@ -143,11 +143,11 @@ interface Rpc {
 
 export class GrpcWebImpl implements Rpc {
 
-  host: string;
+  private host: string;
 
-  options: { transport: any, debug: boolean };
+  private options: { transport?: grpc.TransportFactory, debug?: boolean };
 
-  constructor(host: string, options: { transport: any, debug: boolean }) {
+  constructor(host: string, options: { transport?: grpc.TransportFactory, debug?: boolean }) {
     this.host = host;
     this.options = options;
   }

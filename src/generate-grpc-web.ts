@@ -144,12 +144,15 @@ function generateGrpcWebRpcType(options: Options): InterfaceSpec {
 }
 
 function generateGrpcWebImpl(options: Options): ClassSpec {
-  const optionsParam = TypeNames.anonymousType(['transport', TypeNames.ANY], ['debug', TypeNames.BOOLEAN]);
+  const optionsParam = TypeNames.anonymousType(
+    ['transport?', TypeNames.anyType('grpc.TransportFactory')],
+    ['debug?', TypeNames.BOOLEAN]
+  );
   const t = TypeNames.typeVariable('T', TypeNames.bound('UnaryMethodDefinitionish'));
   return ClassSpec.create('GrpcWebImpl')
     .addModifiers(Modifier.EXPORT)
-    .addProperty(PropertySpec.create('host', TypeNames.STRING))
-    .addProperty(PropertySpec.create('options', optionsParam))
+    .addProperty(PropertySpec.create('host', TypeNames.STRING).addModifiers(Modifier.PRIVATE))
+    .addProperty(PropertySpec.create('options', optionsParam).addModifiers(Modifier.PRIVATE))
     .addInterface('Rpc')
     .addFunction(
       FunctionSpec.createConstructor()
