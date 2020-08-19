@@ -84,8 +84,8 @@ export function generateGrpcMethodMetadata(
     .beginHash()
     .addHashEntry('methodName', CodeBlock.empty().add('%S', methodDesc.name))
     .addHashEntry('service', `${serviceDesc.name}Metadata`)
-    .addHashEntry('requestStream', 'false as const')
-    .addHashEntry('responseStream', 'false as const')
+    .addHashEntry('requestStream', 'false')
+    .addHashEntry('responseStream', 'false')
     .addHashEntry(
       'requestType',
       CodeBlock.empty()

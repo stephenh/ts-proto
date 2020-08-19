@@ -753,8 +753,8 @@ const DashStateMetadata = {
 const DashStateUserSettingsMetadata: UnaryMethodDefinitionish = {
   methodName: "UserSettings",
   service: DashStateMetadata,
-  requestStream: false as const,
-  responseStream: false as const,
+  requestStream: false,
+  responseStream: false,
   requestType: {
     serializeBinary: function serializeBinary() {
       return Empty.encode(this).finish();
@@ -774,8 +774,8 @@ const DashAPICredsMetadata = {
 const DashAPICredsCreateMetadata: UnaryMethodDefinitionish = {
   methodName: "Create",
   service: DashAPICredsMetadata,
-  requestStream: false as const,
-  responseStream: false as const,
+  requestStream: false,
+  responseStream: false,
   requestType: {
     serializeBinary: function serializeBinary() {
       return DashAPICredsCreateReq.encode(this).finish();
@@ -792,8 +792,8 @@ const DashAPICredsCreateMetadata: UnaryMethodDefinitionish = {
 const DashAPICredsUpdateMetadata: UnaryMethodDefinitionish = {
   methodName: "Update",
   service: DashAPICredsMetadata,
-  requestStream: false as const,
-  responseStream: false as const,
+  requestStream: false,
+  responseStream: false,
   requestType: {
     serializeBinary: function serializeBinary() {
       return DashAPICredsUpdateReq.encode(this).finish();
@@ -810,8 +810,8 @@ const DashAPICredsUpdateMetadata: UnaryMethodDefinitionish = {
 const DashAPICredsDeleteMetadata: UnaryMethodDefinitionish = {
   methodName: "Delete",
   service: DashAPICredsMetadata,
-  requestStream: false as const,
-  responseStream: false as const,
+  requestStream: false,
+  responseStream: false,
   requestType: {
     serializeBinary: function serializeBinary() {
       return DashAPICredsDeleteReq.encode(this).finish();
