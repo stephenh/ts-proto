@@ -21,22 +21,6 @@ export interface Villain {
   name: string;
 }
 
-export interface HeroServiceController {
-
-  addOneHero(request: Hero): void;
-
-  findOneHero(request: HeroById): Promise<Hero> | Observable<Hero> | Hero;
-
-  findOneVillain(request: VillainById): Promise<Villain> | Observable<Villain> | Villain;
-
-  findManyVillain(request: Observable<VillainById>): Observable<Villain>;
-
-  findManyVillainStreamIn(request: Observable<VillainById>): Promise<Villain> | Observable<Villain> | Villain;
-
-  findManyVillainStreamOut(request: VillainById): Observable<Villain>;
-
-}
-
 export interface HeroServiceClient {
 
   addOneHero(request: Hero): Observable<Empty>;
@@ -48,6 +32,22 @@ export interface HeroServiceClient {
   findManyVillain(request: Observable<VillainById>): Observable<Villain>;
 
   findManyVillainStreamIn(request: Observable<VillainById>): Observable<Villain>;
+
+  findManyVillainStreamOut(request: VillainById): Observable<Villain>;
+
+}
+
+export interface HeroServiceController {
+
+  addOneHero(request: Hero): void;
+
+  findOneHero(request: HeroById): Promise<Hero> | Observable<Hero> | Hero;
+
+  findOneVillain(request: VillainById): Promise<Villain> | Observable<Villain> | Villain;
+
+  findManyVillain(request: Observable<VillainById>): Observable<Villain>;
+
+  findManyVillainStreamIn(request: Observable<VillainById>): Promise<Villain> | Observable<Villain> | Villain;
 
   findManyVillainStreamOut(request: VillainById): Observable<Villain>;
 

@@ -8,15 +8,15 @@ export interface User {
   name: string;
 }
 
-export interface HeroServiceController {
-
-  findCurrentUser(request: Empty, ...rest: any): Promise<User> | Observable<User> | User;
-
-}
-
 export interface HeroServiceClient {
 
   findCurrentUser(request: Empty, ...rest: any): Observable<User>;
+
+}
+
+export interface HeroServiceController {
+
+  findCurrentUser(request: Empty, ...rest: any): Promise<User> | Observable<User> | User;
 
 }
 

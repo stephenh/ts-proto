@@ -21,21 +21,21 @@ export interface Villain {
   name: string;
 }
 
-export interface HeroServiceController {
-
-  findOneHero(request: HeroById, metadata?: Metadata): Promise<Hero> | Observable<Hero> | Hero;
-
-  findOneVillain(request: VillainById, metadata?: Metadata): Promise<Villain> | Observable<Villain> | Villain;
-
-  findManyVillain(request: Observable<VillainById>, metadata?: Metadata): Observable<Villain>;
-
-}
-
 export interface HeroServiceClient {
 
   findOneHero(request: HeroById, metadata?: Metadata): Observable<Hero>;
 
   findOneVillain(request: VillainById, metadata?: Metadata): Observable<Villain>;
+
+  findManyVillain(request: Observable<VillainById>, metadata?: Metadata): Observable<Villain>;
+
+}
+
+export interface HeroServiceController {
+
+  findOneHero(request: HeroById, metadata?: Metadata): Promise<Hero> | Observable<Hero> | Hero;
+
+  findOneVillain(request: VillainById, metadata?: Metadata): Promise<Villain> | Observable<Villain> | Villain;
 
   findManyVillain(request: Observable<VillainById>, metadata?: Metadata): Observable<Villain>;
 

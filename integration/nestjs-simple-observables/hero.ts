@@ -20,7 +20,7 @@ export interface Villain {
   name: string;
 }
 
-export interface HeroServiceController {
+export interface HeroServiceClient {
 
   findOneHero(request: HeroById): Observable<Hero>;
 
@@ -30,7 +30,7 @@ export interface HeroServiceController {
 
 }
 
-export interface HeroServiceClient {
+export interface HeroServiceController {
 
   findOneHero(request: HeroById): Observable<Hero>;
 
