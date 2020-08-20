@@ -5,7 +5,10 @@ import { fail } from './utils';
 import FieldDescriptorProto = google.protobuf.FieldDescriptorProto;
 import CodeGeneratorRequest = google.protobuf.compiler.CodeGeneratorRequest;
 import EnumDescriptorProto = google.protobuf.EnumDescriptorProto;
+import FileDescriptorProto = google.protobuf.FileDescriptorProto;
 import DescriptorProto = google.protobuf.DescriptorProto;
+import MethodDescriptorProto = google.protobuf.MethodDescriptorProto;
+import ServiceDescriptorProto = google.protobuf.ServiceDescriptorProto;
 import SourceInfo from './sourceInfo';
 import { camelCase } from './case';
 
@@ -413,4 +416,80 @@ export function detectMapType(
     return { messageDesc: mapType, keyType, valueType };
   }
   return undefined;
+}
+
+export function requestType(typeMap: TypeMap, methodDesc: MethodDescriptorProto, options: Options): TypeName {
+  let typeName = messageToTypeName(typeMap, methodDesc.inputType, options);
+  if (methodDesc.clientStreaming) {
+    return TypeNames.anyType('Observable@rxjs').param(typeName);
+  }
+  return typeName;
+}
+
+export function responseType(typeMap: TypeMap, methodDesc: MethodDescriptorProto, options: Options): TypeName {
+  return messageToTypeName(typeMap, methodDesc.outputType, options);
+}
+
+export function responsePromise(typeMap: TypeMap, methodDesc: MethodDescriptorProto, options: Options): TypeName {
+  return TypeNames.PROMISE.param(responseType(typeMap, methodDesc, options));
+}
+
+export function responseObservable(typeMap: TypeMap, methodDesc: MethodDescriptorProto, options: Options): TypeName {
+  return TypeNames.anyType('Observable@rxjs').param(responseType(typeMap, methodDesc, options));
+}
+
+export interface BatchMethod {
+  methodDesc: MethodDescriptorProto;
+  // a ${package + service + method name} key to identify this method in caches
+  uniqueIdentifier: string;
+  singleMethodName: string;
+  inputFieldName: string;
+  inputType: TypeName;
+  outputFieldName: string;
+  outputType: TypeName;
+  mapType: boolean;
+}
+
+export function detectBatchMethod(
+  typeMap: TypeMap,
+  fileDesc: FileDescriptorProto,
+  serviceDesc: ServiceDescriptorProto,
+  methodDesc: MethodDescriptorProto,
+  options: Options
+): BatchMethod | undefined {
+  const nameMatches = methodDesc.name.startsWith('Batch');
+  const inputType = typeMap.get(methodDesc.inputType);
+  const outputType = typeMap.get(methodDesc.outputType);
+  if (nameMatches && inputType && outputType) {
+    // TODO: This might be enums?
+    const inputTypeDesc = inputType[2] as DescriptorProto;
+    const outputTypeDesc = outputType[2] as DescriptorProto;
+    if (hasSingleRepeatedField(inputTypeDesc) && hasSingleRepeatedField(outputTypeDesc)) {
+      const singleMethodName = methodDesc.name.replace('Batch', 'Get');
+      const inputFieldName = inputTypeDesc.field[0].name;
+      const inputType = basicTypeName(typeMap, inputTypeDesc.field[0], options); // e.g. repeated string -> string
+      const outputFieldName = outputTypeDesc.field[0].name;
+      let outputType = basicTypeName(typeMap, outputTypeDesc.field[0], options); // e.g. repeated Entity -> Entity
+      const mapType = detectMapType(typeMap, outputTypeDesc, outputTypeDesc.field[0], options);
+      if (mapType) {
+        outputType = mapType.valueType;
+      }
+      const uniqueIdentifier = `${fileDesc.package}.${serviceDesc.name}.${methodDesc.name}`;
+      return {
+        methodDesc,
+        uniqueIdentifier,
+        singleMethodName,
+        inputFieldName,
+        inputType,
+        outputFieldName,
+        outputType,
+        mapType: !!mapType,
+      };
+    }
+  }
+  return undefined;
+}
+
+function hasSingleRepeatedField(messageDesc: DescriptorProto): boolean {
+  return messageDesc.field.length == 1 && messageDesc.field[0].label === FieldDescriptorProto.Label.LABEL_REPEATED;
 }

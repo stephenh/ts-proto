@@ -273,6 +273,18 @@
     lodash.camelcase "^4.3.0"
     protobufjs "^6.8.6"
 
+"@improbable-eng/grpc-web-node-http-transport@^0.13.0":
+  version "0.13.0"
+  resolved "https://registry.yarnpkg.com/@improbable-eng/grpc-web-node-http-transport/-/grpc-web-node-http-transport-0.13.0.tgz#a8680c7a8bce4c2b44fe48ba4b7c55b320cf5f54"
+  integrity sha512-Ev8pfMs7FbsBWc4FAY8N4dd8xQRowHFyu2AzEHl++8orrB4KSx6NonMqlsLDPBHLKwlYs7EEI6uxGwpjnYiS2Q==
+
+"@improbable-eng/grpc-web@^0.13.0":
+  version "0.13.0"
+  resolved "https://registry.yarnpkg.com/@improbable-eng/grpc-web/-/grpc-web-0.13.0.tgz#289e6fc4dafc00b1af8e2b93b970e6892299014d"
+  integrity sha512-vaxxT+Qwb7GPqDQrBV4vAAfH0HywgOLw6xGIKXd9Q8hcV63CQhmS3p4+pZ9/wVvt4Ph3ZDK9fdC983b9aGMUFg==
+  dependencies:
+    browser-headers "^0.4.0"
+
 "@istanbuljs/load-nyc-config@^1.0.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@istanbuljs/load-nyc-config/-/load-nyc-config-1.1.0.tgz#fd3db1d59ecf7cf121e80650bb86712f9b55eced"
@@ -1028,6 +1040,11 @@ braces@^3.0.1:
   integrity sha512-b8um+L1RzM3WDSzvhm6gIz1yfTbBt6YTlcEKAvsmqCZZFw46z626lVj9j1yEPW33H5H+lBQpZMP1k8l+78Ha0A==
   dependencies:
     fill-range "^7.0.1"
+
+browser-headers@^0.4.0:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/browser-headers/-/browser-headers-0.4.1.tgz#4308a7ad3b240f4203dbb45acedb38dc2d65dd02"
+  integrity sha512-CA9hsySZVo9371qEHjHZtYxV2cFtVj5Wj/ZHi8ooEsrtm4vOnl9Y9HmyYWk9q+05d7K3rdoAE0j3MVEFVvtQtg==
 
 browser-process-hrtime@^1.0.0:
   version "1.0.0"
