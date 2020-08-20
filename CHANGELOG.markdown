@@ -1,3 +1,11 @@
+## v1.28.0
+
+* Use `enum` keyword for modeling keywords again
+* Fix maps of `google.protobuf.Timestamp`s
+* Fix name conflicts when using `google.type.Date`
+* Fix maps of bytes in JSON
+* Add initial support for grpc-web using the `@improbable-eng/grpc-web` runtime
+
 ## v1.27.1
 
 * Extra release to ensure the build output is correct.
