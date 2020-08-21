@@ -791,14 +791,7 @@ function generateEncode(
     } else if (isWithinOneOf(field) && options.oneof === OneofOption.UNIONS) {
       let oneofName = maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options);
       func = func
-        .beginControlFlow(
-          `if (message.%L?.$case === '%L' && message.%L?.%L !== %L)`,
-          oneofName,
-          fieldName,
-          oneofName,
-          fieldName,
-          defaultValue(typeMap, field, options)
-        )
+        .beginControlFlow(`if (message.%L?.$case === '%L')`, oneofName, fieldName)
         .addStatement('%L', writeSnippet(`message.${oneofName}.${fieldName}`))
         .endControlFlow();
     } else if (isWithinOneOf(field) || isMessage(field)) {
