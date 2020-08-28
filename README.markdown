@@ -234,6 +234,10 @@ protoc --plugin=node_modules/ts-proto/protoc-gen-ts_proto ./batching.proto -I.
   However, the type-safety of `useOptionals=false` is admittedly tedious if you have many inherently-unused fields, so you can use `useOptionals=true` if that trade-off makes sense for your project.
 
   Eventually if TypesCript supports [Exact Types](https://github.com/microsoft/TypeScript/issues/12936), that should allow ts-proto to switch to `useOptionals=true` as the default/only behavior, have the generated `Message.encode`/`Message.toPartial`/etc. methods accept `Exact<T>` versions of the message types, and the result would be both safe + succinct.
+  
+  Also see the comment in [this issue](https://github.com/stephenh/ts-proto/issues/120#issuecomment-678375833) which explains some of the nuance behind making all fields optional (currently `useOptionals` only makes message fields optional), specifically that a message created with `const message: Message = { ...key not set... }` vs. `const message = Message.decode(...key not set...)` would look different to clients.
+  
+  (Also note that each message's `Message.fromPartial(...)` static methods are specifically meant to address this, because it allows you to create a message with all keys optional, but still applies the usual protobuf default-value-on-missing-key logic, so that code that reads the message get more consistent behavior.
 
 - With `--ts_proto_opt=oneof=unions`, `oneof` fields will be generated as ADTs.
 
