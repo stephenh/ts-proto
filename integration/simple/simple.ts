@@ -1341,7 +1341,7 @@ export const SimpleWithMap = {
     obj.entitiesById = {};
     if (message.entitiesById) {
       Object.entries(message.entitiesById).forEach(([k, v]) => {
-        obj.entitiesById[k] = Entity.fromJSON(v);
+        obj.entitiesById[k] = Entity.toJSON(v);
       })
     }
     obj.nameLookup = {};
@@ -1737,7 +1737,7 @@ export const SimpleWithSnakeCaseMap = {
     obj.entitiesById = {};
     if (message.entitiesById) {
       Object.entries(message.entitiesById).forEach(([k, v]) => {
-        obj.entitiesById[k] = Entity.fromJSON(v);
+        obj.entitiesById[k] = Entity.toJSON(v);
       })
     }
     return obj;

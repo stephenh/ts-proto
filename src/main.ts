@@ -991,7 +991,7 @@ function generateToJson(
         } else if (isPrimitive(valueType)) {
           return CodeBlock.of('%L', from);
         } else {
-          return CodeBlock.of('%T.fromJSON(%L)', basicTypeName(typeMap, valueType, options).toString(), from);
+          return CodeBlock.of('%T.toJSON(%L)', basicTypeName(typeMap, valueType, options).toString(), from);
         }
       } else if (isMessage(field) && !isValueType(field) && !isMapType(typeMap, messageDesc, field, options)) {
         return CodeBlock.of(
