@@ -988,8 +988,10 @@ function generateToJson(
           return CodeBlock.of('base64FromBytes(%L)', from);
         } else if (isTimestamp(valueType)) {
           return CodeBlock.of('%L.toISOString()', from);
-        } else {
+        } else if (isPrimitive(valueType)) {
           return CodeBlock.of('%L', from);
+        } else {
+          return CodeBlock.of('%T.toJSON(%L)', basicTypeName(typeMap, valueType, options).toString(), from);
         }
       } else if (isMessage(field) && !isValueType(field) && !isMapType(typeMap, messageDesc, field, options)) {
         return CodeBlock.of(
