@@ -402,7 +402,7 @@ export const BatchMapQueryResponse = {
     obj.entities = {};
     if (message.entities) {
       Object.entries(message.entities).forEach(([k, v]) => {
-        obj.entities[k] = v;
+        obj.entities[k] = Entity.fromJSON(v);
       })
     }
     return obj;
