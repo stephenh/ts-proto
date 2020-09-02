@@ -1,3 +1,7 @@
+## v1.29.0
+
+* Fix `toJSON` with maps of messages (#124 by @mscolnick)
+
 ## v1.28.0
 
 * Use `enum` keyword for modeling keywords again
