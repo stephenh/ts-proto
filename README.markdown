@@ -4,7 +4,7 @@
 
 # ts-proto
 
-> `ts-proto` transforms your `.proto` files into strong typed `typescript` files!
+> `ts-proto` transforms your `.proto` files into strongly-typed, idiomatic TypeScript files!
 
 ## Table of contents
 
