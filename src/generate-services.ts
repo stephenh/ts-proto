@@ -54,10 +54,10 @@ export function generateService(
     const info = sourceInfo.lookup(Fields.service.method, index);
     maybeAddComment(info, (text) => (requestFn = requestFn.addJavadoc(text)));
 
-    let inputType = requestType(typeMap, methodDesc, options)
+    let inputType = requestType(typeMap, methodDesc, options);
     // the grpc-web clients `fromPartial` the input before handing off to grpc-web's
     // serde runtime, so it's okay to accept partial results from the client
-    if (options.outputClientImpl === "grpc-web") {
+    if (options.outputClientImpl === 'grpc-web') {
       inputType = TypeNames.parameterizedType(TypeNames.anyType('DeepPartial'), inputType);
     }
     requestFn = requestFn.addParameter('request', inputType);
