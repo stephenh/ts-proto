@@ -2,10 +2,12 @@
 
 import { NodeHttpTransport } from '@improbable-eng/grpc-web-node-http-transport';
 import { DashAPICredsClientImpl, DashStateClientImpl, GrpcWebImpl } from './example';
+import { grpc } from '@improbable-eng/grpc-web';
 
 const rpc = new GrpcWebImpl('http://localhost:9090', {
   transport: NodeHttpTransport(),
   debug: false,
+  metadata: new grpc.Metadata({ SomeHeader: 'bar' }),
 });
 
 const client = new DashStateClientImpl(rpc);
@@ -16,16 +18,16 @@ async function main() {
   console.log(await client.UserSettings({}));
 
   console.log('calling creds.Create');
-  const cred = await creds.Create({ description: 'test desc fooo', metadata: 'test metadata' });
+  const cred = await creds.Create({ description: 'test desc fooo' });
   console.log(cred);
 
   console.log('calling creds.Delete');
-  const del = await creds.Delete({ id: cred.id, credSid: '' });
+  const del = await creds.Delete({ id: cred.id });
   console.log(del);
 
   console.log('calling creds.Update');
   try {
-    await creds.Update({ description: 'test desc2', credSid: '', id: undefined, metadata: '' });
+    await creds.Update({ description: 'test desc2' });
   } catch (e) {
     console.log('expected error', e.message);
   }

@@ -16,6 +16,7 @@ import FileDescriptorProto = google.protobuf.FileDescriptorProto;
 import ServiceDescriptorProto = google.protobuf.ServiceDescriptorProto;
 
 const grpc = TypeNames.anyType('grpc@@improbable-eng/grpc-web');
+const BrowserHeaders = TypeNames.anyType('BrowserHeaders@browser-headers');
 
 /** Generates a client that uses the `@improbable-web/grpc-web` library. */
 export function generateGrpcClientImpl(
@@ -50,12 +51,17 @@ function generateRpcMethod(
   serviceDesc: ServiceDescriptorProto,
   methodDesc: MethodDescriptorProto
 ) {
-  let requestFn = FunctionSpec.create(methodDesc.name);
-  let inputType = requestType(typeMap, methodDesc, options);
+  const requestFn = FunctionSpec.create(methodDesc.name);
+  const inputType = requestType(typeMap, methodDesc, options);
+  const partialInputType = TypeNames.parameterizedType(TypeNames.anyType('DeepPartial'), inputType);
   return requestFn
-    .addParameter('request', inputType)
+    .addParameter('request', partialInputType)
     .addParameter('metadata?', TypeNames.anyType('grpc.Metadata'))
-    .addStatement('return this.rpc.unary(%L, request, metadata)', methodDescName(serviceDesc, methodDesc))
+    .addStatement(
+      'return this.rpc.unary(%L, %T.fromPartial(request), metadata)',
+      methodDescName(serviceDesc, methodDesc),
+      inputType
+    )
     .returns(responsePromise(typeMap, methodDesc, options));
 }
 
@@ -168,9 +174,11 @@ function generateGrpcWebRpcType(): InterfaceSpec {
 
 /** Implements the `Rpc` interface by making calls using the `grpc.unary` method. */
 function generateGrpcWebImpl(): ClassSpec {
+  const maybeMetadata = TypeNames.unionType(TypeNames.anyType('grpc.Metadata'), TypeNames.UNDEFINED);
   const optionsParam = TypeNames.anonymousType(
     ['transport?', TypeNames.anyType('grpc.TransportFactory')],
-    ['debug?', TypeNames.BOOLEAN]
+    ['debug?', TypeNames.BOOLEAN],
+    ['metadata?', maybeMetadata]
   );
   const t = TypeNames.typeVariable('T', TypeNames.bound('UnaryMethodDefinitionish'));
   return ClassSpec.create('GrpcWebImpl')
@@ -190,16 +198,20 @@ function generateGrpcWebImpl(): ClassSpec {
         .addTypeVariable(t)
         .addParameter('methodDesc', t)
         .addParameter('_request', TypeNames.ANY)
-        .addParameter('metadata', TypeNames.unionType(TypeNames.anyType('grpc.Metadata'), TypeNames.UNDEFINED))
+        .addParameter('metadata', maybeMetadata)
         .returns(TypeNames.PROMISE.param(TypeNames.ANY))
         .addCodeBlock(
           CodeBlock.empty().add(
             `const request = { ..._request, ...methodDesc.requestType };
 return new Promise((resolve, reject) => {
+  const maybeCombinedMetadata =
+    metadata && this.options.metadata
+      ? new %T({ ...this.options?.metadata.headersMap, ...metadata?.headersMap })
+      : metadata || this.options.metadata;
   %T.unary(methodDesc, {
     request,
     host: this.host,
-    metadata: metadata,
+    metadata: maybeCombinedMetadata,
     transport: this.options.transport,
     debug: this.options.debug,
     onEnd: function (response) {
@@ -215,6 +227,7 @@ return new Promise((resolve, reject) => {
   });
 });
 `,
+            BrowserHeaders,
             grpc
           )
         )

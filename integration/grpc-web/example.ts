@@ -1,4 +1,5 @@
 import { ID, Empty } from './types';
+import { BrowserHeaders } from 'browser-headers';
 import { grpc } from '@improbable-eng/grpc-web';
 import { Writer, Reader } from 'protobufjs/minimal';
 
@@ -80,7 +81,7 @@ const baseDashAPICredsDeleteReq: object = {
 
 export interface DashState {
 
-  UserSettings(request: Empty, metadata?: grpc.Metadata): Promise<DashUserSettingsState>;
+  UserSettings(request: DeepPartial<Empty>, metadata?: grpc.Metadata): Promise<DashUserSettingsState>;
 
 }
 
@@ -92,8 +93,8 @@ export class DashStateClientImpl implements DashState {
     this.rpc = rpc;
   }
 
-  UserSettings(request: Empty, metadata?: grpc.Metadata): Promise<DashUserSettingsState> {
-    return this.rpc.unary(DashStateUserSettingsDesc, request, metadata);
+  UserSettings(request: DeepPartial<Empty>, metadata?: grpc.Metadata): Promise<DashUserSettingsState> {
+    return this.rpc.unary(DashStateUserSettingsDesc, Empty.fromPartial(request), metadata);
   }
 
 }
@@ -105,11 +106,11 @@ export class DashStateClientImpl implements DashState {
  */
 export interface DashAPICreds {
 
-  Create(request: DashAPICredsCreateReq, metadata?: grpc.Metadata): Promise<DashCred>;
+  Create(request: DeepPartial<DashAPICredsCreateReq>, metadata?: grpc.Metadata): Promise<DashCred>;
 
-  Update(request: DashAPICredsUpdateReq, metadata?: grpc.Metadata): Promise<DashCred>;
+  Update(request: DeepPartial<DashAPICredsUpdateReq>, metadata?: grpc.Metadata): Promise<DashCred>;
 
-  Delete(request: DashAPICredsDeleteReq, metadata?: grpc.Metadata): Promise<DashCred>;
+  Delete(request: DeepPartial<DashAPICredsDeleteReq>, metadata?: grpc.Metadata): Promise<DashCred>;
 
 }
 
@@ -121,16 +122,16 @@ export class DashAPICredsClientImpl implements DashAPICreds {
     this.rpc = rpc;
   }
 
-  Create(request: DashAPICredsCreateReq, metadata?: grpc.Metadata): Promise<DashCred> {
-    return this.rpc.unary(DashAPICredsCreateDesc, request, metadata);
+  Create(request: DeepPartial<DashAPICredsCreateReq>, metadata?: grpc.Metadata): Promise<DashCred> {
+    return this.rpc.unary(DashAPICredsCreateDesc, DashAPICredsCreateReq.fromPartial(request), metadata);
   }
 
-  Update(request: DashAPICredsUpdateReq, metadata?: grpc.Metadata): Promise<DashCred> {
-    return this.rpc.unary(DashAPICredsUpdateDesc, request, metadata);
+  Update(request: DeepPartial<DashAPICredsUpdateReq>, metadata?: grpc.Metadata): Promise<DashCred> {
+    return this.rpc.unary(DashAPICredsUpdateDesc, DashAPICredsUpdateReq.fromPartial(request), metadata);
   }
 
-  Delete(request: DashAPICredsDeleteReq, metadata?: grpc.Metadata): Promise<DashCred> {
-    return this.rpc.unary(DashAPICredsDeleteDesc, request, metadata);
+  Delete(request: DeepPartial<DashAPICredsDeleteReq>, metadata?: grpc.Metadata): Promise<DashCred> {
+    return this.rpc.unary(DashAPICredsDeleteDesc, DashAPICredsDeleteReq.fromPartial(request), metadata);
   }
 
 }
@@ -145,9 +146,9 @@ export class GrpcWebImpl implements Rpc {
 
   private host: string;
 
-  private options: { transport?: grpc.TransportFactory, debug?: boolean };
+  private options: { transport?: grpc.TransportFactory, debug?: boolean, metadata?: grpc.Metadata | undefined };
 
-  constructor(host: string, options: { transport?: grpc.TransportFactory, debug?: boolean }) {
+  constructor(host: string, options: { transport?: grpc.TransportFactory, debug?: boolean, metadata?: grpc.Metadata | undefined }) {
     this.host = host;
     this.options = options;
   }
@@ -155,10 +156,14 @@ export class GrpcWebImpl implements Rpc {
   unary<T extends UnaryMethodDefinitionish>(methodDesc: T, _request: any, metadata: grpc.Metadata | undefined): Promise<any> {
     const request = { ..._request, ...methodDesc.requestType };
     return new Promise((resolve, reject) => {
+      const maybeCombinedMetadata =
+        metadata && this.options.metadata
+          ? new BrowserHeaders({ ...this.options?.metadata.headersMap, ...metadata?.headersMap })
+          : metadata || this.options.metadata;
       grpc.unary(methodDesc, {
         request,
         host: this.host,
-        metadata: metadata,
+        metadata: maybeCombinedMetadata,
         transport: this.options.transport,
         debug: this.options.debug,
         onEnd: function (response) {
