@@ -1,3 +1,8 @@
+## v1.30.0
+
+* Accept cross-call metadata args in the `GrpcWebImpl` constructor
+* Accept `DeepPartial` request types for grpc-web calls
+
 ## v1.29.0
 
 * Fix `toJSON` with maps of messages (#124 by @mscolnick)
