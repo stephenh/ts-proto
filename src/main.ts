@@ -243,14 +243,19 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
 }
 
 function addLongUtilityMethod(_file: FileSpec, options: Options): FileSpec {
-  const protobuf = TypeNames.anyType("protobuf*protobufjs/minimal");
+  const protobuf = TypeNames.anyType('protobuf*protobufjs/minimal');
   // Regardless of which `forceLong` config option we're using, we always use
   // the `long` library to either represent or at least sanity-check 64-bit values
-  let file = _file.addCode(CodeBlock.empty().add(`if (%T.util.Long !== Long) {
+  let file = _file.addCode(
+    CodeBlock.empty().add(
+      `if (%T.util.Long !== Long) {
   protobuf.util.Long = Long;
   protobuf.configure();
 }
-`, protobuf));
+`,
+      protobuf
+    )
+  );
 
   if (options.forceLong === LongOption.LONG) {
     return file.addFunction(
