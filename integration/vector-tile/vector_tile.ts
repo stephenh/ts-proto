@@ -1,4 +1,5 @@
 import * as Long from 'long';
+import * as protobuf from 'protobufjs/minimal';
 import { Writer, Reader } from 'protobufjs/minimal';
 
 
@@ -579,6 +580,11 @@ export const Tile_Layer = {
     return obj;
   },
 };
+
+if (protobuf.util.Long !== Long) {
+  protobuf.util.Long = Long;
+  protobuf.configure();
+}
 
 type Builtin = Date | Function | Uint8Array | string | number | undefined;
 type DeepPartial<T> = T extends Builtin

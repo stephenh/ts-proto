@@ -2,6 +2,7 @@
 //  comment in the output source file.
 //
 import { ImportedThing } from './import_dir/thing';
+import * as protobuf from 'protobufjs/minimal';
 import { Reader, Writer } from 'protobufjs/minimal';
 import { Timestamp } from './google/protobuf/timestamp';
 import * as Long from 'long';
@@ -1858,6 +1859,11 @@ export const Numbers = {
     return obj;
   },
 };
+
+if (protobuf.util.Long !== Long) {
+  protobuf.util.Long = Long;
+  protobuf.configure();
+}
 
 type Builtin = Date | Function | Uint8Array | string | number | undefined;
 type DeepPartial<T> = T extends Builtin

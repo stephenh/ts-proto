@@ -1,4 +1,5 @@
 import * as Long from 'long';
+import * as protobuf from 'protobufjs/minimal';
 import { Writer, Reader } from 'protobufjs/minimal';
 
 
@@ -570,6 +571,11 @@ export const BytesValue = {
     return obj;
   },
 };
+
+if (protobuf.util.Long !== Long) {
+  protobuf.util.Long = Long;
+  protobuf.configure();
+}
 
 interface WindowBase64 {
   atob(b64: string): string;

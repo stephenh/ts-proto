@@ -3,6 +3,7 @@
 //
 import { ImportedThing } from './import_dir/thing';
 import { DateMessage } from './google/type/date';
+import * as protobuf from 'protobufjs/minimal';
 import { Reader, Writer } from 'protobufjs/minimal';
 import { Timestamp } from './google/protobuf/timestamp';
 import * as Long from 'long';
@@ -2322,6 +2323,11 @@ export const Empty = {
     return obj;
   },
 };
+
+if (protobuf.util.Long !== Long) {
+  protobuf.util.Long = Long;
+  protobuf.configure();
+}
 
 interface WindowBase64 {
   atob(b64: string): string;
