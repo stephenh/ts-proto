@@ -1,3 +1,7 @@
+## v1.31.0
+
+* Fix `oneof=unions` not decoding default values correctly (@philikon)
+
 ## v1.30.0
 
 * Accept cross-call metadata args in the `GrpcWebImpl` constructor
