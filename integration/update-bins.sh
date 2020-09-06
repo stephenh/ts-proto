@@ -10,7 +10,7 @@ for file in **/*.proto; do
   dir="${file%%/*}"
   # Strip the proto suffix and add bin
   dest="${file%proto}bin"
-  protoc "--plugin=$(pwd)/protoc-gen-dump" --dump_out=. "${file}" "-I${dir}"
+  protoc --experimental_allow_proto3_optional "--plugin=$(pwd)/protoc-gen-dump" --dump_out=. "${file}" "-I${dir}"
   mv file.bin "${dest}"
 done
 

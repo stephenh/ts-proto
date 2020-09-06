@@ -16,3 +16,4 @@
 # After generation, rename the file to something useful and then import in tests.
 # ----------------------------------------------------------------------------------------------------------------------
 cat >| file.bin
+cat ./dump-response.bin

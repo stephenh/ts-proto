@@ -794,7 +794,13 @@ function generateEncode(
         .beginControlFlow(`if (message.%L?.$case === '%L')`, oneofName, fieldName)
         .addStatement('%L', writeSnippet(`message.${oneofName}.${fieldName}`))
         .endControlFlow();
-    } else if (isWithinOneOf(field) || isMessage(field)) {
+    } else if (isWithinOneOf(field)) {
+      // Oneofs don't have a default value check b/c they need to denote which-oneof presence
+      func = func
+        .beginControlFlow('if (message.%L !== undefined)', fieldName)
+        .addStatement('%L', writeSnippet(`message.${fieldName}`))
+        .endControlFlow();
+    } else if (isMessage(field)) {
       func = func
         .beginControlFlow(
           'if (message.%L !== undefined && message.%L !== %L)',
@@ -1007,12 +1013,10 @@ function generateToJson(
           from,
           isWithinOneOf(field) ? 'undefined' : defaultValue(typeMap, field, options)
         );
+      } else if (isWithinOneOf(field)) {
+        return CodeBlock.of('%L ?? %L', from, 'undefined');
       } else {
-        return CodeBlock.of(
-          '%L || %L',
-          from,
-          isWithinOneOf(field) ? 'undefined' : defaultValue(typeMap, field, options)
-        );
+        return CodeBlock.of('%L || %L', from, defaultValue(typeMap, field, options));
       }
     };
 

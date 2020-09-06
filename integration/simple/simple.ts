@@ -142,6 +142,27 @@ export interface Numbers {
   sfixed64: number;
 }
 
+export interface SimpleButOptional {
+  /**
+   *  Name field
+   */
+  name: string | undefined;
+  /**
+   *  Age  */
+  age: number | undefined;
+  /**
+   *  This comment will also attach
+   */
+  createdAt: Date | undefined;
+  child: Child | undefined;
+  state: StateEnum | undefined;
+  /**
+   *  A thing (imported from thing)
+   */
+  thing: ImportedThing | undefined;
+  birthday: DateMessage | undefined;
+}
+
 export interface Empty {
 }
 
@@ -235,6 +256,9 @@ const baseNumbers: object = {
   fixed64: 0,
   sfixed32: 0,
   sfixed64: 0,
+};
+
+const baseSimpleButOptional: object = {
 };
 
 const baseEmpty: object = {
@@ -948,10 +972,10 @@ export const Nested_InnerMessage_DeepMessage = {
 
 export const OneOfMessage = {
   encode(message: OneOfMessage, writer: Writer = Writer.create()): Writer {
-    if (message.first !== undefined && message.first !== "") {
+    if (message.first !== undefined) {
       writer.uint32(10).string(message.first);
     }
-    if (message.last !== undefined && message.last !== "") {
+    if (message.last !== undefined) {
       writer.uint32(18).string(message.last);
     }
     return writer;
@@ -1006,8 +1030,8 @@ export const OneOfMessage = {
   },
   toJSON(message: OneOfMessage): unknown {
     const obj: any = {};
-    obj.first = message.first || undefined;
-    obj.last = message.last || undefined;
+    obj.first = message.first ?? undefined;
+    obj.last = message.last ?? undefined;
     return obj;
   },
 };
@@ -2110,6 +2134,157 @@ export const Numbers = {
     obj.fixed64 = message.fixed64 || 0;
     obj.sfixed32 = message.sfixed32 || 0;
     obj.sfixed64 = message.sfixed64 || 0;
+    return obj;
+  },
+};
+
+export const SimpleButOptional = {
+  encode(message: SimpleButOptional, writer: Writer = Writer.create()): Writer {
+    if (message.name !== undefined) {
+      writer.uint32(10).string(message.name);
+    }
+    if (message.age !== undefined) {
+      writer.uint32(16).int32(message.age);
+    }
+    if (message.createdAt !== undefined) {
+      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(74).fork()).ldelim();
+    }
+    if (message.child !== undefined) {
+      Child.encode(message.child, writer.uint32(26).fork()).ldelim();
+    }
+    if (message.state !== undefined) {
+      writer.uint32(32).int32(message.state);
+    }
+    if (message.thing !== undefined) {
+      ImportedThing.encode(message.thing, writer.uint32(82).fork()).ldelim();
+    }
+    if (message.birthday !== undefined) {
+      DateMessage.encode(message.birthday, writer.uint32(98).fork()).ldelim();
+    }
+    return writer;
+  },
+  decode(input: Uint8Array | Reader, length?: number): SimpleButOptional {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseSimpleButOptional } as SimpleButOptional;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.name = reader.string();
+          break;
+        case 2:
+          message.age = reader.int32();
+          break;
+        case 9:
+          message.createdAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          break;
+        case 3:
+          message.child = Child.decode(reader, reader.uint32());
+          break;
+        case 4:
+          message.state = reader.int32() as any;
+          break;
+        case 10:
+          message.thing = ImportedThing.decode(reader, reader.uint32());
+          break;
+        case 12:
+          message.birthday = DateMessage.decode(reader, reader.uint32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+  fromJSON(object: any): SimpleButOptional {
+    const message = { ...baseSimpleButOptional } as SimpleButOptional;
+    if (object.name !== undefined && object.name !== null) {
+      message.name = String(object.name);
+    } else {
+      message.name = undefined;
+    }
+    if (object.age !== undefined && object.age !== null) {
+      message.age = Number(object.age);
+    } else {
+      message.age = undefined;
+    }
+    if (object.createdAt !== undefined && object.createdAt !== null) {
+      message.createdAt = fromJsonTimestamp(object.createdAt);
+    } else {
+      message.createdAt = undefined;
+    }
+    if (object.child !== undefined && object.child !== null) {
+      message.child = Child.fromJSON(object.child);
+    } else {
+      message.child = undefined;
+    }
+    if (object.state !== undefined && object.state !== null) {
+      message.state = stateEnumFromJSON(object.state);
+    } else {
+      message.state = undefined;
+    }
+    if (object.thing !== undefined && object.thing !== null) {
+      message.thing = ImportedThing.fromJSON(object.thing);
+    } else {
+      message.thing = undefined;
+    }
+    if (object.birthday !== undefined && object.birthday !== null) {
+      message.birthday = DateMessage.fromJSON(object.birthday);
+    } else {
+      message.birthday = undefined;
+    }
+    return message;
+  },
+  fromPartial(object: DeepPartial<SimpleButOptional>): SimpleButOptional {
+    const message = { ...baseSimpleButOptional } as SimpleButOptional;
+    if (object.name !== undefined && object.name !== null) {
+      message.name = object.name;
+    } else {
+      message.name = undefined;
+    }
+    if (object.age !== undefined && object.age !== null) {
+      message.age = object.age;
+    } else {
+      message.age = undefined;
+    }
+    if (object.createdAt !== undefined && object.createdAt !== null) {
+      message.createdAt = object.createdAt;
+    } else {
+      message.createdAt = undefined;
+    }
+    if (object.child !== undefined && object.child !== null) {
+      message.child = Child.fromPartial(object.child);
+    } else {
+      message.child = undefined;
+    }
+    if (object.state !== undefined && object.state !== null) {
+      message.state = object.state;
+    } else {
+      message.state = undefined;
+    }
+    if (object.thing !== undefined && object.thing !== null) {
+      message.thing = ImportedThing.fromPartial(object.thing);
+    } else {
+      message.thing = undefined;
+    }
+    if (object.birthday !== undefined && object.birthday !== null) {
+      message.birthday = DateMessage.fromPartial(object.birthday);
+    } else {
+      message.birthday = undefined;
+    }
+    return message;
+  },
+  toJSON(message: SimpleButOptional): unknown {
+    const obj: any = {};
+    obj.name = message.name ?? undefined;
+    obj.age = message.age ?? undefined;
+    obj.createdAt = message.createdAt !== undefined ? message.createdAt.toISOString() : null;
+    obj.child = message.child ? Child.toJSON(message.child) : undefined;
+    obj.state = message.state !== undefined ? stateEnumToJSON(message.state) : undefined;
+    obj.thing = message.thing ? ImportedThing.toJSON(message.thing) : undefined;
+    obj.birthday = message.birthday ? DateMessage.toJSON(message.birthday) : undefined;
     return obj;
   },
 };
