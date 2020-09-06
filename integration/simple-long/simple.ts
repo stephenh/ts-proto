@@ -591,23 +591,23 @@ export const Simple = {
   },
   toJSON(message: Simple): unknown {
     const obj: any = {};
-    obj.name = message.name || "";
-    obj.age = message.age || 0;
-    obj.createdAt = message.createdAt !== undefined ? message.createdAt.toISOString() : null;
-    obj.child = message.child ? Child.toJSON(message.child) : undefined;
-    obj.state = stateEnumToJSON(message.state);
+    message.name !== undefined && (obj.name = message.name);
+    message.age !== undefined && (obj.age = message.age);
+    message.createdAt !== undefined && (obj.createdAt = message.createdAt !== undefined ? message.createdAt.toISOString() : null);
+    message.child !== undefined && (obj.child = message.child ? Child.toJSON(message.child) : undefined);
+    message.state !== undefined && (obj.state = stateEnumToJSON(message.state));
     if (message.grandChildren) {
       obj.grandChildren = message.grandChildren.map(e => e ? Child.toJSON(e) : undefined);
     } else {
       obj.grandChildren = [];
     }
     if (message.coins) {
-      obj.coins = message.coins.map(e => e || 0);
+      obj.coins = message.coins.map(e => e);
     } else {
       obj.coins = [];
     }
     if (message.snacks) {
-      obj.snacks = message.snacks.map(e => e || "");
+      obj.snacks = message.snacks.map(e => e);
     } else {
       obj.snacks = [];
     }
@@ -616,7 +616,7 @@ export const Simple = {
     } else {
       obj.oldStates = [];
     }
-    obj.thing = message.thing ? ImportedThing.toJSON(message.thing) : undefined;
+    message.thing !== undefined && (obj.thing = message.thing ? ImportedThing.toJSON(message.thing) : undefined);
     return obj;
   },
 };
@@ -677,8 +677,8 @@ export const Child = {
   },
   toJSON(message: Child): unknown {
     const obj: any = {};
-    obj.name = message.name || "";
-    obj.type = child_TypeToJSON(message.type);
+    message.name !== undefined && (obj.name = message.name);
+    message.type !== undefined && (obj.type = child_TypeToJSON(message.type));
     return obj;
   },
 };
@@ -755,9 +755,9 @@ export const Nested = {
   },
   toJSON(message: Nested): unknown {
     const obj: any = {};
-    obj.name = message.name || "";
-    obj.message = message.message ? Nested_InnerMessage.toJSON(message.message) : undefined;
-    obj.state = nested_InnerEnumToJSON(message.state);
+    message.name !== undefined && (obj.name = message.name);
+    message.message !== undefined && (obj.message = message.message ? Nested_InnerMessage.toJSON(message.message) : undefined);
+    message.state !== undefined && (obj.state = nested_InnerEnumToJSON(message.state));
     return obj;
   },
 };
@@ -820,8 +820,8 @@ export const Nested_InnerMessage = {
   },
   toJSON(message: Nested_InnerMessage): unknown {
     const obj: any = {};
-    obj.name = message.name || "";
-    obj.deep = message.deep ? Nested_InnerMessage_DeepMessage.toJSON(message.deep) : undefined;
+    message.name !== undefined && (obj.name = message.name);
+    message.deep !== undefined && (obj.deep = message.deep ? Nested_InnerMessage_DeepMessage.toJSON(message.deep) : undefined);
     return obj;
   },
 };
@@ -868,17 +868,17 @@ export const Nested_InnerMessage_DeepMessage = {
   },
   toJSON(message: Nested_InnerMessage_DeepMessage): unknown {
     const obj: any = {};
-    obj.name = message.name || "";
+    message.name !== undefined && (obj.name = message.name);
     return obj;
   },
 };
 
 export const OneOfMessage = {
   encode(message: OneOfMessage, writer: Writer = Writer.create()): Writer {
-    if (message.first !== undefined && message.first !== "") {
+    if (message.first !== undefined) {
       writer.uint32(10).string(message.first);
     }
-    if (message.last !== undefined && message.last !== "") {
+    if (message.last !== undefined) {
       writer.uint32(18).string(message.last);
     }
     return writer;
@@ -933,8 +933,8 @@ export const OneOfMessage = {
   },
   toJSON(message: OneOfMessage): unknown {
     const obj: any = {};
-    obj.first = message.first || undefined;
-    obj.last = message.last || undefined;
+    message.first !== undefined && (obj.first = message.first);
+    message.last !== undefined && (obj.last = message.last);
     return obj;
   },
 };
@@ -1053,16 +1053,16 @@ export const SimpleWithWrappers = {
   },
   toJSON(message: SimpleWithWrappers): unknown {
     const obj: any = {};
-    obj.name = message.name || undefined;
-    obj.age = message.age || undefined;
-    obj.enabled = message.enabled || undefined;
+    message.name !== undefined && (obj.name = message.name);
+    message.age !== undefined && (obj.age = message.age);
+    message.enabled !== undefined && (obj.enabled = message.enabled);
     if (message.coins) {
-      obj.coins = message.coins.map(e => e || undefined);
+      obj.coins = message.coins.map(e => e);
     } else {
       obj.coins = [];
     }
     if (message.snacks) {
-      obj.snacks = message.snacks.map(e => e || undefined);
+      obj.snacks = message.snacks.map(e => e);
     } else {
       obj.snacks = [];
     }
@@ -1112,7 +1112,7 @@ export const Entity = {
   },
   toJSON(message: Entity): unknown {
     const obj: any = {};
-    obj.id = message.id || 0;
+    message.id !== undefined && (obj.id = message.id);
     return obj;
   },
 };
@@ -1297,8 +1297,8 @@ export const SimpleWithMap_EntitiesByIdEntry = {
   },
   toJSON(message: SimpleWithMap_EntitiesByIdEntry): unknown {
     const obj: any = {};
-    obj.key = message.key || 0;
-    obj.value = message.value ? Entity.toJSON(message.value) : undefined;
+    message.key !== undefined && (obj.key = message.key);
+    message.value !== undefined && (obj.value = message.value ? Entity.toJSON(message.value) : undefined);
     return obj;
   },
 };
@@ -1359,8 +1359,8 @@ export const SimpleWithMap_NameLookupEntry = {
   },
   toJSON(message: SimpleWithMap_NameLookupEntry): unknown {
     const obj: any = {};
-    obj.key = message.key || "";
-    obj.value = message.value || "";
+    message.key !== undefined && (obj.key = message.key);
+    message.value !== undefined && (obj.value = message.value);
     return obj;
   },
 };
@@ -1421,8 +1421,8 @@ export const SimpleWithMap_IntLookupEntry = {
   },
   toJSON(message: SimpleWithMap_IntLookupEntry): unknown {
     const obj: any = {};
-    obj.key = message.key || 0;
-    obj.value = message.value || 0;
+    message.key !== undefined && (obj.key = message.key);
+    message.value !== undefined && (obj.value = message.value);
     return obj;
   },
 };
@@ -1547,8 +1547,8 @@ export const SimpleWithSnakeCaseMap_EntitiesByIdEntry = {
   },
   toJSON(message: SimpleWithSnakeCaseMap_EntitiesByIdEntry): unknown {
     const obj: any = {};
-    obj.key = message.key || 0;
-    obj.value = message.value ? Entity.toJSON(message.value) : undefined;
+    message.key !== undefined && (obj.key = message.key);
+    message.value !== undefined && (obj.value = message.value ? Entity.toJSON(message.value) : undefined);
     return obj;
   },
 };
@@ -1595,7 +1595,7 @@ export const PingRequest = {
   },
   toJSON(message: PingRequest): unknown {
     const obj: any = {};
-    obj.input = message.input || "";
+    message.input !== undefined && (obj.input = message.input);
     return obj;
   },
 };
@@ -1642,7 +1642,7 @@ export const PingResponse = {
   },
   toJSON(message: PingResponse): unknown {
     const obj: any = {};
-    obj.output = message.output || "";
+    message.output !== undefined && (obj.output = message.output);
     return obj;
   },
 };
@@ -1843,18 +1843,18 @@ export const Numbers = {
   },
   toJSON(message: Numbers): unknown {
     const obj: any = {};
-    obj.double = message.double || 0;
-    obj.float = message.float || 0;
-    obj.int32 = message.int32 || 0;
-    obj.int64 = (message.int64 || Long.ZERO).toString();
-    obj.uint32 = message.uint32 || 0;
-    obj.uint64 = (message.uint64 || Long.UZERO).toString();
-    obj.sint32 = message.sint32 || 0;
-    obj.sint64 = (message.sint64 || Long.ZERO).toString();
-    obj.fixed32 = message.fixed32 || 0;
-    obj.fixed64 = (message.fixed64 || Long.UZERO).toString();
-    obj.sfixed32 = message.sfixed32 || 0;
-    obj.sfixed64 = (message.sfixed64 || Long.ZERO).toString();
+    message.double !== undefined && (obj.double = message.double);
+    message.float !== undefined && (obj.float = message.float);
+    message.int32 !== undefined && (obj.int32 = message.int32);
+    message.int64 !== undefined && (obj.int64 = (message.int64 || Long.ZERO).toString());
+    message.uint32 !== undefined && (obj.uint32 = message.uint32);
+    message.uint64 !== undefined && (obj.uint64 = (message.uint64 || Long.UZERO).toString());
+    message.sint32 !== undefined && (obj.sint32 = message.sint32);
+    message.sint64 !== undefined && (obj.sint64 = (message.sint64 || Long.ZERO).toString());
+    message.fixed32 !== undefined && (obj.fixed32 = message.fixed32);
+    message.fixed64 !== undefined && (obj.fixed64 = (message.fixed64 || Long.UZERO).toString());
+    message.sfixed32 !== undefined && (obj.sfixed32 = message.sfixed32);
+    message.sfixed64 !== undefined && (obj.sfixed64 = (message.sfixed64 || Long.ZERO).toString());
     return obj;
   },
 };

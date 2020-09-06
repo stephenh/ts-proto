@@ -34,4 +34,14 @@ describe('simple-but-optional', () => {
       }
     `);
   });
+
+  it('has optional-by-default keys', () => {
+    // usually leaving off age requires useOptionals
+    const s1: SimpleButOptional = { name: '' };
+    expect(SimpleButOptional.toJSON(s1)).toMatchInlineSnapshot(`
+      Object {
+        "name": "",
+      }
+    `);
+  });
 });

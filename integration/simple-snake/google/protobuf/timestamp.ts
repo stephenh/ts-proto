@@ -172,8 +172,8 @@ export const Timestamp = {
   },
   toJSON(message: Timestamp): unknown {
     const obj: any = {};
-    obj.seconds = message.seconds || 0;
-    obj.nanos = message.nanos || 0;
+    message.seconds !== undefined && (obj.seconds = message.seconds);
+    message.nanos !== undefined && (obj.nanos = message.nanos);
     return obj;
   },
 };

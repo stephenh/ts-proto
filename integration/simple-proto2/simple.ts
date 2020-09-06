@@ -83,7 +83,7 @@ export const Issue56 = {
   },
   toJSON(message: Issue56): unknown {
     const obj: any = {};
-    obj.test = enumWithoutZeroToJSON(message.test);
+    message.test !== undefined && (obj.test = enumWithoutZeroToJSON(message.test));
     return obj;
   },
 };

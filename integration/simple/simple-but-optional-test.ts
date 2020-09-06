@@ -40,12 +40,7 @@ describe('simple-but-optional', () => {
     expect(SimpleButOptional.toJSON(s1)).toMatchInlineSnapshot(`
       Object {
         "age": 0,
-        "birthday": undefined,
-        "child": undefined,
-        "createdAt": null,
         "name": "",
-        "state": undefined,
-        "thing": undefined,
       }
     `);
   });

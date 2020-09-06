@@ -108,9 +108,9 @@ export const DateMessage = {
   },
   toJSON(message: DateMessage): unknown {
     const obj: any = {};
-    obj.year = message.year || 0;
-    obj.month = message.month || 0;
-    obj.day = message.day || 0;
+    message.year !== undefined && (obj.year = message.year);
+    message.month !== undefined && (obj.month = message.month);
+    message.day !== undefined && (obj.day = message.day);
     return obj;
   },
 };

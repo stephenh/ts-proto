@@ -446,7 +446,7 @@ function generateEnumToJson(fullName: string, enumDesc: EnumDescriptorProto): Fu
 
 // When useOptionals=true, non-scalar fields are translated into optional properties.
 function isOptionalProperty(field: FieldDescriptorProto, options: Options): boolean {
-  return options.useOptionals && isMessage(field) && !isRepeated(field);
+  return (options.useOptionals && isMessage(field) && !isRepeated(field)) || field.proto3Optional;
 }
 
 // Create the interface with properties
@@ -1013,10 +1013,8 @@ function generateToJson(
           from,
           isWithinOneOf(field) ? 'undefined' : defaultValue(typeMap, field, options)
         );
-      } else if (isWithinOneOf(field)) {
-        return CodeBlock.of('(%L ?? %L)', from, 'undefined');
       } else {
-        return CodeBlock.of('%L || %L', from, defaultValue(typeMap, field, options));
+        return CodeBlock.of('%L', from);
       }
     };
 
@@ -1048,7 +1046,12 @@ function generateToJson(
         readSnippet(`message.${oneofName}?.${fieldName}`)
       );
     } else {
-      func = func.addStatement('obj.%L = %L', fieldName, readSnippet(`message.${fieldName}`));
+      func = func.addStatement(
+        'message.%L !== undefined && (obj.%L = %L)',
+        fieldName,
+        fieldName,
+        readSnippet(`message.${fieldName}`)
+      );
     }
   });
   return func.addStatement('return obj');

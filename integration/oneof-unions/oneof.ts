@@ -31,8 +31,8 @@ export interface PleaseChoose_Submessage {
 /**
  * * For testing proto3's field presence feature.  */
 export interface SimpleButOptional {
-  name: string | undefined;
-  age: number | undefined;
+  name?: string | undefined;
+  age?: number | undefined;
 }
 
 const basePleaseChoose: object = {
@@ -241,17 +241,17 @@ export const PleaseChoose = {
   },
   toJSON(message: PleaseChoose): unknown {
     const obj: any = {};
-    obj.name = message.name || "";
-    message.choice?.$case === 'aNumber' && (obj.aNumber = (message.choice?.aNumber ?? undefined));
-    message.choice?.$case === 'aString' && (obj.aString = (message.choice?.aString ?? undefined));
+    message.name !== undefined && (obj.name = message.name);
+    message.choice?.$case === 'aNumber' && (obj.aNumber = message.choice?.aNumber);
+    message.choice?.$case === 'aString' && (obj.aString = message.choice?.aString);
     message.choice?.$case === 'aMessage' && (obj.aMessage = message.choice?.aMessage ? PleaseChoose_Submessage.toJSON(message.choice?.aMessage) : undefined);
-    message.choice?.$case === 'aBool' && (obj.aBool = (message.choice?.aBool ?? undefined));
+    message.choice?.$case === 'aBool' && (obj.aBool = message.choice?.aBool);
     message.choice?.$case === 'bunchaBytes' && (obj.bunchaBytes = message.choice?.bunchaBytes !== undefined ? base64FromBytes(message.choice?.bunchaBytes) : undefined);
     message.choice?.$case === 'anEnum' && (obj.anEnum = message.choice?.anEnum !== undefined ? pleaseChoose_StateEnumToJSON(message.choice?.anEnum) : undefined);
-    obj.age = message.age || 0;
-    message.eitherOr?.$case === 'either' && (obj.either = (message.eitherOr?.either ?? undefined));
-    message.eitherOr?.$case === 'or' && (obj.or = (message.eitherOr?.or ?? undefined));
-    message.eitherOr?.$case === 'thirdOption' && (obj.thirdOption = (message.eitherOr?.thirdOption ?? undefined));
+    message.age !== undefined && (obj.age = message.age);
+    message.eitherOr?.$case === 'either' && (obj.either = message.eitherOr?.either);
+    message.eitherOr?.$case === 'or' && (obj.or = message.eitherOr?.or);
+    message.eitherOr?.$case === 'thirdOption' && (obj.thirdOption = message.eitherOr?.thirdOption);
     return obj;
   },
 };
@@ -294,7 +294,7 @@ export const PleaseChoose_Submessage = {
   },
   toJSON(message: PleaseChoose_Submessage): unknown {
     const obj: any = {};
-    obj.name = message.name || "";
+    message.name !== undefined && (obj.name = message.name);
     return obj;
   },
 };
@@ -351,8 +351,8 @@ export const SimpleButOptional = {
   },
   toJSON(message: SimpleButOptional): unknown {
     const obj: any = {};
-    obj.name = (message.name ?? undefined);
-    obj.age = (message.age ?? undefined);
+    message.name !== undefined && (obj.name = message.name);
+    message.age !== undefined && (obj.age = message.age);
     return obj;
   },
 };

@@ -282,8 +282,8 @@ export const DashFlash = {
   },
   toJSON(message: DashFlash): unknown {
     const obj: any = {};
-    obj.msg = message.msg || "";
-    obj.type = dashFlash_TypeToJSON(message.type);
+    message.msg !== undefined && (obj.msg = message.msg);
+    message.type !== undefined && (obj.type = dashFlash_TypeToJSON(message.type));
     return obj;
   },
 };
@@ -365,8 +365,8 @@ export const DashUserSettingsState = {
   },
   toJSON(message: DashUserSettingsState): unknown {
     const obj: any = {};
-    obj.email = message.email || "";
-    obj.urls = message.urls ? DashUserSettingsState_URLs.toJSON(message.urls) : undefined;
+    message.email !== undefined && (obj.email = message.email);
+    message.urls !== undefined && (obj.urls = message.urls ? DashUserSettingsState_URLs.toJSON(message.urls) : undefined);
     if (message.flashes) {
       obj.flashes = message.flashes.map(e => e ? DashFlash.toJSON(e) : undefined);
     } else {
@@ -432,8 +432,8 @@ export const DashUserSettingsState_URLs = {
   },
   toJSON(message: DashUserSettingsState_URLs): unknown {
     const obj: any = {};
-    obj.connectGoogle = message.connectGoogle || "";
-    obj.connectGithub = message.connectGithub || "";
+    message.connectGoogle !== undefined && (obj.connectGoogle = message.connectGoogle);
+    message.connectGithub !== undefined && (obj.connectGithub = message.connectGithub);
     return obj;
   },
 };
@@ -524,10 +524,10 @@ export const DashCred = {
   },
   toJSON(message: DashCred): unknown {
     const obj: any = {};
-    obj.description = message.description || "";
-    obj.metadata = message.metadata || "";
-    obj.token = message.token || "";
-    obj.id = message.id ? ID.toJSON(message.id) : undefined;
+    message.description !== undefined && (obj.description = message.description);
+    message.metadata !== undefined && (obj.metadata = message.metadata);
+    message.token !== undefined && (obj.token = message.token);
+    message.id !== undefined && (obj.id = message.id ? ID.toJSON(message.id) : undefined);
     return obj;
   },
 };
@@ -588,8 +588,8 @@ export const DashAPICredsCreateReq = {
   },
   toJSON(message: DashAPICredsCreateReq): unknown {
     const obj: any = {};
-    obj.description = message.description || "";
-    obj.metadata = message.metadata || "";
+    message.description !== undefined && (obj.description = message.description);
+    message.metadata !== undefined && (obj.metadata = message.metadata);
     return obj;
   },
 };
@@ -680,10 +680,10 @@ export const DashAPICredsUpdateReq = {
   },
   toJSON(message: DashAPICredsUpdateReq): unknown {
     const obj: any = {};
-    obj.credSid = message.credSid || "";
-    obj.description = message.description || "";
-    obj.metadata = message.metadata || "";
-    obj.id = message.id ? ID.toJSON(message.id) : undefined;
+    message.credSid !== undefined && (obj.credSid = message.credSid);
+    message.description !== undefined && (obj.description = message.description);
+    message.metadata !== undefined && (obj.metadata = message.metadata);
+    message.id !== undefined && (obj.id = message.id ? ID.toJSON(message.id) : undefined);
     return obj;
   },
 };
@@ -746,8 +746,8 @@ export const DashAPICredsDeleteReq = {
   },
   toJSON(message: DashAPICredsDeleteReq): unknown {
     const obj: any = {};
-    obj.credSid = message.credSid || "";
-    obj.id = message.id ? ID.toJSON(message.id) : undefined;
+    message.credSid !== undefined && (obj.credSid = message.credSid);
+    message.id !== undefined && (obj.id = message.id ? ID.toJSON(message.id) : undefined);
     return obj;
   },
 };

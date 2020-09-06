@@ -194,7 +194,7 @@ export const DoubleValue = {
   },
   toJSON(message: DoubleValue): unknown {
     const obj: any = {};
-    obj.value = message.value || 0;
+    message.value !== undefined && (obj.value = message.value);
     return obj;
   },
 };
@@ -241,7 +241,7 @@ export const FloatValue = {
   },
   toJSON(message: FloatValue): unknown {
     const obj: any = {};
-    obj.value = message.value || 0;
+    message.value !== undefined && (obj.value = message.value);
     return obj;
   },
 };
@@ -288,7 +288,7 @@ export const Int64Value = {
   },
   toJSON(message: Int64Value): unknown {
     const obj: any = {};
-    obj.value = message.value || 0;
+    message.value !== undefined && (obj.value = message.value);
     return obj;
   },
 };
@@ -335,7 +335,7 @@ export const UInt64Value = {
   },
   toJSON(message: UInt64Value): unknown {
     const obj: any = {};
-    obj.value = message.value || 0;
+    message.value !== undefined && (obj.value = message.value);
     return obj;
   },
 };
@@ -382,7 +382,7 @@ export const Int32Value = {
   },
   toJSON(message: Int32Value): unknown {
     const obj: any = {};
-    obj.value = message.value || 0;
+    message.value !== undefined && (obj.value = message.value);
     return obj;
   },
 };
@@ -429,7 +429,7 @@ export const UInt32Value = {
   },
   toJSON(message: UInt32Value): unknown {
     const obj: any = {};
-    obj.value = message.value || 0;
+    message.value !== undefined && (obj.value = message.value);
     return obj;
   },
 };
@@ -476,7 +476,7 @@ export const BoolValue = {
   },
   toJSON(message: BoolValue): unknown {
     const obj: any = {};
-    obj.value = message.value || false;
+    message.value !== undefined && (obj.value = message.value);
     return obj;
   },
 };
@@ -523,7 +523,7 @@ export const StringValue = {
   },
   toJSON(message: StringValue): unknown {
     const obj: any = {};
-    obj.value = message.value || "";
+    message.value !== undefined && (obj.value = message.value);
     return obj;
   },
 };
@@ -566,7 +566,7 @@ export const BytesValue = {
   },
   toJSON(message: BytesValue): unknown {
     const obj: any = {};
-    obj.value = message.value !== undefined ? base64FromBytes(message.value) : undefined;
+    message.value !== undefined && (obj.value = message.value !== undefined ? base64FromBytes(message.value) : undefined);
     return obj;
   },
 };

@@ -152,8 +152,8 @@ export const Timestamp = {
   },
   toJSON(message: Timestamp): unknown {
     const obj: any = {};
-    obj.seconds = message.seconds || 0;
-    obj.nanos = message.nanos || 0;
+    message.seconds !== undefined && (obj.seconds = message.seconds);
+    message.nanos !== undefined && (obj.nanos = message.nanos);
     return obj;
   },
 };
@@ -200,7 +200,7 @@ export const Duration = {
   },
   toJSON(message: Duration): unknown {
     const obj: any = {};
-    obj.nanos = message.nanos || 0;
+    message.nanos !== undefined && (obj.nanos = message.nanos);
     return obj;
   },
 };
@@ -279,7 +279,7 @@ export const OptString = {
   },
   toJSON(message: OptString): unknown {
     const obj: any = {};
-    obj.val = message.val || "";
+    message.val !== undefined && (obj.val = message.val);
     return obj;
   },
 };
@@ -326,7 +326,7 @@ export const OptInt64 = {
   },
   toJSON(message: OptInt64): unknown {
     const obj: any = {};
-    obj.val = message.val || 0;
+    message.val !== undefined && (obj.val = message.val);
     return obj;
   },
 };
@@ -373,7 +373,7 @@ export const OptBool = {
   },
   toJSON(message: OptBool): unknown {
     const obj: any = {};
-    obj.val = message.val || false;
+    message.val !== undefined && (obj.val = message.val);
     return obj;
   },
 };
@@ -426,8 +426,8 @@ export const IPNet = {
   },
   toJSON(message: IPNet): unknown {
     const obj: any = {};
-    obj.ip = message.ip !== undefined ? base64FromBytes(message.ip) : undefined;
-    obj.mask = message.mask !== undefined ? base64FromBytes(message.mask) : undefined;
+    message.ip !== undefined && (obj.ip = message.ip !== undefined ? base64FromBytes(message.ip) : undefined);
+    message.mask !== undefined && (obj.mask = message.mask !== undefined ? base64FromBytes(message.mask) : undefined);
     return obj;
   },
 };
@@ -474,7 +474,7 @@ export const ID = {
   },
   toJSON(message: ID): unknown {
     const obj: any = {};
-    obj.id = message.id || "";
+    message.id !== undefined && (obj.id = message.id);
     return obj;
   },
 };

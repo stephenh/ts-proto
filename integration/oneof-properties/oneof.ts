@@ -81,32 +81,32 @@ export function pleaseChoose_StateEnumToJSON(object: PleaseChoose_StateEnum): st
 export const PleaseChoose = {
   encode(message: PleaseChoose, writer: Writer = Writer.create()): Writer {
     writer.uint32(10).string(message.name);
-    if (message.aNumber !== undefined && message.aNumber !== 0) {
+    if (message.aNumber !== undefined) {
       writer.uint32(17).double(message.aNumber);
     }
-    if (message.aString !== undefined && message.aString !== "") {
+    if (message.aString !== undefined) {
       writer.uint32(26).string(message.aString);
     }
-    if (message.aMessage !== undefined && message.aMessage !== undefined) {
+    if (message.aMessage !== undefined) {
       PleaseChoose_Submessage.encode(message.aMessage, writer.uint32(34).fork()).ldelim();
     }
-    if (message.aBool !== undefined && message.aBool !== false) {
+    if (message.aBool !== undefined) {
       writer.uint32(48).bool(message.aBool);
     }
-    if (message.bunchaBytes !== undefined && message.bunchaBytes !== undefined) {
+    if (message.bunchaBytes !== undefined) {
       writer.uint32(82).bytes(message.bunchaBytes);
     }
-    if (message.anEnum !== undefined && message.anEnum !== 0) {
+    if (message.anEnum !== undefined) {
       writer.uint32(88).int32(message.anEnum);
     }
     writer.uint32(40).uint32(message.age);
-    if (message.either !== undefined && message.either !== "") {
+    if (message.either !== undefined) {
       writer.uint32(58).string(message.either);
     }
-    if (message.or !== undefined && message.or !== "") {
+    if (message.or !== undefined) {
       writer.uint32(66).string(message.or);
     }
-    if (message.thirdOption !== undefined && message.thirdOption !== "") {
+    if (message.thirdOption !== undefined) {
       writer.uint32(74).string(message.thirdOption);
     }
     return writer;
@@ -274,17 +274,17 @@ export const PleaseChoose = {
   },
   toJSON(message: PleaseChoose): unknown {
     const obj: any = {};
-    obj.name = message.name || "";
-    obj.aNumber = message.aNumber || undefined;
-    obj.aString = message.aString || undefined;
-    obj.aMessage = message.aMessage ? PleaseChoose_Submessage.toJSON(message.aMessage) : undefined;
-    obj.aBool = message.aBool || undefined;
-    obj.bunchaBytes = message.bunchaBytes !== undefined ? base64FromBytes(message.bunchaBytes) : undefined;
-    obj.anEnum = message.anEnum !== undefined ? pleaseChoose_StateEnumToJSON(message.anEnum) : undefined;
-    obj.age = message.age || 0;
-    obj.either = message.either || undefined;
-    obj.or = message.or || undefined;
-    obj.thirdOption = message.thirdOption || undefined;
+    message.name !== undefined && (obj.name = message.name);
+    message.aNumber !== undefined && (obj.aNumber = message.aNumber);
+    message.aString !== undefined && (obj.aString = message.aString);
+    message.aMessage !== undefined && (obj.aMessage = message.aMessage ? PleaseChoose_Submessage.toJSON(message.aMessage) : undefined);
+    message.aBool !== undefined && (obj.aBool = message.aBool);
+    message.bunchaBytes !== undefined && (obj.bunchaBytes = message.bunchaBytes !== undefined ? base64FromBytes(message.bunchaBytes) : undefined);
+    message.anEnum !== undefined && (obj.anEnum = message.anEnum !== undefined ? pleaseChoose_StateEnumToJSON(message.anEnum) : undefined);
+    message.age !== undefined && (obj.age = message.age);
+    message.either !== undefined && (obj.either = message.either);
+    message.or !== undefined && (obj.or = message.or);
+    message.thirdOption !== undefined && (obj.thirdOption = message.thirdOption);
     return obj;
   },
 };
@@ -331,7 +331,7 @@ export const PleaseChoose_Submessage = {
   },
   toJSON(message: PleaseChoose_Submessage): unknown {
     const obj: any = {};
-    obj.name = message.name || "";
+    message.name !== undefined && (obj.name = message.name);
     return obj;
   },
 };
