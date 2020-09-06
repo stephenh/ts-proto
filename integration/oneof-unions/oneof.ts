@@ -78,32 +78,32 @@ export function pleaseChoose_StateEnumToJSON(object: PleaseChoose_StateEnum): st
 export const PleaseChoose = {
   encode(message: PleaseChoose, writer: Writer = Writer.create()): Writer {
     writer.uint32(10).string(message.name);
-    if (message.choice?.$case === 'aNumber' && message.choice?.aNumber !== 0) {
+    if (message.choice?.$case === 'aNumber') {
       writer.uint32(17).double(message.choice.aNumber);
     }
-    if (message.choice?.$case === 'aString' && message.choice?.aString !== "") {
+    if (message.choice?.$case === 'aString') {
       writer.uint32(26).string(message.choice.aString);
     }
-    if (message.choice?.$case === 'aMessage' && message.choice?.aMessage !== undefined) {
+    if (message.choice?.$case === 'aMessage') {
       PleaseChoose_Submessage.encode(message.choice.aMessage, writer.uint32(34).fork()).ldelim();
     }
-    if (message.choice?.$case === 'aBool' && message.choice?.aBool !== false) {
+    if (message.choice?.$case === 'aBool') {
       writer.uint32(48).bool(message.choice.aBool);
     }
-    if (message.choice?.$case === 'bunchaBytes' && message.choice?.bunchaBytes !== undefined) {
+    if (message.choice?.$case === 'bunchaBytes') {
       writer.uint32(82).bytes(message.choice.bunchaBytes);
     }
-    if (message.choice?.$case === 'anEnum' && message.choice?.anEnum !== 0) {
+    if (message.choice?.$case === 'anEnum') {
       writer.uint32(88).int32(message.choice.anEnum);
     }
     writer.uint32(40).uint32(message.age);
-    if (message.eitherOr?.$case === 'either' && message.eitherOr?.either !== "") {
+    if (message.eitherOr?.$case === 'either') {
       writer.uint32(58).string(message.eitherOr.either);
     }
-    if (message.eitherOr?.$case === 'or' && message.eitherOr?.or !== "") {
+    if (message.eitherOr?.$case === 'or') {
       writer.uint32(66).string(message.eitherOr.or);
     }
-    if (message.eitherOr?.$case === 'thirdOption' && message.eitherOr?.thirdOption !== "") {
+    if (message.eitherOr?.$case === 'thirdOption') {
       writer.uint32(74).string(message.eitherOr.thirdOption);
     }
     return writer;

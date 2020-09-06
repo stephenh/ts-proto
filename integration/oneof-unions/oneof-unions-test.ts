@@ -93,4 +93,16 @@ describe('oneof=unions', () => {
     let fromJson = PleaseChoose.fromJSON(pbjsJson)
     expect(fromJson).toEqual(debbie)
   });
+
+
+  it('roundtrip', () => {
+    let obj: PleaseChoose = {
+      name: 'Debbie',
+      age: 37,
+      choice: { $case: 'aNumber', aNumber: 0 },
+    }
+    let encoded = PleaseChoose.encode(obj).finish();
+    let decoded = PleaseChoose.decode(encoded);
+    expect(decoded).toEqual(obj);
+  });
 });
