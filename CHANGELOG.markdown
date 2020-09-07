@@ -1,3 +1,7 @@
+## v1.32.0
+
+* Add support for the experimental proto3 `optional` keyword
+
 ## v1.31.0
 
 * Fix `oneof=unions` not decoding default values correctly (@philikon)
