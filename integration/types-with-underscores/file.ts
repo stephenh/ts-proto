@@ -16,7 +16,7 @@ const baseFooBar: object = {
 
 export const Baz = {
   encode(message: Baz, writer: Writer = Writer.create()): Writer {
-    if (message.foo !== undefined && message.foo !== undefined) {
+    if (message.foo !== undefined) {
       FooBar.encode(message.foo, writer.uint32(10).fork()).ldelim();
     }
     return writer;
@@ -58,7 +58,7 @@ export const Baz = {
   },
   toJSON(message: Baz): unknown {
     const obj: any = {};
-    obj.foo = message.foo ? FooBar.toJSON(message.foo) : undefined;
+    message.foo !== undefined && (obj.foo = message.foo ? FooBar.toJSON(message.foo) : undefined);
     return obj;
   },
 };

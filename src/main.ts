@@ -17,6 +17,7 @@ import {
   isTimestamp,
   isValueType,
   isWithinOneOf,
+  isWithinOneOfThatShouldBeUnion,
   packedType,
   toReaderCall,
   toTypeName,
@@ -446,7 +447,7 @@ function generateEnumToJson(fullName: string, enumDesc: EnumDescriptorProto): Fu
 
 // When useOptionals=true, non-scalar fields are translated into optional properties.
 function isOptionalProperty(field: FieldDescriptorProto, options: Options): boolean {
-  return options.useOptionals && isMessage(field) && !isRepeated(field);
+  return (options.useOptionals && isMessage(field) && !isRepeated(field)) || field.proto3Optional;
 }
 
 // Create the interface with properties
@@ -464,7 +465,7 @@ function generateInterfaceDeclaration(
   messageDesc.field.forEach((fieldDesc, index) => {
     // When oneof=unions, we generate a single property with an algebraic
     // datatype (ADT) per `oneof` clause.
-    if (options.oneof === OneofOption.UNIONS && isWithinOneOf(fieldDesc)) {
+    if (isWithinOneOfThatShouldBeUnion(options, fieldDesc)) {
       const { oneofIndex } = fieldDesc;
       if (!processedOneofs.has(oneofIndex)) {
         processedOneofs.add(oneofIndex);
@@ -702,7 +703,7 @@ function generateDecode(
           .addStatement(`message.%L.push(%L)`, fieldName, readSnippet)
           .endControlFlow();
       }
-    } else if (isWithinOneOf(field) && options.oneof === OneofOption.UNIONS) {
+    } else if (isWithinOneOfThatShouldBeUnion(options, field)) {
       let oneofName = maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options);
       func = func.addStatement(`message.%L = {$case: '%L', %L: %L}`, oneofName, fieldName, fieldName, readSnippet);
     } else {
@@ -788,13 +789,19 @@ function generateEncode(
           .endControlFlow()
           .addStatement('writer.ldelim()');
       }
-    } else if (isWithinOneOf(field) && options.oneof === OneofOption.UNIONS) {
+    } else if (isWithinOneOfThatShouldBeUnion(options, field)) {
       let oneofName = maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options);
       func = func
         .beginControlFlow(`if (message.%L?.$case === '%L')`, oneofName, fieldName)
         .addStatement('%L', writeSnippet(`message.${oneofName}.${fieldName}`))
         .endControlFlow();
-    } else if (isWithinOneOf(field) || isMessage(field)) {
+    } else if (isWithinOneOf(field)) {
+      // Oneofs don't have a default value check b/c they need to denote which-oneof presence
+      func = func
+        .beginControlFlow('if (message.%L !== undefined)', fieldName)
+        .addStatement('%L', writeSnippet(`message.${fieldName}`))
+        .endControlFlow();
+    } else if (isMessage(field)) {
       func = func
         .beginControlFlow(
           'if (message.%L !== undefined && message.%L !== %L)',
@@ -914,7 +921,7 @@ function generateFromJson(
           .addStatement(`message.%L.push(%L)`, fieldName, readSnippet('e'))
           .endControlFlow();
       }
-    } else if (isWithinOneOf(field) && options.oneof === OneofOption.UNIONS) {
+    } else if (isWithinOneOfThatShouldBeUnion(options, field)) {
       let oneofName = maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options);
       func = func.addStatement(
         `message.%L = {$case: '%L', %L: %L}`,
@@ -1008,11 +1015,7 @@ function generateToJson(
           isWithinOneOf(field) ? 'undefined' : defaultValue(typeMap, field, options)
         );
       } else {
-        return CodeBlock.of(
-          '%L || %L',
-          from,
-          isWithinOneOf(field) ? 'undefined' : defaultValue(typeMap, field, options)
-        );
+        return CodeBlock.of('%L', from);
       }
     };
 
@@ -1033,18 +1036,23 @@ function generateToJson(
         .nextControlFlow('else')
         .addStatement('obj.%L = []', fieldName)
         .endControlFlow();
-    } else if (isWithinOneOf(field) && options.oneof === OneofOption.UNIONS) {
+    } else if (isWithinOneOfThatShouldBeUnion(options, field)) {
       // oneofs in a union are only output as `oneof name = ...`
       let oneofName = maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options);
       func = func.addStatement(
-        `obj.%L = message.%L?.$case === '%L' && %L`,
-        fieldName,
+        `message.%L?.$case === '%L' && (obj.%L = %L)`,
         oneofName,
+        fieldName,
         fieldName,
         readSnippet(`message.${oneofName}?.${fieldName}`)
       );
     } else {
-      func = func.addStatement('obj.%L = %L', fieldName, readSnippet(`message.${fieldName}`));
+      func = func.addStatement(
+        'message.%L !== undefined && (obj.%L = %L)',
+        fieldName,
+        fieldName,
+        readSnippet(`message.${fieldName}`)
+      );
     }
   });
   return func.addStatement('return obj');
@@ -1122,7 +1130,7 @@ function generateFromPartial(
           .addStatement(`message.%L.push(%L)`, fieldName, readSnippet('e'))
           .endControlFlow();
       }
-    } else if (isWithinOneOf(field) && options.oneof === OneofOption.UNIONS) {
+    } else if (isWithinOneOfThatShouldBeUnion(options, field)) {
       let oneofName = maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options);
       func = func
         .beginControlFlow(

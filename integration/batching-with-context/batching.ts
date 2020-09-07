@@ -227,7 +227,7 @@ export const BatchQueryRequest = {
   toJSON(message: BatchQueryRequest): unknown {
     const obj: any = {};
     if (message.ids) {
-      obj.ids = message.ids.map(e => e || "");
+      obj.ids = message.ids.map(e => e);
     } else {
       obj.ids = [];
     }
@@ -339,7 +339,7 @@ export const BatchMapQueryRequest = {
   toJSON(message: BatchMapQueryRequest): unknown {
     const obj: any = {};
     if (message.ids) {
-      obj.ids = message.ids.map(e => e || "");
+      obj.ids = message.ids.map(e => e);
     } else {
       obj.ids = [];
     }
@@ -467,8 +467,8 @@ export const BatchMapQueryResponse_EntitiesEntry = {
   },
   toJSON(message: BatchMapQueryResponse_EntitiesEntry): unknown {
     const obj: any = {};
-    obj.key = message.key || "";
-    obj.value = message.value ? Entity.toJSON(message.value) : undefined;
+    message.key !== undefined && (obj.key = message.key);
+    message.value !== undefined && (obj.value = message.value ? Entity.toJSON(message.value) : undefined);
     return obj;
   },
 };
@@ -515,7 +515,7 @@ export const GetOnlyMethodRequest = {
   },
   toJSON(message: GetOnlyMethodRequest): unknown {
     const obj: any = {};
-    obj.id = message.id || "";
+    message.id !== undefined && (obj.id = message.id);
     return obj;
   },
 };
@@ -564,7 +564,7 @@ export const GetOnlyMethodResponse = {
   },
   toJSON(message: GetOnlyMethodResponse): unknown {
     const obj: any = {};
-    obj.entity = message.entity ? Entity.toJSON(message.entity) : undefined;
+    message.entity !== undefined && (obj.entity = message.entity ? Entity.toJSON(message.entity) : undefined);
     return obj;
   },
 };
@@ -611,7 +611,7 @@ export const WriteMethodRequest = {
   },
   toJSON(message: WriteMethodRequest): unknown {
     const obj: any = {};
-    obj.id = message.id || "";
+    message.id !== undefined && (obj.id = message.id);
     return obj;
   },
 };
@@ -704,8 +704,8 @@ export const Entity = {
   },
   toJSON(message: Entity): unknown {
     const obj: any = {};
-    obj.id = message.id || "";
-    obj.name = message.name || "";
+    message.id !== undefined && (obj.id = message.id);
+    message.name !== undefined && (obj.name = message.name);
     return obj;
   },
 };

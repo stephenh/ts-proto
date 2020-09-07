@@ -125,4 +125,18 @@ message Numbers {
   sfixed64 sfixed64 = 12;
 }
 
+/** For testing proto3's field presence feature. */
+message SimpleButOptional {
+  // Name field
+  optional string name = 1;
+  /* Age */
+  optional int32 age = 2;
+  optional google.protobuf.Timestamp created_at = 9; // This comment will also attach
+  optional Child child = 3;
+  optional StateEnum state = 4;
+  // A thing (imported from thing)
+  optional ImportedThing thing = 10;
+  optional google.type.Date birthday = 12;
+}
+
 message Empty {}

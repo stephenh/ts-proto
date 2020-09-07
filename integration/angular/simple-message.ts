@@ -51,7 +51,7 @@ export const SimpleMessage = {
   },
   toJSON(message: SimpleMessage): unknown {
     const obj: any = {};
-    obj.numberField = message.numberField || 0;
+    message.numberField !== undefined && (obj.numberField = message.numberField);
     return obj;
   },
 };

@@ -47,3 +47,9 @@ message PleaseChoose {
   }
 
 }
+
+/** For testing proto3's field presence feature. */
+message SimpleButOptional {
+  optional string name = 1;
+  optional int32 age = 2;
+}
