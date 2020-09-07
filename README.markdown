@@ -145,11 +145,11 @@ creating a class and calling the right getters/setters.
 
 - A poor man's attempt at "please give us back optional types"
 
-  Wrapper types, i.e. `google.protobuf.StringValue`, are mapped as optional values,
-  i.e. `string | undefined`, which means for primitives we can kind of pretend that
-  the protobuf type system has optional types.
+  The canonical protobuf wrapper types, i.e. `google.protobuf.StringValue`, are mapped as optional values, i.e. `string | undefined`, which means for primitives we can kind of pretend the protobuf type system has optional types.
 
-- Timestamp is mapped as `Date`
+  (**Update**: ts-proto now also supports the proto3 `optional` keyword.)
+
+- Timestamps are mapped as `Date`
 
 - `fromJSON`/`toJSON` support the [canonical Protobuf JS](https://developers.google.com/protocol-buffers/docs/proto3#json) format (i.e. timestamps are ISO strings)
 
@@ -317,21 +317,13 @@ The test suite's proto files (i.e. `simple.proto`, `batching.proto`, etc.) curre
 - Support the `json_name` annotation
 - Make `oneof=unions` the default behavior in 2.0
 
-# Typing Approach
-
-- Missing fields on read
-  - When decoding from binary, we set default values for all primitives
-  - When decoding from JSON, we may have missing keys.
-    - We could convert them to our prototype.
-  - When using an instantiated object, our types enforce all keys to be set.
-
 # OneOf Handling
 
 By default, `oneof` fields are modeled "flatly" in the message, i.e. `oneof either_field { string field_a; string field_b }` means that the message will have `field_a: string | undefined; field_b: string | undefined`.
 
 With this output, you'll have to check both `if object.field_a` and `if object.field_b`, and if you set one, you'll have to remember to unset the other.
 
-It's generally recommended to use the `oneof=unions` option, which will change the output to be an Abstract Data Type/ADT like:
+We recommend using the `oneof=unions` option, which will change the output to be an Abstract Data Type/ADT like:
 
 ```typescript
 interface YourMessage {
@@ -341,7 +333,7 @@ interface YourMessage {
 
 As this will automatically enforce only one of `field_a` or `field_b` "being set" at a time, because the values are stored in the `eitherField` field that can only have a single value at a time.
 
-In ts-proto's currently-unplanned 2.x release, `oneof=unions` will become the default behavior.
+In ts-proto's currently-unscheduled 2.x release, `oneof=unions` will become the default behavior.
 
 # Primitive Types
 
