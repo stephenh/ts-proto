@@ -1,7 +1,6 @@
 import { Timestamp } from '../google/protobuf/timestamp';
 import * as Long from 'long';
-import * as protobuf from 'protobufjs/minimal';
-import { Writer, Reader } from 'protobufjs/minimal';
+import { Writer, Reader, util, configure } from 'protobufjs/minimal';
 
 
 export interface ImportedThing {
@@ -86,9 +85,9 @@ export const ImportedThing = {
   },
 };
 
-if (protobuf.util.Long !== Long) {
-  protobuf.util.Long = Long;
-  protobuf.configure();
+if (util.Long !== Long as any) {
+  util.Long = Long as any;
+  configure();
 }
 
 type Builtin = Date | Function | Uint8Array | string | number | undefined;

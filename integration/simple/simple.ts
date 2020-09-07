@@ -3,8 +3,7 @@
 //
 import { ImportedThing } from './import_dir/thing';
 import { DateMessage } from './google/type/date';
-import * as protobuf from 'protobufjs/minimal';
-import { Reader, Writer } from 'protobufjs/minimal';
+import { Reader, Writer, util, configure } from 'protobufjs/minimal';
 import { Timestamp } from './google/protobuf/timestamp';
 import * as Long from 'long';
 import { StringValue, Int32Value, BoolValue } from './google/protobuf/wrappers';
@@ -2324,9 +2323,9 @@ export const Empty = {
   },
 };
 
-if (protobuf.util.Long !== Long) {
-  protobuf.util.Long = Long;
-  protobuf.configure();
+if (util.Long !== Long as any) {
+  util.Long = Long as any;
+  configure();
 }
 
 interface WindowBase64 {

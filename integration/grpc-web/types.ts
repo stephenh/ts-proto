@@ -1,6 +1,5 @@
 import * as Long from 'long';
-import * as protobuf from 'protobufjs/minimal';
-import { Writer, Reader } from 'protobufjs/minimal';
+import { Writer, Reader, util, configure } from 'protobufjs/minimal';
 
 
 export interface Timestamp {
@@ -480,9 +479,9 @@ export const ID = {
   },
 };
 
-if (protobuf.util.Long !== Long) {
-  protobuf.util.Long = Long;
-  protobuf.configure();
+if (util.Long !== Long as any) {
+  util.Long = Long as any;
+  configure();
 }
 
 interface WindowBase64 {
