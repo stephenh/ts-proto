@@ -3,27 +3,8 @@ import { vector_tile } from './pbjs';
 import { Tile_Value } from './vector_tile';
 import IValue = vector_tile.Tile.IValue;
 import PbValue = vector_tile.Tile.Value;
-import { readFileSync } from "fs";
-import { createTypeMap } from '../../src/types';
-import { optionsFromParameter } from '../../src/utils';
-import { generateFile } from '../../src/main';
-import { StringBuffer } from 'ts-poet/build/StringBuffer';
-import { google } from '../../build/pbjs';
-import CodeGeneratorRequest = google.protobuf.compiler.CodeGeneratorRequest;
 
 describe('vector-tile', () => {
-  it('works', () => {
-    const stdin = readFileSync('integration/vector-tile/vector_tile.bin');
-    const request = CodeGeneratorRequest.decode(stdin);
-    const typeMap = createTypeMap(request, optionsFromParameter(request.parameter));
-    for (let file of request.protoFile) {
-      const spec = generateFile(typeMap, file, '');
-      const out = new StringBuffer();
-      spec.emit(out);
-      expect(out.toString()).toMatchSnapshot();
-    }
-  });
-
   it('can decode', () => {
     const v1: IValue = {
       boolValue: false,
@@ -31,7 +12,7 @@ describe('vector-tile', () => {
       floatValue: 0,
       intValue: 1_000,
       sintValue: 0,
-      stringValue: "",
+      stringValue: '',
       uintValue: 2_000,
     };
     const v2 = Tile_Value.decode(Reader.create(PbValue.encode(PbValue.fromObject(v1)).finish()));
@@ -45,10 +26,10 @@ describe('vector-tile', () => {
       floatValue: 0,
       intValue: 1_000,
       sintValue: 0,
-      stringValue: "",
+      stringValue: '',
       uintValue: 2_000,
     };
-    const bytes = PbValue.encode(PbValue.fromObject(v1)).finish()
+    const bytes = PbValue.encode(PbValue.fromObject(v1)).finish();
     const v2 = Tile_Value.decode(bytes);
     expect(v2).toEqual(v1);
   });
@@ -60,11 +41,11 @@ describe('vector-tile', () => {
       floatValue: 0,
       intValue: 1_000,
       sintValue: 0,
-      stringValue: "",
+      stringValue: '',
       uintValue: 2_000,
     };
-    const bytes = PbValue.encode(PbValue.fromObject(v1)).finish()
-    const buffer = Buffer.from(bytes)
+    const bytes = PbValue.encode(PbValue.fromObject(v1)).finish();
+    const buffer = Buffer.from(bytes);
     const v2 = Tile_Value.decode(buffer);
     expect(v2).toEqual(v1);
   });
@@ -75,7 +56,7 @@ describe('vector-tile', () => {
       uintValue: 2,
       sintValue: -3,
       floatValue: 1.1,
-      doubleValue: -2.2
+      doubleValue: -2.2,
     };
     expect(Tile_Value.fromJSON(tile)).toMatchInlineSnapshot(`
       Object {
@@ -96,7 +77,7 @@ describe('vector-tile', () => {
       uintValue: 0,
       sintValue: -0,
       floatValue: 0,
-      doubleValue: 0
+      doubleValue: 0,
     };
     expect(Tile_Value.fromJSON(tile)).toMatchInlineSnapshot(`
       Object {
@@ -117,7 +98,7 @@ describe('vector-tile', () => {
       uintValue: '2',
       sintValue: '-3',
       floatValue: '1.1',
-      doubleValue: '-2.2'
+      doubleValue: '-2.2',
     };
     expect(Tile_Value.fromJSON(tile)).toMatchInlineSnapshot(`
       Object {
@@ -135,7 +116,7 @@ describe('vector-tile', () => {
   it('decodes numbers that are weird', () => {
     const tile = {
       floatValue: 'NaN',
-      doubleValue: 'Infinity'
+      doubleValue: 'Infinity',
     };
     expect(Tile_Value.fromJSON(tile)).toMatchInlineSnapshot(`
       Object {

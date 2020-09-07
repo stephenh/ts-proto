@@ -316,6 +316,7 @@ The test suite's proto files (i.e. `simple.proto`, `batching.proto`, etc.) curre
 - Support the string-based encoding of duration in `fromJSON`/`toJSON`
 - Support the `json_name` annotation
 - Make `oneof=unions` the default behavior in 2.0
+- Probably change `forceLong` default in 2.0, should default to `forceLong=long`
 
 # OneOf Handling
 
@@ -347,38 +348,44 @@ If you want fields where you can model set/unset, see Wrapper Types.
 
 # Wrapper Types
 
-In core Protobuf, while unset primitives are read as default values, unset messages are returned as `null`.
+In core Protobuf, unset primitive fields become their respective default values (so you loose ability to distinguish "unset" from "default").
+ 
+However, unset message fields stay `null`.
 
-This allows a cute hack where you can model a logical `string | null` by creating a field that is a message (can be null) and the message has a single string value (for when the value is not null).
+This allows a cute hack where you can model a logical `string | unset` by creating a field that is technically a message (i.e. so it can stay `null` for the unset case), but the message only has a single string field (i.e for storing the value in the set case).
 
-Protobuf has several built-in types for this pattern, i.e. `google.protobuf.StringValue`.
+Protobuf has already "blessed" this pattern with several built-in types, i.e. `google.protobuf.StringValue`, `google.protobuf.Int32Value`, etc.
 
-`ts-proto` understands these wrapper types and will generate `google.protobuf.StringValue name = 1` as a `name: string | undefined`.
+`ts-proto` understands these wrapper types and "re-idiomizes" them by generating a `google.protobuf.StringValue name = 1` field as a `name: string | undefined`, and hides the `StringValue` implementation detail from your code (i.e. during `encode`/`decode` of the `name` field on the wire to external consumers, it's still read/written as a `StringValue` message field).
 
-This hides some of the `StringValue` mess and gives a more idiomatic way of using them.
-
-Granted, it's unfortunate this is not as simple as marking the `string` as `optional`.
+This makes dealing with `string | unset` in your code much nicer, albeit it's unfortunate that, in Protobuf core, this is not as simple as marking a `string name = 1` field as `optional`, i.e. you have to "dirty" your proto files a bit by knowing to use the `StringValue` convention.
 
 # Number Types
 
-Numbers are by default assumed to be plain JavaScript `numbers`. Since protobuf supports 64 bit numbers, but JavaScript doesn't, default behaviour is to throw an error if a number is detected to be larger than `Number.MAX_SAFE_INTEGER`. If 64 bit numbers are expected to be used, then use the `forceLong` option.
+Numbers are by default assumed to be plain JavaScript `number`s.
 
-Each of the protobuf basic number types maps as following depending on option used.
+This is fine for Protobuf types like `int32` and `float`, but 64-bit types like `int64` can't be 100% represented by JavaScript's `number` type, because `int64` can have larger/smaller values than `number`.
+ 
+ts-proto's default configuration (which is `forceLong=number`) is to still use `number` for 64-bit fields, and then throw an error if a value (at runtime) is larger than `Number.MAX_SAFE_INTEGER`.
+ 
+If you expect to use 64-bit / higher-than-`MAX_SAFE_INTEGER` values, then you can use the ts-proto `forceLong` option, which uses the [long](https://www.npmjs.com/package/long) npm package to support the entire range of 64-bit values.
 
-| Protobuf number types | Default Typescript types | `forceLong=long` types | `forceLong=string` types |
-| --------------------- | ------------------------ | ---------------------- | ------------------------ |
-| double                | number                   | number                 | number                   |
-| float                 | number                   | number                 | number                   |
-| int32                 | number                   | number                 | number                   |
-| int64                 | number\*                 | Long                   | string                   |
-| uint32                | number                   | number                 | number                   |
-| uint64                | number\*                 | Unsigned Long          | string                   |
-| sint32                | number                   | number                 | number                   |
-| sint64                | number\*                 | Long                   | string                   |
-| fixed32               | number                   | number                 | number                   |
-| fixed64               | number\*                 | Unsigned Long          | string                   |
-| sfixed32              | number                   | number                 | number                   |
-| sfixed64              | number\*                 | Long                   | string                   |
+The protobuf number types map to JavaScript types based on the `forceLong` config option:
+
+| Protobuf number types | Default/`forceLong=number` | `forceLong=long` | `forceLong=string` |
+| --------------------- | -------------------------- | ---------------- | ------------------ |
+| double                | number                     | number           | number             |
+| float                 | number                     | number           | number             |
+| int32                 | number                     | number           | number             |
+| int64                 | number\*                   | Long             | string             |
+| uint32                | number                     | number           | number             |
+| uint64                | number\*                   | Unsigned Long    | string             |
+| sint32                | number                     | number           | number             |
+| sint64                | number\*                   | Long             | string             |
+| fixed32               | number                     | number           | number             |
+| fixed64               | number\*                   | Unsigned Long    | string             |
+| sfixed32              | number                     | number           | number             |
+| sfixed64              | number\*                   | Long             | string             |
 
 Where (\*) indicates they might throw an error at runtime.
 

@@ -242,7 +242,19 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
   return file;
 }
 
-function addLongUtilityMethod(file: FileSpec, options: Options): FileSpec {
+function addLongUtilityMethod(_file: FileSpec, options: Options): FileSpec {
+  // Regardless of which `forceLong` config option we're using, we always use
+  // the `long` library to either represent or at least sanity-check 64-bit values
+  const util = TypeNames.anyType('util@protobufjs/minimal');
+  const configure = TypeNames.anyType('configure@protobufjs/minimal');
+  let file = _file.addCode(
+    CodeBlock.empty()
+      .beginControlFlow('if (%T.Long !== %T as any)', util, 'Long*long')
+      .addStatement('%T.Long = %T as any', util, 'Long*long')
+      .addStatement('%T()', configure)
+      .endControlFlow()
+  );
+
   if (options.forceLong === LongOption.LONG) {
     return file.addFunction(
       FunctionSpec.create('numberToLong')

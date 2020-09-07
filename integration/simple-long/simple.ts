@@ -3,7 +3,7 @@
 //
 import { ImportedThing } from './import_dir/thing';
 import * as Long from 'long';
-import { Reader, Writer } from 'protobufjs/minimal';
+import { Reader, Writer, util, configure } from 'protobufjs/minimal';
 import { Timestamp } from './google/protobuf/timestamp';
 import { StringValue, Int32Value, BoolValue } from './google/protobuf/wrappers';
 
@@ -1858,6 +1858,11 @@ export const Numbers = {
     return obj;
   },
 };
+
+if (util.Long !== Long as any) {
+  util.Long = Long as any;
+  configure();
+}
 
 type Builtin = Date | Function | Uint8Array | string | number | undefined;
 type DeepPartial<T> = T extends Builtin

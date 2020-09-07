@@ -1,5 +1,5 @@
 import * as Long from 'long';
-import { Writer, Reader } from 'protobufjs/minimal';
+import { Writer, Reader, util, configure } from 'protobufjs/minimal';
 
 
 /**
@@ -177,6 +177,11 @@ export const Timestamp = {
     return obj;
   },
 };
+
+if (util.Long !== Long as any) {
+  util.Long = Long as any;
+  configure();
+}
 
 type Builtin = Date | Function | Uint8Array | string | number | undefined;
 type DeepPartial<T> = T extends Builtin
