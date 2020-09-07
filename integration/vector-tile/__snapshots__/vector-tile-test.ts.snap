@@ -2,7 +2,7 @@
 
 exports[`vector-tile works 1`] = `
 "import * as Long from 'long';
-import { Writer, Reader } from 'protobufjs/minimal';
+import { Writer, Reader, util, configure } from 'protobufjs/minimal';
 
 
 export interface Tile {
@@ -592,5 +592,10 @@ type DeepPartial<T> = T extends Builtin
   ? ReadonlyArray<DeepPartial<U>>
   : T extends {}
   ? { [K in keyof T]?: DeepPartial<T[K]> }
-  : Partial<T>;"
+  : Partial<T>;
+if (util.Long !== Long as any) {
+  util.Long = Long as any;
+  configure();
+}
+"
 `;
