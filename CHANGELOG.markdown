@@ -1,3 +1,7 @@
+## v1.33.0
+
+* Automatically configure `protobuf.util.Long` when 64-bit numbers are used (fixes #78)
+
 ## v1.32.0
 
 * Add support for the experimental proto3 `optional` keyword
