@@ -17,6 +17,7 @@ import {
   isTimestamp,
   isValueType,
   isWithinOneOf,
+  isWithinOneOfThatShouldBeUnion,
   packedType,
   toReaderCall,
   toTypeName,
@@ -464,7 +465,7 @@ function generateInterfaceDeclaration(
   messageDesc.field.forEach((fieldDesc, index) => {
     // When oneof=unions, we generate a single property with an algebraic
     // datatype (ADT) per `oneof` clause.
-    if (options.oneof === OneofOption.UNIONS && isWithinOneOf(fieldDesc) && !fieldDesc.proto3Optional) {
+    if (isWithinOneOfThatShouldBeUnion(options, fieldDesc)) {
       const { oneofIndex } = fieldDesc;
       if (!processedOneofs.has(oneofIndex)) {
         processedOneofs.add(oneofIndex);
@@ -702,7 +703,7 @@ function generateDecode(
           .addStatement(`message.%L.push(%L)`, fieldName, readSnippet)
           .endControlFlow();
       }
-    } else if (isWithinOneOf(field) && options.oneof === OneofOption.UNIONS && !field.proto3Optional) {
+    } else if (isWithinOneOfThatShouldBeUnion(options, field)) {
       let oneofName = maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options);
       func = func.addStatement(`message.%L = {$case: '%L', %L: %L}`, oneofName, fieldName, fieldName, readSnippet);
     } else {
@@ -788,7 +789,7 @@ function generateEncode(
           .endControlFlow()
           .addStatement('writer.ldelim()');
       }
-    } else if (isWithinOneOf(field) && options.oneof === OneofOption.UNIONS && !field.proto3Optional) {
+    } else if (isWithinOneOfThatShouldBeUnion(options, field)) {
       let oneofName = maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options);
       func = func
         .beginControlFlow(`if (message.%L?.$case === '%L')`, oneofName, fieldName)
@@ -920,7 +921,7 @@ function generateFromJson(
           .addStatement(`message.%L.push(%L)`, fieldName, readSnippet('e'))
           .endControlFlow();
       }
-    } else if (isWithinOneOf(field) && options.oneof === OneofOption.UNIONS && !field.proto3Optional) {
+    } else if (isWithinOneOfThatShouldBeUnion(options, field)) {
       let oneofName = maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options);
       func = func.addStatement(
         `message.%L = {$case: '%L', %L: %L}`,
@@ -1035,7 +1036,7 @@ function generateToJson(
         .nextControlFlow('else')
         .addStatement('obj.%L = []', fieldName)
         .endControlFlow();
-    } else if (isWithinOneOf(field) && options.oneof === OneofOption.UNIONS && !field.proto3Optional) {
+    } else if (isWithinOneOfThatShouldBeUnion(options, field)) {
       // oneofs in a union are only output as `oneof name = ...`
       let oneofName = maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options);
       func = func.addStatement(
@@ -1129,7 +1130,7 @@ function generateFromPartial(
           .addStatement(`message.%L.push(%L)`, fieldName, readSnippet('e'))
           .endControlFlow();
       }
-    } else if (isWithinOneOf(field) && options.oneof === OneofOption.UNIONS && !field.proto3Optional) {
+    } else if (isWithinOneOfThatShouldBeUnion(options, field)) {
       let oneofName = maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options);
       func = func
         .beginControlFlow(

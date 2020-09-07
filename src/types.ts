@@ -265,6 +265,10 @@ export function isWithinOneOf(field: FieldDescriptorProto): boolean {
   return field.hasOwnProperty('oneofIndex');
 }
 
+export function isWithinOneOfThatShouldBeUnion(options: Options, field: FieldDescriptorProto): boolean {
+  return isWithinOneOf(field) && options.oneof === OneofOption.UNIONS && !field.proto3Optional;
+}
+
 export function isRepeated(field: FieldDescriptorProto): boolean {
   return field.label === FieldDescriptorProto.Label.LABEL_REPEATED;
 }
