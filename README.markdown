@@ -264,8 +264,10 @@ protoc --plugin=node_modules/ts-proto/protoc-gen-ts_proto ./batching.proto -I.
 
   Note that `addGrpcMetadata`, `addNestjsRestParameter` and `returnObservable` will still be false.
 
-- With `--ts_proto_opt=configureProtobuf=true`, the binary reader of `protobufjs` will be explicitly configured to use the package `long`. This option may be necessary if you use `ts-proto` in the browser.  
+- With `--ts_proto_opt=configureProtobuf=false`, `protobufjs` will **not** be configured. 
 
+  The default behaviour is `configureProtobuf=true`, which will emit module initialization code to configure `protobufjs` to use the package `long` when reading binary data. This necessary for running bundled, generated code in the browser because `protobufjs` hides its `require` call from bundlers and will fall back to a `Long` implementation that is incompatible with the generated code. 
+  
 
 ### Only Types
 

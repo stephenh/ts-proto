@@ -50,7 +50,7 @@ export function defaultOptions(): Options {
     addGrpcMetadata: false,
     addNestjsRestParameter: false,
     nestJs: false,
-    configureProtobuf: false,
+    configureProtobuf: true,
     env: EnvOption.BOTH,
   };
 }
@@ -112,8 +112,8 @@ export function optionsFromParameter(parameter: string): Options {
       }
     }
 
-    if (parameter.includes('configureProtobuf=true')) {
-      options.configureProtobuf = true;
+    if (parameter.includes('configureProtobuf=false')) {
+      options.configureProtobuf = false;
     }
     if (parameter.includes('env=node')) {
       options.env = EnvOption.NODE;
