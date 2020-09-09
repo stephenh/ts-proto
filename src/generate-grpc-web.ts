@@ -68,7 +68,7 @@ function generateRpcMethod(
 /** Creates the service descriptor that grpc-web needs at runtime. */
 export function generateGrpcServiceDesc(fileDesc: FileDescriptorProto, serviceDesc: ServiceDescriptorProto): CodeBlock {
   return CodeBlock.empty()
-    .add('const %LDesc = ', serviceDesc.name)
+    .add('export const %LDesc = ', serviceDesc.name)
     .beginHash()
     .addHashEntry('serviceName', CodeBlock.empty().add('%S', `${fileDesc.package}.${serviceDesc.name}`))
     .endHash();
@@ -91,7 +91,7 @@ export function generateGrpcMethodDesc(
   let outputType = responseType(typeMap, methodDesc, options);
   return (
     CodeBlock.empty()
-      .add('const %L: UnaryMethodDefinitionish = ', methodDescName(serviceDesc, methodDesc))
+      .add('export const %L: UnaryMethodDefinitionish = ', methodDescName(serviceDesc, methodDesc))
       .beginHash()
       .addHashEntry('methodName', CodeBlock.empty().add('%S', methodDesc.name))
       .addHashEntry('service', `${serviceDesc.name}Desc`)
