@@ -157,13 +157,13 @@ export function addGrpcWebMisc(options: Options, _file: FileSpec): FileSpec {
       .addStatement('import UnaryMethodDefinition = grpc.UnaryMethodDefinition')
       .addStatement('type UnaryMethodDefinitionish = UnaryMethodDefinition<any, any>')
   );
-  file = file.addInterface(generateGrpcWebRpcType());
+  file = file.addInterface(generateGrpcWebRpcType(options.returnObservable));
   file = file.addClass(options.returnObservable ? generateGrpcWebImplObservable() : generateGrpcWebImplPromise());
   return file;
 }
 
 /** Makes an `Rpc` interface to decouple from the low-level grpc-web `grpc.invoke and grpc.unary`/etc. methods. */
-function generateGrpcWebRpcType(): InterfaceSpec {
+function generateGrpcWebRpcType(returnObservable: boolean): InterfaceSpec {
   let rpc = InterfaceSpec.create('Rpc');
   let fnU = FunctionSpec.create('unary');
   let fnI = FunctionSpec.create('invoke');
@@ -173,7 +173,7 @@ function generateGrpcWebRpcType(): InterfaceSpec {
     .addParameter('methodDesc', t)
     .addParameter('request', TypeNames.ANY)
     .addParameter('metadata', TypeNames.unionType(TypeNames.anyType('grpc.Metadata'), TypeNames.UNDEFINED))
-    .returns(TypeNames.PROMISE.param(TypeNames.ANY));
+    .returns(returnObservable ? TypeNames.anyType('Observable@rxjs').param(TypeNames.ANY) : TypeNames.PROMISE.param(TypeNames.ANY));
   fnI = fnI
     .addTypeVariable(t)
     .addParameter('methodDesc', t)

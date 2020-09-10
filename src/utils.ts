@@ -93,6 +93,9 @@ export function optionsFromParameter(parameter: string): Options {
     }
     if (parameter.includes('outputClientImpl=grpc-web')) {
       options.outputClientImpl = 'grpc-web';
+      if (parameter.includes('returnObservable=true')) {
+        options.returnObservable = true;
+      }
     }
 
     if (parameter.includes('nestJs=true')) {
