@@ -60,14 +60,17 @@ function generateRpcMethod(
     .addParameter('request', partialInputType)
     .addParameter('metadata?', TypeNames.anyType('grpc.Metadata'))
     .addStatement(
-      methodDesc.serverStreaming ? 'return this.rpc.invoke(%L, %T.fromPartial(request), metadata)' :
-      'return this.rpc.unary(%L, %T.fromPartial(request), metadata)',
+      methodDesc.serverStreaming
+        ? 'return this.rpc.invoke(%L, %T.fromPartial(request), metadata)'
+        : 'return this.rpc.unary(%L, %T.fromPartial(request), metadata)',
       methodDescName(serviceDesc, methodDesc),
       inputType
     )
-    .returns(options.returnObservable || methodDesc.serverStreaming ?
-      responseObservable(typeMap, methodDesc, options) :
-      responsePromise(typeMap, methodDesc, options));
+    .returns(
+      options.returnObservable || methodDesc.serverStreaming
+        ? responseObservable(typeMap, methodDesc, options)
+        : responsePromise(typeMap, methodDesc, options)
+    );
 }
 
 /** Creates the service descriptor that grpc-web needs at runtime. */
@@ -173,7 +176,11 @@ function generateGrpcWebRpcType(returnObservable: boolean): InterfaceSpec {
     .addParameter('methodDesc', t)
     .addParameter('request', TypeNames.ANY)
     .addParameter('metadata', TypeNames.unionType(TypeNames.anyType('grpc.Metadata'), TypeNames.UNDEFINED))
-    .returns(returnObservable ? TypeNames.anyType('Observable@rxjs').param(TypeNames.ANY) : TypeNames.PROMISE.param(TypeNames.ANY));
+    .returns(
+      returnObservable
+        ? TypeNames.anyType('Observable@rxjs').param(TypeNames.ANY)
+        : TypeNames.PROMISE.param(TypeNames.ANY)
+    );
   fnI = fnI
     .addTypeVariable(t)
     .addParameter('methodDesc', t)
@@ -283,10 +290,10 @@ return new Observable(observer => {
 `,
             BrowserHeaders,
             grpc,
-            share,
+            share
           )
         )
-    )
+    );
 }
 
 function generateGrpcWebImplObservable(): ClassSpec {
@@ -392,5 +399,5 @@ return new Observable(observer => {
             share
           )
         )
-    )
+    );
 }
