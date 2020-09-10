@@ -1,5 +1,5 @@
 import { google } from '../build/pbjs';
-import { requestType, responsePromise, responseType, TypeMap } from './types';
+import { requestType, responseObservable, responsePromise, responseType, TypeMap } from './types';
 import {
   ClassSpec,
   CodeBlock,
@@ -16,6 +16,8 @@ import FileDescriptorProto = google.protobuf.FileDescriptorProto;
 import ServiceDescriptorProto = google.protobuf.ServiceDescriptorProto;
 
 const grpc = TypeNames.anyType('grpc@@improbable-eng/grpc-web');
+const share = TypeNames.anyType('share@rxjs/operators');
+const take = TypeNames.anyType('take@rxjs/operators');
 const BrowserHeaders = TypeNames.anyType('BrowserHeaders@browser-headers');
 
 /** Generates a client that uses the `@improbable-web/grpc-web` library. */
@@ -58,17 +60,20 @@ function generateRpcMethod(
     .addParameter('request', partialInputType)
     .addParameter('metadata?', TypeNames.anyType('grpc.Metadata'))
     .addStatement(
+      methodDesc.serverStreaming ? 'return this.rpc.invoke(%L, %T.fromPartial(request), metadata)' :
       'return this.rpc.unary(%L, %T.fromPartial(request), metadata)',
       methodDescName(serviceDesc, methodDesc),
       inputType
     )
-    .returns(responsePromise(typeMap, methodDesc, options));
+    .returns(options.returnObservable || methodDesc.serverStreaming ?
+      responseObservable(typeMap, methodDesc, options) :
+      responsePromise(typeMap, methodDesc, options));
 }
 
 /** Creates the service descriptor that grpc-web needs at runtime. */
 export function generateGrpcServiceDesc(fileDesc: FileDescriptorProto, serviceDesc: ServiceDescriptorProto): CodeBlock {
   return CodeBlock.empty()
-    .add('const %LDesc = ', serviceDesc.name)
+    .add('export const %LDesc = ', serviceDesc.name)
     .beginHash()
     .addHashEntry('serviceName', CodeBlock.empty().add('%S', `${fileDesc.package}.${serviceDesc.name}`))
     .endHash();
@@ -91,12 +96,12 @@ export function generateGrpcMethodDesc(
   let outputType = responseType(typeMap, methodDesc, options);
   return (
     CodeBlock.empty()
-      .add('const %L: UnaryMethodDefinitionish = ', methodDescName(serviceDesc, methodDesc))
+      .add('export const %L: UnaryMethodDefinitionish = ', methodDescName(serviceDesc, methodDesc))
       .beginHash()
       .addHashEntry('methodName', CodeBlock.empty().add('%S', methodDesc.name))
       .addHashEntry('service', `${serviceDesc.name}Desc`)
       .addHashEntry('requestStream', 'false')
-      .addHashEntry('responseStream', 'false')
+      .addHashEntry('responseStream', methodDesc.serverStreaming ? 'true' : 'false')
       // grpc-web expects this to be a class, but the ts-proto messages are just interfaces.
       //
       // That said, grpc-web's runtime doesn't really use this (at least so far for what ts-proto
@@ -153,27 +158,34 @@ export function addGrpcWebMisc(options: Options, _file: FileSpec): FileSpec {
       .addStatement('type UnaryMethodDefinitionish = UnaryMethodDefinition<any, any>')
   );
   file = file.addInterface(generateGrpcWebRpcType());
-  file = file.addClass(generateGrpcWebImpl());
+  file = file.addClass(options.returnObservable ? generateGrpcWebImplObservable() : generateGrpcWebImplPromise());
   return file;
 }
 
-/** Makes an `Rpc` interface to decouple from the low-level grpc-web `grpc.unary`/etc. methods. */
+/** Makes an `Rpc` interface to decouple from the low-level grpc-web `grpc.invoke and grpc.unary`/etc. methods. */
 function generateGrpcWebRpcType(): InterfaceSpec {
   let rpc = InterfaceSpec.create('Rpc');
-  let fn = FunctionSpec.create('unary');
+  let fnU = FunctionSpec.create('unary');
+  let fnI = FunctionSpec.create('invoke');
   const t = TypeNames.typeVariable('T', TypeNames.bound('UnaryMethodDefinitionish'));
-  fn = fn
+  fnU = fnU
     .addTypeVariable(t)
     .addParameter('methodDesc', t)
     .addParameter('request', TypeNames.ANY)
     .addParameter('metadata', TypeNames.unionType(TypeNames.anyType('grpc.Metadata'), TypeNames.UNDEFINED))
     .returns(TypeNames.PROMISE.param(TypeNames.ANY));
-  rpc = rpc.addFunction(fn);
+  fnI = fnI
+    .addTypeVariable(t)
+    .addParameter('methodDesc', t)
+    .addParameter('request', TypeNames.ANY)
+    .addParameter('metadata', TypeNames.unionType(TypeNames.anyType('grpc.Metadata'), TypeNames.UNDEFINED))
+    .returns(TypeNames.anyType('Observable@rxjs').param(TypeNames.ANY));
+  rpc = rpc.addFunction(fnU).addFunction(fnI);
   return rpc;
 }
 
 /** Implements the `Rpc` interface by making calls using the `grpc.unary` method. */
-function generateGrpcWebImpl(): ClassSpec {
+function generateGrpcWebImplPromise(): ClassSpec {
   const maybeMetadata = TypeNames.unionType(TypeNames.anyType('grpc.Metadata'), TypeNames.UNDEFINED);
   const optionsParam = TypeNames.anonymousType(
     ['transport?', TypeNames.anyType('grpc.TransportFactory')],
@@ -203,11 +215,11 @@ function generateGrpcWebImpl(): ClassSpec {
         .addCodeBlock(
           CodeBlock.empty().add(
             `const request = { ..._request, ...methodDesc.requestType };
-return new Promise((resolve, reject) => {
-  const maybeCombinedMetadata =
+            const maybeCombinedMetadata =
     metadata && this.options.metadata
       ? new %T({ ...this.options?.metadata.headersMap, ...metadata?.headersMap })
       : metadata || this.options.metadata;
+return new Promise((resolve, reject) => {
   %T.unary(methodDesc, {
     request,
     host: this.host,
@@ -231,5 +243,154 @@ return new Promise((resolve, reject) => {
             grpc
           )
         )
-    );
+    )
+    .addFunction(
+      FunctionSpec.create('invoke')
+        .addTypeVariable(t)
+        .addParameter('methodDesc', t)
+        .addParameter('_request', TypeNames.ANY)
+        .addParameter('metadata', maybeMetadata)
+        .returns(TypeNames.anyType('Observable@rxjs').param(TypeNames.ANY))
+        .addCodeBlock(
+          CodeBlock.empty().add(
+            `const DEFAULT_TIMEOUT_TIME: number = 3 /* seconds */ * 1000 /* ms */;
+            const request = { ..._request, ...methodDesc.requestType };
+            const maybeCombinedMetadata =
+    metadata && this.options.metadata
+      ? new %T({ ...this.options?.metadata.headersMap, ...metadata?.headersMap })
+      : metadata || this.options.metadata;
+return new Observable(observer => {
+      const upStream = (() => {
+        %T.invoke(methodDesc, {
+          host: this.host,
+          request,
+          metadata: maybeCombinedMetadata,
+          transport: grpc.WebsocketTransport(),
+          debug: this.options.debug,
+          onMessage: (next) => {
+            observer.next(next as any);
+          },
+          onEnd: () => {
+            setTimeout(() => {
+              upStream();
+            }, DEFAULT_TIMEOUT_TIME);
+          },
+        });
+      });
+
+      upStream();
+    }).pipe(%T());
+`,
+            BrowserHeaders,
+            grpc,
+            share,
+          )
+        )
+    )
+}
+
+function generateGrpcWebImplObservable(): ClassSpec {
+  const maybeMetadata = TypeNames.unionType(TypeNames.anyType('grpc.Metadata'), TypeNames.UNDEFINED);
+  const optionsParam = TypeNames.anonymousType(
+    ['transport?', TypeNames.anyType('grpc.TransportFactory')],
+    ['debug?', TypeNames.BOOLEAN],
+    ['metadata?', maybeMetadata]
+  );
+  const t = TypeNames.typeVariable('T', TypeNames.bound('UnaryMethodDefinitionish'));
+  return ClassSpec.create('GrpcWebImpl')
+    .addModifiers(Modifier.EXPORT)
+    .addProperty(PropertySpec.create('host', TypeNames.STRING).addModifiers(Modifier.PRIVATE))
+    .addProperty(PropertySpec.create('options', optionsParam).addModifiers(Modifier.PRIVATE))
+    .addInterface('Rpc')
+    .addFunction(
+      FunctionSpec.createConstructor()
+        .addParameter('host', 'string')
+        .addParameter('options', optionsParam)
+        .addStatement('this.host = host')
+        .addStatement('this.options = options')
+    )
+    .addFunction(
+      FunctionSpec.create('unary')
+        .addTypeVariable(t)
+        .addParameter('methodDesc', t)
+        .addParameter('_request', TypeNames.ANY)
+        .addParameter('metadata', maybeMetadata)
+        .returns(TypeNames.anyType('Observable@rxjs').param(TypeNames.ANY))
+        .addCodeBlock(
+          CodeBlock.empty().add(
+            `const request = { ..._request, ...methodDesc.requestType };
+            const maybeCombinedMetadata =
+    metadata && this.options.metadata
+      ? new %T({ ...this.options?.metadata.headersMap, ...metadata?.headersMap })
+      : metadata || this.options.metadata;
+return new Observable(observer => {
+  %T.unary(methodDesc, {
+      request,
+      host: this.host,
+      metadata: maybeCombinedMetadata,
+      transport: this.options.transport,
+      debug: this.options.debug,
+      onEnd: (next) => {
+        if (next.status !== 0) {
+          observer.error({
+            code: next.status,
+            message: next.statusMessage,
+          });
+        } else {
+          observer.next(next.message as any);
+          observer.complete();
+        }
+      },
+    });
+  }).pipe(%T(1));
+`,
+            BrowserHeaders,
+            grpc,
+            take
+          )
+        )
+    )
+    .addFunction(
+      FunctionSpec.create('invoke')
+        .addTypeVariable(t)
+        .addParameter('methodDesc', t)
+        .addParameter('_request', TypeNames.ANY)
+        .addParameter('metadata', maybeMetadata)
+        .returns(TypeNames.anyType('Observable@rxjs').param(TypeNames.ANY))
+        .addCodeBlock(
+          CodeBlock.empty().add(
+            `const DEFAULT_TIMEOUT_TIME: number = 3 /* seconds */ * 1000 /* ms */;
+            const request = { ..._request, ...methodDesc.requestType };
+            const maybeCombinedMetadata =
+    metadata && this.options.metadata
+      ? new %T({ ...this.options?.metadata.headersMap, ...metadata?.headersMap })
+      : metadata || this.options.metadata;
+return new Observable(observer => {
+      const upStream = (() => {
+        %T.invoke(methodDesc, {
+          host: this.host,
+          request,
+          metadata: maybeCombinedMetadata,
+          transport: grpc.WebsocketTransport(),
+          debug: this.options.debug,
+          onMessage: (next) => {
+            observer.next(next as any);
+          },
+          onEnd: () => {
+            setTimeout(() => {
+              upStream();
+            }, DEFAULT_TIMEOUT_TIME);
+          },
+        });
+      });
+
+      upStream();
+    }).pipe(%T());
+`,
+            BrowserHeaders,
+            grpc,
+            share
+          )
+        )
+    )
 }
