@@ -35,6 +35,7 @@ export interface Simple {
   thing: ImportedThing | undefined;
   blobs: Uint8Array[];
   birthday: DateMessage | undefined;
+  blob: Uint8Array;
 }
 
 export interface Child {
@@ -473,6 +474,7 @@ export const Simple = {
     if (message.birthday !== undefined && message.birthday !== undefined) {
       DateMessage.encode(message.birthday, writer.uint32(98).fork()).ldelim();
     }
+    writer.uint32(106).bytes(message.blob);
     return writer;
   },
   decode(input: Uint8Array | Reader, length?: number): Simple {
@@ -536,6 +538,9 @@ export const Simple = {
           break;
         case 12:
           message.birthday = DateMessage.decode(reader, reader.uint32());
+          break;
+        case 13:
+          message.blob = reader.bytes();
           break;
         default:
           reader.skipType(tag & 7);
@@ -611,6 +616,9 @@ export const Simple = {
     } else {
       message.birthday = undefined;
     }
+    if (object.blob !== undefined && object.blob !== null) {
+      message.blob = bytesFromBase64(object.blob);
+    }
     return message;
   },
   fromPartial(object: DeepPartial<Simple>): Simple {
@@ -680,6 +688,11 @@ export const Simple = {
     } else {
       message.birthday = undefined;
     }
+    if (object.blob !== undefined && object.blob !== null) {
+      message.blob = object.blob;
+    } else {
+      message.blob = new Uint8Array();
+    }
     return message;
   },
   toJSON(message: Simple): unknown {
@@ -711,11 +724,12 @@ export const Simple = {
     }
     message.thing !== undefined && (obj.thing = message.thing ? ImportedThing.toJSON(message.thing) : undefined);
     if (message.blobs) {
-      obj.blobs = message.blobs.map(e => e !== undefined ? base64FromBytes(e) : undefined);
+      obj.blobs = message.blobs.map(e => base64FromBytes(e !== undefined ? e : new Uint8Array()));
     } else {
       obj.blobs = [];
     }
     message.birthday !== undefined && (obj.birthday = message.birthday ? DateMessage.toJSON(message.birthday) : undefined);
+    message.blob !== undefined && (obj.blob = base64FromBytes(message.blob !== undefined ? message.blob : new Uint8Array()));
     return obj;
   },
 };
@@ -1697,13 +1711,15 @@ export const SimpleWithMap_MapOfBytesEntry = {
     }
     if (object.value !== undefined && object.value !== null) {
       message.value = object.value;
+    } else {
+      message.value = new Uint8Array();
     }
     return message;
   },
   toJSON(message: SimpleWithMap_MapOfBytesEntry): unknown {
     const obj: any = {};
     message.key !== undefined && (obj.key = message.key);
-    message.value !== undefined && (obj.value = message.value !== undefined ? base64FromBytes(message.value) : undefined);
+    message.value !== undefined && (obj.value = base64FromBytes(message.value !== undefined ? message.value : new Uint8Array()));
     return obj;
   },
 };

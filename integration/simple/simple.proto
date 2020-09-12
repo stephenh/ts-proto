@@ -27,6 +27,7 @@ message Simple {
   ImportedThing thing = 10;
   repeated bytes blobs = 11;
   google.type.Date birthday = 12;
+  bytes blob = 13;
 }
 
 message Child {

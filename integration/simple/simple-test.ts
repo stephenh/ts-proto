@@ -33,6 +33,7 @@ describe('simple', () => {
       createdAt: jan1,
       thing: undefined,
       blobs: [],
+      blob: new Uint8Array(),
       birthday: undefined,
     };
     expect(simple.name).toEqual('asdf');
@@ -74,11 +75,14 @@ describe('simple', () => {
       createdAt: jan1,
       thing: undefined,
       blobs: [],
+      blob: new Uint8Array(),
       birthday: undefined,
     };
     const s2 = PbSimple.toObject(PbSimple.decode(Simple.encode(s1).finish()));
 
     delete s1.blobs;
+    delete s1.blob;
+    delete s1.birthday;
     expect(s2).toEqual({
       ...s1,
       createdAt: new PbTimestamp({ nanos: 0, seconds: new Long(0) as any }),
@@ -162,10 +166,13 @@ describe('simple', () => {
       createdAt: jan1,
       thing: undefined,
       blobs: [],
+      blob: new Uint8Array(),
       birthday: undefined,
     };
     const s2 = PbSimple.toObject(PbSimple.decode(Simple.encode(s1).finish()));
     delete s1.blobs;
+    delete s1.blob;
+    delete s1.birthday;
     expect(s2).toEqual({
       ...s1,
       createdAt: new PbTimestamp({ nanos: 0, seconds: new Long(0) as any }),
@@ -212,6 +219,7 @@ describe('simple', () => {
       Object {
         "age": 0,
         "birthday": undefined,
+        "blob": Uint8Array [],
         "blobs": Array [],
         "child": undefined,
         "coins": Array [],
