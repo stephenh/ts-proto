@@ -19,6 +19,7 @@ const grpc = TypeNames.anyType('grpc@@improbable-eng/grpc-web');
 const share = TypeNames.anyType('share@rxjs/operators');
 const take = TypeNames.anyType('take@rxjs/operators');
 const BrowserHeaders = TypeNames.anyType('BrowserHeaders@browser-headers');
+const Code = TypeNames.anyType('Code@@improbable-eng/grpc-web/dist/typings/Code');
 
 /** Generates a client that uses the `@improbable-web/grpc-web` library. */
 export function generateGrpcClientImpl(
@@ -277,10 +278,12 @@ return new Observable(observer => {
           onMessage: (next) => {
             observer.next(next as any);
           },
-          onEnd: () => {
-            setTimeout(() => {
-              upStream();
-            }, DEFAULT_TIMEOUT_TIME);
+           onEnd: (code: %T) => {
+            if (code !== 0) {
+              setTimeout(() => {
+                upStream();
+              }, DEFAULT_TIMEOUT_TIME);
+            }
           },
         });
       });
@@ -290,6 +293,7 @@ return new Observable(observer => {
 `,
             BrowserHeaders,
             grpc,
+            Code,
             share
           )
         )
@@ -383,10 +387,12 @@ return new Observable(observer => {
           onMessage: (next) => {
             observer.next(next as any);
           },
-          onEnd: () => {
-            setTimeout(() => {
-              upStream();
-            }, DEFAULT_TIMEOUT_TIME);
+          onEnd: (code: %T) => {
+            if (code !== 0) {
+              setTimeout(() => {
+                upStream();
+              }, DEFAULT_TIMEOUT_TIME);
+            }
           },
         });
       });
@@ -396,6 +402,7 @@ return new Observable(observer => {
 `,
             BrowserHeaders,
             grpc,
+            Code,
             share
           )
         )
