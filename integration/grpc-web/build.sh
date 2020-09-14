@@ -9,9 +9,9 @@ export GOPATH=$HOME/go
 #go get github.com/gogo/protobuf/protoc-gen-gogo
 #go get github.com/gogo/protobuf/gogoproto
 
-protoc -I=. -I=$GOPATH/src -I=$GOPATH/src/github.com/gogo/protobuf/protobuf -I=$GOPATH/src/github.com/gogo/protobuf/protobuf/google/protobuf --gogo_out=plugins=grpc:src/ types.proto 
+protoc -I=. -I=$GOPATH/src -I=$GOPATH/src/github.com/gogo/protobuf/protobuf -I=$GOPATH/src/github.com/gogo/protobuf/protobuf/google/protobuf --gogo_out=plugins=grpc:src/ types.proto
 
-protoc -I=. -I=$GOPATH/src -I=$GOPATH/src/github.com/gogo/protobuf/protobuf -I=$GOPATH/src/github.com/gogo/protobuf/protobuf/google/protobuf --gogo_out=plugins=grpc:src/ example.proto 
+protoc -I=. -I=$GOPATH/src -I=$GOPATH/src/github.com/gogo/protobuf/protobuf -I=$GOPATH/src/github.com/gogo/protobuf/protobuf/google/protobuf --gogo_out=plugins=grpc:src/ example.proto
 
 # Path to this plugin
 PROTOC_GEN_TS_PATH="./node_modules/.bin/protoc-gen-ts"
