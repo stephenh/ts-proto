@@ -261,7 +261,8 @@ return new Promise((resolve, reject) => {
         .returns(TypeNames.anyType('Observable@rxjs').param(TypeNames.ANY))
         .addCodeBlock(
           CodeBlock.empty().add(
-            `const DEFAULT_TIMEOUT_TIME: number = 3 /* seconds */ * 1000 /* ms */;
+            `const upStreamCodes = [2, 4, 8, 9, 10, 13, 14, 15]; /* Status Response Codes (https://developers.google.com/maps-booking/reference/grpc-api/status_codes) */
+            const DEFAULT_TIMEOUT_TIME: number = 3 /* seconds */ * 1000 /* ms */;
             const request = { ..._request, ...methodDesc.requestType };
             const maybeCombinedMetadata =
     metadata && this.options.metadata
@@ -279,7 +280,7 @@ return new Observable(observer => {
             observer.next(next as any);
           },
            onEnd: (code: %T) => {
-            if (code !== 0) {
+            if (upStreamCodes.find(upStreamCode => code === upStreamCode)) {
               setTimeout(() => {
                 upStream();
               }, DEFAULT_TIMEOUT_TIME);
@@ -370,7 +371,8 @@ return new Observable(observer => {
         .returns(TypeNames.anyType('Observable@rxjs').param(TypeNames.ANY))
         .addCodeBlock(
           CodeBlock.empty().add(
-            `const DEFAULT_TIMEOUT_TIME: number = 3 /* seconds */ * 1000 /* ms */;
+            `const upStreamCodes = [2, 4, 8, 9, 10, 13, 14, 15]; /* Status Response Codes (https://developers.google.com/maps-booking/reference/grpc-api/status_codes) */
+            const DEFAULT_TIMEOUT_TIME: number = 3 /* seconds */ * 1000 /* ms */;
             const request = { ..._request, ...methodDesc.requestType };
             const maybeCombinedMetadata =
     metadata && this.options.metadata
@@ -388,7 +390,7 @@ return new Observable(observer => {
             observer.next(next as any);
           },
           onEnd: (code: %T) => {
-            if (code !== 0) {
+            if (upStreamCodes.find(upStreamCode => code === upStreamCode)) {
               setTimeout(() => {
                 upStream();
               }, DEFAULT_TIMEOUT_TIME);
