@@ -897,7 +897,7 @@ function generateFromJson(
               }
             } else {
               const cstr = capitalize(
-                basicTypeName(typeMap, FieldDescriptorProto.create({ type: valueType.type }), options).toString()
+                basicTypeName(typeMap, valueType, options).toString()
               );
               return CodeBlock.of('%L(%L)', cstr, from);
             }
@@ -1104,7 +1104,7 @@ function generateFromPartial(
               return CodeBlock.of('%L', from);
             } else {
               const cstr = capitalize(
-                basicTypeName(typeMap, FieldDescriptorProto.create({ type: valueType.type }), options).toString()
+                basicTypeName(typeMap, valueType, options).toString()
               );
               return CodeBlock.of('%L(%L)', cstr, from);
             }
