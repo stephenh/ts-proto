@@ -7,6 +7,7 @@ import "types.proto";
 
 service DashState {
   rpc UserSettings(pb.Empty) returns (DashUserSettingsState);
+  rpc ActiveUserSettingsStream(pb.Empty) returns (stream DashUserSettingsState);
 }
 
 message DashFlash {
