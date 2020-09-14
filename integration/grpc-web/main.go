@@ -13,7 +13,6 @@ import (
 
 	"golang.org/x/net/context"
 
-	pb "./generated/lib/pb"
 	rpx "./generated/lib/rpx"
 )
 
@@ -30,7 +29,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
-	log.Println("create server")
+	log.Println("create server at localhost:9090")
 	server := grpc.NewServer()
 	rpx.RegisterDashStateServer(server, &stateService{})
 	if err := server.Serve(lis); err != nil {
@@ -40,7 +39,7 @@ func main() {
 
 type stateService struct{}
 
-func (s *stateService) UserSettings(ctx context.Context, in *pb.Empty) (*rpx.DashUserSettingsState, error) {
+func (s *stateService) UserSettings(ctx context.Context, in *rpx.Empty) (*rpx.DashUserSettingsState, error) {
 	grpc.SendHeader(ctx, metadata.Pairs("Pre-Response-Metadata", "Is-sent-as-headers-unary"))
 	grpc.SetTrailer(ctx, metadata.Pairs("Post-Response-Metadata", "Is-sent-as-trailers-unary"))
 
@@ -69,7 +68,7 @@ func (s *stateService) UserSettings(ctx context.Context, in *pb.Empty) (*rpx.Das
 	return &val, nil
 }
 
-func (s *stateService) ActiveUserSettingsStream(in *pb.Empty, stream rpx.DashState_ActiveUserSettingsStreamServer) error {
+func (s *stateService) ActiveUserSettingsStream(in *rpx.Empty, stream rpx.DashState_ActiveUserSettingsStreamServer) error {
 	urls := rpx.DashUserSettingsState_URLs{
 		ConnectGoogle: "http://google.com",
 		ConnectGithub: "http://github.com",
@@ -119,10 +118,10 @@ func (s *credsService) Create(c context.Context, in *rpx.DashAPICredsCreateReq) 
 		Description: in.Description,
 		Metadata:    in.Metadata,
 		Token:       "token123",
-		Id:          &pb.ID{Id: fmt.Sprintf("id-%d", rand.Int())},
+		Id:          fmt.Sprintf("id-%d", rand.Int()),
 	}
 
-	creds[cred.Id.String()] = cred
+	creds[cred.Id] = cred
 
 	return &cred, nil
 }
@@ -136,13 +135,13 @@ func (s *credsService) Update(c context.Context, in *rpx.DashAPICredsUpdateReq) 
 func (s *credsService) Delete(c context.Context, in *rpx.DashAPICredsDeleteReq) (*rpx.DashCred, error) {
 	grpclog.Printf("DELETE ID: %v", in.Id)
 
-	cred, ok := creds[in.Id.String()]
+	cred, ok := creds[in.Id]
 
 	grpclog.Printf("cred: %v", creds)
 
 	if !ok {
 		return nil, grpc.Errorf(codes.NotFound, "not found")
 	}
-	delete(creds, in.Id.String())
+	delete(creds, in.Id)
 	return &cred, nil
 }

@@ -3,11 +3,9 @@ syntax = "proto3";
 package rpx;
 option go_package = "lib/rpx";
 
-import "types.proto";
-
 service DashState {
-  rpc UserSettings(pb.Empty) returns (DashUserSettingsState);
-  rpc ActiveUserSettingsStream(pb.Empty) returns (stream DashUserSettingsState);
+  rpc UserSettings(Empty) returns (DashUserSettingsState);
+  rpc ActiveUserSettingsStream(Empty) returns (stream DashUserSettingsState);
 }
 
 message DashFlash {
@@ -47,7 +45,7 @@ message DashCred {
   string description = 2;
   string metadata = 3;
   string token = 4;
-  pb.ID id = 7;
+  string id = 7;
 }
 
 message DashAPICredsCreateReq {
@@ -59,10 +57,12 @@ message DashAPICredsUpdateReq {
   string cred_sid = 1;
   string description = 2;
   string metadata = 3;
-  pb.ID id = 5;
+  string id = 5;
 }
 
 message DashAPICredsDeleteReq {
   string cred_sid = 1;
-  pb.ID id = 3;
+  string id = 3;
 }
+
+message Empty {}
