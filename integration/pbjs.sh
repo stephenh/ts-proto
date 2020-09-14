@@ -52,3 +52,7 @@ yarn pbts --no-comments -o integration/oneof-properties/pbjs.d.ts integration/on
 # oneof-unions/
 yarn pbjs --force-message --force-number -t static-module -o integration/oneof-unions/pbjs.js integration/oneof-unions/oneof.proto
 yarn pbts --no-comments -o integration/oneof-unions/pbjs.d.ts integration/oneof-unions/pbjs.js
+
+# map-with-enums/
+yarn pbjs --force-message --force-number -t static-module -o integration/map-with-enums/pbjs.js integration/map-with-enums/map-with-enums.proto
+yarn pbts --no-comments -o integration/map-with-enums/pbjs.d.ts integration/map-with-enums/pbjs.js

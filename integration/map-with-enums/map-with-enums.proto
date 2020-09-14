@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package mapWithEnums;
+
+enum Enums {
+  UNKNOWN = 0;
+  GOOD = 1;
+  BAD = 2;
+}
+
+message MapWithEnums {
+  map<int32, Enums> enums_by_id = 1;
+}
