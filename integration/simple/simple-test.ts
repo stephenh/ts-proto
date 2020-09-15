@@ -279,11 +279,26 @@ describe('simple', () => {
       }
     };
 
-    const encoded = PbSimpleWithMapOfEnums.encode(PbSimpleWithMapOfEnums.create(message));
-    const decoded = SimpleWithMapOfEnums.decode(encoded.finish());
+    const encoded = PbSimpleWithMapOfEnums.encode(PbSimpleWithMapOfEnums.create(message)).finish();
+    const decoded = SimpleWithMapOfEnums.decode(encoded);
 
     expect(decoded).toBeTruthy();
     expect(decoded.enumsById).toBeTruthy();
     expect(decoded.enumsById[3]).toBe(PbState.ON);
+  });
+
+  it('can encode s.t. pbjs can decode', () => {
+    const message = {
+      enumsById: {
+        2: PbState.OFF
+      },
+    };
+
+    const encoded = SimpleWithMapOfEnums.encode(message).finish();
+    const decoded = PbSimpleWithMapOfEnums.decode(encoded);
+
+    expect(decoded).toBeTruthy();
+    expect(decoded.enumsById).toBeTruthy();
+    expect(decoded.enumsById[2]).toBe(PbState.OFF);
   });
 });
