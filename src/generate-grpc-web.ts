@@ -159,7 +159,8 @@ export function addGrpcWebMisc(options: Options, _file: FileSpec): FileSpec {
   file = file.addCode(
     CodeBlock.empty()
       .addStatement('import UnaryMethodDefinition = grpc.UnaryMethodDefinition')
-      .addStatement('type UnaryMethodDefinitionish = UnaryMethodDefinition<any, any>')
+      .addStatement('interface UnaryMethodDefinitionishR extends UnaryMethodDefinition<any, any> { requestStream: any; responseStream: any; }')
+      .addStatement('type UnaryMethodDefinitionish = UnaryMethodDefinitionishR')
   );
   file = file.addInterface(generateGrpcWebRpcType(options.returnObservable));
   file = file.addClass(options.returnObservable ? generateGrpcWebImplObservable() : generateGrpcWebImplPromise());
