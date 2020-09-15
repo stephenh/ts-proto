@@ -98,6 +98,10 @@ message SimpleWithSnakeCaseMap {
   map<int32, Entity> entities_by_id = 1;
 }
 
+message SimpleWithMapOfEnums {
+  map<int32, StateEnum> enums_by_id = 1;
+}
+
 service PingService {
   rpc ping(PingRequest) returns (PingResponse);
 }
