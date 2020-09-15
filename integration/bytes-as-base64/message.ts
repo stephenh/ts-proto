@@ -18,12 +18,14 @@ export const Message = {
     const message = { ...baseMessage } as Message;
     if (object.data !== undefined && object.data !== null) {
       message.data = object.data;
+    } else {
+      message.data = new Uint8Array();
     }
     return message;
   },
   toJSON(message: Message): unknown {
     const obj: any = {};
-    message.data !== undefined && (obj.data = message.data !== undefined ? base64FromBytes(message.data) : undefined);
+    message.data !== undefined && (obj.data = base64FromBytes(message.data !== undefined ? message.data : new Uint8Array()));
     return obj;
   },
 };

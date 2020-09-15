@@ -555,7 +555,7 @@ function generateBaseInstance(typeMap: TypeMap, fullName: string, messageDesc: D
     .filterNot(isWithinOneOf)
     .forEach((field) => {
       let val = defaultValue(typeMap, field, options);
-      if (val === 'undefined') {
+      if (val === 'undefined' || isBytes(field)) {
         return;
       }
       initialValue = initialValue.addHashEntry(maybeSnakeToCamel(field.name, options), val);
@@ -1012,12 +1012,16 @@ function generateToJson(
           defaultValue(typeMap, field, options)
         );
       } else if (isBytes(field)) {
-        return CodeBlock.of(
-          '%L !== undefined ? base64FromBytes(%L) : %L',
-          from,
-          from,
-          isWithinOneOf(field) ? 'undefined' : defaultValue(typeMap, field, options)
-        );
+        if (isWithinOneOf(field)) {
+          return CodeBlock.of('%L !== undefined ? base64FromBytes(%L) : undefined', from, from);
+        } else {
+          return CodeBlock.of(
+            'base64FromBytes(%L !== undefined ? %L : %L)',
+            from,
+            from,
+            defaultValue(typeMap, field, options)
+          );
+        }
       } else if (isLong(field) && options.forceLong === LongOption.LONG) {
         return CodeBlock.of(
           '(%L || %L).toString()',
@@ -1171,12 +1175,7 @@ function generateFromPartial(
       }
     }
 
-    // set the default value (TODO Support bytes)
-    if (
-      !isRepeated(field) &&
-      field.type !== FieldDescriptorProto.Type.TYPE_BYTES &&
-      options.oneof !== OneofOption.UNIONS
-    ) {
+    if (!isRepeated(field) && options.oneof !== OneofOption.UNIONS) {
       func = func.nextControlFlow('else');
       func = func.addStatement(
         `message.%L = %L`,

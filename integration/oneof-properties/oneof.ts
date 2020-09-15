@@ -244,6 +244,8 @@ export const PleaseChoose = {
     }
     if (object.bunchaBytes !== undefined && object.bunchaBytes !== null) {
       message.bunchaBytes = object.bunchaBytes;
+    } else {
+      message.bunchaBytes = undefined;
     }
     if (object.anEnum !== undefined && object.anEnum !== null) {
       message.anEnum = object.anEnum;

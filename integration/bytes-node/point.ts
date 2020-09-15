@@ -41,12 +41,14 @@ export const Point = {
     const message = { ...basePoint } as Point;
     if (object.data !== undefined && object.data !== null) {
       message.data = object.data;
+    } else {
+      message.data = new Buffer(0);
     }
     return message;
   },
   toJSON(message: Point): unknown {
     const obj: any = {};
-    message.data !== undefined && (obj.data = message.data !== undefined ? base64FromBytes(message.data) : undefined);
+    message.data !== undefined && (obj.data = base64FromBytes(message.data !== undefined ? message.data : new Buffer(0)));
     return obj;
   },
 };

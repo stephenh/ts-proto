@@ -282,11 +282,13 @@ describe('simple json', () => {
       createdAt: new Date(1_000),
       thing: undefined,
       blobs: [],
+      blob: new Uint8Array(),
       birthday: undefined,
     };
     expect(Simple.toJSON(s1)).toMatchInlineSnapshot(`
       Object {
         "age": 1,
+        "blob": "",
         "blobs": Array [],
         "child": Object {
           "name": "foo",

@@ -1,3 +1,7 @@
+## v1.34.0
+
+* Fix `blob`s in `fromPartial` and `toJSON`
+
 ## v1.33.0
 
 * Automatically configure `protobuf.util.Long` when 64-bit numbers are used (fixes #78)
