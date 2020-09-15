@@ -896,9 +896,7 @@ function generateFromJson(
                 return CodeBlock.of('bytesFromBase64(%L as string)', from);
               }
             } else {
-              const cstr = capitalize(
-                basicTypeName(typeMap, valueType, options).toString()
-              );
+              const cstr = capitalize(basicTypeName(typeMap, valueType, options).toString());
               return CodeBlock.of('%L(%L)', cstr, from);
             }
           } else if (isTimestamp(valueType)) {
@@ -1103,9 +1101,7 @@ function generateFromPartial(
             if (isBytes(valueType)) {
               return CodeBlock.of('%L', from);
             } else {
-              const cstr = capitalize(
-                basicTypeName(typeMap, valueType, options).toString()
-              );
+              const cstr = capitalize(basicTypeName(typeMap, valueType, options).toString());
               return CodeBlock.of('%L(%L)', cstr, from);
             }
           } else if (isTimestamp(valueType)) {
