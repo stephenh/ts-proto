@@ -1,5 +1,5 @@
 import { Reader } from 'protobufjs';
-import { Child_Type, Nested, Nested_InnerEnum, OneOfMessage, Simple, SimpleWithMap, StateEnum } from './simple';
+import { Child_Type, Nested, Nested_InnerEnum, OneOfMessage, Simple, SimpleWithMap, StateEnum, SimpleWithMapOfEnums } from './simple';
 import { simple as pbjs, google } from './pbjs';
 import ISimple = pbjs.ISimple;
 import PbChild = pbjs.Child;
@@ -10,6 +10,7 @@ import PbNested = pbjs.Nested;
 import PbNested_InnerMessage = pbjs.Nested.InnerMessage;
 import PbNested_DeepMessage = pbjs.Nested.InnerMessage.DeepMessage;
 import PbNested_InnerEnum = pbjs.Nested.InnerEnum;
+import PbSimpleWithMapOfEnums = pbjs.SimpleWithMapOfEnums;
 import INested = pbjs.INested;
 import PbTimestamp = google.protobuf.Timestamp;
 import * as Long from 'long';
@@ -261,5 +262,20 @@ describe('simple', () => {
     function mustBeOn(a: typeof StateEnum.ON) {}
     // @ts-expect-error
     mustBeOn(StateEnum.OFF);
+  });
+
+  it('can decode from a pbjs encoding', () => {
+    const message = {
+      enumsById: {
+        3: PbState.ON,
+      }
+    };
+
+    const encoded = PbSimpleWithMapOfEnums.encode(PbSimpleWithMapOfEnums.create(message));
+    const decoded = SimpleWithMapOfEnums.decode(encoded.finish());
+
+    expect(decoded).toBeTruthy();
+    expect(decoded.enumsById).toBeTruthy();
+    expect(decoded.enumsById[3]).toBe(PbState.ON);
   });
 });
