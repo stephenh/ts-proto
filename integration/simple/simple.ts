@@ -1900,7 +1900,7 @@ export const SimpleWithMapOfEnums = {
     message.enumsById = {};
     if (object.enumsById !== undefined && object.enumsById !== null) {
       Object.entries(object.enumsById).forEach(([key, value]) => {
-        message.enumsById[Number(key)] = StateEnum(value);
+        message.enumsById[Number(key)] = value as number;
       })
     }
     return message;
@@ -1911,7 +1911,7 @@ export const SimpleWithMapOfEnums = {
     if (object.enumsById !== undefined && object.enumsById !== null) {
       Object.entries(object.enumsById).forEach(([key, value]) => {
         if (value !== undefined) {
-          message.enumsById[Number(key)] = StateEnum(value);
+          message.enumsById[Number(key)] = value as number;
         }
       })
     }
@@ -1922,7 +1922,7 @@ export const SimpleWithMapOfEnums = {
     obj.enumsById = {};
     if (message.enumsById) {
       Object.entries(message.enumsById).forEach(([k, v]) => {
-        obj.enumsById[k] = simpleWithMapOfEnums_EnumsByIdEntryToJSON(v);
+        obj.enumsById[k] = stateEnumToJSON(v);
       })
     }
     return obj;
