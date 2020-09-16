@@ -1,3 +1,7 @@
+## v1.35.0
+
+* Fix proto3 optional support
+
 ## v1.34.0
 
 * Fix `blob`s in `fromPartial` and `toJSON`
