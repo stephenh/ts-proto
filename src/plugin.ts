@@ -5,6 +5,7 @@ import { generateFile } from './main';
 import { createTypeMap } from './types';
 import CodeGeneratorRequest = google.protobuf.compiler.CodeGeneratorRequest;
 import CodeGeneratorResponse = google.protobuf.compiler.CodeGeneratorResponse;
+import Feature = google.protobuf.compiler.CodeGeneratorResponse.Feature;
 import { FileSpec } from 'ts-poet';
 
 // this would be the plugin called by the protoc compiler
@@ -21,7 +22,7 @@ async function main() {
       content: prefixDisableLinter(spec),
     });
   });
-  const response = new CodeGeneratorResponse({ file: files });
+  const response = new CodeGeneratorResponse({ file: files, supportedFeatures: Feature.FEATURE_PROTO3_OPTIONAL });
   const buffer = CodeGeneratorResponse.encode(response).finish();
   const write = promisify(process.stdout.write as (buffer: Buffer) => boolean).bind(process.stdout);
   await write(Buffer.from(buffer));
