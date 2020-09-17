@@ -1,0 +1,13 @@
+syntax = "proto3";
+package import_collision.a;
+
+message Job {
+  int32 id = 1;
+  State state = 2;
+
+  enum State {
+    PENDING = 0;
+    STARTED = 1;
+    EXITED = 2;
+  }
+}

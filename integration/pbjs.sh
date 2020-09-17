@@ -52,3 +52,7 @@ yarn pbts --no-comments -o integration/oneof-properties/pbjs.d.ts integration/on
 # oneof-unions/
 yarn pbjs --force-message --force-number -t static-module -o integration/oneof-unions/pbjs.js integration/oneof-unions/oneof.proto
 yarn pbts --no-comments -o integration/oneof-unions/pbjs.d.ts integration/oneof-unions/pbjs.js
+
+# import-collision/
+yarn pbjs --force-message --force-number -t static-module -o integration/import-collision/pbjs.js integration/import-collision/import-collision.proto
+yarn pbts --no-comments -o integration/import-collision/pbjs.d.ts integration/import-collision/pbjs.js

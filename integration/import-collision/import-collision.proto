@@ -1,0 +1,14 @@
+syntax = "proto3";
+package import_collision;
+
+import "a/a.proto";
+import "b/b.proto";
+
+
+message AJob {
+  import_collision.a.Job job = 1;
+}
+
+message BJob {
+  import_collision.b.Job job = 1;
+}
