@@ -81,10 +81,10 @@ describe('simple', () => {
     const s2 = PbSimple.toObject(PbSimple.decode(Simple.encode(s1).finish()));
 
     delete s1.blobs;
-    delete s1.blob;
     delete s1.birthday;
     expect(s2).toEqual({
       ...s1,
+      blob: new Buffer([]),
       createdAt: new PbTimestamp({ nanos: 0, seconds: new Long(0) as any }),
     });
   });
@@ -171,10 +171,10 @@ describe('simple', () => {
     };
     const s2 = PbSimple.toObject(PbSimple.decode(Simple.encode(s1).finish()));
     delete s1.blobs;
-    delete s1.blob;
     delete s1.birthday;
     expect(s2).toEqual({
       ...s1,
+      blob: new Buffer([]),
       createdAt: new PbTimestamp({ nanos: 0, seconds: new Long(0) as any }),
     });
   });
