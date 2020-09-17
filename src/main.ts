@@ -994,8 +994,8 @@ function generateToJson(
         // For map types, drill-in and then admittedly re-hard-code our per-value-type logic
         const valueType = (typeMap.get(field.typeName)![2] as DescriptorProto).field[1];
         if (isEnum(valueType)) {
-          const typeName = camelCase(basicTypeName(typeMap, valueType, options, { keepValueType: true }).toString());
-          return CodeBlock.of('%TToJSON(%L)', typeName, from);
+          const toJson = getEnumMethod(typeMap, valueType.typeName, 'ToJSON');
+          return CodeBlock.of('%T(%L)', toJson, from);
         } else if (isBytes(valueType)) {
           return CodeBlock.of('base64FromBytes(%L)', from);
         } else if (isTimestamp(valueType)) {
