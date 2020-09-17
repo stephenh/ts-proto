@@ -18,7 +18,7 @@ describe('number', () => {
       fixed32: 8,
       fixed64: 9,
       sfixed32: 10,
-      sfixed64: 11
+      sfixed64: 11,
     };
     expect(simple.int64).toEqual(3);
   });
@@ -36,10 +36,13 @@ describe('number', () => {
       fixed32: 8,
       fixed64: 9,
       sfixed32: 10,
-      sfixed64: 11
+      sfixed64: 11,
     };
     const s2 = Numbers.decode(Reader.create(PbNumbers.encode(PbNumbers.fromObject(s1)).finish()));
     expect(s2).toEqual(s1);
+    expect(typeof s2.uint32).toEqual('number');
+    expect(typeof s2.int64).toEqual('number');
+    expect(s2.int64).toEqual(3);
   });
 
   it('can encode', () => {
@@ -55,12 +58,12 @@ describe('number', () => {
       fixed32: 8,
       fixed64: 9,
       sfixed32: 10,
-      sfixed64: 11
+      sfixed64: 11,
     };
     const s2 = PbNumbers.toObject(PbNumbers.decode(Numbers.encode(s1).finish()), { longs: Number });
     expect(s2).toEqual({
       ...s1,
-      sfixed64: 11
+      sfixed64: 11,
     });
   });
 
