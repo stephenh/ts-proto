@@ -1,3 +1,8 @@
+
+## v1.35.1
+
+* Fix maps of enums (@ahmadj-levelbenefits)
+
 ## v1.35.0
 
 * Fix proto3 optional support
