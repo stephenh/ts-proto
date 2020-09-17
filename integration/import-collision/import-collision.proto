@@ -1,14 +1,14 @@
 syntax = "proto3";
 package import_collision;
 
-import "a/a.proto";
-import "b/b.proto";
+import "aws/aws.proto";
+import "gcp/gcp.proto";
 
 
-message AJob {
-  import_collision.a.Job job = 1;
+message Aws {
+  import_collision.aws.Job swf = 1;
 }
 
-message BJob {
-  import_collision.b.Job job = 1;
+message Gcp {
+  import_collision.gcp.Job dag = 1;
 }

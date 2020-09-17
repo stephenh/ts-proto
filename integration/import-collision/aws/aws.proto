@@ -1,5 +1,5 @@
 syntax = "proto3";
-package import_collision.a;
+package import_collision.aws;
 
 message Job {
   int32 id = 1;
@@ -8,6 +8,7 @@ message Job {
   enum State {
     PENDING = 0;
     STARTED = 1;
-    EXITED = 2;
+    CANCELLED = 2;
+    COMPLETED = 3;
   }
 }

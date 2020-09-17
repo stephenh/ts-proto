@@ -14,7 +14,8 @@ const baseJob: object = {
 export enum Job_State {
   PENDING = 0,
   STARTED = 1,
-  EXITED = 2,
+  CANCELLED = 2,
+  COMPLETED = 3,
   UNRECOGNIZED = -1,
 }
 
@@ -27,8 +28,11 @@ export function job_StateFromJSON(object: any): Job_State {
     case "STARTED":
       return Job_State.STARTED;
     case 2:
-    case "EXITED":
-      return Job_State.EXITED;
+    case "CANCELLED":
+      return Job_State.CANCELLED;
+    case 3:
+    case "COMPLETED":
+      return Job_State.COMPLETED;
     case -1:
     case "UNRECOGNIZED":
     default:
@@ -42,8 +46,10 @@ export function job_StateToJSON(object: Job_State): string {
       return "PENDING";
     case Job_State.STARTED:
       return "STARTED";
-    case Job_State.EXITED:
-      return "EXITED";
+    case Job_State.CANCELLED:
+      return "CANCELLED";
+    case Job_State.COMPLETED:
+      return "COMPLETED";
     default:
       return "UNKNOWN";
   }

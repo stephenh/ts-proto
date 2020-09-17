@@ -1,38 +1,38 @@
-import { Job } from './a/a';
-import { Job } from './b/b';
+import { Job } from './aws/aws';
+import { Job } from './gcp/gcp';
 import { Writer, Reader } from 'protobufjs/minimal';
 
 
-export interface AJob {
-  job: Job | undefined;
+export interface Aws {
+  swf: Job | undefined;
 }
 
-export interface BJob {
-  job: Job | undefined;
+export interface Gcp {
+  dag: Job | undefined;
 }
 
-const baseAJob: object = {
+const baseAws: object = {
 };
 
-const baseBJob: object = {
+const baseGcp: object = {
 };
 
-export const AJob = {
-  encode(message: AJob, writer: Writer = Writer.create()): Writer {
-    if (message.job !== undefined && message.job !== undefined) {
-      Job.encode(message.job, writer.uint32(10).fork()).ldelim();
+export const Aws = {
+  encode(message: Aws, writer: Writer = Writer.create()): Writer {
+    if (message.swf !== undefined && message.swf !== undefined) {
+      Job.encode(message.swf, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
-  decode(input: Uint8Array | Reader, length?: number): AJob {
+  decode(input: Uint8Array | Reader, length?: number): Aws {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseAJob } as AJob;
+    const message = { ...baseAws } as Aws;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.job = Job.decode(reader, reader.uint32());
+          message.swf = Job.decode(reader, reader.uint32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -41,47 +41,47 @@ export const AJob = {
     }
     return message;
   },
-  fromJSON(object: any): AJob {
-    const message = { ...baseAJob } as AJob;
-    if (object.job !== undefined && object.job !== null) {
-      message.job = Job.fromJSON(object.job);
+  fromJSON(object: any): Aws {
+    const message = { ...baseAws } as Aws;
+    if (object.swf !== undefined && object.swf !== null) {
+      message.swf = Job.fromJSON(object.swf);
     } else {
-      message.job = undefined;
+      message.swf = undefined;
     }
     return message;
   },
-  fromPartial(object: DeepPartial<AJob>): AJob {
-    const message = { ...baseAJob } as AJob;
-    if (object.job !== undefined && object.job !== null) {
-      message.job = Job.fromPartial(object.job);
+  fromPartial(object: DeepPartial<Aws>): Aws {
+    const message = { ...baseAws } as Aws;
+    if (object.swf !== undefined && object.swf !== null) {
+      message.swf = Job.fromPartial(object.swf);
     } else {
-      message.job = undefined;
+      message.swf = undefined;
     }
     return message;
   },
-  toJSON(message: AJob): unknown {
+  toJSON(message: Aws): unknown {
     const obj: any = {};
-    message.job !== undefined && (obj.job = message.job ? Job.toJSON(message.job) : undefined);
+    message.swf !== undefined && (obj.swf = message.swf ? Job.toJSON(message.swf) : undefined);
     return obj;
   },
 };
 
-export const BJob = {
-  encode(message: BJob, writer: Writer = Writer.create()): Writer {
-    if (message.job !== undefined && message.job !== undefined) {
-      Job.encode(message.job, writer.uint32(10).fork()).ldelim();
+export const Gcp = {
+  encode(message: Gcp, writer: Writer = Writer.create()): Writer {
+    if (message.dag !== undefined && message.dag !== undefined) {
+      Job.encode(message.dag, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
-  decode(input: Uint8Array | Reader, length?: number): BJob {
+  decode(input: Uint8Array | Reader, length?: number): Gcp {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseBJob } as BJob;
+    const message = { ...baseGcp } as Gcp;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.job = Job.decode(reader, reader.uint32());
+          message.dag = Job.decode(reader, reader.uint32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -90,27 +90,27 @@ export const BJob = {
     }
     return message;
   },
-  fromJSON(object: any): BJob {
-    const message = { ...baseBJob } as BJob;
-    if (object.job !== undefined && object.job !== null) {
-      message.job = Job.fromJSON(object.job);
+  fromJSON(object: any): Gcp {
+    const message = { ...baseGcp } as Gcp;
+    if (object.dag !== undefined && object.dag !== null) {
+      message.dag = Job.fromJSON(object.dag);
     } else {
-      message.job = undefined;
+      message.dag = undefined;
     }
     return message;
   },
-  fromPartial(object: DeepPartial<BJob>): BJob {
-    const message = { ...baseBJob } as BJob;
-    if (object.job !== undefined && object.job !== null) {
-      message.job = Job.fromPartial(object.job);
+  fromPartial(object: DeepPartial<Gcp>): Gcp {
+    const message = { ...baseGcp } as Gcp;
+    if (object.dag !== undefined && object.dag !== null) {
+      message.dag = Job.fromPartial(object.dag);
     } else {
-      message.job = undefined;
+      message.dag = undefined;
     }
     return message;
   },
-  toJSON(message: BJob): unknown {
+  toJSON(message: Gcp): unknown {
     const obj: any = {};
-    message.job !== undefined && (obj.job = message.job ? Job.toJSON(message.job) : undefined);
+    message.dag !== undefined && (obj.dag = message.dag ? Job.toJSON(message.dag) : undefined);
     return obj;
   },
 };

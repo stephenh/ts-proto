@@ -1,0 +1,7 @@
+syntax = "proto3";
+package import_collision.gcp;
+
+message Job {
+  int32 id = 1;
+  repeated int32 id_dependencies = 2;
+}

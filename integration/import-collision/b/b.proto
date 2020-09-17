@@ -1,7 +1,0 @@
-syntax = "proto3";
-package import_collision.b;
-
-message Job {
-  int32 id = 1;
-  int32 exit_code = 2;
-}
