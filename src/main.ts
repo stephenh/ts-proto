@@ -83,6 +83,7 @@ export type Options = {
   lowerCaseServiceMethods: boolean;
   nestJs: boolean;
   env: EnvOption;
+  timestampAsString: boolean;
 };
 
 export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, parameter: string): FileSpec {

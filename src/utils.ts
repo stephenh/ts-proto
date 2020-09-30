@@ -51,6 +51,7 @@ export function defaultOptions(): Options {
     addNestjsRestParameter: false,
     nestJs: false,
     env: EnvOption.BOTH,
+    timestampAsString: false,
   };
 }
 
@@ -119,6 +120,9 @@ export function optionsFromParameter(parameter: string): Options {
     }
     if (parameter.includes('env=browser')) {
       options.env = EnvOption.BROWSER;
+    }
+    if (parameter.includes('timestampAsString=true')) {
+      options.timestampAsString = true;
     }
   }
   return options;
