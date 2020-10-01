@@ -35,6 +35,7 @@ import {
 } from './generate-nestjs';
 import {
   generateDataLoadersType,
+  generateDataLoaderOptionsType,
   generateRpcType,
   generateService,
   generateServiceClientImpl,
@@ -204,6 +205,7 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
   }
 
   if (options.useContext) {
+    file = file.addInterface(generateDataLoaderOptionsType());
     file = file.addInterface(generateDataLoadersType());
   }
 
