@@ -6,6 +6,8 @@ export interface Message {
 const baseMessage: object = {
 };
 
+export const protobufPackage = ''
+
 export const Message = {
   fromJSON(object: any): Message {
     const message = { ...baseMessage } as Message;

@@ -9,6 +9,8 @@ const baseSimpleMessage: object = {
   numberField: 0,
 };
 
+export const protobufPackage = 'angular'
+
 export const SimpleMessage = {
   encode(message: SimpleMessage, writer: Writer = Writer.create()): Writer {
     writer.uint32(8).int32(message.numberField);

@@ -36,6 +36,8 @@ function numberToLong(number: number) {
   return Long.fromNumber(number);
 }
 
+export const protobufPackage = 'simple'
+
 export const ImportedThing = {
   encode(message: ImportedThing, writer: Writer = Writer.create()): Writer {
     if (message.createdAt !== undefined && message.createdAt !== undefined) {

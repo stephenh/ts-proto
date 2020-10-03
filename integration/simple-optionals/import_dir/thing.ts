@@ -31,6 +31,8 @@ function fromTimestamp(t: Timestamp): Date {
   return new Date(millis);
 }
 
+export const protobufPackage = 'simple'
+
 export const ImportedThing = {
   encode(message: ImportedThing, writer: Writer = Writer.create()): Writer {
     if (message.createdAt !== undefined && message.createdAt !== undefined) {

@@ -47,6 +47,8 @@ const basePleaseChoose_Submessage: object = {
 const baseSimpleButOptional: object = {
 };
 
+export const protobufPackage = 'oneof'
+
 export enum PleaseChoose_StateEnum {
   UNKNOWN = 0,
   ON = 2,
