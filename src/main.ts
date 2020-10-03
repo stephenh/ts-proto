@@ -103,12 +103,7 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
   let file = FileSpec.create(moduleName);
 
   // Indicate this file's source protobuf package for reflective use with google.protobuf.Any
-  file = file.addCode(
-    CodeBlock.empty().add(
-      `export const protobufPackage = '%L'\n`,
-      fileDesc.package
-    )
-  );
+  file = file.addCode(CodeBlock.empty().add(`export const protobufPackage = '%L'\n`, fileDesc.package));
 
   const sourceInfo = SourceInfo.fromDescriptor(fileDesc);
 
