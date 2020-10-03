@@ -268,6 +268,8 @@ function longToNumber(long: Long) {
   return long.toNumber();
 }
 
+export const protobufPackage = 'simple'
+
 export enum StateEnum {
   UNKNOWN = 0,
   ON = 2,

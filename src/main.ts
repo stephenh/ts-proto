@@ -102,6 +102,14 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
   const moduleName = fileDesc.name.replace('.proto', '.ts');
   let file = FileSpec.create(moduleName);
 
+  // Indicate this file's source protobuf package for reflective use with google.protobuf.Any
+  file = file.addCode(
+    CodeBlock.empty().add(
+      `export const protobufPackage = '%L'\n`,
+      fileDesc.package
+    )
+  );
+
   const sourceInfo = SourceInfo.fromDescriptor(fileDesc);
 
   // Syntax, unlike most fields, is not repeated and thus does not use an index

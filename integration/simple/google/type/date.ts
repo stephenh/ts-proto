@@ -38,6 +38,8 @@ const baseDateMessage: object = {
   day: 0,
 };
 
+export const protobufPackage = 'google.type'
+
 export const DateMessage = {
   encode(message: DateMessage, writer: Writer = Writer.create()): Writer {
     writer.uint32(8).int32(message.year);

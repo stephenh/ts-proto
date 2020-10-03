@@ -152,6 +152,8 @@ function longToNumber(long: Long) {
   return long.toNumber();
 }
 
+export const protobufPackage = 'google.protobuf'
+
 export const DoubleValue = {
   encode(message: DoubleValue, writer: Writer = Writer.create()): Writer {
     writer.uint32(9).double(message.value);

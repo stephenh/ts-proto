@@ -8,6 +8,8 @@ export interface Point {
 const basePoint: object = {
 };
 
+export const protobufPackage = ''
+
 export const Point = {
   encode(message: Point, writer: Writer = Writer.create()): Writer {
     writer.uint32(10).bytes(message.data);

@@ -9,6 +9,8 @@ const baseIssue56: object = {
   test: 1,
 };
 
+export const protobufPackage = 'simple'
+
 export enum EnumWithoutZero {
   A = 1,
   B = 2,
