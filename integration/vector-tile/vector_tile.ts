@@ -66,6 +66,8 @@ function longToNumber(long: Long) {
   return long.toNumber();
 }
 
+export const protobufPackage = 'vector_tile'
+
 export enum Tile_GeomType {
   UNKNOWN = 0,
   POINT = 1,

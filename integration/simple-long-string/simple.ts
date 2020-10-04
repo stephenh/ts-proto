@@ -265,6 +265,8 @@ function longToString(long: Long) {
   return long.toString();
 }
 
+export const protobufPackage = 'simple'
+
 export enum StateEnum {
   UNKNOWN = 0,
   ON = 2,

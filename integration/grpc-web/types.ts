@@ -96,6 +96,8 @@ function longToNumber(long: Long) {
   return long.toNumber();
 }
 
+export const protobufPackage = 'pb'
+
 export const Timestamp = {
   encode(message: Timestamp, writer: Writer = Writer.create()): Writer {
     writer.uint32(8).int64(message.seconds);

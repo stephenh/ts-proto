@@ -113,6 +113,8 @@ function longToString(long: Long) {
   return long.toString();
 }
 
+export const protobufPackage = 'google.protobuf'
+
 export const Timestamp = {
   encode(message: Timestamp, writer: Writer = Writer.create()): Writer {
     writer.uint32(8).int64(message.seconds);

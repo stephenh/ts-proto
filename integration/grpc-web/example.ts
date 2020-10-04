@@ -182,6 +182,8 @@ export class GrpcWebImpl implements Rpc {
 
 }
 
+export const protobufPackage = 'rpx'
+
 export enum DashFlash_Type {
   Undefined = 0,
   Success = 1,

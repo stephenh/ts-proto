@@ -265,6 +265,8 @@ function numberToLong(number: number) {
   return Long.fromNumber(number);
 }
 
+export const protobufPackage = 'simple'
+
 export enum StateEnum {
   UNKNOWN = 0,
   ON = 2,

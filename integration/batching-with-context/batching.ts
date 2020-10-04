@@ -179,6 +179,8 @@ export interface DataLoaders {
 
 }
 
+export const protobufPackage = 'batching'
+
 export const BatchQueryRequest = {
   encode(message: BatchQueryRequest, writer: Writer = Writer.create()): Writer {
     for (const v of message.ids) {

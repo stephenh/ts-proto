@@ -14,6 +14,8 @@ const baseBaz: object = {
 const baseFooBar: object = {
 };
 
+export const protobufPackage = ''
+
 export const Baz = {
   encode(message: Baz, writer: Writer = Writer.create()): Writer {
     if (message.foo !== undefined) {

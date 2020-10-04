@@ -19,6 +19,8 @@ const basePoint: object = {
 const baseArea: object = {
 };
 
+export const protobufPackage = ''
+
 export const Point = {
   encode(message: Point, writer: Writer = Writer.create()): Writer {
     writer.uint32(9).double(message.lat);

@@ -149,6 +149,8 @@ function longToString(long: Long) {
   return long.toString();
 }
 
+export const protobufPackage = 'google.protobuf'
+
 export const DoubleValue = {
   encode(message: DoubleValue, writer: Writer = Writer.create()): Writer {
     writer.uint32(9).double(message.value);
