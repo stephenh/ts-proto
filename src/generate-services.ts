@@ -288,9 +288,14 @@ export function generateDataLoadersType(): InterfaceSpec {
     .addParameter('identifier', TypeNames.STRING)
     .addParameter('constructorFn', TypeNames.lambda2([], TypeNames.typeVariable('T')))
     .returns(TypeNames.typeVariable('T'));
-  return InterfaceSpec.create('DataLoaders').addModifiers(Modifier.EXPORT).addFunction(fn).addProperty('rpcDataLoaderOptions', 'DataLoaderOptions', { optional: true });
+  return InterfaceSpec.create('DataLoaders')
+    .addModifiers(Modifier.EXPORT)
+    .addFunction(fn)
+    .addProperty('rpcDataLoaderOptions', 'DataLoaderOptions', { optional: true });
 }
 
 export function generateDataLoaderOptionsType(): InterfaceSpec {
-  return InterfaceSpec.create('DataLoaderOptions').addModifiers(Modifier.EXPORT).addProperty('cache', 'boolean', { optional: true });
+  return InterfaceSpec.create('DataLoaderOptions')
+    .addModifiers(Modifier.EXPORT)
+    .addProperty('cache', 'boolean', { optional: true });
 }
