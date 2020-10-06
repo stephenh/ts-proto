@@ -303,10 +303,6 @@ const valueTypes: { [key: string]: TypeName } = {
   '.google.protobuf.BytesValue': TypeNames.anyType('Uint8Array'),
 };
 
-const mappedTypes: { [key: string]: TypeName } = {
-  '.google.protobuf.Timestamp': TypeNames.DATE,
-};
-
 export function isTimestamp(field: FieldDescriptorProto): boolean {
   return field.typeName === '.google.protobuf.Timestamp';
 }
@@ -347,8 +343,8 @@ export function messageToTypeName(
     return TypeNames.unionType(typeName, TypeNames.UNDEFINED);
   }
   // Look for other special prototypes like Timestamp that aren't technically wrapper types
-  if (!typeOptions.keepValueType && protoType in mappedTypes) {
-    return mappedTypes[protoType];
+  if (!typeOptions.keepValueType && protoType === '.google.protobuf.Timestamp' && options.useDate) {
+    return TypeNames.DATE;
   }
   const [module, type] = toModuleAndType(typeMap, protoType);
   return TypeNames.importedType(`${type}@./${module}`);

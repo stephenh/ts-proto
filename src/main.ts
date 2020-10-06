@@ -73,6 +73,7 @@ export type Options = {
   snakeToCamel: boolean;
   forceLong: LongOption;
   useOptionals: boolean;
+  useDate: boolean;
   oneof: OneofOption;
   outputEncodeMethods: boolean;
   outputJsonMethods: boolean;
