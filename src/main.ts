@@ -87,6 +87,7 @@ export type Options = {
   lowerCaseServiceMethods: boolean;
   nestJs: boolean;
   env: EnvOption;
+  addUnrecognizedEnum: boolean;
 };
 
 export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, parameter: string): FileSpec {
@@ -420,7 +421,8 @@ function generateEnum(
       options.stringEnums ? `"${valueDesc.name}"` : valueDesc.number.toString()
     );
   });
-  code = code.add(
+  if (options.addUnrecognizedEnum)
+    code = code.add(
     '%L = %L,\n',
     UNRECOGNIZED_ENUM_NAME,
     options.stringEnums ? `"${UNRECOGNIZED_ENUM_NAME}"` : UNRECOGNIZED_ENUM_VALUE.toString()
@@ -429,7 +431,7 @@ function generateEnum(
 
   if (options.outputJsonMethods) {
     code = code.add('\n');
-    code = code.addFunction(generateEnumFromJson(fullName, enumDesc));
+    code = code.addFunction(generateEnumFromJson(fullName, enumDesc, options));
     code = code.add('\n');
     code = code.addFunction(generateEnumToJson(fullName, enumDesc));
   }
@@ -438,7 +440,7 @@ function generateEnum(
 }
 
 /** Generates a function with a big switch statement to decode JSON -> our enum. */
-function generateEnumFromJson(fullName: string, enumDesc: EnumDescriptorProto): FunctionSpec {
+function generateEnumFromJson(fullName: string, enumDesc: EnumDescriptorProto, options: Options): FunctionSpec {
   let func = FunctionSpec.create(`${camelCase(fullName)}FromJSON`)
     .addModifiers(Modifier.EXPORT)
     .addParameter('object', 'any')
@@ -450,12 +452,16 @@ function generateEnumFromJson(fullName: string, enumDesc: EnumDescriptorProto): 
       .add('case %S:%>\n', valueDesc.name)
       .addStatement('return %L.%L%<', fullName, valueDesc.name);
   }
-  body = body
-    .add('case %L:\n', UNRECOGNIZED_ENUM_VALUE)
-    .add('case %S:\n', UNRECOGNIZED_ENUM_NAME)
-    .add('default:%>\n')
-    .addStatement('return %L.%L%<', fullName, UNRECOGNIZED_ENUM_NAME)
-    .endControlFlow();
+  if (options.addUnrecognizedEnum) {
+    body = body
+      .add('case %L:\n', UNRECOGNIZED_ENUM_VALUE)
+      .add('case %S:\n', UNRECOGNIZED_ENUM_NAME)
+      .add('default:%>\n')
+      .addStatement('return %L.%L%<', fullName, UNRECOGNIZED_ENUM_NAME);
+  } else {
+    body = body.add('default:%>\n').addStatement('return %L%<', 'object');
+  }
+  body = body.endControlFlow();
   return func.addCodeBlock(body);
 }
 
