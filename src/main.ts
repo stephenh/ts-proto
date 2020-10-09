@@ -10,6 +10,7 @@ import {
   isBytes,
   isEnum,
   isLong,
+  isLongValueType,
   isMapType,
   isMessage,
   isPrimitive,
@@ -886,7 +887,12 @@ function generateFromJson(
       } else if (isTimestamp(field)) {
         return CodeBlock.of('fromJsonTimestamp(%L)', from);
       } else if (isValueType(field)) {
-        return CodeBlock.of('%L(%L)', capitalize(valueTypeName(field).toString()), from);
+        const valueType = valueTypeName(field.typeName, options)!;
+        if (isLongValueType(field)) {
+          return CodeBlock.of('%L.fromValue(%L)', capitalize(valueType.toString()), from);
+        } else {
+          return CodeBlock.of('%L(%L)', capitalize(valueType.toString()), from);
+        }
       } else if (isMessage(field)) {
         if (isRepeated(field) && isMapType(typeMap, messageDesc, field, options)) {
           const valueType = (typeMap.get(field.typeName)![2] as DescriptorProto).field[1];
@@ -1170,7 +1176,7 @@ function generateFromPartial(
         );
     } else {
       func = func.beginControlFlow('if (object.%L !== undefined && object.%L !== null)', fieldName, fieldName);
-      if (isLong(field) && options.forceLong === LongOption.LONG) {
+      if ((isLong(field) || isLongValueType(field)) && options.forceLong === LongOption.LONG) {
         func = func.addStatement(
           `message.%L = %L as %L`,
           fieldName,
