@@ -36,6 +36,7 @@ import {
 } from './generate-nestjs';
 import {
   generateDataLoadersType,
+  generateDataLoaderOptionsType,
   generateRpcType,
   generateService,
   generateServiceClientImpl,
@@ -74,9 +75,11 @@ export type Options = {
   snakeToCamel: boolean;
   forceLong: LongOption;
   useOptionals: boolean;
+  useDate: boolean;
   oneof: OneofOption;
   outputEncodeMethods: boolean;
   outputJsonMethods: boolean;
+  stringEnums: boolean;
   outputClientImpl: boolean | 'grpc-web';
   addGrpcMetadata: boolean;
   addNestjsRestParameter: boolean;
@@ -208,6 +211,7 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
   }
 
   if (options.useContext) {
+    file = file.addInterface(generateDataLoaderOptionsType());
     file = file.addInterface(generateDataLoadersType());
   }
 
@@ -410,9 +414,17 @@ function generateEnum(
   enumDesc.value.forEach((valueDesc, index) => {
     const info = sourceInfo.lookup(Fields.enum.value, index);
     maybeAddComment(info, (text) => (code = code.add(`/** ${valueDesc.name} - ${text} */\n`)));
-    code = code.add('%L = %L,\n', valueDesc.name, valueDesc.number.toString());
+    code = code.add(
+      '%L = %L,\n',
+      valueDesc.name,
+      options.stringEnums ? `"${valueDesc.name}"` : valueDesc.number.toString()
+    );
   });
-  code = code.add('%L = %L,\n', UNRECOGNIZED_ENUM_NAME, UNRECOGNIZED_ENUM_VALUE.toString());
+  code = code.add(
+    '%L = %L,\n',
+    UNRECOGNIZED_ENUM_NAME,
+    options.stringEnums ? `"${UNRECOGNIZED_ENUM_NAME}"` : UNRECOGNIZED_ENUM_VALUE.toString()
+  );
   code = code.endControlFlow();
 
   if (options.outputJsonMethods) {
