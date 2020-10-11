@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
 
 package hero;
 
@@ -24,6 +25,7 @@ message VillainById {
 message Hero {
     int32 id = 1;
     string name = 2;
+    google.protobuf.Timestamp birth_date = 3;
 }
 
 message Villain {

@@ -41,6 +41,7 @@ export function defaultOptions(): Options {
     snakeToCamel: true,
     forceLong: LongOption.NUMBER,
     useOptionals: false,
+    useDate: true,
     oneof: OneofOption.PROPERTIES,
     lowerCaseServiceMethods: false,
     outputEncodeMethods: true,
@@ -74,6 +75,9 @@ export function optionsFromParameter(parameter: string): Options {
     if (parameter.includes('useOptionals=true')) {
       options.useOptionals = true;
     }
+    if (parameter.includes('useDate=false')) {
+      options.useDate = false;
+    }
     if (parameter.includes('oneof=properties')) {
       options.oneof = OneofOption.PROPERTIES;
     }
@@ -106,6 +110,7 @@ export function optionsFromParameter(parameter: string): Options {
       options.outputEncodeMethods = false;
       options.outputJsonMethods = false;
       options.outputClientImpl = false;
+      options.useDate = false;
 
       if (parameter.includes('addGrpcMetadata=true')) {
         options.addGrpcMetadata = true;
