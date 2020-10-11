@@ -45,6 +45,7 @@ export function defaultOptions(): Options {
     lowerCaseServiceMethods: false,
     outputEncodeMethods: true,
     outputJsonMethods: true,
+    stringEnums: false,
     outputClientImpl: true,
     returnObservable: false,
     addGrpcMetadata: false,
@@ -84,6 +85,9 @@ export function optionsFromParameter(parameter: string): Options {
     }
     if (parameter.includes('outputEncodeMethods=false')) {
       options.outputEncodeMethods = false;
+      if (parameter.includes('stringEnums=true')) {
+        options.stringEnums = true;
+      }
     }
     if (parameter.includes('outputJsonMethods=false')) {
       options.outputJsonMethods = false;

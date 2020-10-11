@@ -253,6 +253,12 @@ protoc --plugin=node_modules/ts-proto/protoc-gen-ts_proto ./batching.proto -I.
 
   This is also useful if you want "only types".
 
+- With `--ts_proto_opt=stringEnums=true`, the generated enum types will be string-based instead of int-based.
+
+  This is useful if you want "only types" and are using a gRPC REST Gateway configured to serialize enums as strings.
+
+  (Requires `outputEncodeMethods=false`.)
+
 - With `--ts_proto_opt=outputClientImpl=false`, the client implementations, i.e. `FooServiceClientImpl`, that implement the client-side (in Twirp, see next option for `grpc-web`) RPC interfaces will not be output.
 
 - With `--ts_proto_opt=outputClientImpl=grpc-web`, the client implementations, i.e. `FooServiceClientImpl`, will use the [@improbable-eng/grpc-web](https://github.com/improbable-eng/grpc-web) library at runtime to send grpc messages to a grpc-web backend.
