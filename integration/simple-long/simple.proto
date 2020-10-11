@@ -75,6 +75,7 @@ message SimpleWithWrappers {
   google.protobuf.StringValue name = 1;
   google.protobuf.Int32Value age = 2;
   google.protobuf.BoolValue enabled = 3;
+  google.protobuf.Int64Value bananas = 4;
   repeated google.protobuf.Int32Value coins = 6;
   repeated google.protobuf.StringValue snacks = 7;
 }
