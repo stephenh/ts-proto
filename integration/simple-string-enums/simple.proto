@@ -1,0 +1,13 @@
+syntax = "proto3";
+package simple;
+
+message Simple {
+  string name = 1;
+  StateEnum state = 4;
+}
+
+enum StateEnum {
+  UNKNOWN = 0;
+  ON = 2;
+  OFF = 3;
+}

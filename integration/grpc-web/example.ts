@@ -832,8 +832,7 @@ const DashAPICredsDeleteDesc: UnaryMethodDefinitionish = {
     ,
   } as any,
 }
-import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
-type UnaryMethodDefinitionish = UnaryMethodDefinition<any, any>;
+type UnaryMethodDefinitionish = grpc.UnaryMethodDefinition<any, any>;
 
 type Builtin = Date | Function | Uint8Array | string | number | undefined;
 type DeepPartial<T> = T extends Builtin

@@ -1,5 +1,3 @@
-import { google } from '../build/pbjs';
-import { requestType, responsePromise, responseType, TypeMap } from './types';
 import {
   ClassSpec,
   CodeBlock,
@@ -10,7 +8,9 @@ import {
   PropertySpec,
   TypeNames,
 } from 'ts-poet';
+import { google } from '../build/pbjs';
 import { Options } from './main';
+import { requestType, responsePromise, responseType, TypeMap } from './types';
 import MethodDescriptorProto = google.protobuf.MethodDescriptorProto;
 import FileDescriptorProto = google.protobuf.FileDescriptorProto;
 import ServiceDescriptorProto = google.protobuf.ServiceDescriptorProto;
@@ -148,9 +148,7 @@ function methodDescName(serviceDesc: ServiceDescriptorProto, methodDesc: MethodD
 export function addGrpcWebMisc(options: Options, _file: FileSpec): FileSpec {
   let file = _file;
   file = file.addCode(
-    CodeBlock.empty()
-      .addStatement('import UnaryMethodDefinition = grpc.UnaryMethodDefinition')
-      .addStatement('type UnaryMethodDefinitionish = UnaryMethodDefinition<any, any>')
+    CodeBlock.empty().addStatement('type UnaryMethodDefinitionish = grpc.UnaryMethodDefinition<any, any>')
   );
   file = file.addInterface(generateGrpcWebRpcType());
   file = file.addClass(generateGrpcWebImpl());
