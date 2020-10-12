@@ -1,4 +1,14 @@
 
+## v1.36.0
+
+* Fix `forceLong` behavior when using wrapper types (Graham)
+* Add `rpcDataLoaderOptions` (Felix Mo)
+* Add `useDate` option to disable `java.util.Date` mapping (Graham)
+  * This is primarily useful for NestJS which can only encode the original `google.protobuf.Timestamp` type
+* Add `stringEnums` option (Bastian Eicher)
+  * Note this is not supported in the binary `encode`/`decode` methods yet
+* Avoid unnecessary `import =` usage (Graham)
+
 ## v1.35.1
 
 * Fix maps of enums (@ahmadj-levelbenefits)
