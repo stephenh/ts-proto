@@ -1,5 +1,5 @@
 
-## v1.36.0
+## v1.37.0
 
 * Fix `forceLong` behavior when using wrapper types (Graham)
 * Add `rpcDataLoaderOptions` (Felix Mo)
@@ -8,6 +8,10 @@
 * Add `stringEnums` option (Bastian Eicher)
   * Note this is not supported in the binary `encode`/`decode` methods yet
 * Avoid unnecessary `import =` usage (Graham)
+
+## v1.36.0
+
+* Add a `protobufPackage` exported `const` for metadata
 
 ## v1.35.1
 
