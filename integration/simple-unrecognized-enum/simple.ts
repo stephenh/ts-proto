@@ -288,7 +288,7 @@ export function stateEnumFromJSON(object: any): StateEnum {
     case "OFF":
       return StateEnum.OFF;
     default:
-      return object;
+      throw new Error("Unrecognized enum value " + object + " for enum StateEnum");
   }
 }
 
@@ -323,7 +323,7 @@ export function child_TypeFromJSON(object: any): Child_Type {
     case "BAD":
       return Child_Type.BAD;
     default:
-      return object;
+      throw new Error("Unrecognized enum value " + object + " for enum Child_Type");
   }
 }
 
@@ -358,7 +358,7 @@ export function nested_InnerEnumFromJSON(object: any): Nested_InnerEnum {
     case "BAD":
       return Nested_InnerEnum.BAD;
     default:
-      return object;
+      throw new Error("Unrecognized enum value " + object + " for enum Nested_InnerEnum");
   }
 }
 

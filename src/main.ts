@@ -35,23 +35,23 @@ import {
   generateNestjsServiceController,
 } from './generate-nestjs';
 import {
-  generateDataLoadersType,
   generateDataLoaderOptionsType,
+  generateDataLoadersType,
   generateRpcType,
   generateService,
   generateServiceClientImpl,
 } from './generate-services';
-import DescriptorProto = google.protobuf.DescriptorProto;
-import FieldDescriptorProto = google.protobuf.FieldDescriptorProto;
-import FileDescriptorProto = google.protobuf.FileDescriptorProto;
-import EnumDescriptorProto = google.protobuf.EnumDescriptorProto;
-import ServiceDescriptorProto = google.protobuf.ServiceDescriptorProto;
 import {
   addGrpcWebMisc,
   generateGrpcClientImpl,
   generateGrpcMethodDesc,
   generateGrpcServiceDesc,
 } from './generate-grpc-web';
+import DescriptorProto = google.protobuf.DescriptorProto;
+import FieldDescriptorProto = google.protobuf.FieldDescriptorProto;
+import FileDescriptorProto = google.protobuf.FileDescriptorProto;
+import EnumDescriptorProto = google.protobuf.EnumDescriptorProto;
+import ServiceDescriptorProto = google.protobuf.ServiceDescriptorProto;
 
 export enum LongOption {
   NUMBER = 'number',
@@ -423,10 +423,10 @@ function generateEnum(
   });
   if (options.addUnrecognizedEnum)
     code = code.add(
-    '%L = %L,\n',
-    UNRECOGNIZED_ENUM_NAME,
-    options.stringEnums ? `"${UNRECOGNIZED_ENUM_NAME}"` : UNRECOGNIZED_ENUM_VALUE.toString()
-  );
+      '%L = %L,\n',
+      UNRECOGNIZED_ENUM_NAME,
+      options.stringEnums ? `"${UNRECOGNIZED_ENUM_NAME}"` : UNRECOGNIZED_ENUM_VALUE.toString()
+    );
   code = code.endControlFlow();
 
   if (options.outputJsonMethods) {
@@ -459,7 +459,9 @@ function generateEnumFromJson(fullName: string, enumDesc: EnumDescriptorProto, o
       .add('default:%>\n')
       .addStatement('return %L.%L%<', fullName, UNRECOGNIZED_ENUM_NAME);
   } else {
-    body = body.add('default:%>\n').addStatement('return %L%<', 'object');
+    body = body
+      .add('default:%>\n')
+      .addStatement('throw new Error("Unrecognized enum value " + %L + " for enum %L")%<', 'object', fullName);
   }
   body = body.endControlFlow();
   return func.addCodeBlock(body);
@@ -597,6 +599,7 @@ type EnumVisitor = (
   sourceInfo: SourceInfo,
   fullProtoTypeName: string
 ) => void;
+
 export function visit(
   proto: FileDescriptorProto | DescriptorProto,
   sourceInfo: SourceInfo,

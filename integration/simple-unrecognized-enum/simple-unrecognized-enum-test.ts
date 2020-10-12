@@ -1,4 +1,4 @@
-import { Child_Type, Simple, StateEnum } from './simple';
+import { Child_Type, Simple, StateEnum, stateEnumFromJSON } from './simple';
 
 const jan1 = new Date('1970-01-01T00:00:00.000Z');
 
@@ -17,5 +17,11 @@ describe('unrecognized enum', () => {
       thing: undefined
     };
     expect(StateEnum[-1]).not.toBeTruthy();
+  });
+  it('generates an error throw for unrecognized enum values', () => {
+    const unrecognizedValue = 'UnrecognizedValue' as any;
+    expect(() => {
+      stateEnumFromJSON(unrecognizedValue);
+    }).toThrow('Unrecognized enum value ' + unrecognizedValue + ' for enum StateEnum');
   });
 });
