@@ -79,6 +79,9 @@ export function optionsFromParameter(parameter: string): Options {
     if (parameter.includes('useDate=false')) {
       options.useDate = false;
     }
+    if (parameter.includes('timestampAsString=true')) {
+      options.timestampAsString = true;
+    }
     if (parameter.includes('oneof=properties')) {
       options.oneof = OneofOption.PROPERTIES;
     }
@@ -129,9 +132,6 @@ export function optionsFromParameter(parameter: string): Options {
     }
     if (parameter.includes('env=browser')) {
       options.env = EnvOption.BROWSER;
-    }
-    if (parameter.includes('timestampAsString=true')) {
-      options.timestampAsString = true;
     }
   }
   return options;
