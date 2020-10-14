@@ -35,23 +35,23 @@ import {
   generateNestjsServiceController,
 } from './generate-nestjs';
 import {
-  generateDataLoaderOptionsType,
   generateDataLoadersType,
+  generateDataLoaderOptionsType,
   generateRpcType,
   generateService,
   generateServiceClientImpl,
 } from './generate-services';
+import DescriptorProto = google.protobuf.DescriptorProto;
+import FieldDescriptorProto = google.protobuf.FieldDescriptorProto;
+import FileDescriptorProto = google.protobuf.FileDescriptorProto;
+import EnumDescriptorProto = google.protobuf.EnumDescriptorProto;
+import ServiceDescriptorProto = google.protobuf.ServiceDescriptorProto;
 import {
   addGrpcWebMisc,
   generateGrpcClientImpl,
   generateGrpcMethodDesc,
   generateGrpcServiceDesc,
 } from './generate-grpc-web';
-import DescriptorProto = google.protobuf.DescriptorProto;
-import FieldDescriptorProto = google.protobuf.FieldDescriptorProto;
-import FileDescriptorProto = google.protobuf.FileDescriptorProto;
-import EnumDescriptorProto = google.protobuf.EnumDescriptorProto;
-import ServiceDescriptorProto = google.protobuf.ServiceDescriptorProto;
 
 export enum LongOption {
   NUMBER = 'number',
