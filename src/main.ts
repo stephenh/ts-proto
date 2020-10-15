@@ -85,6 +85,7 @@ export type Options = {
   addNestjsRestParameter: boolean;
   returnObservable: boolean;
   lowerCaseServiceMethods: boolean;
+  printDoneInfo: boolean;
   nestJs: boolean;
   env: EnvOption;
 };
@@ -151,15 +152,15 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
         staticMethods = !options.outputEncodeMethods
           ? staticMethods
           : staticMethods
-              .addHashEntry(generateEncode(typeMap, fullName, message, options))
-              .addHashEntry(generateDecode(typeMap, fullName, message, options));
+            .addHashEntry(generateEncode(typeMap, fullName, message, options))
+            .addHashEntry(generateDecode(typeMap, fullName, message, options));
 
         staticMethods = !options.outputJsonMethods
           ? staticMethods
           : staticMethods
-              .addHashEntry(generateFromJson(typeMap, fullName, message, options))
-              .addHashEntry(generateFromPartial(typeMap, fullName, message, options))
-              .addHashEntry(generateToJson(typeMap, fullName, message, options));
+            .addHashEntry(generateFromJson(typeMap, fullName, message, options))
+            .addHashEntry(generateFromPartial(typeMap, fullName, message, options))
+            .addHashEntry(generateToJson(typeMap, fullName, message, options));
 
         staticMethods = staticMethods.endHash().add(';').newLine();
         file = file.addCode(staticMethods);
