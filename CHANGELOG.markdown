@@ -1,4 +1,8 @@
 
+## v1.38.0
+
+* Add `unrecognizedEnum` option for disabling the `UNRECOGNIZED` enum values (ShakedH)
+
 ## v1.37.0
 
 * Fix `forceLong` behavior when using wrapper types (Graham)
