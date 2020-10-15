@@ -53,6 +53,7 @@ export function defaultOptions(): Options {
     addNestjsRestParameter: false,
     nestJs: false,
     env: EnvOption.BOTH,
+    addUnrecognizedEnum: true,
   };
 }
 
@@ -128,6 +129,12 @@ export function optionsFromParameter(parameter: string): Options {
     }
     if (parameter.includes('env=browser')) {
       options.env = EnvOption.BROWSER;
+    }
+    if (parameter.includes('unrecognizedEnum=true')) {
+      options.addUnrecognizedEnum = true;
+    }
+    if (parameter.includes('unrecognizedEnum=false')) {
+      options.addUnrecognizedEnum = false;
     }
   }
   return options;
