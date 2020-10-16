@@ -30,7 +30,6 @@ async function main() {
 
 main()
   .then(() => {
-    process.stderr.write('DONE');
     process.exit(0);
   })
   .catch((e) => {
