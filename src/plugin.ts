@@ -8,17 +8,13 @@ import CodeGeneratorResponse = google.protobuf.compiler.CodeGeneratorResponse;
 import Feature = google.protobuf.compiler.CodeGeneratorResponse.Feature;
 import { FileSpec } from 'ts-poet';
 
-var printDoneInfo;
-
 // this would be the plugin called by the protoc compiler
 async function main() {
   const stdin = await readToBuffer(process.stdin);
   // const json = JSON.parse(stdin.toString());
   // const request = CodeGeneratorRequest.fromObject(json);
   const request = CodeGeneratorRequest.decode(stdin);
-  const options = optionsFromParameter(request.parameter);
-  printDoneInfo = options.printDoneInfo;
-  const typeMap = createTypeMap(request, options);
+  const typeMap = createTypeMap(request, optionsFromParameter(request.parameter));
   const files = request.protoFile.map((file) => {
     const spec = generateFile(typeMap, file, request.parameter);
     return new CodeGeneratorResponse.File({
@@ -34,9 +30,6 @@ async function main() {
 
 main()
   .then(() => {
-    if (printDoneInfo) {
-      process.stderr.write('DONE');
-    }
     process.exit(0);
   })
   .catch((e) => {

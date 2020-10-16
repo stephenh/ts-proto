@@ -51,7 +51,6 @@ export function defaultOptions(): Options {
     returnObservable: false,
     addGrpcMetadata: false,
     addNestjsRestParameter: false,
-    printDoneInfo: true,
     nestJs: false,
     env: EnvOption.BOTH,
   };
@@ -61,9 +60,6 @@ export function optionsFromParameter(parameter: string): Options {
   const options = defaultOptions();
 
   if (parameter) {
-    if (parameter.includes('printDoneInfo=false')) {
-      options.printDoneInfo = false;
-    }
     if (parameter.includes('context=true')) {
       options.useContext = true;
     }
