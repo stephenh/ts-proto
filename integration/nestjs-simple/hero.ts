@@ -1,6 +1,6 @@
+import { Timestamp } from './google/protobuf/timestamp';
 import { Observable } from 'rxjs';
 import { Empty } from './google/protobuf/empty';
-import { Timestamp } from './google/protobuf/timestamp';
 import { GrpcMethod, GrpcStreamMethod } from '@nestjs/microservices';
 
 

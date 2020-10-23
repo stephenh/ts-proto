@@ -53,7 +53,7 @@ export function defaultOptions(): Options {
     addNestjsRestParameter: false,
     nestJs: false,
     env: EnvOption.BOTH,
-    timestampAsString: false,
+    addUnrecognizedEnum: true,
   };
 }
 
@@ -81,9 +81,6 @@ export function optionsFromParameter(parameter: string): Options {
     }
     if (parameter.includes('useDate=string')) {
       options.useDate = DateOption.STRING;
-    }
-    if (parameter.includes('timestampAsString=true')) {
-      options.timestampAsString = true;
     }
     if (parameter.includes('oneof=properties')) {
       options.oneof = OneofOption.PROPERTIES;
@@ -135,6 +132,12 @@ export function optionsFromParameter(parameter: string): Options {
     }
     if (parameter.includes('env=browser')) {
       options.env = EnvOption.BROWSER;
+    }
+    if (parameter.includes('unrecognizedEnum=true')) {
+      options.addUnrecognizedEnum = true;
+    }
+    if (parameter.includes('unrecognizedEnum=false')) {
+      options.addUnrecognizedEnum = false;
     }
   }
   return options;
