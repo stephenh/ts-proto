@@ -1,5 +1,5 @@
 import ReadStream = NodeJS.ReadStream;
-import { Options, LongOption, EnvOption, OneofOption } from './main';
+import { Options, LongOption, EnvOption, OneofOption, DateOption } from './main';
 import { SourceDescription } from './sourceInfo';
 
 export function readToBuffer(stream: ReadStream): Promise<Buffer> {
@@ -41,7 +41,7 @@ export function defaultOptions(): Options {
     snakeToCamel: true,
     forceLong: LongOption.NUMBER,
     useOptionals: false,
-    useDate: true,
+    useDate: DateOption.DATE,
     oneof: OneofOption.PROPERTIES,
     lowerCaseServiceMethods: false,
     outputEncodeMethods: true,
@@ -77,7 +77,10 @@ export function optionsFromParameter(parameter: string): Options {
       options.useOptionals = true;
     }
     if (parameter.includes('useDate=false')) {
-      options.useDate = false;
+      options.useDate = DateOption.TIMESTAMP;
+    }
+    if (parameter.includes('useDate=string')) {
+      options.useDate = DateOption.STRING;
     }
     if (parameter.includes('timestampAsString=true')) {
       options.timestampAsString = true;

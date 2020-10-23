@@ -285,6 +285,8 @@ protoc --plugin=node_modules/ts-proto/protoc-gen-ts_proto ./batching.proto -I.
 
 - With `--ts_proto_opt=useDate=false`, fields of type `google.protobuf.Timestamp` will not be mapped to type `Date` in the generated types.
 
+  Alternatively, if you pass `--ts_proto_opt=useDate=string`, all fields of type `google.protobuf.Timestamp` will be outputted as ISO date strings.
+
 - With `--ts_proto_opt=timestampAsString=true`, the return type of `google.protobuf.Timestamp` field will be `string`.
 
 ### Only Types

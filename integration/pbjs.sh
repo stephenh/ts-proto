@@ -17,6 +17,14 @@ yarn pbts --no-comments -o integration/simple-long/pbjs.d.ts integration/simple-
 yarn pbjs --force-message --force-long -t static-module -o integration/simple-long-string/pbjs.js integration/simple-long-string/simple.proto
 yarn pbts --no-comments -o integration/simple-long-string/pbjs.d.ts integration/simple-long-string/pbjs.js
 
+# simple-date-string
+yarn pbjs --force-message --force-number -t static-module -o integration/simple-date-string/pbjs.js integration/simple-date-string/simple.proto
+yarn pbts --no-comments -o integration/simple-date-string/pbjs.d.ts integration/simple-date-string/pbjs.js
+
+# simple-date-timestamp
+yarn pbjs --force-message --force-number -t static-module -o integration/simple-date-timestamp/pbjs.js integration/simple-date-timestamp/simple.proto
+yarn pbts --no-comments -o integration/simple-date-timestamp/pbjs.d.ts integration/simple-date-timestamp/pbjs.js
+
 # vector-tile/
 yarn pbjs --force-message --force-number -t static-module -o integration/vector-tile/pbjs.js integration/vector-tile/vector_tile.proto
 yarn pbts --no-comments -o integration/vector-tile/pbjs.d.ts integration/vector-tile/pbjs.js

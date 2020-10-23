@@ -1,6 +1,6 @@
 import { google } from '../build/pbjs';
 import { CodeBlock, Member, TypeName, TypeNames } from 'ts-poet';
-import { EnvOption, LongOption, OneofOption, Options, visit } from './main';
+import { DateOption, EnvOption, LongOption, OneofOption, Options, visit } from './main';
 import { fail } from './utils';
 import SourceInfo from './sourceInfo';
 import { camelCase } from './case';
@@ -289,6 +289,10 @@ export function isTimestamp(field: FieldDescriptorProto): boolean {
   return field.typeName === '.google.protobuf.Timestamp';
 }
 
+export function isProcessableTimestamp(field: FieldDescriptorProto, options: Options): boolean {
+  return isTimestamp(field) && options.useDate !== DateOption.TIMESTAMP;
+}
+
 export function isValueType(field: FieldDescriptorProto): boolean {
   return valueTypeName(field.typeName) !== undefined;
 }
@@ -354,10 +358,10 @@ export function messageToTypeName(
   }
   // Look for other special prototypes like Timestamp that aren't technically wrapper types
   if (!typeOptions.keepValueType && protoType === '.google.protobuf.Timestamp') {
-    if (options.useDate) {
+    if (options.useDate === DateOption.DATE) {
       return TypeNames.DATE;
     }
-    if (options.timestampAsString) {
+    if (options.useDate === DateOption.STRING) {
       return TypeNames.STRING;
     }
   }

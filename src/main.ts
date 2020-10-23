@@ -14,6 +14,7 @@ import {
   isMapType,
   isMessage,
   isPrimitive,
+  isProcessableTimestamp,
   isRepeated,
   isTimestamp,
   isValueType,
@@ -70,12 +71,18 @@ export enum OneofOption {
   UNIONS = 'unions',
 }
 
+export enum DateOption {
+  DATE = 'date',
+  TIMESTAMP = 'timestamp',
+  STRING = 'string',
+}
+
 export type Options = {
   useContext: boolean;
   snakeToCamel: boolean;
   forceLong: LongOption;
   useOptionals: boolean;
-  useDate: boolean;
+  useDate: boolean | DateOption;
   oneof: OneofOption;
   outputEncodeMethods: boolean;
   outputJsonMethods: boolean;
@@ -346,55 +353,77 @@ function addTimestampMethods(file: FileSpec, options: Options): FileSpec {
   const timestampType = 'Timestamp@./google/protobuf/timestamp';
 
   let secondsCodeLine = 'const seconds = date.getTime() / 1_000';
-  let toNumberCode = 't.seconds';
+  let toNumberCode = 'value.seconds';
   if (options.forceLong === LongOption.LONG) {
-    toNumberCode = 't.seconds.toNumber()';
+    toNumberCode = 'value.seconds.toNumber()';
     secondsCodeLine = 'const seconds = numberToLong(date.getTime() / 1_000)';
   } else if (options.forceLong === LongOption.STRING) {
-    toNumberCode = 'Number(t.seconds)';
+    toNumberCode = 'Number(value.seconds)';
     secondsCodeLine = 'const seconds = (date.getTime() / 1_000).toString()';
   }
 
+  let returnType = 'Date';
+  let toTimestampCodeBlock = CodeBlock.empty()
+    .addStatement(secondsCodeLine)
+    .addStatement('const nanos = (date.getTime() %% 1_000) * 1_000_000')
+    .addStatement('return { seconds, nanos }');
+  let fromTimestampCodeBlock = CodeBlock.empty()
+    .addStatement('let millis = %L * 1_000', toNumberCode)
+    .addStatement('millis += value.nanos / 1_000_000')
+    .addStatement('return new Date(millis)')
+    
+
   if (options.outputJsonMethods) {
+    let fromJsonTimestampCodeBlock = CodeBlock.empty()
+      .beginControlFlow('if (o instanceof Date)')
+      .addStatement('return o')
+      .nextControlFlow('else if (typeof o === "string")')
+      .addStatement('return new Date(o)')
+      .nextControlFlow('else')
+      .addStatement('return fromTimestamp(Timestamp.fromJSON(o))')
+      .endControlFlow();
+
+    if (options.useDate === DateOption.STRING) {
+      returnType = 'string';
+      fromJsonTimestampCodeBlock = CodeBlock.empty()
+        .beginControlFlow('if (o instanceof Date)')
+        .addStatement('return o.toISOString()')
+        .nextControlFlow('else if (typeof o === "string")')
+        .addStatement('return o')
+        .nextControlFlow('else')
+        .addStatement('return fromTimestamp(Timestamp.fromJSON(o))')
+        .endControlFlow();
+      toTimestampCodeBlock = CodeBlock.empty()
+        .addStatement('const date = new Date(value)')
+        .addStatement(secondsCodeLine)
+        .addStatement('const nanos = (date.getTime() %% 1_000) * 1_000_000')
+        .addStatement('return { seconds, nanos }');
+      fromTimestampCodeBlock = CodeBlock.empty()
+        .addStatement('let millis = %L * 1_000', toNumberCode)
+        .addStatement('millis += value.nanos / 1_000_000')
+        .addStatement('return new Date(millis).toISOString()')
+    }
+    
     file = file.addFunction(
       FunctionSpec.create('fromJsonTimestamp')
         .addParameter('o', 'any')
-        .returns('Date')
-        .addCodeBlock(
-          CodeBlock.empty()
-            .beginControlFlow('if (o instanceof Date)')
-            .addStatement('return o')
-            .nextControlFlow('else if (typeof o === "string")')
-            .addStatement('return new Date(o)')
-            .nextControlFlow('else')
-            .addStatement('return fromTimestamp(Timestamp.fromJSON(o))')
-            .endControlFlow()
-        )
+        .returns(returnType)
+        .addCodeBlock(fromJsonTimestampCodeBlock)
     );
   }
 
   return file
     .addFunction(
       FunctionSpec.create('toTimestamp')
-        .addParameter('date', 'Date')
+        .addParameter('value', returnType)
         .returns(timestampType)
-        .addCodeBlock(
-          CodeBlock.empty()
-            .addStatement(secondsCodeLine)
-            .addStatement('const nanos = (date.getTime() %% 1_000) * 1_000_000')
-            .addStatement('return { seconds, nanos }')
-        )
+        .addCodeBlock(toTimestampCodeBlock)
     )
     .addFunction(
       FunctionSpec.create('fromTimestamp')
-        .addParameter('t', timestampType)
-        .returns('Date')
-        .addCodeBlock(
-          CodeBlock.empty()
-            .addStatement('let millis = %L * 1_000', toNumberCode)
-            .addStatement('millis += t.nanos / 1_000_000')
-            .addStatement('return new Date(millis)')
-        )
+        .addParameter('value', timestampType)
+        .returns(returnType)
+        .addCodeBlock(fromTimestampCodeBlock)
     );
 }
 
@@ -698,11 +727,8 @@ function generateDecode(
         '%T.decode(reader, reader.uint32()).value',
         basicTypeName(typeMap, field, options, { keepValueType: true })
       );
-    } else if (isTimestamp(field)) {
-      readSnippet = CodeBlock.of(
-        'fromTimestamp(%T.decode(reader, reader.uint32()))',
-        basicTypeName(typeMap, field, options, { keepValueType: true })
-      );
+    } else if (isProcessableTimestamp(field, options)) {
+      readSnippet = CodeBlock.of('fromTimestamp(%T.decode(reader, reader.uint32()))', basicTypeName(typeMap, field, options, { keepValueType: true }));
     } else if (isMessage(field)) {
       readSnippet = CodeBlock.of('%T.decode(reader, reader.uint32())', basicTypeName(typeMap, field, options));
     } else {
@@ -769,13 +795,18 @@ function generateEncode(
       writeSnippet = (place) => CodeBlock.of('writer.uint32(%L).%L(%L)', tag, toReaderCall(field), place);
     } else if (isTimestamp(field)) {
       const tag = ((field.number << 3) | 2) >>> 0;
-      writeSnippet = (place) =>
-        CodeBlock.of(
-          '%T.encode(toTimestamp(%L), writer.uint32(%L).fork()).ldelim()',
+      writeSnippet = (place) => {
+        let code = '%T.encode(toTimestamp(%L), writer.uint32(%L).fork()).ldelim()';
+        if (options.useDate === DateOption.TIMESTAMP) {
+          code = '%T.encode(%L, writer.uint32(%L).fork()).ldelim()';
+        }
+        return CodeBlock.of(
+          code,
           basicTypeName(typeMap, field, options, { keepValueType: true }),
           place,
           tag
         );
+      }
     } else if (isValueType(field)) {
       const tag = ((field.number << 3) | 2) >>> 0;
       writeSnippet = (place) =>
@@ -898,7 +929,11 @@ function generateFromJson(
           return CodeBlock.of('%L(%L)', cstr, from);
         }
       } else if (isTimestamp(field)) {
-        return CodeBlock.of('fromJsonTimestamp(%L)', from);
+        let code = 'fromJsonTimestamp(%L)';
+        if (options.useDate === DateOption.TIMESTAMP) {
+          code = 'Timestamp.fromJSON(%L)';
+        }
+        return CodeBlock.of(code, from);
       } else if (isValueType(field)) {
         const valueType = valueTypeName(field.typeName, options)!;
         if (isLongValueType(field)) {
@@ -923,7 +958,7 @@ function generateFromJson(
               const cstr = capitalize(basicTypeName(typeMap, valueType, options).toString());
               return CodeBlock.of('%L(%L)', cstr, from);
             }
-          } else if (isTimestamp(valueType)) {
+          } else if (isProcessableTimestamp(field, options)) {
             return CodeBlock.of('fromJsonTimestamp(%L)', from);
           } else {
             return CodeBlock.of('%T.fromJSON(%L)', basicTypeName(typeMap, valueType, options).toString(), from);
@@ -1011,7 +1046,11 @@ function generateToJson(
           ? CodeBlock.of('%L !== undefined ? %T(%L) : undefined', from, toJson, from)
           : CodeBlock.of('%T(%L)', toJson, from);
       } else if (isTimestamp(field)) {
-        return CodeBlock.of('%L !== undefined ? %L.toISOString() : null', from, from);
+        let code = '%L !== undefined ? %L.toISOString() : null';
+        if (options.useDate !== DateOption.DATE) {
+          code = '%L !== undefined ? %L : null';
+        }
+        return CodeBlock.of(code, from, from);
       } else if (isMapType(typeMap, messageDesc, field, options)) {
         // For map types, drill-in and then admittedly re-hard-code our per-value-type logic
         const valueType = (typeMap.get(field.typeName)![2] as DescriptorProto).field[1];
@@ -1021,7 +1060,14 @@ function generateToJson(
         } else if (isBytes(valueType)) {
           return CodeBlock.of('base64FromBytes(%L)', from);
         } else if (isTimestamp(valueType)) {
-          return CodeBlock.of('%L.toISOString()', from);
+          let code = '%L.toISOString()';
+          if (options.useDate === DateOption.STRING) {
+            code = '%L !== undefined ? %L : null';
+          }
+          if (options.useDate === DateOption.TIMESTAMP) {
+            code = '%L !== undefined ? %L : null';
+          }
+          return CodeBlock.of(code, from, from);
         } else if (isPrimitive(valueType)) {
           return CodeBlock.of('%L', from);
         } else {
@@ -1121,6 +1167,9 @@ function generateFromPartial(
 
     const readSnippet = (from: string): CodeBlock => {
       if (isEnum(field) || isPrimitive(field) || isTimestamp(field) || isValueType(field)) {
+        if (isTimestamp(field) && options.useDate === DateOption.TIMESTAMP) {
+          return CodeBlock.of('%T.fromPartial(%L)', basicTypeName(typeMap, field, options), from);
+        }
         return CodeBlock.of(from);
       } else if (isMessage(field)) {
         if (isRepeated(field) && isMapType(typeMap, messageDesc, field, options)) {
@@ -1134,7 +1183,7 @@ function generateFromPartial(
               const cstr = capitalize(basicTypeName(typeMap, valueType, options).toString());
               return CodeBlock.of('%L(%L)', cstr, from);
             }
-          } else if (isTimestamp(valueType)) {
+          } else if (isProcessableTimestamp(field, options)) {
             return CodeBlock.of('%L', from);
           } else {
             return CodeBlock.of('%T.fromPartial(%L)', basicTypeName(typeMap, valueType, options).toString(), from);
