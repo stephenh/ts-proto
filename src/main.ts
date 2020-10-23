@@ -370,8 +370,7 @@ function addTimestampMethods(file: FileSpec, options: Options): FileSpec {
   let fromTimestampCodeBlock = CodeBlock.empty()
     .addStatement('let millis = %L * 1_000', toNumberCode)
     .addStatement('millis += value.nanos / 1_000_000')
-    .addStatement('return new Date(millis)')
-    
+    .addStatement('return new Date(millis)');
 
   if (options.outputJsonMethods) {
     let fromJsonTimestampCodeBlock = CodeBlock.empty()
@@ -401,9 +400,9 @@ function addTimestampMethods(file: FileSpec, options: Options): FileSpec {
       fromTimestampCodeBlock = CodeBlock.empty()
         .addStatement('let millis = %L * 1_000', toNumberCode)
         .addStatement('millis += value.nanos / 1_000_000')
-        .addStatement('return new Date(millis).toISOString()')
+        .addStatement('return new Date(millis).toISOString()');
     }
-    
+
     file = file.addFunction(
       FunctionSpec.create('fromJsonTimestamp')
         .addParameter('o', 'any')
@@ -736,7 +735,10 @@ function generateDecode(
         basicTypeName(typeMap, field, options, { keepValueType: true })
       );
     } else if (isProcessableTimestamp(field, options)) {
-      readSnippet = CodeBlock.of('fromTimestamp(%T.decode(reader, reader.uint32()))', basicTypeName(typeMap, field, options, { keepValueType: true }));
+      readSnippet = CodeBlock.of(
+        'fromTimestamp(%T.decode(reader, reader.uint32()))',
+        basicTypeName(typeMap, field, options, { keepValueType: true })
+      );
     } else if (isMessage(field)) {
       readSnippet = CodeBlock.of('%T.decode(reader, reader.uint32())', basicTypeName(typeMap, field, options));
     } else {
@@ -808,13 +810,8 @@ function generateEncode(
         if (options.useDate === DateOption.TIMESTAMP) {
           code = '%T.encode(%L, writer.uint32(%L).fork()).ldelim()';
         }
-        return CodeBlock.of(
-          code,
-          basicTypeName(typeMap, field, options, { keepValueType: true }),
-          place,
-          tag
-        );
-      }
+        return CodeBlock.of(code, basicTypeName(typeMap, field, options, { keepValueType: true }), place, tag);
+      };
     } else if (isValueType(field)) {
       const tag = ((field.number << 3) | 2) >>> 0;
       writeSnippet = (place) =>
