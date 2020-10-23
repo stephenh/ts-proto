@@ -250,8 +250,8 @@ function fromJsonTimestamp(o: any): Date {
 }
 
 function toTimestamp(value: Date): Timestamp {
-  const seconds = date.getTime() / 1_000;
-  const nanos = (date.getTime() % 1_000) * 1_000_000;
+  const seconds = value.getTime() / 1_000;
+  const nanos = (value.getTime() % 1_000) * 1_000_000;
   return { seconds, nanos };
 }
 
