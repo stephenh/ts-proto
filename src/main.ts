@@ -511,7 +511,11 @@ function generateEnumToJson(fullName: string, enumDesc: EnumDescriptorProto): Fu
 
 // When useOptionals=true, non-scalar fields are translated into optional properties.
 function isOptionalProperty(field: FieldDescriptorProto, options: Options): boolean {
-  return (options.useOptionals && isMessage(field) && !isRepeated(field)) || field.proto3Optional;
+  return (
+    (options.useOptionals && isMessage(field) && !isRepeated(field)) ||
+    field.proto3Optional ||
+    field.label === FieldDescriptorProto.Label.LABEL_OPTIONAL
+  );
 }
 
 // Create the interface with properties
