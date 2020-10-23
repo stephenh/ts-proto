@@ -352,20 +352,20 @@ type DeepPartial<T> = T extends Builtin
 function addTimestampMethods(file: FileSpec, options: Options): FileSpec {
   const timestampType = 'Timestamp@./google/protobuf/timestamp';
 
-  let secondsCodeLine = 'const seconds = date.getTime() / 1_000';
   let toNumberCode = 'value.seconds';
+  let secondsCodeLine = 'const seconds = value.getTime() / 1_000';
   if (options.forceLong === LongOption.LONG) {
     toNumberCode = 'value.seconds.toNumber()';
-    secondsCodeLine = 'const seconds = numberToLong(date.getTime() / 1_000)';
+    secondsCodeLine = 'const seconds = numberToLong(value.getTime() / 1_000)';
   } else if (options.forceLong === LongOption.STRING) {
     toNumberCode = 'Number(value.seconds)';
-    secondsCodeLine = 'const seconds = (date.getTime() / 1_000).toString()';
+    secondsCodeLine = 'const seconds = (value.getTime() / 1_000).toString()';
   }
 
   let returnType = 'Date';
   let toTimestampCodeBlock = CodeBlock.empty()
     .addStatement(secondsCodeLine)
-    .addStatement('const nanos = (date.getTime() %% 1_000) * 1_000_000')
+    .addStatement('const nanos = (value.getTime() %% 1_000) * 1_000_000')
     .addStatement('return { seconds, nanos }');
   let fromTimestampCodeBlock = CodeBlock.empty()
     .addStatement('let millis = %L * 1_000', toNumberCode)
@@ -394,7 +394,7 @@ function addTimestampMethods(file: FileSpec, options: Options): FileSpec {
         .endControlFlow();
       toTimestampCodeBlock = CodeBlock.empty()
         .addStatement('const date = new Date(value)')
-        .addStatement(secondsCodeLine)
+        .addStatement('const seconds = date.getTime() / 1_000')
         .addStatement('const nanos = (date.getTime() %% 1_000) * 1_000_000')
         .addStatement('return { seconds, nanos }');
       fromTimestampCodeBlock = CodeBlock.empty()
@@ -963,7 +963,7 @@ function generateFromJson(
               const cstr = capitalize(basicTypeName(typeMap, valueType, options).toString());
               return CodeBlock.of('%L(%L)', cstr, from);
             }
-          } else if (isProcessableTimestamp(field, options)) {
+          } else if (isProcessableTimestamp(valueType, options)) {
             return CodeBlock.of('fromJsonTimestamp(%L)', from);
           } else {
             return CodeBlock.of('%T.fromJSON(%L)', basicTypeName(typeMap, valueType, options).toString(), from);
@@ -1072,7 +1072,7 @@ function generateToJson(
           if (options.useDate === DateOption.TIMESTAMP) {
             code = '%L !== undefined ? %L : null';
           }
-          return CodeBlock.of(code, from, from);
+          return CodeBlock.of(code, from);
         } else if (isPrimitive(valueType)) {
           return CodeBlock.of('%L', from);
         } else {
@@ -1188,7 +1188,7 @@ function generateFromPartial(
               const cstr = capitalize(basicTypeName(typeMap, valueType, options).toString());
               return CodeBlock.of('%L(%L)', cstr, from);
             }
-          } else if (isProcessableTimestamp(field, options)) {
+          } else if (isProcessableTimestamp(valueType, options)) {
             return CodeBlock.of('%L', from);
           } else {
             return CodeBlock.of('%T.fromPartial(%L)', basicTypeName(typeMap, valueType, options).toString(), from);
