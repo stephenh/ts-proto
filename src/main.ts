@@ -575,7 +575,7 @@ function generateBaseInstance(typeMap: TypeMap, fullName: string, messageDesc: D
   let baseMessage = PropertySpec.create('base' + fullName, TypeNames.anyType('object')).addModifiers(Modifier.CONST);
   let initialValue = CodeBlock.empty().beginHash();
   messageDesc.field
-    .filter(field => !isWithinOneOf(field))
+    .filter((field) => !isWithinOneOf(field))
     .forEach((field) => {
       let val = defaultValue(typeMap, field, options);
       if (val === 'undefined' || isBytes(field)) {
