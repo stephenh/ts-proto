@@ -25,7 +25,6 @@ import {
   TypeMap,
   valueTypeName,
 } from './types';
-import { asSequence } from 'sequency';
 import SourceInfo, { Fields } from './sourceInfo';
 import { maybeAddComment, optionsFromParameter } from './utils';
 import { camelCase, camelToSnake, capitalize, maybeSnakeToCamel } from './case';
@@ -221,7 +220,7 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
     fileDesc,
     sourceInfo,
     (_, messageType) => {
-      hasAnyTimestamps = hasAnyTimestamps || asSequence(messageType.field).any(isTimestamp);
+      hasAnyTimestamps = hasAnyTimestamps || messageType.field.some(isTimestamp);
     },
     options
   );
@@ -575,8 +574,8 @@ function generateBaseInstance(typeMap: TypeMap, fullName: string, messageDesc: D
   // Create a 'base' instance with default values for decode to use as a prototype
   let baseMessage = PropertySpec.create('base' + fullName, TypeNames.anyType('object')).addModifiers(Modifier.CONST);
   let initialValue = CodeBlock.empty().beginHash();
-  asSequence(messageDesc.field)
-    .filterNot(isWithinOneOf)
+  messageDesc.field
+    .filter(field => !isWithinOneOf(field))
     .forEach((field) => {
       let val = defaultValue(typeMap, field, options);
       if (val === 'undefined' || isBytes(field)) {
