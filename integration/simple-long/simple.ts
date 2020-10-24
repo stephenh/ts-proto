@@ -250,15 +250,15 @@ function fromJsonTimestamp(o: any): Date {
   }
 }
 
-function toTimestamp(date: Date): Timestamp {
-  const seconds = numberToLong(date.getTime() / 1_000);
-  const nanos = (date.getTime() % 1_000) * 1_000_000;
+function toTimestamp(value: Date): Timestamp {
+  const seconds = numberToLong(value.getTime() / 1_000);
+  const nanos = (value.getTime() % 1_000) * 1_000_000;
   return { seconds, nanos };
 }
 
-function fromTimestamp(t: Timestamp): Date {
-  let millis = t.seconds.toNumber() * 1_000;
-  millis += t.nanos / 1_000_000;
+function fromTimestamp(value: Timestamp): Date {
+  let millis = value.seconds.toNumber() * 1_000;
+  millis += value.nanos / 1_000_000;
   return new Date(millis);
 }
 

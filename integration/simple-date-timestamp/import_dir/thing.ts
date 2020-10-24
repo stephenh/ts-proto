@@ -3,7 +3,7 @@ import { Writer, Reader } from 'protobufjs/minimal';
 
 
 export interface ImportedThing {
-  createdAt?: Date;
+  createdAt: Timestamp | undefined;
 }
 
 const baseImportedThing: object = {
@@ -36,7 +36,7 @@ export const protobufPackage = 'simple'
 export const ImportedThing = {
   encode(message: ImportedThing, writer: Writer = Writer.create()): Writer {
     if (message.createdAt !== undefined && message.createdAt !== undefined) {
-      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(10).fork()).ldelim();
+      Timestamp.encode(message.createdAt, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
@@ -48,7 +48,7 @@ export const ImportedThing = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.createdAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.createdAt = Timestamp.decode(reader, reader.uint32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -60,7 +60,7 @@ export const ImportedThing = {
   fromJSON(object: any): ImportedThing {
     const message = { ...baseImportedThing } as ImportedThing;
     if (object.createdAt !== undefined && object.createdAt !== null) {
-      message.createdAt = fromJsonTimestamp(object.createdAt);
+      message.createdAt = Timestamp.fromJSON(object.createdAt);
     } else {
       message.createdAt = undefined;
     }
@@ -69,7 +69,7 @@ export const ImportedThing = {
   fromPartial(object: DeepPartial<ImportedThing>): ImportedThing {
     const message = { ...baseImportedThing } as ImportedThing;
     if (object.createdAt !== undefined && object.createdAt !== null) {
-      message.createdAt = object.createdAt;
+      message.createdAt = Timestamp.fromPartial(object.createdAt);
     } else {
       message.createdAt = undefined;
     }
@@ -77,7 +77,7 @@ export const ImportedThing = {
   },
   toJSON(message: ImportedThing): unknown {
     const obj: any = {};
-    message.createdAt !== undefined && (obj.createdAt = message.createdAt !== undefined ? message.createdAt.toISOString() : null);
+    message.createdAt !== undefined && (obj.createdAt = message.createdAt !== undefined ? message.createdAt : null);
     return obj;
   },
 };

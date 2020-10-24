@@ -1,6 +1,6 @@
 {
   "name": "ts-proto",
-  "version": "1.38.0",
+  "version": "1.39.1",
   "description": "",
   "main": "build/plugin.js",
   "repository": "github:stephenh/ts-proto",
@@ -42,5 +42,8 @@
     "object-hash": "^1.3.1",
     "protobufjs": "^6.8.8",
     "ts-poet": "^1.0.1"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
   }
 }

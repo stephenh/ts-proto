@@ -1,9 +1,9 @@
 //  Adding a comment to the syntax will become the first
 //  comment in the output source file.
 //
+import { Timestamp } from './google/protobuf/timestamp';
 import { ImportedThing } from './import_dir/thing';
 import { Reader, Writer, util, configure } from 'protobufjs/minimal';
-import { Timestamp } from './google/protobuf/timestamp';
 import * as Long from 'long';
 import { StringValue, Int32Value, BoolValue } from './google/protobuf/wrappers';
 
@@ -21,7 +21,7 @@ export interface Simple {
   /**
    *  This comment will also attach
    */
-  createdAt: Date | undefined;
+  createdAt: Timestamp | undefined;
   child: Child | undefined;
   state: StateEnum;
   grandChildren: Child[];
@@ -274,6 +274,7 @@ export enum StateEnum {
   UNKNOWN = 0,
   ON = 2,
   OFF = 3,
+  UNRECOGNIZED = -1,
 }
 
 export function stateEnumFromJSON(object: any): StateEnum {
@@ -287,8 +288,10 @@ export function stateEnumFromJSON(object: any): StateEnum {
     case 3:
     case "OFF":
       return StateEnum.OFF;
+    case -1:
+    case "UNRECOGNIZED":
     default:
-      throw new Error("Unrecognized enum value " + object + " for enum StateEnum");
+      return StateEnum.UNRECOGNIZED;
   }
 }
 
@@ -309,6 +312,7 @@ export enum Child_Type {
   UNKNOWN = 0,
   GOOD = 1,
   BAD = 2,
+  UNRECOGNIZED = -1,
 }
 
 export function child_TypeFromJSON(object: any): Child_Type {
@@ -322,8 +326,10 @@ export function child_TypeFromJSON(object: any): Child_Type {
     case 2:
     case "BAD":
       return Child_Type.BAD;
+    case -1:
+    case "UNRECOGNIZED":
     default:
-      throw new Error("Unrecognized enum value " + object + " for enum Child_Type");
+      return Child_Type.UNRECOGNIZED;
   }
 }
 
@@ -344,6 +350,7 @@ export enum Nested_InnerEnum {
   UNKNOWN_INNER = 0,
   GOOD = 100,
   BAD = 1000,
+  UNRECOGNIZED = -1,
 }
 
 export function nested_InnerEnumFromJSON(object: any): Nested_InnerEnum {
@@ -357,8 +364,10 @@ export function nested_InnerEnumFromJSON(object: any): Nested_InnerEnum {
     case 1000:
     case "BAD":
       return Nested_InnerEnum.BAD;
+    case -1:
+    case "UNRECOGNIZED":
     default:
-      throw new Error("Unrecognized enum value " + object + " for enum Nested_InnerEnum");
+      return Nested_InnerEnum.UNRECOGNIZED;
   }
 }
 
@@ -380,7 +389,7 @@ export const Simple = {
     writer.uint32(10).string(message.name);
     writer.uint32(16).int32(message.age);
     if (message.createdAt !== undefined && message.createdAt !== undefined) {
-      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(74).fork()).ldelim();
+      Timestamp.encode(message.createdAt, writer.uint32(74).fork()).ldelim();
     }
     if (message.child !== undefined && message.child !== undefined) {
       Child.encode(message.child, writer.uint32(26).fork()).ldelim();
@@ -425,7 +434,7 @@ export const Simple = {
           message.age = reader.int32();
           break;
         case 9:
-          message.createdAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.createdAt = Timestamp.decode(reader, reader.uint32());
           break;
         case 3:
           message.child = Child.decode(reader, reader.uint32());
@@ -486,7 +495,7 @@ export const Simple = {
       message.age = 0;
     }
     if (object.createdAt !== undefined && object.createdAt !== null) {
-      message.createdAt = fromJsonTimestamp(object.createdAt);
+      message.createdAt = Timestamp.fromJSON(object.createdAt);
     } else {
       message.createdAt = undefined;
     }
@@ -544,7 +553,7 @@ export const Simple = {
       message.age = 0;
     }
     if (object.createdAt !== undefined && object.createdAt !== null) {
-      message.createdAt = object.createdAt;
+      message.createdAt = Timestamp.fromPartial(object.createdAt);
     } else {
       message.createdAt = undefined;
     }
@@ -589,7 +598,7 @@ export const Simple = {
     const obj: any = {};
     message.name !== undefined && (obj.name = message.name);
     message.age !== undefined && (obj.age = message.age);
-    message.createdAt !== undefined && (obj.createdAt = message.createdAt !== undefined ? message.createdAt.toISOString() : null);
+    message.createdAt !== undefined && (obj.createdAt = message.createdAt !== undefined ? message.createdAt : null);
     message.child !== undefined && (obj.child = message.child ? Child.toJSON(message.child) : undefined);
     message.state !== undefined && (obj.state = stateEnumToJSON(message.state));
     if (message.grandChildren) {

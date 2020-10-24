@@ -3,32 +3,33 @@ import { Writer, Reader } from 'protobufjs/minimal';
 
 
 export interface ImportedThing {
-  createdAt?: Date;
+  createdAt: string | undefined;
 }
 
 const baseImportedThing: object = {
 };
 
-function fromJsonTimestamp(o: any): Date {
+function fromJsonTimestamp(o: any): string {
   if (o instanceof Date) {
-    return o;
+    return o.toISOString();
   } else if (typeof o === "string") {
-    return new Date(o);
+    return o;
   } else {
     return fromTimestamp(Timestamp.fromJSON(o));
   }
 }
 
-function toTimestamp(value: Date): Timestamp {
-  const seconds = value.getTime() / 1_000;
-  const nanos = (value.getTime() % 1_000) * 1_000_000;
+function toTimestamp(value: string): Timestamp {
+  const date = new Date(value);
+  const seconds = date.getTime() / 1_000;
+  const nanos = (date.getTime() % 1_000) * 1_000_000;
   return { seconds, nanos };
 }
 
-function fromTimestamp(value: Timestamp): Date {
+function fromTimestamp(value: Timestamp): string {
   let millis = value.seconds * 1_000;
   millis += value.nanos / 1_000_000;
-  return new Date(millis);
+  return new Date(millis).toISOString();
 }
 
 export const protobufPackage = 'simple'
@@ -77,7 +78,7 @@ export const ImportedThing = {
   },
   toJSON(message: ImportedThing): unknown {
     const obj: any = {};
-    message.createdAt !== undefined && (obj.createdAt = message.createdAt !== undefined ? message.createdAt.toISOString() : null);
+    message.createdAt !== undefined && (obj.createdAt = message.createdAt !== undefined ? message.createdAt : null);
     return obj;
   },
 };

@@ -21,7 +21,7 @@ export interface Simple {
   /**
    *  This comment will also attach
    */
-  createdAt: Date | undefined;
+  createdAt: string | undefined;
   child: Child | undefined;
   state: StateEnum;
   grandChildren: Child[];
@@ -239,26 +239,27 @@ interface Rpc {
 
 }
 
-function fromJsonTimestamp(o: any): Date {
+function fromJsonTimestamp(o: any): string {
   if (o instanceof Date) {
-    return o;
+    return o.toISOString();
   } else if (typeof o === "string") {
-    return new Date(o);
+    return o;
   } else {
     return fromTimestamp(Timestamp.fromJSON(o));
   }
 }
 
-function toTimestamp(value: Date): Timestamp {
-  const seconds = value.getTime() / 1_000;
-  const nanos = (value.getTime() % 1_000) * 1_000_000;
+function toTimestamp(value: string): Timestamp {
+  const date = new Date(value);
+  const seconds = date.getTime() / 1_000;
+  const nanos = (date.getTime() % 1_000) * 1_000_000;
   return { seconds, nanos };
 }
 
-function fromTimestamp(value: Timestamp): Date {
+function fromTimestamp(value: Timestamp): string {
   let millis = value.seconds * 1_000;
   millis += value.nanos / 1_000_000;
-  return new Date(millis);
+  return new Date(millis).toISOString();
 }
 
 function longToNumber(long: Long) {
@@ -274,6 +275,7 @@ export enum StateEnum {
   UNKNOWN = 0,
   ON = 2,
   OFF = 3,
+  UNRECOGNIZED = -1,
 }
 
 export function stateEnumFromJSON(object: any): StateEnum {
@@ -287,8 +289,10 @@ export function stateEnumFromJSON(object: any): StateEnum {
     case 3:
     case "OFF":
       return StateEnum.OFF;
+    case -1:
+    case "UNRECOGNIZED":
     default:
-      throw new Error("Unrecognized enum value " + object + " for enum StateEnum");
+      return StateEnum.UNRECOGNIZED;
   }
 }
 
@@ -309,6 +313,7 @@ export enum Child_Type {
   UNKNOWN = 0,
   GOOD = 1,
   BAD = 2,
+  UNRECOGNIZED = -1,
 }
 
 export function child_TypeFromJSON(object: any): Child_Type {
@@ -322,8 +327,10 @@ export function child_TypeFromJSON(object: any): Child_Type {
     case 2:
     case "BAD":
       return Child_Type.BAD;
+    case -1:
+    case "UNRECOGNIZED":
     default:
-      throw new Error("Unrecognized enum value " + object + " for enum Child_Type");
+      return Child_Type.UNRECOGNIZED;
   }
 }
 
@@ -344,6 +351,7 @@ export enum Nested_InnerEnum {
   UNKNOWN_INNER = 0,
   GOOD = 100,
   BAD = 1000,
+  UNRECOGNIZED = -1,
 }
 
 export function nested_InnerEnumFromJSON(object: any): Nested_InnerEnum {
@@ -357,8 +365,10 @@ export function nested_InnerEnumFromJSON(object: any): Nested_InnerEnum {
     case 1000:
     case "BAD":
       return Nested_InnerEnum.BAD;
+    case -1:
+    case "UNRECOGNIZED":
     default:
-      throw new Error("Unrecognized enum value " + object + " for enum Nested_InnerEnum");
+      return Nested_InnerEnum.UNRECOGNIZED;
   }
 }
 
@@ -589,7 +599,7 @@ export const Simple = {
     const obj: any = {};
     message.name !== undefined && (obj.name = message.name);
     message.age !== undefined && (obj.age = message.age);
-    message.createdAt !== undefined && (obj.createdAt = message.createdAt !== undefined ? message.createdAt.toISOString() : null);
+    message.createdAt !== undefined && (obj.createdAt = message.createdAt !== undefined ? message.createdAt : null);
     message.child !== undefined && (obj.child = message.child ? Child.toJSON(message.child) : undefined);
     message.state !== undefined && (obj.state = stateEnumToJSON(message.state));
     if (message.grandChildren) {
