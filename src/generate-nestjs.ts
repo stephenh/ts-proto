@@ -113,13 +113,8 @@ export function generateNestjsServiceClient(
 
     requestFn = requestFn.addParameter('request', requestType(typeMap, methodDesc, options));
 
-    // Use metadata as last argument for interface only configuration
-    if (options.addGrpcMetadata) {
-      requestFn = requestFn.addParameter(options.addNestjsRestParameter ? 'metadata' : 'metadata?', 'Metadata@grpc');
-    }
-    if (options.addNestjsRestParameter) {
-      requestFn = requestFn.addParameter('...rest', 'any');
-    }
+    // Client Request should always accept an optional metadata argument
+    requestFn = requestFn.addParameter('metadata?', 'Metadata@grpc');
 
     // Return observable since nestjs client always returns an Observable
     requestFn = requestFn.returns(responseObservable(typeMap, methodDesc, options));
