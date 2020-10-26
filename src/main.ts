@@ -879,6 +879,11 @@ function generateEncode(
         )
         .addStatement('%L', writeSnippet(`message.${fieldName}`))
         .endControlFlow();
+    } else if (field.label === FieldDescriptorProto.Label.LABEL_OPTIONAL) {
+      func = func
+        .beginControlFlow('if (message.%L !== undefined)', fieldName)
+        .addStatement('%L', writeSnippet(`message.${fieldName}`))
+        .endControlFlow();
     } else {
       func = func.addStatement('%L', writeSnippet(`message.${fieldName}`));
     }
@@ -1015,7 +1020,9 @@ function generateFromJson(
     if (
       !isRepeated(field) &&
       field.type !== FieldDescriptorProto.Type.TYPE_BYTES &&
-      options.oneof !== OneofOption.UNIONS
+      options.oneof !== OneofOption.UNIONS &&
+      !field.proto3Optional &&
+      field.label !== FieldDescriptorProto.Label.LABEL_OPTIONAL
     ) {
       func = func.nextControlFlow('else');
       func = func.addStatement(
@@ -1258,7 +1265,12 @@ function generateFromPartial(
       }
     }
 
-    if (!isRepeated(field) && options.oneof !== OneofOption.UNIONS) {
+    if (
+      !isRepeated(field) &&
+      options.oneof !== OneofOption.UNIONS &&
+      !field.proto3Optional &&
+      field.label !== FieldDescriptorProto.Label.LABEL_OPTIONAL
+    ) {
       func = func.nextControlFlow('else');
       func = func.addStatement(
         `message.%L = %L`,

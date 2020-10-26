@@ -1,12 +1,15 @@
+/* eslint-disable */
 import { Writer, Reader } from 'protobufjs/minimal';
 
 
 export interface Issue56 {
   test: EnumWithoutZero;
+  foo?: number;
 }
 
 const baseIssue56: object = {
   test: 1,
+  foo: 0,
 };
 
 export const protobufPackage = 'simple'
@@ -46,6 +49,9 @@ export function enumWithoutZeroToJSON(object: EnumWithoutZero): string {
 export const Issue56 = {
   encode(message: Issue56, writer: Writer = Writer.create()): Writer {
     writer.uint32(8).int32(message.test);
+    if (message.foo !== undefined) {
+      writer.uint32(16).int32(message.foo);
+    }
     return writer;
   },
   decode(input: Uint8Array | Reader, length?: number): Issue56 {
@@ -57,6 +63,9 @@ export const Issue56 = {
       switch (tag >>> 3) {
         case 1:
           message.test = reader.int32() as any;
+          break;
+        case 2:
+          message.foo = reader.int32();
           break;
         default:
           reader.skipType(tag & 7);
@@ -72,6 +81,9 @@ export const Issue56 = {
     } else {
       message.test = 1;
     }
+    if (object.foo !== undefined && object.foo !== null) {
+      message.foo = Number(object.foo);
+    }
     return message;
   },
   fromPartial(object: DeepPartial<Issue56>): Issue56 {
@@ -81,11 +93,15 @@ export const Issue56 = {
     } else {
       message.test = 1;
     }
+    if (object.foo !== undefined && object.foo !== null) {
+      message.foo = object.foo;
+    }
     return message;
   },
   toJSON(message: Issue56): unknown {
     const obj: any = {};
     message.test !== undefined && (obj.test = enumWithoutZeroToJSON(message.test));
+    message.foo !== undefined && (obj.foo = message.foo);
     return obj;
   },
 };
