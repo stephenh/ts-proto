@@ -1,0 +1,1 @@
+outputJsonMethods=false,outputClientImpl=false,outputMetaTypings=true

@@ -51,6 +51,7 @@ import {
   generateGrpcMethodDesc,
   generateGrpcServiceDesc,
 } from './generate-grpc-web';
+import { generateMetaTable, generateMetaTypings, generateServiceMetaTypings, getMetaInterfaces } from './generate-meta';
 
 export enum LongOption {
   NUMBER = 'number',
@@ -87,6 +88,7 @@ export type Options = {
   nestJs: boolean;
   env: EnvOption;
   addUnrecognizedEnum: boolean;
+  outputMetaTypings: boolean;
 };
 
 export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, parameter: string): FileSpec {
@@ -226,6 +228,56 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
   );
   if (hasAnyTimestamps && (options.outputJsonMethods || options.outputEncodeMethods)) {
     file = addTimestampMethods(file, options);
+  }
+
+  if (options.outputMetaTypings) {
+    file = getMetaInterfaces().reduce((f, i) => {
+      if (i instanceof InterfaceSpec) {
+        return f.addInterface(i);
+      } else {
+        return f.addTypeAlias(i);
+      }
+    }, file);
+
+    const properties: { name: string; proto: string; obj: string; type: 'service' | 'message' | 'enum' }[] = [];
+    visit(
+      fileDesc,
+      sourceInfo,
+      (fullName, message, sInfo) => {
+        // Use addCode to force append to end of file
+        const propertySpec = generateMetaTypings(typeMap, fullName, message, sInfo, options);
+        file = file.addCode(CodeBlock.of(propertySpec.toString()));
+        properties.push({
+          name: propertySpec.name,
+          proto: fullName,
+          obj: options.outputEncodeMethods ? fullName : 'undefined',
+          type: 'message',
+        });
+      },
+      options,
+      (fullName, enumDesc, sInfo) => {
+        properties.push({
+          name: 'undefined',
+          proto: fullName,
+          obj: fullName,
+          type: 'enum',
+        });
+      }
+    );
+
+    visitServices(fileDesc, sourceInfo, (serviceDesc, sInfo) => {
+      // Use addCode to force append to end of file
+      const propertySpec = generateServiceMetaTypings(typeMap, fileDesc, sInfo, serviceDesc, options);
+      file = file.addCode(CodeBlock.of(propertySpec.toString()));
+      properties.push({
+        name: propertySpec.name,
+        proto: serviceDesc.name,
+        obj: options.outputClientImpl ? serviceDesc.name : 'undefined',
+        type: 'service',
+      });
+    });
+
+    file = file.addCode(CodeBlock.of(generateMetaTable(properties, fileDesc.package).toString()));
   }
 
   const initialOutput = file.toString();
