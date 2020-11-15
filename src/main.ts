@@ -460,7 +460,8 @@ function generateEnumFromJson(fullName: string, enumDesc: EnumDescriptorProto, o
   } else {
     body = body
       .add('default:%>\n')
-      .addStatement('throw new Error("Unrecognized enum value " + %L + " for enum %L")%<', 'object', fullName);
+      // We use globalThis to avoid conflicts on protobuf types named `Error`.
+      .addStatement('throw new globalThis.Error("Unrecognized enum value " + %L + " for enum %L")%<', 'object', fullName);
   }
   body = body.endControlFlow();
   return func.addCodeBlock(body);
