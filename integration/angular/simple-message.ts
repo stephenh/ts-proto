@@ -59,7 +59,7 @@ export const SimpleMessage = {
 };
 
 type Builtin = Date | Function | Uint8Array | string | number | undefined;
-type DeepPartial<T> = T extends Builtin
+export type DeepPartial<T> = T extends Builtin
   ? T
   : T extends Array<infer U>
   ? Array<DeepPartial<U>>
