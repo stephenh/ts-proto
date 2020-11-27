@@ -384,7 +384,6 @@ return new Observable(observer => {
           host: this.host,
           request,
           metadata: maybeCombinedMetadata,
-          transport: grpc.WebsocketTransport(),
           debug: this.options.debug,
           onMessage: (next) => {
             observer.next(next as any);
