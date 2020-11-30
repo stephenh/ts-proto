@@ -201,7 +201,11 @@ export function generateMetaTable(
   packageName: string
 ): PropertySpec {
   const metaTable = PropertySpec.create(
-    'metaPackage' + packageName.split('.').map(p => p[0].toUpperCase() + p.slice(1)).join(''),
+    'metaPackage' +
+      packageName
+        .split('.')
+        .map((p) => p[0].toUpperCase() + p.slice(1))
+        .join(''),
     TypeNames.anonymousType(
       new Member(
         `[key: string]`,
