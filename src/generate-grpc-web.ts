@@ -215,92 +215,8 @@ function generateGrpcWebImplPromise(): ClassSpec {
         .addStatement('this.host = host')
         .addStatement('this.options = options')
     )
-    .addFunction(
-      FunctionSpec.create('unary')
-        .addTypeVariable(t)
-        .addParameter('methodDesc', t)
-        .addParameter('_request', TypeNames.ANY)
-        .addParameter('metadata', maybeMetadata)
-        .returns(TypeNames.PROMISE.param(TypeNames.ANY))
-        .addCodeBlock(
-          CodeBlock.empty().add(
-            `const request = { ..._request, ...methodDesc.requestType };
-            const maybeCombinedMetadata =
-    metadata && this.options.metadata
-      ? new %T({ ...this.options?.metadata.headersMap, ...metadata?.headersMap })
-      : metadata || this.options.metadata;
-return new Promise((resolve, reject) => {
-  %T.unary(methodDesc, {
-    request,
-    host: this.host,
-    metadata: maybeCombinedMetadata,
-    transport: this.options.unaryTransport,
-    debug: this.options.debug,
-    onEnd: function (response) {
-      if (response.status === grpc.Code.OK) {
-        resolve(response.message);
-      } else {
-        const err = new Error(response.statusMessage) as any;
-        err.code = response.status;
-        err.metadata = response.trailers;
-        reject(err);
-      }
-    },
-  });
-});
-`,
-            BrowserHeaders,
-            grpc
-          )
-        )
-    )
-    .addFunction(
-      FunctionSpec.create('invoke')
-        .addTypeVariable(t)
-        .addParameter('methodDesc', t)
-        .addParameter('_request', TypeNames.ANY)
-        .addParameter('metadata', maybeMetadata)
-        .returns(TypeNames.anyType('Observable@rxjs').param(TypeNames.ANY))
-        .addCodeBlock(
-          CodeBlock.empty().add(
-            `const upStreamCodes = [2, 4, 8, 9, 10, 13, 14, 15]; /* Status Response Codes (https://developers.google.com/maps-booking/reference/grpc-api/status_codes) */
-            const DEFAULT_TIMEOUT_TIME: number = 3 /* seconds */ * 1000 /* ms */;
-            const request = { ..._request, ...methodDesc.requestType };
-            const maybeCombinedMetadata =
-    metadata && this.options.metadata
-      ? new %T({ ...this.options?.metadata.headersMap, ...metadata?.headersMap })
-      : metadata || this.options.metadata;
-return new Observable(observer => {
-      const upStream = (() => {
-        %T.invoke(methodDesc, {
-          host: this.host,
-          request,
-          transport: this.options.invokeTransport,
-          metadata: maybeCombinedMetadata,
-          debug: this.options.debug,
-          onMessage: (next) => {
-            observer.next(next as any);
-          },
-           onEnd: (code: %T) => {
-            if (upStreamCodes.find(upStreamCode => code === upStreamCode)) {
-              setTimeout(() => {
-                upStream();
-              }, DEFAULT_TIMEOUT_TIME);
-            }
-          },
-        });
-      });
-
-      upStream();
-    }).pipe(%T());
-`,
-            BrowserHeaders,
-            grpc,
-            Code,
-            share
-          )
-        )
-    );
+    .addFunction(createUnaryMethod(t, maybeMetadata, false))
+    .addFunction(createInvokeMethod(t, maybeMetadata));
 }
 
 function generateGrpcWebImplObservable(): ClassSpec {
@@ -324,16 +240,21 @@ function generateGrpcWebImplObservable(): ClassSpec {
         .addStatement('this.host = host')
         .addStatement('this.options = options')
     )
-    .addFunction(
-      FunctionSpec.create('unary')
-        .addTypeVariable(t)
-        .addParameter('methodDesc', t)
-        .addParameter('_request', TypeNames.ANY)
-        .addParameter('metadata', maybeMetadata)
-        .returns(TypeNames.anyType('Observable@rxjs').param(TypeNames.ANY))
-        .addCodeBlock(
-          CodeBlock.empty().add(
-            `const request = { ..._request, ...methodDesc.requestType };
+    .addFunction(createUnaryMethod(t, maybeMetadata, true))
+    .addFunction(createInvokeMethod(t, maybeMetadata));
+}
+
+function createUnaryMethod(t, maybeMetadata, observable: boolean = false) {
+  return FunctionSpec.create('unary')
+    .addTypeVariable(t)
+    .addParameter('methodDesc', t)
+    .addParameter('_request', TypeNames.ANY)
+    .addParameter('metadata', maybeMetadata)
+    .returns(observable ? TypeNames.anyType('Observable@rxjs').param(TypeNames.ANY) : TypeNames.PROMISE.param(TypeNames.ANY))
+    .addCodeBlock(
+      CodeBlock.empty().add(
+        observable ?
+          `const request = { ..._request, ...methodDesc.requestType };
             const maybeCombinedMetadata =
     metadata && this.options.metadata
       ? new %T({ ...this.options?.metadata.headersMap, ...metadata?.headersMap })
@@ -358,23 +279,49 @@ return new Observable(observer => {
       },
     });
   }).pipe(%T(1));
+` :
+          `const request = { ..._request, ...methodDesc.requestType };
+            const maybeCombinedMetadata =
+    metadata && this.options.metadata
+      ? new %T({ ...this.options?.metadata.headersMap, ...metadata?.headersMap })
+      : metadata || this.options.metadata;
+return new Promise((resolve, reject) => {
+  %T.unary(methodDesc, {
+    request,
+    host: this.host,
+    metadata: maybeCombinedMetadata,
+    transport: this.options.unaryTransport,
+    debug: this.options.debug,
+    onEnd: function (response) {
+      if (response.status === grpc.Code.OK) {
+        resolve(response.message);
+      } else {
+        const err = new Error(response.statusMessage) as any;
+        err.code = response.status;
+        err.metadata = response.trailers;
+        reject(err);
+      }
+    },
+  });
+});
 `,
-            BrowserHeaders,
-            grpc,
-            take
-          )
-        )
+        BrowserHeaders,
+        grpc,
+        take
+      )
     )
-    .addFunction(
-      FunctionSpec.create('invoke')
-        .addTypeVariable(t)
-        .addParameter('methodDesc', t)
-        .addParameter('_request', TypeNames.ANY)
-        .addParameter('metadata', maybeMetadata)
-        .returns(TypeNames.anyType('Observable@rxjs').param(TypeNames.ANY))
-        .addCodeBlock(
-          CodeBlock.empty().add(
-            `const upStreamCodes = [2, 4, 8, 9, 10, 13, 14, 15]; /* Status Response Codes (https://developers.google.com/maps-booking/reference/grpc-api/status_codes) */
+}
+
+function createInvokeMethod(t, maybeMetadata) {
+  return FunctionSpec.create('invoke')
+    .addTypeVariable(t)
+    .addParameter('methodDesc', t)
+    .addParameter('_request', TypeNames.ANY)
+    .addParameter('metadata', maybeMetadata)
+    .returns(TypeNames.anyType('Observable@rxjs').param(TypeNames.ANY))
+    .addCodeBlock(
+      CodeBlock.empty().add(
+        `const upStreamCodes = [2, 4, 8, 9, 10, 13, 14, 15]; /* Status Response Codes (https://developers.google.com/maps-booking/reference/grpc-api/status_codes) */
             const DEFAULT_TIMEOUT_TIME: number = 3 /* seconds */ * 1000 /* ms */;
             const request = { ..._request, ...methodDesc.requestType };
             const maybeCombinedMetadata =
@@ -405,11 +352,10 @@ return new Observable(observer => {
       upStream();
     }).pipe(%T());
 `,
-            BrowserHeaders,
-            grpc,
-            Code,
-            share
-          )
-        )
-    );
+        BrowserHeaders,
+        grpc,
+        Code,
+        share
+      )
+    )
 }
