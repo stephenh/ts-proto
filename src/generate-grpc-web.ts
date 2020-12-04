@@ -197,7 +197,7 @@ function generateGrpcWebRpcType(returnObservable: boolean): InterfaceSpec {
 function generateGrpcWebImplPromise(): ClassSpec {
   const maybeMetadata = TypeNames.unionType(TypeNames.anyType('grpc.Metadata'), TypeNames.UNDEFINED);
   const optionsParam = TypeNames.anonymousType(
-    ['transport?', TypeNames.anyType('grpc.TransportFactory')],
+    ['unaryTransport?', TypeNames.anyType('grpc.TransportFactory')],
     ['invokeTransport?', TypeNames.anyType('grpc.TransportFactory')],
     ['debug?', TypeNames.BOOLEAN],
     ['metadata?', maybeMetadata]
@@ -234,7 +234,7 @@ return new Promise((resolve, reject) => {
     request,
     host: this.host,
     metadata: maybeCombinedMetadata,
-    transport: this.options.transport,
+    transport: this.options.unaryTransport,
     debug: this.options.debug,
     onEnd: function (response) {
       if (response.status === grpc.Code.OK) {
@@ -306,7 +306,7 @@ return new Observable(observer => {
 function generateGrpcWebImplObservable(): ClassSpec {
   const maybeMetadata = TypeNames.unionType(TypeNames.anyType('grpc.Metadata'), TypeNames.UNDEFINED);
   const optionsParam = TypeNames.anonymousType(
-    ['transport?', TypeNames.anyType('grpc.TransportFactory')],
+    ['unaryTransport?', TypeNames.anyType('grpc.TransportFactory')],
     ['invokeTransport?', TypeNames.anyType('grpc.TransportFactory')],
     ['debug?', TypeNames.BOOLEAN],
     ['metadata?', maybeMetadata]
@@ -343,7 +343,7 @@ return new Observable(observer => {
       request,
       host: this.host,
       metadata: maybeCombinedMetadata,
-      transport: this.options.transport,
+      transport: this.options.unaryTransport,
       debug: this.options.debug,
       onEnd: (next) => {
         if (next.status !== 0) {
