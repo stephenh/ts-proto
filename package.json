@@ -1,6 +1,6 @@
 {
   "name": "@actuosus/ts-proto",
-  "version": "1.39.3",
+  "version": "1.39.4",
   "description": "",
   "main": "build/plugin.js",
   "repository": "github:actuosus/ts-proto",
