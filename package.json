@@ -1,9 +1,9 @@
 {
-  "name": "ts-proto",
-  "version": "1.39.2",
+  "name": "@actuosus/ts-proto",
+  "version": "1.39.3",
   "description": "",
   "main": "build/plugin.js",
-  "repository": "github:stephenh/ts-proto",
+  "repository": "github:actuosus/ts-proto",
   "bin": {
     "protoc-gen-ts_proto": "./protoc-gen-ts_proto"
   },
