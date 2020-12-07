@@ -386,7 +386,7 @@ export function toTypeName(
   field: FieldDescriptorProto,
   options: Options
 ): TypeName {
-  let type = basicTypeName(typeMap, field, options, { keepValueType: true });
+  let type = basicTypeName(typeMap, field, options, { keepValueType: false });
   if (isRepeated(field)) {
     const mapType = detectMapType(typeMap, messageDesc, field, options);
     if (mapType) {
