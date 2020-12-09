@@ -1,7 +1,9 @@
 import { google } from '../build/pbjs';
 import { CodeBlock, Member, TypeName, TypeNames } from 'ts-poet';
-import { Options, visit, LongOption, EnvOption, OneofOption } from './main';
+import { EnvOption, LongOption, OneofOption, Options, visit } from './main';
 import { fail } from './utils';
+import SourceInfo from './sourceInfo';
+import { camelCase } from './case';
 import FieldDescriptorProto = google.protobuf.FieldDescriptorProto;
 import CodeGeneratorRequest = google.protobuf.compiler.CodeGeneratorRequest;
 import EnumDescriptorProto = google.protobuf.EnumDescriptorProto;
@@ -9,8 +11,6 @@ import FileDescriptorProto = google.protobuf.FileDescriptorProto;
 import DescriptorProto = google.protobuf.DescriptorProto;
 import MethodDescriptorProto = google.protobuf.MethodDescriptorProto;
 import ServiceDescriptorProto = google.protobuf.ServiceDescriptorProto;
-import SourceInfo from './sourceInfo';
-import { camelCase } from './case';
 
 /** Based on https://github.com/dcodeIO/protobuf.js/blob/master/src/types.js#L37. */
 export function basicWireType(type: FieldDescriptorProto.Type): number {
@@ -80,13 +80,7 @@ export function basicTypeName(
     case FieldDescriptorProto.Type.TYPE_FIXED64:
     case FieldDescriptorProto.Type.TYPE_SFIXED64:
       // this handles 2^53, Long is only needed for 2^64; this is effectively pbjs's forceNumber
-      if (options.forceLong === LongOption.LONG) {
-        return TypeNames.anyType('Long*long');
-      } else if (options.forceLong === LongOption.STRING) {
-        return TypeNames.STRING;
-      } else {
-        return TypeNames.NUMBER;
-      }
+      return longTypeName(options);
     case FieldDescriptorProto.Type.TYPE_BOOL:
       return TypeNames.BOOLEAN;
     case FieldDescriptorProto.Type.TYPE_STRING:
@@ -214,6 +208,11 @@ export function defaultValue(typeMap: TypeMap, field: FieldDescriptorProto, opti
     case FieldDescriptorProto.Type.TYPE_STRING:
       return '""';
     case FieldDescriptorProto.Type.TYPE_BYTES:
+      if (options.env === EnvOption.NODE) {
+        return 'new Buffer(0)';
+      } else {
+        return 'new Uint8Array()';
+      }
     case FieldDescriptorProto.Type.TYPE_MESSAGE:
     default:
       return 'undefined';
@@ -286,39 +285,51 @@ export function isMapType(
   return detectMapType(typeMap, messageDesc, field, options) !== undefined;
 }
 
-const valueTypes: { [key: string]: TypeName } = {
-  '.google.protobuf.StringValue': TypeNames.STRING,
-  '.google.protobuf.Int32Value': TypeNames.NUMBER,
-  '.google.protobuf.Int64Value': TypeNames.NUMBER,
-  '.google.protobuf.UInt32Value': TypeNames.NUMBER,
-  '.google.protobuf.UInt64Value': TypeNames.NUMBER,
-  '.google.protobuf.BoolValue': TypeNames.BOOLEAN,
-  '.google.protobuf.DoubleValue': TypeNames.NUMBER,
-  '.google.protobuf.FloatValue': TypeNames.NUMBER,
-  '.google.protobuf.BytesValue': TypeNames.anyType('Uint8Array'),
-};
-
-const mappedTypes: { [key: string]: TypeName } = {
-  '.google.protobuf.Timestamp': TypeNames.DATE,
-};
-
 export function isTimestamp(field: FieldDescriptorProto): boolean {
   return field.typeName === '.google.protobuf.Timestamp';
 }
 
 export function isValueType(field: FieldDescriptorProto): boolean {
-  return field.typeName in valueTypes;
+  return valueTypeName(field.typeName) !== undefined;
+}
+
+export function isLongValueType(field: FieldDescriptorProto): boolean {
+  return field.typeName === '.google.protobuf.Int64Value' || field.typeName === '.google.protobuf.UInt64Value';
 }
 
 export function isEmptyType(typeName: string): boolean {
   return typeName === '.google.protobuf.Empty';
 }
 
-export function valueTypeName(field: FieldDescriptorProto): TypeName {
-  if (!isValueType(field)) {
-    throw new Error('Type is not a valueType: ' + field.typeName);
+export function valueTypeName(typeName: string, options?: Options): TypeName | undefined {
+  switch (typeName) {
+    case '.google.protobuf.StringValue':
+      return TypeNames.STRING;
+    case '.google.protobuf.Int32Value':
+    case '.google.protobuf.UInt32Value':
+    case '.google.protobuf.DoubleValue':
+    case '.google.protobuf.FloatValue':
+      return TypeNames.NUMBER;
+    case '.google.protobuf.Int64Value':
+    case '.google.protobuf.UInt64Value':
+      return options ? longTypeName(options) : TypeNames.NUMBER;
+    case '.google.protobuf.BoolValue':
+      return TypeNames.BOOLEAN;
+    case '.google.protobuf.BytesValue':
+      return TypeNames.anyType('Uint8Array');
+    default:
+      return undefined;
   }
-  return valueTypes[field.typeName];
+}
+
+function longTypeName(options: Options): TypeName {
+  if (options.forceLong === LongOption.LONG) {
+    return TypeNames.anyType('Long*long');
+  } else if (options.forceLong === LongOption.STRING) {
+    return TypeNames.STRING;
+  } else {
+    return TypeNames.NUMBER;
+  }
 }
 
 /** Maps `.some_proto_namespace.Message` to a TypeName. */
@@ -334,16 +345,16 @@ export function messageToTypeName(
   // - If the field is repeated, values cannot be undefined.
   // - If useOptionals=true, all non-scalar types are already optional
   //   properties, so there's no need for that union.
-  if (!typeOptions.keepValueType && protoType in valueTypes) {
-    let typeName = valueTypes[protoType];
+  let valueType = valueTypeName(protoType, options);
+  if (!typeOptions.keepValueType && valueType) {
     if (!!typeOptions.repeated || options.useOptionals) {
-      return typeName;
+      return valueType;
     }
-    return TypeNames.unionType(typeName, TypeNames.UNDEFINED);
+    return TypeNames.unionType(valueType, TypeNames.UNDEFINED);
   }
   // Look for other special prototypes like Timestamp that aren't technically wrapper types
-  if (!typeOptions.keepValueType && protoType in mappedTypes) {
-    return mappedTypes[protoType];
+  if (!typeOptions.keepValueType && protoType === '.google.protobuf.Timestamp' && options.useDate) {
+    return TypeNames.DATE;
   }
   const [module, type] = toModuleAndType(typeMap, protoType);
   return TypeNames.importedType(`${type}@./${module}`);

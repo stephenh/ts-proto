@@ -1,0 +1,121 @@
+// Adding a comment to the syntax will become the first
+// comment in the output source file.
+syntax = "proto3";
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/timestamp.proto";
+import "import_dir/thing.proto";
+package simple;
+
+// This comment is seperated by a blank non-comment line, and will detatch from 
+// the following comment on the message Simple.
+
+/** Example comment on the Simple message */
+message Simple {
+  // Name field
+  string name = 1;
+  /* Age */
+  int32 age = 2;
+  google.protobuf.Timestamp created_at = 9; // This comment will also attach
+  Child child = 3;
+  StateEnum state = 4;
+  repeated Child grand_children = 5;
+  repeated int32 coins = 6;
+  repeated string snacks = 7;
+  repeated StateEnum old_states = 8;
+  // A thing (imported from thing)
+  ImportedThing thing = 10;
+}
+
+message Child {
+  enum Type {
+    UNKNOWN = 0;
+    GOOD = 1;
+    BAD = 2;
+  }
+  string name = 1;
+  Type type = 2;
+}
+
+enum StateEnum {
+  UNKNOWN = 0;
+  ON = 2;
+  OFF = 3;
+}
+
+message Nested {
+  string name = 1;
+  InnerMessage message = 2;
+  InnerEnum state = 3;
+
+  // Comment for a nested message */
+  message InnerMessage {
+    string name = 1;
+    DeepMessage deep = 2;
+
+    message DeepMessage {
+      string name = 1;
+    }
+  }
+
+  enum InnerEnum {
+    UNKNOWN_INNER = 0;
+    GOOD = 100;
+    BAD = 1000;
+  }
+}
+
+message OneOfMessage {
+  oneof name_fields {
+    string first = 1;
+    string last = 2;
+  }
+}
+
+message SimpleWithWrappers {
+  google.protobuf.StringValue name = 1;
+  google.protobuf.Int32Value age = 2;
+  google.protobuf.BoolValue enabled = 3;
+  repeated google.protobuf.Int32Value coins = 6;
+  repeated google.protobuf.StringValue snacks = 7;
+}
+
+message Entity {
+  int32 id = 1;
+}
+
+message SimpleWithMap {
+  map<int32, Entity> entitiesById = 1;
+  map<string, string> nameLookup = 2;
+  map<int32, int32> intLookup = 3;
+}
+
+message SimpleWithSnakeCaseMap {
+  map<int32, Entity> entities_by_id = 1;
+}
+
+service PingService {
+  rpc ping(PingRequest) returns (PingResponse);
+}
+
+message PingRequest {
+  string input = 1;
+}
+
+message PingResponse {
+  string output = 1;
+}
+
+message Numbers {
+  double double = 1;
+  float float = 2;
+  int32 int32 = 3;
+  int64 int64 = 4;
+  uint32 uint32 = 5;
+  uint64 uint64 = 6;
+  sint32 sint32 = 7;
+  sint64 sint64 = 8;
+  fixed32 fixed32 = 9;
+  fixed64 fixed64 = 10;
+  sfixed32 sfixed32 = 11;
+  sfixed64 sfixed64 = 12;
+}

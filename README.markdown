@@ -243,6 +243,8 @@ protoc --plugin=node_modules/ts-proto/protoc-gen-ts_proto ./batching.proto -I.
 
   See the "OneOf Handling" section.
 
+- With `--ts_proto_opt=unrecognizedEnum=false` enums will not contain an `UNRECOGNIZED` key with value of -1.
+
 - With `--ts_proto_opt=lowerCaseServiceMethods=true`, the method names of service methods will be lowered/camel-case, i.e. `service.findFoo` instead of `service.FindFoo`.
 
 - With `--ts_proto_opt=outputEncodeMethods=false`, the `Message.encode` and `Message.decode` methods for working with protobuf-encoded/binary data will not be output.
@@ -252,6 +254,12 @@ protoc --plugin=node_modules/ts-proto/protoc-gen-ts_proto ./batching.proto -I.
 - With `--ts_proto_opt=outputJsonMethods=false`, the `Message.fromJSON` and `Message.toJSON` methods for working with JSON-coded data will not be output.
 
   This is also useful if you want "only types".
+
+- With `--ts_proto_opt=stringEnums=true`, the generated enum types will be string-based instead of int-based.
+
+  This is useful if you want "only types" and are using a gRPC REST Gateway configured to serialize enums as strings.
+
+  (Requires `outputEncodeMethods=false`.)
 
 - With `--ts_proto_opt=outputClientImpl=false`, the client implementations, i.e. `FooServiceClientImpl`, that implement the client-side (in Twirp, see next option for `grpc-web`) RPC interfaces will not be output.
 
@@ -276,6 +284,8 @@ protoc --plugin=node_modules/ts-proto/protoc-gen-ts_proto ./batching.proto -I.
   Specifically `outputEncodeMethods`, `outputJsonMethods`, and `outputClientImpl` will all be false, and `lowerCaseServiceMethods` will be true.
 
   Note that `addGrpcMetadata`, `addNestjsRestParameter` and `returnObservable` will still be false.
+
+- With `--ts_proto_opt=useDate=false`, fields of type `google.protobuf.Timestamp` will not be mapped to type `Date` in the generated types.
 
 ### Only Types
 

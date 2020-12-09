@@ -6,6 +6,8 @@ export interface Message {
 const baseMessage: object = {
 };
 
+export const protobufPackage = ''
+
 export const Message = {
   fromJSON(object: any): Message {
     const message = { ...baseMessage } as Message;
@@ -18,12 +20,14 @@ export const Message = {
     const message = { ...baseMessage } as Message;
     if (object.data !== undefined && object.data !== null) {
       message.data = object.data;
+    } else {
+      message.data = new Uint8Array();
     }
     return message;
   },
   toJSON(message: Message): unknown {
     const obj: any = {};
-    message.data !== undefined && (obj.data = message.data !== undefined ? base64FromBytes(message.data) : undefined);
+    message.data !== undefined && (obj.data = base64FromBytes(message.data !== undefined ? message.data : new Uint8Array()));
     return obj;
   },
 };
@@ -54,7 +58,7 @@ function base64FromBytes(arr: Uint8Array): string {
   return btoa(bin.join(''));
 }
 type Builtin = Date | Function | Uint8Array | string | number | undefined;
-type DeepPartial<T> = T extends Builtin
+export type DeepPartial<T> = T extends Builtin
   ? T
   : T extends Array<infer U>
   ? Array<DeepPartial<U>>

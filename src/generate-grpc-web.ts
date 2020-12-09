@@ -1,5 +1,3 @@
-import { google } from '../build/pbjs';
-import { requestType, responseObservable, responsePromise, responseType, TypeMap } from './types';
 import {
   ClassSpec,
   CodeBlock,
@@ -10,7 +8,9 @@ import {
   PropertySpec,
   TypeNames,
 } from 'ts-poet';
+import { google } from '../build/pbjs';
 import { Options } from './main';
+import { requestType, responsePromise, responseType, TypeMap } from './types';
 import MethodDescriptorProto = google.protobuf.MethodDescriptorProto;
 import FileDescriptorProto = google.protobuf.FileDescriptorProto;
 import ServiceDescriptorProto = google.protobuf.ServiceDescriptorProto;

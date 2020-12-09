@@ -37,14 +37,13 @@ describe('nestjs-simple-test nestjs', () => {
   });
 
   it('should addOneHero', async () => {
-    const emptyResponse = await heroService.addOneHero({ id: 3, name: 'Toon' }).toPromise();
+    const emptyResponse = await heroService.addOneHero({ id: 3, name: 'Toon', birthDate: undefined }).toPromise();
     expect(emptyResponse).toEqual({});
   });
 
-
   it('should findOneHero', async () => {
     const hero = await heroService.findOneHero({ id: 1 }).toPromise();
-    expect(hero).toEqual({ id: 1, name: 'Stephenh' });
+    expect(hero).toEqual({ id: 1, name: 'Stephenh', birthDate: { seconds: 1, nanos: 2 } });
   });
 
   it('should findOneVillain', async () => {
@@ -52,21 +51,21 @@ describe('nestjs-simple-test nestjs', () => {
     expect(villain).toEqual({ id: 1, name: 'John' });
   });
 
-  it('should findManyVillain', done => {
+  it('should findManyVillain', (done) => {
     const villainIdSubject = new Subject<VillainById>();
     const villains: Villain[] = [];
 
     heroService.findManyVillain(villainIdSubject.asObservable()).subscribe({
-      next: villain => {
+      next: (villain) => {
         villains.push(villain);
       },
       complete: () => {
         expect(villains).toEqual([
           { id: 1, name: 'John' },
-          { id: 2, name: 'Doe' }
+          { id: 2, name: 'Doe' },
         ]);
         done();
-      }
+      },
     });
 
     villainIdSubject.next({ id: 1 });

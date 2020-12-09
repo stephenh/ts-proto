@@ -1,0 +1,1 @@
+stringEnums=true,outputEncodeMethods=false,outputJsonMethods=false,outputClientImpl=false
