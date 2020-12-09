@@ -1,4 +1,8 @@
 
+## v1.40.0
+
+* Add support for grpc-web streaming responses (PhilipMantrov)
+
 ## v1.38.0
 
 * Add `unrecognizedEnum` option for disabling the `UNRECOGNIZED` enum values (ShakedH)
