@@ -159,7 +159,9 @@ export function addGrpcWebMisc(options: Options, _file: FileSpec): FileSpec {
   file = file.addCode(
     CodeBlock.empty()
       .addStatement('import UnaryMethodDefinition = grpc.UnaryMethodDefinition')
-      .addStatement('interface UnaryMethodDefinitionishR extends UnaryMethodDefinition<any, any> { requestStream: any; responseStream: any; }')
+      .addStatement(
+        'interface UnaryMethodDefinitionishR extends UnaryMethodDefinition<any, any> { requestStream: any; responseStream: any; }'
+      )
       .addStatement('type UnaryMethodDefinitionish = UnaryMethodDefinitionishR')
   );
   file = file.addInterface(generateGrpcWebRpcType(options.returnObservable));
@@ -250,11 +252,13 @@ function createUnaryMethod(t, maybeMetadata, observable: boolean = false) {
     .addParameter('methodDesc', t)
     .addParameter('_request', TypeNames.ANY)
     .addParameter('metadata', maybeMetadata)
-    .returns(observable ? TypeNames.anyType('Observable@rxjs').param(TypeNames.ANY) : TypeNames.PROMISE.param(TypeNames.ANY))
+    .returns(
+      observable ? TypeNames.anyType('Observable@rxjs').param(TypeNames.ANY) : TypeNames.PROMISE.param(TypeNames.ANY)
+    )
     .addCodeBlock(
       CodeBlock.empty().add(
-        observable ?
-          `const request = { ..._request, ...methodDesc.requestType };
+        observable
+          ? `const request = { ..._request, ...methodDesc.requestType };
             const maybeCombinedMetadata =
     metadata && this.options.metadata
       ? new %T({ ...this.options?.metadata.headersMap, ...metadata?.headersMap })
@@ -279,8 +283,8 @@ return new Observable(observer => {
       },
     });
   }).pipe(%T(1));
-` :
-          `const request = { ..._request, ...methodDesc.requestType };
+`
+          : `const request = { ..._request, ...methodDesc.requestType };
             const maybeCombinedMetadata =
     metadata && this.options.metadata
       ? new %T({ ...this.options?.metadata.headersMap, ...metadata?.headersMap })
@@ -309,7 +313,7 @@ return new Promise((resolve, reject) => {
         grpc,
         take
       )
-    )
+    );
 }
 
 function createInvokeMethod(t, maybeMetadata) {
@@ -357,5 +361,5 @@ return new Observable(observer => {
         Code,
         share
       )
-    )
+    );
 }
