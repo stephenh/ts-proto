@@ -35,6 +35,7 @@ export interface Simple {
   thing: ImportedThing | undefined;
   blobs: Uint8Array[];
   birthday: DateMessage | undefined;
+  blob: Uint8Array;
 }
 
 export interface Child {
@@ -117,6 +118,15 @@ export interface SimpleWithSnakeCaseMap {
 export interface SimpleWithSnakeCaseMap_EntitiesByIdEntry {
   key: number;
   value: Entity | undefined;
+}
+
+export interface SimpleWithMapOfEnums {
+  enumsById: { [key: number]: StateEnum };
+}
+
+export interface SimpleWithMapOfEnums_EnumsByIdEntry {
+  key: number;
+  value: StateEnum;
 }
 
 export interface PingRequest {
@@ -237,6 +247,14 @@ const baseSimpleWithSnakeCaseMap_EntitiesByIdEntry: object = {
   key: 0,
 };
 
+const baseSimpleWithMapOfEnums: object = {
+};
+
+const baseSimpleWithMapOfEnums_EnumsByIdEntry: object = {
+  key: 0,
+  value: 0,
+};
+
 const basePingRequest: object = {
   input: "",
 };
@@ -322,6 +340,8 @@ function longToNumber(long: Long) {
   }
   return long.toNumber();
 }
+
+export const protobufPackage = 'simple'
 
 export enum StateEnum {
   UNKNOWN = 0,
@@ -473,6 +493,7 @@ export const Simple = {
     if (message.birthday !== undefined && message.birthday !== undefined) {
       DateMessage.encode(message.birthday, writer.uint32(98).fork()).ldelim();
     }
+    writer.uint32(106).bytes(message.blob);
     return writer;
   },
   decode(input: Uint8Array | Reader, length?: number): Simple {
@@ -536,6 +557,9 @@ export const Simple = {
           break;
         case 12:
           message.birthday = DateMessage.decode(reader, reader.uint32());
+          break;
+        case 13:
+          message.blob = reader.bytes();
           break;
         default:
           reader.skipType(tag & 7);
@@ -611,6 +635,9 @@ export const Simple = {
     } else {
       message.birthday = undefined;
     }
+    if (object.blob !== undefined && object.blob !== null) {
+      message.blob = bytesFromBase64(object.blob);
+    }
     return message;
   },
   fromPartial(object: DeepPartial<Simple>): Simple {
@@ -680,6 +707,11 @@ export const Simple = {
     } else {
       message.birthday = undefined;
     }
+    if (object.blob !== undefined && object.blob !== null) {
+      message.blob = object.blob;
+    } else {
+      message.blob = new Uint8Array();
+    }
     return message;
   },
   toJSON(message: Simple): unknown {
@@ -711,11 +743,12 @@ export const Simple = {
     }
     message.thing !== undefined && (obj.thing = message.thing ? ImportedThing.toJSON(message.thing) : undefined);
     if (message.blobs) {
-      obj.blobs = message.blobs.map(e => e !== undefined ? base64FromBytes(e) : undefined);
+      obj.blobs = message.blobs.map(e => base64FromBytes(e !== undefined ? e : new Uint8Array()));
     } else {
       obj.blobs = [];
     }
     message.birthday !== undefined && (obj.birthday = message.birthday ? DateMessage.toJSON(message.birthday) : undefined);
+    message.blob !== undefined && (obj.blob = base64FromBytes(message.blob !== undefined ? message.blob : new Uint8Array()));
     return obj;
   },
 };
@@ -1697,13 +1730,15 @@ export const SimpleWithMap_MapOfBytesEntry = {
     }
     if (object.value !== undefined && object.value !== null) {
       message.value = object.value;
+    } else {
+      message.value = new Uint8Array();
     }
     return message;
   },
   toJSON(message: SimpleWithMap_MapOfBytesEntry): unknown {
     const obj: any = {};
     message.key !== undefined && (obj.key = message.key);
-    message.value !== undefined && (obj.value = message.value !== undefined ? base64FromBytes(message.value) : undefined);
+    message.value !== undefined && (obj.value = base64FromBytes(message.value !== undefined ? message.value : new Uint8Array()));
     return obj;
   },
 };
@@ -1830,6 +1865,130 @@ export const SimpleWithSnakeCaseMap_EntitiesByIdEntry = {
     const obj: any = {};
     message.key !== undefined && (obj.key = message.key);
     message.value !== undefined && (obj.value = message.value ? Entity.toJSON(message.value) : undefined);
+    return obj;
+  },
+};
+
+export const SimpleWithMapOfEnums = {
+  encode(message: SimpleWithMapOfEnums, writer: Writer = Writer.create()): Writer {
+    Object.entries(message.enumsById).forEach(([key, value]) => {
+      SimpleWithMapOfEnums_EnumsByIdEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).ldelim();
+    })
+    return writer;
+  },
+  decode(input: Uint8Array | Reader, length?: number): SimpleWithMapOfEnums {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseSimpleWithMapOfEnums } as SimpleWithMapOfEnums;
+    message.enumsById = {};
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          const entry1 = SimpleWithMapOfEnums_EnumsByIdEntry.decode(reader, reader.uint32());
+          if (entry1.value !== undefined) {
+            message.enumsById[entry1.key] = entry1.value;
+          }
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+  fromJSON(object: any): SimpleWithMapOfEnums {
+    const message = { ...baseSimpleWithMapOfEnums } as SimpleWithMapOfEnums;
+    message.enumsById = {};
+    if (object.enumsById !== undefined && object.enumsById !== null) {
+      Object.entries(object.enumsById).forEach(([key, value]) => {
+        message.enumsById[Number(key)] = value as number;
+      })
+    }
+    return message;
+  },
+  fromPartial(object: DeepPartial<SimpleWithMapOfEnums>): SimpleWithMapOfEnums {
+    const message = { ...baseSimpleWithMapOfEnums } as SimpleWithMapOfEnums;
+    message.enumsById = {};
+    if (object.enumsById !== undefined && object.enumsById !== null) {
+      Object.entries(object.enumsById).forEach(([key, value]) => {
+        if (value !== undefined) {
+          message.enumsById[Number(key)] = value as number;
+        }
+      })
+    }
+    return message;
+  },
+  toJSON(message: SimpleWithMapOfEnums): unknown {
+    const obj: any = {};
+    obj.enumsById = {};
+    if (message.enumsById) {
+      Object.entries(message.enumsById).forEach(([k, v]) => {
+        obj.enumsById[k] = stateEnumToJSON(v);
+      })
+    }
+    return obj;
+  },
+};
+
+export const SimpleWithMapOfEnums_EnumsByIdEntry = {
+  encode(message: SimpleWithMapOfEnums_EnumsByIdEntry, writer: Writer = Writer.create()): Writer {
+    writer.uint32(8).int32(message.key);
+    writer.uint32(16).int32(message.value);
+    return writer;
+  },
+  decode(input: Uint8Array | Reader, length?: number): SimpleWithMapOfEnums_EnumsByIdEntry {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseSimpleWithMapOfEnums_EnumsByIdEntry } as SimpleWithMapOfEnums_EnumsByIdEntry;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.key = reader.int32();
+          break;
+        case 2:
+          message.value = reader.int32() as any;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+  fromJSON(object: any): SimpleWithMapOfEnums_EnumsByIdEntry {
+    const message = { ...baseSimpleWithMapOfEnums_EnumsByIdEntry } as SimpleWithMapOfEnums_EnumsByIdEntry;
+    if (object.key !== undefined && object.key !== null) {
+      message.key = Number(object.key);
+    } else {
+      message.key = 0;
+    }
+    if (object.value !== undefined && object.value !== null) {
+      message.value = stateEnumFromJSON(object.value);
+    } else {
+      message.value = 0;
+    }
+    return message;
+  },
+  fromPartial(object: DeepPartial<SimpleWithMapOfEnums_EnumsByIdEntry>): SimpleWithMapOfEnums_EnumsByIdEntry {
+    const message = { ...baseSimpleWithMapOfEnums_EnumsByIdEntry } as SimpleWithMapOfEnums_EnumsByIdEntry;
+    if (object.key !== undefined && object.key !== null) {
+      message.key = object.key;
+    } else {
+      message.key = 0;
+    }
+    if (object.value !== undefined && object.value !== null) {
+      message.value = object.value;
+    } else {
+      message.value = 0;
+    }
+    return message;
+  },
+  toJSON(message: SimpleWithMapOfEnums_EnumsByIdEntry): unknown {
+    const obj: any = {};
+    message.key !== undefined && (obj.key = message.key);
+    message.value !== undefined && (obj.value = stateEnumToJSON(message.value));
     return obj;
   },
 };
@@ -2354,7 +2513,7 @@ function base64FromBytes(arr: Uint8Array): string {
   return btoa(bin.join(''));
 }
 type Builtin = Date | Function | Uint8Array | string | number | undefined;
-type DeepPartial<T> = T extends Builtin
+export type DeepPartial<T> = T extends Builtin
   ? T
   : T extends Array<infer U>
   ? Array<DeepPartial<U>>

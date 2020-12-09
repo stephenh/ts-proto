@@ -113,6 +113,8 @@ function longToString(long: Long) {
   return long.toString();
 }
 
+export const protobufPackage = 'google.protobuf'
+
 export const Timestamp = {
   encode(message: Timestamp, writer: Writer = Writer.create()): Writer {
     writer.uint32(8).int64(message.seconds);
@@ -181,7 +183,7 @@ if (util.Long !== Long as any) {
 }
 
 type Builtin = Date | Function | Uint8Array | string | number | undefined;
-type DeepPartial<T> = T extends Builtin
+export type DeepPartial<T> = T extends Builtin
   ? T
   : T extends Array<infer U>
   ? Array<DeepPartial<U>>

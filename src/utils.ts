@@ -41,16 +41,19 @@ export function defaultOptions(): Options {
     snakeToCamel: true,
     forceLong: LongOption.NUMBER,
     useOptionals: false,
+    useDate: true,
     oneof: OneofOption.PROPERTIES,
     lowerCaseServiceMethods: false,
     outputEncodeMethods: true,
     outputJsonMethods: true,
+    stringEnums: false,
     outputClientImpl: true,
     returnObservable: false,
     addGrpcMetadata: false,
     addNestjsRestParameter: false,
     nestJs: false,
     env: EnvOption.BOTH,
+    addUnrecognizedEnum: true,
   };
 }
 
@@ -73,6 +76,9 @@ export function optionsFromParameter(parameter: string): Options {
     if (parameter.includes('useOptionals=true')) {
       options.useOptionals = true;
     }
+    if (parameter.includes('useDate=false')) {
+      options.useDate = false;
+    }
     if (parameter.includes('oneof=properties')) {
       options.oneof = OneofOption.PROPERTIES;
     }
@@ -84,6 +90,9 @@ export function optionsFromParameter(parameter: string): Options {
     }
     if (parameter.includes('outputEncodeMethods=false')) {
       options.outputEncodeMethods = false;
+      if (parameter.includes('stringEnums=true')) {
+        options.stringEnums = true;
+      }
     }
     if (parameter.includes('outputJsonMethods=false')) {
       options.outputJsonMethods = false;
@@ -102,6 +111,7 @@ export function optionsFromParameter(parameter: string): Options {
       options.outputEncodeMethods = false;
       options.outputJsonMethods = false;
       options.outputClientImpl = false;
+      options.useDate = false;
 
       if (parameter.includes('addGrpcMetadata=true')) {
         options.addGrpcMetadata = true;
@@ -119,6 +129,12 @@ export function optionsFromParameter(parameter: string): Options {
     }
     if (parameter.includes('env=browser')) {
       options.env = EnvOption.BROWSER;
+    }
+    if (parameter.includes('unrecognizedEnum=true')) {
+      options.addUnrecognizedEnum = true;
+    }
+    if (parameter.includes('unrecognizedEnum=false')) {
+      options.addUnrecognizedEnum = false;
     }
   }
   return options;

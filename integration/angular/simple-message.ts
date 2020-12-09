@@ -9,6 +9,8 @@ const baseSimpleMessage: object = {
   numberField: 0,
 };
 
+export const protobufPackage = 'angular'
+
 export const SimpleMessage = {
   encode(message: SimpleMessage, writer: Writer = Writer.create()): Writer {
     writer.uint32(8).int32(message.numberField);
@@ -57,7 +59,7 @@ export const SimpleMessage = {
 };
 
 type Builtin = Date | Function | Uint8Array | string | number | undefined;
-type DeepPartial<T> = T extends Builtin
+export type DeepPartial<T> = T extends Builtin
   ? T
   : T extends Array<infer U>
   ? Array<DeepPartial<U>>

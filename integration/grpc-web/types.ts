@@ -96,6 +96,8 @@ function longToNumber(long: Long) {
   return long.toNumber();
 }
 
+export const protobufPackage = 'pb'
+
 export const Timestamp = {
   encode(message: Timestamp, writer: Writer = Writer.create()): Writer {
     writer.uint32(8).int64(message.seconds);
@@ -418,16 +420,20 @@ export const IPNet = {
     const message = { ...baseIPNet } as IPNet;
     if (object.ip !== undefined && object.ip !== null) {
       message.ip = object.ip;
+    } else {
+      message.ip = new Uint8Array();
     }
     if (object.mask !== undefined && object.mask !== null) {
       message.mask = object.mask;
+    } else {
+      message.mask = new Uint8Array();
     }
     return message;
   },
   toJSON(message: IPNet): unknown {
     const obj: any = {};
-    message.ip !== undefined && (obj.ip = message.ip !== undefined ? base64FromBytes(message.ip) : undefined);
-    message.mask !== undefined && (obj.mask = message.mask !== undefined ? base64FromBytes(message.mask) : undefined);
+    message.ip !== undefined && (obj.ip = base64FromBytes(message.ip !== undefined ? message.ip : new Uint8Array()));
+    message.mask !== undefined && (obj.mask = base64FromBytes(message.mask !== undefined ? message.mask : new Uint8Array()));
     return obj;
   },
 };
@@ -510,7 +516,7 @@ function base64FromBytes(arr: Uint8Array): string {
   return btoa(bin.join(''));
 }
 type Builtin = Date | Function | Uint8Array | string | number | undefined;
-type DeepPartial<T> = T extends Builtin
+export type DeepPartial<T> = T extends Builtin
   ? T
   : T extends Array<infer U>
   ? Array<DeepPartial<U>>

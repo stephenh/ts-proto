@@ -31,6 +31,8 @@ function fromTimestamp(t: Timestamp): Date {
   return new Date(millis);
 }
 
+export const protobufPackage = 'simple'
+
 export const ImportedThing = {
   encode(message: ImportedThing, writer: Writer = Writer.create()): Writer {
     if (message.createdAt !== undefined && message.createdAt !== undefined) {
@@ -81,7 +83,7 @@ export const ImportedThing = {
 };
 
 type Builtin = Date | Function | Uint8Array | string | number | undefined;
-type DeepPartial<T> = T extends Builtin
+export type DeepPartial<T> = T extends Builtin
   ? T
   : T extends Array<infer U>
   ? Array<DeepPartial<U>>

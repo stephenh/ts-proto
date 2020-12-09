@@ -145,6 +145,8 @@ const baseStringValue: object = {
 const baseBytesValue: object = {
 };
 
+export const protobufPackage = 'google.protobuf'
+
 export const DoubleValue = {
   encode(message: DoubleValue, writer: Writer = Writer.create()): Writer {
     writer.uint32(9).double(message.value);
@@ -554,12 +556,14 @@ export const BytesValue = {
     const message = { ...baseBytesValue } as BytesValue;
     if (object.value !== undefined && object.value !== null) {
       message.value = object.value;
+    } else {
+      message.value = new Uint8Array();
     }
     return message;
   },
   toJSON(message: BytesValue): unknown {
     const obj: any = {};
-    message.value !== undefined && (obj.value = message.value !== undefined ? base64FromBytes(message.value) : undefined);
+    message.value !== undefined && (obj.value = base64FromBytes(message.value !== undefined ? message.value : new Uint8Array()));
     return obj;
   },
 };
@@ -590,7 +594,7 @@ function base64FromBytes(arr: Uint8Array): string {
   return btoa(bin.join(''));
 }
 type Builtin = Date | Function | Uint8Array | string | number | undefined;
-type DeepPartial<T> = T extends Builtin
+export type DeepPartial<T> = T extends Builtin
   ? T
   : T extends Array<infer U>
   ? Array<DeepPartial<U>>

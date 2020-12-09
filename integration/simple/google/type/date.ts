@@ -38,6 +38,8 @@ const baseDateMessage: object = {
   day: 0,
 };
 
+export const protobufPackage = 'google.type'
+
 export const DateMessage = {
   encode(message: DateMessage, writer: Writer = Writer.create()): Writer {
     writer.uint32(8).int32(message.year);
@@ -116,7 +118,7 @@ export const DateMessage = {
 };
 
 type Builtin = Date | Function | Uint8Array | string | number | undefined;
-type DeepPartial<T> = T extends Builtin
+export type DeepPartial<T> = T extends Builtin
   ? T
   : T extends Array<infer U>
   ? Array<DeepPartial<U>>

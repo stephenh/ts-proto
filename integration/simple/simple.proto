@@ -27,6 +27,7 @@ message Simple {
   ImportedThing thing = 10;
   repeated bytes blobs = 11;
   google.type.Date birthday = 12;
+  bytes blob = 13;
 }
 
 message Child {
@@ -96,6 +97,10 @@ message SimpleWithMap {
 
 message SimpleWithSnakeCaseMap {
   map<int32, Entity> entities_by_id = 1;
+}
+
+message SimpleWithMapOfEnums {
+  map<int32, StateEnum> enums_by_id = 1;
 }
 
 service PingService {
