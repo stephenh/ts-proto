@@ -10,13 +10,16 @@ import {
 } from 'ts-poet';
 import { google } from '../build/pbjs';
 import { Options } from './main';
-import { requestType, responsePromise, responseType, TypeMap } from './types';
+import { requestType, responseObservable, responsePromise, responseType, TypeMap } from './types';
 import MethodDescriptorProto = google.protobuf.MethodDescriptorProto;
 import FileDescriptorProto = google.protobuf.FileDescriptorProto;
 import ServiceDescriptorProto = google.protobuf.ServiceDescriptorProto;
 
 const grpc = TypeNames.anyType('grpc@@improbable-eng/grpc-web');
+const share = TypeNames.anyType('share@rxjs/operators');
+const take = TypeNames.anyType('take@rxjs/operators');
 const BrowserHeaders = TypeNames.anyType('BrowserHeaders@browser-headers');
+const Code = TypeNames.anyType('Code@@improbable-eng/grpc-web/dist/typings/Code');
 
 /** Generates a client that uses the `@improbable-web/grpc-web` library. */
 export function generateGrpcClientImpl(
@@ -58,17 +61,23 @@ function generateRpcMethod(
     .addParameter('request', partialInputType)
     .addParameter('metadata?', TypeNames.anyType('grpc.Metadata'))
     .addStatement(
-      'return this.rpc.unary(%L, %T.fromPartial(request), metadata)',
+      methodDesc.serverStreaming
+        ? 'return this.rpc.invoke(%L, %T.fromPartial(request), metadata)'
+        : 'return this.rpc.unary(%L, %T.fromPartial(request), metadata)',
       methodDescName(serviceDesc, methodDesc),
       inputType
     )
-    .returns(responsePromise(typeMap, methodDesc, options));
+    .returns(
+      options.returnObservable || methodDesc.serverStreaming
+        ? responseObservable(typeMap, methodDesc, options)
+        : responsePromise(typeMap, methodDesc, options)
+    );
 }
 
 /** Creates the service descriptor that grpc-web needs at runtime. */
 export function generateGrpcServiceDesc(fileDesc: FileDescriptorProto, serviceDesc: ServiceDescriptorProto): CodeBlock {
   return CodeBlock.empty()
-    .add('const %LDesc = ', serviceDesc.name)
+    .add('export const %LDesc = ', serviceDesc.name)
     .beginHash()
     .addHashEntry('serviceName', CodeBlock.empty().add('%S', `${fileDesc.package}.${serviceDesc.name}`))
     .endHash();
@@ -91,12 +100,12 @@ export function generateGrpcMethodDesc(
   let outputType = responseType(typeMap, methodDesc, options);
   return (
     CodeBlock.empty()
-      .add('const %L: UnaryMethodDefinitionish = ', methodDescName(serviceDesc, methodDesc))
+      .add('export const %L: UnaryMethodDefinitionish = ', methodDescName(serviceDesc, methodDesc))
       .beginHash()
       .addHashEntry('methodName', CodeBlock.empty().add('%S', methodDesc.name))
       .addHashEntry('service', `${serviceDesc.name}Desc`)
       .addHashEntry('requestStream', 'false')
-      .addHashEntry('responseStream', 'false')
+      .addHashEntry('responseStream', methodDesc.serverStreaming ? 'true' : 'false')
       // grpc-web expects this to be a class, but the ts-proto messages are just interfaces.
       //
       // That said, grpc-web's runtime doesn't really use this (at least so far for what ts-proto
@@ -148,33 +157,50 @@ function methodDescName(serviceDesc: ServiceDescriptorProto, methodDesc: MethodD
 export function addGrpcWebMisc(options: Options, _file: FileSpec): FileSpec {
   let file = _file;
   file = file.addCode(
-    CodeBlock.empty().addStatement('type UnaryMethodDefinitionish = grpc.UnaryMethodDefinition<any, any>')
+    CodeBlock.empty()
+      .addStatement('import UnaryMethodDefinition = grpc.UnaryMethodDefinition')
+      .addStatement(
+        'interface UnaryMethodDefinitionishR extends UnaryMethodDefinition<any, any> { requestStream: any; responseStream: any; }'
+      )
+      .addStatement('type UnaryMethodDefinitionish = UnaryMethodDefinitionishR')
   );
-  file = file.addInterface(generateGrpcWebRpcType());
-  file = file.addClass(generateGrpcWebImpl());
+  file = file.addInterface(generateGrpcWebRpcType(options.returnObservable));
+  file = file.addClass(options.returnObservable ? generateGrpcWebImplObservable() : generateGrpcWebImplPromise());
   return file;
 }
 
-/** Makes an `Rpc` interface to decouple from the low-level grpc-web `grpc.unary`/etc. methods. */
-function generateGrpcWebRpcType(): InterfaceSpec {
+/** Makes an `Rpc` interface to decouple from the low-level grpc-web `grpc.invoke and grpc.unary`/etc. methods. */
+function generateGrpcWebRpcType(returnObservable: boolean): InterfaceSpec {
   let rpc = InterfaceSpec.create('Rpc');
-  let fn = FunctionSpec.create('unary');
+  let fnU = FunctionSpec.create('unary');
+  let fnI = FunctionSpec.create('invoke');
   const t = TypeNames.typeVariable('T', TypeNames.bound('UnaryMethodDefinitionish'));
-  fn = fn
+  fnU = fnU
     .addTypeVariable(t)
     .addParameter('methodDesc', t)
     .addParameter('request', TypeNames.ANY)
     .addParameter('metadata', TypeNames.unionType(TypeNames.anyType('grpc.Metadata'), TypeNames.UNDEFINED))
-    .returns(TypeNames.PROMISE.param(TypeNames.ANY));
-  rpc = rpc.addFunction(fn);
+    .returns(
+      returnObservable
+        ? TypeNames.anyType('Observable@rxjs').param(TypeNames.ANY)
+        : TypeNames.PROMISE.param(TypeNames.ANY)
+    );
+  fnI = fnI
+    .addTypeVariable(t)
+    .addParameter('methodDesc', t)
+    .addParameter('request', TypeNames.ANY)
+    .addParameter('metadata', TypeNames.unionType(TypeNames.anyType('grpc.Metadata'), TypeNames.UNDEFINED))
+    .returns(TypeNames.anyType('Observable@rxjs').param(TypeNames.ANY));
+  rpc = rpc.addFunction(fnU).addFunction(fnI);
   return rpc;
 }
 
 /** Implements the `Rpc` interface by making calls using the `grpc.unary` method. */
-function generateGrpcWebImpl(): ClassSpec {
+function generateGrpcWebImplPromise(): ClassSpec {
   const maybeMetadata = TypeNames.unionType(TypeNames.anyType('grpc.Metadata'), TypeNames.UNDEFINED);
   const optionsParam = TypeNames.anonymousType(
-    ['transport?', TypeNames.anyType('grpc.TransportFactory')],
+    ['unaryTransport?', TypeNames.anyType('grpc.TransportFactory')],
+    ['invokeTransport?', TypeNames.anyType('grpc.TransportFactory')],
     ['debug?', TypeNames.BOOLEAN],
     ['metadata?', maybeMetadata]
   );
@@ -191,26 +217,84 @@ function generateGrpcWebImpl(): ClassSpec {
         .addStatement('this.host = host')
         .addStatement('this.options = options')
     )
+    .addFunction(createUnaryMethod(t, maybeMetadata, false))
+    .addFunction(createInvokeMethod(t, maybeMetadata));
+}
+
+function generateGrpcWebImplObservable(): ClassSpec {
+  const maybeMetadata = TypeNames.unionType(TypeNames.anyType('grpc.Metadata'), TypeNames.UNDEFINED);
+  const optionsParam = TypeNames.anonymousType(
+    ['unaryTransport?', TypeNames.anyType('grpc.TransportFactory')],
+    ['invokeTransport?', TypeNames.anyType('grpc.TransportFactory')],
+    ['debug?', TypeNames.BOOLEAN],
+    ['metadata?', maybeMetadata]
+  );
+  const t = TypeNames.typeVariable('T', TypeNames.bound('UnaryMethodDefinitionish'));
+  return ClassSpec.create('GrpcWebImpl')
+    .addModifiers(Modifier.EXPORT)
+    .addProperty(PropertySpec.create('host', TypeNames.STRING).addModifiers(Modifier.PRIVATE))
+    .addProperty(PropertySpec.create('options', optionsParam).addModifiers(Modifier.PRIVATE))
+    .addInterface('Rpc')
     .addFunction(
-      FunctionSpec.create('unary')
-        .addTypeVariable(t)
-        .addParameter('methodDesc', t)
-        .addParameter('_request', TypeNames.ANY)
-        .addParameter('metadata', maybeMetadata)
-        .returns(TypeNames.PROMISE.param(TypeNames.ANY))
-        .addCodeBlock(
-          CodeBlock.empty().add(
-            `const request = { ..._request, ...methodDesc.requestType };
-return new Promise((resolve, reject) => {
-  const maybeCombinedMetadata =
+      FunctionSpec.createConstructor()
+        .addParameter('host', 'string')
+        .addParameter('options', optionsParam)
+        .addStatement('this.host = host')
+        .addStatement('this.options = options')
+    )
+    .addFunction(createUnaryMethod(t, maybeMetadata, true))
+    .addFunction(createInvokeMethod(t, maybeMetadata));
+}
+
+function createUnaryMethod(t, maybeMetadata, observable: boolean = false) {
+  return FunctionSpec.create('unary')
+    .addTypeVariable(t)
+    .addParameter('methodDesc', t)
+    .addParameter('_request', TypeNames.ANY)
+    .addParameter('metadata', maybeMetadata)
+    .returns(
+      observable ? TypeNames.anyType('Observable@rxjs').param(TypeNames.ANY) : TypeNames.PROMISE.param(TypeNames.ANY)
+    )
+    .addCodeBlock(
+      CodeBlock.empty().add(
+        observable
+          ? `const request = { ..._request, ...methodDesc.requestType };
+            const maybeCombinedMetadata =
     metadata && this.options.metadata
       ? new %T({ ...this.options?.metadata.headersMap, ...metadata?.headersMap })
       : metadata || this.options.metadata;
+return new Observable(observer => {
+  %T.unary(methodDesc, {
+      request,
+      host: this.host,
+      metadata: maybeCombinedMetadata,
+      transport: this.options.unaryTransport,
+      debug: this.options.debug,
+      onEnd: (next) => {
+        if (next.status !== 0) {
+          observer.error({
+            code: next.status,
+            message: next.statusMessage,
+          });
+        } else {
+          observer.next(next.message as any);
+          observer.complete();
+        }
+      },
+    });
+  }).pipe(%T(1));
+`
+          : `const request = { ..._request, ...methodDesc.requestType };
+            const maybeCombinedMetadata =
+    metadata && this.options.metadata
+      ? new %T({ ...this.options?.metadata.headersMap, ...metadata?.headersMap })
+      : metadata || this.options.metadata;
+return new Promise((resolve, reject) => {
   %T.unary(methodDesc, {
     request,
     host: this.host,
     metadata: maybeCombinedMetadata,
-    transport: this.options.transport,
+    transport: this.options.unaryTransport,
     debug: this.options.debug,
     onEnd: function (response) {
       if (response.status === grpc.Code.OK) {
@@ -225,9 +309,57 @@ return new Promise((resolve, reject) => {
   });
 });
 `,
-            BrowserHeaders,
-            grpc
-          )
-        )
+        BrowserHeaders,
+        grpc,
+        take
+      )
+    );
+}
+
+function createInvokeMethod(t, maybeMetadata) {
+  return FunctionSpec.create('invoke')
+    .addTypeVariable(t)
+    .addParameter('methodDesc', t)
+    .addParameter('_request', TypeNames.ANY)
+    .addParameter('metadata', maybeMetadata)
+    .returns(TypeNames.anyType('Observable@rxjs').param(TypeNames.ANY))
+    .addCodeBlock(
+      CodeBlock.empty().add(
+        `const upStreamCodes = [2, 4, 8, 9, 10, 13, 14, 15]; /* Status Response Codes (https://developers.google.com/maps-booking/reference/grpc-api/status_codes) */
+            const DEFAULT_TIMEOUT_TIME: number = 3 /* seconds */ * 1000 /* ms */;
+            const request = { ..._request, ...methodDesc.requestType };
+            const maybeCombinedMetadata =
+    metadata && this.options.metadata
+      ? new %T({ ...this.options?.metadata.headersMap, ...metadata?.headersMap })
+      : metadata || this.options.metadata;
+return new Observable(observer => {
+      const upStream = (() => {
+        %T.invoke(methodDesc, {
+          host: this.host,
+          request,
+          transport: this.options.invokeTransport,
+          metadata: maybeCombinedMetadata,
+          debug: this.options.debug,
+          onMessage: (next) => {
+            observer.next(next as any);
+          },
+          onEnd: (code: %T) => {
+            if (upStreamCodes.find(upStreamCode => code === upStreamCode)) {
+              setTimeout(() => {
+                upStream();
+              }, DEFAULT_TIMEOUT_TIME);
+            }
+          },
+        });
+      });
+
+      upStream();
+    }).pipe(%T());
+`,
+        BrowserHeaders,
+        grpc,
+        Code,
+        share
+      )
     );
 }

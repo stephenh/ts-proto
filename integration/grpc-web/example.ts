@@ -1,6 +1,8 @@
 import { ID, Empty } from './types';
+import { Observable } from 'rxjs';
 import { BrowserHeaders } from 'browser-headers';
 import { grpc } from '@improbable-eng/grpc-web';
+import { share } from 'rxjs/operators';
 import { Writer, Reader } from 'protobufjs/minimal';
 
 
@@ -83,6 +85,8 @@ export interface DashState {
 
   UserSettings(request: DeepPartial<Empty>, metadata?: grpc.Metadata): Promise<DashUserSettingsState>;
 
+  ActiveUserSettingsStream(request: DeepPartial<Empty>, metadata?: grpc.Metadata): Observable<DashUserSettingsState>;
+
 }
 
 export class DashStateClientImpl implements DashState {
@@ -95,6 +99,10 @@ export class DashStateClientImpl implements DashState {
 
   UserSettings(request: DeepPartial<Empty>, metadata?: grpc.Metadata): Promise<DashUserSettingsState> {
     return this.rpc.unary(DashStateUserSettingsDesc, Empty.fromPartial(request), metadata);
+  }
+
+  ActiveUserSettingsStream(request: DeepPartial<Empty>, metadata?: grpc.Metadata): Observable<DashUserSettingsState> {
+    return this.rpc.invoke(DashStateActiveUserSettingsStreamDesc, Empty.fromPartial(request), metadata);
   }
 
 }
@@ -140,6 +148,8 @@ interface Rpc {
 
   unary<T extends UnaryMethodDefinitionish>(methodDesc: T, request: any, metadata: grpc.Metadata | undefined): Promise<any>;
 
+  invoke<T extends UnaryMethodDefinitionish>(methodDesc: T, request: any, metadata: grpc.Metadata | undefined): Observable<any>;
+
 }
 
 export class GrpcWebImpl implements Rpc {
@@ -155,11 +165,11 @@ export class GrpcWebImpl implements Rpc {
 
   unary<T extends UnaryMethodDefinitionish>(methodDesc: T, _request: any, metadata: grpc.Metadata | undefined): Promise<any> {
     const request = { ..._request, ...methodDesc.requestType };
-    return new Promise((resolve, reject) => {
-      const maybeCombinedMetadata =
+                const maybeCombinedMetadata =
         metadata && this.options.metadata
           ? new BrowserHeaders({ ...this.options?.metadata.headersMap, ...metadata?.headersMap })
           : metadata || this.options.metadata;
+    return new Promise((resolve, reject) => {
       grpc.unary(methodDesc, {
         request,
         host: this.host,
@@ -178,6 +188,36 @@ export class GrpcWebImpl implements Rpc {
         },
       });
     });
+  }
+
+  invoke<T extends UnaryMethodDefinitionish>(methodDesc: T, _request: any, metadata: grpc.Metadata | undefined): Observable<any> {
+    const DEFAULT_TIMEOUT_TIME: number = 3 /* seconds */ * 1000 /* ms */;
+                const request = { ..._request, ...methodDesc.requestType };
+                const maybeCombinedMetadata =
+        metadata && this.options.metadata
+          ? new BrowserHeaders({ ...this.options?.metadata.headersMap, ...metadata?.headersMap })
+          : metadata || this.options.metadata;
+    return new Observable(observer => {
+          const upStream = (() => {
+            grpc.invoke(methodDesc, {
+              host: this.host,
+              request,
+              metadata: maybeCombinedMetadata,
+              transport: grpc.WebsocketTransport(),
+              debug: this.options.debug,
+              onMessage: (next) => {
+                observer.next(next as any);
+              },
+              onEnd: () => {
+                setTimeout(() => {
+                  upStream();
+                }, DEFAULT_TIMEOUT_TIME);
+              },
+            });
+          });
+
+          upStream();
+        }).pipe(share());
   }
 
 }
@@ -754,10 +794,10 @@ export const DashAPICredsDeleteReq = {
   },
 };
 
-const DashStateDesc = {
+export const DashStateDesc = {
   serviceName: "rpx.DashState",
 }
-const DashStateUserSettingsDesc: UnaryMethodDefinitionish = {
+export const DashStateUserSettingsDesc: UnaryMethodDefinitionish = {
   methodName: "UserSettings",
   service: DashStateDesc,
   requestStream: false,
@@ -775,10 +815,28 @@ const DashStateUserSettingsDesc: UnaryMethodDefinitionish = {
     ,
   } as any,
 }
-const DashAPICredsDesc = {
+export const DashStateActiveUserSettingsStreamDesc: UnaryMethodDefinitionish = {
+  methodName: "ActiveUserSettingsStream",
+  service: DashStateDesc,
+  requestStream: false,
+  responseStream: true,
+  requestType: {
+    serializeBinary: function serializeBinary() {
+      return Empty.encode(this).finish();
+    }
+    ,
+  } as any,
+  responseType: {
+    deserializeBinary: function deserializeBinary(data: Uint8Array) {
+      return { ...DashUserSettingsState.decode(data), toObject() { return this; } };
+    }
+    ,
+  } as any,
+}
+export const DashAPICredsDesc = {
   serviceName: "rpx.DashAPICreds",
 }
-const DashAPICredsCreateDesc: UnaryMethodDefinitionish = {
+export const DashAPICredsCreateDesc: UnaryMethodDefinitionish = {
   methodName: "Create",
   service: DashAPICredsDesc,
   requestStream: false,
@@ -796,7 +854,7 @@ const DashAPICredsCreateDesc: UnaryMethodDefinitionish = {
     ,
   } as any,
 }
-const DashAPICredsUpdateDesc: UnaryMethodDefinitionish = {
+export const DashAPICredsUpdateDesc: UnaryMethodDefinitionish = {
   methodName: "Update",
   service: DashAPICredsDesc,
   requestStream: false,
@@ -814,7 +872,7 @@ const DashAPICredsUpdateDesc: UnaryMethodDefinitionish = {
     ,
   } as any,
 }
-const DashAPICredsDeleteDesc: UnaryMethodDefinitionish = {
+export const DashAPICredsDeleteDesc: UnaryMethodDefinitionish = {
   methodName: "Delete",
   service: DashAPICredsDesc,
   requestStream: false,
