@@ -168,6 +168,8 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
     );
   }
 
+  let hasStreamingMethods = false;
+
   visitServices(fileDesc, sourceInfo, (serviceDesc, sInfo) => {
     if (options.nestJs) {
       // NestJS is sufficiently different that we special case all of the client/server interfaces
@@ -197,6 +199,9 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
         file = file.addCode(generateGrpcServiceDesc(fileDesc, serviceDesc));
         serviceDesc.method.forEach((method) => {
           file = file.addCode(generateGrpcMethodDesc(options, typeMap, serviceDesc, method));
+          if (method.serverStreaming) {
+            hasStreamingMethods = true;
+          }
         });
       }
     }
@@ -206,7 +211,7 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
     if (options.outputClientImpl === true) {
       file = file.addInterface(generateRpcType(options));
     } else if (options.outputClientImpl === 'grpc-web') {
-      file = addGrpcWebMisc(options, file);
+      file = addGrpcWebMisc(options, hasStreamingMethods, file);
     }
   }
 

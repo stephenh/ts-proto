@@ -1,5 +1,7 @@
+import { Observable } from 'rxjs';
 import { BrowserHeaders } from 'browser-headers';
 import { grpc } from '@improbable-eng/grpc-web';
+import { take } from 'rxjs/operators';
 import { Writer, Reader } from 'protobufjs/minimal';
 
 
@@ -45,7 +47,7 @@ const baseEmpty: object = {
  */
 export interface DashState {
 
-  UserSettings(request: DeepPartial<Empty>, metadata?: grpc.Metadata): Promise<DashUserSettingsState>;
+  UserSettings(request: DeepPartial<Empty>, metadata?: grpc.Metadata): Observable<DashUserSettingsState>;
 
 }
 
@@ -57,7 +59,7 @@ export class DashStateClientImpl implements DashState {
     this.rpc = rpc;
   }
 
-  UserSettings(request: DeepPartial<Empty>, metadata?: grpc.Metadata): Promise<DashUserSettingsState> {
+  UserSettings(request: DeepPartial<Empty>, metadata?: grpc.Metadata): Observable<DashUserSettingsState> {
     return this.rpc.unary(DashStateUserSettingsDesc, Empty.fromPartial(request), metadata);
   }
 
@@ -65,7 +67,7 @@ export class DashStateClientImpl implements DashState {
 
 interface Rpc {
 
-  unary<T extends UnaryMethodDefinitionish>(methodDesc: T, request: any, metadata: grpc.Metadata | undefined): Promise<any>;
+  unary<T extends UnaryMethodDefinitionish>(methodDesc: T, request: any, metadata: grpc.Metadata | undefined): Observable<any>;
 
 }
 
@@ -80,31 +82,29 @@ export class GrpcWebImpl implements Rpc {
     this.options = options;
   }
 
-  unary<T extends UnaryMethodDefinitionish>(methodDesc: T, _request: any, metadata: grpc.Metadata | undefined): Promise<any> {
+  unary<T extends UnaryMethodDefinitionish>(methodDesc: T, _request: any, metadata: grpc.Metadata | undefined): Observable<any> {
     const request = { ..._request, ...methodDesc.requestType };
         const maybeCombinedMetadata =
         metadata && this.options.metadata
           ? new BrowserHeaders({ ...this.options?.metadata.headersMap, ...metadata?.headersMap })
           : metadata || this.options.metadata;
-        return new Promise((resolve, reject) => {
+        return new Observable(observer => {
           grpc.unary(methodDesc, {
-            request,
-            host: this.host,
-            metadata: maybeCombinedMetadata,
-            transport: this.options.transport,
-            debug: this.options.debug,
-            onEnd: function (response) {
-              if (response.status === grpc.Code.OK) {
-                resolve(response.message);
-              } else {
-                const err = new Error(response.statusMessage) as any;
-                err.code = response.status;
-                err.metadata = response.trailers;
-                reject(err);
-              }
-            },
-          });
-        });}
+              request,
+              host: this.host,
+              metadata: maybeCombinedMetadata,
+              transport: this.options.transport,
+              debug: this.options.debug,
+              onEnd: (next) => {
+                if (next.status !== 0) {
+                  observer.error({ code: next.status, message: next.statusMessage });
+                } else {
+                  observer.next(next.message as any);
+                  observer.complete();
+                }
+              },
+            });
+          }).pipe(take(1));}
 
 }
 

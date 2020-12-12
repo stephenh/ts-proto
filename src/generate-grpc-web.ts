@@ -8,7 +8,7 @@ import {
   PropertySpec,
   TypeName,
   TypeNames,
-  TypeVariable
+  TypeVariable,
 } from 'ts-poet';
 import { google } from '../build/pbjs';
 import { Options } from './main';
@@ -156,7 +156,7 @@ function methodDescName(serviceDesc: ServiceDescriptorProto, methodDesc: MethodD
 }
 
 /** Adds misc top-level definitions for grpc-web functionality. */
-export function addGrpcWebMisc(options: Options, _file: FileSpec): FileSpec {
+export function addGrpcWebMisc(options: Options, hasStreamingMethods: boolean, _file: FileSpec): FileSpec {
   let file = _file;
   file = file.addCode(
     CodeBlock.empty()
@@ -166,39 +166,42 @@ export function addGrpcWebMisc(options: Options, _file: FileSpec): FileSpec {
       )
       .addStatement('type UnaryMethodDefinitionish = UnaryMethodDefinitionishR')
   );
-  file = file.addInterface(generateGrpcWebRpcType(options.returnObservable));
-  file = file.addClass(options.returnObservable ? generateGrpcWebImplObservable() : generateGrpcWebImplPromise());
+  file = file.addInterface(generateGrpcWebRpcType(options.returnObservable, hasStreamingMethods));
+  file = file.addClass(generateGrpcWebImpl(options.returnObservable, hasStreamingMethods));
   return file;
 }
 
 /** Makes an `Rpc` interface to decouple from the low-level grpc-web `grpc.invoke and grpc.unary`/etc. methods. */
-function generateGrpcWebRpcType(returnObservable: boolean): InterfaceSpec {
+function generateGrpcWebRpcType(returnObservable: boolean, hasStreamingMethods: boolean): InterfaceSpec {
   let rpc = InterfaceSpec.create('Rpc');
-  let fnU = FunctionSpec.create('unary');
-  let fnI = FunctionSpec.create('invoke');
   const t = TypeNames.typeVariable('T', TypeNames.bound('UnaryMethodDefinitionish'));
-  fnU = fnU
-    .addTypeVariable(t)
-    .addParameter('methodDesc', t)
-    .addParameter('request', TypeNames.ANY)
-    .addParameter('metadata', TypeNames.unionType(TypeNames.anyType('grpc.Metadata'), TypeNames.UNDEFINED))
-    .returns(
-      returnObservable
-        ? TypeNames.anyType('Observable@rxjs').param(TypeNames.ANY)
-        : TypeNames.PROMISE.param(TypeNames.ANY)
+  rpc = rpc.addFunction(
+    FunctionSpec.create('unary')
+      .addTypeVariable(t)
+      .addParameter('methodDesc', t)
+      .addParameter('request', TypeNames.ANY)
+      .addParameter('metadata', TypeNames.unionType(TypeNames.anyType('grpc.Metadata'), TypeNames.UNDEFINED))
+      .returns(
+        returnObservable
+          ? TypeNames.anyType('Observable@rxjs').param(TypeNames.ANY)
+          : TypeNames.PROMISE.param(TypeNames.ANY)
+      )
+  );
+  if (hasStreamingMethods) {
+    rpc = rpc.addFunction(
+      FunctionSpec.create('invoke')
+        .addTypeVariable(t)
+        .addParameter('methodDesc', t)
+        .addParameter('request', TypeNames.ANY)
+        .addParameter('metadata', TypeNames.unionType(TypeNames.anyType('grpc.Metadata'), TypeNames.UNDEFINED))
+        .returns(TypeNames.anyType('Observable@rxjs').param(TypeNames.ANY))
     );
-  fnI = fnI
-    .addTypeVariable(t)
-    .addParameter('methodDesc', t)
-    .addParameter('request', TypeNames.ANY)
-    .addParameter('metadata', TypeNames.unionType(TypeNames.anyType('grpc.Metadata'), TypeNames.UNDEFINED))
-    .returns(TypeNames.anyType('Observable@rxjs').param(TypeNames.ANY));
-  rpc = rpc.addFunction(fnU).addFunction(fnI);
+  }
   return rpc;
 }
 
 /** Implements the `Rpc` interface by making calls using the `grpc.unary` method. */
-function generateGrpcWebImplPromise(): ClassSpec {
+function generateGrpcWebImpl(returnObservable: boolean, hasStreamingMethods: boolean): ClassSpec {
   const maybeMetadata = TypeNames.unionType(TypeNames.anyType('grpc.Metadata'), TypeNames.UNDEFINED);
   const optionsParam = TypeNames.anonymousType(
     ['transport?', TypeNames.anyType('grpc.TransportFactory')],
@@ -206,7 +209,7 @@ function generateGrpcWebImplPromise(): ClassSpec {
     ['metadata?', maybeMetadata]
   );
   const t = TypeNames.typeVariable('T', TypeNames.bound('UnaryMethodDefinitionish'));
-  return ClassSpec.create('GrpcWebImpl')
+  let spec = ClassSpec.create('GrpcWebImpl')
     .addModifiers(Modifier.EXPORT)
     .addProperty(PropertySpec.create('host', TypeNames.STRING).addModifiers(Modifier.PRIVATE))
     .addProperty(PropertySpec.create('options', optionsParam).addModifiers(Modifier.PRIVATE))
@@ -218,61 +221,25 @@ function generateGrpcWebImplPromise(): ClassSpec {
         .addStatement('this.host = host')
         .addStatement('this.options = options')
     )
-    .addFunction(createUnaryMethod(t, maybeMetadata, false))
-    .addFunction(createInvokeMethod(t, maybeMetadata));
-}
-
-function generateGrpcWebImplObservable(): ClassSpec {
-  const maybeMetadata = TypeNames.unionType(TypeNames.anyType('grpc.Metadata'), TypeNames.UNDEFINED);
-  const optionsParam = TypeNames.anonymousType(
-    ['transport?', TypeNames.anyType('grpc.TransportFactory')],
-    ['debug?', TypeNames.BOOLEAN],
-    ['metadata?', maybeMetadata]
-  );
-  const t = TypeNames.typeVariable('T', TypeNames.bound('UnaryMethodDefinitionish'));
-  return ClassSpec.create('GrpcWebImpl')
-    .addModifiers(Modifier.EXPORT)
-    .addProperty(PropertySpec.create('host', TypeNames.STRING).addModifiers(Modifier.PRIVATE))
-    .addProperty(PropertySpec.create('options', optionsParam).addModifiers(Modifier.PRIVATE))
-    .addInterface('Rpc')
     .addFunction(
-      FunctionSpec.createConstructor()
-        .addParameter('host', 'string')
-        .addParameter('options', optionsParam)
-        .addStatement('this.host = host')
-        .addStatement('this.options = options')
-    )
-    .addFunction(createUnaryMethod(t, maybeMetadata, true))
-    .addFunction(createInvokeMethod(t, maybeMetadata));
+      returnObservable ? createObservableUnaryMethod(t, maybeMetadata) : createPromiseUnaryMethod(t, maybeMetadata)
+    );
+  if (hasStreamingMethods) {
+    spec = spec.addFunction(createInvokeMethod(t, maybeMetadata));
+  }
+  return spec;
 }
 
-function createUnaryMethod(t: TypeVariable, maybeMetadata: TypeName, observable: boolean): FunctionSpec {
-  let block: CodeBlock;
-  if (observable) {
-    block = CodeBlock.empty().add(`const request = { ..._request, ...methodDesc.requestType };
-    const maybeCombinedMetadata =
-    metadata && this.options.metadata
-      ? new %T({ ...this.options?.metadata.headersMap, ...metadata?.headersMap })
-      : metadata || this.options.metadata;
-    return new Observable(observer => {
-      %T.unary(methodDesc, {
-          request,
-          host: this.host,
-          metadata: maybeCombinedMetadata,
-          transport: this.options.transport,
-          debug: this.options.debug,
-          onEnd: (next) => {
-            if (next.status !== 0) {
-              observer.error({ code: next.status, message: next.statusMessage });
-            } else {
-              observer.next(next.message as any);
-              observer.complete();
-            }
-          },
-        });
-      }).pipe(%T(1));`, BrowserHeaders, grpc, take);
-  } else {
-    block = CodeBlock.empty().add(`const request = { ..._request, ...methodDesc.requestType };
+function createPromiseUnaryMethod(t: TypeVariable, maybeMetadata: TypeName): FunctionSpec {
+  return FunctionSpec.create('unary')
+    .addTypeVariable(t)
+    .addParameter('methodDesc', t)
+    .addParameter('_request', TypeNames.ANY)
+    .addParameter('metadata', maybeMetadata)
+    .returns(TypeNames.PROMISE.param(TypeNames.ANY))
+    .addCodeBlock(
+      CodeBlock.empty().add(
+        `const request = { ..._request, ...methodDesc.requestType };
     const maybeCombinedMetadata =
     metadata && this.options.metadata
       ? new %T({ ...this.options?.metadata.headersMap, ...metadata?.headersMap })
@@ -295,17 +262,49 @@ function createUnaryMethod(t: TypeVariable, maybeMetadata: TypeName, observable:
           }
         },
       });
-    });`, BrowserHeaders, grpc);
-  }
+    });`,
+        BrowserHeaders,
+        grpc
+      )
+    );
+}
 
+function createObservableUnaryMethod(t: TypeVariable, maybeMetadata: TypeName): FunctionSpec {
   return FunctionSpec.create('unary')
     .addTypeVariable(t)
     .addParameter('methodDesc', t)
     .addParameter('_request', TypeNames.ANY)
     .addParameter('metadata', maybeMetadata)
-    .returns(
-      observable ? TypeNames.anyType('Observable@rxjs').param(TypeNames.ANY) : TypeNames.PROMISE.param(TypeNames.ANY)
-    ) .addCodeBlock(block);
+    .returns(TypeNames.anyType('Observable@rxjs').param(TypeNames.ANY))
+    .addCodeBlock(
+      CodeBlock.empty().add(
+        `const request = { ..._request, ...methodDesc.requestType };
+    const maybeCombinedMetadata =
+    metadata && this.options.metadata
+      ? new %T({ ...this.options?.metadata.headersMap, ...metadata?.headersMap })
+      : metadata || this.options.metadata;
+    return new Observable(observer => {
+      %T.unary(methodDesc, {
+          request,
+          host: this.host,
+          metadata: maybeCombinedMetadata,
+          transport: this.options.transport,
+          debug: this.options.debug,
+          onEnd: (next) => {
+            if (next.status !== 0) {
+              observer.error({ code: next.status, message: next.statusMessage });
+            } else {
+              observer.next(next.message as any);
+              observer.complete();
+            }
+          },
+        });
+      }).pipe(%T(1));`,
+        BrowserHeaders,
+        grpc,
+        take
+      )
+    );
 }
 
 function createInvokeMethod(t, maybeMetadata) {
