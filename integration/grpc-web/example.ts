@@ -165,9 +165,9 @@ export class GrpcWebImpl implements Rpc {
 
   private host: string;
 
-  private options: { transport?: grpc.TransportFactory, debug?: boolean, metadata?: grpc.Metadata | undefined };
+  private options: { transport?: grpc.TransportFactory, streamingTransport?: grpc.TransportFactory, debug?: boolean, metadata?: grpc.Metadata | undefined };
 
-  constructor(host: string, options: { transport?: grpc.TransportFactory, debug?: boolean, metadata?: grpc.Metadata | undefined }) {
+  constructor(host: string, options: { transport?: grpc.TransportFactory, streamingTransport?: grpc.TransportFactory, debug?: boolean, metadata?: grpc.Metadata | undefined }) {
     this.host = host;
     this.options = options;
   }
@@ -211,7 +211,7 @@ export class GrpcWebImpl implements Rpc {
             grpc.invoke(methodDesc, {
               host: this.host,
               request,
-              transport: this.options.transport,
+              transport: this.options.streamingTransport || this.options.transport,
               metadata: maybeCombinedMetadata,
               debug: this.options.debug,
               onMessage: (next) => {

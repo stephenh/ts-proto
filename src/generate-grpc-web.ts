@@ -204,9 +204,12 @@ function generateGrpcWebRpcType(returnObservable: boolean, hasStreamingMethods: 
 function generateGrpcWebImpl(returnObservable: boolean, hasStreamingMethods: boolean): ClassSpec {
   const maybeMetadata = TypeNames.unionType(TypeNames.anyType('grpc.Metadata'), TypeNames.UNDEFINED);
   const optionsParam = TypeNames.anonymousType(
-    ['transport?', TypeNames.anyType('grpc.TransportFactory')],
-    ['debug?', TypeNames.BOOLEAN],
-    ['metadata?', maybeMetadata]
+    ...([
+      ['transport?', TypeNames.anyType('grpc.TransportFactory')],
+      ...(!hasStreamingMethods ? [] : [['streamingTransport?', TypeNames.anyType('grpc.TransportFactory')]]),
+      ['debug?', TypeNames.BOOLEAN],
+      ['metadata?', maybeMetadata],
+    ] as [string, TypeName][])
   );
   const t = TypeNames.typeVariable('T', TypeNames.bound('UnaryMethodDefinitionish'));
   let spec = ClassSpec.create('GrpcWebImpl')
@@ -328,7 +331,7 @@ function createInvokeMethod(t, maybeMetadata) {
         %T.invoke(methodDesc, {
           host: this.host,
           request,
-          transport: this.options.transport,
+          transport: this.options.streamingTransport || this.options.transport,
           metadata: maybeCombinedMetadata,
           debug: this.options.debug,
           onMessage: (next) => {
