@@ -338,10 +338,8 @@ function createInvokeMethod(t, maybeMetadata) {
             observer.next(next as any);
           },
           onEnd: (code: %T) => {
-            if (upStreamCodes.find(upStreamCode => code === upStreamCode)) {
-              setTimeout(() => {
-                upStream();
-              }, DEFAULT_TIMEOUT_TIME);
+            if (upStreamCodes.includes(code)) {
+              setTimeout(upStream, DEFAULT_TIMEOUT_TIME);
             }
           },
         });

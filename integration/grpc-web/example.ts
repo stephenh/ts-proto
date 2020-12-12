@@ -218,10 +218,8 @@ export class GrpcWebImpl implements Rpc {
                 observer.next(next as any);
               },
               onEnd: (code: Code) => {
-                if (upStreamCodes.find(upStreamCode => code === upStreamCode)) {
-                  setTimeout(() => {
-                    upStream();
-                  }, DEFAULT_TIMEOUT_TIME);
+                if (upStreamCodes.includes(code)) {
+                  setTimeout(upStream, DEFAULT_TIMEOUT_TIME);
                 }
               },
             });
