@@ -1,7 +1,7 @@
-import { ID, Empty } from './types';
 import { Observable } from 'rxjs';
 import { BrowserHeaders } from 'browser-headers';
 import { grpc } from '@improbable-eng/grpc-web';
+import { Code } from '@improbable-eng/grpc-web/dist/typings/Code';
 import { share } from 'rxjs/operators';
 import { Writer, Reader } from 'protobufjs/minimal';
 
@@ -26,7 +26,7 @@ export interface DashCred {
   description: string;
   metadata: string;
   token: string;
-  id: ID | undefined;
+  id: string;
 }
 
 export interface DashAPICredsCreateReq {
@@ -38,12 +38,15 @@ export interface DashAPICredsUpdateReq {
   credSid: string;
   description: string;
   metadata: string;
-  id: ID | undefined;
+  id: string;
 }
 
 export interface DashAPICredsDeleteReq {
   credSid: string;
-  id: ID | undefined;
+  id: string;
+}
+
+export interface Empty {
 }
 
 const baseDashFlash: object = {
@@ -64,6 +67,7 @@ const baseDashCred: object = {
   description: "",
   metadata: "",
   token: "",
+  id: "",
 };
 
 const baseDashAPICredsCreateReq: object = {
@@ -75,10 +79,15 @@ const baseDashAPICredsUpdateReq: object = {
   credSid: "",
   description: "",
   metadata: "",
+  id: "",
 };
 
 const baseDashAPICredsDeleteReq: object = {
   credSid: "",
+  id: "",
+};
+
+const baseEmpty: object = {
 };
 
 export interface DashState {
@@ -165,57 +174,58 @@ export class GrpcWebImpl implements Rpc {
 
   unary<T extends UnaryMethodDefinitionish>(methodDesc: T, _request: any, metadata: grpc.Metadata | undefined): Promise<any> {
     const request = { ..._request, ...methodDesc.requestType };
-                const maybeCombinedMetadata =
+        const maybeCombinedMetadata =
         metadata && this.options.metadata
           ? new BrowserHeaders({ ...this.options?.metadata.headersMap, ...metadata?.headersMap })
           : metadata || this.options.metadata;
-    return new Promise((resolve, reject) => {
-      grpc.unary(methodDesc, {
-        request,
-        host: this.host,
-        metadata: maybeCombinedMetadata,
-        transport: this.options.transport,
-        debug: this.options.debug,
-        onEnd: function (response) {
-          if (response.status === grpc.Code.OK) {
-            resolve(response.message);
-          } else {
-            const err = new Error(response.statusMessage) as any;
-            err.code = response.status;
-            err.metadata = response.trailers;
-            reject(err);
-          }
-        },
-      });
-    });
-  }
+        return new Promise((resolve, reject) => {
+          grpc.unary(methodDesc, {
+            request,
+            host: this.host,
+            metadata: maybeCombinedMetadata,
+            transport: this.options.transport,
+            debug: this.options.debug,
+            onEnd: function (response) {
+              if (response.status === grpc.Code.OK) {
+                resolve(response.message);
+              } else {
+                const err = new Error(response.statusMessage) as any;
+                err.code = response.status;
+                err.metadata = response.trailers;
+                reject(err);
+              }
+            },
+          });
+        });}
 
   invoke<T extends UnaryMethodDefinitionish>(methodDesc: T, _request: any, metadata: grpc.Metadata | undefined): Observable<any> {
-    const DEFAULT_TIMEOUT_TIME: number = 3 /* seconds */ * 1000 /* ms */;
-                const request = { ..._request, ...methodDesc.requestType };
-                const maybeCombinedMetadata =
+    const upStreamCodes = [2, 4, 8, 9, 10, 13, 14, 15]; /* Status Response Codes (https://developers.google.com/maps-booking/reference/grpc-api/status_codes) */
+        const DEFAULT_TIMEOUT_TIME: number = 3 /* seconds */ * 1000 /* ms */;
+        const request = { ..._request, ...methodDesc.requestType };
+        const maybeCombinedMetadata =
         metadata && this.options.metadata
           ? new BrowserHeaders({ ...this.options?.metadata.headersMap, ...metadata?.headersMap })
           : metadata || this.options.metadata;
-    return new Observable(observer => {
+        return new Observable(observer => {
           const upStream = (() => {
             grpc.invoke(methodDesc, {
               host: this.host,
               request,
+              transport: this.options.transport,
               metadata: maybeCombinedMetadata,
-              transport: grpc.WebsocketTransport(),
               debug: this.options.debug,
               onMessage: (next) => {
                 observer.next(next as any);
               },
-              onEnd: () => {
-                setTimeout(() => {
-                  upStream();
-                }, DEFAULT_TIMEOUT_TIME);
+              onEnd: (code: Code) => {
+                if (upStreamCodes.find(upStreamCode => code === upStreamCode)) {
+                  setTimeout(() => {
+                    upStream();
+                  }, DEFAULT_TIMEOUT_TIME);
+                }
               },
             });
           });
-
           upStream();
         }).pipe(share());
   }
@@ -485,9 +495,7 @@ export const DashCred = {
     writer.uint32(18).string(message.description);
     writer.uint32(26).string(message.metadata);
     writer.uint32(34).string(message.token);
-    if (message.id !== undefined && message.id !== undefined) {
-      ID.encode(message.id, writer.uint32(58).fork()).ldelim();
-    }
+    writer.uint32(58).string(message.id);
     return writer;
   },
   decode(input: Uint8Array | Reader, length?: number): DashCred {
@@ -507,7 +515,7 @@ export const DashCred = {
           message.token = reader.string();
           break;
         case 7:
-          message.id = ID.decode(reader, reader.uint32());
+          message.id = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -534,9 +542,9 @@ export const DashCred = {
       message.token = "";
     }
     if (object.id !== undefined && object.id !== null) {
-      message.id = ID.fromJSON(object.id);
+      message.id = String(object.id);
     } else {
-      message.id = undefined;
+      message.id = "";
     }
     return message;
   },
@@ -558,9 +566,9 @@ export const DashCred = {
       message.token = "";
     }
     if (object.id !== undefined && object.id !== null) {
-      message.id = ID.fromPartial(object.id);
+      message.id = object.id;
     } else {
-      message.id = undefined;
+      message.id = "";
     }
     return message;
   },
@@ -569,7 +577,7 @@ export const DashCred = {
     message.description !== undefined && (obj.description = message.description);
     message.metadata !== undefined && (obj.metadata = message.metadata);
     message.token !== undefined && (obj.token = message.token);
-    message.id !== undefined && (obj.id = message.id ? ID.toJSON(message.id) : undefined);
+    message.id !== undefined && (obj.id = message.id);
     return obj;
   },
 };
@@ -641,9 +649,7 @@ export const DashAPICredsUpdateReq = {
     writer.uint32(10).string(message.credSid);
     writer.uint32(18).string(message.description);
     writer.uint32(26).string(message.metadata);
-    if (message.id !== undefined && message.id !== undefined) {
-      ID.encode(message.id, writer.uint32(42).fork()).ldelim();
-    }
+    writer.uint32(42).string(message.id);
     return writer;
   },
   decode(input: Uint8Array | Reader, length?: number): DashAPICredsUpdateReq {
@@ -663,7 +669,7 @@ export const DashAPICredsUpdateReq = {
           message.metadata = reader.string();
           break;
         case 5:
-          message.id = ID.decode(reader, reader.uint32());
+          message.id = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -690,9 +696,9 @@ export const DashAPICredsUpdateReq = {
       message.metadata = "";
     }
     if (object.id !== undefined && object.id !== null) {
-      message.id = ID.fromJSON(object.id);
+      message.id = String(object.id);
     } else {
-      message.id = undefined;
+      message.id = "";
     }
     return message;
   },
@@ -714,9 +720,9 @@ export const DashAPICredsUpdateReq = {
       message.metadata = "";
     }
     if (object.id !== undefined && object.id !== null) {
-      message.id = ID.fromPartial(object.id);
+      message.id = object.id;
     } else {
-      message.id = undefined;
+      message.id = "";
     }
     return message;
   },
@@ -725,7 +731,7 @@ export const DashAPICredsUpdateReq = {
     message.credSid !== undefined && (obj.credSid = message.credSid);
     message.description !== undefined && (obj.description = message.description);
     message.metadata !== undefined && (obj.metadata = message.metadata);
-    message.id !== undefined && (obj.id = message.id ? ID.toJSON(message.id) : undefined);
+    message.id !== undefined && (obj.id = message.id);
     return obj;
   },
 };
@@ -733,9 +739,7 @@ export const DashAPICredsUpdateReq = {
 export const DashAPICredsDeleteReq = {
   encode(message: DashAPICredsDeleteReq, writer: Writer = Writer.create()): Writer {
     writer.uint32(10).string(message.credSid);
-    if (message.id !== undefined && message.id !== undefined) {
-      ID.encode(message.id, writer.uint32(26).fork()).ldelim();
-    }
+    writer.uint32(26).string(message.id);
     return writer;
   },
   decode(input: Uint8Array | Reader, length?: number): DashAPICredsDeleteReq {
@@ -749,7 +753,7 @@ export const DashAPICredsDeleteReq = {
           message.credSid = reader.string();
           break;
         case 3:
-          message.id = ID.decode(reader, reader.uint32());
+          message.id = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -766,9 +770,9 @@ export const DashAPICredsDeleteReq = {
       message.credSid = "";
     }
     if (object.id !== undefined && object.id !== null) {
-      message.id = ID.fromJSON(object.id);
+      message.id = String(object.id);
     } else {
-      message.id = undefined;
+      message.id = "";
     }
     return message;
   },
@@ -780,16 +784,48 @@ export const DashAPICredsDeleteReq = {
       message.credSid = "";
     }
     if (object.id !== undefined && object.id !== null) {
-      message.id = ID.fromPartial(object.id);
+      message.id = object.id;
     } else {
-      message.id = undefined;
+      message.id = "";
     }
     return message;
   },
   toJSON(message: DashAPICredsDeleteReq): unknown {
     const obj: any = {};
     message.credSid !== undefined && (obj.credSid = message.credSid);
-    message.id !== undefined && (obj.id = message.id ? ID.toJSON(message.id) : undefined);
+    message.id !== undefined && (obj.id = message.id);
+    return obj;
+  },
+};
+
+export const Empty = {
+  encode(_: Empty, writer: Writer = Writer.create()): Writer {
+    return writer;
+  },
+  decode(input: Uint8Array | Reader, length?: number): Empty {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseEmpty } as Empty;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+  fromJSON(_: any): Empty {
+    const message = { ...baseEmpty } as Empty;
+    return message;
+  },
+  fromPartial(_: DeepPartial<Empty>): Empty {
+    const message = { ...baseEmpty } as Empty;
+    return message;
+  },
+  toJSON(_: Empty): unknown {
+    const obj: any = {};
     return obj;
   },
 };
@@ -890,7 +926,9 @@ export const DashAPICredsDeleteDesc: UnaryMethodDefinitionish = {
     ,
   } as any,
 }
-type UnaryMethodDefinitionish = grpc.UnaryMethodDefinition<any, any>;
+import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
+interface UnaryMethodDefinitionishR extends UnaryMethodDefinition<any, any> { requestStream: any; responseStream: any; };
+type UnaryMethodDefinitionish = UnaryMethodDefinitionishR;
 
 type Builtin = Date | Function | Uint8Array | string | number | undefined;
 export type DeepPartial<T> = T extends Builtin

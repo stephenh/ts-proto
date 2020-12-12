@@ -6,7 +6,9 @@ import {
   InterfaceSpec,
   Modifier,
   PropertySpec,
+  TypeName,
   TypeNames,
+  TypeVariable
 } from 'ts-poet';
 import { google } from '../build/pbjs';
 import { Options } from './main';
@@ -199,8 +201,7 @@ function generateGrpcWebRpcType(returnObservable: boolean): InterfaceSpec {
 function generateGrpcWebImplPromise(): ClassSpec {
   const maybeMetadata = TypeNames.unionType(TypeNames.anyType('grpc.Metadata'), TypeNames.UNDEFINED);
   const optionsParam = TypeNames.anonymousType(
-    ['unaryTransport?', TypeNames.anyType('grpc.TransportFactory')],
-    ['invokeTransport?', TypeNames.anyType('grpc.TransportFactory')],
+    ['transport?', TypeNames.anyType('grpc.TransportFactory')],
     ['debug?', TypeNames.BOOLEAN],
     ['metadata?', maybeMetadata]
   );
@@ -224,8 +225,7 @@ function generateGrpcWebImplPromise(): ClassSpec {
 function generateGrpcWebImplObservable(): ClassSpec {
   const maybeMetadata = TypeNames.unionType(TypeNames.anyType('grpc.Metadata'), TypeNames.UNDEFINED);
   const optionsParam = TypeNames.anonymousType(
-    ['unaryTransport?', TypeNames.anyType('grpc.TransportFactory')],
-    ['invokeTransport?', TypeNames.anyType('grpc.TransportFactory')],
+    ['transport?', TypeNames.anyType('grpc.TransportFactory')],
     ['debug?', TypeNames.BOOLEAN],
     ['metadata?', maybeMetadata]
   );
@@ -246,7 +246,58 @@ function generateGrpcWebImplObservable(): ClassSpec {
     .addFunction(createInvokeMethod(t, maybeMetadata));
 }
 
-function createUnaryMethod(t, maybeMetadata, observable: boolean = false) {
+function createUnaryMethod(t: TypeVariable, maybeMetadata: TypeName, observable: boolean): FunctionSpec {
+  let block: CodeBlock;
+  if (observable) {
+    block = CodeBlock.empty().add(`const request = { ..._request, ...methodDesc.requestType };
+    const maybeCombinedMetadata =
+    metadata && this.options.metadata
+      ? new %T({ ...this.options?.metadata.headersMap, ...metadata?.headersMap })
+      : metadata || this.options.metadata;
+    return new Observable(observer => {
+      %T.unary(methodDesc, {
+          request,
+          host: this.host,
+          metadata: maybeCombinedMetadata,
+          transport: this.options.transport,
+          debug: this.options.debug,
+          onEnd: (next) => {
+            if (next.status !== 0) {
+              observer.error({ code: next.status, message: next.statusMessage });
+            } else {
+              observer.next(next.message as any);
+              observer.complete();
+            }
+          },
+        });
+      }).pipe(%T(1));`, BrowserHeaders, grpc, take);
+  } else {
+    block = CodeBlock.empty().add(`const request = { ..._request, ...methodDesc.requestType };
+    const maybeCombinedMetadata =
+    metadata && this.options.metadata
+      ? new %T({ ...this.options?.metadata.headersMap, ...metadata?.headersMap })
+      : metadata || this.options.metadata;
+    return new Promise((resolve, reject) => {
+      %T.unary(methodDesc, {
+        request,
+        host: this.host,
+        metadata: maybeCombinedMetadata,
+        transport: this.options.transport,
+        debug: this.options.debug,
+        onEnd: function (response) {
+          if (response.status === grpc.Code.OK) {
+            resolve(response.message);
+          } else {
+            const err = new Error(response.statusMessage) as any;
+            err.code = response.status;
+            err.metadata = response.trailers;
+            reject(err);
+          }
+        },
+      });
+    });`, BrowserHeaders, grpc);
+  }
+
   return FunctionSpec.create('unary')
     .addTypeVariable(t)
     .addParameter('methodDesc', t)
@@ -254,66 +305,7 @@ function createUnaryMethod(t, maybeMetadata, observable: boolean = false) {
     .addParameter('metadata', maybeMetadata)
     .returns(
       observable ? TypeNames.anyType('Observable@rxjs').param(TypeNames.ANY) : TypeNames.PROMISE.param(TypeNames.ANY)
-    )
-    .addCodeBlock(
-      CodeBlock.empty().add(
-        observable
-          ? `const request = { ..._request, ...methodDesc.requestType };
-            const maybeCombinedMetadata =
-    metadata && this.options.metadata
-      ? new %T({ ...this.options?.metadata.headersMap, ...metadata?.headersMap })
-      : metadata || this.options.metadata;
-return new Observable(observer => {
-  %T.unary(methodDesc, {
-      request,
-      host: this.host,
-      metadata: maybeCombinedMetadata,
-      transport: this.options.unaryTransport,
-      debug: this.options.debug,
-      onEnd: (next) => {
-        if (next.status !== 0) {
-          observer.error({
-            code: next.status,
-            message: next.statusMessage,
-          });
-        } else {
-          observer.next(next.message as any);
-          observer.complete();
-        }
-      },
-    });
-  }).pipe(%T(1));
-`
-          : `const request = { ..._request, ...methodDesc.requestType };
-            const maybeCombinedMetadata =
-    metadata && this.options.metadata
-      ? new %T({ ...this.options?.metadata.headersMap, ...metadata?.headersMap })
-      : metadata || this.options.metadata;
-return new Promise((resolve, reject) => {
-  %T.unary(methodDesc, {
-    request,
-    host: this.host,
-    metadata: maybeCombinedMetadata,
-    transport: this.options.unaryTransport,
-    debug: this.options.debug,
-    onEnd: function (response) {
-      if (response.status === grpc.Code.OK) {
-        resolve(response.message);
-      } else {
-        const err = new Error(response.statusMessage) as any;
-        err.code = response.status;
-        err.metadata = response.trailers;
-        reject(err);
-      }
-    },
-  });
-});
-`,
-        BrowserHeaders,
-        grpc,
-        take
-      )
-    );
+    ) .addCodeBlock(block);
 }
 
 function createInvokeMethod(t, maybeMetadata) {
@@ -326,18 +318,18 @@ function createInvokeMethod(t, maybeMetadata) {
     .addCodeBlock(
       CodeBlock.empty().add(
         `const upStreamCodes = [2, 4, 8, 9, 10, 13, 14, 15]; /* Status Response Codes (https://developers.google.com/maps-booking/reference/grpc-api/status_codes) */
-            const DEFAULT_TIMEOUT_TIME: number = 3 /* seconds */ * 1000 /* ms */;
-            const request = { ..._request, ...methodDesc.requestType };
-            const maybeCombinedMetadata =
+    const DEFAULT_TIMEOUT_TIME: number = 3 /* seconds */ * 1000 /* ms */;
+    const request = { ..._request, ...methodDesc.requestType };
+    const maybeCombinedMetadata =
     metadata && this.options.metadata
       ? new %T({ ...this.options?.metadata.headersMap, ...metadata?.headersMap })
       : metadata || this.options.metadata;
-return new Observable(observer => {
+    return new Observable(observer => {
       const upStream = (() => {
         %T.invoke(methodDesc, {
           host: this.host,
           request,
-          transport: this.options.invokeTransport,
+          transport: this.options.transport,
           metadata: maybeCombinedMetadata,
           debug: this.options.debug,
           onMessage: (next) => {
@@ -352,7 +344,6 @@ return new Observable(observer => {
           },
         });
       });
-
       upStream();
     }).pipe(%T());
 `,
