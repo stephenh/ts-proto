@@ -214,12 +214,14 @@ export class GrpcWebImpl implements Rpc {
               transport: this.options.streamingTransport || this.options.transport,
               metadata: maybeCombinedMetadata,
               debug: this.options.debug,
-              onMessage: (next) => {
-                observer.next(next as any);
-              },
-              onEnd: (code: Code) => {
-                if (upStreamCodes.includes(code)) {
+              onMessage: (next) => observer.next(next),
+              onEnd: (code: Code, message: string) => {
+                if (code === 0) {
+                  observer.complete();
+                } else if (upStreamCodes.includes(code)) {
                   setTimeout(upStream, DEFAULT_TIMEOUT_TIME);
+                } else {
+                  observer.error(new Error(`Error ${code} ${message}`));
                 }
               },
             });
