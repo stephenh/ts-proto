@@ -1,4 +1,11 @@
 
+## v1.41.0
+
+* [grpc-web] Fix code generation errors introduced in v1.40.0
+* [grpc-web] Revert breaking change of `unaryTransport` / `invokeTransport`
+  * Now client constructors take `transport` & `streamingTransport`, and streaming calls will use `streamingTransport` is set, and otherwise fallback on `transport`.
+* [grpc-web] Remove `rxjs` dependency unless streaming is actually used
+
 ## v1.40.0
 
 * Add support for grpc-web streaming responses (PhilipMantrov)
