@@ -1,6 +1,7 @@
 import { BrowserHeaders } from 'browser-headers';
 import { grpc } from '@improbable-eng/grpc-web';
 import { Writer, Reader } from 'protobufjs/minimal';
+import { UnaryMethodDefinition } from '@improbable-eng/grpc-web/dist/typings/service';
 
 
 export interface DashFlash {
@@ -419,7 +420,6 @@ export const DashStateUserSettingsDesc: UnaryMethodDefinitionish = {
     ,
   } as any,
 }
-import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 interface UnaryMethodDefinitionishR extends UnaryMethodDefinition<any, any> { requestStream: any; responseStream: any; };
 type UnaryMethodDefinitionish = UnaryMethodDefinitionishR;
 

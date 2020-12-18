@@ -4,6 +4,7 @@ import { grpc } from '@improbable-eng/grpc-web';
 import { Code } from '@improbable-eng/grpc-web/dist/typings/Code';
 import { share } from 'rxjs/operators';
 import { Writer, Reader } from 'protobufjs/minimal';
+import { UnaryMethodDefinition } from '@improbable-eng/grpc-web/dist/typings/service';
 
 
 export interface DashFlash {
@@ -926,7 +927,6 @@ export const DashAPICredsDeleteDesc: UnaryMethodDefinitionish = {
     ,
   } as any,
 }
-import UnaryMethodDefinition = grpc.UnaryMethodDefinition;
 interface UnaryMethodDefinitionishR extends UnaryMethodDefinition<any, any> { requestStream: any; responseStream: any; };
 type UnaryMethodDefinitionish = UnaryMethodDefinitionishR;
 

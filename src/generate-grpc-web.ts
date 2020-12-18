@@ -18,6 +18,7 @@ import FileDescriptorProto = google.protobuf.FileDescriptorProto;
 import ServiceDescriptorProto = google.protobuf.ServiceDescriptorProto;
 
 const grpc = TypeNames.anyType('grpc@@improbable-eng/grpc-web');
+const UnaryMethodDefinition = TypeNames.anyType('UnaryMethodDefinition@@improbable-eng/grpc-web/dist/typings/service');
 const share = TypeNames.anyType('share@rxjs/operators');
 const take = TypeNames.anyType('take@rxjs/operators');
 const BrowserHeaders = TypeNames.anyType('BrowserHeaders@browser-headers');
@@ -160,9 +161,9 @@ export function addGrpcWebMisc(options: Options, hasStreamingMethods: boolean, _
   let file = _file;
   file = file.addCode(
     CodeBlock.empty()
-      .addStatement('import UnaryMethodDefinition = grpc.UnaryMethodDefinition')
       .addStatement(
-        'interface UnaryMethodDefinitionishR extends UnaryMethodDefinition<any, any> { requestStream: any; responseStream: any; }'
+        'interface UnaryMethodDefinitionishR extends %T<any, any> { requestStream: any; responseStream: any; }',
+        UnaryMethodDefinition
       )
       .addStatement('type UnaryMethodDefinitionish = UnaryMethodDefinitionishR')
   );

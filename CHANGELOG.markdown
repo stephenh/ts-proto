@@ -1,4 +1,8 @@
 
+## v1.41.1
+
+* [grpc-web] Remove `import =` to support not using synthetic default imports
+
 ## v1.41.0
 
 * [grpc-web] Fix code generation errors introduced in v1.40.0
