@@ -46,6 +46,7 @@ export function defaultOptions(): Options {
     lowerCaseServiceMethods: false,
     outputEncodeMethods: true,
     outputJsonMethods: true,
+    outputMessageNames: true,
     stringEnums: false,
     outputClientImpl: true,
     returnObservable: false,
@@ -97,6 +98,9 @@ export function optionsFromParameter(parameter: string): Options {
     if (parameter.includes('outputJsonMethods=false')) {
       options.outputJsonMethods = false;
     }
+    if (parameter.includes('outputMessageNames=false')) {
+      options.outputMessageNames = false;
+    }
     if (parameter.includes('outputClientImpl=false')) {
       options.outputClientImpl = false;
     }
@@ -113,6 +117,7 @@ export function optionsFromParameter(parameter: string): Options {
       options.lowerCaseServiceMethods = true;
       options.outputEncodeMethods = false;
       options.outputJsonMethods = false;
+      options.outputMessageNames = false;
       options.outputClientImpl = false;
       options.useDate = false;
 

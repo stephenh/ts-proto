@@ -255,6 +255,8 @@ protoc --plugin=node_modules/ts-proto/protoc-gen-ts_proto ./batching.proto -I.
 
   This is useful if you want "only types".
 
+- With `--ts_proto_opt=outputMessageNames=false`, the `Message.name` field will not be output.
+
 - With `--ts_proto_opt=outputJsonMethods=false`, the `Message.fromJSON` and `Message.toJSON` methods for working with JSON-coded data will not be output.
 
   This is also useful if you want "only types".

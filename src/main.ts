@@ -78,6 +78,7 @@ export type Options = {
   oneof: OneofOption;
   outputEncodeMethods: boolean;
   outputJsonMethods: boolean;
+  outputMessageNames: boolean;
   stringEnums: boolean;
   outputClientImpl: boolean | 'grpc-web';
   addGrpcMetadata: boolean;
@@ -139,7 +140,7 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
     );
   }
 
-  if (options.outputEncodeMethods || options.outputJsonMethods) {
+  if (options.outputEncodeMethods || options.outputJsonMethods || options.outputMessageNames) {
     // then add the encoder/decoder/base instance
     visit(
       fileDesc,
@@ -147,6 +148,10 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
       (fullName, message) => {
         file = file.addProperty(generateBaseInstance(typeMap, fullName, message, options));
         let staticMethods = CodeBlock.empty().add('export const %L = ', fullName).beginHash();
+
+        staticMethods = !options.outputJsonMethods
+          ? staticMethods
+          : staticMethods.addHashEntry('name', CodeBlock.of("'%L'", fullName));
 
         staticMethods = !options.outputEncodeMethods
           ? staticMethods
