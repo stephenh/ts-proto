@@ -9,7 +9,7 @@
   },
   "scripts": {
     "build": "yarn tsc",
-    "setup": "./pbjs.sh && ./integration/pbjs.sh && ./integration/update-bins.sh && ./integration/codegen.sh",
+    "setup": "./pbjs.sh && cd ./integration && ./pbjs.sh && ./update-bins.sh && ./codegen.sh",
     "test": "yarn jest -c jest.config.js --maxWorkers=2",
     "prettier": "prettier --write {src,tests}/**/*.ts",
     "prettier:check": "prettier --list-different {src,tests}/**/*.ts"
