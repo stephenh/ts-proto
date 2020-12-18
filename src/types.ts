@@ -377,7 +377,7 @@ export function toTypeName(
   field: FieldDescriptorProto,
   options: Options
 ): TypeName {
-  let type = basicTypeName(typeMap, field, options, { keepValueType: false });
+  let type = basicTypeName(typeMap, field, options, { keepValueType: true });
   if (isRepeated(field)) {
     const mapType = detectMapType(typeMap, messageDesc, field, options);
     if (mapType) {
@@ -404,7 +404,10 @@ export function toTypeName(
   // clause, spelling each option out inside a large type union. No need for
   // union with `undefined` here, either.
   if (
-    (!isWithinOneOf(field) && isMessage(field) && !options.useOptionals) ||
+    (!isWithinOneOf(field) &&
+      isMessage(field) &&
+      !options.useOptionals &&
+      field.label !== FieldDescriptorProto.Label.LABEL_REQUIRED) ||
     (isWithinOneOf(field) && options.oneof === OneofOption.PROPERTIES) ||
     (isWithinOneOf(field) && field.proto3Optional)
   ) {
