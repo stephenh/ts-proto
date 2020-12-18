@@ -17,6 +17,7 @@ const baseFooBar: object = {
 export const protobufPackage = ''
 
 export const Baz = {
+  name: 'Baz',
   encode(message: Baz, writer: Writer = Writer.create()): Writer {
     if (message.foo !== undefined) {
       FooBar.encode(message.foo, writer.uint32(10).fork()).ldelim();
@@ -66,6 +67,7 @@ export const Baz = {
 };
 
 export const FooBar = {
+  name: 'FooBar',
   encode(_: FooBar, writer: Writer = Writer.create()): Writer {
     return writer;
   },

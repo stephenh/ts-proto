@@ -39,6 +39,7 @@ function numberToLong(number: number) {
 export const protobufPackage = 'simple'
 
 export const ImportedThing = {
+  name: 'ImportedThing',
   encode(message: ImportedThing, writer: Writer = Writer.create()): Writer {
     if (message.createdAt !== undefined && message.createdAt !== undefined) {
       Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(10).fork()).ldelim();

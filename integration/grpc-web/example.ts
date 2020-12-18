@@ -280,6 +280,7 @@ export function dashFlash_TypeToJSON(object: DashFlash_Type): string {
 }
 
 export const DashFlash = {
+  name: 'DashFlash',
   encode(message: DashFlash, writer: Writer = Writer.create()): Writer {
     writer.uint32(10).string(message.msg);
     writer.uint32(16).int32(message.type);
@@ -342,6 +343,7 @@ export const DashFlash = {
 };
 
 export const DashUserSettingsState = {
+  name: 'DashUserSettingsState',
   encode(message: DashUserSettingsState, writer: Writer = Writer.create()): Writer {
     writer.uint32(10).string(message.email);
     if (message.urls !== undefined && message.urls !== undefined) {
@@ -430,6 +432,7 @@ export const DashUserSettingsState = {
 };
 
 export const DashUserSettingsState_URLs = {
+  name: 'DashUserSettingsState_URLs',
   encode(message: DashUserSettingsState_URLs, writer: Writer = Writer.create()): Writer {
     writer.uint32(10).string(message.connectGoogle);
     writer.uint32(18).string(message.connectGithub);
@@ -492,6 +495,7 @@ export const DashUserSettingsState_URLs = {
 };
 
 export const DashCred = {
+  name: 'DashCred',
   encode(message: DashCred, writer: Writer = Writer.create()): Writer {
     writer.uint32(18).string(message.description);
     writer.uint32(26).string(message.metadata);
@@ -584,6 +588,7 @@ export const DashCred = {
 };
 
 export const DashAPICredsCreateReq = {
+  name: 'DashAPICredsCreateReq',
   encode(message: DashAPICredsCreateReq, writer: Writer = Writer.create()): Writer {
     writer.uint32(10).string(message.description);
     writer.uint32(18).string(message.metadata);
@@ -646,6 +651,7 @@ export const DashAPICredsCreateReq = {
 };
 
 export const DashAPICredsUpdateReq = {
+  name: 'DashAPICredsUpdateReq',
   encode(message: DashAPICredsUpdateReq, writer: Writer = Writer.create()): Writer {
     writer.uint32(10).string(message.credSid);
     writer.uint32(18).string(message.description);
@@ -738,6 +744,7 @@ export const DashAPICredsUpdateReq = {
 };
 
 export const DashAPICredsDeleteReq = {
+  name: 'DashAPICredsDeleteReq',
   encode(message: DashAPICredsDeleteReq, writer: Writer = Writer.create()): Writer {
     writer.uint32(10).string(message.credSid);
     writer.uint32(26).string(message.id);
@@ -800,6 +807,7 @@ export const DashAPICredsDeleteReq = {
 };
 
 export const Empty = {
+  name: 'Empty',
   encode(_: Empty, writer: Writer = Writer.create()): Writer {
     return writer;
   },

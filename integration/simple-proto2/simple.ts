@@ -44,6 +44,7 @@ export function enumWithoutZeroToJSON(object: EnumWithoutZero): string {
 }
 
 export const Issue56 = {
+  name: 'Issue56',
   encode(message: Issue56, writer: Writer = Writer.create()): Writer {
     writer.uint32(8).int32(message.test);
     return writer;

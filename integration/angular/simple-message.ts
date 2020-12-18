@@ -12,6 +12,7 @@ const baseSimpleMessage: object = {
 export const protobufPackage = 'angular'
 
 export const SimpleMessage = {
+  name: 'SimpleMessage',
   encode(message: SimpleMessage, writer: Writer = Writer.create()): Writer {
     writer.uint32(8).int32(message.numberField);
     return writer;

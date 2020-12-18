@@ -113,6 +113,7 @@ export function tile_GeomTypeToJSON(object: Tile_GeomType): string {
 }
 
 export const Tile = {
+  name: 'Tile',
   encode(message: Tile, writer: Writer = Writer.create()): Writer {
     for (const v of message.layers) {
       Tile_Layer.encode(v!, writer.uint32(26).fork()).ldelim();
@@ -169,6 +170,7 @@ export const Tile = {
 };
 
 export const Tile_Value = {
+  name: 'Tile_Value',
   encode(message: Tile_Value, writer: Writer = Writer.create()): Writer {
     writer.uint32(10).string(message.stringValue);
     writer.uint32(21).float(message.floatValue);
@@ -306,6 +308,7 @@ export const Tile_Value = {
 };
 
 export const Tile_Feature = {
+  name: 'Tile_Feature',
   encode(message: Tile_Feature, writer: Writer = Writer.create()): Writer {
     writer.uint32(8).uint64(message.id);
     writer.uint32(18).fork();
@@ -434,6 +437,7 @@ export const Tile_Feature = {
 };
 
 export const Tile_Layer = {
+  name: 'Tile_Layer',
   encode(message: Tile_Layer, writer: Writer = Writer.create()): Writer {
     writer.uint32(120).uint32(message.version);
     writer.uint32(10).string(message.name);

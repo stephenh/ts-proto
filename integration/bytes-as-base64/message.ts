@@ -9,6 +9,7 @@ const baseMessage: object = {
 export const protobufPackage = ''
 
 export const Message = {
+  name: 'Message',
   fromJSON(object: any): Message {
     const message = { ...baseMessage } as Message;
     if (object.data !== undefined && object.data !== null) {

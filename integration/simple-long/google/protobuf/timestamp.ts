@@ -112,6 +112,7 @@ const baseTimestamp: object = {
 export const protobufPackage = 'google.protobuf'
 
 export const Timestamp = {
+  name: 'Timestamp',
   encode(message: Timestamp, writer: Writer = Writer.create()): Writer {
     writer.uint32(8).int64(message.seconds);
     writer.uint32(16).int32(message.nanos);

@@ -140,6 +140,7 @@ interface Rpc {
 export const protobufPackage = 'batching'
 
 export const BatchQueryRequest = {
+  name: 'BatchQueryRequest',
   encode(message: BatchQueryRequest, writer: Writer = Writer.create()): Writer {
     for (const v of message.ids) {
       writer.uint32(10).string(v!);
@@ -196,6 +197,7 @@ export const BatchQueryRequest = {
 };
 
 export const BatchQueryResponse = {
+  name: 'BatchQueryResponse',
   encode(message: BatchQueryResponse, writer: Writer = Writer.create()): Writer {
     for (const v of message.entities) {
       Entity.encode(v!, writer.uint32(10).fork()).ldelim();
@@ -252,6 +254,7 @@ export const BatchQueryResponse = {
 };
 
 export const BatchMapQueryRequest = {
+  name: 'BatchMapQueryRequest',
   encode(message: BatchMapQueryRequest, writer: Writer = Writer.create()): Writer {
     for (const v of message.ids) {
       writer.uint32(10).string(v!);
@@ -308,6 +311,7 @@ export const BatchMapQueryRequest = {
 };
 
 export const BatchMapQueryResponse = {
+  name: 'BatchMapQueryResponse',
   encode(message: BatchMapQueryResponse, writer: Writer = Writer.create()): Writer {
     Object.entries(message.entities).forEach(([key, value]) => {
       BatchMapQueryResponse_EntitiesEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).ldelim();
@@ -370,6 +374,7 @@ export const BatchMapQueryResponse = {
 };
 
 export const BatchMapQueryResponse_EntitiesEntry = {
+  name: 'BatchMapQueryResponse_EntitiesEntry',
   encode(message: BatchMapQueryResponse_EntitiesEntry, writer: Writer = Writer.create()): Writer {
     writer.uint32(10).string(message.key);
     if (message.value !== undefined && message.value !== undefined) {
@@ -434,6 +439,7 @@ export const BatchMapQueryResponse_EntitiesEntry = {
 };
 
 export const GetOnlyMethodRequest = {
+  name: 'GetOnlyMethodRequest',
   encode(message: GetOnlyMethodRequest, writer: Writer = Writer.create()): Writer {
     writer.uint32(10).string(message.id);
     return writer;
@@ -481,6 +487,7 @@ export const GetOnlyMethodRequest = {
 };
 
 export const GetOnlyMethodResponse = {
+  name: 'GetOnlyMethodResponse',
   encode(message: GetOnlyMethodResponse, writer: Writer = Writer.create()): Writer {
     if (message.entity !== undefined && message.entity !== undefined) {
       Entity.encode(message.entity, writer.uint32(10).fork()).ldelim();
@@ -530,6 +537,7 @@ export const GetOnlyMethodResponse = {
 };
 
 export const WriteMethodRequest = {
+  name: 'WriteMethodRequest',
   encode(message: WriteMethodRequest, writer: Writer = Writer.create()): Writer {
     writer.uint32(10).string(message.id);
     return writer;
@@ -577,6 +585,7 @@ export const WriteMethodRequest = {
 };
 
 export const WriteMethodResponse = {
+  name: 'WriteMethodResponse',
   encode(_: WriteMethodResponse, writer: Writer = Writer.create()): Writer {
     return writer;
   },
@@ -609,6 +618,7 @@ export const WriteMethodResponse = {
 };
 
 export const Entity = {
+  name: 'Entity',
   encode(message: Entity, writer: Writer = Writer.create()): Writer {
     writer.uint32(10).string(message.id);
     writer.uint32(18).string(message.name);

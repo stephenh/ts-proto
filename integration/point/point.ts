@@ -22,6 +22,7 @@ const baseArea: object = {
 export const protobufPackage = ''
 
 export const Point = {
+  name: 'Point',
   encode(message: Point, writer: Writer = Writer.create()): Writer {
     writer.uint32(9).double(message.lat);
     writer.uint32(17).double(message.lng);
@@ -84,6 +85,7 @@ export const Point = {
 };
 
 export const Area = {
+  name: 'Area',
   encode(message: Area, writer: Writer = Writer.create()): Writer {
     if (message.nw !== undefined && message.nw !== undefined) {
       Point.encode(message.nw, writer.uint32(10).fork()).ldelim();

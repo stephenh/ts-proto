@@ -152,6 +152,7 @@ function longToString(long: Long) {
 export const protobufPackage = 'google.protobuf'
 
 export const DoubleValue = {
+  name: 'DoubleValue',
   encode(message: DoubleValue, writer: Writer = Writer.create()): Writer {
     writer.uint32(9).double(message.value);
     return writer;
@@ -199,6 +200,7 @@ export const DoubleValue = {
 };
 
 export const FloatValue = {
+  name: 'FloatValue',
   encode(message: FloatValue, writer: Writer = Writer.create()): Writer {
     writer.uint32(13).float(message.value);
     return writer;
@@ -246,6 +248,7 @@ export const FloatValue = {
 };
 
 export const Int64Value = {
+  name: 'Int64Value',
   encode(message: Int64Value, writer: Writer = Writer.create()): Writer {
     writer.uint32(8).int64(message.value);
     return writer;
@@ -293,6 +296,7 @@ export const Int64Value = {
 };
 
 export const UInt64Value = {
+  name: 'UInt64Value',
   encode(message: UInt64Value, writer: Writer = Writer.create()): Writer {
     writer.uint32(8).uint64(message.value);
     return writer;
@@ -340,6 +344,7 @@ export const UInt64Value = {
 };
 
 export const Int32Value = {
+  name: 'Int32Value',
   encode(message: Int32Value, writer: Writer = Writer.create()): Writer {
     writer.uint32(8).int32(message.value);
     return writer;
@@ -387,6 +392,7 @@ export const Int32Value = {
 };
 
 export const UInt32Value = {
+  name: 'UInt32Value',
   encode(message: UInt32Value, writer: Writer = Writer.create()): Writer {
     writer.uint32(8).uint32(message.value);
     return writer;
@@ -434,6 +440,7 @@ export const UInt32Value = {
 };
 
 export const BoolValue = {
+  name: 'BoolValue',
   encode(message: BoolValue, writer: Writer = Writer.create()): Writer {
     writer.uint32(8).bool(message.value);
     return writer;
@@ -481,6 +488,7 @@ export const BoolValue = {
 };
 
 export const StringValue = {
+  name: 'StringValue',
   encode(message: StringValue, writer: Writer = Writer.create()): Writer {
     writer.uint32(10).string(message.value);
     return writer;
@@ -528,6 +536,7 @@ export const StringValue = {
 };
 
 export const BytesValue = {
+  name: 'BytesValue',
   encode(message: BytesValue, writer: Writer = Writer.create()): Writer {
     writer.uint32(10).bytes(message.value);
     return writer;

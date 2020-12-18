@@ -41,6 +41,7 @@ const baseDateMessage: object = {
 export const protobufPackage = 'google.type'
 
 export const DateMessage = {
+  name: 'DateMessage',
   encode(message: DateMessage, writer: Writer = Writer.create()): Writer {
     writer.uint32(8).int32(message.year);
     writer.uint32(16).int32(message.month);
