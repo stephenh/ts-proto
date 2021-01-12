@@ -302,43 +302,43 @@ function fromTimestamp(t: Timestamp): Date {
   return new Date(millis);
 }
 
-export interface MetaI {
-  readonly meta: 'object' | 'array' | 'map' | 'union' | 'builtin';
+export interface MetaBase {
+  readonly kind: 'object' | 'array' | 'map' | 'union' | 'builtin';
 }
 
-export interface MetaO extends MetaI {
-  readonly meta: 'object';
+export interface MetaMessage extends MetaBase {
+  readonly kind: 'object';
   readonly type: string;
   readonly name: string;
 }
 
-export interface MetaA extends MetaI {
-  readonly meta: 'array';
-  readonly type: MetaI | string;
+export interface MetaArray extends MetaBase {
+  readonly kind: 'array';
+  readonly type: MetaBase | string;
 }
 
-export interface MetaM extends MetaI {
-  readonly meta: 'map';
+export interface MetaMap extends MetaBase {
+  readonly kind: 'map';
   readonly key: string;
-  readonly value: MetaI | string;
+  readonly value: MetaBase | string;
 }
 
-export interface MetaU extends MetaI {
-  readonly meta: 'union';
-  readonly choices: Array<MetaI | string | undefined>;
+export interface MetaUnion extends MetaBase {
+  readonly kind: 'union';
+  readonly choices: Array<MetaBase | string | undefined>;
 }
 
-export interface MetaS<T, R> {
-  readonly request: MetaO;
-  readonly response: MetaO;
+export interface MetaService<T, R> {
+  readonly request: MetaMessage;
+  readonly response: MetaMessage;
   readonly clientStreaming: boolean;
   readonly serverStreaming: boolean;
   readonly encodeRequest?: (message: T, writer: Writer) => Writer;
   readonly decodeResponse?: (input: Uint8Array | Reader, length?: number) => R;
 }
 
-export interface MetaB extends MetaI {
-  readonly meta: 'builtin';
+export interface MetaPrimitive extends MetaBase {
+  readonly kind: 'builtin';
   readonly type: string;
   readonly original: string;
 }
@@ -1240,127 +1240,127 @@ export const Empty = {
   },
 };
 
-export const metaSimple: { [key in keyof Required<Simple>]: MetaI | string } = {
-  name: {meta:'builtin', type:'string', original:'string'} as MetaB,
-  age: {meta:'builtin', type:'number', original:'int32'} as MetaB,
-  createdAt: {meta:'union', choices: [undefined, {meta:'builtin', type:'Date', original:'.google.protobuf.Timestamp'} as MetaB]} as MetaU,
-  child: {meta:'union', choices: [undefined, {meta:'object', type:'.simple.Child', name:'Child'} as MetaO]} as MetaU,
-  state: {meta:'object', type:'.simple.StateEnum', name:'StateEnum'} as MetaO,
-  grandChildren: {meta:'array', type:{meta:'object', type:'.simple.Child', name:'Child'} as MetaO} as MetaA,
-  coins: {meta:'array', type:{meta:'builtin', type:'number', original:'int32'} as MetaB} as MetaA,
-  snacks: {meta:'array', type:{meta:'builtin', type:'string', original:'string'} as MetaB} as MetaA,
-  oldStates: {meta:'array', type:{meta:'object', type:'.simple.StateEnum', name:'StateEnum'} as MetaO} as MetaA,
-  thing: {meta:'union', choices: [undefined, {meta:'object', type:'.simple.ImportedThing', name:'ImportedThing'} as MetaO]} as MetaU,
-  blobs: {meta:'array', type:{meta:'builtin', type:'Uint8Array', original:'bytes'} as MetaB} as MetaA,
-  birthday: {meta:'union', choices: [undefined, {meta:'object', type:'.google.type.Date', name:'DateMessage'} as MetaO]} as MetaU,
-  blob: {meta:'builtin', type:'Uint8Array', original:'bytes'} as MetaB,
+export const metaSimple: { [key in keyof Required<Simple>]: MetaBase | string } = {
+  name: {kind:'builtin', type:'string', original:'string'} as MetaPrimitive,
+  age: {kind:'builtin', type:'number', original:'int32'} as MetaPrimitive,
+  createdAt: {kind:'union', choices: [undefined, {kind:'builtin', type:'Date', original:'.google.protobuf.Timestamp'} as MetaPrimitive]} as MetaUnion,
+  child: {kind:'union', choices: [undefined, {kind:'object', type:'.simple.Child', name:'Child'} as MetaMessage]} as MetaUnion,
+  state: {kind:'object', type:'.simple.StateEnum', name:'StateEnum'} as MetaMessage,
+  grandChildren: {kind:'array', type:{kind:'object', type:'.simple.Child', name:'Child'} as MetaMessage} as MetaArray,
+  coins: {kind:'array', type:{kind:'builtin', type:'number', original:'int32'} as MetaPrimitive} as MetaArray,
+  snacks: {kind:'array', type:{kind:'builtin', type:'string', original:'string'} as MetaPrimitive} as MetaArray,
+  oldStates: {kind:'array', type:{kind:'object', type:'.simple.StateEnum', name:'StateEnum'} as MetaMessage} as MetaArray,
+  thing: {kind:'union', choices: [undefined, {kind:'object', type:'.simple.ImportedThing', name:'ImportedThing'} as MetaMessage]} as MetaUnion,
+  blobs: {kind:'array', type:{kind:'builtin', type:'Uint8Array', original:'bytes'} as MetaPrimitive} as MetaArray,
+  birthday: {kind:'union', choices: [undefined, {kind:'object', type:'.google.type.Date', name:'DateMessage'} as MetaMessage]} as MetaUnion,
+  blob: {kind:'builtin', type:'Uint8Array', original:'bytes'} as MetaPrimitive,
 }
-export const metaChild: { [key in keyof Required<Child>]: MetaI | string } = {
-  name: {meta:'builtin', type:'string', original:'string'} as MetaB,
-  type: {meta:'object', type:'.simple.Child.Type', name:'Child_Type'} as MetaO,
+export const metaChild: { [key in keyof Required<Child>]: MetaBase | string } = {
+  name: {kind:'builtin', type:'string', original:'string'} as MetaPrimitive,
+  type: {kind:'object', type:'.simple.Child.Type', name:'Child_Type'} as MetaMessage,
 }
-export const metaNested: { [key in keyof Required<Nested>]: MetaI | string } = {
-  name: {meta:'builtin', type:'string', original:'string'} as MetaB,
-  message: {meta:'union', choices: [undefined, {meta:'object', type:'.simple.Nested.InnerMessage', name:'Nested_InnerMessage'} as MetaO]} as MetaU,
-  state: {meta:'object', type:'.simple.Nested.InnerEnum', name:'Nested_InnerEnum'} as MetaO,
+export const metaNested: { [key in keyof Required<Nested>]: MetaBase | string } = {
+  name: {kind:'builtin', type:'string', original:'string'} as MetaPrimitive,
+  message: {kind:'union', choices: [undefined, {kind:'object', type:'.simple.Nested.InnerMessage', name:'Nested_InnerMessage'} as MetaMessage]} as MetaUnion,
+  state: {kind:'object', type:'.simple.Nested.InnerEnum', name:'Nested_InnerEnum'} as MetaMessage,
 }
-export const metaNested_InnerMessage: { [key in keyof Required<Nested_InnerMessage>]: MetaI | string } = {
-  name: {meta:'builtin', type:'string', original:'string'} as MetaB,
-  deep: {meta:'union', choices: [undefined, {meta:'object', type:'.simple.Nested.InnerMessage.DeepMessage', name:'Nested_InnerMessage_DeepMessage'} as MetaO]} as MetaU,
+export const metaNested_InnerMessage: { [key in keyof Required<Nested_InnerMessage>]: MetaBase | string } = {
+  name: {kind:'builtin', type:'string', original:'string'} as MetaPrimitive,
+  deep: {kind:'union', choices: [undefined, {kind:'object', type:'.simple.Nested.InnerMessage.DeepMessage', name:'Nested_InnerMessage_DeepMessage'} as MetaMessage]} as MetaUnion,
 }
-export const metaNested_InnerMessage_DeepMessage: { [key in keyof Required<Nested_InnerMessage_DeepMessage>]: MetaI | string } = {
-  name: {meta:'builtin', type:'string', original:'string'} as MetaB,
+export const metaNested_InnerMessage_DeepMessage: { [key in keyof Required<Nested_InnerMessage_DeepMessage>]: MetaBase | string } = {
+  name: {kind:'builtin', type:'string', original:'string'} as MetaPrimitive,
 }
-export const metaOneOfMessage: { [key in keyof Required<OneOfMessage>]: MetaI | string } = {
-  first: {meta:'union', choices: [undefined, {meta:'builtin', type:'string', original:'string'} as MetaB]} as MetaU,
-  last: {meta:'union', choices: [undefined, {meta:'builtin', type:'string', original:'string'} as MetaB]} as MetaU,
+export const metaOneOfMessage: { [key in keyof Required<OneOfMessage>]: MetaBase | string } = {
+  first: {kind:'union', choices: [undefined, {kind:'builtin', type:'string', original:'string'} as MetaPrimitive]} as MetaUnion,
+  last: {kind:'union', choices: [undefined, {kind:'builtin', type:'string', original:'string'} as MetaPrimitive]} as MetaUnion,
 }
-export const metaSimpleWithWrappers: { [key in keyof Required<SimpleWithWrappers>]: MetaI | string } = {
-  name: {meta:'union', choices: [undefined, {meta:'union', choices: ['string', 'undefined']} as MetaU]} as MetaU,
-  age: {meta:'union', choices: [undefined, {meta:'union', choices: ['number', 'undefined']} as MetaU]} as MetaU,
-  enabled: {meta:'union', choices: [undefined, {meta:'union', choices: ['boolean', 'undefined']} as MetaU]} as MetaU,
-  coins: {meta:'array', type:{meta:'builtin', type:'number', original:'.google.protobuf.Int32Value'} as MetaB} as MetaA,
-  snacks: {meta:'array', type:{meta:'builtin', type:'string', original:'.google.protobuf.StringValue'} as MetaB} as MetaA,
+export const metaSimpleWithWrappers: { [key in keyof Required<SimpleWithWrappers>]: MetaBase | string } = {
+  name: {kind:'union', choices: [undefined, {kind:'union', choices: ['string', 'undefined']} as MetaUnion]} as MetaUnion,
+  age: {kind:'union', choices: [undefined, {kind:'union', choices: ['number', 'undefined']} as MetaUnion]} as MetaUnion,
+  enabled: {kind:'union', choices: [undefined, {kind:'union', choices: ['boolean', 'undefined']} as MetaUnion]} as MetaUnion,
+  coins: {kind:'array', type:{kind:'builtin', type:'number', original:'.google.protobuf.Int32Value'} as MetaPrimitive} as MetaArray,
+  snacks: {kind:'array', type:{kind:'builtin', type:'string', original:'.google.protobuf.StringValue'} as MetaPrimitive} as MetaArray,
 }
-export const metaEntity: { [key in keyof Required<Entity>]: MetaI | string } = {
-  id: {meta:'builtin', type:'number', original:'int32'} as MetaB,
+export const metaEntity: { [key in keyof Required<Entity>]: MetaBase | string } = {
+  id: {kind:'builtin', type:'number', original:'int32'} as MetaPrimitive,
 }
-export const metaSimpleWithMap: { [key in keyof Required<SimpleWithMap>]: MetaI | string } = {
-  entitiesById: {meta:'map', key:'number', value:{meta:'object', type:'.simple.Entity', name:'Entity'} as MetaO} as MetaM,
-  nameLookup: {meta:'map', key:'string', value:{meta:'builtin', type:'string', original:'string'} as MetaB} as MetaM,
-  intLookup: {meta:'map', key:'number', value:{meta:'builtin', type:'number', original:'int32'} as MetaB} as MetaM,
-  mapOfTimestamps: {meta:'map', key:'string', value:{meta:'builtin', type:'Date', original:'.google.protobuf.Timestamp'} as MetaB} as MetaM,
-  mapOfBytes: {meta:'map', key:'string', value:{meta:'builtin', type:'Uint8Array', original:'bytes'} as MetaB} as MetaM,
+export const metaSimpleWithMap: { [key in keyof Required<SimpleWithMap>]: MetaBase | string } = {
+  entitiesById: {kind:'map', key:'number', value:{kind:'object', type:'.simple.Entity', name:'Entity'} as MetaMessage} as MetaMap,
+  nameLookup: {kind:'map', key:'string', value:{kind:'builtin', type:'string', original:'string'} as MetaPrimitive} as MetaMap,
+  intLookup: {kind:'map', key:'number', value:{kind:'builtin', type:'number', original:'int32'} as MetaPrimitive} as MetaMap,
+  mapOfTimestamps: {kind:'map', key:'string', value:{kind:'builtin', type:'Date', original:'.google.protobuf.Timestamp'} as MetaPrimitive} as MetaMap,
+  mapOfBytes: {kind:'map', key:'string', value:{kind:'builtin', type:'Uint8Array', original:'bytes'} as MetaPrimitive} as MetaMap,
 }
-export const metaSimpleWithMap_EntitiesByIdEntry: { [key in keyof Required<SimpleWithMap_EntitiesByIdEntry>]: MetaI | string } = {
-  key: {meta:'builtin', type:'number', original:'int32'} as MetaB,
-  value: {meta:'union', choices: [undefined, {meta:'object', type:'.simple.Entity', name:'Entity'} as MetaO]} as MetaU,
+export const metaSimpleWithMap_EntitiesByIdEntry: { [key in keyof Required<SimpleWithMap_EntitiesByIdEntry>]: MetaBase | string } = {
+  key: {kind:'builtin', type:'number', original:'int32'} as MetaPrimitive,
+  value: {kind:'union', choices: [undefined, {kind:'object', type:'.simple.Entity', name:'Entity'} as MetaMessage]} as MetaUnion,
 }
-export const metaSimpleWithMap_NameLookupEntry: { [key in keyof Required<SimpleWithMap_NameLookupEntry>]: MetaI | string } = {
-  key: {meta:'builtin', type:'string', original:'string'} as MetaB,
-  value: {meta:'builtin', type:'string', original:'string'} as MetaB,
+export const metaSimpleWithMap_NameLookupEntry: { [key in keyof Required<SimpleWithMap_NameLookupEntry>]: MetaBase | string } = {
+  key: {kind:'builtin', type:'string', original:'string'} as MetaPrimitive,
+  value: {kind:'builtin', type:'string', original:'string'} as MetaPrimitive,
 }
-export const metaSimpleWithMap_IntLookupEntry: { [key in keyof Required<SimpleWithMap_IntLookupEntry>]: MetaI | string } = {
-  key: {meta:'builtin', type:'number', original:'int32'} as MetaB,
-  value: {meta:'builtin', type:'number', original:'int32'} as MetaB,
+export const metaSimpleWithMap_IntLookupEntry: { [key in keyof Required<SimpleWithMap_IntLookupEntry>]: MetaBase | string } = {
+  key: {kind:'builtin', type:'number', original:'int32'} as MetaPrimitive,
+  value: {kind:'builtin', type:'number', original:'int32'} as MetaPrimitive,
 }
-export const metaSimpleWithMap_MapOfTimestampsEntry: { [key in keyof Required<SimpleWithMap_MapOfTimestampsEntry>]: MetaI | string } = {
-  key: {meta:'builtin', type:'string', original:'string'} as MetaB,
-  value: {meta:'union', choices: [undefined, {meta:'builtin', type:'Date', original:'.google.protobuf.Timestamp'} as MetaB]} as MetaU,
+export const metaSimpleWithMap_MapOfTimestampsEntry: { [key in keyof Required<SimpleWithMap_MapOfTimestampsEntry>]: MetaBase | string } = {
+  key: {kind:'builtin', type:'string', original:'string'} as MetaPrimitive,
+  value: {kind:'union', choices: [undefined, {kind:'builtin', type:'Date', original:'.google.protobuf.Timestamp'} as MetaPrimitive]} as MetaUnion,
 }
-export const metaSimpleWithMap_MapOfBytesEntry: { [key in keyof Required<SimpleWithMap_MapOfBytesEntry>]: MetaI | string } = {
-  key: {meta:'builtin', type:'string', original:'string'} as MetaB,
-  value: {meta:'builtin', type:'Uint8Array', original:'bytes'} as MetaB,
+export const metaSimpleWithMap_MapOfBytesEntry: { [key in keyof Required<SimpleWithMap_MapOfBytesEntry>]: MetaBase | string } = {
+  key: {kind:'builtin', type:'string', original:'string'} as MetaPrimitive,
+  value: {kind:'builtin', type:'Uint8Array', original:'bytes'} as MetaPrimitive,
 }
-export const metaSimpleWithSnakeCaseMap: { [key in keyof Required<SimpleWithSnakeCaseMap>]: MetaI | string } = {
-  entitiesById: {meta:'map', key:'number', value:{meta:'object', type:'.simple.Entity', name:'Entity'} as MetaO} as MetaM,
+export const metaSimpleWithSnakeCaseMap: { [key in keyof Required<SimpleWithSnakeCaseMap>]: MetaBase | string } = {
+  entitiesById: {kind:'map', key:'number', value:{kind:'object', type:'.simple.Entity', name:'Entity'} as MetaMessage} as MetaMap,
 }
-export const metaSimpleWithSnakeCaseMap_EntitiesByIdEntry: { [key in keyof Required<SimpleWithSnakeCaseMap_EntitiesByIdEntry>]: MetaI | string } = {
-  key: {meta:'builtin', type:'number', original:'int32'} as MetaB,
-  value: {meta:'union', choices: [undefined, {meta:'object', type:'.simple.Entity', name:'Entity'} as MetaO]} as MetaU,
+export const metaSimpleWithSnakeCaseMap_EntitiesByIdEntry: { [key in keyof Required<SimpleWithSnakeCaseMap_EntitiesByIdEntry>]: MetaBase | string } = {
+  key: {kind:'builtin', type:'number', original:'int32'} as MetaPrimitive,
+  value: {kind:'union', choices: [undefined, {kind:'object', type:'.simple.Entity', name:'Entity'} as MetaMessage]} as MetaUnion,
 }
-export const metaSimpleWithMapOfEnums: { [key in keyof Required<SimpleWithMapOfEnums>]: MetaI | string } = {
-  enumsById: {meta:'map', key:'number', value:{meta:'object', type:'.simple.StateEnum', name:'StateEnum'} as MetaO} as MetaM,
+export const metaSimpleWithMapOfEnums: { [key in keyof Required<SimpleWithMapOfEnums>]: MetaBase | string } = {
+  enumsById: {kind:'map', key:'number', value:{kind:'object', type:'.simple.StateEnum', name:'StateEnum'} as MetaMessage} as MetaMap,
 }
-export const metaSimpleWithMapOfEnums_EnumsByIdEntry: { [key in keyof Required<SimpleWithMapOfEnums_EnumsByIdEntry>]: MetaI | string } = {
-  key: {meta:'builtin', type:'number', original:'int32'} as MetaB,
-  value: {meta:'object', type:'.simple.StateEnum', name:'StateEnum'} as MetaO,
+export const metaSimpleWithMapOfEnums_EnumsByIdEntry: { [key in keyof Required<SimpleWithMapOfEnums_EnumsByIdEntry>]: MetaBase | string } = {
+  key: {kind:'builtin', type:'number', original:'int32'} as MetaPrimitive,
+  value: {kind:'object', type:'.simple.StateEnum', name:'StateEnum'} as MetaMessage,
 }
-export const metaPingRequest: { [key in keyof Required<PingRequest>]: MetaI | string } = {
-  input: {meta:'builtin', type:'string', original:'string'} as MetaB,
+export const metaPingRequest: { [key in keyof Required<PingRequest>]: MetaBase | string } = {
+  input: {kind:'builtin', type:'string', original:'string'} as MetaPrimitive,
 }
-export const metaPingResponse: { [key in keyof Required<PingResponse>]: MetaI | string } = {
-  output: {meta:'builtin', type:'string', original:'string'} as MetaB,
+export const metaPingResponse: { [key in keyof Required<PingResponse>]: MetaBase | string } = {
+  output: {kind:'builtin', type:'string', original:'string'} as MetaPrimitive,
 }
-export const metaNumbers: { [key in keyof Required<Numbers>]: MetaI | string } = {
-  double: {meta:'builtin', type:'number', original:'double'} as MetaB,
-  float: {meta:'builtin', type:'number', original:'float'} as MetaB,
-  int32: {meta:'builtin', type:'number', original:'int32'} as MetaB,
-  int64: {meta:'builtin', type:'number', original:'int64'} as MetaB,
-  uint32: {meta:'builtin', type:'number', original:'uint32'} as MetaB,
-  uint64: {meta:'builtin', type:'number', original:'uint64'} as MetaB,
-  sint32: {meta:'builtin', type:'number', original:'sint32'} as MetaB,
-  sint64: {meta:'builtin', type:'number', original:'sint64'} as MetaB,
-  fixed32: {meta:'builtin', type:'number', original:'fixed32'} as MetaB,
-  fixed64: {meta:'builtin', type:'number', original:'fixed64'} as MetaB,
-  sfixed32: {meta:'builtin', type:'number', original:'sfixed32'} as MetaB,
-  sfixed64: {meta:'builtin', type:'number', original:'sfixed64'} as MetaB,
+export const metaNumbers: { [key in keyof Required<Numbers>]: MetaBase | string } = {
+  double: {kind:'builtin', type:'number', original:'double'} as MetaPrimitive,
+  float: {kind:'builtin', type:'number', original:'float'} as MetaPrimitive,
+  int32: {kind:'builtin', type:'number', original:'int32'} as MetaPrimitive,
+  int64: {kind:'builtin', type:'number', original:'int64'} as MetaPrimitive,
+  uint32: {kind:'builtin', type:'number', original:'uint32'} as MetaPrimitive,
+  uint64: {kind:'builtin', type:'number', original:'uint64'} as MetaPrimitive,
+  sint32: {kind:'builtin', type:'number', original:'sint32'} as MetaPrimitive,
+  sint64: {kind:'builtin', type:'number', original:'sint64'} as MetaPrimitive,
+  fixed32: {kind:'builtin', type:'number', original:'fixed32'} as MetaPrimitive,
+  fixed64: {kind:'builtin', type:'number', original:'fixed64'} as MetaPrimitive,
+  sfixed32: {kind:'builtin', type:'number', original:'sfixed32'} as MetaPrimitive,
+  sfixed64: {kind:'builtin', type:'number', original:'sfixed64'} as MetaPrimitive,
 }
-export const metaSimpleButOptional: { [key in keyof Required<SimpleButOptional>]: MetaI | string } = {
-  name: {meta:'union', choices: [undefined, {meta:'builtin', type:'string', original:'string'} as MetaB]} as MetaU,
-  age: {meta:'union', choices: [undefined, {meta:'builtin', type:'number', original:'int32'} as MetaB]} as MetaU,
-  createdAt: {meta:'union', choices: [undefined, {meta:'builtin', type:'Date', original:'.google.protobuf.Timestamp'} as MetaB]} as MetaU,
-  child: {meta:'union', choices: [undefined, {meta:'object', type:'.simple.Child', name:'Child'} as MetaO]} as MetaU,
-  state: {meta:'union', choices: [undefined, {meta:'object', type:'.simple.StateEnum', name:'StateEnum'} as MetaO]} as MetaU,
-  thing: {meta:'union', choices: [undefined, {meta:'object', type:'.simple.ImportedThing', name:'ImportedThing'} as MetaO]} as MetaU,
-  birthday: {meta:'union', choices: [undefined, {meta:'object', type:'.google.type.Date', name:'DateMessage'} as MetaO]} as MetaU,
+export const metaSimpleButOptional: { [key in keyof Required<SimpleButOptional>]: MetaBase | string } = {
+  name: {kind:'union', choices: [undefined, {kind:'builtin', type:'string', original:'string'} as MetaPrimitive]} as MetaUnion,
+  age: {kind:'union', choices: [undefined, {kind:'builtin', type:'number', original:'int32'} as MetaPrimitive]} as MetaUnion,
+  createdAt: {kind:'union', choices: [undefined, {kind:'builtin', type:'Date', original:'.google.protobuf.Timestamp'} as MetaPrimitive]} as MetaUnion,
+  child: {kind:'union', choices: [undefined, {kind:'object', type:'.simple.Child', name:'Child'} as MetaMessage]} as MetaUnion,
+  state: {kind:'union', choices: [undefined, {kind:'object', type:'.simple.StateEnum', name:'StateEnum'} as MetaMessage]} as MetaUnion,
+  thing: {kind:'union', choices: [undefined, {kind:'object', type:'.simple.ImportedThing', name:'ImportedThing'} as MetaMessage]} as MetaUnion,
+  birthday: {kind:'union', choices: [undefined, {kind:'object', type:'.google.type.Date', name:'DateMessage'} as MetaMessage]} as MetaUnion,
 }
-export const metaEmpty: { [key in keyof Required<Empty>]: MetaI | string } = {
+export const metaEmpty: { [key in keyof Required<Empty>]: MetaBase | string } = {
 }
-export const metaPingService: { [key in keyof PingService]: MetaS<any, any> } = {
-  ping: {request: {meta:'object', type:'.simple.PingRequest', name:'PingRequest'} as MetaO, response: {meta:'object', type:'.simple.PingResponse', name:'PingResponse'} as MetaO, clientStreaming: false, serverStreaming: false, encodeRequest: PingRequest.encode, decodeResponse: PingResponse.decode} as MetaS<PingRequest, PingResponse>,
+export const metaPingService: { [key in keyof PingService]: MetaService<any, any> } = {
+  ping: {request: {kind:'object', type:'.simple.PingRequest', name:'PingRequest'} as MetaMessage, response: {kind:'object', type:'.simple.PingResponse', name:'PingResponse'} as MetaMessage, clientStreaming: false, serverStreaming: false, encodeRequest: PingRequest.encode, decodeResponse: PingResponse.decode} as MetaService<PingRequest, PingResponse>,
 }
-export const metaPackageSimple: { [key: string]: ['service', string, any, { [key: string]: MetaS<any, any> }] | ['enum', string, any, any] | ['message', string, any, { [key: string]: MetaI | string }] } = {
+export const metadata: { [key: string]: ['service', string, any, { [key: string]: MetaService<any, any> }] | ['enum', string, any, any] | ['message', string, any, { [key: string]: MetaBase | string }] } = {
   StateEnum: ['enum', '.simple.StateEnum', StateEnum, undefined],
   Simple: ['message', '.simple.Simple', Simple, metaSimple],
   Child: ['message', '.simple.Child', Child, metaChild],

@@ -88,7 +88,7 @@ export type Options = {
   nestJs: boolean;
   env: EnvOption;
   addUnrecognizedEnum: boolean;
-  outputMetaTypings: boolean;
+  outputSchema: boolean;
 };
 
 export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, parameter: string): FileSpec {
@@ -230,7 +230,7 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
     file = addTimestampMethods(file, options);
   }
 
-  if (options.outputMetaTypings) {
+  if (options.outputSchema) {
     file = getMetaInterfaces().reduce((f, i) => {
       if (i instanceof InterfaceSpec) {
         return f.addInterface(i);

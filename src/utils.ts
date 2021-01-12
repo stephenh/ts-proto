@@ -54,7 +54,7 @@ export function defaultOptions(): Options {
     nestJs: false,
     env: EnvOption.BOTH,
     addUnrecognizedEnum: true,
-    outputMetaTypings: false,
+    outputSchema: false,
   };
 }
 
@@ -137,8 +137,8 @@ export function optionsFromParameter(parameter: string): Options {
     if (parameter.includes('unrecognizedEnum=false')) {
       options.addUnrecognizedEnum = false;
     }
-    if (parameter.includes('outputMetaTypings=true')) {
-      options.outputMetaTypings = true;
+    if (parameter.includes('outputSchema=true')) {
+      options.outputSchema = true;
     }
   }
   return options;

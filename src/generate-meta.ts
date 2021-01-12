@@ -10,19 +10,7 @@ import {
   TypeMap,
 } from './types';
 import SourceInfo from './sourceInfo';
-import {
-  Any,
-  CodeBlock,
-  InterfaceSpec,
-  Member,
-  Modifier,
-  PropertySpec,
-  TypeAliasSpec,
-  TypeName,
-  TypeNames,
-  TypeVariable,
-  Union,
-} from 'ts-poet';
+import { Any, CodeBlock, InterfaceSpec, Member, Modifier, PropertySpec, TypeName, TypeNames, Union } from 'ts-poet';
 import { maybeSnakeToCamel } from './case';
 import { OneofOption, Options } from './main';
 import { google } from '../build/pbjs';
@@ -33,55 +21,55 @@ import FieldDescriptorProto = google.protobuf.FieldDescriptorProto;
 
 export function getMetaInterfaces() {
   return [
-    InterfaceSpec.create('MetaI')
+    InterfaceSpec.create('MetaBase')
       .addModifiers(Modifier.EXPORT)
       .addProperty(
         PropertySpec.create(
-          'meta',
+          'kind',
           TypeNames.unionType(`'object'`, `'array'`, `'map'`, `'union'`, `'builtin'`),
           false,
           Modifier.READONLY
         )
       ),
-    InterfaceSpec.create('MetaO')
+    InterfaceSpec.create('MetaMessage')
       .addModifiers(Modifier.EXPORT)
-      .addSuperInterface(TypeNames.anyType('MetaI'))
-      .addProperty(PropertySpec.create('meta', TypeNames.anyType(`'object'`), false, Modifier.READONLY))
+      .addSuperInterface(TypeNames.anyType('MetaBase'))
+      .addProperty(PropertySpec.create('kind', TypeNames.anyType(`'object'`), false, Modifier.READONLY))
       .addProperty(PropertySpec.create('type', TypeNames.STRING, false, Modifier.READONLY))
       .addProperty(PropertySpec.create('name', TypeNames.STRING, false, Modifier.READONLY)),
-    InterfaceSpec.create('MetaA')
+    InterfaceSpec.create('MetaArray')
       .addModifiers(Modifier.EXPORT)
-      .addSuperInterface(TypeNames.anyType('MetaI'))
-      .addProperty(PropertySpec.create('meta', TypeNames.anyType(`'array'`), false, Modifier.READONLY))
+      .addSuperInterface(TypeNames.anyType('MetaBase'))
+      .addProperty(PropertySpec.create('kind', TypeNames.anyType(`'array'`), false, Modifier.READONLY))
       .addProperty(
-        PropertySpec.create('type', TypeNames.unionType('MetaI', TypeNames.STRING), false, Modifier.READONLY)
+        PropertySpec.create('type', TypeNames.unionType('MetaBase', TypeNames.STRING), false, Modifier.READONLY)
       ),
-    InterfaceSpec.create('MetaM')
+    InterfaceSpec.create('MetaMap')
       .addModifiers(Modifier.EXPORT)
-      .addSuperInterface(TypeNames.anyType('MetaI'))
-      .addProperty(PropertySpec.create('meta', TypeNames.anyType(`'map'`), false, Modifier.READONLY))
+      .addSuperInterface(TypeNames.anyType('MetaBase'))
+      .addProperty(PropertySpec.create('kind', TypeNames.anyType(`'map'`), false, Modifier.READONLY))
       .addProperty(PropertySpec.create('key', TypeNames.STRING, false, Modifier.READONLY))
       .addProperty(
-        PropertySpec.create('value', TypeNames.unionType('MetaI', TypeNames.STRING), false, Modifier.READONLY)
+        PropertySpec.create('value', TypeNames.unionType('MetaBase', TypeNames.STRING), false, Modifier.READONLY)
       ),
-    InterfaceSpec.create('MetaU')
+    InterfaceSpec.create('MetaUnion')
       .addModifiers(Modifier.EXPORT)
-      .addSuperInterface(TypeNames.anyType('MetaI'))
-      .addProperty(PropertySpec.create('meta', TypeNames.anyType(`'union'`), false, Modifier.READONLY))
+      .addSuperInterface(TypeNames.anyType('MetaBase'))
+      .addProperty(PropertySpec.create('kind', TypeNames.anyType(`'union'`), false, Modifier.READONLY))
       .addProperty(
         PropertySpec.create(
           'choices',
-          TypeNames.arrayType(TypeNames.unionType('MetaI', TypeNames.STRING, TypeNames.UNDEFINED)),
+          TypeNames.arrayType(TypeNames.unionType('MetaBase', TypeNames.STRING, TypeNames.UNDEFINED)),
           false,
           Modifier.READONLY
         )
       ),
-    InterfaceSpec.create('MetaS')
+    InterfaceSpec.create('MetaService')
       .addModifiers(Modifier.EXPORT)
       .addTypeVariable(TypeNames.typeVariable('T'))
       .addTypeVariable(TypeNames.typeVariable('R'))
-      .addProperty(PropertySpec.create('request', TypeNames.anyType('MetaO'), false, Modifier.READONLY))
-      .addProperty(PropertySpec.create('response', TypeNames.anyType('MetaO'), false, Modifier.READONLY))
+      .addProperty(PropertySpec.create('request', TypeNames.anyType('MetaMessage'), false, Modifier.READONLY))
+      .addProperty(PropertySpec.create('response', TypeNames.anyType('MetaMessage'), false, Modifier.READONLY))
       .addProperty(PropertySpec.create('clientStreaming', TypeNames.BOOLEAN, false, Modifier.READONLY))
       .addProperty(PropertySpec.create('serverStreaming', TypeNames.BOOLEAN, false, Modifier.READONLY))
       .addProperty(
@@ -112,10 +100,10 @@ export function getMetaInterfaces() {
           Modifier.READONLY
         )
       ),
-    InterfaceSpec.create('MetaB')
+    InterfaceSpec.create('MetaPrimitive')
       .addModifiers(Modifier.EXPORT)
-      .addSuperInterface(TypeNames.anyType('MetaI'))
-      .addProperty(PropertySpec.create('meta', TypeNames.anyType(`'builtin'`), false, Modifier.READONLY))
+      .addSuperInterface(TypeNames.anyType('MetaBase'))
+      .addProperty(PropertySpec.create('kind', TypeNames.anyType(`'builtin'`), false, Modifier.READONLY))
       .addProperty(PropertySpec.create('type', TypeNames.STRING, false, Modifier.READONLY))
       .addProperty(PropertySpec.create('original', TypeNames.STRING, false, Modifier.READONLY)),
   ];
@@ -131,7 +119,7 @@ export function generateMetaTypings(
   const metaTypings = PropertySpec.create(
     'meta' + fullName,
     TypeNames.anonymousType(
-      new Member(`[key in keyof Required<${fullName}>]`, TypeNames.unionType('MetaI', 'string'), false)
+      new Member(`[key in keyof Required<${fullName}>]`, TypeNames.unionType('MetaBase', 'string'), false)
     )
   ).addModifiers(Modifier.EXPORT, Modifier.CONST);
 
@@ -156,7 +144,7 @@ export function generateServiceMetaTypings(
   const metaTypings = PropertySpec.create(
     'meta' + serviceDesc.name,
     TypeNames.anonymousType(
-      new Member(`[key in keyof ${serviceDesc.name}]`, TypeNames.anyType('MetaS<any, any>'), false)
+      new Member(`[key in keyof ${serviceDesc.name}]`, TypeNames.anyType('MetaService<any, any>'), false)
     )
   ).addModifiers(Modifier.EXPORT, Modifier.CONST);
 
@@ -168,15 +156,15 @@ export function generateServiceMetaTypings(
 
     let inner = ``;
     if (inputType instanceof Any && inputType.imported) {
-      inner += `request: {meta:'object', type:'${method.inputType}', name:'${inputType.imported.value}'} as MetaO`;
+      inner += `request: {kind:'object', type:'${method.inputType}', name:'${inputType.imported.value}'} as MetaMessage`;
     } else {
-      inner += `request: {meta:'object', type:'${method.inputType}', name:''} as MetaO`;
+      inner += `request: {kind:'object', type:'${method.inputType}', name:''} as MetaMessage`;
     }
 
     if (outputType instanceof Any && outputType.imported) {
-      inner += `, response: {meta:'object', type:'${method.outputType}', name:'${outputType.imported.value}'} as MetaO`;
+      inner += `, response: {kind:'object', type:'${method.outputType}', name:'${outputType.imported.value}'} as MetaMessage`;
     } else {
-      inner += `, response: {meta:'object', type:'${method.outputType}', name:''} as MetaO`;
+      inner += `, response: {kind:'object', type:'${method.outputType}', name:''} as MetaMessage`;
     }
 
     inner += `, clientStreaming: ${method.clientStreaming}`;
@@ -189,7 +177,7 @@ export function generateServiceMetaTypings(
 
     initialValue = initialValue.addHashEntry(
       method.name,
-      `{${inner}} as MetaS<${inputType.toString()}, ${outputType.toString()}>`
+      `{${inner}} as MetaService<${inputType.toString()}, ${outputType.toString()}>`
     );
   });
 
@@ -201,18 +189,14 @@ export function generateMetaTable(
   packageName: string
 ): PropertySpec {
   const metaTable = PropertySpec.create(
-    'metaPackage' +
-      packageName
-        .split('.')
-        .map((p) => p[0].toUpperCase() + p.slice(1))
-        .join(''),
+    'metadata',
     TypeNames.anonymousType(
       new Member(
         `[key: string]`,
         TypeNames.unionType(
-          TypeNames.anyType(`['service', string, any, { [key: string]: MetaS<any, any> }]`),
+          TypeNames.anyType(`['service', string, any, { [key: string]: MetaService<any, any> }]`),
           TypeNames.anyType(`['enum', string, any, any]`),
-          TypeNames.anyType(`['message', string, any, { [key: string]: MetaI | string }]`)
+          TypeNames.anyType(`['message', string, any, { [key: string]: MetaBase | string }]`)
         ),
         false
       )
@@ -244,10 +228,10 @@ function toMetaType(
     if (mapType) {
       let { keyType, valueType } = mapType;
       const value = metaTypeType(mapType.messageDesc.field[1], valueType);
-      return `{meta:'map', key:'${keyType}', value:${value}} as MetaM`;
+      return `{kind:'map', key:'${keyType}', value:${value}} as MetaMap`;
     }
 
-    return `{meta:'array', type:${strType}} as MetaA`;
+    return `{kind:'array', type:${strType}} as MetaArray`;
   }
 
   if (
@@ -255,7 +239,7 @@ function toMetaType(
     (isWithinOneOf(field) && options.oneof === OneofOption.PROPERTIES) ||
     (isWithinOneOf(field) && field.proto3Optional)
   ) {
-    return `{meta:'union', choices: [undefined, ${strType}]} as MetaU`;
+    return `{kind:'union', choices: [undefined, ${strType}]} as MetaUnion`;
   }
 
   return strType;
@@ -271,9 +255,9 @@ function metaTypeType(field: FieldDescriptorProto, type: TypeName): string {
 
       resultString += `'${choice.toString()}'`;
     });
-    return `{meta:'union', choices: [${resultString.toString()}]} as MetaU`;
+    return `{kind:'union', choices: [${resultString.toString()}]} as MetaUnion`;
   } else if (type instanceof Any && type.imported) {
-    return `{meta:'object', type:'${field.typeName}', name:'${type.imported.value}'} as MetaO`;
+    return `{kind:'object', type:'${field.typeName}', name:'${type.imported.value}'} as MetaMessage`;
   } else {
     switch (type.toString()) {
       case 'function':
@@ -288,7 +272,7 @@ function metaTypeType(field: FieldDescriptorProto, type: TypeName): string {
         } catch (e) {
           original = field.typeName;
         }
-        return `{meta:'builtin', type:'${type.toString()}', original:'${original}'} as MetaB`;
+        return `{kind:'builtin', type:'${type.toString()}', original:'${original}'} as MetaPrimitive`;
     }
   }
   return type.toString();

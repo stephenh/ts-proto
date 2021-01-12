@@ -145,43 +145,43 @@ const baseStringValue: object = {
 const baseBytesValue: object = {
 };
 
-export interface MetaI {
-  readonly meta: 'object' | 'array' | 'map' | 'union' | 'builtin';
+export interface MetaBase {
+  readonly kind: 'object' | 'array' | 'map' | 'union' | 'builtin';
 }
 
-export interface MetaO extends MetaI {
-  readonly meta: 'object';
+export interface MetaMessage extends MetaBase {
+  readonly kind: 'object';
   readonly type: string;
   readonly name: string;
 }
 
-export interface MetaA extends MetaI {
-  readonly meta: 'array';
-  readonly type: MetaI | string;
+export interface MetaArray extends MetaBase {
+  readonly kind: 'array';
+  readonly type: MetaBase | string;
 }
 
-export interface MetaM extends MetaI {
-  readonly meta: 'map';
+export interface MetaMap extends MetaBase {
+  readonly kind: 'map';
   readonly key: string;
-  readonly value: MetaI | string;
+  readonly value: MetaBase | string;
 }
 
-export interface MetaU extends MetaI {
-  readonly meta: 'union';
-  readonly choices: Array<MetaI | string | undefined>;
+export interface MetaUnion extends MetaBase {
+  readonly kind: 'union';
+  readonly choices: Array<MetaBase | string | undefined>;
 }
 
-export interface MetaS<T, R> {
-  readonly request: MetaO;
-  readonly response: MetaO;
+export interface MetaService<T, R> {
+  readonly request: MetaMessage;
+  readonly response: MetaMessage;
   readonly clientStreaming: boolean;
   readonly serverStreaming: boolean;
   readonly encodeRequest?: (message: T, writer: Writer) => Writer;
   readonly decodeResponse?: (input: Uint8Array | Reader, length?: number) => R;
 }
 
-export interface MetaB extends MetaI {
-  readonly meta: 'builtin';
+export interface MetaPrimitive extends MetaBase {
+  readonly kind: 'builtin';
   readonly type: string;
   readonly original: string;
 }
@@ -411,34 +411,34 @@ export const BytesValue = {
   },
 };
 
-export const metaDoubleValue: { [key in keyof Required<DoubleValue>]: MetaI | string } = {
-  value: {meta:'builtin', type:'number', original:'double'} as MetaB,
+export const metaDoubleValue: { [key in keyof Required<DoubleValue>]: MetaBase | string } = {
+  value: {kind:'builtin', type:'number', original:'double'} as MetaPrimitive,
 }
-export const metaFloatValue: { [key in keyof Required<FloatValue>]: MetaI | string } = {
-  value: {meta:'builtin', type:'number', original:'float'} as MetaB,
+export const metaFloatValue: { [key in keyof Required<FloatValue>]: MetaBase | string } = {
+  value: {kind:'builtin', type:'number', original:'float'} as MetaPrimitive,
 }
-export const metaInt64Value: { [key in keyof Required<Int64Value>]: MetaI | string } = {
-  value: {meta:'builtin', type:'number', original:'int64'} as MetaB,
+export const metaInt64Value: { [key in keyof Required<Int64Value>]: MetaBase | string } = {
+  value: {kind:'builtin', type:'number', original:'int64'} as MetaPrimitive,
 }
-export const metaUInt64Value: { [key in keyof Required<UInt64Value>]: MetaI | string } = {
-  value: {meta:'builtin', type:'number', original:'uint64'} as MetaB,
+export const metaUInt64Value: { [key in keyof Required<UInt64Value>]: MetaBase | string } = {
+  value: {kind:'builtin', type:'number', original:'uint64'} as MetaPrimitive,
 }
-export const metaInt32Value: { [key in keyof Required<Int32Value>]: MetaI | string } = {
-  value: {meta:'builtin', type:'number', original:'int32'} as MetaB,
+export const metaInt32Value: { [key in keyof Required<Int32Value>]: MetaBase | string } = {
+  value: {kind:'builtin', type:'number', original:'int32'} as MetaPrimitive,
 }
-export const metaUInt32Value: { [key in keyof Required<UInt32Value>]: MetaI | string } = {
-  value: {meta:'builtin', type:'number', original:'uint32'} as MetaB,
+export const metaUInt32Value: { [key in keyof Required<UInt32Value>]: MetaBase | string } = {
+  value: {kind:'builtin', type:'number', original:'uint32'} as MetaPrimitive,
 }
-export const metaBoolValue: { [key in keyof Required<BoolValue>]: MetaI | string } = {
-  value: {meta:'builtin', type:'boolean', original:'bool'} as MetaB,
+export const metaBoolValue: { [key in keyof Required<BoolValue>]: MetaBase | string } = {
+  value: {kind:'builtin', type:'boolean', original:'bool'} as MetaPrimitive,
 }
-export const metaStringValue: { [key in keyof Required<StringValue>]: MetaI | string } = {
-  value: {meta:'builtin', type:'string', original:'string'} as MetaB,
+export const metaStringValue: { [key in keyof Required<StringValue>]: MetaBase | string } = {
+  value: {kind:'builtin', type:'string', original:'string'} as MetaPrimitive,
 }
-export const metaBytesValue: { [key in keyof Required<BytesValue>]: MetaI | string } = {
-  value: {meta:'builtin', type:'Uint8Array', original:'bytes'} as MetaB,
+export const metaBytesValue: { [key in keyof Required<BytesValue>]: MetaBase | string } = {
+  value: {kind:'builtin', type:'Uint8Array', original:'bytes'} as MetaPrimitive,
 }
-export const metaPackageGoogleProtobuf: { [key: string]: ['service', string, any, { [key: string]: MetaS<any, any> }] | ['enum', string, any, any] | ['message', string, any, { [key: string]: MetaI | string }] } = {
+export const metadata: { [key: string]: ['service', string, any, { [key: string]: MetaService<any, any> }] | ['enum', string, any, any] | ['message', string, any, { [key: string]: MetaBase | string }] } = {
   DoubleValue: ['message', '.google.protobuf.DoubleValue', DoubleValue, metaDoubleValue],
   FloatValue: ['message', '.google.protobuf.FloatValue', FloatValue, metaFloatValue],
   Int64Value: ['message', '.google.protobuf.Int64Value', Int64Value, metaInt64Value],
