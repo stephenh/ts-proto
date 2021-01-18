@@ -528,6 +528,9 @@ function generateInterfaceDeclaration(
 
     const info = sourceInfo.lookup(Fields.message.field, index);
     maybeAddComment(info, (text) => (prop = prop.addJavadoc(text)));
+    
+    if (fieldDesc.options?.deprecated)
+      maybeAddComment(info, () => (prop = prop.addJavadoc(" @deprecated\n")));
 
     message = message.addProperty(prop);
   });
