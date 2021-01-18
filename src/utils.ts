@@ -1,6 +1,7 @@
 import ReadStream = NodeJS.ReadStream;
 import { Options, LongOption, EnvOption, OneofOption } from './main';
 import { SourceDescription } from './sourceInfo';
+import { code, Code } from 'ts-poet';
 
 export function readToBuffer(stream: ReadStream): Promise<Buffer> {
   return new Promise((resolve) => {
@@ -143,28 +144,54 @@ export function optionsFromParameter(parameter: string): Options {
   return options;
 }
 
-// addJavadoc will attempt to expand unescaped percent %, so we replace these within source comments.
-const PercentAll = /\%/g;
 // Since we don't know what form the comment originally took, it may contain closing block comments.
 const CloseComment = /\*\//g;
 
-/**
- * Removes potentially harmful characters from comments and calls the provided expression
- * @param desc {SourceDescription} original comment information
- * @param process {(comment: string) => void} called if a comment exists
- * @returns {string} scrubbed text
- */
+/** Removes potentially harmful characters from comments and pushes it into chunks. */
 export function maybeAddComment(
-  desc: SourceDescription,
-  process: (comment: string) => void,
+  desc: Partial<Pick<SourceDescription, 'leadingComments' | 'trailingComments'>>,
+  chunks: Code[],
+  deprecated?: boolean,
   prefix: string = ''
 ): void {
   if (desc.leadingComments || desc.trailingComments) {
-    const content = (desc.leadingComments || desc.trailingComments || '')
-      .replace(PercentAll, '%%')
-      .replace(CloseComment, '* /');
-    const formatted = `\n/** ${prefix}${content.trim().split('\n').join('\n * ')} */\n`;
-    return process(formatted);
+    let content = (desc.leadingComments || desc.trailingComments || '').replace(CloseComment, '* /').trim();
+
+    // Detect /** ... */ comments
+    const isDoubleStar = content.startsWith('*');
+    if (isDoubleStar) {
+      content = content.substring(1).trim();
+    }
+
+    // Prefix things like the enum name.
+    if (prefix) {
+      content = prefix + content;
+    }
+
+    const lines = content.split('\n').map((l) => l.trim());
+
+    if (deprecated) {
+      lines.push('');
+      lines.push('@deprecated');
+    }
+
+    let comment: Code;
+    const isMultiline = lines.length > 1;
+    if (!isMultiline) {
+      if (isDoubleStar) {
+        comment = code`/** ${content} */`;
+      } else {
+        comment = code`// ${content}`;
+      }
+    } else {
+      if (isDoubleStar) {
+        comment = code`/**\n * ${lines.join('\n * ')}\n */`;
+      } else {
+        comment = code`// ${lines.join('\n // ')}`;
+      }
+    }
+
+    chunks.push(code`\n\n${comment}\n\n`);
   }
 }
 

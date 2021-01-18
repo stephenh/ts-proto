@@ -114,7 +114,7 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
   // Syntax, unlike most fields, is not repeated and thus does not use an index
   const sourceInfo = SourceInfo.fromDescriptor(fileDesc);
   const headerComment = sourceInfo.lookup(Fields.file.syntax, undefined);
-  maybeAddComment(headerComment, (text) => chunks.push(code`${text}`));
+  maybeAddComment(headerComment, chunks, fileDesc.options?.deprecated);
 
   // first make all the type declarations
   visit(
@@ -411,12 +411,12 @@ const UNRECOGNIZED_ENUM_VALUE = -1;
 function generateEnum(options: Options, fullName: string, enumDesc: EnumDescriptorProto, sourceInfo: SourceInfo): Code {
   const chunks: Code[] = [];
 
-  maybeAddComment(sourceInfo, (text) => chunks.push(code`${text}`));
+  maybeAddComment(sourceInfo, chunks, enumDesc.options?.deprecated);
   chunks.push(code`export enum ${fullName} {`);
 
   enumDesc.value.forEach((valueDesc, index) => {
     const info = sourceInfo.lookup(Fields.enum.value, index);
-    maybeAddComment(info, (text) => chunks.push(code`${text}`), `${valueDesc.name} - `);
+    maybeAddComment(info, chunks, valueDesc.options?.deprecated, `${valueDesc.name} - `);
     chunks.push(
       code`${valueDesc.name} = ${options.stringEnums ? `"${valueDesc.name}"` : valueDesc.number.toString()},`
     );
@@ -436,7 +436,7 @@ function generateEnum(options: Options, fullName: string, enumDesc: EnumDescript
     chunks.push(generateEnumToJson(fullName, enumDesc));
   }
 
-  return joinCode(chunks);
+  return joinCode(chunks, { on: '\n' });
 }
 
 /** Generates a function with a big switch statement to decode JSON -> our enum. */
@@ -471,7 +471,7 @@ function generateEnumFromJson(fullName: string, enumDesc: EnumDescriptorProto, o
 
   chunks.push(code`}`);
   chunks.push(code`}`);
-  return joinCode(chunks);
+  return joinCode(chunks, { on: '\n' });
 }
 
 /** Generates a function with a big switch statement to encode our enum -> JSON. */
@@ -488,7 +488,7 @@ function generateEnumToJson(fullName: string, enumDesc: EnumDescriptorProto): Co
 
   chunks.push(code`}`);
   chunks.push(code`}`);
-  return joinCode(chunks);
+  return joinCode(chunks, { on: '\n' });
 }
 
 // When useOptionals=true, non-scalar fields are translated into optional properties.
@@ -506,7 +506,7 @@ function generateInterfaceDeclaration(
 ): Code {
   const chunks: Code[] = [];
 
-  maybeAddComment(sourceInfo, (text) => chunks.push(code`${text}`));
+  maybeAddComment(sourceInfo, chunks, messageDesc.options?.deprecated);
   chunks.push(code`export interface ${fullName} {`);
 
   // When oneof=unions, we generate a single property with an ADT per `oneof` clause.
@@ -523,7 +523,7 @@ function generateInterfaceDeclaration(
     }
 
     const info = sourceInfo.lookup(Fields.message.field, index);
-    maybeAddComment(info, (text) => chunks.push(code`${text}`));
+    maybeAddComment(info, chunks, fieldDesc.options?.deprecated);
 
     const name = maybeSnakeToCamel(fieldDesc.name, options);
     const type = toTypeName(typeMap, messageDesc, fieldDesc, options);
@@ -532,7 +532,7 @@ function generateInterfaceDeclaration(
   });
 
   chunks.push(code`}`);
-  return joinCode(chunks);
+  return joinCode(chunks, { on: '\n' });
 }
 
 function generateOneofProperty(
@@ -776,7 +776,7 @@ function generateDecode(
   chunks.push(code`return message;`);
 
   chunks.push(code`}`);
-  return joinCode(chunks);
+  return joinCode(chunks, { on: '\n' });
 }
 
 const Writer = imp('Writer@protobufjs/minimal');
@@ -874,7 +874,7 @@ function generateEncode(
 
   chunks.push(code`return writer;`);
   chunks.push(code`}`);
-  return joinCode(chunks);
+  return joinCode(chunks, { on: '\n' });
 }
 
 /**
@@ -1011,7 +1011,7 @@ function generateFromJson(
   // and then wrap up the switch/while/return
   chunks.push(code`return message`);
   chunks.push(code`}`);
-  return joinCode(chunks);
+  return joinCode(chunks, { on: '\n' });
 }
 
 function generateToJson(
@@ -1106,7 +1106,7 @@ function generateToJson(
 
   chunks.push(code`return obj;`);
   chunks.push(code`}`);
-  return joinCode(chunks);
+  return joinCode(chunks, { on: '\n' });
 }
 
 function generateFromPartial(
@@ -1218,7 +1218,7 @@ function generateFromPartial(
   // and then wrap up the switch/while/return
   chunks.push(code`return message;`);
   chunks.push(code`}`);
-  return joinCode(chunks);
+  return joinCode(chunks, { on: '\n' });
 }
 
 export const contextTypeVar = 'Context extends DataLoaders';

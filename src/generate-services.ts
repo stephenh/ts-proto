@@ -40,7 +40,7 @@ export function generateService(
 ): Code {
   const chunks: Code[] = [];
 
-  maybeAddComment(sourceInfo, (text) => chunks.push(code`${text}`));
+  maybeAddComment(sourceInfo, chunks, serviceDesc.options?.deprecated);
   const maybeTypeVar = options.useContext ? `<${contextTypeVar}>` : '';
   chunks.push(code`export interface ${serviceDesc.name}${maybeTypeVar} {`);
 
@@ -48,7 +48,7 @@ export function generateService(
     const name = options.lowerCaseServiceMethods ? camelCase(methodDesc.name) : methodDesc.name;
 
     const info = sourceInfo.lookup(Fields.service.method, index);
-    maybeAddComment(info, (text) => chunks.push(code`${text}`));
+    maybeAddComment(info, chunks, methodDesc.options?.deprecated);
 
     const params: Code[] = [];
     if (options.useContext) {
@@ -99,7 +99,7 @@ export function generateService(
 
   chunks.push(code`}`);
 
-  return code`${chunks}`;
+  return joinCode(chunks, { on: '\n' });
 }
 
 function generateRegularRpcMethod(
