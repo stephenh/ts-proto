@@ -1,28 +1,17 @@
-import {
-  ClassSpec,
-  CodeBlock,
-  FileSpec,
-  FunctionSpec,
-  InterfaceSpec,
-  Modifier,
-  PropertySpec,
-  TypeName,
-  TypeNames,
-  TypeVariable,
-} from 'ts-poet';
 import { google } from '../build/pbjs';
 import { Options } from './main';
-import { requestType, responseObservable, responsePromise, responseType, TypeMap } from './types';
+import { TypeMap } from './types';
+import { Code, code, imp } from 'ts-poet';
 import MethodDescriptorProto = google.protobuf.MethodDescriptorProto;
 import FileDescriptorProto = google.protobuf.FileDescriptorProto;
 import ServiceDescriptorProto = google.protobuf.ServiceDescriptorProto;
 
-const grpc = TypeNames.anyType('grpc@@improbable-eng/grpc-web');
-const UnaryMethodDefinition = TypeNames.anyType('UnaryMethodDefinition@@improbable-eng/grpc-web/dist/typings/service');
-const share = TypeNames.anyType('share@rxjs/operators');
-const take = TypeNames.anyType('take@rxjs/operators');
-const BrowserHeaders = TypeNames.anyType('BrowserHeaders@browser-headers');
-const Code = TypeNames.anyType('Code@@improbable-eng/grpc-web/dist/typings/Code');
+const grpc = imp('grpc@@improbable-eng/grpc-web');
+const UnaryMethodDefinition = imp('UnaryMethodDefinition@@improbable-eng/grpc-web/dist/typings/service');
+const share = imp('share@rxjs/operators');
+const take = imp('take@rxjs/operators');
+const BrowserHeaders = imp('BrowserHeaders@browser-headers');
+// const Code = imp('Code@@improbable-eng/grpc-web/dist/typings/Code');
 
 /** Generates a client that uses the `@improbable-web/grpc-web` library. */
 export function generateGrpcClientImpl(
@@ -30,7 +19,8 @@ export function generateGrpcClientImpl(
   fileDesc: FileDescriptorProto,
   serviceDesc: ServiceDescriptorProto,
   options: Options
-): ClassSpec {
+): Code {
+  /*
   // Define the FooServiceImpl class
   let client = ClassSpec.create(`${serviceDesc.name}ClientImpl`)
     .addModifiers(Modifier.EXPORT)
@@ -48,6 +38,8 @@ export function generateGrpcClientImpl(
   }
 
   return client;
+   */
+  return code`todo`;
 }
 
 /** Creates the RPC methods that client code actually calls. */
@@ -57,6 +49,7 @@ function generateRpcMethod(
   serviceDesc: ServiceDescriptorProto,
   methodDesc: MethodDescriptorProto
 ) {
+  /*
   const requestFn = FunctionSpec.create(methodDesc.name);
   const inputType = requestType(typeMap, methodDesc, options);
   const partialInputType = TypeNames.parameterizedType(TypeNames.anyType('DeepPartial'), inputType);
@@ -75,16 +68,18 @@ function generateRpcMethod(
         ? responseObservable(typeMap, methodDesc, options)
         : responsePromise(typeMap, methodDesc, options)
     );
+   */
+  return code`todo`;
 }
 
 /** Creates the service descriptor that grpc-web needs at runtime. */
-export function generateGrpcServiceDesc(fileDesc: FileDescriptorProto, serviceDesc: ServiceDescriptorProto): CodeBlock {
-  return CodeBlock.empty()
-    .add('export const %LDesc = ', serviceDesc.name)
-    .beginHash()
-    .addHashEntry('serviceName', CodeBlock.empty().add('%S', `${fileDesc.package}.${serviceDesc.name}`))
-    .endHash();
-}
+// export function generateGrpcServiceDesc(fileDesc: FileDescriptorProto, serviceDesc: ServiceDescriptorProto): CodeBlock {
+//   return CodeBlock.empty()
+//     .add('export const %LDesc = ', serviceDesc.name)
+//     .beginHash()
+//     .addHashEntry('serviceName', CodeBlock.empty().add('%S', `${fileDesc.package}.${serviceDesc.name}`))
+//     .endHash();
+// }
 
 /**
  * Creates the method descriptor that grpc-web needs at runtime to make `unary` calls.
@@ -98,7 +93,8 @@ export function generateGrpcMethodDesc(
   typeMap: TypeMap,
   serviceDesc: ServiceDescriptorProto,
   methodDesc: MethodDescriptorProto
-): CodeBlock {
+): Code {
+  /*
   let inputType = requestType(typeMap, methodDesc, options);
   let outputType = responseType(typeMap, methodDesc, options);
   return (
@@ -150,6 +146,8 @@ export function generateGrpcMethodDesc(
       )
       .endHash()
   );
+   */
+  return code`todo`;
 }
 
 function methodDescName(serviceDesc: ServiceDescriptorProto, methodDesc: MethodDescriptorProto): string {
@@ -157,7 +155,8 @@ function methodDescName(serviceDesc: ServiceDescriptorProto, methodDesc: MethodD
 }
 
 /** Adds misc top-level definitions for grpc-web functionality. */
-export function addGrpcWebMisc(options: Options, hasStreamingMethods: boolean, _file: FileSpec): FileSpec {
+export function addGrpcWebMisc(options: Options, hasStreamingMethods: boolean): Code {
+  /*
   let file = _file;
   file = file.addCode(
     CodeBlock.empty()
@@ -170,10 +169,13 @@ export function addGrpcWebMisc(options: Options, hasStreamingMethods: boolean, _
   file = file.addInterface(generateGrpcWebRpcType(options.returnObservable, hasStreamingMethods));
   file = file.addClass(generateGrpcWebImpl(options.returnObservable, hasStreamingMethods));
   return file;
+   */
+  return code`todo`;
 }
 
 /** Makes an `Rpc` interface to decouple from the low-level grpc-web `grpc.invoke and grpc.unary`/etc. methods. */
-function generateGrpcWebRpcType(returnObservable: boolean, hasStreamingMethods: boolean): InterfaceSpec {
+function generateGrpcWebRpcType(returnObservable: boolean, hasStreamingMethods: boolean): Code {
+  /*
   let rpc = InterfaceSpec.create('Rpc');
   const t = TypeNames.typeVariable('T', TypeNames.bound('UnaryMethodDefinitionish'));
   rpc = rpc.addFunction(
@@ -199,10 +201,13 @@ function generateGrpcWebRpcType(returnObservable: boolean, hasStreamingMethods: 
     );
   }
   return rpc;
+   */
+  return code`todo`;
 }
 
 /** Implements the `Rpc` interface by making calls using the `grpc.unary` method. */
-function generateGrpcWebImpl(returnObservable: boolean, hasStreamingMethods: boolean): ClassSpec {
+function generateGrpcWebImpl(returnObservable: boolean, hasStreamingMethods: boolean): Code {
+  /*
   const maybeMetadata = TypeNames.unionType(TypeNames.anyType('grpc.Metadata'), TypeNames.UNDEFINED);
   const optionsParam = TypeNames.anonymousType(
     ...([
@@ -232,9 +237,13 @@ function generateGrpcWebImpl(returnObservable: boolean, hasStreamingMethods: boo
     spec = spec.addFunction(createInvokeMethod(t, maybeMetadata));
   }
   return spec;
+  */
+  return code`todo`;
 }
 
-function createPromiseUnaryMethod(t: TypeVariable, maybeMetadata: TypeName): FunctionSpec {
+function createPromiseUnaryMethod(): Code {
+  /*
+function createPromiseUnaryMethod(t: TypeVariable, maybeMetadata: TypeName): Code {
   return FunctionSpec.create('unary')
     .addTypeVariable(t)
     .addParameter('methodDesc', t)
@@ -271,9 +280,13 @@ function createPromiseUnaryMethod(t: TypeVariable, maybeMetadata: TypeName): Fun
         grpc
       )
     );
+  */
+  return code`todo`;
 }
 
-function createObservableUnaryMethod(t: TypeVariable, maybeMetadata: TypeName): FunctionSpec {
+function createObservableUnaryMethod(): Code {
+  /*
+function createObservableUnaryMethod(t: TypeVariable, maybeMetadata: TypeName): Code {
   return FunctionSpec.create('unary')
     .addTypeVariable(t)
     .addParameter('methodDesc', t)
@@ -309,9 +322,12 @@ function createObservableUnaryMethod(t: TypeVariable, maybeMetadata: TypeName): 
         take
       )
     );
+    */
+  return code`todo`;
 }
 
 function createInvokeMethod(t, maybeMetadata) {
+  /*
   return FunctionSpec.create('invoke')
     .addTypeVariable(t)
     .addParameter('methodDesc', t)
@@ -320,8 +336,8 @@ function createInvokeMethod(t, maybeMetadata) {
     .returns(TypeNames.anyType('Observable@rxjs').param(TypeNames.ANY))
     .addCodeBlock(
       CodeBlock.empty().add(
-        `const upStreamCodes = [2, 4, 8, 9, 10, 13, 14, 15]; /* Status Response Codes (https://developers.google.com/maps-booking/reference/grpc-api/status_codes) */
-    const DEFAULT_TIMEOUT_TIME: number = 3 /* seconds */ * 1000 /* ms */;
+        `const upStreamCodes = [2, 4, 8, 9, 10, 13, 14, 15]; / Status Response Codes (https://developers.google.com/maps-booking/reference/grpc-api/status_codes) /
+    const DEFAULT_TIMEOUT_TIME: number = 3 / seconds /  1000 / ms /;
     const request = { ..._request, ...methodDesc.requestType };
     const maybeCombinedMetadata =
     metadata && this.options.metadata
@@ -356,4 +372,6 @@ function createInvokeMethod(t, maybeMetadata) {
         share
       )
     );
+   */
+  return code`todo`;
 }

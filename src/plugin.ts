@@ -6,7 +6,6 @@ import { createTypeMap } from './types';
 import CodeGeneratorRequest = google.protobuf.compiler.CodeGeneratorRequest;
 import CodeGeneratorResponse = google.protobuf.compiler.CodeGeneratorResponse;
 import Feature = google.protobuf.compiler.CodeGeneratorResponse.Feature;
-import { FileSpec } from 'ts-poet';
 
 // this would be the plugin called by the protoc compiler
 async function main() {
@@ -15,13 +14,16 @@ async function main() {
   // const request = CodeGeneratorRequest.fromObject(json);
   const request = CodeGeneratorRequest.decode(stdin);
   const typeMap = createTypeMap(request, optionsFromParameter(request.parameter));
-  const files = request.protoFile.map((file) => {
-    const spec = generateFile(typeMap, file, request.parameter);
-    return new CodeGeneratorResponse.File({
-      name: spec.path,
-      content: prefixDisableLinter(spec),
-    });
-  });
+  const files = await Promise.all(
+    request.protoFile.map(async (file) => {
+      const [path, code] = generateFile(typeMap, file, request.parameter);
+      const spec = await code.toStringWithImports({ path });
+      return new CodeGeneratorResponse.File({
+        name: path,
+        content: prefixDisableLinter(spec),
+      });
+    })
+  );
   const response = new CodeGeneratorResponse({ file: files, supportedFeatures: Feature.FEATURE_PROTO3_OPTIONAL });
   const buffer = CodeGeneratorResponse.encode(response).finish();
   const write = promisify(process.stdout.write as (buffer: Buffer) => boolean).bind(process.stdout);
@@ -42,7 +44,7 @@ main()
 // Comment block at the top of every source file, since these comments require specific
 // syntax incompatible with ts-poet, we will hard-code the string and prepend to the
 // generator output.
-function prefixDisableLinter(spec: FileSpec): string {
+function prefixDisableLinter(spec: string): string {
   return `/* eslint-disable */
 ${spec}`;
 }

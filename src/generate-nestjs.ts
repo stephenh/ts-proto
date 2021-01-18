@@ -1,18 +1,8 @@
-import {
-  detectBatchMethod,
-  isEmptyType,
-  requestType,
-  responseObservable,
-  responsePromise,
-  responseType,
-  TypeMap,
-} from './types';
-import SourceInfo, { Fields } from './sourceInfo';
-import { CodeBlock, FunctionSpec, InterfaceSpec, Modifier, TypeNames } from 'ts-poet';
-import { maybeAddComment, singular } from './utils';
-import { camelCase } from './case';
-import { contextTypeVar, Options } from './main';
+import { TypeMap } from './types';
+import SourceInfo from './sourceInfo';
+import { Options } from './main';
 import { google } from '../build/pbjs';
+import { Code, code } from 'ts-poet';
 import FileDescriptorProto = google.protobuf.FileDescriptorProto;
 import ServiceDescriptorProto = google.protobuf.ServiceDescriptorProto;
 
@@ -22,7 +12,8 @@ export function generateNestjsServiceController(
   sourceInfo: SourceInfo,
   serviceDesc: ServiceDescriptorProto,
   options: Options
-): InterfaceSpec {
+): Code {
+  /*
   let service = InterfaceSpec.create(`${serviceDesc.name}Controller`).addModifiers(Modifier.EXPORT);
   if (options.useContext) {
     service = service.addTypeVariable(contextTypeVar);
@@ -84,6 +75,8 @@ export function generateNestjsServiceController(
     }
   });
   return service;
+   */
+  return code`todo`;
 }
 
 export function generateNestjsServiceClient(
@@ -92,7 +85,8 @@ export function generateNestjsServiceClient(
   sourceInfo: SourceInfo,
   serviceDesc: ServiceDescriptorProto,
   options: Options
-): InterfaceSpec {
+): Code {
+  /*
   let service = InterfaceSpec.create(`${serviceDesc.name}Client`).addModifiers(Modifier.EXPORT);
   if (options.useContext) {
     service = service.addTypeVariable(contextTypeVar);
@@ -141,12 +135,12 @@ export function generateNestjsServiceClient(
     }
   });
   return service;
+   */
+  return code`todo`;
 }
 
-export function generateNestjsGrpcServiceMethodsDecorator(
-  serviceDesc: ServiceDescriptorProto,
-  options: Options
-): FunctionSpec {
+export function generateNestjsGrpcServiceMethodsDecorator(serviceDesc: ServiceDescriptorProto, options: Options): Code {
+  /*
   let grpcServiceDecorator = FunctionSpec.create(`${serviceDesc.name}ControllerMethods`).addModifiers(Modifier.EXPORT);
 
   const grpcMethods = serviceDesc.method
@@ -187,8 +181,11 @@ export function generateNestjsGrpcServiceMethodsDecorator(
   grpcServiceDecorator = grpcServiceDecorator.addCodeBlock(body);
 
   return grpcServiceDecorator;
+   */
+  return code`todo`;
 }
 
+/*
 function generateGrpcMethodDecoratorLoop(
   decoratorFunction: FunctionSpec,
   serviceDesc: ServiceDescriptorProto,
@@ -203,3 +200,4 @@ function generateGrpcMethodDecoratorLoop(
     .addStatement(`%T('${serviceDesc.name}', method)(constructor.prototype[method], method, descriptor)`, grpcType)
     .endControlFlow();
 }
+ */
