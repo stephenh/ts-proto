@@ -80,7 +80,7 @@ export function generateService(
       returnType = responsePromise(typeMap, methodDesc, options);
     }
 
-    chunks.push(code`${name}(${joinCode(params, ',')}): ${returnType};`);
+    chunks.push(code`${name}(${joinCode(params, { on: ',' })}): ${returnType};`);
 
     // If this is a batch method, auto-generate the singular version of it
     if (options.useContext) {
@@ -116,7 +116,7 @@ function generateRegularRpcMethod(
 
   return code`
     ${methodDesc.name}(
-      ${joinCode(params, ',')}
+      ${joinCode(params, { on: ',' })}
     ): ${responsePromise(typeMap, methodDesc, options)} {
       const data = ${inputType}.encode(request).finish(); 
       const promise = this.rpc.request(

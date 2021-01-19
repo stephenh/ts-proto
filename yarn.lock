@@ -4191,10 +4191,10 @@ ts-node@^8.3.0:
     source-map-support "^0.5.17"
     yn "3.1.1"
 
-ts-poet@^4.2.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/ts-poet/-/ts-poet-4.2.0.tgz#cfe2b94da12b6b681e3e5ffdf3b5e1ed26019119"
-  integrity sha512-k/ylasrmMv5TTUdZSqaANnoIN7rphNeHSs2pjPNIWkwuBZgkyFmiAxRc/9S1CdWIAeSxCge2JO/qqRAMj+CDWA==
+ts-poet@^4.3.0:
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/ts-poet/-/ts-poet-4.3.0.tgz#dff889bb4ba30fcda0aec5af192be4873f49f2ff"
+  integrity sha512-HIwN3RL8iAsNcGFPCHGstsp9YzGOUbEQBBXmTNnU9pyp/9N/d4yjdD46DEfjaswnSbfEc6cQv7pQyQPCvc8yTA==
   dependencies:
     "@types/prettier" "^1.19.0"
     lodash "^4.17.15"
