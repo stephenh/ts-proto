@@ -106,6 +106,17 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
   const moduleName = fileDesc.name.replace('.proto', '.ts');
   let file = FileSpec.create(moduleName);
 
+  file = file.addCode(CodeBlock.empty().addStatement('declare var self: any | undefined'));
+  file = file.addCode(CodeBlock.empty().addStatement('declare var window: any | undefined'));
+  // Make sure globalThis is defined
+  let getGlobalThis = FunctionSpec.create('getGlobalThis');
+  ['globalThis', 'self', 'window', 'global'].forEach((candidate) => {
+    getGlobalThis = getGlobalThis.addStatement('if (typeof %L !== "undefined") return %L', candidate, candidate);
+  });
+  getGlobalThis = getGlobalThis.addStatement('throw new Error("Unable to locate global object")');
+  file = file.addFunction(getGlobalThis);
+  file = file.addCode(CodeBlock.empty().addStatement('var globalThis = getGlobalThis()'));
+
   // Indicate this file's source protobuf package for reflective use with google.protobuf.Any
   file = file.addCode(CodeBlock.empty().add(`export const protobufPackage = '%L'\n`, fileDesc.package));
 
