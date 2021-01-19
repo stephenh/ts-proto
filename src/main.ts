@@ -1,4 +1,4 @@
-import { code, Code, imp, joinCode } from 'ts-poet';
+import { code, Code, conditionalOutput, imp, joinCode } from 'ts-poet';
 import { google } from '../build/pbjs';
 import {
   basicLongWireType,
@@ -46,6 +46,7 @@ import FieldDescriptorProto = google.protobuf.FieldDescriptorProto;
 import FileDescriptorProto = google.protobuf.FileDescriptorProto;
 import EnumDescriptorProto = google.protobuf.EnumDescriptorProto;
 import ServiceDescriptorProto = google.protobuf.ServiceDescriptorProto;
+import { ConditionalOutput } from 'ts-poet/build/ConditionalOutput';
 
 export enum LongOption {
   NUMBER = 'number',
@@ -86,6 +87,7 @@ export type Options = {
 
 export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, parameter: string): [string, Code] {
   const options = optionsFromParameter(parameter);
+  const u = makeUtils(options);
 
   // Google's protofiles are organized like Java, where package == the folder the file
   // is in, and file == a specific service within the package. I.e. you can have multiple
@@ -140,13 +142,13 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
 
         const staticMethods: Code[] = [];
         if (options.outputEncodeMethods) {
-          staticMethods.push(generateEncode(typeMap, fullName, message, options));
-          staticMethods.push(generateDecode(typeMap, fullName, message, options));
+          staticMethods.push(generateEncode(u, typeMap, fullName, message, options));
+          staticMethods.push(generateDecode(u, typeMap, fullName, message, options));
         }
         if (options.outputJsonMethods) {
-          staticMethods.push(generateFromJson(typeMap, fullName, message, options));
-          staticMethods.push(generateFromPartial(typeMap, fullName, message, options));
-          staticMethods.push(generateToJson(typeMap, fullName, message, options));
+          staticMethods.push(generateFromJson(u, typeMap, fullName, message, options));
+          staticMethods.push(generateFromPartial(u, typeMap, fullName, message, options));
+          staticMethods.push(generateToJson(u, typeMap, fullName, message, options));
         }
 
         chunks.push(code`
@@ -211,198 +213,190 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
     chunks.push(generateDataLoadersType());
   }
 
-  /*
-  let hasAnyTimestamps = false;
-  visit(
-    fileDesc,
-    sourceInfo,
-    (_, messageType) => {
-      hasAnyTimestamps = hasAnyTimestamps || messageType.field.some(isTimestamp);
-    },
-    options
-  );
-  if (hasAnyTimestamps && (options.outputJsonMethods || options.outputEncodeMethods)) {
-    file = addTimestampMethods(file, options);
-  }
-
-  const initialOutput = file.toString();
-  // This `.includes(...)` is a pretty fuzzy way of detecting whether we use these utility
-  // methods (to prevent outputting them if its not necessary). In theory, we should be able
-  // to lean on the code generation library more to do this sort of "output only if used",
-  // similar to what it does for auto-imports.
-  if (
-    initialOutput.includes('longToNumber') ||
-    initialOutput.includes('numberToLong') ||
-    initialOutput.includes('longToString')
-  ) {
-    file = addLongUtilityMethod(file, options);
-  }
-  if (initialOutput.includes('bytesFromBase64') || initialOutput.includes('base64FromBytes')) {
-    file = addBytesUtilityMethods(file);
-  }
-  if (initialOutput.includes('DeepPartial')) {
-    file = addDeepPartialType(file, options);
-  }
-   */
+  chunks.push(...Object.values(u).map((v) => code`${((v as any) as ConditionalOutput).ifUsed}`));
 
   return [moduleName, joinCode(chunks, { on: '\n\n' })];
 }
 
-/*
-function addLongUtilityMethod(_file: FileSpec, options: Options): FileSpec {
+type Utils = ReturnType<typeof makeDeepPartial> &
+  ReturnType<typeof makeTimestampMethods> &
+  ReturnType<typeof makeByteUtils> &
+  ReturnType<typeof makeLongUtils>;
+
+function makeUtils(options: Options): Utils {
+  return {
+    ...makeDeepPartial(options),
+    ...makeTimestampMethods(options),
+    ...makeByteUtils(),
+    ...makeLongUtils(),
+  };
+}
+
+function makeLongUtils() {
   // Regardless of which `forceLong` config option we're using, we always use
   // the `long` library to either represent or at least sanity-check 64-bit values
-  const util = TypeNames.anyType('util@protobufjs/minimal');
-  const configure = TypeNames.anyType('configure@protobufjs/minimal');
-  let file = _file.addCode(
-    CodeBlock.empty()
-      .beginControlFlow('if (%T.Long !== %T as any)', util, 'Long*long')
-      .addStatement('%T.Long = %T as any', util, 'Long*long')
-      .addStatement('%T()', configure)
-      .endControlFlow()
+  const util = imp('util@protobufjs/minimal');
+  const configure = imp('configure@protobufjs/minimal');
+  const Long = imp('Long*long');
+
+  const init = conditionalOutput(
+    '',
+    code`
+      if (${util}.Long !== ${Long}) {
+        ${util}.Long = ${Long} as any;
+        ${configure}();
+      }
+    `
   );
 
-  if (options.forceLong === LongOption.LONG) {
-    return file.addFunction(
-      FunctionSpec.create('numberToLong')
-        .addParameter('number', 'number')
-        .addCodeBlock(CodeBlock.empty().addStatement('return %T.fromNumber(number)', 'Long*long'))
-    );
-  } else if (options.forceLong === LongOption.STRING) {
-    return file.addFunction(
-      FunctionSpec.create('longToString')
-        .addParameter('long', 'Long*long')
-        .addCodeBlock(CodeBlock.empty().addStatement('return long.toString()'))
-    );
-  } else {
-    return file.addFunction(
-      FunctionSpec.create('longToNumber').addParameter('long', 'Long*long').addCodeBlock(
-        CodeBlock.empty()
-          .beginControlFlow('if (long.gt(Number.MAX_SAFE_INTEGER))')
-          // We use globalThis to avoid conflicts on protobuf types named `Error`.
-          .addStatement('throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER")')
-          .endControlFlow()
-          .addStatement('return long.toNumber()')
-      )
-    );
-  }
-}
- */
-
-/*
-function addBytesUtilityMethods(file: FileSpec): FileSpec {
-  return file.addCode(
-    CodeBlock.of(`interface WindowBase64 {
-  atob(b64: string): string;
-  btoa(bin: string): string;
-}
-
-const windowBase64 = (globalThis as unknown as WindowBase64);
-const atob = windowBase64.atob || ((b64: string) => Buffer.from(b64, 'base64').toString('binary'));
-const btoa = windowBase64.btoa || ((bin: string) => Buffer.from(bin, 'binary').toString('base64'));
-
-function bytesFromBase64(b64: string): Uint8Array {
-  const bin = atob(b64);
-  const arr = new Uint8Array(bin.length);
-  for (let i = 0; i < bin.length; ++i) {
-      arr[i] = bin.charCodeAt(i);
-  }
-  return arr;
-}
-
-function base64FromBytes(arr: Uint8Array): string {
-  const bin: string[] = [];
-  for (let i = 0; i < arr.byteLength; ++i) {
-    bin.push(String.fromCharCode(arr[i]));
-  }
-  return btoa(bin.join(''));
-}`)
+  // TODO This is unused?
+  const numberToLong = conditionalOutput(
+    'numberToLong',
+    code`
+      ${init}
+      function numberToLong(number: number) {
+        return ${Long}.fromNumber(number);
+      }
+    `
   );
-}
- */
 
-/*
-function addDeepPartialType(file: FileSpec, options: Options): FileSpec {
+  const longToString = conditionalOutput(
+    'longToString',
+    code`
+      ${init}
+      function longToString(long: ${Long}) {
+        return long.toString();
+      }
+    `
+  );
+
+  const longToNumber = conditionalOutput(
+    'longToNumber',
+    code`
+      ${init}
+      function longToNumber(long: ${Long}): number {
+        if (long.gt(Number.MAX_SAFE_INTEGER)) {
+          throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER")
+        }
+        return long.toNumber();
+      }
+    `
+  );
+
+  return { numberToLong, longToNumber, longToString, longInit: init };
+}
+
+function makeByteUtils() {
+  const bytesFromBase64 = conditionalOutput(
+    'bytesFromBase64',
+    code`
+      const atob: (b64: string) => string = (globalThis as any).atob || ((b64) => Buffer.from(b64, 'base64').toString('binary'));
+      function bytesFromBase64(b64: string): Uint8Array {
+        const bin = atob(b64);
+        const arr = new Uint8Array(bin.length);
+        for (let i = 0; i < bin.length; ++i) {
+            arr[i] = bin.charCodeAt(i);
+        }
+        return arr;
+      }
+    `
+  );
+  const base64FromBytes = conditionalOutput(
+    'base64FromBytes',
+    code`
+      const btoa : (bin: string) => string = (globalThis as any).btoa || ((bin) => Buffer.from(bin, 'binary').toString('base64'));
+      function base64FromBytes(arr: Uint8Array): string {
+        const bin: string[] = [];
+        for (let i = 0; i < arr.byteLength; ++i) {
+          bin.push(String.fromCharCode(arr[i]));
+        }
+        return btoa(bin.join(''));
+      }
+    `
+  );
+  return { bytesFromBase64, base64FromBytes };
+}
+
+function makeDeepPartial(options: Options) {
   let oneofCase = '';
   if (options.oneof === OneofOption.UNIONS) {
     oneofCase = `
-  : T extends { $case: string }
-  ? { [K in keyof Omit<T, '$case'>]?: DeepPartial<T[K]> } & { $case: T['$case'] }`;
+      : T extends { $case: string }
+      ? { [K in keyof Omit<T, '$case'>]?: DeepPartial<T[K]> } & { $case: T['$case'] }
+    `;
   }
   // Based on the type from ts-essentials
-  return file.addCode(
-    CodeBlock.empty().add(`type Builtin = Date | Function | Uint8Array | string | number | undefined;
-export type DeepPartial<T> = T extends Builtin
-  ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U>
-  ? ReadonlyArray<DeepPartial<U>>${oneofCase}
-  : T extends {}
-  ? { [K in keyof T]?: DeepPartial<T[K]> }
-  : Partial<T>;`)
+  const DeepPartial = conditionalOutput(
+    'DeepPartial',
+    code`
+      type Builtin = Date | Function | Uint8Array | string | number | undefined;
+      export type DeepPartial<T> = T extends Builtin
+        ? T
+        : T extends Array<infer U>
+        ? Array<DeepPartial<U>>
+        : T extends ReadonlyArray<infer U>
+        ? ReadonlyArray<DeepPartial<U>>${oneofCase}
+        : T extends {}
+        ? { [K in keyof T]?: DeepPartial<T[K]> }
+        : Partial<T>;
+    `
   );
+
+  return { DeepPartial };
 }
- */
 
-/*
-function addTimestampMethods(file: FileSpec, options: Options): FileSpec {
-  const timestampType = 'Timestamp@./google/protobuf/timestamp';
+function makeTimestampMethods(options: Options) {
+  const Timestamp = imp('Timestamp@./google/protobuf/timestamp');
 
-  let secondsCodeLine = 'const seconds = date.getTime() / 1_000';
+  let seconds = 'date.getTime() / 1_000';
   let toNumberCode = 't.seconds';
   if (options.forceLong === LongOption.LONG) {
     toNumberCode = 't.seconds.toNumber()';
-    secondsCodeLine = 'const seconds = numberToLong(date.getTime() / 1_000)';
+    seconds = 'Long.fromNumber(date.getTime() / 1_000)';
   } else if (options.forceLong === LongOption.STRING) {
     toNumberCode = 'Number(t.seconds)';
-    secondsCodeLine = 'const seconds = (date.getTime() / 1_000).toString()';
+    seconds = '(date.getTime() / 1_000).toString()';
   }
 
-  if (options.outputJsonMethods) {
-    file = file.addFunction(
-      FunctionSpec.create('fromJsonTimestamp')
-        .addParameter('o', 'any')
-        .returns('Date')
-        .addCodeBlock(
-          CodeBlock.empty()
-            .beginControlFlow('if (o instanceof Date)')
-            .addStatement('return o')
-            .nextControlFlow('else if (typeof o === "string")')
-            .addStatement('return new Date(o)')
-            .nextControlFlow('else')
-            .addStatement('return fromTimestamp(Timestamp.fromJSON(o))')
-            .endControlFlow()
-        )
-    );
-  }
+  const toTimestamp = conditionalOutput(
+    'toTimestamp',
+    code`
+      function toTimestamp(date: Date): ${Timestamp} {
+        const seconds = ${seconds};
+        const nanos = (date.getTime() % 1_000) * 1_000_000;
+        return { seconds, nanos };
+      }
+    `
+  );
 
-  return file
-    .addFunction(
-      FunctionSpec.create('toTimestamp')
-        .addParameter('date', 'Date')
-        .returns(timestampType)
-        .addCodeBlock(
-          CodeBlock.empty()
-            .addStatement(secondsCodeLine)
-            .addStatement('const nanos = (date.getTime() %% 1_000) * 1_000_000')
-            .addStatement('return { seconds, nanos }')
-        )
-    )
-    .addFunction(
-      FunctionSpec.create('fromTimestamp')
-        .addParameter('t', timestampType)
-        .returns('Date')
-        .addCodeBlock(
-          CodeBlock.empty()
-            .addStatement('let millis = %L * 1_000', toNumberCode)
-            .addStatement('millis += t.nanos / 1_000_000')
-            .addStatement('return new Date(millis)')
-        )
-    );
+  const fromTimestamp = conditionalOutput(
+    'fromTimestamp',
+    code`
+      function fromTimestamp(t: ${Timestamp}): Date {
+        let millis = ${toNumberCode} * 1_000;
+        millis += t.nanos / 1_000_000;
+        return new Date(millis);
+      }
+    `
+  );
+
+  const fromJsonTimestamp = conditionalOutput(
+    'fromJsonTimestamp',
+    code`
+      function fromJsonTimestamp(o: any): Date {
+        if (o instanceof Date) {
+          return o;
+        } else if (typeof o === "string") {
+          return new Date(o);
+        } else {
+          return fromTimestamp(Timestamp.fromJSON(o));
+        }
+      }
+    `
+  );
+
+  return { toTimestamp, fromTimestamp, fromJsonTimestamp };
 }
-
- */
 
 const UNRECOGNIZED_ENUM_NAME = 'UNRECOGNIZED';
 const UNRECOGNIZED_ENUM_VALUE = -1;
@@ -661,7 +655,13 @@ function visitServices(
 const Reader = imp('Reader@protobufjs/minimal');
 
 /** Creates a function to decode a message by loop overing the tags. */
-function generateDecode(typeMap: TypeMap, fullName: string, messageDesc: DescriptorProto, options: Options): Code {
+function generateDecode(
+  u: Utils,
+  typeMap: TypeMap,
+  fullName: string,
+  messageDesc: DescriptorProto,
+  options: Options
+): Code {
   const chunks: Code[] = [];
 
   // create the basic function declaration
@@ -706,9 +706,9 @@ function generateDecode(typeMap: TypeMap, fullName: string, messageDesc: Descrip
         if (options.forceLong === LongOption.LONG) {
           readSnippet = code`${readSnippet} as Long`;
         } else if (options.forceLong === LongOption.STRING) {
-          readSnippet = code`longToString(${readSnippet} as Long)`;
+          readSnippet = code`${u.longToString}(${readSnippet} as Long)`;
         } else {
-          readSnippet = code`longToNumber(${readSnippet} as Long)`;
+          readSnippet = code`${u.longToNumber}(${readSnippet} as Long)`;
         }
       } else if (isEnum(field)) {
         readSnippet = code`${readSnippet} as any`;
@@ -718,7 +718,7 @@ function generateDecode(typeMap: TypeMap, fullName: string, messageDesc: Descrip
       readSnippet = code`${type}.decode(reader, reader.uint32()).value`;
     } else if (isTimestamp(field)) {
       const type = basicTypeName(typeMap, field, options, { keepValueType: true });
-      readSnippet = code`fromTimestamp(${type}.decode(reader, reader.uint32()))`;
+      readSnippet = code`${u.fromTimestamp}(${type}.decode(reader, reader.uint32()))`;
     } else if (isMessage(field)) {
       const type = basicTypeName(typeMap, field, options);
       readSnippet = code`${type}.decode(reader, reader.uint32())`;
@@ -778,7 +778,13 @@ function generateDecode(typeMap: TypeMap, fullName: string, messageDesc: Descrip
 const Writer = imp('Writer@protobufjs/minimal');
 
 /** Creates a function to encode a message by loop overing the tags. */
-function generateEncode(typeMap: TypeMap, fullName: string, messageDesc: DescriptorProto, options: Options): Code {
+function generateEncode(
+  u: Utils,
+  typeMap: TypeMap,
+  fullName: string,
+  messageDesc: DescriptorProto,
+  options: Options
+): Code {
   const chunks: Code[] = [];
 
   // create the basic function declaration
@@ -801,7 +807,7 @@ function generateEncode(typeMap: TypeMap, fullName: string, messageDesc: Descrip
     } else if (isTimestamp(field)) {
       const tag = ((field.number << 3) | 2) >>> 0;
       const type = basicTypeName(typeMap, field, options, { keepValueType: true });
-      writeSnippet = (place) => code`${type}.encode(toTimestamp(${place}), writer.uint32(${tag}).fork()).ldelim()`;
+      writeSnippet = (place) => code`${type}.encode(${u.toTimestamp}(${place}), writer.uint32(${tag}).fork()).ldelim()`;
     } else if (isValueType(field)) {
       const tag = ((field.number << 3) | 2) >>> 0;
       const type = basicTypeName(typeMap, field, options, { keepValueType: true });
@@ -873,7 +879,13 @@ function generateEncode(typeMap: TypeMap, fullName: string, messageDesc: Descrip
  * This is very similar to decode, we loop through looking for properties, with
  * a few special cases for https://developers.google.com/protocol-buffers/docs/proto3#json.
  * */
-function generateFromJson(typeMap: TypeMap, fullName: string, messageDesc: DescriptorProto, options: Options): Code {
+function generateFromJson(
+  u: Utils,
+  typeMap: TypeMap,
+  fullName: string,
+  messageDesc: DescriptorProto,
+  options: Options
+): Code {
   const chunks: Code[] = [];
 
   // create the basic function declaration
@@ -902,9 +914,9 @@ function generateFromJson(typeMap: TypeMap, fullName: string, messageDesc: Descr
         // Convert primitives using the String(value)/Number(value)/bytesFromBase64(value)
         if (isBytes(field)) {
           if (options.env === EnvOption.NODE) {
-            return code`Buffer.from(bytesFromBase64(${from}))`;
+            return code`Buffer.from(${u.bytesFromBase64}(${from}))`;
           } else {
-            return code`bytesFromBase64(${from})`;
+            return code`${u.bytesFromBase64}(${from})`;
           }
         } else if (isLong(field) && options.forceLong === LongOption.LONG) {
           const cstr = capitalize(basicTypeName(typeMap, field, options, { keepValueType: true }).toCodeString());
@@ -914,7 +926,7 @@ function generateFromJson(typeMap: TypeMap, fullName: string, messageDesc: Descr
           return code`${cstr}(${from})`;
         }
       } else if (isTimestamp(field)) {
-        return code`fromJsonTimestamp(${from})`;
+        return code`${u.fromJsonTimestamp}(${from})`;
       } else if (isValueType(field)) {
         const valueType = valueTypeName(field.typeName, options)!;
         if (isLongValueType(field)) {
@@ -929,9 +941,9 @@ function generateFromJson(typeMap: TypeMap, fullName: string, messageDesc: Descr
             // TODO Can we not copy/paste this from ^?
             if (isBytes(valueType)) {
               if (options.env === EnvOption.NODE) {
-                return code`Buffer.from(bytesFromBase64(${from} as string))`;
+                return code`Buffer.from(${u.bytesFromBase64}(${from} as string))`;
               } else {
-                return code`bytesFromBase64(${from} as string)`;
+                return code`${u.bytesFromBase64}(${from} as string)`;
               }
             } else if (isEnum(valueType)) {
               return code`${from} as number`;
@@ -940,7 +952,7 @@ function generateFromJson(typeMap: TypeMap, fullName: string, messageDesc: Descr
               return code`${cstr}(${from})`;
             }
           } else if (isTimestamp(valueType)) {
-            return code`fromJsonTimestamp(${from})`;
+            return code`${u.fromJsonTimestamp}(${from})`;
           } else {
             const type = basicTypeName(typeMap, valueType, options);
             return code`${type}.fromJSON(${from})`;
@@ -998,7 +1010,13 @@ function generateFromJson(typeMap: TypeMap, fullName: string, messageDesc: Descr
   return joinCode(chunks);
 }
 
-function generateToJson(typeMap: TypeMap, fullName: string, messageDesc: DescriptorProto, options: Options): Code {
+function generateToJson(
+  u: Utils,
+  typeMap: TypeMap,
+  fullName: string,
+  messageDesc: DescriptorProto,
+  options: Options
+): Code {
   const chunks: Code[] = [];
 
   // create the basic function declaration
@@ -1026,7 +1044,7 @@ function generateToJson(typeMap: TypeMap, fullName: string, messageDesc: Descrip
           const toJson = getEnumMethod(typeMap, valueType.typeName, 'ToJSON');
           return code`${toJson}(${from})`;
         } else if (isBytes(valueType)) {
-          return code`base64FromBytes(${from})`;
+          return code`${u.base64FromBytes}(${from})`;
         } else if (isTimestamp(valueType)) {
           return code`${from}.toISOString()`;
         } else if (isPrimitive(valueType)) {
@@ -1040,9 +1058,9 @@ function generateToJson(typeMap: TypeMap, fullName: string, messageDesc: Descrip
         return code`${from} ? ${type}.toJSON(${from}) : ${defaultValue(typeMap, field, options)}`;
       } else if (isBytes(field)) {
         if (isWithinOneOf(field)) {
-          return code`${from} !== undefined ? base64FromBytes(${from}) : undefined`;
+          return code`${from} !== undefined ? ${u.base64FromBytes}(${from}) : undefined`;
         } else {
-          return code`base64FromBytes(${from} !== undefined ? ${from} : ${defaultValue(typeMap, field, options)})`;
+          return code`${u.base64FromBytes}(${from} !== undefined ? ${from} : ${defaultValue(typeMap, field, options)})`;
         }
       } else if (isLong(field) && options.forceLong === LongOption.LONG) {
         const v = isWithinOneOf(field) ? 'undefined' : defaultValue(typeMap, field, options);
@@ -1087,12 +1105,18 @@ function generateToJson(typeMap: TypeMap, fullName: string, messageDesc: Descrip
   return joinCode(chunks);
 }
 
-function generateFromPartial(typeMap: TypeMap, fullName: string, messageDesc: DescriptorProto, options: Options): Code {
+function generateFromPartial(
+  u: Utils,
+  typeMap: TypeMap,
+  fullName: string,
+  messageDesc: DescriptorProto,
+  options: Options
+): Code {
   const chunks: Code[] = [];
 
   // create the basic function declaration
   chunks.push(code`
-    fromPartial(${messageDesc.field.length > 0 ? 'object' : '_'}: DeepPartial<${fullName}>): ${fullName} {
+    fromPartial(${messageDesc.field.length > 0 ? 'object' : '_'}: ${u.DeepPartial}<${fullName}>): ${fullName} {
       const message = { ...base${fullName} } as ${fullName};
   `);
 
