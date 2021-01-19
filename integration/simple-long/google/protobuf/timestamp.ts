@@ -2,6 +2,14 @@ import * as Long from 'long';
 import { Writer, Reader } from 'protobufjs/minimal';
 
 
+function getGlobalThis() {
+  if (typeof globalThis !== "undefined") return globalThis;
+  if (typeof self !== "undefined") return self;
+  if (typeof window !== "undefined") return window;
+  if (typeof global !== "undefined") return global;
+  throw new Error("Unable to locate global object");
+}
+
 /**
  *  A Timestamp represents a point in time independent of any time zone or local
  *  calendar, encoded as a count of seconds and fractions of seconds at
@@ -108,6 +116,12 @@ const baseTimestamp: object = {
   seconds: Long.ZERO,
   nanos: 0,
 };
+
+declare var self: any | undefined;
+
+declare var window: any | undefined;
+
+var globalThis = getGlobalThis();
 
 export const protobufPackage = 'google.protobuf'
 

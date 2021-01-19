@@ -3,6 +3,14 @@ import * as hash from 'object-hash';
 import { Reader, Writer } from 'protobufjs/minimal';
 
 
+function getGlobalThis() {
+  if (typeof globalThis !== "undefined") return globalThis;
+  if (typeof self !== "undefined") return self;
+  if (typeof window !== "undefined") return window;
+  if (typeof global !== "undefined") return global;
+  throw new Error("Unable to locate global object");
+}
+
 export interface BatchQueryRequest {
   ids: string[];
 }
@@ -183,6 +191,12 @@ export interface DataLoaders {
   getDataLoader<T>(identifier: string, constructorFn: () => T): T;
 
 }
+
+declare var self: any | undefined;
+
+declare var window: any | undefined;
+
+var globalThis = getGlobalThis();
 
 export const protobufPackage = 'batching'
 

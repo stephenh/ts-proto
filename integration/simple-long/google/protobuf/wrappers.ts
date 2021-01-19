@@ -2,6 +2,14 @@ import * as Long from 'long';
 import { Writer, Reader } from 'protobufjs/minimal';
 
 
+function getGlobalThis() {
+  if (typeof globalThis !== "undefined") return globalThis;
+  if (typeof self !== "undefined") return self;
+  if (typeof window !== "undefined") return window;
+  if (typeof global !== "undefined") return global;
+  throw new Error("Unable to locate global object");
+}
+
 /**
  *  Wrapper message for `double`.
  *
@@ -144,6 +152,12 @@ const baseStringValue: object = {
 
 const baseBytesValue: object = {
 };
+
+declare var self: any | undefined;
+
+declare var window: any | undefined;
+
+var globalThis = getGlobalThis();
 
 export const protobufPackage = 'google.protobuf'
 

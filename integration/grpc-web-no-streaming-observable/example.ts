@@ -6,6 +6,14 @@ import { Writer, Reader } from 'protobufjs/minimal';
 import { UnaryMethodDefinition } from '@improbable-eng/grpc-web/dist/typings/service';
 
 
+function getGlobalThis() {
+  if (typeof globalThis !== "undefined") return globalThis;
+  if (typeof self !== "undefined") return self;
+  if (typeof window !== "undefined") return window;
+  if (typeof global !== "undefined") return global;
+  throw new Error("Unable to locate global object");
+}
+
 export interface DashFlash {
   msg: string;
   type: DashFlash_Type;
@@ -108,6 +116,12 @@ export class GrpcWebImpl implements Rpc {
           }).pipe(take(1));}
 
 }
+
+declare var self: any | undefined;
+
+declare var window: any | undefined;
+
+var globalThis = getGlobalThis();
 
 export const protobufPackage = 'rpx'
 

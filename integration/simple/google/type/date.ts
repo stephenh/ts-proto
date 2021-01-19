@@ -1,6 +1,14 @@
 import { Writer, Reader } from 'protobufjs/minimal';
 
 
+function getGlobalThis() {
+  if (typeof globalThis !== "undefined") return globalThis;
+  if (typeof self !== "undefined") return self;
+  if (typeof window !== "undefined") return window;
+  if (typeof global !== "undefined") return global;
+  throw new Error("Unable to locate global object");
+}
+
 /**
  *  Represents a whole or partial calendar date, e.g. a birthday. The time of day
  *  and time zone are either specified elsewhere or are not significant. The date
@@ -37,6 +45,12 @@ const baseDateMessage: object = {
   month: 0,
   day: 0,
 };
+
+declare var self: any | undefined;
+
+declare var window: any | undefined;
+
+var globalThis = getGlobalThis();
 
 export const protobufPackage = 'google.type'
 
