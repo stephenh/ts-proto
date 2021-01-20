@@ -1,4 +1,5 @@
-import { Writer, Reader } from 'protobufjs/minimal';
+import * as Long from 'long';
+import { util, configure, Writer, Reader } from 'protobufjs/minimal';
 
 /* eslint-disable */
 

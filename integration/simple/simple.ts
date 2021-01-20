@@ -1,7 +1,8 @@
-import { Reader, Writer } from 'protobufjs/minimal';
+import { Reader, util, configure, Writer } from 'protobufjs/minimal';
+import { Timestamp } from './google/protobuf/timestamp';
+import * as Long from 'long';
 import { ImportedThing } from './import_dir/thing';
 import { DateMessage } from './google/type/date';
-import { Timestamp } from './google/protobuf/timestamp';
 import { StringValue, Int32Value, BoolValue } from './google/protobuf/wrappers';
 
 /* eslint-disable */
@@ -2002,7 +2003,6 @@ export const PingResponse = {
 
 const baseNumbers: object = {
   double: 0,
-  float: 0,
   int32: 0,
   int64: 0,
   uint32: 0,
