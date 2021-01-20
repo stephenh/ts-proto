@@ -1,9 +1,11 @@
 import * as Long from 'long';
-import { Writer, Reader, util, configure } from 'protobufjs/minimal';
+import { util, configure, Writer, Reader } from 'protobufjs/minimal';
 
+/* eslint-disable */
 
-/**
- *  A Timestamp represents a point in time independent of any time zone or local
+export const protobufPackage = 'google.protobuf';
+
+/** A Timestamp represents a point in time independent of any time zone or local
  *  calendar, encoded as a count of seconds and fractions of seconds at
  *  nanosecond resolution. The count is relative to an epoch at UTC midnight on
  *  January 1, 1970, in the proleptic Gregorian calendar which extends the
@@ -44,14 +46,14 @@ import { Writer, Reader, util, configure } from 'protobufjs/minimal';
  *      // is 11644473600 seconds before Unix epoch 1970-01-01T00:00:00Z.
  *      Timestamp timestamp;
  *      timestamp.set_seconds((INT64) ((ticks / 10000000) - 11644473600LL));
- *      timestamp.set_nanos((INT32) ((ticks % 10000000) * 100));
+ *      timestamp.set_nanos((INT32) ((ticks %% 10000000) * 100));
  *
  *  Example 4: Compute Timestamp from Java `System.currentTimeMillis()`.
  *
  *      long millis = System.currentTimeMillis();
  *
  *      Timestamp timestamp = Timestamp.newBuilder().setSeconds(millis / 1000)
- *          .setNanos((int) ((millis % 1000) * 1000000)).build();
+ *          .setNanos((int) ((millis %% 1000) * 1000000)).build();
  *
  *
  *  Example 5: Compute Timestamp from current time in Python.
@@ -81,42 +83,20 @@ import { Writer, Reader, util, configure } from 'protobufjs/minimal';
  *  method. In Python, a standard `datetime.datetime` object can be converted
  *  to this format using
  *  [`strftime`](https://docs.python.org/2/library/time.html#time.strftime) with
- *  the time format spec '%Y-%m-%dT%H:%M:%S.%fZ'. Likewise, in Java, one can use
+ *  the time format spec '%%Y-%%m-%%dT%%H:%%M:%%S.%%fZ'. Likewise, in Java, one can use
  *  the Joda Time's [`ISODateTimeFormat.dateTime()`](
- *  http://www.joda.org/joda-time/apidocs/org/joda/time/format/ISODateTimeFormat.html#dateTime%2D%2D
- *  ) to obtain a formatter capable of generating timestamps in this format.
- *
- *
- */
-export interface Timestamp {
-  /**
-   *  Represents seconds of UTC time since Unix epoch
+ *  http://www.joda.org/joda-time/apidocs/org/joda/time/format/ISODateTimeFormat.html#dateTime%%2D%%2D
+ *  ) to obtain a formatter capable of generating timestamps in this format. */ export interface Timestamp {
+  /** Represents seconds of UTC time since Unix epoch
    *  1970-01-01T00:00:00Z. Must be from 0001-01-01T00:00:00Z to
-   *  9999-12-31T23:59:59Z inclusive.
-   */
-  seconds: number;
-  /**
-   *  Non-negative fractions of a second at nanosecond resolution. Negative
+   *  9999-12-31T23:59:59Z inclusive. */ seconds: number;
+  /** Non-negative fractions of a second at nanosecond resolution. Negative
    *  second values with fractions must still have non-negative nanos values
    *  that count forward in time. Must be from 0 to 999,999,999
-   *  inclusive.
-   */
-  nanos: number;
+   *  inclusive. */ nanos: number;
 }
 
-const baseTimestamp: object = {
-  seconds: 0,
-  nanos: 0,
-};
-
-function longToNumber(long: Long) {
-  if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
-  }
-  return long.toNumber();
-}
-
-export const protobufPackage = 'google.protobuf'
+const baseTimestamp: object = { seconds: 0, nanos: 0 };
 
 export const Timestamp = {
   encode(message: Timestamp, writer: Writer = Writer.create()): Writer {
@@ -124,7 +104,8 @@ export const Timestamp = {
     writer.uint32(16).int32(message.nanos);
     return writer;
   },
-  decode(input: Uint8Array | Reader, length?: number): Timestamp {
+
+  decode(input: Reader | Uint8Array, length?: number): Timestamp {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseTimestamp } as Timestamp;
@@ -144,6 +125,7 @@ export const Timestamp = {
     }
     return message;
   },
+
   fromJSON(object: any): Timestamp {
     const message = { ...baseTimestamp } as Timestamp;
     if (object.seconds !== undefined && object.seconds !== null) {
@@ -158,6 +140,7 @@ export const Timestamp = {
     }
     return message;
   },
+
   fromPartial(object: DeepPartial<Timestamp>): Timestamp {
     const message = { ...baseTimestamp } as Timestamp;
     if (object.seconds !== undefined && object.seconds !== null) {
@@ -172,6 +155,7 @@ export const Timestamp = {
     }
     return message;
   },
+
   toJSON(message: Timestamp): unknown {
     const obj: any = {};
     message.seconds !== undefined && (obj.seconds = message.seconds);
@@ -179,11 +163,6 @@ export const Timestamp = {
     return obj;
   },
 };
-
-if (util.Long !== Long as any) {
-  util.Long = Long as any;
-  configure();
-}
 
 type Builtin = Date | Function | Uint8Array | string | number | undefined;
 export type DeepPartial<T> = T extends Builtin
@@ -195,3 +174,15 @@ export type DeepPartial<T> = T extends Builtin
   : T extends {}
   ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
+
+function longToNumber(long: Long): number {
+  if (long.gt(Number.MAX_SAFE_INTEGER)) {
+    throw new globalThis.Error('Value is larger than Number.MAX_SAFE_INTEGER');
+  }
+  return long.toNumber();
+}
+
+if (util.Long !== Long) {
+  util.Long = Long as any;
+  configure();
+}

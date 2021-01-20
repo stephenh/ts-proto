@@ -224,11 +224,12 @@ type Utils = ReturnType<typeof makeDeepPartial> &
   ReturnType<typeof makeLongUtils>;
 
 function makeUtils(options: Options): Utils {
+  const longs = makeLongUtils();
   return {
     ...makeDeepPartial(options),
-    ...makeTimestampMethods(options),
+    ...makeTimestampMethods(options, longs),
     ...makeByteUtils(),
-    ...makeLongUtils(),
+    ...longs,
   };
 }
 
@@ -345,14 +346,14 @@ function makeDeepPartial(options: Options) {
   return { DeepPartial };
 }
 
-function makeTimestampMethods(options: Options) {
+function makeTimestampMethods(options: Options, longs: ReturnType<typeof makeLongUtils>) {
   const Timestamp = imp('Timestamp@./google/protobuf/timestamp');
 
-  let seconds = 'date.getTime() / 1_000';
+  let seconds: string | Code = 'date.getTime() / 1_000';
   let toNumberCode = 't.seconds';
   if (options.forceLong === LongOption.LONG) {
     toNumberCode = 't.seconds.toNumber()';
-    seconds = 'Long.fromNumber(date.getTime() / 1_000)';
+    seconds = code`${longs.numberToLong}(date.getTime() / 1_000)`;
   } else if (options.forceLong === LongOption.STRING) {
     toNumberCode = 'Number(t.seconds)';
     seconds = '(date.getTime() / 1_000).toString()';
@@ -1064,7 +1065,7 @@ function generateToJson(
         }
       } else if (isLong(field) && options.forceLong === LongOption.LONG) {
         const v = isWithinOneOf(field) ? 'undefined' : defaultValue(typeMap, field, options);
-        return code`(${from} || ${v}}).toString()`;
+        return code`(${from} || ${v}).toString()`;
       } else {
         return code`${from}`;
       }
