@@ -17,7 +17,9 @@ import MethodDescriptorProto = google.protobuf.MethodDescriptorProto;
 import FileDescriptorProto = google.protobuf.FileDescriptorProto;
 import ServiceDescriptorProto = google.protobuf.ServiceDescriptorProto;
 
+const hash = imp('hash*object-hash');
 const dataloader = imp('DataLoader*dataloader');
+const Reader = imp('Reader@protobufjs/minimal');
 
 /**
  * Generates an interface for `serviceDesc`.
@@ -39,7 +41,7 @@ export function generateService(
   const chunks: Code[] = [];
 
   maybeAddComment(sourceInfo, (text) => chunks.push(code`${text}`));
-  const maybeTypeVar = options.useContext ? contextTypeVar : '';
+  const maybeTypeVar = options.useContext ? `<${contextTypeVar}>` : '';
   chunks.push(code`export interface ${serviceDesc.name}${maybeTypeVar} {`);
 
   serviceDesc.method.forEach((methodDesc, index) => {
@@ -141,7 +143,7 @@ export function generateServiceClientImpl(
   // Define the FooServiceImpl class
   const { name } = serviceDesc;
   const i = options.useContext ? `${name}<Context>` : name;
-  const t = options.useContext ? contextTypeVar : '';
+  const t = options.useContext ? `<${contextTypeVar}>` : '';
   chunks.push(code`export class ${name}ClientImpl${t} implements ${i} {`);
 
   // Create the constructor(rpc: Rpc)
@@ -172,7 +174,6 @@ export function generateServiceClientImpl(
 
 /** We've found a BatchXxx method, create a synthetic GetXxx method that calls it. */
 function generateBatchingRpcMethod(typeMap: TypeMap, batchMethod: BatchMethod): Code {
-  /*
   const {
     methodDesc,
     singleMethodName,
@@ -183,36 +184,42 @@ function generateBatchingRpcMethod(typeMap: TypeMap, batchMethod: BatchMethod): 
     mapType,
     uniqueIdentifier,
   } = batchMethod;
+
   // Create the `(keys) => ...` lambda we'll pass to the DataLoader constructor
-  let lambda = CodeBlock.lambda(inputFieldName) // e.g. keys
-    .addStatement('const request = { %L }', inputFieldName);
+  const lambda: Code[] = [];
+  lambda.push(code`
+    (${inputFieldName}) => {
+      const request = { ${inputFieldName} };
+  `);
   if (mapType) {
     // If the return type is a map, lookup each key in the result
-    lambda = lambda
-      .beginLambda('return this.%L(ctx, request).then(res =>', methodDesc.name)
-      .addStatement('return %L.map(key => res.%L[key])', inputFieldName, outputFieldName)
-      .endLambda(')');
+    lambda.push(code`
+      return this.${methodDesc.name}(ctx, request).then(res => {
+        return ${inputFieldName}.map(key => res.${outputFieldName}[key])
+      });
+    `);
   } else {
     // Otherwise assume they come back in order
-    lambda = lambda.addStatement('return this.%L(ctx, request).then(res => res.%L)', methodDesc.name, outputFieldName);
+    lambda.push(code`
+      return this.${methodDesc.name}(ctx, request).then(res => res.${outputFieldName})
+    `);
   }
-  return FunctionSpec.create(singleMethodName)
-    .addParameter('ctx', 'Context')
-    .addParameter(singular(inputFieldName), inputType)
-    .addCode('const dl = ctx.getDataLoader(%S, () => {%>\n', uniqueIdentifier)
-    .addCode(
-      'return new %T<%T, %T>(%L, { cacheKeyFn: %T, ...ctx.rpcDataLoaderOptions });\n',
-      dataloader,
-      inputType,
-      outputType,
-      lambda,
-      TypeNames.anyType('hash*object-hash')
-    )
-    .addCode('%<});\n')
-    .addStatement('return dl.load(%L)', singular(inputFieldName))
-    .returns(TypeNames.PROMISE.param(outputType));
-   */
-  return code`todo`;
+  lambda.push(code`}`);
+
+  return code`
+    ${singleMethodName}(
+      ctx: Context,
+      ${singular(inputFieldName)}: ${inputType}
+    ): Promise<${outputType}> {
+      const dl = ctx.getDataLoader("${uniqueIdentifier}", () => {
+        return new ${dataloader}<${inputType}, ${outputType}>(
+          ${joinCode(lambda)},
+          { cacheKeyFn: ${hash}, ...ctx.rpcDataLoaderOptions }
+        );
+      });
+      return dl.load(${singular(inputFieldName)});
+    }
+  `;
 }
 
 /** We're not going to batch, but use DataLoader for per-request caching. */
@@ -223,40 +230,34 @@ function generateCachingRpcMethod(
   serviceDesc: ServiceDescriptorProto,
   methodDesc: MethodDescriptorProto
 ): Code {
-  /*
   const inputType = requestType(typeMap, methodDesc, options);
   const outputType = responseType(typeMap, methodDesc, options);
-  let lambda = CodeBlock.lambda('requests')
-    .beginLambda('const responses = requests.map(async request =>')
-    .addStatement('const data = %L.encode(request).finish()', inputType)
-    .addStatement(
-      'const response = await this.rpc.request(ctx, "%L.%L", %S, %L)',
-      fileDesc.package,
-      serviceDesc.name,
-      methodDesc.name,
-      'data'
-    )
-    .addStatement('return %L.decode(new %T(response))', outputType, 'Reader@protobufjs/minimal')
-    .endLambda(')')
-    .addStatement('return Promise.all(responses)');
   const uniqueIdentifier = `${fileDesc.package}.${serviceDesc.name}.${methodDesc.name}`;
-  return FunctionSpec.create(methodDesc.name)
-    .addParameter('ctx', 'Context')
-    .addParameter('request', inputType)
-    .addCode('const dl = ctx.getDataLoader(%S, () => {%>\n', uniqueIdentifier)
-    .addCode(
-      'return new %T<%T, %T>(%L, { cacheKeyFn: %T, ...ctx.rpcDataLoaderOptions  });\n',
-      dataloader,
-      inputType,
-      outputType,
-      lambda,
-      TypeNames.anyType('hash*object-hash')
-    )
-    .addCode('%<});\n')
-    .addStatement('return dl.load(request)')
-    .returns(TypeNames.PROMISE.param(outputType));
-   */
-  return code`todo`;
+  const lambda = code`
+    (requests) => {
+      const responses = requests.map(async request => {
+        const data = ${inputType}.encode(request).finish()
+        const response = await this.rpc.request(ctx, "${fileDesc.package}.${serviceDesc.name}", "${methodDesc.name}", data);
+        return ${outputType}.decode(new ${Reader}(response));
+      });
+      return Promise.all(responses);
+    }
+  `;
+
+  return code`
+    ${methodDesc.name}(
+      ctx: Context,
+      request: ${inputType},
+    ): Promise<${outputType}> {
+      const dl = ctx.getDataLoader("${uniqueIdentifier}", () => {
+        return new ${dataloader}<${inputType}, ${outputType}>(
+          ${lambda},
+          { cacheKeyFn: ${hash}, ...ctx.rpcDataLoaderOptions },
+        );
+      });
+      return dl.load(request);
+    }
+  `;
 }
 
 /**
