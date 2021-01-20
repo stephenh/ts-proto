@@ -1168,7 +1168,9 @@ function generateFromPartial(
         const i = maybeCastToNumber(typeMap, messageDesc, field, 'key', options);
         chunks.push(code`
           Object.entries(object.${fieldName}).forEach(([key, value]) => {
-            message.${fieldName}[${i}] = ${readSnippet('value')}; 
+            if (value !== undefined) {
+              message.${fieldName}[${i}] = ${readSnippet('value')}; 
+            }
           });
         `);
       } else {
@@ -1225,7 +1227,7 @@ function maybeCastToNumber(
   options: Options
 ): string {
   const { keyType } = detectMapType(typeMap, messageDesc, field, options)!;
-  if (keyType.toString() === 'string') {
+  if (keyType.toCodeString() === 'string') {
     return variableName;
   } else {
     return `Number(${variableName})`;

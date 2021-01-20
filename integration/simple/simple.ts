@@ -1190,7 +1190,7 @@ export const SimpleWithMap = {
     }
     if (object.nameLookup !== undefined && object.nameLookup !== null) {
       Object.entries(object.nameLookup).forEach(([key, value]) => {
-        message.nameLookup[Number(key)] = String(value);
+        message.nameLookup[key] = String(value);
       });
     }
     if (object.intLookup !== undefined && object.intLookup !== null) {
@@ -1200,12 +1200,12 @@ export const SimpleWithMap = {
     }
     if (object.mapOfTimestamps !== undefined && object.mapOfTimestamps !== null) {
       Object.entries(object.mapOfTimestamps).forEach(([key, value]) => {
-        message.mapOfTimestamps[Number(key)] = fromJsonTimestamp(value);
+        message.mapOfTimestamps[key] = fromJsonTimestamp(value);
       });
     }
     if (object.mapOfBytes !== undefined && object.mapOfBytes !== null) {
       Object.entries(object.mapOfBytes).forEach(([key, value]) => {
-        message.mapOfBytes[Number(key)] = bytesFromBase64(value as string);
+        message.mapOfBytes[key] = bytesFromBase64(value as string);
       });
     }
     return message;
@@ -1220,27 +1220,37 @@ export const SimpleWithMap = {
     message.mapOfBytes = {};
     if (object.entitiesById !== undefined && object.entitiesById !== null) {
       Object.entries(object.entitiesById).forEach(([key, value]) => {
-        message.entitiesById[Number(key)] = Entity.fromPartial(value);
+        if (value !== undefined) {
+          message.entitiesById[Number(key)] = Entity.fromPartial(value);
+        }
       });
     }
     if (object.nameLookup !== undefined && object.nameLookup !== null) {
       Object.entries(object.nameLookup).forEach(([key, value]) => {
-        message.nameLookup[Number(key)] = String(value);
+        if (value !== undefined) {
+          message.nameLookup[key] = String(value);
+        }
       });
     }
     if (object.intLookup !== undefined && object.intLookup !== null) {
       Object.entries(object.intLookup).forEach(([key, value]) => {
-        message.intLookup[Number(key)] = Number(value);
+        if (value !== undefined) {
+          message.intLookup[Number(key)] = Number(value);
+        }
       });
     }
     if (object.mapOfTimestamps !== undefined && object.mapOfTimestamps !== null) {
       Object.entries(object.mapOfTimestamps).forEach(([key, value]) => {
-        message.mapOfTimestamps[Number(key)] = value;
+        if (value !== undefined) {
+          message.mapOfTimestamps[key] = value;
+        }
       });
     }
     if (object.mapOfBytes !== undefined && object.mapOfBytes !== null) {
       Object.entries(object.mapOfBytes).forEach(([key, value]) => {
-        message.mapOfBytes[Number(key)] = value;
+        if (value !== undefined) {
+          message.mapOfBytes[key] = value;
+        }
       });
     }
     return message;
@@ -1673,7 +1683,9 @@ export const SimpleWithSnakeCaseMap = {
     message.entitiesById = {};
     if (object.entitiesById !== undefined && object.entitiesById !== null) {
       Object.entries(object.entitiesById).forEach(([key, value]) => {
-        message.entitiesById[Number(key)] = Entity.fromPartial(value);
+        if (value !== undefined) {
+          message.entitiesById[Number(key)] = Entity.fromPartial(value);
+        }
       });
     }
     return message;
@@ -1809,7 +1821,9 @@ export const SimpleWithMapOfEnums = {
     message.enumsById = {};
     if (object.enumsById !== undefined && object.enumsById !== null) {
       Object.entries(object.enumsById).forEach(([key, value]) => {
-        message.enumsById[Number(key)] = value as number;
+        if (value !== undefined) {
+          message.enumsById[Number(key)] = value as number;
+        }
       });
     }
     return message;
@@ -2003,6 +2017,7 @@ export const PingResponse = {
 
 const baseNumbers: object = {
   double: 0,
+  float: 0,
   int32: 0,
   int64: 0,
   uint32: 0,
