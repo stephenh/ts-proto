@@ -1,7 +1,6 @@
+/* eslint-disable */
 import * as Long from 'long';
 import { Writer, Reader } from 'protobufjs/minimal';
-
-/* eslint-disable */
 
 export const protobufPackage = 'google.protobuf';
 

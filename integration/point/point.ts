@@ -1,6 +1,5 @@
-import { Writer, Reader } from 'protobufjs/minimal';
-
 /* eslint-disable */
+import { Writer, Reader } from 'protobufjs/minimal';
 
 export const protobufPackage = '';
 

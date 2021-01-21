@@ -4,7 +4,7 @@ import { promisify } from 'util';
 import { google } from '../build/pbjs';
 import { generateFile } from '../src/main';
 import { createTypeMap } from '../src/types';
-import { optionsFromParameter } from '../src/utils';
+import { prefixDisableLinter, optionsFromParameter } from '../src/utils';
 import CodeGeneratorRequest = google.protobuf.compiler.CodeGeneratorRequest;
 
 /**
@@ -31,7 +31,7 @@ async function generate(binFile: string, baseDir: string, parameter: string) {
     const filePath = `${baseDir}/${path}`;
     const dirPath = parse(filePath).dir;
     await promisify(mkdir)(dirPath, { recursive: true }).catch(() => {});
-    await promisify(writeFile)(filePath, await code.toStringWithImports({ path }));
+    await promisify(writeFile)(filePath, prefixDisableLinter(await code.toStringWithImports({ path })));
   }
 }
 

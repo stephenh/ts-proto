@@ -1,5 +1,4 @@
 /* eslint-disable */
-
 export const protobufPackage = 'google.protobuf';
 
 /** `Any` contains an arbitrary serialized protocol buffer message along with a

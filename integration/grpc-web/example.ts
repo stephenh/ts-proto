@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { UnaryMethodDefinition } from '@improbable-eng/grpc-web/dist/typings/service';
 import { Observable } from 'rxjs';
 import { BrowserHeaders } from 'browser-headers';
@@ -5,8 +6,6 @@ import { grpc } from '@improbable-eng/grpc-web';
 import { Code } from '@improbable-eng/grpc-web/dist/typings/Code';
 import { share } from 'rxjs/operators';
 import { Writer, Reader } from 'protobufjs/minimal';
-
-/* eslint-disable */
 
 export const protobufPackage = 'rpx';
 

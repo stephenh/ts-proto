@@ -1,8 +1,7 @@
+/* eslint-disable */
 import { Timestamp } from '../google/protobuf/timestamp';
 import * as Long from 'long';
 import { util, configure, Writer, Reader } from 'protobufjs/minimal';
-
-/* eslint-disable */
 
 export const protobufPackage = 'simple';
 

@@ -108,8 +108,6 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
   const moduleName = fileDesc.name.replace('.proto', '.ts');
   const chunks: Code[] = [];
 
-  chunks.push(code`/* eslint-disable */`);
-
   // Indicate this file's source protobuf package for reflective use with google.protobuf.Any
   chunks.push(code`export const protobufPackage = '${fileDesc.package}';`);
 

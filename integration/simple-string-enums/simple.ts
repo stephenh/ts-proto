@@ -1,5 +1,4 @@
 /* eslint-disable */
-
 export const protobufPackage = 'simple';
 
 export enum StateEnum {

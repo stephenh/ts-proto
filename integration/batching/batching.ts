@@ -1,6 +1,5 @@
-import { Reader, Writer } from 'protobufjs/minimal';
-
 /* eslint-disable */
+import { Reader, Writer } from 'protobufjs/minimal';
 
 export const protobufPackage = 'batching';
 

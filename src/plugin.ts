@@ -1,5 +1,5 @@
 import { promisify } from 'util';
-import { optionsFromParameter, readToBuffer } from './utils';
+import { optionsFromParameter, prefixDisableLinter, readToBuffer } from './utils';
 import { google } from '../build/pbjs';
 import { generateFile } from './main';
 import { createTypeMap } from './types';
@@ -40,11 +40,3 @@ main()
     process.stderr.write(e.stack);
     process.exit(1);
   });
-
-// Comment block at the top of every source file, since these comments require specific
-// syntax incompatible with ts-poet, we will hard-code the string and prepend to the
-// generator output.
-function prefixDisableLinter(spec: string): string {
-  return `/* eslint-disable */
-${spec}`;
-}

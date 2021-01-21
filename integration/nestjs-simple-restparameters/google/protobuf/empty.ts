@@ -1,5 +1,4 @@
 /* eslint-disable */
-
 export const protobufPackage = 'google.protobuf';
 
 /** A generic empty message that you can re-use to avoid defining duplicated

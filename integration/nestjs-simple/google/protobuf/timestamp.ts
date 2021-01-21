@@ -1,5 +1,4 @@
 /* eslint-disable */
-
 export const protobufPackage = 'google.protobuf';
 
 /** A Timestamp represents a point in time independent of any time zone or local

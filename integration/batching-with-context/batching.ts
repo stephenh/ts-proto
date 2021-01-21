@@ -1,8 +1,7 @@
+/* eslint-disable */
 import * as DataLoader from 'dataloader';
 import * as hash from 'object-hash';
 import { Reader, Writer } from 'protobufjs/minimal';
-
-/* eslint-disable */
 
 export const protobufPackage = 'batching';
 

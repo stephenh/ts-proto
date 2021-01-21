@@ -167,3 +167,10 @@ export function maybeAddComment(
     return process(formatted);
   }
 }
+
+// Comment block at the top of every source file, since these comments require specific
+// syntax incompatible with ts-poet, we will hard-code the string and prepend to the
+// generator output.
+export function prefixDisableLinter(spec: string): string {
+  return `/* eslint-disable */\n${spec}`;
+}
