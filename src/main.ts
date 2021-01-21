@@ -549,13 +549,13 @@ function generateOneofProperty(
     fields.map((f) => {
       let fieldName = maybeSnakeToCamel(f.name, options);
       let typeName = toTypeName(typeMap, messageDesc, f, options);
-      return code`{ $case: "${fieldName}, ${fieldName}: ${typeName} }`;
+      return code`{ $case: '${fieldName}', ${fieldName}: ${typeName} }`;
     }),
     { on: ' | ' }
   );
 
   const name = maybeSnakeToCamel(messageDesc.oneofDecl[oneofIndex].name, options);
-  return code`${name}?: ${unionType}`;
+  return code`${name}?: ${unionType},`;
 
   /*
   // Ideally we'd put the comments for each oneof field next to the anonymous

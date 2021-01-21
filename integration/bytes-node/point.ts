@@ -1,21 +1,22 @@
 import { Writer, Reader } from 'protobufjs/minimal';
 
+/* eslint-disable */
+
+export const protobufPackage = '';
 
 export interface Point {
   data: Buffer;
 }
 
-const basePoint: object = {
-};
-
-export const protobufPackage = ''
+const basePoint: object = {};
 
 export const Point = {
   encode(message: Point, writer: Writer = Writer.create()): Writer {
     writer.uint32(10).bytes(message.data);
     return writer;
   },
-  decode(input: Uint8Array | Reader, length?: number): Point {
+
+  decode(input: Reader | Uint8Array, length?: number): Point {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...basePoint } as Point;
@@ -32,6 +33,7 @@ export const Point = {
     }
     return message;
   },
+
   fromJSON(object: any): Point {
     const message = { ...basePoint } as Point;
     if (object.data !== undefined && object.data !== null) {
@@ -39,6 +41,7 @@ export const Point = {
     }
     return message;
   },
+
   fromPartial(object: DeepPartial<Point>): Point {
     const message = { ...basePoint } as Point;
     if (object.data !== undefined && object.data !== null) {
@@ -48,38 +51,15 @@ export const Point = {
     }
     return message;
   },
+
   toJSON(message: Point): unknown {
     const obj: any = {};
-    message.data !== undefined && (obj.data = base64FromBytes(message.data !== undefined ? message.data : new Buffer(0)));
+    message.data !== undefined &&
+      (obj.data = base64FromBytes(message.data !== undefined ? message.data : new Buffer(0)));
     return obj;
   },
 };
 
-interface WindowBase64 {
-  atob(b64: string): string;
-  btoa(bin: string): string;
-}
-
-const windowBase64 = (globalThis as unknown as WindowBase64);
-const atob = windowBase64.atob || ((b64: string) => Buffer.from(b64, 'base64').toString('binary'));
-const btoa = windowBase64.btoa || ((bin: string) => Buffer.from(bin, 'binary').toString('base64'));
-
-function bytesFromBase64(b64: string): Uint8Array {
-  const bin = atob(b64);
-  const arr = new Uint8Array(bin.length);
-  for (let i = 0; i < bin.length; ++i) {
-      arr[i] = bin.charCodeAt(i);
-  }
-  return arr;
-}
-
-function base64FromBytes(arr: Uint8Array): string {
-  const bin: string[] = [];
-  for (let i = 0; i < arr.byteLength; ++i) {
-    bin.push(String.fromCharCode(arr[i]));
-  }
-  return btoa(bin.join(''));
-}
 type Builtin = Date | Function | Uint8Array | string | number | undefined;
 export type DeepPartial<T> = T extends Builtin
   ? T
@@ -90,3 +70,24 @@ export type DeepPartial<T> = T extends Builtin
   : T extends {}
   ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
+
+const atob: (b64: string) => string =
+  (globalThis as any).atob || ((b64) => Buffer.from(b64, 'base64').toString('binary'));
+function bytesFromBase64(b64: string): Uint8Array {
+  const bin = atob(b64);
+  const arr = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; ++i) {
+    arr[i] = bin.charCodeAt(i);
+  }
+  return arr;
+}
+
+const btoa: (bin: string) => string =
+  (globalThis as any).btoa || ((bin) => Buffer.from(bin, 'binary').toString('base64'));
+function base64FromBytes(arr: Uint8Array): string {
+  const bin: string[] = [];
+  for (let i = 0; i < arr.byteLength; ++i) {
+    bin.push(String.fromCharCode(arr[i]));
+  }
+  return btoa(bin.join(''));
+}

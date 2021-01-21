@@ -1,20 +1,16 @@
 import { Writer, Reader } from 'protobufjs/minimal';
 
+/* eslint-disable */
+
+export const protobufPackage = '';
 
 export interface Baz {
   foo: FooBar | undefined;
 }
 
-export interface FooBar {
-}
+export interface FooBar {}
 
-const baseBaz: object = {
-};
-
-const baseFooBar: object = {
-};
-
-export const protobufPackage = ''
+const baseBaz: object = {};
 
 export const Baz = {
   encode(message: Baz, writer: Writer = Writer.create()): Writer {
@@ -23,7 +19,8 @@ export const Baz = {
     }
     return writer;
   },
-  decode(input: Uint8Array | Reader, length?: number): Baz {
+
+  decode(input: Reader | Uint8Array, length?: number): Baz {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseBaz } as Baz;
@@ -40,6 +37,7 @@ export const Baz = {
     }
     return message;
   },
+
   fromJSON(object: any): Baz {
     const message = { ...baseBaz } as Baz;
     if (object.foo !== undefined && object.foo !== null) {
@@ -49,6 +47,7 @@ export const Baz = {
     }
     return message;
   },
+
   fromPartial(object: DeepPartial<Baz>): Baz {
     const message = { ...baseBaz } as Baz;
     if (object.foo !== undefined && object.foo !== null) {
@@ -58,6 +57,7 @@ export const Baz = {
     }
     return message;
   },
+
   toJSON(message: Baz): unknown {
     const obj: any = {};
     message.foo !== undefined && (obj.foo = message.foo ? FooBar.toJSON(message.foo) : undefined);
@@ -65,11 +65,14 @@ export const Baz = {
   },
 };
 
+const baseFooBar: object = {};
+
 export const FooBar = {
   encode(_: FooBar, writer: Writer = Writer.create()): Writer {
     return writer;
   },
-  decode(input: Uint8Array | Reader, length?: number): FooBar {
+
+  decode(input: Reader | Uint8Array, length?: number): FooBar {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseFooBar } as FooBar;
@@ -83,14 +86,17 @@ export const FooBar = {
     }
     return message;
   },
+
   fromJSON(_: any): FooBar {
     const message = { ...baseFooBar } as FooBar;
     return message;
   },
+
   fromPartial(_: DeepPartial<FooBar>): FooBar {
     const message = { ...baseFooBar } as FooBar;
     return message;
   },
+
   toJSON(_: FooBar): unknown {
     const obj: any = {};
     return obj;

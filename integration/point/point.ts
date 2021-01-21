@@ -1,5 +1,8 @@
 import { Writer, Reader } from 'protobufjs/minimal';
 
+/* eslint-disable */
+
+export const protobufPackage = '';
 
 export interface Point {
   lat: number;
@@ -11,15 +14,7 @@ export interface Area {
   se: Point | undefined;
 }
 
-const basePoint: object = {
-  lat: 0,
-  lng: 0,
-};
-
-const baseArea: object = {
-};
-
-export const protobufPackage = ''
+const basePoint: object = { lat: 0, lng: 0 };
 
 export const Point = {
   encode(message: Point, writer: Writer = Writer.create()): Writer {
@@ -27,7 +22,8 @@ export const Point = {
     writer.uint32(17).double(message.lng);
     return writer;
   },
-  decode(input: Uint8Array | Reader, length?: number): Point {
+
+  decode(input: Reader | Uint8Array, length?: number): Point {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...basePoint } as Point;
@@ -47,6 +43,7 @@ export const Point = {
     }
     return message;
   },
+
   fromJSON(object: any): Point {
     const message = { ...basePoint } as Point;
     if (object.lat !== undefined && object.lat !== null) {
@@ -61,6 +58,7 @@ export const Point = {
     }
     return message;
   },
+
   fromPartial(object: DeepPartial<Point>): Point {
     const message = { ...basePoint } as Point;
     if (object.lat !== undefined && object.lat !== null) {
@@ -75,6 +73,7 @@ export const Point = {
     }
     return message;
   },
+
   toJSON(message: Point): unknown {
     const obj: any = {};
     message.lat !== undefined && (obj.lat = message.lat);
@@ -82,6 +81,8 @@ export const Point = {
     return obj;
   },
 };
+
+const baseArea: object = {};
 
 export const Area = {
   encode(message: Area, writer: Writer = Writer.create()): Writer {
@@ -93,7 +94,8 @@ export const Area = {
     }
     return writer;
   },
-  decode(input: Uint8Array | Reader, length?: number): Area {
+
+  decode(input: Reader | Uint8Array, length?: number): Area {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseArea } as Area;
@@ -113,6 +115,7 @@ export const Area = {
     }
     return message;
   },
+
   fromJSON(object: any): Area {
     const message = { ...baseArea } as Area;
     if (object.nw !== undefined && object.nw !== null) {
@@ -127,6 +130,7 @@ export const Area = {
     }
     return message;
   },
+
   fromPartial(object: DeepPartial<Area>): Area {
     const message = { ...baseArea } as Area;
     if (object.nw !== undefined && object.nw !== null) {
@@ -141,6 +145,7 @@ export const Area = {
     }
     return message;
   },
+
   toJSON(message: Area): unknown {
     const obj: any = {};
     message.nw !== undefined && (obj.nw = message.nw ? Point.toJSON(message.nw) : undefined);
