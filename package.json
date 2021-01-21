@@ -26,7 +26,7 @@
     "@nestjs/microservices": "^7.0.9",
     "@types/jest": "^24.0.11",
     "@types/node": "^10.7.0",
-    "grpc": "^1.24.2",
+    "grpc": "^1.24.4",
     "jest": "^25.1.0",
     "prettier": "^2.0.5",
     "reflect-metadata": "^0.1.13",
