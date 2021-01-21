@@ -1,6 +1,7 @@
+/* eslint-disable */
+export const protobufPackage = 'google.protobuf';
 
-/**
- *  A Timestamp represents a point in time independent of any time zone or local
+/** A Timestamp represents a point in time independent of any time zone or local
  *  calendar, encoded as a count of seconds and fractions of seconds at
  *  nanosecond resolution. The count is relative to an epoch at UTC midnight on
  *  January 1, 1970, in the proleptic Gregorian calendar which extends the
@@ -41,14 +42,14 @@
  *      // is 11644473600 seconds before Unix epoch 1970-01-01T00:00:00Z.
  *      Timestamp timestamp;
  *      timestamp.set_seconds((INT64) ((ticks / 10000000) - 11644473600LL));
- *      timestamp.set_nanos((INT32) ((ticks % 10000000) * 100));
+ *      timestamp.set_nanos((INT32) ((ticks %% 10000000) * 100));
  *
  *  Example 4: Compute Timestamp from Java `System.currentTimeMillis()`.
  *
  *      long millis = System.currentTimeMillis();
  *
  *      Timestamp timestamp = Timestamp.newBuilder().setSeconds(millis / 1000)
- *          .setNanos((int) ((millis % 1000) * 1000000)).build();
+ *          .setNanos((int) ((millis %% 1000) * 1000000)).build();
  *
  *
  *  Example 5: Compute Timestamp from current time in Python.
@@ -78,29 +79,17 @@
  *  method. In Python, a standard `datetime.datetime` object can be converted
  *  to this format using
  *  [`strftime`](https://docs.python.org/2/library/time.html#time.strftime) with
- *  the time format spec '%Y-%m-%dT%H:%M:%S.%fZ'. Likewise, in Java, one can use
+ *  the time format spec '%%Y-%%m-%%dT%%H:%%M:%%S.%%fZ'. Likewise, in Java, one can use
  *  the Joda Time's [`ISODateTimeFormat.dateTime()`](
- *  http://www.joda.org/joda-time/apidocs/org/joda/time/format/ISODateTimeFormat.html#dateTime%2D%2D
- *  ) to obtain a formatter capable of generating timestamps in this format.
- *
- *
- */
-export interface Timestamp {
-  /**
-   *  Represents seconds of UTC time since Unix epoch
+ *  http://www.joda.org/joda-time/apidocs/org/joda/time/format/ISODateTimeFormat.html#dateTime%%2D%%2D
+ *  ) to obtain a formatter capable of generating timestamps in this format. */ export interface Timestamp {
+  /** Represents seconds of UTC time since Unix epoch
    *  1970-01-01T00:00:00Z. Must be from 0001-01-01T00:00:00Z to
-   *  9999-12-31T23:59:59Z inclusive.
-   */
-  seconds: number;
-  /**
-   *  Non-negative fractions of a second at nanosecond resolution. Negative
+   *  9999-12-31T23:59:59Z inclusive. */ seconds: number;
+  /** Non-negative fractions of a second at nanosecond resolution. Negative
    *  second values with fractions must still have non-negative nanos values
    *  that count forward in time. Must be from 0 to 999,999,999
-   *  inclusive.
-   */
-  nanos: number;
+   *  inclusive. */ nanos: number;
 }
 
-export const protobufPackage = 'google.protobuf'
-
-export const GOOGLE_PROTOBUF_PACKAGE_NAME = 'google.protobuf'
+export const GOOGLE_PROTOBUF_PACKAGE_NAME = 'google.protobuf';

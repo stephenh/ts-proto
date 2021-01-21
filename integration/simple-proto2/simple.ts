@@ -1,54 +1,51 @@
+/* eslint-disable */
 import { Writer, Reader } from 'protobufjs/minimal';
 
-
-export interface Issue56 {
-  test: EnumWithoutZero;
-}
-
-const baseIssue56: object = {
-  test: 1,
-};
-
-export const protobufPackage = 'simple'
+export const protobufPackage = 'simple';
 
 export enum EnumWithoutZero {
   A = 1,
   B = 2,
   UNRECOGNIZED = -1,
 }
-
 export function enumWithoutZeroFromJSON(object: any): EnumWithoutZero {
   switch (object) {
     case 1:
-    case "A":
+    case 'A':
       return EnumWithoutZero.A;
     case 2:
-    case "B":
+    case 'B':
       return EnumWithoutZero.B;
     case -1:
-    case "UNRECOGNIZED":
+    case 'UNRECOGNIZED':
     default:
       return EnumWithoutZero.UNRECOGNIZED;
   }
 }
-
 export function enumWithoutZeroToJSON(object: EnumWithoutZero): string {
   switch (object) {
     case EnumWithoutZero.A:
-      return "A";
+      return 'A';
     case EnumWithoutZero.B:
-      return "B";
+      return 'B';
     default:
-      return "UNKNOWN";
+      return 'UNKNOWN';
   }
 }
+
+export interface Issue56 {
+  test: EnumWithoutZero;
+}
+
+const baseIssue56: object = { test: 1 };
 
 export const Issue56 = {
   encode(message: Issue56, writer: Writer = Writer.create()): Writer {
     writer.uint32(8).int32(message.test);
     return writer;
   },
-  decode(input: Uint8Array | Reader, length?: number): Issue56 {
+
+  decode(input: Reader | Uint8Array, length?: number): Issue56 {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseIssue56 } as Issue56;
@@ -65,6 +62,7 @@ export const Issue56 = {
     }
     return message;
   },
+
   fromJSON(object: any): Issue56 {
     const message = { ...baseIssue56 } as Issue56;
     if (object.test !== undefined && object.test !== null) {
@@ -74,6 +72,7 @@ export const Issue56 = {
     }
     return message;
   },
+
   fromPartial(object: DeepPartial<Issue56>): Issue56 {
     const message = { ...baseIssue56 } as Issue56;
     if (object.test !== undefined && object.test !== null) {
@@ -83,6 +82,7 @@ export const Issue56 = {
     }
     return message;
   },
+
   toJSON(message: Issue56): unknown {
     const obj: any = {};
     message.test !== undefined && (obj.test = enumWithoutZeroToJSON(message.test));
