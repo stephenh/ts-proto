@@ -1,12 +1,56 @@
+/* eslint-disable */
+import { UnaryMethodDefinition } from '@improbable-eng/grpc-web/dist/typings/service';
 import { BrowserHeaders } from 'browser-headers';
 import { grpc } from '@improbable-eng/grpc-web';
 import { Writer, Reader } from 'protobufjs/minimal';
-import { UnaryMethodDefinition } from '@improbable-eng/grpc-web/dist/typings/service';
 
+export const protobufPackage = 'rpx';
 
 export interface DashFlash {
   msg: string;
   type: DashFlash_Type;
+}
+
+export enum DashFlash_Type {
+  Undefined = 0,
+  Success = 1,
+  Warn = 2,
+  Error = 3,
+  UNRECOGNIZED = -1,
+}
+export function dashFlash_TypeFromJSON(object: any): DashFlash_Type {
+  switch (object) {
+    case 0:
+    case 'Undefined':
+      return DashFlash_Type.Undefined;
+    case 1:
+    case 'Success':
+      return DashFlash_Type.Success;
+    case 2:
+    case 'Warn':
+      return DashFlash_Type.Warn;
+    case 3:
+    case 'Error':
+      return DashFlash_Type.Error;
+    case -1:
+    case 'UNRECOGNIZED':
+    default:
+      return DashFlash_Type.UNRECOGNIZED;
+  }
+}
+export function dashFlash_TypeToJSON(object: DashFlash_Type): string {
+  switch (object) {
+    case DashFlash_Type.Undefined:
+      return 'Undefined';
+    case DashFlash_Type.Success:
+      return 'Success';
+    case DashFlash_Type.Warn:
+      return 'Warn';
+    case DashFlash_Type.Error:
+      return 'Error';
+    default:
+      return 'UNKNOWN';
+  }
 }
 
 export interface DashUserSettingsState {
@@ -20,140 +64,9 @@ export interface DashUserSettingsState_URLs {
   connectGithub: string;
 }
 
-export interface Empty {
-}
+export interface Empty {}
 
-const baseDashFlash: object = {
-  msg: "",
-  type: 0,
-};
-
-const baseDashUserSettingsState: object = {
-  email: "",
-};
-
-const baseDashUserSettingsState_URLs: object = {
-  connectGoogle: "",
-  connectGithub: "",
-};
-
-const baseEmpty: object = {
-};
-
-/**
- *  This is the same example.proto used by the other grpc-web examples,
- *  but with the streaming method removed.
- */
-export interface DashState {
-
-  UserSettings(request: DeepPartial<Empty>, metadata?: grpc.Metadata): Promise<DashUserSettingsState>;
-
-}
-
-export class DashStateClientImpl implements DashState {
-
-  private readonly rpc: Rpc;
-
-  constructor(rpc: Rpc) {
-    this.rpc = rpc;
-  }
-
-  UserSettings(request: DeepPartial<Empty>, metadata?: grpc.Metadata): Promise<DashUserSettingsState> {
-    return this.rpc.unary(DashStateUserSettingsDesc, Empty.fromPartial(request), metadata);
-  }
-
-}
-
-interface Rpc {
-
-  unary<T extends UnaryMethodDefinitionish>(methodDesc: T, request: any, metadata: grpc.Metadata | undefined): Promise<any>;
-
-}
-
-export class GrpcWebImpl implements Rpc {
-
-  private host: string;
-
-  private options: { transport?: grpc.TransportFactory, debug?: boolean, metadata?: grpc.Metadata | undefined };
-
-  constructor(host: string, options: { transport?: grpc.TransportFactory, debug?: boolean, metadata?: grpc.Metadata | undefined }) {
-    this.host = host;
-    this.options = options;
-  }
-
-  unary<T extends UnaryMethodDefinitionish>(methodDesc: T, _request: any, metadata: grpc.Metadata | undefined): Promise<any> {
-    const request = { ..._request, ...methodDesc.requestType };
-        const maybeCombinedMetadata =
-        metadata && this.options.metadata
-          ? new BrowserHeaders({ ...this.options?.metadata.headersMap, ...metadata?.headersMap })
-          : metadata || this.options.metadata;
-        return new Promise((resolve, reject) => {
-          grpc.unary(methodDesc, {
-            request,
-            host: this.host,
-            metadata: maybeCombinedMetadata,
-            transport: this.options.transport,
-            debug: this.options.debug,
-            onEnd: function (response) {
-              if (response.status === grpc.Code.OK) {
-                resolve(response.message);
-              } else {
-                const err = new Error(response.statusMessage) as any;
-                err.code = response.status;
-                err.metadata = response.trailers;
-                reject(err);
-              }
-            },
-          });
-        });}
-
-}
-
-export const protobufPackage = 'rpx'
-
-export enum DashFlash_Type {
-  Undefined = 0,
-  Success = 1,
-  Warn = 2,
-  Error = 3,
-  UNRECOGNIZED = -1,
-}
-
-export function dashFlash_TypeFromJSON(object: any): DashFlash_Type {
-  switch (object) {
-    case 0:
-    case "Undefined":
-      return DashFlash_Type.Undefined;
-    case 1:
-    case "Success":
-      return DashFlash_Type.Success;
-    case 2:
-    case "Warn":
-      return DashFlash_Type.Warn;
-    case 3:
-    case "Error":
-      return DashFlash_Type.Error;
-    case -1:
-    case "UNRECOGNIZED":
-    default:
-      return DashFlash_Type.UNRECOGNIZED;
-  }
-}
-
-export function dashFlash_TypeToJSON(object: DashFlash_Type): string {
-  switch (object) {
-    case DashFlash_Type.Undefined:
-      return "Undefined";
-    case DashFlash_Type.Success:
-      return "Success";
-    case DashFlash_Type.Warn:
-      return "Warn";
-    case DashFlash_Type.Error:
-      return "Error";
-    default:
-      return "UNKNOWN";
-  }
-}
+const baseDashFlash: object = { msg: '', type: 0 };
 
 export const DashFlash = {
   encode(message: DashFlash, writer: Writer = Writer.create()): Writer {
@@ -161,7 +74,8 @@ export const DashFlash = {
     writer.uint32(16).int32(message.type);
     return writer;
   },
-  decode(input: Uint8Array | Reader, length?: number): DashFlash {
+
+  decode(input: Reader | Uint8Array, length?: number): DashFlash {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseDashFlash } as DashFlash;
@@ -181,12 +95,13 @@ export const DashFlash = {
     }
     return message;
   },
+
   fromJSON(object: any): DashFlash {
     const message = { ...baseDashFlash } as DashFlash;
     if (object.msg !== undefined && object.msg !== null) {
       message.msg = String(object.msg);
     } else {
-      message.msg = "";
+      message.msg = '';
     }
     if (object.type !== undefined && object.type !== null) {
       message.type = dashFlash_TypeFromJSON(object.type);
@@ -195,12 +110,13 @@ export const DashFlash = {
     }
     return message;
   },
+
   fromPartial(object: DeepPartial<DashFlash>): DashFlash {
     const message = { ...baseDashFlash } as DashFlash;
     if (object.msg !== undefined && object.msg !== null) {
       message.msg = object.msg;
     } else {
-      message.msg = "";
+      message.msg = '';
     }
     if (object.type !== undefined && object.type !== null) {
       message.type = object.type;
@@ -209,6 +125,7 @@ export const DashFlash = {
     }
     return message;
   },
+
   toJSON(message: DashFlash): unknown {
     const obj: any = {};
     message.msg !== undefined && (obj.msg = message.msg);
@@ -216,6 +133,8 @@ export const DashFlash = {
     return obj;
   },
 };
+
+const baseDashUserSettingsState: object = { email: '' };
 
 export const DashUserSettingsState = {
   encode(message: DashUserSettingsState, writer: Writer = Writer.create()): Writer {
@@ -228,7 +147,8 @@ export const DashUserSettingsState = {
     }
     return writer;
   },
-  decode(input: Uint8Array | Reader, length?: number): DashUserSettingsState {
+
+  decode(input: Reader | Uint8Array, length?: number): DashUserSettingsState {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseDashUserSettingsState } as DashUserSettingsState;
@@ -252,13 +172,14 @@ export const DashUserSettingsState = {
     }
     return message;
   },
+
   fromJSON(object: any): DashUserSettingsState {
     const message = { ...baseDashUserSettingsState } as DashUserSettingsState;
     message.flashes = [];
     if (object.email !== undefined && object.email !== null) {
       message.email = String(object.email);
     } else {
-      message.email = "";
+      message.email = '';
     }
     if (object.urls !== undefined && object.urls !== null) {
       message.urls = DashUserSettingsState_URLs.fromJSON(object.urls);
@@ -272,13 +193,14 @@ export const DashUserSettingsState = {
     }
     return message;
   },
+
   fromPartial(object: DeepPartial<DashUserSettingsState>): DashUserSettingsState {
     const message = { ...baseDashUserSettingsState } as DashUserSettingsState;
     message.flashes = [];
     if (object.email !== undefined && object.email !== null) {
       message.email = object.email;
     } else {
-      message.email = "";
+      message.email = '';
     }
     if (object.urls !== undefined && object.urls !== null) {
       message.urls = DashUserSettingsState_URLs.fromPartial(object.urls);
@@ -292,12 +214,14 @@ export const DashUserSettingsState = {
     }
     return message;
   },
+
   toJSON(message: DashUserSettingsState): unknown {
     const obj: any = {};
     message.email !== undefined && (obj.email = message.email);
-    message.urls !== undefined && (obj.urls = message.urls ? DashUserSettingsState_URLs.toJSON(message.urls) : undefined);
+    message.urls !== undefined &&
+      (obj.urls = message.urls ? DashUserSettingsState_URLs.toJSON(message.urls) : undefined);
     if (message.flashes) {
-      obj.flashes = message.flashes.map(e => e ? DashFlash.toJSON(e) : undefined);
+      obj.flashes = message.flashes.map((e) => (e ? DashFlash.toJSON(e) : undefined));
     } else {
       obj.flashes = [];
     }
@@ -305,13 +229,16 @@ export const DashUserSettingsState = {
   },
 };
 
+const baseDashUserSettingsState_URLs: object = { connectGoogle: '', connectGithub: '' };
+
 export const DashUserSettingsState_URLs = {
   encode(message: DashUserSettingsState_URLs, writer: Writer = Writer.create()): Writer {
     writer.uint32(10).string(message.connectGoogle);
     writer.uint32(18).string(message.connectGithub);
     return writer;
   },
-  decode(input: Uint8Array | Reader, length?: number): DashUserSettingsState_URLs {
+
+  decode(input: Reader | Uint8Array, length?: number): DashUserSettingsState_URLs {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseDashUserSettingsState_URLs } as DashUserSettingsState_URLs;
@@ -331,34 +258,37 @@ export const DashUserSettingsState_URLs = {
     }
     return message;
   },
+
   fromJSON(object: any): DashUserSettingsState_URLs {
     const message = { ...baseDashUserSettingsState_URLs } as DashUserSettingsState_URLs;
     if (object.connectGoogle !== undefined && object.connectGoogle !== null) {
       message.connectGoogle = String(object.connectGoogle);
     } else {
-      message.connectGoogle = "";
+      message.connectGoogle = '';
     }
     if (object.connectGithub !== undefined && object.connectGithub !== null) {
       message.connectGithub = String(object.connectGithub);
     } else {
-      message.connectGithub = "";
+      message.connectGithub = '';
     }
     return message;
   },
+
   fromPartial(object: DeepPartial<DashUserSettingsState_URLs>): DashUserSettingsState_URLs {
     const message = { ...baseDashUserSettingsState_URLs } as DashUserSettingsState_URLs;
     if (object.connectGoogle !== undefined && object.connectGoogle !== null) {
       message.connectGoogle = object.connectGoogle;
     } else {
-      message.connectGoogle = "";
+      message.connectGoogle = '';
     }
     if (object.connectGithub !== undefined && object.connectGithub !== null) {
       message.connectGithub = object.connectGithub;
     } else {
-      message.connectGithub = "";
+      message.connectGithub = '';
     }
     return message;
   },
+
   toJSON(message: DashUserSettingsState_URLs): unknown {
     const obj: any = {};
     message.connectGoogle !== undefined && (obj.connectGoogle = message.connectGoogle);
@@ -367,11 +297,14 @@ export const DashUserSettingsState_URLs = {
   },
 };
 
+const baseEmpty: object = {};
+
 export const Empty = {
   encode(_: Empty, writer: Writer = Writer.create()): Writer {
     return writer;
   },
-  decode(input: Uint8Array | Reader, length?: number): Empty {
+
+  decode(input: Reader | Uint8Array, length?: number): Empty {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseEmpty } as Empty;
@@ -385,43 +318,135 @@ export const Empty = {
     }
     return message;
   },
+
   fromJSON(_: any): Empty {
     const message = { ...baseEmpty } as Empty;
     return message;
   },
+
   fromPartial(_: DeepPartial<Empty>): Empty {
     const message = { ...baseEmpty } as Empty;
     return message;
   },
+
   toJSON(_: Empty): unknown {
     const obj: any = {};
     return obj;
   },
 };
 
-export const DashStateDesc = {
-  serviceName: "rpx.DashState",
+/** This is the same example.proto used by the other grpc-web examples,
+ *  but with the streaming method removed. */
+export interface DashState {
+  UserSettings(request: DeepPartial<Empty>, metadata?: grpc.Metadata): Promise<DashUserSettingsState>;
 }
+
+export class DashStateClientImpl implements DashState {
+  private readonly rpc: Rpc;
+
+  constructor(rpc: Rpc) {
+    this.rpc = rpc;
+  }
+
+  UserSettings(request: DeepPartial<Empty>, metadata?: grpc.Metadata): Promise<DashUserSettingsState> {
+    return this.rpc.unary(DashStateUserSettingsDesc, Empty.fromPartial(request), metadata);
+  }
+}
+
+export const DashStateDesc = {
+  serviceName: 'rpx.DashState',
+};
+
 export const DashStateUserSettingsDesc: UnaryMethodDefinitionish = {
-  methodName: "UserSettings",
+  methodName: 'UserSettings',
   service: DashStateDesc,
   requestStream: false,
   responseStream: false,
   requestType: {
-    serializeBinary: function serializeBinary() {
+    serializeBinary() {
       return Empty.encode(this).finish();
-    }
-    ,
+    },
   } as any,
   responseType: {
-    deserializeBinary: function deserializeBinary(data: Uint8Array) {
-      return { ...DashUserSettingsState.decode(data), toObject() { return this; } };
-    }
-    ,
+    deserializeBinary(data: Uint8Array) {
+      return {
+        ...DashUserSettingsState.decode(data),
+        toObject() {
+          return this;
+        },
+      };
+    },
   } as any,
+};
+
+interface UnaryMethodDefinitionishR extends UnaryMethodDefinition<any, any> {
+  requestStream: any;
+  responseStream: any;
 }
-interface UnaryMethodDefinitionishR extends UnaryMethodDefinition<any, any> { requestStream: any; responseStream: any; };
+
 type UnaryMethodDefinitionish = UnaryMethodDefinitionishR;
+
+interface Rpc {
+  unary<T extends UnaryMethodDefinitionish>(
+    methodDesc: T,
+    request: any,
+    metadata: grpc.Metadata | undefined
+  ): Promise<any>;
+}
+
+export class GrpcWebImpl {
+  private host: string;
+  private options: {
+    transport?: grpc.TransportFactory;
+
+    debug?: boolean;
+    metadata?: grpc.Metadata;
+  };
+
+  constructor(
+    host: string,
+    options: {
+      transport?: grpc.TransportFactory;
+
+      debug?: boolean;
+      metadata?: grpc.Metadata;
+    }
+  ) {
+    this.host = host;
+    this.options = options;
+  }
+
+  unary<T extends UnaryMethodDefinitionish>(
+    methodDesc: T,
+    _request: any,
+    metadata: grpc.Metadata | undefined
+  ): Promise<any> {
+    const request = { ..._request, ...methodDesc.requestType };
+    const maybeCombinedMetadata =
+      metadata && this.options.metadata
+        ? new BrowserHeaders({ ...this.options?.metadata.headersMap, ...metadata?.headersMap })
+        : metadata || this.options.metadata;
+    return new Promise((resolve, reject) => {
+      grpc.unary(methodDesc, {
+        request,
+        host: this.host,
+        metadata: maybeCombinedMetadata,
+        transport: this.options.transport,
+        debug: this.options.debug,
+        onEnd: function (response) {
+          if (response.status === grpc.Code.OK) {
+            resolve(response.message);
+          } else {
+            const err = new Error(response.statusMessage) as any;
+            err.code = response.status;
+            err.metadata = response.trailers;
+            reject(err);
+          }
+        },
+      });
+    });
+  }
+}
 
 type Builtin = Date | Function | Uint8Array | string | number | undefined;
 export type DeepPartial<T> = T extends Builtin

@@ -1,20 +1,26 @@
 import { oneof as pbjs } from './pbjs';
-import { PleaseChoose } from './oneof'
+import { PleaseChoose } from './oneof';
 
 describe('oneof=unions', () => {
   it('generates types correctly', () => {
-    const alice: PleaseChoose = {name: 'Alice', age: 42};
-    const bob: PleaseChoose = {name: 'Bob', age: 42, choice: {$case: 'aNumber', aNumber: 132}};
-    const charlie: PleaseChoose = {name: 'Charlie', age: 42, choice: {$case: 'aMessage', aMessage: {name: 'charlie'}}};
+    const alice: PleaseChoose = { name: 'Alice', age: 42 };
+    const bob: PleaseChoose = { name: 'Bob', age: 42, choice: { $case: 'aNumber', aNumber: 132 } };
+    const charlie: PleaseChoose = {
+      name: 'Charlie',
+      age: 42,
+      choice: { $case: 'aMessage', aMessage: { name: 'charlie' } },
+    };
   });
 
   it('decode', () => {
-    let encoded = pbjs.PleaseChoose.encode(new pbjs.PleaseChoose({
-      name: 'Debbie',
-      aBool: true,
-      age: 37,
-      or: 'perhaps not',
-    })).finish();
+    let encoded = pbjs.PleaseChoose.encode(
+      new pbjs.PleaseChoose({
+        name: 'Debbie',
+        aBool: true,
+        age: 37,
+        or: 'perhaps not',
+      })
+    ).finish();
     let decoded = PleaseChoose.decode(encoded);
     expect(decoded).toEqual({
       name: 'Debbie',
@@ -31,7 +37,7 @@ describe('oneof=unions', () => {
       choice: { $case: 'aBool', aBool: true },
       eitherOr: { $case: 'or', or: 'perhaps not' },
     }).finish();
-    let decoded =  pbjs.PleaseChoose.decode(encoded);
+    let decoded = pbjs.PleaseChoose.decode(encoded);
     expect(decoded).toEqual({
       name: 'Debbie',
       aBool: true,
@@ -40,9 +46,8 @@ describe('oneof=unions', () => {
     });
   });
 
-
   it('fromPartial', () => {
-    let empty = PleaseChoose.fromPartial({})
+    let empty = PleaseChoose.fromPartial({});
     expect(empty).toEqual({
       name: '',
       age: 0,
@@ -75,13 +80,13 @@ describe('oneof=unions', () => {
   });
 
   it('fromJSON', () => {
-    let empty = PleaseChoose.fromJSON({})
+    let empty = PleaseChoose.fromJSON({});
     expect(empty).toEqual({
       name: '',
       age: 0,
       choice: undefined,
       eitherOr: undefined,
-    })
+    });
 
     let debbie: PleaseChoose = {
       name: 'Debbie',
@@ -90,17 +95,16 @@ describe('oneof=unions', () => {
       eitherOr: { $case: 'or', or: 'perhaps not' },
     };
     let pbjsJson = pbjs.PleaseChoose.decode(PleaseChoose.encode(debbie).finish()).toJSON();
-    let fromJson = PleaseChoose.fromJSON(pbjsJson)
-    expect(fromJson).toEqual(debbie)
+    let fromJson = PleaseChoose.fromJSON(pbjsJson);
+    expect(fromJson).toEqual(debbie);
   });
-
 
   it('roundtrip', () => {
     let obj: PleaseChoose = {
       name: 'Debbie',
       age: 37,
       choice: { $case: 'aNumber', aNumber: 0 },
-    }
+    };
     let encoded = PleaseChoose.encode(obj).finish();
     let decoded = PleaseChoose.decode(encoded);
     expect(decoded).toEqual(obj);

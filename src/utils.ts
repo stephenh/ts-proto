@@ -154,10 +154,23 @@ const CloseComment = /\*\//g;
  * @param process {(comment: string) => void} called if a comment exists
  * @returns {string} scrubbed text
  */
-export function maybeAddComment(desc: SourceDescription, process: (comment: string) => void): void {
+export function maybeAddComment(
+  desc: SourceDescription,
+  process: (comment: string) => void,
+  prefix: string = ''
+): void {
   if (desc.leadingComments || desc.trailingComments) {
-    return process(
-      (desc.leadingComments || desc.trailingComments || '').replace(PercentAll, '%%').replace(CloseComment, '* /')
-    );
+    const content = (desc.leadingComments || desc.trailingComments || '')
+      .replace(PercentAll, '%%')
+      .replace(CloseComment, '* /');
+    const formatted = `\n/** ${prefix}${content.trim().split('\n').join('\n * ')} */\n`;
+    return process(formatted);
   }
+}
+
+// Comment block at the top of every source file, since these comments require specific
+// syntax incompatible with ts-poet, we will hard-code the string and prepend to the
+// generator output.
+export function prefixDisableLinter(spec: string): string {
+  return `/* eslint-disable */\n${spec}`;
 }

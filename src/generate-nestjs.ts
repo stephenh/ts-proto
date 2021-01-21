@@ -8,13 +8,13 @@ import {
   TypeMap,
 } from './types';
 import SourceInfo, { Fields } from './sourceInfo';
-import { CodeBlock, FunctionSpec, InterfaceSpec, Modifier, TypeNames } from 'ts-poet';
-import { maybeAddComment, singular } from './utils';
-import { camelCase } from './case';
 import { contextTypeVar, Options } from './main';
 import { google } from '../build/pbjs';
+import { arrayOf, Code, code, imp, joinCode } from 'ts-poet';
 import FileDescriptorProto = google.protobuf.FileDescriptorProto;
 import ServiceDescriptorProto = google.protobuf.ServiceDescriptorProto;
+import { maybeAddComment, singular } from './utils';
+import { camelCase } from './case';
 
 export function generateNestjsServiceController(
   typeMap: TypeMap,
@@ -22,68 +22,70 @@ export function generateNestjsServiceController(
   sourceInfo: SourceInfo,
   serviceDesc: ServiceDescriptorProto,
   options: Options
-): InterfaceSpec {
-  let service = InterfaceSpec.create(`${serviceDesc.name}Controller`).addModifiers(Modifier.EXPORT);
-  if (options.useContext) {
-    service = service.addTypeVariable(contextTypeVar);
-  }
-  maybeAddComment(sourceInfo, (text) => (service = service.addJavadoc(text)));
+): Code {
+  const chunks: Code[] = [];
+
+  maybeAddComment(sourceInfo, (text) => chunks.push(code`${text}`));
+  const t = options.useContext ? `<${contextTypeVar}>` : '';
+  chunks.push(code`
+    export interface ${serviceDesc.name}Controller${t} {
+  `);
 
   serviceDesc.method.forEach((methodDesc, index) => {
-    if (options.lowerCaseServiceMethods) {
-      methodDesc.name = camelCase(methodDesc.name);
-    }
-
-    let requestFn = FunctionSpec.create(methodDesc.name);
-    if (options.useContext) {
-      requestFn = requestFn.addParameter('ctx', TypeNames.typeVariable('Context'));
-    }
     const info = sourceInfo.lookup(Fields.service.method, index);
-    maybeAddComment(info, (text) => (requestFn = requestFn.addJavadoc(text)));
+    maybeAddComment(info, (text) => chunks.push(code`${text}`));
 
-    requestFn = requestFn.addParameter('request', requestType(typeMap, methodDesc, options));
-
+    const params: Code[] = [];
+    if (options.useContext) {
+      params.push(code`ctx: Context`);
+    }
+    params.push(code`request: ${requestType(typeMap, methodDesc, options)}`);
     // Use metadata as last argument for interface only configuration
     if (options.addGrpcMetadata) {
-      requestFn = requestFn.addParameter(options.addNestjsRestParameter ? 'metadata' : 'metadata?', 'Metadata@grpc');
+      const q = options.addNestjsRestParameter ? '' : '?';
+      params.push(code`metadata${q}: ${imp('Metadata@grpc')}`);
     }
     if (options.addNestjsRestParameter) {
-      requestFn = requestFn.addParameter('...rest', 'any');
+      params.push(code`...rest: any`);
     }
 
     // Return observable for interface only configuration, passing returnObservable=true and methodDesc.serverStreaming=true
+    let returns: Code;
     if (isEmptyType(methodDesc.outputType)) {
-      requestFn = requestFn.returns(TypeNames.anyType('void'));
+      returns = code`void`;
     } else if (options.returnObservable || methodDesc.serverStreaming) {
-      requestFn = requestFn.returns(responseObservable(typeMap, methodDesc, options));
+      returns = code`${responseObservable(typeMap, methodDesc, options)}`;
     } else {
       // generate nestjs union type
-      requestFn = requestFn.returns(
-        TypeNames.unionType(
-          responsePromise(typeMap, methodDesc, options),
-          responseObservable(typeMap, methodDesc, options),
-          responseType(typeMap, methodDesc, options)
-        )
-      );
+      returns = code`
+        ${responsePromise(typeMap, methodDesc, options)}
+        | ${responseObservable(typeMap, methodDesc, options)}
+        | ${responseType(typeMap, methodDesc, options)}
+      `;
     }
 
-    service = service.addFunction(requestFn);
+    const name = options.lowerCaseServiceMethods ? camelCase(methodDesc.name) : methodDesc.name;
+    chunks.push(code`
+      ${name}(${joinCode(params, { on: ', ' })}): ${returns};
+    `);
 
     if (options.useContext) {
       const batchMethod = detectBatchMethod(typeMap, fileDesc, serviceDesc, methodDesc, options);
       if (batchMethod) {
         const name = batchMethod.methodDesc.name.replace('Batch', 'Get');
-        let batchFn = FunctionSpec.create(name);
-        if (options.useContext) {
-          batchFn = batchFn.addParameter('ctx', TypeNames.typeVariable('Context'));
-        }
-        batchFn = batchFn.addParameter(singular(batchMethod.inputFieldName), batchMethod.inputType);
-        batchFn = batchFn.returns(TypeNames.PROMISE.param(batchMethod.outputType));
-        service = service.addFunction(batchFn);
+        const maybeCtx = options.useContext ? 'ctx: Context,' : '';
+        chunks.push(code`
+          ${name}(
+            ${maybeCtx}
+            ${singular(batchMethod.inputFieldName)}: ${batchMethod.inputType},
+          ): Promise<${batchMethod.outputType}>;
+        `);
       }
     }
   });
-  return service;
+
+  chunks.push(code`}`);
+  return joinCode(chunks, { on: '\n\n' });
 }
 
 export function generateNestjsServiceClient(
@@ -92,114 +94,92 @@ export function generateNestjsServiceClient(
   sourceInfo: SourceInfo,
   serviceDesc: ServiceDescriptorProto,
   options: Options
-): InterfaceSpec {
-  let service = InterfaceSpec.create(`${serviceDesc.name}Client`).addModifiers(Modifier.EXPORT);
-  if (options.useContext) {
-    service = service.addTypeVariable(contextTypeVar);
-  }
-  maybeAddComment(sourceInfo, (text) => (service = service.addJavadoc(text)));
+): Code {
+  const chunks: Code[] = [];
+
+  maybeAddComment(sourceInfo, (text) => chunks.push(code`${text}`));
+  const t = options.useContext ? `<${contextTypeVar}>` : ``;
+  chunks.push(code`
+    export interface ${serviceDesc.name}Client${t} {
+  `);
 
   serviceDesc.method.forEach((methodDesc, index) => {
     if (options.lowerCaseServiceMethods) {
       methodDesc.name = camelCase(methodDesc.name);
     }
 
-    let requestFn = FunctionSpec.create(methodDesc.name);
+    const params: Code[] = [];
     if (options.useContext) {
-      requestFn = requestFn.addParameter('ctx', TypeNames.typeVariable('Context'));
+      params.push(code`ctx: Context`);
     }
-    const info = sourceInfo.lookup(Fields.service.method, index);
-    maybeAddComment(info, (text) => (requestFn = requestFn.addJavadoc(text)));
-
-    requestFn = requestFn.addParameter('request', requestType(typeMap, methodDesc, options));
-
+    params.push(code`request: ${requestType(typeMap, methodDesc, options)}`);
     // Use metadata as last argument for interface only configuration
     if (options.addGrpcMetadata) {
-      requestFn = requestFn.addParameter(options.addNestjsRestParameter ? 'metadata' : 'metadata?', 'Metadata@grpc');
+      const q = options.addNestjsRestParameter ? '' : '?';
+      params.push(code`metadata${q}: ${imp('Metadata@grpc')}`);
     }
     if (options.addNestjsRestParameter) {
-      requestFn = requestFn.addParameter('...rest', 'any');
+      params.push(code`...rest: any`);
     }
 
     // Return observable since nestjs client always returns an Observable
-    requestFn = requestFn.returns(responseObservable(typeMap, methodDesc, options));
+    const returns = responseObservable(typeMap, methodDesc, options);
 
-    service = service.addFunction(requestFn);
+    const info = sourceInfo.lookup(Fields.service.method, index);
+    maybeAddComment(info, (text) => chunks.push(code`${text}`));
+    chunks.push(code`
+      ${methodDesc.name}(
+        ${joinCode(params, { on: ',' })}
+      ): ${returns};
+    `);
 
     if (options.useContext) {
       const batchMethod = detectBatchMethod(typeMap, fileDesc, serviceDesc, methodDesc, options);
       if (batchMethod) {
         const name = batchMethod.methodDesc.name.replace('Batch', 'Get');
-        let batchFn = FunctionSpec.create(name);
-        if (options.useContext) {
-          batchFn = batchFn.addParameter('ctx', TypeNames.typeVariable('Context'));
-        }
-        batchFn = batchFn.addParameter(singular(batchMethod.inputFieldName), batchMethod.inputType);
-        batchFn = batchFn.returns(TypeNames.PROMISE.param(batchMethod.outputType));
-        service = service.addFunction(batchFn);
+        const maybeContext = options.useContext ? `ctx: Context,` : '';
+        chunks.push(code`
+          ${name}(
+            ${maybeContext}
+            ${singular(batchMethod.inputFieldName)}
+          ): Promise<${batchMethod.inputType}>;
+        `);
       }
     }
   });
-  return service;
+
+  chunks.push(code`}`);
+  return joinCode(chunks, { on: '\n\n' });
 }
 
-export function generateNestjsGrpcServiceMethodsDecorator(
-  serviceDesc: ServiceDescriptorProto,
-  options: Options
-): FunctionSpec {
-  let grpcServiceDecorator = FunctionSpec.create(`${serviceDesc.name}ControllerMethods`).addModifiers(Modifier.EXPORT);
+export function generateNestjsGrpcServiceMethodsDecorator(serviceDesc: ServiceDescriptorProto, options: Options): Code {
+  const GrpcMethod = imp('GrpcMethod@@nestjs/microservices');
+  const GrpcStreamMethod = imp('GrpcStreamMethod@@nestjs/microservices');
 
   const grpcMethods = serviceDesc.method
     .filter((m) => !m.clientStreaming)
-    .map((m) => `'${options.lowerCaseServiceMethods ? camelCase(m.name) : m.name}'`)
-    .join(', ');
+    .map((m) => (options.lowerCaseServiceMethods ? camelCase(m.name) : m.name))
+    .map((n) => `"${n}"`);
 
   const grpcStreamMethods = serviceDesc.method
     .filter((m) => m.clientStreaming)
-    .map((m) => `'${options.lowerCaseServiceMethods ? camelCase(m.name) : m.name}'`)
-    .join(', ');
+    .map((m) => (options.lowerCaseServiceMethods ? camelCase(m.name) : m.name))
+    .map((n) => `"${n}"`);
 
-  const grpcMethodType = TypeNames.importedType('GrpcMethod@@nestjs/microservices');
-  const grpcStreamMethodType = TypeNames.importedType('GrpcStreamMethod@@nestjs/microservices');
-
-  let decoratorFunction = FunctionSpec.createCallable().addParameter('constructor', TypeNames.typeVariable('Function'));
-
-  // add loop for applying @GrpcMethod decorators to functions
-  decoratorFunction = generateGrpcMethodDecoratorLoop(
-    decoratorFunction,
-    serviceDesc,
-    'grpcMethods',
-    grpcMethods,
-    grpcMethodType
-  );
-
-  // add loop for applying @GrpcStreamMethod decorators to functions
-  decoratorFunction = generateGrpcMethodDecoratorLoop(
-    decoratorFunction,
-    serviceDesc,
-    'grpcStreamMethods',
-    grpcStreamMethods,
-    grpcStreamMethodType
-  );
-
-  const body = CodeBlock.empty().add('return function %F', decoratorFunction);
-
-  grpcServiceDecorator = grpcServiceDecorator.addCodeBlock(body);
-
-  return grpcServiceDecorator;
-}
-
-function generateGrpcMethodDecoratorLoop(
-  decoratorFunction: FunctionSpec,
-  serviceDesc: ServiceDescriptorProto,
-  grpcMethodsName: string,
-  grpcMethods: string,
-  grpcType: any
-): FunctionSpec {
-  return decoratorFunction
-    .addStatement('const %L: string[] = [%L]', grpcMethodsName, grpcMethods)
-    .beginControlFlow('for (const method of %L)', grpcMethodsName)
-    .addStatement(`const %L: any = %L`, 'descriptor', `Reflect.getOwnPropertyDescriptor(constructor.prototype, method)`)
-    .addStatement(`%T('${serviceDesc.name}', method)(constructor.prototype[method], method, descriptor)`, grpcType)
-    .endControlFlow();
+  return code`
+    export function ${serviceDesc.name}ControllerMethods() {
+      return function(constructor: Function) {
+        const grpcMethods = [${grpcMethods.join(', ')}];
+        for (const method of grpcMethods) {
+          const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
+          ${GrpcMethod}('${serviceDesc.name}', method)(constructor.prototype[method], method, descriptor);
+        }
+        const grpcStreamMethods = [${grpcStreamMethods.join(', ')}];
+        for (const method of grpcStreamMethods) {
+          const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
+          ${GrpcStreamMethod}('${serviceDesc.name}', method)(constructor.prototype[method], method, descriptor);
+        }
+      };
+    }
+  `;
 }

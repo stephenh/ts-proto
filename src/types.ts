@@ -1,5 +1,5 @@
 import { google } from '../build/pbjs';
-import { CodeBlock, Member, TypeName, TypeNames } from 'ts-poet';
+import { code, Code, imp, Import } from 'ts-poet';
 import { EnvOption, LongOption, OneofOption, Options, visit } from './main';
 import { fail } from './utils';
 import SourceInfo from './sourceInfo';
@@ -11,6 +11,8 @@ import FileDescriptorProto = google.protobuf.FileDescriptorProto;
 import DescriptorProto = google.protobuf.DescriptorProto;
 import MethodDescriptorProto = google.protobuf.MethodDescriptorProto;
 import ServiceDescriptorProto = google.protobuf.ServiceDescriptorProto;
+
+const Long = imp('Long*long');
 
 /** Based on https://github.com/dcodeIO/protobuf.js/blob/master/src/types.js#L37. */
 export function basicWireType(type: FieldDescriptorProto.Type): number {
@@ -64,7 +66,7 @@ export function basicTypeName(
   field: FieldDescriptorProto,
   options: Options,
   typeOptions: { keepValueType?: boolean } = {}
-): TypeName {
+): Code {
   switch (field.type) {
     case FieldDescriptorProto.Type.TYPE_DOUBLE:
     case FieldDescriptorProto.Type.TYPE_FLOAT:
@@ -73,7 +75,7 @@ export function basicTypeName(
     case FieldDescriptorProto.Type.TYPE_SINT32:
     case FieldDescriptorProto.Type.TYPE_FIXED32:
     case FieldDescriptorProto.Type.TYPE_SFIXED32:
-      return TypeNames.NUMBER;
+      return code`number`;
     case FieldDescriptorProto.Type.TYPE_INT64:
     case FieldDescriptorProto.Type.TYPE_UINT64:
     case FieldDescriptorProto.Type.TYPE_SINT64:
@@ -82,20 +84,20 @@ export function basicTypeName(
       // this handles 2^53, Long is only needed for 2^64; this is effectively pbjs's forceNumber
       return longTypeName(options);
     case FieldDescriptorProto.Type.TYPE_BOOL:
-      return TypeNames.BOOLEAN;
+      return code`boolean`;
     case FieldDescriptorProto.Type.TYPE_STRING:
-      return TypeNames.STRING;
+      return code`string`;
     case FieldDescriptorProto.Type.TYPE_BYTES:
       if (options.env === EnvOption.NODE) {
-        return TypeNames.BUFFER;
+        return code`Buffer`;
       } else {
-        return TypeNames.anyType('Uint8Array');
+        return code`Uint8Array`;
       }
     case FieldDescriptorProto.Type.TYPE_MESSAGE:
     case FieldDescriptorProto.Type.TYPE_ENUM:
       return messageToTypeName(typeMap, field.typeName, options, { ...typeOptions, repeated: isRepeated(field) });
     default:
-      return TypeNames.anyType(field.typeName);
+      return code`${field.typeName}`;
   }
 }
 
@@ -187,7 +189,7 @@ export function defaultValue(typeMap: TypeMap, field: FieldDescriptorProto, opti
     case FieldDescriptorProto.Type.TYPE_UINT64:
     case FieldDescriptorProto.Type.TYPE_FIXED64:
       if (options.forceLong === LongOption.LONG) {
-        return CodeBlock.of('%T.UZERO', 'Long*long');
+        return code`${Long}.UZERO`;
       } else if (options.forceLong === LongOption.STRING) {
         return '"0"';
       } else {
@@ -197,7 +199,7 @@ export function defaultValue(typeMap: TypeMap, field: FieldDescriptorProto, opti
     case FieldDescriptorProto.Type.TYPE_SINT64:
     case FieldDescriptorProto.Type.TYPE_SFIXED64:
       if (options.forceLong === LongOption.LONG) {
-        return CodeBlock.of('%T.ZERO', 'Long*long');
+        return code`${Long}.ZERO`;
       } else if (options.forceLong === LongOption.STRING) {
         return '"0"';
       } else {
@@ -301,34 +303,34 @@ export function isEmptyType(typeName: string): boolean {
   return typeName === '.google.protobuf.Empty';
 }
 
-export function valueTypeName(typeName: string, options?: Options): TypeName | undefined {
+export function valueTypeName(typeName: string, options?: Options): Code | undefined {
   switch (typeName) {
     case '.google.protobuf.StringValue':
-      return TypeNames.STRING;
+      return code`string`;
     case '.google.protobuf.Int32Value':
     case '.google.protobuf.UInt32Value':
     case '.google.protobuf.DoubleValue':
     case '.google.protobuf.FloatValue':
-      return TypeNames.NUMBER;
+      return code`number`;
     case '.google.protobuf.Int64Value':
     case '.google.protobuf.UInt64Value':
-      return options ? longTypeName(options) : TypeNames.NUMBER;
+      return options ? longTypeName(options) : code`number`;
     case '.google.protobuf.BoolValue':
-      return TypeNames.BOOLEAN;
+      return code`boolean`;
     case '.google.protobuf.BytesValue':
-      return TypeNames.anyType('Uint8Array');
+      return code`Uint8Array`;
     default:
       return undefined;
   }
 }
 
-function longTypeName(options: Options): TypeName {
+function longTypeName(options: Options): Code {
   if (options.forceLong === LongOption.LONG) {
-    return TypeNames.anyType('Long*long');
+    return code`${Long}`;
   } else if (options.forceLong === LongOption.STRING) {
-    return TypeNames.STRING;
+    return code`string`;
   } else {
-    return TypeNames.NUMBER;
+    return code`number`;
   }
 }
 
@@ -338,7 +340,7 @@ export function messageToTypeName(
   protoType: string,
   options: Options,
   typeOptions: { keepValueType?: boolean; repeated?: boolean } = {}
-): TypeName {
+): Code {
   // Watch for the wrapper types `.google.protobuf.*Value`. If we're mapping
   // them to basic built-in types, we union the type with undefined to
   // indicate the value is optional. Exceptions:
@@ -350,14 +352,14 @@ export function messageToTypeName(
     if (!!typeOptions.repeated || options.useOptionals) {
       return valueType;
     }
-    return TypeNames.unionType(valueType, TypeNames.UNDEFINED);
+    return code`${valueType} | undefined`;
   }
   // Look for other special prototypes like Timestamp that aren't technically wrapper types
   if (!typeOptions.keepValueType && protoType === '.google.protobuf.Timestamp' && options.useDate) {
-    return TypeNames.DATE;
+    return code`Date`;
   }
   const [module, type] = toModuleAndType(typeMap, protoType);
-  return TypeNames.importedType(`${type}@./${module}`);
+  return code`${imp(`${type}@./${module}`)}`;
 }
 
 /** Breaks `.some_proto_namespace.Some.Message` into `['some_proto_namespace', 'Some_Message', Descriptor]. */
@@ -365,9 +367,9 @@ function toModuleAndType(typeMap: TypeMap, protoType: string): [string, string, 
   return typeMap.get(protoType) || fail(`No type found for ${protoType}`);
 }
 
-export function getEnumMethod(typeMap: TypeMap, enumProtoType: string, methodSuffix: string): TypeName {
+export function getEnumMethod(typeMap: TypeMap, enumProtoType: string, methodSuffix: string): Import {
   const [module, type] = toModuleAndType(typeMap, enumProtoType);
-  return TypeNames.importedType(`${camelCase(type)}${methodSuffix}@./${module}`);
+  return imp(`${camelCase(type)}${methodSuffix}@./${module}`);
 }
 
 /** Return the TypeName for any field (primitive/message/etc.) as exposed in the interface. */
@@ -376,15 +378,15 @@ export function toTypeName(
   messageDesc: DescriptorProto,
   field: FieldDescriptorProto,
   options: Options
-): TypeName {
+): Code {
   let type = basicTypeName(typeMap, field, options, { keepValueType: false });
   if (isRepeated(field)) {
     const mapType = detectMapType(typeMap, messageDesc, field, options);
     if (mapType) {
       const { keyType, valueType } = mapType;
-      return TypeNames.anonymousType(new Member(`[key: ${keyType}]`, valueType));
+      return code`{ [key: ${keyType} ]: ${valueType} }`;
     }
-    return TypeNames.arrayType(type);
+    return code`${type}[]`;
   }
 
   if (isValueType(field)) {
@@ -408,7 +410,7 @@ export function toTypeName(
     (isWithinOneOf(field) && options.oneof === OneofOption.PROPERTIES) ||
     (isWithinOneOf(field) && field.proto3Optional)
   ) {
-    return TypeNames.unionType(type, TypeNames.UNDEFINED);
+    return code`${type} | undefined`;
   }
 
   return type;
@@ -419,7 +421,7 @@ export function detectMapType(
   messageDesc: DescriptorProto,
   fieldDesc: FieldDescriptorProto,
   options: Options
-): { messageDesc: DescriptorProto; keyType: TypeName; valueType: TypeName } | undefined {
+): { messageDesc: DescriptorProto; keyType: Code; valueType: Code } | undefined {
   if (
     fieldDesc.label === FieldDescriptorProto.Label.LABEL_REPEATED &&
     fieldDesc.type === FieldDescriptorProto.Type.TYPE_MESSAGE
@@ -434,24 +436,24 @@ export function detectMapType(
   return undefined;
 }
 
-export function requestType(typeMap: TypeMap, methodDesc: MethodDescriptorProto, options: Options): TypeName {
+export function requestType(typeMap: TypeMap, methodDesc: MethodDescriptorProto, options: Options): Code {
   let typeName = messageToTypeName(typeMap, methodDesc.inputType, options);
   if (methodDesc.clientStreaming) {
-    return TypeNames.anyType('Observable@rxjs').param(typeName);
+    return code`${imp('Observable@rxjs')}<${typeName}>`;
   }
   return typeName;
 }
 
-export function responseType(typeMap: TypeMap, methodDesc: MethodDescriptorProto, options: Options): TypeName {
+export function responseType(typeMap: TypeMap, methodDesc: MethodDescriptorProto, options: Options): Code {
   return messageToTypeName(typeMap, methodDesc.outputType, options);
 }
 
-export function responsePromise(typeMap: TypeMap, methodDesc: MethodDescriptorProto, options: Options): TypeName {
-  return TypeNames.PROMISE.param(responseType(typeMap, methodDesc, options));
+export function responsePromise(typeMap: TypeMap, methodDesc: MethodDescriptorProto, options: Options): Code {
+  return code`Promise<${responseType(typeMap, methodDesc, options)}>`;
 }
 
-export function responseObservable(typeMap: TypeMap, methodDesc: MethodDescriptorProto, options: Options): TypeName {
-  return TypeNames.anyType('Observable@rxjs').param(responseType(typeMap, methodDesc, options));
+export function responseObservable(typeMap: TypeMap, methodDesc: MethodDescriptorProto, options: Options): Code {
+  return code`${imp('Observable@rxjs')}<${responseType(typeMap, methodDesc, options)}>`;
 }
 
 export interface BatchMethod {
@@ -460,9 +462,9 @@ export interface BatchMethod {
   uniqueIdentifier: string;
   singleMethodName: string;
   inputFieldName: string;
-  inputType: TypeName;
+  inputType: Code;
   outputFieldName: string;
-  outputType: TypeName;
+  outputType: Code;
   mapType: boolean;
 }
 

@@ -1,6 +1,7 @@
+/* eslint-disable */
+export const protobufPackage = 'google.protobuf';
 
-/**
- *  `Any` contains an arbitrary serialized protocol buffer message along with a
+/** `Any` contains an arbitrary serialized protocol buffer message along with a
  *  URL that describes the type of the serialized message.
  *
  *  Protobuf library provides support to pack/unpack Any values in the form
@@ -78,12 +79,8 @@
  *      {
  *        "@type": "type.googleapis.com/google.protobuf.Duration",
  *        "value": "1.212s"
- *      }
- *
- */
-export interface Any {
-  /**
-   *  A URL/resource name that uniquely identifies the type of the serialized
+ *      } */ export interface Any {
+  /** A URL/resource name that uniquely identifies the type of the serialized
    *  protocol buffer message. This string must contain at least
    *  one "/" character. The last segment of the URL's path must represent
    *  the fully qualified name of the type (as in
@@ -109,14 +106,6 @@ export interface Any {
    *  type.googleapis.com.
    *
    *  Schemes other than `http`, `https` (or the empty scheme) might be
-   *  used with implementation specific semantics.
-   *
-   */
-  typeUrl: string;
-  /**
-   *  Must be a valid serialized protocol buffer of the above specified type.
-   */
-  value: Uint8Array;
+   *  used with implementation specific semantics. */ typeUrl: string;
+  /** Must be a valid serialized protocol buffer of the above specified type. */ value: Uint8Array;
 }
-
-export const protobufPackage = 'google.protobuf'
