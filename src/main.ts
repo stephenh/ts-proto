@@ -40,7 +40,12 @@ import {
   generateService,
   generateServiceClientImpl,
 } from './generate-services';
-import { addGrpcWebMisc, generateGrpcClientImpl, generateGrpcMethodDesc } from './generate-grpc-web';
+import {
+  addGrpcWebMisc,
+  generateGrpcClientImpl,
+  generateGrpcMethodDesc,
+  generateGrpcServiceDesc,
+} from './generate-grpc-web';
 import DescriptorProto = google.protobuf.DescriptorProto;
 import FieldDescriptorProto = google.protobuf.FieldDescriptorProto;
 import FileDescriptorProto = google.protobuf.FileDescriptorProto;
@@ -189,7 +194,7 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
         chunks.push(generateServiceClientImpl(typeMap, fileDesc, serviceDesc, options));
       } else if (options.outputClientImpl === 'grpc-web') {
         chunks.push(generateGrpcClientImpl(typeMap, fileDesc, serviceDesc, options));
-        // chunks.push(generateGrpcServiceDesc(fileDesc, serviceDesc));
+        chunks.push(generateGrpcServiceDesc(fileDesc, serviceDesc));
         serviceDesc.method.forEach((method) => {
           chunks.push(generateGrpcMethodDesc(options, typeMap, serviceDesc, method));
           if (method.serverStreaming) {

@@ -1,8 +1,11 @@
-import { Timestamp } from './google/protobuf/timestamp';
-import { Observable } from 'rxjs';
-import { Empty } from './google/protobuf/empty';
 import { GrpcMethod, GrpcStreamMethod } from '@nestjs/microservices';
+import { Observable } from 'rxjs';
+import { Timestamp } from './google/protobuf/timestamp';
+import { Empty } from './google/protobuf/empty';
 
+/* eslint-disable */
+
+export const protobufPackage = 'hero';
 
 export interface HeroById {
   id: number;
@@ -23,8 +26,9 @@ export interface Villain {
   name: string;
 }
 
-export interface HeroServiceClient {
+export const HERO_PACKAGE_NAME = 'hero';
 
+export interface HeroServiceClient {
   addOneHero(request: Hero): Observable<Empty>;
 
   findOneHero(request: HeroById): Observable<Hero>;
@@ -36,11 +40,9 @@ export interface HeroServiceClient {
   findManyVillainStreamIn(request: Observable<VillainById>): Observable<Villain>;
 
   findManyVillainStreamOut(request: VillainById): Observable<Villain>;
-
 }
 
 export interface HeroServiceController {
-
   addOneHero(request: Hero): void;
 
   findOneHero(request: HeroById): Promise<Hero> | Observable<Hero> | Hero;
@@ -52,25 +54,21 @@ export interface HeroServiceController {
   findManyVillainStreamIn(request: Observable<VillainById>): Promise<Villain> | Observable<Villain> | Villain;
 
   findManyVillainStreamOut(request: VillainById): Observable<Villain>;
-
 }
 
 export function HeroServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ['addOneHero', 'findOneHero', 'findOneVillain', 'findManyVillainStreamOut'];
+    const grpcMethods = ['addOneHero', 'findOneHero', 'findOneVillain', 'findManyVillainStreamOut'];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod('HeroService', method)(constructor.prototype[method], method, descriptor);
     }
-    const grpcStreamMethods: string[] = ['findManyVillain', 'findManyVillainStreamIn'];
+    const grpcStreamMethods = ['findManyVillain', 'findManyVillainStreamIn'];
     for (const method of grpcStreamMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcStreamMethod('HeroService', method)(constructor.prototype[method], method, descriptor);
     }
-  }
+  };
 }
 
-export const protobufPackage = 'hero'
-
-export const HERO_PACKAGE_NAME = 'hero'
 export const HERO_SERVICE_NAME = 'HeroService';
