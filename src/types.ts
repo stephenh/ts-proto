@@ -1,6 +1,7 @@
 import { google } from '../build/pbjs';
 import { code, Code, imp, Import } from 'ts-poet';
-import { EnvOption, LongOption, OneofOption, Options, visit } from './main';
+import { EnvOption, LongOption, OneofOption, Options } from './main';
+import { visit } from './visit';
 import { fail } from './utils';
 import SourceInfo from './sourceInfo';
 import { camelCase } from './case';
