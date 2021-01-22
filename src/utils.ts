@@ -1,5 +1,5 @@
 import ReadStream = NodeJS.ReadStream;
-import { EnvOption, LongOption, OneofOption, Options } from './main';
+import { Options, LongOption, EnvOption, OneofOption } from './main';
 import { SourceDescription } from './sourceInfo';
 import { code, Code } from 'ts-poet';
 
