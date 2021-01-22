@@ -1,4 +1,9 @@
 
+## v1.42.0
+
+* `@deprecated` is included in JSDoc output (ShakedH)
+* Upgraded to the latest ts-poet
+
 ## v1.41.1
 
 * [grpc-web] Remove `import =` to support not using synthetic default imports
