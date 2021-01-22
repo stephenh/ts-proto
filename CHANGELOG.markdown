@@ -1,4 +1,8 @@
 
+## v1.42.1
+
+* Handle `@deprecated` when there are no other comments (ShakedH)
+
 ## v1.42.0
 
 * `@deprecated` is included in JSDoc output (ShakedH)
