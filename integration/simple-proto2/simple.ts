@@ -8,6 +8,7 @@ export enum EnumWithoutZero {
   B = 2,
   UNRECOGNIZED = -1,
 }
+
 export function enumWithoutZeroFromJSON(object: any): EnumWithoutZero {
   switch (object) {
     case 1:
@@ -22,6 +23,7 @@ export function enumWithoutZeroFromJSON(object: any): EnumWithoutZero {
       return EnumWithoutZero.UNRECOGNIZED;
   }
 }
+
 export function enumWithoutZeroToJSON(object: EnumWithoutZero): string {
   switch (object) {
     case EnumWithoutZero.A:

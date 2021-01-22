@@ -180,7 +180,7 @@ function generateGrpcWebRpcType(returnObservable: boolean, hasStreamingMethods: 
   }
 
   chunks.push(code`}`);
-  return joinCode(chunks);
+  return joinCode(chunks, { on: '\n' });
 }
 
 /** Implements the `Rpc` interface by making calls using the `grpc.unary` method. */

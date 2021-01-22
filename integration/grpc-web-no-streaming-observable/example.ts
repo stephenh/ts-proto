@@ -20,6 +20,7 @@ export enum DashFlash_Type {
   Error = 3,
   UNRECOGNIZED = -1,
 }
+
 export function dashFlash_TypeFromJSON(object: any): DashFlash_Type {
   switch (object) {
     case 0:
@@ -40,6 +41,7 @@ export function dashFlash_TypeFromJSON(object: any): DashFlash_Type {
       return DashFlash_Type.UNRECOGNIZED;
   }
 }
+
 export function dashFlash_TypeToJSON(object: DashFlash_Type): string {
   switch (object) {
     case DashFlash_Type.Undefined:
@@ -337,8 +339,10 @@ export const Empty = {
   },
 };
 
-/** This is the same example.proto used by the other grpc-web examples,
- *  but with the streaming method removed. */
+/**
+ * This is the same example.proto used by the other grpc-web examples,
+ * but with the streaming method removed.
+ */
 export interface DashState {
   UserSettings(request: DeepPartial<Empty>, metadata?: grpc.Metadata): Observable<DashUserSettingsState>;
 }

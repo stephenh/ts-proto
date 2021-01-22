@@ -10,7 +10,7 @@ import {
 import SourceInfo, { Fields } from './sourceInfo';
 import { contextTypeVar, Options } from './main';
 import { google } from '../build/pbjs';
-import { arrayOf, Code, code, imp, joinCode } from 'ts-poet';
+import { Code, code, imp, joinCode } from 'ts-poet';
 import FileDescriptorProto = google.protobuf.FileDescriptorProto;
 import ServiceDescriptorProto = google.protobuf.ServiceDescriptorProto;
 import { maybeAddComment, singular } from './utils';
@@ -25,7 +25,7 @@ export function generateNestjsServiceController(
 ): Code {
   const chunks: Code[] = [];
 
-  maybeAddComment(sourceInfo, (text) => chunks.push(code`${text}`));
+  maybeAddComment(sourceInfo, chunks, serviceDesc.options?.deprecated);
   const t = options.useContext ? `<${contextTypeVar}>` : '';
   chunks.push(code`
     export interface ${serviceDesc.name}Controller${t} {
@@ -33,7 +33,7 @@ export function generateNestjsServiceController(
 
   serviceDesc.method.forEach((methodDesc, index) => {
     const info = sourceInfo.lookup(Fields.service.method, index);
-    maybeAddComment(info, (text) => chunks.push(code`${text}`));
+    maybeAddComment(info, chunks, serviceDesc.options?.deprecated);
 
     const params: Code[] = [];
     if (options.useContext) {
@@ -97,7 +97,7 @@ export function generateNestjsServiceClient(
 ): Code {
   const chunks: Code[] = [];
 
-  maybeAddComment(sourceInfo, (text) => chunks.push(code`${text}`));
+  maybeAddComment(sourceInfo, chunks);
   const t = options.useContext ? `<${contextTypeVar}>` : ``;
   chunks.push(code`
     export interface ${serviceDesc.name}Client${t} {
@@ -126,7 +126,7 @@ export function generateNestjsServiceClient(
     const returns = responseObservable(typeMap, methodDesc, options);
 
     const info = sourceInfo.lookup(Fields.service.method, index);
-    maybeAddComment(info, (text) => chunks.push(code`${text}`));
+    maybeAddComment(info, chunks, methodDesc.options?.deprecated);
     chunks.push(code`
       ${methodDesc.name}(
         ${joinCode(params, { on: ',' })}

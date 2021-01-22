@@ -7,14 +7,17 @@ import { StringValue, Int32Value, BoolValue } from './google/protobuf/wrappers';
 
 export const protobufPackage = 'simple';
 
-/** Adding a comment to the syntax will become the first
- *  comment in the output source file. */
+/**
+ * Adding a comment to the syntax will become the first
+ * comment in the output source file.
+ */
 
 export enum StateEnum {
   UNKNOWN = 0,
   ON = 2,
   OFF = 3,
 }
+
 export function stateEnumFromJSON(object: any): StateEnum {
   switch (object) {
     case 0:
@@ -30,6 +33,7 @@ export function stateEnumFromJSON(object: any): StateEnum {
       throw new globalThis.Error('Unrecognized enum value ' + object + ' for enum StateEnum');
   }
 }
+
 export function stateEnumToJSON(object: StateEnum): string {
   switch (object) {
     case StateEnum.UNKNOWN:
@@ -43,17 +47,22 @@ export function stateEnumToJSON(object: StateEnum): string {
   }
 }
 
-/** * Example comment on the Simple message */ export interface Simple {
-  /** Name field */ name: string;
-  /** Age */ age: number;
-  /** This comment will also attach */ createdAt: Date | undefined;
+/** Example comment on the Simple message */
+export interface Simple {
+  /** Name field */
+  name: string;
+  /** Age */
+  age: number;
+  /** This comment will also attach */
+  createdAt: Date | undefined;
   child: Child | undefined;
   state: StateEnum;
   grandChildren: Child[];
   coins: number[];
   snacks: string[];
   oldStates: StateEnum[];
-  /** A thing (imported from thing) */ thing: ImportedThing | undefined;
+  /** A thing (imported from thing) */
+  thing: ImportedThing | undefined;
 }
 
 export interface Child {
@@ -66,6 +75,7 @@ export enum Child_Type {
   GOOD = 1,
   BAD = 2,
 }
+
 export function child_TypeFromJSON(object: any): Child_Type {
   switch (object) {
     case 0:
@@ -81,6 +91,7 @@ export function child_TypeFromJSON(object: any): Child_Type {
       throw new globalThis.Error('Unrecognized enum value ' + object + ' for enum Child_Type');
   }
 }
+
 export function child_TypeToJSON(object: Child_Type): string {
   switch (object) {
     case Child_Type.UNKNOWN:
@@ -105,6 +116,7 @@ export enum Nested_InnerEnum {
   GOOD = 100,
   BAD = 1000,
 }
+
 export function nested_InnerEnumFromJSON(object: any): Nested_InnerEnum {
   switch (object) {
     case 0:
@@ -120,6 +132,7 @@ export function nested_InnerEnumFromJSON(object: any): Nested_InnerEnum {
       throw new globalThis.Error('Unrecognized enum value ' + object + ' for enum Nested_InnerEnum');
   }
 }
+
 export function nested_InnerEnumToJSON(object: Nested_InnerEnum): string {
   switch (object) {
     case Nested_InnerEnum.UNKNOWN_INNER:
@@ -133,7 +146,8 @@ export function nested_InnerEnumToJSON(object: Nested_InnerEnum): string {
   }
 }
 
-/** Comment for a nested message * / */ export interface Nested_InnerMessage {
+/** Comment for a nested message * / */
+export interface Nested_InnerMessage {
   name: string;
   deep: Nested_InnerMessage_DeepMessage | undefined;
 }
