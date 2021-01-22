@@ -1,5 +1,5 @@
 import ReadStream = NodeJS.ReadStream;
-import { Options, LongOption, EnvOption, OneofOption } from './main';
+import { EnvOption, LongOption, OneofOption, Options } from './main';
 import { SourceDescription } from './sourceInfo';
 import { code, Code } from 'ts-poet';
 
@@ -173,7 +173,9 @@ export function maybeAddComment(
   }
   // Deprecated comment should be added even if no other comment was added
   if (deprecated) {
-    lines.push('');
+    if (lines.length > 0) {
+      lines.push('');
+    }
     lines.push('@deprecated');
   }
 

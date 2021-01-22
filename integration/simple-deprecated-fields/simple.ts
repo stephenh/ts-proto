@@ -22,10 +22,7 @@ export interface Simple {
    * @deprecated
    */
   child: Child | undefined;
-  /**
-   *
-   * @deprecated
-   */
+  /** @deprecated */
   testField: string;
   testNotDeprecated: string;
 }
