@@ -154,6 +154,7 @@ export function maybeAddComment(
   deprecated?: boolean,
   prefix: string = ''
 ): void {
+  let lines: string[] = [];
   if (desc.leadingComments || desc.trailingComments) {
     let content = (desc.leadingComments || desc.trailingComments || '').replace(CloseComment, '* /').trim();
 
@@ -168,20 +169,23 @@ export function maybeAddComment(
       content = prefix + content;
     }
 
-    const lines = content.split('\n').map((l) => l.replace(/^ /, '').replace(/\n/, ''));
-
-    if (deprecated) {
+    lines = content.split('\n').map((l) => l.replace(/^ /, '').replace(/\n/, ''));
+  }
+  // Deprecated comment should be added even if no other comment was added
+  if (deprecated) {
+    if (lines.length > 0) {
       lines.push('');
-      lines.push('@deprecated');
     }
+    lines.push('@deprecated');
+  }
 
-    let comment: Code;
-    if (lines.length === 1) {
-      comment = code`/** ${content} */`;
-    } else {
-      comment = code`/**\n * ${lines.join('\n * ')}\n */`;
-    }
-
+  let comment: Code;
+  if (lines.length === 1) {
+    comment = code`/** ${lines[0]} */`;
+  } else {
+    comment = code`/**\n * ${lines.join('\n * ')}\n */`;
+  }
+  if (lines.length > 0) {
     chunks.push(code`\n\n${comment}\n\n`);
   }
 }
