@@ -15,6 +15,7 @@ export enum Tile_GeomType {
   POLYGON = 3,
   UNRECOGNIZED = -1,
 }
+
 export function tile_GeomTypeFromJSON(object: any): Tile_GeomType {
   switch (object) {
     case 0:
@@ -35,6 +36,7 @@ export function tile_GeomTypeFromJSON(object: any): Tile_GeomType {
       return Tile_GeomType.UNRECOGNIZED;
   }
 }
+
 export function tile_GeomTypeToJSON(object: Tile_GeomType): string {
   switch (object) {
     case Tile_GeomType.UNKNOWN:

@@ -5,13 +5,22 @@ export const protobufPackage = 'oneof';
 
 export interface PleaseChoose {
   name: string;
-  /** Use this if you want a number. Numbers are great. Who doesn't
-   *  like them? */ aNumber: number | undefined;
-  /** Use this if you want a string. Strings are also nice. Not as
-   *  nice as numbers, but what are you going to do... */ aString: string | undefined;
+  /**
+   * Use this if you want a number. Numbers are great. Who doesn't
+   * like them?
+   */
+  aNumber: number | undefined;
+  /**
+   * Use this if you want a string. Strings are also nice. Not as
+   * nice as numbers, but what are you going to do...
+   */
+  aString: string | undefined;
   aMessage: PleaseChoose_Submessage | undefined;
-  /** We also added a bool option! This was added after the 'age'
-   *  field, so it has a higher number. */ aBool: boolean | undefined;
+  /**
+   * We also added a bool option! This was added after the 'age'
+   * field, so it has a higher number.
+   */
+  aBool: boolean | undefined;
   bunchaBytes: Uint8Array | undefined;
   anEnum: PleaseChoose_StateEnum | undefined;
   age: number;
@@ -26,6 +35,7 @@ export enum PleaseChoose_StateEnum {
   OFF = 3,
   UNRECOGNIZED = -1,
 }
+
 export function pleaseChoose_StateEnumFromJSON(object: any): PleaseChoose_StateEnum {
   switch (object) {
     case 0:
@@ -43,6 +53,7 @@ export function pleaseChoose_StateEnumFromJSON(object: any): PleaseChoose_StateE
       return PleaseChoose_StateEnum.UNRECOGNIZED;
   }
 }
+
 export function pleaseChoose_StateEnumToJSON(object: PleaseChoose_StateEnum): string {
   switch (object) {
     case PleaseChoose_StateEnum.UNKNOWN:

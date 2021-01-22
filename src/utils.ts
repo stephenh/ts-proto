@@ -168,7 +168,7 @@ export function maybeAddComment(
       content = prefix + content;
     }
 
-    const lines = content.split('\n').map((l) => l.trim());
+    const lines = content.split('\n').map((l) => l.replace(/^ /, '').replace(/\n/, ''));
 
     if (deprecated) {
       lines.push('');
@@ -176,19 +176,10 @@ export function maybeAddComment(
     }
 
     let comment: Code;
-    const isMultiline = lines.length > 1;
-    if (!isMultiline) {
-      if (isDoubleStar) {
-        comment = code`/** ${content} */`;
-      } else {
-        comment = code`// ${content}`;
-      }
+    if (lines.length === 1) {
+      comment = code`/** ${content} */`;
     } else {
-      if (isDoubleStar) {
-        comment = code`/**\n * ${lines.join('\n * ')}\n */`;
-      } else {
-        comment = code`// ${lines.join('\n // ')}`;
-      }
+      comment = code`/**\n * ${lines.join('\n * ')}\n */`;
     }
 
     chunks.push(code`\n\n${comment}\n\n`);

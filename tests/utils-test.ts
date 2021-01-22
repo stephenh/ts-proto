@@ -7,14 +7,14 @@ describe('utils', () => {
       // Foo
       const chunks: Code[] = [];
       maybeAddComment({ leadingComments: ' Foo\n' }, chunks);
-      expect(joinCode(chunks).toCodeString()).toMatchInlineSnapshot(`"// Foo"`);
+      expect(joinCode(chunks).toCodeString()).toMatchInlineSnapshot(`"/** Foo */"`);
     });
 
     it('handles single-dot star comments', () => {
       // /* Foo */
       const chunks: Code[] = [];
       maybeAddComment({ leadingComments: ' Foo ' }, chunks);
-      expect(joinCode(chunks).toCodeString()).toMatchInlineSnapshot(`"// Foo"`);
+      expect(joinCode(chunks).toCodeString()).toMatchInlineSnapshot(`"/** Foo */"`);
     });
 
     it('handles single-line double-dot star comments', () => {
@@ -47,8 +47,10 @@ describe('utils', () => {
       const chunks: Code[] = [];
       maybeAddComment({ leadingComments: ' Foo\n Bar\n' }, chunks);
       expect(joinCode(chunks).toCodeString()).toMatchInlineSnapshot(`
-        "// Foo
-         // Bar"
+        "/**
+         * Foo
+         * Bar
+         */"
       `);
     });
   });

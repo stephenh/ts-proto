@@ -4,9 +4,11 @@ import { Writer, Reader } from 'protobufjs/minimal';
 export const protobufPackage = 'simple';
 
 export interface Simple {
-  // Name field
-  //
-  // @deprecated
+  /**
+   * Name field
+   *
+   * @deprecated
+   */
   name: string;
   /**
    * Age field
@@ -14,9 +16,11 @@ export interface Simple {
    * @deprecated
    */
   age: number;
-  // This comment will also attach;
-  //
-  // @deprecated
+  /**
+   * This comment will also attach;
+   *
+   * @deprecated
+   */
   child: Child | undefined;
   testField: string;
   testNotDeprecated: string;

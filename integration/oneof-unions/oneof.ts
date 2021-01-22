@@ -25,6 +25,7 @@ export enum PleaseChoose_StateEnum {
   OFF = 3,
   UNRECOGNIZED = -1,
 }
+
 export function pleaseChoose_StateEnumFromJSON(object: any): PleaseChoose_StateEnum {
   switch (object) {
     case 0:
@@ -42,6 +43,7 @@ export function pleaseChoose_StateEnumFromJSON(object: any): PleaseChoose_StateE
       return PleaseChoose_StateEnum.UNRECOGNIZED;
   }
 }
+
 export function pleaseChoose_StateEnumToJSON(object: PleaseChoose_StateEnum): string {
   switch (object) {
     case PleaseChoose_StateEnum.UNKNOWN:
@@ -59,7 +61,8 @@ export interface PleaseChoose_Submessage {
   name: string;
 }
 
-/** * For testing proto3's field presence feature. */ export interface SimpleButOptional {
+/** For testing proto3's field presence feature. */
+export interface SimpleButOptional {
   name?: string | undefined;
   age?: number | undefined;
 }

@@ -8,8 +8,10 @@ import { StringValue, Int32Value, BoolValue } from './google/protobuf/wrappers';
 
 export const protobufPackage = 'simple';
 
-/** Adding a comment to the syntax will become the first
- *  comment in the output source file. */
+/**
+ * Adding a comment to the syntax will become the first
+ * comment in the output source file.
+ */
 
 export enum StateEnum {
   UNKNOWN = 0,
@@ -17,6 +19,7 @@ export enum StateEnum {
   OFF = 3,
   UNRECOGNIZED = -1,
 }
+
 export function stateEnumFromJSON(object: any): StateEnum {
   switch (object) {
     case 0:
@@ -34,6 +37,7 @@ export function stateEnumFromJSON(object: any): StateEnum {
       return StateEnum.UNRECOGNIZED;
   }
 }
+
 export function stateEnumToJSON(object: StateEnum): string {
   switch (object) {
     case StateEnum.UNKNOWN:
@@ -47,17 +51,22 @@ export function stateEnumToJSON(object: StateEnum): string {
   }
 }
 
-/** * Example comment on the Simple message */ export interface Simple {
-  /** Name field */ name: string;
-  /** Age */ age: number;
-  /** This comment will also attach */ createdAt: Date | undefined;
+/** Example comment on the Simple message */
+export interface Simple {
+  /** Name field */
+  name: string;
+  /** Age */
+  age: number;
+  /** This comment will also attach */
+  createdAt: Date | undefined;
   child: Child | undefined;
   state: StateEnum;
   grandChildren: Child[];
   coins: number[];
   snacks: string[];
   oldStates: StateEnum[];
-  /** A thing (imported from thing) */ thing: ImportedThing | undefined;
+  /** A thing (imported from thing) */
+  thing: ImportedThing | undefined;
   blobs: Uint8Array[];
   birthday: DateMessage | undefined;
   blob: Uint8Array;
@@ -74,6 +83,7 @@ export enum Child_Type {
   BAD = 2,
   UNRECOGNIZED = -1,
 }
+
 export function child_TypeFromJSON(object: any): Child_Type {
   switch (object) {
     case 0:
@@ -91,6 +101,7 @@ export function child_TypeFromJSON(object: any): Child_Type {
       return Child_Type.UNRECOGNIZED;
   }
 }
+
 export function child_TypeToJSON(object: Child_Type): string {
   switch (object) {
     case Child_Type.UNKNOWN:
@@ -116,6 +127,7 @@ export enum Nested_InnerEnum {
   BAD = 1000,
   UNRECOGNIZED = -1,
 }
+
 export function nested_InnerEnumFromJSON(object: any): Nested_InnerEnum {
   switch (object) {
     case 0:
@@ -133,6 +145,7 @@ export function nested_InnerEnumFromJSON(object: any): Nested_InnerEnum {
       return Nested_InnerEnum.UNRECOGNIZED;
   }
 }
+
 export function nested_InnerEnumToJSON(object: Nested_InnerEnum): string {
   switch (object) {
     case Nested_InnerEnum.UNKNOWN_INNER:
@@ -146,7 +159,8 @@ export function nested_InnerEnumToJSON(object: Nested_InnerEnum): string {
   }
 }
 
-/** Comment for a nested message * / */ export interface Nested_InnerMessage {
+/** Comment for a nested message * / */
+export interface Nested_InnerMessage {
   name: string;
   deep: Nested_InnerMessage_DeepMessage | undefined;
 }
@@ -246,13 +260,18 @@ export interface Numbers {
   sfixed64: number;
 }
 
-/** * For testing proto3's field presence feature. */ export interface SimpleButOptional {
-  /** Name field */ name?: string | undefined;
-  /** Age */ age?: number | undefined;
-  /** This comment will also attach */ createdAt?: Date | undefined;
+/** For testing proto3's field presence feature. */
+export interface SimpleButOptional {
+  /** Name field */
+  name?: string | undefined;
+  /** Age */
+  age?: number | undefined;
+  /** This comment will also attach */
+  createdAt?: Date | undefined;
   child?: Child | undefined;
   state?: StateEnum | undefined;
-  /** A thing (imported from thing) */ thing?: ImportedThing | undefined;
+  /** A thing (imported from thing) */
+  thing?: ImportedThing | undefined;
   birthday?: DateMessage | undefined;
 }
 

@@ -21,6 +21,7 @@ export enum DashFlash_Type {
   Error = 3,
   UNRECOGNIZED = -1,
 }
+
 export function dashFlash_TypeFromJSON(object: any): DashFlash_Type {
   switch (object) {
     case 0:
@@ -41,6 +42,7 @@ export function dashFlash_TypeFromJSON(object: any): DashFlash_Type {
       return DashFlash_Type.UNRECOGNIZED;
   }
 }
+
 export function dashFlash_TypeToJSON(object: DashFlash_Type): string {
   switch (object) {
     case DashFlash_Type.Undefined:
@@ -763,9 +765,11 @@ export const DashStateActiveUserSettingsStreamDesc: UnaryMethodDefinitionish = {
   } as any,
 };
 
-/** ----------------------
- *  API Creds
- * ---------------------- */
+/**
+ * ----------------------
+ * API Creds
+ * ----------------------
+ */
 export interface DashAPICreds {
   Create(request: DeepPartial<DashAPICredsCreateReq>, metadata?: grpc.Metadata): Promise<DashCred>;
   Update(request: DeepPartial<DashAPICredsUpdateReq>, metadata?: grpc.Metadata): Promise<DashCred>;
