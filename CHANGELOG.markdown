@@ -1,4 +1,8 @@
 
+## v1.43.0
+
+* Polyfill `globalThis` for Node v10 support (willclarktech)
+
 ## v1.42.1
 
 * Handle `@deprecated` when there are no other comments (ShakedH)
