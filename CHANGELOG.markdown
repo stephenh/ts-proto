@@ -1,4 +1,8 @@
 
+## v1.44.0
+
+* Fix `DeepPartial` when used with `Long`s (willclarktech)
+
 ## v1.43.0
 
 * Polyfill `globalThis` for Node v10 support (willclarktech)
