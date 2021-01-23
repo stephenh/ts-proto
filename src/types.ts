@@ -13,7 +13,7 @@ import DescriptorProto = google.protobuf.DescriptorProto;
 import MethodDescriptorProto = google.protobuf.MethodDescriptorProto;
 import ServiceDescriptorProto = google.protobuf.ServiceDescriptorProto;
 
-const Long = imp('Long*long');
+const Long = imp('Long=long');
 
 /** Based on https://github.com/dcodeIO/protobuf.js/blob/master/src/types.js#L37. */
 export function basicWireType(type: FieldDescriptorProto.Type): number {

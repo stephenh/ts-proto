@@ -254,7 +254,7 @@ function makeLongUtils() {
   // the `long` library to either represent or at least sanity-check 64-bit values
   const util = imp('util@protobufjs/minimal');
   const configure = imp('configure@protobufjs/minimal');
-  const Long = imp('Long*long');
+  const Long = imp('Long=long');
 
   const init = conditionalOutput(
     '',
@@ -342,7 +342,7 @@ function makeDeepPartial(options: Options) {
       ? { [K in keyof Omit<T, '$case'>]?: DeepPartial<T[K]> } & { $case: T['$case'] }
     `;
   }
-  const maybeLong = options.forceLong === LongOption.LONG ? code` | ${imp('Long*long')}` : '';
+  const maybeLong = options.forceLong === LongOption.LONG ? code` | ${imp('Long=long')}` : '';
   // Based on the type from ts-essentials
   const DeepPartial = conditionalOutput(
     'DeepPartial',

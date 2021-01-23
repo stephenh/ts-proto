@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { Reader, util, configure, Writer } from 'protobufjs/minimal';
 import { Timestamp } from './google/protobuf/timestamp';
-import * as Long from 'long';
+import Long from 'long';
 import { ImportedThing } from './import_dir/thing';
 import { StringValue, Int32Value, BoolValue } from './google/protobuf/wrappers';
 
