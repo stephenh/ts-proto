@@ -113,22 +113,21 @@ export function optionsFromParameter(parameter: string): Options {
         options.returnObservable = true;
       }
     }
+    // Even if not using grpc-web/nestJs output
+    if (parameter.includes('addGrpcMetadata=true')) {
+      options.addGrpcMetadata = true;
+    }
     if (parameter.includes('exportCommonSymbols=false')) {
       options.exportCommonSymbols = false;
     }
 
     if (parameter.includes('nestJs=true')) {
       options.nestJs = true;
-
       options.lowerCaseServiceMethods = true;
       options.outputEncodeMethods = false;
       options.outputJsonMethods = false;
       options.outputClientImpl = false;
       options.useDate = false;
-
-      if (parameter.includes('addGrpcMetadata=true')) {
-        options.addGrpcMetadata = true;
-      }
       if (parameter.includes('addNestjsRestParameter=true')) {
         options.addNestjsRestParameter = true;
       }
