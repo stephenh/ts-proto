@@ -112,6 +112,18 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
   // Indicate this file's source protobuf package for reflective use with google.protobuf.Any
   chunks.push(code`export const protobufPackage = '${fileDesc.package}';`);
 
+  chunks.push(code`
+    declare var self: any | undefined;
+    declare var window: any | undefined;
+    var globalThis = (() => {
+      if (typeof globalThis !== "undefined") return globalThis;
+      if (typeof self !== "undefined") return self;
+      if (typeof window !== "undefined") return window;
+      if (typeof global !== "undefined") return global;
+      throw new Error("Unable to locate global object");
+    })();
+  `);
+
   // Syntax, unlike most fields, is not repeated and thus does not use an index
   const sourceInfo = SourceInfo.fromDescriptor(fileDesc);
   const headerComment = sourceInfo.lookup(Fields.file.syntax, undefined);
