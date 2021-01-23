@@ -6,7 +6,7 @@ import { generateFile, makeUtils } from '../src/main';
 import { createTypeMap } from '../src/types';
 import { prefixDisableLinter } from '../src/utils';
 import CodeGeneratorRequest = google.protobuf.compiler.CodeGeneratorRequest;
-import { optionsFromParameter } from '../src/options';
+import { getTsPoetOpts, optionsFromParameter } from '../src/options';
 import { Context } from '../src/context';
 
 /**
@@ -38,7 +38,10 @@ async function generate(binFile: string, baseDir: string, parameter: string) {
     const filePath = `${baseDir}/${path}`;
     const dirPath = parse(filePath).dir;
     await promisify(mkdir)(dirPath, { recursive: true }).catch(() => {});
-    await promisify(writeFile)(filePath, prefixDisableLinter(await code.toStringWithImports({ path })));
+    await promisify(writeFile)(
+      filePath,
+      prefixDisableLinter(await code.toStringWithImports({ ...getTsPoetOpts(options), path }))
+    );
   }
 }
 

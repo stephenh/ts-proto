@@ -147,3 +147,11 @@ export function optionsFromParameter(parameter: string): Options {
   }
   return options;
 }
+
+export function getTsPoetOpts(options: Options): { forceDefaultImport?: string[] } {
+  if (options.esModuleInterop) {
+    return { forceDefaultImport: ['protobufjs/minimal'] };
+  } else {
+    return {};
+  }
+}

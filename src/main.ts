@@ -507,8 +507,6 @@ function visitServices(
   });
 }
 
-const Reader = imp('Reader@protobufjs/minimal');
-
 /** Creates a function to decode a message by loop overing the tags. */
 function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorProto): Code {
   const { options, utils } = ctx;
@@ -520,7 +518,7 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
       input: ${Reader} | Uint8Array,
       length?: number,
     ): ${fullName} {
-      const reader = input instanceof Uint8Array ? new Reader(input) : input;
+      const reader = input instanceof Uint8Array ? new ${Reader}(input) : input;
       let end = length === undefined ? reader.len : reader.pos + length;
       const message = { ...base${fullName} } as ${fullName};
   `);
@@ -626,6 +624,7 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
 }
 
 const Writer = imp('Writer@protobufjs/minimal');
+const Reader = imp('Reader@protobufjs/minimal');
 
 /** Creates a function to encode a message by loop overing the tags. */
 function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorProto): Code {
@@ -636,7 +635,7 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
   chunks.push(code`
     encode(
       ${messageDesc.field.length > 0 ? 'message' : '_'}: ${fullName},
-      writer: ${Writer} = Writer.create(),
+      writer: ${Writer} = ${Writer}.create(),
     ): ${Writer} {
   `);
 

@@ -7,7 +7,7 @@ import CodeGeneratorRequest = google.protobuf.compiler.CodeGeneratorRequest;
 import CodeGeneratorResponse = google.protobuf.compiler.CodeGeneratorResponse;
 import Feature = google.protobuf.compiler.CodeGeneratorResponse.Feature;
 import { Context } from './context';
-import { optionsFromParameter } from './options';
+import { getTsPoetOpts, optionsFromParameter } from './options';
 
 // this would be the plugin called by the protoc compiler
 async function main() {
@@ -24,7 +24,7 @@ async function main() {
   const files = await Promise.all(
     request.protoFile.map(async (file) => {
       const [path, code] = generateFile(ctx, file);
-      const spec = await code.toStringWithImports({ path });
+      const spec = await code.toStringWithImports({ ...getTsPoetOpts(options), path });
       return new CodeGeneratorResponse.File({
         name: path,
         content: prefixDisableLinter(spec),

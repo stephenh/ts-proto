@@ -1,6 +1,6 @@
 /* eslint-disable */
 import Long from 'long';
-import { util, configure, Writer, Reader } from 'protobufjs/minimal';
+import _m0 from 'protobufjs/minimal';
 
 export const protobufPackage = 'simple';
 
@@ -37,14 +37,14 @@ export interface Numbers {
 const baseSimple: object = { name: '', age: 0 };
 
 export const Simple = {
-  encode(message: Simple, writer: Writer = Writer.create()): Writer {
+  encode(message: Simple, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     writer.uint32(10).string(message.name);
     writer.uint32(16).int32(message.age);
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Simple {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+  decode(input: _m0.Reader | Uint8Array, length?: number): Simple {
+    const reader = input instanceof Uint8Array ? new _m0.Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseSimple } as Simple;
     while (reader.pos < end) {
@@ -118,7 +118,7 @@ const baseNumbers: object = {
 };
 
 export const Numbers = {
-  encode(message: Numbers, writer: Writer = Writer.create()): Writer {
+  encode(message: Numbers, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     writer.uint32(9).double(message.double);
     writer.uint32(21).float(message.float);
     writer.uint32(24).int32(message.int32);
@@ -134,8 +134,8 @@ export const Numbers = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Numbers {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+  decode(input: _m0.Reader | Uint8Array, length?: number): Numbers {
+    const reader = input instanceof Uint8Array ? new _m0.Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseNumbers } as Numbers;
     while (reader.pos < end) {
@@ -351,7 +351,7 @@ function longToNumber(long: Long): number {
   return long.toNumber();
 }
 
-if (util.Long !== Long) {
-  util.Long = Long as any;
-  configure();
+if (_m0.util.Long !== Long) {
+  _m0.util.Long = Long as any;
+  _m0.configure();
 }
