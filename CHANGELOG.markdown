@@ -1,4 +1,8 @@
 
+## v1.47.0
+
+* Avoid conflicts when imported message names matched locally-declared names, see #36.
+
 ## v1.46.0
 
 * Import `protobufjs/minimal` as a default import when using `esModuleInterop`
