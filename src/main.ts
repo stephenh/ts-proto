@@ -1,4 +1,4 @@
-import { code, Code, conditionalOutput, imp, joinCode } from 'ts-poet';
+import { code, Code, conditionalOutput, def, imp, joinCode } from 'ts-poet';
 import { google } from '../build/pbjs';
 import {
   basicLongWireType,
@@ -131,7 +131,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
         }
 
         chunks.push(code`
-          export const ${fullName} = {
+          export const ${def(fullName)} = {
             ${joinCode(staticMethods, { on: ',\n\n' })}
           };
         `);
