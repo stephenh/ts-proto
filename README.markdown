@@ -243,6 +243,12 @@ protoc --plugin=node_modules/ts-proto/protoc-gen-ts_proto ./batching.proto -I.
 
   (Also note that each message's `Message.fromPartial(...)` static methods are specifically meant to address this, because it allows you to create a message with all keys optional, but still applies the usual protobuf default-value-on-missing-key logic, so that code that reads the message get more consistent behavior.
 
+- With `--ts_proto_opt=exportCommonSymbols=false`, utility types like `DeepPartial` won't be `export`d.
+  
+  This should make it possible to use create barrel imports of the generated output, i.e. `import * from ./foo` and `import * from ./bar`.
+  
+  Note that if you have the same message name used in multiple `*.proto` files, you will still get import conflicts. 
+
 - With `--ts_proto_opt=oneof=unions`, `oneof` fields will be generated as ADTs.
 
   See the "OneOf Handling" section.

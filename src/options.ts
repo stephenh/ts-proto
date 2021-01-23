@@ -34,6 +34,7 @@ export type Options = {
   nestJs: boolean;
   env: EnvOption;
   addUnrecognizedEnum: boolean;
+  exportCommonSymbols: boolean;
 };
 
 export function defaultOptions(): Options {
@@ -56,6 +57,7 @@ export function defaultOptions(): Options {
     nestJs: false,
     env: EnvOption.BOTH,
     addUnrecognizedEnum: true,
+    exportCommonSymbols: true,
   };
 }
 
@@ -110,6 +112,9 @@ export function optionsFromParameter(parameter: string): Options {
       if (parameter.includes('returnObservable=true')) {
         options.returnObservable = true;
       }
+    }
+    if (parameter.includes('exportCommonSymbols=false')) {
+      options.exportCommonSymbols = false;
     }
 
     if (parameter.includes('nestJs=true')) {

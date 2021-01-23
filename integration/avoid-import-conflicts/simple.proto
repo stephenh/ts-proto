@@ -1,6 +1,6 @@
 syntax = "proto3";
 package simple;
-import "simple2.proto";
+import "bar.proto";
 
 message Simple {
   string name = 1;

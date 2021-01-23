@@ -72,7 +72,9 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
   const chunks: Code[] = [];
 
   // Indicate this file's source protobuf package for reflective use with google.protobuf.Any
-  chunks.push(code`export const protobufPackage = '${fileDesc.package}';`);
+  if (options.exportCommonSymbols) {
+    chunks.push(code`export const protobufPackage = '${fileDesc.package}';`);
+  }
 
   // Syntax, unlike most fields, is not repeated and thus does not use an index
   const sourceInfo = SourceInfo.fromDescriptor(fileDesc);
@@ -327,13 +329,16 @@ function makeDeepPartial(options: Options, longs: ReturnType<typeof makeLongUtil
       ? { [K in keyof Omit<T, '$case'>]?: DeepPartial<T[K]> } & { $case: T['$case'] }
     `;
   }
+
+  const maybeExport = options.exportCommonSymbols ? 'export' : '';
   const maybeLong = options.forceLong === LongOption.LONG ? code` | ${longs.Long}` : '';
+
   // Based on the type from ts-essentials
   const DeepPartial = conditionalOutput(
     'DeepPartial',
     code`
       type Builtin = Date | Function | Uint8Array | string | number | undefined${maybeLong};
-      export type DeepPartial<T> = T extends Builtin
+      ${maybeExport} type DeepPartial<T> = T extends Builtin
         ? T
         : T extends Array<infer U>
         ? Array<DeepPartial<U>>
