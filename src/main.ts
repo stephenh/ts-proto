@@ -45,7 +45,6 @@ import {
   generateGrpcMethodDesc,
   generateGrpcServiceDesc,
 } from './generate-grpc-web';
-import { ConditionalOutput } from 'ts-poet/build/ConditionalOutput';
 import { generateEnum } from './enums';
 import { visit } from './visit';
 import { EnvOption, LongOption, OneofOption, Options } from './options';
@@ -75,18 +74,6 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
   // Indicate this file's source protobuf package for reflective use with google.protobuf.Any
   chunks.push(code`export const protobufPackage = '${fileDesc.package}';`);
 
-  chunks.push(code`
-    declare var self: any | undefined;
-    declare var window: any | undefined;
-    var globalThis = (() => {
-      if (typeof globalThis !== "undefined") return globalThis;
-      if (typeof self !== "undefined") return self;
-      if (typeof window !== "undefined") return window;
-      if (typeof global !== "undefined") return global;
-      throw new Error("Unable to locate global object");
-    })();
-  `);
-
   // Syntax, unlike most fields, is not repeated and thus does not use an index
   const sourceInfo = SourceInfo.fromDescriptor(fileDesc);
   const headerComment = sourceInfo.lookup(Fields.file.syntax, undefined);
@@ -101,7 +88,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
     },
     options,
     (fullName, enumDesc, sInfo) => {
-      chunks.push(generateEnum(options, fullName, enumDesc, sInfo));
+      chunks.push(generateEnum(ctx, fullName, enumDesc, sInfo));
     }
   );
 
@@ -210,17 +197,19 @@ export type Utils = ReturnType<typeof makeDeepPartial> &
   ReturnType<typeof makeByteUtils> &
   ReturnType<typeof makeLongUtils>;
 
+/** These are runtime utility methods used by the generated code. */
 export function makeUtils(options: Options): Utils {
-  const longs = makeLongUtils(options);
+  const bytes = makeByteUtils();
+  const longs = makeLongUtils(options, bytes);
   return {
+    ...bytes,
     ...makeDeepPartial(options, longs),
     ...makeTimestampMethods(options, longs),
-    ...makeByteUtils(),
     ...longs,
   };
 }
 
-function makeLongUtils(options: Options) {
+function makeLongUtils(options: Options, bytes: ReturnType<typeof makeByteUtils>) {
   // Regardless of which `forceLong` config option we're using, we always use
   // the `long` library to either represent or at least sanity-check 64-bit values
   const util = imp('util@protobufjs/minimal');
@@ -274,7 +263,7 @@ function makeLongUtils(options: Options) {
       ${init}
       function longToNumber(long: ${Long}): number {
         if (long.gt(Number.MAX_SAFE_INTEGER)) {
-          throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER")
+          throw new ${bytes.globalThis}.Error("Value is larger than Number.MAX_SAFE_INTEGER")
         }
         return long.toNumber();
       }
@@ -285,10 +274,25 @@ function makeLongUtils(options: Options) {
 }
 
 function makeByteUtils() {
+  const globalThis = conditionalOutput(
+    'globalThis',
+    code`
+      declare var self: any | undefined;
+      declare var window: any | undefined;
+      var globalThis: any = (() => {
+        if (typeof globalThis !== "undefined") return globalThis;
+        if (typeof self !== "undefined") return self;
+        if (typeof window !== "undefined") return window;
+        if (typeof global !== "undefined") return global;
+        throw new Error("Unable to locate global object");
+      })();
+    `
+  );
+
   const bytesFromBase64 = conditionalOutput(
     'bytesFromBase64',
     code`
-      const atob: (b64: string) => string = (globalThis as any).atob || ((b64) => Buffer.from(b64, 'base64').toString('binary'));
+      const atob: (b64: string) => string = ${globalThis}.atob || ((b64) => ${globalThis}.Buffer.from(b64, 'base64').toString('binary'));
       function bytesFromBase64(b64: string): Uint8Array {
         const bin = atob(b64);
         const arr = new Uint8Array(bin.length);
@@ -302,7 +306,7 @@ function makeByteUtils() {
   const base64FromBytes = conditionalOutput(
     'base64FromBytes',
     code`
-      const btoa : (bin: string) => string = (globalThis as any).btoa || ((bin) => Buffer.from(bin, 'binary').toString('base64'));
+      const btoa : (bin: string) => string = ${globalThis}.btoa || ((bin) => ${globalThis}.Buffer.from(bin, 'binary').toString('base64'));
       function base64FromBytes(arr: Uint8Array): string {
         const bin: string[] = [];
         for (let i = 0; i < arr.byteLength; ++i) {
@@ -312,7 +316,7 @@ function makeByteUtils() {
       }
     `
   );
-  return { bytesFromBase64, base64FromBytes };
+  return { globalThis, bytesFromBase64, base64FromBytes };
 }
 
 function makeDeepPartial(options: Options, longs: ReturnType<typeof makeLongUtils>) {

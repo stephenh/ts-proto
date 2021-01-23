@@ -1,21 +1,22 @@
-import { Options } from './options';
 import { google } from '../build/pbjs';
 import { code, Code, joinCode } from 'ts-poet';
 import { maybeAddComment } from './utils';
 import EnumDescriptorProto = google.protobuf.EnumDescriptorProto;
 import { camelCase } from './case';
 import SourceInfo, { Fields } from './sourceInfo';
+import { Context } from './context';
 
 const UNRECOGNIZED_ENUM_NAME = 'UNRECOGNIZED';
 const UNRECOGNIZED_ENUM_VALUE = -1;
 
 // Output the `enum { Foo, A = 0, B = 1 }`
 export function generateEnum(
-  options: Options,
+  ctx: Context,
   fullName: string,
   enumDesc: EnumDescriptorProto,
   sourceInfo: SourceInfo
 ): Code {
+  const { options } = ctx;
   const chunks: Code[] = [];
 
   maybeAddComment(sourceInfo, chunks, enumDesc.options?.deprecated);
@@ -38,7 +39,7 @@ export function generateEnum(
 
   if (options.outputJsonMethods) {
     chunks.push(code`\n`);
-    chunks.push(generateEnumFromJson(fullName, enumDesc, options));
+    chunks.push(generateEnumFromJson(ctx, fullName, enumDesc));
     chunks.push(code`\n`);
     chunks.push(generateEnumToJson(fullName, enumDesc));
   }
@@ -47,7 +48,8 @@ export function generateEnum(
 }
 
 /** Generates a function with a big switch statement to decode JSON -> our enum. */
-export function generateEnumFromJson(fullName: string, enumDesc: EnumDescriptorProto, options: Options): Code {
+export function generateEnumFromJson(ctx: Context, fullName: string, enumDesc: EnumDescriptorProto): Code {
+  const { options, utils } = ctx;
   const chunks: Code[] = [];
 
   chunks.push(code`export function ${camelCase(fullName)}FromJSON(object: any): ${fullName} {`);
@@ -72,7 +74,7 @@ export function generateEnumFromJson(fullName: string, enumDesc: EnumDescriptorP
     // We use globalThis to avoid conflicts on protobuf types named `Error`.
     chunks.push(code`
       default:
-        throw new globalThis.Error("Unrecognized enum value " + object + " for enum ${fullName}");
+        throw new ${utils.globalThis}.Error("Unrecognized enum value " + object + " for enum ${fullName}");
     `);
   }
 

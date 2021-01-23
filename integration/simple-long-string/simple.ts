@@ -7,16 +7,6 @@ import { StringValue, Int32Value, BoolValue } from './google/protobuf/wrappers';
 
 export const protobufPackage = 'simple';
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-var globalThis = (() => {
-  if (typeof globalThis !== 'undefined') return globalThis;
-  if (typeof self !== 'undefined') return self;
-  if (typeof window !== 'undefined') return window;
-  if (typeof global !== 'undefined') return global;
-  throw new Error('Unable to locate global object');
-})();
-
 /**
  * Adding a comment to the syntax will become the first
  * comment in the output source file.
