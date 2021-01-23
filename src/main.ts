@@ -342,11 +342,12 @@ function makeDeepPartial(options: Options) {
       ? { [K in keyof Omit<T, '$case'>]?: DeepPartial<T[K]> } & { $case: T['$case'] }
     `;
   }
+  const maybeLong = options.forceLong === LongOption.LONG ? code` | ${imp('Long*long')}` : '';
   // Based on the type from ts-essentials
   const DeepPartial = conditionalOutput(
     'DeepPartial',
     code`
-      type Builtin = Date | Function | Uint8Array | string | number | undefined;
+      type Builtin = Date | Function | Uint8Array | string | number | undefined${maybeLong};
       export type DeepPartial<T> = T extends Builtin
         ? T
         : T extends Array<infer U>
