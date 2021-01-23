@@ -1,11 +1,14 @@
 
+## v1.49.0
+
+* Add `exportCommonSymbols` flag (defaults `true`) that, when `false` skips `export`ing a few common symbols (i.e. `DeepPartial`) that make it more likely for multiple generated files to be imported by `import * from ...` and not have import conflicts, i.e. for barrel imports.
 ## v1.48.0
 
-* Tweak atob/btoa utility methods to prefix Buffer with globalThis to avoid issues in non-node envs. Fixes #77.
+* Tweak `atob` & `btoa` utility methods to prefix `Buffer` with `globalThis` to avoid issues in non-node envs. Fixes #77.
 
 ## v1.47.0
 
-* Avoid conflicts when imported message names matched locally-declared names, see #36.
+* Avoid import conflicts when an imported message name matches a locally-declared message name, see #36.
 
 ## v1.46.0
 
@@ -14,7 +17,7 @@
 
 ## v1.45.0
 
-* Add `esModuleInterop` option to fix `Long` imports when using `esModuleInterop: true`
+* Add new `esModuleInterop` option to fix `Long` imports for projects that use `esModuleInterop: true` in their `tsconfig.json`.
 
 ## v1.44.0
 
@@ -30,7 +33,7 @@
 
 ## v1.42.0
 
-* `@deprecated` is included in JSDoc output (ShakedH)
+* Messages and fields that are marked as `deprecated` in `*.proto` files will have a `@deprecated` marker included in their JSDoc output (ShakedH)
 * Upgraded to the latest ts-poet
 
 ## v1.41.1
