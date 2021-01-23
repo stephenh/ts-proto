@@ -1,11 +1,13 @@
 import { promisify } from 'util';
-import { optionsFromParameter, prefixDisableLinter, readToBuffer } from './utils';
+import { prefixDisableLinter, readToBuffer } from './utils';
 import { google } from '../build/pbjs';
-import { generateFile } from './main';
+import { generateFile, makeUtils } from './main';
 import { createTypeMap } from './types';
 import CodeGeneratorRequest = google.protobuf.compiler.CodeGeneratorRequest;
 import CodeGeneratorResponse = google.protobuf.compiler.CodeGeneratorResponse;
 import Feature = google.protobuf.compiler.CodeGeneratorResponse.Feature;
+import { Context } from './context';
+import { optionsFromParameter } from './options';
 
 // this would be the plugin called by the protoc compiler
 async function main() {
@@ -13,10 +15,15 @@ async function main() {
   // const json = JSON.parse(stdin.toString());
   // const request = CodeGeneratorRequest.fromObject(json);
   const request = CodeGeneratorRequest.decode(stdin);
-  const typeMap = createTypeMap(request, optionsFromParameter(request.parameter));
+
+  const options = optionsFromParameter(request.parameter);
+  const typeMap = createTypeMap(request, options);
+  const utils = makeUtils(options);
+  const ctx: Context = { typeMap, options, utils };
+
   const files = await Promise.all(
     request.protoFile.map(async (file) => {
-      const [path, code] = generateFile(typeMap, file, request.parameter);
+      const [path, code] = generateFile(ctx, file);
       const spec = await code.toStringWithImports({ path });
       return new CodeGeneratorResponse.File({
         name: path,

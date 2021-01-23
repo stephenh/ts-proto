@@ -5,24 +5,24 @@ import {
   responseObservable,
   responsePromise,
   responseType,
-  TypeMap,
 } from './types';
 import SourceInfo, { Fields } from './sourceInfo';
-import { contextTypeVar, Options } from './main';
+import { contextTypeVar } from './main';
 import { google } from '../build/pbjs';
 import { Code, code, imp, joinCode } from 'ts-poet';
 import FileDescriptorProto = google.protobuf.FileDescriptorProto;
 import ServiceDescriptorProto = google.protobuf.ServiceDescriptorProto;
 import { maybeAddComment, singular } from './utils';
 import { camelCase } from './case';
+import { Context } from './context';
 
 export function generateNestjsServiceController(
-  typeMap: TypeMap,
+  ctx: Context,
   fileDesc: FileDescriptorProto,
   sourceInfo: SourceInfo,
-  serviceDesc: ServiceDescriptorProto,
-  options: Options
+  serviceDesc: ServiceDescriptorProto
 ): Code {
+  const { options } = ctx;
   const chunks: Code[] = [];
 
   maybeAddComment(sourceInfo, chunks, serviceDesc.options?.deprecated);
@@ -39,7 +39,7 @@ export function generateNestjsServiceController(
     if (options.useContext) {
       params.push(code`ctx: Context`);
     }
-    params.push(code`request: ${requestType(typeMap, methodDesc, options)}`);
+    params.push(code`request: ${requestType(ctx, methodDesc)}`);
     // Use metadata as last argument for interface only configuration
     if (options.addGrpcMetadata) {
       const q = options.addNestjsRestParameter ? '' : '?';
@@ -54,13 +54,13 @@ export function generateNestjsServiceController(
     if (isEmptyType(methodDesc.outputType)) {
       returns = code`void`;
     } else if (options.returnObservable || methodDesc.serverStreaming) {
-      returns = code`${responseObservable(typeMap, methodDesc, options)}`;
+      returns = code`${responseObservable(ctx, methodDesc)}`;
     } else {
       // generate nestjs union type
       returns = code`
-        ${responsePromise(typeMap, methodDesc, options)}
-        | ${responseObservable(typeMap, methodDesc, options)}
-        | ${responseType(typeMap, methodDesc, options)}
+        ${responsePromise(ctx, methodDesc)}
+        | ${responseObservable(ctx, methodDesc)}
+        | ${responseType(ctx, methodDesc)}
       `;
     }
 
@@ -70,7 +70,7 @@ export function generateNestjsServiceController(
     `);
 
     if (options.useContext) {
-      const batchMethod = detectBatchMethod(typeMap, fileDesc, serviceDesc, methodDesc, options);
+      const batchMethod = detectBatchMethod(ctx, fileDesc, serviceDesc, methodDesc);
       if (batchMethod) {
         const name = batchMethod.methodDesc.name.replace('Batch', 'Get');
         const maybeCtx = options.useContext ? 'ctx: Context,' : '';
@@ -89,12 +89,12 @@ export function generateNestjsServiceController(
 }
 
 export function generateNestjsServiceClient(
-  typeMap: TypeMap,
+  ctx: Context,
   fileDesc: FileDescriptorProto,
   sourceInfo: SourceInfo,
-  serviceDesc: ServiceDescriptorProto,
-  options: Options
+  serviceDesc: ServiceDescriptorProto
 ): Code {
+  const { options } = ctx;
   const chunks: Code[] = [];
 
   maybeAddComment(sourceInfo, chunks);
@@ -112,7 +112,7 @@ export function generateNestjsServiceClient(
     if (options.useContext) {
       params.push(code`ctx: Context`);
     }
-    params.push(code`request: ${requestType(typeMap, methodDesc, options)}`);
+    params.push(code`request: ${requestType(ctx, methodDesc)}`);
     // Use metadata as last argument for interface only configuration
     if (options.addGrpcMetadata) {
       const q = options.addNestjsRestParameter ? '' : '?';
@@ -123,7 +123,7 @@ export function generateNestjsServiceClient(
     }
 
     // Return observable since nestjs client always returns an Observable
-    const returns = responseObservable(typeMap, methodDesc, options);
+    const returns = responseObservable(ctx, methodDesc);
 
     const info = sourceInfo.lookup(Fields.service.method, index);
     maybeAddComment(info, chunks, methodDesc.options?.deprecated);
@@ -134,7 +134,7 @@ export function generateNestjsServiceClient(
     `);
 
     if (options.useContext) {
-      const batchMethod = detectBatchMethod(typeMap, fileDesc, serviceDesc, methodDesc, options);
+      const batchMethod = detectBatchMethod(ctx, fileDesc, serviceDesc, methodDesc);
       if (batchMethod) {
         const name = batchMethod.methodDesc.name.replace('Batch', 'Get');
         const maybeContext = options.useContext ? `ctx: Context,` : '';
@@ -152,7 +152,8 @@ export function generateNestjsServiceClient(
   return joinCode(chunks, { on: '\n\n' });
 }
 
-export function generateNestjsGrpcServiceMethodsDecorator(serviceDesc: ServiceDescriptorProto, options: Options): Code {
+export function generateNestjsGrpcServiceMethodsDecorator(ctx: Context, serviceDesc: ServiceDescriptorProto): Code {
+  const { options } = ctx;
   const GrpcMethod = imp('GrpcMethod@@nestjs/microservices');
   const GrpcStreamMethod = imp('GrpcStreamMethod@@nestjs/microservices');
 

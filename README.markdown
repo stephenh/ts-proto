@@ -207,6 +207,10 @@ protoc --plugin=node_modules/ts-proto/protoc-gen-ts_proto ./batching.proto -I.
 
   Alternatively, if you pass `--ts_proto_opt=forceLong=string`, all 64 bit numbers will be outputted as strings.
 
+- With `--ts_proto_opt=esModuleInterop=true` changes output to be `esModuleInterop` compliant.
+  
+  Specifically the `Long` imports will be generated as `import Long from 'long'` instead of `import * as Long from 'long'`.
+
 - With `--ts_proto_opt=env=node` or `browser` or `both`, ts-proto will make environment-specific assumptions in your output. This defaults to `both`, which makes no environment-specific assumptions.
 
   Using `node` changes the types of `bytes` from `Uint8Array` to `Buffer` for easier integration with the node ecosystem which generally uses `Buffer`.

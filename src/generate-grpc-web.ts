@@ -1,10 +1,10 @@
 import { google } from '../build/pbjs';
-import { Options } from './main';
 import { requestType, responseObservable, responsePromise, responseType, TypeMap } from './types';
 import { Code, code, imp, joinCode } from 'ts-poet';
 import MethodDescriptorProto = google.protobuf.MethodDescriptorProto;
 import FileDescriptorProto = google.protobuf.FileDescriptorProto;
 import ServiceDescriptorProto = google.protobuf.ServiceDescriptorProto;
+import { Context } from './context';
 
 const grpc = imp('grpc@@improbable-eng/grpc-web');
 const UnaryMethodDefinition = imp('UnaryMethodDefinition@@improbable-eng/grpc-web/dist/typings/service');
@@ -16,10 +16,9 @@ const GrpcCode = imp('Code@@improbable-eng/grpc-web/dist/typings/Code');
 
 /** Generates a client that uses the `@improbable-web/grpc-web` library. */
 export function generateGrpcClientImpl(
-  typeMap: TypeMap,
+  ctx: Context,
   fileDesc: FileDescriptorProto,
-  serviceDesc: ServiceDescriptorProto,
-  options: Options
+  serviceDesc: ServiceDescriptorProto
 ): Code {
   const chunks: Code[] = [];
 
@@ -39,7 +38,7 @@ export function generateGrpcClientImpl(
 
   // Create a method for each FooService method
   for (const methodDesc of serviceDesc.method) {
-    chunks.push(generateRpcMethod(options, typeMap, serviceDesc, methodDesc));
+    chunks.push(generateRpcMethod(ctx, serviceDesc, methodDesc));
   }
 
   chunks.push(code`}`);
@@ -47,18 +46,14 @@ export function generateGrpcClientImpl(
 }
 
 /** Creates the RPC methods that client code actually calls. */
-function generateRpcMethod(
-  options: Options,
-  typeMap: TypeMap,
-  serviceDesc: ServiceDescriptorProto,
-  methodDesc: MethodDescriptorProto
-) {
-  const inputType = requestType(typeMap, methodDesc, options);
+function generateRpcMethod(ctx: Context, serviceDesc: ServiceDescriptorProto, methodDesc: MethodDescriptorProto) {
+  const { options } = ctx;
+  const inputType = requestType(ctx, methodDesc);
   const partialInputType = code`DeepPartial<${inputType}>`;
   const returns =
     options.returnObservable || methodDesc.serverStreaming
-      ? responseObservable(typeMap, methodDesc, options)
-      : responsePromise(typeMap, methodDesc, options);
+      ? responseObservable(ctx, methodDesc)
+      : responsePromise(ctx, methodDesc);
   const method = methodDesc.serverStreaming ? 'invoke' : 'unary';
   return code`
     ${methodDesc.name}(
@@ -91,13 +86,12 @@ export function generateGrpcServiceDesc(fileDesc: FileDescriptorProto, serviceDe
  * implementation.
  */
 export function generateGrpcMethodDesc(
-  options: Options,
-  typeMap: TypeMap,
+  ctx: Context,
   serviceDesc: ServiceDescriptorProto,
   methodDesc: MethodDescriptorProto
 ): Code {
-  const inputType = requestType(typeMap, methodDesc, options);
-  const outputType = responseType(typeMap, methodDesc, options);
+  const inputType = requestType(ctx, methodDesc);
+  const outputType = responseType(ctx, methodDesc);
 
   // grpc-web expects this to be a class, but the ts-proto messages are just interfaces.
   //
@@ -143,7 +137,8 @@ function methodDescName(serviceDesc: ServiceDescriptorProto, methodDesc: MethodD
 }
 
 /** Adds misc top-level definitions for grpc-web functionality. */
-export function addGrpcWebMisc(options: Options, hasStreamingMethods: boolean): Code {
+export function addGrpcWebMisc(ctx: Context, hasStreamingMethods: boolean): Code {
+  const { options } = ctx;
   const chunks: Code[] = [];
   chunks.push(code`
     interface UnaryMethodDefinitionishR extends ${UnaryMethodDefinition}<any, any> { requestStream: any; responseStream: any; }

@@ -1,9 +1,9 @@
 import { google } from '../build/pbjs';
-import { Options } from '../src/main';
+import { Options, defaultOptions } from '../src/options';
 import { messageToTypeName, TypeMap } from '../src/types';
-import { defaultOptions } from '../src/utils';
 import DescriptorProto = google.protobuf.DescriptorProto;
 import { Code, code, imp } from 'ts-poet';
+import { Utils } from '../src/main';
 
 const fakeProto = (undefined as any) as DescriptorProto;
 
@@ -45,7 +45,8 @@ describe('types', () => {
     ];
     testCases.forEach((t) =>
       it(t.descr, async () => {
-        const got = messageToTypeName(t.typeMap, t.protoType, t.options ?? defaultOptions());
+        const ctx = { options: defaultOptions(), utils: (undefined as any) as Utils, ...t };
+        const got = messageToTypeName(ctx, t.protoType);
         expect(await got.toStringWithImports()).toEqual(await t.expected.toStringWithImports());
       })
     );

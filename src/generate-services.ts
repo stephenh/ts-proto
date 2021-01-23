@@ -6,16 +6,16 @@ import {
   responseObservable,
   responsePromise,
   responseType,
-  TypeMap,
 } from './types';
 import { Code, code, imp, joinCode } from 'ts-poet';
 import { maybeAddComment, singular } from './utils';
 import SourceInfo, { Fields } from './sourceInfo';
 import { camelCase } from './case';
-import { contextTypeVar, Options } from './main';
+import { contextTypeVar } from './main';
 import MethodDescriptorProto = google.protobuf.MethodDescriptorProto;
 import FileDescriptorProto = google.protobuf.FileDescriptorProto;
 import ServiceDescriptorProto = google.protobuf.ServiceDescriptorProto;
+import { Context } from './context';
 
 const hash = imp('hash*object-hash');
 const dataloader = imp('DataLoader*dataloader');
@@ -32,12 +32,12 @@ const Reader = imp('Reader@protobufjs/minimal');
  * vs. server-side code/interfaces are handled separately.
  */
 export function generateService(
-  typeMap: TypeMap,
+  ctx: Context,
   fileDesc: FileDescriptorProto,
   sourceInfo: SourceInfo,
-  serviceDesc: ServiceDescriptorProto,
-  options: Options
+  serviceDesc: ServiceDescriptorProto
 ): Code {
+  const { options } = ctx;
   const chunks: Code[] = [];
 
   maybeAddComment(sourceInfo, chunks, serviceDesc.options?.deprecated);
@@ -55,7 +55,7 @@ export function generateService(
       params.push(code`ctx: Context`);
     }
 
-    let inputType = requestType(typeMap, methodDesc, options);
+    let inputType = requestType(ctx, methodDesc);
     // the grpc-web clients auto-`fromPartial` the input before handing off to grpc-web's
     // serde runtime, so it's okay to accept partial results from the client
     if (options.outputClientImpl === 'grpc-web') {
@@ -77,16 +77,16 @@ export function generateService(
     // Return observable for interface only configuration, passing returnObservable=true and methodDesc.serverStreaming=true
     let returnType: Code;
     if (options.returnObservable || methodDesc.serverStreaming) {
-      returnType = responseObservable(typeMap, methodDesc, options);
+      returnType = responseObservable(ctx, methodDesc);
     } else {
-      returnType = responsePromise(typeMap, methodDesc, options);
+      returnType = responsePromise(ctx, methodDesc);
     }
 
     chunks.push(code`${name}(${joinCode(params, { on: ',' })}): ${returnType};`);
 
     // If this is a batch method, auto-generate the singular version of it
     if (options.useContext) {
-      const batchMethod = detectBatchMethod(typeMap, fileDesc, serviceDesc, methodDesc, options);
+      const batchMethod = detectBatchMethod(ctx, fileDesc, serviceDesc, methodDesc);
       if (batchMethod) {
         const name = batchMethod.methodDesc.name.replace('Batch', 'Get');
         chunks.push(code`${name}(
@@ -103,15 +103,15 @@ export function generateService(
 }
 
 function generateRegularRpcMethod(
-  options: Options,
-  typeMap: TypeMap,
+  ctx: Context,
   fileDesc: google.protobuf.FileDescriptorProto,
   serviceDesc: google.protobuf.ServiceDescriptorProto,
   methodDesc: google.protobuf.MethodDescriptorProto
 ): Code {
+  const { options } = ctx;
   const Reader = imp('Reader@protobufjs/minimal');
-  const inputType = requestType(typeMap, methodDesc, options);
-  const outputType = responseType(typeMap, methodDesc, options);
+  const inputType = requestType(ctx, methodDesc);
+  const outputType = responseType(ctx, methodDesc);
 
   const params = [...(options.useContext ? [code`ctx: Context`] : []), code`request: ${inputType}`];
   const maybeCtx = options.useContext ? 'ctx,' : '';
@@ -119,7 +119,7 @@ function generateRegularRpcMethod(
   return code`
     ${methodDesc.name}(
       ${joinCode(params, { on: ',' })}
-    ): ${responsePromise(typeMap, methodDesc, options)} {
+    ): ${responsePromise(ctx, methodDesc)} {
       const data = ${inputType}.encode(request).finish(); 
       const promise = this.rpc.request(
         ${maybeCtx}
@@ -133,11 +133,11 @@ function generateRegularRpcMethod(
 }
 
 export function generateServiceClientImpl(
-  typeMap: TypeMap,
+  ctx: Context,
   fileDesc: FileDescriptorProto,
-  serviceDesc: ServiceDescriptorProto,
-  options: Options
+  serviceDesc: ServiceDescriptorProto
 ): Code {
+  const { options } = ctx;
   const chunks: Code[] = [];
 
   // Define the FooServiceImpl class
@@ -155,16 +155,16 @@ export function generateServiceClientImpl(
   for (const methodDesc of serviceDesc.method) {
     // See if this this fuzzy matches to a batchable method
     if (options.useContext) {
-      const batchMethod = detectBatchMethod(typeMap, fileDesc, serviceDesc, methodDesc, options);
+      const batchMethod = detectBatchMethod(ctx, fileDesc, serviceDesc, methodDesc);
       if (batchMethod) {
-        chunks.push(generateBatchingRpcMethod(typeMap, batchMethod));
+        chunks.push(generateBatchingRpcMethod(ctx, batchMethod));
       }
     }
 
     if (options.useContext && methodDesc.name.match(/^Get[A-Z]/)) {
-      chunks.push(generateCachingRpcMethod(options, typeMap, fileDesc, serviceDesc, methodDesc));
+      chunks.push(generateCachingRpcMethod(ctx, fileDesc, serviceDesc, methodDesc));
     } else {
-      chunks.push(generateRegularRpcMethod(options, typeMap, fileDesc, serviceDesc, methodDesc));
+      chunks.push(generateRegularRpcMethod(ctx, fileDesc, serviceDesc, methodDesc));
     }
   }
 
@@ -173,7 +173,7 @@ export function generateServiceClientImpl(
 }
 
 /** We've found a BatchXxx method, create a synthetic GetXxx method that calls it. */
-function generateBatchingRpcMethod(typeMap: TypeMap, batchMethod: BatchMethod): Code {
+function generateBatchingRpcMethod(ctx: Context, batchMethod: BatchMethod): Code {
   const {
     methodDesc,
     singleMethodName,
@@ -224,14 +224,13 @@ function generateBatchingRpcMethod(typeMap: TypeMap, batchMethod: BatchMethod): 
 
 /** We're not going to batch, but use DataLoader for per-request caching. */
 function generateCachingRpcMethod(
-  options: Options,
-  typeMap: TypeMap,
+  ctx: Context,
   fileDesc: FileDescriptorProto,
   serviceDesc: ServiceDescriptorProto,
   methodDesc: MethodDescriptorProto
 ): Code {
-  const inputType = requestType(typeMap, methodDesc, options);
-  const outputType = responseType(typeMap, methodDesc, options);
+  const inputType = requestType(ctx, methodDesc);
+  const outputType = responseType(ctx, methodDesc);
   const uniqueIdentifier = `${fileDesc.package}.${serviceDesc.name}.${methodDesc.name}`;
   const lambda = code`
     (requests) => {
@@ -269,7 +268,8 @@ function generateCachingRpcMethod(
  * we don't want our the barrel imports in `index.ts` to have multiple `Rpc`
  * types.
  */
-export function generateRpcType(options: Options): Code {
+export function generateRpcType(ctx: Context): Code {
+  const { options } = ctx;
   const maybeContext = options.useContext ? '<Context>' : '';
   const maybeContextParam = options.useContext ? 'ctx: Context,' : '';
   return code`

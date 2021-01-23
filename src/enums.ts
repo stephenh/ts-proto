@@ -1,4 +1,4 @@
-import { Options } from './main';
+import { Options } from './options';
 import { google } from '../build/pbjs';
 import { code, Code, joinCode } from 'ts-poet';
 import { maybeAddComment } from './utils';

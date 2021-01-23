@@ -3,7 +3,7 @@ import DescriptorProto = google.protobuf.DescriptorProto;
 import FileDescriptorProto = google.protobuf.FileDescriptorProto;
 import EnumDescriptorProto = google.protobuf.EnumDescriptorProto;
 import SourceInfo, { Fields } from './sourceInfo';
-import { Options } from './main';
+import { Options } from './options';
 import { maybeSnakeToCamel } from './case';
 
 type MessageVisitor = (

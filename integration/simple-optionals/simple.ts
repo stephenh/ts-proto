@@ -2,7 +2,7 @@
 import { ImportedThing } from './import_dir/thing';
 import { Reader, util, configure, Writer } from 'protobufjs/minimal';
 import { Timestamp } from './google/protobuf/timestamp';
-import Long from 'long';
+import * as Long from 'long';
 import { StringValue, Int32Value, BoolValue } from './google/protobuf/wrappers';
 
 export const protobufPackage = 'simple';
