@@ -1,4 +1,13 @@
 
+## v1.46.0
+
+* Import `protobufjs/minimal` as a default import when using `esModuleInterop`
+  * This should fix running in "type: module" ESM modules, see #181
+
+## v1.45.0
+
+* Add `esModuleInterop` option to fix `Long` imports when using `esModuleInterop: true`
+
 ## v1.44.0
 
 * Fix `DeepPartial` when used with `Long`s (willclarktech)
