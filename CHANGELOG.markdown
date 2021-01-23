@@ -1,4 +1,8 @@
 
+## v1.48.0
+
+* Tweak atob/btoa utility methods to prefix Buffer with globalThis to avoid issues in non-node envs. Fixes #77.
+
 ## v1.47.0
 
 * Avoid conflicts when imported message names matched locally-declared names, see #36.
