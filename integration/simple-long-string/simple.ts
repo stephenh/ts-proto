@@ -1,16 +1,10 @@
 /* eslint-disable */
 import { Reader, util, configure, Writer } from 'protobufjs/minimal';
-import { Timestamp } from './google/protobuf/timestamp';
 import * as Long from 'long';
 import { ImportedThing } from './import_dir/thing';
 import { StringValue, Int32Value, BoolValue } from './google/protobuf/wrappers';
 
 export const protobufPackage = 'simple';
-
-/**
- * Adding a comment to the syntax will become the first
- * comment in the output source file.
- */
 
 export enum StateEnum {
   UNKNOWN = 0,
@@ -50,14 +44,11 @@ export function stateEnumToJSON(object: StateEnum): string {
   }
 }
 
-/** Example comment on the Simple message */
 export interface Simple {
   /** Name field */
   name: string;
   /** Age */
   age: number;
-  /** This comment will also attach */
-  createdAt: Date | undefined;
   child: Child | undefined;
   state: StateEnum;
   grandChildren: Child[];
@@ -241,9 +232,6 @@ export const Simple = {
   encode(message: Simple, writer: Writer = Writer.create()): Writer {
     writer.uint32(10).string(message.name);
     writer.uint32(16).int32(message.age);
-    if (message.createdAt !== undefined && message.createdAt !== undefined) {
-      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(74).fork()).ldelim();
-    }
     if (message.child !== undefined && message.child !== undefined) {
       Child.encode(message.child, writer.uint32(26).fork()).ldelim();
     }
@@ -286,9 +274,6 @@ export const Simple = {
           break;
         case 2:
           message.age = reader.int32();
-          break;
-        case 9:
-          message.createdAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           break;
         case 3:
           message.child = Child.decode(reader, reader.uint32());
@@ -349,11 +334,6 @@ export const Simple = {
     } else {
       message.age = 0;
     }
-    if (object.createdAt !== undefined && object.createdAt !== null) {
-      message.createdAt = fromJsonTimestamp(object.createdAt);
-    } else {
-      message.createdAt = undefined;
-    }
     if (object.child !== undefined && object.child !== null) {
       message.child = Child.fromJSON(object.child);
     } else {
@@ -408,11 +388,6 @@ export const Simple = {
     } else {
       message.age = 0;
     }
-    if (object.createdAt !== undefined && object.createdAt !== null) {
-      message.createdAt = object.createdAt;
-    } else {
-      message.createdAt = undefined;
-    }
     if (object.child !== undefined && object.child !== null) {
       message.child = Child.fromPartial(object.child);
     } else {
@@ -455,8 +430,6 @@ export const Simple = {
     const obj: any = {};
     message.name !== undefined && (obj.name = message.name);
     message.age !== undefined && (obj.age = message.age);
-    message.createdAt !== undefined &&
-      (obj.createdAt = message.createdAt !== undefined ? message.createdAt.toISOString() : null);
     message.child !== undefined && (obj.child = message.child ? Child.toJSON(message.child) : undefined);
     message.state !== undefined && (obj.state = stateEnumToJSON(message.state));
     if (message.grandChildren) {
@@ -1863,28 +1836,6 @@ export type DeepPartial<T> = T extends Builtin
   : T extends {}
   ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
-
-function toTimestamp(date: Date): Timestamp {
-  const seconds = (date.getTime() / 1_000).toString();
-  const nanos = (date.getTime() % 1_000) * 1_000_000;
-  return { seconds, nanos };
-}
-
-function fromTimestamp(t: Timestamp): Date {
-  let millis = Number(t.seconds) * 1_000;
-  millis += t.nanos / 1_000_000;
-  return new Date(millis);
-}
-
-function fromJsonTimestamp(o: any): Date {
-  if (o instanceof Date) {
-    return o;
-  } else if (typeof o === 'string') {
-    return new Date(o);
-  } else {
-    return fromTimestamp(Timestamp.fromJSON(o));
-  }
-}
 
 function longToString(long: Long) {
   return long.toString();

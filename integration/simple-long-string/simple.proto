@@ -1,21 +1,13 @@
-// Adding a comment to the syntax will become the first
-// comment in the output source file.
 syntax = "proto3";
 import "google/protobuf/wrappers.proto";
-import "google/protobuf/timestamp.proto";
 import "import_dir/thing.proto";
 package simple;
 
-// This comment is seperated by a blank non-comment line, and will detatch from 
-// the following comment on the message Simple.
-
-/** Example comment on the Simple message */
 message Simple {
   // Name field
   string name = 1;
   /* Age */
   int32 age = 2;
-  google.protobuf.Timestamp created_at = 9; // This comment will also attach
   Child child = 3;
   StateEnum state = 4;
   repeated Child grand_children = 5;
