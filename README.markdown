@@ -12,7 +12,7 @@
 - [Goals](#goals)
 - [Example Types](#example-types)
 - [Highlights](#highlights)
-- [Auto-Batching / N+1 Prevention](#auto-batching---n-1-prevention)
+- [Auto-Batching / N+1 Prevention](#auto-batching--n1-prevention)
 - [Usage](#usage)
   - [Supported options](#supported-options)
   - [Only Types](#only-types)
