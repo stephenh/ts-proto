@@ -6,6 +6,8 @@
 
 > `ts-proto` transforms your `.proto` files into strongly-typed, idiomatic TypeScript files!
 
+(Note, if you're a new user of ts-proto and using a modern TS setup with `esModuleInterop`, you need to also pass that as a `ts_proto_opt`.)
+
 ## Table of contents
 
 - [QuickStart](#quickstart)
@@ -331,6 +333,7 @@ The test suite's proto files (i.e. `simple.proto`, `batching.proto`, etc.) curre
 - Support the `json_name` annotation
 - Make `oneof=unions` the default behavior in 2.0
 - Probably change `forceLong` default in 2.0, should default to `forceLong=long`
+- Make `esModuleInterop=true` the default in 2.0
 
 # OneOf Handling
 
