@@ -185,8 +185,13 @@ export function defaultValue(ctx: Context, field: FieldDescriptorProto): any {
       // This is probably not great, but it's only used in fromJSON and fromPartial,
       // and I believe the semantics of those in the proto2 world are generally undefined.
       const enumProto = typeMap.get(field.typeName)![2] as EnumDescriptorProto;
-      const hasZero = enumProto.value.find((v) => v.number === 0);
-      return hasZero ? 0 : enumProto.value[0].number;
+      const zerothValue = enumProto.value.find((v) => v.number === 0) || enumProto.value[0];
+      if (options.stringEnums) {
+        const enumType = messageToTypeName(ctx, field.typeName);
+        return code`${enumType}.${zerothValue.name}`;
+      } else {
+        return zerothValue.number;
+      }
     case FieldDescriptorProto.Type.TYPE_UINT64:
     case FieldDescriptorProto.Type.TYPE_FIXED64:
       if (options.forceLong === LongOption.LONG) {
