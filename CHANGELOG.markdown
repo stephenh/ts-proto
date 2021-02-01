@@ -1,4 +1,12 @@
 
+## v1.51.0
+
+* Fix `stringEnums=true` in `fromJSON` and `fromPartial` output (mharsat)
+
+## v1.50.0
+
+* Re-publish to fix previous publish error.
+
 ## v1.49.0
 
 * Add `exportCommonSymbols` flag (defaults `true`) that, when `false` skips `export`ing a few common symbols (i.e. `DeepPartial`) that make it more likely for multiple generated files to be imported by `import * from ...` and not have import conflicts, i.e. for barrel imports.
