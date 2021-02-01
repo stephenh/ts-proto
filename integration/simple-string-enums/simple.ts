@@ -44,7 +44,7 @@ export interface Simple {
   state: StateEnum;
 }
 
-const baseSimple: object = { name: '', state: 0 };
+const baseSimple: object = { name: '', state: StateEnum.UNKNOWN };
 
 export const Simple = {
   fromJSON(object: any): Simple {
@@ -57,7 +57,7 @@ export const Simple = {
     if (object.state !== undefined && object.state !== null) {
       message.state = stateEnumFromJSON(object.state);
     } else {
-      message.state = 0;
+      message.state = StateEnum.UNKNOWN;
     }
     return message;
   },
@@ -72,7 +72,7 @@ export const Simple = {
     if (object.state !== undefined && object.state !== null) {
       message.state = object.state;
     } else {
-      message.state = 0;
+      message.state = StateEnum.UNKNOWN;
     }
     return message;
   },
