@@ -1,11 +1,15 @@
 
-## v1.51.0
+## v1.52.0
 
 * Fix `stringEnums=true` in `fromJSON` and `fromPartial` output (mharsat)
 
-## v1.50.0
+## v1.51.0
 
 * Re-publish to fix previous publish error.
+
+## v1.50.0
+
+* Allow setting `addGrpcMetadata=true` w/o using NestJS (#188)
 
 ## v1.49.0
 
