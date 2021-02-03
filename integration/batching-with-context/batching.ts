@@ -667,7 +667,7 @@ export class EntityServiceClientImpl<Context extends DataLoaders> implements Ent
 
   BatchQuery(ctx: Context, request: BatchQueryRequest): Promise<BatchQueryResponse> {
     const data = BatchQueryRequest.encode(request).finish();
-    const promise = this.rpc.request(ctx, 'batching.EntityService', 'methodDesc.name', data);
+    const promise = this.rpc.request(ctx, 'batching.EntityService', 'BatchQuery', data);
     return promise.then((data) => BatchQueryResponse.decode(new Reader(data)));
   }
 
@@ -688,7 +688,7 @@ export class EntityServiceClientImpl<Context extends DataLoaders> implements Ent
 
   BatchMapQuery(ctx: Context, request: BatchMapQueryRequest): Promise<BatchMapQueryResponse> {
     const data = BatchMapQueryRequest.encode(request).finish();
-    const promise = this.rpc.request(ctx, 'batching.EntityService', 'methodDesc.name', data);
+    const promise = this.rpc.request(ctx, 'batching.EntityService', 'BatchMapQuery', data);
     return promise.then((data) => BatchMapQueryResponse.decode(new Reader(data)));
   }
 
@@ -711,7 +711,7 @@ export class EntityServiceClientImpl<Context extends DataLoaders> implements Ent
 
   WriteMethod(ctx: Context, request: WriteMethodRequest): Promise<WriteMethodResponse> {
     const data = WriteMethodRequest.encode(request).finish();
-    const promise = this.rpc.request(ctx, 'batching.EntityService', 'methodDesc.name', data);
+    const promise = this.rpc.request(ctx, 'batching.EntityService', 'WriteMethod', data);
     return promise.then((data) => WriteMethodResponse.decode(new Reader(data)));
   }
 }

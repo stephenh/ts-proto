@@ -650,25 +650,25 @@ export class EntityServiceClientImpl implements EntityService {
   }
   BatchQuery(request: BatchQueryRequest): Promise<BatchQueryResponse> {
     const data = BatchQueryRequest.encode(request).finish();
-    const promise = this.rpc.request('batching.EntityService', 'methodDesc.name', data);
+    const promise = this.rpc.request('batching.EntityService', 'BatchQuery', data);
     return promise.then((data) => BatchQueryResponse.decode(new Reader(data)));
   }
 
   BatchMapQuery(request: BatchMapQueryRequest): Promise<BatchMapQueryResponse> {
     const data = BatchMapQueryRequest.encode(request).finish();
-    const promise = this.rpc.request('batching.EntityService', 'methodDesc.name', data);
+    const promise = this.rpc.request('batching.EntityService', 'BatchMapQuery', data);
     return promise.then((data) => BatchMapQueryResponse.decode(new Reader(data)));
   }
 
   GetOnlyMethod(request: GetOnlyMethodRequest): Promise<GetOnlyMethodResponse> {
     const data = GetOnlyMethodRequest.encode(request).finish();
-    const promise = this.rpc.request('batching.EntityService', 'methodDesc.name', data);
+    const promise = this.rpc.request('batching.EntityService', 'GetOnlyMethod', data);
     return promise.then((data) => GetOnlyMethodResponse.decode(new Reader(data)));
   }
 
   WriteMethod(request: WriteMethodRequest): Promise<WriteMethodResponse> {
     const data = WriteMethodRequest.encode(request).finish();
-    const promise = this.rpc.request('batching.EntityService', 'methodDesc.name', data);
+    const promise = this.rpc.request('batching.EntityService', 'WriteMethod', data);
     return promise.then((data) => WriteMethodResponse.decode(new Reader(data)));
   }
 }
