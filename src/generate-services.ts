@@ -120,11 +120,11 @@ function generateRegularRpcMethod(
     ${methodDesc.name}(
       ${joinCode(params, { on: ',' })}
     ): ${responsePromise(ctx, methodDesc)} {
-      const data = ${inputType}.encode(request).finish(); 
+      const data = ${inputType}.encode(request).finish();
       const promise = this.rpc.request(
         ${maybeCtx}
         "${fileDesc.package}.${serviceDesc.name}",
-        "methodDesc.name",
+        "${methodDesc.name}",
         data
       );
       return promise.then(data => ${outputType}.decode(new ${Reader}(data)));
