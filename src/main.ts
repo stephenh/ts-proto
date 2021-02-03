@@ -781,7 +781,7 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
         const valueType = valueTypeName(ctx, field.typeName)!;
         if (isLongValueType(field)) {
           return code`${capitalize(valueType.toCodeString())}.fromValue(${from})`;
-        } else if(isBytesValueType(field)) {
+        } else if (isBytesValueType(field)) {
           return code`new ${capitalize(valueType.toCodeString())}.fromValue(${from})`;
         } else {
           return code`${capitalize(valueType.toCodeString())}(${from})`;
