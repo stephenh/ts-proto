@@ -1,4 +1,8 @@
 
+## v1.53.0
+
+* Fix typo for method names in service output (willclarktech)
+
 ## v1.52.0
 
 * Fix `stringEnums=true` in `fromJSON` and `fromPartial` output (mharsat)
