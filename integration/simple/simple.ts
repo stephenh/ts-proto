@@ -1023,7 +1023,7 @@ export const SimpleWithWrappers = {
       }
     }
     if (object.id !== undefined && object.id !== null) {
-      message.id = new Uint8Array.fromValue(object.id);
+      message.id = new Uint8Array(object.id);
     } else {
       message.id = undefined;
     }
