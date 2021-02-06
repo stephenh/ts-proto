@@ -13,6 +13,7 @@ describe('simple value types', () => {
       enabled: true,
       coins: [1, 2],
       snacks: ['a', 'b'],
+      id: new Uint8Array([1, 2, 3, 4]),
     };
     const s2 = PbSimpleWithWrappers.decode(Reader.create(SimpleWithWrappers.encode(s1).finish()));
     // pbjs toJSON still uses the wrapper objects, so we can't compare directly against s1
@@ -31,6 +32,9 @@ describe('simple value types', () => {
         ],
         "enabled": Object {
           "value": true,
+        },
+        "id": Object {
+          "value": "AQIDBA==",
         },
         "name": Object {
           "value": "first",
@@ -54,6 +58,7 @@ describe('simple value types', () => {
       enabled: undefined,
       coins: [], // should be undefined
       snacks: [],
+      id: undefined,
     };
     const s2 = PbSimpleWithWrappers.decode(Reader.create(SimpleWithWrappers.encode(s1).finish()));
     // pbjs toJSON still uses the wrapper objects, so we can't compare directly against s1

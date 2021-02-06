@@ -296,6 +296,10 @@ export function isValueType(ctx: Context, field: FieldDescriptorProto): boolean 
   return valueTypeName(ctx, field.typeName) !== undefined;
 }
 
+export function isBytesValueType(field: FieldDescriptorProto): boolean {
+  return field.typeName === '.google.protobuf.BytesValue';
+}
+
 export function isLongValueType(field: FieldDescriptorProto): boolean {
   return field.typeName === '.google.protobuf.Int64Value' || field.typeName === '.google.protobuf.UInt64Value';
 }
