@@ -1,4 +1,8 @@
 
+## v1.54.0
+
+* Fix `google.protobuf.BytesValue` in `fromPartial` & `fromJSON` (ebakoba)
+
 ## v1.53.0
 
 * Fix typo for method names in service output (willclarktech)
