@@ -782,7 +782,7 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
         if (isLongValueType(field)) {
           return code`${capitalize(valueType.toCodeString())}.fromValue(${from})`;
         } else if (isBytesValueType(field)) {
-          return code`new ${capitalize(valueType.toCodeString())}.fromValue(${from})`;
+          return code`new ${capitalize(valueType.toCodeString())}(${from})`;
         } else {
           return code`${capitalize(valueType.toCodeString())}(${from})`;
         }
