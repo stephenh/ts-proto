@@ -4,7 +4,7 @@ import { Timestamp } from './google/protobuf/timestamp';
 import * as Long from 'long';
 import { ImportedThing } from './import_dir/thing';
 import { DateMessage } from './google/type/date';
-import { StringValue, Int32Value, BoolValue } from './google/protobuf/wrappers';
+import { StringValue, Int32Value, BoolValue, BytesValue } from './google/protobuf/wrappers';
 
 export const protobufPackage = 'simple';
 
@@ -180,6 +180,7 @@ export interface SimpleWithWrappers {
   enabled: boolean | undefined;
   coins: number[];
   snacks: string[];
+  id: Uint8Array | undefined;
 }
 
 export interface Entity {
@@ -951,6 +952,9 @@ export const SimpleWithWrappers = {
     for (const v of message.snacks) {
       StringValue.encode({ value: v!! }, writer.uint32(58).fork()).ldelim();
     }
+    if (message.id !== undefined && message.id !== undefined) {
+      BytesValue.encode({ value: message.id! }, writer.uint32(66).fork()).ldelim();
+    }
     return writer;
   },
 
@@ -977,6 +981,9 @@ export const SimpleWithWrappers = {
           break;
         case 7:
           message.snacks.push(StringValue.decode(reader, reader.uint32()).value);
+          break;
+        case 8:
+          message.id = BytesValue.decode(reader, reader.uint32()).value;
           break;
         default:
           reader.skipType(tag & 7);
@@ -1015,6 +1022,11 @@ export const SimpleWithWrappers = {
         message.snacks.push(String(e));
       }
     }
+    if (object.id !== undefined && object.id !== null) {
+      message.id = new Uint8Array.fromValue(object.id);
+    } else {
+      message.id = undefined;
+    }
     return message;
   },
 
@@ -1047,6 +1059,11 @@ export const SimpleWithWrappers = {
         message.snacks.push(e);
       }
     }
+    if (object.id !== undefined && object.id !== null) {
+      message.id = object.id;
+    } else {
+      message.id = undefined;
+    }
     return message;
   },
 
@@ -1065,6 +1082,7 @@ export const SimpleWithWrappers = {
     } else {
       obj.snacks = [];
     }
+    message.id !== undefined && (obj.id = message.id);
     return obj;
   },
 };
