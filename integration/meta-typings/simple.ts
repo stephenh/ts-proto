@@ -4,6 +4,7 @@
 import { ImportedThing } from './import_dir/thing';
 import { DateMessage } from './google/type/date';
 import { Timestamp } from './google/protobuf/timestamp';
+import { IFileDescriptorProto } from 'protobufjs/ext/descriptor';
 import * as Long from 'long';
 import { Writer, Reader, util, configure } from 'protobufjs/minimal';
 import { StringValue, Int32Value, BoolValue } from './google/protobuf/wrappers';
@@ -302,46 +303,9 @@ function fromTimestamp(t: Timestamp): Date {
   return new Date(millis);
 }
 
-export interface MetaBase {
-  readonly kind: 'object' | 'array' | 'map' | 'union' | 'builtin';
-}
+const fileDescriptor: IFileDescriptorProto = {"dependency":["google/type/date.proto","google/protobuf/wrappers.proto","google/protobuf/timestamp.proto","import_dir/thing.proto"],"publicDependency":[],"weakDependency":[],"messageType":[{"name":"Simple","field":[{"name":"name","number":1,"label":"LABEL_OPTIONAL","type":"TYPE_STRING","jsonName":"name"},{"name":"age","number":2,"label":"LABEL_OPTIONAL","type":"TYPE_INT32","jsonName":"age"},{"name":"created_at","number":9,"label":"LABEL_OPTIONAL","type":"TYPE_MESSAGE","typeName":".google.protobuf.Timestamp","jsonName":"createdAt"},{"name":"child","number":3,"label":"LABEL_OPTIONAL","type":"TYPE_MESSAGE","typeName":".simple.Child","jsonName":"child"},{"name":"state","number":4,"label":"LABEL_OPTIONAL","type":"TYPE_ENUM","typeName":".simple.StateEnum","jsonName":"state"},{"name":"grand_children","number":5,"label":"LABEL_REPEATED","type":"TYPE_MESSAGE","typeName":".simple.Child","jsonName":"grandChildren"},{"name":"coins","number":6,"label":"LABEL_REPEATED","type":"TYPE_INT32","jsonName":"coins"},{"name":"snacks","number":7,"label":"LABEL_REPEATED","type":"TYPE_STRING","jsonName":"snacks"},{"name":"old_states","number":8,"label":"LABEL_REPEATED","type":"TYPE_ENUM","typeName":".simple.StateEnum","jsonName":"oldStates"},{"name":"thing","number":10,"label":"LABEL_OPTIONAL","type":"TYPE_MESSAGE","typeName":".simple.ImportedThing","jsonName":"thing"},{"name":"blobs","number":11,"label":"LABEL_REPEATED","type":"TYPE_BYTES","jsonName":"blobs"},{"name":"birthday","number":12,"label":"LABEL_OPTIONAL","type":"TYPE_MESSAGE","typeName":".google.type.Date","jsonName":"birthday"},{"name":"blob","number":13,"label":"LABEL_OPTIONAL","type":"TYPE_BYTES","jsonName":"blob"}]},{"name":"Child","field":[{"name":"name","number":1,"label":"LABEL_OPTIONAL","type":"TYPE_STRING","jsonName":"name"},{"name":"type","number":2,"label":"LABEL_OPTIONAL","type":"TYPE_ENUM","typeName":".simple.Child.Type","jsonName":"type"}],"enumType":[{"name":"Type","value":[{"name":"UNKNOWN","number":0},{"name":"GOOD","number":1},{"name":"BAD","number":2}]}]},{"name":"Nested","field":[{"name":"name","number":1,"label":"LABEL_OPTIONAL","type":"TYPE_STRING","jsonName":"name"},{"name":"message","number":2,"label":"LABEL_OPTIONAL","type":"TYPE_MESSAGE","typeName":".simple.Nested.InnerMessage","jsonName":"message"},{"name":"state","number":3,"label":"LABEL_OPTIONAL","type":"TYPE_ENUM","typeName":".simple.Nested.InnerEnum","jsonName":"state"}],"nestedType":[{"name":"InnerMessage","field":[{"name":"name","number":1,"label":"LABEL_OPTIONAL","type":"TYPE_STRING","jsonName":"name"},{"name":"deep","number":2,"label":"LABEL_OPTIONAL","type":"TYPE_MESSAGE","typeName":".simple.Nested.InnerMessage.DeepMessage","jsonName":"deep"}],"nestedType":[{"name":"DeepMessage","field":[{"name":"name","number":1,"label":"LABEL_OPTIONAL","type":"TYPE_STRING","jsonName":"name"}]}]}],"enumType":[{"name":"InnerEnum","value":[{"name":"UNKNOWN_INNER","number":0},{"name":"GOOD","number":100},{"name":"BAD","number":1000}]}]},{"name":"OneOfMessage","field":[{"name":"first","number":1,"label":"LABEL_OPTIONAL","type":"TYPE_STRING","oneofIndex":0,"jsonName":"first"},{"name":"last","number":2,"label":"LABEL_OPTIONAL","type":"TYPE_STRING","oneofIndex":0,"jsonName":"last"}],"oneofDecl":[{"name":"name_fields"}]},{"name":"SimpleWithWrappers","field":[{"name":"name","number":1,"label":"LABEL_OPTIONAL","type":"TYPE_MESSAGE","typeName":".google.protobuf.StringValue","jsonName":"name"},{"name":"age","number":2,"label":"LABEL_OPTIONAL","type":"TYPE_MESSAGE","typeName":".google.protobuf.Int32Value","jsonName":"age"},{"name":"enabled","number":3,"label":"LABEL_OPTIONAL","type":"TYPE_MESSAGE","typeName":".google.protobuf.BoolValue","jsonName":"enabled"},{"name":"coins","number":6,"label":"LABEL_REPEATED","type":"TYPE_MESSAGE","typeName":".google.protobuf.Int32Value","jsonName":"coins"},{"name":"snacks","number":7,"label":"LABEL_REPEATED","type":"TYPE_MESSAGE","typeName":".google.protobuf.StringValue","jsonName":"snacks"}]},{"name":"Entity","field":[{"name":"id","number":1,"label":"LABEL_OPTIONAL","type":"TYPE_INT32","jsonName":"id"}]},{"name":"SimpleWithMap","field":[{"name":"entitiesById","number":1,"label":"LABEL_REPEATED","type":"TYPE_MESSAGE","typeName":".simple.SimpleWithMap.EntitiesByIdEntry","jsonName":"entitiesById"},{"name":"nameLookup","number":2,"label":"LABEL_REPEATED","type":"TYPE_MESSAGE","typeName":".simple.SimpleWithMap.NameLookupEntry","jsonName":"nameLookup"},{"name":"intLookup","number":3,"label":"LABEL_REPEATED","type":"TYPE_MESSAGE","typeName":".simple.SimpleWithMap.IntLookupEntry","jsonName":"intLookup"},{"name":"mapOfTimestamps","number":4,"label":"LABEL_REPEATED","type":"TYPE_MESSAGE","typeName":".simple.SimpleWithMap.MapOfTimestampsEntry","jsonName":"mapOfTimestamps"},{"name":"mapOfBytes","number":5,"label":"LABEL_REPEATED","type":"TYPE_MESSAGE","typeName":".simple.SimpleWithMap.MapOfBytesEntry","jsonName":"mapOfBytes"}],"nestedType":[{"name":"EntitiesByIdEntry","field":[{"name":"key","number":1,"label":"LABEL_OPTIONAL","type":"TYPE_INT32","jsonName":"key"},{"name":"value","number":2,"label":"LABEL_OPTIONAL","type":"TYPE_MESSAGE","typeName":".simple.Entity","jsonName":"value"}],"options":{"mapEntry":true}},{"name":"NameLookupEntry","field":[{"name":"key","number":1,"label":"LABEL_OPTIONAL","type":"TYPE_STRING","jsonName":"key"},{"name":"value","number":2,"label":"LABEL_OPTIONAL","type":"TYPE_STRING","jsonName":"value"}],"options":{"mapEntry":true}},{"name":"IntLookupEntry","field":[{"name":"key","number":1,"label":"LABEL_OPTIONAL","type":"TYPE_INT32","jsonName":"key"},{"name":"value","number":2,"label":"LABEL_OPTIONAL","type":"TYPE_INT32","jsonName":"value"}],"options":{"mapEntry":true}},{"name":"MapOfTimestampsEntry","field":[{"name":"key","number":1,"label":"LABEL_OPTIONAL","type":"TYPE_STRING","jsonName":"key"},{"name":"value","number":2,"label":"LABEL_OPTIONAL","type":"TYPE_MESSAGE","typeName":".google.protobuf.Timestamp","jsonName":"value"}],"options":{"mapEntry":true}},{"name":"MapOfBytesEntry","field":[{"name":"key","number":1,"label":"LABEL_OPTIONAL","type":"TYPE_STRING","jsonName":"key"},{"name":"value","number":2,"label":"LABEL_OPTIONAL","type":"TYPE_BYTES","jsonName":"value"}],"options":{"mapEntry":true}}]},{"name":"SimpleWithSnakeCaseMap","field":[{"name":"entities_by_id","number":1,"label":"LABEL_REPEATED","type":"TYPE_MESSAGE","typeName":".simple.SimpleWithSnakeCaseMap.EntitiesByIdEntry","jsonName":"entitiesById"}],"nestedType":[{"name":"EntitiesByIdEntry","field":[{"name":"key","number":1,"label":"LABEL_OPTIONAL","type":"TYPE_INT32","jsonName":"key"},{"name":"value","number":2,"label":"LABEL_OPTIONAL","type":"TYPE_MESSAGE","typeName":".simple.Entity","jsonName":"value"}],"options":{"mapEntry":true}}]},{"name":"SimpleWithMapOfEnums","field":[{"name":"enums_by_id","number":1,"label":"LABEL_REPEATED","type":"TYPE_MESSAGE","typeName":".simple.SimpleWithMapOfEnums.EnumsByIdEntry","jsonName":"enumsById"}],"nestedType":[{"name":"EnumsByIdEntry","field":[{"name":"key","number":1,"label":"LABEL_OPTIONAL","type":"TYPE_INT32","jsonName":"key"},{"name":"value","number":2,"label":"LABEL_OPTIONAL","type":"TYPE_ENUM","typeName":".simple.StateEnum","jsonName":"value"}],"options":{"mapEntry":true}}]},{"name":"PingRequest","field":[{"name":"input","number":1,"label":"LABEL_OPTIONAL","type":"TYPE_STRING","jsonName":"input"}]},{"name":"PingResponse","field":[{"name":"output","number":1,"label":"LABEL_OPTIONAL","type":"TYPE_STRING","jsonName":"output"}]},{"name":"Numbers","field":[{"name":"double","number":1,"label":"LABEL_OPTIONAL","type":"TYPE_DOUBLE","jsonName":"double"},{"name":"float","number":2,"label":"LABEL_OPTIONAL","type":"TYPE_FLOAT","jsonName":"float"},{"name":"int32","number":3,"label":"LABEL_OPTIONAL","type":"TYPE_INT32","jsonName":"int32"},{"name":"int64","number":4,"label":"LABEL_OPTIONAL","type":"TYPE_INT64","jsonName":"int64"},{"name":"uint32","number":5,"label":"LABEL_OPTIONAL","type":"TYPE_UINT32","jsonName":"uint32"},{"name":"uint64","number":6,"label":"LABEL_OPTIONAL","type":"TYPE_UINT64","jsonName":"uint64"},{"name":"sint32","number":7,"label":"LABEL_OPTIONAL","type":"TYPE_SINT32","jsonName":"sint32"},{"name":"sint64","number":8,"label":"LABEL_OPTIONAL","type":"TYPE_SINT64","jsonName":"sint64"},{"name":"fixed32","number":9,"label":"LABEL_OPTIONAL","type":"TYPE_FIXED32","jsonName":"fixed32"},{"name":"fixed64","number":10,"label":"LABEL_OPTIONAL","type":"TYPE_FIXED64","jsonName":"fixed64"},{"name":"sfixed32","number":11,"label":"LABEL_OPTIONAL","type":"TYPE_SFIXED32","jsonName":"sfixed32"},{"name":"sfixed64","number":12,"label":"LABEL_OPTIONAL","type":"TYPE_SFIXED64","jsonName":"sfixed64"}]},{"name":"SimpleButOptional","field":[{"name":"name","number":1,"label":"LABEL_OPTIONAL","type":"TYPE_STRING","oneofIndex":0,"jsonName":"name","proto3Optional":true},{"name":"age","number":2,"label":"LABEL_OPTIONAL","type":"TYPE_INT32","oneofIndex":1,"jsonName":"age","proto3Optional":true},{"name":"created_at","number":9,"label":"LABEL_OPTIONAL","type":"TYPE_MESSAGE","typeName":".google.protobuf.Timestamp","oneofIndex":2,"jsonName":"createdAt","proto3Optional":true},{"name":"child","number":3,"label":"LABEL_OPTIONAL","type":"TYPE_MESSAGE","typeName":".simple.Child","oneofIndex":3,"jsonName":"child","proto3Optional":true},{"name":"state","number":4,"label":"LABEL_OPTIONAL","type":"TYPE_ENUM","typeName":".simple.StateEnum","oneofIndex":4,"jsonName":"state","proto3Optional":true},{"name":"thing","number":10,"label":"LABEL_OPTIONAL","type":"TYPE_MESSAGE","typeName":".simple.ImportedThing","oneofIndex":5,"jsonName":"thing","proto3Optional":true},{"name":"birthday","number":12,"label":"LABEL_OPTIONAL","type":"TYPE_MESSAGE","typeName":".google.type.Date","oneofIndex":6,"jsonName":"birthday","proto3Optional":true}],"oneofDecl":[{"name":"_name"},{"name":"_age"},{"name":"_created_at"},{"name":"_child"},{"name":"_state"},{"name":"_thing"},{"name":"_birthday"}]},{"name":"Empty"}],"enumType":[{"name":"StateEnum","value":[{"name":"UNKNOWN","number":0},{"name":"ON","number":2},{"name":"OFF","number":3}]}],"service":[{"name":"PingService","method":[{"name":"ping","inputType":".simple.PingRequest","outputType":".simple.PingResponse"}]}],"extension":[],"name":"simple.proto","package":"simple","sourceCodeInfo":{"location":[{"path":[12],"span":[2,0,18],"leadingComments":" Adding a comment to the syntax will become the first\n comment in the output source file.\n"},{"path":[4,0],"span":[13,0,30,1],"leadingComments":"* Example comment on the Simple message ","leadingDetachedComments":[" This comment is seperated by a blank non-comment line, and will detatch from \n the following comment on the message Simple.\n"]},{"path":[4,0,2,0],"span":[15,2,18],"leadingComments":" Name field\n"},{"path":[4,0,2,1],"span":[17,2,16],"leadingComments":" Age "},{"path":[4,0,2,2],"span":[18,2,43],"trailingComments":" This comment will also attach\n"},{"path":[4,0,2,9],"span":[26,2,27],"leadingComments":" A thing (imported from thing)\n"},{"path":[4,2,3,0],"span":[54,2,61,3],"leadingComments":" Comment for a nested message */\n"},{"path":[4,12],"span":[133,0,144,1],"leadingComments":"* For testing proto3's field presence feature. "},{"path":[4,12,2,0],"span":[135,2,27],"leadingComments":" Name field\n"},{"path":[4,12,2,1],"span":[137,2,25],"leadingComments":" Age "},{"path":[4,12,2,2],"span":[138,2,52],"trailingComments":" This comment will also attach\n"},{"path":[4,12,2,5],"span":[142,2,36],"leadingComments":" A thing (imported from thing)\n"}]},"syntax":"proto3"};
 
-export interface MetaMessage extends MetaBase {
-  readonly kind: 'object';
-  readonly type: string;
-  readonly name: string;
-}
-
-export interface MetaArray extends MetaBase {
-  readonly kind: 'array';
-  readonly type: MetaBase | string;
-}
-
-export interface MetaMap extends MetaBase {
-  readonly kind: 'map';
-  readonly key: string;
-  readonly value: MetaBase | string;
-}
-
-export interface MetaUnion extends MetaBase {
-  readonly kind: 'union';
-  readonly choices: Array<MetaBase | string | undefined>;
-}
-
-export interface MetaService<T, R> {
-  readonly request: MetaMessage;
-  readonly response: MetaMessage;
-  readonly clientStreaming: boolean;
-  readonly serverStreaming: boolean;
-  readonly encodeRequest?: (message: T, writer: Writer) => Writer;
-  readonly decodeResponse?: (input: Uint8Array | Reader, length?: number) => R;
-}
-
-export interface MetaPrimitive extends MetaBase {
-  readonly kind: 'builtin';
-  readonly type: string;
-  readonly original: string;
-}
+const resolvedDependencies: IFileDescriptorProto[] = [fileDescriptor, fileDescriptor, fileDescriptor, fileDescriptor];
 
 function longToNumber(long: Long) {
   if (long.gt(Number.MAX_SAFE_INTEGER)) {
@@ -1240,155 +1204,6 @@ export const Empty = {
   },
 };
 
-export const metaSimple: { [key in keyof Required<Simple>]: MetaBase | string } = {
-  name: {kind:'builtin', type:'string', original:'string'} as MetaPrimitive,
-  age: {kind:'builtin', type:'number', original:'int32'} as MetaPrimitive,
-  createdAt: {kind:'union', choices: [undefined, {kind:'builtin', type:'Date', original:'.google.protobuf.Timestamp'} as MetaPrimitive]} as MetaUnion,
-  child: {kind:'union', choices: [undefined, {kind:'object', type:'.simple.Child', name:'Child'} as MetaMessage]} as MetaUnion,
-  state: {kind:'object', type:'.simple.StateEnum', name:'StateEnum'} as MetaMessage,
-  grandChildren: {kind:'array', type:{kind:'object', type:'.simple.Child', name:'Child'} as MetaMessage} as MetaArray,
-  coins: {kind:'array', type:{kind:'builtin', type:'number', original:'int32'} as MetaPrimitive} as MetaArray,
-  snacks: {kind:'array', type:{kind:'builtin', type:'string', original:'string'} as MetaPrimitive} as MetaArray,
-  oldStates: {kind:'array', type:{kind:'object', type:'.simple.StateEnum', name:'StateEnum'} as MetaMessage} as MetaArray,
-  thing: {kind:'union', choices: [undefined, {kind:'object', type:'.simple.ImportedThing', name:'ImportedThing'} as MetaMessage]} as MetaUnion,
-  blobs: {kind:'array', type:{kind:'builtin', type:'Uint8Array', original:'bytes'} as MetaPrimitive} as MetaArray,
-  birthday: {kind:'union', choices: [undefined, {kind:'object', type:'.google.type.Date', name:'DateMessage'} as MetaMessage]} as MetaUnion,
-  blob: {kind:'builtin', type:'Uint8Array', original:'bytes'} as MetaPrimitive,
-}
-export const metaChild: { [key in keyof Required<Child>]: MetaBase | string } = {
-  name: {kind:'builtin', type:'string', original:'string'} as MetaPrimitive,
-  type: {kind:'object', type:'.simple.Child.Type', name:'Child_Type'} as MetaMessage,
-}
-export const metaNested: { [key in keyof Required<Nested>]: MetaBase | string } = {
-  name: {kind:'builtin', type:'string', original:'string'} as MetaPrimitive,
-  message: {kind:'union', choices: [undefined, {kind:'object', type:'.simple.Nested.InnerMessage', name:'Nested_InnerMessage'} as MetaMessage]} as MetaUnion,
-  state: {kind:'object', type:'.simple.Nested.InnerEnum', name:'Nested_InnerEnum'} as MetaMessage,
-}
-export const metaNested_InnerMessage: { [key in keyof Required<Nested_InnerMessage>]: MetaBase | string } = {
-  name: {kind:'builtin', type:'string', original:'string'} as MetaPrimitive,
-  deep: {kind:'union', choices: [undefined, {kind:'object', type:'.simple.Nested.InnerMessage.DeepMessage', name:'Nested_InnerMessage_DeepMessage'} as MetaMessage]} as MetaUnion,
-}
-export const metaNested_InnerMessage_DeepMessage: { [key in keyof Required<Nested_InnerMessage_DeepMessage>]: MetaBase | string } = {
-  name: {kind:'builtin', type:'string', original:'string'} as MetaPrimitive,
-}
-export const metaOneOfMessage: { [key in keyof Required<OneOfMessage>]: MetaBase | string } = {
-  first: {kind:'union', choices: [undefined, {kind:'builtin', type:'string', original:'string'} as MetaPrimitive]} as MetaUnion,
-  last: {kind:'union', choices: [undefined, {kind:'builtin', type:'string', original:'string'} as MetaPrimitive]} as MetaUnion,
-}
-export const metaSimpleWithWrappers: { [key in keyof Required<SimpleWithWrappers>]: MetaBase | string } = {
-  name: {kind:'union', choices: [undefined, {kind:'union', choices: ['string', 'undefined']} as MetaUnion]} as MetaUnion,
-  age: {kind:'union', choices: [undefined, {kind:'union', choices: ['number', 'undefined']} as MetaUnion]} as MetaUnion,
-  enabled: {kind:'union', choices: [undefined, {kind:'union', choices: ['boolean', 'undefined']} as MetaUnion]} as MetaUnion,
-  coins: {kind:'array', type:{kind:'builtin', type:'number', original:'.google.protobuf.Int32Value'} as MetaPrimitive} as MetaArray,
-  snacks: {kind:'array', type:{kind:'builtin', type:'string', original:'.google.protobuf.StringValue'} as MetaPrimitive} as MetaArray,
-}
-export const metaEntity: { [key in keyof Required<Entity>]: MetaBase | string } = {
-  id: {kind:'builtin', type:'number', original:'int32'} as MetaPrimitive,
-}
-export const metaSimpleWithMap: { [key in keyof Required<SimpleWithMap>]: MetaBase | string } = {
-  entitiesById: {kind:'map', key:'number', value:{kind:'object', type:'.simple.Entity', name:'Entity'} as MetaMessage} as MetaMap,
-  nameLookup: {kind:'map', key:'string', value:{kind:'builtin', type:'string', original:'string'} as MetaPrimitive} as MetaMap,
-  intLookup: {kind:'map', key:'number', value:{kind:'builtin', type:'number', original:'int32'} as MetaPrimitive} as MetaMap,
-  mapOfTimestamps: {kind:'map', key:'string', value:{kind:'builtin', type:'Date', original:'.google.protobuf.Timestamp'} as MetaPrimitive} as MetaMap,
-  mapOfBytes: {kind:'map', key:'string', value:{kind:'builtin', type:'Uint8Array', original:'bytes'} as MetaPrimitive} as MetaMap,
-}
-export const metaSimpleWithMap_EntitiesByIdEntry: { [key in keyof Required<SimpleWithMap_EntitiesByIdEntry>]: MetaBase | string } = {
-  key: {kind:'builtin', type:'number', original:'int32'} as MetaPrimitive,
-  value: {kind:'union', choices: [undefined, {kind:'object', type:'.simple.Entity', name:'Entity'} as MetaMessage]} as MetaUnion,
-}
-export const metaSimpleWithMap_NameLookupEntry: { [key in keyof Required<SimpleWithMap_NameLookupEntry>]: MetaBase | string } = {
-  key: {kind:'builtin', type:'string', original:'string'} as MetaPrimitive,
-  value: {kind:'builtin', type:'string', original:'string'} as MetaPrimitive,
-}
-export const metaSimpleWithMap_IntLookupEntry: { [key in keyof Required<SimpleWithMap_IntLookupEntry>]: MetaBase | string } = {
-  key: {kind:'builtin', type:'number', original:'int32'} as MetaPrimitive,
-  value: {kind:'builtin', type:'number', original:'int32'} as MetaPrimitive,
-}
-export const metaSimpleWithMap_MapOfTimestampsEntry: { [key in keyof Required<SimpleWithMap_MapOfTimestampsEntry>]: MetaBase | string } = {
-  key: {kind:'builtin', type:'string', original:'string'} as MetaPrimitive,
-  value: {kind:'union', choices: [undefined, {kind:'builtin', type:'Date', original:'.google.protobuf.Timestamp'} as MetaPrimitive]} as MetaUnion,
-}
-export const metaSimpleWithMap_MapOfBytesEntry: { [key in keyof Required<SimpleWithMap_MapOfBytesEntry>]: MetaBase | string } = {
-  key: {kind:'builtin', type:'string', original:'string'} as MetaPrimitive,
-  value: {kind:'builtin', type:'Uint8Array', original:'bytes'} as MetaPrimitive,
-}
-export const metaSimpleWithSnakeCaseMap: { [key in keyof Required<SimpleWithSnakeCaseMap>]: MetaBase | string } = {
-  entitiesById: {kind:'map', key:'number', value:{kind:'object', type:'.simple.Entity', name:'Entity'} as MetaMessage} as MetaMap,
-}
-export const metaSimpleWithSnakeCaseMap_EntitiesByIdEntry: { [key in keyof Required<SimpleWithSnakeCaseMap_EntitiesByIdEntry>]: MetaBase | string } = {
-  key: {kind:'builtin', type:'number', original:'int32'} as MetaPrimitive,
-  value: {kind:'union', choices: [undefined, {kind:'object', type:'.simple.Entity', name:'Entity'} as MetaMessage]} as MetaUnion,
-}
-export const metaSimpleWithMapOfEnums: { [key in keyof Required<SimpleWithMapOfEnums>]: MetaBase | string } = {
-  enumsById: {kind:'map', key:'number', value:{kind:'object', type:'.simple.StateEnum', name:'StateEnum'} as MetaMessage} as MetaMap,
-}
-export const metaSimpleWithMapOfEnums_EnumsByIdEntry: { [key in keyof Required<SimpleWithMapOfEnums_EnumsByIdEntry>]: MetaBase | string } = {
-  key: {kind:'builtin', type:'number', original:'int32'} as MetaPrimitive,
-  value: {kind:'object', type:'.simple.StateEnum', name:'StateEnum'} as MetaMessage,
-}
-export const metaPingRequest: { [key in keyof Required<PingRequest>]: MetaBase | string } = {
-  input: {kind:'builtin', type:'string', original:'string'} as MetaPrimitive,
-}
-export const metaPingResponse: { [key in keyof Required<PingResponse>]: MetaBase | string } = {
-  output: {kind:'builtin', type:'string', original:'string'} as MetaPrimitive,
-}
-export const metaNumbers: { [key in keyof Required<Numbers>]: MetaBase | string } = {
-  double: {kind:'builtin', type:'number', original:'double'} as MetaPrimitive,
-  float: {kind:'builtin', type:'number', original:'float'} as MetaPrimitive,
-  int32: {kind:'builtin', type:'number', original:'int32'} as MetaPrimitive,
-  int64: {kind:'builtin', type:'number', original:'int64'} as MetaPrimitive,
-  uint32: {kind:'builtin', type:'number', original:'uint32'} as MetaPrimitive,
-  uint64: {kind:'builtin', type:'number', original:'uint64'} as MetaPrimitive,
-  sint32: {kind:'builtin', type:'number', original:'sint32'} as MetaPrimitive,
-  sint64: {kind:'builtin', type:'number', original:'sint64'} as MetaPrimitive,
-  fixed32: {kind:'builtin', type:'number', original:'fixed32'} as MetaPrimitive,
-  fixed64: {kind:'builtin', type:'number', original:'fixed64'} as MetaPrimitive,
-  sfixed32: {kind:'builtin', type:'number', original:'sfixed32'} as MetaPrimitive,
-  sfixed64: {kind:'builtin', type:'number', original:'sfixed64'} as MetaPrimitive,
-}
-export const metaSimpleButOptional: { [key in keyof Required<SimpleButOptional>]: MetaBase | string } = {
-  name: {kind:'union', choices: [undefined, {kind:'builtin', type:'string', original:'string'} as MetaPrimitive]} as MetaUnion,
-  age: {kind:'union', choices: [undefined, {kind:'builtin', type:'number', original:'int32'} as MetaPrimitive]} as MetaUnion,
-  createdAt: {kind:'union', choices: [undefined, {kind:'builtin', type:'Date', original:'.google.protobuf.Timestamp'} as MetaPrimitive]} as MetaUnion,
-  child: {kind:'union', choices: [undefined, {kind:'object', type:'.simple.Child', name:'Child'} as MetaMessage]} as MetaUnion,
-  state: {kind:'union', choices: [undefined, {kind:'object', type:'.simple.StateEnum', name:'StateEnum'} as MetaMessage]} as MetaUnion,
-  thing: {kind:'union', choices: [undefined, {kind:'object', type:'.simple.ImportedThing', name:'ImportedThing'} as MetaMessage]} as MetaUnion,
-  birthday: {kind:'union', choices: [undefined, {kind:'object', type:'.google.type.Date', name:'DateMessage'} as MetaMessage]} as MetaUnion,
-}
-export const metaEmpty: { [key in keyof Required<Empty>]: MetaBase | string } = {
-}
-export const metaPingService: { [key in keyof PingService]: MetaService<any, any> } = {
-  ping: {request: {kind:'object', type:'.simple.PingRequest', name:'PingRequest'} as MetaMessage, response: {kind:'object', type:'.simple.PingResponse', name:'PingResponse'} as MetaMessage, clientStreaming: false, serverStreaming: false, encodeRequest: PingRequest.encode, decodeResponse: PingResponse.decode} as MetaService<PingRequest, PingResponse>,
-}
-export const metadata: { [key: string]: ['service', string, any, { [key: string]: MetaService<any, any> }] | ['enum', string, any, any] | ['message', string, any, { [key: string]: MetaBase | string }] } = {
-  StateEnum: ['enum', '.simple.StateEnum', StateEnum, undefined],
-  Simple: ['message', '.simple.Simple', Simple, metaSimple],
-  Child: ['message', '.simple.Child', Child, metaChild],
-  Child_Type: ['enum', '.simple.Child.Type', Child_Type, undefined],
-  Nested: ['message', '.simple.Nested', Nested, metaNested],
-  Nested_InnerEnum: ['enum', '.simple.Nested.InnerEnum', Nested_InnerEnum, undefined],
-  Nested_InnerMessage: ['message', '.simple.Nested.InnerMessage', Nested_InnerMessage, metaNested_InnerMessage],
-  Nested_InnerMessage_DeepMessage: ['message', '.simple.Nested.InnerMessage.DeepMessage', Nested_InnerMessage_DeepMessage, metaNested_InnerMessage_DeepMessage],
-  OneOfMessage: ['message', '.simple.OneOfMessage', OneOfMessage, metaOneOfMessage],
-  SimpleWithWrappers: ['message', '.simple.SimpleWithWrappers', SimpleWithWrappers, metaSimpleWithWrappers],
-  Entity: ['message', '.simple.Entity', Entity, metaEntity],
-  SimpleWithMap: ['message', '.simple.SimpleWithMap', SimpleWithMap, metaSimpleWithMap],
-  SimpleWithMap_EntitiesByIdEntry: ['message', '.simple.SimpleWithMap.EntitiesByIdEntry', SimpleWithMap_EntitiesByIdEntry, metaSimpleWithMap_EntitiesByIdEntry],
-  SimpleWithMap_NameLookupEntry: ['message', '.simple.SimpleWithMap.NameLookupEntry', SimpleWithMap_NameLookupEntry, metaSimpleWithMap_NameLookupEntry],
-  SimpleWithMap_IntLookupEntry: ['message', '.simple.SimpleWithMap.IntLookupEntry', SimpleWithMap_IntLookupEntry, metaSimpleWithMap_IntLookupEntry],
-  SimpleWithMap_MapOfTimestampsEntry: ['message', '.simple.SimpleWithMap.MapOfTimestampsEntry', SimpleWithMap_MapOfTimestampsEntry, metaSimpleWithMap_MapOfTimestampsEntry],
-  SimpleWithMap_MapOfBytesEntry: ['message', '.simple.SimpleWithMap.MapOfBytesEntry', SimpleWithMap_MapOfBytesEntry, metaSimpleWithMap_MapOfBytesEntry],
-  SimpleWithSnakeCaseMap: ['message', '.simple.SimpleWithSnakeCaseMap', SimpleWithSnakeCaseMap, metaSimpleWithSnakeCaseMap],
-  SimpleWithSnakeCaseMap_EntitiesByIdEntry: ['message', '.simple.SimpleWithSnakeCaseMap.EntitiesByIdEntry', SimpleWithSnakeCaseMap_EntitiesByIdEntry, metaSimpleWithSnakeCaseMap_EntitiesByIdEntry],
-  SimpleWithMapOfEnums: ['message', '.simple.SimpleWithMapOfEnums', SimpleWithMapOfEnums, metaSimpleWithMapOfEnums],
-  SimpleWithMapOfEnums_EnumsByIdEntry: ['message', '.simple.SimpleWithMapOfEnums.EnumsByIdEntry', SimpleWithMapOfEnums_EnumsByIdEntry, metaSimpleWithMapOfEnums_EnumsByIdEntry],
-  PingRequest: ['message', '.simple.PingRequest', PingRequest, metaPingRequest],
-  PingResponse: ['message', '.simple.PingResponse', PingResponse, metaPingResponse],
-  Numbers: ['message', '.simple.Numbers', Numbers, metaNumbers],
-  SimpleButOptional: ['message', '.simple.SimpleButOptional', SimpleButOptional, metaSimpleButOptional],
-  Empty: ['message', '.simple.Empty', Empty, metaEmpty],
-  PingService: ['service', '.simple.PingService', undefined, metaPingService],
-}
 if (util.Long !== Long as any) {
   util.Long = Long as any;
   configure();

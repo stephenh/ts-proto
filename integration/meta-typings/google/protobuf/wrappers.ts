@@ -1,3 +1,4 @@
+import { IFileDescriptorProto } from 'protobufjs/ext/descriptor';
 import * as Long from 'long';
 import { Writer, Reader, util, configure } from 'protobufjs/minimal';
 
@@ -145,46 +146,9 @@ const baseStringValue: object = {
 const baseBytesValue: object = {
 };
 
-export interface MetaBase {
-  readonly kind: 'object' | 'array' | 'map' | 'union' | 'builtin';
-}
+const fileDescriptor: IFileDescriptorProto = {"dependency":[],"publicDependency":[],"weakDependency":[],"messageType":[{"name":"DoubleValue","field":[{"name":"value","number":1,"label":"LABEL_OPTIONAL","type":"TYPE_DOUBLE","jsonName":"value"}]},{"name":"FloatValue","field":[{"name":"value","number":1,"label":"LABEL_OPTIONAL","type":"TYPE_FLOAT","jsonName":"value"}]},{"name":"Int64Value","field":[{"name":"value","number":1,"label":"LABEL_OPTIONAL","type":"TYPE_INT64","jsonName":"value"}]},{"name":"UInt64Value","field":[{"name":"value","number":1,"label":"LABEL_OPTIONAL","type":"TYPE_UINT64","jsonName":"value"}]},{"name":"Int32Value","field":[{"name":"value","number":1,"label":"LABEL_OPTIONAL","type":"TYPE_INT32","jsonName":"value"}]},{"name":"UInt32Value","field":[{"name":"value","number":1,"label":"LABEL_OPTIONAL","type":"TYPE_UINT32","jsonName":"value"}]},{"name":"BoolValue","field":[{"name":"value","number":1,"label":"LABEL_OPTIONAL","type":"TYPE_BOOL","jsonName":"value"}]},{"name":"StringValue","field":[{"name":"value","number":1,"label":"LABEL_OPTIONAL","type":"TYPE_STRING","jsonName":"value"}]},{"name":"BytesValue","field":[{"name":"value","number":1,"label":"LABEL_OPTIONAL","type":"TYPE_BYTES","jsonName":"value"}]}],"enumType":[],"service":[],"extension":[],"name":"google/protobuf/wrappers.proto","package":"google.protobuf","options":{"javaPackage":"com.google.protobuf","javaOuterClassname":"WrappersProto","javaMultipleFiles":true,"goPackage":"github.com/golang/protobuf/ptypes/wrappers","ccEnableArenas":true,"objcClassPrefix":"GPB","csharpNamespace":"Google.Protobuf.WellKnownTypes"},"sourceCodeInfo":{"location":[{"path":[4,0],"span":[50,0,53,1],"leadingComments":" Wrapper message for `double`.\n\n The JSON representation for `DoubleValue` is JSON number.\n"},{"path":[4,0,2,0],"span":[52,2,19],"leadingComments":" The double value.\n"},{"path":[4,1],"span":[58,0,61,1],"leadingComments":" Wrapper message for `float`.\n\n The JSON representation for `FloatValue` is JSON number.\n"},{"path":[4,1,2,0],"span":[60,2,18],"leadingComments":" The float value.\n"},{"path":[4,2],"span":[66,0,69,1],"leadingComments":" Wrapper message for `int64`.\n\n The JSON representation for `Int64Value` is JSON string.\n"},{"path":[4,2,2,0],"span":[68,2,18],"leadingComments":" The int64 value.\n"},{"path":[4,3],"span":[74,0,77,1],"leadingComments":" Wrapper message for `uint64`.\n\n The JSON representation for `UInt64Value` is JSON string.\n"},{"path":[4,3,2,0],"span":[76,2,19],"leadingComments":" The uint64 value.\n"},{"path":[4,4],"span":[82,0,85,1],"leadingComments":" Wrapper message for `int32`.\n\n The JSON representation for `Int32Value` is JSON number.\n"},{"path":[4,4,2,0],"span":[84,2,18],"leadingComments":" The int32 value.\n"},{"path":[4,5],"span":[90,0,93,1],"leadingComments":" Wrapper message for `uint32`.\n\n The JSON representation for `UInt32Value` is JSON number.\n"},{"path":[4,5,2,0],"span":[92,2,19],"leadingComments":" The uint32 value.\n"},{"path":[4,6],"span":[98,0,101,1],"leadingComments":" Wrapper message for `bool`.\n\n The JSON representation for `BoolValue` is JSON `true` and `false`.\n"},{"path":[4,6,2,0],"span":[100,2,17],"leadingComments":" The bool value.\n"},{"path":[4,7],"span":[106,0,109,1],"leadingComments":" Wrapper message for `string`.\n\n The JSON representation for `StringValue` is JSON string.\n"},{"path":[4,7,2,0],"span":[108,2,19],"leadingComments":" The string value.\n"},{"path":[4,8],"span":[114,0,117,1],"leadingComments":" Wrapper message for `bytes`.\n\n The JSON representation for `BytesValue` is JSON string.\n"},{"path":[4,8,2,0],"span":[116,2,18],"leadingComments":" The bytes value.\n"}]},"syntax":"proto3"};
 
-export interface MetaMessage extends MetaBase {
-  readonly kind: 'object';
-  readonly type: string;
-  readonly name: string;
-}
-
-export interface MetaArray extends MetaBase {
-  readonly kind: 'array';
-  readonly type: MetaBase | string;
-}
-
-export interface MetaMap extends MetaBase {
-  readonly kind: 'map';
-  readonly key: string;
-  readonly value: MetaBase | string;
-}
-
-export interface MetaUnion extends MetaBase {
-  readonly kind: 'union';
-  readonly choices: Array<MetaBase | string | undefined>;
-}
-
-export interface MetaService<T, R> {
-  readonly request: MetaMessage;
-  readonly response: MetaMessage;
-  readonly clientStreaming: boolean;
-  readonly serverStreaming: boolean;
-  readonly encodeRequest?: (message: T, writer: Writer) => Writer;
-  readonly decodeResponse?: (input: Uint8Array | Reader, length?: number) => R;
-}
-
-export interface MetaPrimitive extends MetaBase {
-  readonly kind: 'builtin';
-  readonly type: string;
-  readonly original: string;
-}
+const resolvedDependencies: IFileDescriptorProto[] = [];
 
 function longToNumber(long: Long) {
   if (long.gt(Number.MAX_SAFE_INTEGER)) {
@@ -411,44 +375,6 @@ export const BytesValue = {
   },
 };
 
-export const metaDoubleValue: { [key in keyof Required<DoubleValue>]: MetaBase | string } = {
-  value: {kind:'builtin', type:'number', original:'double'} as MetaPrimitive,
-}
-export const metaFloatValue: { [key in keyof Required<FloatValue>]: MetaBase | string } = {
-  value: {kind:'builtin', type:'number', original:'float'} as MetaPrimitive,
-}
-export const metaInt64Value: { [key in keyof Required<Int64Value>]: MetaBase | string } = {
-  value: {kind:'builtin', type:'number', original:'int64'} as MetaPrimitive,
-}
-export const metaUInt64Value: { [key in keyof Required<UInt64Value>]: MetaBase | string } = {
-  value: {kind:'builtin', type:'number', original:'uint64'} as MetaPrimitive,
-}
-export const metaInt32Value: { [key in keyof Required<Int32Value>]: MetaBase | string } = {
-  value: {kind:'builtin', type:'number', original:'int32'} as MetaPrimitive,
-}
-export const metaUInt32Value: { [key in keyof Required<UInt32Value>]: MetaBase | string } = {
-  value: {kind:'builtin', type:'number', original:'uint32'} as MetaPrimitive,
-}
-export const metaBoolValue: { [key in keyof Required<BoolValue>]: MetaBase | string } = {
-  value: {kind:'builtin', type:'boolean', original:'bool'} as MetaPrimitive,
-}
-export const metaStringValue: { [key in keyof Required<StringValue>]: MetaBase | string } = {
-  value: {kind:'builtin', type:'string', original:'string'} as MetaPrimitive,
-}
-export const metaBytesValue: { [key in keyof Required<BytesValue>]: MetaBase | string } = {
-  value: {kind:'builtin', type:'Uint8Array', original:'bytes'} as MetaPrimitive,
-}
-export const metadata: { [key: string]: ['service', string, any, { [key: string]: MetaService<any, any> }] | ['enum', string, any, any] | ['message', string, any, { [key: string]: MetaBase | string }] } = {
-  DoubleValue: ['message', '.google.protobuf.DoubleValue', DoubleValue, metaDoubleValue],
-  FloatValue: ['message', '.google.protobuf.FloatValue', FloatValue, metaFloatValue],
-  Int64Value: ['message', '.google.protobuf.Int64Value', Int64Value, metaInt64Value],
-  UInt64Value: ['message', '.google.protobuf.UInt64Value', UInt64Value, metaUInt64Value],
-  Int32Value: ['message', '.google.protobuf.Int32Value', Int32Value, metaInt32Value],
-  UInt32Value: ['message', '.google.protobuf.UInt32Value', UInt32Value, metaUInt32Value],
-  BoolValue: ['message', '.google.protobuf.BoolValue', BoolValue, metaBoolValue],
-  StringValue: ['message', '.google.protobuf.StringValue', StringValue, metaStringValue],
-  BytesValue: ['message', '.google.protobuf.BytesValue', BytesValue, metaBytesValue],
-}
 if (util.Long !== Long as any) {
   util.Long = Long as any;
   configure();

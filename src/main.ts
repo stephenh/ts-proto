@@ -45,13 +45,13 @@ import FieldDescriptorProto = google.protobuf.FieldDescriptorProto;
 import FileDescriptorProto = google.protobuf.FileDescriptorProto;
 import EnumDescriptorProto = google.protobuf.EnumDescriptorProto;
 import ServiceDescriptorProto = google.protobuf.ServiceDescriptorProto;
+import IFileDescriptorProto = google.protobuf.IFileDescriptorProto;
 import {
   addGrpcWebMisc,
   generateGrpcClientImpl,
   generateGrpcMethodDesc,
   generateGrpcServiceDesc,
 } from './generate-grpc-web';
-import { generateMetaTable, generateMetaTypings, generateServiceMetaTypings, getMetaInterfaces } from './generate-meta';
 
 export enum LongOption {
   NUMBER = 'number',
@@ -231,53 +231,37 @@ export function generateFile(typeMap: TypeMap, fileDesc: FileDescriptorProto, pa
   }
 
   if (options.outputSchema) {
-    file = getMetaInterfaces().reduce((f, i) => {
-      if (i instanceof InterfaceSpec) {
-        return f.addInterface(i);
-      } else {
-        return f.addTypeAlias(i);
-      }
-    }, file);
+    const outputFileDesc: IFileDescriptorProto = {
+      ...fileDesc,
+      sourceCodeInfo: null,
+    };
 
-    const properties: { name: string; proto: string; obj: string; type: 'service' | 'message' | 'enum' }[] = [];
-    visit(
-      fileDesc,
-      sourceInfo,
-      (fullName, message, sInfo) => {
-        // Use addCode to force append to end of file
-        const propertySpec = generateMetaTypings(typeMap, fullName, message, sInfo, options);
-        file = file.addCode(CodeBlock.of(propertySpec.toString()));
-        properties.push({
-          name: propertySpec.name,
-          proto: fullName,
-          obj: options.outputEncodeMethods ? fullName : 'undefined',
-          type: 'message',
-        });
-      },
-      options,
-      (fullName, enumDesc, sInfo) => {
-        properties.push({
-          name: 'undefined',
-          proto: fullName,
-          obj: fullName,
-          type: 'enum',
-        });
-      }
-    );
+    if (fileDesc.sourceCodeInfo) {
+      outputFileDesc.sourceCodeInfo = {
+        location: fileDesc.sourceCodeInfo.location.filter((loc) => loc['leadingComments'] || loc['trailingComments']),
+      } as any;
+    }
 
-    visitServices(fileDesc, sourceInfo, (serviceDesc, sInfo) => {
-      // Use addCode to force append to end of file
-      const propertySpec = generateServiceMetaTypings(typeMap, fileDesc, sInfo, serviceDesc, options);
-      file = file.addCode(CodeBlock.of(propertySpec.toString()));
-      properties.push({
-        name: propertySpec.name,
-        proto: serviceDesc.name,
-        obj: options.outputClientImpl ? serviceDesc.name : 'undefined',
-        type: 'service',
+    const descriptor = PropertySpec.create(
+      'fileDescriptor',
+      TypeNames.anyType('IFileDescriptorProto@protobufjs/ext/descriptor')
+    ).addModifiers(Modifier.CONST);
+
+    file = file.addProperty(descriptor.initializerBlock(CodeBlock.of('%L', JSON.stringify(outputFileDesc))));
+
+    if (fileDesc.dependency) {
+      const dependencies = fileDesc.dependency.map((dep) => {
+        const module = dep.replace('.proto', '');
+        return TypeNames.importedType('fileDescriptor@' + module);
       });
-    });
 
-    file = file.addCode(CodeBlock.of(generateMetaTable(properties, fileDesc.package).toString()));
+      const resolvedDependencies = PropertySpec.create(
+        'resolvedDependencies',
+        TypeNames.arrayType('IFileDescriptorProto@protobufjs/ext/descriptor')
+      ).addModifiers(Modifier.CONST);
+
+      file = file.addProperty(resolvedDependencies.initializerBlock(CodeBlock.of('[%L]', dependencies.join(', '))));
+    }
   }
 
   const initialOutput = file.toString();

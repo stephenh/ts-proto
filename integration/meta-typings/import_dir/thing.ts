@@ -1,4 +1,5 @@
 import { Timestamp } from '../google/protobuf/timestamp';
+import { IFileDescriptorProto } from 'protobufjs/ext/descriptor';
 import { Writer, Reader } from 'protobufjs/minimal';
 
 
@@ -21,46 +22,9 @@ function fromTimestamp(t: Timestamp): Date {
   return new Date(millis);
 }
 
-export interface MetaBase {
-  readonly kind: 'object' | 'array' | 'map' | 'union' | 'builtin';
-}
+const fileDescriptor: IFileDescriptorProto = {"dependency":["google/protobuf/timestamp.proto"],"publicDependency":[],"weakDependency":[],"messageType":[{"name":"ImportedThing","field":[{"name":"created_at","number":1,"label":"LABEL_OPTIONAL","type":"TYPE_MESSAGE","typeName":".google.protobuf.Timestamp","jsonName":"createdAt"}]}],"enumType":[],"service":[],"extension":[],"name":"import_dir/thing.proto","package":"simple","sourceCodeInfo":{"location":[]},"syntax":"proto3"};
 
-export interface MetaMessage extends MetaBase {
-  readonly kind: 'object';
-  readonly type: string;
-  readonly name: string;
-}
-
-export interface MetaArray extends MetaBase {
-  readonly kind: 'array';
-  readonly type: MetaBase | string;
-}
-
-export interface MetaMap extends MetaBase {
-  readonly kind: 'map';
-  readonly key: string;
-  readonly value: MetaBase | string;
-}
-
-export interface MetaUnion extends MetaBase {
-  readonly kind: 'union';
-  readonly choices: Array<MetaBase | string | undefined>;
-}
-
-export interface MetaService<T, R> {
-  readonly request: MetaMessage;
-  readonly response: MetaMessage;
-  readonly clientStreaming: boolean;
-  readonly serverStreaming: boolean;
-  readonly encodeRequest?: (message: T, writer: Writer) => Writer;
-  readonly decodeResponse?: (input: Uint8Array | Reader, length?: number) => R;
-}
-
-export interface MetaPrimitive extends MetaBase {
-  readonly kind: 'builtin';
-  readonly type: string;
-  readonly original: string;
-}
+const resolvedDependencies: IFileDescriptorProto[] = [fileDescriptor];
 
 export const protobufPackage = 'simple'
 
@@ -89,10 +53,3 @@ export const ImportedThing = {
     return message;
   },
 };
-
-export const metaImportedThing: { [key in keyof Required<ImportedThing>]: MetaBase | string } = {
-  createdAt: {kind:'union', choices: [undefined, {kind:'builtin', type:'Date', original:'.google.protobuf.Timestamp'} as MetaPrimitive]} as MetaUnion,
-}
-export const metadata: { [key: string]: ['service', string, any, { [key: string]: MetaService<any, any> }] | ['enum', string, any, any] | ['message', string, any, { [key: string]: MetaBase | string }] } = {
-  ImportedThing: ['message', '.simple.ImportedThing', ImportedThing, metaImportedThing],
-}
