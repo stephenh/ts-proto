@@ -398,7 +398,7 @@ function makeTimestampMethods(options: Options, longs: ReturnType<typeof makeLon
         } else if (typeof o === "string") {
           return new Date(o);
         } else {
-          return fromTimestamp(Timestamp.fromJSON(o));
+          return ${fromTimestamp}(Timestamp.fromJSON(o));
         }
       }
     `
