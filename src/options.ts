@@ -25,6 +25,7 @@ export type Options = {
   esModuleInterop: boolean;
   outputEncodeMethods: boolean;
   outputJsonMethods: boolean;
+  outputPartialMethods: boolean;
   stringEnums: boolean;
   outputClientImpl: boolean | 'grpc-web';
   addGrpcMetadata: boolean;
@@ -49,6 +50,7 @@ export function defaultOptions(): Options {
     lowerCaseServiceMethods: false,
     outputEncodeMethods: true,
     outputJsonMethods: true,
+    outputPartialMethods: true,
     stringEnums: false,
     outputClientImpl: true,
     returnObservable: false,
@@ -104,6 +106,9 @@ export function optionsFromParameter(parameter: string): Options {
     if (parameter.includes('outputJsonMethods=false')) {
       options.outputJsonMethods = false;
     }
+    if (parameter.includes('outputPartialMethods=false')) {
+      options.outputPartialMethods = false;
+    }
     if (parameter.includes('outputClientImpl=false')) {
       options.outputClientImpl = false;
     }
@@ -126,6 +131,7 @@ export function optionsFromParameter(parameter: string): Options {
       options.lowerCaseServiceMethods = true;
       options.outputEncodeMethods = false;
       options.outputJsonMethods = false;
+      options.outputPartialMethods = false;
       options.outputClientImpl = false;
       options.useDate = false;
       if (parameter.includes('addNestjsRestParameter=true')) {

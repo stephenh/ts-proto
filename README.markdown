@@ -261,6 +261,10 @@ protoc --plugin=node_modules/ts-proto/protoc-gen-ts_proto ./batching.proto -I.
 
   This is also useful if you want "only types".
 
+- With `--ts_proto_opt=outputPartialMethods=false`, the `Message.fromPartial` method for working with partial JSON-coded data will not be output.
+
+  Also, if `outputJsonMethods=false` is provided this method will not be generated.
+
 - With `--ts_proto_opt=stringEnums=true`, the generated enum types will be string-based instead of int-based.
 
   This is useful if you want "only types" and are using a gRPC REST Gateway configured to serialize enums as strings.
