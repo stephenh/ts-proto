@@ -1,4 +1,8 @@
 
+## v1.55.0
+
+* Fix missing `fromTimestamp` import in generated code, fixes #200 (jessebutterfield)
+
 ## v1.54.0
 
 * Fix `google.protobuf.BytesValue` in `fromPartial` & `fromJSON` (ebakoba)
