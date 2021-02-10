@@ -190,7 +190,7 @@ export const protoMetadata: ProtoMetadata = {
     },
     syntax: 'proto3',
   } as any,
-  references: { 'google.protobuf.Timestamp': Timestamp },
+  references: { '.google.protobuf.Timestamp': Timestamp },
   dependencies: [],
 };
 

@@ -72,7 +72,7 @@ export const protoMetadata: ProtoMetadata = {
     sourceCodeInfo: { location: [] },
     syntax: 'proto3',
   } as any,
-  references: { 'simple.ImportedThing': ImportedThing },
+  references: { '.simple.ImportedThing': ImportedThing },
   dependencies: [google_protobuf_timestamp_protoMetadata],
 };
 

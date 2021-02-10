@@ -133,6 +133,6 @@ export const protoMetadata: ProtoMetadata = {
     },
     syntax: 'proto3',
   } as any,
-  references: { 'google.type.DateMessage': DateMessage },
+  references: { '.google.type.DateMessage': DateMessage },
   dependencies: [],
 };
