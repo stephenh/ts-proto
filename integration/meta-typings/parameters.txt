@@ -1,1 +1,1 @@
-outputJsonMethods=false,outputClientImpl=false,outputSchema=true
+outputJsonMethods=false,outputClientImpl=true,outputSchema=true

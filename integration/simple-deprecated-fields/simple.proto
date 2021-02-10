@@ -1,0 +1,16 @@
+syntax = "proto3";
+package simple;
+
+message Simple {
+  // Name field
+  string name = 1 [deprecated = true];
+  /** Age field */
+  int32 age = 2 [deprecated = true];
+  Child child = 3 [deprecated = true]; // This comment will also attach;
+  string test_field = 4 [deprecated = true];
+  string test_not_deprecated = 5 [deprecated = false];
+}
+
+message Child {
+  string name = 1;
+}

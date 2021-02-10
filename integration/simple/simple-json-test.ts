@@ -72,6 +72,7 @@ describe('simple json', () => {
       enabled: true,
       coins: [1, 2],
       snacks: ['a', 'b'],
+      id: new Uint8Array([1, 2, 3, 4]),
     };
     const s2 = SimpleWithWrappers.fromJSON(s1);
     expect(s2).toMatchInlineSnapshot(`
@@ -82,6 +83,12 @@ describe('simple json', () => {
           2,
         ],
         "enabled": true,
+        "id": Uint8Array [
+          1,
+          2,
+          3,
+          4,
+        ],
         "name": "first",
         "snacks": Array [
           "a",
@@ -101,6 +108,7 @@ describe('simple json', () => {
       coins: null,
       snacks: null,
       oldStates: null,
+      id: null,
     };
     const s2 = Simple.fromJSON(s1);
     expect(s2).toMatchInlineSnapshot(`
@@ -361,6 +369,7 @@ describe('simple json', () => {
       enabled: true,
       coins: [1, 2],
       snacks: ['a', 'b'],
+      id: new Uint8Array([1, 2, 3, 4]),
     };
     const s2 = SimpleWithWrappers.toJSON(s1);
     expect(s2).toMatchInlineSnapshot(`
@@ -371,6 +380,12 @@ describe('simple json', () => {
           2,
         ],
         "enabled": true,
+        "id": Uint8Array [
+          1,
+          2,
+          3,
+          4,
+        ],
         "name": "first",
         "snacks": Array [
           "a",
@@ -387,6 +402,7 @@ describe('simple json', () => {
       enabled: undefined,
       coins: [], // should be undefined
       snacks: [],
+      id: undefined,
     };
     const s2 = SimpleWithWrappers.toJSON(s1);
     expect(s2).toMatchInlineSnapshot(`

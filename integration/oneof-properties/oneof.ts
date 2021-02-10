@@ -1,22 +1,24 @@
+/* eslint-disable */
 import { Writer, Reader } from 'protobufjs/minimal';
 
+export const protobufPackage = 'oneof';
 
 export interface PleaseChoose {
   name: string;
   /**
-   *  Use this if you want a number. Numbers are great. Who doesn't
-   *  like them?
+   * Use this if you want a number. Numbers are great. Who doesn't
+   * like them?
    */
   aNumber: number | undefined;
   /**
-   *  Use this if you want a string. Strings are also nice. Not as
-   *  nice as numbers, but what are you going to do...
+   * Use this if you want a string. Strings are also nice. Not as
+   * nice as numbers, but what are you going to do...
    */
   aString: string | undefined;
   aMessage: PleaseChoose_Submessage | undefined;
   /**
-   *  We also added a bool option! This was added after the 'age'
-   *  field, so it has a higher number.
+   * We also added a bool option! This was added after the 'age'
+   * field, so it has a higher number.
    */
   aBool: boolean | undefined;
   bunchaBytes: Uint8Array | undefined;
@@ -26,21 +28,6 @@ export interface PleaseChoose {
   or: string | undefined;
   thirdOption: string | undefined;
 }
-
-export interface PleaseChoose_Submessage {
-  name: string;
-}
-
-const basePleaseChoose: object = {
-  name: "",
-  age: 0,
-};
-
-const basePleaseChoose_Submessage: object = {
-  name: "",
-};
-
-export const protobufPackage = 'oneof'
 
 export enum PleaseChoose_StateEnum {
   UNKNOWN = 0,
@@ -52,16 +39,16 @@ export enum PleaseChoose_StateEnum {
 export function pleaseChoose_StateEnumFromJSON(object: any): PleaseChoose_StateEnum {
   switch (object) {
     case 0:
-    case "UNKNOWN":
+    case 'UNKNOWN':
       return PleaseChoose_StateEnum.UNKNOWN;
     case 2:
-    case "ON":
+    case 'ON':
       return PleaseChoose_StateEnum.ON;
     case 3:
-    case "OFF":
+    case 'OFF':
       return PleaseChoose_StateEnum.OFF;
     case -1:
-    case "UNRECOGNIZED":
+    case 'UNRECOGNIZED':
     default:
       return PleaseChoose_StateEnum.UNRECOGNIZED;
   }
@@ -70,15 +57,21 @@ export function pleaseChoose_StateEnumFromJSON(object: any): PleaseChoose_StateE
 export function pleaseChoose_StateEnumToJSON(object: PleaseChoose_StateEnum): string {
   switch (object) {
     case PleaseChoose_StateEnum.UNKNOWN:
-      return "UNKNOWN";
+      return 'UNKNOWN';
     case PleaseChoose_StateEnum.ON:
-      return "ON";
+      return 'ON';
     case PleaseChoose_StateEnum.OFF:
-      return "OFF";
+      return 'OFF';
     default:
-      return "UNKNOWN";
+      return 'UNKNOWN';
   }
 }
+
+export interface PleaseChoose_Submessage {
+  name: string;
+}
+
+const basePleaseChoose: object = { name: '', age: 0 };
 
 export const PleaseChoose = {
   encode(message: PleaseChoose, writer: Writer = Writer.create()): Writer {
@@ -113,7 +106,8 @@ export const PleaseChoose = {
     }
     return writer;
   },
-  decode(input: Uint8Array | Reader, length?: number): PleaseChoose {
+
+  decode(input: Reader | Uint8Array, length?: number): PleaseChoose {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...basePleaseChoose } as PleaseChoose;
@@ -160,12 +154,13 @@ export const PleaseChoose = {
     }
     return message;
   },
+
   fromJSON(object: any): PleaseChoose {
     const message = { ...basePleaseChoose } as PleaseChoose;
     if (object.name !== undefined && object.name !== null) {
       message.name = String(object.name);
     } else {
-      message.name = "";
+      message.name = '';
     }
     if (object.aNumber !== undefined && object.aNumber !== null) {
       message.aNumber = Number(object.aNumber);
@@ -217,12 +212,13 @@ export const PleaseChoose = {
     }
     return message;
   },
+
   fromPartial(object: DeepPartial<PleaseChoose>): PleaseChoose {
     const message = { ...basePleaseChoose } as PleaseChoose;
     if (object.name !== undefined && object.name !== null) {
       message.name = object.name;
     } else {
-      message.name = "";
+      message.name = '';
     }
     if (object.aNumber !== undefined && object.aNumber !== null) {
       message.aNumber = object.aNumber;
@@ -276,15 +272,19 @@ export const PleaseChoose = {
     }
     return message;
   },
+
   toJSON(message: PleaseChoose): unknown {
     const obj: any = {};
     message.name !== undefined && (obj.name = message.name);
     message.aNumber !== undefined && (obj.aNumber = message.aNumber);
     message.aString !== undefined && (obj.aString = message.aString);
-    message.aMessage !== undefined && (obj.aMessage = message.aMessage ? PleaseChoose_Submessage.toJSON(message.aMessage) : undefined);
+    message.aMessage !== undefined &&
+      (obj.aMessage = message.aMessage ? PleaseChoose_Submessage.toJSON(message.aMessage) : undefined);
     message.aBool !== undefined && (obj.aBool = message.aBool);
-    message.bunchaBytes !== undefined && (obj.bunchaBytes = message.bunchaBytes !== undefined ? base64FromBytes(message.bunchaBytes) : undefined);
-    message.anEnum !== undefined && (obj.anEnum = message.anEnum !== undefined ? pleaseChoose_StateEnumToJSON(message.anEnum) : undefined);
+    message.bunchaBytes !== undefined &&
+      (obj.bunchaBytes = message.bunchaBytes !== undefined ? base64FromBytes(message.bunchaBytes) : undefined);
+    message.anEnum !== undefined &&
+      (obj.anEnum = message.anEnum !== undefined ? pleaseChoose_StateEnumToJSON(message.anEnum) : undefined);
     message.age !== undefined && (obj.age = message.age);
     message.either !== undefined && (obj.either = message.either);
     message.or !== undefined && (obj.or = message.or);
@@ -293,12 +293,15 @@ export const PleaseChoose = {
   },
 };
 
+const basePleaseChoose_Submessage: object = { name: '' };
+
 export const PleaseChoose_Submessage = {
   encode(message: PleaseChoose_Submessage, writer: Writer = Writer.create()): Writer {
     writer.uint32(10).string(message.name);
     return writer;
   },
-  decode(input: Uint8Array | Reader, length?: number): PleaseChoose_Submessage {
+
+  decode(input: Reader | Uint8Array, length?: number): PleaseChoose_Submessage {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...basePleaseChoose_Submessage } as PleaseChoose_Submessage;
@@ -315,24 +318,27 @@ export const PleaseChoose_Submessage = {
     }
     return message;
   },
+
   fromJSON(object: any): PleaseChoose_Submessage {
     const message = { ...basePleaseChoose_Submessage } as PleaseChoose_Submessage;
     if (object.name !== undefined && object.name !== null) {
       message.name = String(object.name);
     } else {
-      message.name = "";
+      message.name = '';
     }
     return message;
   },
+
   fromPartial(object: DeepPartial<PleaseChoose_Submessage>): PleaseChoose_Submessage {
     const message = { ...basePleaseChoose_Submessage } as PleaseChoose_Submessage;
     if (object.name !== undefined && object.name !== null) {
       message.name = object.name;
     } else {
-      message.name = "";
+      message.name = '';
     }
     return message;
   },
+
   toJSON(message: PleaseChoose_Submessage): unknown {
     const obj: any = {};
     message.name !== undefined && (obj.name = message.name);
@@ -340,24 +346,29 @@ export const PleaseChoose_Submessage = {
   },
 };
 
-interface WindowBase64 {
-  atob(b64: string): string;
-  btoa(bin: string): string;
-}
+declare var self: any | undefined;
+declare var window: any | undefined;
+var globalThis: any = (() => {
+  if (typeof globalThis !== 'undefined') return globalThis;
+  if (typeof self !== 'undefined') return self;
+  if (typeof window !== 'undefined') return window;
+  if (typeof global !== 'undefined') return global;
+  throw new Error('Unable to locate global object');
+})();
 
-const windowBase64 = (globalThis as unknown as WindowBase64);
-const atob = windowBase64.atob || ((b64: string) => Buffer.from(b64, 'base64').toString('binary'));
-const btoa = windowBase64.btoa || ((bin: string) => Buffer.from(bin, 'binary').toString('base64'));
-
+const atob: (b64: string) => string =
+  globalThis.atob || ((b64) => globalThis.Buffer.from(b64, 'base64').toString('binary'));
 function bytesFromBase64(b64: string): Uint8Array {
   const bin = atob(b64);
   const arr = new Uint8Array(bin.length);
   for (let i = 0; i < bin.length; ++i) {
-      arr[i] = bin.charCodeAt(i);
+    arr[i] = bin.charCodeAt(i);
   }
   return arr;
 }
 
+const btoa: (bin: string) => string =
+  globalThis.btoa || ((bin) => globalThis.Buffer.from(bin, 'binary').toString('base64'));
 function base64FromBytes(arr: Uint8Array): string {
   const bin: string[] = [];
   for (let i = 0; i < arr.byteLength; ++i) {
@@ -365,8 +376,9 @@ function base64FromBytes(arr: Uint8Array): string {
   }
   return btoa(bin.join(''));
 }
+
 type Builtin = Date | Function | Uint8Array | string | number | undefined;
-type DeepPartial<T> = T extends Builtin
+export type DeepPartial<T> = T extends Builtin
   ? T
   : T extends Array<infer U>
   ? Array<DeepPartial<U>>

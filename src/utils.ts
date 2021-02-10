@@ -1,6 +1,6 @@
 import ReadStream = NodeJS.ReadStream;
-import { Options, LongOption, EnvOption, OneofOption } from './main';
 import { SourceDescription } from './sourceInfo';
+import { code, Code } from 'ts-poet';
 
 export function readToBuffer(stream: ReadStream): Promise<Buffer> {
   return new Promise((resolve) => {
@@ -35,130 +35,55 @@ export function upperFirst(name: string): string {
   return name.substring(0, 1).toUpperCase() + name.substring(1);
 }
 
-export function defaultOptions(): Options {
-  return {
-    useContext: false,
-    snakeToCamel: true,
-    forceLong: LongOption.NUMBER,
-    useOptionals: false,
-    useDate: true,
-    oneof: OneofOption.PROPERTIES,
-    lowerCaseServiceMethods: false,
-    outputEncodeMethods: true,
-    outputJsonMethods: true,
-    stringEnums: false,
-    outputClientImpl: true,
-    returnObservable: false,
-    addGrpcMetadata: false,
-    addNestjsRestParameter: false,
-    nestJs: false,
-    env: EnvOption.BOTH,
-    addUnrecognizedEnum: true,
-    outputSchema: false,
-  };
-}
-
-export function optionsFromParameter(parameter: string): Options {
-  const options = defaultOptions();
-
-  if (parameter) {
-    if (parameter.includes('context=true')) {
-      options.useContext = true;
-    }
-    if (parameter.includes('snakeToCamel=false')) {
-      options.snakeToCamel = false;
-    }
-    if (parameter.includes('forceLong=true') || parameter.includes('forceLong=long')) {
-      options.forceLong = LongOption.LONG;
-    }
-    if (parameter.includes('forceLong=string')) {
-      options.forceLong = LongOption.STRING;
-    }
-    if (parameter.includes('useOptionals=true')) {
-      options.useOptionals = true;
-    }
-    if (parameter.includes('useDate=false')) {
-      options.useDate = false;
-    }
-    if (parameter.includes('oneof=properties')) {
-      options.oneof = OneofOption.PROPERTIES;
-    }
-    if (parameter.includes('oneof=unions')) {
-      options.oneof = OneofOption.UNIONS;
-    }
-    if (parameter.includes('lowerCaseServiceMethods=true')) {
-      options.lowerCaseServiceMethods = true;
-    }
-    if (parameter.includes('outputEncodeMethods=false')) {
-      options.outputEncodeMethods = false;
-      if (parameter.includes('stringEnums=true')) {
-        options.stringEnums = true;
-      }
-    }
-    if (parameter.includes('outputJsonMethods=false')) {
-      options.outputJsonMethods = false;
-    }
-    if (parameter.includes('outputClientImpl=false')) {
-      options.outputClientImpl = false;
-    }
-    if (parameter.includes('outputClientImpl=grpc-web')) {
-      options.outputClientImpl = 'grpc-web';
-    }
-
-    if (parameter.includes('nestJs=true')) {
-      options.nestJs = true;
-
-      options.lowerCaseServiceMethods = true;
-      options.outputEncodeMethods = false;
-      options.outputJsonMethods = false;
-      options.outputClientImpl = false;
-      options.useDate = false;
-
-      if (parameter.includes('addGrpcMetadata=true')) {
-        options.addGrpcMetadata = true;
-      }
-      if (parameter.includes('addNestjsRestParameter=true')) {
-        options.addNestjsRestParameter = true;
-      }
-      if (parameter.includes('returnObservable=true')) {
-        options.returnObservable = true;
-      }
-    }
-
-    if (parameter.includes('env=node')) {
-      options.env = EnvOption.NODE;
-    }
-    if (parameter.includes('env=browser')) {
-      options.env = EnvOption.BROWSER;
-    }
-    if (parameter.includes('unrecognizedEnum=true')) {
-      options.addUnrecognizedEnum = true;
-    }
-    if (parameter.includes('unrecognizedEnum=false')) {
-      options.addUnrecognizedEnum = false;
-    }
-    if (parameter.includes('outputSchema=true')) {
-      options.outputSchema = true;
-    }
-  }
-  return options;
-}
-
-// addJavadoc will attempt to expand unescaped percent %, so we replace these within source comments.
-const PercentAll = /\%/g;
 // Since we don't know what form the comment originally took, it may contain closing block comments.
 const CloseComment = /\*\//g;
 
-/**
- * Removes potentially harmful characters from comments and calls the provided expression
- * @param desc {SourceDescription} original comment information
- * @param process {(comment: string) => void} called if a comment exists
- * @returns {string} scrubbed text
- */
-export function maybeAddComment(desc: SourceDescription, process: (comment: string) => void): void {
+/** Removes potentially harmful characters from comments and pushes it into chunks. */
+export function maybeAddComment(
+  desc: Partial<Pick<SourceDescription, 'leadingComments' | 'trailingComments'>>,
+  chunks: Code[],
+  deprecated?: boolean,
+  prefix: string = ''
+): void {
+  let lines: string[] = [];
   if (desc.leadingComments || desc.trailingComments) {
-    return process(
-      (desc.leadingComments || desc.trailingComments || '').replace(PercentAll, '%%').replace(CloseComment, '* /')
-    );
+    let content = (desc.leadingComments || desc.trailingComments || '').replace(CloseComment, '* /').trim();
+
+    // Detect /** ... */ comments
+    const isDoubleStar = content.startsWith('*');
+    if (isDoubleStar) {
+      content = content.substring(1).trim();
+    }
+
+    // Prefix things like the enum name.
+    if (prefix) {
+      content = prefix + content;
+    }
+
+    lines = content.split('\n').map((l) => l.replace(/^ /, '').replace(/\n/, ''));
   }
+  // Deprecated comment should be added even if no other comment was added
+  if (deprecated) {
+    if (lines.length > 0) {
+      lines.push('');
+    }
+    lines.push('@deprecated');
+  }
+
+  let comment: Code;
+  if (lines.length === 1) {
+    comment = code`/** ${lines[0]} */`;
+  } else {
+    comment = code`/**\n * ${lines.join('\n * ')}\n */`;
+  }
+  if (lines.length > 0) {
+    chunks.push(code`\n\n${comment}\n\n`);
+  }
+}
+
+// Comment block at the top of every source file, since these comments require specific
+// syntax incompatible with ts-poet, we will hard-code the string and prepend to the
+// generator output.
+export function prefixDisableLinter(spec: string): string {
+  return `/* eslint-disable */\n${spec}`;
 }

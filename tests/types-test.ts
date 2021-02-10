@@ -1,9 +1,9 @@
 import { google } from '../build/pbjs';
-import { Options } from '../src/main';
+import { Options, defaultOptions } from '../src/options';
 import { messageToTypeName, TypeMap } from '../src/types';
-import { defaultOptions } from '../src/utils';
-import { TypeName, TypeNames } from 'ts-poet';
 import DescriptorProto = google.protobuf.DescriptorProto;
+import { Code, code, imp } from 'ts-poet';
+import { Utils } from '../src/main';
 
 const fakeProto = (undefined as any) as DescriptorProto;
 
@@ -14,39 +14,40 @@ describe('types', () => {
       typeMap: TypeMap;
       protoType: string;
       options?: Options;
-      expected: TypeName;
+      expected: Code;
     };
     const testCases: Array<TestCase> = [
       {
         descr: 'top-level messages',
         typeMap: new Map([['.namespace.Message', ['namespace', 'Message', fakeProto]]]),
         protoType: '.namespace.Message',
-        expected: TypeNames.anyType('Message@./namespace'),
+        expected: code`${imp('Message@./namespace')}`,
       },
       {
         descr: 'nested messages',
         typeMap: new Map([['.namespace.Message.Inner', ['namespace', 'Message_Inner', fakeProto]]]),
         protoType: '.namespace.Message.Inner',
-        expected: TypeNames.anyType('Message_Inner@./namespace'),
+        expected: code`${imp('Message_Inner@./namespace')}`,
       },
       {
         descr: 'value types',
         typeMap: new Map(),
         protoType: '.google.protobuf.StringValue',
-        expected: TypeNames.unionType(TypeNames.STRING, TypeNames.UNDEFINED),
+        expected: code`string | undefined`,
       },
       {
         descr: 'value types (useOptionals=true)',
         typeMap: new Map(),
         protoType: '.google.protobuf.StringValue',
         options: { ...defaultOptions(), useOptionals: true },
-        expected: TypeNames.STRING,
+        expected: code`string`,
       },
     ];
     testCases.forEach((t) =>
-      it(t.descr, () => {
-        const got = messageToTypeName(t.typeMap, t.protoType, t.options ?? defaultOptions());
-        expect(got).toEqual(t.expected);
+      it(t.descr, async () => {
+        const ctx = { options: defaultOptions(), utils: (undefined as any) as Utils, ...t };
+        const got = messageToTypeName(ctx, t.protoType);
+        expect(await got.toStringWithImports()).toEqual(await t.expected.toStringWithImports());
       })
     );
   });

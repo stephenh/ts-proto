@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package rpx;
+
+// This is the same example.proto used by the other grpc-web examples,
+// but with the streaming method removed.
+service DashState {
+  rpc UserSettings(Empty) returns (DashUserSettingsState);
+}
+
+message DashFlash {
+  string msg = 1;
+  Type type = 2;
+
+  enum Type {
+    Undefined = 0;
+    Success = 1;
+    Warn = 2;
+    Error = 3;
+  }
+}
+
+message DashUserSettingsState {
+  string email = 1;
+  URLs urls = 6;
+  repeated DashFlash flashes = 7;
+
+  message URLs {
+    string connect_google = 1;
+    string connect_github = 2;
+  }
+}
+
+message Empty {}

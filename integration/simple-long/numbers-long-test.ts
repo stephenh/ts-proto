@@ -19,7 +19,8 @@ describe('number', () => {
       fixed32: 8,
       fixed64: Long.fromNumber(9, true),
       sfixed32: 10,
-      sfixed64: Long.fromNumber(11)
+      sfixed64: Long.fromNumber(11),
+      manyUint64: [Long.fromNumber(5, true)],
     };
     expect(simple.int64).toEqual(Long.fromNumber(3));
     expect(simple.uint64).toEqual(Long.fromNumber(5, true));
@@ -38,7 +39,8 @@ describe('number', () => {
       fixed32: 8,
       fixed64: Long.fromNumber(9, true),
       sfixed32: 10,
-      sfixed64: Long.fromNumber(11)
+      sfixed64: Long.fromNumber(11),
+      manyUint64: [Long.fromNumber(12, true)],
     };
     const s2 = Numbers.decode(Reader.create(PbNumbers.encode(PbNumbers.fromObject(s1)).finish()));
     expect(s2).toEqual(s1);
@@ -57,11 +59,12 @@ describe('number', () => {
       fixed32: 8,
       fixed64: Long.fromNumber(9, true),
       sfixed32: 10,
-      sfixed64: Long.fromNumber(11)
+      sfixed64: Long.fromNumber(11),
+      manyUint64: [Long.fromNumber(12, true)],
     };
     const s2 = PbNumbers.toObject(PbNumbers.decode(Numbers.encode(s1).finish()));
     expect(s2).toEqual({
-      ...s1
+      ...s1,
     });
   });
 
@@ -93,40 +96,41 @@ describe('number', () => {
   it('has fromPartial', () => {
     const s1 = Numbers.fromPartial({});
     expect(s1).toMatchInlineSnapshot(`
-  Object {
-    "double": 0,
-    "fixed32": 0,
-    "fixed64": Long {
-      "high": 0,
-      "low": 0,
-      "unsigned": true,
-    },
-    "float": 0,
-    "int32": 0,
-    "int64": Long {
-      "high": 0,
-      "low": 0,
-      "unsigned": false,
-    },
-    "sfixed32": 0,
-    "sfixed64": Long {
-      "high": 0,
-      "low": 0,
-      "unsigned": false,
-    },
-    "sint32": 0,
-    "sint64": Long {
-      "high": 0,
-      "low": 0,
-      "unsigned": false,
-    },
-    "uint32": 0,
-    "uint64": Long {
-      "high": 0,
-      "low": 0,
-      "unsigned": true,
-    },
-  }
-  `);
+      Object {
+        "double": 0,
+        "fixed32": 0,
+        "fixed64": Long {
+          "high": 0,
+          "low": 0,
+          "unsigned": true,
+        },
+        "float": 0,
+        "int32": 0,
+        "int64": Long {
+          "high": 0,
+          "low": 0,
+          "unsigned": false,
+        },
+        "manyUint64": Array [],
+        "sfixed32": 0,
+        "sfixed64": Long {
+          "high": 0,
+          "low": 0,
+          "unsigned": false,
+        },
+        "sint32": 0,
+        "sint64": Long {
+          "high": 0,
+          "low": 0,
+          "unsigned": false,
+        },
+        "uint32": 0,
+        "uint64": Long {
+          "high": 0,
+          "low": 0,
+          "unsigned": true,
+        },
+      }
+    `);
   });
 });

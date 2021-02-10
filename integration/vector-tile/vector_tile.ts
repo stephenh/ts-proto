@@ -1,9 +1,55 @@
+/* eslint-disable */
 import * as Long from 'long';
-import { Writer, Reader, util, configure } from 'protobufjs/minimal';
+import { util, configure, Writer, Reader } from 'protobufjs/minimal';
 
+export const protobufPackage = 'vector_tile';
 
 export interface Tile {
   layers: Tile_Layer[];
+}
+
+export enum Tile_GeomType {
+  UNKNOWN = 0,
+  POINT = 1,
+  LINESTRING = 2,
+  POLYGON = 3,
+  UNRECOGNIZED = -1,
+}
+
+export function tile_GeomTypeFromJSON(object: any): Tile_GeomType {
+  switch (object) {
+    case 0:
+    case 'UNKNOWN':
+      return Tile_GeomType.UNKNOWN;
+    case 1:
+    case 'POINT':
+      return Tile_GeomType.POINT;
+    case 2:
+    case 'LINESTRING':
+      return Tile_GeomType.LINESTRING;
+    case 3:
+    case 'POLYGON':
+      return Tile_GeomType.POLYGON;
+    case -1:
+    case 'UNRECOGNIZED':
+    default:
+      return Tile_GeomType.UNRECOGNIZED;
+  }
+}
+
+export function tile_GeomTypeToJSON(object: Tile_GeomType): string {
+  switch (object) {
+    case Tile_GeomType.UNKNOWN:
+      return 'UNKNOWN';
+    case Tile_GeomType.POINT:
+      return 'POINT';
+    case Tile_GeomType.LINESTRING:
+      return 'LINESTRING';
+    case Tile_GeomType.POLYGON:
+      return 'POLYGON';
+    default:
+      return 'UNKNOWN';
+  }
 }
 
 export interface Tile_Value {
@@ -32,85 +78,7 @@ export interface Tile_Layer {
   extent: number;
 }
 
-const baseTile: object = {
-};
-
-const baseTile_Value: object = {
-  stringValue: "",
-  floatValue: 0,
-  doubleValue: 0,
-  intValue: 0,
-  uintValue: 0,
-  sintValue: 0,
-  boolValue: false,
-};
-
-const baseTile_Feature: object = {
-  id: 0,
-  tags: 0,
-  type: 0,
-  geometry: 0,
-};
-
-const baseTile_Layer: object = {
-  version: 0,
-  name: "",
-  keys: "",
-  extent: 0,
-};
-
-function longToNumber(long: Long) {
-  if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
-  }
-  return long.toNumber();
-}
-
-export const protobufPackage = 'vector_tile'
-
-export enum Tile_GeomType {
-  UNKNOWN = 0,
-  POINT = 1,
-  LINESTRING = 2,
-  POLYGON = 3,
-  UNRECOGNIZED = -1,
-}
-
-export function tile_GeomTypeFromJSON(object: any): Tile_GeomType {
-  switch (object) {
-    case 0:
-    case "UNKNOWN":
-      return Tile_GeomType.UNKNOWN;
-    case 1:
-    case "POINT":
-      return Tile_GeomType.POINT;
-    case 2:
-    case "LINESTRING":
-      return Tile_GeomType.LINESTRING;
-    case 3:
-    case "POLYGON":
-      return Tile_GeomType.POLYGON;
-    case -1:
-    case "UNRECOGNIZED":
-    default:
-      return Tile_GeomType.UNRECOGNIZED;
-  }
-}
-
-export function tile_GeomTypeToJSON(object: Tile_GeomType): string {
-  switch (object) {
-    case Tile_GeomType.UNKNOWN:
-      return "UNKNOWN";
-    case Tile_GeomType.POINT:
-      return "POINT";
-    case Tile_GeomType.LINESTRING:
-      return "LINESTRING";
-    case Tile_GeomType.POLYGON:
-      return "POLYGON";
-    default:
-      return "UNKNOWN";
-  }
-}
+const baseTile: object = {};
 
 export const Tile = {
   encode(message: Tile, writer: Writer = Writer.create()): Writer {
@@ -119,7 +87,8 @@ export const Tile = {
     }
     return writer;
   },
-  decode(input: Uint8Array | Reader, length?: number): Tile {
+
+  decode(input: Reader | Uint8Array, length?: number): Tile {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseTile } as Tile;
@@ -137,6 +106,7 @@ export const Tile = {
     }
     return message;
   },
+
   fromJSON(object: any): Tile {
     const message = { ...baseTile } as Tile;
     message.layers = [];
@@ -147,6 +117,7 @@ export const Tile = {
     }
     return message;
   },
+
   fromPartial(object: DeepPartial<Tile>): Tile {
     const message = { ...baseTile } as Tile;
     message.layers = [];
@@ -157,15 +128,26 @@ export const Tile = {
     }
     return message;
   },
+
   toJSON(message: Tile): unknown {
     const obj: any = {};
     if (message.layers) {
-      obj.layers = message.layers.map(e => e ? Tile_Layer.toJSON(e) : undefined);
+      obj.layers = message.layers.map((e) => (e ? Tile_Layer.toJSON(e) : undefined));
     } else {
       obj.layers = [];
     }
     return obj;
   },
+};
+
+const baseTile_Value: object = {
+  stringValue: '',
+  floatValue: 0,
+  doubleValue: 0,
+  intValue: 0,
+  uintValue: 0,
+  sintValue: 0,
+  boolValue: false,
 };
 
 export const Tile_Value = {
@@ -179,7 +161,8 @@ export const Tile_Value = {
     writer.uint32(56).bool(message.boolValue);
     return writer;
   },
-  decode(input: Uint8Array | Reader, length?: number): Tile_Value {
+
+  decode(input: Reader | Uint8Array, length?: number): Tile_Value {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseTile_Value } as Tile_Value;
@@ -214,12 +197,13 @@ export const Tile_Value = {
     }
     return message;
   },
+
   fromJSON(object: any): Tile_Value {
     const message = { ...baseTile_Value } as Tile_Value;
     if (object.stringValue !== undefined && object.stringValue !== null) {
       message.stringValue = String(object.stringValue);
     } else {
-      message.stringValue = "";
+      message.stringValue = '';
     }
     if (object.floatValue !== undefined && object.floatValue !== null) {
       message.floatValue = Number(object.floatValue);
@@ -253,12 +237,13 @@ export const Tile_Value = {
     }
     return message;
   },
+
   fromPartial(object: DeepPartial<Tile_Value>): Tile_Value {
     const message = { ...baseTile_Value } as Tile_Value;
     if (object.stringValue !== undefined && object.stringValue !== null) {
       message.stringValue = object.stringValue;
     } else {
-      message.stringValue = "";
+      message.stringValue = '';
     }
     if (object.floatValue !== undefined && object.floatValue !== null) {
       message.floatValue = object.floatValue;
@@ -292,6 +277,7 @@ export const Tile_Value = {
     }
     return message;
   },
+
   toJSON(message: Tile_Value): unknown {
     const obj: any = {};
     message.stringValue !== undefined && (obj.stringValue = message.stringValue);
@@ -304,6 +290,8 @@ export const Tile_Value = {
     return obj;
   },
 };
+
+const baseTile_Feature: object = { id: 0, tags: 0, type: 0, geometry: 0 };
 
 export const Tile_Feature = {
   encode(message: Tile_Feature, writer: Writer = Writer.create()): Writer {
@@ -321,7 +309,8 @@ export const Tile_Feature = {
     writer.ldelim();
     return writer;
   },
-  decode(input: Uint8Array | Reader, length?: number): Tile_Feature {
+
+  decode(input: Reader | Uint8Array, length?: number): Tile_Feature {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseTile_Feature } as Tile_Feature;
@@ -363,6 +352,7 @@ export const Tile_Feature = {
     }
     return message;
   },
+
   fromJSON(object: any): Tile_Feature {
     const message = { ...baseTile_Feature } as Tile_Feature;
     message.tags = [];
@@ -389,6 +379,7 @@ export const Tile_Feature = {
     }
     return message;
   },
+
   fromPartial(object: DeepPartial<Tile_Feature>): Tile_Feature {
     const message = { ...baseTile_Feature } as Tile_Feature;
     message.tags = [];
@@ -415,23 +406,26 @@ export const Tile_Feature = {
     }
     return message;
   },
+
   toJSON(message: Tile_Feature): unknown {
     const obj: any = {};
     message.id !== undefined && (obj.id = message.id);
     if (message.tags) {
-      obj.tags = message.tags.map(e => e);
+      obj.tags = message.tags.map((e) => e);
     } else {
       obj.tags = [];
     }
     message.type !== undefined && (obj.type = tile_GeomTypeToJSON(message.type));
     if (message.geometry) {
-      obj.geometry = message.geometry.map(e => e);
+      obj.geometry = message.geometry.map((e) => e);
     } else {
       obj.geometry = [];
     }
     return obj;
   },
 };
+
+const baseTile_Layer: object = { version: 0, name: '', keys: '', extent: 0 };
 
 export const Tile_Layer = {
   encode(message: Tile_Layer, writer: Writer = Writer.create()): Writer {
@@ -449,7 +443,8 @@ export const Tile_Layer = {
     writer.uint32(40).uint32(message.extent);
     return writer;
   },
-  decode(input: Uint8Array | Reader, length?: number): Tile_Layer {
+
+  decode(input: Reader | Uint8Array, length?: number): Tile_Layer {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseTile_Layer } as Tile_Layer;
@@ -484,6 +479,7 @@ export const Tile_Layer = {
     }
     return message;
   },
+
   fromJSON(object: any): Tile_Layer {
     const message = { ...baseTile_Layer } as Tile_Layer;
     message.features = [];
@@ -497,7 +493,7 @@ export const Tile_Layer = {
     if (object.name !== undefined && object.name !== null) {
       message.name = String(object.name);
     } else {
-      message.name = "";
+      message.name = '';
     }
     if (object.features !== undefined && object.features !== null) {
       for (const e of object.features) {
@@ -521,6 +517,7 @@ export const Tile_Layer = {
     }
     return message;
   },
+
   fromPartial(object: DeepPartial<Tile_Layer>): Tile_Layer {
     const message = { ...baseTile_Layer } as Tile_Layer;
     message.features = [];
@@ -534,7 +531,7 @@ export const Tile_Layer = {
     if (object.name !== undefined && object.name !== null) {
       message.name = object.name;
     } else {
-      message.name = "";
+      message.name = '';
     }
     if (object.features !== undefined && object.features !== null) {
       for (const e of object.features) {
@@ -558,22 +555,23 @@ export const Tile_Layer = {
     }
     return message;
   },
+
   toJSON(message: Tile_Layer): unknown {
     const obj: any = {};
     message.version !== undefined && (obj.version = message.version);
     message.name !== undefined && (obj.name = message.name);
     if (message.features) {
-      obj.features = message.features.map(e => e ? Tile_Feature.toJSON(e) : undefined);
+      obj.features = message.features.map((e) => (e ? Tile_Feature.toJSON(e) : undefined));
     } else {
       obj.features = [];
     }
     if (message.keys) {
-      obj.keys = message.keys.map(e => e);
+      obj.keys = message.keys.map((e) => e);
     } else {
       obj.keys = [];
     }
     if (message.values) {
-      obj.values = message.values.map(e => e ? Tile_Value.toJSON(e) : undefined);
+      obj.values = message.values.map((e) => (e ? Tile_Value.toJSON(e) : undefined));
     } else {
       obj.values = [];
     }
@@ -582,13 +580,18 @@ export const Tile_Layer = {
   },
 };
 
-if (util.Long !== Long as any) {
-  util.Long = Long as any;
-  configure();
-}
+declare var self: any | undefined;
+declare var window: any | undefined;
+var globalThis: any = (() => {
+  if (typeof globalThis !== 'undefined') return globalThis;
+  if (typeof self !== 'undefined') return self;
+  if (typeof window !== 'undefined') return window;
+  if (typeof global !== 'undefined') return global;
+  throw new Error('Unable to locate global object');
+})();
 
 type Builtin = Date | Function | Uint8Array | string | number | undefined;
-type DeepPartial<T> = T extends Builtin
+export type DeepPartial<T> = T extends Builtin
   ? T
   : T extends Array<infer U>
   ? Array<DeepPartial<U>>
@@ -597,3 +600,15 @@ type DeepPartial<T> = T extends Builtin
   : T extends {}
   ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
+
+function longToNumber(long: Long): number {
+  if (long.gt(Number.MAX_SAFE_INTEGER)) {
+    throw new globalThis.Error('Value is larger than Number.MAX_SAFE_INTEGER');
+  }
+  return long.toNumber();
+}
+
+if (util.Long !== Long) {
+  util.Long = Long as any;
+  configure();
+}

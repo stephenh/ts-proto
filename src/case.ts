@@ -1,4 +1,4 @@
-import { Options } from './main';
+import { Options } from './options';
 
 export function maybeSnakeToCamel(s: string, options: Options): string {
   if (options.snakeToCamel) {

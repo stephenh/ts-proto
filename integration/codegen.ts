@@ -2,10 +2,12 @@ import { mkdir, readFile, writeFile } from 'fs';
 import { parse } from 'path';
 import { promisify } from 'util';
 import { google } from '../build/pbjs';
-import { generateFile } from '../src/main';
+import { generateFile, makeUtils } from '../src/main';
 import { createTypeMap } from '../src/types';
-import { optionsFromParameter } from '../src/utils';
+import { prefixDisableLinter } from '../src/utils';
 import CodeGeneratorRequest = google.protobuf.compiler.CodeGeneratorRequest;
+import { getTsPoetOpts, optionsFromParameter } from '../src/options';
+import { Context } from '../src/context';
 
 /**
  * Generates output for our integration tests from their example proto files.
@@ -25,13 +27,21 @@ async function generate(binFile: string, baseDir: string, parameter: string) {
   const stdin = await promisify(readFile)(binFile);
   const request = CodeGeneratorRequest.decode(stdin);
   request.parameter = parameter;
-  const map = createTypeMap(request, optionsFromParameter(parameter || ''));
+
+  const options = optionsFromParameter(parameter || '');
+  const typeMap = createTypeMap(request, options);
+  const utils = makeUtils(options);
+  const ctx: Context = { options, typeMap, utils };
+
   for (let file of request.protoFile) {
-    const spec = generateFile(map, file, request.parameter);
-    const filePath = `${baseDir}/${spec.path}`;
+    const [path, code] = generateFile(ctx, file);
+    const filePath = `${baseDir}/${path}`;
     const dirPath = parse(filePath).dir;
     await promisify(mkdir)(dirPath, { recursive: true }).catch(() => {});
-    await promisify(writeFile)(filePath, spec.toString());
+    await promisify(writeFile)(
+      filePath,
+      prefixDisableLinter(await code.toStringWithImports({ ...getTsPoetOpts(options), path }))
+    );
   }
 }
 
