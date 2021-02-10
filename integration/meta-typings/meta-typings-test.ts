@@ -131,7 +131,7 @@ describe('simple', () => {
               "weakDependency": Array [],
             },
             "references": Object {
-              "google.type.DateMessage": Object {
+              ".google.type.DateMessage": Object {
                 "decode": [Function],
                 "encode": [Function],
               },
@@ -553,39 +553,39 @@ describe('simple', () => {
               "weakDependency": Array [],
             },
             "references": Object {
-              "google.protobuf.BoolValue": Object {
+              ".google.protobuf.BoolValue": Object {
                 "decode": [Function],
                 "encode": [Function],
               },
-              "google.protobuf.BytesValue": Object {
+              ".google.protobuf.BytesValue": Object {
                 "decode": [Function],
                 "encode": [Function],
               },
-              "google.protobuf.DoubleValue": Object {
+              ".google.protobuf.DoubleValue": Object {
                 "decode": [Function],
                 "encode": [Function],
               },
-              "google.protobuf.FloatValue": Object {
+              ".google.protobuf.FloatValue": Object {
                 "decode": [Function],
                 "encode": [Function],
               },
-              "google.protobuf.Int32Value": Object {
+              ".google.protobuf.Int32Value": Object {
                 "decode": [Function],
                 "encode": [Function],
               },
-              "google.protobuf.Int64Value": Object {
+              ".google.protobuf.Int64Value": Object {
                 "decode": [Function],
                 "encode": [Function],
               },
-              "google.protobuf.StringValue": Object {
+              ".google.protobuf.StringValue": Object {
                 "decode": [Function],
                 "encode": [Function],
               },
-              "google.protobuf.UInt32Value": Object {
+              ".google.protobuf.UInt32Value": Object {
                 "decode": [Function],
                 "encode": [Function],
               },
-              "google.protobuf.UInt64Value": Object {
+              ".google.protobuf.UInt64Value": Object {
                 "decode": [Function],
                 "encode": [Function],
               },
@@ -767,7 +767,7 @@ describe('simple', () => {
               "weakDependency": Array [],
             },
             "references": Object {
-              "google.protobuf.Timestamp": Object {
+              ".google.protobuf.Timestamp": Object {
                 "decode": [Function],
                 "encode": [Function],
               },
@@ -951,7 +951,7 @@ describe('simple', () => {
                   "weakDependency": Array [],
                 },
                 "references": Object {
-                  "google.protobuf.Timestamp": Object {
+                  ".google.protobuf.Timestamp": Object {
                     "decode": [Function],
                     "encode": [Function],
                   },
@@ -990,7 +990,7 @@ describe('simple', () => {
               "weakDependency": Array [],
             },
             "references": Object {
-              "simple.ImportedThing": Object {
+              ".simple.ImportedThing": Object {
                 "decode": [Function],
                 "encode": [Function],
               },
@@ -1982,7 +1982,11 @@ describe('simple', () => {
           "weakDependency": Array [],
         },
         "references": Object {
-          "Child.Type": Object {
+          ".simple.Child": Object {
+            "decode": [Function],
+            "encode": [Function],
+          },
+          ".simple.Child.Type": Object {
             "-1": "UNRECOGNIZED",
             "0": "UNKNOWN",
             "1": "GOOD",
@@ -1992,7 +1996,19 @@ describe('simple', () => {
             "UNKNOWN": 0,
             "UNRECOGNIZED": -1,
           },
-          "Nested.InnerEnum": Object {
+          ".simple.Empty": Object {
+            "decode": [Function],
+            "encode": [Function],
+          },
+          ".simple.Entity": Object {
+            "decode": [Function],
+            "encode": [Function],
+          },
+          ".simple.Nested": Object {
+            "decode": [Function],
+            "encode": [Function],
+          },
+          ".simple.Nested.InnerEnum": Object {
             "-1": "UNRECOGNIZED",
             "0": "UNKNOWN_INNER",
             "100": "GOOD",
@@ -2002,8 +2018,84 @@ describe('simple', () => {
             "UNKNOWN_INNER": 0,
             "UNRECOGNIZED": -1,
           },
-          "PingService": [Function],
-          "StateEnum": Object {
+          ".simple.Nested.InnerMessage": Object {
+            "decode": [Function],
+            "encode": [Function],
+          },
+          ".simple.Nested.InnerMessage.DeepMessage": Object {
+            "decode": [Function],
+            "encode": [Function],
+          },
+          ".simple.Numbers": Object {
+            "decode": [Function],
+            "encode": [Function],
+          },
+          ".simple.OneOfMessage": Object {
+            "decode": [Function],
+            "encode": [Function],
+          },
+          ".simple.PingRequest": Object {
+            "decode": [Function],
+            "encode": [Function],
+          },
+          ".simple.PingResponse": Object {
+            "decode": [Function],
+            "encode": [Function],
+          },
+          ".simple.PingService": [Function],
+          ".simple.Simple": Object {
+            "decode": [Function],
+            "encode": [Function],
+          },
+          ".simple.SimpleButOptional": Object {
+            "decode": [Function],
+            "encode": [Function],
+          },
+          ".simple.SimpleWithMap": Object {
+            "decode": [Function],
+            "encode": [Function],
+          },
+          ".simple.SimpleWithMap.EntitiesByIdEntry": Object {
+            "decode": [Function],
+            "encode": [Function],
+          },
+          ".simple.SimpleWithMap.IntLookupEntry": Object {
+            "decode": [Function],
+            "encode": [Function],
+          },
+          ".simple.SimpleWithMap.MapOfBytesEntry": Object {
+            "decode": [Function],
+            "encode": [Function],
+          },
+          ".simple.SimpleWithMap.MapOfTimestampsEntry": Object {
+            "decode": [Function],
+            "encode": [Function],
+          },
+          ".simple.SimpleWithMap.NameLookupEntry": Object {
+            "decode": [Function],
+            "encode": [Function],
+          },
+          ".simple.SimpleWithMapOfEnums": Object {
+            "decode": [Function],
+            "encode": [Function],
+          },
+          ".simple.SimpleWithMapOfEnums.EnumsByIdEntry": Object {
+            "decode": [Function],
+            "encode": [Function],
+          },
+          ".simple.SimpleWithSnakeCaseMap": Object {
+            "decode": [Function],
+            "encode": [Function],
+          },
+          ".simple.SimpleWithSnakeCaseMap.EntitiesByIdEntry": Object {
+            "decode": [Function],
+            "encode": [Function],
+          },
+          ".simple.SimpleWithWrappers": Object {
+            "decode": [Function],
+            "encode": [Function],
+          },
+          ".simple.StateEnum": Object {
             "-1": "UNRECOGNIZED",
             "0": "UNKNOWN",
             "2": "ON",
@@ -2012,98 +2104,6 @@ describe('simple', () => {
             "ON": 2,
             "UNKNOWN": 0,
             "UNRECOGNIZED": -1,
-          },
-          "simple.Child": Object {
-            "decode": [Function],
-            "encode": [Function],
-          },
-          "simple.Empty": Object {
-            "decode": [Function],
-            "encode": [Function],
-          },
-          "simple.Entity": Object {
-            "decode": [Function],
-            "encode": [Function],
-          },
-          "simple.Nested": Object {
-            "decode": [Function],
-            "encode": [Function],
-          },
-          "simple.Nested.InnerMessage": Object {
-            "decode": [Function],
-            "encode": [Function],
-          },
-          "simple.Nested.InnerMessage.DeepMessage": Object {
-            "decode": [Function],
-            "encode": [Function],
-          },
-          "simple.Numbers": Object {
-            "decode": [Function],
-            "encode": [Function],
-          },
-          "simple.OneOfMessage": Object {
-            "decode": [Function],
-            "encode": [Function],
-          },
-          "simple.PingRequest": Object {
-            "decode": [Function],
-            "encode": [Function],
-          },
-          "simple.PingResponse": Object {
-            "decode": [Function],
-            "encode": [Function],
-          },
-          "simple.Simple": Object {
-            "decode": [Function],
-            "encode": [Function],
-          },
-          "simple.SimpleButOptional": Object {
-            "decode": [Function],
-            "encode": [Function],
-          },
-          "simple.SimpleWithMap": Object {
-            "decode": [Function],
-            "encode": [Function],
-          },
-          "simple.SimpleWithMap.EntitiesByIdEntry": Object {
-            "decode": [Function],
-            "encode": [Function],
-          },
-          "simple.SimpleWithMap.IntLookupEntry": Object {
-            "decode": [Function],
-            "encode": [Function],
-          },
-          "simple.SimpleWithMap.MapOfBytesEntry": Object {
-            "decode": [Function],
-            "encode": [Function],
-          },
-          "simple.SimpleWithMap.MapOfTimestampsEntry": Object {
-            "decode": [Function],
-            "encode": [Function],
-          },
-          "simple.SimpleWithMap.NameLookupEntry": Object {
-            "decode": [Function],
-            "encode": [Function],
-          },
-          "simple.SimpleWithMapOfEnums": Object {
-            "decode": [Function],
-            "encode": [Function],
-          },
-          "simple.SimpleWithMapOfEnums.EnumsByIdEntry": Object {
-            "decode": [Function],
-            "encode": [Function],
-          },
-          "simple.SimpleWithSnakeCaseMap": Object {
-            "decode": [Function],
-            "encode": [Function],
-          },
-          "simple.SimpleWithSnakeCaseMap.EntitiesByIdEntry": Object {
-            "decode": [Function],
-            "encode": [Function],
-          },
-          "simple.SimpleWithWrappers": Object {
-            "decode": [Function],
-            "encode": [Function],
           },
         },
       }
