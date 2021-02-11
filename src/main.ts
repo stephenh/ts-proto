@@ -400,7 +400,8 @@ function makeTimestampMethods(options: Options, longs: ReturnType<typeof makeLon
 
   const fromJsonTimestamp = conditionalOutput(
     'fromJsonTimestamp',
-    code`
+    options.useDate
+      ? code`
       function fromJsonTimestamp(o: any): Date {
         if (o instanceof Date) {
           return o;
@@ -408,6 +409,17 @@ function makeTimestampMethods(options: Options, longs: ReturnType<typeof makeLon
           return new Date(o);
         } else {
           return ${fromTimestamp}(Timestamp.fromJSON(o));
+        }
+      }
+    `
+      : code`
+      function fromJsonTimestamp(o: any): Timestamp {
+        if (o instanceof Date) {
+          return ${toTimestamp}(o);
+        } else if (typeof o === "string") {
+          return ${toTimestamp}(new Date(o));
+        } else {
+          return Timestamp.fromJSON(o);
         }
       }
     `
@@ -574,7 +586,9 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
       readSnippet = code`${type}.decode(reader, reader.uint32()).value`;
     } else if (isTimestamp(field)) {
       const type = basicTypeName(ctx, field, { keepValueType: true });
-      readSnippet = code`${utils.fromTimestamp}(${type}.decode(reader, reader.uint32()))`;
+      readSnippet = options.useDate
+        ? code`${utils.fromTimestamp}(${type}.decode(reader, reader.uint32()))`
+        : code`${type}.decode(reader, reader.uint32())`;
     } else if (isMessage(field)) {
       const type = basicTypeName(ctx, field);
       readSnippet = code`${type}.decode(reader, reader.uint32())`;
@@ -660,7 +674,9 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
       const tag = ((field.number << 3) | 2) >>> 0;
       const type = basicTypeName(ctx, field, { keepValueType: true });
       writeSnippet = (place) =>
-        code`${type}.encode(${utils.toTimestamp}(${place}), writer.uint32(${tag}).fork()).ldelim()`;
+        options.useDate
+          ? code`${type}.encode(${utils.toTimestamp}(${place}), writer.uint32(${tag}).fork()).ldelim()`
+          : code`${type}.encode(${place}, writer.uint32(${tag}).fork()).ldelim()`;
     } else if (isValueType(ctx, field)) {
       const tag = ((field.number << 3) | 2) >>> 0;
       const type = basicTypeName(ctx, field, { keepValueType: true });
@@ -887,7 +903,9 @@ function generateToJson(ctx: Context, fullName: string, messageDesc: DescriptorP
           ? code`${from} !== undefined ? ${toJson}(${from}) : undefined`
           : code`${toJson}(${from})`;
       } else if (isTimestamp(field)) {
-        return code`${from} !== undefined ? ${from}.toISOString() : null`;
+        return options.useDate
+          ? code`${from} !== undefined ? ${from}.toISOString() : null`
+          : code`${from} !== undefined ? ${utils.fromTimestamp}(${from}).toISOString() : null`;
       } else if (isMapType(ctx, messageDesc, field)) {
         // For map types, drill-in and then admittedly re-hard-code our per-value-type logic
         const valueType = (typeMap.get(field.typeName)![2] as DescriptorProto).field[1];
@@ -897,7 +915,7 @@ function generateToJson(ctx: Context, fullName: string, messageDesc: DescriptorP
         } else if (isBytes(valueType)) {
           return code`${utils.base64FromBytes}(${from})`;
         } else if (isTimestamp(valueType)) {
-          return code`${from}.toISOString()`;
+          return options.useDate ? code`${from}.toISOString()` : code`${utils.fromTimestamp}(${from}).toISOString()`;
         } else if (isScalar(valueType)) {
           return code`${from}`;
         } else {
@@ -959,6 +977,7 @@ function generateToJson(ctx: Context, fullName: string, messageDesc: DescriptorP
 function generateFromPartial(ctx: Context, fullName: string, messageDesc: DescriptorProto): Code {
   const { options, utils, typeMap } = ctx;
   const chunks: Code[] = [];
+  const Timestamp = imp('Timestamp@./google/protobuf/timestamp');
 
   // create the basic function declaration
   chunks.push(code`
@@ -978,8 +997,10 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
     const fieldName = maybeSnakeToCamel(field.name, options);
 
     const readSnippet = (from: string): Code => {
-      if (isPrimitive(field) || isTimestamp(field) || isValueType(ctx, field)) {
+      if (isPrimitive(field) || isValueType(ctx, field)) {
         return code`${from}`;
+      } else if (isTimestamp(field)) {
+        return options.useDate ? code`${from}` : code`${Timestamp}.fromPartial(${from})`;
       } else if (isMessage(field)) {
         if (isRepeated(field) && isMapType(ctx, messageDesc, field)) {
           const valueType = (typeMap.get(field.typeName)![2] as DescriptorProto).field[1];
@@ -993,7 +1014,7 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
               return code`${cstr}(${from})`;
             }
           } else if (isTimestamp(valueType)) {
-            return code`${from}`;
+            return options.useDate ? code`${from}` : code`${Timestamp}.fromPartial(${from})`;
           } else {
             const type = basicTypeName(ctx, valueType);
             return code`${type}.fromPartial(${from})`;
@@ -1015,7 +1036,7 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
         chunks.push(code`
           Object.entries(object.${fieldName}).forEach(([key, value]) => {
             if (value !== undefined) {
-              message.${fieldName}[${i}] = ${readSnippet('value')}; 
+              message.${fieldName}[${i}] = ${readSnippet('value')};
             }
           });
         `);
