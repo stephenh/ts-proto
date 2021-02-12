@@ -97,8 +97,10 @@ export interface BytesValue {
 const baseDoubleValue: object = { value: 0 };
 
 export const DoubleValue = {
-  encode(message: DoubleValue, writer: Writer = Writer.create()): Writer {
-    writer.uint32(9).double(message.value);
+  encode(message: DoubleValue, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
+    if (forceDefaultSerialization || message.value !== 0) {
+      writer.uint32(9).double(message.value);
+    }
     return writer;
   },
 
@@ -150,8 +152,10 @@ export const DoubleValue = {
 const baseFloatValue: object = { value: 0 };
 
 export const FloatValue = {
-  encode(message: FloatValue, writer: Writer = Writer.create()): Writer {
-    writer.uint32(13).float(message.value);
+  encode(message: FloatValue, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
+    if (forceDefaultSerialization || message.value !== 0) {
+      writer.uint32(13).float(message.value);
+    }
     return writer;
   },
 
@@ -203,8 +207,10 @@ export const FloatValue = {
 const baseInt64Value: object = { value: '0' };
 
 export const Int64Value = {
-  encode(message: Int64Value, writer: Writer = Writer.create()): Writer {
-    writer.uint32(8).int64(message.value);
+  encode(message: Int64Value, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
+    if (forceDefaultSerialization || message.value !== '0') {
+      writer.uint32(8).int64(message.value);
+    }
     return writer;
   },
 
@@ -256,8 +262,10 @@ export const Int64Value = {
 const baseUInt64Value: object = { value: '0' };
 
 export const UInt64Value = {
-  encode(message: UInt64Value, writer: Writer = Writer.create()): Writer {
-    writer.uint32(8).uint64(message.value);
+  encode(message: UInt64Value, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
+    if (forceDefaultSerialization || message.value !== '0') {
+      writer.uint32(8).uint64(message.value);
+    }
     return writer;
   },
 
@@ -309,8 +317,10 @@ export const UInt64Value = {
 const baseInt32Value: object = { value: 0 };
 
 export const Int32Value = {
-  encode(message: Int32Value, writer: Writer = Writer.create()): Writer {
-    writer.uint32(8).int32(message.value);
+  encode(message: Int32Value, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
+    if (forceDefaultSerialization || message.value !== 0) {
+      writer.uint32(8).int32(message.value);
+    }
     return writer;
   },
 
@@ -362,8 +372,10 @@ export const Int32Value = {
 const baseUInt32Value: object = { value: 0 };
 
 export const UInt32Value = {
-  encode(message: UInt32Value, writer: Writer = Writer.create()): Writer {
-    writer.uint32(8).uint32(message.value);
+  encode(message: UInt32Value, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
+    if (forceDefaultSerialization || message.value !== 0) {
+      writer.uint32(8).uint32(message.value);
+    }
     return writer;
   },
 
@@ -415,8 +427,10 @@ export const UInt32Value = {
 const baseBoolValue: object = { value: false };
 
 export const BoolValue = {
-  encode(message: BoolValue, writer: Writer = Writer.create()): Writer {
-    writer.uint32(8).bool(message.value);
+  encode(message: BoolValue, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
+    if (forceDefaultSerialization || message.value === true) {
+      writer.uint32(8).bool(message.value);
+    }
     return writer;
   },
 
@@ -468,8 +482,10 @@ export const BoolValue = {
 const baseStringValue: object = { value: '' };
 
 export const StringValue = {
-  encode(message: StringValue, writer: Writer = Writer.create()): Writer {
-    writer.uint32(10).string(message.value);
+  encode(message: StringValue, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
+    if (forceDefaultSerialization || message.value !== '') {
+      writer.uint32(10).string(message.value);
+    }
     return writer;
   },
 
@@ -521,8 +537,10 @@ export const StringValue = {
 const baseBytesValue: object = {};
 
 export const BytesValue = {
-  encode(message: BytesValue, writer: Writer = Writer.create()): Writer {
-    writer.uint32(10).bytes(message.value);
+  encode(message: BytesValue, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
+    if (forceDefaultSerialization || message.value.length !== 0) {
+      writer.uint32(10).bytes(message.value);
+    }
     return writer;
   },
 

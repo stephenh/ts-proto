@@ -10,8 +10,10 @@ export interface Point {
 const basePoint: object = {};
 
 export const Point = {
-  encode(message: Point, writer: Writer = Writer.create()): Writer {
-    writer.uint32(10).bytes(message.data);
+  encode(message: Point, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
+    if (forceDefaultSerialization || message.data.length !== 0) {
+      writer.uint32(10).bytes(message.data);
+    }
     return writer;
   },
 

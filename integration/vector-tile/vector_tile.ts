@@ -81,9 +81,9 @@ export interface Tile_Layer {
 const baseTile: object = {};
 
 export const Tile = {
-  encode(message: Tile, writer: Writer = Writer.create()): Writer {
+  encode(message: Tile, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
     for (const v of message.layers) {
-      Tile_Layer.encode(v!, writer.uint32(26).fork()).ldelim();
+      Tile_Layer.encode(v!, writer.uint32(26).fork(), false).ldelim();
     }
     return writer;
   },
@@ -151,14 +151,28 @@ const baseTile_Value: object = {
 };
 
 export const Tile_Value = {
-  encode(message: Tile_Value, writer: Writer = Writer.create()): Writer {
-    writer.uint32(10).string(message.stringValue);
-    writer.uint32(21).float(message.floatValue);
-    writer.uint32(25).double(message.doubleValue);
-    writer.uint32(32).int64(message.intValue);
-    writer.uint32(40).uint64(message.uintValue);
-    writer.uint32(48).sint64(message.sintValue);
-    writer.uint32(56).bool(message.boolValue);
+  encode(message: Tile_Value, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
+    if (forceDefaultSerialization || message.stringValue !== '') {
+      writer.uint32(10).string(message.stringValue);
+    }
+    if (forceDefaultSerialization || message.floatValue !== 0) {
+      writer.uint32(21).float(message.floatValue);
+    }
+    if (forceDefaultSerialization || message.doubleValue !== 0) {
+      writer.uint32(25).double(message.doubleValue);
+    }
+    if (forceDefaultSerialization || message.intValue !== 0) {
+      writer.uint32(32).int64(message.intValue);
+    }
+    if (forceDefaultSerialization || message.uintValue !== 0) {
+      writer.uint32(40).uint64(message.uintValue);
+    }
+    if (forceDefaultSerialization || message.sintValue !== 0) {
+      writer.uint32(48).sint64(message.sintValue);
+    }
+    if (forceDefaultSerialization || message.boolValue === true) {
+      writer.uint32(56).bool(message.boolValue);
+    }
     return writer;
   },
 
@@ -294,14 +308,18 @@ export const Tile_Value = {
 const baseTile_Feature: object = { id: 0, tags: 0, type: 0, geometry: 0 };
 
 export const Tile_Feature = {
-  encode(message: Tile_Feature, writer: Writer = Writer.create()): Writer {
-    writer.uint32(8).uint64(message.id);
+  encode(message: Tile_Feature, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
+    if (forceDefaultSerialization || message.id !== 0) {
+      writer.uint32(8).uint64(message.id);
+    }
     writer.uint32(18).fork();
     for (const v of message.tags) {
       writer.uint32(v);
     }
     writer.ldelim();
-    writer.uint32(24).int32(message.type);
+    if (forceDefaultSerialization || message.type !== 0) {
+      writer.uint32(24).int32(message.type);
+    }
     writer.uint32(34).fork();
     for (const v of message.geometry) {
       writer.uint32(v);
@@ -428,19 +446,25 @@ export const Tile_Feature = {
 const baseTile_Layer: object = { version: 0, name: '', keys: '', extent: 0 };
 
 export const Tile_Layer = {
-  encode(message: Tile_Layer, writer: Writer = Writer.create()): Writer {
-    writer.uint32(120).uint32(message.version);
-    writer.uint32(10).string(message.name);
+  encode(message: Tile_Layer, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
+    if (forceDefaultSerialization || message.version !== 0) {
+      writer.uint32(120).uint32(message.version);
+    }
+    if (forceDefaultSerialization || message.name !== '') {
+      writer.uint32(10).string(message.name);
+    }
     for (const v of message.features) {
-      Tile_Feature.encode(v!, writer.uint32(18).fork()).ldelim();
+      Tile_Feature.encode(v!, writer.uint32(18).fork(), false).ldelim();
     }
     for (const v of message.keys) {
       writer.uint32(26).string(v!);
     }
     for (const v of message.values) {
-      Tile_Value.encode(v!, writer.uint32(34).fork()).ldelim();
+      Tile_Value.encode(v!, writer.uint32(34).fork(), false).ldelim();
     }
-    writer.uint32(40).uint32(message.extent);
+    if (forceDefaultSerialization || message.extent !== 0) {
+      writer.uint32(40).uint32(message.extent);
+    }
     return writer;
   },
 

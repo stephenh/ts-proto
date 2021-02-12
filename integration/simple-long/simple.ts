@@ -49,24 +49,24 @@ export interface Numbers {
 const baseSimpleWithWrappers: object = {};
 
 export const SimpleWithWrappers = {
-  encode(message: SimpleWithWrappers, writer: Writer = Writer.create()): Writer {
+  encode(message: SimpleWithWrappers, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
     if (message.name !== undefined) {
-      StringValue.encode({ value: message.name! }, writer.uint32(10).fork()).ldelim();
+      StringValue.encode({ value: message.name! }, writer.uint32(10).fork(), false).ldelim();
     }
     if (message.age !== undefined) {
-      Int32Value.encode({ value: message.age! }, writer.uint32(18).fork()).ldelim();
+      Int32Value.encode({ value: message.age! }, writer.uint32(18).fork(), false).ldelim();
     }
     if (message.enabled !== undefined) {
-      BoolValue.encode({ value: message.enabled! }, writer.uint32(26).fork()).ldelim();
+      BoolValue.encode({ value: message.enabled! }, writer.uint32(26).fork(), false).ldelim();
     }
     if (message.bananas !== undefined) {
-      Int64Value.encode({ value: message.bananas! }, writer.uint32(34).fork()).ldelim();
+      Int64Value.encode({ value: message.bananas! }, writer.uint32(34).fork(), false).ldelim();
     }
     for (const v of message.coins) {
-      Int32Value.encode({ value: v!! }, writer.uint32(50).fork()).ldelim();
+      Int32Value.encode({ value: v!! }, writer.uint32(50).fork(), false).ldelim();
     }
     for (const v of message.snacks) {
-      StringValue.encode({ value: v!! }, writer.uint32(58).fork()).ldelim();
+      StringValue.encode({ value: v!! }, writer.uint32(58).fork(), false).ldelim();
     }
     return writer;
   },
@@ -203,12 +203,12 @@ export const SimpleWithWrappers = {
 const baseSimpleWithMap: object = {};
 
 export const SimpleWithMap = {
-  encode(message: SimpleWithMap, writer: Writer = Writer.create()): Writer {
+  encode(message: SimpleWithMap, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
     Object.entries(message.nameLookup).forEach(([key, value]) => {
-      SimpleWithMap_NameLookupEntry.encode({ key: key as any, value }, writer.uint32(18).fork()).ldelim();
+      SimpleWithMap_NameLookupEntry.encode({ key: key as any, value }, writer.uint32(18).fork(), true).ldelim();
     });
     Object.entries(message.intLookup).forEach(([key, value]) => {
-      SimpleWithMap_IntLookupEntry.encode({ key: key as any, value }, writer.uint32(26).fork()).ldelim();
+      SimpleWithMap_IntLookupEntry.encode({ key: key as any, value }, writer.uint32(26).fork(), true).ldelim();
     });
     return writer;
   },
@@ -301,9 +301,17 @@ export const SimpleWithMap = {
 const baseSimpleWithMap_NameLookupEntry: object = { key: '', value: '' };
 
 export const SimpleWithMap_NameLookupEntry = {
-  encode(message: SimpleWithMap_NameLookupEntry, writer: Writer = Writer.create()): Writer {
-    writer.uint32(10).string(message.key);
-    writer.uint32(18).string(message.value);
+  encode(
+    message: SimpleWithMap_NameLookupEntry,
+    writer: Writer = Writer.create(),
+    forceDefaultSerialization = false
+  ): Writer {
+    if (forceDefaultSerialization || message.key !== '') {
+      writer.uint32(10).string(message.key);
+    }
+    if (forceDefaultSerialization || message.value !== '') {
+      writer.uint32(18).string(message.value);
+    }
     return writer;
   },
 
@@ -369,9 +377,17 @@ export const SimpleWithMap_NameLookupEntry = {
 const baseSimpleWithMap_IntLookupEntry: object = { key: 0, value: 0 };
 
 export const SimpleWithMap_IntLookupEntry = {
-  encode(message: SimpleWithMap_IntLookupEntry, writer: Writer = Writer.create()): Writer {
-    writer.uint32(8).int32(message.key);
-    writer.uint32(16).int32(message.value);
+  encode(
+    message: SimpleWithMap_IntLookupEntry,
+    writer: Writer = Writer.create(),
+    forceDefaultSerialization = false
+  ): Writer {
+    if (forceDefaultSerialization || message.key !== 0) {
+      writer.uint32(8).int32(message.key);
+    }
+    if (forceDefaultSerialization || message.value !== 0) {
+      writer.uint32(16).int32(message.value);
+    }
     return writer;
   },
 
@@ -451,19 +467,43 @@ const baseNumbers: object = {
 };
 
 export const Numbers = {
-  encode(message: Numbers, writer: Writer = Writer.create()): Writer {
-    writer.uint32(9).double(message.double);
-    writer.uint32(21).float(message.float);
-    writer.uint32(24).int32(message.int32);
-    writer.uint32(32).int64(message.int64);
-    writer.uint32(40).uint32(message.uint32);
-    writer.uint32(48).uint64(message.uint64);
-    writer.uint32(56).sint32(message.sint32);
-    writer.uint32(64).sint64(message.sint64);
-    writer.uint32(77).fixed32(message.fixed32);
-    writer.uint32(81).fixed64(message.fixed64);
-    writer.uint32(93).sfixed32(message.sfixed32);
-    writer.uint32(97).sfixed64(message.sfixed64);
+  encode(message: Numbers, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
+    if (forceDefaultSerialization || message.double !== 0) {
+      writer.uint32(9).double(message.double);
+    }
+    if (forceDefaultSerialization || message.float !== 0) {
+      writer.uint32(21).float(message.float);
+    }
+    if (forceDefaultSerialization || message.int32 !== 0) {
+      writer.uint32(24).int32(message.int32);
+    }
+    if (forceDefaultSerialization || !message.int64.isZero()) {
+      writer.uint32(32).int64(message.int64);
+    }
+    if (forceDefaultSerialization || message.uint32 !== 0) {
+      writer.uint32(40).uint32(message.uint32);
+    }
+    if (forceDefaultSerialization || !message.uint64.isZero()) {
+      writer.uint32(48).uint64(message.uint64);
+    }
+    if (forceDefaultSerialization || message.sint32 !== 0) {
+      writer.uint32(56).sint32(message.sint32);
+    }
+    if (forceDefaultSerialization || !message.sint64.isZero()) {
+      writer.uint32(64).sint64(message.sint64);
+    }
+    if (forceDefaultSerialization || message.fixed32 !== 0) {
+      writer.uint32(77).fixed32(message.fixed32);
+    }
+    if (forceDefaultSerialization || !message.fixed64.isZero()) {
+      writer.uint32(81).fixed64(message.fixed64);
+    }
+    if (forceDefaultSerialization || message.sfixed32 !== 0) {
+      writer.uint32(93).sfixed32(message.sfixed32);
+    }
+    if (forceDefaultSerialization || !message.sfixed64.isZero()) {
+      writer.uint32(97).sfixed64(message.sfixed64);
+    }
     writer.uint32(106).fork();
     for (const v of message.manyUint64) {
       writer.uint64(v);

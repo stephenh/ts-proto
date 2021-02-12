@@ -10,10 +10,12 @@ export interface Foo {
 const baseFoo: object = { name: '' };
 
 export const Foo = {
-  encode(message: Foo, writer: Writer = Writer.create()): Writer {
-    writer.uint32(10).string(message.name);
+  encode(message: Foo, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
+    if (forceDefaultSerialization || message.name !== '') {
+      writer.uint32(10).string(message.name);
+    }
     if (message.bar !== undefined) {
-      Bar.encode(message.bar, writer.uint32(18).fork()).ldelim();
+      Bar.encode(message.bar, writer.uint32(18).fork(), false).ldelim();
     }
     return writer;
   },

@@ -107,9 +107,13 @@ export interface Timestamp {
 const baseTimestamp: object = { seconds: 0, nanos: 0 };
 
 export const Timestamp = {
-  encode(message: Timestamp, writer: Writer = Writer.create()): Writer {
-    writer.uint32(8).int64(message.seconds);
-    writer.uint32(16).int32(message.nanos);
+  encode(message: Timestamp, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
+    if (forceDefaultSerialization || message.seconds !== 0) {
+      writer.uint32(8).int64(message.seconds);
+    }
+    if (forceDefaultSerialization || message.nanos !== 0) {
+      writer.uint32(16).int32(message.nanos);
+    }
     return writer;
   },
 

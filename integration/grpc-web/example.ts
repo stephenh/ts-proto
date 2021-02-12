@@ -98,9 +98,13 @@ export interface Empty {}
 const baseDashFlash: object = { msg: '', type: 0 };
 
 export const DashFlash = {
-  encode(message: DashFlash, writer: Writer = Writer.create()): Writer {
-    writer.uint32(10).string(message.msg);
-    writer.uint32(16).int32(message.type);
+  encode(message: DashFlash, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
+    if (forceDefaultSerialization || message.msg !== '') {
+      writer.uint32(10).string(message.msg);
+    }
+    if (forceDefaultSerialization || message.type !== 0) {
+      writer.uint32(16).int32(message.type);
+    }
     return writer;
   },
 
@@ -166,13 +170,15 @@ export const DashFlash = {
 const baseDashUserSettingsState: object = { email: '' };
 
 export const DashUserSettingsState = {
-  encode(message: DashUserSettingsState, writer: Writer = Writer.create()): Writer {
-    writer.uint32(10).string(message.email);
+  encode(message: DashUserSettingsState, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
+    if (forceDefaultSerialization || message.email !== '') {
+      writer.uint32(10).string(message.email);
+    }
     if (message.urls !== undefined) {
-      DashUserSettingsState_URLs.encode(message.urls, writer.uint32(50).fork()).ldelim();
+      DashUserSettingsState_URLs.encode(message.urls, writer.uint32(50).fork(), false).ldelim();
     }
     for (const v of message.flashes) {
-      DashFlash.encode(v!, writer.uint32(58).fork()).ldelim();
+      DashFlash.encode(v!, writer.uint32(58).fork(), false).ldelim();
     }
     return writer;
   },
@@ -261,9 +267,17 @@ export const DashUserSettingsState = {
 const baseDashUserSettingsState_URLs: object = { connectGoogle: '', connectGithub: '' };
 
 export const DashUserSettingsState_URLs = {
-  encode(message: DashUserSettingsState_URLs, writer: Writer = Writer.create()): Writer {
-    writer.uint32(10).string(message.connectGoogle);
-    writer.uint32(18).string(message.connectGithub);
+  encode(
+    message: DashUserSettingsState_URLs,
+    writer: Writer = Writer.create(),
+    forceDefaultSerialization = false
+  ): Writer {
+    if (forceDefaultSerialization || message.connectGoogle !== '') {
+      writer.uint32(10).string(message.connectGoogle);
+    }
+    if (forceDefaultSerialization || message.connectGithub !== '') {
+      writer.uint32(18).string(message.connectGithub);
+    }
     return writer;
   },
 
@@ -329,11 +343,19 @@ export const DashUserSettingsState_URLs = {
 const baseDashCred: object = { description: '', metadata: '', token: '', id: '' };
 
 export const DashCred = {
-  encode(message: DashCred, writer: Writer = Writer.create()): Writer {
-    writer.uint32(18).string(message.description);
-    writer.uint32(26).string(message.metadata);
-    writer.uint32(34).string(message.token);
-    writer.uint32(58).string(message.id);
+  encode(message: DashCred, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
+    if (forceDefaultSerialization || message.description !== '') {
+      writer.uint32(18).string(message.description);
+    }
+    if (forceDefaultSerialization || message.metadata !== '') {
+      writer.uint32(26).string(message.metadata);
+    }
+    if (forceDefaultSerialization || message.token !== '') {
+      writer.uint32(34).string(message.token);
+    }
+    if (forceDefaultSerialization || message.id !== '') {
+      writer.uint32(58).string(message.id);
+    }
     return writer;
   },
 
@@ -427,9 +449,13 @@ export const DashCred = {
 const baseDashAPICredsCreateReq: object = { description: '', metadata: '' };
 
 export const DashAPICredsCreateReq = {
-  encode(message: DashAPICredsCreateReq, writer: Writer = Writer.create()): Writer {
-    writer.uint32(10).string(message.description);
-    writer.uint32(18).string(message.metadata);
+  encode(message: DashAPICredsCreateReq, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
+    if (forceDefaultSerialization || message.description !== '') {
+      writer.uint32(10).string(message.description);
+    }
+    if (forceDefaultSerialization || message.metadata !== '') {
+      writer.uint32(18).string(message.metadata);
+    }
     return writer;
   },
 
@@ -495,11 +521,19 @@ export const DashAPICredsCreateReq = {
 const baseDashAPICredsUpdateReq: object = { credSid: '', description: '', metadata: '', id: '' };
 
 export const DashAPICredsUpdateReq = {
-  encode(message: DashAPICredsUpdateReq, writer: Writer = Writer.create()): Writer {
-    writer.uint32(10).string(message.credSid);
-    writer.uint32(18).string(message.description);
-    writer.uint32(26).string(message.metadata);
-    writer.uint32(42).string(message.id);
+  encode(message: DashAPICredsUpdateReq, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
+    if (forceDefaultSerialization || message.credSid !== '') {
+      writer.uint32(10).string(message.credSid);
+    }
+    if (forceDefaultSerialization || message.description !== '') {
+      writer.uint32(18).string(message.description);
+    }
+    if (forceDefaultSerialization || message.metadata !== '') {
+      writer.uint32(26).string(message.metadata);
+    }
+    if (forceDefaultSerialization || message.id !== '') {
+      writer.uint32(42).string(message.id);
+    }
     return writer;
   },
 
@@ -593,9 +627,13 @@ export const DashAPICredsUpdateReq = {
 const baseDashAPICredsDeleteReq: object = { credSid: '', id: '' };
 
 export const DashAPICredsDeleteReq = {
-  encode(message: DashAPICredsDeleteReq, writer: Writer = Writer.create()): Writer {
-    writer.uint32(10).string(message.credSid);
-    writer.uint32(26).string(message.id);
+  encode(message: DashAPICredsDeleteReq, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
+    if (forceDefaultSerialization || message.credSid !== '') {
+      writer.uint32(10).string(message.credSid);
+    }
+    if (forceDefaultSerialization || message.id !== '') {
+      writer.uint32(26).string(message.id);
+    }
     return writer;
   },
 
@@ -661,7 +699,7 @@ export const DashAPICredsDeleteReq = {
 const baseEmpty: object = {};
 
 export const Empty = {
-  encode(_: Empty, writer: Writer = Writer.create()): Writer {
+  encode(_: Empty, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
     return writer;
   },
 

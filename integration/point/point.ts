@@ -16,9 +16,13 @@ export interface Area {
 const basePoint: object = { lat: 0, lng: 0 };
 
 export const Point = {
-  encode(message: Point, writer: Writer = Writer.create()): Writer {
-    writer.uint32(9).double(message.lat);
-    writer.uint32(17).double(message.lng);
+  encode(message: Point, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
+    if (forceDefaultSerialization || message.lat !== 0) {
+      writer.uint32(9).double(message.lat);
+    }
+    if (forceDefaultSerialization || message.lng !== 0) {
+      writer.uint32(17).double(message.lng);
+    }
     return writer;
   },
 
@@ -84,12 +88,12 @@ export const Point = {
 const baseArea: object = {};
 
 export const Area = {
-  encode(message: Area, writer: Writer = Writer.create()): Writer {
+  encode(message: Area, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
     if (message.nw !== undefined) {
-      Point.encode(message.nw, writer.uint32(10).fork()).ldelim();
+      Point.encode(message.nw, writer.uint32(10).fork(), false).ldelim();
     }
     if (message.se !== undefined) {
-      Point.encode(message.se, writer.uint32(18).fork()).ldelim();
+      Point.encode(message.se, writer.uint32(18).fork(), false).ldelim();
     }
     return writer;
   },
