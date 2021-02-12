@@ -1,4 +1,8 @@
 
+## v1.57.0
+
+* Fix JSON parsing of long wrapper values when forceLong != long (jessebutterfield)
+
 ## v1.56.0
 
 * Fix import collisions for imported-only symbols (stezu)
