@@ -1,4 +1,8 @@
 
+## v1.59.0
+
+* Fix `DeepPartial` imports when services and messages are in separate files
+
 ## v1.58.0
 
 * Fix JSON parsing of long wrapper values when forceLong != long (jessebutterfield)
