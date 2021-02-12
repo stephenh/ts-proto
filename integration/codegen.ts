@@ -30,10 +30,11 @@ async function generate(binFile: string, baseDir: string, parameter: string) {
 
   const options = optionsFromParameter(parameter || '');
   const typeMap = createTypeMap(request, options);
-  const utils = makeUtils(options);
-  const ctx: Context = { options, typeMap, utils };
 
   for (let file of request.protoFile) {
+    // Make a different utils per file to track per-file usage
+    const utils = makeUtils(options);
+    const ctx: Context = { options, typeMap, utils };
     const [path, code] = generateFile(ctx, file);
     const filePath = `${baseDir}/${path}`;
     const dirPath = parse(filePath).dir;

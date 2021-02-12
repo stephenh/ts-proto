@@ -47,9 +47,9 @@ export function generateGrpcClientImpl(
 
 /** Creates the RPC methods that client code actually calls. */
 function generateRpcMethod(ctx: Context, serviceDesc: ServiceDescriptorProto, methodDesc: MethodDescriptorProto) {
-  const { options } = ctx;
+  const { options, utils } = ctx;
   const inputType = requestType(ctx, methodDesc);
-  const partialInputType = code`DeepPartial<${inputType}>`;
+  const partialInputType = code`${utils.DeepPartial}<${inputType}>`;
   const returns =
     options.returnObservable || methodDesc.serverStreaming
       ? responseObservable(ctx, methodDesc)
