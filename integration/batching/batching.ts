@@ -302,7 +302,7 @@ const baseBatchMapQueryResponse_EntitiesEntry: object = { key: '' };
 export const BatchMapQueryResponse_EntitiesEntry = {
   encode(message: BatchMapQueryResponse_EntitiesEntry, writer: Writer = Writer.create()): Writer {
     writer.uint32(10).string(message.key);
-    if (message.value !== undefined && message.value !== undefined) {
+    if (message.value !== undefined) {
       Entity.encode(message.value, writer.uint32(18).fork()).ldelim();
     }
     return writer;
@@ -424,7 +424,7 @@ const baseGetOnlyMethodResponse: object = {};
 
 export const GetOnlyMethodResponse = {
   encode(message: GetOnlyMethodResponse, writer: Writer = Writer.create()): Writer {
-    if (message.entity !== undefined && message.entity !== undefined) {
+    if (message.entity !== undefined) {
       Entity.encode(message.entity, writer.uint32(10).fork()).ldelim();
     }
     return writer;

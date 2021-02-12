@@ -50,16 +50,16 @@ const baseSimpleWithWrappers: object = {};
 
 export const SimpleWithWrappers = {
   encode(message: SimpleWithWrappers, writer: Writer = Writer.create()): Writer {
-    if (message.name !== undefined && message.name !== undefined) {
+    if (message.name !== undefined) {
       StringValue.encode({ value: message.name! }, writer.uint32(10).fork()).ldelim();
     }
-    if (message.age !== undefined && message.age !== undefined) {
+    if (message.age !== undefined) {
       Int32Value.encode({ value: message.age! }, writer.uint32(18).fork()).ldelim();
     }
-    if (message.enabled !== undefined && message.enabled !== undefined) {
+    if (message.enabled !== undefined) {
       BoolValue.encode({ value: message.enabled! }, writer.uint32(26).fork()).ldelim();
     }
-    if (message.bananas !== undefined && message.bananas !== undefined) {
+    if (message.bananas !== undefined) {
       Int64Value.encode({ value: message.bananas! }, writer.uint32(34).fork()).ldelim();
     }
     for (const v of message.coins) {

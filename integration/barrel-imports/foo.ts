@@ -12,7 +12,7 @@ const baseFoo: object = { name: '' };
 export const Foo = {
   encode(message: Foo, writer: Writer = Writer.create()): Writer {
     writer.uint32(10).string(message.name);
-    if (message.bar !== undefined && message.bar !== undefined) {
+    if (message.bar !== undefined) {
       Bar.encode(message.bar, writer.uint32(18).fork()).ldelim();
     }
     return writer;
