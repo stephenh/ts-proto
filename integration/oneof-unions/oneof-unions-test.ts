@@ -98,7 +98,7 @@ describe('oneof=unions', () => {
     let obj: PleaseChoose = {
       name: 'Debbie',
       age: 37,
-      choice: { $case: 'aNumber', aNumber: 0 },
+      choice: { $case: 'aNumber', aNumber: 42 },
     };
     let encoded = PleaseChoose.encode(obj).finish();
     let decoded = PleaseChoose.decode(encoded);

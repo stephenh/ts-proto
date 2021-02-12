@@ -3,8 +3,8 @@ import { SimpleButOptional } from './simple';
 describe('simple-but-optional', () => {
   it('can encode', () => {
     const s1: SimpleButOptional = {
-      name: '',
-      age: 0,
+      name: 'Joe',
+      age: 17,
       child: undefined,
       state: undefined,
       createdAt: undefined,
@@ -22,8 +22,8 @@ describe('simple-but-optional', () => {
     };
     SimpleButOptional.encode(s1, mockWriter as any);
 
-    expect(mockWriter.string).toHaveBeenCalledWith('');
-    expect(mockWriter.int32).toHaveBeenCalledWith(0);
+    expect(mockWriter.string).toHaveBeenCalledWith('Joe');
+    expect(mockWriter.int32).toHaveBeenCalledWith(17);
   });
 
   it('can encode to json', () => {

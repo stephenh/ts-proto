@@ -25,45 +25,45 @@ describe('number', () => {
 
   it('can decode', () => {
     const s1: INumbers = {
-      double: 0,
-      float: 1,
-      int32: 2,
-      int64: 3,
-      uint32: 4,
-      uint64: 5,
-      sint32: 6,
-      sint64: 7,
-      fixed32: 8,
-      fixed64: 9,
-      sfixed32: 10,
-      sfixed64: 11,
+      double: 1,
+      float: 2,
+      int32: 3,
+      int64: 4,
+      uint32: 5,
+      uint64: 6,
+      sint32: 7,
+      sint64: 8,
+      fixed32: 9,
+      fixed64: 10,
+      sfixed32: 11,
+      sfixed64: 12,
     };
     const s2 = Numbers.decode(Reader.create(PbNumbers.encode(PbNumbers.fromObject(s1)).finish()));
     expect(s2).toEqual(s1);
     expect(typeof s2.uint32).toEqual('number');
     expect(typeof s2.int64).toEqual('number');
-    expect(s2.int64).toEqual(3);
+    expect(s2.int64).toEqual(4);
   });
 
   it('can encode', () => {
     const s1: Numbers = {
-      double: 0,
-      float: 1,
-      int32: 2,
-      int64: 3,
-      uint32: 4,
-      uint64: 5,
-      sint32: 6,
-      sint64: 7,
-      fixed32: 8,
-      fixed64: 9,
-      sfixed32: 10,
-      sfixed64: 11,
+      double: 1,
+      float: 2,
+      int32: 3,
+      int64: 4,
+      uint32: 5,
+      uint64: 6,
+      sint32: 7,
+      sint64: 8,
+      fixed32: 9,
+      fixed64: 10,
+      sfixed32: 11,
+      sfixed64: 12,
     };
     const s2 = PbNumbers.toObject(PbNumbers.decode(Numbers.encode(s1).finish()), { longs: Number });
     expect(s2).toEqual({
       ...s1,
-      sfixed64: 11,
+      sfixed64: 12,
     });
   });
 
