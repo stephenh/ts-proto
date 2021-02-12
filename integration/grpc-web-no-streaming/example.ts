@@ -141,7 +141,7 @@ const baseDashUserSettingsState: object = { email: '' };
 export const DashUserSettingsState = {
   encode(message: DashUserSettingsState, writer: Writer = Writer.create()): Writer {
     writer.uint32(10).string(message.email);
-    if (message.urls !== undefined && message.urls !== undefined) {
+    if (message.urls !== undefined) {
       DashUserSettingsState_URLs.encode(message.urls, writer.uint32(50).fork()).ldelim();
     }
     for (const v of message.flashes) {

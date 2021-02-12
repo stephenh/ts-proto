@@ -50,7 +50,7 @@ export const Numbers = {
     writer.uint32(81).fixed64(message.fixed64);
     writer.uint32(93).sfixed32(message.sfixed32);
     writer.uint32(97).sfixed64(message.sfixed64);
-    if (message.guint64 !== undefined && message.guint64 !== undefined) {
+    if (message.guint64 !== undefined) {
       UInt64Value.encode({ value: message.guint64! }, writer.uint32(106).fork()).ldelim();
     }
     return writer;
