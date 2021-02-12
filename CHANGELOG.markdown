@@ -1,7 +1,11 @@
 
-## v1.57.0
+## v1.58.0
 
 * Fix JSON parsing of long wrapper values when forceLong != long (jessebutterfield)
+
+## v1.57.0
+
+* Accidental duplicate publish.
 
 ## v1.56.0
 
