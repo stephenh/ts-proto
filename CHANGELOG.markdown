@@ -1,4 +1,8 @@
 
+## v1.56.0
+
+* Fix import collisions for imported-only symbols (stezu)
+
 ## v1.55.0
 
 * Fix missing `fromTimestamp` import in generated code, fixes #200 (jessebutterfield)
