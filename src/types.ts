@@ -255,6 +255,28 @@ export function createTypeMap(request: CodeGeneratorRequest, options: Options): 
   return typeMap;
 }
 
+/** A "Scalar Value Type" as defined in https://developers.google.com/protocol-buffers/docs/proto3#scalar */
+export function isScalar(field: FieldDescriptorProto): boolean {
+  const scalarTypes = [
+    FieldDescriptorProto_Type.TYPE_DOUBLE,
+    FieldDescriptorProto_Type.TYPE_FLOAT,
+    FieldDescriptorProto_Type.TYPE_INT32,
+    FieldDescriptorProto_Type.TYPE_INT64,
+    FieldDescriptorProto_Type.TYPE_UINT32,
+    FieldDescriptorProto_Type.TYPE_UINT64,
+    FieldDescriptorProto_Type.TYPE_SINT32,
+    FieldDescriptorProto_Type.TYPE_SINT64,
+    FieldDescriptorProto_Type.TYPE_FIXED32,
+    FieldDescriptorProto_Type.TYPE_FIXED64,
+    FieldDescriptorProto_Type.TYPE_SFIXED32,
+    FieldDescriptorProto_Type.TYPE_SFIXED64,
+    FieldDescriptorProto_Type.TYPE_BOOL,
+    FieldDescriptorProto_Type.TYPE_STRING,
+    FieldDescriptorProto_Type.TYPE_BYTES,
+  ];
+  return scalarTypes.includes(field.type);
+}
+
 export function isPrimitive(field: FieldDescriptorProto): boolean {
   return !isMessage(field);
 }

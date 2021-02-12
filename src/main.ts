@@ -21,6 +21,7 @@ import {
   isMessage,
   isPrimitive,
   isRepeated,
+  isScalar,
   isTimestamp,
   isValueType,
   isWithinOneOf,
@@ -650,7 +651,7 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
 
     // get a generic writer.doSomething based on the basic type
     let writeSnippet: (place: string) => Code;
-    if (isPrimitive(field)) {
+    if (isScalar(field) || isEnum(field)) {
       const tag = ((field.number << 3) | basicWireType(field.type)) >>> 0;
       writeSnippet = (place) => code`writer.uint32(${tag}).${toReaderCall(field)}(${place})`;
     } else if (isTimestamp(field)) {
@@ -889,7 +890,7 @@ function generateToJson(ctx: Context, fullName: string, messageDesc: DescriptorP
           return code`${utils.base64FromBytes}(${from})`;
         } else if (isTimestamp(valueType)) {
           return code`${from}.toISOString()`;
-        } else if (isPrimitive(valueType)) {
+        } else if (isScalar(valueType)) {
           return code`${from}`;
         } else {
           const type = basicTypeName(ctx, valueType);
