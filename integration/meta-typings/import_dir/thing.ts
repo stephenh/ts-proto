@@ -1,6 +1,6 @@
 /* eslint-disable */
 import { IFileDescriptorProto } from 'protobufjs/ext/descriptor';
-import { protoMetadata as google_protobuf_timestamp_protoMetadata, Timestamp } from '../google/protobuf/timestamp';
+import { protoMetadata as protoMetadata1, Timestamp } from '../google/protobuf/timestamp';
 import { Writer, Reader } from 'protobufjs/minimal';
 
 export const protobufPackage = 'simple';
@@ -68,7 +68,7 @@ export const protoMetadata: ProtoMetadata = {
     syntax: 'proto3',
   } as any,
   references: { '.simple.ImportedThing': ImportedThing },
-  dependencies: [google_protobuf_timestamp_protoMetadata],
+  dependencies: [protoMetadata1],
 };
 
 function toTimestamp(date: Date): Timestamp {

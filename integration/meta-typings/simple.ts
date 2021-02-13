@@ -1,15 +1,10 @@
 /* eslint-disable */
 import { IFileDescriptorProto } from 'protobufjs/ext/descriptor';
 import { Reader, util, configure, Writer } from 'protobufjs/minimal';
-import { protoMetadata as google_type_date_protoMetadata, DateMessage } from './google/type/date';
-import {
-  protoMetadata as google_protobuf_wrappers_protoMetadata,
-  StringValue,
-  Int32Value,
-  BoolValue,
-} from './google/protobuf/wrappers';
-import { protoMetadata as google_protobuf_timestamp_protoMetadata, Timestamp } from './google/protobuf/timestamp';
-import { protoMetadata as import_dir_thing_protoMetadata, ImportedThing } from './import_dir/thing';
+import { protoMetadata as protoMetadata1, DateMessage } from './google/type/date';
+import { protoMetadata as protoMetadata2, StringValue, Int32Value, BoolValue } from './google/protobuf/wrappers';
+import { protoMetadata as protoMetadata3, Timestamp } from './google/protobuf/timestamp';
+import { protoMetadata as protoMetadata4, ImportedThing } from './import_dir/thing';
 import * as Long from 'long';
 
 export const protobufPackage = 'simple';
@@ -1604,12 +1599,7 @@ export const protoMetadata: ProtoMetadata = {
     '.simple.Empty': Empty,
     '.simple.PingService': PingServiceClientImpl,
   },
-  dependencies: [
-    google_type_date_protoMetadata,
-    google_protobuf_wrappers_protoMetadata,
-    google_protobuf_timestamp_protoMetadata,
-    import_dir_thing_protoMetadata,
-  ],
+  dependencies: [protoMetadata1, protoMetadata2, protoMetadata3, protoMetadata4],
 };
 
 declare var self: any | undefined;
