@@ -13,7 +13,6 @@ jobs:
             - v1-dependencies-
 
       - run: yarn install
-      - run: ./pbjs.sh
       - run: ./integration/pbjs.sh
 
       - save_cache:
