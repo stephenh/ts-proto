@@ -1,10 +1,11 @@
 import { google } from '../build/pbjs';
-import DescriptorProto = google.protobuf.DescriptorProto;
-import FileDescriptorProto = google.protobuf.FileDescriptorProto;
-import EnumDescriptorProto = google.protobuf.EnumDescriptorProto;
 import SourceInfo, { Fields } from './sourceInfo';
 import { Options } from './options';
 import { maybeSnakeToCamel } from './case';
+import DescriptorProto = google.protobuf.DescriptorProto;
+import FileDescriptorProto = google.protobuf.FileDescriptorProto;
+import EnumDescriptorProto = google.protobuf.EnumDescriptorProto;
+import ServiceDescriptorProto = google.protobuf.ServiceDescriptorProto;
 
 type MessageVisitor = (
   fullName: string,
@@ -61,4 +62,15 @@ const builtInNames = ['Date'];
 function messageName(message: DescriptorProto): string {
   const { name } = message;
   return builtInNames.includes(name) ? `${name}Message` : name;
+}
+
+export function visitServices(
+  proto: FileDescriptorProto,
+  sourceInfo: SourceInfo,
+  serviceFn: (desc: ServiceDescriptorProto, sourceInfo: SourceInfo) => void
+): void {
+  proto.service.forEach((serviceDesc, index) => {
+    const nestedSourceInfo = sourceInfo.open(Fields.file.service, index);
+    serviceFn(serviceDesc, nestedSourceInfo);
+  });
 }

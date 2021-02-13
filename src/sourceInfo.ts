@@ -76,7 +76,7 @@ export default class SourceInfo implements SourceDescription {
    * by the protoc compiler. It indexes file.sourceCodeInfo by dotted
    * path notation and returns the root SourceInfo.
    */
-  static fromDescriptor(file: FileDescriptorProto) {
+  static fromDescriptor(file: FileDescriptorProto): SourceInfo {
     let map: SourceInfoMap = {};
     if (file.sourceCodeInfo && file.sourceCodeInfo.location) {
       file.sourceCodeInfo.location.forEach((loc) => {
