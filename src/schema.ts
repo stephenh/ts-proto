@@ -63,7 +63,7 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
 
   chunks.push(code`
     export const protoMetadata: ProtoMetadata = {
-      fileDescriptor: ${JSON.stringify(outputFileDesc)} as any,
+      fileDescriptor: ${outputFileDesc} as any,
       references: { ${joinCode(references, { on: ',' })} },
       dependencies: [${joinCode(dependencies, { on: ',' })}],
     }
