@@ -47,13 +47,13 @@ import {
   generateGrpcServiceDesc,
 } from './generate-grpc-web';
 import { generateEnum } from './enums';
-import { visit } from './visit';
+import { visit, visitServices } from './visit';
 import { EnvOption, LongOption, OneofOption, Options } from './options';
 import { Context } from './context';
 import DescriptorProto = google.protobuf.DescriptorProto;
 import FieldDescriptorProto = google.protobuf.FieldDescriptorProto;
 import FileDescriptorProto = google.protobuf.FileDescriptorProto;
-import ServiceDescriptorProto = google.protobuf.ServiceDescriptorProto;
+import { generateSchema } from './schema';
 
 export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [string, Code] {
   const { options, utils: u } = ctx;
@@ -180,6 +180,10 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
   if (options.useContext) {
     chunks.push(generateDataLoaderOptionsType());
     chunks.push(generateDataLoadersType());
+  }
+
+  if (options.outputSchema) {
+    chunks.push(...generateSchema(ctx, fileDesc, sourceInfo));
   }
 
   chunks.push(
@@ -504,17 +508,6 @@ function generateBaseInstance(ctx: Context, fullName: string, messageDesc: Descr
       return code`${name}: ${val}`;
     });
   return code`const base${fullName}: object = { ${joinCode(fields, { on: ',' })} };`;
-}
-
-function visitServices(
-  proto: FileDescriptorProto,
-  sourceInfo: SourceInfo,
-  serviceFn: (desc: ServiceDescriptorProto, sourceInfo: SourceInfo) => void
-): void {
-  proto.service.forEach((serviceDesc, index) => {
-    const nestedSourceInfo = sourceInfo.open(Fields.file.service, index);
-    serviceFn(serviceDesc, nestedSourceInfo);
-  });
 }
 
 /** Creates a function to decode a message by loop overing the tags. */

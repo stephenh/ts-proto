@@ -35,6 +35,7 @@ export type Options = {
   env: EnvOption;
   addUnrecognizedEnum: boolean;
   exportCommonSymbols: boolean;
+  outputSchema: boolean;
 };
 
 export function defaultOptions(): Options {
@@ -58,6 +59,7 @@ export function defaultOptions(): Options {
     env: EnvOption.BOTH,
     addUnrecognizedEnum: true,
     exportCommonSymbols: true,
+    outputSchema: false,
   };
 }
 
@@ -147,6 +149,9 @@ export function optionsFromParameter(parameter: string): Options {
     }
     if (parameter.includes('unrecognizedEnum=false')) {
       options.addUnrecognizedEnum = false;
+    }
+    if (parameter.includes('outputSchema=true')) {
+      options.outputSchema = true;
     }
   }
   return options;
