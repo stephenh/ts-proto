@@ -1,4 +1,18 @@
 
+## v1.62.0
+
+* Use `ts-proto-descriptors` package to read/write the `protoc` stdin `CodeGeneratorRequest` and stdout `CodeGeneratorResponse` messages.
+
+## v1.61.0
+
+* Use `Object.create` in `decode` to create messages so that `hasOwnProperty` will be false for fields that are using default values.
+
+  In theory fields being default values is not supposed to be observable (on the wire at least), but protobuf itself specifically uses this for the `FieldDescriptorProto.oneofIndex` field.
+
+## v1.60.0
+
+* New `outputSchema` option to include the `*.proto` schema/metadata in the generated output file (Vilsol)
+
 ## v1.59.0
 
 * Fix `DeepPartial` imports when services and messages are in separate files
