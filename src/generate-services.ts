@@ -1,4 +1,9 @@
-import { google } from '../build/pbjs';
+import {
+  MethodDescriptorProto,
+  FileDescriptorProto,
+  ServiceDescriptorProto,
+} from 'ts-proto-descriptors/google/protobuf/descriptor';
+import { Code, code, imp, joinCode } from 'ts-poet';
 import {
   BatchMethod,
   detectBatchMethod,
@@ -7,14 +12,10 @@ import {
   responsePromise,
   responseType,
 } from './types';
-import { Code, code, imp, joinCode } from 'ts-poet';
 import { maybeAddComment, singular } from './utils';
 import SourceInfo, { Fields } from './sourceInfo';
 import { camelCase } from './case';
 import { contextTypeVar } from './main';
-import MethodDescriptorProto = google.protobuf.MethodDescriptorProto;
-import FileDescriptorProto = google.protobuf.FileDescriptorProto;
-import ServiceDescriptorProto = google.protobuf.ServiceDescriptorProto;
 import { Context } from './context';
 
 const hash = imp('hash*object-hash');
@@ -104,9 +105,9 @@ export function generateService(
 
 function generateRegularRpcMethod(
   ctx: Context,
-  fileDesc: google.protobuf.FileDescriptorProto,
-  serviceDesc: google.protobuf.ServiceDescriptorProto,
-  methodDesc: google.protobuf.MethodDescriptorProto
+  fileDesc: FileDescriptorProto,
+  serviceDesc: ServiceDescriptorProto,
+  methodDesc: MethodDescriptorProto
 ): Code {
   const { options } = ctx;
   const Reader = imp('Reader@protobufjs/minimal');

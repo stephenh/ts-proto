@@ -315,11 +315,9 @@ If you need ts-proto customizations or priority support for your company, you ca
 
 # Building
 
-`ts-proto` does not use `pbjs` at runtime, but we do use it in the `ts-proto` build process (to bootstrap the types used to parse the incoming protobuf metadata types, as well as for the test suite to ensure the `ts-proto` implementations match the `ts-proto`).
+After running `yarn install`, run `./integration/pbjs.sh` to create the integration test types. These pbjs-generated files are not currently checked in.
 
-After running `yarn install`, run `./pbjs.sh` to create the bootstrap types, and `./integration/pbjs.sh` to create the integration test types. These pbjs-generated files are not currently checked in.
-
-After this the tests should pass.
+After this, the tests should pass.
 
 After making changes to `ts-proto`, you can run `cd integration` and `./codegen.sh` to re-generate the test case `*.ts` output files that are in each `integration/<test-case>/` directory.
 

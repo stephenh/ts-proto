@@ -1,3 +1,5 @@
+import { FileDescriptorProto, ServiceDescriptorProto } from 'ts-proto-descriptors/google/protobuf/descriptor';
+import { Code, code, imp, joinCode } from 'ts-poet';
 import {
   detectBatchMethod,
   isEmptyType,
@@ -8,10 +10,6 @@ import {
 } from './types';
 import SourceInfo, { Fields } from './sourceInfo';
 import { contextTypeVar } from './main';
-import { google } from '../build/pbjs';
-import { Code, code, imp, joinCode } from 'ts-poet';
-import FileDescriptorProto = google.protobuf.FileDescriptorProto;
-import ServiceDescriptorProto = google.protobuf.ServiceDescriptorProto;
 import { maybeAddComment, singular } from './utils';
 import { camelCase } from './case';
 import { Context } from './context';

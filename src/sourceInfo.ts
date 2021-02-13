@@ -1,5 +1,4 @@
-import { google } from '../build/pbjs';
-import FileDescriptorProto = google.protobuf.FileDescriptorProto;
+import { FileDescriptorProto } from 'ts-proto-descriptors/google/protobuf/descriptor';
 
 /** This type is expecting a value from the Fields constant. */
 export type FieldID = number;

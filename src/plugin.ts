@@ -1,11 +1,12 @@
+import {
+  CodeGeneratorRequest,
+  CodeGeneratorResponse,
+  CodeGeneratorResponse_Feature,
+} from 'ts-proto-descriptors/google/protobuf/compiler/plugin';
 import { promisify } from 'util';
 import { prefixDisableLinter, readToBuffer } from './utils';
-import { google } from '../build/pbjs';
 import { generateFile, makeUtils } from './main';
 import { createTypeMap } from './types';
-import CodeGeneratorRequest = google.protobuf.compiler.CodeGeneratorRequest;
-import CodeGeneratorResponse = google.protobuf.compiler.CodeGeneratorResponse;
-import Feature = google.protobuf.compiler.CodeGeneratorResponse.Feature;
 import { Context } from './context';
 import { getTsPoetOpts, optionsFromParameter } from './options';
 
@@ -25,13 +26,13 @@ async function main() {
     request.protoFile.map(async (file) => {
       const [path, code] = generateFile(ctx, file);
       const spec = await code.toStringWithImports({ ...getTsPoetOpts(options), path });
-      return new CodeGeneratorResponse.File({
-        name: path,
-        content: prefixDisableLinter(spec),
-      });
+      return { name: path, content: prefixDisableLinter(spec) };
     })
   );
-  const response = new CodeGeneratorResponse({ file: files, supportedFeatures: Feature.FEATURE_PROTO3_OPTIONAL });
+  const response = CodeGeneratorResponse.fromPartial({
+    file: files,
+    supportedFeatures: CodeGeneratorResponse_Feature.FEATURE_PROTO3_OPTIONAL,
+  });
   const buffer = CodeGeneratorResponse.encode(response).finish();
   const write = promisify(process.stdout.write as (buffer: Buffer) => boolean).bind(process.stdout);
   await write(Buffer.from(buffer));

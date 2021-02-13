@@ -1,9 +1,10 @@
+import { FileDescriptorProto } from 'ts-proto-descriptors/google/protobuf/descriptor';
 import { imp, code, Code, joinCode, def } from 'ts-poet';
-import { google } from '../build/pbjs';
 import { visit, visitServices } from './visit';
 import { Context } from './context';
 import SourceInfo from './sourceInfo';
-import FileDescriptorProto = google.protobuf.FileDescriptorProto;
+
+const fileDescriptorProto = imp('FileDescriptorProto@ts-proto-descriptors/google/protobuf/descriptor');
 
 export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sourceInfo: SourceInfo): Code[] {
   const { options } = ctx;
@@ -11,7 +12,7 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
 
   chunks.push(code`
     export interface ProtoMetadata {
-      fileDescriptor: ${imp('IFileDescriptorProto@protobufjs/ext/descriptor')};
+      fileDescriptor: ${fileDescriptorProto};
       references: { [key: string]: any };
       dependencies?: ProtoMetadata[];
     }
@@ -47,17 +48,17 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
   });
 
   // Use toObject so that we get enums as numbers (instead of the default toJSON behavior)
-  const descriptor = FileDescriptorProto.toObject(fileDesc);
+  const descriptor = { ...fileDesc };
 
   // Only keep locations that include comments
   descriptor.sourceCodeInfo = {
-    location: descriptor.sourceCodeInfo.location.filter((loc) => loc['leadingComments'] || loc['trailingComments']),
+    location:
+      descriptor.sourceCodeInfo?.location.filter((loc) => loc['leadingComments'] || loc['trailingComments']) || [],
   };
 
-  // TODO Remove the 'as any` from fileDescriptor once protobufjs includes `proto3Optional`
   chunks.push(code`
     export const ${def('protoMetadata')}: ProtoMetadata = {
-      fileDescriptor: ${descriptor} as any,
+      fileDescriptor: ${fileDescriptorProto}.fromPartial(${descriptor}),
       references: { ${joinCode(references, { on: ',' })} },
       dependencies: [${joinCode(dependencies, { on: ',' })}],
     }

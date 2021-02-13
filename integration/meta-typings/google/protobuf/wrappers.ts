@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { IFileDescriptorProto } from 'protobufjs/ext/descriptor';
+import { FileDescriptorProto } from 'ts-proto-descriptors/google/protobuf/descriptor';
 import * as Long from 'long';
 import { util, configure, Writer, Reader } from 'protobufjs/minimal';
 
@@ -339,27 +339,124 @@ export const BytesValue = {
 };
 
 export interface ProtoMetadata {
-  fileDescriptor: IFileDescriptorProto;
+  fileDescriptor: FileDescriptorProto;
   references: { [key: string]: any };
   dependencies?: ProtoMetadata[];
 }
 
 export const protoMetadata: ProtoMetadata = {
-  fileDescriptor: {
+  fileDescriptor: FileDescriptorProto.fromPartial({
+    dependency: [],
+    publicDependency: [],
+    weakDependency: [],
+    messageType: [
+      {
+        field: [{ name: 'value', number: 1, label: 1, type: 1, jsonName: 'value' }],
+        extension: [],
+        nestedType: [],
+        enumType: [],
+        extensionRange: [],
+        oneofDecl: [],
+        reservedRange: [],
+        reservedName: [],
+        name: 'DoubleValue',
+      },
+      {
+        field: [{ name: 'value', number: 1, label: 1, type: 2, jsonName: 'value' }],
+        extension: [],
+        nestedType: [],
+        enumType: [],
+        extensionRange: [],
+        oneofDecl: [],
+        reservedRange: [],
+        reservedName: [],
+        name: 'FloatValue',
+      },
+      {
+        field: [{ name: 'value', number: 1, label: 1, type: 3, jsonName: 'value' }],
+        extension: [],
+        nestedType: [],
+        enumType: [],
+        extensionRange: [],
+        oneofDecl: [],
+        reservedRange: [],
+        reservedName: [],
+        name: 'Int64Value',
+      },
+      {
+        field: [{ name: 'value', number: 1, label: 1, type: 4, jsonName: 'value' }],
+        extension: [],
+        nestedType: [],
+        enumType: [],
+        extensionRange: [],
+        oneofDecl: [],
+        reservedRange: [],
+        reservedName: [],
+        name: 'UInt64Value',
+      },
+      {
+        field: [{ name: 'value', number: 1, label: 1, type: 5, jsonName: 'value' }],
+        extension: [],
+        nestedType: [],
+        enumType: [],
+        extensionRange: [],
+        oneofDecl: [],
+        reservedRange: [],
+        reservedName: [],
+        name: 'Int32Value',
+      },
+      {
+        field: [{ name: 'value', number: 1, label: 1, type: 13, jsonName: 'value' }],
+        extension: [],
+        nestedType: [],
+        enumType: [],
+        extensionRange: [],
+        oneofDecl: [],
+        reservedRange: [],
+        reservedName: [],
+        name: 'UInt32Value',
+      },
+      {
+        field: [{ name: 'value', number: 1, label: 1, type: 8, jsonName: 'value' }],
+        extension: [],
+        nestedType: [],
+        enumType: [],
+        extensionRange: [],
+        oneofDecl: [],
+        reservedRange: [],
+        reservedName: [],
+        name: 'BoolValue',
+      },
+      {
+        field: [{ name: 'value', number: 1, label: 1, type: 9, jsonName: 'value' }],
+        extension: [],
+        nestedType: [],
+        enumType: [],
+        extensionRange: [],
+        oneofDecl: [],
+        reservedRange: [],
+        reservedName: [],
+        name: 'StringValue',
+      },
+      {
+        field: [{ name: 'value', number: 1, label: 1, type: 12, jsonName: 'value' }],
+        extension: [],
+        nestedType: [],
+        enumType: [],
+        extensionRange: [],
+        oneofDecl: [],
+        reservedRange: [],
+        reservedName: [],
+        name: 'BytesValue',
+      },
+    ],
+    enumType: [],
+    service: [],
+    extension: [],
     name: 'google/protobuf/wrappers.proto',
     package: 'google.protobuf',
-    messageType: [
-      { name: 'DoubleValue', field: [{ name: 'value', number: 1, label: 1, type: 1, jsonName: 'value' }] },
-      { name: 'FloatValue', field: [{ name: 'value', number: 1, label: 1, type: 2, jsonName: 'value' }] },
-      { name: 'Int64Value', field: [{ name: 'value', number: 1, label: 1, type: 3, jsonName: 'value' }] },
-      { name: 'UInt64Value', field: [{ name: 'value', number: 1, label: 1, type: 4, jsonName: 'value' }] },
-      { name: 'Int32Value', field: [{ name: 'value', number: 1, label: 1, type: 5, jsonName: 'value' }] },
-      { name: 'UInt32Value', field: [{ name: 'value', number: 1, label: 1, type: 13, jsonName: 'value' }] },
-      { name: 'BoolValue', field: [{ name: 'value', number: 1, label: 1, type: 8, jsonName: 'value' }] },
-      { name: 'StringValue', field: [{ name: 'value', number: 1, label: 1, type: 9, jsonName: 'value' }] },
-      { name: 'BytesValue', field: [{ name: 'value', number: 1, label: 1, type: 12, jsonName: 'value' }] },
-    ],
     options: {
+      uninterpretedOption: [],
       javaPackage: 'com.google.protobuf',
       javaOuterClassname: 'WrappersProto',
       javaMultipleFiles: true,
@@ -373,70 +470,84 @@ export const protoMetadata: ProtoMetadata = {
         {
           path: [4, 0],
           span: [50, 0, 53, 1],
+          leadingDetachedComments: [],
           leadingComments:
             ' Wrapper message for `double`.\n\n The JSON representation for `DoubleValue` is JSON number.\n',
         },
-        { path: [4, 0, 2, 0], span: [52, 2, 19], leadingComments: ' The double value.\n' },
+        { path: [4, 0, 2, 0], span: [52, 2, 19], leadingDetachedComments: [], leadingComments: ' The double value.\n' },
         {
           path: [4, 1],
           span: [58, 0, 61, 1],
+          leadingDetachedComments: [],
           leadingComments:
             ' Wrapper message for `float`.\n\n The JSON representation for `FloatValue` is JSON number.\n',
         },
-        { path: [4, 1, 2, 0], span: [60, 2, 18], leadingComments: ' The float value.\n' },
+        { path: [4, 1, 2, 0], span: [60, 2, 18], leadingDetachedComments: [], leadingComments: ' The float value.\n' },
         {
           path: [4, 2],
           span: [66, 0, 69, 1],
+          leadingDetachedComments: [],
           leadingComments:
             ' Wrapper message for `int64`.\n\n The JSON representation for `Int64Value` is JSON string.\n',
         },
-        { path: [4, 2, 2, 0], span: [68, 2, 18], leadingComments: ' The int64 value.\n' },
+        { path: [4, 2, 2, 0], span: [68, 2, 18], leadingDetachedComments: [], leadingComments: ' The int64 value.\n' },
         {
           path: [4, 3],
           span: [74, 0, 77, 1],
+          leadingDetachedComments: [],
           leadingComments:
             ' Wrapper message for `uint64`.\n\n The JSON representation for `UInt64Value` is JSON string.\n',
         },
-        { path: [4, 3, 2, 0], span: [76, 2, 19], leadingComments: ' The uint64 value.\n' },
+        { path: [4, 3, 2, 0], span: [76, 2, 19], leadingDetachedComments: [], leadingComments: ' The uint64 value.\n' },
         {
           path: [4, 4],
           span: [82, 0, 85, 1],
+          leadingDetachedComments: [],
           leadingComments:
             ' Wrapper message for `int32`.\n\n The JSON representation for `Int32Value` is JSON number.\n',
         },
-        { path: [4, 4, 2, 0], span: [84, 2, 18], leadingComments: ' The int32 value.\n' },
+        { path: [4, 4, 2, 0], span: [84, 2, 18], leadingDetachedComments: [], leadingComments: ' The int32 value.\n' },
         {
           path: [4, 5],
           span: [90, 0, 93, 1],
+          leadingDetachedComments: [],
           leadingComments:
             ' Wrapper message for `uint32`.\n\n The JSON representation for `UInt32Value` is JSON number.\n',
         },
-        { path: [4, 5, 2, 0], span: [92, 2, 19], leadingComments: ' The uint32 value.\n' },
+        { path: [4, 5, 2, 0], span: [92, 2, 19], leadingDetachedComments: [], leadingComments: ' The uint32 value.\n' },
         {
           path: [4, 6],
           span: [98, 0, 101, 1],
+          leadingDetachedComments: [],
           leadingComments:
             ' Wrapper message for `bool`.\n\n The JSON representation for `BoolValue` is JSON `true` and `false`.\n',
         },
-        { path: [4, 6, 2, 0], span: [100, 2, 17], leadingComments: ' The bool value.\n' },
+        { path: [4, 6, 2, 0], span: [100, 2, 17], leadingDetachedComments: [], leadingComments: ' The bool value.\n' },
         {
           path: [4, 7],
           span: [106, 0, 109, 1],
+          leadingDetachedComments: [],
           leadingComments:
             ' Wrapper message for `string`.\n\n The JSON representation for `StringValue` is JSON string.\n',
         },
-        { path: [4, 7, 2, 0], span: [108, 2, 19], leadingComments: ' The string value.\n' },
+        {
+          path: [4, 7, 2, 0],
+          span: [108, 2, 19],
+          leadingDetachedComments: [],
+          leadingComments: ' The string value.\n',
+        },
         {
           path: [4, 8],
           span: [114, 0, 117, 1],
+          leadingDetachedComments: [],
           leadingComments:
             ' Wrapper message for `bytes`.\n\n The JSON representation for `BytesValue` is JSON string.\n',
         },
-        { path: [4, 8, 2, 0], span: [116, 2, 18], leadingComments: ' The bytes value.\n' },
+        { path: [4, 8, 2, 0], span: [116, 2, 18], leadingDetachedComments: [], leadingComments: ' The bytes value.\n' },
       ],
     },
     syntax: 'proto3',
-  } as any,
+  }),
   references: {
     '.google.protobuf.DoubleValue': DoubleValue,
     '.google.protobuf.FloatValue': FloatValue,

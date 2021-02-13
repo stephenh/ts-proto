@@ -1,5 +1,10 @@
 import { code, Code, conditionalOutput, def, imp, joinCode } from 'ts-poet';
-import { google } from '../build/pbjs';
+import {
+  DescriptorProto,
+  FieldDescriptorProto,
+  FileDescriptorProto,
+  FieldDescriptorProto_Type,
+} from 'ts-proto-descriptors/google/protobuf/descriptor';
 import {
   basicLongWireType,
   basicTypeName,
@@ -50,9 +55,6 @@ import { generateEnum } from './enums';
 import { visit, visitServices } from './visit';
 import { EnvOption, LongOption, OneofOption, Options } from './options';
 import { Context } from './context';
-import DescriptorProto = google.protobuf.DescriptorProto;
-import FieldDescriptorProto = google.protobuf.FieldDescriptorProto;
-import FileDescriptorProto = google.protobuf.FileDescriptorProto;
 import { generateSchema } from './schema';
 
 export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [string, Code] {
@@ -840,7 +842,7 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
     // set the default value (TODO Support bytes)
     if (
       !isRepeated(field) &&
-      field.type !== FieldDescriptorProto.Type.TYPE_BYTES &&
+      field.type !== FieldDescriptorProto_Type.TYPE_BYTES &&
       options.oneof !== OneofOption.UNIONS
     ) {
       const v = isWithinOneOf(field) ? 'undefined' : defaultValue(ctx, field);

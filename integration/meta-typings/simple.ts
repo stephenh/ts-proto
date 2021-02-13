@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { IFileDescriptorProto } from 'protobufjs/ext/descriptor';
+import { FileDescriptorProto } from 'ts-proto-descriptors/google/protobuf/descriptor';
 import { Reader, util, configure, Writer } from 'protobufjs/minimal';
 import { protoMetadata as protoMetadata1, DateMessage } from './google/type/date';
 import { protoMetadata as protoMetadata2, StringValue, Int32Value, BoolValue } from './google/protobuf/wrappers';
@@ -1157,24 +1157,23 @@ interface Rpc {
 }
 
 export interface ProtoMetadata {
-  fileDescriptor: IFileDescriptorProto;
+  fileDescriptor: FileDescriptorProto;
   references: { [key: string]: any };
   dependencies?: ProtoMetadata[];
 }
 
 export const protoMetadata: ProtoMetadata = {
-  fileDescriptor: {
-    name: 'simple.proto',
-    package: 'simple',
+  fileDescriptor: FileDescriptorProto.fromPartial({
     dependency: [
       'google/type/date.proto',
       'google/protobuf/wrappers.proto',
       'google/protobuf/timestamp.proto',
       'import_dir/thing.proto',
     ],
+    publicDependency: [],
+    weakDependency: [],
     messageType: [
       {
-        name: 'Simple',
         field: [
           { name: 'name', number: 1, label: 1, type: 9, jsonName: 'name' },
           { name: 'age', number: 2, label: 1, type: 5, jsonName: 'age' },
@@ -1204,26 +1203,41 @@ export const protoMetadata: ProtoMetadata = {
           { name: 'birthday', number: 12, label: 1, type: 11, typeName: '.google.type.Date', jsonName: 'birthday' },
           { name: 'blob', number: 13, label: 1, type: 12, jsonName: 'blob' },
         ],
+        extension: [],
+        nestedType: [],
+        enumType: [],
+        extensionRange: [],
+        oneofDecl: [],
+        reservedRange: [],
+        reservedName: [],
+        name: 'Simple',
       },
       {
-        name: 'Child',
         field: [
           { name: 'name', number: 1, label: 1, type: 9, jsonName: 'name' },
           { name: 'type', number: 2, label: 1, type: 14, typeName: '.simple.Child.Type', jsonName: 'type' },
         ],
+        extension: [],
+        nestedType: [],
         enumType: [
           {
-            name: 'Type',
             value: [
               { name: 'UNKNOWN', number: 0 },
               { name: 'GOOD', number: 1 },
               { name: 'BAD', number: 2 },
             ],
+            reservedRange: [],
+            reservedName: [],
+            name: 'Type',
           },
         ],
+        extensionRange: [],
+        oneofDecl: [],
+        reservedRange: [],
+        reservedName: [],
+        name: 'Child',
       },
       {
-        name: 'Nested',
         field: [
           { name: 'name', number: 1, label: 1, type: 9, jsonName: 'name' },
           {
@@ -1236,9 +1250,9 @@ export const protoMetadata: ProtoMetadata = {
           },
           { name: 'state', number: 3, label: 1, type: 14, typeName: '.simple.Nested.InnerEnum', jsonName: 'state' },
         ],
+        extension: [],
         nestedType: [
           {
-            name: 'InnerMessage',
             field: [
               { name: 'name', number: 1, label: 1, type: 9, jsonName: 'name' },
               {
@@ -1250,32 +1264,61 @@ export const protoMetadata: ProtoMetadata = {
                 jsonName: 'deep',
               },
             ],
+            extension: [],
             nestedType: [
-              { name: 'DeepMessage', field: [{ name: 'name', number: 1, label: 1, type: 9, jsonName: 'name' }] },
+              {
+                field: [{ name: 'name', number: 1, label: 1, type: 9, jsonName: 'name' }],
+                extension: [],
+                nestedType: [],
+                enumType: [],
+                extensionRange: [],
+                oneofDecl: [],
+                reservedRange: [],
+                reservedName: [],
+                name: 'DeepMessage',
+              },
             ],
+            enumType: [],
+            extensionRange: [],
+            oneofDecl: [],
+            reservedRange: [],
+            reservedName: [],
+            name: 'InnerMessage',
           },
         ],
         enumType: [
           {
-            name: 'InnerEnum',
             value: [
               { name: 'UNKNOWN_INNER', number: 0 },
               { name: 'GOOD', number: 100 },
               { name: 'BAD', number: 1000 },
             ],
+            reservedRange: [],
+            reservedName: [],
+            name: 'InnerEnum',
           },
         ],
+        extensionRange: [],
+        oneofDecl: [],
+        reservedRange: [],
+        reservedName: [],
+        name: 'Nested',
       },
       {
-        name: 'OneOfMessage',
         field: [
           { name: 'first', number: 1, label: 1, type: 9, oneofIndex: 0, jsonName: 'first' },
           { name: 'last', number: 2, label: 1, type: 9, oneofIndex: 0, jsonName: 'last' },
         ],
+        extension: [],
+        nestedType: [],
+        enumType: [],
+        extensionRange: [],
         oneofDecl: [{ name: 'name_fields' }],
+        reservedRange: [],
+        reservedName: [],
+        name: 'OneOfMessage',
       },
       {
-        name: 'SimpleWithWrappers',
         field: [
           { name: 'name', number: 1, label: 1, type: 11, typeName: '.google.protobuf.StringValue', jsonName: 'name' },
           { name: 'age', number: 2, label: 1, type: 11, typeName: '.google.protobuf.Int32Value', jsonName: 'age' },
@@ -1297,10 +1340,27 @@ export const protoMetadata: ProtoMetadata = {
             jsonName: 'snacks',
           },
         ],
+        extension: [],
+        nestedType: [],
+        enumType: [],
+        extensionRange: [],
+        oneofDecl: [],
+        reservedRange: [],
+        reservedName: [],
+        name: 'SimpleWithWrappers',
       },
-      { name: 'Entity', field: [{ name: 'id', number: 1, label: 1, type: 5, jsonName: 'id' }] },
       {
-        name: 'SimpleWithMap',
+        field: [{ name: 'id', number: 1, label: 1, type: 5, jsonName: 'id' }],
+        extension: [],
+        nestedType: [],
+        enumType: [],
+        extensionRange: [],
+        oneofDecl: [],
+        reservedRange: [],
+        reservedName: [],
+        name: 'Entity',
+      },
+      {
         field: [
           {
             name: 'entitiesById',
@@ -1343,33 +1403,54 @@ export const protoMetadata: ProtoMetadata = {
             jsonName: 'mapOfBytes',
           },
         ],
+        extension: [],
         nestedType: [
           {
-            name: 'EntitiesByIdEntry',
             field: [
               { name: 'key', number: 1, label: 1, type: 5, jsonName: 'key' },
               { name: 'value', number: 2, label: 1, type: 11, typeName: '.simple.Entity', jsonName: 'value' },
             ],
-            options: { mapEntry: true },
+            extension: [],
+            nestedType: [],
+            enumType: [],
+            extensionRange: [],
+            oneofDecl: [],
+            reservedRange: [],
+            reservedName: [],
+            name: 'EntitiesByIdEntry',
+            options: { uninterpretedOption: [], mapEntry: true },
           },
           {
-            name: 'NameLookupEntry',
             field: [
               { name: 'key', number: 1, label: 1, type: 9, jsonName: 'key' },
               { name: 'value', number: 2, label: 1, type: 9, jsonName: 'value' },
             ],
-            options: { mapEntry: true },
+            extension: [],
+            nestedType: [],
+            enumType: [],
+            extensionRange: [],
+            oneofDecl: [],
+            reservedRange: [],
+            reservedName: [],
+            name: 'NameLookupEntry',
+            options: { uninterpretedOption: [], mapEntry: true },
           },
           {
-            name: 'IntLookupEntry',
             field: [
               { name: 'key', number: 1, label: 1, type: 5, jsonName: 'key' },
               { name: 'value', number: 2, label: 1, type: 5, jsonName: 'value' },
             ],
-            options: { mapEntry: true },
+            extension: [],
+            nestedType: [],
+            enumType: [],
+            extensionRange: [],
+            oneofDecl: [],
+            reservedRange: [],
+            reservedName: [],
+            name: 'IntLookupEntry',
+            options: { uninterpretedOption: [], mapEntry: true },
           },
           {
-            name: 'MapOfTimestampsEntry',
             field: [
               { name: 'key', number: 1, label: 1, type: 9, jsonName: 'key' },
               {
@@ -1381,20 +1462,40 @@ export const protoMetadata: ProtoMetadata = {
                 jsonName: 'value',
               },
             ],
-            options: { mapEntry: true },
+            extension: [],
+            nestedType: [],
+            enumType: [],
+            extensionRange: [],
+            oneofDecl: [],
+            reservedRange: [],
+            reservedName: [],
+            name: 'MapOfTimestampsEntry',
+            options: { uninterpretedOption: [], mapEntry: true },
           },
           {
-            name: 'MapOfBytesEntry',
             field: [
               { name: 'key', number: 1, label: 1, type: 9, jsonName: 'key' },
               { name: 'value', number: 2, label: 1, type: 12, jsonName: 'value' },
             ],
-            options: { mapEntry: true },
+            extension: [],
+            nestedType: [],
+            enumType: [],
+            extensionRange: [],
+            oneofDecl: [],
+            reservedRange: [],
+            reservedName: [],
+            name: 'MapOfBytesEntry',
+            options: { uninterpretedOption: [], mapEntry: true },
           },
         ],
+        enumType: [],
+        extensionRange: [],
+        oneofDecl: [],
+        reservedRange: [],
+        reservedName: [],
+        name: 'SimpleWithMap',
       },
       {
-        name: 'SimpleWithSnakeCaseMap',
         field: [
           {
             name: 'entities_by_id',
@@ -1405,19 +1506,32 @@ export const protoMetadata: ProtoMetadata = {
             jsonName: 'entitiesById',
           },
         ],
+        extension: [],
         nestedType: [
           {
-            name: 'EntitiesByIdEntry',
             field: [
               { name: 'key', number: 1, label: 1, type: 5, jsonName: 'key' },
               { name: 'value', number: 2, label: 1, type: 11, typeName: '.simple.Entity', jsonName: 'value' },
             ],
-            options: { mapEntry: true },
+            extension: [],
+            nestedType: [],
+            enumType: [],
+            extensionRange: [],
+            oneofDecl: [],
+            reservedRange: [],
+            reservedName: [],
+            name: 'EntitiesByIdEntry',
+            options: { uninterpretedOption: [], mapEntry: true },
           },
         ],
+        enumType: [],
+        extensionRange: [],
+        oneofDecl: [],
+        reservedRange: [],
+        reservedName: [],
+        name: 'SimpleWithSnakeCaseMap',
       },
       {
-        name: 'SimpleWithMapOfEnums',
         field: [
           {
             name: 'enums_by_id',
@@ -1428,21 +1542,54 @@ export const protoMetadata: ProtoMetadata = {
             jsonName: 'enumsById',
           },
         ],
+        extension: [],
         nestedType: [
           {
-            name: 'EnumsByIdEntry',
             field: [
               { name: 'key', number: 1, label: 1, type: 5, jsonName: 'key' },
               { name: 'value', number: 2, label: 1, type: 14, typeName: '.simple.StateEnum', jsonName: 'value' },
             ],
-            options: { mapEntry: true },
+            extension: [],
+            nestedType: [],
+            enumType: [],
+            extensionRange: [],
+            oneofDecl: [],
+            reservedRange: [],
+            reservedName: [],
+            name: 'EnumsByIdEntry',
+            options: { uninterpretedOption: [], mapEntry: true },
           },
         ],
+        enumType: [],
+        extensionRange: [],
+        oneofDecl: [],
+        reservedRange: [],
+        reservedName: [],
+        name: 'SimpleWithMapOfEnums',
       },
-      { name: 'PingRequest', field: [{ name: 'input', number: 1, label: 1, type: 9, jsonName: 'input' }] },
-      { name: 'PingResponse', field: [{ name: 'output', number: 1, label: 1, type: 9, jsonName: 'output' }] },
       {
-        name: 'Numbers',
+        field: [{ name: 'input', number: 1, label: 1, type: 9, jsonName: 'input' }],
+        extension: [],
+        nestedType: [],
+        enumType: [],
+        extensionRange: [],
+        oneofDecl: [],
+        reservedRange: [],
+        reservedName: [],
+        name: 'PingRequest',
+      },
+      {
+        field: [{ name: 'output', number: 1, label: 1, type: 9, jsonName: 'output' }],
+        extension: [],
+        nestedType: [],
+        enumType: [],
+        extensionRange: [],
+        oneofDecl: [],
+        reservedRange: [],
+        reservedName: [],
+        name: 'PingResponse',
+      },
+      {
         field: [
           { name: 'double', number: 1, label: 1, type: 1, jsonName: 'double' },
           { name: 'float', number: 2, label: 1, type: 2, jsonName: 'float' },
@@ -1457,9 +1604,16 @@ export const protoMetadata: ProtoMetadata = {
           { name: 'sfixed32', number: 11, label: 1, type: 15, jsonName: 'sfixed32' },
           { name: 'sfixed64', number: 12, label: 1, type: 16, jsonName: 'sfixed64' },
         ],
+        extension: [],
+        nestedType: [],
+        enumType: [],
+        extensionRange: [],
+        oneofDecl: [],
+        reservedRange: [],
+        reservedName: [],
+        name: 'Numbers',
       },
       {
-        name: 'SimpleButOptional',
         field: [
           { name: 'name', number: 1, label: 1, type: 9, oneofIndex: 0, jsonName: 'name', proto3Optional: true },
           { name: 'age', number: 2, label: 1, type: 5, oneofIndex: 1, jsonName: 'age', proto3Optional: true },
@@ -1514,6 +1668,10 @@ export const protoMetadata: ProtoMetadata = {
             proto3Optional: true,
           },
         ],
+        extension: [],
+        nestedType: [],
+        enumType: [],
+        extensionRange: [],
         oneofDecl: [
           { name: '_name' },
           { name: '_age' },
@@ -1523,55 +1681,104 @@ export const protoMetadata: ProtoMetadata = {
           { name: '_thing' },
           { name: '_birthday' },
         ],
+        reservedRange: [],
+        reservedName: [],
+        name: 'SimpleButOptional',
       },
-      { name: 'Empty' },
+      {
+        field: [],
+        extension: [],
+        nestedType: [],
+        enumType: [],
+        extensionRange: [],
+        oneofDecl: [],
+        reservedRange: [],
+        reservedName: [],
+        name: 'Empty',
+      },
     ],
     enumType: [
       {
-        name: 'StateEnum',
         value: [
           { name: 'UNKNOWN', number: 0 },
           { name: 'ON', number: 2 },
           { name: 'OFF', number: 3 },
         ],
+        reservedRange: [],
+        reservedName: [],
+        name: 'StateEnum',
       },
     ],
     service: [
       {
-        name: 'PingService',
         method: [{ name: 'ping', inputType: '.simple.PingRequest', outputType: '.simple.PingResponse' }],
+        name: 'PingService',
       },
     ],
+    extension: [],
+    name: 'simple.proto',
+    package: 'simple',
     sourceCodeInfo: {
       location: [
         {
           path: [12],
           span: [2, 0, 18],
+          leadingDetachedComments: [],
           leadingComments:
             ' Adding a comment to the syntax will become the first\n comment in the output source file.\n',
         },
         {
           path: [4, 0],
           span: [13, 0, 30, 1],
-          leadingComments: '* Example comment on the Simple message ',
           leadingDetachedComments: [
             ' This comment is seperated by a blank non-comment line, and will detatch from \n the following comment on the message Simple.\n',
           ],
+          leadingComments: '* Example comment on the Simple message ',
         },
-        { path: [4, 0, 2, 0], span: [15, 2, 18], leadingComments: ' Name field\n' },
-        { path: [4, 0, 2, 1], span: [17, 2, 16], leadingComments: ' Age ' },
-        { path: [4, 0, 2, 2], span: [18, 2, 43], trailingComments: ' This comment will also attach\n' },
-        { path: [4, 0, 2, 9], span: [26, 2, 27], leadingComments: ' A thing (imported from thing)\n' },
-        { path: [4, 2, 3, 0], span: [54, 2, 61, 3], leadingComments: ' Comment for a nested message */\n' },
-        { path: [4, 12], span: [133, 0, 144, 1], leadingComments: "* For testing proto3's field presence feature. " },
-        { path: [4, 12, 2, 0], span: [135, 2, 27], leadingComments: ' Name field\n' },
-        { path: [4, 12, 2, 1], span: [137, 2, 25], leadingComments: ' Age ' },
-        { path: [4, 12, 2, 2], span: [138, 2, 52], trailingComments: ' This comment will also attach\n' },
-        { path: [4, 12, 2, 5], span: [142, 2, 36], leadingComments: ' A thing (imported from thing)\n' },
+        { path: [4, 0, 2, 0], span: [15, 2, 18], leadingDetachedComments: [], leadingComments: ' Name field\n' },
+        { path: [4, 0, 2, 1], span: [17, 2, 16], leadingDetachedComments: [], leadingComments: ' Age ' },
+        {
+          path: [4, 0, 2, 2],
+          span: [18, 2, 43],
+          leadingDetachedComments: [],
+          trailingComments: ' This comment will also attach\n',
+        },
+        {
+          path: [4, 0, 2, 9],
+          span: [26, 2, 27],
+          leadingDetachedComments: [],
+          leadingComments: ' A thing (imported from thing)\n',
+        },
+        {
+          path: [4, 2, 3, 0],
+          span: [54, 2, 61, 3],
+          leadingDetachedComments: [],
+          leadingComments: ' Comment for a nested message */\n',
+        },
+        {
+          path: [4, 12],
+          span: [133, 0, 144, 1],
+          leadingDetachedComments: [],
+          leadingComments: "* For testing proto3's field presence feature. ",
+        },
+        { path: [4, 12, 2, 0], span: [135, 2, 27], leadingDetachedComments: [], leadingComments: ' Name field\n' },
+        { path: [4, 12, 2, 1], span: [137, 2, 25], leadingDetachedComments: [], leadingComments: ' Age ' },
+        {
+          path: [4, 12, 2, 2],
+          span: [138, 2, 52],
+          leadingDetachedComments: [],
+          trailingComments: ' This comment will also attach\n',
+        },
+        {
+          path: [4, 12, 2, 5],
+          span: [142, 2, 36],
+          leadingDetachedComments: [],
+          leadingComments: ' A thing (imported from thing)\n',
+        },
       ],
     },
     syntax: 'proto3',
-  } as any,
+  }),
   references: {
     '.simple.StateEnum': StateEnum,
     '.simple.Simple': Simple,

@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { IFileDescriptorProto } from 'protobufjs/ext/descriptor';
+import { FileDescriptorProto } from 'ts-proto-descriptors/google/protobuf/descriptor';
 import { protoMetadata as protoMetadata1, Timestamp } from '../google/protobuf/timestamp';
 import { Writer, Reader } from 'protobufjs/minimal';
 
@@ -39,19 +39,18 @@ export const ImportedThing = {
 };
 
 export interface ProtoMetadata {
-  fileDescriptor: IFileDescriptorProto;
+  fileDescriptor: FileDescriptorProto;
   references: { [key: string]: any };
   dependencies?: ProtoMetadata[];
 }
 
 export const protoMetadata: ProtoMetadata = {
-  fileDescriptor: {
-    name: 'import_dir/thing.proto',
-    package: 'simple',
+  fileDescriptor: FileDescriptorProto.fromPartial({
     dependency: ['google/protobuf/timestamp.proto'],
+    publicDependency: [],
+    weakDependency: [],
     messageType: [
       {
-        name: 'ImportedThing',
         field: [
           {
             name: 'created_at',
@@ -62,11 +61,24 @@ export const protoMetadata: ProtoMetadata = {
             jsonName: 'createdAt',
           },
         ],
+        extension: [],
+        nestedType: [],
+        enumType: [],
+        extensionRange: [],
+        oneofDecl: [],
+        reservedRange: [],
+        reservedName: [],
+        name: 'ImportedThing',
       },
     ],
+    enumType: [],
+    service: [],
+    extension: [],
+    name: 'import_dir/thing.proto',
+    package: 'simple',
     sourceCodeInfo: { location: [] },
     syntax: 'proto3',
-  } as any,
+  }),
   references: { '.simple.ImportedThing': ImportedThing },
   dependencies: [protoMetadata1],
 };
