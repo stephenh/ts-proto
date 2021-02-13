@@ -1,4 +1,24 @@
 
+## v1.59.0
+
+* Fix `DeepPartial` imports when services and messages are in separate files
+
+## v1.58.0
+
+* Fix JSON parsing of long wrapper values when forceLong != long (jessebutterfield)
+
+## v1.57.0
+
+* Accidental duplicate publish.
+
+## v1.56.0
+
+* Fix import collisions for imported-only symbols (stezu)
+
+## v1.55.0
+
+* Fix missing `fromTimestamp` import in generated code, fixes #200 (jessebutterfield)
+
 ## v1.54.0
 
 * Fix `google.protobuf.BytesValue` in `fromPartial` & `fromJSON` (ebakoba)

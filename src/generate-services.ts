@@ -37,7 +37,7 @@ export function generateService(
   sourceInfo: SourceInfo,
   serviceDesc: ServiceDescriptorProto
 ): Code {
-  const { options } = ctx;
+  const { options, utils } = ctx;
   const chunks: Code[] = [];
 
   maybeAddComment(sourceInfo, chunks, serviceDesc.options?.deprecated);
@@ -59,7 +59,7 @@ export function generateService(
     // the grpc-web clients auto-`fromPartial` the input before handing off to grpc-web's
     // serde runtime, so it's okay to accept partial results from the client
     if (options.outputClientImpl === 'grpc-web') {
-      inputType = code`DeepPartial<${inputType}>`;
+      inputType = code`${utils.DeepPartial}<${inputType}>`;
     }
     params.push(code`request: ${inputType}`);
 

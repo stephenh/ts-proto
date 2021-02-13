@@ -402,7 +402,7 @@ function makeTimestampMethods(options: Options, longs: ReturnType<typeof makeLon
         } else if (typeof o === "string") {
           return new Date(o);
         } else {
-          return fromTimestamp(Timestamp.fromJSON(o));
+          return ${fromTimestamp}(Timestamp.fromJSON(o));
         }
       }
     `
@@ -772,7 +772,7 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
         return code`${utils.fromJsonTimestamp}(${from})`;
       } else if (isValueType(ctx, field)) {
         const valueType = valueTypeName(ctx, field.typeName)!;
-        if (isLongValueType(field)) {
+        if (isLongValueType(field) && options.forceLong === LongOption.LONG) {
           return code`${capitalize(valueType.toCodeString())}.fromValue(${from})`;
         } else if (isBytesValueType(field)) {
           return code`new ${capitalize(valueType.toCodeString())}(${from})`;

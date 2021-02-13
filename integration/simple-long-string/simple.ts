@@ -1,6 +1,7 @@
 /* eslint-disable */
 import * as Long from 'long';
 import { util, configure, Writer, Reader } from 'protobufjs/minimal';
+import { UInt64Value } from './google/protobuf/wrappers';
 
 export const protobufPackage = 'simple';
 
@@ -17,6 +18,7 @@ export interface Numbers {
   fixed64: string;
   sfixed32: number;
   sfixed64: string;
+  guint64: string | undefined;
 }
 
 const baseNumbers: object = {
@@ -48,6 +50,9 @@ export const Numbers = {
     writer.uint32(81).fixed64(message.fixed64);
     writer.uint32(93).sfixed32(message.sfixed32);
     writer.uint32(97).sfixed64(message.sfixed64);
+    if (message.guint64 !== undefined && message.guint64 !== undefined) {
+      UInt64Value.encode({ value: message.guint64! }, writer.uint32(106).fork()).ldelim();
+    }
     return writer;
   },
 
@@ -93,6 +98,9 @@ export const Numbers = {
           break;
         case 12:
           message.sfixed64 = longToString(reader.sfixed64() as Long);
+          break;
+        case 13:
+          message.guint64 = UInt64Value.decode(reader, reader.uint32()).value;
           break;
         default:
           reader.skipType(tag & 7);
@@ -164,6 +172,11 @@ export const Numbers = {
     } else {
       message.sfixed64 = '0';
     }
+    if (object.guint64 !== undefined && object.guint64 !== null) {
+      message.guint64 = String(object.guint64);
+    } else {
+      message.guint64 = undefined;
+    }
     return message;
   },
 
@@ -229,6 +242,11 @@ export const Numbers = {
     } else {
       message.sfixed64 = '0';
     }
+    if (object.guint64 !== undefined && object.guint64 !== null) {
+      message.guint64 = object.guint64;
+    } else {
+      message.guint64 = undefined;
+    }
     return message;
   },
 
@@ -246,6 +264,7 @@ export const Numbers = {
     message.fixed64 !== undefined && (obj.fixed64 = message.fixed64);
     message.sfixed32 !== undefined && (obj.sfixed32 = message.sfixed32);
     message.sfixed64 !== undefined && (obj.sfixed64 = message.sfixed64);
+    message.guint64 !== undefined && (obj.guint64 = message.guint64);
     return obj;
   },
 };
