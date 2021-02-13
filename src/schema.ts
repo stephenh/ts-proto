@@ -33,31 +33,33 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
   const values = [code`fileDescriptor: ${JSON.stringify(outputFileDesc)} as any`];
 
   const references: Code[] = [];
+  function addReference(localName: string, symbol: string): void {
+    references.push(code`'.${fileDesc.package}.${localName.replace(/_/g, '.')}': ${symbol}`);
+  }
+
   visit(
     fileDesc,
     sourceInfo,
-    (fullName, message, sInfo) => {
+    (fullName) => {
       if (options.outputEncodeMethods) {
-        references.push(code`'.${fileDesc.package}.${fullName.replace(/_/g, '.')}': ${fullName}`);
+        addReference(fullName, fullName);
       }
     },
     options,
-    (fullName, enumDesc, sInfo) => {
-      references.push(code`'.${fileDesc.package}.${fullName.replace(/_/g, '.')}': ${fullName}`);
+    (fullName) => {
+      addReference(fullName, fullName);
     }
   );
 
-  visitServices(fileDesc, sourceInfo, (serviceDesc, sInfo) => {
+  visitServices(fileDesc, sourceInfo, (serviceDesc) => {
     if (options.outputClientImpl) {
-      references.push(
-        code`'.${fileDesc.package}.${serviceDesc.name.replace(/_/g, '.')}': ${serviceDesc.name}ClientImpl`
-      );
+      addReference(serviceDesc.name, `${serviceDesc.name}ClientImpl`);
     }
   });
 
   values.push(code`
-      references: {${joinCode(references, { on: ',\n' })}}
-    `);
+    references: {${joinCode(references, { on: ',\n' })}}
+  `);
 
   if (fileDesc.dependency) {
     const dependencies = fileDesc.dependency.map((dep) => {
