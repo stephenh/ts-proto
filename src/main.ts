@@ -707,7 +707,7 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
       `);
     } else if (isMessage(field)) {
       chunks.push(code`
-        if (message.${fieldName} !== undefined && message.${fieldName} !== ${defaultValue(ctx, field)}) {
+        if (message.${fieldName} !== undefined) {
           ${writeSnippet(`message.${fieldName}`)};
         }
       `);
