@@ -19,17 +19,6 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
     }
   `);
 
-  const outputFileDesc: IFileDescriptorProto = {
-    ...fileDesc,
-    sourceCodeInfo: null,
-  };
-
-  if (fileDesc.sourceCodeInfo) {
-    outputFileDesc.sourceCodeInfo = {
-      location: fileDesc.sourceCodeInfo.location.filter((loc) => loc['leadingComments'] || loc['trailingComments']),
-    } as any;
-  }
-
   const references: Code[] = [];
   function addReference(localName: string, symbol: string): void {
     references.push(code`'.${fileDesc.package}.${localName.replace(/_/g, '.')}': ${symbol}`);
@@ -61,9 +50,18 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
     return code`${new ImportsName(localName, './' + mod, 'protoMetadata')}`;
   });
 
+  // Use toObject so that we get enums as numbers (instead of the default toJSON behavior)
+  const descriptor = FileDescriptorProto.toObject(fileDesc);
+
+  // Only keep locations that include comments
+  descriptor.sourceCodeInfo = {
+    location: descriptor.sourceCodeInfo.location.filter((loc) => loc['leadingComments'] || loc['trailingComments']),
+  };
+
+  // TODO Remove the 'as any` from fileDescriptor once protobufjs includes `proto3Optional`
   chunks.push(code`
     export const protoMetadata: ProtoMetadata = {
-      fileDescriptor: ${outputFileDesc} as any,
+      fileDescriptor: ${descriptor} as any,
       references: { ${joinCode(references, { on: ',' })} },
       dependencies: [${joinCode(dependencies, { on: ',' })}],
     }

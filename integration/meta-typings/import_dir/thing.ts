@@ -46,9 +46,9 @@ export interface ProtoMetadata {
 
 export const protoMetadata: ProtoMetadata = {
   fileDescriptor: {
+    name: 'import_dir/thing.proto',
+    package: 'simple',
     dependency: ['google/protobuf/timestamp.proto'],
-    publicDependency: [],
-    weakDependency: [],
     messageType: [
       {
         name: 'ImportedThing',
@@ -56,19 +56,14 @@ export const protoMetadata: ProtoMetadata = {
           {
             name: 'created_at',
             number: 1,
-            label: 'LABEL_OPTIONAL',
-            type: 'TYPE_MESSAGE',
+            label: 1,
+            type: 11,
             typeName: '.google.protobuf.Timestamp',
             jsonName: 'createdAt',
           },
         ],
       },
     ],
-    enumType: [],
-    service: [],
-    extension: [],
-    name: 'import_dir/thing.proto',
-    package: 'simple',
     sourceCodeInfo: { location: [] },
     syntax: 'proto3',
   } as any,

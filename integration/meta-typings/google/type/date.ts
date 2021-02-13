@@ -78,24 +78,18 @@ export interface ProtoMetadata {
 
 export const protoMetadata: ProtoMetadata = {
   fileDescriptor: {
-    dependency: [],
-    publicDependency: [],
-    weakDependency: [],
+    name: 'google/type/date.proto',
+    package: 'google.type',
     messageType: [
       {
         name: 'Date',
         field: [
-          { name: 'year', number: 1, label: 'LABEL_OPTIONAL', type: 'TYPE_INT32', jsonName: 'year' },
-          { name: 'month', number: 2, label: 'LABEL_OPTIONAL', type: 'TYPE_INT32', jsonName: 'month' },
-          { name: 'day', number: 3, label: 'LABEL_OPTIONAL', type: 'TYPE_INT32', jsonName: 'day' },
+          { name: 'year', number: 1, label: 1, type: 5, jsonName: 'year' },
+          { name: 'month', number: 2, label: 1, type: 5, jsonName: 'month' },
+          { name: 'day', number: 3, label: 1, type: 5, jsonName: 'day' },
         ],
       },
     ],
-    enumType: [],
-    service: [],
-    extension: [],
-    name: 'google/type/date.proto',
-    package: 'google.type',
     options: {
       javaPackage: 'com.google.type',
       javaOuterClassname: 'DateProto',

@@ -346,52 +346,19 @@ export interface ProtoMetadata {
 
 export const protoMetadata: ProtoMetadata = {
   fileDescriptor: {
-    dependency: [],
-    publicDependency: [],
-    weakDependency: [],
-    messageType: [
-      {
-        name: 'DoubleValue',
-        field: [{ name: 'value', number: 1, label: 'LABEL_OPTIONAL', type: 'TYPE_DOUBLE', jsonName: 'value' }],
-      },
-      {
-        name: 'FloatValue',
-        field: [{ name: 'value', number: 1, label: 'LABEL_OPTIONAL', type: 'TYPE_FLOAT', jsonName: 'value' }],
-      },
-      {
-        name: 'Int64Value',
-        field: [{ name: 'value', number: 1, label: 'LABEL_OPTIONAL', type: 'TYPE_INT64', jsonName: 'value' }],
-      },
-      {
-        name: 'UInt64Value',
-        field: [{ name: 'value', number: 1, label: 'LABEL_OPTIONAL', type: 'TYPE_UINT64', jsonName: 'value' }],
-      },
-      {
-        name: 'Int32Value',
-        field: [{ name: 'value', number: 1, label: 'LABEL_OPTIONAL', type: 'TYPE_INT32', jsonName: 'value' }],
-      },
-      {
-        name: 'UInt32Value',
-        field: [{ name: 'value', number: 1, label: 'LABEL_OPTIONAL', type: 'TYPE_UINT32', jsonName: 'value' }],
-      },
-      {
-        name: 'BoolValue',
-        field: [{ name: 'value', number: 1, label: 'LABEL_OPTIONAL', type: 'TYPE_BOOL', jsonName: 'value' }],
-      },
-      {
-        name: 'StringValue',
-        field: [{ name: 'value', number: 1, label: 'LABEL_OPTIONAL', type: 'TYPE_STRING', jsonName: 'value' }],
-      },
-      {
-        name: 'BytesValue',
-        field: [{ name: 'value', number: 1, label: 'LABEL_OPTIONAL', type: 'TYPE_BYTES', jsonName: 'value' }],
-      },
-    ],
-    enumType: [],
-    service: [],
-    extension: [],
     name: 'google/protobuf/wrappers.proto',
     package: 'google.protobuf',
+    messageType: [
+      { name: 'DoubleValue', field: [{ name: 'value', number: 1, label: 1, type: 1, jsonName: 'value' }] },
+      { name: 'FloatValue', field: [{ name: 'value', number: 1, label: 1, type: 2, jsonName: 'value' }] },
+      { name: 'Int64Value', field: [{ name: 'value', number: 1, label: 1, type: 3, jsonName: 'value' }] },
+      { name: 'UInt64Value', field: [{ name: 'value', number: 1, label: 1, type: 4, jsonName: 'value' }] },
+      { name: 'Int32Value', field: [{ name: 'value', number: 1, label: 1, type: 5, jsonName: 'value' }] },
+      { name: 'UInt32Value', field: [{ name: 'value', number: 1, label: 1, type: 13, jsonName: 'value' }] },
+      { name: 'BoolValue', field: [{ name: 'value', number: 1, label: 1, type: 8, jsonName: 'value' }] },
+      { name: 'StringValue', field: [{ name: 'value', number: 1, label: 1, type: 9, jsonName: 'value' }] },
+      { name: 'BytesValue', field: [{ name: 'value', number: 1, label: 1, type: 12, jsonName: 'value' }] },
+    ],
     options: {
       javaPackage: 'com.google.protobuf',
       javaOuterClassname: 'WrappersProto',

@@ -140,23 +140,17 @@ export interface ProtoMetadata {
 
 export const protoMetadata: ProtoMetadata = {
   fileDescriptor: {
-    dependency: [],
-    publicDependency: [],
-    weakDependency: [],
+    name: 'google/protobuf/timestamp.proto',
+    package: 'google.protobuf',
     messageType: [
       {
         name: 'Timestamp',
         field: [
-          { name: 'seconds', number: 1, label: 'LABEL_OPTIONAL', type: 'TYPE_INT64', jsonName: 'seconds' },
-          { name: 'nanos', number: 2, label: 'LABEL_OPTIONAL', type: 'TYPE_INT32', jsonName: 'nanos' },
+          { name: 'seconds', number: 1, label: 1, type: 3, jsonName: 'seconds' },
+          { name: 'nanos', number: 2, label: 1, type: 5, jsonName: 'nanos' },
         ],
       },
     ],
-    enumType: [],
-    service: [],
-    extension: [],
-    name: 'google/protobuf/timestamp.proto',
-    package: 'google.protobuf',
     options: {
       javaPackage: 'com.google.protobuf',
       javaOuterClassname: 'TimestampProto',
