@@ -1,11 +1,9 @@
-import { google } from '../build/pbjs';
 import { Options, defaultOptions } from '../src/options';
 import { messageToTypeName, TypeMap } from '../src/types';
-import DescriptorProto = google.protobuf.DescriptorProto;
 import { Code, code, imp } from 'ts-poet';
 import { Utils } from '../src/main';
 
-const fakeProto = (undefined as any) as DescriptorProto;
+const fakeProto = undefined as any;
 
 describe('types', () => {
   describe('messageToTypeName', () => {
