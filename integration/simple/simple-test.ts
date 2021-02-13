@@ -1,5 +1,15 @@
 import { Reader } from 'protobufjs';
-import { protobufPackage, Child_Type, Nested, Nested_InnerEnum, OneOfMessage, Simple, SimpleWithMap, StateEnum, SimpleWithMapOfEnums } from './simple';
+import {
+  protobufPackage,
+  Child_Type,
+  Nested,
+  Nested_InnerEnum,
+  OneOfMessage,
+  Simple,
+  SimpleWithMap,
+  StateEnum,
+  SimpleWithMapOfEnums,
+} from './simple';
 import { simple as pbjs, google } from './pbjs';
 import ISimple = pbjs.ISimple;
 import PbChild = pbjs.Child;
@@ -41,7 +51,7 @@ describe('simple', () => {
   });
 
   it('generates its protobuf package constant', () => {
-    expect(protobufPackage).toEqual('simple')
+    expect(protobufPackage).toEqual('simple');
   });
 
   it('can decode', () => {
@@ -98,9 +108,13 @@ describe('simple', () => {
     const s1: ISimple = {};
     const s2 = Simple.decode(Reader.create(PbSimple.encode(PbSimple.fromObject(s1)).finish()));
     expect(s2.name).toEqual('');
+    expect(s2.hasOwnProperty('name')).toEqual(false);
     expect(s2.age).toEqual(0);
+    expect(s2.hasOwnProperty('age')).toEqual(false);
     expect(s2.state).toEqual(StateEnum.UNKNOWN);
+    expect(s2.hasOwnProperty('state')).toEqual(false);
     expect(s2.grandChildren).toEqual([]);
+    expect(s2.hasOwnProperty('grandChildren')).toEqual(true);
     expect(s2.coins).toEqual([]);
     expect(s2.snacks).toEqual([]);
     expect(s2.oldStates).toEqual([]);
@@ -280,7 +294,7 @@ describe('simple', () => {
     const message = {
       enumsById: {
         3: PbState.ON,
-      }
+      },
     };
 
     const encoded = PbSimpleWithMapOfEnums.encode(PbSimpleWithMapOfEnums.create(message)).finish();
@@ -294,7 +308,7 @@ describe('simple', () => {
   it('can encode s.t. pbjs can decode', () => {
     const message = {
       enumsById: {
-        2: PbState.OFF
+        2: PbState.OFF,
       },
     };
 

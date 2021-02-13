@@ -81,12 +81,7 @@ describe('oneof=unions', () => {
 
   it('fromJSON', () => {
     let empty = PleaseChoose.fromJSON({});
-    expect(empty).toEqual({
-      name: '',
-      age: 0,
-      choice: undefined,
-      eitherOr: undefined,
-    });
+    expect(empty).toEqual({});
 
     let debbie: PleaseChoose = {
       name: 'Debbie',

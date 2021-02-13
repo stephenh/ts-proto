@@ -117,7 +117,7 @@ export const Timestamp = {
   decode(input: Reader | Uint8Array, length?: number): Timestamp {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseTimestamp } as Timestamp;
+    const message = Object.create(baseTimestamp) as Timestamp;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

@@ -21,7 +21,7 @@ export const ImportedThing = {
   decode(input: Reader | Uint8Array, length?: number): ImportedThing {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseImportedThing } as ImportedThing;
+    const message = Object.create(baseImportedThing) as ImportedThing;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -37,7 +37,7 @@ export const ImportedThing = {
   },
 
   fromJSON(object: any): ImportedThing {
-    const message = { ...baseImportedThing } as ImportedThing;
+    const message = Object.create(baseImportedThing) as ImportedThing;
     if (object.createdAt !== undefined && object.createdAt !== null) {
       message.createdAt = fromJsonTimestamp(object.createdAt);
     } else {
