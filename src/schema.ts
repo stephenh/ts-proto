@@ -30,8 +30,6 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
     } as any;
   }
 
-  const values = [code`fileDescriptor: ${JSON.stringify(outputFileDesc)} as any`];
-
   const references: Code[] = [];
   function addReference(localName: string, symbol: string): void {
     references.push(code`'.${fileDesc.package}.${localName.replace(/_/g, '.')}': ${symbol}`);
@@ -57,25 +55,19 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
     }
   });
 
-  values.push(code`
-    references: {${joinCode(references, { on: ',\n' })}}
-  `);
-
-  if (fileDesc.dependency) {
-    const dependencies = fileDesc.dependency.map((dep) => {
-      const mod = dep.replace('.proto', '');
-      const localName = mod.replace(/\//g, '_') + '_protoMetadata';
-      return code`${new ImportsName(localName, './' + mod, 'protoMetadata')}`;
-    });
-
-    values.push(code`dependencies: [${joinCode(dependencies, { on: ', ' })}]`);
-  }
+  const dependencies = fileDesc.dependency.map((dep) => {
+    const mod = dep.replace('.proto', '');
+    const localName = mod.replace(/\//g, '_') + '_protoMetadata';
+    return code`${new ImportsName(localName, './' + mod, 'protoMetadata')}`;
+  });
 
   chunks.push(code`
-      export const protoMetadata: ProtoMetadata = {
-        ${joinCode(values, { on: ',\n' })}
-      }
-    `);
+    export const protoMetadata: ProtoMetadata = {
+      fileDescriptor: ${JSON.stringify(outputFileDesc)} as any,
+      references: { ${joinCode(references, { on: ',' })} },
+      dependencies: [${joinCode(dependencies, { on: ',' })}],
+    }
+  `);
 
   return chunks;
 }
