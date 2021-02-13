@@ -8,32 +8,29 @@ describe('simple', () => {
           Object {
             "dependencies": Array [],
             "fileDescriptor": Object {
-              "dependency": Array [],
-              "enumType": Array [],
-              "extension": Array [],
               "messageType": Array [
                 Object {
                   "field": Array [
                     Object {
                       "jsonName": "year",
-                      "label": "LABEL_OPTIONAL",
+                      "label": 1,
                       "name": "year",
                       "number": 1,
-                      "type": "TYPE_INT32",
+                      "type": 5,
                     },
                     Object {
                       "jsonName": "month",
-                      "label": "LABEL_OPTIONAL",
+                      "label": 1,
                       "name": "month",
                       "number": 2,
-                      "type": "TYPE_INT32",
+                      "type": 5,
                     },
                     Object {
                       "jsonName": "day",
-                      "label": "LABEL_OPTIONAL",
+                      "label": 1,
                       "name": "day",
                       "number": 3,
-                      "type": "TYPE_INT32",
+                      "type": 5,
                     },
                   ],
                   "name": "Date",
@@ -49,8 +46,6 @@ describe('simple', () => {
                 "objcClassPrefix": "GTP",
               },
               "package": "google.type",
-              "publicDependency": Array [],
-              "service": Array [],
               "sourceCodeInfo": Object {
                 "location": Array [
                   Object {
@@ -128,7 +123,6 @@ describe('simple', () => {
                 ],
               },
               "syntax": "proto3",
-              "weakDependency": Array [],
             },
             "references": Object {
               ".google.type.DateMessage": Object {
@@ -140,18 +134,15 @@ describe('simple', () => {
           Object {
             "dependencies": Array [],
             "fileDescriptor": Object {
-              "dependency": Array [],
-              "enumType": Array [],
-              "extension": Array [],
               "messageType": Array [
                 Object {
                   "field": Array [
                     Object {
                       "jsonName": "value",
-                      "label": "LABEL_OPTIONAL",
+                      "label": 1,
                       "name": "value",
                       "number": 1,
-                      "type": "TYPE_DOUBLE",
+                      "type": 1,
                     },
                   ],
                   "name": "DoubleValue",
@@ -160,10 +151,10 @@ describe('simple', () => {
                   "field": Array [
                     Object {
                       "jsonName": "value",
-                      "label": "LABEL_OPTIONAL",
+                      "label": 1,
                       "name": "value",
                       "number": 1,
-                      "type": "TYPE_FLOAT",
+                      "type": 2,
                     },
                   ],
                   "name": "FloatValue",
@@ -172,10 +163,10 @@ describe('simple', () => {
                   "field": Array [
                     Object {
                       "jsonName": "value",
-                      "label": "LABEL_OPTIONAL",
+                      "label": 1,
                       "name": "value",
                       "number": 1,
-                      "type": "TYPE_INT64",
+                      "type": 3,
                     },
                   ],
                   "name": "Int64Value",
@@ -184,10 +175,10 @@ describe('simple', () => {
                   "field": Array [
                     Object {
                       "jsonName": "value",
-                      "label": "LABEL_OPTIONAL",
+                      "label": 1,
                       "name": "value",
                       "number": 1,
-                      "type": "TYPE_UINT64",
+                      "type": 4,
                     },
                   ],
                   "name": "UInt64Value",
@@ -196,10 +187,10 @@ describe('simple', () => {
                   "field": Array [
                     Object {
                       "jsonName": "value",
-                      "label": "LABEL_OPTIONAL",
+                      "label": 1,
                       "name": "value",
                       "number": 1,
-                      "type": "TYPE_INT32",
+                      "type": 5,
                     },
                   ],
                   "name": "Int32Value",
@@ -208,10 +199,10 @@ describe('simple', () => {
                   "field": Array [
                     Object {
                       "jsonName": "value",
-                      "label": "LABEL_OPTIONAL",
+                      "label": 1,
                       "name": "value",
                       "number": 1,
-                      "type": "TYPE_UINT32",
+                      "type": 13,
                     },
                   ],
                   "name": "UInt32Value",
@@ -220,10 +211,10 @@ describe('simple', () => {
                   "field": Array [
                     Object {
                       "jsonName": "value",
-                      "label": "LABEL_OPTIONAL",
+                      "label": 1,
                       "name": "value",
                       "number": 1,
-                      "type": "TYPE_BOOL",
+                      "type": 8,
                     },
                   ],
                   "name": "BoolValue",
@@ -232,10 +223,10 @@ describe('simple', () => {
                   "field": Array [
                     Object {
                       "jsonName": "value",
-                      "label": "LABEL_OPTIONAL",
+                      "label": 1,
                       "name": "value",
                       "number": 1,
-                      "type": "TYPE_STRING",
+                      "type": 9,
                     },
                   ],
                   "name": "StringValue",
@@ -244,10 +235,10 @@ describe('simple', () => {
                   "field": Array [
                     Object {
                       "jsonName": "value",
-                      "label": "LABEL_OPTIONAL",
+                      "label": 1,
                       "name": "value",
                       "number": 1,
-                      "type": "TYPE_BYTES",
+                      "type": 12,
                     },
                   ],
                   "name": "BytesValue",
@@ -264,8 +255,6 @@ describe('simple', () => {
                 "objcClassPrefix": "GPB",
               },
               "package": "google.protobuf",
-              "publicDependency": Array [],
-              "service": Array [],
               "sourceCodeInfo": Object {
                 "location": Array [
                   Object {
@@ -550,7 +539,6 @@ describe('simple', () => {
                 ],
               },
               "syntax": "proto3",
-              "weakDependency": Array [],
             },
             "references": Object {
               ".google.protobuf.BoolValue": Object {
@@ -594,25 +582,22 @@ describe('simple', () => {
           Object {
             "dependencies": Array [],
             "fileDescriptor": Object {
-              "dependency": Array [],
-              "enumType": Array [],
-              "extension": Array [],
               "messageType": Array [
                 Object {
                   "field": Array [
                     Object {
                       "jsonName": "seconds",
-                      "label": "LABEL_OPTIONAL",
+                      "label": 1,
                       "name": "seconds",
                       "number": 1,
-                      "type": "TYPE_INT64",
+                      "type": 3,
                     },
                     Object {
                       "jsonName": "nanos",
-                      "label": "LABEL_OPTIONAL",
+                      "label": 1,
                       "name": "nanos",
                       "number": 2,
-                      "type": "TYPE_INT32",
+                      "type": 5,
                     },
                   ],
                   "name": "Timestamp",
@@ -629,22 +614,22 @@ describe('simple', () => {
                 "objcClassPrefix": "GPB",
               },
               "package": "google.protobuf",
-              "publicDependency": Array [],
-              "service": Array [],
               "sourceCodeInfo": Object {
                 "location": Array [
                   Object {
-                    "leadingComments": " A Timestamp represents a point in time independent of any time zone
-       or calendar, represented as seconds and fractions of seconds at
-       nanosecond resolution in UTC Epoch time. It is encoded using the
-       Proleptic Gregorian Calendar which extends the Gregorian calendar
-       backwards to year one. It is encoded assuming all minutes are 60
-       seconds long, i.e. leap seconds are \\"smeared\\" so that no leap second
-       table is needed for interpretation. Range is from
-       0001-01-01T00:00:00Z to 9999-12-31T23:59:59.999999999Z.
-       By restricting to that range, we ensure that we can convert to
-       and from  RFC 3339 date strings.
-       See [https://www.ietf.org/rfc/rfc3339.txt](https://www.ietf.org/rfc/rfc3339.txt).
+                    "leadingComments": " A Timestamp represents a point in time independent of any time zone or local
+       calendar, encoded as a count of seconds and fractions of seconds at
+       nanosecond resolution. The count is relative to an epoch at UTC midnight on
+       January 1, 1970, in the proleptic Gregorian calendar which extends the
+       Gregorian calendar backwards to year one.
+
+       All minutes are 60 seconds long. Leap seconds are \\"smeared\\" so that no leap
+       second table is needed for interpretation, using a [24-hour linear
+       smear](https://developers.google.com/time/smear).
+
+       The range is from 0001-01-01T00:00:00Z to 9999-12-31T23:59:59.999999999Z. By
+       restricting to that range, we ensure that we can convert to and from [RFC
+       3339](https://www.ietf.org/rfc/rfc3339.txt) date strings.
 
        # Examples
 
@@ -705,12 +690,14 @@ describe('simple', () => {
        01:30 UTC on January 15, 2017.
 
        In JavaScript, one can convert a Date object to this format using the
-       standard [toISOString()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString]
+       standard
+       [toISOString()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString)
        method. In Python, a standard \`datetime.datetime\` object can be converted
-       to this format using [\`strftime\`](https://docs.python.org/2/library/time.html#time.strftime)
-       with the time format spec '%Y-%m-%dT%H:%M:%S.%fZ'. Likewise, in Java, one
-       can use the Joda Time's [\`ISODateTimeFormat.dateTime()\`](
-       http://www.joda.org/joda-time/apidocs/org/joda/time/format/ISODateTimeFormat.html#dateTime--
+       to this format using
+       [\`strftime\`](https://docs.python.org/2/library/time.html#time.strftime) with
+       the time format spec '%Y-%m-%dT%H:%M:%S.%fZ'. Likewise, in Java, one can use
+       the Joda Time's [\`ISODateTimeFormat.dateTime()\`](
+       http://www.joda.org/joda-time/apidocs/org/joda/time/format/ISODateTimeFormat.html#dateTime%2D%2D
        ) to obtain a formatter capable of generating timestamps in this format.
 
 
@@ -720,9 +707,9 @@ describe('simple', () => {
                       0,
                     ],
                     "span": Array [
-                      122,
+                      126,
                       0,
-                      134,
+                      137,
                       1,
                     ],
                   },
@@ -738,7 +725,7 @@ describe('simple', () => {
                       0,
                     ],
                     "span": Array [
-                      127,
+                      130,
                       2,
                       20,
                     ],
@@ -756,7 +743,7 @@ describe('simple', () => {
                       1,
                     ],
                     "span": Array [
-                      133,
+                      136,
                       2,
                       18,
                     ],
@@ -764,7 +751,6 @@ describe('simple', () => {
                 ],
               },
               "syntax": "proto3",
-              "weakDependency": Array [],
             },
             "references": Object {
               ".google.protobuf.Timestamp": Object {
@@ -778,25 +764,22 @@ describe('simple', () => {
               Object {
                 "dependencies": Array [],
                 "fileDescriptor": Object {
-                  "dependency": Array [],
-                  "enumType": Array [],
-                  "extension": Array [],
                   "messageType": Array [
                     Object {
                       "field": Array [
                         Object {
                           "jsonName": "seconds",
-                          "label": "LABEL_OPTIONAL",
+                          "label": 1,
                           "name": "seconds",
                           "number": 1,
-                          "type": "TYPE_INT64",
+                          "type": 3,
                         },
                         Object {
                           "jsonName": "nanos",
-                          "label": "LABEL_OPTIONAL",
+                          "label": 1,
                           "name": "nanos",
                           "number": 2,
-                          "type": "TYPE_INT32",
+                          "type": 5,
                         },
                       ],
                       "name": "Timestamp",
@@ -813,22 +796,22 @@ describe('simple', () => {
                     "objcClassPrefix": "GPB",
                   },
                   "package": "google.protobuf",
-                  "publicDependency": Array [],
-                  "service": Array [],
                   "sourceCodeInfo": Object {
                     "location": Array [
                       Object {
-                        "leadingComments": " A Timestamp represents a point in time independent of any time zone
-       or calendar, represented as seconds and fractions of seconds at
-       nanosecond resolution in UTC Epoch time. It is encoded using the
-       Proleptic Gregorian Calendar which extends the Gregorian calendar
-       backwards to year one. It is encoded assuming all minutes are 60
-       seconds long, i.e. leap seconds are \\"smeared\\" so that no leap second
-       table is needed for interpretation. Range is from
-       0001-01-01T00:00:00Z to 9999-12-31T23:59:59.999999999Z.
-       By restricting to that range, we ensure that we can convert to
-       and from  RFC 3339 date strings.
-       See [https://www.ietf.org/rfc/rfc3339.txt](https://www.ietf.org/rfc/rfc3339.txt).
+                        "leadingComments": " A Timestamp represents a point in time independent of any time zone or local
+       calendar, encoded as a count of seconds and fractions of seconds at
+       nanosecond resolution. The count is relative to an epoch at UTC midnight on
+       January 1, 1970, in the proleptic Gregorian calendar which extends the
+       Gregorian calendar backwards to year one.
+
+       All minutes are 60 seconds long. Leap seconds are \\"smeared\\" so that no leap
+       second table is needed for interpretation, using a [24-hour linear
+       smear](https://developers.google.com/time/smear).
+
+       The range is from 0001-01-01T00:00:00Z to 9999-12-31T23:59:59.999999999Z. By
+       restricting to that range, we ensure that we can convert to and from [RFC
+       3339](https://www.ietf.org/rfc/rfc3339.txt) date strings.
 
        # Examples
 
@@ -889,12 +872,14 @@ describe('simple', () => {
        01:30 UTC on January 15, 2017.
 
        In JavaScript, one can convert a Date object to this format using the
-       standard [toISOString()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString]
+       standard
+       [toISOString()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString)
        method. In Python, a standard \`datetime.datetime\` object can be converted
-       to this format using [\`strftime\`](https://docs.python.org/2/library/time.html#time.strftime)
-       with the time format spec '%Y-%m-%dT%H:%M:%S.%fZ'. Likewise, in Java, one
-       can use the Joda Time's [\`ISODateTimeFormat.dateTime()\`](
-       http://www.joda.org/joda-time/apidocs/org/joda/time/format/ISODateTimeFormat.html#dateTime--
+       to this format using
+       [\`strftime\`](https://docs.python.org/2/library/time.html#time.strftime) with
+       the time format spec '%Y-%m-%dT%H:%M:%S.%fZ'. Likewise, in Java, one can use
+       the Joda Time's [\`ISODateTimeFormat.dateTime()\`](
+       http://www.joda.org/joda-time/apidocs/org/joda/time/format/ISODateTimeFormat.html#dateTime%2D%2D
        ) to obtain a formatter capable of generating timestamps in this format.
 
 
@@ -904,9 +889,9 @@ describe('simple', () => {
                           0,
                         ],
                         "span": Array [
-                          122,
+                          126,
                           0,
-                          134,
+                          137,
                           1,
                         ],
                       },
@@ -922,7 +907,7 @@ describe('simple', () => {
                           0,
                         ],
                         "span": Array [
-                          127,
+                          130,
                           2,
                           20,
                         ],
@@ -940,7 +925,7 @@ describe('simple', () => {
                           1,
                         ],
                         "span": Array [
-                          133,
+                          136,
                           2,
                           18,
                         ],
@@ -948,7 +933,6 @@ describe('simple', () => {
                     ],
                   },
                   "syntax": "proto3",
-                  "weakDependency": Array [],
                 },
                 "references": Object {
                   ".google.protobuf.Timestamp": Object {
@@ -962,17 +946,15 @@ describe('simple', () => {
               "dependency": Array [
                 "google/protobuf/timestamp.proto",
               ],
-              "enumType": Array [],
-              "extension": Array [],
               "messageType": Array [
                 Object {
                   "field": Array [
                     Object {
                       "jsonName": "createdAt",
-                      "label": "LABEL_OPTIONAL",
+                      "label": 1,
                       "name": "created_at",
                       "number": 1,
-                      "type": "TYPE_MESSAGE",
+                      "type": 11,
                       "typeName": ".google.protobuf.Timestamp",
                     },
                   ],
@@ -981,13 +963,10 @@ describe('simple', () => {
               ],
               "name": "import_dir/thing.proto",
               "package": "simple",
-              "publicDependency": Array [],
-              "service": Array [],
               "sourceCodeInfo": Object {
                 "location": Array [],
               },
               "syntax": "proto3",
-              "weakDependency": Array [],
             },
             "references": Object {
               ".simple.ImportedThing": Object {
@@ -1023,107 +1002,106 @@ describe('simple', () => {
               ],
             },
           ],
-          "extension": Array [],
           "messageType": Array [
             Object {
               "field": Array [
                 Object {
                   "jsonName": "name",
-                  "label": "LABEL_OPTIONAL",
+                  "label": 1,
                   "name": "name",
                   "number": 1,
-                  "type": "TYPE_STRING",
+                  "type": 9,
                 },
                 Object {
                   "jsonName": "age",
-                  "label": "LABEL_OPTIONAL",
+                  "label": 1,
                   "name": "age",
                   "number": 2,
-                  "type": "TYPE_INT32",
+                  "type": 5,
                 },
                 Object {
                   "jsonName": "createdAt",
-                  "label": "LABEL_OPTIONAL",
+                  "label": 1,
                   "name": "created_at",
                   "number": 9,
-                  "type": "TYPE_MESSAGE",
+                  "type": 11,
                   "typeName": ".google.protobuf.Timestamp",
                 },
                 Object {
                   "jsonName": "child",
-                  "label": "LABEL_OPTIONAL",
+                  "label": 1,
                   "name": "child",
                   "number": 3,
-                  "type": "TYPE_MESSAGE",
+                  "type": 11,
                   "typeName": ".simple.Child",
                 },
                 Object {
                   "jsonName": "state",
-                  "label": "LABEL_OPTIONAL",
+                  "label": 1,
                   "name": "state",
                   "number": 4,
-                  "type": "TYPE_ENUM",
+                  "type": 14,
                   "typeName": ".simple.StateEnum",
                 },
                 Object {
                   "jsonName": "grandChildren",
-                  "label": "LABEL_REPEATED",
+                  "label": 3,
                   "name": "grand_children",
                   "number": 5,
-                  "type": "TYPE_MESSAGE",
+                  "type": 11,
                   "typeName": ".simple.Child",
                 },
                 Object {
                   "jsonName": "coins",
-                  "label": "LABEL_REPEATED",
+                  "label": 3,
                   "name": "coins",
                   "number": 6,
-                  "type": "TYPE_INT32",
+                  "type": 5,
                 },
                 Object {
                   "jsonName": "snacks",
-                  "label": "LABEL_REPEATED",
+                  "label": 3,
                   "name": "snacks",
                   "number": 7,
-                  "type": "TYPE_STRING",
+                  "type": 9,
                 },
                 Object {
                   "jsonName": "oldStates",
-                  "label": "LABEL_REPEATED",
+                  "label": 3,
                   "name": "old_states",
                   "number": 8,
-                  "type": "TYPE_ENUM",
+                  "type": 14,
                   "typeName": ".simple.StateEnum",
                 },
                 Object {
                   "jsonName": "thing",
-                  "label": "LABEL_OPTIONAL",
+                  "label": 1,
                   "name": "thing",
                   "number": 10,
-                  "type": "TYPE_MESSAGE",
+                  "type": 11,
                   "typeName": ".simple.ImportedThing",
                 },
                 Object {
                   "jsonName": "blobs",
-                  "label": "LABEL_REPEATED",
+                  "label": 3,
                   "name": "blobs",
                   "number": 11,
-                  "type": "TYPE_BYTES",
+                  "type": 12,
                 },
                 Object {
                   "jsonName": "birthday",
-                  "label": "LABEL_OPTIONAL",
+                  "label": 1,
                   "name": "birthday",
                   "number": 12,
-                  "type": "TYPE_MESSAGE",
+                  "type": 11,
                   "typeName": ".google.type.Date",
                 },
                 Object {
                   "jsonName": "blob",
-                  "label": "LABEL_OPTIONAL",
+                  "label": 1,
                   "name": "blob",
                   "number": 13,
-                  "type": "TYPE_BYTES",
+                  "type": 12,
                 },
               ],
               "name": "Simple",
@@ -1151,17 +1129,17 @@ describe('simple', () => {
               "field": Array [
                 Object {
                   "jsonName": "name",
-                  "label": "LABEL_OPTIONAL",
+                  "label": 1,
                   "name": "name",
                   "number": 1,
-                  "type": "TYPE_STRING",
+                  "type": 9,
                 },
                 Object {
                   "jsonName": "type",
-                  "label": "LABEL_OPTIONAL",
+                  "label": 1,
                   "name": "type",
                   "number": 2,
-                  "type": "TYPE_ENUM",
+                  "type": 14,
                   "typeName": ".simple.Child.Type",
                 },
               ],
@@ -1190,25 +1168,25 @@ describe('simple', () => {
               "field": Array [
                 Object {
                   "jsonName": "name",
-                  "label": "LABEL_OPTIONAL",
+                  "label": 1,
                   "name": "name",
                   "number": 1,
-                  "type": "TYPE_STRING",
+                  "type": 9,
                 },
                 Object {
                   "jsonName": "message",
-                  "label": "LABEL_OPTIONAL",
+                  "label": 1,
                   "name": "message",
                   "number": 2,
-                  "type": "TYPE_MESSAGE",
+                  "type": 11,
                   "typeName": ".simple.Nested.InnerMessage",
                 },
                 Object {
                   "jsonName": "state",
-                  "label": "LABEL_OPTIONAL",
+                  "label": 1,
                   "name": "state",
                   "number": 3,
-                  "type": "TYPE_ENUM",
+                  "type": 14,
                   "typeName": ".simple.Nested.InnerEnum",
                 },
               ],
@@ -1218,17 +1196,17 @@ describe('simple', () => {
                   "field": Array [
                     Object {
                       "jsonName": "name",
-                      "label": "LABEL_OPTIONAL",
+                      "label": 1,
                       "name": "name",
                       "number": 1,
-                      "type": "TYPE_STRING",
+                      "type": 9,
                     },
                     Object {
                       "jsonName": "deep",
-                      "label": "LABEL_OPTIONAL",
+                      "label": 1,
                       "name": "deep",
                       "number": 2,
-                      "type": "TYPE_MESSAGE",
+                      "type": 11,
                       "typeName": ".simple.Nested.InnerMessage.DeepMessage",
                     },
                   ],
@@ -1238,10 +1216,10 @@ describe('simple', () => {
                       "field": Array [
                         Object {
                           "jsonName": "name",
-                          "label": "LABEL_OPTIONAL",
+                          "label": 1,
                           "name": "name",
                           "number": 1,
-                          "type": "TYPE_STRING",
+                          "type": 9,
                         },
                       ],
                       "name": "DeepMessage",
@@ -1254,19 +1232,19 @@ describe('simple', () => {
               "field": Array [
                 Object {
                   "jsonName": "first",
-                  "label": "LABEL_OPTIONAL",
+                  "label": 1,
                   "name": "first",
                   "number": 1,
                   "oneofIndex": 0,
-                  "type": "TYPE_STRING",
+                  "type": 9,
                 },
                 Object {
                   "jsonName": "last",
-                  "label": "LABEL_OPTIONAL",
+                  "label": 1,
                   "name": "last",
                   "number": 2,
                   "oneofIndex": 0,
-                  "type": "TYPE_STRING",
+                  "type": 9,
                 },
               ],
               "name": "OneOfMessage",
@@ -1280,42 +1258,42 @@ describe('simple', () => {
               "field": Array [
                 Object {
                   "jsonName": "name",
-                  "label": "LABEL_OPTIONAL",
+                  "label": 1,
                   "name": "name",
                   "number": 1,
-                  "type": "TYPE_MESSAGE",
+                  "type": 11,
                   "typeName": ".google.protobuf.StringValue",
                 },
                 Object {
                   "jsonName": "age",
-                  "label": "LABEL_OPTIONAL",
+                  "label": 1,
                   "name": "age",
                   "number": 2,
-                  "type": "TYPE_MESSAGE",
+                  "type": 11,
                   "typeName": ".google.protobuf.Int32Value",
                 },
                 Object {
                   "jsonName": "enabled",
-                  "label": "LABEL_OPTIONAL",
+                  "label": 1,
                   "name": "enabled",
                   "number": 3,
-                  "type": "TYPE_MESSAGE",
+                  "type": 11,
                   "typeName": ".google.protobuf.BoolValue",
                 },
                 Object {
                   "jsonName": "coins",
-                  "label": "LABEL_REPEATED",
+                  "label": 3,
                   "name": "coins",
                   "number": 6,
-                  "type": "TYPE_MESSAGE",
+                  "type": 11,
                   "typeName": ".google.protobuf.Int32Value",
                 },
                 Object {
                   "jsonName": "snacks",
-                  "label": "LABEL_REPEATED",
+                  "label": 3,
                   "name": "snacks",
                   "number": 7,
-                  "type": "TYPE_MESSAGE",
+                  "type": 11,
                   "typeName": ".google.protobuf.StringValue",
                 },
               ],
@@ -1325,10 +1303,10 @@ describe('simple', () => {
               "field": Array [
                 Object {
                   "jsonName": "id",
-                  "label": "LABEL_OPTIONAL",
+                  "label": 1,
                   "name": "id",
                   "number": 1,
-                  "type": "TYPE_INT32",
+                  "type": 5,
                 },
               ],
               "name": "Entity",
@@ -1337,42 +1315,42 @@ describe('simple', () => {
               "field": Array [
                 Object {
                   "jsonName": "entitiesById",
-                  "label": "LABEL_REPEATED",
+                  "label": 3,
                   "name": "entitiesById",
                   "number": 1,
-                  "type": "TYPE_MESSAGE",
+                  "type": 11,
                   "typeName": ".simple.SimpleWithMap.EntitiesByIdEntry",
                 },
                 Object {
                   "jsonName": "nameLookup",
-                  "label": "LABEL_REPEATED",
+                  "label": 3,
                   "name": "nameLookup",
                   "number": 2,
-                  "type": "TYPE_MESSAGE",
+                  "type": 11,
                   "typeName": ".simple.SimpleWithMap.NameLookupEntry",
                 },
                 Object {
                   "jsonName": "intLookup",
-                  "label": "LABEL_REPEATED",
+                  "label": 3,
                   "name": "intLookup",
                   "number": 3,
-                  "type": "TYPE_MESSAGE",
+                  "type": 11,
                   "typeName": ".simple.SimpleWithMap.IntLookupEntry",
                 },
                 Object {
                   "jsonName": "mapOfTimestamps",
-                  "label": "LABEL_REPEATED",
+                  "label": 3,
                   "name": "mapOfTimestamps",
                   "number": 4,
-                  "type": "TYPE_MESSAGE",
+                  "type": 11,
                   "typeName": ".simple.SimpleWithMap.MapOfTimestampsEntry",
                 },
                 Object {
                   "jsonName": "mapOfBytes",
-                  "label": "LABEL_REPEATED",
+                  "label": 3,
                   "name": "mapOfBytes",
                   "number": 5,
-                  "type": "TYPE_MESSAGE",
+                  "type": 11,
                   "typeName": ".simple.SimpleWithMap.MapOfBytesEntry",
                 },
               ],
@@ -1382,17 +1360,17 @@ describe('simple', () => {
                   "field": Array [
                     Object {
                       "jsonName": "key",
-                      "label": "LABEL_OPTIONAL",
+                      "label": 1,
                       "name": "key",
                       "number": 1,
-                      "type": "TYPE_INT32",
+                      "type": 5,
                     },
                     Object {
                       "jsonName": "value",
-                      "label": "LABEL_OPTIONAL",
+                      "label": 1,
                       "name": "value",
                       "number": 2,
-                      "type": "TYPE_MESSAGE",
+                      "type": 11,
                       "typeName": ".simple.Entity",
                     },
                   ],
@@ -1405,17 +1383,17 @@ describe('simple', () => {
                   "field": Array [
                     Object {
                       "jsonName": "key",
-                      "label": "LABEL_OPTIONAL",
+                      "label": 1,
                       "name": "key",
                       "number": 1,
-                      "type": "TYPE_STRING",
+                      "type": 9,
                     },
                     Object {
                       "jsonName": "value",
-                      "label": "LABEL_OPTIONAL",
+                      "label": 1,
                       "name": "value",
                       "number": 2,
-                      "type": "TYPE_STRING",
+                      "type": 9,
                     },
                   ],
                   "name": "NameLookupEntry",
@@ -1427,17 +1405,17 @@ describe('simple', () => {
                   "field": Array [
                     Object {
                       "jsonName": "key",
-                      "label": "LABEL_OPTIONAL",
+                      "label": 1,
                       "name": "key",
                       "number": 1,
-                      "type": "TYPE_INT32",
+                      "type": 5,
                     },
                     Object {
                       "jsonName": "value",
-                      "label": "LABEL_OPTIONAL",
+                      "label": 1,
                       "name": "value",
                       "number": 2,
-                      "type": "TYPE_INT32",
+                      "type": 5,
                     },
                   ],
                   "name": "IntLookupEntry",
@@ -1449,17 +1427,17 @@ describe('simple', () => {
                   "field": Array [
                     Object {
                       "jsonName": "key",
-                      "label": "LABEL_OPTIONAL",
+                      "label": 1,
                       "name": "key",
                       "number": 1,
-                      "type": "TYPE_STRING",
+                      "type": 9,
                     },
                     Object {
                       "jsonName": "value",
-                      "label": "LABEL_OPTIONAL",
+                      "label": 1,
                       "name": "value",
                       "number": 2,
-                      "type": "TYPE_MESSAGE",
+                      "type": 11,
                       "typeName": ".google.protobuf.Timestamp",
                     },
                   ],
@@ -1472,17 +1450,17 @@ describe('simple', () => {
                   "field": Array [
                     Object {
                       "jsonName": "key",
-                      "label": "LABEL_OPTIONAL",
+                      "label": 1,
                       "name": "key",
                       "number": 1,
-                      "type": "TYPE_STRING",
+                      "type": 9,
                     },
                     Object {
                       "jsonName": "value",
-                      "label": "LABEL_OPTIONAL",
+                      "label": 1,
                       "name": "value",
                       "number": 2,
-                      "type": "TYPE_BYTES",
+                      "type": 12,
                     },
                   ],
                   "name": "MapOfBytesEntry",
@@ -1496,10 +1474,10 @@ describe('simple', () => {
               "field": Array [
                 Object {
                   "jsonName": "entitiesById",
-                  "label": "LABEL_REPEATED",
+                  "label": 3,
                   "name": "entities_by_id",
                   "number": 1,
-                  "type": "TYPE_MESSAGE",
+                  "type": 11,
                   "typeName": ".simple.SimpleWithSnakeCaseMap.EntitiesByIdEntry",
                 },
               ],
@@ -1509,17 +1487,17 @@ describe('simple', () => {
                   "field": Array [
                     Object {
                       "jsonName": "key",
-                      "label": "LABEL_OPTIONAL",
+                      "label": 1,
                       "name": "key",
                       "number": 1,
-                      "type": "TYPE_INT32",
+                      "type": 5,
                     },
                     Object {
                       "jsonName": "value",
-                      "label": "LABEL_OPTIONAL",
+                      "label": 1,
                       "name": "value",
                       "number": 2,
-                      "type": "TYPE_MESSAGE",
+                      "type": 11,
                       "typeName": ".simple.Entity",
                     },
                   ],
@@ -1534,10 +1512,10 @@ describe('simple', () => {
               "field": Array [
                 Object {
                   "jsonName": "enumsById",
-                  "label": "LABEL_REPEATED",
+                  "label": 3,
                   "name": "enums_by_id",
                   "number": 1,
-                  "type": "TYPE_MESSAGE",
+                  "type": 11,
                   "typeName": ".simple.SimpleWithMapOfEnums.EnumsByIdEntry",
                 },
               ],
@@ -1547,17 +1525,17 @@ describe('simple', () => {
                   "field": Array [
                     Object {
                       "jsonName": "key",
-                      "label": "LABEL_OPTIONAL",
+                      "label": 1,
                       "name": "key",
                       "number": 1,
-                      "type": "TYPE_INT32",
+                      "type": 5,
                     },
                     Object {
                       "jsonName": "value",
-                      "label": "LABEL_OPTIONAL",
+                      "label": 1,
                       "name": "value",
                       "number": 2,
-                      "type": "TYPE_ENUM",
+                      "type": 14,
                       "typeName": ".simple.StateEnum",
                     },
                   ],
@@ -1572,10 +1550,10 @@ describe('simple', () => {
               "field": Array [
                 Object {
                   "jsonName": "input",
-                  "label": "LABEL_OPTIONAL",
+                  "label": 1,
                   "name": "input",
                   "number": 1,
-                  "type": "TYPE_STRING",
+                  "type": 9,
                 },
               ],
               "name": "PingRequest",
@@ -1584,10 +1562,10 @@ describe('simple', () => {
               "field": Array [
                 Object {
                   "jsonName": "output",
-                  "label": "LABEL_OPTIONAL",
+                  "label": 1,
                   "name": "output",
                   "number": 1,
-                  "type": "TYPE_STRING",
+                  "type": 9,
                 },
               ],
               "name": "PingResponse",
@@ -1596,87 +1574,87 @@ describe('simple', () => {
               "field": Array [
                 Object {
                   "jsonName": "double",
-                  "label": "LABEL_OPTIONAL",
+                  "label": 1,
                   "name": "double",
                   "number": 1,
-                  "type": "TYPE_DOUBLE",
+                  "type": 1,
                 },
                 Object {
                   "jsonName": "float",
-                  "label": "LABEL_OPTIONAL",
+                  "label": 1,
                   "name": "float",
                   "number": 2,
-                  "type": "TYPE_FLOAT",
+                  "type": 2,
                 },
                 Object {
                   "jsonName": "int32",
-                  "label": "LABEL_OPTIONAL",
+                  "label": 1,
                   "name": "int32",
                   "number": 3,
-                  "type": "TYPE_INT32",
+                  "type": 5,
                 },
                 Object {
                   "jsonName": "int64",
-                  "label": "LABEL_OPTIONAL",
+                  "label": 1,
                   "name": "int64",
                   "number": 4,
-                  "type": "TYPE_INT64",
+                  "type": 3,
                 },
                 Object {
                   "jsonName": "uint32",
-                  "label": "LABEL_OPTIONAL",
+                  "label": 1,
                   "name": "uint32",
                   "number": 5,
-                  "type": "TYPE_UINT32",
+                  "type": 13,
                 },
                 Object {
                   "jsonName": "uint64",
-                  "label": "LABEL_OPTIONAL",
+                  "label": 1,
                   "name": "uint64",
                   "number": 6,
-                  "type": "TYPE_UINT64",
+                  "type": 4,
                 },
                 Object {
                   "jsonName": "sint32",
-                  "label": "LABEL_OPTIONAL",
+                  "label": 1,
                   "name": "sint32",
                   "number": 7,
-                  "type": "TYPE_SINT32",
+                  "type": 17,
                 },
                 Object {
                   "jsonName": "sint64",
-                  "label": "LABEL_OPTIONAL",
+                  "label": 1,
                   "name": "sint64",
                   "number": 8,
-                  "type": "TYPE_SINT64",
+                  "type": 18,
                 },
                 Object {
                   "jsonName": "fixed32",
-                  "label": "LABEL_OPTIONAL",
+                  "label": 1,
                   "name": "fixed32",
                   "number": 9,
-                  "type": "TYPE_FIXED32",
+                  "type": 7,
                 },
                 Object {
                   "jsonName": "fixed64",
-                  "label": "LABEL_OPTIONAL",
+                  "label": 1,
                   "name": "fixed64",
                   "number": 10,
-                  "type": "TYPE_FIXED64",
+                  "type": 6,
                 },
                 Object {
                   "jsonName": "sfixed32",
-                  "label": "LABEL_OPTIONAL",
+                  "label": 1,
                   "name": "sfixed32",
                   "number": 11,
-                  "type": "TYPE_SFIXED32",
+                  "type": 15,
                 },
                 Object {
                   "jsonName": "sfixed64",
-                  "label": "LABEL_OPTIONAL",
+                  "label": 1,
                   "name": "sfixed64",
                   "number": 12,
-                  "type": "TYPE_SFIXED64",
+                  "type": 16,
                 },
               ],
               "name": "Numbers",
@@ -1685,70 +1663,70 @@ describe('simple', () => {
               "field": Array [
                 Object {
                   "jsonName": "name",
-                  "label": "LABEL_OPTIONAL",
+                  "label": 1,
                   "name": "name",
                   "number": 1,
                   "oneofIndex": 0,
                   "proto3Optional": true,
-                  "type": "TYPE_STRING",
+                  "type": 9,
                 },
                 Object {
                   "jsonName": "age",
-                  "label": "LABEL_OPTIONAL",
+                  "label": 1,
                   "name": "age",
                   "number": 2,
                   "oneofIndex": 1,
                   "proto3Optional": true,
-                  "type": "TYPE_INT32",
+                  "type": 5,
                 },
                 Object {
                   "jsonName": "createdAt",
-                  "label": "LABEL_OPTIONAL",
+                  "label": 1,
                   "name": "created_at",
                   "number": 9,
                   "oneofIndex": 2,
                   "proto3Optional": true,
-                  "type": "TYPE_MESSAGE",
+                  "type": 11,
                   "typeName": ".google.protobuf.Timestamp",
                 },
                 Object {
                   "jsonName": "child",
-                  "label": "LABEL_OPTIONAL",
+                  "label": 1,
                   "name": "child",
                   "number": 3,
                   "oneofIndex": 3,
                   "proto3Optional": true,
-                  "type": "TYPE_MESSAGE",
+                  "type": 11,
                   "typeName": ".simple.Child",
                 },
                 Object {
                   "jsonName": "state",
-                  "label": "LABEL_OPTIONAL",
+                  "label": 1,
                   "name": "state",
                   "number": 4,
                   "oneofIndex": 4,
                   "proto3Optional": true,
-                  "type": "TYPE_ENUM",
+                  "type": 14,
                   "typeName": ".simple.StateEnum",
                 },
                 Object {
                   "jsonName": "thing",
-                  "label": "LABEL_OPTIONAL",
+                  "label": 1,
                   "name": "thing",
                   "number": 10,
                   "oneofIndex": 5,
                   "proto3Optional": true,
-                  "type": "TYPE_MESSAGE",
+                  "type": 11,
                   "typeName": ".simple.ImportedThing",
                 },
                 Object {
                   "jsonName": "birthday",
-                  "label": "LABEL_OPTIONAL",
+                  "label": 1,
                   "name": "birthday",
                   "number": 12,
                   "oneofIndex": 6,
                   "proto3Optional": true,
-                  "type": "TYPE_MESSAGE",
+                  "type": 11,
                   "typeName": ".google.type.Date",
                 },
               ],
@@ -1783,7 +1761,6 @@ describe('simple', () => {
           ],
           "name": "simple.proto",
           "package": "simple",
-          "publicDependency": Array [],
           "service": Array [
             Object {
               "method": Array [
@@ -1979,7 +1956,6 @@ describe('simple', () => {
             ],
           },
           "syntax": "proto3",
-          "weakDependency": Array [],
         },
         "references": Object {
           ".simple.Child": Object {
