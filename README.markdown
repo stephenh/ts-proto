@@ -10,15 +10,19 @@
 
 ## Table of contents
 
+- [ts-proto](#ts-proto)
+  - [Table of contents](#table-of-contents)
+- [Overview](#overview)
 - [QuickStart](#quickstart)
 - [Goals](#goals)
 - [Example Types](#example-types)
 - [Highlights](#highlights)
 - [Auto-Batching / N+1 Prevention](#auto-batching--n1-prevention)
 - [Usage](#usage)
-  - [Supported options](#supported-options)
-  - [Only Types](#only-types)
-  - [NestJS Support](NESTJS.markdown)
+    - [Supported options](#supported-options)
+    - [Only Types](#only-types)
+    - [NestJS Support](#nestjs-support)
+- [Sponsors](#sponsors)
 - [Building](#building)
 - [Assumptions](#assumptions)
 - [Todo](#todo)
@@ -261,9 +265,7 @@ protoc --plugin=node_modules/ts-proto/protoc-gen-ts_proto ./batching.proto -I.
 
   This is also useful if you want "only types".
 
-- With `--ts_proto_opt=outputPartialMethods=false`, the `Message.fromPartial` method for working with partial JSON-coded data will not be output.
-
-  Also, if `outputJsonMethods=false` is provided this method will not be generated.
+- With `--ts_proto_opt=outputPartialMethods=false`, the `Message.fromPartial` methods for accepting partially-formed objects/object literals will not be output.
 
 - With `--ts_proto_opt=stringEnums=true`, the generated enum types will be string-based instead of int-based.
 

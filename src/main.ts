@@ -118,10 +118,10 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
         }
         if (options.outputJsonMethods) {
           staticMethods.push(generateFromJson(ctx, fullName, message));
-          if (options.outputPartialMethods) {
-            staticMethods.push(generateFromPartial(ctx, fullName, message));
-          }
           staticMethods.push(generateToJson(ctx, fullName, message));
+        }
+        if (options.outputPartialMethods) {
+          staticMethods.push(generateFromPartial(ctx, fullName, message));
         }
 
         chunks.push(code`
