@@ -10,19 +10,15 @@
 
 ## Table of contents
 
-- [ts-proto](#ts-proto)
-  - [Table of contents](#table-of-contents)
-- [Overview](#overview)
 - [QuickStart](#quickstart)
 - [Goals](#goals)
 - [Example Types](#example-types)
 - [Highlights](#highlights)
 - [Auto-Batching / N+1 Prevention](#auto-batching--n1-prevention)
 - [Usage](#usage)
-    - [Supported options](#supported-options)
-    - [Only Types](#only-types)
-    - [NestJS Support](#nestjs-support)
-- [Sponsors](#sponsors)
+  - [Supported options](#supported-options)
+  - [Only Types](#only-types)
+  - [NestJS Support](NESTJS.markdown)
 - [Building](#building)
 - [Assumptions](#assumptions)
 - [Todo](#todo)
