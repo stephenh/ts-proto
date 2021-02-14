@@ -241,10 +241,10 @@ export const Simple = {
   encode(message: Simple, writer: Writer = Writer.create()): Writer {
     writer.uint32(10).string(message.name);
     writer.uint32(16).int32(message.age);
-    if (message.created_at !== undefined && message.created_at !== undefined) {
+    if (message.created_at !== undefined) {
       Timestamp.encode(toTimestamp(message.created_at), writer.uint32(74).fork()).ldelim();
     }
-    if (message.child !== undefined && message.child !== undefined) {
+    if (message.child !== undefined) {
       Child.encode(message.child, writer.uint32(26).fork()).ldelim();
     }
     writer.uint32(32).int32(message.state);
@@ -264,7 +264,7 @@ export const Simple = {
       writer.int32(v);
     }
     writer.ldelim();
-    if (message.thing !== undefined && message.thing !== undefined) {
+    if (message.thing !== undefined) {
       ImportedThing.encode(message.thing, writer.uint32(82).fork()).ldelim();
     }
     return writer;
@@ -273,7 +273,7 @@ export const Simple = {
   decode(input: Reader | Uint8Array, length?: number): Simple {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseSimple } as Simple;
+    const message = Object.create(baseSimple) as Simple;
     message.grand_children = [];
     message.coins = [];
     message.snacks = [];
@@ -334,7 +334,7 @@ export const Simple = {
   },
 
   fromJSON(object: any): Simple {
-    const message = { ...baseSimple } as Simple;
+    const message = Object.create(baseSimple) as Simple;
     message.grand_children = [];
     message.coins = [];
     message.snacks = [];
@@ -496,7 +496,7 @@ export const Child = {
   decode(input: Reader | Uint8Array, length?: number): Child {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseChild } as Child;
+    const message = Object.create(baseChild) as Child;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -515,7 +515,7 @@ export const Child = {
   },
 
   fromJSON(object: any): Child {
-    const message = { ...baseChild } as Child;
+    const message = Object.create(baseChild) as Child;
     if (object.name !== undefined && object.name !== null) {
       message.name = String(object.name);
     } else {
@@ -557,7 +557,7 @@ const baseNested: object = { name: '', state: 0 };
 export const Nested = {
   encode(message: Nested, writer: Writer = Writer.create()): Writer {
     writer.uint32(10).string(message.name);
-    if (message.message !== undefined && message.message !== undefined) {
+    if (message.message !== undefined) {
       Nested_InnerMessage.encode(message.message, writer.uint32(18).fork()).ldelim();
     }
     writer.uint32(24).int32(message.state);
@@ -567,7 +567,7 @@ export const Nested = {
   decode(input: Reader | Uint8Array, length?: number): Nested {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseNested } as Nested;
+    const message = Object.create(baseNested) as Nested;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -589,7 +589,7 @@ export const Nested = {
   },
 
   fromJSON(object: any): Nested {
-    const message = { ...baseNested } as Nested;
+    const message = Object.create(baseNested) as Nested;
     if (object.name !== undefined && object.name !== null) {
       message.name = String(object.name);
     } else {
@@ -643,7 +643,7 @@ const baseNested_InnerMessage: object = { name: '' };
 export const Nested_InnerMessage = {
   encode(message: Nested_InnerMessage, writer: Writer = Writer.create()): Writer {
     writer.uint32(10).string(message.name);
-    if (message.deep !== undefined && message.deep !== undefined) {
+    if (message.deep !== undefined) {
       Nested_InnerMessage_DeepMessage.encode(message.deep, writer.uint32(18).fork()).ldelim();
     }
     return writer;
@@ -652,7 +652,7 @@ export const Nested_InnerMessage = {
   decode(input: Reader | Uint8Array, length?: number): Nested_InnerMessage {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseNested_InnerMessage } as Nested_InnerMessage;
+    const message = Object.create(baseNested_InnerMessage) as Nested_InnerMessage;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -671,7 +671,7 @@ export const Nested_InnerMessage = {
   },
 
   fromJSON(object: any): Nested_InnerMessage {
-    const message = { ...baseNested_InnerMessage } as Nested_InnerMessage;
+    const message = Object.create(baseNested_InnerMessage) as Nested_InnerMessage;
     if (object.name !== undefined && object.name !== null) {
       message.name = String(object.name);
     } else {
@@ -720,7 +720,7 @@ export const Nested_InnerMessage_DeepMessage = {
   decode(input: Reader | Uint8Array, length?: number): Nested_InnerMessage_DeepMessage {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseNested_InnerMessage_DeepMessage } as Nested_InnerMessage_DeepMessage;
+    const message = Object.create(baseNested_InnerMessage_DeepMessage) as Nested_InnerMessage_DeepMessage;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -736,7 +736,7 @@ export const Nested_InnerMessage_DeepMessage = {
   },
 
   fromJSON(object: any): Nested_InnerMessage_DeepMessage {
-    const message = { ...baseNested_InnerMessage_DeepMessage } as Nested_InnerMessage_DeepMessage;
+    const message = Object.create(baseNested_InnerMessage_DeepMessage) as Nested_InnerMessage_DeepMessage;
     if (object.name !== undefined && object.name !== null) {
       message.name = String(object.name);
     } else {
@@ -778,7 +778,7 @@ export const OneOfMessage = {
   decode(input: Reader | Uint8Array, length?: number): OneOfMessage {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseOneOfMessage } as OneOfMessage;
+    const message = Object.create(baseOneOfMessage) as OneOfMessage;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -797,7 +797,7 @@ export const OneOfMessage = {
   },
 
   fromJSON(object: any): OneOfMessage {
-    const message = { ...baseOneOfMessage } as OneOfMessage;
+    const message = Object.create(baseOneOfMessage) as OneOfMessage;
     if (object.first !== undefined && object.first !== null) {
       message.first = String(object.first);
     } else {
@@ -838,13 +838,13 @@ const baseSimpleWithWrappers: object = {};
 
 export const SimpleWithWrappers = {
   encode(message: SimpleWithWrappers, writer: Writer = Writer.create()): Writer {
-    if (message.name !== undefined && message.name !== undefined) {
+    if (message.name !== undefined) {
       StringValue.encode({ value: message.name! }, writer.uint32(10).fork()).ldelim();
     }
-    if (message.age !== undefined && message.age !== undefined) {
+    if (message.age !== undefined) {
       Int32Value.encode({ value: message.age! }, writer.uint32(18).fork()).ldelim();
     }
-    if (message.enabled !== undefined && message.enabled !== undefined) {
+    if (message.enabled !== undefined) {
       BoolValue.encode({ value: message.enabled! }, writer.uint32(26).fork()).ldelim();
     }
     for (const v of message.coins) {
@@ -859,7 +859,7 @@ export const SimpleWithWrappers = {
   decode(input: Reader | Uint8Array, length?: number): SimpleWithWrappers {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseSimpleWithWrappers } as SimpleWithWrappers;
+    const message = Object.create(baseSimpleWithWrappers) as SimpleWithWrappers;
     message.coins = [];
     message.snacks = [];
     while (reader.pos < end) {
@@ -889,7 +889,7 @@ export const SimpleWithWrappers = {
   },
 
   fromJSON(object: any): SimpleWithWrappers {
-    const message = { ...baseSimpleWithWrappers } as SimpleWithWrappers;
+    const message = Object.create(baseSimpleWithWrappers) as SimpleWithWrappers;
     message.coins = [];
     message.snacks = [];
     if (object.name !== undefined && object.name !== null) {
@@ -982,7 +982,7 @@ export const Entity = {
   decode(input: Reader | Uint8Array, length?: number): Entity {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseEntity } as Entity;
+    const message = Object.create(baseEntity) as Entity;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -998,7 +998,7 @@ export const Entity = {
   },
 
   fromJSON(object: any): Entity {
-    const message = { ...baseEntity } as Entity;
+    const message = Object.create(baseEntity) as Entity;
     if (object.id !== undefined && object.id !== null) {
       message.id = Number(object.id);
     } else {
@@ -1043,7 +1043,7 @@ export const SimpleWithMap = {
   decode(input: Reader | Uint8Array, length?: number): SimpleWithMap {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseSimpleWithMap } as SimpleWithMap;
+    const message = Object.create(baseSimpleWithMap) as SimpleWithMap;
     message.entitiesById = {};
     message.nameLookup = {};
     message.intLookup = {};
@@ -1077,7 +1077,7 @@ export const SimpleWithMap = {
   },
 
   fromJSON(object: any): SimpleWithMap {
-    const message = { ...baseSimpleWithMap } as SimpleWithMap;
+    const message = Object.create(baseSimpleWithMap) as SimpleWithMap;
     message.entitiesById = {};
     message.nameLookup = {};
     message.intLookup = {};
@@ -1157,7 +1157,7 @@ const baseSimpleWithMap_EntitiesByIdEntry: object = { key: 0 };
 export const SimpleWithMap_EntitiesByIdEntry = {
   encode(message: SimpleWithMap_EntitiesByIdEntry, writer: Writer = Writer.create()): Writer {
     writer.uint32(8).int32(message.key);
-    if (message.value !== undefined && message.value !== undefined) {
+    if (message.value !== undefined) {
       Entity.encode(message.value, writer.uint32(18).fork()).ldelim();
     }
     return writer;
@@ -1166,7 +1166,7 @@ export const SimpleWithMap_EntitiesByIdEntry = {
   decode(input: Reader | Uint8Array, length?: number): SimpleWithMap_EntitiesByIdEntry {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseSimpleWithMap_EntitiesByIdEntry } as SimpleWithMap_EntitiesByIdEntry;
+    const message = Object.create(baseSimpleWithMap_EntitiesByIdEntry) as SimpleWithMap_EntitiesByIdEntry;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -1185,7 +1185,7 @@ export const SimpleWithMap_EntitiesByIdEntry = {
   },
 
   fromJSON(object: any): SimpleWithMap_EntitiesByIdEntry {
-    const message = { ...baseSimpleWithMap_EntitiesByIdEntry } as SimpleWithMap_EntitiesByIdEntry;
+    const message = Object.create(baseSimpleWithMap_EntitiesByIdEntry) as SimpleWithMap_EntitiesByIdEntry;
     if (object.key !== undefined && object.key !== null) {
       message.key = Number(object.key);
     } else {
@@ -1234,7 +1234,7 @@ export const SimpleWithMap_NameLookupEntry = {
   decode(input: Reader | Uint8Array, length?: number): SimpleWithMap_NameLookupEntry {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseSimpleWithMap_NameLookupEntry } as SimpleWithMap_NameLookupEntry;
+    const message = Object.create(baseSimpleWithMap_NameLookupEntry) as SimpleWithMap_NameLookupEntry;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -1253,7 +1253,7 @@ export const SimpleWithMap_NameLookupEntry = {
   },
 
   fromJSON(object: any): SimpleWithMap_NameLookupEntry {
-    const message = { ...baseSimpleWithMap_NameLookupEntry } as SimpleWithMap_NameLookupEntry;
+    const message = Object.create(baseSimpleWithMap_NameLookupEntry) as SimpleWithMap_NameLookupEntry;
     if (object.key !== undefined && object.key !== null) {
       message.key = String(object.key);
     } else {
@@ -1302,7 +1302,7 @@ export const SimpleWithMap_IntLookupEntry = {
   decode(input: Reader | Uint8Array, length?: number): SimpleWithMap_IntLookupEntry {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseSimpleWithMap_IntLookupEntry } as SimpleWithMap_IntLookupEntry;
+    const message = Object.create(baseSimpleWithMap_IntLookupEntry) as SimpleWithMap_IntLookupEntry;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -1321,7 +1321,7 @@ export const SimpleWithMap_IntLookupEntry = {
   },
 
   fromJSON(object: any): SimpleWithMap_IntLookupEntry {
-    const message = { ...baseSimpleWithMap_IntLookupEntry } as SimpleWithMap_IntLookupEntry;
+    const message = Object.create(baseSimpleWithMap_IntLookupEntry) as SimpleWithMap_IntLookupEntry;
     if (object.key !== undefined && object.key !== null) {
       message.key = Number(object.key);
     } else {
@@ -1371,7 +1371,7 @@ export const SimpleWithSnakeCaseMap = {
   decode(input: Reader | Uint8Array, length?: number): SimpleWithSnakeCaseMap {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseSimpleWithSnakeCaseMap } as SimpleWithSnakeCaseMap;
+    const message = Object.create(baseSimpleWithSnakeCaseMap) as SimpleWithSnakeCaseMap;
     message.entities_by_id = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -1391,7 +1391,7 @@ export const SimpleWithSnakeCaseMap = {
   },
 
   fromJSON(object: any): SimpleWithSnakeCaseMap {
-    const message = { ...baseSimpleWithSnakeCaseMap } as SimpleWithSnakeCaseMap;
+    const message = Object.create(baseSimpleWithSnakeCaseMap) as SimpleWithSnakeCaseMap;
     message.entities_by_id = {};
     if (object.entities_by_id !== undefined && object.entities_by_id !== null) {
       Object.entries(object.entities_by_id).forEach(([key, value]) => {
@@ -1431,7 +1431,7 @@ const baseSimpleWithSnakeCaseMap_EntitiesByIdEntry: object = { key: 0 };
 export const SimpleWithSnakeCaseMap_EntitiesByIdEntry = {
   encode(message: SimpleWithSnakeCaseMap_EntitiesByIdEntry, writer: Writer = Writer.create()): Writer {
     writer.uint32(8).int32(message.key);
-    if (message.value !== undefined && message.value !== undefined) {
+    if (message.value !== undefined) {
       Entity.encode(message.value, writer.uint32(18).fork()).ldelim();
     }
     return writer;
@@ -1440,7 +1440,9 @@ export const SimpleWithSnakeCaseMap_EntitiesByIdEntry = {
   decode(input: Reader | Uint8Array, length?: number): SimpleWithSnakeCaseMap_EntitiesByIdEntry {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseSimpleWithSnakeCaseMap_EntitiesByIdEntry } as SimpleWithSnakeCaseMap_EntitiesByIdEntry;
+    const message = Object.create(
+      baseSimpleWithSnakeCaseMap_EntitiesByIdEntry
+    ) as SimpleWithSnakeCaseMap_EntitiesByIdEntry;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -1459,7 +1461,9 @@ export const SimpleWithSnakeCaseMap_EntitiesByIdEntry = {
   },
 
   fromJSON(object: any): SimpleWithSnakeCaseMap_EntitiesByIdEntry {
-    const message = { ...baseSimpleWithSnakeCaseMap_EntitiesByIdEntry } as SimpleWithSnakeCaseMap_EntitiesByIdEntry;
+    const message = Object.create(
+      baseSimpleWithSnakeCaseMap_EntitiesByIdEntry
+    ) as SimpleWithSnakeCaseMap_EntitiesByIdEntry;
     if (object.key !== undefined && object.key !== null) {
       message.key = Number(object.key);
     } else {
@@ -1507,7 +1511,7 @@ export const PingRequest = {
   decode(input: Reader | Uint8Array, length?: number): PingRequest {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...basePingRequest } as PingRequest;
+    const message = Object.create(basePingRequest) as PingRequest;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -1523,7 +1527,7 @@ export const PingRequest = {
   },
 
   fromJSON(object: any): PingRequest {
-    const message = { ...basePingRequest } as PingRequest;
+    const message = Object.create(basePingRequest) as PingRequest;
     if (object.input !== undefined && object.input !== null) {
       message.input = String(object.input);
     } else {
@@ -1560,7 +1564,7 @@ export const PingResponse = {
   decode(input: Reader | Uint8Array, length?: number): PingResponse {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...basePingResponse } as PingResponse;
+    const message = Object.create(basePingResponse) as PingResponse;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -1576,7 +1580,7 @@ export const PingResponse = {
   },
 
   fromJSON(object: any): PingResponse {
-    const message = { ...basePingResponse } as PingResponse;
+    const message = Object.create(basePingResponse) as PingResponse;
     if (object.output !== undefined && object.output !== null) {
       message.output = String(object.output);
     } else {
@@ -1637,7 +1641,7 @@ export const Numbers = {
   decode(input: Reader | Uint8Array, length?: number): Numbers {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseNumbers } as Numbers;
+    const message = Object.create(baseNumbers) as Numbers;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -1686,7 +1690,7 @@ export const Numbers = {
   },
 
   fromJSON(object: any): Numbers {
-    const message = { ...baseNumbers } as Numbers;
+    const message = Object.create(baseNumbers) as Numbers;
     if (object.double !== undefined && object.double !== null) {
       message.double = Number(object.double);
     } else {

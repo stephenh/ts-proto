@@ -1,9 +1,10 @@
-import { google } from '../build/pbjs';
-import { requestType, responseObservable, responsePromise, responseType, TypeMap } from './types';
+import {
+  MethodDescriptorProto,
+  FileDescriptorProto,
+  ServiceDescriptorProto,
+} from 'ts-proto-descriptors/google/protobuf/descriptor';
+import { requestType, responseObservable, responsePromise, responseType } from './types';
 import { Code, code, imp, joinCode } from 'ts-poet';
-import MethodDescriptorProto = google.protobuf.MethodDescriptorProto;
-import FileDescriptorProto = google.protobuf.FileDescriptorProto;
-import ServiceDescriptorProto = google.protobuf.ServiceDescriptorProto;
 import { Context } from './context';
 
 const grpc = imp('grpc@@improbable-eng/grpc-web');
@@ -47,9 +48,9 @@ export function generateGrpcClientImpl(
 
 /** Creates the RPC methods that client code actually calls. */
 function generateRpcMethod(ctx: Context, serviceDesc: ServiceDescriptorProto, methodDesc: MethodDescriptorProto) {
-  const { options } = ctx;
+  const { options, utils } = ctx;
   const inputType = requestType(ctx, methodDesc);
-  const partialInputType = code`DeepPartial<${inputType}>`;
+  const partialInputType = code`${utils.DeepPartial}<${inputType}>`;
   const returns =
     options.returnObservable || methodDesc.serverStreaming
       ? responseObservable(ctx, methodDesc)

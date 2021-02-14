@@ -18,7 +18,7 @@ export const Bar = {
   decode(input: Reader | Uint8Array, length?: number): Bar {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseBar } as Bar;
+    const message = Object.create(baseBar) as Bar;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -37,7 +37,7 @@ export const Bar = {
   },
 
   fromJSON(object: any): Bar {
-    const message = { ...baseBar } as Bar;
+    const message = Object.create(baseBar) as Bar;
     if (object.name !== undefined && object.name !== null) {
       message.name = String(object.name);
     } else {

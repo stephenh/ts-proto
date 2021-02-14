@@ -48,7 +48,7 @@ const baseSimple: object = { name: '', state: StateEnum.UNKNOWN };
 
 export const Simple = {
   fromJSON(object: any): Simple {
-    const message = { ...baseSimple } as Simple;
+    const message = Object.create(baseSimple) as Simple;
     if (object.name !== undefined && object.name !== null) {
       message.name = String(object.name);
     } else {

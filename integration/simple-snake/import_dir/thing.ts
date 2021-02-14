@@ -12,7 +12,7 @@ const baseImportedThing: object = {};
 
 export const ImportedThing = {
   encode(message: ImportedThing, writer: Writer = Writer.create()): Writer {
-    if (message.created_at !== undefined && message.created_at !== undefined) {
+    if (message.created_at !== undefined) {
       Timestamp.encode(toTimestamp(message.created_at), writer.uint32(10).fork()).ldelim();
     }
     return writer;
@@ -21,7 +21,7 @@ export const ImportedThing = {
   decode(input: Reader | Uint8Array, length?: number): ImportedThing {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseImportedThing } as ImportedThing;
+    const message = Object.create(baseImportedThing) as ImportedThing;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -37,7 +37,7 @@ export const ImportedThing = {
   },
 
   fromJSON(object: any): ImportedThing {
-    const message = { ...baseImportedThing } as ImportedThing;
+    const message = Object.create(baseImportedThing) as ImportedThing;
     if (object.created_at !== undefined && object.created_at !== null) {
       message.created_at = fromJsonTimestamp(object.created_at);
     } else {

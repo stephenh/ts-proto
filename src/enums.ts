@@ -1,7 +1,6 @@
-import { google } from '../build/pbjs';
 import { code, Code, joinCode } from 'ts-poet';
+import { EnumDescriptorProto } from 'ts-proto-descriptors/google/protobuf/descriptor';
 import { maybeAddComment } from './utils';
-import EnumDescriptorProto = google.protobuf.EnumDescriptorProto;
 import { camelCase } from './case';
 import SourceInfo, { Fields } from './sourceInfo';
 import { Context } from './context';

@@ -47,7 +47,7 @@ export const DateMessage = {
   decode(input: Reader | Uint8Array, length?: number): DateMessage {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseDateMessage } as DateMessage;
+    const message = Object.create(baseDateMessage) as DateMessage;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -69,7 +69,7 @@ export const DateMessage = {
   },
 
   fromJSON(object: any): DateMessage {
-    const message = { ...baseDateMessage } as DateMessage;
+    const message = Object.create(baseDateMessage) as DateMessage;
     if (object.year !== undefined && object.year !== null) {
       message.year = Number(object.year);
     } else {

@@ -1,7 +1,9 @@
-import { google } from '../build/pbjs';
-import DescriptorProto = google.protobuf.DescriptorProto;
-import FileDescriptorProto = google.protobuf.FileDescriptorProto;
-import EnumDescriptorProto = google.protobuf.EnumDescriptorProto;
+import {
+  DescriptorProto,
+  EnumDescriptorProto,
+  FileDescriptorProto,
+  ServiceDescriptorProto,
+} from 'ts-proto-descriptors/google/protobuf/descriptor';
 import SourceInfo, { Fields } from './sourceInfo';
 import { Options } from './options';
 import { maybeSnakeToCamel } from './case';
@@ -29,7 +31,7 @@ export function visit(
   tsPrefix: string = '',
   protoPrefix: string = ''
 ): void {
-  const isRootFile = proto instanceof FileDescriptorProto;
+  const isRootFile = 'syntax' in proto;
   const childEnumType = isRootFile ? Fields.file.enum_type : Fields.message.enum_type;
 
   proto.enumType.forEach((enumDesc, index) => {
@@ -41,7 +43,7 @@ export function visit(
     enumFn(tsFullName, enumDesc, nestedSourceInfo, protoFullName);
   });
 
-  const messages = proto instanceof FileDescriptorProto ? proto.messageType : proto.nestedType;
+  const messages = 'messageType' in proto ? proto.messageType : proto.nestedType;
   const childType = isRootFile ? Fields.file.message_type : Fields.message.nested_type;
 
   messages.forEach((message, index) => {
@@ -61,4 +63,15 @@ const builtInNames = ['Date'];
 function messageName(message: DescriptorProto): string {
   const { name } = message;
   return builtInNames.includes(name) ? `${name}Message` : name;
+}
+
+export function visitServices(
+  proto: FileDescriptorProto,
+  sourceInfo: SourceInfo,
+  serviceFn: (desc: ServiceDescriptorProto, sourceInfo: SourceInfo) => void
+): void {
+  proto.service.forEach((serviceDesc, index) => {
+    const nestedSourceInfo = sourceInfo.open(Fields.file.service, index);
+    serviceFn(serviceDesc, nestedSourceInfo);
+  });
 }

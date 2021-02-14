@@ -1,9 +1,10 @@
 import { Reader } from 'protobufjs';
 import * as Long from 'long';
 import { Numbers } from './simple';
-import { simple as pbjs } from './pbjs';
+import { simple as pbjs, google } from './pbjs';
 import INumbers = pbjs.INumbers;
 import PbNumbers = pbjs.Numbers;
+import UInt64Value = google.protobuf.UInt64Value;
 
 describe('number', () => {
   it('generates types correctly', () => {
@@ -19,10 +20,12 @@ describe('number', () => {
       fixed32: 8,
       fixed64: "9",
       sfixed32: 10,
-      sfixed64: "11"
+      sfixed64: "11",
+      guint64: "12"
     };
     expect(simple.int64).toEqual("3");
     expect(simple.uint64).toEqual("5");
+    expect(simple.guint64).toEqual("12")
   });
 
   it('can decode', () => {
@@ -38,7 +41,8 @@ describe('number', () => {
       fixed32: 8,
       fixed64: Long.fromNumber(9, true),
       sfixed32: 10,
-      sfixed64: Long.fromNumber(11)
+      sfixed64: Long.fromNumber(11),
+      guint64: new UInt64Value({value: Long.fromNumber(12, true)})
     };
     const expected: Numbers = {
       double: 0,
@@ -52,7 +56,8 @@ describe('number', () => {
       fixed32: 8,
       fixed64: "9",
       sfixed32: 10,
-      sfixed64: "11"
+      sfixed64: "11",
+      guint64: "12"
     };
     const s2 = Numbers.decode(Reader.create(PbNumbers.encode(PbNumbers.fromObject(s1)).finish()));
     expect(s2).toEqual(expected);
@@ -71,7 +76,8 @@ describe('number', () => {
       fixed32: 8,
       fixed64: "9",
       sfixed32: 10,
-      sfixed64: "11"
+      sfixed64: "11",
+      guint64: "12"
     };
     const expected: INumbers = {
       double: 0,
@@ -85,7 +91,8 @@ describe('number', () => {
       fixed32: 8,
       fixed64: Long.fromNumber(9, true),
       sfixed32: 10,
-      sfixed64: Long.fromNumber(11)
+      sfixed64: Long.fromNumber(11),
+      guint64: new UInt64Value({value: Long.fromNumber(12, true)})
     };
     const s2 = PbNumbers.toObject(PbNumbers.decode(Numbers.encode(s1).finish()));
     expect(s2).toEqual({
@@ -107,6 +114,7 @@ describe('number', () => {
     expect(s2.fixed32).toEqual(0);
     expect(s2.fixed64).toEqual("0");
     expect(s2.sfixed32).toEqual(0);
+    expect(s2.guint64).toEqual(undefined)
   });
 
   it('observes how pbjs handles null', () => {
@@ -126,6 +134,7 @@ describe('number', () => {
     "fixed32": 0,
     "fixed64": "0",
     "float": 0,
+    "guint64": undefined,
     "int32": 0,
     "int64": "0",
     "sfixed32": 0,

@@ -18,7 +18,7 @@ export const SimpleMessage = {
   decode(input: Reader | Uint8Array, length?: number): SimpleMessage {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseSimpleMessage } as SimpleMessage;
+    const message = Object.create(baseSimpleMessage) as SimpleMessage;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -34,7 +34,7 @@ export const SimpleMessage = {
   },
 
   fromJSON(object: any): SimpleMessage {
-    const message = { ...baseSimpleMessage } as SimpleMessage;
+    const message = Object.create(baseSimpleMessage) as SimpleMessage;
     if (object.numberField !== undefined && object.numberField !== null) {
       message.numberField = Number(object.numberField);
     } else {

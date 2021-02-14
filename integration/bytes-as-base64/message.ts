@@ -9,7 +9,7 @@ const baseMessage: object = {};
 
 export const Message = {
   fromJSON(object: any): Message {
-    const message = { ...baseMessage } as Message;
+    const message = Object.create(baseMessage) as Message;
     if (object.data !== undefined && object.data !== null) {
       message.data = bytesFromBase64(object.data);
     }

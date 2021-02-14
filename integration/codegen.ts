@@ -1,11 +1,10 @@
+import { CodeGeneratorRequest } from 'ts-proto-descriptors/google/protobuf/compiler/plugin';
 import { mkdir, readFile, writeFile } from 'fs';
 import { parse } from 'path';
 import { promisify } from 'util';
-import { google } from '../build/pbjs';
 import { generateFile, makeUtils } from '../src/main';
 import { createTypeMap } from '../src/types';
 import { prefixDisableLinter } from '../src/utils';
-import CodeGeneratorRequest = google.protobuf.compiler.CodeGeneratorRequest;
 import { getTsPoetOpts, optionsFromParameter } from '../src/options';
 import { Context } from '../src/context';
 
@@ -30,10 +29,11 @@ async function generate(binFile: string, baseDir: string, parameter: string) {
 
   const options = optionsFromParameter(parameter || '');
   const typeMap = createTypeMap(request, options);
-  const utils = makeUtils(options);
-  const ctx: Context = { options, typeMap, utils };
 
   for (let file of request.protoFile) {
+    // Make a different utils per file to track per-file usage
+    const utils = makeUtils(options);
+    const ctx: Context = { options, typeMap, utils };
     const [path, code] = generateFile(ctx, file);
     const filePath = `${baseDir}/${path}`;
     const dirPath = parse(filePath).dir;

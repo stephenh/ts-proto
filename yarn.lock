@@ -3447,10 +3447,29 @@ protobufjs@^5.0.3:
     glob "^7.0.5"
     yargs "^3.10.0"
 
-protobufjs@^6.8.6, protobufjs@^6.8.8:
+protobufjs@^6.8.6:
   version "6.9.0"
   resolved "https://registry.yarnpkg.com/protobufjs/-/protobufjs-6.9.0.tgz#c08b2bf636682598e6fabbf0edb0b1256ff090bd"
   integrity sha512-LlGVfEWDXoI/STstRDdZZKb/qusoAWUnmLg9R8OLSO473mBLWHowx8clbX5/+mKDEI+v7GzjoK9tRPZMMcoTrg==
+  dependencies:
+    "@protobufjs/aspromise" "^1.1.2"
+    "@protobufjs/base64" "^1.1.2"
+    "@protobufjs/codegen" "^2.0.4"
+    "@protobufjs/eventemitter" "^1.1.0"
+    "@protobufjs/fetch" "^1.1.0"
+    "@protobufjs/float" "^1.0.2"
+    "@protobufjs/inquire" "^1.1.0"
+    "@protobufjs/path" "^1.1.2"
+    "@protobufjs/pool" "^1.1.0"
+    "@protobufjs/utf8" "^1.1.0"
+    "@types/long" "^4.0.1"
+    "@types/node" "^13.7.0"
+    long "^4.0.0"
+
+protobufjs@^6.8.8:
+  version "6.10.2"
+  resolved "https://registry.yarnpkg.com/protobufjs/-/protobufjs-6.10.2.tgz#b9cb6bd8ec8f87514592ba3fdfd28e93f33a469b"
+  integrity sha512-27yj+04uF6ya9l+qfpH187aqEzfCF4+Uit0I9ZBQVqK09hk/SQzKa2MUqUpXaVa7LOFRg1TSSr3lVxGOk6c0SQ==
   dependencies:
     "@protobufjs/aspromise" "^1.1.2"
     "@protobufjs/base64" "^1.1.2"
@@ -4191,14 +4210,21 @@ ts-node@^8.3.0:
     source-map-support "^0.5.17"
     yn "3.1.1"
 
-ts-poet@^4.4.1:
-  version "4.4.1"
-  resolved "https://registry.yarnpkg.com/ts-poet/-/ts-poet-4.4.1.tgz#064c613b1c432d2f62f0d4e59ff060a1c72cc984"
-  integrity sha512-xnn4/+fhDDpWYrDQ4ATulJK3zwuKleo2U97CU2uWU42RSGMP4AYATGiZGIku+sSYVsa4toBPjtEY93TuR0ztGw==
+ts-poet@^4.5.0:
+  version "4.5.0"
+  resolved "https://registry.yarnpkg.com/ts-poet/-/ts-poet-4.5.0.tgz#bb07ffe379d5a96f5e81da72a00edad45b28e9ca"
+  integrity sha512-Vs2Zsiz3zf5qdFulFTIEpaLdgWeHXKh+4pv+ycVqEh+ZuUOVGrN0i9lbxVx7DB1FBogExytz3OuaBMJfWffpSQ==
   dependencies:
     "@types/prettier" "^1.19.0"
     lodash "^4.17.15"
     prettier "^2.0.2"
+
+ts-proto-descriptors@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/ts-proto-descriptors/-/ts-proto-descriptors-1.2.0.tgz#47fdef5dc640d2c87fbe0c010678f009e79f63bc"
+  integrity sha512-0t2WITzCiQ/3H6zPuFrFFOj2jhH6xZNu7agS7aKecKrz7tjRMW9VrmlBlJXslTTC3K7/4phV4qlsP5fOfLxuDg==
+  dependencies:
+    protobufjs "^6.8.8"
 
 tslib@1.11.2:
   version "1.11.2"

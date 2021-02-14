@@ -106,7 +106,7 @@ export const PleaseChoose = {
   decode(input: Reader | Uint8Array, length?: number): PleaseChoose {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...basePleaseChoose } as PleaseChoose;
+    const message = Object.create(basePleaseChoose) as PleaseChoose;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -152,7 +152,7 @@ export const PleaseChoose = {
   },
 
   fromJSON(object: any): PleaseChoose {
-    const message = { ...basePleaseChoose } as PleaseChoose;
+    const message = Object.create(basePleaseChoose) as PleaseChoose;
     if (object.name !== undefined && object.name !== null) {
       message.name = String(object.name);
     }
@@ -276,7 +276,7 @@ export const PleaseChoose_Submessage = {
   decode(input: Reader | Uint8Array, length?: number): PleaseChoose_Submessage {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...basePleaseChoose_Submessage } as PleaseChoose_Submessage;
+    const message = Object.create(basePleaseChoose_Submessage) as PleaseChoose_Submessage;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -292,7 +292,7 @@ export const PleaseChoose_Submessage = {
   },
 
   fromJSON(object: any): PleaseChoose_Submessage {
-    const message = { ...basePleaseChoose_Submessage } as PleaseChoose_Submessage;
+    const message = Object.create(basePleaseChoose_Submessage) as PleaseChoose_Submessage;
     if (object.name !== undefined && object.name !== null) {
       message.name = String(object.name);
     }
@@ -330,7 +330,7 @@ export const SimpleButOptional = {
   decode(input: Reader | Uint8Array, length?: number): SimpleButOptional {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseSimpleButOptional } as SimpleButOptional;
+    const message = Object.create(baseSimpleButOptional) as SimpleButOptional;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -349,7 +349,7 @@ export const SimpleButOptional = {
   },
 
   fromJSON(object: any): SimpleButOptional {
-    const message = { ...baseSimpleButOptional } as SimpleButOptional;
+    const message = Object.create(baseSimpleButOptional) as SimpleButOptional;
     if (object.name !== undefined && object.name !== null) {
       message.name = String(object.name);
     }

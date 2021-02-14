@@ -297,6 +297,8 @@ protoc --plugin=node_modules/ts-proto/protoc-gen-ts_proto ./batching.proto -I.
 
 - With `--ts_proto_opt=useDate=false`, fields of type `google.protobuf.Timestamp` will not be mapped to type `Date` in the generated types.
 
+- With `--ts_proto_opt=outputSchema=true`, meta typings will be generated that can later be used in other code generators.
+
 ### Only Types
 
 If you're looking for `ts-proto` to generate only types for your Protobuf types then passing all three of `outputEncodeMethods`, `outputJsonMethods`, and `outputClientImpl` as `false` is probably what you want, i.e.:
@@ -317,11 +319,9 @@ If you need ts-proto customizations or priority support for your company, you ca
 
 # Building
 
-`ts-proto` does not use `pbjs` at runtime, but we do use it in the `ts-proto` build process (to bootstrap the types used to parse the incoming protobuf metadata types, as well as for the test suite to ensure the `ts-proto` implementations match the `ts-proto`).
+After running `yarn install`, run `./integration/pbjs.sh` to create the integration test types. These pbjs-generated files are not currently checked in.
 
-After running `yarn install`, run `./pbjs.sh` to create the bootstrap types, and `./integration/pbjs.sh` to create the integration test types. These pbjs-generated files are not currently checked in.
-
-After this the tests should pass.
+After this, the tests should pass.
 
 After making changes to `ts-proto`, you can run `cd integration` and `./codegen.sh` to re-generate the test case `*.ts` output files that are in each `integration/<test-case>/` directory.
 

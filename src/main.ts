@@ -1,5 +1,10 @@
 import { code, Code, conditionalOutput, def, imp, joinCode } from 'ts-poet';
-import { google } from '../build/pbjs';
+import {
+  DescriptorProto,
+  FieldDescriptorProto,
+  FileDescriptorProto,
+  FieldDescriptorProto_Type,
+} from 'ts-proto-descriptors/google/protobuf/descriptor';
 import {
   basicLongWireType,
   basicTypeName,
@@ -47,13 +52,10 @@ import {
   generateGrpcServiceDesc,
 } from './generate-grpc-web';
 import { generateEnum } from './enums';
-import { visit } from './visit';
+import { visit, visitServices } from './visit';
 import { EnvOption, LongOption, OneofOption, Options } from './options';
 import { Context } from './context';
-import DescriptorProto = google.protobuf.DescriptorProto;
-import FieldDescriptorProto = google.protobuf.FieldDescriptorProto;
-import FileDescriptorProto = google.protobuf.FileDescriptorProto;
-import ServiceDescriptorProto = google.protobuf.ServiceDescriptorProto;
+import { generateSchema } from './schema';
 
 export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [string, Code] {
   const { options, utils: u } = ctx;
@@ -182,6 +184,10 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
   if (options.useContext) {
     chunks.push(generateDataLoaderOptionsType());
     chunks.push(generateDataLoadersType());
+  }
+
+  if (options.outputSchema) {
+    chunks.push(...generateSchema(ctx, fileDesc, sourceInfo));
   }
 
   chunks.push(
@@ -508,17 +514,6 @@ function generateBaseInstance(ctx: Context, fullName: string, messageDesc: Descr
   return code`const base${fullName}: object = { ${joinCode(fields, { on: ',' })} };`;
 }
 
-function visitServices(
-  proto: FileDescriptorProto,
-  sourceInfo: SourceInfo,
-  serviceFn: (desc: ServiceDescriptorProto, sourceInfo: SourceInfo) => void
-): void {
-  proto.service.forEach((serviceDesc, index) => {
-    const nestedSourceInfo = sourceInfo.open(Fields.file.service, index);
-    serviceFn(serviceDesc, nestedSourceInfo);
-  });
-}
-
 /** Creates a function to decode a message by loop overing the tags. */
 function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorProto): Code {
   const { options, utils } = ctx;
@@ -532,7 +527,7 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
     ): ${fullName} {
       const reader = input instanceof Uint8Array ? new ${Reader}(input) : input;
       let end = length === undefined ? reader.len : reader.pos + length;
-      const message = { ...base${fullName} } as ${fullName};
+      const message = Object.create(base${fullName}) as ${fullName};
   `);
 
   // initialize all lists
@@ -716,7 +711,7 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
       `);
     } else if (isMessage(field)) {
       chunks.push(code`
-        if (message.${fieldName} !== undefined && message.${fieldName} !== ${defaultValue(ctx, field)}) {
+        if (message.${fieldName} !== undefined) {
           ${writeSnippet(`message.${fieldName}`)};
         }
       `);
@@ -743,7 +738,7 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
   // create the basic function declaration
   chunks.push(code`
     fromJSON(${messageDesc.field.length > 0 ? 'object' : '_'}: any): ${fullName} {
-      const message = { ...base${fullName} } as ${fullName};
+      const message = Object.create(base${fullName}) as ${fullName};
   `);
 
   // initialize all lists
@@ -781,7 +776,7 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
         return code`${utils.fromJsonTimestamp}(${from})`;
       } else if (isValueType(ctx, field)) {
         const valueType = valueTypeName(ctx, field.typeName)!;
-        if (isLongValueType(field)) {
+        if (isLongValueType(field) && options.forceLong === LongOption.LONG) {
           return code`${capitalize(valueType.toCodeString())}.fromValue(${from})`;
         } else if (isBytesValueType(field)) {
           return code`new ${capitalize(valueType.toCodeString())}(${from})`;
@@ -849,7 +844,7 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
     // set the default value (TODO Support bytes)
     if (
       !isRepeated(field) &&
-      field.type !== FieldDescriptorProto.Type.TYPE_BYTES &&
+      field.type !== FieldDescriptorProto_Type.TYPE_BYTES &&
       options.oneof !== OneofOption.UNIONS
     ) {
       const v = isWithinOneOf(field) ? 'undefined' : defaultValue(ctx, field);

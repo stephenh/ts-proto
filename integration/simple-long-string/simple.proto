@@ -1,4 +1,5 @@
 syntax = "proto3";
+import "google/protobuf/wrappers.proto";
 package simple;
 
 message Numbers {
@@ -14,4 +15,5 @@ message Numbers {
   fixed64 fixed64 = 10;
   sfixed32 sfixed32 = 11;
   sfixed64 sfixed64 = 12;
+  google.protobuf.UInt64Value guint64 = 13;
 }

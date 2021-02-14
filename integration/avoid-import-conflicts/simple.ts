@@ -14,7 +14,7 @@ const baseSimple: object = { name: '' };
 export const Simple = {
   encode(message: Simple, writer: Writer = Writer.create()): Writer {
     writer.uint32(10).string(message.name);
-    if (message.otherSimple !== undefined && message.otherSimple !== undefined) {
+    if (message.otherSimple !== undefined) {
       Simple1.encode(message.otherSimple, writer.uint32(18).fork()).ldelim();
     }
     return writer;
@@ -23,7 +23,7 @@ export const Simple = {
   decode(input: Reader | Uint8Array, length?: number): Simple {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseSimple } as Simple;
+    const message = Object.create(baseSimple) as Simple;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -42,7 +42,7 @@ export const Simple = {
   },
 
   fromJSON(object: any): Simple {
-    const message = { ...baseSimple } as Simple;
+    const message = Object.create(baseSimple) as Simple;
     if (object.name !== undefined && object.name !== null) {
       message.name = String(object.name);
     } else {
