@@ -1,4 +1,9 @@
 
+
+## v1.65.0
+
+* Fix `globalThis` compilation errors with messages called `Error` 
+
 ## v1.64.0
 
 * Don't put default values on the wire while encoding. Fixed #213. (webmaster128)
