@@ -970,7 +970,7 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
     const fieldName = maybeSnakeToCamel(field.name, options);
 
     const readSnippet = (from: string): Code => {
-      if (isEnum(field) || isPrimitive(field) || isTimestamp(field) || isValueType(ctx, field)) {
+      if (isPrimitive(field) || isTimestamp(field) || isValueType(ctx, field)) {
         return code`${from}`;
       } else if (isMessage(field)) {
         if (isRepeated(field) && isMapType(ctx, messageDesc, field)) {

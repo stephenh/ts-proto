@@ -277,6 +277,7 @@ export function isScalar(field: FieldDescriptorProto): boolean {
   return scalarTypes.includes(field.type);
 }
 
+/** This includes all scalars, enums and the [groups type](https://developers.google.com/protocol-buffers/docs/reference/java/com/google/protobuf/DescriptorProtos.FieldDescriptorProto.Type.html#TYPE_GROUP) */
 export function isPrimitive(field: FieldDescriptorProto): boolean {
   return !isMessage(field);
 }
