@@ -95,12 +95,18 @@ describe('simple', () => {
     };
     const s2 = PbSimple.toObject(PbSimple.decode(Simple.encode(s1).finish()));
 
+    delete s1.blob;
     delete s1.blobs;
     delete s1.birthday;
+    delete s1.thing;
     expect(s2).toEqual({
       ...s1,
-      blob: new Buffer([]),
-      createdAt: new PbTimestamp({ nanos: 0, seconds: new Long(0) as any }),
+      child: { name: 'foo' },
+      grandChildren: [
+        { name: 'grand1' },
+        { name: 'grand2' },
+      ],
+      createdAt: new PbTimestamp({}),
     });
   });
 
@@ -189,12 +195,14 @@ describe('simple', () => {
       birthday: undefined,
     };
     const s2 = PbSimple.toObject(PbSimple.decode(Simple.encode(s1).finish()));
+    delete s1.blob;
     delete s1.blobs;
     delete s1.birthday;
     expect(s2).toEqual({
       ...s1,
-      blob: new Buffer([]),
-      createdAt: new PbTimestamp({ nanos: 0, seconds: new Long(0) as any }),
+      child: { name: 'foo' },
+      grandChildren: [{ name: 'grand2' }],
+      createdAt: new PbTimestamp({}),
     });
   });
 

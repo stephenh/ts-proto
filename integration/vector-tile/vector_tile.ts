@@ -152,13 +152,27 @@ const baseTile_Value: object = {
 
 export const Tile_Value = {
   encode(message: Tile_Value, writer: Writer = Writer.create()): Writer {
-    writer.uint32(10).string(message.stringValue);
-    writer.uint32(21).float(message.floatValue);
-    writer.uint32(25).double(message.doubleValue);
-    writer.uint32(32).int64(message.intValue);
-    writer.uint32(40).uint64(message.uintValue);
-    writer.uint32(48).sint64(message.sintValue);
-    writer.uint32(56).bool(message.boolValue);
+    if (message.stringValue !== '') {
+      writer.uint32(10).string(message.stringValue);
+    }
+    if (message.floatValue !== 0) {
+      writer.uint32(21).float(message.floatValue);
+    }
+    if (message.doubleValue !== 0) {
+      writer.uint32(25).double(message.doubleValue);
+    }
+    if (message.intValue !== 0) {
+      writer.uint32(32).int64(message.intValue);
+    }
+    if (message.uintValue !== 0) {
+      writer.uint32(40).uint64(message.uintValue);
+    }
+    if (message.sintValue !== 0) {
+      writer.uint32(48).sint64(message.sintValue);
+    }
+    if (message.boolValue === true) {
+      writer.uint32(56).bool(message.boolValue);
+    }
     return writer;
   },
 
@@ -295,13 +309,17 @@ const baseTile_Feature: object = { id: 0, tags: 0, type: 0, geometry: 0 };
 
 export const Tile_Feature = {
   encode(message: Tile_Feature, writer: Writer = Writer.create()): Writer {
-    writer.uint32(8).uint64(message.id);
+    if (message.id !== 0) {
+      writer.uint32(8).uint64(message.id);
+    }
     writer.uint32(18).fork();
     for (const v of message.tags) {
       writer.uint32(v);
     }
     writer.ldelim();
-    writer.uint32(24).int32(message.type);
+    if (message.type !== 0) {
+      writer.uint32(24).int32(message.type);
+    }
     writer.uint32(34).fork();
     for (const v of message.geometry) {
       writer.uint32(v);
@@ -429,8 +447,12 @@ const baseTile_Layer: object = { version: 0, name: '', keys: '', extent: 0 };
 
 export const Tile_Layer = {
   encode(message: Tile_Layer, writer: Writer = Writer.create()): Writer {
-    writer.uint32(120).uint32(message.version);
-    writer.uint32(10).string(message.name);
+    if (message.version !== 0) {
+      writer.uint32(120).uint32(message.version);
+    }
+    if (message.name !== '') {
+      writer.uint32(10).string(message.name);
+    }
     for (const v of message.features) {
       Tile_Feature.encode(v!, writer.uint32(18).fork()).ldelim();
     }
@@ -440,7 +462,9 @@ export const Tile_Layer = {
     for (const v of message.values) {
       Tile_Value.encode(v!, writer.uint32(34).fork()).ldelim();
     }
-    writer.uint32(40).uint32(message.extent);
+    if (message.extent !== 0) {
+      writer.uint32(40).uint32(message.extent);
+    }
     return writer;
   },
 

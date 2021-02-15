@@ -239,15 +239,21 @@ const baseSimple: object = { name: '', age: 0, state: 0, coins: 0, snacks: '', o
 
 export const Simple = {
   encode(message: Simple, writer: Writer = Writer.create()): Writer {
-    writer.uint32(10).string(message.name);
-    writer.uint32(16).int32(message.age);
+    if (message.name !== '') {
+      writer.uint32(10).string(message.name);
+    }
+    if (message.age !== 0) {
+      writer.uint32(16).int32(message.age);
+    }
     if (message.created_at !== undefined) {
       Timestamp.encode(toTimestamp(message.created_at), writer.uint32(74).fork()).ldelim();
     }
     if (message.child !== undefined) {
       Child.encode(message.child, writer.uint32(26).fork()).ldelim();
     }
-    writer.uint32(32).int32(message.state);
+    if (message.state !== 0) {
+      writer.uint32(32).int32(message.state);
+    }
     for (const v of message.grand_children) {
       Child.encode(v!, writer.uint32(42).fork()).ldelim();
     }
@@ -488,8 +494,12 @@ const baseChild: object = { name: '', type: 0 };
 
 export const Child = {
   encode(message: Child, writer: Writer = Writer.create()): Writer {
-    writer.uint32(10).string(message.name);
-    writer.uint32(16).int32(message.type);
+    if (message.name !== '') {
+      writer.uint32(10).string(message.name);
+    }
+    if (message.type !== 0) {
+      writer.uint32(16).int32(message.type);
+    }
     return writer;
   },
 
@@ -556,11 +566,15 @@ const baseNested: object = { name: '', state: 0 };
 
 export const Nested = {
   encode(message: Nested, writer: Writer = Writer.create()): Writer {
-    writer.uint32(10).string(message.name);
+    if (message.name !== '') {
+      writer.uint32(10).string(message.name);
+    }
     if (message.message !== undefined) {
       Nested_InnerMessage.encode(message.message, writer.uint32(18).fork()).ldelim();
     }
-    writer.uint32(24).int32(message.state);
+    if (message.state !== 0) {
+      writer.uint32(24).int32(message.state);
+    }
     return writer;
   },
 
@@ -642,7 +656,9 @@ const baseNested_InnerMessage: object = { name: '' };
 
 export const Nested_InnerMessage = {
   encode(message: Nested_InnerMessage, writer: Writer = Writer.create()): Writer {
-    writer.uint32(10).string(message.name);
+    if (message.name !== '') {
+      writer.uint32(10).string(message.name);
+    }
     if (message.deep !== undefined) {
       Nested_InnerMessage_DeepMessage.encode(message.deep, writer.uint32(18).fork()).ldelim();
     }
@@ -713,7 +729,9 @@ const baseNested_InnerMessage_DeepMessage: object = { name: '' };
 
 export const Nested_InnerMessage_DeepMessage = {
   encode(message: Nested_InnerMessage_DeepMessage, writer: Writer = Writer.create()): Writer {
-    writer.uint32(10).string(message.name);
+    if (message.name !== '') {
+      writer.uint32(10).string(message.name);
+    }
     return writer;
   },
 
@@ -975,7 +993,9 @@ const baseEntity: object = { id: 0 };
 
 export const Entity = {
   encode(message: Entity, writer: Writer = Writer.create()): Writer {
-    writer.uint32(8).int32(message.id);
+    if (message.id !== 0) {
+      writer.uint32(8).int32(message.id);
+    }
     return writer;
   },
 
@@ -1156,7 +1176,9 @@ const baseSimpleWithMap_EntitiesByIdEntry: object = { key: 0 };
 
 export const SimpleWithMap_EntitiesByIdEntry = {
   encode(message: SimpleWithMap_EntitiesByIdEntry, writer: Writer = Writer.create()): Writer {
-    writer.uint32(8).int32(message.key);
+    if (message.key !== 0) {
+      writer.uint32(8).int32(message.key);
+    }
     if (message.value !== undefined) {
       Entity.encode(message.value, writer.uint32(18).fork()).ldelim();
     }
@@ -1226,8 +1248,12 @@ const baseSimpleWithMap_NameLookupEntry: object = { key: '', value: '' };
 
 export const SimpleWithMap_NameLookupEntry = {
   encode(message: SimpleWithMap_NameLookupEntry, writer: Writer = Writer.create()): Writer {
-    writer.uint32(10).string(message.key);
-    writer.uint32(18).string(message.value);
+    if (message.key !== '') {
+      writer.uint32(10).string(message.key);
+    }
+    if (message.value !== '') {
+      writer.uint32(18).string(message.value);
+    }
     return writer;
   },
 
@@ -1294,8 +1320,12 @@ const baseSimpleWithMap_IntLookupEntry: object = { key: 0, value: 0 };
 
 export const SimpleWithMap_IntLookupEntry = {
   encode(message: SimpleWithMap_IntLookupEntry, writer: Writer = Writer.create()): Writer {
-    writer.uint32(8).int32(message.key);
-    writer.uint32(16).int32(message.value);
+    if (message.key !== 0) {
+      writer.uint32(8).int32(message.key);
+    }
+    if (message.value !== 0) {
+      writer.uint32(16).int32(message.value);
+    }
     return writer;
   },
 
@@ -1430,7 +1460,9 @@ const baseSimpleWithSnakeCaseMap_EntitiesByIdEntry: object = { key: 0 };
 
 export const SimpleWithSnakeCaseMap_EntitiesByIdEntry = {
   encode(message: SimpleWithSnakeCaseMap_EntitiesByIdEntry, writer: Writer = Writer.create()): Writer {
-    writer.uint32(8).int32(message.key);
+    if (message.key !== 0) {
+      writer.uint32(8).int32(message.key);
+    }
     if (message.value !== undefined) {
       Entity.encode(message.value, writer.uint32(18).fork()).ldelim();
     }
@@ -1504,7 +1536,9 @@ const basePingRequest: object = { input: '' };
 
 export const PingRequest = {
   encode(message: PingRequest, writer: Writer = Writer.create()): Writer {
-    writer.uint32(10).string(message.input);
+    if (message.input !== '') {
+      writer.uint32(10).string(message.input);
+    }
     return writer;
   },
 
@@ -1557,7 +1591,9 @@ const basePingResponse: object = { output: '' };
 
 export const PingResponse = {
   encode(message: PingResponse, writer: Writer = Writer.create()): Writer {
-    writer.uint32(10).string(message.output);
+    if (message.output !== '') {
+      writer.uint32(10).string(message.output);
+    }
     return writer;
   },
 
@@ -1623,18 +1659,42 @@ const baseNumbers: object = {
 
 export const Numbers = {
   encode(message: Numbers, writer: Writer = Writer.create()): Writer {
-    writer.uint32(9).double(message.double);
-    writer.uint32(21).float(message.float);
-    writer.uint32(24).int32(message.int32);
-    writer.uint32(32).int64(message.int64);
-    writer.uint32(40).uint32(message.uint32);
-    writer.uint32(48).uint64(message.uint64);
-    writer.uint32(56).sint32(message.sint32);
-    writer.uint32(64).sint64(message.sint64);
-    writer.uint32(77).fixed32(message.fixed32);
-    writer.uint32(81).fixed64(message.fixed64);
-    writer.uint32(93).sfixed32(message.sfixed32);
-    writer.uint32(97).sfixed64(message.sfixed64);
+    if (message.double !== 0) {
+      writer.uint32(9).double(message.double);
+    }
+    if (message.float !== 0) {
+      writer.uint32(21).float(message.float);
+    }
+    if (message.int32 !== 0) {
+      writer.uint32(24).int32(message.int32);
+    }
+    if (message.int64 !== 0) {
+      writer.uint32(32).int64(message.int64);
+    }
+    if (message.uint32 !== 0) {
+      writer.uint32(40).uint32(message.uint32);
+    }
+    if (message.uint64 !== 0) {
+      writer.uint32(48).uint64(message.uint64);
+    }
+    if (message.sint32 !== 0) {
+      writer.uint32(56).sint32(message.sint32);
+    }
+    if (message.sint64 !== 0) {
+      writer.uint32(64).sint64(message.sint64);
+    }
+    if (message.fixed32 !== 0) {
+      writer.uint32(77).fixed32(message.fixed32);
+    }
+    if (message.fixed64 !== 0) {
+      writer.uint32(81).fixed64(message.fixed64);
+    }
+    if (message.sfixed32 !== 0) {
+      writer.uint32(93).sfixed32(message.sfixed32);
+    }
+    if (message.sfixed64 !== 0) {
+      writer.uint32(97).sfixed64(message.sfixed64);
+    }
     return writer;
   },
 

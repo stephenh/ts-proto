@@ -28,8 +28,12 @@ const baseSimple: object = { name: '', age: 0 };
 
 export const Simple = {
   encode(message: Simple, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    writer.uint32(10).string(message.name);
-    writer.uint32(16).int32(message.age);
+    if (message.name !== '') {
+      writer.uint32(10).string(message.name);
+    }
+    if (message.age !== 0) {
+      writer.uint32(16).int32(message.age);
+    }
     return writer;
   },
 
@@ -109,18 +113,42 @@ const baseNumbers: object = {
 
 export const Numbers = {
   encode(message: Numbers, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    writer.uint32(9).double(message.double);
-    writer.uint32(21).float(message.float);
-    writer.uint32(24).int32(message.int32);
-    writer.uint32(32).int64(message.int64);
-    writer.uint32(40).uint32(message.uint32);
-    writer.uint32(48).uint64(message.uint64);
-    writer.uint32(56).sint32(message.sint32);
-    writer.uint32(64).sint64(message.sint64);
-    writer.uint32(77).fixed32(message.fixed32);
-    writer.uint32(81).fixed64(message.fixed64);
-    writer.uint32(93).sfixed32(message.sfixed32);
-    writer.uint32(97).sfixed64(message.sfixed64);
+    if (message.double !== 0) {
+      writer.uint32(9).double(message.double);
+    }
+    if (message.float !== 0) {
+      writer.uint32(21).float(message.float);
+    }
+    if (message.int32 !== 0) {
+      writer.uint32(24).int32(message.int32);
+    }
+    if (message.int64 !== 0) {
+      writer.uint32(32).int64(message.int64);
+    }
+    if (message.uint32 !== 0) {
+      writer.uint32(40).uint32(message.uint32);
+    }
+    if (message.uint64 !== 0) {
+      writer.uint32(48).uint64(message.uint64);
+    }
+    if (message.sint32 !== 0) {
+      writer.uint32(56).sint32(message.sint32);
+    }
+    if (message.sint64 !== 0) {
+      writer.uint32(64).sint64(message.sint64);
+    }
+    if (message.fixed32 !== 0) {
+      writer.uint32(77).fixed32(message.fixed32);
+    }
+    if (message.fixed64 !== 0) {
+      writer.uint32(81).fixed64(message.fixed64);
+    }
+    if (message.sfixed32 !== 0) {
+      writer.uint32(93).sfixed32(message.sfixed32);
+    }
+    if (message.sfixed64 !== 0) {
+      writer.uint32(97).sfixed64(message.sfixed64);
+    }
     return writer;
   },
 

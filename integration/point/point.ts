@@ -17,8 +17,12 @@ const basePoint: object = { lat: 0, lng: 0 };
 
 export const Point = {
   encode(message: Point, writer: Writer = Writer.create()): Writer {
-    writer.uint32(9).double(message.lat);
-    writer.uint32(17).double(message.lng);
+    if (message.lat !== 0) {
+      writer.uint32(9).double(message.lat);
+    }
+    if (message.lng !== 0) {
+      writer.uint32(17).double(message.lng);
+    }
     return writer;
   },
 

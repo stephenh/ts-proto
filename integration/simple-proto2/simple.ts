@@ -43,7 +43,9 @@ const baseIssue56: object = { test: 1 };
 
 export const Issue56 = {
   encode(message: Issue56, writer: Writer = Writer.create()): Writer {
-    writer.uint32(8).int32(message.test);
+    if (message.test !== 1) {
+      writer.uint32(8).int32(message.test);
+    }
     return writer;
   },
 

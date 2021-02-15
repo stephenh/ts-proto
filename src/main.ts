@@ -9,6 +9,7 @@ import {
   basicLongWireType,
   basicTypeName,
   basicWireType,
+  notDefaultCheck,
   defaultValue,
   detectMapType,
   getEnumMethod,
@@ -21,6 +22,7 @@ import {
   isMessage,
   isPrimitive,
   isRepeated,
+  isScalar,
   isTimestamp,
   isValueType,
   isWithinOneOf,
@@ -650,7 +652,7 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
 
     // get a generic writer.doSomething based on the basic type
     let writeSnippet: (place: string) => Code;
-    if (isPrimitive(field)) {
+    if (isScalar(field) || isEnum(field)) {
       const tag = ((field.number << 3) | basicWireType(field.type)) >>> 0;
       writeSnippet = (place) => code`writer.uint32(${tag}).${toReaderCall(field)}(${place})`;
     } else if (isTimestamp(field)) {
@@ -710,6 +712,12 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
     } else if (isMessage(field)) {
       chunks.push(code`
         if (message.${fieldName} !== undefined) {
+          ${writeSnippet(`message.${fieldName}`)};
+        }
+      `);
+    } else if (isScalar(field) || isEnum(field)) {
+      chunks.push(code`
+        if (${notDefaultCheck(ctx, field, `message.${fieldName}`)}) {
           ${writeSnippet(`message.${fieldName}`)};
         }
       `);
@@ -889,7 +897,7 @@ function generateToJson(ctx: Context, fullName: string, messageDesc: DescriptorP
           return code`${utils.base64FromBytes}(${from})`;
         } else if (isTimestamp(valueType)) {
           return code`${from}.toISOString()`;
-        } else if (isPrimitive(valueType)) {
+        } else if (isScalar(valueType)) {
           return code`${from}`;
         } else {
           const type = basicTypeName(ctx, valueType);
@@ -969,7 +977,7 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
     const fieldName = maybeSnakeToCamel(field.name, options);
 
     const readSnippet = (from: string): Code => {
-      if (isEnum(field) || isPrimitive(field) || isTimestamp(field) || isValueType(ctx, field)) {
+      if (isPrimitive(field) || isTimestamp(field) || isValueType(ctx, field)) {
         return code`${from}`;
       } else if (isMessage(field)) {
         if (isRepeated(field) && isMapType(ctx, messageDesc, field)) {

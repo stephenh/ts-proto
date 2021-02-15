@@ -10,8 +10,12 @@ const baseBar: object = { name: '', age: 0 };
 
 export const Bar = {
   encode(message: Bar, writer: Writer = Writer.create()): Writer {
-    writer.uint32(10).string(message.name);
-    writer.uint32(16).int32(message.age);
+    if (message.name !== '') {
+      writer.uint32(10).string(message.name);
+    }
+    if (message.age !== 0) {
+      writer.uint32(16).int32(message.age);
+    }
     return writer;
   },
 

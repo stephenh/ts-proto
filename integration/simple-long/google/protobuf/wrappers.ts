@@ -98,7 +98,9 @@ const baseDoubleValue: object = { value: 0 };
 
 export const DoubleValue = {
   encode(message: DoubleValue, writer: Writer = Writer.create()): Writer {
-    writer.uint32(9).double(message.value);
+    if (message.value !== 0) {
+      writer.uint32(9).double(message.value);
+    }
     return writer;
   },
 
@@ -151,7 +153,9 @@ const baseFloatValue: object = { value: 0 };
 
 export const FloatValue = {
   encode(message: FloatValue, writer: Writer = Writer.create()): Writer {
-    writer.uint32(13).float(message.value);
+    if (message.value !== 0) {
+      writer.uint32(13).float(message.value);
+    }
     return writer;
   },
 
@@ -204,7 +208,9 @@ const baseInt64Value: object = { value: Long.ZERO };
 
 export const Int64Value = {
   encode(message: Int64Value, writer: Writer = Writer.create()): Writer {
-    writer.uint32(8).int64(message.value);
+    if (!message.value.isZero()) {
+      writer.uint32(8).int64(message.value);
+    }
     return writer;
   },
 
@@ -257,7 +263,9 @@ const baseUInt64Value: object = { value: Long.UZERO };
 
 export const UInt64Value = {
   encode(message: UInt64Value, writer: Writer = Writer.create()): Writer {
-    writer.uint32(8).uint64(message.value);
+    if (!message.value.isZero()) {
+      writer.uint32(8).uint64(message.value);
+    }
     return writer;
   },
 
@@ -310,7 +318,9 @@ const baseInt32Value: object = { value: 0 };
 
 export const Int32Value = {
   encode(message: Int32Value, writer: Writer = Writer.create()): Writer {
-    writer.uint32(8).int32(message.value);
+    if (message.value !== 0) {
+      writer.uint32(8).int32(message.value);
+    }
     return writer;
   },
 
@@ -363,7 +373,9 @@ const baseUInt32Value: object = { value: 0 };
 
 export const UInt32Value = {
   encode(message: UInt32Value, writer: Writer = Writer.create()): Writer {
-    writer.uint32(8).uint32(message.value);
+    if (message.value !== 0) {
+      writer.uint32(8).uint32(message.value);
+    }
     return writer;
   },
 
@@ -416,7 +428,9 @@ const baseBoolValue: object = { value: false };
 
 export const BoolValue = {
   encode(message: BoolValue, writer: Writer = Writer.create()): Writer {
-    writer.uint32(8).bool(message.value);
+    if (message.value === true) {
+      writer.uint32(8).bool(message.value);
+    }
     return writer;
   },
 
@@ -469,7 +483,9 @@ const baseStringValue: object = { value: '' };
 
 export const StringValue = {
   encode(message: StringValue, writer: Writer = Writer.create()): Writer {
-    writer.uint32(10).string(message.value);
+    if (message.value !== '') {
+      writer.uint32(10).string(message.value);
+    }
     return writer;
   },
 
@@ -522,7 +538,9 @@ const baseBytesValue: object = {};
 
 export const BytesValue = {
   encode(message: BytesValue, writer: Writer = Writer.create()): Writer {
-    writer.uint32(10).bytes(message.value);
+    if (message.value.length !== 0) {
+      writer.uint32(10).bytes(message.value);
+    }
     return writer;
   },
 

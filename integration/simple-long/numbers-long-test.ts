@@ -48,19 +48,19 @@ describe('number', () => {
 
   it('can encode', () => {
     const s1: Numbers = {
-      double: 0,
-      float: 1,
-      int32: 2,
-      int64: Long.fromNumber(3),
-      uint32: 4,
-      uint64: Long.fromNumber(5, true),
-      sint32: 6,
-      sint64: Long.fromNumber(7),
-      fixed32: 8,
-      fixed64: Long.fromNumber(9, true),
-      sfixed32: 10,
-      sfixed64: Long.fromNumber(11),
-      manyUint64: [Long.fromNumber(12, true)],
+      double: 1,
+      float: 2,
+      int32: 3,
+      int64: Long.fromNumber(4),
+      uint32: 5,
+      uint64: Long.fromNumber(6, true),
+      sint32: 7,
+      sint64: Long.fromNumber(8),
+      fixed32: 9,
+      fixed64: Long.fromNumber(10, true),
+      sfixed32: 11,
+      sfixed64: Long.fromNumber(12),
+      manyUint64: [Long.fromNumber(13, true)],
     };
     const s2 = PbNumbers.toObject(PbNumbers.decode(Numbers.encode(s1).finish()));
     expect(s2).toEqual({

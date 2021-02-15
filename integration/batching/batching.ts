@@ -301,7 +301,9 @@ const baseBatchMapQueryResponse_EntitiesEntry: object = { key: '' };
 
 export const BatchMapQueryResponse_EntitiesEntry = {
   encode(message: BatchMapQueryResponse_EntitiesEntry, writer: Writer = Writer.create()): Writer {
-    writer.uint32(10).string(message.key);
+    if (message.key !== '') {
+      writer.uint32(10).string(message.key);
+    }
     if (message.value !== undefined) {
       Entity.encode(message.value, writer.uint32(18).fork()).ldelim();
     }
@@ -375,7 +377,9 @@ const baseGetOnlyMethodRequest: object = { id: '' };
 
 export const GetOnlyMethodRequest = {
   encode(message: GetOnlyMethodRequest, writer: Writer = Writer.create()): Writer {
-    writer.uint32(10).string(message.id);
+    if (message.id !== '') {
+      writer.uint32(10).string(message.id);
+    }
     return writer;
   },
 
@@ -483,7 +487,9 @@ const baseWriteMethodRequest: object = { id: '' };
 
 export const WriteMethodRequest = {
   encode(message: WriteMethodRequest, writer: Writer = Writer.create()): Writer {
-    writer.uint32(10).string(message.id);
+    if (message.id !== '') {
+      writer.uint32(10).string(message.id);
+    }
     return writer;
   },
 
@@ -574,8 +580,12 @@ const baseEntity: object = { id: '', name: '' };
 
 export const Entity = {
   encode(message: Entity, writer: Writer = Writer.create()): Writer {
-    writer.uint32(10).string(message.id);
-    writer.uint32(18).string(message.name);
+    if (message.id !== '') {
+      writer.uint32(10).string(message.id);
+    }
+    if (message.name !== '') {
+      writer.uint32(18).string(message.name);
+    }
     return writer;
   },
 

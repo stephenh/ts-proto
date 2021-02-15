@@ -71,7 +71,9 @@ const basePleaseChoose: object = { name: '', age: 0 };
 
 export const PleaseChoose = {
   encode(message: PleaseChoose, writer: Writer = Writer.create()): Writer {
-    writer.uint32(10).string(message.name);
+    if (message.name !== '') {
+      writer.uint32(10).string(message.name);
+    }
     if (message.choice?.$case === 'aNumber') {
       writer.uint32(17).double(message.choice.aNumber);
     }
@@ -90,7 +92,9 @@ export const PleaseChoose = {
     if (message.choice?.$case === 'anEnum') {
       writer.uint32(88).int32(message.choice.anEnum);
     }
-    writer.uint32(40).uint32(message.age);
+    if (message.age !== 0) {
+      writer.uint32(40).uint32(message.age);
+    }
     if (message.eitherOr?.$case === 'either') {
       writer.uint32(58).string(message.eitherOr.either);
     }
@@ -269,7 +273,9 @@ const basePleaseChoose_Submessage: object = { name: '' };
 
 export const PleaseChoose_Submessage = {
   encode(message: PleaseChoose_Submessage, writer: Writer = Writer.create()): Writer {
-    writer.uint32(10).string(message.name);
+    if (message.name !== '') {
+      writer.uint32(10).string(message.name);
+    }
     return writer;
   },
 

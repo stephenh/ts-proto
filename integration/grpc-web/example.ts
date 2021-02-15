@@ -99,8 +99,12 @@ const baseDashFlash: object = { msg: '', type: 0 };
 
 export const DashFlash = {
   encode(message: DashFlash, writer: Writer = Writer.create()): Writer {
-    writer.uint32(10).string(message.msg);
-    writer.uint32(16).int32(message.type);
+    if (message.msg !== '') {
+      writer.uint32(10).string(message.msg);
+    }
+    if (message.type !== 0) {
+      writer.uint32(16).int32(message.type);
+    }
     return writer;
   },
 
@@ -167,7 +171,9 @@ const baseDashUserSettingsState: object = { email: '' };
 
 export const DashUserSettingsState = {
   encode(message: DashUserSettingsState, writer: Writer = Writer.create()): Writer {
-    writer.uint32(10).string(message.email);
+    if (message.email !== '') {
+      writer.uint32(10).string(message.email);
+    }
     if (message.urls !== undefined) {
       DashUserSettingsState_URLs.encode(message.urls, writer.uint32(50).fork()).ldelim();
     }
@@ -262,8 +268,12 @@ const baseDashUserSettingsState_URLs: object = { connectGoogle: '', connectGithu
 
 export const DashUserSettingsState_URLs = {
   encode(message: DashUserSettingsState_URLs, writer: Writer = Writer.create()): Writer {
-    writer.uint32(10).string(message.connectGoogle);
-    writer.uint32(18).string(message.connectGithub);
+    if (message.connectGoogle !== '') {
+      writer.uint32(10).string(message.connectGoogle);
+    }
+    if (message.connectGithub !== '') {
+      writer.uint32(18).string(message.connectGithub);
+    }
     return writer;
   },
 
@@ -330,10 +340,18 @@ const baseDashCred: object = { description: '', metadata: '', token: '', id: '' 
 
 export const DashCred = {
   encode(message: DashCred, writer: Writer = Writer.create()): Writer {
-    writer.uint32(18).string(message.description);
-    writer.uint32(26).string(message.metadata);
-    writer.uint32(34).string(message.token);
-    writer.uint32(58).string(message.id);
+    if (message.description !== '') {
+      writer.uint32(18).string(message.description);
+    }
+    if (message.metadata !== '') {
+      writer.uint32(26).string(message.metadata);
+    }
+    if (message.token !== '') {
+      writer.uint32(34).string(message.token);
+    }
+    if (message.id !== '') {
+      writer.uint32(58).string(message.id);
+    }
     return writer;
   },
 
@@ -428,8 +446,12 @@ const baseDashAPICredsCreateReq: object = { description: '', metadata: '' };
 
 export const DashAPICredsCreateReq = {
   encode(message: DashAPICredsCreateReq, writer: Writer = Writer.create()): Writer {
-    writer.uint32(10).string(message.description);
-    writer.uint32(18).string(message.metadata);
+    if (message.description !== '') {
+      writer.uint32(10).string(message.description);
+    }
+    if (message.metadata !== '') {
+      writer.uint32(18).string(message.metadata);
+    }
     return writer;
   },
 
@@ -496,10 +518,18 @@ const baseDashAPICredsUpdateReq: object = { credSid: '', description: '', metada
 
 export const DashAPICredsUpdateReq = {
   encode(message: DashAPICredsUpdateReq, writer: Writer = Writer.create()): Writer {
-    writer.uint32(10).string(message.credSid);
-    writer.uint32(18).string(message.description);
-    writer.uint32(26).string(message.metadata);
-    writer.uint32(42).string(message.id);
+    if (message.credSid !== '') {
+      writer.uint32(10).string(message.credSid);
+    }
+    if (message.description !== '') {
+      writer.uint32(18).string(message.description);
+    }
+    if (message.metadata !== '') {
+      writer.uint32(26).string(message.metadata);
+    }
+    if (message.id !== '') {
+      writer.uint32(42).string(message.id);
+    }
     return writer;
   },
 
@@ -594,8 +624,12 @@ const baseDashAPICredsDeleteReq: object = { credSid: '', id: '' };
 
 export const DashAPICredsDeleteReq = {
   encode(message: DashAPICredsDeleteReq, writer: Writer = Writer.create()): Writer {
-    writer.uint32(10).string(message.credSid);
-    writer.uint32(26).string(message.id);
+    if (message.credSid !== '') {
+      writer.uint32(10).string(message.credSid);
+    }
+    if (message.id !== '') {
+      writer.uint32(26).string(message.id);
+    }
     return writer;
   },
 

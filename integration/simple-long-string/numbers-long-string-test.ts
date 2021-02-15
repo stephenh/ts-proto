@@ -9,55 +9,55 @@ import UInt64Value = google.protobuf.UInt64Value;
 describe('number', () => {
   it('generates types correctly', () => {
     const simple: Numbers = {
-      double: 0,
-      float: 1,
-      int32: 2,
-      int64: "3",
-      uint32: 4,
-      uint64: "5",
-      sint32: 6,
-      sint64: "7",
-      fixed32: 8,
-      fixed64: "9",
-      sfixed32: 10,
-      sfixed64: "11",
-      guint64: "12"
+      double: 1,
+      float: 2,
+      int32: 3,
+      int64: "4",
+      uint32: 5,
+      uint64: "6",
+      sint32: 7,
+      sint64: "8",
+      fixed32: 9,
+      fixed64: "10",
+      sfixed32: 11,
+      sfixed64: "12",
+      guint64: "13"
     };
-    expect(simple.int64).toEqual("3");
-    expect(simple.uint64).toEqual("5");
-    expect(simple.guint64).toEqual("12")
+    expect(simple.int64).toEqual("4");
+    expect(simple.uint64).toEqual("6");
+    expect(simple.guint64).toEqual("13")
   });
 
   it('can decode', () => {
     const s1: INumbers = {
-      double: 0,
-      float: 1,
-      int32: 2,
-      int64: Long.fromNumber(3),
-      uint32: 4,
-      uint64: Long.fromNumber(5, true),
-      sint32: 6,
-      sint64: Long.fromNumber(7),
-      fixed32: 8,
-      fixed64: Long.fromNumber(9, true),
-      sfixed32: 10,
-      sfixed64: Long.fromNumber(11),
-      guint64: new UInt64Value({value: Long.fromNumber(12, true)})
+      double: 1,
+      float: 2,
+      int32: 3,
+      int64: Long.fromNumber(4),
+      uint32: 5,
+      uint64: Long.fromNumber(6, true),
+      sint32: 7,
+      sint64: Long.fromNumber(8),
+      fixed32: 9,
+      fixed64: Long.fromNumber(10, true),
+      sfixed32: 11,
+      sfixed64: Long.fromNumber(12),
+      guint64: new UInt64Value({value: Long.fromNumber(13, true)})
     };
     const expected: Numbers = {
-      double: 0,
-      float: 1,
-      int32: 2,
-      int64: "3",
-      uint32: 4,
-      uint64: "5",
-      sint32: 6,
-      sint64: "7",
-      fixed32: 8,
-      fixed64: "9",
-      sfixed32: 10,
-      sfixed64: "11",
-      guint64: "12"
+      double: 1,
+      float: 2,
+      int32: 3,
+      int64: "4",
+      uint32: 5,
+      uint64: "6",
+      sint32: 7,
+      sint64: "8",
+      fixed32: 9,
+      fixed64: "10",
+      sfixed32: 11,
+      sfixed64: "12",
+      guint64: "13"
     };
     const s2 = Numbers.decode(Reader.create(PbNumbers.encode(PbNumbers.fromObject(s1)).finish()));
     expect(s2).toEqual(expected);
@@ -65,34 +65,34 @@ describe('number', () => {
 
   it('can encode', () => {
     const s1: Numbers = {
-      double: 0,
-      float: 1,
-      int32: 2,
-      int64: "3",
-      uint32: 4,
-      uint64: "5",
-      sint32: 6,
-      sint64: "7",
-      fixed32: 8,
-      fixed64: "9",
-      sfixed32: 10,
-      sfixed64: "11",
-      guint64: "12"
+      double: 1,
+      float: 2,
+      int32: 3,
+      int64: "4",
+      uint32: 5,
+      uint64: "6",
+      sint32: 7,
+      sint64: "8",
+      fixed32: 9,
+      fixed64: "10",
+      sfixed32: 11,
+      sfixed64: "12",
+      guint64: "13"
     };
     const expected: INumbers = {
-      double: 0,
-      float: 1,
-      int32: 2,
-      int64: Long.fromNumber(3),
-      uint32: 4,
-      uint64: Long.fromNumber(5, true),
-      sint32: 6,
-      sint64: Long.fromNumber(7),
-      fixed32: 8,
-      fixed64: Long.fromNumber(9, true),
-      sfixed32: 10,
-      sfixed64: Long.fromNumber(11),
-      guint64: new UInt64Value({value: Long.fromNumber(12, true)})
+      double: 1,
+      float: 2,
+      int32: 3,
+      int64: Long.fromNumber(4),
+      uint32: 5,
+      uint64: Long.fromNumber(6, true),
+      sint32: 7,
+      sint64: Long.fromNumber(8),
+      fixed32: 9,
+      fixed64: Long.fromNumber(10, true),
+      sfixed32: 11,
+      sfixed64: Long.fromNumber(12),
+      guint64: new UInt64Value({value: Long.fromNumber(13, true)})
     };
     const s2 = PbNumbers.toObject(PbNumbers.decode(Numbers.encode(s1).finish()));
     expect(s2).toEqual({

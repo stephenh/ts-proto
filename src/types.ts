@@ -230,6 +230,54 @@ export function defaultValue(ctx: Context, field: FieldDescriptorProto): any {
   }
 }
 
+/** Creates code that checks that the field is not the default value. Supports scalars and enums. */
+export function notDefaultCheck(ctx: Context, field: FieldDescriptorProto, place: string): Code {
+  const { typeMap, options } = ctx;
+  switch (field.type) {
+    case FieldDescriptorProto_Type.TYPE_DOUBLE:
+    case FieldDescriptorProto_Type.TYPE_FLOAT:
+    case FieldDescriptorProto_Type.TYPE_INT32:
+    case FieldDescriptorProto_Type.TYPE_UINT32:
+    case FieldDescriptorProto_Type.TYPE_SINT32:
+    case FieldDescriptorProto_Type.TYPE_FIXED32:
+    case FieldDescriptorProto_Type.TYPE_SFIXED32:
+      return code`${place} !== 0`;
+    case FieldDescriptorProto_Type.TYPE_ENUM:
+      // proto3 enforces enums starting at 0, however proto2 does not, so we have
+      // to probe and see if zero is an allowed value. If it's not, pick the first one.
+      // This is probably not great, but it's only used in fromJSON and fromPartial,
+      // and I believe the semantics of those in the proto2 world are generally undefined.
+      const enumProto = typeMap.get(field.typeName)![2] as EnumDescriptorProto;
+      const zerothValue = enumProto.value.find((v) => v.number === 0) || enumProto.value[0];
+      if (options.stringEnums) {
+        const enumType = messageToTypeName(ctx, field.typeName);
+        return code`${place} !== ${enumType}.${zerothValue.name}`;
+      } else {
+        return code`${place} !== ${zerothValue.number}`;
+      }
+    case FieldDescriptorProto_Type.TYPE_UINT64:
+    case FieldDescriptorProto_Type.TYPE_FIXED64:
+    case FieldDescriptorProto_Type.TYPE_INT64:
+    case FieldDescriptorProto_Type.TYPE_SINT64:
+    case FieldDescriptorProto_Type.TYPE_SFIXED64:
+      if (options.forceLong === LongOption.LONG) {
+        return code`!${place}.isZero()`;
+      } else if (options.forceLong === LongOption.STRING) {
+        return code`${place} !== "0"`;
+      } else {
+        return code`${place} !== 0`;
+      }
+    case FieldDescriptorProto_Type.TYPE_BOOL:
+      return code`${place} === true`;
+    case FieldDescriptorProto_Type.TYPE_STRING:
+      return code`${place} !== ""`;
+    case FieldDescriptorProto_Type.TYPE_BYTES:
+      return code`${place}.length !== 0`;
+    default:
+      throw new Error('Not implemented for the given type.');
+  }
+}
+
 /** A map of proto type name, e.g. `foo.Message.Inner`, to module/class name, e.g. `foo`, `Message_Inner`. */
 export type TypeMap = Map<string, [string, string, DescriptorProto | EnumDescriptorProto]>;
 
@@ -255,6 +303,29 @@ export function createTypeMap(request: CodeGeneratorRequest, options: Options): 
   return typeMap;
 }
 
+/** A "Scalar Value Type" as defined in https://developers.google.com/protocol-buffers/docs/proto3#scalar */
+export function isScalar(field: FieldDescriptorProto): boolean {
+  const scalarTypes = [
+    FieldDescriptorProto_Type.TYPE_DOUBLE,
+    FieldDescriptorProto_Type.TYPE_FLOAT,
+    FieldDescriptorProto_Type.TYPE_INT32,
+    FieldDescriptorProto_Type.TYPE_INT64,
+    FieldDescriptorProto_Type.TYPE_UINT32,
+    FieldDescriptorProto_Type.TYPE_UINT64,
+    FieldDescriptorProto_Type.TYPE_SINT32,
+    FieldDescriptorProto_Type.TYPE_SINT64,
+    FieldDescriptorProto_Type.TYPE_FIXED32,
+    FieldDescriptorProto_Type.TYPE_FIXED64,
+    FieldDescriptorProto_Type.TYPE_SFIXED32,
+    FieldDescriptorProto_Type.TYPE_SFIXED64,
+    FieldDescriptorProto_Type.TYPE_BOOL,
+    FieldDescriptorProto_Type.TYPE_STRING,
+    FieldDescriptorProto_Type.TYPE_BYTES,
+  ];
+  return scalarTypes.includes(field.type);
+}
+
+/** This includes all scalars, enums and the [groups type](https://developers.google.com/protocol-buffers/docs/reference/java/com/google/protobuf/DescriptorProtos.FieldDescriptorProto.Type.html#TYPE_GROUP) */
 export function isPrimitive(field: FieldDescriptorProto): boolean {
   return !isMessage(field);
 }

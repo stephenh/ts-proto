@@ -13,7 +13,9 @@ const baseSimple: object = { name: '' };
 
 export const Simple = {
   encode(message: Simple, writer: Writer = Writer.create()): Writer {
-    writer.uint32(10).string(message.name);
+    if (message.name !== '') {
+      writer.uint32(10).string(message.name);
+    }
     if (message.otherSimple !== undefined) {
       Simple1.encode(message.otherSimple, writer.uint32(18).fork()).ldelim();
     }
