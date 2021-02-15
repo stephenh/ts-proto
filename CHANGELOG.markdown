@@ -1,4 +1,8 @@
 
+## v1.64.0
+
+* Don't put default values on the wire while encoding. Fixed #213. (webmaster128)
+
 ## v1.63.0
 
 * Qualify `Object.create` with `globalThis` to avoid collisions with message names of `Object`. Fixes #216.
