@@ -677,6 +677,14 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
 
     if (isRepeated(field)) {
       if (isMapType(ctx, messageDesc, field)) {
+        // protobuf.js does not support map entries with keys set and values unset.
+        // So we better set both or none. We are free to choose between those options:
+        // "If you provide a key but no value for a map field, the behavior when the
+        // field is serialized is language-dependent. In C++, Java, and Python the
+        // default value for the type is serialized, while in other languages nothing
+        // is serialized." https://developers.google.com/protocol-buffers/docs/proto3#maps
+        // Since we cannot easily check if `value` is "no value" here, we just enforce
+        // serialization of defaults.
         chunks.push(code`
           Object.entries(message.${fieldName}).forEach(([key, value]) => {
             ${writeSnippet('{ key: key as any, value }', true)};
