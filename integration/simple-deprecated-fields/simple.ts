@@ -48,7 +48,7 @@ export const Simple = {
   decode(input: Reader | Uint8Array, length?: number): Simple {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = Object.create(baseSimple) as Simple;
+    const message = globalThis.Object.create(baseSimple) as Simple;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -76,7 +76,7 @@ export const Simple = {
   },
 
   fromJSON(object: any): Simple {
-    const message = Object.create(baseSimple) as Simple;
+    const message = globalThis.Object.create(baseSimple) as Simple;
     if (object.name !== undefined && object.name !== null) {
       message.name = String(object.name);
     } else {
@@ -157,7 +157,7 @@ export const Child = {
   decode(input: Reader | Uint8Array, length?: number): Child {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = Object.create(baseChild) as Child;
+    const message = globalThis.Object.create(baseChild) as Child;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -173,7 +173,7 @@ export const Child = {
   },
 
   fromJSON(object: any): Child {
-    const message = Object.create(baseChild) as Child;
+    const message = globalThis.Object.create(baseChild) as Child;
     if (object.name !== undefined && object.name !== null) {
       message.name = String(object.name);
     } else {
@@ -198,6 +198,16 @@ export const Child = {
     return obj;
   },
 };
+
+declare var self: any | undefined;
+declare var window: any | undefined;
+var globalThis: any = (() => {
+  if (typeof globalThis !== 'undefined') return globalThis;
+  if (typeof self !== 'undefined') return self;
+  if (typeof window !== 'undefined') return window;
+  if (typeof global !== 'undefined') return global;
+  throw new Error('Unable to locate global object');
+})();
 
 type Builtin = Date | Function | Uint8Array | string | number | undefined;
 export type DeepPartial<T> = T extends Builtin

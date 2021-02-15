@@ -91,7 +91,7 @@ export const Tile = {
   decode(input: Reader | Uint8Array, length?: number): Tile {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = Object.create(baseTile) as Tile;
+    const message = globalThis.Object.create(baseTile) as Tile;
     message.layers = [];
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -108,7 +108,7 @@ export const Tile = {
   },
 
   fromJSON(object: any): Tile {
-    const message = Object.create(baseTile) as Tile;
+    const message = globalThis.Object.create(baseTile) as Tile;
     message.layers = [];
     if (object.layers !== undefined && object.layers !== null) {
       for (const e of object.layers) {
@@ -165,7 +165,7 @@ export const Tile_Value = {
   decode(input: Reader | Uint8Array, length?: number): Tile_Value {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = Object.create(baseTile_Value) as Tile_Value;
+    const message = globalThis.Object.create(baseTile_Value) as Tile_Value;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -199,7 +199,7 @@ export const Tile_Value = {
   },
 
   fromJSON(object: any): Tile_Value {
-    const message = Object.create(baseTile_Value) as Tile_Value;
+    const message = globalThis.Object.create(baseTile_Value) as Tile_Value;
     if (object.stringValue !== undefined && object.stringValue !== null) {
       message.stringValue = String(object.stringValue);
     } else {
@@ -313,7 +313,7 @@ export const Tile_Feature = {
   decode(input: Reader | Uint8Array, length?: number): Tile_Feature {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = Object.create(baseTile_Feature) as Tile_Feature;
+    const message = globalThis.Object.create(baseTile_Feature) as Tile_Feature;
     message.tags = [];
     message.geometry = [];
     while (reader.pos < end) {
@@ -354,7 +354,7 @@ export const Tile_Feature = {
   },
 
   fromJSON(object: any): Tile_Feature {
-    const message = Object.create(baseTile_Feature) as Tile_Feature;
+    const message = globalThis.Object.create(baseTile_Feature) as Tile_Feature;
     message.tags = [];
     message.geometry = [];
     if (object.id !== undefined && object.id !== null) {
@@ -447,7 +447,7 @@ export const Tile_Layer = {
   decode(input: Reader | Uint8Array, length?: number): Tile_Layer {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = Object.create(baseTile_Layer) as Tile_Layer;
+    const message = globalThis.Object.create(baseTile_Layer) as Tile_Layer;
     message.features = [];
     message.keys = [];
     message.values = [];
@@ -481,7 +481,7 @@ export const Tile_Layer = {
   },
 
   fromJSON(object: any): Tile_Layer {
-    const message = Object.create(baseTile_Layer) as Tile_Layer;
+    const message = globalThis.Object.create(baseTile_Layer) as Tile_Layer;
     message.features = [];
     message.keys = [];
     message.values = [];

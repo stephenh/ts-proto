@@ -110,7 +110,7 @@ export const PleaseChoose = {
   decode(input: Reader | Uint8Array, length?: number): PleaseChoose {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = Object.create(basePleaseChoose) as PleaseChoose;
+    const message = globalThis.Object.create(basePleaseChoose) as PleaseChoose;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -156,7 +156,7 @@ export const PleaseChoose = {
   },
 
   fromJSON(object: any): PleaseChoose {
-    const message = Object.create(basePleaseChoose) as PleaseChoose;
+    const message = globalThis.Object.create(basePleaseChoose) as PleaseChoose;
     if (object.name !== undefined && object.name !== null) {
       message.name = String(object.name);
     } else {
@@ -304,7 +304,7 @@ export const PleaseChoose_Submessage = {
   decode(input: Reader | Uint8Array, length?: number): PleaseChoose_Submessage {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = Object.create(basePleaseChoose_Submessage) as PleaseChoose_Submessage;
+    const message = globalThis.Object.create(basePleaseChoose_Submessage) as PleaseChoose_Submessage;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -320,7 +320,7 @@ export const PleaseChoose_Submessage = {
   },
 
   fromJSON(object: any): PleaseChoose_Submessage {
-    const message = Object.create(basePleaseChoose_Submessage) as PleaseChoose_Submessage;
+    const message = globalThis.Object.create(basePleaseChoose_Submessage) as PleaseChoose_Submessage;
     if (object.name !== undefined && object.name !== null) {
       message.name = String(object.name);
     } else {

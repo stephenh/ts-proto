@@ -82,7 +82,7 @@ export const DashFlash = {
   decode(input: Reader | Uint8Array, length?: number): DashFlash {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = Object.create(baseDashFlash) as DashFlash;
+    const message = globalThis.Object.create(baseDashFlash) as DashFlash;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -101,7 +101,7 @@ export const DashFlash = {
   },
 
   fromJSON(object: any): DashFlash {
-    const message = Object.create(baseDashFlash) as DashFlash;
+    const message = globalThis.Object.create(baseDashFlash) as DashFlash;
     if (object.msg !== undefined && object.msg !== null) {
       message.msg = String(object.msg);
     } else {
@@ -155,7 +155,7 @@ export const DashUserSettingsState = {
   decode(input: Reader | Uint8Array, length?: number): DashUserSettingsState {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = Object.create(baseDashUserSettingsState) as DashUserSettingsState;
+    const message = globalThis.Object.create(baseDashUserSettingsState) as DashUserSettingsState;
     message.flashes = [];
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -178,7 +178,7 @@ export const DashUserSettingsState = {
   },
 
   fromJSON(object: any): DashUserSettingsState {
-    const message = Object.create(baseDashUserSettingsState) as DashUserSettingsState;
+    const message = globalThis.Object.create(baseDashUserSettingsState) as DashUserSettingsState;
     message.flashes = [];
     if (object.email !== undefined && object.email !== null) {
       message.email = String(object.email);
@@ -245,7 +245,7 @@ export const DashUserSettingsState_URLs = {
   decode(input: Reader | Uint8Array, length?: number): DashUserSettingsState_URLs {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = Object.create(baseDashUserSettingsState_URLs) as DashUserSettingsState_URLs;
+    const message = globalThis.Object.create(baseDashUserSettingsState_URLs) as DashUserSettingsState_URLs;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -264,7 +264,7 @@ export const DashUserSettingsState_URLs = {
   },
 
   fromJSON(object: any): DashUserSettingsState_URLs {
-    const message = Object.create(baseDashUserSettingsState_URLs) as DashUserSettingsState_URLs;
+    const message = globalThis.Object.create(baseDashUserSettingsState_URLs) as DashUserSettingsState_URLs;
     if (object.connectGoogle !== undefined && object.connectGoogle !== null) {
       message.connectGoogle = String(object.connectGoogle);
     } else {
@@ -311,7 +311,7 @@ export const Empty = {
   decode(input: Reader | Uint8Array, length?: number): Empty {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = Object.create(baseEmpty) as Empty;
+    const message = globalThis.Object.create(baseEmpty) as Empty;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -324,7 +324,7 @@ export const Empty = {
   },
 
   fromJSON(_: any): Empty {
-    const message = Object.create(baseEmpty) as Empty;
+    const message = globalThis.Object.create(baseEmpty) as Empty;
     return message;
   },
 
@@ -451,6 +451,16 @@ export class GrpcWebImpl {
     }).pipe(take(1));
   }
 }
+
+declare var self: any | undefined;
+declare var window: any | undefined;
+var globalThis: any = (() => {
+  if (typeof globalThis !== 'undefined') return globalThis;
+  if (typeof self !== 'undefined') return self;
+  if (typeof window !== 'undefined') return window;
+  if (typeof global !== 'undefined') return global;
+  throw new Error('Unable to locate global object');
+})();
 
 type Builtin = Date | Function | Uint8Array | string | number | undefined;
 export type DeepPartial<T> = T extends Builtin

@@ -25,7 +25,7 @@ export const Point = {
   decode(input: Reader | Uint8Array, length?: number): Point {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = Object.create(basePoint) as Point;
+    const message = globalThis.Object.create(basePoint) as Point;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -44,7 +44,7 @@ export const Point = {
   },
 
   fromJSON(object: any): Point {
-    const message = Object.create(basePoint) as Point;
+    const message = globalThis.Object.create(basePoint) as Point;
     if (object.lat !== undefined && object.lat !== null) {
       message.lat = Number(object.lat);
     } else {
@@ -97,7 +97,7 @@ export const Area = {
   decode(input: Reader | Uint8Array, length?: number): Area {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = Object.create(baseArea) as Area;
+    const message = globalThis.Object.create(baseArea) as Area;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -116,7 +116,7 @@ export const Area = {
   },
 
   fromJSON(object: any): Area {
-    const message = Object.create(baseArea) as Area;
+    const message = globalThis.Object.create(baseArea) as Area;
     if (object.nw !== undefined && object.nw !== null) {
       message.nw = Point.fromJSON(object.nw);
     } else {
@@ -152,6 +152,16 @@ export const Area = {
     return obj;
   },
 };
+
+declare var self: any | undefined;
+declare var window: any | undefined;
+var globalThis: any = (() => {
+  if (typeof globalThis !== 'undefined') return globalThis;
+  if (typeof self !== 'undefined') return self;
+  if (typeof window !== 'undefined') return window;
+  if (typeof global !== 'undefined') return global;
+  throw new Error('Unable to locate global object');
+})();
 
 type Builtin = Date | Function | Uint8Array | string | number | undefined;
 export type DeepPartial<T> = T extends Builtin

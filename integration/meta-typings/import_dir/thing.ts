@@ -22,7 +22,7 @@ export const ImportedThing = {
   decode(input: Reader | Uint8Array, length?: number): ImportedThing {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = Object.create(baseImportedThing) as ImportedThing;
+    const message = globalThis.Object.create(baseImportedThing) as ImportedThing;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -82,6 +82,16 @@ export const protoMetadata: ProtoMetadata = {
   references: { '.simple.ImportedThing': ImportedThing },
   dependencies: [protoMetadata1],
 };
+
+declare var self: any | undefined;
+declare var window: any | undefined;
+var globalThis: any = (() => {
+  if (typeof globalThis !== 'undefined') return globalThis;
+  if (typeof self !== 'undefined') return self;
+  if (typeof window !== 'undefined') return window;
+  if (typeof global !== 'undefined') return global;
+  throw new Error('Unable to locate global object');
+})();
 
 function toTimestamp(date: Date): Timestamp {
   const seconds = date.getTime() / 1_000;

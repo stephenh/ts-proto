@@ -58,7 +58,7 @@ export const BatchQueryRequest = {
   decode(input: Reader | Uint8Array, length?: number): BatchQueryRequest {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = Object.create(baseBatchQueryRequest) as BatchQueryRequest;
+    const message = globalThis.Object.create(baseBatchQueryRequest) as BatchQueryRequest;
     message.ids = [];
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -75,7 +75,7 @@ export const BatchQueryRequest = {
   },
 
   fromJSON(object: any): BatchQueryRequest {
-    const message = Object.create(baseBatchQueryRequest) as BatchQueryRequest;
+    const message = globalThis.Object.create(baseBatchQueryRequest) as BatchQueryRequest;
     message.ids = [];
     if (object.ids !== undefined && object.ids !== null) {
       for (const e of object.ids) {
@@ -120,7 +120,7 @@ export const BatchQueryResponse = {
   decode(input: Reader | Uint8Array, length?: number): BatchQueryResponse {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = Object.create(baseBatchQueryResponse) as BatchQueryResponse;
+    const message = globalThis.Object.create(baseBatchQueryResponse) as BatchQueryResponse;
     message.entities = [];
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -137,7 +137,7 @@ export const BatchQueryResponse = {
   },
 
   fromJSON(object: any): BatchQueryResponse {
-    const message = Object.create(baseBatchQueryResponse) as BatchQueryResponse;
+    const message = globalThis.Object.create(baseBatchQueryResponse) as BatchQueryResponse;
     message.entities = [];
     if (object.entities !== undefined && object.entities !== null) {
       for (const e of object.entities) {
@@ -182,7 +182,7 @@ export const BatchMapQueryRequest = {
   decode(input: Reader | Uint8Array, length?: number): BatchMapQueryRequest {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = Object.create(baseBatchMapQueryRequest) as BatchMapQueryRequest;
+    const message = globalThis.Object.create(baseBatchMapQueryRequest) as BatchMapQueryRequest;
     message.ids = [];
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -199,7 +199,7 @@ export const BatchMapQueryRequest = {
   },
 
   fromJSON(object: any): BatchMapQueryRequest {
-    const message = Object.create(baseBatchMapQueryRequest) as BatchMapQueryRequest;
+    const message = globalThis.Object.create(baseBatchMapQueryRequest) as BatchMapQueryRequest;
     message.ids = [];
     if (object.ids !== undefined && object.ids !== null) {
       for (const e of object.ids) {
@@ -244,7 +244,7 @@ export const BatchMapQueryResponse = {
   decode(input: Reader | Uint8Array, length?: number): BatchMapQueryResponse {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = Object.create(baseBatchMapQueryResponse) as BatchMapQueryResponse;
+    const message = globalThis.Object.create(baseBatchMapQueryResponse) as BatchMapQueryResponse;
     message.entities = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -264,7 +264,7 @@ export const BatchMapQueryResponse = {
   },
 
   fromJSON(object: any): BatchMapQueryResponse {
-    const message = Object.create(baseBatchMapQueryResponse) as BatchMapQueryResponse;
+    const message = globalThis.Object.create(baseBatchMapQueryResponse) as BatchMapQueryResponse;
     message.entities = {};
     if (object.entities !== undefined && object.entities !== null) {
       Object.entries(object.entities).forEach(([key, value]) => {
@@ -313,7 +313,9 @@ export const BatchMapQueryResponse_EntitiesEntry = {
   decode(input: Reader | Uint8Array, length?: number): BatchMapQueryResponse_EntitiesEntry {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = Object.create(baseBatchMapQueryResponse_EntitiesEntry) as BatchMapQueryResponse_EntitiesEntry;
+    const message = globalThis.Object.create(
+      baseBatchMapQueryResponse_EntitiesEntry
+    ) as BatchMapQueryResponse_EntitiesEntry;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -332,7 +334,9 @@ export const BatchMapQueryResponse_EntitiesEntry = {
   },
 
   fromJSON(object: any): BatchMapQueryResponse_EntitiesEntry {
-    const message = Object.create(baseBatchMapQueryResponse_EntitiesEntry) as BatchMapQueryResponse_EntitiesEntry;
+    const message = globalThis.Object.create(
+      baseBatchMapQueryResponse_EntitiesEntry
+    ) as BatchMapQueryResponse_EntitiesEntry;
     if (object.key !== undefined && object.key !== null) {
       message.key = String(object.key);
     } else {
@@ -380,7 +384,7 @@ export const GetOnlyMethodRequest = {
   decode(input: Reader | Uint8Array, length?: number): GetOnlyMethodRequest {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = Object.create(baseGetOnlyMethodRequest) as GetOnlyMethodRequest;
+    const message = globalThis.Object.create(baseGetOnlyMethodRequest) as GetOnlyMethodRequest;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -396,7 +400,7 @@ export const GetOnlyMethodRequest = {
   },
 
   fromJSON(object: any): GetOnlyMethodRequest {
-    const message = Object.create(baseGetOnlyMethodRequest) as GetOnlyMethodRequest;
+    const message = globalThis.Object.create(baseGetOnlyMethodRequest) as GetOnlyMethodRequest;
     if (object.id !== undefined && object.id !== null) {
       message.id = String(object.id);
     } else {
@@ -435,7 +439,7 @@ export const GetOnlyMethodResponse = {
   decode(input: Reader | Uint8Array, length?: number): GetOnlyMethodResponse {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = Object.create(baseGetOnlyMethodResponse) as GetOnlyMethodResponse;
+    const message = globalThis.Object.create(baseGetOnlyMethodResponse) as GetOnlyMethodResponse;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -451,7 +455,7 @@ export const GetOnlyMethodResponse = {
   },
 
   fromJSON(object: any): GetOnlyMethodResponse {
-    const message = Object.create(baseGetOnlyMethodResponse) as GetOnlyMethodResponse;
+    const message = globalThis.Object.create(baseGetOnlyMethodResponse) as GetOnlyMethodResponse;
     if (object.entity !== undefined && object.entity !== null) {
       message.entity = Entity.fromJSON(object.entity);
     } else {
@@ -488,7 +492,7 @@ export const WriteMethodRequest = {
   decode(input: Reader | Uint8Array, length?: number): WriteMethodRequest {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = Object.create(baseWriteMethodRequest) as WriteMethodRequest;
+    const message = globalThis.Object.create(baseWriteMethodRequest) as WriteMethodRequest;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -504,7 +508,7 @@ export const WriteMethodRequest = {
   },
 
   fromJSON(object: any): WriteMethodRequest {
-    const message = Object.create(baseWriteMethodRequest) as WriteMethodRequest;
+    const message = globalThis.Object.create(baseWriteMethodRequest) as WriteMethodRequest;
     if (object.id !== undefined && object.id !== null) {
       message.id = String(object.id);
     } else {
@@ -540,7 +544,7 @@ export const WriteMethodResponse = {
   decode(input: Reader | Uint8Array, length?: number): WriteMethodResponse {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = Object.create(baseWriteMethodResponse) as WriteMethodResponse;
+    const message = globalThis.Object.create(baseWriteMethodResponse) as WriteMethodResponse;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -553,7 +557,7 @@ export const WriteMethodResponse = {
   },
 
   fromJSON(_: any): WriteMethodResponse {
-    const message = Object.create(baseWriteMethodResponse) as WriteMethodResponse;
+    const message = globalThis.Object.create(baseWriteMethodResponse) as WriteMethodResponse;
     return message;
   },
 
@@ -580,7 +584,7 @@ export const Entity = {
   decode(input: Reader | Uint8Array, length?: number): Entity {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = Object.create(baseEntity) as Entity;
+    const message = globalThis.Object.create(baseEntity) as Entity;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -599,7 +603,7 @@ export const Entity = {
   },
 
   fromJSON(object: any): Entity {
-    const message = Object.create(baseEntity) as Entity;
+    const message = globalThis.Object.create(baseEntity) as Entity;
     if (object.id !== undefined && object.id !== null) {
       message.id = String(object.id);
     } else {
@@ -728,6 +732,16 @@ export interface DataLoaders {
   rpcDataLoaderOptions?: DataLoaderOptions;
   getDataLoader<T>(identifier: string, constructorFn: () => T): T;
 }
+
+declare var self: any | undefined;
+declare var window: any | undefined;
+var globalThis: any = (() => {
+  if (typeof globalThis !== 'undefined') return globalThis;
+  if (typeof self !== 'undefined') return self;
+  if (typeof window !== 'undefined') return window;
+  if (typeof global !== 'undefined') return global;
+  throw new Error('Unable to locate global object');
+})();
 
 type Builtin = Date | Function | Uint8Array | string | number | undefined;
 export type DeepPartial<T> = T extends Builtin

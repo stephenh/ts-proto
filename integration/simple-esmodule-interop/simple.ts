@@ -36,7 +36,7 @@ export const Simple = {
   decode(input: _m0.Reader | Uint8Array, length?: number): Simple {
     const reader = input instanceof Uint8Array ? new _m0.Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = Object.create(baseSimple) as Simple;
+    const message = globalThis.Object.create(baseSimple) as Simple;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -55,7 +55,7 @@ export const Simple = {
   },
 
   fromJSON(object: any): Simple {
-    const message = Object.create(baseSimple) as Simple;
+    const message = globalThis.Object.create(baseSimple) as Simple;
     if (object.name !== undefined && object.name !== null) {
       message.name = String(object.name);
     } else {
@@ -127,7 +127,7 @@ export const Numbers = {
   decode(input: _m0.Reader | Uint8Array, length?: number): Numbers {
     const reader = input instanceof Uint8Array ? new _m0.Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = Object.create(baseNumbers) as Numbers;
+    const message = globalThis.Object.create(baseNumbers) as Numbers;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -176,7 +176,7 @@ export const Numbers = {
   },
 
   fromJSON(object: any): Numbers {
-    const message = Object.create(baseNumbers) as Numbers;
+    const message = globalThis.Object.create(baseNumbers) as Numbers;
     if (object.double !== undefined && object.double !== null) {
       message.double = Number(object.double);
     } else {

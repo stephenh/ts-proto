@@ -525,7 +525,7 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
     ): ${fullName} {
       const reader = input instanceof Uint8Array ? new ${Reader}(input) : input;
       let end = length === undefined ? reader.len : reader.pos + length;
-      const message = Object.create(base${fullName}) as ${fullName};
+      const message = ${utils.globalThis}.Object.create(base${fullName}) as ${fullName};
   `);
 
   // initialize all lists
@@ -736,7 +736,7 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
   // create the basic function declaration
   chunks.push(code`
     fromJSON(${messageDesc.field.length > 0 ? 'object' : '_'}: any): ${fullName} {
-      const message = Object.create(base${fullName}) as ${fullName};
+      const message = ${utils.globalThis}.Object.create(base${fullName}) as ${fullName};
   `);
 
   // initialize all lists
