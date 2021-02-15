@@ -1,0 +1,10 @@
+syntax = "proto3";
+package simple;
+
+message Object {
+  string name = 1;
+}
+
+message Error {
+  string name = 1;
+}

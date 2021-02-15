@@ -228,6 +228,7 @@ function makeLongUtils(options: Options, bytes: ReturnType<typeof makeByteUtils>
 
   // Before esModuleInterop, we had to use 'import * as Long from long` b/c long is
   // an `export =` module and exports only the Long constructor (which is callable).
+  // See https://www.typescriptlang.org/docs/handbook/modules.html#export--and-import--require.
   //
   // With esModuleInterop on, `* as Long` is no longer the constructor, it's the module,
   // so we want to go back to `import { Long } from long`, which is specifically forbidden
@@ -295,7 +296,7 @@ function makeByteUtils() {
         if (typeof self !== "undefined") return self;
         if (typeof window !== "undefined") return window;
         if (typeof global !== "undefined") return global;
-        throw new Error("Unable to locate global object");
+        throw "Unable to locate global object";
       })();
     `
   );
