@@ -37,14 +37,14 @@ export interface DateMessage {
 const baseDateMessage: object = { year: 0, month: 0, day: 0 };
 
 export const DateMessage = {
-  encode(message: DateMessage, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
-    if (forceDefaultSerialization || message.year !== 0) {
+  encode(message: DateMessage, writer: Writer = Writer.create()): Writer {
+    if (message.year !== 0) {
       writer.uint32(8).int32(message.year);
     }
-    if (forceDefaultSerialization || message.month !== 0) {
+    if (message.month !== 0) {
       writer.uint32(16).int32(message.month);
     }
-    if (forceDefaultSerialization || message.day !== 0) {
+    if (message.day !== 0) {
       writer.uint32(24).int32(message.day);
     }
     return writer;

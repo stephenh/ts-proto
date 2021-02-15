@@ -9,11 +9,11 @@ export interface Bar {
 const baseBar: object = { name: '', age: 0 };
 
 export const Bar = {
-  encode(message: Bar, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
-    if (forceDefaultSerialization || message.name !== '') {
+  encode(message: Bar, writer: Writer = Writer.create()): Writer {
+    if (message.name !== '') {
       writer.uint32(10).string(message.name);
     }
-    if (forceDefaultSerialization || message.age !== 0) {
+    if (message.age !== 0) {
       writer.uint32(16).int32(message.age);
     }
     return writer;

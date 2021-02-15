@@ -12,9 +12,9 @@ export interface FooBar {}
 const baseBaz: object = {};
 
 export const Baz = {
-  encode(message: Baz, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
+  encode(message: Baz, writer: Writer = Writer.create()): Writer {
     if (message.foo !== undefined) {
-      FooBar.encode(message.foo, writer.uint32(10).fork(), false).ldelim();
+      FooBar.encode(message.foo, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
@@ -67,7 +67,7 @@ export const Baz = {
 const baseFooBar: object = {};
 
 export const FooBar = {
-  encode(_: FooBar, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
+  encode(_: FooBar, writer: Writer = Writer.create()): Writer {
     return writer;
   },
 

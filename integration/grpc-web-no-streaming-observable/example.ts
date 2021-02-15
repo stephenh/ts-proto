@@ -73,11 +73,11 @@ export interface Empty {}
 const baseDashFlash: object = { msg: '', type: 0 };
 
 export const DashFlash = {
-  encode(message: DashFlash, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
-    if (forceDefaultSerialization || message.msg !== '') {
+  encode(message: DashFlash, writer: Writer = Writer.create()): Writer {
+    if (message.msg !== '') {
       writer.uint32(10).string(message.msg);
     }
-    if (forceDefaultSerialization || message.type !== 0) {
+    if (message.type !== 0) {
       writer.uint32(16).int32(message.type);
     }
     return writer;
@@ -145,15 +145,15 @@ export const DashFlash = {
 const baseDashUserSettingsState: object = { email: '' };
 
 export const DashUserSettingsState = {
-  encode(message: DashUserSettingsState, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
-    if (forceDefaultSerialization || message.email !== '') {
+  encode(message: DashUserSettingsState, writer: Writer = Writer.create()): Writer {
+    if (message.email !== '') {
       writer.uint32(10).string(message.email);
     }
     if (message.urls !== undefined) {
-      DashUserSettingsState_URLs.encode(message.urls, writer.uint32(50).fork(), false).ldelim();
+      DashUserSettingsState_URLs.encode(message.urls, writer.uint32(50).fork()).ldelim();
     }
     for (const v of message.flashes) {
-      DashFlash.encode(v!, writer.uint32(58).fork(), false).ldelim();
+      DashFlash.encode(v!, writer.uint32(58).fork()).ldelim();
     }
     return writer;
   },
@@ -242,15 +242,11 @@ export const DashUserSettingsState = {
 const baseDashUserSettingsState_URLs: object = { connectGoogle: '', connectGithub: '' };
 
 export const DashUserSettingsState_URLs = {
-  encode(
-    message: DashUserSettingsState_URLs,
-    writer: Writer = Writer.create(),
-    forceDefaultSerialization = false
-  ): Writer {
-    if (forceDefaultSerialization || message.connectGoogle !== '') {
+  encode(message: DashUserSettingsState_URLs, writer: Writer = Writer.create()): Writer {
+    if (message.connectGoogle !== '') {
       writer.uint32(10).string(message.connectGoogle);
     }
-    if (forceDefaultSerialization || message.connectGithub !== '') {
+    if (message.connectGithub !== '') {
       writer.uint32(18).string(message.connectGithub);
     }
     return writer;
@@ -318,7 +314,7 @@ export const DashUserSettingsState_URLs = {
 const baseEmpty: object = {};
 
 export const Empty = {
-  encode(_: Empty, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
+  encode(_: Empty, writer: Writer = Writer.create()): Writer {
     return writer;
   },
 

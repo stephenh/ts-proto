@@ -74,8 +74,8 @@ export interface PleaseChoose_Submessage {
 const basePleaseChoose: object = { name: '', age: 0 };
 
 export const PleaseChoose = {
-  encode(message: PleaseChoose, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
-    if (forceDefaultSerialization || message.name !== '') {
+  encode(message: PleaseChoose, writer: Writer = Writer.create()): Writer {
+    if (message.name !== '') {
       writer.uint32(10).string(message.name);
     }
     if (message.aNumber !== undefined) {
@@ -85,7 +85,7 @@ export const PleaseChoose = {
       writer.uint32(26).string(message.aString);
     }
     if (message.aMessage !== undefined) {
-      PleaseChoose_Submessage.encode(message.aMessage, writer.uint32(34).fork(), false).ldelim();
+      PleaseChoose_Submessage.encode(message.aMessage, writer.uint32(34).fork()).ldelim();
     }
     if (message.aBool !== undefined) {
       writer.uint32(48).bool(message.aBool);
@@ -96,7 +96,7 @@ export const PleaseChoose = {
     if (message.anEnum !== undefined) {
       writer.uint32(88).int32(message.anEnum);
     }
-    if (forceDefaultSerialization || message.age !== 0) {
+    if (message.age !== 0) {
       writer.uint32(40).uint32(message.age);
     }
     if (message.either !== undefined) {
@@ -300,12 +300,8 @@ export const PleaseChoose = {
 const basePleaseChoose_Submessage: object = { name: '' };
 
 export const PleaseChoose_Submessage = {
-  encode(
-    message: PleaseChoose_Submessage,
-    writer: Writer = Writer.create(),
-    forceDefaultSerialization = false
-  ): Writer {
-    if (forceDefaultSerialization || message.name !== '') {
+  encode(message: PleaseChoose_Submessage, writer: Writer = Writer.create()): Writer {
+    if (message.name !== '') {
       writer.uint32(10).string(message.name);
     }
     return writer;

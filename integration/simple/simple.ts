@@ -281,24 +281,24 @@ export interface Empty {}
 const baseSimple: object = { name: '', age: 0, state: 0, coins: 0, snacks: '', oldStates: 0 };
 
 export const Simple = {
-  encode(message: Simple, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
-    if (forceDefaultSerialization || message.name !== '') {
+  encode(message: Simple, writer: Writer = Writer.create()): Writer {
+    if (message.name !== '') {
       writer.uint32(10).string(message.name);
     }
-    if (forceDefaultSerialization || message.age !== 0) {
+    if (message.age !== 0) {
       writer.uint32(16).int32(message.age);
     }
     if (message.createdAt !== undefined) {
-      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(74).fork(), false).ldelim();
+      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(74).fork()).ldelim();
     }
     if (message.child !== undefined) {
-      Child.encode(message.child, writer.uint32(26).fork(), false).ldelim();
+      Child.encode(message.child, writer.uint32(26).fork()).ldelim();
     }
-    if (forceDefaultSerialization || message.state !== 0) {
+    if (message.state !== 0) {
       writer.uint32(32).int32(message.state);
     }
     for (const v of message.grandChildren) {
-      Child.encode(v!, writer.uint32(42).fork(), false).ldelim();
+      Child.encode(v!, writer.uint32(42).fork()).ldelim();
     }
     writer.uint32(50).fork();
     for (const v of message.coins) {
@@ -314,15 +314,15 @@ export const Simple = {
     }
     writer.ldelim();
     if (message.thing !== undefined) {
-      ImportedThing.encode(message.thing, writer.uint32(82).fork(), false).ldelim();
+      ImportedThing.encode(message.thing, writer.uint32(82).fork()).ldelim();
     }
     for (const v of message.blobs) {
       writer.uint32(90).bytes(v!);
     }
     if (message.birthday !== undefined) {
-      DateMessage.encode(message.birthday, writer.uint32(98).fork(), false).ldelim();
+      DateMessage.encode(message.birthday, writer.uint32(98).fork()).ldelim();
     }
-    if (forceDefaultSerialization || message.blob.length !== 0) {
+    if (message.blob.length !== 0) {
       writer.uint32(106).bytes(message.blob);
     }
     return writer;
@@ -594,11 +594,11 @@ export const Simple = {
 const baseChild: object = { name: '', type: 0 };
 
 export const Child = {
-  encode(message: Child, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
-    if (forceDefaultSerialization || message.name !== '') {
+  encode(message: Child, writer: Writer = Writer.create()): Writer {
+    if (message.name !== '') {
       writer.uint32(10).string(message.name);
     }
-    if (forceDefaultSerialization || message.type !== 0) {
+    if (message.type !== 0) {
       writer.uint32(16).int32(message.type);
     }
     return writer;
@@ -666,14 +666,14 @@ export const Child = {
 const baseNested: object = { name: '', state: 0 };
 
 export const Nested = {
-  encode(message: Nested, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
-    if (forceDefaultSerialization || message.name !== '') {
+  encode(message: Nested, writer: Writer = Writer.create()): Writer {
+    if (message.name !== '') {
       writer.uint32(10).string(message.name);
     }
     if (message.message !== undefined) {
-      Nested_InnerMessage.encode(message.message, writer.uint32(18).fork(), false).ldelim();
+      Nested_InnerMessage.encode(message.message, writer.uint32(18).fork()).ldelim();
     }
-    if (forceDefaultSerialization || message.state !== 0) {
+    if (message.state !== 0) {
       writer.uint32(24).int32(message.state);
     }
     return writer;
@@ -756,12 +756,12 @@ export const Nested = {
 const baseNested_InnerMessage: object = { name: '' };
 
 export const Nested_InnerMessage = {
-  encode(message: Nested_InnerMessage, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
-    if (forceDefaultSerialization || message.name !== '') {
+  encode(message: Nested_InnerMessage, writer: Writer = Writer.create()): Writer {
+    if (message.name !== '') {
       writer.uint32(10).string(message.name);
     }
     if (message.deep !== undefined) {
-      Nested_InnerMessage_DeepMessage.encode(message.deep, writer.uint32(18).fork(), false).ldelim();
+      Nested_InnerMessage_DeepMessage.encode(message.deep, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
@@ -829,12 +829,8 @@ export const Nested_InnerMessage = {
 const baseNested_InnerMessage_DeepMessage: object = { name: '' };
 
 export const Nested_InnerMessage_DeepMessage = {
-  encode(
-    message: Nested_InnerMessage_DeepMessage,
-    writer: Writer = Writer.create(),
-    forceDefaultSerialization = false
-  ): Writer {
-    if (forceDefaultSerialization || message.name !== '') {
+  encode(message: Nested_InnerMessage_DeepMessage, writer: Writer = Writer.create()): Writer {
+    if (message.name !== '') {
       writer.uint32(10).string(message.name);
     }
     return writer;
@@ -888,7 +884,7 @@ export const Nested_InnerMessage_DeepMessage = {
 const baseOneOfMessage: object = {};
 
 export const OneOfMessage = {
-  encode(message: OneOfMessage, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
+  encode(message: OneOfMessage, writer: Writer = Writer.create()): Writer {
     if (message.first !== undefined) {
       writer.uint32(10).string(message.first);
     }
@@ -960,24 +956,24 @@ export const OneOfMessage = {
 const baseSimpleWithWrappers: object = {};
 
 export const SimpleWithWrappers = {
-  encode(message: SimpleWithWrappers, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
+  encode(message: SimpleWithWrappers, writer: Writer = Writer.create()): Writer {
     if (message.name !== undefined) {
-      StringValue.encode({ value: message.name! }, writer.uint32(10).fork(), false).ldelim();
+      StringValue.encode({ value: message.name! }, writer.uint32(10).fork()).ldelim();
     }
     if (message.age !== undefined) {
-      Int32Value.encode({ value: message.age! }, writer.uint32(18).fork(), false).ldelim();
+      Int32Value.encode({ value: message.age! }, writer.uint32(18).fork()).ldelim();
     }
     if (message.enabled !== undefined) {
-      BoolValue.encode({ value: message.enabled! }, writer.uint32(26).fork(), false).ldelim();
+      BoolValue.encode({ value: message.enabled! }, writer.uint32(26).fork()).ldelim();
     }
     for (const v of message.coins) {
-      Int32Value.encode({ value: v!! }, writer.uint32(50).fork(), false).ldelim();
+      Int32Value.encode({ value: v!! }, writer.uint32(50).fork()).ldelim();
     }
     for (const v of message.snacks) {
-      StringValue.encode({ value: v!! }, writer.uint32(58).fork(), false).ldelim();
+      StringValue.encode({ value: v!! }, writer.uint32(58).fork()).ldelim();
     }
     if (message.id !== undefined) {
-      BytesValue.encode({ value: message.id! }, writer.uint32(66).fork(), false).ldelim();
+      BytesValue.encode({ value: message.id! }, writer.uint32(66).fork()).ldelim();
     }
     return writer;
   },
@@ -1114,8 +1110,8 @@ export const SimpleWithWrappers = {
 const baseEntity: object = { id: 0 };
 
 export const Entity = {
-  encode(message: Entity, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
-    if (forceDefaultSerialization || message.id !== 0) {
+  encode(message: Entity, writer: Writer = Writer.create()): Writer {
+    if (message.id !== 0) {
       writer.uint32(8).int32(message.id);
     }
     return writer;
@@ -1169,21 +1165,21 @@ export const Entity = {
 const baseSimpleWithMap: object = {};
 
 export const SimpleWithMap = {
-  encode(message: SimpleWithMap, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
+  encode(message: SimpleWithMap, writer: Writer = Writer.create()): Writer {
     Object.entries(message.entitiesById).forEach(([key, value]) => {
-      SimpleWithMap_EntitiesByIdEntry.encode({ key: key as any, value }, writer.uint32(10).fork(), true).ldelim();
+      SimpleWithMap_EntitiesByIdEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).ldelim();
     });
     Object.entries(message.nameLookup).forEach(([key, value]) => {
-      SimpleWithMap_NameLookupEntry.encode({ key: key as any, value }, writer.uint32(18).fork(), true).ldelim();
+      SimpleWithMap_NameLookupEntry.encode({ key: key as any, value }, writer.uint32(18).fork()).ldelim();
     });
     Object.entries(message.intLookup).forEach(([key, value]) => {
-      SimpleWithMap_IntLookupEntry.encode({ key: key as any, value }, writer.uint32(26).fork(), true).ldelim();
+      SimpleWithMap_IntLookupEntry.encode({ key: key as any, value }, writer.uint32(26).fork()).ldelim();
     });
     Object.entries(message.mapOfTimestamps).forEach(([key, value]) => {
-      SimpleWithMap_MapOfTimestampsEntry.encode({ key: key as any, value }, writer.uint32(34).fork(), true).ldelim();
+      SimpleWithMap_MapOfTimestampsEntry.encode({ key: key as any, value }, writer.uint32(34).fork()).ldelim();
     });
     Object.entries(message.mapOfBytes).forEach(([key, value]) => {
-      SimpleWithMap_MapOfBytesEntry.encode({ key: key as any, value }, writer.uint32(42).fork(), true).ldelim();
+      SimpleWithMap_MapOfBytesEntry.encode({ key: key as any, value }, writer.uint32(42).fork()).ldelim();
     });
     return writer;
   },
@@ -1357,16 +1353,12 @@ export const SimpleWithMap = {
 const baseSimpleWithMap_EntitiesByIdEntry: object = { key: 0 };
 
 export const SimpleWithMap_EntitiesByIdEntry = {
-  encode(
-    message: SimpleWithMap_EntitiesByIdEntry,
-    writer: Writer = Writer.create(),
-    forceDefaultSerialization = false
-  ): Writer {
-    if (forceDefaultSerialization || message.key !== 0) {
+  encode(message: SimpleWithMap_EntitiesByIdEntry, writer: Writer = Writer.create()): Writer {
+    if (message.key !== 0) {
       writer.uint32(8).int32(message.key);
     }
     if (message.value !== undefined) {
-      Entity.encode(message.value, writer.uint32(18).fork(), false).ldelim();
+      Entity.encode(message.value, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
@@ -1433,15 +1425,11 @@ export const SimpleWithMap_EntitiesByIdEntry = {
 const baseSimpleWithMap_NameLookupEntry: object = { key: '', value: '' };
 
 export const SimpleWithMap_NameLookupEntry = {
-  encode(
-    message: SimpleWithMap_NameLookupEntry,
-    writer: Writer = Writer.create(),
-    forceDefaultSerialization = false
-  ): Writer {
-    if (forceDefaultSerialization || message.key !== '') {
+  encode(message: SimpleWithMap_NameLookupEntry, writer: Writer = Writer.create()): Writer {
+    if (message.key !== '') {
       writer.uint32(10).string(message.key);
     }
-    if (forceDefaultSerialization || message.value !== '') {
+    if (message.value !== '') {
       writer.uint32(18).string(message.value);
     }
     return writer;
@@ -1509,15 +1497,11 @@ export const SimpleWithMap_NameLookupEntry = {
 const baseSimpleWithMap_IntLookupEntry: object = { key: 0, value: 0 };
 
 export const SimpleWithMap_IntLookupEntry = {
-  encode(
-    message: SimpleWithMap_IntLookupEntry,
-    writer: Writer = Writer.create(),
-    forceDefaultSerialization = false
-  ): Writer {
-    if (forceDefaultSerialization || message.key !== 0) {
+  encode(message: SimpleWithMap_IntLookupEntry, writer: Writer = Writer.create()): Writer {
+    if (message.key !== 0) {
       writer.uint32(8).int32(message.key);
     }
-    if (forceDefaultSerialization || message.value !== 0) {
+    if (message.value !== 0) {
       writer.uint32(16).int32(message.value);
     }
     return writer;
@@ -1585,16 +1569,12 @@ export const SimpleWithMap_IntLookupEntry = {
 const baseSimpleWithMap_MapOfTimestampsEntry: object = { key: '' };
 
 export const SimpleWithMap_MapOfTimestampsEntry = {
-  encode(
-    message: SimpleWithMap_MapOfTimestampsEntry,
-    writer: Writer = Writer.create(),
-    forceDefaultSerialization = false
-  ): Writer {
-    if (forceDefaultSerialization || message.key !== '') {
+  encode(message: SimpleWithMap_MapOfTimestampsEntry, writer: Writer = Writer.create()): Writer {
+    if (message.key !== '') {
       writer.uint32(10).string(message.key);
     }
     if (message.value !== undefined) {
-      Timestamp.encode(toTimestamp(message.value), writer.uint32(18).fork(), false).ldelim();
+      Timestamp.encode(toTimestamp(message.value), writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
@@ -1661,15 +1641,11 @@ export const SimpleWithMap_MapOfTimestampsEntry = {
 const baseSimpleWithMap_MapOfBytesEntry: object = { key: '' };
 
 export const SimpleWithMap_MapOfBytesEntry = {
-  encode(
-    message: SimpleWithMap_MapOfBytesEntry,
-    writer: Writer = Writer.create(),
-    forceDefaultSerialization = false
-  ): Writer {
-    if (forceDefaultSerialization || message.key !== '') {
+  encode(message: SimpleWithMap_MapOfBytesEntry, writer: Writer = Writer.create()): Writer {
+    if (message.key !== '') {
       writer.uint32(10).string(message.key);
     }
-    if (forceDefaultSerialization || message.value.length !== 0) {
+    if (message.value.length !== 0) {
       writer.uint32(18).bytes(message.value);
     }
     return writer;
@@ -1736,13 +1712,9 @@ export const SimpleWithMap_MapOfBytesEntry = {
 const baseSimpleWithSnakeCaseMap: object = {};
 
 export const SimpleWithSnakeCaseMap = {
-  encode(message: SimpleWithSnakeCaseMap, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
+  encode(message: SimpleWithSnakeCaseMap, writer: Writer = Writer.create()): Writer {
     Object.entries(message.entitiesById).forEach(([key, value]) => {
-      SimpleWithSnakeCaseMap_EntitiesByIdEntry.encode(
-        { key: key as any, value },
-        writer.uint32(10).fork(),
-        true
-      ).ldelim();
+      SimpleWithSnakeCaseMap_EntitiesByIdEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).ldelim();
     });
     return writer;
   },
@@ -1808,16 +1780,12 @@ export const SimpleWithSnakeCaseMap = {
 const baseSimpleWithSnakeCaseMap_EntitiesByIdEntry: object = { key: 0 };
 
 export const SimpleWithSnakeCaseMap_EntitiesByIdEntry = {
-  encode(
-    message: SimpleWithSnakeCaseMap_EntitiesByIdEntry,
-    writer: Writer = Writer.create(),
-    forceDefaultSerialization = false
-  ): Writer {
-    if (forceDefaultSerialization || message.key !== 0) {
+  encode(message: SimpleWithSnakeCaseMap_EntitiesByIdEntry, writer: Writer = Writer.create()): Writer {
+    if (message.key !== 0) {
       writer.uint32(8).int32(message.key);
     }
     if (message.value !== undefined) {
-      Entity.encode(message.value, writer.uint32(18).fork(), false).ldelim();
+      Entity.encode(message.value, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
@@ -1888,9 +1856,9 @@ export const SimpleWithSnakeCaseMap_EntitiesByIdEntry = {
 const baseSimpleWithMapOfEnums: object = {};
 
 export const SimpleWithMapOfEnums = {
-  encode(message: SimpleWithMapOfEnums, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
+  encode(message: SimpleWithMapOfEnums, writer: Writer = Writer.create()): Writer {
     Object.entries(message.enumsById).forEach(([key, value]) => {
-      SimpleWithMapOfEnums_EnumsByIdEntry.encode({ key: key as any, value }, writer.uint32(10).fork(), true).ldelim();
+      SimpleWithMapOfEnums_EnumsByIdEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).ldelim();
     });
     return writer;
   },
@@ -1956,15 +1924,11 @@ export const SimpleWithMapOfEnums = {
 const baseSimpleWithMapOfEnums_EnumsByIdEntry: object = { key: 0, value: 0 };
 
 export const SimpleWithMapOfEnums_EnumsByIdEntry = {
-  encode(
-    message: SimpleWithMapOfEnums_EnumsByIdEntry,
-    writer: Writer = Writer.create(),
-    forceDefaultSerialization = false
-  ): Writer {
-    if (forceDefaultSerialization || message.key !== 0) {
+  encode(message: SimpleWithMapOfEnums_EnumsByIdEntry, writer: Writer = Writer.create()): Writer {
+    if (message.key !== 0) {
       writer.uint32(8).int32(message.key);
     }
-    if (forceDefaultSerialization || message.value !== 0) {
+    if (message.value !== 0) {
       writer.uint32(16).int32(message.value);
     }
     return writer;
@@ -2032,8 +1996,8 @@ export const SimpleWithMapOfEnums_EnumsByIdEntry = {
 const basePingRequest: object = { input: '' };
 
 export const PingRequest = {
-  encode(message: PingRequest, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
-    if (forceDefaultSerialization || message.input !== '') {
+  encode(message: PingRequest, writer: Writer = Writer.create()): Writer {
+    if (message.input !== '') {
       writer.uint32(10).string(message.input);
     }
     return writer;
@@ -2087,8 +2051,8 @@ export const PingRequest = {
 const basePingResponse: object = { output: '' };
 
 export const PingResponse = {
-  encode(message: PingResponse, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
-    if (forceDefaultSerialization || message.output !== '') {
+  encode(message: PingResponse, writer: Writer = Writer.create()): Writer {
+    if (message.output !== '') {
       writer.uint32(10).string(message.output);
     }
     return writer;
@@ -2155,41 +2119,41 @@ const baseNumbers: object = {
 };
 
 export const Numbers = {
-  encode(message: Numbers, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
-    if (forceDefaultSerialization || message.double !== 0) {
+  encode(message: Numbers, writer: Writer = Writer.create()): Writer {
+    if (message.double !== 0) {
       writer.uint32(9).double(message.double);
     }
-    if (forceDefaultSerialization || message.float !== 0) {
+    if (message.float !== 0) {
       writer.uint32(21).float(message.float);
     }
-    if (forceDefaultSerialization || message.int32 !== 0) {
+    if (message.int32 !== 0) {
       writer.uint32(24).int32(message.int32);
     }
-    if (forceDefaultSerialization || message.int64 !== 0) {
+    if (message.int64 !== 0) {
       writer.uint32(32).int64(message.int64);
     }
-    if (forceDefaultSerialization || message.uint32 !== 0) {
+    if (message.uint32 !== 0) {
       writer.uint32(40).uint32(message.uint32);
     }
-    if (forceDefaultSerialization || message.uint64 !== 0) {
+    if (message.uint64 !== 0) {
       writer.uint32(48).uint64(message.uint64);
     }
-    if (forceDefaultSerialization || message.sint32 !== 0) {
+    if (message.sint32 !== 0) {
       writer.uint32(56).sint32(message.sint32);
     }
-    if (forceDefaultSerialization || message.sint64 !== 0) {
+    if (message.sint64 !== 0) {
       writer.uint32(64).sint64(message.sint64);
     }
-    if (forceDefaultSerialization || message.fixed32 !== 0) {
+    if (message.fixed32 !== 0) {
       writer.uint32(77).fixed32(message.fixed32);
     }
-    if (forceDefaultSerialization || message.fixed64 !== 0) {
+    if (message.fixed64 !== 0) {
       writer.uint32(81).fixed64(message.fixed64);
     }
-    if (forceDefaultSerialization || message.sfixed32 !== 0) {
+    if (message.sfixed32 !== 0) {
       writer.uint32(93).sfixed32(message.sfixed32);
     }
-    if (forceDefaultSerialization || message.sfixed64 !== 0) {
+    if (message.sfixed64 !== 0) {
       writer.uint32(97).sfixed64(message.sfixed64);
     }
     return writer;
@@ -2397,7 +2361,7 @@ export const Numbers = {
 const baseSimpleButOptional: object = {};
 
 export const SimpleButOptional = {
-  encode(message: SimpleButOptional, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
+  encode(message: SimpleButOptional, writer: Writer = Writer.create()): Writer {
     if (message.name !== undefined) {
       writer.uint32(10).string(message.name);
     }
@@ -2405,19 +2369,19 @@ export const SimpleButOptional = {
       writer.uint32(16).int32(message.age);
     }
     if (message.createdAt !== undefined) {
-      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(74).fork(), false).ldelim();
+      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(74).fork()).ldelim();
     }
     if (message.child !== undefined) {
-      Child.encode(message.child, writer.uint32(26).fork(), false).ldelim();
+      Child.encode(message.child, writer.uint32(26).fork()).ldelim();
     }
     if (message.state !== undefined) {
       writer.uint32(32).int32(message.state);
     }
     if (message.thing !== undefined) {
-      ImportedThing.encode(message.thing, writer.uint32(82).fork(), false).ldelim();
+      ImportedThing.encode(message.thing, writer.uint32(82).fork()).ldelim();
     }
     if (message.birthday !== undefined) {
-      DateMessage.encode(message.birthday, writer.uint32(98).fork(), false).ldelim();
+      DateMessage.encode(message.birthday, writer.uint32(98).fork()).ldelim();
     }
     return writer;
   },
@@ -2557,7 +2521,7 @@ export const SimpleButOptional = {
 const baseEmpty: object = {};
 
 export const Empty = {
-  encode(_: Empty, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
+  encode(_: Empty, writer: Writer = Writer.create()): Writer {
     return writer;
   },
 

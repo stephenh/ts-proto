@@ -12,12 +12,12 @@ export interface Simple {
 const baseSimple: object = { name: '' };
 
 export const Simple = {
-  encode(message: Simple, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
-    if (forceDefaultSerialization || message.name !== '') {
+  encode(message: Simple, writer: Writer = Writer.create()): Writer {
+    if (message.name !== '') {
       writer.uint32(10).string(message.name);
     }
     if (message.otherSimple !== undefined) {
-      Simple1.encode(message.otherSimple, writer.uint32(18).fork(), false).ldelim();
+      Simple1.encode(message.otherSimple, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },

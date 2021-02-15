@@ -34,20 +34,20 @@ export interface Child {
 const baseSimple: object = { name: '', age: 0, testField: '', testNotDeprecated: '' };
 
 export const Simple = {
-  encode(message: Simple, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
-    if (forceDefaultSerialization || message.name !== '') {
+  encode(message: Simple, writer: Writer = Writer.create()): Writer {
+    if (message.name !== '') {
       writer.uint32(10).string(message.name);
     }
-    if (forceDefaultSerialization || message.age !== 0) {
+    if (message.age !== 0) {
       writer.uint32(16).int32(message.age);
     }
     if (message.child !== undefined) {
-      Child.encode(message.child, writer.uint32(26).fork(), false).ldelim();
+      Child.encode(message.child, writer.uint32(26).fork()).ldelim();
     }
-    if (forceDefaultSerialization || message.testField !== '') {
+    if (message.testField !== '') {
       writer.uint32(34).string(message.testField);
     }
-    if (forceDefaultSerialization || message.testNotDeprecated !== '') {
+    if (message.testNotDeprecated !== '') {
       writer.uint32(42).string(message.testNotDeprecated);
     }
     return writer;
@@ -157,8 +157,8 @@ export const Simple = {
 const baseChild: object = { name: '' };
 
 export const Child = {
-  encode(message: Child, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
-    if (forceDefaultSerialization || message.name !== '') {
+  encode(message: Child, writer: Writer = Writer.create()): Writer {
+    if (message.name !== '') {
       writer.uint32(10).string(message.name);
     }
     return writer;

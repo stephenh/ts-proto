@@ -46,7 +46,7 @@ export interface Entity {
 const baseBatchQueryRequest: object = { ids: '' };
 
 export const BatchQueryRequest = {
-  encode(message: BatchQueryRequest, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
+  encode(message: BatchQueryRequest, writer: Writer = Writer.create()): Writer {
     for (const v of message.ids) {
       writer.uint32(10).string(v!);
     }
@@ -108,9 +108,9 @@ export const BatchQueryRequest = {
 const baseBatchQueryResponse: object = {};
 
 export const BatchQueryResponse = {
-  encode(message: BatchQueryResponse, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
+  encode(message: BatchQueryResponse, writer: Writer = Writer.create()): Writer {
     for (const v of message.entities) {
-      Entity.encode(v!, writer.uint32(10).fork(), false).ldelim();
+      Entity.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
@@ -170,7 +170,7 @@ export const BatchQueryResponse = {
 const baseBatchMapQueryRequest: object = { ids: '' };
 
 export const BatchMapQueryRequest = {
-  encode(message: BatchMapQueryRequest, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
+  encode(message: BatchMapQueryRequest, writer: Writer = Writer.create()): Writer {
     for (const v of message.ids) {
       writer.uint32(10).string(v!);
     }
@@ -232,9 +232,9 @@ export const BatchMapQueryRequest = {
 const baseBatchMapQueryResponse: object = {};
 
 export const BatchMapQueryResponse = {
-  encode(message: BatchMapQueryResponse, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
+  encode(message: BatchMapQueryResponse, writer: Writer = Writer.create()): Writer {
     Object.entries(message.entities).forEach(([key, value]) => {
-      BatchMapQueryResponse_EntitiesEntry.encode({ key: key as any, value }, writer.uint32(10).fork(), true).ldelim();
+      BatchMapQueryResponse_EntitiesEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).ldelim();
     });
     return writer;
   },
@@ -300,16 +300,12 @@ export const BatchMapQueryResponse = {
 const baseBatchMapQueryResponse_EntitiesEntry: object = { key: '' };
 
 export const BatchMapQueryResponse_EntitiesEntry = {
-  encode(
-    message: BatchMapQueryResponse_EntitiesEntry,
-    writer: Writer = Writer.create(),
-    forceDefaultSerialization = false
-  ): Writer {
-    if (forceDefaultSerialization || message.key !== '') {
+  encode(message: BatchMapQueryResponse_EntitiesEntry, writer: Writer = Writer.create()): Writer {
+    if (message.key !== '') {
       writer.uint32(10).string(message.key);
     }
     if (message.value !== undefined) {
-      Entity.encode(message.value, writer.uint32(18).fork(), false).ldelim();
+      Entity.encode(message.value, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
@@ -376,8 +372,8 @@ export const BatchMapQueryResponse_EntitiesEntry = {
 const baseGetOnlyMethodRequest: object = { id: '' };
 
 export const GetOnlyMethodRequest = {
-  encode(message: GetOnlyMethodRequest, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
-    if (forceDefaultSerialization || message.id !== '') {
+  encode(message: GetOnlyMethodRequest, writer: Writer = Writer.create()): Writer {
+    if (message.id !== '') {
       writer.uint32(10).string(message.id);
     }
     return writer;
@@ -431,9 +427,9 @@ export const GetOnlyMethodRequest = {
 const baseGetOnlyMethodResponse: object = {};
 
 export const GetOnlyMethodResponse = {
-  encode(message: GetOnlyMethodResponse, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
+  encode(message: GetOnlyMethodResponse, writer: Writer = Writer.create()): Writer {
     if (message.entity !== undefined) {
-      Entity.encode(message.entity, writer.uint32(10).fork(), false).ldelim();
+      Entity.encode(message.entity, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
@@ -486,8 +482,8 @@ export const GetOnlyMethodResponse = {
 const baseWriteMethodRequest: object = { id: '' };
 
 export const WriteMethodRequest = {
-  encode(message: WriteMethodRequest, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
-    if (forceDefaultSerialization || message.id !== '') {
+  encode(message: WriteMethodRequest, writer: Writer = Writer.create()): Writer {
+    if (message.id !== '') {
       writer.uint32(10).string(message.id);
     }
     return writer;
@@ -541,7 +537,7 @@ export const WriteMethodRequest = {
 const baseWriteMethodResponse: object = {};
 
 export const WriteMethodResponse = {
-  encode(_: WriteMethodResponse, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
+  encode(_: WriteMethodResponse, writer: Writer = Writer.create()): Writer {
     return writer;
   },
 
@@ -579,11 +575,11 @@ export const WriteMethodResponse = {
 const baseEntity: object = { id: '', name: '' };
 
 export const Entity = {
-  encode(message: Entity, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
-    if (forceDefaultSerialization || message.id !== '') {
+  encode(message: Entity, writer: Writer = Writer.create()): Writer {
+    if (message.id !== '') {
       writer.uint32(10).string(message.id);
     }
-    if (forceDefaultSerialization || message.name !== '') {
+    if (message.name !== '') {
       writer.uint32(18).string(message.name);
     }
     return writer;

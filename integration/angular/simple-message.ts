@@ -10,8 +10,8 @@ export interface SimpleMessage {
 const baseSimpleMessage: object = { numberField: 0 };
 
 export const SimpleMessage = {
-  encode(message: SimpleMessage, writer: Writer = Writer.create(), forceDefaultSerialization = false): Writer {
-    if (forceDefaultSerialization || message.numberField !== 0) {
+  encode(message: SimpleMessage, writer: Writer = Writer.create()): Writer {
+    if (message.numberField !== 0) {
       writer.uint32(8).int32(message.numberField);
     }
     return writer;
