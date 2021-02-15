@@ -643,7 +643,6 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
     encode(
       ${messageDesc.field.length > 0 ? 'message' : '_'}: ${fullName},
       writer: ${Writer} = ${Writer}.create(),
-      forceDefaultSerialization = false,
     ): ${Writer} {
   `);
 
@@ -652,48 +651,38 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
     const fieldName = maybeSnakeToCamel(field.name, options);
 
     // get a generic writer.doSomething based on the basic type
-    let writeSnippet: (place: string, forceDefaultSerialization: boolean) => Code;
+    let writeSnippet: (place: string) => Code;
     if (isScalar(field) || isEnum(field)) {
       const tag = ((field.number << 3) | basicWireType(field.type)) >>> 0;
-      writeSnippet = (place, _) => code`writer.uint32(${tag}).${toReaderCall(field)}(${place})`;
+      writeSnippet = (place) => code`writer.uint32(${tag}).${toReaderCall(field)}(${place})`;
     } else if (isTimestamp(field)) {
       const tag = ((field.number << 3) | 2) >>> 0;
       const type = basicTypeName(ctx, field, { keepValueType: true });
-      writeSnippet = (place, forceDefaultSerialization) =>
-        code`${type}.encode(${utils.toTimestamp}(${place}), writer.uint32(${tag}).fork(), ${forceDefaultSerialization}).ldelim()`;
+      writeSnippet = (place) =>
+        code`${type}.encode(${utils.toTimestamp}(${place}), writer.uint32(${tag}).fork()).ldelim()`;
     } else if (isValueType(ctx, field)) {
       const tag = ((field.number << 3) | 2) >>> 0;
       const type = basicTypeName(ctx, field, { keepValueType: true });
-      writeSnippet = (place, forceDefaultSerialization) =>
-        code`${type}.encode({ value: ${place}! }, writer.uint32(${tag}).fork(), ${forceDefaultSerialization}).ldelim()`;
+      writeSnippet = (place) => code`${type}.encode({ value: ${place}! }, writer.uint32(${tag}).fork()).ldelim()`;
     } else if (isMessage(field)) {
       const tag = ((field.number << 3) | 2) >>> 0;
       const type = basicTypeName(ctx, field);
-      writeSnippet = (place, forceDefaultSerialization) =>
-        code`${type}.encode(${place}, writer.uint32(${tag}).fork(), ${forceDefaultSerialization}).ldelim()`;
+      writeSnippet = (place) => code`${type}.encode(${place}, writer.uint32(${tag}).fork()).ldelim()`;
     } else {
       throw new Error(`Unhandled field ${field}`);
     }
 
     if (isRepeated(field)) {
       if (isMapType(ctx, messageDesc, field)) {
-        // protobuf.js does not support map entries with keys set and values unset.
-        // So we better set both or none. We are free to choose between those options:
-        // "If you provide a key but no value for a map field, the behavior when the
-        // field is serialized is language-dependent. In C++, Java, and Python the
-        // default value for the type is serialized, while in other languages nothing
-        // is serialized." https://developers.google.com/protocol-buffers/docs/proto3#maps
-        // Since we cannot easily check if `value` is "no value" here, we just enforce
-        // serialization of defaults.
         chunks.push(code`
           Object.entries(message.${fieldName}).forEach(([key, value]) => {
-            ${writeSnippet('{ key: key as any, value }', true)};
+            ${writeSnippet('{ key: key as any, value }')};
           });
         `);
       } else if (packedType(field.type) === undefined) {
         chunks.push(code`
           for (const v of message.${fieldName}) {
-            ${writeSnippet('v!', false)};
+            ${writeSnippet('v!')};
           }
         `);
       } else {
@@ -710,30 +699,30 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
       let oneofName = maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options);
       chunks.push(code`
         if (message.${oneofName}?.$case === '${fieldName}') {
-          ${writeSnippet(`message.${oneofName}.${fieldName}`, false)};
+          ${writeSnippet(`message.${oneofName}.${fieldName}`)};
         }
       `);
     } else if (isWithinOneOf(field)) {
       // Oneofs don't have a default value check b/c they need to denote which-oneof presence
       chunks.push(code`
         if (message.${fieldName} !== undefined) {
-          ${writeSnippet(`message.${fieldName}`, false)};
+          ${writeSnippet(`message.${fieldName}`)};
         }
       `);
     } else if (isMessage(field)) {
       chunks.push(code`
         if (message.${fieldName} !== undefined) {
-          ${writeSnippet(`message.${fieldName}`, false)};
+          ${writeSnippet(`message.${fieldName}`)};
         }
       `);
     } else if (isScalar(field) || isEnum(field)) {
       chunks.push(code`
-        if (forceDefaultSerialization || ${notDefaultCheck(ctx, field, `message.${fieldName}`)}) {
-          ${writeSnippet(`message.${fieldName}`, false)};
+        if (${notDefaultCheck(ctx, field, `message.${fieldName}`)}) {
+          ${writeSnippet(`message.${fieldName}`)};
         }
       `);
     } else {
-      chunks.push(code`${writeSnippet(`message.${fieldName}`, false)};`);
+      chunks.push(code`${writeSnippet(`message.${fieldName}`)};`);
     }
   });
 
