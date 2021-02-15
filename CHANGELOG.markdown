@@ -1,4 +1,8 @@
 
+## v1.63.0
+
+* Qualify `Object.create` with `globalThis` to avoid collisions with message names of `Object`. Fixes #216.
+
 ## v1.62.0
 
 * Use `ts-proto-descriptors` package to read/write the `protoc` stdin `CodeGeneratorRequest` and stdout `CodeGeneratorResponse` messages.
