@@ -12,8 +12,8 @@ const baseMetadata: object = {};
 
 export const Metadata = {
   encode(message: Metadata, writer: Writer = Writer.create()): Writer {
-    if (message.lastEdited !== undefined && message.lastEdited !== undefined) {
-      Timestamp.encode(toTimestamp(message.lastEdited), writer.uint32(10).fork()).ldelim();
+    if (message.lastEdited !== undefined) {
+      Timestamp.encode(message.lastEdited, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
@@ -21,12 +21,12 @@ export const Metadata = {
   decode(input: Reader | Uint8Array, length?: number): Metadata {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseMetadata } as Metadata;
+    const message = globalThis.Object.create(baseMetadata) as Metadata;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.lastEdited = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.lastEdited = Timestamp.decode(reader, reader.uint32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -37,7 +37,7 @@ export const Metadata = {
   },
 
   fromJSON(object: any): Metadata {
-    const message = { ...baseMetadata } as Metadata;
+    const message = globalThis.Object.create(baseMetadata) as Metadata;
     if (object.lastEdited !== undefined && object.lastEdited !== null) {
       message.lastEdited = fromJsonTimestamp(object.lastEdited);
     } else {
@@ -49,7 +49,7 @@ export const Metadata = {
   fromPartial(object: DeepPartial<Metadata>): Metadata {
     const message = { ...baseMetadata } as Metadata;
     if (object.lastEdited !== undefined && object.lastEdited !== null) {
-      message.lastEdited = object.lastEdited;
+      message.lastEdited = Timestamp.fromPartial(object.lastEdited);
     } else {
       message.lastEdited = undefined;
     }
@@ -59,10 +59,20 @@ export const Metadata = {
   toJSON(message: Metadata): unknown {
     const obj: any = {};
     message.lastEdited !== undefined &&
-      (obj.lastEdited = message.lastEdited !== undefined ? message.lastEdited.toISOString() : null);
+      (obj.lastEdited = message.lastEdited !== undefined ? fromTimestamp(message.lastEdited).toISOString() : null);
     return obj;
   },
 };
+
+declare var self: any | undefined;
+declare var window: any | undefined;
+var globalThis: any = (() => {
+  if (typeof globalThis !== 'undefined') return globalThis;
+  if (typeof self !== 'undefined') return self;
+  if (typeof window !== 'undefined') return window;
+  if (typeof global !== 'undefined') return global;
+  throw 'Unable to locate global object';
+})();
 
 type Builtin = Date | Function | Uint8Array | string | number | undefined;
 export type DeepPartial<T> = T extends Builtin
@@ -87,12 +97,12 @@ function fromTimestamp(t: Timestamp): Date {
   return new Date(millis);
 }
 
-function fromJsonTimestamp(o: any): Date {
+function fromJsonTimestamp(o: any): Timestamp {
   if (o instanceof Date) {
-    return o;
+    return toTimestamp(o);
   } else if (typeof o === 'string') {
-    return new Date(o);
+    return toTimestamp(new Date(o));
   } else {
-    return fromTimestamp(Timestamp.fromJSON(o));
+    return Timestamp.fromJSON(o);
   }
 }
