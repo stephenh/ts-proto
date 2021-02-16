@@ -584,11 +584,9 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
     } else if (isValueType(ctx, field)) {
       const type = basicTypeName(ctx, field, { keepValueType: true });
       readSnippet = code`${type}.decode(reader, reader.uint32()).value`;
-    } else if (isTimestamp(field)) {
+    } else if (isTimestamp(field) && options.useDate) {
       const type = basicTypeName(ctx, field, { keepValueType: true });
-      readSnippet = options.useDate
-        ? code`${utils.fromTimestamp}(${type}.decode(reader, reader.uint32()))`
-        : code`${type}.decode(reader, reader.uint32())`;
+      readSnippet = code`${utils.fromTimestamp}(${type}.decode(reader, reader.uint32()))`;
     } else if (isMessage(field)) {
       const type = basicTypeName(ctx, field);
       readSnippet = code`${type}.decode(reader, reader.uint32())`;
@@ -670,13 +668,11 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
     if (isScalar(field) || isEnum(field)) {
       const tag = ((field.number << 3) | basicWireType(field.type)) >>> 0;
       writeSnippet = (place) => code`writer.uint32(${tag}).${toReaderCall(field)}(${place})`;
-    } else if (isTimestamp(field)) {
+    } else if (isTimestamp(field) && options.useDate) {
       const tag = ((field.number << 3) | 2) >>> 0;
       const type = basicTypeName(ctx, field, { keepValueType: true });
       writeSnippet = (place) =>
-        options.useDate
-          ? code`${type}.encode(${utils.toTimestamp}(${place}), writer.uint32(${tag}).fork()).ldelim()`
-          : code`${type}.encode(${place}, writer.uint32(${tag}).fork()).ldelim()`;
+        code`${type}.encode(${utils.toTimestamp}(${place}), writer.uint32(${tag}).fork()).ldelim()`;
     } else if (isValueType(ctx, field)) {
       const tag = ((field.number << 3) | 2) >>> 0;
       const type = basicTypeName(ctx, field, { keepValueType: true });
@@ -977,7 +973,6 @@ function generateToJson(ctx: Context, fullName: string, messageDesc: DescriptorP
 function generateFromPartial(ctx: Context, fullName: string, messageDesc: DescriptorProto): Code {
   const { options, utils, typeMap } = ctx;
   const chunks: Code[] = [];
-  const Timestamp = imp('Timestamp@./google/protobuf/timestamp');
 
   // create the basic function declaration
   chunks.push(code`
@@ -999,8 +994,8 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
     const readSnippet = (from: string): Code => {
       if (isPrimitive(field) || isValueType(ctx, field)) {
         return code`${from}`;
-      } else if (isTimestamp(field)) {
-        return options.useDate ? code`${from}` : code`${Timestamp}.fromPartial(${from})`;
+      } else if (isTimestamp(field) && options.useDate) {
+        return code`${from}`;
       } else if (isMessage(field)) {
         if (isRepeated(field) && isMapType(ctx, messageDesc, field)) {
           const valueType = (typeMap.get(field.typeName)![2] as DescriptorProto).field[1];
@@ -1013,8 +1008,8 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
               const cstr = capitalize(basicTypeName(ctx, valueType).toCodeString());
               return code`${cstr}(${from})`;
             }
-          } else if (isTimestamp(valueType)) {
-            return options.useDate ? code`${from}` : code`${Timestamp}.fromPartial(${from})`;
+          } else if (isTimestamp(valueType) && options.useDate) {
+            return code`${from}`;
           } else {
             const type = basicTypeName(ctx, valueType);
             return code`${type}.fromPartial(${from})`;
