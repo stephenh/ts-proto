@@ -62,6 +62,13 @@ export const Simple = {
     return message;
   },
 
+  toJSON(message: Simple): unknown {
+    const obj: any = {};
+    message.name !== undefined && (obj.name = message.name);
+    message.state !== undefined && (obj.state = stateEnumToJSON(message.state));
+    return obj;
+  },
+
   fromPartial(object: DeepPartial<Simple>): Simple {
     const message = { ...baseSimple } as Simple;
     if (object.name !== undefined && object.name !== null) {
@@ -75,13 +82,6 @@ export const Simple = {
       message.state = StateEnum.UNKNOWN;
     }
     return message;
-  },
-
-  toJSON(message: Simple): unknown {
-    const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
-    message.state !== undefined && (obj.state = stateEnumToJSON(message.state));
-    return obj;
   },
 };
 

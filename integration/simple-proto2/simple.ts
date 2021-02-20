@@ -77,6 +77,12 @@ export const Issue56 = {
     return message;
   },
 
+  toJSON(message: Issue56): unknown {
+    const obj: any = {};
+    message.test !== undefined && (obj.test = enumWithoutZeroToJSON(message.test));
+    return obj;
+  },
+
   fromPartial(object: DeepPartial<Issue56>): Issue56 {
     const message = { ...baseIssue56 } as Issue56;
     if (object.test !== undefined && object.test !== null) {
@@ -85,12 +91,6 @@ export const Issue56 = {
       message.test = 1;
     }
     return message;
-  },
-
-  toJSON(message: Issue56): unknown {
-    const obj: any = {};
-    message.test !== undefined && (obj.test = enumWithoutZeroToJSON(message.test));
-    return obj;
   },
 };
 

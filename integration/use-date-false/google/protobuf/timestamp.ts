@@ -162,6 +162,13 @@ export const Timestamp = {
     return message;
   },
 
+  toJSON(message: Timestamp): unknown {
+    const obj: any = {};
+    message.seconds !== undefined && (obj.seconds = message.seconds);
+    message.nanos !== undefined && (obj.nanos = message.nanos);
+    return obj;
+  },
+
   fromPartial(object: DeepPartial<Timestamp>): Timestamp {
     const message = { ...baseTimestamp } as Timestamp;
     if (object.seconds !== undefined && object.seconds !== null) {
@@ -175,13 +182,6 @@ export const Timestamp = {
       message.nanos = 0;
     }
     return message;
-  },
-
-  toJSON(message: Timestamp): unknown {
-    const obj: any = {};
-    message.seconds !== undefined && (obj.seconds = message.seconds);
-    message.nanos !== undefined && (obj.nanos = message.nanos);
-    return obj;
   },
 };
 

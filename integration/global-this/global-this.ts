@@ -49,6 +49,12 @@ export const Object = {
     return message;
   },
 
+  toJSON(message: Object): unknown {
+    const obj: any = {};
+    message.name !== undefined && (obj.name = message.name);
+    return obj;
+  },
+
   fromPartial(object: DeepPartial<Object>): Object {
     const message = { ...baseObject } as Object;
     if (object.name !== undefined && object.name !== null) {
@@ -57,12 +63,6 @@ export const Object = {
       message.name = '';
     }
     return message;
-  },
-
-  toJSON(message: Object): unknown {
-    const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
-    return obj;
   },
 };
 
@@ -104,6 +104,12 @@ export const Error = {
     return message;
   },
 
+  toJSON(message: Error): unknown {
+    const obj: any = {};
+    message.name !== undefined && (obj.name = message.name);
+    return obj;
+  },
+
   fromPartial(object: DeepPartial<Error>): Error {
     const message = { ...baseError } as Error;
     if (object.name !== undefined && object.name !== null) {
@@ -112,12 +118,6 @@ export const Error = {
       message.name = '';
     }
     return message;
-  },
-
-  toJSON(message: Error): unknown {
-    const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
-    return obj;
   },
 };
 

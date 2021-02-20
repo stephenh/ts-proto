@@ -118,6 +118,16 @@ export const Tile = {
     return message;
   },
 
+  toJSON(message: Tile): unknown {
+    const obj: any = {};
+    if (message.layers) {
+      obj.layers = message.layers.map((e) => (e ? Tile_Layer.toJSON(e) : undefined));
+    } else {
+      obj.layers = [];
+    }
+    return obj;
+  },
+
   fromPartial(object: DeepPartial<Tile>): Tile {
     const message = { ...baseTile } as Tile;
     message.layers = [];
@@ -127,16 +137,6 @@ export const Tile = {
       }
     }
     return message;
-  },
-
-  toJSON(message: Tile): unknown {
-    const obj: any = {};
-    if (message.layers) {
-      obj.layers = message.layers.map((e) => (e ? Tile_Layer.toJSON(e) : undefined));
-    } else {
-      obj.layers = [];
-    }
-    return obj;
   },
 };
 
@@ -252,6 +252,18 @@ export const Tile_Value = {
     return message;
   },
 
+  toJSON(message: Tile_Value): unknown {
+    const obj: any = {};
+    message.stringValue !== undefined && (obj.stringValue = message.stringValue);
+    message.floatValue !== undefined && (obj.floatValue = message.floatValue);
+    message.doubleValue !== undefined && (obj.doubleValue = message.doubleValue);
+    message.intValue !== undefined && (obj.intValue = message.intValue);
+    message.uintValue !== undefined && (obj.uintValue = message.uintValue);
+    message.sintValue !== undefined && (obj.sintValue = message.sintValue);
+    message.boolValue !== undefined && (obj.boolValue = message.boolValue);
+    return obj;
+  },
+
   fromPartial(object: DeepPartial<Tile_Value>): Tile_Value {
     const message = { ...baseTile_Value } as Tile_Value;
     if (object.stringValue !== undefined && object.stringValue !== null) {
@@ -290,18 +302,6 @@ export const Tile_Value = {
       message.boolValue = false;
     }
     return message;
-  },
-
-  toJSON(message: Tile_Value): unknown {
-    const obj: any = {};
-    message.stringValue !== undefined && (obj.stringValue = message.stringValue);
-    message.floatValue !== undefined && (obj.floatValue = message.floatValue);
-    message.doubleValue !== undefined && (obj.doubleValue = message.doubleValue);
-    message.intValue !== undefined && (obj.intValue = message.intValue);
-    message.uintValue !== undefined && (obj.uintValue = message.uintValue);
-    message.sintValue !== undefined && (obj.sintValue = message.sintValue);
-    message.boolValue !== undefined && (obj.boolValue = message.boolValue);
-    return obj;
   },
 };
 
@@ -398,6 +398,23 @@ export const Tile_Feature = {
     return message;
   },
 
+  toJSON(message: Tile_Feature): unknown {
+    const obj: any = {};
+    message.id !== undefined && (obj.id = message.id);
+    if (message.tags) {
+      obj.tags = message.tags.map((e) => e);
+    } else {
+      obj.tags = [];
+    }
+    message.type !== undefined && (obj.type = tile_GeomTypeToJSON(message.type));
+    if (message.geometry) {
+      obj.geometry = message.geometry.map((e) => e);
+    } else {
+      obj.geometry = [];
+    }
+    return obj;
+  },
+
   fromPartial(object: DeepPartial<Tile_Feature>): Tile_Feature {
     const message = { ...baseTile_Feature } as Tile_Feature;
     message.tags = [];
@@ -423,23 +440,6 @@ export const Tile_Feature = {
       }
     }
     return message;
-  },
-
-  toJSON(message: Tile_Feature): unknown {
-    const obj: any = {};
-    message.id !== undefined && (obj.id = message.id);
-    if (message.tags) {
-      obj.tags = message.tags.map((e) => e);
-    } else {
-      obj.tags = [];
-    }
-    message.type !== undefined && (obj.type = tile_GeomTypeToJSON(message.type));
-    if (message.geometry) {
-      obj.geometry = message.geometry.map((e) => e);
-    } else {
-      obj.geometry = [];
-    }
-    return obj;
   },
 };
 
@@ -542,6 +542,29 @@ export const Tile_Layer = {
     return message;
   },
 
+  toJSON(message: Tile_Layer): unknown {
+    const obj: any = {};
+    message.version !== undefined && (obj.version = message.version);
+    message.name !== undefined && (obj.name = message.name);
+    if (message.features) {
+      obj.features = message.features.map((e) => (e ? Tile_Feature.toJSON(e) : undefined));
+    } else {
+      obj.features = [];
+    }
+    if (message.keys) {
+      obj.keys = message.keys.map((e) => e);
+    } else {
+      obj.keys = [];
+    }
+    if (message.values) {
+      obj.values = message.values.map((e) => (e ? Tile_Value.toJSON(e) : undefined));
+    } else {
+      obj.values = [];
+    }
+    message.extent !== undefined && (obj.extent = message.extent);
+    return obj;
+  },
+
   fromPartial(object: DeepPartial<Tile_Layer>): Tile_Layer {
     const message = { ...baseTile_Layer } as Tile_Layer;
     message.features = [];
@@ -578,29 +601,6 @@ export const Tile_Layer = {
       message.extent = 0;
     }
     return message;
-  },
-
-  toJSON(message: Tile_Layer): unknown {
-    const obj: any = {};
-    message.version !== undefined && (obj.version = message.version);
-    message.name !== undefined && (obj.name = message.name);
-    if (message.features) {
-      obj.features = message.features.map((e) => (e ? Tile_Feature.toJSON(e) : undefined));
-    } else {
-      obj.features = [];
-    }
-    if (message.keys) {
-      obj.keys = message.keys.map((e) => e);
-    } else {
-      obj.keys = [];
-    }
-    if (message.values) {
-      obj.values = message.values.map((e) => (e ? Tile_Value.toJSON(e) : undefined));
-    } else {
-      obj.values = [];
-    }
-    message.extent !== undefined && (obj.extent = message.extent);
-    return obj;
   },
 };
 

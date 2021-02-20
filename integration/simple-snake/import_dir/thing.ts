@@ -46,6 +46,13 @@ export const ImportedThing = {
     return message;
   },
 
+  toJSON(message: ImportedThing): unknown {
+    const obj: any = {};
+    message.created_at !== undefined &&
+      (obj.created_at = message.created_at !== undefined ? message.created_at.toISOString() : null);
+    return obj;
+  },
+
   fromPartial(object: DeepPartial<ImportedThing>): ImportedThing {
     const message = { ...baseImportedThing } as ImportedThing;
     if (object.created_at !== undefined && object.created_at !== null) {
@@ -54,13 +61,6 @@ export const ImportedThing = {
       message.created_at = undefined;
     }
     return message;
-  },
-
-  toJSON(message: ImportedThing): unknown {
-    const obj: any = {};
-    message.created_at !== undefined &&
-      (obj.created_at = message.created_at !== undefined ? message.created_at.toISOString() : null);
-    return obj;
   },
 };
 

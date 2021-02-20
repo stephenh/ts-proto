@@ -57,6 +57,13 @@ export const Simple = {
     return message;
   },
 
+  toJSON(message: Simple): unknown {
+    const obj: any = {};
+    message.name !== undefined && (obj.name = message.name);
+    message.age !== undefined && (obj.age = message.age);
+    return obj;
+  },
+
   fromPartial(object: DeepPartial<Simple>): Simple {
     const message = { ...baseSimple } as Simple;
     if (object.name !== undefined && object.name !== null) {
@@ -70,13 +77,6 @@ export const Simple = {
       message.age = 0;
     }
     return message;
-  },
-
-  toJSON(message: Simple): unknown {
-    const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
-    message.age !== undefined && (obj.age = message.age);
-    return obj;
   },
 };
 

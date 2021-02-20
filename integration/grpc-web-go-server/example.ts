@@ -139,6 +139,13 @@ export const DashFlash = {
     return message;
   },
 
+  toJSON(message: DashFlash): unknown {
+    const obj: any = {};
+    message.msg !== undefined && (obj.msg = message.msg);
+    message.type !== undefined && (obj.type = dashFlash_TypeToJSON(message.type));
+    return obj;
+  },
+
   fromPartial(object: DeepPartial<DashFlash>): DashFlash {
     const message = { ...baseDashFlash } as DashFlash;
     if (object.msg !== undefined && object.msg !== null) {
@@ -152,13 +159,6 @@ export const DashFlash = {
       message.type = 0;
     }
     return message;
-  },
-
-  toJSON(message: DashFlash): unknown {
-    const obj: any = {};
-    message.msg !== undefined && (obj.msg = message.msg);
-    message.type !== undefined && (obj.type = dashFlash_TypeToJSON(message.type));
-    return obj;
   },
 };
 
@@ -224,6 +224,19 @@ export const DashUserSettingsState = {
     return message;
   },
 
+  toJSON(message: DashUserSettingsState): unknown {
+    const obj: any = {};
+    message.email !== undefined && (obj.email = message.email);
+    message.urls !== undefined &&
+      (obj.urls = message.urls ? DashUserSettingsState_URLs.toJSON(message.urls) : undefined);
+    if (message.flashes) {
+      obj.flashes = message.flashes.map((e) => (e ? DashFlash.toJSON(e) : undefined));
+    } else {
+      obj.flashes = [];
+    }
+    return obj;
+  },
+
   fromPartial(object: DeepPartial<DashUserSettingsState>): DashUserSettingsState {
     const message = { ...baseDashUserSettingsState } as DashUserSettingsState;
     message.flashes = [];
@@ -243,19 +256,6 @@ export const DashUserSettingsState = {
       }
     }
     return message;
-  },
-
-  toJSON(message: DashUserSettingsState): unknown {
-    const obj: any = {};
-    message.email !== undefined && (obj.email = message.email);
-    message.urls !== undefined &&
-      (obj.urls = message.urls ? DashUserSettingsState_URLs.toJSON(message.urls) : undefined);
-    if (message.flashes) {
-      obj.flashes = message.flashes.map((e) => (e ? DashFlash.toJSON(e) : undefined));
-    } else {
-      obj.flashes = [];
-    }
-    return obj;
   },
 };
 
@@ -308,6 +308,13 @@ export const DashUserSettingsState_URLs = {
     return message;
   },
 
+  toJSON(message: DashUserSettingsState_URLs): unknown {
+    const obj: any = {};
+    message.connectGoogle !== undefined && (obj.connectGoogle = message.connectGoogle);
+    message.connectGithub !== undefined && (obj.connectGithub = message.connectGithub);
+    return obj;
+  },
+
   fromPartial(object: DeepPartial<DashUserSettingsState_URLs>): DashUserSettingsState_URLs {
     const message = { ...baseDashUserSettingsState_URLs } as DashUserSettingsState_URLs;
     if (object.connectGoogle !== undefined && object.connectGoogle !== null) {
@@ -321,13 +328,6 @@ export const DashUserSettingsState_URLs = {
       message.connectGithub = '';
     }
     return message;
-  },
-
-  toJSON(message: DashUserSettingsState_URLs): unknown {
-    const obj: any = {};
-    message.connectGoogle !== undefined && (obj.connectGoogle = message.connectGoogle);
-    message.connectGithub !== undefined && (obj.connectGithub = message.connectGithub);
-    return obj;
   },
 };
 
@@ -402,6 +402,15 @@ export const DashCred = {
     return message;
   },
 
+  toJSON(message: DashCred): unknown {
+    const obj: any = {};
+    message.description !== undefined && (obj.description = message.description);
+    message.metadata !== undefined && (obj.metadata = message.metadata);
+    message.token !== undefined && (obj.token = message.token);
+    message.id !== undefined && (obj.id = message.id);
+    return obj;
+  },
+
   fromPartial(object: DeepPartial<DashCred>): DashCred {
     const message = { ...baseDashCred } as DashCred;
     if (object.description !== undefined && object.description !== null) {
@@ -425,15 +434,6 @@ export const DashCred = {
       message.id = '';
     }
     return message;
-  },
-
-  toJSON(message: DashCred): unknown {
-    const obj: any = {};
-    message.description !== undefined && (obj.description = message.description);
-    message.metadata !== undefined && (obj.metadata = message.metadata);
-    message.token !== undefined && (obj.token = message.token);
-    message.id !== undefined && (obj.id = message.id);
-    return obj;
   },
 };
 
@@ -486,6 +486,13 @@ export const DashAPICredsCreateReq = {
     return message;
   },
 
+  toJSON(message: DashAPICredsCreateReq): unknown {
+    const obj: any = {};
+    message.description !== undefined && (obj.description = message.description);
+    message.metadata !== undefined && (obj.metadata = message.metadata);
+    return obj;
+  },
+
   fromPartial(object: DeepPartial<DashAPICredsCreateReq>): DashAPICredsCreateReq {
     const message = { ...baseDashAPICredsCreateReq } as DashAPICredsCreateReq;
     if (object.description !== undefined && object.description !== null) {
@@ -499,13 +506,6 @@ export const DashAPICredsCreateReq = {
       message.metadata = '';
     }
     return message;
-  },
-
-  toJSON(message: DashAPICredsCreateReq): unknown {
-    const obj: any = {};
-    message.description !== undefined && (obj.description = message.description);
-    message.metadata !== undefined && (obj.metadata = message.metadata);
-    return obj;
   },
 };
 
@@ -580,6 +580,15 @@ export const DashAPICredsUpdateReq = {
     return message;
   },
 
+  toJSON(message: DashAPICredsUpdateReq): unknown {
+    const obj: any = {};
+    message.credSid !== undefined && (obj.credSid = message.credSid);
+    message.description !== undefined && (obj.description = message.description);
+    message.metadata !== undefined && (obj.metadata = message.metadata);
+    message.id !== undefined && (obj.id = message.id);
+    return obj;
+  },
+
   fromPartial(object: DeepPartial<DashAPICredsUpdateReq>): DashAPICredsUpdateReq {
     const message = { ...baseDashAPICredsUpdateReq } as DashAPICredsUpdateReq;
     if (object.credSid !== undefined && object.credSid !== null) {
@@ -603,15 +612,6 @@ export const DashAPICredsUpdateReq = {
       message.id = '';
     }
     return message;
-  },
-
-  toJSON(message: DashAPICredsUpdateReq): unknown {
-    const obj: any = {};
-    message.credSid !== undefined && (obj.credSid = message.credSid);
-    message.description !== undefined && (obj.description = message.description);
-    message.metadata !== undefined && (obj.metadata = message.metadata);
-    message.id !== undefined && (obj.id = message.id);
-    return obj;
   },
 };
 
@@ -664,6 +664,13 @@ export const DashAPICredsDeleteReq = {
     return message;
   },
 
+  toJSON(message: DashAPICredsDeleteReq): unknown {
+    const obj: any = {};
+    message.credSid !== undefined && (obj.credSid = message.credSid);
+    message.id !== undefined && (obj.id = message.id);
+    return obj;
+  },
+
   fromPartial(object: DeepPartial<DashAPICredsDeleteReq>): DashAPICredsDeleteReq {
     const message = { ...baseDashAPICredsDeleteReq } as DashAPICredsDeleteReq;
     if (object.credSid !== undefined && object.credSid !== null) {
@@ -677,13 +684,6 @@ export const DashAPICredsDeleteReq = {
       message.id = '';
     }
     return message;
-  },
-
-  toJSON(message: DashAPICredsDeleteReq): unknown {
-    const obj: any = {};
-    message.credSid !== undefined && (obj.credSid = message.credSid);
-    message.id !== undefined && (obj.id = message.id);
-    return obj;
   },
 };
 
@@ -714,14 +714,14 @@ export const Empty = {
     return message;
   },
 
-  fromPartial(_: DeepPartial<Empty>): Empty {
-    const message = { ...baseEmpty } as Empty;
-    return message;
-  },
-
   toJSON(_: Empty): unknown {
     const obj: any = {};
     return obj;
+  },
+
+  fromPartial(_: DeepPartial<Empty>): Empty {
+    const message = { ...baseEmpty } as Empty;
+    return message;
   },
 };
 

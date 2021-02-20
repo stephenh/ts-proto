@@ -83,6 +83,16 @@ export const BatchQueryRequest = {
     return message;
   },
 
+  toJSON(message: BatchQueryRequest): unknown {
+    const obj: any = {};
+    if (message.ids) {
+      obj.ids = message.ids.map((e) => e);
+    } else {
+      obj.ids = [];
+    }
+    return obj;
+  },
+
   fromPartial(object: DeepPartial<BatchQueryRequest>): BatchQueryRequest {
     const message = { ...baseBatchQueryRequest } as BatchQueryRequest;
     message.ids = [];
@@ -92,16 +102,6 @@ export const BatchQueryRequest = {
       }
     }
     return message;
-  },
-
-  toJSON(message: BatchQueryRequest): unknown {
-    const obj: any = {};
-    if (message.ids) {
-      obj.ids = message.ids.map((e) => e);
-    } else {
-      obj.ids = [];
-    }
-    return obj;
   },
 };
 
@@ -145,6 +145,16 @@ export const BatchQueryResponse = {
     return message;
   },
 
+  toJSON(message: BatchQueryResponse): unknown {
+    const obj: any = {};
+    if (message.entities) {
+      obj.entities = message.entities.map((e) => (e ? Entity.toJSON(e) : undefined));
+    } else {
+      obj.entities = [];
+    }
+    return obj;
+  },
+
   fromPartial(object: DeepPartial<BatchQueryResponse>): BatchQueryResponse {
     const message = { ...baseBatchQueryResponse } as BatchQueryResponse;
     message.entities = [];
@@ -154,16 +164,6 @@ export const BatchQueryResponse = {
       }
     }
     return message;
-  },
-
-  toJSON(message: BatchQueryResponse): unknown {
-    const obj: any = {};
-    if (message.entities) {
-      obj.entities = message.entities.map((e) => (e ? Entity.toJSON(e) : undefined));
-    } else {
-      obj.entities = [];
-    }
-    return obj;
   },
 };
 
@@ -207,6 +207,16 @@ export const BatchMapQueryRequest = {
     return message;
   },
 
+  toJSON(message: BatchMapQueryRequest): unknown {
+    const obj: any = {};
+    if (message.ids) {
+      obj.ids = message.ids.map((e) => e);
+    } else {
+      obj.ids = [];
+    }
+    return obj;
+  },
+
   fromPartial(object: DeepPartial<BatchMapQueryRequest>): BatchMapQueryRequest {
     const message = { ...baseBatchMapQueryRequest } as BatchMapQueryRequest;
     message.ids = [];
@@ -216,16 +226,6 @@ export const BatchMapQueryRequest = {
       }
     }
     return message;
-  },
-
-  toJSON(message: BatchMapQueryRequest): unknown {
-    const obj: any = {};
-    if (message.ids) {
-      obj.ids = message.ids.map((e) => e);
-    } else {
-      obj.ids = [];
-    }
-    return obj;
   },
 };
 
@@ -272,6 +272,17 @@ export const BatchMapQueryResponse = {
     return message;
   },
 
+  toJSON(message: BatchMapQueryResponse): unknown {
+    const obj: any = {};
+    obj.entities = {};
+    if (message.entities) {
+      Object.entries(message.entities).forEach(([k, v]) => {
+        obj.entities[k] = Entity.toJSON(v);
+      });
+    }
+    return obj;
+  },
+
   fromPartial(object: DeepPartial<BatchMapQueryResponse>): BatchMapQueryResponse {
     const message = { ...baseBatchMapQueryResponse } as BatchMapQueryResponse;
     message.entities = {};
@@ -283,17 +294,6 @@ export const BatchMapQueryResponse = {
       });
     }
     return message;
-  },
-
-  toJSON(message: BatchMapQueryResponse): unknown {
-    const obj: any = {};
-    obj.entities = {};
-    if (message.entities) {
-      Object.entries(message.entities).forEach(([k, v]) => {
-        obj.entities[k] = Entity.toJSON(v);
-      });
-    }
-    return obj;
   },
 };
 
@@ -346,6 +346,13 @@ export const BatchMapQueryResponse_EntitiesEntry = {
     return message;
   },
 
+  toJSON(message: BatchMapQueryResponse_EntitiesEntry): unknown {
+    const obj: any = {};
+    message.key !== undefined && (obj.key = message.key);
+    message.value !== undefined && (obj.value = message.value ? Entity.toJSON(message.value) : undefined);
+    return obj;
+  },
+
   fromPartial(object: DeepPartial<BatchMapQueryResponse_EntitiesEntry>): BatchMapQueryResponse_EntitiesEntry {
     const message = { ...baseBatchMapQueryResponse_EntitiesEntry } as BatchMapQueryResponse_EntitiesEntry;
     if (object.key !== undefined && object.key !== null) {
@@ -359,13 +366,6 @@ export const BatchMapQueryResponse_EntitiesEntry = {
       message.value = undefined;
     }
     return message;
-  },
-
-  toJSON(message: BatchMapQueryResponse_EntitiesEntry): unknown {
-    const obj: any = {};
-    message.key !== undefined && (obj.key = message.key);
-    message.value !== undefined && (obj.value = message.value ? Entity.toJSON(message.value) : undefined);
-    return obj;
   },
 };
 
@@ -407,6 +407,12 @@ export const GetOnlyMethodRequest = {
     return message;
   },
 
+  toJSON(message: GetOnlyMethodRequest): unknown {
+    const obj: any = {};
+    message.id !== undefined && (obj.id = message.id);
+    return obj;
+  },
+
   fromPartial(object: DeepPartial<GetOnlyMethodRequest>): GetOnlyMethodRequest {
     const message = { ...baseGetOnlyMethodRequest } as GetOnlyMethodRequest;
     if (object.id !== undefined && object.id !== null) {
@@ -415,12 +421,6 @@ export const GetOnlyMethodRequest = {
       message.id = '';
     }
     return message;
-  },
-
-  toJSON(message: GetOnlyMethodRequest): unknown {
-    const obj: any = {};
-    message.id !== undefined && (obj.id = message.id);
-    return obj;
   },
 };
 
@@ -462,6 +462,12 @@ export const GetOnlyMethodResponse = {
     return message;
   },
 
+  toJSON(message: GetOnlyMethodResponse): unknown {
+    const obj: any = {};
+    message.entity !== undefined && (obj.entity = message.entity ? Entity.toJSON(message.entity) : undefined);
+    return obj;
+  },
+
   fromPartial(object: DeepPartial<GetOnlyMethodResponse>): GetOnlyMethodResponse {
     const message = { ...baseGetOnlyMethodResponse } as GetOnlyMethodResponse;
     if (object.entity !== undefined && object.entity !== null) {
@@ -470,12 +476,6 @@ export const GetOnlyMethodResponse = {
       message.entity = undefined;
     }
     return message;
-  },
-
-  toJSON(message: GetOnlyMethodResponse): unknown {
-    const obj: any = {};
-    message.entity !== undefined && (obj.entity = message.entity ? Entity.toJSON(message.entity) : undefined);
-    return obj;
   },
 };
 
@@ -517,6 +517,12 @@ export const WriteMethodRequest = {
     return message;
   },
 
+  toJSON(message: WriteMethodRequest): unknown {
+    const obj: any = {};
+    message.id !== undefined && (obj.id = message.id);
+    return obj;
+  },
+
   fromPartial(object: DeepPartial<WriteMethodRequest>): WriteMethodRequest {
     const message = { ...baseWriteMethodRequest } as WriteMethodRequest;
     if (object.id !== undefined && object.id !== null) {
@@ -525,12 +531,6 @@ export const WriteMethodRequest = {
       message.id = '';
     }
     return message;
-  },
-
-  toJSON(message: WriteMethodRequest): unknown {
-    const obj: any = {};
-    message.id !== undefined && (obj.id = message.id);
-    return obj;
   },
 };
 
@@ -561,14 +561,14 @@ export const WriteMethodResponse = {
     return message;
   },
 
-  fromPartial(_: DeepPartial<WriteMethodResponse>): WriteMethodResponse {
-    const message = { ...baseWriteMethodResponse } as WriteMethodResponse;
-    return message;
-  },
-
   toJSON(_: WriteMethodResponse): unknown {
     const obj: any = {};
     return obj;
+  },
+
+  fromPartial(_: DeepPartial<WriteMethodResponse>): WriteMethodResponse {
+    const message = { ...baseWriteMethodResponse } as WriteMethodResponse;
+    return message;
   },
 };
 
@@ -621,6 +621,13 @@ export const Entity = {
     return message;
   },
 
+  toJSON(message: Entity): unknown {
+    const obj: any = {};
+    message.id !== undefined && (obj.id = message.id);
+    message.name !== undefined && (obj.name = message.name);
+    return obj;
+  },
+
   fromPartial(object: DeepPartial<Entity>): Entity {
     const message = { ...baseEntity } as Entity;
     if (object.id !== undefined && object.id !== null) {
@@ -634,13 +641,6 @@ export const Entity = {
       message.name = '';
     }
     return message;
-  },
-
-  toJSON(message: Entity): unknown {
-    const obj: any = {};
-    message.id !== undefined && (obj.id = message.id);
-    message.name !== undefined && (obj.name = message.name);
-    return obj;
   },
 };
 

@@ -56,6 +56,13 @@ export const Foo = {
     return message;
   },
 
+  toJSON(message: Foo): unknown {
+    const obj: any = {};
+    message.name !== undefined && (obj.name = message.name);
+    message.bar !== undefined && (obj.bar = message.bar ? Bar.toJSON(message.bar) : undefined);
+    return obj;
+  },
+
   fromPartial(object: DeepPartial<Foo>): Foo {
     const message = { ...baseFoo } as Foo;
     if (object.name !== undefined && object.name !== null) {
@@ -69,13 +76,6 @@ export const Foo = {
       message.bar = undefined;
     }
     return message;
-  },
-
-  toJSON(message: Foo): unknown {
-    const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
-    message.bar !== undefined && (obj.bar = message.bar ? Bar.toJSON(message.bar) : undefined);
-    return obj;
   },
 };
 

@@ -193,6 +193,27 @@ export const PleaseChoose = {
     return message;
   },
 
+  toJSON(message: PleaseChoose): unknown {
+    const obj: any = {};
+    message.name !== undefined && (obj.name = message.name);
+    message.choice?.$case === 'aNumber' && (obj.aNumber = message.choice?.aNumber);
+    message.choice?.$case === 'aString' && (obj.aString = message.choice?.aString);
+    message.choice?.$case === 'aMessage' &&
+      (obj.aMessage = message.choice?.aMessage ? PleaseChoose_Submessage.toJSON(message.choice?.aMessage) : undefined);
+    message.choice?.$case === 'aBool' && (obj.aBool = message.choice?.aBool);
+    message.choice?.$case === 'bunchaBytes' &&
+      (obj.bunchaBytes =
+        message.choice?.bunchaBytes !== undefined ? base64FromBytes(message.choice?.bunchaBytes) : undefined);
+    message.choice?.$case === 'anEnum' &&
+      (obj.anEnum =
+        message.choice?.anEnum !== undefined ? pleaseChoose_StateEnumToJSON(message.choice?.anEnum) : undefined);
+    message.age !== undefined && (obj.age = message.age);
+    message.eitherOr?.$case === 'either' && (obj.either = message.eitherOr?.either);
+    message.eitherOr?.$case === 'or' && (obj.or = message.eitherOr?.or);
+    message.eitherOr?.$case === 'thirdOption' && (obj.thirdOption = message.eitherOr?.thirdOption);
+    return obj;
+  },
+
   fromPartial(object: DeepPartial<PleaseChoose>): PleaseChoose {
     const message = { ...basePleaseChoose } as PleaseChoose;
     if (object.name !== undefined && object.name !== null) {
@@ -246,27 +267,6 @@ export const PleaseChoose = {
     }
     return message;
   },
-
-  toJSON(message: PleaseChoose): unknown {
-    const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
-    message.choice?.$case === 'aNumber' && (obj.aNumber = message.choice?.aNumber);
-    message.choice?.$case === 'aString' && (obj.aString = message.choice?.aString);
-    message.choice?.$case === 'aMessage' &&
-      (obj.aMessage = message.choice?.aMessage ? PleaseChoose_Submessage.toJSON(message.choice?.aMessage) : undefined);
-    message.choice?.$case === 'aBool' && (obj.aBool = message.choice?.aBool);
-    message.choice?.$case === 'bunchaBytes' &&
-      (obj.bunchaBytes =
-        message.choice?.bunchaBytes !== undefined ? base64FromBytes(message.choice?.bunchaBytes) : undefined);
-    message.choice?.$case === 'anEnum' &&
-      (obj.anEnum =
-        message.choice?.anEnum !== undefined ? pleaseChoose_StateEnumToJSON(message.choice?.anEnum) : undefined);
-    message.age !== undefined && (obj.age = message.age);
-    message.eitherOr?.$case === 'either' && (obj.either = message.eitherOr?.either);
-    message.eitherOr?.$case === 'or' && (obj.or = message.eitherOr?.or);
-    message.eitherOr?.$case === 'thirdOption' && (obj.thirdOption = message.eitherOr?.thirdOption);
-    return obj;
-  },
 };
 
 const basePleaseChoose_Submessage: object = { name: '' };
@@ -305,18 +305,18 @@ export const PleaseChoose_Submessage = {
     return message;
   },
 
+  toJSON(message: PleaseChoose_Submessage): unknown {
+    const obj: any = {};
+    message.name !== undefined && (obj.name = message.name);
+    return obj;
+  },
+
   fromPartial(object: DeepPartial<PleaseChoose_Submessage>): PleaseChoose_Submessage {
     const message = { ...basePleaseChoose_Submessage } as PleaseChoose_Submessage;
     if (object.name !== undefined && object.name !== null) {
       message.name = object.name;
     }
     return message;
-  },
-
-  toJSON(message: PleaseChoose_Submessage): unknown {
-    const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
-    return obj;
   },
 };
 
@@ -365,6 +365,13 @@ export const SimpleButOptional = {
     return message;
   },
 
+  toJSON(message: SimpleButOptional): unknown {
+    const obj: any = {};
+    message.name !== undefined && (obj.name = message.name);
+    message.age !== undefined && (obj.age = message.age);
+    return obj;
+  },
+
   fromPartial(object: DeepPartial<SimpleButOptional>): SimpleButOptional {
     const message = { ...baseSimpleButOptional } as SimpleButOptional;
     if (object.name !== undefined && object.name !== null) {
@@ -374,13 +381,6 @@ export const SimpleButOptional = {
       message.age = object.age;
     }
     return message;
-  },
-
-  toJSON(message: SimpleButOptional): unknown {
-    const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
-    message.age !== undefined && (obj.age = message.age);
-    return obj;
   },
 };
 

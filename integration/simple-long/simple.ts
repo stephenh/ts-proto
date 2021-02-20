@@ -143,6 +143,25 @@ export const SimpleWithWrappers = {
     return message;
   },
 
+  toJSON(message: SimpleWithWrappers): unknown {
+    const obj: any = {};
+    message.name !== undefined && (obj.name = message.name);
+    message.age !== undefined && (obj.age = message.age);
+    message.enabled !== undefined && (obj.enabled = message.enabled);
+    message.bananas !== undefined && (obj.bananas = message.bananas);
+    if (message.coins) {
+      obj.coins = message.coins.map((e) => e);
+    } else {
+      obj.coins = [];
+    }
+    if (message.snacks) {
+      obj.snacks = message.snacks.map((e) => e);
+    } else {
+      obj.snacks = [];
+    }
+    return obj;
+  },
+
   fromPartial(object: DeepPartial<SimpleWithWrappers>): SimpleWithWrappers {
     const message = { ...baseSimpleWithWrappers } as SimpleWithWrappers;
     message.coins = [];
@@ -178,25 +197,6 @@ export const SimpleWithWrappers = {
       }
     }
     return message;
-  },
-
-  toJSON(message: SimpleWithWrappers): unknown {
-    const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
-    message.age !== undefined && (obj.age = message.age);
-    message.enabled !== undefined && (obj.enabled = message.enabled);
-    message.bananas !== undefined && (obj.bananas = message.bananas);
-    if (message.coins) {
-      obj.coins = message.coins.map((e) => e);
-    } else {
-      obj.coins = [];
-    }
-    if (message.snacks) {
-      obj.snacks = message.snacks.map((e) => e);
-    } else {
-      obj.snacks = [];
-    }
-    return obj;
   },
 };
 
@@ -259,6 +259,23 @@ export const SimpleWithMap = {
     return message;
   },
 
+  toJSON(message: SimpleWithMap): unknown {
+    const obj: any = {};
+    obj.nameLookup = {};
+    if (message.nameLookup) {
+      Object.entries(message.nameLookup).forEach(([k, v]) => {
+        obj.nameLookup[k] = v;
+      });
+    }
+    obj.intLookup = {};
+    if (message.intLookup) {
+      Object.entries(message.intLookup).forEach(([k, v]) => {
+        obj.intLookup[k] = v;
+      });
+    }
+    return obj;
+  },
+
   fromPartial(object: DeepPartial<SimpleWithMap>): SimpleWithMap {
     const message = { ...baseSimpleWithMap } as SimpleWithMap;
     message.nameLookup = {};
@@ -278,23 +295,6 @@ export const SimpleWithMap = {
       });
     }
     return message;
-  },
-
-  toJSON(message: SimpleWithMap): unknown {
-    const obj: any = {};
-    obj.nameLookup = {};
-    if (message.nameLookup) {
-      Object.entries(message.nameLookup).forEach(([k, v]) => {
-        obj.nameLookup[k] = v;
-      });
-    }
-    obj.intLookup = {};
-    if (message.intLookup) {
-      Object.entries(message.intLookup).forEach(([k, v]) => {
-        obj.intLookup[k] = v;
-      });
-    }
-    return obj;
   },
 };
 
@@ -347,6 +347,13 @@ export const SimpleWithMap_NameLookupEntry = {
     return message;
   },
 
+  toJSON(message: SimpleWithMap_NameLookupEntry): unknown {
+    const obj: any = {};
+    message.key !== undefined && (obj.key = message.key);
+    message.value !== undefined && (obj.value = message.value);
+    return obj;
+  },
+
   fromPartial(object: DeepPartial<SimpleWithMap_NameLookupEntry>): SimpleWithMap_NameLookupEntry {
     const message = { ...baseSimpleWithMap_NameLookupEntry } as SimpleWithMap_NameLookupEntry;
     if (object.key !== undefined && object.key !== null) {
@@ -360,13 +367,6 @@ export const SimpleWithMap_NameLookupEntry = {
       message.value = '';
     }
     return message;
-  },
-
-  toJSON(message: SimpleWithMap_NameLookupEntry): unknown {
-    const obj: any = {};
-    message.key !== undefined && (obj.key = message.key);
-    message.value !== undefined && (obj.value = message.value);
-    return obj;
   },
 };
 
@@ -419,6 +419,13 @@ export const SimpleWithMap_IntLookupEntry = {
     return message;
   },
 
+  toJSON(message: SimpleWithMap_IntLookupEntry): unknown {
+    const obj: any = {};
+    message.key !== undefined && (obj.key = message.key);
+    message.value !== undefined && (obj.value = message.value);
+    return obj;
+  },
+
   fromPartial(object: DeepPartial<SimpleWithMap_IntLookupEntry>): SimpleWithMap_IntLookupEntry {
     const message = { ...baseSimpleWithMap_IntLookupEntry } as SimpleWithMap_IntLookupEntry;
     if (object.key !== undefined && object.key !== null) {
@@ -432,13 +439,6 @@ export const SimpleWithMap_IntLookupEntry = {
       message.value = 0;
     }
     return message;
-  },
-
-  toJSON(message: SimpleWithMap_IntLookupEntry): unknown {
-    const obj: any = {};
-    message.key !== undefined && (obj.key = message.key);
-    message.value !== undefined && (obj.value = message.value);
-    return obj;
   },
 };
 
@@ -637,6 +637,28 @@ export const Numbers = {
     return message;
   },
 
+  toJSON(message: Numbers): unknown {
+    const obj: any = {};
+    message.double !== undefined && (obj.double = message.double);
+    message.float !== undefined && (obj.float = message.float);
+    message.int32 !== undefined && (obj.int32 = message.int32);
+    message.int64 !== undefined && (obj.int64 = (message.int64 || Long.ZERO).toString());
+    message.uint32 !== undefined && (obj.uint32 = message.uint32);
+    message.uint64 !== undefined && (obj.uint64 = (message.uint64 || Long.UZERO).toString());
+    message.sint32 !== undefined && (obj.sint32 = message.sint32);
+    message.sint64 !== undefined && (obj.sint64 = (message.sint64 || Long.ZERO).toString());
+    message.fixed32 !== undefined && (obj.fixed32 = message.fixed32);
+    message.fixed64 !== undefined && (obj.fixed64 = (message.fixed64 || Long.UZERO).toString());
+    message.sfixed32 !== undefined && (obj.sfixed32 = message.sfixed32);
+    message.sfixed64 !== undefined && (obj.sfixed64 = (message.sfixed64 || Long.ZERO).toString());
+    if (message.manyUint64) {
+      obj.manyUint64 = message.manyUint64.map((e) => (e || Long.UZERO).toString());
+    } else {
+      obj.manyUint64 = [];
+    }
+    return obj;
+  },
+
   fromPartial(object: DeepPartial<Numbers>): Numbers {
     const message = { ...baseNumbers } as Numbers;
     message.manyUint64 = [];
@@ -706,28 +728,6 @@ export const Numbers = {
       }
     }
     return message;
-  },
-
-  toJSON(message: Numbers): unknown {
-    const obj: any = {};
-    message.double !== undefined && (obj.double = message.double);
-    message.float !== undefined && (obj.float = message.float);
-    message.int32 !== undefined && (obj.int32 = message.int32);
-    message.int64 !== undefined && (obj.int64 = (message.int64 || Long.ZERO).toString());
-    message.uint32 !== undefined && (obj.uint32 = message.uint32);
-    message.uint64 !== undefined && (obj.uint64 = (message.uint64 || Long.UZERO).toString());
-    message.sint32 !== undefined && (obj.sint32 = message.sint32);
-    message.sint64 !== undefined && (obj.sint64 = (message.sint64 || Long.ZERO).toString());
-    message.fixed32 !== undefined && (obj.fixed32 = message.fixed32);
-    message.fixed64 !== undefined && (obj.fixed64 = (message.fixed64 || Long.UZERO).toString());
-    message.sfixed32 !== undefined && (obj.sfixed32 = message.sfixed32);
-    message.sfixed64 !== undefined && (obj.sfixed64 = (message.sfixed64 || Long.ZERO).toString());
-    if (message.manyUint64) {
-      obj.manyUint64 = message.manyUint64.map((e) => (e || Long.UZERO).toString());
-    } else {
-      obj.manyUint64 = [];
-    }
-    return obj;
   },
 };
 

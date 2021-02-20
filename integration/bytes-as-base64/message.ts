@@ -16,6 +16,13 @@ export const Message = {
     return message;
   },
 
+  toJSON(message: Message): unknown {
+    const obj: any = {};
+    message.data !== undefined &&
+      (obj.data = base64FromBytes(message.data !== undefined ? message.data : new Uint8Array()));
+    return obj;
+  },
+
   fromPartial(object: DeepPartial<Message>): Message {
     const message = { ...baseMessage } as Message;
     if (object.data !== undefined && object.data !== null) {
@@ -24,13 +31,6 @@ export const Message = {
       message.data = new Uint8Array();
     }
     return message;
-  },
-
-  toJSON(message: Message): unknown {
-    const obj: any = {};
-    message.data !== undefined &&
-      (obj.data = base64FromBytes(message.data !== undefined ? message.data : new Uint8Array()));
-    return obj;
   },
 };
 

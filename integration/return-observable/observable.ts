@@ -50,6 +50,12 @@ export const ProduceRequest = {
     return message;
   },
 
+  toJSON(message: ProduceRequest): unknown {
+    const obj: any = {};
+    message.ingredients !== undefined && (obj.ingredients = message.ingredients);
+    return obj;
+  },
+
   fromPartial(object: DeepPartial<ProduceRequest>): ProduceRequest {
     const message = { ...baseProduceRequest } as ProduceRequest;
     if (object.ingredients !== undefined && object.ingredients !== null) {
@@ -58,12 +64,6 @@ export const ProduceRequest = {
       message.ingredients = '';
     }
     return message;
-  },
-
-  toJSON(message: ProduceRequest): unknown {
-    const obj: any = {};
-    message.ingredients !== undefined && (obj.ingredients = message.ingredients);
-    return obj;
   },
 };
 
@@ -105,6 +105,12 @@ export const ProduceReply = {
     return message;
   },
 
+  toJSON(message: ProduceReply): unknown {
+    const obj: any = {};
+    message.result !== undefined && (obj.result = message.result);
+    return obj;
+  },
+
   fromPartial(object: DeepPartial<ProduceReply>): ProduceReply {
     const message = { ...baseProduceReply } as ProduceReply;
     if (object.result !== undefined && object.result !== null) {
@@ -113,12 +119,6 @@ export const ProduceReply = {
       message.result = '';
     }
     return message;
-  },
-
-  toJSON(message: ProduceReply): unknown {
-    const obj: any = {};
-    message.result !== undefined && (obj.result = message.result);
-    return obj;
   },
 };
 

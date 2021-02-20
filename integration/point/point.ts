@@ -62,6 +62,13 @@ export const Point = {
     return message;
   },
 
+  toJSON(message: Point): unknown {
+    const obj: any = {};
+    message.lat !== undefined && (obj.lat = message.lat);
+    message.lng !== undefined && (obj.lng = message.lng);
+    return obj;
+  },
+
   fromPartial(object: DeepPartial<Point>): Point {
     const message = { ...basePoint } as Point;
     if (object.lat !== undefined && object.lat !== null) {
@@ -75,13 +82,6 @@ export const Point = {
       message.lng = 0;
     }
     return message;
-  },
-
-  toJSON(message: Point): unknown {
-    const obj: any = {};
-    message.lat !== undefined && (obj.lat = message.lat);
-    message.lng !== undefined && (obj.lng = message.lng);
-    return obj;
   },
 };
 
@@ -134,6 +134,13 @@ export const Area = {
     return message;
   },
 
+  toJSON(message: Area): unknown {
+    const obj: any = {};
+    message.nw !== undefined && (obj.nw = message.nw ? Point.toJSON(message.nw) : undefined);
+    message.se !== undefined && (obj.se = message.se ? Point.toJSON(message.se) : undefined);
+    return obj;
+  },
+
   fromPartial(object: DeepPartial<Area>): Area {
     const message = { ...baseArea } as Area;
     if (object.nw !== undefined && object.nw !== null) {
@@ -147,13 +154,6 @@ export const Area = {
       message.se = undefined;
     }
     return message;
-  },
-
-  toJSON(message: Area): unknown {
-    const obj: any = {};
-    message.nw !== undefined && (obj.nw = message.nw ? Point.toJSON(message.nw) : undefined);
-    message.se !== undefined && (obj.se = message.se ? Point.toJSON(message.se) : undefined);
-    return obj;
   },
 };
 

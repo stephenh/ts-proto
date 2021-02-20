@@ -45,6 +45,12 @@ export const SimpleMessage = {
     return message;
   },
 
+  toJSON(message: SimpleMessage): unknown {
+    const obj: any = {};
+    message.numberField !== undefined && (obj.numberField = message.numberField);
+    return obj;
+  },
+
   fromPartial(object: DeepPartial<SimpleMessage>): SimpleMessage {
     const message = { ...baseSimpleMessage } as SimpleMessage;
     if (object.numberField !== undefined && object.numberField !== null) {
@@ -53,12 +59,6 @@ export const SimpleMessage = {
       message.numberField = 0;
     }
     return message;
-  },
-
-  toJSON(message: SimpleMessage): unknown {
-    const obj: any = {};
-    message.numberField !== undefined && (obj.numberField = message.numberField);
-    return obj;
   },
 };
 

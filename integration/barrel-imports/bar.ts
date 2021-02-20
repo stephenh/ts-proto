@@ -55,6 +55,13 @@ export const Bar = {
     return message;
   },
 
+  toJSON(message: Bar): unknown {
+    const obj: any = {};
+    message.name !== undefined && (obj.name = message.name);
+    message.age !== undefined && (obj.age = message.age);
+    return obj;
+  },
+
   fromPartial(object: DeepPartial<Bar>): Bar {
     const message = { ...baseBar } as Bar;
     if (object.name !== undefined && object.name !== null) {
@@ -68,13 +75,6 @@ export const Bar = {
       message.age = 0;
     }
     return message;
-  },
-
-  toJSON(message: Bar): unknown {
-    const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
-    message.age !== undefined && (obj.age = message.age);
-    return obj;
   },
 };
 

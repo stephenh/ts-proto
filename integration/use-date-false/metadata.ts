@@ -46,6 +46,13 @@ export const Metadata = {
     return message;
   },
 
+  toJSON(message: Metadata): unknown {
+    const obj: any = {};
+    message.lastEdited !== undefined &&
+      (obj.lastEdited = message.lastEdited !== undefined ? fromTimestamp(message.lastEdited).toISOString() : null);
+    return obj;
+  },
+
   fromPartial(object: DeepPartial<Metadata>): Metadata {
     const message = { ...baseMetadata } as Metadata;
     if (object.lastEdited !== undefined && object.lastEdited !== null) {
@@ -54,13 +61,6 @@ export const Metadata = {
       message.lastEdited = undefined;
     }
     return message;
-  },
-
-  toJSON(message: Metadata): unknown {
-    const obj: any = {};
-    message.lastEdited !== undefined &&
-      (obj.lastEdited = message.lastEdited !== undefined ? fromTimestamp(message.lastEdited).toISOString() : null);
-    return obj;
   },
 };
 

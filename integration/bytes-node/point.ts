@@ -43,6 +43,13 @@ export const Point = {
     return message;
   },
 
+  toJSON(message: Point): unknown {
+    const obj: any = {};
+    message.data !== undefined &&
+      (obj.data = base64FromBytes(message.data !== undefined ? message.data : new Buffer(0)));
+    return obj;
+  },
+
   fromPartial(object: DeepPartial<Point>): Point {
     const message = { ...basePoint } as Point;
     if (object.data !== undefined && object.data !== null) {
@@ -51,13 +58,6 @@ export const Point = {
       message.data = new Buffer(0);
     }
     return message;
-  },
-
-  toJSON(message: Point): unknown {
-    const obj: any = {};
-    message.data !== undefined &&
-      (obj.data = base64FromBytes(message.data !== undefined ? message.data : new Buffer(0)));
-    return obj;
   },
 };
 

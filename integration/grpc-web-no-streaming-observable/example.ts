@@ -119,6 +119,13 @@ export const DashFlash = {
     return message;
   },
 
+  toJSON(message: DashFlash): unknown {
+    const obj: any = {};
+    message.msg !== undefined && (obj.msg = message.msg);
+    message.type !== undefined && (obj.type = dashFlash_TypeToJSON(message.type));
+    return obj;
+  },
+
   fromPartial(object: DeepPartial<DashFlash>): DashFlash {
     const message = { ...baseDashFlash } as DashFlash;
     if (object.msg !== undefined && object.msg !== null) {
@@ -132,13 +139,6 @@ export const DashFlash = {
       message.type = 0;
     }
     return message;
-  },
-
-  toJSON(message: DashFlash): unknown {
-    const obj: any = {};
-    message.msg !== undefined && (obj.msg = message.msg);
-    message.type !== undefined && (obj.type = dashFlash_TypeToJSON(message.type));
-    return obj;
   },
 };
 
@@ -204,6 +204,19 @@ export const DashUserSettingsState = {
     return message;
   },
 
+  toJSON(message: DashUserSettingsState): unknown {
+    const obj: any = {};
+    message.email !== undefined && (obj.email = message.email);
+    message.urls !== undefined &&
+      (obj.urls = message.urls ? DashUserSettingsState_URLs.toJSON(message.urls) : undefined);
+    if (message.flashes) {
+      obj.flashes = message.flashes.map((e) => (e ? DashFlash.toJSON(e) : undefined));
+    } else {
+      obj.flashes = [];
+    }
+    return obj;
+  },
+
   fromPartial(object: DeepPartial<DashUserSettingsState>): DashUserSettingsState {
     const message = { ...baseDashUserSettingsState } as DashUserSettingsState;
     message.flashes = [];
@@ -223,19 +236,6 @@ export const DashUserSettingsState = {
       }
     }
     return message;
-  },
-
-  toJSON(message: DashUserSettingsState): unknown {
-    const obj: any = {};
-    message.email !== undefined && (obj.email = message.email);
-    message.urls !== undefined &&
-      (obj.urls = message.urls ? DashUserSettingsState_URLs.toJSON(message.urls) : undefined);
-    if (message.flashes) {
-      obj.flashes = message.flashes.map((e) => (e ? DashFlash.toJSON(e) : undefined));
-    } else {
-      obj.flashes = [];
-    }
-    return obj;
   },
 };
 
@@ -288,6 +288,13 @@ export const DashUserSettingsState_URLs = {
     return message;
   },
 
+  toJSON(message: DashUserSettingsState_URLs): unknown {
+    const obj: any = {};
+    message.connectGoogle !== undefined && (obj.connectGoogle = message.connectGoogle);
+    message.connectGithub !== undefined && (obj.connectGithub = message.connectGithub);
+    return obj;
+  },
+
   fromPartial(object: DeepPartial<DashUserSettingsState_URLs>): DashUserSettingsState_URLs {
     const message = { ...baseDashUserSettingsState_URLs } as DashUserSettingsState_URLs;
     if (object.connectGoogle !== undefined && object.connectGoogle !== null) {
@@ -301,13 +308,6 @@ export const DashUserSettingsState_URLs = {
       message.connectGithub = '';
     }
     return message;
-  },
-
-  toJSON(message: DashUserSettingsState_URLs): unknown {
-    const obj: any = {};
-    message.connectGoogle !== undefined && (obj.connectGoogle = message.connectGoogle);
-    message.connectGithub !== undefined && (obj.connectGithub = message.connectGithub);
-    return obj;
   },
 };
 
@@ -338,14 +338,14 @@ export const Empty = {
     return message;
   },
 
-  fromPartial(_: DeepPartial<Empty>): Empty {
-    const message = { ...baseEmpty } as Empty;
-    return message;
-  },
-
   toJSON(_: Empty): unknown {
     const obj: any = {};
     return obj;
+  },
+
+  fromPartial(_: DeepPartial<Empty>): Empty {
+    const message = { ...baseEmpty } as Empty;
+    return message;
   },
 };
 

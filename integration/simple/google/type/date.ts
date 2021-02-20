@@ -94,6 +94,14 @@ export const DateMessage = {
     return message;
   },
 
+  toJSON(message: DateMessage): unknown {
+    const obj: any = {};
+    message.year !== undefined && (obj.year = message.year);
+    message.month !== undefined && (obj.month = message.month);
+    message.day !== undefined && (obj.day = message.day);
+    return obj;
+  },
+
   fromPartial(object: DeepPartial<DateMessage>): DateMessage {
     const message = { ...baseDateMessage } as DateMessage;
     if (object.year !== undefined && object.year !== null) {
@@ -112,14 +120,6 @@ export const DateMessage = {
       message.day = 0;
     }
     return message;
-  },
-
-  toJSON(message: DateMessage): unknown {
-    const obj: any = {};
-    message.year !== undefined && (obj.year = message.year);
-    message.month !== undefined && (obj.month = message.month);
-    message.day !== undefined && (obj.day = message.day);
-    return obj;
   },
 };
 

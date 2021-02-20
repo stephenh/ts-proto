@@ -132,6 +132,12 @@ export const DoubleValue = {
     return message;
   },
 
+  toJSON(message: DoubleValue): unknown {
+    const obj: any = {};
+    message.value !== undefined && (obj.value = message.value);
+    return obj;
+  },
+
   fromPartial(object: DeepPartial<DoubleValue>): DoubleValue {
     const message = { ...baseDoubleValue } as DoubleValue;
     if (object.value !== undefined && object.value !== null) {
@@ -140,12 +146,6 @@ export const DoubleValue = {
       message.value = 0;
     }
     return message;
-  },
-
-  toJSON(message: DoubleValue): unknown {
-    const obj: any = {};
-    message.value !== undefined && (obj.value = message.value);
-    return obj;
   },
 };
 
@@ -187,6 +187,12 @@ export const FloatValue = {
     return message;
   },
 
+  toJSON(message: FloatValue): unknown {
+    const obj: any = {};
+    message.value !== undefined && (obj.value = message.value);
+    return obj;
+  },
+
   fromPartial(object: DeepPartial<FloatValue>): FloatValue {
     const message = { ...baseFloatValue } as FloatValue;
     if (object.value !== undefined && object.value !== null) {
@@ -195,12 +201,6 @@ export const FloatValue = {
       message.value = 0;
     }
     return message;
-  },
-
-  toJSON(message: FloatValue): unknown {
-    const obj: any = {};
-    message.value !== undefined && (obj.value = message.value);
-    return obj;
   },
 };
 
@@ -242,6 +242,12 @@ export const Int64Value = {
     return message;
   },
 
+  toJSON(message: Int64Value): unknown {
+    const obj: any = {};
+    message.value !== undefined && (obj.value = message.value);
+    return obj;
+  },
+
   fromPartial(object: DeepPartial<Int64Value>): Int64Value {
     const message = { ...baseInt64Value } as Int64Value;
     if (object.value !== undefined && object.value !== null) {
@@ -250,12 +256,6 @@ export const Int64Value = {
       message.value = '0';
     }
     return message;
-  },
-
-  toJSON(message: Int64Value): unknown {
-    const obj: any = {};
-    message.value !== undefined && (obj.value = message.value);
-    return obj;
   },
 };
 
@@ -297,6 +297,12 @@ export const UInt64Value = {
     return message;
   },
 
+  toJSON(message: UInt64Value): unknown {
+    const obj: any = {};
+    message.value !== undefined && (obj.value = message.value);
+    return obj;
+  },
+
   fromPartial(object: DeepPartial<UInt64Value>): UInt64Value {
     const message = { ...baseUInt64Value } as UInt64Value;
     if (object.value !== undefined && object.value !== null) {
@@ -305,12 +311,6 @@ export const UInt64Value = {
       message.value = '0';
     }
     return message;
-  },
-
-  toJSON(message: UInt64Value): unknown {
-    const obj: any = {};
-    message.value !== undefined && (obj.value = message.value);
-    return obj;
   },
 };
 
@@ -352,6 +352,12 @@ export const Int32Value = {
     return message;
   },
 
+  toJSON(message: Int32Value): unknown {
+    const obj: any = {};
+    message.value !== undefined && (obj.value = message.value);
+    return obj;
+  },
+
   fromPartial(object: DeepPartial<Int32Value>): Int32Value {
     const message = { ...baseInt32Value } as Int32Value;
     if (object.value !== undefined && object.value !== null) {
@@ -360,12 +366,6 @@ export const Int32Value = {
       message.value = 0;
     }
     return message;
-  },
-
-  toJSON(message: Int32Value): unknown {
-    const obj: any = {};
-    message.value !== undefined && (obj.value = message.value);
-    return obj;
   },
 };
 
@@ -407,6 +407,12 @@ export const UInt32Value = {
     return message;
   },
 
+  toJSON(message: UInt32Value): unknown {
+    const obj: any = {};
+    message.value !== undefined && (obj.value = message.value);
+    return obj;
+  },
+
   fromPartial(object: DeepPartial<UInt32Value>): UInt32Value {
     const message = { ...baseUInt32Value } as UInt32Value;
     if (object.value !== undefined && object.value !== null) {
@@ -415,12 +421,6 @@ export const UInt32Value = {
       message.value = 0;
     }
     return message;
-  },
-
-  toJSON(message: UInt32Value): unknown {
-    const obj: any = {};
-    message.value !== undefined && (obj.value = message.value);
-    return obj;
   },
 };
 
@@ -462,6 +462,12 @@ export const BoolValue = {
     return message;
   },
 
+  toJSON(message: BoolValue): unknown {
+    const obj: any = {};
+    message.value !== undefined && (obj.value = message.value);
+    return obj;
+  },
+
   fromPartial(object: DeepPartial<BoolValue>): BoolValue {
     const message = { ...baseBoolValue } as BoolValue;
     if (object.value !== undefined && object.value !== null) {
@@ -470,12 +476,6 @@ export const BoolValue = {
       message.value = false;
     }
     return message;
-  },
-
-  toJSON(message: BoolValue): unknown {
-    const obj: any = {};
-    message.value !== undefined && (obj.value = message.value);
-    return obj;
   },
 };
 
@@ -517,6 +517,12 @@ export const StringValue = {
     return message;
   },
 
+  toJSON(message: StringValue): unknown {
+    const obj: any = {};
+    message.value !== undefined && (obj.value = message.value);
+    return obj;
+  },
+
   fromPartial(object: DeepPartial<StringValue>): StringValue {
     const message = { ...baseStringValue } as StringValue;
     if (object.value !== undefined && object.value !== null) {
@@ -525,12 +531,6 @@ export const StringValue = {
       message.value = '';
     }
     return message;
-  },
-
-  toJSON(message: StringValue): unknown {
-    const obj: any = {};
-    message.value !== undefined && (obj.value = message.value);
-    return obj;
   },
 };
 
@@ -570,6 +570,13 @@ export const BytesValue = {
     return message;
   },
 
+  toJSON(message: BytesValue): unknown {
+    const obj: any = {};
+    message.value !== undefined &&
+      (obj.value = base64FromBytes(message.value !== undefined ? message.value : new Uint8Array()));
+    return obj;
+  },
+
   fromPartial(object: DeepPartial<BytesValue>): BytesValue {
     const message = { ...baseBytesValue } as BytesValue;
     if (object.value !== undefined && object.value !== null) {
@@ -578,13 +585,6 @@ export const BytesValue = {
       message.value = new Uint8Array();
     }
     return message;
-  },
-
-  toJSON(message: BytesValue): unknown {
-    const obj: any = {};
-    message.value !== undefined &&
-      (obj.value = base64FromBytes(message.value !== undefined ? message.value : new Uint8Array()));
-    return obj;
   },
 };
 
