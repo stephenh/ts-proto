@@ -1,6 +1,9 @@
 
-
 ## Next
+
+* Add `outputPartialMethods`. See #207. (mharsat) 
+
+## v1.66.0
 
 * Allow `returnObservable=true` when not using grpc-web. See #220. (ardyfeb)
 * Fix `useDate=false` in encoding/JSON methods. See #211. (willclarktech)
