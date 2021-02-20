@@ -3,6 +3,7 @@
 ## Next
 
 * Allow `returnObservable=true` when not using grpc-web. See #220. (ardyfeb)
+* Fix `useDate=false` in encoding/JSON methods. See #211. (willclarktech)
 
 ## v1.65.0
 
