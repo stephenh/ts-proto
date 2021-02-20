@@ -400,7 +400,8 @@ function makeTimestampMethods(options: Options, longs: ReturnType<typeof makeLon
 
   const fromJsonTimestamp = conditionalOutput(
     'fromJsonTimestamp',
-    code`
+    options.useDate
+      ? code`
       function fromJsonTimestamp(o: any): Date {
         if (o instanceof Date) {
           return o;
@@ -408,6 +409,17 @@ function makeTimestampMethods(options: Options, longs: ReturnType<typeof makeLon
           return new Date(o);
         } else {
           return ${fromTimestamp}(Timestamp.fromJSON(o));
+        }
+      }
+    `
+      : code`
+      function fromJsonTimestamp(o: any): Timestamp {
+        if (o instanceof Date) {
+          return ${toTimestamp}(o);
+        } else if (typeof o === "string") {
+          return ${toTimestamp}(new Date(o));
+        } else {
+          return Timestamp.fromJSON(o);
         }
       }
     `
@@ -572,7 +584,7 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
     } else if (isValueType(ctx, field)) {
       const type = basicTypeName(ctx, field, { keepValueType: true });
       readSnippet = code`${type}.decode(reader, reader.uint32()).value`;
-    } else if (isTimestamp(field)) {
+    } else if (isTimestamp(field) && options.useDate) {
       const type = basicTypeName(ctx, field, { keepValueType: true });
       readSnippet = code`${utils.fromTimestamp}(${type}.decode(reader, reader.uint32()))`;
     } else if (isMessage(field)) {
@@ -656,7 +668,7 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
     if (isScalar(field) || isEnum(field)) {
       const tag = ((field.number << 3) | basicWireType(field.type)) >>> 0;
       writeSnippet = (place) => code`writer.uint32(${tag}).${toReaderCall(field)}(${place})`;
-    } else if (isTimestamp(field)) {
+    } else if (isTimestamp(field) && options.useDate) {
       const tag = ((field.number << 3) | 2) >>> 0;
       const type = basicTypeName(ctx, field, { keepValueType: true });
       writeSnippet = (place) =>
@@ -887,7 +899,9 @@ function generateToJson(ctx: Context, fullName: string, messageDesc: DescriptorP
           ? code`${from} !== undefined ? ${toJson}(${from}) : undefined`
           : code`${toJson}(${from})`;
       } else if (isTimestamp(field)) {
-        return code`${from} !== undefined ? ${from}.toISOString() : null`;
+        return options.useDate
+          ? code`${from} !== undefined ? ${from}.toISOString() : null`
+          : code`${from} !== undefined ? ${utils.fromTimestamp}(${from}).toISOString() : null`;
       } else if (isMapType(ctx, messageDesc, field)) {
         // For map types, drill-in and then admittedly re-hard-code our per-value-type logic
         const valueType = (typeMap.get(field.typeName)![2] as DescriptorProto).field[1];
@@ -897,7 +911,7 @@ function generateToJson(ctx: Context, fullName: string, messageDesc: DescriptorP
         } else if (isBytes(valueType)) {
           return code`${utils.base64FromBytes}(${from})`;
         } else if (isTimestamp(valueType)) {
-          return code`${from}.toISOString()`;
+          return options.useDate ? code`${from}.toISOString()` : code`${utils.fromTimestamp}(${from}).toISOString()`;
         } else if (isScalar(valueType)) {
           return code`${from}`;
         } else {
@@ -978,7 +992,9 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
     const fieldName = maybeSnakeToCamel(field.name, options);
 
     const readSnippet = (from: string): Code => {
-      if (isPrimitive(field) || isTimestamp(field) || isValueType(ctx, field)) {
+      if (isPrimitive(field) || isValueType(ctx, field)) {
+        return code`${from}`;
+      } else if (isTimestamp(field) && options.useDate) {
         return code`${from}`;
       } else if (isMessage(field)) {
         if (isRepeated(field) && isMapType(ctx, messageDesc, field)) {
@@ -992,7 +1008,7 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
               const cstr = capitalize(basicTypeName(ctx, valueType).toCodeString());
               return code`${cstr}(${from})`;
             }
-          } else if (isTimestamp(valueType)) {
+          } else if (isTimestamp(valueType) && options.useDate) {
             return code`${from}`;
           } else {
             const type = basicTypeName(ctx, valueType);
@@ -1015,7 +1031,7 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
         chunks.push(code`
           Object.entries(object.${fieldName}).forEach(([key, value]) => {
             if (value !== undefined) {
-              message.${fieldName}[${i}] = ${readSnippet('value')}; 
+              message.${fieldName}[${i}] = ${readSnippet('value')};
             }
           });
         `);
