@@ -1,5 +1,5 @@
 
-## Next
+## v1.67.0
 
 * Add `outputPartialMethods`. See #207. (mharsat) 
 
