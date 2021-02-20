@@ -4,6 +4,7 @@
 
 * Allow `returnObservable=true` when not using grpc-web. See #220. (ardyfeb)
 * Fix `useDate=false` in encoding/JSON methods. See #211. (willclarktech)
+* Revert back to object spread instead of `Object.create` for primitive default values. Fixes #218.
 
 ## v1.65.0
 
