@@ -1,5 +1,9 @@
 
 
+## Next
+
+* Allow `returnObservable=true` when not using grpc-web. See #220. (ardyfeb)
+
 ## v1.65.0
 
 * Fix `globalThis` compilation errors with messages called `Error` 
