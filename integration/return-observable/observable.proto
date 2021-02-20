@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+message ProduceRequest {
+  string ingredients = 1;
+}
+
+message ProduceReply {
+    string result = 1;
+}
+
+service Factory {
+    rpc Produce(ProduceRequest) returns (ProduceReply) {}
+}
