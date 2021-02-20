@@ -110,16 +110,28 @@ describe('simple', () => {
     const s1: ISimple = {};
     const s2 = Simple.decode(Reader.create(PbSimple.encode(PbSimple.fromObject(s1)).finish()));
     expect(s2.name).toEqual('');
-    expect(s2.hasOwnProperty('name')).toEqual(false);
+    expect(s2.hasOwnProperty('name')).toEqual(true);
     expect(s2.age).toEqual(0);
-    expect(s2.hasOwnProperty('age')).toEqual(false);
+    expect(s2.hasOwnProperty('age')).toEqual(true);
     expect(s2.state).toEqual(StateEnum.UNKNOWN);
-    expect(s2.hasOwnProperty('state')).toEqual(false);
+    expect(s2.hasOwnProperty('state')).toEqual(true);
     expect(s2.grandChildren).toEqual([]);
     expect(s2.hasOwnProperty('grandChildren')).toEqual(true);
     expect(s2.coins).toEqual([]);
     expect(s2.snacks).toEqual([]);
     expect(s2.oldStates).toEqual([]);
+    expect(Object.keys(s2)).toMatchInlineSnapshot(`
+      Array [
+        "name",
+        "age",
+        "state",
+        "coins",
+        "snacks",
+        "oldStates",
+        "grandChildren",
+        "blobs",
+      ]
+    `);
   });
 
   it('can encode inner types', () => {

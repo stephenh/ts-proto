@@ -74,7 +74,7 @@ export const SimpleWithWrappers = {
   decode(input: Reader | Uint8Array, length?: number): SimpleWithWrappers {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = globalThis.Object.create(baseSimpleWithWrappers) as SimpleWithWrappers;
+    const message = { ...baseSimpleWithWrappers } as SimpleWithWrappers;
     message.coins = [];
     message.snacks = [];
     while (reader.pos < end) {
@@ -107,7 +107,7 @@ export const SimpleWithWrappers = {
   },
 
   fromJSON(object: any): SimpleWithWrappers {
-    const message = globalThis.Object.create(baseSimpleWithWrappers) as SimpleWithWrappers;
+    const message = { ...baseSimpleWithWrappers } as SimpleWithWrappers;
     message.coins = [];
     message.snacks = [];
     if (object.name !== undefined && object.name !== null) {
@@ -216,7 +216,7 @@ export const SimpleWithMap = {
   decode(input: Reader | Uint8Array, length?: number): SimpleWithMap {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = globalThis.Object.create(baseSimpleWithMap) as SimpleWithMap;
+    const message = { ...baseSimpleWithMap } as SimpleWithMap;
     message.nameLookup = {};
     message.intLookup = {};
     while (reader.pos < end) {
@@ -243,7 +243,7 @@ export const SimpleWithMap = {
   },
 
   fromJSON(object: any): SimpleWithMap {
-    const message = globalThis.Object.create(baseSimpleWithMap) as SimpleWithMap;
+    const message = { ...baseSimpleWithMap } as SimpleWithMap;
     message.nameLookup = {};
     message.intLookup = {};
     if (object.nameLookup !== undefined && object.nameLookup !== null) {
@@ -314,7 +314,7 @@ export const SimpleWithMap_NameLookupEntry = {
   decode(input: Reader | Uint8Array, length?: number): SimpleWithMap_NameLookupEntry {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = globalThis.Object.create(baseSimpleWithMap_NameLookupEntry) as SimpleWithMap_NameLookupEntry;
+    const message = { ...baseSimpleWithMap_NameLookupEntry } as SimpleWithMap_NameLookupEntry;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -333,7 +333,7 @@ export const SimpleWithMap_NameLookupEntry = {
   },
 
   fromJSON(object: any): SimpleWithMap_NameLookupEntry {
-    const message = globalThis.Object.create(baseSimpleWithMap_NameLookupEntry) as SimpleWithMap_NameLookupEntry;
+    const message = { ...baseSimpleWithMap_NameLookupEntry } as SimpleWithMap_NameLookupEntry;
     if (object.key !== undefined && object.key !== null) {
       message.key = String(object.key);
     } else {
@@ -386,7 +386,7 @@ export const SimpleWithMap_IntLookupEntry = {
   decode(input: Reader | Uint8Array, length?: number): SimpleWithMap_IntLookupEntry {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = globalThis.Object.create(baseSimpleWithMap_IntLookupEntry) as SimpleWithMap_IntLookupEntry;
+    const message = { ...baseSimpleWithMap_IntLookupEntry } as SimpleWithMap_IntLookupEntry;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -405,7 +405,7 @@ export const SimpleWithMap_IntLookupEntry = {
   },
 
   fromJSON(object: any): SimpleWithMap_IntLookupEntry {
-    const message = globalThis.Object.create(baseSimpleWithMap_IntLookupEntry) as SimpleWithMap_IntLookupEntry;
+    const message = { ...baseSimpleWithMap_IntLookupEntry } as SimpleWithMap_IntLookupEntry;
     if (object.key !== undefined && object.key !== null) {
       message.key = Number(object.key);
     } else {
@@ -507,7 +507,7 @@ export const Numbers = {
   decode(input: Reader | Uint8Array, length?: number): Numbers {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = globalThis.Object.create(baseNumbers) as Numbers;
+    const message = { ...baseNumbers } as Numbers;
     message.manyUint64 = [];
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -567,7 +567,7 @@ export const Numbers = {
   },
 
   fromJSON(object: any): Numbers {
-    const message = globalThis.Object.create(baseNumbers) as Numbers;
+    const message = { ...baseNumbers } as Numbers;
     message.manyUint64 = [];
     if (object.double !== undefined && object.double !== null) {
       message.double = Number(object.double);
@@ -730,16 +730,6 @@ export const Numbers = {
     return obj;
   },
 };
-
-declare var self: any | undefined;
-declare var window: any | undefined;
-var globalThis: any = (() => {
-  if (typeof globalThis !== 'undefined') return globalThis;
-  if (typeof self !== 'undefined') return self;
-  if (typeof window !== 'undefined') return window;
-  if (typeof global !== 'undefined') return global;
-  throw 'Unable to locate global object';
-})();
 
 type Builtin = Date | Function | Uint8Array | string | number | undefined | Long;
 export type DeepPartial<T> = T extends Builtin

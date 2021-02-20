@@ -107,7 +107,7 @@ export const DoubleValue = {
   decode(input: Reader | Uint8Array, length?: number): DoubleValue {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = globalThis.Object.create(baseDoubleValue) as DoubleValue;
+    const message = { ...baseDoubleValue } as DoubleValue;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -123,7 +123,7 @@ export const DoubleValue = {
   },
 
   fromJSON(object: any): DoubleValue {
-    const message = globalThis.Object.create(baseDoubleValue) as DoubleValue;
+    const message = { ...baseDoubleValue } as DoubleValue;
     if (object.value !== undefined && object.value !== null) {
       message.value = Number(object.value);
     } else {
@@ -162,7 +162,7 @@ export const FloatValue = {
   decode(input: Reader | Uint8Array, length?: number): FloatValue {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = globalThis.Object.create(baseFloatValue) as FloatValue;
+    const message = { ...baseFloatValue } as FloatValue;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -178,7 +178,7 @@ export const FloatValue = {
   },
 
   fromJSON(object: any): FloatValue {
-    const message = globalThis.Object.create(baseFloatValue) as FloatValue;
+    const message = { ...baseFloatValue } as FloatValue;
     if (object.value !== undefined && object.value !== null) {
       message.value = Number(object.value);
     } else {
@@ -217,7 +217,7 @@ export const Int64Value = {
   decode(input: Reader | Uint8Array, length?: number): Int64Value {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = globalThis.Object.create(baseInt64Value) as Int64Value;
+    const message = { ...baseInt64Value } as Int64Value;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -233,7 +233,7 @@ export const Int64Value = {
   },
 
   fromJSON(object: any): Int64Value {
-    const message = globalThis.Object.create(baseInt64Value) as Int64Value;
+    const message = { ...baseInt64Value } as Int64Value;
     if (object.value !== undefined && object.value !== null) {
       message.value = Number(object.value);
     } else {
@@ -272,7 +272,7 @@ export const UInt64Value = {
   decode(input: Reader | Uint8Array, length?: number): UInt64Value {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = globalThis.Object.create(baseUInt64Value) as UInt64Value;
+    const message = { ...baseUInt64Value } as UInt64Value;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -288,7 +288,7 @@ export const UInt64Value = {
   },
 
   fromJSON(object: any): UInt64Value {
-    const message = globalThis.Object.create(baseUInt64Value) as UInt64Value;
+    const message = { ...baseUInt64Value } as UInt64Value;
     if (object.value !== undefined && object.value !== null) {
       message.value = Number(object.value);
     } else {
@@ -327,7 +327,7 @@ export const Int32Value = {
   decode(input: Reader | Uint8Array, length?: number): Int32Value {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = globalThis.Object.create(baseInt32Value) as Int32Value;
+    const message = { ...baseInt32Value } as Int32Value;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -343,7 +343,7 @@ export const Int32Value = {
   },
 
   fromJSON(object: any): Int32Value {
-    const message = globalThis.Object.create(baseInt32Value) as Int32Value;
+    const message = { ...baseInt32Value } as Int32Value;
     if (object.value !== undefined && object.value !== null) {
       message.value = Number(object.value);
     } else {
@@ -382,7 +382,7 @@ export const UInt32Value = {
   decode(input: Reader | Uint8Array, length?: number): UInt32Value {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = globalThis.Object.create(baseUInt32Value) as UInt32Value;
+    const message = { ...baseUInt32Value } as UInt32Value;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -398,7 +398,7 @@ export const UInt32Value = {
   },
 
   fromJSON(object: any): UInt32Value {
-    const message = globalThis.Object.create(baseUInt32Value) as UInt32Value;
+    const message = { ...baseUInt32Value } as UInt32Value;
     if (object.value !== undefined && object.value !== null) {
       message.value = Number(object.value);
     } else {
@@ -437,7 +437,7 @@ export const BoolValue = {
   decode(input: Reader | Uint8Array, length?: number): BoolValue {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = globalThis.Object.create(baseBoolValue) as BoolValue;
+    const message = { ...baseBoolValue } as BoolValue;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -453,7 +453,7 @@ export const BoolValue = {
   },
 
   fromJSON(object: any): BoolValue {
-    const message = globalThis.Object.create(baseBoolValue) as BoolValue;
+    const message = { ...baseBoolValue } as BoolValue;
     if (object.value !== undefined && object.value !== null) {
       message.value = Boolean(object.value);
     } else {
@@ -492,7 +492,7 @@ export const StringValue = {
   decode(input: Reader | Uint8Array, length?: number): StringValue {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = globalThis.Object.create(baseStringValue) as StringValue;
+    const message = { ...baseStringValue } as StringValue;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -508,7 +508,7 @@ export const StringValue = {
   },
 
   fromJSON(object: any): StringValue {
-    const message = globalThis.Object.create(baseStringValue) as StringValue;
+    const message = { ...baseStringValue } as StringValue;
     if (object.value !== undefined && object.value !== null) {
       message.value = String(object.value);
     } else {
@@ -547,7 +547,7 @@ export const BytesValue = {
   decode(input: Reader | Uint8Array, length?: number): BytesValue {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = globalThis.Object.create(baseBytesValue) as BytesValue;
+    const message = { ...baseBytesValue } as BytesValue;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -563,7 +563,7 @@ export const BytesValue = {
   },
 
   fromJSON(object: any): BytesValue {
-    const message = globalThis.Object.create(baseBytesValue) as BytesValue;
+    const message = { ...baseBytesValue } as BytesValue;
     if (object.value !== undefined && object.value !== null) {
       message.value = bytesFromBase64(object.value);
     }

@@ -23,7 +23,7 @@ export const Foo = {
   decode(input: Reader | Uint8Array, length?: number): Foo {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = globalThis.Object.create(baseFoo) as Foo;
+    const message = { ...baseFoo } as Foo;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -42,7 +42,7 @@ export const Foo = {
   },
 
   fromJSON(object: any): Foo {
-    const message = globalThis.Object.create(baseFoo) as Foo;
+    const message = { ...baseFoo } as Foo;
     if (object.name !== undefined && object.name !== null) {
       message.name = String(object.name);
     } else {
@@ -78,16 +78,6 @@ export const Foo = {
     return obj;
   },
 };
-
-declare var self: any | undefined;
-declare var window: any | undefined;
-var globalThis: any = (() => {
-  if (typeof globalThis !== 'undefined') return globalThis;
-  if (typeof self !== 'undefined') return self;
-  if (typeof window !== 'undefined') return window;
-  if (typeof global !== 'undefined') return global;
-  throw 'Unable to locate global object';
-})();
 
 type Builtin = Date | Function | Uint8Array | string | number | undefined;
 type DeepPartial<T> = T extends Builtin

@@ -120,7 +120,7 @@ export const Timestamp = {
   decode(input: Reader | Uint8Array, length?: number): Timestamp {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = globalThis.Object.create(baseTimestamp) as Timestamp;
+    const message = { ...baseTimestamp } as Timestamp;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -139,7 +139,7 @@ export const Timestamp = {
   },
 
   fromJSON(object: any): Timestamp {
-    const message = globalThis.Object.create(baseTimestamp) as Timestamp;
+    const message = { ...baseTimestamp } as Timestamp;
     if (object.seconds !== undefined && object.seconds !== null) {
       message.seconds = Number(object.seconds);
     } else {

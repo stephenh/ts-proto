@@ -24,7 +24,7 @@ export const Object = {
   decode(input: Reader | Uint8Array, length?: number): Object {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = globalThis.Object.create(baseObject) as Object;
+    const message = { ...baseObject } as Object;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -40,7 +40,7 @@ export const Object = {
   },
 
   fromJSON(object: any): Object {
-    const message = globalThis.Object.create(baseObject) as Object;
+    const message = { ...baseObject } as Object;
     if (object.name !== undefined && object.name !== null) {
       message.name = String(object.name);
     } else {
@@ -79,7 +79,7 @@ export const Error = {
   decode(input: Reader | Uint8Array, length?: number): Error {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = globalThis.Object.create(baseError) as Error;
+    const message = { ...baseError } as Error;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -95,7 +95,7 @@ export const Error = {
   },
 
   fromJSON(object: any): Error {
-    const message = globalThis.Object.create(baseError) as Error;
+    const message = { ...baseError } as Error;
     if (object.name !== undefined && object.name !== null) {
       message.name = String(object.name);
     } else {
@@ -120,16 +120,6 @@ export const Error = {
     return obj;
   },
 };
-
-declare var self: any | undefined;
-declare var window: any | undefined;
-var globalThis: any = (() => {
-  if (typeof globalThis !== 'undefined') return globalThis;
-  if (typeof self !== 'undefined') return self;
-  if (typeof window !== 'undefined') return window;
-  if (typeof global !== 'undefined') return global;
-  throw 'Unable to locate global object';
-})();
 
 type Builtin = Date | Function | Uint8Array | string | number | undefined;
 export type DeepPartial<T> = T extends Builtin
