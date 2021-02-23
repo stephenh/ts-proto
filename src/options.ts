@@ -69,6 +69,19 @@ export function optionsFromParameter(parameter: string): Options {
   const options = defaultOptions();
 
   if (parameter) {
+    // Check nestJs because it changes some defaults that the user can still override
+    if (parameter.includes('nestJs=true')) {
+      options.nestJs = true;
+      options.lowerCaseServiceMethods = true;
+      options.outputEncodeMethods = false;
+      options.outputJsonMethods = false;
+      options.outputPartialMethods = false;
+      options.outputClientImpl = false;
+      options.useDate = false;
+      if (parameter.includes('addNestjsRestParameter=true')) {
+        options.addNestjsRestParameter = true;
+      }
+    }
     if (parameter.includes('context=true')) {
       options.useContext = true;
     }
@@ -126,22 +139,6 @@ export function optionsFromParameter(parameter: string): Options {
     }
     if (parameter.includes('exportCommonSymbols=false')) {
       options.exportCommonSymbols = false;
-    }
-
-    if (parameter.includes('nestJs=true')) {
-      options.nestJs = true;
-      options.lowerCaseServiceMethods = true;
-      options.outputEncodeMethods = false;
-      options.outputJsonMethods = false;
-      options.outputPartialMethods = false;
-      options.outputClientImpl = false;
-      options.useDate = false;
-      if (parameter.includes('addNestjsRestParameter=true')) {
-        options.addNestjsRestParameter = true;
-      }
-      if (parameter.includes('returnObservable=true')) {
-        options.returnObservable = true;
-      }
     }
 
     if (parameter.includes('env=node')) {
