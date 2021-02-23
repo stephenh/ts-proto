@@ -1,4 +1,8 @@
 
+## v1.68.0
+
+* Allow setting `outputJsonMethods=true` while using `nestJs=true`. Fixes #223.
+
 ## v1.67.0
 
 * Add `outputPartialMethods`. See #207. (mharsat) 
