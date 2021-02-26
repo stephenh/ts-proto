@@ -42,7 +42,7 @@ export function generateService(
   const chunks: Code[] = [];
 
   maybeAddComment(sourceInfo, chunks, serviceDesc.options?.deprecated);
-  const maybeTypeVar = options.useContext ? `<${contextTypeVar}>` : '';
+  const maybeTypeVar = options.context ? `<${contextTypeVar}>` : '';
   chunks.push(code`export interface ${serviceDesc.name}${maybeTypeVar} {`);
 
   serviceDesc.method.forEach((methodDesc, index) => {
@@ -52,7 +52,7 @@ export function generateService(
     maybeAddComment(info, chunks, methodDesc.options?.deprecated);
 
     const params: Code[] = [];
-    if (options.useContext) {
+    if (options.context) {
       params.push(code`ctx: Context`);
     }
 
@@ -86,7 +86,7 @@ export function generateService(
     chunks.push(code`${name}(${joinCode(params, { on: ',' })}): ${returnType};`);
 
     // If this is a batch method, auto-generate the singular version of it
-    if (options.useContext) {
+    if (options.context) {
       const batchMethod = detectBatchMethod(ctx, fileDesc, serviceDesc, methodDesc);
       if (batchMethod) {
         const name = batchMethod.methodDesc.name.replace('Batch', 'Get');
@@ -114,8 +114,8 @@ function generateRegularRpcMethod(
   const inputType = requestType(ctx, methodDesc);
   const outputType = responseType(ctx, methodDesc);
 
-  const params = [...(options.useContext ? [code`ctx: Context`] : []), code`request: ${inputType}`];
-  const maybeCtx = options.useContext ? 'ctx,' : '';
+  const params = [...(options.context ? [code`ctx: Context`] : []), code`request: ${inputType}`];
+  const maybeCtx = options.context ? 'ctx,' : '';
 
   return code`
     ${methodDesc.name}(
@@ -143,26 +143,26 @@ export function generateServiceClientImpl(
 
   // Define the FooServiceImpl class
   const { name } = serviceDesc;
-  const i = options.useContext ? `${name}<Context>` : name;
-  const t = options.useContext ? `<${contextTypeVar}>` : '';
+  const i = options.context ? `${name}<Context>` : name;
+  const t = options.context ? `<${contextTypeVar}>` : '';
   chunks.push(code`export class ${name}ClientImpl${t} implements ${i} {`);
 
   // Create the constructor(rpc: Rpc)
-  const rpcType = options.useContext ? 'Rpc<Context>' : 'Rpc';
+  const rpcType = options.context ? 'Rpc<Context>' : 'Rpc';
   chunks.push(code`private readonly rpc: ${rpcType};`);
   chunks.push(code`constructor(rpc: ${rpcType}) { this.rpc = rpc; }`);
 
   // Create a method for each FooService method
   for (const methodDesc of serviceDesc.method) {
     // See if this this fuzzy matches to a batchable method
-    if (options.useContext) {
+    if (options.context) {
       const batchMethod = detectBatchMethod(ctx, fileDesc, serviceDesc, methodDesc);
       if (batchMethod) {
         chunks.push(generateBatchingRpcMethod(ctx, batchMethod));
       }
     }
 
-    if (options.useContext && methodDesc.name.match(/^Get[A-Z]/)) {
+    if (options.context && methodDesc.name.match(/^Get[A-Z]/)) {
       chunks.push(generateCachingRpcMethod(ctx, fileDesc, serviceDesc, methodDesc));
     } else {
       chunks.push(generateRegularRpcMethod(ctx, fileDesc, serviceDesc, methodDesc));
@@ -271,8 +271,8 @@ function generateCachingRpcMethod(
  */
 export function generateRpcType(ctx: Context): Code {
   const { options } = ctx;
-  const maybeContext = options.useContext ? '<Context>' : '';
-  const maybeContextParam = options.useContext ? 'ctx: Context,' : '';
+  const maybeContext = options.context ? '<Context>' : '';
+  const maybeContextParam = options.context ? 'ctx: Context,' : '';
   return code`
     interface Rpc${maybeContext} {
       request(

@@ -29,7 +29,7 @@ export function generateEnum(
     );
   });
 
-  if (options.addUnrecognizedEnum)
+  if (options.unrecognizedEnum)
     chunks.push(code`
       ${UNRECOGNIZED_ENUM_NAME} = ${
       options.stringEnums ? `"${UNRECOGNIZED_ENUM_NAME}"` : UNRECOGNIZED_ENUM_VALUE.toString()
@@ -62,7 +62,7 @@ export function generateEnumFromJson(ctx: Context, fullName: string, enumDesc: E
     `);
   }
 
-  if (options.addUnrecognizedEnum) {
+  if (options.unrecognizedEnum) {
     chunks.push(code`
       case ${UNRECOGNIZED_ENUM_VALUE}:
       case "${UNRECOGNIZED_ENUM_NAME}":

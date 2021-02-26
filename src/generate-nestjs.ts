@@ -24,7 +24,7 @@ export function generateNestjsServiceController(
   const chunks: Code[] = [];
 
   maybeAddComment(sourceInfo, chunks, serviceDesc.options?.deprecated);
-  const t = options.useContext ? `<${contextTypeVar}>` : '';
+  const t = options.context ? `<${contextTypeVar}>` : '';
   chunks.push(code`
     export interface ${serviceDesc.name}Controller${t} {
   `);
@@ -34,7 +34,7 @@ export function generateNestjsServiceController(
     maybeAddComment(info, chunks, serviceDesc.options?.deprecated);
 
     const params: Code[] = [];
-    if (options.useContext) {
+    if (options.context) {
       params.push(code`ctx: Context`);
     }
     params.push(code`request: ${requestType(ctx, methodDesc)}`);
@@ -67,11 +67,11 @@ export function generateNestjsServiceController(
       ${name}(${joinCode(params, { on: ', ' })}): ${returns};
     `);
 
-    if (options.useContext) {
+    if (options.context) {
       const batchMethod = detectBatchMethod(ctx, fileDesc, serviceDesc, methodDesc);
       if (batchMethod) {
         const name = batchMethod.methodDesc.name.replace('Batch', 'Get');
-        const maybeCtx = options.useContext ? 'ctx: Context,' : '';
+        const maybeCtx = options.context ? 'ctx: Context,' : '';
         chunks.push(code`
           ${name}(
             ${maybeCtx}
@@ -96,7 +96,7 @@ export function generateNestjsServiceClient(
   const chunks: Code[] = [];
 
   maybeAddComment(sourceInfo, chunks);
-  const t = options.useContext ? `<${contextTypeVar}>` : ``;
+  const t = options.context ? `<${contextTypeVar}>` : ``;
   chunks.push(code`
     export interface ${serviceDesc.name}Client${t} {
   `);
@@ -107,7 +107,7 @@ export function generateNestjsServiceClient(
     }
 
     const params: Code[] = [];
-    if (options.useContext) {
+    if (options.context) {
       params.push(code`ctx: Context`);
     }
     params.push(code`request: ${requestType(ctx, methodDesc)}`);
@@ -131,11 +131,11 @@ export function generateNestjsServiceClient(
       ): ${returns};
     `);
 
-    if (options.useContext) {
+    if (options.context) {
       const batchMethod = detectBatchMethod(ctx, fileDesc, serviceDesc, methodDesc);
       if (batchMethod) {
         const name = batchMethod.methodDesc.name.replace('Batch', 'Get');
-        const maybeContext = options.useContext ? `ctx: Context,` : '';
+        const maybeContext = options.context ? `ctx: Context,` : '';
         chunks.push(code`
           ${name}(
             ${maybeContext}
