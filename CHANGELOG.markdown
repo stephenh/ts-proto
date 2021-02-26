@@ -1,4 +1,9 @@
 
+
+## v1.69.0
+
+* Actually fix #223.
+
 ## v1.68.0
 
 * Allow setting `outputJsonMethods=true` while using `nestJs=true`. Fixes #223.
