@@ -1,4 +1,7 @@
 
+## v1.70.0
+
+* Update `useOptionals` to make repeated fields optional as well. Fixes #225. (i-dot)
 
 ## v1.69.0
 
