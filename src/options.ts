@@ -27,6 +27,7 @@ export type Options = {
   outputJsonMethods: boolean;
   outputPartialMethods: boolean;
   stringEnums: boolean;
+  constEnums: boolean;
   outputClientImpl: boolean | 'grpc-web';
   addGrpcMetadata: boolean;
   addNestjsRestParameter: boolean;
@@ -53,6 +54,7 @@ export function defaultOptions(): Options {
     outputJsonMethods: true,
     outputPartialMethods: true,
     stringEnums: false,
+    constEnums: false,
     outputClientImpl: true,
     returnObservable: false,
     addGrpcMetadata: false,
