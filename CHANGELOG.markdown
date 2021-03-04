@@ -1,4 +1,8 @@
 
+## v1.71.0
+
+* Add `constEnum` option to enable `const` enums. Fixes #230. (lxgreen)
+
 ## v1.70.0
 
 * Update `useOptionals` to make repeated fields optional as well. Fixes #225. (i-dot)
