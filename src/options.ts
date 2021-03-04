@@ -4,6 +4,12 @@ export enum LongOption {
   STRING = 'string',
 }
 
+export enum DateOption {
+  DATE = 'date',
+  STRING = 'string',
+  TIMESTAMP = 'timestamp',
+}
+
 export enum EnvOption {
   NODE = 'node',
   BROWSER = 'browser',
@@ -20,7 +26,7 @@ export type Options = {
   snakeToCamel: boolean;
   forceLong: LongOption;
   useOptionals: boolean;
-  useDate: boolean;
+  useDate: DateOption;
   oneof: OneofOption;
   esModuleInterop: boolean;
   outputEncodeMethods: boolean;
@@ -45,7 +51,7 @@ export function defaultOptions(): Options {
     snakeToCamel: true,
     forceLong: LongOption.NUMBER,
     useOptionals: false,
-    useDate: true,
+    useDate: DateOption.DATE,
     oneof: OneofOption.PROPERTIES,
     esModuleInterop: false,
     lowerCaseServiceMethods: false,
@@ -71,7 +77,7 @@ const nestJsOptions: Partial<Options> = {
   outputJsonMethods: false,
   outputPartialMethods: false,
   outputClientImpl: false,
-  useDate: false,
+  useDate: DateOption.TIMESTAMP,
 };
 
 export function optionsFromParameter(parameter: string): Options {
@@ -86,6 +92,14 @@ export function optionsFromParameter(parameter: string): Options {
   // Treat forceLong=true as LONG
   if ((options.forceLong as any) === true) {
     options.forceLong = LongOption.LONG;
+  }
+
+  if ((options.useDate as any) === true) {
+    // Treat useDate=true as DATE
+    options.useDate = DateOption.DATE;
+  } else if ((options.useDate as any) === false) {
+    // Treat useDate=false as TIMESTAMP
+    options.useDate = DateOption.TIMESTAMP;
   }
   return options;
 }
