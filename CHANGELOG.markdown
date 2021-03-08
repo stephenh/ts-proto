@@ -1,4 +1,12 @@
 
+## v1.72.0
+
+* Revert the change in v1.70.0 that changed `useOptionals` handling of repeated fields.
+
+Before this PR, `useOptionals` was purely a type system tweak, and this PR introduced a
+change to decoding semantics, so it needs to be re-introduced under a separate flag to
+avoid being a breaking change.
+
 ## v1.71.0
 
 * Add `constEnum` option to enable `const` enums. Fixes #230. (lxgreen)
