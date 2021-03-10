@@ -20,6 +20,7 @@ export type Options = {
   snakeToCamel: boolean;
   forceLong: LongOption;
   useOptionals: boolean;
+  forceOptionalRepeated: boolean;
   useDate: boolean;
   oneof: OneofOption;
   esModuleInterop: boolean;
@@ -46,6 +47,7 @@ export function defaultOptions(): Options {
     snakeToCamel: true,
     forceLong: LongOption.NUMBER,
     useOptionals: false,
+    forceOptionalRepeated: false,
     useDate: true,
     oneof: OneofOption.PROPERTIES,
     esModuleInterop: false,
