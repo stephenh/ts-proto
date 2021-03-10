@@ -22,12 +22,12 @@ export interface HeroServiceController {
 
 export function HeroServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods = ['findCurrentUser'];
+    const grpcMethods: string[] = ['findCurrentUser'];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod('HeroService', method)(constructor.prototype[method], method, descriptor);
     }
-    const grpcStreamMethods = [];
+    const grpcStreamMethods: string[] = [];
     for (const method of grpcStreamMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcStreamMethod('HeroService', method)(constructor.prototype[method], method, descriptor);
