@@ -1,4 +1,8 @@
 
+## v1.73.0
+
+* Fix compiler errors when strict is enabled. Fixes #235. (Graham)
+
 ## v1.72.0
 
 * Revert the change in v1.70.0 that changed `useOptionals` handling of repeated fields.
