@@ -869,7 +869,7 @@ describe('simple', () => {
                 "ccGenericServices": false,
                 "csharpNamespace": "Google.Protobuf.WellKnownTypes",
                 "deprecated": false,
-                "goPackage": "github.com/golang/protobuf/ptypes/timestamp",
+                "goPackage": "google.golang.org/protobuf/types/known/timestamppb",
                 "javaGenerateEqualsAndHash": false,
                 "javaGenericServices": false,
                 "javaMultipleFiles": true,
@@ -944,7 +944,16 @@ describe('simple', () => {
                .setNanos((int) ((millis % 1000) * 1000000)).build();
 
 
-       Example 5: Compute Timestamp from current time in Python.
+       Example 5: Compute Timestamp from Java \`Instant.now()\`.
+
+           Instant now = Instant.now();
+
+           Timestamp timestamp =
+               Timestamp.newBuilder().setSeconds(now.getEpochSecond())
+                   .setNanos(now.getNano()).build();
+
+
+       Example 6: Compute Timestamp from current time in Python.
 
            timestamp = Timestamp()
            timestamp.GetCurrentTime()
@@ -984,9 +993,9 @@ describe('simple', () => {
                       0,
                     ],
                     "span": Array [
-                      126,
+                      135,
                       0,
-                      137,
+                      146,
                       1,
                     ],
                     "trailingComments": "",
@@ -1004,7 +1013,7 @@ describe('simple', () => {
                       0,
                     ],
                     "span": Array [
-                      130,
+                      139,
                       2,
                       20,
                     ],
@@ -1024,7 +1033,7 @@ describe('simple', () => {
                       1,
                     ],
                     "span": Array [
-                      136,
+                      145,
                       2,
                       18,
                     ],
@@ -1097,7 +1106,7 @@ describe('simple', () => {
                     "ccGenericServices": false,
                     "csharpNamespace": "Google.Protobuf.WellKnownTypes",
                     "deprecated": false,
-                    "goPackage": "github.com/golang/protobuf/ptypes/timestamp",
+                    "goPackage": "google.golang.org/protobuf/types/known/timestamppb",
                     "javaGenerateEqualsAndHash": false,
                     "javaGenericServices": false,
                     "javaMultipleFiles": true,
@@ -1172,7 +1181,16 @@ describe('simple', () => {
                .setNanos((int) ((millis % 1000) * 1000000)).build();
 
 
-       Example 5: Compute Timestamp from current time in Python.
+       Example 5: Compute Timestamp from Java \`Instant.now()\`.
+
+           Instant now = Instant.now();
+
+           Timestamp timestamp =
+               Timestamp.newBuilder().setSeconds(now.getEpochSecond())
+                   .setNanos(now.getNano()).build();
+
+
+       Example 6: Compute Timestamp from current time in Python.
 
            timestamp = Timestamp()
            timestamp.GetCurrentTime()
@@ -1212,9 +1230,9 @@ describe('simple', () => {
                           0,
                         ],
                         "span": Array [
-                          126,
+                          135,
                           0,
-                          137,
+                          146,
                           1,
                         ],
                         "trailingComments": "",
@@ -1232,7 +1250,7 @@ describe('simple', () => {
                           0,
                         ],
                         "span": Array [
-                          130,
+                          139,
                           2,
                           20,
                         ],
@@ -1252,7 +1270,7 @@ describe('simple', () => {
                           1,
                         ],
                         "span": Array [
-                          136,
+                          145,
                           2,
                           18,
                         ],
