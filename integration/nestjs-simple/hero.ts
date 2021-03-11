@@ -57,12 +57,12 @@ export interface HeroServiceController {
 
 export function HeroServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods = ['addOneHero', 'findOneHero', 'findOneVillain', 'findManyVillainStreamOut'];
+    const grpcMethods: string[] = ['addOneHero', 'findOneHero', 'findOneVillain', 'findManyVillainStreamOut'];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod('HeroService', method)(constructor.prototype[method], method, descriptor);
     }
-    const grpcStreamMethods = ['findManyVillain', 'findManyVillainStreamIn'];
+    const grpcStreamMethods: string[] = ['findManyVillain', 'findManyVillainStreamIn'];
     for (const method of grpcStreamMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcStreamMethod('HeroService', method)(constructor.prototype[method], method, descriptor);
