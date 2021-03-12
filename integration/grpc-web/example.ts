@@ -1,9 +1,7 @@
 /* eslint-disable */
-import { UnaryMethodDefinition } from '@improbable-eng/grpc-web/dist/typings/service';
+import { grpc } from '@improbable-eng/grpc-web';
 import { Observable } from 'rxjs';
 import { BrowserHeaders } from 'browser-headers';
-import { grpc } from '@improbable-eng/grpc-web';
-import { Code } from '@improbable-eng/grpc-web/dist/typings/Code';
 import { share } from 'rxjs/operators';
 import { Writer, Reader } from 'protobufjs/minimal';
 
@@ -900,7 +898,7 @@ export const DashAPICredsDeleteDesc: UnaryMethodDefinitionish = {
   } as any,
 };
 
-interface UnaryMethodDefinitionishR extends UnaryMethodDefinition<any, any> {
+interface UnaryMethodDefinitionishR extends grpc.UnaryMethodDefinition<any, any> {
   requestStream: any;
   responseStream: any;
 }
@@ -995,7 +993,7 @@ export class GrpcWebImpl {
           metadata: maybeCombinedMetadata,
           debug: this.options.debug,
           onMessage: (next) => observer.next(next),
-          onEnd: (code: Code, message: string) => {
+          onEnd: (code: grpc.Code, message: string) => {
             if (code === 0) {
               observer.complete();
             } else if (upStreamCodes.includes(code)) {
