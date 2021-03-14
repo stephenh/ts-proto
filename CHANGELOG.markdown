@@ -1,4 +1,8 @@
 
+## v1.74.0
+
+* Fix `@improbable-eng` imports to work with babel. (m!m)
+
 ## v1.73.0
 
 * Fix compiler errors when strict is enabled. Fixes #235. (Graham)
