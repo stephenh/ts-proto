@@ -240,9 +240,16 @@ function makeLongUtils(options: Options, bytes: ReturnType<typeof makeByteUtils>
   // not esModuleInterop.
   const Long = options.esModuleInterop ? imp('Long=long') : imp('Long*long');
 
+  const disclaimer = options.esModuleInterop
+    ? ''
+    : `
+    // If you get a compile-error about 'Constructor<Long> and ... have no overlap',
+    // add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.`;
+
   const init = conditionalOutput(
     '',
     code`
+      ${disclaimer}
       if (${util}.Long !== ${Long}) {
         ${util}.Long = ${Long} as any;
         ${configure}();
