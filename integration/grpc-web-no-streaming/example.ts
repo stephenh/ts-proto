@@ -1,7 +1,6 @@
 /* eslint-disable */
-import { UnaryMethodDefinition } from '@improbable-eng/grpc-web/dist/typings/service';
-import { BrowserHeaders } from 'browser-headers';
 import { grpc } from '@improbable-eng/grpc-web';
+import { BrowserHeaders } from 'browser-headers';
 import { Writer, Reader } from 'protobufjs/minimal';
 
 export const protobufPackage = 'rpx';
@@ -393,7 +392,7 @@ export const DashStateUserSettingsDesc: UnaryMethodDefinitionish = {
   } as any,
 };
 
-interface UnaryMethodDefinitionishR extends UnaryMethodDefinition<any, any> {
+interface UnaryMethodDefinitionishR extends grpc.UnaryMethodDefinition<any, any> {
   requestStream: any;
   responseStream: any;
 }

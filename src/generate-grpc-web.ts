@@ -8,12 +8,10 @@ import { Code, code, imp, joinCode } from 'ts-poet';
 import { Context } from './context';
 
 const grpc = imp('grpc@@improbable-eng/grpc-web');
-const UnaryMethodDefinition = imp('UnaryMethodDefinition@@improbable-eng/grpc-web/dist/typings/service');
 const share = imp('share@rxjs/operators');
 const take = imp('take@rxjs/operators');
 const BrowserHeaders = imp('BrowserHeaders@browser-headers');
 const Observable = imp('Observable@rxjs');
-const GrpcCode = imp('Code@@improbable-eng/grpc-web/dist/typings/Code');
 
 /** Generates a client that uses the `@improbable-web/grpc-web` library. */
 export function generateGrpcClientImpl(
@@ -142,7 +140,7 @@ export function addGrpcWebMisc(ctx: Context, hasStreamingMethods: boolean): Code
   const { options } = ctx;
   const chunks: Code[] = [];
   chunks.push(code`
-    interface UnaryMethodDefinitionishR extends ${UnaryMethodDefinition}<any, any> { requestStream: any; responseStream: any; }
+    interface UnaryMethodDefinitionishR extends ${grpc}.UnaryMethodDefinition<any, any> { requestStream: any; responseStream: any; }
   `);
   chunks.push(code`type UnaryMethodDefinitionish = UnaryMethodDefinitionishR;`);
   chunks.push(generateGrpcWebRpcType(options.returnObservable, hasStreamingMethods));
@@ -308,7 +306,7 @@ function createInvokeMethod() {
             metadata: maybeCombinedMetadata,
             debug: this.options.debug,
             onMessage: (next) => observer.next(next),
-            onEnd: (code: ${GrpcCode}, message: string) => {
+            onEnd: (code: ${grpc}.Code, message: string) => {
               if (code === 0) {
                 observer.complete();
               } else if (upStreamCodes.includes(code)) {
