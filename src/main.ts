@@ -200,7 +200,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
       } else if (v instanceof Code) {
         return code`${v}`;
       } else {
-        return code ``;
+        return code``;
       }
     })
   );
