@@ -51,12 +51,27 @@ export function dividerData_DividerTypeToJSON(object: DividerData_DividerType): 
   }
 }
 
+export function dividerData_DividerTypeToNumber(object: DividerData_DividerType): number {
+  switch (object) {
+    case DividerData_DividerType.DOUBLE:
+      return 0;
+    case DividerData_DividerType.SINGLE:
+      return 1;
+    case DividerData_DividerType.DASHED:
+      return 2;
+    case DividerData_DividerType.DOTTED:
+      return 3;
+    default:
+      return 0;
+  }
+}
+
 const baseDividerData: object = { type: DividerData_DividerType.DOUBLE };
 
 export const DividerData = {
   encode(message: DividerData, writer: Writer = Writer.create()): Writer {
     if (message.type !== DividerData_DividerType.DOUBLE) {
-      writer.uint32(8).int32(message.type);
+      writer.uint32(8).int32(dividerData_DividerTypeToNumber(message.type));
     }
     return writer;
   },
@@ -69,7 +84,7 @@ export const DividerData = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.type = reader.int32() as any;
+          message.type = dividerData_DividerTypeFromJSON(reader.int32());
           break;
         default:
           reader.skipType(tag & 7);

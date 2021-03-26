@@ -538,7 +538,7 @@ function generateBaseInstance(ctx: Context, fullName: string, messageDesc: Descr
 
 /** Creates a function to decode a message by loop overing the tags. */
 function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorProto): Code {
-  const { options, utils } = ctx;
+  const { options, utils, typeMap } = ctx;
   const chunks: Code[] = [];
 
   // create the basic function declaration
@@ -588,7 +588,12 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
           readSnippet = code`${utils.longToNumber}(${readSnippet} as Long)`;
         }
       } else if (isEnum(field)) {
-        readSnippet = code`${readSnippet} as any`;
+        if (options.stringEnums) {
+          const fromJson = getEnumMethod(typeMap, field.typeName, 'FromJSON');
+          readSnippet = code`${fromJson}(${readSnippet})`;
+        } else {
+          readSnippet = code`${readSnippet} as any`;
+        }
       }
     } else if (isValueType(ctx, field)) {
       const type = basicTypeName(ctx, field, { keepValueType: true });
@@ -657,7 +662,7 @@ const Reader = imp('Reader@protobufjs/minimal');
 
 /** Creates a function to encode a message by loop overing the tags. */
 function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorProto): Code {
-  const { options, utils } = ctx;
+  const { options, utils, typeMap } = ctx;
   const chunks: Code[] = [];
 
   // create the basic function declaration
@@ -674,7 +679,11 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
 
     // get a generic writer.doSomething based on the basic type
     let writeSnippet: (place: string) => Code;
-    if (isScalar(field) || isEnum(field)) {
+    if (isEnum(field) && options.stringEnums) {
+      const tag = ((field.number << 3) | basicWireType(field.type)) >>> 0;
+      const toNumber = getEnumMethod(typeMap, field.typeName, 'ToNumber');
+      writeSnippet = (place) => code`writer.uint32(${tag}).${toReaderCall(field)}(${toNumber}(${place}))`;
+    } else if (isScalar(field) || isEnum(field)) {
       const tag = ((field.number << 3) | basicWireType(field.type)) >>> 0;
       writeSnippet = (place) => code`writer.uint32(${tag}).${toReaderCall(field)}(${place})`;
     } else if (isTimestamp(field) && options.useDate) {

@@ -1,1 +1,1 @@
-stringEnums=true,outputEncodeMethods=false,outputClientImpl=false
+stringEnums=true,outputClientImpl=false
