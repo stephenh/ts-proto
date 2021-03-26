@@ -1,6 +1,10 @@
 
 ## v1.74.0
 
+* Fix `stringEnums` combined with `outputEncodeMethods`
+
+## v1.74.0
+
 * Fix `@improbable-eng` imports to work with babel. (m!m)
 
 ## v1.73.0
