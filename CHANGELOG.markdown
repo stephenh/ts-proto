@@ -1,5 +1,9 @@
 
-## v1.74.0
+## v1.76.0
+
+* Always initial long when `forceLong=long`. Fixes #247. (daw1012345)
+
+## v1.75.0
 
 * Fix `stringEnums` combined with `outputEncodeMethods`
 
