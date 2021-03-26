@@ -1,5 +1,7 @@
 /* eslint-disable */
 import { GrpcMethod, GrpcStreamMethod } from '@nestjs/microservices';
+import { util, configure } from 'protobufjs/minimal';
+import * as Long from 'long';
 import { Observable } from 'rxjs';
 
 export const protobufPackage = 'hero';
@@ -56,3 +58,10 @@ export function HeroServiceControllerMethods() {
 }
 
 export const HERO_SERVICE_NAME = 'HeroService';
+
+// If you get a compile-error about 'Constructor<Long> and ... have no overlap',
+// add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
+if (util.Long !== Long) {
+  util.Long = Long as any;
+  configure();
+}

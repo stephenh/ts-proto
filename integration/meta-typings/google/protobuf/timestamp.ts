@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { FileDescriptorProto } from 'ts-proto-descriptors/google/protobuf/descriptor';
-import * as Long from 'long';
 import { util, configure, Writer, Reader } from 'protobufjs/minimal';
+import * as Long from 'long';
 
 export const protobufPackage = 'google.protobuf';
 

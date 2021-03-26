@@ -1,9 +1,10 @@
 /* eslint-disable */
 import { grpc } from '@improbable-eng/grpc-web';
+import { util, configure, Writer, Reader } from 'protobufjs/minimal';
+import * as Long from 'long';
 import { Observable } from 'rxjs';
 import { BrowserHeaders } from 'browser-headers';
 import { take } from 'rxjs/operators';
-import { Writer, Reader } from 'protobufjs/minimal';
 
 export const protobufPackage = 'rpx';
 
@@ -471,3 +472,10 @@ export type DeepPartial<T> = T extends Builtin
   : T extends {}
   ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
+
+// If you get a compile-error about 'Constructor<Long> and ... have no overlap',
+// add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
+if (util.Long !== Long) {
+  util.Long = Long as any;
+  configure();
+}
