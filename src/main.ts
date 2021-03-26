@@ -58,6 +58,7 @@ import { visit, visitServices } from './visit';
 import { EnvOption, LongOption, OneofOption, Options } from './options';
 import { Context } from './context';
 import { generateSchema } from './schema';
+import { ConditionalOutput } from 'ts-poet/build/ConditionalOutput';
 
 export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [string, Code] {
   const { options, utils: u } = ctx;
@@ -194,8 +195,10 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
 
   chunks.push(
     ...Object.values(u).map((v) => {
-      if ('ifUsed' in v) {
+      if (v instanceof ConditionalOutput) {
         return code`${v.ifUsed}`;
+      } else if (v instanceof Code) {
+        return code`${v}`;
       } else {
         return code``;
       }
@@ -246,22 +249,18 @@ function makeLongUtils(options: Options, bytes: ReturnType<typeof makeByteUtils>
     // If you get a compile-error about 'Constructor<Long> and ... have no overlap',
     // add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.`;
 
-  const init = conditionalOutput(
-    '',
-    code`
+  const longInit = code`
       ${disclaimer}
       if (${util}.Long !== ${Long}) {
         ${util}.Long = ${Long} as any;
         ${configure}();
       }
-    `
-  );
+    `;
 
   // TODO This is unused?
   const numberToLong = conditionalOutput(
     'numberToLong',
     code`
-      ${init}
       function numberToLong(number: number) {
         return ${Long}.fromNumber(number);
       }
@@ -271,7 +270,6 @@ function makeLongUtils(options: Options, bytes: ReturnType<typeof makeByteUtils>
   const longToString = conditionalOutput(
     'longToString',
     code`
-      ${init}
       function longToString(long: ${Long}) {
         return long.toString();
       }
@@ -281,7 +279,6 @@ function makeLongUtils(options: Options, bytes: ReturnType<typeof makeByteUtils>
   const longToNumber = conditionalOutput(
     'longToNumber',
     code`
-      ${init}
       function longToNumber(long: ${Long}): number {
         if (long.gt(Number.MAX_SAFE_INTEGER)) {
           throw new ${bytes.globalThis}.Error("Value is larger than Number.MAX_SAFE_INTEGER")
@@ -291,7 +288,7 @@ function makeLongUtils(options: Options, bytes: ReturnType<typeof makeByteUtils>
     `
   );
 
-  return { numberToLong, longToNumber, longToString, longInit: init, Long };
+  return { numberToLong, longToNumber, longToString, longInit, Long };
 }
 
 function makeByteUtils() {

@@ -1,6 +1,7 @@
 /* eslint-disable */
 import { FileDescriptorProto } from 'ts-proto-descriptors/google/protobuf/descriptor';
-import { Writer, Reader } from 'protobufjs/minimal';
+import { util, configure, Writer, Reader } from 'protobufjs/minimal';
+import * as Long from 'long';
 
 export const protobufPackage = 'google.type';
 
@@ -154,3 +155,10 @@ export const protoMetadata: ProtoMetadata = {
   references: { '.google.type.DateMessage': DateMessage },
   dependencies: [],
 };
+
+// If you get a compile-error about 'Constructor<Long> and ... have no overlap',
+// add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
+if (util.Long !== Long) {
+  util.Long = Long as any;
+  configure();
+}
