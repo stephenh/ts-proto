@@ -1,8 +1,17 @@
 import { Options } from './options';
 
-export function maybeSnakeToCamel(s: string, options: Options): string {
-  if (options.snakeToCamel) {
-    return s.replace(/(\_\w)/g, (m) => m[1].toUpperCase());
+export function maybeSnakeToCamel(s: string, options: Pick<Options, 'snakeToCamel'>): string {
+  if (options.snakeToCamel && s.includes('_')) {
+    return s
+      .split('_')
+      .map((word, i) => {
+        if (i === 0) {
+          return word[0] + word.substring(1).toLowerCase();
+        } else {
+          return capitalize(word.toLowerCase());
+        }
+      })
+      .join('');
   } else {
     return s;
   }
