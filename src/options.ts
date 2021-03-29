@@ -30,6 +30,7 @@ export type Options = {
   stringEnums: boolean;
   constEnums: boolean;
   outputClientImpl: boolean | 'grpc-web';
+  outputServices: false | 'grpc-js';
   addGrpcMetadata: boolean;
   addNestjsRestParameter: boolean;
   returnObservable: boolean;
@@ -60,6 +61,7 @@ export function defaultOptions(): Options {
     stringEnums: false,
     constEnums: false,
     outputClientImpl: true,
+    outputServices: false,
     returnObservable: false,
     addGrpcMetadata: false,
     addNestjsRestParameter: false,
