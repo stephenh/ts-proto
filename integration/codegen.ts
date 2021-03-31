@@ -7,6 +7,7 @@ import { createTypeMap } from '../src/types';
 import { prefixDisableLinter } from '../src/utils';
 import { getTsPoetOpts, optionsFromParameter } from '../src/options';
 import { Context } from '../src/context';
+import { generateTypeRegistry } from '../src/generate-type-registry';
 
 /**
  * Generates output for our integration tests from their example proto files.
@@ -38,6 +39,21 @@ async function generate(binFile: string, baseDir: string, parameter: string) {
     const filePath = `${baseDir}/${path}`;
     const dirPath = parse(filePath).dir;
     await promisify(mkdir)(dirPath, { recursive: true }).catch(() => {});
+    await promisify(writeFile)(
+      filePath,
+      prefixDisableLinter(await code.toStringWithImports({ ...getTsPoetOpts(options), path }))
+    );
+  }
+
+  if (options.outputTypeRegistry) {
+    const utils = makeUtils(options);
+    const ctx: Context = { options, typeMap, utils };
+
+    const path = 'typeRegistry.ts';
+    const code = generateTypeRegistry(ctx);
+
+    const filePath = `${baseDir}/${path}`;
+
     await promisify(writeFile)(
       filePath,
       prefixDisableLinter(await code.toStringWithImports({ ...getTsPoetOpts(options), path }))

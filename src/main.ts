@@ -91,8 +91,16 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
   visit(
     fileDesc,
     sourceInfo,
-    (fullName, message, sInfo) => {
-      chunks.push(generateInterfaceDeclaration(ctx, fullName, message, sInfo));
+    (fullName, message, sInfo, fullProtoTypeName) => {
+      chunks.push(
+        generateInterfaceDeclaration(
+          ctx,
+          fullName,
+          message,
+          sInfo,
+          fileDesc.package ? `${fileDesc.package}.${fullProtoTypeName}` : fullProtoTypeName
+        )
+      );
     },
     options,
     (fullName, enumDesc, sInfo) => {
@@ -106,13 +114,15 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
     chunks.push(code`export const ${prefix}_PACKAGE_NAME = '${fileDesc.package}';`);
   }
 
-  if (options.outputEncodeMethods || options.outputJsonMethods) {
+  if (options.outputEncodeMethods || options.outputJsonMethods || options.outputTypeRegistry) {
     // then add the encoder/decoder/base instance
     visit(
       fileDesc,
       sourceInfo,
-      (fullName, message) => {
-        chunks.push(generateBaseInstance(ctx, fullName, message));
+      (fullName, message, sInfo, fullProtoTypeName) => {
+        const fullTypeName = fileDesc.package ? `${fileDesc.package}.${fullProtoTypeName}` : fullProtoTypeName;
+
+        chunks.push(generateBaseInstance(ctx, fullName, message, fullTypeName));
 
         const staticMethods: Code[] = [];
         if (options.outputEncodeMethods) {
@@ -132,6 +142,14 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
             ${joinCode(staticMethods, { on: ',\n\n' })}
           };
         `);
+
+        if (options.outputTypeRegistry) {
+          const messageTypeRegistry = imp('messageTypeRegistry@./typeRegistry');
+
+          chunks.push(code`
+            ${messageTypeRegistry}.set('${fullTypeName}', ${def(fullName)});
+          `);
+        }
       },
       options
     );
@@ -382,13 +400,15 @@ function makeTimestampMethods(options: Options, longs: ReturnType<typeof makeLon
     seconds = '(date.getTime() / 1_000).toString()';
   }
 
+  const maybeTypeField = options.outputTypeRegistry ? `$type: 'google.protobuf.Timestamp',` : '';
+
   const toTimestamp = conditionalOutput(
     'toTimestamp',
     code`
       function toTimestamp(date: Date): ${Timestamp} {
         const seconds = ${seconds};
         const nanos = (date.getTime() % 1_000) * 1_000_000;
-        return { seconds, nanos };
+        return { ${maybeTypeField} seconds, nanos };
       }
     `
   );
@@ -444,13 +464,18 @@ function generateInterfaceDeclaration(
   ctx: Context,
   fullName: string,
   messageDesc: DescriptorProto,
-  sourceInfo: SourceInfo
+  sourceInfo: SourceInfo,
+  fullTypeName: string
 ): Code {
   const { options } = ctx;
   const chunks: Code[] = [];
 
   maybeAddComment(sourceInfo, chunks, messageDesc.options?.deprecated);
   chunks.push(code`export interface ${fullName} {`);
+
+  if (ctx.options.outputTypeRegistry) {
+    chunks.push(code`$type: '${fullTypeName}',`);
+  }
 
   // When oneof=unions, we generate a single property with an ADT per `oneof` clause.
   const processedOneofs = new Set<number>();
@@ -521,7 +546,12 @@ function generateOneofProperty(
 }
 
 // Create a 'base' instance with default values for decode to use as a prototype
-function generateBaseInstance(ctx: Context, fullName: string, messageDesc: DescriptorProto): Code {
+function generateBaseInstance(
+  ctx: Context,
+  fullName: string,
+  messageDesc: DescriptorProto,
+  fullTypeName: string
+): Code {
   const fields = messageDesc.field
     .filter((field) => !isWithinOneOf(field))
     .map((field) => [field, defaultValue(ctx, field)])
@@ -530,6 +560,11 @@ function generateBaseInstance(ctx: Context, fullName: string, messageDesc: Descr
       const name = maybeSnakeToCamel(field.name, ctx.options);
       return code`${name}: ${val}`;
     });
+
+  if (ctx.options.outputTypeRegistry) {
+    fields.unshift(code`$type: '${fullTypeName}'`);
+  }
+
   return code`const base${fullName}: object = { ${joinCode(fields, { on: ',' })} };`;
 }
 
@@ -691,7 +726,9 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
     } else if (isValueType(ctx, field)) {
       const tag = ((field.number << 3) | 2) >>> 0;
       const type = basicTypeName(ctx, field, { keepValueType: true });
-      writeSnippet = (place) => code`${type}.encode({ value: ${place}! }, writer.uint32(${tag}).fork()).ldelim()`;
+      const maybeTypeField = options.outputTypeRegistry ? `$type: '${field.typeName.slice(1)}',` : '';
+      writeSnippet = (place) =>
+        code`${type}.encode({ ${maybeTypeField} value: ${place}! }, writer.uint32(${tag}).fork()).ldelim()`;
     } else if (isMessage(field)) {
       const tag = ((field.number << 3) | 2) >>> 0;
       const type = basicTypeName(ctx, field);
@@ -702,9 +739,10 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
 
     if (isRepeated(field)) {
       if (isMapType(ctx, messageDesc, field)) {
+        const maybeTypeField = options.outputTypeRegistry ? `$type: '${field.typeName.slice(1)}',` : '';
         chunks.push(code`
           Object.entries(message.${fieldName}).forEach(([key, value]) => {
-            ${writeSnippet('{ key: key as any, value }')};
+            ${writeSnippet(`{ ${maybeTypeField} key: key as any, value }`)};
           });
         `);
       } else if (packedType(field.type) === undefined) {
