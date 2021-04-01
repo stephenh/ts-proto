@@ -12,6 +12,7 @@ describe('options', () => {
         "esModuleInterop": false,
         "exportCommonSymbols": true,
         "forceLong": "number",
+        "forceOptionalRepeated": false,
         "lowerCaseServiceMethods": true,
         "nestJs": true,
         "oneof": "properties",

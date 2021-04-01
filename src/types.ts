@@ -462,7 +462,7 @@ export function toTypeName(ctx: Context, messageDesc: DescriptorProto, field: Fi
       const { keyType, valueType } = mapType;
       return code`{ [key: ${keyType} ]: ${valueType} }`;
     }
-    return code`${type}[]`;
+    return ctx.options.forceOptionalRepeated ? code`${type}[] | undefined` : code`${type}[]`;
   }
 
   if (isValueType(ctx, field)) {

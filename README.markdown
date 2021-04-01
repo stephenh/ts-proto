@@ -209,7 +209,15 @@ protoc --plugin=node_modules/ts-proto/protoc-gen-ts_proto ./batching.proto -I.
 
   Currently `browser` doesn't have any specific behavior other than being "not `node`". It probably will soon/at some point.
 
+- With `--ts_proto_opt=forceOptionalRepeated=true`, repeated fields are treated as non-scalar fields and
+  declared as possibly undefined, e.g. `field?: string[] | undefined` instead of `field: string[]`.
+
+  ts-proto defaults to `forceOptionalRepeated=false` since this complies with the [proto3 defaults guide](https://developers.google.com/protocol-buffers/docs/proto3#default).
+
+  However, if you use standard [protobufjs](https://www.npmjs.com/package/protobufjs) serialization (*without* using the optional `defaults: true` setting) empty arrays will actually *not* be deserialized as empty, but will be left undefined. So to match this behavior you may prefer to turn on this option.
+
 - With `--ts_proto_opt=useOptionals=true`, non-scalar fields are declared as optional TypeScript properties, e.g. `field?: Message` instead of `field: Message | undefined`.
+  In case you use `forceOptionalRepeated=true` the same will apply to repeated fields.
 
   ts-proto defaults to `useOptionals=false`, e.g. `field: Message | undefined`, because it is the "most-safe" for use cases like:
 
@@ -229,7 +237,7 @@ protoc --plugin=node_modules/ts-proto/protoc-gen-ts_proto ./batching.proto -I.
 
   However, the type-safety of `useOptionals=false` is admittedly tedious if you have many inherently-unused fields, so you can use `useOptionals=true` if that trade-off makes sense for your project.
 
-  Eventually if TypesCript supports [Exact Types](https://github.com/microsoft/TypeScript/issues/12936), that should allow ts-proto to switch to `useOptionals=true` as the default/only behavior, have the generated `Message.encode`/`Message.toPartial`/etc. methods accept `Exact<T>` versions of the message types, and the result would be both safe + succinct.
+  Eventually if TypesScript supports [Exact Types](https://github.com/microsoft/TypeScript/issues/12936), that should allow ts-proto to switch to `useOptionals=true` as the default/only behavior, have the generated `Message.encode`/`Message.toPartial`/etc. methods accept `Exact<T>` versions of the message types, and the result would be both safe + succinct.
 
   Also see the comment in [this issue](https://github.com/stephenh/ts-proto/issues/120#issuecomment-678375833) which explains some of the nuance behind making all fields optional (currently `useOptionals` only makes message fields optional), specifically that a message created with `const message: Message = { ...key not set... }` vs. `const message = Message.decode(...key not set...)` would look different to clients.
 

@@ -461,7 +461,10 @@ function makeTimestampMethods(options: Options, longs: ReturnType<typeof makeLon
 
 // When useOptionals=true, non-scalar fields are translated into optional properties.
 function isOptionalProperty(field: FieldDescriptorProto, options: Options): boolean {
-  return (options.useOptionals && isMessage(field) && !isRepeated(field)) || field.proto3Optional;
+  if (isRepeated(field)) {
+    return options.forceOptionalRepeated;
+  }
+  return (options.useOptionals && isMessage(field)) || field.proto3Optional;
 }
 
 // Create the interface with properties
@@ -752,6 +755,11 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
     }
 
     if (isRepeated(field)) {
+      if (options.forceOptionalRepeated) {
+        chunks.push(code`
+          if (message.${fieldName} !== undefined) {
+        `);
+      }
       if (isMapType(ctx, messageDesc, field)) {
         const maybeTypeField = options.outputTypeRegistry ? `$type: '${field.typeName.slice(1)}',` : '';
         chunks.push(code`
@@ -773,6 +781,11 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
             writer.${toReaderCall(field)}(v);
           }
           writer.ldelim();
+        `);
+      }
+      if (options.forceOptionalRepeated) {
+        chunks.push(code`
+          }
         `);
       }
     } else if (isWithinOneOfThatShouldBeUnion(options, field)) {
@@ -917,13 +930,13 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
         const i = maybeCastToNumber(ctx, messageDesc, field, 'key');
         chunks.push(code`
           Object.entries(object.${fieldName}).forEach(([key, value]) => {
-            message.${fieldName}[${i}] = ${readSnippet('value')};
+            message.${fieldName}${options.forceOptionalRepeated ? '!' : ''}[${i}] = ${readSnippet('value')};
           });
         `);
       } else {
         chunks.push(code`
           for (const e of object.${fieldName}) {
-            message.${fieldName}.push(${readSnippet('e')});
+            message.${fieldName}${options.forceOptionalRepeated ? '!' : ''}.push(${readSnippet('e')});
           }
         `);
       }
@@ -1107,14 +1120,14 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
         chunks.push(code`
           Object.entries(object.${fieldName}).forEach(([key, value]) => {
             if (value !== undefined) {
-              message.${fieldName}[${i}] = ${readSnippet('value')};
+              message.${fieldName}${options.forceOptionalRepeated ? '!' : ''}[${i}] = ${readSnippet('value')};
             }
           });
         `);
       } else {
         chunks.push(code`
           for (const e of object.${fieldName}) {
-            message.${fieldName}.push(${readSnippet('e')});
+            message.${fieldName}${options.forceOptionalRepeated ? '!' : ''}.push(${readSnippet('e')});
           }
         `);
       }
