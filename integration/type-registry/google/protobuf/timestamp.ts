@@ -118,6 +118,8 @@ export interface Timestamp {
 const baseTimestamp: object = { $type: 'google.protobuf.Timestamp', seconds: 0, nanos: 0 };
 
 export const Timestamp = {
+  $type: 'google.protobuf.Timestamp' as const,
+
   encode(message: Timestamp, writer: Writer = Writer.create()): Writer {
     if (message.seconds !== 0) {
       writer.uint32(8).int64(message.seconds);
@@ -187,7 +189,7 @@ export const Timestamp = {
   },
 };
 
-messageTypeRegistry.set('google.protobuf.Timestamp', Timestamp);
+messageTypeRegistry.set(Timestamp.$type, Timestamp);
 
 declare var self: any | undefined;
 declare var window: any | undefined;

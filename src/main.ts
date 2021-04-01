@@ -124,22 +124,27 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
 
         chunks.push(generateBaseInstance(ctx, fullName, message, fullTypeName));
 
-        const staticMethods: Code[] = [];
+        const staticMembers: Code[] = [];
+
+        if (options.outputTypeRegistry) {
+          staticMembers.push(code`$type: '${fullTypeName}' as const`);
+        }
+
         if (options.outputEncodeMethods) {
-          staticMethods.push(generateEncode(ctx, fullName, message));
-          staticMethods.push(generateDecode(ctx, fullName, message));
+          staticMembers.push(generateEncode(ctx, fullName, message));
+          staticMembers.push(generateDecode(ctx, fullName, message));
         }
         if (options.outputJsonMethods) {
-          staticMethods.push(generateFromJson(ctx, fullName, message));
-          staticMethods.push(generateToJson(ctx, fullName, message));
+          staticMembers.push(generateFromJson(ctx, fullName, message));
+          staticMembers.push(generateToJson(ctx, fullName, message));
         }
         if (options.outputPartialMethods) {
-          staticMethods.push(generateFromPartial(ctx, fullName, message));
+          staticMembers.push(generateFromPartial(ctx, fullName, message));
         }
 
         chunks.push(code`
           export const ${def(fullName)} = {
-            ${joinCode(staticMethods, { on: ',\n\n' })}
+            ${joinCode(staticMembers, { on: ',\n\n' })}
           };
         `);
 
@@ -147,7 +152,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
           const messageTypeRegistry = imp('messageTypeRegistry@./typeRegistry');
 
           chunks.push(code`
-            ${messageTypeRegistry}.set('${fullTypeName}', ${def(fullName)});
+            ${messageTypeRegistry}.set(${fullName}.$type, ${def(fullName)});
           `);
         }
       },

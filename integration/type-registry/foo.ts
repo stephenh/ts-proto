@@ -14,6 +14,8 @@ export interface Foo {
 const baseFoo: object = { $type: 'foo.Foo' };
 
 export const Foo = {
+  $type: 'foo.Foo' as const,
+
   encode(message: Foo, writer: Writer = Writer.create()): Writer {
     if (message.timestamp !== undefined) {
       Timestamp.encode(toTimestamp(message.timestamp), writer.uint32(10).fork()).ldelim();
@@ -67,7 +69,7 @@ export const Foo = {
   },
 };
 
-messageTypeRegistry.set('foo.Foo', Foo);
+messageTypeRegistry.set(Foo.$type, Foo);
 
 type Builtin = Date | Function | Uint8Array | string | number | undefined;
 export type DeepPartial<T> = T extends Builtin
