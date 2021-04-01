@@ -1,4 +1,7 @@
 /* eslint-disable */
+import { util, configure, Writer, Reader } from 'protobufjs/minimal';
+import * as Long from 'long';
+
 export const protobufPackage = 'simple';
 
 export enum StateEnum {
@@ -39,6 +42,19 @@ export function stateEnumToJSON(object: StateEnum): string {
   }
 }
 
+export function stateEnumToNumber(object: StateEnum): number {
+  switch (object) {
+    case StateEnum.UNKNOWN:
+      return 0;
+    case StateEnum.ON:
+      return 2;
+    case StateEnum.OFF:
+      return 3;
+    default:
+      return 0;
+  }
+}
+
 export interface Simple {
   name: string;
   state: StateEnum;
@@ -47,6 +63,37 @@ export interface Simple {
 const baseSimple: object = { name: '', state: StateEnum.UNKNOWN };
 
 export const Simple = {
+  encode(message: Simple, writer: Writer = Writer.create()): Writer {
+    if (message.name !== '') {
+      writer.uint32(10).string(message.name);
+    }
+    if (message.state !== StateEnum.UNKNOWN) {
+      writer.uint32(32).int32(stateEnumToNumber(message.state));
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): Simple {
+    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseSimple } as Simple;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.name = reader.string();
+          break;
+        case 4:
+          message.state = stateEnumFromJSON(reader.int32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
   fromJSON(object: any): Simple {
     const message = { ...baseSimple } as Simple;
     if (object.name !== undefined && object.name !== null) {
@@ -95,3 +142,10 @@ export type DeepPartial<T> = T extends Builtin
   : T extends {}
   ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
+
+// If you get a compile-error about 'Constructor<Long> and ... have no overlap',
+// add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
+if (util.Long !== Long) {
+  util.Long = Long as any;
+  configure();
+}

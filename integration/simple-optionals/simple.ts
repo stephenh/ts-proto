@@ -1,8 +1,8 @@
 /* eslint-disable */
-import { ImportedThing } from './import_dir/thing';
-import { Reader, util, configure, Writer } from 'protobufjs/minimal';
-import { Timestamp } from './google/protobuf/timestamp';
+import { util, configure, Reader, Writer } from 'protobufjs/minimal';
 import * as Long from 'long';
+import { ImportedThing } from './import_dir/thing';
+import { Timestamp } from './google/protobuf/timestamp';
 import { StringValue, Int32Value, BoolValue } from './google/protobuf/wrappers';
 
 export const protobufPackage = 'simple';
@@ -60,7 +60,7 @@ export interface Simple {
   createdAt?: Date;
   child?: Child;
   state: StateEnum;
-  grandChildren?: Child[];
+  grandChildren: Child[];
   coins: number[];
   snacks: string[];
   oldStates: StateEnum[];
@@ -174,8 +174,8 @@ export interface SimpleWithWrappers {
   name?: string;
   age?: number;
   enabled?: boolean;
-  coins?: number[];
-  snacks?: string[];
+  coins: number[];
+  snacks: string[];
 }
 
 export interface Entity {
@@ -183,9 +183,9 @@ export interface Entity {
 }
 
 export interface SimpleWithMap {
-  entitiesById?: { [key: number]: Entity };
-  nameLookup?: { [key: string]: string };
-  intLookup?: { [key: number]: number };
+  entitiesById: { [key: number]: Entity };
+  nameLookup: { [key: string]: string };
+  intLookup: { [key: number]: number };
 }
 
 export interface SimpleWithMap_EntitiesByIdEntry {
@@ -204,7 +204,7 @@ export interface SimpleWithMap_IntLookupEntry {
 }
 
 export interface SimpleWithSnakeCaseMap {
-  entitiesById?: { [key: number]: Entity };
+  entitiesById: { [key: number]: Entity };
 }
 
 export interface SimpleWithSnakeCaseMap_EntitiesByIdEntry {
@@ -254,30 +254,22 @@ export const Simple = {
     if (message.state !== 0) {
       writer.uint32(32).int32(message.state);
     }
-    if (message.grandChildren !== undefined) {
-      for (const v of message.grandChildren) {
-        Child.encode(v!, writer.uint32(42).fork()).ldelim();
-      }
+    for (const v of message.grandChildren) {
+      Child.encode(v!, writer.uint32(42).fork()).ldelim();
     }
-    if (message.coins !== undefined) {
-      writer.uint32(50).fork();
-      for (const v of message.coins) {
-        writer.int32(v);
-      }
-      writer.ldelim();
+    writer.uint32(50).fork();
+    for (const v of message.coins) {
+      writer.int32(v);
     }
-    if (message.snacks !== undefined) {
-      for (const v of message.snacks) {
-        writer.uint32(58).string(v!);
-      }
+    writer.ldelim();
+    for (const v of message.snacks) {
+      writer.uint32(58).string(v!);
     }
-    if (message.oldStates !== undefined) {
-      writer.uint32(66).fork();
-      for (const v of message.oldStates) {
-        writer.int32(v);
-      }
-      writer.ldelim();
+    writer.uint32(66).fork();
+    for (const v of message.oldStates) {
+      writer.int32(v);
     }
+    writer.ldelim();
     if (message.thing !== undefined) {
       ImportedThing.encode(message.thing, writer.uint32(82).fork()).ldelim();
     }
@@ -380,22 +372,22 @@ export const Simple = {
     }
     if (object.grandChildren !== undefined && object.grandChildren !== null) {
       for (const e of object.grandChildren) {
-        message.grandChildren!.push(Child.fromJSON(e));
+        message.grandChildren.push(Child.fromJSON(e));
       }
     }
     if (object.coins !== undefined && object.coins !== null) {
       for (const e of object.coins) {
-        message.coins!.push(Number(e));
+        message.coins.push(Number(e));
       }
     }
     if (object.snacks !== undefined && object.snacks !== null) {
       for (const e of object.snacks) {
-        message.snacks!.push(String(e));
+        message.snacks.push(String(e));
       }
     }
     if (object.oldStates !== undefined && object.oldStates !== null) {
       for (const e of object.oldStates) {
-        message.oldStates!.push(stateEnumFromJSON(e));
+        message.oldStates.push(stateEnumFromJSON(e));
       }
     }
     if (object.thing !== undefined && object.thing !== null) {
@@ -470,22 +462,22 @@ export const Simple = {
     }
     if (object.grandChildren !== undefined && object.grandChildren !== null) {
       for (const e of object.grandChildren) {
-        message.grandChildren!.push(Child.fromPartial(e));
+        message.grandChildren.push(Child.fromPartial(e));
       }
     }
     if (object.coins !== undefined && object.coins !== null) {
       for (const e of object.coins) {
-        message.coins!.push(e);
+        message.coins.push(e);
       }
     }
     if (object.snacks !== undefined && object.snacks !== null) {
       for (const e of object.snacks) {
-        message.snacks!.push(e);
+        message.snacks.push(e);
       }
     }
     if (object.oldStates !== undefined && object.oldStates !== null) {
       for (const e of object.oldStates) {
-        message.oldStates!.push(e);
+        message.oldStates.push(e);
       }
     }
     if (object.thing !== undefined && object.thing !== null) {
@@ -872,15 +864,11 @@ export const SimpleWithWrappers = {
     if (message.enabled !== undefined) {
       BoolValue.encode({ value: message.enabled! }, writer.uint32(26).fork()).ldelim();
     }
-    if (message.coins !== undefined) {
-      for (const v of message.coins) {
-        Int32Value.encode({ value: v!! }, writer.uint32(50).fork()).ldelim();
-      }
+    for (const v of message.coins) {
+      Int32Value.encode({ value: v!! }, writer.uint32(50).fork()).ldelim();
     }
-    if (message.snacks !== undefined) {
-      for (const v of message.snacks) {
-        StringValue.encode({ value: v!! }, writer.uint32(58).fork()).ldelim();
-      }
+    for (const v of message.snacks) {
+      StringValue.encode({ value: v!! }, writer.uint32(58).fork()).ldelim();
     }
     return writer;
   },
@@ -938,12 +926,12 @@ export const SimpleWithWrappers = {
     }
     if (object.coins !== undefined && object.coins !== null) {
       for (const e of object.coins) {
-        message.coins!.push(Number(e));
+        message.coins.push(Number(e));
       }
     }
     if (object.snacks !== undefined && object.snacks !== null) {
       for (const e of object.snacks) {
-        message.snacks!.push(String(e));
+        message.snacks.push(String(e));
       }
     }
     return message;
@@ -988,12 +976,12 @@ export const SimpleWithWrappers = {
     }
     if (object.coins !== undefined && object.coins !== null) {
       for (const e of object.coins) {
-        message.coins!.push(e);
+        message.coins.push(e);
       }
     }
     if (object.snacks !== undefined && object.snacks !== null) {
       for (const e of object.snacks) {
-        message.snacks!.push(e);
+        message.snacks.push(e);
       }
     }
     return message;
@@ -1059,21 +1047,15 @@ const baseSimpleWithMap: object = {};
 
 export const SimpleWithMap = {
   encode(message: SimpleWithMap, writer: Writer = Writer.create()): Writer {
-    if (message.entitiesById !== undefined) {
-      Object.entries(message.entitiesById).forEach(([key, value]) => {
-        SimpleWithMap_EntitiesByIdEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).ldelim();
-      });
-    }
-    if (message.nameLookup !== undefined) {
-      Object.entries(message.nameLookup).forEach(([key, value]) => {
-        SimpleWithMap_NameLookupEntry.encode({ key: key as any, value }, writer.uint32(18).fork()).ldelim();
-      });
-    }
-    if (message.intLookup !== undefined) {
-      Object.entries(message.intLookup).forEach(([key, value]) => {
-        SimpleWithMap_IntLookupEntry.encode({ key: key as any, value }, writer.uint32(26).fork()).ldelim();
-      });
-    }
+    Object.entries(message.entitiesById).forEach(([key, value]) => {
+      SimpleWithMap_EntitiesByIdEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).ldelim();
+    });
+    Object.entries(message.nameLookup).forEach(([key, value]) => {
+      SimpleWithMap_NameLookupEntry.encode({ key: key as any, value }, writer.uint32(18).fork()).ldelim();
+    });
+    Object.entries(message.intLookup).forEach(([key, value]) => {
+      SimpleWithMap_IntLookupEntry.encode({ key: key as any, value }, writer.uint32(26).fork()).ldelim();
+    });
     return writer;
   },
 
@@ -1120,17 +1102,17 @@ export const SimpleWithMap = {
     message.intLookup = {};
     if (object.entitiesById !== undefined && object.entitiesById !== null) {
       Object.entries(object.entitiesById).forEach(([key, value]) => {
-        message.entitiesById![Number(key)] = Entity.fromJSON(value);
+        message.entitiesById[Number(key)] = Entity.fromJSON(value);
       });
     }
     if (object.nameLookup !== undefined && object.nameLookup !== null) {
       Object.entries(object.nameLookup).forEach(([key, value]) => {
-        message.nameLookup![key] = String(value);
+        message.nameLookup[key] = String(value);
       });
     }
     if (object.intLookup !== undefined && object.intLookup !== null) {
       Object.entries(object.intLookup).forEach(([key, value]) => {
-        message.intLookup![Number(key)] = Number(value);
+        message.intLookup[Number(key)] = Number(value);
       });
     }
     return message;
@@ -1167,21 +1149,21 @@ export const SimpleWithMap = {
     if (object.entitiesById !== undefined && object.entitiesById !== null) {
       Object.entries(object.entitiesById).forEach(([key, value]) => {
         if (value !== undefined) {
-          message.entitiesById![Number(key)] = Entity.fromPartial(value);
+          message.entitiesById[Number(key)] = Entity.fromPartial(value);
         }
       });
     }
     if (object.nameLookup !== undefined && object.nameLookup !== null) {
       Object.entries(object.nameLookup).forEach(([key, value]) => {
         if (value !== undefined) {
-          message.nameLookup![key] = String(value);
+          message.nameLookup[key] = String(value);
         }
       });
     }
     if (object.intLookup !== undefined && object.intLookup !== null) {
       Object.entries(object.intLookup).forEach(([key, value]) => {
         if (value !== undefined) {
-          message.intLookup![Number(key)] = Number(value);
+          message.intLookup[Number(key)] = Number(value);
         }
       });
     }
@@ -1409,11 +1391,9 @@ const baseSimpleWithSnakeCaseMap: object = {};
 
 export const SimpleWithSnakeCaseMap = {
   encode(message: SimpleWithSnakeCaseMap, writer: Writer = Writer.create()): Writer {
-    if (message.entitiesById !== undefined) {
-      Object.entries(message.entitiesById).forEach(([key, value]) => {
-        SimpleWithSnakeCaseMap_EntitiesByIdEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).ldelim();
-      });
-    }
+    Object.entries(message.entitiesById).forEach(([key, value]) => {
+      SimpleWithSnakeCaseMap_EntitiesByIdEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).ldelim();
+    });
     return writer;
   },
 
@@ -1444,7 +1424,7 @@ export const SimpleWithSnakeCaseMap = {
     message.entitiesById = {};
     if (object.entitiesById !== undefined && object.entitiesById !== null) {
       Object.entries(object.entitiesById).forEach(([key, value]) => {
-        message.entitiesById![Number(key)] = Entity.fromJSON(value);
+        message.entitiesById[Number(key)] = Entity.fromJSON(value);
       });
     }
     return message;
@@ -1467,7 +1447,7 @@ export const SimpleWithSnakeCaseMap = {
     if (object.entitiesById !== undefined && object.entitiesById !== null) {
       Object.entries(object.entitiesById).forEach(([key, value]) => {
         if (value !== undefined) {
-          message.entitiesById![Number(key)] = Entity.fromPartial(value);
+          message.entitiesById[Number(key)] = Entity.fromPartial(value);
         }
       });
     }
@@ -1982,6 +1962,8 @@ function longToNumber(long: Long): number {
   return long.toNumber();
 }
 
+// If you get a compile-error about 'Constructor<Long> and ... have no overlap',
+// add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();

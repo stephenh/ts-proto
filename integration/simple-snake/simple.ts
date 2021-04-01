@@ -1,7 +1,7 @@
 /* eslint-disable */
-import { Reader, util, configure, Writer } from 'protobufjs/minimal';
-import { Timestamp } from './google/protobuf/timestamp';
+import { util, configure, Reader, Writer } from 'protobufjs/minimal';
 import * as Long from 'long';
+import { Timestamp } from './google/protobuf/timestamp';
 import { ImportedThing } from './import_dir/thing';
 import { StringValue, Int32Value, BoolValue } from './google/protobuf/wrappers';
 
@@ -1962,6 +1962,8 @@ function longToNumber(long: Long): number {
   return long.toNumber();
 }
 
+// If you get a compile-error about 'Constructor<Long> and ... have no overlap',
+// add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();

@@ -1,5 +1,7 @@
 /* eslint-disable */
 import { GrpcMethod, GrpcStreamMethod } from '@nestjs/microservices';
+import { util, configure } from 'protobufjs/minimal';
+import * as Long from 'long';
 import { Observable } from 'rxjs';
 import { Empty } from './google/protobuf/empty';
 
@@ -22,12 +24,12 @@ export interface HeroServiceController {
 
 export function HeroServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods = ['findCurrentUser'];
+    const grpcMethods: string[] = ['findCurrentUser'];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcMethod('HeroService', method)(constructor.prototype[method], method, descriptor);
     }
-    const grpcStreamMethods = [];
+    const grpcStreamMethods: string[] = [];
     for (const method of grpcStreamMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
       GrpcStreamMethod('HeroService', method)(constructor.prototype[method], method, descriptor);
@@ -36,3 +38,10 @@ export function HeroServiceControllerMethods() {
 }
 
 export const HERO_SERVICE_NAME = 'HeroService';
+
+// If you get a compile-error about 'Constructor<Long> and ... have no overlap',
+// add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
+if (util.Long !== Long) {
+  util.Long = Long as any;
+  configure();
+}

@@ -6,6 +6,7 @@ describe('options', () => {
       Object {
         "addGrpcMetadata": false,
         "addNestjsRestParameter": false,
+        "constEnums": false,
         "context": false,
         "env": "both",
         "esModuleInterop": false,

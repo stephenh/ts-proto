@@ -1,6 +1,6 @@
 /* eslint-disable */
-import * as Long from 'long';
 import { util, configure, Writer, Reader } from 'protobufjs/minimal';
+import * as Long from 'long';
 import { UInt64Value } from './google/protobuf/wrappers';
 
 export const protobufPackage = 'simple';
@@ -308,6 +308,8 @@ function longToString(long: Long) {
   return long.toString();
 }
 
+// If you get a compile-error about 'Constructor<Long> and ... have no overlap',
+// add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();

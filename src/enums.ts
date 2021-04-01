@@ -19,7 +19,7 @@ export function generateEnum(
   const chunks: Code[] = [];
 
   maybeAddComment(sourceInfo, chunks, enumDesc.options?.deprecated);
-  chunks.push(code`export enum ${fullName} {`);
+  chunks.push(code`export ${options.constEnums ? 'const ' : ''}enum ${fullName} {`);
 
   enumDesc.value.forEach((valueDesc, index) => {
     const info = sourceInfo.lookup(Fields.enum.value, index);
@@ -36,11 +36,17 @@ export function generateEnum(
     },`);
   chunks.push(code`}`);
 
-  if (options.outputJsonMethods) {
+  if (options.outputJsonMethods || (options.stringEnums && options.outputEncodeMethods)) {
     chunks.push(code`\n`);
     chunks.push(generateEnumFromJson(ctx, fullName, enumDesc));
+  }
+  if (options.outputJsonMethods) {
     chunks.push(code`\n`);
     chunks.push(generateEnumToJson(fullName, enumDesc));
+  }
+  if (options.stringEnums && options.outputEncodeMethods) {
+    chunks.push(code`\n`);
+    chunks.push(generateEnumToNumber(fullName, enumDesc));
   }
 
   return joinCode(chunks, { on: '\n' });
@@ -94,6 +100,20 @@ export function generateEnumToJson(fullName: string, enumDesc: EnumDescriptorPro
   }
   chunks.push(code`default: return "UNKNOWN";`);
 
+  chunks.push(code`}`);
+  chunks.push(code`}`);
+  return joinCode(chunks, { on: '\n' });
+}
+
+/** Generates a function with a big switch statement to encode our string enum -> int value. */
+export function generateEnumToNumber(fullName: string, enumDesc: EnumDescriptorProto): Code {
+  const chunks: Code[] = [];
+  chunks.push(code`export function ${camelCase(fullName)}ToNumber(object: ${fullName}): number {`);
+  chunks.push(code`switch (object) {`);
+  for (const valueDesc of enumDesc.value) {
+    chunks.push(code`case ${fullName}.${valueDesc.name}: return ${valueDesc.number};`);
+  }
+  chunks.push(code`default: return 0;`);
   chunks.push(code`}`);
   chunks.push(code`}`);
   return joinCode(chunks, { on: '\n' });

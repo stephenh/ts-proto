@@ -58,6 +58,7 @@ import { visit, visitServices } from './visit';
 import { EnvOption, LongOption, OneofOption, Options, DateOption } from './options';
 import { Context } from './context';
 import { generateSchema } from './schema';
+import { ConditionalOutput } from 'ts-poet/build/ConditionalOutput';
 
 export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [string, Code] {
   const { options, utils: u } = ctx;
@@ -194,8 +195,10 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
 
   chunks.push(
     ...Object.values(u).map((v) => {
-      if ('ifUsed' in v) {
+      if (v instanceof ConditionalOutput) {
         return code`${v.ifUsed}`;
+      } else if (v instanceof Code) {
+        return code`${v}`;
       } else {
         return code``;
       }
@@ -240,21 +243,24 @@ function makeLongUtils(options: Options, bytes: ReturnType<typeof makeByteUtils>
   // not esModuleInterop.
   const Long = options.esModuleInterop ? imp('Long=long') : imp('Long*long');
 
-  const init = conditionalOutput(
-    '',
-    code`
+  const disclaimer = options.esModuleInterop
+    ? ''
+    : `
+    // If you get a compile-error about 'Constructor<Long> and ... have no overlap',
+    // add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.`;
+
+  const longInit = code`
+      ${disclaimer}
       if (${util}.Long !== ${Long}) {
         ${util}.Long = ${Long} as any;
         ${configure}();
       }
-    `
-  );
+    `;
 
   // TODO This is unused?
   const numberToLong = conditionalOutput(
     'numberToLong',
     code`
-      ${init}
       function numberToLong(number: number) {
         return ${Long}.fromNumber(number);
       }
@@ -264,7 +270,6 @@ function makeLongUtils(options: Options, bytes: ReturnType<typeof makeByteUtils>
   const longToString = conditionalOutput(
     'longToString',
     code`
-      ${init}
       function longToString(long: ${Long}) {
         return long.toString();
       }
@@ -274,7 +279,6 @@ function makeLongUtils(options: Options, bytes: ReturnType<typeof makeByteUtils>
   const longToNumber = conditionalOutput(
     'longToNumber',
     code`
-      ${init}
       function longToNumber(long: ${Long}): number {
         if (long.gt(Number.MAX_SAFE_INTEGER)) {
           throw new ${bytes.globalThis}.Error("Value is larger than Number.MAX_SAFE_INTEGER")
@@ -284,7 +288,7 @@ function makeLongUtils(options: Options, bytes: ReturnType<typeof makeByteUtils>
     `
   );
 
-  return { numberToLong, longToNumber, longToString, longInit: init, Long };
+  return { numberToLong, longToNumber, longToString, longInit, Long };
 }
 
 function makeByteUtils() {
@@ -449,7 +453,7 @@ function makeTimestampMethods(options: Options, longs: ReturnType<typeof makeLon
 
 // When useOptionals=true, non-scalar fields are translated into optional properties.
 function isOptionalProperty(field: FieldDescriptorProto, options: Options): boolean {
-  return (options.useOptionals && isMessage(field)) || field.proto3Optional;
+  return (options.useOptionals && isMessage(field) && !isRepeated(field)) || field.proto3Optional;
 }
 
 // Create the interface with properties
@@ -548,7 +552,7 @@ function generateBaseInstance(ctx: Context, fullName: string, messageDesc: Descr
 
 /** Creates a function to decode a message by loop overing the tags. */
 function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorProto): Code {
-  const { options, utils } = ctx;
+  const { options, utils, typeMap } = ctx;
   const chunks: Code[] = [];
 
   // create the basic function declaration
@@ -598,7 +602,12 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
           readSnippet = code`${utils.longToNumber}(${readSnippet} as Long)`;
         }
       } else if (isEnum(field)) {
-        readSnippet = code`${readSnippet} as any`;
+        if (options.stringEnums) {
+          const fromJson = getEnumMethod(typeMap, field.typeName, 'FromJSON');
+          readSnippet = code`${fromJson}(${readSnippet})`;
+        } else {
+          readSnippet = code`${readSnippet} as any`;
+        }
       }
     } else if (isValueType(ctx, field)) {
       const type = basicTypeName(ctx, field, { keepValueType: true });
@@ -667,7 +676,7 @@ const Reader = imp('Reader@protobufjs/minimal');
 
 /** Creates a function to encode a message by loop overing the tags. */
 function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorProto): Code {
-  const { options, utils } = ctx;
+  const { options, utils, typeMap } = ctx;
   const chunks: Code[] = [];
 
   // create the basic function declaration
@@ -684,7 +693,11 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
 
     // get a generic writer.doSomething based on the basic type
     let writeSnippet: (place: string) => Code;
-    if (isScalar(field) || isEnum(field)) {
+    if (isEnum(field) && options.stringEnums) {
+      const tag = ((field.number << 3) | basicWireType(field.type)) >>> 0;
+      const toNumber = getEnumMethod(typeMap, field.typeName, 'ToNumber');
+      writeSnippet = (place) => code`writer.uint32(${tag}).${toReaderCall(field)}(${toNumber}(${place}))`;
+    } else if (isScalar(field) || isEnum(field)) {
       const tag = ((field.number << 3) | basicWireType(field.type)) >>> 0;
       writeSnippet = (place) => code`writer.uint32(${tag}).${toReaderCall(field)}(${place})`;
     } else if (isTimestamp(field) && (options.useDate === DateOption.DATE || options.useDate === DateOption.STRING)) {
@@ -705,11 +718,6 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
     }
 
     if (isRepeated(field)) {
-      if (options.useOptionals) {
-        chunks.push(code`
-          if (message.${fieldName} !== undefined) {
-        `);
-      }
       if (isMapType(ctx, messageDesc, field)) {
         chunks.push(code`
           Object.entries(message.${fieldName}).forEach(([key, value]) => {
@@ -730,11 +738,6 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
             writer.${toReaderCall(field)}(v);
           }
           writer.ldelim();
-        `);
-      }
-      if (options.useOptionals) {
-        chunks.push(code`
-          }
         `);
       }
     } else if (isWithinOneOfThatShouldBeUnion(options, field)) {
@@ -880,13 +883,13 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
         const i = maybeCastToNumber(ctx, messageDesc, field, 'key');
         chunks.push(code`
           Object.entries(object.${fieldName}).forEach(([key, value]) => {
-            message.${fieldName}${options.useOptionals ? '!' : ''}[${i}] = ${readSnippet('value')};
+            message.${fieldName}[${i}] = ${readSnippet('value')};
           });
         `);
       } else {
         chunks.push(code`
           for (const e of object.${fieldName}) {
-            message.${fieldName}${options.useOptionals ? '!' : ''}.push(${readSnippet('e')});
+            message.${fieldName}.push(${readSnippet('e')});
           }
         `);
       }
@@ -1082,14 +1085,14 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
         chunks.push(code`
           Object.entries(object.${fieldName}).forEach(([key, value]) => {
             if (value !== undefined) {
-              message.${fieldName}${options.useOptionals ? '!' : ''}[${i}] = ${readSnippet('value')};
+              message.${fieldName}[${i}] = ${readSnippet('value')};
             }
           });
         `);
       } else {
         chunks.push(code`
           for (const e of object.${fieldName}) {
-            message.${fieldName}${options.useOptionals ? '!' : ''}.push(${readSnippet('e')});
+            message.${fieldName}.push(${readSnippet('e')});
           }
         `);
       }

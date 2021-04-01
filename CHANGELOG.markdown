@@ -1,4 +1,32 @@
 
+## v1.76.0
+
+* Always initial long when `forceLong=long`. Fixes #247. (daw1012345)
+
+## v1.75.0
+
+* Fix `stringEnums` combined with `outputEncodeMethods`
+
+## v1.74.0
+
+* Fix `@improbable-eng` imports to work with babel. (m!m)
+
+## v1.73.0
+
+* Fix compiler errors when strict is enabled. Fixes #235. (Graham)
+
+## v1.72.0
+
+* Revert the change in v1.70.0 that changed `useOptionals` handling of repeated fields.
+
+Before this PR, `useOptionals` was purely a type system tweak, and this PR introduced a
+change to decoding semantics, so it needs to be re-introduced under a separate flag to
+avoid being a breaking change.
+
+## v1.71.0
+
+* Add `constEnum` option to enable `const` enums. Fixes #230. (lxgreen)
+
 ## v1.70.0
 
 * Update `useOptionals` to make repeated fields optional as well. Fixes #225. (i-dot)
