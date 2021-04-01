@@ -22,6 +22,7 @@ export const Point = {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...basePoint } as Point;
+    message.data = Buffer.alloc(0);
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -38,6 +39,7 @@ export const Point = {
 
   fromJSON(object: any): Point {
     const message = { ...basePoint } as Point;
+    message.data = Buffer.alloc(0);
     if (object.data !== undefined && object.data !== null) {
       message.data = Buffer.from(bytesFromBase64(object.data));
     }
@@ -47,7 +49,7 @@ export const Point = {
   toJSON(message: Point): unknown {
     const obj: any = {};
     message.data !== undefined &&
-      (obj.data = base64FromBytes(message.data !== undefined ? message.data : new Buffer(0)));
+      (obj.data = base64FromBytes(message.data !== undefined ? message.data : Buffer.alloc(0)));
     return obj;
   },
 
@@ -56,7 +58,7 @@ export const Point = {
     if (object.data !== undefined && object.data !== null) {
       message.data = object.data;
     } else {
-      message.data = new Buffer(0);
+      message.data = Buffer.alloc(0);
     }
     return message;
   },

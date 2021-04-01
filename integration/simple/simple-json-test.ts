@@ -26,7 +26,9 @@ describe('simple json', () => {
     // (even though its really our object/representation
     expect(s2).toEqual({
       ...s1,
+      birthday: undefined,
       blobs: [],
+      blob: new Uint8Array(),
       createdAt: undefined,
       thing: undefined,
     });
@@ -115,6 +117,7 @@ describe('simple json', () => {
       Object {
         "age": 0,
         "birthday": undefined,
+        "blob": Uint8Array [],
         "blobs": Array [],
         "child": undefined,
         "coins": Array [],
@@ -136,6 +139,7 @@ describe('simple json', () => {
       Object {
         "age": 0,
         "birthday": undefined,
+        "blob": Uint8Array [],
         "blobs": Array [],
         "child": undefined,
         "coins": Array [],
