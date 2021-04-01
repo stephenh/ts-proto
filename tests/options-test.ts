@@ -20,6 +20,7 @@ describe('options', () => {
         "outputJsonMethods": true,
         "outputPartialMethods": false,
         "outputSchema": false,
+        "outputTypeRegistry": false,
         "returnObservable": false,
         "snakeToCamel": true,
         "stringEnums": false,
