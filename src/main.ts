@@ -152,7 +152,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
           const messageTypeRegistry = imp('messageTypeRegistry@./typeRegistry');
 
           chunks.push(code`
-            ${messageTypeRegistry}.set(${fullName}.$type, ${def(fullName)});
+            ${messageTypeRegistry}.set(${fullName}.$type, ${fullName});
           `);
         }
       },
