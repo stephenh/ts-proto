@@ -32,6 +32,7 @@ export type Options = {
   outputEncodeMethods: boolean;
   outputJsonMethods: boolean;
   outputPartialMethods: boolean;
+  outputTypeRegistry: boolean;
   stringEnums: boolean;
   constEnums: boolean;
   outputClientImpl: boolean | 'grpc-web';
@@ -59,6 +60,7 @@ export function defaultOptions(): Options {
     outputEncodeMethods: true,
     outputJsonMethods: true,
     outputPartialMethods: true,
+    outputTypeRegistry: false,
     stringEnums: false,
     constEnums: false,
     outputClientImpl: true,

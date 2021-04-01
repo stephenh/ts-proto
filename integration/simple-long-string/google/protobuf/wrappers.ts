@@ -548,6 +548,7 @@ export const BytesValue = {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseBytesValue } as BytesValue;
+    message.value = new Uint8Array();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -564,6 +565,7 @@ export const BytesValue = {
 
   fromJSON(object: any): BytesValue {
     const message = { ...baseBytesValue } as BytesValue;
+    message.value = new Uint8Array();
     if (object.value !== undefined && object.value !== null) {
       message.value = bytesFromBase64(object.value);
     }

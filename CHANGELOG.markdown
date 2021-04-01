@@ -1,4 +1,10 @@
 
+## Pending
+
+* Fix bytes initialization. Fixes #237. (willclarktech and webmaster128)
+* Better camelization for `FOO_BAR` to `fooBar`
+* Add `message.$type` fields and a type register. See #254. (aikoven)
+
 ## v1.76.0
 
 * Always initial long when `forceLong=long`. Fixes #247. (daw1012345)

@@ -70,7 +70,10 @@ describe('simple', () => {
       blobs: [],
     };
     const s2 = Simple.decode(Reader.create(PbSimple.encode(PbSimple.fromObject(s1)).finish()));
-    expect(s2).toEqual(s1);
+    expect(s2).toEqual({
+      ...s1,
+      blob: new Uint8Array(),
+    });
   });
 
   it('can encode', () => {
@@ -130,6 +133,7 @@ describe('simple', () => {
         "oldStates",
         "grandChildren",
         "blobs",
+        "blob",
       ]
     `);
   });

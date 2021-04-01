@@ -9,6 +9,7 @@ import { generateFile, makeUtils } from './main';
 import { createTypeMap } from './types';
 import { Context } from './context';
 import { getTsPoetOpts, optionsFromParameter } from './options';
+import { generateTypeRegistry } from './generate-type-registry';
 
 // this would be the plugin called by the protoc compiler
 async function main() {
@@ -29,6 +30,18 @@ async function main() {
       return { name: path, content: prefixDisableLinter(spec) };
     })
   );
+
+  if (options.outputTypeRegistry) {
+    const utils = makeUtils(options);
+    const ctx: Context = { options, typeMap, utils };
+
+    const path = 'typeRegistry.ts';
+    const code = generateTypeRegistry(ctx);
+
+    const spec = await code.toStringWithImports({ ...getTsPoetOpts(options), path });
+    files.push({ name: path, content: prefixDisableLinter(spec) });
+  }
+
   const response = CodeGeneratorResponse.fromPartial({
     file: files,
     supportedFeatures: CodeGeneratorResponse_Feature.FEATURE_PROTO3_OPTIONAL,
