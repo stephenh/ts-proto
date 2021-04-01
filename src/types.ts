@@ -220,7 +220,7 @@ export function defaultValue(ctx: Context, field: FieldDescriptorProto): any {
       return '""';
     case FieldDescriptorProto_Type.TYPE_BYTES:
       if (options.env === EnvOption.NODE) {
-        return 'new Buffer(0)';
+        return 'Buffer.alloc(0)';
       } else {
         return 'new Uint8Array()';
       }
