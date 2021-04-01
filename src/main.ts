@@ -938,11 +938,11 @@ function generateToJson(ctx: Context, fullName: string, messageDesc: DescriptorP
           ? code`${from} !== undefined ? ${toJson}(${from}) : undefined`
           : code`${toJson}(${from})`;
       } else if (isTimestamp(field) && options.useDate === DateOption.DATE) {
-        return code`${from} !== undefined ? ${from}.toISOString() : null`;
+        return code`${from}.toISOString()`;
       } else if (isTimestamp(field) && options.useDate === DateOption.STRING) {
         return code`${from}`;
       } else if (isTimestamp(field) && options.useDate === DateOption.TIMESTAMP) {
-        return code`${from} !== undefined ? ${utils.fromTimestamp}(${from}).toISOString() : null`;
+        return code`${utils.fromTimestamp}(${from}).toISOString()`;
       } else if (isMapType(ctx, messageDesc, field)) {
         // For map types, drill-in and then admittedly re-hard-code our per-value-type logic
         const valueType = (typeMap.get(field.typeName)![2] as DescriptorProto).field[1];

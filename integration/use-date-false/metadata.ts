@@ -48,8 +48,7 @@ export const Metadata = {
 
   toJSON(message: Metadata): unknown {
     const obj: any = {};
-    message.lastEdited !== undefined &&
-      (obj.lastEdited = message.lastEdited !== undefined ? fromTimestamp(message.lastEdited).toISOString() : null);
+    message.lastEdited !== undefined && (obj.lastEdited = fromTimestamp(message.lastEdited).toISOString());
     return obj;
   },
 

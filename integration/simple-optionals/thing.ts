@@ -48,8 +48,7 @@ export const ImportedThing = {
 
   toJSON(message: ImportedThing): unknown {
     const obj: any = {};
-    message.createdAt !== undefined &&
-      (obj.createdAt = message.createdAt !== undefined ? message.createdAt.toISOString() : null);
+    message.createdAt !== undefined && (obj.createdAt = message.createdAt.toISOString());
     return obj;
   },
 

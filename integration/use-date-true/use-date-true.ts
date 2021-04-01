@@ -109,16 +109,13 @@ export const Todo = {
   toJSON(message: Todo): unknown {
     const obj: any = {};
     message.id !== undefined && (obj.id = message.id);
-    message.timestamp !== undefined &&
-      (obj.timestamp = message.timestamp !== undefined ? message.timestamp.toISOString() : null);
+    message.timestamp !== undefined && (obj.timestamp = message.timestamp.toISOString());
     if (message.repeatedTimestamp) {
-      obj.repeatedTimestamp = message.repeatedTimestamp.map((e) => (e !== undefined ? e.toISOString() : null));
+      obj.repeatedTimestamp = message.repeatedTimestamp.map((e) => e.toISOString());
     } else {
       obj.repeatedTimestamp = [];
     }
-    message.optionalTimestamp !== undefined &&
-      (obj.optionalTimestamp =
-        message.optionalTimestamp !== undefined ? message.optionalTimestamp.toISOString() : null);
+    message.optionalTimestamp !== undefined && (obj.optionalTimestamp = message.optionalTimestamp.toISOString());
     obj.mapOfTimestamps = {};
     if (message.mapOfTimestamps) {
       Object.entries(message.mapOfTimestamps).forEach(([k, v]) => {
@@ -215,7 +212,7 @@ export const Todo_MapOfTimestampsEntry = {
   toJSON(message: Todo_MapOfTimestampsEntry): unknown {
     const obj: any = {};
     message.key !== undefined && (obj.key = message.key);
-    message.value !== undefined && (obj.value = message.value !== undefined ? message.value.toISOString() : null);
+    message.value !== undefined && (obj.value = message.value.toISOString());
     return obj;
   },
 
