@@ -244,6 +244,7 @@ export const Simple = {
     message.snacks = [];
     message.oldStates = [];
     message.blobs = [];
+    message.blob = new Uint8Array();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -798,6 +799,7 @@ export const SimpleWithMap_MapOfBytesEntry = {
     const reader = input instanceof Uint8Array ? new Reader(input) : input;
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseSimpleWithMap_MapOfBytesEntry } as SimpleWithMap_MapOfBytesEntry;
+    message.value = new Uint8Array();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
