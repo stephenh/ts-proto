@@ -480,8 +480,7 @@ export const Simple = {
     const obj: any = {};
     message.name !== undefined && (obj.name = message.name);
     message.age !== undefined && (obj.age = message.age);
-    message.createdAt !== undefined &&
-      (obj.createdAt = message.createdAt !== undefined ? message.createdAt.toISOString() : null);
+    message.createdAt !== undefined && (obj.createdAt = message.createdAt.toISOString());
     message.child !== undefined && (obj.child = message.child ? Child.toJSON(message.child) : undefined);
     message.state !== undefined && (obj.state = stateEnumToJSON(message.state));
     if (message.grandChildren) {
@@ -1620,7 +1619,7 @@ export const SimpleWithMap_MapOfTimestampsEntry = {
   toJSON(message: SimpleWithMap_MapOfTimestampsEntry): unknown {
     const obj: any = {};
     message.key !== undefined && (obj.key = message.key);
-    message.value !== undefined && (obj.value = message.value !== undefined ? message.value.toISOString() : null);
+    message.value !== undefined && (obj.value = message.value.toISOString());
     return obj;
   },
 
@@ -2466,8 +2465,7 @@ export const SimpleButOptional = {
     const obj: any = {};
     message.name !== undefined && (obj.name = message.name);
     message.age !== undefined && (obj.age = message.age);
-    message.createdAt !== undefined &&
-      (obj.createdAt = message.createdAt !== undefined ? message.createdAt.toISOString() : null);
+    message.createdAt !== undefined && (obj.createdAt = message.createdAt.toISOString());
     message.child !== undefined && (obj.child = message.child ? Child.toJSON(message.child) : undefined);
     message.state !== undefined &&
       (obj.state = message.state !== undefined ? stateEnumToJSON(message.state) : undefined);

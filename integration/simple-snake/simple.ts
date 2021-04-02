@@ -402,8 +402,7 @@ export const Simple = {
     const obj: any = {};
     message.name !== undefined && (obj.name = message.name);
     message.age !== undefined && (obj.age = message.age);
-    message.created_at !== undefined &&
-      (obj.created_at = message.created_at !== undefined ? message.created_at.toISOString() : null);
+    message.created_at !== undefined && (obj.created_at = message.created_at.toISOString());
     message.child !== undefined && (obj.child = message.child ? Child.toJSON(message.child) : undefined);
     message.state !== undefined && (obj.state = stateEnumToJSON(message.state));
     if (message.grand_children) {

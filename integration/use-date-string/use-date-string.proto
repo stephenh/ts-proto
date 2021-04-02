@@ -1,0 +1,10 @@
+syntax = "proto3";
+import "google/protobuf/timestamp.proto";
+
+message Todo {
+  string id = 1;
+  google.protobuf.Timestamp timestamp = 2;
+  repeated google.protobuf.Timestamp repeated_timestamp = 3;
+  optional google.protobuf.Timestamp optional_timestamp = 4;
+  map<string, google.protobuf.Timestamp> map_of_timestamps = 5;
+}

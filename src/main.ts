@@ -55,7 +55,7 @@ import {
 } from './generate-grpc-web';
 import { generateEnum } from './enums';
 import { visit, visitServices } from './visit';
-import { EnvOption, LongOption, OneofOption, Options } from './options';
+import { EnvOption, LongOption, OneofOption, Options, DateOption } from './options';
 import { Context } from './context';
 import { generateSchema } from './schema';
 import { ConditionalOutput } from 'ts-poet/build/ConditionalOutput';
@@ -416,51 +416,68 @@ function makeTimestampMethods(options: Options, longs: ReturnType<typeof makeLon
 
   const toTimestamp = conditionalOutput(
     'toTimestamp',
-    code`
-      function toTimestamp(date: Date): ${Timestamp} {
-        const seconds = ${seconds};
-        const nanos = (date.getTime() % 1_000) * 1_000_000;
-        return { ${maybeTypeField} seconds, nanos };
-      }
-    `
+    options.useDate === DateOption.STRING
+      ? code`
+          function toTimestamp(dateStr: string): ${Timestamp} {
+            const date = new Date(dateStr);
+            const seconds = ${seconds};
+            const nanos = (date.getTime() % 1_000) * 1_000_000;
+            return { ${maybeTypeField} seconds, nanos };
+          }
+        `
+      : code`
+          function toTimestamp(date: Date): ${Timestamp} {
+            const seconds = ${seconds};
+            const nanos = (date.getTime() % 1_000) * 1_000_000;
+            return { ${maybeTypeField} seconds, nanos };
+          }
+        `
   );
 
   const fromTimestamp = conditionalOutput(
     'fromTimestamp',
-    code`
-      function fromTimestamp(t: ${Timestamp}): Date {
-        let millis = ${toNumberCode} * 1_000;
-        millis += t.nanos / 1_000_000;
-        return new Date(millis);
-      }
-    `
+    options.useDate === DateOption.STRING
+      ? code`
+          function fromTimestamp(t: ${Timestamp}): string {
+            let millis = ${toNumberCode} * 1_000;
+            millis += t.nanos / 1_000_000;
+            return new Date(millis).toISOString();
+          }
+        `
+      : code`
+          function fromTimestamp(t: ${Timestamp}): Date {
+            let millis = ${toNumberCode} * 1_000;
+            millis += t.nanos / 1_000_000;
+            return new Date(millis);
+          }
+        `
   );
 
   const fromJsonTimestamp = conditionalOutput(
     'fromJsonTimestamp',
-    options.useDate
+    options.useDate === DateOption.DATE
       ? code`
-      function fromJsonTimestamp(o: any): Date {
-        if (o instanceof Date) {
-          return o;
-        } else if (typeof o === "string") {
-          return new Date(o);
-        } else {
-          return ${fromTimestamp}(Timestamp.fromJSON(o));
+        function fromJsonTimestamp(o: any): Date {
+          if (o instanceof Date) {
+            return o;
+          } else if (typeof o === "string") {
+            return new Date(o);
+          } else {
+            return ${fromTimestamp}(Timestamp.fromJSON(o));
+          }
         }
-      }
-    `
+      `
       : code`
-      function fromJsonTimestamp(o: any): Timestamp {
-        if (o instanceof Date) {
-          return ${toTimestamp}(o);
-        } else if (typeof o === "string") {
-          return ${toTimestamp}(new Date(o));
-        } else {
-          return Timestamp.fromJSON(o);
+        function fromJsonTimestamp(o: any): Timestamp {
+          if (o instanceof Date) {
+            return ${toTimestamp}(o);
+          } else if (typeof o === "string") {
+            return ${toTimestamp}(new Date(o));
+          } else {
+            return Timestamp.fromJSON(o);
+          }
         }
-      }
-    `
+      `
   );
 
   return { toTimestamp, fromTimestamp, fromJsonTimestamp };
@@ -651,7 +668,7 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
     } else if (isValueType(ctx, field)) {
       const type = basicTypeName(ctx, field, { keepValueType: true });
       readSnippet = code`${type}.decode(reader, reader.uint32()).value`;
-    } else if (isTimestamp(field) && options.useDate) {
+    } else if (isTimestamp(field) && (options.useDate === DateOption.DATE || options.useDate === DateOption.STRING)) {
       const type = basicTypeName(ctx, field, { keepValueType: true });
       readSnippet = code`${utils.fromTimestamp}(${type}.decode(reader, reader.uint32()))`;
     } else if (isMessage(field)) {
@@ -739,7 +756,7 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
     } else if (isScalar(field) || isEnum(field)) {
       const tag = ((field.number << 3) | basicWireType(field.type)) >>> 0;
       writeSnippet = (place) => code`writer.uint32(${tag}).${toReaderCall(field)}(${place})`;
-    } else if (isTimestamp(field) && options.useDate) {
+    } else if (isTimestamp(field) && (options.useDate === DateOption.DATE || options.useDate === DateOption.STRING)) {
       const tag = ((field.number << 3) | 2) >>> 0;
       const type = basicTypeName(ctx, field, { keepValueType: true });
       writeSnippet = (place) =>
@@ -874,7 +891,12 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
           const cstr = capitalize(basicTypeName(ctx, field, { keepValueType: true }).toCodeString());
           return code`${cstr}(${from})`;
         }
-      } else if (isTimestamp(field)) {
+      } else if (isTimestamp(field) && options.useDate === DateOption.STRING) {
+        return code`String(${from})`;
+      } else if (
+        isTimestamp(field) &&
+        (options.useDate === DateOption.DATE || options.useDate === DateOption.TIMESTAMP)
+      ) {
         return code`${utils.fromJsonTimestamp}(${from})`;
       } else if (isValueType(ctx, field)) {
         const valueType = valueTypeName(ctx, field.typeName)!;
@@ -902,7 +924,12 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
               const cstr = capitalize(basicTypeName(ctx, valueType).toCodeString());
               return code`${cstr}(${from})`;
             }
-          } else if (isTimestamp(valueType)) {
+          } else if (isTimestamp(valueType) && options.useDate === DateOption.STRING) {
+            return code`String(${from})`;
+          } else if (
+            isTimestamp(valueType) &&
+            (options.useDate === DateOption.DATE || options.useDate === DateOption.TIMESTAMP)
+          ) {
             return code`${utils.fromJsonTimestamp}(${from})`;
           } else {
             const type = basicTypeName(ctx, valueType);
@@ -981,10 +1008,12 @@ function generateToJson(ctx: Context, fullName: string, messageDesc: DescriptorP
         return isWithinOneOf(field)
           ? code`${from} !== undefined ? ${toJson}(${from}) : undefined`
           : code`${toJson}(${from})`;
-      } else if (isTimestamp(field)) {
-        return options.useDate
-          ? code`${from} !== undefined ? ${from}.toISOString() : null`
-          : code`${from} !== undefined ? ${utils.fromTimestamp}(${from}).toISOString() : null`;
+      } else if (isTimestamp(field) && options.useDate === DateOption.DATE) {
+        return code`${from}.toISOString()`;
+      } else if (isTimestamp(field) && options.useDate === DateOption.STRING) {
+        return code`${from}`;
+      } else if (isTimestamp(field) && options.useDate === DateOption.TIMESTAMP) {
+        return code`${utils.fromTimestamp}(${from}).toISOString()`;
       } else if (isMapType(ctx, messageDesc, field)) {
         // For map types, drill-in and then admittedly re-hard-code our per-value-type logic
         const valueType = (typeMap.get(field.typeName)![2] as DescriptorProto).field[1];
@@ -993,8 +1022,12 @@ function generateToJson(ctx: Context, fullName: string, messageDesc: DescriptorP
           return code`${toJson}(${from})`;
         } else if (isBytes(valueType)) {
           return code`${utils.base64FromBytes}(${from})`;
-        } else if (isTimestamp(valueType)) {
-          return options.useDate ? code`${from}.toISOString()` : code`${utils.fromTimestamp}(${from}).toISOString()`;
+        } else if (isTimestamp(valueType) && options.useDate === DateOption.DATE) {
+          return code`${from}.toISOString()`;
+        } else if (isTimestamp(valueType) && options.useDate === DateOption.STRING) {
+          return code`${from}`;
+        } else if (isTimestamp(valueType) && options.useDate === DateOption.TIMESTAMP) {
+          return code`${utils.fromTimestamp}(${from}).toISOString()`;
         } else if (isScalar(valueType)) {
           return code`${from}`;
         } else {
@@ -1056,6 +1089,7 @@ function generateToJson(ctx: Context, fullName: string, messageDesc: DescriptorP
 function generateFromPartial(ctx: Context, fullName: string, messageDesc: DescriptorProto): Code {
   const { options, utils, typeMap } = ctx;
   const chunks: Code[] = [];
+  const Timestamp = imp('Timestamp@./google/protobuf/timestamp');
 
   // create the basic function declaration
   chunks.push(code`
@@ -1075,9 +1109,11 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
     const fieldName = maybeSnakeToCamel(field.name, options);
 
     const readSnippet = (from: string): Code => {
-      if (isPrimitive(field) || isValueType(ctx, field)) {
-        return code`${from}`;
-      } else if (isTimestamp(field) && options.useDate) {
+      if (
+        isPrimitive(field) ||
+        (isTimestamp(field) && (options.useDate === DateOption.DATE || options.useDate === DateOption.STRING)) ||
+        isValueType(ctx, field)
+      ) {
         return code`${from}`;
       } else if (isMessage(field)) {
         if (isRepeated(field) && isMapType(ctx, messageDesc, field)) {
@@ -1091,7 +1127,10 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
               const cstr = capitalize(basicTypeName(ctx, valueType).toCodeString());
               return code`${cstr}(${from})`;
             }
-          } else if (isTimestamp(valueType) && options.useDate) {
+          } else if (
+            isTimestamp(valueType) &&
+            (options.useDate === DateOption.DATE || options.useDate === DateOption.STRING)
+          ) {
             return code`${from}`;
           } else {
             const type = basicTypeName(ctx, valueType);

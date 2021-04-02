@@ -10,7 +10,7 @@ import {
 } from 'ts-proto-descriptors/google/protobuf/descriptor';
 import { CodeGeneratorRequest } from 'ts-proto-descriptors/google/protobuf/compiler/plugin';
 import { code, Code, imp, Import } from 'ts-poet';
-import { EnvOption, LongOption, OneofOption, Options } from './options';
+import { DateOption, EnvOption, LongOption, OneofOption, Options } from './options';
 import { visit } from './visit';
 import { fail } from './utils';
 import SourceInfo from './sourceInfo';
@@ -436,8 +436,14 @@ export function messageToTypeName(
     return code`${valueType} | undefined`;
   }
   // Look for other special prototypes like Timestamp that aren't technically wrapper types
-  if (!typeOptions.keepValueType && protoType === '.google.protobuf.Timestamp' && options.useDate) {
-    return code`Date`;
+  if (!typeOptions.keepValueType && protoType === '.google.protobuf.Timestamp') {
+    if (options.useDate == DateOption.DATE) {
+      return code`Date`;
+    }
+
+    if (options.useDate == DateOption.STRING) {
+      return code`string`;
+    }
   }
   const [module, type] = toModuleAndType(typeMap, protoType);
   return code`${imp(`${type}@./${module}`)}`;

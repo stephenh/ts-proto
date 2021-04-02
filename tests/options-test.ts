@@ -27,7 +27,7 @@ describe('options', () => {
         "snakeToCamel": true,
         "stringEnums": false,
         "unrecognizedEnum": true,
-        "useDate": false,
+        "useDate": "timestamp",
         "useOptionals": false,
       }
     `);

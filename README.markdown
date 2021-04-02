@@ -25,6 +25,7 @@
 - [Primitive Types](#primitive-types)
 - [Wrapper Types](#wrapper-types)
 - [Number Types](#number-types)
+- [Timestamps](#timestamps)
 - [Current Status of Optional Values](#current-status-of-optional-values)
 
 # Overview
@@ -292,7 +293,7 @@ protoc --plugin=node_modules/ts-proto/protoc-gen-ts_proto ./batching.proto -I.
 
   Note that `addGrpcMetadata`, `addNestjsRestParameter` and `returnObservable` will still be false.
 
-- With `--ts_proto_opt=useDate=false`, fields of type `google.protobuf.Timestamp` will not be mapped to type `Date` in the generated types.
+- With `--ts_proto_opt=useDate=false`, fields of type `google.protobuf.Timestamp` will not be mapped to type `Date` in the generated types. See [Timestamps](#timestamps) for more details.
 
 - With `--ts_proto_opt=outputSchema=true`, meta typings will be generated that can later be used in other code generators.
 
@@ -410,6 +411,14 @@ The protobuf number types map to JavaScript types based on the `forceLong` confi
 | sfixed64              | number\*                   | Long             | string             |
 
 Where (\*) indicates they might throw an error at runtime.
+
+# Timestamps
+
+The representation of `google.protobuf.Timestamp` is configurable by the `useDate` flag.
+
+| Protobuf well-known type    | Default/`useDate=true` | `useDate=false`                      | `useDate=string` |
+| --------------------------- | ---------------------- | ------------------------------------ | ---------------- |
+| `google.protobuf.Timestamp` | `Date`                 | `{ seconds: number, nanos: number }` | `string`         |
 
 # Current Status of Optional Values
 
