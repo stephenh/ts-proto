@@ -151,6 +151,8 @@ creating a class and calling the right getters/setters.
 
 - Timestamps are mapped as `Date`
 
+  (Configurable with the `useDate` parameter.)
+
 - `fromJSON`/`toJSON` support the [canonical Protobuf JS](https://developers.google.com/protocol-buffers/docs/proto3#json) format (i.e. timestamps are ISO strings)
 
 # Auto-Batching / N+1 Prevention
@@ -195,7 +197,7 @@ protoc --plugin=node_modules/ts-proto/protoc-gen-ts_proto ./batching.proto -I.
 
 - With `--ts_proto_opt=context=true`, the services will have a Go-style `ctx` parameter, which is useful for tracing/logging/etc. if you're not using node's `async_hooks` api due to performance reasons.
 
-- With `--ts_proto_opt=forceLong=long`, all 64 bit numbers will be parsed as instances of `Long` (using the [long](https://www.npmjs.com/package/long) library).
+- With `--ts_proto_opt=forceLong=long`, all 64-bit numbers will be parsed as instances of `Long` (using the [long](https://www.npmjs.com/package/long) library).
 
   Alternatively, if you pass `--ts_proto_opt=forceLong=string`, all 64 bit numbers will be outputted as strings.
 
@@ -209,9 +211,9 @@ protoc --plugin=node_modules/ts-proto/protoc-gen-ts_proto ./batching.proto -I.
 
   Currently `browser` doesn't have any specific behavior other than being "not `node`". It probably will soon/at some point.
 
-- With `--ts_proto_opt=useOptionals=true`, non-scalar fields are declared as optional TypeScript properties, e.g. `field?: Message` instead of `field: Message | undefined`.
+- With `--ts_proto_opt=useOptionals=true`, non-scalar fields are declared as optional TypeScript properties, e.g. `field?: Message` instead of the default `field: Message | undefined`.
 
-  ts-proto defaults to `useOptionals=false`, e.g. `field: Message | undefined`, because it is the "most-safe" for use cases like:
+  ts-proto defaults to `useOptionals=false`, e.g. `field: Message | undefined`, because it is the most safe for use cases like:
 
   ```typescript
   interface SomeMessage {
@@ -221,19 +223,22 @@ protoc --plugin=node_modules/ts-proto/protoc-gen-ts_proto ./batching.proto -I.
 
   const data = { firstName: 'a', lastTypo: 'b' };
 
-  // This will compile even though `lastTypo` means that `lastName` is not assigned
+  // This would compile if `lastName` was `lastName?`, even though the
+  // `lastTypo` key above means that `lastName` is not assigned.
   const message: SomeMessage = {
     ...data,
   };
   ```
 
   However, the type-safety of `useOptionals=false` is admittedly tedious if you have many inherently-unused fields, so you can use `useOptionals=true` if that trade-off makes sense for your project.
+  
+  You can also use the generated `SomeMessage.fromPartial` methods to opt into the optionality on a per-call-site basis. The `fromPartial` allows the creator/writer to have default values applied (i.e. `undefined` --> `0`), and the return value will still be the non-optional type that provides a consistent view (i.e. always `0`) to clients.
 
   Eventually if TypesCript supports [Exact Types](https://github.com/microsoft/TypeScript/issues/12936), that should allow ts-proto to switch to `useOptionals=true` as the default/only behavior, have the generated `Message.encode`/`Message.toPartial`/etc. methods accept `Exact<T>` versions of the message types, and the result would be both safe + succinct.
 
-  Also see the comment in [this issue](https://github.com/stephenh/ts-proto/issues/120#issuecomment-678375833) which explains some of the nuance behind making all fields optional (currently `useOptionals` only makes message fields optional), specifically that a message created with `const message: Message = { ...key not set... }` vs. `const message = Message.decode(...key not set...)` would look different to clients.
+  Also see the comment in [this issue](https://github.com/stephenh/ts-proto/issues/120#issuecomment-678375833) which explains the nuance behind making all fields optional (currently `useOptionals` only makes message fields optional), specifically that a message created with `const message: Message = { ...key not set... }` (so `key` is `undefined`) vs. `const message = Message.decode(...key not set...)` (so `key` is the default value) would look different to clients.
 
-  (Also note that each message's `Message.fromPartial(...)` static methods are specifically meant to address this, because it allows you to create a message with all keys optional, but still applies the usual protobuf default-value-on-missing-key logic, so that code that reads the message get more consistent behavior.
+  Note that RPC methods, like `service.ping({ key: ... })`, accept `DeepPartial` versions of the request messages, because of the same rationale that it makes it easy for the writer call-site to get default values for free, and because the "reader" is the internal ts-proto serialization code, it can apply the defaults as necessary.
 
 - With `--ts_proto_opt=exportCommonSymbols=false`, utility types like `DeepPartial` won't be `export`d.
   
