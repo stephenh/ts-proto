@@ -4,6 +4,7 @@
 * Fix bytes initialization. Fixes #237. (willclarktech and webmaster128)
 * Better camelization for `FOO_BAR` to `fooBar`
 * Add `message.$type` fields and a type register. See #254. (aikoven)
+* Don't output long initialization for only types. Fixes #247.
 
 ## v1.76.0
 
