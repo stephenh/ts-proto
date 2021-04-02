@@ -3,6 +3,7 @@ import { util, configure, Writer, Reader } from 'protobufjs/minimal';
 import * as Long from 'long';
 import { grpc } from '@improbable-eng/grpc-web';
 import { BrowserHeaders } from 'browser-headers';
+import { Metadata } from 'grpc';
 
 export const protobufPackage = 'rpx';
 
@@ -352,7 +353,7 @@ export const Empty = {
  * but with the streaming method removed.
  */
 export interface DashState {
-  UserSettings(request: DeepPartial<Empty>, metadata?: grpc.Metadata): Promise<DashUserSettingsState>;
+  UserSettings(request: DeepPartial<Empty>, metadata?: Metadata): Promise<DashUserSettingsState>;
 }
 
 export class DashStateClientImpl implements DashState {

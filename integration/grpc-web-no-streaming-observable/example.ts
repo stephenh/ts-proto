@@ -5,6 +5,7 @@ import { grpc } from '@improbable-eng/grpc-web';
 import { Observable } from 'rxjs';
 import { BrowserHeaders } from 'browser-headers';
 import { take } from 'rxjs/operators';
+import { Metadata } from 'grpc';
 
 export const protobufPackage = 'rpx';
 
@@ -354,7 +355,7 @@ export const Empty = {
  * but with the streaming method removed.
  */
 export interface DashState {
-  UserSettings(request: DeepPartial<Empty>, metadata?: grpc.Metadata): Observable<DashUserSettingsState>;
+  UserSettings(request: DeepPartial<Empty>, metadata?: Metadata): Observable<DashUserSettingsState>;
 }
 
 export class DashStateClientImpl implements DashState {
