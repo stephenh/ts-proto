@@ -1,4 +1,6 @@
 /* eslint-disable */
+import { util, configure, Writer, Reader } from 'protobufjs/minimal';
+import * as Long from 'long';
 import {
   makeGenericClientConstructor,
   ChannelCredentials,
@@ -17,8 +19,6 @@ import {
   ClientDuplexStream,
   ServiceError,
 } from '@grpc/grpc-js';
-import { util, configure, Writer, Reader } from 'protobufjs/minimal';
-import * as Long from 'long';
 import { Timestamp } from './google/protobuf/timestamp';
 import { Empty } from './google/protobuf/empty';
 

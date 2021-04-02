@@ -21,6 +21,7 @@ import { Context } from './context';
 const hash = imp('hash*object-hash');
 const dataloader = imp('DataLoader*dataloader');
 const Reader = imp('Reader@protobufjs/minimal');
+const Metadata = imp('Metadata@grpc');
 
 /**
  * Generates an interface for `serviceDesc`.
@@ -66,10 +67,10 @@ export function generateService(
 
     // Use metadata as last argument for interface only configuration
     if (options.outputClientImpl === 'grpc-web') {
-      params.push(code`metadata?: grpc.Metadata`);
+      params.push(code`metadata?: ${Metadata}`);
     } else if (options.addGrpcMetadata) {
       const q = options.addNestjsRestParameter ? '' : '?';
-      params.push(code`metadata${q}: Metadata@grpc`);
+      params.push(code`metadata${q}: ${Metadata}`);
     }
     if (options.addNestjsRestParameter) {
       params.push(code`...rest: any`);

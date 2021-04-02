@@ -14,6 +14,8 @@ import { maybeAddComment, singular } from './utils';
 import { camelCase } from './case';
 import { Context } from './context';
 
+const Metadata = imp('Metadata@grpc');
+
 export function generateNestjsServiceController(
   ctx: Context,
   fileDesc: FileDescriptorProto,
@@ -41,7 +43,7 @@ export function generateNestjsServiceController(
     // Use metadata as last argument for interface only configuration
     if (options.addGrpcMetadata) {
       const q = options.addNestjsRestParameter ? '' : '?';
-      params.push(code`metadata${q}: ${imp('Metadata@grpc')}`);
+      params.push(code`metadata${q}: ${Metadata}`);
     }
     if (options.addNestjsRestParameter) {
       params.push(code`...rest: any`);
@@ -114,7 +116,7 @@ export function generateNestjsServiceClient(
     // Use metadata as last argument for interface only configuration
     if (options.addGrpcMetadata) {
       const q = options.addNestjsRestParameter ? '' : '?';
-      params.push(code`metadata${q}: ${imp('Metadata@grpc')}`);
+      params.push(code`metadata${q}: ${Metadata}`);
     }
     if (options.addNestjsRestParameter) {
       params.push(code`...rest: any`);

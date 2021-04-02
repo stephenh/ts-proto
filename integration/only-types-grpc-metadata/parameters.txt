@@ -1,0 +1,1 @@
+outputEncodeMethods=false,outputJsonMethods=false,outputClientImpl=false,lowerCaseServiceMethods=true,addGrpcMetadata=true
