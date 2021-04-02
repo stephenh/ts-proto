@@ -52,7 +52,7 @@ export const DateMessage = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): DateMessage {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseDateMessage } as DateMessage;
     while (reader.pos < end) {

@@ -277,7 +277,7 @@ export const Simple = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): Simple {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseSimple } as Simple;
     message.grandChildren = [];
@@ -503,7 +503,7 @@ export const Child = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): Child {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseChild } as Child;
     while (reader.pos < end) {
@@ -578,7 +578,7 @@ export const Nested = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): Nested {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseNested } as Nested;
     while (reader.pos < end) {
@@ -665,7 +665,7 @@ export const Nested_InnerMessage = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): Nested_InnerMessage {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseNested_InnerMessage } as Nested_InnerMessage;
     while (reader.pos < end) {
@@ -735,7 +735,7 @@ export const Nested_InnerMessage_DeepMessage = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): Nested_InnerMessage_DeepMessage {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseNested_InnerMessage_DeepMessage } as Nested_InnerMessage_DeepMessage;
     while (reader.pos < end) {
@@ -793,7 +793,7 @@ export const OneOfMessage = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): OneOfMessage {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseOneOfMessage } as OneOfMessage;
     while (reader.pos < end) {
@@ -874,7 +874,7 @@ export const SimpleWithWrappers = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): SimpleWithWrappers {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseSimpleWithWrappers } as SimpleWithWrappers;
     message.coins = [];
@@ -999,7 +999,7 @@ export const Entity = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): Entity {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseEntity } as Entity;
     while (reader.pos < end) {
@@ -1060,7 +1060,7 @@ export const SimpleWithMap = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): SimpleWithMap {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseSimpleWithMap } as SimpleWithMap;
     message.entitiesById = {};
@@ -1185,7 +1185,7 @@ export const SimpleWithMap_EntitiesByIdEntry = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): SimpleWithMap_EntitiesByIdEntry {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseSimpleWithMap_EntitiesByIdEntry } as SimpleWithMap_EntitiesByIdEntry;
     while (reader.pos < end) {
@@ -1257,7 +1257,7 @@ export const SimpleWithMap_NameLookupEntry = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): SimpleWithMap_NameLookupEntry {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseSimpleWithMap_NameLookupEntry } as SimpleWithMap_NameLookupEntry;
     while (reader.pos < end) {
@@ -1329,7 +1329,7 @@ export const SimpleWithMap_IntLookupEntry = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): SimpleWithMap_IntLookupEntry {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseSimpleWithMap_IntLookupEntry } as SimpleWithMap_IntLookupEntry;
     while (reader.pos < end) {
@@ -1398,7 +1398,7 @@ export const SimpleWithSnakeCaseMap = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): SimpleWithSnakeCaseMap {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseSimpleWithSnakeCaseMap } as SimpleWithSnakeCaseMap;
     message.entitiesById = {};
@@ -1469,7 +1469,7 @@ export const SimpleWithSnakeCaseMap_EntitiesByIdEntry = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): SimpleWithSnakeCaseMap_EntitiesByIdEntry {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseSimpleWithSnakeCaseMap_EntitiesByIdEntry } as SimpleWithSnakeCaseMap_EntitiesByIdEntry;
     while (reader.pos < end) {
@@ -1538,7 +1538,7 @@ export const PingRequest = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): PingRequest {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...basePingRequest } as PingRequest;
     while (reader.pos < end) {
@@ -1593,7 +1593,7 @@ export const PingResponse = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): PingResponse {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...basePingResponse } as PingResponse;
     while (reader.pos < end) {
@@ -1694,7 +1694,7 @@ export const Numbers = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): Numbers {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseNumbers } as Numbers;
     while (reader.pos < end) {

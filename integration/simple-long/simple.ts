@@ -72,7 +72,7 @@ export const SimpleWithWrappers = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): SimpleWithWrappers {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseSimpleWithWrappers } as SimpleWithWrappers;
     message.coins = [];
@@ -214,7 +214,7 @@ export const SimpleWithMap = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): SimpleWithMap {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseSimpleWithMap } as SimpleWithMap;
     message.nameLookup = {};
@@ -312,7 +312,7 @@ export const SimpleWithMap_NameLookupEntry = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): SimpleWithMap_NameLookupEntry {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseSimpleWithMap_NameLookupEntry } as SimpleWithMap_NameLookupEntry;
     while (reader.pos < end) {
@@ -384,7 +384,7 @@ export const SimpleWithMap_IntLookupEntry = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): SimpleWithMap_IntLookupEntry {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseSimpleWithMap_IntLookupEntry } as SimpleWithMap_IntLookupEntry;
     while (reader.pos < end) {
@@ -505,7 +505,7 @@ export const Numbers = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): Numbers {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseNumbers } as Numbers;
     message.manyUint64 = [];

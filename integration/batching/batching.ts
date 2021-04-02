@@ -55,7 +55,7 @@ export const BatchQueryRequest = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): BatchQueryRequest {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseBatchQueryRequest } as BatchQueryRequest;
     message.ids = [];
@@ -117,7 +117,7 @@ export const BatchQueryResponse = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): BatchQueryResponse {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseBatchQueryResponse } as BatchQueryResponse;
     message.entities = [];
@@ -179,7 +179,7 @@ export const BatchMapQueryRequest = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): BatchMapQueryRequest {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseBatchMapQueryRequest } as BatchMapQueryRequest;
     message.ids = [];
@@ -241,7 +241,7 @@ export const BatchMapQueryResponse = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): BatchMapQueryResponse {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseBatchMapQueryResponse } as BatchMapQueryResponse;
     message.entities = {};
@@ -312,7 +312,7 @@ export const BatchMapQueryResponse_EntitiesEntry = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): BatchMapQueryResponse_EntitiesEntry {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseBatchMapQueryResponse_EntitiesEntry } as BatchMapQueryResponse_EntitiesEntry;
     while (reader.pos < end) {
@@ -381,7 +381,7 @@ export const GetOnlyMethodRequest = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): GetOnlyMethodRequest {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseGetOnlyMethodRequest } as GetOnlyMethodRequest;
     while (reader.pos < end) {
@@ -436,7 +436,7 @@ export const GetOnlyMethodResponse = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): GetOnlyMethodResponse {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseGetOnlyMethodResponse } as GetOnlyMethodResponse;
     while (reader.pos < end) {
@@ -491,7 +491,7 @@ export const WriteMethodRequest = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): WriteMethodRequest {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseWriteMethodRequest } as WriteMethodRequest;
     while (reader.pos < end) {
@@ -543,7 +543,7 @@ export const WriteMethodResponse = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): WriteMethodResponse {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseWriteMethodResponse } as WriteMethodResponse;
     while (reader.pos < end) {
@@ -587,7 +587,7 @@ export const Entity = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): Entity {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseEntity } as Entity;
     while (reader.pos < end) {

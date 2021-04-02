@@ -81,7 +81,7 @@ export const Numbers = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): Numbers {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseNumbers } as Numbers;
     while (reader.pos < end) {

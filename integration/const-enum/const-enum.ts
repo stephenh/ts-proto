@@ -78,7 +78,7 @@ export const DividerData = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): DividerData {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseDividerData } as DividerData;
     while (reader.pos < end) {

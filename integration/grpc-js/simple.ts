@@ -39,7 +39,7 @@ export const TestMessage = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): TestMessage {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseTestMessage } as TestMessage;
     while (reader.pos < end) {
@@ -68,8 +68,7 @@ export const TestMessage = {
 
   toJSON(message: TestMessage): unknown {
     const obj: any = {};
-    message.timestamp !== undefined &&
-      (obj.timestamp = message.timestamp !== undefined ? message.timestamp.toISOString() : null);
+    message.timestamp !== undefined && (obj.timestamp = message.timestamp.toISOString());
     return obj;
   },
 
