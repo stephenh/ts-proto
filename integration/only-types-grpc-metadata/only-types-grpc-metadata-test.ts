@@ -1,8 +1,8 @@
-import { Registration } from './reservation';
+import { GetBasicRequest } from './only-types-grpc-metadata';
 
-describe('Reservation', () => {
-  it('has no JSON conversion', () => {
-    const r: Registration = { eventName: 'Foo', date: undefined } as Registration;
-    expect(r).toBeTruthy();
+describe('BasicService', () => {
+  it('compiles', () => {
+    const g: GetBasicRequest = { name: 'asdf' };
+    expect(g).toBeTruthy();
   });
 });
