@@ -14,6 +14,9 @@
     "prettier": "prettier --write {src,tests}/**/*.ts",
     "prettier:check": "prettier --list-different {src,tests}/**/*.ts"
   },
+  "files": [
+    "build"
+  ],
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -24,6 +27,12 @@
     "@nestjs/common": "^7.0.9",
     "@nestjs/core": "^7.0.9",
     "@nestjs/microservices": "^7.0.9",
+    "@semantic-release/changelog": "^5.0.1",
+    "@semantic-release/commit-analyzer": "^8.0.1",
+    "@semantic-release/git": "^9.0.0",
+    "@semantic-release/github": "^7.2.0",
+    "@semantic-release/npm": "^7.1.0",
+    "@semantic-release/release-notes-generator": "^9.0.2",
     "@types/jest": "^24.0.11",
     "@types/node": "^10.7.0",
     "grpc": "^1.24.4",
@@ -31,6 +40,7 @@
     "prettier": "^2.0.5",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^6.5.5",
+    "semantic-release": "^17.4.2",
     "ts-jest": "^25.2.1",
     "ts-node": "^8.3.0",
     "typescript": "^3.9.3",
