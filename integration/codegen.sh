@@ -19,6 +19,8 @@ shopt -s globstar
 
 dir=${1:-*}
 
+N=6
+
 for file in ${dir}/**/*.bin; do
   echo "${file}"
   # Strip the longest suffix starting at the 1st slash
@@ -27,6 +29,8 @@ for file in ${dir}/**/*.bin; do
   if [ -f "${dir}/parameters.txt" ]; then
     params=$(cat "${dir}/parameters.txt")
   fi
-  ../node_modules/.bin/ts-node ./codegen.ts "${dir}" "${file}" "${params}"
+  ((i=i%N)); ((i++==0)) && wait
+  ../node_modules/.bin/ts-node ./codegen.ts "${dir}" "${file}" "${params}" &
 done
 
+wait
