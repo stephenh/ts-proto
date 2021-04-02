@@ -1,3 +1,10 @@
+# [1.79.0](https://github.com/stephenh/ts-proto/compare/v1.78.1...v1.79.0) (2021-04-02)
+
+
+### Features
+
+* Add support for useDate=string ([#221](https://github.com/stephenh/ts-proto/issues/221)) ([d967a9a](https://github.com/stephenh/ts-proto/commit/d967a9afd6cf63fc7b156d506b8683b2f8fd6569))
+
 ## [1.78.1](https://github.com/stephenh/ts-proto/compare/v1.78.0...v1.78.1) (2021-04-02)
 
 
