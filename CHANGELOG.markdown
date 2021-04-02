@@ -1,5 +1,5 @@
 
-## Pending
+## v1.77.0
 
 * Fix bytes initialization. Fixes #237. (willclarktech and webmaster128)
 * Better camelization for `FOO_BAR` to `fooBar`
