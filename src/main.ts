@@ -59,6 +59,7 @@ import { EnvOption, LongOption, OneofOption, Options } from './options';
 import { Context } from './context';
 import { generateSchema } from './schema';
 import { ConditionalOutput } from 'ts-poet/build/ConditionalOutput';
+import { generateGrpcJsService } from './generate-grpc-js';
 
 export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [string, Code] {
   const { options, utils } = ctx;
@@ -179,6 +180,8 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
       }
 
       chunks.push(code`export const ${serviceConstName} = "${serviceDesc.name}";`);
+    } else if (options.outputServices === 'grpc-js') {
+      chunks.push(generateGrpcJsService(ctx, fileDesc, sInfo, serviceDesc));
     } else {
       // This service could be Twirp or grpc-web or JSON (maybe). So far all of their
       // interfaces are fairly similar so we share the same service interface.
@@ -199,7 +202,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
     }
   });
 
-  if (options.outputClientImpl && fileDesc.service.length > 0) {
+  if (!options.outputServices && options.outputClientImpl && fileDesc.service.length > 0) {
     if (options.outputClientImpl === true) {
       chunks.push(generateRpcType(ctx));
     } else if (options.outputClientImpl === 'grpc-web') {

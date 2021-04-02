@@ -21,6 +21,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@grpc/grpc-js": "^1.2.12",
     "@grpc/proto-loader": "^0.5.4",
     "@improbable-eng/grpc-web": "^0.13.0",
     "@improbable-eng/grpc-web-node-http-transport": "^0.13.0",
