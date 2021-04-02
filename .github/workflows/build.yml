@@ -38,6 +38,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+        with:
+          persist-credentials: false
       - name: Setup Node.js
         uses: actions/setup-node@v1
         with:
@@ -47,5 +49,5 @@ jobs:
       - name: Release
         run: yarn semantic-release
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.ADMIN_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
