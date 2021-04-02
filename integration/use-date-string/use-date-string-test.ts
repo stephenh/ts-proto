@@ -45,4 +45,24 @@ describe('useDate=string', () => {
       }
     `);
   });
+
+  it('supports using JSON.parse directly', () => {
+    // Given a message that is encoded to json by the server
+    const t1: Todo = {
+      id: '6883ed6e-bd0d-4817-ba58-c2a53c73edc2',
+      timestamp: feb1.toISOString(),
+      repeatedTimestamp: [jan1.toISOString(), feb1.toISOString()],
+      mapOfTimestamps: {
+        jan1: jan1.toISOString(),
+        feb1: feb1.toISOString(),
+      },
+    };
+    const json = JSON.stringify(t1);
+
+    // The client-side can JSON.parse it
+    const t2 = JSON.parse(json);
+
+    // And they'll be the same
+    expect(t2).toEqual(t1);
+  });
 });
