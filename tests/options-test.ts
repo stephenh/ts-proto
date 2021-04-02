@@ -15,6 +15,7 @@ describe('options', () => {
         "lowerCaseServiceMethods": true,
         "nestJs": true,
         "oneof": "properties",
+        "onlyTypes": false,
         "outputClientImpl": false,
         "outputEncodeMethods": false,
         "outputJsonMethods": true,
