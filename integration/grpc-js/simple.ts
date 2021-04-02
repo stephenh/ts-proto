@@ -89,14 +89,14 @@ export const TestMessage = {
  *
  * @deprecated
  */
-export const TestService = {
+export const TestServiceService = {
   /**
    * Unary
    *
    * @deprecated
    */
   unary: {
-    path: '/simple.Test/Unary',
+    path: '/simple.TestService/Unary',
     requestStream: false,
     responseStream: false,
     requestSerialize: (value: Empty) => Buffer.from(Empty.encode(value).finish()),
@@ -106,7 +106,7 @@ export const TestService = {
   },
   /** Server Streaming */
   serverStreaming: {
-    path: '/simple.Test/ServerStreaming',
+    path: '/simple.TestService/ServerStreaming',
     requestStream: false,
     responseStream: true,
     requestSerialize: (value: TestMessage) => Buffer.from(TestMessage.encode(value).finish()),
@@ -116,7 +116,7 @@ export const TestService = {
   },
   /** Client Streaming */
   clientStreaming: {
-    path: '/simple.Test/ClientStreaming',
+    path: '/simple.TestService/ClientStreaming',
     requestStream: true,
     responseStream: false,
     requestSerialize: (value: TestMessage) => Buffer.from(TestMessage.encode(value).finish()),
@@ -126,7 +126,7 @@ export const TestService = {
   },
   /** Bidi Streaming */
   bidiStreaming: {
-    path: '/simple.Test/BidiStreaming',
+    path: '/simple.TestService/BidiStreaming',
     requestStream: true,
     responseStream: true,
     requestSerialize: (value: TestMessage) => Buffer.from(TestMessage.encode(value).finish()),
@@ -136,7 +136,7 @@ export const TestService = {
   },
 } as const;
 
-export interface TestServer extends UntypedServiceImplementation {
+export interface TestServiceServer extends UntypedServiceImplementation {
   /**
    * Unary
    *
@@ -151,7 +151,7 @@ export interface TestServer extends UntypedServiceImplementation {
   bidiStreaming: handleBidiStreamingCall<TestMessage, TestMessage>;
 }
 
-export interface TestClient extends Client {
+export interface TestServiceClient extends Client {
   /**
    * Unary
    *
@@ -199,8 +199,11 @@ export interface TestClient extends Client {
   bidiStreaming(metadata: Metadata, options?: Partial<CallOptions>): ClientDuplexStream<TestMessage, TestMessage>;
 }
 
-export const TestClient = (makeGenericClientConstructor(TestService, 'simple.Test') as unknown) as {
-  new (address: string, credentials: ChannelCredentials, options?: Partial<ChannelOptions>): TestClient;
+export const TestServiceClient = (makeGenericClientConstructor(
+  TestServiceService,
+  'simple.TestService'
+) as unknown) as {
+  new (address: string, credentials: ChannelCredentials, options?: Partial<ChannelOptions>): TestServiceClient;
 };
 
 type Builtin = Date | Function | Uint8Array | string | number | undefined;

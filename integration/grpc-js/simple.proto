@@ -6,7 +6,7 @@ import "google/protobuf/timestamp.proto";
 package simple;
 
 // Test
-service Test {
+service TestService {
     option deprecated = true;
 
     // Unary

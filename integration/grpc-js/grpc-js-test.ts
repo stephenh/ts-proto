@@ -2,17 +2,20 @@
  * @jest-environment node
  */
 import { Server, ChannelCredentials, ServerCredentials } from '@grpc/grpc-js';
-import { TestClient, TestServer, TestService } from './simple';
+import { TestServiceService, TestServiceClient, TestServiceServer } from './simple';
 
 describe('grpc-js-test', () => {
   it('compiles', () => {
-    expect(TestService).not.toBeUndefined();
+    expect(TestServiceService).not.toBeUndefined();
   });
 
   it('can create a server and a client', async () => {
     const server = new Server();
 
-    const impl: TestServer = {
+    // TestServiceServer is based on the RPC definition from our proto file,
+    // i.e. unary is an example of implementing the business logic for a unary call,
+    // serverStreaming is an example of implementing a server streaming call, etc.
+    const impl: TestServiceServer = {
       unary(call, callback) {
         callback(null, call.request);
       },
@@ -41,7 +44,7 @@ describe('grpc-js-test', () => {
       },
     };
 
-    server.addService(TestService, impl);
+    server.addService(TestServiceService, impl);
 
     const port = await new Promise<number>((resolve, reject) => {
       server.bindAsync('localhost:0', ServerCredentials.createInsecure(), (err, port) => {
@@ -54,7 +57,7 @@ describe('grpc-js-test', () => {
     });
     server.start();
 
-    const client = new TestClient(`localhost:${port}`, ChannelCredentials.createInsecure());
+    const client = new TestServiceClient(`localhost:${port}`, ChannelCredentials.createInsecure());
 
     expect.assertions(4);
 
