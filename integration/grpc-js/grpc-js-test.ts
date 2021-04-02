@@ -56,30 +56,40 @@ describe('grpc-js-test', () => {
 
     const client = new TestClient(`localhost:${port}`, ChannelCredentials.createInsecure());
 
-    client.unary({}, (err, res) => {});
+    expect.assertions(4);
 
-    const serverStreamingCall = client.serverStreaming({ timestamp: new Date() });
+    client.unary({}, (err, res) => {
+      expect(res).toEqual({});
+    });
+
+    const timestamp = new Date();
+
+    const serverStreamingCall = client.serverStreaming({ timestamp });
     serverStreamingCall.on('data', (response) => {
-      response.timestamp?.toISOString();
+      expect(response.timestamp).toEqual(timestamp);
     });
 
     const clientStreamingCall = client.clientStreaming((err, res) => {
-      res.timestamp?.toISOString();
+      expect(res.timestamp).toEqual(timestamp);
     });
-    clientStreamingCall.write({ timestamp: new Date() });
+    clientStreamingCall.write({ timestamp });
     clientStreamingCall.end();
 
     const bidiStreamingCall = client.bidiStreaming();
-    bidiStreamingCall.write({ timestamp: new Date() });
+    bidiStreamingCall.write({ timestamp });
     bidiStreamingCall.on('data', (response) => {
-      response.timestamp?.toISOString();
+      expect(response.timestamp).toEqual(timestamp);
       bidiStreamingCall.end();
     });
 
-    setTimeout(() => {
-      server.tryShutdown(() => {
-        client.close();
-      });
-    }, 1000);
+    await new Promise<void>((resolve) => {
+      setTimeout(() => {
+        server.tryShutdown(() => {
+          client.close();
+
+          resolve();
+        });
+      }, 100);
+    });
   });
 });
