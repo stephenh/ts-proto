@@ -1,3 +1,10 @@
+## [1.78.1](https://github.com/stephenh/ts-proto/compare/v1.78.0...v1.78.1) (2021-04-02)
+
+
+### Bug Fixes
+
+* Fix bad grpc.Metadata import. Fixes [#188](https://github.com/stephenh/ts-proto/issues/188). ([#259](https://github.com/stephenh/ts-proto/issues/259)) ([cd83733](https://github.com/stephenh/ts-proto/commit/cd83733bfe64ba637633282c3170011051dec41e))
+
 # [1.78.0](https://github.com/stephenh/ts-proto/compare/v1.77.0...v1.78.0) (2021-04-02)
 
 
