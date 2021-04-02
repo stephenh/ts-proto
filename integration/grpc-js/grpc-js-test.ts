@@ -43,18 +43,18 @@ describe('grpc-js-test', () => {
 
     server.addService(TestService, impl);
 
-    await new Promise<void>((resolve, reject) => {
-      server.bindAsync('localhost:8081', ServerCredentials.createInsecure(), (err) => {
+    const port = await new Promise<number>((resolve, reject) => {
+      server.bindAsync('localhost:0', ServerCredentials.createInsecure(), (err, port) => {
         if (err) {
           reject(err);
         } else {
-          resolve();
+          resolve(port);
         }
       });
     });
     server.start();
 
-    const client = new TestClient('localhost:8081', ChannelCredentials.createInsecure());
+    const client = new TestClient(`localhost:${port}`, ChannelCredentials.createInsecure());
 
     client.unary({}, (err, res) => {});
 
