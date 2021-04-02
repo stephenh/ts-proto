@@ -61,7 +61,7 @@ import { generateSchema } from './schema';
 import { ConditionalOutput } from 'ts-poet/build/ConditionalOutput';
 
 export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [string, Code] {
-  const { options, utils: u } = ctx;
+  const { options, utils } = ctx;
 
   // Google's protofiles are organized like Java, where package == the folder the file
   // is in, and file == a specific service within the package. I.e. you can have multiple
@@ -217,11 +217,11 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
   }
 
   chunks.push(
-    ...Object.values(u).map((v) => {
+    ...Object.values(utils).map((v) => {
       if (v instanceof ConditionalOutput) {
         return code`${v.ifUsed}`;
       } else if (v instanceof Code) {
-        return code`${v}`;
+        return v;
       } else {
         return code``;
       }
@@ -272,7 +272,11 @@ function makeLongUtils(options: Options, bytes: ReturnType<typeof makeByteUtils>
     // If you get a compile-error about 'Constructor<Long> and ... have no overlap',
     // add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.`;
 
-  const longInit = code`
+  // Kinda hacky, but we always init long until in onlyTypes mode. I'd rather do
+  // this more implicitly, like if `Long@long` is imported or something like that.
+  const longInit = options.onlyTypes
+    ? code``
+    : code`
       ${disclaimer}
       if (${util}.Long !== ${Long}) {
         ${util}.Long = ${Long} as any;

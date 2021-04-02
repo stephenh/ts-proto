@@ -1,7 +1,7 @@
 /* eslint-disable */
-import { grpc } from '@improbable-eng/grpc-web';
 import { util, configure, Writer, Reader } from 'protobufjs/minimal';
 import * as Long from 'long';
+import { grpc } from '@improbable-eng/grpc-web';
 import { Observable } from 'rxjs';
 import { BrowserHeaders } from 'browser-headers';
 import { share } from 'rxjs/operators';

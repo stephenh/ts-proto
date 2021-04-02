@@ -1,7 +1,4 @@
 /* eslint-disable */
-import { util, configure } from 'protobufjs/minimal';
-import * as Long from 'long';
-
 export const protobufPackage = 'google.protobuf';
 
 /**
@@ -118,11 +115,4 @@ export interface Any {
   typeUrl: string;
   /** Must be a valid serialized protocol buffer of the above specified type. */
   value: Uint8Array;
-}
-
-// If you get a compile-error about 'Constructor<Long> and ... have no overlap',
-// add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
-if (util.Long !== Long) {
-  util.Long = Long as any;
-  configure();
 }

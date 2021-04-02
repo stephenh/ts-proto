@@ -39,6 +39,8 @@ export type Options = {
   unrecognizedEnum: boolean;
   exportCommonSymbols: boolean;
   outputSchema: boolean;
+  // An alias of !output
+  onlyTypes: boolean;
 };
 
 export function defaultOptions(): Options {
@@ -66,6 +68,7 @@ export function defaultOptions(): Options {
     unrecognizedEnum: true,
     exportCommonSymbols: true,
     outputSchema: false,
+    onlyTypes: false,
   };
 }
 
@@ -86,6 +89,10 @@ export function optionsFromParameter(parameter: string): Options {
       Object.assign(options, nestJsOptions);
     }
     Object.assign(options, parsed);
+  }
+  // We should promote onlyTypes to its own documented flag, but just an alias for now
+  if (!options.outputJsonMethods && !options.outputEncodeMethods && !options.outputClientImpl && !options.nestJs) {
+    options.onlyTypes = true;
   }
   // Treat forceLong=true as LONG
   if ((options.forceLong as any) === true) {

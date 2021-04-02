@@ -1,7 +1,7 @@
 /* eslint-disable */
-import { grpc } from '@improbable-eng/grpc-web';
 import { util, configure, Writer, Reader } from 'protobufjs/minimal';
 import * as Long from 'long';
+import { grpc } from '@improbable-eng/grpc-web';
 import { BrowserHeaders } from 'browser-headers';
 
 export const protobufPackage = 'rpx';
