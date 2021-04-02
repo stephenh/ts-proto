@@ -97,8 +97,8 @@ describe('simple', () => {
     };
     const s2 = PbSimple.toObject(PbSimple.decode(Simple.encode(s1).finish()));
 
-    delete s1.blob;
-    delete s1.blobs;
+    delete (s1 as any).blob;
+    delete (s1 as any).blobs;
     delete s1.birthday;
     delete s1.thing;
     expect(s2).toEqual({
@@ -207,8 +207,8 @@ describe('simple', () => {
       birthday: undefined,
     };
     const s2 = PbSimple.toObject(PbSimple.decode(Simple.encode(s1).finish()));
-    delete s1.blob;
-    delete s1.blobs;
+    delete (s1 as any).blob;
+    delete (s1 as any).blobs;
     delete s1.birthday;
     expect(s2).toEqual({
       ...s1,
@@ -233,8 +233,8 @@ describe('simple', () => {
       mapOfBytes: {},
     };
     const s2 = PbSimpleWithMap.toObject(PbSimpleWithMap.decode(SimpleWithMap.encode(s1).finish()));
-    delete s1.mapOfTimestamps;
-    delete s1.mapOfBytes;
+    delete (s1 as any).mapOfTimestamps;
+    delete (s1 as any).mapOfBytes;
     expect(s2).toEqual(s1);
   });
 
