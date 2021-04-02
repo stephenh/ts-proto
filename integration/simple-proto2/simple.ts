@@ -51,7 +51,7 @@ export const Issue56 = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): Issue56 {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseIssue56 } as Issue56;
     while (reader.pos < end) {

@@ -109,7 +109,7 @@ export const DashFlash = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): DashFlash {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseDashFlash } as DashFlash;
     while (reader.pos < end) {
@@ -184,7 +184,7 @@ export const DashUserSettingsState = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): DashUserSettingsState {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseDashUserSettingsState } as DashUserSettingsState;
     message.flashes = [];
@@ -278,7 +278,7 @@ export const DashUserSettingsState_URLs = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): DashUserSettingsState_URLs {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseDashUserSettingsState_URLs } as DashUserSettingsState_URLs;
     while (reader.pos < end) {
@@ -356,7 +356,7 @@ export const DashCred = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): DashCred {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseDashCred } as DashCred;
     while (reader.pos < end) {
@@ -456,7 +456,7 @@ export const DashAPICredsCreateReq = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): DashAPICredsCreateReq {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseDashAPICredsCreateReq } as DashAPICredsCreateReq;
     while (reader.pos < end) {
@@ -534,7 +534,7 @@ export const DashAPICredsUpdateReq = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): DashAPICredsUpdateReq {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseDashAPICredsUpdateReq } as DashAPICredsUpdateReq;
     while (reader.pos < end) {
@@ -634,7 +634,7 @@ export const DashAPICredsDeleteReq = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): DashAPICredsDeleteReq {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseDashAPICredsDeleteReq } as DashAPICredsDeleteReq;
     while (reader.pos < end) {
@@ -700,7 +700,7 @@ export const Empty = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): Empty {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseEmpty } as Empty;
     while (reader.pos < end) {

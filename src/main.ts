@@ -608,7 +608,7 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
       input: ${Reader} | Uint8Array,
       length?: number,
     ): ${fullName} {
-      const reader = input instanceof Uint8Array ? new ${Reader}(input) : input;
+      const reader = input instanceof ${Reader} ? input : new ${Reader}(input);
       let end = length === undefined ? reader.len : reader.pos + length;
       const message = { ...base${fullName} } as ${fullName};
   `);

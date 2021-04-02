@@ -21,7 +21,7 @@ export const ImportedThing = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): ImportedThing {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseImportedThing } as ImportedThing;
     while (reader.pos < end) {

@@ -24,7 +24,7 @@ export const ProduceRequest = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): ProduceRequest {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseProduceRequest } as ProduceRequest;
     while (reader.pos < end) {
@@ -79,7 +79,7 @@ export const ProduceReply = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): ProduceReply {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseProduceReply } as ProduceReply;
     while (reader.pos < end) {

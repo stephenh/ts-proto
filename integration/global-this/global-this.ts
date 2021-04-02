@@ -23,7 +23,7 @@ export const Object = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): Object {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseObject } as Object;
     while (reader.pos < end) {
@@ -78,7 +78,7 @@ export const Error = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): Error {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseError } as Error;
     while (reader.pos < end) {

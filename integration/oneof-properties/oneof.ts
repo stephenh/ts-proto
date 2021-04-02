@@ -113,7 +113,7 @@ export const PleaseChoose = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): PleaseChoose {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...basePleaseChoose } as PleaseChoose;
     while (reader.pos < end) {
@@ -309,7 +309,7 @@ export const PleaseChoose_Submessage = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): PleaseChoose_Submessage {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...basePleaseChoose_Submessage } as PleaseChoose_Submessage;
     while (reader.pos < end) {

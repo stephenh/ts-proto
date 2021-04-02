@@ -41,7 +41,7 @@ export const Todo = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): Todo {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseTodo } as Todo;
     message.repeatedTimestamp = [];
@@ -175,7 +175,7 @@ export const Todo_MapOfTimestampsEntry = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): Todo_MapOfTimestampsEntry {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseTodo_MapOfTimestampsEntry } as Todo_MapOfTimestampsEntry;
     while (reader.pos < end) {

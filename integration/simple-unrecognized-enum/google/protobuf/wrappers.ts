@@ -105,7 +105,7 @@ export const DoubleValue = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): DoubleValue {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseDoubleValue } as DoubleValue;
     while (reader.pos < end) {
@@ -160,7 +160,7 @@ export const FloatValue = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): FloatValue {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseFloatValue } as FloatValue;
     while (reader.pos < end) {
@@ -215,7 +215,7 @@ export const Int64Value = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): Int64Value {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseInt64Value } as Int64Value;
     while (reader.pos < end) {
@@ -270,7 +270,7 @@ export const UInt64Value = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): UInt64Value {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseUInt64Value } as UInt64Value;
     while (reader.pos < end) {
@@ -325,7 +325,7 @@ export const Int32Value = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): Int32Value {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseInt32Value } as Int32Value;
     while (reader.pos < end) {
@@ -380,7 +380,7 @@ export const UInt32Value = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): UInt32Value {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseUInt32Value } as UInt32Value;
     while (reader.pos < end) {
@@ -435,7 +435,7 @@ export const BoolValue = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): BoolValue {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseBoolValue } as BoolValue;
     while (reader.pos < end) {
@@ -490,7 +490,7 @@ export const StringValue = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): StringValue {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseStringValue } as StringValue;
     while (reader.pos < end) {
@@ -545,7 +545,7 @@ export const BytesValue = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): BytesValue {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseBytesValue } as BytesValue;
     message.value = new Uint8Array();

@@ -89,7 +89,7 @@ export const Tile = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): Tile {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseTile } as Tile;
     message.layers = [];
@@ -177,7 +177,7 @@ export const Tile_Value = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): Tile_Value {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseTile_Value } as Tile_Value;
     while (reader.pos < end) {
@@ -329,7 +329,7 @@ export const Tile_Feature = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): Tile_Feature {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseTile_Feature } as Tile_Feature;
     message.tags = [];
@@ -469,7 +469,7 @@ export const Tile_Layer = {
   },
 
   decode(input: Reader | Uint8Array, length?: number): Tile_Layer {
-    const reader = input instanceof Uint8Array ? new Reader(input) : input;
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseTile_Layer } as Tile_Layer;
     message.features = [];
