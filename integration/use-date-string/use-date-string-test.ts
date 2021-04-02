@@ -60,7 +60,7 @@ describe('useDate=string', () => {
     const json = JSON.stringify(t1);
 
     // The client-side can JSON.parse it
-    const t2 = JSON.parse(json);
+    const t2 = JSON.parse(json) as Todo;
 
     // And they'll be the same
     expect(t2).toEqual(t1);
