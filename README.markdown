@@ -63,7 +63,7 @@ export interface PingService {
 }
 ```
 
-It will also generate client implementations of `PingService`; currently [Twirp](https://github.com/twitchtv/twirp), [grpc-web](./integration/grpc-web), and [nestjs](./NESTJS.markdown) are supported.
+It will also generate client implementations of `PingService`; currently [Twirp](https://github.com/twitchtv/twirp), [grpc-web](./integration/grpc-web), [grpc-js](./integration/grpc-js) and [nestjs](./NESTJS.markdown) are supported.
 
 # QuickStart
 
