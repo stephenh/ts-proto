@@ -1,3 +1,10 @@
+## [1.79.1](https://github.com/stephenh/ts-proto/compare/v1.79.0...v1.79.1) (2021-04-04)
+
+
+### Bug Fixes
+
+* Build before releasing, fixes [#267](https://github.com/stephenh/ts-proto/issues/267). ([#269](https://github.com/stephenh/ts-proto/issues/269)) ([1f1bcfe](https://github.com/stephenh/ts-proto/commit/1f1bcfeca329e36c41c069b791e803ceb7cb975c))
+
 # [1.79.0](https://github.com/stephenh/ts-proto/compare/v1.78.1...v1.79.0) (2021-04-02)
 
 
