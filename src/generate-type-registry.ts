@@ -10,7 +10,11 @@ export function generateTypeRegistry(ctx: Context): Code {
   chunks.push(generateMessageType(ctx));
 
   chunks.push(code`
-    export const messageTypeRegistry = new Map<string, MessageType<unknown>>();
+    export type UnknownMessage = {$type: string};
+  `);
+
+  chunks.push(code`
+    export const messageTypeRegistry = new Map<string, MessageType>();
   `);
 
   chunks.push(code`${ctx.utils.DeepPartial.ifUsed}`);
@@ -21,7 +25,9 @@ export function generateTypeRegistry(ctx: Context): Code {
 function generateMessageType(ctx: Context): Code {
   const chunks: Code[] = [];
 
-  chunks.push(code`export interface MessageType<Message> {`);
+  chunks.push(code`export interface MessageType<Message extends UnknownMessage = UnknownMessage> {`);
+
+  chunks.push(code`$type: Message['$type'];`);
 
   if (ctx.options.outputEncodeMethods) {
     chunks.push(code`encode(message: Message, writer?: ${Writer}): ${Writer};`);
