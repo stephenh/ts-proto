@@ -1,7 +1,8 @@
 /* eslint-disable */
 import { Writer, Reader } from 'protobufjs/minimal';
 
-export interface MessageType<Message> {
+export interface MessageType<Message extends UnknownMessage = UnknownMessage> {
+  $type: Message['$type'];
   encode(message: Message, writer?: Writer): Writer;
   decode(input: Reader | Uint8Array, length?: number): Message;
   fromJSON(object: any): Message;
@@ -9,7 +10,9 @@ export interface MessageType<Message> {
   fromPartial(object: DeepPartial<Message>): Message;
 }
 
-export const messageTypeRegistry = new Map<string, MessageType<unknown>>();
+export type UnknownMessage = { $type: string };
+
+export const messageTypeRegistry = new Map<string, MessageType>();
 
 type Builtin = Date | Function | Uint8Array | string | number | undefined;
 export type DeepPartial<T> = T extends Builtin
