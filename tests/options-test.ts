@@ -32,4 +32,12 @@ describe('options', () => {
       }
     `);
   });
+
+  it('can set outputJsonMethods with nestJs=true', () => {
+    const options = optionsFromParameter('outputClientImpl=grpc-web,addGrpcMetadata=false');
+    expect(options).toMatchObject({
+      outputClientImpl: 'grpc-web',
+      addGrpcMetadata: false,
+    });
+  });
 });

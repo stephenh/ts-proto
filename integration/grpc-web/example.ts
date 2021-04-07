@@ -5,7 +5,6 @@ import { grpc } from '@improbable-eng/grpc-web';
 import { Observable } from 'rxjs';
 import { BrowserHeaders } from 'browser-headers';
 import { share } from 'rxjs/operators';
-import { Metadata } from 'grpc';
 
 export const protobufPackage = 'rpx';
 
@@ -731,8 +730,8 @@ export const Empty = {
 };
 
 export interface DashState {
-  UserSettings(request: DeepPartial<Empty>, metadata?: Metadata): Promise<DashUserSettingsState>;
-  ActiveUserSettingsStream(request: DeepPartial<Empty>, metadata?: Metadata): Observable<DashUserSettingsState>;
+  UserSettings(request: DeepPartial<Empty>, metadata?: grpc.Metadata): Promise<DashUserSettingsState>;
+  ActiveUserSettingsStream(request: DeepPartial<Empty>, metadata?: grpc.Metadata): Observable<DashUserSettingsState>;
 }
 
 export class DashStateClientImpl implements DashState {
@@ -805,9 +804,9 @@ export const DashStateActiveUserSettingsStreamDesc: UnaryMethodDefinitionish = {
  * ----------------------
  */
 export interface DashAPICreds {
-  Create(request: DeepPartial<DashAPICredsCreateReq>, metadata?: Metadata): Promise<DashCred>;
-  Update(request: DeepPartial<DashAPICredsUpdateReq>, metadata?: Metadata): Promise<DashCred>;
-  Delete(request: DeepPartial<DashAPICredsDeleteReq>, metadata?: Metadata): Promise<DashCred>;
+  Create(request: DeepPartial<DashAPICredsCreateReq>, metadata?: grpc.Metadata): Promise<DashCred>;
+  Update(request: DeepPartial<DashAPICredsUpdateReq>, metadata?: grpc.Metadata): Promise<DashCred>;
+  Delete(request: DeepPartial<DashAPICredsDeleteReq>, metadata?: grpc.Metadata): Promise<DashCred>;
 }
 
 export class DashAPICredsClientImpl implements DashAPICreds {
