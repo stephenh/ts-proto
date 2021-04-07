@@ -1,3 +1,10 @@
+## [1.79.2](https://github.com/stephenh/ts-proto/compare/v1.79.1...v1.79.2) (2021-04-07)
+
+
+### Bug Fixes
+
+* Use the right Metadata for grpc-web. Fixes [#270](https://github.com/stephenh/ts-proto/issues/270). ([#271](https://github.com/stephenh/ts-proto/issues/271)) ([640e645](https://github.com/stephenh/ts-proto/commit/640e645dd93cd0e04abac17de9899aa6a172ac37))
+
 ## [1.79.1](https://github.com/stephenh/ts-proto/compare/v1.79.0...v1.79.1) (2021-04-04)
 
 
