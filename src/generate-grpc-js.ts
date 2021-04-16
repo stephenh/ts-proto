@@ -67,7 +67,7 @@ function generateServiceDefinition(
 
     chunks.push(code`
       ${camelCase(methodDesc.name)}: {
-        path: '/${fileDesc.package}.${serviceDesc.name}/${methodDesc.name}',
+        path: '/${fileDesc.package === "" ? "" : `${fileDesc.package === "" ? "" : `${fileDesc.package}.`}`}${serviceDesc.name}/${methodDesc.name}',
         requestStream: ${methodDesc.clientStreaming},
         responseStream: ${methodDesc.serverStreaming},
         requestSerialize: (value: ${inputType}) =>
@@ -209,7 +209,7 @@ function generateClientConstructor(fileDesc: FileDescriptorProto, serviceDesc: S
   return code`
     export const ${def(`${serviceDesc.name}Client`)} = ${makeGenericClientConstructor}(
       ${serviceDesc.name}Service,
-      '${fileDesc.package}.${serviceDesc.name}'
+      '${fileDesc.package === "" ? "" : `${fileDesc.package}.`}${serviceDesc.name}'
     ) as unknown as {
       new (
         address: string,

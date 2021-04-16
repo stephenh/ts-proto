@@ -72,7 +72,7 @@ function generateRpcMethod(ctx: Context, serviceDesc: ServiceDescriptorProto, me
 export function generateGrpcServiceDesc(fileDesc: FileDescriptorProto, serviceDesc: ServiceDescriptorProto): Code {
   return code`
     export const ${serviceDesc.name}Desc = {
-      serviceName: "${fileDesc.package}.${serviceDesc.name}",
+      serviceName: "${fileDesc.package === "" ? "" : `${fileDesc.package === "" ? "" : `${fileDesc.package}.`}`}${serviceDesc.name}",
     };
   `;
 }

@@ -20,7 +20,7 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
 
   const references: Code[] = [];
   function addReference(localName: string, symbol: string): void {
-    references.push(code`'.${fileDesc.package}.${localName.replace(/_/g, '.')}': ${symbol}`);
+    references.push(code`'.${fileDesc.package === "" ? "" : `${fileDesc.package}.`}${localName.replace(/_/g, '.')}': ${symbol}`);
   }
 
   visit(
