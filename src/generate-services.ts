@@ -122,7 +122,7 @@ function generateRegularRpcMethod(
       const data = ${inputType}.encode(request).finish();
       const promise = this.rpc.request(
         ${maybeCtx}
-        "${fileDesc.package}.${serviceDesc.name}",
+        "${fileDesc.package === "" ? "" : `${fileDesc.package}.`}${serviceDesc.name}",
         "${methodDesc.name}",
         data
       );
@@ -230,12 +230,12 @@ function generateCachingRpcMethod(
 ): Code {
   const inputType = requestType(ctx, methodDesc);
   const outputType = responseType(ctx, methodDesc);
-  const uniqueIdentifier = `${fileDesc.package}.${serviceDesc.name}.${methodDesc.name}`;
+  const uniqueIdentifier = `${fileDesc.package === "" ? "" : `${fileDesc.package}.`}${serviceDesc.name}.${methodDesc.name}`;
   const lambda = code`
     (requests) => {
       const responses = requests.map(async request => {
         const data = ${inputType}.encode(request).finish()
-        const response = await this.rpc.request(ctx, "${fileDesc.package}.${serviceDesc.name}", "${methodDesc.name}", data);
+        const response = await this.rpc.request(ctx, "${fileDesc.package === "" ? "" : `${fileDesc.package}.`}${serviceDesc.name}", "${methodDesc.name}", data);
         return ${outputType}.decode(new ${Reader}(response));
       });
       return Promise.all(responses);
