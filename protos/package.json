@@ -1,13 +1,14 @@
 {
   "name": "ts-proto-descriptors",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "",
   "repository": "github:stephenh/ts-proto",
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "protobufjs": "^6.8.8"
+    "protobufjs": "^6.8.8",
+    "long": "^4.0.0"
   },
   "devDependencies": {
     "ts-proto": "^1.61.0",

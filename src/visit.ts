@@ -3,7 +3,7 @@ import {
   EnumDescriptorProto,
   FileDescriptorProto,
   ServiceDescriptorProto,
-} from 'ts-proto-descriptors/google/protobuf/descriptor';
+} from 'ts-proto-descriptors';
 import SourceInfo, { Fields } from './sourceInfo';
 import { Options } from './options';
 import { maybeSnakeToCamel } from './case';

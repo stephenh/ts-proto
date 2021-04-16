@@ -1,4 +1,4 @@
-import { FileDescriptorProto } from 'ts-proto-descriptors/google/protobuf/descriptor';
+import { FileDescriptorProto } from 'ts-proto-descriptors';
 
 /** This type is expecting a value from the Fields constant. */
 export type FieldID = number;

@@ -86,7 +86,6 @@ If you want to package these source files into an npm package to distribute to c
 - Interfaces over classes
   - As much as possible, types are just interfaces, so you can work with messages just like regular hashes/data structures.
 - Only supports codegen `*.proto`-to-`*.ts` workflow, currently no runtime reflection/loading of dynamic `.proto` files
-- Currently ambivalent about browser support, current focus is on Node/server-side use cases
 
 # Example Types
 

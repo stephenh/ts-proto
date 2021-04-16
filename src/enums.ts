@@ -1,5 +1,5 @@
 import { code, Code, joinCode } from 'ts-poet';
-import { EnumDescriptorProto } from 'ts-proto-descriptors/google/protobuf/descriptor';
+import { EnumDescriptorProto } from 'ts-proto-descriptors';
 import { maybeAddComment } from './utils';
 import { camelCase } from './case';
 import SourceInfo, { Fields } from './sourceInfo';
