@@ -1,4 +1,4 @@
-import { CodeGeneratorRequest } from 'ts-proto-descriptors/google/protobuf/compiler/plugin';
+import { CodeGeneratorRequest } from 'ts-proto-descriptors';
 import { mkdir, readFile, writeFile } from 'fs';
 import { parse } from 'path';
 import { promisify } from 'util';

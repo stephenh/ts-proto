@@ -1,8 +1,4 @@
-import {
-  MethodDescriptorProto,
-  FileDescriptorProto,
-  ServiceDescriptorProto,
-} from 'ts-proto-descriptors/google/protobuf/descriptor';
+import { MethodDescriptorProto, FileDescriptorProto, ServiceDescriptorProto } from 'ts-proto-descriptors';
 import { Code, code, imp, joinCode } from 'ts-poet';
 import {
   BatchMethod,

@@ -1,10 +1,10 @@
-import { FileDescriptorProto } from 'ts-proto-descriptors/google/protobuf/descriptor';
+import { FileDescriptorProto } from 'ts-proto-descriptors';
 import { imp, code, Code, joinCode, def } from 'ts-poet';
 import { visit, visitServices } from './visit';
 import { Context } from './context';
 import SourceInfo from './sourceInfo';
 
-const fileDescriptorProto = imp('FileDescriptorProto@ts-proto-descriptors/google/protobuf/descriptor');
+const fileDescriptorProto = imp('FileDescriptorProto@ts-proto-descriptors');
 
 export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sourceInfo: SourceInfo): Code[] {
   const { options } = ctx;

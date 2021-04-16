@@ -4,7 +4,7 @@ import {
   FieldDescriptorProto,
   FileDescriptorProto,
   FieldDescriptorProto_Type,
-} from 'ts-proto-descriptors/google/protobuf/descriptor';
+} from 'ts-proto-descriptors';
 import {
   basicLongWireType,
   basicTypeName,

@@ -1,5 +1,5 @@
 import { Code, code, def, imp, joinCode } from 'ts-poet';
-import { FileDescriptorProto, ServiceDescriptorProto } from 'ts-proto-descriptors/google/protobuf/descriptor';
+import { FileDescriptorProto, ServiceDescriptorProto } from 'ts-proto-descriptors';
 import { camelCase } from './case';
 import { Context } from './context';
 import SourceInfo, { Fields } from './sourceInfo';

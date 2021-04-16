@@ -3,8 +3,6 @@ import * as Long from 'long';
 import { util, configure, Writer, Reader } from 'protobufjs/minimal';
 import { FileDescriptorProto, GeneratedCodeInfo } from '../../../google/protobuf/descriptor';
 
-export const protobufPackage = 'google.protobuf.compiler';
-
 /** The version number of protocol compiler. */
 export interface Version {
   major: number;
@@ -591,7 +589,7 @@ var globalThis: any = (() => {
 })();
 
 type Builtin = Date | Function | Uint8Array | string | number | undefined;
-export type DeepPartial<T> = T extends Builtin
+type DeepPartial<T> = T extends Builtin
   ? T
   : T extends Array<infer U>
   ? Array<DeepPartial<U>>

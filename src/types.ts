@@ -1,14 +1,14 @@
 import {
+  CodeGeneratorRequest,
   DescriptorProto,
   EnumDescriptorProto,
   FieldDescriptorProto,
-  FieldDescriptorProto_Type,
   FieldDescriptorProto_Label,
+  FieldDescriptorProto_Type,
   FileDescriptorProto,
   MethodDescriptorProto,
   ServiceDescriptorProto,
-} from 'ts-proto-descriptors/google/protobuf/descriptor';
-import { CodeGeneratorRequest } from 'ts-proto-descriptors/google/protobuf/compiler/plugin';
+} from 'ts-proto-descriptors';
 import { code, Code, imp, Import } from 'ts-poet';
 import { DateOption, EnvOption, LongOption, OneofOption, Options } from './options';
 import { visit } from './visit';
