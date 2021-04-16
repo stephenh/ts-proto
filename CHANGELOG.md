@@ -1,3 +1,10 @@
+## [1.79.3](https://github.com/stephenh/ts-proto/compare/v1.79.2...v1.79.3) (2021-04-16)
+
+
+### Bug Fixes
+
+* Add long dep to ts-proto-descriptors. ([#275](https://github.com/stephenh/ts-proto/issues/275)) ([0d20827](https://github.com/stephenh/ts-proto/commit/0d20827dbae5195d30a3094c4ea5e98833909daa))
+
 ## [1.79.2](https://github.com/stephenh/ts-proto/compare/v1.79.1...v1.79.2) (2021-04-07)
 
 
