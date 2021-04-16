@@ -575,7 +575,9 @@ export function detectBatchMethod(
       if (mapType) {
         outputType = mapType.valueType;
       }
-      const uniqueIdentifier = `${fileDesc.package === "" ? "" : `${fileDesc.package}.`}${serviceDesc.name}.${methodDesc.name}`;
+      const uniqueIdentifier = `${fileDesc.package === '' ? '' : `${fileDesc.package}.`}${serviceDesc.name}.${
+        methodDesc.name
+      }`;
       return {
         methodDesc,
         uniqueIdentifier,
