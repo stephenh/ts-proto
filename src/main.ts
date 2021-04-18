@@ -644,7 +644,7 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
     // get a generic 'reader.doSomething' bit that is specific to the basic type
     let readSnippet: Code;
     if (isPrimitive(field)) {
-      readSnippet = code`reader.${toReaderCall(ctx, field)}()`;
+      readSnippet = code`reader.${toReaderCall(field)}()`;
       if (isBytes(field)) {
         if (options.env === EnvOption.NODE) {
           readSnippet = code`${readSnippet} as Buffer`;
@@ -752,10 +752,10 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
     if (isEnum(field) && options.stringEnums) {
       const tag = ((field.number << 3) | basicWireType(field.type)) >>> 0;
       const toNumber = getEnumMethod(typeMap, field.typeName, 'ToNumber');
-      writeSnippet = (place) => code`writer.uint32(${tag}).${toReaderCall(ctx, field)}(${toNumber}(${place}))`;
+      writeSnippet = (place) => code`writer.uint32(${tag}).${toReaderCall(field)}(${toNumber}(${place}))`;
     } else if (isScalar(field) || isEnum(field)) {
       const tag = ((field.number << 3) | basicWireType(field.type)) >>> 0;
-      writeSnippet = (place) => code`writer.uint32(${tag}).${toReaderCall(ctx, field)}(${place})`;
+      writeSnippet = (place) => code`writer.uint32(${tag}).${toReaderCall(field)}(${place})`;
     } else if (isTimestamp(field) && (options.useDate === DateOption.DATE || options.useDate === DateOption.STRING)) {
       const tag = ((field.number << 3) | 2) >>> 0;
       const type = basicTypeName(ctx, field, { keepValueType: true });
@@ -789,12 +789,22 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
             ${writeSnippet('v!')};
           }
         `);
+      } else if (isEnum(field) && options.stringEnums) {
+        const tag = ((field.number << 3) | basicWireType(field.type)) >>> 0;
+        const toNumber = getEnumMethod(typeMap, field.typeName, 'ToNumber');
+        chunks.push(code`
+          writer.uint32(${tag}).fork();
+          for (const v of message.${fieldName}) {
+            writer.${toReaderCall(field)}(${toNumber}(v));
+          }
+          writer.ldelim();
+        `);
       } else {
         const tag = ((field.number << 3) | 2) >>> 0;
         chunks.push(code`
           writer.uint32(${tag}).fork();
           for (const v of message.${fieldName}) {
-            writer.${toReaderCall(ctx, field)}(v);
+            writer.${toReaderCall(field)}(v);
           }
           writer.ldelim();
         `);

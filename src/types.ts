@@ -105,7 +105,7 @@ export function basicTypeName(
 }
 
 /** Returns the Reader method for the primitive's read/write call. */
-export function toReaderCall(ctx: Context, field: FieldDescriptorProto): string {
+export function toReaderCall(field: FieldDescriptorProto): string {
   switch (field.type) {
     case FieldDescriptorProto_Type.TYPE_DOUBLE:
       return 'double';
@@ -113,7 +113,7 @@ export function toReaderCall(ctx: Context, field: FieldDescriptorProto): string 
       return 'float';
     case FieldDescriptorProto_Type.TYPE_INT32:
     case FieldDescriptorProto_Type.TYPE_ENUM:
-      return ctx.options.stringEnums ? 'string' : 'int32';
+      return 'int32';
     case FieldDescriptorProto_Type.TYPE_UINT32:
       return 'uint32';
     case FieldDescriptorProto_Type.TYPE_SINT32:
