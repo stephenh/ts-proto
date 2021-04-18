@@ -691,6 +691,13 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
         `);
       } else if (packedType(field.type) === undefined) {
         chunks.push(code`message.${fieldName}.push(${readSnippet});`);
+      } else if (isEnum(field) && options.stringEnums) {
+        chunks.push(code`
+          const end2 = reader.uint32() + reader.pos;
+          while (reader.pos < end2) {
+            message.${fieldName}.push(${readSnippet});
+          }
+        `);
       } else {
         chunks.push(code`
           if ((tag & 7) === 2) {
@@ -788,6 +795,16 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
           for (const v of message.${fieldName}) {
             ${writeSnippet('v!')};
           }
+        `);
+      } else if (isEnum(field) && options.stringEnums) {
+        const tag = ((field.number << 3) | basicWireType(field.type)) >>> 0;
+        const toNumber = getEnumMethod(typeMap, field.typeName, 'ToNumber');
+        chunks.push(code`
+          writer.uint32(${tag}).fork();
+          for (const v of message.${fieldName}) {
+            writer.${toReaderCall(field)}(${toNumber}(v));
+          }
+          writer.ldelim();
         `);
       } else {
         const tag = ((field.number << 3) | 2) >>> 0;

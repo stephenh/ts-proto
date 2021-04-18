@@ -58,9 +58,10 @@ export function stateEnumToNumber(object: StateEnum): number {
 export interface Simple {
   name: string;
   state: StateEnum;
+  states: StateEnum[];
 }
 
-const baseSimple: object = { name: '', state: StateEnum.UNKNOWN };
+const baseSimple: object = { name: '', state: StateEnum.UNKNOWN, states: StateEnum.UNKNOWN };
 
 export const Simple = {
   encode(message: Simple, writer: Writer = Writer.create()): Writer {
@@ -70,6 +71,11 @@ export const Simple = {
     if (message.state !== StateEnum.UNKNOWN) {
       writer.uint32(32).int32(stateEnumToNumber(message.state));
     }
+    writer.uint32(40).fork();
+    for (const v of message.states) {
+      writer.int32(stateEnumToNumber(v));
+    }
+    writer.ldelim();
     return writer;
   },
 
@@ -77,6 +83,7 @@ export const Simple = {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseSimple } as Simple;
+    message.states = [];
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -85,6 +92,12 @@ export const Simple = {
           break;
         case 4:
           message.state = stateEnumFromJSON(reader.int32());
+          break;
+        case 5:
+          const end2 = reader.uint32() + reader.pos;
+          while (reader.pos < end2) {
+            message.states.push(stateEnumFromJSON(reader.int32()));
+          }
           break;
         default:
           reader.skipType(tag & 7);
@@ -96,6 +109,7 @@ export const Simple = {
 
   fromJSON(object: any): Simple {
     const message = { ...baseSimple } as Simple;
+    message.states = [];
     if (object.name !== undefined && object.name !== null) {
       message.name = String(object.name);
     } else {
@@ -106,6 +120,11 @@ export const Simple = {
     } else {
       message.state = StateEnum.UNKNOWN;
     }
+    if (object.states !== undefined && object.states !== null) {
+      for (const e of object.states) {
+        message.states.push(stateEnumFromJSON(e));
+      }
+    }
     return message;
   },
 
@@ -113,11 +132,17 @@ export const Simple = {
     const obj: any = {};
     message.name !== undefined && (obj.name = message.name);
     message.state !== undefined && (obj.state = stateEnumToJSON(message.state));
+    if (message.states) {
+      obj.states = message.states.map((e) => stateEnumToJSON(e));
+    } else {
+      obj.states = [];
+    }
     return obj;
   },
 
   fromPartial(object: DeepPartial<Simple>): Simple {
     const message = { ...baseSimple } as Simple;
+    message.states = [];
     if (object.name !== undefined && object.name !== null) {
       message.name = object.name;
     } else {
@@ -127,6 +152,11 @@ export const Simple = {
       message.state = object.state;
     } else {
       message.state = StateEnum.UNKNOWN;
+    }
+    if (object.states !== undefined && object.states !== null) {
+      for (const e of object.states) {
+        message.states.push(e);
+      }
     }
     return message;
   },
