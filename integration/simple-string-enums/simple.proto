@@ -4,6 +4,7 @@ package simple;
 message Simple {
   string name = 1;
   StateEnum state = 4;
+  repeated StateEnum states = 5;
 }
 
 enum StateEnum {
