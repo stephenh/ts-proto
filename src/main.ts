@@ -355,7 +355,10 @@ function makeByteUtils() {
     'base64FromBytes',
     code`
       const btoa : (bin: string) => string = ${globalThis}.btoa || ((bin) => ${globalThis}.Buffer.from(bin, 'binary').toString('base64'));
-      function base64FromBytes(arr: Uint8Array): string {
+      function base64FromBytes(arr: Uint8Array | string): string {
+        if (typeof arr === 'string') {
+          return arr;
+        }
         const bin: string[] = [];
         for (let i = 0; i < arr.byteLength; ++i) {
           bin.push(String.fromCharCode(arr[i]));
