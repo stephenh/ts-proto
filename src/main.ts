@@ -906,7 +906,8 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
         if (isLongValueType(field) && options.forceLong === LongOption.LONG) {
           return code`${capitalize(valueType.toCodeString())}.fromValue(${from})`;
         } else if (isBytesValueType(field)) {
-          return code`new ${capitalize(valueType.toCodeString())}(${from})`;
+          const typeCheck = code`typeof ${from} === 'string'`;
+          return code`(${typeCheck} ? ${from} : new Uint8Array(${from}))`;
         } else {
           return code`${capitalize(valueType.toCodeString())}(${from})`;
         }

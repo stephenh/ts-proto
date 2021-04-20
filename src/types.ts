@@ -94,7 +94,7 @@ export function basicTypeName(
       if (options.env === EnvOption.NODE) {
         return code`Buffer`;
       } else {
-        return code`Uint8Array | string`;
+        return code`(Uint8Array | string)`;
       }
     case FieldDescriptorProto_Type.TYPE_MESSAGE:
     case FieldDescriptorProto_Type.TYPE_ENUM:
@@ -398,7 +398,7 @@ export function valueTypeName(ctx: Context, typeName: string): Code | undefined 
     case '.google.protobuf.BoolValue':
       return code`boolean`;
     case '.google.protobuf.BytesValue':
-      return code`Uint8Array`;
+      return code`(Uint8Array | string)`;
     default:
       return undefined;
   }
