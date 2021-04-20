@@ -67,9 +67,9 @@ export interface Simple {
   oldStates: StateEnum[];
   /** A thing (imported from thing) */
   thing: ImportedThing | undefined;
-  blobs: Uint8Array[];
+  blobs: (Uint8Array | string)[];
   birthday: DateMessage | undefined;
-  blob: Uint8Array;
+  blob: Uint8Array | string;
 }
 
 export interface Child {
@@ -180,7 +180,7 @@ export interface SimpleWithWrappers {
   enabled: boolean | undefined;
   coins: number[];
   snacks: string[];
-  id: Uint8Array | undefined;
+  id: (Uint8Array | string) | undefined;
 }
 
 export interface Entity {
@@ -192,7 +192,7 @@ export interface SimpleWithMap {
   nameLookup: { [key: string]: string };
   intLookup: { [key: number]: number };
   mapOfTimestamps: { [key: string]: Date };
-  mapOfBytes: { [key: string]: Uint8Array };
+  mapOfBytes: { [key: string]: Uint8Array | string };
 }
 
 export interface SimpleWithMap_EntitiesByIdEntry {
@@ -217,7 +217,7 @@ export interface SimpleWithMap_MapOfTimestampsEntry {
 
 export interface SimpleWithMap_MapOfBytesEntry {
   key: string;
-  value: Uint8Array;
+  value: Uint8Array | string;
 }
 
 export interface SimpleWithSnakeCaseMap {
@@ -1044,7 +1044,7 @@ export const SimpleWithWrappers = {
       }
     }
     if (object.id !== undefined && object.id !== null) {
-      message.id = new Uint8Array(object.id);
+      message.id = typeof object.id === 'string' ? object.id : new Uint8Array(object.id);
     } else {
       message.id = undefined;
     }
@@ -2597,7 +2597,10 @@ function bytesFromBase64(b64: string): Uint8Array {
 
 const btoa: (bin: string) => string =
   globalThis.btoa || ((bin) => globalThis.Buffer.from(bin, 'binary').toString('base64'));
-function base64FromBytes(arr: Uint8Array): string {
+function base64FromBytes(arr: Uint8Array | string): string {
+  if (typeof arr === 'string') {
+    return arr;
+  }
   const bin: string[] = [];
   for (let i = 0; i < arr.byteLength; ++i) {
     bin.push(String.fromCharCode(arr[i]));

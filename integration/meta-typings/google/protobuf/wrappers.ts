@@ -92,7 +92,7 @@ export interface StringValue {
  */
 export interface BytesValue {
   /** The bytes value. */
-  value: Uint8Array;
+  value: Uint8Array | string;
 }
 
 const baseDoubleValue: object = { value: 0 };

@@ -11,7 +11,7 @@ export interface PleaseChoose {
     | { $case: 'aString'; aString: string }
     | { $case: 'aMessage'; aMessage: PleaseChoose_Submessage }
     | { $case: 'aBool'; aBool: boolean }
-    | { $case: 'bunchaBytes'; bunchaBytes: Uint8Array }
+    | { $case: 'bunchaBytes'; bunchaBytes: Uint8Array | string }
     | { $case: 'anEnum'; anEnum: PleaseChoose_StateEnum };
   age: number;
   eitherOr?:
@@ -408,7 +408,10 @@ function bytesFromBase64(b64: string): Uint8Array {
 
 const btoa: (bin: string) => string =
   globalThis.btoa || ((bin) => globalThis.Buffer.from(bin, 'binary').toString('base64'));
-function base64FromBytes(arr: Uint8Array): string {
+function base64FromBytes(arr: Uint8Array | string): string {
+  if (typeof arr === 'string') {
+    return arr;
+  }
   const bin: string[] = [];
   for (let i = 0; i < arr.byteLength; ++i) {
     bin.push(String.fromCharCode(arr[i]));

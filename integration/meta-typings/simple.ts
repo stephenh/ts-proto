@@ -37,9 +37,9 @@ export interface Simple {
   oldStates: StateEnum[];
   /** A thing (imported from thing) */
   thing: ImportedThing | undefined;
-  blobs: Uint8Array[];
+  blobs: (Uint8Array | string)[];
   birthday: DateMessage | undefined;
-  blob: Uint8Array;
+  blob: Uint8Array | string;
 }
 
 export interface Child {
@@ -99,7 +99,7 @@ export interface SimpleWithMap {
   nameLookup: { [key: string]: string };
   intLookup: { [key: number]: number };
   mapOfTimestamps: { [key: string]: Date };
-  mapOfBytes: { [key: string]: Uint8Array };
+  mapOfBytes: { [key: string]: Uint8Array | string };
 }
 
 export interface SimpleWithMap_EntitiesByIdEntry {
@@ -124,7 +124,7 @@ export interface SimpleWithMap_MapOfTimestampsEntry {
 
 export interface SimpleWithMap_MapOfBytesEntry {
   key: string;
-  value: Uint8Array;
+  value: Uint8Array | string;
 }
 
 export interface SimpleWithSnakeCaseMap {

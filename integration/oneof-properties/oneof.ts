@@ -22,7 +22,7 @@ export interface PleaseChoose {
    * field, so it has a higher number.
    */
   aBool: boolean | undefined;
-  bunchaBytes: Uint8Array | undefined;
+  bunchaBytes: (Uint8Array | string) | undefined;
   anEnum: PleaseChoose_StateEnum | undefined;
   age: number;
   either: string | undefined;
@@ -376,7 +376,10 @@ function bytesFromBase64(b64: string): Uint8Array {
 
 const btoa: (bin: string) => string =
   globalThis.btoa || ((bin) => globalThis.Buffer.from(bin, 'binary').toString('base64'));
-function base64FromBytes(arr: Uint8Array): string {
+function base64FromBytes(arr: Uint8Array | string): string {
+  if (typeof arr === 'string') {
+    return arr;
+  }
   const bin: string[] = [];
   for (let i = 0; i < arr.byteLength; ++i) {
     bin.push(String.fromCharCode(arr[i]));

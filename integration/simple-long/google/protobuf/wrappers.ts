@@ -91,7 +91,7 @@ export interface StringValue {
  */
 export interface BytesValue {
   /** The bytes value. */
-  value: Uint8Array;
+  value: Uint8Array | string;
 }
 
 const baseDoubleValue: object = { value: 0 };
@@ -613,7 +613,10 @@ function bytesFromBase64(b64: string): Uint8Array {
 
 const btoa: (bin: string) => string =
   globalThis.btoa || ((bin) => globalThis.Buffer.from(bin, 'binary').toString('base64'));
-function base64FromBytes(arr: Uint8Array): string {
+function base64FromBytes(arr: Uint8Array | string): string {
+  if (typeof arr === 'string') {
+    return arr;
+  }
   const bin: string[] = [];
   for (let i = 0; i < arr.byteLength; ++i) {
     bin.push(String.fromCharCode(arr[i]));
