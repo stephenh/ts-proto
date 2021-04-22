@@ -91,7 +91,7 @@ export interface StringValue {
  */
 export interface BytesValue {
   /** The bytes value. */
-  value: Uint8Array;
+  value: Buffer;
 }
 
 const baseDoubleValue: object = { value: 0 };
@@ -548,12 +548,12 @@ export const BytesValue = {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...baseBytesValue } as BytesValue;
-    message.value = new Uint8Array();
+    message.value = Buffer.alloc(0);
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.value = reader.bytes();
+          message.value = reader.bytes() as Buffer;
           break;
         default:
           reader.skipType(tag & 7);
@@ -565,9 +565,9 @@ export const BytesValue = {
 
   fromJSON(object: any): BytesValue {
     const message = { ...baseBytesValue } as BytesValue;
-    message.value = new Uint8Array();
+    message.value = Buffer.alloc(0);
     if (object.value !== undefined && object.value !== null) {
-      message.value = bytesFromBase64(object.value);
+      message.value = Buffer.from(bytesFromBase64(object.value));
     }
     return message;
   },
@@ -575,7 +575,7 @@ export const BytesValue = {
   toJSON(message: BytesValue): unknown {
     const obj: any = {};
     message.value !== undefined &&
-      (obj.value = base64FromBytes(message.value !== undefined ? message.value : new Uint8Array()));
+      (obj.value = base64FromBytes(message.value !== undefined ? message.value : Buffer.alloc(0)));
     return obj;
   },
 
@@ -584,7 +584,7 @@ export const BytesValue = {
     if (object.value !== undefined && object.value !== null) {
       message.value = object.value;
     } else {
-      message.value = new Uint8Array();
+      message.value = Buffer.alloc(0);
     }
     return message;
   },
