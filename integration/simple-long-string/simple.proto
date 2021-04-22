@@ -1,5 +1,7 @@
 syntax = "proto3";
 import "google/protobuf/wrappers.proto";
+import "google/protobuf/timestamp.proto";
+
 package simple;
 
 message Numbers {
@@ -16,4 +18,5 @@ message Numbers {
   sfixed32 sfixed32 = 11;
   sfixed64 sfixed64 = 12;
   google.protobuf.UInt64Value guint64 = 13;
+  google.protobuf.Timestamp timestamp = 14;
 }

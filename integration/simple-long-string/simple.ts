@@ -1,6 +1,7 @@
 /* eslint-disable */
 import { util, configure, Writer, Reader } from 'protobufjs/minimal';
 import * as Long from 'long';
+import { Timestamp } from './google/protobuf/timestamp';
 import { UInt64Value } from './google/protobuf/wrappers';
 
 export const protobufPackage = 'simple';
@@ -18,7 +19,8 @@ export interface Numbers {
   fixed64: string;
   sfixed32: number;
   sfixed64: string;
-  guint64: string | undefined;
+  guint64?: string;
+  timestamp?: Date;
 }
 
 const baseNumbers: object = {
@@ -77,6 +79,9 @@ export const Numbers = {
     if (message.guint64 !== undefined) {
       UInt64Value.encode({ value: message.guint64! }, writer.uint32(106).fork()).ldelim();
     }
+    if (message.timestamp !== undefined) {
+      Timestamp.encode(toTimestamp(message.timestamp), writer.uint32(114).fork()).ldelim();
+    }
     return writer;
   },
 
@@ -125,6 +130,9 @@ export const Numbers = {
           break;
         case 13:
           message.guint64 = UInt64Value.decode(reader, reader.uint32()).value;
+          break;
+        case 14:
+          message.timestamp = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -201,6 +209,11 @@ export const Numbers = {
     } else {
       message.guint64 = undefined;
     }
+    if (object.timestamp !== undefined && object.timestamp !== null) {
+      message.timestamp = fromJsonTimestamp(object.timestamp);
+    } else {
+      message.timestamp = undefined;
+    }
     return message;
   },
 
@@ -219,6 +232,7 @@ export const Numbers = {
     message.sfixed32 !== undefined && (obj.sfixed32 = message.sfixed32);
     message.sfixed64 !== undefined && (obj.sfixed64 = message.sfixed64);
     message.guint64 !== undefined && (obj.guint64 = message.guint64);
+    message.timestamp !== undefined && (obj.timestamp = message.timestamp.toISOString());
     return obj;
   },
 
@@ -289,6 +303,11 @@ export const Numbers = {
     } else {
       message.guint64 = undefined;
     }
+    if (object.timestamp !== undefined && object.timestamp !== null) {
+      message.timestamp = object.timestamp;
+    } else {
+      message.timestamp = undefined;
+    }
     return message;
   },
 };
@@ -303,6 +322,28 @@ export type DeepPartial<T> = T extends Builtin
   : T extends {}
   ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
+
+function toTimestamp(date: Date): Timestamp {
+  const seconds = Math.trunc(date.getTime() / 1_000).toString();
+  const nanos = (date.getTime() % 1_000) * 1_000_000;
+  return { seconds, nanos };
+}
+
+function fromTimestamp(t: Timestamp): Date {
+  let millis = Number(t.seconds) * 1_000;
+  millis += t.nanos / 1_000_000;
+  return new Date(millis);
+}
+
+function fromJsonTimestamp(o: any): Date {
+  if (o instanceof Date) {
+    return o;
+  } else if (typeof o === 'string') {
+    return new Date(o);
+  } else {
+    return fromTimestamp(Timestamp.fromJSON(o));
+  }
+}
 
 function longToString(long: Long) {
   return long.toString();
