@@ -94,12 +94,8 @@ export const Simple = {
           message.state = stateEnumFromJSON(reader.int32());
           break;
         case 5:
-          if ((tag & 7) === 2) {
-            const end2 = reader.uint32() + reader.pos;
-            while (reader.pos < end2) {
-              message.states.push(stateEnumFromJSON(reader.int32()));
-            }
-          } else {
+          const end2 = reader.uint32() + reader.pos;
+          while (reader.pos < end2) {
             message.states.push(stateEnumFromJSON(reader.int32()));
           }
           break;

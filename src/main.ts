@@ -691,6 +691,13 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
         `);
       } else if (packedType(field.type) === undefined) {
         chunks.push(code`message.${fieldName}.push(${readSnippet});`);
+      } else if (isEnum(field) && options.stringEnums) {
+        chunks.push(code`
+          const end2 = reader.uint32() + reader.pos;
+          while (reader.pos < end2) {
+            message.${fieldName}.push(${readSnippet});
+          }
+        `);
       } else {
         chunks.push(code`
           if ((tag & 7) === 2) {
