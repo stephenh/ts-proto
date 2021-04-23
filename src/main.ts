@@ -411,7 +411,7 @@ function makeTimestampMethods(options: Options, longs: ReturnType<typeof makeLon
     toNumberCode = 'Number(t.seconds)';
     // Must discard the fractional piece here
     // Otherwise the fraction ends up on the seconds when parsed as a Long
-    // (note this but would only occurs when the string is > 8 characters)
+    // (note this only occurs when the string is > 8 characters)
     seconds = 'Math.trunc(date.getTime() / 1_000).toString()';
   }
 
