@@ -7,3 +7,7 @@ import "google/protobuf/timestamp.proto";
 message Foo {
   google.protobuf.Timestamp timestamp = 1;
 }
+
+message Foo2 {
+  google.protobuf.Timestamp timestamp = 1;
+}

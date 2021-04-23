@@ -57,7 +57,16 @@ export const protobufPackage = 'google.protobuf';
  *         .setNanos((int) ((millis % 1000) * 1000000)).build();
  *
  *
- * Example 5: Compute Timestamp from current time in Python.
+ * Example 5: Compute Timestamp from Java `Instant.now()`.
+ *
+ *     Instant now = Instant.now();
+ *
+ *     Timestamp timestamp =
+ *         Timestamp.newBuilder().setSeconds(now.getEpochSecond())
+ *             .setNanos(now.getNano()).build();
+ *
+ *
+ * Example 6: Compute Timestamp from current time in Python.
  *
  *     timestamp = Timestamp()
  *     timestamp.GetCurrentTime()
@@ -200,7 +209,7 @@ export type DeepPartial<T> = T extends Builtin
   : T extends ReadonlyArray<infer U>
   ? ReadonlyArray<DeepPartial<U>>
   : T extends {}
-  ? { [K in keyof T]?: DeepPartial<T[K]> }
+  ? { [K in Exclude<keyof T, '$type'>]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 function longToNumber(long: Long): number {

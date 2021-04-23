@@ -378,6 +378,7 @@ function makeDeepPartial(options: Options, longs: ReturnType<typeof makeLongUtil
 
   const maybeExport = options.exportCommonSymbols ? 'export' : '';
   const maybeLong = options.forceLong === LongOption.LONG ? code` | ${longs.Long}` : '';
+  const keys = options.outputTypeRegistry ? code`Exclude<keyof T, '$type'>` : code`keyof T`;
 
   // Based on the type from ts-essentials
   const DeepPartial = conditionalOutput(
@@ -391,7 +392,7 @@ function makeDeepPartial(options: Options, longs: ReturnType<typeof makeLongUtil
         : T extends ReadonlyArray<infer U>
         ? ReadonlyArray<DeepPartial<U>>${oneofCase}
         : T extends {}
-        ? { [K in keyof T]?: DeepPartial<T[K]> }
+        ? { [K in ${keys}]?: DeepPartial<T[K]> }
         : Partial<T>;
     `
   );
