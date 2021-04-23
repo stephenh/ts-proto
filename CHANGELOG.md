@@ -1,3 +1,10 @@
+## [1.79.4](https://github.com/stephenh/ts-proto/compare/v1.79.3...v1.79.4) (2021-04-23)
+
+
+### Bug Fixes
+
+* ignore `$type` field in `DeepPartial` ([#282](https://github.com/stephenh/ts-proto/issues/282)) ([6c5087e](https://github.com/stephenh/ts-proto/commit/6c5087ed489283bf7293a2cdbee71dd83484c68e))
+
 ## [1.79.3](https://github.com/stephenh/ts-proto/compare/v1.79.2...v1.79.3) (2021-04-16)
 
 
