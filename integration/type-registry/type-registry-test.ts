@@ -1,4 +1,4 @@
-import { Foo } from './foo';
+import { Foo, Foo2 } from './foo';
 import { Bar } from './bar/bar';
 import { messageTypeRegistry } from './typeRegistry';
 
@@ -21,5 +21,21 @@ describe('type-registry', () => {
   it('should register every type', () => {
     expect(messageTypeRegistry.get('foo.Foo')).toBe(Foo);
     expect(messageTypeRegistry.get('foo.bar.Bar')).toBe(Bar);
+  });
+
+  it('should ignore $type field when creating from partial', () => {
+    const foo2 = Foo2.fromPartial({});
+    expect(foo2).toMatchInlineSnapshot(`
+      Object {
+        "$type": "foo.Foo2",
+        "timestamp": undefined,
+      }
+    `);
+    expect(Foo.fromPartial(foo2)).toMatchInlineSnapshot(`
+      Object {
+        "$type": "foo.Foo",
+        "timestamp": undefined,
+      }
+    `);
   });
 });
