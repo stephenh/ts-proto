@@ -26,6 +26,8 @@ jobs:
         run: yarn install
       - name: Prepare Integration
         run: ./integration/pbjs.sh
+      - name: Codegen
+        run: cd integration && ./codegen.sh
       - name: test
         run: yarn test
         env:
