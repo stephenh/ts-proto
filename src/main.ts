@@ -33,7 +33,7 @@ import {
   valueTypeName,
 } from './types';
 import SourceInfo, { Fields } from './sourceInfo';
-import { maybeAddComment } from './utils';
+import { maybeAddComment, maybePrefixPackage } from './utils';
 import { camelToSnake, capitalize, maybeSnakeToCamel } from './case';
 import {
   generateNestjsGrpcServiceMethodsDecorator,
@@ -94,13 +94,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
     sourceInfo,
     (fullName, message, sInfo, fullProtoTypeName) => {
       chunks.push(
-        generateInterfaceDeclaration(
-          ctx,
-          fullName,
-          message,
-          sInfo,
-          fileDesc.package ? `${fileDesc.package}.${fullProtoTypeName}` : fullProtoTypeName
-        )
+        generateInterfaceDeclaration(ctx, fullName, message, sInfo, maybePrefixPackage(fileDesc, fullProtoTypeName))
       );
     },
     options,
@@ -121,7 +115,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
       fileDesc,
       sourceInfo,
       (fullName, message, sInfo, fullProtoTypeName) => {
-        const fullTypeName = fileDesc.package ? `${fileDesc.package}.${fullProtoTypeName}` : fullProtoTypeName;
+        const fullTypeName = maybePrefixPackage(fileDesc, fullProtoTypeName);
 
         chunks.push(generateBaseInstance(ctx, fullName, message, fullTypeName));
 

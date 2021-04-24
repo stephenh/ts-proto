@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+service UserState {
+  rpc GetUsers(Empty) returns (stream User);
+}
+
+message User {
+  string name = 1;
+}
+
+message Empty {}

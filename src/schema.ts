@@ -3,6 +3,7 @@ import { imp, code, Code, joinCode, def } from 'ts-poet';
 import { visit, visitServices } from './visit';
 import { Context } from './context';
 import SourceInfo from './sourceInfo';
+import { maybePrefixPackage } from './utils';
 
 const fileDescriptorProto = imp('FileDescriptorProto@ts-proto-descriptors');
 
@@ -20,7 +21,7 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
 
   const references: Code[] = [];
   function addReference(localName: string, symbol: string): void {
-    references.push(code`'.${fileDesc.package}.${localName.replace(/_/g, '.')}': ${symbol}`);
+    references.push(code`'.${maybePrefixPackage(fileDesc, localName.replace(/_/g, '.'))}': ${symbol}`);
   }
 
   visit(

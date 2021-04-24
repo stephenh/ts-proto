@@ -4,7 +4,7 @@ import { camelCase } from './case';
 import { Context } from './context';
 import SourceInfo, { Fields } from './sourceInfo';
 import { messageToTypeName } from './types';
-import { maybeAddComment } from './utils';
+import { maybeAddComment, maybePrefixPackage } from './utils';
 
 const CallOptions = imp('CallOptions@@grpc/grpc-js');
 const ChannelCredentials = imp('ChannelCredentials@@grpc/grpc-js');
@@ -67,7 +67,7 @@ function generateServiceDefinition(
 
     chunks.push(code`
       ${camelCase(methodDesc.name)}: {
-        path: '/${fileDesc.package}.${serviceDesc.name}/${methodDesc.name}',
+        path: '/${maybePrefixPackage(fileDesc, serviceDesc.name)}/${methodDesc.name}',
         requestStream: ${methodDesc.clientStreaming},
         responseStream: ${methodDesc.serverStreaming},
         requestSerialize: (value: ${inputType}) =>
@@ -209,7 +209,7 @@ function generateClientConstructor(fileDesc: FileDescriptorProto, serviceDesc: S
   return code`
     export const ${def(`${serviceDesc.name}Client`)} = ${makeGenericClientConstructor}(
       ${serviceDesc.name}Service,
-      '${fileDesc.package}.${serviceDesc.name}'
+      '${maybePrefixPackage(fileDesc, serviceDesc.name)}'
     ) as unknown as {
       new (
         address: string,
