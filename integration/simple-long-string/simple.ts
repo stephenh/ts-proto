@@ -19,8 +19,8 @@ export interface Numbers {
   fixed64: string;
   sfixed32: number;
   sfixed64: string;
-  guint64?: string;
-  timestamp?: Date;
+  guint64: string | undefined;
+  timestamp: Date | undefined;
 }
 
 const baseNumbers: object = {
