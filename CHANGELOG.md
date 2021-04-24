@@ -1,3 +1,10 @@
+## [1.79.6](https://github.com/stephenh/ts-proto/compare/v1.79.5...v1.79.6) (2021-04-24)
+
+
+### Bug Fixes
+
+* Handle empty package ([#285](https://github.com/stephenh/ts-proto/issues/285)) ([5eadf92](https://github.com/stephenh/ts-proto/commit/5eadf9271fd9b00180593f3771266f3796a157bb))
+
 ## [1.79.5](https://github.com/stephenh/ts-proto/compare/v1.79.4...v1.79.5) (2021-04-24)
 
 
