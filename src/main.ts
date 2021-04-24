@@ -793,7 +793,22 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
             ${writeSnippet('v!')};
           }
         `);
+      } else if (isEnum(field) && options.stringEnums) {
+        // This is a lot like the `else` clause, but we wrap `fooToNumber` around it.
+        // Ideally we'd reuse `writeSnippet` here, but `writeSnippet` has the `writer.uint32(tag)`
+        // embedded inside of it, and we want to drop that so that we can encode it packed
+        // (i.e. just one tag and multiple values).
+        const tag = ((field.number << 3) | 2) >>> 0;
+        const toNumber = getEnumMethod(typeMap, field.typeName, 'ToNumber');
+        chunks.push(code`
+          writer.uint32(${tag}).fork();
+          for (const v of message.${fieldName}) {
+            writer.${toReaderCall(field)}(${toNumber}(v));
+          }
+          writer.ldelim();
+        `);
       } else {
+        // Ideally we'd reuse `writeSnippet` but it has tagging embedded inside of it.
         const tag = ((field.number << 3) | 2) >>> 0;
         chunks.push(code`
           writer.uint32(${tag}).fork();
