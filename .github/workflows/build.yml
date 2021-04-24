@@ -26,6 +26,12 @@ jobs:
         run: yarn install
       - name: Prepare Integration
         run: ./integration/pbjs.sh
+      # This will fail if any git-tracked file has changed
+      - name: Codegen
+        run: |
+          cd integration
+          ./codegen.sh
+          git status && git diff --exit-code
       - name: test
         run: yarn test
         env:
