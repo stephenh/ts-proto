@@ -71,7 +71,7 @@ export const Simple = {
     if (message.state !== StateEnum.UNKNOWN) {
       writer.uint32(32).int32(stateEnumToNumber(message.state));
     }
-    writer.uint32(40).fork();
+    writer.uint32(42).fork();
     for (const v of message.states) {
       writer.int32(stateEnumToNumber(v));
     }
@@ -94,8 +94,12 @@ export const Simple = {
           message.state = stateEnumFromJSON(reader.int32());
           break;
         case 5:
-          const end2 = reader.uint32() + reader.pos;
-          while (reader.pos < end2) {
+          if ((tag & 7) === 2) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.states.push(stateEnumFromJSON(reader.int32()));
+            }
+          } else {
             message.states.push(stateEnumFromJSON(reader.int32()));
           }
           break;

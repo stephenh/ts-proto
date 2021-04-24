@@ -691,13 +691,6 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
         `);
       } else if (packedType(field.type) === undefined) {
         chunks.push(code`message.${fieldName}.push(${readSnippet});`);
-      } else if (isEnum(field) && options.stringEnums) {
-        chunks.push(code`
-          const end2 = reader.uint32() + reader.pos;
-          while (reader.pos < end2) {
-            message.${fieldName}.push(${readSnippet});
-          }
-        `);
       } else {
         chunks.push(code`
           if ((tag & 7) === 2) {
@@ -797,7 +790,11 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
           }
         `);
       } else if (isEnum(field) && options.stringEnums) {
-        const tag = ((field.number << 3) | basicWireType(field.type)) >>> 0;
+        // This is a lot like the `else` clause, but we wrap `fooToNumber` around it.
+        // Ideally we'd reuse `writeSnippet` here, but `writeSnippet` has the `writer.uint32(tag)`
+        // embedded inside of it, and we want to drop that so that we can encode it packed
+        // (i.e. just one tag and multiple values).
+        const tag = ((field.number << 3) | 2) >>> 0;
         const toNumber = getEnumMethod(typeMap, field.typeName, 'ToNumber');
         chunks.push(code`
           writer.uint32(${tag}).fork();
@@ -807,6 +804,7 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
           writer.ldelim();
         `);
       } else {
+        // Ideally we'd reuse `writeSnippet` but it has tagging embedded inside of it.
         const tag = ((field.number << 3) | 2) >>> 0;
         chunks.push(code`
           writer.uint32(${tag}).fork();
