@@ -2,6 +2,7 @@ import { MethodDescriptorProto, FileDescriptorProto, ServiceDescriptorProto } fr
 import { requestType, responseObservable, responsePromise, responseType } from './types';
 import { Code, code, imp, joinCode } from 'ts-poet';
 import { Context } from './context';
+import { maybePrefixPackage } from './utils';
 
 const grpc = imp('grpc@@improbable-eng/grpc-web');
 const share = imp('share@rxjs/operators');
@@ -68,9 +69,7 @@ function generateRpcMethod(ctx: Context, serviceDesc: ServiceDescriptorProto, me
 export function generateGrpcServiceDesc(fileDesc: FileDescriptorProto, serviceDesc: ServiceDescriptorProto): Code {
   return code`
     export const ${serviceDesc.name}Desc = {
-      serviceName: "${fileDesc.package === '' ? '' : `${fileDesc.package === '' ? '' : `${fileDesc.package}.`}`}${
-    serviceDesc.name
-  }",
+      serviceName: "${maybePrefixPackage(fileDesc, serviceDesc.name)}",
     };
   `;
 }

@@ -1,6 +1,7 @@
+import { code, Code } from 'ts-poet';
+import { FileDescriptorProto } from 'ts-proto-descriptors';
 import ReadStream = NodeJS.ReadStream;
 import { SourceDescription } from './sourceInfo';
-import { code, Code } from 'ts-poet';
 
 export function readToBuffer(stream: ReadStream): Promise<Buffer> {
   return new Promise((resolve) => {
@@ -86,4 +87,9 @@ export function maybeAddComment(
 // generator output.
 export function prefixDisableLinter(spec: string): string {
   return `/* eslint-disable */\n${spec}`;
+}
+
+export function maybePrefixPackage(fileDesc: FileDescriptorProto, rest: string): string {
+  const prefix = fileDesc.package === '' ? '' : `${fileDesc.package}.`;
+  return `${prefix}${rest}`;
 }

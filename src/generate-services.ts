@@ -8,7 +8,7 @@ import {
   responsePromise,
   responseType,
 } from './types';
-import { maybeAddComment, singular } from './utils';
+import { maybeAddComment, maybePrefixPackage, singular } from './utils';
 import SourceInfo, { Fields } from './sourceInfo';
 import { camelCase } from './case';
 import { contextTypeVar } from './main';
@@ -122,7 +122,7 @@ function generateRegularRpcMethod(
       const data = ${inputType}.encode(request).finish();
       const promise = this.rpc.request(
         ${maybeCtx}
-        "${fileDesc.package === '' ? '' : `${fileDesc.package}.`}${serviceDesc.name}",
+        "${maybePrefixPackage(fileDesc, serviceDesc.name)}",
         "${methodDesc.name}",
         data
       );
@@ -230,16 +230,14 @@ function generateCachingRpcMethod(
 ): Code {
   const inputType = requestType(ctx, methodDesc);
   const outputType = responseType(ctx, methodDesc);
-  const uniqueIdentifier = `${fileDesc.package === '' ? '' : `${fileDesc.package}.`}${serviceDesc.name}.${
-    methodDesc.name
-  }`;
+  const uniqueIdentifier = `${maybePrefixPackage(fileDesc, serviceDesc.name)}.${methodDesc.name}`;
   const lambda = code`
     (requests) => {
       const responses = requests.map(async request => {
         const data = ${inputType}.encode(request).finish()
-        const response = await this.rpc.request(ctx, "${fileDesc.package === '' ? '' : `${fileDesc.package}.`}${
-    serviceDesc.name
-  }", "${methodDesc.name}", data);
+        const response = await this.rpc.request(ctx, "${maybePrefixPackage(fileDesc, serviceDesc.name)}", "${
+    methodDesc.name
+  }", data);
         return ${outputType}.decode(new ${Reader}(response));
       });
       return Promise.all(responses);
