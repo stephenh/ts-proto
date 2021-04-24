@@ -1,3 +1,10 @@
+## [1.79.5](https://github.com/stephenh/ts-proto/compare/v1.79.4...v1.79.5) (2021-04-24)
+
+
+### Bug Fixes
+
+* Support repeated string enums. ([#284](https://github.com/stephenh/ts-proto/issues/284)) ([be9ecf7](https://github.com/stephenh/ts-proto/commit/be9ecf785952ab7515155cb495e8e0da76b93a38))
+
 ## [1.79.4](https://github.com/stephenh/ts-proto/compare/v1.79.3...v1.79.4) (2021-04-23)
 
 
