@@ -80,7 +80,7 @@ export const Foo = {
   },
 };
 
-type Builtin = Date | Function | Uint8Array | string | number | undefined;
+type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 type DeepPartial<T> = T extends Builtin
   ? T
   : T extends Array<infer U>
