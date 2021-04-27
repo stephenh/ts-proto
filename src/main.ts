@@ -378,7 +378,7 @@ function makeDeepPartial(options: Options, longs: ReturnType<typeof makeLongUtil
   const DeepPartial = conditionalOutput(
     'DeepPartial',
     code`
-      type Builtin = Date | Function | Uint8Array | string | number | undefined${maybeLong};
+      type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined${maybeLong};
       ${maybeExport} type DeepPartial<T> = T extends Builtin
         ? T
         : T extends Array<infer U>

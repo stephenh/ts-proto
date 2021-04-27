@@ -127,7 +127,7 @@ export interface Factory {
   Produce(request: ProduceRequest): Observable<ProduceReply>;
 }
 
-type Builtin = Date | Function | Uint8Array | string | number | undefined;
+type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 export type DeepPartial<T> = T extends Builtin
   ? T
   : T extends Array<infer U>
