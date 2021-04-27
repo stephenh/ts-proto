@@ -1,3 +1,10 @@
+## [1.79.7](https://github.com/stephenh/ts-proto/compare/v1.79.6...v1.79.7) (2021-04-27)
+
+
+### Bug Fixes
+
+* add missing `boolean` to `DeepPartial` ([#287](https://github.com/stephenh/ts-proto/issues/287)) ([ba18380](https://github.com/stephenh/ts-proto/commit/ba1838069c6119516ceb1bfa5bc0242724e2b520))
+
 ## [1.79.6](https://github.com/stephenh/ts-proto/compare/v1.79.5...v1.79.6) (2021-04-24)
 
 
