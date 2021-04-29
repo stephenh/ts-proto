@@ -1,4 +1,9 @@
-import { CodeGeneratorRequest, CodeGeneratorResponse, CodeGeneratorResponse_Feature } from 'ts-proto-descriptors';
+import {
+  CodeGeneratorRequest,
+  CodeGeneratorResponse,
+  CodeGeneratorResponse_Feature,
+  FileDescriptorProto,
+} from 'ts-proto-descriptors';
 import { promisify } from 'util';
 import { prefixDisableLinter, readToBuffer } from './utils';
 import { generateFile, makeUtils } from './main';
@@ -6,6 +11,10 @@ import { createTypeMap } from './types';
 import { Context } from './context';
 import { getTsPoetOpts, optionsFromParameter } from './options';
 import { generateTypeRegistry } from './generate-type-registry';
+
+export function protoFilesToGenerate(request: CodeGeneratorRequest): FileDescriptorProto[] {
+  return request.protoFile.filter((f) => request.fileToGenerate.includes(f.name));
+}
 
 // this would be the plugin called by the protoc compiler
 async function main() {
@@ -20,7 +29,7 @@ async function main() {
   const ctx: Context = { typeMap, options, utils };
 
   const files = await Promise.all(
-    request.protoFile.map(async (file) => {
+    protoFilesToGenerate(request).map(async (file) => {
       const [path, code] = generateFile(ctx, file);
       const spec = await code.toStringWithImports({ ...getTsPoetOpts(options), path });
       return { name: path, content: prefixDisableLinter(spec) };
