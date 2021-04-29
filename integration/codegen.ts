@@ -8,6 +8,7 @@ import { prefixDisableLinter } from '../src/utils';
 import { getTsPoetOpts, optionsFromParameter } from '../src/options';
 import { Context } from '../src/context';
 import { generateTypeRegistry } from '../src/generate-type-registry';
+import { protoFilesToGenerate } from '../src/plugin';
 
 /**
  * Generates output for our integration tests from their example proto files.
@@ -31,7 +32,7 @@ async function generate(binFile: string, baseDir: string, parameter: string) {
   const options = optionsFromParameter(parameter || '');
   const typeMap = createTypeMap(request, options);
 
-  for (let file of request.protoFile) {
+  for (let file of protoFilesToGenerate(request)) {
     // Make a different utils per file to track per-file usage
     const utils = makeUtils(options);
     const ctx: Context = { options, typeMap, utils };
