@@ -28,9 +28,13 @@ export function generateGrpcClientImpl(
     private readonly rpc: Rpc;
     
     constructor(rpc: Rpc) {
-      this.rpc = rpc;
-    }
   `);
+  chunks.push(code`this.rpc = rpc;`);
+  // Bind each FooService method to the FooServiceImpl class
+  for (const methodDesc of serviceDesc.method) {
+    chunks.push(code`this.${methodDesc.name} = this.${methodDesc.name}.bind(this);`);
+  }
+  chunks.push(code`}\n`);
 
   // Create a method for each FooService method
   for (const methodDesc of serviceDesc.method) {

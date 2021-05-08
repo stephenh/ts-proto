@@ -735,6 +735,8 @@ export class DashStateClientImpl implements DashState {
   private readonly rpc: Rpc;
   constructor(rpc: Rpc) {
     this.rpc = rpc;
+    this.UserSettings = this.UserSettings.bind(this);
+    this.ActiveUserSettingsStream = this.ActiveUserSettingsStream.bind(this);
   }
   UserSettings(request: Empty): Promise<DashUserSettingsState> {
     const data = Empty.encode(request).finish();
@@ -764,6 +766,9 @@ export class DashAPICredsClientImpl implements DashAPICreds {
   private readonly rpc: Rpc;
   constructor(rpc: Rpc) {
     this.rpc = rpc;
+    this.Create = this.Create.bind(this);
+    this.Update = this.Update.bind(this);
+    this.Delete = this.Delete.bind(this);
   }
   Create(request: DashAPICredsCreateReq): Promise<DashCred> {
     const data = DashAPICredsCreateReq.encode(request).finish();

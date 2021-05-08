@@ -362,6 +362,7 @@ export class DashStateClientImpl implements DashState {
 
   constructor(rpc: Rpc) {
     this.rpc = rpc;
+    this.UserSettings = this.UserSettings.bind(this);
   }
 
   UserSettings(request: DeepPartial<Empty>, metadata?: grpc.Metadata): Observable<DashUserSettingsState> {

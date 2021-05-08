@@ -148,7 +148,13 @@ export function generateServiceClientImpl(
   // Create the constructor(rpc: Rpc)
   const rpcType = options.context ? 'Rpc<Context>' : 'Rpc';
   chunks.push(code`private readonly rpc: ${rpcType};`);
-  chunks.push(code`constructor(rpc: ${rpcType}) { this.rpc = rpc; }`);
+  chunks.push(code`constructor(rpc: ${rpcType}) {`);
+  chunks.push(code`this.rpc = rpc;`);
+  // Bind each FooService method to the FooServiceImpl class
+  for (const methodDesc of serviceDesc.method) {
+    chunks.push(code`this.${methodDesc.name} = this.${methodDesc.name}.bind(this);`);
+  }
+  chunks.push(code`}`);
 
   // Create a method for each FooService method
   for (const methodDesc of serviceDesc.method) {

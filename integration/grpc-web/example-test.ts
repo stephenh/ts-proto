@@ -11,4 +11,13 @@ describe('grpc-web', () => {
     const client = new DashStateClientImpl(rpc);
     client.UserSettings({});
   });
+  it('binds rpc function', () => {
+    const rpc = {
+      unary: jest.fn(),
+      invoke: jest.fn(),
+    };
+    const client = new DashStateClientImpl(rpc);
+    const userSettings = client.UserSettings;
+    userSettings({});
+  })
 });

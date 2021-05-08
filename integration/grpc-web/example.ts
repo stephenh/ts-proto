@@ -739,6 +739,8 @@ export class DashStateClientImpl implements DashState {
 
   constructor(rpc: Rpc) {
     this.rpc = rpc;
+    this.UserSettings = this.UserSettings.bind(this);
+    this.ActiveUserSettingsStream = this.ActiveUserSettingsStream.bind(this);
   }
 
   UserSettings(request: DeepPartial<Empty>, metadata?: grpc.Metadata): Promise<DashUserSettingsState> {
@@ -814,6 +816,9 @@ export class DashAPICredsClientImpl implements DashAPICreds {
 
   constructor(rpc: Rpc) {
     this.rpc = rpc;
+    this.Create = this.Create.bind(this);
+    this.Update = this.Update.bind(this);
+    this.Delete = this.Delete.bind(this);
   }
 
   Create(request: DeepPartial<DashAPICredsCreateReq>, metadata?: grpc.Metadata): Promise<DashCred> {
