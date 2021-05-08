@@ -1,14 +1,13 @@
-import { CodeGeneratorRequest } from 'ts-proto-descriptors';
+import { CodeGeneratorRequest, FileDescriptorProto } from 'ts-proto-descriptors';
 import { mkdir, readFile, writeFile } from 'fs';
 import { parse } from 'path';
 import { promisify } from 'util';
 import { generateFile, makeUtils } from '../src/main';
 import { createTypeMap } from '../src/types';
-import { prefixDisableLinter } from '../src/utils';
+import { prefixDisableLinter, protoFilesToGenerate } from '../src/utils';
 import { getTsPoetOpts, optionsFromParameter } from '../src/options';
 import { Context } from '../src/context';
 import { generateTypeRegistry } from '../src/generate-type-registry';
-import { protoFilesToGenerate } from '../src/plugin';
 
 /**
  * Generates output for our integration tests from their example proto files.
