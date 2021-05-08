@@ -404,6 +404,24 @@ export function valueTypeName(ctx: Context, typeName: string): Code | undefined 
   }
 }
 
+export function wrapperTypeName(typeName: string): string | undefined {
+  switch (typeName) {
+    case '.google.protobuf.StringValue':
+    case '.google.protobuf.Int32Value':
+    case '.google.protobuf.UInt32Value':
+    case '.google.protobuf.DoubleValue':
+    case '.google.protobuf.FloatValue':
+    case '.google.protobuf.Int64Value':
+    case '.google.protobuf.UInt64Value':
+    case '.google.protobuf.BoolValue':
+    case '.google.protobuf.BytesValue':
+    case '.google.protobuf.Timestamp':
+      return typeName.split('.')[3];
+    default:
+      return undefined;
+  }
+}
+
 function longTypeName(ctx: Context): Code {
   const { options, utils } = ctx;
   if (options.forceLong === LongOption.LONG) {

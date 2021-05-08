@@ -3,8 +3,9 @@ import { FileDescriptorProto, ServiceDescriptorProto } from 'ts-proto-descriptor
 import { camelCase } from './case';
 import { Context } from './context';
 import SourceInfo, { Fields } from './sourceInfo';
-import { messageToTypeName } from './types';
+import { messageToTypeName, wrapperTypeName } from './types';
 import { maybeAddComment, maybePrefixPackage } from './utils';
+import { generateDecoder, generateEncoder } from './encode';
 
 const CallOptions = imp('CallOptions@@grpc/grpc-js');
 const ChannelCredentials = imp('ChannelCredentials@@grpc/grpc-js');
@@ -65,17 +66,23 @@ function generateServiceDefinition(
     const info = sourceInfo.lookup(Fields.service.method, index);
     maybeAddComment(info, chunks, methodDesc.options?.deprecated);
 
+    const inputEncoder = generateEncoder(ctx, methodDesc.inputType);
+    const outputEncoder = generateEncoder(ctx, methodDesc.outputType);
+
+    const inputDecoder = generateDecoder(ctx, methodDesc.inputType);
+    const outputDecoder = generateDecoder(ctx, methodDesc.outputType);
+
     chunks.push(code`
       ${camelCase(methodDesc.name)}: {
         path: '/${maybePrefixPackage(fileDesc, serviceDesc.name)}/${methodDesc.name}',
         requestStream: ${methodDesc.clientStreaming},
         responseStream: ${methodDesc.serverStreaming},
         requestSerialize: (value: ${inputType}) =>
-          Buffer.from(${inputType}.encode(value).finish()),
-        requestDeserialize: (value: Buffer) => ${inputType}.decode(value),
+          Buffer.from(${inputEncoder}),
+        requestDeserialize: (value: Buffer) => ${inputDecoder},
         responseSerialize: (value: ${outputType}) =>
-          Buffer.from(${outputType}.encode(value).finish()),
-        responseDeserialize: (value: Buffer) => ${outputType}.decode(value),
+          Buffer.from(${outputEncoder}),
+        responseDeserialize: (value: Buffer) => ${outputDecoder},
       },
     `);
   }

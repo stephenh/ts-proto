@@ -21,6 +21,17 @@ import {
 } from '@grpc/grpc-js';
 import { Timestamp } from './google/protobuf/timestamp';
 import { Empty } from './google/protobuf/empty';
+import {
+  StringValue,
+  Int64Value,
+  UInt64Value,
+  Int32Value,
+  UInt32Value,
+  BytesValue,
+  FloatValue,
+  DoubleValue,
+  BoolValue,
+} from './google/protobuf/wrappers';
 
 export const protobufPackage = 'simple';
 
@@ -103,6 +114,99 @@ export const TestService = {
     responseSerialize: (value: Empty) => Buffer.from(Empty.encode(value).finish()),
     responseDeserialize: (value: Buffer) => Empty.decode(value),
   },
+  unaryStringValue: {
+    path: '/simple.Test/UnaryStringValue',
+    requestStream: false,
+    responseStream: false,
+    requestSerialize: (value: string | undefined) => Buffer.from(StringValue.encode({ value: value ?? '' }).finish()),
+    requestDeserialize: (value: Buffer) => StringValue.decode(value).value,
+    responseSerialize: (value: string | undefined) => Buffer.from(StringValue.encode({ value: value ?? '' }).finish()),
+    responseDeserialize: (value: Buffer) => StringValue.decode(value).value,
+  },
+  unaryInt64Value: {
+    path: '/simple.Test/UnaryInt64Value',
+    requestStream: false,
+    responseStream: false,
+    requestSerialize: (value: number | undefined) => Buffer.from(Int64Value.encode({ value: value ?? 0 }).finish()),
+    requestDeserialize: (value: Buffer) => Int64Value.decode(value).value,
+    responseSerialize: (value: number | undefined) => Buffer.from(Int64Value.encode({ value: value ?? 0 }).finish()),
+    responseDeserialize: (value: Buffer) => Int64Value.decode(value).value,
+  },
+  unaryUint64Value: {
+    path: '/simple.Test/UnaryUint64Value',
+    requestStream: false,
+    responseStream: false,
+    requestSerialize: (value: number | undefined) => Buffer.from(UInt64Value.encode({ value: value ?? 0 }).finish()),
+    requestDeserialize: (value: Buffer) => UInt64Value.decode(value).value,
+    responseSerialize: (value: number | undefined) => Buffer.from(UInt64Value.encode({ value: value ?? 0 }).finish()),
+    responseDeserialize: (value: Buffer) => UInt64Value.decode(value).value,
+  },
+  unaryInt32Value: {
+    path: '/simple.Test/UnaryInt32Value',
+    requestStream: false,
+    responseStream: false,
+    requestSerialize: (value: number | undefined) => Buffer.from(Int32Value.encode({ value: value ?? 0 }).finish()),
+    requestDeserialize: (value: Buffer) => Int32Value.decode(value).value,
+    responseSerialize: (value: number | undefined) => Buffer.from(Int32Value.encode({ value: value ?? 0 }).finish()),
+    responseDeserialize: (value: Buffer) => Int32Value.decode(value).value,
+  },
+  unaryUInt32Value: {
+    path: '/simple.Test/UnaryUInt32Value',
+    requestStream: false,
+    responseStream: false,
+    requestSerialize: (value: number | undefined) => Buffer.from(UInt32Value.encode({ value: value ?? 0 }).finish()),
+    requestDeserialize: (value: Buffer) => UInt32Value.decode(value).value,
+    responseSerialize: (value: number | undefined) => Buffer.from(UInt32Value.encode({ value: value ?? 0 }).finish()),
+    responseDeserialize: (value: Buffer) => UInt32Value.decode(value).value,
+  },
+  unaryBytesValue: {
+    path: '/simple.Test/UnaryBytesValue',
+    requestStream: false,
+    responseStream: false,
+    requestSerialize: (value: Uint8Array | undefined) =>
+      Buffer.from(BytesValue.encode({ value: value ?? new Uint8Array() }).finish()),
+    requestDeserialize: (value: Buffer) => BytesValue.decode(value).value,
+    responseSerialize: (value: Uint8Array | undefined) =>
+      Buffer.from(BytesValue.encode({ value: value ?? new Uint8Array() }).finish()),
+    responseDeserialize: (value: Buffer) => BytesValue.decode(value).value,
+  },
+  unaryFloatValue: {
+    path: '/simple.Test/UnaryFloatValue',
+    requestStream: false,
+    responseStream: false,
+    requestSerialize: (value: number | undefined) => Buffer.from(FloatValue.encode({ value: value ?? 0 }).finish()),
+    requestDeserialize: (value: Buffer) => FloatValue.decode(value).value,
+    responseSerialize: (value: number | undefined) => Buffer.from(FloatValue.encode({ value: value ?? 0 }).finish()),
+    responseDeserialize: (value: Buffer) => FloatValue.decode(value).value,
+  },
+  unaryDoubleValue: {
+    path: '/simple.Test/UnaryDoubleValue',
+    requestStream: false,
+    responseStream: false,
+    requestSerialize: (value: number | undefined) => Buffer.from(DoubleValue.encode({ value: value ?? 0 }).finish()),
+    requestDeserialize: (value: Buffer) => DoubleValue.decode(value).value,
+    responseSerialize: (value: number | undefined) => Buffer.from(DoubleValue.encode({ value: value ?? 0 }).finish()),
+    responseDeserialize: (value: Buffer) => DoubleValue.decode(value).value,
+  },
+  unaryBoolValue: {
+    path: '/simple.Test/UnaryBoolValue',
+    requestStream: false,
+    responseStream: false,
+    requestSerialize: (value: boolean | undefined) => Buffer.from(BoolValue.encode({ value: value ?? false }).finish()),
+    requestDeserialize: (value: Buffer) => BoolValue.decode(value).value,
+    responseSerialize: (value: boolean | undefined) =>
+      Buffer.from(BoolValue.encode({ value: value ?? false }).finish()),
+    responseDeserialize: (value: Buffer) => BoolValue.decode(value).value,
+  },
+  unaryTimestamp: {
+    path: '/simple.Test/UnaryTimestamp',
+    requestStream: false,
+    responseStream: false,
+    requestSerialize: (value: Date) => Buffer.from(Timestamp.encode(toTimestamp(value)).finish()),
+    requestDeserialize: (value: Buffer) => Timestamp.decode(value),
+    responseSerialize: (value: Date) => Buffer.from(Timestamp.encode(toTimestamp(value)).finish()),
+    responseDeserialize: (value: Buffer) => Timestamp.decode(value),
+  },
   /** Server Streaming */
   serverStreaming: {
     path: '/simple.Test/ServerStreaming',
@@ -112,6 +216,15 @@ export const TestService = {
     requestDeserialize: (value: Buffer) => TestMessage.decode(value),
     responseSerialize: (value: TestMessage) => Buffer.from(TestMessage.encode(value).finish()),
     responseDeserialize: (value: Buffer) => TestMessage.decode(value),
+  },
+  serverStringValueStreaming: {
+    path: '/simple.Test/ServerStringValueStreaming',
+    requestStream: false,
+    responseStream: true,
+    requestSerialize: (value: string | undefined) => Buffer.from(StringValue.encode({ value: value ?? '' }).finish()),
+    requestDeserialize: (value: Buffer) => StringValue.decode(value).value,
+    responseSerialize: (value: string | undefined) => Buffer.from(StringValue.encode({ value: value ?? '' }).finish()),
+    responseDeserialize: (value: Buffer) => StringValue.decode(value).value,
   },
   /** Client Streaming */
   clientStreaming: {
@@ -123,6 +236,15 @@ export const TestService = {
     responseSerialize: (value: TestMessage) => Buffer.from(TestMessage.encode(value).finish()),
     responseDeserialize: (value: Buffer) => TestMessage.decode(value),
   },
+  clientStringValueStreaming: {
+    path: '/simple.Test/ClientStringValueStreaming',
+    requestStream: true,
+    responseStream: false,
+    requestSerialize: (value: string | undefined) => Buffer.from(StringValue.encode({ value: value ?? '' }).finish()),
+    requestDeserialize: (value: Buffer) => StringValue.decode(value).value,
+    responseSerialize: (value: string | undefined) => Buffer.from(StringValue.encode({ value: value ?? '' }).finish()),
+    responseDeserialize: (value: Buffer) => StringValue.decode(value).value,
+  },
   /** Bidi Streaming */
   bidiStreaming: {
     path: '/simple.Test/BidiStreaming',
@@ -133,6 +255,15 @@ export const TestService = {
     responseSerialize: (value: TestMessage) => Buffer.from(TestMessage.encode(value).finish()),
     responseDeserialize: (value: Buffer) => TestMessage.decode(value),
   },
+  bidiStringValueStreaming: {
+    path: '/simple.Test/BidiStringValueStreaming',
+    requestStream: true,
+    responseStream: true,
+    requestSerialize: (value: string | undefined) => Buffer.from(StringValue.encode({ value: value ?? '' }).finish()),
+    requestDeserialize: (value: Buffer) => StringValue.decode(value).value,
+    responseSerialize: (value: string | undefined) => Buffer.from(StringValue.encode({ value: value ?? '' }).finish()),
+    responseDeserialize: (value: Buffer) => StringValue.decode(value).value,
+  },
 } as const;
 
 export interface TestServer extends UntypedServiceImplementation {
@@ -142,12 +273,25 @@ export interface TestServer extends UntypedServiceImplementation {
    * @deprecated
    */
   unary: handleUnaryCall<Empty, Empty>;
+  unaryStringValue: handleUnaryCall<string | undefined, string | undefined>;
+  unaryInt64Value: handleUnaryCall<number | undefined, number | undefined>;
+  unaryUint64Value: handleUnaryCall<number | undefined, number | undefined>;
+  unaryInt32Value: handleUnaryCall<number | undefined, number | undefined>;
+  unaryUInt32Value: handleUnaryCall<number | undefined, number | undefined>;
+  unaryBytesValue: handleUnaryCall<Uint8Array | undefined, Uint8Array | undefined>;
+  unaryFloatValue: handleUnaryCall<number | undefined, number | undefined>;
+  unaryDoubleValue: handleUnaryCall<number | undefined, number | undefined>;
+  unaryBoolValue: handleUnaryCall<boolean | undefined, boolean | undefined>;
+  unaryTimestamp: handleUnaryCall<Date, Date>;
   /** Server Streaming */
   serverStreaming: handleServerStreamingCall<TestMessage, TestMessage>;
+  serverStringValueStreaming: handleServerStreamingCall<string | undefined, string | undefined>;
   /** Client Streaming */
   clientStreaming: handleClientStreamingCall<TestMessage, TestMessage>;
+  clientStringValueStreaming: handleClientStreamingCall<string | undefined, string | undefined>;
   /** Bidi Streaming */
   bidiStreaming: handleBidiStreamingCall<TestMessage, TestMessage>;
+  bidiStringValueStreaming: handleBidiStreamingCall<string | undefined, string | undefined>;
 }
 
 export interface TestClient extends Client {
@@ -168,6 +312,153 @@ export interface TestClient extends Client {
     options: Partial<CallOptions>,
     callback: (error: ServiceError | null, response: Empty) => void
   ): ClientUnaryCall;
+  unaryStringValue(
+    request: string | undefined,
+    callback: (error: ServiceError | null, response: string | undefined) => void
+  ): ClientUnaryCall;
+  unaryStringValue(
+    request: string | undefined,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: string | undefined) => void
+  ): ClientUnaryCall;
+  unaryStringValue(
+    request: string | undefined,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: string | undefined) => void
+  ): ClientUnaryCall;
+  unaryInt64Value(
+    request: number | undefined,
+    callback: (error: ServiceError | null, response: number | undefined) => void
+  ): ClientUnaryCall;
+  unaryInt64Value(
+    request: number | undefined,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: number | undefined) => void
+  ): ClientUnaryCall;
+  unaryInt64Value(
+    request: number | undefined,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: number | undefined) => void
+  ): ClientUnaryCall;
+  unaryUint64Value(
+    request: number | undefined,
+    callback: (error: ServiceError | null, response: number | undefined) => void
+  ): ClientUnaryCall;
+  unaryUint64Value(
+    request: number | undefined,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: number | undefined) => void
+  ): ClientUnaryCall;
+  unaryUint64Value(
+    request: number | undefined,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: number | undefined) => void
+  ): ClientUnaryCall;
+  unaryInt32Value(
+    request: number | undefined,
+    callback: (error: ServiceError | null, response: number | undefined) => void
+  ): ClientUnaryCall;
+  unaryInt32Value(
+    request: number | undefined,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: number | undefined) => void
+  ): ClientUnaryCall;
+  unaryInt32Value(
+    request: number | undefined,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: number | undefined) => void
+  ): ClientUnaryCall;
+  unaryUInt32Value(
+    request: number | undefined,
+    callback: (error: ServiceError | null, response: number | undefined) => void
+  ): ClientUnaryCall;
+  unaryUInt32Value(
+    request: number | undefined,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: number | undefined) => void
+  ): ClientUnaryCall;
+  unaryUInt32Value(
+    request: number | undefined,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: number | undefined) => void
+  ): ClientUnaryCall;
+  unaryBytesValue(
+    request: Uint8Array | undefined,
+    callback: (error: ServiceError | null, response: Uint8Array | undefined) => void
+  ): ClientUnaryCall;
+  unaryBytesValue(
+    request: Uint8Array | undefined,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: Uint8Array | undefined) => void
+  ): ClientUnaryCall;
+  unaryBytesValue(
+    request: Uint8Array | undefined,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: Uint8Array | undefined) => void
+  ): ClientUnaryCall;
+  unaryFloatValue(
+    request: number | undefined,
+    callback: (error: ServiceError | null, response: number | undefined) => void
+  ): ClientUnaryCall;
+  unaryFloatValue(
+    request: number | undefined,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: number | undefined) => void
+  ): ClientUnaryCall;
+  unaryFloatValue(
+    request: number | undefined,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: number | undefined) => void
+  ): ClientUnaryCall;
+  unaryDoubleValue(
+    request: number | undefined,
+    callback: (error: ServiceError | null, response: number | undefined) => void
+  ): ClientUnaryCall;
+  unaryDoubleValue(
+    request: number | undefined,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: number | undefined) => void
+  ): ClientUnaryCall;
+  unaryDoubleValue(
+    request: number | undefined,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: number | undefined) => void
+  ): ClientUnaryCall;
+  unaryBoolValue(
+    request: boolean | undefined,
+    callback: (error: ServiceError | null, response: boolean | undefined) => void
+  ): ClientUnaryCall;
+  unaryBoolValue(
+    request: boolean | undefined,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: boolean | undefined) => void
+  ): ClientUnaryCall;
+  unaryBoolValue(
+    request: boolean | undefined,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: boolean | undefined) => void
+  ): ClientUnaryCall;
+  unaryTimestamp(request: Date, callback: (error: ServiceError | null, response: Date) => void): ClientUnaryCall;
+  unaryTimestamp(
+    request: Date,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: Date) => void
+  ): ClientUnaryCall;
+  unaryTimestamp(
+    request: Date,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: Date) => void
+  ): ClientUnaryCall;
   /** Server Streaming */
   serverStreaming(request: TestMessage, options?: Partial<CallOptions>): ClientReadableStream<TestMessage>;
   serverStreaming(
@@ -175,6 +466,15 @@ export interface TestClient extends Client {
     metadata?: Metadata,
     options?: Partial<CallOptions>
   ): ClientReadableStream<TestMessage>;
+  serverStringValueStreaming(
+    request: string | undefined,
+    options?: Partial<CallOptions>
+  ): ClientReadableStream<string | undefined>;
+  serverStringValueStreaming(
+    request: string | undefined,
+    metadata?: Metadata,
+    options?: Partial<CallOptions>
+  ): ClientReadableStream<string | undefined>;
   /** Client Streaming */
   clientStreaming(
     callback: (error: ServiceError | null, response: TestMessage) => void
@@ -192,10 +492,32 @@ export interface TestClient extends Client {
     options: Partial<CallOptions>,
     callback: (error: ServiceError | null, response: TestMessage) => void
   ): ClientWritableStream<TestMessage>;
+  clientStringValueStreaming(
+    callback: (error: ServiceError | null, response: string | undefined) => void
+  ): ClientWritableStream<string | undefined>;
+  clientStringValueStreaming(
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: string | undefined) => void
+  ): ClientWritableStream<string | undefined>;
+  clientStringValueStreaming(
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: string | undefined) => void
+  ): ClientWritableStream<string | undefined>;
+  clientStringValueStreaming(
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: string | undefined) => void
+  ): ClientWritableStream<string | undefined>;
   /** Bidi Streaming */
   bidiStreaming(): ClientDuplexStream<TestMessage, TestMessage>;
   bidiStreaming(options: Partial<CallOptions>): ClientDuplexStream<TestMessage, TestMessage>;
   bidiStreaming(metadata: Metadata, options?: Partial<CallOptions>): ClientDuplexStream<TestMessage, TestMessage>;
+  bidiStringValueStreaming(): ClientDuplexStream<string | undefined, string | undefined>;
+  bidiStringValueStreaming(options: Partial<CallOptions>): ClientDuplexStream<string | undefined, string | undefined>;
+  bidiStringValueStreaming(
+    metadata: Metadata,
+    options?: Partial<CallOptions>
+  ): ClientDuplexStream<string | undefined, string | undefined>;
 }
 
 export const TestClient = (makeGenericClientConstructor(TestService, 'simple.Test') as unknown) as {

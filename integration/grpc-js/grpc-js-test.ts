@@ -1,7 +1,14 @@
 /**
  * @jest-environment node
  */
-import { Server, ChannelCredentials, ServerCredentials } from '@grpc/grpc-js';
+import {
+  Server,
+  ChannelCredentials,
+  ServerCredentials,
+  ServerUnaryCall,
+  sendUnaryData,
+  ServiceError,
+} from '@grpc/grpc-js';
 import { TestClient, TestServer, TestService } from './simple';
 
 describe('grpc-js-test', () => {
@@ -16,10 +23,62 @@ describe('grpc-js-test', () => {
       unary(call, callback) {
         callback(null, call.request);
       },
+      unaryStringValue(call, callback) {
+        callback(null, call.request);
+      },
+      unaryInt64Value(call, callback) {
+        callback(null, call.request);
+      },
+      unaryUint64Value(call, callback) {
+        callback(null, call.request);
+      },
+      unaryBoolValue(
+        call: ServerUnaryCall<boolean | undefined, boolean | undefined>,
+        callback: sendUnaryData<boolean | undefined>
+      ): void {
+        callback(null, call.request);
+      },
+      unaryBytesValue(
+        call: ServerUnaryCall<Uint8Array | undefined, Uint8Array | undefined>,
+        callback: sendUnaryData<Uint8Array | undefined>
+      ): void {
+        callback(null, call.request);
+      },
+      unaryDoubleValue(
+        call: ServerUnaryCall<number | undefined, number | undefined>,
+        callback: sendUnaryData<number | undefined>
+      ): void {
+        callback(null, call.request);
+      },
+      unaryFloatValue(
+        call: ServerUnaryCall<number | undefined, number | undefined>,
+        callback: sendUnaryData<number | undefined>
+      ): void {
+        callback(null, call.request);
+      },
+      unaryInt32Value(
+        call: ServerUnaryCall<number | undefined, number | undefined>,
+        callback: sendUnaryData<number | undefined>
+      ): void {
+        callback(null, call.request);
+      },
+      unaryTimestamp(call: ServerUnaryCall<Date, Date>, callback: sendUnaryData<Date>): void {
+        callback(null, call.request);
+      },
+      unaryUInt32Value(
+        call: ServerUnaryCall<number | undefined, number | undefined>,
+        callback: sendUnaryData<number | undefined>
+      ): void {
+        callback(null, call.request);
+      },
       serverStreaming(call) {
         call.write({
           timestamp: call.request.timestamp,
         });
+        call.end();
+      },
+      serverStringValueStreaming(call) {
+        call.write(call.request);
         call.end();
       },
       clientStreaming(call, callback) {
@@ -29,11 +88,24 @@ describe('grpc-js-test', () => {
           });
         });
       },
+      clientStringValueStreaming(call, callback) {
+        call.on('data', (request) => {
+          callback(null, request);
+        });
+      },
       bidiStreaming(call) {
         call.on('data', (request) => {
           call.write({
             timestamp: request.timestamp,
           });
+        });
+        call.on('end', () => {
+          call.end();
+        });
+      },
+      bidiStringValueStreaming(call) {
+        call.on('data', (request) => {
+          call.write(request);
         });
         call.on('end', () => {
           call.end();
@@ -56,17 +128,69 @@ describe('grpc-js-test', () => {
 
     const client = new TestClient(`localhost:${port}`, ChannelCredentials.createInsecure());
 
-    expect.assertions(4);
+    expect.assertions(25);
 
     client.unary({}, (err, res) => {
       expect(res).toEqual({});
     });
+
+    client.unaryStringValue('foobar', (error: ServiceError | null, response: string | undefined) => {
+      expect(error).toBeNull();
+      expect(response).toEqual('foobar');
+    });
+
+    client.unaryBoolValue(true, (error: ServiceError | null, response: boolean | undefined) => {
+      expect(error).toBeNull();
+      expect(response).toBeTruthy();
+    });
+
+    client.unaryDoubleValue(12.5, (error: ServiceError | null, response: number | undefined) => {
+      expect(error).toBeNull();
+      expect(response).toEqual(12.5);
+    });
+
+    client.unaryFloatValue(12.5, (error: ServiceError | null, response: number | undefined) => {
+      expect(error).toBeNull();
+      expect(response).toEqual(12.5);
+    });
+
+    client.unaryInt32Value(12, (error: ServiceError | null, response: number | undefined) => {
+      expect(error).toBeNull();
+      expect(response).toEqual(12);
+    });
+
+    client.unaryUInt32Value(12, (error: ServiceError | null, response: number | undefined) => {
+      expect(error).toBeNull();
+      expect(response).toEqual(12);
+    });
+
+    client.unaryInt64Value(12, (error: ServiceError | null, response: number | undefined) => {
+      expect(error).toBeNull();
+      expect(response).toEqual(12);
+    });
+
+    client.unaryUint64Value(12, (error: ServiceError | null, response: number | undefined) => {
+      expect(error).toBeNull();
+      expect(response).toEqual(12);
+    });
+
+    client.unaryBytesValue(
+      new Uint8Array([1, 2, 3]),
+      (error: ServiceError | null, response: Uint8Array | undefined) => {
+        expect(error).toBeNull();
+        expect(response).toHaveLength(3);
+      }
+    );
 
     const timestamp = new Date();
 
     const serverStreamingCall = client.serverStreaming({ timestamp });
     serverStreamingCall.on('data', (response) => {
       expect(response.timestamp).toEqual(timestamp);
+    });
+    const serverStringValueStreamingCall = client.serverStringValueStreaming('foobar');
+    serverStringValueStreamingCall.on('data', (response) => {
+      expect(response).toEqual('foobar');
     });
 
     const clientStreamingCall = client.clientStreaming((err, res) => {
@@ -75,11 +199,24 @@ describe('grpc-js-test', () => {
     clientStreamingCall.write({ timestamp });
     clientStreamingCall.end();
 
+    const clientStringValueStreamingCall = client.clientStringValueStreaming((err, res) => {
+      expect(res).toEqual('foobar');
+    });
+    clientStringValueStreamingCall.write('foobar');
+    clientStringValueStreamingCall.end();
+
     const bidiStreamingCall = client.bidiStreaming();
     bidiStreamingCall.write({ timestamp });
     bidiStreamingCall.on('data', (response) => {
       expect(response.timestamp).toEqual(timestamp);
       bidiStreamingCall.end();
+    });
+
+    const bidiStringValueStreamingCall = client.bidiStringValueStreaming();
+    bidiStringValueStreamingCall.write('foobar');
+    bidiStringValueStreamingCall.on('data', (response) => {
+      expect(response).toEqual('foobar');
+      bidiStringValueStreamingCall.end();
     });
 
     await new Promise<void>((resolve) => {
