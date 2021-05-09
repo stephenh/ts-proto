@@ -112,6 +112,7 @@ export class UserStateClientImpl implements UserState {
   private readonly rpc: Rpc;
   constructor(rpc: Rpc) {
     this.rpc = rpc;
+    this.GetUsers = this.GetUsers.bind(this);
   }
   GetUsers(request: Empty): Promise<User> {
     const data = Empty.encode(request).finish();

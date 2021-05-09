@@ -662,6 +662,10 @@ export class EntityServiceClientImpl<Context extends DataLoaders> implements Ent
   private readonly rpc: Rpc<Context>;
   constructor(rpc: Rpc<Context>) {
     this.rpc = rpc;
+    this.BatchQuery = this.BatchQuery.bind(this);
+    this.BatchMapQuery = this.BatchMapQuery.bind(this);
+    this.GetOnlyMethod = this.GetOnlyMethod.bind(this);
+    this.WriteMethod = this.WriteMethod.bind(this);
   }
   GetQuery(ctx: Context, id: string): Promise<Entity> {
     const dl = ctx.getDataLoader('batching.EntityService.BatchQuery', () => {

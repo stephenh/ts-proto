@@ -658,6 +658,10 @@ export class EntityServiceClientImpl implements EntityService {
   private readonly rpc: Rpc;
   constructor(rpc: Rpc) {
     this.rpc = rpc;
+    this.BatchQuery = this.BatchQuery.bind(this);
+    this.BatchMapQuery = this.BatchMapQuery.bind(this);
+    this.GetOnlyMethod = this.GetOnlyMethod.bind(this);
+    this.WriteMethod = this.WriteMethod.bind(this);
   }
   BatchQuery(request: BatchQueryRequest): Promise<BatchQueryResponse> {
     const data = BatchQueryRequest.encode(request).finish();
