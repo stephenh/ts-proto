@@ -1,3 +1,10 @@
+# [1.80.0](https://github.com/stephenh/ts-proto/compare/v1.79.8...v1.80.0) (2021-05-09)
+
+
+### Features
+
+* Bind service methods to class ([#290](https://github.com/stephenh/ts-proto/issues/290)) ([84060e2](https://github.com/stephenh/ts-proto/commit/84060e204d0e42688b8da85d434fe3d24788813b))
+
 ## [1.79.8](https://github.com/stephenh/ts-proto/compare/v1.79.7...v1.79.8) (2021-05-09)
 
 
