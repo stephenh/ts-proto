@@ -1,3 +1,10 @@
+## [1.79.8](https://github.com/stephenh/ts-proto/compare/v1.79.7...v1.79.8) (2021-05-09)
+
+
+### Bug Fixes
+
+* Fix integration test codegen script ([#291](https://github.com/stephenh/ts-proto/issues/291)) ([a51eee5](https://github.com/stephenh/ts-proto/commit/a51eee55d07c43b4b7cbe1ad2eb010f33c216a29))
+
 ## [1.79.7](https://github.com/stephenh/ts-proto/compare/v1.79.6...v1.79.7) (2021-04-27)
 
 
