@@ -5,16 +5,12 @@ import {
   FileDescriptorProto,
 } from 'ts-proto-descriptors';
 import { promisify } from 'util';
-import { prefixDisableLinter, readToBuffer } from './utils';
+import { prefixDisableLinter, protoFilesToGenerate, readToBuffer } from './utils';
 import { generateFile, makeUtils } from './main';
 import { createTypeMap } from './types';
 import { Context } from './context';
 import { getTsPoetOpts, optionsFromParameter } from './options';
 import { generateTypeRegistry } from './generate-type-registry';
-
-export function protoFilesToGenerate(request: CodeGeneratorRequest): FileDescriptorProto[] {
-  return request.protoFile.filter((f) => request.fileToGenerate.includes(f.name));
-}
 
 // this would be the plugin called by the protoc compiler
 async function main() {

@@ -1,7 +1,11 @@
 import { code, Code } from 'ts-poet';
-import { FileDescriptorProto } from 'ts-proto-descriptors';
+import { CodeGeneratorRequest, FileDescriptorProto } from 'ts-proto-descriptors';
 import ReadStream = NodeJS.ReadStream;
 import { SourceDescription } from './sourceInfo';
+
+export function protoFilesToGenerate(request: CodeGeneratorRequest): FileDescriptorProto[] {
+  return request.protoFile.filter((f) => request.fileToGenerate.includes(f.name));
+}
 
 export function readToBuffer(stream: ReadStream): Promise<Buffer> {
   return new Promise((resolve) => {
