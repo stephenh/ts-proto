@@ -498,7 +498,8 @@ function generateInterfaceDeclaration(
   const chunks: Code[] = [];
 
   maybeAddComment(sourceInfo, chunks, messageDesc.options?.deprecated);
-  chunks.push(code`export interface ${fullName} {`);
+  // interface name should be defined to avoid import collisions
+  chunks.push(code`export interface ${def(fullName)} {`);
 
   if (ctx.options.outputTypeRegistry) {
     chunks.push(code`$type: '${fullTypeName}',`);
