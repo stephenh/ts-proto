@@ -1,0 +1,1 @@
+outputJsonMethods=false,outputEncodeMethods=false,outputClientImpl=false,nestJs=false
