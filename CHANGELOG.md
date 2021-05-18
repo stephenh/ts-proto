@@ -1,3 +1,10 @@
+## [1.80.1](https://github.com/stephenh/ts-proto/compare/v1.80.0...v1.80.1) (2021-05-18)
+
+
+### Bug Fixes
+
+* resolve import collisions for interfaces ([#300](https://github.com/stephenh/ts-proto/issues/300)) ([773d866](https://github.com/stephenh/ts-proto/commit/773d86686c15e9e831ad1c22405dee8d7251072e)), closes [#298](https://github.com/stephenh/ts-proto/issues/298)
+
 # [1.80.0](https://github.com/stephenh/ts-proto/compare/v1.79.8...v1.80.0) (2021-05-09)
 
 
