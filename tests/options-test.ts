@@ -8,6 +8,7 @@ describe('options', () => {
         "addNestjsRestParameter": false,
         "constEnums": false,
         "context": false,
+        "emitImportedFiles": true,
         "env": "both",
         "esModuleInterop": false,
         "exportCommonSymbols": true,

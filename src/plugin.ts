@@ -24,8 +24,9 @@ async function main() {
   const utils = makeUtils(options);
   const ctx: Context = { typeMap, options, utils };
 
+  const filesToGenerate = options.emitImportedFiles ? request.protoFile : protoFilesToGenerate(request);
   const files = await Promise.all(
-    protoFilesToGenerate(request).map(async (file) => {
+    filesToGenerate.map(async (file) => {
       const [path, code] = generateFile(ctx, file);
       const spec = await code.toStringWithImports({ ...getTsPoetOpts(options), path });
       return { name: path, content: prefixDisableLinter(spec) };

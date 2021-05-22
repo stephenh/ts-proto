@@ -48,6 +48,7 @@ export type Options = {
   outputSchema: boolean;
   // An alias of !output
   onlyTypes: boolean;
+  emitImportedFiles: boolean;
 };
 
 export function defaultOptions(): Options {
@@ -77,6 +78,7 @@ export function defaultOptions(): Options {
     exportCommonSymbols: true,
     outputSchema: false,
     onlyTypes: false,
+    emitImportedFiles: true,
   };
 }
 
