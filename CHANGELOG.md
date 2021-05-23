@@ -1,3 +1,10 @@
+## [1.81.1](https://github.com/stephenh/ts-proto/compare/v1.81.0...v1.81.1) (2021-05-23)
+
+
+### Bug Fixes
+
+* Fix encode wrap types ([#303](https://github.com/stephenh/ts-proto/issues/303)) ([533c0e0](https://github.com/stephenh/ts-proto/commit/533c0e0959943562a59de5f456b83ab0b0b6abed))
+
 # [1.81.0](https://github.com/stephenh/ts-proto/compare/v1.80.1...v1.81.0) (2021-05-23)
 
 
