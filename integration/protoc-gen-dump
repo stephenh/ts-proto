@@ -16,4 +16,5 @@
 # After generation, rename the file to something useful and then import in tests.
 # ----------------------------------------------------------------------------------------------------------------------
 cat >| file.bin
+# This echos back to protoc that we're a proto3 plugin
 cat ./dump-response.bin

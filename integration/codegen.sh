@@ -25,7 +25,7 @@ if [ -n "${1}" ]; then
   dir=$1
 fi
 
-list=$(find "$dir" -name "*.bin" -type f)
+list=$(find "$dir" -name "*.bin" -type f | grep -v dump-response.bin)
 
 for file in $list; do
   echo "${file}"
