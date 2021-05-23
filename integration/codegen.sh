@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-shopt -s globstar
 
 # Runs the local code generator for the .bin test files (as created/kept
 # up-to-date by ./update-bins.sh). Good for local iteration of WIP changes.
@@ -21,14 +20,24 @@ dir=${1:-*}
 
 N=6
 
-for file in ${dir}/**/*.bin; do
+dir=.
+if [ -n "${1}" ]; then
+  dir=$1
+fi
+
+list=$(find "$dir" -name "*.bin" -type f | grep -v dump-response.bin)
+
+for file in $list; do
   echo "${file}"
   # Strip the longest suffix starting at the 1st slash
-  dir="${file%%/*}"
+  dir="${file##./}"
+  dir="${dir%%/*}"
   params=""
+
   if [ -f "${dir}/parameters.txt" ]; then
     params=$(cat "${dir}/parameters.txt")
   fi
+
   ((i=i%N)); ((i++==0)) && wait
   ../node_modules/.bin/ts-node ./codegen.ts "${dir}" "${file}" "${params}" &
 done
