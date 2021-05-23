@@ -4,7 +4,7 @@ import { parse } from 'path';
 import { promisify } from 'util';
 import { generateFile, makeUtils } from '../src/main';
 import { createTypeMap } from '../src/types';
-import { prefixDisableLinter, protoFilesToGenerate } from '../src/utils';
+import { prefixDisableLinter } from '../src/utils';
 import { getTsPoetOpts, optionsFromParameter } from '../src/options';
 import { Context } from '../src/context';
 import { generateTypeRegistry } from '../src/generate-type-registry';
@@ -31,7 +31,7 @@ async function generate(binFile: string, baseDir: string, parameter: string) {
   const options = optionsFromParameter(parameter || '');
   const typeMap = createTypeMap(request, options);
 
-  for (let file of protoFilesToGenerate(request)) {
+  for (let file of request.protoFile) {
     // Make a different utils per file to track per-file usage
     const utils = makeUtils(options);
     const ctx: Context = { options, typeMap, utils };
