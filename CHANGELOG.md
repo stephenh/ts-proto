@@ -1,3 +1,10 @@
+# [1.81.0](https://github.com/stephenh/ts-proto/compare/v1.80.1...v1.81.0) (2021-05-23)
+
+
+### Features
+
+* implemented emitImportedFiles flag ([#302](https://github.com/stephenh/ts-proto/issues/302)) ([16b4aca](https://github.com/stephenh/ts-proto/commit/16b4aca98aa9f0266734421314baaa5259e3f4e2)), closes [#294](https://github.com/stephenh/ts-proto/issues/294) [#283](https://github.com/stephenh/ts-proto/issues/283) [#283](https://github.com/stephenh/ts-proto/issues/283)
+
 ## [1.80.1](https://github.com/stephenh/ts-proto/compare/v1.80.0...v1.80.1) (2021-05-18)
 
 
