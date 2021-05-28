@@ -14,7 +14,7 @@ import { maybeAddComment, singular } from './utils';
 import { camelCase } from './case';
 import { Context } from './context';
 
-const Metadata = imp('Metadata@grpc');
+
 
 export function generateNestjsServiceController(
   ctx: Context,
@@ -24,6 +24,8 @@ export function generateNestjsServiceController(
 ): Code {
   const { options } = ctx;
   const chunks: Code[] = [];
+
+  const Metadata = options.outputServices === 'grpc-js' ? imp('Metadata@@grpc/grpc-js') : imp('Metadata@grpc');
 
   maybeAddComment(sourceInfo, chunks, serviceDesc.options?.deprecated);
   const t = options.context ? `<${contextTypeVar}>` : '';
@@ -96,6 +98,8 @@ export function generateNestjsServiceClient(
 ): Code {
   const { options } = ctx;
   const chunks: Code[] = [];
+
+  const Metadata = options.outputServices === 'grpc-js' ? imp('Metadata@@grpc/grpc-js') : imp('Metadata@grpc');
 
   maybeAddComment(sourceInfo, chunks);
   const t = options.context ? `<${contextTypeVar}>` : ``;
