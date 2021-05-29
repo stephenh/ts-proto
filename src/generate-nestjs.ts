@@ -14,8 +14,6 @@ import { maybeAddComment, singular } from './utils';
 import { camelCase } from './case';
 import { Context } from './context';
 
-
-
 export function generateNestjsServiceController(
   ctx: Context,
   fileDesc: FileDescriptorProto,
