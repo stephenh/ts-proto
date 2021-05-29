@@ -1,0 +1,2564 @@
+{
+  "fileDescriptor": {
+    "name": "simple.proto",
+    "package": "simple",
+    "dependency": [
+      "google/type/date.proto",
+      "google/protobuf/wrappers.proto",
+      "google/protobuf/timestamp.proto",
+      "import_dir/thing.proto"
+    ],
+    "publicDependency": [],
+    "weakDependency": [],
+    "syntax": "proto3",
+    "messageType": [
+      {
+        "name": "Simple",
+        "reservedName": [],
+        "field": [
+          {
+            "name": "name",
+            "number": 1,
+            "label": 1,
+            "type": 9,
+            "typeName": "",
+            "extendee": "",
+            "defaultValue": "",
+            "oneofIndex": 0,
+            "jsonName": "name",
+            "proto3Optional": false
+          },
+          {
+            "name": "age",
+            "number": 2,
+            "label": 1,
+            "type": 5,
+            "typeName": "",
+            "extendee": "",
+            "defaultValue": "",
+            "oneofIndex": 0,
+            "jsonName": "age",
+            "proto3Optional": false
+          },
+          {
+            "name": "created_at",
+            "number": 9,
+            "label": 1,
+            "type": 11,
+            "typeName": ".google.protobuf.Timestamp",
+            "extendee": "",
+            "defaultValue": "",
+            "oneofIndex": 0,
+            "jsonName": "createdAt",
+            "proto3Optional": false
+          },
+          {
+            "name": "child",
+            "number": 3,
+            "label": 1,
+            "type": 11,
+            "typeName": ".simple.Child",
+            "extendee": "",
+            "defaultValue": "",
+            "oneofIndex": 0,
+            "jsonName": "child",
+            "proto3Optional": false
+          },
+          {
+            "name": "state",
+            "number": 4,
+            "label": 1,
+            "type": 14,
+            "typeName": ".simple.StateEnum",
+            "extendee": "",
+            "defaultValue": "",
+            "oneofIndex": 0,
+            "jsonName": "state",
+            "proto3Optional": false
+          },
+          {
+            "name": "grand_children",
+            "number": 5,
+            "label": 3,
+            "type": 11,
+            "typeName": ".simple.Child",
+            "extendee": "",
+            "defaultValue": "",
+            "oneofIndex": 0,
+            "jsonName": "grandChildren",
+            "proto3Optional": false
+          },
+          {
+            "name": "coins",
+            "number": 6,
+            "label": 3,
+            "type": 5,
+            "typeName": "",
+            "extendee": "",
+            "defaultValue": "",
+            "oneofIndex": 0,
+            "jsonName": "coins",
+            "proto3Optional": false
+          },
+          {
+            "name": "snacks",
+            "number": 7,
+            "label": 3,
+            "type": 9,
+            "typeName": "",
+            "extendee": "",
+            "defaultValue": "",
+            "oneofIndex": 0,
+            "jsonName": "snacks",
+            "proto3Optional": false
+          },
+          {
+            "name": "old_states",
+            "number": 8,
+            "label": 3,
+            "type": 14,
+            "typeName": ".simple.StateEnum",
+            "extendee": "",
+            "defaultValue": "",
+            "oneofIndex": 0,
+            "jsonName": "oldStates",
+            "proto3Optional": false
+          },
+          {
+            "name": "thing",
+            "number": 10,
+            "label": 1,
+            "type": 11,
+            "typeName": ".simple.ImportedThing",
+            "extendee": "",
+            "defaultValue": "",
+            "oneofIndex": 0,
+            "jsonName": "thing",
+            "proto3Optional": false
+          },
+          {
+            "name": "blobs",
+            "number": 11,
+            "label": 3,
+            "type": 12,
+            "typeName": "",
+            "extendee": "",
+            "defaultValue": "",
+            "oneofIndex": 0,
+            "jsonName": "blobs",
+            "proto3Optional": false
+          },
+          {
+            "name": "birthday",
+            "number": 12,
+            "label": 1,
+            "type": 11,
+            "typeName": ".google.type.Date",
+            "extendee": "",
+            "defaultValue": "",
+            "oneofIndex": 0,
+            "jsonName": "birthday",
+            "proto3Optional": false
+          },
+          {
+            "name": "blob",
+            "number": 13,
+            "label": 1,
+            "type": 12,
+            "typeName": "",
+            "extendee": "",
+            "defaultValue": "",
+            "oneofIndex": 0,
+            "jsonName": "blob",
+            "proto3Optional": false
+          }
+        ],
+        "extension": [],
+        "nestedType": [],
+        "enumType": [],
+        "extensionRange": [],
+        "oneofDecl": [],
+        "reservedRange": []
+      },
+      {
+        "name": "Child",
+        "reservedName": [],
+        "field": [
+          {
+            "name": "name",
+            "number": 1,
+            "label": 1,
+            "type": 9,
+            "typeName": "",
+            "extendee": "",
+            "defaultValue": "",
+            "oneofIndex": 0,
+            "jsonName": "name",
+            "proto3Optional": false
+          },
+          {
+            "name": "type",
+            "number": 2,
+            "label": 1,
+            "type": 14,
+            "typeName": ".simple.Child.Type",
+            "extendee": "",
+            "defaultValue": "",
+            "oneofIndex": 0,
+            "jsonName": "type",
+            "proto3Optional": false
+          }
+        ],
+        "extension": [],
+        "nestedType": [],
+        "enumType": [
+          {
+            "name": "Type",
+            "reservedName": [],
+            "value": [
+              {
+                "name": "UNKNOWN",
+                "number": 0
+              },
+              {
+                "name": "GOOD",
+                "number": 1
+              },
+              {
+                "name": "BAD",
+                "number": 2
+              }
+            ],
+            "reservedRange": []
+          }
+        ],
+        "extensionRange": [],
+        "oneofDecl": [],
+        "reservedRange": []
+      },
+      {
+        "name": "Nested",
+        "reservedName": [],
+        "field": [
+          {
+            "name": "name",
+            "number": 1,
+            "label": 1,
+            "type": 9,
+            "typeName": "",
+            "extendee": "",
+            "defaultValue": "",
+            "oneofIndex": 0,
+            "jsonName": "name",
+            "proto3Optional": false
+          },
+          {
+            "name": "message",
+            "number": 2,
+            "label": 1,
+            "type": 11,
+            "typeName": ".simple.Nested.InnerMessage",
+            "extendee": "",
+            "defaultValue": "",
+            "oneofIndex": 0,
+            "jsonName": "message",
+            "proto3Optional": false
+          },
+          {
+            "name": "state",
+            "number": 3,
+            "label": 1,
+            "type": 14,
+            "typeName": ".simple.Nested.InnerEnum",
+            "extendee": "",
+            "defaultValue": "",
+            "oneofIndex": 0,
+            "jsonName": "state",
+            "proto3Optional": false
+          }
+        ],
+        "extension": [],
+        "nestedType": [
+          {
+            "name": "InnerMessage",
+            "reservedName": [],
+            "field": [
+              {
+                "name": "name",
+                "number": 1,
+                "label": 1,
+                "type": 9,
+                "typeName": "",
+                "extendee": "",
+                "defaultValue": "",
+                "oneofIndex": 0,
+                "jsonName": "name",
+                "proto3Optional": false
+              },
+              {
+                "name": "deep",
+                "number": 2,
+                "label": 1,
+                "type": 11,
+                "typeName": ".simple.Nested.InnerMessage.DeepMessage",
+                "extendee": "",
+                "defaultValue": "",
+                "oneofIndex": 0,
+                "jsonName": "deep",
+                "proto3Optional": false
+              }
+            ],
+            "extension": [],
+            "nestedType": [
+              {
+                "name": "DeepMessage",
+                "reservedName": [],
+                "field": [
+                  {
+                    "name": "name",
+                    "number": 1,
+                    "label": 1,
+                    "type": 9,
+                    "typeName": "",
+                    "extendee": "",
+                    "defaultValue": "",
+                    "oneofIndex": 0,
+                    "jsonName": "name",
+                    "proto3Optional": false
+                  }
+                ],
+                "extension": [],
+                "nestedType": [],
+                "enumType": [],
+                "extensionRange": [],
+                "oneofDecl": [],
+                "reservedRange": []
+              }
+            ],
+            "enumType": [],
+            "extensionRange": [],
+            "oneofDecl": [],
+            "reservedRange": []
+          }
+        ],
+        "enumType": [
+          {
+            "name": "InnerEnum",
+            "reservedName": [],
+            "value": [
+              {
+                "name": "UNKNOWN_INNER",
+                "number": 0
+              },
+              {
+                "name": "GOOD",
+                "number": 100
+              },
+              {
+                "name": "BAD",
+                "number": 1000
+              }
+            ],
+            "reservedRange": []
+          }
+        ],
+        "extensionRange": [],
+        "oneofDecl": [],
+        "reservedRange": []
+      },
+      {
+        "name": "OneOfMessage",
+        "reservedName": [],
+        "field": [
+          {
+            "name": "first",
+            "number": 1,
+            "label": 1,
+            "type": 9,
+            "typeName": "",
+            "extendee": "",
+            "defaultValue": "",
+            "oneofIndex": 0,
+            "jsonName": "first",
+            "proto3Optional": false
+          },
+          {
+            "name": "last",
+            "number": 2,
+            "label": 1,
+            "type": 9,
+            "typeName": "",
+            "extendee": "",
+            "defaultValue": "",
+            "oneofIndex": 0,
+            "jsonName": "last",
+            "proto3Optional": false
+          }
+        ],
+        "extension": [],
+        "nestedType": [],
+        "enumType": [],
+        "extensionRange": [],
+        "oneofDecl": [
+          {
+            "name": "name_fields"
+          }
+        ],
+        "reservedRange": []
+      },
+      {
+        "name": "SimpleWithWrappers",
+        "reservedName": [],
+        "field": [
+          {
+            "name": "name",
+            "number": 1,
+            "label": 1,
+            "type": 11,
+            "typeName": ".google.protobuf.StringValue",
+            "extendee": "",
+            "defaultValue": "",
+            "oneofIndex": 0,
+            "jsonName": "name",
+            "proto3Optional": false
+          },
+          {
+            "name": "age",
+            "number": 2,
+            "label": 1,
+            "type": 11,
+            "typeName": ".google.protobuf.Int32Value",
+            "extendee": "",
+            "defaultValue": "",
+            "oneofIndex": 0,
+            "jsonName": "age",
+            "proto3Optional": false
+          },
+          {
+            "name": "enabled",
+            "number": 3,
+            "label": 1,
+            "type": 11,
+            "typeName": ".google.protobuf.BoolValue",
+            "extendee": "",
+            "defaultValue": "",
+            "oneofIndex": 0,
+            "jsonName": "enabled",
+            "proto3Optional": false
+          },
+          {
+            "name": "coins",
+            "number": 6,
+            "label": 3,
+            "type": 11,
+            "typeName": ".google.protobuf.Int32Value",
+            "extendee": "",
+            "defaultValue": "",
+            "oneofIndex": 0,
+            "jsonName": "coins",
+            "proto3Optional": false
+          },
+          {
+            "name": "snacks",
+            "number": 7,
+            "label": 3,
+            "type": 11,
+            "typeName": ".google.protobuf.StringValue",
+            "extendee": "",
+            "defaultValue": "",
+            "oneofIndex": 0,
+            "jsonName": "snacks",
+            "proto3Optional": false
+          }
+        ],
+        "extension": [],
+        "nestedType": [],
+        "enumType": [],
+        "extensionRange": [],
+        "oneofDecl": [],
+        "reservedRange": []
+      },
+      {
+        "name": "Entity",
+        "reservedName": [],
+        "field": [
+          {
+            "name": "id",
+            "number": 1,
+            "label": 1,
+            "type": 5,
+            "typeName": "",
+            "extendee": "",
+            "defaultValue": "",
+            "oneofIndex": 0,
+            "jsonName": "id",
+            "proto3Optional": false
+          }
+        ],
+        "extension": [],
+        "nestedType": [],
+        "enumType": [],
+        "extensionRange": [],
+        "oneofDecl": [],
+        "reservedRange": []
+      },
+      {
+        "name": "SimpleWithMap",
+        "reservedName": [],
+        "field": [
+          {
+            "name": "entitiesById",
+            "number": 1,
+            "label": 3,
+            "type": 11,
+            "typeName": ".simple.SimpleWithMap.EntitiesByIdEntry",
+            "extendee": "",
+            "defaultValue": "",
+            "oneofIndex": 0,
+            "jsonName": "entitiesById",
+            "proto3Optional": false
+          },
+          {
+            "name": "nameLookup",
+            "number": 2,
+            "label": 3,
+            "type": 11,
+            "typeName": ".simple.SimpleWithMap.NameLookupEntry",
+            "extendee": "",
+            "defaultValue": "",
+            "oneofIndex": 0,
+            "jsonName": "nameLookup",
+            "proto3Optional": false
+          },
+          {
+            "name": "intLookup",
+            "number": 3,
+            "label": 3,
+            "type": 11,
+            "typeName": ".simple.SimpleWithMap.IntLookupEntry",
+            "extendee": "",
+            "defaultValue": "",
+            "oneofIndex": 0,
+            "jsonName": "intLookup",
+            "proto3Optional": false
+          },
+          {
+            "name": "mapOfTimestamps",
+            "number": 4,
+            "label": 3,
+            "type": 11,
+            "typeName": ".simple.SimpleWithMap.MapOfTimestampsEntry",
+            "extendee": "",
+            "defaultValue": "",
+            "oneofIndex": 0,
+            "jsonName": "mapOfTimestamps",
+            "proto3Optional": false
+          },
+          {
+            "name": "mapOfBytes",
+            "number": 5,
+            "label": 3,
+            "type": 11,
+            "typeName": ".simple.SimpleWithMap.MapOfBytesEntry",
+            "extendee": "",
+            "defaultValue": "",
+            "oneofIndex": 0,
+            "jsonName": "mapOfBytes",
+            "proto3Optional": false
+          }
+        ],
+        "extension": [],
+        "nestedType": [
+          {
+            "name": "EntitiesByIdEntry",
+            "reservedName": [],
+            "field": [
+              {
+                "name": "key",
+                "number": 1,
+                "label": 1,
+                "type": 5,
+                "typeName": "",
+                "extendee": "",
+                "defaultValue": "",
+                "oneofIndex": 0,
+                "jsonName": "key",
+                "proto3Optional": false
+              },
+              {
+                "name": "value",
+                "number": 2,
+                "label": 1,
+                "type": 11,
+                "typeName": ".simple.Entity",
+                "extendee": "",
+                "defaultValue": "",
+                "oneofIndex": 0,
+                "jsonName": "value",
+                "proto3Optional": false
+              }
+            ],
+            "extension": [],
+            "nestedType": [],
+            "enumType": [],
+            "extensionRange": [],
+            "oneofDecl": [],
+            "reservedRange": [],
+            "options": {
+              "messageSetWireFormat": false,
+              "noStandardDescriptorAccessor": false,
+              "deprecated": false,
+              "mapEntry": true,
+              "uninterpretedOption": []
+            }
+          },
+          {
+            "name": "NameLookupEntry",
+            "reservedName": [],
+            "field": [
+              {
+                "name": "key",
+                "number": 1,
+                "label": 1,
+                "type": 9,
+                "typeName": "",
+                "extendee": "",
+                "defaultValue": "",
+                "oneofIndex": 0,
+                "jsonName": "key",
+                "proto3Optional": false
+              },
+              {
+                "name": "value",
+                "number": 2,
+                "label": 1,
+                "type": 9,
+                "typeName": "",
+                "extendee": "",
+                "defaultValue": "",
+                "oneofIndex": 0,
+                "jsonName": "value",
+                "proto3Optional": false
+              }
+            ],
+            "extension": [],
+            "nestedType": [],
+            "enumType": [],
+            "extensionRange": [],
+            "oneofDecl": [],
+            "reservedRange": [],
+            "options": {
+              "messageSetWireFormat": false,
+              "noStandardDescriptorAccessor": false,
+              "deprecated": false,
+              "mapEntry": true,
+              "uninterpretedOption": []
+            }
+          },
+          {
+            "name": "IntLookupEntry",
+            "reservedName": [],
+            "field": [
+              {
+                "name": "key",
+                "number": 1,
+                "label": 1,
+                "type": 5,
+                "typeName": "",
+                "extendee": "",
+                "defaultValue": "",
+                "oneofIndex": 0,
+                "jsonName": "key",
+                "proto3Optional": false
+              },
+              {
+                "name": "value",
+                "number": 2,
+                "label": 1,
+                "type": 5,
+                "typeName": "",
+                "extendee": "",
+                "defaultValue": "",
+                "oneofIndex": 0,
+                "jsonName": "value",
+                "proto3Optional": false
+              }
+            ],
+            "extension": [],
+            "nestedType": [],
+            "enumType": [],
+            "extensionRange": [],
+            "oneofDecl": [],
+            "reservedRange": [],
+            "options": {
+              "messageSetWireFormat": false,
+              "noStandardDescriptorAccessor": false,
+              "deprecated": false,
+              "mapEntry": true,
+              "uninterpretedOption": []
+            }
+          },
+          {
+            "name": "MapOfTimestampsEntry",
+            "reservedName": [],
+            "field": [
+              {
+                "name": "key",
+                "number": 1,
+                "label": 1,
+                "type": 9,
+                "typeName": "",
+                "extendee": "",
+                "defaultValue": "",
+                "oneofIndex": 0,
+                "jsonName": "key",
+                "proto3Optional": false
+              },
+              {
+                "name": "value",
+                "number": 2,
+                "label": 1,
+                "type": 11,
+                "typeName": ".google.protobuf.Timestamp",
+                "extendee": "",
+                "defaultValue": "",
+                "oneofIndex": 0,
+                "jsonName": "value",
+                "proto3Optional": false
+              }
+            ],
+            "extension": [],
+            "nestedType": [],
+            "enumType": [],
+            "extensionRange": [],
+            "oneofDecl": [],
+            "reservedRange": [],
+            "options": {
+              "messageSetWireFormat": false,
+              "noStandardDescriptorAccessor": false,
+              "deprecated": false,
+              "mapEntry": true,
+              "uninterpretedOption": []
+            }
+          },
+          {
+            "name": "MapOfBytesEntry",
+            "reservedName": [],
+            "field": [
+              {
+                "name": "key",
+                "number": 1,
+                "label": 1,
+                "type": 9,
+                "typeName": "",
+                "extendee": "",
+                "defaultValue": "",
+                "oneofIndex": 0,
+                "jsonName": "key",
+                "proto3Optional": false
+              },
+              {
+                "name": "value",
+                "number": 2,
+                "label": 1,
+                "type": 12,
+                "typeName": "",
+                "extendee": "",
+                "defaultValue": "",
+                "oneofIndex": 0,
+                "jsonName": "value",
+                "proto3Optional": false
+              }
+            ],
+            "extension": [],
+            "nestedType": [],
+            "enumType": [],
+            "extensionRange": [],
+            "oneofDecl": [],
+            "reservedRange": [],
+            "options": {
+              "messageSetWireFormat": false,
+              "noStandardDescriptorAccessor": false,
+              "deprecated": false,
+              "mapEntry": true,
+              "uninterpretedOption": []
+            }
+          }
+        ],
+        "enumType": [],
+        "extensionRange": [],
+        "oneofDecl": [],
+        "reservedRange": []
+      },
+      {
+        "name": "SimpleWithSnakeCaseMap",
+        "reservedName": [],
+        "field": [
+          {
+            "name": "entities_by_id",
+            "number": 1,
+            "label": 3,
+            "type": 11,
+            "typeName": ".simple.SimpleWithSnakeCaseMap.EntitiesByIdEntry",
+            "extendee": "",
+            "defaultValue": "",
+            "oneofIndex": 0,
+            "jsonName": "entitiesById",
+            "proto3Optional": false
+          }
+        ],
+        "extension": [],
+        "nestedType": [
+          {
+            "name": "EntitiesByIdEntry",
+            "reservedName": [],
+            "field": [
+              {
+                "name": "key",
+                "number": 1,
+                "label": 1,
+                "type": 5,
+                "typeName": "",
+                "extendee": "",
+                "defaultValue": "",
+                "oneofIndex": 0,
+                "jsonName": "key",
+                "proto3Optional": false
+              },
+              {
+                "name": "value",
+                "number": 2,
+                "label": 1,
+                "type": 11,
+                "typeName": ".simple.Entity",
+                "extendee": "",
+                "defaultValue": "",
+                "oneofIndex": 0,
+                "jsonName": "value",
+                "proto3Optional": false
+              }
+            ],
+            "extension": [],
+            "nestedType": [],
+            "enumType": [],
+            "extensionRange": [],
+            "oneofDecl": [],
+            "reservedRange": [],
+            "options": {
+              "messageSetWireFormat": false,
+              "noStandardDescriptorAccessor": false,
+              "deprecated": false,
+              "mapEntry": true,
+              "uninterpretedOption": []
+            }
+          }
+        ],
+        "enumType": [],
+        "extensionRange": [],
+        "oneofDecl": [],
+        "reservedRange": []
+      },
+      {
+        "name": "SimpleWithMapOfEnums",
+        "reservedName": [],
+        "field": [
+          {
+            "name": "enums_by_id",
+            "number": 1,
+            "label": 3,
+            "type": 11,
+            "typeName": ".simple.SimpleWithMapOfEnums.EnumsByIdEntry",
+            "extendee": "",
+            "defaultValue": "",
+            "oneofIndex": 0,
+            "jsonName": "enumsById",
+            "proto3Optional": false
+          }
+        ],
+        "extension": [],
+        "nestedType": [
+          {
+            "name": "EnumsByIdEntry",
+            "reservedName": [],
+            "field": [
+              {
+                "name": "key",
+                "number": 1,
+                "label": 1,
+                "type": 5,
+                "typeName": "",
+                "extendee": "",
+                "defaultValue": "",
+                "oneofIndex": 0,
+                "jsonName": "key",
+                "proto3Optional": false
+              },
+              {
+                "name": "value",
+                "number": 2,
+                "label": 1,
+                "type": 14,
+                "typeName": ".simple.StateEnum",
+                "extendee": "",
+                "defaultValue": "",
+                "oneofIndex": 0,
+                "jsonName": "value",
+                "proto3Optional": false
+              }
+            ],
+            "extension": [],
+            "nestedType": [],
+            "enumType": [],
+            "extensionRange": [],
+            "oneofDecl": [],
+            "reservedRange": [],
+            "options": {
+              "messageSetWireFormat": false,
+              "noStandardDescriptorAccessor": false,
+              "deprecated": false,
+              "mapEntry": true,
+              "uninterpretedOption": []
+            }
+          }
+        ],
+        "enumType": [],
+        "extensionRange": [],
+        "oneofDecl": [],
+        "reservedRange": []
+      },
+      {
+        "name": "PingRequest",
+        "reservedName": [],
+        "field": [
+          {
+            "name": "input",
+            "number": 1,
+            "label": 1,
+            "type": 9,
+            "typeName": "",
+            "extendee": "",
+            "defaultValue": "",
+            "oneofIndex": 0,
+            "jsonName": "input",
+            "proto3Optional": false
+          }
+        ],
+        "extension": [],
+        "nestedType": [],
+        "enumType": [],
+        "extensionRange": [],
+        "oneofDecl": [],
+        "reservedRange": []
+      },
+      {
+        "name": "PingResponse",
+        "reservedName": [],
+        "field": [
+          {
+            "name": "output",
+            "number": 1,
+            "label": 1,
+            "type": 9,
+            "typeName": "",
+            "extendee": "",
+            "defaultValue": "",
+            "oneofIndex": 0,
+            "jsonName": "output",
+            "proto3Optional": false
+          }
+        ],
+        "extension": [],
+        "nestedType": [],
+        "enumType": [],
+        "extensionRange": [],
+        "oneofDecl": [],
+        "reservedRange": []
+      },
+      {
+        "name": "Numbers",
+        "reservedName": [],
+        "field": [
+          {
+            "name": "double",
+            "number": 1,
+            "label": 1,
+            "type": 1,
+            "typeName": "",
+            "extendee": "",
+            "defaultValue": "",
+            "oneofIndex": 0,
+            "jsonName": "double",
+            "proto3Optional": false
+          },
+          {
+            "name": "float",
+            "number": 2,
+            "label": 1,
+            "type": 2,
+            "typeName": "",
+            "extendee": "",
+            "defaultValue": "",
+            "oneofIndex": 0,
+            "jsonName": "float",
+            "proto3Optional": false
+          },
+          {
+            "name": "int32",
+            "number": 3,
+            "label": 1,
+            "type": 5,
+            "typeName": "",
+            "extendee": "",
+            "defaultValue": "",
+            "oneofIndex": 0,
+            "jsonName": "int32",
+            "proto3Optional": false
+          },
+          {
+            "name": "int64",
+            "number": 4,
+            "label": 1,
+            "type": 3,
+            "typeName": "",
+            "extendee": "",
+            "defaultValue": "",
+            "oneofIndex": 0,
+            "jsonName": "int64",
+            "proto3Optional": false
+          },
+          {
+            "name": "uint32",
+            "number": 5,
+            "label": 1,
+            "type": 13,
+            "typeName": "",
+            "extendee": "",
+            "defaultValue": "",
+            "oneofIndex": 0,
+            "jsonName": "uint32",
+            "proto3Optional": false
+          },
+          {
+            "name": "uint64",
+            "number": 6,
+            "label": 1,
+            "type": 4,
+            "typeName": "",
+            "extendee": "",
+            "defaultValue": "",
+            "oneofIndex": 0,
+            "jsonName": "uint64",
+            "proto3Optional": false
+          },
+          {
+            "name": "sint32",
+            "number": 7,
+            "label": 1,
+            "type": 17,
+            "typeName": "",
+            "extendee": "",
+            "defaultValue": "",
+            "oneofIndex": 0,
+            "jsonName": "sint32",
+            "proto3Optional": false
+          },
+          {
+            "name": "sint64",
+            "number": 8,
+            "label": 1,
+            "type": 18,
+            "typeName": "",
+            "extendee": "",
+            "defaultValue": "",
+            "oneofIndex": 0,
+            "jsonName": "sint64",
+            "proto3Optional": false
+          },
+          {
+            "name": "fixed32",
+            "number": 9,
+            "label": 1,
+            "type": 7,
+            "typeName": "",
+            "extendee": "",
+            "defaultValue": "",
+            "oneofIndex": 0,
+            "jsonName": "fixed32",
+            "proto3Optional": false
+          },
+          {
+            "name": "fixed64",
+            "number": 10,
+            "label": 1,
+            "type": 6,
+            "typeName": "",
+            "extendee": "",
+            "defaultValue": "",
+            "oneofIndex": 0,
+            "jsonName": "fixed64",
+            "proto3Optional": false
+          },
+          {
+            "name": "sfixed32",
+            "number": 11,
+            "label": 1,
+            "type": 15,
+            "typeName": "",
+            "extendee": "",
+            "defaultValue": "",
+            "oneofIndex": 0,
+            "jsonName": "sfixed32",
+            "proto3Optional": false
+          },
+          {
+            "name": "sfixed64",
+            "number": 12,
+            "label": 1,
+            "type": 16,
+            "typeName": "",
+            "extendee": "",
+            "defaultValue": "",
+            "oneofIndex": 0,
+            "jsonName": "sfixed64",
+            "proto3Optional": false
+          }
+        ],
+        "extension": [],
+        "nestedType": [],
+        "enumType": [],
+        "extensionRange": [],
+        "oneofDecl": [],
+        "reservedRange": []
+      },
+      {
+        "name": "SimpleButOptional",
+        "reservedName": [],
+        "field": [
+          {
+            "name": "name",
+            "number": 1,
+            "label": 1,
+            "type": 9,
+            "typeName": "",
+            "extendee": "",
+            "defaultValue": "",
+            "oneofIndex": 0,
+            "jsonName": "name",
+            "proto3Optional": true
+          },
+          {
+            "name": "age",
+            "number": 2,
+            "label": 1,
+            "type": 5,
+            "typeName": "",
+            "extendee": "",
+            "defaultValue": "",
+            "oneofIndex": 1,
+            "jsonName": "age",
+            "proto3Optional": true
+          },
+          {
+            "name": "created_at",
+            "number": 9,
+            "label": 1,
+            "type": 11,
+            "typeName": ".google.protobuf.Timestamp",
+            "extendee": "",
+            "defaultValue": "",
+            "oneofIndex": 2,
+            "jsonName": "createdAt",
+            "proto3Optional": true
+          },
+          {
+            "name": "child",
+            "number": 3,
+            "label": 1,
+            "type": 11,
+            "typeName": ".simple.Child",
+            "extendee": "",
+            "defaultValue": "",
+            "oneofIndex": 3,
+            "jsonName": "child",
+            "proto3Optional": true
+          },
+          {
+            "name": "state",
+            "number": 4,
+            "label": 1,
+            "type": 14,
+            "typeName": ".simple.StateEnum",
+            "extendee": "",
+            "defaultValue": "",
+            "oneofIndex": 4,
+            "jsonName": "state",
+            "proto3Optional": true
+          },
+          {
+            "name": "thing",
+            "number": 10,
+            "label": 1,
+            "type": 11,
+            "typeName": ".simple.ImportedThing",
+            "extendee": "",
+            "defaultValue": "",
+            "oneofIndex": 5,
+            "jsonName": "thing",
+            "proto3Optional": true
+          },
+          {
+            "name": "birthday",
+            "number": 12,
+            "label": 1,
+            "type": 11,
+            "typeName": ".google.type.Date",
+            "extendee": "",
+            "defaultValue": "",
+            "oneofIndex": 6,
+            "jsonName": "birthday",
+            "proto3Optional": true
+          }
+        ],
+        "extension": [],
+        "nestedType": [],
+        "enumType": [],
+        "extensionRange": [],
+        "oneofDecl": [
+          {
+            "name": "_name"
+          },
+          {
+            "name": "_age"
+          },
+          {
+            "name": "_created_at"
+          },
+          {
+            "name": "_child"
+          },
+          {
+            "name": "_state"
+          },
+          {
+            "name": "_thing"
+          },
+          {
+            "name": "_birthday"
+          }
+        ],
+        "reservedRange": []
+      },
+      {
+        "name": "Empty",
+        "reservedName": [],
+        "field": [],
+        "extension": [],
+        "nestedType": [],
+        "enumType": [],
+        "extensionRange": [],
+        "oneofDecl": [],
+        "reservedRange": []
+      }
+    ],
+    "enumType": [
+      {
+        "name": "StateEnum",
+        "reservedName": [],
+        "value": [
+          {
+            "name": "UNKNOWN",
+            "number": 0
+          },
+          {
+            "name": "ON",
+            "number": 2
+          },
+          {
+            "name": "OFF",
+            "number": 3
+          }
+        ],
+        "reservedRange": []
+      }
+    ],
+    "service": [
+      {
+        "name": "PingService",
+        "method": [
+          {
+            "name": "ping",
+            "inputType": ".simple.PingRequest",
+            "outputType": ".simple.PingResponse",
+            "clientStreaming": false,
+            "serverStreaming": false
+          }
+        ]
+      }
+    ],
+    "extension": [],
+    "sourceCodeInfo": {
+      "location": [
+        {
+          "path": [
+            12
+          ],
+          "span": [
+            2,
+            0,
+            18
+          ],
+          "leadingComments": " Adding a comment to the syntax will become the first\n comment in the output source file.\n",
+          "trailingComments": "",
+          "leadingDetachedComments": []
+        },
+        {
+          "path": [
+            4,
+            0
+          ],
+          "span": [
+            13,
+            0,
+            30,
+            1
+          ],
+          "leadingComments": "* Example comment on the Simple message ",
+          "trailingComments": "",
+          "leadingDetachedComments": [
+            " This comment is seperated by a blank non-comment line, and will detatch from \n the following comment on the message Simple.\n"
+          ]
+        },
+        {
+          "path": [
+            4,
+            0,
+            2,
+            0
+          ],
+          "span": [
+            15,
+            2,
+            18
+          ],
+          "leadingComments": " Name field\n",
+          "trailingComments": "",
+          "leadingDetachedComments": []
+        },
+        {
+          "path": [
+            4,
+            0,
+            2,
+            1
+          ],
+          "span": [
+            17,
+            2,
+            16
+          ],
+          "leadingComments": " Age ",
+          "trailingComments": "",
+          "leadingDetachedComments": []
+        },
+        {
+          "path": [
+            4,
+            0,
+            2,
+            2
+          ],
+          "span": [
+            18,
+            2,
+            43
+          ],
+          "leadingComments": "",
+          "trailingComments": " This comment will also attach\n",
+          "leadingDetachedComments": []
+        },
+        {
+          "path": [
+            4,
+            0,
+            2,
+            9
+          ],
+          "span": [
+            26,
+            2,
+            27
+          ],
+          "leadingComments": " A thing (imported from thing)\n",
+          "trailingComments": "",
+          "leadingDetachedComments": []
+        },
+        {
+          "path": [
+            4,
+            2,
+            3,
+            0
+          ],
+          "span": [
+            54,
+            2,
+            61,
+            3
+          ],
+          "leadingComments": " Comment for a nested message */\n",
+          "trailingComments": "",
+          "leadingDetachedComments": []
+        },
+        {
+          "path": [
+            4,
+            12
+          ],
+          "span": [
+            133,
+            0,
+            144,
+            1
+          ],
+          "leadingComments": "* For testing proto3's field presence feature. ",
+          "trailingComments": "",
+          "leadingDetachedComments": []
+        },
+        {
+          "path": [
+            4,
+            12,
+            2,
+            0
+          ],
+          "span": [
+            135,
+            2,
+            27
+          ],
+          "leadingComments": " Name field\n",
+          "trailingComments": "",
+          "leadingDetachedComments": []
+        },
+        {
+          "path": [
+            4,
+            12,
+            2,
+            1
+          ],
+          "span": [
+            137,
+            2,
+            25
+          ],
+          "leadingComments": " Age ",
+          "trailingComments": "",
+          "leadingDetachedComments": []
+        },
+        {
+          "path": [
+            4,
+            12,
+            2,
+            2
+          ],
+          "span": [
+            138,
+            2,
+            52
+          ],
+          "leadingComments": "",
+          "trailingComments": " This comment will also attach\n",
+          "leadingDetachedComments": []
+        },
+        {
+          "path": [
+            4,
+            12,
+            2,
+            5
+          ],
+          "span": [
+            142,
+            2,
+            36
+          ],
+          "leadingComments": " A thing (imported from thing)\n",
+          "trailingComments": "",
+          "leadingDetachedComments": []
+        }
+      ]
+    }
+  },
+  "references": {
+    ".simple.StateEnum": {
+      "0": "UNKNOWN",
+      "2": "ON",
+      "3": "OFF",
+      "UNKNOWN": 0,
+      "ON": 2,
+      "OFF": 3,
+      "UNRECOGNIZED": -1,
+      "-1": "UNRECOGNIZED"
+    },
+    ".simple.Simple": {},
+    ".simple.Child": {},
+    ".simple.Child.Type": {
+      "0": "UNKNOWN",
+      "1": "GOOD",
+      "2": "BAD",
+      "UNKNOWN": 0,
+      "GOOD": 1,
+      "BAD": 2,
+      "UNRECOGNIZED": -1,
+      "-1": "UNRECOGNIZED"
+    },
+    ".simple.Nested": {},
+    ".simple.Nested.InnerEnum": {
+      "0": "UNKNOWN_INNER",
+      "100": "GOOD",
+      "1000": "BAD",
+      "UNKNOWN_INNER": 0,
+      "GOOD": 100,
+      "BAD": 1000,
+      "UNRECOGNIZED": -1,
+      "-1": "UNRECOGNIZED"
+    },
+    ".simple.Nested.InnerMessage": {},
+    ".simple.Nested.InnerMessage.DeepMessage": {},
+    ".simple.OneOfMessage": {},
+    ".simple.SimpleWithWrappers": {},
+    ".simple.Entity": {},
+    ".simple.SimpleWithMap": {},
+    ".simple.SimpleWithMap.EntitiesByIdEntry": {},
+    ".simple.SimpleWithMap.NameLookupEntry": {},
+    ".simple.SimpleWithMap.IntLookupEntry": {},
+    ".simple.SimpleWithMap.MapOfTimestampsEntry": {},
+    ".simple.SimpleWithMap.MapOfBytesEntry": {},
+    ".simple.SimpleWithSnakeCaseMap": {},
+    ".simple.SimpleWithSnakeCaseMap.EntitiesByIdEntry": {},
+    ".simple.SimpleWithMapOfEnums": {},
+    ".simple.SimpleWithMapOfEnums.EnumsByIdEntry": {},
+    ".simple.PingRequest": {},
+    ".simple.PingResponse": {},
+    ".simple.Numbers": {},
+    ".simple.SimpleButOptional": {},
+    ".simple.Empty": {}
+  },
+  "dependencies": [
+    {
+      "fileDescriptor": {
+        "name": "google/type/date.proto",
+        "package": "google.type",
+        "dependency": [],
+        "publicDependency": [],
+        "weakDependency": [],
+        "syntax": "proto3",
+        "messageType": [
+          {
+            "name": "Date",
+            "reservedName": [],
+            "field": [
+              {
+                "name": "year",
+                "number": 1,
+                "label": 1,
+                "type": 5,
+                "typeName": "",
+                "extendee": "",
+                "defaultValue": "",
+                "oneofIndex": 0,
+                "jsonName": "year",
+                "proto3Optional": false
+              },
+              {
+                "name": "month",
+                "number": 2,
+                "label": 1,
+                "type": 5,
+                "typeName": "",
+                "extendee": "",
+                "defaultValue": "",
+                "oneofIndex": 0,
+                "jsonName": "month",
+                "proto3Optional": false
+              },
+              {
+                "name": "day",
+                "number": 3,
+                "label": 1,
+                "type": 5,
+                "typeName": "",
+                "extendee": "",
+                "defaultValue": "",
+                "oneofIndex": 0,
+                "jsonName": "day",
+                "proto3Optional": false
+              }
+            ],
+            "extension": [],
+            "nestedType": [],
+            "enumType": [],
+            "extensionRange": [],
+            "oneofDecl": [],
+            "reservedRange": []
+          }
+        ],
+        "enumType": [],
+        "service": [],
+        "extension": [],
+        "options": {
+          "javaPackage": "com.google.type",
+          "javaOuterClassname": "DateProto",
+          "javaMultipleFiles": true,
+          "javaGenerateEqualsAndHash": false,
+          "javaStringCheckUtf8": false,
+          "optimizeFor": 1,
+          "goPackage": "google.golang.org/genproto/googleapis/type/date;date",
+          "ccGenericServices": false,
+          "javaGenericServices": false,
+          "pyGenericServices": false,
+          "phpGenericServices": false,
+          "deprecated": false,
+          "ccEnableArenas": true,
+          "objcClassPrefix": "GTP",
+          "csharpNamespace": "",
+          "swiftPrefix": "",
+          "phpClassPrefix": "",
+          "phpNamespace": "",
+          "phpMetadataNamespace": "",
+          "rubyPackage": "",
+          "uninterpretedOption": []
+        },
+        "sourceCodeInfo": {
+          "location": [
+            {
+              "path": [
+                4,
+                0
+              ],
+              "span": [
+                36,
+                0,
+                49,
+                1
+              ],
+              "leadingComments": " Represents a whole or partial calendar date, e.g. a birthday. The time of day\n and time zone are either specified elsewhere or are not significant. The date\n is relative to the Proleptic Gregorian Calendar. This can represent:\n\n * A full date, with non-zero year, month and day values\n * A month and day value, with a zero year, e.g. an anniversary\n * A year on its own, with zero month and day values\n * A year and month value, with a zero day, e.g. a credit card expiration date\n\n Related types are [google.type.TimeOfDay][google.type.TimeOfDay] and `google.protobuf.Timestamp`.\n",
+              "trailingComments": "",
+              "leadingDetachedComments": []
+            },
+            {
+              "path": [
+                4,
+                0,
+                2,
+                0
+              ],
+              "span": [
+                39,
+                2,
+                17
+              ],
+              "leadingComments": " Year of date. Must be from 1 to 9999, or 0 if specifying a date without\n a year.\n",
+              "trailingComments": "",
+              "leadingDetachedComments": []
+            },
+            {
+              "path": [
+                4,
+                0,
+                2,
+                1
+              ],
+              "span": [
+                43,
+                2,
+                18
+              ],
+              "leadingComments": " Month of year. Must be from 1 to 12, or 0 if specifying a year without a\n month and day.\n",
+              "trailingComments": "",
+              "leadingDetachedComments": []
+            },
+            {
+              "path": [
+                4,
+                0,
+                2,
+                2
+              ],
+              "span": [
+                48,
+                2,
+                16
+              ],
+              "leadingComments": " Day of month. Must be from 1 to 31 and valid for the year and month, or 0\n if specifying a year by itself or a year and month where the day is not\n significant.\n",
+              "trailingComments": "",
+              "leadingDetachedComments": []
+            }
+          ]
+        }
+      },
+      "references": {
+        ".google.type.DateMessage": {}
+      },
+      "dependencies": []
+    },
+    {
+      "fileDescriptor": {
+        "name": "google/protobuf/wrappers.proto",
+        "package": "google.protobuf",
+        "dependency": [],
+        "publicDependency": [],
+        "weakDependency": [],
+        "syntax": "proto3",
+        "messageType": [
+          {
+            "name": "DoubleValue",
+            "reservedName": [],
+            "field": [
+              {
+                "name": "value",
+                "number": 1,
+                "label": 1,
+                "type": 1,
+                "typeName": "",
+                "extendee": "",
+                "defaultValue": "",
+                "oneofIndex": 0,
+                "jsonName": "value",
+                "proto3Optional": false
+              }
+            ],
+            "extension": [],
+            "nestedType": [],
+            "enumType": [],
+            "extensionRange": [],
+            "oneofDecl": [],
+            "reservedRange": []
+          },
+          {
+            "name": "FloatValue",
+            "reservedName": [],
+            "field": [
+              {
+                "name": "value",
+                "number": 1,
+                "label": 1,
+                "type": 2,
+                "typeName": "",
+                "extendee": "",
+                "defaultValue": "",
+                "oneofIndex": 0,
+                "jsonName": "value",
+                "proto3Optional": false
+              }
+            ],
+            "extension": [],
+            "nestedType": [],
+            "enumType": [],
+            "extensionRange": [],
+            "oneofDecl": [],
+            "reservedRange": []
+          },
+          {
+            "name": "Int64Value",
+            "reservedName": [],
+            "field": [
+              {
+                "name": "value",
+                "number": 1,
+                "label": 1,
+                "type": 3,
+                "typeName": "",
+                "extendee": "",
+                "defaultValue": "",
+                "oneofIndex": 0,
+                "jsonName": "value",
+                "proto3Optional": false
+              }
+            ],
+            "extension": [],
+            "nestedType": [],
+            "enumType": [],
+            "extensionRange": [],
+            "oneofDecl": [],
+            "reservedRange": []
+          },
+          {
+            "name": "UInt64Value",
+            "reservedName": [],
+            "field": [
+              {
+                "name": "value",
+                "number": 1,
+                "label": 1,
+                "type": 4,
+                "typeName": "",
+                "extendee": "",
+                "defaultValue": "",
+                "oneofIndex": 0,
+                "jsonName": "value",
+                "proto3Optional": false
+              }
+            ],
+            "extension": [],
+            "nestedType": [],
+            "enumType": [],
+            "extensionRange": [],
+            "oneofDecl": [],
+            "reservedRange": []
+          },
+          {
+            "name": "Int32Value",
+            "reservedName": [],
+            "field": [
+              {
+                "name": "value",
+                "number": 1,
+                "label": 1,
+                "type": 5,
+                "typeName": "",
+                "extendee": "",
+                "defaultValue": "",
+                "oneofIndex": 0,
+                "jsonName": "value",
+                "proto3Optional": false
+              }
+            ],
+            "extension": [],
+            "nestedType": [],
+            "enumType": [],
+            "extensionRange": [],
+            "oneofDecl": [],
+            "reservedRange": []
+          },
+          {
+            "name": "UInt32Value",
+            "reservedName": [],
+            "field": [
+              {
+                "name": "value",
+                "number": 1,
+                "label": 1,
+                "type": 13,
+                "typeName": "",
+                "extendee": "",
+                "defaultValue": "",
+                "oneofIndex": 0,
+                "jsonName": "value",
+                "proto3Optional": false
+              }
+            ],
+            "extension": [],
+            "nestedType": [],
+            "enumType": [],
+            "extensionRange": [],
+            "oneofDecl": [],
+            "reservedRange": []
+          },
+          {
+            "name": "BoolValue",
+            "reservedName": [],
+            "field": [
+              {
+                "name": "value",
+                "number": 1,
+                "label": 1,
+                "type": 8,
+                "typeName": "",
+                "extendee": "",
+                "defaultValue": "",
+                "oneofIndex": 0,
+                "jsonName": "value",
+                "proto3Optional": false
+              }
+            ],
+            "extension": [],
+            "nestedType": [],
+            "enumType": [],
+            "extensionRange": [],
+            "oneofDecl": [],
+            "reservedRange": []
+          },
+          {
+            "name": "StringValue",
+            "reservedName": [],
+            "field": [
+              {
+                "name": "value",
+                "number": 1,
+                "label": 1,
+                "type": 9,
+                "typeName": "",
+                "extendee": "",
+                "defaultValue": "",
+                "oneofIndex": 0,
+                "jsonName": "value",
+                "proto3Optional": false
+              }
+            ],
+            "extension": [],
+            "nestedType": [],
+            "enumType": [],
+            "extensionRange": [],
+            "oneofDecl": [],
+            "reservedRange": []
+          },
+          {
+            "name": "BytesValue",
+            "reservedName": [],
+            "field": [
+              {
+                "name": "value",
+                "number": 1,
+                "label": 1,
+                "type": 12,
+                "typeName": "",
+                "extendee": "",
+                "defaultValue": "",
+                "oneofIndex": 0,
+                "jsonName": "value",
+                "proto3Optional": false
+              }
+            ],
+            "extension": [],
+            "nestedType": [],
+            "enumType": [],
+            "extensionRange": [],
+            "oneofDecl": [],
+            "reservedRange": []
+          }
+        ],
+        "enumType": [],
+        "service": [],
+        "extension": [],
+        "options": {
+          "javaPackage": "com.google.protobuf",
+          "javaOuterClassname": "WrappersProto",
+          "javaMultipleFiles": true,
+          "javaGenerateEqualsAndHash": false,
+          "javaStringCheckUtf8": false,
+          "optimizeFor": 1,
+          "goPackage": "github.com/golang/protobuf/ptypes/wrappers",
+          "ccGenericServices": false,
+          "javaGenericServices": false,
+          "pyGenericServices": false,
+          "phpGenericServices": false,
+          "deprecated": false,
+          "ccEnableArenas": true,
+          "objcClassPrefix": "GPB",
+          "csharpNamespace": "Google.Protobuf.WellKnownTypes",
+          "swiftPrefix": "",
+          "phpClassPrefix": "",
+          "phpNamespace": "",
+          "phpMetadataNamespace": "",
+          "rubyPackage": "",
+          "uninterpretedOption": []
+        },
+        "sourceCodeInfo": {
+          "location": [
+            {
+              "path": [
+                4,
+                0
+              ],
+              "span": [
+                50,
+                0,
+                53,
+                1
+              ],
+              "leadingComments": " Wrapper message for `double`.\n\n The JSON representation for `DoubleValue` is JSON number.\n",
+              "trailingComments": "",
+              "leadingDetachedComments": []
+            },
+            {
+              "path": [
+                4,
+                0,
+                2,
+                0
+              ],
+              "span": [
+                52,
+                2,
+                19
+              ],
+              "leadingComments": " The double value.\n",
+              "trailingComments": "",
+              "leadingDetachedComments": []
+            },
+            {
+              "path": [
+                4,
+                1
+              ],
+              "span": [
+                58,
+                0,
+                61,
+                1
+              ],
+              "leadingComments": " Wrapper message for `float`.\n\n The JSON representation for `FloatValue` is JSON number.\n",
+              "trailingComments": "",
+              "leadingDetachedComments": []
+            },
+            {
+              "path": [
+                4,
+                1,
+                2,
+                0
+              ],
+              "span": [
+                60,
+                2,
+                18
+              ],
+              "leadingComments": " The float value.\n",
+              "trailingComments": "",
+              "leadingDetachedComments": []
+            },
+            {
+              "path": [
+                4,
+                2
+              ],
+              "span": [
+                66,
+                0,
+                69,
+                1
+              ],
+              "leadingComments": " Wrapper message for `int64`.\n\n The JSON representation for `Int64Value` is JSON string.\n",
+              "trailingComments": "",
+              "leadingDetachedComments": []
+            },
+            {
+              "path": [
+                4,
+                2,
+                2,
+                0
+              ],
+              "span": [
+                68,
+                2,
+                18
+              ],
+              "leadingComments": " The int64 value.\n",
+              "trailingComments": "",
+              "leadingDetachedComments": []
+            },
+            {
+              "path": [
+                4,
+                3
+              ],
+              "span": [
+                74,
+                0,
+                77,
+                1
+              ],
+              "leadingComments": " Wrapper message for `uint64`.\n\n The JSON representation for `UInt64Value` is JSON string.\n",
+              "trailingComments": "",
+              "leadingDetachedComments": []
+            },
+            {
+              "path": [
+                4,
+                3,
+                2,
+                0
+              ],
+              "span": [
+                76,
+                2,
+                19
+              ],
+              "leadingComments": " The uint64 value.\n",
+              "trailingComments": "",
+              "leadingDetachedComments": []
+            },
+            {
+              "path": [
+                4,
+                4
+              ],
+              "span": [
+                82,
+                0,
+                85,
+                1
+              ],
+              "leadingComments": " Wrapper message for `int32`.\n\n The JSON representation for `Int32Value` is JSON number.\n",
+              "trailingComments": "",
+              "leadingDetachedComments": []
+            },
+            {
+              "path": [
+                4,
+                4,
+                2,
+                0
+              ],
+              "span": [
+                84,
+                2,
+                18
+              ],
+              "leadingComments": " The int32 value.\n",
+              "trailingComments": "",
+              "leadingDetachedComments": []
+            },
+            {
+              "path": [
+                4,
+                5
+              ],
+              "span": [
+                90,
+                0,
+                93,
+                1
+              ],
+              "leadingComments": " Wrapper message for `uint32`.\n\n The JSON representation for `UInt32Value` is JSON number.\n",
+              "trailingComments": "",
+              "leadingDetachedComments": []
+            },
+            {
+              "path": [
+                4,
+                5,
+                2,
+                0
+              ],
+              "span": [
+                92,
+                2,
+                19
+              ],
+              "leadingComments": " The uint32 value.\n",
+              "trailingComments": "",
+              "leadingDetachedComments": []
+            },
+            {
+              "path": [
+                4,
+                6
+              ],
+              "span": [
+                98,
+                0,
+                101,
+                1
+              ],
+              "leadingComments": " Wrapper message for `bool`.\n\n The JSON representation for `BoolValue` is JSON `true` and `false`.\n",
+              "trailingComments": "",
+              "leadingDetachedComments": []
+            },
+            {
+              "path": [
+                4,
+                6,
+                2,
+                0
+              ],
+              "span": [
+                100,
+                2,
+                17
+              ],
+              "leadingComments": " The bool value.\n",
+              "trailingComments": "",
+              "leadingDetachedComments": []
+            },
+            {
+              "path": [
+                4,
+                7
+              ],
+              "span": [
+                106,
+                0,
+                109,
+                1
+              ],
+              "leadingComments": " Wrapper message for `string`.\n\n The JSON representation for `StringValue` is JSON string.\n",
+              "trailingComments": "",
+              "leadingDetachedComments": []
+            },
+            {
+              "path": [
+                4,
+                7,
+                2,
+                0
+              ],
+              "span": [
+                108,
+                2,
+                19
+              ],
+              "leadingComments": " The string value.\n",
+              "trailingComments": "",
+              "leadingDetachedComments": []
+            },
+            {
+              "path": [
+                4,
+                8
+              ],
+              "span": [
+                114,
+                0,
+                117,
+                1
+              ],
+              "leadingComments": " Wrapper message for `bytes`.\n\n The JSON representation for `BytesValue` is JSON string.\n",
+              "trailingComments": "",
+              "leadingDetachedComments": []
+            },
+            {
+              "path": [
+                4,
+                8,
+                2,
+                0
+              ],
+              "span": [
+                116,
+                2,
+                18
+              ],
+              "leadingComments": " The bytes value.\n",
+              "trailingComments": "",
+              "leadingDetachedComments": []
+            }
+          ]
+        }
+      },
+      "references": {
+        ".google.protobuf.DoubleValue": {},
+        ".google.protobuf.FloatValue": {},
+        ".google.protobuf.Int64Value": {},
+        ".google.protobuf.UInt64Value": {},
+        ".google.protobuf.Int32Value": {},
+        ".google.protobuf.UInt32Value": {},
+        ".google.protobuf.BoolValue": {},
+        ".google.protobuf.StringValue": {},
+        ".google.protobuf.BytesValue": {}
+      },
+      "dependencies": []
+    },
+    {
+      "fileDescriptor": {
+        "name": "google/protobuf/timestamp.proto",
+        "package": "google.protobuf",
+        "dependency": [],
+        "publicDependency": [],
+        "weakDependency": [],
+        "syntax": "proto3",
+        "messageType": [
+          {
+            "name": "Timestamp",
+            "reservedName": [],
+            "field": [
+              {
+                "name": "seconds",
+                "number": 1,
+                "label": 1,
+                "type": 3,
+                "typeName": "",
+                "extendee": "",
+                "defaultValue": "",
+                "oneofIndex": 0,
+                "jsonName": "seconds",
+                "proto3Optional": false
+              },
+              {
+                "name": "nanos",
+                "number": 2,
+                "label": 1,
+                "type": 5,
+                "typeName": "",
+                "extendee": "",
+                "defaultValue": "",
+                "oneofIndex": 0,
+                "jsonName": "nanos",
+                "proto3Optional": false
+              }
+            ],
+            "extension": [],
+            "nestedType": [],
+            "enumType": [],
+            "extensionRange": [],
+            "oneofDecl": [],
+            "reservedRange": []
+          }
+        ],
+        "enumType": [],
+        "service": [],
+        "extension": [],
+        "options": {
+          "javaPackage": "com.google.protobuf",
+          "javaOuterClassname": "TimestampProto",
+          "javaMultipleFiles": true,
+          "javaGenerateEqualsAndHash": false,
+          "javaStringCheckUtf8": false,
+          "optimizeFor": 1,
+          "goPackage": "google.golang.org/protobuf/types/known/timestamppb",
+          "ccGenericServices": false,
+          "javaGenericServices": false,
+          "pyGenericServices": false,
+          "phpGenericServices": false,
+          "deprecated": false,
+          "ccEnableArenas": true,
+          "objcClassPrefix": "GPB",
+          "csharpNamespace": "Google.Protobuf.WellKnownTypes",
+          "swiftPrefix": "",
+          "phpClassPrefix": "",
+          "phpNamespace": "",
+          "phpMetadataNamespace": "",
+          "rubyPackage": "",
+          "uninterpretedOption": []
+        },
+        "sourceCodeInfo": {
+          "location": [
+            {
+              "path": [
+                4,
+                0
+              ],
+              "span": [
+                135,
+                0,
+                146,
+                1
+              ],
+              "leadingComments": " A Timestamp represents a point in time independent of any time zone or local\n calendar, encoded as a count of seconds and fractions of seconds at\n nanosecond resolution. The count is relative to an epoch at UTC midnight on\n January 1, 1970, in the proleptic Gregorian calendar which extends the\n Gregorian calendar backwards to year one.\n\n All minutes are 60 seconds long. Leap seconds are \"smeared\" so that no leap\n second table is needed for interpretation, using a [24-hour linear\n smear](https://developers.google.com/time/smear).\n\n The range is from 0001-01-01T00:00:00Z to 9999-12-31T23:59:59.999999999Z. By\n restricting to that range, we ensure that we can convert to and from [RFC\n 3339](https://www.ietf.org/rfc/rfc3339.txt) date strings.\n\n # Examples\n\n Example 1: Compute Timestamp from POSIX `time()`.\n\n     Timestamp timestamp;\n     timestamp.set_seconds(time(NULL));\n     timestamp.set_nanos(0);\n\n Example 2: Compute Timestamp from POSIX `gettimeofday()`.\n\n     struct timeval tv;\n     gettimeofday(&tv, NULL);\n\n     Timestamp timestamp;\n     timestamp.set_seconds(tv.tv_sec);\n     timestamp.set_nanos(tv.tv_usec * 1000);\n\n Example 3: Compute Timestamp from Win32 `GetSystemTimeAsFileTime()`.\n\n     FILETIME ft;\n     GetSystemTimeAsFileTime(&ft);\n     UINT64 ticks = (((UINT64)ft.dwHighDateTime) << 32) | ft.dwLowDateTime;\n\n     // A Windows tick is 100 nanoseconds. Windows epoch 1601-01-01T00:00:00Z\n     // is 11644473600 seconds before Unix epoch 1970-01-01T00:00:00Z.\n     Timestamp timestamp;\n     timestamp.set_seconds((INT64) ((ticks / 10000000) - 11644473600LL));\n     timestamp.set_nanos((INT32) ((ticks % 10000000) * 100));\n\n Example 4: Compute Timestamp from Java `System.currentTimeMillis()`.\n\n     long millis = System.currentTimeMillis();\n\n     Timestamp timestamp = Timestamp.newBuilder().setSeconds(millis / 1000)\n         .setNanos((int) ((millis % 1000) * 1000000)).build();\n\n\n Example 5: Compute Timestamp from Java `Instant.now()`.\n\n     Instant now = Instant.now();\n\n     Timestamp timestamp =\n         Timestamp.newBuilder().setSeconds(now.getEpochSecond())\n             .setNanos(now.getNano()).build();\n\n\n Example 6: Compute Timestamp from current time in Python.\n\n     timestamp = Timestamp()\n     timestamp.GetCurrentTime()\n\n # JSON Mapping\n\n In JSON format, the Timestamp type is encoded as a string in the\n [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format. That is, the\n format is \"{year}-{month}-{day}T{hour}:{min}:{sec}[.{frac_sec}]Z\"\n where {year} is always expressed using four digits while {month}, {day},\n {hour}, {min}, and {sec} are zero-padded to two digits each. The fractional\n seconds, which can go up to 9 digits (i.e. up to 1 nanosecond resolution),\n are optional. The \"Z\" suffix indicates the timezone (\"UTC\"); the timezone\n is required. A proto3 JSON serializer should always use UTC (as indicated by\n \"Z\") when printing the Timestamp type and a proto3 JSON parser should be\n able to accept both UTC and other timezones (as indicated by an offset).\n\n For example, \"2017-01-15T01:30:15.01Z\" encodes 15.01 seconds past\n 01:30 UTC on January 15, 2017.\n\n In JavaScript, one can convert a Date object to this format using the\n standard\n [toISOString()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString)\n method. In Python, a standard `datetime.datetime` object can be converted\n to this format using\n [`strftime`](https://docs.python.org/2/library/time.html#time.strftime) with\n the time format spec '%Y-%m-%dT%H:%M:%S.%fZ'. Likewise, in Java, one can use\n the Joda Time's [`ISODateTimeFormat.dateTime()`](\n http://www.joda.org/joda-time/apidocs/org/joda/time/format/ISODateTimeFormat.html#dateTime%2D%2D\n ) to obtain a formatter capable of generating timestamps in this format.\n\n\n",
+              "trailingComments": "",
+              "leadingDetachedComments": []
+            },
+            {
+              "path": [
+                4,
+                0,
+                2,
+                0
+              ],
+              "span": [
+                139,
+                2,
+                20
+              ],
+              "leadingComments": " Represents seconds of UTC time since Unix epoch\n 1970-01-01T00:00:00Z. Must be from 0001-01-01T00:00:00Z to\n 9999-12-31T23:59:59Z inclusive.\n",
+              "trailingComments": "",
+              "leadingDetachedComments": []
+            },
+            {
+              "path": [
+                4,
+                0,
+                2,
+                1
+              ],
+              "span": [
+                145,
+                2,
+                18
+              ],
+              "leadingComments": " Non-negative fractions of a second at nanosecond resolution. Negative\n second values with fractions must still have non-negative nanos values\n that count forward in time. Must be from 0 to 999,999,999\n inclusive.\n",
+              "trailingComments": "",
+              "leadingDetachedComments": []
+            }
+          ]
+        }
+      },
+      "references": {
+        ".google.protobuf.Timestamp": {}
+      },
+      "dependencies": []
+    },
+    {
+      "fileDescriptor": {
+        "name": "import_dir/thing.proto",
+        "package": "simple",
+        "dependency": [
+          "google/protobuf/timestamp.proto"
+        ],
+        "publicDependency": [],
+        "weakDependency": [],
+        "syntax": "proto3",
+        "messageType": [
+          {
+            "name": "ImportedThing",
+            "reservedName": [],
+            "field": [
+              {
+                "name": "created_at",
+                "number": 1,
+                "label": 1,
+                "type": 11,
+                "typeName": ".google.protobuf.Timestamp",
+                "extendee": "",
+                "defaultValue": "",
+                "oneofIndex": 0,
+                "jsonName": "createdAt",
+                "proto3Optional": false
+              }
+            ],
+            "extension": [],
+            "nestedType": [],
+            "enumType": [],
+            "extensionRange": [],
+            "oneofDecl": [],
+            "reservedRange": []
+          }
+        ],
+        "enumType": [],
+        "service": [],
+        "extension": [],
+        "sourceCodeInfo": {
+          "location": []
+        }
+      },
+      "references": {
+        ".simple.ImportedThing": {}
+      },
+      "dependencies": [
+        {
+          "fileDescriptor": {
+            "name": "google/protobuf/timestamp.proto",
+            "package": "google.protobuf",
+            "dependency": [],
+            "publicDependency": [],
+            "weakDependency": [],
+            "syntax": "proto3",
+            "messageType": [
+              {
+                "name": "Timestamp",
+                "reservedName": [],
+                "field": [
+                  {
+                    "name": "seconds",
+                    "number": 1,
+                    "label": 1,
+                    "type": 3,
+                    "typeName": "",
+                    "extendee": "",
+                    "defaultValue": "",
+                    "oneofIndex": 0,
+                    "jsonName": "seconds",
+                    "proto3Optional": false
+                  },
+                  {
+                    "name": "nanos",
+                    "number": 2,
+                    "label": 1,
+                    "type": 5,
+                    "typeName": "",
+                    "extendee": "",
+                    "defaultValue": "",
+                    "oneofIndex": 0,
+                    "jsonName": "nanos",
+                    "proto3Optional": false
+                  }
+                ],
+                "extension": [],
+                "nestedType": [],
+                "enumType": [],
+                "extensionRange": [],
+                "oneofDecl": [],
+                "reservedRange": []
+              }
+            ],
+            "enumType": [],
+            "service": [],
+            "extension": [],
+            "options": {
+              "javaPackage": "com.google.protobuf",
+              "javaOuterClassname": "TimestampProto",
+              "javaMultipleFiles": true,
+              "javaGenerateEqualsAndHash": false,
+              "javaStringCheckUtf8": false,
+              "optimizeFor": 1,
+              "goPackage": "google.golang.org/protobuf/types/known/timestamppb",
+              "ccGenericServices": false,
+              "javaGenericServices": false,
+              "pyGenericServices": false,
+              "phpGenericServices": false,
+              "deprecated": false,
+              "ccEnableArenas": true,
+              "objcClassPrefix": "GPB",
+              "csharpNamespace": "Google.Protobuf.WellKnownTypes",
+              "swiftPrefix": "",
+              "phpClassPrefix": "",
+              "phpNamespace": "",
+              "phpMetadataNamespace": "",
+              "rubyPackage": "",
+              "uninterpretedOption": []
+            },
+            "sourceCodeInfo": {
+              "location": [
+                {
+                  "path": [
+                    4,
+                    0
+                  ],
+                  "span": [
+                    135,
+                    0,
+                    146,
+                    1
+                  ],
+                  "leadingComments": " A Timestamp represents a point in time independent of any time zone or local\n calendar, encoded as a count of seconds and fractions of seconds at\n nanosecond resolution. The count is relative to an epoch at UTC midnight on\n January 1, 1970, in the proleptic Gregorian calendar which extends the\n Gregorian calendar backwards to year one.\n\n All minutes are 60 seconds long. Leap seconds are \"smeared\" so that no leap\n second table is needed for interpretation, using a [24-hour linear\n smear](https://developers.google.com/time/smear).\n\n The range is from 0001-01-01T00:00:00Z to 9999-12-31T23:59:59.999999999Z. By\n restricting to that range, we ensure that we can convert to and from [RFC\n 3339](https://www.ietf.org/rfc/rfc3339.txt) date strings.\n\n # Examples\n\n Example 1: Compute Timestamp from POSIX `time()`.\n\n     Timestamp timestamp;\n     timestamp.set_seconds(time(NULL));\n     timestamp.set_nanos(0);\n\n Example 2: Compute Timestamp from POSIX `gettimeofday()`.\n\n     struct timeval tv;\n     gettimeofday(&tv, NULL);\n\n     Timestamp timestamp;\n     timestamp.set_seconds(tv.tv_sec);\n     timestamp.set_nanos(tv.tv_usec * 1000);\n\n Example 3: Compute Timestamp from Win32 `GetSystemTimeAsFileTime()`.\n\n     FILETIME ft;\n     GetSystemTimeAsFileTime(&ft);\n     UINT64 ticks = (((UINT64)ft.dwHighDateTime) << 32) | ft.dwLowDateTime;\n\n     // A Windows tick is 100 nanoseconds. Windows epoch 1601-01-01T00:00:00Z\n     // is 11644473600 seconds before Unix epoch 1970-01-01T00:00:00Z.\n     Timestamp timestamp;\n     timestamp.set_seconds((INT64) ((ticks / 10000000) - 11644473600LL));\n     timestamp.set_nanos((INT32) ((ticks % 10000000) * 100));\n\n Example 4: Compute Timestamp from Java `System.currentTimeMillis()`.\n\n     long millis = System.currentTimeMillis();\n\n     Timestamp timestamp = Timestamp.newBuilder().setSeconds(millis / 1000)\n         .setNanos((int) ((millis % 1000) * 1000000)).build();\n\n\n Example 5: Compute Timestamp from Java `Instant.now()`.\n\n     Instant now = Instant.now();\n\n     Timestamp timestamp =\n         Timestamp.newBuilder().setSeconds(now.getEpochSecond())\n             .setNanos(now.getNano()).build();\n\n\n Example 6: Compute Timestamp from current time in Python.\n\n     timestamp = Timestamp()\n     timestamp.GetCurrentTime()\n\n # JSON Mapping\n\n In JSON format, the Timestamp type is encoded as a string in the\n [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format. That is, the\n format is \"{year}-{month}-{day}T{hour}:{min}:{sec}[.{frac_sec}]Z\"\n where {year} is always expressed using four digits while {month}, {day},\n {hour}, {min}, and {sec} are zero-padded to two digits each. The fractional\n seconds, which can go up to 9 digits (i.e. up to 1 nanosecond resolution),\n are optional. The \"Z\" suffix indicates the timezone (\"UTC\"); the timezone\n is required. A proto3 JSON serializer should always use UTC (as indicated by\n \"Z\") when printing the Timestamp type and a proto3 JSON parser should be\n able to accept both UTC and other timezones (as indicated by an offset).\n\n For example, \"2017-01-15T01:30:15.01Z\" encodes 15.01 seconds past\n 01:30 UTC on January 15, 2017.\n\n In JavaScript, one can convert a Date object to this format using the\n standard\n [toISOString()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/toISOString)\n method. In Python, a standard `datetime.datetime` object can be converted\n to this format using\n [`strftime`](https://docs.python.org/2/library/time.html#time.strftime) with\n the time format spec '%Y-%m-%dT%H:%M:%S.%fZ'. Likewise, in Java, one can use\n the Joda Time's [`ISODateTimeFormat.dateTime()`](\n http://www.joda.org/joda-time/apidocs/org/joda/time/format/ISODateTimeFormat.html#dateTime%2D%2D\n ) to obtain a formatter capable of generating timestamps in this format.\n\n\n",
+                  "trailingComments": "",
+                  "leadingDetachedComments": []
+                },
+                {
+                  "path": [
+                    4,
+                    0,
+                    2,
+                    0
+                  ],
+                  "span": [
+                    139,
+                    2,
+                    20
+                  ],
+                  "leadingComments": " Represents seconds of UTC time since Unix epoch\n 1970-01-01T00:00:00Z. Must be from 0001-01-01T00:00:00Z to\n 9999-12-31T23:59:59Z inclusive.\n",
+                  "trailingComments": "",
+                  "leadingDetachedComments": []
+                },
+                {
+                  "path": [
+                    4,
+                    0,
+                    2,
+                    1
+                  ],
+                  "span": [
+                    145,
+                    2,
+                    18
+                  ],
+                  "leadingComments": " Non-negative fractions of a second at nanosecond resolution. Negative\n second values with fractions must still have non-negative nanos values\n that count forward in time. Must be from 0 to 999,999,999\n inclusive.\n",
+                  "trailingComments": "",
+                  "leadingDetachedComments": []
+                }
+              ]
+            }
+          },
+          "references": {
+            ".google.protobuf.Timestamp": {}
+          },
+          "dependencies": []
+        }
+      ]
+    }
+  ]
+}
