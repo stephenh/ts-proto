@@ -13,7 +13,8 @@ protoc \
 ./node_modules/.bin/tsc \
   ./index.ts \
   ./google/protobuf/descriptor.ts \
-  ./google/protobuf/compiler/plugin.ts
+  ./google/protobuf/compiler/plugin.ts \
+  --outDir dist --declaration
 
 
 
