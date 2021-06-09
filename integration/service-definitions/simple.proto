@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
+
+package simple;
+
+// Test
+service Test {
+    option deprecated = true;
+
+    // Unary
+    rpc Unary (google.protobuf.Empty) returns (google.protobuf.Empty) {
+        option deprecated = true;
+    }
+
+    rpc UnaryStringValue(google.protobuf.StringValue) returns (google.protobuf.StringValue);
+    rpc UnaryInt64Value(google.protobuf.Int64Value) returns (google.protobuf.Int64Value);
+    rpc UnaryUint64Value(google.protobuf.UInt64Value) returns (google.protobuf.UInt64Value);
+    rpc UnaryInt32Value(google.protobuf.Int32Value) returns (google.protobuf.Int32Value);
+    rpc UnaryUInt32Value(google.protobuf.UInt32Value) returns (google.protobuf.UInt32Value);
+    rpc UnaryBytesValue(google.protobuf.BytesValue) returns (google.protobuf.BytesValue);
+    rpc UnaryFloatValue(google.protobuf.FloatValue) returns (google.protobuf.FloatValue);
+    rpc UnaryDoubleValue(google.protobuf.DoubleValue) returns (google.protobuf.DoubleValue);
+    rpc UnaryBoolValue(google.protobuf.BoolValue) returns (google.protobuf.BoolValue);
+    rpc UnaryTimestamp(google.protobuf.Timestamp) returns (google.protobuf.Timestamp);
+
+    // Server Streaming
+    rpc ServerStreaming (TestMessage) returns (stream TestMessage) {}
+    rpc ServerStringValueStreaming (google.protobuf.StringValue) returns (stream google.protobuf.StringValue) {}
+
+    // Client Streaming
+    rpc ClientStreaming (stream TestMessage) returns (TestMessage) {}
+    rpc ClientStringValueStreaming (stream google.protobuf.StringValue) returns (google.protobuf.StringValue) {}
+
+    // Bidi Streaming
+    rpc BidiStreaming (stream TestMessage) returns (stream TestMessage) {}
+    rpc BidiStringValueStreaming (stream google.protobuf.StringValue) returns (stream google.protobuf.StringValue) {}
+
+    rpc Idempotent (google.protobuf.Empty) returns (google.protobuf.Empty) {
+        option idempotency_level = IDEMPOTENT;
+    }
+    rpc NoSideEffects (google.protobuf.Empty) returns (google.protobuf.Empty) {
+        option idempotency_level = NO_SIDE_EFFECTS;
+    }
+}
+
+message TestMessage {
+    google.protobuf.Timestamp timestamp = 1;
+}
