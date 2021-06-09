@@ -4,7 +4,7 @@
 # proto requests into .bin files that then unit tests can pull in directly as needed.
 list=$(find . -name "*.proto" -type f)
 
-for file in $list; do
+for file in service-definitions/*.proto; do
   echo "${file}"
 #  # Strip the longest suffix starting at the 1st slash
   dir="${file##./}"

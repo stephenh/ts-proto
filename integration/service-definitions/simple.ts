@@ -1,32 +1,19 @@
 /* eslint-disable */
 import { util, configure, Writer, Reader } from 'protobufjs/minimal';
 import * as Long from 'long';
-import { Timestamp } from './google/protobuf/timestamp';
-import { Empty } from './google/protobuf/empty';
-import {
-  StringValue,
-  Int64Value,
-  UInt64Value,
-  Int32Value,
-  UInt32Value,
-  BytesValue,
-  FloatValue,
-  DoubleValue,
-  BoolValue,
-} from './google/protobuf/wrappers';
 
 export const protobufPackage = 'simple';
 
 export interface TestMessage {
-  timestamp: Date | undefined;
+  value: string;
 }
 
-const baseTestMessage: object = {};
+const baseTestMessage: object = { value: '' };
 
 export const TestMessage = {
   encode(message: TestMessage, writer: Writer = Writer.create()): Writer {
-    if (message.timestamp !== undefined) {
-      Timestamp.encode(toTimestamp(message.timestamp), writer.uint32(10).fork()).ldelim();
+    if (message.value !== '') {
+      writer.uint32(10).string(message.value);
     }
     return writer;
   },
@@ -39,7 +26,7 @@ export const TestMessage = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.timestamp = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.value = reader.string();
           break;
         default:
           reader.skipType(tag & 7);
@@ -51,134 +38,44 @@ export const TestMessage = {
 
   fromJSON(object: any): TestMessage {
     const message = { ...baseTestMessage } as TestMessage;
-    if (object.timestamp !== undefined && object.timestamp !== null) {
-      message.timestamp = fromJsonTimestamp(object.timestamp);
+    if (object.value !== undefined && object.value !== null) {
+      message.value = String(object.value);
     } else {
-      message.timestamp = undefined;
+      message.value = '';
     }
     return message;
   },
 
   toJSON(message: TestMessage): unknown {
     const obj: any = {};
-    message.timestamp !== undefined && (obj.timestamp = message.timestamp.toISOString());
+    message.value !== undefined && (obj.value = message.value);
     return obj;
   },
 
   fromPartial(object: DeepPartial<TestMessage>): TestMessage {
     const message = { ...baseTestMessage } as TestMessage;
-    if (object.timestamp !== undefined && object.timestamp !== null) {
-      message.timestamp = object.timestamp;
+    if (object.value !== undefined && object.value !== null) {
+      message.value = object.value;
     } else {
-      message.timestamp = undefined;
+      message.value = '';
     }
     return message;
   },
 };
 
-/**
- * Test
- *
- * @deprecated
- */
+/** @deprecated */
 export const TestDefinition = {
   name: 'Test',
   fullName: 'simple.Test',
   methods: {
-    /**
-     * Unary
-     *
-     * @deprecated
-     */
     unary: {
       name: 'Unary',
-      requestType: Empty,
+      requestType: TestMessage,
       requestStream: false,
-      responseType: Empty,
+      responseType: TestMessage,
       responseStream: false,
       options: {},
     },
-    unaryStringValue: {
-      name: 'UnaryStringValue',
-      requestType: StringValue,
-      requestStream: false,
-      responseType: StringValue,
-      responseStream: false,
-      options: {},
-    },
-    unaryInt64Value: {
-      name: 'UnaryInt64Value',
-      requestType: Int64Value,
-      requestStream: false,
-      responseType: Int64Value,
-      responseStream: false,
-      options: {},
-    },
-    unaryUint64Value: {
-      name: 'UnaryUint64Value',
-      requestType: UInt64Value,
-      requestStream: false,
-      responseType: UInt64Value,
-      responseStream: false,
-      options: {},
-    },
-    unaryInt32Value: {
-      name: 'UnaryInt32Value',
-      requestType: Int32Value,
-      requestStream: false,
-      responseType: Int32Value,
-      responseStream: false,
-      options: {},
-    },
-    unaryUInt32Value: {
-      name: 'UnaryUInt32Value',
-      requestType: UInt32Value,
-      requestStream: false,
-      responseType: UInt32Value,
-      responseStream: false,
-      options: {},
-    },
-    unaryBytesValue: {
-      name: 'UnaryBytesValue',
-      requestType: BytesValue,
-      requestStream: false,
-      responseType: BytesValue,
-      responseStream: false,
-      options: {},
-    },
-    unaryFloatValue: {
-      name: 'UnaryFloatValue',
-      requestType: FloatValue,
-      requestStream: false,
-      responseType: FloatValue,
-      responseStream: false,
-      options: {},
-    },
-    unaryDoubleValue: {
-      name: 'UnaryDoubleValue',
-      requestType: DoubleValue,
-      requestStream: false,
-      responseType: DoubleValue,
-      responseStream: false,
-      options: {},
-    },
-    unaryBoolValue: {
-      name: 'UnaryBoolValue',
-      requestType: BoolValue,
-      requestStream: false,
-      responseType: BoolValue,
-      responseStream: false,
-      options: {},
-    },
-    unaryTimestamp: {
-      name: 'UnaryTimestamp',
-      requestType: Timestamp,
-      requestStream: false,
-      responseType: Timestamp,
-      responseStream: false,
-      options: {},
-    },
-    /** Server Streaming */
     serverStreaming: {
       name: 'ServerStreaming',
       requestType: TestMessage,
@@ -187,15 +84,6 @@ export const TestDefinition = {
       responseStream: true,
       options: {},
     },
-    serverStringValueStreaming: {
-      name: 'ServerStringValueStreaming',
-      requestType: StringValue,
-      requestStream: false,
-      responseType: StringValue,
-      responseStream: true,
-      options: {},
-    },
-    /** Client Streaming */
     clientStreaming: {
       name: 'ClientStreaming',
       requestType: TestMessage,
@@ -204,15 +92,6 @@ export const TestDefinition = {
       responseStream: false,
       options: {},
     },
-    clientStringValueStreaming: {
-      name: 'ClientStringValueStreaming',
-      requestType: StringValue,
-      requestStream: true,
-      responseType: StringValue,
-      responseStream: false,
-      options: {},
-    },
-    /** Bidi Streaming */
     bidiStreaming: {
       name: 'BidiStreaming',
       requestType: TestMessage,
@@ -221,19 +100,20 @@ export const TestDefinition = {
       responseStream: true,
       options: {},
     },
-    bidiStringValueStreaming: {
-      name: 'BidiStringValueStreaming',
-      requestType: StringValue,
-      requestStream: true,
-      responseType: StringValue,
-      responseStream: true,
+    /** @deprecated */
+    deprecated: {
+      name: 'Deprecated',
+      requestType: TestMessage,
+      requestStream: false,
+      responseType: TestMessage,
+      responseStream: false,
       options: {},
     },
     idempotent: {
       name: 'Idempotent',
-      requestType: Empty,
+      requestType: TestMessage,
       requestStream: false,
-      responseType: Empty,
+      responseType: TestMessage,
       responseStream: false,
       options: {
         idempotencyLevel: 'IDEMPOTENT',
@@ -241,9 +121,9 @@ export const TestDefinition = {
     },
     noSideEffects: {
       name: 'NoSideEffects',
-      requestType: Empty,
+      requestType: TestMessage,
       requestStream: false,
-      responseType: Empty,
+      responseType: TestMessage,
       responseStream: false,
       options: {
         idempotencyLevel: 'NO_SIDE_EFFECTS',
@@ -262,28 +142,6 @@ export type DeepPartial<T> = T extends Builtin
   : T extends {}
   ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
-
-function toTimestamp(date: Date): Timestamp {
-  const seconds = date.getTime() / 1_000;
-  const nanos = (date.getTime() % 1_000) * 1_000_000;
-  return { seconds, nanos };
-}
-
-function fromTimestamp(t: Timestamp): Date {
-  let millis = t.seconds * 1_000;
-  millis += t.nanos / 1_000_000;
-  return new Date(millis);
-}
-
-function fromJsonTimestamp(o: any): Date {
-  if (o instanceof Date) {
-    return o;
-  } else if (typeof o === 'string') {
-    return new Date(o);
-  } else {
-    return fromTimestamp(Timestamp.fromJSON(o));
-  }
-}
 
 // If you get a compile-error about 'Constructor<Long> and ... have no overlap',
 // add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
