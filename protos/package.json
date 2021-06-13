@@ -6,6 +6,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "main": "dist/index.js",
   "dependencies": {
     "protobufjs": "^6.8.8",
     "long": "^4.0.0"
