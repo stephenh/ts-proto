@@ -992,7 +992,7 @@ export class GrpcWebImpl {
         : metadata || this.options.metadata;
     return new Observable((observer) => {
       const upStream = () => {
-        grpc.invoke(methodDesc, {
+        const client = grpc.invoke(methodDesc, {
           host: this.host,
           request,
           transport: this.options.streamingTransport || this.options.transport,
@@ -1009,6 +1009,7 @@ export class GrpcWebImpl {
             }
           },
         });
+        observer.add(() => client.close());
       };
       upStream();
     }).pipe(share());
