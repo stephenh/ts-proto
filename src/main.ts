@@ -60,7 +60,7 @@ import { Context } from './context';
 import { generateSchema } from './schema';
 import { ConditionalOutput } from 'ts-poet/build/ConditionalOutput';
 import { generateGrpcJsService } from './generate-grpc-js';
-import { generateServiceDefinition } from './generate-service-definition';
+import { generateGenericServiceDefinition } from './generate-generic-service-definition';
 
 export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [string, Code] {
   const { options, utils } = ctx;
@@ -177,8 +177,8 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
       chunks.push(code`export const ${serviceConstName} = "${serviceDesc.name}";`);
     } else if (options.outputServices === 'grpc-js') {
       chunks.push(generateGrpcJsService(ctx, fileDesc, sInfo, serviceDesc));
-    } else if (options.outputServices === true) {
-      chunks.push(generateServiceDefinition(ctx, fileDesc, sInfo, serviceDesc));
+    } else if (options.outputServices === 'generic-definitions') {
+      chunks.push(generateGenericServiceDefinition(ctx, fileDesc, sInfo, serviceDesc));
     } else {
       // This service could be Twirp or grpc-web or JSON (maybe). So far all of their
       // interfaces are fairly similar so we share the same service interface.

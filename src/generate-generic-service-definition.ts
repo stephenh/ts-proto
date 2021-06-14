@@ -15,7 +15,7 @@ import { maybeAddComment, maybePrefixPackage } from './utils';
 /**
  * Generates a framework-agnostic service descriptor.
  */
-export function generateServiceDefinition(
+export function generateGenericServiceDefinition(
   ctx: Context,
   fileDesc: FileDescriptorProto,
   sourceInfo: SourceInfo,
