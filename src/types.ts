@@ -383,12 +383,11 @@ export function isEmptyType(typeName: string): boolean {
 }
 
 export function valueTypeName(ctx: Context, typeName: string): Code | undefined {
-  if(ctx.options.nestJs)
-    return undefined;
+ 
 
   switch (typeName) {
     case '.google.protobuf.StringValue':
-       return code`string`;
+       return ctx.options.nestJs?undefined: code`string`;
     case '.google.protobuf.Int32Value':
     case '.google.protobuf.UInt32Value':
     case '.google.protobuf.DoubleValue':
