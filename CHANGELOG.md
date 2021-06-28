@@ -1,3 +1,10 @@
+# [1.82.0](https://github.com/stephenh/ts-proto/compare/v1.81.3...v1.82.0) (2021-06-28)
+
+
+### Features
+
+* framework-agnostic service definitions ([#316](https://github.com/stephenh/ts-proto/issues/316)) ([3d89282](https://github.com/stephenh/ts-proto/commit/3d89282176f8f16a33eea5042df0439c3f23b038))
+
 ## [1.81.3](https://github.com/stephenh/ts-proto/compare/v1.81.2...v1.81.3) (2021-06-13)
 
 
