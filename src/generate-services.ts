@@ -42,8 +42,6 @@ export function generateService(
   chunks.push(code`export interface ${serviceDesc.name}${maybeTypeVar} {`);
 
   serviceDesc.method.forEach((methodDesc, index) => {
-    const name = options.lowerCaseServiceMethods ? camelCase(methodDesc.name) : methodDesc.name;
-
     const info = sourceInfo.lookup(Fields.service.method, index);
     maybeAddComment(info, chunks, methodDesc.options?.deprecated);
 
@@ -81,7 +79,7 @@ export function generateService(
       returnType = responsePromise(ctx, methodDesc);
     }
 
-    chunks.push(code`${name}(${joinCode(params, { on: ',' })}): ${returnType};`);
+    chunks.push(code`${methodDesc.name}(${joinCode(params, { on: ',' })}): ${returnType};`);
 
     // If this is a batch method, auto-generate the singular version of it
     if (options.context) {
