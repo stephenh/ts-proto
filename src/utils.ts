@@ -1,7 +1,9 @@
 import { code, Code } from 'ts-poet';
-import { CodeGeneratorRequest, FileDescriptorProto } from 'ts-proto-descriptors';
+import { CodeGeneratorRequest, FileDescriptorProto, MethodDescriptorProto, MethodOptions } from 'ts-proto-descriptors';
 import ReadStream = NodeJS.ReadStream;
 import { SourceDescription } from './sourceInfo';
+import { Options } from './options';
+import { camelCase } from './case';
 
 export function protoFilesToGenerate(request: CodeGeneratorRequest): FileDescriptorProto[] {
   return request.protoFile.filter((f) => request.fileToGenerate.includes(f.name));
@@ -96,4 +98,46 @@ export function prefixDisableLinter(spec: string): string {
 export function maybePrefixPackage(fileDesc: FileDescriptorProto, rest: string): string {
   const prefix = fileDesc.package === '' ? '' : `${fileDesc.package}.`;
   return `${prefix}${rest}`;
+}
+
+/**
+ * A MethodDescriptorProto subclass that applies formatting rules.
+ */
+export class FormattedMethodDescriptor implements MethodDescriptorProto {
+  public name: string;
+  public inputType: string;
+  public outputType: string;
+  public options: MethodOptions | undefined;
+  public clientStreaming: boolean;
+  public serverStreaming: boolean;
+
+  /** The source object before any formatting was applied */
+  public original: MethodDescriptorProto;
+
+  constructor(src: MethodDescriptorProto, options: Options) {
+    this.original = src;
+    this.inputType = src.name;
+    this.outputType = src.outputType;
+    this.options = src.options;
+    this.clientStreaming = src.clientStreaming;
+    this.serverStreaming = src.serverStreaming;
+
+    this.name = FormattedMethodDescriptor.formatMethodName(src.name, options);
+  }
+
+  /**
+   * Applies formatting rules to a gRPC method name.
+   * @param methodName The original method name
+   * @param options The options object containing rules to apply
+   * @returns The formatted method name
+   */
+  private static formatMethodName(methodName: string, options: Options) {
+    let result = methodName;
+  
+    if (options.lowerCaseServiceMethods) {
+      result = camelCase(result);
+    }
+  
+    return result;
+  }
 }
