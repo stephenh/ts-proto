@@ -1,3 +1,17 @@
+## [1.81.3](https://github.com/stephenh/ts-proto/compare/v1.81.2...v1.81.3) (2021-06-13)
+
+
+### Bug Fixes
+
+* close server stream on observer unsubscribe ([#309](https://github.com/stephenh/ts-proto/issues/309)) ([4b72563](https://github.com/stephenh/ts-proto/commit/4b7256381c3b2ff2d4d5190e878de6903cd0d53a))
+
+## [1.81.2](https://github.com/stephenh/ts-proto/compare/v1.81.1...v1.81.2) (2021-06-13)
+
+
+### Bug Fixes
+
+* Fix TypeScript errors when compiling with `noUncheckedIndexedAccess` ([#297](https://github.com/stephenh/ts-proto/issues/297)) ([f865e43](https://github.com/stephenh/ts-proto/commit/f865e431c2613a1cfe9dc1d87fba6a9e4bcd3b16))
+
 ## [1.81.1](https://github.com/stephenh/ts-proto/compare/v1.81.0...v1.81.1) (2021-05-23)
 
 
