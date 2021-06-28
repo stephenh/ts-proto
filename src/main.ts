@@ -4,6 +4,7 @@ import {
   FieldDescriptorProto,
   FileDescriptorProto,
   FieldDescriptorProto_Type,
+  MethodDescriptorProto,
 } from 'ts-proto-descriptors';
 import {
   basicLongWireType,
@@ -33,7 +34,7 @@ import {
   valueTypeName,
 } from './types';
 import SourceInfo, { Fields } from './sourceInfo';
-import { maybeAddComment, maybePrefixPackage } from './utils';
+import { FormattedMethodDescriptor, maybeAddComment, maybePrefixPackage } from './utils';
 import { camelToSnake, capitalize, maybeSnakeToCamel } from './case';
 import {
   generateNestjsGrpcServiceMethodsDecorator,
@@ -87,6 +88,14 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
   const sourceInfo = SourceInfo.fromDescriptor(fileDesc);
   const headerComment = sourceInfo.lookup(Fields.file.syntax, undefined);
   maybeAddComment(headerComment, chunks, fileDesc.options?.deprecated);
+
+  // Apply formatting to methods here, so they propagate globally
+  const allMethods = new Array<MethodDescriptorProto>().concat.apply([], fileDesc.service.map(x => x.method));
+  for (let svc of fileDesc.service) {
+    for (let i = 0; i < svc.method.length; i++) {
+      svc.method[i] = new FormattedMethodDescriptor(svc.method[i], options);
+    }
+  }
 
   // first make all the type declarations
   visit(
