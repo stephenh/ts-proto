@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+message NumPair {
+    double num1 = 1;
+    double num2 = 2;
+}
+
+message NumSingle {
+    double num = 1;
+}
+
+message Numbers {
+    repeated double num = 1;
+}
+
+service MathService {
+    rpc Add(NumPair) returns (NumSingle);
+    rpc AbsoluteValue(NumSingle) returns (NumSingle);
+    rpc BatchDouble(Numbers) returns (Numbers);
+}
