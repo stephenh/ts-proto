@@ -112,7 +112,7 @@ export function assertInstanceOf<T>(obj: unknown, constructor: { new(...args: an
 }
 
 /**
- * A MethodDescriptorProto subclass that applies adds new 
+ * A MethodDescriptorProto subclass that adds formatted properties
  */
 export class FormattedMethodDescriptor implements MethodDescriptorProto {
   public name: string;
@@ -123,19 +123,22 @@ export class FormattedMethodDescriptor implements MethodDescriptorProto {
   public serverStreaming: boolean;
 
   private ctxOptions: Options;
+  /** 
+   * The name of this method with formatting applied according to the `Options` object passed to the constructor.
+   * Automatically updates to any changes to the `Options` or `name` of this object
+   */
   public get formattedName() {
     return FormattedMethodDescriptor.formatName(this.name, this.ctxOptions);
   }
 
   constructor(src: MethodDescriptorProto, options: Options) {
     this.ctxOptions = options;
+    this.name = src.name;
     this.inputType = src.inputType;
     this.outputType = src.outputType;
     this.options = src.options;
     this.clientStreaming = src.clientStreaming;
     this.serverStreaming = src.serverStreaming;
-
-    this.name = FormattedMethodDescriptor.formatName(src.name, options);
   }
 
   /**

@@ -2,7 +2,7 @@ import { MethodDescriptorProto, FileDescriptorProto, ServiceDescriptorProto } fr
 import { requestType, responseObservable, responsePromise, responseType } from './types';
 import { Code, code, imp, joinCode } from 'ts-poet';
 import { Context } from './context';
-import { FormattedMethodDescriptor, maybePrefixPackage } from './utils';
+import { assertInstanceOf, FormattedMethodDescriptor, maybePrefixPackage } from './utils';
 
 const grpc = imp('grpc@@improbable-eng/grpc-web');
 const share = imp('share@rxjs/operators');
@@ -32,7 +32,8 @@ export function generateGrpcClientImpl(
   chunks.push(code`this.rpc = rpc;`);
   // Bind each FooService method to the FooServiceImpl class
   for (const methodDesc of serviceDesc.method) {
-    chunks.push(code`this.${methodDesc.name} = this.${methodDesc.name}.bind(this);`);
+    assertInstanceOf(methodDesc, FormattedMethodDescriptor);
+    chunks.push(code`this.${methodDesc.formattedName} = this.${methodDesc.formattedName}.bind(this);`);
   }
   chunks.push(code`}\n`);
 
@@ -47,6 +48,7 @@ export function generateGrpcClientImpl(
 
 /** Creates the RPC methods that client code actually calls. */
 function generateRpcMethod(ctx: Context, serviceDesc: ServiceDescriptorProto, methodDesc: MethodDescriptorProto) {
+  assertInstanceOf(methodDesc, FormattedMethodDescriptor);
   const { options, utils } = ctx;
   const inputType = requestType(ctx, methodDesc);
   const partialInputType = code`${utils.DeepPartial}<${inputType}>`;
@@ -56,7 +58,7 @@ function generateRpcMethod(ctx: Context, serviceDesc: ServiceDescriptorProto, me
       : responsePromise(ctx, methodDesc);
   const method = methodDesc.serverStreaming ? 'invoke' : 'unary';
   return code`
-    ${methodDesc.name}(
+    ${methodDesc.formattedName}(
       request: ${partialInputType},
       metadata?: grpc.Metadata,
     ): ${returns} {
@@ -120,10 +122,9 @@ export function generateGrpcMethodDesc(
     }
   }`;
 
-  FormattedMethodDescriptor.assert(methodDesc);
   return code`
     export const ${methodDescName(serviceDesc, methodDesc)}: UnaryMethodDefinitionish = {
-      methodName: "${methodDesc.original.name}",
+      methodName: "${methodDesc.name}",
       service: ${serviceDesc.name}Desc,
       requestStream: false,
       responseStream: ${methodDesc.serverStreaming ? 'true' : 'false'},
@@ -134,8 +135,7 @@ export function generateGrpcMethodDesc(
 }
 
 function methodDescName(serviceDesc: ServiceDescriptorProto, methodDesc: MethodDescriptorProto): string {
-  FormattedMethodDescriptor.assert(methodDesc);
-  return `${serviceDesc.name}${methodDesc.original.name}Desc`;
+  return `${serviceDesc.name}${methodDesc.name}Desc`;
 }
 
 /** Adds misc top-level definitions for grpc-web functionality. */

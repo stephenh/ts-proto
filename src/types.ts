@@ -575,11 +575,6 @@ export function detectBatchMethod(
   serviceDesc: ServiceDescriptorProto,
   methodDesc: MethodDescriptorProto
 ): BatchMethod | undefined {
-  // Use original method descriptor here, so no formatting will mess up string parsing logic ahead...
-  FormattedMethodDescriptor.assert(methodDesc);
-  const formattedMethodDesc = methodDesc;
-  methodDesc = methodDesc.original;
-
   const { typeMap } = ctx;
   const nameMatches = methodDesc.name.startsWith('Batch');
   const inputType = typeMap.get(methodDesc.inputType);
@@ -600,9 +595,9 @@ export function detectBatchMethod(
       }
       const uniqueIdentifier = `${maybePrefixPackage(fileDesc, serviceDesc.name)}.${methodDesc.name}`;
       return {
-        methodDesc: formattedMethodDesc,
+        methodDesc: methodDesc,
         uniqueIdentifier,
-        singleMethodName: FormattedMethodDescriptor.formatMethodName(singleMethodName, ctx.options),
+        singleMethodName: FormattedMethodDescriptor.formatName(singleMethodName, ctx.options),
         inputFieldName,
         inputType,
         outputFieldName,

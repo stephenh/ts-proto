@@ -10,7 +10,7 @@ import {
 } from './types';
 import SourceInfo, { Fields } from './sourceInfo';
 import { contextTypeVar } from './main';
-import { FormattedMethodDescriptor, maybeAddComment, singular } from './utils';
+import { assertInstanceOf, FormattedMethodDescriptor, maybeAddComment, singular } from './utils';
 import { camelCase } from './case';
 import { Context } from './context';
 
@@ -32,8 +32,7 @@ export function generateNestjsServiceController(
   `);
 
   serviceDesc.method.forEach((methodDesc, index) => {
-    FormattedMethodDescriptor.assert(methodDesc);
-
+    assertInstanceOf(methodDesc, FormattedMethodDescriptor);
     const info = sourceInfo.lookup(Fields.service.method, index);
     maybeAddComment(info, chunks, serviceDesc.options?.deprecated);
 
@@ -67,7 +66,7 @@ export function generateNestjsServiceController(
     }
 
     chunks.push(code`
-      ${methodDesc.name}(${joinCode(params, { on: ', ' })}): ${returns};
+      ${methodDesc.formattedName}(${joinCode(params, { on: ', ' })}): ${returns};
     `);
 
     if (options.context) {
@@ -104,7 +103,7 @@ export function generateNestjsServiceClient(
   `);
 
   serviceDesc.method.forEach((methodDesc, index) => {
-    FormattedMethodDescriptor.assert(methodDesc);
+    assertInstanceOf(methodDesc, FormattedMethodDescriptor);
     const params: Code[] = [];
     if (options.context) {
       params.push(code`ctx: Context`);
@@ -125,7 +124,7 @@ export function generateNestjsServiceClient(
     const info = sourceInfo.lookup(Fields.service.method, index);
     maybeAddComment(info, chunks, methodDesc.options?.deprecated);
     chunks.push(code`
-      ${methodDesc.name}(
+      ${methodDesc.formattedName}(
         ${joinCode(params, { on: ',' })}
       ): ${returns};
     `);
@@ -155,12 +154,12 @@ export function generateNestjsGrpcServiceMethodsDecorator(ctx: Context, serviceD
 
   const grpcMethods = serviceDesc.method
     .filter((m) => !m.clientStreaming)
-    .map((m) => m.name)
+    .map((m) => { assertInstanceOf(m, FormattedMethodDescriptor); return m.formattedName; } )
     .map((n) => `"${n}"`);
 
   const grpcStreamMethods = serviceDesc.method
     .filter((m) => m.clientStreaming)
-    .map((m) => m.name)
+    .map((m) => { assertInstanceOf(m, FormattedMethodDescriptor); return m.formattedName; })
     .map((n) => `"${n}"`);
 
   return code`
