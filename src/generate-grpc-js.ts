@@ -4,7 +4,7 @@ import { camelCase } from './case';
 import { Context } from './context';
 import SourceInfo, { Fields } from './sourceInfo';
 import { messageToTypeName, wrapperTypeName } from './types';
-import { maybeAddComment, maybePrefixPackage } from './utils';
+import { FormattedMethodDescriptor, maybeAddComment, maybePrefixPackage } from './utils';
 import { generateDecoder, generateEncoder } from './encode';
 
 const CallOptions = imp('CallOptions@@grpc/grpc-js');
@@ -72,9 +72,11 @@ function generateServiceDefinition(
     const inputDecoder = generateDecoder(ctx, methodDesc.inputType);
     const outputDecoder = generateDecoder(ctx, methodDesc.outputType);
 
+    FormattedMethodDescriptor.assert(methodDesc);
+
     chunks.push(code`
-      ${camelCase(methodDesc.name)}: {
-        path: '/${maybePrefixPackage(fileDesc, serviceDesc.name)}/${methodDesc.name}',
+      ${methodDesc.name}: {
+        path: '/${maybePrefixPackage(fileDesc, serviceDesc.name)}/${methodDesc.original.name}',
         requestStream: ${methodDesc.clientStreaming},
         responseStream: ${methodDesc.serverStreaming},
         requestSerialize: (value: ${inputType}) =>
@@ -113,7 +115,7 @@ function generateServerStub(ctx: Context, sourceInfo: SourceInfo, serviceDesc: S
       : handleUnaryCall;
 
     chunks.push(code`
-      ${camelCase(methodDesc.name)}: ${callType}<${inputType}, ${outputType}>;
+      ${methodDesc.name}: ${callType}<${inputType}, ${outputType}>;
     `);
   }
 
@@ -140,11 +142,11 @@ function generateClientStub(ctx: Context, sourceInfo: SourceInfo, serviceDesc: S
       if (methodDesc.serverStreaming) {
         // bidi streaming
         chunks.push(code`
-          ${camelCase(methodDesc.name)}(): ${ClientDuplexStream}<${inputType}, ${outputType}>;
-          ${camelCase(methodDesc.name)}(
+          ${methodDesc.name}(): ${ClientDuplexStream}<${inputType}, ${outputType}>;
+          ${methodDesc.name}(
             options: Partial<${CallOptions}>,
           ): ${ClientDuplexStream}<${inputType}, ${outputType}>;
-          ${camelCase(methodDesc.name)}(
+          ${methodDesc.name}(
             metadata: ${Metadata},
             options?: Partial<${CallOptions}>,
           ): ${ClientDuplexStream}<${inputType}, ${outputType}>;
@@ -152,18 +154,18 @@ function generateClientStub(ctx: Context, sourceInfo: SourceInfo, serviceDesc: S
       } else {
         // client streaming
         chunks.push(code`
-          ${camelCase(methodDesc.name)}(
+          ${methodDesc.name}(
             callback: ${responseCallback},
           ): ${ClientWritableStream}<${inputType}>;
-          ${camelCase(methodDesc.name)}(
+          ${methodDesc.name}(
             metadata: ${Metadata},
             callback: ${responseCallback},
           ): ${ClientWritableStream}<${inputType}>;
-          ${camelCase(methodDesc.name)}(
+          ${methodDesc.name}(
             options: Partial<${CallOptions}>,
             callback: ${responseCallback},
           ): ${ClientWritableStream}<${inputType}>;
-          ${camelCase(methodDesc.name)}(
+          ${methodDesc.name}(
             metadata: ${Metadata},
             options: Partial<${CallOptions}>,
             callback: ${responseCallback},
@@ -174,11 +176,11 @@ function generateClientStub(ctx: Context, sourceInfo: SourceInfo, serviceDesc: S
       if (methodDesc.serverStreaming) {
         // server streaming
         chunks.push(code`
-          ${camelCase(methodDesc.name)}(
+          ${methodDesc.name}(
             request: ${inputType},
             options?: Partial<${CallOptions}>,
           ): ${ClientReadableStream}<${outputType}>;
-          ${camelCase(methodDesc.name)}(
+          ${methodDesc.name}(
             request: ${inputType},
             metadata?: ${Metadata},
             options?: Partial<${CallOptions}>,
@@ -187,16 +189,16 @@ function generateClientStub(ctx: Context, sourceInfo: SourceInfo, serviceDesc: S
       } else {
         // unary
         chunks.push(code`
-          ${camelCase(methodDesc.name)}(
+          ${methodDesc.name}(
             request: ${inputType},
             callback: ${responseCallback},
           ): ${ClientUnaryCall};
-          ${camelCase(methodDesc.name)}(
+          ${methodDesc.name}(
             request: ${inputType},
             metadata: ${Metadata},
             callback: ${responseCallback},
           ): ${ClientUnaryCall};
-          ${camelCase(methodDesc.name)}(
+          ${methodDesc.name}(
             request: ${inputType},
             metadata: ${Metadata},
             options: Partial<${CallOptions}>,

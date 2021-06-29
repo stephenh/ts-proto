@@ -131,13 +131,23 @@ export class FormattedMethodDescriptor implements MethodDescriptorProto {
    * @param options The options object containing rules to apply
    * @returns The formatted method name
    */
-  private static formatMethodName(methodName: string, options: Options) {
+  public static formatMethodName(methodName: string, options: Options) {
     let result = methodName;
-  
-    if (options.lowerCaseServiceMethods) {
+
+    if (options.lowerCaseServiceMethods || options.outputServices === 'grpc-js') {
       result = camelCase(result);
     }
-  
+
     return result;
+  }
+
+  /**
+   * Asserts that the passed object is an instance of FormattedMethodDescriptor
+   * @param obj The object to check
+   */
+  public static assert(obj: unknown): asserts obj is FormattedMethodDescriptor {
+    if (!(obj instanceof FormattedMethodDescriptor)) {
+      throw new Error('Expected instance of FormattedMethodDescriptor');
+    }
   }
 }

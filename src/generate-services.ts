@@ -8,7 +8,7 @@ import {
   responsePromise,
   responseType,
 } from './types';
-import { maybeAddComment, maybePrefixPackage, singular } from './utils';
+import { FormattedMethodDescriptor, maybeAddComment, maybePrefixPackage, singular } from './utils';
 import SourceInfo, { Fields } from './sourceInfo';
 import { camelCase } from './case';
 import { contextTypeVar } from './main';
@@ -85,8 +85,7 @@ export function generateService(
     if (options.context) {
       const batchMethod = detectBatchMethod(ctx, fileDesc, serviceDesc, methodDesc);
       if (batchMethod) {
-        const name = batchMethod.methodDesc.name.replace('Batch', 'Get');
-        chunks.push(code`${name}(
+        chunks.push(code`${batchMethod.singleMethodName}(
           ctx: Context,
           ${singular(batchMethod.inputFieldName)}: ${batchMethod.inputType},
         ): Promise<${batchMethod.outputType}>;`);
@@ -105,6 +104,7 @@ function generateRegularRpcMethod(
   serviceDesc: ServiceDescriptorProto,
   methodDesc: MethodDescriptorProto
 ): Code {
+  FormattedMethodDescriptor.assert(methodDesc);
   const { options } = ctx;
   const Reader = imp('Reader@protobufjs/minimal');
   const inputType = requestType(ctx, methodDesc);
@@ -121,7 +121,7 @@ function generateRegularRpcMethod(
       const promise = this.rpc.request(
         ${maybeCtx}
         "${maybePrefixPackage(fileDesc, serviceDesc.name)}",
-        "${methodDesc.name}",
+        "${methodDesc.original.name}",
         data
       );
       return promise.then(data => ${outputType}.decode(new ${Reader}(data)));
@@ -164,7 +164,7 @@ export function generateServiceClientImpl(
       }
     }
 
-    if (options.context && methodDesc.name.match(/^Get[A-Z]/)) {
+    if (options.context && methodDesc.name.match(/^[Gg]et[A-Z]/)) {
       chunks.push(generateCachingRpcMethod(ctx, fileDesc, serviceDesc, methodDesc));
     } else {
       chunks.push(generateRegularRpcMethod(ctx, fileDesc, serviceDesc, methodDesc));
@@ -232,15 +232,16 @@ function generateCachingRpcMethod(
   serviceDesc: ServiceDescriptorProto,
   methodDesc: MethodDescriptorProto
 ): Code {
+  FormattedMethodDescriptor.assert(methodDesc);
   const inputType = requestType(ctx, methodDesc);
   const outputType = responseType(ctx, methodDesc);
-  const uniqueIdentifier = `${maybePrefixPackage(fileDesc, serviceDesc.name)}.${methodDesc.name}`;
+  const uniqueIdentifier = `${maybePrefixPackage(fileDesc, serviceDesc.name)}.${methodDesc.original.name}`;
   const lambda = code`
     (requests) => {
       const responses = requests.map(async request => {
         const data = ${inputType}.encode(request).finish()
         const response = await this.rpc.request(ctx, "${maybePrefixPackage(fileDesc, serviceDesc.name)}", "${
-    methodDesc.name
+    methodDesc.original.name
   }", data);
         return ${outputType}.decode(new ${Reader}(response));
       });

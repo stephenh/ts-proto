@@ -12,7 +12,7 @@ import {
 import { code, Code, imp, Import } from 'ts-poet';
 import { DateOption, EnvOption, LongOption, OneofOption, Options } from './options';
 import { visit } from './visit';
-import { fail, maybePrefixPackage } from './utils';
+import { fail, FormattedMethodDescriptor, maybePrefixPackage } from './utils';
 import SourceInfo from './sourceInfo';
 import { camelCase } from './case';
 import { Context } from './context';
@@ -575,6 +575,11 @@ export function detectBatchMethod(
   serviceDesc: ServiceDescriptorProto,
   methodDesc: MethodDescriptorProto
 ): BatchMethod | undefined {
+  // Use original method descriptor here, so no formatting will mess up string parsing logic ahead...
+  FormattedMethodDescriptor.assert(methodDesc);
+  const formattedMethodDesc = methodDesc;
+  methodDesc = methodDesc.original;
+
   const { typeMap } = ctx;
   const nameMatches = methodDesc.name.startsWith('Batch');
   const inputType = typeMap.get(methodDesc.inputType);
@@ -595,9 +600,9 @@ export function detectBatchMethod(
       }
       const uniqueIdentifier = `${maybePrefixPackage(fileDesc, serviceDesc.name)}.${methodDesc.name}`;
       return {
-        methodDesc,
+        methodDesc: formattedMethodDesc,
         uniqueIdentifier,
-        singleMethodName,
+        singleMethodName: FormattedMethodDescriptor.formatMethodName(singleMethodName, ctx.options),
         inputFieldName,
         inputType,
         outputFieldName,

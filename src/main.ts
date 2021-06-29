@@ -90,7 +90,10 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
   maybeAddComment(headerComment, chunks, fileDesc.options?.deprecated);
 
   // Apply formatting to methods here, so they propagate globally
-  const allMethods = new Array<MethodDescriptorProto>().concat.apply([], fileDesc.service.map(x => x.method));
+  const allMethods = new Array<MethodDescriptorProto>().concat.apply(
+    [],
+    fileDesc.service.map((x) => x.method)
+  );
   for (let svc of fileDesc.service) {
     for (let i = 0; i < svc.method.length; i++) {
       svc.method[i] = new FormattedMethodDescriptor(svc.method[i], options);

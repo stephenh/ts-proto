@@ -2,7 +2,7 @@ import { MethodDescriptorProto, FileDescriptorProto, ServiceDescriptorProto } fr
 import { requestType, responseObservable, responsePromise, responseType } from './types';
 import { Code, code, imp, joinCode } from 'ts-poet';
 import { Context } from './context';
-import { maybePrefixPackage } from './utils';
+import { FormattedMethodDescriptor, maybePrefixPackage } from './utils';
 
 const grpc = imp('grpc@@improbable-eng/grpc-web');
 const share = imp('share@rxjs/operators');
@@ -120,9 +120,10 @@ export function generateGrpcMethodDesc(
     }
   }`;
 
+  FormattedMethodDescriptor.assert(methodDesc);
   return code`
     export const ${methodDescName(serviceDesc, methodDesc)}: UnaryMethodDefinitionish = {
-      methodName: "${methodDesc.name}",
+      methodName: "${methodDesc.original.name}",
       service: ${serviceDesc.name}Desc,
       requestStream: false,
       responseStream: ${methodDesc.serverStreaming ? 'true' : 'false'},
@@ -133,7 +134,8 @@ export function generateGrpcMethodDesc(
 }
 
 function methodDescName(serviceDesc: ServiceDescriptorProto, methodDesc: MethodDescriptorProto): string {
-  return `${serviceDesc.name}${methodDesc.name}Desc`;
+  FormattedMethodDescriptor.assert(methodDesc);
+  return `${serviceDesc.name}${methodDesc.original.name}Desc`;
 }
 
 /** Adds misc top-level definitions for grpc-web functionality. */

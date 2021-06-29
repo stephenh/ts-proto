@@ -10,7 +10,7 @@ import {
 } from './types';
 import SourceInfo, { Fields } from './sourceInfo';
 import { contextTypeVar } from './main';
-import { maybeAddComment, singular } from './utils';
+import { FormattedMethodDescriptor, maybeAddComment, singular } from './utils';
 import { camelCase } from './case';
 import { Context } from './context';
 
@@ -32,6 +32,8 @@ export function generateNestjsServiceController(
   `);
 
   serviceDesc.method.forEach((methodDesc, index) => {
+    FormattedMethodDescriptor.assert(methodDesc);
+
     const info = sourceInfo.lookup(Fields.service.method, index);
     maybeAddComment(info, chunks, serviceDesc.options?.deprecated);
 
@@ -64,18 +66,16 @@ export function generateNestjsServiceController(
       `;
     }
 
-    const name = options.lowerCaseServiceMethods ? camelCase(methodDesc.name) : methodDesc.name;
     chunks.push(code`
-      ${name}(${joinCode(params, { on: ', ' })}): ${returns};
+      ${methodDesc.name}(${joinCode(params, { on: ', ' })}): ${returns};
     `);
 
     if (options.context) {
       const batchMethod = detectBatchMethod(ctx, fileDesc, serviceDesc, methodDesc);
       if (batchMethod) {
-        const name = batchMethod.methodDesc.name.replace('Batch', 'Get');
         const maybeCtx = options.context ? 'ctx: Context,' : '';
         chunks.push(code`
-          ${name}(
+          ${batchMethod.singleMethodName}(
             ${maybeCtx}
             ${singular(batchMethod.inputFieldName)}: ${batchMethod.inputType},
           ): Promise<${batchMethod.outputType}>;
@@ -104,10 +104,7 @@ export function generateNestjsServiceClient(
   `);
 
   serviceDesc.method.forEach((methodDesc, index) => {
-    if (options.lowerCaseServiceMethods) {
-      methodDesc.name = camelCase(methodDesc.name);
-    }
-
+    FormattedMethodDescriptor.assert(methodDesc);
     const params: Code[] = [];
     if (options.context) {
       params.push(code`ctx: Context`);
@@ -136,10 +133,9 @@ export function generateNestjsServiceClient(
     if (options.context) {
       const batchMethod = detectBatchMethod(ctx, fileDesc, serviceDesc, methodDesc);
       if (batchMethod) {
-        const name = batchMethod.methodDesc.name.replace('Batch', 'Get');
         const maybeContext = options.context ? `ctx: Context,` : '';
         chunks.push(code`
-          ${name}(
+          ${batchMethod.singleMethodName}(
             ${maybeContext}
             ${singular(batchMethod.inputFieldName)}
           ): Promise<${batchMethod.inputType}>;
@@ -159,12 +155,12 @@ export function generateNestjsGrpcServiceMethodsDecorator(ctx: Context, serviceD
 
   const grpcMethods = serviceDesc.method
     .filter((m) => !m.clientStreaming)
-    .map((m) => (options.lowerCaseServiceMethods ? camelCase(m.name) : m.name))
+    .map((m) => m.name)
     .map((n) => `"${n}"`);
 
   const grpcStreamMethods = serviceDesc.method
     .filter((m) => m.clientStreaming)
-    .map((m) => (options.lowerCaseServiceMethods ? camelCase(m.name) : m.name))
+    .map((m) => m.name)
     .map((n) => `"${n}"`);
 
   return code`
