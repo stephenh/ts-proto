@@ -122,6 +122,7 @@ export class FormattedMethodDescriptor implements MethodDescriptorProto {
   public clientStreaming: boolean;
   public serverStreaming: boolean;
 
+  private original: MethodDescriptorProto;
   private ctxOptions: Options;
   /**
    * The name of this method with formatting applied according to the `Options` object passed to the constructor.
@@ -133,12 +134,21 @@ export class FormattedMethodDescriptor implements MethodDescriptorProto {
 
   constructor(src: MethodDescriptorProto, options: Options) {
     this.ctxOptions = options;
+    this.original = src;
     this.name = src.name;
     this.inputType = src.inputType;
     this.outputType = src.outputType;
     this.options = src.options;
     this.clientStreaming = src.clientStreaming;
     this.serverStreaming = src.serverStreaming;
+  }
+
+  /**
+   * Retrieve the source `MethodDescriptorProto` used to construct this object
+   * @returns The source `MethodDescriptorProto` used to construct this object
+   */
+  public getSource(): MethodDescriptorProto {
+    return this.original;
   }
 
   /**

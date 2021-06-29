@@ -34,7 +34,7 @@ import {
   valueTypeName,
 } from './types';
 import SourceInfo, { Fields } from './sourceInfo';
-import { FormattedMethodDescriptor, maybeAddComment, maybePrefixPackage } from './utils';
+import { assertInstanceOf, FormattedMethodDescriptor, maybeAddComment, maybePrefixPackage } from './utils';
 import { camelToSnake, capitalize, maybeSnakeToCamel } from './case';
 import {
   generateNestjsGrpcServiceMethodsDecorator,
@@ -232,6 +232,16 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
       }
     })
   );
+
+  // Finally, reset method definitions to their original state (unformatted)
+  // This is mainly so that the `meta-typings` tests pass
+  for (let svc of fileDesc.service) {
+    for (let i = 0; i < svc.method.length; i++) {
+      const methodInfo = svc.method[i];
+      assertInstanceOf(methodInfo, FormattedMethodDescriptor);
+      svc.method[i] = methodInfo.getSource();
+    }
+  }
 
   return [moduleName, joinCode(chunks, { on: '\n\n' })];
 }
