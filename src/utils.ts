@@ -101,7 +101,18 @@ export function maybePrefixPackage(fileDesc: FileDescriptorProto, rest: string):
 }
 
 /**
- * A MethodDescriptorProto subclass that applies formatting rules.
+ * Asserts that an object is an instance of a certain class
+ * @param obj The object to check
+ * @param constructor The constructor of the class to check
+ */
+export function assertInstanceOf<T>(obj: unknown, constructor: { new(...args: any[]): T }): asserts obj is T {
+  if (!(obj instanceof constructor)) {
+    throw new Error(`Expected instance of ${constructor.name}`);
+  }
+}
+
+/**
+ * A MethodDescriptorProto subclass that applies adds new 
  */
 export class FormattedMethodDescriptor implements MethodDescriptorProto {
   public name: string;
@@ -111,18 +122,20 @@ export class FormattedMethodDescriptor implements MethodDescriptorProto {
   public clientStreaming: boolean;
   public serverStreaming: boolean;
 
-  /** The source object before any formatting was applied */
-  public original: MethodDescriptorProto;
+  private ctxOptions: Options;
+  public get formattedName() {
+    return FormattedMethodDescriptor.formatName(this.name, this.ctxOptions);
+  }
 
   constructor(src: MethodDescriptorProto, options: Options) {
-    this.original = src;
-    this.inputType = src.name;
+    this.ctxOptions = options;
+    this.inputType = src.inputType;
     this.outputType = src.outputType;
     this.options = src.options;
     this.clientStreaming = src.clientStreaming;
     this.serverStreaming = src.serverStreaming;
 
-    this.name = FormattedMethodDescriptor.formatMethodName(src.name, options);
+    this.name = FormattedMethodDescriptor.formatName(src.name, options);
   }
 
   /**
@@ -131,7 +144,7 @@ export class FormattedMethodDescriptor implements MethodDescriptorProto {
    * @param options The options object containing rules to apply
    * @returns The formatted method name
    */
-  public static formatMethodName(methodName: string, options: Options) {
+  public static formatName(methodName: string, options: Options) {
     let result = methodName;
 
     if (options.lowerCaseServiceMethods || options.outputServices === 'grpc-js') {
@@ -139,15 +152,5 @@ export class FormattedMethodDescriptor implements MethodDescriptorProto {
     }
 
     return result;
-  }
-
-  /**
-   * Asserts that the passed object is an instance of FormattedMethodDescriptor
-   * @param obj The object to check
-   */
-  public static assert(obj: unknown): asserts obj is FormattedMethodDescriptor {
-    if (!(obj instanceof FormattedMethodDescriptor)) {
-      throw new Error('Expected instance of FormattedMethodDescriptor');
-    }
   }
 }
