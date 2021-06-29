@@ -133,7 +133,7 @@ function generateClientStub(ctx: Context, sourceInfo: SourceInfo, serviceDesc: S
 
   for (const [index, methodDesc] of serviceDesc.method.entries()) {
     assertInstanceOf(methodDesc, FormattedMethodDescriptor);
-    
+
     const inputType = messageToTypeName(ctx, methodDesc.inputType);
     const outputType = messageToTypeName(ctx, methodDesc.outputType);
 

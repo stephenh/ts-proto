@@ -105,7 +105,7 @@ export function maybePrefixPackage(fileDesc: FileDescriptorProto, rest: string):
  * @param obj The object to check
  * @param constructor The constructor of the class to check
  */
-export function assertInstanceOf<T>(obj: unknown, constructor: { new(...args: any[]): T }): asserts obj is T {
+export function assertInstanceOf<T>(obj: unknown, constructor: { new (...args: any[]): T }): asserts obj is T {
   if (!(obj instanceof constructor)) {
     throw new Error(`Expected instance of ${constructor.name}`);
   }
@@ -123,7 +123,7 @@ export class FormattedMethodDescriptor implements MethodDescriptorProto {
   public serverStreaming: boolean;
 
   private ctxOptions: Options;
-  /** 
+  /**
    * The name of this method with formatting applied according to the `Options` object passed to the constructor.
    * Automatically updates to any changes to the `Options` or `name` of this object
    */

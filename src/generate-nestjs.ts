@@ -154,12 +154,18 @@ export function generateNestjsGrpcServiceMethodsDecorator(ctx: Context, serviceD
 
   const grpcMethods = serviceDesc.method
     .filter((m) => !m.clientStreaming)
-    .map((m) => { assertInstanceOf(m, FormattedMethodDescriptor); return m.formattedName; } )
+    .map((m) => {
+      assertInstanceOf(m, FormattedMethodDescriptor);
+      return m.formattedName;
+    })
     .map((n) => `"${n}"`);
 
   const grpcStreamMethods = serviceDesc.method
     .filter((m) => m.clientStreaming)
-    .map((m) => { assertInstanceOf(m, FormattedMethodDescriptor); return m.formattedName; })
+    .map((m) => {
+      assertInstanceOf(m, FormattedMethodDescriptor);
+      return m.formattedName;
+    })
     .map((n) => `"${n}"`);
 
   return code`
