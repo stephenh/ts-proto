@@ -12,7 +12,7 @@ import {
 import { code, Code, imp, Import } from 'ts-poet';
 import { DateOption, EnvOption, LongOption, OneofOption, Options } from './options';
 import { visit } from './visit';
-import { fail, maybePrefixPackage } from './utils';
+import { fail, FormattedMethodDescriptor, maybePrefixPackage } from './utils';
 import SourceInfo from './sourceInfo';
 import { camelCase } from './case';
 import { Context } from './context';
@@ -595,9 +595,9 @@ export function detectBatchMethod(
       }
       const uniqueIdentifier = `${maybePrefixPackage(fileDesc, serviceDesc.name)}.${methodDesc.name}`;
       return {
-        methodDesc,
+        methodDesc: methodDesc,
         uniqueIdentifier,
-        singleMethodName,
+        singleMethodName: FormattedMethodDescriptor.formatName(singleMethodName, ctx.options),
         inputFieldName,
         inputType,
         outputFieldName,

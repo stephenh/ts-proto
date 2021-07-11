@@ -4,7 +4,7 @@ import { camelCase } from './case';
 import { Context } from './context';
 import SourceInfo, { Fields } from './sourceInfo';
 import { messageToTypeName, wrapperTypeName } from './types';
-import { maybeAddComment, maybePrefixPackage } from './utils';
+import { assertInstanceOf, FormattedMethodDescriptor, maybeAddComment, maybePrefixPackage } from './utils';
 import { generateDecoder, generateEncoder } from './encode';
 
 const CallOptions = imp('CallOptions@@grpc/grpc-js');
@@ -60,6 +60,8 @@ function generateServiceDefinition(
   `);
 
   for (const [index, methodDesc] of serviceDesc.method.entries()) {
+    assertInstanceOf(methodDesc, FormattedMethodDescriptor);
+
     const inputType = messageToTypeName(ctx, methodDesc.inputType);
     const outputType = messageToTypeName(ctx, methodDesc.outputType);
 
@@ -73,7 +75,7 @@ function generateServiceDefinition(
     const outputDecoder = generateDecoder(ctx, methodDesc.outputType);
 
     chunks.push(code`
-      ${camelCase(methodDesc.name)}: {
+      ${methodDesc.formattedName}: {
         path: '/${maybePrefixPackage(fileDesc, serviceDesc.name)}/${methodDesc.name}',
         requestStream: ${methodDesc.clientStreaming},
         responseStream: ${methodDesc.serverStreaming},
@@ -98,6 +100,8 @@ function generateServerStub(ctx: Context, sourceInfo: SourceInfo, serviceDesc: S
   chunks.push(code`export interface ${def(`${serviceDesc.name}Server`)} extends ${UntypedServiceImplementation} {`);
 
   for (const [index, methodDesc] of serviceDesc.method.entries()) {
+    assertInstanceOf(methodDesc, FormattedMethodDescriptor);
+
     const inputType = messageToTypeName(ctx, methodDesc.inputType);
     const outputType = messageToTypeName(ctx, methodDesc.outputType);
 
@@ -113,7 +117,7 @@ function generateServerStub(ctx: Context, sourceInfo: SourceInfo, serviceDesc: S
       : handleUnaryCall;
 
     chunks.push(code`
-      ${camelCase(methodDesc.name)}: ${callType}<${inputType}, ${outputType}>;
+      ${methodDesc.formattedName}: ${callType}<${inputType}, ${outputType}>;
     `);
   }
 
@@ -128,6 +132,8 @@ function generateClientStub(ctx: Context, sourceInfo: SourceInfo, serviceDesc: S
   chunks.push(code`export interface ${def(`${serviceDesc.name}Client`)} extends ${Client} {`);
 
   for (const [index, methodDesc] of serviceDesc.method.entries()) {
+    assertInstanceOf(methodDesc, FormattedMethodDescriptor);
+
     const inputType = messageToTypeName(ctx, methodDesc.inputType);
     const outputType = messageToTypeName(ctx, methodDesc.outputType);
 
@@ -140,11 +146,11 @@ function generateClientStub(ctx: Context, sourceInfo: SourceInfo, serviceDesc: S
       if (methodDesc.serverStreaming) {
         // bidi streaming
         chunks.push(code`
-          ${camelCase(methodDesc.name)}(): ${ClientDuplexStream}<${inputType}, ${outputType}>;
-          ${camelCase(methodDesc.name)}(
+          ${methodDesc.formattedName}(): ${ClientDuplexStream}<${inputType}, ${outputType}>;
+          ${methodDesc.formattedName}(
             options: Partial<${CallOptions}>,
           ): ${ClientDuplexStream}<${inputType}, ${outputType}>;
-          ${camelCase(methodDesc.name)}(
+          ${methodDesc.formattedName}(
             metadata: ${Metadata},
             options?: Partial<${CallOptions}>,
           ): ${ClientDuplexStream}<${inputType}, ${outputType}>;
@@ -152,18 +158,18 @@ function generateClientStub(ctx: Context, sourceInfo: SourceInfo, serviceDesc: S
       } else {
         // client streaming
         chunks.push(code`
-          ${camelCase(methodDesc.name)}(
+          ${methodDesc.formattedName}(
             callback: ${responseCallback},
           ): ${ClientWritableStream}<${inputType}>;
-          ${camelCase(methodDesc.name)}(
+          ${methodDesc.formattedName}(
             metadata: ${Metadata},
             callback: ${responseCallback},
           ): ${ClientWritableStream}<${inputType}>;
-          ${camelCase(methodDesc.name)}(
+          ${methodDesc.formattedName}(
             options: Partial<${CallOptions}>,
             callback: ${responseCallback},
           ): ${ClientWritableStream}<${inputType}>;
-          ${camelCase(methodDesc.name)}(
+          ${methodDesc.formattedName}(
             metadata: ${Metadata},
             options: Partial<${CallOptions}>,
             callback: ${responseCallback},
@@ -174,11 +180,11 @@ function generateClientStub(ctx: Context, sourceInfo: SourceInfo, serviceDesc: S
       if (methodDesc.serverStreaming) {
         // server streaming
         chunks.push(code`
-          ${camelCase(methodDesc.name)}(
+          ${methodDesc.formattedName}(
             request: ${inputType},
             options?: Partial<${CallOptions}>,
           ): ${ClientReadableStream}<${outputType}>;
-          ${camelCase(methodDesc.name)}(
+          ${methodDesc.formattedName}(
             request: ${inputType},
             metadata?: ${Metadata},
             options?: Partial<${CallOptions}>,
@@ -187,16 +193,16 @@ function generateClientStub(ctx: Context, sourceInfo: SourceInfo, serviceDesc: S
       } else {
         // unary
         chunks.push(code`
-          ${camelCase(methodDesc.name)}(
+          ${methodDesc.formattedName}(
             request: ${inputType},
             callback: ${responseCallback},
           ): ${ClientUnaryCall};
-          ${camelCase(methodDesc.name)}(
+          ${methodDesc.formattedName}(
             request: ${inputType},
             metadata: ${Metadata},
             callback: ${responseCallback},
           ): ${ClientUnaryCall};
-          ${camelCase(methodDesc.name)}(
+          ${methodDesc.formattedName}(
             request: ${inputType},
             metadata: ${Metadata},
             options: Partial<${CallOptions}>,

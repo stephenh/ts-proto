@@ -4,6 +4,7 @@ import {
   FieldDescriptorProto,
   FileDescriptorProto,
   FieldDescriptorProto_Type,
+  MethodDescriptorProto,
 } from 'ts-proto-descriptors';
 import {
   basicLongWireType,
@@ -33,7 +34,7 @@ import {
   valueTypeName,
 } from './types';
 import SourceInfo, { Fields } from './sourceInfo';
-import { maybeAddComment, maybePrefixPackage } from './utils';
+import { assertInstanceOf, FormattedMethodDescriptor, maybeAddComment, maybePrefixPackage } from './utils';
 import { camelToSnake, capitalize, maybeSnakeToCamel } from './case';
 import {
   generateNestjsGrpcServiceMethodsDecorator,
@@ -88,6 +89,13 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
   const sourceInfo = SourceInfo.fromDescriptor(fileDesc);
   const headerComment = sourceInfo.lookup(Fields.file.syntax, undefined);
   maybeAddComment(headerComment, chunks, fileDesc.options?.deprecated);
+
+  // Apply formatting to methods here, so they propagate globally
+  for (let svc of fileDesc.service) {
+    for (let i = 0; i < svc.method.length; i++) {
+      svc.method[i] = new FormattedMethodDescriptor(svc.method[i], options);
+    }
+  }
 
   // first make all the type declarations
   visit(
@@ -227,6 +235,16 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
       }
     })
   );
+
+  // Finally, reset method definitions to their original state (unformatted)
+  // This is mainly so that the `meta-typings` tests pass
+  for (let svc of fileDesc.service) {
+    for (let i = 0; i < svc.method.length; i++) {
+      const methodInfo = svc.method[i];
+      assertInstanceOf(methodInfo, FormattedMethodDescriptor);
+      svc.method[i] = methodInfo.getSource();
+    }
+  }
 
   return [moduleName, joinCode(chunks, { on: '\n\n' })];
 }
