@@ -1,3 +1,10 @@
+## [1.82.2](https://github.com/stephenh/ts-proto/compare/v1.82.1...v1.82.2) (2021-07-11)
+
+
+### Bug Fixes
+
+* grpc-js support for nestjs ([#307](https://github.com/stephenh/ts-proto/issues/307)) ([d11c8c2](https://github.com/stephenh/ts-proto/commit/d11c8c2bc041c2e8a25ebf7f1c68c901c18ee0ca))
+
 ## [1.82.1](https://github.com/stephenh/ts-proto/compare/v1.82.0...v1.82.1) (2021-07-11)
 
 
