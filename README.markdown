@@ -192,6 +192,33 @@ But the net effect is that ts-proto can provide SQL-/ORM-style N+1 prevention fo
 protoc --plugin=node_modules/ts-proto/protoc-gen-ts_proto ./batching.proto -I.
 ```
 
+`ts-proto` can also be invoked with [Gradle](https://gradle.org) using the [protobuf-gradle-plugin](https://github.com/google/protobuf-gradle-plugin):
+
+``` groovy
+protobuf {
+    plugins {
+        // `ts` can be replaced by any unused plugin name, e.g. `tsproto`
+        ts {
+            path = 'path/to/plugin'
+        }
+    }
+
+    // This section only needed if you provide plugin options
+    generateProtoTasks {
+        all().each { task ->
+            task.plugins {
+                // Must match plugin ID declared above
+                ts {
+                    option 'foo=bar'
+                }
+            }
+        }
+    }
+}
+```
+
+Generated code will be placed in the Gradle build directory.
+
 ### Supported options
 
 - With `--ts_proto_opt=context=true`, the services will have a Go-style `ctx` parameter, which is useful for tracing/logging/etc. if you're not using node's `async_hooks` api due to performance reasons.
