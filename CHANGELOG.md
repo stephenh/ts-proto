@@ -1,3 +1,10 @@
+## [1.82.1](https://github.com/stephenh/ts-proto/compare/v1.82.0...v1.82.1) (2021-07-11)
+
+
+### Bug Fixes
+
+* Consistently apply lowerCaseServiceMethods=true ([#332](https://github.com/stephenh/ts-proto/issues/332)) ([57f2473](https://github.com/stephenh/ts-proto/commit/57f24739f425ec05eabd8c8d6959d4b1b14623a1))
+
 # [1.82.0](https://github.com/stephenh/ts-proto/compare/v1.81.3...v1.82.0) (2021-06-28)
 
 
