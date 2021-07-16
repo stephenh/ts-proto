@@ -290,7 +290,7 @@ function makeLongUtils(options: Options, bytes: ReturnType<typeof makeByteUtils>
     // If you get a compile-error about 'Constructor<Long> and ... have no overlap',
     // add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.`;
 
-  // Kinda hacky, but we always init long until in onlyTypes mode. I'd rather do
+  // Kinda hacky, but we always init long unless in onlyTypes mode. I'd rather do
   // this more implicitly, like if `Long@long` is imported or something like that.
   const longInit = options.onlyTypes
     ? code``

@@ -225,7 +225,9 @@ Generated code will be placed in the Gradle build directory.
 
 - With `--ts_proto_opt=forceLong=long`, all 64-bit numbers will be parsed as instances of `Long` (using the [long](https://www.npmjs.com/package/long) library).
 
-  Alternatively, if you pass `--ts_proto_opt=forceLong=string`, all 64 bit numbers will be outputted as strings.
+  Alternatively, if you pass `--ts_proto_opt=forceLong=string`, all 64-bit numbers will be outputted as strings.
+
+  The default behavior is `forceLong=number`, which will internally still use the `long` library to encode/decode values on the wire (so you will still see a `util.Long = Long` line in your output), but will convert the `long` values to `number` automatically for you. Note that a runtime error is thrown if, while doing this conversion, a 64-bit value is larger than can be correctly stored as a `number`.
 
 - With `--ts_proto_opt=esModuleInterop=true` changes output to be `esModuleInterop` compliant.
   
