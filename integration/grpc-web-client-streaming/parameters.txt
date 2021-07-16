@@ -1,0 +1,1 @@
+outputClientImpl=grpc-web,addGrpcMetadata=true,returnObservable=false,oneof=oneof,outputJsonMethods=false,env=browser,exportCommonSymbols=false,useDate=false
