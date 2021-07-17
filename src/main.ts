@@ -63,6 +63,13 @@ import { ConditionalOutput } from 'ts-poet/build/ConditionalOutput';
 import { generateGrpcJsService } from './generate-grpc-js';
 import { generateGenericServiceDefinition } from './generate-generic-service-definition';
 
+function getFieldName(field: FieldDescriptorProto, options: Options): string {
+  if (field.jsonName.length > 0) {
+    return field.jsonName;
+  }
+  return maybeSnakeToCamel(field.name, options);
+}
+
 export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [string, Code] {
   const { options, utils } = ctx;
 
@@ -542,7 +549,7 @@ function generateInterfaceDeclaration(
     const info = sourceInfo.lookup(Fields.message.field, index);
     maybeAddComment(info, chunks, fieldDesc.options?.deprecated);
 
-    const name = maybeSnakeToCamel(fieldDesc.name, options);
+    const name = getFieldName(fieldDesc, options);
     const type = toTypeName(ctx, messageDesc, fieldDesc);
     const q = isOptionalProperty(fieldDesc, options) ? '?' : '';
     chunks.push(code`${name}${q}: ${type}, `);
@@ -562,7 +569,7 @@ function generateOneofProperty(
   const fields = messageDesc.field.filter((field) => isWithinOneOf(field) && field.oneofIndex === oneofIndex);
   const unionType = joinCode(
     fields.map((f) => {
-      let fieldName = maybeSnakeToCamel(f.name, options);
+      let fieldName = getFieldName(f, options);
       let typeName = toTypeName(ctx, messageDesc, f);
       return code`{ $case: '${fieldName}', ${fieldName}: ${typeName} }`;
     }),
@@ -584,7 +591,7 @@ function generateOneofProperty(
       return;
     }
     const info = sourceInfo.lookup(Fields.message.field, index);
-    const name = maybeSnakeToCamel(field.name, options);
+    const name = getFieldName(field, options);
     maybeAddComment(info, (text) => comments.push(name + '\n' + text));
   });
   if (comments.length) {
@@ -606,7 +613,7 @@ function generateBaseInstance(
     .map((field) => [field, defaultValue(ctx, field)])
     .filter(([field, val]) => val !== 'undefined' && !isBytes(field))
     .map(([field, val]) => {
-      const name = maybeSnakeToCamel(field.name, ctx.options);
+      const name = getFieldName(field, ctx.options);
       return code`${name}: ${val}`;
     });
 
@@ -635,7 +642,7 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
 
   // initialize all lists
   messageDesc.field.filter(isRepeated).forEach((field) => {
-    const name = maybeSnakeToCamel(field.name, options);
+    const name = getFieldName(field, options);
     const value = isMapType(ctx, messageDesc, field) ? '{}' : '[]';
     chunks.push(code`message.${name} = ${value};`);
   });
@@ -658,7 +665,7 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
 
   // add a case for each incoming field
   messageDesc.field.forEach((field) => {
-    const fieldName = maybeSnakeToCamel(field.name, options);
+    const fieldName = getFieldName(field, options);
     chunks.push(code`case ${field.number}:`);
 
     // get a generic 'reader.doSomething' bit that is specific to the basic type
@@ -765,7 +772,7 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
 
   // then add a case for each field
   messageDesc.field.forEach((field) => {
-    const fieldName = maybeSnakeToCamel(field.name, options);
+    const fieldName = getFieldName(field, options);
 
     // get a generic writer.doSomething based on the basic type
     let writeSnippet: (place: string) => Code;
@@ -889,7 +896,7 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
   // initialize all lists
   messageDesc.field.filter(isRepeated).forEach((field) => {
     const value = isMapType(ctx, messageDesc, field) ? '{}' : '[]';
-    const name = maybeSnakeToCamel(field.name, options);
+    const name = getFieldName(field, options);
     chunks.push(code`message.${name} = ${value};`);
   });
 
@@ -904,7 +911,7 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
 
   // add a check for each incoming field
   messageDesc.field.forEach((field) => {
-    const fieldName = maybeSnakeToCamel(field.name, options);
+    const fieldName = getFieldName(field, options);
 
     // get a generic 'reader.doSomething' bit that is specific to the basic type
     const readSnippet = (from: string): Code => {
@@ -1035,7 +1042,7 @@ function generateToJson(ctx: Context, fullName: string, messageDesc: DescriptorP
 
   // then add a case for each field
   messageDesc.field.forEach((field) => {
-    const fieldName = maybeSnakeToCamel(field.name, options);
+    const fieldName = getFieldName(field, options);
 
     const readSnippet = (from: string): Code => {
       if (isEnum(field)) {
@@ -1135,13 +1142,13 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
   // initialize all lists
   messageDesc.field.filter(isRepeated).forEach((field) => {
     const value = isMapType(ctx, messageDesc, field) ? '{}' : '[]';
-    const name = maybeSnakeToCamel(field.name, options);
+    const name = getFieldName(field, options);
     chunks.push(code`message.${name} = ${value};`);
   });
 
   // add a check for each incoming field
   messageDesc.field.forEach((field) => {
-    const fieldName = maybeSnakeToCamel(field.name, options);
+    const fieldName = getFieldName(field, options);
 
     const readSnippet = (from: string): Code => {
       if (
