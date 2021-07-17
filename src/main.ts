@@ -370,7 +370,10 @@ function makeByteUtils() {
     'base64FromBytes',
     code`
       const btoa : (bin: string) => string = ${globalThis}.btoa || ((bin) => ${globalThis}.Buffer.from(bin, 'binary').toString('base64'));
-      function base64FromBytes(arr: Uint8Array): string {
+      function base64FromBytes(arr: Uint8Array | string): string {
+        if (typeof arr === 'string') {
+          return arr;
+        }
         const bin: string[] = [];
         for (const byte of arr) {
           bin.push(String.fromCharCode(byte));
@@ -938,7 +941,8 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
         if (isLongValueType(field) && options.forceLong === LongOption.LONG) {
           return code`${capitalize(valueType.toCodeString())}.fromValue(${from})`;
         } else if (isBytesValueType(field)) {
-          return code`new ${capitalize(valueType.toCodeString())}(${from})`;
+          const typeCheck = code`typeof ${from} === 'string'`;
+          return code`(${typeCheck} ? ${from} : new Uint8Array(${from}))`;
         } else {
           return code`${capitalize(valueType.toCodeString())}(${from})`;
         }
