@@ -4,6 +4,44 @@ import * as Long from 'long';
 
 export const protobufPackage = 'simple2';
 
+export enum SimpleEnum {
+  IMPORT_DEFAULT = 0,
+  IMPORT_FOO = 10,
+  IMPORT_BAR = 11,
+  UNRECOGNIZED = -1,
+}
+
+export function simpleEnumFromJSON(object: any): SimpleEnum {
+  switch (object) {
+    case 0:
+    case 'IMPORT_DEFAULT':
+      return SimpleEnum.IMPORT_DEFAULT;
+    case 10:
+    case 'IMPORT_FOO':
+      return SimpleEnum.IMPORT_FOO;
+    case 11:
+    case 'IMPORT_BAR':
+      return SimpleEnum.IMPORT_BAR;
+    case -1:
+    case 'UNRECOGNIZED':
+    default:
+      return SimpleEnum.UNRECOGNIZED;
+  }
+}
+
+export function simpleEnumToJSON(object: SimpleEnum): string {
+  switch (object) {
+    case SimpleEnum.IMPORT_DEFAULT:
+      return 'IMPORT_DEFAULT';
+    case SimpleEnum.IMPORT_FOO:
+      return 'IMPORT_FOO';
+    case SimpleEnum.IMPORT_BAR:
+      return 'IMPORT_BAR';
+    default:
+      return 'UNKNOWN';
+  }
+}
+
 export interface Simple {
   name: string;
   age: number;
