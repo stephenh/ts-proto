@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { NodeHttpTransport } from '@improbable-eng/grpc-web-node-http-transport';
-import { DashAPICredsClientImpl, DashStateClientImpl, GrpcWebImpl } from './example';
+import { DashAPICredsClientImpl, DashStateClientImpl, GrpcWebImpl } from './client-stream-example';
 import { grpc } from '@improbable-eng/grpc-web';
 
 const rpc = new GrpcWebImpl('http://localhost:9090', {
@@ -35,7 +35,6 @@ async function main() {
   const obs = client.ActiveUserSettingsStream({});
   await obs.forEach((value) => {
     console.log('Got', value);
-    client.ChangeUserSettingsStream({ id: String(Math.random()) });
   });
 }
 

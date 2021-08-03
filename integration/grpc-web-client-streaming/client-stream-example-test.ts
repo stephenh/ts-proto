@@ -1,4 +1,4 @@
-import { DashStateClientImpl } from './example';
+import { DashStateClientImpl } from './client-stream-example';
 
 describe('grpc-web', () => {
   it('at least compiles', () => {
@@ -19,5 +19,14 @@ describe('grpc-web', () => {
     const client = new DashStateClientImpl(rpc);
     const userSettings = client.UserSettings;
     userSettings({});
-  })
+  });
+  it('checks that ChangeUserSettingsStream is undefined because client streaming', () => {
+    const rpc = {
+      unary: jest.fn(),
+      invoke: jest.fn(),
+    };
+    const client = new DashStateClientImpl(rpc);
+    //@ts-expect-error ChangeUserSettingsStream
+    expect(client['ChangeUserSettingsStream']).toBeUndefined();
+  });
 });
