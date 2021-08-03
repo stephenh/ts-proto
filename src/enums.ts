@@ -1,4 +1,4 @@
-import { code, Code, joinCode } from 'ts-poet';
+import { code, def, Code, joinCode } from 'ts-poet';
 import { EnumDescriptorProto } from 'ts-proto-descriptors';
 import { maybeAddComment } from './utils';
 import { camelCase } from './case';
@@ -19,7 +19,7 @@ export function generateEnum(
   const chunks: Code[] = [];
 
   maybeAddComment(sourceInfo, chunks, enumDesc.options?.deprecated);
-  chunks.push(code`export ${options.constEnums ? 'const ' : ''}enum ${fullName} {`);
+  chunks.push(code`export ${options.constEnums ? 'const ' : ''}enum ${def(fullName)} {`);
 
   enumDesc.value.forEach((valueDesc, index) => {
     const info = sourceInfo.lookup(Fields.enum.value, index);
