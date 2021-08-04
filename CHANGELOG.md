@@ -1,3 +1,10 @@
+## [1.82.4](https://github.com/stephenh/ts-proto/compare/v1.82.3...v1.82.4) (2021-08-04)
+
+
+### Bug Fixes
+
+* resolve import collisions for enums ([#341](https://github.com/stephenh/ts-proto/issues/341)) ([50fe34e](https://github.com/stephenh/ts-proto/commit/50fe34ecc66877bead1f0ae55afe28b88e5eda10))
+
 ## [1.82.3](https://github.com/stephenh/ts-proto/compare/v1.82.2...v1.82.3) (2021-08-03)
 
 
