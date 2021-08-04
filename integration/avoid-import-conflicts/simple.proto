@@ -2,7 +2,20 @@ syntax = "proto3";
 package simple;
 import "simple2.proto";
 
+enum SimpleEnum {
+  LOCAL_DEFAULT = 0;
+  LOCAL_FOO = 1;
+  LOCAL_BAR = 2;
+}
+
 message Simple {
   string name = 1;
   simple2.Simple otherSimple = 2;
 }
+
+message SimpleEnums {
+  SimpleEnum local_enum = 1;
+  simple2.SimpleEnum import_enum = 2;
+}
+
+

@@ -57,7 +57,8 @@ export function generateEnumFromJson(ctx: Context, fullName: string, enumDesc: E
   const { options, utils } = ctx;
   const chunks: Code[] = [];
 
-  chunks.push(code`export function ${camelCase(fullName)}FromJSON(object: any): ${fullName} {`);
+  const functionName = camelCase(fullName) + 'FromJSON';
+  chunks.push(code`export function ${def(functionName)}(object: any): ${fullName} {`);
   chunks.push(code`switch (object) {`);
 
   for (const valueDesc of enumDesc.value) {
@@ -92,7 +93,8 @@ export function generateEnumFromJson(ctx: Context, fullName: string, enumDesc: E
 export function generateEnumToJson(fullName: string, enumDesc: EnumDescriptorProto): Code {
   const chunks: Code[] = [];
 
-  chunks.push(code`export function ${camelCase(fullName)}ToJSON(object: ${fullName}): string {`);
+  const functionName = camelCase(fullName) + 'ToJSON';
+  chunks.push(code`export function ${def(functionName)}(object: ${fullName}): string {`);
   chunks.push(code`switch (object) {`);
 
   for (const valueDesc of enumDesc.value) {
@@ -108,7 +110,9 @@ export function generateEnumToJson(fullName: string, enumDesc: EnumDescriptorPro
 /** Generates a function with a big switch statement to encode our string enum -> int value. */
 export function generateEnumToNumber(fullName: string, enumDesc: EnumDescriptorProto): Code {
   const chunks: Code[] = [];
-  chunks.push(code`export function ${camelCase(fullName)}ToNumber(object: ${fullName}): number {`);
+
+  const functionName = camelCase(fullName) + 'ToNumber';
+  chunks.push(code`export function ${def(functionName)}(object: ${fullName}): number {`);
   chunks.push(code`switch (object) {`);
   for (const valueDesc of enumDesc.value) {
     chunks.push(code`case ${fullName}.${valueDesc.name}: return ${valueDesc.number};`);
