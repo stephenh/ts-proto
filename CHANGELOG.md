@@ -1,3 +1,10 @@
+## [1.82.5](https://github.com/stephenh/ts-proto/compare/v1.82.4...v1.82.5) (2021-08-05)
+
+
+### Bug Fixes
+
+* Field starting with '_' generates an interface property starting with 'undefined' ([#344](https://github.com/stephenh/ts-proto/issues/344)) ([fab354f](https://github.com/stephenh/ts-proto/commit/fab354f3f8f3aae51bb0377f98138bc80a1113e3))
+
 ## [1.82.4](https://github.com/stephenh/ts-proto/compare/v1.82.3...v1.82.4) (2021-08-04)
 
 
