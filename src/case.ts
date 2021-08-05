@@ -6,7 +6,8 @@ export function maybeSnakeToCamel(s: string, options: Pick<Options, 'snakeToCame
       .split('_')
       .map((word, i) => {
         if (i === 0) {
-          return word[0] + word.substring(1).toLowerCase();
+          // if first symbol is "_" then skip it
+          return word ? word[0] + word.substring(1).toLowerCase() : '';
         } else {
           return capitalize(word.toLowerCase());
         }
