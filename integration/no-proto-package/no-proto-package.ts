@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { util, configure, Reader, Writer } from 'protobufjs/minimal';
+import { util, configure, Reader, Writer } from 'protobufjs/minimal.js';
 import * as Long from 'long';
 import { Observable } from 'rxjs';
 

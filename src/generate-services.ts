@@ -10,13 +10,12 @@ import {
 } from './types';
 import { assertInstanceOf, FormattedMethodDescriptor, maybeAddComment, maybePrefixPackage, singular } from './utils';
 import SourceInfo, { Fields } from './sourceInfo';
-import { camelCase } from './case';
 import { contextTypeVar } from './main';
 import { Context } from './context';
 
 const hash = imp('hash*object-hash');
 const dataloader = imp('DataLoader*dataloader');
-const Reader = imp('Reader@protobufjs/minimal');
+const Reader = imp('Reader@protobufjs/minimal.js');
 
 /**
  * Generates an interface for `serviceDesc`.
@@ -107,7 +106,7 @@ function generateRegularRpcMethod(
 ): Code {
   assertInstanceOf(methodDesc, FormattedMethodDescriptor);
   const { options } = ctx;
-  const Reader = imp('Reader@protobufjs/minimal');
+  const Reader = imp('Reader@protobufjs/minimal.js');
   const inputType = requestType(ctx, methodDesc);
   const outputType = responseType(ctx, methodDesc);
 

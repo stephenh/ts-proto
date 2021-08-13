@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { util, configure, Reader, Writer } from 'protobufjs/minimal';
+import { util, configure, Reader, Writer } from 'protobufjs/minimal.js';
 import * as Long from 'long';
 import * as DataLoader from 'dataloader';
 import * as hash from 'object-hash';

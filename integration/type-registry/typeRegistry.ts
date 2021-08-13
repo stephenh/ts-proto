@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { Writer, Reader } from 'protobufjs/minimal';
+import { Writer, Reader } from 'protobufjs/minimal.js';
 
 export interface MessageType<Message extends UnknownMessage = UnknownMessage> {
   $type: Message['$type'];

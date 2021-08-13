@@ -269,8 +269,8 @@ export function makeUtils(options: Options): Utils {
 function makeLongUtils(options: Options, bytes: ReturnType<typeof makeByteUtils>) {
   // Regardless of which `forceLong` config option we're using, we always use
   // the `long` library to either represent or at least sanity-check 64-bit values
-  const util = imp('util@protobufjs/minimal');
-  const configure = imp('configure@protobufjs/minimal');
+  const util = imp('util@protobufjs/minimal.js');
+  const configure = imp('configure@protobufjs/minimal.js');
 
   // Before esModuleInterop, we had to use 'import * as Long from long` b/c long is
   // an `export =` module and exports only the Long constructor (which is callable).
@@ -747,8 +747,8 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
   return joinCode(chunks, { on: '\n' });
 }
 
-const Writer = imp('Writer@protobufjs/minimal');
-const Reader = imp('Reader@protobufjs/minimal');
+const Writer = imp('Writer@protobufjs/minimal.js');
+const Reader = imp('Reader@protobufjs/minimal.js');
 
 /** Creates a function to encode a message by loop overing the tags. */
 function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorProto): Code {

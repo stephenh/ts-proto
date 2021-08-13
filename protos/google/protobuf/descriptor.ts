@@ -1,6 +1,6 @@
 /* eslint-disable */
 import * as Long from 'long';
-import { util, configure, Writer, Reader } from 'protobufjs/minimal';
+import { util, configure, Writer, Reader } from 'protobufjs/minimal.js';
 
 /**
  * The protocol compiler can output a FileDescriptorSet containing the .proto

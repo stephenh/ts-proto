@@ -1,8 +1,8 @@
 import { code, Code, imp, joinCode } from 'ts-poet';
 import { Context } from './context';
 
-const Writer = imp('Writer@protobufjs/minimal');
-const Reader = imp('Reader@protobufjs/minimal');
+const Writer = imp('Writer@protobufjs/minimal.js');
+const Reader = imp('Reader@protobufjs/minimal.js');
 
 export function generateTypeRegistry(ctx: Context): Code {
   const chunks: Code[] = [];

@@ -1,6 +1,6 @@
 /* eslint-disable */
 import * as Long from 'long';
-import { util, configure, Writer, Reader } from 'protobufjs/minimal';
+import { util, configure, Writer, Reader } from 'protobufjs/minimal.js';
 import { FileDescriptorProto, GeneratedCodeInfo } from '../../../google/protobuf/descriptor';
 
 /** The version number of protocol compiler. */

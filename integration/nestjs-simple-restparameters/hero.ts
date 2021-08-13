@@ -1,6 +1,6 @@
 /* eslint-disable */
 import { GrpcMethod, GrpcStreamMethod } from '@nestjs/microservices';
-import { util, configure } from 'protobufjs/minimal';
+import { util, configure } from 'protobufjs/minimal.js';
 import * as Long from 'long';
 import { Observable } from 'rxjs';
 import { Empty } from './google/protobuf/empty';

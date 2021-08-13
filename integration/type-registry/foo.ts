@@ -1,6 +1,6 @@
 /* eslint-disable */
 import { messageTypeRegistry } from './typeRegistry';
-import { util, configure, Writer, Reader } from 'protobufjs/minimal';
+import { util, configure, Writer, Reader } from 'protobufjs/minimal.js';
 import * as Long from 'long';
 import { Timestamp } from './google/protobuf/timestamp';
 

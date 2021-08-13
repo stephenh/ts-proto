@@ -1,11 +1,15 @@
 /* eslint-disable */
 import { FileDescriptorProto } from 'ts-proto-descriptors';
-import { util, configure, Reader, Writer } from 'protobufjs/minimal';
+import { util, configure, Reader, Writer } from 'protobufjs/minimal.js';
 import * as Long from 'long';
-import { protoMetadata as protoMetadata1, DateMessage } from './google/type/date';
-import { protoMetadata as protoMetadata2, StringValue, Int32Value, BoolValue } from './google/protobuf/wrappers';
-import { protoMetadata as protoMetadata3, Timestamp } from './google/protobuf/timestamp';
-import { protoMetadata as protoMetadata4, ImportedThing } from './import_dir/thing';
+import { protoMetadata as protoMetadata1 } from './google/type/date.js';
+import { protoMetadata as protoMetadata2 } from './google/protobuf/wrappers.js';
+import { protoMetadata as protoMetadata3 } from './google/protobuf/timestamp.js';
+import { protoMetadata as protoMetadata4 } from './import_dir/thing.js';
+import { Timestamp } from './google/protobuf/timestamp';
+import { ImportedThing } from './import_dir/thing';
+import { DateMessage } from './google/type/date';
+import { StringValue, Int32Value, BoolValue } from './google/protobuf/wrappers';
 
 export const protobufPackage = 'simple';
 
