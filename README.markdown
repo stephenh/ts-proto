@@ -262,7 +262,7 @@ Generated code will be placed in the Gradle build directory.
   
   You can also use the generated `SomeMessage.fromPartial` methods to opt into the optionality on a per-call-site basis. The `fromPartial` allows the creator/writer to have default values applied (i.e. `undefined` --> `0`), and the return value will still be the non-optional type that provides a consistent view (i.e. always `0`) to clients.
 
-  Eventually if TypesCript supports [Exact Types](https://github.com/microsoft/TypeScript/issues/12936), that should allow ts-proto to switch to `useOptionals=true` as the default/only behavior, have the generated `Message.encode`/`Message.toPartial`/etc. methods accept `Exact<T>` versions of the message types, and the result would be both safe + succinct.
+  Eventually if TypeScript supports [Exact Types](https://github.com/microsoft/TypeScript/issues/12936), that should allow ts-proto to switch to `useOptionals=true` as the default/only behavior, have the generated `Message.encode`/`Message.toPartial`/etc. methods accept `Exact<T>` versions of the message types, and the result would be both safe + succinct.
 
   Also see the comment in [this issue](https://github.com/stephenh/ts-proto/issues/120#issuecomment-678375833) which explains the nuance behind making all fields optional (currently `useOptionals` only makes message fields optional), specifically that a message created with `const message: Message = { ...key not set... }` (so `key` is `undefined`) vs. `const message = Message.decode(...key not set...)` (so `key` is the default value) would look different to clients.
 
