@@ -21,6 +21,13 @@ export enum OneofOption {
   UNIONS = 'unions',
 }
 
+export enum ServiceOption {
+  GRPC = 'grpc-js',
+  GENERIC = 'generic-definitions',
+  DEFAULT = 'default',
+  NONE = 'none',
+}
+
 export type Options = {
   context: boolean;
   snakeToCamel: boolean;
