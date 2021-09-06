@@ -187,7 +187,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
       chunks.push(generateGrpcJsService(ctx, fileDesc, sInfo, serviceDesc));
     } else if (options.outputServices === ServiceOption.GENERIC) {
       chunks.push(generateGenericServiceDefinition(ctx, fileDesc, sInfo, serviceDesc));
-    } else {
+    } else if (options.outputServices === ServiceOption.DEFAULT) {
       // This service could be Twirp or grpc-web or JSON (maybe). So far all of their
       // interfaces are fairly similar so we share the same service interface.
       chunks.push(generateService(ctx, fileDesc, sInfo, serviceDesc));
