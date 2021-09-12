@@ -1,4 +1,4 @@
-import { optionsFromParameter } from '../src/options';
+import { optionsFromParameter, ServiceOption } from '../src/options';
 
 describe('options', () => {
   it('can set outputJsonMethods with nestJs=true', () => {
@@ -22,7 +22,7 @@ describe('options', () => {
         "outputJsonMethods": true,
         "outputPartialMethods": false,
         "outputSchema": false,
-        "outputServices": false,
+        "outputServices": "default",
         "outputTypeRegistry": false,
         "returnObservable": false,
         "snakeToCamel": true,
@@ -39,6 +39,20 @@ describe('options', () => {
     expect(options).toMatchObject({
       outputClientImpl: 'grpc-web',
       addGrpcMetadata: false,
+    });
+  });
+
+  it('can set outputServices to false', () => {
+    const options = optionsFromParameter('outputServices=false');
+    expect(options).toMatchObject({
+      outputServices: ServiceOption.NONE,
+    });
+  });
+
+  it('can set outputServices to grpc', () => {
+    const options = optionsFromParameter('outputServices=grpc-js');
+    expect(options).toMatchObject({
+      outputServices: ServiceOption.GRPC,
     });
   });
 });

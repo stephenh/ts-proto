@@ -230,7 +230,7 @@ Generated code will be placed in the Gradle build directory.
   The default behavior is `forceLong=number`, which will internally still use the `long` library to encode/decode values on the wire (so you will still see a `util.Long = Long` line in your output), but will convert the `long` values to `number` automatically for you. Note that a runtime error is thrown if, while doing this conversion, a 64-bit value is larger than can be correctly stored as a `number`.
 
 - With `--ts_proto_opt=esModuleInterop=true` changes output to be `esModuleInterop` compliant.
-  
+
   Specifically the `Long` imports will be generated as `import Long from 'long'` instead of `import * as Long from 'long'`.
 
 - With `--ts_proto_opt=env=node` or `browser` or `both`, ts-proto will make environment-specific assumptions in your output. This defaults to `both`, which makes no environment-specific assumptions.
@@ -259,7 +259,7 @@ Generated code will be placed in the Gradle build directory.
   ```
 
   However, the type-safety of `useOptionals=false` is admittedly tedious if you have many inherently-unused fields, so you can use `useOptionals=true` if that trade-off makes sense for your project.
-  
+
   You can also use the generated `SomeMessage.fromPartial` methods to opt into the optionality on a per-call-site basis. The `fromPartial` allows the creator/writer to have default values applied (i.e. `undefined` --> `0`), and the return value will still be the non-optional type that provides a consistent view (i.e. always `0`) to clients.
 
   Eventually if TypeScript supports [Exact Types](https://github.com/microsoft/TypeScript/issues/12936), that should allow ts-proto to switch to `useOptionals=true` as the default/only behavior, have the generated `Message.encode`/`Message.toPartial`/etc. methods accept `Exact<T>` versions of the message types, and the result would be both safe + succinct.
@@ -269,10 +269,10 @@ Generated code will be placed in the Gradle build directory.
   Note that RPC methods, like `service.ping({ key: ... })`, accept `DeepPartial` versions of the request messages, because of the same rationale that it makes it easy for the writer call-site to get default values for free, and because the "reader" is the internal ts-proto serialization code, it can apply the defaults as necessary.
 
 - With `--ts_proto_opt=exportCommonSymbols=false`, utility types like `DeepPartial` won't be `export`d.
-  
+
   This should make it possible to use create barrel imports of the generated output, i.e. `import * from ./foo` and `import * from ./bar`.
-  
-  Note that if you have the same message name used in multiple `*.proto` files, you will still get import conflicts. 
+
+  Note that if you have the same message name used in multiple `*.proto` files, you will still get import conflicts.
 
 - With `--ts_proto_opt=oneof=unions`, `oneof` fields will be generated as ADTs.
 
@@ -335,6 +335,8 @@ Generated code will be placed in the Gradle build directory.
 - With `--ts_proto_opt=outputServices=grpc-js`, ts-proto will output service definitions and server / client stubs in [grpc-js](https://github.com/grpc/grpc-node/tree/master/packages/grpc-js) format.
 
 - With `--ts_proto_opt=outputServices=generic-definitions`, ts-proto will output generic (framework-agnostic) service definitions.
+
+- With `--ts_proto_opt=outputServices=false`, or `=none`, ts-proto will output NO service definitions.
 
 - With `--ts_proto_opt=emitImportedFiles=false`, ts-proto will not emit `google/protobuf/*` files unless you explicit add files to `protoc` like this
 `protoc --plugin=./node_modules/.bin/protoc-gen-ts_proto my_message.proto google/protobuf/duration.proto`
@@ -410,7 +412,7 @@ If you want fields where you can model set/unset, see Wrapper Types.
 # Wrapper Types
 
 In core Protobuf, unset primitive fields become their respective default values (so you loose ability to distinguish "unset" from "default").
- 
+
 However, unset message fields stay `null`.
 
 This allows a cute hack where you can model a logical `string | unset` by creating a field that is technically a message (i.e. so it can stay `null` for the unset case), but the message only has a single string field (i.e for storing the value in the set case).
@@ -426,9 +428,9 @@ This makes dealing with `string | unset` in your code much nicer, albeit it's un
 Numbers are by default assumed to be plain JavaScript `number`s.
 
 This is fine for Protobuf types like `int32` and `float`, but 64-bit types like `int64` can't be 100% represented by JavaScript's `number` type, because `int64` can have larger/smaller values than `number`.
- 
+
 ts-proto's default configuration (which is `forceLong=number`) is to still use `number` for 64-bit fields, and then throw an error if a value (at runtime) is larger than `Number.MAX_SAFE_INTEGER`.
- 
+
 If you expect to use 64-bit / higher-than-`MAX_SAFE_INTEGER` values, then you can use the ts-proto `forceLong` option, which uses the [long](https://www.npmjs.com/package/long) npm package to support the entire range of 64-bit values.
 
 The protobuf number types map to JavaScript types based on the `forceLong` config option:

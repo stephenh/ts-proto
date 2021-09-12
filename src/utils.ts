@@ -2,7 +2,7 @@ import { code, Code } from 'ts-poet';
 import { CodeGeneratorRequest, FileDescriptorProto, MethodDescriptorProto, MethodOptions } from 'ts-proto-descriptors';
 import ReadStream = NodeJS.ReadStream;
 import { SourceDescription } from './sourceInfo';
-import { Options } from './options';
+import { Options, ServiceOption } from './options';
 import { camelCase } from './case';
 
 export function protoFilesToGenerate(request: CodeGeneratorRequest): FileDescriptorProto[] {
@@ -160,7 +160,7 @@ export class FormattedMethodDescriptor implements MethodDescriptorProto {
   public static formatName(methodName: string, options: Options) {
     let result = methodName;
 
-    if (options.lowerCaseServiceMethods || options.outputServices === 'grpc-js') {
+    if (options.lowerCaseServiceMethods || options.outputServices === ServiceOption.GRPC) {
       result = camelCase(result);
     }
 

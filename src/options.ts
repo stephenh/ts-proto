@@ -21,6 +21,13 @@ export enum OneofOption {
   UNIONS = 'unions',
 }
 
+export enum ServiceOption {
+  GRPC = 'grpc-js',
+  GENERIC = 'generic-definitions',
+  DEFAULT = 'default',
+  NONE = 'none',
+}
+
 export type Options = {
   context: boolean;
   snakeToCamel: boolean;
@@ -36,7 +43,7 @@ export type Options = {
   stringEnums: boolean;
   constEnums: boolean;
   outputClientImpl: boolean | 'grpc-web';
-  outputServices: false | 'grpc-js' | 'generic-definitions';
+  outputServices: ServiceOption;
   addGrpcMetadata: boolean;
   addNestjsRestParameter: boolean;
   returnObservable: boolean;
@@ -68,7 +75,7 @@ export function defaultOptions(): Options {
     stringEnums: false,
     constEnums: false,
     outputClientImpl: true,
-    outputServices: false,
+    outputServices: ServiceOption.DEFAULT,
     returnObservable: false,
     addGrpcMetadata: false,
     addNestjsRestParameter: false,
@@ -107,6 +114,11 @@ export function optionsFromParameter(parameter: string): Options {
   // Treat forceLong=true as LONG
   if ((options.forceLong as any) === true) {
     options.forceLong = LongOption.LONG;
+  }
+
+  // Treat outputServices=false as NONE
+  if ((options.outputServices as any) === false) {
+    options.outputServices = ServiceOption.NONE;
   }
 
   if ((options.useDate as any) === true) {
