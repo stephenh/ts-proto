@@ -1,3 +1,10 @@
+# [1.83.0](https://github.com/stephenh/ts-proto/compare/v1.82.5...v1.83.0) (2021-09-12)
+
+
+### Features
+
+* Service generation option ([#357](https://github.com/stephenh/ts-proto/issues/357)) ([7a2cf83](https://github.com/stephenh/ts-proto/commit/7a2cf831c3768e5afd76dea37f3165df4886136e))
+
 ## [1.82.5](https://github.com/stephenh/ts-proto/compare/v1.82.4...v1.82.5) (2021-08-05)
 
 
