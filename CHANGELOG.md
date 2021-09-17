@@ -1,3 +1,10 @@
+## [1.83.1](https://github.com/stephenh/ts-proto/compare/v1.83.0...v1.83.1) (2021-09-17)
+
+
+### Bug Fixes
+
+* deprecated grpc and replace with @grpc/grpc-js ([#362](https://github.com/stephenh/ts-proto/issues/362)) ([1a11b97](https://github.com/stephenh/ts-proto/commit/1a11b97e9b5e92e79fdd4e22d3e8ea4536af243b))
+
 # [1.83.0](https://github.com/stephenh/ts-proto/compare/v1.82.5...v1.83.0) (2021-09-12)
 
 
