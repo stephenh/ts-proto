@@ -3,7 +3,7 @@ import { GrpcMethod, GrpcStreamMethod } from '@nestjs/microservices';
 import { util, configure } from 'protobufjs/minimal';
 import * as Long from 'long';
 import { Observable } from 'rxjs';
-import { Metadata } from 'grpc';
+import { Metadata } from '@grpc/grpc-js';
 
 export const protobufPackage = 'hero';
 

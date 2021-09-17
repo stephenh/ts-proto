@@ -24,7 +24,7 @@ export function generateNestjsServiceController(
   const { options } = ctx;
   const chunks: Code[] = [];
 
-  const Metadata = options.outputServices === ServiceOption.GRPC ? imp('Metadata@@grpc/grpc-js') : imp('Metadata@grpc');
+  const Metadata = imp('Metadata@@grpc/grpc-js');
 
   maybeAddComment(sourceInfo, chunks, serviceDesc.options?.deprecated);
   const t = options.context ? `<${contextTypeVar}>` : '';
@@ -97,7 +97,7 @@ export function generateNestjsServiceClient(
   const { options } = ctx;
   const chunks: Code[] = [];
 
-  const Metadata = options.outputServices === ServiceOption.GRPC ? imp('Metadata@@grpc/grpc-js') : imp('Metadata@grpc');
+  const Metadata = imp('Metadata@@grpc/grpc-js');
 
   maybeAddComment(sourceInfo, chunks);
   const t = options.context ? `<${contextTypeVar}>` : ``;

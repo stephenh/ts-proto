@@ -64,7 +64,7 @@ export function generateService(
       // We have to use grpc.Metadata where grpc will come from @improbable-eng
       params.push(code`metadata?: grpc.Metadata`);
     } else if (options.addGrpcMetadata) {
-      const Metadata = imp('Metadata@grpc');
+      const Metadata = imp('Metadata@@grpc/grpc-js');
       const q = options.addNestjsRestParameter ? '' : '?';
       params.push(code`metadata${q}: ${Metadata}`);
     }

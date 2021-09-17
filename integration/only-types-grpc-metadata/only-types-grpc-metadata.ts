@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { Metadata } from 'grpc';
+import { Metadata } from '@grpc/grpc-js';
 
 export const protobufPackage = 'basic';
 
