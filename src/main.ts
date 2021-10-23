@@ -967,6 +967,9 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
             (options.useDate === DateOption.DATE || options.useDate === DateOption.TIMESTAMP)
           ) {
             return code`${utils.fromJsonTimestamp}(${from})`;
+          } else if (isValueType(ctx, valueType)) {
+            const type = basicTypeName(ctx, valueType);
+            return code`${from} as ${type}`;
           } else {
             const type = basicTypeName(ctx, valueType);
             return code`${type}.fromJSON(${from})`;
@@ -1064,7 +1067,7 @@ function generateToJson(ctx: Context, fullName: string, messageDesc: DescriptorP
           return code`${from}`;
         } else if (isTimestamp(valueType) && options.useDate === DateOption.TIMESTAMP) {
           return code`${utils.fromTimestamp}(${from}).toISOString()`;
-        } else if (isScalar(valueType)) {
+        } else if (isScalar(valueType) || isValueType(ctx, valueType)) {
           return code`${from}`;
         } else {
           const type = basicTypeName(ctx, valueType);
@@ -1167,6 +1170,8 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
             isTimestamp(valueType) &&
             (options.useDate === DateOption.DATE || options.useDate === DateOption.STRING)
           ) {
+            return code`${from}`;
+          } else if (isValueType(ctx, valueType)) {
             return code`${from}`;
           } else {
             const type = basicTypeName(ctx, valueType);

@@ -1286,7 +1286,7 @@ export const SimpleWithMap = {
     }
     if (object.mapOfStringValues !== undefined && object.mapOfStringValues !== null) {
       Object.entries(object.mapOfStringValues).forEach(([key, value]) => {
-        message.mapOfStringValues[key] = string | undefined.fromJSON(value);
+        message.mapOfStringValues[key] = value as string | undefined;
       });
     }
     return message;
@@ -1327,7 +1327,7 @@ export const SimpleWithMap = {
     obj.mapOfStringValues = {};
     if (message.mapOfStringValues) {
       Object.entries(message.mapOfStringValues).forEach(([k, v]) => {
-        obj.mapOfStringValues[k] = string | undefined.toJSON(v);
+        obj.mapOfStringValues[k] = v;
       });
     }
     return obj;
@@ -1379,7 +1379,7 @@ export const SimpleWithMap = {
     if (object.mapOfStringValues !== undefined && object.mapOfStringValues !== null) {
       Object.entries(object.mapOfStringValues).forEach(([key, value]) => {
         if (value !== undefined) {
-          message.mapOfStringValues[key] = string | undefined.fromPartial(value);
+          message.mapOfStringValues[key] = value;
         }
       });
     }
