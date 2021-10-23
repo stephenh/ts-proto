@@ -96,6 +96,7 @@ message SimpleWithMap {
   map<int32, int32> intLookup = 3;
   map<string, google.protobuf.Timestamp> mapOfTimestamps = 4;
   map<string, bytes> mapOfBytes = 5;
+  map<string, google.protobuf.StringValue> mapOfStringValues = 6;
 }
 
 message SimpleWithSnakeCaseMap {
