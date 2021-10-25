@@ -13,7 +13,7 @@ const Observable = imp('Observable@rxjs');
 /** Generates a client that uses the `@improbable-web/grpc-web` library. */
 export function generateGrpcClientImpl(
   ctx: Context,
-  fileDesc: FileDescriptorProto,
+  _fileDesc: FileDescriptorProto,
   serviceDesc: ServiceDescriptorProto
 ): Code {
   const chunks: Code[] = [];

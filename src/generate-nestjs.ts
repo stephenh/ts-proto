@@ -148,7 +148,7 @@ export function generateNestjsServiceClient(
   return joinCode(chunks, { on: '\n\n' });
 }
 
-export function generateNestjsGrpcServiceMethodsDecorator(ctx: Context, serviceDesc: ServiceDescriptorProto): Code {
+export function generateNestjsGrpcServiceMethodsDecorator(_ctx: Context, serviceDesc: ServiceDescriptorProto): Code {
   const GrpcMethod = imp('GrpcMethod@@nestjs/microservices');
   const GrpcStreamMethod = imp('GrpcStreamMethod@@nestjs/microservices');
 

@@ -177,7 +177,7 @@ export function generateServiceClientImpl(
 }
 
 /** We've found a BatchXxx method, create a synthetic GetXxx method that calls it. */
-function generateBatchingRpcMethod(ctx: Context, batchMethod: BatchMethod): Code {
+function generateBatchingRpcMethod(_ctx: Context, batchMethod: BatchMethod): Code {
   const {
     methodDesc,
     singleMethodName,

@@ -122,7 +122,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
     visit(
       fileDesc,
       sourceInfo,
-      (fullName, message, sInfo, fullProtoTypeName) => {
+      (fullName, message, _sInfo, fullProtoTypeName) => {
         const fullTypeName = maybePrefixPackage(fileDesc, fullProtoTypeName);
 
         chunks.push(generateBaseInstance(ctx, fullName, message, fullTypeName));
@@ -534,7 +534,7 @@ function generateInterfaceDeclaration(
       const { oneofIndex } = fieldDesc;
       if (!processedOneofs.has(oneofIndex)) {
         processedOneofs.add(oneofIndex);
-        chunks.push(generateOneofProperty(ctx, messageDesc, oneofIndex, sourceInfo));
+        chunks.push(generateOneofProperty(ctx, messageDesc, oneofIndex));
       }
       return;
     }
@@ -552,12 +552,7 @@ function generateInterfaceDeclaration(
   return joinCode(chunks, { on: '\n' });
 }
 
-function generateOneofProperty(
-  ctx: Context,
-  messageDesc: DescriptorProto,
-  oneofIndex: number,
-  sourceInfo: SourceInfo
-): Code {
+function generateOneofProperty(ctx: Context, messageDesc: DescriptorProto, oneofIndex: number): Code {
   const { options } = ctx;
   const fields = messageDesc.field.filter((field) => isWithinOneOf(field) && field.oneofIndex === oneofIndex);
   const unionType = joinCode(

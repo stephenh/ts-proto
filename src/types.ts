@@ -291,7 +291,7 @@ export function createTypeMap(request: CodeGeneratorRequest, options: Options): 
     function saveMapping(
       tsFullName: string,
       desc: DescriptorProto | EnumDescriptorProto,
-      s: SourceInfo,
+      _s: SourceInfo,
       protoFullName: string
     ): void {
       // package is optional, but make sure we have a dot-prefixed type name either way

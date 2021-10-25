@@ -5,6 +5,7 @@
     "module": "commonjs",
     "strict": true,
     "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "outDir": "build",
     "skipLibCheck": true,
     "experimentalDecorators": true
