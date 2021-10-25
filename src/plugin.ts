@@ -1,9 +1,4 @@
-import {
-  CodeGeneratorRequest,
-  CodeGeneratorResponse,
-  CodeGeneratorResponse_Feature,
-  FileDescriptorProto,
-} from 'ts-proto-descriptors';
+import { CodeGeneratorRequest, CodeGeneratorResponse, CodeGeneratorResponse_Feature } from 'ts-proto-descriptors';
 import { promisify } from 'util';
 import { prefixDisableLinter, protoFilesToGenerate, readToBuffer } from './utils';
 import { generateFile, makeUtils } from './main';

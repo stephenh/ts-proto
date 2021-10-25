@@ -4,7 +4,6 @@ import {
   FieldDescriptorProto,
   FileDescriptorProto,
   FieldDescriptorProto_Type,
-  MethodDescriptorProto,
 } from 'ts-proto-descriptors';
 import {
   basicLongWireType,
@@ -1125,7 +1124,6 @@ function generateToJson(ctx: Context, fullName: string, messageDesc: DescriptorP
 function generateFromPartial(ctx: Context, fullName: string, messageDesc: DescriptorProto): Code {
   const { options, utils, typeMap } = ctx;
   const chunks: Code[] = [];
-  const Timestamp = imp('Timestamp@./google/protobuf/timestamp');
 
   // create the basic function declaration
   chunks.push(code`

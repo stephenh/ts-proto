@@ -10,7 +10,6 @@ import {
 } from './types';
 import { assertInstanceOf, FormattedMethodDescriptor, maybeAddComment, maybePrefixPackage, singular } from './utils';
 import SourceInfo, { Fields } from './sourceInfo';
-import { camelCase } from './case';
 import { contextTypeVar } from './main';
 import { Context } from './context';
 

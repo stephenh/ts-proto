@@ -11,9 +11,7 @@ import {
 import SourceInfo, { Fields } from './sourceInfo';
 import { contextTypeVar } from './main';
 import { assertInstanceOf, FormattedMethodDescriptor, maybeAddComment, singular } from './utils';
-import { camelCase } from './case';
 import { Context } from './context';
-import { ServiceOption } from './options';
 
 export function generateNestjsServiceController(
   ctx: Context,
@@ -151,7 +149,6 @@ export function generateNestjsServiceClient(
 }
 
 export function generateNestjsGrpcServiceMethodsDecorator(ctx: Context, serviceDesc: ServiceDescriptorProto): Code {
-  const { options } = ctx;
   const GrpcMethod = imp('GrpcMethod@@nestjs/microservices');
   const GrpcStreamMethod = imp('GrpcStreamMethod@@nestjs/microservices');
 

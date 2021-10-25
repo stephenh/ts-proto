@@ -1,9 +1,8 @@
 import { Code, code, def, imp, joinCode } from 'ts-poet';
 import { FileDescriptorProto, ServiceDescriptorProto } from 'ts-proto-descriptors';
-import { camelCase } from './case';
 import { Context } from './context';
 import SourceInfo, { Fields } from './sourceInfo';
-import { messageToTypeName, wrapperTypeName } from './types';
+import { messageToTypeName } from './types';
 import { assertInstanceOf, FormattedMethodDescriptor, maybeAddComment, maybePrefixPackage } from './utils';
 import { generateDecoder, generateEncoder } from './encode';
 

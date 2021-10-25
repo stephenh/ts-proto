@@ -4,6 +4,7 @@
     "lib": ["es2018"],
     "module": "commonjs",
     "strict": true,
+    "noUnusedLocals": true,
     "outDir": "build",
     "skipLibCheck": true,
     "experimentalDecorators": true
