@@ -18,6 +18,7 @@ export interface PleaseChoose {
     | { $case: 'either'; either: string }
     | { $case: 'or'; or: string }
     | { $case: 'thirdOption'; thirdOption: string };
+  signature: Uint8Array;
 }
 
 export enum PleaseChoose_StateEnum {
@@ -105,6 +106,9 @@ export const PleaseChoose = {
     if (message.eitherOr?.$case === 'thirdOption') {
       writer.uint32(74).string(message.eitherOr.thirdOption);
     }
+    if (message.signature.length !== 0) {
+      writer.uint32(98).bytes(message.signature);
+    }
     return writer;
   },
 
@@ -112,6 +116,7 @@ export const PleaseChoose = {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = { ...basePleaseChoose } as PleaseChoose;
+    message.signature = new Uint8Array();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -148,6 +153,9 @@ export const PleaseChoose = {
         case 9:
           message.eitherOr = { $case: 'thirdOption', thirdOption: reader.string() };
           break;
+        case 12:
+          message.signature = reader.bytes();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -158,6 +166,7 @@ export const PleaseChoose = {
 
   fromJSON(object: any): PleaseChoose {
     const message = { ...basePleaseChoose } as PleaseChoose;
+    message.signature = new Uint8Array();
     if (object.name !== undefined && object.name !== null) {
       message.name = String(object.name);
     }
@@ -191,6 +200,9 @@ export const PleaseChoose = {
     if (object.thirdOption !== undefined && object.thirdOption !== null) {
       message.eitherOr = { $case: 'thirdOption', thirdOption: String(object.thirdOption) };
     }
+    if (object.signature !== undefined && object.signature !== null) {
+      message.signature = bytesFromBase64(object.signature);
+    }
     return message;
   },
 
@@ -212,6 +224,8 @@ export const PleaseChoose = {
     message.eitherOr?.$case === 'either' && (obj.either = message.eitherOr?.either);
     message.eitherOr?.$case === 'or' && (obj.or = message.eitherOr?.or);
     message.eitherOr?.$case === 'thirdOption' && (obj.thirdOption = message.eitherOr?.thirdOption);
+    message.signature !== undefined &&
+      (obj.signature = base64FromBytes(message.signature !== undefined ? message.signature : new Uint8Array()));
     return obj;
   },
 
@@ -265,6 +279,9 @@ export const PleaseChoose = {
       object.eitherOr?.thirdOption !== null
     ) {
       message.eitherOr = { $case: 'thirdOption', thirdOption: object.eitherOr.thirdOption };
+    }
+    if (object.signature !== undefined && object.signature !== null) {
+      message.signature = object.signature;
     }
     return message;
   },
