@@ -1,7 +1,8 @@
 /* eslint-disable */
-import { util, configure, Reader, Writer } from 'protobufjs/minimal';
+import { util, configure, Writer, Reader } from 'protobufjs/minimal';
 import * as Long from 'long';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 export const protobufPackage = '';
 
@@ -116,13 +117,16 @@ export class UserStateClientImpl implements UserState {
   }
   GetUsers(request: Empty): Observable<User> {
     const data = Empty.encode(request).finish();
-    const promise = this.rpc.request('UserState', 'GetUsers', data);
-    return promise.then((data) => User.decode(new Reader(data)));
+    const result = this.rpc.serverStreamingRequest('UserState', 'GetUsers', data);
+    return result.pipe(map((data) => User.decode(new Reader(data))));
   }
 }
 
 interface Rpc {
   request(service: string, method: string, data: Uint8Array): Promise<Uint8Array>;
+  clientStreamingRequest(service: string, method: string, data: Observable<Uint8Array>): Promise<Uint8Array>;
+  serverStreamingRequest(service: string, method: string, data: Uint8Array): Observable<Uint8Array>;
+  bidirectionalStreamingRequest(service: string, method: string, data: Observable<Uint8Array>): Observable<Uint8Array>;
 }
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;

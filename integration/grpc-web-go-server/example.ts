@@ -1,7 +1,8 @@
 /* eslint-disable */
-import { util, configure, Reader, Writer } from 'protobufjs/minimal';
+import { util, configure, Writer, Reader } from 'protobufjs/minimal';
 import * as Long from 'long';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 export const protobufPackage = 'rpx';
 
@@ -746,8 +747,8 @@ export class DashStateClientImpl implements DashState {
 
   ActiveUserSettingsStream(request: Empty): Observable<DashUserSettingsState> {
     const data = Empty.encode(request).finish();
-    const promise = this.rpc.request('rpx.DashState', 'ActiveUserSettingsStream', data);
-    return promise.then((data) => DashUserSettingsState.decode(new Reader(data)));
+    const result = this.rpc.serverStreamingRequest('rpx.DashState', 'ActiveUserSettingsStream', data);
+    return result.pipe(map((data) => DashUserSettingsState.decode(new Reader(data))));
   }
 }
 
@@ -791,6 +792,9 @@ export class DashAPICredsClientImpl implements DashAPICreds {
 
 interface Rpc {
   request(service: string, method: string, data: Uint8Array): Promise<Uint8Array>;
+  clientStreamingRequest(service: string, method: string, data: Observable<Uint8Array>): Promise<Uint8Array>;
+  serverStreamingRequest(service: string, method: string, data: Uint8Array): Observable<Uint8Array>;
+  bidirectionalStreamingRequest(service: string, method: string, data: Observable<Uint8Array>): Observable<Uint8Array>;
 }
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;

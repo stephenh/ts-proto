@@ -537,8 +537,12 @@ export function detectMapType(
   return undefined;
 }
 
+export function rawRequestType(ctx: Context, methodDesc: MethodDescriptorProto): Code {
+  return messageToTypeName(ctx, methodDesc.inputType);
+}
+
 export function requestType(ctx: Context, methodDesc: MethodDescriptorProto): Code {
-  let typeName = messageToTypeName(ctx, methodDesc.inputType);
+  let typeName = rawRequestType(ctx, methodDesc);
   if (methodDesc.clientStreaming) {
     return code`${imp('Observable@rxjs')}<${typeName}>`;
   }
