@@ -1222,7 +1222,7 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
       }
     }
 
-    if (!isRepeated(field) && options.oneof !== OneofOption.UNIONS) {
+    if (!isRepeated(field) && !isWithinOneOfThatShouldBeUnion(options, field)) {
       chunks.push(code`} else {`);
       const v = isWithinOneOf(field) ? 'undefined' : defaultValue(ctx, field);
       chunks.push(code`message.${fieldName} = ${v}`);

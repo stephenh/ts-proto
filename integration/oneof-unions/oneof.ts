@@ -233,6 +233,8 @@ export const PleaseChoose = {
     const message = { ...basePleaseChoose } as PleaseChoose;
     if (object.name !== undefined && object.name !== null) {
       message.name = object.name;
+    } else {
+      message.name = '';
     }
     if (object.choice?.$case === 'aNumber' && object.choice?.aNumber !== undefined && object.choice?.aNumber !== null) {
       message.choice = { $case: 'aNumber', aNumber: object.choice.aNumber };
@@ -262,6 +264,8 @@ export const PleaseChoose = {
     }
     if (object.age !== undefined && object.age !== null) {
       message.age = object.age;
+    } else {
+      message.age = 0;
     }
     if (
       object.eitherOr?.$case === 'either' &&
@@ -282,6 +286,8 @@ export const PleaseChoose = {
     }
     if (object.signature !== undefined && object.signature !== null) {
       message.signature = object.signature;
+    } else {
+      message.signature = new Uint8Array();
     }
     return message;
   },
@@ -333,6 +339,8 @@ export const PleaseChoose_Submessage = {
     const message = { ...basePleaseChoose_Submessage } as PleaseChoose_Submessage;
     if (object.name !== undefined && object.name !== null) {
       message.name = object.name;
+    } else {
+      message.name = '';
     }
     return message;
   },
@@ -394,9 +402,13 @@ export const SimpleButOptional = {
     const message = { ...baseSimpleButOptional } as SimpleButOptional;
     if (object.name !== undefined && object.name !== null) {
       message.name = object.name;
+    } else {
+      message.name = undefined;
     }
     if (object.age !== undefined && object.age !== null) {
       message.age = object.age;
+    } else {
+      message.age = undefined;
     }
     return message;
   },
