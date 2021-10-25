@@ -557,6 +557,14 @@ export function responseObservable(ctx: Context, methodDesc: MethodDescriptorPro
   return code`${imp('Observable@rxjs')}<${responseType(ctx, methodDesc)}>`;
 }
 
+export function responsePromiseOrObservable(ctx: Context, methodDesc: MethodDescriptorProto): Code {
+  const { options } = ctx;
+  if (options.returnObservable || methodDesc.serverStreaming) {
+    return responseObservable(ctx, methodDesc);
+  }
+  return responsePromise(ctx, methodDesc)
+}
+
 export interface BatchMethod {
   methodDesc: MethodDescriptorProto;
   // a ${package + service + method name} key to identify this method in caches

@@ -114,7 +114,7 @@ export class UserStateClientImpl implements UserState {
     this.rpc = rpc;
     this.GetUsers = this.GetUsers.bind(this);
   }
-  GetUsers(request: Empty): Promise<User> {
+  GetUsers(request: Empty): Observable<User> {
     const data = Empty.encode(request).finish();
     const promise = this.rpc.request('UserState', 'GetUsers', data);
     return promise.then((data) => User.decode(new Reader(data)));

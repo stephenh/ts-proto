@@ -4,8 +4,7 @@ import {
   BatchMethod,
   detectBatchMethod,
   requestType,
-  responseObservable,
-  responsePromise,
+  responsePromiseOrObservable,
   responseType,
 } from './types';
 import { assertInstanceOf, FormattedMethodDescriptor, maybeAddComment, maybePrefixPackage, singular } from './utils';
@@ -72,15 +71,7 @@ export function generateService(
       params.push(code`...rest: any`);
     }
 
-    // Return observable for interface only configuration, passing returnObservable=true and methodDesc.serverStreaming=true
-    let returnType: Code;
-    if (options.returnObservable || methodDesc.serverStreaming) {
-      returnType = responseObservable(ctx, methodDesc);
-    } else {
-      returnType = responsePromise(ctx, methodDesc);
-    }
-
-    chunks.push(code`${methodDesc.formattedName}(${joinCode(params, { on: ',' })}): ${returnType};`);
+    chunks.push(code`${methodDesc.formattedName}(${joinCode(params, { on: ',' })}): ${responsePromiseOrObservable(ctx, methodDesc)};`);
 
     // If this is a batch method, auto-generate the singular version of it
     if (options.context) {
@@ -117,7 +108,7 @@ function generateRegularRpcMethod(
   return code`
     ${methodDesc.formattedName}(
       ${joinCode(params, { on: ',' })}
-    ): ${responsePromise(ctx, methodDesc)} {
+    ): ${responsePromiseOrObservable(ctx, methodDesc)} {
       const data = ${inputType}.encode(request).finish();
       const promise = this.rpc.request(
         ${maybeCtx}

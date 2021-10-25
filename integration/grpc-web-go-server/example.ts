@@ -744,7 +744,7 @@ export class DashStateClientImpl implements DashState {
     return promise.then((data) => DashUserSettingsState.decode(new Reader(data)));
   }
 
-  ActiveUserSettingsStream(request: Empty): Promise<DashUserSettingsState> {
+  ActiveUserSettingsStream(request: Empty): Observable<DashUserSettingsState> {
     const data = Empty.encode(request).finish();
     const promise = this.rpc.request('rpx.DashState', 'ActiveUserSettingsStream', data);
     return promise.then((data) => DashUserSettingsState.decode(new Reader(data)));

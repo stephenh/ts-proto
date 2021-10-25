@@ -1,5 +1,5 @@
 import { MethodDescriptorProto, FileDescriptorProto, ServiceDescriptorProto } from 'ts-proto-descriptors';
-import { requestType, responseObservable, responsePromise, responseType } from './types';
+import { requestType, responsePromiseOrObservable, responseType } from './types';
 import { Code, code, imp, joinCode } from 'ts-poet';
 import { Context } from './context';
 import { assertInstanceOf, FormattedMethodDescriptor, maybePrefixPackage } from './utils';
@@ -52,10 +52,7 @@ function generateRpcMethod(ctx: Context, serviceDesc: ServiceDescriptorProto, me
   const { options, utils } = ctx;
   const inputType = requestType(ctx, methodDesc);
   const partialInputType = code`${utils.DeepPartial}<${inputType}>`;
-  const returns =
-    options.returnObservable || methodDesc.serverStreaming
-      ? responseObservable(ctx, methodDesc)
-      : responsePromise(ctx, methodDesc);
+  const returns = responsePromiseOrObservable(ctx, methodDesc);
   const method = methodDesc.serverStreaming ? 'invoke' : 'unary';
   return code`
     ${methodDesc.formattedName}(
