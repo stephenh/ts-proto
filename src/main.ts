@@ -1144,13 +1144,6 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
       const message = { ...base${fullName} } as ${fullName};
   `);
 
-  // initialize all lists
-  messageDesc.field.filter(isRepeated).forEach((field) => {
-    const value = isMapType(ctx, messageDesc, field) ? '{}' : '[]';
-    const name = maybeSnakeToCamel(field.name, options);
-    chunks.push(code`message.${name} = ${value};`);
-  });
-
   // add a check for each incoming field
   messageDesc.field.forEach((field) => {
     const fieldName = maybeSnakeToCamel(field.name, options);
@@ -1196,6 +1189,9 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
 
     // and then use the snippet to handle repeated fields if necessary
     if (isRepeated(field)) {
+      const value = isMapType(ctx, messageDesc, field) ? '{}' : '[]';
+      const name = maybeSnakeToCamel(field.name, options);
+      chunks.push(code`message.${name} = ${value};`);
       chunks.push(code`if (object.${fieldName} !== undefined && object.${fieldName} !== null) {`);
       if (isMapType(ctx, messageDesc, field)) {
         const i = maybeCastToNumber(ctx, messageDesc, field, 'key');
