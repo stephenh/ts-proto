@@ -86,10 +86,8 @@ export const Issue56 = {
 
   fromPartial(object: DeepPartial<Issue56>): Issue56 {
     const message = { ...baseIssue56 } as Issue56;
-    if (object.test !== undefined && object.test !== null) {
-      message.test = object.test;
-    } else {
-      message.test = 1;
+    {
+      message.test = object.test ?? 1;
     }
     return message;
   },

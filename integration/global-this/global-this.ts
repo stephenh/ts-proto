@@ -58,10 +58,8 @@ export const Object = {
 
   fromPartial(object: DeepPartial<Object>): Object {
     const message = { ...baseObject } as Object;
-    if (object.name !== undefined && object.name !== null) {
-      message.name = object.name;
-    } else {
-      message.name = '';
+    {
+      message.name = object.name ?? '';
     }
     return message;
   },
@@ -113,10 +111,8 @@ export const Error = {
 
   fromPartial(object: DeepPartial<Error>): Error {
     const message = { ...baseError } as Error;
-    if (object.name !== undefined && object.name !== null) {
-      message.name = object.name;
-    } else {
-      message.name = '';
+    {
+      message.name = object.name ?? '';
     }
     return message;
   },

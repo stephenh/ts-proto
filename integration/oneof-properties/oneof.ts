@@ -239,60 +239,40 @@ export const PleaseChoose = {
 
   fromPartial(object: DeepPartial<PleaseChoose>): PleaseChoose {
     const message = { ...basePleaseChoose } as PleaseChoose;
-    if (object.name !== undefined && object.name !== null) {
-      message.name = object.name;
-    } else {
-      message.name = '';
+    {
+      message.name = object.name ?? '';
     }
-    if (object.aNumber !== undefined && object.aNumber !== null) {
-      message.aNumber = object.aNumber;
-    } else {
-      message.aNumber = undefined;
+    {
+      message.aNumber = object.aNumber ?? undefined;
     }
-    if (object.aString !== undefined && object.aString !== null) {
-      message.aString = object.aString;
-    } else {
-      message.aString = undefined;
+    {
+      message.aString = object.aString ?? undefined;
     }
     if (object.aMessage !== undefined && object.aMessage !== null) {
       message.aMessage = PleaseChoose_Submessage.fromPartial(object.aMessage);
     } else {
       message.aMessage = undefined;
     }
-    if (object.aBool !== undefined && object.aBool !== null) {
-      message.aBool = object.aBool;
-    } else {
-      message.aBool = undefined;
+    {
+      message.aBool = object.aBool ?? undefined;
     }
-    if (object.bunchaBytes !== undefined && object.bunchaBytes !== null) {
-      message.bunchaBytes = object.bunchaBytes;
-    } else {
-      message.bunchaBytes = undefined;
+    {
+      message.bunchaBytes = object.bunchaBytes ?? undefined;
     }
-    if (object.anEnum !== undefined && object.anEnum !== null) {
-      message.anEnum = object.anEnum;
-    } else {
-      message.anEnum = undefined;
+    {
+      message.anEnum = object.anEnum ?? undefined;
     }
-    if (object.age !== undefined && object.age !== null) {
-      message.age = object.age;
-    } else {
-      message.age = 0;
+    {
+      message.age = object.age ?? 0;
     }
-    if (object.either !== undefined && object.either !== null) {
-      message.either = object.either;
-    } else {
-      message.either = undefined;
+    {
+      message.either = object.either ?? undefined;
     }
-    if (object.or !== undefined && object.or !== null) {
-      message.or = object.or;
-    } else {
-      message.or = undefined;
+    {
+      message.or = object.or ?? undefined;
     }
-    if (object.thirdOption !== undefined && object.thirdOption !== null) {
-      message.thirdOption = object.thirdOption;
-    } else {
-      message.thirdOption = undefined;
+    {
+      message.thirdOption = object.thirdOption ?? undefined;
     }
     return message;
   },
@@ -344,10 +324,8 @@ export const PleaseChoose_Submessage = {
 
   fromPartial(object: DeepPartial<PleaseChoose_Submessage>): PleaseChoose_Submessage {
     const message = { ...basePleaseChoose_Submessage } as PleaseChoose_Submessage;
-    if (object.name !== undefined && object.name !== null) {
-      message.name = object.name;
-    } else {
-      message.name = '';
+    {
+      message.name = object.name ?? '';
     }
     return message;
   },

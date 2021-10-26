@@ -1228,6 +1228,10 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
       chunks.push(code`} else {`);
       const fallback = isWithinOneOf(field) ? 'undefined' : defaultValue(ctx, field);
       chunks.push(code`message.${fieldName} = ${fallback}`);
+    } else if (isPrimitive(field)) {
+      const fallback = isWithinOneOf(field) ? 'undefined' : defaultValue(ctx, field);
+      chunks.push(code`{`); // Without this extra scope the code generation breaks 🤷. We don't really need it.
+      chunks.push(code`message.${fieldName} = object.${fieldName} ?? ${fallback};`);
     } else {
       chunks.push(code`if (object.${fieldName} !== undefined && object.${fieldName} !== null) {`);
       chunks.push(code`message.${fieldName} = ${readSnippet(`object.${fieldName}`)};`);

@@ -57,10 +57,8 @@ export const User = {
 
   fromPartial(object: DeepPartial<User>): User {
     const message = { ...baseUser } as User;
-    if (object.name !== undefined && object.name !== null) {
-      message.name = object.name;
-    } else {
-      message.name = '';
+    {
+      message.name = object.name ?? '';
     }
     return message;
   },

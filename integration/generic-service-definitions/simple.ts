@@ -54,10 +54,8 @@ export const TestMessage = {
 
   fromPartial(object: DeepPartial<TestMessage>): TestMessage {
     const message = { ...baseTestMessage } as TestMessage;
-    if (object.value !== undefined && object.value !== null) {
-      message.value = object.value;
-    } else {
-      message.value = '';
+    {
+      message.value = object.value ?? '';
     }
     return message;
   },

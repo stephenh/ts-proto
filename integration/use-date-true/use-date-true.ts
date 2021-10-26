@@ -128,10 +128,8 @@ export const Todo = {
 
   fromPartial(object: DeepPartial<Todo>): Todo {
     const message = { ...baseTodo } as Todo;
-    if (object.id !== undefined && object.id !== null) {
-      message.id = object.id;
-    } else {
-      message.id = '';
+    {
+      message.id = object.id ?? '';
     }
     if (object.timestamp !== undefined && object.timestamp !== null) {
       message.timestamp = object.timestamp;
@@ -219,10 +217,8 @@ export const Todo_MapOfTimestampsEntry = {
 
   fromPartial(object: DeepPartial<Todo_MapOfTimestampsEntry>): Todo_MapOfTimestampsEntry {
     const message = { ...baseTodo_MapOfTimestampsEntry } as Todo_MapOfTimestampsEntry;
-    if (object.key !== undefined && object.key !== null) {
-      message.key = object.key;
-    } else {
-      message.key = '';
+    {
+      message.key = object.key ?? '';
     }
     if (object.value !== undefined && object.value !== null) {
       message.value = object.value;

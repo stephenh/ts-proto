@@ -146,15 +146,11 @@ export const Simple = {
 
   fromPartial(object: DeepPartial<Simple>): Simple {
     const message = { ...baseSimple } as Simple;
-    if (object.name !== undefined && object.name !== null) {
-      message.name = object.name;
-    } else {
-      message.name = '';
+    {
+      message.name = object.name ?? '';
     }
-    if (object.state !== undefined && object.state !== null) {
-      message.state = object.state;
-    } else {
-      message.state = StateEnum.UNKNOWN;
+    {
+      message.state = object.state ?? StateEnum.UNKNOWN;
     }
     message.states = [];
     if (object.states !== undefined && object.states !== null) {

@@ -126,30 +126,22 @@ export const Simple = {
 
   fromPartial(object: DeepPartial<Simple>): Simple {
     const message = { ...baseSimple } as Simple;
-    if (object.name !== undefined && object.name !== null) {
-      message.name = object.name;
-    } else {
-      message.name = '';
+    {
+      message.name = object.name ?? '';
     }
-    if (object.age !== undefined && object.age !== null) {
-      message.age = object.age;
-    } else {
-      message.age = 0;
+    {
+      message.age = object.age ?? 0;
     }
     if (object.child !== undefined && object.child !== null) {
       message.child = Child.fromPartial(object.child);
     } else {
       message.child = undefined;
     }
-    if (object.testField !== undefined && object.testField !== null) {
-      message.testField = object.testField;
-    } else {
-      message.testField = '';
+    {
+      message.testField = object.testField ?? '';
     }
-    if (object.testNotDeprecated !== undefined && object.testNotDeprecated !== null) {
-      message.testNotDeprecated = object.testNotDeprecated;
-    } else {
-      message.testNotDeprecated = '';
+    {
+      message.testNotDeprecated = object.testNotDeprecated ?? '';
     }
     return message;
   },
@@ -201,10 +193,8 @@ export const Child = {
 
   fromPartial(object: DeepPartial<Child>): Child {
     const message = { ...baseChild } as Child;
-    if (object.name !== undefined && object.name !== null) {
-      message.name = object.name;
-    } else {
-      message.name = '';
+    {
+      message.name = object.name ?? '';
     }
     return message;
   },
