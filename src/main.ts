@@ -1220,22 +1220,20 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
         ) {
           message.${oneofName} = { $case: '${fieldName}', ${fieldName}: ${v} };
       `);
+    } else if ((isLong(field) || isLongValueType(field)) && options.forceLong === LongOption.LONG) {
+      const v = readSnippet(`object.${fieldName}`);
+      const type = basicTypeName(ctx, field);
+      chunks.push(code`if (object.${fieldName} !== undefined && object.${fieldName} !== null) {`);
+      chunks.push(code`message.${fieldName} = ${v} as ${type};`);
+      chunks.push(code`} else {`);
+      const fallback = isWithinOneOf(field) ? 'undefined' : defaultValue(ctx, field);
+      chunks.push(code`message.${fieldName} = ${fallback}`);
     } else {
-      if ((isLong(field) || isLongValueType(field)) && options.forceLong === LongOption.LONG) {
-        const v = readSnippet(`object.${fieldName}`);
-        const type = basicTypeName(ctx, field);
-        chunks.push(code`if (object.${fieldName} !== undefined && object.${fieldName} !== null) {`);
-        chunks.push(code`message.${fieldName} = ${v} as ${type};`);
-        chunks.push(code`} else {`);
-        const fallback = isWithinOneOf(field) ? 'undefined' : defaultValue(ctx, field);
-        chunks.push(code`message.${fieldName} = ${fallback}`);
-      } else {
-        chunks.push(code`if (object.${fieldName} !== undefined && object.${fieldName} !== null) {`);
-        chunks.push(code`message.${fieldName} = ${readSnippet(`object.${fieldName}`)};`);
-        chunks.push(code`} else {`);
-        const fallback = isWithinOneOf(field) ? 'undefined' : defaultValue(ctx, field);
-        chunks.push(code`message.${fieldName} = ${fallback}`);
-      }
+      chunks.push(code`if (object.${fieldName} !== undefined && object.${fieldName} !== null) {`);
+      chunks.push(code`message.${fieldName} = ${readSnippet(`object.${fieldName}`)};`);
+      chunks.push(code`} else {`);
+      const fallback = isWithinOneOf(field) ? 'undefined' : defaultValue(ctx, field);
+      chunks.push(code`message.${fieldName} = ${fallback}`);
     }
 
     chunks.push(code`}`);
