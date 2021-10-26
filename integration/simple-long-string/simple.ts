@@ -274,15 +274,11 @@ export const Numbers = {
     {
       message.sfixed64 = object.sfixed64 ?? '0';
     }
-    if (object.guint64 !== undefined && object.guint64 !== null) {
-      message.guint64 = object.guint64;
-    } else {
-      message.guint64 = undefined;
+    {
+      message.guint64 = object.guint64 ?? undefined;
     }
-    if (object.timestamp !== undefined && object.timestamp !== null) {
-      message.timestamp = object.timestamp;
-    } else {
-      message.timestamp = undefined;
+    {
+      message.timestamp = object.timestamp ?? undefined;
     }
     return message;
   },

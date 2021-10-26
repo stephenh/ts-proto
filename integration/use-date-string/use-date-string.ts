@@ -131,10 +131,8 @@ export const Todo = {
     {
       message.id = object.id ?? '';
     }
-    if (object.timestamp !== undefined && object.timestamp !== null) {
-      message.timestamp = object.timestamp;
-    } else {
-      message.timestamp = undefined;
+    {
+      message.timestamp = object.timestamp ?? undefined;
     }
     message.repeatedTimestamp = [];
     if (object.repeatedTimestamp !== undefined && object.repeatedTimestamp !== null) {
@@ -142,10 +140,8 @@ export const Todo = {
         message.repeatedTimestamp.push(e);
       }
     }
-    if (object.optionalTimestamp !== undefined && object.optionalTimestamp !== null) {
-      message.optionalTimestamp = object.optionalTimestamp;
-    } else {
-      message.optionalTimestamp = undefined;
+    {
+      message.optionalTimestamp = object.optionalTimestamp ?? undefined;
     }
     message.mapOfTimestamps = {};
     if (object.mapOfTimestamps !== undefined && object.mapOfTimestamps !== null) {
@@ -220,10 +216,8 @@ export const Todo_MapOfTimestampsEntry = {
     {
       message.key = object.key ?? '';
     }
-    if (object.value !== undefined && object.value !== null) {
-      message.value = object.value;
-    } else {
-      message.value = undefined;
+    {
+      message.value = object.value ?? undefined;
     }
     return message;
   },

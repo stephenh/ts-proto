@@ -530,10 +530,8 @@ export const Simple = {
     {
       message.age = object.age ?? 0;
     }
-    if (object.createdAt !== undefined && object.createdAt !== null) {
-      message.createdAt = object.createdAt;
-    } else {
-      message.createdAt = undefined;
+    {
+      message.createdAt = object.createdAt ?? undefined;
     }
     if (object.child !== undefined && object.child !== null) {
       message.child = Child.fromPartial(object.child);
@@ -1054,20 +1052,14 @@ export const SimpleWithWrappers = {
 
   fromPartial(object: DeepPartial<SimpleWithWrappers>): SimpleWithWrappers {
     const message = { ...baseSimpleWithWrappers } as SimpleWithWrappers;
-    if (object.name !== undefined && object.name !== null) {
-      message.name = object.name;
-    } else {
-      message.name = undefined;
+    {
+      message.name = object.name ?? undefined;
     }
-    if (object.age !== undefined && object.age !== null) {
-      message.age = object.age;
-    } else {
-      message.age = undefined;
+    {
+      message.age = object.age ?? undefined;
     }
-    if (object.enabled !== undefined && object.enabled !== null) {
-      message.enabled = object.enabled;
-    } else {
-      message.enabled = undefined;
+    {
+      message.enabled = object.enabled ?? undefined;
     }
     message.coins = [];
     if (object.coins !== undefined && object.coins !== null) {
@@ -1081,10 +1073,8 @@ export const SimpleWithWrappers = {
         message.snacks.push(e);
       }
     }
-    if (object.id !== undefined && object.id !== null) {
-      message.id = object.id;
-    } else {
-      message.id = undefined;
+    {
+      message.id = object.id ?? undefined;
     }
     return message;
   },
@@ -1630,10 +1620,8 @@ export const SimpleWithMap_MapOfTimestampsEntry = {
     {
       message.key = object.key ?? '';
     }
-    if (object.value !== undefined && object.value !== null) {
-      message.value = object.value;
-    } else {
-      message.value = undefined;
+    {
+      message.value = object.value ?? undefined;
     }
     return message;
   },
@@ -1769,10 +1757,8 @@ export const SimpleWithMap_MapOfStringValuesEntry = {
     {
       message.key = object.key ?? '';
     }
-    if (object.value !== undefined && object.value !== null) {
-      message.value = object.value;
-    } else {
-      message.value = undefined;
+    {
+      message.value = object.value ?? undefined;
     }
     return message;
   },
@@ -2515,10 +2501,8 @@ export const SimpleButOptional = {
     {
       message.age = object.age ?? undefined;
     }
-    if (object.createdAt !== undefined && object.createdAt !== null) {
-      message.createdAt = object.createdAt;
-    } else {
-      message.createdAt = undefined;
+    {
+      message.createdAt = object.createdAt ?? undefined;
     }
     if (object.child !== undefined && object.child !== null) {
       message.child = Child.fromPartial(object.child);

@@ -55,10 +55,8 @@ export const ImportedThing = {
 
   fromPartial(object: DeepPartial<ImportedThing>): ImportedThing {
     const message = { ...baseImportedThing } as ImportedThing;
-    if (object.createdAt !== undefined && object.createdAt !== null) {
-      message.createdAt = object.createdAt;
-    } else {
-      message.createdAt = undefined;
+    {
+      message.createdAt = object.createdAt ?? undefined;
     }
     return message;
   },

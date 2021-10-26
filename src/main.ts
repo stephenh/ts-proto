@@ -1228,9 +1228,14 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
       chunks.push(code`} else {`);
       const fallback = isWithinOneOf(field) ? 'undefined' : defaultValue(ctx, field);
       chunks.push(code`message.${fieldName} = ${fallback}`);
-    } else if (isPrimitive(field)) {
-      const fallback = isWithinOneOf(field) ? 'undefined' : defaultValue(ctx, field);
+    } else if (
+      isPrimitive(field) ||
+      (isTimestamp(field) && (options.useDate === DateOption.DATE || options.useDate === DateOption.STRING)) ||
+      isValueType(ctx, field)
+    ) {
+      // An optimized case of the else below that works when `readSnippet` returns the plain input
       chunks.push(code`{`); // Without this extra scope the code generation breaks 🤷. We don't really need it.
+      const fallback = isWithinOneOf(field) ? 'undefined' : defaultValue(ctx, field);
       chunks.push(code`message.${fieldName} = object.${fieldName} ?? ${fallback};`);
     } else {
       chunks.push(code`if (object.${fieldName} !== undefined && object.${fieldName} !== null) {`);

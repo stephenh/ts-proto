@@ -164,20 +164,14 @@ export const SimpleWithWrappers = {
 
   fromPartial(object: DeepPartial<SimpleWithWrappers>): SimpleWithWrappers {
     const message = { ...baseSimpleWithWrappers } as SimpleWithWrappers;
-    if (object.name !== undefined && object.name !== null) {
-      message.name = object.name;
-    } else {
-      message.name = undefined;
+    {
+      message.name = object.name ?? undefined;
     }
-    if (object.age !== undefined && object.age !== null) {
-      message.age = object.age;
-    } else {
-      message.age = undefined;
+    {
+      message.age = object.age ?? undefined;
     }
-    if (object.enabled !== undefined && object.enabled !== null) {
-      message.enabled = object.enabled;
-    } else {
-      message.enabled = undefined;
+    {
+      message.enabled = object.enabled ?? undefined;
     }
     if (object.bananas !== undefined && object.bananas !== null) {
       message.bananas = object.bananas as Long | undefined;
