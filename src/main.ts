@@ -1229,9 +1229,6 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
       } else {
         chunks.push(code`message.${fieldName} = ${readSnippet(`object.${fieldName}`)};`);
       }
-    }
-
-    if (!isRepeated(field) && !isWithinOneOfThatShouldBeUnion(options, field)) {
       chunks.push(code`} else {`);
       const v = isWithinOneOf(field) ? 'undefined' : defaultValue(ctx, field);
       chunks.push(code`message.${fieldName} = ${v}`);
