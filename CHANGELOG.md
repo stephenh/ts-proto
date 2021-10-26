@@ -1,3 +1,10 @@
+## [1.83.2](https://github.com/stephenh/ts-proto/compare/v1.83.1...v1.83.2) (2021-10-26)
+
+
+### Bug Fixes
+
+* Add missing defaults to fromPartial if options.oneof is UNIONS ([#375](https://github.com/stephenh/ts-proto/issues/375)) ([21781e9](https://github.com/stephenh/ts-proto/commit/21781e98bb6117b540be8c3f2c38ac3ad5cbbb44))
+
 ## [1.83.1](https://github.com/stephenh/ts-proto/compare/v1.83.0...v1.83.1) (2021-09-17)
 
 
