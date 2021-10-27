@@ -323,7 +323,7 @@ describe('simple', () => {
         "entitiesById": Object {},
         "intLookup": Object {
           "1": 2,
-          "2": 0,§
+          "2": 0,
         },
         "mapOfBytes": Object {},
         "mapOfStringValues": Object {
