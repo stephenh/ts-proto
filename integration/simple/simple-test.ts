@@ -231,13 +231,34 @@ describe('simple', () => {
       intLookup: { 1: 2, 2: 1 },
       mapOfTimestamps: {},
       mapOfBytes: {},
-      mapOfStringValues: {},
+      mapOfStringValues: { a: '1', b: '', c: undefined },
     };
     const s2 = PbSimpleWithMap.toObject(PbSimpleWithMap.decode(SimpleWithMap.encode(s1).finish()));
-    delete (s1 as any).mapOfTimestamps;
-    delete (s1 as any).mapOfBytes;
-    delete (s1 as any).mapOfStringValues;
-    expect(s2).toEqual(s1);
+    expect(s2).toMatchInlineSnapshot(`
+      Object {
+        "entitiesById": Object {
+          "1": Object {
+            "id": 1,
+          },
+          "2": Object {
+            "id": 2,
+          },
+        },
+        "intLookup": Object {
+          "1": 2,
+          "2": 1,
+        },
+        "mapOfStringValues": Object {
+          "a": Object {
+            "value": "1",
+          },
+          "b": Object {},
+        },
+        "nameLookup": Object {
+          "foo": "bar",
+        },
+      }
+    `);
   });
 
   it('can encode maps with default values', () => {
@@ -247,7 +268,7 @@ describe('simple', () => {
       intLookup: { 1: 0 },
       mapOfTimestamps: {},
       mapOfBytes: {},
-      mapOfStringValues: {},
+      mapOfStringValues: { foo: '', bar: undefined },
     };
     const s2 = SimpleWithMap.decode(SimpleWithMap.encode(s1).finish());
     expect(s2).toEqual(s1);
@@ -293,16 +314,22 @@ describe('simple', () => {
   });
 
   it('can fromPartial on maps with falsey values', () => {
-    const s1 = SimpleWithMap.fromPartial({ intLookup: { 1: 2, 2: 0 } });
+    const s1 = SimpleWithMap.fromPartial({
+      intLookup: { 1: 2, 2: 0 },
+      mapOfStringValues: { a: '1', b: '', c: undefined },
+    });
     expect(s1).toMatchInlineSnapshot(`
       Object {
         "entitiesById": Object {},
         "intLookup": Object {
           "1": 2,
-          "2": 0,
+          "2": 0,§
         },
         "mapOfBytes": Object {},
-        "mapOfStringValues": Object {},
+        "mapOfStringValues": Object {
+          "a": "1",
+          "b": "",
+        },
         "mapOfTimestamps": Object {},
         "nameLookup": Object {},
       }
