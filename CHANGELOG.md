@@ -1,3 +1,10 @@
+## [1.83.3](https://github.com/stephenh/ts-proto/compare/v1.83.2...v1.83.3) (2021-10-28)
+
+
+### Bug Fixes
+
+* fix codegen for maps with wrapper value type ([#370](https://github.com/stephenh/ts-proto/issues/370)) ([dd2481d](https://github.com/stephenh/ts-proto/commit/dd2481df0835faafc561aad4a4d0c9c2ff9d868a))
+
 ## [1.83.2](https://github.com/stephenh/ts-proto/compare/v1.83.1...v1.83.2) (2021-10-26)
 
 
