@@ -1189,7 +1189,9 @@ export const SimpleWithMap = {
       SimpleWithMap_MapOfBytesEntry.encode({ key: key as any, value }, writer.uint32(42).fork()).ldelim();
     });
     Object.entries(message.mapOfStringValues).forEach(([key, value]) => {
-      SimpleWithMap_MapOfStringValuesEntry.encode({ key: key as any, value }, writer.uint32(50).fork()).ldelim();
+      if (value !== undefined) {
+        SimpleWithMap_MapOfStringValuesEntry.encode({ key: key as any, value }, writer.uint32(50).fork()).ldelim();
+      }
     });
     return writer;
   },

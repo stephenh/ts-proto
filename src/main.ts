@@ -798,10 +798,18 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
 
     if (isRepeated(field)) {
       if (isMapType(ctx, messageDesc, field)) {
+        const valueType = (typeMap.get(field.typeName)![2] as DescriptorProto).field[1];
         const maybeTypeField = options.outputTypeRegistry ? `$type: '${field.typeName.slice(1)}',` : '';
+        const entryWriteSnippet = isValueType(ctx, valueType)
+          ? code`
+              if (value !== undefined) {
+                ${writeSnippet(`{ ${maybeTypeField} key: key as any, value }`)};
+              }
+            `
+          : writeSnippet(`{ ${maybeTypeField} key: key as any, value }`);
         chunks.push(code`
           Object.entries(message.${fieldName}).forEach(([key, value]) => {
-            ${writeSnippet(`{ ${maybeTypeField} key: key as any, value }`)};
+            ${entryWriteSnippet}
           });
         `);
       } else if (packedType(field.type) === undefined) {
