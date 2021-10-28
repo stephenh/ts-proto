@@ -193,6 +193,7 @@ export interface SimpleWithMap {
   intLookup: { [key: number]: number };
   mapOfTimestamps: { [key: string]: Date };
   mapOfBytes: { [key: string]: Uint8Array };
+  mapOfStringValues: { [key: string]: string | undefined };
 }
 
 export interface SimpleWithMap_EntitiesByIdEntry {
@@ -218,6 +219,11 @@ export interface SimpleWithMap_MapOfTimestampsEntry {
 export interface SimpleWithMap_MapOfBytesEntry {
   key: string;
   value: Uint8Array;
+}
+
+export interface SimpleWithMap_MapOfStringValuesEntry {
+  key: string;
+  value: string | undefined;
 }
 
 export interface SimpleWithSnakeCaseMap {
@@ -1182,6 +1188,11 @@ export const SimpleWithMap = {
     Object.entries(message.mapOfBytes).forEach(([key, value]) => {
       SimpleWithMap_MapOfBytesEntry.encode({ key: key as any, value }, writer.uint32(42).fork()).ldelim();
     });
+    Object.entries(message.mapOfStringValues).forEach(([key, value]) => {
+      if (value !== undefined) {
+        SimpleWithMap_MapOfStringValuesEntry.encode({ key: key as any, value }, writer.uint32(50).fork()).ldelim();
+      }
+    });
     return writer;
   },
 
@@ -1194,6 +1205,7 @@ export const SimpleWithMap = {
     message.intLookup = {};
     message.mapOfTimestamps = {};
     message.mapOfBytes = {};
+    message.mapOfStringValues = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -1227,6 +1239,12 @@ export const SimpleWithMap = {
             message.mapOfBytes[entry5.key] = entry5.value;
           }
           break;
+        case 6:
+          const entry6 = SimpleWithMap_MapOfStringValuesEntry.decode(reader, reader.uint32());
+          if (entry6.value !== undefined) {
+            message.mapOfStringValues[entry6.key] = entry6.value;
+          }
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -1242,6 +1260,7 @@ export const SimpleWithMap = {
     message.intLookup = {};
     message.mapOfTimestamps = {};
     message.mapOfBytes = {};
+    message.mapOfStringValues = {};
     if (object.entitiesById !== undefined && object.entitiesById !== null) {
       Object.entries(object.entitiesById).forEach(([key, value]) => {
         message.entitiesById[Number(key)] = Entity.fromJSON(value);
@@ -1265,6 +1284,11 @@ export const SimpleWithMap = {
     if (object.mapOfBytes !== undefined && object.mapOfBytes !== null) {
       Object.entries(object.mapOfBytes).forEach(([key, value]) => {
         message.mapOfBytes[key] = bytesFromBase64(value as string);
+      });
+    }
+    if (object.mapOfStringValues !== undefined && object.mapOfStringValues !== null) {
+      Object.entries(object.mapOfStringValues).forEach(([key, value]) => {
+        message.mapOfStringValues[key] = value as string | undefined;
       });
     }
     return message;
@@ -1302,6 +1326,12 @@ export const SimpleWithMap = {
         obj.mapOfBytes[k] = base64FromBytes(v);
       });
     }
+    obj.mapOfStringValues = {};
+    if (message.mapOfStringValues) {
+      Object.entries(message.mapOfStringValues).forEach(([k, v]) => {
+        obj.mapOfStringValues[k] = v;
+      });
+    }
     return obj;
   },
 
@@ -1312,6 +1342,7 @@ export const SimpleWithMap = {
     message.intLookup = {};
     message.mapOfTimestamps = {};
     message.mapOfBytes = {};
+    message.mapOfStringValues = {};
     if (object.entitiesById !== undefined && object.entitiesById !== null) {
       Object.entries(object.entitiesById).forEach(([key, value]) => {
         if (value !== undefined) {
@@ -1344,6 +1375,13 @@ export const SimpleWithMap = {
       Object.entries(object.mapOfBytes).forEach(([key, value]) => {
         if (value !== undefined) {
           message.mapOfBytes[key] = value;
+        }
+      });
+    }
+    if (object.mapOfStringValues !== undefined && object.mapOfStringValues !== null) {
+      Object.entries(object.mapOfStringValues).forEach(([key, value]) => {
+        if (value !== undefined) {
+          message.mapOfStringValues[key] = value;
         }
       });
     }
@@ -1707,6 +1745,78 @@ export const SimpleWithMap_MapOfBytesEntry = {
       message.value = object.value;
     } else {
       message.value = new Uint8Array();
+    }
+    return message;
+  },
+};
+
+const baseSimpleWithMap_MapOfStringValuesEntry: object = { key: '' };
+
+export const SimpleWithMap_MapOfStringValuesEntry = {
+  encode(message: SimpleWithMap_MapOfStringValuesEntry, writer: Writer = Writer.create()): Writer {
+    if (message.key !== '') {
+      writer.uint32(10).string(message.key);
+    }
+    if (message.value !== undefined) {
+      StringValue.encode({ value: message.value! }, writer.uint32(18).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): SimpleWithMap_MapOfStringValuesEntry {
+    const reader = input instanceof Reader ? input : new Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseSimpleWithMap_MapOfStringValuesEntry } as SimpleWithMap_MapOfStringValuesEntry;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.key = reader.string();
+          break;
+        case 2:
+          message.value = StringValue.decode(reader, reader.uint32()).value;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): SimpleWithMap_MapOfStringValuesEntry {
+    const message = { ...baseSimpleWithMap_MapOfStringValuesEntry } as SimpleWithMap_MapOfStringValuesEntry;
+    if (object.key !== undefined && object.key !== null) {
+      message.key = String(object.key);
+    } else {
+      message.key = '';
+    }
+    if (object.value !== undefined && object.value !== null) {
+      message.value = String(object.value);
+    } else {
+      message.value = undefined;
+    }
+    return message;
+  },
+
+  toJSON(message: SimpleWithMap_MapOfStringValuesEntry): unknown {
+    const obj: any = {};
+    message.key !== undefined && (obj.key = message.key);
+    message.value !== undefined && (obj.value = message.value);
+    return obj;
+  },
+
+  fromPartial(object: DeepPartial<SimpleWithMap_MapOfStringValuesEntry>): SimpleWithMap_MapOfStringValuesEntry {
+    const message = { ...baseSimpleWithMap_MapOfStringValuesEntry } as SimpleWithMap_MapOfStringValuesEntry;
+    if (object.key !== undefined && object.key !== null) {
+      message.key = object.key;
+    } else {
+      message.key = '';
+    }
+    if (object.value !== undefined && object.value !== null) {
+      message.value = object.value;
+    } else {
+      message.value = undefined;
     }
     return message;
   },

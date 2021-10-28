@@ -191,6 +191,7 @@ describe('simple json', () => {
           "1": 0,
         },
         "mapOfBytes": Object {},
+        "mapOfStringValues": Object {},
         "mapOfTimestamps": Object {},
         "nameLookup": Object {},
       }
@@ -212,6 +213,7 @@ describe('simple json', () => {
         "entitiesById": Object {},
         "intLookup": Object {},
         "mapOfBytes": Object {},
+        "mapOfStringValues": Object {},
         "mapOfTimestamps": Object {
           "a": 1970-01-01T00:16:40.000Z,
           "b": 1970-01-01T00:33:20.000Z,
@@ -233,6 +235,7 @@ describe('simple json', () => {
         a: new Uint8Array([1, 2]),
         b: new Uint8Array([1, 2, 3]),
       },
+      mapOfStringValues: {},
     };
     const json = SimpleWithMap.toJSON(s1);
     expect(json).toMatchInlineSnapshot(`
@@ -243,6 +246,7 @@ describe('simple json', () => {
           "a": "AQI=",
           "b": "AQID",
         },
+        "mapOfStringValues": Object {},
         "mapOfTimestamps": Object {},
         "nameLookup": Object {},
       }
@@ -272,6 +276,7 @@ describe('simple json', () => {
             3,
           ],
         },
+        "mapOfStringValues": Object {},
         "mapOfTimestamps": Object {},
         "nameLookup": Object {},
       }
