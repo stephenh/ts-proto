@@ -57,9 +57,7 @@ export const User = {
 
   fromPartial(object: DeepPartial<User>): User {
     const message = { ...baseUser } as User;
-    {
-      message.name = object.name ?? '';
-    }
+    message.name = object.name ?? '';
     return message;
   },
 };

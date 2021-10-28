@@ -128,21 +128,15 @@ export const Todo = {
 
   fromPartial(object: DeepPartial<Todo>): Todo {
     const message = { ...baseTodo } as Todo;
-    {
-      message.id = object.id ?? '';
-    }
-    {
-      message.timestamp = object.timestamp ?? undefined;
-    }
+    message.id = object.id ?? '';
+    message.timestamp = object.timestamp ?? undefined;
     message.repeatedTimestamp = [];
     if (object.repeatedTimestamp !== undefined && object.repeatedTimestamp !== null) {
       for (const e of object.repeatedTimestamp) {
         message.repeatedTimestamp.push(e);
       }
     }
-    {
-      message.optionalTimestamp = object.optionalTimestamp ?? undefined;
-    }
+    message.optionalTimestamp = object.optionalTimestamp ?? undefined;
     message.mapOfTimestamps = {};
     if (object.mapOfTimestamps !== undefined && object.mapOfTimestamps !== null) {
       Object.entries(object.mapOfTimestamps).forEach(([key, value]) => {
@@ -213,12 +207,8 @@ export const Todo_MapOfTimestampsEntry = {
 
   fromPartial(object: DeepPartial<Todo_MapOfTimestampsEntry>): Todo_MapOfTimestampsEntry {
     const message = { ...baseTodo_MapOfTimestampsEntry } as Todo_MapOfTimestampsEntry;
-    {
-      message.key = object.key ?? '';
-    }
-    {
-      message.value = object.value ?? undefined;
-    }
+    message.key = object.key ?? '';
+    message.value = object.value ?? undefined;
     return message;
   },
 };

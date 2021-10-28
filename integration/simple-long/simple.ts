@@ -164,15 +164,9 @@ export const SimpleWithWrappers = {
 
   fromPartial(object: DeepPartial<SimpleWithWrappers>): SimpleWithWrappers {
     const message = { ...baseSimpleWithWrappers } as SimpleWithWrappers;
-    {
-      message.name = object.name ?? undefined;
-    }
-    {
-      message.age = object.age ?? undefined;
-    }
-    {
-      message.enabled = object.enabled ?? undefined;
-    }
+    message.name = object.name ?? undefined;
+    message.age = object.age ?? undefined;
+    message.enabled = object.enabled ?? undefined;
     if (object.bananas !== undefined && object.bananas !== null) {
       message.bananas = object.bananas as Long | undefined;
     } else {
@@ -350,12 +344,8 @@ export const SimpleWithMap_NameLookupEntry = {
 
   fromPartial(object: DeepPartial<SimpleWithMap_NameLookupEntry>): SimpleWithMap_NameLookupEntry {
     const message = { ...baseSimpleWithMap_NameLookupEntry } as SimpleWithMap_NameLookupEntry;
-    {
-      message.key = object.key ?? '';
-    }
-    {
-      message.value = object.value ?? '';
-    }
+    message.key = object.key ?? '';
+    message.value = object.value ?? '';
     return message;
   },
 };
@@ -418,12 +408,8 @@ export const SimpleWithMap_IntLookupEntry = {
 
   fromPartial(object: DeepPartial<SimpleWithMap_IntLookupEntry>): SimpleWithMap_IntLookupEntry {
     const message = { ...baseSimpleWithMap_IntLookupEntry } as SimpleWithMap_IntLookupEntry;
-    {
-      message.key = object.key ?? 0;
-    }
-    {
-      message.value = object.value ?? 0;
-    }
+    message.key = object.key ?? 0;
+    message.value = object.value ?? 0;
     return message;
   },
 };
@@ -647,47 +633,33 @@ export const Numbers = {
 
   fromPartial(object: DeepPartial<Numbers>): Numbers {
     const message = { ...baseNumbers } as Numbers;
-    {
-      message.double = object.double ?? 0;
-    }
-    {
-      message.float = object.float ?? 0;
-    }
-    {
-      message.int32 = object.int32 ?? 0;
-    }
+    message.double = object.double ?? 0;
+    message.float = object.float ?? 0;
+    message.int32 = object.int32 ?? 0;
     if (object.int64 !== undefined && object.int64 !== null) {
       message.int64 = object.int64 as Long;
     } else {
       message.int64 = Long.ZERO;
     }
-    {
-      message.uint32 = object.uint32 ?? 0;
-    }
+    message.uint32 = object.uint32 ?? 0;
     if (object.uint64 !== undefined && object.uint64 !== null) {
       message.uint64 = object.uint64 as Long;
     } else {
       message.uint64 = Long.UZERO;
     }
-    {
-      message.sint32 = object.sint32 ?? 0;
-    }
+    message.sint32 = object.sint32 ?? 0;
     if (object.sint64 !== undefined && object.sint64 !== null) {
       message.sint64 = object.sint64 as Long;
     } else {
       message.sint64 = Long.ZERO;
     }
-    {
-      message.fixed32 = object.fixed32 ?? 0;
-    }
+    message.fixed32 = object.fixed32 ?? 0;
     if (object.fixed64 !== undefined && object.fixed64 !== null) {
       message.fixed64 = object.fixed64 as Long;
     } else {
       message.fixed64 = Long.UZERO;
     }
-    {
-      message.sfixed32 = object.sfixed32 ?? 0;
-    }
+    message.sfixed32 = object.sfixed32 ?? 0;
     if (object.sfixed64 !== undefined && object.sfixed64 !== null) {
       message.sfixed64 = object.sfixed64 as Long;
     } else {

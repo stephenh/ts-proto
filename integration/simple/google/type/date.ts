@@ -105,15 +105,9 @@ export const DateMessage = {
 
   fromPartial(object: DeepPartial<DateMessage>): DateMessage {
     const message = { ...baseDateMessage } as DateMessage;
-    {
-      message.year = object.year ?? 0;
-    }
-    {
-      message.month = object.month ?? 0;
-    }
-    {
-      message.day = object.day ?? 0;
-    }
+    message.year = object.year ?? 0;
+    message.month = object.month ?? 0;
+    message.day = object.day ?? 0;
     return message;
   },
 };

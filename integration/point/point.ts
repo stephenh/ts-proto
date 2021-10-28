@@ -72,12 +72,8 @@ export const Point = {
 
   fromPartial(object: DeepPartial<Point>): Point {
     const message = { ...basePoint } as Point;
-    {
-      message.lat = object.lat ?? 0;
-    }
-    {
-      message.lng = object.lng ?? 0;
-    }
+    message.lat = object.lat ?? 0;
+    message.lng = object.lng ?? 0;
     return message;
   },
 };

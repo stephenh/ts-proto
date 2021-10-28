@@ -55,9 +55,7 @@ export const Point = {
 
   fromPartial(object: DeepPartial<Point>): Point {
     const message = { ...basePoint } as Point;
-    {
-      message.data = object.data ?? Buffer.alloc(0);
-    }
+    message.data = object.data ?? Buffer.alloc(0);
     return message;
   },
 };

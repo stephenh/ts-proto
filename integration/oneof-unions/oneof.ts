@@ -231,9 +231,7 @@ export const PleaseChoose = {
 
   fromPartial(object: DeepPartial<PleaseChoose>): PleaseChoose {
     const message = { ...basePleaseChoose } as PleaseChoose;
-    {
-      message.name = object.name ?? '';
-    }
+    message.name = object.name ?? '';
     if (object.choice?.$case === 'aNumber' && object.choice?.aNumber !== undefined && object.choice?.aNumber !== null) {
       message.choice = { $case: 'aNumber', aNumber: object.choice.aNumber };
     }
@@ -260,9 +258,7 @@ export const PleaseChoose = {
     if (object.choice?.$case === 'anEnum' && object.choice?.anEnum !== undefined && object.choice?.anEnum !== null) {
       message.choice = { $case: 'anEnum', anEnum: object.choice.anEnum };
     }
-    {
-      message.age = object.age ?? 0;
-    }
+    message.age = object.age ?? 0;
     if (
       object.eitherOr?.$case === 'either' &&
       object.eitherOr?.either !== undefined &&
@@ -280,9 +276,7 @@ export const PleaseChoose = {
     ) {
       message.eitherOr = { $case: 'thirdOption', thirdOption: object.eitherOr.thirdOption };
     }
-    {
-      message.signature = object.signature ?? new Uint8Array();
-    }
+    message.signature = object.signature ?? new Uint8Array();
     return message;
   },
 };
@@ -331,9 +325,7 @@ export const PleaseChoose_Submessage = {
 
   fromPartial(object: DeepPartial<PleaseChoose_Submessage>): PleaseChoose_Submessage {
     const message = { ...basePleaseChoose_Submessage } as PleaseChoose_Submessage;
-    {
-      message.name = object.name ?? '';
-    }
+    message.name = object.name ?? '';
     return message;
   },
 };
@@ -392,12 +384,8 @@ export const SimpleButOptional = {
 
   fromPartial(object: DeepPartial<SimpleButOptional>): SimpleButOptional {
     const message = { ...baseSimpleButOptional } as SimpleButOptional;
-    {
-      message.name = object.name ?? undefined;
-    }
-    {
-      message.age = object.age ?? undefined;
-    }
+    message.name = object.name ?? undefined;
+    message.age = object.age ?? undefined;
     return message;
   },
 };

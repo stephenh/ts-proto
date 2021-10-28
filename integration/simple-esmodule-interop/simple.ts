@@ -82,12 +82,8 @@ export const Simple = {
 
   fromPartial(object: DeepPartial<Simple>): Simple {
     const message = { ...baseSimple } as Simple;
-    {
-      message.name = object.name ?? '';
-    }
-    {
-      message.age = object.age ?? 0;
-    }
+    message.name = object.name ?? '';
+    message.age = object.age ?? 0;
     return message;
   },
 };
@@ -283,42 +279,18 @@ export const Numbers = {
 
   fromPartial(object: DeepPartial<Numbers>): Numbers {
     const message = { ...baseNumbers } as Numbers;
-    {
-      message.double = object.double ?? 0;
-    }
-    {
-      message.float = object.float ?? 0;
-    }
-    {
-      message.int32 = object.int32 ?? 0;
-    }
-    {
-      message.int64 = object.int64 ?? 0;
-    }
-    {
-      message.uint32 = object.uint32 ?? 0;
-    }
-    {
-      message.uint64 = object.uint64 ?? 0;
-    }
-    {
-      message.sint32 = object.sint32 ?? 0;
-    }
-    {
-      message.sint64 = object.sint64 ?? 0;
-    }
-    {
-      message.fixed32 = object.fixed32 ?? 0;
-    }
-    {
-      message.fixed64 = object.fixed64 ?? 0;
-    }
-    {
-      message.sfixed32 = object.sfixed32 ?? 0;
-    }
-    {
-      message.sfixed64 = object.sfixed64 ?? 0;
-    }
+    message.double = object.double ?? 0;
+    message.float = object.float ?? 0;
+    message.int32 = object.int32 ?? 0;
+    message.int64 = object.int64 ?? 0;
+    message.uint32 = object.uint32 ?? 0;
+    message.uint64 = object.uint64 ?? 0;
+    message.sint32 = object.sint32 ?? 0;
+    message.sint64 = object.sint64 ?? 0;
+    message.fixed32 = object.fixed32 ?? 0;
+    message.fixed64 = object.fixed64 ?? 0;
+    message.sfixed32 = object.sfixed32 ?? 0;
+    message.sfixed64 = object.sfixed64 ?? 0;
     return message;
   },
 };

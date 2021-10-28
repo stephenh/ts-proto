@@ -54,9 +54,7 @@ export const TestMessage = {
 
   fromPartial(object: DeepPartial<TestMessage>): TestMessage {
     const message = { ...baseTestMessage } as TestMessage;
-    {
-      message.value = object.value ?? '';
-    }
+    message.value = object.value ?? '';
     return message;
   },
 };

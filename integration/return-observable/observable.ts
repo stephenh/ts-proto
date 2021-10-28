@@ -59,9 +59,7 @@ export const ProduceRequest = {
 
   fromPartial(object: DeepPartial<ProduceRequest>): ProduceRequest {
     const message = { ...baseProduceRequest } as ProduceRequest;
-    {
-      message.ingredients = object.ingredients ?? '';
-    }
+    message.ingredients = object.ingredients ?? '';
     return message;
   },
 };
@@ -112,9 +110,7 @@ export const ProduceReply = {
 
   fromPartial(object: DeepPartial<ProduceReply>): ProduceReply {
     const message = { ...baseProduceReply } as ProduceReply;
-    {
-      message.result = object.result ?? '';
-    }
+    message.result = object.result ?? '';
     return message;
   },
 };

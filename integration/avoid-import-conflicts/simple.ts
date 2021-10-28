@@ -117,9 +117,7 @@ export const Simple = {
 
   fromPartial(object: DeepPartial<Simple>): Simple {
     const message = { ...baseSimple } as Simple;
-    {
-      message.name = object.name ?? '';
-    }
+    message.name = object.name ?? '';
     if (object.otherSimple !== undefined && object.otherSimple !== null) {
       message.otherSimple = Simple2.fromPartial(object.otherSimple);
     } else {
@@ -187,12 +185,8 @@ export const SimpleEnums = {
 
   fromPartial(object: DeepPartial<SimpleEnums>): SimpleEnums {
     const message = { ...baseSimpleEnums } as SimpleEnums;
-    {
-      message.localEnum = object.localEnum ?? 0;
-    }
-    {
-      message.importEnum = object.importEnum ?? 0;
-    }
+    message.localEnum = object.localEnum ?? 0;
+    message.importEnum = object.importEnum ?? 0;
     return message;
   },
 };

@@ -54,9 +54,7 @@ export const SimpleMessage = {
 
   fromPartial(object: DeepPartial<SimpleMessage>): SimpleMessage {
     const message = { ...baseSimpleMessage } as SimpleMessage;
-    {
-      message.numberField = object.numberField ?? 0;
-    }
+    message.numberField = object.numberField ?? 0;
     return message;
   },
 };

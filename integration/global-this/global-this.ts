@@ -58,9 +58,7 @@ export const Object = {
 
   fromPartial(object: DeepPartial<Object>): Object {
     const message = { ...baseObject } as Object;
-    {
-      message.name = object.name ?? '';
-    }
+    message.name = object.name ?? '';
     return message;
   },
 };
@@ -111,9 +109,7 @@ export const Error = {
 
   fromPartial(object: DeepPartial<Error>): Error {
     const message = { ...baseError } as Error;
-    {
-      message.name = object.name ?? '';
-    }
+    message.name = object.name ?? '';
     return message;
   },
 };

@@ -66,9 +66,7 @@ export const Foo = {
 
   fromPartial(object: DeepPartial<Foo>): Foo {
     const message = { ...baseFoo } as Foo;
-    {
-      message.name = object.name ?? '';
-    }
+    message.name = object.name ?? '';
     if (object.bar !== undefined && object.bar !== null) {
       message.bar = Bar.fromPartial(object.bar);
     } else {

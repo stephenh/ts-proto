@@ -105,12 +105,8 @@ export const Simple = {
 
   fromPartial(object: DeepPartial<Simple>): Simple {
     const message = { ...baseSimple } as Simple;
-    {
-      message.name = object.name ?? '';
-    }
-    {
-      message.age = object.age ?? 0;
-    }
+    message.name = object.name ?? '';
+    message.age = object.age ?? 0;
     return message;
   },
 };

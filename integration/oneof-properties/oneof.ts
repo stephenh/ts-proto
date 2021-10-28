@@ -239,41 +239,21 @@ export const PleaseChoose = {
 
   fromPartial(object: DeepPartial<PleaseChoose>): PleaseChoose {
     const message = { ...basePleaseChoose } as PleaseChoose;
-    {
-      message.name = object.name ?? '';
-    }
-    {
-      message.aNumber = object.aNumber ?? undefined;
-    }
-    {
-      message.aString = object.aString ?? undefined;
-    }
+    message.name = object.name ?? '';
+    message.aNumber = object.aNumber ?? undefined;
+    message.aString = object.aString ?? undefined;
     if (object.aMessage !== undefined && object.aMessage !== null) {
       message.aMessage = PleaseChoose_Submessage.fromPartial(object.aMessage);
     } else {
       message.aMessage = undefined;
     }
-    {
-      message.aBool = object.aBool ?? undefined;
-    }
-    {
-      message.bunchaBytes = object.bunchaBytes ?? undefined;
-    }
-    {
-      message.anEnum = object.anEnum ?? undefined;
-    }
-    {
-      message.age = object.age ?? 0;
-    }
-    {
-      message.either = object.either ?? undefined;
-    }
-    {
-      message.or = object.or ?? undefined;
-    }
-    {
-      message.thirdOption = object.thirdOption ?? undefined;
-    }
+    message.aBool = object.aBool ?? undefined;
+    message.bunchaBytes = object.bunchaBytes ?? undefined;
+    message.anEnum = object.anEnum ?? undefined;
+    message.age = object.age ?? 0;
+    message.either = object.either ?? undefined;
+    message.or = object.or ?? undefined;
+    message.thirdOption = object.thirdOption ?? undefined;
     return message;
   },
 };
@@ -324,9 +304,7 @@ export const PleaseChoose_Submessage = {
 
   fromPartial(object: DeepPartial<PleaseChoose_Submessage>): PleaseChoose_Submessage {
     const message = { ...basePleaseChoose_Submessage } as PleaseChoose_Submessage;
-    {
-      message.name = object.name ?? '';
-    }
+    message.name = object.name ?? '';
     return message;
   },
 };

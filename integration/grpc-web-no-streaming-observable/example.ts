@@ -128,12 +128,8 @@ export const DashFlash = {
 
   fromPartial(object: DeepPartial<DashFlash>): DashFlash {
     const message = { ...baseDashFlash } as DashFlash;
-    {
-      message.msg = object.msg ?? '';
-    }
-    {
-      message.type = object.type ?? 0;
-    }
+    message.msg = object.msg ?? '';
+    message.type = object.type ?? 0;
     return message;
   },
 };
@@ -215,9 +211,7 @@ export const DashUserSettingsState = {
 
   fromPartial(object: DeepPartial<DashUserSettingsState>): DashUserSettingsState {
     const message = { ...baseDashUserSettingsState } as DashUserSettingsState;
-    {
-      message.email = object.email ?? '';
-    }
+    message.email = object.email ?? '';
     if (object.urls !== undefined && object.urls !== null) {
       message.urls = DashUserSettingsState_URLs.fromPartial(object.urls);
     } else {
@@ -291,12 +285,8 @@ export const DashUserSettingsState_URLs = {
 
   fromPartial(object: DeepPartial<DashUserSettingsState_URLs>): DashUserSettingsState_URLs {
     const message = { ...baseDashUserSettingsState_URLs } as DashUserSettingsState_URLs;
-    {
-      message.connectGoogle = object.connectGoogle ?? '';
-    }
-    {
-      message.connectGithub = object.connectGithub ?? '';
-    }
+    message.connectGoogle = object.connectGoogle ?? '';
+    message.connectGithub = object.connectGithub ?? '';
     return message;
   },
 };

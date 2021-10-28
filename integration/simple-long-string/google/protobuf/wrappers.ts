@@ -140,9 +140,7 @@ export const DoubleValue = {
 
   fromPartial(object: DeepPartial<DoubleValue>): DoubleValue {
     const message = { ...baseDoubleValue } as DoubleValue;
-    {
-      message.value = object.value ?? 0;
-    }
+    message.value = object.value ?? 0;
     return message;
   },
 };
@@ -193,9 +191,7 @@ export const FloatValue = {
 
   fromPartial(object: DeepPartial<FloatValue>): FloatValue {
     const message = { ...baseFloatValue } as FloatValue;
-    {
-      message.value = object.value ?? 0;
-    }
+    message.value = object.value ?? 0;
     return message;
   },
 };
@@ -246,9 +242,7 @@ export const Int64Value = {
 
   fromPartial(object: DeepPartial<Int64Value>): Int64Value {
     const message = { ...baseInt64Value } as Int64Value;
-    {
-      message.value = object.value ?? '0';
-    }
+    message.value = object.value ?? '0';
     return message;
   },
 };
@@ -299,9 +293,7 @@ export const UInt64Value = {
 
   fromPartial(object: DeepPartial<UInt64Value>): UInt64Value {
     const message = { ...baseUInt64Value } as UInt64Value;
-    {
-      message.value = object.value ?? '0';
-    }
+    message.value = object.value ?? '0';
     return message;
   },
 };
@@ -352,9 +344,7 @@ export const Int32Value = {
 
   fromPartial(object: DeepPartial<Int32Value>): Int32Value {
     const message = { ...baseInt32Value } as Int32Value;
-    {
-      message.value = object.value ?? 0;
-    }
+    message.value = object.value ?? 0;
     return message;
   },
 };
@@ -405,9 +395,7 @@ export const UInt32Value = {
 
   fromPartial(object: DeepPartial<UInt32Value>): UInt32Value {
     const message = { ...baseUInt32Value } as UInt32Value;
-    {
-      message.value = object.value ?? 0;
-    }
+    message.value = object.value ?? 0;
     return message;
   },
 };
@@ -458,9 +446,7 @@ export const BoolValue = {
 
   fromPartial(object: DeepPartial<BoolValue>): BoolValue {
     const message = { ...baseBoolValue } as BoolValue;
-    {
-      message.value = object.value ?? false;
-    }
+    message.value = object.value ?? false;
     return message;
   },
 };
@@ -511,9 +497,7 @@ export const StringValue = {
 
   fromPartial(object: DeepPartial<StringValue>): StringValue {
     const message = { ...baseStringValue } as StringValue;
-    {
-      message.value = object.value ?? '';
-    }
+    message.value = object.value ?? '';
     return message;
   },
 };
@@ -565,9 +549,7 @@ export const BytesValue = {
 
   fromPartial(object: DeepPartial<BytesValue>): BytesValue {
     const message = { ...baseBytesValue } as BytesValue;
-    {
-      message.value = object.value ?? new Uint8Array();
-    }
+    message.value = object.value ?? new Uint8Array();
     return message;
   },
 };

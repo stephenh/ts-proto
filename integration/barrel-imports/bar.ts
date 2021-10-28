@@ -65,12 +65,8 @@ export const Bar = {
 
   fromPartial(object: DeepPartial<Bar>): Bar {
     const message = { ...baseBar } as Bar;
-    {
-      message.name = object.name ?? '';
-    }
-    {
-      message.age = object.age ?? 0;
-    }
+    message.name = object.name ?? '';
+    message.age = object.age ?? 0;
     return message;
   },
 };

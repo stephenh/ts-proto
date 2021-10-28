@@ -77,12 +77,8 @@ export const NumPair = {
 
   fromPartial(object: DeepPartial<NumPair>): NumPair {
     const message = { ...baseNumPair } as NumPair;
-    {
-      message.num1 = object.num1 ?? 0;
-    }
-    {
-      message.num2 = object.num2 ?? 0;
-    }
+    message.num1 = object.num1 ?? 0;
+    message.num2 = object.num2 ?? 0;
     return message;
   },
 };
@@ -133,9 +129,7 @@ export const NumSingle = {
 
   fromPartial(object: DeepPartial<NumSingle>): NumSingle {
     const message = { ...baseNumSingle } as NumSingle;
-    {
-      message.num = object.num ?? 0;
-    }
+    message.num = object.num ?? 0;
     return message;
   },
 };

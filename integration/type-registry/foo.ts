@@ -64,9 +64,7 @@ export const Foo = {
 
   fromPartial(object: DeepPartial<Foo>): Foo {
     const message = { ...baseFoo } as Foo;
-    {
-      message.timestamp = object.timestamp ?? undefined;
-    }
+    message.timestamp = object.timestamp ?? undefined;
     return message;
   },
 };
@@ -121,9 +119,7 @@ export const Foo2 = {
 
   fromPartial(object: DeepPartial<Foo2>): Foo2 {
     const message = { ...baseFoo2 } as Foo2;
-    {
-      message.timestamp = object.timestamp ?? undefined;
-    }
+    message.timestamp = object.timestamp ?? undefined;
     return message;
   },
 };

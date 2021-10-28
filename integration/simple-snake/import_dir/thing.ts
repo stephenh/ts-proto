@@ -55,9 +55,7 @@ export const ImportedThing = {
 
   fromPartial(object: DeepPartial<ImportedThing>): ImportedThing {
     const message = { ...baseImportedThing } as ImportedThing;
-    {
-      message.created_at = object.created_at ?? undefined;
-    }
+    message.created_at = object.created_at ?? undefined;
     return message;
   },
 };
