@@ -539,7 +539,8 @@ export function detectMapType(
 
 export function requestType(ctx: Context, methodDesc: MethodDescriptorProto): Code {
   let typeName = messageToTypeName(ctx, methodDesc.inputType);
-  if (methodDesc.clientStreaming) {
+  const { options } = ctx;
+  if (options.nestJs && methodDesc.clientStreaming) {
     return code`${imp('Observable@rxjs')}<${typeName}>`;
   }
   return typeName;
