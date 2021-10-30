@@ -1,18 +1,15 @@
 /* eslint-disable */
 import { util, configure, Writer, Reader } from 'protobufjs/minimal';
 import * as Long from 'long';
-import {
-  makeGenericClientConstructor,
-  ChannelCredentials,
+import { makeGenericClientConstructor, ChannelCredentials, Client, Metadata } from '@grpc/grpc-js';
+import type {
   ChannelOptions,
   UntypedServiceImplementation,
   handleUnaryCall,
   handleServerStreamingCall,
   handleClientStreamingCall,
   handleBidiStreamingCall,
-  Client,
   ClientUnaryCall,
-  Metadata,
   CallOptions,
   ClientReadableStream,
   ClientWritableStream,

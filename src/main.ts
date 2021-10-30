@@ -63,6 +63,8 @@ import { ConditionalOutput } from 'ts-poet/build/ConditionalOutput';
 import { generateGrpcJsService } from './generate-grpc-js';
 import { generateGenericServiceDefinition } from './generate-generic-service-definition';
 
+const Timestamp = imp('t:Timestamp@./google/protobuf/timestamp');
+
 export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [string, Code] {
   const { options, utils } = ctx;
 
@@ -417,8 +419,6 @@ function makeDeepPartial(options: Options, longs: ReturnType<typeof makeLongUtil
 }
 
 function makeTimestampMethods(options: Options, longs: ReturnType<typeof makeLongUtils>) {
-  const Timestamp = imp('Timestamp@./google/protobuf/timestamp');
-
   let seconds: string | Code = 'date.getTime() / 1_000';
   let toNumberCode = 't.seconds';
   if (options.forceLong === LongOption.LONG) {
@@ -1136,7 +1136,6 @@ function generateToJson(ctx: Context, fullName: string, messageDesc: DescriptorP
 function generateFromPartial(ctx: Context, fullName: string, messageDesc: DescriptorProto): Code {
   const { options, utils, typeMap } = ctx;
   const chunks: Code[] = [];
-  const Timestamp = imp('Timestamp@./google/protobuf/timestamp');
 
   // create the basic function declaration
   chunks.push(code`
