@@ -72,7 +72,12 @@ export function generateService(
       params.push(code`...rest: any`);
     }
 
-    chunks.push(code`${methodDesc.formattedName}(${joinCode(params, { on: ',' })}): ${responsePromiseOrObservable(ctx, methodDesc)};`);
+    chunks.push(
+      code`${methodDesc.formattedName}(${joinCode(params, { on: ',' })}): ${responsePromiseOrObservable(
+        ctx,
+        methodDesc
+      )};`
+    );
 
     // If this is a batch method, auto-generate the singular version of it
     if (options.context) {
@@ -320,7 +325,7 @@ export function generateRpcType(ctx: Context, hasStreamingMethods: boolean): Cod
         method: string,
         data: ${method[1]}
       ): ${method[2]};`);
-  })
+  });
   chunks.push(code`    }`);
   return joinCode(chunks, { on: '\n' });
 }

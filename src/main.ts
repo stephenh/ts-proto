@@ -210,7 +210,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
       if (methodDesc.serverStreaming || methodDesc.clientStreaming) {
         hasStreamingMethods = true;
       }
-    })
+    });
   });
 
   if (options.outputServices === ServiceOption.DEFAULT && options.outputClientImpl && fileDesc.service.length > 0) {

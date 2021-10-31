@@ -566,7 +566,7 @@ export function responsePromiseOrObservable(ctx: Context, methodDesc: MethodDesc
   if (options.returnObservable || methodDesc.serverStreaming) {
     return responseObservable(ctx, methodDesc);
   }
-  return responsePromise(ctx, methodDesc)
+  return responsePromise(ctx, methodDesc);
 }
 
 export interface BatchMethod {
