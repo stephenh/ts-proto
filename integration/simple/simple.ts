@@ -524,11 +524,6 @@ export const Simple = {
 
   fromPartial(object: DeepPartial<Simple>): Simple {
     const message = { ...baseSimple } as Simple;
-    message.grandChildren = [];
-    message.coins = [];
-    message.snacks = [];
-    message.oldStates = [];
-    message.blobs = [];
     if (object.name !== undefined && object.name !== null) {
       message.name = object.name;
     } else {
@@ -554,21 +549,25 @@ export const Simple = {
     } else {
       message.state = 0;
     }
+    message.grandChildren = [];
     if (object.grandChildren !== undefined && object.grandChildren !== null) {
       for (const e of object.grandChildren) {
         message.grandChildren.push(Child.fromPartial(e));
       }
     }
+    message.coins = [];
     if (object.coins !== undefined && object.coins !== null) {
       for (const e of object.coins) {
         message.coins.push(e);
       }
     }
+    message.snacks = [];
     if (object.snacks !== undefined && object.snacks !== null) {
       for (const e of object.snacks) {
         message.snacks.push(e);
       }
     }
+    message.oldStates = [];
     if (object.oldStates !== undefined && object.oldStates !== null) {
       for (const e of object.oldStates) {
         message.oldStates.push(e);
@@ -579,6 +578,7 @@ export const Simple = {
     } else {
       message.thing = undefined;
     }
+    message.blobs = [];
     if (object.blobs !== undefined && object.blobs !== null) {
       for (const e of object.blobs) {
         message.blobs.push(e);
@@ -1078,8 +1078,6 @@ export const SimpleWithWrappers = {
 
   fromPartial(object: DeepPartial<SimpleWithWrappers>): SimpleWithWrappers {
     const message = { ...baseSimpleWithWrappers } as SimpleWithWrappers;
-    message.coins = [];
-    message.snacks = [];
     if (object.name !== undefined && object.name !== null) {
       message.name = object.name;
     } else {
@@ -1095,11 +1093,13 @@ export const SimpleWithWrappers = {
     } else {
       message.enabled = undefined;
     }
+    message.coins = [];
     if (object.coins !== undefined && object.coins !== null) {
       for (const e of object.coins) {
         message.coins.push(e);
       }
     }
+    message.snacks = [];
     if (object.snacks !== undefined && object.snacks !== null) {
       for (const e of object.snacks) {
         message.snacks.push(e);
@@ -1338,11 +1338,6 @@ export const SimpleWithMap = {
   fromPartial(object: DeepPartial<SimpleWithMap>): SimpleWithMap {
     const message = { ...baseSimpleWithMap } as SimpleWithMap;
     message.entitiesById = {};
-    message.nameLookup = {};
-    message.intLookup = {};
-    message.mapOfTimestamps = {};
-    message.mapOfBytes = {};
-    message.mapOfStringValues = {};
     if (object.entitiesById !== undefined && object.entitiesById !== null) {
       Object.entries(object.entitiesById).forEach(([key, value]) => {
         if (value !== undefined) {
@@ -1350,6 +1345,7 @@ export const SimpleWithMap = {
         }
       });
     }
+    message.nameLookup = {};
     if (object.nameLookup !== undefined && object.nameLookup !== null) {
       Object.entries(object.nameLookup).forEach(([key, value]) => {
         if (value !== undefined) {
@@ -1357,6 +1353,7 @@ export const SimpleWithMap = {
         }
       });
     }
+    message.intLookup = {};
     if (object.intLookup !== undefined && object.intLookup !== null) {
       Object.entries(object.intLookup).forEach(([key, value]) => {
         if (value !== undefined) {
@@ -1364,6 +1361,7 @@ export const SimpleWithMap = {
         }
       });
     }
+    message.mapOfTimestamps = {};
     if (object.mapOfTimestamps !== undefined && object.mapOfTimestamps !== null) {
       Object.entries(object.mapOfTimestamps).forEach(([key, value]) => {
         if (value !== undefined) {
@@ -1371,6 +1369,7 @@ export const SimpleWithMap = {
         }
       });
     }
+    message.mapOfBytes = {};
     if (object.mapOfBytes !== undefined && object.mapOfBytes !== null) {
       Object.entries(object.mapOfBytes).forEach(([key, value]) => {
         if (value !== undefined) {
@@ -1378,6 +1377,7 @@ export const SimpleWithMap = {
         }
       });
     }
+    message.mapOfStringValues = {};
     if (object.mapOfStringValues !== undefined && object.mapOfStringValues !== null) {
       Object.entries(object.mapOfStringValues).forEach(([key, value]) => {
         if (value !== undefined) {

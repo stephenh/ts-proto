@@ -146,7 +146,6 @@ export const Simple = {
 
   fromPartial(object: DeepPartial<Simple>): Simple {
     const message = { ...baseSimple } as Simple;
-    message.states = [];
     if (object.name !== undefined && object.name !== null) {
       message.name = object.name;
     } else {
@@ -157,6 +156,7 @@ export const Simple = {
     } else {
       message.state = StateEnum.UNKNOWN;
     }
+    message.states = [];
     if (object.states !== undefined && object.states !== null) {
       for (const e of object.states) {
         message.states.push(e);

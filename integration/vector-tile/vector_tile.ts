@@ -417,13 +417,12 @@ export const Tile_Feature = {
 
   fromPartial(object: DeepPartial<Tile_Feature>): Tile_Feature {
     const message = { ...baseTile_Feature } as Tile_Feature;
-    message.tags = [];
-    message.geometry = [];
     if (object.id !== undefined && object.id !== null) {
       message.id = object.id;
     } else {
       message.id = 0;
     }
+    message.tags = [];
     if (object.tags !== undefined && object.tags !== null) {
       for (const e of object.tags) {
         message.tags.push(e);
@@ -434,6 +433,7 @@ export const Tile_Feature = {
     } else {
       message.type = 0;
     }
+    message.geometry = [];
     if (object.geometry !== undefined && object.geometry !== null) {
       for (const e of object.geometry) {
         message.geometry.push(e);
@@ -567,9 +567,6 @@ export const Tile_Layer = {
 
   fromPartial(object: DeepPartial<Tile_Layer>): Tile_Layer {
     const message = { ...baseTile_Layer } as Tile_Layer;
-    message.features = [];
-    message.keys = [];
-    message.values = [];
     if (object.version !== undefined && object.version !== null) {
       message.version = object.version;
     } else {
@@ -580,16 +577,19 @@ export const Tile_Layer = {
     } else {
       message.name = '';
     }
+    message.features = [];
     if (object.features !== undefined && object.features !== null) {
       for (const e of object.features) {
         message.features.push(Tile_Feature.fromPartial(e));
       }
     }
+    message.keys = [];
     if (object.keys !== undefined && object.keys !== null) {
       for (const e of object.keys) {
         message.keys.push(e);
       }
     }
+    message.values = [];
     if (object.values !== undefined && object.values !== null) {
       for (const e of object.values) {
         message.values.push(Tile_Value.fromPartial(e));
