@@ -313,7 +313,11 @@ export function generateRpcType(ctx: Context, hasStreamingMethods: boolean): Cod
     const observable = imp('Observable@rxjs');
     methods.push([code`clientStreamingRequest`, code`${observable}<Uint8Array>`, code`Promise<Uint8Array>`]);
     methods.push([code`serverStreamingRequest`, code`Uint8Array`, code`${observable}<Uint8Array>`]);
-    methods.push([code`bidirectionalStreamingRequest`, code`${observable}<Uint8Array>`, code`${observable}<Uint8Array>`]);
+    methods.push([
+      code`bidirectionalStreamingRequest`,
+      code`${observable}<Uint8Array>`,
+      code`${observable}<Uint8Array>`,
+    ]);
   }
   const chunks: Code[] = [];
   chunks.push(code`    interface Rpc${maybeContext} {`);
