@@ -537,8 +537,12 @@ export function detectMapType(
   return undefined;
 }
 
+export function rawRequestType(ctx: Context, methodDesc: MethodDescriptorProto): Code {
+  return messageToTypeName(ctx, methodDesc.inputType);
+}
+
 export function requestType(ctx: Context, methodDesc: MethodDescriptorProto): Code {
-  let typeName = messageToTypeName(ctx, methodDesc.inputType);
+  let typeName = rawRequestType(ctx, methodDesc);
   if (methodDesc.clientStreaming) {
     return code`${imp('Observable@rxjs')}<${typeName}>`;
   }
@@ -555,6 +559,14 @@ export function responsePromise(ctx: Context, methodDesc: MethodDescriptorProto)
 
 export function responseObservable(ctx: Context, methodDesc: MethodDescriptorProto): Code {
   return code`${imp('Observable@rxjs')}<${responseType(ctx, methodDesc)}>`;
+}
+
+export function responsePromiseOrObservable(ctx: Context, methodDesc: MethodDescriptorProto): Code {
+  const { options } = ctx;
+  if (options.returnObservable || methodDesc.serverStreaming) {
+    return responseObservable(ctx, methodDesc);
+  }
+  return responsePromise(ctx, methodDesc);
 }
 
 export interface BatchMethod {

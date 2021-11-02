@@ -1,6 +1,6 @@
 /* eslint-disable */
 import { FileDescriptorProto } from 'ts-proto-descriptors';
-import { util, configure, Reader, Writer } from 'protobufjs/minimal';
+import { util, configure, Writer, Reader } from 'protobufjs/minimal';
 import * as Long from 'long';
 import { protoMetadata as protoMetadata1, DateMessage } from './google/type/date';
 import { protoMetadata as protoMetadata2, StringValue, Int32Value, BoolValue } from './google/protobuf/wrappers';

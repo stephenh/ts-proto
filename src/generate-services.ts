@@ -4,8 +4,8 @@ import {
   BatchMethod,
   detectBatchMethod,
   requestType,
-  responseObservable,
-  responsePromise,
+  rawRequestType,
+  responsePromiseOrObservable,
   responseType,
 } from './types';
 import { assertInstanceOf, FormattedMethodDescriptor, maybeAddComment, maybePrefixPackage, singular } from './utils';
@@ -72,15 +72,12 @@ export function generateService(
       params.push(code`...rest: any`);
     }
 
-    // Return observable for interface only configuration, passing returnObservable=true and methodDesc.serverStreaming=true
-    let returnType: Code;
-    if (options.returnObservable || methodDesc.serverStreaming) {
-      returnType = responseObservable(ctx, methodDesc);
-    } else {
-      returnType = responsePromise(ctx, methodDesc);
-    }
-
-    chunks.push(code`${methodDesc.formattedName}(${joinCode(params, { on: ',' })}): ${returnType};`);
+    chunks.push(
+      code`${methodDesc.formattedName}(${joinCode(params, { on: ',' })}): ${responsePromiseOrObservable(
+        ctx,
+        methodDesc
+      )};`
+    );
 
     // If this is a batch method, auto-generate the singular version of it
     if (options.context) {
@@ -108,24 +105,51 @@ function generateRegularRpcMethod(
   assertInstanceOf(methodDesc, FormattedMethodDescriptor);
   const { options } = ctx;
   const Reader = imp('Reader@protobufjs/minimal');
+  const rawInputType = rawRequestType(ctx, methodDesc);
   const inputType = requestType(ctx, methodDesc);
   const outputType = responseType(ctx, methodDesc);
 
   const params = [...(options.context ? [code`ctx: Context`] : []), code`request: ${inputType}`];
   const maybeCtx = options.context ? 'ctx,' : '';
 
+  let encode = code`${rawInputType}.encode(request).finish()`;
+  let decode = code`data => ${outputType}.decode(new ${Reader}(data))`;
+
+  if (methodDesc.clientStreaming) {
+    encode = code`request.pipe(${imp('map@rxjs/operators')}(request => ${encode}))`;
+  }
+  let returnVariable: string;
+  if (options.returnObservable || methodDesc.serverStreaming) {
+    returnVariable = 'result';
+    decode = code`result.pipe(${imp('map@rxjs/operators')}(${decode}))`;
+  } else {
+    returnVariable = 'promise';
+    decode = code`promise.then(${decode})`;
+  }
+
+  let rpcMethod: string;
+  if (methodDesc.clientStreaming && methodDesc.serverStreaming) {
+    rpcMethod = 'bidirectionalStreamingRequest';
+  } else if (methodDesc.serverStreaming) {
+    rpcMethod = 'serverStreamingRequest';
+  } else if (methodDesc.clientStreaming) {
+    rpcMethod = 'clientStreamingRequest';
+  } else {
+    rpcMethod = 'request';
+  }
+
   return code`
     ${methodDesc.formattedName}(
       ${joinCode(params, { on: ',' })}
-    ): ${responsePromise(ctx, methodDesc)} {
-      const data = ${inputType}.encode(request).finish();
-      const promise = this.rpc.request(
+    ): ${responsePromiseOrObservable(ctx, methodDesc)} {
+      const data = ${encode};
+      const ${returnVariable} = this.rpc.${rpcMethod}(
         ${maybeCtx}
         "${maybePrefixPackage(fileDesc, serviceDesc.name)}",
         "${methodDesc.name}",
         data
       );
-      return promise.then(data => ${outputType}.decode(new ${Reader}(data)));
+      return ${decode};
     }
   `;
 }
@@ -273,24 +297,41 @@ function generateCachingRpcMethod(
  *
  * This lets clients pass in their own request-promise-ish client.
  *
+ * This also requires clientStreamingRequest, serverStreamingRequest and
+ * bidirectionalStreamingRequest methods if any of the RPCs is streaming.
+ *
  * We don't export this because if a project uses multiple `*.proto` files,
  * we don't want our the barrel imports in `index.ts` to have multiple `Rpc`
  * types.
  */
-export function generateRpcType(ctx: Context): Code {
+export function generateRpcType(ctx: Context, hasStreamingMethods: boolean): Code {
   const { options } = ctx;
   const maybeContext = options.context ? '<Context>' : '';
   const maybeContextParam = options.context ? 'ctx: Context,' : '';
-  return code`
-    interface Rpc${maybeContext} {
-      request(
+  const methods = [[code`request`, code`Uint8Array`, code`Promise<Uint8Array>`]];
+  if (hasStreamingMethods) {
+    const observable = imp('Observable@rxjs');
+    methods.push([code`clientStreamingRequest`, code`${observable}<Uint8Array>`, code`Promise<Uint8Array>`]);
+    methods.push([code`serverStreamingRequest`, code`Uint8Array`, code`${observable}<Uint8Array>`]);
+    methods.push([
+      code`bidirectionalStreamingRequest`,
+      code`${observable}<Uint8Array>`,
+      code`${observable}<Uint8Array>`,
+    ]);
+  }
+  const chunks: Code[] = [];
+  chunks.push(code`    interface Rpc${maybeContext} {`);
+  methods.forEach((method) => {
+    chunks.push(code`
+      ${method[0]}(
         ${maybeContextParam}
         service: string,
         method: string,
-        data: Uint8Array
-      ): Promise<Uint8Array>;
-    }
-  `;
+        data: ${method[1]}
+      ): ${method[2]};`);
+  });
+  chunks.push(code`    }`);
+  return joinCode(chunks, { on: '\n' });
 }
 
 export function generateDataLoadersType(): Code {
