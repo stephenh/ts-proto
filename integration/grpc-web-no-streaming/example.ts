@@ -126,16 +126,8 @@ export const DashFlash = {
 
   fromPartial(object: DeepPartial<DashFlash>): DashFlash {
     const message = { ...baseDashFlash } as DashFlash;
-    if (object.msg !== undefined && object.msg !== null) {
-      message.msg = object.msg;
-    } else {
-      message.msg = '';
-    }
-    if (object.type !== undefined && object.type !== null) {
-      message.type = object.type;
-    } else {
-      message.type = 0;
-    }
+    message.msg = object.msg ?? '';
+    message.type = object.type ?? 0;
     return message;
   },
 };
@@ -217,17 +209,13 @@ export const DashUserSettingsState = {
 
   fromPartial(object: DeepPartial<DashUserSettingsState>): DashUserSettingsState {
     const message = { ...baseDashUserSettingsState } as DashUserSettingsState;
-    message.flashes = [];
-    if (object.email !== undefined && object.email !== null) {
-      message.email = object.email;
-    } else {
-      message.email = '';
-    }
+    message.email = object.email ?? '';
     if (object.urls !== undefined && object.urls !== null) {
       message.urls = DashUserSettingsState_URLs.fromPartial(object.urls);
     } else {
       message.urls = undefined;
     }
+    message.flashes = [];
     if (object.flashes !== undefined && object.flashes !== null) {
       for (const e of object.flashes) {
         message.flashes.push(DashFlash.fromPartial(e));
@@ -295,16 +283,8 @@ export const DashUserSettingsState_URLs = {
 
   fromPartial(object: DeepPartial<DashUserSettingsState_URLs>): DashUserSettingsState_URLs {
     const message = { ...baseDashUserSettingsState_URLs } as DashUserSettingsState_URLs;
-    if (object.connectGoogle !== undefined && object.connectGoogle !== null) {
-      message.connectGoogle = object.connectGoogle;
-    } else {
-      message.connectGoogle = '';
-    }
-    if (object.connectGithub !== undefined && object.connectGithub !== null) {
-      message.connectGithub = object.connectGithub;
-    } else {
-      message.connectGithub = '';
-    }
+    message.connectGoogle = object.connectGoogle ?? '';
+    message.connectGithub = object.connectGithub ?? '';
     return message;
   },
 };

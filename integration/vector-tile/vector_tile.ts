@@ -266,41 +266,13 @@ export const Tile_Value = {
 
   fromPartial(object: DeepPartial<Tile_Value>): Tile_Value {
     const message = { ...baseTile_Value } as Tile_Value;
-    if (object.stringValue !== undefined && object.stringValue !== null) {
-      message.stringValue = object.stringValue;
-    } else {
-      message.stringValue = '';
-    }
-    if (object.floatValue !== undefined && object.floatValue !== null) {
-      message.floatValue = object.floatValue;
-    } else {
-      message.floatValue = 0;
-    }
-    if (object.doubleValue !== undefined && object.doubleValue !== null) {
-      message.doubleValue = object.doubleValue;
-    } else {
-      message.doubleValue = 0;
-    }
-    if (object.intValue !== undefined && object.intValue !== null) {
-      message.intValue = object.intValue;
-    } else {
-      message.intValue = 0;
-    }
-    if (object.uintValue !== undefined && object.uintValue !== null) {
-      message.uintValue = object.uintValue;
-    } else {
-      message.uintValue = 0;
-    }
-    if (object.sintValue !== undefined && object.sintValue !== null) {
-      message.sintValue = object.sintValue;
-    } else {
-      message.sintValue = 0;
-    }
-    if (object.boolValue !== undefined && object.boolValue !== null) {
-      message.boolValue = object.boolValue;
-    } else {
-      message.boolValue = false;
-    }
+    message.stringValue = object.stringValue ?? '';
+    message.floatValue = object.floatValue ?? 0;
+    message.doubleValue = object.doubleValue ?? 0;
+    message.intValue = object.intValue ?? 0;
+    message.uintValue = object.uintValue ?? 0;
+    message.sintValue = object.sintValue ?? 0;
+    message.boolValue = object.boolValue ?? false;
     return message;
   },
 };
@@ -417,23 +389,15 @@ export const Tile_Feature = {
 
   fromPartial(object: DeepPartial<Tile_Feature>): Tile_Feature {
     const message = { ...baseTile_Feature } as Tile_Feature;
+    message.id = object.id ?? 0;
     message.tags = [];
-    message.geometry = [];
-    if (object.id !== undefined && object.id !== null) {
-      message.id = object.id;
-    } else {
-      message.id = 0;
-    }
     if (object.tags !== undefined && object.tags !== null) {
       for (const e of object.tags) {
         message.tags.push(e);
       }
     }
-    if (object.type !== undefined && object.type !== null) {
-      message.type = object.type;
-    } else {
-      message.type = 0;
-    }
+    message.type = object.type ?? 0;
+    message.geometry = [];
     if (object.geometry !== undefined && object.geometry !== null) {
       for (const e of object.geometry) {
         message.geometry.push(e);
@@ -567,39 +531,27 @@ export const Tile_Layer = {
 
   fromPartial(object: DeepPartial<Tile_Layer>): Tile_Layer {
     const message = { ...baseTile_Layer } as Tile_Layer;
+    message.version = object.version ?? 0;
+    message.name = object.name ?? '';
     message.features = [];
-    message.keys = [];
-    message.values = [];
-    if (object.version !== undefined && object.version !== null) {
-      message.version = object.version;
-    } else {
-      message.version = 0;
-    }
-    if (object.name !== undefined && object.name !== null) {
-      message.name = object.name;
-    } else {
-      message.name = '';
-    }
     if (object.features !== undefined && object.features !== null) {
       for (const e of object.features) {
         message.features.push(Tile_Feature.fromPartial(e));
       }
     }
+    message.keys = [];
     if (object.keys !== undefined && object.keys !== null) {
       for (const e of object.keys) {
         message.keys.push(e);
       }
     }
+    message.values = [];
     if (object.values !== undefined && object.values !== null) {
       for (const e of object.values) {
         message.values.push(Tile_Value.fromPartial(e));
       }
     }
-    if (object.extent !== undefined && object.extent !== null) {
-      message.extent = object.extent;
-    } else {
-      message.extent = 0;
-    }
+    message.extent = object.extent ?? 0;
     return message;
   },
 };

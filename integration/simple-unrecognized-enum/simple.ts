@@ -422,50 +422,34 @@ export const Simple = {
 
   fromPartial(object: DeepPartial<Simple>): Simple {
     const message = { ...baseSimple } as Simple;
-    message.grandChildren = [];
-    message.coins = [];
-    message.snacks = [];
-    message.oldStates = [];
-    if (object.name !== undefined && object.name !== null) {
-      message.name = object.name;
-    } else {
-      message.name = '';
-    }
-    if (object.age !== undefined && object.age !== null) {
-      message.age = object.age;
-    } else {
-      message.age = 0;
-    }
-    if (object.createdAt !== undefined && object.createdAt !== null) {
-      message.createdAt = object.createdAt;
-    } else {
-      message.createdAt = undefined;
-    }
+    message.name = object.name ?? '';
+    message.age = object.age ?? 0;
+    message.createdAt = object.createdAt ?? undefined;
     if (object.child !== undefined && object.child !== null) {
       message.child = Child.fromPartial(object.child);
     } else {
       message.child = undefined;
     }
-    if (object.state !== undefined && object.state !== null) {
-      message.state = object.state;
-    } else {
-      message.state = 0;
-    }
+    message.state = object.state ?? 0;
+    message.grandChildren = [];
     if (object.grandChildren !== undefined && object.grandChildren !== null) {
       for (const e of object.grandChildren) {
         message.grandChildren.push(Child.fromPartial(e));
       }
     }
+    message.coins = [];
     if (object.coins !== undefined && object.coins !== null) {
       for (const e of object.coins) {
         message.coins.push(e);
       }
     }
+    message.snacks = [];
     if (object.snacks !== undefined && object.snacks !== null) {
       for (const e of object.snacks) {
         message.snacks.push(e);
       }
     }
+    message.oldStates = [];
     if (object.oldStates !== undefined && object.oldStates !== null) {
       for (const e of object.oldStates) {
         message.oldStates.push(e);
@@ -538,16 +522,8 @@ export const Child = {
 
   fromPartial(object: DeepPartial<Child>): Child {
     const message = { ...baseChild } as Child;
-    if (object.name !== undefined && object.name !== null) {
-      message.name = object.name;
-    } else {
-      message.name = '';
-    }
-    if (object.type !== undefined && object.type !== null) {
-      message.type = object.type;
-    } else {
-      message.type = 0;
-    }
+    message.name = object.name ?? '';
+    message.type = object.type ?? 0;
     return message;
   },
 };
@@ -623,21 +599,13 @@ export const Nested = {
 
   fromPartial(object: DeepPartial<Nested>): Nested {
     const message = { ...baseNested } as Nested;
-    if (object.name !== undefined && object.name !== null) {
-      message.name = object.name;
-    } else {
-      message.name = '';
-    }
+    message.name = object.name ?? '';
     if (object.message !== undefined && object.message !== null) {
       message.message = Nested_InnerMessage.fromPartial(object.message);
     } else {
       message.message = undefined;
     }
-    if (object.state !== undefined && object.state !== null) {
-      message.state = object.state;
-    } else {
-      message.state = 0;
-    }
+    message.state = object.state ?? 0;
     return message;
   },
 };
@@ -701,11 +669,7 @@ export const Nested_InnerMessage = {
 
   fromPartial(object: DeepPartial<Nested_InnerMessage>): Nested_InnerMessage {
     const message = { ...baseNested_InnerMessage } as Nested_InnerMessage;
-    if (object.name !== undefined && object.name !== null) {
-      message.name = object.name;
-    } else {
-      message.name = '';
-    }
+    message.name = object.name ?? '';
     if (object.deep !== undefined && object.deep !== null) {
       message.deep = Nested_InnerMessage_DeepMessage.fromPartial(object.deep);
     } else {
@@ -761,11 +725,7 @@ export const Nested_InnerMessage_DeepMessage = {
 
   fromPartial(object: DeepPartial<Nested_InnerMessage_DeepMessage>): Nested_InnerMessage_DeepMessage {
     const message = { ...baseNested_InnerMessage_DeepMessage } as Nested_InnerMessage_DeepMessage;
-    if (object.name !== undefined && object.name !== null) {
-      message.name = object.name;
-    } else {
-      message.name = '';
-    }
+    message.name = object.name ?? '';
     return message;
   },
 };
@@ -828,16 +788,8 @@ export const OneOfMessage = {
 
   fromPartial(object: DeepPartial<OneOfMessage>): OneOfMessage {
     const message = { ...baseOneOfMessage } as OneOfMessage;
-    if (object.first !== undefined && object.first !== null) {
-      message.first = object.first;
-    } else {
-      message.first = undefined;
-    }
-    if (object.last !== undefined && object.last !== null) {
-      message.last = object.last;
-    } else {
-      message.last = undefined;
-    }
+    message.first = object.first ?? undefined;
+    message.last = object.last ?? undefined;
     return message;
   },
 };
@@ -948,28 +900,16 @@ export const SimpleWithWrappers = {
 
   fromPartial(object: DeepPartial<SimpleWithWrappers>): SimpleWithWrappers {
     const message = { ...baseSimpleWithWrappers } as SimpleWithWrappers;
+    message.name = object.name ?? undefined;
+    message.age = object.age ?? undefined;
+    message.enabled = object.enabled ?? undefined;
     message.coins = [];
-    message.snacks = [];
-    if (object.name !== undefined && object.name !== null) {
-      message.name = object.name;
-    } else {
-      message.name = undefined;
-    }
-    if (object.age !== undefined && object.age !== null) {
-      message.age = object.age;
-    } else {
-      message.age = undefined;
-    }
-    if (object.enabled !== undefined && object.enabled !== null) {
-      message.enabled = object.enabled;
-    } else {
-      message.enabled = undefined;
-    }
     if (object.coins !== undefined && object.coins !== null) {
       for (const e of object.coins) {
         message.coins.push(e);
       }
     }
+    message.snacks = [];
     if (object.snacks !== undefined && object.snacks !== null) {
       for (const e of object.snacks) {
         message.snacks.push(e);
@@ -1025,11 +965,7 @@ export const Entity = {
 
   fromPartial(object: DeepPartial<Entity>): Entity {
     const message = { ...baseEntity } as Entity;
-    if (object.id !== undefined && object.id !== null) {
-      message.id = object.id;
-    } else {
-      message.id = 0;
-    }
+    message.id = object.id ?? 0;
     return message;
   },
 };
@@ -1135,8 +1071,6 @@ export const SimpleWithMap = {
   fromPartial(object: DeepPartial<SimpleWithMap>): SimpleWithMap {
     const message = { ...baseSimpleWithMap } as SimpleWithMap;
     message.entitiesById = {};
-    message.nameLookup = {};
-    message.intLookup = {};
     if (object.entitiesById !== undefined && object.entitiesById !== null) {
       Object.entries(object.entitiesById).forEach(([key, value]) => {
         if (value !== undefined) {
@@ -1144,6 +1078,7 @@ export const SimpleWithMap = {
         }
       });
     }
+    message.nameLookup = {};
     if (object.nameLookup !== undefined && object.nameLookup !== null) {
       Object.entries(object.nameLookup).forEach(([key, value]) => {
         if (value !== undefined) {
@@ -1151,6 +1086,7 @@ export const SimpleWithMap = {
         }
       });
     }
+    message.intLookup = {};
     if (object.intLookup !== undefined && object.intLookup !== null) {
       Object.entries(object.intLookup).forEach(([key, value]) => {
         if (value !== undefined) {
@@ -1220,11 +1156,7 @@ export const SimpleWithMap_EntitiesByIdEntry = {
 
   fromPartial(object: DeepPartial<SimpleWithMap_EntitiesByIdEntry>): SimpleWithMap_EntitiesByIdEntry {
     const message = { ...baseSimpleWithMap_EntitiesByIdEntry } as SimpleWithMap_EntitiesByIdEntry;
-    if (object.key !== undefined && object.key !== null) {
-      message.key = object.key;
-    } else {
-      message.key = 0;
-    }
+    message.key = object.key ?? 0;
     if (object.value !== undefined && object.value !== null) {
       message.value = Entity.fromPartial(object.value);
     } else {
@@ -1292,16 +1224,8 @@ export const SimpleWithMap_NameLookupEntry = {
 
   fromPartial(object: DeepPartial<SimpleWithMap_NameLookupEntry>): SimpleWithMap_NameLookupEntry {
     const message = { ...baseSimpleWithMap_NameLookupEntry } as SimpleWithMap_NameLookupEntry;
-    if (object.key !== undefined && object.key !== null) {
-      message.key = object.key;
-    } else {
-      message.key = '';
-    }
-    if (object.value !== undefined && object.value !== null) {
-      message.value = object.value;
-    } else {
-      message.value = '';
-    }
+    message.key = object.key ?? '';
+    message.value = object.value ?? '';
     return message;
   },
 };
@@ -1364,16 +1288,8 @@ export const SimpleWithMap_IntLookupEntry = {
 
   fromPartial(object: DeepPartial<SimpleWithMap_IntLookupEntry>): SimpleWithMap_IntLookupEntry {
     const message = { ...baseSimpleWithMap_IntLookupEntry } as SimpleWithMap_IntLookupEntry;
-    if (object.key !== undefined && object.key !== null) {
-      message.key = object.key;
-    } else {
-      message.key = 0;
-    }
-    if (object.value !== undefined && object.value !== null) {
-      message.value = object.value;
-    } else {
-      message.value = 0;
-    }
+    message.key = object.key ?? 0;
+    message.value = object.value ?? 0;
     return message;
   },
 };
@@ -1504,11 +1420,7 @@ export const SimpleWithSnakeCaseMap_EntitiesByIdEntry = {
 
   fromPartial(object: DeepPartial<SimpleWithSnakeCaseMap_EntitiesByIdEntry>): SimpleWithSnakeCaseMap_EntitiesByIdEntry {
     const message = { ...baseSimpleWithSnakeCaseMap_EntitiesByIdEntry } as SimpleWithSnakeCaseMap_EntitiesByIdEntry;
-    if (object.key !== undefined && object.key !== null) {
-      message.key = object.key;
-    } else {
-      message.key = 0;
-    }
+    message.key = object.key ?? 0;
     if (object.value !== undefined && object.value !== null) {
       message.value = Entity.fromPartial(object.value);
     } else {
@@ -1564,11 +1476,7 @@ export const PingRequest = {
 
   fromPartial(object: DeepPartial<PingRequest>): PingRequest {
     const message = { ...basePingRequest } as PingRequest;
-    if (object.input !== undefined && object.input !== null) {
-      message.input = object.input;
-    } else {
-      message.input = '';
-    }
+    message.input = object.input ?? '';
     return message;
   },
 };
@@ -1619,11 +1527,7 @@ export const PingResponse = {
 
   fromPartial(object: DeepPartial<PingResponse>): PingResponse {
     const message = { ...basePingResponse } as PingResponse;
-    if (object.output !== undefined && object.output !== null) {
-      message.output = object.output;
-    } else {
-      message.output = '';
-    }
+    message.output = object.output ?? '';
     return message;
   },
 };
@@ -1819,66 +1723,18 @@ export const Numbers = {
 
   fromPartial(object: DeepPartial<Numbers>): Numbers {
     const message = { ...baseNumbers } as Numbers;
-    if (object.double !== undefined && object.double !== null) {
-      message.double = object.double;
-    } else {
-      message.double = 0;
-    }
-    if (object.float !== undefined && object.float !== null) {
-      message.float = object.float;
-    } else {
-      message.float = 0;
-    }
-    if (object.int32 !== undefined && object.int32 !== null) {
-      message.int32 = object.int32;
-    } else {
-      message.int32 = 0;
-    }
-    if (object.int64 !== undefined && object.int64 !== null) {
-      message.int64 = object.int64;
-    } else {
-      message.int64 = 0;
-    }
-    if (object.uint32 !== undefined && object.uint32 !== null) {
-      message.uint32 = object.uint32;
-    } else {
-      message.uint32 = 0;
-    }
-    if (object.uint64 !== undefined && object.uint64 !== null) {
-      message.uint64 = object.uint64;
-    } else {
-      message.uint64 = 0;
-    }
-    if (object.sint32 !== undefined && object.sint32 !== null) {
-      message.sint32 = object.sint32;
-    } else {
-      message.sint32 = 0;
-    }
-    if (object.sint64 !== undefined && object.sint64 !== null) {
-      message.sint64 = object.sint64;
-    } else {
-      message.sint64 = 0;
-    }
-    if (object.fixed32 !== undefined && object.fixed32 !== null) {
-      message.fixed32 = object.fixed32;
-    } else {
-      message.fixed32 = 0;
-    }
-    if (object.fixed64 !== undefined && object.fixed64 !== null) {
-      message.fixed64 = object.fixed64;
-    } else {
-      message.fixed64 = 0;
-    }
-    if (object.sfixed32 !== undefined && object.sfixed32 !== null) {
-      message.sfixed32 = object.sfixed32;
-    } else {
-      message.sfixed32 = 0;
-    }
-    if (object.sfixed64 !== undefined && object.sfixed64 !== null) {
-      message.sfixed64 = object.sfixed64;
-    } else {
-      message.sfixed64 = 0;
-    }
+    message.double = object.double ?? 0;
+    message.float = object.float ?? 0;
+    message.int32 = object.int32 ?? 0;
+    message.int64 = object.int64 ?? 0;
+    message.uint32 = object.uint32 ?? 0;
+    message.uint64 = object.uint64 ?? 0;
+    message.sint32 = object.sint32 ?? 0;
+    message.sint64 = object.sint64 ?? 0;
+    message.fixed32 = object.fixed32 ?? 0;
+    message.fixed64 = object.fixed64 ?? 0;
+    message.sfixed32 = object.sfixed32 ?? 0;
+    message.sfixed64 = object.sfixed64 ?? 0;
     return message;
   },
 };

@@ -1127,7 +1127,6 @@ function generateToJson(ctx: Context, fullName: string, messageDesc: DescriptorP
       chunks.push(code`message.${fieldName} !== undefined && (obj.${fieldName} = ${v});`);
     }
   });
-
   chunks.push(code`return obj;`);
   chunks.push(code`}`);
   return joinCode(chunks, { on: '\n' });
@@ -1143,13 +1142,6 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
     fromPartial(${messageDesc.field.length > 0 ? 'object' : '_'}: ${utils.DeepPartial}<${fullName}>): ${fullName} {
       const message = { ...base${fullName} } as ${fullName};
   `);
-
-  // initialize all lists
-  messageDesc.field.filter(isRepeated).forEach((field) => {
-    const value = isMapType(ctx, messageDesc, field) ? '{}' : '[]';
-    const name = maybeSnakeToCamel(field.name, options);
-    chunks.push(code`message.${name} = ${value};`);
-  });
 
   // add a check for each incoming field
   messageDesc.field.forEach((field) => {
@@ -1196,6 +1188,9 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
 
     // and then use the snippet to handle repeated fields if necessary
     if (isRepeated(field)) {
+      const value = isMapType(ctx, messageDesc, field) ? '{}' : '[]';
+      const name = maybeSnakeToCamel(field.name, options);
+      chunks.push(code`message.${name} = ${value};`);
       chunks.push(code`if (object.${fieldName} !== undefined && object.${fieldName} !== null) {`);
       if (isMapType(ctx, messageDesc, field)) {
         const i = maybeCastToNumber(ctx, messageDesc, field, 'key');
@@ -1213,6 +1208,7 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
           }
         `);
       }
+      chunks.push(code`}`);
     } else if (isWithinOneOfThatShouldBeUnion(options, field)) {
       let oneofName = maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options);
       const v = readSnippet(`object.${oneofName}.${fieldName}`);
@@ -1223,25 +1219,33 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
           && object.${oneofName}?.${fieldName} !== null
         ) {
           message.${oneofName} = { $case: '${fieldName}', ${fieldName}: ${v} };
+        }  
       `);
+    } else if ((isLong(field) || isLongValueType(field)) && options.forceLong === LongOption.LONG) {
+      const v = readSnippet(`object.${fieldName}`);
+      const type = basicTypeName(ctx, field);
+      chunks.push(code`if (object.${fieldName} !== undefined && object.${fieldName} !== null) {`);
+      chunks.push(code`message.${fieldName} = ${v} as ${type};`);
+      chunks.push(code`} else {`);
+      const fallback = isWithinOneOf(field) ? 'undefined' : defaultValue(ctx, field);
+      chunks.push(code`message.${fieldName} = ${fallback}`);
+      chunks.push(code`}`);
+    } else if (
+      isPrimitive(field) ||
+      (isTimestamp(field) && (options.useDate === DateOption.DATE || options.useDate === DateOption.STRING)) ||
+      isValueType(ctx, field)
+    ) {
+      // An optimized case of the else below that works when `readSnippet` returns the plain input
+      const fallback = isWithinOneOf(field) ? 'undefined' : defaultValue(ctx, field);
+      chunks.push(code`message.${fieldName} = object.${fieldName} ?? ${fallback};`);
     } else {
       chunks.push(code`if (object.${fieldName} !== undefined && object.${fieldName} !== null) {`);
-      if ((isLong(field) || isLongValueType(field)) && options.forceLong === LongOption.LONG) {
-        const v = readSnippet(`object.${fieldName}`);
-        const type = basicTypeName(ctx, field);
-        chunks.push(code`message.${fieldName} = ${v} as ${type};`);
-      } else {
-        chunks.push(code`message.${fieldName} = ${readSnippet(`object.${fieldName}`)};`);
-      }
-    }
-
-    if (!isRepeated(field) && !isWithinOneOfThatShouldBeUnion(options, field)) {
+      chunks.push(code`message.${fieldName} = ${readSnippet(`object.${fieldName}`)};`);
       chunks.push(code`} else {`);
-      const v = isWithinOneOf(field) ? 'undefined' : defaultValue(ctx, field);
-      chunks.push(code`message.${fieldName} = ${v}`);
+      const fallback = isWithinOneOf(field) ? 'undefined' : defaultValue(ctx, field);
+      chunks.push(code`message.${fieldName} = ${fallback}`);
+      chunks.push(code`}`);
     }
-
-    chunks.push(code`}`);
   });
 
   // and then wrap up the switch/while/return

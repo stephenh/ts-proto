@@ -113,11 +113,7 @@ export const DividerData = {
 
   fromPartial(object: DeepPartial<DividerData>): DividerData {
     const message = { ...baseDividerData } as DividerData;
-    if (object.type !== undefined && object.type !== null) {
-      message.type = object.type;
-    } else {
-      message.type = DividerData_DividerType.DOUBLE;
-    }
+    message.type = object.type ?? DividerData_DividerType.DOUBLE;
     return message;
   },
 };

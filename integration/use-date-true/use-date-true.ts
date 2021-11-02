@@ -128,28 +128,16 @@ export const Todo = {
 
   fromPartial(object: DeepPartial<Todo>): Todo {
     const message = { ...baseTodo } as Todo;
+    message.id = object.id ?? '';
+    message.timestamp = object.timestamp ?? undefined;
     message.repeatedTimestamp = [];
-    message.mapOfTimestamps = {};
-    if (object.id !== undefined && object.id !== null) {
-      message.id = object.id;
-    } else {
-      message.id = '';
-    }
-    if (object.timestamp !== undefined && object.timestamp !== null) {
-      message.timestamp = object.timestamp;
-    } else {
-      message.timestamp = undefined;
-    }
     if (object.repeatedTimestamp !== undefined && object.repeatedTimestamp !== null) {
       for (const e of object.repeatedTimestamp) {
         message.repeatedTimestamp.push(e);
       }
     }
-    if (object.optionalTimestamp !== undefined && object.optionalTimestamp !== null) {
-      message.optionalTimestamp = object.optionalTimestamp;
-    } else {
-      message.optionalTimestamp = undefined;
-    }
+    message.optionalTimestamp = object.optionalTimestamp ?? undefined;
+    message.mapOfTimestamps = {};
     if (object.mapOfTimestamps !== undefined && object.mapOfTimestamps !== null) {
       Object.entries(object.mapOfTimestamps).forEach(([key, value]) => {
         if (value !== undefined) {
@@ -219,16 +207,8 @@ export const Todo_MapOfTimestampsEntry = {
 
   fromPartial(object: DeepPartial<Todo_MapOfTimestampsEntry>): Todo_MapOfTimestampsEntry {
     const message = { ...baseTodo_MapOfTimestampsEntry } as Todo_MapOfTimestampsEntry;
-    if (object.key !== undefined && object.key !== null) {
-      message.key = object.key;
-    } else {
-      message.key = '';
-    }
-    if (object.value !== undefined && object.value !== null) {
-      message.value = object.value;
-    } else {
-      message.value = undefined;
-    }
+    message.key = object.key ?? '';
+    message.value = object.value ?? undefined;
     return message;
   },
 };

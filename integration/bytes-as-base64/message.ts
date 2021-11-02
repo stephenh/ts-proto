@@ -29,11 +29,7 @@ export const Message = {
 
   fromPartial(object: DeepPartial<Message>): Message {
     const message = { ...baseMessage } as Message;
-    if (object.data !== undefined && object.data !== null) {
-      message.data = object.data;
-    } else {
-      message.data = new Uint8Array();
-    }
+    message.data = object.data ?? new Uint8Array();
     return message;
   },
 };

@@ -140,11 +140,7 @@ export const DoubleValue = {
 
   fromPartial(object: DeepPartial<DoubleValue>): DoubleValue {
     const message = { ...baseDoubleValue } as DoubleValue;
-    if (object.value !== undefined && object.value !== null) {
-      message.value = object.value;
-    } else {
-      message.value = 0;
-    }
+    message.value = object.value ?? 0;
     return message;
   },
 };
@@ -195,11 +191,7 @@ export const FloatValue = {
 
   fromPartial(object: DeepPartial<FloatValue>): FloatValue {
     const message = { ...baseFloatValue } as FloatValue;
-    if (object.value !== undefined && object.value !== null) {
-      message.value = object.value;
-    } else {
-      message.value = 0;
-    }
+    message.value = object.value ?? 0;
     return message;
   },
 };
@@ -250,11 +242,7 @@ export const Int64Value = {
 
   fromPartial(object: DeepPartial<Int64Value>): Int64Value {
     const message = { ...baseInt64Value } as Int64Value;
-    if (object.value !== undefined && object.value !== null) {
-      message.value = object.value;
-    } else {
-      message.value = 0;
-    }
+    message.value = object.value ?? 0;
     return message;
   },
 };
@@ -305,11 +293,7 @@ export const UInt64Value = {
 
   fromPartial(object: DeepPartial<UInt64Value>): UInt64Value {
     const message = { ...baseUInt64Value } as UInt64Value;
-    if (object.value !== undefined && object.value !== null) {
-      message.value = object.value;
-    } else {
-      message.value = 0;
-    }
+    message.value = object.value ?? 0;
     return message;
   },
 };
@@ -360,11 +344,7 @@ export const Int32Value = {
 
   fromPartial(object: DeepPartial<Int32Value>): Int32Value {
     const message = { ...baseInt32Value } as Int32Value;
-    if (object.value !== undefined && object.value !== null) {
-      message.value = object.value;
-    } else {
-      message.value = 0;
-    }
+    message.value = object.value ?? 0;
     return message;
   },
 };
@@ -415,11 +395,7 @@ export const UInt32Value = {
 
   fromPartial(object: DeepPartial<UInt32Value>): UInt32Value {
     const message = { ...baseUInt32Value } as UInt32Value;
-    if (object.value !== undefined && object.value !== null) {
-      message.value = object.value;
-    } else {
-      message.value = 0;
-    }
+    message.value = object.value ?? 0;
     return message;
   },
 };
@@ -470,11 +446,7 @@ export const BoolValue = {
 
   fromPartial(object: DeepPartial<BoolValue>): BoolValue {
     const message = { ...baseBoolValue } as BoolValue;
-    if (object.value !== undefined && object.value !== null) {
-      message.value = object.value;
-    } else {
-      message.value = false;
-    }
+    message.value = object.value ?? false;
     return message;
   },
 };
@@ -525,11 +497,7 @@ export const StringValue = {
 
   fromPartial(object: DeepPartial<StringValue>): StringValue {
     const message = { ...baseStringValue } as StringValue;
-    if (object.value !== undefined && object.value !== null) {
-      message.value = object.value;
-    } else {
-      message.value = '';
-    }
+    message.value = object.value ?? '';
     return message;
   },
 };
@@ -581,11 +549,7 @@ export const BytesValue = {
 
   fromPartial(object: DeepPartial<BytesValue>): BytesValue {
     const message = { ...baseBytesValue } as BytesValue;
-    if (object.value !== undefined && object.value !== null) {
-      message.value = object.value;
-    } else {
-      message.value = new Uint8Array();
-    }
+    message.value = object.value ?? new Uint8Array();
     return message;
   },
 };

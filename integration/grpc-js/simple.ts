@@ -85,11 +85,7 @@ export const TestMessage = {
 
   fromPartial(object: DeepPartial<TestMessage>): TestMessage {
     const message = { ...baseTestMessage } as TestMessage;
-    if (object.timestamp !== undefined && object.timestamp !== null) {
-      message.timestamp = object.timestamp;
-    } else {
-      message.timestamp = undefined;
-    }
+    message.timestamp = object.timestamp ?? undefined;
     return message;
   },
 };

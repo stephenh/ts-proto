@@ -149,16 +149,8 @@ export const DashFlash = {
 
   fromPartial(object: DeepPartial<DashFlash>): DashFlash {
     const message = { ...baseDashFlash } as DashFlash;
-    if (object.msg !== undefined && object.msg !== null) {
-      message.msg = object.msg;
-    } else {
-      message.msg = '';
-    }
-    if (object.type !== undefined && object.type !== null) {
-      message.type = object.type;
-    } else {
-      message.type = 0;
-    }
+    message.msg = object.msg ?? '';
+    message.type = object.type ?? 0;
     return message;
   },
 };
@@ -240,17 +232,13 @@ export const DashUserSettingsState = {
 
   fromPartial(object: DeepPartial<DashUserSettingsState>): DashUserSettingsState {
     const message = { ...baseDashUserSettingsState } as DashUserSettingsState;
-    message.flashes = [];
-    if (object.email !== undefined && object.email !== null) {
-      message.email = object.email;
-    } else {
-      message.email = '';
-    }
+    message.email = object.email ?? '';
     if (object.urls !== undefined && object.urls !== null) {
       message.urls = DashUserSettingsState_URLs.fromPartial(object.urls);
     } else {
       message.urls = undefined;
     }
+    message.flashes = [];
     if (object.flashes !== undefined && object.flashes !== null) {
       for (const e of object.flashes) {
         message.flashes.push(DashFlash.fromPartial(e));
@@ -318,16 +306,8 @@ export const DashUserSettingsState_URLs = {
 
   fromPartial(object: DeepPartial<DashUserSettingsState_URLs>): DashUserSettingsState_URLs {
     const message = { ...baseDashUserSettingsState_URLs } as DashUserSettingsState_URLs;
-    if (object.connectGoogle !== undefined && object.connectGoogle !== null) {
-      message.connectGoogle = object.connectGoogle;
-    } else {
-      message.connectGoogle = '';
-    }
-    if (object.connectGithub !== undefined && object.connectGithub !== null) {
-      message.connectGithub = object.connectGithub;
-    } else {
-      message.connectGithub = '';
-    }
+    message.connectGoogle = object.connectGoogle ?? '';
+    message.connectGithub = object.connectGithub ?? '';
     return message;
   },
 };
@@ -414,26 +394,10 @@ export const DashCred = {
 
   fromPartial(object: DeepPartial<DashCred>): DashCred {
     const message = { ...baseDashCred } as DashCred;
-    if (object.description !== undefined && object.description !== null) {
-      message.description = object.description;
-    } else {
-      message.description = '';
-    }
-    if (object.metadata !== undefined && object.metadata !== null) {
-      message.metadata = object.metadata;
-    } else {
-      message.metadata = '';
-    }
-    if (object.token !== undefined && object.token !== null) {
-      message.token = object.token;
-    } else {
-      message.token = '';
-    }
-    if (object.id !== undefined && object.id !== null) {
-      message.id = object.id;
-    } else {
-      message.id = '';
-    }
+    message.description = object.description ?? '';
+    message.metadata = object.metadata ?? '';
+    message.token = object.token ?? '';
+    message.id = object.id ?? '';
     return message;
   },
 };
@@ -496,16 +460,8 @@ export const DashAPICredsCreateReq = {
 
   fromPartial(object: DeepPartial<DashAPICredsCreateReq>): DashAPICredsCreateReq {
     const message = { ...baseDashAPICredsCreateReq } as DashAPICredsCreateReq;
-    if (object.description !== undefined && object.description !== null) {
-      message.description = object.description;
-    } else {
-      message.description = '';
-    }
-    if (object.metadata !== undefined && object.metadata !== null) {
-      message.metadata = object.metadata;
-    } else {
-      message.metadata = '';
-    }
+    message.description = object.description ?? '';
+    message.metadata = object.metadata ?? '';
     return message;
   },
 };
@@ -592,26 +548,10 @@ export const DashAPICredsUpdateReq = {
 
   fromPartial(object: DeepPartial<DashAPICredsUpdateReq>): DashAPICredsUpdateReq {
     const message = { ...baseDashAPICredsUpdateReq } as DashAPICredsUpdateReq;
-    if (object.credSid !== undefined && object.credSid !== null) {
-      message.credSid = object.credSid;
-    } else {
-      message.credSid = '';
-    }
-    if (object.description !== undefined && object.description !== null) {
-      message.description = object.description;
-    } else {
-      message.description = '';
-    }
-    if (object.metadata !== undefined && object.metadata !== null) {
-      message.metadata = object.metadata;
-    } else {
-      message.metadata = '';
-    }
-    if (object.id !== undefined && object.id !== null) {
-      message.id = object.id;
-    } else {
-      message.id = '';
-    }
+    message.credSid = object.credSid ?? '';
+    message.description = object.description ?? '';
+    message.metadata = object.metadata ?? '';
+    message.id = object.id ?? '';
     return message;
   },
 };
@@ -674,16 +614,8 @@ export const DashAPICredsDeleteReq = {
 
   fromPartial(object: DeepPartial<DashAPICredsDeleteReq>): DashAPICredsDeleteReq {
     const message = { ...baseDashAPICredsDeleteReq } as DashAPICredsDeleteReq;
-    if (object.credSid !== undefined && object.credSid !== null) {
-      message.credSid = object.credSid;
-    } else {
-      message.credSid = '';
-    }
-    if (object.id !== undefined && object.id !== null) {
-      message.id = object.id;
-    } else {
-      message.id = '';
-    }
+    message.credSid = object.credSid ?? '';
+    message.id = object.id ?? '';
     return message;
   },
 };

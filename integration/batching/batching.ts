@@ -356,11 +356,7 @@ export const BatchMapQueryResponse_EntitiesEntry = {
 
   fromPartial(object: DeepPartial<BatchMapQueryResponse_EntitiesEntry>): BatchMapQueryResponse_EntitiesEntry {
     const message = { ...baseBatchMapQueryResponse_EntitiesEntry } as BatchMapQueryResponse_EntitiesEntry;
-    if (object.key !== undefined && object.key !== null) {
-      message.key = object.key;
-    } else {
-      message.key = '';
-    }
+    message.key = object.key ?? '';
     if (object.value !== undefined && object.value !== null) {
       message.value = Entity.fromPartial(object.value);
     } else {
@@ -416,11 +412,7 @@ export const GetOnlyMethodRequest = {
 
   fromPartial(object: DeepPartial<GetOnlyMethodRequest>): GetOnlyMethodRequest {
     const message = { ...baseGetOnlyMethodRequest } as GetOnlyMethodRequest;
-    if (object.id !== undefined && object.id !== null) {
-      message.id = object.id;
-    } else {
-      message.id = '';
-    }
+    message.id = object.id ?? '';
     return message;
   },
 };
@@ -526,11 +518,7 @@ export const WriteMethodRequest = {
 
   fromPartial(object: DeepPartial<WriteMethodRequest>): WriteMethodRequest {
     const message = { ...baseWriteMethodRequest } as WriteMethodRequest;
-    if (object.id !== undefined && object.id !== null) {
-      message.id = object.id;
-    } else {
-      message.id = '';
-    }
+    message.id = object.id ?? '';
     return message;
   },
 };
@@ -631,16 +619,8 @@ export const Entity = {
 
   fromPartial(object: DeepPartial<Entity>): Entity {
     const message = { ...baseEntity } as Entity;
-    if (object.id !== undefined && object.id !== null) {
-      message.id = object.id;
-    } else {
-      message.id = '';
-    }
-    if (object.name !== undefined && object.name !== null) {
-      message.name = object.name;
-    } else {
-      message.name = '';
-    }
+    message.id = object.id ?? '';
+    message.name = object.name ?? '';
     return message;
   },
 };
