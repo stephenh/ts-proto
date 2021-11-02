@@ -1,3 +1,10 @@
+# [1.84.0](https://github.com/stephenh/ts-proto/compare/v1.83.3...v1.84.0) (2021-11-02)
+
+
+### Features
+
+* Reduce code size by using nullish coalescing operator in fromPartial ([#376](https://github.com/stephenh/ts-proto/issues/376)) ([19d2ded](https://github.com/stephenh/ts-proto/commit/19d2deda2cf7c47b1b56bfc65cf58653291dba4a))
+
 ## [1.83.3](https://github.com/stephenh/ts-proto/compare/v1.83.2...v1.83.3) (2021-10-28)
 
 
