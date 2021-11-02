@@ -1,3 +1,10 @@
+# [1.85.0](https://github.com/stephenh/ts-proto/compare/v1.84.0...v1.85.0) (2021-11-02)
+
+
+### Features
+
+* Streaming support ([#373](https://github.com/stephenh/ts-proto/issues/373)) ([459b94f](https://github.com/stephenh/ts-proto/commit/459b94f5b2988d58d186461332e888c3e511603a))
+
 # [1.84.0](https://github.com/stephenh/ts-proto/compare/v1.83.3...v1.84.0) (2021-11-02)
 
 
