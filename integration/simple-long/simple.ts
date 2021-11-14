@@ -129,16 +129,12 @@ export const SimpleWithWrappers = {
       message.bananas = undefined;
     }
     message.coins = [];
-    if (object.coins !== undefined && object.coins !== null) {
-      for (const e of object.coins) {
-        message.coins.push(Number(e));
-      }
+    for (const e of object.coins ?? []) {
+      message.coins.push(Number(e));
     }
     message.snacks = [];
-    if (object.snacks !== undefined && object.snacks !== null) {
-      for (const e of object.snacks) {
-        message.snacks.push(String(e));
-      }
+    for (const e of object.snacks ?? []) {
+      message.snacks.push(String(e));
     }
     return message;
   },
@@ -173,16 +169,12 @@ export const SimpleWithWrappers = {
       message.bananas = undefined;
     }
     message.coins = [];
-    if (object.coins !== undefined && object.coins !== null) {
-      for (const e of object.coins) {
-        message.coins.push(e);
-      }
+    for (const e of object.coins ?? []) {
+      message.coins.push(e);
     }
     message.snacks = [];
-    if (object.snacks !== undefined && object.snacks !== null) {
-      for (const e of object.snacks) {
-        message.snacks.push(e);
-      }
+    for (const e of object.snacks ?? []) {
+      message.snacks.push(e);
     }
     return message;
   },
@@ -601,10 +593,8 @@ export const Numbers = {
       message.sfixed64 = Long.ZERO;
     }
     message.manyUint64 = [];
-    if (object.manyUint64 !== undefined && object.manyUint64 !== null) {
-      for (const e of object.manyUint64) {
-        message.manyUint64.push(Long.fromString(e));
-      }
+    for (const e of object.manyUint64 ?? []) {
+      message.manyUint64.push(Long.fromString(e));
     }
     return message;
   },
@@ -666,10 +656,8 @@ export const Numbers = {
       message.sfixed64 = Long.ZERO;
     }
     message.manyUint64 = [];
-    if (object.manyUint64 !== undefined && object.manyUint64 !== null) {
-      for (const e of object.manyUint64) {
-        message.manyUint64.push(e);
-      }
+    for (const e of object.manyUint64 ?? []) {
+      message.manyUint64.push(e);
     }
     return message;
   },

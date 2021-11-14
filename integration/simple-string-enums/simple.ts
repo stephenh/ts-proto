@@ -124,10 +124,8 @@ export const Simple = {
       message.state = StateEnum.UNKNOWN;
     }
     message.states = [];
-    if (object.states !== undefined && object.states !== null) {
-      for (const e of object.states) {
-        message.states.push(stateEnumFromJSON(e));
-      }
+    for (const e of object.states ?? []) {
+      message.states.push(stateEnumFromJSON(e));
     }
     return message;
   },
@@ -149,10 +147,8 @@ export const Simple = {
     message.name = object.name ?? '';
     message.state = object.state ?? StateEnum.UNKNOWN;
     message.states = [];
-    if (object.states !== undefined && object.states !== null) {
-      for (const e of object.states) {
-        message.states.push(e);
-      }
+    for (const e of object.states ?? []) {
+      message.states.push(e);
     }
     return message;
   },

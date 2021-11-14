@@ -367,28 +367,20 @@ export const Simple = {
       message.state = 0;
     }
     message.grand_children = [];
-    if (object.grand_children !== undefined && object.grand_children !== null) {
-      for (const e of object.grand_children) {
-        message.grand_children.push(Child.fromJSON(e));
-      }
+    for (const e of object.grand_children ?? []) {
+      message.grand_children.push(Child.fromJSON(e));
     }
     message.coins = [];
-    if (object.coins !== undefined && object.coins !== null) {
-      for (const e of object.coins) {
-        message.coins.push(Number(e));
-      }
+    for (const e of object.coins ?? []) {
+      message.coins.push(Number(e));
     }
     message.snacks = [];
-    if (object.snacks !== undefined && object.snacks !== null) {
-      for (const e of object.snacks) {
-        message.snacks.push(String(e));
-      }
+    for (const e of object.snacks ?? []) {
+      message.snacks.push(String(e));
     }
     message.old_states = [];
-    if (object.old_states !== undefined && object.old_states !== null) {
-      for (const e of object.old_states) {
-        message.old_states.push(stateEnumFromJSON(e));
-      }
+    for (const e of object.old_states ?? []) {
+      message.old_states.push(stateEnumFromJSON(e));
     }
     if (object.thing !== undefined && object.thing !== null) {
       message.thing = ImportedThing.fromJSON(object.thing);
@@ -441,28 +433,20 @@ export const Simple = {
     }
     message.state = object.state ?? 0;
     message.grand_children = [];
-    if (object.grand_children !== undefined && object.grand_children !== null) {
-      for (const e of object.grand_children) {
-        message.grand_children.push(Child.fromPartial(e));
-      }
+    for (const e of object.grand_children ?? []) {
+      message.grand_children.push(Child.fromPartial(e));
     }
     message.coins = [];
-    if (object.coins !== undefined && object.coins !== null) {
-      for (const e of object.coins) {
-        message.coins.push(e);
-      }
+    for (const e of object.coins ?? []) {
+      message.coins.push(e);
     }
     message.snacks = [];
-    if (object.snacks !== undefined && object.snacks !== null) {
-      for (const e of object.snacks) {
-        message.snacks.push(e);
-      }
+    for (const e of object.snacks ?? []) {
+      message.snacks.push(e);
     }
     message.old_states = [];
-    if (object.old_states !== undefined && object.old_states !== null) {
-      for (const e of object.old_states) {
-        message.old_states.push(e);
-      }
+    for (const e of object.old_states ?? []) {
+      message.old_states.push(e);
     }
     if (object.thing !== undefined && object.thing !== null) {
       message.thing = ImportedThing.fromPartial(object.thing);
@@ -875,16 +859,12 @@ export const SimpleWithWrappers = {
       message.enabled = undefined;
     }
     message.coins = [];
-    if (object.coins !== undefined && object.coins !== null) {
-      for (const e of object.coins) {
-        message.coins.push(Number(e));
-      }
+    for (const e of object.coins ?? []) {
+      message.coins.push(Number(e));
     }
     message.snacks = [];
-    if (object.snacks !== undefined && object.snacks !== null) {
-      for (const e of object.snacks) {
-        message.snacks.push(String(e));
-      }
+    for (const e of object.snacks ?? []) {
+      message.snacks.push(String(e));
     }
     return message;
   },
@@ -913,16 +893,12 @@ export const SimpleWithWrappers = {
     message.age = object.age ?? undefined;
     message.enabled = object.enabled ?? undefined;
     message.coins = [];
-    if (object.coins !== undefined && object.coins !== null) {
-      for (const e of object.coins) {
-        message.coins.push(e);
-      }
+    for (const e of object.coins ?? []) {
+      message.coins.push(e);
     }
     message.snacks = [];
-    if (object.snacks !== undefined && object.snacks !== null) {
-      for (const e of object.snacks) {
-        message.snacks.push(e);
-      }
+    for (const e of object.snacks ?? []) {
+      message.snacks.push(e);
     }
     return message;
   },

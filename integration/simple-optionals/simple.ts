@@ -367,28 +367,20 @@ export const Simple = {
       message.state = 0;
     }
     message.grandChildren = [];
-    if (object.grandChildren !== undefined && object.grandChildren !== null) {
-      for (const e of object.grandChildren) {
-        message.grandChildren.push(Child.fromJSON(e));
-      }
+    for (const e of object.grandChildren ?? []) {
+      message.grandChildren.push(Child.fromJSON(e));
     }
     message.coins = [];
-    if (object.coins !== undefined && object.coins !== null) {
-      for (const e of object.coins) {
-        message.coins.push(Number(e));
-      }
+    for (const e of object.coins ?? []) {
+      message.coins.push(Number(e));
     }
     message.snacks = [];
-    if (object.snacks !== undefined && object.snacks !== null) {
-      for (const e of object.snacks) {
-        message.snacks.push(String(e));
-      }
+    for (const e of object.snacks ?? []) {
+      message.snacks.push(String(e));
     }
     message.oldStates = [];
-    if (object.oldStates !== undefined && object.oldStates !== null) {
-      for (const e of object.oldStates) {
-        message.oldStates.push(stateEnumFromJSON(e));
-      }
+    for (const e of object.oldStates ?? []) {
+      message.oldStates.push(stateEnumFromJSON(e));
     }
     if (object.thing !== undefined && object.thing !== null) {
       message.thing = ImportedThing.fromJSON(object.thing);
@@ -441,28 +433,20 @@ export const Simple = {
     }
     message.state = object.state ?? 0;
     message.grandChildren = [];
-    if (object.grandChildren !== undefined && object.grandChildren !== null) {
-      for (const e of object.grandChildren) {
-        message.grandChildren.push(Child.fromPartial(e));
-      }
+    for (const e of object.grandChildren ?? []) {
+      message.grandChildren.push(Child.fromPartial(e));
     }
     message.coins = [];
-    if (object.coins !== undefined && object.coins !== null) {
-      for (const e of object.coins) {
-        message.coins.push(e);
-      }
+    for (const e of object.coins ?? []) {
+      message.coins.push(e);
     }
     message.snacks = [];
-    if (object.snacks !== undefined && object.snacks !== null) {
-      for (const e of object.snacks) {
-        message.snacks.push(e);
-      }
+    for (const e of object.snacks ?? []) {
+      message.snacks.push(e);
     }
     message.oldStates = [];
-    if (object.oldStates !== undefined && object.oldStates !== null) {
-      for (const e of object.oldStates) {
-        message.oldStates.push(e);
-      }
+    for (const e of object.oldStates ?? []) {
+      message.oldStates.push(e);
     }
     if (object.thing !== undefined && object.thing !== null) {
       message.thing = ImportedThing.fromPartial(object.thing);
@@ -875,16 +859,12 @@ export const SimpleWithWrappers = {
       message.enabled = undefined;
     }
     message.coins = [];
-    if (object.coins !== undefined && object.coins !== null) {
-      for (const e of object.coins) {
-        message.coins.push(Number(e));
-      }
+    for (const e of object.coins ?? []) {
+      message.coins.push(Number(e));
     }
     message.snacks = [];
-    if (object.snacks !== undefined && object.snacks !== null) {
-      for (const e of object.snacks) {
-        message.snacks.push(String(e));
-      }
+    for (const e of object.snacks ?? []) {
+      message.snacks.push(String(e));
     }
     return message;
   },
@@ -913,16 +893,12 @@ export const SimpleWithWrappers = {
     message.age = object.age ?? undefined;
     message.enabled = object.enabled ?? undefined;
     message.coins = [];
-    if (object.coins !== undefined && object.coins !== null) {
-      for (const e of object.coins) {
-        message.coins.push(e);
-      }
+    for (const e of object.coins ?? []) {
+      message.coins.push(e);
     }
     message.snacks = [];
-    if (object.snacks !== undefined && object.snacks !== null) {
-      for (const e of object.snacks) {
-        message.snacks.push(e);
-      }
+    for (const e of object.snacks ?? []) {
+      message.snacks.push(e);
     }
     return message;
   },

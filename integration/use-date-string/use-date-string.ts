@@ -88,10 +88,8 @@ export const Todo = {
       message.timestamp = undefined;
     }
     message.repeatedTimestamp = [];
-    if (object.repeatedTimestamp !== undefined && object.repeatedTimestamp !== null) {
-      for (const e of object.repeatedTimestamp) {
-        message.repeatedTimestamp.push(String(e));
-      }
+    for (const e of object.repeatedTimestamp ?? []) {
+      message.repeatedTimestamp.push(String(e));
     }
     if (object.optionalTimestamp !== undefined && object.optionalTimestamp !== null) {
       message.optionalTimestamp = String(object.optionalTimestamp);
@@ -131,10 +129,8 @@ export const Todo = {
     message.id = object.id ?? '';
     message.timestamp = object.timestamp ?? undefined;
     message.repeatedTimestamp = [];
-    if (object.repeatedTimestamp !== undefined && object.repeatedTimestamp !== null) {
-      for (const e of object.repeatedTimestamp) {
-        message.repeatedTimestamp.push(e);
-      }
+    for (const e of object.repeatedTimestamp ?? []) {
+      message.repeatedTimestamp.push(e);
     }
     message.optionalTimestamp = object.optionalTimestamp ?? undefined;
     message.mapOfTimestamps = {};

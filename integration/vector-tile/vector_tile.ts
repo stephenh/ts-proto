@@ -110,10 +110,8 @@ export const Tile = {
   fromJSON(object: any): Tile {
     const message = { ...baseTile } as Tile;
     message.layers = [];
-    if (object.layers !== undefined && object.layers !== null) {
-      for (const e of object.layers) {
-        message.layers.push(Tile_Layer.fromJSON(e));
-      }
+    for (const e of object.layers ?? []) {
+      message.layers.push(Tile_Layer.fromJSON(e));
     }
     return message;
   },
@@ -131,10 +129,8 @@ export const Tile = {
   fromPartial(object: DeepPartial<Tile>): Tile {
     const message = { ...baseTile } as Tile;
     message.layers = [];
-    if (object.layers !== undefined && object.layers !== null) {
-      for (const e of object.layers) {
-        message.layers.push(Tile_Layer.fromPartial(e));
-      }
+    for (const e of object.layers ?? []) {
+      message.layers.push(Tile_Layer.fromPartial(e));
     }
     return message;
   },
@@ -351,10 +347,8 @@ export const Tile_Feature = {
       message.id = 0;
     }
     message.tags = [];
-    if (object.tags !== undefined && object.tags !== null) {
-      for (const e of object.tags) {
-        message.tags.push(Number(e));
-      }
+    for (const e of object.tags ?? []) {
+      message.tags.push(Number(e));
     }
     if (object.type !== undefined && object.type !== null) {
       message.type = tile_GeomTypeFromJSON(object.type);
@@ -362,10 +356,8 @@ export const Tile_Feature = {
       message.type = 0;
     }
     message.geometry = [];
-    if (object.geometry !== undefined && object.geometry !== null) {
-      for (const e of object.geometry) {
-        message.geometry.push(Number(e));
-      }
+    for (const e of object.geometry ?? []) {
+      message.geometry.push(Number(e));
     }
     return message;
   },
@@ -391,17 +383,13 @@ export const Tile_Feature = {
     const message = { ...baseTile_Feature } as Tile_Feature;
     message.id = object.id ?? 0;
     message.tags = [];
-    if (object.tags !== undefined && object.tags !== null) {
-      for (const e of object.tags) {
-        message.tags.push(e);
-      }
+    for (const e of object.tags ?? []) {
+      message.tags.push(e);
     }
     message.type = object.type ?? 0;
     message.geometry = [];
-    if (object.geometry !== undefined && object.geometry !== null) {
-      for (const e of object.geometry) {
-        message.geometry.push(e);
-      }
+    for (const e of object.geometry ?? []) {
+      message.geometry.push(e);
     }
     return message;
   },
@@ -481,22 +469,16 @@ export const Tile_Layer = {
       message.name = '';
     }
     message.features = [];
-    if (object.features !== undefined && object.features !== null) {
-      for (const e of object.features) {
-        message.features.push(Tile_Feature.fromJSON(e));
-      }
+    for (const e of object.features ?? []) {
+      message.features.push(Tile_Feature.fromJSON(e));
     }
     message.keys = [];
-    if (object.keys !== undefined && object.keys !== null) {
-      for (const e of object.keys) {
-        message.keys.push(String(e));
-      }
+    for (const e of object.keys ?? []) {
+      message.keys.push(String(e));
     }
     message.values = [];
-    if (object.values !== undefined && object.values !== null) {
-      for (const e of object.values) {
-        message.values.push(Tile_Value.fromJSON(e));
-      }
+    for (const e of object.values ?? []) {
+      message.values.push(Tile_Value.fromJSON(e));
     }
     if (object.extent !== undefined && object.extent !== null) {
       message.extent = Number(object.extent);
@@ -534,22 +516,16 @@ export const Tile_Layer = {
     message.version = object.version ?? 0;
     message.name = object.name ?? '';
     message.features = [];
-    if (object.features !== undefined && object.features !== null) {
-      for (const e of object.features) {
-        message.features.push(Tile_Feature.fromPartial(e));
-      }
+    for (const e of object.features ?? []) {
+      message.features.push(Tile_Feature.fromPartial(e));
     }
     message.keys = [];
-    if (object.keys !== undefined && object.keys !== null) {
-      for (const e of object.keys) {
-        message.keys.push(e);
-      }
+    for (const e of object.keys ?? []) {
+      message.keys.push(e);
     }
     message.values = [];
-    if (object.values !== undefined && object.values !== null) {
-      for (const e of object.values) {
-        message.values.push(Tile_Value.fromPartial(e));
-      }
+    for (const e of object.values ?? []) {
+      message.values.push(Tile_Value.fromPartial(e));
     }
     message.extent = object.extent ?? 0;
     return message;

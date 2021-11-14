@@ -983,25 +983,24 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
 
     // and then use the snippet to handle repeated fields if necessary
     if (isRepeated(field)) {
-      const value = isMapType(ctx, messageDesc, field) ? '{}' : '[]';
-      const name = maybeSnakeToCamel(field.name, options);
-      chunks.push(code`message.${name} = ${value};`);
-      chunks.push(code`if (object.${fieldName} !== undefined && object.${fieldName} !== null) {`);
       if (isMapType(ctx, messageDesc, field)) {
+        chunks.push(code`message.${fieldName} = {};`);
+        chunks.push(code`if (object.${fieldName} !== undefined && object.${fieldName} !== null) {`);
         const i = maybeCastToNumber(ctx, messageDesc, field, 'key');
         chunks.push(code`
           Object.entries(object.${fieldName}).forEach(([key, value]) => {
             message.${fieldName}[${i}] = ${readSnippet('value')};
           });
         `);
+        chunks.push(code`}`);
       } else {
+        chunks.push(code`message.${fieldName} = [];`);
         chunks.push(code`
-          for (const e of object.${fieldName}) {
+          for (const e of (object.${fieldName} ?? [])) {
             message.${fieldName}.push(${readSnippet('e')});
           }
         `);
       }
-      chunks.push(code`}`);
     } else if (isWithinOneOfThatShouldBeUnion(options, field)) {
       chunks.push(code`if (object.${fieldName} !== undefined && object.${fieldName} !== null) {`);
       const oneofName = maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options);
@@ -1177,11 +1176,9 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
 
     // and then use the snippet to handle repeated fields if necessary
     if (isRepeated(field)) {
-      const value = isMapType(ctx, messageDesc, field) ? '{}' : '[]';
-      const name = maybeSnakeToCamel(field.name, options);
-      chunks.push(code`message.${name} = ${value};`);
-      chunks.push(code`if (object.${fieldName} !== undefined && object.${fieldName} !== null) {`);
       if (isMapType(ctx, messageDesc, field)) {
+        chunks.push(code`message.${fieldName} = {};`);
+        chunks.push(code`if (object.${fieldName} !== undefined && object.${fieldName} !== null) {`);
         const i = maybeCastToNumber(ctx, messageDesc, field, 'key');
         chunks.push(code`
           Object.entries(object.${fieldName}).forEach(([key, value]) => {
@@ -1190,14 +1187,15 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
             }
           });
         `);
+        chunks.push(code`}`);
       } else {
+        chunks.push(code`message.${fieldName} = [];`);
         chunks.push(code`
-          for (const e of object.${fieldName}) {
+          for (const e of (object.${fieldName} ?? [])) {
             message.${fieldName}.push(${readSnippet('e')});
           }
         `);
       }
-      chunks.push(code`}`);
     } else if (isWithinOneOfThatShouldBeUnion(options, field)) {
       let oneofName = maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options);
       const v = readSnippet(`object.${oneofName}.${fieldName}`);

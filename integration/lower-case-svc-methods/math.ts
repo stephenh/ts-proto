@@ -175,10 +175,8 @@ export const Numbers = {
   fromJSON(object: any): Numbers {
     const message = { ...baseNumbers } as Numbers;
     message.num = [];
-    if (object.num !== undefined && object.num !== null) {
-      for (const e of object.num) {
-        message.num.push(Number(e));
-      }
+    for (const e of object.num ?? []) {
+      message.num.push(Number(e));
     }
     return message;
   },
@@ -196,10 +194,8 @@ export const Numbers = {
   fromPartial(object: DeepPartial<Numbers>): Numbers {
     const message = { ...baseNumbers } as Numbers;
     message.num = [];
-    if (object.num !== undefined && object.num !== null) {
-      for (const e of object.num) {
-        message.num.push(e);
-      }
+    for (const e of object.num ?? []) {
+      message.num.push(e);
     }
     return message;
   },
