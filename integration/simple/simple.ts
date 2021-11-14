@@ -415,7 +415,6 @@ export const Simple = {
     message.snacks = [];
     message.oldStates = [];
     message.blobs = [];
-    message.blob = new Uint8Array();
     if (object.name !== undefined && object.name !== null) {
       message.name = String(object.name);
     } else {
@@ -478,6 +477,8 @@ export const Simple = {
     }
     if (object.blob !== undefined && object.blob !== null) {
       message.blob = bytesFromBase64(object.blob);
+    } else {
+      message.blob = new Uint8Array();
     }
     return message;
   },
@@ -1614,7 +1615,6 @@ export const SimpleWithMap_MapOfBytesEntry = {
 
   fromJSON(object: any): SimpleWithMap_MapOfBytesEntry {
     const message = { ...baseSimpleWithMap_MapOfBytesEntry } as SimpleWithMap_MapOfBytesEntry;
-    message.value = new Uint8Array();
     if (object.key !== undefined && object.key !== null) {
       message.key = String(object.key);
     } else {
@@ -1622,6 +1622,8 @@ export const SimpleWithMap_MapOfBytesEntry = {
     }
     if (object.value !== undefined && object.value !== null) {
       message.value = bytesFromBase64(object.value);
+    } else {
+      message.value = new Uint8Array();
     }
     return message;
   },

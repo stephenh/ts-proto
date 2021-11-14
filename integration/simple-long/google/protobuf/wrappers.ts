@@ -541,9 +541,10 @@ export const BytesValue = {
 
   fromJSON(object: any): BytesValue {
     const message = { ...baseBytesValue } as BytesValue;
-    message.value = new Uint8Array();
     if (object.value !== undefined && object.value !== null) {
       message.value = bytesFromBase64(object.value);
+    } else {
+      message.value = new Uint8Array();
     }
     return message;
   },

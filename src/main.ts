@@ -908,15 +908,6 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
     chunks.push(code`message.${name} = ${value};`);
   });
 
-  // initialize all buffers
-  messageDesc.field
-    .filter((field) => !isRepeated(field) && !isWithinOneOf(field) && isBytes(field))
-    .forEach((field) => {
-      const value = options.env === EnvOption.NODE ? 'Buffer.alloc(0)' : 'new Uint8Array()';
-      const name = maybeSnakeToCamel(field.name, options);
-      chunks.push(code`message.${name} = ${value};`);
-    });
-
   // add a check for each incoming field
   messageDesc.field.forEach((field) => {
     const fieldName = maybeSnakeToCamel(field.name, options);
@@ -998,8 +989,8 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
     };
 
     // and then use the snippet to handle repeated fields if necessary
-    chunks.push(code`if (object.${fieldName} !== undefined && object.${fieldName} !== null) {`);
     if (isRepeated(field)) {
+      chunks.push(code`if (object.${fieldName} !== undefined && object.${fieldName} !== null) {`);
       if (isMapType(ctx, messageDesc, field)) {
         const i = maybeCastToNumber(ctx, messageDesc, field, 'key');
         chunks.push(code`
@@ -1014,26 +1005,22 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
           }
         `);
       }
+      chunks.push(code`}`);
     } else if (isWithinOneOfThatShouldBeUnion(options, field)) {
+      chunks.push(code`if (object.${fieldName} !== undefined && object.${fieldName} !== null) {`);
       const oneofName = maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options);
       chunks.push(code`
         message.${oneofName} = { $case: '${fieldName}', ${fieldName}: ${readSnippet(`object.${fieldName}`)} }
       `);
+      chunks.push(code`}`);
     } else {
+      chunks.push(code`if (object.${fieldName} !== undefined && object.${fieldName} !== null) {`);
       chunks.push(code`message.${fieldName} = ${readSnippet(`object.${fieldName}`)};`);
-    }
-
-    // set the default value (TODO Support bytes)
-    if (
-      !isRepeated(field) &&
-      field.type !== FieldDescriptorProto_Type.TYPE_BYTES &&
-      options.oneof !== OneofOption.UNIONS
-    ) {
-      const v = isWithinOneOf(field) ? 'undefined' : defaultValue(ctx, field);
       chunks.push(code`} else {`);
-      chunks.push(code`message.${fieldName} = ${v};`);
+      const fallback = isWithinOneOf(field) ? 'undefined' : defaultValue(ctx, field);
+      chunks.push(code`message.${fieldName} = ${fallback};`);
+      chunks.push(code`}`);
     }
-    chunks.push(code`}`);
   });
   // and then wrap up the switch/while/return
   chunks.push(code`return message`);
