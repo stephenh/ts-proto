@@ -1225,7 +1225,7 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
       chunks.push(code`message.${fieldName} = ${readSnippet(`object.${fieldName}`)};`);
       chunks.push(code`} else {`);
       const fallback = isWithinOneOf(field) ? 'undefined' : defaultValue(ctx, field);
-      chunks.push(code`message.${fieldName} = ${fallback}`);
+      chunks.push(code`message.${fieldName} = ${fallback};`);
       chunks.push(code`}`);
     }
   });
