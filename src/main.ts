@@ -994,11 +994,9 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
         `);
         chunks.push(code`}`);
       } else {
-        chunks.push(code`message.${fieldName} = [];`);
+        // Explicit `any` type required to make TS with noImplicitAny happy. `object` is also `any` here.
         chunks.push(code`
-          for (const e of (object.${fieldName} ?? [])) {
-            message.${fieldName}.push(${readSnippet('e')});
-          }
+          message.${fieldName} = (object.${fieldName} ?? []).map((e: any) => ${readSnippet('e')});
         `);
       }
     } else if (isWithinOneOfThatShouldBeUnion(options, field)) {
@@ -1189,11 +1187,8 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
         `);
         chunks.push(code`}`);
       } else {
-        chunks.push(code`message.${fieldName} = [];`);
         chunks.push(code`
-          for (const e of (object.${fieldName} ?? [])) {
-            message.${fieldName}.push(${readSnippet('e')});
-          }
+          message.${fieldName} = (object.${fieldName} ?? []).map((e) => ${readSnippet('e')});
         `);
       }
     } else if (isWithinOneOfThatShouldBeUnion(options, field)) {

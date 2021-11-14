@@ -209,10 +209,7 @@ export const DashUserSettingsState = {
     } else {
       message.urls = undefined;
     }
-    message.flashes = [];
-    for (const e of object.flashes ?? []) {
-      message.flashes.push(DashFlash.fromJSON(e));
-    }
+    message.flashes = (object.flashes ?? []).map((e: any) => DashFlash.fromJSON(e));
     return message;
   },
 
@@ -237,10 +234,7 @@ export const DashUserSettingsState = {
     } else {
       message.urls = undefined;
     }
-    message.flashes = [];
-    for (const e of object.flashes ?? []) {
-      message.flashes.push(DashFlash.fromPartial(e));
-    }
+    message.flashes = (object.flashes ?? []).map((e) => DashFlash.fromPartial(e));
     return message;
   },
 };

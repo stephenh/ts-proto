@@ -357,22 +357,10 @@ export const Simple = {
     } else {
       message.state = 0;
     }
-    message.grandChildren = [];
-    for (const e of object.grandChildren ?? []) {
-      message.grandChildren.push(Child.fromJSON(e));
-    }
-    message.coins = [];
-    for (const e of object.coins ?? []) {
-      message.coins.push(Number(e));
-    }
-    message.snacks = [];
-    for (const e of object.snacks ?? []) {
-      message.snacks.push(String(e));
-    }
-    message.oldStates = [];
-    for (const e of object.oldStates ?? []) {
-      message.oldStates.push(stateEnumFromJSON(e));
-    }
+    message.grandChildren = (object.grandChildren ?? []).map((e: any) => Child.fromJSON(e));
+    message.coins = (object.coins ?? []).map((e: any) => Number(e));
+    message.snacks = (object.snacks ?? []).map((e: any) => String(e));
+    message.oldStates = (object.oldStates ?? []).map((e: any) => stateEnumFromJSON(e));
     if (object.thing !== undefined && object.thing !== null) {
       message.thing = ImportedThing.fromJSON(object.thing);
     } else {
@@ -423,22 +411,10 @@ export const Simple = {
       message.child = undefined;
     }
     message.state = object.state ?? 0;
-    message.grandChildren = [];
-    for (const e of object.grandChildren ?? []) {
-      message.grandChildren.push(Child.fromPartial(e));
-    }
-    message.coins = [];
-    for (const e of object.coins ?? []) {
-      message.coins.push(e);
-    }
-    message.snacks = [];
-    for (const e of object.snacks ?? []) {
-      message.snacks.push(e);
-    }
-    message.oldStates = [];
-    for (const e of object.oldStates ?? []) {
-      message.oldStates.push(e);
-    }
+    message.grandChildren = (object.grandChildren ?? []).map((e) => Child.fromPartial(e));
+    message.coins = (object.coins ?? []).map((e) => e);
+    message.snacks = (object.snacks ?? []).map((e) => e);
+    message.oldStates = (object.oldStates ?? []).map((e) => e);
     if (object.thing !== undefined && object.thing !== null) {
       message.thing = ImportedThing.fromPartial(object.thing);
     } else {
@@ -849,14 +825,8 @@ export const SimpleWithWrappers = {
     } else {
       message.enabled = undefined;
     }
-    message.coins = [];
-    for (const e of object.coins ?? []) {
-      message.coins.push(Number(e));
-    }
-    message.snacks = [];
-    for (const e of object.snacks ?? []) {
-      message.snacks.push(String(e));
-    }
+    message.coins = (object.coins ?? []).map((e: any) => Number(e));
+    message.snacks = (object.snacks ?? []).map((e: any) => String(e));
     return message;
   },
 
@@ -883,14 +853,8 @@ export const SimpleWithWrappers = {
     message.name = object.name ?? undefined;
     message.age = object.age ?? undefined;
     message.enabled = object.enabled ?? undefined;
-    message.coins = [];
-    for (const e of object.coins ?? []) {
-      message.coins.push(e);
-    }
-    message.snacks = [];
-    for (const e of object.snacks ?? []) {
-      message.snacks.push(e);
-    }
+    message.coins = (object.coins ?? []).map((e) => e);
+    message.snacks = (object.snacks ?? []).map((e) => e);
     return message;
   },
 };

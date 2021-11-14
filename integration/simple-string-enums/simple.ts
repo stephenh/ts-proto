@@ -123,10 +123,7 @@ export const Simple = {
     } else {
       message.state = StateEnum.UNKNOWN;
     }
-    message.states = [];
-    for (const e of object.states ?? []) {
-      message.states.push(stateEnumFromJSON(e));
-    }
+    message.states = (object.states ?? []).map((e: any) => stateEnumFromJSON(e));
     return message;
   },
 
@@ -146,10 +143,7 @@ export const Simple = {
     const message = { ...baseSimple } as Simple;
     message.name = object.name ?? '';
     message.state = object.state ?? StateEnum.UNKNOWN;
-    message.states = [];
-    for (const e of object.states ?? []) {
-      message.states.push(e);
-    }
+    message.states = (object.states ?? []).map((e) => e);
     return message;
   },
 };

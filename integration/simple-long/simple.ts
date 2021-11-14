@@ -128,14 +128,8 @@ export const SimpleWithWrappers = {
     } else {
       message.bananas = undefined;
     }
-    message.coins = [];
-    for (const e of object.coins ?? []) {
-      message.coins.push(Number(e));
-    }
-    message.snacks = [];
-    for (const e of object.snacks ?? []) {
-      message.snacks.push(String(e));
-    }
+    message.coins = (object.coins ?? []).map((e: any) => Number(e));
+    message.snacks = (object.snacks ?? []).map((e: any) => String(e));
     return message;
   },
 
@@ -168,14 +162,8 @@ export const SimpleWithWrappers = {
     } else {
       message.bananas = undefined;
     }
-    message.coins = [];
-    for (const e of object.coins ?? []) {
-      message.coins.push(e);
-    }
-    message.snacks = [];
-    for (const e of object.snacks ?? []) {
-      message.snacks.push(e);
-    }
+    message.coins = (object.coins ?? []).map((e) => e);
+    message.snacks = (object.snacks ?? []).map((e) => e);
     return message;
   },
 };
@@ -592,10 +580,7 @@ export const Numbers = {
     } else {
       message.sfixed64 = Long.ZERO;
     }
-    message.manyUint64 = [];
-    for (const e of object.manyUint64 ?? []) {
-      message.manyUint64.push(Long.fromString(e));
-    }
+    message.manyUint64 = (object.manyUint64 ?? []).map((e: any) => Long.fromString(e));
     return message;
   },
 
@@ -655,10 +640,7 @@ export const Numbers = {
     } else {
       message.sfixed64 = Long.ZERO;
     }
-    message.manyUint64 = [];
-    for (const e of object.manyUint64 ?? []) {
-      message.manyUint64.push(e);
-    }
+    message.manyUint64 = (object.manyUint64 ?? []).map((e) => e);
     return message;
   },
 };
