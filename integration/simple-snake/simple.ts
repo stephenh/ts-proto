@@ -341,10 +341,6 @@ export const Simple = {
 
   fromJSON(object: any): Simple {
     const message = { ...baseSimple } as Simple;
-    message.grand_children = [];
-    message.coins = [];
-    message.snacks = [];
-    message.old_states = [];
     if (object.name !== undefined && object.name !== null) {
       message.name = String(object.name);
     } else {
@@ -370,21 +366,25 @@ export const Simple = {
     } else {
       message.state = 0;
     }
+    message.grand_children = [];
     if (object.grand_children !== undefined && object.grand_children !== null) {
       for (const e of object.grand_children) {
         message.grand_children.push(Child.fromJSON(e));
       }
     }
+    message.coins = [];
     if (object.coins !== undefined && object.coins !== null) {
       for (const e of object.coins) {
         message.coins.push(Number(e));
       }
     }
+    message.snacks = [];
     if (object.snacks !== undefined && object.snacks !== null) {
       for (const e of object.snacks) {
         message.snacks.push(String(e));
       }
     }
+    message.old_states = [];
     if (object.old_states !== undefined && object.old_states !== null) {
       for (const e of object.old_states) {
         message.old_states.push(stateEnumFromJSON(e));
@@ -859,8 +859,6 @@ export const SimpleWithWrappers = {
 
   fromJSON(object: any): SimpleWithWrappers {
     const message = { ...baseSimpleWithWrappers } as SimpleWithWrappers;
-    message.coins = [];
-    message.snacks = [];
     if (object.name !== undefined && object.name !== null) {
       message.name = String(object.name);
     } else {
@@ -876,11 +874,13 @@ export const SimpleWithWrappers = {
     } else {
       message.enabled = undefined;
     }
+    message.coins = [];
     if (object.coins !== undefined && object.coins !== null) {
       for (const e of object.coins) {
         message.coins.push(Number(e));
       }
     }
+    message.snacks = [];
     if (object.snacks !== undefined && object.snacks !== null) {
       for (const e of object.snacks) {
         message.snacks.push(String(e));
@@ -1034,18 +1034,18 @@ export const SimpleWithMap = {
   fromJSON(object: any): SimpleWithMap {
     const message = { ...baseSimpleWithMap } as SimpleWithMap;
     message.entitiesById = {};
-    message.nameLookup = {};
-    message.intLookup = {};
     if (object.entitiesById !== undefined && object.entitiesById !== null) {
       Object.entries(object.entitiesById).forEach(([key, value]) => {
         message.entitiesById[Number(key)] = Entity.fromJSON(value);
       });
     }
+    message.nameLookup = {};
     if (object.nameLookup !== undefined && object.nameLookup !== null) {
       Object.entries(object.nameLookup).forEach(([key, value]) => {
         message.nameLookup[key] = String(value);
       });
     }
+    message.intLookup = {};
     if (object.intLookup !== undefined && object.intLookup !== null) {
       Object.entries(object.intLookup).forEach(([key, value]) => {
         message.intLookup[Number(key)] = Number(value);

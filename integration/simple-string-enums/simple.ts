@@ -113,7 +113,6 @@ export const Simple = {
 
   fromJSON(object: any): Simple {
     const message = { ...baseSimple } as Simple;
-    message.states = [];
     if (object.name !== undefined && object.name !== null) {
       message.name = String(object.name);
     } else {
@@ -124,6 +123,7 @@ export const Simple = {
     } else {
       message.state = StateEnum.UNKNOWN;
     }
+    message.states = [];
     if (object.states !== undefined && object.states !== null) {
       for (const e of object.states) {
         message.states.push(stateEnumFromJSON(e));

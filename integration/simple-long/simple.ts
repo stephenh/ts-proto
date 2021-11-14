@@ -108,8 +108,6 @@ export const SimpleWithWrappers = {
 
   fromJSON(object: any): SimpleWithWrappers {
     const message = { ...baseSimpleWithWrappers } as SimpleWithWrappers;
-    message.coins = [];
-    message.snacks = [];
     if (object.name !== undefined && object.name !== null) {
       message.name = String(object.name);
     } else {
@@ -130,11 +128,13 @@ export const SimpleWithWrappers = {
     } else {
       message.bananas = undefined;
     }
+    message.coins = [];
     if (object.coins !== undefined && object.coins !== null) {
       for (const e of object.coins) {
         message.coins.push(Number(e));
       }
     }
+    message.snacks = [];
     if (object.snacks !== undefined && object.snacks !== null) {
       for (const e of object.snacks) {
         message.snacks.push(String(e));
@@ -233,12 +233,12 @@ export const SimpleWithMap = {
   fromJSON(object: any): SimpleWithMap {
     const message = { ...baseSimpleWithMap } as SimpleWithMap;
     message.nameLookup = {};
-    message.intLookup = {};
     if (object.nameLookup !== undefined && object.nameLookup !== null) {
       Object.entries(object.nameLookup).forEach(([key, value]) => {
         message.nameLookup[key] = String(value);
       });
     }
+    message.intLookup = {};
     if (object.intLookup !== undefined && object.intLookup !== null) {
       Object.entries(object.intLookup).forEach(([key, value]) => {
         message.intLookup[Number(key)] = Number(value);
@@ -540,7 +540,6 @@ export const Numbers = {
 
   fromJSON(object: any): Numbers {
     const message = { ...baseNumbers } as Numbers;
-    message.manyUint64 = [];
     if (object.double !== undefined && object.double !== null) {
       message.double = Number(object.double);
     } else {
@@ -601,6 +600,7 @@ export const Numbers = {
     } else {
       message.sfixed64 = Long.ZERO;
     }
+    message.manyUint64 = [];
     if (object.manyUint64 !== undefined && object.manyUint64 !== null) {
       for (const e of object.manyUint64) {
         message.manyUint64.push(Long.fromString(e));

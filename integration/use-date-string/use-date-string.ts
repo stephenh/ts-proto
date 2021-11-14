@@ -77,8 +77,6 @@ export const Todo = {
 
   fromJSON(object: any): Todo {
     const message = { ...baseTodo } as Todo;
-    message.repeatedTimestamp = [];
-    message.mapOfTimestamps = {};
     if (object.id !== undefined && object.id !== null) {
       message.id = String(object.id);
     } else {
@@ -89,6 +87,7 @@ export const Todo = {
     } else {
       message.timestamp = undefined;
     }
+    message.repeatedTimestamp = [];
     if (object.repeatedTimestamp !== undefined && object.repeatedTimestamp !== null) {
       for (const e of object.repeatedTimestamp) {
         message.repeatedTimestamp.push(String(e));
@@ -99,6 +98,7 @@ export const Todo = {
     } else {
       message.optionalTimestamp = undefined;
     }
+    message.mapOfTimestamps = {};
     if (object.mapOfTimestamps !== undefined && object.mapOfTimestamps !== null) {
       Object.entries(object.mapOfTimestamps).forEach(([key, value]) => {
         message.mapOfTimestamps[key] = String(value);

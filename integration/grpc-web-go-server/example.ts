@@ -199,7 +199,6 @@ export const DashUserSettingsState = {
 
   fromJSON(object: any): DashUserSettingsState {
     const message = { ...baseDashUserSettingsState } as DashUserSettingsState;
-    message.flashes = [];
     if (object.email !== undefined && object.email !== null) {
       message.email = String(object.email);
     } else {
@@ -210,6 +209,7 @@ export const DashUserSettingsState = {
     } else {
       message.urls = undefined;
     }
+    message.flashes = [];
     if (object.flashes !== undefined && object.flashes !== null) {
       for (const e of object.flashes) {
         message.flashes.push(DashFlash.fromJSON(e));
