@@ -341,10 +341,6 @@ export const Simple = {
 
   fromJSON(object: any): Simple {
     const message = { ...baseSimple } as Simple;
-    message.grand_children = [];
-    message.coins = [];
-    message.snacks = [];
-    message.old_states = [];
     if (object.name !== undefined && object.name !== null) {
       message.name = String(object.name);
     } else {
@@ -370,26 +366,10 @@ export const Simple = {
     } else {
       message.state = 0;
     }
-    if (object.grand_children !== undefined && object.grand_children !== null) {
-      for (const e of object.grand_children) {
-        message.grand_children.push(Child.fromJSON(e));
-      }
-    }
-    if (object.coins !== undefined && object.coins !== null) {
-      for (const e of object.coins) {
-        message.coins.push(Number(e));
-      }
-    }
-    if (object.snacks !== undefined && object.snacks !== null) {
-      for (const e of object.snacks) {
-        message.snacks.push(String(e));
-      }
-    }
-    if (object.old_states !== undefined && object.old_states !== null) {
-      for (const e of object.old_states) {
-        message.old_states.push(stateEnumFromJSON(e));
-      }
-    }
+    message.grand_children = (object.grand_children ?? []).map((e: any) => Child.fromJSON(e));
+    message.coins = (object.coins ?? []).map((e: any) => Number(e));
+    message.snacks = (object.snacks ?? []).map((e: any) => String(e));
+    message.old_states = (object.old_states ?? []).map((e: any) => stateEnumFromJSON(e));
     if (object.thing !== undefined && object.thing !== null) {
       message.thing = ImportedThing.fromJSON(object.thing);
     } else {
@@ -440,30 +420,10 @@ export const Simple = {
       message.child = undefined;
     }
     message.state = object.state ?? 0;
-    message.grand_children = [];
-    if (object.grand_children !== undefined && object.grand_children !== null) {
-      for (const e of object.grand_children) {
-        message.grand_children.push(Child.fromPartial(e));
-      }
-    }
-    message.coins = [];
-    if (object.coins !== undefined && object.coins !== null) {
-      for (const e of object.coins) {
-        message.coins.push(e);
-      }
-    }
-    message.snacks = [];
-    if (object.snacks !== undefined && object.snacks !== null) {
-      for (const e of object.snacks) {
-        message.snacks.push(e);
-      }
-    }
-    message.old_states = [];
-    if (object.old_states !== undefined && object.old_states !== null) {
-      for (const e of object.old_states) {
-        message.old_states.push(e);
-      }
-    }
+    message.grand_children = (object.grand_children ?? []).map((e) => Child.fromPartial(e));
+    message.coins = (object.coins ?? []).map((e) => e);
+    message.snacks = (object.snacks ?? []).map((e) => e);
+    message.old_states = (object.old_states ?? []).map((e) => e);
     if (object.thing !== undefined && object.thing !== null) {
       message.thing = ImportedThing.fromPartial(object.thing);
     } else {
@@ -859,8 +819,6 @@ export const SimpleWithWrappers = {
 
   fromJSON(object: any): SimpleWithWrappers {
     const message = { ...baseSimpleWithWrappers } as SimpleWithWrappers;
-    message.coins = [];
-    message.snacks = [];
     if (object.name !== undefined && object.name !== null) {
       message.name = String(object.name);
     } else {
@@ -876,16 +834,8 @@ export const SimpleWithWrappers = {
     } else {
       message.enabled = undefined;
     }
-    if (object.coins !== undefined && object.coins !== null) {
-      for (const e of object.coins) {
-        message.coins.push(Number(e));
-      }
-    }
-    if (object.snacks !== undefined && object.snacks !== null) {
-      for (const e of object.snacks) {
-        message.snacks.push(String(e));
-      }
-    }
+    message.coins = (object.coins ?? []).map((e: any) => Number(e));
+    message.snacks = (object.snacks ?? []).map((e: any) => String(e));
     return message;
   },
 
@@ -912,18 +862,8 @@ export const SimpleWithWrappers = {
     message.name = object.name ?? undefined;
     message.age = object.age ?? undefined;
     message.enabled = object.enabled ?? undefined;
-    message.coins = [];
-    if (object.coins !== undefined && object.coins !== null) {
-      for (const e of object.coins) {
-        message.coins.push(e);
-      }
-    }
-    message.snacks = [];
-    if (object.snacks !== undefined && object.snacks !== null) {
-      for (const e of object.snacks) {
-        message.snacks.push(e);
-      }
-    }
+    message.coins = (object.coins ?? []).map((e) => e);
+    message.snacks = (object.snacks ?? []).map((e) => e);
     return message;
   },
 };
@@ -1034,18 +974,18 @@ export const SimpleWithMap = {
   fromJSON(object: any): SimpleWithMap {
     const message = { ...baseSimpleWithMap } as SimpleWithMap;
     message.entitiesById = {};
-    message.nameLookup = {};
-    message.intLookup = {};
     if (object.entitiesById !== undefined && object.entitiesById !== null) {
       Object.entries(object.entitiesById).forEach(([key, value]) => {
         message.entitiesById[Number(key)] = Entity.fromJSON(value);
       });
     }
+    message.nameLookup = {};
     if (object.nameLookup !== undefined && object.nameLookup !== null) {
       Object.entries(object.nameLookup).forEach(([key, value]) => {
         message.nameLookup[key] = String(value);
       });
     }
+    message.intLookup = {};
     if (object.intLookup !== undefined && object.intLookup !== null) {
       Object.entries(object.intLookup).forEach(([key, value]) => {
         message.intLookup[Number(key)] = Number(value);

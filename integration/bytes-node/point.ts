@@ -39,9 +39,10 @@ export const Point = {
 
   fromJSON(object: any): Point {
     const message = { ...basePoint } as Point;
-    message.data = Buffer.alloc(0);
     if (object.data !== undefined && object.data !== null) {
       message.data = Buffer.from(bytesFromBase64(object.data));
+    } else {
+      message.data = Buffer.alloc(0);
     }
     return message;
   },

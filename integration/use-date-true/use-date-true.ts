@@ -77,8 +77,6 @@ export const Todo = {
 
   fromJSON(object: any): Todo {
     const message = { ...baseTodo } as Todo;
-    message.repeatedTimestamp = [];
-    message.mapOfTimestamps = {};
     if (object.id !== undefined && object.id !== null) {
       message.id = String(object.id);
     } else {
@@ -89,16 +87,13 @@ export const Todo = {
     } else {
       message.timestamp = undefined;
     }
-    if (object.repeatedTimestamp !== undefined && object.repeatedTimestamp !== null) {
-      for (const e of object.repeatedTimestamp) {
-        message.repeatedTimestamp.push(fromJsonTimestamp(e));
-      }
-    }
+    message.repeatedTimestamp = (object.repeatedTimestamp ?? []).map((e: any) => fromJsonTimestamp(e));
     if (object.optionalTimestamp !== undefined && object.optionalTimestamp !== null) {
       message.optionalTimestamp = fromJsonTimestamp(object.optionalTimestamp);
     } else {
       message.optionalTimestamp = undefined;
     }
+    message.mapOfTimestamps = {};
     if (object.mapOfTimestamps !== undefined && object.mapOfTimestamps !== null) {
       Object.entries(object.mapOfTimestamps).forEach(([key, value]) => {
         message.mapOfTimestamps[key] = fromJsonTimestamp(value);
@@ -130,12 +125,7 @@ export const Todo = {
     const message = { ...baseTodo } as Todo;
     message.id = object.id ?? '';
     message.timestamp = object.timestamp ?? undefined;
-    message.repeatedTimestamp = [];
-    if (object.repeatedTimestamp !== undefined && object.repeatedTimestamp !== null) {
-      for (const e of object.repeatedTimestamp) {
-        message.repeatedTimestamp.push(e);
-      }
-    }
+    message.repeatedTimestamp = (object.repeatedTimestamp ?? []).map((e) => e);
     message.optionalTimestamp = object.optionalTimestamp ?? undefined;
     message.mapOfTimestamps = {};
     if (object.mapOfTimestamps !== undefined && object.mapOfTimestamps !== null) {

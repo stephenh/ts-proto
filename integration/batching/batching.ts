@@ -75,12 +75,7 @@ export const BatchQueryRequest = {
 
   fromJSON(object: any): BatchQueryRequest {
     const message = { ...baseBatchQueryRequest } as BatchQueryRequest;
-    message.ids = [];
-    if (object.ids !== undefined && object.ids !== null) {
-      for (const e of object.ids) {
-        message.ids.push(String(e));
-      }
-    }
+    message.ids = (object.ids ?? []).map((e: any) => String(e));
     return message;
   },
 
@@ -96,12 +91,7 @@ export const BatchQueryRequest = {
 
   fromPartial(object: DeepPartial<BatchQueryRequest>): BatchQueryRequest {
     const message = { ...baseBatchQueryRequest } as BatchQueryRequest;
-    message.ids = [];
-    if (object.ids !== undefined && object.ids !== null) {
-      for (const e of object.ids) {
-        message.ids.push(e);
-      }
-    }
+    message.ids = (object.ids ?? []).map((e) => e);
     return message;
   },
 };
@@ -137,12 +127,7 @@ export const BatchQueryResponse = {
 
   fromJSON(object: any): BatchQueryResponse {
     const message = { ...baseBatchQueryResponse } as BatchQueryResponse;
-    message.entities = [];
-    if (object.entities !== undefined && object.entities !== null) {
-      for (const e of object.entities) {
-        message.entities.push(Entity.fromJSON(e));
-      }
-    }
+    message.entities = (object.entities ?? []).map((e: any) => Entity.fromJSON(e));
     return message;
   },
 
@@ -158,12 +143,7 @@ export const BatchQueryResponse = {
 
   fromPartial(object: DeepPartial<BatchQueryResponse>): BatchQueryResponse {
     const message = { ...baseBatchQueryResponse } as BatchQueryResponse;
-    message.entities = [];
-    if (object.entities !== undefined && object.entities !== null) {
-      for (const e of object.entities) {
-        message.entities.push(Entity.fromPartial(e));
-      }
-    }
+    message.entities = (object.entities ?? []).map((e) => Entity.fromPartial(e));
     return message;
   },
 };
@@ -199,12 +179,7 @@ export const BatchMapQueryRequest = {
 
   fromJSON(object: any): BatchMapQueryRequest {
     const message = { ...baseBatchMapQueryRequest } as BatchMapQueryRequest;
-    message.ids = [];
-    if (object.ids !== undefined && object.ids !== null) {
-      for (const e of object.ids) {
-        message.ids.push(String(e));
-      }
-    }
+    message.ids = (object.ids ?? []).map((e: any) => String(e));
     return message;
   },
 
@@ -220,12 +195,7 @@ export const BatchMapQueryRequest = {
 
   fromPartial(object: DeepPartial<BatchMapQueryRequest>): BatchMapQueryRequest {
     const message = { ...baseBatchMapQueryRequest } as BatchMapQueryRequest;
-    message.ids = [];
-    if (object.ids !== undefined && object.ids !== null) {
-      for (const e of object.ids) {
-        message.ids.push(e);
-      }
-    }
+    message.ids = (object.ids ?? []).map((e) => e);
     return message;
   },
 };

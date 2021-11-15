@@ -166,9 +166,10 @@ export const PleaseChoose = {
 
   fromJSON(object: any): PleaseChoose {
     const message = { ...basePleaseChoose } as PleaseChoose;
-    message.signature = new Uint8Array();
     if (object.name !== undefined && object.name !== null) {
       message.name = String(object.name);
+    } else {
+      message.name = '';
     }
     if (object.aNumber !== undefined && object.aNumber !== null) {
       message.choice = { $case: 'aNumber', aNumber: Number(object.aNumber) };
@@ -190,6 +191,8 @@ export const PleaseChoose = {
     }
     if (object.age !== undefined && object.age !== null) {
       message.age = Number(object.age);
+    } else {
+      message.age = 0;
     }
     if (object.either !== undefined && object.either !== null) {
       message.eitherOr = { $case: 'either', either: String(object.either) };
@@ -202,6 +205,8 @@ export const PleaseChoose = {
     }
     if (object.signature !== undefined && object.signature !== null) {
       message.signature = bytesFromBase64(object.signature);
+    } else {
+      message.signature = new Uint8Array();
     }
     return message;
   },
@@ -313,6 +318,8 @@ export const PleaseChoose_Submessage = {
     const message = { ...basePleaseChoose_Submessage } as PleaseChoose_Submessage;
     if (object.name !== undefined && object.name !== null) {
       message.name = String(object.name);
+    } else {
+      message.name = '';
     }
     return message;
   },
@@ -368,9 +375,13 @@ export const SimpleButOptional = {
     const message = { ...baseSimpleButOptional } as SimpleButOptional;
     if (object.name !== undefined && object.name !== null) {
       message.name = String(object.name);
+    } else {
+      message.name = undefined;
     }
     if (object.age !== undefined && object.age !== null) {
       message.age = Number(object.age);
+    } else {
+      message.age = undefined;
     }
     return message;
   },
