@@ -1,3 +1,10 @@
+# [1.86.0](https://github.com/stephenh/ts-proto/compare/v1.85.0...v1.86.0) (2021-11-15)
+
+
+### Features
+
+* Initialize lists with map ([#387](https://github.com/stephenh/ts-proto/issues/387)) ([200e674](https://github.com/stephenh/ts-proto/commit/200e674e4baf2640d67720ad535fe042d291d4a0))
+
 # [1.85.0](https://github.com/stephenh/ts-proto/compare/v1.84.0...v1.85.0) (2021-11-02)
 
 
