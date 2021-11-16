@@ -1,3 +1,10 @@
+# [1.87.0](https://github.com/stephenh/ts-proto/compare/v1.86.0...v1.87.0) (2021-11-16)
+
+
+### Features
+
+* Use ternary operator for conditional assignments ([#394](https://github.com/stephenh/ts-proto/issues/394)) ([d84c084](https://github.com/stephenh/ts-proto/commit/d84c084fb56c958c184f8971479979b8bfb17ccc))
+
 # [1.86.0](https://github.com/stephenh/ts-proto/compare/v1.85.0...v1.86.0) (2021-11-15)
 
 
