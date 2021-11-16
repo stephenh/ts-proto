@@ -69,11 +69,8 @@ export const TestMessage = {
 
   fromJSON(object: any): TestMessage {
     const message = { ...baseTestMessage } as TestMessage;
-    if (object.timestamp !== undefined && object.timestamp !== null) {
-      message.timestamp = fromJsonTimestamp(object.timestamp);
-    } else {
-      message.timestamp = undefined;
-    }
+    message.timestamp =
+      object.timestamp !== undefined && object.timestamp !== null ? fromJsonTimestamp(object.timestamp) : undefined;
     return message;
   },
 

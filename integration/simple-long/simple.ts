@@ -108,26 +108,11 @@ export const SimpleWithWrappers = {
 
   fromJSON(object: any): SimpleWithWrappers {
     const message = { ...baseSimpleWithWrappers } as SimpleWithWrappers;
-    if (object.name !== undefined && object.name !== null) {
-      message.name = String(object.name);
-    } else {
-      message.name = undefined;
-    }
-    if (object.age !== undefined && object.age !== null) {
-      message.age = Number(object.age);
-    } else {
-      message.age = undefined;
-    }
-    if (object.enabled !== undefined && object.enabled !== null) {
-      message.enabled = Boolean(object.enabled);
-    } else {
-      message.enabled = undefined;
-    }
-    if (object.bananas !== undefined && object.bananas !== null) {
-      message.bananas = Long.fromValue(object.bananas);
-    } else {
-      message.bananas = undefined;
-    }
+    message.name = object.name !== undefined && object.name !== null ? String(object.name) : undefined;
+    message.age = object.age !== undefined && object.age !== null ? Number(object.age) : undefined;
+    message.enabled = object.enabled !== undefined && object.enabled !== null ? Boolean(object.enabled) : undefined;
+    message.bananas =
+      object.bananas !== undefined && object.bananas !== null ? Long.fromValue(object.bananas) : undefined;
     message.coins = (object.coins ?? []).map((e: any) => Number(e));
     message.snacks = (object.snacks ?? []).map((e: any) => String(e));
     return message;
@@ -302,16 +287,8 @@ export const SimpleWithMap_NameLookupEntry = {
 
   fromJSON(object: any): SimpleWithMap_NameLookupEntry {
     const message = { ...baseSimpleWithMap_NameLookupEntry } as SimpleWithMap_NameLookupEntry;
-    if (object.key !== undefined && object.key !== null) {
-      message.key = String(object.key);
-    } else {
-      message.key = '';
-    }
-    if (object.value !== undefined && object.value !== null) {
-      message.value = String(object.value);
-    } else {
-      message.value = '';
-    }
+    message.key = object.key !== undefined && object.key !== null ? String(object.key) : '';
+    message.value = object.value !== undefined && object.value !== null ? String(object.value) : '';
     return message;
   },
 
@@ -366,16 +343,8 @@ export const SimpleWithMap_IntLookupEntry = {
 
   fromJSON(object: any): SimpleWithMap_IntLookupEntry {
     const message = { ...baseSimpleWithMap_IntLookupEntry } as SimpleWithMap_IntLookupEntry;
-    if (object.key !== undefined && object.key !== null) {
-      message.key = Number(object.key);
-    } else {
-      message.key = 0;
-    }
-    if (object.value !== undefined && object.value !== null) {
-      message.value = Number(object.value);
-    } else {
-      message.value = 0;
-    }
+    message.key = object.key !== undefined && object.key !== null ? Number(object.key) : 0;
+    message.value = object.value !== undefined && object.value !== null ? Number(object.value) : 0;
     return message;
   },
 
@@ -520,66 +489,21 @@ export const Numbers = {
 
   fromJSON(object: any): Numbers {
     const message = { ...baseNumbers } as Numbers;
-    if (object.double !== undefined && object.double !== null) {
-      message.double = Number(object.double);
-    } else {
-      message.double = 0;
-    }
-    if (object.float !== undefined && object.float !== null) {
-      message.float = Number(object.float);
-    } else {
-      message.float = 0;
-    }
-    if (object.int32 !== undefined && object.int32 !== null) {
-      message.int32 = Number(object.int32);
-    } else {
-      message.int32 = 0;
-    }
-    if (object.int64 !== undefined && object.int64 !== null) {
-      message.int64 = Long.fromString(object.int64);
-    } else {
-      message.int64 = Long.ZERO;
-    }
-    if (object.uint32 !== undefined && object.uint32 !== null) {
-      message.uint32 = Number(object.uint32);
-    } else {
-      message.uint32 = 0;
-    }
-    if (object.uint64 !== undefined && object.uint64 !== null) {
-      message.uint64 = Long.fromString(object.uint64);
-    } else {
-      message.uint64 = Long.UZERO;
-    }
-    if (object.sint32 !== undefined && object.sint32 !== null) {
-      message.sint32 = Number(object.sint32);
-    } else {
-      message.sint32 = 0;
-    }
-    if (object.sint64 !== undefined && object.sint64 !== null) {
-      message.sint64 = Long.fromString(object.sint64);
-    } else {
-      message.sint64 = Long.ZERO;
-    }
-    if (object.fixed32 !== undefined && object.fixed32 !== null) {
-      message.fixed32 = Number(object.fixed32);
-    } else {
-      message.fixed32 = 0;
-    }
-    if (object.fixed64 !== undefined && object.fixed64 !== null) {
-      message.fixed64 = Long.fromString(object.fixed64);
-    } else {
-      message.fixed64 = Long.UZERO;
-    }
-    if (object.sfixed32 !== undefined && object.sfixed32 !== null) {
-      message.sfixed32 = Number(object.sfixed32);
-    } else {
-      message.sfixed32 = 0;
-    }
-    if (object.sfixed64 !== undefined && object.sfixed64 !== null) {
-      message.sfixed64 = Long.fromString(object.sfixed64);
-    } else {
-      message.sfixed64 = Long.ZERO;
-    }
+    message.double = object.double !== undefined && object.double !== null ? Number(object.double) : 0;
+    message.float = object.float !== undefined && object.float !== null ? Number(object.float) : 0;
+    message.int32 = object.int32 !== undefined && object.int32 !== null ? Number(object.int32) : 0;
+    message.int64 = object.int64 !== undefined && object.int64 !== null ? Long.fromString(object.int64) : Long.ZERO;
+    message.uint32 = object.uint32 !== undefined && object.uint32 !== null ? Number(object.uint32) : 0;
+    message.uint64 =
+      object.uint64 !== undefined && object.uint64 !== null ? Long.fromString(object.uint64) : Long.UZERO;
+    message.sint32 = object.sint32 !== undefined && object.sint32 !== null ? Number(object.sint32) : 0;
+    message.sint64 = object.sint64 !== undefined && object.sint64 !== null ? Long.fromString(object.sint64) : Long.ZERO;
+    message.fixed32 = object.fixed32 !== undefined && object.fixed32 !== null ? Number(object.fixed32) : 0;
+    message.fixed64 =
+      object.fixed64 !== undefined && object.fixed64 !== null ? Long.fromString(object.fixed64) : Long.UZERO;
+    message.sfixed32 = object.sfixed32 !== undefined && object.sfixed32 !== null ? Number(object.sfixed32) : 0;
+    message.sfixed64 =
+      object.sfixed64 !== undefined && object.sfixed64 !== null ? Long.fromString(object.sfixed64) : Long.ZERO;
     message.manyUint64 = (object.manyUint64 ?? []).map((e: any) => Long.fromString(e));
     return message;
   },

@@ -113,16 +113,9 @@ export const Simple = {
 
   fromJSON(object: any): Simple {
     const message = { ...baseSimple } as Simple;
-    if (object.name !== undefined && object.name !== null) {
-      message.name = String(object.name);
-    } else {
-      message.name = '';
-    }
-    if (object.state !== undefined && object.state !== null) {
-      message.state = stateEnumFromJSON(object.state);
-    } else {
-      message.state = StateEnum.UNKNOWN;
-    }
+    message.name = object.name !== undefined && object.name !== null ? String(object.name) : '';
+    message.state =
+      object.state !== undefined && object.state !== null ? stateEnumFromJSON(object.state) : StateEnum.UNKNOWN;
     message.states = (object.states ?? []).map((e: any) => stateEnumFromJSON(e));
     return message;
   },

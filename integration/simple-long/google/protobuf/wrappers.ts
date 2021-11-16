@@ -124,11 +124,7 @@ export const DoubleValue = {
 
   fromJSON(object: any): DoubleValue {
     const message = { ...baseDoubleValue } as DoubleValue;
-    if (object.value !== undefined && object.value !== null) {
-      message.value = Number(object.value);
-    } else {
-      message.value = 0;
-    }
+    message.value = object.value !== undefined && object.value !== null ? Number(object.value) : 0;
     return message;
   },
 
@@ -175,11 +171,7 @@ export const FloatValue = {
 
   fromJSON(object: any): FloatValue {
     const message = { ...baseFloatValue } as FloatValue;
-    if (object.value !== undefined && object.value !== null) {
-      message.value = Number(object.value);
-    } else {
-      message.value = 0;
-    }
+    message.value = object.value !== undefined && object.value !== null ? Number(object.value) : 0;
     return message;
   },
 
@@ -226,11 +218,7 @@ export const Int64Value = {
 
   fromJSON(object: any): Int64Value {
     const message = { ...baseInt64Value } as Int64Value;
-    if (object.value !== undefined && object.value !== null) {
-      message.value = Long.fromString(object.value);
-    } else {
-      message.value = Long.ZERO;
-    }
+    message.value = object.value !== undefined && object.value !== null ? Long.fromString(object.value) : Long.ZERO;
     return message;
   },
 
@@ -281,11 +269,7 @@ export const UInt64Value = {
 
   fromJSON(object: any): UInt64Value {
     const message = { ...baseUInt64Value } as UInt64Value;
-    if (object.value !== undefined && object.value !== null) {
-      message.value = Long.fromString(object.value);
-    } else {
-      message.value = Long.UZERO;
-    }
+    message.value = object.value !== undefined && object.value !== null ? Long.fromString(object.value) : Long.UZERO;
     return message;
   },
 
@@ -336,11 +320,7 @@ export const Int32Value = {
 
   fromJSON(object: any): Int32Value {
     const message = { ...baseInt32Value } as Int32Value;
-    if (object.value !== undefined && object.value !== null) {
-      message.value = Number(object.value);
-    } else {
-      message.value = 0;
-    }
+    message.value = object.value !== undefined && object.value !== null ? Number(object.value) : 0;
     return message;
   },
 
@@ -387,11 +367,7 @@ export const UInt32Value = {
 
   fromJSON(object: any): UInt32Value {
     const message = { ...baseUInt32Value } as UInt32Value;
-    if (object.value !== undefined && object.value !== null) {
-      message.value = Number(object.value);
-    } else {
-      message.value = 0;
-    }
+    message.value = object.value !== undefined && object.value !== null ? Number(object.value) : 0;
     return message;
   },
 
@@ -438,11 +414,7 @@ export const BoolValue = {
 
   fromJSON(object: any): BoolValue {
     const message = { ...baseBoolValue } as BoolValue;
-    if (object.value !== undefined && object.value !== null) {
-      message.value = Boolean(object.value);
-    } else {
-      message.value = false;
-    }
+    message.value = object.value !== undefined && object.value !== null ? Boolean(object.value) : false;
     return message;
   },
 
@@ -489,11 +461,7 @@ export const StringValue = {
 
   fromJSON(object: any): StringValue {
     const message = { ...baseStringValue } as StringValue;
-    if (object.value !== undefined && object.value !== null) {
-      message.value = String(object.value);
-    } else {
-      message.value = '';
-    }
+    message.value = object.value !== undefined && object.value !== null ? String(object.value) : '';
     return message;
   },
 
@@ -541,11 +509,8 @@ export const BytesValue = {
 
   fromJSON(object: any): BytesValue {
     const message = { ...baseBytesValue } as BytesValue;
-    if (object.value !== undefined && object.value !== null) {
-      message.value = bytesFromBase64(object.value);
-    } else {
-      message.value = new Uint8Array();
-    }
+    message.value =
+      object.value !== undefined && object.value !== null ? bytesFromBase64(object.value) : new Uint8Array();
     return message;
   },
 

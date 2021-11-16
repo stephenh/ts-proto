@@ -97,11 +97,10 @@ export const DividerData = {
 
   fromJSON(object: any): DividerData {
     const message = { ...baseDividerData } as DividerData;
-    if (object.type !== undefined && object.type !== null) {
-      message.type = dividerData_DividerTypeFromJSON(object.type);
-    } else {
-      message.type = DividerData_DividerType.DOUBLE;
-    }
+    message.type =
+      object.type !== undefined && object.type !== null
+        ? dividerData_DividerTypeFromJSON(object.type)
+        : DividerData_DividerType.DOUBLE;
     return message;
   },
 

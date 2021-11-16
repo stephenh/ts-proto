@@ -140,16 +140,8 @@ export const Timestamp = {
 
   fromJSON(object: any): Timestamp {
     const message = { ...baseTimestamp } as Timestamp;
-    if (object.seconds !== undefined && object.seconds !== null) {
-      message.seconds = String(object.seconds);
-    } else {
-      message.seconds = '0';
-    }
-    if (object.nanos !== undefined && object.nanos !== null) {
-      message.nanos = Number(object.nanos);
-    } else {
-      message.nanos = 0;
-    }
+    message.seconds = object.seconds !== undefined && object.seconds !== null ? String(object.seconds) : '0';
+    message.nanos = object.nanos !== undefined && object.nanos !== null ? Number(object.nanos) : 0;
     return message;
   },
 

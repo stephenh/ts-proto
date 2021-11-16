@@ -42,11 +42,7 @@ export const User = {
 
   fromJSON(object: any): User {
     const message = { ...baseUser } as User;
-    if (object.name !== undefined && object.name !== null) {
-      message.name = String(object.name);
-    } else {
-      message.name = '';
-    }
+    message.name = object.name !== undefined && object.name !== null ? String(object.name) : '';
     return message;
   },
 

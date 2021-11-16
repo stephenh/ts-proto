@@ -410,51 +410,22 @@ export const Simple = {
 
   fromJSON(object: any): Simple {
     const message = { ...baseSimple } as Simple;
-    if (object.name !== undefined && object.name !== null) {
-      message.name = String(object.name);
-    } else {
-      message.name = '';
-    }
-    if (object.age !== undefined && object.age !== null) {
-      message.age = Number(object.age);
-    } else {
-      message.age = 0;
-    }
-    if (object.createdAt !== undefined && object.createdAt !== null) {
-      message.createdAt = fromJsonTimestamp(object.createdAt);
-    } else {
-      message.createdAt = undefined;
-    }
-    if (object.child !== undefined && object.child !== null) {
-      message.child = Child.fromJSON(object.child);
-    } else {
-      message.child = undefined;
-    }
-    if (object.state !== undefined && object.state !== null) {
-      message.state = stateEnumFromJSON(object.state);
-    } else {
-      message.state = 0;
-    }
+    message.name = object.name !== undefined && object.name !== null ? String(object.name) : '';
+    message.age = object.age !== undefined && object.age !== null ? Number(object.age) : 0;
+    message.createdAt =
+      object.createdAt !== undefined && object.createdAt !== null ? fromJsonTimestamp(object.createdAt) : undefined;
+    message.child = object.child !== undefined && object.child !== null ? Child.fromJSON(object.child) : undefined;
+    message.state = object.state !== undefined && object.state !== null ? stateEnumFromJSON(object.state) : 0;
     message.grandChildren = (object.grandChildren ?? []).map((e: any) => Child.fromJSON(e));
     message.coins = (object.coins ?? []).map((e: any) => Number(e));
     message.snacks = (object.snacks ?? []).map((e: any) => String(e));
     message.oldStates = (object.oldStates ?? []).map((e: any) => stateEnumFromJSON(e));
-    if (object.thing !== undefined && object.thing !== null) {
-      message.thing = ImportedThing.fromJSON(object.thing);
-    } else {
-      message.thing = undefined;
-    }
+    message.thing =
+      object.thing !== undefined && object.thing !== null ? ImportedThing.fromJSON(object.thing) : undefined;
     message.blobs = (object.blobs ?? []).map((e: any) => bytesFromBase64(e));
-    if (object.birthday !== undefined && object.birthday !== null) {
-      message.birthday = DateMessage.fromJSON(object.birthday);
-    } else {
-      message.birthday = undefined;
-    }
-    if (object.blob !== undefined && object.blob !== null) {
-      message.blob = bytesFromBase64(object.blob);
-    } else {
-      message.blob = new Uint8Array();
-    }
+    message.birthday =
+      object.birthday !== undefined && object.birthday !== null ? DateMessage.fromJSON(object.birthday) : undefined;
+    message.blob = object.blob !== undefined && object.blob !== null ? bytesFromBase64(object.blob) : new Uint8Array();
     return message;
   },
 
@@ -503,27 +474,17 @@ export const Simple = {
     message.name = object.name ?? '';
     message.age = object.age ?? 0;
     message.createdAt = object.createdAt ?? undefined;
-    if (object.child !== undefined && object.child !== null) {
-      message.child = Child.fromPartial(object.child);
-    } else {
-      message.child = undefined;
-    }
+    message.child = object.child !== undefined && object.child !== null ? Child.fromPartial(object.child) : undefined;
     message.state = object.state ?? 0;
     message.grandChildren = (object.grandChildren ?? []).map((e) => Child.fromPartial(e));
     message.coins = (object.coins ?? []).map((e) => e);
     message.snacks = (object.snacks ?? []).map((e) => e);
     message.oldStates = (object.oldStates ?? []).map((e) => e);
-    if (object.thing !== undefined && object.thing !== null) {
-      message.thing = ImportedThing.fromPartial(object.thing);
-    } else {
-      message.thing = undefined;
-    }
+    message.thing =
+      object.thing !== undefined && object.thing !== null ? ImportedThing.fromPartial(object.thing) : undefined;
     message.blobs = (object.blobs ?? []).map((e) => e);
-    if (object.birthday !== undefined && object.birthday !== null) {
-      message.birthday = DateMessage.fromPartial(object.birthday);
-    } else {
-      message.birthday = undefined;
-    }
+    message.birthday =
+      object.birthday !== undefined && object.birthday !== null ? DateMessage.fromPartial(object.birthday) : undefined;
     message.blob = object.blob ?? new Uint8Array();
     return message;
   },
@@ -565,16 +526,8 @@ export const Child = {
 
   fromJSON(object: any): Child {
     const message = { ...baseChild } as Child;
-    if (object.name !== undefined && object.name !== null) {
-      message.name = String(object.name);
-    } else {
-      message.name = '';
-    }
-    if (object.type !== undefined && object.type !== null) {
-      message.type = child_TypeFromJSON(object.type);
-    } else {
-      message.type = 0;
-    }
+    message.name = object.name !== undefined && object.name !== null ? String(object.name) : '';
+    message.type = object.type !== undefined && object.type !== null ? child_TypeFromJSON(object.type) : 0;
     return message;
   },
 
@@ -635,21 +588,12 @@ export const Nested = {
 
   fromJSON(object: any): Nested {
     const message = { ...baseNested } as Nested;
-    if (object.name !== undefined && object.name !== null) {
-      message.name = String(object.name);
-    } else {
-      message.name = '';
-    }
-    if (object.message !== undefined && object.message !== null) {
-      message.message = Nested_InnerMessage.fromJSON(object.message);
-    } else {
-      message.message = undefined;
-    }
-    if (object.state !== undefined && object.state !== null) {
-      message.state = nested_InnerEnumFromJSON(object.state);
-    } else {
-      message.state = 0;
-    }
+    message.name = object.name !== undefined && object.name !== null ? String(object.name) : '';
+    message.message =
+      object.message !== undefined && object.message !== null
+        ? Nested_InnerMessage.fromJSON(object.message)
+        : undefined;
+    message.state = object.state !== undefined && object.state !== null ? nested_InnerEnumFromJSON(object.state) : 0;
     return message;
   },
 
@@ -665,11 +609,10 @@ export const Nested = {
   fromPartial(object: DeepPartial<Nested>): Nested {
     const message = { ...baseNested } as Nested;
     message.name = object.name ?? '';
-    if (object.message !== undefined && object.message !== null) {
-      message.message = Nested_InnerMessage.fromPartial(object.message);
-    } else {
-      message.message = undefined;
-    }
+    message.message =
+      object.message !== undefined && object.message !== null
+        ? Nested_InnerMessage.fromPartial(object.message)
+        : undefined;
     message.state = object.state ?? 0;
     return message;
   },
@@ -711,16 +654,11 @@ export const Nested_InnerMessage = {
 
   fromJSON(object: any): Nested_InnerMessage {
     const message = { ...baseNested_InnerMessage } as Nested_InnerMessage;
-    if (object.name !== undefined && object.name !== null) {
-      message.name = String(object.name);
-    } else {
-      message.name = '';
-    }
-    if (object.deep !== undefined && object.deep !== null) {
-      message.deep = Nested_InnerMessage_DeepMessage.fromJSON(object.deep);
-    } else {
-      message.deep = undefined;
-    }
+    message.name = object.name !== undefined && object.name !== null ? String(object.name) : '';
+    message.deep =
+      object.deep !== undefined && object.deep !== null
+        ? Nested_InnerMessage_DeepMessage.fromJSON(object.deep)
+        : undefined;
     return message;
   },
 
@@ -735,11 +673,10 @@ export const Nested_InnerMessage = {
   fromPartial(object: DeepPartial<Nested_InnerMessage>): Nested_InnerMessage {
     const message = { ...baseNested_InnerMessage } as Nested_InnerMessage;
     message.name = object.name ?? '';
-    if (object.deep !== undefined && object.deep !== null) {
-      message.deep = Nested_InnerMessage_DeepMessage.fromPartial(object.deep);
-    } else {
-      message.deep = undefined;
-    }
+    message.deep =
+      object.deep !== undefined && object.deep !== null
+        ? Nested_InnerMessage_DeepMessage.fromPartial(object.deep)
+        : undefined;
     return message;
   },
 };
@@ -774,11 +711,7 @@ export const Nested_InnerMessage_DeepMessage = {
 
   fromJSON(object: any): Nested_InnerMessage_DeepMessage {
     const message = { ...baseNested_InnerMessage_DeepMessage } as Nested_InnerMessage_DeepMessage;
-    if (object.name !== undefined && object.name !== null) {
-      message.name = String(object.name);
-    } else {
-      message.name = '';
-    }
+    message.name = object.name !== undefined && object.name !== null ? String(object.name) : '';
     return message;
   },
 
@@ -831,16 +764,8 @@ export const OneOfMessage = {
 
   fromJSON(object: any): OneOfMessage {
     const message = { ...baseOneOfMessage } as OneOfMessage;
-    if (object.first !== undefined && object.first !== null) {
-      message.first = String(object.first);
-    } else {
-      message.first = undefined;
-    }
-    if (object.last !== undefined && object.last !== null) {
-      message.last = String(object.last);
-    } else {
-      message.last = undefined;
-    }
+    message.first = object.first !== undefined && object.first !== null ? String(object.first) : undefined;
+    message.last = object.last !== undefined && object.last !== null ? String(object.last) : undefined;
     return message;
   },
 
@@ -921,28 +846,12 @@ export const SimpleWithWrappers = {
 
   fromJSON(object: any): SimpleWithWrappers {
     const message = { ...baseSimpleWithWrappers } as SimpleWithWrappers;
-    if (object.name !== undefined && object.name !== null) {
-      message.name = String(object.name);
-    } else {
-      message.name = undefined;
-    }
-    if (object.age !== undefined && object.age !== null) {
-      message.age = Number(object.age);
-    } else {
-      message.age = undefined;
-    }
-    if (object.enabled !== undefined && object.enabled !== null) {
-      message.enabled = Boolean(object.enabled);
-    } else {
-      message.enabled = undefined;
-    }
+    message.name = object.name !== undefined && object.name !== null ? String(object.name) : undefined;
+    message.age = object.age !== undefined && object.age !== null ? Number(object.age) : undefined;
+    message.enabled = object.enabled !== undefined && object.enabled !== null ? Boolean(object.enabled) : undefined;
     message.coins = (object.coins ?? []).map((e: any) => Number(e));
     message.snacks = (object.snacks ?? []).map((e: any) => String(e));
-    if (object.id !== undefined && object.id !== null) {
-      message.id = new Uint8Array(object.id);
-    } else {
-      message.id = undefined;
-    }
+    message.id = object.id !== undefined && object.id !== null ? new Uint8Array(object.id) : undefined;
     return message;
   },
 
@@ -1007,11 +916,7 @@ export const Entity = {
 
   fromJSON(object: any): Entity {
     const message = { ...baseEntity } as Entity;
-    if (object.id !== undefined && object.id !== null) {
-      message.id = Number(object.id);
-    } else {
-      message.id = 0;
-    }
+    message.id = object.id !== undefined && object.id !== null ? Number(object.id) : 0;
     return message;
   },
 
@@ -1284,16 +1189,8 @@ export const SimpleWithMap_EntitiesByIdEntry = {
 
   fromJSON(object: any): SimpleWithMap_EntitiesByIdEntry {
     const message = { ...baseSimpleWithMap_EntitiesByIdEntry } as SimpleWithMap_EntitiesByIdEntry;
-    if (object.key !== undefined && object.key !== null) {
-      message.key = Number(object.key);
-    } else {
-      message.key = 0;
-    }
-    if (object.value !== undefined && object.value !== null) {
-      message.value = Entity.fromJSON(object.value);
-    } else {
-      message.value = undefined;
-    }
+    message.key = object.key !== undefined && object.key !== null ? Number(object.key) : 0;
+    message.value = object.value !== undefined && object.value !== null ? Entity.fromJSON(object.value) : undefined;
     return message;
   },
 
@@ -1307,11 +1204,7 @@ export const SimpleWithMap_EntitiesByIdEntry = {
   fromPartial(object: DeepPartial<SimpleWithMap_EntitiesByIdEntry>): SimpleWithMap_EntitiesByIdEntry {
     const message = { ...baseSimpleWithMap_EntitiesByIdEntry } as SimpleWithMap_EntitiesByIdEntry;
     message.key = object.key ?? 0;
-    if (object.value !== undefined && object.value !== null) {
-      message.value = Entity.fromPartial(object.value);
-    } else {
-      message.value = undefined;
-    }
+    message.value = object.value !== undefined && object.value !== null ? Entity.fromPartial(object.value) : undefined;
     return message;
   },
 };
@@ -1352,16 +1245,8 @@ export const SimpleWithMap_NameLookupEntry = {
 
   fromJSON(object: any): SimpleWithMap_NameLookupEntry {
     const message = { ...baseSimpleWithMap_NameLookupEntry } as SimpleWithMap_NameLookupEntry;
-    if (object.key !== undefined && object.key !== null) {
-      message.key = String(object.key);
-    } else {
-      message.key = '';
-    }
-    if (object.value !== undefined && object.value !== null) {
-      message.value = String(object.value);
-    } else {
-      message.value = '';
-    }
+    message.key = object.key !== undefined && object.key !== null ? String(object.key) : '';
+    message.value = object.value !== undefined && object.value !== null ? String(object.value) : '';
     return message;
   },
 
@@ -1416,16 +1301,8 @@ export const SimpleWithMap_IntLookupEntry = {
 
   fromJSON(object: any): SimpleWithMap_IntLookupEntry {
     const message = { ...baseSimpleWithMap_IntLookupEntry } as SimpleWithMap_IntLookupEntry;
-    if (object.key !== undefined && object.key !== null) {
-      message.key = Number(object.key);
-    } else {
-      message.key = 0;
-    }
-    if (object.value !== undefined && object.value !== null) {
-      message.value = Number(object.value);
-    } else {
-      message.value = 0;
-    }
+    message.key = object.key !== undefined && object.key !== null ? Number(object.key) : 0;
+    message.value = object.value !== undefined && object.value !== null ? Number(object.value) : 0;
     return message;
   },
 
@@ -1480,16 +1357,8 @@ export const SimpleWithMap_MapOfTimestampsEntry = {
 
   fromJSON(object: any): SimpleWithMap_MapOfTimestampsEntry {
     const message = { ...baseSimpleWithMap_MapOfTimestampsEntry } as SimpleWithMap_MapOfTimestampsEntry;
-    if (object.key !== undefined && object.key !== null) {
-      message.key = String(object.key);
-    } else {
-      message.key = '';
-    }
-    if (object.value !== undefined && object.value !== null) {
-      message.value = fromJsonTimestamp(object.value);
-    } else {
-      message.value = undefined;
-    }
+    message.key = object.key !== undefined && object.key !== null ? String(object.key) : '';
+    message.value = object.value !== undefined && object.value !== null ? fromJsonTimestamp(object.value) : undefined;
     return message;
   },
 
@@ -1545,16 +1414,9 @@ export const SimpleWithMap_MapOfBytesEntry = {
 
   fromJSON(object: any): SimpleWithMap_MapOfBytesEntry {
     const message = { ...baseSimpleWithMap_MapOfBytesEntry } as SimpleWithMap_MapOfBytesEntry;
-    if (object.key !== undefined && object.key !== null) {
-      message.key = String(object.key);
-    } else {
-      message.key = '';
-    }
-    if (object.value !== undefined && object.value !== null) {
-      message.value = bytesFromBase64(object.value);
-    } else {
-      message.value = new Uint8Array();
-    }
+    message.key = object.key !== undefined && object.key !== null ? String(object.key) : '';
+    message.value =
+      object.value !== undefined && object.value !== null ? bytesFromBase64(object.value) : new Uint8Array();
     return message;
   },
 
@@ -1610,16 +1472,8 @@ export const SimpleWithMap_MapOfStringValuesEntry = {
 
   fromJSON(object: any): SimpleWithMap_MapOfStringValuesEntry {
     const message = { ...baseSimpleWithMap_MapOfStringValuesEntry } as SimpleWithMap_MapOfStringValuesEntry;
-    if (object.key !== undefined && object.key !== null) {
-      message.key = String(object.key);
-    } else {
-      message.key = '';
-    }
-    if (object.value !== undefined && object.value !== null) {
-      message.value = String(object.value);
-    } else {
-      message.value = undefined;
-    }
+    message.key = object.key !== undefined && object.key !== null ? String(object.key) : '';
+    message.value = object.value !== undefined && object.value !== null ? String(object.value) : undefined;
     return message;
   },
 
@@ -1742,16 +1596,8 @@ export const SimpleWithSnakeCaseMap_EntitiesByIdEntry = {
 
   fromJSON(object: any): SimpleWithSnakeCaseMap_EntitiesByIdEntry {
     const message = { ...baseSimpleWithSnakeCaseMap_EntitiesByIdEntry } as SimpleWithSnakeCaseMap_EntitiesByIdEntry;
-    if (object.key !== undefined && object.key !== null) {
-      message.key = Number(object.key);
-    } else {
-      message.key = 0;
-    }
-    if (object.value !== undefined && object.value !== null) {
-      message.value = Entity.fromJSON(object.value);
-    } else {
-      message.value = undefined;
-    }
+    message.key = object.key !== undefined && object.key !== null ? Number(object.key) : 0;
+    message.value = object.value !== undefined && object.value !== null ? Entity.fromJSON(object.value) : undefined;
     return message;
   },
 
@@ -1765,11 +1611,7 @@ export const SimpleWithSnakeCaseMap_EntitiesByIdEntry = {
   fromPartial(object: DeepPartial<SimpleWithSnakeCaseMap_EntitiesByIdEntry>): SimpleWithSnakeCaseMap_EntitiesByIdEntry {
     const message = { ...baseSimpleWithSnakeCaseMap_EntitiesByIdEntry } as SimpleWithSnakeCaseMap_EntitiesByIdEntry;
     message.key = object.key ?? 0;
-    if (object.value !== undefined && object.value !== null) {
-      message.value = Entity.fromPartial(object.value);
-    } else {
-      message.value = undefined;
-    }
+    message.value = object.value !== undefined && object.value !== null ? Entity.fromPartial(object.value) : undefined;
     return message;
   },
 };
@@ -1878,16 +1720,8 @@ export const SimpleWithMapOfEnums_EnumsByIdEntry = {
 
   fromJSON(object: any): SimpleWithMapOfEnums_EnumsByIdEntry {
     const message = { ...baseSimpleWithMapOfEnums_EnumsByIdEntry } as SimpleWithMapOfEnums_EnumsByIdEntry;
-    if (object.key !== undefined && object.key !== null) {
-      message.key = Number(object.key);
-    } else {
-      message.key = 0;
-    }
-    if (object.value !== undefined && object.value !== null) {
-      message.value = stateEnumFromJSON(object.value);
-    } else {
-      message.value = 0;
-    }
+    message.key = object.key !== undefined && object.key !== null ? Number(object.key) : 0;
+    message.value = object.value !== undefined && object.value !== null ? stateEnumFromJSON(object.value) : 0;
     return message;
   },
 
@@ -1936,11 +1770,7 @@ export const PingRequest = {
 
   fromJSON(object: any): PingRequest {
     const message = { ...basePingRequest } as PingRequest;
-    if (object.input !== undefined && object.input !== null) {
-      message.input = String(object.input);
-    } else {
-      message.input = '';
-    }
+    message.input = object.input !== undefined && object.input !== null ? String(object.input) : '';
     return message;
   },
 
@@ -1987,11 +1817,7 @@ export const PingResponse = {
 
   fromJSON(object: any): PingResponse {
     const message = { ...basePingResponse } as PingResponse;
-    if (object.output !== undefined && object.output !== null) {
-      message.output = String(object.output);
-    } else {
-      message.output = '';
-    }
+    message.output = object.output !== undefined && object.output !== null ? String(object.output) : '';
     return message;
   },
 
@@ -2117,66 +1943,18 @@ export const Numbers = {
 
   fromJSON(object: any): Numbers {
     const message = { ...baseNumbers } as Numbers;
-    if (object.double !== undefined && object.double !== null) {
-      message.double = Number(object.double);
-    } else {
-      message.double = 0;
-    }
-    if (object.float !== undefined && object.float !== null) {
-      message.float = Number(object.float);
-    } else {
-      message.float = 0;
-    }
-    if (object.int32 !== undefined && object.int32 !== null) {
-      message.int32 = Number(object.int32);
-    } else {
-      message.int32 = 0;
-    }
-    if (object.int64 !== undefined && object.int64 !== null) {
-      message.int64 = Number(object.int64);
-    } else {
-      message.int64 = 0;
-    }
-    if (object.uint32 !== undefined && object.uint32 !== null) {
-      message.uint32 = Number(object.uint32);
-    } else {
-      message.uint32 = 0;
-    }
-    if (object.uint64 !== undefined && object.uint64 !== null) {
-      message.uint64 = Number(object.uint64);
-    } else {
-      message.uint64 = 0;
-    }
-    if (object.sint32 !== undefined && object.sint32 !== null) {
-      message.sint32 = Number(object.sint32);
-    } else {
-      message.sint32 = 0;
-    }
-    if (object.sint64 !== undefined && object.sint64 !== null) {
-      message.sint64 = Number(object.sint64);
-    } else {
-      message.sint64 = 0;
-    }
-    if (object.fixed32 !== undefined && object.fixed32 !== null) {
-      message.fixed32 = Number(object.fixed32);
-    } else {
-      message.fixed32 = 0;
-    }
-    if (object.fixed64 !== undefined && object.fixed64 !== null) {
-      message.fixed64 = Number(object.fixed64);
-    } else {
-      message.fixed64 = 0;
-    }
-    if (object.sfixed32 !== undefined && object.sfixed32 !== null) {
-      message.sfixed32 = Number(object.sfixed32);
-    } else {
-      message.sfixed32 = 0;
-    }
-    if (object.sfixed64 !== undefined && object.sfixed64 !== null) {
-      message.sfixed64 = Number(object.sfixed64);
-    } else {
-      message.sfixed64 = 0;
-    }
+    message.double = object.double !== undefined && object.double !== null ? Number(object.double) : 0;
+    message.float = object.float !== undefined && object.float !== null ? Number(object.float) : 0;
+    message.int32 = object.int32 !== undefined && object.int32 !== null ? Number(object.int32) : 0;
+    message.int64 = object.int64 !== undefined && object.int64 !== null ? Number(object.int64) : 0;
+    message.uint32 = object.uint32 !== undefined && object.uint32 !== null ? Number(object.uint32) : 0;
+    message.uint64 = object.uint64 !== undefined && object.uint64 !== null ? Number(object.uint64) : 0;
+    message.sint32 = object.sint32 !== undefined && object.sint32 !== null ? Number(object.sint32) : 0;
+    message.sint64 = object.sint64 !== undefined && object.sint64 !== null ? Number(object.sint64) : 0;
+    message.fixed32 = object.fixed32 !== undefined && object.fixed32 !== null ? Number(object.fixed32) : 0;
+    message.fixed64 = object.fixed64 !== undefined && object.fixed64 !== null ? Number(object.fixed64) : 0;
+    message.sfixed32 = object.sfixed32 !== undefined && object.sfixed32 !== null ? Number(object.sfixed32) : 0;
+    message.sfixed64 = object.sfixed64 !== undefined && object.sfixed64 !== null ? Number(object.sfixed64) : 0;
     return message;
   },
 
@@ -2281,41 +2059,16 @@ export const SimpleButOptional = {
 
   fromJSON(object: any): SimpleButOptional {
     const message = { ...baseSimpleButOptional } as SimpleButOptional;
-    if (object.name !== undefined && object.name !== null) {
-      message.name = String(object.name);
-    } else {
-      message.name = undefined;
-    }
-    if (object.age !== undefined && object.age !== null) {
-      message.age = Number(object.age);
-    } else {
-      message.age = undefined;
-    }
-    if (object.createdAt !== undefined && object.createdAt !== null) {
-      message.createdAt = fromJsonTimestamp(object.createdAt);
-    } else {
-      message.createdAt = undefined;
-    }
-    if (object.child !== undefined && object.child !== null) {
-      message.child = Child.fromJSON(object.child);
-    } else {
-      message.child = undefined;
-    }
-    if (object.state !== undefined && object.state !== null) {
-      message.state = stateEnumFromJSON(object.state);
-    } else {
-      message.state = undefined;
-    }
-    if (object.thing !== undefined && object.thing !== null) {
-      message.thing = ImportedThing.fromJSON(object.thing);
-    } else {
-      message.thing = undefined;
-    }
-    if (object.birthday !== undefined && object.birthday !== null) {
-      message.birthday = DateMessage.fromJSON(object.birthday);
-    } else {
-      message.birthday = undefined;
-    }
+    message.name = object.name !== undefined && object.name !== null ? String(object.name) : undefined;
+    message.age = object.age !== undefined && object.age !== null ? Number(object.age) : undefined;
+    message.createdAt =
+      object.createdAt !== undefined && object.createdAt !== null ? fromJsonTimestamp(object.createdAt) : undefined;
+    message.child = object.child !== undefined && object.child !== null ? Child.fromJSON(object.child) : undefined;
+    message.state = object.state !== undefined && object.state !== null ? stateEnumFromJSON(object.state) : undefined;
+    message.thing =
+      object.thing !== undefined && object.thing !== null ? ImportedThing.fromJSON(object.thing) : undefined;
+    message.birthday =
+      object.birthday !== undefined && object.birthday !== null ? DateMessage.fromJSON(object.birthday) : undefined;
     return message;
   },
 
@@ -2338,22 +2091,12 @@ export const SimpleButOptional = {
     message.name = object.name ?? undefined;
     message.age = object.age ?? undefined;
     message.createdAt = object.createdAt ?? undefined;
-    if (object.child !== undefined && object.child !== null) {
-      message.child = Child.fromPartial(object.child);
-    } else {
-      message.child = undefined;
-    }
+    message.child = object.child !== undefined && object.child !== null ? Child.fromPartial(object.child) : undefined;
     message.state = object.state ?? undefined;
-    if (object.thing !== undefined && object.thing !== null) {
-      message.thing = ImportedThing.fromPartial(object.thing);
-    } else {
-      message.thing = undefined;
-    }
-    if (object.birthday !== undefined && object.birthday !== null) {
-      message.birthday = DateMessage.fromPartial(object.birthday);
-    } else {
-      message.birthday = undefined;
-    }
+    message.thing =
+      object.thing !== undefined && object.thing !== null ? ImportedThing.fromPartial(object.thing) : undefined;
+    message.birthday =
+      object.birthday !== undefined && object.birthday !== null ? DateMessage.fromPartial(object.birthday) : undefined;
     return message;
   },
 };

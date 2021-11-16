@@ -50,16 +50,8 @@ export const Point = {
 
   fromJSON(object: any): Point {
     const message = { ...basePoint } as Point;
-    if (object.lat !== undefined && object.lat !== null) {
-      message.lat = Number(object.lat);
-    } else {
-      message.lat = 0;
-    }
-    if (object.lng !== undefined && object.lng !== null) {
-      message.lng = Number(object.lng);
-    } else {
-      message.lng = 0;
-    }
+    message.lat = object.lat !== undefined && object.lat !== null ? Number(object.lat) : 0;
+    message.lng = object.lng !== undefined && object.lng !== null ? Number(object.lng) : 0;
     return message;
   },
 
@@ -114,16 +106,8 @@ export const Area = {
 
   fromJSON(object: any): Area {
     const message = { ...baseArea } as Area;
-    if (object.nw !== undefined && object.nw !== null) {
-      message.nw = Point.fromJSON(object.nw);
-    } else {
-      message.nw = undefined;
-    }
-    if (object.se !== undefined && object.se !== null) {
-      message.se = Point.fromJSON(object.se);
-    } else {
-      message.se = undefined;
-    }
+    message.nw = object.nw !== undefined && object.nw !== null ? Point.fromJSON(object.nw) : undefined;
+    message.se = object.se !== undefined && object.se !== null ? Point.fromJSON(object.se) : undefined;
     return message;
   },
 
@@ -136,16 +120,8 @@ export const Area = {
 
   fromPartial(object: DeepPartial<Area>): Area {
     const message = { ...baseArea } as Area;
-    if (object.nw !== undefined && object.nw !== null) {
-      message.nw = Point.fromPartial(object.nw);
-    } else {
-      message.nw = undefined;
-    }
-    if (object.se !== undefined && object.se !== null) {
-      message.se = Point.fromPartial(object.se);
-    } else {
-      message.se = undefined;
-    }
+    message.nw = object.nw !== undefined && object.nw !== null ? Point.fromPartial(object.nw) : undefined;
+    message.se = object.se !== undefined && object.se !== null ? Point.fromPartial(object.se) : undefined;
     return message;
   },
 };

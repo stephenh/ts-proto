@@ -38,11 +38,7 @@ export const TestMessage = {
 
   fromJSON(object: any): TestMessage {
     const message = { ...baseTestMessage } as TestMessage;
-    if (object.value !== undefined && object.value !== null) {
-      message.value = String(object.value);
-    } else {
-      message.value = '';
-    }
+    message.value = object.value !== undefined && object.value !== null ? String(object.value) : '';
     return message;
   },
 

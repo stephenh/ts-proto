@@ -13,11 +13,7 @@ const baseMessage: object = {};
 export const Message = {
   fromJSON(object: any): Message {
     const message = { ...baseMessage } as Message;
-    if (object.data !== undefined && object.data !== null) {
-      message.data = bytesFromBase64(object.data);
-    } else {
-      message.data = new Uint8Array();
-    }
+    message.data = object.data !== undefined && object.data !== null ? bytesFromBase64(object.data) : new Uint8Array();
     return message;
   },
 

@@ -1007,12 +1007,12 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
       `);
       chunks.push(code`}`);
     } else {
-      chunks.push(code`if (object.${fieldName} !== undefined && object.${fieldName} !== null) {`);
-      chunks.push(code`message.${fieldName} = ${readSnippet(`object.${fieldName}`)};`);
-      chunks.push(code`} else {`);
       const fallback = isWithinOneOf(field) ? 'undefined' : defaultValue(ctx, field);
-      chunks.push(code`message.${fieldName} = ${fallback};`);
-      chunks.push(code`}`);
+      chunks.push(code`
+        message.${fieldName} = (object.${fieldName} !== undefined && object.${fieldName} !== null)
+          ? ${readSnippet(`object.${fieldName}`)}
+          : ${fallback};
+      `);
     }
   });
   // and then wrap up the switch/while/return
@@ -1217,12 +1217,12 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
       const fallback = isWithinOneOf(field) ? 'undefined' : defaultValue(ctx, field);
       chunks.push(code`message.${fieldName} = object.${fieldName} ?? ${fallback};`);
     } else {
-      chunks.push(code`if (object.${fieldName} !== undefined && object.${fieldName} !== null) {`);
-      chunks.push(code`message.${fieldName} = ${readSnippet(`object.${fieldName}`)};`);
-      chunks.push(code`} else {`);
       const fallback = isWithinOneOf(field) ? 'undefined' : defaultValue(ctx, field);
-      chunks.push(code`message.${fieldName} = ${fallback};`);
-      chunks.push(code`}`);
+      chunks.push(code`
+        message.${fieldName} = (object.${fieldName} !== undefined && object.${fieldName} !== null)
+          ? ${readSnippet(`object.${fieldName}`)}
+          : ${fallback};
+      `);
     }
   });
 

@@ -162,61 +162,23 @@ export const PleaseChoose = {
 
   fromJSON(object: any): PleaseChoose {
     const message = { ...basePleaseChoose } as PleaseChoose;
-    if (object.name !== undefined && object.name !== null) {
-      message.name = String(object.name);
-    } else {
-      message.name = '';
-    }
-    if (object.aNumber !== undefined && object.aNumber !== null) {
-      message.aNumber = Number(object.aNumber);
-    } else {
-      message.aNumber = undefined;
-    }
-    if (object.aString !== undefined && object.aString !== null) {
-      message.aString = String(object.aString);
-    } else {
-      message.aString = undefined;
-    }
-    if (object.aMessage !== undefined && object.aMessage !== null) {
-      message.aMessage = PleaseChoose_Submessage.fromJSON(object.aMessage);
-    } else {
-      message.aMessage = undefined;
-    }
-    if (object.aBool !== undefined && object.aBool !== null) {
-      message.aBool = Boolean(object.aBool);
-    } else {
-      message.aBool = undefined;
-    }
-    if (object.bunchaBytes !== undefined && object.bunchaBytes !== null) {
-      message.bunchaBytes = bytesFromBase64(object.bunchaBytes);
-    } else {
-      message.bunchaBytes = undefined;
-    }
-    if (object.anEnum !== undefined && object.anEnum !== null) {
-      message.anEnum = pleaseChoose_StateEnumFromJSON(object.anEnum);
-    } else {
-      message.anEnum = undefined;
-    }
-    if (object.age !== undefined && object.age !== null) {
-      message.age = Number(object.age);
-    } else {
-      message.age = 0;
-    }
-    if (object.either !== undefined && object.either !== null) {
-      message.either = String(object.either);
-    } else {
-      message.either = undefined;
-    }
-    if (object.or !== undefined && object.or !== null) {
-      message.or = String(object.or);
-    } else {
-      message.or = undefined;
-    }
-    if (object.thirdOption !== undefined && object.thirdOption !== null) {
-      message.thirdOption = String(object.thirdOption);
-    } else {
-      message.thirdOption = undefined;
-    }
+    message.name = object.name !== undefined && object.name !== null ? String(object.name) : '';
+    message.aNumber = object.aNumber !== undefined && object.aNumber !== null ? Number(object.aNumber) : undefined;
+    message.aString = object.aString !== undefined && object.aString !== null ? String(object.aString) : undefined;
+    message.aMessage =
+      object.aMessage !== undefined && object.aMessage !== null
+        ? PleaseChoose_Submessage.fromJSON(object.aMessage)
+        : undefined;
+    message.aBool = object.aBool !== undefined && object.aBool !== null ? Boolean(object.aBool) : undefined;
+    message.bunchaBytes =
+      object.bunchaBytes !== undefined && object.bunchaBytes !== null ? bytesFromBase64(object.bunchaBytes) : undefined;
+    message.anEnum =
+      object.anEnum !== undefined && object.anEnum !== null ? pleaseChoose_StateEnumFromJSON(object.anEnum) : undefined;
+    message.age = object.age !== undefined && object.age !== null ? Number(object.age) : 0;
+    message.either = object.either !== undefined && object.either !== null ? String(object.either) : undefined;
+    message.or = object.or !== undefined && object.or !== null ? String(object.or) : undefined;
+    message.thirdOption =
+      object.thirdOption !== undefined && object.thirdOption !== null ? String(object.thirdOption) : undefined;
     return message;
   },
 
@@ -244,11 +206,10 @@ export const PleaseChoose = {
     message.name = object.name ?? '';
     message.aNumber = object.aNumber ?? undefined;
     message.aString = object.aString ?? undefined;
-    if (object.aMessage !== undefined && object.aMessage !== null) {
-      message.aMessage = PleaseChoose_Submessage.fromPartial(object.aMessage);
-    } else {
-      message.aMessage = undefined;
-    }
+    message.aMessage =
+      object.aMessage !== undefined && object.aMessage !== null
+        ? PleaseChoose_Submessage.fromPartial(object.aMessage)
+        : undefined;
     message.aBool = object.aBool ?? undefined;
     message.bunchaBytes = object.bunchaBytes ?? undefined;
     message.anEnum = object.anEnum ?? undefined;
@@ -290,11 +251,7 @@ export const PleaseChoose_Submessage = {
 
   fromJSON(object: any): PleaseChoose_Submessage {
     const message = { ...basePleaseChoose_Submessage } as PleaseChoose_Submessage;
-    if (object.name !== undefined && object.name !== null) {
-      message.name = String(object.name);
-    } else {
-      message.name = '';
-    }
+    message.name = object.name !== undefined && object.name !== null ? String(object.name) : '';
     return message;
   },
 

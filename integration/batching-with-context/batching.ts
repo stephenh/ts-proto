@@ -306,16 +306,8 @@ export const BatchMapQueryResponse_EntitiesEntry = {
 
   fromJSON(object: any): BatchMapQueryResponse_EntitiesEntry {
     const message = { ...baseBatchMapQueryResponse_EntitiesEntry } as BatchMapQueryResponse_EntitiesEntry;
-    if (object.key !== undefined && object.key !== null) {
-      message.key = String(object.key);
-    } else {
-      message.key = '';
-    }
-    if (object.value !== undefined && object.value !== null) {
-      message.value = Entity.fromJSON(object.value);
-    } else {
-      message.value = undefined;
-    }
+    message.key = object.key !== undefined && object.key !== null ? String(object.key) : '';
+    message.value = object.value !== undefined && object.value !== null ? Entity.fromJSON(object.value) : undefined;
     return message;
   },
 
@@ -329,11 +321,7 @@ export const BatchMapQueryResponse_EntitiesEntry = {
   fromPartial(object: DeepPartial<BatchMapQueryResponse_EntitiesEntry>): BatchMapQueryResponse_EntitiesEntry {
     const message = { ...baseBatchMapQueryResponse_EntitiesEntry } as BatchMapQueryResponse_EntitiesEntry;
     message.key = object.key ?? '';
-    if (object.value !== undefined && object.value !== null) {
-      message.value = Entity.fromPartial(object.value);
-    } else {
-      message.value = undefined;
-    }
+    message.value = object.value !== undefined && object.value !== null ? Entity.fromPartial(object.value) : undefined;
     return message;
   },
 };
@@ -368,11 +356,7 @@ export const GetOnlyMethodRequest = {
 
   fromJSON(object: any): GetOnlyMethodRequest {
     const message = { ...baseGetOnlyMethodRequest } as GetOnlyMethodRequest;
-    if (object.id !== undefined && object.id !== null) {
-      message.id = String(object.id);
-    } else {
-      message.id = '';
-    }
+    message.id = object.id !== undefined && object.id !== null ? String(object.id) : '';
     return message;
   },
 
@@ -419,11 +403,7 @@ export const GetOnlyMethodResponse = {
 
   fromJSON(object: any): GetOnlyMethodResponse {
     const message = { ...baseGetOnlyMethodResponse } as GetOnlyMethodResponse;
-    if (object.entity !== undefined && object.entity !== null) {
-      message.entity = Entity.fromJSON(object.entity);
-    } else {
-      message.entity = undefined;
-    }
+    message.entity = object.entity !== undefined && object.entity !== null ? Entity.fromJSON(object.entity) : undefined;
     return message;
   },
 
@@ -435,11 +415,8 @@ export const GetOnlyMethodResponse = {
 
   fromPartial(object: DeepPartial<GetOnlyMethodResponse>): GetOnlyMethodResponse {
     const message = { ...baseGetOnlyMethodResponse } as GetOnlyMethodResponse;
-    if (object.entity !== undefined && object.entity !== null) {
-      message.entity = Entity.fromPartial(object.entity);
-    } else {
-      message.entity = undefined;
-    }
+    message.entity =
+      object.entity !== undefined && object.entity !== null ? Entity.fromPartial(object.entity) : undefined;
     return message;
   },
 };
@@ -474,11 +451,7 @@ export const WriteMethodRequest = {
 
   fromJSON(object: any): WriteMethodRequest {
     const message = { ...baseWriteMethodRequest } as WriteMethodRequest;
-    if (object.id !== undefined && object.id !== null) {
-      message.id = String(object.id);
-    } else {
-      message.id = '';
-    }
+    message.id = object.id !== undefined && object.id !== null ? String(object.id) : '';
     return message;
   },
 
@@ -569,16 +542,8 @@ export const Entity = {
 
   fromJSON(object: any): Entity {
     const message = { ...baseEntity } as Entity;
-    if (object.id !== undefined && object.id !== null) {
-      message.id = String(object.id);
-    } else {
-      message.id = '';
-    }
-    if (object.name !== undefined && object.name !== null) {
-      message.name = String(object.name);
-    } else {
-      message.name = '';
-    }
+    message.id = object.id !== undefined && object.id !== null ? String(object.id) : '';
+    message.name = object.name !== undefined && object.name !== null ? String(object.name) : '';
     return message;
   },
 

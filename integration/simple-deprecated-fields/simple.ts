@@ -86,31 +86,14 @@ export const Simple = {
 
   fromJSON(object: any): Simple {
     const message = { ...baseSimple } as Simple;
-    if (object.name !== undefined && object.name !== null) {
-      message.name = String(object.name);
-    } else {
-      message.name = '';
-    }
-    if (object.age !== undefined && object.age !== null) {
-      message.age = Number(object.age);
-    } else {
-      message.age = 0;
-    }
-    if (object.child !== undefined && object.child !== null) {
-      message.child = Child.fromJSON(object.child);
-    } else {
-      message.child = undefined;
-    }
-    if (object.testField !== undefined && object.testField !== null) {
-      message.testField = String(object.testField);
-    } else {
-      message.testField = '';
-    }
-    if (object.testNotDeprecated !== undefined && object.testNotDeprecated !== null) {
-      message.testNotDeprecated = String(object.testNotDeprecated);
-    } else {
-      message.testNotDeprecated = '';
-    }
+    message.name = object.name !== undefined && object.name !== null ? String(object.name) : '';
+    message.age = object.age !== undefined && object.age !== null ? Number(object.age) : 0;
+    message.child = object.child !== undefined && object.child !== null ? Child.fromJSON(object.child) : undefined;
+    message.testField = object.testField !== undefined && object.testField !== null ? String(object.testField) : '';
+    message.testNotDeprecated =
+      object.testNotDeprecated !== undefined && object.testNotDeprecated !== null
+        ? String(object.testNotDeprecated)
+        : '';
     return message;
   },
 
@@ -128,11 +111,7 @@ export const Simple = {
     const message = { ...baseSimple } as Simple;
     message.name = object.name ?? '';
     message.age = object.age ?? 0;
-    if (object.child !== undefined && object.child !== null) {
-      message.child = Child.fromPartial(object.child);
-    } else {
-      message.child = undefined;
-    }
+    message.child = object.child !== undefined && object.child !== null ? Child.fromPartial(object.child) : undefined;
     message.testField = object.testField ?? '';
     message.testNotDeprecated = object.testNotDeprecated ?? '';
     return message;
@@ -169,11 +148,7 @@ export const Child = {
 
   fromJSON(object: any): Child {
     const message = { ...baseChild } as Child;
-    if (object.name !== undefined && object.name !== null) {
-      message.name = String(object.name);
-    } else {
-      message.name = '';
-    }
+    message.name = object.name !== undefined && object.name !== null ? String(object.name) : '';
     return message;
   },
 

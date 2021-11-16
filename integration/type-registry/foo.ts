@@ -48,11 +48,8 @@ export const Foo = {
 
   fromJSON(object: any): Foo {
     const message = { ...baseFoo } as Foo;
-    if (object.timestamp !== undefined && object.timestamp !== null) {
-      message.timestamp = fromJsonTimestamp(object.timestamp);
-    } else {
-      message.timestamp = undefined;
-    }
+    message.timestamp =
+      object.timestamp !== undefined && object.timestamp !== null ? fromJsonTimestamp(object.timestamp) : undefined;
     return message;
   },
 
@@ -103,11 +100,8 @@ export const Foo2 = {
 
   fromJSON(object: any): Foo2 {
     const message = { ...baseFoo2 } as Foo2;
-    if (object.timestamp !== undefined && object.timestamp !== null) {
-      message.timestamp = fromJsonTimestamp(object.timestamp);
-    } else {
-      message.timestamp = undefined;
-    }
+    message.timestamp =
+      object.timestamp !== undefined && object.timestamp !== null ? fromJsonTimestamp(object.timestamp) : undefined;
     return message;
   },
 
