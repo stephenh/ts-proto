@@ -1212,11 +1212,7 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
       const fallback = isWithinOneOf(field) ? 'undefined' : defaultValue(ctx, field);
       chunks.push(code`message.${fieldName} = ${fallback}`);
       chunks.push(code`}`);
-    } else if (
-      isPrimitive(field) ||
-      (isTimestamp(field) && (options.useDate === DateOption.DATE || options.useDate === DateOption.STRING)) ||
-      isValueType(ctx, field)
-    ) {
+    } else if (readSnippet(`x`).toCodeString() == 'x') {
       // An optimized case of the else below that works when `readSnippet` returns the plain input
       const fallback = isWithinOneOf(field) ? 'undefined' : defaultValue(ctx, field);
       chunks.push(code`message.${fieldName} = object.${fieldName} ?? ${fallback};`);
