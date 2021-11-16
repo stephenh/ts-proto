@@ -43,16 +43,8 @@ export const Bar = {
 
   fromJSON(object: any): Bar {
     const message = { ...baseBar } as Bar;
-    if (object.name !== undefined && object.name !== null) {
-      message.name = String(object.name);
-    } else {
-      message.name = '';
-    }
-    if (object.age !== undefined && object.age !== null) {
-      message.age = Number(object.age);
-    } else {
-      message.age = 0;
-    }
+    message.name = object.name !== undefined && object.name !== null ? String(object.name) : '';
+    message.age = object.age !== undefined && object.age !== null ? Number(object.age) : 0;
     return message;
   },
 

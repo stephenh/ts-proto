@@ -106,16 +106,8 @@ export const DashFlash = {
 
   fromJSON(object: any): DashFlash {
     const message = { ...baseDashFlash } as DashFlash;
-    if (object.msg !== undefined && object.msg !== null) {
-      message.msg = String(object.msg);
-    } else {
-      message.msg = '';
-    }
-    if (object.type !== undefined && object.type !== null) {
-      message.type = dashFlash_TypeFromJSON(object.type);
-    } else {
-      message.type = 0;
-    }
+    message.msg = object.msg !== undefined && object.msg !== null ? String(object.msg) : '';
+    message.type = object.type !== undefined && object.type !== null ? dashFlash_TypeFromJSON(object.type) : 0;
     return message;
   },
 
@@ -177,16 +169,9 @@ export const DashUserSettingsState = {
 
   fromJSON(object: any): DashUserSettingsState {
     const message = { ...baseDashUserSettingsState } as DashUserSettingsState;
-    if (object.email !== undefined && object.email !== null) {
-      message.email = String(object.email);
-    } else {
-      message.email = '';
-    }
-    if (object.urls !== undefined && object.urls !== null) {
-      message.urls = DashUserSettingsState_URLs.fromJSON(object.urls);
-    } else {
-      message.urls = undefined;
-    }
+    message.email = object.email !== undefined && object.email !== null ? String(object.email) : '';
+    message.urls =
+      object.urls !== undefined && object.urls !== null ? DashUserSettingsState_URLs.fromJSON(object.urls) : undefined;
     message.flashes = (object.flashes ?? []).map((e: any) => DashFlash.fromJSON(e));
     return message;
   },
@@ -207,11 +192,10 @@ export const DashUserSettingsState = {
   fromPartial(object: DeepPartial<DashUserSettingsState>): DashUserSettingsState {
     const message = { ...baseDashUserSettingsState } as DashUserSettingsState;
     message.email = object.email ?? '';
-    if (object.urls !== undefined && object.urls !== null) {
-      message.urls = DashUserSettingsState_URLs.fromPartial(object.urls);
-    } else {
-      message.urls = undefined;
-    }
+    message.urls =
+      object.urls !== undefined && object.urls !== null
+        ? DashUserSettingsState_URLs.fromPartial(object.urls)
+        : undefined;
     message.flashes = (object.flashes ?? []).map((e) => DashFlash.fromPartial(e));
     return message;
   },
@@ -253,16 +237,10 @@ export const DashUserSettingsState_URLs = {
 
   fromJSON(object: any): DashUserSettingsState_URLs {
     const message = { ...baseDashUserSettingsState_URLs } as DashUserSettingsState_URLs;
-    if (object.connectGoogle !== undefined && object.connectGoogle !== null) {
-      message.connectGoogle = String(object.connectGoogle);
-    } else {
-      message.connectGoogle = '';
-    }
-    if (object.connectGithub !== undefined && object.connectGithub !== null) {
-      message.connectGithub = String(object.connectGithub);
-    } else {
-      message.connectGithub = '';
-    }
+    message.connectGoogle =
+      object.connectGoogle !== undefined && object.connectGoogle !== null ? String(object.connectGoogle) : '';
+    message.connectGithub =
+      object.connectGithub !== undefined && object.connectGithub !== null ? String(object.connectGithub) : '';
     return message;
   },
 

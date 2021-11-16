@@ -44,16 +44,8 @@ export const Foo = {
 
   fromJSON(object: any): Foo {
     const message = { ...baseFoo } as Foo;
-    if (object.name !== undefined && object.name !== null) {
-      message.name = String(object.name);
-    } else {
-      message.name = '';
-    }
-    if (object.bar !== undefined && object.bar !== null) {
-      message.bar = Bar.fromJSON(object.bar);
-    } else {
-      message.bar = undefined;
-    }
+    message.name = object.name !== undefined && object.name !== null ? String(object.name) : '';
+    message.bar = object.bar !== undefined && object.bar !== null ? Bar.fromJSON(object.bar) : undefined;
     return message;
   },
 
@@ -67,11 +59,7 @@ export const Foo = {
   fromPartial(object: DeepPartial<Foo>): Foo {
     const message = { ...baseFoo } as Foo;
     message.name = object.name ?? '';
-    if (object.bar !== undefined && object.bar !== null) {
-      message.bar = Bar.fromPartial(object.bar);
-    } else {
-      message.bar = undefined;
-    }
+    message.bar = object.bar !== undefined && object.bar !== null ? Bar.fromPartial(object.bar) : undefined;
     return message;
   },
 };

@@ -43,11 +43,8 @@ export const ProduceRequest = {
 
   fromJSON(object: any): ProduceRequest {
     const message = { ...baseProduceRequest } as ProduceRequest;
-    if (object.ingredients !== undefined && object.ingredients !== null) {
-      message.ingredients = String(object.ingredients);
-    } else {
-      message.ingredients = '';
-    }
+    message.ingredients =
+      object.ingredients !== undefined && object.ingredients !== null ? String(object.ingredients) : '';
     return message;
   },
 
@@ -94,11 +91,7 @@ export const ProduceReply = {
 
   fromJSON(object: any): ProduceReply {
     const message = { ...baseProduceReply } as ProduceReply;
-    if (object.result !== undefined && object.result !== null) {
-      message.result = String(object.result);
-    } else {
-      message.result = '';
-    }
+    message.result = object.result !== undefined && object.result !== null ? String(object.result) : '';
     return message;
   },
 

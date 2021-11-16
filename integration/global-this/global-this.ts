@@ -42,11 +42,7 @@ export const Object = {
 
   fromJSON(object: any): Object {
     const message = { ...baseObject } as Object;
-    if (object.name !== undefined && object.name !== null) {
-      message.name = String(object.name);
-    } else {
-      message.name = '';
-    }
+    message.name = object.name !== undefined && object.name !== null ? String(object.name) : '';
     return message;
   },
 
@@ -93,11 +89,7 @@ export const Error = {
 
   fromJSON(object: any): Error {
     const message = { ...baseError } as Error;
-    if (object.name !== undefined && object.name !== null) {
-      message.name = String(object.name);
-    } else {
-      message.name = '';
-    }
+    message.name = object.name !== undefined && object.name !== null ? String(object.name) : '';
     return message;
   },
 

@@ -144,76 +144,21 @@ export const Numbers = {
 
   fromJSON(object: any): Numbers {
     const message = { ...baseNumbers } as Numbers;
-    if (object.double !== undefined && object.double !== null) {
-      message.double = Number(object.double);
-    } else {
-      message.double = 0;
-    }
-    if (object.float !== undefined && object.float !== null) {
-      message.float = Number(object.float);
-    } else {
-      message.float = 0;
-    }
-    if (object.int32 !== undefined && object.int32 !== null) {
-      message.int32 = Number(object.int32);
-    } else {
-      message.int32 = 0;
-    }
-    if (object.int64 !== undefined && object.int64 !== null) {
-      message.int64 = String(object.int64);
-    } else {
-      message.int64 = '0';
-    }
-    if (object.uint32 !== undefined && object.uint32 !== null) {
-      message.uint32 = Number(object.uint32);
-    } else {
-      message.uint32 = 0;
-    }
-    if (object.uint64 !== undefined && object.uint64 !== null) {
-      message.uint64 = String(object.uint64);
-    } else {
-      message.uint64 = '0';
-    }
-    if (object.sint32 !== undefined && object.sint32 !== null) {
-      message.sint32 = Number(object.sint32);
-    } else {
-      message.sint32 = 0;
-    }
-    if (object.sint64 !== undefined && object.sint64 !== null) {
-      message.sint64 = String(object.sint64);
-    } else {
-      message.sint64 = '0';
-    }
-    if (object.fixed32 !== undefined && object.fixed32 !== null) {
-      message.fixed32 = Number(object.fixed32);
-    } else {
-      message.fixed32 = 0;
-    }
-    if (object.fixed64 !== undefined && object.fixed64 !== null) {
-      message.fixed64 = String(object.fixed64);
-    } else {
-      message.fixed64 = '0';
-    }
-    if (object.sfixed32 !== undefined && object.sfixed32 !== null) {
-      message.sfixed32 = Number(object.sfixed32);
-    } else {
-      message.sfixed32 = 0;
-    }
-    if (object.sfixed64 !== undefined && object.sfixed64 !== null) {
-      message.sfixed64 = String(object.sfixed64);
-    } else {
-      message.sfixed64 = '0';
-    }
-    if (object.guint64 !== undefined && object.guint64 !== null) {
-      message.guint64 = String(object.guint64);
-    } else {
-      message.guint64 = undefined;
-    }
-    if (object.timestamp !== undefined && object.timestamp !== null) {
-      message.timestamp = fromJsonTimestamp(object.timestamp);
-    } else {
-      message.timestamp = undefined;
-    }
+    message.double = object.double !== undefined && object.double !== null ? Number(object.double) : 0;
+    message.float = object.float !== undefined && object.float !== null ? Number(object.float) : 0;
+    message.int32 = object.int32 !== undefined && object.int32 !== null ? Number(object.int32) : 0;
+    message.int64 = object.int64 !== undefined && object.int64 !== null ? String(object.int64) : '0';
+    message.uint32 = object.uint32 !== undefined && object.uint32 !== null ? Number(object.uint32) : 0;
+    message.uint64 = object.uint64 !== undefined && object.uint64 !== null ? String(object.uint64) : '0';
+    message.sint32 = object.sint32 !== undefined && object.sint32 !== null ? Number(object.sint32) : 0;
+    message.sint64 = object.sint64 !== undefined && object.sint64 !== null ? String(object.sint64) : '0';
+    message.fixed32 = object.fixed32 !== undefined && object.fixed32 !== null ? Number(object.fixed32) : 0;
+    message.fixed64 = object.fixed64 !== undefined && object.fixed64 !== null ? String(object.fixed64) : '0';
+    message.sfixed32 = object.sfixed32 !== undefined && object.sfixed32 !== null ? Number(object.sfixed32) : 0;
+    message.sfixed64 = object.sfixed64 !== undefined && object.sfixed64 !== null ? String(object.sfixed64) : '0';
+    message.guint64 = object.guint64 !== undefined && object.guint64 !== null ? String(object.guint64) : undefined;
+    message.timestamp =
+      object.timestamp !== undefined && object.timestamp !== null ? fromJsonTimestamp(object.timestamp) : undefined;
     return message;
   },
 

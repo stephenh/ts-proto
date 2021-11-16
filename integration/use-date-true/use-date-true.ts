@@ -77,22 +77,14 @@ export const Todo = {
 
   fromJSON(object: any): Todo {
     const message = { ...baseTodo } as Todo;
-    if (object.id !== undefined && object.id !== null) {
-      message.id = String(object.id);
-    } else {
-      message.id = '';
-    }
-    if (object.timestamp !== undefined && object.timestamp !== null) {
-      message.timestamp = fromJsonTimestamp(object.timestamp);
-    } else {
-      message.timestamp = undefined;
-    }
+    message.id = object.id !== undefined && object.id !== null ? String(object.id) : '';
+    message.timestamp =
+      object.timestamp !== undefined && object.timestamp !== null ? fromJsonTimestamp(object.timestamp) : undefined;
     message.repeatedTimestamp = (object.repeatedTimestamp ?? []).map((e: any) => fromJsonTimestamp(e));
-    if (object.optionalTimestamp !== undefined && object.optionalTimestamp !== null) {
-      message.optionalTimestamp = fromJsonTimestamp(object.optionalTimestamp);
-    } else {
-      message.optionalTimestamp = undefined;
-    }
+    message.optionalTimestamp =
+      object.optionalTimestamp !== undefined && object.optionalTimestamp !== null
+        ? fromJsonTimestamp(object.optionalTimestamp)
+        : undefined;
     message.mapOfTimestamps = {};
     if (object.mapOfTimestamps !== undefined && object.mapOfTimestamps !== null) {
       Object.entries(object.mapOfTimestamps).forEach(([key, value]) => {
@@ -175,16 +167,8 @@ export const Todo_MapOfTimestampsEntry = {
 
   fromJSON(object: any): Todo_MapOfTimestampsEntry {
     const message = { ...baseTodo_MapOfTimestampsEntry } as Todo_MapOfTimestampsEntry;
-    if (object.key !== undefined && object.key !== null) {
-      message.key = String(object.key);
-    } else {
-      message.key = '';
-    }
-    if (object.value !== undefined && object.value !== null) {
-      message.value = fromJsonTimestamp(object.value);
-    } else {
-      message.value = undefined;
-    }
+    message.key = object.key !== undefined && object.key !== null ? String(object.key) : '';
+    message.value = object.value !== undefined && object.value !== null ? fromJsonTimestamp(object.value) : undefined;
     return message;
   },
 

@@ -204,41 +204,15 @@ export const Tile_Value = {
 
   fromJSON(object: any): Tile_Value {
     const message = { ...baseTile_Value } as Tile_Value;
-    if (object.stringValue !== undefined && object.stringValue !== null) {
-      message.stringValue = String(object.stringValue);
-    } else {
-      message.stringValue = '';
-    }
-    if (object.floatValue !== undefined && object.floatValue !== null) {
-      message.floatValue = Number(object.floatValue);
-    } else {
-      message.floatValue = 0;
-    }
-    if (object.doubleValue !== undefined && object.doubleValue !== null) {
-      message.doubleValue = Number(object.doubleValue);
-    } else {
-      message.doubleValue = 0;
-    }
-    if (object.intValue !== undefined && object.intValue !== null) {
-      message.intValue = Number(object.intValue);
-    } else {
-      message.intValue = 0;
-    }
-    if (object.uintValue !== undefined && object.uintValue !== null) {
-      message.uintValue = Number(object.uintValue);
-    } else {
-      message.uintValue = 0;
-    }
-    if (object.sintValue !== undefined && object.sintValue !== null) {
-      message.sintValue = Number(object.sintValue);
-    } else {
-      message.sintValue = 0;
-    }
-    if (object.boolValue !== undefined && object.boolValue !== null) {
-      message.boolValue = Boolean(object.boolValue);
-    } else {
-      message.boolValue = false;
-    }
+    message.stringValue =
+      object.stringValue !== undefined && object.stringValue !== null ? String(object.stringValue) : '';
+    message.floatValue = object.floatValue !== undefined && object.floatValue !== null ? Number(object.floatValue) : 0;
+    message.doubleValue =
+      object.doubleValue !== undefined && object.doubleValue !== null ? Number(object.doubleValue) : 0;
+    message.intValue = object.intValue !== undefined && object.intValue !== null ? Number(object.intValue) : 0;
+    message.uintValue = object.uintValue !== undefined && object.uintValue !== null ? Number(object.uintValue) : 0;
+    message.sintValue = object.sintValue !== undefined && object.sintValue !== null ? Number(object.sintValue) : 0;
+    message.boolValue = object.boolValue !== undefined && object.boolValue !== null ? Boolean(object.boolValue) : false;
     return message;
   },
 
@@ -335,17 +309,9 @@ export const Tile_Feature = {
 
   fromJSON(object: any): Tile_Feature {
     const message = { ...baseTile_Feature } as Tile_Feature;
-    if (object.id !== undefined && object.id !== null) {
-      message.id = Number(object.id);
-    } else {
-      message.id = 0;
-    }
+    message.id = object.id !== undefined && object.id !== null ? Number(object.id) : 0;
     message.tags = (object.tags ?? []).map((e: any) => Number(e));
-    if (object.type !== undefined && object.type !== null) {
-      message.type = tile_GeomTypeFromJSON(object.type);
-    } else {
-      message.type = 0;
-    }
+    message.type = object.type !== undefined && object.type !== null ? tile_GeomTypeFromJSON(object.type) : 0;
     message.geometry = (object.geometry ?? []).map((e: any) => Number(e));
     return message;
   },
@@ -440,24 +406,12 @@ export const Tile_Layer = {
 
   fromJSON(object: any): Tile_Layer {
     const message = { ...baseTile_Layer } as Tile_Layer;
-    if (object.version !== undefined && object.version !== null) {
-      message.version = Number(object.version);
-    } else {
-      message.version = 0;
-    }
-    if (object.name !== undefined && object.name !== null) {
-      message.name = String(object.name);
-    } else {
-      message.name = '';
-    }
+    message.version = object.version !== undefined && object.version !== null ? Number(object.version) : 0;
+    message.name = object.name !== undefined && object.name !== null ? String(object.name) : '';
     message.features = (object.features ?? []).map((e: any) => Tile_Feature.fromJSON(e));
     message.keys = (object.keys ?? []).map((e: any) => String(e));
     message.values = (object.values ?? []).map((e: any) => Tile_Value.fromJSON(e));
-    if (object.extent !== undefined && object.extent !== null) {
-      message.extent = Number(object.extent);
-    } else {
-      message.extent = 0;
-    }
+    message.extent = object.extent !== undefined && object.extent !== null ? Number(object.extent) : 0;
     return message;
   },
 

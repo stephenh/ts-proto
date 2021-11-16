@@ -77,21 +77,9 @@ export const DateMessage = {
 
   fromJSON(object: any): DateMessage {
     const message = { ...baseDateMessage } as DateMessage;
-    if (object.year !== undefined && object.year !== null) {
-      message.year = Number(object.year);
-    } else {
-      message.year = 0;
-    }
-    if (object.month !== undefined && object.month !== null) {
-      message.month = Number(object.month);
-    } else {
-      message.month = 0;
-    }
-    if (object.day !== undefined && object.day !== null) {
-      message.day = Number(object.day);
-    } else {
-      message.day = 0;
-    }
+    message.year = object.year !== undefined && object.year !== null ? Number(object.year) : 0;
+    message.month = object.month !== undefined && object.month !== null ? Number(object.month) : 0;
+    message.day = object.day !== undefined && object.day !== null ? Number(object.day) : 0;
     return message;
   },
 

@@ -94,16 +94,11 @@ export const Simple = {
 
   fromJSON(object: any): Simple {
     const message = { ...baseSimple } as Simple;
-    if (object.name !== undefined && object.name !== null) {
-      message.name = String(object.name);
-    } else {
-      message.name = '';
-    }
-    if (object.otherSimple !== undefined && object.otherSimple !== null) {
-      message.otherSimple = Simple2.fromJSON(object.otherSimple);
-    } else {
-      message.otherSimple = undefined;
-    }
+    message.name = object.name !== undefined && object.name !== null ? String(object.name) : '';
+    message.otherSimple =
+      object.otherSimple !== undefined && object.otherSimple !== null
+        ? Simple2.fromJSON(object.otherSimple)
+        : undefined;
     return message;
   },
 
@@ -118,11 +113,10 @@ export const Simple = {
   fromPartial(object: DeepPartial<Simple>): Simple {
     const message = { ...baseSimple } as Simple;
     message.name = object.name ?? '';
-    if (object.otherSimple !== undefined && object.otherSimple !== null) {
-      message.otherSimple = Simple2.fromPartial(object.otherSimple);
-    } else {
-      message.otherSimple = undefined;
-    }
+    message.otherSimple =
+      object.otherSimple !== undefined && object.otherSimple !== null
+        ? Simple2.fromPartial(object.otherSimple)
+        : undefined;
     return message;
   },
 };
@@ -163,16 +157,10 @@ export const SimpleEnums = {
 
   fromJSON(object: any): SimpleEnums {
     const message = { ...baseSimpleEnums } as SimpleEnums;
-    if (object.localEnum !== undefined && object.localEnum !== null) {
-      message.localEnum = simpleEnumFromJSON(object.localEnum);
-    } else {
-      message.localEnum = 0;
-    }
-    if (object.importEnum !== undefined && object.importEnum !== null) {
-      message.importEnum = simpleEnumFromJSON3(object.importEnum);
-    } else {
-      message.importEnum = 0;
-    }
+    message.localEnum =
+      object.localEnum !== undefined && object.localEnum !== null ? simpleEnumFromJSON(object.localEnum) : 0;
+    message.importEnum =
+      object.importEnum !== undefined && object.importEnum !== null ? simpleEnumFromJSON3(object.importEnum) : 0;
     return message;
   },
 

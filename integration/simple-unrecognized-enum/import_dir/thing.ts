@@ -39,11 +39,8 @@ export const ImportedThing = {
 
   fromJSON(object: any): ImportedThing {
     const message = { ...baseImportedThing } as ImportedThing;
-    if (object.createdAt !== undefined && object.createdAt !== null) {
-      message.createdAt = fromJsonTimestamp(object.createdAt);
-    } else {
-      message.createdAt = undefined;
-    }
+    message.createdAt =
+      object.createdAt !== undefined && object.createdAt !== null ? fromJsonTimestamp(object.createdAt) : undefined;
     return message;
   },
 

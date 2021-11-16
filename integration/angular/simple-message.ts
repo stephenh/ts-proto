@@ -38,11 +38,8 @@ export const SimpleMessage = {
 
   fromJSON(object: any): SimpleMessage {
     const message = { ...baseSimpleMessage } as SimpleMessage;
-    if (object.numberField !== undefined && object.numberField !== null) {
-      message.numberField = Number(object.numberField);
-    } else {
-      message.numberField = 0;
-    }
+    message.numberField =
+      object.numberField !== undefined && object.numberField !== null ? Number(object.numberField) : 0;
     return message;
   },
 

@@ -70,11 +70,7 @@ export const Issue56 = {
 
   fromJSON(object: any): Issue56 {
     const message = { ...baseIssue56 } as Issue56;
-    if (object.test !== undefined && object.test !== null) {
-      message.test = enumWithoutZeroFromJSON(object.test);
-    } else {
-      message.test = 1;
-    }
+    message.test = object.test !== undefined && object.test !== null ? enumWithoutZeroFromJSON(object.test) : 1;
     return message;
   },
 
