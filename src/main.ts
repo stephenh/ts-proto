@@ -952,6 +952,8 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
               } else {
                 return code`${utils.bytesFromBase64}(${from} as string)`;
               }
+            } else if (isLong(valueType) && options.forceLong === LongOption.LONG) {
+              return code`Long.fromString(${from} as string)`;
             } else if (isEnum(valueType)) {
               return code`${from} as number`;
             } else {
@@ -1148,6 +1150,8 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
               return code`${from}`;
             } else if (isEnum(valueType)) {
               return code`${from} as number`;
+            } else if (isLong(valueType) && options.forceLong === LongOption.LONG) {
+              return code`Long.fromValue(${from})`;
             } else {
               const cstr = capitalize(basicTypeName(ctx, valueType).toCodeString());
               return code`${cstr}(${from})`;
