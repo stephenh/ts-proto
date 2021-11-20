@@ -14,9 +14,11 @@ import {
   defaultValue,
   detectMapType,
   getEnumMethod,
+  isAnyValueType,
   isBytes,
   isBytesValueType,
   isEnum,
+  isListValueType,
   isLong,
   isLongValueType,
   isMapType,
@@ -32,6 +34,8 @@ import {
   toReaderCall,
   toTypeName,
   valueTypeName,
+  messageToTypeName,
+  isStructType,
 } from './types';
 import SourceInfo, { Fields } from './sourceInfo';
 import { assertInstanceOf, FormattedMethodDescriptor, maybeAddComment, maybePrefixPackage } from './utils';
@@ -258,7 +262,8 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
 export type Utils = ReturnType<typeof makeDeepPartial> &
   ReturnType<typeof makeTimestampMethods> &
   ReturnType<typeof makeByteUtils> &
-  ReturnType<typeof makeLongUtils>;
+  ReturnType<typeof makeLongUtils> &
+  ReturnType<typeof makeWrappingUtils>;
 
 /** These are runtime utility methods used by the generated code. */
 export function makeUtils(options: Options): Utils {
@@ -269,6 +274,7 @@ export function makeUtils(options: Options): Utils {
     ...makeDeepPartial(options, longs),
     ...makeTimestampMethods(options, longs),
     ...longs,
+    ...makeWrappingUtils(),
   };
 }
 
@@ -340,6 +346,61 @@ function makeLongUtils(options: Options, bytes: ReturnType<typeof makeByteUtils>
   );
 
   return { numberToLong, longToNumber, longToString, longInit, Long };
+}
+
+function makeWrappingUtils() {
+  const wrapAnyValue = conditionalOutput('wrapAnyValue', code`function wrapAnyValue(value: any): Value {
+    if (value === null) {
+        return {nullValue: 0} as Value;
+      } else if (typeof value === 'boolean') {
+        return {boolValue: value} as Value;
+      } else if (typeof value === 'number') {
+        return {numberValue: value} as Value;
+      } else if (typeof value === 'string') {
+        return {stringValue: value} as Value;
+      } else if (Array.isArray(value)) {
+        return {listValue: value} as Value;
+      } else if (typeof value === 'object') {
+        return {structValue: value} as Value;
+      } else if (typeof value === 'undefined') {
+        return {} as Value;
+      } else {
+        throw new Error('Unsupported any value type: ' + typeof value);
+      }
+  }`);
+
+  const unwrapAnyValue = conditionalOutput('unwrapAnyValue', code`function unwrapAnyValue(value: Value): string | number | boolean | Object | null | Array<any> | undefined {
+    if (value.stringValue !== undefined) {
+      return value.stringValue;
+    } else if (value.numberValue !== undefined) {
+      return value.numberValue;
+    } else if (value.boolValue !== undefined) {
+      return value.boolValue;
+    } else if (value.structValue !== undefined) {
+      return value.structValue;
+    } else if (value.listValue !== undefined) {
+        return value.listValue;
+    } else if (value.nullValue !== undefined) {
+      return null;
+    }
+  }`)
+
+  const wrapStruct = conditionalOutput('wrapStruct', code`function wrapStruct(object: {[key: string]: any}): Struct {
+    const struct = Struct.fromPartial({});
+    Object.keys(object).forEach(key => {
+      struct.fields[key] = object[key];
+    });
+    return struct;
+  }`)
+
+  const unwrapStruct = conditionalOutput('unwrapStruct', code`function unwrapStruct(struct: Struct): {[key: string]: any} {
+    const object: { [key: string]: any } = {};
+    Object.keys(struct.fields).forEach(key => {
+      object[key] = struct.fields[key];
+    });
+    return object;
+  }`)
+  return { wrapAnyValue, unwrapAnyValue, wrapStruct, unwrapStruct };
 }
 
 function makeByteUtils() {
@@ -693,8 +754,15 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
         }
       }
     } else if (isValueType(ctx, field)) {
+      const unwrap = (decodedValue: any): Code => {
+        if (isAnyValueType(field)) return code`${ctx.utils.unwrapAnyValue}(${decodedValue})`;
+        if (isStructType(field)) return code`${ctx.utils.unwrapStruct}(${decodedValue})`;
+        if (isListValueType(field)) return code`${decodedValue}.values`;
+        return code`${decodedValue}.value`;
+      }
       const type = basicTypeName(ctx, field, { keepValueType: true });
-      readSnippet = code`${type}.decode(reader, reader.uint32()).value`;
+      const decoder = code`${type}.decode(reader, reader.uint32())`
+      readSnippet = code`${unwrap(decoder)}`;
     } else if (isTimestamp(field) && (options.useDate === DateOption.DATE || options.useDate === DateOption.STRING)) {
       const type = basicTypeName(ctx, field, { keepValueType: true });
       readSnippet = code`${utils.fromTimestamp}(${type}.decode(reader, reader.uint32()))`;
@@ -789,11 +857,18 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
       writeSnippet = (place) =>
         code`${type}.encode(${utils.toTimestamp}(${place}), writer.uint32(${tag}).fork()).ldelim()`;
     } else if (isValueType(ctx, field)) {
+      const maybeTypeField = options.outputTypeRegistry ? `$type: '${field.typeName.slice(1)}',` : '';
+
+      const wrappedValue = (place: string): Code => {
+        if (isAnyValueType(field)) return code`${ctx.utils.wrapAnyValue}(${place})`;
+        if (isListValueType(field)) return code`{values: ${place}}`;
+        if (isStructType(field)) return code`${ctx.utils.wrapStruct}(${place})`;
+        return code`{${maybeTypeField} value: ${place}!}`;
+      }
+
       const tag = ((field.number << 3) | 2) >>> 0;
       const type = basicTypeName(ctx, field, { keepValueType: true });
-      const maybeTypeField = options.outputTypeRegistry ? `$type: '${field.typeName.slice(1)}',` : '';
-      writeSnippet = (place) =>
-        code`${type}.encode({ ${maybeTypeField} value: ${place}! }, writer.uint32(${tag}).fork()).ldelim()`;
+      writeSnippet = (place) => code`${type}.encode(${wrappedValue(place)}, writer.uint32(${tag}).fork()).ldelim()`;
     } else if (isMessage(field)) {
       const tag = ((field.number << 3) | 2) >>> 0;
       const type = basicTypeName(ctx, field);
@@ -932,12 +1007,16 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
         (options.useDate === DateOption.DATE || options.useDate === DateOption.TIMESTAMP)
       ) {
         return code`${utils.fromJsonTimestamp}(${from})`;
+      }  else if (isAnyValueType(field) || isStructType(field)) {
+        return code`${from}`;
       } else if (isValueType(ctx, field)) {
         const valueType = valueTypeName(ctx, field.typeName)!;
         if (isLongValueType(field) && options.forceLong === LongOption.LONG) {
           return code`${capitalize(valueType.toCodeString())}.fromValue(${from})`;
         } else if (isBytesValueType(field)) {
           return code`new ${capitalize(valueType.toCodeString())}(${from})`;
+        } else if (isListValueType(field)) {
+          return code`[...${from}]`;
         } else {
           return code`${capitalize(valueType.toCodeString())}(${from})`;
         }
@@ -968,6 +1047,8 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
           } else if (isValueType(ctx, valueType)) {
             const type = basicTypeName(ctx, valueType);
             return code`${from} as ${type}`;
+          } else if (isAnyValueType(valueType)) {
+            return code`${from}`;
           } else {
             const type = basicTypeName(ctx, valueType);
             return code`${type}.fromJSON(${from})`;
@@ -993,6 +1074,10 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
           });
         `);
         chunks.push(code`}`);
+      } else if (isAnyValueType(field)) {
+        chunks.push(code`
+          message.${fieldName} = Array.isArray(object?.${fieldName}) ? [...object.${fieldName}] : [];
+        `);
       } else {
         // Explicit `any` type required to make TS with noImplicitAny happy. `object` is also `any` here.
         chunks.push(code`
@@ -1006,6 +1091,16 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
         message.${oneofName} = { $case: '${fieldName}', ${fieldName}: ${readSnippet(`object.${fieldName}`)} }
       `);
       chunks.push(code`}`);
+    } else if (isAnyValueType(field)) {
+      chunks.push(code`message.${fieldName} = object.${fieldName};`);
+    } else if (isStructType(field)) {
+      chunks.push(code`message.${fieldName} = typeof(object.${fieldName}) === 'object' ? object.${fieldName} : undefined;`);
+    } else if (isListValueType(field)) {
+      chunks.push(code`
+        message.${fieldName} = Array.isArray(object?.${fieldName})
+          ? ${readSnippet(`object.${fieldName}`)}
+          : ${'undefined'};
+      `);
     } else {
       const fallback = isWithinOneOf(field) ? 'undefined' : defaultValue(ctx, field);
       chunks.push(code`
@@ -1063,10 +1158,14 @@ function generateToJson(ctx: Context, fullName: string, messageDesc: DescriptorP
           return code`${utils.fromTimestamp}(${from}).toISOString()`;
         } else if (isScalar(valueType) || isValueType(ctx, valueType)) {
           return code`${from}`;
+        } else if (isAnyValueType(valueType)) {
+          return code`${from}`;
         } else {
           const type = basicTypeName(ctx, valueType);
           return code`${type}.toJSON(${from})`;
         }
+      } else if (isAnyValueType(field)) {
+        return code`${from}`;
       } else if (isMessage(field) && !isValueType(ctx, field) && !isMapType(ctx, messageDesc, field)) {
         const type = basicTypeName(ctx, field, { keepValueType: true });
         return code`${from} ? ${type}.toJSON(${from}) : ${defaultValue(ctx, field)}`;
@@ -1152,6 +1251,8 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
               const cstr = capitalize(basicTypeName(ctx, valueType).toCodeString());
               return code`${cstr}(${from})`;
             }
+          } else if (isAnyValueType(valueType)) {
+              return code`${from}`
           } else if (
             isTimestamp(valueType) &&
             (options.useDate === DateOption.DATE || options.useDate === DateOption.STRING)
@@ -1163,6 +1264,8 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
             const type = basicTypeName(ctx, valueType);
             return code`${type}.fromPartial(${from})`;
           }
+        } else if (isAnyValueType(field)) {
+          return code`${from}`
         } else {
           const type = basicTypeName(ctx, field);
           return code`${type}.fromPartial(${from})`;

@@ -370,8 +370,24 @@ export function isValueType(ctx: Context, field: FieldDescriptorProto): boolean 
   return valueTypeName(ctx, field.typeName) !== undefined;
 }
 
+export function isAnyValueType(field: FieldDescriptorProto): boolean {
+  return field.typeName === '.google.protobuf.Value'
+}
+
 export function isBytesValueType(field: FieldDescriptorProto): boolean {
   return field.typeName === '.google.protobuf.BytesValue';
+}
+
+export function isListValueType(field: FieldDescriptorProto): boolean {
+  return isListValueTypeName(field.typeName)
+}
+
+export function isListValueTypeName(typeName: string): boolean {
+  return typeName === 'google.protobuf.ListValue' || typeName === '.google.protobuf.ListValue';
+}
+
+export function isStructType(field: FieldDescriptorProto): boolean {
+  return field.typeName === '.google.protobuf.Struct';
 }
 
 export function isLongValueType(field: FieldDescriptorProto): boolean {
@@ -399,6 +415,12 @@ export function valueTypeName(ctx: Context, typeName: string): Code | undefined 
       return code`boolean`;
     case '.google.protobuf.BytesValue':
       return code`Uint8Array`;
+    case '.google.protobuf.ListValue':
+      return code`Array<any>`
+    case '.google.protobuf.Value':
+      return code`any`
+    case '.google.protobuf.Struct':
+      return code`{[key: string]: any}`
     default:
       return undefined;
   }
@@ -415,6 +437,7 @@ export function wrapperTypeName(typeName: string): string | undefined {
     case '.google.protobuf.UInt64Value':
     case '.google.protobuf.BoolValue':
     case '.google.protobuf.BytesValue':
+    case '.google.protobuf.ListValue':
     case '.google.protobuf.Timestamp':
       return typeName.split('.')[3];
     default:

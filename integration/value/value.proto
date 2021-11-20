@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+import "google/protobuf/struct.proto";
+import "google/protobuf/wrappers.proto";
+
+message ValueMessage {
+  google.protobuf.Value value = 1;
+  google.protobuf.ListValue anyList = 2;
+  repeated google.protobuf.Value repeatedAny = 3;
+}

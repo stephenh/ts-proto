@@ -36,6 +36,8 @@ export function generateEncoder(ctx: Context, typeName: string): Code {
       return code`${TypeValue}.encode({value: value ?? false}).finish()`;
     case 'BytesValue':
       return code`${TypeValue}.encode({value: value ?? new Uint8Array()}).finish()`;
+    case 'ListValue':
+      return code`${TypeValue}.encode({value: value ?? []]}).finish()`;
   }
 
   throw new Error(`unknown wrapper type: ${name}`);
