@@ -445,14 +445,16 @@ When writing JSON, `ts-proto` currently does **not** normalize message when conv
 ```typescript
 // Current ts-proto behavior
 Foo.toJSON({ }); // => { }
-Foo.toJSON({ bar: '' }); // => { bar: '' }
+Foo.toJSON({ bar: undefined }); // => { }
+Foo.toJSON({ bar: '' }); // => { bar: '' } - note: this is the default value, but it's not omitted
 Foo.toJSON({ bar: 'baz' }); // => { bar: 'baz' }
 ```
 
 ```typescript
 // Possible future behavior, where ts-proto would normalize message
 Foo.toJSON({ }); // => { }
-Foo.toJSON({ bar: '' }); // => { }
+Foo.toJSON({ bar: undefined }); // => { }
+Foo.toJSON({ bar: '' }); // => { } - note: omitting the default value, as expected
 Foo.toJSON({ bar: 'baz' }); // => { bar: 'baz' }
 ```
 
