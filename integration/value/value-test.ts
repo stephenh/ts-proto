@@ -1,15 +1,14 @@
 import { Reader } from 'protobufjs';
-import {ValueMessage} from "./value";
+import { ValueMessage } from './value';
 
 import { ValueMessage as PbValueMessage } from './pbjs';
-
 
 describe('values', () => {
   it('json value', () => {
     const s1 = ValueMessage.fromJSON({
-      value: "Hello",
-      anyList: [1, "foo", true],
-      repeatedAny: [2, "bar", false],
+      value: 'Hello',
+      anyList: [1, 'foo', true],
+      repeatedAny: [2, 'bar', false],
     });
 
     const s2 = PbValueMessage.decode(Reader.create(ValueMessage.encode(s1).finish()));
@@ -29,6 +28,17 @@ describe('values', () => {
             },
           ],
         },
+        "repeatedAny": Array [
+          Object {
+            "numberValue": 2,
+          },
+          Object {
+            "stringValue": "bar",
+          },
+          Object {
+            "boolValue": false,
+          },
+        ],
         "value": Object {
           "stringValue": "Hello",
         },
@@ -38,17 +48,17 @@ describe('values', () => {
 
   it('decodes lists of any types correctly', () => {
     const s1 = ValueMessage.fromJSON({
-      anyList: [1, "foo", true],
-      repeatedAny: [2, "bar", false],
+      anyList: [1, 'foo', true],
+      repeatedAny: [2, 'bar', false],
     });
-    expect(s1).toEqual({anyList: [1, "foo", true],  repeatedAny: [2, "bar", false]});
-  })
+    expect(s1).toEqual({ anyList: [1, 'foo', true], repeatedAny: [2, 'bar', false] });
+  });
 
   it('toJson', () => {
     const s1 = ValueMessage.fromPartial({
       anyList: [1],
       repeatedAny: [2],
     });
-    expect(s1).toEqual({anyList: [1], repeatedAny: [2]});
-  })
+    expect(s1).toEqual({ anyList: [1], repeatedAny: [2] });
+  });
 });
