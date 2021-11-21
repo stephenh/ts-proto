@@ -190,6 +190,7 @@ describe('simple json', () => {
         "intLookup": Object {
           "1": 0,
         },
+        "longLookup": Object {},
         "mapOfBytes": Object {},
         "mapOfStringValues": Object {},
         "mapOfTimestamps": Object {},
@@ -212,6 +213,7 @@ describe('simple json', () => {
       Object {
         "entitiesById": Object {},
         "intLookup": Object {},
+        "longLookup": Object {},
         "mapOfBytes": Object {},
         "mapOfStringValues": Object {},
         "mapOfTimestamps": Object {
@@ -236,12 +238,14 @@ describe('simple json', () => {
         b: new Uint8Array([1, 2, 3]),
       },
       mapOfStringValues: {},
+      longLookup: {},
     };
     const json = SimpleWithMap.toJSON(s1);
     expect(json).toMatchInlineSnapshot(`
       Object {
         "entitiesById": Object {},
         "intLookup": Object {},
+        "longLookup": Object {},
         "mapOfBytes": Object {
           "a": "AQI=",
           "b": "AQID",
@@ -265,6 +269,7 @@ describe('simple json', () => {
       Object {
         "entitiesById": Object {},
         "intLookup": Object {},
+        "longLookup": Object {},
         "mapOfBytes": Object {
           "a": Uint8Array [
             1,
