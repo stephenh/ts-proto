@@ -1,3 +1,10 @@
+## [1.87.1](https://github.com/stephenh/ts-proto/compare/v1.87.0...v1.87.1) (2021-11-21)
+
+
+### Bug Fixes
+
+* code generation for int64 map values in fromPartial and fromJson ([#395](https://github.com/stephenh/ts-proto/issues/395)) ([d3ea8eb](https://github.com/stephenh/ts-proto/commit/d3ea8eb69e19a5e45fcc1766c4af1194b17e48fc))
+
 # [1.87.0](https://github.com/stephenh/ts-proto/compare/v1.86.0...v1.87.0) (2021-11-16)
 
 
