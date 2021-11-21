@@ -349,7 +349,9 @@ function makeLongUtils(options: Options, bytes: ReturnType<typeof makeByteUtils>
 }
 
 function makeWrappingUtils() {
-  const wrapAnyValue = conditionalOutput('wrapAnyValue', code`function wrapAnyValue(value: any): Value {
+  const wrapAnyValue = conditionalOutput(
+    'wrapAnyValue',
+    code`function wrapAnyValue(value: any): Value {
     if (value === null) {
         return {nullValue: 0} as Value;
       } else if (typeof value === 'boolean') {
@@ -367,9 +369,12 @@ function makeWrappingUtils() {
       } else {
         throw new Error('Unsupported any value type: ' + typeof value);
       }
-  }`);
+  }`
+  );
 
-  const unwrapAnyValue = conditionalOutput('unwrapAnyValue', code`function unwrapAnyValue(value: Value): string | number | boolean | Object | null | Array<any> | undefined {
+  const unwrapAnyValue = conditionalOutput(
+    'unwrapAnyValue',
+    code`function unwrapAnyValue(value: Value): string | number | boolean | Object | null | Array<any> | undefined {
     if (value.stringValue !== undefined) {
       return value.stringValue;
     } else if (value.numberValue !== undefined) {
@@ -383,23 +388,30 @@ function makeWrappingUtils() {
     } else if (value.nullValue !== undefined) {
       return null;
     }
-  }`)
+  }`
+  );
 
-  const wrapStruct = conditionalOutput('wrapStruct', code`function wrapStruct(object: {[key: string]: any}): Struct {
+  const wrapStruct = conditionalOutput(
+    'wrapStruct',
+    code`function wrapStruct(object: {[key: string]: any}): Struct {
     const struct = Struct.fromPartial({});
     Object.keys(object).forEach(key => {
       struct.fields[key] = object[key];
     });
     return struct;
-  }`)
+  }`
+  );
 
-  const unwrapStruct = conditionalOutput('unwrapStruct', code`function unwrapStruct(struct: Struct): {[key: string]: any} {
+  const unwrapStruct = conditionalOutput(
+    'unwrapStruct',
+    code`function unwrapStruct(struct: Struct): {[key: string]: any} {
     const object: { [key: string]: any } = {};
     Object.keys(struct.fields).forEach(key => {
       object[key] = struct.fields[key];
     });
     return object;
-  }`)
+  }`
+  );
   return { wrapAnyValue, unwrapAnyValue, wrapStruct, unwrapStruct };
 }
 
@@ -759,9 +771,9 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
         if (isStructType(field)) return code`${ctx.utils.unwrapStruct}(${decodedValue})`;
         if (isListValueType(field)) return code`${decodedValue}.values`;
         return code`${decodedValue}.value`;
-      }
+      };
       const type = basicTypeName(ctx, field, { keepValueType: true });
-      const decoder = code`${type}.decode(reader, reader.uint32())`
+      const decoder = code`${type}.decode(reader, reader.uint32())`;
       readSnippet = code`${unwrap(decoder)}`;
     } else if (isTimestamp(field) && (options.useDate === DateOption.DATE || options.useDate === DateOption.STRING)) {
       const type = basicTypeName(ctx, field, { keepValueType: true });
@@ -864,7 +876,7 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
         if (isListValueType(field)) return code`{values: ${place}}`;
         if (isStructType(field)) return code`${ctx.utils.wrapStruct}(${place})`;
         return code`{${maybeTypeField} value: ${place}!}`;
-      }
+      };
 
       const tag = ((field.number << 3) | 2) >>> 0;
       const type = basicTypeName(ctx, field, { keepValueType: true });
@@ -1007,7 +1019,7 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
         (options.useDate === DateOption.DATE || options.useDate === DateOption.TIMESTAMP)
       ) {
         return code`${utils.fromJsonTimestamp}(${from})`;
-      }  else if (isAnyValueType(field) || isStructType(field)) {
+      } else if (isAnyValueType(field) || isStructType(field)) {
         return code`${from}`;
       } else if (isValueType(ctx, field)) {
         const valueType = valueTypeName(ctx, field.typeName)!;
@@ -1094,7 +1106,9 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
     } else if (isAnyValueType(field)) {
       chunks.push(code`message.${fieldName} = object.${fieldName};`);
     } else if (isStructType(field)) {
-      chunks.push(code`message.${fieldName} = typeof(object.${fieldName}) === 'object' ? object.${fieldName} : undefined;`);
+      chunks.push(
+        code`message.${fieldName} = typeof(object.${fieldName}) === 'object' ? object.${fieldName} : undefined;`
+      );
     } else if (isListValueType(field)) {
       chunks.push(code`
         message.${fieldName} = Array.isArray(object?.${fieldName})
@@ -1252,7 +1266,7 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
               return code`${cstr}(${from})`;
             }
           } else if (isAnyValueType(valueType)) {
-              return code`${from}`
+            return code`${from}`;
           } else if (
             isTimestamp(valueType) &&
             (options.useDate === DateOption.DATE || options.useDate === DateOption.STRING)
@@ -1265,7 +1279,7 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
             return code`${type}.fromPartial(${from})`;
           }
         } else if (isAnyValueType(field)) {
-          return code`${from}`
+          return code`${from}`;
         } else {
           const type = basicTypeName(ctx, field);
           return code`${type}.fromPartial(${from})`;

@@ -371,7 +371,7 @@ export function isValueType(ctx: Context, field: FieldDescriptorProto): boolean 
 }
 
 export function isAnyValueType(field: FieldDescriptorProto): boolean {
-  return field.typeName === '.google.protobuf.Value'
+  return field.typeName === '.google.protobuf.Value';
 }
 
 export function isBytesValueType(field: FieldDescriptorProto): boolean {
@@ -379,7 +379,7 @@ export function isBytesValueType(field: FieldDescriptorProto): boolean {
 }
 
 export function isListValueType(field: FieldDescriptorProto): boolean {
-  return isListValueTypeName(field.typeName)
+  return isListValueTypeName(field.typeName);
 }
 
 export function isListValueTypeName(typeName: string): boolean {
@@ -416,11 +416,11 @@ export function valueTypeName(ctx: Context, typeName: string): Code | undefined 
     case '.google.protobuf.BytesValue':
       return code`Uint8Array`;
     case '.google.protobuf.ListValue':
-      return code`Array<any>`
+      return code`Array<any>`;
     case '.google.protobuf.Value':
-      return code`any`
+      return code`any`;
     case '.google.protobuf.Struct':
-      return code`{[key: string]: any}`
+      return code`{[key: string]: any}`;
     default:
       return undefined;
   }
