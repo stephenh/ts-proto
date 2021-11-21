@@ -194,6 +194,7 @@ export interface SimpleWithMap {
   mapOfTimestamps: { [key: string]: Date };
   mapOfBytes: { [key: string]: Uint8Array };
   mapOfStringValues: { [key: string]: string | undefined };
+  longLookup: { [key: number]: number };
 }
 
 export interface SimpleWithMap_EntitiesByIdEntry {
@@ -224,6 +225,11 @@ export interface SimpleWithMap_MapOfBytesEntry {
 export interface SimpleWithMap_MapOfStringValuesEntry {
   key: string;
   value: string | undefined;
+}
+
+export interface SimpleWithMap_LongLookupEntry {
+  key: number;
+  value: number;
 }
 
 export interface SimpleWithSnakeCaseMap {
@@ -957,6 +963,9 @@ export const SimpleWithMap = {
         SimpleWithMap_MapOfStringValuesEntry.encode({ key: key as any, value }, writer.uint32(50).fork()).ldelim();
       }
     });
+    Object.entries(message.longLookup).forEach(([key, value]) => {
+      SimpleWithMap_LongLookupEntry.encode({ key: key as any, value }, writer.uint32(58).fork()).ldelim();
+    });
     return writer;
   },
 
@@ -970,6 +979,7 @@ export const SimpleWithMap = {
     message.mapOfTimestamps = {};
     message.mapOfBytes = {};
     message.mapOfStringValues = {};
+    message.longLookup = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -1007,6 +1017,12 @@ export const SimpleWithMap = {
           const entry6 = SimpleWithMap_MapOfStringValuesEntry.decode(reader, reader.uint32());
           if (entry6.value !== undefined) {
             message.mapOfStringValues[entry6.key] = entry6.value;
+          }
+          break;
+        case 7:
+          const entry7 = SimpleWithMap_LongLookupEntry.decode(reader, reader.uint32());
+          if (entry7.value !== undefined) {
+            message.longLookup[entry7.key] = entry7.value;
           }
           break;
         default:
@@ -1055,6 +1071,12 @@ export const SimpleWithMap = {
         message.mapOfStringValues[key] = value as string | undefined;
       });
     }
+    message.longLookup = {};
+    if (object.longLookup !== undefined && object.longLookup !== null) {
+      Object.entries(object.longLookup).forEach(([key, value]) => {
+        message.longLookup[Number(key)] = Number(value);
+      });
+    }
     return message;
   },
 
@@ -1094,6 +1116,12 @@ export const SimpleWithMap = {
     if (message.mapOfStringValues) {
       Object.entries(message.mapOfStringValues).forEach(([k, v]) => {
         obj.mapOfStringValues[k] = v;
+      });
+    }
+    obj.longLookup = {};
+    if (message.longLookup) {
+      Object.entries(message.longLookup).forEach(([k, v]) => {
+        obj.longLookup[k] = v;
       });
     }
     return obj;
@@ -1146,6 +1174,14 @@ export const SimpleWithMap = {
       Object.entries(object.mapOfStringValues).forEach(([key, value]) => {
         if (value !== undefined) {
           message.mapOfStringValues[key] = value;
+        }
+      });
+    }
+    message.longLookup = {};
+    if (object.longLookup !== undefined && object.longLookup !== null) {
+      Object.entries(object.longLookup).forEach(([key, value]) => {
+        if (value !== undefined) {
+          message.longLookup[Number(key)] = Number(value);
         }
       });
     }
@@ -1488,6 +1524,62 @@ export const SimpleWithMap_MapOfStringValuesEntry = {
     const message = { ...baseSimpleWithMap_MapOfStringValuesEntry } as SimpleWithMap_MapOfStringValuesEntry;
     message.key = object.key ?? '';
     message.value = object.value ?? undefined;
+    return message;
+  },
+};
+
+const baseSimpleWithMap_LongLookupEntry: object = { key: 0, value: 0 };
+
+export const SimpleWithMap_LongLookupEntry = {
+  encode(message: SimpleWithMap_LongLookupEntry, writer: Writer = Writer.create()): Writer {
+    if (message.key !== 0) {
+      writer.uint32(8).int64(message.key);
+    }
+    if (message.value !== 0) {
+      writer.uint32(16).int64(message.value);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): SimpleWithMap_LongLookupEntry {
+    const reader = input instanceof Reader ? input : new Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = { ...baseSimpleWithMap_LongLookupEntry } as SimpleWithMap_LongLookupEntry;
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.key = longToNumber(reader.int64() as Long);
+          break;
+        case 2:
+          message.value = longToNumber(reader.int64() as Long);
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): SimpleWithMap_LongLookupEntry {
+    const message = { ...baseSimpleWithMap_LongLookupEntry } as SimpleWithMap_LongLookupEntry;
+    message.key = object.key !== undefined && object.key !== null ? Number(object.key) : 0;
+    message.value = object.value !== undefined && object.value !== null ? Number(object.value) : 0;
+    return message;
+  },
+
+  toJSON(message: SimpleWithMap_LongLookupEntry): unknown {
+    const obj: any = {};
+    message.key !== undefined && (obj.key = message.key);
+    message.value !== undefined && (obj.value = message.value);
+    return obj;
+  },
+
+  fromPartial(object: DeepPartial<SimpleWithMap_LongLookupEntry>): SimpleWithMap_LongLookupEntry {
+    const message = { ...baseSimpleWithMap_LongLookupEntry } as SimpleWithMap_LongLookupEntry;
+    message.key = object.key ?? 0;
+    message.value = object.value ?? 0;
     return message;
   },
 };

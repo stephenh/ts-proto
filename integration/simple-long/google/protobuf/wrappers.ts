@@ -230,11 +230,7 @@ export const Int64Value = {
 
   fromPartial(object: DeepPartial<Int64Value>): Int64Value {
     const message = { ...baseInt64Value } as Int64Value;
-    if (object.value !== undefined && object.value !== null) {
-      message.value = object.value as Long;
-    } else {
-      message.value = Long.ZERO;
-    }
+    message.value = object.value !== undefined && object.value !== null ? Long.fromValue(object.value) : Long.ZERO;
     return message;
   },
 };
@@ -281,11 +277,7 @@ export const UInt64Value = {
 
   fromPartial(object: DeepPartial<UInt64Value>): UInt64Value {
     const message = { ...baseUInt64Value } as UInt64Value;
-    if (object.value !== undefined && object.value !== null) {
-      message.value = object.value as Long;
-    } else {
-      message.value = Long.UZERO;
-    }
+    message.value = object.value !== undefined && object.value !== null ? Long.fromValue(object.value) : Long.UZERO;
     return message;
   },
 };
@@ -560,9 +552,11 @@ function base64FromBytes(arr: Uint8Array): string {
   return btoa(bin.join(''));
 }
 
-type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined | Long;
+type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 export type DeepPartial<T> = T extends Builtin
   ? T
+  : T extends Long
+  ? string | number | Long
   : T extends Array<infer U>
   ? Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U>

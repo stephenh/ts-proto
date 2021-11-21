@@ -14,6 +14,8 @@ message SimpleWithWrappers {
 message SimpleWithMap {
   map<string, string> nameLookup = 2;
   map<int32, int32> intLookup = 3;
+  // Ideally we'd test map<int64, int64> but we present maps as JS objects and `Long` cannot be used as a keys.
+  map<string, int64> longLookup = 4;
 }
 
 message Numbers {
