@@ -29,7 +29,7 @@ export class HeroController implements HeroServiceController {
 
     const onNext = (villainById: VillainById) => {
       const item = this.villains.find(({ id }) => id === villainById.id);
-      hero$.next(item);
+      hero$.next(item!);
     };
     const onComplete = () => hero$.complete();
     request.subscribe(onNext, null, onComplete);
