@@ -399,16 +399,19 @@ function makeDeepPartial(options: Options, longs: ReturnType<typeof makeLongUtil
   }
 
   const maybeExport = options.exportCommonSymbols ? 'export' : '';
-  const maybeLong = options.forceLong === LongOption.LONG ? code` | ${longs.Long}` : '';
+  // Allow passing longs as numbers or strings, nad we'll convert them
+  const maybeLong =
+    options.forceLong === LongOption.LONG ? code` : T extends ${longs.Long} ? string | number | Long ` : '';
   const keys = options.outputTypeRegistry ? code`Exclude<keyof T, '$type'>` : code`keyof T`;
 
   // Based on the type from ts-essentials
   const DeepPartial = conditionalOutput(
     'DeepPartial',
     code`
-      type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined${maybeLong};
-      ${maybeExport} type DeepPartial<T> = T extends Builtin
+      type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
+      ${maybeExport} type DeepPartial<T> =  T extends Builtin
         ? T
+        ${maybeLong}
         : T extends Array<infer U>
         ? Array<DeepPartial<U>>
         : T extends ReadonlyArray<infer U>
@@ -1063,6 +1066,8 @@ function generateToJson(ctx: Context, fullName: string, messageDesc: DescriptorP
           return code`${from}`;
         } else if (isTimestamp(valueType) && options.useDate === DateOption.TIMESTAMP) {
           return code`${utils.fromTimestamp}(${from}).toISOString()`;
+        } else if (isLong(valueType) && options.forceLong === LongOption.LONG) {
+          return code`${from}.toString()`;
         } else if (isScalar(valueType) || isValueType(ctx, valueType)) {
           return code`${from}`;
         } else {
@@ -1136,7 +1141,9 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
     const fieldName = maybeSnakeToCamel(field.name, options);
 
     const readSnippet = (from: string): Code => {
-      if (
+      if ((isLong(field) || isLongValueType(field)) && options.forceLong === LongOption.LONG) {
+        return code`Long.fromValue(${from})`;
+      } else if (
         isPrimitive(field) ||
         (isTimestamp(field) && (options.useDate === DateOption.DATE || options.useDate === DateOption.STRING)) ||
         isValueType(ctx, field)
@@ -1207,15 +1214,6 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
           message.${oneofName} = { $case: '${fieldName}', ${fieldName}: ${v} };
         }  
       `);
-    } else if ((isLong(field) || isLongValueType(field)) && options.forceLong === LongOption.LONG) {
-      const v = readSnippet(`object.${fieldName}`);
-      const type = basicTypeName(ctx, field);
-      chunks.push(code`if (object.${fieldName} !== undefined && object.${fieldName} !== null) {`);
-      chunks.push(code`message.${fieldName} = ${v} as ${type};`);
-      chunks.push(code`} else {`);
-      const fallback = isWithinOneOf(field) ? 'undefined' : defaultValue(ctx, field);
-      chunks.push(code`message.${fieldName} = ${fallback}`);
-      chunks.push(code`}`);
     } else if (readSnippet(`x`).toCodeString() == 'x') {
       // An optimized case of the else below that works when `readSnippet` returns the plain input
       const fallback = isWithinOneOf(field) ? 'undefined' : defaultValue(ctx, field);
