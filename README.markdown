@@ -435,7 +435,9 @@ Foo.encode({ bar: '' }); // => { }, writes an empty Foo object, in protobuf bina
 Reading JSON will also initialize the default values. Since senders may either omit unset fields, or set them to the default value, use `fromJSON` to normalize the input.
 
 ```typescript
-Foo.fromJSON({}); // => { bar: '' }
+Foo.fromJSON({ }); // => { bar: '' }
+Foo.fromJSON({ bar: '' }); // => { bar: '' }
+Foo.fromJSON({ bar: 'baz' }); // => { bar: 'baz' }
 ```
 
 When writing JSON, `ts-proto` currently does **not** normalize message when converting to JSON, other than omitting unset fields, but it may do so in the future.
