@@ -9,6 +9,10 @@
   },
   "scripts": {
     "build": "yarn tsc",
+    "setup:docker": "docker-compose build",
+    "setup:pbjs": "docker-compose run --rm --entrypoint bash -w /host/integration protoc pbjs.sh",
+    "setup:bins": "docker-compose run --rm --entrypoint bash -w /host/integration protoc update-bins.sh",
+    "setup:codegen": "docker-compose run --rm --entrypoint bash -w /host/integration protoc codegen.sh",
     "setup": "cd ./integration && ./pbjs.sh && ./update-bins.sh && ./codegen.sh",
     "test": "yarn jest -c jest.config.js --maxWorkers=2",
     "prettier": "prettier --write {src,tests}/**/*.ts",
