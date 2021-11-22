@@ -1,6 +1,6 @@
 import { HeroServiceController, HeroById, Hero, Villain, VillainById } from './hero';
 import { Observable, of, Subject } from 'rxjs';
-import { Metadata } from 'grpc';
+import { Metadata } from '@grpc/grpc-js';
 
 export class SampleService implements HeroServiceController {
   findOneHero(request: HeroById, metadata?: Metadata): Observable<Hero> {

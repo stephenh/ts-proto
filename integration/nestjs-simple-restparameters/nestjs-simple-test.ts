@@ -12,7 +12,7 @@ describe('nestjs-simple-test nestjs', () => {
     app = await createApp();
     client = app.get(HERO_PACKAGE_NAME);
     heroService = client.getService<HeroServiceClient>(HERO_SERVICE_NAME);
-    await app.listenAsync();
+    await app.listen();
   });
 
   afterAll(async () => {
