@@ -227,7 +227,7 @@ export const SimpleWithMap = {
     );
     message.longLookup = Object.entries(object.longLookup ?? {}).reduce<{ [key: string]: Long }>(
       (acc, [key, value]) => {
-        acc[key] = Long.fromString(value as string);
+        acc[key] = Long.fromValue(value as Long | string);
         return acc;
       },
       {}

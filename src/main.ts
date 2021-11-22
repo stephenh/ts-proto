@@ -990,7 +990,7 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
                 return code`${utils.bytesFromBase64}(${from} as string)`;
               }
             } else if (isLong(valueType) && options.forceLong === LongOption.LONG) {
-              return code`Long.fromString(${from} as string)`;
+              return code`Long.fromValue(${from} as Long | string)`;
             } else if (isEnum(valueType)) {
               return code`${from} as number`;
             } else {
