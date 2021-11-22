@@ -1,9 +1,15 @@
 import { code, Code } from 'ts-poet';
-import { CodeGeneratorRequest, FileDescriptorProto, MethodDescriptorProto, MethodOptions } from 'ts-proto-descriptors';
+import {
+  CodeGeneratorRequest,
+  FieldDescriptorProto,
+  FileDescriptorProto,
+  MethodDescriptorProto,
+  MethodOptions,
+} from 'ts-proto-descriptors';
 import ReadStream = NodeJS.ReadStream;
 import { SourceDescription } from './sourceInfo';
 import { Options, ServiceOption } from './options';
-import { camelCase } from './case';
+import { camelCase, maybeSnakeToCamel } from './case';
 
 export function protoFilesToGenerate(request: CodeGeneratorRequest): FileDescriptorProto[] {
   return request.protoFile.filter((f) => request.fileToGenerate.includes(f.name));
@@ -166,4 +172,14 @@ export class FormattedMethodDescriptor implements MethodDescriptorProto {
 
     return result;
   }
+}
+
+export function determineFieldJsonName(field: FieldDescriptorProto, options: Options): string {
+  // By default jsonName is camelCased by the protocol compilier unless the user has
+  // set a "json_name" option on this field. So, if field name is already snake_case
+  // then this will keep jsonName also snake_case.
+  if (field.jsonName.length > 0 && options.snakeToCamel) {
+    return field.jsonName;
+  }
+  return maybeSnakeToCamel(field.name, options);
 }

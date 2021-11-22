@@ -38,7 +38,13 @@ import {
   isStructType,
 } from './types';
 import SourceInfo, { Fields } from './sourceInfo';
-import { assertInstanceOf, FormattedMethodDescriptor, maybeAddComment, maybePrefixPackage } from './utils';
+import {
+  assertInstanceOf,
+  determineFieldJsonName,
+  FormattedMethodDescriptor,
+  maybeAddComment,
+  maybePrefixPackage,
+} from './utils';
 import { camelToSnake, capitalize, maybeSnakeToCamel } from './case';
 import {
   generateNestjsGrpcServiceMethodsDecorator,
@@ -994,6 +1000,7 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
   // add a check for each incoming field
   messageDesc.field.forEach((field) => {
     const fieldName = maybeSnakeToCamel(field.name, options);
+    const jsonName = determineFieldJsonName(field, options);
 
     // get a generic 'reader.doSomething' bit that is specific to the basic type
     const readSnippet = (from: string): Code => {
@@ -1085,26 +1092,26 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
         const fieldType = toTypeName(ctx, messageDesc, field);
         const i = maybeCastToNumber(ctx, messageDesc, field, 'key');
         chunks.push(code`
-          message.${fieldName} = Object.entries(object.${fieldName} ?? {}).reduce<${fieldType}>((acc, [key, value]) => {
+          message.${fieldName} = Object.entries(object.${jsonName} ?? {}).reduce<${fieldType}>((acc, [key, value]) => {
             acc[${i}] = ${readSnippet('value')};
             return acc;
           }, {});
         `);
       } else if (isAnyValueType(field)) {
         chunks.push(code`
-          message.${fieldName} = Array.isArray(object?.${fieldName}) ? [...object.${fieldName}] : [];
+          message.${fieldName} = Array.isArray(object?.${jsonName}) ? [...object.${jsonName}] : [];
         `);
       } else {
         // Explicit `any` type required to make TS with noImplicitAny happy. `object` is also `any` here.
         chunks.push(code`
-          message.${fieldName} = (object.${fieldName} ?? []).map((e: any) => ${readSnippet('e')});
+          message.${fieldName} = (object.${jsonName} ?? []).map((e: any) => ${readSnippet('e')});
         `);
       }
     } else if (isWithinOneOfThatShouldBeUnion(options, field)) {
-      chunks.push(code`if (object.${fieldName} !== undefined && object.${fieldName} !== null) {`);
+      chunks.push(code`if (object.${jsonName} !== undefined && object.${jsonName} !== null) {`);
       const oneofName = maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options);
       chunks.push(code`
-        message.${oneofName} = { $case: '${fieldName}', ${fieldName}: ${readSnippet(`object.${fieldName}`)} }
+        message.${oneofName} = { $case: '${fieldName}', ${fieldName}: ${readSnippet(`object.${jsonName}`)} }
       `);
       chunks.push(code`}`);
     } else if (isAnyValueType(field)) {
@@ -1122,8 +1129,8 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
     } else {
       const fallback = isWithinOneOf(field) ? 'undefined' : defaultValue(ctx, field);
       chunks.push(code`
-        message.${fieldName} = (object.${fieldName} !== undefined && object.${fieldName} !== null)
-          ? ${readSnippet(`object.${fieldName}`)}
+        message.${fieldName} = (object.${jsonName} !== undefined && object.${jsonName} !== null)
+          ? ${readSnippet(`object.${jsonName}`)}
           : ${fallback};
       `);
     }
@@ -1147,6 +1154,7 @@ function generateToJson(ctx: Context, fullName: string, messageDesc: DescriptorP
   // then add a case for each field
   messageDesc.field.forEach((field) => {
     const fieldName = maybeSnakeToCamel(field.name, options);
+    const jsonName = determineFieldJsonName(field, options);
 
     const readSnippet = (from: string): Code => {
       if (isEnum(field)) {
@@ -1206,10 +1214,10 @@ function generateToJson(ctx: Context, fullName: string, messageDesc: DescriptorP
     if (isMapType(ctx, messageDesc, field)) {
       // Maps might need their values transformed, i.e. bytes --> base64
       chunks.push(code`
-        obj.${fieldName} = {};
+        obj.${jsonName} = {};
         if (message.${fieldName}) {
           Object.entries(message.${fieldName}).forEach(([k, v]) => {
-            obj.${fieldName}[k] = ${readSnippet('v')};
+            obj.${jsonName}[k] = ${readSnippet('v')};
           });
         }
       `);
@@ -1217,19 +1225,19 @@ function generateToJson(ctx: Context, fullName: string, messageDesc: DescriptorP
       // Arrays might need their elements transformed
       chunks.push(code`
         if (message.${fieldName}) {
-          obj.${fieldName} = message.${fieldName}.map(e => ${readSnippet('e')});
+          obj.${jsonName} = message.${fieldName}.map(e => ${readSnippet('e')});
         } else {
-          obj.${fieldName} = [];
+          obj.${jsonName} = [];
         }
       `);
     } else if (isWithinOneOfThatShouldBeUnion(options, field)) {
       // oneofs in a union are only output as `oneof name = ...`
       const oneofName = maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options);
       const v = readSnippet(`message.${oneofName}?.${fieldName}`);
-      chunks.push(code`message.${oneofName}?.$case === '${fieldName}' && (obj.${fieldName} = ${v});`);
+      chunks.push(code`message.${oneofName}?.$case === '${fieldName}' && (obj.${jsonName} = ${v});`);
     } else {
       const v = readSnippet(`message.${fieldName}`);
-      chunks.push(code`message.${fieldName} !== undefined && (obj.${fieldName} = ${v});`);
+      chunks.push(code`message.${fieldName} !== undefined && (obj.${jsonName} = ${v});`);
     }
   });
   chunks.push(code`return obj;`);
