@@ -1,3 +1,10 @@
+# [1.88.0](https://github.com/stephenh/ts-proto/compare/v1.87.1...v1.88.0) (2021-11-22)
+
+
+### Features
+
+* Support for Google.Protobuf.Value, ListValue and Struct ([#396](https://github.com/stephenh/ts-proto/issues/396)) ([7dd9c16](https://github.com/stephenh/ts-proto/commit/7dd9c16ffdec4d9ea296fbdc30d390fe44192c42))
+
 ## [1.87.1](https://github.com/stephenh/ts-proto/compare/v1.87.0...v1.87.1) (2021-11-21)
 
 
