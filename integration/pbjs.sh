@@ -52,3 +52,11 @@ yarn pbts --no-comments -o integration/oneof-properties/pbjs.d.ts integration/on
 # oneof-unions/
 yarn pbjs --force-message --force-number -t static-module -o integration/oneof-unions/pbjs.js integration/oneof-unions/oneof.proto
 yarn pbts --no-comments -o integration/oneof-unions/pbjs.d.ts integration/oneof-unions/pbjs.js
+
+# struct/
+yarn pbjs --force-message --force-number -t static-module -o integration/struct/pbjs.js integration/struct/struct.proto
+yarn pbts --no-comments -o integration/struct/pbjs.d.ts integration/struct/pbjs.js
+
+# value/
+yarn pbjs --force-message --force-number -t static-module -o integration/value/pbjs.js integration/value/value.proto
+yarn pbts --no-comments -o integration/value/pbjs.d.ts integration/value/pbjs.js

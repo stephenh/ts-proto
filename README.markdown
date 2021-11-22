@@ -22,10 +22,13 @@
 - [Assumptions](#assumptions)
 - [Todo](#todo)
 - [OneOf Handling](#oneof-handling)
-- [Primitive Types](#primitive-types)
+- [Default Values and Unset Fields](#default-values-and-unset-fields)
+- [Well-Known Types](#well-known-types)
+  - [Wrapper Types](#wrapper-types)
+  - [JSON Types (Struct Types)](#json-types-struct-types)
+  - [Timestamps](#timestamp)
 - [Wrapper Types](#wrapper-types)
 - [Number Types](#number-types)
-- [Timestamps](#timestamps)
 - [Current Status of Optional Values](#current-status-of-optional-values)
 
 # Overview
@@ -399,29 +402,201 @@ As this will automatically enforce only one of `field_a` or `field_b` "being set
 
 In ts-proto's currently-unscheduled 2.x release, `oneof=unions` will become the default behavior.
 
-# Primitive Types
+# Default values and unset fields
 
-Protobuf has the somewhat annoying behavior that primitives types cannot differentiate between set-to-defalut-value and unset.
+In core Protobuf, values that are _unset_ or equal to the default value are not sent over the wire.
+The default value of a message is `undefined`. Primitive types take their natural default value, i.e. `string` is `''`, `number` is `0`, etc.
+This behavior enables forward compatibility, as primitive fields will always have a value, even when omitted by outdated agents, but it also means _default_ and _unset_ values cannot be distinguished.
 
-I.e. if you have a `string name = 1`, and set `object.name = ''`, Protobuf will skip sending the tagged `name` field over the wire, because its understood that readers on the other end will, when they see `name` is not included in the payload, return empty string.
+If you need primitive fields where you can detect set/unset, see [Wrapper Types](#wrapper-types).
 
-`ts-proto` models this behavior, of "unset" values being the primitive's default. (Technically by setting up an object prototype that knows the default values of the message's primitive fields.)
+**Encode / Decode**
 
-If you want fields where you can model set/unset, see Wrapper Types.
+`ts-proto` follows the Protobuf rules, and always returns default values for unsets fields when decoding, while omitting them from the output when serialized in binary format.
 
-# Wrapper Types
+```protobuf
+syntax = "proto3";
+message Foo {
+  string bar = 1;
+}
+```
 
-In core Protobuf, unset primitive fields become their respective default values (so you loose ability to distinguish "unset" from "default").
+```typescript
+protobufBytes; // assume this is an empty Foo object, in protobuf binary format
+Foo.decode(protobufBytes); // => { bar: '' }
+```
 
-However, unset message fields stay `null`.
+```typescript
+Foo.encode({ bar: '' }); // => { }, writes an empty Foo object, in protobuf binary format
+```
 
-This allows a cute hack where you can model a logical `string | unset` by creating a field that is technically a message (i.e. so it can stay `null` for the unset case), but the message only has a single string field (i.e for storing the value in the set case).
+**fromJSON / toJSON**
 
-Protobuf has already "blessed" this pattern with several built-in types, i.e. `google.protobuf.StringValue`, `google.protobuf.Int32Value`, etc.
+Reading JSON will also initialize the default values. Since senders may either omit unset fields, or set them to the default value, use `fromJSON` to normalize the input.
 
-`ts-proto` understands these wrapper types and "re-idiomizes" them by generating a `google.protobuf.StringValue name = 1` field as a `name: string | undefined`, and hides the `StringValue` implementation detail from your code (i.e. during `encode`/`decode` of the `name` field on the wire to external consumers, it's still read/written as a `StringValue` message field).
+```typescript
+Foo.fromJSON({ }); // => { bar: '' }
+Foo.fromJSON({ bar: '' }); // => { bar: '' }
+Foo.fromJSON({ bar: 'baz' }); // => { bar: 'baz' }
+```
 
-This makes dealing with `string | unset` in your code much nicer, albeit it's unfortunate that, in Protobuf core, this is not as simple as marking a `string name = 1` field as `optional`, i.e. you have to "dirty" your proto files a bit by knowing to use the `StringValue` convention.
+When writing JSON, `ts-proto` currently does **not** normalize message when converting to JSON, other than omitting unset fields, but it may do so in the future.
+
+```typescript
+// Current ts-proto behavior
+Foo.toJSON({ }); // => { }
+Foo.toJSON({ bar: undefined }); // => { }
+Foo.toJSON({ bar: '' }); // => { bar: '' } - note: this is the default value, but it's not omitted
+Foo.toJSON({ bar: 'baz' }); // => { bar: 'baz' }
+```
+
+```typescript
+// Possible future behavior, where ts-proto would normalize message
+Foo.toJSON({ }); // => { }
+Foo.toJSON({ bar: undefined }); // => { }
+Foo.toJSON({ bar: '' }); // => { } - note: omitting the default value, as expected
+Foo.toJSON({ bar: 'baz' }); // => { bar: 'baz' }
+```
+
+-  Please open an issue if you need this behavior.
+
+# Well-Known Types
+
+Protobuf comes with several predefined message definitions, called "[Well-Known Types](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf)".
+Their interpretation is defined by the Protobuf specification, and libraries are expected to convert these messages to corresponding native types in the target language.
+
+`ts-proto` currently automatically converts these messages to their corresponding native types.
+
+- Wrapper Types:
+
+  * [google.protobuf.DoubleValue](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#DoubleValue) &lrarr; `number | undefined`
+  * [google.protobuf.FloatValue](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#FloatValue) &lrarr; `number | undefined`
+  * [google.protobuf.Int64Value](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#Int64Value) &lrarr; `number | undefined`
+  * [google.protobuf.UInt64Value](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#UInt64Value) &lrarr; `number | undefined`
+  * [google.protobuf.Int32Value](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#Int32Value) &lrarr; `number | undefined`
+  * [google.protobuf.UInt32Value](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#UInt32Value) &lrarr; `number | undefined`
+  * [google.protobuf.BoolValue](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#BoolValue) &lrarr; `boolean | undefined`
+  * [google.protobuf.StringValue](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#StringValue) &lrarr; `string | undefined`
+  * [google.protobuf.BytesValue](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.BytesValue) &lrarr; `Uint8Array | undefined`
+
+- JSON Types (Struct Types):
+
+  * [google.protobuf.Value](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#Value)  &lrarr; `any | undefined` (i.e. `number | string | boolean | null | array | object`)
+  * [google.protobuf.ListValue](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#ListValue) &lrarr; `any[]`
+  * [google.protobuf.Struct](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#Struct) &lrarr; `{ [key: string]: any } | undefined`
+
+## Wrapper Types
+
+Wrapper Types are messages containing a single primitive field, and can be imported in `.proto` files with `import "google/protobuf/wrappers.proto"`.
+
+
+Since these are _messages_, their default value is `undefined`, allowing you to distinguish unset primitives from their default values, when using Wrapper Types.
+`ts-proto` generates these fields as `<primitive> | undefined`.
+
+For example:
+
+```protobuf
+// Protobuf
+syntax = "proto3";
+
+import "google/protobuf/wrappers.proto";
+
+message ExampleMessage {
+  google.protobuf.StringValue name = 1;
+}
+```
+
+```typescript
+// TypeScript
+interface ExampleMessage {
+  name: string | undefined;
+}
+```
+
+When encoding a message the primitive value is converted back to its corresponding wrapper type:
+
+```typescript
+ExampleMessage.encode({ name: 'foo' }) // => { name: { value: 'foo' } }, in binary
+```
+
+When calling toJSON, the value is not converted, because wrapper types are idiomatic in JSON.
+
+```typescript
+ExampleMessage.toJSON({ name: 'foo' }) // => { name: 'foo' }
+```
+
+## JSON Types (Struct Types)
+
+Protobuf's language and types are not sufficient to represent all possible JSON values, since JSON may contain values whose type is unknown in advance.
+For this reason, Protobuf offers several additional types to represent arbitrary JSON values.
+
+These are called Struct Types, and can be imported in `.proto` files with `import "google/protobuf/struct.proto"`.
+
+- [google.protobuf.Value](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#Value) &lrarr; `any`  
+  - This is the most general type, and can represent any JSON value (i.e. `number | string | boolean | null | array | object`).
+- [google.protobuf.ListValue](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#ListValue) &lrarr; `any[]`
+  - To represent a JSON array
+- [google.protobuf.Struct](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#Struct) &lrarr; `{ [key: string]: any }`
+  - To represent a JSON object
+
+`ts-proto` automatically converts back and forth between these Struct Types and their corresponding JSON types.
+
+Example:
+
+```protobuf
+// Protobuf
+syntax = "proto3";
+
+import "google/protobuf/struct.proto";
+
+message ExampleMessage {
+  google.protobuf.Value anything = 1;
+}
+```
+
+```typescript
+// TypeScript
+interface ExampleMessage {
+  anything: any | undefined;
+}
+```
+
+Encoding a JSON value embedded in a message, converts it to a Struct Type:
+```typescript
+ExampleMessage.encode({ anything: { "name": "hello" } })
+/* Outputs the following structure, encoded in protobuf binary format:
+{
+  anything: Value {
+    structValue = Struct {
+      fields = [
+        MapEntry {
+          key = "name",
+          value = Value {
+            stringValue = "hello"
+          }
+        ]
+      }
+    }
+ }
+}*/
+
+ExampleMessage.encode({ anything: true })
+/* Outputs the following structure encoded in protobuf binary format:
+{
+  anything: Value {
+    boolValue = true
+  }
+}*/
+```
+
+## Timestamp
+
+The representation of `google.protobuf.Timestamp` is configurable by the `useDate` flag.
+
+| Protobuf well-known type    | Default/`useDate=true` | `useDate=false`                      | `useDate=string` |
+| --------------------------- | ---------------------- | ------------------------------------ | ---------------- |
+| `google.protobuf.Timestamp` | `Date`                 | `{ seconds: number, nanos: number }` | `string`         |
+
 
 # Number Types
 
@@ -451,14 +626,6 @@ The protobuf number types map to JavaScript types based on the `forceLong` confi
 | sfixed64              | number\*                   | Long             | string             |
 
 Where (\*) indicates they might throw an error at runtime.
-
-# Timestamps
-
-The representation of `google.protobuf.Timestamp` is configurable by the `useDate` flag.
-
-| Protobuf well-known type    | Default/`useDate=true` | `useDate=false`                      | `useDate=string` |
-| --------------------------- | ---------------------- | ------------------------------------ | ---------------- |
-| `google.protobuf.Timestamp` | `Date`                 | `{ seconds: number, nanos: number }` | `string`         |
 
 # Current Status of Optional Values
 
