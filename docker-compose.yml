@@ -1,0 +1,13 @@
+version: "3"
+services:
+  protoc:
+    build:
+      context: .
+      dockerfile: "protoc.Dockerfile"
+      args:
+        BASE: "node:17-alpine3.14"
+        BIN: "/ts-proto"
+        PROTOC_VERSION: "3.19.1"
+    working_dir: "/ts-proto"
+    volumes:
+      - ".:/ts-proto"
