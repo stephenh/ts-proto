@@ -10,5 +10,5 @@ services:
         PROTOC_VERSION: "3.19.1"
     working_dir: "/host"
     volumes:
-      - "${PWD}:/host"
+      - "${PWD:-.}:/host"
       - ".:/ts-proto"
