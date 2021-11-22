@@ -8,6 +8,7 @@ services:
         BASE: "node:17-alpine3.14"
         BIN: "/ts-proto"
         PROTOC_VERSION: "3.19.1"
-    working_dir: "/ts-proto"
+    working_dir: "/host"
     volumes:
+      - "${PWD}:/host"
       - ".:/ts-proto"
