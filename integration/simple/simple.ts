@@ -1035,34 +1035,54 @@ export const SimpleWithMap = {
 
   fromJSON(object: any): SimpleWithMap {
     const message = { ...baseSimpleWithMap } as SimpleWithMap;
-    message.entitiesById = {};
-    Object.entries(object.entitiesById ?? {}).forEach(([key, value]) => {
-      message.entitiesById[Number(key)] = Entity.fromJSON(value);
-    });
-    message.nameLookup = {};
-    Object.entries(object.nameLookup ?? {}).forEach(([key, value]) => {
-      message.nameLookup[key] = String(value);
-    });
-    message.intLookup = {};
-    Object.entries(object.intLookup ?? {}).forEach(([key, value]) => {
-      message.intLookup[Number(key)] = Number(value);
-    });
-    message.mapOfTimestamps = {};
-    Object.entries(object.mapOfTimestamps ?? {}).forEach(([key, value]) => {
-      message.mapOfTimestamps[key] = fromJsonTimestamp(value);
-    });
-    message.mapOfBytes = {};
-    Object.entries(object.mapOfBytes ?? {}).forEach(([key, value]) => {
-      message.mapOfBytes[key] = bytesFromBase64(value as string);
-    });
-    message.mapOfStringValues = {};
-    Object.entries(object.mapOfStringValues ?? {}).forEach(([key, value]) => {
-      message.mapOfStringValues[key] = value as string | undefined;
-    });
-    message.longLookup = {};
-    Object.entries(object.longLookup ?? {}).forEach(([key, value]) => {
-      message.longLookup[Number(key)] = Number(value);
-    });
+    message.entitiesById = Object.entries(object.entitiesById ?? {}).reduce<{ [key: number]: Entity }>(
+      (acc, [key, value]) => {
+        acc[Number(key)] = Entity.fromJSON(value);
+        return acc;
+      },
+      {}
+    );
+    message.nameLookup = Object.entries(object.nameLookup ?? {}).reduce<{ [key: string]: string }>(
+      (acc, [key, value]) => {
+        acc[key] = String(value);
+        return acc;
+      },
+      {}
+    );
+    message.intLookup = Object.entries(object.intLookup ?? {}).reduce<{ [key: number]: number }>(
+      (acc, [key, value]) => {
+        acc[Number(key)] = Number(value);
+        return acc;
+      },
+      {}
+    );
+    message.mapOfTimestamps = Object.entries(object.mapOfTimestamps ?? {}).reduce<{ [key: string]: Date }>(
+      (acc, [key, value]) => {
+        acc[key] = fromJsonTimestamp(value);
+        return acc;
+      },
+      {}
+    );
+    message.mapOfBytes = Object.entries(object.mapOfBytes ?? {}).reduce<{ [key: string]: Uint8Array }>(
+      (acc, [key, value]) => {
+        acc[key] = bytesFromBase64(value as string);
+        return acc;
+      },
+      {}
+    );
+    message.mapOfStringValues = Object.entries(object.mapOfStringValues ?? {}).reduce<{
+      [key: string]: string | undefined;
+    }>((acc, [key, value]) => {
+      acc[key] = value as string | undefined;
+      return acc;
+    }, {});
+    message.longLookup = Object.entries(object.longLookup ?? {}).reduce<{ [key: number]: number }>(
+      (acc, [key, value]) => {
+        acc[Number(key)] = Number(value);
+        return acc;
+      },
+      {}
+    );
     return message;
   },
 
@@ -1115,48 +1135,68 @@ export const SimpleWithMap = {
 
   fromPartial(object: DeepPartial<SimpleWithMap>): SimpleWithMap {
     const message = { ...baseSimpleWithMap } as SimpleWithMap;
-    message.entitiesById = {};
-    Object.entries(object.entitiesById ?? {}).forEach(([key, value]) => {
+    message.entitiesById = Object.entries(object.entitiesById ?? {}).reduce<{ [key: number]: Entity }>(
+      (acc, [key, value]) => {
+        if (value !== undefined) {
+          acc[Number(key)] = Entity.fromPartial(value);
+        }
+        return acc;
+      },
+      {}
+    );
+    message.nameLookup = Object.entries(object.nameLookup ?? {}).reduce<{ [key: string]: string }>(
+      (acc, [key, value]) => {
+        if (value !== undefined) {
+          acc[key] = String(value);
+        }
+        return acc;
+      },
+      {}
+    );
+    message.intLookup = Object.entries(object.intLookup ?? {}).reduce<{ [key: number]: number }>(
+      (acc, [key, value]) => {
+        if (value !== undefined) {
+          acc[Number(key)] = Number(value);
+        }
+        return acc;
+      },
+      {}
+    );
+    message.mapOfTimestamps = Object.entries(object.mapOfTimestamps ?? {}).reduce<{ [key: string]: Date }>(
+      (acc, [key, value]) => {
+        if (value !== undefined) {
+          acc[key] = value;
+        }
+        return acc;
+      },
+      {}
+    );
+    message.mapOfBytes = Object.entries(object.mapOfBytes ?? {}).reduce<{ [key: string]: Uint8Array }>(
+      (acc, [key, value]) => {
+        if (value !== undefined) {
+          acc[key] = value;
+        }
+        return acc;
+      },
+      {}
+    );
+    message.mapOfStringValues = Object.entries(object.mapOfStringValues ?? {}).reduce<{
+      [key: string]: string | undefined;
+    }>((acc, [key, value]) => {
       if (value !== undefined) {
-        message.entitiesById[Number(key)] = Entity.fromPartial(value);
+        acc[key] = value;
       }
-    });
-    message.nameLookup = {};
-    Object.entries(object.nameLookup ?? {}).forEach(([key, value]) => {
-      if (value !== undefined) {
-        message.nameLookup[key] = String(value);
-      }
-    });
-    message.intLookup = {};
-    Object.entries(object.intLookup ?? {}).forEach(([key, value]) => {
-      if (value !== undefined) {
-        message.intLookup[Number(key)] = Number(value);
-      }
-    });
-    message.mapOfTimestamps = {};
-    Object.entries(object.mapOfTimestamps ?? {}).forEach(([key, value]) => {
-      if (value !== undefined) {
-        message.mapOfTimestamps[key] = value;
-      }
-    });
-    message.mapOfBytes = {};
-    Object.entries(object.mapOfBytes ?? {}).forEach(([key, value]) => {
-      if (value !== undefined) {
-        message.mapOfBytes[key] = value;
-      }
-    });
-    message.mapOfStringValues = {};
-    Object.entries(object.mapOfStringValues ?? {}).forEach(([key, value]) => {
-      if (value !== undefined) {
-        message.mapOfStringValues[key] = value;
-      }
-    });
-    message.longLookup = {};
-    Object.entries(object.longLookup ?? {}).forEach(([key, value]) => {
-      if (value !== undefined) {
-        message.longLookup[Number(key)] = Number(value);
-      }
-    });
+      return acc;
+    }, {});
+    message.longLookup = Object.entries(object.longLookup ?? {}).reduce<{ [key: number]: number }>(
+      (acc, [key, value]) => {
+        if (value !== undefined) {
+          acc[Number(key)] = Number(value);
+        }
+        return acc;
+      },
+      {}
+    );
     return message;
   },
 };
@@ -1590,10 +1630,13 @@ export const SimpleWithSnakeCaseMap = {
 
   fromJSON(object: any): SimpleWithSnakeCaseMap {
     const message = { ...baseSimpleWithSnakeCaseMap } as SimpleWithSnakeCaseMap;
-    message.entitiesById = {};
-    Object.entries(object.entitiesById ?? {}).forEach(([key, value]) => {
-      message.entitiesById[Number(key)] = Entity.fromJSON(value);
-    });
+    message.entitiesById = Object.entries(object.entitiesById ?? {}).reduce<{ [key: number]: Entity }>(
+      (acc, [key, value]) => {
+        acc[Number(key)] = Entity.fromJSON(value);
+        return acc;
+      },
+      {}
+    );
     return message;
   },
 
@@ -1610,12 +1653,15 @@ export const SimpleWithSnakeCaseMap = {
 
   fromPartial(object: DeepPartial<SimpleWithSnakeCaseMap>): SimpleWithSnakeCaseMap {
     const message = { ...baseSimpleWithSnakeCaseMap } as SimpleWithSnakeCaseMap;
-    message.entitiesById = {};
-    Object.entries(object.entitiesById ?? {}).forEach(([key, value]) => {
-      if (value !== undefined) {
-        message.entitiesById[Number(key)] = Entity.fromPartial(value);
-      }
-    });
+    message.entitiesById = Object.entries(object.entitiesById ?? {}).reduce<{ [key: number]: Entity }>(
+      (acc, [key, value]) => {
+        if (value !== undefined) {
+          acc[Number(key)] = Entity.fromPartial(value);
+        }
+        return acc;
+      },
+      {}
+    );
     return message;
   },
 };
@@ -1710,10 +1756,13 @@ export const SimpleWithMapOfEnums = {
 
   fromJSON(object: any): SimpleWithMapOfEnums {
     const message = { ...baseSimpleWithMapOfEnums } as SimpleWithMapOfEnums;
-    message.enumsById = {};
-    Object.entries(object.enumsById ?? {}).forEach(([key, value]) => {
-      message.enumsById[Number(key)] = value as number;
-    });
+    message.enumsById = Object.entries(object.enumsById ?? {}).reduce<{ [key: number]: StateEnum }>(
+      (acc, [key, value]) => {
+        acc[Number(key)] = value as number;
+        return acc;
+      },
+      {}
+    );
     return message;
   },
 
@@ -1730,12 +1779,15 @@ export const SimpleWithMapOfEnums = {
 
   fromPartial(object: DeepPartial<SimpleWithMapOfEnums>): SimpleWithMapOfEnums {
     const message = { ...baseSimpleWithMapOfEnums } as SimpleWithMapOfEnums;
-    message.enumsById = {};
-    Object.entries(object.enumsById ?? {}).forEach(([key, value]) => {
-      if (value !== undefined) {
-        message.enumsById[Number(key)] = value as number;
-      }
-    });
+    message.enumsById = Object.entries(object.enumsById ?? {}).reduce<{ [key: number]: StateEnum }>(
+      (acc, [key, value]) => {
+        if (value !== undefined) {
+          acc[Number(key)] = value as number;
+        }
+        return acc;
+      },
+      {}
+    );
     return message;
   },
 };

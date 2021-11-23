@@ -85,10 +85,13 @@ export const Todo = {
       object.optionalTimestamp !== undefined && object.optionalTimestamp !== null
         ? fromJsonTimestamp(object.optionalTimestamp)
         : undefined;
-    message.mapOfTimestamps = {};
-    Object.entries(object.mapOfTimestamps ?? {}).forEach(([key, value]) => {
-      message.mapOfTimestamps[key] = fromJsonTimestamp(value);
-    });
+    message.mapOfTimestamps = Object.entries(object.mapOfTimestamps ?? {}).reduce<{ [key: string]: Date }>(
+      (acc, [key, value]) => {
+        acc[key] = fromJsonTimestamp(value);
+        return acc;
+      },
+      {}
+    );
     return message;
   },
 
@@ -117,12 +120,15 @@ export const Todo = {
     message.timestamp = object.timestamp ?? undefined;
     message.repeatedTimestamp = (object.repeatedTimestamp ?? []).map((e) => e);
     message.optionalTimestamp = object.optionalTimestamp ?? undefined;
-    message.mapOfTimestamps = {};
-    Object.entries(object.mapOfTimestamps ?? {}).forEach(([key, value]) => {
-      if (value !== undefined) {
-        message.mapOfTimestamps[key] = value;
-      }
-    });
+    message.mapOfTimestamps = Object.entries(object.mapOfTimestamps ?? {}).reduce<{ [key: string]: Date }>(
+      (acc, [key, value]) => {
+        if (value !== undefined) {
+          acc[key] = value;
+        }
+        return acc;
+      },
+      {}
+    );
     return message;
   },
 };

@@ -1082,12 +1082,13 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
     // and then use the snippet to handle repeated fields if necessary
     if (isRepeated(field)) {
       if (isMapType(ctx, messageDesc, field)) {
-        chunks.push(code`message.${fieldName} = {};`);
+        const fieldType = toTypeName(ctx, messageDesc, field);
         const i = maybeCastToNumber(ctx, messageDesc, field, 'key');
         chunks.push(code`
-          Object.entries(object.${fieldName} ?? {}).forEach(([key, value]) => {
-            message.${fieldName}[${i}] = ${readSnippet('value')};
-          });
+          message.${fieldName} = Object.entries(object.${fieldName} ?? {}).reduce<${fieldType}>((acc, [key, value]) => {
+            acc[${i}] = ${readSnippet('value')};
+            return acc;
+          }, {});
         `);
       } else if (isAnyValueType(field)) {
         chunks.push(code`
@@ -1301,14 +1302,15 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
     // and then use the snippet to handle repeated fields if necessary
     if (isRepeated(field)) {
       if (isMapType(ctx, messageDesc, field)) {
-        chunks.push(code`message.${fieldName} = {};`);
+        const fieldType = toTypeName(ctx, messageDesc, field);
         const i = maybeCastToNumber(ctx, messageDesc, field, 'key');
         chunks.push(code`
-          Object.entries(object.${fieldName} ?? {}).forEach(([key, value]) => {
+          message.${fieldName} = Object.entries(object.${fieldName} ?? {}).reduce<${fieldType}>((acc, [key, value]) => {
             if (value !== undefined) {
-              message.${fieldName}[${i}] = ${readSnippet('value')};
+              acc[${i}] = ${readSnippet('value')};
             }
-          });
+            return acc;
+          }, {});
         `);
       } else {
         chunks.push(code`

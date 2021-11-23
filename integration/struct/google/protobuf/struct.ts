@@ -126,10 +126,13 @@ export const Struct = {
 
   fromJSON(object: any): Struct {
     const message = { ...baseStruct } as Struct;
-    message.fields = {};
-    Object.entries(object.fields ?? {}).forEach(([key, value]) => {
-      message.fields[key] = value as any | undefined;
-    });
+    message.fields = Object.entries(object.fields ?? {}).reduce<{ [key: string]: any | undefined }>(
+      (acc, [key, value]) => {
+        acc[key] = value as any | undefined;
+        return acc;
+      },
+      {}
+    );
     return message;
   },
 
@@ -146,12 +149,15 @@ export const Struct = {
 
   fromPartial(object: DeepPartial<Struct>): Struct {
     const message = { ...baseStruct } as Struct;
-    message.fields = {};
-    Object.entries(object.fields ?? {}).forEach(([key, value]) => {
-      if (value !== undefined) {
-        message.fields[key] = value;
-      }
-    });
+    message.fields = Object.entries(object.fields ?? {}).reduce<{ [key: string]: any | undefined }>(
+      (acc, [key, value]) => {
+        if (value !== undefined) {
+          acc[key] = value;
+        }
+        return acc;
+      },
+      {}
+    );
     return message;
   },
 };

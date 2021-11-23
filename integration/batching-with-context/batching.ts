@@ -236,10 +236,10 @@ export const BatchMapQueryResponse = {
 
   fromJSON(object: any): BatchMapQueryResponse {
     const message = { ...baseBatchMapQueryResponse } as BatchMapQueryResponse;
-    message.entities = {};
-    Object.entries(object.entities ?? {}).forEach(([key, value]) => {
-      message.entities[key] = Entity.fromJSON(value);
-    });
+    message.entities = Object.entries(object.entities ?? {}).reduce<{ [key: string]: Entity }>((acc, [key, value]) => {
+      acc[key] = Entity.fromJSON(value);
+      return acc;
+    }, {});
     return message;
   },
 
@@ -256,12 +256,12 @@ export const BatchMapQueryResponse = {
 
   fromPartial(object: DeepPartial<BatchMapQueryResponse>): BatchMapQueryResponse {
     const message = { ...baseBatchMapQueryResponse } as BatchMapQueryResponse;
-    message.entities = {};
-    Object.entries(object.entities ?? {}).forEach(([key, value]) => {
+    message.entities = Object.entries(object.entities ?? {}).reduce<{ [key: string]: Entity }>((acc, [key, value]) => {
       if (value !== undefined) {
-        message.entities[key] = Entity.fromPartial(value);
+        acc[key] = Entity.fromPartial(value);
       }
-    });
+      return acc;
+    }, {});
     return message;
   },
 };
