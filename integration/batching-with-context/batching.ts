@@ -237,11 +237,9 @@ export const BatchMapQueryResponse = {
   fromJSON(object: any): BatchMapQueryResponse {
     const message = { ...baseBatchMapQueryResponse } as BatchMapQueryResponse;
     message.entities = {};
-    if (object.entities !== undefined && object.entities !== null) {
-      Object.entries(object.entities).forEach(([key, value]) => {
-        message.entities[key] = Entity.fromJSON(value);
-      });
-    }
+    Object.entries(object.entities ?? {}).forEach(([key, value]) => {
+      message.entities[key] = Entity.fromJSON(value);
+    });
     return message;
   },
 
@@ -259,13 +257,11 @@ export const BatchMapQueryResponse = {
   fromPartial(object: DeepPartial<BatchMapQueryResponse>): BatchMapQueryResponse {
     const message = { ...baseBatchMapQueryResponse } as BatchMapQueryResponse;
     message.entities = {};
-    if (object.entities !== undefined && object.entities !== null) {
-      Object.entries(object.entities).forEach(([key, value]) => {
-        if (value !== undefined) {
-          message.entities[key] = Entity.fromPartial(value);
-        }
-      });
-    }
+    Object.entries(object.entities ?? {}).forEach(([key, value]) => {
+      if (value !== undefined) {
+        message.entities[key] = Entity.fromPartial(value);
+      }
+    });
     return message;
   },
 };

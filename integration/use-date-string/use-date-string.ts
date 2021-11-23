@@ -86,11 +86,9 @@ export const Todo = {
         ? String(object.optionalTimestamp)
         : undefined;
     message.mapOfTimestamps = {};
-    if (object.mapOfTimestamps !== undefined && object.mapOfTimestamps !== null) {
-      Object.entries(object.mapOfTimestamps).forEach(([key, value]) => {
-        message.mapOfTimestamps[key] = String(value);
-      });
-    }
+    Object.entries(object.mapOfTimestamps ?? {}).forEach(([key, value]) => {
+      message.mapOfTimestamps[key] = String(value);
+    });
     return message;
   },
 
@@ -120,13 +118,11 @@ export const Todo = {
     message.repeatedTimestamp = (object.repeatedTimestamp ?? []).map((e) => e);
     message.optionalTimestamp = object.optionalTimestamp ?? undefined;
     message.mapOfTimestamps = {};
-    if (object.mapOfTimestamps !== undefined && object.mapOfTimestamps !== null) {
-      Object.entries(object.mapOfTimestamps).forEach(([key, value]) => {
-        if (value !== undefined) {
-          message.mapOfTimestamps[key] = value;
-        }
-      });
-    }
+    Object.entries(object.mapOfTimestamps ?? {}).forEach(([key, value]) => {
+      if (value !== undefined) {
+        message.mapOfTimestamps[key] = value;
+      }
+    });
     return message;
   },
 };

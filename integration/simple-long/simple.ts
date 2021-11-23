@@ -212,23 +212,17 @@ export const SimpleWithMap = {
   fromJSON(object: any): SimpleWithMap {
     const message = { ...baseSimpleWithMap } as SimpleWithMap;
     message.nameLookup = {};
-    if (object.nameLookup !== undefined && object.nameLookup !== null) {
-      Object.entries(object.nameLookup).forEach(([key, value]) => {
-        message.nameLookup[key] = String(value);
-      });
-    }
+    Object.entries(object.nameLookup ?? {}).forEach(([key, value]) => {
+      message.nameLookup[key] = String(value);
+    });
     message.intLookup = {};
-    if (object.intLookup !== undefined && object.intLookup !== null) {
-      Object.entries(object.intLookup).forEach(([key, value]) => {
-        message.intLookup[Number(key)] = Number(value);
-      });
-    }
+    Object.entries(object.intLookup ?? {}).forEach(([key, value]) => {
+      message.intLookup[Number(key)] = Number(value);
+    });
     message.longLookup = {};
-    if (object.longLookup !== undefined && object.longLookup !== null) {
-      Object.entries(object.longLookup).forEach(([key, value]) => {
-        message.longLookup[key] = Long.fromString(value as string);
-      });
-    }
+    Object.entries(object.longLookup ?? {}).forEach(([key, value]) => {
+      message.longLookup[key] = Long.fromString(value as string);
+    });
     return message;
   },
 
@@ -258,29 +252,23 @@ export const SimpleWithMap = {
   fromPartial(object: DeepPartial<SimpleWithMap>): SimpleWithMap {
     const message = { ...baseSimpleWithMap } as SimpleWithMap;
     message.nameLookup = {};
-    if (object.nameLookup !== undefined && object.nameLookup !== null) {
-      Object.entries(object.nameLookup).forEach(([key, value]) => {
-        if (value !== undefined) {
-          message.nameLookup[key] = String(value);
-        }
-      });
-    }
+    Object.entries(object.nameLookup ?? {}).forEach(([key, value]) => {
+      if (value !== undefined) {
+        message.nameLookup[key] = String(value);
+      }
+    });
     message.intLookup = {};
-    if (object.intLookup !== undefined && object.intLookup !== null) {
-      Object.entries(object.intLookup).forEach(([key, value]) => {
-        if (value !== undefined) {
-          message.intLookup[Number(key)] = Number(value);
-        }
-      });
-    }
+    Object.entries(object.intLookup ?? {}).forEach(([key, value]) => {
+      if (value !== undefined) {
+        message.intLookup[Number(key)] = Number(value);
+      }
+    });
     message.longLookup = {};
-    if (object.longLookup !== undefined && object.longLookup !== null) {
-      Object.entries(object.longLookup).forEach(([key, value]) => {
-        if (value !== undefined) {
-          message.longLookup[key] = Long.fromValue(value);
-        }
-      });
-    }
+    Object.entries(object.longLookup ?? {}).forEach(([key, value]) => {
+      if (value !== undefined) {
+        message.longLookup[key] = Long.fromValue(value);
+      }
+    });
     return message;
   },
 };

@@ -884,23 +884,17 @@ export const SimpleWithMap = {
   fromJSON(object: any): SimpleWithMap {
     const message = { ...baseSimpleWithMap } as SimpleWithMap;
     message.entitiesById = {};
-    if (object.entitiesById !== undefined && object.entitiesById !== null) {
-      Object.entries(object.entitiesById).forEach(([key, value]) => {
-        message.entitiesById[Number(key)] = Entity.fromJSON(value);
-      });
-    }
+    Object.entries(object.entitiesById ?? {}).forEach(([key, value]) => {
+      message.entitiesById[Number(key)] = Entity.fromJSON(value);
+    });
     message.nameLookup = {};
-    if (object.nameLookup !== undefined && object.nameLookup !== null) {
-      Object.entries(object.nameLookup).forEach(([key, value]) => {
-        message.nameLookup[key] = String(value);
-      });
-    }
+    Object.entries(object.nameLookup ?? {}).forEach(([key, value]) => {
+      message.nameLookup[key] = String(value);
+    });
     message.intLookup = {};
-    if (object.intLookup !== undefined && object.intLookup !== null) {
-      Object.entries(object.intLookup).forEach(([key, value]) => {
-        message.intLookup[Number(key)] = Number(value);
-      });
-    }
+    Object.entries(object.intLookup ?? {}).forEach(([key, value]) => {
+      message.intLookup[Number(key)] = Number(value);
+    });
     return message;
   },
 
@@ -930,29 +924,23 @@ export const SimpleWithMap = {
   fromPartial(object: DeepPartial<SimpleWithMap>): SimpleWithMap {
     const message = { ...baseSimpleWithMap } as SimpleWithMap;
     message.entitiesById = {};
-    if (object.entitiesById !== undefined && object.entitiesById !== null) {
-      Object.entries(object.entitiesById).forEach(([key, value]) => {
-        if (value !== undefined) {
-          message.entitiesById[Number(key)] = Entity.fromPartial(value);
-        }
-      });
-    }
+    Object.entries(object.entitiesById ?? {}).forEach(([key, value]) => {
+      if (value !== undefined) {
+        message.entitiesById[Number(key)] = Entity.fromPartial(value);
+      }
+    });
     message.nameLookup = {};
-    if (object.nameLookup !== undefined && object.nameLookup !== null) {
-      Object.entries(object.nameLookup).forEach(([key, value]) => {
-        if (value !== undefined) {
-          message.nameLookup[key] = String(value);
-        }
-      });
-    }
+    Object.entries(object.nameLookup ?? {}).forEach(([key, value]) => {
+      if (value !== undefined) {
+        message.nameLookup[key] = String(value);
+      }
+    });
     message.intLookup = {};
-    if (object.intLookup !== undefined && object.intLookup !== null) {
-      Object.entries(object.intLookup).forEach(([key, value]) => {
-        if (value !== undefined) {
-          message.intLookup[Number(key)] = Number(value);
-        }
-      });
-    }
+    Object.entries(object.intLookup ?? {}).forEach(([key, value]) => {
+      if (value !== undefined) {
+        message.intLookup[Number(key)] = Number(value);
+      }
+    });
     return message;
   },
 };
@@ -1160,11 +1148,9 @@ export const SimpleWithSnakeCaseMap = {
   fromJSON(object: any): SimpleWithSnakeCaseMap {
     const message = { ...baseSimpleWithSnakeCaseMap } as SimpleWithSnakeCaseMap;
     message.entitiesById = {};
-    if (object.entitiesById !== undefined && object.entitiesById !== null) {
-      Object.entries(object.entitiesById).forEach(([key, value]) => {
-        message.entitiesById[Number(key)] = Entity.fromJSON(value);
-      });
-    }
+    Object.entries(object.entitiesById ?? {}).forEach(([key, value]) => {
+      message.entitiesById[Number(key)] = Entity.fromJSON(value);
+    });
     return message;
   },
 
@@ -1182,13 +1168,11 @@ export const SimpleWithSnakeCaseMap = {
   fromPartial(object: DeepPartial<SimpleWithSnakeCaseMap>): SimpleWithSnakeCaseMap {
     const message = { ...baseSimpleWithSnakeCaseMap } as SimpleWithSnakeCaseMap;
     message.entitiesById = {};
-    if (object.entitiesById !== undefined && object.entitiesById !== null) {
-      Object.entries(object.entitiesById).forEach(([key, value]) => {
-        if (value !== undefined) {
-          message.entitiesById[Number(key)] = Entity.fromPartial(value);
-        }
-      });
-    }
+    Object.entries(object.entitiesById ?? {}).forEach(([key, value]) => {
+      if (value !== undefined) {
+        message.entitiesById[Number(key)] = Entity.fromPartial(value);
+      }
+    });
     return message;
   },
 };
