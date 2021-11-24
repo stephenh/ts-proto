@@ -176,9 +176,8 @@ export class FormattedMethodDescriptor implements MethodDescriptorProto {
 
 export function determineFieldJsonName(field: FieldDescriptorProto, options: Options): string {
   // By default jsonName is camelCased by the protocol compilier unless the user has
-  // set a "json_name" option on this field. So, if field name is already snake_case
-  // then this will keep jsonName also snake_case.
-  if (field.jsonName.length > 0 && options.snakeToCamel) {
+  // set a "json_name" option on this field.
+  if (field.jsonName.length > 0) {
     return field.jsonName;
   }
   return maybeSnakeToCamel(field.name, options);

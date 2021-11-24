@@ -40,13 +40,13 @@ export const ImportedThing = {
   fromJSON(object: any): ImportedThing {
     const message = { ...baseImportedThing } as ImportedThing;
     message.created_at =
-      object.created_at !== undefined && object.created_at !== null ? fromJsonTimestamp(object.created_at) : undefined;
+      object.createdAt !== undefined && object.createdAt !== null ? fromJsonTimestamp(object.createdAt) : undefined;
     return message;
   },
 
   toJSON(message: ImportedThing): unknown {
     const obj: any = {};
-    message.created_at !== undefined && (obj.created_at = message.created_at.toISOString());
+    message.created_at !== undefined && (obj.createdAt = message.created_at.toISOString());
     return obj;
   },
 
