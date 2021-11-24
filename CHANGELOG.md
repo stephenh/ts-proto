@@ -1,3 +1,10 @@
+# [1.90.0](https://github.com/stephenh/ts-proto/compare/v1.89.0...v1.90.0) (2021-11-24)
+
+
+### Features
+
+*  Add support for 'json_name' annotation ([#408](https://github.com/stephenh/ts-proto/issues/408)) ([b519717](https://github.com/stephenh/ts-proto/commit/b5197174bcaacb8f163cd197d52ab9c645d21d4c))
+
 # [1.89.0](https://github.com/stephenh/ts-proto/compare/v1.88.0...v1.89.0) (2021-11-24)
 
 
