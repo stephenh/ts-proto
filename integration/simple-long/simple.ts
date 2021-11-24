@@ -211,24 +211,27 @@ export const SimpleWithMap = {
 
   fromJSON(object: any): SimpleWithMap {
     const message = { ...baseSimpleWithMap } as SimpleWithMap;
-    message.nameLookup = {};
-    if (object.nameLookup !== undefined && object.nameLookup !== null) {
-      Object.entries(object.nameLookup).forEach(([key, value]) => {
-        message.nameLookup[key] = String(value);
-      });
-    }
-    message.intLookup = {};
-    if (object.intLookup !== undefined && object.intLookup !== null) {
-      Object.entries(object.intLookup).forEach(([key, value]) => {
-        message.intLookup[Number(key)] = Number(value);
-      });
-    }
-    message.longLookup = {};
-    if (object.longLookup !== undefined && object.longLookup !== null) {
-      Object.entries(object.longLookup).forEach(([key, value]) => {
-        message.longLookup[key] = Long.fromString(value as string);
-      });
-    }
+    message.nameLookup = Object.entries(object.nameLookup ?? {}).reduce<{ [key: string]: string }>(
+      (acc, [key, value]) => {
+        acc[key] = String(value);
+        return acc;
+      },
+      {}
+    );
+    message.intLookup = Object.entries(object.intLookup ?? {}).reduce<{ [key: number]: number }>(
+      (acc, [key, value]) => {
+        acc[Number(key)] = Number(value);
+        return acc;
+      },
+      {}
+    );
+    message.longLookup = Object.entries(object.longLookup ?? {}).reduce<{ [key: string]: Long }>(
+      (acc, [key, value]) => {
+        acc[key] = Long.fromString(value as string);
+        return acc;
+      },
+      {}
+    );
     return message;
   },
 
@@ -257,30 +260,33 @@ export const SimpleWithMap = {
 
   fromPartial(object: DeepPartial<SimpleWithMap>): SimpleWithMap {
     const message = { ...baseSimpleWithMap } as SimpleWithMap;
-    message.nameLookup = {};
-    if (object.nameLookup !== undefined && object.nameLookup !== null) {
-      Object.entries(object.nameLookup).forEach(([key, value]) => {
+    message.nameLookup = Object.entries(object.nameLookup ?? {}).reduce<{ [key: string]: string }>(
+      (acc, [key, value]) => {
         if (value !== undefined) {
-          message.nameLookup[key] = String(value);
+          acc[key] = String(value);
         }
-      });
-    }
-    message.intLookup = {};
-    if (object.intLookup !== undefined && object.intLookup !== null) {
-      Object.entries(object.intLookup).forEach(([key, value]) => {
+        return acc;
+      },
+      {}
+    );
+    message.intLookup = Object.entries(object.intLookup ?? {}).reduce<{ [key: number]: number }>(
+      (acc, [key, value]) => {
         if (value !== undefined) {
-          message.intLookup[Number(key)] = Number(value);
+          acc[Number(key)] = Number(value);
         }
-      });
-    }
-    message.longLookup = {};
-    if (object.longLookup !== undefined && object.longLookup !== null) {
-      Object.entries(object.longLookup).forEach(([key, value]) => {
+        return acc;
+      },
+      {}
+    );
+    message.longLookup = Object.entries(object.longLookup ?? {}).reduce<{ [key: string]: Long }>(
+      (acc, [key, value]) => {
         if (value !== undefined) {
-          message.longLookup[key] = Long.fromValue(value);
+          acc[key] = Long.fromValue(value);
         }
-      });
-    }
+        return acc;
+      },
+      {}
+    );
     return message;
   },
 };
