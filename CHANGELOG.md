@@ -1,3 +1,10 @@
+# [1.89.0](https://github.com/stephenh/ts-proto/compare/v1.88.0...v1.89.0) (2021-11-24)
+
+
+### Features
+
+* Improve map reading (fromJSON/fromPartial) ([#410](https://github.com/stephenh/ts-proto/issues/410)) ([057d438](https://github.com/stephenh/ts-proto/commit/057d438548d95c354331f7d2d767ccff952ad5c6))
+
 # [1.88.0](https://github.com/stephenh/ts-proto/compare/v1.87.1...v1.88.0) (2021-11-22)
 
 
