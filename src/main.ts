@@ -34,8 +34,10 @@ import {
   toReaderCall,
   toTypeName,
   valueTypeName,
-  messageToTypeName,
   isStructType,
+  isStructTypeName,
+  isAnyValueTypeName,
+  isListValueTypeName,
 } from './types';
 import SourceInfo, { Fields } from './sourceInfo';
 import {
@@ -156,6 +158,9 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
           staticMembers.push(generateFromPartial(ctx, fullName, message));
         }
 
+        staticMembers.push(...generateWrap(fullTypeName));
+        staticMembers.push(...generateUnwrap(fullTypeName));
+
         chunks.push(code`
           export const ${def(fullName)} = {
             ${joinCode(staticMembers, { on: ',\n\n' })}
@@ -268,8 +273,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
 export type Utils = ReturnType<typeof makeDeepPartial> &
   ReturnType<typeof makeTimestampMethods> &
   ReturnType<typeof makeByteUtils> &
-  ReturnType<typeof makeLongUtils> &
-  ReturnType<typeof makeWrappingUtils>;
+  ReturnType<typeof makeLongUtils>;
 
 /** These are runtime utility methods used by the generated code. */
 export function makeUtils(options: Options): Utils {
@@ -280,7 +284,6 @@ export function makeUtils(options: Options): Utils {
     ...makeDeepPartial(options, longs),
     ...makeTimestampMethods(options, longs),
     ...longs,
-    ...makeWrappingUtils(),
   };
 }
 
@@ -352,73 +355,6 @@ function makeLongUtils(options: Options, bytes: ReturnType<typeof makeByteUtils>
   );
 
   return { numberToLong, longToNumber, longToString, longInit, Long };
-}
-
-function makeWrappingUtils() {
-  const wrapAnyValue = conditionalOutput(
-    'wrapAnyValue',
-    code`function wrapAnyValue(value: any): Value {
-    if (value === null) {
-        return {nullValue: 0} as Value;
-      } else if (typeof value === 'boolean') {
-        return {boolValue: value} as Value;
-      } else if (typeof value === 'number') {
-        return {numberValue: value} as Value;
-      } else if (typeof value === 'string') {
-        return {stringValue: value} as Value;
-      } else if (Array.isArray(value)) {
-        return {listValue: value} as Value;
-      } else if (typeof value === 'object') {
-        return {structValue: value} as Value;
-      } else if (typeof value === 'undefined') {
-        return {} as Value;
-      } else {
-        throw new Error('Unsupported any value type: ' + typeof value);
-      }
-  }`
-  );
-
-  const unwrapAnyValue = conditionalOutput(
-    'unwrapAnyValue',
-    code`function unwrapAnyValue(value: Value): string | number | boolean | Object | null | Array<any> | undefined {
-    if (value.stringValue !== undefined) {
-      return value.stringValue;
-    } else if (value.numberValue !== undefined) {
-      return value.numberValue;
-    } else if (value.boolValue !== undefined) {
-      return value.boolValue;
-    } else if (value.structValue !== undefined) {
-      return value.structValue;
-    } else if (value.listValue !== undefined) {
-        return value.listValue;
-    } else if (value.nullValue !== undefined) {
-      return null;
-    }
-  }`
-  );
-
-  const wrapStruct = conditionalOutput(
-    'wrapStruct',
-    code`function wrapStruct(object: {[key: string]: any}): Struct {
-    const struct = Struct.fromPartial({});
-    Object.keys(object).forEach(key => {
-      struct.fields[key] = object[key];
-    });
-    return struct;
-  }`
-  );
-
-  const unwrapStruct = conditionalOutput(
-    'unwrapStruct',
-    code`function unwrapStruct(struct: Struct): {[key: string]: any} {
-    const object: { [key: string]: any } = {};
-    Object.keys(struct.fields).forEach(key => {
-      object[key] = struct.fields[key];
-    });
-    return object;
-  }`
-  );
-  return { wrapAnyValue, unwrapAnyValue, wrapStruct, unwrapStruct };
 }
 
 function makeByteUtils() {
@@ -775,13 +711,13 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
         }
       }
     } else if (isValueType(ctx, field)) {
+      const type = basicTypeName(ctx, field, { keepValueType: true });
       const unwrap = (decodedValue: any): Code => {
-        if (isAnyValueType(field)) return code`${ctx.utils.unwrapAnyValue}(${decodedValue})`;
-        if (isStructType(field)) return code`${ctx.utils.unwrapStruct}(${decodedValue})`;
-        if (isListValueType(field)) return code`${decodedValue}.values`;
+        if (isListValueType(field) || isStructType(field) || isAnyValueType(field)) {
+          return code`${type}.unwrap(${decodedValue})`;
+        }
         return code`${decodedValue}.value`;
       };
-      const type = basicTypeName(ctx, field, { keepValueType: true });
       const decoder = code`${type}.decode(reader, reader.uint32())`;
       readSnippet = code`${unwrap(decoder)}`;
     } else if (isTimestamp(field) && (options.useDate === DateOption.DATE || options.useDate === DateOption.STRING)) {
@@ -880,15 +816,15 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
     } else if (isValueType(ctx, field)) {
       const maybeTypeField = options.outputTypeRegistry ? `$type: '${field.typeName.slice(1)}',` : '';
 
+      const type = basicTypeName(ctx, field, { keepValueType: true });
       const wrappedValue = (place: string): Code => {
-        if (isAnyValueType(field)) return code`${ctx.utils.wrapAnyValue}(${place})`;
-        if (isListValueType(field)) return code`{values: ${place}}`;
-        if (isStructType(field)) return code`${ctx.utils.wrapStruct}(${place})`;
+        if (isAnyValueType(field) || isListValueType(field) || isStructType(field)) {
+          return code`${type}.wrap(${place})`;
+        }
         return code`{${maybeTypeField} value: ${place}!}`;
       };
 
       const tag = ((field.number << 3) | 2) >>> 0;
-      const type = basicTypeName(ctx, field, { keepValueType: true });
       writeSnippet = (place) => code`${type}.encode(${wrappedValue(place)}, writer.uint32(${tag}).fork()).ldelim()`;
     } else if (isMessage(field)) {
       const tag = ((field.number << 3) | 2) >>> 0;
@@ -1355,6 +1291,90 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
   chunks.push(code`return message;`);
   chunks.push(code`}`);
   return joinCode(chunks, { on: '\n' });
+}
+
+function generateWrap(fullProtoTypeName: string): Code[] {
+  const chunks: Code[] = [];
+  if (isStructTypeName(fullProtoTypeName)) {
+    chunks.push(code`wrap(object: {[key: string]: any} | undefined): Struct {
+      const struct = Struct.fromPartial({});
+      if (object !== undefined) {
+        Object.keys(object).forEach(key => {
+          struct.fields[key] = object[key];
+        });
+      }
+      return struct;
+    }`);
+  }
+
+  if (isAnyValueTypeName(fullProtoTypeName)) {
+    chunks.push(code`wrap(value: any): Value {
+      if (value === null) {
+        return {nullValue: 0} as Value;
+      } else if (typeof value === 'boolean') {
+        return {boolValue: value} as Value;
+      } else if (typeof value === 'number') {
+        return {numberValue: value} as Value;
+      } else if (typeof value === 'string') {
+        return {stringValue: value} as Value;
+      } else if (Array.isArray(value)) {
+        return {listValue: value} as Value;
+      } else if (typeof value === 'object') {
+        return {structValue: value} as Value;
+      } else if (typeof value === 'undefined') {
+        return {} as Value;
+      } else {
+        throw new Error('Unsupported any value type: ' + typeof value);
+      }
+    }`);
+  }
+
+  if (isListValueTypeName(fullProtoTypeName)) {
+    chunks.push(code`wrap(value: Array<any>): ListValue {
+      return {values: value};
+    }`);
+  }
+
+  return chunks;
+}
+
+function generateUnwrap(fullProtoTypeName: string): Code[] {
+  const chunks: Code[] = [];
+  if (isStructTypeName(fullProtoTypeName)) {
+    chunks.push(code`unwrap(message: Struct): {[key: string]: any} {
+      const object: { [key: string]: any } = {};
+      Object.keys(message.fields).forEach(key => {
+        object[key] = message.fields[key];
+      });
+      return object;
+    }`);
+  }
+
+  if (isAnyValueTypeName(fullProtoTypeName)) {
+    chunks.push(code`unwrap(message: Value): string | number | boolean | Object | null | Array<any> | undefined {
+      if (message.stringValue !== undefined) {
+        return message.stringValue;
+      } else if (message.numberValue !== undefined) {
+        return message.numberValue;
+      } else if (message.boolValue !== undefined) {
+        return message.boolValue;
+      } else if (message.structValue !== undefined) {
+        return message.structValue;
+      } else if (message.listValue !== undefined) {
+          return message.listValue;
+      } else if (message.nullValue !== undefined) {
+        return null;
+      }
+    }`);
+  }
+
+  if (isListValueTypeName(fullProtoTypeName)) {
+    chunks.push(code`unwrap(message: ListValue): Array<any> {
+      return message.values;
+    }`);
+  }
+
+  return chunks;
 }
 
 export const contextTypeVar = 'Context extends DataLoaders';

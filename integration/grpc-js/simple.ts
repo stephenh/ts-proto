@@ -32,6 +32,7 @@ import {
   DoubleValue,
   BoolValue,
 } from './google/protobuf/wrappers';
+import { Struct, ListValue, Value } from './google/protobuf/struct';
 
 export const protobufPackage = 'simple';
 
@@ -200,6 +201,37 @@ export const TestService = {
     responseSerialize: (value: Date) => Buffer.from(Timestamp.encode(toTimestamp(value)).finish()),
     responseDeserialize: (value: Buffer) => Timestamp.decode(value),
   },
+  struct: {
+    path: '/simple.Test/Struct',
+    requestStream: false,
+    responseStream: false,
+    requestSerialize: (value: { [key: string]: any } | undefined) =>
+      Buffer.from(Struct.encode(Struct.wrap(value)).finish()),
+    requestDeserialize: (value: Buffer) => Struct.unwrap(Struct.decode(value)),
+    responseSerialize: (value: { [key: string]: any } | undefined) =>
+      Buffer.from(Struct.encode(Struct.wrap(value)).finish()),
+    responseDeserialize: (value: Buffer) => Struct.unwrap(Struct.decode(value)),
+  },
+  value: {
+    path: '/simple.Test/Value',
+    requestStream: false,
+    responseStream: false,
+    requestSerialize: (value: any | undefined) => Buffer.from(Value.encode(value).finish()),
+    requestDeserialize: (value: Buffer) => Value.decode(value),
+    responseSerialize: (value: any | undefined) => Buffer.from(Value.encode(value).finish()),
+    responseDeserialize: (value: Buffer) => Value.decode(value),
+  },
+  listValue: {
+    path: '/simple.Test/ListValue',
+    requestStream: false,
+    responseStream: false,
+    requestSerialize: (value: Array<any> | undefined) =>
+      Buffer.from(ListValue.encode({ values: value ?? [] }).finish()),
+    requestDeserialize: (value: Buffer) => ListValue.unwrap(ListValue.decode(value)),
+    responseSerialize: (value: Array<any> | undefined) =>
+      Buffer.from(ListValue.encode({ values: value ?? [] }).finish()),
+    responseDeserialize: (value: Buffer) => ListValue.unwrap(ListValue.decode(value)),
+  },
   /** Server Streaming */
   serverStreaming: {
     path: '/simple.Test/ServerStreaming',
@@ -210,14 +242,25 @@ export const TestService = {
     responseSerialize: (value: TestMessage) => Buffer.from(TestMessage.encode(value).finish()),
     responseDeserialize: (value: Buffer) => TestMessage.decode(value),
   },
-  serverStringValueStreaming: {
-    path: '/simple.Test/ServerStringValueStreaming',
+  serverStreamingStringValue: {
+    path: '/simple.Test/ServerStreamingStringValue',
     requestStream: false,
     responseStream: true,
     requestSerialize: (value: string | undefined) => Buffer.from(StringValue.encode({ value: value ?? '' }).finish()),
     requestDeserialize: (value: Buffer) => StringValue.decode(value).value,
     responseSerialize: (value: string | undefined) => Buffer.from(StringValue.encode({ value: value ?? '' }).finish()),
     responseDeserialize: (value: Buffer) => StringValue.decode(value).value,
+  },
+  serverStreamingStruct: {
+    path: '/simple.Test/ServerStreamingStruct',
+    requestStream: false,
+    responseStream: true,
+    requestSerialize: (value: { [key: string]: any } | undefined) =>
+      Buffer.from(Struct.encode(Struct.wrap(value)).finish()),
+    requestDeserialize: (value: Buffer) => Struct.unwrap(Struct.decode(value)),
+    responseSerialize: (value: { [key: string]: any } | undefined) =>
+      Buffer.from(Struct.encode(Struct.wrap(value)).finish()),
+    responseDeserialize: (value: Buffer) => Struct.unwrap(Struct.decode(value)),
   },
   /** Client Streaming */
   clientStreaming: {
@@ -229,8 +272,8 @@ export const TestService = {
     responseSerialize: (value: TestMessage) => Buffer.from(TestMessage.encode(value).finish()),
     responseDeserialize: (value: Buffer) => TestMessage.decode(value),
   },
-  clientStringValueStreaming: {
-    path: '/simple.Test/ClientStringValueStreaming',
+  clientStreamingStringValue: {
+    path: '/simple.Test/ClientStreamingStringValue',
     requestStream: true,
     responseStream: false,
     requestSerialize: (value: string | undefined) => Buffer.from(StringValue.encode({ value: value ?? '' }).finish()),
@@ -248,8 +291,8 @@ export const TestService = {
     responseSerialize: (value: TestMessage) => Buffer.from(TestMessage.encode(value).finish()),
     responseDeserialize: (value: Buffer) => TestMessage.decode(value),
   },
-  bidiStringValueStreaming: {
-    path: '/simple.Test/BidiStringValueStreaming',
+  bidiStreamingStringValue: {
+    path: '/simple.Test/BidiStreamingStringValue',
     requestStream: true,
     responseStream: true,
     requestSerialize: (value: string | undefined) => Buffer.from(StringValue.encode({ value: value ?? '' }).finish()),
@@ -276,15 +319,22 @@ export interface TestServer extends UntypedServiceImplementation {
   unaryDoubleValue: handleUnaryCall<number | undefined, number | undefined>;
   unaryBoolValue: handleUnaryCall<boolean | undefined, boolean | undefined>;
   unaryTimestamp: handleUnaryCall<Date, Date>;
+  struct: handleUnaryCall<{ [key: string]: any } | undefined, { [key: string]: any } | undefined>;
+  value: handleUnaryCall<any | undefined, any | undefined>;
+  listValue: handleUnaryCall<Array<any> | undefined, Array<any> | undefined>;
   /** Server Streaming */
   serverStreaming: handleServerStreamingCall<TestMessage, TestMessage>;
-  serverStringValueStreaming: handleServerStreamingCall<string | undefined, string | undefined>;
+  serverStreamingStringValue: handleServerStreamingCall<string | undefined, string | undefined>;
+  serverStreamingStruct: handleServerStreamingCall<
+    { [key: string]: any } | undefined,
+    { [key: string]: any } | undefined
+  >;
   /** Client Streaming */
   clientStreaming: handleClientStreamingCall<TestMessage, TestMessage>;
-  clientStringValueStreaming: handleClientStreamingCall<string | undefined, string | undefined>;
+  clientStreamingStringValue: handleClientStreamingCall<string | undefined, string | undefined>;
   /** Bidi Streaming */
   bidiStreaming: handleBidiStreamingCall<TestMessage, TestMessage>;
-  bidiStringValueStreaming: handleBidiStreamingCall<string | undefined, string | undefined>;
+  bidiStreamingStringValue: handleBidiStreamingCall<string | undefined, string | undefined>;
 }
 
 export interface TestClient extends Client {
@@ -452,6 +502,51 @@ export interface TestClient extends Client {
     options: Partial<CallOptions>,
     callback: (error: ServiceError | null, response: Date) => void
   ): ClientUnaryCall;
+  struct(
+    request: { [key: string]: any } | undefined,
+    callback: (error: ServiceError | null, response: { [key: string]: any } | undefined) => void
+  ): ClientUnaryCall;
+  struct(
+    request: { [key: string]: any } | undefined,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: { [key: string]: any } | undefined) => void
+  ): ClientUnaryCall;
+  struct(
+    request: { [key: string]: any } | undefined,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: { [key: string]: any } | undefined) => void
+  ): ClientUnaryCall;
+  value(
+    request: any | undefined,
+    callback: (error: ServiceError | null, response: any | undefined) => void
+  ): ClientUnaryCall;
+  value(
+    request: any | undefined,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: any | undefined) => void
+  ): ClientUnaryCall;
+  value(
+    request: any | undefined,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: any | undefined) => void
+  ): ClientUnaryCall;
+  listValue(
+    request: Array<any> | undefined,
+    callback: (error: ServiceError | null, response: Array<any> | undefined) => void
+  ): ClientUnaryCall;
+  listValue(
+    request: Array<any> | undefined,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: Array<any> | undefined) => void
+  ): ClientUnaryCall;
+  listValue(
+    request: Array<any> | undefined,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: Array<any> | undefined) => void
+  ): ClientUnaryCall;
   /** Server Streaming */
   serverStreaming(request: TestMessage, options?: Partial<CallOptions>): ClientReadableStream<TestMessage>;
   serverStreaming(
@@ -459,15 +554,24 @@ export interface TestClient extends Client {
     metadata?: Metadata,
     options?: Partial<CallOptions>
   ): ClientReadableStream<TestMessage>;
-  serverStringValueStreaming(
+  serverStreamingStringValue(
     request: string | undefined,
     options?: Partial<CallOptions>
   ): ClientReadableStream<string | undefined>;
-  serverStringValueStreaming(
+  serverStreamingStringValue(
     request: string | undefined,
     metadata?: Metadata,
     options?: Partial<CallOptions>
   ): ClientReadableStream<string | undefined>;
+  serverStreamingStruct(
+    request: { [key: string]: any } | undefined,
+    options?: Partial<CallOptions>
+  ): ClientReadableStream<{ [key: string]: any } | undefined>;
+  serverStreamingStruct(
+    request: { [key: string]: any } | undefined,
+    metadata?: Metadata,
+    options?: Partial<CallOptions>
+  ): ClientReadableStream<{ [key: string]: any } | undefined>;
   /** Client Streaming */
   clientStreaming(
     callback: (error: ServiceError | null, response: TestMessage) => void
@@ -485,18 +589,18 @@ export interface TestClient extends Client {
     options: Partial<CallOptions>,
     callback: (error: ServiceError | null, response: TestMessage) => void
   ): ClientWritableStream<TestMessage>;
-  clientStringValueStreaming(
+  clientStreamingStringValue(
     callback: (error: ServiceError | null, response: string | undefined) => void
   ): ClientWritableStream<string | undefined>;
-  clientStringValueStreaming(
+  clientStreamingStringValue(
     metadata: Metadata,
     callback: (error: ServiceError | null, response: string | undefined) => void
   ): ClientWritableStream<string | undefined>;
-  clientStringValueStreaming(
+  clientStreamingStringValue(
     options: Partial<CallOptions>,
     callback: (error: ServiceError | null, response: string | undefined) => void
   ): ClientWritableStream<string | undefined>;
-  clientStringValueStreaming(
+  clientStreamingStringValue(
     metadata: Metadata,
     options: Partial<CallOptions>,
     callback: (error: ServiceError | null, response: string | undefined) => void
@@ -505,15 +609,15 @@ export interface TestClient extends Client {
   bidiStreaming(): ClientDuplexStream<TestMessage, TestMessage>;
   bidiStreaming(options: Partial<CallOptions>): ClientDuplexStream<TestMessage, TestMessage>;
   bidiStreaming(metadata: Metadata, options?: Partial<CallOptions>): ClientDuplexStream<TestMessage, TestMessage>;
-  bidiStringValueStreaming(): ClientDuplexStream<string | undefined, string | undefined>;
-  bidiStringValueStreaming(options: Partial<CallOptions>): ClientDuplexStream<string | undefined, string | undefined>;
-  bidiStringValueStreaming(
+  bidiStreamingStringValue(): ClientDuplexStream<string | undefined, string | undefined>;
+  bidiStreamingStringValue(options: Partial<CallOptions>): ClientDuplexStream<string | undefined, string | undefined>;
+  bidiStreamingStringValue(
     metadata: Metadata,
     options?: Partial<CallOptions>
   ): ClientDuplexStream<string | undefined, string | undefined>;
 }
 
-export const TestClient = (makeGenericClientConstructor(TestService, 'simple.Test') as unknown) as {
+export const TestClient = makeGenericClientConstructor(TestService, 'simple.Test') as unknown as {
   new (address: string, credentials: ChannelCredentials, options?: Partial<ChannelOptions>): TestClient;
 };
 

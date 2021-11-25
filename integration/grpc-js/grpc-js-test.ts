@@ -71,13 +71,32 @@ describe('grpc-js-test', () => {
       ): void {
         callback(null, call.request);
       },
+      struct(
+        call: ServerUnaryCall<{ [key: string]: any } | undefined, { [key: string]: any }>,
+        callback: sendUnaryData<{ [key: string]: any } | undefined>){
+        callback(null, call.request);
+      },
+      value(
+        call: ServerUnaryCall<any | undefined, any | undefined>,
+        callback: sendUnaryData<any | undefined>) {
+        callback(null, call.request);
+      },
+      listValue(
+        call: ServerUnaryCall<Array<any> | undefined, Array<any> | undefined>,
+        callback: sendUnaryData<Array<any> | undefined>) {
+        callback(null, call.request);
+      },
       serverStreaming(call) {
         call.write({
           timestamp: call.request.timestamp,
         });
         call.end();
       },
-      serverStringValueStreaming(call) {
+      serverStreamingStringValue(call) {
+        call.write(call.request);
+        call.end();
+      },
+      serverStreamingStruct(call) {
         call.write(call.request);
         call.end();
       },
@@ -88,7 +107,7 @@ describe('grpc-js-test', () => {
           });
         });
       },
-      clientStringValueStreaming(call, callback) {
+      clientStreamingStringValue(call, callback) {
         call.on('data', (request) => {
           callback(null, request);
         });
@@ -103,7 +122,7 @@ describe('grpc-js-test', () => {
           call.end();
         });
       },
-      bidiStringValueStreaming(call) {
+      bidiStreamingStringValue(call) {
         call.on('data', (request) => {
           call.write(request);
         });
@@ -188,8 +207,8 @@ describe('grpc-js-test', () => {
     serverStreamingCall.on('data', (response) => {
       expect(response.timestamp).toEqual(timestamp);
     });
-    const serverStringValueStreamingCall = client.serverStringValueStreaming('foobar');
-    serverStringValueStreamingCall.on('data', (response) => {
+    const serverStreamingStringValueCall = client.serverStreamingStringValue('foobar');
+    serverStreamingStringValueCall.on('data', (response) => {
       expect(response).toEqual('foobar');
     });
 
@@ -199,11 +218,11 @@ describe('grpc-js-test', () => {
     clientStreamingCall.write({ timestamp });
     clientStreamingCall.end();
 
-    const clientStringValueStreamingCall = client.clientStringValueStreaming((err, res) => {
+    const clientStreamingStringValueCall = client.clientStreamingStringValue((err, res) => {
       expect(res).toEqual('foobar');
     });
-    clientStringValueStreamingCall.write('foobar');
-    clientStringValueStreamingCall.end();
+    clientStreamingStringValueCall.write('foobar');
+    clientStreamingStringValueCall.end();
 
     const bidiStreamingCall = client.bidiStreaming();
     bidiStreamingCall.write({ timestamp });
@@ -212,7 +231,7 @@ describe('grpc-js-test', () => {
       bidiStreamingCall.end();
     });
 
-    const bidiStringValueStreamingCall = client.bidiStringValueStreaming();
+    const bidiStringValueStreamingCall = client.bidiStreamingStringValue();
     bidiStringValueStreamingCall.write('foobar');
     bidiStringValueStreamingCall.on('data', (response) => {
       expect(response).toEqual('foobar');
