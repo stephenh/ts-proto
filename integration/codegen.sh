@@ -16,9 +16,12 @@
 # Each integration test can optionally have a `parameters.txt` file that will
 # be used as the ts-proto_opt... args for generating that test's code.
 
-dir=${1:-*}
+INTEGRATION_DIR=$(realpath $(dirname "$BASH_SOURCE"))
 
-N=6
+# Run the code generator in parallel, with one process per core.
+N=$(nproc)
+
+echo "Generating typescript code for integration tests using ${N} cores..."
 
 dir=.
 if [ -n "${1}" ]; then
@@ -39,7 +42,7 @@ for file in $list; do
   fi
 
   ((i=i%N)); ((i++==0)) && wait
-  ../node_modules/.bin/ts-node ./codegen.ts "${dir}" "${file}" "${params}" &
+  "${INTEGRATION_DIR}/../node_modules/.bin/ts-node" "${INTEGRATION_DIR}/codegen.ts" "${dir}" "${file}" "${params}" &
 done
 
 wait
