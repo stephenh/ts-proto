@@ -18,7 +18,7 @@
   - [Supported options](#supported-options)
   - [Only Types](#only-types)
   - [NestJS Support](NESTJS.markdown)
-- [Building](#building)
+- [Development](#development)
 - [Assumptions](#assumptions)
 - [Todo](#todo)
 - [OneOf Handling](#oneof-handling)
@@ -362,15 +362,45 @@ Kudos to our sponsors:
 
 If you need ts-proto customizations or priority support for your company, you can ping me at [via email](mailto:stephen.haberman@gmail.com).
 
-# Building
+# Development
 
-After running `yarn install`, run `./integration/pbjs.sh` to create the integration test types. These pbjs-generated files are not currently checked in.
+**Requirements**
 
-After this, the tests should pass.
+- [Docker](https://www.docker.com) or [protoc](https://github.com/protocolbuffers/protobuf/releases) v3.19.1
+- `yarn` — `npm install -g yarn`
 
-After making changes to `ts-proto`, you can run `cd integration` and `./codegen.sh` to re-generate the test case `*.ts` output files that are in each `integration/<test-case>/` directory.
+**Setup**
 
-The test suite's proto files (i.e. `simple.proto`, `batching.proto`, etc.) currently have serialized/`.bin` copies checked into git (i.e. `simple.bin`, `batching.bin`, etc.), so that the test suite can run without having to invoke the `protoc` build chain. I.e. if you change the `simple.proto`/etc. files, you'll need to run `./integration/update-bins.sh`, which does require having the `protoc` executable available.
+The commands below assume you have **Docker** installed. To use a **local** copy of `protoc` without docker, use commands suffixed with `:local`
+
+- Check out the [repository]() for the latest code.
+- Run `yarn install` to install the dependencies.
+- Run `yarn build:test` or `yarn build:test:local` to generate the test files.
+  > _This runs the following commands:_
+  >  - `proto2bin` — Converts integration test `.proto` files to `.bin`.
+  >  - `bin2ts` — Runs `ts-proto` on the `.bin` files to generate  `.ts`  files.
+  >  - `bin2pbjs` — Generates a reference implementation using `pbjs` for testing compatibility.
+- Run `yarn test`
+
+**Workflow**
+
+- Modifying the plugin implementation:
+  - Run `yarn bin2ts` or `yarn bin2ts:local`.  
+    _Since the proto files were not changed, you only need to regenerate the typescript files._
+  - Run `yarn test` to verify the typescript files are compatible with the reference implementation, and pass other tests.
+- Updating or adding `.proto` files in the integration directory:
+  - Run `yarn build:test` to regenerate the integration test files.
+  - Run `yarn test` to retest.
+
+**Contributing**
+
+- Run `yarn build:test` and `yarn test` to make sure everything works.
+- Run `yarn prettier` to format the typescript files.
+- Commit the changes:
+  - Also include the generated `.bin` files for the tests where you added or modified `.proto` files.  
+    > These are checked into git so that the test suite can run without having to invoke the `protoc` build chain.
+  - Also include the generated `.ts` files.
+- Create a pull request
 
 # Assumptions
 
