@@ -9,9 +9,9 @@
 #
 #    Updates generated output for all integration tests.
 #
-# ./codegen.sh simple
+# ./codegen.sh simple value
 #
-#    Updates generated output only for the 'simple' integration test.
+#    Updates generated output only for the 'simple' and 'value' integration test.
 #
 # Each integration test can optionally have a `parameters.txt` file that will
 # be used as the ts-proto_opt... args for generating that test's code.
@@ -22,10 +22,10 @@ N=6
 
 dir=.
 if [ -n "${1}" ]; then
-  dir=$1
+  dir="${@}"
 fi
 
-list=$(find "$dir" -name "*.bin" -type f | grep -v dump-response.bin)
+list=$(find $dir -name "*.bin" -type f | grep -v dump-response.bin)
 
 for file in $list; do
   echo "${file}"
