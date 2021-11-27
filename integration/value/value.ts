@@ -16,13 +16,13 @@ const baseValueMessage: object = {};
 export const ValueMessage = {
   encode(message: ValueMessage, writer: Writer = Writer.create()): Writer {
     if (message.value !== undefined) {
-      Value.encode(wrapAnyValue(message.value), writer.uint32(10).fork()).ldelim();
+      Value.encode(Value.wrap(message.value), writer.uint32(10).fork()).ldelim();
     }
     if (message.anyList !== undefined) {
-      ListValue.encode({ values: message.anyList }, writer.uint32(18).fork()).ldelim();
+      ListValue.encode(ListValue.wrap(message.anyList), writer.uint32(18).fork()).ldelim();
     }
     for (const v of message.repeatedAny) {
-      Value.encode(wrapAnyValue(v!), writer.uint32(26).fork()).ldelim();
+      Value.encode(Value.wrap(v!), writer.uint32(26).fork()).ldelim();
     }
     return writer;
   },
@@ -36,13 +36,13 @@ export const ValueMessage = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.value = unwrapAnyValue(Value.decode(reader, reader.uint32()));
+          message.value = Value.unwrap(Value.decode(reader, reader.uint32()));
           break;
         case 2:
-          message.anyList = ListValue.decode(reader, reader.uint32()).values;
+          message.anyList = ListValue.unwrap(ListValue.decode(reader, reader.uint32()));
           break;
         case 3:
-          message.repeatedAny.push(unwrapAnyValue(Value.decode(reader, reader.uint32())));
+          message.repeatedAny.push(Value.unwrap(Value.decode(reader, reader.uint32())));
           break;
         default:
           reader.skipType(tag & 7);
@@ -97,40 +97,4 @@ export type DeepPartial<T> = T extends Builtin
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
-}
-
-function wrapAnyValue(value: any): Value {
-  if (value === null) {
-    return { nullValue: 0 } as Value;
-  } else if (typeof value === 'boolean') {
-    return { boolValue: value } as Value;
-  } else if (typeof value === 'number') {
-    return { numberValue: value } as Value;
-  } else if (typeof value === 'string') {
-    return { stringValue: value } as Value;
-  } else if (Array.isArray(value)) {
-    return { listValue: value } as Value;
-  } else if (typeof value === 'object') {
-    return { structValue: value } as Value;
-  } else if (typeof value === 'undefined') {
-    return {} as Value;
-  } else {
-    throw new Error('Unsupported any value type: ' + typeof value);
-  }
-}
-
-function unwrapAnyValue(value: Value): string | number | boolean | Object | null | Array<any> | undefined {
-  if (value.stringValue !== undefined) {
-    return value.stringValue;
-  } else if (value.numberValue !== undefined) {
-    return value.numberValue;
-  } else if (value.boolValue !== undefined) {
-    return value.boolValue;
-  } else if (value.structValue !== undefined) {
-    return value.structValue;
-  } else if (value.listValue !== undefined) {
-    return value.listValue;
-  } else if (value.nullValue !== undefined) {
-    return null;
-  }
 }

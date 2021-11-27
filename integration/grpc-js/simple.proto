@@ -3,6 +3,7 @@ syntax = "proto3";
 import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/wrappers.proto";
+import "google/protobuf/struct.proto";
 
 package simple;
 
@@ -25,18 +26,22 @@ service Test {
     rpc UnaryDoubleValue(google.protobuf.DoubleValue) returns (google.protobuf.DoubleValue);
     rpc UnaryBoolValue(google.protobuf.BoolValue) returns (google.protobuf.BoolValue);
     rpc UnaryTimestamp(google.protobuf.Timestamp) returns (google.protobuf.Timestamp);
+    rpc Struct(google.protobuf.Struct) returns (google.protobuf.Struct);
+    rpc Value(google.protobuf.Value) returns (google.protobuf.Value);
+    rpc ListValue(google.protobuf.ListValue) returns (google.protobuf.ListValue);
 
     // Server Streaming
     rpc ServerStreaming (TestMessage) returns (stream TestMessage) {}
-    rpc ServerStringValueStreaming (google.protobuf.StringValue) returns (stream google.protobuf.StringValue) {}
+    rpc ServerStreamingStringValue (google.protobuf.StringValue) returns (stream google.protobuf.StringValue) {}
+    rpc ServerStreamingStruct(google.protobuf.Struct) returns (stream google.protobuf.Struct) {}
 
     // Client Streaming
     rpc ClientStreaming (stream TestMessage) returns (TestMessage) {}
-    rpc ClientStringValueStreaming (stream google.protobuf.StringValue) returns (google.protobuf.StringValue) {}
+    rpc ClientStreamingStringValue (stream google.protobuf.StringValue) returns (google.protobuf.StringValue) {}
 
     // Bidi Streaming
     rpc BidiStreaming (stream TestMessage) returns (stream TestMessage) {}
-    rpc BidiStringValueStreaming (stream google.protobuf.StringValue) returns (stream google.protobuf.StringValue) {}
+    rpc BidiStreamingStringValue (stream google.protobuf.StringValue) returns (stream google.protobuf.StringValue) {}
 }
 
 message TestMessage {

@@ -6,13 +6,23 @@ import { LongOption } from './options';
 export function generateEncoder(ctx: Context, typeName: string): Code {
   const name = wrapperTypeName(typeName);
   if (!name) {
-    return code`${messageToTypeName(ctx, typeName)}.encode(value).finish()`;
+    return code`${messageToTypeName(ctx, typeName, { keepValueType: true })}.encode(value).finish()`;
   }
 
   if (name == 'Timestamp') {
     const TimestampValue = imp(`${name}@./google/protobuf/timestamp`);
 
     return code`${TimestampValue}.encode(${ctx.utils.toTimestamp}(value)).finish()`;
+  }
+
+  if (name == 'Struct') {
+    const StructType = imp(`${name}@./google/protobuf/struct`);
+    return code`${StructType}.encode(${StructType}.wrap(value)).finish()`;
+  }
+
+  if (name == 'ListValue') {
+    const ListValueType = imp(`${name}@./google/protobuf/struct`);
+    return code`${ListValueType}.encode({values: value ?? []}).finish()`;
   }
 
   const TypeValue = imp(`${name}@./google/protobuf/wrappers`);
@@ -36,8 +46,6 @@ export function generateEncoder(ctx: Context, typeName: string): Code {
       return code`${TypeValue}.encode({value: value ?? false}).finish()`;
     case 'BytesValue':
       return code`${TypeValue}.encode({value: value ?? new Uint8Array()}).finish()`;
-    case 'ListValue':
-      return code`${TypeValue}.encode({value: value ?? []]}).finish()`;
   }
 
   throw new Error(`unknown wrapper type: ${name}`);
@@ -46,7 +54,7 @@ export function generateEncoder(ctx: Context, typeName: string): Code {
 export function generateDecoder(ctx: Context, typeName: string): Code {
   let name = wrapperTypeName(typeName);
   if (!name) {
-    return code`${messageToTypeName(ctx, typeName)}.decode(value)`;
+    return code`${messageToTypeName(ctx, typeName, { keepValueType: true })}.decode(value)`;
   }
 
   let TypeValue: Import;
@@ -54,6 +62,11 @@ export function generateDecoder(ctx: Context, typeName: string): Code {
   if (name == 'Timestamp') {
     TypeValue = imp(`${name}@./google/protobuf/timestamp`);
     return code`${TypeValue}.decode(value)`;
+  }
+
+  if (name == 'Struct' || name == 'ListValue') {
+    TypeValue = imp(`${name}@./google/protobuf/struct`);
+    return code`${TypeValue}.unwrap(${TypeValue}.decode(value))`;
   }
 
   TypeValue = imp(`${name}@./google/protobuf/wrappers`);
