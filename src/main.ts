@@ -419,12 +419,17 @@ function makeDeepPartial(options: Options, longs: ReturnType<typeof makeLongUtil
     options.forceLong === LongOption.LONG ? code` : T extends ${longs.Long} ? string | number | Long ` : '';
   const keys = options.outputTypeRegistry ? code`Exclude<keyof T, '$type'>` : code`keyof T`;
 
+  const Builtin = conditionalOutput(
+    'Builtin',
+    code`type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;`
+  );
+
+  // Based on https://github.com/sindresorhus/type-fest/pull/259
   const Exact = conditionalOutput(
     'Exact',
     code`
       type KeysOfUnion<T> = T extends T ? keyof T : never;
-
-      ${maybeExport} type Exact<P, I extends P> = P extends Builtin
+      ${maybeExport} type Exact<P, I extends P> = P extends ${Builtin}
         ? P
         : P &
         { [K in keyof P]: Exact<P[K], I[K]> } & Record<Exclude<keyof I, KeysOfUnion<P>>, never>;
@@ -435,9 +440,7 @@ function makeDeepPartial(options: Options, longs: ReturnType<typeof makeLongUtil
   const DeepPartial = conditionalOutput(
     'DeepPartial',
     code`
-      type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
-      
-      ${maybeExport} type DeepPartial<T> =  T extends Builtin
+      ${maybeExport} type DeepPartial<T> =  T extends ${Builtin}
         ? T
         ${maybeLong}
         : T extends Array<infer U>
@@ -450,7 +453,7 @@ function makeDeepPartial(options: Options, longs: ReturnType<typeof makeLongUtil
     `
   );
 
-  return { DeepPartial, Exact };
+  return { Builtin, DeepPartial, Exact };
 }
 
 function makeTimestampMethods(options: Options, longs: ReturnType<typeof makeLongUtils>) {
