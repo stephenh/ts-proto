@@ -18,8 +18,10 @@
 
 INTEGRATION_DIR=$(realpath $(dirname "$BASH_SOURCE"))
 
-# Run the code generator in parallel, with one process per core.
-N=$(nproc)
+# Run the code generator in parallel. Note this is purposefully pinned to 5 because
+# CI only has 2 cores, but we can go faster than that, and for me locally using all
+# 16 cores is overly taxes the machine/kicks on fans/etc. 5 is a good balance.
+N=5
 
 echo "Generating typescript code for integration tests using ${N} cores..."
 
