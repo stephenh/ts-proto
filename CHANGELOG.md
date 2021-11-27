@@ -1,3 +1,15 @@
+# [1.91.0](https://github.com/stephenh/ts-proto/compare/v1.90.1...v1.91.0) (2021-11-27)
+
+
+### Bug Fixes
+
+* use Long.fromValue instead of Long.fromString for improved robustness regarding already parsed objects ([#405](https://github.com/stephenh/ts-proto/issues/405)) ([7bdc3ee](https://github.com/stephenh/ts-proto/commit/7bdc3eee05ed1318e18e27aa7d5bb2680060f8b6))
+
+
+### Features
+
+* Include dockerized protoc ([#404](https://github.com/stephenh/ts-proto/issues/404)) ([7564a78](https://github.com/stephenh/ts-proto/commit/7564a7887ccd0bb80cac19d313ee9bd8daae778d))
+
 ## [1.90.1](https://github.com/stephenh/ts-proto/compare/v1.90.0...v1.90.1) (2021-11-27)
 
 
