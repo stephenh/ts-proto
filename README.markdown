@@ -402,6 +402,30 @@ The commands below assume you have **Docker** installed. To use a **local** copy
   - Also include the generated `.ts` files.
 - Create a pull request
 
+**Dockerized Protoc**
+
+The repository includes a dockerized version of `protoc`, which is configured in [docker-compose.yml](docker-compose.yml).
+
+It can be useful in case you want to manually invoke the plugin with a known version of `protoc`.
+
+Usage:
+
+```bash
+# Include the protoc alias in your shell.
+. aliases.sh
+
+# Run protoc as usual. The ts-proto directory is available in /ts-proto.
+protoc --plugin=/ts-proto/protoc-gen-ts_proto --ts_proto_out=./output -I=./protos ./protoc/*.proto
+
+# Or use the ts-protoc alias which specifies the plugin path for you.
+ts-protoc --ts_proto_out=./output -I=./protos ./protoc/*.proto
+```
+
+- All paths must be relative paths _within_ the current working directory of the host. `../` is not allowed
+- Within the docker container, the absolute path to the project root is `/ts-proto`
+- The container mounts the current working directory in `/host`, and sets it as its working directory.
+- Once `aliases.sh` is sourced, you can use the `protoc` command in any folder.
+
 # Assumptions
 
 - TS/ES6 module name is the proto package
