@@ -1,8 +1,6 @@
 # Docker image for protoc
-ARG BASE="alpine:3.14.3"
-FROM $BASE
+FROM node:17-alpine3.14
 ARG PROTOC_VERSION="3.19.1"
-ARG BIN=""
 
 RUN apk add bash
 RUN apk add gcompat
@@ -11,7 +9,6 @@ RUN mkdir /usr/local/lib/protoc && unzip protoc.zip -d /usr/local/lib/protoc && 
 RUN ln -s /usr/local/lib/protoc/bin/protoc /usr/local/bin/protoc
 
 RUN protoc --version
+WORKDIR /ts-proto/integration
 
-ENV PATH "$BIN:$PATH"
-
-ENTRYPOINT ["/usr/local/bin/protoc"]
+ENTRYPOINT ["/bin/bash"]

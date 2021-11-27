@@ -12,11 +12,13 @@ else
   PLUGIN_PATH="protoc-gen-dump"
 fi
 
-PROTO_FILES=$(find . -maxdepth 2 -name "*.proto" -type f)
+PROTO_FILES=$(find . -name "*.proto" -type f)
 
 for FILE in $PROTO_FILES; do
   echo "${FILE}"
-  INPUT_DIR="$(dirname "$FILE")"
+  # Strip the longest suffix starting at the 1st slash
+  INPUT_DIR="${FILE##./}"
+  INPUT_DIR="${INPUT_DIR%%/*}"
   OUTPUT_FILE="${FILE%proto}bin"
   protoc --experimental_allow_proto3_optional "--plugin=$PLUGIN_PATH" --dump_out=. "${FILE}" "-I${INPUT_DIR}"
   mv file.bin "${OUTPUT_FILE}"

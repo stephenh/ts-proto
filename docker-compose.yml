@@ -4,11 +4,5 @@ services:
     build:
       context: .
       dockerfile: "protoc.Dockerfile"
-      args:
-        BASE: "node:17-alpine3.14"
-        BIN: "/ts-proto"
-        PROTOC_VERSION: "3.19.1"
-    working_dir: "/host"
     volumes:
-      - "${PWD:-.}:/host"
       - ".:/ts-proto"
