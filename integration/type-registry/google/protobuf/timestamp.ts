@@ -57,7 +57,16 @@ export const protobufPackage = 'google.protobuf';
  *         .setNanos((int) ((millis % 1000) * 1000000)).build();
  *
  *
- * Example 5: Compute Timestamp from current time in Python.
+ * Example 5: Compute Timestamp from Java `Instant.now()`.
+ *
+ *     Instant now = Instant.now();
+ *
+ *     Timestamp timestamp =
+ *         Timestamp.newBuilder().setSeconds(now.getEpochSecond())
+ *             .setNanos(now.getNano()).build();
+ *
+ *
+ * Example 6: Compute Timestamp from current time in Python.
  *
  *     timestamp = Timestamp()
  *     timestamp.GetCurrentTime()
@@ -193,15 +202,6 @@ function longToNumber(long: Long): number {
     throw new globalThis.Error('Value is larger than Number.MAX_SAFE_INTEGER');
   }
   return long.toNumber();
-}
-
-// If you get a compile-error about 'Constructor<Long> and ... have no overlap',
-// add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
-if (util.Long !== Long) {
-  util.Long = Long as any;
-  configure();
-}
-rn long.toNumber();
 }
 
 // If you get a compile-error about 'Constructor<Long> and ... have no overlap',
