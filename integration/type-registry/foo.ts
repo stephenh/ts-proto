@@ -59,7 +59,7 @@ export const Foo = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<Foo>): Foo {
+  fromPartial<I extends Exact<DeepPartial<Foo>, I>>(object: I): Foo {
     const message = { ...baseFoo } as Foo;
     message.timestamp = object.timestamp ?? undefined;
     return message;
@@ -111,7 +111,7 @@ export const Foo2 = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<Foo2>): Foo2 {
+  fromPartial<I extends Exact<DeepPartial<Foo2>, I>>(object: I): Foo2 {
     const message = { ...baseFoo2 } as Foo2;
     message.timestamp = object.timestamp ?? undefined;
     return message;
@@ -121,6 +121,7 @@ export const Foo2 = {
 messageTypeRegistry.set(Foo2.$type, Foo2);
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
+
 export type DeepPartial<T> = T extends Builtin
   ? T
   : T extends Array<infer U>
@@ -130,6 +131,11 @@ export type DeepPartial<T> = T extends Builtin
   : T extends {}
   ? { [K in Exclude<keyof T, '$type'>]?: DeepPartial<T[K]> }
   : Partial<T>;
+
+type KeysOfUnion<T> = T extends T ? keyof T : never;
+export type Exact<P, I extends P> = P extends Builtin
+  ? P
+  : P & { [K in keyof P]: Exact<P[K], I[K]> } & Record<Exclude<keyof I, KeysOfUnion<P>>, never>;
 
 function toTimestamp(date: Date): Timestamp {
   const seconds = date.getTime() / 1_000;

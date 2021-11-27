@@ -181,7 +181,7 @@ export const Numbers = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<Numbers>): Numbers {
+  fromPartial<I extends Exact<DeepPartial<Numbers>, I>>(object: I): Numbers {
     const message = { ...baseNumbers } as Numbers;
     message.double = object.double ?? 0;
     message.float = object.float ?? 0;
@@ -202,6 +202,7 @@ export const Numbers = {
 };
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
+
 export type DeepPartial<T> = T extends Builtin
   ? T
   : T extends Array<infer U>
@@ -211,6 +212,11 @@ export type DeepPartial<T> = T extends Builtin
   : T extends {}
   ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
+
+type KeysOfUnion<T> = T extends T ? keyof T : never;
+export type Exact<P, I extends P> = P extends Builtin
+  ? P
+  : P & { [K in keyof P]: Exact<P[K], I[K]> } & Record<Exclude<keyof I, KeysOfUnion<P>>, never>;
 
 function toTimestamp(date: Date): Timestamp {
   const seconds = Math.trunc(date.getTime() / 1_000).toString();

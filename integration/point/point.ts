@@ -62,7 +62,7 @@ export const Point = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<Point>): Point {
+  fromPartial<I extends Exact<DeepPartial<Point>, I>>(object: I): Point {
     const message = { ...basePoint } as Point;
     message.lat = object.lat ?? 0;
     message.lng = object.lng ?? 0;
@@ -118,7 +118,7 @@ export const Area = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<Area>): Area {
+  fromPartial<I extends Exact<DeepPartial<Area>, I>>(object: I): Area {
     const message = { ...baseArea } as Area;
     message.nw = object.nw !== undefined && object.nw !== null ? Point.fromPartial(object.nw) : undefined;
     message.se = object.se !== undefined && object.se !== null ? Point.fromPartial(object.se) : undefined;
@@ -127,6 +127,7 @@ export const Area = {
 };
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
+
 export type DeepPartial<T> = T extends Builtin
   ? T
   : T extends Array<infer U>
@@ -136,6 +137,11 @@ export type DeepPartial<T> = T extends Builtin
   : T extends {}
   ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
+
+type KeysOfUnion<T> = T extends T ? keyof T : never;
+export type Exact<P, I extends P> = P extends Builtin
+  ? P
+  : P & { [K in keyof P]: Exact<P[K], I[K]> } & Record<Exclude<keyof I, KeysOfUnion<P>>, never>;
 
 // If you get a compile-error about 'Constructor<Long> and ... have no overlap',
 // add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.

@@ -89,9 +89,9 @@ export const BatchQueryRequest = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<BatchQueryRequest>): BatchQueryRequest {
+  fromPartial<I extends Exact<DeepPartial<BatchQueryRequest>, I>>(object: I): BatchQueryRequest {
     const message = { ...baseBatchQueryRequest } as BatchQueryRequest;
-    message.ids = (object.ids ?? []).map((e) => e);
+    message.ids = object.ids?.map((e) => e) || [];
     return message;
   },
 };
@@ -141,9 +141,9 @@ export const BatchQueryResponse = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<BatchQueryResponse>): BatchQueryResponse {
+  fromPartial<I extends Exact<DeepPartial<BatchQueryResponse>, I>>(object: I): BatchQueryResponse {
     const message = { ...baseBatchQueryResponse } as BatchQueryResponse;
-    message.entities = (object.entities ?? []).map((e) => Entity.fromPartial(e));
+    message.entities = object.entities?.map((e) => Entity.fromPartial(e)) || [];
     return message;
   },
 };
@@ -193,9 +193,9 @@ export const BatchMapQueryRequest = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<BatchMapQueryRequest>): BatchMapQueryRequest {
+  fromPartial<I extends Exact<DeepPartial<BatchMapQueryRequest>, I>>(object: I): BatchMapQueryRequest {
     const message = { ...baseBatchMapQueryRequest } as BatchMapQueryRequest;
-    message.ids = (object.ids ?? []).map((e) => e);
+    message.ids = object.ids?.map((e) => e) || [];
     return message;
   },
 };
@@ -252,7 +252,7 @@ export const BatchMapQueryResponse = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<BatchMapQueryResponse>): BatchMapQueryResponse {
+  fromPartial<I extends Exact<DeepPartial<BatchMapQueryResponse>, I>>(object: I): BatchMapQueryResponse {
     const message = { ...baseBatchMapQueryResponse } as BatchMapQueryResponse;
     message.entities = Object.entries(object.entities ?? {}).reduce<{ [key: string]: Entity }>((acc, [key, value]) => {
       if (value !== undefined) {
@@ -312,7 +312,9 @@ export const BatchMapQueryResponse_EntitiesEntry = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<BatchMapQueryResponse_EntitiesEntry>): BatchMapQueryResponse_EntitiesEntry {
+  fromPartial<I extends Exact<DeepPartial<BatchMapQueryResponse_EntitiesEntry>, I>>(
+    object: I
+  ): BatchMapQueryResponse_EntitiesEntry {
     const message = { ...baseBatchMapQueryResponse_EntitiesEntry } as BatchMapQueryResponse_EntitiesEntry;
     message.key = object.key ?? '';
     message.value = object.value !== undefined && object.value !== null ? Entity.fromPartial(object.value) : undefined;
@@ -360,7 +362,7 @@ export const GetOnlyMethodRequest = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<GetOnlyMethodRequest>): GetOnlyMethodRequest {
+  fromPartial<I extends Exact<DeepPartial<GetOnlyMethodRequest>, I>>(object: I): GetOnlyMethodRequest {
     const message = { ...baseGetOnlyMethodRequest } as GetOnlyMethodRequest;
     message.id = object.id ?? '';
     return message;
@@ -407,7 +409,7 @@ export const GetOnlyMethodResponse = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<GetOnlyMethodResponse>): GetOnlyMethodResponse {
+  fromPartial<I extends Exact<DeepPartial<GetOnlyMethodResponse>, I>>(object: I): GetOnlyMethodResponse {
     const message = { ...baseGetOnlyMethodResponse } as GetOnlyMethodResponse;
     message.entity =
       object.entity !== undefined && object.entity !== null ? Entity.fromPartial(object.entity) : undefined;
@@ -455,7 +457,7 @@ export const WriteMethodRequest = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<WriteMethodRequest>): WriteMethodRequest {
+  fromPartial<I extends Exact<DeepPartial<WriteMethodRequest>, I>>(object: I): WriteMethodRequest {
     const message = { ...baseWriteMethodRequest } as WriteMethodRequest;
     message.id = object.id ?? '';
     return message;
@@ -494,7 +496,7 @@ export const WriteMethodResponse = {
     return obj;
   },
 
-  fromPartial(_: DeepPartial<WriteMethodResponse>): WriteMethodResponse {
+  fromPartial<I extends Exact<DeepPartial<WriteMethodResponse>, I>>(_: I): WriteMethodResponse {
     const message = { ...baseWriteMethodResponse } as WriteMethodResponse;
     return message;
   },
@@ -548,7 +550,7 @@ export const Entity = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<Entity>): Entity {
+  fromPartial<I extends Exact<DeepPartial<Entity>, I>>(object: I): Entity {
     const message = { ...baseEntity } as Entity;
     message.id = object.id ?? '';
     message.name = object.name ?? '';
@@ -604,6 +606,7 @@ interface Rpc {
 }
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
+
 export type DeepPartial<T> = T extends Builtin
   ? T
   : T extends Array<infer U>
@@ -613,6 +616,11 @@ export type DeepPartial<T> = T extends Builtin
   : T extends {}
   ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
+
+type KeysOfUnion<T> = T extends T ? keyof T : never;
+export type Exact<P, I extends P> = P extends Builtin
+  ? P
+  : P & { [K in keyof P]: Exact<P[K], I[K]> } & Record<Exclude<keyof I, KeysOfUnion<P>>, never>;
 
 // If you get a compile-error about 'Constructor<Long> and ... have no overlap',
 // add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.

@@ -324,23 +324,6 @@ describe('simple', () => {
     const s1 = Simple.fromPartial({
       grandChildren: ['a', 'b'].map((name) => ({ name, typ: null })),
     });
-    expect(s1).toMatchInlineSnapshot(`
-      Object {
-        "age": 0,
-        "birthday": undefined,
-        "blob": Uint8Array [],
-        "blobs": Array [],
-        "child": undefined,
-        "coins": Array [],
-        "createdAt": undefined,
-        "grandChildren": Array [],
-        "name": "",
-        "oldStates": Array [],
-        "snacks": Array [],
-        "state": 0,
-        "thing": undefined,
-      }
-    `);
   });
 
   it('can fromPartial on maps with falsey values', () => {

@@ -53,7 +53,7 @@ export const Bar = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<Bar>): Bar {
+  fromPartial<I extends Exact<DeepPartial<Bar>, I>>(object: I): Bar {
     const message = { ...baseBar } as Bar;
     message.foo = object.foo !== undefined && object.foo !== null ? Foo.fromPartial(object.foo) : undefined;
     return message;
@@ -63,6 +63,7 @@ export const Bar = {
 messageTypeRegistry.set(Bar.$type, Bar);
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
+
 export type DeepPartial<T> = T extends Builtin
   ? T
   : T extends Array<infer U>
@@ -72,6 +73,11 @@ export type DeepPartial<T> = T extends Builtin
   : T extends {}
   ? { [K in Exclude<keyof T, '$type'>]?: DeepPartial<T[K]> }
   : Partial<T>;
+
+type KeysOfUnion<T> = T extends T ? keyof T : never;
+export type Exact<P, I extends P> = P extends Builtin
+  ? P
+  : P & { [K in keyof P]: Exact<P[K], I[K]> } & Record<Exclude<keyof I, KeysOfUnion<P>>, never>;
 
 // If you get a compile-error about 'Constructor<Long> and ... have no overlap',
 // add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.

@@ -147,7 +147,7 @@ export const Struct = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<Struct>): Struct {
+  fromPartial<I extends Exact<DeepPartial<Struct>, I>>(object: I): Struct {
     const message = { ...baseStruct } as Struct;
     message.fields = Object.entries(object.fields ?? {}).reduce<{ [key: string]: any | undefined }>(
       (acc, [key, value]) => {
@@ -228,7 +228,7 @@ export const Struct_FieldsEntry = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<Struct_FieldsEntry>): Struct_FieldsEntry {
+  fromPartial<I extends Exact<DeepPartial<Struct_FieldsEntry>, I>>(object: I): Struct_FieldsEntry {
     const message = { ...baseStruct_FieldsEntry } as Struct_FieldsEntry;
     message.key = object.key ?? '';
     message.value = object.value ?? undefined;
@@ -321,7 +321,7 @@ export const Value = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<Value>): Value {
+  fromPartial<I extends Exact<DeepPartial<Value>, I>>(object: I): Value {
     const message = { ...baseValue } as Value;
     message.nullValue = object.nullValue ?? undefined;
     message.numberValue = object.numberValue ?? undefined;
@@ -414,9 +414,9 @@ export const ListValue = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<ListValue>): ListValue {
+  fromPartial<I extends Exact<DeepPartial<ListValue>, I>>(object: I): ListValue {
     const message = { ...baseListValue } as ListValue;
-    message.values = (object.values ?? []).map((e) => e);
+    message.values = object.values?.map((e) => e) || [];
     return message;
   },
 
@@ -430,6 +430,7 @@ export const ListValue = {
 };
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
+
 export type DeepPartial<T> = T extends Builtin
   ? T
   : T extends Array<infer U>
@@ -439,6 +440,11 @@ export type DeepPartial<T> = T extends Builtin
   : T extends {}
   ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
+
+type KeysOfUnion<T> = T extends T ? keyof T : never;
+export type Exact<P, I extends P> = P extends Builtin
+  ? P
+  : P & { [K in keyof P]: Exact<P[K], I[K]> } & Record<Exclude<keyof I, KeysOfUnion<P>>, never>;
 
 // If you get a compile-error about 'Constructor<Long> and ... have no overlap',
 // add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.

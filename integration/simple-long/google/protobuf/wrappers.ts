@@ -134,7 +134,7 @@ export const DoubleValue = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<DoubleValue>): DoubleValue {
+  fromPartial<I extends Exact<DeepPartial<DoubleValue>, I>>(object: I): DoubleValue {
     const message = { ...baseDoubleValue } as DoubleValue;
     message.value = object.value ?? 0;
     return message;
@@ -181,7 +181,7 @@ export const FloatValue = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<FloatValue>): FloatValue {
+  fromPartial<I extends Exact<DeepPartial<FloatValue>, I>>(object: I): FloatValue {
     const message = { ...baseFloatValue } as FloatValue;
     message.value = object.value ?? 0;
     return message;
@@ -228,7 +228,7 @@ export const Int64Value = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<Int64Value>): Int64Value {
+  fromPartial<I extends Exact<DeepPartial<Int64Value>, I>>(object: I): Int64Value {
     const message = { ...baseInt64Value } as Int64Value;
     message.value = object.value !== undefined && object.value !== null ? Long.fromValue(object.value) : Long.ZERO;
     return message;
@@ -275,7 +275,7 @@ export const UInt64Value = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<UInt64Value>): UInt64Value {
+  fromPartial<I extends Exact<DeepPartial<UInt64Value>, I>>(object: I): UInt64Value {
     const message = { ...baseUInt64Value } as UInt64Value;
     message.value = object.value !== undefined && object.value !== null ? Long.fromValue(object.value) : Long.UZERO;
     return message;
@@ -322,7 +322,7 @@ export const Int32Value = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<Int32Value>): Int32Value {
+  fromPartial<I extends Exact<DeepPartial<Int32Value>, I>>(object: I): Int32Value {
     const message = { ...baseInt32Value } as Int32Value;
     message.value = object.value ?? 0;
     return message;
@@ -369,7 +369,7 @@ export const UInt32Value = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<UInt32Value>): UInt32Value {
+  fromPartial<I extends Exact<DeepPartial<UInt32Value>, I>>(object: I): UInt32Value {
     const message = { ...baseUInt32Value } as UInt32Value;
     message.value = object.value ?? 0;
     return message;
@@ -416,7 +416,7 @@ export const BoolValue = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<BoolValue>): BoolValue {
+  fromPartial<I extends Exact<DeepPartial<BoolValue>, I>>(object: I): BoolValue {
     const message = { ...baseBoolValue } as BoolValue;
     message.value = object.value ?? false;
     return message;
@@ -463,7 +463,7 @@ export const StringValue = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<StringValue>): StringValue {
+  fromPartial<I extends Exact<DeepPartial<StringValue>, I>>(object: I): StringValue {
     const message = { ...baseStringValue } as StringValue;
     message.value = object.value ?? '';
     return message;
@@ -513,7 +513,7 @@ export const BytesValue = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<BytesValue>): BytesValue {
+  fromPartial<I extends Exact<DeepPartial<BytesValue>, I>>(object: I): BytesValue {
     const message = { ...baseBytesValue } as BytesValue;
     message.value = object.value ?? new Uint8Array();
     return message;
@@ -553,6 +553,7 @@ function base64FromBytes(arr: Uint8Array): string {
 }
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
+
 export type DeepPartial<T> = T extends Builtin
   ? T
   : T extends Long
@@ -564,6 +565,11 @@ export type DeepPartial<T> = T extends Builtin
   : T extends {}
   ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
+
+type KeysOfUnion<T> = T extends T ? keyof T : never;
+export type Exact<P, I extends P> = P extends Builtin
+  ? P
+  : P & { [K in keyof P]: Exact<P[K], I[K]> } & Record<Exclude<keyof I, KeysOfUnion<P>>, never>;
 
 // If you get a compile-error about 'Constructor<Long> and ... have no overlap',
 // add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.

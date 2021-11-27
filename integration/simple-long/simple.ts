@@ -144,15 +144,15 @@ export const SimpleWithWrappers = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<SimpleWithWrappers>): SimpleWithWrappers {
+  fromPartial<I extends Exact<DeepPartial<SimpleWithWrappers>, I>>(object: I): SimpleWithWrappers {
     const message = { ...baseSimpleWithWrappers } as SimpleWithWrappers;
     message.name = object.name ?? undefined;
     message.age = object.age ?? undefined;
     message.enabled = object.enabled ?? undefined;
     message.bananas =
       object.bananas !== undefined && object.bananas !== null ? Long.fromValue(object.bananas) : undefined;
-    message.coins = (object.coins ?? []).map((e) => e);
-    message.snacks = (object.snacks ?? []).map((e) => e);
+    message.coins = object.coins?.map((e) => e) || [];
+    message.snacks = object.snacks?.map((e) => e) || [];
     return message;
   },
 };
@@ -258,7 +258,7 @@ export const SimpleWithMap = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<SimpleWithMap>): SimpleWithMap {
+  fromPartial<I extends Exact<DeepPartial<SimpleWithMap>, I>>(object: I): SimpleWithMap {
     const message = { ...baseSimpleWithMap } as SimpleWithMap;
     message.nameLookup = Object.entries(object.nameLookup ?? {}).reduce<{ [key: string]: string }>(
       (acc, [key, value]) => {
@@ -339,7 +339,9 @@ export const SimpleWithMap_NameLookupEntry = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<SimpleWithMap_NameLookupEntry>): SimpleWithMap_NameLookupEntry {
+  fromPartial<I extends Exact<DeepPartial<SimpleWithMap_NameLookupEntry>, I>>(
+    object: I
+  ): SimpleWithMap_NameLookupEntry {
     const message = { ...baseSimpleWithMap_NameLookupEntry } as SimpleWithMap_NameLookupEntry;
     message.key = object.key ?? '';
     message.value = object.value ?? '';
@@ -395,7 +397,7 @@ export const SimpleWithMap_IntLookupEntry = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<SimpleWithMap_IntLookupEntry>): SimpleWithMap_IntLookupEntry {
+  fromPartial<I extends Exact<DeepPartial<SimpleWithMap_IntLookupEntry>, I>>(object: I): SimpleWithMap_IntLookupEntry {
     const message = { ...baseSimpleWithMap_IntLookupEntry } as SimpleWithMap_IntLookupEntry;
     message.key = object.key ?? 0;
     message.value = object.value ?? 0;
@@ -451,7 +453,9 @@ export const SimpleWithMap_LongLookupEntry = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<SimpleWithMap_LongLookupEntry>): SimpleWithMap_LongLookupEntry {
+  fromPartial<I extends Exact<DeepPartial<SimpleWithMap_LongLookupEntry>, I>>(
+    object: I
+  ): SimpleWithMap_LongLookupEntry {
     const message = { ...baseSimpleWithMap_LongLookupEntry } as SimpleWithMap_LongLookupEntry;
     message.key = object.key ?? '';
     message.value = object.value !== undefined && object.value !== null ? Long.fromValue(object.value) : Long.ZERO;
@@ -626,7 +630,7 @@ export const Numbers = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<Numbers>): Numbers {
+  fromPartial<I extends Exact<DeepPartial<Numbers>, I>>(object: I): Numbers {
     const message = { ...baseNumbers } as Numbers;
     message.double = object.double ?? 0;
     message.float = object.float ?? 0;
@@ -642,12 +646,13 @@ export const Numbers = {
     message.sfixed32 = object.sfixed32 ?? 0;
     message.sfixed64 =
       object.sfixed64 !== undefined && object.sfixed64 !== null ? Long.fromValue(object.sfixed64) : Long.ZERO;
-    message.manyUint64 = (object.manyUint64 ?? []).map((e) => Long.fromValue(e));
+    message.manyUint64 = object.manyUint64?.map((e) => Long.fromValue(e)) || [];
     return message;
   },
 };
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
+
 export type DeepPartial<T> = T extends Builtin
   ? T
   : T extends Long
@@ -659,6 +664,11 @@ export type DeepPartial<T> = T extends Builtin
   : T extends {}
   ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
+
+type KeysOfUnion<T> = T extends T ? keyof T : never;
+export type Exact<P, I extends P> = P extends Builtin
+  ? P
+  : P & { [K in keyof P]: Exact<P[K], I[K]> } & Record<Exclude<keyof I, KeysOfUnion<P>>, never>;
 
 // If you get a compile-error about 'Constructor<Long> and ... have no overlap',
 // add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
