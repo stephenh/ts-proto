@@ -1,3 +1,10 @@
+## [1.90.1](https://github.com/stephenh/ts-proto/compare/v1.90.0...v1.90.1) (2021-11-27)
+
+
+### Bug Fixes
+
+* code-generation for Services with Struct response types ([#407](https://github.com/stephenh/ts-proto/issues/407)) ([f041fa1](https://github.com/stephenh/ts-proto/commit/f041fa1047816748c366bcb81895b6b917eb328d))
+
 # [1.90.0](https://github.com/stephenh/ts-proto/compare/v1.89.0...v1.90.0) (2021-11-24)
 
 
