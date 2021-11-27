@@ -18,6 +18,6 @@ for FILE in $PROTO_FILES; do
   echo "${FILE}"
   INPUT_DIR="$(dirname "$FILE")"
   OUTPUT_FILE="${FILE%proto}bin"
-  protoc --experimental_allow_proto3_optional "--plugin=$PLUGIN_PATH" --dump_out=. "${FILE}" "-I${INPUT_DIR}"\
-   && mv FILE.bin "${OUTPUT_FILE}"
+  protoc --experimental_allow_proto3_optional "--plugin=$PLUGIN_PATH" --dump_out=. "${FILE}" "-I${INPUT_DIR}"
+  mv file.bin "${OUTPUT_FILE}"
 done
