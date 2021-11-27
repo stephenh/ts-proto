@@ -1,17 +1,23 @@
 #!/usr/bin/env bash
 
 # To avoid running the protoc pipeline all the time, we capture the incoming Plugin
-# proto requests into .bin files that then unit tests can pull in directly as needed.
-list=$(find . -name "*.proto" -type f)
+# proto requests into .bin PROTO_FILES that then unit tests can pull in directly as needed.
 
-for file in $list; do
-  echo "${file}"
-#  # Strip the longest suffix starting at the 1st slash
-  dir="${file##./}"
-  dir="${dir%%/*}"
+INTEGRATION_DIR=$(realpath $(dirname "$BASH_SOURCE"))
+cd $INTEGRATION_DIR;
 
-  # Strip the proto suffix and add bin
-  dest="${file%proto}bin"
-  protoc --experimental_allow_proto3_optional "--plugin=$(pwd)/protoc-gen-dump" --dump_out=. "${file}" "-I${dir}"
-  mv file.bin "${dest}"
+if [[ "$OSTYPE" == "msys" ]]; then
+  PLUGIN_PATH="protoc-gen-dump.bat"
+else
+  PLUGIN_PATH="protoc-gen-dump"
+fi
+
+PROTO_FILES=$(find . -maxdepth 2 -name "*.proto" -type f)
+
+for FILE in $PROTO_FILES; do
+  echo "${FILE}"
+  INPUT_DIR="$(dirname "$FILE")"
+  OUTPUT_FILE="${FILE%proto}bin"
+  protoc --experimental_allow_proto3_optional "--plugin=$PLUGIN_PATH" --dump_out=. "${FILE}" "-I${INPUT_DIR}"
+  mv file.bin "${OUTPUT_FILE}"
 done

@@ -9,10 +9,19 @@
   },
   "scripts": {
     "build": "yarn tsc",
-    "setup": "cd ./integration && ./pbjs.sh && ./update-bins.sh && ./codegen.sh",
+    "build:test": "yarn proto2bin && yarn proto2pbjs && yarn bin2ts",
+    "build:test:local": "yarn proto2bin:local && yarn proto2pbjs:local && yarn bin2ts:local",
+    "proto2bin": "docker-compose run --rm --entrypoint bash -w /ts-proto/integration protoc update-bins.sh",
+    "proto2bin-node": "docker-compose run --rm --entrypoint bash -w /ts-proto/integration node update-bins.sh",
+    "proto2pbjs": "docker-compose run --rm --entrypoint bash -w /ts-proto/integration protoc pbjs.sh",
+    "bin2ts": "docker-compose run --rm --entrypoint bash -w /ts-proto/integration protoc codegen.sh",
+    "proto2bin:local": "integration/update-bins.sh",
+    "proto2pbjs:local": "integration/pbjs.sh",
+    "bin2ts:local": "integration/codegen.sh",
     "test": "yarn jest -c jest.config.js --maxWorkers=2",
     "prettier": "prettier --write {src,tests}/**/*.ts",
-    "prettier:check": "prettier --list-different {src,tests}/**/*.ts"
+    "prettier:check": "prettier --list-different {src,tests}/**/*.ts",
+    "setup:docker": "docker-compose build"
   },
   "files": [
     "build"

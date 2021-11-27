@@ -28,10 +28,9 @@ jobs:
         run: ./integration/pbjs.sh
       # This will fail if any git-tracked file has changed
       - name: Codegen
-        run: |
-          cd integration
-          ./codegen.sh
-          git status && git diff --exit-code
+        run: yarn bin2ts
+      - name: Diff Output
+        run: git status && git diff --exit-code
       - name: test
         run: yarn test
         env:
