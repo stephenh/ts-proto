@@ -30,6 +30,7 @@ if [ -n "${1}" ]; then
   dir="${@}"
 fi
 
+cd $INTEGRATION_DIR
 list=$(find $dir -name "*.bin" -type f | grep -v dump-response.bin)
 
 for file in $list; do
@@ -44,7 +45,7 @@ for file in $list; do
   fi
 
   ((i=i%N)); ((i++==0)) && wait
-  "${INTEGRATION_DIR}/../node_modules/.bin/ts-node" "${INTEGRATION_DIR}/codegen.ts" "${dir}" "${file}" "${params}" &
+  "../node_modules/.bin/ts-node" "./codegen.ts" "${dir}" "${file}" "${params}" &
 done
 
 wait
