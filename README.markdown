@@ -409,7 +409,6 @@ The commands below assume you have **Docker** installed. To use a **local** copy
 # Todo
 
 - Support the string-based encoding of duration in `fromJSON`/`toJSON`
-- Support the `json_name` annotation
 - Make `oneof=unions` the default behavior in 2.0
 - Probably change `forceLong` default in 2.0, should default to `forceLong=long`
 - Make `esModuleInterop=true` the default in 2.0

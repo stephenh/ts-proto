@@ -11,7 +11,7 @@ import { HERO_PACKAGE_NAME } from '../hero';
             name: HERO_PACKAGE_NAME,
             transport: Transport.GRPC,
             options: {
-                url: '0.0.0.0:8080',
+                url: '0.0.0.0:8081',
                 package: HERO_PACKAGE_NAME,
                 protoPath: join(__dirname, '../hero.proto'),
             },

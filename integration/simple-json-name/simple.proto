@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+package simple;
+
+message Simple {
+  string name = 1 [ json_name = "other_name" ];
+  optional int32 age = 2 [ json_name = "other_age" ];
+  optional google.protobuf.Timestamp created_at = 9 [ json_name="createdAt" ];
+}

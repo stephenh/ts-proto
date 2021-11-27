@@ -1,33 +1,47 @@
 /* eslint-disable */
 import { util, configure, Writer, Reader } from 'protobufjs/minimal';
 import * as Long from 'long';
-import { Timestamp } from '../google/protobuf/timestamp';
+import { Timestamp } from './google/protobuf/timestamp';
 
 export const protobufPackage = 'simple';
 
-export interface ImportedThing {
-  created_at: Date | undefined;
+export interface Simple {
+  name: string;
+  age?: number | undefined;
+  createdAt?: Date | undefined;
 }
 
-const baseImportedThing: object = {};
+const baseSimple: object = { name: '' };
 
-export const ImportedThing = {
-  encode(message: ImportedThing, writer: Writer = Writer.create()): Writer {
-    if (message.created_at !== undefined) {
-      Timestamp.encode(toTimestamp(message.created_at), writer.uint32(10).fork()).ldelim();
+export const Simple = {
+  encode(message: Simple, writer: Writer = Writer.create()): Writer {
+    if (message.name !== '') {
+      writer.uint32(10).string(message.name);
+    }
+    if (message.age !== undefined) {
+      writer.uint32(16).int32(message.age);
+    }
+    if (message.createdAt !== undefined) {
+      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(74).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): ImportedThing {
+  decode(input: Reader | Uint8Array, length?: number): Simple {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseImportedThing } as ImportedThing;
+    const message = { ...baseSimple } as Simple;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.created_at = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.name = reader.string();
+          break;
+        case 2:
+          message.age = reader.int32();
+          break;
+        case 9:
+          message.createdAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -37,22 +51,28 @@ export const ImportedThing = {
     return message;
   },
 
-  fromJSON(object: any): ImportedThing {
-    const message = { ...baseImportedThing } as ImportedThing;
-    message.created_at =
+  fromJSON(object: any): Simple {
+    const message = { ...baseSimple } as Simple;
+    message.name = object.other_name !== undefined && object.other_name !== null ? String(object.other_name) : '';
+    message.age = object.other_age !== undefined && object.other_age !== null ? Number(object.other_age) : undefined;
+    message.createdAt =
       object.createdAt !== undefined && object.createdAt !== null ? fromJsonTimestamp(object.createdAt) : undefined;
     return message;
   },
 
-  toJSON(message: ImportedThing): unknown {
+  toJSON(message: Simple): unknown {
     const obj: any = {};
-    message.created_at !== undefined && (obj.createdAt = message.created_at.toISOString());
+    message.name !== undefined && (obj.other_name = message.name);
+    message.age !== undefined && (obj.other_age = message.age);
+    message.createdAt !== undefined && (obj.createdAt = message.createdAt.toISOString());
     return obj;
   },
 
-  fromPartial(object: DeepPartial<ImportedThing>): ImportedThing {
-    const message = { ...baseImportedThing } as ImportedThing;
-    message.created_at = object.created_at ?? undefined;
+  fromPartial(object: DeepPartial<Simple>): Simple {
+    const message = { ...baseSimple } as Simple;
+    message.name = object.name ?? '';
+    message.age = object.age ?? undefined;
+    message.createdAt = object.createdAt ?? undefined;
     return message;
   },
 };

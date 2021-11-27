@@ -8,7 +8,7 @@ export async function createApp() {
     const app = await NestFactory.createMicroservice<MicroserviceOptions>(AppModule, {
       transport: Transport.GRPC,
       options: {
-        url: '0.0.0.0:8080',
+        url: '0.0.0.0:8081',
         package: HERO_PACKAGE_NAME,
         protoPath: join(__dirname, '../hero.proto'),
       },
