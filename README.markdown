@@ -379,7 +379,7 @@ The commands below assume you have **Docker** installed. To use a **local** copy
   > _This runs the following commands:_
   >  - `proto2bin` — Converts integration test `.proto` files to `.bin`.
   >  - `bin2ts` — Runs `ts-proto` on the `.bin` files to generate  `.ts`  files.
-  >  - `bin2pbjs` — Generates a reference implementation using `pbjs` for testing compatibility.
+  >  - `proto2pbjs` — Generates a reference implementation using `pbjs` for testing compatibility.
 - Run `yarn test`
 
 **Workflow**
