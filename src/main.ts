@@ -417,7 +417,6 @@ function makeDeepPartial(options: Options, longs: ReturnType<typeof makeLongUtil
   // Allow passing longs as numbers or strings, nad we'll convert them
   const maybeLong =
     options.forceLong === LongOption.LONG ? code` : T extends ${longs.Long} ? string | number | Long ` : '';
-  const keys = options.outputTypeRegistry ? code`Exclude<keyof T, '$type'>` : code`keyof T`;
 
   const Builtin = conditionalOutput(
     'Builtin',
@@ -425,6 +424,7 @@ function makeDeepPartial(options: Options, longs: ReturnType<typeof makeLongUtil
   );
 
   // Based on https://github.com/sindresorhus/type-fest/pull/259
+  const maybeExcludeType = options.outputTypeRegistry ? `| '$type'` : '';
   const Exact = conditionalOutput(
     'Exact',
     code`
@@ -432,11 +432,12 @@ function makeDeepPartial(options: Options, longs: ReturnType<typeof makeLongUtil
       ${maybeExport} type Exact<P, I extends P> = P extends ${Builtin}
         ? P
         : P &
-        { [K in keyof P]: Exact<P[K], I[K]> } & Record<Exclude<keyof I, KeysOfUnion<P>>, never>;
+        { [K in keyof P]: Exact<P[K], I[K]> } & Record<Exclude<keyof I, KeysOfUnion<P> ${maybeExcludeType}>, never>;
     `
   );
 
   // Based on the type from ts-essentials
+  const keys = options.outputTypeRegistry ? code`Exclude<keyof T, '$type'>` : code`keyof T`;
   const DeepPartial = conditionalOutput(
     'DeepPartial',
     code`
