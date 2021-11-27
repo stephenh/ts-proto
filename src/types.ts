@@ -371,7 +371,11 @@ export function isValueType(ctx: Context, field: FieldDescriptorProto): boolean 
 }
 
 export function isAnyValueType(field: FieldDescriptorProto): boolean {
-  return field.typeName === '.google.protobuf.Value';
+  return isAnyValueTypeName(field.typeName);
+}
+
+export function isAnyValueTypeName(typeName: string): boolean {
+  return typeName === 'google.protobuf.Value' || typeName === '.google.protobuf.Value';
 }
 
 export function isBytesValueType(field: FieldDescriptorProto): boolean {
@@ -387,7 +391,11 @@ export function isListValueTypeName(typeName: string): boolean {
 }
 
 export function isStructType(field: FieldDescriptorProto): boolean {
-  return field.typeName === '.google.protobuf.Struct';
+  return isStructTypeName(field.typeName);
+}
+
+export function isStructTypeName(typeName: string): boolean {
+  return typeName === 'google.protobuf.Struct' || typeName === '.google.protobuf.Struct';
 }
 
 export function isLongValueType(field: FieldDescriptorProto): boolean {
@@ -439,6 +447,7 @@ export function wrapperTypeName(typeName: string): string | undefined {
     case '.google.protobuf.BytesValue':
     case '.google.protobuf.ListValue':
     case '.google.protobuf.Timestamp':
+    case '.google.protobuf.Struct':
       return typeName.split('.')[3];
     default:
       return undefined;
@@ -573,7 +582,7 @@ export function requestType(ctx: Context, methodDesc: MethodDescriptorProto): Co
 }
 
 export function responseType(ctx: Context, methodDesc: MethodDescriptorProto): Code {
-  return messageToTypeName(ctx, methodDesc.outputType);
+  return messageToTypeName(ctx, methodDesc.outputType, { keepValueType: true });
 }
 
 export function responsePromise(ctx: Context, methodDesc: MethodDescriptorProto): Code {

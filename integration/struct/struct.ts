@@ -14,7 +14,7 @@ const baseStructMessage: object = {};
 export const StructMessage = {
   encode(message: StructMessage, writer: Writer = Writer.create()): Writer {
     if (message.value !== undefined) {
-      Struct.encode(wrapStruct(message.value), writer.uint32(10).fork()).ldelim();
+      Struct.encode(Struct.wrap(message.value), writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
@@ -27,7 +27,7 @@ export const StructMessage = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.value = unwrapStruct(Struct.decode(reader, reader.uint32()));
+          message.value = Struct.unwrap(Struct.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -72,20 +72,4 @@ export type DeepPartial<T> = T extends Builtin
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
-}
-
-function wrapStruct(object: { [key: string]: any }): Struct {
-  const struct = Struct.fromPartial({});
-  Object.keys(object).forEach((key) => {
-    struct.fields[key] = object[key];
-  });
-  return struct;
-}
-
-function unwrapStruct(struct: Struct): { [key: string]: any } {
-  const object: { [key: string]: any } = {};
-  Object.keys(struct.fields).forEach((key) => {
-    object[key] = struct.fields[key];
-  });
-  return object;
 }
