@@ -18,8 +18,10 @@
 
 INTEGRATION_DIR=$(realpath $(dirname "$BASH_SOURCE"))
 
-# Run the code generator in parallel, with one process per core.
-N=$(nproc)
+# Run the code generator in parallel. Note this is purposefully pinned to 5 because
+# CI only has 2 cores, but we can go faster than that, and for me locally using all
+# 16 cores is overly taxes the machine/kicks on fans/etc. 5 is a good balance.
+N=5
 
 echo "Generating typescript code for integration tests using ${N} cores..."
 
@@ -28,6 +30,7 @@ if [ -n "${1}" ]; then
   dir="${@}"
 fi
 
+cd $INTEGRATION_DIR
 list=$(find $dir -name "*.bin" -type f | grep -v dump-response.bin)
 
 for file in $list; do
@@ -42,7 +45,7 @@ for file in $list; do
   fi
 
   ((i=i%N)); ((i++==0)) && wait
-  "${INTEGRATION_DIR}/../node_modules/.bin/ts-node" "${INTEGRATION_DIR}/codegen.ts" "${dir}" "${file}" "${params}" &
+  "../node_modules/.bin/ts-node" "./codegen.ts" "${dir}" "${file}" "${params}" &
 done
 
 wait
