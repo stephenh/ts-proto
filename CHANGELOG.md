@@ -1,3 +1,10 @@
+# [1.92.0](https://github.com/stephenh/ts-proto/compare/v1.91.0...v1.92.0) (2021-11-28)
+
+
+### Features
+
+* Use exact types for fromPartial ([#412](https://github.com/stephenh/ts-proto/issues/412)) ([808f8a7](https://github.com/stephenh/ts-proto/commit/808f8a7a77d56f65dd4a4643dd66158f106ab755)), closes [#156](https://github.com/stephenh/ts-proto/issues/156)
+
 # [1.91.0](https://github.com/stephenh/ts-proto/compare/v1.90.1...v1.91.0) (2021-11-27)
 
 
