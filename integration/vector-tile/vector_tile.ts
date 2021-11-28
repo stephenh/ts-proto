@@ -123,9 +123,9 @@ export const Tile = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<Tile>): Tile {
+  fromPartial<I extends Exact<DeepPartial<Tile>, I>>(object: I): Tile {
     const message = { ...baseTile } as Tile;
-    message.layers = (object.layers ?? []).map((e) => Tile_Layer.fromPartial(e));
+    message.layers = object.layers?.map((e) => Tile_Layer.fromPartial(e)) || [];
     return message;
   },
 };
@@ -228,7 +228,7 @@ export const Tile_Value = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<Tile_Value>): Tile_Value {
+  fromPartial<I extends Exact<DeepPartial<Tile_Value>, I>>(object: I): Tile_Value {
     const message = { ...baseTile_Value } as Tile_Value;
     message.stringValue = object.stringValue ?? '';
     message.floatValue = object.floatValue ?? 0;
@@ -333,12 +333,12 @@ export const Tile_Feature = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<Tile_Feature>): Tile_Feature {
+  fromPartial<I extends Exact<DeepPartial<Tile_Feature>, I>>(object: I): Tile_Feature {
     const message = { ...baseTile_Feature } as Tile_Feature;
     message.id = object.id ?? 0;
-    message.tags = (object.tags ?? []).map((e) => e);
+    message.tags = object.tags?.map((e) => e) || [];
     message.type = object.type ?? 0;
-    message.geometry = (object.geometry ?? []).map((e) => e);
+    message.geometry = object.geometry?.map((e) => e) || [];
     return message;
   },
 };
@@ -438,13 +438,13 @@ export const Tile_Layer = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<Tile_Layer>): Tile_Layer {
+  fromPartial<I extends Exact<DeepPartial<Tile_Layer>, I>>(object: I): Tile_Layer {
     const message = { ...baseTile_Layer } as Tile_Layer;
     message.version = object.version ?? 0;
     message.name = object.name ?? '';
-    message.features = (object.features ?? []).map((e) => Tile_Feature.fromPartial(e));
-    message.keys = (object.keys ?? []).map((e) => e);
-    message.values = (object.values ?? []).map((e) => Tile_Value.fromPartial(e));
+    message.features = object.features?.map((e) => Tile_Feature.fromPartial(e)) || [];
+    message.keys = object.keys?.map((e) => e) || [];
+    message.values = object.values?.map((e) => Tile_Value.fromPartial(e)) || [];
     message.extent = object.extent ?? 0;
     return message;
   },
@@ -462,6 +462,7 @@ var globalThis: any = (() => {
 })();
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
+
 export type DeepPartial<T> = T extends Builtin
   ? T
   : T extends Array<infer U>
@@ -471,6 +472,11 @@ export type DeepPartial<T> = T extends Builtin
   : T extends {}
   ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
+
+type KeysOfUnion<T> = T extends T ? keyof T : never;
+export type Exact<P, I extends P> = P extends Builtin
+  ? P
+  : P & { [K in keyof P]: Exact<P[K], I[K]> } & Record<Exclude<keyof I, KeysOfUnion<P>>, never>;
 
 function longToNumber(long: Long): number {
   if (long.gt(Number.MAX_SAFE_INTEGER)) {

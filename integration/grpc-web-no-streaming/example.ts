@@ -116,7 +116,7 @@ export const DashFlash = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<DashFlash>): DashFlash {
+  fromPartial<I extends Exact<DeepPartial<DashFlash>, I>>(object: I): DashFlash {
     const message = { ...baseDashFlash } as DashFlash;
     message.msg = object.msg ?? '';
     message.type = object.type ?? 0;
@@ -187,14 +187,14 @@ export const DashUserSettingsState = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<DashUserSettingsState>): DashUserSettingsState {
+  fromPartial<I extends Exact<DeepPartial<DashUserSettingsState>, I>>(object: I): DashUserSettingsState {
     const message = { ...baseDashUserSettingsState } as DashUserSettingsState;
     message.email = object.email ?? '';
     message.urls =
       object.urls !== undefined && object.urls !== null
         ? DashUserSettingsState_URLs.fromPartial(object.urls)
         : undefined;
-    message.flashes = (object.flashes ?? []).map((e) => DashFlash.fromPartial(e));
+    message.flashes = object.flashes?.map((e) => DashFlash.fromPartial(e)) || [];
     return message;
   },
 };
@@ -249,7 +249,7 @@ export const DashUserSettingsState_URLs = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<DashUserSettingsState_URLs>): DashUserSettingsState_URLs {
+  fromPartial<I extends Exact<DeepPartial<DashUserSettingsState_URLs>, I>>(object: I): DashUserSettingsState_URLs {
     const message = { ...baseDashUserSettingsState_URLs } as DashUserSettingsState_URLs;
     message.connectGoogle = object.connectGoogle ?? '';
     message.connectGithub = object.connectGithub ?? '';
@@ -289,7 +289,7 @@ export const Empty = {
     return obj;
   },
 
-  fromPartial(_: DeepPartial<Empty>): Empty {
+  fromPartial<I extends Exact<DeepPartial<Empty>, I>>(_: I): Empty {
     const message = { ...baseEmpty } as Empty;
     return message;
   },
@@ -412,6 +412,7 @@ export class GrpcWebImpl {
 }
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
+
 export type DeepPartial<T> = T extends Builtin
   ? T
   : T extends Array<infer U>
@@ -421,6 +422,11 @@ export type DeepPartial<T> = T extends Builtin
   : T extends {}
   ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
+
+type KeysOfUnion<T> = T extends T ? keyof T : never;
+export type Exact<P, I extends P> = P extends Builtin
+  ? P
+  : P & { [K in keyof P]: Exact<P[K], I[K]> } & Record<Exclude<keyof I, KeysOfUnion<P>>, never>;
 
 // If you get a compile-error about 'Constructor<Long> and ... have no overlap',
 // add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.

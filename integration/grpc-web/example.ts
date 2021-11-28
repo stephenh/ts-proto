@@ -142,7 +142,7 @@ export const DashFlash = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<DashFlash>): DashFlash {
+  fromPartial<I extends Exact<DeepPartial<DashFlash>, I>>(object: I): DashFlash {
     const message = { ...baseDashFlash } as DashFlash;
     message.msg = object.msg ?? '';
     message.type = object.type ?? 0;
@@ -213,14 +213,14 @@ export const DashUserSettingsState = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<DashUserSettingsState>): DashUserSettingsState {
+  fromPartial<I extends Exact<DeepPartial<DashUserSettingsState>, I>>(object: I): DashUserSettingsState {
     const message = { ...baseDashUserSettingsState } as DashUserSettingsState;
     message.email = object.email ?? '';
     message.urls =
       object.urls !== undefined && object.urls !== null
         ? DashUserSettingsState_URLs.fromPartial(object.urls)
         : undefined;
-    message.flashes = (object.flashes ?? []).map((e) => DashFlash.fromPartial(e));
+    message.flashes = object.flashes?.map((e) => DashFlash.fromPartial(e)) || [];
     return message;
   },
 };
@@ -275,7 +275,7 @@ export const DashUserSettingsState_URLs = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<DashUserSettingsState_URLs>): DashUserSettingsState_URLs {
+  fromPartial<I extends Exact<DeepPartial<DashUserSettingsState_URLs>, I>>(object: I): DashUserSettingsState_URLs {
     const message = { ...baseDashUserSettingsState_URLs } as DashUserSettingsState_URLs;
     message.connectGoogle = object.connectGoogle ?? '';
     message.connectGithub = object.connectGithub ?? '';
@@ -348,7 +348,7 @@ export const DashCred = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<DashCred>): DashCred {
+  fromPartial<I extends Exact<DeepPartial<DashCred>, I>>(object: I): DashCred {
     const message = { ...baseDashCred } as DashCred;
     message.description = object.description ?? '';
     message.metadata = object.metadata ?? '';
@@ -407,7 +407,7 @@ export const DashAPICredsCreateReq = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<DashAPICredsCreateReq>): DashAPICredsCreateReq {
+  fromPartial<I extends Exact<DeepPartial<DashAPICredsCreateReq>, I>>(object: I): DashAPICredsCreateReq {
     const message = { ...baseDashAPICredsCreateReq } as DashAPICredsCreateReq;
     message.description = object.description ?? '';
     message.metadata = object.metadata ?? '';
@@ -480,7 +480,7 @@ export const DashAPICredsUpdateReq = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<DashAPICredsUpdateReq>): DashAPICredsUpdateReq {
+  fromPartial<I extends Exact<DeepPartial<DashAPICredsUpdateReq>, I>>(object: I): DashAPICredsUpdateReq {
     const message = { ...baseDashAPICredsUpdateReq } as DashAPICredsUpdateReq;
     message.credSid = object.credSid ?? '';
     message.description = object.description ?? '';
@@ -538,7 +538,7 @@ export const DashAPICredsDeleteReq = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<DashAPICredsDeleteReq>): DashAPICredsDeleteReq {
+  fromPartial<I extends Exact<DeepPartial<DashAPICredsDeleteReq>, I>>(object: I): DashAPICredsDeleteReq {
     const message = { ...baseDashAPICredsDeleteReq } as DashAPICredsDeleteReq;
     message.credSid = object.credSid ?? '';
     message.id = object.id ?? '';
@@ -578,7 +578,7 @@ export const Empty = {
     return obj;
   },
 
-  fromPartial(_: DeepPartial<Empty>): Empty {
+  fromPartial<I extends Exact<DeepPartial<Empty>, I>>(_: I): Empty {
     const message = { ...baseEmpty } as Empty;
     return message;
   },
@@ -872,6 +872,7 @@ export class GrpcWebImpl {
 }
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
+
 export type DeepPartial<T> = T extends Builtin
   ? T
   : T extends Array<infer U>
@@ -881,6 +882,11 @@ export type DeepPartial<T> = T extends Builtin
   : T extends {}
   ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
+
+type KeysOfUnion<T> = T extends T ? keyof T : never;
+export type Exact<P, I extends P> = P extends Builtin
+  ? P
+  : P & { [K in keyof P]: Exact<P[K], I[K]> } & Record<Exclude<keyof I, KeysOfUnion<P>>, never>;
 
 // If you get a compile-error about 'Constructor<Long> and ... have no overlap',
 // add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.

@@ -378,17 +378,17 @@ export const Simple = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<Simple>): Simple {
+  fromPartial<I extends Exact<DeepPartial<Simple>, I>>(object: I): Simple {
     const message = { ...baseSimple } as Simple;
     message.name = object.name ?? '';
     message.age = object.age ?? 0;
     message.createdAt = object.createdAt ?? undefined;
     message.child = object.child !== undefined && object.child !== null ? Child.fromPartial(object.child) : undefined;
     message.state = object.state ?? 0;
-    message.grandChildren = (object.grandChildren ?? []).map((e) => Child.fromPartial(e));
-    message.coins = (object.coins ?? []).map((e) => e);
-    message.snacks = (object.snacks ?? []).map((e) => e);
-    message.oldStates = (object.oldStates ?? []).map((e) => e);
+    message.grandChildren = object.grandChildren?.map((e) => Child.fromPartial(e)) || [];
+    message.coins = object.coins?.map((e) => e) || [];
+    message.snacks = object.snacks?.map((e) => e) || [];
+    message.oldStates = object.oldStates?.map((e) => e) || [];
     message.thing =
       object.thing !== undefined && object.thing !== null ? ImportedThing.fromPartial(object.thing) : undefined;
     return message;
@@ -443,7 +443,7 @@ export const Child = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<Child>): Child {
+  fromPartial<I extends Exact<DeepPartial<Child>, I>>(object: I): Child {
     const message = { ...baseChild } as Child;
     message.name = object.name ?? '';
     message.type = object.type ?? 0;
@@ -511,7 +511,7 @@ export const Nested = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<Nested>): Nested {
+  fromPartial<I extends Exact<DeepPartial<Nested>, I>>(object: I): Nested {
     const message = { ...baseNested } as Nested;
     message.name = object.name ?? '';
     message.message =
@@ -575,7 +575,7 @@ export const Nested_InnerMessage = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<Nested_InnerMessage>): Nested_InnerMessage {
+  fromPartial<I extends Exact<DeepPartial<Nested_InnerMessage>, I>>(object: I): Nested_InnerMessage {
     const message = { ...baseNested_InnerMessage } as Nested_InnerMessage;
     message.name = object.name ?? '';
     message.deep =
@@ -626,7 +626,9 @@ export const Nested_InnerMessage_DeepMessage = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<Nested_InnerMessage_DeepMessage>): Nested_InnerMessage_DeepMessage {
+  fromPartial<I extends Exact<DeepPartial<Nested_InnerMessage_DeepMessage>, I>>(
+    object: I
+  ): Nested_InnerMessage_DeepMessage {
     const message = { ...baseNested_InnerMessage_DeepMessage } as Nested_InnerMessage_DeepMessage;
     message.name = object.name ?? '';
     return message;
@@ -681,7 +683,7 @@ export const OneOfMessage = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<OneOfMessage>): OneOfMessage {
+  fromPartial<I extends Exact<DeepPartial<OneOfMessage>, I>>(object: I): OneOfMessage {
     const message = { ...baseOneOfMessage } as OneOfMessage;
     message.first = object.first ?? undefined;
     message.last = object.last ?? undefined;
@@ -771,13 +773,13 @@ export const SimpleWithWrappers = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<SimpleWithWrappers>): SimpleWithWrappers {
+  fromPartial<I extends Exact<DeepPartial<SimpleWithWrappers>, I>>(object: I): SimpleWithWrappers {
     const message = { ...baseSimpleWithWrappers } as SimpleWithWrappers;
     message.name = object.name ?? undefined;
     message.age = object.age ?? undefined;
     message.enabled = object.enabled ?? undefined;
-    message.coins = (object.coins ?? []).map((e) => e);
-    message.snacks = (object.snacks ?? []).map((e) => e);
+    message.coins = object.coins?.map((e) => e) || [];
+    message.snacks = object.snacks?.map((e) => e) || [];
     return message;
   },
 };
@@ -822,7 +824,7 @@ export const Entity = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<Entity>): Entity {
+  fromPartial<I extends Exact<DeepPartial<Entity>, I>>(object: I): Entity {
     const message = { ...baseEntity } as Entity;
     message.id = object.id ?? 0;
     return message;
@@ -930,7 +932,7 @@ export const SimpleWithMap = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<SimpleWithMap>): SimpleWithMap {
+  fromPartial<I extends Exact<DeepPartial<SimpleWithMap>, I>>(object: I): SimpleWithMap {
     const message = { ...baseSimpleWithMap } as SimpleWithMap;
     message.entitiesById = Object.entries(object.entitiesById ?? {}).reduce<{ [key: number]: Entity }>(
       (acc, [key, value]) => {
@@ -1011,7 +1013,9 @@ export const SimpleWithMap_EntitiesByIdEntry = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<SimpleWithMap_EntitiesByIdEntry>): SimpleWithMap_EntitiesByIdEntry {
+  fromPartial<I extends Exact<DeepPartial<SimpleWithMap_EntitiesByIdEntry>, I>>(
+    object: I
+  ): SimpleWithMap_EntitiesByIdEntry {
     const message = { ...baseSimpleWithMap_EntitiesByIdEntry } as SimpleWithMap_EntitiesByIdEntry;
     message.key = object.key ?? 0;
     message.value = object.value !== undefined && object.value !== null ? Entity.fromPartial(object.value) : undefined;
@@ -1067,7 +1071,9 @@ export const SimpleWithMap_NameLookupEntry = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<SimpleWithMap_NameLookupEntry>): SimpleWithMap_NameLookupEntry {
+  fromPartial<I extends Exact<DeepPartial<SimpleWithMap_NameLookupEntry>, I>>(
+    object: I
+  ): SimpleWithMap_NameLookupEntry {
     const message = { ...baseSimpleWithMap_NameLookupEntry } as SimpleWithMap_NameLookupEntry;
     message.key = object.key ?? '';
     message.value = object.value ?? '';
@@ -1123,7 +1129,7 @@ export const SimpleWithMap_IntLookupEntry = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<SimpleWithMap_IntLookupEntry>): SimpleWithMap_IntLookupEntry {
+  fromPartial<I extends Exact<DeepPartial<SimpleWithMap_IntLookupEntry>, I>>(object: I): SimpleWithMap_IntLookupEntry {
     const message = { ...baseSimpleWithMap_IntLookupEntry } as SimpleWithMap_IntLookupEntry;
     message.key = object.key ?? 0;
     message.value = object.value ?? 0;
@@ -1186,7 +1192,7 @@ export const SimpleWithSnakeCaseMap = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<SimpleWithSnakeCaseMap>): SimpleWithSnakeCaseMap {
+  fromPartial<I extends Exact<DeepPartial<SimpleWithSnakeCaseMap>, I>>(object: I): SimpleWithSnakeCaseMap {
     const message = { ...baseSimpleWithSnakeCaseMap } as SimpleWithSnakeCaseMap;
     message.entitiesById = Object.entries(object.entitiesById ?? {}).reduce<{ [key: number]: Entity }>(
       (acc, [key, value]) => {
@@ -1249,7 +1255,9 @@ export const SimpleWithSnakeCaseMap_EntitiesByIdEntry = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<SimpleWithSnakeCaseMap_EntitiesByIdEntry>): SimpleWithSnakeCaseMap_EntitiesByIdEntry {
+  fromPartial<I extends Exact<DeepPartial<SimpleWithSnakeCaseMap_EntitiesByIdEntry>, I>>(
+    object: I
+  ): SimpleWithSnakeCaseMap_EntitiesByIdEntry {
     const message = { ...baseSimpleWithSnakeCaseMap_EntitiesByIdEntry } as SimpleWithSnakeCaseMap_EntitiesByIdEntry;
     message.key = object.key ?? 0;
     message.value = object.value !== undefined && object.value !== null ? Entity.fromPartial(object.value) : undefined;
@@ -1297,7 +1305,7 @@ export const PingRequest = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<PingRequest>): PingRequest {
+  fromPartial<I extends Exact<DeepPartial<PingRequest>, I>>(object: I): PingRequest {
     const message = { ...basePingRequest } as PingRequest;
     message.input = object.input ?? '';
     return message;
@@ -1344,7 +1352,7 @@ export const PingResponse = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<PingResponse>): PingResponse {
+  fromPartial<I extends Exact<DeepPartial<PingResponse>, I>>(object: I): PingResponse {
     const message = { ...basePingResponse } as PingResponse;
     message.output = object.output ?? '';
     return message;
@@ -1492,7 +1500,7 @@ export const Numbers = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<Numbers>): Numbers {
+  fromPartial<I extends Exact<DeepPartial<Numbers>, I>>(object: I): Numbers {
     const message = { ...baseNumbers } as Numbers;
     message.double = object.double ?? 0;
     message.float = object.float ?? 0;
@@ -1543,6 +1551,7 @@ var globalThis: any = (() => {
 })();
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
+
 export type DeepPartial<T> = T extends Builtin
   ? T
   : T extends Array<infer U>
@@ -1552,6 +1561,11 @@ export type DeepPartial<T> = T extends Builtin
   : T extends {}
   ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
+
+type KeysOfUnion<T> = T extends T ? keyof T : never;
+export type Exact<P, I extends P> = P extends Builtin
+  ? P
+  : P & { [K in keyof P]: Exact<P[K], I[K]> } & Record<Exclude<keyof I, KeysOfUnion<P>>, never>;
 
 function toTimestamp(date: Date): Timestamp {
   const seconds = date.getTime() / 1_000;

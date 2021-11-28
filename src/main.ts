@@ -417,14 +417,31 @@ function makeDeepPartial(options: Options, longs: ReturnType<typeof makeLongUtil
   // Allow passing longs as numbers or strings, nad we'll convert them
   const maybeLong =
     options.forceLong === LongOption.LONG ? code` : T extends ${longs.Long} ? string | number | Long ` : '';
-  const keys = options.outputTypeRegistry ? code`Exclude<keyof T, '$type'>` : code`keyof T`;
+
+  const Builtin = conditionalOutput(
+    'Builtin',
+    code`type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;`
+  );
+
+  // Based on https://github.com/sindresorhus/type-fest/pull/259
+  const maybeExcludeType = options.outputTypeRegistry ? `| '$type'` : '';
+  const Exact = conditionalOutput(
+    'Exact',
+    code`
+      type KeysOfUnion<T> = T extends T ? keyof T : never;
+      ${maybeExport} type Exact<P, I extends P> = P extends ${Builtin}
+        ? P
+        : P &
+        { [K in keyof P]: Exact<P[K], I[K]> } & Record<Exclude<keyof I, KeysOfUnion<P> ${maybeExcludeType}>, never>;
+    `
+  );
 
   // Based on the type from ts-essentials
+  const keys = options.outputTypeRegistry ? code`Exclude<keyof T, '$type'>` : code`keyof T`;
   const DeepPartial = conditionalOutput(
     'DeepPartial',
     code`
-      type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
-      ${maybeExport} type DeepPartial<T> =  T extends Builtin
+      ${maybeExport} type DeepPartial<T> =  T extends ${Builtin}
         ? T
         ${maybeLong}
         : T extends Array<infer U>
@@ -437,7 +454,7 @@ function makeDeepPartial(options: Options, longs: ReturnType<typeof makeLongUtil
     `
   );
 
-  return { DeepPartial };
+  return { Builtin, DeepPartial, Exact };
 }
 
 function makeTimestampMethods(options: Options, longs: ReturnType<typeof makeLongUtils>) {
@@ -1187,8 +1204,9 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
   const Timestamp = imp('Timestamp@./google/protobuf/timestamp');
 
   // create the basic function declaration
+  const paramName = messageDesc.field.length > 0 ? 'object' : '_';
   chunks.push(code`
-    fromPartial(${messageDesc.field.length > 0 ? 'object' : '_'}: ${utils.DeepPartial}<${fullName}>): ${fullName} {
+    fromPartial<I extends ${utils.Exact}<${utils.DeepPartial}<${fullName}>, I>>(${paramName}: I): ${fullName} {
       const message = { ...base${fullName} } as ${fullName};
   `);
 
@@ -1258,7 +1276,7 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
         `);
       } else {
         chunks.push(code`
-          message.${fieldName} = (object.${fieldName} ?? []).map((e) => ${readSnippet('e')});
+          message.${fieldName} = object.${fieldName}?.map((e) => ${readSnippet('e')}) || [];
         `);
       }
     } else if (isWithinOneOfThatShouldBeUnion(options, field)) {

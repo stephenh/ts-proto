@@ -320,6 +320,13 @@ describe('simple', () => {
     `);
   });
 
+  it('has fromPartial uses exact types', () => {
+    const s1 = Simple.fromPartial({
+      // @ts-expect-error
+      grandChildren: ['a', 'b'].map((name) => ({ name, typ: null })),
+    });
+  });
+
   it('can fromPartial on maps with falsey values', () => {
     const s1 = SimpleWithMap.fromPartial({
       intLookup: { 1: 2, 2: 0 },

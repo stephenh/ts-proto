@@ -54,7 +54,7 @@ export const ProduceRequest = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<ProduceRequest>): ProduceRequest {
+  fromPartial<I extends Exact<DeepPartial<ProduceRequest>, I>>(object: I): ProduceRequest {
     const message = { ...baseProduceRequest } as ProduceRequest;
     message.ingredients = object.ingredients ?? '';
     return message;
@@ -101,7 +101,7 @@ export const ProduceReply = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<ProduceReply>): ProduceReply {
+  fromPartial<I extends Exact<DeepPartial<ProduceReply>, I>>(object: I): ProduceReply {
     const message = { ...baseProduceReply } as ProduceReply;
     message.result = object.result ?? '';
     return message;
@@ -113,6 +113,7 @@ export interface Factory {
 }
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
+
 export type DeepPartial<T> = T extends Builtin
   ? T
   : T extends Array<infer U>
@@ -122,6 +123,11 @@ export type DeepPartial<T> = T extends Builtin
   : T extends {}
   ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
+
+type KeysOfUnion<T> = T extends T ? keyof T : never;
+export type Exact<P, I extends P> = P extends Builtin
+  ? P
+  : P & { [K in keyof P]: Exact<P[K], I[K]> } & Record<Exclude<keyof I, KeysOfUnion<P>>, never>;
 
 // If you get a compile-error about 'Constructor<Long> and ... have no overlap',
 // add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.

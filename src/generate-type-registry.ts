@@ -17,7 +17,7 @@ export function generateTypeRegistry(ctx: Context): Code {
     export const messageTypeRegistry = new Map<string, MessageType>();
   `);
 
-  chunks.push(code`${ctx.utils.DeepPartial.ifUsed}`);
+  chunks.push(code` ${ctx.utils.Builtin.ifUsed} ${ctx.utils.DeepPartial.ifUsed}`);
 
   return joinCode(chunks, { on: '\n\n' });
 }

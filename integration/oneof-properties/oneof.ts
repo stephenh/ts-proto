@@ -201,7 +201,7 @@ export const PleaseChoose = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<PleaseChoose>): PleaseChoose {
+  fromPartial<I extends Exact<DeepPartial<PleaseChoose>, I>>(object: I): PleaseChoose {
     const message = { ...basePleaseChoose } as PleaseChoose;
     message.name = object.name ?? '';
     message.aNumber = object.aNumber ?? undefined;
@@ -261,7 +261,7 @@ export const PleaseChoose_Submessage = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<PleaseChoose_Submessage>): PleaseChoose_Submessage {
+  fromPartial<I extends Exact<DeepPartial<PleaseChoose_Submessage>, I>>(object: I): PleaseChoose_Submessage {
     const message = { ...basePleaseChoose_Submessage } as PleaseChoose_Submessage;
     message.name = object.name ?? '';
     return message;
@@ -301,6 +301,7 @@ function base64FromBytes(arr: Uint8Array): string {
 }
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
+
 export type DeepPartial<T> = T extends Builtin
   ? T
   : T extends Array<infer U>
@@ -310,6 +311,11 @@ export type DeepPartial<T> = T extends Builtin
   : T extends {}
   ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
+
+type KeysOfUnion<T> = T extends T ? keyof T : never;
+export type Exact<P, I extends P> = P extends Builtin
+  ? P
+  : P & { [K in keyof P]: Exact<P[K], I[K]> } & Record<Exclude<keyof I, KeysOfUnion<P>>, never>;
 
 // If you get a compile-error about 'Constructor<Long> and ... have no overlap',
 // add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.

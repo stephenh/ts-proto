@@ -114,11 +114,11 @@ export const Todo = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<Todo>): Todo {
+  fromPartial<I extends Exact<DeepPartial<Todo>, I>>(object: I): Todo {
     const message = { ...baseTodo } as Todo;
     message.id = object.id ?? '';
     message.timestamp = object.timestamp ?? undefined;
-    message.repeatedTimestamp = (object.repeatedTimestamp ?? []).map((e) => e);
+    message.repeatedTimestamp = object.repeatedTimestamp?.map((e) => e) || [];
     message.optionalTimestamp = object.optionalTimestamp ?? undefined;
     message.mapOfTimestamps = Object.entries(object.mapOfTimestamps ?? {}).reduce<{ [key: string]: string }>(
       (acc, [key, value]) => {
@@ -181,7 +181,7 @@ export const Todo_MapOfTimestampsEntry = {
     return obj;
   },
 
-  fromPartial(object: DeepPartial<Todo_MapOfTimestampsEntry>): Todo_MapOfTimestampsEntry {
+  fromPartial<I extends Exact<DeepPartial<Todo_MapOfTimestampsEntry>, I>>(object: I): Todo_MapOfTimestampsEntry {
     const message = { ...baseTodo_MapOfTimestampsEntry } as Todo_MapOfTimestampsEntry;
     message.key = object.key ?? '';
     message.value = object.value ?? undefined;
@@ -190,6 +190,7 @@ export const Todo_MapOfTimestampsEntry = {
 };
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
+
 export type DeepPartial<T> = T extends Builtin
   ? T
   : T extends Array<infer U>
@@ -199,6 +200,11 @@ export type DeepPartial<T> = T extends Builtin
   : T extends {}
   ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
+
+type KeysOfUnion<T> = T extends T ? keyof T : never;
+export type Exact<P, I extends P> = P extends Builtin
+  ? P
+  : P & { [K in keyof P]: Exact<P[K], I[K]> } & Record<Exclude<keyof I, KeysOfUnion<P>>, never>;
 
 function toTimestamp(dateStr: string): Timestamp {
   const date = new Date(dateStr);
