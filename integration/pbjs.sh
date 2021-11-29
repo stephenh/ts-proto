@@ -60,3 +60,7 @@ yarn pbts --no-comments -o integration/struct/pbjs.d.ts integration/struct/pbjs.
 # value/
 yarn pbjs --force-message --force-number -t static-module -o integration/value/pbjs.js integration/value/value.proto
 yarn pbts --no-comments -o integration/value/pbjs.d.ts integration/value/pbjs.js
+
+# value/
+yarn pbjs --force-message --force-number -t static-module -o integration/nullvalue/pbjs.js integration/nullvalue/nullvalue.proto
+yarn pbts --no-comments -o integration/nullvalue/pbjs.d.ts integration/nullvalue/pbjs.js

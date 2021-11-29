@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+import "google/protobuf/struct.proto";
+
+message ValueMessage {
+  google.protobuf.NullValue nullValue = 1;
+}

@@ -334,7 +334,7 @@ export const Value = {
 
   wrap(value: any): Value {
     if (value === null) {
-      return { nullValue: 0 } as Value;
+      return { nullValue: NullValue.NULL_VALUE } as Value;
     } else if (typeof value === 'boolean') {
       return { boolValue: value } as Value;
     } else if (typeof value === 'number') {
