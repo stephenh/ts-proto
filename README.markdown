@@ -26,7 +26,7 @@
 - [Well-Known Types](#well-known-types)
   - [Wrapper Types](#wrapper-types)
   - [JSON Types (Struct Types)](#json-types-struct-types)
-  - [Timestamps](#timestamp)
+  - [Timestamp](#timestamp)
 - [Wrapper Types](#wrapper-types)
 - [Number Types](#number-types)
 - [Current Status of Optional Values](#current-status-of-optional-values)
@@ -329,7 +329,7 @@ Generated code will be placed in the Gradle build directory.
 
   Note that `addGrpcMetadata`, `addNestjsRestParameter` and `returnObservable` will still be false.
 
-- With `--ts_proto_opt=useDate=false`, fields of type `google.protobuf.Timestamp` will not be mapped to type `Date` in the generated types. See [Timestamps](#timestamps) for more details.
+- With `--ts_proto_opt=useDate=false`, fields of type `google.protobuf.Timestamp` will not be mapped to type `Date` in the generated types. See [Timestamp](#timestamp) for more details.
 
 - With `--ts_proto_opt=outputSchema=true`, meta typings will be generated that can later be used in other code generators.
 
