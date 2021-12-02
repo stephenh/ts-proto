@@ -1,6 +1,7 @@
 /* eslint-disable */
 import { util, configure, Writer, Reader } from 'protobufjs/minimal';
 import * as Long from 'long';
+import { NullValue, nullValueToNumber, nullValueFromJSON, nullValueToJSON } from './google/protobuf/struct';
 
 export const protobufPackage = 'simple';
 
@@ -59,9 +60,15 @@ export interface Simple {
   name: string;
   state: StateEnum;
   states: StateEnum[];
+  nullValue: NullValue;
 }
 
-const baseSimple: object = { name: '', state: StateEnum.UNKNOWN, states: StateEnum.UNKNOWN };
+const baseSimple: object = {
+  name: '',
+  state: StateEnum.UNKNOWN,
+  states: StateEnum.UNKNOWN,
+  nullValue: NullValue.NULL_VALUE,
+};
 
 export const Simple = {
   encode(message: Simple, writer: Writer = Writer.create()): Writer {
@@ -76,6 +83,9 @@ export const Simple = {
       writer.int32(stateEnumToNumber(v));
     }
     writer.ldelim();
+    if (message.nullValue !== NullValue.NULL_VALUE) {
+      writer.uint32(48).int32(nullValueToNumber(message.nullValue));
+    }
     return writer;
   },
 
@@ -103,6 +113,9 @@ export const Simple = {
             message.states.push(stateEnumFromJSON(reader.int32()));
           }
           break;
+        case 6:
+          message.nullValue = nullValueFromJSON(reader.int32());
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -117,6 +130,10 @@ export const Simple = {
     message.state =
       object.state !== undefined && object.state !== null ? stateEnumFromJSON(object.state) : StateEnum.UNKNOWN;
     message.states = (object.states ?? []).map((e: any) => stateEnumFromJSON(e));
+    message.nullValue =
+      object.nullValue !== undefined && object.nullValue !== null
+        ? nullValueFromJSON(object.nullValue)
+        : NullValue.NULL_VALUE;
     return message;
   },
 
@@ -129,6 +146,7 @@ export const Simple = {
     } else {
       obj.states = [];
     }
+    message.nullValue !== undefined && (obj.nullValue = nullValueToJSON(message.nullValue));
     return obj;
   },
 
@@ -137,6 +155,7 @@ export const Simple = {
     message.name = object.name ?? '';
     message.state = object.state ?? StateEnum.UNKNOWN;
     message.states = object.states?.map((e) => e) || [];
+    message.nullValue = object.nullValue ?? NullValue.NULL_VALUE;
     return message;
   },
 };
