@@ -1,3 +1,10 @@
+## [1.92.1](https://github.com/stephenh/ts-proto/compare/v1.92.0...v1.92.1) (2021-12-02)
+
+
+### Bug Fixes
+
+* Respect stringEnums option in wrap function ([#420](https://github.com/stephenh/ts-proto/issues/420)) ([7adf90c](https://github.com/stephenh/ts-proto/commit/7adf90c23c46950bcf457b317764393ff4af2bf2))
+
 # [1.92.0](https://github.com/stephenh/ts-proto/compare/v1.91.0...v1.92.0) (2021-11-28)
 
 
