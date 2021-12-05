@@ -30,7 +30,7 @@ export enum ServiceOption {
 
 export type Options = {
   context: boolean;
-  snakeToCamel: boolean;
+  snakeToCamel: boolean | string;
   forceLong: LongOption;
   useOptionals: boolean;
   useDate: DateOption;

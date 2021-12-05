@@ -344,13 +344,13 @@ export const Simple = {
     message.name = object.name !== undefined && object.name !== null ? String(object.name) : '';
     message.age = object.age !== undefined && object.age !== null ? Number(object.age) : 0;
     message.created_at =
-      object.createdAt !== undefined && object.createdAt !== null ? fromJsonTimestamp(object.createdAt) : undefined;
+      object.created_at !== undefined && object.created_at !== null ? fromJsonTimestamp(object.created_at) : undefined;
     message.child = object.child !== undefined && object.child !== null ? Child.fromJSON(object.child) : undefined;
     message.state = object.state !== undefined && object.state !== null ? stateEnumFromJSON(object.state) : 0;
-    message.grand_children = (object.grandChildren ?? []).map((e: any) => Child.fromJSON(e));
+    message.grand_children = (object.grand_children ?? []).map((e: any) => Child.fromJSON(e));
     message.coins = (object.coins ?? []).map((e: any) => Number(e));
     message.snacks = (object.snacks ?? []).map((e: any) => String(e));
-    message.old_states = (object.oldStates ?? []).map((e: any) => stateEnumFromJSON(e));
+    message.old_states = (object.old_states ?? []).map((e: any) => stateEnumFromJSON(e));
     message.thing =
       object.thing !== undefined && object.thing !== null ? ImportedThing.fromJSON(object.thing) : undefined;
     return message;
@@ -360,13 +360,13 @@ export const Simple = {
     const obj: any = {};
     message.name !== undefined && (obj.name = message.name);
     message.age !== undefined && (obj.age = message.age);
-    message.created_at !== undefined && (obj.createdAt = message.created_at.toISOString());
+    message.created_at !== undefined && (obj.created_at = message.created_at.toISOString());
     message.child !== undefined && (obj.child = message.child ? Child.toJSON(message.child) : undefined);
     message.state !== undefined && (obj.state = stateEnumToJSON(message.state));
     if (message.grand_children) {
-      obj.grandChildren = message.grand_children.map((e) => (e ? Child.toJSON(e) : undefined));
+      obj.grand_children = message.grand_children.map((e) => (e ? Child.toJSON(e) : undefined));
     } else {
-      obj.grandChildren = [];
+      obj.grand_children = [];
     }
     if (message.coins) {
       obj.coins = message.coins.map((e) => e);
@@ -379,9 +379,9 @@ export const Simple = {
       obj.snacks = [];
     }
     if (message.old_states) {
-      obj.oldStates = message.old_states.map((e) => stateEnumToJSON(e));
+      obj.old_states = message.old_states.map((e) => stateEnumToJSON(e));
     } else {
-      obj.oldStates = [];
+      obj.old_states = [];
     }
     message.thing !== undefined && (obj.thing = message.thing ? ImportedThing.toJSON(message.thing) : undefined);
     return obj;
@@ -894,21 +894,21 @@ export const SimpleWithMap = {
 
   fromJSON(object: any): SimpleWithMap {
     const message = { ...baseSimpleWithMap } as SimpleWithMap;
-    message.entitiesById = Object.entries(object.entitiesById ?? {}).reduce<{ [key: number]: Entity }>(
+    message.entitiesById = Object.entries(object.entities_by_id ?? {}).reduce<{ [key: number]: Entity }>(
       (acc, [key, value]) => {
         acc[Number(key)] = Entity.fromJSON(value);
         return acc;
       },
       {}
     );
-    message.nameLookup = Object.entries(object.nameLookup ?? {}).reduce<{ [key: string]: string }>(
+    message.nameLookup = Object.entries(object.name_lookup ?? {}).reduce<{ [key: string]: string }>(
       (acc, [key, value]) => {
         acc[key] = String(value);
         return acc;
       },
       {}
     );
-    message.intLookup = Object.entries(object.intLookup ?? {}).reduce<{ [key: number]: number }>(
+    message.intLookup = Object.entries(object.int_lookup ?? {}).reduce<{ [key: number]: number }>(
       (acc, [key, value]) => {
         acc[Number(key)] = Number(value);
         return acc;
@@ -920,22 +920,22 @@ export const SimpleWithMap = {
 
   toJSON(message: SimpleWithMap): unknown {
     const obj: any = {};
-    obj.entitiesById = {};
+    obj.entities_by_id = {};
     if (message.entitiesById) {
       Object.entries(message.entitiesById).forEach(([k, v]) => {
-        obj.entitiesById[k] = Entity.toJSON(v);
+        obj.entities_by_id[k] = Entity.toJSON(v);
       });
     }
-    obj.nameLookup = {};
+    obj.name_lookup = {};
     if (message.nameLookup) {
       Object.entries(message.nameLookup).forEach(([k, v]) => {
-        obj.nameLookup[k] = v;
+        obj.name_lookup[k] = v;
       });
     }
-    obj.intLookup = {};
+    obj.int_lookup = {};
     if (message.intLookup) {
       Object.entries(message.intLookup).forEach(([k, v]) => {
-        obj.intLookup[k] = v;
+        obj.int_lookup[k] = v;
       });
     }
     return obj;
@@ -1180,7 +1180,7 @@ export const SimpleWithSnakeCaseMap = {
 
   fromJSON(object: any): SimpleWithSnakeCaseMap {
     const message = { ...baseSimpleWithSnakeCaseMap } as SimpleWithSnakeCaseMap;
-    message.entities_by_id = Object.entries(object.entitiesById ?? {}).reduce<{ [key: number]: Entity }>(
+    message.entities_by_id = Object.entries(object.entities_by_id ?? {}).reduce<{ [key: number]: Entity }>(
       (acc, [key, value]) => {
         acc[Number(key)] = Entity.fromJSON(value);
         return acc;
@@ -1192,10 +1192,10 @@ export const SimpleWithSnakeCaseMap = {
 
   toJSON(message: SimpleWithSnakeCaseMap): unknown {
     const obj: any = {};
-    obj.entitiesById = {};
+    obj.entities_by_id = {};
     if (message.entities_by_id) {
       Object.entries(message.entities_by_id).forEach(([k, v]) => {
-        obj.entitiesById[k] = Entity.toJSON(v);
+        obj.entities_by_id[k] = Entity.toJSON(v);
       });
     }
     return obj;
