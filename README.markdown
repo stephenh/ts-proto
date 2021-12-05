@@ -285,9 +285,7 @@ Generated code will be placed in the Gradle build directory.
 
 - With `--ts_proto_opt=lowerCaseServiceMethods=true`, the method names of service methods will be lowered/camel-case, i.e. `service.findFoo` instead of `service.FindFoo`.
 
-- With `--ts_proto_opt=snakeToCamel=false`, fields will be kept snake case.
-
-  Defaults to `true`.
+- With `--ts_proto_opt=snakeToCamel=false`, fields will be kept snake case. `snakeToCamel` can also be set as string with `--ts_proto_opt=snakeToCamel=keys,json`. `keys` will keep field names as camelCase and `json` will keep json field names as camelCase. Empty string will keep field names as snake_case.
 
 - With `--ts_proto_opt=outputEncodeMethods=false`, the `Message.encode` and `Message.decode` methods for working with protobuf-encoded/binary data will not be output.
 
