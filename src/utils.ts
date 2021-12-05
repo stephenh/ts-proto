@@ -175,14 +175,13 @@ export class FormattedMethodDescriptor implements MethodDescriptorProto {
 }
 
 export function determineFieldJsonName(field: FieldDescriptorProto, options: Options): string {
-  // By default jsonName is camelCased by the protocol compilier unless the user has
-  // set a "json_name" option on this field.
-  const fromStringSnakeToCamel = typeof options.snakeToCamel === 'string' && options.snakeToCamel.includes('json');
-  const fromBooleanSnakeToCamel = options.snakeToCamel === true;
-  if (fromBooleanSnakeToCamel || fromStringSnakeToCamel) {
+  // jsonName will be camelCased by the protocol compiler, plus can be overridden by the user,
+  // so just use that instead of our own maybeSnakeToCamel
+  if (options.snakeToCamel.includes('json')) {
     return field.jsonName;
+  } else {
+    return field.name;
   }
-  return stringToSnakeCase(field.name);
 }
 
 export function impProto(options: Options, module: string, type: string): Import {
