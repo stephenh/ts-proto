@@ -36,6 +36,7 @@ export type Options = {
   useDate: DateOption;
   oneof: OneofOption;
   esModuleInterop: boolean;
+  fileSuffix: string;
   outputEncodeMethods: boolean;
   outputJsonMethods: boolean;
   outputPartialMethods: boolean;
@@ -67,6 +68,7 @@ export function defaultOptions(): Options {
     useDate: DateOption.DATE,
     oneof: OneofOption.PROPERTIES,
     esModuleInterop: false,
+    fileSuffix: '',
     lowerCaseServiceMethods: false,
     outputEncodeMethods: true,
     outputJsonMethods: true,

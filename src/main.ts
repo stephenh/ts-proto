@@ -89,7 +89,8 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
   //
   // We'll also assume that the fileDesc.name is already the `company/foo.proto` path, with
   // the package already implicitly in it, so we won't re-append/strip/etc. it out/back in.
-  const moduleName = fileDesc.name.replace('.proto', '.ts');
+  const suffix = `${options.fileSuffix}.ts`;
+  const moduleName = fileDesc.name.replace('.proto', suffix);
   const chunks: Code[] = [];
 
   // Indicate this file's source protobuf package for reflective use with google.protobuf.Any
@@ -458,7 +459,7 @@ function makeDeepPartial(options: Options, longs: ReturnType<typeof makeLongUtil
 }
 
 function makeTimestampMethods(options: Options, longs: ReturnType<typeof makeLongUtils>) {
-  const Timestamp = imp('Timestamp@./google/protobuf/timestamp');
+  const Timestamp = imp(`Timestamp@./google/protobuf/timestamp${options.fileSuffix}`);
 
   let seconds: string | Code = 'date.getTime() / 1_000';
   let toNumberCode = 't.seconds';
@@ -721,7 +722,7 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
         }
       } else if (isEnum(field)) {
         if (options.stringEnums) {
-          const fromJson = getEnumMethod(typeMap, field.typeName, 'FromJSON');
+          const fromJson = getEnumMethod(ctx, field.typeName, 'FromJSON');
           readSnippet = code`${fromJson}(${readSnippet})`;
         } else {
           readSnippet = code`${readSnippet} as any`;
@@ -820,7 +821,7 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
     let writeSnippet: (place: string) => Code;
     if (isEnum(field) && options.stringEnums) {
       const tag = ((field.number << 3) | basicWireType(field.type)) >>> 0;
-      const toNumber = getEnumMethod(typeMap, field.typeName, 'ToNumber');
+      const toNumber = getEnumMethod(ctx, field.typeName, 'ToNumber');
       writeSnippet = (place) => code`writer.uint32(${tag}).${toReaderCall(field)}(${toNumber}(${place}))`;
     } else if (isScalar(field) || isEnum(field)) {
       const tag = ((field.number << 3) | basicWireType(field.type)) >>> 0;
@@ -879,7 +880,7 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
         // embedded inside of it, and we want to drop that so that we can encode it packed
         // (i.e. just one tag and multiple values).
         const tag = ((field.number << 3) | 2) >>> 0;
-        const toNumber = getEnumMethod(typeMap, field.typeName, 'ToNumber');
+        const toNumber = getEnumMethod(ctx, field.typeName, 'ToNumber');
         chunks.push(code`
           writer.uint32(${tag}).fork();
           for (const v of message.${fieldName}) {
@@ -958,7 +959,7 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
     // get a generic 'reader.doSomething' bit that is specific to the basic type
     const readSnippet = (from: string): Code => {
       if (isEnum(field)) {
-        const fromJson = getEnumMethod(typeMap, field.typeName, 'FromJSON');
+        const fromJson = getEnumMethod(ctx, field.typeName, 'FromJSON');
         return code`${fromJson}(${from})`;
       } else if (isPrimitive(field)) {
         // Convert primitives using the String(value)/Number(value)/bytesFromBase64(value)
@@ -1111,7 +1112,7 @@ function generateToJson(ctx: Context, fullName: string, messageDesc: DescriptorP
 
     const readSnippet = (from: string): Code => {
       if (isEnum(field)) {
-        const toJson = getEnumMethod(typeMap, field.typeName, 'ToJSON');
+        const toJson = getEnumMethod(ctx, field.typeName, 'ToJSON');
         return isWithinOneOf(field)
           ? code`${from} !== undefined ? ${toJson}(${from}) : undefined`
           : code`${toJson}(${from})`;
@@ -1125,7 +1126,7 @@ function generateToJson(ctx: Context, fullName: string, messageDesc: DescriptorP
         // For map types, drill-in and then admittedly re-hard-code our per-value-type logic
         const valueType = (typeMap.get(field.typeName)![2] as DescriptorProto).field[1];
         if (isEnum(valueType)) {
-          const toJson = getEnumMethod(typeMap, valueType.typeName, 'ToJSON');
+          const toJson = getEnumMethod(ctx, valueType.typeName, 'ToJSON');
           return code`${toJson}(${from})`;
         } else if (isBytes(valueType)) {
           return code`${utils.base64FromBytes}(${from})`;
@@ -1201,7 +1202,7 @@ function generateToJson(ctx: Context, fullName: string, messageDesc: DescriptorP
 function generateFromPartial(ctx: Context, fullName: string, messageDesc: DescriptorProto): Code {
   const { options, utils, typeMap } = ctx;
   const chunks: Code[] = [];
-  const Timestamp = imp('Timestamp@./google/protobuf/timestamp');
+  const Timestamp = imp(`Timestamp@./google/protobuf/timestamp${options.fileSuffix}`);
 
   // create the basic function declaration
   const paramName = messageDesc.field.length > 0 ? 'object' : '_';

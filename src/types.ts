@@ -496,7 +496,7 @@ export function messageToTypeName(
     }
   }
   const [module, type] = toModuleAndType(typeMap, protoType);
-  return code`${imp(`${type}@./${module}`)}`;
+  return code`${imp(`${type}@./${module}${options.fileSuffix}`)}`;
 }
 
 /** Breaks `.some_proto_namespace.Some.Message` into `['some_proto_namespace', 'Some_Message', Descriptor]. */
@@ -504,9 +504,10 @@ function toModuleAndType(typeMap: TypeMap, protoType: string): [string, string, 
   return typeMap.get(protoType) || fail(`No type found for ${protoType}`);
 }
 
-export function getEnumMethod(typeMap: TypeMap, enumProtoType: string, methodSuffix: string): Import {
+export function getEnumMethod(ctx: Context, enumProtoType: string, methodSuffix: string): Import {
+  const { options, typeMap } = ctx;
   const [module, type] = toModuleAndType(typeMap, enumProtoType);
-  return imp(`${camelCase(type)}${methodSuffix}@./${module}`);
+  return imp(`${camelCase(type)}${methodSuffix}@./${module}${options.fileSuffix}`);
 }
 
 /** Return the TypeName for any field (primitive/message/etc.) as exposed in the interface. */
