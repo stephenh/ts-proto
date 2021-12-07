@@ -9,25 +9,29 @@
 
 ## Table of contents
 
+- [ts-proto](#ts-proto)
+  - [Table of contents](#table-of-contents)
+- [Overview](#overview)
 - [QuickStart](#quickstart)
 - [Goals](#goals)
 - [Example Types](#example-types)
 - [Highlights](#highlights)
 - [Auto-Batching / N+1 Prevention](#auto-batching--n1-prevention)
 - [Usage](#usage)
-  - [Supported options](#supported-options)
-  - [Only Types](#only-types)
-  - [NestJS Support](NESTJS.markdown)
+    - [Supported options](#supported-options)
+    - [Only Types](#only-types)
+    - [NestJS Support](#nestjs-support)
+    - [Watch Mode](#watch-mode)
+- [Sponsors](#sponsors)
 - [Development](#development)
 - [Assumptions](#assumptions)
 - [Todo](#todo)
 - [OneOf Handling](#oneof-handling)
-- [Default Values and Unset Fields](#default-values-and-unset-fields)
+- [Default values and unset fields](#default-values-and-unset-fields)
 - [Well-Known Types](#well-known-types)
   - [Wrapper Types](#wrapper-types)
   - [JSON Types (Struct Types)](#json-types-struct-types)
   - [Timestamp](#timestamp)
-- [Wrapper Types](#wrapper-types)
 - [Number Types](#number-types)
 - [Current Status of Optional Values](#current-status-of-optional-values)
 
@@ -353,6 +357,15 @@ If you're looking for `ts-proto` to generate only types for your Protobuf types 
 ### NestJS Support
 
 We have a great way of working together with [nestjs](https://docs.nestjs.com/microservices/grpc). `ts-proto` generates `interfaces` and `decorators` for you controller, client. For more information see the [nestjs readme](NESTJS.markdown).
+
+### Watch Mode
+
+If you want to run `ts-proto` on every change of a proto file, you'll need to use a tool like [chokidar-cli](https://www.npmjs.com/package/chokidar-cli) and use it as a script in `package.json`:
+
+```json
+"proto:generate": "protoc --ts_proto_out=. ./<proto_path>/<proto_name>.proto --ts_proto_opt=esModuleInterop=true",
+"proto:watch": "chokidar \"**/*.proto\" -c \"npm run proto:generate\""
+```
 
 # Sponsors
 
