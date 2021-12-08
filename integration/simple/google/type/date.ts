@@ -85,9 +85,9 @@ export const DateMessage = {
 
   toJSON(message: DateMessage): unknown {
     const obj: any = {};
-    message.year !== undefined && (obj.year = message.year);
-    message.month !== undefined && (obj.month = message.month);
-    message.day !== undefined && (obj.day = message.day);
+    message.year !== undefined && (obj.year = Math.round(message.year));
+    message.month !== undefined && (obj.month = Math.round(message.month));
+    message.day !== undefined && (obj.day = Math.round(message.day));
     return obj;
   },
 
