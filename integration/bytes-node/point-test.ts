@@ -2,11 +2,11 @@ import { Point } from './point';
 
 describe('point', () => {
   it('can encode/decode bytes', () => {
-    const p1: Point = {
+    const point: Point = {
       data: Buffer.from('testblob'),
       dataWrapped: Buffer.from('testblob')
     };
-    const pointEncoded = Point.encode(p1).finish();
+    const pointEncoded = Point.encode(point).finish();
     const pointDecoded = Point.decode(pointEncoded);
     const dataDecoded: Buffer = pointDecoded.data;
     const dataDecoded2: Buffer | undefined = pointDecoded.dataWrapped;
