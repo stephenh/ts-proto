@@ -1,3 +1,10 @@
+# [1.93.0](https://github.com/stephenh/ts-proto/compare/v1.92.2...v1.93.0) (2021-12-08)
+
+
+### Features
+
+* Allow optional suffix for generated files ([#431](https://github.com/stephenh/ts-proto/issues/431)) ([d826966](https://github.com/stephenh/ts-proto/commit/d826966f22830920444963b3894ffc0be9b7c319))
+
 ## [1.92.2](https://github.com/stephenh/ts-proto/compare/v1.92.1...v1.92.2) (2021-12-08)
 
 
