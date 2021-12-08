@@ -1,3 +1,10 @@
+## [1.93.1](https://github.com/stephenh/ts-proto/compare/v1.93.0...v1.93.1) (2021-12-08)
+
+
+### Bug Fixes
+
+* Unwrap google.protobuf.BytesValue to Buffer when env=node ([#439](https://github.com/stephenh/ts-proto/issues/439)) ([73aa836](https://github.com/stephenh/ts-proto/commit/73aa8368300818068f3cddc5f046d990c66ab4f2))
+
 # [1.93.0](https://github.com/stephenh/ts-proto/compare/v1.92.2...v1.93.0) (2021-12-08)
 
 
