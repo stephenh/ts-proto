@@ -12,6 +12,7 @@ describe('options', () => {
         "env": "both",
         "esModuleInterop": false,
         "exportCommonSymbols": true,
+        "fileSuffix": "",
         "forceLong": "number",
         "lowerCaseServiceMethods": true,
         "nestJs": true,
@@ -39,6 +40,13 @@ describe('options', () => {
     expect(options).toMatchObject({
       outputClientImpl: 'grpc-web',
       addGrpcMetadata: false,
+    });
+  });
+
+  it('can set fileSuffix', () => {
+    const options = optionsFromParameter('fileSuffix=.pb');
+    expect(options).toMatchObject({
+      fileSuffix: '.pb',
     });
   });
 
