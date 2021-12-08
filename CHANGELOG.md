@@ -1,3 +1,10 @@
+## [1.92.2](https://github.com/stephenh/ts-proto/compare/v1.92.1...v1.92.2) (2021-12-08)
+
+
+### Bug Fixes
+
+* noImplicitReturns error in Value.unwrap ([#436](https://github.com/stephenh/ts-proto/issues/436)) ([2d7a5d0](https://github.com/stephenh/ts-proto/commit/2d7a5d04c72ace58fa3a6745c3857f6cc0468543)), closes [#432](https://github.com/stephenh/ts-proto/issues/432)
+
 ## [1.92.1](https://github.com/stephenh/ts-proto/compare/v1.92.0...v1.92.1) (2021-12-02)
 
 
