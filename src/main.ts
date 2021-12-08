@@ -38,6 +38,7 @@ import {
   isStructTypeName,
   isAnyValueTypeName,
   isListValueTypeName,
+  isInteger,
 } from './types';
 import SourceInfo, { Fields } from './sourceInfo';
 import {
@@ -1136,7 +1137,9 @@ function generateToJson(ctx: Context, fullName: string, messageDesc: DescriptorP
         } else if (isTimestamp(valueType) && options.useDate === DateOption.TIMESTAMP) {
           return code`${utils.fromTimestamp}(${from}).toISOString()`;
         } else if (isLong(valueType) && options.forceLong === LongOption.LONG) {
-          return code`${from}.toString()`;
+          return code`Math.round(${from}).toString()`;
+        } else if (isInteger(valueType)) {
+          return code`Math.round(${from})`;
         } else if (isScalar(valueType) || isValueType(ctx, valueType)) {
           return code`${from}`;
         } else if (isAnyValueType(valueType)) {
