@@ -1,4 +1,4 @@
-import { code, Code } from 'ts-poet';
+import { code, Code, imp, Import } from 'ts-poet';
 import {
   CodeGeneratorRequest,
   FieldDescriptorProto,
@@ -181,4 +181,8 @@ export function determineFieldJsonName(field: FieldDescriptorProto, options: Opt
     return field.jsonName;
   }
   return maybeSnakeToCamel(field.name, options);
+}
+
+export function impProto(options: Options, module: string, type: string): Import {
+  return imp(`${type}@./${module}${options.fileSuffix}`);
 }

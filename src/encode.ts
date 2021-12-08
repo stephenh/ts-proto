@@ -1,32 +1,32 @@
 import { Context } from './context';
-import { code, Code, imp, Import } from 'ts-poet';
+import { code, Code, Import } from 'ts-poet';
 import { messageToTypeName, wrapperTypeName } from './types';
 import { LongOption } from './options';
+import { impProto } from './utils';
 
 export function generateEncoder(ctx: Context, typeName: string): Code {
-  const { options } = ctx;
   const name = wrapperTypeName(typeName);
   if (!name) {
     return code`${messageToTypeName(ctx, typeName, { keepValueType: true })}.encode(value).finish()`;
   }
 
   if (name == 'Timestamp') {
-    const TimestampValue = imp(`${name}@./google/protobuf/timestamp${options.fileSuffix}`);
+    const TimestampValue = impProto(ctx.options, 'google/protobuf/timestamp', name);
 
     return code`${TimestampValue}.encode(${ctx.utils.toTimestamp}(value)).finish()`;
   }
 
   if (name == 'Struct') {
-    const StructType = imp(`${name}@./google/protobuf/struct${options.fileSuffix}`);
+    const StructType = impProto(ctx.options, 'google/protobuf/struct', name);
     return code`${StructType}.encode(${StructType}.wrap(value)).finish()`;
   }
 
   if (name == 'ListValue') {
-    const ListValueType = imp(`${name}@./google/protobuf/struct${options.fileSuffix}`);
+    const ListValueType = impProto(ctx.options, 'google/protobuf/struct', name);
     return code`${ListValueType}.encode({values: value ?? []}).finish()`;
   }
 
-  const TypeValue = imp(`${name}@./google/protobuf/wrappers${options.fileSuffix}`);
+  const TypeValue = impProto(ctx.options, 'google/protobuf/wrappers', name);
 
   switch (name) {
     case 'StringValue':
@@ -62,16 +62,16 @@ export function generateDecoder(ctx: Context, typeName: string): Code {
   let TypeValue: Import;
 
   if (name == 'Timestamp') {
-    TypeValue = imp(`${name}@./google/protobuf/timestamp${options.fileSuffix}`);
+    TypeValue = impProto(ctx.options, 'google/protobuf/timestamp', name);
     return code`${TypeValue}.decode(value)`;
   }
 
   if (name == 'Struct' || name == 'ListValue') {
-    TypeValue = imp(`${name}@./google/protobuf/struct${options.fileSuffix}`);
+    TypeValue = impProto(ctx.options, 'google/protobuf/struct', name);
     return code`${TypeValue}.unwrap(${TypeValue}.decode(value))`;
   }
 
-  TypeValue = imp(`${name}@./google/protobuf/wrappers${options.fileSuffix}`);
+  TypeValue = impProto(ctx.options, 'google/protobuf/wrappers', name);
 
   return code`${TypeValue}.decode(value).value`;
 }

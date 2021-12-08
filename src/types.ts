@@ -12,7 +12,7 @@ import {
 import { code, Code, imp, Import } from 'ts-poet';
 import { DateOption, EnvOption, LongOption, OneofOption, Options } from './options';
 import { visit } from './visit';
-import { fail, FormattedMethodDescriptor, maybePrefixPackage } from './utils';
+import { fail, FormattedMethodDescriptor, impProto, maybePrefixPackage } from './utils';
 import SourceInfo from './sourceInfo';
 import { camelCase } from './case';
 import { Context } from './context';
@@ -496,7 +496,7 @@ export function messageToTypeName(
     }
   }
   const [module, type] = toModuleAndType(typeMap, protoType);
-  return code`${imp(`${type}@./${module}${options.fileSuffix}`)}`;
+  return code`${impProto(options, module, type)}`;
 }
 
 /** Breaks `.some_proto_namespace.Some.Message` into `['some_proto_namespace', 'Some_Message', Descriptor]. */
@@ -505,9 +505,8 @@ function toModuleAndType(typeMap: TypeMap, protoType: string): [string, string, 
 }
 
 export function getEnumMethod(ctx: Context, enumProtoType: string, methodSuffix: string): Import {
-  const { options, typeMap } = ctx;
-  const [module, type] = toModuleAndType(typeMap, enumProtoType);
-  return imp(`${camelCase(type)}${methodSuffix}@./${module}${options.fileSuffix}`);
+  const [module, type] = toModuleAndType(ctx.typeMap, enumProtoType);
+  return impProto(ctx.options, module, `${camelCase(type)}${methodSuffix}`);
 }
 
 /** Return the TypeName for any field (primitive/message/etc.) as exposed in the interface. */

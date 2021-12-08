@@ -44,6 +44,7 @@ import {
   assertInstanceOf,
   determineFieldJsonName,
   FormattedMethodDescriptor,
+  impProto,
   maybeAddComment,
   maybePrefixPackage,
 } from './utils';
@@ -459,7 +460,7 @@ function makeDeepPartial(options: Options, longs: ReturnType<typeof makeLongUtil
 }
 
 function makeTimestampMethods(options: Options, longs: ReturnType<typeof makeLongUtils>) {
-  const Timestamp = imp(`Timestamp@./google/protobuf/timestamp${options.fileSuffix}`);
+  const Timestamp = impProto(options, 'google/protobuf/timestamp', 'Timestamp');
 
   let seconds: string | Code = 'date.getTime() / 1_000';
   let toNumberCode = 't.seconds';
@@ -1202,7 +1203,7 @@ function generateToJson(ctx: Context, fullName: string, messageDesc: DescriptorP
 function generateFromPartial(ctx: Context, fullName: string, messageDesc: DescriptorProto): Code {
   const { options, utils, typeMap } = ctx;
   const chunks: Code[] = [];
-  const Timestamp = imp(`Timestamp@./google/protobuf/timestamp${options.fileSuffix}`);
+  const Timestamp = impProto(options, 'google/protobuf/timestamp', 'Timestamp');
 
   // create the basic function declaration
   const paramName = messageDesc.field.length > 0 ? 'object' : '_';
