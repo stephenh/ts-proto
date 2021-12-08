@@ -1370,19 +1370,20 @@ function generateUnwrap(fullProtoTypeName: string): Code[] {
 
   if (isAnyValueTypeName(fullProtoTypeName)) {
     chunks.push(code`unwrap(message: Value): string | number | boolean | Object | null | Array<any> | undefined {
-      if (message.stringValue !== undefined) {
+      if (message?.stringValue !== undefined) {
         return message.stringValue;
-      } else if (message.numberValue !== undefined) {
+      } else if (message?.numberValue !== undefined) {
         return message.numberValue;
-      } else if (message.boolValue !== undefined) {
+      } else if (message?.boolValue !== undefined) {
         return message.boolValue;
-      } else if (message.structValue !== undefined) {
+      } else if (message?.structValue !== undefined) {
         return message.structValue;
-      } else if (message.listValue !== undefined) {
+      } else if (message?.listValue !== undefined) {
           return message.listValue;
-      } else if (message.nullValue !== undefined) {
+      } else if (message?.nullValue !== undefined) {
         return null;
       }
+      return undefined;
     }`);
   }
 
