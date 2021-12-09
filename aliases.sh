@@ -2,10 +2,23 @@
 PROJECT_ROOT=$(realpath $(dirname "$BASH_SOURCE"))
 PROJECT_ROOT_DOCKER="//ts-proto" # double slash to support git bash on windows
 
-# Alias docker-compose to make it usable from anywhere
+# Alias docker-compose to make it usable from anywhere.
 function _docker-compose() { docker-compose -f $PROJECT_ROOT/docker-compose.yml "$@"; }
 
-function protoc() { _docker-compose run --rm protoc "$@"; }
-function protoc-sh() { _docker-compose run --rm --entrypoint sh -- protoc "$@"; }
+# Dockerized version of protoc.
+function protoc() { _docker-compose run --rm -w //host --entrypoint protoc -- protoc "$@"; }
+
+# Open a shell in the dockerized version of protoc, useful for debugging.
+function protoc-sh() { _docker-compose run --rm -w //host -- protoc "$@"; }
+
+# Rebuild the docker image.
 function protoc-build() { _docker-compose build protoc; }
-function ts-protoc { protoc --plugin=$PROJECT_ROOT_DOCKER/protoc-gen-ts_proto "$@"; }
+
+# Run protoc with the plugin path pre-set.
+function ts-protoc {
+  if [ ! -d "$PROJECT_ROOT/build" ]; then
+    echo "Run 'yarn build' first"
+    return 1
+  fi
+  protoc --plugin=$PROJECT_ROOT_DOCKER/protoc-gen-ts_proto "$@";
+}
