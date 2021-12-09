@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 import "google/protobuf/descriptor.proto";
+import "something/something.proto";
 
 extend google.protobuf.FileOptions {
   optional string my_file_option = 50000;
@@ -40,7 +41,10 @@ message MyMessage {
   option (my_message_option) = 1234;
 
   optional int32 foo = 1 [(my_field_option) = 4.5];
-  optional int32 foo_2 = 2;
+  optional int32 foo_2 = 2 [(something.something) = {
+    hello: "world";
+    foo: [123, 345];
+  }];
   optional string bar = 3;
   oneof qux {
     option (my_oneof_option) = 42;

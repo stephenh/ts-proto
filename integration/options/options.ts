@@ -3,6 +3,7 @@ import { FileDescriptorProto as FileDescriptorProto1 } from 'ts-proto-descriptor
 import { util, configure, Writer, Reader } from 'protobufjs/minimal';
 import * as Long from 'long';
 import { protoMetadata as protoMetadata1 } from './google/protobuf/descriptor';
+import { protoMetadata as protoMetadata2, Something } from './something/something';
 
 export const protobufPackage = '';
 
@@ -170,7 +171,7 @@ export interface ProtoMetadata {
 
 export const protoMetadata: ProtoMetadata = {
   fileDescriptor: FileDescriptorProto1.fromPartial({
-    dependency: ['google/protobuf/descriptor.proto'],
+    dependency: ['google/protobuf/descriptor.proto', 'something/something.proto'],
     publicDependency: [],
     weakDependency: [],
     messageType: [
@@ -186,7 +187,16 @@ export const protoMetadata: ProtoMetadata = {
             jsonName: 'foo',
             proto3Optional: true,
           },
-          { name: 'foo_2', number: 2, label: 1, type: 5, oneofIndex: 2, jsonName: 'foo2', proto3Optional: true },
+          {
+            name: 'foo_2',
+            number: 2,
+            label: 1,
+            type: 5,
+            options: { uninterpretedOption: [] },
+            oneofIndex: 2,
+            jsonName: 'foo2',
+            proto3Optional: true,
+          },
           { name: 'bar', number: 3, label: 1, type: 9, oneofIndex: 3, jsonName: 'bar', proto3Optional: true },
           { name: 'quux', number: 4, label: 1, type: 9, oneofIndex: 0, jsonName: 'quux' },
         ],
@@ -342,14 +352,16 @@ export const protoMetadata: ProtoMetadata = {
     '.ResponseType': ResponseType,
     '.MyService': MyServiceClientImpl,
   },
-  dependencies: [protoMetadata1],
-
+  dependencies: [protoMetadata1, protoMetadata2],
   options: {
     options: { my_file_option: 'Hello world!' },
     messages: {
       MyMessage: {
         options: { my_message_option: 1234 },
-        fields: { foo: { my_field_option: 4.5 } },
+        fields: {
+          foo: { my_field_option: 4.5 },
+          foo_2: { something: Something.decode(Buffer.from('CgV3b3JsZBIDe9kC', 'base64')) },
+        },
         oneof: { qux: { my_oneof_option: 42 } },
       },
     },

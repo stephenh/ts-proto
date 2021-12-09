@@ -9,7 +9,7 @@ import { visit, visitServices } from './visit';
 import { Context } from './context';
 import SourceInfo from './sourceInfo';
 import { maybePrefixPackage } from './utils';
-import { messageToTypeName, toReaderCall } from './types';
+import { basicTypeName, toReaderCall } from './types';
 import { Reader } from 'protobufjs/minimal';
 
 const fileDescriptorProto = imp('FileDescriptorProto@ts-proto-descriptors');
@@ -175,11 +175,11 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
       dependencies: [${joinCode(dependencies, { on: ',' })}],
       ${
         fileOptions || messagesOptions.length > 0 || servicesOptions.length > 0 || enumsOptions.length > 0
-          ? `options: {
-          ${fileOptions ? `options: ${fileOptions},` : ''}
-          ${messagesOptions.length > 0 ? `messages: {${joinCode(messagesOptions, { on: ',' })}},` : ''}
-          ${servicesOptions.length > 0 ? `services: {${joinCode(servicesOptions, { on: ',' })}},` : ''}
-          ${enumsOptions.length > 0 ? `enums: {${joinCode(enumsOptions, { on: ',' })}}` : ''}
+          ? code`options: {
+          ${fileOptions ? code`options: ${fileOptions},` : ''}
+          ${messagesOptions.length > 0 ? code`messages: {${joinCode(messagesOptions, { on: ',' })}},` : ''}
+          ${servicesOptions.length > 0 ? code`services: {${joinCode(servicesOptions, { on: ',' })}},` : ''}
+          ${enumsOptions.length > 0 ? code`enums: {${joinCode(enumsOptions, { on: ',' })}}` : ''}
         }`
           : ''
       }
@@ -191,7 +191,7 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
 
 function getExtensionValue(ctx: Context, extension: FieldDescriptorProto, data: Uint8Array[]): Code {
   if (extension.type == FieldDescriptorProto_Type.TYPE_MESSAGE) {
-    const typeName = messageToTypeName(ctx, extension.typeName);
+    const typeName = basicTypeName(ctx, extension);
     const resultBuffer = Buffer.concat(
       data.map((d) => {
         // Skip length byte
@@ -206,7 +206,7 @@ function getExtensionValue(ctx: Context, extension: FieldDescriptorProto, data: 
     const reader = new Reader(data[0]);
     let value = (reader as any)[toReaderCall(extension)]();
     if (typeof value === 'string') {
-      value = `"${value}"`;
+      value = code`"${value}"`;
     }
     return code`'${extension.name}': ${value}`;
   }
@@ -266,10 +266,10 @@ function resolveMessageOptions(ctx: Context, message: DescriptorProto): Code | u
   if (fieldsOptions.length > 0 || oneOfsOptions.length > 0 || nestedOptions.length > 0 || messageOptions) {
     return code`
       '${message.name}': {
-        ${messageOptions ? `options: ${messageOptions},` : ''}
-        ${fieldsOptions.length > 0 ? `fields: {${joinCode(fieldsOptions, { on: ',' })}},` : ''}
-        ${oneOfsOptions.length > 0 ? `oneof: {${joinCode(oneOfsOptions, { on: ',' })}},` : ''}
-        ${nestedOptions.length > 0 ? `nested: {${joinCode(nestedOptions, { on: ',' })}},` : ''}
+        ${messageOptions ? code`options: ${messageOptions},` : ''}
+        ${fieldsOptions.length > 0 ? code`fields: {${joinCode(fieldsOptions, { on: ',' })}},` : ''}
+        ${oneOfsOptions.length > 0 ? code`oneof: {${joinCode(oneOfsOptions, { on: ',' })}},` : ''}
+        ${nestedOptions.length > 0 ? code`nested: {${joinCode(nestedOptions, { on: ',' })}},` : ''}
       }
     `;
   }
