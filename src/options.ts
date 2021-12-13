@@ -100,7 +100,7 @@ const nestJsOptions: Partial<Options> = {
   useDate: DateOption.TIMESTAMP,
 };
 
-export function optionsFromParameter(parameter: string): Options {
+export function optionsFromParameter(parameter: string | undefined): Options {
   const options = defaultOptions();
   if (parameter) {
     const parsed = parseParameter(parameter);

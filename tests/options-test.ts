@@ -26,7 +26,10 @@ describe('options', () => {
         "outputServices": "default",
         "outputTypeRegistry": false,
         "returnObservable": false,
-        "snakeToCamel": true,
+        "snakeToCamel": Array [
+          "json",
+          "keys",
+        ],
         "stringEnums": false,
         "unrecognizedEnum": true,
         "useDate": "timestamp",
