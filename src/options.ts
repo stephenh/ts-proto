@@ -30,7 +30,7 @@ export enum ServiceOption {
 
 export type Options = {
   context: boolean;
-  snakeToCamel: boolean | string;
+  snakeToCamel: Array<'json' | 'keys'>;
   forceLong: LongOption;
   useOptionals: boolean;
   useDate: DateOption;
@@ -62,7 +62,7 @@ export type Options = {
 export function defaultOptions(): Options {
   return {
     context: false,
-    snakeToCamel: true,
+    snakeToCamel: ['json', 'keys'],
     forceLong: LongOption.NUMBER,
     useOptionals: false,
     useDate: DateOption.DATE,
@@ -100,7 +100,7 @@ const nestJsOptions: Partial<Options> = {
   useDate: DateOption.TIMESTAMP,
 };
 
-export function optionsFromParameter(parameter: string): Options {
+export function optionsFromParameter(parameter: string | undefined): Options {
   const options = defaultOptions();
   if (parameter) {
     const parsed = parseParameter(parameter);
@@ -113,6 +113,7 @@ export function optionsFromParameter(parameter: string): Options {
   if (!options.outputJsonMethods && !options.outputEncodeMethods && !options.outputClientImpl && !options.nestJs) {
     options.onlyTypes = true;
   }
+
   // Treat forceLong=true as LONG
   if ((options.forceLong as any) === true) {
     options.forceLong = LongOption.LONG;
@@ -130,6 +131,13 @@ export function optionsFromParameter(parameter: string): Options {
     // Treat useDate=false as TIMESTAMP
     options.useDate = DateOption.TIMESTAMP;
   }
+
+  if ((options.snakeToCamel as any) === false) {
+    options.snakeToCamel = [];
+  } else if ((options.snakeToCamel as any) === true) {
+    options.snakeToCamel = ['keys', 'json'];
+  }
+
   return options;
 }
 

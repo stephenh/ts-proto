@@ -1,24 +1,27 @@
 import { maybeSnakeToCamel } from '../src/case';
+import { Options, optionsFromParameter } from '../src/options';
+
+const keys = optionsFromParameter('snakeToCamel=keys');
 
 describe('case', () => {
   it('converts snake to camel by default', () => {
-    expect(maybeSnakeToCamel('foo_bar', { snakeToCamel: true })).toEqual('fooBar');
+    expect(maybeSnakeToCamel('foo_bar', optionsFromParameter(undefined))).toEqual('fooBar');
   });
 
   it('leaves as-is if snakeToCamel is false', () => {
-    expect(maybeSnakeToCamel('foo_bar', { snakeToCamel: false })).toEqual('foo_bar');
+    expect(maybeSnakeToCamel('foo_bar', optionsFromParameter('snakeToCamel=false'))).toEqual('foo_bar');
   });
 
   it('de-upper cases', () => {
-    expect(maybeSnakeToCamel('FOO_BAR', { snakeToCamel: true })).toEqual('FooBar');
+    expect(maybeSnakeToCamel('FOO_BAR', keys)).toEqual('FooBar');
   });
 
   it('leaves the first character as it was', () => {
-    expect(maybeSnakeToCamel('Foo_Bar', { snakeToCamel: true })).toEqual('FooBar');
+    expect(maybeSnakeToCamel('Foo_Bar', keys)).toEqual('FooBar');
   });
 
   it('does nothing is already camel', () => {
-    expect(maybeSnakeToCamel('FooBar', { snakeToCamel: true })).toEqual('FooBar');
+    expect(maybeSnakeToCamel('FooBar', keys)).toEqual('FooBar');
   });
 
   // deal with original protoc which converts
@@ -26,14 +29,14 @@ describe('case', () => {
   // __uuid -> Uuid
   // _uuid_foo -> UuidFoo
   it('converts snake to camel with first underscore', () => {
-    expect(maybeSnakeToCamel('_uuid', { snakeToCamel: true })).toEqual('Uuid');
+    expect(maybeSnakeToCamel('_uuid', { snakeToCamel: ['keys'] })).toEqual('Uuid');
   });
 
   it('converts snake to camel with first double underscore', () => {
-    expect(maybeSnakeToCamel('__uuid', { snakeToCamel: true })).toEqual('Uuid');
+    expect(maybeSnakeToCamel('__uuid', { snakeToCamel: ['keys'] })).toEqual('Uuid');
   });
 
   it('converts snake to camel with first underscore and camelize other', () => {
-    expect(maybeSnakeToCamel('_uuid_foo', { snakeToCamel: true })).toEqual('UuidFoo');
+    expect(maybeSnakeToCamel('_uuid_foo', { snakeToCamel: ['keys'] })).toEqual('UuidFoo');
   });
 });

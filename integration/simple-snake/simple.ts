@@ -894,21 +894,21 @@ export const SimpleWithMap = {
 
   fromJSON(object: any): SimpleWithMap {
     const message = { ...baseSimpleWithMap } as SimpleWithMap;
-    message.entitiesById = Object.entries(object.entities_by_id ?? {}).reduce<{ [key: number]: Entity }>(
+    message.entitiesById = Object.entries(object.entitiesById ?? {}).reduce<{ [key: number]: Entity }>(
       (acc, [key, value]) => {
         acc[Number(key)] = Entity.fromJSON(value);
         return acc;
       },
       {}
     );
-    message.nameLookup = Object.entries(object.name_lookup ?? {}).reduce<{ [key: string]: string }>(
+    message.nameLookup = Object.entries(object.nameLookup ?? {}).reduce<{ [key: string]: string }>(
       (acc, [key, value]) => {
         acc[key] = String(value);
         return acc;
       },
       {}
     );
-    message.intLookup = Object.entries(object.int_lookup ?? {}).reduce<{ [key: number]: number }>(
+    message.intLookup = Object.entries(object.intLookup ?? {}).reduce<{ [key: number]: number }>(
       (acc, [key, value]) => {
         acc[Number(key)] = Number(value);
         return acc;
@@ -920,22 +920,22 @@ export const SimpleWithMap = {
 
   toJSON(message: SimpleWithMap): unknown {
     const obj: any = {};
-    obj.entities_by_id = {};
+    obj.entitiesById = {};
     if (message.entitiesById) {
       Object.entries(message.entitiesById).forEach(([k, v]) => {
-        obj.entities_by_id[k] = Entity.toJSON(v);
+        obj.entitiesById[k] = Entity.toJSON(v);
       });
     }
-    obj.name_lookup = {};
+    obj.nameLookup = {};
     if (message.nameLookup) {
       Object.entries(message.nameLookup).forEach(([k, v]) => {
-        obj.name_lookup[k] = v;
+        obj.nameLookup[k] = v;
       });
     }
-    obj.int_lookup = {};
+    obj.intLookup = {};
     if (message.intLookup) {
       Object.entries(message.intLookup).forEach(([k, v]) => {
-        obj.int_lookup[k] = v;
+        obj.intLookup[k] = v;
       });
     }
     return obj;
