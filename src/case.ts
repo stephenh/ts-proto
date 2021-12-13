@@ -1,7 +1,9 @@
 import { Options } from './options';
 
 export function maybeSnakeToCamel(s: string, options: Pick<Options, 'snakeToCamel'>): string {
-  if (options.snakeToCamel && s.includes('_')) {
+  const fromStringSnakeToCamel = typeof options.snakeToCamel === 'string' && options.snakeToCamel.includes('keys');
+  const fromBooleanSnakeToCamel = options.snakeToCamel === true;
+  if ((fromBooleanSnakeToCamel || fromStringSnakeToCamel) && s.includes('_')) {
     return s
       .split('_')
       .map((word, i) => {
@@ -16,6 +18,10 @@ export function maybeSnakeToCamel(s: string, options: Pick<Options, 'snakeToCame
   } else {
     return s;
   }
+}
+
+export function stringToSnakeCase(s: string) {
+  return s.replace(/([a-z])([A-Z])/g, '$1_$2').toLowerCase();
 }
 
 export function camelToSnake(s: string): string {
