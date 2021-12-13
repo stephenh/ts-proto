@@ -9,7 +9,7 @@ import {
 import ReadStream = NodeJS.ReadStream;
 import { SourceDescription } from './sourceInfo';
 import { Options, ServiceOption } from './options';
-import { camelCase, stringToSnakeCase } from './case';
+import { camelCase } from './case';
 
 export function protoFilesToGenerate(request: CodeGeneratorRequest): FileDescriptorProto[] {
   return request.protoFile.filter((f) => request.fileToGenerate.includes(f.name));

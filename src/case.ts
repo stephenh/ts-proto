@@ -18,10 +18,6 @@ export function maybeSnakeToCamel(s: string, options: Pick<Options, 'snakeToCame
   }
 }
 
-export function stringToSnakeCase(s: string) {
-  return s.replace(/([a-z])([A-Z])/g, '$1_$2').toLowerCase();
-}
-
 export function camelToSnake(s: string): string {
   return s
     .replace(/[\w]([A-Z])/g, function (m) {
