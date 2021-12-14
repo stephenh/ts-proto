@@ -359,7 +359,8 @@ export function isLong(field: FieldDescriptorProto): boolean {
 }
 
 export function isInteger(field: FieldDescriptorProto): boolean {
-  return field.type === FieldDescriptorProto_Type.TYPE_INT32 ||    
+  return (
+    field.type === FieldDescriptorProto_Type.TYPE_INT32 ||
     field.type === FieldDescriptorProto_Type.TYPE_INT64 ||
     field.type === FieldDescriptorProto_Type.TYPE_UINT32 ||
     field.type === FieldDescriptorProto_Type.TYPE_UINT64 ||
@@ -368,7 +369,8 @@ export function isInteger(field: FieldDescriptorProto): boolean {
     field.type === FieldDescriptorProto_Type.TYPE_FIXED32 ||
     field.type === FieldDescriptorProto_Type.TYPE_FIXED64 ||
     field.type === FieldDescriptorProto_Type.TYPE_SFIXED32 ||
-    field.type === FieldDescriptorProto_Type.TYPE_SFIXED64;
+    field.type === FieldDescriptorProto_Type.TYPE_SFIXED64
+  );
 }
 
 export function isMapType(ctx: Context, messageDesc: DescriptorProto, field: FieldDescriptorProto): boolean {
