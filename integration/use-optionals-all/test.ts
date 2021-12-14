@@ -341,16 +341,16 @@ export const OptionalsTest = {
 
   toJSON(message: OptionalsTest): unknown {
     const obj: any = {};
-    message.id !== undefined && (obj.id = message.id);
+    message.id !== undefined && (obj.id = Math.round(message.id));
     message.child !== undefined && (obj.child = message.child ? Child.toJSON(message.child) : undefined);
     message.state !== undefined && (obj.state = stateEnumToJSON(message.state));
-    message.long !== undefined && (obj.long = message.long);
+    message.long !== undefined && (obj.long = Math.round(message.long));
     message.truth !== undefined && (obj.truth = message.truth);
     message.description !== undefined && (obj.description = message.description);
     message.data !== undefined &&
       (obj.data = base64FromBytes(message.data !== undefined ? message.data : new Uint8Array()));
     if (message.repId) {
-      obj.repId = message.repId.map((e) => e);
+      obj.repId = message.repId.map((e) => Math.round(e));
     } else {
       obj.repId = [];
     }
@@ -365,7 +365,7 @@ export const OptionalsTest = {
       obj.repState = [];
     }
     if (message.repLong) {
-      obj.repLong = message.repLong.map((e) => e);
+      obj.repLong = message.repLong.map((e) => Math.round(e));
     } else {
       obj.repLong = [];
     }
@@ -384,11 +384,11 @@ export const OptionalsTest = {
     } else {
       obj.repData = [];
     }
-    message.optId !== undefined && (obj.optId = message.optId);
+    message.optId !== undefined && (obj.optId = Math.round(message.optId));
     message.optChild !== undefined && (obj.optChild = message.optChild ? Child.toJSON(message.optChild) : undefined);
     message.optState !== undefined &&
       (obj.optState = message.optState !== undefined ? stateEnumToJSON(message.optState) : undefined);
-    message.optLong !== undefined && (obj.optLong = message.optLong);
+    message.optLong !== undefined && (obj.optLong = Math.round(message.optLong));
     message.optTruth !== undefined && (obj.optTruth = message.optTruth);
     message.optDescription !== undefined && (obj.optDescription = message.optDescription);
     message.optData !== undefined &&
