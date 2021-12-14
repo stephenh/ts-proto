@@ -358,7 +358,7 @@ export function isLong(field: FieldDescriptorProto): boolean {
   return basicLongWireType(field.type) !== undefined;
 }
 
-export function isInteger(field: FieldDescriptorProto): boolean {
+export function isWholeNumber(field: FieldDescriptorProto): boolean {
   return (
     field.type === FieldDescriptorProto_Type.TYPE_INT32 ||
     field.type === FieldDescriptorProto_Type.TYPE_INT64 ||

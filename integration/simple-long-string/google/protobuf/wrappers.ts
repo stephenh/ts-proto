@@ -224,7 +224,7 @@ export const Int64Value = {
 
   toJSON(message: Int64Value): unknown {
     const obj: any = {};
-    message.value !== undefined && (obj.value = Math.round(message.value));
+    message.value !== undefined && (obj.value = message.value);
     return obj;
   },
 
@@ -271,7 +271,7 @@ export const UInt64Value = {
 
   toJSON(message: UInt64Value): unknown {
     const obj: any = {};
-    message.value !== undefined && (obj.value = Math.round(message.value));
+    message.value !== undefined && (obj.value = message.value);
     return obj;
   },
 

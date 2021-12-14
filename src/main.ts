@@ -1,24 +1,19 @@
 import { code, Code, conditionalOutput, def, imp, joinCode } from 'ts-poet';
-import {
-  DescriptorProto,
-  FieldDescriptorProto,
-  FileDescriptorProto,
-  FieldDescriptorProto_Type,
-  MethodDescriptorProto,
-} from 'ts-proto-descriptors';
+import { DescriptorProto, FieldDescriptorProto, FileDescriptorProto } from 'ts-proto-descriptors';
 import {
   basicLongWireType,
   basicTypeName,
   basicWireType,
-  notDefaultCheck,
   defaultValue,
   detectMapType,
   getEnumMethod,
   isAnyValueType,
+  isAnyValueTypeName,
   isBytes,
   isBytesValueType,
   isEnum,
   isListValueType,
+  isListValueTypeName,
   isLong,
   isLongValueType,
   isMapType,
@@ -26,19 +21,18 @@ import {
   isPrimitive,
   isRepeated,
   isScalar,
+  isStructType,
+  isStructTypeName,
   isTimestamp,
   isValueType,
+  isWholeNumber,
   isWithinOneOf,
   isWithinOneOfThatShouldBeUnion,
+  notDefaultCheck,
   packedType,
   toReaderCall,
   toTypeName,
   valueTypeName,
-  isStructType,
-  isStructTypeName,
-  isAnyValueTypeName,
-  isListValueTypeName,
-  isInteger,
 } from './types';
 import SourceInfo, { Fields } from './sourceInfo';
 import {
@@ -70,7 +64,7 @@ import {
 } from './generate-grpc-web';
 import { generateEnum } from './enums';
 import { visit, visitServices } from './visit';
-import { EnvOption, LongOption, OneofOption, Options, ServiceOption, DateOption } from './options';
+import { DateOption, EnvOption, LongOption, OneofOption, Options, ServiceOption } from './options';
 import { Context } from './context';
 import { generateSchema } from './schema';
 import { ConditionalOutput } from 'ts-poet/build/ConditionalOutput';
@@ -1139,8 +1133,8 @@ function generateToJson(ctx: Context, fullName: string, messageDesc: DescriptorP
         } else if (isTimestamp(valueType) && options.useDate === DateOption.TIMESTAMP) {
           return code`${utils.fromTimestamp}(${from}).toISOString()`;
         } else if (isLong(valueType) && options.forceLong === LongOption.LONG) {
-          return code`Math.round(${from}).toString()`;
-        } else if (isInteger(valueType)) {
+          return code`${from}.toString()`;
+        } else if (isWholeNumber(valueType) && !(isLong(valueType) && options.forceLong === LongOption.STRING)) {
           return code`Math.round(${from})`;
         } else if (isScalar(valueType) || isValueType(ctx, valueType)) {
           return code`${from}`;
@@ -1163,8 +1157,8 @@ function generateToJson(ctx: Context, fullName: string, messageDesc: DescriptorP
         }
       } else if (isLong(field) && options.forceLong === LongOption.LONG) {
         const v = isWithinOneOf(field) ? 'undefined' : defaultValue(ctx, field);
-        return code`Math.round(${from} || ${v}).toString()`;
-      } else if (isInteger(field)) {
+        return code`(${from} || ${v}).toString()`;
+      } else if (isWholeNumber(field) && !(isLong(field) && options.forceLong === LongOption.STRING)) {
         return code`Math.round(${from})`;
       } else {
         return code`${from}`;

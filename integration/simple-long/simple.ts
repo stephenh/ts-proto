@@ -252,7 +252,7 @@ export const SimpleWithMap = {
     obj.longLookup = {};
     if (message.longLookup) {
       Object.entries(message.longLookup).forEach(([k, v]) => {
-        obj.longLookup[k] = Math.round(v).toString();
+        obj.longLookup[k] = v.toString();
       });
     }
     return obj;
@@ -449,7 +449,7 @@ export const SimpleWithMap_LongLookupEntry = {
   toJSON(message: SimpleWithMap_LongLookupEntry): unknown {
     const obj: any = {};
     message.key !== undefined && (obj.key = message.key);
-    message.value !== undefined && (obj.value = Math.round(message.value || Long.ZERO).toString());
+    message.value !== undefined && (obj.value = (message.value || Long.ZERO).toString());
     return obj;
   },
 
@@ -613,17 +613,17 @@ export const Numbers = {
     message.double !== undefined && (obj.double = message.double);
     message.float !== undefined && (obj.float = message.float);
     message.int32 !== undefined && (obj.int32 = Math.round(message.int32));
-    message.int64 !== undefined && (obj.int64 = Math.round(message.int64 || Long.ZERO).toString());
+    message.int64 !== undefined && (obj.int64 = (message.int64 || Long.ZERO).toString());
     message.uint32 !== undefined && (obj.uint32 = Math.round(message.uint32));
-    message.uint64 !== undefined && (obj.uint64 = Math.round(message.uint64 || Long.UZERO).toString());
+    message.uint64 !== undefined && (obj.uint64 = (message.uint64 || Long.UZERO).toString());
     message.sint32 !== undefined && (obj.sint32 = Math.round(message.sint32));
-    message.sint64 !== undefined && (obj.sint64 = Math.round(message.sint64 || Long.ZERO).toString());
+    message.sint64 !== undefined && (obj.sint64 = (message.sint64 || Long.ZERO).toString());
     message.fixed32 !== undefined && (obj.fixed32 = Math.round(message.fixed32));
-    message.fixed64 !== undefined && (obj.fixed64 = Math.round(message.fixed64 || Long.UZERO).toString());
+    message.fixed64 !== undefined && (obj.fixed64 = (message.fixed64 || Long.UZERO).toString());
     message.sfixed32 !== undefined && (obj.sfixed32 = Math.round(message.sfixed32));
-    message.sfixed64 !== undefined && (obj.sfixed64 = Math.round(message.sfixed64 || Long.ZERO).toString());
+    message.sfixed64 !== undefined && (obj.sfixed64 = (message.sfixed64 || Long.ZERO).toString());
     if (message.manyUint64) {
-      obj.manyUint64 = message.manyUint64.map((e) => Math.round(e || Long.UZERO).toString());
+      obj.manyUint64 = message.manyUint64.map((e) => (e || Long.UZERO).toString());
     } else {
       obj.manyUint64 = [];
     }
