@@ -100,7 +100,7 @@ export const Simple = {
   toJSON(message: Simple): unknown {
     const obj: any = {};
     message.name !== undefined && (obj.name = message.name);
-    message.age !== undefined && (obj.age = message.age);
+    message.age !== undefined && (obj.age = Math.round(message.age));
     message.child !== undefined && (obj.child = message.child ? Child.toJSON(message.child) : undefined);
     message.testField !== undefined && (obj.testField = message.testField);
     message.testNotDeprecated !== undefined && (obj.testNotDeprecated = message.testNotDeprecated);

@@ -216,7 +216,7 @@ export const PleaseChoose = {
     message.choice?.$case === 'anEnum' &&
       (obj.anEnum =
         message.choice?.anEnum !== undefined ? pleaseChoose_StateEnumToJSON(message.choice?.anEnum) : undefined);
-    message.age !== undefined && (obj.age = message.age);
+    message.age !== undefined && (obj.age = Math.round(message.age));
     message.eitherOr?.$case === 'either' && (obj.either = message.eitherOr?.either);
     message.eitherOr?.$case === 'or' && (obj.or = message.eitherOr?.or);
     message.eitherOr?.$case === 'thirdOption' && (obj.thirdOption = message.eitherOr?.thirdOption);
@@ -368,7 +368,7 @@ export const SimpleButOptional = {
   toJSON(message: SimpleButOptional): unknown {
     const obj: any = {};
     message.name !== undefined && (obj.name = message.name);
-    message.age !== undefined && (obj.age = message.age);
+    message.age !== undefined && (obj.age = Math.round(message.age));
     return obj;
   },
 

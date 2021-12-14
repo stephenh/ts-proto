@@ -221,9 +221,9 @@ export const Tile_Value = {
     message.stringValue !== undefined && (obj.stringValue = message.stringValue);
     message.floatValue !== undefined && (obj.floatValue = message.floatValue);
     message.doubleValue !== undefined && (obj.doubleValue = message.doubleValue);
-    message.intValue !== undefined && (obj.intValue = message.intValue);
-    message.uintValue !== undefined && (obj.uintValue = message.uintValue);
-    message.sintValue !== undefined && (obj.sintValue = message.sintValue);
+    message.intValue !== undefined && (obj.intValue = Math.round(message.intValue));
+    message.uintValue !== undefined && (obj.uintValue = Math.round(message.uintValue));
+    message.sintValue !== undefined && (obj.sintValue = Math.round(message.sintValue));
     message.boolValue !== undefined && (obj.boolValue = message.boolValue);
     return obj;
   },
@@ -318,15 +318,15 @@ export const Tile_Feature = {
 
   toJSON(message: Tile_Feature): unknown {
     const obj: any = {};
-    message.id !== undefined && (obj.id = message.id);
+    message.id !== undefined && (obj.id = Math.round(message.id));
     if (message.tags) {
-      obj.tags = message.tags.map((e) => e);
+      obj.tags = message.tags.map((e) => Math.round(e));
     } else {
       obj.tags = [];
     }
     message.type !== undefined && (obj.type = tile_GeomTypeToJSON(message.type));
     if (message.geometry) {
-      obj.geometry = message.geometry.map((e) => e);
+      obj.geometry = message.geometry.map((e) => Math.round(e));
     } else {
       obj.geometry = [];
     }
@@ -417,7 +417,7 @@ export const Tile_Layer = {
 
   toJSON(message: Tile_Layer): unknown {
     const obj: any = {};
-    message.version !== undefined && (obj.version = message.version);
+    message.version !== undefined && (obj.version = Math.round(message.version));
     message.name !== undefined && (obj.name = message.name);
     if (message.features) {
       obj.features = message.features.map((e) => (e ? Tile_Feature.toJSON(e) : undefined));
@@ -434,7 +434,7 @@ export const Tile_Layer = {
     } else {
       obj.values = [];
     }
-    message.extent !== undefined && (obj.extent = message.extent);
+    message.extent !== undefined && (obj.extent = Math.round(message.extent));
     return obj;
   },
 

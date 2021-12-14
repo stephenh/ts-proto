@@ -359,7 +359,7 @@ export const Simple = {
   toJSON(message: Simple): unknown {
     const obj: any = {};
     message.name !== undefined && (obj.name = message.name);
-    message.age !== undefined && (obj.age = message.age);
+    message.age !== undefined && (obj.age = Math.round(message.age));
     message.created_at !== undefined && (obj.created_at = message.created_at.toISOString());
     message.child !== undefined && (obj.child = message.child ? Child.toJSON(message.child) : undefined);
     message.state !== undefined && (obj.state = stateEnumToJSON(message.state));
@@ -369,7 +369,7 @@ export const Simple = {
       obj.grand_children = [];
     }
     if (message.coins) {
-      obj.coins = message.coins.map((e) => e);
+      obj.coins = message.coins.map((e) => Math.round(e));
     } else {
       obj.coins = [];
     }
@@ -829,7 +829,7 @@ export const Entity = {
 
   toJSON(message: Entity): unknown {
     const obj: any = {};
-    message.id !== undefined && (obj.id = message.id);
+    message.id !== undefined && (obj.id = Math.round(message.id));
     return obj;
   },
 
@@ -935,7 +935,7 @@ export const SimpleWithMap = {
     obj.intLookup = {};
     if (message.intLookup) {
       Object.entries(message.intLookup).forEach(([k, v]) => {
-        obj.intLookup[k] = v;
+        obj.intLookup[k] = Math.round(v);
       });
     }
     return obj;
@@ -1017,7 +1017,7 @@ export const SimpleWithMap_EntitiesByIdEntry = {
 
   toJSON(message: SimpleWithMap_EntitiesByIdEntry): unknown {
     const obj: any = {};
-    message.key !== undefined && (obj.key = message.key);
+    message.key !== undefined && (obj.key = Math.round(message.key));
     message.value !== undefined && (obj.value = message.value ? Entity.toJSON(message.value) : undefined);
     return obj;
   },
@@ -1133,8 +1133,8 @@ export const SimpleWithMap_IntLookupEntry = {
 
   toJSON(message: SimpleWithMap_IntLookupEntry): unknown {
     const obj: any = {};
-    message.key !== undefined && (obj.key = message.key);
-    message.value !== undefined && (obj.value = message.value);
+    message.key !== undefined && (obj.key = Math.round(message.key));
+    message.value !== undefined && (obj.value = Math.round(message.value));
     return obj;
   },
 
@@ -1259,7 +1259,7 @@ export const SimpleWithSnakeCaseMap_EntitiesByIdEntry = {
 
   toJSON(message: SimpleWithSnakeCaseMap_EntitiesByIdEntry): unknown {
     const obj: any = {};
-    message.key !== undefined && (obj.key = message.key);
+    message.key !== undefined && (obj.key = Math.round(message.key));
     message.value !== undefined && (obj.value = message.value ? Entity.toJSON(message.value) : undefined);
     return obj;
   },
@@ -1496,16 +1496,16 @@ export const Numbers = {
     const obj: any = {};
     message.double !== undefined && (obj.double = message.double);
     message.float !== undefined && (obj.float = message.float);
-    message.int32 !== undefined && (obj.int32 = message.int32);
-    message.int64 !== undefined && (obj.int64 = message.int64);
-    message.uint32 !== undefined && (obj.uint32 = message.uint32);
-    message.uint64 !== undefined && (obj.uint64 = message.uint64);
-    message.sint32 !== undefined && (obj.sint32 = message.sint32);
-    message.sint64 !== undefined && (obj.sint64 = message.sint64);
-    message.fixed32 !== undefined && (obj.fixed32 = message.fixed32);
-    message.fixed64 !== undefined && (obj.fixed64 = message.fixed64);
-    message.sfixed32 !== undefined && (obj.sfixed32 = message.sfixed32);
-    message.sfixed64 !== undefined && (obj.sfixed64 = message.sfixed64);
+    message.int32 !== undefined && (obj.int32 = Math.round(message.int32));
+    message.int64 !== undefined && (obj.int64 = Math.round(message.int64));
+    message.uint32 !== undefined && (obj.uint32 = Math.round(message.uint32));
+    message.uint64 !== undefined && (obj.uint64 = Math.round(message.uint64));
+    message.sint32 !== undefined && (obj.sint32 = Math.round(message.sint32));
+    message.sint64 !== undefined && (obj.sint64 = Math.round(message.sint64));
+    message.fixed32 !== undefined && (obj.fixed32 = Math.round(message.fixed32));
+    message.fixed64 !== undefined && (obj.fixed64 = Math.round(message.fixed64));
+    message.sfixed32 !== undefined && (obj.sfixed32 = Math.round(message.sfixed32));
+    message.sfixed64 !== undefined && (obj.sfixed64 = Math.round(message.sfixed64));
     return obj;
   },
 
