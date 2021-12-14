@@ -6,6 +6,7 @@ import {
   FieldDescriptorProto_Label,
   FieldDescriptorProto_Type,
   FileDescriptorProto,
+  MessageOptions,
   MethodDescriptorProto,
   ServiceDescriptorProto,
 } from 'ts-proto-descriptors';
@@ -231,8 +232,15 @@ export function defaultValue(ctx: Context, field: FieldDescriptorProto): any {
 }
 
 /** Creates code that checks that the field is not the default value. Supports scalars and enums. */
-export function notDefaultCheck(ctx: Context, field: FieldDescriptorProto, place: string): Code {
+export function notDefaultCheck(
+  ctx: Context,
+  field: FieldDescriptorProto,
+  messageOptions: MessageOptions | undefined,
+  place: string
+): Code {
   const { typeMap, options } = ctx;
+  const isOptional = isOptionalProperty(field, messageOptions, options);
+  const maybeNotUndefinedAnd = isOptional ? `${place} !== undefined && ` : '';
   switch (field.type) {
     case FieldDescriptorProto_Type.TYPE_DOUBLE:
     case FieldDescriptorProto_Type.TYPE_FLOAT:
@@ -241,7 +249,7 @@ export function notDefaultCheck(ctx: Context, field: FieldDescriptorProto, place
     case FieldDescriptorProto_Type.TYPE_SINT32:
     case FieldDescriptorProto_Type.TYPE_FIXED32:
     case FieldDescriptorProto_Type.TYPE_SFIXED32:
-      return code`${place} !== 0`;
+      return code`${maybeNotUndefinedAnd} ${place} !== 0`;
     case FieldDescriptorProto_Type.TYPE_ENUM:
       // proto3 enforces enums starting at 0, however proto2 does not, so we have
       // to probe and see if zero is an allowed value. If it's not, pick the first one.
@@ -251,9 +259,9 @@ export function notDefaultCheck(ctx: Context, field: FieldDescriptorProto, place
       const zerothValue = enumProto.value.find((v) => v.number === 0) || enumProto.value[0];
       if (options.stringEnums) {
         const enumType = messageToTypeName(ctx, field.typeName);
-        return code`${place} !== ${enumType}.${zerothValue.name}`;
+        return code`${maybeNotUndefinedAnd} ${place} !== ${enumType}.${zerothValue.name}`;
       } else {
-        return code`${place} !== ${zerothValue.number}`;
+        return code`${maybeNotUndefinedAnd} ${place} !== ${zerothValue.number}`;
       }
     case FieldDescriptorProto_Type.TYPE_UINT64:
     case FieldDescriptorProto_Type.TYPE_FIXED64:
@@ -261,18 +269,18 @@ export function notDefaultCheck(ctx: Context, field: FieldDescriptorProto, place
     case FieldDescriptorProto_Type.TYPE_SINT64:
     case FieldDescriptorProto_Type.TYPE_SFIXED64:
       if (options.forceLong === LongOption.LONG) {
-        return code`!${place}.isZero()`;
+        return code`${maybeNotUndefinedAnd} !${place}.isZero()`;
       } else if (options.forceLong === LongOption.STRING) {
-        return code`${place} !== "0"`;
+        return code`${maybeNotUndefinedAnd} ${place} !== "0"`;
       } else {
-        return code`${place} !== 0`;
+        return code`${maybeNotUndefinedAnd} ${place} !== 0`;
       }
     case FieldDescriptorProto_Type.TYPE_BOOL:
       return code`${place} === true`;
     case FieldDescriptorProto_Type.TYPE_STRING:
-      return code`${place} !== ""`;
+      return code`${maybeNotUndefinedAnd} ${place} !== ""`;
     case FieldDescriptorProto_Type.TYPE_BYTES:
-      return code`${place}.length !== 0`;
+      return code`${maybeNotUndefinedAnd} ${place}.length !== 0`;
     default:
       throw new Error('Not implemented for the given type.');
   }
@@ -323,6 +331,25 @@ export function isScalar(field: FieldDescriptorProto): boolean {
     FieldDescriptorProto_Type.TYPE_BYTES,
   ];
   return scalarTypes.includes(field.type);
+}
+
+// When useOptionals='messages', non-scalar fields are translated into optional
+// properties. When useOptionals='all', all fields are translated into
+// optional properties, with the exception of map Entry key/values, which must
+// always be present.
+export function isOptionalProperty(
+  field: FieldDescriptorProto,
+  messageOptions: MessageOptions | undefined,
+  options: Options
+): boolean {
+  const optionalMessages =
+    options.useOptionals === true || options.useOptionals === 'messages' || options.useOptionals === 'all';
+  const optionalAll = options.useOptionals === 'all';
+  return (
+    (optionalMessages && isMessage(field) && !isRepeated(field)) ||
+    (optionalAll && !messageOptions?.mapEntry) ||
+    field.proto3Optional
+  );
 }
 
 /** This includes all scalars, enums and the [groups type](https://developers.google.com/protocol-buffers/docs/reference/java/com/google/protobuf/DescriptorProtos.FieldDescriptorProto.Type.html#TYPE_GROUP) */
@@ -491,11 +518,16 @@ export function messageToTypeName(
   // them to basic built-in types, we union the type with undefined to
   // indicate the value is optional. Exceptions:
   // - If the field is repeated, values cannot be undefined.
-  // - If useOptionals=true, all non-scalar types are already optional
-  //   properties, so there's no need for that union.
+  // - If useOptionals='messages' or useOptionals='all', all non-scalar types
+  //   are already optional properties, so there's no need for that union.
   let valueType = valueTypeName(ctx, protoType);
   if (!typeOptions.keepValueType && valueType) {
-    if (!!typeOptions.repeated || options.useOptionals) {
+    if (
+      !!typeOptions.repeated ||
+      options.useOptionals === true ||
+      options.useOptionals === 'messages' ||
+      options.useOptionals === 'all'
+    ) {
       return valueType;
     }
     return code`${valueType} | undefined`;
@@ -542,19 +574,22 @@ export function toTypeName(ctx: Context, messageDesc: DescriptorProto, field: Fi
     return type;
   }
 
-  // By default (useOptionals=false, oneof=properties), non-scalar fields
+  // By default (useOptionals='none', oneof=properties), non-scalar fields
   // outside oneofs and all fields within a oneof clause need to be unioned
   // with `undefined` to indicate the value is optional.
   //
-  // When useOptionals=true, non-scalar fields are translated to optional
-  // properties, so no need for the union with `undefined` here.
+  // When useOptionals='messages' or useOptionals='all', non-scalar fields are
+  // translated to optional properties, so no need for the union with
+  // `undefined` here.
   //
   // When oneof=unions, we generate a single property for the entire `oneof`
   // clause, spelling each option out inside a large type union. No need for
   // union with `undefined` here, either.
   const { options } = ctx;
   if (
-    (!isWithinOneOf(field) && isMessage(field) && !options.useOptionals) ||
+    (!isWithinOneOf(field) &&
+      isMessage(field) &&
+      (options.useOptionals === false || options.useOptionals === 'none')) ||
     (isWithinOneOf(field) && options.oneof === OneofOption.PROPERTIES) ||
     (isWithinOneOf(field) && field.proto3Optional)
   ) {

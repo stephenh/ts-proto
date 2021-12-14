@@ -32,7 +32,7 @@ export type Options = {
   context: boolean;
   snakeToCamel: Array<'json' | 'keys'>;
   forceLong: LongOption;
-  useOptionals: boolean;
+  useOptionals: boolean | 'none' | 'messages' | 'all'; // boolean is deprecated
   useDate: DateOption;
   oneof: OneofOption;
   esModuleInterop: boolean;
@@ -64,7 +64,7 @@ export function defaultOptions(): Options {
     context: false,
     snakeToCamel: ['json', 'keys'],
     forceLong: LongOption.NUMBER,
-    useOptionals: false,
+    useOptionals: 'none',
     useDate: DateOption.DATE,
     oneof: OneofOption.PROPERTIES,
     esModuleInterop: false,

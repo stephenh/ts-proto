@@ -33,7 +33,7 @@ describe('options', () => {
         "stringEnums": false,
         "unrecognizedEnum": true,
         "useDate": "timestamp",
-        "useOptionals": false,
+        "useOptionals": "none",
       }
     `);
   });
@@ -64,6 +64,20 @@ describe('options', () => {
     const options = optionsFromParameter('outputServices=grpc-js');
     expect(options).toMatchObject({
       outputServices: ServiceOption.GRPC,
+    });
+  });
+
+  it('can set useOptionals to boolean', () => {
+    const options = optionsFromParameter('useOptionals=true');
+    expect(options).toMatchObject({
+      useOptionals: true,
+    });
+  });
+
+  it('can set useOptionals to string', () => {
+    const options = optionsFromParameter('useOptionals=messages');
+    expect(options).toMatchObject({
+      useOptionals: 'messages',
     });
   });
 });
