@@ -91,7 +91,7 @@ export const Simple = {
   toJSON(message: Simple): unknown {
     const obj: any = {};
     message.name !== undefined && (obj.name = message.name);
-    message.age !== undefined && (obj.age = message.age);
+    message.age !== undefined && (obj.age = Math.round(message.age));
     return obj;
   },
 

@@ -51,7 +51,7 @@ export const Bar = {
   toJSON(message: Bar): unknown {
     const obj: any = {};
     message.name !== undefined && (obj.name = message.name);
-    message.age !== undefined && (obj.age = message.age);
+    message.age !== undefined && (obj.age = Math.round(message.age));
     return obj;
   },
 

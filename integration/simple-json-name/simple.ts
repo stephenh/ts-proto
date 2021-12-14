@@ -63,7 +63,7 @@ export const Simple = {
   toJSON(message: Simple): unknown {
     const obj: any = {};
     message.name !== undefined && (obj.other_name = message.name);
-    message.age !== undefined && (obj.other_age = message.age);
+    message.age !== undefined && (obj.other_age = Math.round(message.age));
     message.createdAt !== undefined && (obj.createdAt = message.createdAt.toISOString());
     return obj;
   },

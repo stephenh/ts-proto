@@ -358,6 +358,21 @@ export function isLong(field: FieldDescriptorProto): boolean {
   return basicLongWireType(field.type) !== undefined;
 }
 
+export function isWholeNumber(field: FieldDescriptorProto): boolean {
+  return (
+    field.type === FieldDescriptorProto_Type.TYPE_INT32 ||
+    field.type === FieldDescriptorProto_Type.TYPE_INT64 ||
+    field.type === FieldDescriptorProto_Type.TYPE_UINT32 ||
+    field.type === FieldDescriptorProto_Type.TYPE_UINT64 ||
+    field.type === FieldDescriptorProto_Type.TYPE_SINT32 ||
+    field.type === FieldDescriptorProto_Type.TYPE_SINT64 ||
+    field.type === FieldDescriptorProto_Type.TYPE_FIXED32 ||
+    field.type === FieldDescriptorProto_Type.TYPE_FIXED64 ||
+    field.type === FieldDescriptorProto_Type.TYPE_SFIXED32 ||
+    field.type === FieldDescriptorProto_Type.TYPE_SFIXED64
+  );
+}
+
 export function isMapType(ctx: Context, messageDesc: DescriptorProto, field: FieldDescriptorProto): boolean {
   return detectMapType(ctx, messageDesc, field) !== undefined;
 }

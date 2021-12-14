@@ -318,7 +318,7 @@ export const Int32Value = {
 
   toJSON(message: Int32Value): unknown {
     const obj: any = {};
-    message.value !== undefined && (obj.value = message.value);
+    message.value !== undefined && (obj.value = Math.round(message.value));
     return obj;
   },
 
@@ -365,7 +365,7 @@ export const UInt32Value = {
 
   toJSON(message: UInt32Value): unknown {
     const obj: any = {};
-    message.value !== undefined && (obj.value = message.value);
+    message.value !== undefined && (obj.value = Math.round(message.value));
     return obj;
   },
 
