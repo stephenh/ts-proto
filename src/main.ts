@@ -18,6 +18,7 @@ import {
   isLongValueType,
   isMapType,
   isMessage,
+  isOptionalProperty,
   isPrimitive,
   isRepeated,
   isScalar,
@@ -73,6 +74,18 @@ import { generateGenericServiceDefinition } from './generate-generic-service-def
 
 export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [string, Code] {
   const { options, utils } = ctx;
+
+  if (options.useOptionals === false) {
+    console.warn(
+      "ts-proto: Passing useOptionals as a boolean option is deprecated and will be removed in a future version. Please pass the string 'none' instead of false."
+    );
+    options.useOptionals = 'none';
+  } else if (options.useOptionals === true) {
+    console.warn(
+      "ts-proto: Passing useOptionals as a boolean option is deprecated and will be removed in a future version. Please pass the string 'messages' instead of true."
+    );
+    options.useOptionals = 'messages';
+  }
 
   // Google's protofiles are organized like Java, where package == the folder the file
   // is in, and file == a specific service within the package. I.e. you can have multiple
@@ -541,11 +554,6 @@ function makeTimestampMethods(options: Options, longs: ReturnType<typeof makeLon
   return { toTimestamp, fromTimestamp, fromJsonTimestamp };
 }
 
-// When useOptionals=true, non-scalar fields are translated into optional properties.
-function isOptionalProperty(field: FieldDescriptorProto, options: Options): boolean {
-  return (options.useOptionals && isMessage(field) && !isRepeated(field)) || field.proto3Optional;
-}
-
 // Create the interface with properties
 function generateInterfaceDeclaration(
   ctx: Context,
@@ -583,7 +591,7 @@ function generateInterfaceDeclaration(
 
     const name = maybeSnakeToCamel(fieldDesc.name, options);
     const type = toTypeName(ctx, messageDesc, fieldDesc);
-    const q = isOptionalProperty(fieldDesc, options) ? '?' : '';
+    const q = isOptionalProperty(fieldDesc, messageDesc.options, options) ? '?' : '';
     chunks.push(code`${name}${q}: ${type}, `);
   });
 
@@ -848,6 +856,7 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
       throw new Error(`Unhandled field ${field}`);
     }
 
+    const isOptional = isOptionalProperty(field, messageDesc.options, options);
     if (isRepeated(field)) {
       if (isMapType(ctx, messageDesc, field)) {
         const valueType = (typeMap.get(field.typeName)![2] as DescriptorProto).field[1];
@@ -859,17 +868,27 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
               }
             `
           : writeSnippet(`{ ${maybeTypeField} key: key as any, value }`);
+        const optionalAlternative = isOptional ? ' || {}' : '';
         chunks.push(code`
-          Object.entries(message.${fieldName}).forEach(([key, value]) => {
+          Object.entries(message.${fieldName}${optionalAlternative}).forEach(([key, value]) => {
             ${entryWriteSnippet}
           });
         `);
       } else if (packedType(field.type) === undefined) {
-        chunks.push(code`
+        const listWriteSnippet = code`
           for (const v of message.${fieldName}) {
             ${writeSnippet('v!')};
           }
-        `);
+        `;
+        if (isOptional) {
+          chunks.push(code`
+            if (message.${fieldName} !== undefined && message.${fieldName}.length !== 0) {
+              ${listWriteSnippet}
+            }
+          `);
+        } else {
+          chunks.push(listWriteSnippet);
+        }
       } else if (isEnum(field) && options.stringEnums) {
         // This is a lot like the `else` clause, but we wrap `fooToNumber` around it.
         // Ideally we'd reuse `writeSnippet` here, but `writeSnippet` has the `writer.uint32(tag)`
@@ -877,23 +896,41 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
         // (i.e. just one tag and multiple values).
         const tag = ((field.number << 3) | 2) >>> 0;
         const toNumber = getEnumMethod(ctx, field.typeName, 'ToNumber');
-        chunks.push(code`
+        const listWriteSnippet = code`
           writer.uint32(${tag}).fork();
           for (const v of message.${fieldName}) {
             writer.${toReaderCall(field)}(${toNumber}(v));
           }
           writer.ldelim();
-        `);
+        `;
+        if (isOptional) {
+          chunks.push(code`
+            if (message.${fieldName} !== undefined && message.${fieldName}.length !== 0) {
+              ${listWriteSnippet}
+            }
+          `);
+        } else {
+          chunks.push(listWriteSnippet);
+        }
       } else {
         // Ideally we'd reuse `writeSnippet` but it has tagging embedded inside of it.
         const tag = ((field.number << 3) | 2) >>> 0;
-        chunks.push(code`
+        const listWriteSnippet = code`
           writer.uint32(${tag}).fork();
           for (const v of message.${fieldName}) {
             writer.${toReaderCall(field)}(v);
           }
           writer.ldelim();
-        `);
+        `;
+        if (isOptional) {
+          chunks.push(code`
+            if (message.${fieldName} !== undefined && message.${fieldName}.length !== 0) {
+              ${listWriteSnippet}
+            }
+          `);
+        } else {
+          chunks.push(listWriteSnippet);
+        }
       }
     } else if (isWithinOneOfThatShouldBeUnion(options, field)) {
       let oneofName = maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options);
@@ -917,7 +954,7 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
       `);
     } else if (isScalar(field) || isEnum(field)) {
       chunks.push(code`
-        if (${notDefaultCheck(ctx, field, `message.${fieldName}`)}) {
+        if (${notDefaultCheck(ctx, field, messageDesc.options, `message.${fieldName}`)}) {
           ${writeSnippet(`message.${fieldName}`)};
         }
       `);
