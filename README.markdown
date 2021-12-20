@@ -159,7 +159,7 @@ creating a class and calling the right getters/setters.
 
   (Configurable with the `useDate` parameter.)
 
-- `fromJSON`/`toJSON` support the [canonical Protobuf JS](https://developers.google.com/protocol-buffers/docs/proto3#json) format (i.e. timestamps are ISO strings)
+- `fromJSON`/`toJSON` use the [proto3 canonical JSON encoding format](https://developers.google.com/protocol-buffers/docs/proto3#json) (e.g. timestamps are ISO strings), unlike [`protobufjs`](https://github.com/protobufjs/protobuf.js/issues/1304). 
 
 # Auto-Batching / N+1 Prevention
 
