@@ -9,11 +9,11 @@ export interface DividerData {
 }
 
 export const DividerData_DividerType = {
-  DOUBLE: 0,
-  SINGLE: 1,
-  DASHED: 2,
-  DOTTED: 3,
-  UNRECOGNIZED: -1,
+  DOUBLE: 'DOUBLE',
+  SINGLE: 'SINGLE',
+  DASHED: 'DASHED',
+  DOTTED: 'DOTTED',
+  UNRECOGNIZED: 'UNRECOGNIZED',
 } as const;
 
 export type DividerData_DividerType = typeof DividerData_DividerType[keyof typeof DividerData_DividerType];
@@ -54,12 +54,27 @@ export function dividerData_DividerTypeToJSON(object: DividerData_DividerType): 
   }
 }
 
-const baseDividerData: object = { type: 0 };
+export function dividerData_DividerTypeToNumber(object: DividerData_DividerType): number {
+  switch (object) {
+    case DividerData_DividerType.DOUBLE:
+      return 0;
+    case DividerData_DividerType.SINGLE:
+      return 1;
+    case DividerData_DividerType.DASHED:
+      return 2;
+    case DividerData_DividerType.DOTTED:
+      return 3;
+    default:
+      return 0;
+  }
+}
+
+const baseDividerData: object = { type: DividerData_DividerType.DOUBLE };
 
 export const DividerData = {
   encode(message: DividerData, writer: Writer = Writer.create()): Writer {
-    if (message.type !== 0) {
-      writer.uint32(8).int32(message.type);
+    if (message.type !== DividerData_DividerType.DOUBLE) {
+      writer.uint32(8).int32(dividerData_DividerTypeToNumber(message.type));
     }
     return writer;
   },
@@ -72,7 +87,7 @@ export const DividerData = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.type = reader.int32() as any;
+          message.type = dividerData_DividerTypeFromJSON(reader.int32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -84,7 +99,10 @@ export const DividerData = {
 
   fromJSON(object: any): DividerData {
     const message = { ...baseDividerData } as DividerData;
-    message.type = object.type !== undefined && object.type !== null ? dividerData_DividerTypeFromJSON(object.type) : 0;
+    message.type =
+      object.type !== undefined && object.type !== null
+        ? dividerData_DividerTypeFromJSON(object.type)
+        : DividerData_DividerType.DOUBLE;
     return message;
   },
 
@@ -96,7 +114,7 @@ export const DividerData = {
 
   fromPartial<I extends Exact<DeepPartial<DividerData>, I>>(object: I): DividerData {
     const message = { ...baseDividerData } as DividerData;
-    message.type = object.type ?? 0;
+    message.type = object.type ?? DividerData_DividerType.DOUBLE;
     return message;
   },
 };
