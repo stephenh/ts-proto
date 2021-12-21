@@ -229,7 +229,7 @@ function generateClientConstructor(fileDesc: FileDescriptorProto, serviceDesc: S
         credentials: ${ChannelCredentials},
         options?: Partial<${ChannelOptions}>,
       ): ${serviceDesc.name}Client;
-      service: ${serviceDesc.name}Service;
+      service: typeof ${serviceDesc.name}Service;
     }
   `;
 }
