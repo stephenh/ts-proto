@@ -1,3 +1,10 @@
+## [1.95.1](https://github.com/stephenh/ts-proto/compare/v1.95.0...v1.95.1) (2021-12-23)
+
+
+### Bug Fixes
+
+* Add service to the client constructor. ([#455](https://github.com/stephenh/ts-proto/issues/455)) ([8c32104](https://github.com/stephenh/ts-proto/commit/8c32104a8522cfe2febcf2338d51710021d837ff))
+
 # [1.95.0](https://github.com/stephenh/ts-proto/compare/v1.94.0...v1.95.0) (2021-12-14)
 
 
