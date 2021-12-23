@@ -73,17 +73,17 @@ describe('grpc-js-test', () => {
       },
       struct(
         call: ServerUnaryCall<{ [key: string]: any } | undefined, { [key: string]: any }>,
-        callback: sendUnaryData<{ [key: string]: any } | undefined>){
+        callback: sendUnaryData<{ [key: string]: any } | undefined>
+      ) {
         callback(null, call.request);
       },
-      value(
-        call: ServerUnaryCall<any | undefined, any | undefined>,
-        callback: sendUnaryData<any | undefined>) {
+      value(call: ServerUnaryCall<any | undefined, any | undefined>, callback: sendUnaryData<any | undefined>) {
         callback(null, call.request);
       },
       listValue(
         call: ServerUnaryCall<Array<any> | undefined, Array<any> | undefined>,
-        callback: sendUnaryData<Array<any> | undefined>) {
+        callback: sendUnaryData<Array<any> | undefined>
+      ) {
         callback(null, call.request);
       },
       serverStreaming(call) {
@@ -147,7 +147,9 @@ describe('grpc-js-test', () => {
 
     const client = new TestClient(`localhost:${port}`, ChannelCredentials.createInsecure());
 
-    expect.assertions(25);
+    expect.assertions(26);
+
+    expect(TestClient.service).toEqual(TestService);
 
     client.unary({}, (err, res) => {
       expect(res).toEqual({});
