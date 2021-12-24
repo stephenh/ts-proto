@@ -20,13 +20,13 @@ export function generateEnum(
 
   maybeAddComment(sourceInfo, chunks, enumDesc.options?.deprecated);
 
-  if (options.enumAsConst) {
+  if (options.enumsAsLiterals) {
     chunks.push(code`export const ${def(fullName)} = {`);
   } else {
     chunks.push(code`export ${options.constEnums ? 'const ' : ''}enum ${def(fullName)} {`);
   }
 
-  const delimiter = options.enumAsConst ? ':' : '=';
+  const delimiter = options.enumsAsLiterals ? ':' : '=';
 
   enumDesc.value.forEach((valueDesc, index) => {
     const info = sourceInfo.lookup(Fields.enum.value, index);
@@ -42,7 +42,7 @@ export function generateEnum(
       options.stringEnums ? `"${UNRECOGNIZED_ENUM_NAME}"` : UNRECOGNIZED_ENUM_VALUE.toString()
     },`);
 
-  if (options.enumAsConst) {
+  if (options.enumsAsLiterals) {
     chunks.push(code`} as const`);
     chunks.push(code`\n`);
     chunks.push(code`export type ${def(fullName)} = typeof ${def(fullName)}[keyof typeof ${def(fullName)}]`);
