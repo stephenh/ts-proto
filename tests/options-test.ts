@@ -9,6 +9,7 @@ describe('options', () => {
         "constEnums": false,
         "context": false,
         "emitImportedFiles": true,
+        "enumsAsLiterals": false,
         "env": "both",
         "esModuleInterop": false,
         "exportCommonSymbols": true,

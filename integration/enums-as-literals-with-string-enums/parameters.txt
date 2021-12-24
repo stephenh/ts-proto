@@ -1,0 +1,1 @@
+stringEnums=true,enumsAsLiterals=true
