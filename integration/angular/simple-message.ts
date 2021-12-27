@@ -8,7 +8,7 @@ export interface SimpleMessage {
   numberField: number;
 }
 
-const baseSimpleMessage: object = { numberField: 0 };
+const createBaseSimpleMessage = (): SimpleMessage => ({ numberField: 0 });
 
 export const SimpleMessage = {
   encode(message: SimpleMessage, writer: Writer = Writer.create()): Writer {
@@ -21,7 +21,7 @@ export const SimpleMessage = {
   decode(input: Reader | Uint8Array, length?: number): SimpleMessage {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseSimpleMessage } as SimpleMessage;
+    const message = createBaseSimpleMessage();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -37,7 +37,7 @@ export const SimpleMessage = {
   },
 
   fromJSON(object: any): SimpleMessage {
-    const message = { ...baseSimpleMessage } as SimpleMessage;
+    const message = createBaseSimpleMessage();
     message.numberField =
       object.numberField !== undefined && object.numberField !== null ? Number(object.numberField) : 0;
     return message;
@@ -50,7 +50,7 @@ export const SimpleMessage = {
   },
 
   fromPartial<I extends Exact<DeepPartial<SimpleMessage>, I>>(object: I): SimpleMessage {
-    const message = { ...baseSimpleMessage } as SimpleMessage;
+    const message = createBaseSimpleMessage();
     message.numberField = object.numberField ?? 0;
     return message;
   },

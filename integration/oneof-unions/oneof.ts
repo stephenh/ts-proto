@@ -69,7 +69,7 @@ export interface SimpleButOptional {
   age?: number | undefined;
 }
 
-const basePleaseChoose: object = { name: '', age: 0 };
+const createBasePleaseChoose = (): PleaseChoose => ({ name: '', age: 0 });
 
 export const PleaseChoose = {
   encode(message: PleaseChoose, writer: Writer = Writer.create()): Writer {
@@ -115,7 +115,7 @@ export const PleaseChoose = {
   decode(input: Reader | Uint8Array, length?: number): PleaseChoose {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...basePleaseChoose } as PleaseChoose;
+    const message = createBasePleaseChoose();
     message.signature = new Uint8Array();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -165,7 +165,7 @@ export const PleaseChoose = {
   },
 
   fromJSON(object: any): PleaseChoose {
-    const message = { ...basePleaseChoose } as PleaseChoose;
+    const message = createBasePleaseChoose();
     message.name = object.name !== undefined && object.name !== null ? String(object.name) : '';
     if (object.aNumber !== undefined && object.aNumber !== null) {
       message.choice = { $case: 'aNumber', aNumber: Number(object.aNumber) };
@@ -226,7 +226,7 @@ export const PleaseChoose = {
   },
 
   fromPartial<I extends Exact<DeepPartial<PleaseChoose>, I>>(object: I): PleaseChoose {
-    const message = { ...basePleaseChoose } as PleaseChoose;
+    const message = createBasePleaseChoose();
     message.name = object.name ?? '';
     if (object.choice?.$case === 'aNumber' && object.choice?.aNumber !== undefined && object.choice?.aNumber !== null) {
       message.choice = { $case: 'aNumber', aNumber: object.choice.aNumber };
@@ -277,7 +277,7 @@ export const PleaseChoose = {
   },
 };
 
-const basePleaseChoose_Submessage: object = { name: '' };
+const createBasePleaseChoose_Submessage = (): PleaseChoose_Submessage => ({ name: '' });
 
 export const PleaseChoose_Submessage = {
   encode(message: PleaseChoose_Submessage, writer: Writer = Writer.create()): Writer {
@@ -290,7 +290,7 @@ export const PleaseChoose_Submessage = {
   decode(input: Reader | Uint8Array, length?: number): PleaseChoose_Submessage {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...basePleaseChoose_Submessage } as PleaseChoose_Submessage;
+    const message = createBasePleaseChoose_Submessage();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -306,7 +306,7 @@ export const PleaseChoose_Submessage = {
   },
 
   fromJSON(object: any): PleaseChoose_Submessage {
-    const message = { ...basePleaseChoose_Submessage } as PleaseChoose_Submessage;
+    const message = createBasePleaseChoose_Submessage();
     message.name = object.name !== undefined && object.name !== null ? String(object.name) : '';
     return message;
   },
@@ -318,13 +318,13 @@ export const PleaseChoose_Submessage = {
   },
 
   fromPartial<I extends Exact<DeepPartial<PleaseChoose_Submessage>, I>>(object: I): PleaseChoose_Submessage {
-    const message = { ...basePleaseChoose_Submessage } as PleaseChoose_Submessage;
+    const message = createBasePleaseChoose_Submessage();
     message.name = object.name ?? '';
     return message;
   },
 };
 
-const baseSimpleButOptional: object = {};
+const createBaseSimpleButOptional = (): SimpleButOptional => ({});
 
 export const SimpleButOptional = {
   encode(message: SimpleButOptional, writer: Writer = Writer.create()): Writer {
@@ -340,7 +340,7 @@ export const SimpleButOptional = {
   decode(input: Reader | Uint8Array, length?: number): SimpleButOptional {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseSimpleButOptional } as SimpleButOptional;
+    const message = createBaseSimpleButOptional();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -359,7 +359,7 @@ export const SimpleButOptional = {
   },
 
   fromJSON(object: any): SimpleButOptional {
-    const message = { ...baseSimpleButOptional } as SimpleButOptional;
+    const message = createBaseSimpleButOptional();
     message.name = object.name !== undefined && object.name !== null ? String(object.name) : undefined;
     message.age = object.age !== undefined && object.age !== null ? Number(object.age) : undefined;
     return message;
@@ -373,7 +373,7 @@ export const SimpleButOptional = {
   },
 
   fromPartial<I extends Exact<DeepPartial<SimpleButOptional>, I>>(object: I): SimpleButOptional {
-    const message = { ...baseSimpleButOptional } as SimpleButOptional;
+    const message = createBaseSimpleButOptional();
     message.name = object.name ?? undefined;
     message.age = object.age ?? undefined;
     return message;

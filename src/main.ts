@@ -148,7 +148,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
       (fullName, message, sInfo, fullProtoTypeName) => {
         const fullTypeName = maybePrefixPackage(fileDesc, fullProtoTypeName);
 
-        chunks.push(generateBaseInstance(ctx, fullName, message, fullTypeName));
+        chunks.push(generateBaseInstanceFactory(ctx, fullName, message, fullTypeName));
 
         const staticMembers: Code[] = [];
 
@@ -641,8 +641,8 @@ function generateOneofProperty(
   */
 }
 
-// Create a 'base' instance with default values for decode to use as a prototype
-function generateBaseInstance(
+// Create a function that constructs 'base' instance with default values for decode to use as a prototype
+function generateBaseInstanceFactory(
   ctx: Context,
   fullName: string,
   messageDesc: DescriptorProto,
@@ -661,7 +661,7 @@ function generateBaseInstance(
     fields.unshift(code`$type: '${fullTypeName}'`);
   }
 
-  return code`const base${fullName}: object = { ${joinCode(fields, { on: ',' })} };`;
+  return code`const createBase${fullName} = (): ${fullName} => ({ ${joinCode(fields, { on: ',' })} });`;
 }
 
 /** Creates a function to decode a message by loop overing the tags. */
@@ -677,7 +677,7 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
     ): ${fullName} {
       const reader = input instanceof ${Reader} ? input : new ${Reader}(input);
       let end = length === undefined ? reader.len : reader.pos + length;
-      const message = { ...base${fullName} } as ${fullName};
+      const message = createBase${fullName}();
   `);
 
   // initialize all lists
@@ -981,7 +981,7 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
   // create the basic function declaration
   chunks.push(code`
     fromJSON(${messageDesc.field.length > 0 ? 'object' : '_'}: any): ${fullName} {
-      const message = { ...base${fullName} } as ${fullName};
+      const message = createBase${fullName}();
   `);
 
   // add a check for each incoming field
@@ -1245,7 +1245,7 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
   const paramName = messageDesc.field.length > 0 ? 'object' : '_';
   chunks.push(code`
     fromPartial<I extends ${utils.Exact}<${utils.DeepPartial}<${fullName}>, I>>(${paramName}: I): ${fullName} {
-      const message = { ...base${fullName} } as ${fullName};
+      const message = createBase${fullName}();
   `);
 
   // add a check for each incoming field

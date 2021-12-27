@@ -8,11 +8,11 @@ export interface Message {
   data: Uint8Array;
 }
 
-const baseMessage: object = {};
+const createBaseMessage = (): Message => ({});
 
 export const Message = {
   fromJSON(object: any): Message {
-    const message = { ...baseMessage } as Message;
+    const message = createBaseMessage();
     message.data = object.data !== undefined && object.data !== null ? bytesFromBase64(object.data) : new Uint8Array();
     return message;
   },
@@ -25,7 +25,7 @@ export const Message = {
   },
 
   fromPartial<I extends Exact<DeepPartial<Message>, I>>(object: I): Message {
-    const message = { ...baseMessage } as Message;
+    const message = createBaseMessage();
     message.data = object.data ?? new Uint8Array();
     return message;
   },

@@ -113,7 +113,7 @@ export interface Timestamp {
   nanos: number;
 }
 
-const baseTimestamp: object = { seconds: '0', nanos: 0 };
+const createBaseTimestamp = (): Timestamp => ({ seconds: '0', nanos: 0 });
 
 export const Timestamp = {
   encode(message: Timestamp, writer: Writer = Writer.create()): Writer {
@@ -129,7 +129,7 @@ export const Timestamp = {
   decode(input: Reader | Uint8Array, length?: number): Timestamp {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseTimestamp } as Timestamp;
+    const message = createBaseTimestamp();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -148,7 +148,7 @@ export const Timestamp = {
   },
 
   fromJSON(object: any): Timestamp {
-    const message = { ...baseTimestamp } as Timestamp;
+    const message = createBaseTimestamp();
     message.seconds = object.seconds !== undefined && object.seconds !== null ? String(object.seconds) : '0';
     message.nanos = object.nanos !== undefined && object.nanos !== null ? Number(object.nanos) : 0;
     return message;
@@ -162,7 +162,7 @@ export const Timestamp = {
   },
 
   fromPartial<I extends Exact<DeepPartial<Timestamp>, I>>(object: I): Timestamp {
-    const message = { ...baseTimestamp } as Timestamp;
+    const message = createBaseTimestamp();
     message.seconds = object.seconds ?? '0';
     message.nanos = object.nanos ?? 0;
     return message;

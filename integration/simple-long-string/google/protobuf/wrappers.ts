@@ -94,7 +94,7 @@ export interface BytesValue {
   value: Uint8Array;
 }
 
-const baseDoubleValue: object = { value: 0 };
+const createBaseDoubleValue = (): DoubleValue => ({ value: 0 });
 
 export const DoubleValue = {
   encode(message: DoubleValue, writer: Writer = Writer.create()): Writer {
@@ -107,7 +107,7 @@ export const DoubleValue = {
   decode(input: Reader | Uint8Array, length?: number): DoubleValue {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseDoubleValue } as DoubleValue;
+    const message = createBaseDoubleValue();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -123,7 +123,7 @@ export const DoubleValue = {
   },
 
   fromJSON(object: any): DoubleValue {
-    const message = { ...baseDoubleValue } as DoubleValue;
+    const message = createBaseDoubleValue();
     message.value = object.value !== undefined && object.value !== null ? Number(object.value) : 0;
     return message;
   },
@@ -135,13 +135,13 @@ export const DoubleValue = {
   },
 
   fromPartial<I extends Exact<DeepPartial<DoubleValue>, I>>(object: I): DoubleValue {
-    const message = { ...baseDoubleValue } as DoubleValue;
+    const message = createBaseDoubleValue();
     message.value = object.value ?? 0;
     return message;
   },
 };
 
-const baseFloatValue: object = { value: 0 };
+const createBaseFloatValue = (): FloatValue => ({ value: 0 });
 
 export const FloatValue = {
   encode(message: FloatValue, writer: Writer = Writer.create()): Writer {
@@ -154,7 +154,7 @@ export const FloatValue = {
   decode(input: Reader | Uint8Array, length?: number): FloatValue {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseFloatValue } as FloatValue;
+    const message = createBaseFloatValue();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -170,7 +170,7 @@ export const FloatValue = {
   },
 
   fromJSON(object: any): FloatValue {
-    const message = { ...baseFloatValue } as FloatValue;
+    const message = createBaseFloatValue();
     message.value = object.value !== undefined && object.value !== null ? Number(object.value) : 0;
     return message;
   },
@@ -182,13 +182,13 @@ export const FloatValue = {
   },
 
   fromPartial<I extends Exact<DeepPartial<FloatValue>, I>>(object: I): FloatValue {
-    const message = { ...baseFloatValue } as FloatValue;
+    const message = createBaseFloatValue();
     message.value = object.value ?? 0;
     return message;
   },
 };
 
-const baseInt64Value: object = { value: '0' };
+const createBaseInt64Value = (): Int64Value => ({ value: '0' });
 
 export const Int64Value = {
   encode(message: Int64Value, writer: Writer = Writer.create()): Writer {
@@ -201,7 +201,7 @@ export const Int64Value = {
   decode(input: Reader | Uint8Array, length?: number): Int64Value {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseInt64Value } as Int64Value;
+    const message = createBaseInt64Value();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -217,7 +217,7 @@ export const Int64Value = {
   },
 
   fromJSON(object: any): Int64Value {
-    const message = { ...baseInt64Value } as Int64Value;
+    const message = createBaseInt64Value();
     message.value = object.value !== undefined && object.value !== null ? String(object.value) : '0';
     return message;
   },
@@ -229,13 +229,13 @@ export const Int64Value = {
   },
 
   fromPartial<I extends Exact<DeepPartial<Int64Value>, I>>(object: I): Int64Value {
-    const message = { ...baseInt64Value } as Int64Value;
+    const message = createBaseInt64Value();
     message.value = object.value ?? '0';
     return message;
   },
 };
 
-const baseUInt64Value: object = { value: '0' };
+const createBaseUInt64Value = (): UInt64Value => ({ value: '0' });
 
 export const UInt64Value = {
   encode(message: UInt64Value, writer: Writer = Writer.create()): Writer {
@@ -248,7 +248,7 @@ export const UInt64Value = {
   decode(input: Reader | Uint8Array, length?: number): UInt64Value {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseUInt64Value } as UInt64Value;
+    const message = createBaseUInt64Value();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -264,7 +264,7 @@ export const UInt64Value = {
   },
 
   fromJSON(object: any): UInt64Value {
-    const message = { ...baseUInt64Value } as UInt64Value;
+    const message = createBaseUInt64Value();
     message.value = object.value !== undefined && object.value !== null ? String(object.value) : '0';
     return message;
   },
@@ -276,13 +276,13 @@ export const UInt64Value = {
   },
 
   fromPartial<I extends Exact<DeepPartial<UInt64Value>, I>>(object: I): UInt64Value {
-    const message = { ...baseUInt64Value } as UInt64Value;
+    const message = createBaseUInt64Value();
     message.value = object.value ?? '0';
     return message;
   },
 };
 
-const baseInt32Value: object = { value: 0 };
+const createBaseInt32Value = (): Int32Value => ({ value: 0 });
 
 export const Int32Value = {
   encode(message: Int32Value, writer: Writer = Writer.create()): Writer {
@@ -295,7 +295,7 @@ export const Int32Value = {
   decode(input: Reader | Uint8Array, length?: number): Int32Value {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseInt32Value } as Int32Value;
+    const message = createBaseInt32Value();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -311,7 +311,7 @@ export const Int32Value = {
   },
 
   fromJSON(object: any): Int32Value {
-    const message = { ...baseInt32Value } as Int32Value;
+    const message = createBaseInt32Value();
     message.value = object.value !== undefined && object.value !== null ? Number(object.value) : 0;
     return message;
   },
@@ -323,13 +323,13 @@ export const Int32Value = {
   },
 
   fromPartial<I extends Exact<DeepPartial<Int32Value>, I>>(object: I): Int32Value {
-    const message = { ...baseInt32Value } as Int32Value;
+    const message = createBaseInt32Value();
     message.value = object.value ?? 0;
     return message;
   },
 };
 
-const baseUInt32Value: object = { value: 0 };
+const createBaseUInt32Value = (): UInt32Value => ({ value: 0 });
 
 export const UInt32Value = {
   encode(message: UInt32Value, writer: Writer = Writer.create()): Writer {
@@ -342,7 +342,7 @@ export const UInt32Value = {
   decode(input: Reader | Uint8Array, length?: number): UInt32Value {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseUInt32Value } as UInt32Value;
+    const message = createBaseUInt32Value();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -358,7 +358,7 @@ export const UInt32Value = {
   },
 
   fromJSON(object: any): UInt32Value {
-    const message = { ...baseUInt32Value } as UInt32Value;
+    const message = createBaseUInt32Value();
     message.value = object.value !== undefined && object.value !== null ? Number(object.value) : 0;
     return message;
   },
@@ -370,13 +370,13 @@ export const UInt32Value = {
   },
 
   fromPartial<I extends Exact<DeepPartial<UInt32Value>, I>>(object: I): UInt32Value {
-    const message = { ...baseUInt32Value } as UInt32Value;
+    const message = createBaseUInt32Value();
     message.value = object.value ?? 0;
     return message;
   },
 };
 
-const baseBoolValue: object = { value: false };
+const createBaseBoolValue = (): BoolValue => ({ value: false });
 
 export const BoolValue = {
   encode(message: BoolValue, writer: Writer = Writer.create()): Writer {
@@ -389,7 +389,7 @@ export const BoolValue = {
   decode(input: Reader | Uint8Array, length?: number): BoolValue {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseBoolValue } as BoolValue;
+    const message = createBaseBoolValue();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -405,7 +405,7 @@ export const BoolValue = {
   },
 
   fromJSON(object: any): BoolValue {
-    const message = { ...baseBoolValue } as BoolValue;
+    const message = createBaseBoolValue();
     message.value = object.value !== undefined && object.value !== null ? Boolean(object.value) : false;
     return message;
   },
@@ -417,13 +417,13 @@ export const BoolValue = {
   },
 
   fromPartial<I extends Exact<DeepPartial<BoolValue>, I>>(object: I): BoolValue {
-    const message = { ...baseBoolValue } as BoolValue;
+    const message = createBaseBoolValue();
     message.value = object.value ?? false;
     return message;
   },
 };
 
-const baseStringValue: object = { value: '' };
+const createBaseStringValue = (): StringValue => ({ value: '' });
 
 export const StringValue = {
   encode(message: StringValue, writer: Writer = Writer.create()): Writer {
@@ -436,7 +436,7 @@ export const StringValue = {
   decode(input: Reader | Uint8Array, length?: number): StringValue {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseStringValue } as StringValue;
+    const message = createBaseStringValue();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -452,7 +452,7 @@ export const StringValue = {
   },
 
   fromJSON(object: any): StringValue {
-    const message = { ...baseStringValue } as StringValue;
+    const message = createBaseStringValue();
     message.value = object.value !== undefined && object.value !== null ? String(object.value) : '';
     return message;
   },
@@ -464,13 +464,13 @@ export const StringValue = {
   },
 
   fromPartial<I extends Exact<DeepPartial<StringValue>, I>>(object: I): StringValue {
-    const message = { ...baseStringValue } as StringValue;
+    const message = createBaseStringValue();
     message.value = object.value ?? '';
     return message;
   },
 };
 
-const baseBytesValue: object = {};
+const createBaseBytesValue = (): BytesValue => ({});
 
 export const BytesValue = {
   encode(message: BytesValue, writer: Writer = Writer.create()): Writer {
@@ -483,7 +483,7 @@ export const BytesValue = {
   decode(input: Reader | Uint8Array, length?: number): BytesValue {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseBytesValue } as BytesValue;
+    const message = createBaseBytesValue();
     message.value = new Uint8Array();
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -500,7 +500,7 @@ export const BytesValue = {
   },
 
   fromJSON(object: any): BytesValue {
-    const message = { ...baseBytesValue } as BytesValue;
+    const message = createBaseBytesValue();
     message.value =
       object.value !== undefined && object.value !== null ? bytesFromBase64(object.value) : new Uint8Array();
     return message;
@@ -514,7 +514,7 @@ export const BytesValue = {
   },
 
   fromPartial<I extends Exact<DeepPartial<BytesValue>, I>>(object: I): BytesValue {
-    const message = { ...baseBytesValue } as BytesValue;
+    const message = createBaseBytesValue();
     message.value = object.value ?? new Uint8Array();
     return message;
   },

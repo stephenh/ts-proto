@@ -10,7 +10,7 @@ export interface Point {
   dataWrapped: Buffer | undefined;
 }
 
-const basePoint: object = {};
+const createBasePoint = (): Point => ({});
 
 export const Point = {
   encode(message: Point, writer: Writer = Writer.create()): Writer {
@@ -26,7 +26,7 @@ export const Point = {
   decode(input: Reader | Uint8Array, length?: number): Point {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...basePoint } as Point;
+    const message = createBasePoint();
     message.data = Buffer.alloc(0);
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -46,7 +46,7 @@ export const Point = {
   },
 
   fromJSON(object: any): Point {
-    const message = { ...basePoint } as Point;
+    const message = createBasePoint();
     message.data =
       object.data !== undefined && object.data !== null ? Buffer.from(bytesFromBase64(object.data)) : Buffer.alloc(0);
     message.dataWrapped =
@@ -63,7 +63,7 @@ export const Point = {
   },
 
   fromPartial<I extends Exact<DeepPartial<Point>, I>>(object: I): Point {
-    const message = { ...basePoint } as Point;
+    const message = createBasePoint();
     message.data = object.data ?? Buffer.alloc(0);
     message.dataWrapped = object.dataWrapped ?? undefined;
     return message;

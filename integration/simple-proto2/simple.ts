@@ -40,7 +40,7 @@ export interface Issue56 {
   test: EnumWithoutZero;
 }
 
-const baseIssue56: object = { test: 1 };
+const createBaseIssue56 = (): Issue56 => ({ test: 1 });
 
 export const Issue56 = {
   encode(message: Issue56, writer: Writer = Writer.create()): Writer {
@@ -53,7 +53,7 @@ export const Issue56 = {
   decode(input: Reader | Uint8Array, length?: number): Issue56 {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseIssue56 } as Issue56;
+    const message = createBaseIssue56();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -69,7 +69,7 @@ export const Issue56 = {
   },
 
   fromJSON(object: any): Issue56 {
-    const message = { ...baseIssue56 } as Issue56;
+    const message = createBaseIssue56();
     message.test = object.test !== undefined && object.test !== null ? enumWithoutZeroFromJSON(object.test) : 1;
     return message;
   },
@@ -81,7 +81,7 @@ export const Issue56 = {
   },
 
   fromPartial<I extends Exact<DeepPartial<Issue56>, I>>(object: I): Issue56 {
-    const message = { ...baseIssue56 } as Issue56;
+    const message = createBaseIssue56();
     message.test = object.test ?? 1;
     return message;
   },

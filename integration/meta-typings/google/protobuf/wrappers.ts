@@ -95,7 +95,7 @@ export interface BytesValue {
   value: Uint8Array;
 }
 
-const baseDoubleValue: object = { value: 0 };
+const createBaseDoubleValue = (): DoubleValue => ({ value: 0 });
 
 export const DoubleValue = {
   encode(message: DoubleValue, writer: Writer = Writer.create()): Writer {
@@ -108,7 +108,7 @@ export const DoubleValue = {
   decode(input: Reader | Uint8Array, length?: number): DoubleValue {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseDoubleValue } as DoubleValue;
+    const message = createBaseDoubleValue();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -124,7 +124,7 @@ export const DoubleValue = {
   },
 };
 
-const baseFloatValue: object = { value: 0 };
+const createBaseFloatValue = (): FloatValue => ({ value: 0 });
 
 export const FloatValue = {
   encode(message: FloatValue, writer: Writer = Writer.create()): Writer {
@@ -137,7 +137,7 @@ export const FloatValue = {
   decode(input: Reader | Uint8Array, length?: number): FloatValue {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseFloatValue } as FloatValue;
+    const message = createBaseFloatValue();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -153,7 +153,7 @@ export const FloatValue = {
   },
 };
 
-const baseInt64Value: object = { value: 0 };
+const createBaseInt64Value = (): Int64Value => ({ value: 0 });
 
 export const Int64Value = {
   encode(message: Int64Value, writer: Writer = Writer.create()): Writer {
@@ -166,7 +166,7 @@ export const Int64Value = {
   decode(input: Reader | Uint8Array, length?: number): Int64Value {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseInt64Value } as Int64Value;
+    const message = createBaseInt64Value();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -182,7 +182,7 @@ export const Int64Value = {
   },
 };
 
-const baseUInt64Value: object = { value: 0 };
+const createBaseUInt64Value = (): UInt64Value => ({ value: 0 });
 
 export const UInt64Value = {
   encode(message: UInt64Value, writer: Writer = Writer.create()): Writer {
@@ -195,7 +195,7 @@ export const UInt64Value = {
   decode(input: Reader | Uint8Array, length?: number): UInt64Value {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseUInt64Value } as UInt64Value;
+    const message = createBaseUInt64Value();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -211,7 +211,7 @@ export const UInt64Value = {
   },
 };
 
-const baseInt32Value: object = { value: 0 };
+const createBaseInt32Value = (): Int32Value => ({ value: 0 });
 
 export const Int32Value = {
   encode(message: Int32Value, writer: Writer = Writer.create()): Writer {
@@ -224,7 +224,7 @@ export const Int32Value = {
   decode(input: Reader | Uint8Array, length?: number): Int32Value {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseInt32Value } as Int32Value;
+    const message = createBaseInt32Value();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -240,7 +240,7 @@ export const Int32Value = {
   },
 };
 
-const baseUInt32Value: object = { value: 0 };
+const createBaseUInt32Value = (): UInt32Value => ({ value: 0 });
 
 export const UInt32Value = {
   encode(message: UInt32Value, writer: Writer = Writer.create()): Writer {
@@ -253,7 +253,7 @@ export const UInt32Value = {
   decode(input: Reader | Uint8Array, length?: number): UInt32Value {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseUInt32Value } as UInt32Value;
+    const message = createBaseUInt32Value();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -269,7 +269,7 @@ export const UInt32Value = {
   },
 };
 
-const baseBoolValue: object = { value: false };
+const createBaseBoolValue = (): BoolValue => ({ value: false });
 
 export const BoolValue = {
   encode(message: BoolValue, writer: Writer = Writer.create()): Writer {
@@ -282,7 +282,7 @@ export const BoolValue = {
   decode(input: Reader | Uint8Array, length?: number): BoolValue {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseBoolValue } as BoolValue;
+    const message = createBaseBoolValue();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -298,7 +298,7 @@ export const BoolValue = {
   },
 };
 
-const baseStringValue: object = { value: '' };
+const createBaseStringValue = (): StringValue => ({ value: '' });
 
 export const StringValue = {
   encode(message: StringValue, writer: Writer = Writer.create()): Writer {
@@ -311,7 +311,7 @@ export const StringValue = {
   decode(input: Reader | Uint8Array, length?: number): StringValue {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseStringValue } as StringValue;
+    const message = createBaseStringValue();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -327,7 +327,7 @@ export const StringValue = {
   },
 };
 
-const baseBytesValue: object = {};
+const createBaseBytesValue = (): BytesValue => ({});
 
 export const BytesValue = {
   encode(message: BytesValue, writer: Writer = Writer.create()): Writer {
@@ -340,7 +340,7 @@ export const BytesValue = {
   decode(input: Reader | Uint8Array, length?: number): BytesValue {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseBytesValue } as BytesValue;
+    const message = createBaseBytesValue();
     message.value = new Uint8Array();
     while (reader.pos < end) {
       const tag = reader.uint32();

@@ -40,7 +40,7 @@ export interface TestMessage {
   timestamp: Date | undefined;
 }
 
-const baseTestMessage: object = {};
+const createBaseTestMessage = (): TestMessage => ({});
 
 export const TestMessage = {
   encode(message: TestMessage, writer: Writer = Writer.create()): Writer {
@@ -53,7 +53,7 @@ export const TestMessage = {
   decode(input: Reader | Uint8Array, length?: number): TestMessage {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseTestMessage } as TestMessage;
+    const message = createBaseTestMessage();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -69,7 +69,7 @@ export const TestMessage = {
   },
 
   fromJSON(object: any): TestMessage {
-    const message = { ...baseTestMessage } as TestMessage;
+    const message = createBaseTestMessage();
     message.timestamp =
       object.timestamp !== undefined && object.timestamp !== null ? fromJsonTimestamp(object.timestamp) : undefined;
     return message;
@@ -82,7 +82,7 @@ export const TestMessage = {
   },
 
   fromPartial<I extends Exact<DeepPartial<TestMessage>, I>>(object: I): TestMessage {
-    const message = { ...baseTestMessage } as TestMessage;
+    const message = createBaseTestMessage();
     message.timestamp = object.timestamp ?? undefined;
     return message;
   },

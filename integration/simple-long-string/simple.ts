@@ -23,7 +23,7 @@ export interface Numbers {
   timestamp: Date | undefined;
 }
 
-const baseNumbers: object = {
+const createBaseNumbers = (): Numbers => ({
   double: 0,
   float: 0,
   int32: 0,
@@ -36,7 +36,7 @@ const baseNumbers: object = {
   fixed64: '0',
   sfixed32: 0,
   sfixed64: '0',
-};
+});
 
 export const Numbers = {
   encode(message: Numbers, writer: Writer = Writer.create()): Writer {
@@ -88,7 +88,7 @@ export const Numbers = {
   decode(input: Reader | Uint8Array, length?: number): Numbers {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseNumbers } as Numbers;
+    const message = createBaseNumbers();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -143,7 +143,7 @@ export const Numbers = {
   },
 
   fromJSON(object: any): Numbers {
-    const message = { ...baseNumbers } as Numbers;
+    const message = createBaseNumbers();
     message.double = object.double !== undefined && object.double !== null ? Number(object.double) : 0;
     message.float = object.float !== undefined && object.float !== null ? Number(object.float) : 0;
     message.int32 = object.int32 !== undefined && object.int32 !== null ? Number(object.int32) : 0;
@@ -182,7 +182,7 @@ export const Numbers = {
   },
 
   fromPartial<I extends Exact<DeepPartial<Numbers>, I>>(object: I): Numbers {
-    const message = { ...baseNumbers } as Numbers;
+    const message = createBaseNumbers();
     message.double = object.double ?? 0;
     message.float = object.float ?? 0;
     message.int32 = object.int32 ?? 0;

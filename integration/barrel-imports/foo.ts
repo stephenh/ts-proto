@@ -8,7 +8,7 @@ export interface Foo {
   bar: Bar | undefined;
 }
 
-const baseFoo: object = { name: '' };
+const createBaseFoo = (): Foo => ({ name: '' });
 
 export const Foo = {
   encode(message: Foo, writer: Writer = Writer.create()): Writer {
@@ -24,7 +24,7 @@ export const Foo = {
   decode(input: Reader | Uint8Array, length?: number): Foo {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseFoo } as Foo;
+    const message = createBaseFoo();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -43,7 +43,7 @@ export const Foo = {
   },
 
   fromJSON(object: any): Foo {
-    const message = { ...baseFoo } as Foo;
+    const message = createBaseFoo();
     message.name = object.name !== undefined && object.name !== null ? String(object.name) : '';
     message.bar = object.bar !== undefined && object.bar !== null ? Bar.fromJSON(object.bar) : undefined;
     return message;
@@ -57,7 +57,7 @@ export const Foo = {
   },
 
   fromPartial<I extends Exact<DeepPartial<Foo>, I>>(object: I): Foo {
-    const message = { ...baseFoo } as Foo;
+    const message = createBaseFoo();
     message.name = object.name ?? '';
     message.bar = object.bar !== undefined && object.bar !== null ? Bar.fromPartial(object.bar) : undefined;
     return message;

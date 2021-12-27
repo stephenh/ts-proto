@@ -32,7 +32,7 @@ export interface Child {
   name: string;
 }
 
-const baseSimple: object = { name: '', age: 0, testField: '', testNotDeprecated: '' };
+const createBaseSimple = (): Simple => ({ name: '', age: 0, testField: '', testNotDeprecated: '' });
 
 export const Simple = {
   encode(message: Simple, writer: Writer = Writer.create()): Writer {
@@ -57,7 +57,7 @@ export const Simple = {
   decode(input: Reader | Uint8Array, length?: number): Simple {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseSimple } as Simple;
+    const message = createBaseSimple();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -85,7 +85,7 @@ export const Simple = {
   },
 
   fromJSON(object: any): Simple {
-    const message = { ...baseSimple } as Simple;
+    const message = createBaseSimple();
     message.name = object.name !== undefined && object.name !== null ? String(object.name) : '';
     message.age = object.age !== undefined && object.age !== null ? Number(object.age) : 0;
     message.child = object.child !== undefined && object.child !== null ? Child.fromJSON(object.child) : undefined;
@@ -108,7 +108,7 @@ export const Simple = {
   },
 
   fromPartial<I extends Exact<DeepPartial<Simple>, I>>(object: I): Simple {
-    const message = { ...baseSimple } as Simple;
+    const message = createBaseSimple();
     message.name = object.name ?? '';
     message.age = object.age ?? 0;
     message.child = object.child !== undefined && object.child !== null ? Child.fromPartial(object.child) : undefined;
@@ -118,7 +118,7 @@ export const Simple = {
   },
 };
 
-const baseChild: object = { name: '' };
+const createBaseChild = (): Child => ({ name: '' });
 
 export const Child = {
   encode(message: Child, writer: Writer = Writer.create()): Writer {
@@ -131,7 +131,7 @@ export const Child = {
   decode(input: Reader | Uint8Array, length?: number): Child {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseChild } as Child;
+    const message = createBaseChild();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -147,7 +147,7 @@ export const Child = {
   },
 
   fromJSON(object: any): Child {
-    const message = { ...baseChild } as Child;
+    const message = createBaseChild();
     message.name = object.name !== undefined && object.name !== null ? String(object.name) : '';
     return message;
   },
@@ -159,7 +159,7 @@ export const Child = {
   },
 
   fromPartial<I extends Exact<DeepPartial<Child>, I>>(object: I): Child {
-    const message = { ...baseChild } as Child;
+    const message = createBaseChild();
     message.name = object.name ?? '';
     return message;
   },

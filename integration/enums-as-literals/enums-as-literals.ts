@@ -54,7 +54,7 @@ export function dividerData_DividerTypeToJSON(object: DividerData_DividerType): 
   }
 }
 
-const baseDividerData: object = { type: 0 };
+const createBaseDividerData = (): DividerData => ({ type: 0 });
 
 export const DividerData = {
   encode(message: DividerData, writer: Writer = Writer.create()): Writer {
@@ -67,7 +67,7 @@ export const DividerData = {
   decode(input: Reader | Uint8Array, length?: number): DividerData {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseDividerData } as DividerData;
+    const message = createBaseDividerData();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -83,7 +83,7 @@ export const DividerData = {
   },
 
   fromJSON(object: any): DividerData {
-    const message = { ...baseDividerData } as DividerData;
+    const message = createBaseDividerData();
     message.type = object.type !== undefined && object.type !== null ? dividerData_DividerTypeFromJSON(object.type) : 0;
     return message;
   },
@@ -95,7 +95,7 @@ export const DividerData = {
   },
 
   fromPartial<I extends Exact<DeepPartial<DividerData>, I>>(object: I): DividerData {
-    const message = { ...baseDividerData } as DividerData;
+    const message = createBaseDividerData();
     message.type = object.type ?? 0;
     return message;
   },

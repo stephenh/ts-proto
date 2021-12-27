@@ -11,7 +11,7 @@ export interface ValueMessage {
   repeatedAny: any[];
 }
 
-const baseValueMessage: object = {};
+const createBaseValueMessage = (): ValueMessage => ({});
 
 export const ValueMessage = {
   encode(message: ValueMessage, writer: Writer = Writer.create()): Writer {
@@ -30,7 +30,7 @@ export const ValueMessage = {
   decode(input: Reader | Uint8Array, length?: number): ValueMessage {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseValueMessage } as ValueMessage;
+    const message = createBaseValueMessage();
     message.repeatedAny = [];
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -53,7 +53,7 @@ export const ValueMessage = {
   },
 
   fromJSON(object: any): ValueMessage {
-    const message = { ...baseValueMessage } as ValueMessage;
+    const message = createBaseValueMessage();
     message.value = object.value;
     message.anyList = Array.isArray(object?.anyList) ? [...object.anyList] : undefined;
     message.repeatedAny = Array.isArray(object?.repeatedAny) ? [...object.repeatedAny] : [];
@@ -73,7 +73,7 @@ export const ValueMessage = {
   },
 
   fromPartial<I extends Exact<DeepPartial<ValueMessage>, I>>(object: I): ValueMessage {
-    const message = { ...baseValueMessage } as ValueMessage;
+    const message = createBaseValueMessage();
     message.value = object.value ?? undefined;
     message.anyList = object.anyList ?? undefined;
     message.repeatedAny = object.repeatedAny?.map((e) => e) || [];

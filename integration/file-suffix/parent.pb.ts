@@ -12,7 +12,7 @@ export interface Parent {
   createdAt: Date | undefined;
 }
 
-const baseParent: object = { childEnum: 0 };
+const createBaseParent = (): Parent => ({ childEnum: 0 });
 
 export const Parent = {
   encode(message: Parent, writer: Writer = Writer.create()): Writer {
@@ -31,7 +31,7 @@ export const Parent = {
   decode(input: Reader | Uint8Array, length?: number): Parent {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseParent } as Parent;
+    const message = createBaseParent();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -53,7 +53,7 @@ export const Parent = {
   },
 
   fromJSON(object: any): Parent {
-    const message = { ...baseParent } as Parent;
+    const message = createBaseParent();
     message.child = object.child !== undefined && object.child !== null ? Child.fromJSON(object.child) : undefined;
     message.childEnum =
       object.childEnum !== undefined && object.childEnum !== null ? childEnumFromJSON(object.childEnum) : 0;
@@ -71,7 +71,7 @@ export const Parent = {
   },
 
   fromPartial<I extends Exact<DeepPartial<Parent>, I>>(object: I): Parent {
-    const message = { ...baseParent } as Parent;
+    const message = createBaseParent();
     message.child = object.child !== undefined && object.child !== null ? Child.fromPartial(object.child) : undefined;
     message.childEnum = object.childEnum ?? 0;
     message.createdAt = object.createdAt ?? undefined;

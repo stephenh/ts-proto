@@ -58,7 +58,7 @@ export interface SimpleEnums {
   importEnum: SimpleEnum1;
 }
 
-const baseSimple: object = { name: '' };
+const createBaseSimple = (): Simple => ({ name: '' });
 
 export const Simple = {
   encode(message: Simple, writer: Writer = Writer.create()): Writer {
@@ -74,7 +74,7 @@ export const Simple = {
   decode(input: Reader | Uint8Array, length?: number): Simple {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseSimple } as Simple;
+    const message = createBaseSimple();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -93,7 +93,7 @@ export const Simple = {
   },
 
   fromJSON(object: any): Simple {
-    const message = { ...baseSimple } as Simple;
+    const message = createBaseSimple();
     message.name = object.name !== undefined && object.name !== null ? String(object.name) : '';
     message.otherSimple =
       object.otherSimple !== undefined && object.otherSimple !== null
@@ -111,7 +111,7 @@ export const Simple = {
   },
 
   fromPartial<I extends Exact<DeepPartial<Simple>, I>>(object: I): Simple {
-    const message = { ...baseSimple } as Simple;
+    const message = createBaseSimple();
     message.name = object.name ?? '';
     message.otherSimple =
       object.otherSimple !== undefined && object.otherSimple !== null
@@ -121,7 +121,7 @@ export const Simple = {
   },
 };
 
-const baseSimpleEnums: object = { localEnum: 0, importEnum: 0 };
+const createBaseSimpleEnums = (): SimpleEnums => ({ localEnum: 0, importEnum: 0 });
 
 export const SimpleEnums = {
   encode(message: SimpleEnums, writer: Writer = Writer.create()): Writer {
@@ -137,7 +137,7 @@ export const SimpleEnums = {
   decode(input: Reader | Uint8Array, length?: number): SimpleEnums {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseSimpleEnums } as SimpleEnums;
+    const message = createBaseSimpleEnums();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -156,7 +156,7 @@ export const SimpleEnums = {
   },
 
   fromJSON(object: any): SimpleEnums {
-    const message = { ...baseSimpleEnums } as SimpleEnums;
+    const message = createBaseSimpleEnums();
     message.localEnum =
       object.localEnum !== undefined && object.localEnum !== null ? simpleEnumFromJSON(object.localEnum) : 0;
     message.importEnum =
@@ -172,7 +172,7 @@ export const SimpleEnums = {
   },
 
   fromPartial<I extends Exact<DeepPartial<SimpleEnums>, I>>(object: I): SimpleEnums {
-    const message = { ...baseSimpleEnums } as SimpleEnums;
+    const message = createBaseSimpleEnums();
     message.localEnum = object.localEnum ?? 0;
     message.importEnum = object.importEnum ?? 0;
     return message;

@@ -24,7 +24,7 @@ export interface Numbers {
   sfixed64: number;
 }
 
-const baseSimple: object = { name: '', age: 0 };
+const createBaseSimple = (): Simple => ({ name: '', age: 0 });
 
 export const Simple = {
   encode(message: Simple, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
@@ -40,7 +40,7 @@ export const Simple = {
   decode(input: _m0.Reader | Uint8Array, length?: number): Simple {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseSimple } as Simple;
+    const message = createBaseSimple();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -59,7 +59,7 @@ export const Simple = {
   },
 
   fromJSON(object: any): Simple {
-    const message = { ...baseSimple } as Simple;
+    const message = createBaseSimple();
     message.name = object.name !== undefined && object.name !== null ? String(object.name) : '';
     message.age = object.age !== undefined && object.age !== null ? Number(object.age) : 0;
     return message;
@@ -73,14 +73,14 @@ export const Simple = {
   },
 
   fromPartial<I extends Exact<DeepPartial<Simple>, I>>(object: I): Simple {
-    const message = { ...baseSimple } as Simple;
+    const message = createBaseSimple();
     message.name = object.name ?? '';
     message.age = object.age ?? 0;
     return message;
   },
 };
 
-const baseNumbers: object = {
+const createBaseNumbers = (): Numbers => ({
   double: 0,
   float: 0,
   int32: 0,
@@ -93,7 +93,7 @@ const baseNumbers: object = {
   fixed64: 0,
   sfixed32: 0,
   sfixed64: 0,
-};
+});
 
 export const Numbers = {
   encode(message: Numbers, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
@@ -139,7 +139,7 @@ export const Numbers = {
   decode(input: _m0.Reader | Uint8Array, length?: number): Numbers {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseNumbers } as Numbers;
+    const message = createBaseNumbers();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -188,7 +188,7 @@ export const Numbers = {
   },
 
   fromJSON(object: any): Numbers {
-    const message = { ...baseNumbers } as Numbers;
+    const message = createBaseNumbers();
     message.double = object.double !== undefined && object.double !== null ? Number(object.double) : 0;
     message.float = object.float !== undefined && object.float !== null ? Number(object.float) : 0;
     message.int32 = object.int32 !== undefined && object.int32 !== null ? Number(object.int32) : 0;
@@ -222,7 +222,7 @@ export const Numbers = {
   },
 
   fromPartial<I extends Exact<DeepPartial<Numbers>, I>>(object: I): Numbers {
-    const message = { ...baseNumbers } as Numbers;
+    const message = createBaseNumbers();
     message.double = object.double ?? 0;
     message.float = object.float ?? 0;
     message.int32 = object.int32 ?? 0;
