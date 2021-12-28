@@ -67,7 +67,9 @@ export function dividerData_DividerTypeToNumber(object: DividerData_DividerType)
   }
 }
 
-const createBaseDividerData = (): DividerData => ({ type: DividerData_DividerType.DOUBLE });
+function createBaseDividerData(): DividerData {
+  return { type: DividerData_DividerType.DOUBLE };
+}
 
 export const DividerData = {
   encode(message: DividerData, writer: Writer = Writer.create()): Writer {

@@ -14,7 +14,9 @@ export interface Area {
   se: Point | undefined;
 }
 
-const createBasePoint = (): Point => ({ lat: 0, lng: 0 });
+function createBasePoint(): Point {
+  return { lat: 0, lng: 0 };
+}
 
 export const Point = {
   encode(message: Point, writer: Writer = Writer.create()): Writer {
@@ -70,7 +72,9 @@ export const Point = {
   },
 };
 
-const createBaseArea = (): Area => ({});
+function createBaseArea(): Area {
+  return { nw: undefined, se: undefined };
+}
 
 export const Area = {
   encode(message: Area, writer: Writer = Writer.create()): Writer {

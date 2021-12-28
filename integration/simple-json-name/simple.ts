@@ -11,7 +11,9 @@ export interface Simple {
   createdAt?: Date | undefined;
 }
 
-const createBaseSimple = (): Simple => ({ name: '' });
+function createBaseSimple(): Simple {
+  return { name: '', age: undefined, createdAt: undefined };
+}
 
 export const Simple = {
   encode(message: Simple, writer: Writer = Writer.create()): Writer {

@@ -12,7 +12,9 @@ export interface Error {
   name: string;
 }
 
-const createBaseObject = (): Object => ({ name: '' });
+function createBaseObject(): Object {
+  return { name: '' };
+}
 
 export const Object = {
   encode(message: Object, writer: Writer = Writer.create()): Writer {
@@ -59,7 +61,9 @@ export const Object = {
   },
 };
 
-const createBaseError = (): Error => ({ name: '' });
+function createBaseError(): Error {
+  return { name: '' };
+}
 
 export const Error = {
   encode(message: Error, writer: Writer = Writer.create()): Writer {

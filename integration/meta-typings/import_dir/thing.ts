@@ -10,7 +10,9 @@ export interface ImportedThing {
   createdAt: Date | undefined;
 }
 
-const createBaseImportedThing = (): ImportedThing => ({});
+function createBaseImportedThing(): ImportedThing {
+  return { createdAt: undefined };
+}
 
 export const ImportedThing = {
   encode(message: ImportedThing, writer: Writer = Writer.create()): Writer {

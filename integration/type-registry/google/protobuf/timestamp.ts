@@ -115,7 +115,9 @@ export interface Timestamp {
   nanos: number;
 }
 
-const createBaseTimestamp = (): Timestamp => ({ $type: 'google.protobuf.Timestamp', seconds: 0, nanos: 0 });
+function createBaseTimestamp(): Timestamp {
+  return { $type: 'google.protobuf.Timestamp', seconds: 0, nanos: 0 };
+}
 
 export const Timestamp = {
   $type: 'google.protobuf.Timestamp' as const,

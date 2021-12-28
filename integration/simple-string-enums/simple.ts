@@ -63,12 +63,9 @@ export interface Simple {
   nullValue: NullValue;
 }
 
-const createBaseSimple = (): Simple => ({
-  name: '',
-  state: StateEnum.UNKNOWN,
-  states: StateEnum.UNKNOWN,
-  nullValue: NullValue.NULL_VALUE,
-});
+function createBaseSimple(): Simple {
+  return { name: '', state: StateEnum.UNKNOWN, states: [], nullValue: NullValue.NULL_VALUE };
+}
 
 export const Simple = {
   encode(message: Simple, writer: Writer = Writer.create()): Writer {
@@ -93,7 +90,6 @@ export const Simple = {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimple();
-    message.states = [];
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

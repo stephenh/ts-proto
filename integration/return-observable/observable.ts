@@ -13,7 +13,9 @@ export interface ProduceReply {
   result: string;
 }
 
-const createBaseProduceRequest = (): ProduceRequest => ({ ingredients: '' });
+function createBaseProduceRequest(): ProduceRequest {
+  return { ingredients: '' };
+}
 
 export const ProduceRequest = {
   encode(message: ProduceRequest, writer: Writer = Writer.create()): Writer {
@@ -61,7 +63,9 @@ export const ProduceRequest = {
   },
 };
 
-const createBaseProduceReply = (): ProduceReply => ({ result: '' });
+function createBaseProduceReply(): ProduceReply {
+  return { result: '' };
+}
 
 export const ProduceReply = {
   encode(message: ProduceReply, writer: Writer = Writer.create()): Writer {

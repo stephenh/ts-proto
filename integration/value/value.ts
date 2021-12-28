@@ -11,7 +11,9 @@ export interface ValueMessage {
   repeatedAny: any[];
 }
 
-const createBaseValueMessage = (): ValueMessage => ({});
+function createBaseValueMessage(): ValueMessage {
+  return { value: undefined, anyList: undefined, repeatedAny: [] };
+}
 
 export const ValueMessage = {
   encode(message: ValueMessage, writer: Writer = Writer.create()): Writer {
@@ -31,7 +33,6 @@ export const ValueMessage = {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseValueMessage();
-    message.repeatedAny = [];
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

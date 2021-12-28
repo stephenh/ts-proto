@@ -19,7 +19,9 @@ export interface Numbers {
   num: number[];
 }
 
-const createBaseNumPair = (): NumPair => ({ num1: 0, num2: 0 });
+function createBaseNumPair(): NumPair {
+  return { num1: 0, num2: 0 };
+}
 
 export const NumPair = {
   encode(message: NumPair, writer: Writer = Writer.create()): Writer {
@@ -75,7 +77,9 @@ export const NumPair = {
   },
 };
 
-const createBaseNumSingle = (): NumSingle => ({ num: 0 });
+function createBaseNumSingle(): NumSingle {
+  return { num: 0 };
+}
 
 export const NumSingle = {
   encode(message: NumSingle, writer: Writer = Writer.create()): Writer {
@@ -122,7 +126,9 @@ export const NumSingle = {
   },
 };
 
-const createBaseNumbers = (): Numbers => ({ num: 0 });
+function createBaseNumbers(): Numbers {
+  return { num: [] };
+}
 
 export const Numbers = {
   encode(message: Numbers, writer: Writer = Writer.create()): Writer {
@@ -138,7 +144,6 @@ export const Numbers = {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNumbers();
-    message.num = [];
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

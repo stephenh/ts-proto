@@ -99,7 +99,9 @@ export interface ListValue {
   values: any[];
 }
 
-const createBaseStruct = (): Struct => ({});
+function createBaseStruct(): Struct {
+  return { fields: {} };
+}
 
 export const Struct = {
   encode(message: Struct, writer: Writer = Writer.create()): Writer {
@@ -115,7 +117,6 @@ export const Struct = {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStruct();
-    message.fields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -189,7 +190,9 @@ export const Struct = {
   },
 };
 
-const createBaseStruct_FieldsEntry = (): Struct_FieldsEntry => ({ key: '' });
+function createBaseStruct_FieldsEntry(): Struct_FieldsEntry {
+  return { key: '', value: undefined };
+}
 
 export const Struct_FieldsEntry = {
   encode(message: Struct_FieldsEntry, writer: Writer = Writer.create()): Writer {
@@ -245,7 +248,16 @@ export const Struct_FieldsEntry = {
   },
 };
 
-const createBaseValue = (): Value => ({});
+function createBaseValue(): Value {
+  return {
+    nullValue: undefined,
+    numberValue: undefined,
+    stringValue: undefined,
+    boolValue: undefined,
+    structValue: undefined,
+    listValue: undefined,
+  };
+}
 
 export const Value = {
   encode(message: Value, writer: Writer = Writer.create()): Writer {
@@ -379,7 +391,9 @@ export const Value = {
   },
 };
 
-const createBaseListValue = (): ListValue => ({});
+function createBaseListValue(): ListValue {
+  return { values: [] };
+}
 
 export const ListValue = {
   encode(message: ListValue, writer: Writer = Writer.create()): Writer {
@@ -393,7 +407,6 @@ export const ListValue = {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseListValue();
-    message.values = [];
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

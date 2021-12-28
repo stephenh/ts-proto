@@ -16,7 +16,9 @@ export interface Foo2 {
   timestamp: Date | undefined;
 }
 
-const createBaseFoo = (): Foo => ({ $type: 'foo.Foo' });
+function createBaseFoo(): Foo {
+  return { $type: 'foo.Foo', timestamp: undefined };
+}
 
 export const Foo = {
   $type: 'foo.Foo' as const,
@@ -68,7 +70,9 @@ export const Foo = {
 
 messageTypeRegistry.set(Foo.$type, Foo);
 
-const createBaseFoo2 = (): Foo2 => ({ $type: 'foo.Foo2' });
+function createBaseFoo2(): Foo2 {
+  return { $type: 'foo.Foo2', timestamp: undefined };
+}
 
 export const Foo2 = {
   $type: 'foo.Foo2' as const,

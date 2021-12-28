@@ -113,7 +113,9 @@ export interface Timestamp {
   nanos: number;
 }
 
-const createBaseTimestamp = (): Timestamp => ({ seconds: '0', nanos: 0 });
+function createBaseTimestamp(): Timestamp {
+  return { seconds: '0', nanos: 0 };
+}
 
 export const Timestamp = {
   encode(message: Timestamp, writer: Writer = Writer.create()): Writer {

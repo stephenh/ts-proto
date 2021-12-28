@@ -69,7 +69,9 @@ export interface SimpleButOptional {
   age?: number | undefined;
 }
 
-const createBasePleaseChoose = (): PleaseChoose => ({ name: '', age: 0 });
+function createBasePleaseChoose(): PleaseChoose {
+  return { name: '', choice: undefined, age: 0, eitherOr: undefined, signature: new Uint8Array() };
+}
 
 export const PleaseChoose = {
   encode(message: PleaseChoose, writer: Writer = Writer.create()): Writer {
@@ -116,7 +118,6 @@ export const PleaseChoose = {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePleaseChoose();
-    message.signature = new Uint8Array();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -277,7 +278,9 @@ export const PleaseChoose = {
   },
 };
 
-const createBasePleaseChoose_Submessage = (): PleaseChoose_Submessage => ({ name: '' });
+function createBasePleaseChoose_Submessage(): PleaseChoose_Submessage {
+  return { name: '' };
+}
 
 export const PleaseChoose_Submessage = {
   encode(message: PleaseChoose_Submessage, writer: Writer = Writer.create()): Writer {
@@ -324,7 +327,9 @@ export const PleaseChoose_Submessage = {
   },
 };
 
-const createBaseSimpleButOptional = (): SimpleButOptional => ({});
+function createBaseSimpleButOptional(): SimpleButOptional {
+  return { name: undefined, age: undefined };
+}
 
 export const SimpleButOptional = {
   encode(message: SimpleButOptional, writer: Writer = Writer.create()): Writer {

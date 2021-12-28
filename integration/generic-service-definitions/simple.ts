@@ -8,7 +8,9 @@ export interface TestMessage {
   value: string;
 }
 
-const createBaseTestMessage = (): TestMessage => ({ value: '' });
+function createBaseTestMessage(): TestMessage {
+  return { value: '' };
+}
 
 export const TestMessage = {
   encode(message: TestMessage, writer: Writer = Writer.create()): Writer {

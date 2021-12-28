@@ -92,7 +92,9 @@ export interface DashAPICredsDeleteReq {
 
 export interface Empty {}
 
-const createBaseDashFlash = (): DashFlash => ({ msg: '', type: 0 });
+function createBaseDashFlash(): DashFlash {
+  return { msg: '', type: 0 };
+}
 
 export const DashFlash = {
   encode(message: DashFlash, writer: Writer = Writer.create()): Writer {
@@ -148,7 +150,9 @@ export const DashFlash = {
   },
 };
 
-const createBaseDashUserSettingsState = (): DashUserSettingsState => ({ email: '' });
+function createBaseDashUserSettingsState(): DashUserSettingsState {
+  return { email: '', urls: undefined, flashes: [] };
+}
 
 export const DashUserSettingsState = {
   encode(message: DashUserSettingsState, writer: Writer = Writer.create()): Writer {
@@ -168,7 +172,6 @@ export const DashUserSettingsState = {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDashUserSettingsState();
-    message.flashes = [];
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -223,10 +226,9 @@ export const DashUserSettingsState = {
   },
 };
 
-const createBaseDashUserSettingsState_URLs = (): DashUserSettingsState_URLs => ({
-  connectGoogle: '',
-  connectGithub: '',
-});
+function createBaseDashUserSettingsState_URLs(): DashUserSettingsState_URLs {
+  return { connectGoogle: '', connectGithub: '' };
+}
 
 export const DashUserSettingsState_URLs = {
   encode(message: DashUserSettingsState_URLs, writer: Writer = Writer.create()): Writer {
@@ -284,7 +286,9 @@ export const DashUserSettingsState_URLs = {
   },
 };
 
-const createBaseDashCred = (): DashCred => ({ description: '', metadata: '', token: '', id: '' });
+function createBaseDashCred(): DashCred {
+  return { description: '', metadata: '', token: '', id: '' };
+}
 
 export const DashCred = {
   encode(message: DashCred, writer: Writer = Writer.create()): Writer {
@@ -359,7 +363,9 @@ export const DashCred = {
   },
 };
 
-const createBaseDashAPICredsCreateReq = (): DashAPICredsCreateReq => ({ description: '', metadata: '' });
+function createBaseDashAPICredsCreateReq(): DashAPICredsCreateReq {
+  return { description: '', metadata: '' };
+}
 
 export const DashAPICredsCreateReq = {
   encode(message: DashAPICredsCreateReq, writer: Writer = Writer.create()): Writer {
@@ -416,12 +422,9 @@ export const DashAPICredsCreateReq = {
   },
 };
 
-const createBaseDashAPICredsUpdateReq = (): DashAPICredsUpdateReq => ({
-  credSid: '',
-  description: '',
-  metadata: '',
-  id: '',
-});
+function createBaseDashAPICredsUpdateReq(): DashAPICredsUpdateReq {
+  return { credSid: '', description: '', metadata: '', id: '' };
+}
 
 export const DashAPICredsUpdateReq = {
   encode(message: DashAPICredsUpdateReq, writer: Writer = Writer.create()): Writer {
@@ -496,7 +499,9 @@ export const DashAPICredsUpdateReq = {
   },
 };
 
-const createBaseDashAPICredsDeleteReq = (): DashAPICredsDeleteReq => ({ credSid: '', id: '' });
+function createBaseDashAPICredsDeleteReq(): DashAPICredsDeleteReq {
+  return { credSid: '', id: '' };
+}
 
 export const DashAPICredsDeleteReq = {
   encode(message: DashAPICredsDeleteReq, writer: Writer = Writer.create()): Writer {
@@ -552,7 +557,9 @@ export const DashAPICredsDeleteReq = {
   },
 };
 
-const createBaseEmpty = (): Empty => ({});
+function createBaseEmpty(): Empty {
+  return {};
+}
 
 export const Empty = {
   encode(_: Empty, writer: Writer = Writer.create()): Writer {

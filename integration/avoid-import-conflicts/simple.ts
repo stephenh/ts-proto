@@ -58,7 +58,9 @@ export interface SimpleEnums {
   importEnum: SimpleEnum1;
 }
 
-const createBaseSimple = (): Simple => ({ name: '' });
+function createBaseSimple(): Simple {
+  return { name: '', otherSimple: undefined };
+}
 
 export const Simple = {
   encode(message: Simple, writer: Writer = Writer.create()): Writer {
@@ -121,7 +123,9 @@ export const Simple = {
   },
 };
 
-const createBaseSimpleEnums = (): SimpleEnums => ({ localEnum: 0, importEnum: 0 });
+function createBaseSimpleEnums(): SimpleEnums {
+  return { localEnum: 0, importEnum: 0 };
+}
 
 export const SimpleEnums = {
   encode(message: SimpleEnums, writer: Writer = Writer.create()): Writer {

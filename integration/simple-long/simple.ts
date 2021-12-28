@@ -53,7 +53,9 @@ export interface Numbers {
   manyUint64: Long[];
 }
 
-const createBaseSimpleWithWrappers = (): SimpleWithWrappers => ({});
+function createBaseSimpleWithWrappers(): SimpleWithWrappers {
+  return { name: undefined, age: undefined, enabled: undefined, bananas: undefined, coins: [], snacks: [] };
+}
 
 export const SimpleWithWrappers = {
   encode(message: SimpleWithWrappers, writer: Writer = Writer.create()): Writer {
@@ -82,8 +84,6 @@ export const SimpleWithWrappers = {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithWrappers();
-    message.coins = [];
-    message.snacks = [];
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -157,7 +157,9 @@ export const SimpleWithWrappers = {
   },
 };
 
-const createBaseSimpleWithMap = (): SimpleWithMap => ({});
+function createBaseSimpleWithMap(): SimpleWithMap {
+  return { nameLookup: {}, intLookup: {}, longLookup: {} };
+}
 
 export const SimpleWithMap = {
   encode(message: SimpleWithMap, writer: Writer = Writer.create()): Writer {
@@ -177,9 +179,6 @@ export const SimpleWithMap = {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithMap();
-    message.nameLookup = {};
-    message.intLookup = {};
-    message.longLookup = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -291,7 +290,9 @@ export const SimpleWithMap = {
   },
 };
 
-const createBaseSimpleWithMap_NameLookupEntry = (): SimpleWithMap_NameLookupEntry => ({ key: '', value: '' });
+function createBaseSimpleWithMap_NameLookupEntry(): SimpleWithMap_NameLookupEntry {
+  return { key: '', value: '' };
+}
 
 export const SimpleWithMap_NameLookupEntry = {
   encode(message: SimpleWithMap_NameLookupEntry, writer: Writer = Writer.create()): Writer {
@@ -349,7 +350,9 @@ export const SimpleWithMap_NameLookupEntry = {
   },
 };
 
-const createBaseSimpleWithMap_IntLookupEntry = (): SimpleWithMap_IntLookupEntry => ({ key: 0, value: 0 });
+function createBaseSimpleWithMap_IntLookupEntry(): SimpleWithMap_IntLookupEntry {
+  return { key: 0, value: 0 };
+}
 
 export const SimpleWithMap_IntLookupEntry = {
   encode(message: SimpleWithMap_IntLookupEntry, writer: Writer = Writer.create()): Writer {
@@ -405,7 +408,9 @@ export const SimpleWithMap_IntLookupEntry = {
   },
 };
 
-const createBaseSimpleWithMap_LongLookupEntry = (): SimpleWithMap_LongLookupEntry => ({ key: '', value: Long.ZERO });
+function createBaseSimpleWithMap_LongLookupEntry(): SimpleWithMap_LongLookupEntry {
+  return { key: '', value: Long.ZERO };
+}
 
 export const SimpleWithMap_LongLookupEntry = {
   encode(message: SimpleWithMap_LongLookupEntry, writer: Writer = Writer.create()): Writer {
@@ -463,21 +468,23 @@ export const SimpleWithMap_LongLookupEntry = {
   },
 };
 
-const createBaseNumbers = (): Numbers => ({
-  double: 0,
-  float: 0,
-  int32: 0,
-  int64: Long.ZERO,
-  uint32: 0,
-  uint64: Long.UZERO,
-  sint32: 0,
-  sint64: Long.ZERO,
-  fixed32: 0,
-  fixed64: Long.UZERO,
-  sfixed32: 0,
-  sfixed64: Long.ZERO,
-  manyUint64: Long.UZERO,
-});
+function createBaseNumbers(): Numbers {
+  return {
+    double: 0,
+    float: 0,
+    int32: 0,
+    int64: Long.ZERO,
+    uint32: 0,
+    uint64: Long.UZERO,
+    sint32: 0,
+    sint64: Long.ZERO,
+    fixed32: 0,
+    fixed64: Long.UZERO,
+    sfixed32: 0,
+    sfixed64: Long.ZERO,
+    manyUint64: [],
+  };
+}
 
 export const Numbers = {
   encode(message: Numbers, writer: Writer = Writer.create()): Writer {
@@ -529,7 +536,6 @@ export const Numbers = {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNumbers();
-    message.manyUint64 = [];
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

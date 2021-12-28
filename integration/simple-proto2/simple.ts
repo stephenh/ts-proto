@@ -40,7 +40,9 @@ export interface Issue56 {
   test: EnumWithoutZero;
 }
 
-const createBaseIssue56 = (): Issue56 => ({ test: 1 });
+function createBaseIssue56(): Issue56 {
+  return { test: 1 };
+}
 
 export const Issue56 = {
   encode(message: Issue56, writer: Writer = Writer.create()): Writer {

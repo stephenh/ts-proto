@@ -23,20 +23,24 @@ export interface Numbers {
   timestamp: Date | undefined;
 }
 
-const createBaseNumbers = (): Numbers => ({
-  double: 0,
-  float: 0,
-  int32: 0,
-  int64: '0',
-  uint32: 0,
-  uint64: '0',
-  sint32: 0,
-  sint64: '0',
-  fixed32: 0,
-  fixed64: '0',
-  sfixed32: 0,
-  sfixed64: '0',
-});
+function createBaseNumbers(): Numbers {
+  return {
+    double: 0,
+    float: 0,
+    int32: 0,
+    int64: '0',
+    uint32: 0,
+    uint64: '0',
+    sint32: 0,
+    sint64: '0',
+    fixed32: 0,
+    fixed64: '0',
+    sfixed32: 0,
+    sfixed64: '0',
+    guint64: undefined,
+    timestamp: undefined,
+  };
+}
 
 export const Numbers = {
   encode(message: Numbers, writer: Writer = Writer.create()): Writer {

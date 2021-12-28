@@ -12,7 +12,9 @@ export interface Parent {
   createdAt: Date | undefined;
 }
 
-const createBaseParent = (): Parent => ({ childEnum: 0 });
+function createBaseParent(): Parent {
+  return { child: undefined, childEnum: 0, createdAt: undefined };
+}
 
 export const Parent = {
   encode(message: Parent, writer: Writer = Writer.create()): Writer {

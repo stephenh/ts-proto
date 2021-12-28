@@ -72,7 +72,21 @@ export interface PleaseChoose_Submessage {
   name: string;
 }
 
-const createBasePleaseChoose = (): PleaseChoose => ({ name: '', age: 0 });
+function createBasePleaseChoose(): PleaseChoose {
+  return {
+    name: '',
+    aNumber: undefined,
+    aString: undefined,
+    aMessage: undefined,
+    aBool: undefined,
+    bunchaBytes: undefined,
+    anEnum: undefined,
+    age: 0,
+    either: undefined,
+    or: undefined,
+    thirdOption: undefined,
+  };
+}
 
 export const PleaseChoose = {
   encode(message: PleaseChoose, writer: Writer = Writer.create()): Writer {
@@ -221,7 +235,9 @@ export const PleaseChoose = {
   },
 };
 
-const createBasePleaseChoose_Submessage = (): PleaseChoose_Submessage => ({ name: '' });
+function createBasePleaseChoose_Submessage(): PleaseChoose_Submessage {
+  return { name: '' };
+}
 
 export const PleaseChoose_Submessage = {
   encode(message: PleaseChoose_Submessage, writer: Writer = Writer.create()): Writer {

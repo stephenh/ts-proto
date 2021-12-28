@@ -7,7 +7,9 @@ export interface Bar {
   age: number;
 }
 
-const createBaseBar = (): Bar => ({ name: '', age: 0 });
+function createBaseBar(): Bar {
+  return { name: '', age: 0 };
+}
 
 export const Bar = {
   encode(message: Bar, writer: Writer = Writer.create()): Writer {

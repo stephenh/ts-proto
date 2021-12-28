@@ -10,7 +10,9 @@ export interface Point {
   dataWrapped: Buffer | undefined;
 }
 
-const createBasePoint = (): Point => ({});
+function createBasePoint(): Point {
+  return { data: Buffer.alloc(0), dataWrapped: undefined };
+}
 
 export const Point = {
   encode(message: Point, writer: Writer = Writer.create()): Writer {
@@ -27,7 +29,6 @@ export const Point = {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePoint();
-    message.data = Buffer.alloc(0);
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

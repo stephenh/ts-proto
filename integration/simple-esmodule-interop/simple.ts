@@ -24,7 +24,9 @@ export interface Numbers {
   sfixed64: number;
 }
 
-const createBaseSimple = (): Simple => ({ name: '', age: 0 });
+function createBaseSimple(): Simple {
+  return { name: '', age: 0 };
+}
 
 export const Simple = {
   encode(message: Simple, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
@@ -80,20 +82,22 @@ export const Simple = {
   },
 };
 
-const createBaseNumbers = (): Numbers => ({
-  double: 0,
-  float: 0,
-  int32: 0,
-  int64: 0,
-  uint32: 0,
-  uint64: 0,
-  sint32: 0,
-  sint64: 0,
-  fixed32: 0,
-  fixed64: 0,
-  sfixed32: 0,
-  sfixed64: 0,
-});
+function createBaseNumbers(): Numbers {
+  return {
+    double: 0,
+    float: 0,
+    int32: 0,
+    int64: 0,
+    uint32: 0,
+    uint64: 0,
+    sint32: 0,
+    sint64: 0,
+    fixed32: 0,
+    fixed64: 0,
+    sfixed32: 0,
+    sfixed64: 0,
+  };
+}
 
 export const Numbers = {
   encode(message: Numbers, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {

@@ -35,7 +35,9 @@ export interface DateMessage {
   day: number;
 }
 
-const createBaseDateMessage = (): DateMessage => ({ year: 0, month: 0, day: 0 });
+function createBaseDateMessage(): DateMessage {
+  return { year: 0, month: 0, day: 0 };
+}
 
 export const DateMessage = {
   encode(message: DateMessage, writer: Writer = Writer.create()): Writer {

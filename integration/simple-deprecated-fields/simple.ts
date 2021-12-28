@@ -32,7 +32,9 @@ export interface Child {
   name: string;
 }
 
-const createBaseSimple = (): Simple => ({ name: '', age: 0, testField: '', testNotDeprecated: '' });
+function createBaseSimple(): Simple {
+  return { name: '', age: 0, child: undefined, testField: '', testNotDeprecated: '' };
+}
 
 export const Simple = {
   encode(message: Simple, writer: Writer = Writer.create()): Writer {
@@ -118,7 +120,9 @@ export const Simple = {
   },
 };
 
-const createBaseChild = (): Child => ({ name: '' });
+function createBaseChild(): Child {
+  return { name: '' };
+}
 
 export const Child = {
   encode(message: Child, writer: Writer = Writer.create()): Writer {

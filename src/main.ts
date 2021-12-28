@@ -648,20 +648,44 @@ function generateBaseInstanceFactory(
   messageDesc: DescriptorProto,
   fullTypeName: string
 ): Code {
-  const fields = messageDesc.field
-    .filter((field) => !isWithinOneOf(field))
-    .map((field) => [field, defaultValue(ctx, field)])
-    .filter(([field, val]) => val !== 'undefined' && !isBytes(field))
-    .map(([field, val]) => {
-      const name = maybeSnakeToCamel(field.name, ctx.options);
-      return code`${name}: ${val}`;
-    });
+  const fields: Code[] = [];
+
+  // When oneof=unions, we generate a single property with an ADT per `oneof` clause.
+  const processedOneofs = new Set<number>();
+
+  for (const field of messageDesc.field) {
+    if (isWithinOneOfThatShouldBeUnion(ctx.options, field)) {
+      const { oneofIndex } = field;
+      if (!processedOneofs.has(oneofIndex)) {
+        processedOneofs.add(oneofIndex);
+
+        const name = maybeSnakeToCamel(messageDesc.oneofDecl[oneofIndex].name, ctx.options);
+        fields.push(code`${name}: undefined`);
+      }
+      continue;
+    }
+
+    const name = maybeSnakeToCamel(field.name, ctx.options);
+    const val = isWithinOneOf(field)
+      ? 'undefined'
+      : isMapType(ctx, messageDesc, field)
+      ? '{}'
+      : isRepeated(field)
+      ? '[]'
+      : defaultValue(ctx, field);
+
+    fields.push(code`${name}: ${val}`);
+  }
 
   if (ctx.options.outputTypeRegistry) {
     fields.unshift(code`$type: '${fullTypeName}'`);
   }
 
-  return code`const createBase${fullName} = (): ${fullName} => ({ ${joinCode(fields, { on: ',' })} });`;
+  return code`
+    function createBase${fullName}(): ${fullName} {
+      return { ${joinCode(fields, { on: ',' })} };
+    }
+  `;
 }
 
 /** Creates a function to decode a message by loop overing the tags. */
@@ -679,22 +703,6 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
       let end = length === undefined ? reader.len : reader.pos + length;
       const message = createBase${fullName}();
   `);
-
-  // initialize all lists
-  messageDesc.field.filter(isRepeated).forEach((field) => {
-    const name = maybeSnakeToCamel(field.name, options);
-    const value = isMapType(ctx, messageDesc, field) ? '{}' : '[]';
-    chunks.push(code`message.${name} = ${value};`);
-  });
-
-  // initialize all buffers
-  messageDesc.field
-    .filter((field) => !isRepeated(field) && !isWithinOneOf(field) && isBytes(field))
-    .forEach((field) => {
-      const value = options.env === EnvOption.NODE ? 'Buffer.alloc(0)' : 'new Uint8Array()';
-      const name = maybeSnakeToCamel(field.name, options);
-      chunks.push(code`message.${name} = ${value};`);
-    });
 
   // start the tag loop
   chunks.push(code`
@@ -754,26 +762,28 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
 
     // and then use the snippet to handle repeated fields if necessary
     if (isRepeated(field)) {
+      const maybeNonNullAssertion = ctx.options.useOptionals === 'all' ? '!' : '';
+
       if (isMapType(ctx, messageDesc, field)) {
         // We need a unique const within the `cast` statement
         const varName = `entry${field.number}`;
         chunks.push(code`
           const ${varName} = ${readSnippet};
           if (${varName}.value !== undefined) {
-            message.${fieldName}[${varName}.key] = ${varName}.value;
+            message.${fieldName}${maybeNonNullAssertion}[${varName}.key] = ${varName}.value;
           }
         `);
       } else if (packedType(field.type) === undefined) {
-        chunks.push(code`message.${fieldName}.push(${readSnippet});`);
+        chunks.push(code`message.${fieldName}${maybeNonNullAssertion}.push(${readSnippet});`);
       } else {
         chunks.push(code`
           if ((tag & 7) === 2) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
-              message.${fieldName}.push(${readSnippet});
+              message.${fieldName}${maybeNonNullAssertion}.push(${readSnippet});
             }
           } else {
-            message.${fieldName}.push(${readSnippet});
+            message.${fieldName}${maybeNonNullAssertion}.push(${readSnippet});
           }
         `);
       }

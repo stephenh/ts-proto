@@ -46,7 +46,9 @@ export interface Entity {
   name: string;
 }
 
-const createBaseBatchQueryRequest = (): BatchQueryRequest => ({ ids: '' });
+function createBaseBatchQueryRequest(): BatchQueryRequest {
+  return { ids: [] };
+}
 
 export const BatchQueryRequest = {
   encode(message: BatchQueryRequest, writer: Writer = Writer.create()): Writer {
@@ -60,7 +62,6 @@ export const BatchQueryRequest = {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseBatchQueryRequest();
-    message.ids = [];
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -98,7 +99,9 @@ export const BatchQueryRequest = {
   },
 };
 
-const createBaseBatchQueryResponse = (): BatchQueryResponse => ({});
+function createBaseBatchQueryResponse(): BatchQueryResponse {
+  return { entities: [] };
+}
 
 export const BatchQueryResponse = {
   encode(message: BatchQueryResponse, writer: Writer = Writer.create()): Writer {
@@ -112,7 +115,6 @@ export const BatchQueryResponse = {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseBatchQueryResponse();
-    message.entities = [];
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -150,7 +152,9 @@ export const BatchQueryResponse = {
   },
 };
 
-const createBaseBatchMapQueryRequest = (): BatchMapQueryRequest => ({ ids: '' });
+function createBaseBatchMapQueryRequest(): BatchMapQueryRequest {
+  return { ids: [] };
+}
 
 export const BatchMapQueryRequest = {
   encode(message: BatchMapQueryRequest, writer: Writer = Writer.create()): Writer {
@@ -164,7 +168,6 @@ export const BatchMapQueryRequest = {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseBatchMapQueryRequest();
-    message.ids = [];
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -202,7 +205,9 @@ export const BatchMapQueryRequest = {
   },
 };
 
-const createBaseBatchMapQueryResponse = (): BatchMapQueryResponse => ({});
+function createBaseBatchMapQueryResponse(): BatchMapQueryResponse {
+  return { entities: {} };
+}
 
 export const BatchMapQueryResponse = {
   encode(message: BatchMapQueryResponse, writer: Writer = Writer.create()): Writer {
@@ -216,7 +221,6 @@ export const BatchMapQueryResponse = {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseBatchMapQueryResponse();
-    message.entities = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -266,7 +270,9 @@ export const BatchMapQueryResponse = {
   },
 };
 
-const createBaseBatchMapQueryResponse_EntitiesEntry = (): BatchMapQueryResponse_EntitiesEntry => ({ key: '' });
+function createBaseBatchMapQueryResponse_EntitiesEntry(): BatchMapQueryResponse_EntitiesEntry {
+  return { key: '', value: undefined };
+}
 
 export const BatchMapQueryResponse_EntitiesEntry = {
   encode(message: BatchMapQueryResponse_EntitiesEntry, writer: Writer = Writer.create()): Writer {
@@ -324,7 +330,9 @@ export const BatchMapQueryResponse_EntitiesEntry = {
   },
 };
 
-const createBaseGetOnlyMethodRequest = (): GetOnlyMethodRequest => ({ id: '' });
+function createBaseGetOnlyMethodRequest(): GetOnlyMethodRequest {
+  return { id: '' };
+}
 
 export const GetOnlyMethodRequest = {
   encode(message: GetOnlyMethodRequest, writer: Writer = Writer.create()): Writer {
@@ -371,7 +379,9 @@ export const GetOnlyMethodRequest = {
   },
 };
 
-const createBaseGetOnlyMethodResponse = (): GetOnlyMethodResponse => ({});
+function createBaseGetOnlyMethodResponse(): GetOnlyMethodResponse {
+  return { entity: undefined };
+}
 
 export const GetOnlyMethodResponse = {
   encode(message: GetOnlyMethodResponse, writer: Writer = Writer.create()): Writer {
@@ -419,7 +429,9 @@ export const GetOnlyMethodResponse = {
   },
 };
 
-const createBaseWriteMethodRequest = (): WriteMethodRequest => ({ id: '' });
+function createBaseWriteMethodRequest(): WriteMethodRequest {
+  return { id: '' };
+}
 
 export const WriteMethodRequest = {
   encode(message: WriteMethodRequest, writer: Writer = Writer.create()): Writer {
@@ -466,7 +478,9 @@ export const WriteMethodRequest = {
   },
 };
 
-const createBaseWriteMethodResponse = (): WriteMethodResponse => ({});
+function createBaseWriteMethodResponse(): WriteMethodResponse {
+  return {};
+}
 
 export const WriteMethodResponse = {
   encode(_: WriteMethodResponse, writer: Writer = Writer.create()): Writer {
@@ -504,7 +518,9 @@ export const WriteMethodResponse = {
   },
 };
 
-const createBaseEntity = (): Entity => ({ id: '', name: '' });
+function createBaseEntity(): Entity {
+  return { id: '', name: '' };
+}
 
 export const Entity = {
   encode(message: Entity, writer: Writer = Writer.create()): Writer {

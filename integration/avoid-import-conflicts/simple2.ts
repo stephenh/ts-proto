@@ -47,7 +47,9 @@ export interface Simple {
   age: number;
 }
 
-const createBaseSimple = (): Simple => ({ name: '', age: 0 });
+function createBaseSimple(): Simple {
+  return { name: '', age: 0 };
+}
 
 export const Simple = {
   encode(message: Simple, writer: Writer = Writer.create()): Writer {

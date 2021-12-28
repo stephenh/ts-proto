@@ -95,7 +95,9 @@ export interface BytesValue {
   value: Uint8Array;
 }
 
-const createBaseDoubleValue = (): DoubleValue => ({ value: 0 });
+function createBaseDoubleValue(): DoubleValue {
+  return { value: 0 };
+}
 
 export const DoubleValue = {
   encode(message: DoubleValue, writer: Writer = Writer.create()): Writer {
@@ -124,7 +126,9 @@ export const DoubleValue = {
   },
 };
 
-const createBaseFloatValue = (): FloatValue => ({ value: 0 });
+function createBaseFloatValue(): FloatValue {
+  return { value: 0 };
+}
 
 export const FloatValue = {
   encode(message: FloatValue, writer: Writer = Writer.create()): Writer {
@@ -153,7 +157,9 @@ export const FloatValue = {
   },
 };
 
-const createBaseInt64Value = (): Int64Value => ({ value: 0 });
+function createBaseInt64Value(): Int64Value {
+  return { value: 0 };
+}
 
 export const Int64Value = {
   encode(message: Int64Value, writer: Writer = Writer.create()): Writer {
@@ -182,7 +188,9 @@ export const Int64Value = {
   },
 };
 
-const createBaseUInt64Value = (): UInt64Value => ({ value: 0 });
+function createBaseUInt64Value(): UInt64Value {
+  return { value: 0 };
+}
 
 export const UInt64Value = {
   encode(message: UInt64Value, writer: Writer = Writer.create()): Writer {
@@ -211,7 +219,9 @@ export const UInt64Value = {
   },
 };
 
-const createBaseInt32Value = (): Int32Value => ({ value: 0 });
+function createBaseInt32Value(): Int32Value {
+  return { value: 0 };
+}
 
 export const Int32Value = {
   encode(message: Int32Value, writer: Writer = Writer.create()): Writer {
@@ -240,7 +250,9 @@ export const Int32Value = {
   },
 };
 
-const createBaseUInt32Value = (): UInt32Value => ({ value: 0 });
+function createBaseUInt32Value(): UInt32Value {
+  return { value: 0 };
+}
 
 export const UInt32Value = {
   encode(message: UInt32Value, writer: Writer = Writer.create()): Writer {
@@ -269,7 +281,9 @@ export const UInt32Value = {
   },
 };
 
-const createBaseBoolValue = (): BoolValue => ({ value: false });
+function createBaseBoolValue(): BoolValue {
+  return { value: false };
+}
 
 export const BoolValue = {
   encode(message: BoolValue, writer: Writer = Writer.create()): Writer {
@@ -298,7 +312,9 @@ export const BoolValue = {
   },
 };
 
-const createBaseStringValue = (): StringValue => ({ value: '' });
+function createBaseStringValue(): StringValue {
+  return { value: '' };
+}
 
 export const StringValue = {
   encode(message: StringValue, writer: Writer = Writer.create()): Writer {
@@ -327,7 +343,9 @@ export const StringValue = {
   },
 };
 
-const createBaseBytesValue = (): BytesValue => ({});
+function createBaseBytesValue(): BytesValue {
+  return { value: new Uint8Array() };
+}
 
 export const BytesValue = {
   encode(message: BytesValue, writer: Writer = Writer.create()): Writer {
@@ -341,7 +359,6 @@ export const BytesValue = {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseBytesValue();
-    message.value = new Uint8Array();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

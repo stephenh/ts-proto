@@ -78,7 +78,9 @@ export interface Tile_Layer {
   extent: number;
 }
 
-const createBaseTile = (): Tile => ({});
+function createBaseTile(): Tile {
+  return { layers: [] };
+}
 
 export const Tile = {
   encode(message: Tile, writer: Writer = Writer.create()): Writer {
@@ -92,7 +94,6 @@ export const Tile = {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTile();
-    message.layers = [];
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -130,15 +131,9 @@ export const Tile = {
   },
 };
 
-const createBaseTile_Value = (): Tile_Value => ({
-  stringValue: '',
-  floatValue: 0,
-  doubleValue: 0,
-  intValue: 0,
-  uintValue: 0,
-  sintValue: 0,
-  boolValue: false,
-});
+function createBaseTile_Value(): Tile_Value {
+  return { stringValue: '', floatValue: 0, doubleValue: 0, intValue: 0, uintValue: 0, sintValue: 0, boolValue: false };
+}
 
 export const Tile_Value = {
   encode(message: Tile_Value, writer: Writer = Writer.create()): Writer {
@@ -241,7 +236,9 @@ export const Tile_Value = {
   },
 };
 
-const createBaseTile_Feature = (): Tile_Feature => ({ id: 0, tags: 0, type: 0, geometry: 0 });
+function createBaseTile_Feature(): Tile_Feature {
+  return { id: 0, tags: [], type: 0, geometry: [] };
+}
 
 export const Tile_Feature = {
   encode(message: Tile_Feature, writer: Writer = Writer.create()): Writer {
@@ -268,8 +265,6 @@ export const Tile_Feature = {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTile_Feature();
-    message.tags = [];
-    message.geometry = [];
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -343,7 +338,9 @@ export const Tile_Feature = {
   },
 };
 
-const createBaseTile_Layer = (): Tile_Layer => ({ version: 0, name: '', keys: '', extent: 0 });
+function createBaseTile_Layer(): Tile_Layer {
+  return { version: 0, name: '', features: [], keys: [], values: [], extent: 0 };
+}
 
 export const Tile_Layer = {
   encode(message: Tile_Layer, writer: Writer = Writer.create()): Writer {
@@ -372,9 +369,6 @@ export const Tile_Layer = {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTile_Layer();
-    message.features = [];
-    message.keys = [];
-    message.values = [];
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

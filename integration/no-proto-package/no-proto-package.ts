@@ -12,7 +12,9 @@ export interface User {
 
 export interface Empty {}
 
-const createBaseUser = (): User => ({ name: '' });
+function createBaseUser(): User {
+  return { name: '' };
+}
 
 export const User = {
   encode(message: User, writer: Writer = Writer.create()): Writer {
@@ -59,7 +61,9 @@ export const User = {
   },
 };
 
-const createBaseEmpty = (): Empty => ({});
+function createBaseEmpty(): Empty {
+  return {};
+}
 
 export const Empty = {
   encode(_: Empty, writer: Writer = Writer.create()): Writer {

@@ -17,7 +17,9 @@ export const protobufPackage = 'google.protobuf';
  */
 export interface Empty {}
 
-const createBaseEmpty = (): Empty => ({});
+function createBaseEmpty(): Empty {
+  return {};
+}
 
 export const Empty = {
   encode(_: Empty, writer: Writer = Writer.create()): Writer {

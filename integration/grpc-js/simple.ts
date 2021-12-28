@@ -40,7 +40,9 @@ export interface TestMessage {
   timestamp: Date | undefined;
 }
 
-const createBaseTestMessage = (): TestMessage => ({});
+function createBaseTestMessage(): TestMessage {
+  return { timestamp: undefined };
+}
 
 export const TestMessage = {
   encode(message: TestMessage, writer: Writer = Writer.create()): Writer {

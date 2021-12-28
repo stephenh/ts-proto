@@ -9,7 +9,9 @@ export interface Metadata {
   lastEdited: Timestamp | undefined;
 }
 
-const createBaseMetadata = (): Metadata => ({});
+function createBaseMetadata(): Metadata {
+  return { lastEdited: undefined };
+}
 
 export const Metadata = {
   encode(message: Metadata, writer: Writer = Writer.create()): Writer {

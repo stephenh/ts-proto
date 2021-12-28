@@ -18,7 +18,9 @@ export interface Todo_MapOfTimestampsEntry {
   value: string | undefined;
 }
 
-const createBaseTodo = (): Todo => ({ id: '' });
+function createBaseTodo(): Todo {
+  return { id: '', timestamp: undefined, repeatedTimestamp: [], optionalTimestamp: undefined, mapOfTimestamps: {} };
+}
 
 export const Todo = {
   encode(message: Todo, writer: Writer = Writer.create()): Writer {
@@ -44,8 +46,6 @@ export const Todo = {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTodo();
-    message.repeatedTimestamp = [];
-    message.mapOfTimestamps = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -133,7 +133,9 @@ export const Todo = {
   },
 };
 
-const createBaseTodo_MapOfTimestampsEntry = (): Todo_MapOfTimestampsEntry => ({ key: '' });
+function createBaseTodo_MapOfTimestampsEntry(): Todo_MapOfTimestampsEntry {
+  return { key: '', value: undefined };
+}
 
 export const Todo_MapOfTimestampsEntry = {
   encode(message: Todo_MapOfTimestampsEntry, writer: Writer = Writer.create()): Writer {

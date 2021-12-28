@@ -10,7 +10,9 @@ export interface Baz {
 
 export interface FooBar {}
 
-const createBaseBaz = (): Baz => ({});
+function createBaseBaz(): Baz {
+  return { foo: undefined };
+}
 
 export const Baz = {
   encode(message: Baz, writer: Writer = Writer.create()): Writer {
@@ -57,7 +59,9 @@ export const Baz = {
   },
 };
 
-const createBaseFooBar = (): FooBar => ({});
+function createBaseFooBar(): FooBar {
+  return {};
+}
 
 export const FooBar = {
   encode(_: FooBar, writer: Writer = Writer.create()): Writer {

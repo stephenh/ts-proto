@@ -54,7 +54,9 @@ export function dividerData_DividerTypeToJSON(object: DividerData_DividerType): 
   }
 }
 
-const createBaseDividerData = (): DividerData => ({ type: 0 });
+function createBaseDividerData(): DividerData {
+  return { type: 0 };
+}
 
 export const DividerData = {
   encode(message: DividerData, writer: Writer = Writer.create()): Writer {

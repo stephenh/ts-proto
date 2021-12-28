@@ -8,7 +8,9 @@ export interface SimpleMessage {
   numberField: number;
 }
 
-const createBaseSimpleMessage = (): SimpleMessage => ({ numberField: 0 });
+function createBaseSimpleMessage(): SimpleMessage {
+  return { numberField: 0 };
+}
 
 export const SimpleMessage = {
   encode(message: SimpleMessage, writer: Writer = Writer.create()): Writer {

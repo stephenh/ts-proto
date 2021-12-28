@@ -11,7 +11,9 @@ export interface Bar {
   foo: Foo | undefined;
 }
 
-const createBaseBar = (): Bar => ({ $type: 'foo.bar.Bar' });
+function createBaseBar(): Bar {
+  return { $type: 'foo.bar.Bar', foo: undefined };
+}
 
 export const Bar = {
   $type: 'foo.bar.Bar' as const,

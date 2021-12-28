@@ -40,7 +40,9 @@ export interface Child {
   name: string;
 }
 
-const createBaseChild = (): Child => ({ name: '' });
+function createBaseChild(): Child {
+  return { name: '' };
+}
 
 export const Child = {
   encode(message: Child, writer: Writer = Writer.create()): Writer {

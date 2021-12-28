@@ -9,7 +9,9 @@ export interface StructMessage {
   value: { [key: string]: any } | undefined;
 }
 
-const createBaseStructMessage = (): StructMessage => ({});
+function createBaseStructMessage(): StructMessage {
+  return { value: undefined };
+}
 
 export const StructMessage = {
   encode(message: StructMessage, writer: Writer = Writer.create()): Writer {

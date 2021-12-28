@@ -8,7 +8,9 @@ export interface Foo {
   bar: Bar | undefined;
 }
 
-const createBaseFoo = (): Foo => ({ name: '' });
+function createBaseFoo(): Foo {
+  return { name: '', bar: undefined };
+}
 
 export const Foo = {
   encode(message: Foo, writer: Writer = Writer.create()): Writer {
