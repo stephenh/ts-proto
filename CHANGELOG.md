@@ -1,3 +1,10 @@
+## [1.96.1](https://github.com/stephenh/ts-proto/compare/v1.96.0...v1.96.1) (2021-12-28)
+
+
+### Performance Improvements
+
+* optimize object creation in `decode`, `fromJSON` and `fromPartial` ([#457](https://github.com/stephenh/ts-proto/issues/457)) ([70832d3](https://github.com/stephenh/ts-proto/commit/70832d33bae82ecb3c5f87845d14e992a13437e4))
+
 # [1.96.0](https://github.com/stephenh/ts-proto/compare/v1.95.1...v1.96.0) (2021-12-24)
 
 
