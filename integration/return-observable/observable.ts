@@ -13,7 +13,9 @@ export interface ProduceReply {
   result: string;
 }
 
-const baseProduceRequest: object = { ingredients: '' };
+function createBaseProduceRequest(): ProduceRequest {
+  return { ingredients: '' };
+}
 
 export const ProduceRequest = {
   encode(message: ProduceRequest, writer: Writer = Writer.create()): Writer {
@@ -26,7 +28,7 @@ export const ProduceRequest = {
   decode(input: Reader | Uint8Array, length?: number): ProduceRequest {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseProduceRequest } as ProduceRequest;
+    const message = createBaseProduceRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -42,7 +44,7 @@ export const ProduceRequest = {
   },
 
   fromJSON(object: any): ProduceRequest {
-    const message = { ...baseProduceRequest } as ProduceRequest;
+    const message = createBaseProduceRequest();
     message.ingredients =
       object.ingredients !== undefined && object.ingredients !== null ? String(object.ingredients) : '';
     return message;
@@ -55,13 +57,15 @@ export const ProduceRequest = {
   },
 
   fromPartial<I extends Exact<DeepPartial<ProduceRequest>, I>>(object: I): ProduceRequest {
-    const message = { ...baseProduceRequest } as ProduceRequest;
+    const message = createBaseProduceRequest();
     message.ingredients = object.ingredients ?? '';
     return message;
   },
 };
 
-const baseProduceReply: object = { result: '' };
+function createBaseProduceReply(): ProduceReply {
+  return { result: '' };
+}
 
 export const ProduceReply = {
   encode(message: ProduceReply, writer: Writer = Writer.create()): Writer {
@@ -74,7 +78,7 @@ export const ProduceReply = {
   decode(input: Reader | Uint8Array, length?: number): ProduceReply {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseProduceReply } as ProduceReply;
+    const message = createBaseProduceReply();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -90,7 +94,7 @@ export const ProduceReply = {
   },
 
   fromJSON(object: any): ProduceReply {
-    const message = { ...baseProduceReply } as ProduceReply;
+    const message = createBaseProduceReply();
     message.result = object.result !== undefined && object.result !== null ? String(object.result) : '';
     return message;
   },
@@ -102,7 +106,7 @@ export const ProduceReply = {
   },
 
   fromPartial<I extends Exact<DeepPartial<ProduceReply>, I>>(object: I): ProduceReply {
-    const message = { ...baseProduceReply } as ProduceReply;
+    const message = createBaseProduceReply();
     message.result = object.result ?? '';
     return message;
   },

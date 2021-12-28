@@ -14,7 +14,9 @@ export interface Area {
   se: Point | undefined;
 }
 
-const basePoint: object = { lat: 0, lng: 0 };
+function createBasePoint(): Point {
+  return { lat: 0, lng: 0 };
+}
 
 export const Point = {
   encode(message: Point, writer: Writer = Writer.create()): Writer {
@@ -30,7 +32,7 @@ export const Point = {
   decode(input: Reader | Uint8Array, length?: number): Point {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...basePoint } as Point;
+    const message = createBasePoint();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -49,7 +51,7 @@ export const Point = {
   },
 
   fromJSON(object: any): Point {
-    const message = { ...basePoint } as Point;
+    const message = createBasePoint();
     message.lat = object.lat !== undefined && object.lat !== null ? Number(object.lat) : 0;
     message.lng = object.lng !== undefined && object.lng !== null ? Number(object.lng) : 0;
     return message;
@@ -63,14 +65,16 @@ export const Point = {
   },
 
   fromPartial<I extends Exact<DeepPartial<Point>, I>>(object: I): Point {
-    const message = { ...basePoint } as Point;
+    const message = createBasePoint();
     message.lat = object.lat ?? 0;
     message.lng = object.lng ?? 0;
     return message;
   },
 };
 
-const baseArea: object = {};
+function createBaseArea(): Area {
+  return { nw: undefined, se: undefined };
+}
 
 export const Area = {
   encode(message: Area, writer: Writer = Writer.create()): Writer {
@@ -86,7 +90,7 @@ export const Area = {
   decode(input: Reader | Uint8Array, length?: number): Area {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseArea } as Area;
+    const message = createBaseArea();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -105,7 +109,7 @@ export const Area = {
   },
 
   fromJSON(object: any): Area {
-    const message = { ...baseArea } as Area;
+    const message = createBaseArea();
     message.nw = object.nw !== undefined && object.nw !== null ? Point.fromJSON(object.nw) : undefined;
     message.se = object.se !== undefined && object.se !== null ? Point.fromJSON(object.se) : undefined;
     return message;
@@ -119,7 +123,7 @@ export const Area = {
   },
 
   fromPartial<I extends Exact<DeepPartial<Area>, I>>(object: I): Area {
-    const message = { ...baseArea } as Area;
+    const message = createBaseArea();
     message.nw = object.nw !== undefined && object.nw !== null ? Point.fromPartial(object.nw) : undefined;
     message.se = object.se !== undefined && object.se !== null ? Point.fromPartial(object.se) : undefined;
     return message;

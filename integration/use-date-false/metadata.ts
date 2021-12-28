@@ -9,7 +9,9 @@ export interface Metadata {
   lastEdited: Timestamp | undefined;
 }
 
-const baseMetadata: object = {};
+function createBaseMetadata(): Metadata {
+  return { lastEdited: undefined };
+}
 
 export const Metadata = {
   encode(message: Metadata, writer: Writer = Writer.create()): Writer {
@@ -22,7 +24,7 @@ export const Metadata = {
   decode(input: Reader | Uint8Array, length?: number): Metadata {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseMetadata } as Metadata;
+    const message = createBaseMetadata();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -38,7 +40,7 @@ export const Metadata = {
   },
 
   fromJSON(object: any): Metadata {
-    const message = { ...baseMetadata } as Metadata;
+    const message = createBaseMetadata();
     message.lastEdited =
       object.lastEdited !== undefined && object.lastEdited !== null ? fromJsonTimestamp(object.lastEdited) : undefined;
     return message;
@@ -51,7 +53,7 @@ export const Metadata = {
   },
 
   fromPartial<I extends Exact<DeepPartial<Metadata>, I>>(object: I): Metadata {
-    const message = { ...baseMetadata } as Metadata;
+    const message = createBaseMetadata();
     message.lastEdited =
       object.lastEdited !== undefined && object.lastEdited !== null
         ? Timestamp.fromPartial(object.lastEdited)

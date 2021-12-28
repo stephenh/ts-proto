@@ -127,12 +127,16 @@ describe('simple', () => {
       Array [
         "name",
         "age",
+        "createdAt",
+        "child",
         "state",
+        "grandChildren",
         "coins",
         "snacks",
         "oldStates",
-        "grandChildren",
+        "thing",
         "blobs",
+        "birthday",
         "blob",
       ]
     `);

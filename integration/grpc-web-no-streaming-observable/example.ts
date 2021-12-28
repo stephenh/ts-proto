@@ -70,7 +70,9 @@ export interface DashUserSettingsState_URLs {
 
 export interface Empty {}
 
-const baseDashFlash: object = { msg: '', type: 0 };
+function createBaseDashFlash(): DashFlash {
+  return { msg: '', type: 0 };
+}
 
 export const DashFlash = {
   encode(message: DashFlash, writer: Writer = Writer.create()): Writer {
@@ -86,7 +88,7 @@ export const DashFlash = {
   decode(input: Reader | Uint8Array, length?: number): DashFlash {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseDashFlash } as DashFlash;
+    const message = createBaseDashFlash();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -105,7 +107,7 @@ export const DashFlash = {
   },
 
   fromJSON(object: any): DashFlash {
-    const message = { ...baseDashFlash } as DashFlash;
+    const message = createBaseDashFlash();
     message.msg = object.msg !== undefined && object.msg !== null ? String(object.msg) : '';
     message.type = object.type !== undefined && object.type !== null ? dashFlash_TypeFromJSON(object.type) : 0;
     return message;
@@ -119,14 +121,16 @@ export const DashFlash = {
   },
 
   fromPartial<I extends Exact<DeepPartial<DashFlash>, I>>(object: I): DashFlash {
-    const message = { ...baseDashFlash } as DashFlash;
+    const message = createBaseDashFlash();
     message.msg = object.msg ?? '';
     message.type = object.type ?? 0;
     return message;
   },
 };
 
-const baseDashUserSettingsState: object = { email: '' };
+function createBaseDashUserSettingsState(): DashUserSettingsState {
+  return { email: '', urls: undefined, flashes: [] };
+}
 
 export const DashUserSettingsState = {
   encode(message: DashUserSettingsState, writer: Writer = Writer.create()): Writer {
@@ -145,8 +149,7 @@ export const DashUserSettingsState = {
   decode(input: Reader | Uint8Array, length?: number): DashUserSettingsState {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseDashUserSettingsState } as DashUserSettingsState;
-    message.flashes = [];
+    const message = createBaseDashUserSettingsState();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -168,7 +171,7 @@ export const DashUserSettingsState = {
   },
 
   fromJSON(object: any): DashUserSettingsState {
-    const message = { ...baseDashUserSettingsState } as DashUserSettingsState;
+    const message = createBaseDashUserSettingsState();
     message.email = object.email !== undefined && object.email !== null ? String(object.email) : '';
     message.urls =
       object.urls !== undefined && object.urls !== null ? DashUserSettingsState_URLs.fromJSON(object.urls) : undefined;
@@ -190,7 +193,7 @@ export const DashUserSettingsState = {
   },
 
   fromPartial<I extends Exact<DeepPartial<DashUserSettingsState>, I>>(object: I): DashUserSettingsState {
-    const message = { ...baseDashUserSettingsState } as DashUserSettingsState;
+    const message = createBaseDashUserSettingsState();
     message.email = object.email ?? '';
     message.urls =
       object.urls !== undefined && object.urls !== null
@@ -201,7 +204,9 @@ export const DashUserSettingsState = {
   },
 };
 
-const baseDashUserSettingsState_URLs: object = { connectGoogle: '', connectGithub: '' };
+function createBaseDashUserSettingsState_URLs(): DashUserSettingsState_URLs {
+  return { connectGoogle: '', connectGithub: '' };
+}
 
 export const DashUserSettingsState_URLs = {
   encode(message: DashUserSettingsState_URLs, writer: Writer = Writer.create()): Writer {
@@ -217,7 +222,7 @@ export const DashUserSettingsState_URLs = {
   decode(input: Reader | Uint8Array, length?: number): DashUserSettingsState_URLs {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseDashUserSettingsState_URLs } as DashUserSettingsState_URLs;
+    const message = createBaseDashUserSettingsState_URLs();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -236,7 +241,7 @@ export const DashUserSettingsState_URLs = {
   },
 
   fromJSON(object: any): DashUserSettingsState_URLs {
-    const message = { ...baseDashUserSettingsState_URLs } as DashUserSettingsState_URLs;
+    const message = createBaseDashUserSettingsState_URLs();
     message.connectGoogle =
       object.connectGoogle !== undefined && object.connectGoogle !== null ? String(object.connectGoogle) : '';
     message.connectGithub =
@@ -252,14 +257,16 @@ export const DashUserSettingsState_URLs = {
   },
 
   fromPartial<I extends Exact<DeepPartial<DashUserSettingsState_URLs>, I>>(object: I): DashUserSettingsState_URLs {
-    const message = { ...baseDashUserSettingsState_URLs } as DashUserSettingsState_URLs;
+    const message = createBaseDashUserSettingsState_URLs();
     message.connectGoogle = object.connectGoogle ?? '';
     message.connectGithub = object.connectGithub ?? '';
     return message;
   },
 };
 
-const baseEmpty: object = {};
+function createBaseEmpty(): Empty {
+  return {};
+}
 
 export const Empty = {
   encode(_: Empty, writer: Writer = Writer.create()): Writer {
@@ -269,7 +276,7 @@ export const Empty = {
   decode(input: Reader | Uint8Array, length?: number): Empty {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseEmpty } as Empty;
+    const message = createBaseEmpty();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -282,7 +289,7 @@ export const Empty = {
   },
 
   fromJSON(_: any): Empty {
-    const message = { ...baseEmpty } as Empty;
+    const message = createBaseEmpty();
     return message;
   },
 
@@ -292,7 +299,7 @@ export const Empty = {
   },
 
   fromPartial<I extends Exact<DeepPartial<Empty>, I>>(_: I): Empty {
-    const message = { ...baseEmpty } as Empty;
+    const message = createBaseEmpty();
     return message;
   },
 };

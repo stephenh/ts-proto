@@ -10,7 +10,9 @@ export interface Baz {
 
 export interface FooBar {}
 
-const baseBaz: object = {};
+function createBaseBaz(): Baz {
+  return { foo: undefined };
+}
 
 export const Baz = {
   encode(message: Baz, writer: Writer = Writer.create()): Writer {
@@ -23,7 +25,7 @@ export const Baz = {
   decode(input: Reader | Uint8Array, length?: number): Baz {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseBaz } as Baz;
+    const message = createBaseBaz();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -39,7 +41,7 @@ export const Baz = {
   },
 
   fromJSON(object: any): Baz {
-    const message = { ...baseBaz } as Baz;
+    const message = createBaseBaz();
     message.foo = object.foo !== undefined && object.foo !== null ? FooBar.fromJSON(object.foo) : undefined;
     return message;
   },
@@ -51,13 +53,15 @@ export const Baz = {
   },
 
   fromPartial<I extends Exact<DeepPartial<Baz>, I>>(object: I): Baz {
-    const message = { ...baseBaz } as Baz;
+    const message = createBaseBaz();
     message.foo = object.foo !== undefined && object.foo !== null ? FooBar.fromPartial(object.foo) : undefined;
     return message;
   },
 };
 
-const baseFooBar: object = {};
+function createBaseFooBar(): FooBar {
+  return {};
+}
 
 export const FooBar = {
   encode(_: FooBar, writer: Writer = Writer.create()): Writer {
@@ -67,7 +71,7 @@ export const FooBar = {
   decode(input: Reader | Uint8Array, length?: number): FooBar {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseFooBar } as FooBar;
+    const message = createBaseFooBar();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -80,7 +84,7 @@ export const FooBar = {
   },
 
   fromJSON(_: any): FooBar {
-    const message = { ...baseFooBar } as FooBar;
+    const message = createBaseFooBar();
     return message;
   },
 
@@ -90,7 +94,7 @@ export const FooBar = {
   },
 
   fromPartial<I extends Exact<DeepPartial<FooBar>, I>>(_: I): FooBar {
-    const message = { ...baseFooBar } as FooBar;
+    const message = createBaseFooBar();
     return message;
   },
 };

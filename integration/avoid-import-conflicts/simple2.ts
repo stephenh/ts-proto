@@ -47,7 +47,9 @@ export interface Simple {
   age: number;
 }
 
-const baseSimple: object = { name: '', age: 0 };
+function createBaseSimple(): Simple {
+  return { name: '', age: 0 };
+}
 
 export const Simple = {
   encode(message: Simple, writer: Writer = Writer.create()): Writer {
@@ -63,7 +65,7 @@ export const Simple = {
   decode(input: Reader | Uint8Array, length?: number): Simple {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseSimple } as Simple;
+    const message = createBaseSimple();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -82,7 +84,7 @@ export const Simple = {
   },
 
   fromJSON(object: any): Simple {
-    const message = { ...baseSimple } as Simple;
+    const message = createBaseSimple();
     message.name = object.name !== undefined && object.name !== null ? String(object.name) : '';
     message.age = object.age !== undefined && object.age !== null ? Number(object.age) : 0;
     return message;
@@ -96,7 +98,7 @@ export const Simple = {
   },
 
   fromPartial<I extends Exact<DeepPartial<Simple>, I>>(object: I): Simple {
-    const message = { ...baseSimple } as Simple;
+    const message = createBaseSimple();
     message.name = object.name ?? '';
     message.age = object.age ?? 0;
     return message;
