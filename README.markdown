@@ -5,7 +5,7 @@
 
 > `ts-proto` transforms your `.proto` files into strongly-typed, idiomatic TypeScript files!
 
-(Note, if you're a new user of ts-proto and using a modern TS setup with `esModuleInterop`, you need to also pass that as a `ts_proto_opt`.)
+(Note, if you're a new user of ts-proto and using a modern TS setup with `esModuleInterop`, or want to use ts-proto in ESM / snowpack / vite, you need to also pass that as a `ts_proto_opt`.)
 
 ## Table of contents
 
