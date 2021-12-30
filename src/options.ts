@@ -58,6 +58,7 @@ export type Options = {
   // An alias of !output
   onlyTypes: boolean;
   emitImportedFiles: boolean;
+  useExactTypes: boolean;
 };
 
 export function defaultOptions(): Options {
@@ -90,6 +91,7 @@ export function defaultOptions(): Options {
     outputSchema: false,
     onlyTypes: false,
     emitImportedFiles: true,
+    useExactTypes: true,
   };
 }
 

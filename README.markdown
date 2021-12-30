@@ -350,6 +350,10 @@ Generated code will be placed in the Gradle build directory.
 
 - With `--ts_proto_opt=enumsAsLiterals=true`, the generated enum types will be enum-ish object with `as const`.
 
+- With `--ts_proto_opt=useExactTypes=false`, the generated `fromPartial` method will not use Exact types.
+  
+  The default behavior is `useExactTypes=true`, which makes `fromPartial` use Exact type for its argument to make TypeScript reject any unknown properties.
+
 ### Only Types
 
 If you're looking for `ts-proto` to generate only types for your Protobuf types then passing all three of `outputEncodeMethods`, `outputJsonMethods`, and `outputClientImpl` as `false` is probably what you want, i.e.:

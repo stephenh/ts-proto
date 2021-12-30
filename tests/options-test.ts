@@ -34,6 +34,7 @@ describe('options', () => {
         "stringEnums": false,
         "unrecognizedEnum": true,
         "useDate": "timestamp",
+        "useExactTypes": true,
         "useOptionals": "none",
       }
     `);

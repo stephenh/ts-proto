@@ -1249,14 +1249,21 @@ function generateToJson(ctx: Context, fullName: string, messageDesc: DescriptorP
 function generateFromPartial(ctx: Context, fullName: string, messageDesc: DescriptorProto): Code {
   const { options, utils, typeMap } = ctx;
   const chunks: Code[] = [];
-  const Timestamp = impProto(options, 'google/protobuf/timestamp', 'Timestamp');
 
   // create the basic function declaration
   const paramName = messageDesc.field.length > 0 ? 'object' : '_';
-  chunks.push(code`
-    fromPartial<I extends ${utils.Exact}<${utils.DeepPartial}<${fullName}>, I>>(${paramName}: I): ${fullName} {
-      const message = createBase${fullName}();
-  `);
+
+  if (ctx.options.useExactTypes) {
+    chunks.push(code`
+      fromPartial<I extends ${utils.Exact}<${utils.DeepPartial}<${fullName}>, I>>(${paramName}: I): ${fullName} {
+    `);
+  } else {
+    chunks.push(code`
+      fromPartial(${paramName}: ${utils.DeepPartial}<${fullName}>): ${fullName} {
+    `);
+  }
+
+  chunks.push(code`const message = createBase${fullName}();`);
 
   // add a check for each incoming field
   messageDesc.field.forEach((field) => {
