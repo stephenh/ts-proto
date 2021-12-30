@@ -59,6 +59,7 @@ export type Options = {
   onlyTypes: boolean;
   emitImportedFiles: boolean;
   useExactTypes: boolean;
+  delimitedMethods: boolean;
 };
 
 export function defaultOptions(): Options {
@@ -92,6 +93,7 @@ export function defaultOptions(): Options {
     onlyTypes: false,
     emitImportedFiles: true,
     useExactTypes: true,
+    delimitedMethods: false,
   };
 }
 
