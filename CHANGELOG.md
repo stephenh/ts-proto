@@ -1,3 +1,10 @@
+# [1.97.0](https://github.com/stephenh/ts-proto/compare/v1.96.1...v1.97.0) (2021-12-30)
+
+
+### Features
+
+* add an option to disable Exact types ([#456](https://github.com/stephenh/ts-proto/issues/456)) ([9c53d7e](https://github.com/stephenh/ts-proto/commit/9c53d7efb0252c7ea0af85a5d161ff94bcd69760))
+
 ## [1.96.1](https://github.com/stephenh/ts-proto/compare/v1.96.0...v1.96.1) (2021-12-28)
 
 
