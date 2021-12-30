@@ -11,7 +11,9 @@ export interface Simple {
   createdAt?: Date | undefined;
 }
 
-const baseSimple: object = { name: '' };
+function createBaseSimple(): Simple {
+  return { name: '', age: undefined, createdAt: undefined };
+}
 
 export const Simple = {
   encode(message: Simple, writer: Writer = Writer.create()): Writer {
@@ -30,7 +32,7 @@ export const Simple = {
   decode(input: Reader | Uint8Array, length?: number): Simple {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseSimple } as Simple;
+    const message = createBaseSimple();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -52,7 +54,7 @@ export const Simple = {
   },
 
   fromJSON(object: any): Simple {
-    const message = { ...baseSimple } as Simple;
+    const message = createBaseSimple();
     message.name = object.other_name !== undefined && object.other_name !== null ? String(object.other_name) : '';
     message.age = object.other_age !== undefined && object.other_age !== null ? Number(object.other_age) : undefined;
     message.createdAt =
@@ -69,7 +71,7 @@ export const Simple = {
   },
 
   fromPartial<I extends Exact<DeepPartial<Simple>, I>>(object: I): Simple {
-    const message = { ...baseSimple } as Simple;
+    const message = createBaseSimple();
     message.name = object.name ?? '';
     message.age = object.age ?? undefined;
     message.createdAt = object.createdAt ?? undefined;

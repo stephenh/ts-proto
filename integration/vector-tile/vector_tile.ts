@@ -78,7 +78,9 @@ export interface Tile_Layer {
   extent: number;
 }
 
-const baseTile: object = {};
+function createBaseTile(): Tile {
+  return { layers: [] };
+}
 
 export const Tile = {
   encode(message: Tile, writer: Writer = Writer.create()): Writer {
@@ -91,8 +93,7 @@ export const Tile = {
   decode(input: Reader | Uint8Array, length?: number): Tile {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseTile } as Tile;
-    message.layers = [];
+    const message = createBaseTile();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -108,7 +109,7 @@ export const Tile = {
   },
 
   fromJSON(object: any): Tile {
-    const message = { ...baseTile } as Tile;
+    const message = createBaseTile();
     message.layers = (object.layers ?? []).map((e: any) => Tile_Layer.fromJSON(e));
     return message;
   },
@@ -124,21 +125,15 @@ export const Tile = {
   },
 
   fromPartial<I extends Exact<DeepPartial<Tile>, I>>(object: I): Tile {
-    const message = { ...baseTile } as Tile;
+    const message = createBaseTile();
     message.layers = object.layers?.map((e) => Tile_Layer.fromPartial(e)) || [];
     return message;
   },
 };
 
-const baseTile_Value: object = {
-  stringValue: '',
-  floatValue: 0,
-  doubleValue: 0,
-  intValue: 0,
-  uintValue: 0,
-  sintValue: 0,
-  boolValue: false,
-};
+function createBaseTile_Value(): Tile_Value {
+  return { stringValue: '', floatValue: 0, doubleValue: 0, intValue: 0, uintValue: 0, sintValue: 0, boolValue: false };
+}
 
 export const Tile_Value = {
   encode(message: Tile_Value, writer: Writer = Writer.create()): Writer {
@@ -169,7 +164,7 @@ export const Tile_Value = {
   decode(input: Reader | Uint8Array, length?: number): Tile_Value {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseTile_Value } as Tile_Value;
+    const message = createBaseTile_Value();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -203,7 +198,7 @@ export const Tile_Value = {
   },
 
   fromJSON(object: any): Tile_Value {
-    const message = { ...baseTile_Value } as Tile_Value;
+    const message = createBaseTile_Value();
     message.stringValue =
       object.stringValue !== undefined && object.stringValue !== null ? String(object.stringValue) : '';
     message.floatValue = object.floatValue !== undefined && object.floatValue !== null ? Number(object.floatValue) : 0;
@@ -229,7 +224,7 @@ export const Tile_Value = {
   },
 
   fromPartial<I extends Exact<DeepPartial<Tile_Value>, I>>(object: I): Tile_Value {
-    const message = { ...baseTile_Value } as Tile_Value;
+    const message = createBaseTile_Value();
     message.stringValue = object.stringValue ?? '';
     message.floatValue = object.floatValue ?? 0;
     message.doubleValue = object.doubleValue ?? 0;
@@ -241,7 +236,9 @@ export const Tile_Value = {
   },
 };
 
-const baseTile_Feature: object = { id: 0, tags: 0, type: 0, geometry: 0 };
+function createBaseTile_Feature(): Tile_Feature {
+  return { id: 0, tags: [], type: 0, geometry: [] };
+}
 
 export const Tile_Feature = {
   encode(message: Tile_Feature, writer: Writer = Writer.create()): Writer {
@@ -267,9 +264,7 @@ export const Tile_Feature = {
   decode(input: Reader | Uint8Array, length?: number): Tile_Feature {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseTile_Feature } as Tile_Feature;
-    message.tags = [];
-    message.geometry = [];
+    const message = createBaseTile_Feature();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -308,7 +303,7 @@ export const Tile_Feature = {
   },
 
   fromJSON(object: any): Tile_Feature {
-    const message = { ...baseTile_Feature } as Tile_Feature;
+    const message = createBaseTile_Feature();
     message.id = object.id !== undefined && object.id !== null ? Number(object.id) : 0;
     message.tags = (object.tags ?? []).map((e: any) => Number(e));
     message.type = object.type !== undefined && object.type !== null ? tile_GeomTypeFromJSON(object.type) : 0;
@@ -334,7 +329,7 @@ export const Tile_Feature = {
   },
 
   fromPartial<I extends Exact<DeepPartial<Tile_Feature>, I>>(object: I): Tile_Feature {
-    const message = { ...baseTile_Feature } as Tile_Feature;
+    const message = createBaseTile_Feature();
     message.id = object.id ?? 0;
     message.tags = object.tags?.map((e) => e) || [];
     message.type = object.type ?? 0;
@@ -343,7 +338,9 @@ export const Tile_Feature = {
   },
 };
 
-const baseTile_Layer: object = { version: 0, name: '', keys: '', extent: 0 };
+function createBaseTile_Layer(): Tile_Layer {
+  return { version: 0, name: '', features: [], keys: [], values: [], extent: 0 };
+}
 
 export const Tile_Layer = {
   encode(message: Tile_Layer, writer: Writer = Writer.create()): Writer {
@@ -371,10 +368,7 @@ export const Tile_Layer = {
   decode(input: Reader | Uint8Array, length?: number): Tile_Layer {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseTile_Layer } as Tile_Layer;
-    message.features = [];
-    message.keys = [];
-    message.values = [];
+    const message = createBaseTile_Layer();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -405,7 +399,7 @@ export const Tile_Layer = {
   },
 
   fromJSON(object: any): Tile_Layer {
-    const message = { ...baseTile_Layer } as Tile_Layer;
+    const message = createBaseTile_Layer();
     message.version = object.version !== undefined && object.version !== null ? Number(object.version) : 0;
     message.name = object.name !== undefined && object.name !== null ? String(object.name) : '';
     message.features = (object.features ?? []).map((e: any) => Tile_Feature.fromJSON(e));
@@ -439,7 +433,7 @@ export const Tile_Layer = {
   },
 
   fromPartial<I extends Exact<DeepPartial<Tile_Layer>, I>>(object: I): Tile_Layer {
-    const message = { ...baseTile_Layer } as Tile_Layer;
+    const message = createBaseTile_Layer();
     message.version = object.version ?? 0;
     message.name = object.name ?? '';
     message.features = object.features?.map((e) => Tile_Feature.fromPartial(e)) || [];

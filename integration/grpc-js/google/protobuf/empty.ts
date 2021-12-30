@@ -17,7 +17,9 @@ export const protobufPackage = 'google.protobuf';
  */
 export interface Empty {}
 
-const baseEmpty: object = {};
+function createBaseEmpty(): Empty {
+  return {};
+}
 
 export const Empty = {
   encode(_: Empty, writer: Writer = Writer.create()): Writer {
@@ -27,7 +29,7 @@ export const Empty = {
   decode(input: Reader | Uint8Array, length?: number): Empty {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseEmpty } as Empty;
+    const message = createBaseEmpty();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -40,7 +42,7 @@ export const Empty = {
   },
 
   fromJSON(_: any): Empty {
-    const message = { ...baseEmpty } as Empty;
+    const message = createBaseEmpty();
     return message;
   },
 
@@ -50,7 +52,7 @@ export const Empty = {
   },
 
   fromPartial<I extends Exact<DeepPartial<Empty>, I>>(_: I): Empty {
-    const message = { ...baseEmpty } as Empty;
+    const message = createBaseEmpty();
     return message;
   },
 };

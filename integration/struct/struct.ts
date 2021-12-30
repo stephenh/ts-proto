@@ -9,7 +9,9 @@ export interface StructMessage {
   value: { [key: string]: any } | undefined;
 }
 
-const baseStructMessage: object = {};
+function createBaseStructMessage(): StructMessage {
+  return { value: undefined };
+}
 
 export const StructMessage = {
   encode(message: StructMessage, writer: Writer = Writer.create()): Writer {
@@ -22,7 +24,7 @@ export const StructMessage = {
   decode(input: Reader | Uint8Array, length?: number): StructMessage {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseStructMessage } as StructMessage;
+    const message = createBaseStructMessage();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -38,7 +40,7 @@ export const StructMessage = {
   },
 
   fromJSON(object: any): StructMessage {
-    const message = { ...baseStructMessage } as StructMessage;
+    const message = createBaseStructMessage();
     message.value = typeof object.value === 'object' ? object.value : undefined;
     return message;
   },
@@ -50,7 +52,7 @@ export const StructMessage = {
   },
 
   fromPartial<I extends Exact<DeepPartial<StructMessage>, I>>(object: I): StructMessage {
-    const message = { ...baseStructMessage } as StructMessage;
+    const message = createBaseStructMessage();
     message.value = object.value ?? undefined;
     return message;
   },

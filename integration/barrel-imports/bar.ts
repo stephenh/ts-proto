@@ -7,7 +7,9 @@ export interface Bar {
   age: number;
 }
 
-const baseBar: object = { name: '', age: 0 };
+function createBaseBar(): Bar {
+  return { name: '', age: 0 };
+}
 
 export const Bar = {
   encode(message: Bar, writer: Writer = Writer.create()): Writer {
@@ -23,7 +25,7 @@ export const Bar = {
   decode(input: Reader | Uint8Array, length?: number): Bar {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseBar } as Bar;
+    const message = createBaseBar();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -42,7 +44,7 @@ export const Bar = {
   },
 
   fromJSON(object: any): Bar {
-    const message = { ...baseBar } as Bar;
+    const message = createBaseBar();
     message.name = object.name !== undefined && object.name !== null ? String(object.name) : '';
     message.age = object.age !== undefined && object.age !== null ? Number(object.age) : 0;
     return message;
@@ -56,7 +58,7 @@ export const Bar = {
   },
 
   fromPartial<I extends Exact<DeepPartial<Bar>, I>>(object: I): Bar {
-    const message = { ...baseBar } as Bar;
+    const message = createBaseBar();
     message.name = object.name ?? '';
     message.age = object.age ?? 0;
     return message;

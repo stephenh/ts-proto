@@ -148,7 +148,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
       (fullName, message, sInfo, fullProtoTypeName) => {
         const fullTypeName = maybePrefixPackage(fileDesc, fullProtoTypeName);
 
-        chunks.push(generateBaseInstance(ctx, fullName, message, fullTypeName));
+        chunks.push(generateBaseInstanceFactory(ctx, fullName, message, fullTypeName));
 
         const staticMembers: Code[] = [];
 
@@ -641,27 +641,51 @@ function generateOneofProperty(
   */
 }
 
-// Create a 'base' instance with default values for decode to use as a prototype
-function generateBaseInstance(
+// Create a function that constructs 'base' instance with default values for decode to use as a prototype
+function generateBaseInstanceFactory(
   ctx: Context,
   fullName: string,
   messageDesc: DescriptorProto,
   fullTypeName: string
 ): Code {
-  const fields = messageDesc.field
-    .filter((field) => !isWithinOneOf(field))
-    .map((field) => [field, defaultValue(ctx, field)])
-    .filter(([field, val]) => val !== 'undefined' && !isBytes(field))
-    .map(([field, val]) => {
-      const name = maybeSnakeToCamel(field.name, ctx.options);
-      return code`${name}: ${val}`;
-    });
+  const fields: Code[] = [];
+
+  // When oneof=unions, we generate a single property with an ADT per `oneof` clause.
+  const processedOneofs = new Set<number>();
+
+  for (const field of messageDesc.field) {
+    if (isWithinOneOfThatShouldBeUnion(ctx.options, field)) {
+      const { oneofIndex } = field;
+      if (!processedOneofs.has(oneofIndex)) {
+        processedOneofs.add(oneofIndex);
+
+        const name = maybeSnakeToCamel(messageDesc.oneofDecl[oneofIndex].name, ctx.options);
+        fields.push(code`${name}: undefined`);
+      }
+      continue;
+    }
+
+    const name = maybeSnakeToCamel(field.name, ctx.options);
+    const val = isWithinOneOf(field)
+      ? 'undefined'
+      : isMapType(ctx, messageDesc, field)
+      ? '{}'
+      : isRepeated(field)
+      ? '[]'
+      : defaultValue(ctx, field);
+
+    fields.push(code`${name}: ${val}`);
+  }
 
   if (ctx.options.outputTypeRegistry) {
     fields.unshift(code`$type: '${fullTypeName}'`);
   }
 
-  return code`const base${fullName}: object = { ${joinCode(fields, { on: ',' })} };`;
+  return code`
+    function createBase${fullName}(): ${fullName} {
+      return { ${joinCode(fields, { on: ',' })} };
+    }
+  `;
 }
 
 /** Creates a function to decode a message by loop overing the tags. */
@@ -677,24 +701,8 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
     ): ${fullName} {
       const reader = input instanceof ${Reader} ? input : new ${Reader}(input);
       let end = length === undefined ? reader.len : reader.pos + length;
-      const message = { ...base${fullName} } as ${fullName};
+      const message = createBase${fullName}();
   `);
-
-  // initialize all lists
-  messageDesc.field.filter(isRepeated).forEach((field) => {
-    const name = maybeSnakeToCamel(field.name, options);
-    const value = isMapType(ctx, messageDesc, field) ? '{}' : '[]';
-    chunks.push(code`message.${name} = ${value};`);
-  });
-
-  // initialize all buffers
-  messageDesc.field
-    .filter((field) => !isRepeated(field) && !isWithinOneOf(field) && isBytes(field))
-    .forEach((field) => {
-      const value = options.env === EnvOption.NODE ? 'Buffer.alloc(0)' : 'new Uint8Array()';
-      const name = maybeSnakeToCamel(field.name, options);
-      chunks.push(code`message.${name} = ${value};`);
-    });
 
   // start the tag loop
   chunks.push(code`
@@ -754,26 +762,28 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
 
     // and then use the snippet to handle repeated fields if necessary
     if (isRepeated(field)) {
+      const maybeNonNullAssertion = ctx.options.useOptionals === 'all' ? '!' : '';
+
       if (isMapType(ctx, messageDesc, field)) {
         // We need a unique const within the `cast` statement
         const varName = `entry${field.number}`;
         chunks.push(code`
           const ${varName} = ${readSnippet};
           if (${varName}.value !== undefined) {
-            message.${fieldName}[${varName}.key] = ${varName}.value;
+            message.${fieldName}${maybeNonNullAssertion}[${varName}.key] = ${varName}.value;
           }
         `);
       } else if (packedType(field.type) === undefined) {
-        chunks.push(code`message.${fieldName}.push(${readSnippet});`);
+        chunks.push(code`message.${fieldName}${maybeNonNullAssertion}.push(${readSnippet});`);
       } else {
         chunks.push(code`
           if ((tag & 7) === 2) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
-              message.${fieldName}.push(${readSnippet});
+              message.${fieldName}${maybeNonNullAssertion}.push(${readSnippet});
             }
           } else {
-            message.${fieldName}.push(${readSnippet});
+            message.${fieldName}${maybeNonNullAssertion}.push(${readSnippet});
           }
         `);
       }
@@ -981,7 +991,7 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
   // create the basic function declaration
   chunks.push(code`
     fromJSON(${messageDesc.field.length > 0 ? 'object' : '_'}: any): ${fullName} {
-      const message = { ...base${fullName} } as ${fullName};
+      const message = createBase${fullName}();
   `);
 
   // add a check for each incoming field
@@ -1253,7 +1263,7 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
     `);
   }
 
-  chunks.push(code`const message = { ...base${fullName} } as ${fullName};`);
+  chunks.push(code`const message = createBase${fullName}();`);
 
   // add a check for each incoming field
   messageDesc.field.forEach((field) => {
