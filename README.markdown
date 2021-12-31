@@ -18,10 +18,10 @@
 - [Highlights](#highlights)
 - [Auto-Batching / N+1 Prevention](#auto-batching--n1-prevention)
 - [Usage](#usage)
-    - [Supported options](#supported-options)
-    - [Only Types](#only-types)
-    - [NestJS Support](#nestjs-support)
-    - [Watch Mode](#watch-mode)
+  - [Supported options](#supported-options)
+  - [Only Types](#only-types)
+  - [NestJS Support](#nestjs-support)
+  - [Watch Mode](#watch-mode)
 - [Sponsors](#sponsors)
 - [Development](#development)
 - [Assumptions](#assumptions)
@@ -159,7 +159,7 @@ creating a class and calling the right getters/setters.
 
   (Configurable with the `useDate` parameter.)
 
-- `fromJSON`/`toJSON` use the [proto3 canonical JSON encoding format](https://developers.google.com/protocol-buffers/docs/proto3#json) (e.g. timestamps are ISO strings), unlike [`protobufjs`](https://github.com/protobufjs/protobuf.js/issues/1304). 
+- `fromJSON`/`toJSON` use the [proto3 canonical JSON encoding format](https://developers.google.com/protocol-buffers/docs/proto3#json) (e.g. timestamps are ISO strings), unlike [`protobufjs`](https://github.com/protobufjs/protobuf.js/issues/1304).
 
 # Auto-Batching / N+1 Prevention
 
@@ -201,7 +201,7 @@ protoc --plugin=node_modules/ts-proto/protoc-gen-ts_proto ./batching.proto -I.
 
 `ts-proto` can also be invoked with [Gradle](https://gradle.org) using the [protobuf-gradle-plugin](https://github.com/google/protobuf-gradle-plugin):
 
-``` groovy
+```groovy
 protobuf {
     plugins {
         // `ts` can be replaced by any unused plugin name, e.g. `tsproto`
@@ -344,15 +344,19 @@ Generated code will be placed in the Gradle build directory.
 - With `--ts_proto_opt=outputServices=false`, or `=none`, ts-proto will output NO service definitions.
 
 - With `--ts_proto_opt=emitImportedFiles=false`, ts-proto will not emit `google/protobuf/*` files unless you explicit add files to `protoc` like this
-`protoc --plugin=./node_modules/.bin/protoc-gen-ts_proto my_message.proto google/protobuf/duration.proto`
+  `protoc --plugin=./node_modules/.bin/protoc-gen-ts_proto my_message.proto google/protobuf/duration.proto`
 
-- With `--ts_proto_opt=fileSuffix=<SUFFIX>`, ts-proto will emit generated files using the specified suffix. A `helloworld.proto` file with `fileSuffix=.pb` would be generated as `helloworld.pb.ts`. This is common behavior in other protoc plugins and provides a way to quickly glob all the generated files. 
+- With `--ts_proto_opt=fileSuffix=<SUFFIX>`, ts-proto will emit generated files using the specified suffix. A `helloworld.proto` file with `fileSuffix=.pb` would be generated as `helloworld.pb.ts`. This is common behavior in other protoc plugins and provides a way to quickly glob all the generated files.
 
 - With `--ts_proto_opt=enumsAsLiterals=true`, the generated enum types will be enum-ish object with `as const`.
 
 - With `--ts_proto_opt=useExactTypes=false`, the generated `fromPartial` method will not use Exact types.
-  
+
   The default behavior is `useExactTypes=true`, which makes `fromPartial` use Exact type for its argument to make TypeScript reject any unknown properties.
+
+- With `--ts_proto_opt=delimitedMethods=true`, ts-proto will generate `Message.encodeDelimited` which will prefix the output binary with its length, and `Message.decodeDelimited` which will decode binaries prefixed with a length. This is helpful in cases where you want to stream multiple messages, you can read more about that approach [here](https://developers.google.com/protocol-buffers/docs/techniques#streaming)
+
+  (Requires `outputEncodeMethods=true`, which is true by default.)
 
 ### Only Types
 
@@ -377,7 +381,7 @@ If you want to run `ts-proto` on every change of a proto file, you'll need to us
 
 Kudos to our sponsors:
 
-* [ngrok](https://ngrok.com) funded ts-proto's initial grpc-web support.
+- [ngrok](https://ngrok.com) funded ts-proto's initial grpc-web support.
 
 If you need ts-proto customizations or priority support for your company, you can ping me at [via email](mailto:stephen.haberman@gmail.com).
 
@@ -396,9 +400,10 @@ The commands below assume you have **Docker** installed. To use a **local** copy
 - Run `yarn install` to install the dependencies.
 - Run `yarn build:test` or `yarn build:test:local` to generate the test files.
   > _This runs the following commands:_
-  >  - `proto2bin` — Converts integration test `.proto` files to `.bin`.
-  >  - `bin2ts` — Runs `ts-proto` on the `.bin` files to generate  `.ts`  files.
-  >  - `proto2pbjs` — Generates a reference implementation using `pbjs` for testing compatibility.
+  >
+  > - `proto2bin` — Converts integration test `.proto` files to `.bin`.
+  > - `bin2ts` — Runs `ts-proto` on the `.bin` files to generate `.ts` files.
+  > - `proto2pbjs` — Generates a reference implementation using `pbjs` for testing compatibility.
 - Run `yarn test`
 
 **Workflow**
@@ -416,7 +421,7 @@ The commands below assume you have **Docker** installed. To use a **local** copy
 - Run `yarn build:test` and `yarn test` to make sure everything works.
 - Run `yarn prettier` to format the typescript files.
 - Commit the changes:
-  - Also include the generated `.bin` files for the tests where you added or modified `.proto` files.  
+  - Also include the generated `.bin` files for the tests where you added or modified `.proto` files.
     > These are checked into git so that the test suite can run without having to invoke the `protoc` build chain.
   - Also include the generated `.ts` files.
 - Create a pull request
@@ -507,7 +512,7 @@ Foo.encode({ bar: '' }); // => { }, writes an empty Foo object, in protobuf bina
 Reading JSON will also initialize the default values. Since senders may either omit unset fields, or set them to the default value, use `fromJSON` to normalize the input.
 
 ```typescript
-Foo.fromJSON({ }); // => { bar: '' }
+Foo.fromJSON({}); // => { bar: '' }
 Foo.fromJSON({ bar: '' }); // => { bar: '' }
 Foo.fromJSON({ bar: 'baz' }); // => { bar: 'baz' }
 ```
@@ -516,7 +521,7 @@ When writing JSON, `ts-proto` currently does **not** normalize message when conv
 
 ```typescript
 // Current ts-proto behavior
-Foo.toJSON({ }); // => { }
+Foo.toJSON({}); // => { }
 Foo.toJSON({ bar: undefined }); // => { }
 Foo.toJSON({ bar: '' }); // => { bar: '' } - note: this is the default value, but it's not omitted
 Foo.toJSON({ bar: 'baz' }); // => { bar: 'baz' }
@@ -524,13 +529,13 @@ Foo.toJSON({ bar: 'baz' }); // => { bar: 'baz' }
 
 ```typescript
 // Possible future behavior, where ts-proto would normalize message
-Foo.toJSON({ }); // => { }
+Foo.toJSON({}); // => { }
 Foo.toJSON({ bar: undefined }); // => { }
 Foo.toJSON({ bar: '' }); // => { } - note: omitting the default value, as expected
 Foo.toJSON({ bar: 'baz' }); // => { bar: 'baz' }
 ```
 
--  Please open an issue if you need this behavior.
+- Please open an issue if you need this behavior.
 
 # Well-Known Types
 
@@ -541,26 +546,25 @@ Their interpretation is defined by the Protobuf specification, and libraries are
 
 - Wrapper Types:
 
-  * [google.protobuf.DoubleValue](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#DoubleValue) &lrarr; `number | undefined`
-  * [google.protobuf.FloatValue](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#FloatValue) &lrarr; `number | undefined`
-  * [google.protobuf.Int64Value](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#Int64Value) &lrarr; `number | undefined`
-  * [google.protobuf.UInt64Value](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#UInt64Value) &lrarr; `number | undefined`
-  * [google.protobuf.Int32Value](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#Int32Value) &lrarr; `number | undefined`
-  * [google.protobuf.UInt32Value](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#UInt32Value) &lrarr; `number | undefined`
-  * [google.protobuf.BoolValue](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#BoolValue) &lrarr; `boolean | undefined`
-  * [google.protobuf.StringValue](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#StringValue) &lrarr; `string | undefined`
-  * [google.protobuf.BytesValue](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.BytesValue) &lrarr; `Uint8Array | undefined`
+  - [google.protobuf.DoubleValue](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#DoubleValue) &lrarr; `number | undefined`
+  - [google.protobuf.FloatValue](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#FloatValue) &lrarr; `number | undefined`
+  - [google.protobuf.Int64Value](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#Int64Value) &lrarr; `number | undefined`
+  - [google.protobuf.UInt64Value](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#UInt64Value) &lrarr; `number | undefined`
+  - [google.protobuf.Int32Value](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#Int32Value) &lrarr; `number | undefined`
+  - [google.protobuf.UInt32Value](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#UInt32Value) &lrarr; `number | undefined`
+  - [google.protobuf.BoolValue](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#BoolValue) &lrarr; `boolean | undefined`
+  - [google.protobuf.StringValue](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#StringValue) &lrarr; `string | undefined`
+  - [google.protobuf.BytesValue](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.BytesValue) &lrarr; `Uint8Array | undefined`
 
 - JSON Types (Struct Types):
 
-  * [google.protobuf.Value](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#Value)  &lrarr; `any | undefined` (i.e. `number | string | boolean | null | array | object`)
-  * [google.protobuf.ListValue](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#ListValue) &lrarr; `any[]`
-  * [google.protobuf.Struct](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#Struct) &lrarr; `{ [key: string]: any } | undefined`
+  - [google.protobuf.Value](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#Value) &lrarr; `any | undefined` (i.e. `number | string | boolean | null | array | object`)
+  - [google.protobuf.ListValue](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#ListValue) &lrarr; `any[]`
+  - [google.protobuf.Struct](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#Struct) &lrarr; `{ [key: string]: any } | undefined`
 
 ## Wrapper Types
 
 Wrapper Types are messages containing a single primitive field, and can be imported in `.proto` files with `import "google/protobuf/wrappers.proto"`.
-
 
 Since these are _messages_, their default value is `undefined`, allowing you to distinguish unset primitives from their default values, when using Wrapper Types.
 `ts-proto` generates these fields as `<primitive> | undefined`.
@@ -588,13 +592,13 @@ interface ExampleMessage {
 When encoding a message the primitive value is converted back to its corresponding wrapper type:
 
 ```typescript
-ExampleMessage.encode({ name: 'foo' }) // => { name: { value: 'foo' } }, in binary
+ExampleMessage.encode({ name: 'foo' }); // => { name: { value: 'foo' } }, in binary
 ```
 
 When calling toJSON, the value is not converted, because wrapper types are idiomatic in JSON.
 
 ```typescript
-ExampleMessage.toJSON({ name: 'foo' }) // => { name: 'foo' }
+ExampleMessage.toJSON({ name: 'foo' }); // => { name: 'foo' }
 ```
 
 ## JSON Types (Struct Types)
@@ -604,7 +608,7 @@ For this reason, Protobuf offers several additional types to represent arbitrary
 
 These are called Struct Types, and can be imported in `.proto` files with `import "google/protobuf/struct.proto"`.
 
-- [google.protobuf.Value](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#Value) &lrarr; `any`  
+- [google.protobuf.Value](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#Value) &lrarr; `any`
   - This is the most general type, and can represent any JSON value (i.e. `number | string | boolean | null | array | object`).
 - [google.protobuf.ListValue](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#ListValue) &lrarr; `any[]`
   - To represent a JSON array
@@ -634,8 +638,9 @@ interface ExampleMessage {
 ```
 
 Encoding a JSON value embedded in a message, converts it to a Struct Type:
+
 ```typescript
-ExampleMessage.encode({ anything: { "name": "hello" } })
+ExampleMessage.encode({ anything: { name: 'hello' } });
 /* Outputs the following structure, encoded in protobuf binary format:
 {
   anything: Value {
@@ -652,7 +657,7 @@ ExampleMessage.encode({ anything: { "name": "hello" } })
  }
 }*/
 
-ExampleMessage.encode({ anything: true })
+ExampleMessage.encode({ anything: true });
 /* Outputs the following structure encoded in protobuf binary format:
 {
   anything: Value {
@@ -668,7 +673,6 @@ The representation of `google.protobuf.Timestamp` is configurable by the `useDat
 | Protobuf well-known type    | Default/`useDate=true` | `useDate=false`                      | `useDate=string` |
 | --------------------------- | ---------------------- | ------------------------------------ | ---------------- |
 | `google.protobuf.Timestamp` | `Date`                 | `{ seconds: number, nanos: number }` | `string`         |
-
 
 # Number Types
 
