@@ -12,7 +12,7 @@ else
   PLUGIN_PATH="protoc-gen-dump"
 fi
 
-PROTO_FILES=$(find . -name "*.proto" -type f | egrep 'oneof|value')
+PROTO_FILES=$(find . -name "*.proto" -type f)
 
 for FILE in $PROTO_FILES; do
   echo "${FILE}"
