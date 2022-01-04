@@ -1142,7 +1142,8 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
       `);
       chunks.push(code`}`);
     } else if (isAnyValueType(field)) {
-      chunks.push(code`message.${fieldName} = ${ctx.options.unwrapFromJSON ? ctx.utils.isObject : ctx.utils.isSet}(object?.${jsonName})
+      const notEmpty = ctx.options.unwrapFromJSON ? ctx.utils.isObject : ctx.utils.isSet;
+      chunks.push(code`message.${fieldName} = ${notEmpty}(object?.${jsonName})
         ? ${readSnippet(`object.${jsonName}`)}
         : undefined;
       `);
