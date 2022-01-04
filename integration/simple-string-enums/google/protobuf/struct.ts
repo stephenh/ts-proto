@@ -229,7 +229,7 @@ export const Struct_FieldsEntry = {
   fromJSON(object: any): Struct_FieldsEntry {
     const message = createBaseStruct_FieldsEntry();
     message.key = isSet(object.key) ? String(object.key) : '';
-    message.value = object.value;
+    message.value = isSet(object?.value) ? object.value : undefined;
     return message;
   },
 

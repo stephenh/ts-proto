@@ -220,7 +220,7 @@ export const Struct_FieldsEntry = {
   fromJSON(object: any): Struct_FieldsEntry {
     const message = createBaseStruct_FieldsEntry();
     message.key = isSet(object.key) ? String(object.key) : '';
-    message.value = isSet(object?.value) ? object.value : undefined;
+    message.value = isObject(object?.value) ? Value.unwrap(Value.fromJSON(object.value)) : undefined;
     return message;
   },
 
@@ -312,8 +312,8 @@ export const Value = {
     message.numberValue = isSet(object.numberValue) ? Number(object.numberValue) : undefined;
     message.stringValue = isSet(object.stringValue) ? String(object.stringValue) : undefined;
     message.boolValue = isSet(object.boolValue) ? Boolean(object.boolValue) : undefined;
-    message.structValue = isObject(object.structValue) ? object.structValue : undefined;
-    message.listValue = Array.isArray(object.listValue) ? [...object.listValue] : undefined;
+    message.structValue = isObject(object.structValue) ? Struct.unwrap(Struct.fromJSON(object.structValue)) : undefined;
+    message.listValue = isObject(object.listValue) ? ListValue.unwrap(ListValue.fromJSON(object.listValue)) : undefined;
     return message;
   },
 
@@ -411,7 +411,7 @@ export const ListValue = {
   fromJSON(object: any): ListValue {
     const message = createBaseListValue();
     if (Array.isArray(object?.values)) {
-      message.values = [...object.values];
+      message.values = object.values.map((e: any) => Value.unwrap(Value.fromJSON(e)));
     }
     return message;
   },
