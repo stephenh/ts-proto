@@ -41,8 +41,7 @@ export const Metadata = {
 
   fromJSON(object: any): Metadata {
     const message = createBaseMetadata();
-    message.lastEdited =
-      object.lastEdited !== undefined && object.lastEdited !== null ? fromJsonTimestamp(object.lastEdited) : undefined;
+    message.lastEdited = isSet(object.lastEdited) ? fromJsonTimestamp(object.lastEdited) : undefined;
     return message;
   },
 
@@ -106,4 +105,8 @@ function fromJsonTimestamp(o: any): Timestamp {
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
+}
+
+function isSet(value: any): boolean {
+  return value !== null && value !== undefined;
 }

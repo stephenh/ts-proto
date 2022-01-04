@@ -31,7 +31,8 @@ if [ -n "${1}" ]; then
 fi
 
 cd $INTEGRATION_DIR
-list=$(find $dir -name "*.bin" -type f | grep -v dump-response.bin)
+#list=$(find $dir -name "*.bin" -type f | grep -v dump-response.bin)
+list=$(find $dir -name "*.bin" -type f | grep -v dump-response.bin | egrep 'oneof-unions|value')
 
 for file in $list; do
   echo "${file}"

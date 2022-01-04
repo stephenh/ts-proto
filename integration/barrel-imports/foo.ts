@@ -46,8 +46,8 @@ export const Foo = {
 
   fromJSON(object: any): Foo {
     const message = createBaseFoo();
-    message.name = object.name !== undefined && object.name !== null ? String(object.name) : '';
-    message.bar = object.bar !== undefined && object.bar !== null ? Bar.fromJSON(object.bar) : undefined;
+    message.name = isSet(object.name) ? String(object.name) : '';
+    message.bar = isSet(object.bar) ? Bar.fromJSON(object.bar) : undefined;
     return message;
   },
 
@@ -88,4 +88,8 @@ type Exact<P, I extends P> = P extends Builtin
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
+}
+
+function isSet(value: any): boolean {
+  return value !== null && value !== undefined;
 }

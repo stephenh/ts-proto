@@ -72,8 +72,7 @@ export const TestMessage = {
 
   fromJSON(object: any): TestMessage {
     const message = createBaseTestMessage();
-    message.timestamp =
-      object.timestamp !== undefined && object.timestamp !== null ? fromJsonTimestamp(object.timestamp) : undefined;
+    message.timestamp = isSet(object.timestamp) ? fromJsonTimestamp(object.timestamp) : undefined;
     return message;
   },
 
@@ -668,4 +667,8 @@ function fromJsonTimestamp(o: any): Date {
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
+}
+
+function isSet(value: any): boolean {
+  return value !== null && value !== undefined;
 }

@@ -1,7 +1,8 @@
 /* eslint-disable */
 import { util, configure, Writer, Reader } from 'protobufjs/minimal';
 import * as Long from 'long';
-import { Value, ListValue } from './google/protobuf/struct';
+import { Value, ListValue, Struct } from './google/protobuf/struct';
+import { StringValue } from './google/protobuf/wrappers';
 
 export const protobufPackage = '';
 
@@ -9,10 +10,12 @@ export interface ValueMessage {
   value: any | undefined;
   anyList: Array<any> | undefined;
   repeatedAny: any[];
+  repeatedStrings: string[];
+  structValue: { [key: string]: any } | undefined;
 }
 
 function createBaseValueMessage(): ValueMessage {
-  return { value: undefined, anyList: undefined, repeatedAny: [] };
+  return { value: undefined, anyList: undefined, repeatedAny: [], repeatedStrings: [], structValue: undefined };
 }
 
 export const ValueMessage = {
@@ -25,6 +28,12 @@ export const ValueMessage = {
     }
     for (const v of message.repeatedAny) {
       Value.encode(Value.wrap(v!), writer.uint32(26).fork()).ldelim();
+    }
+    for (const v of message.repeatedStrings) {
+      StringValue.encode({ value: v!! }, writer.uint32(34).fork()).ldelim();
+    }
+    if (message.structValue !== undefined) {
+      Struct.encode(Struct.wrap(message.structValue), writer.uint32(42).fork()).ldelim();
     }
     return writer;
   },
@@ -45,6 +54,12 @@ export const ValueMessage = {
         case 3:
           message.repeatedAny.push(Value.unwrap(Value.decode(reader, reader.uint32())));
           break;
+        case 4:
+          message.repeatedStrings.push(StringValue.decode(reader, reader.uint32()).value);
+          break;
+        case 5:
+          message.structValue = Struct.unwrap(Struct.decode(reader, reader.uint32()));
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -55,9 +70,15 @@ export const ValueMessage = {
 
   fromJSON(object: any): ValueMessage {
     const message = createBaseValueMessage();
-    message.value = object.value;
-    message.anyList = Array.isArray(object?.anyList) ? [...object.anyList] : undefined;
-    message.repeatedAny = Array.isArray(object?.repeatedAny) ? [...object.repeatedAny] : [];
+    message.value = isSet(object?.value) ? object.value : undefined;
+    message.anyList = Array.isArray(object.anyList) ? [...object.anyList] : undefined;
+    if (Array.isArray(object?.repeatedAny)) {
+      message.repeatedAny = [...object.repeatedAny];
+    }
+    if (Array.isArray(object?.repeatedStrings)) {
+      message.repeatedStrings = object.repeatedStrings.map((e: any) => String(e));
+    }
+    message.structValue = isObject(object.structValue) ? object.structValue : undefined;
     return message;
   },
 
@@ -70,6 +91,12 @@ export const ValueMessage = {
     } else {
       obj.repeatedAny = [];
     }
+    if (message.repeatedStrings) {
+      obj.repeatedStrings = message.repeatedStrings.map((e) => e);
+    } else {
+      obj.repeatedStrings = [];
+    }
+    message.structValue !== undefined && (obj.structValue = message.structValue);
     return obj;
   },
 
@@ -78,6 +105,8 @@ export const ValueMessage = {
     message.value = object.value ?? undefined;
     message.anyList = object.anyList ?? undefined;
     message.repeatedAny = object.repeatedAny?.map((e) => e) || [];
+    message.repeatedStrings = object.repeatedStrings?.map((e) => e) || [];
+    message.structValue = object.structValue ?? undefined;
     return message;
   },
 };
@@ -104,4 +133,12 @@ export type Exact<P, I extends P> = P extends Builtin
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
+}
+
+function isObject(value: any): boolean {
+  return typeof value === 'object' && value !== null;
+}
+
+function isSet(value: any): boolean {
+  return value !== null && value !== undefined;
 }

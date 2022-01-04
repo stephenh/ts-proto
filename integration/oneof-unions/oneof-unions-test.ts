@@ -1,5 +1,6 @@
-import { oneof as pbjs } from './pbjs';
+import { google, oneof as pbjs } from './pbjs';
 import { PleaseChoose } from './oneof';
+import Value = google.protobuf.Value;
 
 describe('oneof=unions', () => {
   it('generates types correctly', () => {
@@ -7,18 +8,21 @@ describe('oneof=unions', () => {
       name: 'Alice',
       age: 42,
       signature: new Uint8Array([0xab, 0xcd]),
+      value: 'Alice'
     };
     const bob: PleaseChoose = {
       name: 'Bob',
       age: 42,
       choice: { $case: 'aNumber', aNumber: 132 },
       signature: new Uint8Array([0xab, 0xcd]),
+      value: 'Bob'
     };
     const charlie: PleaseChoose = {
       name: 'Charlie',
       age: 42,
       choice: { $case: 'aMessage', aMessage: { name: 'charlie' } },
       signature: new Uint8Array([0xab, 0xcd]),
+      value: 'Charlie'
     };
   });
 
@@ -29,8 +33,8 @@ describe('oneof=unions', () => {
         aBool: true,
         age: 37,
         or: 'perhaps not',
-      })
-    ).finish();
+        value: new Value({ stringValue: 'Debbie' })
+      })).finish();
     let decoded = PleaseChoose.decode(encoded);
     expect(decoded).toEqual({
       name: 'Debbie',
@@ -38,6 +42,7 @@ describe('oneof=unions', () => {
       choice: { $case: 'aBool', aBool: true },
       eitherOr: { $case: 'or', or: 'perhaps not' },
       signature: new Uint8Array(),
+      value: 'Debbie'
     });
   });
 
@@ -48,6 +53,7 @@ describe('oneof=unions', () => {
       choice: { $case: 'aBool', aBool: true },
       eitherOr: { $case: 'or', or: 'perhaps not' },
       signature: new Uint8Array([0xab, 0xcd]),
+      value: 'Debbie'
     }).finish();
     let decoded = pbjs.PleaseChoose.decode(encoded);
     expect(decoded).toEqual({
@@ -56,6 +62,7 @@ describe('oneof=unions', () => {
       age: 37,
       or: 'perhaps not',
       signature: Buffer.from([0xab, 0xcd]),
+      value: new Value({ stringValue: 'Debbie' })
     });
   });
 
@@ -90,6 +97,7 @@ describe('oneof=unions', () => {
       choice: { $case: 'aBool', aBool: true },
       eitherOr: { $case: 'or', or: 'perhaps not' },
       signature: new Uint8Array([0xab, 0xcd]),
+      value: undefined
     };
     let pbjsJson = pbjs.PleaseChoose.decode(PleaseChoose.encode(debbie).finish()).toJSON();
     let json = PleaseChoose.toJSON(debbie);
@@ -106,6 +114,7 @@ describe('oneof=unions', () => {
       choice: { $case: 'aBool', aBool: true },
       eitherOr: { $case: 'or', or: 'perhaps not' },
       signature: new Uint8Array([0xab, 0xcd]),
+      value: 'Debbie'
     };
     let pbjsJson = pbjs.PleaseChoose.decode(PleaseChoose.encode(debbie).finish()).toJSON();
     let fromJson = PleaseChoose.fromJSON(pbjsJson);
@@ -118,6 +127,7 @@ describe('oneof=unions', () => {
       age: 37,
       choice: { $case: 'aNumber', aNumber: 42 },
       signature: Buffer.from([0xab, 0xcd]),
+      value: new Value({ stringValue: 'Debbie' })
     };
     let encoded = PleaseChoose.encode(obj).finish();
     let decoded = PleaseChoose.decode(encoded);

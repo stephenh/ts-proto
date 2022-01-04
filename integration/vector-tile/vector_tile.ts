@@ -110,7 +110,9 @@ export const Tile = {
 
   fromJSON(object: any): Tile {
     const message = createBaseTile();
-    message.layers = (object.layers ?? []).map((e: any) => Tile_Layer.fromJSON(e));
+    if (Array.isArray(object?.layers)) {
+      message.layers = object.layers.map((e: any) => Tile_Layer.fromJSON(e));
+    }
     return message;
   },
 
@@ -199,15 +201,13 @@ export const Tile_Value = {
 
   fromJSON(object: any): Tile_Value {
     const message = createBaseTile_Value();
-    message.stringValue =
-      object.stringValue !== undefined && object.stringValue !== null ? String(object.stringValue) : '';
-    message.floatValue = object.floatValue !== undefined && object.floatValue !== null ? Number(object.floatValue) : 0;
-    message.doubleValue =
-      object.doubleValue !== undefined && object.doubleValue !== null ? Number(object.doubleValue) : 0;
-    message.intValue = object.intValue !== undefined && object.intValue !== null ? Number(object.intValue) : 0;
-    message.uintValue = object.uintValue !== undefined && object.uintValue !== null ? Number(object.uintValue) : 0;
-    message.sintValue = object.sintValue !== undefined && object.sintValue !== null ? Number(object.sintValue) : 0;
-    message.boolValue = object.boolValue !== undefined && object.boolValue !== null ? Boolean(object.boolValue) : false;
+    message.stringValue = isSet(object.stringValue) ? String(object.stringValue) : '';
+    message.floatValue = isSet(object.floatValue) ? Number(object.floatValue) : 0;
+    message.doubleValue = isSet(object.doubleValue) ? Number(object.doubleValue) : 0;
+    message.intValue = isSet(object.intValue) ? Number(object.intValue) : 0;
+    message.uintValue = isSet(object.uintValue) ? Number(object.uintValue) : 0;
+    message.sintValue = isSet(object.sintValue) ? Number(object.sintValue) : 0;
+    message.boolValue = isSet(object.boolValue) ? Boolean(object.boolValue) : false;
     return message;
   },
 
@@ -304,10 +304,14 @@ export const Tile_Feature = {
 
   fromJSON(object: any): Tile_Feature {
     const message = createBaseTile_Feature();
-    message.id = object.id !== undefined && object.id !== null ? Number(object.id) : 0;
-    message.tags = (object.tags ?? []).map((e: any) => Number(e));
-    message.type = object.type !== undefined && object.type !== null ? tile_GeomTypeFromJSON(object.type) : 0;
-    message.geometry = (object.geometry ?? []).map((e: any) => Number(e));
+    message.id = isSet(object.id) ? Number(object.id) : 0;
+    if (Array.isArray(object?.tags)) {
+      message.tags = object.tags.map((e: any) => Number(e));
+    }
+    message.type = isSet(object.type) ? tile_GeomTypeFromJSON(object.type) : 0;
+    if (Array.isArray(object?.geometry)) {
+      message.geometry = object.geometry.map((e: any) => Number(e));
+    }
     return message;
   },
 
@@ -400,12 +404,18 @@ export const Tile_Layer = {
 
   fromJSON(object: any): Tile_Layer {
     const message = createBaseTile_Layer();
-    message.version = object.version !== undefined && object.version !== null ? Number(object.version) : 0;
-    message.name = object.name !== undefined && object.name !== null ? String(object.name) : '';
-    message.features = (object.features ?? []).map((e: any) => Tile_Feature.fromJSON(e));
-    message.keys = (object.keys ?? []).map((e: any) => String(e));
-    message.values = (object.values ?? []).map((e: any) => Tile_Value.fromJSON(e));
-    message.extent = object.extent !== undefined && object.extent !== null ? Number(object.extent) : 0;
+    message.version = isSet(object.version) ? Number(object.version) : 0;
+    message.name = isSet(object.name) ? String(object.name) : '';
+    if (Array.isArray(object?.features)) {
+      message.features = object.features.map((e: any) => Tile_Feature.fromJSON(e));
+    }
+    if (Array.isArray(object?.keys)) {
+      message.keys = object.keys.map((e: any) => String(e));
+    }
+    if (Array.isArray(object?.values)) {
+      message.values = object.values.map((e: any) => Tile_Value.fromJSON(e));
+    }
+    message.extent = isSet(object.extent) ? Number(object.extent) : 0;
     return message;
   },
 
@@ -484,4 +494,8 @@ function longToNumber(long: Long): number {
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
+}
+
+function isSet(value: any): boolean {
+  return value !== null && value !== undefined;
 }

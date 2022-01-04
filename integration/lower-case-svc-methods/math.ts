@@ -57,8 +57,8 @@ export const NumPair = {
 
   fromJSON(object: any): NumPair {
     const message = createBaseNumPair();
-    message.num1 = object.num1 !== undefined && object.num1 !== null ? Number(object.num1) : 0;
-    message.num2 = object.num2 !== undefined && object.num2 !== null ? Number(object.num2) : 0;
+    message.num1 = isSet(object.num1) ? Number(object.num1) : 0;
+    message.num2 = isSet(object.num2) ? Number(object.num2) : 0;
     return message;
   },
 
@@ -109,7 +109,7 @@ export const NumSingle = {
 
   fromJSON(object: any): NumSingle {
     const message = createBaseNumSingle();
-    message.num = object.num !== undefined && object.num !== null ? Number(object.num) : 0;
+    message.num = isSet(object.num) ? Number(object.num) : 0;
     return message;
   },
 
@@ -167,7 +167,9 @@ export const Numbers = {
 
   fromJSON(object: any): Numbers {
     const message = createBaseNumbers();
-    message.num = (object.num ?? []).map((e: any) => Number(e));
+    if (Array.isArray(object?.num)) {
+      message.num = object.num.map((e: any) => Number(e));
+    }
     return message;
   },
 
@@ -270,4 +272,8 @@ export type Exact<P, I extends P> = P extends Builtin
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
+}
+
+function isSet(value: any): boolean {
+  return value !== null && value !== undefined;
 }

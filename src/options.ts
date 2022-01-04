@@ -41,6 +41,7 @@ export type Options = {
   outputJsonMethods: boolean;
   outputPartialMethods: boolean;
   outputTypeRegistry: boolean;
+  unwrapFromJSON: boolean;
   stringEnums: boolean;
   constEnums: boolean;
   enumsAsLiterals: boolean;
@@ -92,6 +93,7 @@ export function defaultOptions(): Options {
     onlyTypes: false,
     emitImportedFiles: true,
     useExactTypes: true,
+    unwrapFromJSON: false,
   };
 }
 

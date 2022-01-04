@@ -41,7 +41,7 @@ export const StructMessage = {
 
   fromJSON(object: any): StructMessage {
     const message = createBaseStructMessage();
-    message.value = typeof object.value === 'object' ? object.value : undefined;
+    message.value = isObject(object.value) ? object.value : undefined;
     return message;
   },
 
@@ -80,4 +80,8 @@ export type Exact<P, I extends P> = P extends Builtin
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
+}
+
+function isObject(value: any): boolean {
+  return typeof value === 'object' && value !== null;
 }

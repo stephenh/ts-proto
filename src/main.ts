@@ -168,8 +168,8 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
           staticMembers.push(generateFromPartial(ctx, fullName, message));
         }
 
-        staticMembers.push(...generateWrap(fullTypeName));
-        staticMembers.push(...generateUnwrap(fullTypeName));
+        staticMembers.push(...generateWrap(ctx, fullTypeName));
+        staticMembers.push(...generateUnwrap(ctx, fullTypeName));
 
         chunks.push(code`
           export const ${def(fullName)} = {
@@ -283,7 +283,8 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
 export type Utils = ReturnType<typeof makeDeepPartial> &
   ReturnType<typeof makeTimestampMethods> &
   ReturnType<typeof makeByteUtils> &
-  ReturnType<typeof makeLongUtils>;
+  ReturnType<typeof makeLongUtils> &
+  ReturnType<typeof makeComparisonUtils>;
 
 /** These are runtime utility methods used by the generated code. */
 export function makeUtils(options: Options): Utils {
@@ -294,6 +295,7 @@ export function makeUtils(options: Options): Utils {
     ...makeDeepPartial(options, longs),
     ...makeTimestampMethods(options, longs),
     ...longs,
+    ...makeComparisonUtils(),
   };
 }
 
@@ -552,6 +554,26 @@ function makeTimestampMethods(options: Options, longs: ReturnType<typeof makeLon
   );
 
   return { toTimestamp, fromTimestamp, fromJsonTimestamp };
+}
+
+function makeComparisonUtils() {
+  const isObject = conditionalOutput(
+    'isObject',
+    code`
+    function isObject(value: any): boolean {
+      return typeof value === 'object' && value !== null;
+    }`
+  );
+
+  const isSet = conditionalOutput(
+    'isSet',
+    code`
+    function isSet(value: any): boolean {
+      return value !== null && value !== undefined;
+    }`
+  );
+
+  return { isObject, isSet };
 }
 
 // Create the interface with properties
@@ -999,7 +1021,7 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
     const fieldName = maybeSnakeToCamel(field.name, options);
     const jsonName = determineFieldJsonName(field, options);
 
-    // get a generic 'reader.doSomething' bit that is specific to the basic type
+    // get code that extracts value from incoming object
     const readSnippet = (from: string): Code => {
       if (isEnum(field)) {
         const fromJson = getEnumMethod(ctx, field.typeName, 'FromJSON');
@@ -1027,15 +1049,19 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
       ) {
         return code`${utils.fromJsonTimestamp}(${from})`;
       } else if (isAnyValueType(field) || isStructType(field)) {
-        return code`${from}`;
+        const valueType = basicTypeName(ctx, field, { keepValueType: true });
+        return ctx.options.unwrapFromJSON ? code`${valueType}.unwrap(${valueType}.fromJSON(${from}))` : code`${from}`;
+      } else if (isListValueType(field)) {
+        const valueType = basicTypeName(ctx, field, { keepValueType: true });
+        return ctx.options.unwrapFromJSON
+          ? code`${valueType}.unwrap(${valueType}.fromJSON(${from}))`
+          : code`[...${from}]`;
       } else if (isValueType(ctx, field)) {
         const valueType = valueTypeName(ctx, field.typeName)!;
         if (isLongValueType(field) && options.forceLong === LongOption.LONG) {
           return code`${capitalize(valueType.toCodeString())}.fromValue(${from})`;
         } else if (isBytesValueType(field)) {
           return code`new ${capitalize(valueType.toCodeString())}(${from})`;
-        } else if (isListValueType(field)) {
-          return code`[...${from}]`;
         } else {
           return code`${capitalize(valueType.toCodeString())}(${from})`;
         }
@@ -1094,39 +1120,56 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
             return acc;
           }, {});
         `);
-      } else if (isAnyValueType(field)) {
-        chunks.push(code`
-          message.${fieldName} = Array.isArray(object?.${jsonName}) ? [...object.${jsonName}] : [];
-        `);
       } else {
+        const readValueSnippet = readSnippet('e');
+        chunks.push(code`if (Array.isArray(object?.${jsonName})) {`);
+        if (readValueSnippet.toString() === code`e`.toString()) {
+          // Return [...object.field] instead of object.map(e => e)
+          chunks.push(code`message.${fieldName} = [...object.${jsonName}];`);
+        }
         // Explicit `any` type required to make TS with noImplicitAny happy. `object` is also `any` here.
-        chunks.push(code`
-          message.${fieldName} = (object.${jsonName} ?? []).map((e: any) => ${readSnippet('e')});
-        `);
+        else
+          chunks.push(code`
+            message.${fieldName} = object.${jsonName}.map((e: any) => ${readValueSnippet});
+          `);
+        chunks.push(code`}`);
       }
     } else if (isWithinOneOfThatShouldBeUnion(options, field)) {
-      chunks.push(code`if (object.${jsonName} !== undefined && object.${jsonName} !== null) {`);
+      chunks.push(code`if (${ctx.utils.isSet}(object.${jsonName})) {`);
       const oneofName = maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options);
       chunks.push(code`
         message.${oneofName} = { $case: '${fieldName}', ${fieldName}: ${readSnippet(`object.${jsonName}`)} }
       `);
       chunks.push(code`}`);
     } else if (isAnyValueType(field)) {
-      chunks.push(code`message.${fieldName} = object.${fieldName};`);
+      chunks.push(code`message.${fieldName} = ${ctx.options.unwrapFromJSON ? ctx.utils.isObject : ctx.utils.isSet}(object?.${jsonName})
+        ? ${readSnippet(`object.${jsonName}`)}
+        : undefined;
+      `);
     } else if (isStructType(field)) {
       chunks.push(
-        code`message.${fieldName} = typeof(object.${fieldName}) === 'object' ? object.${fieldName} : undefined;`
+        code`message.${fieldName} = ${ctx.utils.isObject}(object.${jsonName})
+          ? ${readSnippet(`object.${jsonName}`)}
+          : undefined;`
       );
     } else if (isListValueType(field)) {
-      chunks.push(code`
-        message.${fieldName} = Array.isArray(object?.${fieldName})
-          ? ${readSnippet(`object.${fieldName}`)}
-          : ${'undefined'};
-      `);
+      if (ctx.options.unwrapFromJSON) {
+        chunks.push(code`
+          message.${fieldName} = ${ctx.utils.isObject}(object.${jsonName})
+            ? ${readSnippet(`object.${jsonName}`)}
+            : ${'undefined'};
+        `);
+      } else {
+        chunks.push(code`
+          message.${fieldName} = Array.isArray(object.${jsonName})
+            ? ${readSnippet(`object.${jsonName}`)}
+            : ${'undefined'};
+        `);
+      }
     } else {
       const fallback = isWithinOneOf(field) ? 'undefined' : defaultValue(ctx, field);
       chunks.push(code`
-        message.${fieldName} = (object.${jsonName} !== undefined && object.${jsonName} !== null)
+        message.${fieldName} = ${ctx.utils.isSet}(object.${jsonName})
           ? ${readSnippet(`object.${jsonName}`)}
           : ${fallback};
       `);
@@ -1366,7 +1409,7 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
   return joinCode(chunks, { on: '\n' });
 }
 
-function generateWrap(fullProtoTypeName: string): Code[] {
+function generateWrap(ctx: Context, fullProtoTypeName: string): Code[] {
   const chunks: Code[] = [];
   if (isStructTypeName(fullProtoTypeName)) {
     chunks.push(code`wrap(object: {[key: string]: any} | undefined): Struct {
@@ -1381,7 +1424,28 @@ function generateWrap(fullProtoTypeName: string): Code[] {
   }
 
   if (isAnyValueTypeName(fullProtoTypeName)) {
-    chunks.push(code`wrap(value: any): Value {
+    if (ctx.options.oneof === OneofOption.UNIONS) {
+      chunks.push(code`wrap(value: any): Value {
+      if (value === null) {
+        return {kind: {$case: 'nullValue', nullValue: NullValue.NULL_VALUE}};
+      } else if (typeof value === 'boolean') {
+        return {kind: {$case: 'boolValue', boolValue: value}};
+      } else if (typeof value === 'number') {
+        return {kind: {$case: 'numberValue', numberValue: value}};
+      } else if (typeof value === 'string') {
+        return {kind: {$case: 'stringValue', stringValue: value}};
+      } else if (Array.isArray(value)) {
+        return {kind: {$case: 'listValue', listValue: value}};
+      } else if (typeof value === 'object') {
+        return {kind: {$case: 'structValue', structValue: value}};
+      } else if (typeof value === 'undefined') {
+        return {} as Value;
+      } else {
+        throw new Error('Unsupported any value type: ' + typeof value);
+      }
+    }`);
+    } else {
+      chunks.push(code`wrap(value: any): Value {
       if (value === null) {
         return {nullValue: NullValue.NULL_VALUE} as Value;
       } else if (typeof value === 'boolean') {
@@ -1400,18 +1464,19 @@ function generateWrap(fullProtoTypeName: string): Code[] {
         throw new Error('Unsupported any value type: ' + typeof value);
       }
     }`);
+    }
   }
 
   if (isListValueTypeName(fullProtoTypeName)) {
-    chunks.push(code`wrap(value: Array<any>): ListValue {
-      return {values: value};
+    chunks.push(code`wrap(value: Array<any> | undefined): ListValue {
+      return {values: value ?? []};
     }`);
   }
 
   return chunks;
 }
 
-function generateUnwrap(fullProtoTypeName: string): Code[] {
+function generateUnwrap(ctx: Context, fullProtoTypeName: string): Code[] {
   const chunks: Code[] = [];
   if (isStructTypeName(fullProtoTypeName)) {
     chunks.push(code`unwrap(message: Struct): {[key: string]: any} {
@@ -1424,7 +1489,26 @@ function generateUnwrap(fullProtoTypeName: string): Code[] {
   }
 
   if (isAnyValueTypeName(fullProtoTypeName)) {
-    chunks.push(code`unwrap(message: Value): string | number | boolean | Object | null | Array<any> | undefined {
+    if (ctx.options.oneof === OneofOption.UNIONS) {
+      chunks.push(code`unwrap(message: Value): string | number | boolean | Object | null | Array<any> | undefined {
+        if (message.kind?.$case === 'nullValue') {
+          return null;
+        } else if (message.kind?.$case === 'numberValue') {
+          return message.kind?.numberValue;
+        } else if (message.kind?.$case === 'stringValue') {
+          return message.kind?.stringValue;
+        } else if (message.kind?.$case === 'boolValue') {
+          return message.kind?.boolValue;
+        } else if (message.kind?.$case === 'structValue') {
+          return message.kind?.structValue;
+        } else if (message.kind?.$case === 'listValue') {
+          return message.kind?.listValue;
+        } else {
+          return undefined;
+        }
+    }`);
+    } else {
+      chunks.push(code`unwrap(message: Value): string | number | boolean | Object | null | Array<any> | undefined {
       if (message?.stringValue !== undefined) {
         return message.stringValue;
       } else if (message?.numberValue !== undefined) {
@@ -1440,6 +1524,7 @@ function generateUnwrap(fullProtoTypeName: string): Code[] {
       }
       return undefined;
     }`);
+    }
   }
 
   if (isListValueTypeName(fullProtoTypeName)) {

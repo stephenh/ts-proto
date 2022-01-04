@@ -55,10 +55,9 @@ export const Simple = {
 
   fromJSON(object: any): Simple {
     const message = createBaseSimple();
-    message.name = object.other_name !== undefined && object.other_name !== null ? String(object.other_name) : '';
-    message.age = object.other_age !== undefined && object.other_age !== null ? Number(object.other_age) : undefined;
-    message.createdAt =
-      object.createdAt !== undefined && object.createdAt !== null ? fromJsonTimestamp(object.createdAt) : undefined;
+    message.name = isSet(object.other_name) ? String(object.other_name) : '';
+    message.age = isSet(object.other_age) ? Number(object.other_age) : undefined;
+    message.createdAt = isSet(object.createdAt) ? fromJsonTimestamp(object.createdAt) : undefined;
     return message;
   },
 
@@ -123,4 +122,8 @@ function fromJsonTimestamp(o: any): Date {
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
+}
+
+function isSet(value: any): boolean {
+  return value !== null && value !== undefined;
 }

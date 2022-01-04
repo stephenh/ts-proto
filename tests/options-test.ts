@@ -33,6 +33,7 @@ describe('options', () => {
         ],
         "stringEnums": false,
         "unrecognizedEnum": true,
+        "unwrapFromJSON": false,
         "useDate": "timestamp",
         "useExactTypes": true,
         "useOptionals": "none",

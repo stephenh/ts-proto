@@ -72,7 +72,7 @@ export const Child = {
 
   fromJSON(object: any): Child {
     const message = createBaseChild();
-    message.name = object.name !== undefined && object.name !== null ? String(object.name) : '';
+    message.name = isSet(object.name) ? String(object.name) : '';
     return message;
   },
 
@@ -111,4 +111,8 @@ export type Exact<P, I extends P> = P extends Builtin
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
+}
+
+function isSet(value: any): boolean {
+  return value !== null && value !== undefined;
 }

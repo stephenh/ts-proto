@@ -42,7 +42,7 @@ export const Baz = {
 
   fromJSON(object: any): Baz {
     const message = createBaseBaz();
-    message.foo = object.foo !== undefined && object.foo !== null ? FooBar.fromJSON(object.foo) : undefined;
+    message.foo = isSet(object.foo) ? FooBar.fromJSON(object.foo) : undefined;
     return message;
   },
 
@@ -121,4 +121,8 @@ export type Exact<P, I extends P> = P extends Builtin
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
+}
+
+function isSet(value: any): boolean {
+  return value !== null && value !== undefined;
 }
