@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+message Simple {
+  string name = 1;
+  int32 age = 2;
+  repeated string children = 3;
+}
