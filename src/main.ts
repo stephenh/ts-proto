@@ -1009,6 +1009,7 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
 function generateFromJson(ctx: Context, fullName: string, messageDesc: DescriptorProto): Code {
   const { options, utils, typeMap } = ctx;
   const chunks: Code[] = [];
+  const choiceFieldChunks: Code[] = [];
 
   // create the basic function declaration
   chunks.push(code`
@@ -1134,12 +1135,24 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
         }
       }
     } else if (isWithinOneOfThatShouldBeUnion(options, field)) {
-      chunks.push(code`/${ctx.utils.isSet}(object.${jsonName}) ?`);
+      const oneofFields = messageDesc.field
+        .filter(isWithinOneOf)
+        .filter(otherField => otherField.oneofIndex === field.oneofIndex)
+
       const oneofName = maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options);
-      chunks.push(code`
-        ${oneofName}: { $case: '${fieldName}', ${fieldName}: ${readSnippet(`object.${jsonName}`)} },
-      `);
-      chunks.push(code`//}`);
+
+      // First case, output field name
+      if (field === oneofFields[0]) {
+        chunks.push(code`${oneofName}: `);
+      }
+
+      const ternaryIf = code`${ctx.utils.isSet}(object.${jsonName})`;
+      const ternaryThen = code`{ $case: '${fieldName}', ${fieldName}: ${readSnippet(`object.${jsonName}`)}`;
+      chunks.push(code `${ternaryIf} ? ${ternaryThen}} : `)
+
+      if (field === oneofFields[oneofFields.length - 1]) {
+        chunks.push(code`undefined,`);
+      }
     } else if (isAnyValueType(field)) {
       chunks.push(code`${fieldName}: ${ctx.utils.isSet}(object?.${jsonName})
         ? ${readSnippet(`object.${jsonName}`)}
