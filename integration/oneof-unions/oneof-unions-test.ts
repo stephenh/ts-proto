@@ -1,6 +1,7 @@
-import { google, oneof as pbjs } from './pbjs';
 import { PleaseChoose } from './oneof';
-import Value = google.protobuf.Value;
+import * as pbjs from "./pbjs";
+import pbjsValue = pbjs.google.protobuf.Value;
+import { Value } from "./google/protobuf/struct";
 
 describe('oneof=unions', () => {
   it('generates types correctly', () => {
@@ -27,13 +28,13 @@ describe('oneof=unions', () => {
   });
 
   it('decode', () => {
-    let encoded = pbjs.PleaseChoose.encode(
-      new pbjs.PleaseChoose({
+    let encoded = pbjs.oneof.PleaseChoose.encode(
+      new pbjs.oneof.PleaseChoose({
         name: 'Debbie',
         aBool: true,
         age: 37,
         or: 'perhaps not',
-        value: new Value({ stringValue: 'Debbie' })
+        value: new pbjsValue({ stringValue: 'Debbie' })
       })).finish();
     let decoded = PleaseChoose.decode(encoded);
     expect(decoded).toEqual({
@@ -55,14 +56,14 @@ describe('oneof=unions', () => {
       signature: new Uint8Array([0xab, 0xcd]),
       value: 'Debbie'
     }).finish();
-    let decoded = pbjs.PleaseChoose.decode(encoded);
+    let decoded = pbjs.oneof.PleaseChoose.decode(encoded);
     expect(decoded).toEqual({
       name: 'Debbie',
       aBool: true,
       age: 37,
       or: 'perhaps not',
       signature: Buffer.from([0xab, 0xcd]),
-      value: new Value({ stringValue: 'Debbie' })
+      value: new pbjsValue({ stringValue: 'Debbie' })
     });
   });
 
@@ -99,7 +100,7 @@ describe('oneof=unions', () => {
       signature: new Uint8Array([0xab, 0xcd]),
       value: undefined
     };
-    let pbjsJson = pbjs.PleaseChoose.decode(PleaseChoose.encode(debbie).finish()).toJSON();
+    let pbjsJson = pbjs.oneof.PleaseChoose.decode(PleaseChoose.encode(debbie).finish()).toJSON();
     let json = PleaseChoose.toJSON(debbie);
     expect(json).toEqual(pbjsJson);
   });
@@ -116,7 +117,11 @@ describe('oneof=unions', () => {
       signature: new Uint8Array([0xab, 0xcd]),
       value: 'Debbie'
     };
-    let pbjsJson = pbjs.PleaseChoose.decode(PleaseChoose.encode(debbie).finish()).toJSON();
+    let pbjsJson = pbjs.oneof.PleaseChoose.decode(PleaseChoose.encode(debbie).finish()).toJSON();
+
+    // workaround because protobuf.js does not unwrap Value when decoding
+    pbjsJson.value = pbjsJson.value.stringValue
+
     let fromJson = PleaseChoose.fromJSON(pbjsJson);
     expect(fromJson).toEqual(debbie);
   });
@@ -127,7 +132,7 @@ describe('oneof=unions', () => {
       age: 37,
       choice: { $case: 'aNumber', aNumber: 42 },
       signature: Buffer.from([0xab, 0xcd]),
-      value: new Value({ stringValue: 'Debbie' })
+      value: 'Debbie'
     };
     let encoded = PleaseChoose.encode(obj).finish();
     let decoded = PleaseChoose.decode(encoded);
