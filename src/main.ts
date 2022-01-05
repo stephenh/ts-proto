@@ -1137,7 +1137,7 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
     } else if (isWithinOneOfThatShouldBeUnion(options, field)) {
       const oneofFields = messageDesc.field
         .filter(isWithinOneOf)
-        .filter(otherField => otherField.oneofIndex === field.oneofIndex)
+        .filter((otherField) => otherField.oneofIndex === field.oneofIndex);
 
       const oneofName = maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options);
 
@@ -1148,7 +1148,7 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
 
       const ternaryIf = code`${ctx.utils.isSet}(object.${jsonName})`;
       const ternaryThen = code`{ $case: '${fieldName}', ${fieldName}: ${readSnippet(`object.${jsonName}`)}`;
-      chunks.push(code `${ternaryIf} ? ${ternaryThen}} : `)
+      chunks.push(code`${ternaryIf} ? ${ternaryThen}} : `);
 
       if (field === oneofFields[oneofFields.length - 1]) {
         chunks.push(code`undefined,`);
@@ -1162,7 +1162,7 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
       chunks.push(
         code`${fieldName}: ${ctx.utils.isObject}(object.${jsonName})
           ? ${readSnippet(`object.${jsonName}`)}
-          : undefined,`,
+          : undefined,`
       );
     } else if (isListValueType(field)) {
       chunks.push(code`
