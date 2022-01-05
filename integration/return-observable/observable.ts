@@ -45,8 +45,7 @@ export const ProduceRequest = {
 
   fromJSON(object: any): ProduceRequest {
     const message = createBaseProduceRequest();
-    message.ingredients =
-      object.ingredients !== undefined && object.ingredients !== null ? String(object.ingredients) : '';
+    message.ingredients = isSet(object.ingredients) ? String(object.ingredients) : '';
     return message;
   },
 
@@ -95,7 +94,7 @@ export const ProduceReply = {
 
   fromJSON(object: any): ProduceReply {
     const message = createBaseProduceReply();
-    message.result = object.result !== undefined && object.result !== null ? String(object.result) : '';
+    message.result = isSet(object.result) ? String(object.result) : '';
     return message;
   },
 
@@ -138,4 +137,8 @@ export type Exact<P, I extends P> = P extends Builtin
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
+}
+
+function isSet(value: any): boolean {
+  return value !== null && value !== undefined;
 }

@@ -132,8 +132,8 @@ export const DashFlash = {
 
   fromJSON(object: any): DashFlash {
     const message = createBaseDashFlash();
-    message.msg = object.msg !== undefined && object.msg !== null ? String(object.msg) : '';
-    message.type = object.type !== undefined && object.type !== null ? dashFlash_TypeFromJSON(object.type) : 0;
+    message.msg = isSet(object.msg) ? String(object.msg) : '';
+    message.type = isSet(object.type) ? dashFlash_TypeFromJSON(object.type) : 0;
     return message;
   },
 
@@ -196,10 +196,9 @@ export const DashUserSettingsState = {
 
   fromJSON(object: any): DashUserSettingsState {
     const message = createBaseDashUserSettingsState();
-    message.email = object.email !== undefined && object.email !== null ? String(object.email) : '';
-    message.urls =
-      object.urls !== undefined && object.urls !== null ? DashUserSettingsState_URLs.fromJSON(object.urls) : undefined;
-    message.flashes = (object.flashes ?? []).map((e: any) => DashFlash.fromJSON(e));
+    message.email = isSet(object.email) ? String(object.email) : '';
+    message.urls = isSet(object.urls) ? DashUserSettingsState_URLs.fromJSON(object.urls) : undefined;
+    message.flashes = Array.isArray(object?.flashes) ? object.flashes.map((e: any) => DashFlash.fromJSON(e)) : [];
     return message;
   },
 
@@ -266,10 +265,8 @@ export const DashUserSettingsState_URLs = {
 
   fromJSON(object: any): DashUserSettingsState_URLs {
     const message = createBaseDashUserSettingsState_URLs();
-    message.connectGoogle =
-      object.connectGoogle !== undefined && object.connectGoogle !== null ? String(object.connectGoogle) : '';
-    message.connectGithub =
-      object.connectGithub !== undefined && object.connectGithub !== null ? String(object.connectGithub) : '';
+    message.connectGoogle = isSet(object.connectGoogle) ? String(object.connectGoogle) : '';
+    message.connectGithub = isSet(object.connectGithub) ? String(object.connectGithub) : '';
     return message;
   },
 
@@ -338,11 +335,10 @@ export const DashCred = {
 
   fromJSON(object: any): DashCred {
     const message = createBaseDashCred();
-    message.description =
-      object.description !== undefined && object.description !== null ? String(object.description) : '';
-    message.metadata = object.metadata !== undefined && object.metadata !== null ? String(object.metadata) : '';
-    message.token = object.token !== undefined && object.token !== null ? String(object.token) : '';
-    message.id = object.id !== undefined && object.id !== null ? String(object.id) : '';
+    message.description = isSet(object.description) ? String(object.description) : '';
+    message.metadata = isSet(object.metadata) ? String(object.metadata) : '';
+    message.token = isSet(object.token) ? String(object.token) : '';
+    message.id = isSet(object.id) ? String(object.id) : '';
     return message;
   },
 
@@ -403,9 +399,8 @@ export const DashAPICredsCreateReq = {
 
   fromJSON(object: any): DashAPICredsCreateReq {
     const message = createBaseDashAPICredsCreateReq();
-    message.description =
-      object.description !== undefined && object.description !== null ? String(object.description) : '';
-    message.metadata = object.metadata !== undefined && object.metadata !== null ? String(object.metadata) : '';
+    message.description = isSet(object.description) ? String(object.description) : '';
+    message.metadata = isSet(object.metadata) ? String(object.metadata) : '';
     return message;
   },
 
@@ -474,11 +469,10 @@ export const DashAPICredsUpdateReq = {
 
   fromJSON(object: any): DashAPICredsUpdateReq {
     const message = createBaseDashAPICredsUpdateReq();
-    message.credSid = object.credSid !== undefined && object.credSid !== null ? String(object.credSid) : '';
-    message.description =
-      object.description !== undefined && object.description !== null ? String(object.description) : '';
-    message.metadata = object.metadata !== undefined && object.metadata !== null ? String(object.metadata) : '';
-    message.id = object.id !== undefined && object.id !== null ? String(object.id) : '';
+    message.credSid = isSet(object.credSid) ? String(object.credSid) : '';
+    message.description = isSet(object.description) ? String(object.description) : '';
+    message.metadata = isSet(object.metadata) ? String(object.metadata) : '';
+    message.id = isSet(object.id) ? String(object.id) : '';
     return message;
   },
 
@@ -539,8 +533,8 @@ export const DashAPICredsDeleteReq = {
 
   fromJSON(object: any): DashAPICredsDeleteReq {
     const message = createBaseDashAPICredsDeleteReq();
-    message.credSid = object.credSid !== undefined && object.credSid !== null ? String(object.credSid) : '';
-    message.id = object.id !== undefined && object.id !== null ? String(object.id) : '';
+    message.credSid = isSet(object.credSid) ? String(object.credSid) : '';
+    message.id = isSet(object.id) ? String(object.id) : '';
     return message;
   },
 
@@ -908,4 +902,8 @@ export type Exact<P, I extends P> = P extends Builtin
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
+}
+
+function isSet(value: any): boolean {
+  return value !== null && value !== undefined;
 }

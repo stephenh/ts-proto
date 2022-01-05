@@ -1,6 +1,8 @@
 syntax = "proto3";
 package oneof;
 
+import "google/protobuf/struct.proto";
+
 message PleaseChoose {
 
   string name = 1;
@@ -47,6 +49,8 @@ message PleaseChoose {
   }
 
   bytes signature = 12;
+
+  google.protobuf.Value value = 13;
 }
 
 /** For testing proto3's field presence feature. */

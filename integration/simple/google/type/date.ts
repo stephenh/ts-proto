@@ -79,9 +79,9 @@ export const DateMessage = {
 
   fromJSON(object: any): DateMessage {
     const message = createBaseDateMessage();
-    message.year = object.year !== undefined && object.year !== null ? Number(object.year) : 0;
-    message.month = object.month !== undefined && object.month !== null ? Number(object.month) : 0;
-    message.day = object.day !== undefined && object.day !== null ? Number(object.day) : 0;
+    message.year = isSet(object.year) ? Number(object.year) : 0;
+    message.month = isSet(object.month) ? Number(object.month) : 0;
+    message.day = isSet(object.day) ? Number(object.day) : 0;
     return message;
   },
 
@@ -124,4 +124,8 @@ export type Exact<P, I extends P> = P extends Builtin
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
+}
+
+function isSet(value: any): boolean {
+  return value !== null && value !== undefined;
 }

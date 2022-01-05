@@ -41,8 +41,7 @@ export const ImportedThing = {
 
   fromJSON(object: any): ImportedThing {
     const message = createBaseImportedThing();
-    message.created_at =
-      object.created_at !== undefined && object.created_at !== null ? fromJsonTimestamp(object.created_at) : undefined;
+    message.created_at = isSet(object.created_at) ? fromJsonTimestamp(object.created_at) : undefined;
     return message;
   },
 
@@ -103,4 +102,8 @@ function fromJsonTimestamp(o: any): Date {
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
+}
+
+function isSet(value: any): boolean {
+  return value !== null && value !== undefined;
 }

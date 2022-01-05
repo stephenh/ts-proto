@@ -99,10 +99,7 @@ export const DividerData = {
 
   fromJSON(object: any): DividerData {
     const message = createBaseDividerData();
-    message.type =
-      object.type !== undefined && object.type !== null
-        ? dividerData_DividerTypeFromJSON(object.type)
-        : DividerData_DividerType.DOUBLE;
+    message.type = isSet(object.type) ? dividerData_DividerTypeFromJSON(object.type) : DividerData_DividerType.DOUBLE;
     return message;
   },
 
@@ -141,4 +138,8 @@ export type Exact<P, I extends P> = P extends Builtin
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
+}
+
+function isSet(value: any): boolean {
+  return value !== null && value !== undefined;
 }

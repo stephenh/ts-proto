@@ -77,14 +77,14 @@ export const Todo = {
 
   fromJSON(object: any): Todo {
     const message = createBaseTodo();
-    message.id = object.id !== undefined && object.id !== null ? String(object.id) : '';
-    message.timestamp =
-      object.timestamp !== undefined && object.timestamp !== null ? fromJsonTimestamp(object.timestamp) : undefined;
-    message.repeatedTimestamp = (object.repeatedTimestamp ?? []).map((e: any) => fromJsonTimestamp(e));
-    message.optionalTimestamp =
-      object.optionalTimestamp !== undefined && object.optionalTimestamp !== null
-        ? fromJsonTimestamp(object.optionalTimestamp)
-        : undefined;
+    message.id = isSet(object.id) ? String(object.id) : '';
+    message.timestamp = isSet(object.timestamp) ? fromJsonTimestamp(object.timestamp) : undefined;
+    message.repeatedTimestamp = Array.isArray(object?.repeatedTimestamp)
+      ? object.repeatedTimestamp.map((e: any) => fromJsonTimestamp(e))
+      : [];
+    message.optionalTimestamp = isSet(object.optionalTimestamp)
+      ? fromJsonTimestamp(object.optionalTimestamp)
+      : undefined;
     message.mapOfTimestamps = Object.entries(object.mapOfTimestamps ?? {}).reduce<{ [key: string]: Date }>(
       (acc, [key, value]) => {
         acc[key] = fromJsonTimestamp(value);
@@ -171,8 +171,8 @@ export const Todo_MapOfTimestampsEntry = {
 
   fromJSON(object: any): Todo_MapOfTimestampsEntry {
     const message = createBaseTodo_MapOfTimestampsEntry();
-    message.key = object.key !== undefined && object.key !== null ? String(object.key) : '';
-    message.value = object.value !== undefined && object.value !== null ? fromJsonTimestamp(object.value) : undefined;
+    message.key = isSet(object.key) ? String(object.key) : '';
+    message.value = isSet(object.value) ? fromJsonTimestamp(object.value) : undefined;
     return message;
   },
 
@@ -235,4 +235,8 @@ function fromJsonTimestamp(o: any): Date {
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
+}
+
+function isSet(value: any): boolean {
+  return value !== null && value !== undefined;
 }

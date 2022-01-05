@@ -106,8 +106,8 @@ export const DashFlash = {
 
   fromJSON(object: any): DashFlash {
     const message = createBaseDashFlash();
-    message.msg = object.msg !== undefined && object.msg !== null ? String(object.msg) : '';
-    message.type = object.type !== undefined && object.type !== null ? dashFlash_TypeFromJSON(object.type) : 0;
+    message.msg = isSet(object.msg) ? String(object.msg) : '';
+    message.type = isSet(object.type) ? dashFlash_TypeFromJSON(object.type) : 0;
     return message;
   },
 
@@ -170,10 +170,9 @@ export const DashUserSettingsState = {
 
   fromJSON(object: any): DashUserSettingsState {
     const message = createBaseDashUserSettingsState();
-    message.email = object.email !== undefined && object.email !== null ? String(object.email) : '';
-    message.urls =
-      object.urls !== undefined && object.urls !== null ? DashUserSettingsState_URLs.fromJSON(object.urls) : undefined;
-    message.flashes = (object.flashes ?? []).map((e: any) => DashFlash.fromJSON(e));
+    message.email = isSet(object.email) ? String(object.email) : '';
+    message.urls = isSet(object.urls) ? DashUserSettingsState_URLs.fromJSON(object.urls) : undefined;
+    message.flashes = Array.isArray(object?.flashes) ? object.flashes.map((e: any) => DashFlash.fromJSON(e)) : [];
     return message;
   },
 
@@ -240,10 +239,8 @@ export const DashUserSettingsState_URLs = {
 
   fromJSON(object: any): DashUserSettingsState_URLs {
     const message = createBaseDashUserSettingsState_URLs();
-    message.connectGoogle =
-      object.connectGoogle !== undefined && object.connectGoogle !== null ? String(object.connectGoogle) : '';
-    message.connectGithub =
-      object.connectGithub !== undefined && object.connectGithub !== null ? String(object.connectGithub) : '';
+    message.connectGoogle = isSet(object.connectGoogle) ? String(object.connectGoogle) : '';
+    message.connectGithub = isSet(object.connectGithub) ? String(object.connectGithub) : '';
     return message;
   },
 
@@ -440,4 +437,8 @@ export type Exact<P, I extends P> = P extends Builtin
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
+}
+
+function isSet(value: any): boolean {
+  return value !== null && value !== undefined;
 }

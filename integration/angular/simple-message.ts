@@ -40,8 +40,7 @@ export const SimpleMessage = {
 
   fromJSON(object: any): SimpleMessage {
     const message = createBaseSimpleMessage();
-    message.numberField =
-      object.numberField !== undefined && object.numberField !== null ? Number(object.numberField) : 0;
+    message.numberField = isSet(object.numberField) ? Number(object.numberField) : 0;
     return message;
   },
 
@@ -80,4 +79,8 @@ export type Exact<P, I extends P> = P extends Builtin
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
+}
+
+function isSet(value: any): boolean {
+  return value !== null && value !== undefined;
 }

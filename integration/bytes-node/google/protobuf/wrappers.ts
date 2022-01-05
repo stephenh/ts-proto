@@ -126,7 +126,7 @@ export const DoubleValue = {
 
   fromJSON(object: any): DoubleValue {
     const message = createBaseDoubleValue();
-    message.value = object.value !== undefined && object.value !== null ? Number(object.value) : 0;
+    message.value = isSet(object.value) ? Number(object.value) : 0;
     return message;
   },
 
@@ -175,7 +175,7 @@ export const FloatValue = {
 
   fromJSON(object: any): FloatValue {
     const message = createBaseFloatValue();
-    message.value = object.value !== undefined && object.value !== null ? Number(object.value) : 0;
+    message.value = isSet(object.value) ? Number(object.value) : 0;
     return message;
   },
 
@@ -224,7 +224,7 @@ export const Int64Value = {
 
   fromJSON(object: any): Int64Value {
     const message = createBaseInt64Value();
-    message.value = object.value !== undefined && object.value !== null ? Number(object.value) : 0;
+    message.value = isSet(object.value) ? Number(object.value) : 0;
     return message;
   },
 
@@ -273,7 +273,7 @@ export const UInt64Value = {
 
   fromJSON(object: any): UInt64Value {
     const message = createBaseUInt64Value();
-    message.value = object.value !== undefined && object.value !== null ? Number(object.value) : 0;
+    message.value = isSet(object.value) ? Number(object.value) : 0;
     return message;
   },
 
@@ -322,7 +322,7 @@ export const Int32Value = {
 
   fromJSON(object: any): Int32Value {
     const message = createBaseInt32Value();
-    message.value = object.value !== undefined && object.value !== null ? Number(object.value) : 0;
+    message.value = isSet(object.value) ? Number(object.value) : 0;
     return message;
   },
 
@@ -371,7 +371,7 @@ export const UInt32Value = {
 
   fromJSON(object: any): UInt32Value {
     const message = createBaseUInt32Value();
-    message.value = object.value !== undefined && object.value !== null ? Number(object.value) : 0;
+    message.value = isSet(object.value) ? Number(object.value) : 0;
     return message;
   },
 
@@ -420,7 +420,7 @@ export const BoolValue = {
 
   fromJSON(object: any): BoolValue {
     const message = createBaseBoolValue();
-    message.value = object.value !== undefined && object.value !== null ? Boolean(object.value) : false;
+    message.value = isSet(object.value) ? Boolean(object.value) : false;
     return message;
   },
 
@@ -469,7 +469,7 @@ export const StringValue = {
 
   fromJSON(object: any): StringValue {
     const message = createBaseStringValue();
-    message.value = object.value !== undefined && object.value !== null ? String(object.value) : '';
+    message.value = isSet(object.value) ? String(object.value) : '';
     return message;
   },
 
@@ -518,10 +518,7 @@ export const BytesValue = {
 
   fromJSON(object: any): BytesValue {
     const message = createBaseBytesValue();
-    message.value =
-      object.value !== undefined && object.value !== null
-        ? Buffer.from(bytesFromBase64(object.value))
-        : Buffer.alloc(0);
+    message.value = isSet(object.value) ? Buffer.from(bytesFromBase64(object.value)) : Buffer.alloc(0);
     return message;
   },
 
@@ -600,4 +597,8 @@ function longToNumber(long: Long): number {
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
+}
+
+function isSet(value: any): boolean {
+  return value !== null && value !== undefined;
 }

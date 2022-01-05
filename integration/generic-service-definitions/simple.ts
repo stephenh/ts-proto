@@ -40,7 +40,7 @@ export const TestMessage = {
 
   fromJSON(object: any): TestMessage {
     const message = createBaseTestMessage();
-    message.value = object.value !== undefined && object.value !== null ? String(object.value) : '';
+    message.value = isSet(object.value) ? String(object.value) : '';
     return message;
   },
 
@@ -148,4 +148,8 @@ export type Exact<P, I extends P> = P extends Builtin
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
+}
+
+function isSet(value: any): boolean {
+  return value !== null && value !== undefined;
 }

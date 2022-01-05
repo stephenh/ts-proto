@@ -85,8 +85,8 @@ export const Simple = {
 
   fromJSON(object: any): Simple {
     const message = createBaseSimple();
-    message.name = object.name !== undefined && object.name !== null ? String(object.name) : '';
-    message.age = object.age !== undefined && object.age !== null ? Number(object.age) : 0;
+    message.name = isSet(object.name) ? String(object.name) : '';
+    message.age = isSet(object.age) ? Number(object.age) : 0;
     return message;
   },
 
@@ -127,4 +127,8 @@ export type Exact<P, I extends P> = P extends Builtin
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
+}
+
+function isSet(value: any): boolean {
+  return value !== null && value !== undefined;
 }

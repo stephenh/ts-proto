@@ -88,14 +88,11 @@ export const Simple = {
 
   fromJSON(object: any): Simple {
     const message = createBaseSimple();
-    message.name = object.name !== undefined && object.name !== null ? String(object.name) : '';
-    message.age = object.age !== undefined && object.age !== null ? Number(object.age) : 0;
-    message.child = object.child !== undefined && object.child !== null ? Child.fromJSON(object.child) : undefined;
-    message.testField = object.testField !== undefined && object.testField !== null ? String(object.testField) : '';
-    message.testNotDeprecated =
-      object.testNotDeprecated !== undefined && object.testNotDeprecated !== null
-        ? String(object.testNotDeprecated)
-        : '';
+    message.name = isSet(object.name) ? String(object.name) : '';
+    message.age = isSet(object.age) ? Number(object.age) : 0;
+    message.child = isSet(object.child) ? Child.fromJSON(object.child) : undefined;
+    message.testField = isSet(object.testField) ? String(object.testField) : '';
+    message.testNotDeprecated = isSet(object.testNotDeprecated) ? String(object.testNotDeprecated) : '';
     return message;
   },
 
@@ -152,7 +149,7 @@ export const Child = {
 
   fromJSON(object: any): Child {
     const message = createBaseChild();
-    message.name = object.name !== undefined && object.name !== null ? String(object.name) : '';
+    message.name = isSet(object.name) ? String(object.name) : '';
     return message;
   },
 
@@ -191,4 +188,8 @@ export type Exact<P, I extends P> = P extends Builtin
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
+}
+
+function isSet(value: any): boolean {
+  return value !== null && value !== undefined;
 }

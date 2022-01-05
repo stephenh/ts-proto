@@ -48,10 +48,8 @@ export const Point = {
 
   fromJSON(object: any): Point {
     const message = createBasePoint();
-    message.data =
-      object.data !== undefined && object.data !== null ? Buffer.from(bytesFromBase64(object.data)) : Buffer.alloc(0);
-    message.dataWrapped =
-      object.dataWrapped !== undefined && object.dataWrapped !== null ? new Buffer(object.dataWrapped) : undefined;
+    message.data = isSet(object.data) ? Buffer.from(bytesFromBase64(object.data)) : Buffer.alloc(0);
+    message.dataWrapped = isSet(object.dataWrapped) ? new Buffer(object.dataWrapped) : undefined;
     return message;
   },
 
@@ -125,4 +123,8 @@ export type Exact<P, I extends P> = P extends Builtin
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
+}
+
+function isSet(value: any): boolean {
+  return value !== null && value !== undefined;
 }

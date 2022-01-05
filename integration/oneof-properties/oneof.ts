@@ -176,23 +176,17 @@ export const PleaseChoose = {
 
   fromJSON(object: any): PleaseChoose {
     const message = createBasePleaseChoose();
-    message.name = object.name !== undefined && object.name !== null ? String(object.name) : '';
-    message.aNumber = object.aNumber !== undefined && object.aNumber !== null ? Number(object.aNumber) : undefined;
-    message.aString = object.aString !== undefined && object.aString !== null ? String(object.aString) : undefined;
-    message.aMessage =
-      object.aMessage !== undefined && object.aMessage !== null
-        ? PleaseChoose_Submessage.fromJSON(object.aMessage)
-        : undefined;
-    message.aBool = object.aBool !== undefined && object.aBool !== null ? Boolean(object.aBool) : undefined;
-    message.bunchaBytes =
-      object.bunchaBytes !== undefined && object.bunchaBytes !== null ? bytesFromBase64(object.bunchaBytes) : undefined;
-    message.anEnum =
-      object.anEnum !== undefined && object.anEnum !== null ? pleaseChoose_StateEnumFromJSON(object.anEnum) : undefined;
-    message.age = object.age !== undefined && object.age !== null ? Number(object.age) : 0;
-    message.either = object.either !== undefined && object.either !== null ? String(object.either) : undefined;
-    message.or = object.or !== undefined && object.or !== null ? String(object.or) : undefined;
-    message.thirdOption =
-      object.thirdOption !== undefined && object.thirdOption !== null ? String(object.thirdOption) : undefined;
+    message.name = isSet(object.name) ? String(object.name) : '';
+    message.aNumber = isSet(object.aNumber) ? Number(object.aNumber) : undefined;
+    message.aString = isSet(object.aString) ? String(object.aString) : undefined;
+    message.aMessage = isSet(object.aMessage) ? PleaseChoose_Submessage.fromJSON(object.aMessage) : undefined;
+    message.aBool = isSet(object.aBool) ? Boolean(object.aBool) : undefined;
+    message.bunchaBytes = isSet(object.bunchaBytes) ? bytesFromBase64(object.bunchaBytes) : undefined;
+    message.anEnum = isSet(object.anEnum) ? pleaseChoose_StateEnumFromJSON(object.anEnum) : undefined;
+    message.age = isSet(object.age) ? Number(object.age) : 0;
+    message.either = isSet(object.either) ? String(object.either) : undefined;
+    message.or = isSet(object.or) ? String(object.or) : undefined;
+    message.thirdOption = isSet(object.thirdOption) ? String(object.thirdOption) : undefined;
     return message;
   },
 
@@ -267,7 +261,7 @@ export const PleaseChoose_Submessage = {
 
   fromJSON(object: any): PleaseChoose_Submessage {
     const message = createBasePleaseChoose_Submessage();
-    message.name = object.name !== undefined && object.name !== null ? String(object.name) : '';
+    message.name = isSet(object.name) ? String(object.name) : '';
     return message;
   },
 
@@ -338,4 +332,8 @@ export type Exact<P, I extends P> = P extends Builtin
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
+}
+
+function isSet(value: any): boolean {
+  return value !== null && value !== undefined;
 }

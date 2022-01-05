@@ -1,6 +1,7 @@
 /* eslint-disable */
 import { util, configure, Writer, Reader } from 'protobufjs/minimal';
 import * as Long from 'long';
+import { Value } from './google/protobuf/struct';
 
 export const protobufPackage = 'oneof';
 
@@ -19,6 +20,7 @@ export interface PleaseChoose {
     | { $case: 'or'; or: string }
     | { $case: 'thirdOption'; thirdOption: string };
   signature: Uint8Array;
+  value: any | undefined;
 }
 
 export enum PleaseChoose_StateEnum {
@@ -70,7 +72,7 @@ export interface SimpleButOptional {
 }
 
 function createBasePleaseChoose(): PleaseChoose {
-  return { name: '', choice: undefined, age: 0, eitherOr: undefined, signature: new Uint8Array() };
+  return { name: '', choice: undefined, age: 0, eitherOr: undefined, signature: new Uint8Array(), value: undefined };
 }
 
 export const PleaseChoose = {
@@ -110,6 +112,9 @@ export const PleaseChoose = {
     }
     if (message.signature.length !== 0) {
       writer.uint32(98).bytes(message.signature);
+    }
+    if (message.value !== undefined) {
+      Value.encode(Value.wrap(message.value), writer.uint32(106).fork()).ldelim();
     }
     return writer;
   },
@@ -157,6 +162,9 @@ export const PleaseChoose = {
         case 12:
           message.signature = reader.bytes();
           break;
+        case 13:
+          message.value = Value.unwrap(Value.decode(reader, reader.uint32()));
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -167,39 +175,37 @@ export const PleaseChoose = {
 
   fromJSON(object: any): PleaseChoose {
     const message = createBasePleaseChoose();
-    message.name = object.name !== undefined && object.name !== null ? String(object.name) : '';
-    if (object.aNumber !== undefined && object.aNumber !== null) {
+    message.name = isSet(object.name) ? String(object.name) : '';
+    if (isSet(object.aNumber)) {
       message.choice = { $case: 'aNumber', aNumber: Number(object.aNumber) };
     }
-    if (object.aString !== undefined && object.aString !== null) {
+    if (isSet(object.aString)) {
       message.choice = { $case: 'aString', aString: String(object.aString) };
     }
-    if (object.aMessage !== undefined && object.aMessage !== null) {
+    if (isSet(object.aMessage)) {
       message.choice = { $case: 'aMessage', aMessage: PleaseChoose_Submessage.fromJSON(object.aMessage) };
     }
-    if (object.aBool !== undefined && object.aBool !== null) {
+    if (isSet(object.aBool)) {
       message.choice = { $case: 'aBool', aBool: Boolean(object.aBool) };
     }
-    if (object.bunchaBytes !== undefined && object.bunchaBytes !== null) {
+    if (isSet(object.bunchaBytes)) {
       message.choice = { $case: 'bunchaBytes', bunchaBytes: bytesFromBase64(object.bunchaBytes) };
     }
-    if (object.anEnum !== undefined && object.anEnum !== null) {
+    if (isSet(object.anEnum)) {
       message.choice = { $case: 'anEnum', anEnum: pleaseChoose_StateEnumFromJSON(object.anEnum) };
     }
-    message.age = object.age !== undefined && object.age !== null ? Number(object.age) : 0;
-    if (object.either !== undefined && object.either !== null) {
+    message.age = isSet(object.age) ? Number(object.age) : 0;
+    if (isSet(object.either)) {
       message.eitherOr = { $case: 'either', either: String(object.either) };
     }
-    if (object.or !== undefined && object.or !== null) {
+    if (isSet(object.or)) {
       message.eitherOr = { $case: 'or', or: String(object.or) };
     }
-    if (object.thirdOption !== undefined && object.thirdOption !== null) {
+    if (isSet(object.thirdOption)) {
       message.eitherOr = { $case: 'thirdOption', thirdOption: String(object.thirdOption) };
     }
-    message.signature =
-      object.signature !== undefined && object.signature !== null
-        ? bytesFromBase64(object.signature)
-        : new Uint8Array();
+    message.signature = isSet(object.signature) ? bytesFromBase64(object.signature) : new Uint8Array();
+    message.value = isSet(object?.value) ? object.value : undefined;
     return message;
   },
 
@@ -223,6 +229,7 @@ export const PleaseChoose = {
     message.eitherOr?.$case === 'thirdOption' && (obj.thirdOption = message.eitherOr?.thirdOption);
     message.signature !== undefined &&
       (obj.signature = base64FromBytes(message.signature !== undefined ? message.signature : new Uint8Array()));
+    message.value !== undefined && (obj.value = message.value);
     return obj;
   },
 
@@ -274,6 +281,7 @@ export const PleaseChoose = {
       message.eitherOr = { $case: 'thirdOption', thirdOption: object.eitherOr.thirdOption };
     }
     message.signature = object.signature ?? new Uint8Array();
+    message.value = object.value ?? undefined;
     return message;
   },
 };
@@ -310,7 +318,7 @@ export const PleaseChoose_Submessage = {
 
   fromJSON(object: any): PleaseChoose_Submessage {
     const message = createBasePleaseChoose_Submessage();
-    message.name = object.name !== undefined && object.name !== null ? String(object.name) : '';
+    message.name = isSet(object.name) ? String(object.name) : '';
     return message;
   },
 
@@ -365,8 +373,8 @@ export const SimpleButOptional = {
 
   fromJSON(object: any): SimpleButOptional {
     const message = createBaseSimpleButOptional();
-    message.name = object.name !== undefined && object.name !== null ? String(object.name) : undefined;
-    message.age = object.age !== undefined && object.age !== null ? Number(object.age) : undefined;
+    message.name = isSet(object.name) ? String(object.name) : undefined;
+    message.age = isSet(object.age) ? Number(object.age) : undefined;
     return message;
   },
 
@@ -441,4 +449,8 @@ export type Exact<P, I extends P> = P extends Builtin
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
+}
+
+function isSet(value: any): boolean {
+  return value !== null && value !== undefined;
 }

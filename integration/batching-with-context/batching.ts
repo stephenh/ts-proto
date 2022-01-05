@@ -78,7 +78,7 @@ export const BatchQueryRequest = {
 
   fromJSON(object: any): BatchQueryRequest {
     const message = createBaseBatchQueryRequest();
-    message.ids = (object.ids ?? []).map((e: any) => String(e));
+    message.ids = Array.isArray(object?.ids) ? object.ids.map((e: any) => String(e)) : [];
     return message;
   },
 
@@ -131,7 +131,7 @@ export const BatchQueryResponse = {
 
   fromJSON(object: any): BatchQueryResponse {
     const message = createBaseBatchQueryResponse();
-    message.entities = (object.entities ?? []).map((e: any) => Entity.fromJSON(e));
+    message.entities = Array.isArray(object?.entities) ? object.entities.map((e: any) => Entity.fromJSON(e)) : [];
     return message;
   },
 
@@ -184,7 +184,7 @@ export const BatchMapQueryRequest = {
 
   fromJSON(object: any): BatchMapQueryRequest {
     const message = createBaseBatchMapQueryRequest();
-    message.ids = (object.ids ?? []).map((e: any) => String(e));
+    message.ids = Array.isArray(object?.ids) ? object.ids.map((e: any) => String(e)) : [];
     return message;
   },
 
@@ -308,8 +308,8 @@ export const BatchMapQueryResponse_EntitiesEntry = {
 
   fromJSON(object: any): BatchMapQueryResponse_EntitiesEntry {
     const message = createBaseBatchMapQueryResponse_EntitiesEntry();
-    message.key = object.key !== undefined && object.key !== null ? String(object.key) : '';
-    message.value = object.value !== undefined && object.value !== null ? Entity.fromJSON(object.value) : undefined;
+    message.key = isSet(object.key) ? String(object.key) : '';
+    message.value = isSet(object.value) ? Entity.fromJSON(object.value) : undefined;
     return message;
   },
 
@@ -362,7 +362,7 @@ export const GetOnlyMethodRequest = {
 
   fromJSON(object: any): GetOnlyMethodRequest {
     const message = createBaseGetOnlyMethodRequest();
-    message.id = object.id !== undefined && object.id !== null ? String(object.id) : '';
+    message.id = isSet(object.id) ? String(object.id) : '';
     return message;
   },
 
@@ -411,7 +411,7 @@ export const GetOnlyMethodResponse = {
 
   fromJSON(object: any): GetOnlyMethodResponse {
     const message = createBaseGetOnlyMethodResponse();
-    message.entity = object.entity !== undefined && object.entity !== null ? Entity.fromJSON(object.entity) : undefined;
+    message.entity = isSet(object.entity) ? Entity.fromJSON(object.entity) : undefined;
     return message;
   },
 
@@ -461,7 +461,7 @@ export const WriteMethodRequest = {
 
   fromJSON(object: any): WriteMethodRequest {
     const message = createBaseWriteMethodRequest();
-    message.id = object.id !== undefined && object.id !== null ? String(object.id) : '';
+    message.id = isSet(object.id) ? String(object.id) : '';
     return message;
   },
 
@@ -556,8 +556,8 @@ export const Entity = {
 
   fromJSON(object: any): Entity {
     const message = createBaseEntity();
-    message.id = object.id !== undefined && object.id !== null ? String(object.id) : '';
-    message.name = object.name !== undefined && object.name !== null ? String(object.name) : '';
+    message.id = isSet(object.id) ? String(object.id) : '';
+    message.name = isSet(object.name) ? String(object.name) : '';
     return message;
   },
 
@@ -695,4 +695,8 @@ export type Exact<P, I extends P> = P extends Builtin
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
+}
+
+function isSet(value: any): boolean {
+  return value !== null && value !== undefined;
 }

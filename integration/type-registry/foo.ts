@@ -50,8 +50,7 @@ export const Foo = {
 
   fromJSON(object: any): Foo {
     const message = createBaseFoo();
-    message.timestamp =
-      object.timestamp !== undefined && object.timestamp !== null ? fromJsonTimestamp(object.timestamp) : undefined;
+    message.timestamp = isSet(object.timestamp) ? fromJsonTimestamp(object.timestamp) : undefined;
     return message;
   },
 
@@ -104,8 +103,7 @@ export const Foo2 = {
 
   fromJSON(object: any): Foo2 {
     const message = createBaseFoo2();
-    message.timestamp =
-      object.timestamp !== undefined && object.timestamp !== null ? fromJsonTimestamp(object.timestamp) : undefined;
+    message.timestamp = isSet(object.timestamp) ? fromJsonTimestamp(object.timestamp) : undefined;
     return message;
   },
 
@@ -168,4 +166,8 @@ function fromJsonTimestamp(o: any): Date {
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
+}
+
+function isSet(value: any): boolean {
+  return value !== null && value !== undefined;
 }

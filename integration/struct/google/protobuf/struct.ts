@@ -219,8 +219,8 @@ export const Struct_FieldsEntry = {
 
   fromJSON(object: any): Struct_FieldsEntry {
     const message = createBaseStruct_FieldsEntry();
-    message.key = object.key !== undefined && object.key !== null ? String(object.key) : '';
-    message.value = object.value;
+    message.key = isSet(object.key) ? String(object.key) : '';
+    message.value = isSet(object?.value) ? object.value : undefined;
     return message;
   },
 
@@ -308,16 +308,12 @@ export const Value = {
 
   fromJSON(object: any): Value {
     const message = createBaseValue();
-    message.nullValue =
-      object.nullValue !== undefined && object.nullValue !== null ? nullValueFromJSON(object.nullValue) : undefined;
-    message.numberValue =
-      object.numberValue !== undefined && object.numberValue !== null ? Number(object.numberValue) : undefined;
-    message.stringValue =
-      object.stringValue !== undefined && object.stringValue !== null ? String(object.stringValue) : undefined;
-    message.boolValue =
-      object.boolValue !== undefined && object.boolValue !== null ? Boolean(object.boolValue) : undefined;
-    message.structValue = typeof object.structValue === 'object' ? object.structValue : undefined;
-    message.listValue = Array.isArray(object?.listValue) ? [...object.listValue] : undefined;
+    message.nullValue = isSet(object.nullValue) ? nullValueFromJSON(object.nullValue) : undefined;
+    message.numberValue = isSet(object.numberValue) ? Number(object.numberValue) : undefined;
+    message.stringValue = isSet(object.stringValue) ? String(object.stringValue) : undefined;
+    message.boolValue = isSet(object.boolValue) ? Boolean(object.boolValue) : undefined;
+    message.structValue = isObject(object.structValue) ? object.structValue : undefined;
+    message.listValue = Array.isArray(object.listValue) ? [...object.listValue] : undefined;
     return message;
   },
 
@@ -434,8 +430,8 @@ export const ListValue = {
     return message;
   },
 
-  wrap(value: Array<any>): ListValue {
-    return { values: value };
+  wrap(value: Array<any> | undefined): ListValue {
+    return { values: value ?? [] };
   },
 
   unwrap(message: ListValue): Array<any> {
@@ -465,4 +461,12 @@ export type Exact<P, I extends P> = P extends Builtin
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
+}
+
+function isObject(value: any): boolean {
+  return typeof value === 'object' && value !== null;
+}
+
+function isSet(value: any): boolean {
+  return value !== null && value !== undefined;
 }

@@ -15,7 +15,7 @@ function createBaseMessage(): Message {
 export const Message = {
   fromJSON(object: any): Message {
     const message = createBaseMessage();
-    message.data = object.data !== undefined && object.data !== null ? bytesFromBase64(object.data) : new Uint8Array();
+    message.data = isSet(object.data) ? bytesFromBase64(object.data) : new Uint8Array();
     return message;
   },
 
@@ -87,4 +87,8 @@ export type Exact<P, I extends P> = P extends Builtin
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
+}
+
+function isSet(value: any): boolean {
+  return value !== null && value !== undefined;
 }

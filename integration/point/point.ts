@@ -52,8 +52,8 @@ export const Point = {
 
   fromJSON(object: any): Point {
     const message = createBasePoint();
-    message.lat = object.lat !== undefined && object.lat !== null ? Number(object.lat) : 0;
-    message.lng = object.lng !== undefined && object.lng !== null ? Number(object.lng) : 0;
+    message.lat = isSet(object.lat) ? Number(object.lat) : 0;
+    message.lng = isSet(object.lng) ? Number(object.lng) : 0;
     return message;
   },
 
@@ -110,8 +110,8 @@ export const Area = {
 
   fromJSON(object: any): Area {
     const message = createBaseArea();
-    message.nw = object.nw !== undefined && object.nw !== null ? Point.fromJSON(object.nw) : undefined;
-    message.se = object.se !== undefined && object.se !== null ? Point.fromJSON(object.se) : undefined;
+    message.nw = isSet(object.nw) ? Point.fromJSON(object.nw) : undefined;
+    message.se = isSet(object.se) ? Point.fromJSON(object.se) : undefined;
     return message;
   },
 
@@ -152,4 +152,8 @@ export type Exact<P, I extends P> = P extends Builtin
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
+}
+
+function isSet(value: any): boolean {
+  return value !== null && value !== undefined;
 }

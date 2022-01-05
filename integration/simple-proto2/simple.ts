@@ -72,7 +72,7 @@ export const Issue56 = {
 
   fromJSON(object: any): Issue56 {
     const message = createBaseIssue56();
-    message.test = object.test !== undefined && object.test !== null ? enumWithoutZeroFromJSON(object.test) : 1;
+    message.test = isSet(object.test) ? enumWithoutZeroFromJSON(object.test) : 1;
     return message;
   },
 
@@ -111,4 +111,8 @@ export type Exact<P, I extends P> = P extends Builtin
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
+}
+
+function isSet(value: any): boolean {
+  return value !== null && value !== undefined;
 }

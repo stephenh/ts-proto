@@ -47,8 +47,8 @@ export const Foo = {
 
   fromJSON(object: any): Foo {
     const message = createBaseFoo();
-    message.bar = object.bar !== undefined && object.bar !== null ? String(object.bar) : '';
-    message.baz = object.baz !== undefined && object.baz !== null ? String(object.baz) : '';
+    message.bar = isSet(object.bar) ? String(object.bar) : '';
+    message.baz = isSet(object.baz) ? String(object.baz) : '';
     return message;
   },
 
@@ -84,4 +84,8 @@ export type DeepPartial<T> = T extends Builtin
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
+}
+
+function isSet(value: any): boolean {
+  return value !== null && value !== undefined;
 }

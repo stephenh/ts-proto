@@ -122,14 +122,10 @@ export const Simple = {
 
   fromJSON(object: any): Simple {
     const message = createBaseSimple();
-    message.name = object.name !== undefined && object.name !== null ? String(object.name) : '';
-    message.state =
-      object.state !== undefined && object.state !== null ? stateEnumFromJSON(object.state) : StateEnum.UNKNOWN;
-    message.states = (object.states ?? []).map((e: any) => stateEnumFromJSON(e));
-    message.nullValue =
-      object.nullValue !== undefined && object.nullValue !== null
-        ? nullValueFromJSON(object.nullValue)
-        : NullValue.NULL_VALUE;
+    message.name = isSet(object.name) ? String(object.name) : '';
+    message.state = isSet(object.state) ? stateEnumFromJSON(object.state) : StateEnum.UNKNOWN;
+    message.states = Array.isArray(object?.states) ? object.states.map((e: any) => stateEnumFromJSON(e)) : [];
+    message.nullValue = isSet(object.nullValue) ? nullValueFromJSON(object.nullValue) : NullValue.NULL_VALUE;
     return message;
   },
 
@@ -178,4 +174,8 @@ export type Exact<P, I extends P> = P extends Builtin
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
+}
+
+function isSet(value: any): boolean {
+  return value !== null && value !== undefined;
 }

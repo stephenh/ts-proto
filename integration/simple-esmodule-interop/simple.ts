@@ -62,8 +62,8 @@ export const Simple = {
 
   fromJSON(object: any): Simple {
     const message = createBaseSimple();
-    message.name = object.name !== undefined && object.name !== null ? String(object.name) : '';
-    message.age = object.age !== undefined && object.age !== null ? Number(object.age) : 0;
+    message.name = isSet(object.name) ? String(object.name) : '';
+    message.age = isSet(object.age) ? Number(object.age) : 0;
     return message;
   },
 
@@ -193,18 +193,18 @@ export const Numbers = {
 
   fromJSON(object: any): Numbers {
     const message = createBaseNumbers();
-    message.double = object.double !== undefined && object.double !== null ? Number(object.double) : 0;
-    message.float = object.float !== undefined && object.float !== null ? Number(object.float) : 0;
-    message.int32 = object.int32 !== undefined && object.int32 !== null ? Number(object.int32) : 0;
-    message.int64 = object.int64 !== undefined && object.int64 !== null ? Number(object.int64) : 0;
-    message.uint32 = object.uint32 !== undefined && object.uint32 !== null ? Number(object.uint32) : 0;
-    message.uint64 = object.uint64 !== undefined && object.uint64 !== null ? Number(object.uint64) : 0;
-    message.sint32 = object.sint32 !== undefined && object.sint32 !== null ? Number(object.sint32) : 0;
-    message.sint64 = object.sint64 !== undefined && object.sint64 !== null ? Number(object.sint64) : 0;
-    message.fixed32 = object.fixed32 !== undefined && object.fixed32 !== null ? Number(object.fixed32) : 0;
-    message.fixed64 = object.fixed64 !== undefined && object.fixed64 !== null ? Number(object.fixed64) : 0;
-    message.sfixed32 = object.sfixed32 !== undefined && object.sfixed32 !== null ? Number(object.sfixed32) : 0;
-    message.sfixed64 = object.sfixed64 !== undefined && object.sfixed64 !== null ? Number(object.sfixed64) : 0;
+    message.double = isSet(object.double) ? Number(object.double) : 0;
+    message.float = isSet(object.float) ? Number(object.float) : 0;
+    message.int32 = isSet(object.int32) ? Number(object.int32) : 0;
+    message.int64 = isSet(object.int64) ? Number(object.int64) : 0;
+    message.uint32 = isSet(object.uint32) ? Number(object.uint32) : 0;
+    message.uint64 = isSet(object.uint64) ? Number(object.uint64) : 0;
+    message.sint32 = isSet(object.sint32) ? Number(object.sint32) : 0;
+    message.sint64 = isSet(object.sint64) ? Number(object.sint64) : 0;
+    message.fixed32 = isSet(object.fixed32) ? Number(object.fixed32) : 0;
+    message.fixed64 = isSet(object.fixed64) ? Number(object.fixed64) : 0;
+    message.sfixed32 = isSet(object.sfixed32) ? Number(object.sfixed32) : 0;
+    message.sfixed64 = isSet(object.sfixed64) ? Number(object.sfixed64) : 0;
     return message;
   },
 
@@ -281,4 +281,8 @@ function longToNumber(long: Long): number {
 if (_m0.util.Long !== Long) {
   _m0.util.Long = Long as any;
   _m0.configure();
+}
+
+function isSet(value: any): boolean {
+  return value !== null && value !== undefined;
 }

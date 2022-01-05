@@ -151,8 +151,8 @@ export const Timestamp = {
 
   fromJSON(object: any): Timestamp {
     const message = createBaseTimestamp();
-    message.seconds = object.seconds !== undefined && object.seconds !== null ? Number(object.seconds) : 0;
-    message.nanos = object.nanos !== undefined && object.nanos !== null ? Number(object.nanos) : 0;
+    message.seconds = isSet(object.seconds) ? Number(object.seconds) : 0;
+    message.nanos = isSet(object.nanos) ? Number(object.nanos) : 0;
     return message;
   },
 
@@ -211,4 +211,8 @@ function longToNumber(long: Long): number {
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
+}
+
+function isSet(value: any): boolean {
+  return value !== null && value !== undefined;
 }

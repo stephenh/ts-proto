@@ -308,32 +308,29 @@ export const OptionalsTest = {
 
   fromJSON(object: any): OptionalsTest {
     const message = createBaseOptionalsTest();
-    message.id = object.id !== undefined && object.id !== null ? Number(object.id) : 0;
-    message.child = object.child !== undefined && object.child !== null ? Child.fromJSON(object.child) : undefined;
-    message.state = object.state !== undefined && object.state !== null ? stateEnumFromJSON(object.state) : 0;
-    message.long = object.long !== undefined && object.long !== null ? Number(object.long) : 0;
-    message.truth = object.truth !== undefined && object.truth !== null ? Boolean(object.truth) : false;
-    message.description =
-      object.description !== undefined && object.description !== null ? String(object.description) : '';
-    message.data = object.data !== undefined && object.data !== null ? bytesFromBase64(object.data) : new Uint8Array();
-    message.repId = (object.repId ?? []).map((e: any) => Number(e));
-    message.repChild = (object.repChild ?? []).map((e: any) => Child.fromJSON(e));
-    message.repState = (object.repState ?? []).map((e: any) => stateEnumFromJSON(e));
-    message.repLong = (object.repLong ?? []).map((e: any) => Number(e));
-    message.repTruth = (object.repTruth ?? []).map((e: any) => Boolean(e));
-    message.repDescription = (object.repDescription ?? []).map((e: any) => String(e));
-    message.repData = (object.repData ?? []).map((e: any) => bytesFromBase64(e));
-    message.optId = object.optId !== undefined && object.optId !== null ? Number(object.optId) : undefined;
-    message.optChild =
-      object.optChild !== undefined && object.optChild !== null ? Child.fromJSON(object.optChild) : undefined;
-    message.optState =
-      object.optState !== undefined && object.optState !== null ? stateEnumFromJSON(object.optState) : undefined;
-    message.optLong = object.optLong !== undefined && object.optLong !== null ? Number(object.optLong) : undefined;
-    message.optTruth = object.optTruth !== undefined && object.optTruth !== null ? Boolean(object.optTruth) : undefined;
-    message.optDescription =
-      object.optDescription !== undefined && object.optDescription !== null ? String(object.optDescription) : undefined;
-    message.optData =
-      object.optData !== undefined && object.optData !== null ? bytesFromBase64(object.optData) : undefined;
+    message.id = isSet(object.id) ? Number(object.id) : 0;
+    message.child = isSet(object.child) ? Child.fromJSON(object.child) : undefined;
+    message.state = isSet(object.state) ? stateEnumFromJSON(object.state) : 0;
+    message.long = isSet(object.long) ? Number(object.long) : 0;
+    message.truth = isSet(object.truth) ? Boolean(object.truth) : false;
+    message.description = isSet(object.description) ? String(object.description) : '';
+    message.data = isSet(object.data) ? bytesFromBase64(object.data) : new Uint8Array();
+    message.repId = Array.isArray(object?.repId) ? object.repId.map((e: any) => Number(e)) : [];
+    message.repChild = Array.isArray(object?.repChild) ? object.repChild.map((e: any) => Child.fromJSON(e)) : [];
+    message.repState = Array.isArray(object?.repState) ? object.repState.map((e: any) => stateEnumFromJSON(e)) : [];
+    message.repLong = Array.isArray(object?.repLong) ? object.repLong.map((e: any) => Number(e)) : [];
+    message.repTruth = Array.isArray(object?.repTruth) ? object.repTruth.map((e: any) => Boolean(e)) : [];
+    message.repDescription = Array.isArray(object?.repDescription)
+      ? object.repDescription.map((e: any) => String(e))
+      : [];
+    message.repData = Array.isArray(object?.repData) ? object.repData.map((e: any) => bytesFromBase64(e)) : [];
+    message.optId = isSet(object.optId) ? Number(object.optId) : undefined;
+    message.optChild = isSet(object.optChild) ? Child.fromJSON(object.optChild) : undefined;
+    message.optState = isSet(object.optState) ? stateEnumFromJSON(object.optState) : undefined;
+    message.optLong = isSet(object.optLong) ? Number(object.optLong) : undefined;
+    message.optTruth = isSet(object.optTruth) ? Boolean(object.optTruth) : undefined;
+    message.optDescription = isSet(object.optDescription) ? String(object.optDescription) : undefined;
+    message.optData = isSet(object.optData) ? bytesFromBase64(object.optData) : undefined;
     message.translations = Object.entries(object.translations ?? {}).reduce<{ [key: string]: string }>(
       (acc, [key, value]) => {
         acc[key] = String(value);
@@ -482,8 +479,8 @@ export const OptionalsTest_TranslationsEntry = {
 
   fromJSON(object: any): OptionalsTest_TranslationsEntry {
     const message = createBaseOptionalsTest_TranslationsEntry();
-    message.key = object.key !== undefined && object.key !== null ? String(object.key) : '';
-    message.value = object.value !== undefined && object.value !== null ? String(object.value) : '';
+    message.key = isSet(object.key) ? String(object.key) : '';
+    message.value = isSet(object.value) ? String(object.value) : '';
     return message;
   },
 
@@ -605,4 +602,8 @@ function longToNumber(long: Long): number {
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
+}
+
+function isSet(value: any): boolean {
+  return value !== null && value !== undefined;
 }

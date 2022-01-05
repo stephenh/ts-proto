@@ -56,11 +56,9 @@ export const Parent = {
 
   fromJSON(object: any): Parent {
     const message = createBaseParent();
-    message.child = object.child !== undefined && object.child !== null ? Child.fromJSON(object.child) : undefined;
-    message.childEnum =
-      object.childEnum !== undefined && object.childEnum !== null ? childEnumFromJSON(object.childEnum) : 0;
-    message.createdAt =
-      object.createdAt !== undefined && object.createdAt !== null ? fromJsonTimestamp(object.createdAt) : undefined;
+    message.child = isSet(object.child) ? Child.fromJSON(object.child) : undefined;
+    message.childEnum = isSet(object.childEnum) ? childEnumFromJSON(object.childEnum) : 0;
+    message.createdAt = isSet(object.createdAt) ? fromJsonTimestamp(object.createdAt) : undefined;
     return message;
   },
 
@@ -125,4 +123,8 @@ function fromJsonTimestamp(o: any): Date {
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
+}
+
+function isSet(value: any): boolean {
+  return value !== null && value !== undefined;
 }
