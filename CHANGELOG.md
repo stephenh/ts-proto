@@ -1,3 +1,10 @@
+## [1.97.1](https://github.com/stephenh/ts-proto/compare/v1.97.0...v1.97.1) (2022-01-05)
+
+
+### Bug Fixes
+
+* oneof=union breaks wrapper types [#458](https://github.com/stephenh/ts-proto/issues/458) ([#462](https://github.com/stephenh/ts-proto/issues/462)) ([dd16992](https://github.com/stephenh/ts-proto/commit/dd16992a409f24e88e3a142830cd0745f50dbd10))
+
 # [1.97.0](https://github.com/stephenh/ts-proto/compare/v1.96.1...v1.97.0) (2021-12-30)
 
 
