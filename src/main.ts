@@ -1118,16 +1118,14 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
         `);
       } else {
         const readValueSnippet = readSnippet('e');
-        chunks.push(code`if (Array.isArray(object?.${jsonName})) {`);
         if (readValueSnippet.toString() === code`e`.toString()) {
-          chunks.push(code`message.${fieldName} = [...object.${jsonName}];`);
+          chunks.push(code`message.${fieldName} = Array.isArray(object?.${jsonName}) ? [...object.${jsonName}] : [];`);
         } else {
           // Explicit `any` type required to make TS with noImplicitAny happy. `object` is also `any` here.
           chunks.push(code`
-            message.${fieldName} = object.${jsonName}.map((e: any) => ${readValueSnippet});
+            message.${fieldName} = Array.isArray(object?.${jsonName}) ? object.${jsonName}.map((e: any) => ${readValueSnippet}): [];
           `);
         }
-        chunks.push(code`}`);
       }
     } else if (isWithinOneOfThatShouldBeUnion(options, field)) {
       chunks.push(code`if (${ctx.utils.isSet}(object.${jsonName})) {`);

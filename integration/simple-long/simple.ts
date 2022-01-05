@@ -119,12 +119,8 @@ export const SimpleWithWrappers = {
     message.age = isSet(object.age) ? Number(object.age) : undefined;
     message.enabled = isSet(object.enabled) ? Boolean(object.enabled) : undefined;
     message.bananas = isSet(object.bananas) ? Long.fromValue(object.bananas) : undefined;
-    if (Array.isArray(object?.coins)) {
-      message.coins = object.coins.map((e: any) => Number(e));
-    }
-    if (Array.isArray(object?.snacks)) {
-      message.snacks = object.snacks.map((e: any) => String(e));
-    }
+    message.coins = Array.isArray(object?.coins) ? object.coins.map((e: any) => Number(e)) : [];
+    message.snacks = Array.isArray(object?.snacks) ? object.snacks.map((e: any) => String(e)) : [];
     return message;
   },
 
@@ -610,9 +606,7 @@ export const Numbers = {
     message.fixed64 = isSet(object.fixed64) ? Long.fromString(object.fixed64) : Long.UZERO;
     message.sfixed32 = isSet(object.sfixed32) ? Number(object.sfixed32) : 0;
     message.sfixed64 = isSet(object.sfixed64) ? Long.fromString(object.sfixed64) : Long.ZERO;
-    if (Array.isArray(object?.manyUint64)) {
-      message.manyUint64 = object.manyUint64.map((e: any) => Long.fromString(e));
-    }
+    message.manyUint64 = Array.isArray(object?.manyUint64) ? object.manyUint64.map((e: any) => Long.fromString(e)) : [];
     return message;
   },
 

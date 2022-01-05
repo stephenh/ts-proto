@@ -355,18 +355,14 @@ export const Simple = {
     message.created_at = isSet(object.created_at) ? fromJsonTimestamp(object.created_at) : undefined;
     message.child = isSet(object.child) ? Child.fromJSON(object.child) : undefined;
     message.state = isSet(object.state) ? stateEnumFromJSON(object.state) : 0;
-    if (Array.isArray(object?.grand_children)) {
-      message.grand_children = object.grand_children.map((e: any) => Child.fromJSON(e));
-    }
-    if (Array.isArray(object?.coins)) {
-      message.coins = object.coins.map((e: any) => Number(e));
-    }
-    if (Array.isArray(object?.snacks)) {
-      message.snacks = object.snacks.map((e: any) => String(e));
-    }
-    if (Array.isArray(object?.old_states)) {
-      message.old_states = object.old_states.map((e: any) => stateEnumFromJSON(e));
-    }
+    message.grand_children = Array.isArray(object?.grand_children)
+      ? object.grand_children.map((e: any) => Child.fromJSON(e))
+      : [];
+    message.coins = Array.isArray(object?.coins) ? object.coins.map((e: any) => Number(e)) : [];
+    message.snacks = Array.isArray(object?.snacks) ? object.snacks.map((e: any) => String(e)) : [];
+    message.old_states = Array.isArray(object?.old_states)
+      ? object.old_states.map((e: any) => stateEnumFromJSON(e))
+      : [];
     message.thing = isSet(object.thing) ? ImportedThing.fromJSON(object.thing) : undefined;
     return message;
   },
@@ -778,12 +774,8 @@ export const SimpleWithWrappers = {
     message.name = isSet(object.name) ? String(object.name) : undefined;
     message.age = isSet(object.age) ? Number(object.age) : undefined;
     message.enabled = isSet(object.enabled) ? Boolean(object.enabled) : undefined;
-    if (Array.isArray(object?.coins)) {
-      message.coins = object.coins.map((e: any) => Number(e));
-    }
-    if (Array.isArray(object?.snacks)) {
-      message.snacks = object.snacks.map((e: any) => String(e));
-    }
+    message.coins = Array.isArray(object?.coins) ? object.coins.map((e: any) => Number(e)) : [];
+    message.snacks = Array.isArray(object?.snacks) ? object.snacks.map((e: any) => String(e)) : [];
     return message;
   },
 

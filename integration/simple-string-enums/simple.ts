@@ -124,9 +124,7 @@ export const Simple = {
     const message = createBaseSimple();
     message.name = isSet(object.name) ? String(object.name) : '';
     message.state = isSet(object.state) ? stateEnumFromJSON(object.state) : StateEnum.UNKNOWN;
-    if (Array.isArray(object?.states)) {
-      message.states = object.states.map((e: any) => stateEnumFromJSON(e));
-    }
+    message.states = Array.isArray(object?.states) ? object.states.map((e: any) => stateEnumFromJSON(e)) : [];
     message.nullValue = isSet(object.nullValue) ? nullValueFromJSON(object.nullValue) : NullValue.NULL_VALUE;
     return message;
   },

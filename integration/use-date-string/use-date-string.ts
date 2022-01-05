@@ -79,9 +79,9 @@ export const Todo = {
     const message = createBaseTodo();
     message.id = isSet(object.id) ? String(object.id) : '';
     message.timestamp = isSet(object.timestamp) ? String(object.timestamp) : undefined;
-    if (Array.isArray(object?.repeatedTimestamp)) {
-      message.repeatedTimestamp = object.repeatedTimestamp.map((e: any) => String(e));
-    }
+    message.repeatedTimestamp = Array.isArray(object?.repeatedTimestamp)
+      ? object.repeatedTimestamp.map((e: any) => String(e))
+      : [];
     message.optionalTimestamp = isSet(object.optionalTimestamp) ? String(object.optionalTimestamp) : undefined;
     message.mapOfTimestamps = Object.entries(object.mapOfTimestamps ?? {}).reduce<{ [key: string]: string }>(
       (acc, [key, value]) => {

@@ -174,9 +174,7 @@ export const DashUserSettingsState = {
     const message = createBaseDashUserSettingsState();
     message.email = isSet(object.email) ? String(object.email) : '';
     message.urls = isSet(object.urls) ? DashUserSettingsState_URLs.fromJSON(object.urls) : undefined;
-    if (Array.isArray(object?.flashes)) {
-      message.flashes = object.flashes.map((e: any) => DashFlash.fromJSON(e));
-    }
+    message.flashes = Array.isArray(object?.flashes) ? object.flashes.map((e: any) => DashFlash.fromJSON(e)) : [];
     return message;
   },
 

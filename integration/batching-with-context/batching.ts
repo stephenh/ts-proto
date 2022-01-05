@@ -78,9 +78,7 @@ export const BatchQueryRequest = {
 
   fromJSON(object: any): BatchQueryRequest {
     const message = createBaseBatchQueryRequest();
-    if (Array.isArray(object?.ids)) {
-      message.ids = object.ids.map((e: any) => String(e));
-    }
+    message.ids = Array.isArray(object?.ids) ? object.ids.map((e: any) => String(e)) : [];
     return message;
   },
 
@@ -133,9 +131,7 @@ export const BatchQueryResponse = {
 
   fromJSON(object: any): BatchQueryResponse {
     const message = createBaseBatchQueryResponse();
-    if (Array.isArray(object?.entities)) {
-      message.entities = object.entities.map((e: any) => Entity.fromJSON(e));
-    }
+    message.entities = Array.isArray(object?.entities) ? object.entities.map((e: any) => Entity.fromJSON(e)) : [];
     return message;
   },
 
@@ -188,9 +184,7 @@ export const BatchMapQueryRequest = {
 
   fromJSON(object: any): BatchMapQueryRequest {
     const message = createBaseBatchMapQueryRequest();
-    if (Array.isArray(object?.ids)) {
-      message.ids = object.ids.map((e: any) => String(e));
-    }
+    message.ids = Array.isArray(object?.ids) ? object.ids.map((e: any) => String(e)) : [];
     return message;
   },
 

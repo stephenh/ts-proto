@@ -315,27 +315,15 @@ export const OptionalsTest = {
     message.truth = isSet(object.truth) ? Boolean(object.truth) : false;
     message.description = isSet(object.description) ? String(object.description) : '';
     message.data = isSet(object.data) ? bytesFromBase64(object.data) : new Uint8Array();
-    if (Array.isArray(object?.repId)) {
-      message.repId = object.repId.map((e: any) => Number(e));
-    }
-    if (Array.isArray(object?.repChild)) {
-      message.repChild = object.repChild.map((e: any) => Child.fromJSON(e));
-    }
-    if (Array.isArray(object?.repState)) {
-      message.repState = object.repState.map((e: any) => stateEnumFromJSON(e));
-    }
-    if (Array.isArray(object?.repLong)) {
-      message.repLong = object.repLong.map((e: any) => Number(e));
-    }
-    if (Array.isArray(object?.repTruth)) {
-      message.repTruth = object.repTruth.map((e: any) => Boolean(e));
-    }
-    if (Array.isArray(object?.repDescription)) {
-      message.repDescription = object.repDescription.map((e: any) => String(e));
-    }
-    if (Array.isArray(object?.repData)) {
-      message.repData = object.repData.map((e: any) => bytesFromBase64(e));
-    }
+    message.repId = Array.isArray(object?.repId) ? object.repId.map((e: any) => Number(e)) : [];
+    message.repChild = Array.isArray(object?.repChild) ? object.repChild.map((e: any) => Child.fromJSON(e)) : [];
+    message.repState = Array.isArray(object?.repState) ? object.repState.map((e: any) => stateEnumFromJSON(e)) : [];
+    message.repLong = Array.isArray(object?.repLong) ? object.repLong.map((e: any) => Number(e)) : [];
+    message.repTruth = Array.isArray(object?.repTruth) ? object.repTruth.map((e: any) => Boolean(e)) : [];
+    message.repDescription = Array.isArray(object?.repDescription)
+      ? object.repDescription.map((e: any) => String(e))
+      : [];
+    message.repData = Array.isArray(object?.repData) ? object.repData.map((e: any) => bytesFromBase64(e)) : [];
     message.optId = isSet(object.optId) ? Number(object.optId) : undefined;
     message.optChild = isSet(object.optChild) ? Child.fromJSON(object.optChild) : undefined;
     message.optState = isSet(object.optState) ? stateEnumFromJSON(object.optState) : undefined;

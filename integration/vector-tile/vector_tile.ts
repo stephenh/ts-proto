@@ -110,9 +110,7 @@ export const Tile = {
 
   fromJSON(object: any): Tile {
     const message = createBaseTile();
-    if (Array.isArray(object?.layers)) {
-      message.layers = object.layers.map((e: any) => Tile_Layer.fromJSON(e));
-    }
+    message.layers = Array.isArray(object?.layers) ? object.layers.map((e: any) => Tile_Layer.fromJSON(e)) : [];
     return message;
   },
 
@@ -305,13 +303,9 @@ export const Tile_Feature = {
   fromJSON(object: any): Tile_Feature {
     const message = createBaseTile_Feature();
     message.id = isSet(object.id) ? Number(object.id) : 0;
-    if (Array.isArray(object?.tags)) {
-      message.tags = object.tags.map((e: any) => Number(e));
-    }
+    message.tags = Array.isArray(object?.tags) ? object.tags.map((e: any) => Number(e)) : [];
     message.type = isSet(object.type) ? tile_GeomTypeFromJSON(object.type) : 0;
-    if (Array.isArray(object?.geometry)) {
-      message.geometry = object.geometry.map((e: any) => Number(e));
-    }
+    message.geometry = Array.isArray(object?.geometry) ? object.geometry.map((e: any) => Number(e)) : [];
     return message;
   },
 
@@ -406,15 +400,9 @@ export const Tile_Layer = {
     const message = createBaseTile_Layer();
     message.version = isSet(object.version) ? Number(object.version) : 0;
     message.name = isSet(object.name) ? String(object.name) : '';
-    if (Array.isArray(object?.features)) {
-      message.features = object.features.map((e: any) => Tile_Feature.fromJSON(e));
-    }
-    if (Array.isArray(object?.keys)) {
-      message.keys = object.keys.map((e: any) => String(e));
-    }
-    if (Array.isArray(object?.values)) {
-      message.values = object.values.map((e: any) => Tile_Value.fromJSON(e));
-    }
+    message.features = Array.isArray(object?.features) ? object.features.map((e: any) => Tile_Feature.fromJSON(e)) : [];
+    message.keys = Array.isArray(object?.keys) ? object.keys.map((e: any) => String(e)) : [];
+    message.values = Array.isArray(object?.values) ? object.values.map((e: any) => Tile_Value.fromJSON(e)) : [];
     message.extent = isSet(object.extent) ? Number(object.extent) : 0;
     return message;
   },

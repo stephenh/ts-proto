@@ -419,9 +419,7 @@ export const ListValue = {
 
   fromJSON(object: any): ListValue {
     const message = createBaseListValue();
-    if (Array.isArray(object?.values)) {
-      message.values = [...object.values];
-    }
+    message.values = Array.isArray(object?.values) ? [...object.values] : [];
     return message;
   },
 

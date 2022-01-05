@@ -72,12 +72,10 @@ export const ValueMessage = {
     const message = createBaseValueMessage();
     message.value = isSet(object?.value) ? object.value : undefined;
     message.anyList = Array.isArray(object.anyList) ? [...object.anyList] : undefined;
-    if (Array.isArray(object?.repeatedAny)) {
-      message.repeatedAny = [...object.repeatedAny];
-    }
-    if (Array.isArray(object?.repeatedStrings)) {
-      message.repeatedStrings = object.repeatedStrings.map((e: any) => String(e));
-    }
+    message.repeatedAny = Array.isArray(object?.repeatedAny) ? [...object.repeatedAny] : [];
+    message.repeatedStrings = Array.isArray(object?.repeatedStrings)
+      ? object.repeatedStrings.map((e: any) => String(e))
+      : [];
     message.structValue = isObject(object.structValue) ? object.structValue : undefined;
     return message;
   },

@@ -167,9 +167,7 @@ export const Numbers = {
 
   fromJSON(object: any): Numbers {
     const message = createBaseNumbers();
-    if (Array.isArray(object?.num)) {
-      message.num = object.num.map((e: any) => Number(e));
-    }
+    message.num = Array.isArray(object?.num) ? object.num.map((e: any) => Number(e)) : [];
     return message;
   },
 
