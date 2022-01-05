@@ -49,9 +49,10 @@ export const Foo = {
   },
 
   fromJSON(object: any): Foo {
-    const message = createBaseFoo();
-    message.timestamp = isSet(object.timestamp) ? fromJsonTimestamp(object.timestamp) : undefined;
-    return message;
+    return {
+      $type: Foo.$type,
+      timestamp: isSet(object.timestamp) ? fromJsonTimestamp(object.timestamp) : undefined,
+    };
   },
 
   toJSON(message: Foo): unknown {
@@ -102,9 +103,10 @@ export const Foo2 = {
   },
 
   fromJSON(object: any): Foo2 {
-    const message = createBaseFoo2();
-    message.timestamp = isSet(object.timestamp) ? fromJsonTimestamp(object.timestamp) : undefined;
-    return message;
+    return {
+      $type: Foo2.$type,
+      timestamp: isSet(object.timestamp) ? fromJsonTimestamp(object.timestamp) : undefined,
+    };
   },
 
   toJSON(message: Foo2): unknown {

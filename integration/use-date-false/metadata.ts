@@ -40,9 +40,9 @@ export const Metadata = {
   },
 
   fromJSON(object: any): Metadata {
-    const message = createBaseMetadata();
-    message.lastEdited = isSet(object.lastEdited) ? fromJsonTimestamp(object.lastEdited) : undefined;
-    return message;
+    return {
+      lastEdited: isSet(object.lastEdited) ? fromJsonTimestamp(object.lastEdited) : undefined,
+    };
   },
 
   toJSON(message: Metadata): unknown {

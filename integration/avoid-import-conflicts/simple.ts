@@ -95,10 +95,10 @@ export const Simple = {
   },
 
   fromJSON(object: any): Simple {
-    const message = createBaseSimple();
-    message.name = isSet(object.name) ? String(object.name) : '';
-    message.otherSimple = isSet(object.otherSimple) ? Simple2.fromJSON(object.otherSimple) : undefined;
-    return message;
+    return {
+      name: isSet(object.name) ? String(object.name) : '',
+      otherSimple: isSet(object.otherSimple) ? Simple2.fromJSON(object.otherSimple) : undefined,
+    };
   },
 
   toJSON(message: Simple): unknown {
@@ -157,10 +157,10 @@ export const SimpleEnums = {
   },
 
   fromJSON(object: any): SimpleEnums {
-    const message = createBaseSimpleEnums();
-    message.localEnum = isSet(object.localEnum) ? simpleEnumFromJSON(object.localEnum) : 0;
-    message.importEnum = isSet(object.importEnum) ? simpleEnumFromJSON3(object.importEnum) : 0;
-    return message;
+    return {
+      localEnum: isSet(object.localEnum) ? simpleEnumFromJSON(object.localEnum) : 0,
+      importEnum: isSet(object.importEnum) ? simpleEnumFromJSON3(object.importEnum) : 0,
+    };
   },
 
   toJSON(message: SimpleEnums): unknown {

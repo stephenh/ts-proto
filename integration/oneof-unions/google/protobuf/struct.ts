@@ -121,15 +121,14 @@ export const Struct = {
   },
 
   fromJSON(object: any): Struct {
-    const message = createBaseStruct();
-    message.fields = Object.entries(object.fields ?? {}).reduce<{ [key: string]: any | undefined }>(
-      (acc, [key, value]) => {
-        acc[key] = value as any | undefined;
-        return acc;
-      },
-      {}
-    );
-    return message;
+    return {
+      fields: isObject(object.fields)
+        ? Object.entries(object.fields).reduce<{ [key: string]: any | undefined }>((acc, [key, value]) => {
+            acc[key] = value as any | undefined;
+            return acc;
+          }, {})
+        : {},
+    };
   },
 
   toJSON(message: Struct): unknown {
@@ -213,10 +212,10 @@ export const Struct_FieldsEntry = {
   },
 
   fromJSON(object: any): Struct_FieldsEntry {
-    const message = createBaseStruct_FieldsEntry();
-    message.key = isSet(object.key) ? String(object.key) : '';
-    message.value = isSet(object?.value) ? object.value : undefined;
-    return message;
+    return {
+      key: isSet(object.key) ? String(object.key) : '',
+      value: isSet(object?.value) ? object.value : undefined,
+    };
   },
 
   toJSON(message: Struct_FieldsEntry): unknown {
@@ -295,26 +294,21 @@ export const Value = {
   },
 
   fromJSON(object: any): Value {
-    const message = createBaseValue();
-    if (isSet(object.nullValue)) {
-      message.kind = { $case: 'nullValue', nullValue: nullValueFromJSON(object.nullValue) };
-    }
-    if (isSet(object.numberValue)) {
-      message.kind = { $case: 'numberValue', numberValue: Number(object.numberValue) };
-    }
-    if (isSet(object.stringValue)) {
-      message.kind = { $case: 'stringValue', stringValue: String(object.stringValue) };
-    }
-    if (isSet(object.boolValue)) {
-      message.kind = { $case: 'boolValue', boolValue: Boolean(object.boolValue) };
-    }
-    if (isSet(object.structValue)) {
-      message.kind = { $case: 'structValue', structValue: object.structValue };
-    }
-    if (isSet(object.listValue)) {
-      message.kind = { $case: 'listValue', listValue: [...object.listValue] };
-    }
-    return message;
+    return {
+      kind: isSet(object.nullValue)
+        ? { $case: 'nullValue', nullValue: nullValueFromJSON(object.nullValue) }
+        : isSet(object.numberValue)
+        ? { $case: 'numberValue', numberValue: Number(object.numberValue) }
+        : isSet(object.stringValue)
+        ? { $case: 'stringValue', stringValue: String(object.stringValue) }
+        : isSet(object.boolValue)
+        ? { $case: 'boolValue', boolValue: Boolean(object.boolValue) }
+        : isSet(object.structValue)
+        ? { $case: 'structValue', structValue: object.structValue }
+        : isSet(object.listValue)
+        ? { $case: 'listValue', listValue: [...object.listValue] }
+        : undefined,
+    };
   },
 
   toJSON(message: Value): unknown {
@@ -434,9 +428,9 @@ export const ListValue = {
   },
 
   fromJSON(object: any): ListValue {
-    const message = createBaseListValue();
-    message.values = Array.isArray(object?.values) ? [...object.values] : [];
-    return message;
+    return {
+      values: Array.isArray(object?.values) ? [...object.values] : [],
+    };
   },
 
   toJSON(message: ListValue): unknown {
@@ -488,6 +482,10 @@ export type Exact<P, I extends P> = P extends Builtin
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
+}
+
+function isObject(value: any): boolean {
+  return typeof value === 'object' && value !== null;
 }
 
 function isSet(value: any): boolean {

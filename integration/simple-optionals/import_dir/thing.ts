@@ -40,9 +40,9 @@ export const ImportedThing = {
   },
 
   fromJSON(object: any): ImportedThing {
-    const message = createBaseImportedThing();
-    message.createdAt = isSet(object.createdAt) ? fromJsonTimestamp(object.createdAt) : undefined;
-    return message;
+    return {
+      createdAt: isSet(object.createdAt) ? fromJsonTimestamp(object.createdAt) : undefined,
+    };
   },
 
   toJSON(message: ImportedThing): unknown {

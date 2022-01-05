@@ -121,12 +121,12 @@ export const Simple = {
   },
 
   fromJSON(object: any): Simple {
-    const message = createBaseSimple();
-    message.name = isSet(object.name) ? String(object.name) : '';
-    message.state = isSet(object.state) ? stateEnumFromJSON(object.state) : StateEnum.UNKNOWN;
-    message.states = Array.isArray(object?.states) ? object.states.map((e: any) => stateEnumFromJSON(e)) : [];
-    message.nullValue = isSet(object.nullValue) ? nullValueFromJSON(object.nullValue) : NullValue.NULL_VALUE;
-    return message;
+    return {
+      name: isSet(object.name) ? String(object.name) : '',
+      state: isSet(object.state) ? stateEnumFromJSON(object.state) : StateEnum.UNKNOWN,
+      states: Array.isArray(object?.states) ? object.states.map((e: any) => stateEnumFromJSON(e)) : [],
+      nullValue: isSet(object.nullValue) ? nullValueFromJSON(object.nullValue) : NullValue.NULL_VALUE,
+    };
   },
 
   toJSON(message: Simple): unknown {

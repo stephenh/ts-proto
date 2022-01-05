@@ -44,10 +44,10 @@ export const Bar = {
   },
 
   fromJSON(object: any): Bar {
-    const message = createBaseBar();
-    message.name = isSet(object.name) ? String(object.name) : '';
-    message.age = isSet(object.age) ? Number(object.age) : 0;
-    return message;
+    return {
+      name: isSet(object.name) ? String(object.name) : '',
+      age: isSet(object.age) ? Number(object.age) : 0,
+    };
   },
 
   toJSON(message: Bar): unknown {

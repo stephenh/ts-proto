@@ -109,9 +109,9 @@ export const Tile = {
   },
 
   fromJSON(object: any): Tile {
-    const message = createBaseTile();
-    message.layers = Array.isArray(object?.layers) ? object.layers.map((e: any) => Tile_Layer.fromJSON(e)) : [];
-    return message;
+    return {
+      layers: Array.isArray(object?.layers) ? object.layers.map((e: any) => Tile_Layer.fromJSON(e)) : [],
+    };
   },
 
   toJSON(message: Tile): unknown {
@@ -198,15 +198,15 @@ export const Tile_Value = {
   },
 
   fromJSON(object: any): Tile_Value {
-    const message = createBaseTile_Value();
-    message.stringValue = isSet(object.stringValue) ? String(object.stringValue) : '';
-    message.floatValue = isSet(object.floatValue) ? Number(object.floatValue) : 0;
-    message.doubleValue = isSet(object.doubleValue) ? Number(object.doubleValue) : 0;
-    message.intValue = isSet(object.intValue) ? Number(object.intValue) : 0;
-    message.uintValue = isSet(object.uintValue) ? Number(object.uintValue) : 0;
-    message.sintValue = isSet(object.sintValue) ? Number(object.sintValue) : 0;
-    message.boolValue = isSet(object.boolValue) ? Boolean(object.boolValue) : false;
-    return message;
+    return {
+      stringValue: isSet(object.stringValue) ? String(object.stringValue) : '',
+      floatValue: isSet(object.floatValue) ? Number(object.floatValue) : 0,
+      doubleValue: isSet(object.doubleValue) ? Number(object.doubleValue) : 0,
+      intValue: isSet(object.intValue) ? Number(object.intValue) : 0,
+      uintValue: isSet(object.uintValue) ? Number(object.uintValue) : 0,
+      sintValue: isSet(object.sintValue) ? Number(object.sintValue) : 0,
+      boolValue: isSet(object.boolValue) ? Boolean(object.boolValue) : false,
+    };
   },
 
   toJSON(message: Tile_Value): unknown {
@@ -301,12 +301,12 @@ export const Tile_Feature = {
   },
 
   fromJSON(object: any): Tile_Feature {
-    const message = createBaseTile_Feature();
-    message.id = isSet(object.id) ? Number(object.id) : 0;
-    message.tags = Array.isArray(object?.tags) ? object.tags.map((e: any) => Number(e)) : [];
-    message.type = isSet(object.type) ? tile_GeomTypeFromJSON(object.type) : 0;
-    message.geometry = Array.isArray(object?.geometry) ? object.geometry.map((e: any) => Number(e)) : [];
-    return message;
+    return {
+      id: isSet(object.id) ? Number(object.id) : 0,
+      tags: Array.isArray(object?.tags) ? object.tags.map((e: any) => Number(e)) : [],
+      type: isSet(object.type) ? tile_GeomTypeFromJSON(object.type) : 0,
+      geometry: Array.isArray(object?.geometry) ? object.geometry.map((e: any) => Number(e)) : [],
+    };
   },
 
   toJSON(message: Tile_Feature): unknown {
@@ -397,14 +397,14 @@ export const Tile_Layer = {
   },
 
   fromJSON(object: any): Tile_Layer {
-    const message = createBaseTile_Layer();
-    message.version = isSet(object.version) ? Number(object.version) : 0;
-    message.name = isSet(object.name) ? String(object.name) : '';
-    message.features = Array.isArray(object?.features) ? object.features.map((e: any) => Tile_Feature.fromJSON(e)) : [];
-    message.keys = Array.isArray(object?.keys) ? object.keys.map((e: any) => String(e)) : [];
-    message.values = Array.isArray(object?.values) ? object.values.map((e: any) => Tile_Value.fromJSON(e)) : [];
-    message.extent = isSet(object.extent) ? Number(object.extent) : 0;
-    return message;
+    return {
+      version: isSet(object.version) ? Number(object.version) : 0,
+      name: isSet(object.name) ? String(object.name) : '',
+      features: Array.isArray(object?.features) ? object.features.map((e: any) => Tile_Feature.fromJSON(e)) : [],
+      keys: Array.isArray(object?.keys) ? object.keys.map((e: any) => String(e)) : [],
+      values: Array.isArray(object?.values) ? object.values.map((e: any) => Tile_Value.fromJSON(e)) : [],
+      extent: isSet(object.extent) ? Number(object.extent) : 0,
+    };
   },
 
   toJSON(message: Tile_Layer): unknown {

@@ -51,10 +51,10 @@ export const Point = {
   },
 
   fromJSON(object: any): Point {
-    const message = createBasePoint();
-    message.lat = isSet(object.lat) ? Number(object.lat) : 0;
-    message.lng = isSet(object.lng) ? Number(object.lng) : 0;
-    return message;
+    return {
+      lat: isSet(object.lat) ? Number(object.lat) : 0,
+      lng: isSet(object.lng) ? Number(object.lng) : 0,
+    };
   },
 
   toJSON(message: Point): unknown {
@@ -109,10 +109,10 @@ export const Area = {
   },
 
   fromJSON(object: any): Area {
-    const message = createBaseArea();
-    message.nw = isSet(object.nw) ? Point.fromJSON(object.nw) : undefined;
-    message.se = isSet(object.se) ? Point.fromJSON(object.se) : undefined;
-    return message;
+    return {
+      nw: isSet(object.nw) ? Point.fromJSON(object.nw) : undefined,
+      se: isSet(object.se) ? Point.fromJSON(object.se) : undefined,
+    };
   },
 
   toJSON(message: Area): unknown {

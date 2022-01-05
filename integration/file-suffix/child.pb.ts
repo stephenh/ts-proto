@@ -71,9 +71,9 @@ export const Child = {
   },
 
   fromJSON(object: any): Child {
-    const message = createBaseChild();
-    message.name = isSet(object.name) ? String(object.name) : '';
-    return message;
+    return {
+      name: isSet(object.name) ? String(object.name) : '',
+    };
   },
 
   toJSON(message: Child): unknown {

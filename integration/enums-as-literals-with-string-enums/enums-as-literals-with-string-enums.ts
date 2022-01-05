@@ -100,9 +100,9 @@ export const DividerData = {
   },
 
   fromJSON(object: any): DividerData {
-    const message = createBaseDividerData();
-    message.type = isSet(object.type) ? dividerData_DividerTypeFromJSON(object.type) : DividerData_DividerType.DOUBLE;
-    return message;
+    return {
+      type: isSet(object.type) ? dividerData_DividerTypeFromJSON(object.type) : DividerData_DividerType.DOUBLE,
+    };
   },
 
   toJSON(message: DividerData): unknown {

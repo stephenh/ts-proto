@@ -76,23 +76,20 @@ export const Todo = {
   },
 
   fromJSON(object: any): Todo {
-    const message = createBaseTodo();
-    message.id = isSet(object.id) ? String(object.id) : '';
-    message.timestamp = isSet(object.timestamp) ? fromJsonTimestamp(object.timestamp) : undefined;
-    message.repeatedTimestamp = Array.isArray(object?.repeatedTimestamp)
-      ? object.repeatedTimestamp.map((e: any) => fromJsonTimestamp(e))
-      : [];
-    message.optionalTimestamp = isSet(object.optionalTimestamp)
-      ? fromJsonTimestamp(object.optionalTimestamp)
-      : undefined;
-    message.mapOfTimestamps = Object.entries(object.mapOfTimestamps ?? {}).reduce<{ [key: string]: Date }>(
-      (acc, [key, value]) => {
-        acc[key] = fromJsonTimestamp(value);
-        return acc;
-      },
-      {}
-    );
-    return message;
+    return {
+      id: isSet(object.id) ? String(object.id) : '',
+      timestamp: isSet(object.timestamp) ? fromJsonTimestamp(object.timestamp) : undefined,
+      repeatedTimestamp: Array.isArray(object?.repeatedTimestamp)
+        ? object.repeatedTimestamp.map((e: any) => fromJsonTimestamp(e))
+        : [],
+      optionalTimestamp: isSet(object.optionalTimestamp) ? fromJsonTimestamp(object.optionalTimestamp) : undefined,
+      mapOfTimestamps: isObject(object.mapOfTimestamps)
+        ? Object.entries(object.mapOfTimestamps).reduce<{ [key: string]: Date }>((acc, [key, value]) => {
+            acc[key] = fromJsonTimestamp(value);
+            return acc;
+          }, {})
+        : {},
+    };
   },
 
   toJSON(message: Todo): unknown {
@@ -170,10 +167,10 @@ export const Todo_MapOfTimestampsEntry = {
   },
 
   fromJSON(object: any): Todo_MapOfTimestampsEntry {
-    const message = createBaseTodo_MapOfTimestampsEntry();
-    message.key = isSet(object.key) ? String(object.key) : '';
-    message.value = isSet(object.value) ? fromJsonTimestamp(object.value) : undefined;
-    return message;
+    return {
+      key: isSet(object.key) ? String(object.key) : '',
+      value: isSet(object.value) ? fromJsonTimestamp(object.value) : undefined,
+    };
   },
 
   toJSON(message: Todo_MapOfTimestampsEntry): unknown {
@@ -235,6 +232,10 @@ function fromJsonTimestamp(o: any): Date {
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
+}
+
+function isObject(value: any): boolean {
+  return typeof value === 'object' && value !== null;
 }
 
 function isSet(value: any): boolean {

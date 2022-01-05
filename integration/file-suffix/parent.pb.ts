@@ -55,11 +55,11 @@ export const Parent = {
   },
 
   fromJSON(object: any): Parent {
-    const message = createBaseParent();
-    message.child = isSet(object.child) ? Child.fromJSON(object.child) : undefined;
-    message.childEnum = isSet(object.childEnum) ? childEnumFromJSON(object.childEnum) : 0;
-    message.createdAt = isSet(object.createdAt) ? fromJsonTimestamp(object.createdAt) : undefined;
-    return message;
+    return {
+      child: isSet(object.child) ? Child.fromJSON(object.child) : undefined,
+      childEnum: isSet(object.childEnum) ? childEnumFromJSON(object.childEnum) : 0,
+      createdAt: isSet(object.createdAt) ? fromJsonTimestamp(object.createdAt) : undefined,
+    };
   },
 
   toJSON(message: Parent): unknown {

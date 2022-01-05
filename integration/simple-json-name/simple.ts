@@ -54,11 +54,11 @@ export const Simple = {
   },
 
   fromJSON(object: any): Simple {
-    const message = createBaseSimple();
-    message.name = isSet(object.other_name) ? String(object.other_name) : '';
-    message.age = isSet(object.other_age) ? Number(object.other_age) : undefined;
-    message.createdAt = isSet(object.createdAt) ? fromJsonTimestamp(object.createdAt) : undefined;
-    return message;
+    return {
+      name: isSet(object.other_name) ? String(object.other_name) : '',
+      age: isSet(object.other_age) ? Number(object.other_age) : undefined,
+      createdAt: isSet(object.createdAt) ? fromJsonTimestamp(object.createdAt) : undefined,
+    };
   },
 
   toJSON(message: Simple): unknown {

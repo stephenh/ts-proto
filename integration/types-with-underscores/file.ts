@@ -41,9 +41,9 @@ export const Baz = {
   },
 
   fromJSON(object: any): Baz {
-    const message = createBaseBaz();
-    message.foo = isSet(object.foo) ? FooBar.fromJSON(object.foo) : undefined;
-    return message;
+    return {
+      foo: isSet(object.foo) ? FooBar.fromJSON(object.foo) : undefined,
+    };
   },
 
   toJSON(message: Baz): unknown {
@@ -84,8 +84,7 @@ export const FooBar = {
   },
 
   fromJSON(_: any): FooBar {
-    const message = createBaseFooBar();
-    return message;
+    return {};
   },
 
   toJSON(_: FooBar): unknown {

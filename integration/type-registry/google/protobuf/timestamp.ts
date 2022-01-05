@@ -154,10 +154,11 @@ export const Timestamp = {
   },
 
   fromJSON(object: any): Timestamp {
-    const message = createBaseTimestamp();
-    message.seconds = isSet(object.seconds) ? Number(object.seconds) : 0;
-    message.nanos = isSet(object.nanos) ? Number(object.nanos) : 0;
-    return message;
+    return {
+      $type: Timestamp.$type,
+      seconds: isSet(object.seconds) ? Number(object.seconds) : 0,
+      nanos: isSet(object.nanos) ? Number(object.nanos) : 0,
+    };
   },
 
   toJSON(message: Timestamp): unknown {

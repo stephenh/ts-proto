@@ -47,10 +47,10 @@ export const Point = {
   },
 
   fromJSON(object: any): Point {
-    const message = createBasePoint();
-    message.data = isSet(object.data) ? Buffer.from(bytesFromBase64(object.data)) : Buffer.alloc(0);
-    message.dataWrapped = isSet(object.dataWrapped) ? new Buffer(object.dataWrapped) : undefined;
-    return message;
+    return {
+      data: isSet(object.data) ? Buffer.from(bytesFromBase64(object.data)) : Buffer.alloc(0),
+      dataWrapped: isSet(object.dataWrapped) ? new Buffer(object.dataWrapped) : undefined,
+    };
   },
 
   toJSON(message: Point): unknown {
