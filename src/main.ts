@@ -1013,8 +1013,12 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
   // create the basic function declaration
   chunks.push(code`
     fromJSON(${messageDesc.field.length > 0 ? 'object' : '_'}: any): ${fullName} {
-      const message = createBase${fullName}();
+      return {
   `);
+
+  if (ctx.options.outputTypeRegistry) {
+    chunks.push(code`$type: ${fullName}.$type,`);
+  }
 
   // add a check for each incoming field
   messageDesc.field.forEach((field) => {
@@ -1111,57 +1115,59 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
         const fieldType = toTypeName(ctx, messageDesc, field);
         const i = maybeCastToNumber(ctx, messageDesc, field, 'key');
         chunks.push(code`
-          message.${fieldName} = Object.entries(object.${jsonName} ?? {}).reduce<${fieldType}>((acc, [key, value]) => {
-            acc[${i}] = ${readSnippet('value')};
-            return acc;
-          }, {});
+          ${fieldName}: ${ctx.utils.isObject}(object.${jsonName})
+            ? Object.entries(object.${jsonName}).reduce<${fieldType}>((acc, [key, value]) => {
+                acc[${i}] = ${readSnippet('value')};
+                return acc;
+              }, {})
+            : {},
         `);
       } else {
         const readValueSnippet = readSnippet('e');
         if (readValueSnippet.toString() === code`e`.toString()) {
-          chunks.push(code`message.${fieldName} = Array.isArray(object?.${jsonName}) ? [...object.${jsonName}] : [];`);
+          chunks.push(code`${fieldName}: Array.isArray(object?.${jsonName}) ? [...object.${jsonName}] : [],`);
         } else {
           // Explicit `any` type required to make TS with noImplicitAny happy. `object` is also `any` here.
           chunks.push(code`
-            message.${fieldName} = Array.isArray(object?.${jsonName}) ? object.${jsonName}.map((e: any) => ${readValueSnippet}): [];
+            ${fieldName}: Array.isArray(object?.${jsonName}) ? object.${jsonName}.map((e: any) => ${readValueSnippet}): [],
           `);
         }
       }
     } else if (isWithinOneOfThatShouldBeUnion(options, field)) {
-      chunks.push(code`if (${ctx.utils.isSet}(object.${jsonName})) {`);
+      chunks.push(code`/${ctx.utils.isSet}(object.${jsonName}) ?`);
       const oneofName = maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options);
       chunks.push(code`
-        message.${oneofName} = { $case: '${fieldName}', ${fieldName}: ${readSnippet(`object.${jsonName}`)} }
+        ${oneofName}: { $case: '${fieldName}', ${fieldName}: ${readSnippet(`object.${jsonName}`)} },
       `);
-      chunks.push(code`}`);
+      chunks.push(code`//}`);
     } else if (isAnyValueType(field)) {
-      chunks.push(code`message.${fieldName} = ${ctx.utils.isSet}(object?.${jsonName})
+      chunks.push(code`${fieldName}: ${ctx.utils.isSet}(object?.${jsonName})
         ? ${readSnippet(`object.${jsonName}`)}
-        : undefined;
+        : undefined,
       `);
     } else if (isStructType(field)) {
       chunks.push(
-        code`message.${fieldName} = ${ctx.utils.isObject}(object.${jsonName})
+        code`${fieldName}: ${ctx.utils.isObject}(object.${jsonName})
           ? ${readSnippet(`object.${jsonName}`)}
-          : undefined;`
+          : undefined,`,
       );
     } else if (isListValueType(field)) {
       chunks.push(code`
-        message.${fieldName} = Array.isArray(object.${jsonName})
+        ${fieldName}: Array.isArray(object.${jsonName})
           ? ${readSnippet(`object.${jsonName}`)}
-          : ${'undefined'};
+          : undefined,
       `);
     } else {
       const fallback = isWithinOneOf(field) ? 'undefined' : defaultValue(ctx, field);
       chunks.push(code`
-        message.${fieldName} = ${ctx.utils.isSet}(object.${jsonName})
+        ${fieldName}: ${ctx.utils.isSet}(object.${jsonName})
           ? ${readSnippet(`object.${jsonName}`)}
-          : ${fallback};
+          : ${fallback},
       `);
     }
   });
   // and then wrap up the switch/while/return
-  chunks.push(code`return message`);
+  chunks.push(code`};`);
   chunks.push(code`}`);
   return joinCode(chunks, { on: '\n' });
 }
