@@ -1,1 +1,1 @@
-oneof=unions,unwrapFromJSON=true
+oneof=unions
