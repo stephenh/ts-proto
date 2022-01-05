@@ -70,15 +70,15 @@ export const ValueMessage = {
 
   fromJSON(object: any): ValueMessage {
     const message = createBaseValueMessage();
-    message.value = isObject(object?.value) ? Value.unwrap(Value.fromJSON(object.value)) : undefined;
-    message.anyList = isObject(object.anyList) ? ListValue.unwrap(ListValue.fromJSON(object.anyList)) : undefined;
+    message.value = isSet(object?.value) ? object.value : undefined;
+    message.anyList = Array.isArray(object.anyList) ? [...object.anyList] : undefined;
     if (Array.isArray(object?.repeatedAny)) {
-      message.repeatedAny = object.repeatedAny.map((e: any) => Value.unwrap(Value.fromJSON(e)));
+      message.repeatedAny = [...object.repeatedAny];
     }
     if (Array.isArray(object?.repeatedStrings)) {
       message.repeatedStrings = object.repeatedStrings.map((e: any) => String(e));
     }
-    message.structValue = isObject(object.structValue) ? Struct.unwrap(Struct.fromJSON(object.structValue)) : undefined;
+    message.structValue = isObject(object.structValue) ? object.structValue : undefined;
     return message;
   },
 
@@ -137,4 +137,8 @@ if (util.Long !== Long) {
 
 function isObject(value: any): boolean {
   return typeof value === 'object' && value !== null;
+}
+
+function isSet(value: any): boolean {
+  return value !== null && value !== undefined;
 }

@@ -2,7 +2,6 @@ import { Reader } from 'protobufjs';
 import { ValueMessage } from './value';
 
 import { ValueMessage as PbValueMessage } from './pbjs';
-import { NullValue } from "./google/protobuf/struct";
 
 describe('values', () => {
   it('json value', () => {
@@ -51,9 +50,13 @@ describe('values', () => {
   it('decodes lists of any types correctly', () => {
     const s1 = ValueMessage.fromJSON({
       anyList: [1, 'foo', true],
-      repeatedAny: [2, 'bar', false],
+      repeatedAny: [2, 'bar', false, { key: 'value' }],
     });
-    expect(s1).toEqual({ anyList: [1, 'foo', true], repeatedAny: [2, 'bar', false], repeatedStrings: [] });
+    expect(s1).toEqual({
+      anyList: [1, 'foo', true],
+      repeatedAny: [2, 'bar', false, { key: 'value' }],
+      repeatedStrings: [],
+    });
   });
 
   it('toJson', () => {

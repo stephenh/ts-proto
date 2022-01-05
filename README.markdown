@@ -354,10 +354,6 @@ Generated code will be placed in the Gradle build directory.
   
   The default behavior is `useExactTypes=true`, which makes `fromPartial` use Exact type for its argument to make TypeScript reject any unknown properties.
 
-- With `--ts_proto_opt=unwrapFromJSON=true`, the generated `fromJSON` method will expect input values for `google.protobuf.Value` and `google.protobuf.Struct` to be provided in "wrapped" format: e.g. `{"stringValue": "hello world"}` instead of just `"hello world"`. Used for compatibility with libraries that do not "unwrap" these values before encoding to JSON, for example `pbjs`. This option currently does not affect other wrapper types.
-
-  The default behavior is `unwrapFromJSON=false`, which makes `fromJSON` expect to receive native JSON values.
-
 ### Only Types
 
 If you're looking for `ts-proto` to generate only types for your Protobuf types then passing all three of `outputEncodeMethods`, `outputJsonMethods`, and `outputClientImpl` as `false` is probably what you want, i.e.:

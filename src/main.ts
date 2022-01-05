@@ -1049,13 +1049,9 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
       ) {
         return code`${utils.fromJsonTimestamp}(${from})`;
       } else if (isAnyValueType(field) || isStructType(field)) {
-        const valueType = basicTypeName(ctx, field, { keepValueType: true });
-        return ctx.options.unwrapFromJSON ? code`${valueType}.unwrap(${valueType}.fromJSON(${from}))` : code`${from}`;
+        return code`${from}`;
       } else if (isListValueType(field)) {
-        const valueType = basicTypeName(ctx, field, { keepValueType: true });
-        return ctx.options.unwrapFromJSON
-          ? code`${valueType}.unwrap(${valueType}.fromJSON(${from}))`
-          : code`[...${from}]`;
+        return code`[...${from}]`;
       } else if (isValueType(ctx, field)) {
         const valueType = valueTypeName(ctx, field.typeName)!;
         if (isLongValueType(field) && options.forceLong === LongOption.LONG) {
@@ -1124,14 +1120,13 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
         const readValueSnippet = readSnippet('e');
         chunks.push(code`if (Array.isArray(object?.${jsonName})) {`);
         if (readValueSnippet.toString() === code`e`.toString()) {
-          // Return [...object.field] instead of object.map(e => e)
           chunks.push(code`message.${fieldName} = [...object.${jsonName}];`);
-        }
-        // Explicit `any` type required to make TS with noImplicitAny happy. `object` is also `any` here.
-        else
+        } else {
+          // Explicit `any` type required to make TS with noImplicitAny happy. `object` is also `any` here.
           chunks.push(code`
             message.${fieldName} = object.${jsonName}.map((e: any) => ${readValueSnippet});
           `);
+        }
         chunks.push(code`}`);
       }
     } else if (isWithinOneOfThatShouldBeUnion(options, field)) {
@@ -1142,8 +1137,7 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
       `);
       chunks.push(code`}`);
     } else if (isAnyValueType(field)) {
-      const notEmpty = ctx.options.unwrapFromJSON ? ctx.utils.isObject : ctx.utils.isSet;
-      chunks.push(code`message.${fieldName} = ${notEmpty}(object?.${jsonName})
+      chunks.push(code`message.${fieldName} = ${ctx.utils.isSet}(object?.${jsonName})
         ? ${readSnippet(`object.${jsonName}`)}
         : undefined;
       `);
@@ -1154,19 +1148,11 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
           : undefined;`
       );
     } else if (isListValueType(field)) {
-      if (ctx.options.unwrapFromJSON) {
-        chunks.push(code`
-          message.${fieldName} = ${ctx.utils.isObject}(object.${jsonName})
-            ? ${readSnippet(`object.${jsonName}`)}
-            : ${'undefined'};
-        `);
-      } else {
-        chunks.push(code`
-          message.${fieldName} = Array.isArray(object.${jsonName})
-            ? ${readSnippet(`object.${jsonName}`)}
-            : ${'undefined'};
-        `);
-      }
+      chunks.push(code`
+        message.${fieldName} = Array.isArray(object.${jsonName})
+          ? ${readSnippet(`object.${jsonName}`)}
+          : ${'undefined'};
+      `);
     } else {
       const fallback = isWithinOneOf(field) ? 'undefined' : defaultValue(ctx, field);
       chunks.push(code`

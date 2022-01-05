@@ -205,7 +205,7 @@ export const PleaseChoose = {
       message.eitherOr = { $case: 'thirdOption', thirdOption: String(object.thirdOption) };
     }
     message.signature = isSet(object.signature) ? bytesFromBase64(object.signature) : new Uint8Array();
-    message.value = isObject(object?.value) ? Value.unwrap(Value.fromJSON(object.value)) : undefined;
+    message.value = isSet(object?.value) ? object.value : undefined;
     return message;
   },
 
@@ -449,10 +449,6 @@ export type Exact<P, I extends P> = P extends Builtin
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
-}
-
-function isObject(value: any): boolean {
-  return typeof value === 'object' && value !== null;
 }
 
 function isSet(value: any): boolean {

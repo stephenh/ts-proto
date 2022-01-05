@@ -60,8 +60,8 @@ export interface Struct_FieldsEntry {
 /**
  * `Value` represents a dynamically typed value which can be either
  * null, a number, a string, a boolean, a recursive struct value, or a
- * list of values. A producer of value is expected to set one of that
- * variants, absence of any variant indicates an error.
+ * list of values. A producer of value is expected to set one of these
+ * variants. Absence of any variant indicates an error.
  *
  * The JSON representation for `Value` is JSON value.
  */
@@ -220,7 +220,7 @@ export const Struct_FieldsEntry = {
   fromJSON(object: any): Struct_FieldsEntry {
     const message = createBaseStruct_FieldsEntry();
     message.key = isSet(object.key) ? String(object.key) : '';
-    message.value = isObject(object?.value) ? Value.unwrap(Value.fromJSON(object.value)) : undefined;
+    message.value = isSet(object?.value) ? object.value : undefined;
     return message;
   },
 
@@ -312,8 +312,8 @@ export const Value = {
     message.numberValue = isSet(object.numberValue) ? Number(object.numberValue) : undefined;
     message.stringValue = isSet(object.stringValue) ? String(object.stringValue) : undefined;
     message.boolValue = isSet(object.boolValue) ? Boolean(object.boolValue) : undefined;
-    message.structValue = isObject(object.structValue) ? Struct.unwrap(Struct.fromJSON(object.structValue)) : undefined;
-    message.listValue = isObject(object.listValue) ? ListValue.unwrap(ListValue.fromJSON(object.listValue)) : undefined;
+    message.structValue = isObject(object.structValue) ? object.structValue : undefined;
+    message.listValue = Array.isArray(object.listValue) ? [...object.listValue] : undefined;
     return message;
   },
 
@@ -411,7 +411,7 @@ export const ListValue = {
   fromJSON(object: any): ListValue {
     const message = createBaseListValue();
     if (Array.isArray(object?.values)) {
-      message.values = object.values.map((e: any) => Value.unwrap(Value.fromJSON(e)));
+      message.values = [...object.values];
     }
     return message;
   },
