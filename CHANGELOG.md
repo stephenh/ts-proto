@@ -1,3 +1,10 @@
+## [1.97.2](https://github.com/stephenh/ts-proto/compare/v1.97.1...v1.97.2) (2022-01-06)
+
+
+### Performance Improvements
+
+* fromJSON returns object literal to allow v8 optimizations ([#463](https://github.com/stephenh/ts-proto/issues/463)) ([5fcd05b](https://github.com/stephenh/ts-proto/commit/5fcd05b79e7c02547c4b6db46fae7a7202f97629))
+
 ## [1.97.1](https://github.com/stephenh/ts-proto/compare/v1.97.0...v1.97.1) (2022-01-05)
 
 
