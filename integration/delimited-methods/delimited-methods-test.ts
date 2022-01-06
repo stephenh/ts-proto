@@ -51,7 +51,6 @@ describe('delimited-methods', () => {
     const stream = writer.finish();
 
     const reader = new Reader(stream);
-
     const decodedMessages = messages.map(() => Simple.decodeDelimited(reader));
 
     expect(decodedMessages).toEqual(messages);
@@ -64,7 +63,6 @@ describe('delimited-methods', () => {
    */
   it('decodes a stream of different length-delimited messages', () => {
     const writer = new Writer();
-
     const messages = [messageA, messageD, messageC, messageD] as const;
 
     Simple.encodeDelimited(messages[0], writer);
@@ -75,7 +73,6 @@ describe('delimited-methods', () => {
     const stream = writer.finish();
 
     const reader = new Reader(stream);
-
     const decodedMessages = [
       Simple.decodeDelimited(reader),
       AnotherSimple.decodeDelimited(reader),
