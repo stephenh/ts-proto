@@ -6,18 +6,34 @@ main()
 function main() {
     const yarn = process.platform === 'win32' ? 'yarn.cmd' : 'yarn'
 
+    if (process.argv.includes('-h') || process.argv.includes('--help')) {
+        console.log(`
+Watches the integration directory for changes and regenerates .bin and .ts files.
+
+Usage:
+    $ yarn watch 
+    $ ts-node watch.ts [options]
+    
+Options:
+    -h, --help    Show this help message
+    --polling     Use polling instead of native watchers
+        `)
+        process.exit(0)
+    }
+    const usePolling = process.argv.includes('--polling')
+
     process.chdir("integration");
 
     chokidar
-      .watch("*/*.proto", { ignoreInitial: true, })
+      .watch("*/*.proto", { ignoreInitial: true, usePolling  })
       .on('all', yarnRunHandler(yarn, 'proto2bin'));
 
     chokidar
-      .watch("*/*.proto", { ignoreInitial: true })
+      .watch("*/*.proto", { ignoreInitial: true, usePolling })
       .on('all', yarnRunHandler(yarn, 'proto2pbjs'));
 
     chokidar
-      .watch("*/*.bin", { ignoreInitial: true })
+      .watch("*/*.bin", { ignoreInitial: true, usePolling })
       .on('all', yarnRunHandler(yarn, 'bin2ts'));
 }
 
