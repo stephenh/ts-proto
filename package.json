@@ -19,7 +19,7 @@
     "proto2pbjs:local": "integration/pbjs.sh",
     "bin2ts:local": "integration/codegen.sh",
     "test": "yarn jest -c jest.config.js --maxWorkers=2",
-    "prettier": "prettier --write {src,tests}/**/*.ts",
+    "prettier": "prettier --write {src,tests}/**/*.ts integration/*.ts",
     "prettier:check": "prettier --list-different {src,tests}/**/*.ts",
     "setup:docker": "docker-compose build",
     "watch": "ts-node integration/watch.ts"
