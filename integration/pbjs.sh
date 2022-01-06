@@ -80,7 +80,7 @@ if match "nestjs-simple-restparameters"; then
   yarn run pbts --no-comments -o integration/nestjs-simple-restparameters/pbjs.d.ts integration/nestjs-simple-restparameters/pbjs.js
 fi
 
-if match "oneof-proprties"; then
+if match "oneof-properties"; then
   yarn run pbjs --force-message --force-number -t static-module -o integration/oneof-properties/pbjs.js integration/oneof-properties/oneof.proto
   yarn run pbts --no-comments -o integration/oneof-properties/pbjs.d.ts integration/oneof-properties/pbjs.js
 fi
