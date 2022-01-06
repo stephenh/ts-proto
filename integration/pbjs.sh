@@ -5,13 +5,6 @@
 # Only a handful of integration tests use these so we hand-code it one-off.
 #
 
-#if [[ $# -eq 0 ]]; then
-#  FILTER_PATH=""
-#else
-#  FILTER_PATH=$(realpath "$1")
-#fi
-
-
 INTEGRATION_DIR=$(realpath $(dirname "$BASH_SOURCE"))
 
 if [[ $# -eq 0 ]]; then
