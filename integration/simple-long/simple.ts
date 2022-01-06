@@ -114,14 +114,14 @@ export const SimpleWithWrappers = {
   },
 
   fromJSON(object: any): SimpleWithWrappers {
-    const message = createBaseSimpleWithWrappers();
-    message.name = isSet(object.name) ? String(object.name) : undefined;
-    message.age = isSet(object.age) ? Number(object.age) : undefined;
-    message.enabled = isSet(object.enabled) ? Boolean(object.enabled) : undefined;
-    message.bananas = isSet(object.bananas) ? Long.fromValue(object.bananas) : undefined;
-    message.coins = Array.isArray(object?.coins) ? object.coins.map((e: any) => Number(e)) : [];
-    message.snacks = Array.isArray(object?.snacks) ? object.snacks.map((e: any) => String(e)) : [];
-    return message;
+    return {
+      name: isSet(object.name) ? String(object.name) : undefined,
+      age: isSet(object.age) ? Number(object.age) : undefined,
+      enabled: isSet(object.enabled) ? Boolean(object.enabled) : undefined,
+      bananas: isSet(object.bananas) ? Long.fromValue(object.bananas) : undefined,
+      coins: Array.isArray(object?.coins) ? object.coins.map((e: any) => Number(e)) : [],
+      snacks: Array.isArray(object?.snacks) ? object.snacks.map((e: any) => String(e)) : [],
+    };
   },
 
   toJSON(message: SimpleWithWrappers): unknown {
@@ -208,29 +208,26 @@ export const SimpleWithMap = {
   },
 
   fromJSON(object: any): SimpleWithMap {
-    const message = createBaseSimpleWithMap();
-    message.nameLookup = Object.entries(object.nameLookup ?? {}).reduce<{ [key: string]: string }>(
-      (acc, [key, value]) => {
-        acc[key] = String(value);
-        return acc;
-      },
-      {}
-    );
-    message.intLookup = Object.entries(object.intLookup ?? {}).reduce<{ [key: number]: number }>(
-      (acc, [key, value]) => {
-        acc[Number(key)] = Number(value);
-        return acc;
-      },
-      {}
-    );
-    message.longLookup = Object.entries(object.longLookup ?? {}).reduce<{ [key: string]: Long }>(
-      (acc, [key, value]) => {
-        acc[key] = Long.fromValue(value as Long | string);
-        return acc;
-      },
-      {}
-    );
-    return message;
+    return {
+      nameLookup: isObject(object.nameLookup)
+        ? Object.entries(object.nameLookup).reduce<{ [key: string]: string }>((acc, [key, value]) => {
+            acc[key] = String(value);
+            return acc;
+          }, {})
+        : {},
+      intLookup: isObject(object.intLookup)
+        ? Object.entries(object.intLookup).reduce<{ [key: number]: number }>((acc, [key, value]) => {
+            acc[Number(key)] = Number(value);
+            return acc;
+          }, {})
+        : {},
+      longLookup: isObject(object.longLookup)
+        ? Object.entries(object.longLookup).reduce<{ [key: string]: Long }>((acc, [key, value]) => {
+            acc[key] = Long.fromValue(value as Long | string);
+            return acc;
+          }, {})
+        : {},
+    };
   },
 
   toJSON(message: SimpleWithMap): unknown {
@@ -326,10 +323,10 @@ export const SimpleWithMap_NameLookupEntry = {
   },
 
   fromJSON(object: any): SimpleWithMap_NameLookupEntry {
-    const message = createBaseSimpleWithMap_NameLookupEntry();
-    message.key = isSet(object.key) ? String(object.key) : '';
-    message.value = isSet(object.value) ? String(object.value) : '';
-    return message;
+    return {
+      key: isSet(object.key) ? String(object.key) : '',
+      value: isSet(object.value) ? String(object.value) : '',
+    };
   },
 
   toJSON(message: SimpleWithMap_NameLookupEntry): unknown {
@@ -386,10 +383,10 @@ export const SimpleWithMap_IntLookupEntry = {
   },
 
   fromJSON(object: any): SimpleWithMap_IntLookupEntry {
-    const message = createBaseSimpleWithMap_IntLookupEntry();
-    message.key = isSet(object.key) ? Number(object.key) : 0;
-    message.value = isSet(object.value) ? Number(object.value) : 0;
-    return message;
+    return {
+      key: isSet(object.key) ? Number(object.key) : 0,
+      value: isSet(object.value) ? Number(object.value) : 0,
+    };
   },
 
   toJSON(message: SimpleWithMap_IntLookupEntry): unknown {
@@ -444,10 +441,10 @@ export const SimpleWithMap_LongLookupEntry = {
   },
 
   fromJSON(object: any): SimpleWithMap_LongLookupEntry {
-    const message = createBaseSimpleWithMap_LongLookupEntry();
-    message.key = isSet(object.key) ? String(object.key) : '';
-    message.value = isSet(object.value) ? Long.fromString(object.value) : Long.ZERO;
-    return message;
+    return {
+      key: isSet(object.key) ? String(object.key) : '',
+      value: isSet(object.value) ? Long.fromString(object.value) : Long.ZERO,
+    };
   },
 
   toJSON(message: SimpleWithMap_LongLookupEntry): unknown {
@@ -593,21 +590,21 @@ export const Numbers = {
   },
 
   fromJSON(object: any): Numbers {
-    const message = createBaseNumbers();
-    message.double = isSet(object.double) ? Number(object.double) : 0;
-    message.float = isSet(object.float) ? Number(object.float) : 0;
-    message.int32 = isSet(object.int32) ? Number(object.int32) : 0;
-    message.int64 = isSet(object.int64) ? Long.fromString(object.int64) : Long.ZERO;
-    message.uint32 = isSet(object.uint32) ? Number(object.uint32) : 0;
-    message.uint64 = isSet(object.uint64) ? Long.fromString(object.uint64) : Long.UZERO;
-    message.sint32 = isSet(object.sint32) ? Number(object.sint32) : 0;
-    message.sint64 = isSet(object.sint64) ? Long.fromString(object.sint64) : Long.ZERO;
-    message.fixed32 = isSet(object.fixed32) ? Number(object.fixed32) : 0;
-    message.fixed64 = isSet(object.fixed64) ? Long.fromString(object.fixed64) : Long.UZERO;
-    message.sfixed32 = isSet(object.sfixed32) ? Number(object.sfixed32) : 0;
-    message.sfixed64 = isSet(object.sfixed64) ? Long.fromString(object.sfixed64) : Long.ZERO;
-    message.manyUint64 = Array.isArray(object?.manyUint64) ? object.manyUint64.map((e: any) => Long.fromString(e)) : [];
-    return message;
+    return {
+      double: isSet(object.double) ? Number(object.double) : 0,
+      float: isSet(object.float) ? Number(object.float) : 0,
+      int32: isSet(object.int32) ? Number(object.int32) : 0,
+      int64: isSet(object.int64) ? Long.fromString(object.int64) : Long.ZERO,
+      uint32: isSet(object.uint32) ? Number(object.uint32) : 0,
+      uint64: isSet(object.uint64) ? Long.fromString(object.uint64) : Long.UZERO,
+      sint32: isSet(object.sint32) ? Number(object.sint32) : 0,
+      sint64: isSet(object.sint64) ? Long.fromString(object.sint64) : Long.ZERO,
+      fixed32: isSet(object.fixed32) ? Number(object.fixed32) : 0,
+      fixed64: isSet(object.fixed64) ? Long.fromString(object.fixed64) : Long.UZERO,
+      sfixed32: isSet(object.sfixed32) ? Number(object.sfixed32) : 0,
+      sfixed64: isSet(object.sfixed64) ? Long.fromString(object.sfixed64) : Long.ZERO,
+      manyUint64: Array.isArray(object?.manyUint64) ? object.manyUint64.map((e: any) => Long.fromString(e)) : [],
+    };
   },
 
   toJSON(message: Numbers): unknown {
@@ -677,6 +674,10 @@ export type Exact<P, I extends P> = P extends Builtin
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
+}
+
+function isObject(value: any): boolean {
+  return typeof value === 'object' && value !== null;
 }
 
 function isSet(value: any): boolean {

@@ -69,15 +69,13 @@ export const ValueMessage = {
   },
 
   fromJSON(object: any): ValueMessage {
-    const message = createBaseValueMessage();
-    message.value = isSet(object?.value) ? object.value : undefined;
-    message.anyList = Array.isArray(object.anyList) ? [...object.anyList] : undefined;
-    message.repeatedAny = Array.isArray(object?.repeatedAny) ? [...object.repeatedAny] : [];
-    message.repeatedStrings = Array.isArray(object?.repeatedStrings)
-      ? object.repeatedStrings.map((e: any) => String(e))
-      : [];
-    message.structValue = isObject(object.structValue) ? object.structValue : undefined;
-    return message;
+    return {
+      value: isSet(object?.value) ? object.value : undefined,
+      anyList: Array.isArray(object.anyList) ? [...object.anyList] : undefined,
+      repeatedAny: Array.isArray(object?.repeatedAny) ? [...object.repeatedAny] : [],
+      repeatedStrings: Array.isArray(object?.repeatedStrings) ? object.repeatedStrings.map((e: any) => String(e)) : [],
+      structValue: isObject(object.structValue) ? object.structValue : undefined,
+    };
   },
 
   toJSON(message: ValueMessage): unknown {

@@ -71,9 +71,9 @@ export const Issue56 = {
   },
 
   fromJSON(object: any): Issue56 {
-    const message = createBaseIssue56();
-    message.test = isSet(object.test) ? enumWithoutZeroFromJSON(object.test) : 1;
-    return message;
+    return {
+      test: isSet(object.test) ? enumWithoutZeroFromJSON(object.test) : 1,
+    };
   },
 
   toJSON(message: Issue56): unknown {

@@ -71,9 +71,9 @@ export const TestMessage = {
   },
 
   fromJSON(object: any): TestMessage {
-    const message = createBaseTestMessage();
-    message.timestamp = isSet(object.timestamp) ? fromJsonTimestamp(object.timestamp) : undefined;
-    return message;
+    return {
+      timestamp: isSet(object.timestamp) ? fromJsonTimestamp(object.timestamp) : undefined,
+    };
   },
 
   toJSON(message: TestMessage): unknown {

@@ -39,9 +39,9 @@ export const SimpleMessage = {
   },
 
   fromJSON(object: any): SimpleMessage {
-    const message = createBaseSimpleMessage();
-    message.numberField = isSet(object.numberField) ? Number(object.numberField) : 0;
-    return message;
+    return {
+      numberField: isSet(object.numberField) ? Number(object.numberField) : 0,
+    };
   },
 
   toJSON(message: SimpleMessage): unknown {

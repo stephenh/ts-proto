@@ -43,9 +43,9 @@ export const User = {
   },
 
   fromJSON(object: any): User {
-    const message = createBaseUser();
-    message.name = isSet(object.name) ? String(object.name) : '';
-    return message;
+    return {
+      name: isSet(object.name) ? String(object.name) : '',
+    };
   },
 
   toJSON(message: User): unknown {
@@ -86,8 +86,7 @@ export const Empty = {
   },
 
   fromJSON(_: any): Empty {
-    const message = createBaseEmpty();
-    return message;
+    return {};
   },
 
   toJSON(_: Empty): unknown {

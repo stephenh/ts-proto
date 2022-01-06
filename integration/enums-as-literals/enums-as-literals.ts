@@ -85,9 +85,9 @@ export const DividerData = {
   },
 
   fromJSON(object: any): DividerData {
-    const message = createBaseDividerData();
-    message.type = isSet(object.type) ? dividerData_DividerTypeFromJSON(object.type) : 0;
-    return message;
+    return {
+      type: isSet(object.type) ? dividerData_DividerTypeFromJSON(object.type) : 0,
+    };
   },
 
   toJSON(message: DividerData): unknown {

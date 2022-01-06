@@ -39,9 +39,9 @@ export const TestMessage = {
   },
 
   fromJSON(object: any): TestMessage {
-    const message = createBaseTestMessage();
-    message.value = isSet(object.value) ? String(object.value) : '';
-    return message;
+    return {
+      value: isSet(object.value) ? String(object.value) : '',
+    };
   },
 
   toJSON(message: TestMessage): unknown {

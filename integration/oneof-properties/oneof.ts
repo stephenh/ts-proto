@@ -175,19 +175,19 @@ export const PleaseChoose = {
   },
 
   fromJSON(object: any): PleaseChoose {
-    const message = createBasePleaseChoose();
-    message.name = isSet(object.name) ? String(object.name) : '';
-    message.aNumber = isSet(object.aNumber) ? Number(object.aNumber) : undefined;
-    message.aString = isSet(object.aString) ? String(object.aString) : undefined;
-    message.aMessage = isSet(object.aMessage) ? PleaseChoose_Submessage.fromJSON(object.aMessage) : undefined;
-    message.aBool = isSet(object.aBool) ? Boolean(object.aBool) : undefined;
-    message.bunchaBytes = isSet(object.bunchaBytes) ? bytesFromBase64(object.bunchaBytes) : undefined;
-    message.anEnum = isSet(object.anEnum) ? pleaseChoose_StateEnumFromJSON(object.anEnum) : undefined;
-    message.age = isSet(object.age) ? Number(object.age) : 0;
-    message.either = isSet(object.either) ? String(object.either) : undefined;
-    message.or = isSet(object.or) ? String(object.or) : undefined;
-    message.thirdOption = isSet(object.thirdOption) ? String(object.thirdOption) : undefined;
-    return message;
+    return {
+      name: isSet(object.name) ? String(object.name) : '',
+      aNumber: isSet(object.aNumber) ? Number(object.aNumber) : undefined,
+      aString: isSet(object.aString) ? String(object.aString) : undefined,
+      aMessage: isSet(object.aMessage) ? PleaseChoose_Submessage.fromJSON(object.aMessage) : undefined,
+      aBool: isSet(object.aBool) ? Boolean(object.aBool) : undefined,
+      bunchaBytes: isSet(object.bunchaBytes) ? bytesFromBase64(object.bunchaBytes) : undefined,
+      anEnum: isSet(object.anEnum) ? pleaseChoose_StateEnumFromJSON(object.anEnum) : undefined,
+      age: isSet(object.age) ? Number(object.age) : 0,
+      either: isSet(object.either) ? String(object.either) : undefined,
+      or: isSet(object.or) ? String(object.or) : undefined,
+      thirdOption: isSet(object.thirdOption) ? String(object.thirdOption) : undefined,
+    };
   },
 
   toJSON(message: PleaseChoose): unknown {
@@ -260,9 +260,9 @@ export const PleaseChoose_Submessage = {
   },
 
   fromJSON(object: any): PleaseChoose_Submessage {
-    const message = createBasePleaseChoose_Submessage();
-    message.name = isSet(object.name) ? String(object.name) : '';
-    return message;
+    return {
+      name: isSet(object.name) ? String(object.name) : '',
+    };
   },
 
   toJSON(message: PleaseChoose_Submessage): unknown {

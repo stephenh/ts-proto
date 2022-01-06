@@ -105,10 +105,10 @@ export const DashFlash = {
   },
 
   fromJSON(object: any): DashFlash {
-    const message = createBaseDashFlash();
-    message.msg = isSet(object.msg) ? String(object.msg) : '';
-    message.type = isSet(object.type) ? dashFlash_TypeFromJSON(object.type) : 0;
-    return message;
+    return {
+      msg: isSet(object.msg) ? String(object.msg) : '',
+      type: isSet(object.type) ? dashFlash_TypeFromJSON(object.type) : 0,
+    };
   },
 
   toJSON(message: DashFlash): unknown {
@@ -169,11 +169,11 @@ export const DashUserSettingsState = {
   },
 
   fromJSON(object: any): DashUserSettingsState {
-    const message = createBaseDashUserSettingsState();
-    message.email = isSet(object.email) ? String(object.email) : '';
-    message.urls = isSet(object.urls) ? DashUserSettingsState_URLs.fromJSON(object.urls) : undefined;
-    message.flashes = Array.isArray(object?.flashes) ? object.flashes.map((e: any) => DashFlash.fromJSON(e)) : [];
-    return message;
+    return {
+      email: isSet(object.email) ? String(object.email) : '',
+      urls: isSet(object.urls) ? DashUserSettingsState_URLs.fromJSON(object.urls) : undefined,
+      flashes: Array.isArray(object?.flashes) ? object.flashes.map((e: any) => DashFlash.fromJSON(e)) : [],
+    };
   },
 
   toJSON(message: DashUserSettingsState): unknown {
@@ -238,10 +238,10 @@ export const DashUserSettingsState_URLs = {
   },
 
   fromJSON(object: any): DashUserSettingsState_URLs {
-    const message = createBaseDashUserSettingsState_URLs();
-    message.connectGoogle = isSet(object.connectGoogle) ? String(object.connectGoogle) : '';
-    message.connectGithub = isSet(object.connectGithub) ? String(object.connectGithub) : '';
-    return message;
+    return {
+      connectGoogle: isSet(object.connectGoogle) ? String(object.connectGoogle) : '',
+      connectGithub: isSet(object.connectGithub) ? String(object.connectGithub) : '',
+    };
   },
 
   toJSON(message: DashUserSettingsState_URLs): unknown {
@@ -284,8 +284,7 @@ export const Empty = {
   },
 
   fromJSON(_: any): Empty {
-    const message = createBaseEmpty();
-    return message;
+    return {};
   },
 
   toJSON(_: Empty): unknown {

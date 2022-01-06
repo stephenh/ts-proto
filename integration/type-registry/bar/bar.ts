@@ -44,9 +44,10 @@ export const Bar = {
   },
 
   fromJSON(object: any): Bar {
-    const message = createBaseBar();
-    message.foo = isSet(object.foo) ? Foo.fromJSON(object.foo) : undefined;
-    return message;
+    return {
+      $type: Bar.$type,
+      foo: isSet(object.foo) ? Foo.fromJSON(object.foo) : undefined,
+    };
   },
 
   toJSON(message: Bar): unknown {

@@ -46,10 +46,10 @@ export const Foo = {
   },
 
   fromJSON(object: any): Foo {
-    const message = createBaseFoo();
-    message.bar = isSet(object.bar) ? String(object.bar) : '';
-    message.baz = isSet(object.baz) ? String(object.baz) : '';
-    return message;
+    return {
+      bar: isSet(object.bar) ? String(object.bar) : '',
+      baz: isSet(object.baz) ? String(object.baz) : '',
+    };
   },
 
   toJSON(message: Foo): unknown {

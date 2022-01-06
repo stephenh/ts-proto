@@ -56,10 +56,10 @@ export const NumPair = {
   },
 
   fromJSON(object: any): NumPair {
-    const message = createBaseNumPair();
-    message.num1 = isSet(object.num1) ? Number(object.num1) : 0;
-    message.num2 = isSet(object.num2) ? Number(object.num2) : 0;
-    return message;
+    return {
+      num1: isSet(object.num1) ? Number(object.num1) : 0,
+      num2: isSet(object.num2) ? Number(object.num2) : 0,
+    };
   },
 
   toJSON(message: NumPair): unknown {
@@ -108,9 +108,9 @@ export const NumSingle = {
   },
 
   fromJSON(object: any): NumSingle {
-    const message = createBaseNumSingle();
-    message.num = isSet(object.num) ? Number(object.num) : 0;
-    return message;
+    return {
+      num: isSet(object.num) ? Number(object.num) : 0,
+    };
   },
 
   toJSON(message: NumSingle): unknown {
@@ -166,9 +166,9 @@ export const Numbers = {
   },
 
   fromJSON(object: any): Numbers {
-    const message = createBaseNumbers();
-    message.num = Array.isArray(object?.num) ? object.num.map((e: any) => Number(e)) : [];
-    return message;
+    return {
+      num: Array.isArray(object?.num) ? object.num.map((e: any) => Number(e)) : [],
+    };
   },
 
   toJSON(message: Numbers): unknown {

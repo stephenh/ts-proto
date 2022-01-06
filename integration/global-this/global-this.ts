@@ -43,9 +43,9 @@ export const Object = {
   },
 
   fromJSON(object: any): Object {
-    const message = createBaseObject();
-    message.name = isSet(object.name) ? String(object.name) : '';
-    return message;
+    return {
+      name: isSet(object.name) ? String(object.name) : '',
+    };
   },
 
   toJSON(message: Object): unknown {
@@ -92,9 +92,9 @@ export const Error = {
   },
 
   fromJSON(object: any): Error {
-    const message = createBaseError();
-    message.name = isSet(object.name) ? String(object.name) : '';
-    return message;
+    return {
+      name: isSet(object.name) ? String(object.name) : '',
+    };
   },
 
   toJSON(message: Error): unknown {

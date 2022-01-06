@@ -40,9 +40,9 @@ export const StructMessage = {
   },
 
   fromJSON(object: any): StructMessage {
-    const message = createBaseStructMessage();
-    message.value = isObject(object.value) ? object.value : undefined;
-    return message;
+    return {
+      value: isObject(object.value) ? object.value : undefined,
+    };
   },
 
   toJSON(message: StructMessage): unknown {

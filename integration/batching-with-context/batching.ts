@@ -77,9 +77,9 @@ export const BatchQueryRequest = {
   },
 
   fromJSON(object: any): BatchQueryRequest {
-    const message = createBaseBatchQueryRequest();
-    message.ids = Array.isArray(object?.ids) ? object.ids.map((e: any) => String(e)) : [];
-    return message;
+    return {
+      ids: Array.isArray(object?.ids) ? object.ids.map((e: any) => String(e)) : [],
+    };
   },
 
   toJSON(message: BatchQueryRequest): unknown {
@@ -130,9 +130,9 @@ export const BatchQueryResponse = {
   },
 
   fromJSON(object: any): BatchQueryResponse {
-    const message = createBaseBatchQueryResponse();
-    message.entities = Array.isArray(object?.entities) ? object.entities.map((e: any) => Entity.fromJSON(e)) : [];
-    return message;
+    return {
+      entities: Array.isArray(object?.entities) ? object.entities.map((e: any) => Entity.fromJSON(e)) : [],
+    };
   },
 
   toJSON(message: BatchQueryResponse): unknown {
@@ -183,9 +183,9 @@ export const BatchMapQueryRequest = {
   },
 
   fromJSON(object: any): BatchMapQueryRequest {
-    const message = createBaseBatchMapQueryRequest();
-    message.ids = Array.isArray(object?.ids) ? object.ids.map((e: any) => String(e)) : [];
-    return message;
+    return {
+      ids: Array.isArray(object?.ids) ? object.ids.map((e: any) => String(e)) : [],
+    };
   },
 
   toJSON(message: BatchMapQueryRequest): unknown {
@@ -239,12 +239,14 @@ export const BatchMapQueryResponse = {
   },
 
   fromJSON(object: any): BatchMapQueryResponse {
-    const message = createBaseBatchMapQueryResponse();
-    message.entities = Object.entries(object.entities ?? {}).reduce<{ [key: string]: Entity }>((acc, [key, value]) => {
-      acc[key] = Entity.fromJSON(value);
-      return acc;
-    }, {});
-    return message;
+    return {
+      entities: isObject(object.entities)
+        ? Object.entries(object.entities).reduce<{ [key: string]: Entity }>((acc, [key, value]) => {
+            acc[key] = Entity.fromJSON(value);
+            return acc;
+          }, {})
+        : {},
+    };
   },
 
   toJSON(message: BatchMapQueryResponse): unknown {
@@ -307,10 +309,10 @@ export const BatchMapQueryResponse_EntitiesEntry = {
   },
 
   fromJSON(object: any): BatchMapQueryResponse_EntitiesEntry {
-    const message = createBaseBatchMapQueryResponse_EntitiesEntry();
-    message.key = isSet(object.key) ? String(object.key) : '';
-    message.value = isSet(object.value) ? Entity.fromJSON(object.value) : undefined;
-    return message;
+    return {
+      key: isSet(object.key) ? String(object.key) : '',
+      value: isSet(object.value) ? Entity.fromJSON(object.value) : undefined,
+    };
   },
 
   toJSON(message: BatchMapQueryResponse_EntitiesEntry): unknown {
@@ -361,9 +363,9 @@ export const GetOnlyMethodRequest = {
   },
 
   fromJSON(object: any): GetOnlyMethodRequest {
-    const message = createBaseGetOnlyMethodRequest();
-    message.id = isSet(object.id) ? String(object.id) : '';
-    return message;
+    return {
+      id: isSet(object.id) ? String(object.id) : '',
+    };
   },
 
   toJSON(message: GetOnlyMethodRequest): unknown {
@@ -410,9 +412,9 @@ export const GetOnlyMethodResponse = {
   },
 
   fromJSON(object: any): GetOnlyMethodResponse {
-    const message = createBaseGetOnlyMethodResponse();
-    message.entity = isSet(object.entity) ? Entity.fromJSON(object.entity) : undefined;
-    return message;
+    return {
+      entity: isSet(object.entity) ? Entity.fromJSON(object.entity) : undefined,
+    };
   },
 
   toJSON(message: GetOnlyMethodResponse): unknown {
@@ -460,9 +462,9 @@ export const WriteMethodRequest = {
   },
 
   fromJSON(object: any): WriteMethodRequest {
-    const message = createBaseWriteMethodRequest();
-    message.id = isSet(object.id) ? String(object.id) : '';
-    return message;
+    return {
+      id: isSet(object.id) ? String(object.id) : '',
+    };
   },
 
   toJSON(message: WriteMethodRequest): unknown {
@@ -503,8 +505,7 @@ export const WriteMethodResponse = {
   },
 
   fromJSON(_: any): WriteMethodResponse {
-    const message = createBaseWriteMethodResponse();
-    return message;
+    return {};
   },
 
   toJSON(_: WriteMethodResponse): unknown {
@@ -555,10 +556,10 @@ export const Entity = {
   },
 
   fromJSON(object: any): Entity {
-    const message = createBaseEntity();
-    message.id = isSet(object.id) ? String(object.id) : '';
-    message.name = isSet(object.name) ? String(object.name) : '';
-    return message;
+    return {
+      id: isSet(object.id) ? String(object.id) : '',
+      name: isSet(object.name) ? String(object.name) : '',
+    };
   },
 
   toJSON(message: Entity): unknown {
@@ -695,6 +696,10 @@ export type Exact<P, I extends P> = P extends Builtin
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
+}
+
+function isObject(value: any): boolean {
+  return typeof value === 'object' && value !== null;
 }
 
 function isSet(value: any): boolean {

@@ -14,9 +14,9 @@ function createBaseMessage(): Message {
 
 export const Message = {
   fromJSON(object: any): Message {
-    const message = createBaseMessage();
-    message.data = isSet(object.data) ? bytesFromBase64(object.data) : new Uint8Array();
-    return message;
+    return {
+      data: isSet(object.data) ? bytesFromBase64(object.data) : new Uint8Array(),
+    };
   },
 
   toJSON(message: Message): unknown {

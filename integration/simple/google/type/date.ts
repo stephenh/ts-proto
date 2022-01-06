@@ -78,11 +78,11 @@ export const DateMessage = {
   },
 
   fromJSON(object: any): DateMessage {
-    const message = createBaseDateMessage();
-    message.year = isSet(object.year) ? Number(object.year) : 0;
-    message.month = isSet(object.month) ? Number(object.month) : 0;
-    message.day = isSet(object.day) ? Number(object.day) : 0;
-    return message;
+    return {
+      year: isSet(object.year) ? Number(object.year) : 0,
+      month: isSet(object.month) ? Number(object.month) : 0,
+      day: isSet(object.day) ? Number(object.day) : 0,
+    };
   },
 
   toJSON(message: DateMessage): unknown {

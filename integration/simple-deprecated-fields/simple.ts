@@ -87,13 +87,13 @@ export const Simple = {
   },
 
   fromJSON(object: any): Simple {
-    const message = createBaseSimple();
-    message.name = isSet(object.name) ? String(object.name) : '';
-    message.age = isSet(object.age) ? Number(object.age) : 0;
-    message.child = isSet(object.child) ? Child.fromJSON(object.child) : undefined;
-    message.testField = isSet(object.testField) ? String(object.testField) : '';
-    message.testNotDeprecated = isSet(object.testNotDeprecated) ? String(object.testNotDeprecated) : '';
-    return message;
+    return {
+      name: isSet(object.name) ? String(object.name) : '',
+      age: isSet(object.age) ? Number(object.age) : 0,
+      child: isSet(object.child) ? Child.fromJSON(object.child) : undefined,
+      testField: isSet(object.testField) ? String(object.testField) : '',
+      testNotDeprecated: isSet(object.testNotDeprecated) ? String(object.testNotDeprecated) : '',
+    };
   },
 
   toJSON(message: Simple): unknown {
@@ -148,9 +148,9 @@ export const Child = {
   },
 
   fromJSON(object: any): Child {
-    const message = createBaseChild();
-    message.name = isSet(object.name) ? String(object.name) : '';
-    return message;
+    return {
+      name: isSet(object.name) ? String(object.name) : '',
+    };
   },
 
   toJSON(message: Child): unknown {

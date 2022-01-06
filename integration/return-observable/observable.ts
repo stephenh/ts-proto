@@ -44,9 +44,9 @@ export const ProduceRequest = {
   },
 
   fromJSON(object: any): ProduceRequest {
-    const message = createBaseProduceRequest();
-    message.ingredients = isSet(object.ingredients) ? String(object.ingredients) : '';
-    return message;
+    return {
+      ingredients: isSet(object.ingredients) ? String(object.ingredients) : '',
+    };
   },
 
   toJSON(message: ProduceRequest): unknown {
@@ -93,9 +93,9 @@ export const ProduceReply = {
   },
 
   fromJSON(object: any): ProduceReply {
-    const message = createBaseProduceReply();
-    message.result = isSet(object.result) ? String(object.result) : '';
-    return message;
+    return {
+      result: isSet(object.result) ? String(object.result) : '',
+    };
   },
 
   toJSON(message: ProduceReply): unknown {

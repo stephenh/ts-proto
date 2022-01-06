@@ -174,39 +174,32 @@ export const PleaseChoose = {
   },
 
   fromJSON(object: any): PleaseChoose {
-    const message = createBasePleaseChoose();
-    message.name = isSet(object.name) ? String(object.name) : '';
-    if (isSet(object.aNumber)) {
-      message.choice = { $case: 'aNumber', aNumber: Number(object.aNumber) };
-    }
-    if (isSet(object.aString)) {
-      message.choice = { $case: 'aString', aString: String(object.aString) };
-    }
-    if (isSet(object.aMessage)) {
-      message.choice = { $case: 'aMessage', aMessage: PleaseChoose_Submessage.fromJSON(object.aMessage) };
-    }
-    if (isSet(object.aBool)) {
-      message.choice = { $case: 'aBool', aBool: Boolean(object.aBool) };
-    }
-    if (isSet(object.bunchaBytes)) {
-      message.choice = { $case: 'bunchaBytes', bunchaBytes: bytesFromBase64(object.bunchaBytes) };
-    }
-    if (isSet(object.anEnum)) {
-      message.choice = { $case: 'anEnum', anEnum: pleaseChoose_StateEnumFromJSON(object.anEnum) };
-    }
-    message.age = isSet(object.age) ? Number(object.age) : 0;
-    if (isSet(object.either)) {
-      message.eitherOr = { $case: 'either', either: String(object.either) };
-    }
-    if (isSet(object.or)) {
-      message.eitherOr = { $case: 'or', or: String(object.or) };
-    }
-    if (isSet(object.thirdOption)) {
-      message.eitherOr = { $case: 'thirdOption', thirdOption: String(object.thirdOption) };
-    }
-    message.signature = isSet(object.signature) ? bytesFromBase64(object.signature) : new Uint8Array();
-    message.value = isSet(object?.value) ? object.value : undefined;
-    return message;
+    return {
+      name: isSet(object.name) ? String(object.name) : '',
+      choice: isSet(object.aNumber)
+        ? { $case: 'aNumber', aNumber: Number(object.aNumber) }
+        : isSet(object.aString)
+        ? { $case: 'aString', aString: String(object.aString) }
+        : isSet(object.aMessage)
+        ? { $case: 'aMessage', aMessage: PleaseChoose_Submessage.fromJSON(object.aMessage) }
+        : isSet(object.aBool)
+        ? { $case: 'aBool', aBool: Boolean(object.aBool) }
+        : isSet(object.bunchaBytes)
+        ? { $case: 'bunchaBytes', bunchaBytes: bytesFromBase64(object.bunchaBytes) }
+        : isSet(object.anEnum)
+        ? { $case: 'anEnum', anEnum: pleaseChoose_StateEnumFromJSON(object.anEnum) }
+        : undefined,
+      age: isSet(object.age) ? Number(object.age) : 0,
+      eitherOr: isSet(object.either)
+        ? { $case: 'either', either: String(object.either) }
+        : isSet(object.or)
+        ? { $case: 'or', or: String(object.or) }
+        : isSet(object.thirdOption)
+        ? { $case: 'thirdOption', thirdOption: String(object.thirdOption) }
+        : undefined,
+      signature: isSet(object.signature) ? bytesFromBase64(object.signature) : new Uint8Array(),
+      value: isSet(object?.value) ? object.value : undefined,
+    };
   },
 
   toJSON(message: PleaseChoose): unknown {
@@ -317,9 +310,9 @@ export const PleaseChoose_Submessage = {
   },
 
   fromJSON(object: any): PleaseChoose_Submessage {
-    const message = createBasePleaseChoose_Submessage();
-    message.name = isSet(object.name) ? String(object.name) : '';
-    return message;
+    return {
+      name: isSet(object.name) ? String(object.name) : '',
+    };
   },
 
   toJSON(message: PleaseChoose_Submessage): unknown {
@@ -372,10 +365,10 @@ export const SimpleButOptional = {
   },
 
   fromJSON(object: any): SimpleButOptional {
-    const message = createBaseSimpleButOptional();
-    message.name = isSet(object.name) ? String(object.name) : undefined;
-    message.age = isSet(object.age) ? Number(object.age) : undefined;
-    return message;
+    return {
+      name: isSet(object.name) ? String(object.name) : undefined,
+      age: isSet(object.age) ? Number(object.age) : undefined,
+    };
   },
 
   toJSON(message: SimpleButOptional): unknown {

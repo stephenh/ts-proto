@@ -349,22 +349,20 @@ export const Simple = {
   },
 
   fromJSON(object: any): Simple {
-    const message = createBaseSimple();
-    message.name = isSet(object.name) ? String(object.name) : '';
-    message.age = isSet(object.age) ? Number(object.age) : 0;
-    message.created_at = isSet(object.created_at) ? fromJsonTimestamp(object.created_at) : undefined;
-    message.child = isSet(object.child) ? Child.fromJSON(object.child) : undefined;
-    message.state = isSet(object.state) ? stateEnumFromJSON(object.state) : 0;
-    message.grand_children = Array.isArray(object?.grand_children)
-      ? object.grand_children.map((e: any) => Child.fromJSON(e))
-      : [];
-    message.coins = Array.isArray(object?.coins) ? object.coins.map((e: any) => Number(e)) : [];
-    message.snacks = Array.isArray(object?.snacks) ? object.snacks.map((e: any) => String(e)) : [];
-    message.old_states = Array.isArray(object?.old_states)
-      ? object.old_states.map((e: any) => stateEnumFromJSON(e))
-      : [];
-    message.thing = isSet(object.thing) ? ImportedThing.fromJSON(object.thing) : undefined;
-    return message;
+    return {
+      name: isSet(object.name) ? String(object.name) : '',
+      age: isSet(object.age) ? Number(object.age) : 0,
+      created_at: isSet(object.created_at) ? fromJsonTimestamp(object.created_at) : undefined,
+      child: isSet(object.child) ? Child.fromJSON(object.child) : undefined,
+      state: isSet(object.state) ? stateEnumFromJSON(object.state) : 0,
+      grand_children: Array.isArray(object?.grand_children)
+        ? object.grand_children.map((e: any) => Child.fromJSON(e))
+        : [],
+      coins: Array.isArray(object?.coins) ? object.coins.map((e: any) => Number(e)) : [],
+      snacks: Array.isArray(object?.snacks) ? object.snacks.map((e: any) => String(e)) : [],
+      old_states: Array.isArray(object?.old_states) ? object.old_states.map((e: any) => stateEnumFromJSON(e)) : [],
+      thing: isSet(object.thing) ? ImportedThing.fromJSON(object.thing) : undefined,
+    };
   },
 
   toJSON(message: Simple): unknown {
@@ -452,10 +450,10 @@ export const Child = {
   },
 
   fromJSON(object: any): Child {
-    const message = createBaseChild();
-    message.name = isSet(object.name) ? String(object.name) : '';
-    message.type = isSet(object.type) ? child_TypeFromJSON(object.type) : 0;
-    return message;
+    return {
+      name: isSet(object.name) ? String(object.name) : '',
+      type: isSet(object.type) ? child_TypeFromJSON(object.type) : 0,
+    };
   },
 
   toJSON(message: Child): unknown {
@@ -516,11 +514,11 @@ export const Nested = {
   },
 
   fromJSON(object: any): Nested {
-    const message = createBaseNested();
-    message.name = isSet(object.name) ? String(object.name) : '';
-    message.message = isSet(object.message) ? Nested_InnerMessage.fromJSON(object.message) : undefined;
-    message.state = isSet(object.state) ? nested_InnerEnumFromJSON(object.state) : 0;
-    return message;
+    return {
+      name: isSet(object.name) ? String(object.name) : '',
+      message: isSet(object.message) ? Nested_InnerMessage.fromJSON(object.message) : undefined,
+      state: isSet(object.state) ? nested_InnerEnumFromJSON(object.state) : 0,
+    };
   },
 
   toJSON(message: Nested): unknown {
@@ -581,10 +579,10 @@ export const Nested_InnerMessage = {
   },
 
   fromJSON(object: any): Nested_InnerMessage {
-    const message = createBaseNested_InnerMessage();
-    message.name = isSet(object.name) ? String(object.name) : '';
-    message.deep = isSet(object.deep) ? Nested_InnerMessage_DeepMessage.fromJSON(object.deep) : undefined;
-    return message;
+    return {
+      name: isSet(object.name) ? String(object.name) : '',
+      deep: isSet(object.deep) ? Nested_InnerMessage_DeepMessage.fromJSON(object.deep) : undefined,
+    };
   },
 
   toJSON(message: Nested_InnerMessage): unknown {
@@ -637,9 +635,9 @@ export const Nested_InnerMessage_DeepMessage = {
   },
 
   fromJSON(object: any): Nested_InnerMessage_DeepMessage {
-    const message = createBaseNested_InnerMessage_DeepMessage();
-    message.name = isSet(object.name) ? String(object.name) : '';
-    return message;
+    return {
+      name: isSet(object.name) ? String(object.name) : '',
+    };
   },
 
   toJSON(message: Nested_InnerMessage_DeepMessage): unknown {
@@ -694,10 +692,10 @@ export const OneOfMessage = {
   },
 
   fromJSON(object: any): OneOfMessage {
-    const message = createBaseOneOfMessage();
-    message.first = isSet(object.first) ? String(object.first) : undefined;
-    message.last = isSet(object.last) ? String(object.last) : undefined;
-    return message;
+    return {
+      first: isSet(object.first) ? String(object.first) : undefined,
+      last: isSet(object.last) ? String(object.last) : undefined,
+    };
   },
 
   toJSON(message: OneOfMessage): unknown {
@@ -770,13 +768,13 @@ export const SimpleWithWrappers = {
   },
 
   fromJSON(object: any): SimpleWithWrappers {
-    const message = createBaseSimpleWithWrappers();
-    message.name = isSet(object.name) ? String(object.name) : undefined;
-    message.age = isSet(object.age) ? Number(object.age) : undefined;
-    message.enabled = isSet(object.enabled) ? Boolean(object.enabled) : undefined;
-    message.coins = Array.isArray(object?.coins) ? object.coins.map((e: any) => Number(e)) : [];
-    message.snacks = Array.isArray(object?.snacks) ? object.snacks.map((e: any) => String(e)) : [];
-    return message;
+    return {
+      name: isSet(object.name) ? String(object.name) : undefined,
+      age: isSet(object.age) ? Number(object.age) : undefined,
+      enabled: isSet(object.enabled) ? Boolean(object.enabled) : undefined,
+      coins: Array.isArray(object?.coins) ? object.coins.map((e: any) => Number(e)) : [],
+      snacks: Array.isArray(object?.snacks) ? object.snacks.map((e: any) => String(e)) : [],
+    };
   },
 
   toJSON(message: SimpleWithWrappers): unknown {
@@ -839,9 +837,9 @@ export const Entity = {
   },
 
   fromJSON(object: any): Entity {
-    const message = createBaseEntity();
-    message.id = isSet(object.id) ? Number(object.id) : 0;
-    return message;
+    return {
+      id: isSet(object.id) ? Number(object.id) : 0,
+    };
   },
 
   toJSON(message: Entity): unknown {
@@ -909,29 +907,26 @@ export const SimpleWithMap = {
   },
 
   fromJSON(object: any): SimpleWithMap {
-    const message = createBaseSimpleWithMap();
-    message.entitiesById = Object.entries(object.entitiesById ?? {}).reduce<{ [key: number]: Entity }>(
-      (acc, [key, value]) => {
-        acc[Number(key)] = Entity.fromJSON(value);
-        return acc;
-      },
-      {}
-    );
-    message.nameLookup = Object.entries(object.nameLookup ?? {}).reduce<{ [key: string]: string }>(
-      (acc, [key, value]) => {
-        acc[key] = String(value);
-        return acc;
-      },
-      {}
-    );
-    message.intLookup = Object.entries(object.intLookup ?? {}).reduce<{ [key: number]: number }>(
-      (acc, [key, value]) => {
-        acc[Number(key)] = Number(value);
-        return acc;
-      },
-      {}
-    );
-    return message;
+    return {
+      entitiesById: isObject(object.entitiesById)
+        ? Object.entries(object.entitiesById).reduce<{ [key: number]: Entity }>((acc, [key, value]) => {
+            acc[Number(key)] = Entity.fromJSON(value);
+            return acc;
+          }, {})
+        : {},
+      nameLookup: isObject(object.nameLookup)
+        ? Object.entries(object.nameLookup).reduce<{ [key: string]: string }>((acc, [key, value]) => {
+            acc[key] = String(value);
+            return acc;
+          }, {})
+        : {},
+      intLookup: isObject(object.intLookup)
+        ? Object.entries(object.intLookup).reduce<{ [key: number]: number }>((acc, [key, value]) => {
+            acc[Number(key)] = Number(value);
+            return acc;
+          }, {})
+        : {},
+    };
   },
 
   toJSON(message: SimpleWithMap): unknown {
@@ -1027,10 +1022,10 @@ export const SimpleWithMap_EntitiesByIdEntry = {
   },
 
   fromJSON(object: any): SimpleWithMap_EntitiesByIdEntry {
-    const message = createBaseSimpleWithMap_EntitiesByIdEntry();
-    message.key = isSet(object.key) ? Number(object.key) : 0;
-    message.value = isSet(object.value) ? Entity.fromJSON(object.value) : undefined;
-    return message;
+    return {
+      key: isSet(object.key) ? Number(object.key) : 0,
+      value: isSet(object.value) ? Entity.fromJSON(object.value) : undefined,
+    };
   },
 
   toJSON(message: SimpleWithMap_EntitiesByIdEntry): unknown {
@@ -1087,10 +1082,10 @@ export const SimpleWithMap_NameLookupEntry = {
   },
 
   fromJSON(object: any): SimpleWithMap_NameLookupEntry {
-    const message = createBaseSimpleWithMap_NameLookupEntry();
-    message.key = isSet(object.key) ? String(object.key) : '';
-    message.value = isSet(object.value) ? String(object.value) : '';
-    return message;
+    return {
+      key: isSet(object.key) ? String(object.key) : '',
+      value: isSet(object.value) ? String(object.value) : '',
+    };
   },
 
   toJSON(message: SimpleWithMap_NameLookupEntry): unknown {
@@ -1147,10 +1142,10 @@ export const SimpleWithMap_IntLookupEntry = {
   },
 
   fromJSON(object: any): SimpleWithMap_IntLookupEntry {
-    const message = createBaseSimpleWithMap_IntLookupEntry();
-    message.key = isSet(object.key) ? Number(object.key) : 0;
-    message.value = isSet(object.value) ? Number(object.value) : 0;
-    return message;
+    return {
+      key: isSet(object.key) ? Number(object.key) : 0,
+      value: isSet(object.value) ? Number(object.value) : 0,
+    };
   },
 
   toJSON(message: SimpleWithMap_IntLookupEntry): unknown {
@@ -1202,15 +1197,14 @@ export const SimpleWithSnakeCaseMap = {
   },
 
   fromJSON(object: any): SimpleWithSnakeCaseMap {
-    const message = createBaseSimpleWithSnakeCaseMap();
-    message.entities_by_id = Object.entries(object.entities_by_id ?? {}).reduce<{ [key: number]: Entity }>(
-      (acc, [key, value]) => {
-        acc[Number(key)] = Entity.fromJSON(value);
-        return acc;
-      },
-      {}
-    );
-    return message;
+    return {
+      entities_by_id: isObject(object.entities_by_id)
+        ? Object.entries(object.entities_by_id).reduce<{ [key: number]: Entity }>((acc, [key, value]) => {
+            acc[Number(key)] = Entity.fromJSON(value);
+            return acc;
+          }, {})
+        : {},
+    };
   },
 
   toJSON(message: SimpleWithSnakeCaseMap): unknown {
@@ -1276,10 +1270,10 @@ export const SimpleWithSnakeCaseMap_EntitiesByIdEntry = {
   },
 
   fromJSON(object: any): SimpleWithSnakeCaseMap_EntitiesByIdEntry {
-    const message = createBaseSimpleWithSnakeCaseMap_EntitiesByIdEntry();
-    message.key = isSet(object.key) ? Number(object.key) : 0;
-    message.value = isSet(object.value) ? Entity.fromJSON(object.value) : undefined;
-    return message;
+    return {
+      key: isSet(object.key) ? Number(object.key) : 0,
+      value: isSet(object.value) ? Entity.fromJSON(object.value) : undefined,
+    };
   },
 
   toJSON(message: SimpleWithSnakeCaseMap_EntitiesByIdEntry): unknown {
@@ -1330,9 +1324,9 @@ export const PingRequest = {
   },
 
   fromJSON(object: any): PingRequest {
-    const message = createBasePingRequest();
-    message.input = isSet(object.input) ? String(object.input) : '';
-    return message;
+    return {
+      input: isSet(object.input) ? String(object.input) : '',
+    };
   },
 
   toJSON(message: PingRequest): unknown {
@@ -1379,9 +1373,9 @@ export const PingResponse = {
   },
 
   fromJSON(object: any): PingResponse {
-    const message = createBasePingResponse();
-    message.output = isSet(object.output) ? String(object.output) : '';
-    return message;
+    return {
+      output: isSet(object.output) ? String(object.output) : '',
+    };
   },
 
   toJSON(message: PingResponse): unknown {
@@ -1507,20 +1501,20 @@ export const Numbers = {
   },
 
   fromJSON(object: any): Numbers {
-    const message = createBaseNumbers();
-    message.double = isSet(object.double) ? Number(object.double) : 0;
-    message.float = isSet(object.float) ? Number(object.float) : 0;
-    message.int32 = isSet(object.int32) ? Number(object.int32) : 0;
-    message.int64 = isSet(object.int64) ? Number(object.int64) : 0;
-    message.uint32 = isSet(object.uint32) ? Number(object.uint32) : 0;
-    message.uint64 = isSet(object.uint64) ? Number(object.uint64) : 0;
-    message.sint32 = isSet(object.sint32) ? Number(object.sint32) : 0;
-    message.sint64 = isSet(object.sint64) ? Number(object.sint64) : 0;
-    message.fixed32 = isSet(object.fixed32) ? Number(object.fixed32) : 0;
-    message.fixed64 = isSet(object.fixed64) ? Number(object.fixed64) : 0;
-    message.sfixed32 = isSet(object.sfixed32) ? Number(object.sfixed32) : 0;
-    message.sfixed64 = isSet(object.sfixed64) ? Number(object.sfixed64) : 0;
-    return message;
+    return {
+      double: isSet(object.double) ? Number(object.double) : 0,
+      float: isSet(object.float) ? Number(object.float) : 0,
+      int32: isSet(object.int32) ? Number(object.int32) : 0,
+      int64: isSet(object.int64) ? Number(object.int64) : 0,
+      uint32: isSet(object.uint32) ? Number(object.uint32) : 0,
+      uint64: isSet(object.uint64) ? Number(object.uint64) : 0,
+      sint32: isSet(object.sint32) ? Number(object.sint32) : 0,
+      sint64: isSet(object.sint64) ? Number(object.sint64) : 0,
+      fixed32: isSet(object.fixed32) ? Number(object.fixed32) : 0,
+      fixed64: isSet(object.fixed64) ? Number(object.fixed64) : 0,
+      sfixed32: isSet(object.sfixed32) ? Number(object.sfixed32) : 0,
+      sfixed64: isSet(object.sfixed64) ? Number(object.sfixed64) : 0,
+    };
   },
 
   toJSON(message: Numbers): unknown {
@@ -1641,6 +1635,10 @@ function longToNumber(long: Long): number {
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
+}
+
+function isObject(value: any): boolean {
+  return typeof value === 'object' && value !== null;
 }
 
 function isSet(value: any): boolean {

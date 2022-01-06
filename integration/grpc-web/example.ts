@@ -131,10 +131,10 @@ export const DashFlash = {
   },
 
   fromJSON(object: any): DashFlash {
-    const message = createBaseDashFlash();
-    message.msg = isSet(object.msg) ? String(object.msg) : '';
-    message.type = isSet(object.type) ? dashFlash_TypeFromJSON(object.type) : 0;
-    return message;
+    return {
+      msg: isSet(object.msg) ? String(object.msg) : '',
+      type: isSet(object.type) ? dashFlash_TypeFromJSON(object.type) : 0,
+    };
   },
 
   toJSON(message: DashFlash): unknown {
@@ -195,11 +195,11 @@ export const DashUserSettingsState = {
   },
 
   fromJSON(object: any): DashUserSettingsState {
-    const message = createBaseDashUserSettingsState();
-    message.email = isSet(object.email) ? String(object.email) : '';
-    message.urls = isSet(object.urls) ? DashUserSettingsState_URLs.fromJSON(object.urls) : undefined;
-    message.flashes = Array.isArray(object?.flashes) ? object.flashes.map((e: any) => DashFlash.fromJSON(e)) : [];
-    return message;
+    return {
+      email: isSet(object.email) ? String(object.email) : '',
+      urls: isSet(object.urls) ? DashUserSettingsState_URLs.fromJSON(object.urls) : undefined,
+      flashes: Array.isArray(object?.flashes) ? object.flashes.map((e: any) => DashFlash.fromJSON(e)) : [],
+    };
   },
 
   toJSON(message: DashUserSettingsState): unknown {
@@ -264,10 +264,10 @@ export const DashUserSettingsState_URLs = {
   },
 
   fromJSON(object: any): DashUserSettingsState_URLs {
-    const message = createBaseDashUserSettingsState_URLs();
-    message.connectGoogle = isSet(object.connectGoogle) ? String(object.connectGoogle) : '';
-    message.connectGithub = isSet(object.connectGithub) ? String(object.connectGithub) : '';
-    return message;
+    return {
+      connectGoogle: isSet(object.connectGoogle) ? String(object.connectGoogle) : '',
+      connectGithub: isSet(object.connectGithub) ? String(object.connectGithub) : '',
+    };
   },
 
   toJSON(message: DashUserSettingsState_URLs): unknown {
@@ -334,12 +334,12 @@ export const DashCred = {
   },
 
   fromJSON(object: any): DashCred {
-    const message = createBaseDashCred();
-    message.description = isSet(object.description) ? String(object.description) : '';
-    message.metadata = isSet(object.metadata) ? String(object.metadata) : '';
-    message.token = isSet(object.token) ? String(object.token) : '';
-    message.id = isSet(object.id) ? String(object.id) : '';
-    return message;
+    return {
+      description: isSet(object.description) ? String(object.description) : '',
+      metadata: isSet(object.metadata) ? String(object.metadata) : '',
+      token: isSet(object.token) ? String(object.token) : '',
+      id: isSet(object.id) ? String(object.id) : '',
+    };
   },
 
   toJSON(message: DashCred): unknown {
@@ -398,10 +398,10 @@ export const DashAPICredsCreateReq = {
   },
 
   fromJSON(object: any): DashAPICredsCreateReq {
-    const message = createBaseDashAPICredsCreateReq();
-    message.description = isSet(object.description) ? String(object.description) : '';
-    message.metadata = isSet(object.metadata) ? String(object.metadata) : '';
-    return message;
+    return {
+      description: isSet(object.description) ? String(object.description) : '',
+      metadata: isSet(object.metadata) ? String(object.metadata) : '',
+    };
   },
 
   toJSON(message: DashAPICredsCreateReq): unknown {
@@ -468,12 +468,12 @@ export const DashAPICredsUpdateReq = {
   },
 
   fromJSON(object: any): DashAPICredsUpdateReq {
-    const message = createBaseDashAPICredsUpdateReq();
-    message.credSid = isSet(object.credSid) ? String(object.credSid) : '';
-    message.description = isSet(object.description) ? String(object.description) : '';
-    message.metadata = isSet(object.metadata) ? String(object.metadata) : '';
-    message.id = isSet(object.id) ? String(object.id) : '';
-    return message;
+    return {
+      credSid: isSet(object.credSid) ? String(object.credSid) : '',
+      description: isSet(object.description) ? String(object.description) : '',
+      metadata: isSet(object.metadata) ? String(object.metadata) : '',
+      id: isSet(object.id) ? String(object.id) : '',
+    };
   },
 
   toJSON(message: DashAPICredsUpdateReq): unknown {
@@ -532,10 +532,10 @@ export const DashAPICredsDeleteReq = {
   },
 
   fromJSON(object: any): DashAPICredsDeleteReq {
-    const message = createBaseDashAPICredsDeleteReq();
-    message.credSid = isSet(object.credSid) ? String(object.credSid) : '';
-    message.id = isSet(object.id) ? String(object.id) : '';
-    return message;
+    return {
+      credSid: isSet(object.credSid) ? String(object.credSid) : '',
+      id: isSet(object.id) ? String(object.id) : '',
+    };
   },
 
   toJSON(message: DashAPICredsDeleteReq): unknown {
@@ -578,8 +578,7 @@ export const Empty = {
   },
 
   fromJSON(_: any): Empty {
-    const message = createBaseEmpty();
-    return message;
+    return {};
   },
 
   toJSON(_: Empty): unknown {
