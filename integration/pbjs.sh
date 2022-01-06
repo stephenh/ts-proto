@@ -4,19 +4,30 @@
 #
 # Only a handful of integration tests use these so we hand-code it one-off.
 #
+# Usage
+#
+#  ./pbjs.sh [TEST_DIRECTORY | PROTO_FILE, ...]
+#
+# Run for all integration tests:
+#   ./pbjs.sh
+#
+# Run for specific integration tests:
+#   ./pbjs.sh simple value
+#   ./pbjs.sh simple/simple.proto simple-long/simple.proto
 
 INTEGRATION_DIR=$(realpath $(dirname "$BASH_SOURCE"))
 
 if [[ $# -eq 0 ]]; then
-  FILTER_PATHS=$INTEGRATION_DIR
+  FILTER_PATHS="$INTEGRATION_DIR"
 else
-  FILTER_PATHS="${@}"
+  FILTER_PATHS=$(echo "${@}" | xargs realpath)
 fi
 
+cd $INTEGRATION_DIR/../
 set -e
 
 function match() {
-  find $FILTER_PATHS -wholename "$1/*.proto" -type f  | grep -q .
+  find $FILTER_PATHS -path "$INTEGRATION_DIR/$1/*.proto" -type f  | grep -q .
 }
 
 if match "simple"; then
