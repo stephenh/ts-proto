@@ -404,11 +404,13 @@ The commands below assume you have **Docker** installed. To use a **local** copy
 **Workflow**
 
 - Modifying the plugin implementation:
+  - The most important logic is found in [src/main.ts](src/main.ts).
   - Run `yarn bin2ts` or `yarn bin2ts:local`.  
     _Since the proto files were not changed, you only need to regenerate the typescript files._
   - Run `yarn test` to verify the typescript files are compatible with the reference implementation, and pass other tests.
 - Updating or adding `.proto` files in the integration directory:
-  - Run `yarn build:test` to regenerate the integration test files.
+  - Run `yarn watch` to automatically regenerate test files when proto files change. 
+    - Or run `yarn build:test` to regenerate all integration test files. 
   - Run `yarn test` to retest.
 
 **Contributing**

@@ -1009,7 +1009,6 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
 function generateFromJson(ctx: Context, fullName: string, messageDesc: DescriptorProto): Code {
   const { options, utils, typeMap } = ctx;
   const chunks: Code[] = [];
-  const choiceFieldChunks: Code[] = [];
 
   // create the basic function declaration
   chunks.push(code`
