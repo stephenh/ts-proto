@@ -10,6 +10,11 @@ export interface Simple {
   children: string[];
 }
 
+export interface AnotherSimple {
+  num: number;
+  str: string;
+}
+
 function createBaseSimple(): Simple {
   return { name: '', age: 0, children: [] };
 }
@@ -88,6 +93,75 @@ export const Simple = {
     message.name = object.name ?? '';
     message.age = object.age ?? 0;
     message.children = object.children?.map((e) => e) || [];
+    return message;
+  },
+};
+
+function createBaseAnotherSimple(): AnotherSimple {
+  return { num: 0, str: '' };
+}
+
+export const AnotherSimple = {
+  encode(message: AnotherSimple, writer: Writer = Writer.create()): Writer {
+    if (message.num !== 0) {
+      writer.uint32(13).float(message.num);
+    }
+    if (message.str !== '') {
+      writer.uint32(18).string(message.str);
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): AnotherSimple {
+    const reader = input instanceof Reader ? input : new Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseAnotherSimple();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.num = reader.float();
+          break;
+        case 2:
+          message.str = reader.string();
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  encodeDelimited(message: AnotherSimple, writer: Writer = Writer.create()): Writer {
+    return this.encode(message, writer.fork()).ldelim();
+  },
+
+  decodeDelimited(input: Reader | Uint8Array): AnotherSimple {
+    const reader = input instanceof Reader ? input : new Reader(input);
+    const length = reader.uint32();
+    const message = this.decode(reader, length);
+    return message;
+  },
+
+  fromJSON(object: any): AnotherSimple {
+    const message = createBaseAnotherSimple();
+    message.num = object.num !== undefined && object.num !== null ? Number(object.num) : 0;
+    message.str = object.str !== undefined && object.str !== null ? String(object.str) : '';
+    return message;
+  },
+
+  toJSON(message: AnotherSimple): unknown {
+    const obj: any = {};
+    message.num !== undefined && (obj.num = message.num);
+    message.str !== undefined && (obj.str = message.str);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<AnotherSimple>, I>>(object: I): AnotherSimple {
+    const message = createBaseAnotherSimple();
+    message.num = object.num ?? 0;
+    message.str = object.str ?? '';
     return message;
   },
 };

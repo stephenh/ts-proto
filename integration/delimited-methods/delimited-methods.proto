@@ -5,3 +5,8 @@ message Simple {
   int32 age = 2;
   repeated string children = 3;
 }
+
+message AnotherSimple {
+  float num = 1;
+  string str = 2;
+}
