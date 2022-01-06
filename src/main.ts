@@ -1014,7 +1014,7 @@ function generateEncodeDelimited(ctx: Context, fullName: string, messageDesc: De
     ): ${Writer} {
   `);
 
-  chunks.push(code`return this.encode(message, writer).ldelim();`);
+  chunks.push(code`return this.encode(message, writer.fork()).ldelim();`);
   chunks.push(code`}`);
   return joinCode(chunks, { on: '\n' });
 }

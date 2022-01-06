@@ -53,7 +53,7 @@ export const Simple = {
   },
 
   encodeDelimited(message: Simple, writer: Writer = Writer.create()): Writer {
-    return this.encode(message, writer).ldelim();
+    return this.encode(message, writer.fork()).ldelim();
   },
 
   decodeDelimited(input: Reader | Uint8Array): Simple {
