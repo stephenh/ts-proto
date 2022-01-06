@@ -40,11 +40,11 @@ function yarnRunHandler(yarn: string, task: string) {
 
         path = path.replace(/\\/g, "/"); // windows
 
-        yarnRun(task, path, yarn);
+        yarnRun(yarn, task, path);
     }
 }
 
-function yarnRun(task: string, path: string, yarn: string) {
+function yarnRun(yarn: string, task: string, path: string) {
     const yarnArgs = [task, path];
 
     console.log(formatLog(colors.green, task, path, `${yarn} ${yarnArgs.join(' ')}`));
