@@ -69,9 +69,10 @@ Usage:
     $ ts-node watch.ts [options] [TEST, TEST2, ...]
     
 Options:
-    -h, --help    Show this help message
-    --polling     Use polling instead of native watchers
-    TEST          Recompile the specified TEST when implementation files change
+    -h, --help    Show this help message.
+    --polling     Use polling instead of native watchers.
+    TEST          Recompile the specified TEST(s) when implementation files change.
+                  Equivalent to running 'yarn bin2ts TEST' manually each time.
     
 Examples:
     $ yarn watch
@@ -130,7 +131,7 @@ function sourceHandler(yarn: string, task: string, tests: string[]) {
 
     triggerPath = triggerPath.replace(/\\/g, '/');
     if (tests.length === 0) {
-      let notice = `Source changed! Press [enter] to recompile all .proto files or rerun this command with 'yarn watch [TEST, ...]'. See 'yarn watch --help'.`;
+      let notice = `Source changed! Press [enter] to recompile all .proto files or rerun this command as 'yarn watch [TEST, ...]'. See 'yarn watch --help'.`;
       console.log(formatLog(colors.yellow, triggerPath, 'watch', notice));
     } else {
       yarnRun(yarn, task, triggerPath, tests.join(' '));
