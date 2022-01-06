@@ -17,7 +17,7 @@
 #
 #    Updates generated output for the 'simple' integration test. Used by file watcher.
 #
-# Each integration test can optionally have a `parameters.txt` BIN_FILES that will
+# Each integration test can optionally have a `parameters.txt` file that will
 # be used as the ts-proto_opt... args for generating that test's code.
 
 INTEGRATION_DIR=$(realpath $(dirname "$BASH_SOURCE"))
