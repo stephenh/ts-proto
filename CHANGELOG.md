@@ -1,3 +1,10 @@
+# [1.98.0](https://github.com/stephenh/ts-proto/compare/v1.97.2...v1.98.0) (2022-01-06)
+
+
+### Features
+
+* watch for changed integration test files ([#464](https://github.com/stephenh/ts-proto/issues/464)) ([988cd7e](https://github.com/stephenh/ts-proto/commit/988cd7eb84bc3b8b72d6b4d59c38aa794c16c638))
+
 ## [1.97.2](https://github.com/stephenh/ts-proto/compare/v1.97.1...v1.97.2) (2022-01-06)
 
 
