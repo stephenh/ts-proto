@@ -62,5 +62,5 @@ async function generate(binFile: string, baseDir: string, parameter: string) {
 }
 
 main().then(() => {
-  console.log('done');
+  console.log(`${process.argv[3]}: Done`);
 });
