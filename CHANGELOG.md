@@ -1,3 +1,10 @@
+# [1.99.0](https://github.com/stephenh/ts-proto/compare/v1.98.0...v1.99.0) (2022-01-07)
+
+
+### Features
+
+* yarn watch updates (specified) tests when source files change ([#465](https://github.com/stephenh/ts-proto/issues/465)) ([275d0e7](https://github.com/stephenh/ts-proto/commit/275d0e7c61f3acb2b1fd670b1974e64dd49d6ff4))
+
 # [1.98.0](https://github.com/stephenh/ts-proto/compare/v1.97.2...v1.98.0) (2022-01-06)
 
 
