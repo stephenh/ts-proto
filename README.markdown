@@ -89,6 +89,15 @@ If you want to package these source files into an npm package to distribute to c
 
 If you're using Buf, pass `strategy: all` in your `buf.gen.yaml` file ([docs](https://docs.buf.build/configuration/v1/buf-gen-yaml#strategy)).
 
+```yaml
+version: v1
+plugins:
+  - name: ts
+    out: ../gen/ts
+    strategy: all
+    path: ../node_modules/ts-proto/protoc-gen-ts_proto
+```    
+
 # Goals
 
 - Idiomatic TypeScript/ES6 types
