@@ -13,6 +13,7 @@
   - [Table of contents](#table-of-contents)
 - [Overview](#overview)
 - [QuickStart](#quickstart)
+    - [Buf](#buf)
 - [Goals](#goals)
 - [Example Types](#example-types)
 - [Highlights](#highlights)
@@ -83,6 +84,10 @@ It will also generate client implementations of `PingService`; currently [Twirp]
 This will generate `*.ts` source files for the given `*.proto` types.
 
 If you want to package these source files into an npm package to distribute to clients, just run `tsc` on them as usual to generate the `.js`/`.d.ts` files, and deploy the output as a regular npm package.
+
+## Buf
+
+If you're using Buf, pass `strategy: all` in your `buf.gen.yaml` file ([docs](https://docs.buf.build/configuration/v1/buf-gen-yaml#strategy)).
 
 # Goals
 
