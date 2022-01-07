@@ -24,21 +24,10 @@ function main() {
   if (process.argv.includes('-h') || process.argv.includes('--help')) showHelp();
   showSettings(tests);
 
-  chokidar
-    .watch('integration/*/*.proto', watchOptions)
-    .on('all', integrationHandler(yarn, 'proto2bin'));
-
-  chokidar
-    .watch('integration/*/*.proto', watchOptions)
-    .on('all', integrationHandler(yarn, 'proto2pbjs'));
-
-  chokidar
-    .watch('integration/*/*.bin', watchOptions)
-    .on('all', integrationHandler(yarn, 'bin2ts'));
-
-  chokidar
-    .watch('src/**/*.ts', watchOptions) //
-    .on('all', sourceHandler(yarn, 'bin2ts', tests));
+  chokidar.watch('integration/*/*.proto', watchOptions).on('all', integrationHandler(yarn, 'proto2bin'));
+  chokidar.watch('integration/*/*.proto', watchOptions).on('all', integrationHandler(yarn, 'proto2pbjs'));
+  chokidar.watch('integration/*/*.bin', watchOptions).on('all', integrationHandler(yarn, 'bin2ts'));
+  chokidar.watch('src/**/*.ts', watchOptions).on('change', srcHandler(yarn, 'bin2ts', tests));
 
   setupKeys({
     ['']: () => yarnRun(yarn, 'bin2ts', 'enter'),
@@ -71,34 +60,31 @@ Usage:
 Options:
     -h, --help    Show this help message.
     --polling     Use polling instead of native watchers.
-    TEST          Recompile the specified TEST(s) when implementation files change.
+    TEST          Regenerate the specified TEST(s) when implementation files change.
                   Equivalent to running 'yarn bin2ts TEST' manually each time.
     
 Examples:
     $ yarn watch
     $ yarn watch --polling
-    $ yarn watch simple struct
-        `);
+    $ yarn watch simple struct`);
   process.exit(0);
 }
 
 function showSettings(tests: string[]) {
   console.log(`${colors.yellow}`);
   console.log(`Watching for changes:`);
-  console.log('- integration/\tRecompiling .proto to .bin and .ts');
+  console.log('- integration/\tRegenerating integration/*/*.proto to .bin and .ts');
   if (tests.length) {
-    console.log(`- src/\t\tRecompiling .proto to .ts\n\t\t(${tests.join(', ')})`);
+    console.log(`- src/\t\tRegenerating integration/{${tests.join(', ')}}/*.proto to .ts`);
   }
-  console.log('\nPress enter to recompile all .proto files.');
+  console.log('\nPress enter to regenerate all integration tests.');
   console.log('Press ctrl+c or q to exit');
   console.log(colors.reset);
 }
 
 function integrationHandler(yarn: string, task: string) {
   return (event: FsEvent, triggerPath: string) => {
-    if (event !== 'add' && event !== 'change') {
-      return;
-    }
+    if (event !== 'add' && event !== 'change') return;
 
     triggerPath = triggerPath.replace(/\\/g, '/'); // windows
     const relativePath = triggerPath.replace(/^integration\//, '');
@@ -125,13 +111,11 @@ function yarnRun(yarn: string, task: string, header: string, taskArgument?: stri
   });
 }
 
-function sourceHandler(yarn: string, task: string, tests: string[]) {
+function srcHandler(yarn: string, task: string, tests: string[]) {
   return async (event: FsEvent, triggerPath: string) => {
-    if (event !== 'change') return;
-
     triggerPath = triggerPath.replace(/\\/g, '/');
     if (tests.length === 0) {
-      let notice = `Source changed! Press [enter] to recompile all .proto files or rerun this command as 'yarn watch [TEST, ...]'. See 'yarn watch --help'.`;
+      const notice = `Plugin modified! Press [enter] to regenerate all integration tests or run 'yarn watch [TEST, ...]'. See 'yarn watch --help'.`;
       console.log(formatLog(colors.yellow, triggerPath, 'watch', notice));
     } else {
       yarnRun(yarn, task, triggerPath, tests.join(' '));
