@@ -175,6 +175,10 @@ creating a class and calling the right getters/setters.
 
 - `fromJSON`/`toJSON` use the [proto3 canonical JSON encoding format](https://developers.google.com/protocol-buffers/docs/proto3#json) (e.g. timestamps are ISO strings), unlike [`protobufjs`](https://github.com/protobufjs/protobuf.js/issues/1304). 
 
+- ObjectIds can be mapped as `mongodb.ObjectId`
+
+  (Configurable with the `useObjectId` parameter.)
+
 # Auto-Batching / N+1 Prevention
 
 (Note: this is currently only supported by the Twirp clients.)
@@ -346,6 +350,8 @@ Generated code will be placed in the Gradle build directory.
   Note that `addGrpcMetadata`, `addNestjsRestParameter` and `returnObservable` will still be false.
 
 - With `--ts_proto_opt=useDate=false`, fields of type `google.protobuf.Timestamp` will not be mapped to type `Date` in the generated types. See [Timestamp](#timestamp) for more details.
+
+- With `--ts_proto_opt=useObjectId=true`, fields of a type called ObjectId where the message is constructed to have on field called value that is a string will be mapped to type `mongodb.ObjectId` in the generated types. This will require your project to install the mongodb npm package. See [ObjectId](#objectid) for more details.
 
 - With `--ts_proto_opt=outputSchema=true`, meta typings will be generated that can later be used in other code generators.
 
@@ -684,7 +690,6 @@ The representation of `google.protobuf.Timestamp` is configurable by the `useDat
 | Protobuf well-known type    | Default/`useDate=true` | `useDate=false`                      | `useDate=string` |
 | --------------------------- | ---------------------- | ------------------------------------ | ---------------- |
 | `google.protobuf.Timestamp` | `Date`                 | `{ seconds: number, nanos: number }` | `string`         |
-
 
 # Number Types
 

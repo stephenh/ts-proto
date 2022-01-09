@@ -34,6 +34,7 @@ export type Options = {
   forceLong: LongOption;
   useOptionals: boolean | 'none' | 'messages' | 'all'; // boolean is deprecated
   useDate: DateOption;
+  useMongoObjectId: boolean;
   oneof: OneofOption;
   esModuleInterop: boolean;
   fileSuffix: string;
@@ -68,6 +69,7 @@ export function defaultOptions(): Options {
     forceLong: LongOption.NUMBER,
     useOptionals: 'none',
     useDate: DateOption.DATE,
+    useMongoObjectId: false,
     oneof: OneofOption.PROPERTIES,
     esModuleInterop: false,
     fileSuffix: '',

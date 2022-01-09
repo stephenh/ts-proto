@@ -35,6 +35,7 @@ describe('options', () => {
         "unrecognizedEnum": true,
         "useDate": "timestamp",
         "useExactTypes": true,
+        "useMongoObjectId": false,
         "useOptionals": "none",
       }
     `);

@@ -18,6 +18,7 @@ import {
   isLongValueType,
   isMapType,
   isMessage,
+  isObjectId,
   isOptionalProperty,
   isPrimitive,
   isRepeated,
@@ -281,6 +282,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
 }
 
 export type Utils = ReturnType<typeof makeDeepPartial> &
+  ReturnType<typeof makeObjectIdMethods> &
   ReturnType<typeof makeTimestampMethods> &
   ReturnType<typeof makeByteUtils> &
   ReturnType<typeof makeLongUtils> &
@@ -293,6 +295,7 @@ export function makeUtils(options: Options): Utils {
   return {
     ...bytes,
     ...makeDeepPartial(options, longs),
+    ...makeObjectIdMethods(options),
     ...makeTimestampMethods(options, longs),
     ...longs,
     ...makeComparisonUtils(),
@@ -467,6 +470,46 @@ function makeDeepPartial(options: Options, longs: ReturnType<typeof makeLongUtil
   );
 
   return { Builtin, DeepPartial, Exact };
+}
+
+function makeObjectIdMethods(options: Options) {
+  const mongodb = imp('mongodb*mongodb');
+
+  const fromProtoObjectId = conditionalOutput(
+    'fromProtoObjectId',
+    code`
+      function fromProtoObjectId(oid: ObjectId): ${mongodb}.ObjectId {
+        return new ${mongodb}.ObjectId(oid.value);
+      }
+    `
+  );
+
+  const fromJsonObjectId = conditionalOutput(
+    'fromJsonObjectId',
+    code`
+      function fromJsonObjectId(o: any): ${mongodb}.ObjectId {
+        if (o instanceof ${mongodb}.ObjectId) {
+          return o;
+        } else if (typeof o === "string") {
+          return new ${mongodb}.ObjectId(o);
+        } else {
+          return ${fromProtoObjectId}(ObjectId.fromJSON(o));
+        }
+      }
+    `
+  );
+
+  const toProtoObjectId = conditionalOutput(
+    'toProtoObjectId',
+    code`
+      function toProtoObjectId(oid: ${mongodb}.ObjectId): ObjectId {
+        const value = oid.toString();
+        return { value };
+      }
+    `
+  );
+
+  return { fromJsonObjectId, fromProtoObjectId, toProtoObjectId };
 }
 
 function makeTimestampMethods(options: Options, longs: ReturnType<typeof makeLongUtils>) {
@@ -775,6 +818,9 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
     } else if (isTimestamp(field) && (options.useDate === DateOption.DATE || options.useDate === DateOption.STRING)) {
       const type = basicTypeName(ctx, field, { keepValueType: true });
       readSnippet = code`${utils.fromTimestamp}(${type}.decode(reader, reader.uint32()))`;
+    } else if (isObjectId(field) && options.useMongoObjectId) {
+      const type = basicTypeName(ctx, field, { keepValueType: true });
+      readSnippet = code`${utils.fromProtoObjectId}(${type}.decode(reader, reader.uint32()))`;
     } else if (isMessage(field)) {
       const type = basicTypeName(ctx, field);
       readSnippet = code`${type}.decode(reader, reader.uint32())`;
@@ -862,6 +908,11 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
     } else if (isScalar(field) || isEnum(field)) {
       const tag = ((field.number << 3) | basicWireType(field.type)) >>> 0;
       writeSnippet = (place) => code`writer.uint32(${tag}).${toReaderCall(field)}(${place})`;
+    } else if (isObjectId(field) && options.useMongoObjectId) {
+      const tag = ((field.number << 3) | 2) >>> 0;
+      const type = basicTypeName(ctx, field, { keepValueType: true });
+      writeSnippet = (place) =>
+        code`${type}.encode(${utils.toProtoObjectId}(${place}), writer.uint32(${tag}).fork()).ldelim()`;
     } else if (isTimestamp(field) && (options.useDate === DateOption.DATE || options.useDate === DateOption.STRING)) {
       const tag = ((field.number << 3) | 2) >>> 0;
       const type = basicTypeName(ctx, field, { keepValueType: true });
@@ -1049,6 +1100,8 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
           const cstr = capitalize(basicTypeName(ctx, field, { keepValueType: true }).toCodeString());
           return code`${cstr}(${from})`;
         }
+      } else if (isObjectId(field) && options.useMongoObjectId) {
+        return code`${utils.fromJsonObjectId}(${from})`;
       } else if (isTimestamp(field) && options.useDate === DateOption.STRING) {
         return code`String(${from})`;
       } else if (
@@ -1088,6 +1141,8 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
               const cstr = capitalize(basicTypeName(ctx, valueType).toCodeString());
               return code`${cstr}(${from})`;
             }
+          } else if (isObjectId(valueType) && options.useMongoObjectId) {
+            return code`${utils.fromJsonObjectId}(${from})`;
           } else if (isTimestamp(valueType) && options.useDate === DateOption.STRING) {
             return code`String(${from})`;
           } else if (
@@ -1207,6 +1262,8 @@ function generateToJson(ctx: Context, fullName: string, messageDesc: DescriptorP
         return isWithinOneOf(field)
           ? code`${from} !== undefined ? ${toJson}(${from}) : undefined`
           : code`${toJson}(${from})`;
+      } else if (isObjectId(field) && options.useMongoObjectId) {
+        return code`${from}.toString()`;
       } else if (isTimestamp(field) && options.useDate === DateOption.DATE) {
         return code`${from}.toISOString()`;
       } else if (isTimestamp(field) && options.useDate === DateOption.STRING) {
@@ -1221,6 +1278,8 @@ function generateToJson(ctx: Context, fullName: string, messageDesc: DescriptorP
           return code`${toJson}(${from})`;
         } else if (isBytes(valueType)) {
           return code`${utils.base64FromBytes}(${from})`;
+        } else if (isObjectId(valueType) && options.useMongoObjectId) {
+          return code`${from}.toString()`;
         } else if (isTimestamp(valueType) && options.useDate === DateOption.DATE) {
           return code`${from}.toISOString()`;
         } else if (isTimestamp(valueType) && options.useDate === DateOption.STRING) {
@@ -1320,6 +1379,8 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
     const readSnippet = (from: string): Code => {
       if ((isLong(field) || isLongValueType(field)) && options.forceLong === LongOption.LONG) {
         return code`Long.fromValue(${from})`;
+      } else if (isObjectId(field) && options.useMongoObjectId) {
+        return code`${from} as mongodb.ObjectId`;
       } else if (
         isPrimitive(field) ||
         (isTimestamp(field) && (options.useDate === DateOption.DATE || options.useDate === DateOption.STRING)) ||
@@ -1342,6 +1403,8 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
             }
           } else if (isAnyValueType(valueType)) {
             return code`${from}`;
+          } else if (isObjectId(valueType) && options.useMongoObjectId) {
+            return code`${from} as mongodb.ObjectId`;
           } else if (
             isTimestamp(valueType) &&
             (options.useDate === DateOption.DATE || options.useDate === DateOption.STRING)
