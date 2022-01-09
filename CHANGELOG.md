@@ -1,3 +1,10 @@
+# [1.100.0](https://github.com/stephenh/ts-proto/compare/v1.99.0...v1.100.0) (2022-01-09)
+
+
+### Features
+
+* support mapping ObjectId message as mongodb.ObjectId ([#467](https://github.com/stephenh/ts-proto/issues/467)) ([8b23897](https://github.com/stephenh/ts-proto/commit/8b2389715ecfd5d51b1b24f5a9332e4ff9f09a27))
+
 # [1.99.0](https://github.com/stephenh/ts-proto/compare/v1.98.0...v1.99.0) (2022-01-07)
 
 
