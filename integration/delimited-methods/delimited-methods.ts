@@ -64,8 +64,7 @@ export const Simple = {
   decodeDelimited(input: Reader | Uint8Array): Simple {
     const reader = input instanceof Reader ? input : new Reader(input);
     const length = reader.uint32();
-    const message = this.decode(reader, length);
-    return message;
+    return this.decode(reader, length);
   },
 
   fromJSON(object: any): Simple {
@@ -140,8 +139,7 @@ export const AnotherSimple = {
   decodeDelimited(input: Reader | Uint8Array): AnotherSimple {
     const reader = input instanceof Reader ? input : new Reader(input);
     const length = reader.uint32();
-    const message = this.decode(reader, length);
-    return message;
+    return this.decode(reader, length);
   },
 
   fromJSON(object: any): AnotherSimple {
