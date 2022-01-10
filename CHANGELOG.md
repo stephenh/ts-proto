@@ -1,3 +1,10 @@
+## [1.100.1](https://github.com/stephenh/ts-proto/compare/v1.100.0...v1.100.1) (2022-01-10)
+
+
+### Bug Fixes
+
+* respect generateClientImpl=false in grpc-js ([#471](https://github.com/stephenh/ts-proto/issues/471)) ([#472](https://github.com/stephenh/ts-proto/issues/472)) ([2f389f2](https://github.com/stephenh/ts-proto/commit/2f389f243ef11d8d58c32ce37c371aba2cdf294e))
+
 # [1.100.0](https://github.com/stephenh/ts-proto/compare/v1.99.0...v1.100.0) (2022-01-09)
 
 
