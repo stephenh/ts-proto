@@ -827,8 +827,7 @@ function generateDecodeDelimited(ctx: Context, fullName: string, messageDesc: De
       const reader = input instanceof ${Reader} ? input : new ${Reader}(input);
       const length = reader.uint32();
   `);
-  chunks.push(code`const message = this.decode(reader, length);`);
-  chunks.push(code`return message;`);
+  chunks.push(code`return this.decode(reader, length);`);
 
   chunks.push(code`}`);
   return joinCode(chunks, { on: '\n' });
@@ -1009,7 +1008,7 @@ function generateEncodeDelimited(ctx: Context, fullName: string, messageDesc: De
   // create the basic function declaration
   chunks.push(code`
     encodeDelimited(
-      ${messageDesc.field.length > 0 ? 'message' : '_'}: ${fullName},
+      message: ${fullName},
       writer: ${Writer} = ${Writer}.create(),
     ): ${Writer} {
   `);
