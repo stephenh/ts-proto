@@ -8,6 +8,7 @@ describe('options', () => {
         "addNestjsRestParameter": false,
         "constEnums": false,
         "context": false,
+        "delimitedMethods": false,
         "emitImportedFiles": true,
         "enumsAsLiterals": false,
         "env": "both",

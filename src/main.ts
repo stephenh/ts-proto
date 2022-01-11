@@ -160,6 +160,10 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
         if (options.outputEncodeMethods) {
           staticMembers.push(generateEncode(ctx, fullName, message));
           staticMembers.push(generateDecode(ctx, fullName, message));
+          if (options.delimitedMethods) {
+            staticMembers.push(generateEncodeDelimited(ctx, fullName, message));
+            staticMembers.push(generateDecodeDelimited(ctx, fullName, message));
+          }
         }
         if (options.outputJsonMethods) {
           staticMembers.push(generateFromJson(ctx, fullName, message));
@@ -879,6 +883,24 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
   return joinCode(chunks, { on: '\n' });
 }
 
+function generateDecodeDelimited(ctx: Context, fullName: string, messageDesc: DescriptorProto): Code {
+  const { options, utils, typeMap } = ctx;
+  const chunks: Code[] = [];
+
+  // create the basic function declaration
+  chunks.push(code`
+    decodeDelimited(
+      input: ${Reader} | Uint8Array,
+    ): ${fullName} {
+      const reader = input instanceof ${Reader} ? input : new ${Reader}(input);
+      const length = reader.uint32();
+  `);
+  chunks.push(code`return this.decode(reader, length);`);
+
+  chunks.push(code`}`);
+  return joinCode(chunks, { on: '\n' });
+}
+
 const Writer = imp('Writer@protobufjs/minimal');
 const Reader = imp('Reader@protobufjs/minimal');
 
@@ -1047,6 +1069,24 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
   });
 
   chunks.push(code`return writer;`);
+  chunks.push(code`}`);
+  return joinCode(chunks, { on: '\n' });
+}
+
+/** Creates a function to encode a message by loop overing the tags then delimits the encoding with a length prefix */
+function generateEncodeDelimited(ctx: Context, fullName: string, messageDesc: DescriptorProto): Code {
+  const { options, utils, typeMap } = ctx;
+  const chunks: Code[] = [];
+
+  // create the basic function declaration
+  chunks.push(code`
+    encodeDelimited(
+      message: ${fullName},
+      writer: ${Writer} = ${Writer}.create(),
+    ): ${Writer} {
+  `);
+
+  chunks.push(code`return this.encode(message, writer.fork()).ldelim();`);
   chunks.push(code`}`);
   return joinCode(chunks, { on: '\n' });
 }

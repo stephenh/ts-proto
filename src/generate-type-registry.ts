@@ -32,6 +32,10 @@ function generateMessageType(ctx: Context): Code {
   if (ctx.options.outputEncodeMethods) {
     chunks.push(code`encode(message: Message, writer?: ${Writer}): ${Writer};`);
     chunks.push(code`decode(input: ${Reader} | Uint8Array, length?: number): Message;`);
+    if (ctx.options.delimitedMethods) {
+      chunks.push(code`encodeDelimited(message: Message, writer?: ${Writer}): ${Writer};`);
+      chunks.push(code`decodeDelimited(input: ${Reader} | Uint8Array): Message;`);
+    }
   }
 
   if (ctx.options.outputJsonMethods) {

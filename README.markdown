@@ -374,6 +374,10 @@ Generated code will be placed in the Gradle build directory.
   
   The default behavior is `useExactTypes=true`, which makes `fromPartial` use Exact type for its argument to make TypeScript reject any unknown properties.
 
+- With `--ts_proto_opt=delimitedMethods=true`, ts-proto will generate `Message.encodeDelimited` which will prefix the output binary with its length, and `Message.decodeDelimited` which will decode binaries prefixed with a length. This is helpful in cases where you want to stream multiple messages, you can read more about that approach [here](https://developers.google.com/protocol-buffers/docs/techniques#streaming)
+
+  (Requires `outputEncodeMethods=true`, which is true by default.)
+
 ### Only Types
 
 If you're looking for `ts-proto` to generate only types for your Protobuf types then passing all three of `outputEncodeMethods`, `outputJsonMethods`, and `outputClientImpl` as `false` is probably what you want, i.e.:
