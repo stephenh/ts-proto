@@ -1,7 +1,7 @@
 import { Options } from './options';
 
 export function maybeSnakeToCamel(s: string, options: Pick<Options, 'snakeToCamel'>): string {
-  if (options.snakeToCamel && s.includes('_')) {
+  if (options.snakeToCamel.includes('keys') && s.includes('_')) {
     return s
       .split('_')
       .map((word, i) => {

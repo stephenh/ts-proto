@@ -16,7 +16,9 @@ export interface Foo2 {
   timestamp: Date | undefined;
 }
 
-const baseFoo: object = { $type: 'foo.Foo' };
+function createBaseFoo(): Foo {
+  return { $type: 'foo.Foo', timestamp: undefined };
+}
 
 export const Foo = {
   $type: 'foo.Foo' as const,
@@ -31,7 +33,7 @@ export const Foo = {
   decode(input: Reader | Uint8Array, length?: number): Foo {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseFoo } as Foo;
+    const message = createBaseFoo();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -47,10 +49,10 @@ export const Foo = {
   },
 
   fromJSON(object: any): Foo {
-    const message = { ...baseFoo } as Foo;
-    message.timestamp =
-      object.timestamp !== undefined && object.timestamp !== null ? fromJsonTimestamp(object.timestamp) : undefined;
-    return message;
+    return {
+      $type: Foo.$type,
+      timestamp: isSet(object.timestamp) ? fromJsonTimestamp(object.timestamp) : undefined,
+    };
   },
 
   toJSON(message: Foo): unknown {
@@ -60,7 +62,7 @@ export const Foo = {
   },
 
   fromPartial<I extends Exact<DeepPartial<Foo>, I>>(object: I): Foo {
-    const message = { ...baseFoo } as Foo;
+    const message = createBaseFoo();
     message.timestamp = object.timestamp ?? undefined;
     return message;
   },
@@ -68,7 +70,9 @@ export const Foo = {
 
 messageTypeRegistry.set(Foo.$type, Foo);
 
-const baseFoo2: object = { $type: 'foo.Foo2' };
+function createBaseFoo2(): Foo2 {
+  return { $type: 'foo.Foo2', timestamp: undefined };
+}
 
 export const Foo2 = {
   $type: 'foo.Foo2' as const,
@@ -83,7 +87,7 @@ export const Foo2 = {
   decode(input: Reader | Uint8Array, length?: number): Foo2 {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseFoo2 } as Foo2;
+    const message = createBaseFoo2();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -99,10 +103,10 @@ export const Foo2 = {
   },
 
   fromJSON(object: any): Foo2 {
-    const message = { ...baseFoo2 } as Foo2;
-    message.timestamp =
-      object.timestamp !== undefined && object.timestamp !== null ? fromJsonTimestamp(object.timestamp) : undefined;
-    return message;
+    return {
+      $type: Foo2.$type,
+      timestamp: isSet(object.timestamp) ? fromJsonTimestamp(object.timestamp) : undefined,
+    };
   },
 
   toJSON(message: Foo2): unknown {
@@ -112,7 +116,7 @@ export const Foo2 = {
   },
 
   fromPartial<I extends Exact<DeepPartial<Foo2>, I>>(object: I): Foo2 {
-    const message = { ...baseFoo2 } as Foo2;
+    const message = createBaseFoo2();
     message.timestamp = object.timestamp ?? undefined;
     return message;
   },
@@ -164,4 +168,8 @@ function fromJsonTimestamp(o: any): Date {
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
+}
+
+function isSet(value: any): boolean {
+  return value !== null && value !== undefined;
 }

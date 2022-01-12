@@ -12,7 +12,9 @@ export interface Error {
   name: string;
 }
 
-const baseObject: object = { name: '' };
+function createBaseObject(): Object {
+  return { name: '' };
+}
 
 export const Object = {
   encode(message: Object, writer: Writer = Writer.create()): Writer {
@@ -25,7 +27,7 @@ export const Object = {
   decode(input: Reader | Uint8Array, length?: number): Object {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseObject } as Object;
+    const message = createBaseObject();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -41,9 +43,9 @@ export const Object = {
   },
 
   fromJSON(object: any): Object {
-    const message = { ...baseObject } as Object;
-    message.name = object.name !== undefined && object.name !== null ? String(object.name) : '';
-    return message;
+    return {
+      name: isSet(object.name) ? String(object.name) : '',
+    };
   },
 
   toJSON(message: Object): unknown {
@@ -53,13 +55,15 @@ export const Object = {
   },
 
   fromPartial<I extends Exact<DeepPartial<Object>, I>>(object: I): Object {
-    const message = { ...baseObject } as Object;
+    const message = createBaseObject();
     message.name = object.name ?? '';
     return message;
   },
 };
 
-const baseError: object = { name: '' };
+function createBaseError(): Error {
+  return { name: '' };
+}
 
 export const Error = {
   encode(message: Error, writer: Writer = Writer.create()): Writer {
@@ -72,7 +76,7 @@ export const Error = {
   decode(input: Reader | Uint8Array, length?: number): Error {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseError } as Error;
+    const message = createBaseError();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -88,9 +92,9 @@ export const Error = {
   },
 
   fromJSON(object: any): Error {
-    const message = { ...baseError } as Error;
-    message.name = object.name !== undefined && object.name !== null ? String(object.name) : '';
-    return message;
+    return {
+      name: isSet(object.name) ? String(object.name) : '',
+    };
   },
 
   toJSON(message: Error): unknown {
@@ -100,7 +104,7 @@ export const Error = {
   },
 
   fromPartial<I extends Exact<DeepPartial<Error>, I>>(object: I): Error {
-    const message = { ...baseError } as Error;
+    const message = createBaseError();
     message.name = object.name ?? '';
     return message;
   },
@@ -128,4 +132,8 @@ export type Exact<P, I extends P> = P extends Builtin
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
+}
+
+function isSet(value: any): boolean {
+  return value !== null && value !== undefined;
 }

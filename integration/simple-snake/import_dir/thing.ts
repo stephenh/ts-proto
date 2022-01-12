@@ -9,7 +9,9 @@ export interface ImportedThing {
   created_at: Date | undefined;
 }
 
-const baseImportedThing: object = {};
+function createBaseImportedThing(): ImportedThing {
+  return { created_at: undefined };
+}
 
 export const ImportedThing = {
   encode(message: ImportedThing, writer: Writer = Writer.create()): Writer {
@@ -22,7 +24,7 @@ export const ImportedThing = {
   decode(input: Reader | Uint8Array, length?: number): ImportedThing {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseImportedThing } as ImportedThing;
+    const message = createBaseImportedThing();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -38,20 +40,19 @@ export const ImportedThing = {
   },
 
   fromJSON(object: any): ImportedThing {
-    const message = { ...baseImportedThing } as ImportedThing;
-    message.created_at =
-      object.createdAt !== undefined && object.createdAt !== null ? fromJsonTimestamp(object.createdAt) : undefined;
-    return message;
+    return {
+      created_at: isSet(object.created_at) ? fromJsonTimestamp(object.created_at) : undefined,
+    };
   },
 
   toJSON(message: ImportedThing): unknown {
     const obj: any = {};
-    message.created_at !== undefined && (obj.createdAt = message.created_at.toISOString());
+    message.created_at !== undefined && (obj.created_at = message.created_at.toISOString());
     return obj;
   },
 
   fromPartial<I extends Exact<DeepPartial<ImportedThing>, I>>(object: I): ImportedThing {
-    const message = { ...baseImportedThing } as ImportedThing;
+    const message = createBaseImportedThing();
     message.created_at = object.created_at ?? undefined;
     return message;
   },
@@ -101,4 +102,8 @@ function fromJsonTimestamp(o: any): Date {
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
+}
+
+function isSet(value: any): boolean {
+  return value !== null && value !== undefined;
 }

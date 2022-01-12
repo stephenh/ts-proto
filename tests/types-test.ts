@@ -40,6 +40,13 @@ describe('types', () => {
         options: { ...defaultOptions(), useOptionals: true },
         expected: code`string`,
       },
+      {
+        descr: 'value types (useOptionals="all")',
+        typeMap: new Map(),
+        protoType: '.google.protobuf.StringValue',
+        options: { ...defaultOptions(), useOptionals: 'all' },
+        expected: code`string`,
+      },
     ];
     testCases.forEach((t) =>
       it(t.descr, async () => {

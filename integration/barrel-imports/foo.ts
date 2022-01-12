@@ -8,7 +8,9 @@ export interface Foo {
   bar: Bar | undefined;
 }
 
-const baseFoo: object = { name: '' };
+function createBaseFoo(): Foo {
+  return { name: '', bar: undefined };
+}
 
 export const Foo = {
   encode(message: Foo, writer: Writer = Writer.create()): Writer {
@@ -24,7 +26,7 @@ export const Foo = {
   decode(input: Reader | Uint8Array, length?: number): Foo {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseFoo } as Foo;
+    const message = createBaseFoo();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -43,10 +45,10 @@ export const Foo = {
   },
 
   fromJSON(object: any): Foo {
-    const message = { ...baseFoo } as Foo;
-    message.name = object.name !== undefined && object.name !== null ? String(object.name) : '';
-    message.bar = object.bar !== undefined && object.bar !== null ? Bar.fromJSON(object.bar) : undefined;
-    return message;
+    return {
+      name: isSet(object.name) ? String(object.name) : '',
+      bar: isSet(object.bar) ? Bar.fromJSON(object.bar) : undefined,
+    };
   },
 
   toJSON(message: Foo): unknown {
@@ -57,7 +59,7 @@ export const Foo = {
   },
 
   fromPartial<I extends Exact<DeepPartial<Foo>, I>>(object: I): Foo {
-    const message = { ...baseFoo } as Foo;
+    const message = createBaseFoo();
     message.name = object.name ?? '';
     message.bar = object.bar !== undefined && object.bar !== null ? Bar.fromPartial(object.bar) : undefined;
     return message;
@@ -86,4 +88,8 @@ type Exact<P, I extends P> = P extends Builtin
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
+}
+
+function isSet(value: any): boolean {
+  return value !== null && value !== undefined;
 }

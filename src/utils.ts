@@ -9,7 +9,7 @@ import {
 import ReadStream = NodeJS.ReadStream;
 import { SourceDescription } from './sourceInfo';
 import { Options, ServiceOption } from './options';
-import { camelCase, maybeSnakeToCamel } from './case';
+import { camelCase } from './case';
 
 export function protoFilesToGenerate(request: CodeGeneratorRequest): FileDescriptorProto[] {
   return request.protoFile.filter((f) => request.fileToGenerate.includes(f.name));
@@ -175,12 +175,13 @@ export class FormattedMethodDescriptor implements MethodDescriptorProto {
 }
 
 export function determineFieldJsonName(field: FieldDescriptorProto, options: Options): string {
-  // By default jsonName is camelCased by the protocol compilier unless the user has
-  // set a "json_name" option on this field.
-  if (field.jsonName.length > 0) {
+  // jsonName will be camelCased by the protocol compiler, plus can be overridden by the user,
+  // so just use that instead of our own maybeSnakeToCamel
+  if (options.snakeToCamel.includes('json')) {
     return field.jsonName;
+  } else {
+    return field.name;
   }
-  return maybeSnakeToCamel(field.name, options);
 }
 
 export function impProto(options: Options, module: string, type: string): Import {

@@ -23,20 +23,24 @@ export interface Numbers {
   timestamp: Date | undefined;
 }
 
-const baseNumbers: object = {
-  double: 0,
-  float: 0,
-  int32: 0,
-  int64: '0',
-  uint32: 0,
-  uint64: '0',
-  sint32: 0,
-  sint64: '0',
-  fixed32: 0,
-  fixed64: '0',
-  sfixed32: 0,
-  sfixed64: '0',
-};
+function createBaseNumbers(): Numbers {
+  return {
+    double: 0,
+    float: 0,
+    int32: 0,
+    int64: '0',
+    uint32: 0,
+    uint64: '0',
+    sint32: 0,
+    sint64: '0',
+    fixed32: 0,
+    fixed64: '0',
+    sfixed32: 0,
+    sfixed64: '0',
+    guint64: undefined,
+    timestamp: undefined,
+  };
+}
 
 export const Numbers = {
   encode(message: Numbers, writer: Writer = Writer.create()): Writer {
@@ -88,7 +92,7 @@ export const Numbers = {
   decode(input: Reader | Uint8Array, length?: number): Numbers {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseNumbers } as Numbers;
+    const message = createBaseNumbers();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -143,38 +147,37 @@ export const Numbers = {
   },
 
   fromJSON(object: any): Numbers {
-    const message = { ...baseNumbers } as Numbers;
-    message.double = object.double !== undefined && object.double !== null ? Number(object.double) : 0;
-    message.float = object.float !== undefined && object.float !== null ? Number(object.float) : 0;
-    message.int32 = object.int32 !== undefined && object.int32 !== null ? Number(object.int32) : 0;
-    message.int64 = object.int64 !== undefined && object.int64 !== null ? String(object.int64) : '0';
-    message.uint32 = object.uint32 !== undefined && object.uint32 !== null ? Number(object.uint32) : 0;
-    message.uint64 = object.uint64 !== undefined && object.uint64 !== null ? String(object.uint64) : '0';
-    message.sint32 = object.sint32 !== undefined && object.sint32 !== null ? Number(object.sint32) : 0;
-    message.sint64 = object.sint64 !== undefined && object.sint64 !== null ? String(object.sint64) : '0';
-    message.fixed32 = object.fixed32 !== undefined && object.fixed32 !== null ? Number(object.fixed32) : 0;
-    message.fixed64 = object.fixed64 !== undefined && object.fixed64 !== null ? String(object.fixed64) : '0';
-    message.sfixed32 = object.sfixed32 !== undefined && object.sfixed32 !== null ? Number(object.sfixed32) : 0;
-    message.sfixed64 = object.sfixed64 !== undefined && object.sfixed64 !== null ? String(object.sfixed64) : '0';
-    message.guint64 = object.guint64 !== undefined && object.guint64 !== null ? String(object.guint64) : undefined;
-    message.timestamp =
-      object.timestamp !== undefined && object.timestamp !== null ? fromJsonTimestamp(object.timestamp) : undefined;
-    return message;
+    return {
+      double: isSet(object.double) ? Number(object.double) : 0,
+      float: isSet(object.float) ? Number(object.float) : 0,
+      int32: isSet(object.int32) ? Number(object.int32) : 0,
+      int64: isSet(object.int64) ? String(object.int64) : '0',
+      uint32: isSet(object.uint32) ? Number(object.uint32) : 0,
+      uint64: isSet(object.uint64) ? String(object.uint64) : '0',
+      sint32: isSet(object.sint32) ? Number(object.sint32) : 0,
+      sint64: isSet(object.sint64) ? String(object.sint64) : '0',
+      fixed32: isSet(object.fixed32) ? Number(object.fixed32) : 0,
+      fixed64: isSet(object.fixed64) ? String(object.fixed64) : '0',
+      sfixed32: isSet(object.sfixed32) ? Number(object.sfixed32) : 0,
+      sfixed64: isSet(object.sfixed64) ? String(object.sfixed64) : '0',
+      guint64: isSet(object.guint64) ? String(object.guint64) : undefined,
+      timestamp: isSet(object.timestamp) ? fromJsonTimestamp(object.timestamp) : undefined,
+    };
   },
 
   toJSON(message: Numbers): unknown {
     const obj: any = {};
     message.double !== undefined && (obj.double = message.double);
     message.float !== undefined && (obj.float = message.float);
-    message.int32 !== undefined && (obj.int32 = message.int32);
+    message.int32 !== undefined && (obj.int32 = Math.round(message.int32));
     message.int64 !== undefined && (obj.int64 = message.int64);
-    message.uint32 !== undefined && (obj.uint32 = message.uint32);
+    message.uint32 !== undefined && (obj.uint32 = Math.round(message.uint32));
     message.uint64 !== undefined && (obj.uint64 = message.uint64);
-    message.sint32 !== undefined && (obj.sint32 = message.sint32);
+    message.sint32 !== undefined && (obj.sint32 = Math.round(message.sint32));
     message.sint64 !== undefined && (obj.sint64 = message.sint64);
-    message.fixed32 !== undefined && (obj.fixed32 = message.fixed32);
+    message.fixed32 !== undefined && (obj.fixed32 = Math.round(message.fixed32));
     message.fixed64 !== undefined && (obj.fixed64 = message.fixed64);
-    message.sfixed32 !== undefined && (obj.sfixed32 = message.sfixed32);
+    message.sfixed32 !== undefined && (obj.sfixed32 = Math.round(message.sfixed32));
     message.sfixed64 !== undefined && (obj.sfixed64 = message.sfixed64);
     message.guint64 !== undefined && (obj.guint64 = message.guint64);
     message.timestamp !== undefined && (obj.timestamp = message.timestamp.toISOString());
@@ -182,7 +185,7 @@ export const Numbers = {
   },
 
   fromPartial<I extends Exact<DeepPartial<Numbers>, I>>(object: I): Numbers {
-    const message = { ...baseNumbers } as Numbers;
+    const message = createBaseNumbers();
     message.double = object.double ?? 0;
     message.float = object.float ?? 0;
     message.int32 = object.int32 ?? 0;
@@ -249,4 +252,8 @@ function longToString(long: Long) {
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
+}
+
+function isSet(value: any): boolean {
+  return value !== null && value !== undefined;
 }

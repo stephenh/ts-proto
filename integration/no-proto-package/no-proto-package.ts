@@ -12,7 +12,9 @@ export interface User {
 
 export interface Empty {}
 
-const baseUser: object = { name: '' };
+function createBaseUser(): User {
+  return { name: '' };
+}
 
 export const User = {
   encode(message: User, writer: Writer = Writer.create()): Writer {
@@ -25,7 +27,7 @@ export const User = {
   decode(input: Reader | Uint8Array, length?: number): User {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseUser } as User;
+    const message = createBaseUser();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -41,9 +43,9 @@ export const User = {
   },
 
   fromJSON(object: any): User {
-    const message = { ...baseUser } as User;
-    message.name = object.name !== undefined && object.name !== null ? String(object.name) : '';
-    return message;
+    return {
+      name: isSet(object.name) ? String(object.name) : '',
+    };
   },
 
   toJSON(message: User): unknown {
@@ -53,13 +55,15 @@ export const User = {
   },
 
   fromPartial<I extends Exact<DeepPartial<User>, I>>(object: I): User {
-    const message = { ...baseUser } as User;
+    const message = createBaseUser();
     message.name = object.name ?? '';
     return message;
   },
 };
 
-const baseEmpty: object = {};
+function createBaseEmpty(): Empty {
+  return {};
+}
 
 export const Empty = {
   encode(_: Empty, writer: Writer = Writer.create()): Writer {
@@ -69,7 +73,7 @@ export const Empty = {
   decode(input: Reader | Uint8Array, length?: number): Empty {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseEmpty } as Empty;
+    const message = createBaseEmpty();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -82,8 +86,7 @@ export const Empty = {
   },
 
   fromJSON(_: any): Empty {
-    const message = { ...baseEmpty } as Empty;
-    return message;
+    return {};
   },
 
   toJSON(_: Empty): unknown {
@@ -92,7 +95,7 @@ export const Empty = {
   },
 
   fromPartial<I extends Exact<DeepPartial<Empty>, I>>(_: I): Empty {
-    const message = { ...baseEmpty } as Empty;
+    const message = createBaseEmpty();
     return message;
   },
 };
@@ -143,4 +146,8 @@ export type Exact<P, I extends P> = P extends Builtin
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
+}
+
+function isSet(value: any): boolean {
+  return value !== null && value !== undefined;
 }

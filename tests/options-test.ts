@@ -9,6 +9,7 @@ describe('options', () => {
         "constEnums": false,
         "context": false,
         "emitImportedFiles": true,
+        "enumsAsLiterals": false,
         "env": "both",
         "esModuleInterop": false,
         "exportCommonSymbols": true,
@@ -26,11 +27,16 @@ describe('options', () => {
         "outputServices": "default",
         "outputTypeRegistry": false,
         "returnObservable": false,
-        "snakeToCamel": true,
+        "snakeToCamel": Array [
+          "json",
+          "keys",
+        ],
         "stringEnums": false,
         "unrecognizedEnum": true,
         "useDate": "timestamp",
-        "useOptionals": false,
+        "useExactTypes": true,
+        "useMongoObjectId": false,
+        "useOptionals": "none",
       }
     `);
   });
@@ -61,6 +67,20 @@ describe('options', () => {
     const options = optionsFromParameter('outputServices=grpc-js');
     expect(options).toMatchObject({
       outputServices: ServiceOption.GRPC,
+    });
+  });
+
+  it('can set useOptionals to boolean', () => {
+    const options = optionsFromParameter('useOptionals=true');
+    expect(options).toMatchObject({
+      useOptionals: true,
+    });
+  });
+
+  it('can set useOptionals to string', () => {
+    const options = optionsFromParameter('useOptionals=messages');
+    expect(options).toMatchObject({
+      useOptionals: 'messages',
     });
   });
 });

@@ -1,6 +1,6 @@
 {
   "name": "ts-proto",
-  "version": "1.93.0",
+  "version": "1.100.1",
   "description": "",
   "main": "build/plugin.js",
   "repository": "github:stephenh/ts-proto",
@@ -19,9 +19,10 @@
     "proto2pbjs:local": "integration/pbjs.sh",
     "bin2ts:local": "integration/codegen.sh",
     "test": "yarn jest -c jest.config.js --maxWorkers=2",
-    "prettier": "prettier --write {src,tests}/**/*.ts",
+    "prettier": "prettier --write {src,tests}/**/*.ts integration/*.ts",
     "prettier:check": "prettier --list-different {src,tests}/**/*.ts",
-    "setup:docker": "docker-compose build"
+    "setup:docker": "docker-compose build",
+    "watch": "ts-node integration/watch.ts"
   },
   "files": [
     "build"
@@ -45,7 +46,9 @@
     "@semantic-release/release-notes-generator": "^9.0.2",
     "@types/jest": "^26.0.22",
     "@types/node": "^14.14.37",
+    "chokidar": "^3.5.2",
     "jest": "^26.6.3",
+    "mongodb": "^4.3.0",
     "prettier": "^2.2.1",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.4.0",

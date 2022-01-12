@@ -46,7 +46,9 @@ export interface Entity {
   name: string;
 }
 
-const baseBatchQueryRequest: object = { ids: '' };
+function createBaseBatchQueryRequest(): BatchQueryRequest {
+  return { ids: [] };
+}
 
 export const BatchQueryRequest = {
   encode(message: BatchQueryRequest, writer: Writer = Writer.create()): Writer {
@@ -59,8 +61,7 @@ export const BatchQueryRequest = {
   decode(input: Reader | Uint8Array, length?: number): BatchQueryRequest {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseBatchQueryRequest } as BatchQueryRequest;
-    message.ids = [];
+    const message = createBaseBatchQueryRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -76,9 +77,9 @@ export const BatchQueryRequest = {
   },
 
   fromJSON(object: any): BatchQueryRequest {
-    const message = { ...baseBatchQueryRequest } as BatchQueryRequest;
-    message.ids = (object.ids ?? []).map((e: any) => String(e));
-    return message;
+    return {
+      ids: Array.isArray(object?.ids) ? object.ids.map((e: any) => String(e)) : [],
+    };
   },
 
   toJSON(message: BatchQueryRequest): unknown {
@@ -92,13 +93,15 @@ export const BatchQueryRequest = {
   },
 
   fromPartial<I extends Exact<DeepPartial<BatchQueryRequest>, I>>(object: I): BatchQueryRequest {
-    const message = { ...baseBatchQueryRequest } as BatchQueryRequest;
+    const message = createBaseBatchQueryRequest();
     message.ids = object.ids?.map((e) => e) || [];
     return message;
   },
 };
 
-const baseBatchQueryResponse: object = {};
+function createBaseBatchQueryResponse(): BatchQueryResponse {
+  return { entities: [] };
+}
 
 export const BatchQueryResponse = {
   encode(message: BatchQueryResponse, writer: Writer = Writer.create()): Writer {
@@ -111,8 +114,7 @@ export const BatchQueryResponse = {
   decode(input: Reader | Uint8Array, length?: number): BatchQueryResponse {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseBatchQueryResponse } as BatchQueryResponse;
-    message.entities = [];
+    const message = createBaseBatchQueryResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -128,9 +130,9 @@ export const BatchQueryResponse = {
   },
 
   fromJSON(object: any): BatchQueryResponse {
-    const message = { ...baseBatchQueryResponse } as BatchQueryResponse;
-    message.entities = (object.entities ?? []).map((e: any) => Entity.fromJSON(e));
-    return message;
+    return {
+      entities: Array.isArray(object?.entities) ? object.entities.map((e: any) => Entity.fromJSON(e)) : [],
+    };
   },
 
   toJSON(message: BatchQueryResponse): unknown {
@@ -144,13 +146,15 @@ export const BatchQueryResponse = {
   },
 
   fromPartial<I extends Exact<DeepPartial<BatchQueryResponse>, I>>(object: I): BatchQueryResponse {
-    const message = { ...baseBatchQueryResponse } as BatchQueryResponse;
+    const message = createBaseBatchQueryResponse();
     message.entities = object.entities?.map((e) => Entity.fromPartial(e)) || [];
     return message;
   },
 };
 
-const baseBatchMapQueryRequest: object = { ids: '' };
+function createBaseBatchMapQueryRequest(): BatchMapQueryRequest {
+  return { ids: [] };
+}
 
 export const BatchMapQueryRequest = {
   encode(message: BatchMapQueryRequest, writer: Writer = Writer.create()): Writer {
@@ -163,8 +167,7 @@ export const BatchMapQueryRequest = {
   decode(input: Reader | Uint8Array, length?: number): BatchMapQueryRequest {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseBatchMapQueryRequest } as BatchMapQueryRequest;
-    message.ids = [];
+    const message = createBaseBatchMapQueryRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -180,9 +183,9 @@ export const BatchMapQueryRequest = {
   },
 
   fromJSON(object: any): BatchMapQueryRequest {
-    const message = { ...baseBatchMapQueryRequest } as BatchMapQueryRequest;
-    message.ids = (object.ids ?? []).map((e: any) => String(e));
-    return message;
+    return {
+      ids: Array.isArray(object?.ids) ? object.ids.map((e: any) => String(e)) : [],
+    };
   },
 
   toJSON(message: BatchMapQueryRequest): unknown {
@@ -196,13 +199,15 @@ export const BatchMapQueryRequest = {
   },
 
   fromPartial<I extends Exact<DeepPartial<BatchMapQueryRequest>, I>>(object: I): BatchMapQueryRequest {
-    const message = { ...baseBatchMapQueryRequest } as BatchMapQueryRequest;
+    const message = createBaseBatchMapQueryRequest();
     message.ids = object.ids?.map((e) => e) || [];
     return message;
   },
 };
 
-const baseBatchMapQueryResponse: object = {};
+function createBaseBatchMapQueryResponse(): BatchMapQueryResponse {
+  return { entities: {} };
+}
 
 export const BatchMapQueryResponse = {
   encode(message: BatchMapQueryResponse, writer: Writer = Writer.create()): Writer {
@@ -215,8 +220,7 @@ export const BatchMapQueryResponse = {
   decode(input: Reader | Uint8Array, length?: number): BatchMapQueryResponse {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseBatchMapQueryResponse } as BatchMapQueryResponse;
-    message.entities = {};
+    const message = createBaseBatchMapQueryResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -235,12 +239,14 @@ export const BatchMapQueryResponse = {
   },
 
   fromJSON(object: any): BatchMapQueryResponse {
-    const message = { ...baseBatchMapQueryResponse } as BatchMapQueryResponse;
-    message.entities = Object.entries(object.entities ?? {}).reduce<{ [key: string]: Entity }>((acc, [key, value]) => {
-      acc[key] = Entity.fromJSON(value);
-      return acc;
-    }, {});
-    return message;
+    return {
+      entities: isObject(object.entities)
+        ? Object.entries(object.entities).reduce<{ [key: string]: Entity }>((acc, [key, value]) => {
+            acc[key] = Entity.fromJSON(value);
+            return acc;
+          }, {})
+        : {},
+    };
   },
 
   toJSON(message: BatchMapQueryResponse): unknown {
@@ -255,7 +261,7 @@ export const BatchMapQueryResponse = {
   },
 
   fromPartial<I extends Exact<DeepPartial<BatchMapQueryResponse>, I>>(object: I): BatchMapQueryResponse {
-    const message = { ...baseBatchMapQueryResponse } as BatchMapQueryResponse;
+    const message = createBaseBatchMapQueryResponse();
     message.entities = Object.entries(object.entities ?? {}).reduce<{ [key: string]: Entity }>((acc, [key, value]) => {
       if (value !== undefined) {
         acc[key] = Entity.fromPartial(value);
@@ -266,7 +272,9 @@ export const BatchMapQueryResponse = {
   },
 };
 
-const baseBatchMapQueryResponse_EntitiesEntry: object = { key: '' };
+function createBaseBatchMapQueryResponse_EntitiesEntry(): BatchMapQueryResponse_EntitiesEntry {
+  return { key: '', value: undefined };
+}
 
 export const BatchMapQueryResponse_EntitiesEntry = {
   encode(message: BatchMapQueryResponse_EntitiesEntry, writer: Writer = Writer.create()): Writer {
@@ -282,7 +290,7 @@ export const BatchMapQueryResponse_EntitiesEntry = {
   decode(input: Reader | Uint8Array, length?: number): BatchMapQueryResponse_EntitiesEntry {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseBatchMapQueryResponse_EntitiesEntry } as BatchMapQueryResponse_EntitiesEntry;
+    const message = createBaseBatchMapQueryResponse_EntitiesEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -301,10 +309,10 @@ export const BatchMapQueryResponse_EntitiesEntry = {
   },
 
   fromJSON(object: any): BatchMapQueryResponse_EntitiesEntry {
-    const message = { ...baseBatchMapQueryResponse_EntitiesEntry } as BatchMapQueryResponse_EntitiesEntry;
-    message.key = object.key !== undefined && object.key !== null ? String(object.key) : '';
-    message.value = object.value !== undefined && object.value !== null ? Entity.fromJSON(object.value) : undefined;
-    return message;
+    return {
+      key: isSet(object.key) ? String(object.key) : '',
+      value: isSet(object.value) ? Entity.fromJSON(object.value) : undefined,
+    };
   },
 
   toJSON(message: BatchMapQueryResponse_EntitiesEntry): unknown {
@@ -317,14 +325,16 @@ export const BatchMapQueryResponse_EntitiesEntry = {
   fromPartial<I extends Exact<DeepPartial<BatchMapQueryResponse_EntitiesEntry>, I>>(
     object: I
   ): BatchMapQueryResponse_EntitiesEntry {
-    const message = { ...baseBatchMapQueryResponse_EntitiesEntry } as BatchMapQueryResponse_EntitiesEntry;
+    const message = createBaseBatchMapQueryResponse_EntitiesEntry();
     message.key = object.key ?? '';
     message.value = object.value !== undefined && object.value !== null ? Entity.fromPartial(object.value) : undefined;
     return message;
   },
 };
 
-const baseGetOnlyMethodRequest: object = { id: '' };
+function createBaseGetOnlyMethodRequest(): GetOnlyMethodRequest {
+  return { id: '' };
+}
 
 export const GetOnlyMethodRequest = {
   encode(message: GetOnlyMethodRequest, writer: Writer = Writer.create()): Writer {
@@ -337,7 +347,7 @@ export const GetOnlyMethodRequest = {
   decode(input: Reader | Uint8Array, length?: number): GetOnlyMethodRequest {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseGetOnlyMethodRequest } as GetOnlyMethodRequest;
+    const message = createBaseGetOnlyMethodRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -353,9 +363,9 @@ export const GetOnlyMethodRequest = {
   },
 
   fromJSON(object: any): GetOnlyMethodRequest {
-    const message = { ...baseGetOnlyMethodRequest } as GetOnlyMethodRequest;
-    message.id = object.id !== undefined && object.id !== null ? String(object.id) : '';
-    return message;
+    return {
+      id: isSet(object.id) ? String(object.id) : '',
+    };
   },
 
   toJSON(message: GetOnlyMethodRequest): unknown {
@@ -365,13 +375,15 @@ export const GetOnlyMethodRequest = {
   },
 
   fromPartial<I extends Exact<DeepPartial<GetOnlyMethodRequest>, I>>(object: I): GetOnlyMethodRequest {
-    const message = { ...baseGetOnlyMethodRequest } as GetOnlyMethodRequest;
+    const message = createBaseGetOnlyMethodRequest();
     message.id = object.id ?? '';
     return message;
   },
 };
 
-const baseGetOnlyMethodResponse: object = {};
+function createBaseGetOnlyMethodResponse(): GetOnlyMethodResponse {
+  return { entity: undefined };
+}
 
 export const GetOnlyMethodResponse = {
   encode(message: GetOnlyMethodResponse, writer: Writer = Writer.create()): Writer {
@@ -384,7 +396,7 @@ export const GetOnlyMethodResponse = {
   decode(input: Reader | Uint8Array, length?: number): GetOnlyMethodResponse {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseGetOnlyMethodResponse } as GetOnlyMethodResponse;
+    const message = createBaseGetOnlyMethodResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -400,9 +412,9 @@ export const GetOnlyMethodResponse = {
   },
 
   fromJSON(object: any): GetOnlyMethodResponse {
-    const message = { ...baseGetOnlyMethodResponse } as GetOnlyMethodResponse;
-    message.entity = object.entity !== undefined && object.entity !== null ? Entity.fromJSON(object.entity) : undefined;
-    return message;
+    return {
+      entity: isSet(object.entity) ? Entity.fromJSON(object.entity) : undefined,
+    };
   },
 
   toJSON(message: GetOnlyMethodResponse): unknown {
@@ -412,14 +424,16 @@ export const GetOnlyMethodResponse = {
   },
 
   fromPartial<I extends Exact<DeepPartial<GetOnlyMethodResponse>, I>>(object: I): GetOnlyMethodResponse {
-    const message = { ...baseGetOnlyMethodResponse } as GetOnlyMethodResponse;
+    const message = createBaseGetOnlyMethodResponse();
     message.entity =
       object.entity !== undefined && object.entity !== null ? Entity.fromPartial(object.entity) : undefined;
     return message;
   },
 };
 
-const baseWriteMethodRequest: object = { id: '' };
+function createBaseWriteMethodRequest(): WriteMethodRequest {
+  return { id: '' };
+}
 
 export const WriteMethodRequest = {
   encode(message: WriteMethodRequest, writer: Writer = Writer.create()): Writer {
@@ -432,7 +446,7 @@ export const WriteMethodRequest = {
   decode(input: Reader | Uint8Array, length?: number): WriteMethodRequest {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseWriteMethodRequest } as WriteMethodRequest;
+    const message = createBaseWriteMethodRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -448,9 +462,9 @@ export const WriteMethodRequest = {
   },
 
   fromJSON(object: any): WriteMethodRequest {
-    const message = { ...baseWriteMethodRequest } as WriteMethodRequest;
-    message.id = object.id !== undefined && object.id !== null ? String(object.id) : '';
-    return message;
+    return {
+      id: isSet(object.id) ? String(object.id) : '',
+    };
   },
 
   toJSON(message: WriteMethodRequest): unknown {
@@ -460,13 +474,15 @@ export const WriteMethodRequest = {
   },
 
   fromPartial<I extends Exact<DeepPartial<WriteMethodRequest>, I>>(object: I): WriteMethodRequest {
-    const message = { ...baseWriteMethodRequest } as WriteMethodRequest;
+    const message = createBaseWriteMethodRequest();
     message.id = object.id ?? '';
     return message;
   },
 };
 
-const baseWriteMethodResponse: object = {};
+function createBaseWriteMethodResponse(): WriteMethodResponse {
+  return {};
+}
 
 export const WriteMethodResponse = {
   encode(_: WriteMethodResponse, writer: Writer = Writer.create()): Writer {
@@ -476,7 +492,7 @@ export const WriteMethodResponse = {
   decode(input: Reader | Uint8Array, length?: number): WriteMethodResponse {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseWriteMethodResponse } as WriteMethodResponse;
+    const message = createBaseWriteMethodResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -489,8 +505,7 @@ export const WriteMethodResponse = {
   },
 
   fromJSON(_: any): WriteMethodResponse {
-    const message = { ...baseWriteMethodResponse } as WriteMethodResponse;
-    return message;
+    return {};
   },
 
   toJSON(_: WriteMethodResponse): unknown {
@@ -499,12 +514,14 @@ export const WriteMethodResponse = {
   },
 
   fromPartial<I extends Exact<DeepPartial<WriteMethodResponse>, I>>(_: I): WriteMethodResponse {
-    const message = { ...baseWriteMethodResponse } as WriteMethodResponse;
+    const message = createBaseWriteMethodResponse();
     return message;
   },
 };
 
-const baseEntity: object = { id: '', name: '' };
+function createBaseEntity(): Entity {
+  return { id: '', name: '' };
+}
 
 export const Entity = {
   encode(message: Entity, writer: Writer = Writer.create()): Writer {
@@ -520,7 +537,7 @@ export const Entity = {
   decode(input: Reader | Uint8Array, length?: number): Entity {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseEntity } as Entity;
+    const message = createBaseEntity();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -539,10 +556,10 @@ export const Entity = {
   },
 
   fromJSON(object: any): Entity {
-    const message = { ...baseEntity } as Entity;
-    message.id = object.id !== undefined && object.id !== null ? String(object.id) : '';
-    message.name = object.name !== undefined && object.name !== null ? String(object.name) : '';
-    return message;
+    return {
+      id: isSet(object.id) ? String(object.id) : '',
+      name: isSet(object.name) ? String(object.name) : '',
+    };
   },
 
   toJSON(message: Entity): unknown {
@@ -553,7 +570,7 @@ export const Entity = {
   },
 
   fromPartial<I extends Exact<DeepPartial<Entity>, I>>(object: I): Entity {
-    const message = { ...baseEntity } as Entity;
+    const message = createBaseEntity();
     message.id = object.id ?? '';
     message.name = object.name ?? '';
     return message;
@@ -679,4 +696,12 @@ export type Exact<P, I extends P> = P extends Builtin
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
+}
+
+function isObject(value: any): boolean {
+  return typeof value === 'object' && value !== null;
+}
+
+function isSet(value: any): boolean {
+  return value !== null && value !== undefined;
 }

@@ -1,19 +1,26 @@
 /* eslint-disable */
 import { util, configure, Writer, Reader } from 'protobufjs/minimal';
 import * as Long from 'long';
+import { BytesValue } from './google/protobuf/wrappers';
 
 export const protobufPackage = '';
 
 export interface Point {
   data: Buffer;
+  dataWrapped: Buffer | undefined;
 }
 
-const basePoint: object = {};
+function createBasePoint(): Point {
+  return { data: Buffer.alloc(0), dataWrapped: undefined };
+}
 
 export const Point = {
   encode(message: Point, writer: Writer = Writer.create()): Writer {
     if (message.data.length !== 0) {
       writer.uint32(10).bytes(message.data);
+    }
+    if (message.dataWrapped !== undefined) {
+      BytesValue.encode({ value: message.dataWrapped! }, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
@@ -21,13 +28,15 @@ export const Point = {
   decode(input: Reader | Uint8Array, length?: number): Point {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...basePoint } as Point;
-    message.data = Buffer.alloc(0);
+    const message = createBasePoint();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
           message.data = reader.bytes() as Buffer;
+          break;
+        case 2:
+          message.dataWrapped = BytesValue.decode(reader, reader.uint32()).value;
           break;
         default:
           reader.skipType(tag & 7);
@@ -38,22 +47,24 @@ export const Point = {
   },
 
   fromJSON(object: any): Point {
-    const message = { ...basePoint } as Point;
-    message.data =
-      object.data !== undefined && object.data !== null ? Buffer.from(bytesFromBase64(object.data)) : Buffer.alloc(0);
-    return message;
+    return {
+      data: isSet(object.data) ? Buffer.from(bytesFromBase64(object.data)) : Buffer.alloc(0),
+      dataWrapped: isSet(object.dataWrapped) ? new Buffer(object.dataWrapped) : undefined,
+    };
   },
 
   toJSON(message: Point): unknown {
     const obj: any = {};
     message.data !== undefined &&
       (obj.data = base64FromBytes(message.data !== undefined ? message.data : Buffer.alloc(0)));
+    message.dataWrapped !== undefined && (obj.dataWrapped = message.dataWrapped);
     return obj;
   },
 
   fromPartial<I extends Exact<DeepPartial<Point>, I>>(object: I): Point {
-    const message = { ...basePoint } as Point;
+    const message = createBasePoint();
     message.data = object.data ?? Buffer.alloc(0);
+    message.dataWrapped = object.dataWrapped ?? undefined;
     return message;
   },
 };
@@ -112,4 +123,8 @@ export type Exact<P, I extends P> = P extends Builtin
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
+}
+
+function isSet(value: any): boolean {
+  return value !== null && value !== undefined;
 }

@@ -7,7 +7,9 @@ export interface Bar {
   age: number;
 }
 
-const baseBar: object = { name: '', age: 0 };
+function createBaseBar(): Bar {
+  return { name: '', age: 0 };
+}
 
 export const Bar = {
   encode(message: Bar, writer: Writer = Writer.create()): Writer {
@@ -23,7 +25,7 @@ export const Bar = {
   decode(input: Reader | Uint8Array, length?: number): Bar {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseBar } as Bar;
+    const message = createBaseBar();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -42,21 +44,21 @@ export const Bar = {
   },
 
   fromJSON(object: any): Bar {
-    const message = { ...baseBar } as Bar;
-    message.name = object.name !== undefined && object.name !== null ? String(object.name) : '';
-    message.age = object.age !== undefined && object.age !== null ? Number(object.age) : 0;
-    return message;
+    return {
+      name: isSet(object.name) ? String(object.name) : '',
+      age: isSet(object.age) ? Number(object.age) : 0,
+    };
   },
 
   toJSON(message: Bar): unknown {
     const obj: any = {};
     message.name !== undefined && (obj.name = message.name);
-    message.age !== undefined && (obj.age = message.age);
+    message.age !== undefined && (obj.age = Math.round(message.age));
     return obj;
   },
 
   fromPartial<I extends Exact<DeepPartial<Bar>, I>>(object: I): Bar {
-    const message = { ...baseBar } as Bar;
+    const message = createBaseBar();
     message.name = object.name ?? '';
     message.age = object.age ?? 0;
     return message;
@@ -85,4 +87,8 @@ type Exact<P, I extends P> = P extends Builtin
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
+}
+
+function isSet(value: any): boolean {
+  return value !== null && value !== undefined;
 }

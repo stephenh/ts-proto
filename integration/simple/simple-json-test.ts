@@ -1,4 +1,4 @@
-import { Child_Type, Simple, SimpleWithWrappers, StateEnum, SimpleWithMap, OneOfMessage } from './simple';
+import { Child_Type, Simple, SimpleWithWrappers, StateEnum, SimpleWithMap, OneOfMessage, Numbers } from './simple';
 import { google, simple as pbjs } from './pbjs';
 import ISimple = pbjs.ISimple;
 import PbChild = pbjs.Child;
@@ -438,6 +438,39 @@ describe('simple json', () => {
     expect(OneOfMessage.toJSON(s1)).toMatchInlineSnapshot(`
       Object {
         "first": "first",
+      }
+    `);
+  });
+
+  it('rounds numbers', () => {
+    const n1: Numbers = {
+      double: 1.1,
+      fixed32: 1.1,
+      fixed64: 1.1,
+      float: 1.1,
+      int32: 1.1,
+      int64: 1.1,
+      sfixed32: 1.1,
+      sfixed64: 1.1,
+      sint32: 1.1,
+      sint64: 1.1,
+      uint32: 1.1,
+      uint64: 1.1,
+    };
+    expect(Numbers.toJSON(n1)).toMatchInlineSnapshot(`
+      Object {
+        "double": 1.1,
+        "fixed32": 1,
+        "fixed64": 1,
+        "float": 1.1,
+        "int32": 1,
+        "int64": 1,
+        "sfixed32": 1,
+        "sfixed64": 1,
+        "sint32": 1,
+        "sint64": 1,
+        "uint32": 1,
+        "uint64": 1,
       }
     `);
   });

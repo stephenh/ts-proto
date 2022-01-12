@@ -63,12 +63,9 @@ export interface Simple {
   nullValue: NullValue;
 }
 
-const baseSimple: object = {
-  name: '',
-  state: StateEnum.UNKNOWN,
-  states: StateEnum.UNKNOWN,
-  nullValue: NullValue.NULL_VALUE,
-};
+function createBaseSimple(): Simple {
+  return { name: '', state: StateEnum.UNKNOWN, states: [], nullValue: NullValue.NULL_VALUE };
+}
 
 export const Simple = {
   encode(message: Simple, writer: Writer = Writer.create()): Writer {
@@ -92,8 +89,7 @@ export const Simple = {
   decode(input: Reader | Uint8Array, length?: number): Simple {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseSimple } as Simple;
-    message.states = [];
+    const message = createBaseSimple();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -125,16 +121,12 @@ export const Simple = {
   },
 
   fromJSON(object: any): Simple {
-    const message = { ...baseSimple } as Simple;
-    message.name = object.name !== undefined && object.name !== null ? String(object.name) : '';
-    message.state =
-      object.state !== undefined && object.state !== null ? stateEnumFromJSON(object.state) : StateEnum.UNKNOWN;
-    message.states = (object.states ?? []).map((e: any) => stateEnumFromJSON(e));
-    message.nullValue =
-      object.nullValue !== undefined && object.nullValue !== null
-        ? nullValueFromJSON(object.nullValue)
-        : NullValue.NULL_VALUE;
-    return message;
+    return {
+      name: isSet(object.name) ? String(object.name) : '',
+      state: isSet(object.state) ? stateEnumFromJSON(object.state) : StateEnum.UNKNOWN,
+      states: Array.isArray(object?.states) ? object.states.map((e: any) => stateEnumFromJSON(e)) : [],
+      nullValue: isSet(object.nullValue) ? nullValueFromJSON(object.nullValue) : NullValue.NULL_VALUE,
+    };
   },
 
   toJSON(message: Simple): unknown {
@@ -151,7 +143,7 @@ export const Simple = {
   },
 
   fromPartial<I extends Exact<DeepPartial<Simple>, I>>(object: I): Simple {
-    const message = { ...baseSimple } as Simple;
+    const message = createBaseSimple();
     message.name = object.name ?? '';
     message.state = object.state ?? StateEnum.UNKNOWN;
     message.states = object.states?.map((e) => e) || [];
@@ -182,4 +174,8 @@ export type Exact<P, I extends P> = P extends Builtin
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
+}
+
+function isSet(value: any): boolean {
+  return value !== null && value !== undefined;
 }

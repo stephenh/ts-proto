@@ -6,3 +6,4 @@ services:
       dockerfile: "protoc.Dockerfile"
     volumes:
       - ".:/ts-proto"
+      - "${PWD:-.}:/host"

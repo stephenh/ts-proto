@@ -10,7 +10,9 @@ export interface ImportedThing {
   createdAt: Date | undefined;
 }
 
-const baseImportedThing: object = {};
+function createBaseImportedThing(): ImportedThing {
+  return { createdAt: undefined };
+}
 
 export const ImportedThing = {
   encode(message: ImportedThing, writer: Writer = Writer.create()): Writer {
@@ -23,7 +25,7 @@ export const ImportedThing = {
   decode(input: Reader | Uint8Array, length?: number): ImportedThing {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseImportedThing } as ImportedThing;
+    const message = createBaseImportedThing();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

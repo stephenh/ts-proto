@@ -1,3 +1,108 @@
+## [1.100.1](https://github.com/stephenh/ts-proto/compare/v1.100.0...v1.100.1) (2022-01-10)
+
+
+### Bug Fixes
+
+* respect generateClientImpl=false in grpc-js ([#471](https://github.com/stephenh/ts-proto/issues/471)) ([#472](https://github.com/stephenh/ts-proto/issues/472)) ([2f389f2](https://github.com/stephenh/ts-proto/commit/2f389f243ef11d8d58c32ce37c371aba2cdf294e))
+
+# [1.100.0](https://github.com/stephenh/ts-proto/compare/v1.99.0...v1.100.0) (2022-01-09)
+
+
+### Features
+
+* support mapping ObjectId message as mongodb.ObjectId ([#467](https://github.com/stephenh/ts-proto/issues/467)) ([8b23897](https://github.com/stephenh/ts-proto/commit/8b2389715ecfd5d51b1b24f5a9332e4ff9f09a27))
+
+# [1.99.0](https://github.com/stephenh/ts-proto/compare/v1.98.0...v1.99.0) (2022-01-07)
+
+
+### Features
+
+* yarn watch updates (specified) tests when source files change ([#465](https://github.com/stephenh/ts-proto/issues/465)) ([275d0e7](https://github.com/stephenh/ts-proto/commit/275d0e7c61f3acb2b1fd670b1974e64dd49d6ff4))
+
+# [1.98.0](https://github.com/stephenh/ts-proto/compare/v1.97.2...v1.98.0) (2022-01-06)
+
+
+### Features
+
+* watch for changed integration test files ([#464](https://github.com/stephenh/ts-proto/issues/464)) ([988cd7e](https://github.com/stephenh/ts-proto/commit/988cd7eb84bc3b8b72d6b4d59c38aa794c16c638))
+
+## [1.97.2](https://github.com/stephenh/ts-proto/compare/v1.97.1...v1.97.2) (2022-01-06)
+
+
+### Performance Improvements
+
+* fromJSON returns object literal to allow v8 optimizations ([#463](https://github.com/stephenh/ts-proto/issues/463)) ([5fcd05b](https://github.com/stephenh/ts-proto/commit/5fcd05b79e7c02547c4b6db46fae7a7202f97629))
+
+## [1.97.1](https://github.com/stephenh/ts-proto/compare/v1.97.0...v1.97.1) (2022-01-05)
+
+
+### Bug Fixes
+
+* oneof=union breaks wrapper types [#458](https://github.com/stephenh/ts-proto/issues/458) ([#462](https://github.com/stephenh/ts-proto/issues/462)) ([dd16992](https://github.com/stephenh/ts-proto/commit/dd16992a409f24e88e3a142830cd0745f50dbd10))
+
+# [1.97.0](https://github.com/stephenh/ts-proto/compare/v1.96.1...v1.97.0) (2021-12-30)
+
+
+### Features
+
+* add an option to disable Exact types ([#456](https://github.com/stephenh/ts-proto/issues/456)) ([9c53d7e](https://github.com/stephenh/ts-proto/commit/9c53d7efb0252c7ea0af85a5d161ff94bcd69760))
+
+## [1.96.1](https://github.com/stephenh/ts-proto/compare/v1.96.0...v1.96.1) (2021-12-28)
+
+
+### Performance Improvements
+
+* optimize object creation in `decode`, `fromJSON` and `fromPartial` ([#457](https://github.com/stephenh/ts-proto/issues/457)) ([70832d3](https://github.com/stephenh/ts-proto/commit/70832d33bae82ecb3c5f87845d14e992a13437e4))
+
+# [1.96.0](https://github.com/stephenh/ts-proto/compare/v1.95.1...v1.96.0) (2021-12-24)
+
+
+### Features
+
+* `enumsAsLiterals` option ([#450](https://github.com/stephenh/ts-proto/issues/450)) ([fcaade2](https://github.com/stephenh/ts-proto/commit/fcaade2855ae28ea3553a365556ccb92a9644d70))
+
+## [1.95.1](https://github.com/stephenh/ts-proto/compare/v1.95.0...v1.95.1) (2021-12-23)
+
+
+### Bug Fixes
+
+* Add service to the client constructor. ([#455](https://github.com/stephenh/ts-proto/issues/455)) ([8c32104](https://github.com/stephenh/ts-proto/commit/8c32104a8522cfe2febcf2338d51710021d837ff))
+
+# [1.95.0](https://github.com/stephenh/ts-proto/compare/v1.94.0...v1.95.0) (2021-12-14)
+
+
+### Features
+
+* Add useOptionals=all to enable non-field members to be optional. ([#402](https://github.com/stephenh/ts-proto/issues/402)) ([e7b70cb](https://github.com/stephenh/ts-proto/commit/e7b70cbd7b9bd43bf9e6e54e25bc48c527718317))
+
+# [1.94.0](https://github.com/stephenh/ts-proto/compare/v1.93.3...v1.94.0) (2021-12-14)
+
+
+### Features
+
+* Round numbers in toJSON. ([#444](https://github.com/stephenh/ts-proto/issues/444)) ([bd2df7b](https://github.com/stephenh/ts-proto/commit/bd2df7b7176e961955ed1dcacb3602384e13ee45))
+
+## [1.93.3](https://github.com/stephenh/ts-proto/compare/v1.93.2...v1.93.3) (2021-12-13)
+
+
+### Bug Fixes
+
+* support mutliple options in snakeToCamel flag  ([#429](https://github.com/stephenh/ts-proto/issues/429)) ([cff6674](https://github.com/stephenh/ts-proto/commit/cff667406cba21676546fd91b04cf2cbc571ed7d)), closes [#423](https://github.com/stephenh/ts-proto/issues/423)
+
+## [1.93.2](https://github.com/stephenh/ts-proto/compare/v1.93.1...v1.93.2) (2021-12-09)
+
+
+### Bug Fixes
+
+* standalone dockerized protoc alias ([#438](https://github.com/stephenh/ts-proto/issues/438)) ([466f7d9](https://github.com/stephenh/ts-proto/commit/466f7d91551c6297fc1b9677f7a5839f8cdba0c6))
+
+## [1.93.1](https://github.com/stephenh/ts-proto/compare/v1.93.0...v1.93.1) (2021-12-08)
+
+
+### Bug Fixes
+
+* Unwrap google.protobuf.BytesValue to Buffer when env=node ([#439](https://github.com/stephenh/ts-proto/issues/439)) ([73aa836](https://github.com/stephenh/ts-proto/commit/73aa8368300818068f3cddc5f046d990c66ab4f2))
+
 # [1.93.0](https://github.com/stephenh/ts-proto/compare/v1.92.2...v1.93.0) (2021-12-08)
 
 

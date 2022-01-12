@@ -35,7 +35,9 @@ export interface DateMessage {
   day: number;
 }
 
-const baseDateMessage: object = { year: 0, month: 0, day: 0 };
+function createBaseDateMessage(): DateMessage {
+  return { year: 0, month: 0, day: 0 };
+}
 
 export const DateMessage = {
   encode(message: DateMessage, writer: Writer = Writer.create()): Writer {
@@ -54,7 +56,7 @@ export const DateMessage = {
   decode(input: Reader | Uint8Array, length?: number): DateMessage {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseDateMessage } as DateMessage;
+    const message = createBaseDateMessage();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -76,23 +78,23 @@ export const DateMessage = {
   },
 
   fromJSON(object: any): DateMessage {
-    const message = { ...baseDateMessage } as DateMessage;
-    message.year = object.year !== undefined && object.year !== null ? Number(object.year) : 0;
-    message.month = object.month !== undefined && object.month !== null ? Number(object.month) : 0;
-    message.day = object.day !== undefined && object.day !== null ? Number(object.day) : 0;
-    return message;
+    return {
+      year: isSet(object.year) ? Number(object.year) : 0,
+      month: isSet(object.month) ? Number(object.month) : 0,
+      day: isSet(object.day) ? Number(object.day) : 0,
+    };
   },
 
   toJSON(message: DateMessage): unknown {
     const obj: any = {};
-    message.year !== undefined && (obj.year = message.year);
-    message.month !== undefined && (obj.month = message.month);
-    message.day !== undefined && (obj.day = message.day);
+    message.year !== undefined && (obj.year = Math.round(message.year));
+    message.month !== undefined && (obj.month = Math.round(message.month));
+    message.day !== undefined && (obj.day = Math.round(message.day));
     return obj;
   },
 
   fromPartial<I extends Exact<DeepPartial<DateMessage>, I>>(object: I): DateMessage {
-    const message = { ...baseDateMessage } as DateMessage;
+    const message = createBaseDateMessage();
     message.year = object.year ?? 0;
     message.month = object.month ?? 0;
     message.day = object.day ?? 0;
@@ -122,4 +124,8 @@ export type Exact<P, I extends P> = P extends Builtin
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
+}
+
+function isSet(value: any): boolean {
+  return value !== null && value !== undefined;
 }

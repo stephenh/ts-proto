@@ -11,7 +11,9 @@ export interface Simple {
   createdAt?: Date | undefined;
 }
 
-const baseSimple: object = { name: '' };
+function createBaseSimple(): Simple {
+  return { name: '', age: undefined, createdAt: undefined };
+}
 
 export const Simple = {
   encode(message: Simple, writer: Writer = Writer.create()): Writer {
@@ -30,7 +32,7 @@ export const Simple = {
   decode(input: Reader | Uint8Array, length?: number): Simple {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseSimple } as Simple;
+    const message = createBaseSimple();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -52,24 +54,23 @@ export const Simple = {
   },
 
   fromJSON(object: any): Simple {
-    const message = { ...baseSimple } as Simple;
-    message.name = object.other_name !== undefined && object.other_name !== null ? String(object.other_name) : '';
-    message.age = object.other_age !== undefined && object.other_age !== null ? Number(object.other_age) : undefined;
-    message.createdAt =
-      object.createdAt !== undefined && object.createdAt !== null ? fromJsonTimestamp(object.createdAt) : undefined;
-    return message;
+    return {
+      name: isSet(object.other_name) ? String(object.other_name) : '',
+      age: isSet(object.other_age) ? Number(object.other_age) : undefined,
+      createdAt: isSet(object.createdAt) ? fromJsonTimestamp(object.createdAt) : undefined,
+    };
   },
 
   toJSON(message: Simple): unknown {
     const obj: any = {};
     message.name !== undefined && (obj.other_name = message.name);
-    message.age !== undefined && (obj.other_age = message.age);
+    message.age !== undefined && (obj.other_age = Math.round(message.age));
     message.createdAt !== undefined && (obj.createdAt = message.createdAt.toISOString());
     return obj;
   },
 
   fromPartial<I extends Exact<DeepPartial<Simple>, I>>(object: I): Simple {
-    const message = { ...baseSimple } as Simple;
+    const message = createBaseSimple();
     message.name = object.name ?? '';
     message.age = object.age ?? undefined;
     message.createdAt = object.createdAt ?? undefined;
@@ -121,4 +122,8 @@ function fromJsonTimestamp(o: any): Date {
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
+}
+
+function isSet(value: any): boolean {
+  return value !== null && value !== undefined;
 }
