@@ -14,14 +14,16 @@ export interface MyMessage {
   foo?: number | undefined;
   foo2?: number | undefined;
   bar?: string | undefined;
-  quux: string;
+  quux: string | undefined;
 }
 
 export interface RequestType {}
 
 export interface ResponseType {}
 
-const baseMyMessage: object = { quux: '' };
+function createBaseMyMessage(): MyMessage {
+  return { foo: undefined, foo2: undefined, bar: undefined, quux: undefined };
+}
 
 export const MyMessage = {
   encode(message: MyMessage, writer: Writer = Writer.create()): Writer {
@@ -34,7 +36,7 @@ export const MyMessage = {
     if (message.bar !== undefined) {
       writer.uint32(26).string(message.bar);
     }
-    if (message.quux !== '') {
+    if (message.quux !== undefined) {
       writer.uint32(34).string(message.quux);
     }
     if ('_unknownFields' in message) {
@@ -56,7 +58,7 @@ export const MyMessage = {
   decode(input: Reader | Uint8Array, length?: number): MyMessage {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseMyMessage } as MyMessage;
+    const message = createBaseMyMessage();
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -87,7 +89,9 @@ export const MyMessage = {
   },
 };
 
-const baseRequestType: object = {};
+function createBaseRequestType(): RequestType {
+  return {};
+}
 
 export const RequestType = {
   encode(message: RequestType, writer: Writer = Writer.create()): Writer {
@@ -110,7 +114,7 @@ export const RequestType = {
   decode(input: Reader | Uint8Array, length?: number): RequestType {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseRequestType } as RequestType;
+    const message = createBaseRequestType();
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -129,7 +133,9 @@ export const RequestType = {
   },
 };
 
-const baseResponseType: object = {};
+function createBaseResponseType(): ResponseType {
+  return {};
+}
 
 export const ResponseType = {
   encode(message: ResponseType, writer: Writer = Writer.create()): Writer {
@@ -152,7 +158,7 @@ export const ResponseType = {
   decode(input: Reader | Uint8Array, length?: number): ResponseType {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseResponseType } as ResponseType;
+    const message = createBaseResponseType();
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();

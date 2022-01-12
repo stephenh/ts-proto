@@ -851,7 +851,9 @@ export interface GeneratedCodeInfo_Annotation {
   end: number;
 }
 
-const baseFileDescriptorSet: object = {};
+function createBaseFileDescriptorSet(): FileDescriptorSet {
+  return { file: [] };
+}
 
 export const FileDescriptorSet = {
   encode(message: FileDescriptorSet, writer: Writer = Writer.create()): Writer {
@@ -877,8 +879,7 @@ export const FileDescriptorSet = {
   decode(input: Reader | Uint8Array, length?: number): FileDescriptorSet {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseFileDescriptorSet } as FileDescriptorSet;
-    message.file = [];
+    const message = createBaseFileDescriptorSet();
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -900,14 +901,22 @@ export const FileDescriptorSet = {
   },
 };
 
-const baseFileDescriptorProto: object = {
-  name: '',
-  package: '',
-  dependency: '',
-  publicDependency: 0,
-  weakDependency: 0,
-  syntax: '',
-};
+function createBaseFileDescriptorProto(): FileDescriptorProto {
+  return {
+    name: '',
+    package: '',
+    dependency: [],
+    publicDependency: [],
+    weakDependency: [],
+    messageType: [],
+    enumType: [],
+    service: [],
+    extension: [],
+    options: undefined,
+    sourceCodeInfo: undefined,
+    syntax: '',
+  };
+}
 
 export const FileDescriptorProto = {
   encode(message: FileDescriptorProto, writer: Writer = Writer.create()): Writer {
@@ -970,14 +979,7 @@ export const FileDescriptorProto = {
   decode(input: Reader | Uint8Array, length?: number): FileDescriptorProto {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseFileDescriptorProto } as FileDescriptorProto;
-    message.dependency = [];
-    message.publicDependency = [];
-    message.weakDependency = [];
-    message.messageType = [];
-    message.enumType = [];
-    message.service = [];
-    message.extension = [];
+    const message = createBaseFileDescriptorProto();
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -1046,7 +1048,20 @@ export const FileDescriptorProto = {
   },
 };
 
-const baseDescriptorProto: object = { name: '', reservedName: '' };
+function createBaseDescriptorProto(): DescriptorProto {
+  return {
+    name: '',
+    field: [],
+    extension: [],
+    nestedType: [],
+    enumType: [],
+    extensionRange: [],
+    oneofDecl: [],
+    options: undefined,
+    reservedRange: [],
+    reservedName: [],
+  };
+}
 
 export const DescriptorProto = {
   encode(message: DescriptorProto, writer: Writer = Writer.create()): Writer {
@@ -1099,15 +1114,7 @@ export const DescriptorProto = {
   decode(input: Reader | Uint8Array, length?: number): DescriptorProto {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseDescriptorProto } as DescriptorProto;
-    message.field = [];
-    message.extension = [];
-    message.nestedType = [];
-    message.enumType = [];
-    message.extensionRange = [];
-    message.oneofDecl = [];
-    message.reservedRange = [];
-    message.reservedName = [];
+    const message = createBaseDescriptorProto();
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -1156,7 +1163,9 @@ export const DescriptorProto = {
   },
 };
 
-const baseDescriptorProto_ExtensionRange: object = { start: 0, end: 0 };
+function createBaseDescriptorProto_ExtensionRange(): DescriptorProto_ExtensionRange {
+  return { start: 0, end: 0, options: undefined };
+}
 
 export const DescriptorProto_ExtensionRange = {
   encode(message: DescriptorProto_ExtensionRange, writer: Writer = Writer.create()): Writer {
@@ -1188,7 +1197,7 @@ export const DescriptorProto_ExtensionRange = {
   decode(input: Reader | Uint8Array, length?: number): DescriptorProto_ExtensionRange {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseDescriptorProto_ExtensionRange } as DescriptorProto_ExtensionRange;
+    const message = createBaseDescriptorProto_ExtensionRange();
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -1216,7 +1225,9 @@ export const DescriptorProto_ExtensionRange = {
   },
 };
 
-const baseDescriptorProto_ReservedRange: object = { start: 0, end: 0 };
+function createBaseDescriptorProto_ReservedRange(): DescriptorProto_ReservedRange {
+  return { start: 0, end: 0 };
+}
 
 export const DescriptorProto_ReservedRange = {
   encode(message: DescriptorProto_ReservedRange, writer: Writer = Writer.create()): Writer {
@@ -1245,7 +1256,7 @@ export const DescriptorProto_ReservedRange = {
   decode(input: Reader | Uint8Array, length?: number): DescriptorProto_ReservedRange {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseDescriptorProto_ReservedRange } as DescriptorProto_ReservedRange;
+    const message = createBaseDescriptorProto_ReservedRange();
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -1270,7 +1281,9 @@ export const DescriptorProto_ReservedRange = {
   },
 };
 
-const baseExtensionRangeOptions: object = {};
+function createBaseExtensionRangeOptions(): ExtensionRangeOptions {
+  return { uninterpretedOption: [] };
+}
 
 export const ExtensionRangeOptions = {
   encode(message: ExtensionRangeOptions, writer: Writer = Writer.create()): Writer {
@@ -1296,8 +1309,7 @@ export const ExtensionRangeOptions = {
   decode(input: Reader | Uint8Array, length?: number): ExtensionRangeOptions {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseExtensionRangeOptions } as ExtensionRangeOptions;
-    message.uninterpretedOption = [];
+    const message = createBaseExtensionRangeOptions();
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -1319,18 +1331,21 @@ export const ExtensionRangeOptions = {
   },
 };
 
-const baseFieldDescriptorProto: object = {
-  name: '',
-  number: 0,
-  label: 1,
-  type: 1,
-  typeName: '',
-  extendee: '',
-  defaultValue: '',
-  oneofIndex: 0,
-  jsonName: '',
-  proto3Optional: false,
-};
+function createBaseFieldDescriptorProto(): FieldDescriptorProto {
+  return {
+    name: '',
+    number: 0,
+    label: 1,
+    type: 1,
+    typeName: '',
+    extendee: '',
+    defaultValue: '',
+    oneofIndex: 0,
+    jsonName: '',
+    options: undefined,
+    proto3Optional: false,
+  };
+}
 
 export const FieldDescriptorProto = {
   encode(message: FieldDescriptorProto, writer: Writer = Writer.create()): Writer {
@@ -1386,7 +1401,7 @@ export const FieldDescriptorProto = {
   decode(input: Reader | Uint8Array, length?: number): FieldDescriptorProto {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseFieldDescriptorProto } as FieldDescriptorProto;
+    const message = createBaseFieldDescriptorProto();
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -1438,7 +1453,9 @@ export const FieldDescriptorProto = {
   },
 };
 
-const baseOneofDescriptorProto: object = { name: '' };
+function createBaseOneofDescriptorProto(): OneofDescriptorProto {
+  return { name: '', options: undefined };
+}
 
 export const OneofDescriptorProto = {
   encode(message: OneofDescriptorProto, writer: Writer = Writer.create()): Writer {
@@ -1467,7 +1484,7 @@ export const OneofDescriptorProto = {
   decode(input: Reader | Uint8Array, length?: number): OneofDescriptorProto {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseOneofDescriptorProto } as OneofDescriptorProto;
+    const message = createBaseOneofDescriptorProto();
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -1492,7 +1509,9 @@ export const OneofDescriptorProto = {
   },
 };
 
-const baseEnumDescriptorProto: object = { name: '', reservedName: '' };
+function createBaseEnumDescriptorProto(): EnumDescriptorProto {
+  return { name: '', value: [], options: undefined, reservedRange: [], reservedName: [] };
+}
 
 export const EnumDescriptorProto = {
   encode(message: EnumDescriptorProto, writer: Writer = Writer.create()): Writer {
@@ -1530,10 +1549,7 @@ export const EnumDescriptorProto = {
   decode(input: Reader | Uint8Array, length?: number): EnumDescriptorProto {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseEnumDescriptorProto } as EnumDescriptorProto;
-    message.value = [];
-    message.reservedRange = [];
-    message.reservedName = [];
+    const message = createBaseEnumDescriptorProto();
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -1567,7 +1583,9 @@ export const EnumDescriptorProto = {
   },
 };
 
-const baseEnumDescriptorProto_EnumReservedRange: object = { start: 0, end: 0 };
+function createBaseEnumDescriptorProto_EnumReservedRange(): EnumDescriptorProto_EnumReservedRange {
+  return { start: 0, end: 0 };
+}
 
 export const EnumDescriptorProto_EnumReservedRange = {
   encode(message: EnumDescriptorProto_EnumReservedRange, writer: Writer = Writer.create()): Writer {
@@ -1596,7 +1614,7 @@ export const EnumDescriptorProto_EnumReservedRange = {
   decode(input: Reader | Uint8Array, length?: number): EnumDescriptorProto_EnumReservedRange {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseEnumDescriptorProto_EnumReservedRange } as EnumDescriptorProto_EnumReservedRange;
+    const message = createBaseEnumDescriptorProto_EnumReservedRange();
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -1621,7 +1639,9 @@ export const EnumDescriptorProto_EnumReservedRange = {
   },
 };
 
-const baseEnumValueDescriptorProto: object = { name: '', number: 0 };
+function createBaseEnumValueDescriptorProto(): EnumValueDescriptorProto {
+  return { name: '', number: 0, options: undefined };
+}
 
 export const EnumValueDescriptorProto = {
   encode(message: EnumValueDescriptorProto, writer: Writer = Writer.create()): Writer {
@@ -1653,7 +1673,7 @@ export const EnumValueDescriptorProto = {
   decode(input: Reader | Uint8Array, length?: number): EnumValueDescriptorProto {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseEnumValueDescriptorProto } as EnumValueDescriptorProto;
+    const message = createBaseEnumValueDescriptorProto();
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -1681,7 +1701,9 @@ export const EnumValueDescriptorProto = {
   },
 };
 
-const baseServiceDescriptorProto: object = { name: '' };
+function createBaseServiceDescriptorProto(): ServiceDescriptorProto {
+  return { name: '', method: [], options: undefined };
+}
 
 export const ServiceDescriptorProto = {
   encode(message: ServiceDescriptorProto, writer: Writer = Writer.create()): Writer {
@@ -1713,8 +1735,7 @@ export const ServiceDescriptorProto = {
   decode(input: Reader | Uint8Array, length?: number): ServiceDescriptorProto {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseServiceDescriptorProto } as ServiceDescriptorProto;
-    message.method = [];
+    const message = createBaseServiceDescriptorProto();
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -1742,13 +1763,16 @@ export const ServiceDescriptorProto = {
   },
 };
 
-const baseMethodDescriptorProto: object = {
-  name: '',
-  inputType: '',
-  outputType: '',
-  clientStreaming: false,
-  serverStreaming: false,
-};
+function createBaseMethodDescriptorProto(): MethodDescriptorProto {
+  return {
+    name: '',
+    inputType: '',
+    outputType: '',
+    options: undefined,
+    clientStreaming: false,
+    serverStreaming: false,
+  };
+}
 
 export const MethodDescriptorProto = {
   encode(message: MethodDescriptorProto, writer: Writer = Writer.create()): Writer {
@@ -1789,7 +1813,7 @@ export const MethodDescriptorProto = {
   decode(input: Reader | Uint8Array, length?: number): MethodDescriptorProto {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseMethodDescriptorProto } as MethodDescriptorProto;
+    const message = createBaseMethodDescriptorProto();
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -1826,28 +1850,31 @@ export const MethodDescriptorProto = {
   },
 };
 
-const baseFileOptions: object = {
-  javaPackage: '',
-  javaOuterClassname: '',
-  javaMultipleFiles: false,
-  javaGenerateEqualsAndHash: false,
-  javaStringCheckUtf8: false,
-  optimizeFor: 1,
-  goPackage: '',
-  ccGenericServices: false,
-  javaGenericServices: false,
-  pyGenericServices: false,
-  phpGenericServices: false,
-  deprecated: false,
-  ccEnableArenas: false,
-  objcClassPrefix: '',
-  csharpNamespace: '',
-  swiftPrefix: '',
-  phpClassPrefix: '',
-  phpNamespace: '',
-  phpMetadataNamespace: '',
-  rubyPackage: '',
-};
+function createBaseFileOptions(): FileOptions {
+  return {
+    javaPackage: '',
+    javaOuterClassname: '',
+    javaMultipleFiles: false,
+    javaGenerateEqualsAndHash: false,
+    javaStringCheckUtf8: false,
+    optimizeFor: 1,
+    goPackage: '',
+    ccGenericServices: false,
+    javaGenericServices: false,
+    pyGenericServices: false,
+    phpGenericServices: false,
+    deprecated: false,
+    ccEnableArenas: false,
+    objcClassPrefix: '',
+    csharpNamespace: '',
+    swiftPrefix: '',
+    phpClassPrefix: '',
+    phpNamespace: '',
+    phpMetadataNamespace: '',
+    rubyPackage: '',
+    uninterpretedOption: [],
+  };
+}
 
 export const FileOptions = {
   encode(message: FileOptions, writer: Writer = Writer.create()): Writer {
@@ -1933,8 +1960,7 @@ export const FileOptions = {
   decode(input: Reader | Uint8Array, length?: number): FileOptions {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseFileOptions } as FileOptions;
-    message.uninterpretedOption = [];
+    const message = createBaseFileOptions();
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -2016,12 +2042,15 @@ export const FileOptions = {
   },
 };
 
-const baseMessageOptions: object = {
-  messageSetWireFormat: false,
-  noStandardDescriptorAccessor: false,
-  deprecated: false,
-  mapEntry: false,
-};
+function createBaseMessageOptions(): MessageOptions {
+  return {
+    messageSetWireFormat: false,
+    noStandardDescriptorAccessor: false,
+    deprecated: false,
+    mapEntry: false,
+    uninterpretedOption: [],
+  };
+}
 
 export const MessageOptions = {
   encode(message: MessageOptions, writer: Writer = Writer.create()): Writer {
@@ -2059,8 +2088,7 @@ export const MessageOptions = {
   decode(input: Reader | Uint8Array, length?: number): MessageOptions {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseMessageOptions } as MessageOptions;
-    message.uninterpretedOption = [];
+    const message = createBaseMessageOptions();
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -2094,7 +2122,9 @@ export const MessageOptions = {
   },
 };
 
-const baseFieldOptions: object = { ctype: 0, packed: false, jstype: 0, lazy: false, deprecated: false, weak: false };
+function createBaseFieldOptions(): FieldOptions {
+  return { ctype: 0, packed: false, jstype: 0, lazy: false, deprecated: false, weak: false, uninterpretedOption: [] };
+}
 
 export const FieldOptions = {
   encode(message: FieldOptions, writer: Writer = Writer.create()): Writer {
@@ -2138,8 +2168,7 @@ export const FieldOptions = {
   decode(input: Reader | Uint8Array, length?: number): FieldOptions {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseFieldOptions } as FieldOptions;
-    message.uninterpretedOption = [];
+    const message = createBaseFieldOptions();
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -2179,7 +2208,9 @@ export const FieldOptions = {
   },
 };
 
-const baseOneofOptions: object = {};
+function createBaseOneofOptions(): OneofOptions {
+  return { uninterpretedOption: [] };
+}
 
 export const OneofOptions = {
   encode(message: OneofOptions, writer: Writer = Writer.create()): Writer {
@@ -2205,8 +2236,7 @@ export const OneofOptions = {
   decode(input: Reader | Uint8Array, length?: number): OneofOptions {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseOneofOptions } as OneofOptions;
-    message.uninterpretedOption = [];
+    const message = createBaseOneofOptions();
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -2228,7 +2258,9 @@ export const OneofOptions = {
   },
 };
 
-const baseEnumOptions: object = { allowAlias: false, deprecated: false };
+function createBaseEnumOptions(): EnumOptions {
+  return { allowAlias: false, deprecated: false, uninterpretedOption: [] };
+}
 
 export const EnumOptions = {
   encode(message: EnumOptions, writer: Writer = Writer.create()): Writer {
@@ -2260,8 +2292,7 @@ export const EnumOptions = {
   decode(input: Reader | Uint8Array, length?: number): EnumOptions {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseEnumOptions } as EnumOptions;
-    message.uninterpretedOption = [];
+    const message = createBaseEnumOptions();
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -2289,7 +2320,9 @@ export const EnumOptions = {
   },
 };
 
-const baseEnumValueOptions: object = { deprecated: false };
+function createBaseEnumValueOptions(): EnumValueOptions {
+  return { deprecated: false, uninterpretedOption: [] };
+}
 
 export const EnumValueOptions = {
   encode(message: EnumValueOptions, writer: Writer = Writer.create()): Writer {
@@ -2318,8 +2351,7 @@ export const EnumValueOptions = {
   decode(input: Reader | Uint8Array, length?: number): EnumValueOptions {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseEnumValueOptions } as EnumValueOptions;
-    message.uninterpretedOption = [];
+    const message = createBaseEnumValueOptions();
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -2344,7 +2376,9 @@ export const EnumValueOptions = {
   },
 };
 
-const baseServiceOptions: object = { deprecated: false };
+function createBaseServiceOptions(): ServiceOptions {
+  return { deprecated: false, uninterpretedOption: [] };
+}
 
 export const ServiceOptions = {
   encode(message: ServiceOptions, writer: Writer = Writer.create()): Writer {
@@ -2373,8 +2407,7 @@ export const ServiceOptions = {
   decode(input: Reader | Uint8Array, length?: number): ServiceOptions {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseServiceOptions } as ServiceOptions;
-    message.uninterpretedOption = [];
+    const message = createBaseServiceOptions();
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -2399,7 +2432,9 @@ export const ServiceOptions = {
   },
 };
 
-const baseMethodOptions: object = { deprecated: false, idempotencyLevel: 0 };
+function createBaseMethodOptions(): MethodOptions {
+  return { deprecated: false, idempotencyLevel: 0, uninterpretedOption: [] };
+}
 
 export const MethodOptions = {
   encode(message: MethodOptions, writer: Writer = Writer.create()): Writer {
@@ -2431,8 +2466,7 @@ export const MethodOptions = {
   decode(input: Reader | Uint8Array, length?: number): MethodOptions {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseMethodOptions } as MethodOptions;
-    message.uninterpretedOption = [];
+    const message = createBaseMethodOptions();
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -2460,13 +2494,17 @@ export const MethodOptions = {
   },
 };
 
-const baseUninterpretedOption: object = {
-  identifierValue: '',
-  positiveIntValue: 0,
-  negativeIntValue: 0,
-  doubleValue: 0,
-  aggregateValue: '',
-};
+function createBaseUninterpretedOption(): UninterpretedOption {
+  return {
+    name: [],
+    identifierValue: '',
+    positiveIntValue: 0,
+    negativeIntValue: 0,
+    doubleValue: 0,
+    stringValue: new Uint8Array(),
+    aggregateValue: '',
+  };
+}
 
 export const UninterpretedOption = {
   encode(message: UninterpretedOption, writer: Writer = Writer.create()): Writer {
@@ -2510,9 +2548,7 @@ export const UninterpretedOption = {
   decode(input: Reader | Uint8Array, length?: number): UninterpretedOption {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseUninterpretedOption } as UninterpretedOption;
-    message.name = [];
-    message.stringValue = new Uint8Array();
+    const message = createBaseUninterpretedOption();
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -2552,7 +2588,9 @@ export const UninterpretedOption = {
   },
 };
 
-const baseUninterpretedOption_NamePart: object = { namePart: '', isExtension: false };
+function createBaseUninterpretedOption_NamePart(): UninterpretedOption_NamePart {
+  return { namePart: '', isExtension: false };
+}
 
 export const UninterpretedOption_NamePart = {
   encode(message: UninterpretedOption_NamePart, writer: Writer = Writer.create()): Writer {
@@ -2581,7 +2619,7 @@ export const UninterpretedOption_NamePart = {
   decode(input: Reader | Uint8Array, length?: number): UninterpretedOption_NamePart {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseUninterpretedOption_NamePart } as UninterpretedOption_NamePart;
+    const message = createBaseUninterpretedOption_NamePart();
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -2606,7 +2644,9 @@ export const UninterpretedOption_NamePart = {
   },
 };
 
-const baseSourceCodeInfo: object = {};
+function createBaseSourceCodeInfo(): SourceCodeInfo {
+  return { location: [] };
+}
 
 export const SourceCodeInfo = {
   encode(message: SourceCodeInfo, writer: Writer = Writer.create()): Writer {
@@ -2632,8 +2672,7 @@ export const SourceCodeInfo = {
   decode(input: Reader | Uint8Array, length?: number): SourceCodeInfo {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseSourceCodeInfo } as SourceCodeInfo;
-    message.location = [];
+    const message = createBaseSourceCodeInfo();
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -2655,13 +2694,9 @@ export const SourceCodeInfo = {
   },
 };
 
-const baseSourceCodeInfo_Location: object = {
-  path: 0,
-  span: 0,
-  leadingComments: '',
-  trailingComments: '',
-  leadingDetachedComments: '',
-};
+function createBaseSourceCodeInfo_Location(): SourceCodeInfo_Location {
+  return { path: [], span: [], leadingComments: '', trailingComments: '', leadingDetachedComments: [] };
+}
 
 export const SourceCodeInfo_Location = {
   encode(message: SourceCodeInfo_Location, writer: Writer = Writer.create()): Writer {
@@ -2703,10 +2738,7 @@ export const SourceCodeInfo_Location = {
   decode(input: Reader | Uint8Array, length?: number): SourceCodeInfo_Location {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseSourceCodeInfo_Location } as SourceCodeInfo_Location;
-    message.path = [];
-    message.span = [];
-    message.leadingDetachedComments = [];
+    const message = createBaseSourceCodeInfo_Location();
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -2754,7 +2786,9 @@ export const SourceCodeInfo_Location = {
   },
 };
 
-const baseGeneratedCodeInfo: object = {};
+function createBaseGeneratedCodeInfo(): GeneratedCodeInfo {
+  return { annotation: [] };
+}
 
 export const GeneratedCodeInfo = {
   encode(message: GeneratedCodeInfo, writer: Writer = Writer.create()): Writer {
@@ -2780,8 +2814,7 @@ export const GeneratedCodeInfo = {
   decode(input: Reader | Uint8Array, length?: number): GeneratedCodeInfo {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseGeneratedCodeInfo } as GeneratedCodeInfo;
-    message.annotation = [];
+    const message = createBaseGeneratedCodeInfo();
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -2803,7 +2836,9 @@ export const GeneratedCodeInfo = {
   },
 };
 
-const baseGeneratedCodeInfo_Annotation: object = { path: 0, sourceFile: '', begin: 0, end: 0 };
+function createBaseGeneratedCodeInfo_Annotation(): GeneratedCodeInfo_Annotation {
+  return { path: [], sourceFile: '', begin: 0, end: 0 };
+}
 
 export const GeneratedCodeInfo_Annotation = {
   encode(message: GeneratedCodeInfo_Annotation, writer: Writer = Writer.create()): Writer {
@@ -2840,8 +2875,7 @@ export const GeneratedCodeInfo_Annotation = {
   decode(input: Reader | Uint8Array, length?: number): GeneratedCodeInfo_Annotation {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseGeneratedCodeInfo_Annotation } as GeneratedCodeInfo_Annotation;
-    message.path = [];
+    const message = createBaseGeneratedCodeInfo_Annotation();
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
