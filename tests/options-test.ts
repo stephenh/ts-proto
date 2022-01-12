@@ -9,6 +9,7 @@ describe('options', () => {
         "constEnums": false,
         "context": false,
         "emitImportedFiles": true,
+        "enumsAsLiterals": false,
         "env": "both",
         "esModuleInterop": false,
         "exportCommonSymbols": true,
@@ -33,6 +34,8 @@ describe('options', () => {
         "stringEnums": false,
         "unrecognizedEnum": true,
         "useDate": "timestamp",
+        "useExactTypes": true,
+        "useMongoObjectId": false,
         "useOptionals": "none",
       }
     `);

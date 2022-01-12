@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package foo;
+
+import "objectid/objectid.proto";
+
+message Todo {
+  string id = 1;
+  foo.objectid.ObjectId oid = 2;
+  repeated foo.objectid.ObjectId repeated_oid = 3;
+  optional foo.objectid.ObjectId optional_oid = 4;
+  map<string, foo.objectid.ObjectId> map_of_oids = 5;
+}

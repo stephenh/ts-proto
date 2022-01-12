@@ -34,12 +34,15 @@ export function generateGrpcJsService(
   sourceInfo: SourceInfo,
   serviceDesc: ServiceDescriptorProto
 ): Code {
+  const { options } = ctx;
   const chunks: Code[] = [];
 
   chunks.push(generateServiceDefinition(ctx, fileDesc, sourceInfo, serviceDesc));
   chunks.push(generateServerStub(ctx, sourceInfo, serviceDesc));
-  chunks.push(generateClientStub(ctx, sourceInfo, serviceDesc));
-  chunks.push(generateClientConstructor(fileDesc, serviceDesc));
+  if (options.outputClientImpl) {
+    chunks.push(generateClientStub(ctx, sourceInfo, serviceDesc));
+    chunks.push(generateClientConstructor(fileDesc, serviceDesc));
+  }
 
   return joinCode(chunks, { on: '\n\n' });
 }
@@ -229,6 +232,7 @@ function generateClientConstructor(fileDesc: FileDescriptorProto, serviceDesc: S
         credentials: ${ChannelCredentials},
         options?: Partial<${ChannelOptions}>,
       ): ${serviceDesc.name}Client;
+      service: typeof ${serviceDesc.name}Service;
     }
   `;
 }

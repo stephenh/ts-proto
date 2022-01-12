@@ -34,6 +34,7 @@ export type Options = {
   forceLong: LongOption;
   useOptionals: boolean | 'none' | 'messages' | 'all'; // boolean is deprecated
   useDate: DateOption;
+  useMongoObjectId: boolean;
   oneof: OneofOption;
   esModuleInterop: boolean;
   fileSuffix: string;
@@ -43,6 +44,7 @@ export type Options = {
   outputTypeRegistry: boolean;
   stringEnums: boolean;
   constEnums: boolean;
+  enumsAsLiterals: boolean;
   outputClientImpl: boolean | 'grpc-web';
   outputServices: ServiceOption;
   addGrpcMetadata: boolean;
@@ -57,6 +59,7 @@ export type Options = {
   // An alias of !output
   onlyTypes: boolean;
   emitImportedFiles: boolean;
+  useExactTypes: boolean;
   unknownFields: boolean;
 };
 
@@ -67,6 +70,7 @@ export function defaultOptions(): Options {
     forceLong: LongOption.NUMBER,
     useOptionals: 'none',
     useDate: DateOption.DATE,
+    useMongoObjectId: false,
     oneof: OneofOption.PROPERTIES,
     esModuleInterop: false,
     fileSuffix: '',
@@ -77,6 +81,7 @@ export function defaultOptions(): Options {
     outputTypeRegistry: false,
     stringEnums: false,
     constEnums: false,
+    enumsAsLiterals: false,
     outputClientImpl: true,
     outputServices: ServiceOption.DEFAULT,
     returnObservable: false,
@@ -89,6 +94,7 @@ export function defaultOptions(): Options {
     outputSchema: false,
     onlyTypes: false,
     emitImportedFiles: true,
+    useExactTypes: true,
     unknownFields: false,
   };
 }

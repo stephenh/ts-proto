@@ -12,7 +12,9 @@ export interface Parent {
   createdAt: Date | undefined;
 }
 
-const baseParent: object = { childEnum: 0 };
+function createBaseParent(): Parent {
+  return { child: undefined, childEnum: 0, createdAt: undefined };
+}
 
 export const Parent = {
   encode(message: Parent, writer: Writer = Writer.create()): Writer {
@@ -31,7 +33,7 @@ export const Parent = {
   decode(input: Reader | Uint8Array, length?: number): Parent {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseParent } as Parent;
+    const message = createBaseParent();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -53,13 +55,11 @@ export const Parent = {
   },
 
   fromJSON(object: any): Parent {
-    const message = { ...baseParent } as Parent;
-    message.child = object.child !== undefined && object.child !== null ? Child.fromJSON(object.child) : undefined;
-    message.childEnum =
-      object.childEnum !== undefined && object.childEnum !== null ? childEnumFromJSON(object.childEnum) : 0;
-    message.createdAt =
-      object.createdAt !== undefined && object.createdAt !== null ? fromJsonTimestamp(object.createdAt) : undefined;
-    return message;
+    return {
+      child: isSet(object.child) ? Child.fromJSON(object.child) : undefined,
+      childEnum: isSet(object.childEnum) ? childEnumFromJSON(object.childEnum) : 0,
+      createdAt: isSet(object.createdAt) ? fromJsonTimestamp(object.createdAt) : undefined,
+    };
   },
 
   toJSON(message: Parent): unknown {
@@ -71,7 +71,7 @@ export const Parent = {
   },
 
   fromPartial<I extends Exact<DeepPartial<Parent>, I>>(object: I): Parent {
-    const message = { ...baseParent } as Parent;
+    const message = createBaseParent();
     message.child = object.child !== undefined && object.child !== null ? Child.fromPartial(object.child) : undefined;
     message.childEnum = object.childEnum ?? 0;
     message.createdAt = object.createdAt ?? undefined;
@@ -123,4 +123,8 @@ function fromJsonTimestamp(o: any): Date {
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
+}
+
+function isSet(value: any): boolean {
+  return value !== null && value !== undefined;
 }

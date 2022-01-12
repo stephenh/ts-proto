@@ -53,7 +53,9 @@ export interface Numbers {
   manyUint64: Long[];
 }
 
-const baseSimpleWithWrappers: object = {};
+function createBaseSimpleWithWrappers(): SimpleWithWrappers {
+  return { name: undefined, age: undefined, enabled: undefined, bananas: undefined, coins: [], snacks: [] };
+}
 
 export const SimpleWithWrappers = {
   encode(message: SimpleWithWrappers, writer: Writer = Writer.create()): Writer {
@@ -81,9 +83,7 @@ export const SimpleWithWrappers = {
   decode(input: Reader | Uint8Array, length?: number): SimpleWithWrappers {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseSimpleWithWrappers } as SimpleWithWrappers;
-    message.coins = [];
-    message.snacks = [];
+    const message = createBaseSimpleWithWrappers();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -114,15 +114,14 @@ export const SimpleWithWrappers = {
   },
 
   fromJSON(object: any): SimpleWithWrappers {
-    const message = { ...baseSimpleWithWrappers } as SimpleWithWrappers;
-    message.name = object.name !== undefined && object.name !== null ? String(object.name) : undefined;
-    message.age = object.age !== undefined && object.age !== null ? Number(object.age) : undefined;
-    message.enabled = object.enabled !== undefined && object.enabled !== null ? Boolean(object.enabled) : undefined;
-    message.bananas =
-      object.bananas !== undefined && object.bananas !== null ? Long.fromValue(object.bananas) : undefined;
-    message.coins = (object.coins ?? []).map((e: any) => Number(e));
-    message.snacks = (object.snacks ?? []).map((e: any) => String(e));
-    return message;
+    return {
+      name: isSet(object.name) ? String(object.name) : undefined,
+      age: isSet(object.age) ? Number(object.age) : undefined,
+      enabled: isSet(object.enabled) ? Boolean(object.enabled) : undefined,
+      bananas: isSet(object.bananas) ? Long.fromValue(object.bananas) : undefined,
+      coins: Array.isArray(object?.coins) ? object.coins.map((e: any) => Number(e)) : [],
+      snacks: Array.isArray(object?.snacks) ? object.snacks.map((e: any) => String(e)) : [],
+    };
   },
 
   toJSON(message: SimpleWithWrappers): unknown {
@@ -145,7 +144,7 @@ export const SimpleWithWrappers = {
   },
 
   fromPartial<I extends Exact<DeepPartial<SimpleWithWrappers>, I>>(object: I): SimpleWithWrappers {
-    const message = { ...baseSimpleWithWrappers } as SimpleWithWrappers;
+    const message = createBaseSimpleWithWrappers();
     message.name = object.name ?? undefined;
     message.age = object.age ?? undefined;
     message.enabled = object.enabled ?? undefined;
@@ -157,7 +156,9 @@ export const SimpleWithWrappers = {
   },
 };
 
-const baseSimpleWithMap: object = {};
+function createBaseSimpleWithMap(): SimpleWithMap {
+  return { nameLookup: {}, intLookup: {}, longLookup: {} };
+}
 
 export const SimpleWithMap = {
   encode(message: SimpleWithMap, writer: Writer = Writer.create()): Writer {
@@ -176,10 +177,7 @@ export const SimpleWithMap = {
   decode(input: Reader | Uint8Array, length?: number): SimpleWithMap {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseSimpleWithMap } as SimpleWithMap;
-    message.nameLookup = {};
-    message.intLookup = {};
-    message.longLookup = {};
+    const message = createBaseSimpleWithMap();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -210,29 +208,26 @@ export const SimpleWithMap = {
   },
 
   fromJSON(object: any): SimpleWithMap {
-    const message = { ...baseSimpleWithMap } as SimpleWithMap;
-    message.nameLookup = Object.entries(object.nameLookup ?? {}).reduce<{ [key: string]: string }>(
-      (acc, [key, value]) => {
-        acc[key] = String(value);
-        return acc;
-      },
-      {}
-    );
-    message.intLookup = Object.entries(object.intLookup ?? {}).reduce<{ [key: number]: number }>(
-      (acc, [key, value]) => {
-        acc[Number(key)] = Number(value);
-        return acc;
-      },
-      {}
-    );
-    message.longLookup = Object.entries(object.longLookup ?? {}).reduce<{ [key: string]: Long }>(
-      (acc, [key, value]) => {
-        acc[key] = Long.fromValue(value as Long | string);
-        return acc;
-      },
-      {}
-    );
-    return message;
+    return {
+      nameLookup: isObject(object.nameLookup)
+        ? Object.entries(object.nameLookup).reduce<{ [key: string]: string }>((acc, [key, value]) => {
+            acc[key] = String(value);
+            return acc;
+          }, {})
+        : {},
+      intLookup: isObject(object.intLookup)
+        ? Object.entries(object.intLookup).reduce<{ [key: number]: number }>((acc, [key, value]) => {
+            acc[Number(key)] = Number(value);
+            return acc;
+          }, {})
+        : {},
+      longLookup: isObject(object.longLookup)
+        ? Object.entries(object.longLookup).reduce<{ [key: string]: Long }>((acc, [key, value]) => {
+            acc[key] = Long.fromValue(value as Long | string);
+            return acc;
+          }, {})
+        : {},
+    };
   },
 
   toJSON(message: SimpleWithMap): unknown {
@@ -259,7 +254,7 @@ export const SimpleWithMap = {
   },
 
   fromPartial<I extends Exact<DeepPartial<SimpleWithMap>, I>>(object: I): SimpleWithMap {
-    const message = { ...baseSimpleWithMap } as SimpleWithMap;
+    const message = createBaseSimpleWithMap();
     message.nameLookup = Object.entries(object.nameLookup ?? {}).reduce<{ [key: string]: string }>(
       (acc, [key, value]) => {
         if (value !== undefined) {
@@ -291,7 +286,9 @@ export const SimpleWithMap = {
   },
 };
 
-const baseSimpleWithMap_NameLookupEntry: object = { key: '', value: '' };
+function createBaseSimpleWithMap_NameLookupEntry(): SimpleWithMap_NameLookupEntry {
+  return { key: '', value: '' };
+}
 
 export const SimpleWithMap_NameLookupEntry = {
   encode(message: SimpleWithMap_NameLookupEntry, writer: Writer = Writer.create()): Writer {
@@ -307,7 +304,7 @@ export const SimpleWithMap_NameLookupEntry = {
   decode(input: Reader | Uint8Array, length?: number): SimpleWithMap_NameLookupEntry {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseSimpleWithMap_NameLookupEntry } as SimpleWithMap_NameLookupEntry;
+    const message = createBaseSimpleWithMap_NameLookupEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -326,10 +323,10 @@ export const SimpleWithMap_NameLookupEntry = {
   },
 
   fromJSON(object: any): SimpleWithMap_NameLookupEntry {
-    const message = { ...baseSimpleWithMap_NameLookupEntry } as SimpleWithMap_NameLookupEntry;
-    message.key = object.key !== undefined && object.key !== null ? String(object.key) : '';
-    message.value = object.value !== undefined && object.value !== null ? String(object.value) : '';
-    return message;
+    return {
+      key: isSet(object.key) ? String(object.key) : '',
+      value: isSet(object.value) ? String(object.value) : '',
+    };
   },
 
   toJSON(message: SimpleWithMap_NameLookupEntry): unknown {
@@ -342,14 +339,16 @@ export const SimpleWithMap_NameLookupEntry = {
   fromPartial<I extends Exact<DeepPartial<SimpleWithMap_NameLookupEntry>, I>>(
     object: I
   ): SimpleWithMap_NameLookupEntry {
-    const message = { ...baseSimpleWithMap_NameLookupEntry } as SimpleWithMap_NameLookupEntry;
+    const message = createBaseSimpleWithMap_NameLookupEntry();
     message.key = object.key ?? '';
     message.value = object.value ?? '';
     return message;
   },
 };
 
-const baseSimpleWithMap_IntLookupEntry: object = { key: 0, value: 0 };
+function createBaseSimpleWithMap_IntLookupEntry(): SimpleWithMap_IntLookupEntry {
+  return { key: 0, value: 0 };
+}
 
 export const SimpleWithMap_IntLookupEntry = {
   encode(message: SimpleWithMap_IntLookupEntry, writer: Writer = Writer.create()): Writer {
@@ -365,7 +364,7 @@ export const SimpleWithMap_IntLookupEntry = {
   decode(input: Reader | Uint8Array, length?: number): SimpleWithMap_IntLookupEntry {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseSimpleWithMap_IntLookupEntry } as SimpleWithMap_IntLookupEntry;
+    const message = createBaseSimpleWithMap_IntLookupEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -384,10 +383,10 @@ export const SimpleWithMap_IntLookupEntry = {
   },
 
   fromJSON(object: any): SimpleWithMap_IntLookupEntry {
-    const message = { ...baseSimpleWithMap_IntLookupEntry } as SimpleWithMap_IntLookupEntry;
-    message.key = object.key !== undefined && object.key !== null ? Number(object.key) : 0;
-    message.value = object.value !== undefined && object.value !== null ? Number(object.value) : 0;
-    return message;
+    return {
+      key: isSet(object.key) ? Number(object.key) : 0,
+      value: isSet(object.value) ? Number(object.value) : 0,
+    };
   },
 
   toJSON(message: SimpleWithMap_IntLookupEntry): unknown {
@@ -398,14 +397,16 @@ export const SimpleWithMap_IntLookupEntry = {
   },
 
   fromPartial<I extends Exact<DeepPartial<SimpleWithMap_IntLookupEntry>, I>>(object: I): SimpleWithMap_IntLookupEntry {
-    const message = { ...baseSimpleWithMap_IntLookupEntry } as SimpleWithMap_IntLookupEntry;
+    const message = createBaseSimpleWithMap_IntLookupEntry();
     message.key = object.key ?? 0;
     message.value = object.value ?? 0;
     return message;
   },
 };
 
-const baseSimpleWithMap_LongLookupEntry: object = { key: '', value: Long.ZERO };
+function createBaseSimpleWithMap_LongLookupEntry(): SimpleWithMap_LongLookupEntry {
+  return { key: '', value: Long.ZERO };
+}
 
 export const SimpleWithMap_LongLookupEntry = {
   encode(message: SimpleWithMap_LongLookupEntry, writer: Writer = Writer.create()): Writer {
@@ -421,7 +422,7 @@ export const SimpleWithMap_LongLookupEntry = {
   decode(input: Reader | Uint8Array, length?: number): SimpleWithMap_LongLookupEntry {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseSimpleWithMap_LongLookupEntry } as SimpleWithMap_LongLookupEntry;
+    const message = createBaseSimpleWithMap_LongLookupEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -440,10 +441,10 @@ export const SimpleWithMap_LongLookupEntry = {
   },
 
   fromJSON(object: any): SimpleWithMap_LongLookupEntry {
-    const message = { ...baseSimpleWithMap_LongLookupEntry } as SimpleWithMap_LongLookupEntry;
-    message.key = object.key !== undefined && object.key !== null ? String(object.key) : '';
-    message.value = object.value !== undefined && object.value !== null ? Long.fromString(object.value) : Long.ZERO;
-    return message;
+    return {
+      key: isSet(object.key) ? String(object.key) : '',
+      value: isSet(object.value) ? Long.fromString(object.value) : Long.ZERO,
+    };
   },
 
   toJSON(message: SimpleWithMap_LongLookupEntry): unknown {
@@ -456,28 +457,30 @@ export const SimpleWithMap_LongLookupEntry = {
   fromPartial<I extends Exact<DeepPartial<SimpleWithMap_LongLookupEntry>, I>>(
     object: I
   ): SimpleWithMap_LongLookupEntry {
-    const message = { ...baseSimpleWithMap_LongLookupEntry } as SimpleWithMap_LongLookupEntry;
+    const message = createBaseSimpleWithMap_LongLookupEntry();
     message.key = object.key ?? '';
     message.value = object.value !== undefined && object.value !== null ? Long.fromValue(object.value) : Long.ZERO;
     return message;
   },
 };
 
-const baseNumbers: object = {
-  double: 0,
-  float: 0,
-  int32: 0,
-  int64: Long.ZERO,
-  uint32: 0,
-  uint64: Long.UZERO,
-  sint32: 0,
-  sint64: Long.ZERO,
-  fixed32: 0,
-  fixed64: Long.UZERO,
-  sfixed32: 0,
-  sfixed64: Long.ZERO,
-  manyUint64: Long.UZERO,
-};
+function createBaseNumbers(): Numbers {
+  return {
+    double: 0,
+    float: 0,
+    int32: 0,
+    int64: Long.ZERO,
+    uint32: 0,
+    uint64: Long.UZERO,
+    sint32: 0,
+    sint64: Long.ZERO,
+    fixed32: 0,
+    fixed64: Long.UZERO,
+    sfixed32: 0,
+    sfixed64: Long.ZERO,
+    manyUint64: [],
+  };
+}
 
 export const Numbers = {
   encode(message: Numbers, writer: Writer = Writer.create()): Writer {
@@ -528,8 +531,7 @@ export const Numbers = {
   decode(input: Reader | Uint8Array, length?: number): Numbers {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseNumbers } as Numbers;
-    message.manyUint64 = [];
+    const message = createBaseNumbers();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -588,24 +590,21 @@ export const Numbers = {
   },
 
   fromJSON(object: any): Numbers {
-    const message = { ...baseNumbers } as Numbers;
-    message.double = object.double !== undefined && object.double !== null ? Number(object.double) : 0;
-    message.float = object.float !== undefined && object.float !== null ? Number(object.float) : 0;
-    message.int32 = object.int32 !== undefined && object.int32 !== null ? Number(object.int32) : 0;
-    message.int64 = object.int64 !== undefined && object.int64 !== null ? Long.fromString(object.int64) : Long.ZERO;
-    message.uint32 = object.uint32 !== undefined && object.uint32 !== null ? Number(object.uint32) : 0;
-    message.uint64 =
-      object.uint64 !== undefined && object.uint64 !== null ? Long.fromString(object.uint64) : Long.UZERO;
-    message.sint32 = object.sint32 !== undefined && object.sint32 !== null ? Number(object.sint32) : 0;
-    message.sint64 = object.sint64 !== undefined && object.sint64 !== null ? Long.fromString(object.sint64) : Long.ZERO;
-    message.fixed32 = object.fixed32 !== undefined && object.fixed32 !== null ? Number(object.fixed32) : 0;
-    message.fixed64 =
-      object.fixed64 !== undefined && object.fixed64 !== null ? Long.fromString(object.fixed64) : Long.UZERO;
-    message.sfixed32 = object.sfixed32 !== undefined && object.sfixed32 !== null ? Number(object.sfixed32) : 0;
-    message.sfixed64 =
-      object.sfixed64 !== undefined && object.sfixed64 !== null ? Long.fromString(object.sfixed64) : Long.ZERO;
-    message.manyUint64 = (object.manyUint64 ?? []).map((e: any) => Long.fromString(e));
-    return message;
+    return {
+      double: isSet(object.double) ? Number(object.double) : 0,
+      float: isSet(object.float) ? Number(object.float) : 0,
+      int32: isSet(object.int32) ? Number(object.int32) : 0,
+      int64: isSet(object.int64) ? Long.fromString(object.int64) : Long.ZERO,
+      uint32: isSet(object.uint32) ? Number(object.uint32) : 0,
+      uint64: isSet(object.uint64) ? Long.fromString(object.uint64) : Long.UZERO,
+      sint32: isSet(object.sint32) ? Number(object.sint32) : 0,
+      sint64: isSet(object.sint64) ? Long.fromString(object.sint64) : Long.ZERO,
+      fixed32: isSet(object.fixed32) ? Number(object.fixed32) : 0,
+      fixed64: isSet(object.fixed64) ? Long.fromString(object.fixed64) : Long.UZERO,
+      sfixed32: isSet(object.sfixed32) ? Number(object.sfixed32) : 0,
+      sfixed64: isSet(object.sfixed64) ? Long.fromString(object.sfixed64) : Long.ZERO,
+      manyUint64: Array.isArray(object?.manyUint64) ? object.manyUint64.map((e: any) => Long.fromString(e)) : [],
+    };
   },
 
   toJSON(message: Numbers): unknown {
@@ -631,7 +630,7 @@ export const Numbers = {
   },
 
   fromPartial<I extends Exact<DeepPartial<Numbers>, I>>(object: I): Numbers {
-    const message = { ...baseNumbers } as Numbers;
+    const message = createBaseNumbers();
     message.double = object.double ?? 0;
     message.float = object.float ?? 0;
     message.int32 = object.int32 ?? 0;
@@ -675,4 +674,12 @@ export type Exact<P, I extends P> = P extends Builtin
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
+}
+
+function isObject(value: any): boolean {
+  return typeof value === 'object' && value !== null;
+}
+
+function isSet(value: any): boolean {
+  return value !== null && value !== undefined;
 }

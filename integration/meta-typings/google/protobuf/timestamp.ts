@@ -114,7 +114,9 @@ export interface Timestamp {
   nanos: number;
 }
 
-const baseTimestamp: object = { seconds: 0, nanos: 0 };
+function createBaseTimestamp(): Timestamp {
+  return { seconds: 0, nanos: 0 };
+}
 
 export const Timestamp = {
   encode(message: Timestamp, writer: Writer = Writer.create()): Writer {
@@ -130,7 +132,7 @@ export const Timestamp = {
   decode(input: Reader | Uint8Array, length?: number): Timestamp {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseTimestamp } as Timestamp;
+    const message = createBaseTimestamp();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

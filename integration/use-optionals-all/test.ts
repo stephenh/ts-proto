@@ -74,18 +74,32 @@ export interface OptionalsTest_TranslationsEntry {
 
 export interface Child {}
 
-const baseOptionalsTest: object = {
-  id: 0,
-  state: 0,
-  long: 0,
-  truth: false,
-  description: '',
-  repId: 0,
-  repState: 0,
-  repLong: 0,
-  repTruth: false,
-  repDescription: '',
-};
+function createBaseOptionalsTest(): OptionalsTest {
+  return {
+    id: 0,
+    child: undefined,
+    state: 0,
+    long: 0,
+    truth: false,
+    description: '',
+    data: new Uint8Array(),
+    repId: [],
+    repChild: [],
+    repState: [],
+    repLong: [],
+    repTruth: [],
+    repDescription: [],
+    repData: [],
+    optId: undefined,
+    optChild: undefined,
+    optState: undefined,
+    optLong: undefined,
+    optTruth: undefined,
+    optDescription: undefined,
+    optData: undefined,
+    translations: {},
+  };
+}
 
 export const OptionalsTest = {
   encode(message: OptionalsTest, writer: Writer = Writer.create()): Writer {
@@ -183,16 +197,7 @@ export const OptionalsTest = {
   decode(input: Reader | Uint8Array, length?: number): OptionalsTest {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseOptionalsTest } as OptionalsTest;
-    message.repId = [];
-    message.repChild = [];
-    message.repState = [];
-    message.repLong = [];
-    message.repTruth = [];
-    message.repDescription = [];
-    message.repData = [];
-    message.translations = {};
-    message.data = new Uint8Array();
+    const message = createBaseOptionalsTest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -221,50 +226,50 @@ export const OptionalsTest = {
           if ((tag & 7) === 2) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
-              message.repId.push(reader.int32());
+              message.repId!.push(reader.int32());
             }
           } else {
-            message.repId.push(reader.int32());
+            message.repId!.push(reader.int32());
           }
           break;
         case 12:
-          message.repChild.push(Child.decode(reader, reader.uint32()));
+          message.repChild!.push(Child.decode(reader, reader.uint32()));
           break;
         case 13:
           if ((tag & 7) === 2) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
-              message.repState.push(reader.int32() as any);
+              message.repState!.push(reader.int32() as any);
             }
           } else {
-            message.repState.push(reader.int32() as any);
+            message.repState!.push(reader.int32() as any);
           }
           break;
         case 14:
           if ((tag & 7) === 2) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
-              message.repLong.push(longToNumber(reader.int64() as Long));
+              message.repLong!.push(longToNumber(reader.int64() as Long));
             }
           } else {
-            message.repLong.push(longToNumber(reader.int64() as Long));
+            message.repLong!.push(longToNumber(reader.int64() as Long));
           }
           break;
         case 15:
           if ((tag & 7) === 2) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
-              message.repTruth.push(reader.bool());
+              message.repTruth!.push(reader.bool());
             }
           } else {
-            message.repTruth.push(reader.bool());
+            message.repTruth!.push(reader.bool());
           }
           break;
         case 16:
-          message.repDescription.push(reader.string());
+          message.repDescription!.push(reader.string());
           break;
         case 17:
-          message.repData.push(reader.bytes());
+          message.repData!.push(reader.bytes());
           break;
         case 21:
           message.optId = reader.int32();
@@ -290,7 +295,7 @@ export const OptionalsTest = {
         case 30:
           const entry30 = OptionalsTest_TranslationsEntry.decode(reader, reader.uint32());
           if (entry30.value !== undefined) {
-            message.translations[entry30.key] = entry30.value;
+            message.translations![entry30.key] = entry30.value;
           }
           break;
         default:
@@ -302,41 +307,35 @@ export const OptionalsTest = {
   },
 
   fromJSON(object: any): OptionalsTest {
-    const message = { ...baseOptionalsTest } as OptionalsTest;
-    message.id = object.id !== undefined && object.id !== null ? Number(object.id) : 0;
-    message.child = object.child !== undefined && object.child !== null ? Child.fromJSON(object.child) : undefined;
-    message.state = object.state !== undefined && object.state !== null ? stateEnumFromJSON(object.state) : 0;
-    message.long = object.long !== undefined && object.long !== null ? Number(object.long) : 0;
-    message.truth = object.truth !== undefined && object.truth !== null ? Boolean(object.truth) : false;
-    message.description =
-      object.description !== undefined && object.description !== null ? String(object.description) : '';
-    message.data = object.data !== undefined && object.data !== null ? bytesFromBase64(object.data) : new Uint8Array();
-    message.repId = (object.repId ?? []).map((e: any) => Number(e));
-    message.repChild = (object.repChild ?? []).map((e: any) => Child.fromJSON(e));
-    message.repState = (object.repState ?? []).map((e: any) => stateEnumFromJSON(e));
-    message.repLong = (object.repLong ?? []).map((e: any) => Number(e));
-    message.repTruth = (object.repTruth ?? []).map((e: any) => Boolean(e));
-    message.repDescription = (object.repDescription ?? []).map((e: any) => String(e));
-    message.repData = (object.repData ?? []).map((e: any) => bytesFromBase64(e));
-    message.optId = object.optId !== undefined && object.optId !== null ? Number(object.optId) : undefined;
-    message.optChild =
-      object.optChild !== undefined && object.optChild !== null ? Child.fromJSON(object.optChild) : undefined;
-    message.optState =
-      object.optState !== undefined && object.optState !== null ? stateEnumFromJSON(object.optState) : undefined;
-    message.optLong = object.optLong !== undefined && object.optLong !== null ? Number(object.optLong) : undefined;
-    message.optTruth = object.optTruth !== undefined && object.optTruth !== null ? Boolean(object.optTruth) : undefined;
-    message.optDescription =
-      object.optDescription !== undefined && object.optDescription !== null ? String(object.optDescription) : undefined;
-    message.optData =
-      object.optData !== undefined && object.optData !== null ? bytesFromBase64(object.optData) : undefined;
-    message.translations = Object.entries(object.translations ?? {}).reduce<{ [key: string]: string }>(
-      (acc, [key, value]) => {
-        acc[key] = String(value);
-        return acc;
-      },
-      {}
-    );
-    return message;
+    return {
+      id: isSet(object.id) ? Number(object.id) : 0,
+      child: isSet(object.child) ? Child.fromJSON(object.child) : undefined,
+      state: isSet(object.state) ? stateEnumFromJSON(object.state) : 0,
+      long: isSet(object.long) ? Number(object.long) : 0,
+      truth: isSet(object.truth) ? Boolean(object.truth) : false,
+      description: isSet(object.description) ? String(object.description) : '',
+      data: isSet(object.data) ? bytesFromBase64(object.data) : new Uint8Array(),
+      repId: Array.isArray(object?.repId) ? object.repId.map((e: any) => Number(e)) : [],
+      repChild: Array.isArray(object?.repChild) ? object.repChild.map((e: any) => Child.fromJSON(e)) : [],
+      repState: Array.isArray(object?.repState) ? object.repState.map((e: any) => stateEnumFromJSON(e)) : [],
+      repLong: Array.isArray(object?.repLong) ? object.repLong.map((e: any) => Number(e)) : [],
+      repTruth: Array.isArray(object?.repTruth) ? object.repTruth.map((e: any) => Boolean(e)) : [],
+      repDescription: Array.isArray(object?.repDescription) ? object.repDescription.map((e: any) => String(e)) : [],
+      repData: Array.isArray(object?.repData) ? object.repData.map((e: any) => bytesFromBase64(e)) : [],
+      optId: isSet(object.optId) ? Number(object.optId) : undefined,
+      optChild: isSet(object.optChild) ? Child.fromJSON(object.optChild) : undefined,
+      optState: isSet(object.optState) ? stateEnumFromJSON(object.optState) : undefined,
+      optLong: isSet(object.optLong) ? Number(object.optLong) : undefined,
+      optTruth: isSet(object.optTruth) ? Boolean(object.optTruth) : undefined,
+      optDescription: isSet(object.optDescription) ? String(object.optDescription) : undefined,
+      optData: isSet(object.optData) ? bytesFromBase64(object.optData) : undefined,
+      translations: isObject(object.translations)
+        ? Object.entries(object.translations).reduce<{ [key: string]: string }>((acc, [key, value]) => {
+            acc[key] = String(value);
+            return acc;
+          }, {})
+        : {},
+    };
   },
 
   toJSON(message: OptionalsTest): unknown {
@@ -403,7 +402,7 @@ export const OptionalsTest = {
   },
 
   fromPartial<I extends Exact<DeepPartial<OptionalsTest>, I>>(object: I): OptionalsTest {
-    const message = { ...baseOptionalsTest } as OptionalsTest;
+    const message = createBaseOptionalsTest();
     message.id = object.id ?? 0;
     message.child = object.child !== undefined && object.child !== null ? Child.fromPartial(object.child) : undefined;
     message.state = object.state ?? 0;
@@ -439,7 +438,9 @@ export const OptionalsTest = {
   },
 };
 
-const baseOptionalsTest_TranslationsEntry: object = { key: '', value: '' };
+function createBaseOptionalsTest_TranslationsEntry(): OptionalsTest_TranslationsEntry {
+  return { key: '', value: '' };
+}
 
 export const OptionalsTest_TranslationsEntry = {
   encode(message: OptionalsTest_TranslationsEntry, writer: Writer = Writer.create()): Writer {
@@ -455,7 +456,7 @@ export const OptionalsTest_TranslationsEntry = {
   decode(input: Reader | Uint8Array, length?: number): OptionalsTest_TranslationsEntry {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseOptionalsTest_TranslationsEntry } as OptionalsTest_TranslationsEntry;
+    const message = createBaseOptionalsTest_TranslationsEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -474,10 +475,10 @@ export const OptionalsTest_TranslationsEntry = {
   },
 
   fromJSON(object: any): OptionalsTest_TranslationsEntry {
-    const message = { ...baseOptionalsTest_TranslationsEntry } as OptionalsTest_TranslationsEntry;
-    message.key = object.key !== undefined && object.key !== null ? String(object.key) : '';
-    message.value = object.value !== undefined && object.value !== null ? String(object.value) : '';
-    return message;
+    return {
+      key: isSet(object.key) ? String(object.key) : '',
+      value: isSet(object.value) ? String(object.value) : '',
+    };
   },
 
   toJSON(message: OptionalsTest_TranslationsEntry): unknown {
@@ -490,14 +491,16 @@ export const OptionalsTest_TranslationsEntry = {
   fromPartial<I extends Exact<DeepPartial<OptionalsTest_TranslationsEntry>, I>>(
     object: I
   ): OptionalsTest_TranslationsEntry {
-    const message = { ...baseOptionalsTest_TranslationsEntry } as OptionalsTest_TranslationsEntry;
+    const message = createBaseOptionalsTest_TranslationsEntry();
     message.key = object.key ?? '';
     message.value = object.value ?? '';
     return message;
   },
 };
 
-const baseChild: object = {};
+function createBaseChild(): Child {
+  return {};
+}
 
 export const Child = {
   encode(_: Child, writer: Writer = Writer.create()): Writer {
@@ -507,7 +510,7 @@ export const Child = {
   decode(input: Reader | Uint8Array, length?: number): Child {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseChild } as Child;
+    const message = createBaseChild();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -520,8 +523,7 @@ export const Child = {
   },
 
   fromJSON(_: any): Child {
-    const message = { ...baseChild } as Child;
-    return message;
+    return {};
   },
 
   toJSON(_: Child): unknown {
@@ -530,7 +532,7 @@ export const Child = {
   },
 
   fromPartial<I extends Exact<DeepPartial<Child>, I>>(_: I): Child {
-    const message = { ...baseChild } as Child;
+    const message = createBaseChild();
     return message;
   },
 };
@@ -596,4 +598,12 @@ function longToNumber(long: Long): number {
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
+}
+
+function isObject(value: any): boolean {
+  return typeof value === 'object' && value !== null;
+}
+
+function isSet(value: any): boolean {
+  return value !== null && value !== undefined;
 }

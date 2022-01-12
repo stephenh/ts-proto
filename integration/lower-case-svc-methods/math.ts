@@ -19,7 +19,9 @@ export interface Numbers {
   num: number[];
 }
 
-const baseNumPair: object = { num1: 0, num2: 0 };
+function createBaseNumPair(): NumPair {
+  return { num1: 0, num2: 0 };
+}
 
 export const NumPair = {
   encode(message: NumPair, writer: Writer = Writer.create()): Writer {
@@ -35,7 +37,7 @@ export const NumPair = {
   decode(input: Reader | Uint8Array, length?: number): NumPair {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseNumPair } as NumPair;
+    const message = createBaseNumPair();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -54,10 +56,10 @@ export const NumPair = {
   },
 
   fromJSON(object: any): NumPair {
-    const message = { ...baseNumPair } as NumPair;
-    message.num1 = object.num1 !== undefined && object.num1 !== null ? Number(object.num1) : 0;
-    message.num2 = object.num2 !== undefined && object.num2 !== null ? Number(object.num2) : 0;
-    return message;
+    return {
+      num1: isSet(object.num1) ? Number(object.num1) : 0,
+      num2: isSet(object.num2) ? Number(object.num2) : 0,
+    };
   },
 
   toJSON(message: NumPair): unknown {
@@ -68,14 +70,16 @@ export const NumPair = {
   },
 
   fromPartial<I extends Exact<DeepPartial<NumPair>, I>>(object: I): NumPair {
-    const message = { ...baseNumPair } as NumPair;
+    const message = createBaseNumPair();
     message.num1 = object.num1 ?? 0;
     message.num2 = object.num2 ?? 0;
     return message;
   },
 };
 
-const baseNumSingle: object = { num: 0 };
+function createBaseNumSingle(): NumSingle {
+  return { num: 0 };
+}
 
 export const NumSingle = {
   encode(message: NumSingle, writer: Writer = Writer.create()): Writer {
@@ -88,7 +92,7 @@ export const NumSingle = {
   decode(input: Reader | Uint8Array, length?: number): NumSingle {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseNumSingle } as NumSingle;
+    const message = createBaseNumSingle();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -104,9 +108,9 @@ export const NumSingle = {
   },
 
   fromJSON(object: any): NumSingle {
-    const message = { ...baseNumSingle } as NumSingle;
-    message.num = object.num !== undefined && object.num !== null ? Number(object.num) : 0;
-    return message;
+    return {
+      num: isSet(object.num) ? Number(object.num) : 0,
+    };
   },
 
   toJSON(message: NumSingle): unknown {
@@ -116,13 +120,15 @@ export const NumSingle = {
   },
 
   fromPartial<I extends Exact<DeepPartial<NumSingle>, I>>(object: I): NumSingle {
-    const message = { ...baseNumSingle } as NumSingle;
+    const message = createBaseNumSingle();
     message.num = object.num ?? 0;
     return message;
   },
 };
 
-const baseNumbers: object = { num: 0 };
+function createBaseNumbers(): Numbers {
+  return { num: [] };
+}
 
 export const Numbers = {
   encode(message: Numbers, writer: Writer = Writer.create()): Writer {
@@ -137,8 +143,7 @@ export const Numbers = {
   decode(input: Reader | Uint8Array, length?: number): Numbers {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseNumbers } as Numbers;
-    message.num = [];
+    const message = createBaseNumbers();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -161,9 +166,9 @@ export const Numbers = {
   },
 
   fromJSON(object: any): Numbers {
-    const message = { ...baseNumbers } as Numbers;
-    message.num = (object.num ?? []).map((e: any) => Number(e));
-    return message;
+    return {
+      num: Array.isArray(object?.num) ? object.num.map((e: any) => Number(e)) : [],
+    };
   },
 
   toJSON(message: Numbers): unknown {
@@ -177,7 +182,7 @@ export const Numbers = {
   },
 
   fromPartial<I extends Exact<DeepPartial<Numbers>, I>>(object: I): Numbers {
-    const message = { ...baseNumbers } as Numbers;
+    const message = createBaseNumbers();
     message.num = object.num?.map((e) => e) || [];
     return message;
   },
@@ -265,4 +270,8 @@ export type Exact<P, I extends P> = P extends Builtin
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
+}
+
+function isSet(value: any): boolean {
+  return value !== null && value !== undefined;
 }

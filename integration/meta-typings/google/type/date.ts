@@ -36,7 +36,9 @@ export interface DateMessage {
   day: number;
 }
 
-const baseDateMessage: object = { year: 0, month: 0, day: 0 };
+function createBaseDateMessage(): DateMessage {
+  return { year: 0, month: 0, day: 0 };
+}
 
 export const DateMessage = {
   encode(message: DateMessage, writer: Writer = Writer.create()): Writer {
@@ -55,7 +57,7 @@ export const DateMessage = {
   decode(input: Reader | Uint8Array, length?: number): DateMessage {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseDateMessage } as DateMessage;
+    const message = createBaseDateMessage();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {

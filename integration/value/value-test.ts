@@ -9,6 +9,7 @@ describe('values', () => {
       value: 'Hello',
       anyList: [1, 'foo', true],
       repeatedAny: [2, 'bar', false],
+      nullValue: null,
     });
 
     const s2 = PbValueMessage.decode(Reader.create(ValueMessage.encode(s1).finish()));
@@ -49,9 +50,13 @@ describe('values', () => {
   it('decodes lists of any types correctly', () => {
     const s1 = ValueMessage.fromJSON({
       anyList: [1, 'foo', true],
-      repeatedAny: [2, 'bar', false],
+      repeatedAny: [2, 'bar', false, { key: 'value' }],
     });
-    expect(s1).toEqual({ anyList: [1, 'foo', true], repeatedAny: [2, 'bar', false] });
+    expect(s1).toEqual({
+      anyList: [1, 'foo', true],
+      repeatedAny: [2, 'bar', false, { key: 'value' }],
+      repeatedStrings: [],
+    });
   });
 
   it('toJson', () => {
@@ -59,6 +64,6 @@ describe('values', () => {
       anyList: [1],
       repeatedAny: [2],
     });
-    expect(s1).toEqual({ anyList: [1], repeatedAny: [2] });
+    expect(s1).toEqual({ anyList: [1], repeatedAny: [2], repeatedStrings: [] });
   });
 });

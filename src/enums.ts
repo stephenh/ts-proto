@@ -19,22 +19,36 @@ export function generateEnum(
   const chunks: Code[] = [];
 
   maybeAddComment(sourceInfo, chunks, enumDesc.options?.deprecated);
-  chunks.push(code`export ${options.constEnums ? 'const ' : ''}enum ${def(fullName)} {`);
+
+  if (options.enumsAsLiterals) {
+    chunks.push(code`export const ${def(fullName)} = {`);
+  } else {
+    chunks.push(code`export ${options.constEnums ? 'const ' : ''}enum ${def(fullName)} {`);
+  }
+
+  const delimiter = options.enumsAsLiterals ? ':' : '=';
 
   enumDesc.value.forEach((valueDesc, index) => {
     const info = sourceInfo.lookup(Fields.enum.value, index);
     maybeAddComment(info, chunks, valueDesc.options?.deprecated, `${valueDesc.name} - `);
     chunks.push(
-      code`${valueDesc.name} = ${options.stringEnums ? `"${valueDesc.name}"` : valueDesc.number.toString()},`
+      code`${valueDesc.name} ${delimiter} ${options.stringEnums ? `"${valueDesc.name}"` : valueDesc.number.toString()},`
     );
   });
 
   if (options.unrecognizedEnum)
     chunks.push(code`
-      ${UNRECOGNIZED_ENUM_NAME} = ${
+      ${UNRECOGNIZED_ENUM_NAME} ${delimiter} ${
       options.stringEnums ? `"${UNRECOGNIZED_ENUM_NAME}"` : UNRECOGNIZED_ENUM_VALUE.toString()
     },`);
-  chunks.push(code`}`);
+
+  if (options.enumsAsLiterals) {
+    chunks.push(code`} as const`);
+    chunks.push(code`\n`);
+    chunks.push(code`export type ${def(fullName)} = typeof ${def(fullName)}[keyof typeof ${def(fullName)}]`);
+  } else {
+    chunks.push(code`}`);
+  }
 
   if (options.outputJsonMethods || (options.stringEnums && options.outputEncodeMethods)) {
     chunks.push(code`\n`);

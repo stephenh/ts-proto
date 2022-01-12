@@ -404,6 +404,11 @@ export function isMapType(ctx: Context, messageDesc: DescriptorProto, field: Fie
   return detectMapType(ctx, messageDesc, field) !== undefined;
 }
 
+export function isObjectId(field: FieldDescriptorProto): boolean {
+  // need to use endsWith instead of === because objectid could be imported from an external proto file
+  return field.typeName.endsWith('.ObjectId');
+}
+
 export function isTimestamp(field: FieldDescriptorProto): boolean {
   return field.typeName === '.google.protobuf.Timestamp';
 }
@@ -541,6 +546,11 @@ export function messageToTypeName(
     if (options.useDate == DateOption.STRING) {
       return code`string`;
     }
+  }
+
+  // need to use endsWith instead of === because objectid could be imported from an external proto file
+  if (!typeOptions.keepValueType && options.useMongoObjectId && protoType.endsWith('.ObjectId')) {
+    return code`mongodb.ObjectId`;
   }
   const [module, type] = toModuleAndType(typeMap, protoType);
   return code`${impProto(options, module, type)}`;

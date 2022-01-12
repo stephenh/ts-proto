@@ -18,6 +18,7 @@ import {
   isLongValueType,
   isMapType,
   isMessage,
+  isObjectId,
   isOptionalProperty,
   isPrimitive,
   isRepeated,
@@ -148,7 +149,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
       (fullName, message, sInfo, fullProtoTypeName) => {
         const fullTypeName = maybePrefixPackage(fileDesc, fullProtoTypeName);
 
-        chunks.push(generateBaseInstance(ctx, fullName, message, fullTypeName));
+        chunks.push(generateBaseInstanceFactory(ctx, fullName, message, fullTypeName));
 
         const staticMembers: Code[] = [];
 
@@ -168,8 +169,8 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
           staticMembers.push(generateFromPartial(ctx, fullName, message));
         }
 
-        staticMembers.push(...generateWrap(fullTypeName));
-        staticMembers.push(...generateUnwrap(fullTypeName));
+        staticMembers.push(...generateWrap(ctx, fullTypeName));
+        staticMembers.push(...generateUnwrap(ctx, fullTypeName));
 
         chunks.push(code`
           export const ${def(fullName)} = {
@@ -281,9 +282,11 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
 }
 
 export type Utils = ReturnType<typeof makeDeepPartial> &
+  ReturnType<typeof makeObjectIdMethods> &
   ReturnType<typeof makeTimestampMethods> &
   ReturnType<typeof makeByteUtils> &
-  ReturnType<typeof makeLongUtils>;
+  ReturnType<typeof makeLongUtils> &
+  ReturnType<typeof makeComparisonUtils>;
 
 /** These are runtime utility methods used by the generated code. */
 export function makeUtils(options: Options): Utils {
@@ -292,8 +295,10 @@ export function makeUtils(options: Options): Utils {
   return {
     ...bytes,
     ...makeDeepPartial(options, longs),
+    ...makeObjectIdMethods(options),
     ...makeTimestampMethods(options, longs),
     ...longs,
+    ...makeComparisonUtils(),
   };
 }
 
@@ -467,6 +472,46 @@ function makeDeepPartial(options: Options, longs: ReturnType<typeof makeLongUtil
   return { Builtin, DeepPartial, Exact };
 }
 
+function makeObjectIdMethods(options: Options) {
+  const mongodb = imp('mongodb*mongodb');
+
+  const fromProtoObjectId = conditionalOutput(
+    'fromProtoObjectId',
+    code`
+      function fromProtoObjectId(oid: ObjectId): ${mongodb}.ObjectId {
+        return new ${mongodb}.ObjectId(oid.value);
+      }
+    `
+  );
+
+  const fromJsonObjectId = conditionalOutput(
+    'fromJsonObjectId',
+    code`
+      function fromJsonObjectId(o: any): ${mongodb}.ObjectId {
+        if (o instanceof ${mongodb}.ObjectId) {
+          return o;
+        } else if (typeof o === "string") {
+          return new ${mongodb}.ObjectId(o);
+        } else {
+          return ${fromProtoObjectId}(ObjectId.fromJSON(o));
+        }
+      }
+    `
+  );
+
+  const toProtoObjectId = conditionalOutput(
+    'toProtoObjectId',
+    code`
+      function toProtoObjectId(oid: ${mongodb}.ObjectId): ObjectId {
+        const value = oid.toString();
+        return { value };
+      }
+    `
+  );
+
+  return { fromJsonObjectId, fromProtoObjectId, toProtoObjectId };
+}
+
 function makeTimestampMethods(options: Options, longs: ReturnType<typeof makeLongUtils>) {
   const Timestamp = impProto(options, 'google/protobuf/timestamp', 'Timestamp');
 
@@ -552,6 +597,26 @@ function makeTimestampMethods(options: Options, longs: ReturnType<typeof makeLon
   );
 
   return { toTimestamp, fromTimestamp, fromJsonTimestamp };
+}
+
+function makeComparisonUtils() {
+  const isObject = conditionalOutput(
+    'isObject',
+    code`
+    function isObject(value: any): boolean {
+      return typeof value === 'object' && value !== null;
+    }`
+  );
+
+  const isSet = conditionalOutput(
+    'isSet',
+    code`
+    function isSet(value: any): boolean {
+      return value !== null && value !== undefined;
+    }`
+  );
+
+  return { isObject, isSet };
 }
 
 // Create the interface with properties
@@ -641,27 +706,51 @@ function generateOneofProperty(
   */
 }
 
-// Create a 'base' instance with default values for decode to use as a prototype
-function generateBaseInstance(
+// Create a function that constructs 'base' instance with default values for decode to use as a prototype
+function generateBaseInstanceFactory(
   ctx: Context,
   fullName: string,
   messageDesc: DescriptorProto,
   fullTypeName: string
 ): Code {
-  const fields = messageDesc.field
-    .filter((field) => !isWithinOneOf(field))
-    .map((field) => [field, defaultValue(ctx, field)])
-    .filter(([field, val]) => val !== 'undefined' && !isBytes(field))
-    .map(([field, val]) => {
-      const name = maybeSnakeToCamel(field.name, ctx.options);
-      return code`${name}: ${val}`;
-    });
+  const fields: Code[] = [];
+
+  // When oneof=unions, we generate a single property with an ADT per `oneof` clause.
+  const processedOneofs = new Set<number>();
+
+  for (const field of messageDesc.field) {
+    if (isWithinOneOfThatShouldBeUnion(ctx.options, field)) {
+      const { oneofIndex } = field;
+      if (!processedOneofs.has(oneofIndex)) {
+        processedOneofs.add(oneofIndex);
+
+        const name = maybeSnakeToCamel(messageDesc.oneofDecl[oneofIndex].name, ctx.options);
+        fields.push(code`${name}: undefined`);
+      }
+      continue;
+    }
+
+    const name = maybeSnakeToCamel(field.name, ctx.options);
+    const val = isWithinOneOf(field)
+      ? 'undefined'
+      : isMapType(ctx, messageDesc, field)
+      ? '{}'
+      : isRepeated(field)
+      ? '[]'
+      : defaultValue(ctx, field);
+
+    fields.push(code`${name}: ${val}`);
+  }
 
   if (ctx.options.outputTypeRegistry) {
     fields.unshift(code`$type: '${fullTypeName}'`);
   }
 
-  return code`const base${fullName}: object = { ${joinCode(fields, { on: ',' })} };`;
+  return code`
+    function createBase${fullName}(): ${fullName} {
+      return { ${joinCode(fields, { on: ',' })} };
+    }
+  `;
 }
 
 /** Creates a function to decode a message by loop overing the tags. */
@@ -677,24 +766,8 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
     ): ${fullName} {
       const reader = input instanceof ${Reader} ? input : new ${Reader}(input);
       let end = length === undefined ? reader.len : reader.pos + length;
-      const message = { ...base${fullName} } as ${fullName};
+      const message = createBase${fullName}();
   `);
-
-  // initialize all lists
-  messageDesc.field.filter(isRepeated).forEach((field) => {
-    const name = maybeSnakeToCamel(field.name, options);
-    const value = isMapType(ctx, messageDesc, field) ? '{}' : '[]';
-    chunks.push(code`message.${name} = ${value};`);
-  });
-
-  // initialize all buffers
-  messageDesc.field
-    .filter((field) => !isRepeated(field) && !isWithinOneOf(field) && isBytes(field))
-    .forEach((field) => {
-      const value = options.env === EnvOption.NODE ? 'Buffer.alloc(0)' : 'new Uint8Array()';
-      const name = maybeSnakeToCamel(field.name, options);
-      chunks.push(code`message.${name} = ${value};`);
-    });
 
   if (options.unknownFields) {
     chunks.push(code`(message as any)._unknownFields = {}`);
@@ -749,6 +822,9 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
     } else if (isTimestamp(field) && (options.useDate === DateOption.DATE || options.useDate === DateOption.STRING)) {
       const type = basicTypeName(ctx, field, { keepValueType: true });
       readSnippet = code`${utils.fromTimestamp}(${type}.decode(reader, reader.uint32()))`;
+    } else if (isObjectId(field) && options.useMongoObjectId) {
+      const type = basicTypeName(ctx, field, { keepValueType: true });
+      readSnippet = code`${utils.fromProtoObjectId}(${type}.decode(reader, reader.uint32()))`;
     } else if (isMessage(field)) {
       const type = basicTypeName(ctx, field);
       readSnippet = code`${type}.decode(reader, reader.uint32())`;
@@ -758,26 +834,28 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
 
     // and then use the snippet to handle repeated fields if necessary
     if (isRepeated(field)) {
+      const maybeNonNullAssertion = ctx.options.useOptionals === 'all' ? '!' : '';
+
       if (isMapType(ctx, messageDesc, field)) {
         // We need a unique const within the `cast` statement
         const varName = `entry${field.number}`;
         chunks.push(code`
           const ${varName} = ${readSnippet};
           if (${varName}.value !== undefined) {
-            message.${fieldName}[${varName}.key] = ${varName}.value;
+            message.${fieldName}${maybeNonNullAssertion}[${varName}.key] = ${varName}.value;
           }
         `);
       } else if (packedType(field.type) === undefined) {
-        chunks.push(code`message.${fieldName}.push(${readSnippet});`);
+        chunks.push(code`message.${fieldName}${maybeNonNullAssertion}.push(${readSnippet});`);
       } else {
         chunks.push(code`
           if ((tag & 7) === 2) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
-              message.${fieldName}.push(${readSnippet});
+              message.${fieldName}${maybeNonNullAssertion}.push(${readSnippet});
             }
           } else {
-            message.${fieldName}.push(${readSnippet});
+            message.${fieldName}${maybeNonNullAssertion}.push(${readSnippet});
           }
         `);
       }
@@ -844,6 +922,11 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
     } else if (isScalar(field) || isEnum(field)) {
       const tag = ((field.number << 3) | basicWireType(field.type)) >>> 0;
       writeSnippet = (place) => code`writer.uint32(${tag}).${toReaderCall(field)}(${place})`;
+    } else if (isObjectId(field) && options.useMongoObjectId) {
+      const tag = ((field.number << 3) | 2) >>> 0;
+      const type = basicTypeName(ctx, field, { keepValueType: true });
+      writeSnippet = (place) =>
+        code`${type}.encode(${utils.toProtoObjectId}(${place}), writer.uint32(${tag}).fork()).ldelim()`;
     } else if (isTimestamp(field) && (options.useDate === DateOption.DATE || options.useDate === DateOption.STRING)) {
       const tag = ((field.number << 3) | 2) >>> 0;
       const type = basicTypeName(ctx, field, { keepValueType: true });
@@ -1011,15 +1094,23 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
   // create the basic function declaration
   chunks.push(code`
     fromJSON(${messageDesc.field.length > 0 ? 'object' : '_'}: any): ${fullName} {
-      const message = { ...base${fullName} } as ${fullName};
+      return {
   `);
+
+  if (ctx.options.outputTypeRegistry) {
+    chunks.push(code`$type: ${fullName}.$type,`);
+  }
+
+  const oneofFieldsCases = messageDesc.oneofDecl.map((oneof, oneofIndex) =>
+    messageDesc.field.filter(isWithinOneOf).filter((field) => field.oneofIndex === oneofIndex)
+  );
 
   // add a check for each incoming field
   messageDesc.field.forEach((field) => {
     const fieldName = maybeSnakeToCamel(field.name, options);
     const jsonName = determineFieldJsonName(field, options);
 
-    // get a generic 'reader.doSomething' bit that is specific to the basic type
+    // get code that extracts value from incoming object
     const readSnippet = (from: string): Code => {
       if (isEnum(field)) {
         const fromJson = getEnumMethod(ctx, field.typeName, 'FromJSON');
@@ -1039,6 +1130,8 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
           const cstr = capitalize(basicTypeName(ctx, field, { keepValueType: true }).toCodeString());
           return code`${cstr}(${from})`;
         }
+      } else if (isObjectId(field) && options.useMongoObjectId) {
+        return code`${utils.fromJsonObjectId}(${from})`;
       } else if (isTimestamp(field) && options.useDate === DateOption.STRING) {
         return code`String(${from})`;
       } else if (
@@ -1048,14 +1141,14 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
         return code`${utils.fromJsonTimestamp}(${from})`;
       } else if (isAnyValueType(field) || isStructType(field)) {
         return code`${from}`;
+      } else if (isListValueType(field)) {
+        return code`[...${from}]`;
       } else if (isValueType(ctx, field)) {
         const valueType = valueTypeName(ctx, field.typeName)!;
         if (isLongValueType(field) && options.forceLong === LongOption.LONG) {
           return code`${capitalize(valueType.toCodeString())}.fromValue(${from})`;
         } else if (isBytesValueType(field)) {
           return code`new ${capitalize(valueType.toCodeString())}(${from})`;
-        } else if (isListValueType(field)) {
-          return code`[...${from}]`;
         } else {
           return code`${capitalize(valueType.toCodeString())}(${from})`;
         }
@@ -1078,6 +1171,8 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
               const cstr = capitalize(basicTypeName(ctx, valueType).toCodeString());
               return code`${cstr}(${from})`;
             }
+          } else if (isObjectId(valueType) && options.useMongoObjectId) {
+            return code`${utils.fromJsonObjectId}(${from})`;
           } else if (isTimestamp(valueType) && options.useDate === DateOption.STRING) {
             return code`String(${from})`;
           } else if (
@@ -1109,51 +1204,69 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
         const fieldType = toTypeName(ctx, messageDesc, field);
         const i = maybeCastToNumber(ctx, messageDesc, field, 'key');
         chunks.push(code`
-          message.${fieldName} = Object.entries(object.${jsonName} ?? {}).reduce<${fieldType}>((acc, [key, value]) => {
-            acc[${i}] = ${readSnippet('value')};
-            return acc;
-          }, {});
-        `);
-      } else if (isAnyValueType(field)) {
-        chunks.push(code`
-          message.${fieldName} = Array.isArray(object?.${jsonName}) ? [...object.${jsonName}] : [];
+          ${fieldName}: ${ctx.utils.isObject}(object.${jsonName})
+            ? Object.entries(object.${jsonName}).reduce<${fieldType}>((acc, [key, value]) => {
+                acc[${i}] = ${readSnippet('value')};
+                return acc;
+              }, {})
+            : {},
         `);
       } else {
-        // Explicit `any` type required to make TS with noImplicitAny happy. `object` is also `any` here.
-        chunks.push(code`
-          message.${fieldName} = (object.${jsonName} ?? []).map((e: any) => ${readSnippet('e')});
-        `);
+        const readValueSnippet = readSnippet('e');
+        if (readValueSnippet.toString() === code`e`.toString()) {
+          chunks.push(code`${fieldName}: Array.isArray(object?.${jsonName}) ? [...object.${jsonName}] : [],`);
+        } else {
+          // Explicit `any` type required to make TS with noImplicitAny happy. `object` is also `any` here.
+          chunks.push(code`
+            ${fieldName}: Array.isArray(object?.${jsonName}) ? object.${jsonName}.map((e: any) => ${readValueSnippet}): [],
+          `);
+        }
       }
     } else if (isWithinOneOfThatShouldBeUnion(options, field)) {
-      chunks.push(code`if (object.${jsonName} !== undefined && object.${jsonName} !== null) {`);
-      const oneofName = maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options);
-      chunks.push(code`
-        message.${oneofName} = { $case: '${fieldName}', ${fieldName}: ${readSnippet(`object.${jsonName}`)} }
-      `);
-      chunks.push(code`}`);
+      const cases = oneofFieldsCases[field.oneofIndex];
+      const firstCase = cases[0];
+      const lastCase = cases[cases.length - 1];
+
+      if (field === firstCase) {
+        const fieldName = maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options);
+        chunks.push(code`${fieldName}: `);
+      }
+
+      const ternaryIf = code`${ctx.utils.isSet}(object.${jsonName})`;
+      const ternaryThen = code`{ $case: '${fieldName}', ${fieldName}: ${readSnippet(`object.${jsonName}`)}`;
+      chunks.push(code`${ternaryIf} ? ${ternaryThen}} : `);
+
+      if (field === lastCase) {
+        chunks.push(code`undefined,`);
+      }
     } else if (isAnyValueType(field)) {
-      chunks.push(code`message.${fieldName} = object.${fieldName};`);
+      chunks.push(code`${fieldName}: ${ctx.utils.isSet}(object?.${jsonName})
+        ? ${readSnippet(`object.${jsonName}`)}
+        : undefined,
+      `);
     } else if (isStructType(field)) {
       chunks.push(
-        code`message.${fieldName} = typeof(object.${fieldName}) === 'object' ? object.${fieldName} : undefined;`
+        code`${fieldName}: ${ctx.utils.isObject}(object.${jsonName})
+          ? ${readSnippet(`object.${jsonName}`)}
+          : undefined,`
       );
     } else if (isListValueType(field)) {
       chunks.push(code`
-        message.${fieldName} = Array.isArray(object?.${fieldName})
-          ? ${readSnippet(`object.${fieldName}`)}
-          : ${'undefined'};
+        ${fieldName}: Array.isArray(object.${jsonName})
+          ? ${readSnippet(`object.${jsonName}`)}
+          : undefined,
       `);
     } else {
       const fallback = isWithinOneOf(field) ? 'undefined' : defaultValue(ctx, field);
       chunks.push(code`
-        message.${fieldName} = (object.${jsonName} !== undefined && object.${jsonName} !== null)
+        ${fieldName}: ${ctx.utils.isSet}(object.${jsonName})
           ? ${readSnippet(`object.${jsonName}`)}
-          : ${fallback};
+          : ${fallback},
       `);
     }
   });
   // and then wrap up the switch/while/return
-  chunks.push(code`return message`);
+  chunks.push(code`};`);
   chunks.push(code`}`);
   return joinCode(chunks, { on: '\n' });
 }
@@ -1179,6 +1292,8 @@ function generateToJson(ctx: Context, fullName: string, messageDesc: DescriptorP
         return isWithinOneOf(field)
           ? code`${from} !== undefined ? ${toJson}(${from}) : undefined`
           : code`${toJson}(${from})`;
+      } else if (isObjectId(field) && options.useMongoObjectId) {
+        return code`${from}.toString()`;
       } else if (isTimestamp(field) && options.useDate === DateOption.DATE) {
         return code`${from}.toISOString()`;
       } else if (isTimestamp(field) && options.useDate === DateOption.STRING) {
@@ -1193,6 +1308,8 @@ function generateToJson(ctx: Context, fullName: string, messageDesc: DescriptorP
           return code`${toJson}(${from})`;
         } else if (isBytes(valueType)) {
           return code`${utils.base64FromBytes}(${from})`;
+        } else if (isObjectId(valueType) && options.useMongoObjectId) {
+          return code`${from}.toString()`;
         } else if (isTimestamp(valueType) && options.useDate === DateOption.DATE) {
           return code`${from}.toISOString()`;
         } else if (isTimestamp(valueType) && options.useDate === DateOption.STRING) {
@@ -1269,14 +1386,21 @@ function generateToJson(ctx: Context, fullName: string, messageDesc: DescriptorP
 function generateFromPartial(ctx: Context, fullName: string, messageDesc: DescriptorProto): Code {
   const { options, utils, typeMap } = ctx;
   const chunks: Code[] = [];
-  const Timestamp = impProto(options, 'google/protobuf/timestamp', 'Timestamp');
 
   // create the basic function declaration
   const paramName = messageDesc.field.length > 0 ? 'object' : '_';
-  chunks.push(code`
-    fromPartial<I extends ${utils.Exact}<${utils.DeepPartial}<${fullName}>, I>>(${paramName}: I): ${fullName} {
-      const message = { ...base${fullName} } as ${fullName};
-  `);
+
+  if (ctx.options.useExactTypes) {
+    chunks.push(code`
+      fromPartial<I extends ${utils.Exact}<${utils.DeepPartial}<${fullName}>, I>>(${paramName}: I): ${fullName} {
+    `);
+  } else {
+    chunks.push(code`
+      fromPartial(${paramName}: ${utils.DeepPartial}<${fullName}>): ${fullName} {
+    `);
+  }
+
+  chunks.push(code`const message = createBase${fullName}();`);
 
   // add a check for each incoming field
   messageDesc.field.forEach((field) => {
@@ -1285,6 +1409,8 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
     const readSnippet = (from: string): Code => {
       if ((isLong(field) || isLongValueType(field)) && options.forceLong === LongOption.LONG) {
         return code`Long.fromValue(${from})`;
+      } else if (isObjectId(field) && options.useMongoObjectId) {
+        return code`${from} as mongodb.ObjectId`;
       } else if (
         isPrimitive(field) ||
         (isTimestamp(field) && (options.useDate === DateOption.DATE || options.useDate === DateOption.STRING)) ||
@@ -1307,6 +1433,8 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
             }
           } else if (isAnyValueType(valueType)) {
             return code`${from}`;
+          } else if (isObjectId(valueType) && options.useMongoObjectId) {
+            return code`${from} as mongodb.ObjectId`;
           } else if (
             isTimestamp(valueType) &&
             (options.useDate === DateOption.DATE || options.useDate === DateOption.STRING)
@@ -1379,7 +1507,7 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
   return joinCode(chunks, { on: '\n' });
 }
 
-function generateWrap(fullProtoTypeName: string): Code[] {
+function generateWrap(ctx: Context, fullProtoTypeName: string): Code[] {
   const chunks: Code[] = [];
   if (isStructTypeName(fullProtoTypeName)) {
     chunks.push(code`wrap(object: {[key: string]: any} | undefined): Struct {
@@ -1394,7 +1522,28 @@ function generateWrap(fullProtoTypeName: string): Code[] {
   }
 
   if (isAnyValueTypeName(fullProtoTypeName)) {
-    chunks.push(code`wrap(value: any): Value {
+    if (ctx.options.oneof === OneofOption.UNIONS) {
+      chunks.push(code`wrap(value: any): Value {
+      if (value === null) {
+        return {kind: {$case: 'nullValue', nullValue: NullValue.NULL_VALUE}};
+      } else if (typeof value === 'boolean') {
+        return {kind: {$case: 'boolValue', boolValue: value}};
+      } else if (typeof value === 'number') {
+        return {kind: {$case: 'numberValue', numberValue: value}};
+      } else if (typeof value === 'string') {
+        return {kind: {$case: 'stringValue', stringValue: value}};
+      } else if (Array.isArray(value)) {
+        return {kind: {$case: 'listValue', listValue: value}};
+      } else if (typeof value === 'object') {
+        return {kind: {$case: 'structValue', structValue: value}};
+      } else if (typeof value === 'undefined') {
+        return {} as Value;
+      } else {
+        throw new Error('Unsupported any value type: ' + typeof value);
+      }
+    }`);
+    } else {
+      chunks.push(code`wrap(value: any): Value {
       if (value === null) {
         return {nullValue: NullValue.NULL_VALUE} as Value;
       } else if (typeof value === 'boolean') {
@@ -1413,18 +1562,19 @@ function generateWrap(fullProtoTypeName: string): Code[] {
         throw new Error('Unsupported any value type: ' + typeof value);
       }
     }`);
+    }
   }
 
   if (isListValueTypeName(fullProtoTypeName)) {
-    chunks.push(code`wrap(value: Array<any>): ListValue {
-      return {values: value};
+    chunks.push(code`wrap(value: Array<any> | undefined): ListValue {
+      return {values: value ?? []};
     }`);
   }
 
   return chunks;
 }
 
-function generateUnwrap(fullProtoTypeName: string): Code[] {
+function generateUnwrap(ctx: Context, fullProtoTypeName: string): Code[] {
   const chunks: Code[] = [];
   if (isStructTypeName(fullProtoTypeName)) {
     chunks.push(code`unwrap(message: Struct): {[key: string]: any} {
@@ -1437,7 +1587,26 @@ function generateUnwrap(fullProtoTypeName: string): Code[] {
   }
 
   if (isAnyValueTypeName(fullProtoTypeName)) {
-    chunks.push(code`unwrap(message: Value): string | number | boolean | Object | null | Array<any> | undefined {
+    if (ctx.options.oneof === OneofOption.UNIONS) {
+      chunks.push(code`unwrap(message: Value): string | number | boolean | Object | null | Array<any> | undefined {
+        if (message.kind?.$case === 'nullValue') {
+          return null;
+        } else if (message.kind?.$case === 'numberValue') {
+          return message.kind?.numberValue;
+        } else if (message.kind?.$case === 'stringValue') {
+          return message.kind?.stringValue;
+        } else if (message.kind?.$case === 'boolValue') {
+          return message.kind?.boolValue;
+        } else if (message.kind?.$case === 'structValue') {
+          return message.kind?.structValue;
+        } else if (message.kind?.$case === 'listValue') {
+          return message.kind?.listValue;
+        } else {
+          return undefined;
+        }
+    }`);
+    } else {
+      chunks.push(code`unwrap(message: Value): string | number | boolean | Object | null | Array<any> | undefined {
       if (message?.stringValue !== undefined) {
         return message.stringValue;
       } else if (message?.numberValue !== undefined) {
@@ -1453,6 +1622,7 @@ function generateUnwrap(fullProtoTypeName: string): Code[] {
       }
       return undefined;
     }`);
+    }
   }
 
   if (isListValueTypeName(fullProtoTypeName)) {

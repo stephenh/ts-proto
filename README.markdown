@@ -5,7 +5,7 @@
 
 > `ts-proto` transforms your `.proto` files into strongly-typed, idiomatic TypeScript files!
 
-(Note, if you're a new user of ts-proto and using a modern TS setup with `esModuleInterop`, you need to also pass that as a `ts_proto_opt`.)
+(Note, if you're a new user of ts-proto and using a modern TS setup with `esModuleInterop`, or want to use ts-proto in ESM / snowpack / vite, you need to also pass that as a `ts_proto_opt`.)
 
 ## Table of contents
 
@@ -13,6 +13,7 @@
   - [Table of contents](#table-of-contents)
 - [Overview](#overview)
 - [QuickStart](#quickstart)
+    - [Buf](#buf)
 - [Goals](#goals)
 - [Example Types](#example-types)
 - [Highlights](#highlights)
@@ -83,6 +84,19 @@ It will also generate client implementations of `PingService`; currently [Twirp]
 This will generate `*.ts` source files for the given `*.proto` types.
 
 If you want to package these source files into an npm package to distribute to clients, just run `tsc` on them as usual to generate the `.js`/`.d.ts` files, and deploy the output as a regular npm package.
+
+## Buf
+
+If you're using Buf, pass `strategy: all` in your `buf.gen.yaml` file ([docs](https://docs.buf.build/configuration/v1/buf-gen-yaml#strategy)).
+
+```yaml
+version: v1
+plugins:
+  - name: ts
+    out: ../gen/ts
+    strategy: all
+    path: ../node_modules/ts-proto/protoc-gen-ts_proto
+```    
 
 # Goals
 
@@ -159,7 +173,11 @@ creating a class and calling the right getters/setters.
 
   (Configurable with the `useDate` parameter.)
 
-- `fromJSON`/`toJSON` support the [canonical Protobuf JS](https://developers.google.com/protocol-buffers/docs/proto3#json) format (i.e. timestamps are ISO strings)
+- `fromJSON`/`toJSON` use the [proto3 canonical JSON encoding format](https://developers.google.com/protocol-buffers/docs/proto3#json) (e.g. timestamps are ISO strings), unlike [`protobufjs`](https://github.com/protobufjs/protobuf.js/issues/1304). 
+
+- ObjectIds can be mapped as `mongodb.ObjectId`
+
+  (Configurable with the `useObjectId` parameter.)
 
 # Auto-Batching / N+1 Prevention
 
@@ -333,6 +351,8 @@ Generated code will be placed in the Gradle build directory.
 
 - With `--ts_proto_opt=useDate=false`, fields of type `google.protobuf.Timestamp` will not be mapped to type `Date` in the generated types. See [Timestamp](#timestamp) for more details.
 
+- With `--ts_proto_opt=useObjectId=true`, fields of a type called ObjectId where the message is constructed to have on field called value that is a string will be mapped to type `mongodb.ObjectId` in the generated types. This will require your project to install the mongodb npm package. See [ObjectId](#objectid) for more details.
+
 - With `--ts_proto_opt=outputSchema=true`, meta typings will be generated that can later be used in other code generators.
 
 - With `--ts_proto_opt=outputTypeRegistry=true`, the type registry will be generated that can be used to resolve message types by fully-qualified name. Also, each message will get extra `$type` field containing fully-qualified name.
@@ -347,6 +367,12 @@ Generated code will be placed in the Gradle build directory.
 `protoc --plugin=./node_modules/.bin/protoc-gen-ts_proto my_message.proto google/protobuf/duration.proto`
 
 - With `--ts_proto_opt=fileSuffix=<SUFFIX>`, ts-proto will emit generated files using the specified suffix. A `helloworld.proto` file with `fileSuffix=.pb` would be generated as `helloworld.pb.ts`. This is common behavior in other protoc plugins and provides a way to quickly glob all the generated files. 
+
+- With `--ts_proto_opt=enumsAsLiterals=true`, the generated enum types will be enum-ish object with `as const`.
+
+- With `--ts_proto_opt=useExactTypes=false`, the generated `fromPartial` method will not use Exact types.
+  
+  The default behavior is `useExactTypes=true`, which makes `fromPartial` use Exact type for its argument to make TypeScript reject any unknown properties.
 
 - With `--ts_proto_opt=unknownFields=true`, all unknown fields will be parsed and output as arrays of buffers.
 
@@ -400,11 +426,13 @@ The commands below assume you have **Docker** installed. To use a **local** copy
 **Workflow**
 
 - Modifying the plugin implementation:
+  - The most important logic is found in [src/main.ts](src/main.ts).
   - Run `yarn bin2ts` or `yarn bin2ts:local`.  
     _Since the proto files were not changed, you only need to regenerate the typescript files._
   - Run `yarn test` to verify the typescript files are compatible with the reference implementation, and pass other tests.
 - Updating or adding `.proto` files in the integration directory:
-  - Run `yarn build:test` to regenerate the integration test files.
+  - Run `yarn watch` to automatically regenerate test files when proto files change. 
+    - Or run `yarn build:test` to regenerate all integration test files. 
   - Run `yarn test` to retest.
 
 **Contributing**
@@ -664,7 +692,6 @@ The representation of `google.protobuf.Timestamp` is configurable by the `useDat
 | Protobuf well-known type    | Default/`useDate=true` | `useDate=false`                      | `useDate=string` |
 | --------------------------- | ---------------------- | ------------------------------------ | ---------------- |
 | `google.protobuf.Timestamp` | `Date`                 | `{ seconds: number, nanos: number }` | `string`         |
-
 
 # Number Types
 

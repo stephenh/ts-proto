@@ -67,7 +67,9 @@ export function dividerData_DividerTypeToNumber(object: DividerData_DividerType)
   }
 }
 
-const baseDividerData: object = { type: DividerData_DividerType.DOUBLE };
+function createBaseDividerData(): DividerData {
+  return { type: DividerData_DividerType.DOUBLE };
+}
 
 export const DividerData = {
   encode(message: DividerData, writer: Writer = Writer.create()): Writer {
@@ -80,7 +82,7 @@ export const DividerData = {
   decode(input: Reader | Uint8Array, length?: number): DividerData {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseDividerData } as DividerData;
+    const message = createBaseDividerData();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -96,12 +98,9 @@ export const DividerData = {
   },
 
   fromJSON(object: any): DividerData {
-    const message = { ...baseDividerData } as DividerData;
-    message.type =
-      object.type !== undefined && object.type !== null
-        ? dividerData_DividerTypeFromJSON(object.type)
-        : DividerData_DividerType.DOUBLE;
-    return message;
+    return {
+      type: isSet(object.type) ? dividerData_DividerTypeFromJSON(object.type) : DividerData_DividerType.DOUBLE,
+    };
   },
 
   toJSON(message: DividerData): unknown {
@@ -111,7 +110,7 @@ export const DividerData = {
   },
 
   fromPartial<I extends Exact<DeepPartial<DividerData>, I>>(object: I): DividerData {
-    const message = { ...baseDividerData } as DividerData;
+    const message = createBaseDividerData();
     message.type = object.type ?? DividerData_DividerType.DOUBLE;
     return message;
   },
@@ -139,4 +138,8 @@ export type Exact<P, I extends P> = P extends Builtin
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
+}
+
+function isSet(value: any): boolean {
+  return value !== null && value !== undefined;
 }
