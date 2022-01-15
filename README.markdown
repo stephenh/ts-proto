@@ -374,6 +374,8 @@ Generated code will be placed in the Gradle build directory.
   
   The default behavior is `useExactTypes=true`, which makes `fromPartial` use Exact type for its argument to make TypeScript reject any unknown properties.
 
+- With `--ts_proto_opt=unknownFields=true`, all unknown fields will be parsed and output as arrays of buffers.
+
 ### Only Types
 
 If you're looking for `ts-proto` to generate only types for your Protobuf types then passing all three of `outputEncodeMethods`, `outputJsonMethods`, and `outputClientImpl` as `false` is probably what you want, i.e.:
