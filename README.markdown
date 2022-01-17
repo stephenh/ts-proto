@@ -305,6 +305,10 @@ Generated code will be placed in the Gradle build directory.
 
 - With `--ts_proto_opt=unrecognizedEnum=false` enums will not contain an `UNRECOGNIZED` key with value of -1.
 
+- With `--ts_proto_opt=removeEnumPrefix=true` generated enum members will have the enum name removed in both name and value (for string enums)
+
+  `FooBar.FOO_BAR_BAZ` will become `FooBar.BAZ`
+
 - With `--ts_proto_opt=lowerCaseServiceMethods=true`, the method names of service methods will be lowered/camel-case, i.e. `service.findFoo` instead of `service.FindFoo`.
 
 - With `--ts_proto_opt=snakeToCamel=false`, fields will be kept snake case. `snakeToCamel` can also be set as string with `--ts_proto_opt=snakeToCamel=keys,json`. `keys` will keep field names as camelCase and `json` will keep json field names as camelCase. Empty string will keep field names as snake_case.
