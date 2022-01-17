@@ -16,7 +16,7 @@
     "long": "^4.0.0"
   },
   "devDependencies": {
-    "ts-proto": "^1.61.0",
+    "ts-proto": "^1.101.0",
     "typescript": "^4.1.5"
   }
 }
