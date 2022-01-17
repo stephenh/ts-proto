@@ -1,7 +1,7 @@
 import { code, def, Code, joinCode } from 'ts-poet';
 import { EnumDescriptorProto } from 'ts-proto-descriptors';
 import { maybeAddComment } from './utils';
-import { camelCase } from './case';
+import { camelCase, camelToSnake } from './case';
 import SourceInfo, { Fields } from './sourceInfo';
 import { Context } from './context';
 
@@ -30,9 +30,12 @@ export function generateEnum(
 
   enumDesc.value.forEach((valueDesc, index) => {
     const info = sourceInfo.lookup(Fields.enum.value, index);
-    maybeAddComment(info, chunks, valueDesc.options?.deprecated, `${valueDesc.name} - `);
+    const valueName = options.removeEnumPrefix
+      ? valueDesc.name.replace(`${camelToSnake(fullName)}_`, '')
+      : valueDesc.name;
+    maybeAddComment(info, chunks, valueDesc.options?.deprecated, `${valueName} - `);
     chunks.push(
-      code`${valueDesc.name} ${delimiter} ${options.stringEnums ? `"${valueDesc.name}"` : valueDesc.number.toString()},`
+      code`${valueName} ${delimiter} ${options.stringEnums ? `"${valueName}"` : valueDesc.number.toString()},`
     );
   });
 
@@ -56,11 +59,11 @@ export function generateEnum(
   }
   if (options.outputJsonMethods) {
     chunks.push(code`\n`);
-    chunks.push(generateEnumToJson(fullName, enumDesc));
+    chunks.push(generateEnumToJson(ctx, fullName, enumDesc));
   }
   if (options.stringEnums && options.outputEncodeMethods) {
     chunks.push(code`\n`);
-    chunks.push(generateEnumToNumber(fullName, enumDesc));
+    chunks.push(generateEnumToNumber(ctx, fullName, enumDesc));
   }
 
   return joinCode(chunks, { on: '\n' });
@@ -76,10 +79,13 @@ export function generateEnumFromJson(ctx: Context, fullName: string, enumDesc: E
   chunks.push(code`switch (object) {`);
 
   for (const valueDesc of enumDesc.value) {
+    const valueName = options.removeEnumPrefix
+      ? valueDesc.name.replace(`${camelToSnake(fullName)}_`, '')
+      : valueDesc.name;
     chunks.push(code`
       case ${valueDesc.number}:
-      case "${valueDesc.name}":
-        return ${fullName}.${valueDesc.name};
+      case "${valueName}":
+        return ${fullName}.${valueName};
     `);
   }
 
@@ -104,7 +110,8 @@ export function generateEnumFromJson(ctx: Context, fullName: string, enumDesc: E
 }
 
 /** Generates a function with a big switch statement to encode our enum -> JSON. */
-export function generateEnumToJson(fullName: string, enumDesc: EnumDescriptorProto): Code {
+export function generateEnumToJson(ctx: Context, fullName: string, enumDesc: EnumDescriptorProto): Code {
+  const { options } = ctx;
   const chunks: Code[] = [];
 
   const functionName = camelCase(fullName) + 'ToJSON';
@@ -112,7 +119,10 @@ export function generateEnumToJson(fullName: string, enumDesc: EnumDescriptorPro
   chunks.push(code`switch (object) {`);
 
   for (const valueDesc of enumDesc.value) {
-    chunks.push(code`case ${fullName}.${valueDesc.name}: return "${valueDesc.name}";`);
+    const valueName = options.removeEnumPrefix
+      ? valueDesc.name.replace(`${camelToSnake(fullName)}_`, '')
+      : valueDesc.name;
+    chunks.push(code`case ${fullName}.${valueName}: return "${valueName}";`);
   }
   chunks.push(code`default: return "UNKNOWN";`);
 
@@ -122,14 +132,18 @@ export function generateEnumToJson(fullName: string, enumDesc: EnumDescriptorPro
 }
 
 /** Generates a function with a big switch statement to encode our string enum -> int value. */
-export function generateEnumToNumber(fullName: string, enumDesc: EnumDescriptorProto): Code {
+export function generateEnumToNumber(ctx: Context, fullName: string, enumDesc: EnumDescriptorProto): Code {
+  const { options } = ctx;
   const chunks: Code[] = [];
 
   const functionName = camelCase(fullName) + 'ToNumber';
   chunks.push(code`export function ${def(functionName)}(object: ${fullName}): number {`);
   chunks.push(code`switch (object) {`);
   for (const valueDesc of enumDesc.value) {
-    chunks.push(code`case ${fullName}.${valueDesc.name}: return ${valueDesc.number};`);
+    const valueName = options.removeEnumPrefix
+      ? valueDesc.name.replace(`${camelToSnake(fullName)}_`, '')
+      : valueDesc.name;
+    chunks.push(code`case ${fullName}.${valueName}: return ${valueDesc.number};`);
   }
   chunks.push(code`default: return 0;`);
   chunks.push(code`}`);
