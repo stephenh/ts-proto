@@ -1,3 +1,10 @@
+# [1.102.0](https://github.com/stephenh/ts-proto/compare/v1.101.0...v1.102.0) (2022-01-18)
+
+
+### Features
+
+* enable unknown fields for descriptor protos ([#479](https://github.com/stephenh/ts-proto/issues/479)) ([824c996](https://github.com/stephenh/ts-proto/commit/824c9962cd98dc0f9093e8909e3028d900094c54))
+
 # [1.101.0](https://github.com/stephenh/ts-proto/compare/v1.100.1...v1.101.0) (2022-01-15)
 
 
