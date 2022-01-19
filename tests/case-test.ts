@@ -16,6 +16,10 @@ describe('case', () => {
     expect(maybeSnakeToCamel('FOO_BAR', keys)).toEqual('FooBar');
   });
 
+  it('leaves existing mixed cases', () => {
+    expect(maybeSnakeToCamel('clientI_d', keys)).toEqual('clientID');
+  });
+
   it('leaves the first character as it was', () => {
     expect(maybeSnakeToCamel('Foo_Bar', keys)).toEqual('FooBar');
   });
