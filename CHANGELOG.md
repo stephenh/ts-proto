@@ -1,3 +1,10 @@
+## [1.102.2](https://github.com/stephenh/ts-proto/compare/v1.102.1...v1.102.2) (2022-01-19)
+
+
+### Bug Fixes
+
+* Have snakeToCamel leave existing mixed case. ([#482](https://github.com/stephenh/ts-proto/issues/482)) ([c0bf0fc](https://github.com/stephenh/ts-proto/commit/c0bf0fc13da70e2bde923cd1746119d2e7ac4b2f)), closes [#478](https://github.com/stephenh/ts-proto/issues/478)
+
 ## [1.102.1](https://github.com/stephenh/ts-proto/compare/v1.102.0...v1.102.1) (2022-01-19)
 
 
