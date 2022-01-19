@@ -1,3 +1,10 @@
+## [1.102.1](https://github.com/stephenh/ts-proto/compare/v1.102.0...v1.102.1) (2022-01-19)
+
+
+### Bug Fixes
+
+* Pin ts-proto-descriptors to 1.3.1. ([#481](https://github.com/stephenh/ts-proto/issues/481)) ([6f362bf](https://github.com/stephenh/ts-proto/commit/6f362bfd3517a6bcb440d65e7ac63cd2b0bcc293)), closes [#480](https://github.com/stephenh/ts-proto/issues/480)
+
 # [1.102.0](https://github.com/stephenh/ts-proto/compare/v1.101.0...v1.102.0) (2022-01-18)
 
 
