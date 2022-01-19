@@ -64,6 +64,6 @@
     "object-hash": "^1.3.1",
     "protobufjs": "^6.8.8",
     "ts-poet": "^4.5.0",
-    "ts-proto-descriptors": "^1.2.1"
+    "ts-proto-descriptors": "1.3.1"
   }
 }
