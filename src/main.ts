@@ -758,6 +758,11 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
   const { options, utils, typeMap } = ctx;
   const chunks: Code[] = [];
 
+  let createBase = code`createBase${fullName}()`;
+  if (options.usePrototypeForDefaults) {
+    createBase = code`Object.create(${createBase}) as ${fullName}`;
+  }
+
   // create the basic function declaration
   chunks.push(code`
     decode(
@@ -766,7 +771,7 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
     ): ${fullName} {
       const reader = input instanceof ${Reader} ? input : new ${Reader}(input);
       let end = length === undefined ? reader.len : reader.pos + length;
-      const message = createBase${fullName}();
+      const message = ${createBase};
   `);
 
   if (options.unknownFields) {
@@ -1400,7 +1405,12 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
     `);
   }
 
-  chunks.push(code`const message = createBase${fullName}();`);
+  let createBase = code`createBase${fullName}()`;
+  if (options.usePrototypeForDefaults) {
+    createBase = code`Object.create(${createBase}) as ${fullName}`;
+  }
+
+  chunks.push(code`const message = ${createBase};`);
 
   // add a check for each incoming field
   messageDesc.field.forEach((field) => {
