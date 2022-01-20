@@ -1,3 +1,10 @@
+# [1.101.0](https://github.com/stephenh/ts-proto/compare/v1.100.1...v1.101.0) (2022-01-15)
+
+
+### Features
+
+* add support for unknown fields ([#473](https://github.com/stephenh/ts-proto/issues/473)) ([3bb9472](https://github.com/stephenh/ts-proto/commit/3bb9472943cf2e698b013487c7370a76576b68b6))
+
 ## [1.100.1](https://github.com/stephenh/ts-proto/compare/v1.100.0...v1.100.1) (2022-01-10)
 
 

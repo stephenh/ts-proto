@@ -32,6 +32,7 @@ describe('options', () => {
           "keys",
         ],
         "stringEnums": false,
+        "unknownFields": false,
         "unrecognizedEnum": true,
         "useDate": "timestamp",
         "useExactTypes": true,
