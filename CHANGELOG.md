@@ -1,3 +1,10 @@
+# [1.103.0](https://github.com/stephenh/ts-proto/compare/v1.102.2...v1.103.0) (2022-01-20)
+
+
+### Features
+
+* add usePrototypeForDefaults option ([#484](https://github.com/stephenh/ts-proto/issues/484)) ([8e8c810](https://github.com/stephenh/ts-proto/commit/8e8c81016968e7d772dfac5ed54800898f039cbe))
+
 ## [1.102.2](https://github.com/stephenh/ts-proto/compare/v1.102.1...v1.102.2) (2022-01-19)
 
 
