@@ -1,3 +1,15 @@
+# [1.104.0](https://github.com/stephenh/ts-proto/compare/v1.103.0...v1.104.0) (2022-01-21)
+
+
+### Bug Fixes
+
+* Leave mixed case in all words. ([#488](https://github.com/stephenh/ts-proto/issues/488)) ([8a26c9c](https://github.com/stephenh/ts-proto/commit/8a26c9cba4c9897700aafe1a7f59d0b0f537764b))
+
+
+### Features
+
+* enable prototype for defaults for ts-proto-descriptors ([#487](https://github.com/stephenh/ts-proto/issues/487)) ([2b5640f](https://github.com/stephenh/ts-proto/commit/2b5640f582e6adb4e81797a9cec217896061aadb))
+
 # [1.103.0](https://github.com/stephenh/ts-proto/compare/v1.102.2...v1.103.0) (2022-01-20)
 
 
