@@ -1138,7 +1138,7 @@ export const FileDescriptorSet = {
   decode(input: Reader | Uint8Array, length?: number): FileDescriptorSet {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseFileDescriptorSet();
+    const message = Object.create(createBaseFileDescriptorSet()) as FileDescriptorSet;
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -1176,7 +1176,7 @@ export const FileDescriptorSet = {
   },
 
   fromPartial<I extends Exact<DeepPartial<FileDescriptorSet>, I>>(object: I): FileDescriptorSet {
-    const message = createBaseFileDescriptorSet();
+    const message = Object.create(createBaseFileDescriptorSet()) as FileDescriptorSet;
     message.file = object.file?.map((e) => FileDescriptorProto.fromPartial(e)) || [];
     return message;
   },
@@ -1260,7 +1260,7 @@ export const FileDescriptorProto = {
   decode(input: Reader | Uint8Array, length?: number): FileDescriptorProto {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseFileDescriptorProto();
+    const message = Object.create(createBaseFileDescriptorProto()) as FileDescriptorProto;
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -1398,7 +1398,7 @@ export const FileDescriptorProto = {
   },
 
   fromPartial<I extends Exact<DeepPartial<FileDescriptorProto>, I>>(object: I): FileDescriptorProto {
-    const message = createBaseFileDescriptorProto();
+    const message = Object.create(createBaseFileDescriptorProto()) as FileDescriptorProto;
     message.name = object.name ?? '';
     message.package = object.package ?? '';
     message.dependency = object.dependency?.map((e) => e) || [];
@@ -1485,7 +1485,7 @@ export const DescriptorProto = {
   decode(input: Reader | Uint8Array, length?: number): DescriptorProto {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseDescriptorProto();
+    const message = Object.create(createBaseDescriptorProto()) as DescriptorProto;
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -1609,7 +1609,7 @@ export const DescriptorProto = {
   },
 
   fromPartial<I extends Exact<DeepPartial<DescriptorProto>, I>>(object: I): DescriptorProto {
-    const message = createBaseDescriptorProto();
+    const message = Object.create(createBaseDescriptorProto()) as DescriptorProto;
     message.name = object.name ?? '';
     message.field = object.field?.map((e) => FieldDescriptorProto.fromPartial(e)) || [];
     message.extension = object.extension?.map((e) => FieldDescriptorProto.fromPartial(e)) || [];
@@ -1659,7 +1659,7 @@ export const DescriptorProto_ExtensionRange = {
   decode(input: Reader | Uint8Array, length?: number): DescriptorProto_ExtensionRange {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseDescriptorProto_ExtensionRange();
+    const message = Object.create(createBaseDescriptorProto_ExtensionRange()) as DescriptorProto_ExtensionRange;
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -1706,7 +1706,7 @@ export const DescriptorProto_ExtensionRange = {
   fromPartial<I extends Exact<DeepPartial<DescriptorProto_ExtensionRange>, I>>(
     object: I
   ): DescriptorProto_ExtensionRange {
-    const message = createBaseDescriptorProto_ExtensionRange();
+    const message = Object.create(createBaseDescriptorProto_ExtensionRange()) as DescriptorProto_ExtensionRange;
     message.start = object.start ?? 0;
     message.end = object.end ?? 0;
     message.options =
@@ -1748,7 +1748,7 @@ export const DescriptorProto_ReservedRange = {
   decode(input: Reader | Uint8Array, length?: number): DescriptorProto_ReservedRange {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseDescriptorProto_ReservedRange();
+    const message = Object.create(createBaseDescriptorProto_ReservedRange()) as DescriptorProto_ReservedRange;
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -1789,7 +1789,7 @@ export const DescriptorProto_ReservedRange = {
   fromPartial<I extends Exact<DeepPartial<DescriptorProto_ReservedRange>, I>>(
     object: I
   ): DescriptorProto_ReservedRange {
-    const message = createBaseDescriptorProto_ReservedRange();
+    const message = Object.create(createBaseDescriptorProto_ReservedRange()) as DescriptorProto_ReservedRange;
     message.start = object.start ?? 0;
     message.end = object.end ?? 0;
     return message;
@@ -1824,7 +1824,7 @@ export const ExtensionRangeOptions = {
   decode(input: Reader | Uint8Array, length?: number): ExtensionRangeOptions {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseExtensionRangeOptions();
+    const message = Object.create(createBaseExtensionRangeOptions()) as ExtensionRangeOptions;
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -1864,7 +1864,7 @@ export const ExtensionRangeOptions = {
   },
 
   fromPartial<I extends Exact<DeepPartial<ExtensionRangeOptions>, I>>(object: I): ExtensionRangeOptions {
-    const message = createBaseExtensionRangeOptions();
+    const message = Object.create(createBaseExtensionRangeOptions()) as ExtensionRangeOptions;
     message.uninterpretedOption = object.uninterpretedOption?.map((e) => UninterpretedOption.fromPartial(e)) || [];
     return message;
   },
@@ -1940,7 +1940,7 @@ export const FieldDescriptorProto = {
   decode(input: Reader | Uint8Array, length?: number): FieldDescriptorProto {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseFieldDescriptorProto();
+    const message = Object.create(createBaseFieldDescriptorProto()) as FieldDescriptorProto;
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -2024,7 +2024,7 @@ export const FieldDescriptorProto = {
   },
 
   fromPartial<I extends Exact<DeepPartial<FieldDescriptorProto>, I>>(object: I): FieldDescriptorProto {
-    const message = createBaseFieldDescriptorProto();
+    const message = Object.create(createBaseFieldDescriptorProto()) as FieldDescriptorProto;
     message.name = object.name ?? '';
     message.number = object.number ?? 0;
     message.label = object.label ?? 1;
@@ -2072,7 +2072,7 @@ export const OneofDescriptorProto = {
   decode(input: Reader | Uint8Array, length?: number): OneofDescriptorProto {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseOneofDescriptorProto();
+    const message = Object.create(createBaseOneofDescriptorProto()) as OneofDescriptorProto;
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -2111,7 +2111,7 @@ export const OneofDescriptorProto = {
   },
 
   fromPartial<I extends Exact<DeepPartial<OneofDescriptorProto>, I>>(object: I): OneofDescriptorProto {
-    const message = createBaseOneofDescriptorProto();
+    const message = Object.create(createBaseOneofDescriptorProto()) as OneofDescriptorProto;
     message.name = object.name ?? '';
     message.options =
       object.options !== undefined && object.options !== null ? OneofOptions.fromPartial(object.options) : undefined;
@@ -2159,7 +2159,7 @@ export const EnumDescriptorProto = {
   decode(input: Reader | Uint8Array, length?: number): EnumDescriptorProto {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseEnumDescriptorProto();
+    const message = Object.create(createBaseEnumDescriptorProto()) as EnumDescriptorProto;
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -2229,7 +2229,7 @@ export const EnumDescriptorProto = {
   },
 
   fromPartial<I extends Exact<DeepPartial<EnumDescriptorProto>, I>>(object: I): EnumDescriptorProto {
-    const message = createBaseEnumDescriptorProto();
+    const message = Object.create(createBaseEnumDescriptorProto()) as EnumDescriptorProto;
     message.name = object.name ?? '';
     message.value = object.value?.map((e) => EnumValueDescriptorProto.fromPartial(e)) || [];
     message.options =
@@ -2272,7 +2272,9 @@ export const EnumDescriptorProto_EnumReservedRange = {
   decode(input: Reader | Uint8Array, length?: number): EnumDescriptorProto_EnumReservedRange {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseEnumDescriptorProto_EnumReservedRange();
+    const message = Object.create(
+      createBaseEnumDescriptorProto_EnumReservedRange()
+    ) as EnumDescriptorProto_EnumReservedRange;
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -2313,7 +2315,9 @@ export const EnumDescriptorProto_EnumReservedRange = {
   fromPartial<I extends Exact<DeepPartial<EnumDescriptorProto_EnumReservedRange>, I>>(
     object: I
   ): EnumDescriptorProto_EnumReservedRange {
-    const message = createBaseEnumDescriptorProto_EnumReservedRange();
+    const message = Object.create(
+      createBaseEnumDescriptorProto_EnumReservedRange()
+    ) as EnumDescriptorProto_EnumReservedRange;
     message.start = object.start ?? 0;
     message.end = object.end ?? 0;
     return message;
@@ -2354,7 +2358,7 @@ export const EnumValueDescriptorProto = {
   decode(input: Reader | Uint8Array, length?: number): EnumValueDescriptorProto {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseEnumValueDescriptorProto();
+    const message = Object.create(createBaseEnumValueDescriptorProto()) as EnumValueDescriptorProto;
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -2399,7 +2403,7 @@ export const EnumValueDescriptorProto = {
   },
 
   fromPartial<I extends Exact<DeepPartial<EnumValueDescriptorProto>, I>>(object: I): EnumValueDescriptorProto {
-    const message = createBaseEnumValueDescriptorProto();
+    const message = Object.create(createBaseEnumValueDescriptorProto()) as EnumValueDescriptorProto;
     message.name = object.name ?? '';
     message.number = object.number ?? 0;
     message.options =
@@ -2444,7 +2448,7 @@ export const ServiceDescriptorProto = {
   decode(input: Reader | Uint8Array, length?: number): ServiceDescriptorProto {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseServiceDescriptorProto();
+    const message = Object.create(createBaseServiceDescriptorProto()) as ServiceDescriptorProto;
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -2493,7 +2497,7 @@ export const ServiceDescriptorProto = {
   },
 
   fromPartial<I extends Exact<DeepPartial<ServiceDescriptorProto>, I>>(object: I): ServiceDescriptorProto {
-    const message = createBaseServiceDescriptorProto();
+    const message = Object.create(createBaseServiceDescriptorProto()) as ServiceDescriptorProto;
     message.name = object.name ?? '';
     message.method = object.method?.map((e) => MethodDescriptorProto.fromPartial(e)) || [];
     message.options =
@@ -2552,7 +2556,7 @@ export const MethodDescriptorProto = {
   decode(input: Reader | Uint8Array, length?: number): MethodDescriptorProto {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMethodDescriptorProto();
+    const message = Object.create(createBaseMethodDescriptorProto()) as MethodDescriptorProto;
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -2612,7 +2616,7 @@ export const MethodDescriptorProto = {
   },
 
   fromPartial<I extends Exact<DeepPartial<MethodDescriptorProto>, I>>(object: I): MethodDescriptorProto {
-    const message = createBaseMethodDescriptorProto();
+    const message = Object.create(createBaseMethodDescriptorProto()) as MethodDescriptorProto;
     message.name = object.name ?? '';
     message.inputType = object.inputType ?? '';
     message.outputType = object.outputType ?? '';
@@ -2734,7 +2738,7 @@ export const FileOptions = {
   decode(input: Reader | Uint8Array, length?: number): FileOptions {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseFileOptions();
+    const message = Object.create(createBaseFileOptions()) as FileOptions;
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -2877,7 +2881,7 @@ export const FileOptions = {
   },
 
   fromPartial<I extends Exact<DeepPartial<FileOptions>, I>>(object: I): FileOptions {
-    const message = createBaseFileOptions();
+    const message = Object.create(createBaseFileOptions()) as FileOptions;
     message.javaPackage = object.javaPackage ?? '';
     message.javaOuterClassname = object.javaOuterClassname ?? '';
     message.javaMultipleFiles = object.javaMultipleFiles ?? false;
@@ -2949,7 +2953,7 @@ export const MessageOptions = {
   decode(input: Reader | Uint8Array, length?: number): MessageOptions {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMessageOptions();
+    const message = Object.create(createBaseMessageOptions()) as MessageOptions;
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -3012,7 +3016,7 @@ export const MessageOptions = {
   },
 
   fromPartial<I extends Exact<DeepPartial<MessageOptions>, I>>(object: I): MessageOptions {
-    const message = createBaseMessageOptions();
+    const message = Object.create(createBaseMessageOptions()) as MessageOptions;
     message.messageSetWireFormat = object.messageSetWireFormat ?? false;
     message.noStandardDescriptorAccessor = object.noStandardDescriptorAccessor ?? false;
     message.deprecated = object.deprecated ?? false;
@@ -3068,7 +3072,7 @@ export const FieldOptions = {
   decode(input: Reader | Uint8Array, length?: number): FieldOptions {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseFieldOptions();
+    const message = Object.create(createBaseFieldOptions()) as FieldOptions;
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -3138,7 +3142,7 @@ export const FieldOptions = {
   },
 
   fromPartial<I extends Exact<DeepPartial<FieldOptions>, I>>(object: I): FieldOptions {
-    const message = createBaseFieldOptions();
+    const message = Object.create(createBaseFieldOptions()) as FieldOptions;
     message.ctype = object.ctype ?? 0;
     message.packed = object.packed ?? false;
     message.jstype = object.jstype ?? 0;
@@ -3178,7 +3182,7 @@ export const OneofOptions = {
   decode(input: Reader | Uint8Array, length?: number): OneofOptions {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseOneofOptions();
+    const message = Object.create(createBaseOneofOptions()) as OneofOptions;
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -3218,7 +3222,7 @@ export const OneofOptions = {
   },
 
   fromPartial<I extends Exact<DeepPartial<OneofOptions>, I>>(object: I): OneofOptions {
-    const message = createBaseOneofOptions();
+    const message = Object.create(createBaseOneofOptions()) as OneofOptions;
     message.uninterpretedOption = object.uninterpretedOption?.map((e) => UninterpretedOption.fromPartial(e)) || [];
     return message;
   },
@@ -3258,7 +3262,7 @@ export const EnumOptions = {
   decode(input: Reader | Uint8Array, length?: number): EnumOptions {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseEnumOptions();
+    const message = Object.create(createBaseEnumOptions()) as EnumOptions;
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -3308,7 +3312,7 @@ export const EnumOptions = {
   },
 
   fromPartial<I extends Exact<DeepPartial<EnumOptions>, I>>(object: I): EnumOptions {
-    const message = createBaseEnumOptions();
+    const message = Object.create(createBaseEnumOptions()) as EnumOptions;
     message.allowAlias = object.allowAlias ?? false;
     message.deprecated = object.deprecated ?? false;
     message.uninterpretedOption = object.uninterpretedOption?.map((e) => UninterpretedOption.fromPartial(e)) || [];
@@ -3347,7 +3351,7 @@ export const EnumValueOptions = {
   decode(input: Reader | Uint8Array, length?: number): EnumValueOptions {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseEnumValueOptions();
+    const message = Object.create(createBaseEnumValueOptions()) as EnumValueOptions;
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -3392,7 +3396,7 @@ export const EnumValueOptions = {
   },
 
   fromPartial<I extends Exact<DeepPartial<EnumValueOptions>, I>>(object: I): EnumValueOptions {
-    const message = createBaseEnumValueOptions();
+    const message = Object.create(createBaseEnumValueOptions()) as EnumValueOptions;
     message.deprecated = object.deprecated ?? false;
     message.uninterpretedOption = object.uninterpretedOption?.map((e) => UninterpretedOption.fromPartial(e)) || [];
     return message;
@@ -3430,7 +3434,7 @@ export const ServiceOptions = {
   decode(input: Reader | Uint8Array, length?: number): ServiceOptions {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseServiceOptions();
+    const message = Object.create(createBaseServiceOptions()) as ServiceOptions;
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -3475,7 +3479,7 @@ export const ServiceOptions = {
   },
 
   fromPartial<I extends Exact<DeepPartial<ServiceOptions>, I>>(object: I): ServiceOptions {
-    const message = createBaseServiceOptions();
+    const message = Object.create(createBaseServiceOptions()) as ServiceOptions;
     message.deprecated = object.deprecated ?? false;
     message.uninterpretedOption = object.uninterpretedOption?.map((e) => UninterpretedOption.fromPartial(e)) || [];
     return message;
@@ -3516,7 +3520,7 @@ export const MethodOptions = {
   decode(input: Reader | Uint8Array, length?: number): MethodOptions {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseMethodOptions();
+    const message = Object.create(createBaseMethodOptions()) as MethodOptions;
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -3569,7 +3573,7 @@ export const MethodOptions = {
   },
 
   fromPartial<I extends Exact<DeepPartial<MethodOptions>, I>>(object: I): MethodOptions {
-    const message = createBaseMethodOptions();
+    const message = Object.create(createBaseMethodOptions()) as MethodOptions;
     message.deprecated = object.deprecated ?? false;
     message.idempotencyLevel = object.idempotencyLevel ?? 0;
     message.uninterpretedOption = object.uninterpretedOption?.map((e) => UninterpretedOption.fromPartial(e)) || [];
@@ -3631,7 +3635,7 @@ export const UninterpretedOption = {
   decode(input: Reader | Uint8Array, length?: number): UninterpretedOption {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseUninterpretedOption();
+    const message = Object.create(createBaseUninterpretedOption()) as UninterpretedOption;
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -3700,7 +3704,7 @@ export const UninterpretedOption = {
   },
 
   fromPartial<I extends Exact<DeepPartial<UninterpretedOption>, I>>(object: I): UninterpretedOption {
-    const message = createBaseUninterpretedOption();
+    const message = Object.create(createBaseUninterpretedOption()) as UninterpretedOption;
     message.name = object.name?.map((e) => UninterpretedOption_NamePart.fromPartial(e)) || [];
     message.identifierValue = object.identifierValue ?? '';
     message.positiveIntValue = object.positiveIntValue ?? 0;
@@ -3743,7 +3747,7 @@ export const UninterpretedOption_NamePart = {
   decode(input: Reader | Uint8Array, length?: number): UninterpretedOption_NamePart {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseUninterpretedOption_NamePart();
+    const message = Object.create(createBaseUninterpretedOption_NamePart()) as UninterpretedOption_NamePart;
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -3782,7 +3786,7 @@ export const UninterpretedOption_NamePart = {
   },
 
   fromPartial<I extends Exact<DeepPartial<UninterpretedOption_NamePart>, I>>(object: I): UninterpretedOption_NamePart {
-    const message = createBaseUninterpretedOption_NamePart();
+    const message = Object.create(createBaseUninterpretedOption_NamePart()) as UninterpretedOption_NamePart;
     message.namePart = object.namePart ?? '';
     message.isExtension = object.isExtension ?? false;
     return message;
@@ -3817,7 +3821,7 @@ export const SourceCodeInfo = {
   decode(input: Reader | Uint8Array, length?: number): SourceCodeInfo {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseSourceCodeInfo();
+    const message = Object.create(createBaseSourceCodeInfo()) as SourceCodeInfo;
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -3857,7 +3861,7 @@ export const SourceCodeInfo = {
   },
 
   fromPartial<I extends Exact<DeepPartial<SourceCodeInfo>, I>>(object: I): SourceCodeInfo {
-    const message = createBaseSourceCodeInfo();
+    const message = Object.create(createBaseSourceCodeInfo()) as SourceCodeInfo;
     message.location = object.location?.map((e) => SourceCodeInfo_Location.fromPartial(e)) || [];
     return message;
   },
@@ -3907,7 +3911,7 @@ export const SourceCodeInfo_Location = {
   decode(input: Reader | Uint8Array, length?: number): SourceCodeInfo_Location {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseSourceCodeInfo_Location();
+    const message = Object.create(createBaseSourceCodeInfo_Location()) as SourceCodeInfo_Location;
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -3989,7 +3993,7 @@ export const SourceCodeInfo_Location = {
   },
 
   fromPartial<I extends Exact<DeepPartial<SourceCodeInfo_Location>, I>>(object: I): SourceCodeInfo_Location {
-    const message = createBaseSourceCodeInfo_Location();
+    const message = Object.create(createBaseSourceCodeInfo_Location()) as SourceCodeInfo_Location;
     message.path = object.path?.map((e) => e) || [];
     message.span = object.span?.map((e) => e) || [];
     message.leadingComments = object.leadingComments ?? '';
@@ -4027,7 +4031,7 @@ export const GeneratedCodeInfo = {
   decode(input: Reader | Uint8Array, length?: number): GeneratedCodeInfo {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGeneratedCodeInfo();
+    const message = Object.create(createBaseGeneratedCodeInfo()) as GeneratedCodeInfo;
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -4067,7 +4071,7 @@ export const GeneratedCodeInfo = {
   },
 
   fromPartial<I extends Exact<DeepPartial<GeneratedCodeInfo>, I>>(object: I): GeneratedCodeInfo {
-    const message = createBaseGeneratedCodeInfo();
+    const message = Object.create(createBaseGeneratedCodeInfo()) as GeneratedCodeInfo;
     message.annotation = object.annotation?.map((e) => GeneratedCodeInfo_Annotation.fromPartial(e)) || [];
     return message;
   },
@@ -4112,7 +4116,7 @@ export const GeneratedCodeInfo_Annotation = {
   decode(input: Reader | Uint8Array, length?: number): GeneratedCodeInfo_Annotation {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseGeneratedCodeInfo_Annotation();
+    const message = Object.create(createBaseGeneratedCodeInfo_Annotation()) as GeneratedCodeInfo_Annotation;
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -4172,7 +4176,7 @@ export const GeneratedCodeInfo_Annotation = {
   },
 
   fromPartial<I extends Exact<DeepPartial<GeneratedCodeInfo_Annotation>, I>>(object: I): GeneratedCodeInfo_Annotation {
-    const message = createBaseGeneratedCodeInfo_Annotation();
+    const message = Object.create(createBaseGeneratedCodeInfo_Annotation()) as GeneratedCodeInfo_Annotation;
     message.path = object.path?.map((e) => e) || [];
     message.sourceFile = object.sourceFile ?? '';
     message.begin = object.begin ?? 0;
