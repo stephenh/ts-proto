@@ -203,7 +203,7 @@ export const Version = {
   decode(input: Reader | Uint8Array, length?: number): Version {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseVersion();
+    const message = Object.create(createBaseVersion()) as Version;
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -252,7 +252,7 @@ export const Version = {
   },
 
   fromPartial<I extends Exact<DeepPartial<Version>, I>>(object: I): Version {
-    const message = createBaseVersion();
+    const message = Object.create(createBaseVersion()) as Version;
     message.major = object.major ?? 0;
     message.minor = object.minor ?? 0;
     message.patch = object.patch ?? 0;
@@ -298,7 +298,7 @@ export const CodeGeneratorRequest = {
   decode(input: Reader | Uint8Array, length?: number): CodeGeneratorRequest {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseCodeGeneratorRequest();
+    const message = Object.create(createBaseCodeGeneratorRequest()) as CodeGeneratorRequest;
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -358,7 +358,7 @@ export const CodeGeneratorRequest = {
   },
 
   fromPartial<I extends Exact<DeepPartial<CodeGeneratorRequest>, I>>(object: I): CodeGeneratorRequest {
-    const message = createBaseCodeGeneratorRequest();
+    const message = Object.create(createBaseCodeGeneratorRequest()) as CodeGeneratorRequest;
     message.fileToGenerate = object.fileToGenerate?.map((e) => e) || [];
     message.parameter = object.parameter ?? '';
     message.protoFile = object.protoFile?.map((e) => FileDescriptorProto.fromPartial(e)) || [];
@@ -404,7 +404,7 @@ export const CodeGeneratorResponse = {
   decode(input: Reader | Uint8Array, length?: number): CodeGeneratorResponse {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseCodeGeneratorResponse();
+    const message = Object.create(createBaseCodeGeneratorResponse()) as CodeGeneratorResponse;
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -452,7 +452,7 @@ export const CodeGeneratorResponse = {
   },
 
   fromPartial<I extends Exact<DeepPartial<CodeGeneratorResponse>, I>>(object: I): CodeGeneratorResponse {
-    const message = createBaseCodeGeneratorResponse();
+    const message = Object.create(createBaseCodeGeneratorResponse()) as CodeGeneratorResponse;
     message.error = object.error ?? '';
     message.supportedFeatures = object.supportedFeatures ?? 0;
     message.file = object.file?.map((e) => CodeGeneratorResponse_File.fromPartial(e)) || [];
@@ -497,7 +497,7 @@ export const CodeGeneratorResponse_File = {
   decode(input: Reader | Uint8Array, length?: number): CodeGeneratorResponse_File {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseCodeGeneratorResponse_File();
+    const message = Object.create(createBaseCodeGeneratorResponse_File()) as CodeGeneratorResponse_File;
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
@@ -551,7 +551,7 @@ export const CodeGeneratorResponse_File = {
   },
 
   fromPartial<I extends Exact<DeepPartial<CodeGeneratorResponse_File>, I>>(object: I): CodeGeneratorResponse_File {
-    const message = createBaseCodeGeneratorResponse_File();
+    const message = Object.create(createBaseCodeGeneratorResponse_File()) as CodeGeneratorResponse_File;
     message.name = object.name ?? '';
     message.insertionPoint = object.insertionPoint ?? '';
     message.content = object.content ?? '';
