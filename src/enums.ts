@@ -1,9 +1,10 @@
 import { code, def, Code, joinCode } from 'ts-poet';
-import { EnumDescriptorProto } from 'ts-proto-descriptors';
+import { EnumDescriptorProto, EnumValueDescriptorProto } from 'ts-proto-descriptors';
 import { maybeAddComment } from './utils';
 import { camelCase, camelToSnake } from './case';
 import SourceInfo, { Fields } from './sourceInfo';
 import { Context } from './context';
+import { RemoveEnumPrefixOption } from './options';
 
 const UNRECOGNIZED_ENUM_NAME = 'UNRECOGNIZED';
 const UNRECOGNIZED_ENUM_VALUE = -1;
@@ -30,12 +31,11 @@ export function generateEnum(
 
   enumDesc.value.forEach((valueDesc, index) => {
     const info = sourceInfo.lookup(Fields.enum.value, index);
-    const valueName = options.removeEnumPrefix
-      ? valueDesc.name.replace(`${camelToSnake(fullName)}_`, '')
-      : valueDesc.name;
-    maybeAddComment(info, chunks, valueDesc.options?.deprecated, `${valueName} - `);
+    const valueName = getValueName(ctx, fullName, valueDesc);
+    const memberName = getMemberName(ctx, fullName, valueDesc);
+    maybeAddComment(info, chunks, valueDesc.options?.deprecated, `${memberName} - `);
     chunks.push(
-      code`${valueName} ${delimiter} ${options.stringEnums ? `"${valueName}"` : valueDesc.number.toString()},`
+      code`${memberName} ${delimiter} ${options.stringEnums ? `"${valueName}"` : valueDesc.number.toString()},`
     );
   });
 
@@ -79,13 +79,12 @@ export function generateEnumFromJson(ctx: Context, fullName: string, enumDesc: E
   chunks.push(code`switch (object) {`);
 
   for (const valueDesc of enumDesc.value) {
-    const valueName = options.removeEnumPrefix
-      ? valueDesc.name.replace(`${camelToSnake(fullName)}_`, '')
-      : valueDesc.name;
+    const memberName = getMemberName(ctx, fullName, valueDesc);
+    const valueName = getValueName(ctx, fullName, valueDesc);
     chunks.push(code`
       case ${valueDesc.number}:
       case "${valueName}":
-        return ${fullName}.${valueName};
+        return ${fullName}.${memberName};
     `);
   }
 
@@ -111,7 +110,6 @@ export function generateEnumFromJson(ctx: Context, fullName: string, enumDesc: E
 
 /** Generates a function with a big switch statement to encode our enum -> JSON. */
 export function generateEnumToJson(ctx: Context, fullName: string, enumDesc: EnumDescriptorProto): Code {
-  const { options } = ctx;
   const chunks: Code[] = [];
 
   const functionName = camelCase(fullName) + 'ToJSON';
@@ -119,10 +117,9 @@ export function generateEnumToJson(ctx: Context, fullName: string, enumDesc: Enu
   chunks.push(code`switch (object) {`);
 
   for (const valueDesc of enumDesc.value) {
-    const valueName = options.removeEnumPrefix
-      ? valueDesc.name.replace(`${camelToSnake(fullName)}_`, '')
-      : valueDesc.name;
-    chunks.push(code`case ${fullName}.${valueName}: return "${valueName}";`);
+    const memberName = getMemberName(ctx, fullName, valueDesc);
+    const valueName = getValueName(ctx, fullName, valueDesc);
+    chunks.push(code`case ${fullName}.${memberName}: return "${valueName}";`);
   }
   chunks.push(code`default: return "UNKNOWN";`);
 
@@ -133,20 +130,30 @@ export function generateEnumToJson(ctx: Context, fullName: string, enumDesc: Enu
 
 /** Generates a function with a big switch statement to encode our string enum -> int value. */
 export function generateEnumToNumber(ctx: Context, fullName: string, enumDesc: EnumDescriptorProto): Code {
-  const { options } = ctx;
   const chunks: Code[] = [];
 
   const functionName = camelCase(fullName) + 'ToNumber';
   chunks.push(code`export function ${def(functionName)}(object: ${fullName}): number {`);
   chunks.push(code`switch (object) {`);
   for (const valueDesc of enumDesc.value) {
-    const valueName = options.removeEnumPrefix
-      ? valueDesc.name.replace(`${camelToSnake(fullName)}_`, '')
-      : valueDesc.name;
-    chunks.push(code`case ${fullName}.${valueName}: return ${valueDesc.number};`);
+    chunks.push(code`case ${fullName}.${getMemberName(ctx, fullName, valueDesc)}: return ${valueDesc.number};`);
   }
   chunks.push(code`default: return 0;`);
   chunks.push(code`}`);
   chunks.push(code`}`);
   return joinCode(chunks, { on: '\n' });
+}
+
+function getMemberName(ctx: Context, fullName: string, valueDesc: EnumValueDescriptorProto): string {
+  if ([RemoveEnumPrefixOption.ALL, RemoveEnumPrefixOption.MEMBERS].includes(ctx.options.removeEnumPrefix)) {
+    return valueDesc.name.replace(`${camelToSnake(fullName)}_`, '');
+  }
+  return valueDesc.name;
+}
+
+function getValueName(ctx: Context, fullName: string, valueDesc: EnumValueDescriptorProto): string {
+  if (ctx.options.removeEnumPrefix === RemoveEnumPrefixOption.ALL) {
+    return valueDesc.name.replace(`${camelToSnake(fullName)}_`, '');
+  }
+  return valueDesc.name;
 }

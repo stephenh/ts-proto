@@ -1,0 +1,1 @@
+removeEnumPrefix=members,unrecognizedEnum=false
