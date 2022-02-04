@@ -573,7 +573,13 @@ export function toTypeName(ctx: Context, messageDesc: DescriptorProto, field: Fi
     const mapType = detectMapType(ctx, messageDesc, field);
     if (mapType) {
       const { keyType, valueType } = mapType;
+      if (ctx.options.usePrototypeForDefaults) {
+        return code`{ [key: ${keyType} ]: ${valueType} } | undefined`;
+      }
       return code`{ [key: ${keyType} ]: ${valueType} }`;
+    }
+    if (ctx.options.usePrototypeForDefaults) {
+      return code`${type}[] | undefined`;
     }
     return code`${type}[]`;
   }
