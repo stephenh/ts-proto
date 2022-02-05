@@ -376,6 +376,10 @@ Generated code will be placed in the Gradle build directory.
 
 - With `--ts_proto_opt=unknownFields=true`, all unknown fields will be parsed and output as arrays of buffers.
 
+- With `--ts_proto_opt=onlyTypes=true`, only types will be emitted, and imports for `long` and `protobufjs/minimal` will be excluded.
+
+  Note: _This is a combination_ of `outputJsonMethods=false,outputEncodeMethods=false,outputClientImpl=false,nestJs=false`
+
 - With `--ts_proto_opt=usePrototypeForDefaults=true`, the generated code will wrap new objects with `Object.create`.
 
   This allows code to do hazzer checks to detect when default values have been applied, which due to proto3's behavior of not putting default values on the wire, is typically only useful for interacting with proto2 messages.
@@ -385,10 +389,9 @@ Generated code will be placed in the Gradle build directory.
   Note that, as indicated, this means Object.keys will not include set-by-default fields, so if you have code that iterates over messages keys in a generic fashion, it will have to also iterate over keys inherited from the prototype.
 
 ### Only Types
-
 If you're looking for `ts-proto` to generate only types for your Protobuf types then passing all three of `outputEncodeMethods`, `outputJsonMethods`, and `outputClientImpl` as `false` is probably what you want, i.e.:
 
-`--ts_proto_opt=outputEncodeMethods=false,outputJsonMethods=false,outputClientImpl=false`.
+`--ts_proto_opt=onlyTypes=true`.
 
 ### NestJS Support
 
