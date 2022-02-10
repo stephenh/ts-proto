@@ -157,7 +157,7 @@ export const Struct = {
   },
 
   wrap(object: { [key: string]: any } | undefined): Struct {
-    const struct = Struct.fromPartial({});
+    const struct = createBaseStruct();
     if (object !== undefined) {
       Object.keys(object).forEach((key) => {
         struct.fields[key] = object[key];
@@ -359,23 +359,25 @@ export const Value = {
   },
 
   wrap(value: any): Value {
+    const result = createBaseValue();
+
     if (value === null) {
-      return { kind: { $case: 'nullValue', nullValue: NullValue.NULL_VALUE } };
+      result.kind = { $case: 'nullValue', nullValue: NullValue.NULL_VALUE };
     } else if (typeof value === 'boolean') {
-      return { kind: { $case: 'boolValue', boolValue: value } };
+      result.kind = { $case: 'boolValue', boolValue: value };
     } else if (typeof value === 'number') {
-      return { kind: { $case: 'numberValue', numberValue: value } };
+      result.kind = { $case: 'numberValue', numberValue: value };
     } else if (typeof value === 'string') {
-      return { kind: { $case: 'stringValue', stringValue: value } };
+      result.kind = { $case: 'stringValue', stringValue: value };
     } else if (Array.isArray(value)) {
-      return { kind: { $case: 'listValue', listValue: value } };
+      result.kind = { $case: 'listValue', listValue: value };
     } else if (typeof value === 'object') {
-      return { kind: { $case: 'structValue', structValue: value } };
-    } else if (typeof value === 'undefined') {
-      return {} as Value;
-    } else {
+      result.kind = { $case: 'structValue', structValue: value };
+    } else if (typeof value !== 'undefined') {
       throw new Error('Unsupported any value type: ' + typeof value);
     }
+
+    return result;
   },
 
   unwrap(message: Value): string | number | boolean | Object | null | Array<any> | undefined {
@@ -450,7 +452,11 @@ export const ListValue = {
   },
 
   wrap(value: Array<any> | undefined): ListValue {
-    return { values: value ?? [] };
+    const result = createBaseListValue();
+
+    result.values = value ?? [];
+
+    return result;
   },
 
   unwrap(message: ListValue): Array<any> {
