@@ -1521,7 +1521,7 @@ function generateWrap(ctx: Context, fullProtoTypeName: string): Code[] {
   const chunks: Code[] = [];
   if (isStructTypeName(fullProtoTypeName)) {
     chunks.push(code`wrap(object: {[key: string]: any} | undefined): Struct {
-      const struct = Struct.fromPartial({});
+      const struct = createBaseStruct();
       if (object !== undefined) {
         Object.keys(object).forEach(key => {
           struct.fields[key] = object[key];
@@ -1534,50 +1534,58 @@ function generateWrap(ctx: Context, fullProtoTypeName: string): Code[] {
   if (isAnyValueTypeName(fullProtoTypeName)) {
     if (ctx.options.oneof === OneofOption.UNIONS) {
       chunks.push(code`wrap(value: any): Value {
-      if (value === null) {
-        return {kind: {$case: 'nullValue', nullValue: NullValue.NULL_VALUE}};
-      } else if (typeof value === 'boolean') {
-        return {kind: {$case: 'boolValue', boolValue: value}};
-      } else if (typeof value === 'number') {
-        return {kind: {$case: 'numberValue', numberValue: value}};
-      } else if (typeof value === 'string') {
-        return {kind: {$case: 'stringValue', stringValue: value}};
-      } else if (Array.isArray(value)) {
-        return {kind: {$case: 'listValue', listValue: value}};
-      } else if (typeof value === 'object') {
-        return {kind: {$case: 'structValue', structValue: value}};
-      } else if (typeof value === 'undefined') {
-        return {} as Value;
-      } else {
-        throw new Error('Unsupported any value type: ' + typeof value);
-      }
+        const result = createBaseValue();
+        
+        if (value === null) {
+          result.kind = {$case: 'nullValue', nullValue: NullValue.NULL_VALUE};
+        } else if (typeof value === 'boolean') {
+          result.kind = {$case: 'boolValue', boolValue: value};
+        } else if (typeof value === 'number') {
+          result.kind = {$case: 'numberValue', numberValue: value};
+        } else if (typeof value === 'string') {
+          result.kind = {$case: 'stringValue', stringValue: value};
+        } else if (Array.isArray(value)) {
+          result.kind = {$case: 'listValue', listValue: value};
+        } else if (typeof value === 'object') {
+          result.kind = {$case: 'structValue', structValue: value};
+        } else if (typeof value !== 'undefined') {
+          throw new Error('Unsupported any value type: ' + typeof value);
+        }
+
+        return result;
     }`);
     } else {
       chunks.push(code`wrap(value: any): Value {
-      if (value === null) {
-        return {nullValue: NullValue.NULL_VALUE} as Value;
-      } else if (typeof value === 'boolean') {
-        return {boolValue: value} as Value;
-      } else if (typeof value === 'number') {
-        return {numberValue: value} as Value;
-      } else if (typeof value === 'string') {
-        return {stringValue: value} as Value;
-      } else if (Array.isArray(value)) {
-        return {listValue: value} as Value;
-      } else if (typeof value === 'object') {
-        return {structValue: value} as Value;
-      } else if (typeof value === 'undefined') {
-        return {} as Value;
-      } else {
-        throw new Error('Unsupported any value type: ' + typeof value);
-      }
+        const result = createBaseValue();
+
+        if (value === null) {
+          result.nullValue = NullValue.NULL_VALUE;
+        } else if (typeof value === 'boolean') {
+          result.boolValue = value;
+        } else if (typeof value === 'number') {
+          result.numberValue = value;
+        } else if (typeof value === 'string') {
+          result.stringValue = value;
+        } else if (Array.isArray(value)) {
+          result.listValue = value;
+        } else if (typeof value === 'object') {
+          result.structValue = value;
+        } else if (typeof value !== 'undefined') {
+          throw new Error('Unsupported any value type: ' + typeof value);
+        }
+
+        return result;
     }`);
     }
   }
 
   if (isListValueTypeName(fullProtoTypeName)) {
     chunks.push(code`wrap(value: Array<any> | undefined): ListValue {
-      return {values: value ?? []};
+      const result = createBaseListValue();
+
+      result.values = value ?? [];
+
+      return result;
     }`);
   }
 
