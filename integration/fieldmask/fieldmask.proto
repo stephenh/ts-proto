@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+import "google/protobuf/field_mask.proto";
+
+message FieldMaskMessage {
+  google.protobuf.FieldMask field_mask = 1;
+}
