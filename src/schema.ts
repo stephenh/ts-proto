@@ -49,7 +49,7 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
   });
 
   // Use toObject so that we get enums as numbers (instead of the default toJSON behavior)
-  const descriptor = { ...fileDesc };
+  const descriptor = FileDescriptorProto.fromPartial(fileDesc);
 
   // Only keep locations that include comments
   descriptor.sourceCodeInfo = {
