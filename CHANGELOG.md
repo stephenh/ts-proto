@@ -1,3 +1,10 @@
+## [1.104.1](https://github.com/stephenh/ts-proto/compare/v1.104.0...v1.104.1) (2022-02-12)
+
+
+### Bug Fixes
+
+* make struct types play well with type registry ([#503](https://github.com/stephenh/ts-proto/issues/503)) ([d62f854](https://github.com/stephenh/ts-proto/commit/d62f85478011c7eb3dbca196f79b452895406ece))
+
 # [1.104.0](https://github.com/stephenh/ts-proto/compare/v1.103.0...v1.104.0) (2022-01-21)
 
 
