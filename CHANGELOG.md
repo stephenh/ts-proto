@@ -1,3 +1,10 @@
+# [1.105.0](https://github.com/stephenh/ts-proto/compare/v1.104.1...v1.105.0) (2022-02-12)
+
+
+### Features
+
+* Bump ts-proto-descriptors. ([#489](https://github.com/stephenh/ts-proto/issues/489)) ([d454448](https://github.com/stephenh/ts-proto/commit/d454448b1889b1576c1ebcc6964a55a03af7d921)), closes [#493](https://github.com/stephenh/ts-proto/issues/493)
+
 ## [1.104.1](https://github.com/stephenh/ts-proto/compare/v1.104.0...v1.104.1) (2022-02-12)
 
 
