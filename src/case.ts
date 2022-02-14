@@ -2,15 +2,13 @@ import { Options } from './options';
 
 export function maybeSnakeToCamel(s: string, options: Pick<Options, 'snakeToCamel'>): string {
   if (options.snakeToCamel.includes('keys') && s.includes('_')) {
+    const hasLowerCase = !!s.match(/[a-z]/);
     return s
       .split('_')
       .map((word, i) => {
-        if (i === 0) {
-          // if first symbol is "_" then skip it
-          return word ? word[0] + word.substring(1).toLowerCase() : '';
-        } else {
-          return capitalize(word.toLowerCase());
-        }
+        // If the word is already mixed case, leave the exist case as-is
+        word = hasLowerCase ? word : word.toLowerCase();
+        return i === 0 ? word : capitalize(word);
       })
       .join('');
   } else {

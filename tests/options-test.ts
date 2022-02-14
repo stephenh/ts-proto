@@ -38,6 +38,7 @@ describe('options', () => {
         "useExactTypes": true,
         "useMongoObjectId": false,
         "useOptionals": "none",
+        "usePrototypeForDefaults": false,
       }
     `);
   });

@@ -4,13 +4,13 @@ With the use of NestJS it's easy to implement an GRPC Microservice ([example](ht
 
 By using `ts-proto` you have strong type checks and compiler errors!
 
-To generate `ts` files for your `.proto` files you can use the `--ts_proto_opt=nestJs=true` option.
+To generate `.ts` files for your `.proto` files you can use the `--ts_proto_opt=nestJs=true` option.
 
 ### Naming convention
 
-For each service in your `.proto` file we generate two `interfaces` on to implement in your nestjs `controller` and one for the `client`.
+For each service in your `.proto` file we generate two TypeScript interfaces: one to implement in your NestJS _controller_, and another one for the _client_ code.
 
-The name of the `controller` interface is base on the name of the service inside the `.proto`.
+The name of the controller interface is based on the name of the service inside the `.proto`.
 
 If we have to following `.proto` file:
 
@@ -27,19 +27,20 @@ service HeroService {
 ```
 
 The controller interface name would be `HeroServiceController`.
-The client interface name would `HeroServiceClient`.
+The client interface name would be `HeroServiceClient`.
 
 ### implementation
 
-To implement the typescript file in your `nestjs` project you need to add the `controller` interface to your controller. We also generate a `decorator` for you controller. For example: `HeroServiceControllerMethods`, when you apply this to your controller we add all the method decorators you normally should do but doing it this way is safer.
+To implement the TypeScript file in your NestJS project you need to implement the **controller** interface in your controller. We also generate a class decorator factory for you controller (for example: `@HeroServiceControllerMethods()`), when you apply this to your controller we add all the method decorators you normally should do, but doing it this way is safer.
 
-For the client we simply pass the `client` interface to the `client.getService<?>();` (see below).
+For the client we simply pass the **client** interface to the `client.getService<?>()` method (see [below](#client)).
 
-> Note: Based on the `.proto` we'll generate a `const` for example `HERO_PACKAGE_NAME` and `HERO_SERVICE_NAME` this way your code breaks if you change your package or service name. (It's safer to have compiler errors than runtime errors)
+> **Note:** Based on the `.proto` we'll generate a `const` (for example: `HERO_PACKAGE_NAME` and `HERO_SERVICE_NAME`), this way your code will break if you change your package or service name later. It's safer to have compiler errors than runtime errors!
 
 ##### Controller
 
 ```typescript
+// ...
 import { HeroById, Hero, HeroServiceController, VillainById, Villain, HeroServiceControllerMethods } from '../hero';
 
 @Controller('hero')
@@ -82,6 +83,7 @@ export class HeroController implements HeroServiceController {
 ##### Client
 
 ```typescript
+// ...
 import { HeroById, Hero, HeroServiceController, HeroesService, HERO_SERVICE_NAME, HERO_PACKAGE_NAME } from '../hero';
 
 @Injectable()
@@ -90,7 +92,7 @@ export class AppService implements OnModuleInit {
 
   constructor(@Inject(HERO_PACKAGE_NAME) private client: ClientGrpc) {}
 
-  onModuleInit() {
+  onModuleInit(): void {
     this.heroesService = this.client.getService<HeroesService>(HERO_SERVICE_NAME);
   }
 

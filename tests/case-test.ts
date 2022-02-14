@@ -13,7 +13,13 @@ describe('case', () => {
   });
 
   it('de-upper cases', () => {
-    expect(maybeSnakeToCamel('FOO_BAR', keys)).toEqual('FooBar');
+    expect(maybeSnakeToCamel('FOO_BAR', keys)).toEqual('fooBar');
+  });
+
+  it('leaves existing mixed cases', () => {
+    expect(maybeSnakeToCamel('clientI_d', keys)).toEqual('clientID');
+    expect(maybeSnakeToCamel('menu_calendarI_d', keys)).toEqual('menuCalendarID');
+    expect(maybeSnakeToCamel('display_nameI18n', keys)).toEqual('displayNameI18n');
   });
 
   it('leaves the first character as it was', () => {

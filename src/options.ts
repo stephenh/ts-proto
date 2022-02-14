@@ -61,6 +61,7 @@ export type Options = {
   emitImportedFiles: boolean;
   useExactTypes: boolean;
   unknownFields: boolean;
+  usePrototypeForDefaults: boolean;
 };
 
 export function defaultOptions(): Options {
@@ -96,6 +97,7 @@ export function defaultOptions(): Options {
     emitImportedFiles: true,
     useExactTypes: true,
     unknownFields: false,
+    usePrototypeForDefaults: false,
   };
 }
 

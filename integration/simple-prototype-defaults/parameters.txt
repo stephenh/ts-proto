@@ -1,0 +1,1 @@
+usePrototypeForDefaults=true

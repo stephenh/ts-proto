@@ -1,6 +1,6 @@
 {
   "name": "ts-proto",
-  "version": "1.101.0",
+  "version": "1.105.0",
   "description": "",
   "main": "build/plugin.js",
   "repository": "github:stephenh/ts-proto",
@@ -64,6 +64,6 @@
     "object-hash": "^1.3.1",
     "protobufjs": "^6.8.8",
     "ts-poet": "^4.5.0",
-    "ts-proto-descriptors": "^1.2.1"
+    "ts-proto-descriptors": "1.6.0"
   }
 }

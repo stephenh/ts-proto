@@ -1,3 +1,57 @@
+# [1.105.0](https://github.com/stephenh/ts-proto/compare/v1.104.1...v1.105.0) (2022-02-12)
+
+
+### Features
+
+* Bump ts-proto-descriptors. ([#489](https://github.com/stephenh/ts-proto/issues/489)) ([d454448](https://github.com/stephenh/ts-proto/commit/d454448b1889b1576c1ebcc6964a55a03af7d921)), closes [#493](https://github.com/stephenh/ts-proto/issues/493)
+
+## [1.104.1](https://github.com/stephenh/ts-proto/compare/v1.104.0...v1.104.1) (2022-02-12)
+
+
+### Bug Fixes
+
+* make struct types play well with type registry ([#503](https://github.com/stephenh/ts-proto/issues/503)) ([d62f854](https://github.com/stephenh/ts-proto/commit/d62f85478011c7eb3dbca196f79b452895406ece))
+
+# [1.104.0](https://github.com/stephenh/ts-proto/compare/v1.103.0...v1.104.0) (2022-01-21)
+
+
+### Bug Fixes
+
+* Leave mixed case in all words. ([#488](https://github.com/stephenh/ts-proto/issues/488)) ([8a26c9c](https://github.com/stephenh/ts-proto/commit/8a26c9cba4c9897700aafe1a7f59d0b0f537764b))
+
+
+### Features
+
+* enable prototype for defaults for ts-proto-descriptors ([#487](https://github.com/stephenh/ts-proto/issues/487)) ([2b5640f](https://github.com/stephenh/ts-proto/commit/2b5640f582e6adb4e81797a9cec217896061aadb))
+
+# [1.103.0](https://github.com/stephenh/ts-proto/compare/v1.102.2...v1.103.0) (2022-01-20)
+
+
+### Features
+
+* add usePrototypeForDefaults option ([#484](https://github.com/stephenh/ts-proto/issues/484)) ([8e8c810](https://github.com/stephenh/ts-proto/commit/8e8c81016968e7d772dfac5ed54800898f039cbe))
+
+## [1.102.2](https://github.com/stephenh/ts-proto/compare/v1.102.1...v1.102.2) (2022-01-19)
+
+
+### Bug Fixes
+
+* Have snakeToCamel leave existing mixed case. ([#482](https://github.com/stephenh/ts-proto/issues/482)) ([c0bf0fc](https://github.com/stephenh/ts-proto/commit/c0bf0fc13da70e2bde923cd1746119d2e7ac4b2f)), closes [#478](https://github.com/stephenh/ts-proto/issues/478)
+
+## [1.102.1](https://github.com/stephenh/ts-proto/compare/v1.102.0...v1.102.1) (2022-01-19)
+
+
+### Bug Fixes
+
+* Pin ts-proto-descriptors to 1.3.1. ([#481](https://github.com/stephenh/ts-proto/issues/481)) ([6f362bf](https://github.com/stephenh/ts-proto/commit/6f362bfd3517a6bcb440d65e7ac63cd2b0bcc293)), closes [#480](https://github.com/stephenh/ts-proto/issues/480)
+
+# [1.102.0](https://github.com/stephenh/ts-proto/compare/v1.101.0...v1.102.0) (2022-01-18)
+
+
+### Features
+
+* enable unknown fields for descriptor protos ([#479](https://github.com/stephenh/ts-proto/issues/479)) ([824c996](https://github.com/stephenh/ts-proto/commit/824c9962cd98dc0f9093e8909e3028d900094c54))
+
 # [1.101.0](https://github.com/stephenh/ts-proto/compare/v1.100.1...v1.101.0) (2022-01-15)
 
 
