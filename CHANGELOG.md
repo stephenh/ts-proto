@@ -1,3 +1,10 @@
+## [1.105.1](https://github.com/stephenh/ts-proto/compare/v1.105.0...v1.105.1) (2022-02-14)
+
+
+### Bug Fixes
+
+* generate canonical JSON encoding for FieldMasks ([#510](https://github.com/stephenh/ts-proto/issues/510)) ([0ec4e97](https://github.com/stephenh/ts-proto/commit/0ec4e97a2649dc15af1c925f8a2ff6adf1e17d9b))
+
 # [1.105.0](https://github.com/stephenh/ts-proto/compare/v1.104.1...v1.105.0) (2022-02-12)
 
 
