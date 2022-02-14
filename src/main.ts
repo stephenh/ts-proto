@@ -12,6 +12,7 @@ import {
   isBytes,
   isBytesValueType,
   isEnum,
+  isFieldMaskType,
   isListValueType,
   isListValueTypeName,
   isLong,
@@ -1146,6 +1147,8 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
         return code`${utils.fromJsonTimestamp}(${from})`;
       } else if (isAnyValueType(field) || isStructType(field)) {
         return code`${from}`;
+      } else if (isFieldMaskType(field)) {
+        return code`{paths: ${from}.split(",")}`;
       } else if (isListValueType(field)) {
         return code`[...${from}]`;
       } else if (isValueType(ctx, field)) {
@@ -1335,6 +1338,8 @@ function generateToJson(ctx: Context, fullName: string, messageDesc: DescriptorP
         }
       } else if (isAnyValueType(field)) {
         return code`${from}`;
+      } else if (isFieldMaskType(field)) {
+        return code`${from}.paths.join()`;
       } else if (isMessage(field) && !isValueType(ctx, field) && !isMapType(ctx, messageDesc, field)) {
         const type = basicTypeName(ctx, field, { keepValueType: true });
         return code`${from} ? ${type}.toJSON(${from}) : ${defaultValue(ctx, field)}`;
@@ -1495,7 +1500,7 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
           && object.${oneofName}?.${fieldName} !== null
         ) {
           message.${oneofName} = { $case: '${fieldName}', ${fieldName}: ${v} };
-        }  
+        }
       `);
     } else if (readSnippet(`x`).toCodeString() == 'x') {
       // An optimized case of the else below that works when `readSnippet` returns the plain input
@@ -1535,7 +1540,7 @@ function generateWrap(ctx: Context, fullProtoTypeName: string): Code[] {
     if (ctx.options.oneof === OneofOption.UNIONS) {
       chunks.push(code`wrap(value: any): Value {
         const result = createBaseValue();
-        
+
         if (value === null) {
           result.kind = {$case: 'nullValue', nullValue: NullValue.NULL_VALUE};
         } else if (typeof value === 'boolean') {

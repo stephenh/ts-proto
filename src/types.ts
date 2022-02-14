@@ -429,6 +429,14 @@ export function isBytesValueType(field: FieldDescriptorProto): boolean {
   return field.typeName === '.google.protobuf.BytesValue';
 }
 
+export function isFieldMaskType(field: FieldDescriptorProto): boolean {
+  return isFieldMaskTypeName(field.typeName);
+}
+
+export function isFieldMaskTypeName(typeName: string): boolean {
+  return typeName === 'google.protobuf.FieldMask' || typeName === '.google.protobuf.FieldMask';
+}
+
 export function isListValueType(field: FieldDescriptorProto): boolean {
   return isListValueTypeName(field.typeName);
 }
