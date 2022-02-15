@@ -23,6 +23,7 @@
     - [Only Types](#only-types)
     - [NestJS Support](#nestjs-support)
     - [Watch Mode](#watch-mode)
+    - [Basic gRPC implementation](#basic-grpc-implementation)
 - [Sponsors](#sponsors)
 - [Development](#development)
 - [Assumptions](#assumptions)
@@ -404,6 +405,51 @@ If you want to run `ts-proto` on every change of a proto file, you'll need to us
 ```json
 "proto:generate": "protoc --ts_proto_out=. ./<proto_path>/<proto_name>.proto --ts_proto_opt=esModuleInterop=true",
 "proto:watch": "chokidar \"**/*.proto\" -c \"npm run proto:generate\""
+```
+
+### Basic gRPC implementation
+
+`ts-proto` is RPC framework agnostic - how you transmit your data to and from
+your data source is up to you. The generated client implementations all expect
+a `rpc` parameter, which type is defined like this: 
+
+```ts
+interface Rpc {
+  request(service: string, method: string, data: Uint8Array): Promise<Uint8Array>;
+}
+```
+
+If you're working with gRPC, a simple implementation could look like this: 
+
+```ts
+type RpcImpl = (service: string, method: string, data: Uint8Array) => Promise<Uint8Array>;
+
+const sendRequest: RpcImpl = (service, method, data) => {
+  // Conventionally in gRPC, the request path looks like
+  //   "package.names.ServiceName/MethodName",
+  // we therefore construct such a string
+  const path = `${service}/${method}`;
+
+  return new Promise((resolve, reject) => {
+    // makeUnaryRequest transmits the result (and error) with a callback
+    // transform this into a promise!
+    const resultCallback: UnaryCallback<any> = (err, res) => {
+      if (err) {
+        return reject(err);
+      }
+      resolve(res);
+    };
+
+    function passThrough(argument: any) {
+      return argument;
+    }
+
+    // Using passThrough as the serialize and deserialize functions
+    conn.makeUnaryRequest(path, passThrough, passThrough, data, resultCallback);
+  });
+};
+
+const rpc: Rpc = { request: sendRequest }
 ```
 
 # Sponsors
