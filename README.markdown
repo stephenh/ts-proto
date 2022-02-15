@@ -591,6 +591,7 @@ Their interpretation is defined by the Protobuf specification, and libraries are
   * [google.protobuf.Value](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#Value)  &lrarr; `any | undefined` (i.e. `number | string | boolean | null | array | object`)
   * [google.protobuf.ListValue](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#ListValue) &lrarr; `any[]`
   * [google.protobuf.Struct](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#Struct) &lrarr; `{ [key: string]: any } | undefined`
+  * [google.protobuf.FieldMask](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#fieldmask) &lrarr; `string[]` (only in the JSON, `FieldMask` is still a message)
 
 ## Wrapper Types
 
