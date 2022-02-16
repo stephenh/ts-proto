@@ -213,24 +213,27 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
       chunks.push(code`export const ${serviceConstName} = "${serviceDesc.name}";`);
     } else if (options.outputServices === ServiceOption.GRPC) {
       chunks.push(generateGrpcJsService(ctx, fileDesc, sInfo, serviceDesc));
-    } else if (options.outputServices === ServiceOption.GENERIC) {
-      chunks.push(generateGenericServiceDefinition(ctx, fileDesc, sInfo, serviceDesc));
-    } else if (options.outputServices === ServiceOption.DEFAULT) {
-      // This service could be Twirp or grpc-web or JSON (maybe). So far all of their
-      // interfaces are fairly similar so we share the same service interface.
-      chunks.push(generateService(ctx, fileDesc, sInfo, serviceDesc));
+    } else {
+      if (options.outputServices === ServiceOption.GENERIC || options.outputServices === ServiceOption.GENERIC_AND_SERVICES) {
+        chunks.push(generateGenericServiceDefinition(ctx, fileDesc, sInfo, serviceDesc));
+      }
+      if (options.outputServices === ServiceOption.GENERIC_AND_SERVICES || options.outputServices === ServiceOption.DEFAULT) {
+        // This service could be Twirp or grpc-web or JSON (maybe). So far all of their
+        // interfaces are fairly similar so we share the same service interface.
+        chunks.push(generateService(ctx, fileDesc, sInfo, serviceDesc));
 
-      if (options.outputClientImpl === true) {
-        chunks.push(generateServiceClientImpl(ctx, fileDesc, serviceDesc));
-      } else if (options.outputClientImpl === 'grpc-web') {
-        chunks.push(generateGrpcClientImpl(ctx, fileDesc, serviceDesc));
-        chunks.push(generateGrpcServiceDesc(fileDesc, serviceDesc));
-        serviceDesc.method.forEach((method) => {
-          chunks.push(generateGrpcMethodDesc(ctx, serviceDesc, method));
-          if (method.serverStreaming) {
-            hasServerStreamingMethods = true;
-          }
-        });
+        if (options.outputClientImpl === true) {
+          chunks.push(generateServiceClientImpl(ctx, fileDesc, serviceDesc));
+        } else if (options.outputClientImpl === 'grpc-web') {
+          chunks.push(generateGrpcClientImpl(ctx, fileDesc, serviceDesc));
+          chunks.push(generateGrpcServiceDesc(fileDesc, serviceDesc));
+          serviceDesc.method.forEach((method) => {
+            chunks.push(generateGrpcMethodDesc(ctx, serviceDesc, method));
+            if (method.serverStreaming) {
+              hasServerStreamingMethods = true;
+            }
+          });
+        }
       }
     }
     serviceDesc.method.forEach((methodDesc, index) => {
@@ -735,10 +738,10 @@ function generateBaseInstanceFactory(
     const val = isWithinOneOf(field)
       ? 'undefined'
       : isMapType(ctx, messageDesc, field)
-      ? '{}'
-      : isRepeated(field)
-      ? '[]'
-      : defaultValue(ctx, field);
+        ? '{}'
+        : isRepeated(field)
+          ? '[]'
+          : defaultValue(ctx, field);
 
     fields.push(code`${name}: ${val}`);
   }
