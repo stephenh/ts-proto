@@ -1,3 +1,10 @@
+## [1.105.2](https://github.com/stephenh/ts-proto/compare/v1.105.1...v1.105.2) (2022-02-17)
+
+
+### Bug Fixes
+
+* Fix snakeToCamel single value parsing. ([#513](https://github.com/stephenh/ts-proto/issues/513)) ([e1ad866](https://github.com/stephenh/ts-proto/commit/e1ad866c95751c37ed13f02f4da2dc9076ab4758))
+
 ## [1.105.1](https://github.com/stephenh/ts-proto/compare/v1.105.0...v1.105.1) (2022-02-14)
 
 
