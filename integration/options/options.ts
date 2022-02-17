@@ -24,7 +24,9 @@ export interface RequestType {}
 
 export interface ResponseType {}
 
-const baseMyMessage: object = {};
+function createBaseMyMessage(): MyMessage {
+  return { foo: undefined, foo2: undefined, bar: undefined, quux: undefined };
+}
 
 export const MyMessage = {
   encode(message: MyMessage, writer: Writer = Writer.create()): Writer {
@@ -46,7 +48,7 @@ export const MyMessage = {
   decode(input: Reader | Uint8Array, length?: number): MyMessage {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseMyMessage } as MyMessage;
+    const message = createBaseMyMessage();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -71,7 +73,9 @@ export const MyMessage = {
   },
 };
 
-const baseRequestType: object = {};
+function createBaseRequestType(): RequestType {
+  return {};
+}
 
 export const RequestType = {
   encode(_: RequestType, writer: Writer = Writer.create()): Writer {
@@ -81,7 +85,7 @@ export const RequestType = {
   decode(input: Reader | Uint8Array, length?: number): RequestType {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseRequestType } as RequestType;
+    const message = createBaseRequestType();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -94,7 +98,9 @@ export const RequestType = {
   },
 };
 
-const baseResponseType: object = {};
+function createBaseResponseType(): ResponseType {
+  return {};
+}
 
 export const ResponseType = {
   encode(_: ResponseType, writer: Writer = Writer.create()): Writer {
@@ -104,7 +110,7 @@ export const ResponseType = {
   decode(input: Reader | Uint8Array, length?: number): ResponseType {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseResponseType } as ResponseType;
+    const message = createBaseResponseType();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -171,20 +177,34 @@ export interface ProtoMetadata {
 
 export const protoMetadata: ProtoMetadata = {
   fileDescriptor: FileDescriptorProto1.fromPartial({
+    name: 'options.proto',
+    package: '',
     dependency: ['google/protobuf/descriptor.proto', 'something/something.proto'],
     publicDependency: [],
     weakDependency: [],
     messageType: [
       {
+        name: 'MyMessage',
         field: [
           {
             name: 'foo',
             number: 1,
             label: 1,
             type: 5,
-            options: { uninterpretedOption: [] },
+            typeName: '',
+            extendee: '',
+            defaultValue: '',
             oneofIndex: 1,
             jsonName: 'foo',
+            options: {
+              ctype: 0,
+              packed: false,
+              jstype: 0,
+              lazy: false,
+              deprecated: false,
+              weak: false,
+              uninterpretedOption: [],
+            },
             proto3Optional: true,
           },
           {
@@ -192,13 +212,46 @@ export const protoMetadata: ProtoMetadata = {
             number: 2,
             label: 1,
             type: 5,
-            options: { uninterpretedOption: [] },
+            typeName: '',
+            extendee: '',
+            defaultValue: '',
             oneofIndex: 2,
             jsonName: 'foo2',
+            options: {
+              ctype: 0,
+              packed: false,
+              jstype: 0,
+              lazy: false,
+              deprecated: false,
+              weak: false,
+              uninterpretedOption: [],
+            },
             proto3Optional: true,
           },
-          { name: 'bar', number: 3, label: 1, type: 9, oneofIndex: 3, jsonName: 'bar', proto3Optional: true },
-          { name: 'quux', number: 4, label: 1, type: 9, oneofIndex: 0, jsonName: 'quux' },
+          {
+            name: 'bar',
+            number: 3,
+            label: 1,
+            type: 9,
+            typeName: '',
+            extendee: '',
+            defaultValue: '',
+            oneofIndex: 3,
+            jsonName: 'bar',
+            proto3Optional: true,
+          },
+          {
+            name: 'quux',
+            number: 4,
+            label: 1,
+            type: 9,
+            typeName: '',
+            extendee: '',
+            defaultValue: '',
+            oneofIndex: 0,
+            jsonName: 'quux',
+            proto3Optional: false,
+          },
         ],
         extension: [],
         nestedType: [],
@@ -210,23 +263,18 @@ export const protoMetadata: ProtoMetadata = {
           { name: '_foo_2' },
           { name: '_bar' },
         ],
+        options: {
+          messageSetWireFormat: false,
+          noStandardDescriptorAccessor: false,
+          deprecated: false,
+          mapEntry: false,
+          uninterpretedOption: [],
+        },
         reservedRange: [],
         reservedName: [],
-        name: 'MyMessage',
-        options: { uninterpretedOption: [] },
       },
       {
-        field: [],
-        extension: [],
-        nestedType: [],
-        enumType: [],
-        extensionRange: [],
-        oneofDecl: [],
-        reservedRange: [],
-        reservedName: [],
         name: 'RequestType',
-      },
-      {
         field: [],
         extension: [],
         nestedType: [],
@@ -235,113 +283,168 @@ export const protoMetadata: ProtoMetadata = {
         oneofDecl: [],
         reservedRange: [],
         reservedName: [],
+      },
+      {
         name: 'ResponseType',
+        field: [],
+        extension: [],
+        nestedType: [],
+        enumType: [],
+        extensionRange: [],
+        oneofDecl: [],
+        reservedRange: [],
+        reservedName: [],
       },
     ],
     enumType: [
       {
+        name: 'MyEnum',
         value: [
-          { name: 'FOO', number: 0, options: { uninterpretedOption: [] } },
+          { name: 'FOO', number: 0, options: { deprecated: false, uninterpretedOption: [] } },
           { name: 'BAR', number: 1 },
         ],
+        options: { allowAlias: false, deprecated: false, uninterpretedOption: [] },
         reservedRange: [],
         reservedName: [],
-        name: 'MyEnum',
-        options: { uninterpretedOption: [] },
       },
     ],
     service: [
       {
+        name: 'MyService',
         method: [
           {
             name: 'MyMethod',
             inputType: '.RequestType',
             outputType: '.ResponseType',
-            options: { uninterpretedOption: [] },
+            options: { deprecated: false, idempotencyLevel: 0, uninterpretedOption: [] },
+            clientStreaming: false,
+            serverStreaming: false,
           },
         ],
-        name: 'MyService',
-        options: { uninterpretedOption: [] },
+        options: { deprecated: false, uninterpretedOption: [] },
       },
     ],
     extension: [
       {
         name: 'my_file_option',
-        extendee: '.google.protobuf.FileOptions',
         number: 50000,
         label: 1,
         type: 9,
+        typeName: '',
+        extendee: '.google.protobuf.FileOptions',
+        defaultValue: '',
+        oneofIndex: 0,
         jsonName: 'myFileOption',
         proto3Optional: true,
       },
       {
         name: 'my_message_option',
-        extendee: '.google.protobuf.MessageOptions',
         number: 50001,
         label: 1,
         type: 5,
+        typeName: '',
+        extendee: '.google.protobuf.MessageOptions',
+        defaultValue: '',
+        oneofIndex: 0,
         jsonName: 'myMessageOption',
         proto3Optional: true,
       },
       {
         name: 'my_field_option',
-        extendee: '.google.protobuf.FieldOptions',
         number: 50002,
         label: 1,
         type: 2,
+        typeName: '',
+        extendee: '.google.protobuf.FieldOptions',
+        defaultValue: '',
+        oneofIndex: 0,
         jsonName: 'myFieldOption',
         proto3Optional: true,
       },
       {
         name: 'my_oneof_option',
-        extendee: '.google.protobuf.OneofOptions',
         number: 50003,
         label: 1,
         type: 3,
+        typeName: '',
+        extendee: '.google.protobuf.OneofOptions',
+        defaultValue: '',
+        oneofIndex: 0,
         jsonName: 'myOneofOption',
         proto3Optional: true,
       },
       {
         name: 'my_enum_option',
-        extendee: '.google.protobuf.EnumOptions',
         number: 50004,
         label: 1,
         type: 8,
+        typeName: '',
+        extendee: '.google.protobuf.EnumOptions',
+        defaultValue: '',
+        oneofIndex: 0,
         jsonName: 'myEnumOption',
         proto3Optional: true,
       },
       {
         name: 'my_enum_value_option',
-        extendee: '.google.protobuf.EnumValueOptions',
         number: 50005,
         label: 1,
         type: 13,
+        typeName: '',
+        extendee: '.google.protobuf.EnumValueOptions',
+        defaultValue: '',
+        oneofIndex: 0,
         jsonName: 'myEnumValueOption',
         proto3Optional: true,
       },
       {
         name: 'my_service_option',
-        extendee: '.google.protobuf.ServiceOptions',
         number: 50006,
         label: 1,
         type: 14,
         typeName: '.MyEnum',
+        extendee: '.google.protobuf.ServiceOptions',
+        defaultValue: '',
+        oneofIndex: 0,
         jsonName: 'myServiceOption',
         proto3Optional: true,
       },
       {
         name: 'my_method_option',
-        extendee: '.google.protobuf.MethodOptions',
         number: 50007,
         label: 1,
         type: 11,
         typeName: '.MyMessage',
+        extendee: '.google.protobuf.MethodOptions',
+        defaultValue: '',
+        oneofIndex: 0,
         jsonName: 'myMethodOption',
         proto3Optional: true,
       },
     ],
-    name: 'options.proto',
-    options: { uninterpretedOption: [] },
+    options: {
+      javaPackage: '',
+      javaOuterClassname: '',
+      javaMultipleFiles: false,
+      javaGenerateEqualsAndHash: false,
+      javaStringCheckUtf8: false,
+      optimizeFor: 1,
+      goPackage: '',
+      ccGenericServices: false,
+      javaGenericServices: false,
+      pyGenericServices: false,
+      phpGenericServices: false,
+      deprecated: false,
+      ccEnableArenas: false,
+      objcClassPrefix: '',
+      csharpNamespace: '',
+      swiftPrefix: '',
+      phpClassPrefix: '',
+      phpNamespace: '',
+      phpMetadataNamespace: '',
+      rubyPackage: '',
+      uninterpretedOption: [],
+    },
     sourceCodeInfo: { location: [] },
     syntax: 'proto3',
   }),

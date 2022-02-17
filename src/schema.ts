@@ -97,13 +97,13 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
   };
 
   let fileOptions: Code | undefined;
-  if (descriptor.options) {
-    fileOptions = encodedOptionsToOptions(ctx, (descriptor.options as any)['encodedOptions']);
-    delete (descriptor.options as any)['encodedOptions'];
+  if (fileDesc.options) {
+    fileOptions = encodedOptionsToOptions(ctx, (fileDesc.options as any)['_unknownFields']);
+    delete (fileDesc.options as any)['_unknownFields'];
   }
 
   const messagesOptions: Code[] = [];
-  descriptor.messageType.forEach((message) => {
+  (fileDesc.messageType || []).forEach((message) => {
     const resolvedMessage = resolveMessageOptions(ctx, message);
     if (resolvedMessage) {
       messagesOptions.push(resolvedMessage);
@@ -111,12 +111,12 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
   });
 
   const servicesOptions: Code[] = [];
-  descriptor.service.forEach((service) => {
+  (fileDesc.service || []).forEach((service) => {
     const methodsOptions: Code[] = [];
     service.method.forEach((method) => {
       if (method.options) {
-        const methodOptions = encodedOptionsToOptions(ctx, (method.options as any)['encodedOptions']);
-        delete (method.options as any)['encodedOptions'];
+        const methodOptions = encodedOptionsToOptions(ctx, (method.options as any)['_unknownFields']);
+        delete (method.options as any)['_unknownFields'];
         if (methodOptions) {
           methodsOptions.push(code`'${method.name}': ${methodOptions}`);
         }
@@ -125,8 +125,8 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
 
     let serviceOptions: Code | undefined;
     if (service.options) {
-      serviceOptions = encodedOptionsToOptions(ctx, (service.options as any)['encodedOptions']);
-      delete (service.options as any)['encodedOptions'];
+      serviceOptions = encodedOptionsToOptions(ctx, (service.options as any)['_unknownFields']);
+      delete (service.options as any)['_unknownFields'];
     }
 
     if (methodsOptions.length > 0 || serviceOptions) {
@@ -140,12 +140,12 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
   });
 
   const enumsOptions: Code[] = [];
-  descriptor.enumType.forEach((Enum) => {
+  (fileDesc.enumType || []).forEach((Enum) => {
     const valuesOptions: Code[] = [];
     Enum.value.forEach((value) => {
       if (value.options) {
-        const valueOptions = encodedOptionsToOptions(ctx, (value.options as any)['encodedOptions']);
-        delete (value.options as any)['encodedOptions'];
+        const valueOptions = encodedOptionsToOptions(ctx, (value.options as any)['_unknownFields']);
+        delete (value.options as any)['_unknownFields'];
         if (valueOptions) {
           valuesOptions.push(code`'${value.name}': ${valueOptions}`);
         }
@@ -154,8 +154,8 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
 
     let enumOptions: Code | undefined;
     if (Enum.options) {
-      enumOptions = encodedOptionsToOptions(ctx, (Enum.options as any)['encodedOptions']);
-      delete (Enum.options as any)['encodedOptions'];
+      enumOptions = encodedOptionsToOptions(ctx, (Enum.options as any)['_unknownFields']);
+      delete (Enum.options as any)['_unknownFields'];
     }
 
     if (valuesOptions.length > 0 || enumOptions) {
@@ -213,9 +213,12 @@ function getExtensionValue(ctx: Context, extension: FieldDescriptorProto, data: 
 }
 
 function encodedOptionsToOptions(ctx: Context, encodedOptions: { [key: number]: Uint8Array[] }): Code | undefined {
+  if (!encodedOptions) {
+    return undefined;
+  }
   const resultOptions: Code[] = [];
   for (const key of Object.keys(encodedOptions)) {
-    const extension = extensionCache[key];
+    const extension = extensionCache[parseInt(key, 10) >>> 3];
     resultOptions.push(getExtensionValue(ctx, extension, encodedOptions[key as any]));
   }
   if (resultOptions.length == 0) {
@@ -228,8 +231,8 @@ function resolveMessageOptions(ctx: Context, message: DescriptorProto): Code | u
   const fieldsOptions: Code[] = [];
   message.field.forEach((field) => {
     if (field.options) {
-      const fieldOptions = encodedOptionsToOptions(ctx, (field.options as any)['encodedOptions']);
-      delete (field.options as any)['encodedOptions'];
+      const fieldOptions = encodedOptionsToOptions(ctx, (field.options as any)['_unknownFields']);
+      delete (field.options as any)['_unknownFields'];
       if (fieldOptions) {
         fieldsOptions.push(code`'${field.name}': ${fieldOptions}`);
       }
@@ -239,8 +242,8 @@ function resolveMessageOptions(ctx: Context, message: DescriptorProto): Code | u
   const oneOfsOptions: Code[] = [];
   message.oneofDecl.forEach((oneOf) => {
     if (oneOf.options) {
-      const oneOfOptions = encodedOptionsToOptions(ctx, (oneOf.options as any)['encodedOptions']);
-      delete (oneOf.options as any)['encodedOptions'];
+      const oneOfOptions = encodedOptionsToOptions(ctx, (oneOf.options as any)['_unknownFields']);
+      delete (oneOf.options as any)['_unknownFields'];
       if (oneOfOptions) {
         oneOfsOptions.push(code`'${oneOf.name}': ${oneOfOptions}`);
       }
@@ -259,8 +262,8 @@ function resolveMessageOptions(ctx: Context, message: DescriptorProto): Code | u
 
   let messageOptions: Code | undefined;
   if (message.options) {
-    messageOptions = encodedOptionsToOptions(ctx, (message.options as any)['encodedOptions']);
-    delete (message.options as any)['encodedOptions'];
+    messageOptions = encodedOptionsToOptions(ctx, (message.options as any)['_unknownFields']);
+    delete (message.options as any)['_unknownFields'];
   }
 
   if (fieldsOptions.length > 0 || oneOfsOptions.length > 0 || nestedOptions.length > 0 || messageOptions) {

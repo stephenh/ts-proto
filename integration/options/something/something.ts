@@ -11,7 +11,9 @@ export interface Something {
   foo: number[];
 }
 
-const baseSomething: object = { hello: '', foo: 0 };
+function createBaseSomething(): Something {
+  return { hello: '', foo: [] };
+}
 
 export const Something = {
   encode(message: Something, writer: Writer = Writer.create()): Writer {
@@ -29,8 +31,7 @@ export const Something = {
   decode(input: Reader | Uint8Array, length?: number): Something {
     const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = { ...baseSomething } as Something;
-    message.foo = [];
+    const message = createBaseSomething();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -89,14 +90,39 @@ export interface ProtoMetadata {
 
 export const protoMetadata: ProtoMetadata = {
   fileDescriptor: FileDescriptorProto1.fromPartial({
+    name: 'something/something.proto',
+    package: 'something',
     dependency: ['google/protobuf/descriptor.proto'],
     publicDependency: [],
     weakDependency: [],
     messageType: [
       {
+        name: 'Something',
         field: [
-          { name: 'hello', number: 1, label: 1, type: 9, jsonName: 'hello' },
-          { name: 'foo', number: 2, label: 3, type: 5, jsonName: 'foo' },
+          {
+            name: 'hello',
+            number: 1,
+            label: 1,
+            type: 9,
+            typeName: '',
+            extendee: '',
+            defaultValue: '',
+            oneofIndex: 0,
+            jsonName: 'hello',
+            proto3Optional: false,
+          },
+          {
+            name: 'foo',
+            number: 2,
+            label: 3,
+            type: 5,
+            typeName: '',
+            extendee: '',
+            defaultValue: '',
+            oneofIndex: 0,
+            jsonName: 'foo',
+            proto3Optional: false,
+          },
         ],
         extension: [],
         nestedType: [],
@@ -105,7 +131,6 @@ export const protoMetadata: ProtoMetadata = {
         oneofDecl: [],
         reservedRange: [],
         reservedName: [],
-        name: 'Something',
       },
     ],
     enumType: [],
@@ -113,17 +138,17 @@ export const protoMetadata: ProtoMetadata = {
     extension: [
       {
         name: 'something',
-        extendee: '.google.protobuf.FieldOptions',
         number: 1000,
         label: 1,
         type: 11,
         typeName: '.something.Something',
+        extendee: '.google.protobuf.FieldOptions',
+        defaultValue: '',
+        oneofIndex: 0,
         jsonName: 'something',
         proto3Optional: true,
       },
     ],
-    name: 'something/something.proto',
-    package: 'something',
     sourceCodeInfo: { location: [] },
     syntax: 'proto3',
   }),
