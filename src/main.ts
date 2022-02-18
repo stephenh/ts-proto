@@ -212,7 +212,8 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
 
       chunks.push(code`export const ${serviceConstName} = "${serviceDesc.name}";`);
     } else {
-      new Set(options.outputServices).forEach((outputService) => {
+      const uniqueServices = [...new Set(options.outputServices)].sort();
+      uniqueServices.forEach((outputService) => {
         if (outputService === ServiceOption.GRPC) {
           chunks.push(generateGrpcJsService(ctx, fileDesc, sInfo, serviceDesc));
         } else if (outputService === ServiceOption.GENERIC) {
