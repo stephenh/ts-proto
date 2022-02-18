@@ -85,4 +85,14 @@ describe('options', () => {
       useOptionals: 'messages',
     });
   });
+
+  it('can set snakeToCamel as string', () => {
+    const options = optionsFromParameter('snakeToCamel=keys');
+    expect(options).toMatchObject({ snakeToCamel: ['keys'] });
+  });
+
+  it('can set multiple values as an array', () => {
+    const options = optionsFromParameter('foo=one,foo=two');
+    expect(options).toMatchObject({ foo: ['one', 'two'] });
+  });
 });

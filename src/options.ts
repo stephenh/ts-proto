@@ -147,6 +147,8 @@ export function optionsFromParameter(parameter: string | undefined): Options {
     options.snakeToCamel = [];
   } else if ((options.snakeToCamel as any) === true) {
     options.snakeToCamel = ['keys', 'json'];
+  } else if (typeof options.snakeToCamel === 'string') {
+    options.snakeToCamel = [options.snakeToCamel];
   }
 
   return options;
@@ -156,8 +158,13 @@ export function optionsFromParameter(parameter: string | undefined): Options {
 function parseParameter(parameter: string): Options {
   const options = {} as any;
   const pairs = parameter.split(',').map((s) => s.split('='));
-  pairs.forEach(([key, value]) => {
-    options[key] = value === 'true' ? true : value === 'false' ? false : value;
+  pairs.forEach(([key, _value]) => {
+    const value = _value === 'true' ? true : _value === 'false' ? false : _value;
+    if (options[key]) {
+      options[key] = [options[key], value];
+    } else {
+      options[key] = value;
+    }
   });
   return options;
 }
