@@ -166,7 +166,7 @@ export class FormattedMethodDescriptor implements MethodDescriptorProto {
   public static formatName(methodName: string, options: Options) {
     let result = methodName;
 
-    if (options.lowerCaseServiceMethods || options.outputServices === ServiceOption.GRPC) {
+    if (options.lowerCaseServiceMethods || options.outputServices.includes(ServiceOption.GRPC)) {
       result = camelCase(result);
     }
 
