@@ -1,1 +1,1 @@
-outputServices=generic-definitions-and-services
+outputServices=generic-definitions,outputServices=generic-definitions=default
