@@ -3,7 +3,14 @@ PROJECT_ROOT=$(realpath $(dirname "$BASH_SOURCE"))
 PROJECT_ROOT_DOCKER="//ts-proto" # double slash to support git bash on windows
 
 # Alias docker-compose to make it usable from anywhere.
-function _docker-compose() { docker-compose -f $PROJECT_ROOT/docker-compose.yml "$@"; }
+function _docker-compose() { 
+  if [ uname -a | grep arm64 ]
+  then
+    docker-compose -f "$PROJECT_ROOT/docker-compose.aarch64.yml" "$@"
+  else
+    docker-compose -f $PROJECT_ROOT/docker-compose.yml "$@"; 
+  fi
+}
 
 # Dockerized version of protoc.
 function protoc() { _docker-compose run --rm -w //host --entrypoint protoc -- protoc "$@"; }
