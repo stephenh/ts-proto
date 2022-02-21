@@ -40,11 +40,12 @@ import {
 import SourceInfo, { Fields } from './sourceInfo';
 import {
   assertInstanceOf,
-  determineFieldJsonName,
+  getFieldJsonName,
   FormattedMethodDescriptor,
   impProto,
   maybeAddComment,
   maybePrefixPackage,
+  getPropertyAccessor,
 } from './utils';
 import { camelToSnake, capitalize, maybeSnakeToCamel } from './case';
 import {
@@ -1114,7 +1115,8 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
   // add a check for each incoming field
   messageDesc.field.forEach((field) => {
     const fieldName = maybeSnakeToCamel(field.name, options);
-    const jsonName = determineFieldJsonName(field, options);
+    const jsonName = getFieldJsonName(field, options);
+    const jsonProperty = getPropertyAccessor('object', jsonName);
 
     // get code that extracts value from incoming object
     const readSnippet = (from: string): Code => {
@@ -1212,8 +1214,8 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
         const fieldType = toTypeName(ctx, messageDesc, field);
         const i = maybeCastToNumber(ctx, messageDesc, field, 'key');
         chunks.push(code`
-          ${fieldName}: ${ctx.utils.isObject}(object.${jsonName})
-            ? Object.entries(object.${jsonName}).reduce<${fieldType}>((acc, [key, value]) => {
+          ${fieldName}: ${ctx.utils.isObject}(${jsonProperty})
+            ? Object.entries(${jsonProperty}).reduce<${fieldType}>((acc, [key, value]) => {
                 acc[${i}] = ${readSnippet('value')};
                 return acc;
               }, {})
@@ -1222,11 +1224,11 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
       } else {
         const readValueSnippet = readSnippet('e');
         if (readValueSnippet.toString() === code`e`.toString()) {
-          chunks.push(code`${fieldName}: Array.isArray(object?.${jsonName}) ? [...object.${jsonName}] : [],`);
+          chunks.push(code`${fieldName}: Array.isArray(object?.${jsonName}) ? [...${jsonProperty}] : [],`);
         } else {
           // Explicit `any` type required to make TS with noImplicitAny happy. `object` is also `any` here.
           chunks.push(code`
-            ${fieldName}: Array.isArray(object?.${jsonName}) ? object.${jsonName}.map((e: any) => ${readValueSnippet}): [],
+            ${fieldName}: Array.isArray(object?.${jsonName}) ? ${jsonProperty}.map((e: any) => ${readValueSnippet}): [],
           `);
         }
       }
@@ -1240,8 +1242,8 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
         chunks.push(code`${fieldName}: `);
       }
 
-      const ternaryIf = code`${ctx.utils.isSet}(object.${jsonName})`;
-      const ternaryThen = code`{ $case: '${fieldName}', ${fieldName}: ${readSnippet(`object.${jsonName}`)}`;
+      const ternaryIf = code`${ctx.utils.isSet}(${jsonProperty})`;
+      const ternaryThen = code`{ $case: '${fieldName}', ${fieldName}: ${readSnippet(`${jsonProperty}`)}`;
       chunks.push(code`${ternaryIf} ? ${ternaryThen}} : `);
 
       if (field === lastCase) {
@@ -1249,26 +1251,26 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
       }
     } else if (isAnyValueType(field)) {
       chunks.push(code`${fieldName}: ${ctx.utils.isSet}(object?.${jsonName})
-        ? ${readSnippet(`object.${jsonName}`)}
+        ? ${readSnippet(`${jsonProperty}`)}
         : undefined,
       `);
     } else if (isStructType(field)) {
       chunks.push(
-        code`${fieldName}: ${ctx.utils.isObject}(object.${jsonName})
-          ? ${readSnippet(`object.${jsonName}`)}
+        code`${fieldName}: ${ctx.utils.isObject}(${jsonProperty})
+          ? ${readSnippet(`${jsonProperty}`)}
           : undefined,`
       );
     } else if (isListValueType(field)) {
       chunks.push(code`
-        ${fieldName}: Array.isArray(object.${jsonName})
-          ? ${readSnippet(`object.${jsonName}`)}
+        ${fieldName}: Array.isArray(${jsonProperty})
+          ? ${readSnippet(`${jsonProperty}`)}
           : undefined,
       `);
     } else {
       const fallback = isWithinOneOf(field) ? 'undefined' : defaultValue(ctx, field);
       chunks.push(code`
-        ${fieldName}: ${ctx.utils.isSet}(object.${jsonName})
-          ? ${readSnippet(`object.${jsonName}`)}
+        ${fieldName}: ${ctx.utils.isSet}(${jsonProperty})
+          ? ${readSnippet(`${jsonProperty}`)}
           : ${fallback},
       `);
     }
@@ -1292,7 +1294,8 @@ function generateToJson(ctx: Context, fullName: string, messageDesc: DescriptorP
   // then add a case for each field
   messageDesc.field.forEach((field) => {
     const fieldName = maybeSnakeToCamel(field.name, options);
-    const jsonName = determineFieldJsonName(field, options);
+    const jsonName = getFieldJsonName(field, options);
+    const jsonProperty = getPropertyAccessor('obj', jsonName);
 
     const readSnippet = (from: string): Code => {
       if (isEnum(field)) {
@@ -1382,10 +1385,10 @@ function generateToJson(ctx: Context, fullName: string, messageDesc: DescriptorP
       // oneofs in a union are only output as `oneof name = ...`
       const oneofName = maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options);
       const v = readSnippet(`message.${oneofName}?.${fieldName}`);
-      chunks.push(code`message.${oneofName}?.$case === '${fieldName}' && (obj.${jsonName} = ${v});`);
+      chunks.push(code`message.${oneofName}?.$case === '${fieldName}' && (${jsonProperty} = ${v});`);
     } else {
       const v = readSnippet(`message.${fieldName}`);
-      chunks.push(code`message.${fieldName} !== undefined && (obj.${jsonName} = ${v});`);
+      chunks.push(code`message.${fieldName} !== undefined && (${jsonProperty} = ${v});`);
     }
   });
   chunks.push(code`return obj;`);
