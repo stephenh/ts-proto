@@ -1117,6 +1117,7 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
     const fieldName = maybeSnakeToCamel(field.name, options);
     const jsonName = getFieldJsonName(field, options);
     const jsonProperty = getPropertyAccessor('object', jsonName);
+    const jsonPropertyOptional = getPropertyAccessor('object', jsonName, true);
 
     // get code that extracts value from incoming object
     const readSnippet = (from: string): Code => {
@@ -1224,11 +1225,11 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
       } else {
         const readValueSnippet = readSnippet('e');
         if (readValueSnippet.toString() === code`e`.toString()) {
-          chunks.push(code`${fieldName}: Array.isArray(object?.${jsonName}) ? [...${jsonProperty}] : [],`);
+          chunks.push(code`${fieldName}: Array.isArray(${jsonPropertyOptional}) ? [...${jsonProperty}] : [],`);
         } else {
           // Explicit `any` type required to make TS with noImplicitAny happy. `object` is also `any` here.
           chunks.push(code`
-            ${fieldName}: Array.isArray(object?.${jsonName}) ? ${jsonProperty}.map((e: any) => ${readValueSnippet}): [],
+            ${fieldName}: Array.isArray(${jsonPropertyOptional}) ? ${jsonProperty}.map((e: any) => ${readValueSnippet}): [],
           `);
         }
       }
@@ -1250,7 +1251,7 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
         chunks.push(code`undefined,`);
       }
     } else if (isAnyValueType(field)) {
-      chunks.push(code`${fieldName}: ${ctx.utils.isSet}(object?.${jsonName})
+      chunks.push(code`${fieldName}: ${ctx.utils.isSet}(${jsonPropertyOptional})
         ? ${readSnippet(`${jsonProperty}`)}
         : undefined,
       `);
@@ -1365,10 +1366,10 @@ function generateToJson(ctx: Context, fullName: string, messageDesc: DescriptorP
     if (isMapType(ctx, messageDesc, field)) {
       // Maps might need their values transformed, i.e. bytes --> base64
       chunks.push(code`
-        obj.${jsonName} = {};
+        ${jsonProperty} = {};
         if (message.${fieldName}) {
           Object.entries(message.${fieldName}).forEach(([k, v]) => {
-            obj.${jsonName}[k] = ${readSnippet('v')};
+            ${jsonProperty}[k] = ${readSnippet('v')};
           });
         }
       `);
@@ -1376,9 +1377,9 @@ function generateToJson(ctx: Context, fullName: string, messageDesc: DescriptorP
       // Arrays might need their elements transformed
       chunks.push(code`
         if (message.${fieldName}) {
-          obj.${jsonName} = message.${fieldName}.map(e => ${readSnippet('e')});
+          ${jsonProperty} = message.${fieldName}.map(e => ${readSnippet('e')});
         } else {
-          obj.${jsonName} = [];
+          ${jsonProperty} = [];
         }
       `);
     } else if (isWithinOneOfThatShouldBeUnion(options, field)) {
