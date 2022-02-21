@@ -12,4 +12,5 @@ message Simple {
   string spaces = 4 [json_name = "name with spaces"];
   string dollarStart = 5 [json_name = "$dollar"];
   string dollarEnd = 6 [json_name = "dollar$"];
+  repeated string hyphenList = 7 [json_name = "hyphen-list"];
 }
