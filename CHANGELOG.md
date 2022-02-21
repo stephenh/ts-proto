@@ -1,3 +1,10 @@
+## [1.106.1](https://github.com/stephenh/ts-proto/compare/v1.106.0...v1.106.1) (2022-02-21)
+
+
+### Bug Fixes
+
+* support json_name containing hyphen on all field types ([#521](https://github.com/stephenh/ts-proto/issues/521)) ([8d9e78e](https://github.com/stephenh/ts-proto/commit/8d9e78eb39c460f6727458f6a2dd149deb983668))
+
 # [1.106.0](https://github.com/stephenh/ts-proto/compare/v1.105.2...v1.106.0) (2022-02-21)
 
 
