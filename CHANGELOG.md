@@ -1,3 +1,10 @@
+# [1.106.0](https://github.com/stephenh/ts-proto/compare/v1.105.2...v1.106.0) (2022-02-21)
+
+
+### Features
+
+* Support json names containing non-alphanumeric characters ([#520](https://github.com/stephenh/ts-proto/issues/520)) ([ce44668](https://github.com/stephenh/ts-proto/commit/ce44668b8fe01b14f50ac3c5c950f73db769fa76))
+
 ## [1.105.2](https://github.com/stephenh/ts-proto/compare/v1.105.1...v1.105.2) (2022-02-17)
 
 
