@@ -112,7 +112,7 @@ function yarnRun(yarn: string, task: string, header: string, taskArgument?: stri
 }
 
 function srcHandler(yarn: string, task: string, tests: string[]) {
-  return async (event: FsEvent, triggerPath: string) => {
+  return async (triggerPath: string) => {
     triggerPath = triggerPath.replace(/\\/g, '/');
     if (tests.length === 0) {
       const notice = `Plugin modified! Press [enter] to regenerate all integration tests or run 'yarn watch [TEST, ...]'. See 'yarn watch --help'.`;
