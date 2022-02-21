@@ -57,7 +57,6 @@ export function generateGenericServiceDefinition(
 function generateMethodDefinition(ctx: Context, methodDesc: MethodDescriptorProto) {
   const inputType = messageToTypeName(ctx, methodDesc.inputType, { keepValueType: true });
   const outputType = messageToTypeName(ctx, methodDesc.outputType, { keepValueType: true });
-
   return code`
     {
       name: '${methodDesc.name}',
@@ -80,6 +79,25 @@ function generateMethodOptions(options: MethodOptions | undefined) {
       chunks.push(code`idempotencyLevel: 'IDEMPOTENT',`);
     } else if (options.idempotencyLevel === MethodOptions_IdempotencyLevel.NO_SIDE_EFFECTS) {
       chunks.push(code`idempotencyLevel: 'NO_SIDE_EFFECTS',`);
+    }
+
+    for (const option of options.uninterpretedOption) {
+      const fullName = option.name.map((part) => part.namePart);
+      const value =
+        option.identifierValue ||
+        option.positiveIntValue ||
+        option.negativeIntValue ||
+        option.doubleValue ||
+        option.aggregateValue ||
+        option.stringValue;
+      chunks.push(code`'${fullName}': ${value},`);
+    }
+
+    // for some reason, uninterpretedOption contains none of the custom extensions...
+    const customExtensions = (options as any)._unknownFields as Record<string, any>;
+
+    for (const [key, value] of Object.entries(customExtensions)) {
+      chunks.push(code`${key}: ${JSON.stringify(value)},`);
     }
   }
 
