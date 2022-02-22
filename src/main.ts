@@ -738,7 +738,7 @@ function generateBaseInstanceFactory(
       : isMapType(ctx, messageDesc, field)
       ? '{}'
       : isRepeated(field)
-      ? '[]'
+      ? (ctx.options.usePrototypeForDefaults ? 'undefined' : '[]')
       : defaultValue(ctx, field);
 
     fields.push(code`${name}: ${val}`);
@@ -841,7 +841,12 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
 
     // and then use the snippet to handle repeated fields if necessary
     if (isRepeated(field)) {
-      const maybeNonNullAssertion = ctx.options.useOptionals === 'all' ? '!' : '';
+      let maybeNonNullAssertion = ctx.options.useOptionals === 'all' ? '!' : '';
+
+      if (ctx.options.usePrototypeForDefaults) {
+        chunks.push(code`message.${fieldName} ||= [];`);
+        maybeNonNullAssertion = '';
+      }
 
       if (isMapType(ctx, messageDesc, field)) {
         // We need a unique const within the `cast` statement

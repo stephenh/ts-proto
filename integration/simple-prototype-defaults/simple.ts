@@ -61,13 +61,13 @@ export interface Simple {
   createdAt: Date | undefined;
   child: Child | undefined;
   state: StateEnum;
-  grandChildren: Child[];
-  coins: number[];
-  snacks: string[];
-  oldStates: StateEnum[];
+  grandChildren: Child[] | undefined;
+  coins: number[] | undefined;
+  snacks: string[] | undefined;
+  oldStates: StateEnum[] | undefined;
   /** A thing (imported from thing) */
   thing: ImportedThing | undefined;
-  blobs: Uint8Array[];
+  blobs: Uint8Array[] | undefined;
   birthday: DateMessage | undefined;
   blob: Uint8Array;
 }
@@ -178,8 +178,8 @@ export interface SimpleWithWrappers {
   name: string | undefined;
   age: number | undefined;
   enabled: boolean | undefined;
-  coins: number[];
-  snacks: string[];
+  coins: number[] | undefined;
+  snacks: string[] | undefined;
   id: Uint8Array | undefined;
 }
 
@@ -188,13 +188,13 @@ export interface Entity {
 }
 
 export interface SimpleWithMap {
-  entitiesById: { [key: number]: Entity };
-  nameLookup: { [key: string]: string };
-  intLookup: { [key: number]: number };
-  mapOfTimestamps: { [key: string]: Date };
-  mapOfBytes: { [key: string]: Uint8Array };
-  mapOfStringValues: { [key: string]: string | undefined };
-  longLookup: { [key: number]: number };
+  entitiesById: { [key: number]: Entity } | undefined;
+  nameLookup: { [key: string]: string } | undefined;
+  intLookup: { [key: number]: number } | undefined;
+  mapOfTimestamps: { [key: string]: Date } | undefined;
+  mapOfBytes: { [key: string]: Uint8Array } | undefined;
+  mapOfStringValues: { [key: string]: string | undefined } | undefined;
+  longLookup: { [key: number]: number } | undefined;
 }
 
 export interface SimpleWithMap_EntitiesByIdEntry {
@@ -233,7 +233,7 @@ export interface SimpleWithMap_LongLookupEntry {
 }
 
 export interface SimpleWithSnakeCaseMap {
-  entitiesById: { [key: number]: Entity };
+  entitiesById: { [key: number]: Entity } | undefined;
 }
 
 export interface SimpleWithSnakeCaseMap_EntitiesByIdEntry {
@@ -242,7 +242,7 @@ export interface SimpleWithSnakeCaseMap_EntitiesByIdEntry {
 }
 
 export interface SimpleWithMapOfEnums {
-  enumsById: { [key: number]: StateEnum };
+  enumsById: { [key: number]: StateEnum } | undefined;
 }
 
 export interface SimpleWithMapOfEnums_EnumsByIdEntry {
@@ -297,12 +297,12 @@ function createBaseSimple(): Simple {
     createdAt: undefined,
     child: undefined,
     state: 0,
-    grandChildren: [],
-    coins: [],
-    snacks: [],
-    oldStates: [],
+    grandChildren: undefined,
+    coins: undefined,
+    snacks: undefined,
+    oldStates: undefined,
     thing: undefined,
-    blobs: [],
+    blobs: undefined,
     birthday: undefined,
     blob: new Uint8Array(),
   };
@@ -379,9 +379,11 @@ export const Simple = {
           message.state = reader.int32() as any;
           break;
         case 5:
+          message.grandChildren ||= [];
           message.grandChildren.push(Child.decode(reader, reader.uint32()));
           break;
         case 6:
+          message.coins ||= [];
           if ((tag & 7) === 2) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
@@ -392,9 +394,11 @@ export const Simple = {
           }
           break;
         case 7:
+          message.snacks ||= [];
           message.snacks.push(reader.string());
           break;
         case 8:
+          message.oldStates ||= [];
           if ((tag & 7) === 2) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
@@ -408,6 +412,7 @@ export const Simple = {
           message.thing = ImportedThing.decode(reader, reader.uint32());
           break;
         case 11:
+          message.blobs ||= [];
           message.blobs.push(reader.bytes());
           break;
         case 12:
@@ -806,7 +811,7 @@ export const OneOfMessage = {
 };
 
 function createBaseSimpleWithWrappers(): SimpleWithWrappers {
-  return { name: undefined, age: undefined, enabled: undefined, coins: [], snacks: [], id: undefined };
+  return { name: undefined, age: undefined, enabled: undefined, coins: undefined, snacks: undefined, id: undefined };
 }
 
 export const SimpleWithWrappers = {
@@ -849,9 +854,11 @@ export const SimpleWithWrappers = {
           message.enabled = BoolValue.decode(reader, reader.uint32()).value;
           break;
         case 6:
+          message.coins ||= [];
           message.coins.push(Int32Value.decode(reader, reader.uint32()).value);
           break;
         case 7:
+          message.snacks ||= [];
           message.snacks.push(StringValue.decode(reader, reader.uint32()).value);
           break;
         case 8:
@@ -1004,42 +1011,49 @@ export const SimpleWithMap = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          message.entitiesById ||= [];
           const entry1 = SimpleWithMap_EntitiesByIdEntry.decode(reader, reader.uint32());
           if (entry1.value !== undefined) {
             message.entitiesById[entry1.key] = entry1.value;
           }
           break;
         case 2:
+          message.nameLookup ||= [];
           const entry2 = SimpleWithMap_NameLookupEntry.decode(reader, reader.uint32());
           if (entry2.value !== undefined) {
             message.nameLookup[entry2.key] = entry2.value;
           }
           break;
         case 3:
+          message.intLookup ||= [];
           const entry3 = SimpleWithMap_IntLookupEntry.decode(reader, reader.uint32());
           if (entry3.value !== undefined) {
             message.intLookup[entry3.key] = entry3.value;
           }
           break;
         case 4:
+          message.mapOfTimestamps ||= [];
           const entry4 = SimpleWithMap_MapOfTimestampsEntry.decode(reader, reader.uint32());
           if (entry4.value !== undefined) {
             message.mapOfTimestamps[entry4.key] = entry4.value;
           }
           break;
         case 5:
+          message.mapOfBytes ||= [];
           const entry5 = SimpleWithMap_MapOfBytesEntry.decode(reader, reader.uint32());
           if (entry5.value !== undefined) {
             message.mapOfBytes[entry5.key] = entry5.value;
           }
           break;
         case 6:
+          message.mapOfStringValues ||= [];
           const entry6 = SimpleWithMap_MapOfStringValuesEntry.decode(reader, reader.uint32());
           if (entry6.value !== undefined) {
             message.mapOfStringValues[entry6.key] = entry6.value;
           }
           break;
         case 7:
+          message.longLookup ||= [];
           const entry7 = SimpleWithMap_LongLookupEntry.decode(reader, reader.uint32());
           if (entry7.value !== undefined) {
             message.longLookup[entry7.key] = entry7.value;
@@ -1056,37 +1070,37 @@ export const SimpleWithMap = {
   fromJSON(object: any): SimpleWithMap {
     return {
       entitiesById: isObject(object.entitiesById)
-        ? Object.entries(object.entitiesById).reduce<{ [key: number]: Entity }>((acc, [key, value]) => {
+        ? Object.entries(object.entitiesById).reduce<{ [key: number]: Entity } | undefined>((acc, [key, value]) => {
             acc[Number(key)] = Entity.fromJSON(value);
             return acc;
           }, {})
         : {},
       nameLookup: isObject(object.nameLookup)
-        ? Object.entries(object.nameLookup).reduce<{ [key: string]: string }>((acc, [key, value]) => {
+        ? Object.entries(object.nameLookup).reduce<{ [key: string]: string } | undefined>((acc, [key, value]) => {
             acc[key] = String(value);
             return acc;
           }, {})
         : {},
       intLookup: isObject(object.intLookup)
-        ? Object.entries(object.intLookup).reduce<{ [key: number]: number }>((acc, [key, value]) => {
+        ? Object.entries(object.intLookup).reduce<{ [key: number]: number } | undefined>((acc, [key, value]) => {
             acc[Number(key)] = Number(value);
             return acc;
           }, {})
         : {},
       mapOfTimestamps: isObject(object.mapOfTimestamps)
-        ? Object.entries(object.mapOfTimestamps).reduce<{ [key: string]: Date }>((acc, [key, value]) => {
+        ? Object.entries(object.mapOfTimestamps).reduce<{ [key: string]: Date } | undefined>((acc, [key, value]) => {
             acc[key] = fromJsonTimestamp(value);
             return acc;
           }, {})
         : {},
       mapOfBytes: isObject(object.mapOfBytes)
-        ? Object.entries(object.mapOfBytes).reduce<{ [key: string]: Uint8Array }>((acc, [key, value]) => {
+        ? Object.entries(object.mapOfBytes).reduce<{ [key: string]: Uint8Array } | undefined>((acc, [key, value]) => {
             acc[key] = bytesFromBase64(value as string);
             return acc;
           }, {})
         : {},
       mapOfStringValues: isObject(object.mapOfStringValues)
-        ? Object.entries(object.mapOfStringValues).reduce<{ [key: string]: string | undefined }>(
+        ? Object.entries(object.mapOfStringValues).reduce<{ [key: string]: string | undefined } | undefined>(
             (acc, [key, value]) => {
               acc[key] = value as string | undefined;
               return acc;
@@ -1095,7 +1109,7 @@ export const SimpleWithMap = {
           )
         : {},
       longLookup: isObject(object.longLookup)
-        ? Object.entries(object.longLookup).reduce<{ [key: number]: number }>((acc, [key, value]) => {
+        ? Object.entries(object.longLookup).reduce<{ [key: number]: number } | undefined>((acc, [key, value]) => {
             acc[Number(key)] = Number(value);
             return acc;
           }, {})
@@ -1152,7 +1166,7 @@ export const SimpleWithMap = {
 
   fromPartial<I extends Exact<DeepPartial<SimpleWithMap>, I>>(object: I): SimpleWithMap {
     const message = Object.create(createBaseSimpleWithMap()) as SimpleWithMap;
-    message.entitiesById = Object.entries(object.entitiesById ?? {}).reduce<{ [key: number]: Entity }>(
+    message.entitiesById = Object.entries(object.entitiesById ?? {}).reduce<{ [key: number]: Entity } | undefined>(
       (acc, [key, value]) => {
         if (value !== undefined) {
           acc[Number(key)] = Entity.fromPartial(value);
@@ -1161,7 +1175,7 @@ export const SimpleWithMap = {
       },
       {}
     );
-    message.nameLookup = Object.entries(object.nameLookup ?? {}).reduce<{ [key: string]: string }>(
+    message.nameLookup = Object.entries(object.nameLookup ?? {}).reduce<{ [key: string]: string } | undefined>(
       (acc, [key, value]) => {
         if (value !== undefined) {
           acc[key] = String(value);
@@ -1170,7 +1184,7 @@ export const SimpleWithMap = {
       },
       {}
     );
-    message.intLookup = Object.entries(object.intLookup ?? {}).reduce<{ [key: number]: number }>(
+    message.intLookup = Object.entries(object.intLookup ?? {}).reduce<{ [key: number]: number } | undefined>(
       (acc, [key, value]) => {
         if (value !== undefined) {
           acc[Number(key)] = Number(value);
@@ -1179,7 +1193,7 @@ export const SimpleWithMap = {
       },
       {}
     );
-    message.mapOfTimestamps = Object.entries(object.mapOfTimestamps ?? {}).reduce<{ [key: string]: Date }>(
+    message.mapOfTimestamps = Object.entries(object.mapOfTimestamps ?? {}).reduce<{ [key: string]: Date } | undefined>(
       (acc, [key, value]) => {
         if (value !== undefined) {
           acc[key] = value;
@@ -1188,7 +1202,7 @@ export const SimpleWithMap = {
       },
       {}
     );
-    message.mapOfBytes = Object.entries(object.mapOfBytes ?? {}).reduce<{ [key: string]: Uint8Array }>(
+    message.mapOfBytes = Object.entries(object.mapOfBytes ?? {}).reduce<{ [key: string]: Uint8Array } | undefined>(
       (acc, [key, value]) => {
         if (value !== undefined) {
           acc[key] = value;
@@ -1197,15 +1211,15 @@ export const SimpleWithMap = {
       },
       {}
     );
-    message.mapOfStringValues = Object.entries(object.mapOfStringValues ?? {}).reduce<{
-      [key: string]: string | undefined;
-    }>((acc, [key, value]) => {
+    message.mapOfStringValues = Object.entries(object.mapOfStringValues ?? {}).reduce<
+      { [key: string]: string | undefined } | undefined
+    >((acc, [key, value]) => {
       if (value !== undefined) {
         acc[key] = value;
       }
       return acc;
     }, {});
-    message.longLookup = Object.entries(object.longLookup ?? {}).reduce<{ [key: number]: number }>(
+    message.longLookup = Object.entries(object.longLookup ?? {}).reduce<{ [key: number]: number } | undefined>(
       (acc, [key, value]) => {
         if (value !== undefined) {
           acc[Number(key)] = Number(value);
@@ -1661,6 +1675,7 @@ export const SimpleWithSnakeCaseMap = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          message.entitiesById ||= [];
           const entry1 = SimpleWithSnakeCaseMap_EntitiesByIdEntry.decode(reader, reader.uint32());
           if (entry1.value !== undefined) {
             message.entitiesById[entry1.key] = entry1.value;
@@ -1677,7 +1692,7 @@ export const SimpleWithSnakeCaseMap = {
   fromJSON(object: any): SimpleWithSnakeCaseMap {
     return {
       entitiesById: isObject(object.entitiesById)
-        ? Object.entries(object.entitiesById).reduce<{ [key: number]: Entity }>((acc, [key, value]) => {
+        ? Object.entries(object.entitiesById).reduce<{ [key: number]: Entity } | undefined>((acc, [key, value]) => {
             acc[Number(key)] = Entity.fromJSON(value);
             return acc;
           }, {})
@@ -1698,7 +1713,7 @@ export const SimpleWithSnakeCaseMap = {
 
   fromPartial<I extends Exact<DeepPartial<SimpleWithSnakeCaseMap>, I>>(object: I): SimpleWithSnakeCaseMap {
     const message = Object.create(createBaseSimpleWithSnakeCaseMap()) as SimpleWithSnakeCaseMap;
-    message.entitiesById = Object.entries(object.entitiesById ?? {}).reduce<{ [key: number]: Entity }>(
+    message.entitiesById = Object.entries(object.entitiesById ?? {}).reduce<{ [key: number]: Entity } | undefined>(
       (acc, [key, value]) => {
         if (value !== undefined) {
           acc[Number(key)] = Entity.fromPartial(value);
@@ -1795,6 +1810,7 @@ export const SimpleWithMapOfEnums = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          message.enumsById ||= [];
           const entry1 = SimpleWithMapOfEnums_EnumsByIdEntry.decode(reader, reader.uint32());
           if (entry1.value !== undefined) {
             message.enumsById[entry1.key] = entry1.value;
@@ -1811,7 +1827,7 @@ export const SimpleWithMapOfEnums = {
   fromJSON(object: any): SimpleWithMapOfEnums {
     return {
       enumsById: isObject(object.enumsById)
-        ? Object.entries(object.enumsById).reduce<{ [key: number]: StateEnum }>((acc, [key, value]) => {
+        ? Object.entries(object.enumsById).reduce<{ [key: number]: StateEnum } | undefined>((acc, [key, value]) => {
             acc[Number(key)] = value as number;
             return acc;
           }, {})
@@ -1832,7 +1848,7 @@ export const SimpleWithMapOfEnums = {
 
   fromPartial<I extends Exact<DeepPartial<SimpleWithMapOfEnums>, I>>(object: I): SimpleWithMapOfEnums {
     const message = Object.create(createBaseSimpleWithMapOfEnums()) as SimpleWithMapOfEnums;
-    message.enumsById = Object.entries(object.enumsById ?? {}).reduce<{ [key: number]: StateEnum }>(
+    message.enumsById = Object.entries(object.enumsById ?? {}).reduce<{ [key: number]: StateEnum } | undefined>(
       (acc, [key, value]) => {
         if (value !== undefined) {
           acc[Number(key)] = value as number;
