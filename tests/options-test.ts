@@ -63,7 +63,7 @@ describe('options', () => {
   it('can set outputServices to false', () => {
     const options = optionsFromParameter('outputServices=false');
     expect(options).toMatchObject({
-      outputServices: ['none'],
+      outputServices: [ServiceOption.NONE],
     });
   });
 
