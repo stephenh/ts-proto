@@ -57,6 +57,75 @@ export const TestMessage = {
   },
 };
 
+/** @deprecated */
+export const TestDefinition = {
+  name: 'Test',
+  fullName: 'simple.Test',
+  methods: {
+    unary: {
+      name: 'Unary',
+      requestType: TestMessage,
+      requestStream: false,
+      responseType: TestMessage,
+      responseStream: false,
+      options: {},
+    },
+    serverStreaming: {
+      name: 'ServerStreaming',
+      requestType: TestMessage,
+      requestStream: false,
+      responseType: TestMessage,
+      responseStream: true,
+      options: {},
+    },
+    clientStreaming: {
+      name: 'ClientStreaming',
+      requestType: TestMessage,
+      requestStream: true,
+      responseType: TestMessage,
+      responseStream: false,
+      options: {},
+    },
+    bidiStreaming: {
+      name: 'BidiStreaming',
+      requestType: TestMessage,
+      requestStream: true,
+      responseType: TestMessage,
+      responseStream: true,
+      options: {},
+    },
+    /** @deprecated */
+    deprecated: {
+      name: 'Deprecated',
+      requestType: TestMessage,
+      requestStream: false,
+      responseType: TestMessage,
+      responseStream: false,
+      options: {},
+    },
+    idempotent: {
+      name: 'Idempotent',
+      requestType: TestMessage,
+      requestStream: false,
+      responseType: TestMessage,
+      responseStream: false,
+      options: {
+        idempotencyLevel: 'IDEMPOTENT',
+      },
+    },
+    noSideEffects: {
+      name: 'NoSideEffects',
+      requestType: TestMessage,
+      requestStream: false,
+      responseType: TestMessage,
+      responseStream: false,
+      options: {
+        idempotencyLevel: 'NO_SIDE_EFFECTS',
+      },
+    },
+  },
+} as const;
+
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin
