@@ -1,8 +1,6 @@
 /* eslint-disable */
 import { util, configure, Writer, Reader } from 'protobufjs/minimal';
 import * as Long from 'long';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 export const protobufPackage = 'simple';
 
@@ -127,73 +125,6 @@ export const TestDefinition = {
     },
   },
 } as const;
-
-/** @deprecated */
-export interface Test {
-  Unary(request: TestMessage): Promise<TestMessage>;
-  ServerStreaming(request: TestMessage): Observable<TestMessage>;
-  ClientStreaming(request: Observable<TestMessage>): Promise<TestMessage>;
-  BidiStreaming(request: Observable<TestMessage>): Observable<TestMessage>;
-  /** @deprecated */
-  Deprecated(request: TestMessage): Promise<TestMessage>;
-  Idempotent(request: TestMessage): Promise<TestMessage>;
-  NoSideEffects(request: TestMessage): Promise<TestMessage>;
-}
-
-export class TestClientImpl implements Test {
-  private readonly rpc: Rpc;
-  constructor(rpc: Rpc) {
-    this.rpc = rpc;
-    this.Unary = this.Unary.bind(this);
-    this.ServerStreaming = this.ServerStreaming.bind(this);
-    this.ClientStreaming = this.ClientStreaming.bind(this);
-    this.BidiStreaming = this.BidiStreaming.bind(this);
-    this.Deprecated = this.Deprecated.bind(this);
-    this.Idempotent = this.Idempotent.bind(this);
-    this.NoSideEffects = this.NoSideEffects.bind(this);
-  }
-  Unary(request: TestMessage): Promise<TestMessage> {
-    const data = TestMessage.encode(request).finish();
-    const promise = this.rpc.request('simple.Test', 'Unary', data);
-    return promise.then((data) => TestMessage.decode(new Reader(data)));
-  }
-
-  ServerStreaming(request: TestMessage): Observable<TestMessage> {
-    const data = TestMessage.encode(request).finish();
-    const result = this.rpc.serverStreamingRequest('simple.Test', 'ServerStreaming', data);
-    return result.pipe(map((data) => TestMessage.decode(new Reader(data))));
-  }
-
-  ClientStreaming(request: Observable<TestMessage>): Promise<TestMessage> {
-    const data = request.pipe(map((request) => TestMessage.encode(request).finish()));
-    const promise = this.rpc.clientStreamingRequest('simple.Test', 'ClientStreaming', data);
-    return promise.then((data) => TestMessage.decode(new Reader(data)));
-  }
-
-  BidiStreaming(request: Observable<TestMessage>): Observable<TestMessage> {
-    const data = request.pipe(map((request) => TestMessage.encode(request).finish()));
-    const result = this.rpc.bidirectionalStreamingRequest('simple.Test', 'BidiStreaming', data);
-    return result.pipe(map((data) => TestMessage.decode(new Reader(data))));
-  }
-
-  Deprecated(request: TestMessage): Promise<TestMessage> {
-    const data = TestMessage.encode(request).finish();
-    const promise = this.rpc.request('simple.Test', 'Deprecated', data);
-    return promise.then((data) => TestMessage.decode(new Reader(data)));
-  }
-
-  Idempotent(request: TestMessage): Promise<TestMessage> {
-    const data = TestMessage.encode(request).finish();
-    const promise = this.rpc.request('simple.Test', 'Idempotent', data);
-    return promise.then((data) => TestMessage.decode(new Reader(data)));
-  }
-
-  NoSideEffects(request: TestMessage): Promise<TestMessage> {
-    const data = TestMessage.encode(request).finish();
-    const promise = this.rpc.request('simple.Test', 'NoSideEffects', data);
-    return promise.then((data) => TestMessage.decode(new Reader(data)));
-  }
-}
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
