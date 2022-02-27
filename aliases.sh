@@ -6,10 +6,9 @@ PROJECT_ROOT_DOCKER="//ts-proto" # double slash to support git bash on windows
 function _docker-compose() { 
   if [ uname -a | grep arm64 ]
   then
-    docker-compose -f "$PROJECT_ROOT/docker-compose.aarch64.yml" "$@"
-  else
-    docker-compose -f $PROJECT_ROOT/docker-compose.yml "$@"; 
+    ARCH=aarch_64
   fi
+  docker-compose -f $PROJECT_ROOT/docker-compose.yml "$@"; 
 }
 
 # Dockerized version of protoc.
