@@ -4,6 +4,8 @@ services:
     build:
       context: .
       dockerfile: "protoc.Dockerfile"
+      args:
+        - "ARCH=${ARCH:-x86_64}"
     volumes:
       - ".:/ts-proto"
       - "${PWD:-.}:/host"
