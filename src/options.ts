@@ -135,6 +135,11 @@ export function optionsFromParameter(parameter: string | undefined): Options {
     options.outputServices = [];
   }
 
+  // Existing type-coercion inside parseParameter leaves a little to be desired.
+  if (typeof options.outputServices == 'string') {
+    options.outputServices = [options.outputServices];
+  }
+
   if ((options.useDate as any) === true) {
     // Treat useDate=true as DATE
     options.useDate = DateOption.DATE;

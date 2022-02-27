@@ -70,7 +70,7 @@ describe('options', () => {
   it('can set outputServices to grpc', () => {
     const options = optionsFromParameter('outputServices=grpc-js');
     expect(options).toMatchObject({
-      outputServices: ServiceOption.GRPC,
+      outputServices: [ServiceOption.GRPC],
     });
   });
 
