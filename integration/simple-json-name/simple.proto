@@ -5,7 +5,12 @@ import "google/protobuf/timestamp.proto";
 package simple;
 
 message Simple {
-  string name = 1 [ json_name = "other_name" ];
-  optional int32 age = 2 [ json_name = "other_age" ];
-  optional google.protobuf.Timestamp created_at = 9 [ json_name="createdAt" ];
+  string name = 1 [json_name = "other_name"];
+  optional int32 age = 2 [json_name = "other_age"];
+  optional google.protobuf.Timestamp created_at = 9 [json_name = "createdAt"];
+  string hyphen = 3 [json_name = "hyphened-name"];
+  string spaces = 4 [json_name = "name with spaces"];
+  string dollarStart = 5 [json_name = "$dollar"];
+  string dollarEnd = 6 [json_name = "dollar$"];
+  repeated string hyphenList = 7 [json_name = "hyphen-list"];
 }
