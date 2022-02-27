@@ -1,3 +1,10 @@
+## [1.106.2](https://github.com/stephenh/ts-proto/compare/v1.106.1...v1.106.2) (2022-02-27)
+
+
+### Bug Fixes
+
+* Add M1/ARM support for the test suite ([#516](https://github.com/stephenh/ts-proto/issues/516)) ([7cf5625](https://github.com/stephenh/ts-proto/commit/7cf56251726d149eebd015367476f36e4edb48aa))
+
 ## [1.106.1](https://github.com/stephenh/ts-proto/compare/v1.106.0...v1.106.1) (2022-02-21)
 
 
