@@ -25,7 +25,6 @@ export enum ServiceOption {
   GRPC = 'grpc-js',
   GENERIC = 'generic-definitions',
   DEFAULT = 'default',
-  GENERIC_AND_SERVICES = 'generic-definitions-and-services',
   NONE = 'none',
 }
 
