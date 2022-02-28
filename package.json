@@ -11,6 +11,7 @@
     "build": "yarn tsc",
     "build:test": "yarn proto2bin && yarn proto2pbjs && yarn bin2ts",
     "build:test:local": "yarn proto2bin:local && yarn proto2pbjs:local && yarn bin2ts:local",
+    "prepare": "yarn build",
     "proto2bin": "docker-compose run --rm protoc update-bins.sh",
     "proto2bin-node": "docker-compose run --rm node update-bins.sh",
     "proto2pbjs": "docker-compose run --rm protoc pbjs.sh",
