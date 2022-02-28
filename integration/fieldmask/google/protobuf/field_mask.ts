@@ -242,24 +242,31 @@ export const FieldMask = {
 
   fromJSON(object: any): FieldMask {
     return {
-      paths: Array.isArray(object?.paths) ? object.paths.map((e: any) => String(e)) : [],
+      paths:
+        typeof object === 'string'
+          ? object.split(',').filter(Boolean)
+          : Array.isArray(object?.paths)
+          ? object.paths.map(String)
+          : [],
     };
   },
 
-  toJSON(message: FieldMask): unknown {
-    const obj: any = {};
-    if (message.paths) {
-      obj.paths = message.paths.map((e) => e);
-    } else {
-      obj.paths = [];
-    }
-    return obj;
+  toJSON(message: FieldMask): string {
+    return message.paths.join(',');
   },
 
   fromPartial<I extends Exact<DeepPartial<FieldMask>, I>>(object: I): FieldMask {
     const message = createBaseFieldMask();
     message.paths = object.paths?.map((e) => e) || [];
     return message;
+  },
+
+  wrap(paths: string[]): FieldMask {
+    return { paths: paths };
+  },
+
+  unwrap(message: FieldMask): string[] {
+    return message.paths;
   },
 };
 

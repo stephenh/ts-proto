@@ -13,6 +13,7 @@ import {
   isBytesValueType,
   isEnum,
   isFieldMaskType,
+  isFieldMaskTypeName,
   isListValueType,
   isListValueTypeName,
   isLong,
@@ -74,6 +75,7 @@ import { generateSchema } from './schema';
 import { ConditionalOutput } from 'ts-poet/build/ConditionalOutput';
 import { generateGrpcJsService } from './generate-grpc-js';
 import { generateGenericServiceDefinition } from './generate-generic-service-definition';
+import fn = jest.fn;
 
 export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [string, Code] {
   const { options, utils } = ctx;
@@ -164,8 +166,8 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
           staticMembers.push(generateDecode(ctx, fullName, message));
         }
         if (options.outputJsonMethods) {
-          staticMembers.push(generateFromJson(ctx, fullName, message));
-          staticMembers.push(generateToJson(ctx, fullName, message));
+          staticMembers.push(generateFromJson(ctx, fullName, fullTypeName, message));
+          staticMembers.push(generateToJson(ctx, fullName, fullTypeName, message));
         }
         if (options.outputPartialMethods) {
           staticMembers.push(generateFromPartial(ctx, fullName, message));
@@ -819,7 +821,7 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
     } else if (isValueType(ctx, field)) {
       const type = basicTypeName(ctx, field, { keepValueType: true });
       const unwrap = (decodedValue: any): Code => {
-        if (isListValueType(field) || isStructType(field) || isAnyValueType(field)) {
+        if (isListValueType(field) || isStructType(field) || isAnyValueType(field) || isFieldMaskType(field)) {
           return code`${type}.unwrap(${decodedValue})`;
         }
         return code`${decodedValue}.value`;
@@ -944,7 +946,7 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
 
       const type = basicTypeName(ctx, field, { keepValueType: true });
       const wrappedValue = (place: string): Code => {
-        if (isAnyValueType(field) || isListValueType(field) || isStructType(field)) {
+        if (isAnyValueType(field) || isListValueType(field) || isStructType(field) || isFieldMaskType(field)) {
           return code`${type}.wrap(${place})`;
         }
         return code`{${maybeTypeField} value: ${place}!}`;
@@ -1094,7 +1096,7 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
  * This is very similar to decode, we loop through looking for properties, with
  * a few special cases for https://developers.google.com/protocol-buffers/docs/proto3#json.
  * */
-function generateFromJson(ctx: Context, fullName: string, messageDesc: DescriptorProto): Code {
+function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, messageDesc: DescriptorProto): Code {
   const { options, utils, typeMap } = ctx;
   const chunks: Code[] = [];
 
@@ -1111,6 +1113,16 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
   const oneofFieldsCases = messageDesc.oneofDecl.map((oneof, oneofIndex) =>
     messageDesc.field.filter(isWithinOneOf).filter((field) => field.oneofIndex === oneofIndex)
   );
+
+  const canonicalFromJson: { [key: string]: { [field: string]: (from: string) => Code } } = {
+    ['google.protobuf.FieldMask']: {
+      paths: (from: string) => code`typeof(${from}) === 'string'
+        ? ${from}.split(",").filter(Boolean)
+        : Array.isArray(${from}?.paths)
+        ? ${from}.paths.map(String)
+        : []`,
+    },
+  };
 
   // add a check for each incoming field
   messageDesc.field.forEach((field) => {
@@ -1151,7 +1163,8 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
       } else if (isAnyValueType(field) || isStructType(field)) {
         return code`${from}`;
       } else if (isFieldMaskType(field)) {
-        return code`{paths: ${from}.split(",")}`;
+        const type = basicTypeName(ctx, field, { keepValueType: true });
+        return code`${type}.unwrap(${type}.fromJSON(${from}))`;
       } else if (isListValueType(field)) {
         return code`[...${from}]`;
       } else if (isValueType(ctx, field)) {
@@ -1210,7 +1223,9 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
     };
 
     // and then use the snippet to handle repeated fields if necessary
-    if (isRepeated(field)) {
+    if (canonicalFromJson[fullTypeName]?.[fieldName]) {
+      chunks.push(code`${fieldName}: ${canonicalFromJson[fullTypeName][fieldName]('object')},`);
+    } else if (isRepeated(field)) {
       if (isMapType(ctx, messageDesc, field)) {
         const fieldType = toTypeName(ctx, messageDesc, field);
         const i = maybeCastToNumber(ctx, messageDesc, field, 'key');
@@ -1282,9 +1297,31 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
   return joinCode(chunks, { on: '\n' });
 }
 
-function generateToJson(ctx: Context, fullName: string, messageDesc: DescriptorProto): Code {
+function generateCanonicalToJson(fullName: string, fullProtobufTypeName: string): Code | undefined {
+  if (isFieldMaskTypeName(fullProtobufTypeName)) {
+    return code`
+    toJSON(message: ${fullName}): string {
+      return message.paths.join(',');
+    }
+  `;
+  }
+  return undefined;
+}
+
+function generateToJson(
+  ctx: Context,
+  fullName: string,
+  fullProtobufTypeName: string,
+  messageDesc: DescriptorProto
+): Code {
   const { options, utils, typeMap } = ctx;
   const chunks: Code[] = [];
+
+  const canonicalToJson = generateCanonicalToJson(fullName, fullProtobufTypeName);
+  if (canonicalToJson) {
+    chunks.push(canonicalToJson);
+    return joinCode(chunks, { on: '\n' });
+  }
 
   // create the basic function declaration
   chunks.push(code`
@@ -1343,7 +1380,8 @@ function generateToJson(ctx: Context, fullName: string, messageDesc: DescriptorP
       } else if (isAnyValueType(field)) {
         return code`${from}`;
       } else if (isFieldMaskType(field)) {
-        return code`${from}.paths.join()`;
+        const type = basicTypeName(ctx, field, { keepValueType: true });
+        return code`${type}.toJSON(${type}.wrap(${from}))`;
       } else if (isMessage(field) && !isValueType(ctx, field) && !isMapType(ctx, messageDesc, field)) {
         const type = basicTypeName(ctx, field, { keepValueType: true });
         return code`${from} ? ${type}.toJSON(${from}) : ${defaultValue(ctx, field)}`;
@@ -1598,6 +1636,12 @@ function generateWrap(ctx: Context, fullProtoTypeName: string): Code[] {
     }`);
   }
 
+  if (isFieldMaskTypeName(fullProtoTypeName)) {
+    chunks.push(code`wrap(paths: string[]): FieldMask {
+      return {paths: paths};
+    }`);
+  }
+
   return chunks;
 }
 
@@ -1655,6 +1699,12 @@ function generateUnwrap(ctx: Context, fullProtoTypeName: string): Code[] {
   if (isListValueTypeName(fullProtoTypeName)) {
     chunks.push(code`unwrap(message: ListValue): Array<any> {
       return message.values;
+    }`);
+  }
+
+  if (isFieldMaskTypeName(fullProtoTypeName)) {
+    chunks.push(code`unwrap(message: FieldMask): string[] {
+      return message.paths;
     }`);
   }
 
