@@ -1,3 +1,10 @@
+# [1.107.0](https://github.com/stephenh/ts-proto/compare/v1.106.2...v1.107.0) (2022-03-04)
+
+
+### Features
+
+* Allow simultaneous services and generic service definitions ([#512](https://github.com/stephenh/ts-proto/issues/512)) ([680831e](https://github.com/stephenh/ts-proto/commit/680831e76f1a4ceb4337442a157d7e702cb14bfc))
+
 ## [1.106.2](https://github.com/stephenh/ts-proto/compare/v1.106.1...v1.106.2) (2022-02-27)
 
 
