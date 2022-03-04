@@ -46,7 +46,7 @@ export type Options = {
   constEnums: boolean;
   enumsAsLiterals: boolean;
   outputClientImpl: boolean | 'grpc-web';
-  outputServices: ServiceOption;
+  outputServices: ServiceOption[];
   addGrpcMetadata: boolean;
   addNestjsRestParameter: boolean;
   returnObservable: boolean;
@@ -84,7 +84,7 @@ export function defaultOptions(): Options {
     constEnums: false,
     enumsAsLiterals: false,
     outputClientImpl: true,
-    outputServices: ServiceOption.DEFAULT,
+    outputServices: [],
     returnObservable: false,
     addGrpcMetadata: false,
     addNestjsRestParameter: false,
@@ -131,7 +131,16 @@ export function optionsFromParameter(parameter: string | undefined): Options {
 
   // Treat outputServices=false as NONE
   if ((options.outputServices as any) === false) {
-    options.outputServices = ServiceOption.NONE;
+    options.outputServices = [ServiceOption.NONE];
+  }
+
+  // Existing type-coercion inside parseParameter leaves a little to be desired.
+  if (typeof options.outputServices == 'string') {
+    options.outputServices = [options.outputServices];
+  }
+
+  if (options.outputServices.length == 0) {
+    options.outputServices = [ServiceOption.DEFAULT];
   }
 
   if ((options.useDate as any) === true) {

@@ -24,7 +24,9 @@ describe('options', () => {
         "outputJsonMethods": true,
         "outputPartialMethods": false,
         "outputSchema": false,
-        "outputServices": "default",
+        "outputServices": Array [
+          "default",
+        ],
         "outputTypeRegistry": false,
         "returnObservable": false,
         "snakeToCamel": Array [
@@ -61,14 +63,14 @@ describe('options', () => {
   it('can set outputServices to false', () => {
     const options = optionsFromParameter('outputServices=false');
     expect(options).toMatchObject({
-      outputServices: ServiceOption.NONE,
+      outputServices: [ServiceOption.NONE],
     });
   });
 
   it('can set outputServices to grpc', () => {
     const options = optionsFromParameter('outputServices=grpc-js');
     expect(options).toMatchObject({
-      outputServices: ServiceOption.GRPC,
+      outputServices: [ServiceOption.GRPC],
     });
   });
 
