@@ -75,7 +75,6 @@ import { generateSchema } from './schema';
 import { ConditionalOutput } from 'ts-poet/build/ConditionalOutput';
 import { generateGrpcJsService } from './generate-grpc-js';
 import { generateGenericServiceDefinition } from './generate-generic-service-definition';
-import fn = jest.fn;
 
 export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [string, Code] {
   const { options, utils } = ctx;
