@@ -620,24 +620,19 @@ Their interpretation is defined by the Protobuf specification, and libraries are
 
 `ts-proto` currently automatically converts these messages to their corresponding native types.
 
-- Wrapper Types:
-
-  * [google.protobuf.DoubleValue](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#DoubleValue) &lrarr; `number | undefined`
-  * [google.protobuf.FloatValue](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#FloatValue) &lrarr; `number | undefined`
-  * [google.protobuf.Int64Value](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#Int64Value) &lrarr; `number | undefined`
-  * [google.protobuf.UInt64Value](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#UInt64Value) &lrarr; `number | undefined`
-  * [google.protobuf.Int32Value](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#Int32Value) &lrarr; `number | undefined`
-  * [google.protobuf.UInt32Value](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#UInt32Value) &lrarr; `number | undefined`
-  * [google.protobuf.BoolValue](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#BoolValue) &lrarr; `boolean | undefined`
-  * [google.protobuf.StringValue](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#StringValue) &lrarr; `string | undefined`
-  * [google.protobuf.BytesValue](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.BytesValue) &lrarr; `Uint8Array | undefined`
-
-- JSON Types (Struct Types):
-
-  * [google.protobuf.Value](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#Value)  &lrarr; `any | undefined` (i.e. `number | string | boolean | null | array | object`)
-  * [google.protobuf.ListValue](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#ListValue) &lrarr; `any[]`
-  * [google.protobuf.Struct](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#Struct) &lrarr; `{ [key: string]: any } | undefined`
-  * [google.protobuf.FieldMask](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#fieldmask) &lrarr; `string[]` (only in the JSON, `FieldMask` is still a message)
+ * [google.protobuf.BoolValue](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#boolvalue) &lrarr; `boolean`
+ * [google.protobuf.BytesValue](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#bytesvalue) &lrarr; `Uint8Array`
+ * [google.protobuf.DoubleValue](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#doublevalue) &lrarr; `number`
+ * [google.protobuf.FieldMask](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#fieldmask) &lrarr; `string[]`
+ * [google.protobuf.FloatValue](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#floatvalue) &lrarr; `number`
+ * [google.protobuf.Int32Value](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#int32value) &lrarr; `number`
+ * [google.protobuf.Int64Value](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#int64value) &lrarr; `number`
+ * [google.protobuf.ListValue](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#listvalue) &lrarr; `any[]`
+ * [google.protobuf.UInt32Value](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#uint32value) &lrarr; `number`
+ * [google.protobuf.UInt64Value](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#uint64value) &lrarr; `number`
+ * [google.protobuf.StringValue](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#stringvalue) &lrarr; `string`
+ * [google.protobuf.Value](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#value)  &lrarr; `any` (i.e. `number | string | boolean | null | array | object`)
+ * [google.protobuf.Struct](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#struct) &lrarr; `{ [key: string]: any }`
 
 ## Wrapper Types
 
