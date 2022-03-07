@@ -9,4 +9,5 @@ message DividerData {
     }
 
     DividerType type = 1;
+    map<string, DividerType> typeMap = 2;
 }

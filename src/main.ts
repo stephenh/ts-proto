@@ -1198,7 +1198,9 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
             } else if (isLong(valueType) && options.forceLong === LongOption.LONG) {
               return code`Long.fromValue(${from} as Long | string)`;
             } else if (isEnum(valueType)) {
-              return code`${from} as number`;
+              const mapType = detectMapType(ctx, messageDesc, field);
+              if (mapType) return code`${from} as ${mapType.valueType}`;
+              else return code`${from}`;
             } else {
               const cstr = capitalize(basicTypeName(ctx, valueType).toCodeString());
               return code`${cstr}(${from})`;
@@ -1489,7 +1491,9 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
             if (isBytes(valueType)) {
               return code`${from}`;
             } else if (isEnum(valueType)) {
-              return code`${from} as number`;
+              const mapType = detectMapType(ctx, messageDesc, field);
+              if (mapType) return code`${from} as ${mapType.valueType}`;
+              else return code`${from}`;
             } else if (isLong(valueType) && options.forceLong === LongOption.LONG) {
               return code`Long.fromValue(${from})`;
             } else {
