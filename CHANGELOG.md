@@ -1,3 +1,10 @@
+# [1.108.0](https://github.com/stephenh/ts-proto/compare/v1.107.0...v1.108.0) (2022-03-07)
+
+
+### Features
+
+* represent field masks as `string[]` ([#525](https://github.com/stephenh/ts-proto/issues/525)) ([903b216](https://github.com/stephenh/ts-proto/commit/903b216238db025e24ec3cfb2d20063aec1a40ed))
+
 # [1.107.0](https://github.com/stephenh/ts-proto/compare/v1.106.2...v1.107.0) (2022-03-04)
 
 
