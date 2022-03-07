@@ -484,6 +484,8 @@ export function valueTypeName(ctx: Context, typeName: string): Code | undefined 
       return code`any`;
     case '.google.protobuf.Struct':
       return code`{[key: string]: any}`;
+    case '.google.protobuf.FieldMask':
+      return code`string[]`;
     default:
       return undefined;
   }

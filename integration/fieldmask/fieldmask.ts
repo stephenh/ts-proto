@@ -6,7 +6,7 @@ import { FieldMask } from './google/protobuf/field_mask';
 export const protobufPackage = '';
 
 export interface FieldMaskMessage {
-  fieldMask: FieldMask | undefined;
+  fieldMask: string[] | undefined;
 }
 
 function createBaseFieldMaskMessage(): FieldMaskMessage {
@@ -16,7 +16,7 @@ function createBaseFieldMaskMessage(): FieldMaskMessage {
 export const FieldMaskMessage = {
   encode(message: FieldMaskMessage, writer: Writer = Writer.create()): Writer {
     if (message.fieldMask !== undefined) {
-      FieldMask.encode(message.fieldMask, writer.uint32(10).fork()).ldelim();
+      FieldMask.encode(FieldMask.wrap(message.fieldMask), writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
@@ -29,7 +29,7 @@ export const FieldMaskMessage = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.fieldMask = FieldMask.decode(reader, reader.uint32());
+          message.fieldMask = FieldMask.unwrap(FieldMask.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -41,20 +41,19 @@ export const FieldMaskMessage = {
 
   fromJSON(object: any): FieldMaskMessage {
     return {
-      fieldMask: isSet(object.fieldMask) ? { paths: object.fieldMask.split(',') } : undefined,
+      fieldMask: isSet(object.fieldMask) ? FieldMask.unwrap(FieldMask.fromJSON(object.fieldMask)) : undefined,
     };
   },
 
   toJSON(message: FieldMaskMessage): unknown {
     const obj: any = {};
-    message.fieldMask !== undefined && (obj.fieldMask = message.fieldMask.paths.join());
+    message.fieldMask !== undefined && (obj.fieldMask = FieldMask.toJSON(FieldMask.wrap(message.fieldMask)));
     return obj;
   },
 
   fromPartial<I extends Exact<DeepPartial<FieldMaskMessage>, I>>(object: I): FieldMaskMessage {
     const message = createBaseFieldMaskMessage();
-    message.fieldMask =
-      object.fieldMask !== undefined && object.fieldMask !== null ? FieldMask.fromPartial(object.fieldMask) : undefined;
+    message.fieldMask = object.fieldMask ?? undefined;
     return message;
   },
 };
