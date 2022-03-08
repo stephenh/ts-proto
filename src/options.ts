@@ -48,6 +48,7 @@ export type Options = {
   outputClientImpl: boolean | 'grpc-web';
   outputServices: ServiceOption[];
   addGrpcMetadata: boolean;
+  addGenericMetadata: boolean;
   addNestjsRestParameter: boolean;
   returnObservable: boolean;
   lowerCaseServiceMethods: boolean;
@@ -87,6 +88,7 @@ export function defaultOptions(): Options {
     outputServices: [],
     returnObservable: false,
     addGrpcMetadata: false,
+    addGenericMetadata: false,
     addNestjsRestParameter: false,
     nestJs: false,
     env: EnvOption.BOTH,

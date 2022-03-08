@@ -298,13 +298,15 @@ export type Utils = ReturnType<typeof makeDeepPartial> &
   ReturnType<typeof makeTimestampMethods> &
   ReturnType<typeof makeByteUtils> &
   ReturnType<typeof makeLongUtils> &
-  ReturnType<typeof makeComparisonUtils>;
+  ReturnType<typeof makeComparisonUtils> &
+  ReturnType<typeof makeMetadataUtils>;
 
 /** These are runtime utility methods used by the generated code. */
 export function makeUtils(options: Options): Utils {
   const bytes = makeByteUtils();
   const longs = makeLongUtils(options, bytes);
   return {
+    ...makeMetadataUtils(options),
     ...bytes,
     ...makeDeepPartial(options, longs),
     ...makeObjectIdMethods(options),
@@ -312,6 +314,22 @@ export function makeUtils(options: Options): Utils {
     ...longs,
     ...makeComparisonUtils(),
   };
+}
+function makeMetadataUtils(options: Options) {
+
+  // TODO This is unused?
+  const GenericMetadata = conditionalOutput(
+    'GenericMetadata',
+    code`
+      export interface Strings {
+        values: string[];
+      }
+      type GenericMetadata = { [key: string]: Strings };
+    `
+  );
+
+
+  return { GenericMetadata };
 }
 
 function makeLongUtils(options: Options, bytes: ReturnType<typeof makeByteUtils>) {
@@ -746,10 +764,10 @@ function generateBaseInstanceFactory(
     const val = isWithinOneOf(field)
       ? 'undefined'
       : isMapType(ctx, messageDesc, field)
-      ? '{}'
-      : isRepeated(field)
-      ? '[]'
-      : defaultValue(ctx, field);
+        ? '{}'
+        : isRepeated(field)
+          ? '[]'
+          : defaultValue(ctx, field);
 
     fields.push(code`${name}: ${val}`);
   }

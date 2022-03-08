@@ -67,6 +67,8 @@ export function generateService(
       const Metadata = imp('Metadata@@grpc/grpc-js');
       const q = options.addNestjsRestParameter ? '' : '?';
       params.push(code`metadata${q}: ${Metadata}`);
+    } else if (options.addGenericMetadata) {
+      params.push(code`metadata?: GenericMetadata`);
     }
     if (options.addNestjsRestParameter) {
       params.push(code`...rest: any`);
@@ -267,9 +269,8 @@ function generateCachingRpcMethod(
     (requests) => {
       const responses = requests.map(async request => {
         const data = ${inputType}.encode(request).finish()
-        const response = await this.rpc.request(ctx, "${maybePrefixPackage(fileDesc, serviceDesc.name)}", "${
-    methodDesc.name
-  }", data);
+        const response = await this.rpc.request(ctx, "${maybePrefixPackage(fileDesc, serviceDesc.name)}", "${methodDesc.name
+    }", data);
         return ${outputType}.decode(new ${Reader}(response));
       });
       return Promise.all(responses);
