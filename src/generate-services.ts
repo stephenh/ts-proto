@@ -68,7 +68,7 @@ export function generateService(
       const q = options.addNestjsRestParameter ? '' : '?';
       params.push(code`metadata${q}: ${Metadata}`);
     } else if (options.addGenericMetadata) {
-      params.push(code`metadata?: GenericMetadata`);
+      params.push(code`metadata?: ${utils.GenericMetadata}`);
     }
     if (options.addNestjsRestParameter) {
       params.push(code`...rest: any`);

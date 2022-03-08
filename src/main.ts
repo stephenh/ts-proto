@@ -321,7 +321,7 @@ function makeMetadataUtils(options: Options) {
   const GenericMetadata = conditionalOutput(
     'GenericMetadata',
     code`
-      export interface Strings {
+      interface Strings {
         values: string[];
       }
       type GenericMetadata = { [key: string]: Strings };

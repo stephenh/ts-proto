@@ -1,1 +1,1 @@
-nestJs=true,addGenericMetadata=true
+addGenericMetadata=true,outputServices=generic-definitions,outputServices=default
