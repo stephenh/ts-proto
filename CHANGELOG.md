@@ -1,3 +1,10 @@
+## [1.109.1](https://github.com/stephenh/ts-proto/compare/v1.109.0...v1.109.1) (2022-03-13)
+
+
+### Bug Fixes
+
+* Type Error when map contains string enums [#382](https://github.com/stephenh/ts-proto/issues/382) ([#529](https://github.com/stephenh/ts-proto/issues/529)) ([c2107b9](https://github.com/stephenh/ts-proto/commit/c2107b96b494a500a4773ac04900a1acd13c507a))
+
 # [1.109.0](https://github.com/stephenh/ts-proto/compare/v1.108.0...v1.109.0) (2022-03-13)
 
 
