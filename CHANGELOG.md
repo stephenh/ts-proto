@@ -1,3 +1,10 @@
+# [1.109.0](https://github.com/stephenh/ts-proto/compare/v1.108.0...v1.109.0) (2022-03-13)
+
+
+### Features
+
+* import proto as type import if onlyTypes is set ([25d8e8b](https://github.com/stephenh/ts-proto/commit/25d8e8b9042142f1032feadc8a799b7a01115cc2))
+
 # [1.108.0](https://github.com/stephenh/ts-proto/compare/v1.107.0...v1.108.0) (2022-03-07)
 
 
