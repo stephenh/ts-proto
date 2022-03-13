@@ -7,6 +7,7 @@ message Simple {
   StateEnum state = 4;
   repeated StateEnum states = 5;
   google.protobuf.NullValue nullValue = 6;
+  map <string, StateEnum> stateMap = 7;
 }
 
 enum StateEnum {

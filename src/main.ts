@@ -1186,40 +1186,38 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
         }
       } else if (isMessage(field)) {
         if (isRepeated(field) && isMapType(ctx, messageDesc, field)) {
-          const valueType = (typeMap.get(field.typeName)![2] as DescriptorProto).field[1];
-          if (isPrimitive(valueType)) {
+          const { valueField, valueType } = detectMapType(ctx, messageDesc, field)!;
+          if (isPrimitive(valueField)) {
             // TODO Can we not copy/paste this from ^?
-            if (isBytes(valueType)) {
+            if (isBytes(valueField)) {
               if (options.env === EnvOption.NODE) {
                 return code`Buffer.from(${utils.bytesFromBase64}(${from} as string))`;
               } else {
                 return code`${utils.bytesFromBase64}(${from} as string)`;
               }
-            } else if (isLong(valueType) && options.forceLong === LongOption.LONG) {
+            } else if (isLong(valueField) && options.forceLong === LongOption.LONG) {
               return code`Long.fromValue(${from} as Long | string)`;
-            } else if (isEnum(valueType)) {
-              return code`${from} as number`;
+            } else if (isEnum(valueField)) {
+              return code`${from} as ${valueType}`;
             } else {
-              const cstr = capitalize(basicTypeName(ctx, valueType).toCodeString());
+              const cstr = capitalize(valueType.toCodeString());
               return code`${cstr}(${from})`;
             }
-          } else if (isObjectId(valueType) && options.useMongoObjectId) {
+          } else if (isObjectId(valueField) && options.useMongoObjectId) {
             return code`${utils.fromJsonObjectId}(${from})`;
-          } else if (isTimestamp(valueType) && options.useDate === DateOption.STRING) {
+          } else if (isTimestamp(valueField) && options.useDate === DateOption.STRING) {
             return code`String(${from})`;
           } else if (
-            isTimestamp(valueType) &&
+            isTimestamp(valueField) &&
             (options.useDate === DateOption.DATE || options.useDate === DateOption.TIMESTAMP)
           ) {
             return code`${utils.fromJsonTimestamp}(${from})`;
-          } else if (isValueType(ctx, valueType)) {
-            const type = basicTypeName(ctx, valueType);
-            return code`${from} as ${type}`;
-          } else if (isAnyValueType(valueType)) {
+          } else if (isValueType(ctx, valueField)) {
+            return code`${from} as ${valueType}`;
+          } else if (isAnyValueType(valueField)) {
             return code`${from}`;
           } else {
-            const type = basicTypeName(ctx, valueType);
-            return code`${type}.fromJSON(${from})`;
+            return code`${valueType}.fromJSON(${from})`;
           }
         } else {
           const type = basicTypeName(ctx, field);
@@ -1484,31 +1482,31 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
         return code`${from}`;
       } else if (isMessage(field)) {
         if (isRepeated(field) && isMapType(ctx, messageDesc, field)) {
-          const valueType = (typeMap.get(field.typeName)![2] as DescriptorProto).field[1];
-          if (isPrimitive(valueType)) {
-            if (isBytes(valueType)) {
+          const { valueField, valueType } = detectMapType(ctx, messageDesc, field)!;
+          if (isPrimitive(valueField)) {
+            if (isBytes(valueField)) {
               return code`${from}`;
-            } else if (isEnum(valueType)) {
-              return code`${from} as number`;
-            } else if (isLong(valueType) && options.forceLong === LongOption.LONG) {
+            } else if (isEnum(valueField)) {
+              return code`${from} as ${valueType}`;
+            } else if (isLong(valueField) && options.forceLong === LongOption.LONG) {
               return code`Long.fromValue(${from})`;
             } else {
-              const cstr = capitalize(basicTypeName(ctx, valueType).toCodeString());
+              const cstr = capitalize(valueType.toCodeString());
               return code`${cstr}(${from})`;
             }
-          } else if (isAnyValueType(valueType)) {
+          } else if (isAnyValueType(valueField)) {
             return code`${from}`;
-          } else if (isObjectId(valueType) && options.useMongoObjectId) {
+          } else if (isObjectId(valueField) && options.useMongoObjectId) {
             return code`${from} as mongodb.ObjectId`;
           } else if (
-            isTimestamp(valueType) &&
+            isTimestamp(valueField) &&
             (options.useDate === DateOption.DATE || options.useDate === DateOption.STRING)
           ) {
             return code`${from}`;
-          } else if (isValueType(ctx, valueType)) {
+          } else if (isValueType(ctx, valueField)) {
             return code`${from}`;
           } else {
-            const type = basicTypeName(ctx, valueType);
+            const type = basicTypeName(ctx, valueField);
             return code`${type}.fromPartial(${from})`;
           }
         } else if (isAnyValueType(field)) {
