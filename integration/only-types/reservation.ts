@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { Any } from './google/protobuf/any';
+import type { Any } from './google/protobuf/any';
 
 export const protobufPackage = 'event';
 

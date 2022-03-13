@@ -618,7 +618,7 @@ export interface TestClient extends Client {
   ): ClientDuplexStream<string | undefined, string | undefined>;
 }
 
-export const TestClient = (makeGenericClientConstructor(TestService, 'simple.Test') as unknown) as {
+export const TestClient = makeGenericClientConstructor(TestService, 'simple.Test') as unknown as {
   new (address: string, credentials: ChannelCredentials, options?: Partial<ChannelOptions>): TestClient;
   service: typeof TestService;
 };

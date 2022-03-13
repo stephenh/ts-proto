@@ -199,5 +199,10 @@ export function getPropertyAccessor(objectName: string, propertyName: string, op
 }
 
 export function impProto(options: Options, module: string, type: string): Import {
-  return imp(`${type}@./${module}${options.fileSuffix}`);
+  const importString = `${type}@./${module}${options.fileSuffix}`;
+  if (options.onlyTypes) {
+    return imp('t:' + importString);
+  } else {
+    return imp(importString);
+  }
 }
