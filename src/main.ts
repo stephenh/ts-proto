@@ -746,10 +746,10 @@ function generateBaseInstanceFactory(
     const val = isWithinOneOf(field)
       ? 'undefined'
       : isMapType(ctx, messageDesc, field)
-        ? '{}'
-        : isRepeated(field)
-          ? '[]'
-          : defaultValue(ctx, field);
+      ? '{}'
+      : isRepeated(field)
+      ? '[]'
+      : defaultValue(ctx, field);
 
     fields.push(code`${name}: ${val}`);
   }
