@@ -2,6 +2,7 @@
 import { util, configure, Writer, Reader } from 'protobufjs/minimal';
 import * as Long from 'long';
 import { Observable } from 'rxjs';
+import { Foo } from './some-file';
 import { map } from 'rxjs/operators';
 
 export const protobufPackage = 'hero';
@@ -239,9 +240,9 @@ export const Villain = {
 };
 
 export interface HeroService {
-  FindOneHero(request: HeroById, metadata?: GenericMetadata): Promise<Hero>;
-  FindOneVillain(request: VillainById, metadata?: GenericMetadata): Promise<Villain>;
-  FindManyVillain(request: Observable<VillainById>, metadata?: GenericMetadata): Observable<Villain>;
+  FindOneHero(request: HeroById, metadata?: Foo): Promise<Hero>;
+  FindOneVillain(request: VillainById, metadata?: Foo): Promise<Villain>;
+  FindManyVillain(request: Observable<VillainById>, metadata?: Foo): Observable<Villain>;
 }
 
 export class HeroServiceClientImpl implements HeroService {
@@ -308,11 +309,6 @@ interface Rpc {
   serverStreamingRequest(service: string, method: string, data: Uint8Array): Observable<Uint8Array>;
   bidirectionalStreamingRequest(service: string, method: string, data: Observable<Uint8Array>): Observable<Uint8Array>;
 }
-
-export interface Strings {
-  values: string[];
-}
-type GenericMetadata = { [key: string]: Strings };
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 

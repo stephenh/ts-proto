@@ -298,15 +298,13 @@ export type Utils = ReturnType<typeof makeDeepPartial> &
   ReturnType<typeof makeTimestampMethods> &
   ReturnType<typeof makeByteUtils> &
   ReturnType<typeof makeLongUtils> &
-  ReturnType<typeof makeComparisonUtils> &
-  ReturnType<typeof makeMetadataUtils>;
+  ReturnType<typeof makeComparisonUtils>;
 
 /** These are runtime utility methods used by the generated code. */
 export function makeUtils(options: Options): Utils {
   const bytes = makeByteUtils();
   const longs = makeLongUtils(options, bytes);
   return {
-    ...makeMetadataUtils(options),
     ...bytes,
     ...makeDeepPartial(options, longs),
     ...makeObjectIdMethods(options),
@@ -314,22 +312,6 @@ export function makeUtils(options: Options): Utils {
     ...longs,
     ...makeComparisonUtils(),
   };
-}
-function makeMetadataUtils(options: Options) {
-
-  // TODO This is unused?
-  const GenericMetadata = conditionalOutput(
-    'GenericMetadata',
-    code`
-      interface Strings {
-        values: string[];
-      }
-      type GenericMetadata = { [key: string]: Strings };
-    `
-  );
-
-
-  return { GenericMetadata };
 }
 
 function makeLongUtils(options: Options, bytes: ReturnType<typeof makeByteUtils>) {

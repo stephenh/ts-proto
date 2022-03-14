@@ -1,1 +1,1 @@
-addGenericMetadata=true,outputServices=generic-definitions,outputServices=default
+metadataType=Foo@./some-file,outputServices=generic-definitions,outputServices=default
