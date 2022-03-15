@@ -9,10 +9,24 @@ export interface Simple {
   name: string;
   age?: number | undefined;
   createdAt?: Date | undefined;
+  hyphen: string;
+  spaces: string;
+  dollarStart: string;
+  dollarEnd: string;
+  hyphenList: string[];
 }
 
 function createBaseSimple(): Simple {
-  return { name: '', age: undefined, createdAt: undefined };
+  return {
+    name: '',
+    age: undefined,
+    createdAt: undefined,
+    hyphen: '',
+    spaces: '',
+    dollarStart: '',
+    dollarEnd: '',
+    hyphenList: [],
+  };
 }
 
 export const Simple = {
@@ -25,6 +39,21 @@ export const Simple = {
     }
     if (message.createdAt !== undefined) {
       Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(74).fork()).ldelim();
+    }
+    if (message.hyphen !== '') {
+      writer.uint32(26).string(message.hyphen);
+    }
+    if (message.spaces !== '') {
+      writer.uint32(34).string(message.spaces);
+    }
+    if (message.dollarStart !== '') {
+      writer.uint32(42).string(message.dollarStart);
+    }
+    if (message.dollarEnd !== '') {
+      writer.uint32(50).string(message.dollarEnd);
+    }
+    for (const v of message.hyphenList) {
+      writer.uint32(58).string(v!);
     }
     return writer;
   },
@@ -45,6 +74,21 @@ export const Simple = {
         case 9:
           message.createdAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           break;
+        case 3:
+          message.hyphen = reader.string();
+          break;
+        case 4:
+          message.spaces = reader.string();
+          break;
+        case 5:
+          message.dollarStart = reader.string();
+          break;
+        case 6:
+          message.dollarEnd = reader.string();
+          break;
+        case 7:
+          message.hyphenList.push(reader.string());
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -58,6 +102,11 @@ export const Simple = {
       name: isSet(object.other_name) ? String(object.other_name) : '',
       age: isSet(object.other_age) ? Number(object.other_age) : undefined,
       createdAt: isSet(object.createdAt) ? fromJsonTimestamp(object.createdAt) : undefined,
+      hyphen: isSet(object['hyphened-name']) ? String(object['hyphened-name']) : '',
+      spaces: isSet(object['name with spaces']) ? String(object['name with spaces']) : '',
+      dollarStart: isSet(object.$dollar) ? String(object.$dollar) : '',
+      dollarEnd: isSet(object.dollar$) ? String(object.dollar$) : '',
+      hyphenList: Array.isArray(object?.['hyphen-list']) ? object['hyphen-list'].map((e: any) => String(e)) : [],
     };
   },
 
@@ -66,6 +115,15 @@ export const Simple = {
     message.name !== undefined && (obj.other_name = message.name);
     message.age !== undefined && (obj.other_age = Math.round(message.age));
     message.createdAt !== undefined && (obj.createdAt = message.createdAt.toISOString());
+    message.hyphen !== undefined && (obj['hyphened-name'] = message.hyphen);
+    message.spaces !== undefined && (obj['name with spaces'] = message.spaces);
+    message.dollarStart !== undefined && (obj.$dollar = message.dollarStart);
+    message.dollarEnd !== undefined && (obj.dollar$ = message.dollarEnd);
+    if (message.hyphenList) {
+      obj['hyphen-list'] = message.hyphenList.map((e) => e);
+    } else {
+      obj['hyphen-list'] = [];
+    }
     return obj;
   },
 
@@ -74,6 +132,11 @@ export const Simple = {
     message.name = object.name ?? '';
     message.age = object.age ?? undefined;
     message.createdAt = object.createdAt ?? undefined;
+    message.hyphen = object.hyphen ?? '';
+    message.spaces = object.spaces ?? '';
+    message.dollarStart = object.dollarStart ?? '';
+    message.dollarEnd = object.dollarEnd ?? '';
+    message.hyphenList = object.hyphenList?.map((e) => e) || [];
     return message;
   },
 };

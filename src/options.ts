@@ -46,8 +46,9 @@ export type Options = {
   constEnums: boolean;
   enumsAsLiterals: boolean;
   outputClientImpl: boolean | 'grpc-web';
-  outputServices: ServiceOption;
+  outputServices: ServiceOption[];
   addGrpcMetadata: boolean;
+  metadataType: string | undefined;
   addNestjsRestParameter: boolean;
   returnObservable: boolean;
   lowerCaseServiceMethods: boolean;
@@ -84,9 +85,10 @@ export function defaultOptions(): Options {
     constEnums: false,
     enumsAsLiterals: false,
     outputClientImpl: true,
-    outputServices: ServiceOption.DEFAULT,
+    outputServices: [],
     returnObservable: false,
     addGrpcMetadata: false,
+    metadataType: undefined,
     addNestjsRestParameter: false,
     nestJs: false,
     env: EnvOption.BOTH,
@@ -131,7 +133,16 @@ export function optionsFromParameter(parameter: string | undefined): Options {
 
   // Treat outputServices=false as NONE
   if ((options.outputServices as any) === false) {
-    options.outputServices = ServiceOption.NONE;
+    options.outputServices = [ServiceOption.NONE];
+  }
+
+  // Existing type-coercion inside parseParameter leaves a little to be desired.
+  if (typeof options.outputServices == 'string') {
+    options.outputServices = [options.outputServices];
+  }
+
+  if (options.outputServices.length == 0) {
+    options.outputServices = [ServiceOption.DEFAULT];
   }
 
   if ((options.useDate as any) === true) {
@@ -146,6 +157,8 @@ export function optionsFromParameter(parameter: string | undefined): Options {
     options.snakeToCamel = [];
   } else if ((options.snakeToCamel as any) === true) {
     options.snakeToCamel = ['keys', 'json'];
+  } else if (typeof options.snakeToCamel === 'string') {
+    options.snakeToCamel = [options.snakeToCamel];
   }
 
   return options;
@@ -155,8 +168,13 @@ export function optionsFromParameter(parameter: string | undefined): Options {
 function parseParameter(parameter: string): Options {
   const options = {} as any;
   const pairs = parameter.split(',').map((s) => s.split('='));
-  pairs.forEach(([key, value]) => {
-    options[key] = value === 'true' ? true : value === 'false' ? false : value;
+  pairs.forEach(([key, _value]) => {
+    const value = _value === 'true' ? true : _value === 'false' ? false : _value;
+    if (options[key]) {
+      options[key] = [options[key], value];
+    } else {
+      options[key] = value;
+    }
   });
   return options;
 }

@@ -429,6 +429,14 @@ export function isBytesValueType(field: FieldDescriptorProto): boolean {
   return field.typeName === '.google.protobuf.BytesValue';
 }
 
+export function isFieldMaskType(field: FieldDescriptorProto): boolean {
+  return isFieldMaskTypeName(field.typeName);
+}
+
+export function isFieldMaskTypeName(typeName: string): boolean {
+  return typeName === 'google.protobuf.FieldMask' || typeName === '.google.protobuf.FieldMask';
+}
+
 export function isListValueType(field: FieldDescriptorProto): boolean {
   return isListValueTypeName(field.typeName);
 }
@@ -476,6 +484,8 @@ export function valueTypeName(ctx: Context, typeName: string): Code | undefined 
       return code`any`;
     case '.google.protobuf.Struct':
       return code`{[key: string]: any}`;
+    case '.google.protobuf.FieldMask':
+      return code`string[]`;
     default:
       return undefined;
   }
@@ -613,7 +623,15 @@ export function detectMapType(
   ctx: Context,
   messageDesc: DescriptorProto,
   fieldDesc: FieldDescriptorProto
-): { messageDesc: DescriptorProto; keyType: Code; valueType: Code } | undefined {
+):
+  | {
+      messageDesc: DescriptorProto;
+      keyField: FieldDescriptorProto;
+      keyType: Code;
+      valueField: FieldDescriptorProto;
+      valueType: Code;
+    }
+  | undefined {
   const { typeMap } = ctx;
   if (
     fieldDesc.label === FieldDescriptorProto_Label.LABEL_REPEATED &&
@@ -621,10 +639,11 @@ export function detectMapType(
   ) {
     const mapType = typeMap.get(fieldDesc.typeName)![2] as DescriptorProto;
     if (!mapType.options?.mapEntry) return undefined;
-    const keyType = toTypeName(ctx, messageDesc, mapType.field[0]);
+    const [keyField, valueField] = mapType.field;
+    const keyType = toTypeName(ctx, messageDesc, keyField);
     // use basicTypeName because we don't need the '| undefined'
-    const valueType = basicTypeName(ctx, mapType.field[1]);
-    return { messageDesc: mapType, keyType, valueType };
+    const valueType = basicTypeName(ctx, valueField);
+    return { messageDesc: mapType, keyField, keyType, valueField, valueType };
   }
   return undefined;
 }

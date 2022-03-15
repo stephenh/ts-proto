@@ -203,6 +203,7 @@ export const protoMetadata: ProtoMetadata = {
             defaultValue: '',
             oneofIndex: 0,
             jsonName: 'seconds',
+            options: undefined,
             proto3Optional: false,
           },
           {
@@ -215,6 +216,7 @@ export const protoMetadata: ProtoMetadata = {
             defaultValue: '',
             oneofIndex: 0,
             jsonName: 'nanos',
+            options: undefined,
             proto3Optional: false,
           },
         ],
@@ -223,6 +225,7 @@ export const protoMetadata: ProtoMetadata = {
         enumType: [],
         extensionRange: [],
         oneofDecl: [],
+        options: undefined,
         reservedRange: [],
         reservedName: [],
       },

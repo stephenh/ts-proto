@@ -1812,7 +1812,7 @@ export const SimpleWithMapOfEnums = {
     return {
       enumsById: isObject(object.enumsById)
         ? Object.entries(object.enumsById).reduce<{ [key: number]: StateEnum }>((acc, [key, value]) => {
-            acc[Number(key)] = value as number;
+            acc[Number(key)] = value as StateEnum;
             return acc;
           }, {})
         : {},
@@ -1835,7 +1835,7 @@ export const SimpleWithMapOfEnums = {
     message.enumsById = Object.entries(object.enumsById ?? {}).reduce<{ [key: number]: StateEnum }>(
       (acc, [key, value]) => {
         if (value !== undefined) {
-          acc[Number(key)] = value as number;
+          acc[Number(key)] = value as StateEnum;
         }
         return acc;
       },

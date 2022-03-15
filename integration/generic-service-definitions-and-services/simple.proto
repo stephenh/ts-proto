@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package simple;
+
+service Test {
+    option deprecated = true;
+
+    rpc Unary (TestMessage) returns (TestMessage) {}
+    rpc ServerStreaming (TestMessage) returns (stream TestMessage) {}
+    rpc ClientStreaming (stream TestMessage) returns (TestMessage) {}
+    rpc BidiStreaming (stream TestMessage) returns (stream TestMessage) {}
+    rpc Deprecated (TestMessage) returns (TestMessage) {
+        option deprecated = true;
+    }
+    rpc Idempotent (TestMessage) returns (TestMessage) {
+        option idempotency_level = IDEMPOTENT;
+    }
+    rpc NoSideEffects (TestMessage) returns (TestMessage) {
+        option idempotency_level = NO_SIDE_EFFECTS;
+    }
+}
+
+message TestMessage {
+    string value = 1;
+}

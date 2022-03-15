@@ -166,7 +166,7 @@ export class FormattedMethodDescriptor implements MethodDescriptorProto {
   public static formatName(methodName: string, options: Options) {
     let result = methodName;
 
-    if (options.lowerCaseServiceMethods || options.outputServices === ServiceOption.GRPC) {
+    if (options.lowerCaseServiceMethods || options.outputServices.includes(ServiceOption.GRPC)) {
       result = camelCase(result);
     }
 
@@ -174,7 +174,7 @@ export class FormattedMethodDescriptor implements MethodDescriptorProto {
   }
 }
 
-export function determineFieldJsonName(field: FieldDescriptorProto, options: Options): string {
+export function getFieldJsonName(field: FieldDescriptorProto, options: Options): string {
   // jsonName will be camelCased by the protocol compiler, plus can be overridden by the user,
   // so just use that instead of our own maybeSnakeToCamel
   if (options.snakeToCamel.includes('json')) {
@@ -184,6 +184,25 @@ export function determineFieldJsonName(field: FieldDescriptorProto, options: Opt
   }
 }
 
+/**
+ * Returns a snippet for reading an object's property, such as `foo.bar`, or `foo['bar']` if the property name contains unusual characters.
+ * For simplicity, we don't match the ECMA 5/6 rules for valid identifiers exactly, and return array syntax liberally.
+ * @param objectName
+ * @param propertyName
+ * @param optional
+ */
+export function getPropertyAccessor(objectName: string, propertyName: string, optional: boolean = false): string {
+  let validIdentifier = /^[a-zA-Z_$][\w$]*$/;
+  return validIdentifier.test(propertyName)
+    ? `${objectName}${optional ? '?' : ''}.${propertyName}`
+    : `${objectName}${optional ? '?.' : ''}[${JSON.stringify(propertyName)}]`;
+}
+
 export function impProto(options: Options, module: string, type: string): Import {
-  return imp(`${type}@./${module}${options.fileSuffix}`);
+  const importString = `${type}@./${module}${options.fileSuffix}`;
+  if (options.onlyTypes) {
+    return imp('t:' + importString);
+  } else {
+    return imp(importString);
+  }
 }

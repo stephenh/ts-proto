@@ -131,6 +131,7 @@ export const protoMetadata: ProtoMetadata = {
             defaultValue: '',
             oneofIndex: 0,
             jsonName: 'year',
+            options: undefined,
             proto3Optional: false,
           },
           {
@@ -143,6 +144,7 @@ export const protoMetadata: ProtoMetadata = {
             defaultValue: '',
             oneofIndex: 0,
             jsonName: 'month',
+            options: undefined,
             proto3Optional: false,
           },
           {
@@ -155,6 +157,7 @@ export const protoMetadata: ProtoMetadata = {
             defaultValue: '',
             oneofIndex: 0,
             jsonName: 'day',
+            options: undefined,
             proto3Optional: false,
           },
         ],
@@ -163,6 +166,7 @@ export const protoMetadata: ProtoMetadata = {
         enumType: [],
         extensionRange: [],
         oneofDecl: [],
+        options: undefined,
         reservedRange: [],
         reservedName: [],
       },

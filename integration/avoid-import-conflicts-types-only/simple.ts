@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { SimpleEnum as SimpleEnum1, Simple as Simple2 } from './simple2';
+import type { SimpleEnum as SimpleEnum1, Simple as Simple2 } from './simple2';
 
 export const protobufPackage = 'simple';
 

@@ -23,6 +23,7 @@
     - [Only Types](#only-types)
     - [NestJS Support](#nestjs-support)
     - [Watch Mode](#watch-mode)
+    - [Basic gRPC implementation](#basic-grpc-implementation)
 - [Sponsors](#sponsors)
 - [Development](#development)
 - [Assumptions](#assumptions)
@@ -331,7 +332,7 @@ Generated code will be placed in the Gradle build directory.
 
   (Note that this only uses the grpc-web runtime, you don't need to use any of their generated code, i.e. the ts-proto output replaces their `ts-protoc-gen` output.)
 
-  You'll need to add the `@improbable-eng/grpc-web` and a transport to your project's `package.json`; see the `integration/grpc-web` directory for a working example.
+  You'll need to add the `@improbable-eng/grpc-web` and a transport to your project's `package.json`; see the `integration/grpc-web` directory for a working example. Also see [#504](https://github.com/stephenh/ts-proto/issues/504) for integrating with [grpc-web-devtools](https://github.com/SafetyCulture/grpc-web-devtools).
 
 - With `--ts_proto_opt=returnObservable=true`, the return type of service methods will be `Observable<T>` instead of `Promise<T>`.
 
@@ -360,6 +361,10 @@ Generated code will be placed in the Gradle build directory.
 - With `--ts_proto_opt=outputServices=grpc-js`, ts-proto will output service definitions and server / client stubs in [grpc-js](https://github.com/grpc/grpc-node/tree/master/packages/grpc-js) format.
 
 - With `--ts_proto_opt=outputServices=generic-definitions`, ts-proto will output generic (framework-agnostic) service definitions. These definitions contain descriptors for each method with links to request and response types, which allows to generate server and client stubs at runtime, and also generate strong types for them at compile time. An example of a library that uses this approach is [nice-grpc](https://github.com/deeplay-io/nice-grpc).
+
+- With `--ts_proto_opt=metadataType=Foo@./some-file`, ts-proto add a generic (framework-agnostic) metadata field to the generic service definition.
+
+- With `--ts_proto_opt=outputServices=generic-definitions,outputServices=default`, ts-proto will output both generic definitions and interfaces.  This is useful if you want to rely on the interfaces, but also have some reflection capabilities at runtime.
 
 - With `--ts_proto_opt=outputServices=false`, or `=none`, ts-proto will output NO service definitions.
 
@@ -404,6 +409,51 @@ If you want to run `ts-proto` on every change of a proto file, you'll need to us
 ```json
 "proto:generate": "protoc --ts_proto_out=. ./<proto_path>/<proto_name>.proto --ts_proto_opt=esModuleInterop=true",
 "proto:watch": "chokidar \"**/*.proto\" -c \"npm run proto:generate\""
+```
+
+### Basic gRPC implementation
+
+`ts-proto` is RPC framework agnostic - how you transmit your data to and from
+your data source is up to you. The generated client implementations all expect
+a `rpc` parameter, which type is defined like this: 
+
+```ts
+interface Rpc {
+  request(service: string, method: string, data: Uint8Array): Promise<Uint8Array>;
+}
+```
+
+If you're working with gRPC, a simple implementation could look like this: 
+
+```ts
+type RpcImpl = (service: string, method: string, data: Uint8Array) => Promise<Uint8Array>;
+
+const sendRequest: RpcImpl = (service, method, data) => {
+  // Conventionally in gRPC, the request path looks like
+  //   "package.names.ServiceName/MethodName",
+  // we therefore construct such a string
+  const path = `${service}/${method}`;
+
+  return new Promise((resolve, reject) => {
+    // makeUnaryRequest transmits the result (and error) with a callback
+    // transform this into a promise!
+    const resultCallback: UnaryCallback<any> = (err, res) => {
+      if (err) {
+        return reject(err);
+      }
+      resolve(res);
+    };
+
+    function passThrough(argument: any) {
+      return argument;
+    }
+
+    // Using passThrough as the serialize and deserialize functions
+    conn.makeUnaryRequest(path, passThrough, passThrough, data, resultCallback);
+  });
+};
+
+const rpc: Rpc = { request: sendRequest }
 ```
 
 # Sponsors
@@ -574,23 +624,19 @@ Their interpretation is defined by the Protobuf specification, and libraries are
 
 `ts-proto` currently automatically converts these messages to their corresponding native types.
 
-- Wrapper Types:
-
-  * [google.protobuf.DoubleValue](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#DoubleValue) &lrarr; `number | undefined`
-  * [google.protobuf.FloatValue](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#FloatValue) &lrarr; `number | undefined`
-  * [google.protobuf.Int64Value](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#Int64Value) &lrarr; `number | undefined`
-  * [google.protobuf.UInt64Value](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#UInt64Value) &lrarr; `number | undefined`
-  * [google.protobuf.Int32Value](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#Int32Value) &lrarr; `number | undefined`
-  * [google.protobuf.UInt32Value](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#UInt32Value) &lrarr; `number | undefined`
-  * [google.protobuf.BoolValue](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#BoolValue) &lrarr; `boolean | undefined`
-  * [google.protobuf.StringValue](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#StringValue) &lrarr; `string | undefined`
-  * [google.protobuf.BytesValue](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#google.protobuf.BytesValue) &lrarr; `Uint8Array | undefined`
-
-- JSON Types (Struct Types):
-
-  * [google.protobuf.Value](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#Value)  &lrarr; `any | undefined` (i.e. `number | string | boolean | null | array | object`)
-  * [google.protobuf.ListValue](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#ListValue) &lrarr; `any[]`
-  * [google.protobuf.Struct](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#Struct) &lrarr; `{ [key: string]: any } | undefined`
+ * [google.protobuf.BoolValue](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#boolvalue) &lrarr; `boolean`
+ * [google.protobuf.BytesValue](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#bytesvalue) &lrarr; `Uint8Array`
+ * [google.protobuf.DoubleValue](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#doublevalue) &lrarr; `number`
+ * [google.protobuf.FieldMask](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#fieldmask) &lrarr; `string[]`
+ * [google.protobuf.FloatValue](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#floatvalue) &lrarr; `number`
+ * [google.protobuf.Int32Value](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#int32value) &lrarr; `number`
+ * [google.protobuf.Int64Value](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#int64value) &lrarr; `number`
+ * [google.protobuf.ListValue](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#listvalue) &lrarr; `any[]`
+ * [google.protobuf.UInt32Value](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#uint32value) &lrarr; `number`
+ * [google.protobuf.UInt64Value](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#uint64value) &lrarr; `number`
+ * [google.protobuf.StringValue](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#stringvalue) &lrarr; `string`
+ * [google.protobuf.Value](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#value)  &lrarr; `any` (i.e. `number | string | boolean | null | array | object`)
+ * [google.protobuf.Struct](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#struct) &lrarr; `{ [key: string]: any }`
 
 ## Wrapper Types
 

@@ -12,6 +12,8 @@ import {
   isBytes,
   isBytesValueType,
   isEnum,
+  isFieldMaskType,
+  isFieldMaskTypeName,
   isListValueType,
   isListValueTypeName,
   isLong,
@@ -39,11 +41,12 @@ import {
 import SourceInfo, { Fields } from './sourceInfo';
 import {
   assertInstanceOf,
-  determineFieldJsonName,
+  getFieldJsonName,
   FormattedMethodDescriptor,
   impProto,
   maybeAddComment,
   maybePrefixPackage,
+  getPropertyAccessor,
 } from './utils';
 import { camelToSnake, capitalize, maybeSnakeToCamel } from './case';
 import {
@@ -162,8 +165,8 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
           staticMembers.push(generateDecode(ctx, fullName, message));
         }
         if (options.outputJsonMethods) {
-          staticMembers.push(generateFromJson(ctx, fullName, message));
-          staticMembers.push(generateToJson(ctx, fullName, message));
+          staticMembers.push(generateFromJson(ctx, fullName, fullTypeName, message));
+          staticMembers.push(generateToJson(ctx, fullName, fullTypeName, message));
         }
         if (options.outputPartialMethods) {
           staticMembers.push(generateFromPartial(ctx, fullName, message));
@@ -210,27 +213,32 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
       }
 
       chunks.push(code`export const ${serviceConstName} = "${serviceDesc.name}";`);
-    } else if (options.outputServices === ServiceOption.GRPC) {
-      chunks.push(generateGrpcJsService(ctx, fileDesc, sInfo, serviceDesc));
-    } else if (options.outputServices === ServiceOption.GENERIC) {
-      chunks.push(generateGenericServiceDefinition(ctx, fileDesc, sInfo, serviceDesc));
-    } else if (options.outputServices === ServiceOption.DEFAULT) {
-      // This service could be Twirp or grpc-web or JSON (maybe). So far all of their
-      // interfaces are fairly similar so we share the same service interface.
-      chunks.push(generateService(ctx, fileDesc, sInfo, serviceDesc));
+    } else {
+      const uniqueServices = [...new Set(options.outputServices)].sort();
+      uniqueServices.forEach((outputService) => {
+        if (outputService === ServiceOption.GRPC) {
+          chunks.push(generateGrpcJsService(ctx, fileDesc, sInfo, serviceDesc));
+        } else if (outputService === ServiceOption.GENERIC) {
+          chunks.push(generateGenericServiceDefinition(ctx, fileDesc, sInfo, serviceDesc));
+        } else if (outputService === ServiceOption.DEFAULT) {
+          // This service could be Twirp or grpc-web or JSON (maybe). So far all of their
+          // interfaces are fairly similar so we share the same service interface.
+          chunks.push(generateService(ctx, fileDesc, sInfo, serviceDesc));
 
-      if (options.outputClientImpl === true) {
-        chunks.push(generateServiceClientImpl(ctx, fileDesc, serviceDesc));
-      } else if (options.outputClientImpl === 'grpc-web') {
-        chunks.push(generateGrpcClientImpl(ctx, fileDesc, serviceDesc));
-        chunks.push(generateGrpcServiceDesc(fileDesc, serviceDesc));
-        serviceDesc.method.forEach((method) => {
-          chunks.push(generateGrpcMethodDesc(ctx, serviceDesc, method));
-          if (method.serverStreaming) {
-            hasServerStreamingMethods = true;
+          if (options.outputClientImpl === true) {
+            chunks.push(generateServiceClientImpl(ctx, fileDesc, serviceDesc));
+          } else if (options.outputClientImpl === 'grpc-web') {
+            chunks.push(generateGrpcClientImpl(ctx, fileDesc, serviceDesc));
+            chunks.push(generateGrpcServiceDesc(fileDesc, serviceDesc));
+            serviceDesc.method.forEach((method) => {
+              chunks.push(generateGrpcMethodDesc(ctx, serviceDesc, method));
+              if (method.serverStreaming) {
+                hasServerStreamingMethods = true;
+              }
+            });
           }
-        });
-      }
+        }
+      });
     }
     serviceDesc.method.forEach((methodDesc, index) => {
       if (methodDesc.serverStreaming || methodDesc.clientStreaming) {
@@ -239,7 +247,11 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
     });
   });
 
-  if (options.outputServices === ServiceOption.DEFAULT && options.outputClientImpl && fileDesc.service.length > 0) {
+  if (
+    options.outputServices.includes(ServiceOption.DEFAULT) &&
+    options.outputClientImpl &&
+    fileDesc.service.length > 0
+  ) {
     if (options.outputClientImpl === true) {
       chunks.push(generateRpcType(ctx, hasStreamingMethods));
     } else if (options.outputClientImpl === 'grpc-web') {
@@ -817,7 +829,7 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
     } else if (isValueType(ctx, field)) {
       const type = basicTypeName(ctx, field, { keepValueType: true });
       const unwrap = (decodedValue: any): Code => {
-        if (isListValueType(field) || isStructType(field) || isAnyValueType(field)) {
+        if (isListValueType(field) || isStructType(field) || isAnyValueType(field) || isFieldMaskType(field)) {
           return code`${type}.unwrap(${decodedValue})`;
         }
         return code`${decodedValue}.value`;
@@ -942,7 +954,7 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
 
       const type = basicTypeName(ctx, field, { keepValueType: true });
       const wrappedValue = (place: string): Code => {
-        if (isAnyValueType(field) || isListValueType(field) || isStructType(field)) {
+        if (isAnyValueType(field) || isListValueType(field) || isStructType(field) || isFieldMaskType(field)) {
           return code`${type}.wrap(${place})`;
         }
         return code`{${maybeTypeField} value: ${place}!}`;
@@ -1092,7 +1104,7 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
  * This is very similar to decode, we loop through looking for properties, with
  * a few special cases for https://developers.google.com/protocol-buffers/docs/proto3#json.
  * */
-function generateFromJson(ctx: Context, fullName: string, messageDesc: DescriptorProto): Code {
+function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, messageDesc: DescriptorProto): Code {
   const { options, utils, typeMap } = ctx;
   const chunks: Code[] = [];
 
@@ -1110,10 +1122,22 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
     messageDesc.field.filter(isWithinOneOf).filter((field) => field.oneofIndex === oneofIndex)
   );
 
+  const canonicalFromJson: { [key: string]: { [field: string]: (from: string) => Code } } = {
+    ['google.protobuf.FieldMask']: {
+      paths: (from: string) => code`typeof(${from}) === 'string'
+        ? ${from}.split(",").filter(Boolean)
+        : Array.isArray(${from}?.paths)
+        ? ${from}.paths.map(String)
+        : []`,
+    },
+  };
+
   // add a check for each incoming field
   messageDesc.field.forEach((field) => {
     const fieldName = maybeSnakeToCamel(field.name, options);
-    const jsonName = determineFieldJsonName(field, options);
+    const jsonName = getFieldJsonName(field, options);
+    const jsonProperty = getPropertyAccessor('object', jsonName);
+    const jsonPropertyOptional = getPropertyAccessor('object', jsonName, true);
 
     // get code that extracts value from incoming object
     const readSnippet = (from: string): Code => {
@@ -1146,6 +1170,9 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
         return code`${utils.fromJsonTimestamp}(${from})`;
       } else if (isAnyValueType(field) || isStructType(field)) {
         return code`${from}`;
+      } else if (isFieldMaskType(field)) {
+        const type = basicTypeName(ctx, field, { keepValueType: true });
+        return code`${type}.unwrap(${type}.fromJSON(${from}))`;
       } else if (isListValueType(field)) {
         return code`[...${from}]`;
       } else if (isValueType(ctx, field)) {
@@ -1159,40 +1186,38 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
         }
       } else if (isMessage(field)) {
         if (isRepeated(field) && isMapType(ctx, messageDesc, field)) {
-          const valueType = (typeMap.get(field.typeName)![2] as DescriptorProto).field[1];
-          if (isPrimitive(valueType)) {
+          const { valueField, valueType } = detectMapType(ctx, messageDesc, field)!;
+          if (isPrimitive(valueField)) {
             // TODO Can we not copy/paste this from ^?
-            if (isBytes(valueType)) {
+            if (isBytes(valueField)) {
               if (options.env === EnvOption.NODE) {
                 return code`Buffer.from(${utils.bytesFromBase64}(${from} as string))`;
               } else {
                 return code`${utils.bytesFromBase64}(${from} as string)`;
               }
-            } else if (isLong(valueType) && options.forceLong === LongOption.LONG) {
+            } else if (isLong(valueField) && options.forceLong === LongOption.LONG) {
               return code`Long.fromValue(${from} as Long | string)`;
-            } else if (isEnum(valueType)) {
-              return code`${from} as number`;
+            } else if (isEnum(valueField)) {
+              return code`${from} as ${valueType}`;
             } else {
-              const cstr = capitalize(basicTypeName(ctx, valueType).toCodeString());
+              const cstr = capitalize(valueType.toCodeString());
               return code`${cstr}(${from})`;
             }
-          } else if (isObjectId(valueType) && options.useMongoObjectId) {
+          } else if (isObjectId(valueField) && options.useMongoObjectId) {
             return code`${utils.fromJsonObjectId}(${from})`;
-          } else if (isTimestamp(valueType) && options.useDate === DateOption.STRING) {
+          } else if (isTimestamp(valueField) && options.useDate === DateOption.STRING) {
             return code`String(${from})`;
           } else if (
-            isTimestamp(valueType) &&
+            isTimestamp(valueField) &&
             (options.useDate === DateOption.DATE || options.useDate === DateOption.TIMESTAMP)
           ) {
             return code`${utils.fromJsonTimestamp}(${from})`;
-          } else if (isValueType(ctx, valueType)) {
-            const type = basicTypeName(ctx, valueType);
-            return code`${from} as ${type}`;
-          } else if (isAnyValueType(valueType)) {
+          } else if (isValueType(ctx, valueField)) {
+            return code`${from} as ${valueType}`;
+          } else if (isAnyValueType(valueField)) {
             return code`${from}`;
           } else {
-            const type = basicTypeName(ctx, valueType);
-            return code`${type}.fromJSON(${from})`;
+            return code`${valueType}.fromJSON(${from})`;
           }
         } else {
           const type = basicTypeName(ctx, field);
@@ -1204,13 +1229,15 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
     };
 
     // and then use the snippet to handle repeated fields if necessary
-    if (isRepeated(field)) {
+    if (canonicalFromJson[fullTypeName]?.[fieldName]) {
+      chunks.push(code`${fieldName}: ${canonicalFromJson[fullTypeName][fieldName]('object')},`);
+    } else if (isRepeated(field)) {
       if (isMapType(ctx, messageDesc, field)) {
         const fieldType = toTypeName(ctx, messageDesc, field);
         const i = maybeCastToNumber(ctx, messageDesc, field, 'key');
         chunks.push(code`
-          ${fieldName}: ${ctx.utils.isObject}(object.${jsonName})
-            ? Object.entries(object.${jsonName}).reduce<${fieldType}>((acc, [key, value]) => {
+          ${fieldName}: ${ctx.utils.isObject}(${jsonProperty})
+            ? Object.entries(${jsonProperty}).reduce<${fieldType}>((acc, [key, value]) => {
                 acc[${i}] = ${readSnippet('value')};
                 return acc;
               }, {})
@@ -1219,11 +1246,11 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
       } else {
         const readValueSnippet = readSnippet('e');
         if (readValueSnippet.toString() === code`e`.toString()) {
-          chunks.push(code`${fieldName}: Array.isArray(object?.${jsonName}) ? [...object.${jsonName}] : [],`);
+          chunks.push(code`${fieldName}: Array.isArray(${jsonPropertyOptional}) ? [...${jsonProperty}] : [],`);
         } else {
           // Explicit `any` type required to make TS with noImplicitAny happy. `object` is also `any` here.
           chunks.push(code`
-            ${fieldName}: Array.isArray(object?.${jsonName}) ? object.${jsonName}.map((e: any) => ${readValueSnippet}): [],
+            ${fieldName}: Array.isArray(${jsonPropertyOptional}) ? ${jsonProperty}.map((e: any) => ${readValueSnippet}): [],
           `);
         }
       }
@@ -1237,35 +1264,35 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
         chunks.push(code`${fieldName}: `);
       }
 
-      const ternaryIf = code`${ctx.utils.isSet}(object.${jsonName})`;
-      const ternaryThen = code`{ $case: '${fieldName}', ${fieldName}: ${readSnippet(`object.${jsonName}`)}`;
+      const ternaryIf = code`${ctx.utils.isSet}(${jsonProperty})`;
+      const ternaryThen = code`{ $case: '${fieldName}', ${fieldName}: ${readSnippet(`${jsonProperty}`)}`;
       chunks.push(code`${ternaryIf} ? ${ternaryThen}} : `);
 
       if (field === lastCase) {
         chunks.push(code`undefined,`);
       }
     } else if (isAnyValueType(field)) {
-      chunks.push(code`${fieldName}: ${ctx.utils.isSet}(object?.${jsonName})
-        ? ${readSnippet(`object.${jsonName}`)}
+      chunks.push(code`${fieldName}: ${ctx.utils.isSet}(${jsonPropertyOptional})
+        ? ${readSnippet(`${jsonProperty}`)}
         : undefined,
       `);
     } else if (isStructType(field)) {
       chunks.push(
-        code`${fieldName}: ${ctx.utils.isObject}(object.${jsonName})
-          ? ${readSnippet(`object.${jsonName}`)}
+        code`${fieldName}: ${ctx.utils.isObject}(${jsonProperty})
+          ? ${readSnippet(`${jsonProperty}`)}
           : undefined,`
       );
     } else if (isListValueType(field)) {
       chunks.push(code`
-        ${fieldName}: Array.isArray(object.${jsonName})
-          ? ${readSnippet(`object.${jsonName}`)}
+        ${fieldName}: Array.isArray(${jsonProperty})
+          ? ${readSnippet(`${jsonProperty}`)}
           : undefined,
       `);
     } else {
       const fallback = isWithinOneOf(field) ? 'undefined' : defaultValue(ctx, field);
       chunks.push(code`
-        ${fieldName}: ${ctx.utils.isSet}(object.${jsonName})
-          ? ${readSnippet(`object.${jsonName}`)}
+        ${fieldName}: ${ctx.utils.isSet}(${jsonProperty})
+          ? ${readSnippet(`${jsonProperty}`)}
           : ${fallback},
       `);
     }
@@ -1276,9 +1303,31 @@ function generateFromJson(ctx: Context, fullName: string, messageDesc: Descripto
   return joinCode(chunks, { on: '\n' });
 }
 
-function generateToJson(ctx: Context, fullName: string, messageDesc: DescriptorProto): Code {
+function generateCanonicalToJson(fullName: string, fullProtobufTypeName: string): Code | undefined {
+  if (isFieldMaskTypeName(fullProtobufTypeName)) {
+    return code`
+    toJSON(message: ${fullName}): string {
+      return message.paths.join(',');
+    }
+  `;
+  }
+  return undefined;
+}
+
+function generateToJson(
+  ctx: Context,
+  fullName: string,
+  fullProtobufTypeName: string,
+  messageDesc: DescriptorProto
+): Code {
   const { options, utils, typeMap } = ctx;
   const chunks: Code[] = [];
+
+  const canonicalToJson = generateCanonicalToJson(fullName, fullProtobufTypeName);
+  if (canonicalToJson) {
+    chunks.push(canonicalToJson);
+    return joinCode(chunks, { on: '\n' });
+  }
 
   // create the basic function declaration
   chunks.push(code`
@@ -1289,7 +1338,8 @@ function generateToJson(ctx: Context, fullName: string, messageDesc: DescriptorP
   // then add a case for each field
   messageDesc.field.forEach((field) => {
     const fieldName = maybeSnakeToCamel(field.name, options);
-    const jsonName = determineFieldJsonName(field, options);
+    const jsonName = getFieldJsonName(field, options);
+    const jsonProperty = getPropertyAccessor('obj', jsonName);
 
     const readSnippet = (from: string): Code => {
       if (isEnum(field)) {
@@ -1335,6 +1385,9 @@ function generateToJson(ctx: Context, fullName: string, messageDesc: DescriptorP
         }
       } else if (isAnyValueType(field)) {
         return code`${from}`;
+      } else if (isFieldMaskType(field)) {
+        const type = basicTypeName(ctx, field, { keepValueType: true });
+        return code`${type}.toJSON(${type}.wrap(${from}))`;
       } else if (isMessage(field) && !isValueType(ctx, field) && !isMapType(ctx, messageDesc, field)) {
         const type = basicTypeName(ctx, field, { keepValueType: true });
         return code`${from} ? ${type}.toJSON(${from}) : ${defaultValue(ctx, field)}`;
@@ -1357,10 +1410,10 @@ function generateToJson(ctx: Context, fullName: string, messageDesc: DescriptorP
     if (isMapType(ctx, messageDesc, field)) {
       // Maps might need their values transformed, i.e. bytes --> base64
       chunks.push(code`
-        obj.${jsonName} = {};
+        ${jsonProperty} = {};
         if (message.${fieldName}) {
           Object.entries(message.${fieldName}).forEach(([k, v]) => {
-            obj.${jsonName}[k] = ${readSnippet('v')};
+            ${jsonProperty}[k] = ${readSnippet('v')};
           });
         }
       `);
@@ -1368,19 +1421,19 @@ function generateToJson(ctx: Context, fullName: string, messageDesc: DescriptorP
       // Arrays might need their elements transformed
       chunks.push(code`
         if (message.${fieldName}) {
-          obj.${jsonName} = message.${fieldName}.map(e => ${readSnippet('e')});
+          ${jsonProperty} = message.${fieldName}.map(e => ${readSnippet('e')});
         } else {
-          obj.${jsonName} = [];
+          ${jsonProperty} = [];
         }
       `);
     } else if (isWithinOneOfThatShouldBeUnion(options, field)) {
       // oneofs in a union are only output as `oneof name = ...`
       const oneofName = maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options);
       const v = readSnippet(`message.${oneofName}?.${fieldName}`);
-      chunks.push(code`message.${oneofName}?.$case === '${fieldName}' && (obj.${jsonName} = ${v});`);
+      chunks.push(code`message.${oneofName}?.$case === '${fieldName}' && (${jsonProperty} = ${v});`);
     } else {
       const v = readSnippet(`message.${fieldName}`);
-      chunks.push(code`message.${fieldName} !== undefined && (obj.${jsonName} = ${v});`);
+      chunks.push(code`message.${fieldName} !== undefined && (${jsonProperty} = ${v});`);
     }
   });
   chunks.push(code`return obj;`);
@@ -1429,31 +1482,31 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
         return code`${from}`;
       } else if (isMessage(field)) {
         if (isRepeated(field) && isMapType(ctx, messageDesc, field)) {
-          const valueType = (typeMap.get(field.typeName)![2] as DescriptorProto).field[1];
-          if (isPrimitive(valueType)) {
-            if (isBytes(valueType)) {
+          const { valueField, valueType } = detectMapType(ctx, messageDesc, field)!;
+          if (isPrimitive(valueField)) {
+            if (isBytes(valueField)) {
               return code`${from}`;
-            } else if (isEnum(valueType)) {
-              return code`${from} as number`;
-            } else if (isLong(valueType) && options.forceLong === LongOption.LONG) {
+            } else if (isEnum(valueField)) {
+              return code`${from} as ${valueType}`;
+            } else if (isLong(valueField) && options.forceLong === LongOption.LONG) {
               return code`Long.fromValue(${from})`;
             } else {
-              const cstr = capitalize(basicTypeName(ctx, valueType).toCodeString());
+              const cstr = capitalize(valueType.toCodeString());
               return code`${cstr}(${from})`;
             }
-          } else if (isAnyValueType(valueType)) {
+          } else if (isAnyValueType(valueField)) {
             return code`${from}`;
-          } else if (isObjectId(valueType) && options.useMongoObjectId) {
+          } else if (isObjectId(valueField) && options.useMongoObjectId) {
             return code`${from} as mongodb.ObjectId`;
           } else if (
-            isTimestamp(valueType) &&
+            isTimestamp(valueField) &&
             (options.useDate === DateOption.DATE || options.useDate === DateOption.STRING)
           ) {
             return code`${from}`;
-          } else if (isValueType(ctx, valueType)) {
+          } else if (isValueType(ctx, valueField)) {
             return code`${from}`;
           } else {
-            const type = basicTypeName(ctx, valueType);
+            const type = basicTypeName(ctx, valueField);
             return code`${type}.fromPartial(${from})`;
           }
         } else if (isAnyValueType(field)) {
@@ -1495,7 +1548,7 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
           && object.${oneofName}?.${fieldName} !== null
         ) {
           message.${oneofName} = { $case: '${fieldName}', ${fieldName}: ${v} };
-        }  
+        }
       `);
     } else if (readSnippet(`x`).toCodeString() == 'x') {
       // An optimized case of the else below that works when `readSnippet` returns the plain input
@@ -1535,7 +1588,7 @@ function generateWrap(ctx: Context, fullProtoTypeName: string): Code[] {
     if (ctx.options.oneof === OneofOption.UNIONS) {
       chunks.push(code`wrap(value: any): Value {
         const result = createBaseValue();
-        
+
         if (value === null) {
           result.kind = {$case: 'nullValue', nullValue: NullValue.NULL_VALUE};
         } else if (typeof value === 'boolean') {
@@ -1586,6 +1639,12 @@ function generateWrap(ctx: Context, fullProtoTypeName: string): Code[] {
       result.values = value ?? [];
 
       return result;
+    }`);
+  }
+
+  if (isFieldMaskTypeName(fullProtoTypeName)) {
+    chunks.push(code`wrap(paths: string[]): FieldMask {
+      return {paths: paths};
     }`);
   }
 
@@ -1646,6 +1705,12 @@ function generateUnwrap(ctx: Context, fullProtoTypeName: string): Code[] {
   if (isListValueTypeName(fullProtoTypeName)) {
     chunks.push(code`unwrap(message: ListValue): Array<any> {
       return message.values;
+    }`);
+  }
+
+  if (isFieldMaskTypeName(fullProtoTypeName)) {
+    chunks.push(code`unwrap(message: FieldMask): string[] {
+      return message.paths;
     }`);
   }
 

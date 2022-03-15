@@ -1,3 +1,73 @@
+# [1.110.0](https://github.com/stephenh/ts-proto/compare/v1.109.1...v1.110.0) (2022-03-15)
+
+
+### Features
+
+* Add generic metadata parameter to the generic service definition interface. ([#530](https://github.com/stephenh/ts-proto/issues/530)) ([0f5525a](https://github.com/stephenh/ts-proto/commit/0f5525ade80e7b69889dfd091a458e21bb14a265))
+
+## [1.109.1](https://github.com/stephenh/ts-proto/compare/v1.109.0...v1.109.1) (2022-03-13)
+
+
+### Bug Fixes
+
+* Type Error when map contains string enums [#382](https://github.com/stephenh/ts-proto/issues/382) ([#529](https://github.com/stephenh/ts-proto/issues/529)) ([c2107b9](https://github.com/stephenh/ts-proto/commit/c2107b96b494a500a4773ac04900a1acd13c507a))
+
+# [1.109.0](https://github.com/stephenh/ts-proto/compare/v1.108.0...v1.109.0) (2022-03-13)
+
+
+### Features
+
+* import proto as type import if onlyTypes is set ([25d8e8b](https://github.com/stephenh/ts-proto/commit/25d8e8b9042142f1032feadc8a799b7a01115cc2))
+
+# [1.108.0](https://github.com/stephenh/ts-proto/compare/v1.107.0...v1.108.0) (2022-03-07)
+
+
+### Features
+
+* represent field masks as `string[]` ([#525](https://github.com/stephenh/ts-proto/issues/525)) ([903b216](https://github.com/stephenh/ts-proto/commit/903b216238db025e24ec3cfb2d20063aec1a40ed))
+
+# [1.107.0](https://github.com/stephenh/ts-proto/compare/v1.106.2...v1.107.0) (2022-03-04)
+
+
+### Features
+
+* Allow simultaneous services and generic service definitions ([#512](https://github.com/stephenh/ts-proto/issues/512)) ([680831e](https://github.com/stephenh/ts-proto/commit/680831e76f1a4ceb4337442a157d7e702cb14bfc))
+
+## [1.106.2](https://github.com/stephenh/ts-proto/compare/v1.106.1...v1.106.2) (2022-02-27)
+
+
+### Bug Fixes
+
+* Add M1/ARM support for the test suite ([#516](https://github.com/stephenh/ts-proto/issues/516)) ([7cf5625](https://github.com/stephenh/ts-proto/commit/7cf56251726d149eebd015367476f36e4edb48aa))
+
+## [1.106.1](https://github.com/stephenh/ts-proto/compare/v1.106.0...v1.106.1) (2022-02-21)
+
+
+### Bug Fixes
+
+* support json_name containing hyphen on all field types ([#521](https://github.com/stephenh/ts-proto/issues/521)) ([8d9e78e](https://github.com/stephenh/ts-proto/commit/8d9e78eb39c460f6727458f6a2dd149deb983668))
+
+# [1.106.0](https://github.com/stephenh/ts-proto/compare/v1.105.2...v1.106.0) (2022-02-21)
+
+
+### Features
+
+* Support json names containing non-alphanumeric characters ([#520](https://github.com/stephenh/ts-proto/issues/520)) ([ce44668](https://github.com/stephenh/ts-proto/commit/ce44668b8fe01b14f50ac3c5c950f73db769fa76))
+
+## [1.105.2](https://github.com/stephenh/ts-proto/compare/v1.105.1...v1.105.2) (2022-02-17)
+
+
+### Bug Fixes
+
+* Fix snakeToCamel single value parsing. ([#513](https://github.com/stephenh/ts-proto/issues/513)) ([e1ad866](https://github.com/stephenh/ts-proto/commit/e1ad866c95751c37ed13f02f4da2dc9076ab4758))
+
+## [1.105.1](https://github.com/stephenh/ts-proto/compare/v1.105.0...v1.105.1) (2022-02-14)
+
+
+### Bug Fixes
+
+* generate canonical JSON encoding for FieldMasks ([#510](https://github.com/stephenh/ts-proto/issues/510)) ([0ec4e97](https://github.com/stephenh/ts-proto/commit/0ec4e97a2649dc15af1c925f8a2ff6adf1e17d9b))
+
 # [1.105.0](https://github.com/stephenh/ts-proto/compare/v1.104.1...v1.105.0) (2022-02-12)
 
 

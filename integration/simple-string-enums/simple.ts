@@ -61,10 +61,16 @@ export interface Simple {
   state: StateEnum;
   states: StateEnum[];
   nullValue: NullValue;
+  stateMap: { [key: string]: StateEnum };
+}
+
+export interface Simple_StateMapEntry {
+  key: string;
+  value: StateEnum;
 }
 
 function createBaseSimple(): Simple {
-  return { name: '', state: StateEnum.UNKNOWN, states: [], nullValue: NullValue.NULL_VALUE };
+  return { name: '', state: StateEnum.UNKNOWN, states: [], nullValue: NullValue.NULL_VALUE, stateMap: {} };
 }
 
 export const Simple = {
@@ -83,6 +89,9 @@ export const Simple = {
     if (message.nullValue !== NullValue.NULL_VALUE) {
       writer.uint32(48).int32(nullValueToNumber(message.nullValue));
     }
+    Object.entries(message.stateMap).forEach(([key, value]) => {
+      Simple_StateMapEntry.encode({ key: key as any, value }, writer.uint32(58).fork()).ldelim();
+    });
     return writer;
   },
 
@@ -112,6 +121,12 @@ export const Simple = {
         case 6:
           message.nullValue = nullValueFromJSON(reader.int32());
           break;
+        case 7:
+          const entry7 = Simple_StateMapEntry.decode(reader, reader.uint32());
+          if (entry7.value !== undefined) {
+            message.stateMap[entry7.key] = entry7.value;
+          }
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -126,6 +141,12 @@ export const Simple = {
       state: isSet(object.state) ? stateEnumFromJSON(object.state) : StateEnum.UNKNOWN,
       states: Array.isArray(object?.states) ? object.states.map((e: any) => stateEnumFromJSON(e)) : [],
       nullValue: isSet(object.nullValue) ? nullValueFromJSON(object.nullValue) : NullValue.NULL_VALUE,
+      stateMap: isObject(object.stateMap)
+        ? Object.entries(object.stateMap).reduce<{ [key: string]: StateEnum }>((acc, [key, value]) => {
+            acc[key] = value as StateEnum;
+            return acc;
+          }, {})
+        : {},
     };
   },
 
@@ -139,6 +160,12 @@ export const Simple = {
       obj.states = [];
     }
     message.nullValue !== undefined && (obj.nullValue = nullValueToJSON(message.nullValue));
+    obj.stateMap = {};
+    if (message.stateMap) {
+      Object.entries(message.stateMap).forEach(([k, v]) => {
+        obj.stateMap[k] = stateEnumToJSON(v);
+      });
+    }
     return obj;
   },
 
@@ -148,6 +175,73 @@ export const Simple = {
     message.state = object.state ?? StateEnum.UNKNOWN;
     message.states = object.states?.map((e) => e) || [];
     message.nullValue = object.nullValue ?? NullValue.NULL_VALUE;
+    message.stateMap = Object.entries(object.stateMap ?? {}).reduce<{ [key: string]: StateEnum }>(
+      (acc, [key, value]) => {
+        if (value !== undefined) {
+          acc[key] = value as StateEnum;
+        }
+        return acc;
+      },
+      {}
+    );
+    return message;
+  },
+};
+
+function createBaseSimple_StateMapEntry(): Simple_StateMapEntry {
+  return { key: '', value: StateEnum.UNKNOWN };
+}
+
+export const Simple_StateMapEntry = {
+  encode(message: Simple_StateMapEntry, writer: Writer = Writer.create()): Writer {
+    if (message.key !== '') {
+      writer.uint32(10).string(message.key);
+    }
+    if (message.value !== StateEnum.UNKNOWN) {
+      writer.uint32(16).int32(stateEnumToNumber(message.value));
+    }
+    return writer;
+  },
+
+  decode(input: Reader | Uint8Array, length?: number): Simple_StateMapEntry {
+    const reader = input instanceof Reader ? input : new Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSimple_StateMapEntry();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.key = reader.string();
+          break;
+        case 2:
+          message.value = stateEnumFromJSON(reader.int32());
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): Simple_StateMapEntry {
+    return {
+      key: isSet(object.key) ? String(object.key) : '',
+      value: isSet(object.value) ? stateEnumFromJSON(object.value) : StateEnum.UNKNOWN,
+    };
+  },
+
+  toJSON(message: Simple_StateMapEntry): unknown {
+    const obj: any = {};
+    message.key !== undefined && (obj.key = message.key);
+    message.value !== undefined && (obj.value = stateEnumToJSON(message.value));
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<Simple_StateMapEntry>, I>>(object: I): Simple_StateMapEntry {
+    const message = createBaseSimple_StateMapEntry();
+    message.key = object.key ?? '';
+    message.value = object.value ?? StateEnum.UNKNOWN;
     return message;
   },
 };
@@ -174,6 +268,10 @@ export type Exact<P, I extends P> = P extends Builtin
 if (util.Long !== Long) {
   util.Long = Long as any;
   configure();
+}
+
+function isObject(value: any): boolean {
+  return typeof value === 'object' && value !== null;
 }
 
 function isSet(value: any): boolean {
