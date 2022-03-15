@@ -67,6 +67,9 @@ export function generateService(
       const Metadata = imp('Metadata@@grpc/grpc-js');
       const q = options.addNestjsRestParameter ? '' : '?';
       params.push(code`metadata${q}: ${Metadata}`);
+    } else if (options.metadataType) {
+      const Metadata = imp(options.metadataType);
+      params.push(code`metadata?: ${Metadata}`);
     }
     if (options.addNestjsRestParameter) {
       params.push(code`...rest: any`);

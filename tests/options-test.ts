@@ -16,6 +16,7 @@ describe('options', () => {
         "fileSuffix": "",
         "forceLong": "number",
         "lowerCaseServiceMethods": true,
+        "metadataType": undefined,
         "nestJs": true,
         "oneof": "properties",
         "onlyTypes": false,
