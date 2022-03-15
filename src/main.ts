@@ -231,7 +231,9 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
             chunks.push(generateGrpcClientImpl(ctx, fileDesc, serviceDesc));
             chunks.push(generateGrpcServiceDesc(fileDesc, serviceDesc));
             serviceDesc.method.forEach((method) => {
-              chunks.push(generateGrpcMethodDesc(ctx, serviceDesc, method));
+              if (!method.clientStreaming) {
+                chunks.push(generateGrpcMethodDesc(ctx, serviceDesc, method));
+              }
               if (method.serverStreaming) {
                 hasServerStreamingMethods = true;
               }
