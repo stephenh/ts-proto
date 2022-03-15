@@ -238,6 +238,7 @@ export const protoMetadata: ProtoMetadata = {
             defaultValue: '',
             oneofIndex: 3,
             jsonName: 'bar',
+            options: undefined,
             proto3Optional: true,
           },
           {
@@ -250,6 +251,7 @@ export const protoMetadata: ProtoMetadata = {
             defaultValue: '',
             oneofIndex: 0,
             jsonName: 'quux',
+            options: undefined,
             proto3Optional: false,
           },
         ],
@@ -259,9 +261,9 @@ export const protoMetadata: ProtoMetadata = {
         extensionRange: [],
         oneofDecl: [
           { name: 'qux', options: { uninterpretedOption: [] } },
-          { name: '_foo' },
-          { name: '_foo_2' },
-          { name: '_bar' },
+          { name: '_foo', options: undefined },
+          { name: '_foo_2', options: undefined },
+          { name: '_bar', options: undefined },
         ],
         options: {
           messageSetWireFormat: false,
@@ -281,6 +283,7 @@ export const protoMetadata: ProtoMetadata = {
         enumType: [],
         extensionRange: [],
         oneofDecl: [],
+        options: undefined,
         reservedRange: [],
         reservedName: [],
       },
@@ -292,6 +295,7 @@ export const protoMetadata: ProtoMetadata = {
         enumType: [],
         extensionRange: [],
         oneofDecl: [],
+        options: undefined,
         reservedRange: [],
         reservedName: [],
       },
@@ -301,7 +305,7 @@ export const protoMetadata: ProtoMetadata = {
         name: 'MyEnum',
         value: [
           { name: 'FOO', number: 0, options: { deprecated: false, uninterpretedOption: [] } },
-          { name: 'BAR', number: 1 },
+          { name: 'BAR', number: 1, options: undefined },
         ],
         options: { allowAlias: false, deprecated: false, uninterpretedOption: [] },
         reservedRange: [],
@@ -335,6 +339,7 @@ export const protoMetadata: ProtoMetadata = {
         defaultValue: '',
         oneofIndex: 0,
         jsonName: 'myFileOption',
+        options: undefined,
         proto3Optional: true,
       },
       {
@@ -347,6 +352,7 @@ export const protoMetadata: ProtoMetadata = {
         defaultValue: '',
         oneofIndex: 0,
         jsonName: 'myMessageOption',
+        options: undefined,
         proto3Optional: true,
       },
       {
@@ -359,6 +365,7 @@ export const protoMetadata: ProtoMetadata = {
         defaultValue: '',
         oneofIndex: 0,
         jsonName: 'myFieldOption',
+        options: undefined,
         proto3Optional: true,
       },
       {
@@ -371,6 +378,7 @@ export const protoMetadata: ProtoMetadata = {
         defaultValue: '',
         oneofIndex: 0,
         jsonName: 'myOneofOption',
+        options: undefined,
         proto3Optional: true,
       },
       {
@@ -383,6 +391,7 @@ export const protoMetadata: ProtoMetadata = {
         defaultValue: '',
         oneofIndex: 0,
         jsonName: 'myEnumOption',
+        options: undefined,
         proto3Optional: true,
       },
       {
@@ -395,6 +404,7 @@ export const protoMetadata: ProtoMetadata = {
         defaultValue: '',
         oneofIndex: 0,
         jsonName: 'myEnumValueOption',
+        options: undefined,
         proto3Optional: true,
       },
       {
@@ -407,6 +417,7 @@ export const protoMetadata: ProtoMetadata = {
         defaultValue: '',
         oneofIndex: 0,
         jsonName: 'myServiceOption',
+        options: undefined,
         proto3Optional: true,
       },
       {
@@ -419,6 +430,7 @@ export const protoMetadata: ProtoMetadata = {
         defaultValue: '',
         oneofIndex: 0,
         jsonName: 'myMethodOption',
+        options: undefined,
         proto3Optional: true,
       },
     ],
