@@ -1,3 +1,10 @@
+# [1.110.0](https://github.com/stephenh/ts-proto/compare/v1.109.1...v1.110.0) (2022-03-15)
+
+
+### Features
+
+* Add generic metadata parameter to the generic service definition interface. ([#530](https://github.com/stephenh/ts-proto/issues/530)) ([0f5525a](https://github.com/stephenh/ts-proto/commit/0f5525ade80e7b69889dfd091a458e21bb14a265))
+
 ## [1.109.1](https://github.com/stephenh/ts-proto/compare/v1.109.0...v1.109.1) (2022-03-13)
 
 
