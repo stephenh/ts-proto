@@ -14,14 +14,17 @@ import { Reader } from 'protobufjs/minimal';
 
 const fileDescriptorProto = imp('FileDescriptorProto@ts-proto-descriptors');
 
-const extensionCache: { [key: string]: FieldDescriptorProto } = {};
+const extensionCache: { [key: string]: { [key: string]: FieldDescriptorProto } } = {};
 
 export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sourceInfo: SourceInfo): Code[] {
   const { options } = ctx;
   const chunks: Code[] = [];
 
   fileDesc.extension.forEach((extension) => {
-    extensionCache[extension.number] = extension;
+    if (!(extension.extendee in extensionCache)) {
+      extensionCache[extension.extendee] = {};
+    }
+    extensionCache[extension.extendee][extension.number] = extension;
   });
 
   chunks.push(code`
@@ -98,7 +101,7 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
 
   let fileOptions: Code | undefined;
   if (fileDesc.options) {
-    fileOptions = encodedOptionsToOptions(ctx, (fileDesc.options as any)['_unknownFields']);
+    fileOptions = encodedOptionsToOptions(ctx, '.google.protobuf.FileOptions', (fileDesc.options as any)['_unknownFields']);
     delete (fileDesc.options as any)['_unknownFields'];
   }
 
@@ -115,7 +118,7 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
     const methodsOptions: Code[] = [];
     service.method.forEach((method) => {
       if (method.options) {
-        const methodOptions = encodedOptionsToOptions(ctx, (method.options as any)['_unknownFields']);
+        const methodOptions = encodedOptionsToOptions(ctx, '.google.protobuf.MethodOptions', (method.options as any)['_unknownFields']);
         delete (method.options as any)['_unknownFields'];
         if (methodOptions) {
           methodsOptions.push(code`'${method.name}': ${methodOptions}`);
@@ -125,7 +128,7 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
 
     let serviceOptions: Code | undefined;
     if (service.options) {
-      serviceOptions = encodedOptionsToOptions(ctx, (service.options as any)['_unknownFields']);
+      serviceOptions = encodedOptionsToOptions(ctx, '.google.protobuf.ServiceOptions', (service.options as any)['_unknownFields']);
       delete (service.options as any)['_unknownFields'];
     }
 
@@ -144,7 +147,7 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
     const valuesOptions: Code[] = [];
     Enum.value.forEach((value) => {
       if (value.options) {
-        const valueOptions = encodedOptionsToOptions(ctx, (value.options as any)['_unknownFields']);
+        const valueOptions = encodedOptionsToOptions(ctx, '.google.protobuf.EnumValueOptions', (value.options as any)['_unknownFields']);
         delete (value.options as any)['_unknownFields'];
         if (valueOptions) {
           valuesOptions.push(code`'${value.name}': ${valueOptions}`);
@@ -154,7 +157,7 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
 
     let enumOptions: Code | undefined;
     if (Enum.options) {
-      enumOptions = encodedOptionsToOptions(ctx, (Enum.options as any)['_unknownFields']);
+      enumOptions = encodedOptionsToOptions(ctx, '.google.protobuf.EnumOptions', (Enum.options as any)['_unknownFields']);
       delete (Enum.options as any)['_unknownFields'];
     }
 
@@ -212,14 +215,15 @@ function getExtensionValue(ctx: Context, extension: FieldDescriptorProto, data: 
   }
 }
 
-function encodedOptionsToOptions(ctx: Context, encodedOptions: { [key: number]: Uint8Array[] }): Code | undefined {
+/** Takes the protoc's input of options as proto-encoded messages, and turns them into embedded-able-in-source-code representations. */
+function encodedOptionsToOptions(ctx: Context, extendee: string, encodedOptions: { [key: number]: Uint8Array[] }): Code | undefined {
   if (!encodedOptions) {
     return undefined;
   }
   const resultOptions: Code[] = [];
-  for (const key of Object.keys(encodedOptions)) {
-    const extension = extensionCache[parseInt(key, 10) >>> 3];
-    resultOptions.push(getExtensionValue(ctx, extension, encodedOptions[key as any]));
+  for (const [key, value] of Object.entries(encodedOptions)) {
+    const extension = extensionCache[extendee][parseInt(key, 10) >>> 3];
+    resultOptions.push(getExtensionValue(ctx, extension, value));
   }
   if (resultOptions.length == 0) {
     return undefined;
@@ -231,7 +235,7 @@ function resolveMessageOptions(ctx: Context, message: DescriptorProto): Code | u
   const fieldsOptions: Code[] = [];
   message.field.forEach((field) => {
     if (field.options) {
-      const fieldOptions = encodedOptionsToOptions(ctx, (field.options as any)['_unknownFields']);
+      const fieldOptions = encodedOptionsToOptions(ctx, '.google.protobuf.FieldOptions', (field.options as any)['_unknownFields']);
       delete (field.options as any)['_unknownFields'];
       if (fieldOptions) {
         fieldsOptions.push(code`'${field.name}': ${fieldOptions}`);
@@ -242,7 +246,7 @@ function resolveMessageOptions(ctx: Context, message: DescriptorProto): Code | u
   const oneOfsOptions: Code[] = [];
   message.oneofDecl.forEach((oneOf) => {
     if (oneOf.options) {
-      const oneOfOptions = encodedOptionsToOptions(ctx, (oneOf.options as any)['_unknownFields']);
+      const oneOfOptions = encodedOptionsToOptions(ctx, '.google.protobuf.OneofOptions', (oneOf.options as any)['_unknownFields']);
       delete (oneOf.options as any)['_unknownFields'];
       if (oneOfOptions) {
         oneOfsOptions.push(code`'${oneOf.name}': ${oneOfOptions}`);
@@ -262,7 +266,7 @@ function resolveMessageOptions(ctx: Context, message: DescriptorProto): Code | u
 
   let messageOptions: Code | undefined;
   if (message.options) {
-    messageOptions = encodedOptionsToOptions(ctx, (message.options as any)['_unknownFields']);
+    messageOptions = encodedOptionsToOptions(ctx, '.google.protobuf.MessageOptions', (message.options as any)['_unknownFields']);
     delete (message.options as any)['_unknownFields'];
   }
 
