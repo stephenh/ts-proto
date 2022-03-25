@@ -1,3 +1,10 @@
+## [1.110.1](https://github.com/stephenh/ts-proto/compare/v1.110.0...v1.110.1) (2022-03-25)
+
+
+### Bug Fixes
+
+* Use a module star import for protobuf types. ([#540](https://github.com/stephenh/ts-proto/issues/540)) ([f5b7700](https://github.com/stephenh/ts-proto/commit/f5b770083dffe72338beb4a09432a2a917760eae))
+
 # [1.110.0](https://github.com/stephenh/ts-proto/compare/v1.109.1...v1.110.0) (2022-03-15)
 
 
