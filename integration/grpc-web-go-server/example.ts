@@ -1,6 +1,6 @@
 /* eslint-disable */
-import { util, configure, Writer, Reader } from 'protobufjs/minimal';
 import * as Long from 'long';
+import * as _m0 from 'protobufjs/minimal';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -97,7 +97,7 @@ function createBaseDashFlash(): DashFlash {
 }
 
 export const DashFlash = {
-  encode(message: DashFlash, writer: Writer = Writer.create()): Writer {
+  encode(message: DashFlash, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.msg !== '') {
       writer.uint32(10).string(message.msg);
     }
@@ -107,8 +107,8 @@ export const DashFlash = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): DashFlash {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): DashFlash {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDashFlash();
     while (reader.pos < end) {
@@ -155,7 +155,7 @@ function createBaseDashUserSettingsState(): DashUserSettingsState {
 }
 
 export const DashUserSettingsState = {
-  encode(message: DashUserSettingsState, writer: Writer = Writer.create()): Writer {
+  encode(message: DashUserSettingsState, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.email !== '') {
       writer.uint32(10).string(message.email);
     }
@@ -168,8 +168,8 @@ export const DashUserSettingsState = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): DashUserSettingsState {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): DashUserSettingsState {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDashUserSettingsState();
     while (reader.pos < end) {
@@ -230,7 +230,7 @@ function createBaseDashUserSettingsState_URLs(): DashUserSettingsState_URLs {
 }
 
 export const DashUserSettingsState_URLs = {
-  encode(message: DashUserSettingsState_URLs, writer: Writer = Writer.create()): Writer {
+  encode(message: DashUserSettingsState_URLs, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.connectGoogle !== '') {
       writer.uint32(10).string(message.connectGoogle);
     }
@@ -240,8 +240,8 @@ export const DashUserSettingsState_URLs = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): DashUserSettingsState_URLs {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): DashUserSettingsState_URLs {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDashUserSettingsState_URLs();
     while (reader.pos < end) {
@@ -288,7 +288,7 @@ function createBaseDashCred(): DashCred {
 }
 
 export const DashCred = {
-  encode(message: DashCred, writer: Writer = Writer.create()): Writer {
+  encode(message: DashCred, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.description !== '') {
       writer.uint32(18).string(message.description);
     }
@@ -304,8 +304,8 @@ export const DashCred = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): DashCred {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): DashCred {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDashCred();
     while (reader.pos < end) {
@@ -364,7 +364,7 @@ function createBaseDashAPICredsCreateReq(): DashAPICredsCreateReq {
 }
 
 export const DashAPICredsCreateReq = {
-  encode(message: DashAPICredsCreateReq, writer: Writer = Writer.create()): Writer {
+  encode(message: DashAPICredsCreateReq, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.description !== '') {
       writer.uint32(10).string(message.description);
     }
@@ -374,8 +374,8 @@ export const DashAPICredsCreateReq = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): DashAPICredsCreateReq {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): DashAPICredsCreateReq {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDashAPICredsCreateReq();
     while (reader.pos < end) {
@@ -422,7 +422,7 @@ function createBaseDashAPICredsUpdateReq(): DashAPICredsUpdateReq {
 }
 
 export const DashAPICredsUpdateReq = {
-  encode(message: DashAPICredsUpdateReq, writer: Writer = Writer.create()): Writer {
+  encode(message: DashAPICredsUpdateReq, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.credSid !== '') {
       writer.uint32(10).string(message.credSid);
     }
@@ -438,8 +438,8 @@ export const DashAPICredsUpdateReq = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): DashAPICredsUpdateReq {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): DashAPICredsUpdateReq {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDashAPICredsUpdateReq();
     while (reader.pos < end) {
@@ -498,7 +498,7 @@ function createBaseDashAPICredsDeleteReq(): DashAPICredsDeleteReq {
 }
 
 export const DashAPICredsDeleteReq = {
-  encode(message: DashAPICredsDeleteReq, writer: Writer = Writer.create()): Writer {
+  encode(message: DashAPICredsDeleteReq, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.credSid !== '') {
       writer.uint32(10).string(message.credSid);
     }
@@ -508,8 +508,8 @@ export const DashAPICredsDeleteReq = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): DashAPICredsDeleteReq {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): DashAPICredsDeleteReq {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDashAPICredsDeleteReq();
     while (reader.pos < end) {
@@ -556,12 +556,12 @@ function createBaseEmpty(): Empty {
 }
 
 export const Empty = {
-  encode(_: Empty, writer: Writer = Writer.create()): Writer {
+  encode(_: Empty, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Empty {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): Empty {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEmpty();
     while (reader.pos < end) {
@@ -605,13 +605,13 @@ export class DashStateClientImpl implements DashState {
   UserSettings(request: Empty): Promise<DashUserSettingsState> {
     const data = Empty.encode(request).finish();
     const promise = this.rpc.request('rpx.DashState', 'UserSettings', data);
-    return promise.then((data) => DashUserSettingsState.decode(new Reader(data)));
+    return promise.then((data) => DashUserSettingsState.decode(new _m0.Reader(data)));
   }
 
   ActiveUserSettingsStream(request: Empty): Observable<DashUserSettingsState> {
     const data = Empty.encode(request).finish();
     const result = this.rpc.serverStreamingRequest('rpx.DashState', 'ActiveUserSettingsStream', data);
-    return result.pipe(map((data) => DashUserSettingsState.decode(new Reader(data))));
+    return result.pipe(map((data) => DashUserSettingsState.decode(new _m0.Reader(data))));
   }
 }
 
@@ -637,19 +637,19 @@ export class DashAPICredsClientImpl implements DashAPICreds {
   Create(request: DashAPICredsCreateReq): Promise<DashCred> {
     const data = DashAPICredsCreateReq.encode(request).finish();
     const promise = this.rpc.request('rpx.DashAPICreds', 'Create', data);
-    return promise.then((data) => DashCred.decode(new Reader(data)));
+    return promise.then((data) => DashCred.decode(new _m0.Reader(data)));
   }
 
   Update(request: DashAPICredsUpdateReq): Promise<DashCred> {
     const data = DashAPICredsUpdateReq.encode(request).finish();
     const promise = this.rpc.request('rpx.DashAPICreds', 'Update', data);
-    return promise.then((data) => DashCred.decode(new Reader(data)));
+    return promise.then((data) => DashCred.decode(new _m0.Reader(data)));
   }
 
   Delete(request: DashAPICredsDeleteReq): Promise<DashCred> {
     const data = DashAPICredsDeleteReq.encode(request).finish();
     const promise = this.rpc.request('rpx.DashAPICreds', 'Delete', data);
-    return promise.then((data) => DashCred.decode(new Reader(data)));
+    return promise.then((data) => DashCred.decode(new _m0.Reader(data)));
   }
 }
 
@@ -679,9 +679,9 @@ export type Exact<P, I extends P> = P extends Builtin
 
 // If you get a compile-error about 'Constructor<Long> and ... have no overlap',
 // add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
-if (util.Long !== Long) {
-  util.Long = Long as any;
-  configure();
+if (_m0.util.Long !== Long) {
+  _m0.util.Long = Long as any;
+  _m0.configure();
 }
 
 function isSet(value: any): boolean {

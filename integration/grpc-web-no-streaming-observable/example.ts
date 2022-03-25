@@ -1,7 +1,7 @@
 /* eslint-disable */
-import { util, configure, Writer, Reader } from 'protobufjs/minimal';
 import * as Long from 'long';
 import { grpc } from '@improbable-eng/grpc-web';
+import * as _m0 from 'protobufjs/minimal';
 import { Observable } from 'rxjs';
 import { BrowserHeaders } from 'browser-headers';
 import { take } from 'rxjs/operators';
@@ -75,7 +75,7 @@ function createBaseDashFlash(): DashFlash {
 }
 
 export const DashFlash = {
-  encode(message: DashFlash, writer: Writer = Writer.create()): Writer {
+  encode(message: DashFlash, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.msg !== '') {
       writer.uint32(10).string(message.msg);
     }
@@ -85,8 +85,8 @@ export const DashFlash = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): DashFlash {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): DashFlash {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDashFlash();
     while (reader.pos < end) {
@@ -133,7 +133,7 @@ function createBaseDashUserSettingsState(): DashUserSettingsState {
 }
 
 export const DashUserSettingsState = {
-  encode(message: DashUserSettingsState, writer: Writer = Writer.create()): Writer {
+  encode(message: DashUserSettingsState, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.email !== '') {
       writer.uint32(10).string(message.email);
     }
@@ -146,8 +146,8 @@ export const DashUserSettingsState = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): DashUserSettingsState {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): DashUserSettingsState {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDashUserSettingsState();
     while (reader.pos < end) {
@@ -208,7 +208,7 @@ function createBaseDashUserSettingsState_URLs(): DashUserSettingsState_URLs {
 }
 
 export const DashUserSettingsState_URLs = {
-  encode(message: DashUserSettingsState_URLs, writer: Writer = Writer.create()): Writer {
+  encode(message: DashUserSettingsState_URLs, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.connectGoogle !== '') {
       writer.uint32(10).string(message.connectGoogle);
     }
@@ -218,8 +218,8 @@ export const DashUserSettingsState_URLs = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): DashUserSettingsState_URLs {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): DashUserSettingsState_URLs {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDashUserSettingsState_URLs();
     while (reader.pos < end) {
@@ -266,12 +266,12 @@ function createBaseEmpty(): Empty {
 }
 
 export const Empty = {
-  encode(_: Empty, writer: Writer = Writer.create()): Writer {
+  encode(_: Empty, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Empty {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): Empty {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEmpty();
     while (reader.pos < end) {
@@ -433,9 +433,9 @@ export type Exact<P, I extends P> = P extends Builtin
 
 // If you get a compile-error about 'Constructor<Long> and ... have no overlap',
 // add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
-if (util.Long !== Long) {
-  util.Long = Long as any;
-  configure();
+if (_m0.util.Long !== Long) {
+  _m0.util.Long = Long as any;
+  _m0.configure();
 }
 
 function isSet(value: any): boolean {

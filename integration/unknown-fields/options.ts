@@ -1,6 +1,6 @@
 /* eslint-disable */
-import { util, configure, Writer, Reader } from 'protobufjs/minimal';
 import * as Long from 'long';
+import * as _m0 from 'protobufjs/minimal';
 
 export const protobufPackage = '';
 
@@ -26,7 +26,7 @@ function createBaseMyMessage(): MyMessage {
 }
 
 export const MyMessage = {
-  encode(message: MyMessage, writer: Writer = Writer.create()): Writer {
+  encode(message: MyMessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.foo !== undefined) {
       writer.uint32(8).int32(message.foo);
     }
@@ -55,8 +55,8 @@ export const MyMessage = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): MyMessage {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): MyMessage {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMyMessage();
     (message as any)._unknownFields = {};
@@ -94,7 +94,7 @@ function createBaseRequestType(): RequestType {
 }
 
 export const RequestType = {
-  encode(message: RequestType, writer: Writer = Writer.create()): Writer {
+  encode(message: RequestType, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if ('_unknownFields' in message) {
       for (const key of Object.keys(message['_unknownFields'])) {
         const values = message['_unknownFields'][key] as Uint8Array[];
@@ -111,8 +111,8 @@ export const RequestType = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): RequestType {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): RequestType {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseRequestType();
     (message as any)._unknownFields = {};
@@ -138,7 +138,7 @@ function createBaseResponseType(): ResponseType {
 }
 
 export const ResponseType = {
-  encode(message: ResponseType, writer: Writer = Writer.create()): Writer {
+  encode(message: ResponseType, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if ('_unknownFields' in message) {
       for (const key of Object.keys(message['_unknownFields'])) {
         const values = message['_unknownFields'][key] as Uint8Array[];
@@ -155,8 +155,8 @@ export const ResponseType = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): ResponseType {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): ResponseType {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseResponseType();
     (message as any)._unknownFields = {};
@@ -190,7 +190,7 @@ export class MyServiceClientImpl implements MyService {
   MyMethod(request: RequestType): Promise<ResponseType> {
     const data = RequestType.encode(request).finish();
     const promise = this.rpc.request('MyService', 'MyMethod', data);
-    return promise.then((data) => ResponseType.decode(new Reader(data)));
+    return promise.then((data) => ResponseType.decode(new _m0.Reader(data)));
   }
 }
 
@@ -200,7 +200,7 @@ interface Rpc {
 
 // If you get a compile-error about 'Constructor<Long> and ... have no overlap',
 // add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
-if (util.Long !== Long) {
-  util.Long = Long as any;
-  configure();
+if (_m0.util.Long !== Long) {
+  _m0.util.Long = Long as any;
+  _m0.configure();
 }

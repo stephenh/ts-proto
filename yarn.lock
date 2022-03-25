@@ -6273,10 +6273,10 @@ ts-node@^9.1.1:
     source-map-support "^0.5.17"
     yn "3.1.1"
 
-ts-poet@^4.10.0:
-  version "4.10.0"
-  resolved "https://registry.yarnpkg.com/ts-poet/-/ts-poet-4.10.0.tgz#8732374655e87f8f833e5d110938e346713e8c66"
-  integrity sha512-V5xzt+LDMVtxWvK12WVwHhGHTA//CeoPdWOqka0mMjlRqq7RPKYSfWEnzJdMmhNbd34BwZuZpip4mm+nqEcbQA==
+ts-poet@^4.11.0:
+  version "4.11.0"
+  resolved "https://registry.yarnpkg.com/ts-poet/-/ts-poet-4.11.0.tgz#5566f499ec767920cc18b977624f084c52e8734a"
+  integrity sha512-OaXnCKsRs0yrc0O7LFhnq/US2DB4Wd313cS+qjG2XMksZ74pF/jvMHkJdURXJiAo4kSahL2N4e8JOdwUjOMNdw==
   dependencies:
     lodash "^4.17.15"
     prettier "^2.5.1"
