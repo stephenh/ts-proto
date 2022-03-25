@@ -1,6 +1,6 @@
 /* eslint-disable */
-import { util, configure, Writer, Reader } from 'protobufjs/minimal';
 import * as Long from 'long';
+import * as _m0 from 'protobufjs/minimal';
 import { FileDescriptorProto, GeneratedCodeInfo } from '../../../google/protobuf/descriptor';
 
 export const protobufPackage = 'google.protobuf.compiler';
@@ -147,7 +147,7 @@ function createBaseVersion(): Version {
 }
 
 export const Version = {
-  encode(message: Version, writer: Writer = Writer.create()): Writer {
+  encode(message: Version, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.major !== 0) {
       writer.uint32(8).int32(message.major);
     }
@@ -176,8 +176,8 @@ export const Version = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Version {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): Version {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseVersion();
     (message as any)._unknownFields = {};
@@ -215,7 +215,7 @@ function createBaseCodeGeneratorRequest(): CodeGeneratorRequest {
 }
 
 export const CodeGeneratorRequest = {
-  encode(message: CodeGeneratorRequest, writer: Writer = Writer.create()): Writer {
+  encode(message: CodeGeneratorRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     for (const v of message.fileToGenerate) {
       writer.uint32(10).string(v!);
     }
@@ -244,8 +244,8 @@ export const CodeGeneratorRequest = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): CodeGeneratorRequest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): CodeGeneratorRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCodeGeneratorRequest();
     (message as any)._unknownFields = {};
@@ -283,7 +283,7 @@ function createBaseCodeGeneratorResponse(): CodeGeneratorResponse {
 }
 
 export const CodeGeneratorResponse = {
-  encode(message: CodeGeneratorResponse, writer: Writer = Writer.create()): Writer {
+  encode(message: CodeGeneratorResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.error !== '') {
       writer.uint32(10).string(message.error);
     }
@@ -309,8 +309,8 @@ export const CodeGeneratorResponse = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): CodeGeneratorResponse {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): CodeGeneratorResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCodeGeneratorResponse();
     (message as any)._unknownFields = {};
@@ -345,7 +345,7 @@ function createBaseCodeGeneratorResponse_File(): CodeGeneratorResponse_File {
 }
 
 export const CodeGeneratorResponse_File = {
-  encode(message: CodeGeneratorResponse_File, writer: Writer = Writer.create()): Writer {
+  encode(message: CodeGeneratorResponse_File, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.name !== '') {
       writer.uint32(10).string(message.name);
     }
@@ -374,8 +374,8 @@ export const CodeGeneratorResponse_File = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): CodeGeneratorResponse_File {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): CodeGeneratorResponse_File {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCodeGeneratorResponse_File();
     (message as any)._unknownFields = {};
@@ -428,7 +428,7 @@ function longToNumber(long: Long): number {
 
 // If you get a compile-error about 'Constructor<Long> and ... have no overlap',
 // add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
-if (util.Long !== Long) {
-  util.Long = Long as any;
-  configure();
+if (_m0.util.Long !== Long) {
+  _m0.util.Long = Long as any;
+  _m0.configure();
 }
