@@ -1,3 +1,10 @@
+## [1.110.2](https://github.com/stephenh/ts-proto/compare/v1.110.1...v1.110.2) (2022-03-27)
+
+
+### Bug Fixes
+
+* **Grpc-Web:** Fix compilation failure when a service definition contains a client streaming call. ([#535](https://github.com/stephenh/ts-proto/issues/535)) ([0c83892](https://github.com/stephenh/ts-proto/commit/0c83892693d5755c9fe848b442b5e666192103ab))
+
 ## [1.110.1](https://github.com/stephenh/ts-proto/compare/v1.110.0...v1.110.1) (2022-03-25)
 
 
