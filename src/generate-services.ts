@@ -51,12 +51,10 @@ export function generateService(
       params.push(code`ctx: Context`);
     }
 
-    let inputType = requestType(ctx, methodDesc);
     // the grpc-web clients auto-`fromPartial` the input before handing off to grpc-web's
     // serde runtime, so it's okay to accept partial results from the client
-    if (options.outputClientImpl === 'grpc-web') {
-      inputType = code`${utils.DeepPartial}<${inputType}>`;
-    }
+    const partialInput = options.outputClientImpl === 'grpc-web';
+    const inputType = requestType(ctx, methodDesc, partialInput);
     params.push(code`request: ${inputType}`);
 
     // Use metadata as last argument for interface only configuration

@@ -1,4 +1,5 @@
 import { DashStateClientImpl } from './example';
+import { EMPTY } from 'rxjs';
 
 describe('grpc-web', () => {
   it('at least compiles', () => {
@@ -19,5 +20,14 @@ describe('grpc-web', () => {
     const client = new DashStateClientImpl(rpc);
     const userSettings = client.UserSettings;
     userSettings({});
-  })
+  });
+  it('throws on client streaming call', () => {
+    const rpc = {
+      unary: jest.fn(),
+      invoke: jest.fn(),
+    };
+    const client = new DashStateClientImpl(rpc);
+    const call = () => client.ChangeUserSettingsStream(EMPTY)
+    expect(call).toThrowError("ts-proto does not yet support client streaming!")
+  });
 });

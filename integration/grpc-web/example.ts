@@ -595,6 +595,11 @@ export const Empty = {
 export interface DashState {
   UserSettings(request: DeepPartial<Empty>, metadata?: grpc.Metadata): Promise<DashUserSettingsState>;
   ActiveUserSettingsStream(request: DeepPartial<Empty>, metadata?: grpc.Metadata): Observable<DashUserSettingsState>;
+  /** not supported in grpc-web, but should still compile */
+  ChangeUserSettingsStream(
+    request: Observable<DeepPartial<DashUserSettingsState>>,
+    metadata?: grpc.Metadata
+  ): Observable<DashUserSettingsState>;
 }
 
 export class DashStateClientImpl implements DashState {
@@ -604,6 +609,7 @@ export class DashStateClientImpl implements DashState {
     this.rpc = rpc;
     this.UserSettings = this.UserSettings.bind(this);
     this.ActiveUserSettingsStream = this.ActiveUserSettingsStream.bind(this);
+    this.ChangeUserSettingsStream = this.ChangeUserSettingsStream.bind(this);
   }
 
   UserSettings(request: DeepPartial<Empty>, metadata?: grpc.Metadata): Promise<DashUserSettingsState> {
@@ -612,6 +618,13 @@ export class DashStateClientImpl implements DashState {
 
   ActiveUserSettingsStream(request: DeepPartial<Empty>, metadata?: grpc.Metadata): Observable<DashUserSettingsState> {
     return this.rpc.invoke(DashStateActiveUserSettingsStreamDesc, Empty.fromPartial(request), metadata);
+  }
+
+  ChangeUserSettingsStream(
+    request: Observable<DeepPartial<DashUserSettingsState>>,
+    metadata?: grpc.Metadata
+  ): Observable<DashUserSettingsState> {
+    throw new Error('ts-proto does not yet support client streaming!');
   }
 }
 
