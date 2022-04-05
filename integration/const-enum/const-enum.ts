@@ -1,6 +1,6 @@
 /* eslint-disable */
-import { util, configure, Writer, Reader } from 'protobufjs/minimal';
 import * as Long from 'long';
+import * as _m0 from 'protobufjs/minimal';
 
 export const protobufPackage = '';
 
@@ -78,7 +78,7 @@ function createBaseDividerData(): DividerData {
 }
 
 export const DividerData = {
-  encode(message: DividerData, writer: Writer = Writer.create()): Writer {
+  encode(message: DividerData, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.type !== DividerData_DividerType.DOUBLE) {
       writer.uint32(8).int32(dividerData_DividerTypeToNumber(message.type));
     }
@@ -88,8 +88,8 @@ export const DividerData = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): DividerData {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): DividerData {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDividerData();
     while (reader.pos < end) {
@@ -157,7 +157,7 @@ function createBaseDividerData_TypeMapEntry(): DividerData_TypeMapEntry {
 }
 
 export const DividerData_TypeMapEntry = {
-  encode(message: DividerData_TypeMapEntry, writer: Writer = Writer.create()): Writer {
+  encode(message: DividerData_TypeMapEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.key !== '') {
       writer.uint32(10).string(message.key);
     }
@@ -167,8 +167,8 @@ export const DividerData_TypeMapEntry = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): DividerData_TypeMapEntry {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): DividerData_TypeMapEntry {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDividerData_TypeMapEntry();
     while (reader.pos < end) {
@@ -229,9 +229,9 @@ export type Exact<P, I extends P> = P extends Builtin
 
 // If you get a compile-error about 'Constructor<Long> and ... have no overlap',
 // add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
-if (util.Long !== Long) {
-  util.Long = Long as any;
-  configure();
+if (_m0.util.Long !== Long) {
+  _m0.util.Long = Long as any;
+  _m0.configure();
 }
 
 function isObject(value: any): boolean {

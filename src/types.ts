@@ -652,8 +652,13 @@ export function rawRequestType(ctx: Context, methodDesc: MethodDescriptorProto):
   return messageToTypeName(ctx, methodDesc.inputType);
 }
 
-export function requestType(ctx: Context, methodDesc: MethodDescriptorProto): Code {
+export function requestType(ctx: Context, methodDesc: MethodDescriptorProto, partial: boolean = false): Code {
   let typeName = rawRequestType(ctx, methodDesc);
+
+  if (partial) {
+    typeName = code`${ctx.utils.DeepPartial}<${typeName}>`;
+  }
+
   if (methodDesc.clientStreaming) {
     return code`${imp('Observable@rxjs')}<${typeName}>`;
   }

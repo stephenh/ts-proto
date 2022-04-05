@@ -179,10 +179,6 @@ function parseParameter(parameter: string): Options {
   return options;
 }
 
-export function getTsPoetOpts(options: Options): { forceDefaultImport?: string[] } {
-  if (options.esModuleInterop) {
-    return { forceDefaultImport: ['protobufjs/minimal'] };
-  } else {
-    return {};
-  }
+export function getTsPoetOpts(options: Options): { forceModuleImport?: string[] } {
+  return { forceModuleImport: ['protobufjs/minimal'] };
 }

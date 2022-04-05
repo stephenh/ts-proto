@@ -35,6 +35,14 @@ jobs:
         run: yarn test
         env:
           CI: true
+      - name: test esmodule interop
+        working-directory: ./integration/simple-esmodule-interop
+        run: |
+          yarn install
+          yarn tsc
+          yarn jest
+        env:
+          CI: true
 
   release:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'

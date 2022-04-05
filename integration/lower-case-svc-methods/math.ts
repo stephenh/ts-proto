@@ -1,6 +1,6 @@
 /* eslint-disable */
-import { util, configure, Writer, Reader } from 'protobufjs/minimal';
 import * as Long from 'long';
+import * as _m0 from 'protobufjs/minimal';
 import * as DataLoader from 'dataloader';
 import * as hash from 'object-hash';
 
@@ -24,7 +24,7 @@ function createBaseNumPair(): NumPair {
 }
 
 export const NumPair = {
-  encode(message: NumPair, writer: Writer = Writer.create()): Writer {
+  encode(message: NumPair, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.num1 !== 0) {
       writer.uint32(9).double(message.num1);
     }
@@ -34,8 +34,8 @@ export const NumPair = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): NumPair {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): NumPair {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNumPair();
     while (reader.pos < end) {
@@ -82,15 +82,15 @@ function createBaseNumSingle(): NumSingle {
 }
 
 export const NumSingle = {
-  encode(message: NumSingle, writer: Writer = Writer.create()): Writer {
+  encode(message: NumSingle, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.num !== 0) {
       writer.uint32(9).double(message.num);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): NumSingle {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): NumSingle {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNumSingle();
     while (reader.pos < end) {
@@ -131,7 +131,7 @@ function createBaseNumbers(): Numbers {
 }
 
 export const Numbers = {
-  encode(message: Numbers, writer: Writer = Writer.create()): Writer {
+  encode(message: Numbers, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     writer.uint32(10).fork();
     for (const v of message.num) {
       writer.double(v);
@@ -140,8 +140,8 @@ export const Numbers = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Numbers {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): Numbers {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNumbers();
     while (reader.pos < end) {
@@ -206,13 +206,13 @@ export class MathServiceClientImpl<Context extends DataLoaders> implements MathS
   add(ctx: Context, request: NumPair): Promise<NumSingle> {
     const data = NumPair.encode(request).finish();
     const promise = this.rpc.request(ctx, 'MathService', 'Add', data);
-    return promise.then((data) => NumSingle.decode(new Reader(data)));
+    return promise.then((data) => NumSingle.decode(new _m0.Reader(data)));
   }
 
   absoluteValue(ctx: Context, request: NumSingle): Promise<NumSingle> {
     const data = NumSingle.encode(request).finish();
     const promise = this.rpc.request(ctx, 'MathService', 'AbsoluteValue', data);
-    return promise.then((data) => NumSingle.decode(new Reader(data)));
+    return promise.then((data) => NumSingle.decode(new _m0.Reader(data)));
   }
 
   getDouble(ctx: Context, nu: number): Promise<number> {
@@ -231,7 +231,7 @@ export class MathServiceClientImpl<Context extends DataLoaders> implements MathS
   batchDouble(ctx: Context, request: Numbers): Promise<Numbers> {
     const data = Numbers.encode(request).finish();
     const promise = this.rpc.request(ctx, 'MathService', 'BatchDouble', data);
-    return promise.then((data) => Numbers.decode(new Reader(data)));
+    return promise.then((data) => Numbers.decode(new _m0.Reader(data)));
   }
 }
 
@@ -267,9 +267,9 @@ export type Exact<P, I extends P> = P extends Builtin
 
 // If you get a compile-error about 'Constructor<Long> and ... have no overlap',
 // add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
-if (util.Long !== Long) {
-  util.Long = Long as any;
-  configure();
+if (_m0.util.Long !== Long) {
+  _m0.util.Long = Long as any;
+  _m0.configure();
 }
 
 function isSet(value: any): boolean {

@@ -1,6 +1,6 @@
 /* eslint-disable */
-import { util, configure, Writer, Reader } from 'protobufjs/minimal';
 import * as Long from 'long';
+import * as _m0 from 'protobufjs/minimal';
 import { Timestamp } from './google/protobuf/timestamp';
 import { Empty } from './google/protobuf/empty';
 
@@ -24,7 +24,7 @@ function createBaseTodo(): Todo {
 }
 
 export const Todo = {
-  encode(message: Todo, writer: Writer = Writer.create()): Writer {
+  encode(message: Todo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.id !== '') {
       writer.uint32(10).string(message.id);
     }
@@ -43,8 +43,8 @@ export const Todo = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Todo {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): Todo {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTodo();
     while (reader.pos < end) {
@@ -136,7 +136,7 @@ function createBaseTodo_MapOfTimestampsEntry(): Todo_MapOfTimestampsEntry {
 }
 
 export const Todo_MapOfTimestampsEntry = {
-  encode(message: Todo_MapOfTimestampsEntry, writer: Writer = Writer.create()): Writer {
+  encode(message: Todo_MapOfTimestampsEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.key !== '') {
       writer.uint32(10).string(message.key);
     }
@@ -146,8 +146,8 @@ export const Todo_MapOfTimestampsEntry = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Todo_MapOfTimestampsEntry {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): Todo_MapOfTimestampsEntry {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTodo_MapOfTimestampsEntry();
     while (reader.pos < end) {
@@ -266,9 +266,9 @@ function fromJsonTimestamp(o: any): Date {
 
 // If you get a compile-error about 'Constructor<Long> and ... have no overlap',
 // add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
-if (util.Long !== Long) {
-  util.Long = Long as any;
-  configure();
+if (_m0.util.Long !== Long) {
+  _m0.util.Long = Long as any;
+  _m0.configure();
 }
 
 function isObject(value: any): boolean {

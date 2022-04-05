@@ -1,5 +1,5 @@
 import { MethodDescriptorProto, FileDescriptorProto, ServiceDescriptorProto } from 'ts-proto-descriptors';
-import { requestType, responsePromiseOrObservable, responseType } from './types';
+import { rawRequestType, requestType, responsePromiseOrObservable, responseType } from './types';
 import { Code, code, imp, joinCode } from 'ts-poet';
 import { Context } from './context';
 import { assertInstanceOf, FormattedMethodDescriptor, maybePrefixPackage } from './utils';
@@ -35,7 +35,7 @@ export function generateGrpcClientImpl(
     assertInstanceOf(methodDesc, FormattedMethodDescriptor);
     chunks.push(code`this.${methodDesc.formattedName} = this.${methodDesc.formattedName}.bind(this);`);
   }
-  chunks.push(code`}\n`);
+  chunks.push(code`}`);
 
   // Create a method for each FooService method
   for (const methodDesc of serviceDesc.method) {
@@ -43,25 +43,36 @@ export function generateGrpcClientImpl(
   }
 
   chunks.push(code`}`);
-  return joinCode(chunks, { trim: false });
+  return joinCode(chunks, { trim: false, on: '\n' });
 }
 
 /** Creates the RPC methods that client code actually calls. */
 function generateRpcMethod(ctx: Context, serviceDesc: ServiceDescriptorProto, methodDesc: MethodDescriptorProto) {
   assertInstanceOf(methodDesc, FormattedMethodDescriptor);
-  const { options, utils } = ctx;
-  const inputType = requestType(ctx, methodDesc);
-  const partialInputType = code`${utils.DeepPartial}<${inputType}>`;
+  const requestMessage = rawRequestType(ctx, methodDesc);
+  const inputType = requestType(ctx, methodDesc, true);
   const returns = responsePromiseOrObservable(ctx, methodDesc);
+
+  if (methodDesc.clientStreaming) {
+    return code`
+    ${methodDesc.formattedName}(
+      request: ${inputType},
+      metadata?: grpc.Metadata,
+    ): ${returns} {
+      throw new Error('ts-proto does not yet support client streaming!');
+    }
+  `;
+  }
+
   const method = methodDesc.serverStreaming ? 'invoke' : 'unary';
   return code`
     ${methodDesc.formattedName}(
-      request: ${partialInputType},
+      request: ${inputType},
       metadata?: grpc.Metadata,
     ): ${returns} {
       return this.rpc.${method}(
         ${methodDescName(serviceDesc, methodDesc)},
-        ${inputType}.fromPartial(request),
+        ${requestMessage}.fromPartial(request),
         metadata,
       );
     }
