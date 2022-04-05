@@ -86,9 +86,9 @@ export const Todo = {
       optionalTimestamp: isSet(object.optionalTimestamp) ? fromJsonTimestamp(object.optionalTimestamp) : undefined,
       mapOfTimestamps: isObject(object.mapOfTimestamps)
         ? Object.entries(object.mapOfTimestamps).reduce<{ [key: string]: Date }>((acc, [key, value]) => {
-            acc[key] = fromJsonTimestamp(value);
-            return acc;
-          }, {})
+          acc[key] = fromJsonTimestamp(value);
+          return acc;
+        }, {})
         : {},
     };
   },
@@ -202,7 +202,7 @@ export class ClockClientImpl implements Clock {
   Now(request: Empty): Promise<Date> {
     const data = Empty.encode(request).finish();
     const promise = this.rpc.request('Clock', 'Now', data);
-    return promise.then((data) => fromTimestamp(Timestamp.decode(new Reader(data))));
+    return promise.then((data) => fromTimestamp(Timestamp.decode(new _m0.Reader(data))));
   }
 }
 
