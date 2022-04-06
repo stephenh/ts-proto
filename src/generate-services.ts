@@ -116,7 +116,7 @@ function generateRegularRpcMethod(
 
   let encode = code`${rawInputType}.encode(request).finish()`;
   let decode = code`data => ${outputType}.decode(new ${Reader}(data))`;
-  console.error();
+
   if (options.useDate && rawOutputType.toString().includes('Timestamp')) {
     decode = code`data => ${utils.fromTimestamp}(${rawOutputType}.decode(new ${Reader}(data)))`;
   }
@@ -272,9 +272,8 @@ function generateCachingRpcMethod(
     (requests) => {
       const responses = requests.map(async request => {
         const data = ${inputType}.encode(request).finish()
-        const response = await this.rpc.request(ctx, "${maybePrefixPackage(fileDesc, serviceDesc.name)}", "${
-    methodDesc.name
-  }", data);
+        const response = await this.rpc.request(ctx, "${maybePrefixPackage(fileDesc, serviceDesc.name)}", "${methodDesc.name
+    }", data);
         return ${outputType}.decode(new ${Reader}(response));
       });
       return Promise.all(responses);
