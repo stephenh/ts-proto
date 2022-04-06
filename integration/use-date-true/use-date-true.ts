@@ -86,9 +86,9 @@ export const Todo = {
       optionalTimestamp: isSet(object.optionalTimestamp) ? fromJsonTimestamp(object.optionalTimestamp) : undefined,
       mapOfTimestamps: isObject(object.mapOfTimestamps)
         ? Object.entries(object.mapOfTimestamps).reduce<{ [key: string]: Date }>((acc, [key, value]) => {
-          acc[key] = fromJsonTimestamp(value);
-          return acc;
-        }, {})
+            acc[key] = fromJsonTimestamp(value);
+            return acc;
+          }, {})
         : {},
     };
   },
