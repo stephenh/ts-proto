@@ -1,3 +1,10 @@
+## [1.110.3](https://github.com/stephenh/ts-proto/compare/v1.110.2...v1.110.3) (2022-04-08)
+
+
+### Bug Fixes
+
+* regression in being able to return a Date as a GRPC return value ([#534](https://github.com/stephenh/ts-proto/issues/534)) ([22b76ec](https://github.com/stephenh/ts-proto/commit/22b76eccfc0d26309aab9e454de31ef020595be8))
+
 ## [1.110.2](https://github.com/stephenh/ts-proto/compare/v1.110.1...v1.110.2) (2022-03-27)
 
 
