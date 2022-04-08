@@ -104,11 +104,12 @@ function generateRegularRpcMethod(
   methodDesc: MethodDescriptorProto
 ): Code {
   assertInstanceOf(methodDesc, FormattedMethodDescriptor);
-  const { options } = ctx;
+  const { options, utils } = ctx;
   const Reader = imp('Reader@protobufjs/minimal');
   const rawInputType = rawRequestType(ctx, methodDesc);
   const inputType = requestType(ctx, methodDesc);
   const outputType = responseType(ctx, methodDesc);
+  const rawOutputType = responseType(ctx, methodDesc, { keepValueType: true });
 
   const params = [...(options.context ? [code`ctx: Context`] : []), code`request: ${inputType}`];
   const maybeCtx = options.context ? 'ctx,' : '';
@@ -116,6 +117,9 @@ function generateRegularRpcMethod(
   let encode = code`${rawInputType}.encode(request).finish()`;
   let decode = code`data => ${outputType}.decode(new ${Reader}(data))`;
 
+  if (options.useDate && rawOutputType.toString().includes('Timestamp')) {
+    decode = code`data => ${utils.fromTimestamp}(${rawOutputType}.decode(new ${Reader}(data)))`;
+  }
   if (methodDesc.clientStreaming) {
     encode = code`request.pipe(${imp('map@rxjs/operators')}(request => ${encode}))`;
   }

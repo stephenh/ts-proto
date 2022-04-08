@@ -2,6 +2,7 @@
 import * as Long from 'long';
 import * as _m0 from 'protobufjs/minimal';
 import { Timestamp } from './google/protobuf/timestamp';
+import { Empty } from './google/protobuf/empty';
 
 export const protobufPackage = '';
 
@@ -187,6 +188,42 @@ export const Todo_MapOfTimestampsEntry = {
     return message;
   },
 };
+
+export interface Clock {
+  Now(request: Empty): Promise<Date>;
+}
+
+export class ClockClientImpl implements Clock {
+  private readonly rpc: Rpc;
+  constructor(rpc: Rpc) {
+    this.rpc = rpc;
+    this.Now = this.Now.bind(this);
+  }
+  Now(request: Empty): Promise<Date> {
+    const data = Empty.encode(request).finish();
+    const promise = this.rpc.request('Clock', 'Now', data);
+    return promise.then((data) => fromTimestamp(Timestamp.decode(new _m0.Reader(data))));
+  }
+}
+
+export const ClockDefinition = {
+  name: 'Clock',
+  fullName: 'Clock',
+  methods: {
+    now: {
+      name: 'Now',
+      requestType: Empty,
+      requestStream: false,
+      responseType: Timestamp,
+      responseStream: false,
+      options: {},
+    },
+  },
+} as const;
+
+interface Rpc {
+  request(service: string, method: string, data: Uint8Array): Promise<Uint8Array>;
+}
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 

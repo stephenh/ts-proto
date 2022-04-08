@@ -665,8 +665,12 @@ export function requestType(ctx: Context, methodDesc: MethodDescriptorProto, par
   return typeName;
 }
 
-export function responseType(ctx: Context, methodDesc: MethodDescriptorProto): Code {
-  return messageToTypeName(ctx, methodDesc.outputType, { keepValueType: true });
+export function responseType(
+  ctx: Context,
+  methodDesc: MethodDescriptorProto,
+  typeOptions: { keepValueType?: boolean; repeated?: boolean } = {}
+): Code {
+  return messageToTypeName(ctx, methodDesc.outputType, typeOptions);
 }
 
 export function responsePromise(ctx: Context, methodDesc: MethodDescriptorProto): Code {
