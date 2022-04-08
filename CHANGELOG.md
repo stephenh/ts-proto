@@ -1,3 +1,10 @@
+## [1.110.4](https://github.com/stephenh/ts-proto/compare/v1.110.3...v1.110.4) (2022-04-08)
+
+
+### Bug Fixes
+
+* Use Uint8Array.forEach in base64FromBytes ([#544](https://github.com/stephenh/ts-proto/issues/544)) ([c7641ce](https://github.com/stephenh/ts-proto/commit/c7641ceb6a1c9da234245b9d808b2ded899dbbbc))
+
 ## [1.110.3](https://github.com/stephenh/ts-proto/compare/v1.110.2...v1.110.3) (2022-04-08)
 
 
