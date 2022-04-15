@@ -9,28 +9,37 @@ export interface PleaseChoose {
    * Use this if you want a number. Numbers are great. Who doesn't
    * like them?
    */
+<<<<<<< HEAD
   aNumber:
     | number
     | undefined;
+=======
+  aNumber?: number | undefined;
+>>>>>>> 6896257 (feat(plugin): optional fields for oneof properties)
   /**
    * Use this if you want a string. Strings are also nice. Not as
    * nice as numbers, but what are you going to do...
    */
+<<<<<<< HEAD
   aString: string | undefined;
   aMessage:
     | PleaseChoose_Submessage
     | undefined;
+=======
+  aString?: string | undefined;
+  aMessage?: PleaseChoose_Submessage | undefined;
+>>>>>>> 6896257 (feat(plugin): optional fields for oneof properties)
   /**
    * We also added a bool option! This was added after the 'age'
    * field, so it has a higher number.
    */
-  aBool: boolean | undefined;
-  bunchaBytes: Uint8Array | undefined;
-  anEnum: PleaseChoose_StateEnum | undefined;
+  aBool?: boolean | undefined;
+  bunchaBytes?: Uint8Array | undefined;
+  anEnum?: PleaseChoose_StateEnum | undefined;
   age: number;
-  either: string | undefined;
-  or: string | undefined;
-  thirdOption: string | undefined;
+  either?: string | undefined;
+  or?: string | undefined;
+  thirdOption?: string | undefined;
 }
 
 export enum PleaseChoose_StateEnum {

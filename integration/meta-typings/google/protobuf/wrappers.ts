@@ -636,6 +636,7 @@ export const protoMetadata: ProtoMetadata = {
       "rubyPackage": "",
       "uninterpretedOption": [],
     },
+<<<<<<< HEAD
     "sourceCodeInfo": {
       "location": [{
         "path": [4, 0],
@@ -755,6 +756,146 @@ export const protoMetadata: ProtoMetadata = {
         "trailingComments": "",
         "leadingDetachedComments": [],
       }],
+=======
+    sourceCodeInfo: {
+      location: [
+        {
+          path: [4, 0],
+          span: [50, 0, 53, 1],
+          leadingComments:
+            ' Wrapper message for `double`.\r\n\r\n The JSON representation for `DoubleValue` is JSON number.\r\n',
+          trailingComments: '',
+          leadingDetachedComments: [],
+        },
+        {
+          path: [4, 0, 2, 0],
+          span: [52, 2, 19],
+          leadingComments: ' The double value.\r\n',
+          trailingComments: '',
+          leadingDetachedComments: [],
+        },
+        {
+          path: [4, 1],
+          span: [58, 0, 61, 1],
+          leadingComments:
+            ' Wrapper message for `float`.\r\n\r\n The JSON representation for `FloatValue` is JSON number.\r\n',
+          trailingComments: '',
+          leadingDetachedComments: [],
+        },
+        {
+          path: [4, 1, 2, 0],
+          span: [60, 2, 18],
+          leadingComments: ' The float value.\r\n',
+          trailingComments: '',
+          leadingDetachedComments: [],
+        },
+        {
+          path: [4, 2],
+          span: [66, 0, 69, 1],
+          leadingComments:
+            ' Wrapper message for `int64`.\r\n\r\n The JSON representation for `Int64Value` is JSON string.\r\n',
+          trailingComments: '',
+          leadingDetachedComments: [],
+        },
+        {
+          path: [4, 2, 2, 0],
+          span: [68, 2, 18],
+          leadingComments: ' The int64 value.\r\n',
+          trailingComments: '',
+          leadingDetachedComments: [],
+        },
+        {
+          path: [4, 3],
+          span: [74, 0, 77, 1],
+          leadingComments:
+            ' Wrapper message for `uint64`.\r\n\r\n The JSON representation for `UInt64Value` is JSON string.\r\n',
+          trailingComments: '',
+          leadingDetachedComments: [],
+        },
+        {
+          path: [4, 3, 2, 0],
+          span: [76, 2, 19],
+          leadingComments: ' The uint64 value.\r\n',
+          trailingComments: '',
+          leadingDetachedComments: [],
+        },
+        {
+          path: [4, 4],
+          span: [82, 0, 85, 1],
+          leadingComments:
+            ' Wrapper message for `int32`.\r\n\r\n The JSON representation for `Int32Value` is JSON number.\r\n',
+          trailingComments: '',
+          leadingDetachedComments: [],
+        },
+        {
+          path: [4, 4, 2, 0],
+          span: [84, 2, 18],
+          leadingComments: ' The int32 value.\r\n',
+          trailingComments: '',
+          leadingDetachedComments: [],
+        },
+        {
+          path: [4, 5],
+          span: [90, 0, 93, 1],
+          leadingComments:
+            ' Wrapper message for `uint32`.\r\n\r\n The JSON representation for `UInt32Value` is JSON number.\r\n',
+          trailingComments: '',
+          leadingDetachedComments: [],
+        },
+        {
+          path: [4, 5, 2, 0],
+          span: [92, 2, 19],
+          leadingComments: ' The uint32 value.\r\n',
+          trailingComments: '',
+          leadingDetachedComments: [],
+        },
+        {
+          path: [4, 6],
+          span: [98, 0, 101, 1],
+          leadingComments:
+            ' Wrapper message for `bool`.\r\n\r\n The JSON representation for `BoolValue` is JSON `true` and `false`.\r\n',
+          trailingComments: '',
+          leadingDetachedComments: [],
+        },
+        {
+          path: [4, 6, 2, 0],
+          span: [100, 2, 17],
+          leadingComments: ' The bool value.\r\n',
+          trailingComments: '',
+          leadingDetachedComments: [],
+        },
+        {
+          path: [4, 7],
+          span: [106, 0, 109, 1],
+          leadingComments:
+            ' Wrapper message for `string`.\r\n\r\n The JSON representation for `StringValue` is JSON string.\r\n',
+          trailingComments: '',
+          leadingDetachedComments: [],
+        },
+        {
+          path: [4, 7, 2, 0],
+          span: [108, 2, 19],
+          leadingComments: ' The string value.\r\n',
+          trailingComments: '',
+          leadingDetachedComments: [],
+        },
+        {
+          path: [4, 8],
+          span: [114, 0, 117, 1],
+          leadingComments:
+            ' Wrapper message for `bytes`.\r\n\r\n The JSON representation for `BytesValue` is JSON string.\r\n',
+          trailingComments: '',
+          leadingDetachedComments: [],
+        },
+        {
+          path: [4, 8, 2, 0],
+          span: [116, 2, 18],
+          leadingComments: ' The bytes value.\r\n',
+          trailingComments: '',
+          leadingDetachedComments: [],
+        },
+      ],
+>>>>>>> 6896257 (feat(plugin): optional fields for oneof properties)
     },
     "syntax": "proto3",
   }),
