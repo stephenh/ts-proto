@@ -5,7 +5,7 @@ import * as _m0 from 'protobufjs/minimal';
 export const protobufPackage = '';
 
 export interface Baz {
-  foo: FooBar | undefined;
+  foo?: FooBar | undefined;
 }
 
 export interface FooBar {}

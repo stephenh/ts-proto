@@ -337,6 +337,7 @@ export function isScalar(field: FieldDescriptorProto): boolean {
 // properties. When useOptionals='all', all fields are translated into
 // optional properties, with the exception of map Entry key/values, which must
 // always be present.
+// OneOf fields are always optional, whenever oneof=unions option not in use.
 export function isOptionalProperty(
   field: FieldDescriptorProto,
   messageOptions: MessageOptions | undefined,
@@ -348,6 +349,8 @@ export function isOptionalProperty(
   return (
     (optionalMessages && isMessage(field) && !isRepeated(field)) ||
     (optionalAll && !messageOptions?.mapEntry) ||
+    // don't bother verifying that oneof is not union. union oneofs generate their own properties.
+    isWithinOneOf(field) ||
     field.proto3Optional
   );
 }

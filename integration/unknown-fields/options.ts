@@ -14,7 +14,7 @@ export interface MyMessage {
   foo?: number | undefined;
   foo2?: number | undefined;
   bar?: string | undefined;
-  quux: string | undefined;
+  quux?: string | undefined;
 }
 
 export interface RequestType {}
