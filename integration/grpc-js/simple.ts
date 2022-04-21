@@ -94,6 +94,7 @@ export const TestMessage = {
  *
  * @deprecated
  */
+export type TestService = typeof TestService;
 export const TestService = {
   /**
    * Unary

@@ -272,6 +272,7 @@ export class HeroServiceClientImpl implements HeroService {
   }
 }
 
+export type HeroServiceDefinition = typeof HeroServiceDefinition;
 export const HeroServiceDefinition = {
   name: 'HeroService',
   fullName: 'hero.HeroService',
