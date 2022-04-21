@@ -473,7 +473,7 @@ If you need ts-proto customizations or priority support for your company, you ca
 
 **Setup**
 
-The commands below assume you have **Docker** installed. To use a **local** copy of `protoc` without docker, use commands suffixed with `:local`
+The commands below assume you have **Docker** installed. To use a **local** copy of `protoc` without docker, use commands suffixed with `:local`. If you are using OS X, install **coreutils**, `brew install coreutils`.
 
 - Check out the [repository]() for the latest code.
 - Run `yarn install` to install the dependencies.
