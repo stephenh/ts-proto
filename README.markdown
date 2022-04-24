@@ -362,6 +362,8 @@ Generated code will be placed in the Gradle build directory.
 
 - With `--ts_proto_opt=outputServices=generic-definitions`, ts-proto will output generic (framework-agnostic) service definitions. These definitions contain descriptors for each method with links to request and response types, which allows to generate server and client stubs at runtime, and also generate strong types for them at compile time. An example of a library that uses this approach is [nice-grpc](https://github.com/deeplay-io/nice-grpc).
 
+- With `--ts_proto_opt=outputServices=nice-grpc`, ts-proto will output server and client stubs for [nice-grpc](https://github.com/deeplay-io/nice-grpc). This should be used together with generic definitions, i.e. you should specify two options: `outputServices=nice-grpc,outputServices=generic-definitions`.
+
 - With `--ts_proto_opt=metadataType=Foo@./some-file`, ts-proto add a generic (framework-agnostic) metadata field to the generic service definition.
 
 - With `--ts_proto_opt=outputServices=generic-definitions,outputServices=default`, ts-proto will output both generic definitions and interfaces.  This is useful if you want to rely on the interfaces, but also have some reflection capabilities at runtime.

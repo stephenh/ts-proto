@@ -288,6 +288,14 @@
     google-auth-library "^6.1.1"
     semver "^6.2.0"
 
+"@grpc/grpc-js@^1.6.1":
+  version "1.6.7"
+  resolved "https://registry.yarnpkg.com/@grpc/grpc-js/-/grpc-js-1.6.7.tgz#4c4fa998ff719fe859ac19fe977fdef097bb99aa"
+  integrity sha512-eBM03pu9hd3VqDQG+kHahiG1x80RGkkqqRb1Pchcwqej/KkAH95gAvKs6laqaHCycYaPK+TKuNQnOz9UXYA8qw==
+  dependencies:
+    "@grpc/proto-loader" "^0.6.4"
+    "@types/node" ">=12.12.47"
+
 "@grpc/proto-loader@^0.5.6":
   version "0.5.6"
   resolved "https://registry.npmjs.org/@grpc/proto-loader/-/proto-loader-0.5.6.tgz"
@@ -295,6 +303,17 @@
   dependencies:
     lodash.camelcase "^4.3.0"
     protobufjs "^6.8.6"
+
+"@grpc/proto-loader@^0.6.4":
+  version "0.6.9"
+  resolved "https://registry.yarnpkg.com/@grpc/proto-loader/-/proto-loader-0.6.9.tgz#4014eef366da733f8e04a9ddd7376fe8a58547b7"
+  integrity sha512-UlcCS8VbsU9d3XTXGiEVFonN7hXk+oMXZtoHHG2oSA1/GcDP1q6OUgs20PzHDGizzyi8ufGSUDlk3O2NyY7leg==
+  dependencies:
+    "@types/long" "^4.0.1"
+    lodash.camelcase "^4.3.0"
+    long "^4.0.0"
+    protobufjs "^6.10.0"
+    yargs "^16.2.0"
 
 "@improbable-eng/grpc-web-node-http-transport@^0.14.0":
   version "0.14.0"
@@ -1052,6 +1071,11 @@
   resolved "https://registry.npmjs.org/@types/node/-/node-14.14.37.tgz"
   integrity sha512-XYmBiy+ohOR4Lh5jE379fV2IU+6Jn4g5qASinhitfyO71b/sCo6MKsMLF5tc7Zf2CE8hViVQyYSobJNke8OvUw==
 
+"@types/node@>=13.7.0":
+  version "17.0.25"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-17.0.25.tgz#527051f3c2f77aa52e5dc74e45a3da5fb2301448"
+  integrity sha512-wANk6fBrUwdpY4isjWrKTufkrXdu1D2YHCot2fD/DfWxF5sMrVSA+KN7ydckvaTCh0HiqX9IVl0L5/ZoXg5M7w==
+
 "@types/node@^13.7.0":
   version "13.13.9"
   resolved "https://registry.npmjs.org/@types/node/-/node-13.13.9.tgz"
@@ -1129,6 +1153,13 @@ abbrev@1, abbrev@~1.1.1:
   version "1.1.1"
   resolved "https://registry.npmjs.org/abbrev/-/abbrev-1.1.1.tgz"
   integrity sha512-nne9/IiQ/hzIhY6pdDnbBtz7DjPTKrY00P/zvPSm5pOFkl6xuGrGnXn/VtTNNfNtAfZ9/1RtehkszU9qcTii0Q==
+
+abort-controller-x@^0.2.4:
+  version "0.2.6"
+  resolved "https://registry.yarnpkg.com/abort-controller-x/-/abort-controller-x-0.2.6.tgz#708d5fc50a9bccfdf04ec70e562c925cc6f5b4ad"
+  integrity sha512-U8MmmcfIzl7qnzoog1woxKX/eYkQin3WR7k/S2dtpGLlSlsndXnvOYQEq8y1VnHC3+ofNFAT0GRgHq1lBbXlDQ==
+  dependencies:
+    node-abort-controller "^1.2.1 || ^2.0.0"
 
 abort-controller@^3.0.0:
   version "3.0.0"
@@ -4525,10 +4556,38 @@ nerf-dart@^1.0.0:
   resolved "https://registry.npmjs.org/nerf-dart/-/nerf-dart-1.0.0.tgz"
   integrity sha1-5tq3/r9a2Bbqgc9cYpxaDr3nLBo=
 
+nice-grpc-common@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/nice-grpc-common/-/nice-grpc-common-1.1.0.tgz#cebfd36f840c08f253ddf6de6ed4389fa5cdb05b"
+  integrity sha512-klxJ/lxMyH1KkT02woMBWL3A7BQSTH5jGodJIpNbbv7WKeFBWJaEtT6p7kZJBhGYXtSsQ+TyMU1EJR9BH14YfQ==
+  dependencies:
+    node-abort-controller "^2.0.0"
+    ts-error "^1.0.6"
+
+nice-grpc@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/nice-grpc/-/nice-grpc-1.1.1.tgz#fa1453894c6f1ab7bd895dad332eac974574df9d"
+  integrity sha512-bsYDdnhrt+tytA2JEZAGonNxACfVlla79Q+EFD7ga1MGy9EgBwG+DyQMlaUtj6maIAAouaMOsDW2hbyunEWizg==
+  dependencies:
+    "@grpc/grpc-js" "^1.6.1"
+    abort-controller-x "^0.2.4"
+    nice-grpc-common "^1.1.0"
+    node-abort-controller "^1.2.1"
+
 nice-try@^1.0.4:
   version "1.0.5"
   resolved "https://registry.npmjs.org/nice-try/-/nice-try-1.0.5.tgz"
   integrity sha512-1nh45deeb5olNY7eX82BkPO7SSxR5SSYJiPTrTdFUVYwAl8CKMA5N9PjTYkHiRjisVcxcQ1HXdLhx2qxxJzLNQ==
+
+node-abort-controller@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/node-abort-controller/-/node-abort-controller-1.2.1.tgz#1eddb57eb8fea734198b11b28857596dc6165708"
+  integrity sha512-79PYeJuj6S9+yOHirR0JBLFOgjB6sQCir10uN6xRx25iD+ZD4ULqgRn3MwWBRaQGB0vEgReJzWwJo42T1R6YbQ==
+
+"node-abort-controller@^1.2.1 || ^2.0.0", node-abort-controller@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/node-abort-controller/-/node-abort-controller-2.0.0.tgz#800e0d250d3b977175e48df4f74c2d3960076a79"
+  integrity sha512-L8RfEgjBTHAISTuagw51PprVAqNZoG6KSB6LQ6H1bskMVkFs5E71IyjauLBv3XbuomJlguWF/VnRHdJ1gqiAqA==
 
 node-emoji@^1.10.0:
   version "1.10.0"
@@ -5195,6 +5254,25 @@ promzard@^0.3.0:
   integrity sha1-JqXW7ox97kyxIggwWs+5O6OCqe4=
   dependencies:
     read "1"
+
+protobufjs@^6.10.0:
+  version "6.11.2"
+  resolved "https://registry.yarnpkg.com/protobufjs/-/protobufjs-6.11.2.tgz#de39fabd4ed32beaa08e9bb1e30d08544c1edf8b"
+  integrity sha512-4BQJoPooKJl2G9j3XftkIXjoC9C0Av2NOrWmbLWT1vH32GcSUHjM0Arra6UfTsVyfMAuFzaLucXn1sadxJydAw==
+  dependencies:
+    "@protobufjs/aspromise" "^1.1.2"
+    "@protobufjs/base64" "^1.1.2"
+    "@protobufjs/codegen" "^2.0.4"
+    "@protobufjs/eventemitter" "^1.1.0"
+    "@protobufjs/fetch" "^1.1.0"
+    "@protobufjs/float" "^1.0.2"
+    "@protobufjs/inquire" "^1.1.0"
+    "@protobufjs/path" "^1.1.2"
+    "@protobufjs/pool" "^1.1.0"
+    "@protobufjs/utf8" "^1.1.0"
+    "@types/long" "^4.0.1"
+    "@types/node" ">=13.7.0"
+    long "^4.0.0"
 
 protobufjs@^6.8.6, protobufjs@^6.8.8:
   version "6.10.2"
@@ -6244,6 +6322,11 @@ trim-off-newlines@^1.0.0:
   version "1.0.1"
   resolved "https://registry.npmjs.org/trim-off-newlines/-/trim-off-newlines-1.0.1.tgz"
   integrity sha1-n5up2e+odkw4dpi8v+sshI8RrbM=
+
+ts-error@^1.0.6:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/ts-error/-/ts-error-1.0.6.tgz#277496f2a28de6c184cfce8dfd5cdd03a4e6b0fc"
+  integrity sha512-tLJxacIQUM82IR7JO1UUkKlYuUTmoY9HBJAmNWFzheSlDS5SPMcNIepejHJa4BpPQLAcbRhRf3GDJzyj6rbKvA==
 
 ts-jest@^26.5.4:
   version "26.5.4"

@@ -1,0 +1,1 @@
+outputServices=generic-definitions,outputServices=nice-grpc,useExactTypes=false

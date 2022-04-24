@@ -23,6 +23,7 @@ export enum OneofOption {
 
 export enum ServiceOption {
   GRPC = 'grpc-js',
+  NICE_GRPC = 'nice-grpc',
   GENERIC = 'generic-definitions',
   DEFAULT = 'default',
   NONE = 'none',
