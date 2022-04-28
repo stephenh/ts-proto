@@ -784,4 +784,4 @@ Where (\*) indicates they might throw an error at runtime.
 - Required primitives: use as-is, i.e. `string name = 1`.
 - Optional primitives: use wrapper types, i.e. `StringValue name = 1`.
 - Required messages: not available
-- Optional primitives: use as-is, i.e. `SubMessage message = 1`.
+- Optional messages: use as-is, i.e. `SubMessage message = 1`.
