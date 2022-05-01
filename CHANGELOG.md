@@ -1,3 +1,10 @@
+# [1.111.0](https://github.com/stephenh/ts-proto/compare/v1.110.4...v1.111.0) (2022-05-01)
+
+
+### Features
+
+* include service and definition types with implementations ([#552](https://github.com/stephenh/ts-proto/issues/552)) ([6b896f4](https://github.com/stephenh/ts-proto/commit/6b896f4b7f4ba0f0d97730767421786171646aea))
+
 ## [next](https://github.com/stephenh/ts-proto/compare/v1.110.4...main) (????-??-??)
 
 ### Features
