@@ -75,6 +75,7 @@ import { generateSchema } from './schema';
 import { ConditionalOutput } from 'ts-poet/build/ConditionalOutput';
 import { generateGrpcJsService } from './generate-grpc-js';
 import { generateGenericServiceDefinition } from './generate-generic-service-definition';
+import { generateNiceGrpcService } from './generate-nice-grpc';
 
 export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [string, Code] {
   const { options, utils } = ctx;
@@ -218,6 +219,8 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
       uniqueServices.forEach((outputService) => {
         if (outputService === ServiceOption.GRPC) {
           chunks.push(generateGrpcJsService(ctx, fileDesc, sInfo, serviceDesc));
+        } else if (outputService === ServiceOption.NICE_GRPC) {
+          chunks.push(generateNiceGrpcService(ctx, fileDesc, sInfo, serviceDesc));
         } else if (outputService === ServiceOption.GENERIC) {
           chunks.push(generateGenericServiceDefinition(ctx, fileDesc, sInfo, serviceDesc));
         } else if (outputService === ServiceOption.DEFAULT) {
@@ -300,7 +303,8 @@ export type Utils = ReturnType<typeof makeDeepPartial> &
   ReturnType<typeof makeTimestampMethods> &
   ReturnType<typeof makeByteUtils> &
   ReturnType<typeof makeLongUtils> &
-  ReturnType<typeof makeComparisonUtils>;
+  ReturnType<typeof makeComparisonUtils> &
+  ReturnType<typeof makeNiceGrpcServerStreamingMethodResult>;
 
 /** These are runtime utility methods used by the generated code. */
 export function makeUtils(options: Options): Utils {
@@ -313,6 +317,7 @@ export function makeUtils(options: Options): Utils {
     ...makeTimestampMethods(options, longs),
     ...longs,
     ...makeComparisonUtils(),
+    ...makeNiceGrpcServerStreamingMethodResult(),
   };
 }
 
@@ -631,6 +636,19 @@ function makeComparisonUtils() {
   );
 
   return { isObject, isSet };
+}
+
+function makeNiceGrpcServerStreamingMethodResult() {
+  const NiceGrpcServerStreamingMethodResult = conditionalOutput(
+    'ServerStreamingMethodResult',
+    code`
+      export type ServerStreamingMethodResult<Response> = {
+        [Symbol.asyncIterator](): AsyncIterator<Response, void>;
+      };  
+    `
+  );
+
+  return { NiceGrpcServerStreamingMethodResult };
 }
 
 // Create the interface with properties
