@@ -25,9 +25,15 @@ export function generateGenericServiceDefinition(
 
   maybeAddComment(sourceInfo, chunks, serviceDesc.options?.deprecated);
 
+  // Service definition type
+  const name = def(`${serviceDesc.name}Definition`);
+  chunks.push(code`
+    export type ${name} = typeof ${name};
+  `);
+
   // Service definition
   chunks.push(code`
-    export const ${def(`${serviceDesc.name}Definition`)} = {
+    export const ${name} = {
   `);
 
   serviceDesc.options?.uninterpretedOption;

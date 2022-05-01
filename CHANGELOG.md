@@ -1,3 +1,32 @@
+## [next](https://github.com/stephenh/ts-proto/compare/v1.110.4...main) (????-??-??)
+
+### Features
+
+* When outputing service and service definition implementations, include types. Eg, before:
+
+  ```ts
+  export const TestDefinition = {
+    name: 'Test',
+    fullName: 'simple.Test',
+    methods: {
+      …
+    },
+  } as const;
+  ```
+
+  Now:
+
+  ```ts
+  export type TestDefinition = typeof TestDefinition;
+  export const TestDefinition = {
+    name: 'Test',
+    fullName: 'simple.Test',
+    methods: {
+      …
+    },
+  } as const;
+  ```
+
 ## [1.110.4](https://github.com/stephenh/ts-proto/compare/v1.110.3...v1.110.4) (2022-04-08)
 
 

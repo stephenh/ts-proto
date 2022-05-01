@@ -206,6 +206,7 @@ export class ClockClientImpl implements Clock {
   }
 }
 
+export type ClockDefinition = typeof ClockDefinition;
 export const ClockDefinition = {
   name: 'Clock',
   fullName: 'Clock',
