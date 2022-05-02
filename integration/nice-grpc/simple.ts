@@ -77,6 +77,7 @@ export const TestMessage = {
  *
  * @deprecated
  */
+export type TestDefinition = typeof TestDefinition;
 export const TestDefinition = {
   name: 'Test',
   fullName: 'simple.Test',
