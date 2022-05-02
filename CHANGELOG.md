@@ -1,3 +1,15 @@
+# [1.112.0](https://github.com/stephenh/ts-proto/compare/v1.111.0...v1.112.0) (2022-05-02)
+
+
+### Bug Fixes
+
+* update codegen for `nice-grpc` ([#561](https://github.com/stephenh/ts-proto/issues/561)) ([d503f67](https://github.com/stephenh/ts-proto/commit/d503f677922402e880b5d8502b3d8bc099b7f39d))
+
+
+### Features
+
+* add support for generating `nice-grpc` server and client stubs ([#555](https://github.com/stephenh/ts-proto/issues/555)) ([8c19361](https://github.com/stephenh/ts-proto/commit/8c19361ede9a7a039acf3a1375913d012b0fcb7d)), closes [#545](https://github.com/stephenh/ts-proto/issues/545)
+
 # [1.111.0](https://github.com/stephenh/ts-proto/compare/v1.110.4...v1.111.0) (2022-05-01)
 
 
