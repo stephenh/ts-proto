@@ -1174,7 +1174,7 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
           }
         } else if (isLong(field) && options.forceLong === LongOption.LONG) {
           const cstr = capitalize(basicTypeName(ctx, field, { keepValueType: true }).toCodeString());
-          return code`${cstr}.fromString(${from})`;
+          return code`${cstr}.fromValue(${from})`;
         } else {
           const cstr = capitalize(basicTypeName(ctx, field, { keepValueType: true }).toCodeString());
           return code`${cstr}(${from})`;

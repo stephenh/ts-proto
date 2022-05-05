@@ -224,7 +224,7 @@ export const Int64Value = {
 
   fromJSON(object: any): Int64Value {
     return {
-      value: isSet(object.value) ? Long.fromString(object.value) : Long.ZERO,
+      value: isSet(object.value) ? Long.fromValue(object.value) : Long.ZERO,
     };
   },
 
@@ -273,7 +273,7 @@ export const UInt64Value = {
 
   fromJSON(object: any): UInt64Value {
     return {
-      value: isSet(object.value) ? Long.fromString(object.value) : Long.UZERO,
+      value: isSet(object.value) ? Long.fromValue(object.value) : Long.UZERO,
     };
   },
 
