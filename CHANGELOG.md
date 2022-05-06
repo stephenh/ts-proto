@@ -1,3 +1,10 @@
+## [1.112.1](https://github.com/stephenh/ts-proto/compare/v1.112.0...v1.112.1) (2022-05-06)
+
+
+### Bug Fixes
+
+* use Long.fromValue instead of Long.fromString ([#562](https://github.com/stephenh/ts-proto/issues/562)) ([c99891e](https://github.com/stephenh/ts-proto/commit/c99891e0fec6d9b7225025eb0c5bd7393e80af36))
+
 # [1.112.0](https://github.com/stephenh/ts-proto/compare/v1.111.0...v1.112.0) (2022-05-02)
 
 
