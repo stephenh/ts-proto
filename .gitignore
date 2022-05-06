@@ -5,3 +5,4 @@ build/
 /integration/*/pbjs.js
 /integration/*/pbjs.d.ts
 coverage/
+yarn-error.log
