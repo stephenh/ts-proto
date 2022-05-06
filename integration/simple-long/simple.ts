@@ -443,7 +443,7 @@ export const SimpleWithMap_LongLookupEntry = {
   fromJSON(object: any): SimpleWithMap_LongLookupEntry {
     return {
       key: isSet(object.key) ? String(object.key) : '',
-      value: isSet(object.value) ? Long.fromString(object.value) : Long.ZERO,
+      value: isSet(object.value) ? Long.fromValue(object.value) : Long.ZERO,
     };
   },
 
@@ -594,16 +594,16 @@ export const Numbers = {
       double: isSet(object.double) ? Number(object.double) : 0,
       float: isSet(object.float) ? Number(object.float) : 0,
       int32: isSet(object.int32) ? Number(object.int32) : 0,
-      int64: isSet(object.int64) ? Long.fromString(object.int64) : Long.ZERO,
+      int64: isSet(object.int64) ? Long.fromValue(object.int64) : Long.ZERO,
       uint32: isSet(object.uint32) ? Number(object.uint32) : 0,
-      uint64: isSet(object.uint64) ? Long.fromString(object.uint64) : Long.UZERO,
+      uint64: isSet(object.uint64) ? Long.fromValue(object.uint64) : Long.UZERO,
       sint32: isSet(object.sint32) ? Number(object.sint32) : 0,
-      sint64: isSet(object.sint64) ? Long.fromString(object.sint64) : Long.ZERO,
+      sint64: isSet(object.sint64) ? Long.fromValue(object.sint64) : Long.ZERO,
       fixed32: isSet(object.fixed32) ? Number(object.fixed32) : 0,
-      fixed64: isSet(object.fixed64) ? Long.fromString(object.fixed64) : Long.UZERO,
+      fixed64: isSet(object.fixed64) ? Long.fromValue(object.fixed64) : Long.UZERO,
       sfixed32: isSet(object.sfixed32) ? Number(object.sfixed32) : 0,
-      sfixed64: isSet(object.sfixed64) ? Long.fromString(object.sfixed64) : Long.ZERO,
-      manyUint64: Array.isArray(object?.manyUint64) ? object.manyUint64.map((e: any) => Long.fromString(e)) : [],
+      sfixed64: isSet(object.sfixed64) ? Long.fromValue(object.sfixed64) : Long.ZERO,
+      manyUint64: Array.isArray(object?.manyUint64) ? object.manyUint64.map((e: any) => Long.fromValue(e)) : [],
     };
   },
 
