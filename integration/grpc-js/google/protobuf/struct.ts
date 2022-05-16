@@ -32,8 +32,9 @@ export function nullValueToJSON(object: NullValue): string {
   switch (object) {
     case NullValue.NULL_VALUE:
       return 'NULL_VALUE';
+    case NullValue.UNRECOGNIZED:
     default:
-      return 'UNKNOWN';
+      return 'UNRECOGNIZED';
   }
 }
 

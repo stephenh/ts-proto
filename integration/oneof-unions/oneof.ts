@@ -56,8 +56,9 @@ export function pleaseChoose_StateEnumToJSON(object: PleaseChoose_StateEnum): st
       return 'ON';
     case PleaseChoose_StateEnum.OFF:
       return 'OFF';
+    case PleaseChoose_StateEnum.UNRECOGNIZED:
     default:
-      return 'UNKNOWN';
+      return 'UNRECOGNIZED';
   }
 }
 
