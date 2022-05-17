@@ -310,15 +310,41 @@ export type Utils = ReturnType<typeof makeDeepPartial> &
 export function makeUtils(options: Options): Utils {
   const bytes = makeByteUtils();
   const longs = makeLongUtils(options, bytes);
+  const wrappers = makeNestJsWrappers(options);
   return {
     ...bytes,
     ...makeDeepPartial(options, longs),
     ...makeObjectIdMethods(options),
     ...makeTimestampMethods(options, longs),
     ...longs,
+    ...wrappers,
     ...makeComparisonUtils(),
     ...makeNiceGrpcServerStreamingMethodResult(),
   };
+}
+
+function makeNestJsWrappers(options: Options) {
+  const wrappers = imp('wrappers@protobufjs/minimal');
+
+  const nestJsTimestampTypeWrapper =
+    options.nestJs && options.useDate === DateOption.DATE
+      ? code`
+      if (${wrappers}) {
+          ${wrappers}['.google.protobuf.Timestamp'] = {
+              fromObject(value: Date) {
+                  return {
+                      seconds: value.getTime() / 1000,
+                      nanos: (value.getTime() % 1000) * 1e6,
+                  };
+              },
+              toObject(message: { seconds: number; nanos: number }) {
+                  return new Date(message.seconds * 1000 + message.nanos / 1e6);
+              },
+          } as any;
+      }`
+      : code``;
+
+  return { nestJsTimestampTypeWrapper };
 }
 
 function makeLongUtils(options: Options, bytes: ReturnType<typeof makeByteUtils>) {
