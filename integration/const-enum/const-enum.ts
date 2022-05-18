@@ -48,8 +48,9 @@ export function dividerData_DividerTypeToJSON(object: DividerData_DividerType): 
       return 'DASHED';
     case DividerData_DividerType.DOTTED:
       return 'DOTTED';
+    case DividerData_DividerType.UNRECOGNIZED:
     default:
-      return 'UNKNOWN';
+      return 'UNRECOGNIZED';
   }
 }
 
@@ -63,8 +64,9 @@ export function dividerData_DividerTypeToNumber(object: DividerData_DividerType)
       return 2;
     case DividerData_DividerType.DOTTED:
       return 3;
+    case DividerData_DividerType.UNRECOGNIZED:
     default:
-      return 0;
+      return -1;
   }
 }
 

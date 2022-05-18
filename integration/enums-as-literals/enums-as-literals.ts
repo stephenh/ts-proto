@@ -49,8 +49,9 @@ export function dividerData_DividerTypeToJSON(object: DividerData_DividerType): 
       return 'DASHED';
     case DividerData_DividerType.DOTTED:
       return 'DOTTED';
+    case DividerData_DividerType.UNRECOGNIZED:
     default:
-      return 'UNKNOWN';
+      return 'UNRECOGNIZED';
   }
 }
 

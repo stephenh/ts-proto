@@ -31,8 +31,9 @@ export function childEnumToJSON(object: ChildEnum): string {
       return 'DEFAULT';
     case ChildEnum.FOO:
       return 'FOO';
+    case ChildEnum.UNRECOGNIZED:
     default:
-      return 'UNKNOWN';
+      return 'UNRECOGNIZED';
   }
 }
 

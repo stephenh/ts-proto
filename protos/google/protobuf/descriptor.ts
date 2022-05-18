@@ -303,8 +303,9 @@ export function fieldDescriptorProto_TypeToJSON(object: FieldDescriptorProto_Typ
       return 'TYPE_SINT32';
     case FieldDescriptorProto_Type.TYPE_SINT64:
       return 'TYPE_SINT64';
+    case FieldDescriptorProto_Type.UNRECOGNIZED:
     default:
-      return 'UNKNOWN';
+      return 'UNRECOGNIZED';
   }
 }
 
@@ -342,8 +343,9 @@ export function fieldDescriptorProto_LabelToJSON(object: FieldDescriptorProto_La
       return 'LABEL_REQUIRED';
     case FieldDescriptorProto_Label.LABEL_REPEATED:
       return 'LABEL_REPEATED';
+    case FieldDescriptorProto_Label.UNRECOGNIZED:
     default:
-      return 'UNKNOWN';
+      return 'UNRECOGNIZED';
   }
 }
 
@@ -574,8 +576,9 @@ export function fileOptions_OptimizeModeToJSON(object: FileOptions_OptimizeMode)
       return 'CODE_SIZE';
     case FileOptions_OptimizeMode.LITE_RUNTIME:
       return 'LITE_RUNTIME';
+    case FileOptions_OptimizeMode.UNRECOGNIZED:
     default:
-      return 'UNKNOWN';
+      return 'UNRECOGNIZED';
   }
 }
 
@@ -750,8 +753,9 @@ export function fieldOptions_CTypeToJSON(object: FieldOptions_CType): string {
       return 'CORD';
     case FieldOptions_CType.STRING_PIECE:
       return 'STRING_PIECE';
+    case FieldOptions_CType.UNRECOGNIZED:
     default:
-      return 'UNKNOWN';
+      return 'UNRECOGNIZED';
   }
 }
 
@@ -791,8 +795,9 @@ export function fieldOptions_JSTypeToJSON(object: FieldOptions_JSType): string {
       return 'JS_STRING';
     case FieldOptions_JSType.JS_NUMBER:
       return 'JS_NUMBER';
+    case FieldOptions_JSType.UNRECOGNIZED:
     default:
-      return 'UNKNOWN';
+      return 'UNRECOGNIZED';
   }
 }
 
@@ -895,8 +900,9 @@ export function methodOptions_IdempotencyLevelToJSON(object: MethodOptions_Idemp
       return 'NO_SIDE_EFFECTS';
     case MethodOptions_IdempotencyLevel.IDEMPOTENT:
       return 'IDEMPOTENT';
+    case MethodOptions_IdempotencyLevel.UNRECOGNIZED:
     default:
-      return 'UNKNOWN';
+      return 'UNRECOGNIZED';
   }
 }
 
