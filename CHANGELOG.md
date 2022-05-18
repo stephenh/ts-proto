@@ -1,3 +1,10 @@
+## [1.112.2](https://github.com/stephenh/ts-proto/compare/v1.112.1...v1.112.2) (2022-05-18)
+
+
+### Bug Fixes
+
+* enum type returns 'UNRECOGNIZED' or '-1' in xxxToJSON/xxxToNumber ([#566](https://github.com/stephenh/ts-proto/issues/566)) ([19911a1](https://github.com/stephenh/ts-proto/commit/19911a1c62e3fe5c8a0eb0a795489340512898da))
+
 ## [1.112.1](https://github.com/stephenh/ts-proto/compare/v1.112.0...v1.112.1) (2022-05-06)
 
 
