@@ -1,6 +1,6 @@
 /* eslint-disable */
+import { util, configure, Writer, Reader } from 'protobufjs/minimal';
 import * as Long from 'long';
-import * as _m0 from 'protobufjs/minimal';
 
 export const protobufPackage = 'google.protobuf';
 
@@ -99,15 +99,15 @@ function createBaseDoubleValue(): DoubleValue {
 }
 
 export const DoubleValue = {
-  encode(message: DoubleValue, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: DoubleValue, writer: Writer = Writer.create()): Writer {
     if (message.value !== 0) {
       writer.uint32(9).double(message.value);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): DoubleValue {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+  decode(input: Reader | Uint8Array, length?: number): DoubleValue {
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = Object.create(createBaseDoubleValue()) as DoubleValue;
     while (reader.pos < end) {
@@ -148,15 +148,15 @@ function createBaseFloatValue(): FloatValue {
 }
 
 export const FloatValue = {
-  encode(message: FloatValue, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: FloatValue, writer: Writer = Writer.create()): Writer {
     if (message.value !== 0) {
       writer.uint32(13).float(message.value);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): FloatValue {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+  decode(input: Reader | Uint8Array, length?: number): FloatValue {
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = Object.create(createBaseFloatValue()) as FloatValue;
     while (reader.pos < end) {
@@ -197,15 +197,15 @@ function createBaseInt64Value(): Int64Value {
 }
 
 export const Int64Value = {
-  encode(message: Int64Value, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Int64Value, writer: Writer = Writer.create()): Writer {
     if (message.value !== 0) {
       writer.uint32(8).int64(message.value);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Int64Value {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+  decode(input: Reader | Uint8Array, length?: number): Int64Value {
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = Object.create(createBaseInt64Value()) as Int64Value;
     while (reader.pos < end) {
@@ -246,15 +246,15 @@ function createBaseUInt64Value(): UInt64Value {
 }
 
 export const UInt64Value = {
-  encode(message: UInt64Value, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: UInt64Value, writer: Writer = Writer.create()): Writer {
     if (message.value !== 0) {
       writer.uint32(8).uint64(message.value);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): UInt64Value {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+  decode(input: Reader | Uint8Array, length?: number): UInt64Value {
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = Object.create(createBaseUInt64Value()) as UInt64Value;
     while (reader.pos < end) {
@@ -295,15 +295,15 @@ function createBaseInt32Value(): Int32Value {
 }
 
 export const Int32Value = {
-  encode(message: Int32Value, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Int32Value, writer: Writer = Writer.create()): Writer {
     if (message.value !== 0) {
       writer.uint32(8).int32(message.value);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Int32Value {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+  decode(input: Reader | Uint8Array, length?: number): Int32Value {
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = Object.create(createBaseInt32Value()) as Int32Value;
     while (reader.pos < end) {
@@ -344,15 +344,15 @@ function createBaseUInt32Value(): UInt32Value {
 }
 
 export const UInt32Value = {
-  encode(message: UInt32Value, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: UInt32Value, writer: Writer = Writer.create()): Writer {
     if (message.value !== 0) {
       writer.uint32(8).uint32(message.value);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): UInt32Value {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+  decode(input: Reader | Uint8Array, length?: number): UInt32Value {
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = Object.create(createBaseUInt32Value()) as UInt32Value;
     while (reader.pos < end) {
@@ -393,15 +393,15 @@ function createBaseBoolValue(): BoolValue {
 }
 
 export const BoolValue = {
-  encode(message: BoolValue, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: BoolValue, writer: Writer = Writer.create()): Writer {
     if (message.value === true) {
       writer.uint32(8).bool(message.value);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): BoolValue {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+  decode(input: Reader | Uint8Array, length?: number): BoolValue {
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = Object.create(createBaseBoolValue()) as BoolValue;
     while (reader.pos < end) {
@@ -442,15 +442,15 @@ function createBaseStringValue(): StringValue {
 }
 
 export const StringValue = {
-  encode(message: StringValue, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: StringValue, writer: Writer = Writer.create()): Writer {
     if (message.value !== '') {
       writer.uint32(10).string(message.value);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): StringValue {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+  decode(input: Reader | Uint8Array, length?: number): StringValue {
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = Object.create(createBaseStringValue()) as StringValue;
     while (reader.pos < end) {
@@ -491,15 +491,15 @@ function createBaseBytesValue(): BytesValue {
 }
 
 export const BytesValue = {
-  encode(message: BytesValue, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: BytesValue, writer: Writer = Writer.create()): Writer {
     if (message.value.length !== 0) {
       writer.uint32(10).bytes(message.value);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): BytesValue {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+  decode(input: Reader | Uint8Array, length?: number): BytesValue {
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = Object.create(createBaseBytesValue()) as BytesValue;
     while (reader.pos < end) {
@@ -594,9 +594,9 @@ function longToNumber(long: Long): number {
 
 // If you get a compile-error about 'Constructor<Long> and ... have no overlap',
 // add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
-if (_m0.util.Long !== Long) {
-  _m0.util.Long = Long as any;
-  _m0.configure();
+if (util.Long !== Long) {
+  util.Long = Long as any;
+  configure();
 }
 
 function isSet(value: any): boolean {

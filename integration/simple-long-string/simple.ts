@@ -1,6 +1,6 @@
 /* eslint-disable */
+import { util, configure, Writer, Reader } from 'protobufjs/minimal';
 import * as Long from 'long';
-import * as _m0 from 'protobufjs/minimal';
 import { Timestamp } from './google/protobuf/timestamp';
 import { UInt64Value } from './google/protobuf/wrappers';
 
@@ -43,7 +43,7 @@ function createBaseNumbers(): Numbers {
 }
 
 export const Numbers = {
-  encode(message: Numbers, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Numbers, writer: Writer = Writer.create()): Writer {
     if (message.double !== 0) {
       writer.uint32(9).double(message.double);
     }
@@ -89,8 +89,8 @@ export const Numbers = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Numbers {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+  decode(input: Reader | Uint8Array, length?: number): Numbers {
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNumbers();
     while (reader.pos < end) {
@@ -249,9 +249,9 @@ function longToString(long: Long) {
 
 // If you get a compile-error about 'Constructor<Long> and ... have no overlap',
 // add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
-if (_m0.util.Long !== Long) {
-  _m0.util.Long = Long as any;
-  _m0.configure();
+if (util.Long !== Long) {
+  util.Long = Long as any;
+  configure();
 }
 
 function isSet(value: any): boolean {

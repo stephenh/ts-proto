@@ -80,6 +80,11 @@ if match "nestjs-simple-restparameters"; then
   yarn run pbts --no-comments -o integration/nestjs-simple-restparameters/pbjs.d.ts integration/nestjs-simple-restparameters/pbjs.js
 fi
 
+if match "nestjs-simple-usedate"; then
+  yarn run pbjs --force-message --force-number -t static-module -o integration/nestjs-simple-usedate/pbjs.js integration/nestjs-simple-usedate/hero.proto
+  yarn run pbts --no-comments -o integration/nestjs-simple-usedate/pbjs.d.ts integration/nestjs-simple-usedate/pbjs.js
+fi
+
 if match "oneof-properties"; then
   yarn run pbjs --force-message --force-number -t static-module -o integration/oneof-properties/pbjs.js integration/oneof-properties/oneof.proto
   yarn run pbts --no-comments -o integration/oneof-properties/pbjs.d.ts integration/oneof-properties/pbjs.js

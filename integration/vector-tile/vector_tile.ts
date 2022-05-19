@@ -1,6 +1,6 @@
 /* eslint-disable */
+import { util, configure, Writer, Reader } from 'protobufjs/minimal';
 import * as Long from 'long';
-import * as _m0 from 'protobufjs/minimal';
 
 export const protobufPackage = 'vector_tile';
 
@@ -83,15 +83,15 @@ function createBaseTile(): Tile {
 }
 
 export const Tile = {
-  encode(message: Tile, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Tile, writer: Writer = Writer.create()): Writer {
     for (const v of message.layers) {
       Tile_Layer.encode(v!, writer.uint32(26).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Tile {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+  decode(input: Reader | Uint8Array, length?: number): Tile {
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTile();
     while (reader.pos < end) {
@@ -136,7 +136,7 @@ function createBaseTile_Value(): Tile_Value {
 }
 
 export const Tile_Value = {
-  encode(message: Tile_Value, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Tile_Value, writer: Writer = Writer.create()): Writer {
     if (message.stringValue !== '') {
       writer.uint32(10).string(message.stringValue);
     }
@@ -161,8 +161,8 @@ export const Tile_Value = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Tile_Value {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+  decode(input: Reader | Uint8Array, length?: number): Tile_Value {
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTile_Value();
     while (reader.pos < end) {
@@ -239,7 +239,7 @@ function createBaseTile_Feature(): Tile_Feature {
 }
 
 export const Tile_Feature = {
-  encode(message: Tile_Feature, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Tile_Feature, writer: Writer = Writer.create()): Writer {
     if (message.id !== 0) {
       writer.uint32(8).uint64(message.id);
     }
@@ -259,8 +259,8 @@ export const Tile_Feature = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Tile_Feature {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+  decode(input: Reader | Uint8Array, length?: number): Tile_Feature {
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTile_Feature();
     while (reader.pos < end) {
@@ -341,7 +341,7 @@ function createBaseTile_Layer(): Tile_Layer {
 }
 
 export const Tile_Layer = {
-  encode(message: Tile_Layer, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Tile_Layer, writer: Writer = Writer.create()): Writer {
     if (message.version !== 0) {
       writer.uint32(120).uint32(message.version);
     }
@@ -363,8 +363,8 @@ export const Tile_Layer = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Tile_Layer {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+  decode(input: Reader | Uint8Array, length?: number): Tile_Layer {
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTile_Layer();
     while (reader.pos < end) {
@@ -479,9 +479,9 @@ function longToNumber(long: Long): number {
 
 // If you get a compile-error about 'Constructor<Long> and ... have no overlap',
 // add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
-if (_m0.util.Long !== Long) {
-  _m0.util.Long = Long as any;
-  _m0.configure();
+if (util.Long !== Long) {
+  util.Long = Long as any;
+  configure();
 }
 
 function isSet(value: any): boolean {

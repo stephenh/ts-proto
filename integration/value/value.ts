@@ -1,6 +1,6 @@
 /* eslint-disable */
+import { util, configure, Writer, Reader } from 'protobufjs/minimal';
 import * as Long from 'long';
-import * as _m0 from 'protobufjs/minimal';
 import { Value, ListValue, Struct } from './google/protobuf/struct';
 import { StringValue } from './google/protobuf/wrappers';
 
@@ -19,7 +19,7 @@ function createBaseValueMessage(): ValueMessage {
 }
 
 export const ValueMessage = {
-  encode(message: ValueMessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: ValueMessage, writer: Writer = Writer.create()): Writer {
     if (message.value !== undefined) {
       Value.encode(Value.wrap(message.value), writer.uint32(10).fork()).ldelim();
     }
@@ -38,8 +38,8 @@ export const ValueMessage = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ValueMessage {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+  decode(input: Reader | Uint8Array, length?: number): ValueMessage {
+    const reader = input instanceof Reader ? input : new Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseValueMessage();
     while (reader.pos < end) {
@@ -126,9 +126,9 @@ export type Exact<P, I extends P> = P extends Builtin
 
 // If you get a compile-error about 'Constructor<Long> and ... have no overlap',
 // add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
-if (_m0.util.Long !== Long) {
-  _m0.util.Long = Long as any;
-  _m0.configure();
+if (util.Long !== Long) {
+  util.Long = Long as any;
+  configure();
 }
 
 function isObject(value: any): boolean {
