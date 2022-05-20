@@ -47,8 +47,9 @@ export function tile_GeomTypeToJSON(object: Tile_GeomType): string {
       return 'LINESTRING';
     case Tile_GeomType.POLYGON:
       return 'POLYGON';
+    case Tile_GeomType.UNRECOGNIZED:
     default:
-      return 'UNKNOWN';
+      return 'UNRECOGNIZED';
   }
 }
 

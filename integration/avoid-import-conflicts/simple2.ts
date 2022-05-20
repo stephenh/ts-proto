@@ -37,8 +37,9 @@ export function simpleEnumToJSON(object: SimpleEnum): string {
       return 'IMPORT_FOO';
     case SimpleEnum.IMPORT_BAR:
       return 'IMPORT_BAR';
+    case SimpleEnum.UNRECOGNIZED:
     default:
-      return 'UNKNOWN';
+      return 'UNRECOGNIZED';
   }
 }
 

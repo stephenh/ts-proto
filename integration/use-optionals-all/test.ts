@@ -37,8 +37,9 @@ export function stateEnumToJSON(object: StateEnum): string {
       return 'ON';
     case StateEnum.OFF:
       return 'OFF';
+    case StateEnum.UNRECOGNIZED:
     default:
-      return 'UNKNOWN';
+      return 'UNRECOGNIZED';
   }
 }
 

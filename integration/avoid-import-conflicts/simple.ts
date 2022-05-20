@@ -43,8 +43,9 @@ export function simpleEnumToJSON(object: SimpleEnum): string {
       return 'LOCAL_FOO';
     case SimpleEnum.LOCAL_BAR:
       return 'LOCAL_BAR';
+    case SimpleEnum.UNRECOGNIZED:
     default:
-      return 'UNKNOWN';
+      return 'UNRECOGNIZED';
   }
 }
 

@@ -31,8 +31,9 @@ export function enumWithoutZeroToJSON(object: EnumWithoutZero): string {
       return 'A';
     case EnumWithoutZero.B:
       return 'B';
+    case EnumWithoutZero.UNRECOGNIZED:
     default:
-      return 'UNKNOWN';
+      return 'UNRECOGNIZED';
   }
 }
 

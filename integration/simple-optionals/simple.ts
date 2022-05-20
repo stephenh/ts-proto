@@ -45,8 +45,9 @@ export function stateEnumToJSON(object: StateEnum): string {
       return 'ON';
     case StateEnum.OFF:
       return 'OFF';
+    case StateEnum.UNRECOGNIZED:
     default:
-      return 'UNKNOWN';
+      return 'UNRECOGNIZED';
   }
 }
 
@@ -106,8 +107,9 @@ export function child_TypeToJSON(object: Child_Type): string {
       return 'GOOD';
     case Child_Type.BAD:
       return 'BAD';
+    case Child_Type.UNRECOGNIZED:
     default:
-      return 'UNKNOWN';
+      return 'UNRECOGNIZED';
   }
 }
 
@@ -150,8 +152,9 @@ export function nested_InnerEnumToJSON(object: Nested_InnerEnum): string {
       return 'GOOD';
     case Nested_InnerEnum.BAD:
       return 'BAD';
+    case Nested_InnerEnum.UNRECOGNIZED:
     default:
-      return 'UNKNOWN';
+      return 'UNRECOGNIZED';
   }
 }
 

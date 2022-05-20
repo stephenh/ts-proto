@@ -32,8 +32,9 @@ export function nullValueToJSON(object: NullValue): string {
   switch (object) {
     case NullValue.NULL_VALUE:
       return 'NULL_VALUE';
+    case NullValue.UNRECOGNIZED:
     default:
-      return 'UNKNOWN';
+      return 'UNRECOGNIZED';
   }
 }
 
@@ -41,8 +42,9 @@ export function nullValueToNumber(object: NullValue): number {
   switch (object) {
     case NullValue.NULL_VALUE:
       return 0;
+    case NullValue.UNRECOGNIZED:
     default:
-      return 0;
+      return -1;
   }
 }
 

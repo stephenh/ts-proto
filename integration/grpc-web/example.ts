@@ -52,8 +52,9 @@ export function dashFlash_TypeToJSON(object: DashFlash_Type): string {
       return 'Warn';
     case DashFlash_Type.Error:
       return 'Error';
+    case DashFlash_Type.UNRECOGNIZED:
     default:
-      return 'UNKNOWN';
+      return 'UNRECOGNIZED';
   }
 }
 
