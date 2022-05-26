@@ -29,10 +29,10 @@ jobs:
           RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
         run: docker build
           --file ts-proto.Dockerfile
-          --tag plugins.buf.build/stephenh/ts-proto:${RELEASE_VERSION}-0
+          --tag plugins.buf.build/${{ secrets.BUF_USERNAME }}/ts-proto:${RELEASE_VERSION}-0
           "."
 
       - name: Push to Buf Registry
         env:
           RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
-        run: docker push plugins.buf.build/stephenh/ts-proto:${RELEASE_VERSION}-0
+        run: docker push plugins.buf.build/${{ secrets.BUF_USERNAME }}/ts-proto:${RELEASE_VERSION}-0
