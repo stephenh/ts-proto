@@ -119,7 +119,7 @@ export const DividerData = {
       type: isSet(object.type) ? dividerData_DividerTypeFromJSON(object.type) : DividerData_DividerType.DOUBLE,
       typeMap: isObject(object.typeMap)
         ? Object.entries(object.typeMap).reduce<{ [key: string]: DividerData_DividerType }>((acc, [key, value]) => {
-            acc[key] = value as DividerData_DividerType;
+            acc[key] = dividerData_DividerTypeFromJSON(value);
             return acc;
           }, {})
         : {},

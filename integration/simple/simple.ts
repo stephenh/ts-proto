@@ -1807,7 +1807,7 @@ export const SimpleWithMapOfEnums = {
     return {
       enumsById: isObject(object.enumsById)
         ? Object.entries(object.enumsById).reduce<{ [key: number]: StateEnum }>((acc, [key, value]) => {
-            acc[Number(key)] = value as StateEnum;
+            acc[Number(key)] = stateEnumFromJSON(value);
             return acc;
           }, {})
         : {},

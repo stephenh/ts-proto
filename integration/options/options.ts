@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { FileDescriptorProto as FileDescriptorProto1 } from 'ts-proto-descriptors';
-import { util, configure, Writer, Reader } from 'protobufjs/minimal';
 import * as Long from 'long';
+import * as _m0 from 'protobufjs/minimal';
 import { protoMetadata as protoMetadata1 } from './google/protobuf/descriptor';
 import { protoMetadata as protoMetadata2, Something } from './something/something';
 
@@ -29,7 +29,7 @@ function createBaseMyMessage(): MyMessage {
 }
 
 export const MyMessage = {
-  encode(message: MyMessage, writer: Writer = Writer.create()): Writer {
+  encode(message: MyMessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.foo !== undefined) {
       writer.uint32(8).int32(message.foo);
     }
@@ -45,8 +45,8 @@ export const MyMessage = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): MyMessage {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): MyMessage {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMyMessage();
     while (reader.pos < end) {
@@ -78,12 +78,12 @@ function createBaseRequestType(): RequestType {
 }
 
 export const RequestType = {
-  encode(_: RequestType, writer: Writer = Writer.create()): Writer {
+  encode(_: RequestType, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): RequestType {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): RequestType {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseRequestType();
     while (reader.pos < end) {
@@ -103,12 +103,12 @@ function createBaseResponseType(): ResponseType {
 }
 
 export const ResponseType = {
-  encode(_: ResponseType, writer: Writer = Writer.create()): Writer {
+  encode(_: ResponseType, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): ResponseType {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): ResponseType {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseResponseType();
     while (reader.pos < end) {
@@ -136,7 +136,7 @@ export class MyServiceClientImpl implements MyService {
   MyMethod(request: RequestType): Promise<ResponseType> {
     const data = RequestType.encode(request).finish();
     const promise = this.rpc.request('MyService', 'MyMethod', data);
-    return promise.then((data) => ResponseType.decode(new Reader(data)));
+    return promise.then((data) => ResponseType.decode(new _m0.Reader(data)));
   }
 }
 
@@ -501,7 +501,7 @@ export const protoMetadata: ProtoMetadata = {
 
 // If you get a compile-error about 'Constructor<Long> and ... have no overlap',
 // add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
-if (util.Long !== Long) {
-  util.Long = Long as any;
-  configure();
+if (_m0.util.Long !== Long) {
+  _m0.util.Long = Long as any;
+  _m0.configure();
 }

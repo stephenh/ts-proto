@@ -145,7 +145,7 @@ export const Simple = {
       nullValue: isSet(object.nullValue) ? nullValueFromJSON(object.nullValue) : NullValue.NULL_VALUE,
       stateMap: isObject(object.stateMap)
         ? Object.entries(object.stateMap).reduce<{ [key: string]: StateEnum }>((acc, [key, value]) => {
-            acc[key] = value as StateEnum;
+            acc[key] = stateEnumFromJSON(value);
             return acc;
           }, {})
         : {},
