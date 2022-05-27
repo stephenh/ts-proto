@@ -1,3 +1,10 @@
+# [1.114.0](https://github.com/stephenh/ts-proto/compare/v1.113.0...v1.114.0) (2022-05-27)
+
+
+### Features
+
+* Official Buf Plugin ([#573](https://github.com/stephenh/ts-proto/issues/573)) ([e6272c4](https://github.com/stephenh/ts-proto/commit/e6272c487f73ff96afb4146a7998a892c4b43f14))
+
 # [1.113.0](https://github.com/stephenh/ts-proto/compare/v1.112.2...v1.113.0) (2022-05-27)
 
 
