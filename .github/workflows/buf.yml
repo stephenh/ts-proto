@@ -1,0 +1,38 @@
+name: Buf Plugin
+
+on:
+  push:
+    tags:
+      - v*.*.*
+
+jobs:
+  push_to_buf_registry:
+    name: Push Docker image to Buf Registry
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v3
+
+      - name: Set output
+        id: vars
+        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+
+      - name: Log in to Buf Plugin Registry
+        uses: docker/login-action@v2
+        with:
+          registry: plugins.buf.build
+          username: ${{ secrets.BUF_USERNAME }}
+          password: ${{ secrets.BUF_PASSWORD }}
+
+      - name: Build Plugin image
+        env:
+          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
+        run: docker build
+          --file ts-proto.Dockerfile
+          --tag plugins.buf.build/${{ secrets.BUF_USERNAME }}/ts-proto:${RELEASE_VERSION}-0
+          "."
+
+      - name: Push to Buf Registry
+        env:
+          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
+        run: docker push plugins.buf.build/${{ secrets.BUF_USERNAME }}/ts-proto:${RELEASE_VERSION}-0
