@@ -644,7 +644,7 @@ function makeNiceGrpcServerStreamingMethodResult() {
     code`
       export type ServerStreamingMethodResult<Response> = {
         [Symbol.asyncIterator](): AsyncIterator<Response, void>;
-      };  
+      };
     `
   );
 
@@ -1218,7 +1218,8 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
             } else if (isLong(valueField) && options.forceLong === LongOption.LONG) {
               return code`Long.fromValue(${from} as Long | string)`;
             } else if (isEnum(valueField)) {
-              return code`${from} as ${valueType}`;
+              const fromJson = getEnumMethod(ctx, valueField.typeName, 'FromJSON');
+              return code`${fromJson}(${from})`;
             } else {
               const cstr = capitalize(valueType.toCodeString());
               return code`${cstr}(${from})`;
