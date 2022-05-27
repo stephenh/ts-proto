@@ -3,7 +3,7 @@ name: Buf Plugin
 on:
   push:
     tags:
-      - v*.*.*
+      - "v*"
 
 jobs:
   push_to_buf_registry:
