@@ -1,3 +1,10 @@
+# [1.113.0](https://github.com/stephenh/ts-proto/compare/v1.112.2...v1.113.0) (2022-05-27)
+
+
+### Features
+
+* add options to schema output ([#437](https://github.com/stephenh/ts-proto/issues/437)) ([e8e4e39](https://github.com/stephenh/ts-proto/commit/e8e4e3937292e07280f5154b584e60124118f093))
+
 ## [1.112.2](https://github.com/stephenh/ts-proto/compare/v1.112.1...v1.112.2) (2022-05-18)
 
 
