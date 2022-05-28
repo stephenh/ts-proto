@@ -1,3 +1,10 @@
+## [1.114.3](https://github.com/stephenh/ts-proto/compare/v1.114.2...v1.114.3) (2022-05-28)
+
+
+### Bug Fixes
+
+* Use the npm environment. ([0103443](https://github.com/stephenh/ts-proto/commit/01034430c25461c0e5a46e2b9fd757ef4e0c91b1))
+
 ## [1.114.2](https://github.com/stephenh/ts-proto/compare/v1.114.1...v1.114.2) (2022-05-28)
 
 
