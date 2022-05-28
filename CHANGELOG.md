@@ -1,3 +1,10 @@
+## [1.114.2](https://github.com/stephenh/ts-proto/compare/v1.114.1...v1.114.2) (2022-05-28)
+
+
+### Bug Fixes
+
+* Try combined workflow. ([c293c1f](https://github.com/stephenh/ts-proto/commit/c293c1f379cb69635c968d5b8094135931bcea54))
+
 # [1.114.0](https://github.com/stephenh/ts-proto/compare/v1.113.0...v1.114.0) (2022-05-27)
 
 
