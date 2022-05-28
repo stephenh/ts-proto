@@ -7,6 +7,6 @@ module.exports = {
     '@semantic-release/npm',
     '@semantic-release/github',
     '@semantic-release/git',
-    ['@semantic-release/exec', { publishCmd: 'echo "RELEASE_VERSION=${nextRelease.version}" >> $GITHUB_ENV' }],
+    ['@semantic-release/exec', { publishCmd: 'echo "::set-output name=release_version::${nextRelease.version}"' }],
   ],
 };

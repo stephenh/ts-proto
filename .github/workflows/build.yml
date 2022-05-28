@@ -62,10 +62,13 @@ jobs:
       - name: Build
         run: yarn build
       - name: Release
+        id: release
         run: yarn semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.ADMIN_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+    outputs:
+      release_version: ${{ steps.release.outputs.release_version }}
 
   push_to_buf_registry:
     name: Push Docker image to Buf Registry
@@ -86,8 +89,8 @@ jobs:
       - name: Build Plugin image
         run: docker build
           --file ts-proto.Dockerfile
-          --tag plugins.buf.build/${{ secrets.BUF_USERNAME }}/ts-proto:${{ env.RELEASE_VERSION }}-0
+          --tag plugins.buf.build/${{ secrets.BUF_USERNAME }}/ts-proto:${{ needs.release.outputs.release_version }}-0
           "."
 
       - name: Push to Buf Registry
-        run: docker push plugins.buf.build/${{ secrets.BUF_USERNAME }}/ts-proto:${{ env.RELEASE_VERSION }}-0
+        run: docker push plugins.buf.build/${{ secrets.BUF_USERNAME }}/ts-proto:${{ needs.release.outputs.release_version }}-0
