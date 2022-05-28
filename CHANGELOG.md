@@ -1,3 +1,10 @@
+## [1.114.5](https://github.com/stephenh/ts-proto/compare/v1.114.4...v1.114.5) (2022-05-28)
+
+
+### Bug Fixes
+
+* Use outputs for Buf plugin workflow. ([7017d4c](https://github.com/stephenh/ts-proto/commit/7017d4c1f5eb2a8619dd03cc4f7a27c1dcf6c918))
+
 ## [1.114.4](https://github.com/stephenh/ts-proto/compare/v1.114.3...v1.114.4) (2022-05-28)
 
 
