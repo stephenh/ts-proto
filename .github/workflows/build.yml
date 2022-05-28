@@ -70,6 +70,7 @@ jobs:
   push_to_buf_registry:
     name: Push Docker image to Buf Registry
     runs-on: ubuntu-latest
+    environment: npm
     needs: [release]
     steps:
       - name: Check out the repo
@@ -89,6 +90,4 @@ jobs:
           "."
 
       - name: Push to Buf Registry
-        env:
-          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
         run: docker push plugins.buf.build/${{ secrets.BUF_USERNAME }}/ts-proto:${RELEASE_VERSION}-0
