@@ -1,3 +1,10 @@
+## [1.114.4](https://github.com/stephenh/ts-proto/compare/v1.114.3...v1.114.4) (2022-05-28)
+
+
+### Bug Fixes
+
+* Use env prefix for Buf plugin. ([ea42caa](https://github.com/stephenh/ts-proto/commit/ea42caacbd919f9a8b6a9e3138d8a48e80ac86d9))
+
 ## [1.114.3](https://github.com/stephenh/ts-proto/compare/v1.114.2...v1.114.3) (2022-05-28)
 
 
