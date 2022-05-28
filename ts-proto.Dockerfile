@@ -1,4 +1,4 @@
-FROM node:12-alpine as build
+FROM node:17-alpine as build
 
 COPY . .
 
@@ -13,7 +13,7 @@ RUN yarn cache clean
 # install production dependencies only
 RUN yarn install --production
 
-FROM node:12-alpine
+FROM node:17-alpine
 
 WORKDIR /ts-proto
 
