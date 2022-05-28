@@ -1,3 +1,10 @@
+## [1.114.6](https://github.com/stephenh/ts-proto/compare/v1.114.5...v1.114.6) (2022-05-28)
+
+
+### Bug Fixes
+
+* Bump node in ts-proto.Dockerfile. ([42f3cea](https://github.com/stephenh/ts-proto/commit/42f3ceac5323056b1b845b51919ecddaa32bf258))
+
 ## [1.114.5](https://github.com/stephenh/ts-proto/compare/v1.114.4...v1.114.5) (2022-05-28)
 
 
