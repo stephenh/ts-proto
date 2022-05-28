@@ -89,8 +89,8 @@ jobs:
       - name: Build Plugin image
         run: docker build
           --file ts-proto.Dockerfile
-          --tag plugins.buf.build/${{ secrets.BUF_USERNAME }}/ts-proto:${{ needs.release.outputs.release_version }}-0
+          --tag plugins.buf.build/${{ secrets.BUF_USERNAME }}/ts-proto:v${{ needs.release.outputs.release_version }}-0
           "."
 
       - name: Push to Buf Registry
-        run: docker push plugins.buf.build/${{ secrets.BUF_USERNAME }}/ts-proto:${{ needs.release.outputs.release_version }}-0
+        run: docker push plugins.buf.build/${{ secrets.BUF_USERNAME }}/ts-proto:v${{ needs.release.outputs.release_version }}-0
