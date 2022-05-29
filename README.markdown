@@ -274,34 +274,36 @@ Generated code will be placed in the Gradle build directory.
 
   Currently `browser` doesn't have any specific behavior other than being "not `node`". It probably will soon/at some point.
 
-- With `--ts_proto_opt=useOptionals=true`, non-scalar fields are declared as optional TypeScript properties, e.g. `field?: Message` instead of the default `field: Message | undefined`.
+- With `--ts_proto_opt=useOptionals=messages` (for message fields) or `--ts_proto_opt=useOptionals=all` (for message and scalar fields), fields are declared as optional keys, e.g. `field?: Message` instead of the default `field: Message | undefined`.
 
-  ts-proto defaults to `useOptionals=false`, e.g. `field: Message | undefined`, because it is the most safe for use cases like:
+  ts-proto defaults to `useOptionals=none` because it:
+  
+  1. Prevents typos when initializing messages, and
+  2. Provides the most consistent API to readers
+  3. Ensures production messages are properly initialized with all fields. 
 
-  ```typescript
-  interface SomeMessage {
-    firstName: string | undefined;
-    lastName: string | undefined;
-  }
+  For typo prevention, optional fields make it easy for extra fields to slip into a message (until we get [Exact Types](https://github.com/microsoft/TypeScript/issues/12936)),  i.e.:
 
-  const data = { firstName: 'a', lastTypo: 'b' };
+   ```typescript
+   interface SomeMessage {
+     firstName: string | undefined;
+     lastName: string | undefined;
+   }
+   // Declared with a typo
+   const data = { firstName: 'a', lastTypo: 'b' };
+   // With useOptionals=none, this correctly fails to compile; if `lastName` was optional, it would not
+   const message: SomeMessage = { ...data };
+   ```
+  
+   For a consistent API, if `SomeMessage.lastName` is optional `lastName?`, then readers have to check _two_ empty conditions: a) is `lastName` `undefined` (b/c it was created in-memory and left unset), or b) is `lastName` empty string (b/c we read `SomeMessage` off the wire and correctly set `lastName` to empty string)?
 
-  // This would compile if `lastName` was `lastName?`, even though the
-  // `lastTypo` key above means that `lastName` is not assigned.
-  const message: SomeMessage = {
-    ...data,
-  };
-  ```
+   For ensuring proper initialization, if later `SomeMessage.middleInitial` is added, but it's marked as optional `middleInitial?`, you may have many call sites in production code that _should_ now be passing `middleInitial` to create a valid `SomeMessage`, but are not.
 
-  However, the type-safety of `useOptionals=false` is admittedly tedious if you have many inherently-unused fields, so you can use `useOptionals=true` if that trade-off makes sense for your project.
+   So, between typo-prevention, reader inconsistency, and proper initialization, ts-proto recommends using `useOptionals=none` as the "most safe" option.
 
-  You can also use the generated `SomeMessage.fromPartial` methods to opt into the optionality on a per-call-site basis. The `fromPartial` allows the creator/writer to have default values applied (i.e. `undefined` --> `0`), and the return value will still be the non-optional type that provides a consistent view (i.e. always `0`) to clients.
+   All that said, this approach does require writers/creators to set every field (although `fromPartial` is meant to address this), so if you still want to have optional fields, you can set `useOptionals=messages` or `useOptionals=all`.
 
-  Eventually if TypeScript supports [Exact Types](https://github.com/microsoft/TypeScript/issues/12936), that should allow ts-proto to switch to `useOptionals=true` as the default/only behavior, have the generated `Message.encode`/`Message.toPartial`/etc. methods accept `Exact<T>` versions of the message types, and the result would be both safe + succinct.
-
-  Also see the comment in [this issue](https://github.com/stephenh/ts-proto/issues/120#issuecomment-678375833) which explains the nuance behind making all fields optional (currently `useOptionals` only makes message fields optional), specifically that a message created with `const message: Message = { ...key not set... }` (so `key` is `undefined`) vs. `const message = Message.decode(...key not set...)` (so `key` is the default value) would look different to clients.
-
-  Note that RPC methods, like `service.ping({ key: ... })`, accept `DeepPartial` versions of the request messages, because of the same rationale that it makes it easy for the writer call-site to get default values for free, and because the "reader" is the internal ts-proto serialization code, it can apply the defaults as necessary.
+   (See [this issue](https://github.com/stephenh/ts-proto/issues/120#issuecomment-678375833) and [this issue](https://github.com/stephenh/ts-proto/issues/397#issuecomment-977259118) for discussions on `useOptional`.)
 
 - With `--ts_proto_opt=exportCommonSymbols=false`, utility types like `DeepPartial` won't be `export`d.
 
