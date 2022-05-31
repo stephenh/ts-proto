@@ -104,7 +104,7 @@ You can also use the official plugin published to the Buf Registry.
 ```yaml
 version: v1
 plugins:
-  - remote: buf.build/roundrock-io/plugins/ts-proto
+  - remote: buf.build/stephenh/plugins/ts-proto
     out: ../gen/ts
 ```
 
