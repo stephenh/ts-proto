@@ -462,7 +462,7 @@ export function isEmptyType(typeName: string): boolean {
 }
 
 export function valueTypeName(ctx: Context, typeName: string): Code | undefined {
-  const useJsonWireFormat = ctx.options.onlyTypes && ctx.options.useJsonWireFormat
+  const useJsonWireFormat = ctx.options.onlyTypes && ctx.options.useJsonWireFormat;
   switch (typeName) {
     case '.google.protobuf.StringValue':
       return code`string`;
@@ -478,9 +478,7 @@ export function valueTypeName(ctx: Context, typeName: string): Code | undefined 
     case '.google.protobuf.BoolValue':
       return code`boolean`;
     case '.google.protobuf.BytesValue':
-      return ctx.options.env === EnvOption.NODE
-          ? code`Buffer`
-          : useJsonWireFormat ? code`string` : code`Uint8Array`;
+      return ctx.options.env === EnvOption.NODE ? code`Buffer` : useJsonWireFormat ? code`string` : code`Uint8Array`;
     case '.google.protobuf.ListValue':
       return code`Array<any>`;
     case '.google.protobuf.Value':
