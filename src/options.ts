@@ -64,6 +64,7 @@ export type Options = {
   useExactTypes: boolean;
   unknownFields: boolean;
   usePrototypeForDefaults: boolean;
+  useJsonWireFormat: boolean;
 };
 
 export function defaultOptions(): Options {
@@ -101,6 +102,7 @@ export function defaultOptions(): Options {
     useExactTypes: true,
     unknownFields: false,
     usePrototypeForDefaults: false,
+    useJsonWireFormat: false,
   };
 }
 

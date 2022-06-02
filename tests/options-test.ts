@@ -39,6 +39,7 @@ describe('options', () => {
         "unrecognizedEnum": true,
         "useDate": "timestamp",
         "useExactTypes": true,
+        "useJsonWireFormat": false,
         "useMongoObjectId": false,
         "useOptionals": "none",
         "usePrototypeForDefaults": false,
