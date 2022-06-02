@@ -164,6 +164,17 @@ export function optionsFromParameter(parameter: string | undefined): Options {
     options.snakeToCamel = [options.snakeToCamel];
   }
 
+  if (options.useJsonWireFormat) {
+    if (!options.onlyTypes) {
+      // useJsonWireFormat requires onlyTypes=true
+      options.useJsonWireFormat = false;
+    } else {
+      // useJsonWireFormat implies stringEnums=true and useDate=string
+      options.stringEnums = true;
+      options.useDate = DateOption.STRING;
+    }
+  }
+
   return options;
 }
 

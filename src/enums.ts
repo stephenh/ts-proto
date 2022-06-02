@@ -27,20 +27,19 @@ export function generateEnum(
   }
 
   const delimiter = options.enumsAsLiterals ? ':' : '=';
-  const stringEnums = options.stringEnums || (options.onlyTypes && options.useJsonWireFormat);
 
   enumDesc.value.forEach((valueDesc, index) => {
     const info = sourceInfo.lookup(Fields.enum.value, index);
     maybeAddComment(info, chunks, valueDesc.options?.deprecated, `${valueDesc.name} - `);
     chunks.push(
-      code`${valueDesc.name} ${delimiter} ${stringEnums ? `"${valueDesc.name}"` : valueDesc.number.toString()},`
+      code`${valueDesc.name} ${delimiter} ${options.stringEnums ? `"${valueDesc.name}"` : valueDesc.number.toString()},`
     );
   });
 
   if (options.unrecognizedEnum)
     chunks.push(code`
       ${UNRECOGNIZED_ENUM_NAME} ${delimiter} ${
-      stringEnums ? `"${UNRECOGNIZED_ENUM_NAME}"` : UNRECOGNIZED_ENUM_VALUE.toString()
+      options.stringEnums ? `"${UNRECOGNIZED_ENUM_NAME}"` : UNRECOGNIZED_ENUM_VALUE.toString()
     },`);
 
   if (options.enumsAsLiterals) {
@@ -51,7 +50,7 @@ export function generateEnum(
     chunks.push(code`}`);
   }
 
-  if (options.outputJsonMethods || (stringEnums && options.outputEncodeMethods)) {
+  if (options.outputJsonMethods || (options.stringEnums && options.outputEncodeMethods)) {
     chunks.push(code`\n`);
     chunks.push(generateEnumFromJson(ctx, fullName, enumDesc));
   }
@@ -59,7 +58,7 @@ export function generateEnum(
     chunks.push(code`\n`);
     chunks.push(generateEnumToJson(ctx, fullName, enumDesc));
   }
-  if (stringEnums && options.outputEncodeMethods) {
+  if (options.stringEnums && options.outputEncodeMethods) {
     chunks.push(code`\n`);
     chunks.push(generateEnumToNumber(ctx, fullName, enumDesc));
   }
