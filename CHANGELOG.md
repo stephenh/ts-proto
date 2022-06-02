@@ -1,3 +1,10 @@
+## [1.115.1](https://github.com/stephenh/ts-proto/compare/v1.115.0...v1.115.1) (2022-06-02)
+
+
+### Bug Fixes
+
+* Bump protobufjs. ([#585](https://github.com/stephenh/ts-proto/issues/585)) ([ba6b85d](https://github.com/stephenh/ts-proto/commit/ba6b85d9d5b7ce191dce898c462cf164a6b1e308))
+
 # [1.115.0](https://github.com/stephenh/ts-proto/compare/v1.114.7...v1.115.0) (2022-06-02)
 
 
