@@ -58,7 +58,6 @@ export type Options = {
   unrecognizedEnum: boolean;
   exportCommonSymbols: boolean;
   outputSchema: boolean;
-  // An alias of !output
   onlyTypes: boolean;
   emitImportedFiles: boolean;
   useExactTypes: boolean;
@@ -124,8 +123,18 @@ export function optionsFromParameter(parameter: string | undefined): Options {
     }
     Object.assign(options, parsed);
   }
-  // We should promote onlyTypes to its own documented flag, but just an alias for now
-  if (!options.outputJsonMethods && !options.outputEncodeMethods && !options.outputClientImpl && !options.nestJs) {
+  // onlyTypes=true implies outputJsonMethods=false,outputEncodeMethods=false,outputClientImpl=false,nestJs=false
+  if (options.onlyTypes) {
+    options.outputJsonMethods = false;
+    options.outputEncodeMethods = false;
+    options.outputClientImpl = false;
+    options.nestJs = false;
+  } else if (
+    !options.outputJsonMethods &&
+    !options.outputEncodeMethods &&
+    !options.outputClientImpl &&
+    !options.nestJs
+  ) {
     options.onlyTypes = true;
   }
 
