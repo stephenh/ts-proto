@@ -1,3 +1,10 @@
+# [1.115.0](https://github.com/stephenh/ts-proto/compare/v1.114.7...v1.115.0) (2022-06-02)
+
+
+### Features
+
+* added option 'useJsonWireFormat' ([#576](https://github.com/stephenh/ts-proto/issues/576)) ([a71b145](https://github.com/stephenh/ts-proto/commit/a71b145c81136b8d8e3681b6753146d3ceeff179)), closes [#571](https://github.com/stephenh/ts-proto/issues/571)
+
 ## [1.114.7](https://github.com/stephenh/ts-proto/compare/v1.114.6...v1.114.7) (2022-05-28)
 
 
