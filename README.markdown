@@ -396,7 +396,7 @@ Generated code will be placed in the Gradle build directory.
 
 - With `--ts_proto_opt=onlyTypes=true`, only types will be emitted, and imports for `long` and `protobufjs/minimal` will be excluded.
 
-  This implies `outputJsonMethods=false,outputEncodeMethods=false,outputClientImpl=false,nestJs=false`
+  This is the same as setting `outputJsonMethods=false,outputEncodeMethods=false,outputClientImpl=false,nestJs=false`
 
 - With `--ts_proto_opt=usePrototypeForDefaults=true`, the generated code will wrap new objects with `Object.create`.
 
