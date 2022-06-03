@@ -180,7 +180,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
           boolValue: maybeSnakeToCamel('bool_value', ctx.options),
           structValue: maybeSnakeToCamel('struct_value', ctx.options),
           listValue: maybeSnakeToCamel('list_value', ctx.options),
-        }
+        };
         staticMembers.push(...generateWrap(ctx, fullTypeName, structFieldNames));
         staticMembers.push(...generateUnwrap(ctx, fullTypeName, structFieldNames));
 
@@ -1600,13 +1600,13 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
 }
 
 type StructFieldNames = {
-  nullValue: string,
-  numberValue: string,
-  stringValue: string,
-  boolValue: string,
-  structValue: string,
-  listValue: string,
-}
+  nullValue: string;
+  numberValue: string;
+  stringValue: string;
+  boolValue: string;
+  structValue: string;
+  listValue: string;
+};
 
 function generateWrap(ctx: Context, fullProtoTypeName: string, fieldNames: StructFieldNames): Code[] {
   const chunks: Code[] = [];
