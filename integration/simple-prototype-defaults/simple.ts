@@ -173,8 +173,8 @@ export interface Nested_InnerMessage_DeepMessage {
 }
 
 export interface OneOfMessage {
-  first: string | undefined;
-  last: string | undefined;
+  first?: string | undefined;
+  last?: string | undefined;
 }
 
 export interface SimpleWithWrappers {
