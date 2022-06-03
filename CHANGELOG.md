@@ -1,3 +1,10 @@
+## [1.115.3](https://github.com/stephenh/ts-proto/compare/v1.115.2...v1.115.3) (2022-06-03)
+
+
+### Bug Fixes
+
+* Fix ts-poet typo in package.json. ([#589](https://github.com/stephenh/ts-proto/issues/589)) ([5211347](https://github.com/stephenh/ts-proto/commit/5211347cb21ac7d117349a32a87c0d017999c44a))
+
 ## [1.115.2](https://github.com/stephenh/ts-proto/compare/v1.115.1...v1.115.2) (2022-06-03)
 
 
