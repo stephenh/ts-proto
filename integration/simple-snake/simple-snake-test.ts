@@ -1,4 +1,4 @@
-import { Child_Type, Simple, StateEnum } from './simple';
+import { Child_Type, Simple, StateEnum, SimpleStruct } from './simple';
 
 const jan1 = new Date('1970-01-01T00:00:00.000Z');
 
@@ -18,4 +18,13 @@ describe('simple', () => {
     };
     expect(simple.name).toEqual('asdf');
   });
+
+  it('struct snake case', () => {
+    const simple: SimpleStruct = {
+      simple_struct: {
+        any: 'any'
+      }
+    }
+    expect(simple.simple_struct!['any']).toEqual('any')
+  })
 });
