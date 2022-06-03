@@ -1,4 +1,4 @@
-import {DateOption, optionsFromParameter, ServiceOption} from '../src/options';
+import { DateOption, optionsFromParameter, ServiceOption } from '../src/options';
 
 describe('options', () => {
   it('can set outputJsonMethods with nestJs=true', () => {
