@@ -1,3 +1,10 @@
+## [1.115.2](https://github.com/stephenh/ts-proto/compare/v1.115.1...v1.115.2) (2022-06-03)
+
+
+### Bug Fixes
+
+* simplify handling useJsonWireFormat=true and fix onlyTypes=true ([#583](https://github.com/stephenh/ts-proto/issues/583)) ([6e7f938](https://github.com/stephenh/ts-proto/commit/6e7f9387d144f506ded982604f32981ac5e327de))
+
 ## [1.115.1](https://github.com/stephenh/ts-proto/compare/v1.115.0...v1.115.1) (2022-06-02)
 
 
