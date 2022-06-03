@@ -462,7 +462,6 @@ export function isEmptyType(typeName: string): boolean {
 }
 
 export function valueTypeName(ctx: Context, typeName: string): Code | undefined {
-  const useJsonWireFormat = ctx.options.onlyTypes && ctx.options.useJsonWireFormat;
   switch (typeName) {
     case '.google.protobuf.StringValue':
       return code`string`;
@@ -478,7 +477,11 @@ export function valueTypeName(ctx: Context, typeName: string): Code | undefined 
     case '.google.protobuf.BoolValue':
       return code`boolean`;
     case '.google.protobuf.BytesValue':
-      return ctx.options.env === EnvOption.NODE ? code`Buffer` : useJsonWireFormat ? code`string` : code`Uint8Array`;
+      return ctx.options.env === EnvOption.NODE
+        ? code`Buffer`
+        : ctx.options.useJsonWireFormat
+        ? code`string`
+        : code`Uint8Array`;
     case '.google.protobuf.ListValue':
       return code`Array<any>`;
     case '.google.protobuf.Value':
@@ -486,11 +489,11 @@ export function valueTypeName(ctx: Context, typeName: string): Code | undefined 
     case '.google.protobuf.Struct':
       return code`{[key: string]: any}`;
     case '.google.protobuf.FieldMask':
-      return useJsonWireFormat ? code`string` : code`string[]`;
+      return ctx.options.useJsonWireFormat ? code`string` : code`string[]`;
     case '.google.protobuf.Duration':
-      return useJsonWireFormat ? code`string` : undefined;
+      return ctx.options.useJsonWireFormat ? code`string` : undefined;
     case '.google.protobuf.Timestamp':
-      return useJsonWireFormat ? code`string` : undefined;
+      return ctx.options.useJsonWireFormat ? code`string` : undefined;
     default:
       return undefined;
   }
