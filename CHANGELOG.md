@@ -1,3 +1,10 @@
+## [1.115.4](https://github.com/stephenh/ts-proto/compare/v1.115.3...v1.115.4) (2022-06-05)
+
+
+### Bug Fixes
+
+* Struct wrap/unwrap snake case [#579](https://github.com/stephenh/ts-proto/issues/579) ([#588](https://github.com/stephenh/ts-proto/issues/588)) ([33f89bf](https://github.com/stephenh/ts-proto/commit/33f89bfcf0d5d9e64a6fd360eaefc140055e9291))
+
 ## [1.115.3](https://github.com/stephenh/ts-proto/compare/v1.115.2...v1.115.3) (2022-06-03)
 
 
