@@ -4,6 +4,7 @@ import * as _m0 from 'protobufjs/minimal';
 import { Timestamp } from './google/protobuf/timestamp';
 import { ImportedThing } from './import_dir/thing';
 import { StringValue, Int32Value, BoolValue } from './google/protobuf/wrappers';
+import { Struct } from './google/protobuf/struct';
 
 export const protobufPackage = 'simple';
 
@@ -236,6 +237,10 @@ export interface Numbers {
   fixed64: number;
   sfixed32: number;
   sfixed64: number;
+}
+
+export interface SimpleStruct {
+  simple_struct: { [key: string]: any } | undefined;
 }
 
 function createBaseSimple(): Simple {
@@ -1551,6 +1556,55 @@ export const Numbers = {
     message.fixed64 = object.fixed64 ?? 0;
     message.sfixed32 = object.sfixed32 ?? 0;
     message.sfixed64 = object.sfixed64 ?? 0;
+    return message;
+  },
+};
+
+function createBaseSimpleStruct(): SimpleStruct {
+  return { simple_struct: undefined };
+}
+
+export const SimpleStruct = {
+  encode(message: SimpleStruct, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.simple_struct !== undefined) {
+      Struct.encode(Struct.wrap(message.simple_struct), writer.uint32(10).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): SimpleStruct {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSimpleStruct();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.simple_struct = Struct.unwrap(Struct.decode(reader, reader.uint32()));
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): SimpleStruct {
+    return {
+      simple_struct: isObject(object.simple_struct) ? object.simple_struct : undefined,
+    };
+  },
+
+  toJSON(message: SimpleStruct): unknown {
+    const obj: any = {};
+    message.simple_struct !== undefined && (obj.simple_struct = message.simple_struct);
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<SimpleStruct>, I>>(object: I): SimpleStruct {
+    const message = createBaseSimpleStruct();
+    message.simple_struct = object.simple_struct ?? undefined;
     return message;
   },
 };
