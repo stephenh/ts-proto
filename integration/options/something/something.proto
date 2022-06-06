@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+import "google/protobuf/descriptor.proto";
+
+package something;
+
+extend google.protobuf.FieldOptions {
+  optional Something something = 1000;
+}
+
+message Something {
+  string hello = 1;
+  repeated int32 foo = 2;
+}

@@ -1,7 +1,8 @@
-/node_modules/
-/build/
+node_modules/
+build/
 /.idea
 /.vscode
 /integration/*/pbjs.js
 /integration/*/pbjs.d.ts
 coverage/
+yarn-error.log

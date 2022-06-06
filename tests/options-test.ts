@@ -1,4 +1,4 @@
-import { optionsFromParameter, ServiceOption } from '../src/options';
+import { DateOption, optionsFromParameter, ServiceOption } from '../src/options';
 
 describe('options', () => {
   it('can set outputJsonMethods with nestJs=true', () => {
@@ -39,6 +39,7 @@ describe('options', () => {
         "unrecognizedEnum": true,
         "useDate": "timestamp",
         "useExactTypes": true,
+        "useJsonWireFormat": false,
         "useMongoObjectId": false,
         "useOptionals": "none",
         "usePrototypeForDefaults": false,
@@ -97,5 +98,39 @@ describe('options', () => {
   it('can set multiple values as an array', () => {
     const options = optionsFromParameter('foo=one,foo=two');
     expect(options).toMatchObject({ foo: ['one', 'two'] });
+  });
+
+  it('´output*=false implies onlyTypes', () => {
+    const options = optionsFromParameter('outputJsonMethods=false,outputEncodeMethods=false,outputClientImpl=false');
+    expect(options).toMatchObject({
+      onlyTypes: true,
+    });
+  });
+
+  it('onlyTypes implies output*=false', () => {
+    const options = optionsFromParameter('onlyTypes=true');
+    expect(options).toMatchObject({
+      outputJsonMethods: false,
+      outputEncodeMethods: false,
+      outputClientImpl: false,
+      nestJs: false,
+    });
+  });
+
+  it('useJsonWireFormat requires onlyTypes', () => {
+    const options = optionsFromParameter('useJsonWireFormat=true');
+    expect(options).toMatchObject({
+      useJsonWireFormat: false,
+    });
+  });
+
+  it('useJsonWireFormat implies useDate=string and stringEnums=true', () => {
+    const options = optionsFromParameter('useJsonWireFormat=true,onlyTypes=true');
+    expect(options).toMatchObject({
+      useJsonWireFormat: true,
+      onlyTypes: true,
+      stringEnums: true,
+      useDate: DateOption.STRING,
+    });
   });
 });

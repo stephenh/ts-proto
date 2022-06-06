@@ -3,10 +3,11 @@
 syntax = "proto3";
 import "google/protobuf/wrappers.proto";
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/struct.proto";
 import "import_dir/thing.proto";
 package simple;
 
-// This comment is seperated by a blank non-comment line, and will detatch from 
+// This comment is seperated by a blank non-comment line, and will detatch from
 // the following comment on the message Simple.
 
 /** Example comment on the Simple message */
@@ -118,4 +119,8 @@ message Numbers {
   fixed64 fixed64 = 10;
   sfixed32 sfixed32 = 11;
   sfixed64 sfixed64 = 12;
+}
+
+message SimpleStruct {
+  google.protobuf.Struct simple_struct = 1;
 }

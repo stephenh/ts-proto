@@ -57,9 +57,15 @@ function generateServiceDefinition(
 
   maybeAddComment(sourceInfo, chunks, serviceDesc.options?.deprecated);
 
+  // Service definition type
+  const name = def(`${serviceDesc.name}Service`);
+  chunks.push(code`
+    export type ${name} = typeof ${name};
+  `);
+
   // Service definition
   chunks.push(code`
-    export const ${def(`${serviceDesc.name}Service`)} = {
+    export const ${name} = {
   `);
 
   for (const [index, methodDesc] of serviceDesc.method.entries()) {

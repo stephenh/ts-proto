@@ -1,3 +1,184 @@
+## [1.115.4](https://github.com/stephenh/ts-proto/compare/v1.115.3...v1.115.4) (2022-06-05)
+
+
+### Bug Fixes
+
+* Struct wrap/unwrap snake case [#579](https://github.com/stephenh/ts-proto/issues/579) ([#588](https://github.com/stephenh/ts-proto/issues/588)) ([33f89bf](https://github.com/stephenh/ts-proto/commit/33f89bfcf0d5d9e64a6fd360eaefc140055e9291))
+
+## [1.115.3](https://github.com/stephenh/ts-proto/compare/v1.115.2...v1.115.3) (2022-06-03)
+
+
+### Bug Fixes
+
+* Fix ts-poet typo in package.json. ([#589](https://github.com/stephenh/ts-proto/issues/589)) ([5211347](https://github.com/stephenh/ts-proto/commit/5211347cb21ac7d117349a32a87c0d017999c44a))
+
+## [1.115.2](https://github.com/stephenh/ts-proto/compare/v1.115.1...v1.115.2) (2022-06-03)
+
+
+### Bug Fixes
+
+* simplify handling useJsonWireFormat=true and fix onlyTypes=true ([#583](https://github.com/stephenh/ts-proto/issues/583)) ([6e7f938](https://github.com/stephenh/ts-proto/commit/6e7f9387d144f506ded982604f32981ac5e327de))
+
+## [1.115.1](https://github.com/stephenh/ts-proto/compare/v1.115.0...v1.115.1) (2022-06-02)
+
+
+### Bug Fixes
+
+* Bump protobufjs. ([#585](https://github.com/stephenh/ts-proto/issues/585)) ([ba6b85d](https://github.com/stephenh/ts-proto/commit/ba6b85d9d5b7ce191dce898c462cf164a6b1e308))
+
+# [1.115.0](https://github.com/stephenh/ts-proto/compare/v1.114.7...v1.115.0) (2022-06-02)
+
+
+### Features
+
+* added option 'useJsonWireFormat' ([#576](https://github.com/stephenh/ts-proto/issues/576)) ([a71b145](https://github.com/stephenh/ts-proto/commit/a71b145c81136b8d8e3681b6753146d3ceeff179)), closes [#571](https://github.com/stephenh/ts-proto/issues/571)
+
+## [1.114.7](https://github.com/stephenh/ts-proto/compare/v1.114.6...v1.114.7) (2022-05-28)
+
+
+### Bug Fixes
+
+* Fix version number for Buf plugin. ([dc1fb7e](https://github.com/stephenh/ts-proto/commit/dc1fb7e766ed4115d026e7ff0e9a9480c1e42380))
+
+## [1.114.6](https://github.com/stephenh/ts-proto/compare/v1.114.5...v1.114.6) (2022-05-28)
+
+
+### Bug Fixes
+
+* Bump node in ts-proto.Dockerfile. ([42f3cea](https://github.com/stephenh/ts-proto/commit/42f3ceac5323056b1b845b51919ecddaa32bf258))
+
+## [1.114.5](https://github.com/stephenh/ts-proto/compare/v1.114.4...v1.114.5) (2022-05-28)
+
+
+### Bug Fixes
+
+* Use outputs for Buf plugin workflow. ([7017d4c](https://github.com/stephenh/ts-proto/commit/7017d4c1f5eb2a8619dd03cc4f7a27c1dcf6c918))
+
+## [1.114.4](https://github.com/stephenh/ts-proto/compare/v1.114.3...v1.114.4) (2022-05-28)
+
+
+### Bug Fixes
+
+* Use env prefix for Buf plugin. ([ea42caa](https://github.com/stephenh/ts-proto/commit/ea42caacbd919f9a8b6a9e3138d8a48e80ac86d9))
+
+## [1.114.3](https://github.com/stephenh/ts-proto/compare/v1.114.2...v1.114.3) (2022-05-28)
+
+
+### Bug Fixes
+
+* Use the npm environment. ([0103443](https://github.com/stephenh/ts-proto/commit/01034430c25461c0e5a46e2b9fd757ef4e0c91b1))
+
+## [1.114.2](https://github.com/stephenh/ts-proto/compare/v1.114.1...v1.114.2) (2022-05-28)
+
+
+### Bug Fixes
+
+* Try combined workflow. ([c293c1f](https://github.com/stephenh/ts-proto/commit/c293c1f379cb69635c968d5b8094135931bcea54))
+
+# [1.114.0](https://github.com/stephenh/ts-proto/compare/v1.113.0...v1.114.0) (2022-05-27)
+
+
+### Features
+
+* Official Buf Plugin ([#573](https://github.com/stephenh/ts-proto/issues/573)) ([e6272c4](https://github.com/stephenh/ts-proto/commit/e6272c487f73ff96afb4146a7998a892c4b43f14))
+
+# [1.113.0](https://github.com/stephenh/ts-proto/compare/v1.112.2...v1.113.0) (2022-05-27)
+
+
+### Features
+
+* add options to schema output ([#437](https://github.com/stephenh/ts-proto/issues/437)) ([e8e4e39](https://github.com/stephenh/ts-proto/commit/e8e4e3937292e07280f5154b584e60124118f093))
+
+## [1.112.2](https://github.com/stephenh/ts-proto/compare/v1.112.1...v1.112.2) (2022-05-18)
+
+
+### Bug Fixes
+
+* enum type returns 'UNRECOGNIZED' or '-1' in xxxToJSON/xxxToNumber ([#566](https://github.com/stephenh/ts-proto/issues/566)) ([19911a1](https://github.com/stephenh/ts-proto/commit/19911a1c62e3fe5c8a0eb0a795489340512898da))
+
+## [1.112.1](https://github.com/stephenh/ts-proto/compare/v1.112.0...v1.112.1) (2022-05-06)
+
+
+### Bug Fixes
+
+* use Long.fromValue instead of Long.fromString ([#562](https://github.com/stephenh/ts-proto/issues/562)) ([c99891e](https://github.com/stephenh/ts-proto/commit/c99891e0fec6d9b7225025eb0c5bd7393e80af36))
+
+# [1.112.0](https://github.com/stephenh/ts-proto/compare/v1.111.0...v1.112.0) (2022-05-02)
+
+
+### Bug Fixes
+
+* update codegen for `nice-grpc` ([#561](https://github.com/stephenh/ts-proto/issues/561)) ([d503f67](https://github.com/stephenh/ts-proto/commit/d503f677922402e880b5d8502b3d8bc099b7f39d))
+
+
+### Features
+
+* add support for generating `nice-grpc` server and client stubs ([#555](https://github.com/stephenh/ts-proto/issues/555)) ([8c19361](https://github.com/stephenh/ts-proto/commit/8c19361ede9a7a039acf3a1375913d012b0fcb7d)), closes [#545](https://github.com/stephenh/ts-proto/issues/545)
+
+# [1.111.0](https://github.com/stephenh/ts-proto/compare/v1.110.4...v1.111.0) (2022-05-01)
+
+
+### Features
+
+* include service and definition types with implementations ([#552](https://github.com/stephenh/ts-proto/issues/552)) ([6b896f4](https://github.com/stephenh/ts-proto/commit/6b896f4b7f4ba0f0d97730767421786171646aea))
+
+## [next](https://github.com/stephenh/ts-proto/compare/v1.110.4...main) (????-??-??)
+
+### Features
+
+* When outputing service and service definition implementations, include types. Eg, before:
+
+  ```ts
+  export const TestDefinition = {
+    name: 'Test',
+    fullName: 'simple.Test',
+    methods: {
+      …
+    },
+  } as const;
+  ```
+
+  Now:
+
+  ```ts
+  export type TestDefinition = typeof TestDefinition;
+  export const TestDefinition = {
+    name: 'Test',
+    fullName: 'simple.Test',
+    methods: {
+      …
+    },
+  } as const;
+  ```
+
+## [1.110.4](https://github.com/stephenh/ts-proto/compare/v1.110.3...v1.110.4) (2022-04-08)
+
+
+### Bug Fixes
+
+* Use Uint8Array.forEach in base64FromBytes ([#544](https://github.com/stephenh/ts-proto/issues/544)) ([c7641ce](https://github.com/stephenh/ts-proto/commit/c7641ceb6a1c9da234245b9d808b2ded899dbbbc))
+
+## [1.110.3](https://github.com/stephenh/ts-proto/compare/v1.110.2...v1.110.3) (2022-04-08)
+
+
+### Bug Fixes
+
+* regression in being able to return a Date as a GRPC return value ([#534](https://github.com/stephenh/ts-proto/issues/534)) ([22b76ec](https://github.com/stephenh/ts-proto/commit/22b76eccfc0d26309aab9e454de31ef020595be8))
+
+## [1.110.2](https://github.com/stephenh/ts-proto/compare/v1.110.1...v1.110.2) (2022-03-27)
+
+
+### Bug Fixes
+
+* **Grpc-Web:** Fix compilation failure when a service definition contains a client streaming call. ([#535](https://github.com/stephenh/ts-proto/issues/535)) ([0c83892](https://github.com/stephenh/ts-proto/commit/0c83892693d5755c9fe848b442b5e666192103ab))
+
+## [1.110.1](https://github.com/stephenh/ts-proto/compare/v1.110.0...v1.110.1) (2022-03-25)
+
+
+### Bug Fixes
+
+* Use a module star import for protobuf types. ([#540](https://github.com/stephenh/ts-proto/issues/540)) ([f5b7700](https://github.com/stephenh/ts-proto/commit/f5b770083dffe72338beb4a09432a2a917760eae))
+
 # [1.110.0](https://github.com/stephenh/ts-proto/compare/v1.109.1...v1.110.0) (2022-03-15)
 
 

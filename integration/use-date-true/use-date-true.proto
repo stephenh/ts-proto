@@ -1,4 +1,5 @@
 syntax = "proto3";
+import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
 
 message Todo {
@@ -7,4 +8,8 @@ message Todo {
   repeated google.protobuf.Timestamp repeated_timestamp = 3;
   optional google.protobuf.Timestamp optional_timestamp = 4;
   map<string, google.protobuf.Timestamp> map_of_timestamps = 5;
+}
+
+service Clock {
+  rpc Now(google.protobuf.Empty) returns (google.protobuf.Timestamp);
 }

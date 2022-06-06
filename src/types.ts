@@ -477,7 +477,11 @@ export function valueTypeName(ctx: Context, typeName: string): Code | undefined 
     case '.google.protobuf.BoolValue':
       return code`boolean`;
     case '.google.protobuf.BytesValue':
-      return ctx.options.env === EnvOption.NODE ? code`Buffer` : code`Uint8Array`;
+      return ctx.options.env === EnvOption.NODE
+        ? code`Buffer`
+        : ctx.options.useJsonWireFormat
+        ? code`string`
+        : code`Uint8Array`;
     case '.google.protobuf.ListValue':
       return code`Array<any>`;
     case '.google.protobuf.Value':
@@ -485,7 +489,11 @@ export function valueTypeName(ctx: Context, typeName: string): Code | undefined 
     case '.google.protobuf.Struct':
       return code`{[key: string]: any}`;
     case '.google.protobuf.FieldMask':
-      return code`string[]`;
+      return ctx.options.useJsonWireFormat ? code`string` : code`string[]`;
+    case '.google.protobuf.Duration':
+      return ctx.options.useJsonWireFormat ? code`string` : undefined;
+    case '.google.protobuf.Timestamp':
+      return ctx.options.useJsonWireFormat ? code`string` : undefined;
     default:
       return undefined;
   }
@@ -652,16 +660,25 @@ export function rawRequestType(ctx: Context, methodDesc: MethodDescriptorProto):
   return messageToTypeName(ctx, methodDesc.inputType);
 }
 
-export function requestType(ctx: Context, methodDesc: MethodDescriptorProto): Code {
+export function requestType(ctx: Context, methodDesc: MethodDescriptorProto, partial: boolean = false): Code {
   let typeName = rawRequestType(ctx, methodDesc);
+
+  if (partial) {
+    typeName = code`${ctx.utils.DeepPartial}<${typeName}>`;
+  }
+
   if (methodDesc.clientStreaming) {
     return code`${imp('Observable@rxjs')}<${typeName}>`;
   }
   return typeName;
 }
 
-export function responseType(ctx: Context, methodDesc: MethodDescriptorProto): Code {
-  return messageToTypeName(ctx, methodDesc.outputType, { keepValueType: true });
+export function responseType(
+  ctx: Context,
+  methodDesc: MethodDescriptorProto,
+  typeOptions: { keepValueType?: boolean; repeated?: boolean } = {}
+): Code {
+  return messageToTypeName(ctx, methodDesc.outputType, typeOptions);
 }
 
 export function responsePromise(ctx: Context, methodDesc: MethodDescriptorProto): Code {

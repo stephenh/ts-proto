@@ -51,12 +51,10 @@ export function generateService(
       params.push(code`ctx: Context`);
     }
 
-    let inputType = requestType(ctx, methodDesc);
     // the grpc-web clients auto-`fromPartial` the input before handing off to grpc-web's
     // serde runtime, so it's okay to accept partial results from the client
-    if (options.outputClientImpl === 'grpc-web') {
-      inputType = code`${utils.DeepPartial}<${inputType}>`;
-    }
+    const partialInput = options.outputClientImpl === 'grpc-web';
+    const inputType = requestType(ctx, methodDesc, partialInput);
     params.push(code`request: ${inputType}`);
 
     // Use metadata as last argument for interface only configuration
@@ -106,11 +104,12 @@ function generateRegularRpcMethod(
   methodDesc: MethodDescriptorProto
 ): Code {
   assertInstanceOf(methodDesc, FormattedMethodDescriptor);
-  const { options } = ctx;
+  const { options, utils } = ctx;
   const Reader = imp('Reader@protobufjs/minimal');
   const rawInputType = rawRequestType(ctx, methodDesc);
   const inputType = requestType(ctx, methodDesc);
   const outputType = responseType(ctx, methodDesc);
+  const rawOutputType = responseType(ctx, methodDesc, { keepValueType: true });
 
   const params = [...(options.context ? [code`ctx: Context`] : []), code`request: ${inputType}`];
   const maybeCtx = options.context ? 'ctx,' : '';
@@ -118,6 +117,9 @@ function generateRegularRpcMethod(
   let encode = code`${rawInputType}.encode(request).finish()`;
   let decode = code`data => ${outputType}.decode(new ${Reader}(data))`;
 
+  if (options.useDate && rawOutputType.toString().includes('Timestamp')) {
+    decode = code`data => ${utils.fromTimestamp}(${rawOutputType}.decode(new ${Reader}(data)))`;
+  }
   if (methodDesc.clientStreaming) {
     encode = code`request.pipe(${imp('map@rxjs/operators')}(request => ${encode}))`;
   }

@@ -12,12 +12,12 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [12.x, 14.x]
+        node-version: [14.x, 16.x]
 
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
         with:
-          token: ${{ secrets.ADMIN_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
@@ -35,6 +35,14 @@ jobs:
         run: yarn test
         env:
           CI: true
+      - name: test esmodule interop
+        working-directory: ./integration/simple-esmodule-interop
+        run: |
+          yarn install
+          yarn tsc
+          yarn jest
+        env:
+          CI: true
 
   release:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -42,19 +50,47 @@ jobs:
     needs: [build]
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           persist-credentials: false
       - name: Setup Node.js
         uses: actions/setup-node@v1
         with:
-          node-version: 12.x
+          node-version: 16.x
       - name: Install
         run: yarn install
       - name: Build
         run: yarn build
       - name: Release
+        id: release
         run: yarn semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.ADMIN_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+    outputs:
+      release_version: ${{ steps.release.outputs.release_version }}
+
+  push_to_buf_registry:
+    name: Push Docker image to Buf Registry
+    runs-on: ubuntu-latest
+    environment: npm
+    needs: [release]
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v3
+
+      - name: Log in to Buf Plugin Registry
+        uses: docker/login-action@v2
+        with:
+          registry: plugins.buf.build
+          username: ${{ secrets.BUF_USERNAME }}
+          password: ${{ secrets.BUF_PASSWORD }}
+
+      - name: Build Plugin image
+        run: docker build
+          --file ts-proto.Dockerfile
+          --tag plugins.buf.build/${{ secrets.BUF_USERNAME }}/ts-proto:v${{ needs.release.outputs.release_version }}-0
+          "."
+
+      - name: Push to Buf Registry
+        run: docker push plugins.buf.build/${{ secrets.BUF_USERNAME }}/ts-proto:v${{ needs.release.outputs.release_version }}-0

@@ -23,6 +23,7 @@ export enum OneofOption {
 
 export enum ServiceOption {
   GRPC = 'grpc-js',
+  NICE_GRPC = 'nice-grpc',
   GENERIC = 'generic-definitions',
   DEFAULT = 'default',
   NONE = 'none',
@@ -57,12 +58,12 @@ export type Options = {
   unrecognizedEnum: boolean;
   exportCommonSymbols: boolean;
   outputSchema: boolean;
-  // An alias of !output
   onlyTypes: boolean;
   emitImportedFiles: boolean;
   useExactTypes: boolean;
   unknownFields: boolean;
   usePrototypeForDefaults: boolean;
+  useJsonWireFormat: boolean;
 };
 
 export function defaultOptions(): Options {
@@ -100,6 +101,7 @@ export function defaultOptions(): Options {
     useExactTypes: true,
     unknownFields: false,
     usePrototypeForDefaults: false,
+    useJsonWireFormat: false,
   };
 }
 
@@ -121,8 +123,18 @@ export function optionsFromParameter(parameter: string | undefined): Options {
     }
     Object.assign(options, parsed);
   }
-  // We should promote onlyTypes to its own documented flag, but just an alias for now
-  if (!options.outputJsonMethods && !options.outputEncodeMethods && !options.outputClientImpl && !options.nestJs) {
+  // onlyTypes=true implies outputJsonMethods=false,outputEncodeMethods=false,outputClientImpl=false,nestJs=false
+  if (options.onlyTypes) {
+    options.outputJsonMethods = false;
+    options.outputEncodeMethods = false;
+    options.outputClientImpl = false;
+    options.nestJs = false;
+  } else if (
+    !options.outputJsonMethods &&
+    !options.outputEncodeMethods &&
+    !options.outputClientImpl &&
+    !options.nestJs
+  ) {
     options.onlyTypes = true;
   }
 
@@ -161,6 +173,17 @@ export function optionsFromParameter(parameter: string | undefined): Options {
     options.snakeToCamel = [options.snakeToCamel];
   }
 
+  if (options.useJsonWireFormat) {
+    if (!options.onlyTypes) {
+      // useJsonWireFormat requires onlyTypes=true
+      options.useJsonWireFormat = false;
+    } else {
+      // useJsonWireFormat implies stringEnums=true and useDate=string
+      options.stringEnums = true;
+      options.useDate = DateOption.STRING;
+    }
+  }
+
   return options;
 }
 
@@ -179,10 +202,6 @@ function parseParameter(parameter: string): Options {
   return options;
 }
 
-export function getTsPoetOpts(options: Options): { forceDefaultImport?: string[] } {
-  if (options.esModuleInterop) {
-    return { forceDefaultImport: ['protobufjs/minimal'] };
-  } else {
-    return {};
-  }
+export function getTsPoetOpts(options: Options): { forceModuleImport?: string[] } {
+  return { forceModuleImport: ['protobufjs/minimal'] };
 }

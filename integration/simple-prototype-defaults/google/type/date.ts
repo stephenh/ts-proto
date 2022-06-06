@@ -1,6 +1,6 @@
 /* eslint-disable */
-import { util, configure, Writer, Reader } from 'protobufjs/minimal';
 import * as Long from 'long';
+import * as _m0 from 'protobufjs/minimal';
 
 export const protobufPackage = 'google.type';
 
@@ -40,7 +40,7 @@ function createBaseDateMessage(): DateMessage {
 }
 
 export const DateMessage = {
-  encode(message: DateMessage, writer: Writer = Writer.create()): Writer {
+  encode(message: DateMessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.year !== 0) {
       writer.uint32(8).int32(message.year);
     }
@@ -53,8 +53,8 @@ export const DateMessage = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): DateMessage {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): DateMessage {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = Object.create(createBaseDateMessage()) as DateMessage;
     while (reader.pos < end) {
@@ -121,9 +121,9 @@ export type Exact<P, I extends P> = P extends Builtin
 
 // If you get a compile-error about 'Constructor<Long> and ... have no overlap',
 // add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
-if (util.Long !== Long) {
-  util.Long = Long as any;
-  configure();
+if (_m0.util.Long !== Long) {
+  _m0.util.Long = Long as any;
+  _m0.configure();
 }
 
 function isSet(value: any): boolean {

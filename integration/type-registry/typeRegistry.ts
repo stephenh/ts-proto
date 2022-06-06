@@ -1,10 +1,10 @@
 /* eslint-disable */
-import { Writer, Reader } from 'protobufjs/minimal';
+import * as _m0 from 'protobufjs/minimal';
 
 export interface MessageType<Message extends UnknownMessage = UnknownMessage> {
   $type: Message['$type'];
-  encode(message: Message, writer?: Writer): Writer;
-  decode(input: Reader | Uint8Array, length?: number): Message;
+  encode(message: Message, writer?: _m0.Writer): _m0.Writer;
+  decode(input: _m0.Reader | Uint8Array, length?: number): Message;
   fromJSON(object: any): Message;
   toJSON(message: Message): unknown;
   fromPartial(object: DeepPartial<Message>): Message;

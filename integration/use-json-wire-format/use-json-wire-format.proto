@@ -1,0 +1,11 @@
+syntax = "proto3";
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/timestamp.proto";
+
+message Todo {
+  string id = 1;
+  google.protobuf.Timestamp timestamp = 2;
+  google.protobuf.Duration duration = 3;
+  google.protobuf.FieldMask update_mask =4;
+}

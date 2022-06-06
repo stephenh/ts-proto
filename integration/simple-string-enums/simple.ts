@@ -1,6 +1,6 @@
 /* eslint-disable */
-import { util, configure, Writer, Reader } from 'protobufjs/minimal';
 import * as Long from 'long';
+import * as _m0 from 'protobufjs/minimal';
 import { NullValue, nullValueToNumber, nullValueFromJSON, nullValueToJSON } from './google/protobuf/struct';
 
 export const protobufPackage = 'simple';
@@ -38,8 +38,9 @@ export function stateEnumToJSON(object: StateEnum): string {
       return 'ON';
     case StateEnum.OFF:
       return 'OFF';
+    case StateEnum.UNRECOGNIZED:
     default:
-      return 'UNKNOWN';
+      return 'UNRECOGNIZED';
   }
 }
 
@@ -51,8 +52,9 @@ export function stateEnumToNumber(object: StateEnum): number {
       return 2;
     case StateEnum.OFF:
       return 3;
+    case StateEnum.UNRECOGNIZED:
     default:
-      return 0;
+      return -1;
   }
 }
 
@@ -74,7 +76,7 @@ function createBaseSimple(): Simple {
 }
 
 export const Simple = {
-  encode(message: Simple, writer: Writer = Writer.create()): Writer {
+  encode(message: Simple, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.name !== '') {
       writer.uint32(10).string(message.name);
     }
@@ -95,8 +97,8 @@ export const Simple = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Simple {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): Simple {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimple();
     while (reader.pos < end) {
@@ -143,7 +145,7 @@ export const Simple = {
       nullValue: isSet(object.nullValue) ? nullValueFromJSON(object.nullValue) : NullValue.NULL_VALUE,
       stateMap: isObject(object.stateMap)
         ? Object.entries(object.stateMap).reduce<{ [key: string]: StateEnum }>((acc, [key, value]) => {
-            acc[key] = value as StateEnum;
+            acc[key] = stateEnumFromJSON(value);
             return acc;
           }, {})
         : {},
@@ -193,7 +195,7 @@ function createBaseSimple_StateMapEntry(): Simple_StateMapEntry {
 }
 
 export const Simple_StateMapEntry = {
-  encode(message: Simple_StateMapEntry, writer: Writer = Writer.create()): Writer {
+  encode(message: Simple_StateMapEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.key !== '') {
       writer.uint32(10).string(message.key);
     }
@@ -203,8 +205,8 @@ export const Simple_StateMapEntry = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Simple_StateMapEntry {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): Simple_StateMapEntry {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimple_StateMapEntry();
     while (reader.pos < end) {
@@ -265,9 +267,9 @@ export type Exact<P, I extends P> = P extends Builtin
 
 // If you get a compile-error about 'Constructor<Long> and ... have no overlap',
 // add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
-if (util.Long !== Long) {
-  util.Long = Long as any;
-  configure();
+if (_m0.util.Long !== Long) {
+  _m0.util.Long = Long as any;
+  _m0.configure();
 }
 
 function isObject(value: any): boolean {

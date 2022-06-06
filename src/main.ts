@@ -75,6 +75,7 @@ import { generateSchema } from './schema';
 import { ConditionalOutput } from 'ts-poet/build/ConditionalOutput';
 import { generateGrpcJsService } from './generate-grpc-js';
 import { generateGenericServiceDefinition } from './generate-generic-service-definition';
+import { generateNiceGrpcService } from './generate-nice-grpc';
 
 export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [string, Code] {
   const { options, utils } = ctx;
@@ -172,8 +173,16 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
           staticMembers.push(generateFromPartial(ctx, fullName, message));
         }
 
-        staticMembers.push(...generateWrap(ctx, fullTypeName));
-        staticMembers.push(...generateUnwrap(ctx, fullTypeName));
+        const structFieldNames = {
+          nullValue: maybeSnakeToCamel('null_value', ctx.options),
+          numberValue: maybeSnakeToCamel('number_value', ctx.options),
+          stringValue: maybeSnakeToCamel('string_value', ctx.options),
+          boolValue: maybeSnakeToCamel('bool_value', ctx.options),
+          structValue: maybeSnakeToCamel('struct_value', ctx.options),
+          listValue: maybeSnakeToCamel('list_value', ctx.options),
+        };
+        staticMembers.push(...generateWrap(ctx, fullTypeName, structFieldNames));
+        staticMembers.push(...generateUnwrap(ctx, fullTypeName, structFieldNames));
 
         chunks.push(code`
           export const ${def(fullName)} = {
@@ -218,6 +227,8 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
       uniqueServices.forEach((outputService) => {
         if (outputService === ServiceOption.GRPC) {
           chunks.push(generateGrpcJsService(ctx, fileDesc, sInfo, serviceDesc));
+        } else if (outputService === ServiceOption.NICE_GRPC) {
+          chunks.push(generateNiceGrpcService(ctx, fileDesc, sInfo, serviceDesc));
         } else if (outputService === ServiceOption.GENERIC) {
           chunks.push(generateGenericServiceDefinition(ctx, fileDesc, sInfo, serviceDesc));
         } else if (outputService === ServiceOption.DEFAULT) {
@@ -231,7 +242,9 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
             chunks.push(generateGrpcClientImpl(ctx, fileDesc, serviceDesc));
             chunks.push(generateGrpcServiceDesc(fileDesc, serviceDesc));
             serviceDesc.method.forEach((method) => {
-              chunks.push(generateGrpcMethodDesc(ctx, serviceDesc, method));
+              if (!method.clientStreaming) {
+                chunks.push(generateGrpcMethodDesc(ctx, serviceDesc, method));
+              }
               if (method.serverStreaming) {
                 hasServerStreamingMethods = true;
               }
@@ -298,7 +311,8 @@ export type Utils = ReturnType<typeof makeDeepPartial> &
   ReturnType<typeof makeTimestampMethods> &
   ReturnType<typeof makeByteUtils> &
   ReturnType<typeof makeLongUtils> &
-  ReturnType<typeof makeComparisonUtils>;
+  ReturnType<typeof makeComparisonUtils> &
+  ReturnType<typeof makeNiceGrpcServerStreamingMethodResult>;
 
 /** These are runtime utility methods used by the generated code. */
 export function makeUtils(options: Options): Utils {
@@ -311,6 +325,7 @@ export function makeUtils(options: Options): Utils {
     ...makeTimestampMethods(options, longs),
     ...longs,
     ...makeComparisonUtils(),
+    ...makeNiceGrpcServerStreamingMethodResult(),
   };
 }
 
@@ -421,9 +436,9 @@ function makeByteUtils() {
       const btoa : (bin: string) => string = ${globalThis}.btoa || ((bin) => ${globalThis}.Buffer.from(bin, 'binary').toString('base64'));
       function base64FromBytes(arr: Uint8Array): string {
         const bin: string[] = [];
-        for (const byte of arr) {
+        arr.forEach((byte) => {
           bin.push(String.fromCharCode(byte));
-        }
+        });
         return btoa(bin.join(''));
       }
     `
@@ -629,6 +644,19 @@ function makeComparisonUtils() {
   );
 
   return { isObject, isSet };
+}
+
+function makeNiceGrpcServerStreamingMethodResult() {
+  const NiceGrpcServerStreamingMethodResult = conditionalOutput(
+    'ServerStreamingMethodResult',
+    code`
+      export type ServerStreamingMethodResult<Response> = {
+        [Symbol.asyncIterator](): AsyncIterator<Response, void>;
+      };
+    `
+  );
+
+  return { NiceGrpcServerStreamingMethodResult };
 }
 
 // Create the interface with properties
@@ -1155,7 +1183,7 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
           }
         } else if (isLong(field) && options.forceLong === LongOption.LONG) {
           const cstr = capitalize(basicTypeName(ctx, field, { keepValueType: true }).toCodeString());
-          return code`${cstr}.fromString(${from})`;
+          return code`${cstr}.fromValue(${from})`;
         } else {
           const cstr = capitalize(basicTypeName(ctx, field, { keepValueType: true }).toCodeString());
           return code`${cstr}(${from})`;
@@ -1199,7 +1227,8 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
             } else if (isLong(valueField) && options.forceLong === LongOption.LONG) {
               return code`Long.fromValue(${from} as Long | string)`;
             } else if (isEnum(valueField)) {
-              return code`${from} as ${valueType}`;
+              const fromJson = getEnumMethod(ctx, valueField.typeName, 'FromJSON');
+              return code`${fromJson}(${from})`;
             } else {
               const cstr = capitalize(valueType.toCodeString());
               return code`${cstr}(${from})`;
@@ -1571,7 +1600,16 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
   return joinCode(chunks, { on: '\n' });
 }
 
-function generateWrap(ctx: Context, fullProtoTypeName: string): Code[] {
+type StructFieldNames = {
+  nullValue: string;
+  numberValue: string;
+  stringValue: string;
+  boolValue: string;
+  structValue: string;
+  listValue: string;
+};
+
+function generateWrap(ctx: Context, fullProtoTypeName: string, fieldNames: StructFieldNames): Code[] {
   const chunks: Code[] = [];
   if (isStructTypeName(fullProtoTypeName)) {
     chunks.push(code`wrap(object: {[key: string]: any} | undefined): Struct {
@@ -1591,17 +1629,17 @@ function generateWrap(ctx: Context, fullProtoTypeName: string): Code[] {
         const result = createBaseValue();
 
         if (value === null) {
-          result.kind = {$case: 'nullValue', nullValue: NullValue.NULL_VALUE};
+          result.kind = {$case: '${fieldNames.nullValue}', ${fieldNames.nullValue}: NullValue.NULL_VALUE};
         } else if (typeof value === 'boolean') {
-          result.kind = {$case: 'boolValue', boolValue: value};
+          result.kind = {$case: '${fieldNames.boolValue}', ${fieldNames.boolValue}: value};
         } else if (typeof value === 'number') {
-          result.kind = {$case: 'numberValue', numberValue: value};
+          result.kind = {$case: '${fieldNames.numberValue}', ${fieldNames.numberValue}: value};
         } else if (typeof value === 'string') {
-          result.kind = {$case: 'stringValue', stringValue: value};
+          result.kind = {$case: '${fieldNames.stringValue}', ${fieldNames.stringValue}: value};
         } else if (Array.isArray(value)) {
-          result.kind = {$case: 'listValue', listValue: value};
+          result.kind = {$case: '${fieldNames.listValue}', ${fieldNames.listValue}: value};
         } else if (typeof value === 'object') {
-          result.kind = {$case: 'structValue', structValue: value};
+          result.kind = {$case: '${fieldNames.structValue}', ${fieldNames.structValue}: value};
         } else if (typeof value !== 'undefined') {
           throw new Error('Unsupported any value type: ' + typeof value);
         }
@@ -1613,17 +1651,17 @@ function generateWrap(ctx: Context, fullProtoTypeName: string): Code[] {
         const result = createBaseValue();
 
         if (value === null) {
-          result.nullValue = NullValue.NULL_VALUE;
+          result.${fieldNames.nullValue} = NullValue.NULL_VALUE;
         } else if (typeof value === 'boolean') {
-          result.boolValue = value;
+          result.${fieldNames.boolValue} = value;
         } else if (typeof value === 'number') {
-          result.numberValue = value;
+          result.${fieldNames.numberValue} = value;
         } else if (typeof value === 'string') {
-          result.stringValue = value;
+          result.${fieldNames.stringValue} = value;
         } else if (Array.isArray(value)) {
-          result.listValue = value;
+          result.${fieldNames.listValue} = value;
         } else if (typeof value === 'object') {
-          result.structValue = value;
+          result.${fieldNames.structValue} = value;
         } else if (typeof value !== 'undefined') {
           throw new Error('Unsupported any value type: ' + typeof value);
         }
@@ -1652,7 +1690,7 @@ function generateWrap(ctx: Context, fullProtoTypeName: string): Code[] {
   return chunks;
 }
 
-function generateUnwrap(ctx: Context, fullProtoTypeName: string): Code[] {
+function generateUnwrap(ctx: Context, fullProtoTypeName: string, fieldNames: StructFieldNames): Code[] {
   const chunks: Code[] = [];
   if (isStructTypeName(fullProtoTypeName)) {
     chunks.push(code`unwrap(message: Struct): {[key: string]: any} {
@@ -1667,35 +1705,35 @@ function generateUnwrap(ctx: Context, fullProtoTypeName: string): Code[] {
   if (isAnyValueTypeName(fullProtoTypeName)) {
     if (ctx.options.oneof === OneofOption.UNIONS) {
       chunks.push(code`unwrap(message: Value): string | number | boolean | Object | null | Array<any> | undefined {
-        if (message.kind?.$case === 'nullValue') {
+        if (message.kind?.$case === '${fieldNames.nullValue}') {
           return null;
-        } else if (message.kind?.$case === 'numberValue') {
-          return message.kind?.numberValue;
-        } else if (message.kind?.$case === 'stringValue') {
-          return message.kind?.stringValue;
-        } else if (message.kind?.$case === 'boolValue') {
-          return message.kind?.boolValue;
-        } else if (message.kind?.$case === 'structValue') {
-          return message.kind?.structValue;
-        } else if (message.kind?.$case === 'listValue') {
-          return message.kind?.listValue;
+        } else if (message.kind?.$case === '${fieldNames.numberValue}') {
+          return message.kind?.${fieldNames.numberValue};
+        } else if (message.kind?.$case === '${fieldNames.stringValue}') {
+          return message.kind?.${fieldNames.stringValue};
+        } else if (message.kind?.$case === '${fieldNames.boolValue}') {
+          return message.kind?.${fieldNames.boolValue};
+        } else if (message.kind?.$case === '${fieldNames.structValue}') {
+          return message.kind?.${fieldNames.structValue};
+        } else if (message.kind?.$case === '${fieldNames.listValue}') {
+          return message.kind?.${fieldNames.listValue};
         } else {
           return undefined;
         }
     }`);
     } else {
       chunks.push(code`unwrap(message: Value): string | number | boolean | Object | null | Array<any> | undefined {
-      if (message?.stringValue !== undefined) {
-        return message.stringValue;
-      } else if (message?.numberValue !== undefined) {
-        return message.numberValue;
-      } else if (message?.boolValue !== undefined) {
-        return message.boolValue;
-      } else if (message?.structValue !== undefined) {
-        return message.structValue;
-      } else if (message?.listValue !== undefined) {
-          return message.listValue;
-      } else if (message?.nullValue !== undefined) {
+      if (message?.${fieldNames.stringValue} !== undefined) {
+        return message.${fieldNames.stringValue};
+      } else if (message?.${fieldNames.numberValue} !== undefined) {
+        return message.${fieldNames.numberValue};
+      } else if (message?.${fieldNames.boolValue} !== undefined) {
+        return message.${fieldNames.boolValue};
+      } else if (message?.${fieldNames.structValue} !== undefined) {
+        return message.${fieldNames.structValue};
+      } else if (message?.${fieldNames.listValue} !== undefined) {
+          return message.${fieldNames.listValue};
+      } else if (message?.${fieldNames.nullValue} !== undefined) {
         return null;
       }
       return undefined;
