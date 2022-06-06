@@ -669,7 +669,8 @@ function generateInterfaceDeclaration(
     const name = maybeSnakeToCamel(fieldDesc.name, options);
     const type = toTypeName(ctx, messageDesc, fieldDesc);
     const q = isOptionalProperty(fieldDesc, messageDesc.options, options) ? '?' : '';
-    chunks.push(code`${name}${q}: ${type}, `);
+    console.log('HEEEELOOO!!!', name, q, type);
+    chunks.push(code`readonly ${name}${q}: ${type}, `);
   });
 
   chunks.push(code`}`);
