@@ -405,7 +405,10 @@ export class GrpcWebImpl {
         debug: this.options.debug,
         onEnd: (next) => {
           if (next.status !== 0) {
-            observer.error({ code: next.status, message: next.statusMessage });
+            const err = new Error(next.statusMessage) as GrpcWebError;
+            err.code = next.status;
+            err.metadata = next.trailers;
+            observer.error(err);
           } else {
             observer.next(next.message as any);
             observer.complete();
@@ -435,4 +438,9 @@ export type Exact<P, I extends P> = P extends Builtin
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+export interface GrpcWebError extends Error {
+  code: grpc.Code;
+  metadata: grpc.Metadata;
 }

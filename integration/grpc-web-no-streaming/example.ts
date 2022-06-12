@@ -405,7 +405,7 @@ export class GrpcWebImpl {
           if (response.status === grpc.Code.OK) {
             resolve(response.message);
           } else {
-            const err = new Error(response.statusMessage) as any;
+            const err = new Error(response.statusMessage) as GrpcWebError;
             err.code = response.status;
             err.metadata = response.trailers;
             reject(err);
@@ -435,4 +435,9 @@ export type Exact<P, I extends P> = P extends Builtin
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+export interface GrpcWebError extends Error {
+  code: grpc.Code;
+  metadata: grpc.Metadata;
 }
