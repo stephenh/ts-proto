@@ -1,8 +1,7 @@
 /* eslint-disable */
 import { messageTypeRegistry } from '../typeRegistry';
-import * as Long from 'long';
-import * as _m0 from 'protobufjs/minimal';
 import { Foo } from '../foo';
+import * as _m0 from 'protobufjs/minimal';
 
 export const protobufPackage = 'foo.bar';
 
@@ -81,13 +80,6 @@ type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin
   ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & Record<Exclude<keyof I, KeysOfUnion<P> | '$type'>, never>;
-
-// If you get a compile-error about 'Constructor<Long> and ... have no overlap',
-// add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
-if (_m0.util.Long !== Long) {
-  _m0.util.Long = Long as any;
-  _m0.configure();
-}
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
