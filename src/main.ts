@@ -351,6 +351,9 @@ function makeLongUtils(options: Options, bytes: ReturnType<typeof makeByteUtils>
     // If you get a compile-error about 'Constructor<Long> and ... have no overlap',
     // add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.`;
 
+  // Instead of exposing `LongImp` directly, let callers think that they are getting the
+  // `imp(Long)` but really it is that + our long initialization snippet. This means the
+  // initialization code will only be emitted in files that actually use the Long import.
   const Long = conditionalOutput(
     'Long',
     code`
