@@ -1,7 +1,6 @@
 /* eslint-disable */
-import * as Long from 'long';
-import * as _m0 from 'protobufjs/minimal';
 import * as mongodb from 'mongodb';
+import * as _m0 from 'protobufjs/minimal';
 import { ObjectId } from './objectid/objectid';
 
 export const protobufPackage = 'foo';
@@ -225,13 +224,6 @@ function fromProtoObjectId(oid: ObjectId): mongodb.ObjectId {
 function toProtoObjectId(oid: mongodb.ObjectId): ObjectId {
   const value = oid.toString();
   return { value };
-}
-
-// If you get a compile-error about 'Constructor<Long> and ... have no overlap',
-// add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
-if (_m0.util.Long !== Long) {
-  _m0.util.Long = Long as any;
-  _m0.configure();
 }
 
 function isObject(value: any): boolean {

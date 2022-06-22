@@ -285,8 +285,6 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
     ...Object.values(utils).map((v) => {
       if (v instanceof ConditionalOutput) {
         return code`${v.ifUsed}`;
-      } else if (v instanceof Code) {
-        return v;
       } else {
         return code``;
       }
@@ -345,7 +343,7 @@ function makeLongUtils(options: Options, bytes: ReturnType<typeof makeByteUtils>
   //
   // I.e there is not an import for long that "just works" in both esModuleInterop and
   // not esModuleInterop.
-  const Long = options.esModuleInterop ? imp('Long=long') : imp('Long*long');
+  const LongImp = options.esModuleInterop ? imp('Long=long') : imp('Long*long');
 
   const disclaimer = options.esModuleInterop
     ? ''
@@ -353,17 +351,19 @@ function makeLongUtils(options: Options, bytes: ReturnType<typeof makeByteUtils>
     // If you get a compile-error about 'Constructor<Long> and ... have no overlap',
     // add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.`;
 
-  // Kinda hacky, but we always init long unless in onlyTypes mode. I'd rather do
-  // this more implicitly, like if `Long@long` is imported or something like that.
-  const longInit = options.onlyTypes
-    ? code``
-    : code`
+  // Instead of exposing `LongImp` directly, let callers think that they are getting the
+  // `imp(Long)` but really it is that + our long initialization snippet. This means the
+  // initialization code will only be emitted in files that actually use the Long import.
+  const Long = conditionalOutput(
+    'Long',
+    code`
       ${disclaimer}
-      if (${util}.Long !== ${Long}) {
-        ${util}.Long = ${Long} as any;
+      if (${util}.Long !== ${LongImp}) {
+        ${util}.Long = ${LongImp} as any;
         ${configure}();
       }
-    `;
+    `
+  );
 
   // TODO This is unused?
   const numberToLong = conditionalOutput(
@@ -396,7 +396,7 @@ function makeLongUtils(options: Options, bytes: ReturnType<typeof makeByteUtils>
     `
   );
 
-  return { numberToLong, longToNumber, longToString, longInit, Long };
+  return { numberToLong, longToNumber, longToString, Long };
 }
 
 function makeByteUtils() {

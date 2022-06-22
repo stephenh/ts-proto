@@ -1,8 +1,7 @@
 /* eslint-disable */
 import { messageTypeRegistry } from './typeRegistry';
-import * as Long from 'long';
-import * as _m0 from 'protobufjs/minimal';
 import { Timestamp } from './google/protobuf/timestamp';
+import * as _m0 from 'protobufjs/minimal';
 import { Struct } from './google/protobuf/struct';
 
 export const protobufPackage = 'foo';
@@ -221,13 +220,6 @@ function fromJsonTimestamp(o: any): Date {
   } else {
     return fromTimestamp(Timestamp.fromJSON(o));
   }
-}
-
-// If you get a compile-error about 'Constructor<Long> and ... have no overlap',
-// add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
-if (_m0.util.Long !== Long) {
-  _m0.util.Long = Long as any;
-  _m0.configure();
 }
 
 function isObject(value: any): boolean {
