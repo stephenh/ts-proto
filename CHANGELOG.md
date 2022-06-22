@@ -1,3 +1,10 @@
+## [1.115.5](https://github.com/stephenh/ts-proto/compare/v1.115.4...v1.115.5) (2022-06-22)
+
+
+### Bug Fixes
+
+* remove Long import statement when Long was unused ([#599](https://github.com/stephenh/ts-proto/issues/599)) ([58dc10c](https://github.com/stephenh/ts-proto/commit/58dc10c61ec5a76d4b54ba9eddf34021979dd4aa))
+
 ## [1.115.4](https://github.com/stephenh/ts-proto/compare/v1.115.3...v1.115.4) (2022-06-05)
 
 
