@@ -1,6 +1,6 @@
 /* eslint-disable */
-import { Timestamp } from './google/protobuf/timestamp';
-import { Empty } from './google/protobuf/empty';
+import { Timestamp } from './google/protobuf/timestamp.js';
+import { Empty } from './google/protobuf/empty.js';
 import * as _m0 from 'protobufjs/minimal';
 
 export const protobufPackage = '';

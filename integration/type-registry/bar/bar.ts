@@ -1,6 +1,6 @@
 /* eslint-disable */
 import { messageTypeRegistry } from '../typeRegistry';
-import { Foo } from '../foo';
+import { Foo } from '../foo.js';
 import * as _m0 from 'protobufjs/minimal';
 
 export const protobufPackage = 'foo.bar';

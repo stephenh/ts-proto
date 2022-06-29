@@ -4,7 +4,7 @@ import {
   Simple as Simple2,
   simpleEnumFromJSON as simpleEnumFromJSON3,
   simpleEnumToJSON as simpleEnumToJSON4,
-} from './simple2';
+} from './simple2.js';
 import * as _m0 from 'protobufjs/minimal';
 
 export const protobufPackage = 'simple';

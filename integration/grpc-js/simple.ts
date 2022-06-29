@@ -17,8 +17,8 @@ import {
   ClientDuplexStream,
   ServiceError,
 } from '@grpc/grpc-js';
-import { Timestamp } from './google/protobuf/timestamp';
-import { Empty } from './google/protobuf/empty';
+import { Timestamp } from './google/protobuf/timestamp.js';
+import { Empty } from './google/protobuf/empty.js';
 import {
   StringValue,
   Int64Value,
@@ -29,8 +29,8 @@ import {
   FloatValue,
   DoubleValue,
   BoolValue,
-} from './google/protobuf/wrappers';
-import { Struct, ListValue, Value } from './google/protobuf/struct';
+} from './google/protobuf/wrappers.js';
+import { Struct, ListValue, Value } from './google/protobuf/struct.js';
 import * as _m0 from 'protobufjs/minimal';
 
 export const protobufPackage = 'simple';

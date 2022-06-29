@@ -199,7 +199,8 @@ export function getPropertyAccessor(objectName: string, propertyName: string, op
 }
 
 export function impProto(options: Options, module: string, type: string): Import {
-  const importString = `${type}@./${module}${options.fileSuffix}`;
+  // NOTE: TypeScript resolves importing foo.js to importing foo.ts.
+  const importString = `${type}@./${module}${options.fileSuffix}.js`;
   if (options.onlyTypes) {
     return imp('t:' + importString);
   } else {

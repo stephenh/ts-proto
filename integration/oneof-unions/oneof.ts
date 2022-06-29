@@ -1,6 +1,6 @@
 /* eslint-disable */
 import * as _m0 from 'protobufjs/minimal';
-import { Value } from './google/protobuf/struct';
+import { Value } from './google/protobuf/struct.js';
 
 export const protobufPackage = 'oneof';
 

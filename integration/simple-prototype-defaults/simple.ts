@@ -1,10 +1,10 @@
 /* eslint-disable */
-import { Timestamp } from './google/protobuf/timestamp';
+import { Timestamp } from './google/protobuf/timestamp.js';
 import * as Long from 'long';
-import { ImportedThing } from './import_dir/thing';
-import { DateMessage } from './google/type/date';
+import { ImportedThing } from './import_dir/thing.js';
+import { DateMessage } from './google/type/date.js';
 import * as _m0 from 'protobufjs/minimal';
-import { StringValue, Int32Value, BoolValue, BytesValue } from './google/protobuf/wrappers';
+import { StringValue, Int32Value, BoolValue, BytesValue } from './google/protobuf/wrappers.js';
 
 export const protobufPackage = 'simple';
 
