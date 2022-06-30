@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package simple;
+
+service Test {
+    rpc BidiStreaming(stream TestMessage) returns (stream TestMessage) {}
+}
+
+message TestMessage {
+    string value = 1;
+}

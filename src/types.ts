@@ -660,6 +660,13 @@ export function rawRequestType(ctx: Context, methodDesc: MethodDescriptorProto):
   return messageToTypeName(ctx, methodDesc.inputType);
 }
 
+export function observableType(ctx: Context): Code {
+  if (ctx.options.useAsyncIterable) {
+    return code`AsyncIterable`;
+  }
+  return code`${imp('Observable@rxjs')}`;
+}
+
 export function requestType(ctx: Context, methodDesc: MethodDescriptorProto, partial: boolean = false): Code {
   let typeName = rawRequestType(ctx, methodDesc);
 
@@ -668,7 +675,7 @@ export function requestType(ctx: Context, methodDesc: MethodDescriptorProto, par
   }
 
   if (methodDesc.clientStreaming) {
-    return code`${imp('Observable@rxjs')}<${typeName}>`;
+    return code`${observableType(ctx)}<${typeName}>`;
   }
   return typeName;
 }
@@ -686,7 +693,7 @@ export function responsePromise(ctx: Context, methodDesc: MethodDescriptorProto)
 }
 
 export function responseObservable(ctx: Context, methodDesc: MethodDescriptorProto): Code {
-  return code`${imp('Observable@rxjs')}<${responseType(ctx, methodDesc)}>`;
+  return code`${observableType(ctx)}<${responseType(ctx, methodDesc)}>`;
 }
 
 export function responsePromiseOrObservable(ctx: Context, methodDesc: MethodDescriptorProto): Code {

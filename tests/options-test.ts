@@ -37,6 +37,7 @@ describe('options', () => {
         "stringEnums": false,
         "unknownFields": false,
         "unrecognizedEnum": true,
+        "useAsyncIterable": false,
         "useDate": "timestamp",
         "useExactTypes": true,
         "useJsonWireFormat": false,

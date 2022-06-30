@@ -1,8 +1,8 @@
 /* eslint-disable */
 import { grpc } from '@improbable-eng/grpc-web';
-import { Observable } from 'rxjs';
 import { BrowserHeaders } from 'browser-headers';
 import { share } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import * as _m0 from 'protobufjs/minimal';
 
 export const protobufPackage = 'rpx';

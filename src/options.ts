@@ -61,6 +61,7 @@ export type Options = {
   onlyTypes: boolean;
   emitImportedFiles: boolean;
   useExactTypes: boolean;
+  useAsyncIterable: boolean;
   unknownFields: boolean;
   usePrototypeForDefaults: boolean;
   useJsonWireFormat: boolean;
@@ -99,6 +100,7 @@ export function defaultOptions(): Options {
     onlyTypes: false,
     emitImportedFiles: true,
     useExactTypes: true,
+    useAsyncIterable: false,
     unknownFields: false,
     usePrototypeForDefaults: false,
     useJsonWireFormat: false,

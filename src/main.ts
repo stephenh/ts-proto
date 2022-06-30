@@ -67,6 +67,7 @@ import {
   generateGrpcMethodDesc,
   generateGrpcServiceDesc,
 } from './generate-grpc-web';
+import { generateEncodeTransform, generateDecodeTransform } from './generate-async-iterable';
 import { generateEnum } from './enums';
 import { visit, visitServices } from './visit';
 import { DateOption, EnvOption, LongOption, OneofOption, Options, ServiceOption } from './options';
@@ -164,6 +165,10 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
         if (options.outputEncodeMethods) {
           staticMembers.push(generateEncode(ctx, fullName, message));
           staticMembers.push(generateDecode(ctx, fullName, message));
+        }
+        if (options.useAsyncIterable) {
+          staticMembers.push(generateEncodeTransform(fullName));
+          staticMembers.push(generateDecodeTransform(fullName));
         }
         if (options.outputJsonMethods) {
           staticMembers.push(generateFromJson(ctx, fullName, fullTypeName, message));
