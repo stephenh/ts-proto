@@ -7,10 +7,10 @@ import {
   rawRequestType,
   responsePromiseOrObservable,
   responseType,
+  observableType,
 } from './types';
 import { assertInstanceOf, FormattedMethodDescriptor, maybeAddComment, maybePrefixPackage, singular } from './utils';
 import SourceInfo, { Fields } from './sourceInfo';
-import { camelCase } from './case';
 import { contextTypeVar } from './main';
 import { Context } from './context';
 
@@ -34,7 +34,7 @@ export function generateService(
   sourceInfo: SourceInfo,
   serviceDesc: ServiceDescriptorProto
 ): Code {
-  const { options, utils } = ctx;
+  const { options } = ctx;
   const chunks: Code[] = [];
 
   maybeAddComment(sourceInfo, chunks, serviceDesc.options?.deprecated);
@@ -121,12 +121,20 @@ function generateRegularRpcMethod(
     decode = code`data => ${utils.fromTimestamp}(${rawOutputType}.decode(new ${Reader}(data)))`;
   }
   if (methodDesc.clientStreaming) {
-    encode = code`request.pipe(${imp('map@rxjs/operators')}(request => ${encode}))`;
+    if (options.useAsyncIterable) {
+      encode = code`${rawInputType}.encodeTransform(request)`;
+    } else {
+      encode = code`request.pipe(${imp('map@rxjs/operators')}(request => ${encode}))`;
+    }
   }
   let returnVariable: string;
   if (options.returnObservable || methodDesc.serverStreaming) {
     returnVariable = 'result';
-    decode = code`result.pipe(${imp('map@rxjs/operators')}(${decode}))`;
+    if (options.useAsyncIterable) {
+      decode = code`${rawOutputType}.decodeTransform(result)`;
+    } else {
+      decode = code`result.pipe(${imp('map@rxjs/operators')}(${decode}))`;
+    }
   } else {
     returnVariable = 'promise';
     decode = code`promise.then(${decode})`;
@@ -207,7 +215,7 @@ export function generateServiceClientImpl(
 }
 
 /** We've found a BatchXxx method, create a synthetic GetXxx method that calls it. */
-function generateBatchingRpcMethod(ctx: Context, batchMethod: BatchMethod): Code {
+function generateBatchingRpcMethod(_ctx: Context, batchMethod: BatchMethod): Code {
   const {
     methodDesc,
     singleMethodName,
@@ -315,7 +323,7 @@ export function generateRpcType(ctx: Context, hasStreamingMethods: boolean): Cod
   const maybeContextParam = options.context ? 'ctx: Context,' : '';
   const methods = [[code`request`, code`Uint8Array`, code`Promise<Uint8Array>`]];
   if (hasStreamingMethods) {
-    const observable = imp('Observable@rxjs');
+    const observable = observableType(ctx);
     methods.push([code`clientStreamingRequest`, code`${observable}<Uint8Array>`, code`Promise<Uint8Array>`]);
     methods.push([code`serverStreamingRequest`, code`Uint8Array`, code`${observable}<Uint8Array>`]);
     methods.push([

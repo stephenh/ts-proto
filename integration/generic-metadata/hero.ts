@@ -1,6 +1,6 @@
 /* eslint-disable */
-import { Observable } from 'rxjs';
 import { Foo } from './some-file';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import * as _m0 from 'protobufjs/minimal';
 

@@ -1,5 +1,5 @@
 import { MethodDescriptorProto, FileDescriptorProto, ServiceDescriptorProto } from 'ts-proto-descriptors';
-import { rawRequestType, requestType, responsePromiseOrObservable, responseType } from './types';
+import { rawRequestType, requestType, responsePromiseOrObservable, responseType, observableType } from './types';
 import { Code, code, imp, joinCode } from 'ts-poet';
 import { Context } from './context';
 import { assertInstanceOf, FormattedMethodDescriptor, maybePrefixPackage } from './utils';
@@ -8,12 +8,11 @@ const grpc = imp('grpc@@improbable-eng/grpc-web');
 const share = imp('share@rxjs/operators');
 const take = imp('take@rxjs/operators');
 const BrowserHeaders = imp('BrowserHeaders@browser-headers');
-const Observable = imp('Observable@rxjs');
 
 /** Generates a client that uses the `@improbable-web/grpc-web` library. */
 export function generateGrpcClientImpl(
   ctx: Context,
-  fileDesc: FileDescriptorProto,
+  _fileDesc: FileDescriptorProto,
   serviceDesc: ServiceDescriptorProto
 ): Code {
   const chunks: Code[] = [];
@@ -154,18 +153,18 @@ export function addGrpcWebMisc(ctx: Context, hasStreamingMethods: boolean): Code
     interface UnaryMethodDefinitionishR extends ${grpc}.UnaryMethodDefinition<any, any> { requestStream: any; responseStream: any; }
   `);
   chunks.push(code`type UnaryMethodDefinitionish = UnaryMethodDefinitionishR;`);
-  chunks.push(generateGrpcWebRpcType(options.returnObservable, hasStreamingMethods));
-  chunks.push(generateGrpcWebImpl(options.returnObservable, hasStreamingMethods));
+  chunks.push(generateGrpcWebRpcType(ctx, options.returnObservable, hasStreamingMethods));
+  chunks.push(generateGrpcWebImpl(ctx, options.returnObservable, hasStreamingMethods));
   return joinCode(chunks, { on: '\n\n' });
 }
 
 /** Makes an `Rpc` interface to decouple from the low-level grpc-web `grpc.invoke and grpc.unary`/etc. methods. */
-function generateGrpcWebRpcType(returnObservable: boolean, hasStreamingMethods: boolean): Code {
+function generateGrpcWebRpcType(ctx: Context, returnObservable: boolean, hasStreamingMethods: boolean): Code {
   const chunks: Code[] = [];
 
   chunks.push(code`interface Rpc {`);
 
-  const wrapper = returnObservable ? Observable : 'Promise';
+  const wrapper = returnObservable ? observableType(ctx) : 'Promise';
   chunks.push(code`
     unary<T extends UnaryMethodDefinitionish>(
       methodDesc: T,
@@ -180,7 +179,7 @@ function generateGrpcWebRpcType(returnObservable: boolean, hasStreamingMethods: 
         methodDesc: T,
         request: any,
         metadata: grpc.Metadata | undefined,
-      ): ${Observable}<any>;
+      ): ${observableType(ctx)}<any>;
     `);
   }
 
@@ -189,7 +188,7 @@ function generateGrpcWebRpcType(returnObservable: boolean, hasStreamingMethods: 
 }
 
 /** Implements the `Rpc` interface by making calls using the `grpc.unary` method. */
-function generateGrpcWebImpl(returnObservable: boolean, hasStreamingMethods: boolean): Code {
+function generateGrpcWebImpl(ctx: Context, returnObservable: boolean, hasStreamingMethods: boolean): Code {
   const options = code`
     {
       transport?: grpc.TransportFactory,
@@ -212,13 +211,13 @@ function generateGrpcWebImpl(returnObservable: boolean, hasStreamingMethods: boo
   `);
 
   if (returnObservable) {
-    chunks.push(createObservableUnaryMethod());
+    chunks.push(createObservableUnaryMethod(ctx));
   } else {
     chunks.push(createPromiseUnaryMethod());
   }
 
   if (hasStreamingMethods) {
-    chunks.push(createInvokeMethod());
+    chunks.push(createInvokeMethod(ctx));
   }
 
   chunks.push(code`}`);
@@ -260,13 +259,13 @@ function createPromiseUnaryMethod(): Code {
   `;
 }
 
-function createObservableUnaryMethod(): Code {
+function createObservableUnaryMethod(ctx: Context): Code {
   return code`
     unary<T extends UnaryMethodDefinitionish>(
       methodDesc: T,
       _request: any,
       metadata: grpc.Metadata | undefined
-    ): ${Observable}<any> {
+    ): ${observableType(ctx)}<any> {
       const request = { ..._request, ...methodDesc.requestType };
       const maybeCombinedMetadata =
         metadata && this.options.metadata
@@ -293,13 +292,13 @@ function createObservableUnaryMethod(): Code {
   `;
 }
 
-function createInvokeMethod() {
+function createInvokeMethod(ctx: Context) {
   return code`
     invoke<T extends UnaryMethodDefinitionish>(
       methodDesc: T,
       _request: any,
       metadata: grpc.Metadata | undefined
-    ): ${Observable}<any> {
+    ): ${observableType(ctx)}<any> {
       // Status Response Codes (https://developers.google.com/maps-booking/reference/grpc-api/status_codes)
       const upStreamCodes = [2, 4, 8, 9, 10, 13, 14, 15]; 
       const DEFAULT_TIMEOUT_TIME: number = 3_000;
