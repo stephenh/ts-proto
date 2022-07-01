@@ -95,9 +95,8 @@ export function codeGeneratorResponse_FeatureToJSON(object: CodeGeneratorRespons
       return 'FEATURE_NONE';
     case CodeGeneratorResponse_Feature.FEATURE_PROTO3_OPTIONAL:
       return 'FEATURE_PROTO3_OPTIONAL';
-    case CodeGeneratorResponse_Feature.UNRECOGNIZED:
     default:
-      return 'UNRECOGNIZED';
+      return 'UNKNOWN';
   }
 }
 

@@ -10,11 +10,7 @@ protoc \
   ./google/protobuf/descriptor.proto \
   ./google/protobuf/compiler/plugin.proto
 
-./node_modules/.bin/tsc \
-  ./index.ts \
-  ./google/protobuf/descriptor.ts \
-  ./google/protobuf/compiler/plugin.ts \
-  --outDir dist --declaration --downlevelIteration
+./node_modules/.bin/tsc -p tsconfig.json
 
 
 
