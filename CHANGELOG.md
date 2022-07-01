@@ -1,3 +1,10 @@
+# [1.116.0](https://github.com/stephenh/ts-proto/compare/v1.115.5...v1.116.0) (2022-07-01)
+
+
+### Features
+
+* add option to use async iterables ([#605](https://github.com/stephenh/ts-proto/issues/605)) ([ca8ea8d](https://github.com/stephenh/ts-proto/commit/ca8ea8d761c02d3ca4da6eaa156acff35d88c510)), closes [#600](https://github.com/stephenh/ts-proto/issues/600)
+
 ## [1.115.5](https://github.com/stephenh/ts-proto/compare/v1.115.4...v1.115.5) (2022-06-22)
 
 
