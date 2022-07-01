@@ -23,8 +23,9 @@ export const Something = {
     }
     writer.ldelim();
     if ('_unknownFields' in message) {
-      for (const key of Object.keys(message['_unknownFields'])) {
-        const values = message['_unknownFields'][key] as Uint8Array[];
+      const msgUnknownFields: any = (message as any)['_unknownFields'];
+      for (const key of Object.keys(msgUnknownFields)) {
+        const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
           (writer as any)['_push'](
