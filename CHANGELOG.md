@@ -1,3 +1,10 @@
+## [1.116.1](https://github.com/stephenh/ts-proto/compare/v1.116.0...v1.116.1) (2022-07-02)
+
+
+### Bug Fixes
+
+* add .js suffix to proto cross-reference imports ([#602](https://github.com/stephenh/ts-proto/issues/602)) ([8dc38af](https://github.com/stephenh/ts-proto/commit/8dc38af40e68262cd53469ce3dc4dcac670365da)), closes [#601](https://github.com/stephenh/ts-proto/issues/601) [/github.com/kulshekhar/ts-jest/issues/1057#issuecomment-481406624](https://github.com//github.com/kulshekhar/ts-jest/issues/1057/issues/issuecomment-481406624)
+
 # [1.116.0](https://github.com/stephenh/ts-proto/compare/v1.115.5...v1.116.0) (2022-07-01)
 
 
