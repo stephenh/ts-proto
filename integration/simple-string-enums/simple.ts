@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { NullValue, nullValueToNumber, nullValueFromJSON, nullValueToJSON } from './google/protobuf/struct';
+import { NullValue, nullValueToNumber, nullValueFromJSON, nullValueToJSON } from './google/protobuf/struct.js';
 import * as _m0 from 'protobufjs/minimal';
 
 export const protobufPackage = 'simple';

@@ -1,7 +1,7 @@
 /* eslint-disable */
 import * as Long from 'long';
 import * as _m0 from 'protobufjs/minimal';
-import { StringValue, Int32Value, BoolValue, Int64Value } from './google/protobuf/wrappers';
+import { StringValue, Int32Value, BoolValue, Int64Value } from './google/protobuf/wrappers.js';
 
 export const protobufPackage = 'simple';
 

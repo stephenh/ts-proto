@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { Bar } from './bar';
+import { Bar } from './bar.js';
 import * as _m0 from 'protobufjs/minimal';
 
 export interface Foo {

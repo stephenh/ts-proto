@@ -19,13 +19,13 @@ describe('types', () => {
         descr: 'top-level messages',
         typeMap: new Map([['.namespace.Message', ['namespace', 'Message', fakeProto]]]),
         protoType: '.namespace.Message',
-        expected: code`${imp('Message@./namespace')}`,
+        expected: code`${imp('Message@./namespace.js')}`,
       },
       {
         descr: 'nested messages',
         typeMap: new Map([['.namespace.Message.Inner', ['namespace', 'Message_Inner', fakeProto]]]),
         protoType: '.namespace.Message.Inner',
-        expected: code`${imp('Message_Inner@./namespace')}`,
+        expected: code`${imp('Message_Inner@./namespace.js')}`,
       },
       {
         descr: 'value types',
@@ -50,7 +50,7 @@ describe('types', () => {
     ];
     testCases.forEach((t) =>
       it(t.descr, async () => {
-        const ctx = { options: defaultOptions(), utils: (undefined as any) as Utils, ...t };
+        const ctx = { options: defaultOptions(), utils: undefined as any as Utils, ...t };
         const got = messageToTypeName(ctx, t.protoType);
         expect(await got.toStringWithImports()).toEqual(await t.expected.toStringWithImports());
       })
