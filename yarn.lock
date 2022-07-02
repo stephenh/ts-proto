@@ -6646,10 +6646,10 @@ ts-poet@^4.15.0:
     lodash "^4.17.15"
     prettier "^2.5.1"
 
-ts-proto-descriptors@1.7.0:
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/ts-proto-descriptors/-/ts-proto-descriptors-1.7.0.tgz#bd465a17642b23747c21a2442a2ec379446cd18b"
-  integrity sha512-FydY8jv+V/y48LNGy/UX1H5p2z6mV/dP8kgn+4VqZ6VI7pw/JTgWaxF3SRuCPxEhzDFB5WaLVLlnbDXrPzyHWQ==
+ts-proto-descriptors@1.7.1:
+  version "1.7.1"
+  resolved "https://registry.yarnpkg.com/ts-proto-descriptors/-/ts-proto-descriptors-1.7.1.tgz#685d00305b06adfa929fd5a016a419382cd64c50"
+  integrity sha512-oIKUh3K4Xts4v29USGLfUG+2mEk32MsqpgZAOUyUlkrcIdv34yE+k2oZ2Nzngm6cV/JgFdOxRCqeyvmWHuYAyw==
   dependencies:
     long "^4.0.0"
     protobufjs "^6.8.8"
