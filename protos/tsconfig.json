@@ -3,10 +3,10 @@
     "target": "es2018",
     "lib": ["es2018"],
     "module": "commonjs",
-    "strict": false,
+    "strict": true,
     "outDir": "dist",
     "declaration": true,
     "skipLibCheck": true,
     "downlevelIteration": true
-  },
+  }
 }
