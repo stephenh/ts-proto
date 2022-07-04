@@ -1,8 +1,8 @@
 /* eslint-disable */
 import { messageTypeRegistry } from './typeRegistry';
-import { Timestamp } from './google/protobuf/timestamp.js';
+import { Timestamp } from './google/protobuf/timestamp';
 import * as _m0 from 'protobufjs/minimal';
-import { Struct } from './google/protobuf/struct.js';
+import { Struct } from './google/protobuf/struct';
 
 export const protobufPackage = 'foo';
 

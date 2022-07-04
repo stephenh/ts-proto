@@ -19,12 +19,19 @@ describe('types', () => {
         descr: 'top-level messages',
         typeMap: new Map([['.namespace.Message', ['namespace', 'Message', fakeProto]]]),
         protoType: '.namespace.Message',
-        expected: code`${imp('Message@./namespace.js')}`,
+        expected: code`${imp('Message@./namespace')}`,
       },
       {
         descr: 'nested messages',
         typeMap: new Map([['.namespace.Message.Inner', ['namespace', 'Message_Inner', fakeProto]]]),
         protoType: '.namespace.Message.Inner',
+        expected: code`${imp('Message_Inner@./namespace')}`,
+      },
+      {
+        descr: 'nested messages: .js import suffix',
+        typeMap: new Map([['.namespace.Message.Inner', ['namespace', 'Message_Inner', fakeProto]]]),
+        protoType: '.namespace.Message.Inner',
+        options: { ...defaultOptions(), importSuffix: '.js' },
         expected: code`${imp('Message_Inner@./namespace.js')}`,
       },
       {

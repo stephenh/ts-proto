@@ -1,6 +1,6 @@
 /* eslint-disable */
 import * as _m0 from 'protobufjs/minimal';
-import { BytesValue } from './google/protobuf/wrappers.js';
+import { BytesValue } from './google/protobuf/wrappers';
 
 export const protobufPackage = '';
 

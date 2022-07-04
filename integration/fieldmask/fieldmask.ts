@@ -1,6 +1,6 @@
 /* eslint-disable */
 import * as _m0 from 'protobufjs/minimal';
-import { FieldMask } from './google/protobuf/field_mask.js';
+import { FieldMask } from './google/protobuf/field_mask';
 
 export const protobufPackage = '';
 

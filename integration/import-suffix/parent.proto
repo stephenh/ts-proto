@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+import "child.proto";
+
+package file_suffix;
+
+message Parent {
+  Child child = 1;
+  ChildEnum child_enum = 2;
+  google.protobuf.Timestamp created_at = 3;
+}

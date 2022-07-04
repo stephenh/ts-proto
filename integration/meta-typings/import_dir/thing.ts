@@ -1,7 +1,6 @@
 /* eslint-disable */
 import { FileDescriptorProto } from 'ts-proto-descriptors';
-import { protoMetadata as protoMetadata1 } from '../google/protobuf/timestamp';
-import { Timestamp } from '../google/protobuf/timestamp.js';
+import { protoMetadata as protoMetadata1, Timestamp } from '../google/protobuf/timestamp';
 import * as _m0 from 'protobufjs/minimal';
 
 export const protobufPackage = 'simple';
