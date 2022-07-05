@@ -1,3 +1,10 @@
+# [1.117.0](https://github.com/stephenh/ts-proto/compare/v1.116.1...v1.117.0) (2022-07-05)
+
+
+### Features
+
+* add importSuffix option and remove default .js suffix ([#612](https://github.com/stephenh/ts-proto/issues/612)) ([63a8895](https://github.com/stephenh/ts-proto/commit/63a8895f5a3a38fa3d5c0868f44e950e137fb697))
+
 ## [1.116.1](https://github.com/stephenh/ts-proto/compare/v1.116.0...v1.116.1) (2022-07-02)
 
 
