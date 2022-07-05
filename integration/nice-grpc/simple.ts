@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { CallContext, CallOptions } from 'nice-grpc-common';
-import { Timestamp } from './google/protobuf/timestamp.js';
-import { Empty } from './google/protobuf/empty.js';
+import { Timestamp } from './google/protobuf/timestamp';
+import { Empty } from './google/protobuf/empty';
 import {
   StringValue,
   Int64Value,
@@ -12,8 +12,8 @@ import {
   FloatValue,
   DoubleValue,
   BoolValue,
-} from './google/protobuf/wrappers.js';
-import { Struct, Value, ListValue } from './google/protobuf/struct.js';
+} from './google/protobuf/wrappers';
+import { Struct, Value, ListValue } from './google/protobuf/struct';
 import * as _m0 from 'protobufjs/minimal';
 
 export const protobufPackage = 'simple';

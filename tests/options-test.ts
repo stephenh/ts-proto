@@ -15,6 +15,7 @@ describe('options', () => {
         "exportCommonSymbols": true,
         "fileSuffix": "",
         "forceLong": "number",
+        "importSuffix": "",
         "lowerCaseServiceMethods": true,
         "metadataType": undefined,
         "nestJs": true,

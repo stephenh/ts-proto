@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { Timestamp } from './google/protobuf/timestamp.js';
+import { Timestamp } from './google/protobuf/timestamp';
 import * as _m0 from 'protobufjs/minimal';
 
 export const protobufPackage = '';

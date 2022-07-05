@@ -1,7 +1,7 @@
 /* eslint-disable */
 import * as mongodb from 'mongodb';
 import * as _m0 from 'protobufjs/minimal';
-import { ObjectId } from './objectid/objectid.js';
+import { ObjectId } from './objectid/objectid';
 
 export const protobufPackage = 'foo';
 

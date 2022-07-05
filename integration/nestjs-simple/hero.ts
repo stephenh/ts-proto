@@ -1,8 +1,8 @@
 /* eslint-disable */
 import { GrpcMethod, GrpcStreamMethod } from '@nestjs/microservices';
-import { Timestamp } from './google/protobuf/timestamp.js';
+import { Timestamp } from './google/protobuf/timestamp';
 import { Observable } from 'rxjs';
-import { Empty } from './google/protobuf/empty.js';
+import { Empty } from './google/protobuf/empty';
 
 export const protobufPackage = 'hero';
 

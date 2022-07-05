@@ -1,7 +1,7 @@
 /* eslint-disable */
 import * as _m0 from 'protobufjs/minimal';
-import { Value, ListValue, Struct } from './google/protobuf/struct.js';
-import { StringValue } from './google/protobuf/wrappers.js';
+import { Value, ListValue, Struct } from './google/protobuf/struct';
+import { StringValue } from './google/protobuf/wrappers';
 
 export const protobufPackage = '';
 

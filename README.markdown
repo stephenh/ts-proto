@@ -388,6 +388,8 @@ Generated code will be placed in the Gradle build directory.
 
 - With `--ts_proto_opt=fileSuffix=<SUFFIX>`, ts-proto will emit generated files using the specified suffix. A `helloworld.proto` file with `fileSuffix=.pb` would be generated as `helloworld.pb.ts`. This is common behavior in other protoc plugins and provides a way to quickly glob all the generated files.
 
+- With `--ts_proto_opt=importSuffix=<SUFFIX>`, ts-proto will emit file imports using the specified suffix. An import of `helloworld.ts` with `fileSuffix=.js` would generate `import "helloworld.js"`. The default is to import without a file extension. Supported by TypeScript 4.7.x and up.
+
 - With `--ts_proto_opt=enumsAsLiterals=true`, the generated enum types will be enum-ish object with `as const`.
 
 - With `--ts_proto_opt=useExactTypes=false`, the generated `fromPartial` method will not use Exact types.

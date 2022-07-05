@@ -1,6 +1,6 @@
 /* eslint-disable */
 import * as Long from 'long';
-import { FileDescriptorProto, GeneratedCodeInfo } from '../descriptor.js';
+import { FileDescriptorProto, GeneratedCodeInfo } from '../descriptor';
 import * as _m0 from 'protobufjs/minimal';
 
 export const protobufPackage = 'google.protobuf.compiler';

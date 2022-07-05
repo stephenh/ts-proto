@@ -39,6 +39,7 @@ export type Options = {
   oneof: OneofOption;
   esModuleInterop: boolean;
   fileSuffix: string;
+  importSuffix: string;
   outputEncodeMethods: boolean;
   outputJsonMethods: boolean;
   outputPartialMethods: boolean;
@@ -78,6 +79,7 @@ export function defaultOptions(): Options {
     oneof: OneofOption.PROPERTIES,
     esModuleInterop: false,
     fileSuffix: '',
+    importSuffix: '',
     lowerCaseServiceMethods: false,
     outputEncodeMethods: true,
     outputJsonMethods: true,
@@ -204,6 +206,6 @@ function parseParameter(parameter: string): Options {
   return options;
 }
 
-export function getTsPoetOpts(options: Options): { forceModuleImport?: string[] } {
+export function getTsPoetOpts(_options: Options): { forceModuleImport?: string[] } {
   return { forceModuleImport: ['protobufjs/minimal'] };
 }
