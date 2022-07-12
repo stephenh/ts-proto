@@ -597,9 +597,9 @@ export interface DashState {
   ActiveUserSettingsStream(request: DeepPartial<Empty>, metadata?: grpc.Metadata): Observable<DashUserSettingsState>;
   /** not supported in grpc-web, but should still compile */
   ChangeUserSettingsStream(
-    request: Observable<DeepPartial<DashUserSettingsState>>,
-    metadata?: grpc.Metadata
-  ): Observable<DashUserSettingsState>;
+    metadata?: grpc.Metadata,
+    options?: grpc.RpcOptions
+  ): BidiStream<DashUserSettingsState, DashUserSettingsState>;
 }
 
 export class DashStateClientImpl implements DashState {
@@ -621,10 +621,10 @@ export class DashStateClientImpl implements DashState {
   }
 
   ChangeUserSettingsStream(
-    request: Observable<DeepPartial<DashUserSettingsState>>,
-    metadata?: grpc.Metadata
-  ): Observable<DashUserSettingsState> {
-    throw new Error('ts-proto does not yet support client streaming!');
+    metadata?: grpc.Metadata,
+    options?: grpc.RpcOptions
+  ): BidiStream<DashUserSettingsState, DashUserSettingsState> {
+    return this.rpc.stream(DashStateChangeUserSettingsStreamDesc, metadata, options)
   }
 }
 
@@ -675,6 +675,28 @@ export const DashStateActiveUserSettingsStreamDesc: UnaryMethodDefinitionish = {
     },
   } as any,
 };
+
+export const DashStateChangeUserSettingsStreamDesc: MethodDefinitionish = {
+  methodName: 'ChangeUserSettingsStream',
+  service: DashStateDesc,
+  requestStream: true,
+  responseStream: true,
+  requestType: {
+    serializeBinary() {
+      return Empty.encode(this).finish();
+    },
+  } as any,
+  responseType: {
+    deserializeBinary(data: Uint8Array) {
+      return {
+        ...DashUserSettingsState.decode(data),
+        toObject() {
+          return this;
+        },
+      };
+    },
+  } as any,
+};;
 
 /**
  * ----------------------
@@ -787,6 +809,20 @@ interface UnaryMethodDefinitionishR extends grpc.UnaryMethodDefinition<any, any>
 
 type UnaryMethodDefinitionish = UnaryMethodDefinitionishR;
 
+interface MethodDefinitionish extends grpc.MethodDefinition<any, any> {
+  requestStream: any;
+  responseStream: any;
+}
+
+interface BidiStream<T, R> {
+  onEnd(callback: (code: grpc.Code, message: string, trailers: grpc.Metadata) => void): void;
+  onMessage(callback: (res: R) => void): void;
+  onHeaders(callback: (headers: grpc.Metadata) => void): void;
+  cancel(): void;
+  write(req: T): void;
+  end(): void;
+}
+
 interface Rpc {
   unary<T extends UnaryMethodDefinitionish>(
     methodDesc: T,
@@ -798,6 +834,11 @@ interface Rpc {
     request: any,
     metadata: grpc.Metadata | undefined
   ): Observable<any>;
+  stream<T extends MethodDefinitionish>(
+    methodDesc: T,
+    metadata: grpc.Metadata | undefined,
+    rpcOptions: grpc.RpcOptions | undefined
+  ): BidiStream<any, any>;
 }
 
 export class GrpcWebImpl {
@@ -889,6 +930,45 @@ export class GrpcWebImpl {
       };
       upStream();
     }).pipe(share());
+  }
+
+  stream<T extends MethodDefinitionish>(
+    methodDesc: T,
+    metadata: grpc.Metadata | undefined,
+    rpcOptions: grpc.RpcOptions | undefined
+  ): BidiStream<any, any> {
+    const defaultOptions = {
+      host: this.host,
+      debug: rpcOptions?.debug || this.options.debug,
+      transport: rpcOptions?.transport || this.options.streamingTransport || this.options.transport,
+    }
+    let started = false;
+    const client = grpc.client(methodDesc, defaultOptions)
+    client.start(metadata);
+    return {
+      onEnd: function(callback: (code: grpc.Code, message: string, trailers: grpc.Metadata) => void) {
+        client.onEnd(callback)
+      },
+      onMessage: function(callback: (res: any) => void) {
+        client.onMessage(callback)
+      },
+      onHeaders: function(callback: (headers: grpc.Metadata) => void) {
+        client.onHeaders(callback)
+      },
+      cancel: function() {
+        client.close()
+      },
+      write: function(req: any) {
+        // if (!started) {
+        //   client.start(metadata);
+        //   started = true;
+        // }
+        client.send(req)
+      },
+      end: function() {
+        client.finishSend()
+      }
+    }
   }
 }
 

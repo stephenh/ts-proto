@@ -35,9 +35,13 @@ func main() {
 	rpx.RegisterDashStateServer(server, &stateService{})
 	rpx.RegisterDashAPICredsServer(server, &credsService{})
 
-	wrappedServer := grpcweb.WrapServer(server)
+	wrappedServer := grpcweb.WrapServer(server,
+		grpcweb.WithWebsockets(true),
+		grpcweb.WithWebsocketOriginFunc(func(*http.Request) bool { return true }))
 
 	handler := func(resp http.ResponseWriter, req *http.Request) {
+		resp.Header().Set("Access-Control-Allow-Origin", "*")
+		resp.Header().Set("Access-Control-Allow-Headers", "*")
 		grpclog.Infof("Request: %v", req)
 		wrappedServer.ServeHTTP(resp, req)
 	}
@@ -103,6 +107,43 @@ func (s *stateService) ActiveUserSettingsStream(in *rpx.Empty, stream rpx.DashSt
 	return nil
 }
 
+func (s *stateService) ChangeUserSettingsStream(stream rpx.DashState_ChangeUserSettingsStreamServer) error {
+	grpclog.Info("ChangeUserSettingsStream....")
+
+	urls := rpx.DashUserSettingsState_URLs{
+		ConnectGoogle: "http://google.com",
+		ConnectGithub: "http://github.com",
+	}
+
+	flashes := []*rpx.DashFlash{
+		&rpx.DashFlash{Msg: "flash1", Type: rpx.DashFlash_Warn},
+		&rpx.DashFlash{Msg: "flash2", Type: rpx.DashFlash_Success},
+	}
+
+	err := stream.Send(&rpx.DashUserSettingsState{Email: "test1-email@example.com", Urls: &urls, Flashes: flashes})
+	if err != nil {
+		grpclog.Error("Send Error", err)
+		return err
+	}
+	stream.Send(&rpx.DashUserSettingsState{Email: "test2-email@example.com", Urls: &urls, Flashes: flashes})
+	stream.Send(&rpx.DashUserSettingsState{Email: "test3-email@example.com", Urls: &urls, Flashes: flashes})
+
+	for {
+		select {
+		case <-stream.Context().Done():
+			grpclog.Info("Done!")
+			return stream.Context().Err()
+		default:
+			state, err := stream.Recv()
+			if err != nil {
+				return err
+			}
+			grpclog.Infof("receive: %+v\n", state)
+			stream.Send(&rpx.DashUserSettingsState{Email: fmt.Sprintf("receive: %s", state.GetEmail())})
+		}
+	}
+}
+
 type credsService struct{}
 
 var creds = map[string]rpx.DashCred{}
@@ -121,7 +162,7 @@ func (s *credsService) Create(c context.Context, in *rpx.DashAPICredsCreateReq) 
 }
 
 func (s *credsService) Update(c context.Context, in *rpx.DashAPICredsUpdateReq) (*rpx.DashCred, error) {
-	fmt.Println("Update", in.CredSid)
+	grpclog.Info("Update", in.CredSid)
 	return nil, grpc.Errorf(codes.NotFound, "not found")
 }
 

@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 
-import { NodeHttpTransport } from '@improbable-eng/grpc-web-node-http-transport';
-import { DashAPICredsClientImpl, DashStateClientImpl, GrpcWebImpl } from './example';
+import { DashAPICredsClientImpl, DashStateClientImpl, GrpcWebImpl, DashUserSettingsState } from './example';
 import { grpc } from '@improbable-eng/grpc-web';
 
+const defTransport = grpc.CrossBrowserHttpTransport({ withCredentials: false });
+const ws = grpc.WebsocketTransport()
+
 const rpc = new GrpcWebImpl('http://localhost:9090', {
-  // Only necessary for tests running on node. Remove the
-  // transport config when actually using in the browser.
-  transport: NodeHttpTransport(),
-  debug: false,
+  transport: defTransport,
+  debug: true,
   metadata: new grpc.Metadata({ SomeHeader: 'bar' }),
 });
 
@@ -34,10 +34,20 @@ async function main() {
     console.log('got expected error', e);
   }
 
+  console.log('calling client.ActiveUserSettingsStream');
   const obs = client.ActiveUserSettingsStream({});
   await obs.forEach(value => {
     console.log("Got", value);
   });
+
+  console.log('calling client.ChangeUserSettingsStream');
+  const stream = client.ChangeUserSettingsStream(undefined, { transport: ws })
+  stream.onMessage((res) => {
+    console.log("onMessage", res)
+  })
+  setInterval(() => {
+    stream.write(DashUserSettingsState.fromPartial({ email: "ping@email.com" }))
+  }, 1000)
 }
 
 main().then(

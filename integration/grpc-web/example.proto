@@ -5,7 +5,6 @@ package rpx;
 service DashState {
   rpc UserSettings(Empty) returns (DashUserSettingsState);
   rpc ActiveUserSettingsStream(Empty) returns (stream DashUserSettingsState);
-  // not supported in grpc-web, but should still compile
   rpc ChangeUserSettingsStream (stream DashUserSettingsState) returns (stream DashUserSettingsState) {}
 }
 
