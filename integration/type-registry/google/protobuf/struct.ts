@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { messageTypeRegistry } from '../../typeRegistry';
-import { util, configure, Writer, Reader } from 'protobufjs/minimal';
 import * as Long from 'long';
+import * as _m0 from 'protobufjs/minimal';
 
 export const protobufPackage = 'google.protobuf';
 
@@ -103,7 +103,7 @@ function createBaseStruct(): Struct {
 export const Struct = {
   $type: 'google.protobuf.Struct' as const,
 
-  encode(message: Struct, writer: Writer = Writer.create()): Writer {
+  encode(message: Struct, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     Object.entries(message.fields).forEach(([key, value]) => {
       if (value !== undefined) {
         Struct_FieldsEntry.encode(
@@ -115,8 +115,8 @@ export const Struct = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Struct {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): Struct {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStruct();
     while (reader.pos < end) {
@@ -201,7 +201,7 @@ function createBaseStruct_FieldsEntry(): Struct_FieldsEntry {
 export const Struct_FieldsEntry = {
   $type: 'google.protobuf.Struct.FieldsEntry' as const,
 
-  encode(message: Struct_FieldsEntry, writer: Writer = Writer.create()): Writer {
+  encode(message: Struct_FieldsEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.key !== '') {
       writer.uint32(10).string(message.key);
     }
@@ -211,8 +211,8 @@ export const Struct_FieldsEntry = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Struct_FieldsEntry {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): Struct_FieldsEntry {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStruct_FieldsEntry();
     while (reader.pos < end) {
@@ -272,7 +272,7 @@ function createBaseValue(): Value {
 export const Value = {
   $type: 'google.protobuf.Value' as const,
 
-  encode(message: Value, writer: Writer = Writer.create()): Writer {
+  encode(message: Value, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.nullValue !== undefined) {
       writer.uint32(8).int32(message.nullValue);
     }
@@ -294,8 +294,8 @@ export const Value = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Value {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): Value {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseValue();
     while (reader.pos < end) {
@@ -411,15 +411,15 @@ function createBaseListValue(): ListValue {
 export const ListValue = {
   $type: 'google.protobuf.ListValue' as const,
 
-  encode(message: ListValue, writer: Writer = Writer.create()): Writer {
+  encode(message: ListValue, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     for (const v of message.values) {
       Value.encode(Value.wrap(v!), writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): ListValue {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): ListValue {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseListValue();
     while (reader.pos < end) {
@@ -493,9 +493,9 @@ export type Exact<P, I extends P> = P extends Builtin
 
 // If you get a compile-error about 'Constructor<Long> and ... have no overlap',
 // add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
-if (util.Long !== Long) {
-  util.Long = Long as any;
-  configure();
+if (_m0.util.Long !== Long) {
+  _m0.util.Long = Long as any;
+  _m0.configure();
 }
 
 function isObject(value: any): boolean {

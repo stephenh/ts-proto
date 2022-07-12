@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { FileDescriptorProto as FileDescriptorProto1 } from 'ts-proto-descriptors';
-import { util, configure, Writer, Reader } from 'protobufjs/minimal';
 import * as Long from 'long';
+import * as _m0 from 'protobufjs/minimal';
 import { protoMetadata as protoMetadata1 } from '../google/protobuf/descriptor';
 
 export const protobufPackage = 'something';
@@ -16,7 +16,7 @@ function createBaseSomething(): Something {
 }
 
 export const Something = {
-  encode(message: Something, writer: Writer = Writer.create()): Writer {
+  encode(message: Something, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.hello !== '') {
       writer.uint32(10).string(message.hello);
     }
@@ -28,8 +28,8 @@ export const Something = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Something {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): Something {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSomething();
     while (reader.pos < end) {
@@ -163,7 +163,7 @@ export const protoMetadata: ProtoMetadata = {
 
 // If you get a compile-error about 'Constructor<Long> and ... have no overlap',
 // add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
-if (util.Long !== Long) {
-  util.Long = Long as any;
-  configure();
+if (_m0.util.Long !== Long) {
+  _m0.util.Long = Long as any;
+  _m0.configure();
 }

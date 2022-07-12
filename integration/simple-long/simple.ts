@@ -1,6 +1,6 @@
 /* eslint-disable */
-import { util, configure, Writer, Reader } from 'protobufjs/minimal';
 import * as Long from 'long';
+import * as _m0 from 'protobufjs/minimal';
 import { StringValue, Int32Value, BoolValue, Int64Value } from './google/protobuf/wrappers';
 
 export const protobufPackage = 'simple';
@@ -58,7 +58,7 @@ function createBaseSimpleWithWrappers(): SimpleWithWrappers {
 }
 
 export const SimpleWithWrappers = {
-  encode(message: SimpleWithWrappers, writer: Writer = Writer.create()): Writer {
+  encode(message: SimpleWithWrappers, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.name !== undefined) {
       StringValue.encode({ value: message.name! }, writer.uint32(10).fork()).ldelim();
     }
@@ -80,8 +80,8 @@ export const SimpleWithWrappers = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): SimpleWithWrappers {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): SimpleWithWrappers {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithWrappers();
     while (reader.pos < end) {
@@ -161,7 +161,7 @@ function createBaseSimpleWithMap(): SimpleWithMap {
 }
 
 export const SimpleWithMap = {
-  encode(message: SimpleWithMap, writer: Writer = Writer.create()): Writer {
+  encode(message: SimpleWithMap, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     Object.entries(message.nameLookup).forEach(([key, value]) => {
       SimpleWithMap_NameLookupEntry.encode({ key: key as any, value }, writer.uint32(18).fork()).ldelim();
     });
@@ -174,8 +174,8 @@ export const SimpleWithMap = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): SimpleWithMap {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): SimpleWithMap {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithMap();
     while (reader.pos < end) {
@@ -291,7 +291,7 @@ function createBaseSimpleWithMap_NameLookupEntry(): SimpleWithMap_NameLookupEntr
 }
 
 export const SimpleWithMap_NameLookupEntry = {
-  encode(message: SimpleWithMap_NameLookupEntry, writer: Writer = Writer.create()): Writer {
+  encode(message: SimpleWithMap_NameLookupEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.key !== '') {
       writer.uint32(10).string(message.key);
     }
@@ -301,8 +301,8 @@ export const SimpleWithMap_NameLookupEntry = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): SimpleWithMap_NameLookupEntry {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): SimpleWithMap_NameLookupEntry {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithMap_NameLookupEntry();
     while (reader.pos < end) {
@@ -351,7 +351,7 @@ function createBaseSimpleWithMap_IntLookupEntry(): SimpleWithMap_IntLookupEntry 
 }
 
 export const SimpleWithMap_IntLookupEntry = {
-  encode(message: SimpleWithMap_IntLookupEntry, writer: Writer = Writer.create()): Writer {
+  encode(message: SimpleWithMap_IntLookupEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.key !== 0) {
       writer.uint32(8).int32(message.key);
     }
@@ -361,8 +361,8 @@ export const SimpleWithMap_IntLookupEntry = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): SimpleWithMap_IntLookupEntry {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): SimpleWithMap_IntLookupEntry {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithMap_IntLookupEntry();
     while (reader.pos < end) {
@@ -409,7 +409,7 @@ function createBaseSimpleWithMap_LongLookupEntry(): SimpleWithMap_LongLookupEntr
 }
 
 export const SimpleWithMap_LongLookupEntry = {
-  encode(message: SimpleWithMap_LongLookupEntry, writer: Writer = Writer.create()): Writer {
+  encode(message: SimpleWithMap_LongLookupEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.key !== '') {
       writer.uint32(10).string(message.key);
     }
@@ -419,8 +419,8 @@ export const SimpleWithMap_LongLookupEntry = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): SimpleWithMap_LongLookupEntry {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): SimpleWithMap_LongLookupEntry {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithMap_LongLookupEntry();
     while (reader.pos < end) {
@@ -483,7 +483,7 @@ function createBaseNumbers(): Numbers {
 }
 
 export const Numbers = {
-  encode(message: Numbers, writer: Writer = Writer.create()): Writer {
+  encode(message: Numbers, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.double !== 0) {
       writer.uint32(9).double(message.double);
     }
@@ -528,8 +528,8 @@ export const Numbers = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Numbers {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): Numbers {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNumbers();
     while (reader.pos < end) {
@@ -671,9 +671,9 @@ export type Exact<P, I extends P> = P extends Builtin
 
 // If you get a compile-error about 'Constructor<Long> and ... have no overlap',
 // add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
-if (util.Long !== Long) {
-  util.Long = Long as any;
-  configure();
+if (_m0.util.Long !== Long) {
+  _m0.util.Long = Long as any;
+  _m0.configure();
 }
 
 function isObject(value: any): boolean {

@@ -1,6 +1,6 @@
 /* eslint-disable */
-import { util, configure, Writer, Reader } from 'protobufjs/minimal';
 import * as Long from 'long';
+import * as _m0 from 'protobufjs/minimal';
 import { Observable } from 'rxjs';
 import { Foo } from './some-file';
 import { map } from 'rxjs/operators';
@@ -30,15 +30,15 @@ function createBaseHeroById(): HeroById {
 }
 
 export const HeroById = {
-  encode(message: HeroById, writer: Writer = Writer.create()): Writer {
+  encode(message: HeroById, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.id !== 0) {
       writer.uint32(8).int32(message.id);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): HeroById {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): HeroById {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseHeroById();
     while (reader.pos < end) {
@@ -79,15 +79,15 @@ function createBaseVillainById(): VillainById {
 }
 
 export const VillainById = {
-  encode(message: VillainById, writer: Writer = Writer.create()): Writer {
+  encode(message: VillainById, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.id !== 0) {
       writer.uint32(8).int32(message.id);
     }
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): VillainById {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): VillainById {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseVillainById();
     while (reader.pos < end) {
@@ -128,7 +128,7 @@ function createBaseHero(): Hero {
 }
 
 export const Hero = {
-  encode(message: Hero, writer: Writer = Writer.create()): Writer {
+  encode(message: Hero, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.id !== 0) {
       writer.uint32(8).int32(message.id);
     }
@@ -138,8 +138,8 @@ export const Hero = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Hero {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): Hero {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseHero();
     while (reader.pos < end) {
@@ -186,7 +186,7 @@ function createBaseVillain(): Villain {
 }
 
 export const Villain = {
-  encode(message: Villain, writer: Writer = Writer.create()): Writer {
+  encode(message: Villain, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.id !== 0) {
       writer.uint32(8).int32(message.id);
     }
@@ -196,8 +196,8 @@ export const Villain = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Villain {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): Villain {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseVillain();
     while (reader.pos < end) {
@@ -256,19 +256,19 @@ export class HeroServiceClientImpl implements HeroService {
   FindOneHero(request: HeroById): Promise<Hero> {
     const data = HeroById.encode(request).finish();
     const promise = this.rpc.request('hero.HeroService', 'FindOneHero', data);
-    return promise.then((data) => Hero.decode(new Reader(data)));
+    return promise.then((data) => Hero.decode(new _m0.Reader(data)));
   }
 
   FindOneVillain(request: VillainById): Promise<Villain> {
     const data = VillainById.encode(request).finish();
     const promise = this.rpc.request('hero.HeroService', 'FindOneVillain', data);
-    return promise.then((data) => Villain.decode(new Reader(data)));
+    return promise.then((data) => Villain.decode(new _m0.Reader(data)));
   }
 
   FindManyVillain(request: Observable<VillainById>): Observable<Villain> {
     const data = request.pipe(map((request) => VillainById.encode(request).finish()));
     const result = this.rpc.bidirectionalStreamingRequest('hero.HeroService', 'FindManyVillain', data);
-    return result.pipe(map((data) => Villain.decode(new Reader(data))));
+    return result.pipe(map((data) => Villain.decode(new _m0.Reader(data))));
   }
 }
 
@@ -330,9 +330,9 @@ export type Exact<P, I extends P> = P extends Builtin
 
 // If you get a compile-error about 'Constructor<Long> and ... have no overlap',
 // add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
-if (util.Long !== Long) {
-  util.Long = Long as any;
-  configure();
+if (_m0.util.Long !== Long) {
+  _m0.util.Long = Long as any;
+  _m0.configure();
 }
 
 function isSet(value: any): boolean {

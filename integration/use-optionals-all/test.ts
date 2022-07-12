@@ -1,6 +1,6 @@
 /* eslint-disable */
-import { util, configure, Writer, Reader } from 'protobufjs/minimal';
 import * as Long from 'long';
+import * as _m0 from 'protobufjs/minimal';
 
 export const protobufPackage = 'optionalstest';
 
@@ -103,7 +103,7 @@ function createBaseOptionalsTest(): OptionalsTest {
 }
 
 export const OptionalsTest = {
-  encode(message: OptionalsTest, writer: Writer = Writer.create()): Writer {
+  encode(message: OptionalsTest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.id !== undefined && message.id !== 0) {
       writer.uint32(8).int32(message.id);
     }
@@ -195,8 +195,8 @@ export const OptionalsTest = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): OptionalsTest {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): OptionalsTest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseOptionalsTest();
     while (reader.pos < end) {
@@ -444,7 +444,7 @@ function createBaseOptionalsTest_TranslationsEntry(): OptionalsTest_Translations
 }
 
 export const OptionalsTest_TranslationsEntry = {
-  encode(message: OptionalsTest_TranslationsEntry, writer: Writer = Writer.create()): Writer {
+  encode(message: OptionalsTest_TranslationsEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.key !== '') {
       writer.uint32(10).string(message.key);
     }
@@ -454,8 +454,8 @@ export const OptionalsTest_TranslationsEntry = {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): OptionalsTest_TranslationsEntry {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): OptionalsTest_TranslationsEntry {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseOptionalsTest_TranslationsEntry();
     while (reader.pos < end) {
@@ -504,12 +504,12 @@ function createBaseChild(): Child {
 }
 
 export const Child = {
-  encode(_: Child, writer: Writer = Writer.create()): Writer {
+  encode(_: Child, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     return writer;
   },
 
-  decode(input: Reader | Uint8Array, length?: number): Child {
-    const reader = input instanceof Reader ? input : new Reader(input);
+  decode(input: _m0.Reader | Uint8Array, length?: number): Child {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseChild();
     while (reader.pos < end) {
@@ -596,9 +596,9 @@ function longToNumber(long: Long): number {
 
 // If you get a compile-error about 'Constructor<Long> and ... have no overlap',
 // add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
-if (util.Long !== Long) {
-  util.Long = Long as any;
-  configure();
+if (_m0.util.Long !== Long) {
+  _m0.util.Long = Long as any;
+  _m0.configure();
 }
 
 function isObject(value: any): boolean {
