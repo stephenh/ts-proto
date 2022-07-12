@@ -1,8 +1,8 @@
 /* eslint-disable */
-import * as Long from 'long';
-import * as _m0 from 'protobufjs/minimal';
 import { Timestamp } from './google/protobuf/timestamp';
+import * as Long from 'long';
 import { ImportedThing } from './import_dir/thing';
+import * as _m0 from 'protobufjs/minimal';
 import { StringValue, Int32Value, BoolValue } from './google/protobuf/wrappers';
 
 export const protobufPackage = 'simple';

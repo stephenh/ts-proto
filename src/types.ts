@@ -477,7 +477,11 @@ export function valueTypeName(ctx: Context, typeName: string): Code | undefined 
     case '.google.protobuf.BoolValue':
       return code`boolean`;
     case '.google.protobuf.BytesValue':
-      return ctx.options.env === EnvOption.NODE ? code`Buffer` : code`Uint8Array`;
+      return ctx.options.env === EnvOption.NODE
+        ? code`Buffer`
+        : ctx.options.useJsonWireFormat
+        ? code`string`
+        : code`Uint8Array`;
     case '.google.protobuf.ListValue':
       return code`Array<any>`;
     case '.google.protobuf.Value':
@@ -485,7 +489,11 @@ export function valueTypeName(ctx: Context, typeName: string): Code | undefined 
     case '.google.protobuf.Struct':
       return code`{[key: string]: any}`;
     case '.google.protobuf.FieldMask':
-      return code`string[]`;
+      return ctx.options.useJsonWireFormat ? code`string` : code`string[]`;
+    case '.google.protobuf.Duration':
+      return ctx.options.useJsonWireFormat ? code`string` : undefined;
+    case '.google.protobuf.Timestamp':
+      return ctx.options.useJsonWireFormat ? code`string` : undefined;
     default:
       return undefined;
   }
@@ -652,6 +660,13 @@ export function rawRequestType(ctx: Context, methodDesc: MethodDescriptorProto):
   return messageToTypeName(ctx, methodDesc.inputType);
 }
 
+export function observableType(ctx: Context): Code {
+  if (ctx.options.useAsyncIterable) {
+    return code`AsyncIterable`;
+  }
+  return code`${imp('Observable@rxjs')}`;
+}
+
 export function requestType(ctx: Context, methodDesc: MethodDescriptorProto, partial: boolean = false): Code {
   let typeName = rawRequestType(ctx, methodDesc);
 
@@ -660,7 +675,7 @@ export function requestType(ctx: Context, methodDesc: MethodDescriptorProto, par
   }
 
   if (methodDesc.clientStreaming) {
-    return code`${imp('Observable@rxjs')}<${typeName}>`;
+    return code`${observableType(ctx)}<${typeName}>`;
   }
   return typeName;
 }
@@ -678,7 +693,7 @@ export function responsePromise(ctx: Context, methodDesc: MethodDescriptorProto)
 }
 
 export function responseObservable(ctx: Context, methodDesc: MethodDescriptorProto): Code {
-  return code`${imp('Observable@rxjs')}<${responseType(ctx, methodDesc)}>`;
+  return code`${observableType(ctx)}<${responseType(ctx, methodDesc)}>`;
 }
 
 export function responsePromiseOrObservable(ctx: Context, methodDesc: MethodDescriptorProto): Code {

@@ -1,8 +1,7 @@
 /* eslint-disable */
 import { FileDescriptorProto } from 'ts-proto-descriptors';
-import * as Long from 'long';
-import * as _m0 from 'protobufjs/minimal';
 import { protoMetadata as protoMetadata1, Timestamp } from '../google/protobuf/timestamp';
+import * as _m0 from 'protobufjs/minimal';
 
 export const protobufPackage = 'simple';
 
@@ -128,11 +127,4 @@ function fromTimestamp(t: Timestamp): Date {
   let millis = t.seconds * 1_000;
   millis += t.nanos / 1_000_000;
   return new Date(millis);
-}
-
-// If you get a compile-error about 'Constructor<Long> and ... have no overlap',
-// add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
-if (_m0.util.Long !== Long) {
-  _m0.util.Long = Long as any;
-  _m0.configure();
 }

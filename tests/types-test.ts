@@ -28,6 +28,13 @@ describe('types', () => {
         expected: code`${imp('Message_Inner@./namespace')}`,
       },
       {
+        descr: 'nested messages: .js import suffix',
+        typeMap: new Map([['.namespace.Message.Inner', ['namespace', 'Message_Inner', fakeProto]]]),
+        protoType: '.namespace.Message.Inner',
+        options: { ...defaultOptions(), importSuffix: '.js' },
+        expected: code`${imp('Message_Inner@./namespace.js')}`,
+      },
+      {
         descr: 'value types',
         typeMap: new Map(),
         protoType: '.google.protobuf.StringValue',
@@ -50,7 +57,7 @@ describe('types', () => {
     ];
     testCases.forEach((t) =>
       it(t.descr, async () => {
-        const ctx = { options: defaultOptions(), utils: (undefined as any) as Utils, ...t };
+        const ctx = { options: defaultOptions(), utils: undefined as any as Utils, ...t };
         const got = messageToTypeName(ctx, t.protoType);
         expect(await got.toStringWithImports()).toEqual(await t.expected.toStringWithImports());
       })

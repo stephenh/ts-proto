@@ -1,7 +1,7 @@
 /* eslint-disable */
 import * as Long from 'long';
+import { FileDescriptorProto, GeneratedCodeInfo } from '../descriptor';
 import * as _m0 from 'protobufjs/minimal';
-import { FileDescriptorProto, GeneratedCodeInfo } from '../../../google/protobuf/descriptor';
 
 export const protobufPackage = 'google.protobuf.compiler';
 
@@ -161,8 +161,9 @@ export const Version = {
       writer.uint32(34).string(message.suffix);
     }
     if ('_unknownFields' in message) {
-      for (const key of Object.keys(message['_unknownFields'])) {
-        const values = message['_unknownFields'][key] as Uint8Array[];
+      const msgUnknownFields: any = (message as any)['_unknownFields'];
+      for (const key of Object.keys(msgUnknownFields)) {
+        const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
           (writer as any)['_push'](
@@ -229,8 +230,9 @@ export const CodeGeneratorRequest = {
       Version.encode(message.compilerVersion, writer.uint32(26).fork()).ldelim();
     }
     if ('_unknownFields' in message) {
-      for (const key of Object.keys(message['_unknownFields'])) {
-        const values = message['_unknownFields'][key] as Uint8Array[];
+      const msgUnknownFields: any = (message as any)['_unknownFields'];
+      for (const key of Object.keys(msgUnknownFields)) {
+        const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
           (writer as any)['_push'](
@@ -294,8 +296,9 @@ export const CodeGeneratorResponse = {
       CodeGeneratorResponse_File.encode(v!, writer.uint32(122).fork()).ldelim();
     }
     if ('_unknownFields' in message) {
-      for (const key of Object.keys(message['_unknownFields'])) {
-        const values = message['_unknownFields'][key] as Uint8Array[];
+      const msgUnknownFields: any = (message as any)['_unknownFields'];
+      for (const key of Object.keys(msgUnknownFields)) {
+        const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
           (writer as any)['_push'](
@@ -359,8 +362,9 @@ export const CodeGeneratorResponse_File = {
       GeneratedCodeInfo.encode(message.generatedCodeInfo, writer.uint32(130).fork()).ldelim();
     }
     if ('_unknownFields' in message) {
-      for (const key of Object.keys(message['_unknownFields'])) {
-        const values = message['_unknownFields'][key] as Uint8Array[];
+      const msgUnknownFields: any = (message as any)['_unknownFields'];
+      for (const key of Object.keys(msgUnknownFields)) {
+        const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
           (writer as any)['_push'](

@@ -1,11 +1,11 @@
 /* eslint-disable */
 import { FileDescriptorProto } from 'ts-proto-descriptors';
-import * as Long from 'long';
-import * as _m0 from 'protobufjs/minimal';
 import { protoMetadata as protoMetadata1, DateMessage } from './google/type/date';
 import { protoMetadata as protoMetadata2, StringValue, Int32Value, BoolValue } from './google/protobuf/wrappers';
 import { protoMetadata as protoMetadata3, Timestamp } from './google/protobuf/timestamp';
 import { protoMetadata as protoMetadata4, ImportedThing } from './import_dir/thing';
+import * as Long from 'long';
+import * as _m0 from 'protobufjs/minimal';
 
 export const protobufPackage = 'simple';
 

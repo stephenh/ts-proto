@@ -861,8 +861,9 @@ export const FileDescriptorSet = {
       FileDescriptorProto.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     if ('_unknownFields' in message) {
-      for (const key of Object.keys(message['_unknownFields'])) {
-        const values = message['_unknownFields'][key] as Uint8Array[];
+      const msgUnknownFields: any = (message as any)['_unknownFields'];
+      for (const key of Object.keys(msgUnknownFields)) {
+        const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
           (writer as any)['_push'](
@@ -961,8 +962,9 @@ export const FileDescriptorProto = {
       writer.uint32(98).string(message.syntax);
     }
     if ('_unknownFields' in message) {
-      for (const key of Object.keys(message['_unknownFields'])) {
-        const values = message['_unknownFields'][key] as Uint8Array[];
+      const msgUnknownFields: any = (message as any)['_unknownFields'];
+      for (const key of Object.keys(msgUnknownFields)) {
+        const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
           (writer as any)['_push'](
@@ -1096,8 +1098,9 @@ export const DescriptorProto = {
       writer.uint32(82).string(v!);
     }
     if ('_unknownFields' in message) {
-      for (const key of Object.keys(message['_unknownFields'])) {
-        const values = message['_unknownFields'][key] as Uint8Array[];
+      const msgUnknownFields: any = (message as any)['_unknownFields'];
+      for (const key of Object.keys(msgUnknownFields)) {
+        const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
           (writer as any)['_push'](
@@ -1179,8 +1182,9 @@ export const DescriptorProto_ExtensionRange = {
       ExtensionRangeOptions.encode(message.options, writer.uint32(26).fork()).ldelim();
     }
     if ('_unknownFields' in message) {
-      for (const key of Object.keys(message['_unknownFields'])) {
-        const values = message['_unknownFields'][key] as Uint8Array[];
+      const msgUnknownFields: any = (message as any)['_unknownFields'];
+      for (const key of Object.keys(msgUnknownFields)) {
+        const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
           (writer as any)['_push'](
@@ -1238,8 +1242,9 @@ export const DescriptorProto_ReservedRange = {
       writer.uint32(16).int32(message.end);
     }
     if ('_unknownFields' in message) {
-      for (const key of Object.keys(message['_unknownFields'])) {
-        const values = message['_unknownFields'][key] as Uint8Array[];
+      const msgUnknownFields: any = (message as any)['_unknownFields'];
+      for (const key of Object.keys(msgUnknownFields)) {
+        const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
           (writer as any)['_push'](
@@ -1291,8 +1296,9 @@ export const ExtensionRangeOptions = {
       UninterpretedOption.encode(v!, writer.uint32(7994).fork()).ldelim();
     }
     if ('_unknownFields' in message) {
-      for (const key of Object.keys(message['_unknownFields'])) {
-        const values = message['_unknownFields'][key] as Uint8Array[];
+      const msgUnknownFields: any = (message as any)['_unknownFields'];
+      for (const key of Object.keys(msgUnknownFields)) {
+        const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
           (writer as any)['_push'](
@@ -1383,8 +1389,9 @@ export const FieldDescriptorProto = {
       writer.uint32(136).bool(message.proto3Optional);
     }
     if ('_unknownFields' in message) {
-      for (const key of Object.keys(message['_unknownFields'])) {
-        const values = message['_unknownFields'][key] as Uint8Array[];
+      const msgUnknownFields: any = (message as any)['_unknownFields'];
+      for (const key of Object.keys(msgUnknownFields)) {
+        const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
           (writer as any)['_push'](
@@ -1466,8 +1473,9 @@ export const OneofDescriptorProto = {
       OneofOptions.encode(message.options, writer.uint32(18).fork()).ldelim();
     }
     if ('_unknownFields' in message) {
-      for (const key of Object.keys(message['_unknownFields'])) {
-        const values = message['_unknownFields'][key] as Uint8Array[];
+      const msgUnknownFields: any = (message as any)['_unknownFields'];
+      for (const key of Object.keys(msgUnknownFields)) {
+        const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
           (writer as any)['_push'](
@@ -1531,8 +1539,9 @@ export const EnumDescriptorProto = {
       writer.uint32(42).string(v!);
     }
     if ('_unknownFields' in message) {
-      for (const key of Object.keys(message['_unknownFields'])) {
-        const values = message['_unknownFields'][key] as Uint8Array[];
+      const msgUnknownFields: any = (message as any)['_unknownFields'];
+      for (const key of Object.keys(msgUnknownFields)) {
+        const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
           (writer as any)['_push'](
@@ -1596,8 +1605,9 @@ export const EnumDescriptorProto_EnumReservedRange = {
       writer.uint32(16).int32(message.end);
     }
     if ('_unknownFields' in message) {
-      for (const key of Object.keys(message['_unknownFields'])) {
-        const values = message['_unknownFields'][key] as Uint8Array[];
+      const msgUnknownFields: any = (message as any)['_unknownFields'];
+      for (const key of Object.keys(msgUnknownFields)) {
+        const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
           (writer as any)['_push'](
@@ -1655,8 +1665,9 @@ export const EnumValueDescriptorProto = {
       EnumValueOptions.encode(message.options, writer.uint32(26).fork()).ldelim();
     }
     if ('_unknownFields' in message) {
-      for (const key of Object.keys(message['_unknownFields'])) {
-        const values = message['_unknownFields'][key] as Uint8Array[];
+      const msgUnknownFields: any = (message as any)['_unknownFields'];
+      for (const key of Object.keys(msgUnknownFields)) {
+        const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
           (writer as any)['_push'](
@@ -1717,8 +1728,9 @@ export const ServiceDescriptorProto = {
       ServiceOptions.encode(message.options, writer.uint32(26).fork()).ldelim();
     }
     if ('_unknownFields' in message) {
-      for (const key of Object.keys(message['_unknownFields'])) {
-        const values = message['_unknownFields'][key] as Uint8Array[];
+      const msgUnknownFields: any = (message as any)['_unknownFields'];
+      for (const key of Object.keys(msgUnknownFields)) {
+        const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
           (writer as any)['_push'](
@@ -1795,8 +1807,9 @@ export const MethodDescriptorProto = {
       writer.uint32(48).bool(message.serverStreaming);
     }
     if ('_unknownFields' in message) {
-      for (const key of Object.keys(message['_unknownFields'])) {
-        const values = message['_unknownFields'][key] as Uint8Array[];
+      const msgUnknownFields: any = (message as any)['_unknownFields'];
+      for (const key of Object.keys(msgUnknownFields)) {
+        const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
           (writer as any)['_push'](
@@ -1942,8 +1955,9 @@ export const FileOptions = {
       UninterpretedOption.encode(v!, writer.uint32(7994).fork()).ldelim();
     }
     if ('_unknownFields' in message) {
-      for (const key of Object.keys(message['_unknownFields'])) {
-        const values = message['_unknownFields'][key] as Uint8Array[];
+      const msgUnknownFields: any = (message as any)['_unknownFields'];
+      for (const key of Object.keys(msgUnknownFields)) {
+        const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
           (writer as any)['_push'](
@@ -2070,8 +2084,9 @@ export const MessageOptions = {
       UninterpretedOption.encode(v!, writer.uint32(7994).fork()).ldelim();
     }
     if ('_unknownFields' in message) {
-      for (const key of Object.keys(message['_unknownFields'])) {
-        const values = message['_unknownFields'][key] as Uint8Array[];
+      const msgUnknownFields: any = (message as any)['_unknownFields'];
+      for (const key of Object.keys(msgUnknownFields)) {
+        const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
           (writer as any)['_push'](
@@ -2150,8 +2165,9 @@ export const FieldOptions = {
       UninterpretedOption.encode(v!, writer.uint32(7994).fork()).ldelim();
     }
     if ('_unknownFields' in message) {
-      for (const key of Object.keys(message['_unknownFields'])) {
-        const values = message['_unknownFields'][key] as Uint8Array[];
+      const msgUnknownFields: any = (message as any)['_unknownFields'];
+      for (const key of Object.keys(msgUnknownFields)) {
+        const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
           (writer as any)['_push'](
@@ -2218,8 +2234,9 @@ export const OneofOptions = {
       UninterpretedOption.encode(v!, writer.uint32(7994).fork()).ldelim();
     }
     if ('_unknownFields' in message) {
-      for (const key of Object.keys(message['_unknownFields'])) {
-        const values = message['_unknownFields'][key] as Uint8Array[];
+      const msgUnknownFields: any = (message as any)['_unknownFields'];
+      for (const key of Object.keys(msgUnknownFields)) {
+        const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
           (writer as any)['_push'](
@@ -2274,8 +2291,9 @@ export const EnumOptions = {
       UninterpretedOption.encode(v!, writer.uint32(7994).fork()).ldelim();
     }
     if ('_unknownFields' in message) {
-      for (const key of Object.keys(message['_unknownFields'])) {
-        const values = message['_unknownFields'][key] as Uint8Array[];
+      const msgUnknownFields: any = (message as any)['_unknownFields'];
+      for (const key of Object.keys(msgUnknownFields)) {
+        const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
           (writer as any)['_push'](
@@ -2333,8 +2351,9 @@ export const EnumValueOptions = {
       UninterpretedOption.encode(v!, writer.uint32(7994).fork()).ldelim();
     }
     if ('_unknownFields' in message) {
-      for (const key of Object.keys(message['_unknownFields'])) {
-        const values = message['_unknownFields'][key] as Uint8Array[];
+      const msgUnknownFields: any = (message as any)['_unknownFields'];
+      for (const key of Object.keys(msgUnknownFields)) {
+        const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
           (writer as any)['_push'](
@@ -2389,8 +2408,9 @@ export const ServiceOptions = {
       UninterpretedOption.encode(v!, writer.uint32(7994).fork()).ldelim();
     }
     if ('_unknownFields' in message) {
-      for (const key of Object.keys(message['_unknownFields'])) {
-        const values = message['_unknownFields'][key] as Uint8Array[];
+      const msgUnknownFields: any = (message as any)['_unknownFields'];
+      for (const key of Object.keys(msgUnknownFields)) {
+        const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
           (writer as any)['_push'](
@@ -2448,8 +2468,9 @@ export const MethodOptions = {
       UninterpretedOption.encode(v!, writer.uint32(7994).fork()).ldelim();
     }
     if ('_unknownFields' in message) {
-      for (const key of Object.keys(message['_unknownFields'])) {
-        const values = message['_unknownFields'][key] as Uint8Array[];
+      const msgUnknownFields: any = (message as any)['_unknownFields'];
+      for (const key of Object.keys(msgUnknownFields)) {
+        const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
           (writer as any)['_push'](
@@ -2530,8 +2551,9 @@ export const UninterpretedOption = {
       writer.uint32(66).string(message.aggregateValue);
     }
     if ('_unknownFields' in message) {
-      for (const key of Object.keys(message['_unknownFields'])) {
-        const values = message['_unknownFields'][key] as Uint8Array[];
+      const msgUnknownFields: any = (message as any)['_unknownFields'];
+      for (const key of Object.keys(msgUnknownFields)) {
+        const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
           (writer as any)['_push'](
@@ -2601,8 +2623,9 @@ export const UninterpretedOption_NamePart = {
       writer.uint32(16).bool(message.isExtension);
     }
     if ('_unknownFields' in message) {
-      for (const key of Object.keys(message['_unknownFields'])) {
-        const values = message['_unknownFields'][key] as Uint8Array[];
+      const msgUnknownFields: any = (message as any)['_unknownFields'];
+      for (const key of Object.keys(msgUnknownFields)) {
+        const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
           (writer as any)['_push'](
@@ -2654,8 +2677,9 @@ export const SourceCodeInfo = {
       SourceCodeInfo_Location.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     if ('_unknownFields' in message) {
-      for (const key of Object.keys(message['_unknownFields'])) {
-        const values = message['_unknownFields'][key] as Uint8Array[];
+      const msgUnknownFields: any = (message as any)['_unknownFields'];
+      for (const key of Object.keys(msgUnknownFields)) {
+        const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
           (writer as any)['_push'](
@@ -2720,8 +2744,9 @@ export const SourceCodeInfo_Location = {
       writer.uint32(50).string(v!);
     }
     if ('_unknownFields' in message) {
-      for (const key of Object.keys(message['_unknownFields'])) {
-        const values = message['_unknownFields'][key] as Uint8Array[];
+      const msgUnknownFields: any = (message as any)['_unknownFields'];
+      for (const key of Object.keys(msgUnknownFields)) {
+        const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
           (writer as any)['_push'](
@@ -2796,8 +2821,9 @@ export const GeneratedCodeInfo = {
       GeneratedCodeInfo_Annotation.encode(v!, writer.uint32(10).fork()).ldelim();
     }
     if ('_unknownFields' in message) {
-      for (const key of Object.keys(message['_unknownFields'])) {
-        const values = message['_unknownFields'][key] as Uint8Array[];
+      const msgUnknownFields: any = (message as any)['_unknownFields'];
+      for (const key of Object.keys(msgUnknownFields)) {
+        const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
           (writer as any)['_push'](
@@ -2857,8 +2883,9 @@ export const GeneratedCodeInfo_Annotation = {
       writer.uint32(32).int32(message.end);
     }
     if ('_unknownFields' in message) {
-      for (const key of Object.keys(message['_unknownFields'])) {
-        const values = message['_unknownFields'][key] as Uint8Array[];
+      const msgUnknownFields: any = (message as any)['_unknownFields'];
+      for (const key of Object.keys(msgUnknownFields)) {
+        const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
           (writer as any)['_push'](

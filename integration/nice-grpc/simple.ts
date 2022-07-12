@@ -1,6 +1,4 @@
 /* eslint-disable */
-import * as Long from 'long';
-import * as _m0 from 'protobufjs/minimal';
 import { CallContext, CallOptions } from 'nice-grpc-common';
 import { Timestamp } from './google/protobuf/timestamp';
 import { Empty } from './google/protobuf/empty';
@@ -16,6 +14,7 @@ import {
   BoolValue,
 } from './google/protobuf/wrappers';
 import { Struct, Value, ListValue } from './google/protobuf/struct';
+import * as _m0 from 'protobufjs/minimal';
 
 export const protobufPackage = 'simple';
 
@@ -396,13 +395,6 @@ function fromJsonTimestamp(o: any): Date {
   } else {
     return fromTimestamp(Timestamp.fromJSON(o));
   }
-}
-
-// If you get a compile-error about 'Constructor<Long> and ... have no overlap',
-// add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
-if (_m0.util.Long !== Long) {
-  _m0.util.Long = Long as any;
-  _m0.configure();
 }
 
 function isSet(value: any): boolean {

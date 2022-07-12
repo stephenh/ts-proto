@@ -1,3 +1,122 @@
+# [1.117.0](https://github.com/stephenh/ts-proto/compare/v1.116.1...v1.117.0) (2022-07-05)
+
+
+### Features
+
+* add importSuffix option and remove default .js suffix ([#612](https://github.com/stephenh/ts-proto/issues/612)) ([63a8895](https://github.com/stephenh/ts-proto/commit/63a8895f5a3a38fa3d5c0868f44e950e137fb697))
+
+## [1.116.1](https://github.com/stephenh/ts-proto/compare/v1.116.0...v1.116.1) (2022-07-02)
+
+
+### Bug Fixes
+
+* add .js suffix to proto cross-reference imports ([#602](https://github.com/stephenh/ts-proto/issues/602)) ([8dc38af](https://github.com/stephenh/ts-proto/commit/8dc38af40e68262cd53469ce3dc4dcac670365da)), closes [#601](https://github.com/stephenh/ts-proto/issues/601) [/github.com/kulshekhar/ts-jest/issues/1057#issuecomment-481406624](https://github.com//github.com/kulshekhar/ts-jest/issues/1057/issues/issuecomment-481406624)
+
+# [1.116.0](https://github.com/stephenh/ts-proto/compare/v1.115.5...v1.116.0) (2022-07-01)
+
+
+### Features
+
+* add option to use async iterables ([#605](https://github.com/stephenh/ts-proto/issues/605)) ([ca8ea8d](https://github.com/stephenh/ts-proto/commit/ca8ea8d761c02d3ca4da6eaa156acff35d88c510)), closes [#600](https://github.com/stephenh/ts-proto/issues/600)
+
+## [1.115.5](https://github.com/stephenh/ts-proto/compare/v1.115.4...v1.115.5) (2022-06-22)
+
+
+### Bug Fixes
+
+* remove Long import statement when Long was unused ([#599](https://github.com/stephenh/ts-proto/issues/599)) ([58dc10c](https://github.com/stephenh/ts-proto/commit/58dc10c61ec5a76d4b54ba9eddf34021979dd4aa))
+
+## [1.115.4](https://github.com/stephenh/ts-proto/compare/v1.115.3...v1.115.4) (2022-06-05)
+
+
+### Bug Fixes
+
+* Struct wrap/unwrap snake case [#579](https://github.com/stephenh/ts-proto/issues/579) ([#588](https://github.com/stephenh/ts-proto/issues/588)) ([33f89bf](https://github.com/stephenh/ts-proto/commit/33f89bfcf0d5d9e64a6fd360eaefc140055e9291))
+
+## [1.115.3](https://github.com/stephenh/ts-proto/compare/v1.115.2...v1.115.3) (2022-06-03)
+
+
+### Bug Fixes
+
+* Fix ts-poet typo in package.json. ([#589](https://github.com/stephenh/ts-proto/issues/589)) ([5211347](https://github.com/stephenh/ts-proto/commit/5211347cb21ac7d117349a32a87c0d017999c44a))
+
+## [1.115.2](https://github.com/stephenh/ts-proto/compare/v1.115.1...v1.115.2) (2022-06-03)
+
+
+### Bug Fixes
+
+* simplify handling useJsonWireFormat=true and fix onlyTypes=true ([#583](https://github.com/stephenh/ts-proto/issues/583)) ([6e7f938](https://github.com/stephenh/ts-proto/commit/6e7f9387d144f506ded982604f32981ac5e327de))
+
+## [1.115.1](https://github.com/stephenh/ts-proto/compare/v1.115.0...v1.115.1) (2022-06-02)
+
+
+### Bug Fixes
+
+* Bump protobufjs. ([#585](https://github.com/stephenh/ts-proto/issues/585)) ([ba6b85d](https://github.com/stephenh/ts-proto/commit/ba6b85d9d5b7ce191dce898c462cf164a6b1e308))
+
+# [1.115.0](https://github.com/stephenh/ts-proto/compare/v1.114.7...v1.115.0) (2022-06-02)
+
+
+### Features
+
+* added option 'useJsonWireFormat' ([#576](https://github.com/stephenh/ts-proto/issues/576)) ([a71b145](https://github.com/stephenh/ts-proto/commit/a71b145c81136b8d8e3681b6753146d3ceeff179)), closes [#571](https://github.com/stephenh/ts-proto/issues/571)
+
+## [1.114.7](https://github.com/stephenh/ts-proto/compare/v1.114.6...v1.114.7) (2022-05-28)
+
+
+### Bug Fixes
+
+* Fix version number for Buf plugin. ([dc1fb7e](https://github.com/stephenh/ts-proto/commit/dc1fb7e766ed4115d026e7ff0e9a9480c1e42380))
+
+## [1.114.6](https://github.com/stephenh/ts-proto/compare/v1.114.5...v1.114.6) (2022-05-28)
+
+
+### Bug Fixes
+
+* Bump node in ts-proto.Dockerfile. ([42f3cea](https://github.com/stephenh/ts-proto/commit/42f3ceac5323056b1b845b51919ecddaa32bf258))
+
+## [1.114.5](https://github.com/stephenh/ts-proto/compare/v1.114.4...v1.114.5) (2022-05-28)
+
+
+### Bug Fixes
+
+* Use outputs for Buf plugin workflow. ([7017d4c](https://github.com/stephenh/ts-proto/commit/7017d4c1f5eb2a8619dd03cc4f7a27c1dcf6c918))
+
+## [1.114.4](https://github.com/stephenh/ts-proto/compare/v1.114.3...v1.114.4) (2022-05-28)
+
+
+### Bug Fixes
+
+* Use env prefix for Buf plugin. ([ea42caa](https://github.com/stephenh/ts-proto/commit/ea42caacbd919f9a8b6a9e3138d8a48e80ac86d9))
+
+## [1.114.3](https://github.com/stephenh/ts-proto/compare/v1.114.2...v1.114.3) (2022-05-28)
+
+
+### Bug Fixes
+
+* Use the npm environment. ([0103443](https://github.com/stephenh/ts-proto/commit/01034430c25461c0e5a46e2b9fd757ef4e0c91b1))
+
+## [1.114.2](https://github.com/stephenh/ts-proto/compare/v1.114.1...v1.114.2) (2022-05-28)
+
+
+### Bug Fixes
+
+* Try combined workflow. ([c293c1f](https://github.com/stephenh/ts-proto/commit/c293c1f379cb69635c968d5b8094135931bcea54))
+
+# [1.114.0](https://github.com/stephenh/ts-proto/compare/v1.113.0...v1.114.0) (2022-05-27)
+
+
+### Features
+
+* Official Buf Plugin ([#573](https://github.com/stephenh/ts-proto/issues/573)) ([e6272c4](https://github.com/stephenh/ts-proto/commit/e6272c487f73ff96afb4146a7998a892c4b43f14))
+
+# [1.113.0](https://github.com/stephenh/ts-proto/compare/v1.112.2...v1.113.0) (2022-05-27)
+
+
+### Features
+
+* add options to schema output ([#437](https://github.com/stephenh/ts-proto/issues/437)) ([e8e4e39](https://github.com/stephenh/ts-proto/commit/e8e4e3937292e07280f5154b584e60124118f093))
+
 ## [1.112.2](https://github.com/stephenh/ts-proto/compare/v1.112.1...v1.112.2) (2022-05-18)
 
 

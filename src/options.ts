@@ -39,6 +39,7 @@ export type Options = {
   oneof: OneofOption;
   esModuleInterop: boolean;
   fileSuffix: string;
+  importSuffix: string;
   outputEncodeMethods: boolean;
   outputJsonMethods: boolean;
   outputPartialMethods: boolean;
@@ -58,12 +59,13 @@ export type Options = {
   unrecognizedEnum: boolean;
   exportCommonSymbols: boolean;
   outputSchema: boolean;
-  // An alias of !output
   onlyTypes: boolean;
   emitImportedFiles: boolean;
   useExactTypes: boolean;
+  useAsyncIterable: boolean;
   unknownFields: boolean;
   usePrototypeForDefaults: boolean;
+  useJsonWireFormat: boolean;
 };
 
 export function defaultOptions(): Options {
@@ -77,6 +79,7 @@ export function defaultOptions(): Options {
     oneof: OneofOption.PROPERTIES,
     esModuleInterop: false,
     fileSuffix: '',
+    importSuffix: '',
     lowerCaseServiceMethods: false,
     outputEncodeMethods: true,
     outputJsonMethods: true,
@@ -99,8 +102,10 @@ export function defaultOptions(): Options {
     onlyTypes: false,
     emitImportedFiles: true,
     useExactTypes: true,
+    useAsyncIterable: false,
     unknownFields: false,
     usePrototypeForDefaults: false,
+    useJsonWireFormat: false,
   };
 }
 
@@ -122,8 +127,18 @@ export function optionsFromParameter(parameter: string | undefined): Options {
     }
     Object.assign(options, parsed);
   }
-  // We should promote onlyTypes to its own documented flag, but just an alias for now
-  if (!options.outputJsonMethods && !options.outputEncodeMethods && !options.outputClientImpl && !options.nestJs) {
+  // onlyTypes=true implies outputJsonMethods=false,outputEncodeMethods=false,outputClientImpl=false,nestJs=false
+  if (options.onlyTypes) {
+    options.outputJsonMethods = false;
+    options.outputEncodeMethods = false;
+    options.outputClientImpl = false;
+    options.nestJs = false;
+  } else if (
+    !options.outputJsonMethods &&
+    !options.outputEncodeMethods &&
+    !options.outputClientImpl &&
+    !options.nestJs
+  ) {
     options.onlyTypes = true;
   }
 
@@ -162,6 +177,17 @@ export function optionsFromParameter(parameter: string | undefined): Options {
     options.snakeToCamel = [options.snakeToCamel];
   }
 
+  if (options.useJsonWireFormat) {
+    if (!options.onlyTypes) {
+      // useJsonWireFormat requires onlyTypes=true
+      options.useJsonWireFormat = false;
+    } else {
+      // useJsonWireFormat implies stringEnums=true and useDate=string
+      options.stringEnums = true;
+      options.useDate = DateOption.STRING;
+    }
+  }
+
   return options;
 }
 
@@ -180,6 +206,6 @@ function parseParameter(parameter: string): Options {
   return options;
 }
 
-export function getTsPoetOpts(options: Options): { forceModuleImport?: string[] } {
+export function getTsPoetOpts(_options: Options): { forceModuleImport?: string[] } {
   return { forceModuleImport: ['protobufjs/minimal'] };
 }

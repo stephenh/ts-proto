@@ -1,0 +1,9 @@
+// Adding a comment to the syntax will become the first
+// comment in the output source file.
+syntax = "proto3";
+import "google/protobuf/struct.proto";
+package simple;
+
+message SimpleStruct {
+  google.protobuf.Struct simple_struct = 1;
+}

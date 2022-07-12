@@ -13,17 +13,17 @@
   - [Table of contents](#table-of-contents)
 - [Overview](#overview)
 - [QuickStart](#quickstart)
-    - [Buf](#buf)
+  - [Buf](#buf)
 - [Goals](#goals)
 - [Example Types](#example-types)
 - [Highlights](#highlights)
 - [Auto-Batching / N+1 Prevention](#auto-batching--n1-prevention)
 - [Usage](#usage)
-    - [Supported options](#supported-options)
-    - [Only Types](#only-types)
-    - [NestJS Support](#nestjs-support)
-    - [Watch Mode](#watch-mode)
-    - [Basic gRPC implementation](#basic-grpc-implementation)
+  - [Supported options](#supported-options)
+  - [Only Types](#only-types)
+  - [NestJS Support](#nestjs-support)
+  - [Watch Mode](#watch-mode)
+  - [Basic gRPC implementation](#basic-grpc-implementation)
 - [Sponsors](#sponsors)
 - [Development](#development)
 - [Assumptions](#assumptions)
@@ -97,7 +97,16 @@ plugins:
     out: ../gen/ts
     strategy: all
     path: ../node_modules/ts-proto/protoc-gen-ts_proto
-```    
+```
+
+You can also use the official plugin published to the Buf Registry.
+
+```yaml
+version: v1
+plugins:
+  - remote: buf.build/stephenh/plugins/ts-proto
+    out: ../gen/ts
+```
 
 # Goals
 
@@ -174,7 +183,7 @@ creating a class and calling the right getters/setters.
 
   (Configurable with the `useDate` parameter.)
 
-- `fromJSON`/`toJSON` use the [proto3 canonical JSON encoding format](https://developers.google.com/protocol-buffers/docs/proto3#json) (e.g. timestamps are ISO strings), unlike [`protobufjs`](https://github.com/protobufjs/protobuf.js/issues/1304). 
+- `fromJSON`/`toJSON` use the [proto3 canonical JSON encoding format](https://developers.google.com/protocol-buffers/docs/proto3#json) (e.g. timestamps are ISO strings), unlike [`protobufjs`](https://github.com/protobufjs/protobuf.js/issues/1304).
 
 - ObjectIds can be mapped as `mongodb.ObjectId`
 
@@ -220,7 +229,7 @@ protoc --plugin=node_modules/ts-proto/protoc-gen-ts_proto ./batching.proto -I.
 
 `ts-proto` can also be invoked with [Gradle](https://gradle.org) using the [protobuf-gradle-plugin](https://github.com/google/protobuf-gradle-plugin):
 
-``` groovy
+```groovy
 protobuf {
     plugins {
         // `ts` can be replaced by any unused plugin name, e.g. `tsproto`
@@ -265,34 +274,36 @@ Generated code will be placed in the Gradle build directory.
 
   Currently `browser` doesn't have any specific behavior other than being "not `node`". It probably will soon/at some point.
 
-- With `--ts_proto_opt=useOptionals=true`, non-scalar fields are declared as optional TypeScript properties, e.g. `field?: Message` instead of the default `field: Message | undefined`.
+- With `--ts_proto_opt=useOptionals=messages` (for message fields) or `--ts_proto_opt=useOptionals=all` (for message and scalar fields), fields are declared as optional keys, e.g. `field?: Message` instead of the default `field: Message | undefined`.
 
-  ts-proto defaults to `useOptionals=false`, e.g. `field: Message | undefined`, because it is the most safe for use cases like:
+  ts-proto defaults to `useOptionals=none` because it:
+  
+  1. Prevents typos when initializing messages, and
+  2. Provides the most consistent API to readers
+  3. Ensures production messages are properly initialized with all fields. 
 
-  ```typescript
-  interface SomeMessage {
-    firstName: string | undefined;
-    lastName: string | undefined;
-  }
+  For typo prevention, optional fields make it easy for extra fields to slip into a message (until we get [Exact Types](https://github.com/microsoft/TypeScript/issues/12936)),  i.e.:
 
-  const data = { firstName: 'a', lastTypo: 'b' };
+   ```typescript
+   interface SomeMessage {
+     firstName: string | undefined;
+     lastName: string | undefined;
+   }
+   // Declared with a typo
+   const data = { firstName: 'a', lastTypo: 'b' };
+   // With useOptionals=none, this correctly fails to compile; if `lastName` was optional, it would not
+   const message: SomeMessage = { ...data };
+   ```
+  
+   For a consistent API, if `SomeMessage.lastName` is optional `lastName?`, then readers have to check _two_ empty conditions: a) is `lastName` `undefined` (b/c it was created in-memory and left unset), or b) is `lastName` empty string (b/c we read `SomeMessage` off the wire and correctly set `lastName` to empty string)?
 
-  // This would compile if `lastName` was `lastName?`, even though the
-  // `lastTypo` key above means that `lastName` is not assigned.
-  const message: SomeMessage = {
-    ...data,
-  };
-  ```
+   For ensuring proper initialization, if later `SomeMessage.middleInitial` is added, but it's marked as optional `middleInitial?`, you may have many call sites in production code that _should_ now be passing `middleInitial` to create a valid `SomeMessage`, but are not.
 
-  However, the type-safety of `useOptionals=false` is admittedly tedious if you have many inherently-unused fields, so you can use `useOptionals=true` if that trade-off makes sense for your project.
+   So, between typo-prevention, reader inconsistency, and proper initialization, ts-proto recommends using `useOptionals=none` as the "most safe" option.
 
-  You can also use the generated `SomeMessage.fromPartial` methods to opt into the optionality on a per-call-site basis. The `fromPartial` allows the creator/writer to have default values applied (i.e. `undefined` --> `0`), and the return value will still be the non-optional type that provides a consistent view (i.e. always `0`) to clients.
+   All that said, this approach does require writers/creators to set every field (although `fromPartial` is meant to address this), so if you still want to have optional fields, you can set `useOptionals=messages` or `useOptionals=all`.
 
-  Eventually if TypeScript supports [Exact Types](https://github.com/microsoft/TypeScript/issues/12936), that should allow ts-proto to switch to `useOptionals=true` as the default/only behavior, have the generated `Message.encode`/`Message.toPartial`/etc. methods accept `Exact<T>` versions of the message types, and the result would be both safe + succinct.
-
-  Also see the comment in [this issue](https://github.com/stephenh/ts-proto/issues/120#issuecomment-678375833) which explains the nuance behind making all fields optional (currently `useOptionals` only makes message fields optional), specifically that a message created with `const message: Message = { ...key not set... }` (so `key` is `undefined`) vs. `const message = Message.decode(...key not set...)` (so `key` is the default value) would look different to clients.
-
-  Note that RPC methods, like `service.ping({ key: ... })`, accept `DeepPartial` versions of the request messages, because of the same rationale that it makes it easy for the writer call-site to get default values for free, and because the "reader" is the internal ts-proto serialization code, it can apply the defaults as necessary.
+   (See [this issue](https://github.com/stephenh/ts-proto/issues/120#issuecomment-678375833) and [this issue](https://github.com/stephenh/ts-proto/issues/397#issuecomment-977259118) for discussions on `useOptional`.)
 
 - With `--ts_proto_opt=exportCommonSymbols=false`, utility types like `DeepPartial` won't be `export`d.
 
@@ -366,26 +377,30 @@ Generated code will be placed in the Gradle build directory.
 
 - With `--ts_proto_opt=metadataType=Foo@./some-file`, ts-proto add a generic (framework-agnostic) metadata field to the generic service definition.
 
-- With `--ts_proto_opt=outputServices=generic-definitions,outputServices=default`, ts-proto will output both generic definitions and interfaces.  This is useful if you want to rely on the interfaces, but also have some reflection capabilities at runtime.
+- With `--ts_proto_opt=outputServices=generic-definitions,outputServices=default`, ts-proto will output both generic definitions and interfaces. This is useful if you want to rely on the interfaces, but also have some reflection capabilities at runtime.
 
 - With `--ts_proto_opt=outputServices=false`, or `=none`, ts-proto will output NO service definitions.
 
-- With `--ts_proto_opt=emitImportedFiles=false`, ts-proto will not emit `google/protobuf/*` files unless you explicit add files to `protoc` like this
-`protoc --plugin=./node_modules/.bin/protoc-gen-ts_proto my_message.proto google/protobuf/duration.proto`
+- With `--ts_proto_opt=useAsyncIterable=true`, the generated services will use `AsyncIterable` instead of `Observable`.
 
-- With `--ts_proto_opt=fileSuffix=<SUFFIX>`, ts-proto will emit generated files using the specified suffix. A `helloworld.proto` file with `fileSuffix=.pb` would be generated as `helloworld.pb.ts`. This is common behavior in other protoc plugins and provides a way to quickly glob all the generated files. 
+- With `--ts_proto_opt=emitImportedFiles=false`, ts-proto will not emit `google/protobuf/*` files unless you explicit add files to `protoc` like this
+  `protoc --plugin=./node_modules/.bin/protoc-gen-ts_proto my_message.proto google/protobuf/duration.proto`
+
+- With `--ts_proto_opt=fileSuffix=<SUFFIX>`, ts-proto will emit generated files using the specified suffix. A `helloworld.proto` file with `fileSuffix=.pb` would be generated as `helloworld.pb.ts`. This is common behavior in other protoc plugins and provides a way to quickly glob all the generated files.
+
+- With `--ts_proto_opt=importSuffix=<SUFFIX>`, ts-proto will emit file imports using the specified suffix. An import of `helloworld.ts` with `fileSuffix=.js` would generate `import "helloworld.js"`. The default is to import without a file extension. Supported by TypeScript 4.7.x and up.
 
 - With `--ts_proto_opt=enumsAsLiterals=true`, the generated enum types will be enum-ish object with `as const`.
 
 - With `--ts_proto_opt=useExactTypes=false`, the generated `fromPartial` method will not use Exact types.
-  
+
   The default behavior is `useExactTypes=true`, which makes `fromPartial` use Exact type for its argument to make TypeScript reject any unknown properties.
 
 - With `--ts_proto_opt=unknownFields=true`, all unknown fields will be parsed and output as arrays of buffers.
 
 - With `--ts_proto_opt=onlyTypes=true`, only types will be emitted, and imports for `long` and `protobufjs/minimal` will be excluded.
 
-  Note: _This is a combination_ of `outputJsonMethods=false,outputEncodeMethods=false,outputClientImpl=false,nestJs=false`
+  This is the same as setting `outputJsonMethods=false,outputEncodeMethods=false,outputClientImpl=false,nestJs=false`
 
 - With `--ts_proto_opt=usePrototypeForDefaults=true`, the generated code will wrap new objects with `Object.create`.
 
@@ -395,10 +410,10 @@ Generated code will be placed in the Gradle build directory.
 
   Note that, as indicated, this means Object.keys will not include set-by-default fields, so if you have code that iterates over messages keys in a generic fashion, it will have to also iterate over keys inherited from the prototype.
 
-### Only Types
-If you're looking for `ts-proto` to generate only types for your Protobuf types then passing all three of `outputEncodeMethods`, `outputJsonMethods`, and `outputClientImpl` as `false` is probably what you want, i.e.:
+- With `--ts_proto_opt=useJsonWireFormat=true`, the generated code will reflect the JSON representation of Protobuf messages.
 
-`--ts_proto_opt=onlyTypes=true`.
+  Requires `onlyTypes=true`. Implies `useDate=string` and `stringEnums=true`. This option is to generate types that can be directly used with marshalling/unmarshalling Protobuf messages serialized as JSON.  
+  You may also want to set `useOptionals=all`, as gRPC gateways are not required to send default value for scalar values.
 
 ### NestJS Support
 
@@ -417,7 +432,7 @@ If you want to run `ts-proto` on every change of a proto file, you'll need to us
 
 `ts-proto` is RPC framework agnostic - how you transmit your data to and from
 your data source is up to you. The generated client implementations all expect
-a `rpc` parameter, which type is defined like this: 
+a `rpc` parameter, which type is defined like this:
 
 ```ts
 interface Rpc {
@@ -425,7 +440,7 @@ interface Rpc {
 }
 ```
 
-If you're working with gRPC, a simple implementation could look like this: 
+If you're working with gRPC, a simple implementation could look like this:
 
 ```ts
 type RpcImpl = (service: string, method: string, data: Uint8Array) => Promise<Uint8Array>;
@@ -455,14 +470,14 @@ const sendRequest: RpcImpl = (service, method, data) => {
   });
 };
 
-const rpc: Rpc = { request: sendRequest }
+const rpc: Rpc = { request: sendRequest };
 ```
 
 # Sponsors
 
 Kudos to our sponsors:
 
-* [ngrok](https://ngrok.com) funded ts-proto's initial grpc-web support.
+- [ngrok](https://ngrok.com) funded ts-proto's initial grpc-web support.
 
 If you need ts-proto customizations or priority support for your company, you can ping me at [via email](mailto:stephen.haberman@gmail.com).
 
@@ -481,9 +496,10 @@ The commands below assume you have **Docker** installed. To use a **local** copy
 - Run `yarn install` to install the dependencies.
 - Run `yarn build:test` or `yarn build:test:local` to generate the test files.
   > _This runs the following commands:_
-  >  - `proto2bin` — Converts integration test `.proto` files to `.bin`.
-  >  - `bin2ts` — Runs `ts-proto` on the `.bin` files to generate  `.ts`  files.
-  >  - `proto2pbjs` — Generates a reference implementation using `pbjs` for testing compatibility.
+  >
+  > - `proto2bin` — Converts integration test `.proto` files to `.bin`.
+  > - `bin2ts` — Runs `ts-proto` on the `.bin` files to generate `.ts` files.
+  > - `proto2pbjs` — Generates a reference implementation using `pbjs` for testing compatibility.
 - Run `yarn test`
 
 **Workflow**
@@ -494,8 +510,8 @@ The commands below assume you have **Docker** installed. To use a **local** copy
     _Since the proto files were not changed, you only need to regenerate the typescript files._
   - Run `yarn test` to verify the typescript files are compatible with the reference implementation, and pass other tests.
 - Updating or adding `.proto` files in the integration directory:
-  - Run `yarn watch` to automatically regenerate test files when proto files change. 
-    - Or run `yarn build:test` to regenerate all integration test files. 
+  - Run `yarn watch` to automatically regenerate test files when proto files change.
+    - Or run `yarn build:test` to regenerate all integration test files.
   - Run `yarn test` to retest.
 
 **Contributing**
@@ -503,7 +519,7 @@ The commands below assume you have **Docker** installed. To use a **local** copy
 - Run `yarn build:test` and `yarn test` to make sure everything works.
 - Run `yarn prettier` to format the typescript files.
 - Commit the changes:
-  - Also include the generated `.bin` files for the tests where you added or modified `.proto` files.  
+  - Also include the generated `.bin` files for the tests where you added or modified `.proto` files.
     > These are checked into git so that the test suite can run without having to invoke the `protoc` build chain.
   - Also include the generated `.ts` files.
 - Create a pull request
@@ -594,7 +610,7 @@ Foo.encode({ bar: '' }); // => { }, writes an empty Foo object, in protobuf bina
 Reading JSON will also initialize the default values. Since senders may either omit unset fields, or set them to the default value, use `fromJSON` to normalize the input.
 
 ```typescript
-Foo.fromJSON({ }); // => { bar: '' }
+Foo.fromJSON({}); // => { bar: '' }
 Foo.fromJSON({ bar: '' }); // => { bar: '' }
 Foo.fromJSON({ bar: 'baz' }); // => { bar: 'baz' }
 ```
@@ -603,7 +619,7 @@ When writing JSON, `ts-proto` currently does **not** normalize message when conv
 
 ```typescript
 // Current ts-proto behavior
-Foo.toJSON({ }); // => { }
+Foo.toJSON({}); // => { }
 Foo.toJSON({ bar: undefined }); // => { }
 Foo.toJSON({ bar: '' }); // => { bar: '' } - note: this is the default value, but it's not omitted
 Foo.toJSON({ bar: 'baz' }); // => { bar: 'baz' }
@@ -611,13 +627,13 @@ Foo.toJSON({ bar: 'baz' }); // => { bar: 'baz' }
 
 ```typescript
 // Possible future behavior, where ts-proto would normalize message
-Foo.toJSON({ }); // => { }
+Foo.toJSON({}); // => { }
 Foo.toJSON({ bar: undefined }); // => { }
 Foo.toJSON({ bar: '' }); // => { } - note: omitting the default value, as expected
 Foo.toJSON({ bar: 'baz' }); // => { bar: 'baz' }
 ```
 
--  Please open an issue if you need this behavior.
+- Please open an issue if you need this behavior.
 
 # Well-Known Types
 
@@ -626,24 +642,23 @@ Their interpretation is defined by the Protobuf specification, and libraries are
 
 `ts-proto` currently automatically converts these messages to their corresponding native types.
 
- * [google.protobuf.BoolValue](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#boolvalue) &lrarr; `boolean`
- * [google.protobuf.BytesValue](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#bytesvalue) &lrarr; `Uint8Array`
- * [google.protobuf.DoubleValue](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#doublevalue) &lrarr; `number`
- * [google.protobuf.FieldMask](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#fieldmask) &lrarr; `string[]`
- * [google.protobuf.FloatValue](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#floatvalue) &lrarr; `number`
- * [google.protobuf.Int32Value](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#int32value) &lrarr; `number`
- * [google.protobuf.Int64Value](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#int64value) &lrarr; `number`
- * [google.protobuf.ListValue](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#listvalue) &lrarr; `any[]`
- * [google.protobuf.UInt32Value](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#uint32value) &lrarr; `number`
- * [google.protobuf.UInt64Value](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#uint64value) &lrarr; `number`
- * [google.protobuf.StringValue](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#stringvalue) &lrarr; `string`
- * [google.protobuf.Value](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#value)  &lrarr; `any` (i.e. `number | string | boolean | null | array | object`)
- * [google.protobuf.Struct](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#struct) &lrarr; `{ [key: string]: any }`
+- [google.protobuf.BoolValue](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#boolvalue) &lrarr; `boolean`
+- [google.protobuf.BytesValue](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#bytesvalue) &lrarr; `Uint8Array`
+- [google.protobuf.DoubleValue](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#doublevalue) &lrarr; `number`
+- [google.protobuf.FieldMask](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#fieldmask) &lrarr; `string[]`
+- [google.protobuf.FloatValue](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#floatvalue) &lrarr; `number`
+- [google.protobuf.Int32Value](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#int32value) &lrarr; `number`
+- [google.protobuf.Int64Value](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#int64value) &lrarr; `number`
+- [google.protobuf.ListValue](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#listvalue) &lrarr; `any[]`
+- [google.protobuf.UInt32Value](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#uint32value) &lrarr; `number`
+- [google.protobuf.UInt64Value](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#uint64value) &lrarr; `number`
+- [google.protobuf.StringValue](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#stringvalue) &lrarr; `string`
+- [google.protobuf.Value](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#value) &lrarr; `any` (i.e. `number | string | boolean | null | array | object`)
+- [google.protobuf.Struct](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#struct) &lrarr; `{ [key: string]: any }`
 
 ## Wrapper Types
 
 Wrapper Types are messages containing a single primitive field, and can be imported in `.proto` files with `import "google/protobuf/wrappers.proto"`.
-
 
 Since these are _messages_, their default value is `undefined`, allowing you to distinguish unset primitives from their default values, when using Wrapper Types.
 `ts-proto` generates these fields as `<primitive> | undefined`.
@@ -671,13 +686,13 @@ interface ExampleMessage {
 When encoding a message the primitive value is converted back to its corresponding wrapper type:
 
 ```typescript
-ExampleMessage.encode({ name: 'foo' }) // => { name: { value: 'foo' } }, in binary
+ExampleMessage.encode({ name: 'foo' }); // => { name: { value: 'foo' } }, in binary
 ```
 
 When calling toJSON, the value is not converted, because wrapper types are idiomatic in JSON.
 
 ```typescript
-ExampleMessage.toJSON({ name: 'foo' }) // => { name: 'foo' }
+ExampleMessage.toJSON({ name: 'foo' }); // => { name: 'foo' }
 ```
 
 ## JSON Types (Struct Types)
@@ -687,7 +702,7 @@ For this reason, Protobuf offers several additional types to represent arbitrary
 
 These are called Struct Types, and can be imported in `.proto` files with `import "google/protobuf/struct.proto"`.
 
-- [google.protobuf.Value](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#Value) &lrarr; `any`  
+- [google.protobuf.Value](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#Value) &lrarr; `any`
   - This is the most general type, and can represent any JSON value (i.e. `number | string | boolean | null | array | object`).
 - [google.protobuf.ListValue](https://developers.google.com/protocol-buffers/docs/reference/google.protobuf#ListValue) &lrarr; `any[]`
   - To represent a JSON array
@@ -717,8 +732,9 @@ interface ExampleMessage {
 ```
 
 Encoding a JSON value embedded in a message, converts it to a Struct Type:
+
 ```typescript
-ExampleMessage.encode({ anything: { "name": "hello" } })
+ExampleMessage.encode({ anything: { name: 'hello' } });
 /* Outputs the following structure, encoded in protobuf binary format:
 {
   anything: Value {
@@ -735,7 +751,7 @@ ExampleMessage.encode({ anything: { "name": "hello" } })
  }
 }*/
 
-ExampleMessage.encode({ anything: true })
+ExampleMessage.encode({ anything: true });
 /* Outputs the following structure encoded in protobuf binary format:
 {
   anything: Value {

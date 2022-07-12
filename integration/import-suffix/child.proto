@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package file_suffix;
+
+message Child {
+  string name = 1;
+}
+
+enum ChildEnum {
+  DEFAULT = 0;
+  FOO = 1;
+}

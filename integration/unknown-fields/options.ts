@@ -1,5 +1,4 @@
 /* eslint-disable */
-import * as Long from 'long';
 import * as _m0 from 'protobufjs/minimal';
 
 export const protobufPackage = '';
@@ -40,8 +39,9 @@ export const MyMessage = {
       writer.uint32(34).string(message.quux);
     }
     if ('_unknownFields' in message) {
-      for (const key of Object.keys(message['_unknownFields'])) {
-        const values = message['_unknownFields'][key] as Uint8Array[];
+      const msgUnknownFields: any = (message as any)['_unknownFields'];
+      for (const key of Object.keys(msgUnknownFields)) {
+        const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
           (writer as any)['_push'](
@@ -96,8 +96,9 @@ function createBaseRequestType(): RequestType {
 export const RequestType = {
   encode(message: RequestType, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if ('_unknownFields' in message) {
-      for (const key of Object.keys(message['_unknownFields'])) {
-        const values = message['_unknownFields'][key] as Uint8Array[];
+      const msgUnknownFields: any = (message as any)['_unknownFields'];
+      for (const key of Object.keys(msgUnknownFields)) {
+        const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
           (writer as any)['_push'](
@@ -140,8 +141,9 @@ function createBaseResponseType(): ResponseType {
 export const ResponseType = {
   encode(message: ResponseType, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if ('_unknownFields' in message) {
-      for (const key of Object.keys(message['_unknownFields'])) {
-        const values = message['_unknownFields'][key] as Uint8Array[];
+      const msgUnknownFields: any = (message as any)['_unknownFields'];
+      for (const key of Object.keys(msgUnknownFields)) {
+        const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
           (writer as any)['_push'](
@@ -196,11 +198,4 @@ export class MyServiceClientImpl implements MyService {
 
 interface Rpc {
   request(service: string, method: string, data: Uint8Array): Promise<Uint8Array>;
-}
-
-// If you get a compile-error about 'Constructor<Long> and ... have no overlap',
-// add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
-if (_m0.util.Long !== Long) {
-  _m0.util.Long = Long as any;
-  _m0.configure();
 }
