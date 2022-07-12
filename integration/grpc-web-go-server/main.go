@@ -3,17 +3,18 @@ package main
 import (
 	"flag"
 	"fmt"
+	"math/rand"
+	"net/http"
+
 	"github.com/improbable-eng/grpc-web/go/grpcweb"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/grpclog"
 	"google.golang.org/grpc/metadata"
-	"math/rand"
-	"net/http"
 
 	"golang.org/x/net/context"
 
-	rpx "./generated/lib/rpx"
+	rpx "grpc-web-go-server/generated/lib/rpx"
 )
 
 var (
