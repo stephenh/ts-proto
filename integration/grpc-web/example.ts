@@ -683,7 +683,7 @@ export const DashStateChangeUserSettingsStreamDesc: MethodDefinitionish = {
   responseStream: true,
   requestType: {
     serializeBinary() {
-      return Empty.encode(this).finish();
+      return DashUserSettingsState.encode(this).finish();
     },
   } as any,
   responseType: {
@@ -944,7 +944,6 @@ export class GrpcWebImpl {
     }
     let started = false;
     const client = grpc.client(methodDesc, defaultOptions)
-    client.start(metadata);
     return {
       onEnd: function(callback: (code: grpc.Code, message: string, trailers: grpc.Metadata) => void) {
         client.onEnd(callback)
@@ -958,12 +957,13 @@ export class GrpcWebImpl {
       cancel: function() {
         client.close()
       },
-      write: function(req: any) {
-        // if (!started) {
-        //   client.start(metadata);
-        //   started = true;
-        // }
-        client.send(req)
+      write: function(_req: any) {
+        const request = { ..._req, ...methodDesc.requestType };
+        if (!started) {
+          client.start(metadata);
+          started = true;
+        }
+        client.send(request)
       },
       end: function() {
         client.finishSend()
