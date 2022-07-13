@@ -596,10 +596,10 @@ export interface DashState {
   UserSettings(request: DeepPartial<Empty>, metadata?: grpc.Metadata): Promise<DashUserSettingsState>;
   ActiveUserSettingsStream(request: DeepPartial<Empty>, metadata?: grpc.Metadata): Observable<DashUserSettingsState>;
   /** not supported in grpc-web, but should still compile */
-  ChangeUserSettingsStream(
+  ChangeUserSettingsStream(options?: {
     metadata?: grpc.Metadata,
-    options?: grpc.RpcOptions
-  ): BidiStream<DashUserSettingsState, DashUserSettingsState>;
+    rpcOptions?: grpc.RpcOptions
+  }): BidiStream<DashUserSettingsState, DashUserSettingsState>;
 }
 
 export class DashStateClientImpl implements DashState {
@@ -620,11 +620,11 @@ export class DashStateClientImpl implements DashState {
     return this.rpc.invoke(DashStateActiveUserSettingsStreamDesc, Empty.fromPartial(request), metadata);
   }
 
-  ChangeUserSettingsStream(
+  ChangeUserSettingsStream(options?: {
     metadata?: grpc.Metadata,
-    options?: grpc.RpcOptions
-  ): BidiStream<DashUserSettingsState, DashUserSettingsState> {
-    return this.rpc.stream(DashStateChangeUserSettingsStreamDesc, metadata, options)
+    rpcOptions?: grpc.RpcOptions
+  }): BidiStream<DashUserSettingsState, DashUserSettingsState> {
+    return this.rpc.stream(DashStateChangeUserSettingsStreamDesc, options?.metadata, options?.rpcOptions)
   }
 }
 

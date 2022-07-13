@@ -41,7 +41,9 @@ async function main() {
   });
 
   console.log('calling client.ChangeUserSettingsStream');
-  const stream = client.ChangeUserSettingsStream(undefined, { transport: ws })
+  const stream = client.ChangeUserSettingsStream({
+    rpcOptions: { transport: ws }
+  })
   stream.onMessage((res) => {
     console.log("onMessage", res)
   })
