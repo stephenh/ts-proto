@@ -2,6 +2,7 @@
 
 import { DashAPICredsClientImpl, DashStateClientImpl, GrpcWebImpl, DashUserSettingsState } from './example';
 import { grpc } from '@improbable-eng/grpc-web';
+import { Observable } from "rxjs";
 
 const defTransport = grpc.CrossBrowserHttpTransport({ withCredentials: false });
 const ws = grpc.WebsocketTransport()
@@ -41,15 +42,28 @@ async function main() {
   });
 
   console.log('calling client.ChangeUserSettingsStream');
-  const stream = client.ChangeUserSettingsStream({
+  const reqObs = new Observable(function subscribe(subscriber) {
+    // Keep track of the interval resource
+    let count = 0;
+    const intervalId = setInterval(() => {
+      if (count >= 10) {
+	subscriber.complete();
+	clearInterval(intervalId);
+      }
+
+      subscriber.next(DashUserSettingsState.fromPartial({ email: "ping@email.com" }));
+      count++;
+
+    }, 1000);
+  });
+  const resObs = client.ChangeUserSettingsStream(reqObs, {
     rpcOptions: { transport: ws }
   })
-  stream.onMessage((res) => {
-    console.log("onMessage", res)
-  })
-  setInterval(() => {
-    stream.write(DashUserSettingsState.fromPartial({ email: "ping@email.com" }))
-  }, 1000)
+  resObs.subscribe({
+    next(x) { console.log("Stream Res", x) },
+    error(err){ console.error("Stream Error", err) },
+    complete() { console.log("Done") }
+  });
 }
 
 main().then(

@@ -136,6 +136,7 @@ func (s *stateService) ChangeUserSettingsStream(stream rpx.DashState_ChangeUserS
 		default:
 			state, err := stream.Recv()
 			if err != nil {
+				grpclog.Error("Recv Error", err)
 				return err
 			}
 			grpclog.Infof("receive: %+v\n", state)

@@ -596,10 +596,10 @@ export interface DashState {
   UserSettings(request: DeepPartial<Empty>, metadata?: grpc.Metadata): Promise<DashUserSettingsState>;
   ActiveUserSettingsStream(request: DeepPartial<Empty>, metadata?: grpc.Metadata): Observable<DashUserSettingsState>;
   /** not supported in grpc-web, but should still compile */
-  ChangeUserSettingsStream(options?: {
+  ChangeUserSettingsStream(request: Observable<DeepPartial<DashUserSettingsState>>, options?: {
     metadata?: grpc.Metadata,
     rpcOptions?: grpc.RpcOptions
-  }): BidiStream<DashUserSettingsState, DashUserSettingsState>;
+  }): Observable<DashUserSettingsState>;
 }
 
 export class DashStateClientImpl implements DashState {
@@ -620,11 +620,11 @@ export class DashStateClientImpl implements DashState {
     return this.rpc.invoke(DashStateActiveUserSettingsStreamDesc, Empty.fromPartial(request), metadata);
   }
 
-  ChangeUserSettingsStream(options?: {
+  ChangeUserSettingsStream(request: Observable<DeepPartial<DashUserSettingsState>>, options?: {
     metadata?: grpc.Metadata,
     rpcOptions?: grpc.RpcOptions
-  }): BidiStream<DashUserSettingsState, DashUserSettingsState> {
-    return this.rpc.stream(DashStateChangeUserSettingsStreamDesc, options?.metadata, options?.rpcOptions)
+  }): Observable<DashUserSettingsState> {
+    return this.rpc.stream(DashStateChangeUserSettingsStreamDesc, request, options?.metadata, options?.rpcOptions)
   }
 }
 
@@ -814,15 +814,6 @@ interface MethodDefinitionish extends grpc.MethodDefinition<any, any> {
   responseStream: any;
 }
 
-interface BidiStream<T, R> {
-  onEnd(callback: (code: grpc.Code, message: string, trailers: grpc.Metadata) => void): void;
-  onMessage(callback: (res: R) => void): void;
-  onHeaders(callback: (headers: grpc.Metadata) => void): void;
-  cancel(): void;
-  write(req: T): void;
-  end(): void;
-}
-
 interface Rpc {
   unary<T extends UnaryMethodDefinitionish>(
     methodDesc: T,
@@ -836,9 +827,10 @@ interface Rpc {
   ): Observable<any>;
   stream<T extends MethodDefinitionish>(
     methodDesc: T,
+    request: Observable<any>,
     metadata: grpc.Metadata | undefined,
     rpcOptions: grpc.RpcOptions | undefined
-  ): BidiStream<any, any>;
+  ): Observable<any>;
 }
 
 export class GrpcWebImpl {
@@ -934,41 +926,46 @@ export class GrpcWebImpl {
 
   stream<T extends MethodDefinitionish>(
     methodDesc: T,
+    _request: Observable<any>,
     metadata: grpc.Metadata | undefined,
     rpcOptions: grpc.RpcOptions | undefined
-  ): BidiStream<any, any> {
+  ): Observable<any> {
     const defaultOptions = {
       host: this.host,
       debug: rpcOptions?.debug || this.options.debug,
       transport: rpcOptions?.transport || this.options.streamingTransport || this.options.transport,
     }
+
     let started = false;
     const client = grpc.client(methodDesc, defaultOptions)
-    return {
-      onEnd: function(callback: (code: grpc.Code, message: string, trailers: grpc.Metadata) => void) {
-        client.onEnd(callback)
-      },
-      onMessage: function(callback: (res: any) => void) {
-        client.onMessage(callback)
-      },
-      onHeaders: function(callback: (headers: grpc.Metadata) => void) {
-        client.onHeaders(callback)
-      },
-      cancel: function() {
-        client.close()
-      },
-      write: function(_req: any) {
-        const request = { ..._req, ...methodDesc.requestType };
-        if (!started) {
-          client.start(metadata);
-          started = true;
-        }
-        client.send(request)
-      },
-      end: function() {
-        client.finishSend()
+
+    const subscription = _request.subscribe((_req: any) => {
+      const request = { ..._req, ...methodDesc.requestType };
+      if (!started) {
+        client.start(metadata);
+        started = true;
       }
-    }
+      client.send(request)
+    })
+
+    subscription.add(() => {
+      client.finishSend()
+    })
+
+    return new Observable((observer) => {
+      client.onEnd((code: grpc.Code, message: string, trailers: grpc.Metadata) => {
+        subscription.unsubscribe();
+        if (code === 0) {
+          observer.complete();
+        } else {
+          observer.error(new Error(`Error ${code} ${message}`));
+        }
+      })
+      client.onMessage((res: any) => {
+        observer.next(res);
+      })
+      observer.add(() => client.close())
+    }).pipe(share());
   }
 }
 
