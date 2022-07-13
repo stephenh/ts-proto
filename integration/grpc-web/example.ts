@@ -596,10 +596,13 @@ export interface DashState {
   UserSettings(request: DeepPartial<Empty>, metadata?: grpc.Metadata): Promise<DashUserSettingsState>;
   ActiveUserSettingsStream(request: DeepPartial<Empty>, metadata?: grpc.Metadata): Observable<DashUserSettingsState>;
   /** not supported in grpc-web, but should still compile */
-  ChangeUserSettingsStream(request: Observable<DeepPartial<DashUserSettingsState>>, options?: {
-    metadata?: grpc.Metadata,
-    rpcOptions?: grpc.RpcOptions
-  }): Observable<DashUserSettingsState>;
+  ChangeUserSettingsStream(
+    request: Observable<DeepPartial<DashUserSettingsState>>,
+    options?: {
+      metadata?: grpc.Metadata;
+      rpcOptions?: grpc.RpcOptions;
+    }
+  ): Observable<DashUserSettingsState>;
 }
 
 export class DashStateClientImpl implements DashState {
@@ -620,11 +623,14 @@ export class DashStateClientImpl implements DashState {
     return this.rpc.invoke(DashStateActiveUserSettingsStreamDesc, Empty.fromPartial(request), metadata);
   }
 
-  ChangeUserSettingsStream(request: Observable<DeepPartial<DashUserSettingsState>>, options?: {
-    metadata?: grpc.Metadata,
-    rpcOptions?: grpc.RpcOptions
-  }): Observable<DashUserSettingsState> {
-    return this.rpc.stream(DashStateChangeUserSettingsStreamDesc, request, options?.metadata, options?.rpcOptions)
+  ChangeUserSettingsStream(
+    request: Observable<DeepPartial<DashUserSettingsState>>,
+    options?: {
+      metadata?: grpc.Metadata;
+      rpcOptions?: grpc.RpcOptions;
+    }
+  ): Observable<DashUserSettingsState> {
+    return this.rpc.stream(DashStateChangeUserSettingsStreamDesc, request, options?.metadata, options?.rpcOptions);
   }
 }
 
@@ -654,7 +660,7 @@ export const DashStateUserSettingsDesc: UnaryMethodDefinitionish = {
   } as any,
 };
 
-export const DashStateActiveUserSettingsStreamDesc: UnaryMethodDefinitionish = {
+export const DashStateActiveUserSettingsStreamDesc: MethodDefinitionish = {
   methodName: 'ActiveUserSettingsStream',
   service: DashStateDesc,
   requestStream: false,
@@ -696,7 +702,7 @@ export const DashStateChangeUserSettingsStreamDesc: MethodDefinitionish = {
       };
     },
   } as any,
-};;
+};
 
 /**
  * ----------------------
@@ -809,10 +815,12 @@ interface UnaryMethodDefinitionishR extends grpc.UnaryMethodDefinition<any, any>
 
 type UnaryMethodDefinitionish = UnaryMethodDefinitionishR;
 
-interface MethodDefinitionish extends grpc.MethodDefinition<any, any> {
+interface MethodDefinitionishR extends grpc.MethodDefinition<any, any> {
   requestStream: any;
   responseStream: any;
 }
+
+type MethodDefinitionish = MethodDefinitionishR;
 
 interface Rpc {
   unary<T extends UnaryMethodDefinitionish>(
@@ -934,10 +942,10 @@ export class GrpcWebImpl {
       host: this.host,
       debug: rpcOptions?.debug || this.options.debug,
       transport: rpcOptions?.transport || this.options.streamingTransport || this.options.transport,
-    }
+    };
 
     let started = false;
-    const client = grpc.client(methodDesc, defaultOptions)
+    const client = grpc.client(methodDesc, defaultOptions);
 
     const subscription = _request.subscribe((_req: any) => {
       const request = { ..._req, ...methodDesc.requestType };
@@ -945,12 +953,12 @@ export class GrpcWebImpl {
         client.start(metadata);
         started = true;
       }
-      client.send(request)
-    })
+      client.send(request);
+    });
 
     subscription.add(() => {
-      client.finishSend()
-    })
+      client.finishSend();
+    });
 
     return new Observable((observer) => {
       client.onEnd((code: grpc.Code, message: string, trailers: grpc.Metadata) => {
@@ -960,11 +968,11 @@ export class GrpcWebImpl {
         } else {
           observer.error(new Error(`Error ${code} ${message}`));
         }
-      })
+      });
       client.onMessage((res: any) => {
         observer.next(res);
-      })
-      observer.add(() => client.close())
+      });
+      observer.add(() => client.close());
     }).pipe(share());
   }
 }
