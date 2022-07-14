@@ -198,6 +198,10 @@ export function getPropertyAccessor(objectName: string, propertyName: string, op
     : `${objectName}${optional ? '?.' : ''}[${JSON.stringify(propertyName)}]`;
 }
 
+export function impFile(options: Options, spec: string) {
+  return imp(`${spec}${options.importSuffix}`);
+}
+
 export function impProto(options: Options, module: string, type: string): Import {
   const importString = `${type}@./${module}${options.fileSuffix}${options.importSuffix}`;
   if (options.onlyTypes) {

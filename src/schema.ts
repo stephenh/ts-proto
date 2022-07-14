@@ -8,7 +8,7 @@ import { imp, code, Code, joinCode, def } from 'ts-poet';
 import { visit, visitServices } from './visit';
 import { Context } from './context';
 import SourceInfo from './sourceInfo';
-import { maybePrefixPackage } from './utils';
+import { impFile, maybePrefixPackage } from './utils';
 import { basicTypeName, toReaderCall } from './types';
 import { Reader } from 'protobufjs/minimal';
 
@@ -87,7 +87,7 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
   });
 
   const dependencies = fileDesc.dependency.map((dep) => {
-    return code`${imp(`protoMetadata@./${dep.replace('.proto', '')}`)}`;
+    return code`${impFile(options, `protoMetadata@./${dep.replace('.proto', '')}`)}`;
   });
 
   // Use toObject so that we get enums as numbers (instead of the default toJSON behavior)
