@@ -1,8 +1,6 @@
-import { code, Code, imp, joinCode } from 'ts-poet';
+import { code, Code, joinCode } from 'ts-poet';
 import { Context } from './context';
-
-const Writer = imp('Writer@protobufjs/minimal');
-const Reader = imp('Reader@protobufjs/minimal');
+import { impFile } from './utils';
 
 export function generateTypeRegistry(ctx: Context): Code {
   const chunks: Code[] = [];
@@ -30,6 +28,9 @@ function generateMessageType(ctx: Context): Code {
   chunks.push(code`$type: Message['$type'];`);
 
   if (ctx.options.outputEncodeMethods) {
+    const Writer = impFile(ctx.options, 'Writer@protobufjs/minimal');
+    const Reader = impFile(ctx.options, 'Reader@protobufjs/minimal');
+
     chunks.push(code`encode(message: Message, writer?: ${Writer}): ${Writer};`);
     chunks.push(code`decode(input: ${Reader} | Uint8Array, length?: number): Message;`);
   }

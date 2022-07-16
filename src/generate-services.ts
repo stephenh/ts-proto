@@ -9,14 +9,20 @@ import {
   responseType,
   observableType,
 } from './types';
-import { assertInstanceOf, FormattedMethodDescriptor, maybeAddComment, maybePrefixPackage, singular } from './utils';
+import {
+  assertInstanceOf,
+  FormattedMethodDescriptor,
+  impFile,
+  maybeAddComment,
+  maybePrefixPackage,
+  singular,
+} from './utils';
 import SourceInfo, { Fields } from './sourceInfo';
 import { contextTypeVar } from './main';
 import { Context } from './context';
 
 const hash = imp('hash*object-hash');
 const dataloader = imp('DataLoader*dataloader');
-const Reader = imp('Reader@protobufjs/minimal');
 
 /**
  * Generates an interface for `serviceDesc`.
@@ -105,7 +111,7 @@ function generateRegularRpcMethod(
 ): Code {
   assertInstanceOf(methodDesc, FormattedMethodDescriptor);
   const { options, utils } = ctx;
-  const Reader = imp('Reader@protobufjs/minimal');
+  const Reader = impFile(ctx.options, 'Reader@protobufjs/minimal');
   const rawInputType = rawRequestType(ctx, methodDesc);
   const inputType = requestType(ctx, methodDesc);
   const outputType = responseType(ctx, methodDesc);
@@ -276,6 +282,7 @@ function generateCachingRpcMethod(
   const inputType = requestType(ctx, methodDesc);
   const outputType = responseType(ctx, methodDesc);
   const uniqueIdentifier = `${maybePrefixPackage(fileDesc, serviceDesc.name)}.${methodDesc.name}`;
+  const Reader = impFile(ctx.options, 'Reader@protobufjs/minimal');
   const lambda = code`
     (requests) => {
       const responses = requests.map(async request => {
