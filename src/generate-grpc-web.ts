@@ -198,7 +198,7 @@ function generateGrpcWebRpcType(ctx: Context, returnObservable: boolean, hasStre
     request: ${observableType(ctx)}<any>,
     metadata: grpc.Metadata | undefined,
     rpcOptions: grpc.RpcOptions | undefined
-  ): ${observableType(ctx)}<any>;`)
+  ): ${observableType(ctx)}<any>;`);
   }
 
   chunks.push(code`}`);

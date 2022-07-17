@@ -593,6 +593,7 @@ export const Empty = {
 export interface DashState {
   UserSettings(request: Empty): Promise<DashUserSettingsState>;
   ActiveUserSettingsStream(request: Empty): Observable<DashUserSettingsState>;
+  ChangeUserSettingsStream(request: Observable<DashUserSettingsState>): Observable<DashUserSettingsState>;
 }
 
 export class DashStateClientImpl implements DashState {
@@ -601,6 +602,7 @@ export class DashStateClientImpl implements DashState {
     this.rpc = rpc;
     this.UserSettings = this.UserSettings.bind(this);
     this.ActiveUserSettingsStream = this.ActiveUserSettingsStream.bind(this);
+    this.ChangeUserSettingsStream = this.ChangeUserSettingsStream.bind(this);
   }
   UserSettings(request: Empty): Promise<DashUserSettingsState> {
     const data = Empty.encode(request).finish();
@@ -611,6 +613,12 @@ export class DashStateClientImpl implements DashState {
   ActiveUserSettingsStream(request: Empty): Observable<DashUserSettingsState> {
     const data = Empty.encode(request).finish();
     const result = this.rpc.serverStreamingRequest('rpx.DashState', 'ActiveUserSettingsStream', data);
+    return result.pipe(map((data) => DashUserSettingsState.decode(new _m0.Reader(data))));
+  }
+
+  ChangeUserSettingsStream(request: Observable<DashUserSettingsState>): Observable<DashUserSettingsState> {
+    const data = request.pipe(map((request) => DashUserSettingsState.encode(request).finish()));
+    const result = this.rpc.bidirectionalStreamingRequest('rpx.DashState', 'ChangeUserSettingsStream', data);
     return result.pipe(map((data) => DashUserSettingsState.decode(new _m0.Reader(data))));
   }
 }

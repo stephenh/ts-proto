@@ -63,7 +63,7 @@ export function generateService(
       if (methodDesc.clientStreaming) {
         params.push(code`options?: {
           metadata?: grpc.Metadata,
-          rpcOptions?: grpc.RpcOptions}`)
+          rpcOptions?: grpc.RpcOptions}`);
       } else {
         params.push(code`metadata?: grpc.Metadata`);
       }

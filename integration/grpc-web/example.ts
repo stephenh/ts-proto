@@ -595,7 +595,6 @@ export const Empty = {
 export interface DashState {
   UserSettings(request: DeepPartial<Empty>, metadata?: grpc.Metadata): Promise<DashUserSettingsState>;
   ActiveUserSettingsStream(request: DeepPartial<Empty>, metadata?: grpc.Metadata): Observable<DashUserSettingsState>;
-  /** not supported in grpc-web, but should still compile */
   ChangeUserSettingsStream(
     request: Observable<DeepPartial<DashUserSettingsState>>,
     options?: {
