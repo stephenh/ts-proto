@@ -145,6 +145,10 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
   if (options.nestJs) {
     const prefix = camelToSnake(fileDesc.package.replace(/\./g, '_'));
     chunks.push(code`export const ${prefix}_PACKAGE_NAME = '${fileDesc.package}';`);
+
+    if (options.useDate === DateOption.DATE && fileDesc.messageType.find(message => message.field.find(field => field.typeName === '.google.protobuf.Timestamp'))) {
+      chunks.push(makeProtobufTimestampWrapper())
+    }
   }
 
   if (options.outputEncodeMethods || options.outputJsonMethods || options.outputTypeRegistry) {
@@ -322,25 +326,20 @@ export type Utils = ReturnType<typeof makeDeepPartial> &
 export function makeUtils(options: Options): Utils {
   const bytes = makeByteUtils();
   const longs = makeLongUtils(options, bytes);
-  const wrappers = makeNestJsWrappers(options);
   return {
     ...bytes,
     ...makeDeepPartial(options, longs),
     ...makeObjectIdMethods(options),
     ...makeTimestampMethods(options, longs),
     ...longs,
-    ...wrappers,
     ...makeComparisonUtils(),
     ...makeNiceGrpcServerStreamingMethodResult(),
   };
 }
 
-function makeNestJsWrappers(options: Options) {
+function makeProtobufTimestampWrapper() {
   const wrappers = imp('wrappers@protobufjs');
-
-  const nestJsTimestampTypeWrapper =
-    options.nestJs && options.useDate === DateOption.DATE
-      ? code`
+  return code`
       ${wrappers}['.google.protobuf.Timestamp'] = {
         fromObject(value: Date) {
           return {
@@ -351,10 +350,7 @@ function makeNestJsWrappers(options: Options) {
         toObject(message: { seconds: number; nanos: number }) {
           return new Date(message.seconds * 1000 + message.nanos / 1e6);
         },
-      } as any;`
-      : code``;
-
-  return { nestJsTimestampTypeWrapper };
+      } as any;`;
 }
 
 function makeLongUtils(options: Options, bytes: ReturnType<typeof makeByteUtils>) {

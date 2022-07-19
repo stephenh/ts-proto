@@ -1,4 +1,5 @@
 /* eslint-disable */
+import { wrappers } from 'protobufjs';
 import { GrpcMethod, GrpcStreamMethod } from '@nestjs/microservices';
 import { Observable } from 'rxjs';
 import { Empty } from './google/protobuf/empty';
@@ -25,6 +26,18 @@ export interface Villain {
 }
 
 export const HERO_PACKAGE_NAME = 'hero';
+
+wrappers['.google.protobuf.Timestamp'] = {
+  fromObject(value: Date) {
+    return {
+      seconds: value.getTime() / 1000,
+      nanos: (value.getTime() % 1000) * 1e6,
+    };
+  },
+  toObject(message: { seconds: number; nanos: number }) {
+    return new Date(message.seconds * 1000 + message.nanos / 1e6);
+  },
+} as any;
 
 export interface HeroServiceClient {
   addOneHero(request: Hero): Observable<Empty>;
