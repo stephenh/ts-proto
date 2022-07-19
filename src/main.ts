@@ -47,6 +47,7 @@ import {
   maybeAddComment,
   maybePrefixPackage,
   getPropertyAccessor,
+  impFile,
 } from './utils';
 import { camelToSnake, capitalize, maybeSnakeToCamel } from './case';
 import {
@@ -196,7 +197,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
         `);
 
         if (options.outputTypeRegistry) {
-          const messageTypeRegistry = imp('messageTypeRegistry@./typeRegistry');
+          const messageTypeRegistry = impFile(options, 'messageTypeRegistry@./typeRegistry');
 
           chunks.push(code`
             ${messageTypeRegistry}.set(${fullName}.$type, ${fullName});
@@ -359,8 +360,8 @@ function makeNestJsWrappers(options: Options) {
 function makeLongUtils(options: Options, bytes: ReturnType<typeof makeByteUtils>) {
   // Regardless of which `forceLong` config option we're using, we always use
   // the `long` library to either represent or at least sanity-check 64-bit values
-  const util = imp('util@protobufjs/minimal');
-  const configure = imp('configure@protobufjs/minimal');
+  const util = impFile(options, 'util@protobufjs/minimal');
+  const configure = impFile(options, 'configure@protobufjs/minimal');
 
   // Before esModuleInterop, we had to use 'import * as Long from long` b/c long is
   // an `export =` module and exports only the Long constructor (which is callable).
@@ -832,6 +833,8 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
     createBase = code`Object.create(${createBase}) as ${fullName}`;
   }
 
+  const Reader = impFile(ctx.options, 'Reader@protobufjs/minimal');
+
   // create the basic function declaration
   chunks.push(code`
     decode(
@@ -967,13 +970,12 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
   return joinCode(chunks, { on: '\n' });
 }
 
-const Writer = imp('Writer@protobufjs/minimal');
-const Reader = imp('Reader@protobufjs/minimal');
-
 /** Creates a function to encode a message by loop overing the tags. */
 function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorProto): Code {
   const { options, utils, typeMap } = ctx;
   const chunks: Code[] = [];
+
+  const Writer = impFile(ctx.options, 'Writer@protobufjs/minimal');
 
   // create the basic function declaration
   chunks.push(code`
