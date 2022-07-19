@@ -110,6 +110,8 @@ plugins:
 
 # Goals
 
+In terms of the code that `ts-proto` generates, the general goals are:
+
 - Idiomatic TypeScript/ES6 types
   - `ts-proto` is a clean break from either the built-in Google/Java-esque JS code of `protoc` or the "make `.d.ts` files the `*.js` comments" approach of `protobufjs`
   - (Techically the `protobufjs/minimal` package is used for actually reading/writing bytes.)
@@ -117,6 +119,17 @@ plugins:
 - Interfaces over classes
   - As much as possible, types are just interfaces, so you can work with messages just like regular hashes/data structures.
 - Only supports codegen `*.proto`-to-`*.ts` workflow, currently no runtime reflection/loading of dynamic `.proto` files
+
+## Non-Goals
+
+Note that ts-proto is not an out-of-the-box RPC framework; instead it's more of a swiss-army knife (as witnessed by its many config options), that lets you build _exactly_ the RPC framework you'd like on top of it (i.e. that best integrates with your company's protobuf ecosystem; for better or worse, protobuf RPC is still a somewhat fragmented ecosystem).
+
+If you'd like an out-of-the-box RPC framework built on top of ts-proto, there are a few examples:
+
+- [nice-grpc](https://github.com/deeplay-io/nice-grpc)
+- [starpc](https://github.com/aperturerobotics/starpc)
+
+(Note for potential contributors, if you develop other frameworks/mini-frameworks, or even blog posts/tutorials, on using `ts-proto`, we're happy to link to them.)
 
 # Example Types
 
@@ -482,6 +495,8 @@ Kudos to our sponsors:
 If you need ts-proto customizations or priority support for your company, you can ping me at [via email](mailto:stephen.haberman@gmail.com).
 
 # Development
+
+This section describes how to contribute directly to ts-proto, i.e. it's not required for running `ts-proto` in `protoc` or using the generated TypeScript.
 
 **Requirements**
 
