@@ -595,6 +595,13 @@ export const Empty = {
 export interface DashState {
   UserSettings(request: DeepPartial<Empty>, metadata?: grpc.Metadata): Promise<DashUserSettingsState>;
   ActiveUserSettingsStream(request: DeepPartial<Empty>, metadata?: grpc.Metadata): Observable<DashUserSettingsState>;
+  ManyUserSettingsStream(
+    request: Observable<DeepPartial<DashUserSettingsState>>,
+    options?: {
+      metadata?: grpc.Metadata;
+      rpcOptions?: grpc.RpcOptions;
+    }
+  ): Observable<DashUserSettingsState>;
   ChangeUserSettingsStream(
     request: Observable<DeepPartial<DashUserSettingsState>>,
     options?: {
@@ -611,6 +618,7 @@ export class DashStateClientImpl implements DashState {
     this.rpc = rpc;
     this.UserSettings = this.UserSettings.bind(this);
     this.ActiveUserSettingsStream = this.ActiveUserSettingsStream.bind(this);
+    this.ManyUserSettingsStream = this.ManyUserSettingsStream.bind(this);
     this.ChangeUserSettingsStream = this.ChangeUserSettingsStream.bind(this);
   }
 
@@ -620,6 +628,16 @@ export class DashStateClientImpl implements DashState {
 
   ActiveUserSettingsStream(request: DeepPartial<Empty>, metadata?: grpc.Metadata): Observable<DashUserSettingsState> {
     return this.rpc.invoke(DashStateActiveUserSettingsStreamDesc, Empty.fromPartial(request), metadata);
+  }
+
+  ManyUserSettingsStream(
+    request: Observable<DeepPartial<DashUserSettingsState>>,
+    options?: {
+      metadata?: grpc.Metadata;
+      rpcOptions?: grpc.RpcOptions;
+    }
+  ): Observable<DashUserSettingsState> {
+    return this.rpc.stream(DashStateManyUserSettingsStreamDesc, request, options?.metadata, options?.rpcOptions);
   }
 
   ChangeUserSettingsStream(
@@ -667,6 +685,28 @@ export const DashStateActiveUserSettingsStreamDesc: MethodDefinitionish = {
   requestType: {
     serializeBinary() {
       return Empty.encode(this).finish();
+    },
+  } as any,
+  responseType: {
+    deserializeBinary(data: Uint8Array) {
+      return {
+        ...DashUserSettingsState.decode(data),
+        toObject() {
+          return this;
+        },
+      };
+    },
+  } as any,
+};
+
+export const DashStateManyUserSettingsStreamDesc: MethodDefinitionish = {
+  methodName: 'ManyUserSettingsStream',
+  service: DashStateDesc,
+  requestStream: true,
+  responseStream: false,
+  requestType: {
+    serializeBinary() {
+      return DashUserSettingsState.encode(this).finish();
     },
   } as any,
   responseType: {

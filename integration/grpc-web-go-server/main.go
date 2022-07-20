@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"io"
 	"math/rand"
 	"net/http"
 
@@ -136,11 +137,38 @@ func (s *stateService) ChangeUserSettingsStream(stream rpx.DashState_ChangeUserS
 		default:
 			state, err := stream.Recv()
 			if err != nil {
-				grpclog.Error("Recv Error", err)
-				return err
+				if err == io.EOF {
+					return nil
+				} else {
+					grpclog.Error("Recv Error ", err)
+					return err
+				}
 			}
-			grpclog.Infof("receive: %+v\n", state)
-			stream.Send(&rpx.DashUserSettingsState{Email: fmt.Sprintf("receive: %s", state.GetEmail())})
+			grpclog.Infof("client-server stream: %+v\n", state)
+			stream.Send(&rpx.DashUserSettingsState{Email: "pong@example.com"})
+		}
+	}
+}
+
+func (s *stateService) ManyUserSettingsStream(stream rpx.DashState_ManyUserSettingsStreamServer) error {
+	grpclog.Info("ManyUserSettingsStream....")
+
+	for {
+		select {
+		case <-stream.Context().Done():
+			grpclog.Info("Context Done!")
+			return stream.Context().Err()
+		default:
+			state, err := stream.Recv()
+			if err != nil {
+				if err == io.EOF {
+					return stream.SendAndClose(&rpx.DashUserSettingsState{Email: "done@example.com"})
+				} else {
+					grpclog.Error("Recv Error", err)
+					return err
+				}
+			}
+			grpclog.Infof("client-stream: %+v\n", state)
 		}
 	}
 }

@@ -6,6 +6,7 @@ option go_package = "lib/rpx";
 service DashState {
   rpc UserSettings(Empty) returns (DashUserSettingsState);
   rpc ActiveUserSettingsStream(Empty) returns (stream DashUserSettingsState);
+  rpc ManyUserSettingsStream(stream DashUserSettingsState) returns (DashUserSettingsState);
   rpc ChangeUserSettingsStream (stream DashUserSettingsState) returns (stream DashUserSettingsState) {}
 }
 

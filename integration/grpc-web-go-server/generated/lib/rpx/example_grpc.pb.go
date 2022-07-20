@@ -24,6 +24,7 @@ const _ = grpc.SupportPackageIsVersion7
 type DashStateClient interface {
 	UserSettings(ctx context.Context, in *Empty, opts ...grpc.CallOption) (*DashUserSettingsState, error)
 	ActiveUserSettingsStream(ctx context.Context, in *Empty, opts ...grpc.CallOption) (DashState_ActiveUserSettingsStreamClient, error)
+	ManyUserSettingsStream(ctx context.Context, opts ...grpc.CallOption) (DashState_ManyUserSettingsStreamClient, error)
 	ChangeUserSettingsStream(ctx context.Context, opts ...grpc.CallOption) (DashState_ChangeUserSettingsStreamClient, error)
 }
 
@@ -76,8 +77,42 @@ func (x *dashStateActiveUserSettingsStreamClient) Recv() (*DashUserSettingsState
 	return m, nil
 }
 
+func (c *dashStateClient) ManyUserSettingsStream(ctx context.Context, opts ...grpc.CallOption) (DashState_ManyUserSettingsStreamClient, error) {
+	stream, err := c.cc.NewStream(ctx, &DashState_ServiceDesc.Streams[1], "/rpx.DashState/ManyUserSettingsStream", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &dashStateManyUserSettingsStreamClient{stream}
+	return x, nil
+}
+
+type DashState_ManyUserSettingsStreamClient interface {
+	Send(*DashUserSettingsState) error
+	CloseAndRecv() (*DashUserSettingsState, error)
+	grpc.ClientStream
+}
+
+type dashStateManyUserSettingsStreamClient struct {
+	grpc.ClientStream
+}
+
+func (x *dashStateManyUserSettingsStreamClient) Send(m *DashUserSettingsState) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *dashStateManyUserSettingsStreamClient) CloseAndRecv() (*DashUserSettingsState, error) {
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	m := new(DashUserSettingsState)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 func (c *dashStateClient) ChangeUserSettingsStream(ctx context.Context, opts ...grpc.CallOption) (DashState_ChangeUserSettingsStreamClient, error) {
-	stream, err := c.cc.NewStream(ctx, &DashState_ServiceDesc.Streams[1], "/rpx.DashState/ChangeUserSettingsStream", opts...)
+	stream, err := c.cc.NewStream(ctx, &DashState_ServiceDesc.Streams[2], "/rpx.DashState/ChangeUserSettingsStream", opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -113,6 +148,7 @@ func (x *dashStateChangeUserSettingsStreamClient) Recv() (*DashUserSettingsState
 type DashStateServer interface {
 	UserSettings(context.Context, *Empty) (*DashUserSettingsState, error)
 	ActiveUserSettingsStream(*Empty, DashState_ActiveUserSettingsStreamServer) error
+	ManyUserSettingsStream(DashState_ManyUserSettingsStreamServer) error
 	ChangeUserSettingsStream(DashState_ChangeUserSettingsStreamServer) error
 }
 
@@ -125,6 +161,9 @@ func (UnimplementedDashStateServer) UserSettings(context.Context, *Empty) (*Dash
 }
 func (UnimplementedDashStateServer) ActiveUserSettingsStream(*Empty, DashState_ActiveUserSettingsStreamServer) error {
 	return status.Errorf(codes.Unimplemented, "method ActiveUserSettingsStream not implemented")
+}
+func (UnimplementedDashStateServer) ManyUserSettingsStream(DashState_ManyUserSettingsStreamServer) error {
+	return status.Errorf(codes.Unimplemented, "method ManyUserSettingsStream not implemented")
 }
 func (UnimplementedDashStateServer) ChangeUserSettingsStream(DashState_ChangeUserSettingsStreamServer) error {
 	return status.Errorf(codes.Unimplemented, "method ChangeUserSettingsStream not implemented")
@@ -180,6 +219,32 @@ func (x *dashStateActiveUserSettingsStreamServer) Send(m *DashUserSettingsState)
 	return x.ServerStream.SendMsg(m)
 }
 
+func _DashState_ManyUserSettingsStream_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(DashStateServer).ManyUserSettingsStream(&dashStateManyUserSettingsStreamServer{stream})
+}
+
+type DashState_ManyUserSettingsStreamServer interface {
+	SendAndClose(*DashUserSettingsState) error
+	Recv() (*DashUserSettingsState, error)
+	grpc.ServerStream
+}
+
+type dashStateManyUserSettingsStreamServer struct {
+	grpc.ServerStream
+}
+
+func (x *dashStateManyUserSettingsStreamServer) SendAndClose(m *DashUserSettingsState) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *dashStateManyUserSettingsStreamServer) Recv() (*DashUserSettingsState, error) {
+	m := new(DashUserSettingsState)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 func _DashState_ChangeUserSettingsStream_Handler(srv interface{}, stream grpc.ServerStream) error {
 	return srv.(DashStateServer).ChangeUserSettingsStream(&dashStateChangeUserSettingsStreamServer{stream})
 }
@@ -223,6 +288,11 @@ var DashState_ServiceDesc = grpc.ServiceDesc{
 			StreamName:    "ActiveUserSettingsStream",
 			Handler:       _DashState_ActiveUserSettingsStream_Handler,
 			ServerStreams: true,
+		},
+		{
+			StreamName:    "ManyUserSettingsStream",
+			Handler:       _DashState_ManyUserSettingsStream_Handler,
+			ClientStreams: true,
 		},
 		{
 			StreamName:    "ChangeUserSettingsStream",

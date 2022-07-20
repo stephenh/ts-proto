@@ -9,7 +9,7 @@ const ws = grpc.WebsocketTransport()
 
 const rpc = new GrpcWebImpl('http://localhost:9090', {
   transport: defTransport,
-  debug: true,
+  debug: false,
   metadata: new grpc.Metadata({ SomeHeader: 'bar' }),
 });
 
@@ -35,13 +35,36 @@ async function main() {
     console.log('got expected error', e);
   }
 
-  console.log('calling client.ActiveUserSettingsStream');
+  console.log('(server-stream) calling client.ActiveUserSettingsStream');
   const obs = client.ActiveUserSettingsStream({});
   await obs.forEach(value => {
-    console.log("Got", value);
+    console.log("[server-stream] Got", value);
   });
 
-  console.log('calling client.ChangeUserSettingsStream');
+  console.log('(client-stream) calling client.ManyUserSettingsStream');
+  const clientStreamObs = new Observable(function subscribe(subscriber) {
+    // Keep track of the interval resource
+    let count = 0;
+    const intervalId = setInterval(() => {
+      if (count >= 10) {
+	subscriber.complete();
+	clearInterval(intervalId);
+      }
+
+      subscriber.next(DashUserSettingsState.fromPartial({ email: "ping@example.com" }));
+      count++;
+
+    }, 1000);
+  });
+  const manyObs = client.ManyUserSettingsStream(clientStreamObs, {
+    rpcOptions: { transport: ws }
+  });
+  // will only receive one message when client stream finish.
+  await manyObs.forEach(value => {
+    console.log("[client-stream] Got", value);
+  });
+
+  console.log('(client-server bidirectional stream) calling client.ChangeUserSettingsStream');
   const reqObs = new Observable(function subscribe(subscriber) {
     // Keep track of the interval resource
     let count = 0;
@@ -51,7 +74,7 @@ async function main() {
 	clearInterval(intervalId);
       }
 
-      subscriber.next(DashUserSettingsState.fromPartial({ email: "ping@email.com" }));
+      subscriber.next(DashUserSettingsState.fromPartial({ email: "ping@example.com" }));
       count++;
 
     }, 1000);
@@ -61,7 +84,7 @@ async function main() {
   })
   resObs.subscribe({
     next(x) { console.log("Stream Res", x) },
-    error(err){ console.error("Stream Error", err) },
+    error(err){ console.error(err) },
     complete() { console.log("Done") }
   });
 }
