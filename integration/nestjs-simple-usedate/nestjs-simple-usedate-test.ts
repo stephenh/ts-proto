@@ -5,14 +5,14 @@ import { ClientGrpc } from '@nestjs/microservices';
 import { HeroServiceClient, VillainById, Villain, HERO_SERVICE_NAME, HERO_PACKAGE_NAME } from './hero';
 import { Subject } from 'rxjs';
 
-describe('nestjs-simple-test', () => {
+describe('nestjs-simple-usedate-test', () => {
   it('compiles', () => {
     const service = new SampleService();
     expect(service).not.toBeUndefined();
   });
 });
 
-describe('nestjs-simple-test nestjs', () => {
+describe('nestjs-simple-usedate-test nestjs', () => {
   let app: INestMicroservice;
   let client: ClientGrpc;
   let heroService: HeroServiceClient;
