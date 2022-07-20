@@ -46,6 +46,11 @@ describe('nestjs-simple-usedate-test nestjs', () => {
     expect(hero).toEqual({ id: 1, name: 'Stephenh', birthDate: new Date("2000/01/01") });
   });
 
+  it('should findOneHero recently added hero', async () => {
+    const hero = await heroService.findOneHero({ id: 3 }).toPromise();
+    expect(hero).toEqual({ id: 3, name: 'Toon', birthDate: new Date("2000/03/03") });
+  });
+
   it('should findOneVillain', async () => {
     const villain = await heroService.findOneVillain({ id: 1 }).toPromise();
     expect(villain).toEqual({ id: 1, name: 'John' });
