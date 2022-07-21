@@ -1,3 +1,10 @@
+# [1.120.0](https://github.com/stephenh/ts-proto/compare/v1.119.0...v1.120.0) (2022-07-21)
+
+
+### Features
+
+* add meta-data to stream error ([#620](https://github.com/stephenh/ts-proto/issues/620)) ([b68f301](https://github.com/stephenh/ts-proto/commit/b68f301b5fb4222a3fce676a7e5036cf00e77e11))
+
 # [1.119.0](https://github.com/stephenh/ts-proto/compare/v1.118.0...v1.119.0) (2022-07-21)
 
 
