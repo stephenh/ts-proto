@@ -316,7 +316,7 @@ function createInvokeMethod(ctx: Context) {
             metadata: maybeCombinedMetadata,
             debug: this.options.debug,
             onMessage: (next) => observer.next(next),
-            onEnd: (code: ${grpc}.Code, message: string, trailers: grpc.Metadata) => {
+            onEnd: (code: ${grpc}.Code, message: string, trailers: ${grpc}.Metadata) => {
               if (code === 0) {
                 observer.complete();
               } else if (upStreamCodes.includes(code)) {
