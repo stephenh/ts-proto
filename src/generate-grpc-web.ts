@@ -60,7 +60,10 @@ function generateRpcMethod(ctx: Context, serviceDesc: ServiceDescriptorProto, me
         metadata?: grpc.Metadata,
         rpcOptions?: grpc.RpcOptions,
     }): ${returns} {
-      return this.rpc.stream(${methodDescName(serviceDesc, methodDesc)}, request, options?.metadata, options?.rpcOptions)
+      return this.rpc.stream(${methodDescName(
+        serviceDesc,
+        methodDesc
+      )}, request, options?.metadata, options?.rpcOptions)
     }
   `;
   }
