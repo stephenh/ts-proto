@@ -3,17 +3,19 @@ package main
 import (
 	"flag"
 	"fmt"
+	"io"
+	"math/rand"
+	"net/http"
+
 	"github.com/improbable-eng/grpc-web/go/grpcweb"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/grpclog"
 	"google.golang.org/grpc/metadata"
-	"math/rand"
-	"net/http"
 
 	"golang.org/x/net/context"
 
-	rpx "./generated/lib/rpx"
+	rpx "grpc-web-go-server/generated/lib/rpx"
 )
 
 var (
@@ -34,9 +36,13 @@ func main() {
 	rpx.RegisterDashStateServer(server, &stateService{})
 	rpx.RegisterDashAPICredsServer(server, &credsService{})
 
-	wrappedServer := grpcweb.WrapServer(server)
+	wrappedServer := grpcweb.WrapServer(server,
+		grpcweb.WithWebsockets(true),
+		grpcweb.WithWebsocketOriginFunc(func(*http.Request) bool { return true }))
 
 	handler := func(resp http.ResponseWriter, req *http.Request) {
+		resp.Header().Set("Access-Control-Allow-Origin", "*")
+		resp.Header().Set("Access-Control-Allow-Headers", "*")
 		grpclog.Infof("Request: %v", req)
 		wrappedServer.ServeHTTP(resp, req)
 	}
@@ -102,6 +108,71 @@ func (s *stateService) ActiveUserSettingsStream(in *rpx.Empty, stream rpx.DashSt
 	return nil
 }
 
+func (s *stateService) ChangeUserSettingsStream(stream rpx.DashState_ChangeUserSettingsStreamServer) error {
+	grpclog.Info("ChangeUserSettingsStream....")
+
+	urls := rpx.DashUserSettingsState_URLs{
+		ConnectGoogle: "http://google.com",
+		ConnectGithub: "http://github.com",
+	}
+
+	flashes := []*rpx.DashFlash{
+		&rpx.DashFlash{Msg: "flash1", Type: rpx.DashFlash_Warn},
+		&rpx.DashFlash{Msg: "flash2", Type: rpx.DashFlash_Success},
+	}
+
+	err := stream.Send(&rpx.DashUserSettingsState{Email: "test1-email@example.com", Urls: &urls, Flashes: flashes})
+	if err != nil {
+		grpclog.Error("Send Error", err)
+		return err
+	}
+	stream.Send(&rpx.DashUserSettingsState{Email: "test2-email@example.com", Urls: &urls, Flashes: flashes})
+	stream.Send(&rpx.DashUserSettingsState{Email: "test3-email@example.com", Urls: &urls, Flashes: flashes})
+
+	for {
+		select {
+		case <-stream.Context().Done():
+			grpclog.Info("Done!")
+			return stream.Context().Err()
+		default:
+			state, err := stream.Recv()
+			if err != nil {
+				if err == io.EOF {
+					return nil
+				} else {
+					grpclog.Error("Recv Error ", err)
+					return err
+				}
+			}
+			grpclog.Infof("client-server stream: %+v\n", state)
+			stream.Send(&rpx.DashUserSettingsState{Email: "pong@example.com"})
+		}
+	}
+}
+
+func (s *stateService) ManyUserSettingsStream(stream rpx.DashState_ManyUserSettingsStreamServer) error {
+	grpclog.Info("ManyUserSettingsStream....")
+
+	for {
+		select {
+		case <-stream.Context().Done():
+			grpclog.Info("Context Done!")
+			return stream.Context().Err()
+		default:
+			state, err := stream.Recv()
+			if err != nil {
+				if err == io.EOF {
+					return stream.SendAndClose(&rpx.DashUserSettingsState{Email: "done@example.com"})
+				} else {
+					grpclog.Error("Recv Error", err)
+					return err
+				}
+			}
+			grpclog.Infof("client-stream: %+v\n", state)
+		}
+	}
+}
+
 type credsService struct{}
 
 var creds = map[string]rpx.DashCred{}
@@ -120,7 +191,7 @@ func (s *credsService) Create(c context.Context, in *rpx.DashAPICredsCreateReq) 
 }
 
 func (s *credsService) Update(c context.Context, in *rpx.DashAPICredsUpdateReq) (*rpx.DashCred, error) {
-	fmt.Println("Update", in.CredSid)
+	grpclog.Info("Update", in.CredSid)
 	return nil, grpc.Errorf(codes.NotFound, "not found")
 }
 

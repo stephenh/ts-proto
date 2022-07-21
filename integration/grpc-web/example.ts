@@ -595,10 +595,19 @@ export const Empty = {
 export interface DashState {
   UserSettings(request: DeepPartial<Empty>, metadata?: grpc.Metadata): Promise<DashUserSettingsState>;
   ActiveUserSettingsStream(request: DeepPartial<Empty>, metadata?: grpc.Metadata): Observable<DashUserSettingsState>;
-  /** not supported in grpc-web, but should still compile */
+  ManyUserSettingsStream(
+    request: Observable<DeepPartial<DashUserSettingsState>>,
+    options?: {
+      metadata?: grpc.Metadata;
+      rpcOptions?: grpc.RpcOptions;
+    }
+  ): Observable<DashUserSettingsState>;
   ChangeUserSettingsStream(
     request: Observable<DeepPartial<DashUserSettingsState>>,
-    metadata?: grpc.Metadata
+    options?: {
+      metadata?: grpc.Metadata;
+      rpcOptions?: grpc.RpcOptions;
+    }
   ): Observable<DashUserSettingsState>;
 }
 
@@ -609,6 +618,7 @@ export class DashStateClientImpl implements DashState {
     this.rpc = rpc;
     this.UserSettings = this.UserSettings.bind(this);
     this.ActiveUserSettingsStream = this.ActiveUserSettingsStream.bind(this);
+    this.ManyUserSettingsStream = this.ManyUserSettingsStream.bind(this);
     this.ChangeUserSettingsStream = this.ChangeUserSettingsStream.bind(this);
   }
 
@@ -620,11 +630,24 @@ export class DashStateClientImpl implements DashState {
     return this.rpc.invoke(DashStateActiveUserSettingsStreamDesc, Empty.fromPartial(request), metadata);
   }
 
+  ManyUserSettingsStream(
+    request: Observable<DeepPartial<DashUserSettingsState>>,
+    options?: {
+      metadata?: grpc.Metadata;
+      rpcOptions?: grpc.RpcOptions;
+    }
+  ): Observable<DashUserSettingsState> {
+    return this.rpc.stream(DashStateManyUserSettingsStreamDesc, request, options?.metadata, options?.rpcOptions);
+  }
+
   ChangeUserSettingsStream(
     request: Observable<DeepPartial<DashUserSettingsState>>,
-    metadata?: grpc.Metadata
+    options?: {
+      metadata?: grpc.Metadata;
+      rpcOptions?: grpc.RpcOptions;
+    }
   ): Observable<DashUserSettingsState> {
-    throw new Error('ts-proto does not yet support client streaming!');
+    return this.rpc.stream(DashStateChangeUserSettingsStreamDesc, request, options?.metadata, options?.rpcOptions);
   }
 }
 
@@ -654,7 +677,7 @@ export const DashStateUserSettingsDesc: UnaryMethodDefinitionish = {
   } as any,
 };
 
-export const DashStateActiveUserSettingsStreamDesc: UnaryMethodDefinitionish = {
+export const DashStateActiveUserSettingsStreamDesc: MethodDefinitionish = {
   methodName: 'ActiveUserSettingsStream',
   service: DashStateDesc,
   requestStream: false,
@@ -662,6 +685,50 @@ export const DashStateActiveUserSettingsStreamDesc: UnaryMethodDefinitionish = {
   requestType: {
     serializeBinary() {
       return Empty.encode(this).finish();
+    },
+  } as any,
+  responseType: {
+    deserializeBinary(data: Uint8Array) {
+      return {
+        ...DashUserSettingsState.decode(data),
+        toObject() {
+          return this;
+        },
+      };
+    },
+  } as any,
+};
+
+export const DashStateManyUserSettingsStreamDesc: MethodDefinitionish = {
+  methodName: 'ManyUserSettingsStream',
+  service: DashStateDesc,
+  requestStream: true,
+  responseStream: false,
+  requestType: {
+    serializeBinary() {
+      return DashUserSettingsState.encode(this).finish();
+    },
+  } as any,
+  responseType: {
+    deserializeBinary(data: Uint8Array) {
+      return {
+        ...DashUserSettingsState.decode(data),
+        toObject() {
+          return this;
+        },
+      };
+    },
+  } as any,
+};
+
+export const DashStateChangeUserSettingsStreamDesc: MethodDefinitionish = {
+  methodName: 'ChangeUserSettingsStream',
+  service: DashStateDesc,
+  requestStream: true,
+  responseStream: true,
+  requestType: {
+    serializeBinary() {
+      return DashUserSettingsState.encode(this).finish();
     },
   } as any,
   responseType: {
@@ -787,6 +854,13 @@ interface UnaryMethodDefinitionishR extends grpc.UnaryMethodDefinition<any, any>
 
 type UnaryMethodDefinitionish = UnaryMethodDefinitionishR;
 
+interface MethodDefinitionishR extends grpc.MethodDefinition<any, any> {
+  requestStream: any;
+  responseStream: any;
+}
+
+type MethodDefinitionish = MethodDefinitionishR;
+
 interface Rpc {
   unary<T extends UnaryMethodDefinitionish>(
     methodDesc: T,
@@ -797,6 +871,12 @@ interface Rpc {
     methodDesc: T,
     request: any,
     metadata: grpc.Metadata | undefined
+  ): Observable<any>;
+  stream<T extends MethodDefinitionish>(
+    methodDesc: T,
+    request: Observable<any>,
+    metadata: grpc.Metadata | undefined,
+    rpcOptions: grpc.RpcOptions | undefined
   ): Observable<any>;
 }
 
@@ -889,6 +969,50 @@ export class GrpcWebImpl {
         observer.add(() => client.close());
       };
       upStream();
+    }).pipe(share());
+  }
+
+  stream<T extends MethodDefinitionish>(
+    methodDesc: T,
+    _request: Observable<any>,
+    metadata: grpc.Metadata | undefined,
+    rpcOptions: grpc.RpcOptions | undefined
+  ): Observable<any> {
+    const defaultOptions = {
+      host: this.host,
+      debug: rpcOptions?.debug || this.options.debug,
+      transport: rpcOptions?.transport || this.options.streamingTransport || this.options.transport,
+    };
+
+    let started = false;
+    const client = grpc.client(methodDesc, defaultOptions);
+
+    const subscription = _request.subscribe((_req: any) => {
+      const request = { ..._req, ...methodDesc.requestType };
+      if (!started) {
+        client.start(metadata);
+        started = true;
+      }
+      client.send(request);
+    });
+
+    subscription.add(() => {
+      client.finishSend();
+    });
+
+    return new Observable((observer) => {
+      client.onEnd((code: grpc.Code, message: string, trailers: grpc.Metadata) => {
+        subscription.unsubscribe();
+        if (code === 0) {
+          observer.complete();
+        } else {
+          observer.error(new Error(`Error ${code} ${message}`));
+        }
+      });
+      client.onMessage((res: any) => {
+        observer.next(res);
+      });
+      observer.add(() => client.close());
     }).pipe(share());
   }
 }

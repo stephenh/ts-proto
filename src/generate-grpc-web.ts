@@ -25,7 +25,7 @@ export function generateGrpcClientImpl(
   // Create the constructor(rpc: Rpc)
   chunks.push(code`
     private readonly rpc: Rpc;
-    
+
     constructor(rpc: Rpc) {
   `);
   chunks.push(code`this.rpc = rpc;`);
@@ -56,9 +56,14 @@ function generateRpcMethod(ctx: Context, serviceDesc: ServiceDescriptorProto, me
     return code`
     ${methodDesc.formattedName}(
       request: ${inputType},
-      metadata?: grpc.Metadata,
-    ): ${returns} {
-      throw new Error('ts-proto does not yet support client streaming!');
+      options?: {
+        metadata?: grpc.Metadata,
+        rpcOptions?: grpc.RpcOptions,
+    }): ${returns} {
+      return this.rpc.stream(${methodDescName(
+        serviceDesc,
+        methodDesc
+      )}, request, options?.metadata, options?.rpcOptions)
     }
   `;
   }
@@ -99,7 +104,7 @@ export function generateGrpcMethodDesc(
   serviceDesc: ServiceDescriptorProto,
   methodDesc: MethodDescriptorProto
 ): Code {
-  const inputType = requestType(ctx, methodDesc);
+  const inputType = rawRequestType(ctx, methodDesc);
   const outputType = responseType(ctx, methodDesc);
 
   // grpc-web expects this to be a class, but the ts-proto messages are just interfaces.
@@ -127,14 +132,17 @@ export function generateGrpcMethodDesc(
     deserializeBinary(data: Uint8Array) {
       return { ...${outputType}.decode(data), toObject() { return this; } };
     }
-  }`;
+}`;
+
+  const streaming = methodDesc.clientStreaming || methodDesc.serverStreaming;
+  const methodDef = streaming ? 'MethodDefinitionish' : 'UnaryMethodDefinitionish';
 
   return code`
-    export const ${methodDescName(serviceDesc, methodDesc)}: UnaryMethodDefinitionish = {
+    export const ${methodDescName(serviceDesc, methodDesc)}: ${methodDef} = {
       methodName: "${methodDesc.name}",
       service: ${serviceDesc.name}Desc,
-      requestStream: false,
-      responseStream: ${methodDesc.serverStreaming ? 'true' : 'false'},
+      requestStream: ${methodDesc.clientStreaming ? true : false},
+      responseStream: ${methodDesc.serverStreaming ? true : false},
       requestType: ${requestFn} as any,
       responseType: ${responseFn} as any,
     };
@@ -153,6 +161,12 @@ export function addGrpcWebMisc(ctx: Context, hasStreamingMethods: boolean): Code
     interface UnaryMethodDefinitionishR extends ${grpc}.UnaryMethodDefinition<any, any> { requestStream: any; responseStream: any; }
   `);
   chunks.push(code`type UnaryMethodDefinitionish = UnaryMethodDefinitionishR;`);
+
+  chunks.push(code`
+    interface MethodDefinitionishR extends ${grpc}.MethodDefinition<any, any> { requestStream: any; responseStream: any; }
+`);
+  chunks.push(code`type MethodDefinitionish = MethodDefinitionishR;`);
+
   chunks.push(generateGrpcWebRpcType(ctx, options.returnObservable, hasStreamingMethods));
   chunks.push(generateGrpcWebImpl(ctx, options.returnObservable, hasStreamingMethods));
   return joinCode(chunks, { on: '\n\n' });
@@ -179,8 +193,15 @@ function generateGrpcWebRpcType(ctx: Context, returnObservable: boolean, hasStre
         methodDesc: T,
         request: any,
         metadata: grpc.Metadata | undefined,
-      ): ${observableType(ctx)}<any>;
-    `);
+      ): ${observableType(ctx)}<any>;`);
+
+    chunks.push(code`
+  stream<T extends MethodDefinitionish>(
+    methodDesc: T,
+    request: ${observableType(ctx)}<any>,
+    metadata: grpc.Metadata | undefined,
+    rpcOptions: grpc.RpcOptions | undefined
+  ): ${observableType(ctx)}<any>;`);
   }
 
   chunks.push(code`}`);
@@ -204,7 +225,7 @@ function generateGrpcWebImpl(ctx: Context, returnObservable: boolean, hasStreami
     export class GrpcWebImpl {
       private host: string;
       private options: ${options};
-      
+
       constructor(host: string, options: ${options}) {
         this.host = host;
         this.options = options;
@@ -219,6 +240,7 @@ function generateGrpcWebImpl(ctx: Context, returnObservable: boolean, hasStreami
 
   if (hasStreamingMethods) {
     chunks.push(createInvokeMethod(ctx));
+    chunks.push(createStreamMethod(ctx));
   }
 
   chunks.push(code`}`);
@@ -289,7 +311,7 @@ function createObservableUnaryMethod(ctx: Context): Code {
           },
         });
       }).pipe(${take}(1));
-    } 
+    }
   `;
 }
 
@@ -332,4 +354,52 @@ function createInvokeMethod(ctx: Context) {
       }).pipe(${share}());
     }
   `;
+}
+
+function createStreamMethod(ctx: Context) {
+  return code`
+  stream<T extends MethodDefinitionish>(
+    methodDesc: T,
+    _request: ${observableType(ctx)}<any>,
+    metadata: ${grpc}.Metadata | undefined,
+    rpcOptions: ${grpc}.RpcOptions | undefined
+  ): ${observableType(ctx)}<any> {
+    const defaultOptions = {
+      host: this.host,
+      debug: rpcOptions?.debug || this.options.debug,
+      transport: rpcOptions?.transport || this.options.streamingTransport || this.options.transport,
+    }
+
+    let started = false;
+    const client = ${grpc}.client(methodDesc, defaultOptions);
+
+    const subscription = _request.subscribe((_req: any) => {
+      const request = { ..._req, ...methodDesc.requestType };
+      if (!started) {
+        client.start(metadata);
+        started = true;
+      }
+      client.send(request);
+    })
+
+    subscription.add(() => {
+      client.finishSend();
+    })
+
+    return new Observable((observer) => {
+      client.onEnd((code: ${grpc}.Code, message: string, trailers: ${grpc}.Metadata) => {
+        subscription.unsubscribe();
+        if (code === 0) {
+          observer.complete();
+        } else {
+          observer.error(new Error(\`Error \${code} \${message}\`));
+        }
+      })
+      client.onMessage((res: any) => {
+        observer.next(res);
+      })
+      observer.add(() => client.close())
+    }).pipe(share());
+  }
+`;
 }

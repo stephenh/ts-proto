@@ -698,7 +698,7 @@ export function responseObservable(ctx: Context, methodDesc: MethodDescriptorPro
 
 export function responsePromiseOrObservable(ctx: Context, methodDesc: MethodDescriptorProto): Code {
   const { options } = ctx;
-  if (options.returnObservable || methodDesc.serverStreaming) {
+  if (options.returnObservable || methodDesc.serverStreaming || methodDesc.clientStreaming) {
     return responseObservable(ctx, methodDesc);
   }
   return responsePromise(ctx, methodDesc);
