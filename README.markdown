@@ -99,6 +99,13 @@ plugins:
     path: ../node_modules/ts-proto/protoc-gen-ts_proto
 ```
 
+To prevent `buf push` from reading irrelevent `.proto` files, configure `buf.yaml` like so:
+
+```yaml
+build:
+  excludes: [node_modules]
+```
+
 You can also use the official plugin published to the Buf Registry.
 
 ```yaml
