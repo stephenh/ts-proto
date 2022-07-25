@@ -261,7 +261,11 @@ export const FieldMask = {
   },
 
   wrap(paths: string[]): FieldMask {
-    return { paths: paths };
+    const result = createBaseFieldMask();
+
+    result.paths = paths;
+
+    return result;
   },
 
   unwrap(message: FieldMask): string[] {

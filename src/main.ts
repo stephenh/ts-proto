@@ -1684,7 +1684,11 @@ function generateWrap(ctx: Context, fullProtoTypeName: string, fieldNames: Struc
 
   if (isFieldMaskTypeName(fullProtoTypeName)) {
     chunks.push(code`wrap(paths: string[]): FieldMask {
-      return {paths: paths};
+      const result = createBaseFieldMask();
+
+      result.paths = paths;
+
+      return result;
     }`);
   }
 
