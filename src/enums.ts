@@ -110,19 +110,36 @@ export function generateEnumToJson(ctx: Context, fullName: string, enumDesc: Enu
   const chunks: Code[] = [];
 
   const functionName = camelCase(fullName) + 'ToJSON';
-  chunks.push(code`export function ${def(functionName)}(object: ${fullName}): string {`);
+  chunks.push(
+    code`export function ${def(functionName)}(object: ${fullName}): ${
+      ctx.options.useNumericEnumForJson ? 'number' : 'string'
+    } {`
+  );
   chunks.push(code`switch (object) {`);
 
   for (const valueDesc of enumDesc.value) {
-    chunks.push(code`case ${fullName}.${valueDesc.name}: return "${valueDesc.name}";`);
+    if (ctx.options.useNumericEnumForJson) {
+      chunks.push(code`case ${fullName}.${valueDesc.name}: return ${valueDesc.number};`);
+    } else {
+      chunks.push(code`case ${fullName}.${valueDesc.name}: return "${valueDesc.name}";`);
+    }
   }
 
   if (options.unrecognizedEnum) {
     chunks.push(code`
-      case ${fullName}.${UNRECOGNIZED_ENUM_NAME}:
+      case ${fullName}.${UNRECOGNIZED_ENUM_NAME}:`);
+
+    if (ctx.options.useNumericEnumForJson) {
+      chunks.push(code`
+      default:
+        return ${UNRECOGNIZED_ENUM_VALUE};
+    `);
+    } else {
+      chunks.push(code`
       default:
         return "${UNRECOGNIZED_ENUM_NAME}";
     `);
+    }
   } else {
     // We use globalThis to avoid conflicts on protobuf types named `Error`.
     chunks.push(code`

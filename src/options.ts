@@ -66,6 +66,7 @@ export type Options = {
   unknownFields: boolean;
   usePrototypeForDefaults: boolean;
   useJsonWireFormat: boolean;
+  useNumericEnumForJson: boolean;
 };
 
 export function defaultOptions(): Options {
@@ -106,6 +107,7 @@ export function defaultOptions(): Options {
     unknownFields: false,
     usePrototypeForDefaults: false,
     useJsonWireFormat: false,
+    useNumericEnumForJson: false,
   };
 }
 

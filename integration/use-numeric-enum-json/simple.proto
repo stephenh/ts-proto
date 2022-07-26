@@ -1,0 +1,17 @@
+syntax = "proto3";
+package simple;
+import "google/protobuf/struct.proto";
+
+message Simple {
+  string name = 1;
+  StateEnum state = 4;
+  repeated StateEnum states = 5;
+  google.protobuf.NullValue nullValue = 6;
+  map <string, StateEnum> stateMap = 7;
+}
+
+enum StateEnum {
+  UNKNOWN = 0;
+  ON = 2;
+  OFF = 3;
+}
