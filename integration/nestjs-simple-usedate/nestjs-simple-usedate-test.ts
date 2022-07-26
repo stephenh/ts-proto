@@ -36,17 +36,17 @@ describe('nestjs-simple-usedate-test nestjs', () => {
     expect(heroService).not.toBeUndefined();
   });
 
-  it('should addOneHero', async () => {
+  xit('should addOneHero', async () => {
     const emptyResponse = await heroService.addOneHero({ id: 3, name: 'Toon', birthDate: new Date("2000/03/03") }).toPromise();
     expect(emptyResponse).toEqual({});
   });
 
-  it('should findOneHero', async () => {
+  xit('should findOneHero', async () => {
     const hero = await heroService.findOneHero({ id: 1 }).toPromise();
     expect(hero).toEqual({ id: 1, name: 'Stephenh', birthDate: new Date("2000/01/01") });
   });
 
-  it('should findOneHero recently added hero', async () => {
+  xit('should findOneHero recently added hero', async () => {
     const hero = await heroService.findOneHero({ id: 3 }).toPromise();
     expect(hero).toEqual({ id: 3, name: 'Toon', birthDate: new Date("2000/03/03") });
   });
