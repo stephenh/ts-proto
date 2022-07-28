@@ -8,7 +8,6 @@ describe('grpc-web', () => {
     const rpc = {
       unary: jest.fn(),
       invoke: jest.fn(),
-      stream: jest.fn(),
     };
     const client = new DashStateClientImpl(rpc);
     client.UserSettings({});
@@ -17,7 +16,6 @@ describe('grpc-web', () => {
     const rpc = {
       unary: jest.fn(),
       invoke: jest.fn(),
-      stream: jest.fn(),
     };
     const client = new DashStateClientImpl(rpc);
     const userSettings = client.UserSettings;
@@ -27,9 +25,9 @@ describe('grpc-web', () => {
     const rpc = {
       unary: jest.fn(),
       invoke: jest.fn(),
-      stream: jest.fn(),
     };
     const client = new DashStateClientImpl(rpc);
-    client.ChangeUserSettingsStream(EMPTY);
+    const call = () => client.ChangeUserSettingsStream(EMPTY)
+    expect(call).toThrowError("ts-proto does not yet support client streaming!")
   });
 });

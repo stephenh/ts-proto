@@ -66,13 +66,7 @@ export function generateService(
     // Use metadata as last argument for interface only configuration
     if (options.outputClientImpl === 'grpc-web') {
       // We have to use grpc.Metadata where grpc will come from @improbable-eng
-      if (methodDesc.clientStreaming) {
-        params.push(code`options?: {
-          metadata?: grpc.Metadata,
-          rpcOptions?: grpc.RpcOptions}`);
-      } else {
-        params.push(code`metadata?: grpc.Metadata`);
-      }
+      params.push(code`metadata?: grpc.Metadata`);
     } else if (options.addGrpcMetadata) {
       const Metadata = imp('Metadata@@grpc/grpc-js');
       const q = options.addNestjsRestParameter ? '' : '?';
