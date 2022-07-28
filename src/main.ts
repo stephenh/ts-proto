@@ -208,7 +208,8 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
     );
   }
 
-  let hasStreamingMethods = false;
+  let hasServerStreamingMethods = false;
+  let hasClientStreamingMethods = false;
 
   visitServices(fileDesc, sourceInfo, (serviceDesc, sInfo) => {
     if (options.nestJs) {
@@ -253,9 +254,12 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
         }
       });
     }
-    serviceDesc.method.forEach((methodDesc, index) => {
-      if (methodDesc.serverStreaming || methodDesc.clientStreaming) {
-        hasStreamingMethods = true;
+    serviceDesc.method.forEach((methodDesc) => {
+      if (methodDesc.serverStreaming) {
+        hasServerStreamingMethods = true;
+      }
+      if (methodDesc.clientStreaming) {
+        hasClientStreamingMethods = true;
       }
     });
   });
@@ -266,9 +270,9 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
     fileDesc.service.length > 0
   ) {
     if (options.outputClientImpl === true) {
-      chunks.push(generateRpcType(ctx, hasStreamingMethods));
+      chunks.push(generateRpcType(ctx, hasServerStreamingMethods || hasClientStreamingMethods));
     } else if (options.outputClientImpl === 'grpc-web') {
-      chunks.push(addGrpcWebMisc(ctx, hasStreamingMethods));
+      chunks.push(addGrpcWebMisc(ctx, hasClientStreamingMethods, hasServerStreamingMethods));
     }
   }
 
