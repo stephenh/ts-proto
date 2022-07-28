@@ -696,9 +696,17 @@ export function responseObservable(ctx: Context, methodDesc: MethodDescriptorPro
   return code`${observableType(ctx)}<${responseType(ctx, methodDesc)}>`;
 }
 
-export function responsePromiseOrObservable(ctx: Context, methodDesc: MethodDescriptorProto): Code {
+export function responsePromiseOrObservable(
+  ctx: Context,
+  methodDesc: MethodDescriptorProto,
+  observableIfClientStreaming: boolean
+): Code {
   const { options } = ctx;
-  if (options.returnObservable || methodDesc.serverStreaming || methodDesc.clientStreaming) {
+  if (
+    options.returnObservable ||
+    methodDesc.serverStreaming ||
+    (observableIfClientStreaming && methodDesc.clientStreaming)
+  ) {
     return responseObservable(ctx, methodDesc);
   }
   return responsePromise(ctx, methodDesc);

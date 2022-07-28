@@ -85,10 +85,12 @@ export function generateService(
       params.push(code`...rest: any`);
     }
 
+    const observableIfClientStreaming = options.outputClientImpl === 'grpc-web';
     chunks.push(
       code`${methodDesc.formattedName}(${joinCode(params, { on: ',' })}): ${responsePromiseOrObservable(
         ctx,
-        methodDesc
+        methodDesc,
+        observableIfClientStreaming
       )};`
     );
 
@@ -166,7 +168,7 @@ function generateRegularRpcMethod(
   return code`
     ${methodDesc.formattedName}(
       ${joinCode(params, { on: ',' })}
-    ): ${responsePromiseOrObservable(ctx, methodDesc)} {
+    ): ${responsePromiseOrObservable(ctx, methodDesc, false)} {
       const data = ${encode};
       const ${returnVariable} = this.rpc.${rpcMethod}(
         ${maybeCtx}

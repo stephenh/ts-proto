@@ -50,7 +50,7 @@ function generateRpcMethod(ctx: Context, serviceDesc: ServiceDescriptorProto, me
   assertInstanceOf(methodDesc, FormattedMethodDescriptor);
   const requestMessage = rawRequestType(ctx, methodDesc);
   const inputType = requestType(ctx, methodDesc, true);
-  const returns = responsePromiseOrObservable(ctx, methodDesc);
+  const returns = responsePromiseOrObservable(ctx, methodDesc, true);
 
   if (methodDesc.clientStreaming) {
     return code`
