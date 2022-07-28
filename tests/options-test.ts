@@ -43,6 +43,7 @@ describe('options', () => {
         "useExactTypes": true,
         "useJsonWireFormat": false,
         "useMongoObjectId": false,
+        "useNumericEnumForJson": false,
         "useOptionals": "none",
         "usePrototypeForDefaults": false,
       }

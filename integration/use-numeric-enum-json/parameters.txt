@@ -1,0 +1,1 @@
+useNumericEnumForJson=true,outputClientImpl=false
