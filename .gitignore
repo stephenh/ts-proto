@@ -2,6 +2,7 @@ node_modules/
 build/
 /.idea
 /.vscode
+/.log
 /integration/*/pbjs.js
 /integration/*/pbjs.d.ts
 coverage/
