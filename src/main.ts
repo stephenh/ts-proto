@@ -208,6 +208,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
     );
   }
 
+  let hasServerStreamingMethods = false;
   let hasStreamingMethods = false;
 
   visitServices(fileDesc, sourceInfo, (serviceDesc, sInfo) => {
@@ -247,7 +248,12 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
             chunks.push(generateGrpcClientImpl(ctx, fileDesc, serviceDesc));
             chunks.push(generateGrpcServiceDesc(fileDesc, serviceDesc));
             serviceDesc.method.forEach((method) => {
-              chunks.push(generateGrpcMethodDesc(ctx, serviceDesc, method));
+              if (!method.clientStreaming) {
+                chunks.push(generateGrpcMethodDesc(ctx, serviceDesc, method));
+              }
+              if (method.serverStreaming) {
+                hasServerStreamingMethods = true;
+              }
             });
           }
         }
@@ -268,7 +274,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
     if (options.outputClientImpl === true) {
       chunks.push(generateRpcType(ctx, hasStreamingMethods));
     } else if (options.outputClientImpl === 'grpc-web') {
-      chunks.push(addGrpcWebMisc(ctx, hasStreamingMethods));
+      chunks.push(addGrpcWebMisc(ctx, hasServerStreamingMethods));
     }
   }
 
