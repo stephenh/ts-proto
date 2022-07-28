@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { grpc } from '@improbable-eng/grpc-web';
 import { BrowserHeaders } from 'browser-headers';
-import { share } from 'rxjs/operators';
+import { take, share } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import * as _m0 from 'protobufjs/minimal';
 
@@ -593,7 +593,7 @@ export const Empty = {
 };
 
 export interface DashState {
-  UserSettings(request: DeepPartial<Empty>, metadata?: grpc.Metadata): Promise<DashUserSettingsState>;
+  UserSettings(request: DeepPartial<Empty>, metadata?: grpc.Metadata): Observable<DashUserSettingsState>;
   ActiveUserSettingsStream(request: DeepPartial<Empty>, metadata?: grpc.Metadata): Observable<DashUserSettingsState>;
   ManyUserSettingsStream(
     request: Observable<DeepPartial<DashUserSettingsState>>,
@@ -622,7 +622,7 @@ export class DashStateClientImpl implements DashState {
     this.ChangeUserSettingsStream = this.ChangeUserSettingsStream.bind(this);
   }
 
-  UserSettings(request: DeepPartial<Empty>, metadata?: grpc.Metadata): Promise<DashUserSettingsState> {
+  UserSettings(request: DeepPartial<Empty>, metadata?: grpc.Metadata): Observable<DashUserSettingsState> {
     return this.rpc.unary(DashStateUserSettingsDesc, Empty.fromPartial(request), metadata);
   }
 
@@ -749,9 +749,9 @@ export const DashStateChangeUserSettingsStreamDesc: MethodDefinitionish = {
  * ----------------------
  */
 export interface DashAPICreds {
-  Create(request: DeepPartial<DashAPICredsCreateReq>, metadata?: grpc.Metadata): Promise<DashCred>;
-  Update(request: DeepPartial<DashAPICredsUpdateReq>, metadata?: grpc.Metadata): Promise<DashCred>;
-  Delete(request: DeepPartial<DashAPICredsDeleteReq>, metadata?: grpc.Metadata): Promise<DashCred>;
+  Create(request: DeepPartial<DashAPICredsCreateReq>, metadata?: grpc.Metadata): Observable<DashCred>;
+  Update(request: DeepPartial<DashAPICredsUpdateReq>, metadata?: grpc.Metadata): Observable<DashCred>;
+  Delete(request: DeepPartial<DashAPICredsDeleteReq>, metadata?: grpc.Metadata): Observable<DashCred>;
 }
 
 export class DashAPICredsClientImpl implements DashAPICreds {
@@ -764,15 +764,15 @@ export class DashAPICredsClientImpl implements DashAPICreds {
     this.Delete = this.Delete.bind(this);
   }
 
-  Create(request: DeepPartial<DashAPICredsCreateReq>, metadata?: grpc.Metadata): Promise<DashCred> {
+  Create(request: DeepPartial<DashAPICredsCreateReq>, metadata?: grpc.Metadata): Observable<DashCred> {
     return this.rpc.unary(DashAPICredsCreateDesc, DashAPICredsCreateReq.fromPartial(request), metadata);
   }
 
-  Update(request: DeepPartial<DashAPICredsUpdateReq>, metadata?: grpc.Metadata): Promise<DashCred> {
+  Update(request: DeepPartial<DashAPICredsUpdateReq>, metadata?: grpc.Metadata): Observable<DashCred> {
     return this.rpc.unary(DashAPICredsUpdateDesc, DashAPICredsUpdateReq.fromPartial(request), metadata);
   }
 
-  Delete(request: DeepPartial<DashAPICredsDeleteReq>, metadata?: grpc.Metadata): Promise<DashCred> {
+  Delete(request: DeepPartial<DashAPICredsDeleteReq>, metadata?: grpc.Metadata): Observable<DashCred> {
     return this.rpc.unary(DashAPICredsDeleteDesc, DashAPICredsDeleteReq.fromPartial(request), metadata);
   }
 }
@@ -866,7 +866,7 @@ interface Rpc {
     methodDesc: T,
     request: any,
     metadata: grpc.Metadata | undefined
-  ): Promise<any>;
+  ): Observable<any>;
   invoke<T extends UnaryMethodDefinitionish>(
     methodDesc: T,
     request: any,
@@ -908,31 +908,29 @@ export class GrpcWebImpl {
     methodDesc: T,
     _request: any,
     metadata: grpc.Metadata | undefined
-  ): Promise<any> {
+  ): Observable<any> {
     const request = { ..._request, ...methodDesc.requestType };
     const maybeCombinedMetadata =
       metadata && this.options.metadata
         ? new BrowserHeaders({ ...this.options?.metadata.headersMap, ...metadata?.headersMap })
         : metadata || this.options.metadata;
-    return new Promise((resolve, reject) => {
+    return new Observable((observer) => {
       grpc.unary(methodDesc, {
         request,
         host: this.host,
         metadata: maybeCombinedMetadata,
         transport: this.options.transport,
         debug: this.options.debug,
-        onEnd: function (response) {
-          if (response.status === grpc.Code.OK) {
-            resolve(response.message);
+        onEnd: (next) => {
+          if (next.status !== 0) {
+            observer.error({ code: next.status, message: next.statusMessage });
           } else {
-            const err = new Error(response.statusMessage) as any;
-            err.code = response.status;
-            err.metadata = response.trailers;
-            reject(err);
+            observer.next(next.message as any);
+            observer.complete();
           }
         },
       });
-    });
+    }).pipe(take(1));
   }
 
   invoke<T extends UnaryMethodDefinitionish>(

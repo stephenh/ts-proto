@@ -18,26 +18,36 @@ const creds = new DashAPICredsClientImpl(rpc);
 
 async function main() {
   console.log('calling client.UserSettings');
-  console.log(await client.UserSettings({}));
+  const settingObs = client.UserSettings({});
+  await settingObs.forEach(value => {
+    console.log("[setting] Got", value);
+  });
 
   console.log('calling creds.Create');
-  const cred = await creds.Create({ description: 'test desc fooo' });
-  console.log(cred);
+  const credObs = creds.Create({ description: 'test desc fooo' });
+  let credId = undefined;
+  await credObs.forEach(value => {
+    credId = value.id;
+    console.log("[create] Got", value);
+  });
 
   console.log('calling creds.Delete');
-  const del = await creds.Delete({ id: cred.id });
-  console.log(del);
+  const delObs = creds.Delete({ id: credId });
+  await delObs.forEach(value => {
+    console.log("[delete] Got", value);
+  });
 
   console.log('calling creds.Update');
-  try {
-    await creds.Update({ description: 'test desc2' });
-  } catch (e) {
-    console.log('got expected error', e);
-  }
+  const updateObs = creds.Update({ description: 'test desc2' });
+  updateObs.subscribe({
+    next(x) { console.log("[update] Got", x) },
+    error(err){ console.error('got expected error', err) },
+    complete() { console.log("update Done") }
+  });
 
   console.log('(server-stream) calling client.ActiveUserSettingsStream');
-  const obs = client.ActiveUserSettingsStream({});
-  await obs.forEach(value => {
+  const activeObs = client.ActiveUserSettingsStream({});
+  await activeObs.forEach(value => {
     console.log("[server-stream] Got", value);
   });
 
