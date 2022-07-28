@@ -1,3 +1,10 @@
+# [1.121.0](https://github.com/stephenh/ts-proto/compare/v1.120.0...v1.121.0) (2022-07-28)
+
+
+### Features
+
+* Add use-numeric-enum-json option. ([#625](https://github.com/stephenh/ts-proto/issues/625)) ([cd53d8c](https://github.com/stephenh/ts-proto/commit/cd53d8cacd6b4b8fa6517242020b216dd18eebdf))
+
 # [1.120.0](https://github.com/stephenh/ts-proto/compare/v1.119.0...v1.120.0) (2022-07-21)
 
 
