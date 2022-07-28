@@ -175,7 +175,7 @@ function generateRegularRpcMethod(
   return code`
     ${methodDesc.formattedName}(
       ${joinCode(params, { on: ',' })}
-    ): ${responsePromiseOrObservable(ctx, methodDesc, false)} {
+    ): ${responsePromiseOrObservable(ctx, methodDesc)} {
       const data = ${encode};
       const ${returnVariable} = this.rpc.${rpcMethod}(
         ${maybeCtx}
