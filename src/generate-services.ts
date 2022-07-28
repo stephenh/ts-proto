@@ -20,6 +20,7 @@ import {
 import SourceInfo, { Fields } from './sourceInfo';
 import { contextTypeVar } from './main';
 import { Context } from './context';
+import { grpcWebResponsePromiseOrObservable } from './generate-grpc-web';
 
 const hash = imp('hash*object-hash');
 const dataloader = imp('DataLoader*dataloader');
@@ -57,16 +58,29 @@ export function generateService(
       params.push(code`ctx: Context`);
     }
 
-    // the grpc-web clients auto-`fromPartial` the input before handing off to grpc-web's
-    // serde runtime, so it's okay to accept partial results from the client
-    const partialInput = options.outputClientImpl === 'grpc-web';
-    const inputType = requestType(ctx, methodDesc, partialInput);
-    params.push(code`request: ${inputType}`);
+    // grpc-web client stream or bidirectional stream not request params when use Promise.
+    if (!options.returnObservable && options.outputClientImpl === 'grpc-web' && methodDesc.clientStreaming) {
+      // skip
+    } else {
+      // the grpc-web clients auto-`fromPartial` the input before handing off to grpc-web's
+      // serde runtime, so it's okay to accept partial results from the client
+      const partialInput = options.outputClientImpl === 'grpc-web';
+
+      // add request params
+      const inputType = requestType(ctx, methodDesc, partialInput);
+      params.push(code`request: ${inputType}`);
+    }
 
     // Use metadata as last argument for interface only configuration
     if (options.outputClientImpl === 'grpc-web') {
       // We have to use grpc.Metadata where grpc will come from @improbable-eng
-      params.push(code`metadata?: grpc.Metadata`);
+      if (methodDesc.clientStreaming) {
+        params.push(code`options?: {
+          metadata?: grpc.Metadata,
+          rpcOptions?: grpc.RpcOptions}`);
+      } else {
+        params.push(code`metadata?: grpc.Metadata`);
+      }
     } else if (options.addGrpcMetadata) {
       const Metadata = imp('Metadata@@grpc/grpc-js');
       const q = options.addNestjsRestParameter ? '' : '?';
@@ -79,12 +93,13 @@ export function generateService(
       params.push(code`...rest: any`);
     }
 
-    chunks.push(
-      code`${methodDesc.formattedName}(${joinCode(params, { on: ',' })}): ${responsePromiseOrObservable(
-        ctx,
-        methodDesc
-      )};`
-    );
+    let returns: Code;
+    if (options.outputClientImpl === 'grpc-web') {
+      returns = grpcWebResponsePromiseOrObservable(ctx, methodDesc);
+    } else {
+      returns = responsePromiseOrObservable(ctx, methodDesc);
+    }
+    chunks.push(code`${methodDesc.formattedName}(${joinCode(params, { on: ',' })}): ${returns};`);
 
     // If this is a batch method, auto-generate the singular version of it
     if (options.context) {
