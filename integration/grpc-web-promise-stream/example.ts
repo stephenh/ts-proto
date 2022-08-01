@@ -246,7 +246,7 @@ export const TestServicePingErrorDesc: UnaryMethodDefinitionish = {
   } as any,
 };
 
-export const TestServicePingListDesc: MethodDefinitionish = {
+export const TestServicePingListDesc: UnaryMethodDefinitionish = {
   methodName: 'PingList',
   service: TestServiceDesc,
   requestStream: false,
