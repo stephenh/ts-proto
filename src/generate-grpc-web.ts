@@ -574,7 +574,10 @@ function createStreamMethod(ctx: Context) {
         if (code === 0) {
           observer.complete();
         } else {
-          observer.error(new Error(\`Error \${code} \${message}\`));
+          const err = new Error(message) as any;
+          err.code = code;
+          err.metadata = trailers;
+          observer.error(err);
         }
       })
       client.onMessage((res: any) => {
