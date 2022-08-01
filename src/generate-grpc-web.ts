@@ -94,10 +94,13 @@ function generateRpcMethod(ctx: Context, serviceDesc: ServiceDescriptorProto, me
         metadata?: ${grpc}.Metadata,
         rpcOptions?: ${grpc}.RpcOptions,
     }): ${returns} {
-      return this.rpc.stream(${methodDescName(
-        serviceDesc,
-        methodDesc
-      )}, request, options?.metadata, options?.rpcOptions);
+    return this.rpc.stream(
+      ${methodDescName(serviceDesc, methodDesc)},
+      request,
+      ${requestMessage}.fromPartial,
+      options?.metadata,
+      options?.rpcOptions
+    );
     }
   `;
     }
@@ -274,8 +277,7 @@ function generateGrpcWebRpcType(
       methodDesc: T,
       request: any,
       metadata: ${grpc}.Metadata | undefined,
-    ): ${wrapper}<any>;
-  `);
+    ): ${wrapper}<any>;`);
 
   if (returnObservable) {
     if (hasServerStreaming || hasClientStreaming) {
@@ -284,32 +286,31 @@ function generateGrpcWebRpcType(
         methodDesc: T,
         request: any,
         metadata: ${grpc}.Metadata | undefined,
-): ${observableType(ctx)}<any>;`);
+      ): ${observableType(ctx)}<any>;`);
       chunks.push(code`
-  stream<T extends MethodDefinitionish>(
-    methodDesc: T,
-    request: ${observableType(ctx)}<any>,
-    metadata: ${grpc}.Metadata | undefined,
-    rpcOptions: ${grpc}.RpcOptions | undefined
-): ${observableType(ctx)}<any>;`);
+      stream<T extends MethodDefinitionish, Req>(
+        methodDesc: T,
+        request: Observable<DeepPartial<Req>>,
+        fromPartial: (request: DeepPartial<Req>) => any,
+        metadata: grpc.Metadata | undefined,
+        rpcOptions: grpc.RpcOptions | undefined
+      ): Observable<any>;`);
     }
   } else {
     if (hasServerStreaming || hasClientStreaming) {
       chunks.push(code`
-  invoke<T extends UnaryMethodDefinitionish>(
-    methodDesc: T,
-    request: any,
-    metadata: ${grpc}.Metadata | undefined
-  ): Promise<GrpcWebResponseStream<any>>;
-`);
+      invoke<T extends UnaryMethodDefinitionish>(
+        methodDesc: T,
+        request: any,
+        metadata: ${grpc}.Metadata | undefined
+      ): Promise<GrpcWebResponseStream<any>>;`);
       chunks.push(code`
-  stream<T extends MethodDefinitionish, Req>(
-    methodDesc: T,
-    fromPartial: (request: any) => Req,
-    metadata: ${grpc}.Metadata | undefined,
-    rpcOptions: ${grpc}.RpcOptions | undefined
-  ): Promise<GrpcWebBidirectionalStream<Req, any>>;
-`);
+      stream<T extends MethodDefinitionish, Req>(
+        methodDesc: T,
+        fromPartial: (request: any) => Req,
+      metadata: ${grpc}.Metadata | undefined,
+      rpcOptions: ${grpc}.RpcOptions | undefined
+    ): Promise<GrpcWebBidirectionalStream<Req, any>>;`);
     }
   }
 
@@ -540,9 +541,10 @@ function createPromiseInvokeMethod() {
 
 function createStreamMethod(ctx: Context) {
   return code`
-  stream<T extends MethodDefinitionish>(
+  stream<T extends MethodDefinitionish, Req>(
     methodDesc: T,
-    _request: ${observableType(ctx)}<any>,
+    _request: ${observableType(ctx)}<DeepPartial<Req>>,
+    fromPartial: (request: DeepPartial<Req>) => any,
     metadata: ${grpc}.Metadata | undefined,
     rpcOptions: ${grpc}.RpcOptions | undefined
   ): ${observableType(ctx)}<any> {
@@ -555,8 +557,9 @@ function createStreamMethod(ctx: Context) {
     let started = false;
     const client = ${grpc}.client(methodDesc, defaultOptions);
 
-    const subscription = _request.subscribe((_req: any) => {
-      const request = { ..._req, ...methodDesc.requestType };
+    const subscription = _request.subscribe((_req: DeepPartial<Req>) => {
+      const req = fromPartial(_req);
+      const request = { ...req, ...methodDesc.requestType };
       if (!started) {
         client.start(metadata);
         started = true;

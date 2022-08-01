@@ -171,7 +171,13 @@ export class TestServiceClientImpl implements TestService {
       rpcOptions?: grpc.RpcOptions;
     }
   ): Observable<PingResponse> {
-    return this.rpc.stream(TestServicePingPongBidiDesc, request, options?.metadata, options?.rpcOptions);
+    return this.rpc.stream(
+      TestServicePingPongBidiDesc,
+      request,
+      PingRequest.fromPartial,
+      options?.metadata,
+      options?.rpcOptions
+    );
   }
 
   PingStream(
@@ -181,7 +187,13 @@ export class TestServiceClientImpl implements TestService {
       rpcOptions?: grpc.RpcOptions;
     }
   ): Observable<PingResponse> {
-    return this.rpc.stream(TestServicePingStreamDesc, request, options?.metadata, options?.rpcOptions);
+    return this.rpc.stream(
+      TestServicePingStreamDesc,
+      request,
+      PingRequest.fromPartial,
+      options?.metadata,
+      options?.rpcOptions
+    );
   }
 }
 
@@ -346,9 +358,10 @@ interface Rpc {
     request: any,
     metadata: grpc.Metadata | undefined
   ): Observable<any>;
-  stream<T extends MethodDefinitionish>(
+  stream<T extends MethodDefinitionish, Req>(
     methodDesc: T,
-    request: Observable<any>,
+    request: Observable<DeepPartial<Req>>,
+    fromPartial: (request: DeepPartial<Req>) => any,
     metadata: grpc.Metadata | undefined,
     rpcOptions: grpc.RpcOptions | undefined
   ): Observable<any>;
@@ -447,9 +460,10 @@ export class GrpcWebImpl {
     }).pipe(share());
   }
 
-  stream<T extends MethodDefinitionish>(
+  stream<T extends MethodDefinitionish, Req>(
     methodDesc: T,
-    _request: Observable<any>,
+    _request: Observable<DeepPartial<Req>>,
+    fromPartial: (request: DeepPartial<Req>) => any,
     metadata: grpc.Metadata | undefined,
     rpcOptions: grpc.RpcOptions | undefined
   ): Observable<any> {
@@ -462,8 +476,9 @@ export class GrpcWebImpl {
     let started = false;
     const client = grpc.client(methodDesc, defaultOptions);
 
-    const subscription = _request.subscribe((_req: any) => {
-      const request = { ..._req, ...methodDesc.requestType };
+    const subscription = _request.subscribe((_req: DeepPartial<Req>) => {
+      const req = fromPartial(_req);
+      const request = { ...req, ...methodDesc.requestType };
       if (!started) {
         client.start(metadata);
         started = true;
