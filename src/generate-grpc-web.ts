@@ -190,8 +190,7 @@ export function generateGrpcMethodDesc(
     }
 }`;
 
-  const streaming = methodDesc.clientStreaming || methodDesc.serverStreaming;
-  const methodDef = streaming ? 'MethodDefinitionish' : 'UnaryMethodDefinitionish';
+  const methodDef = methodDesc.clientStreaming ? 'MethodDefinitionish' : 'UnaryMethodDefinitionish';
 
   return code`
     export const ${methodDescName(serviceDesc, methodDesc)}: ${methodDef} = {
@@ -218,7 +217,7 @@ export function addGrpcWebMisc(ctx: Context, hasClientStreaming: boolean, hasSer
   `);
   chunks.push(code`type UnaryMethodDefinitionish = UnaryMethodDefinitionishR;`);
 
-  if (hasClientStreaming || hasServerStreaming) {
+  if (hasClientStreaming) {
     chunks.push(code`
     interface MethodDefinitionishR extends ${grpc}.MethodDefinition<any, any> { requestStream: any; responseStream: any; }
 `);
