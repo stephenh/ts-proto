@@ -15,6 +15,7 @@ describe('options', () => {
         "exportCommonSymbols": true,
         "fileSuffix": "",
         "forceLong": "number",
+        "grpcWebMixObservablePromise": true,
         "importSuffix": "",
         "lowerCaseServiceMethods": true,
         "metadataType": undefined,

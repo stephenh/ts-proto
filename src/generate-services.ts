@@ -59,13 +59,15 @@ export function generateService(
     }
 
     // grpc-web client stream or bidirectional stream not request params when use Promise.
-    if (!options.returnObservable && options.outputClientImpl === 'grpc-web' && methodDesc.clientStreaming) {
-      // skip
-    } else {
+    if (
+      options.returnObservable ||
+      options.grpcWebMixObservablePromise ||
+      options.outputClientImpl !== 'grpc-web' ||
+      !methodDesc.clientStreaming
+    ) {
       // the grpc-web clients auto-`fromPartial` the input before handing off to grpc-web's
       // serde runtime, so it's okay to accept partial results from the client
       const partialInput = options.outputClientImpl === 'grpc-web';
-
       // add request params
       const inputType = requestType(ctx, methodDesc, partialInput);
       params.push(code`request: ${inputType}`);
