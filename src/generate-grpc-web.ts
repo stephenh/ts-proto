@@ -217,7 +217,7 @@ export function addGrpcWebMisc(ctx: Context, hasClientStreaming: boolean, hasSer
   `);
   chunks.push(code`type UnaryMethodDefinitionish = UnaryMethodDefinitionishR;`);
 
-  if (hasClientStreaming) {
+  if (hasClientStreaming || hasServerStreaming) {
     chunks.push(code`
     interface MethodDefinitionishR extends ${grpc}.MethodDefinition<any, any> { requestStream: any; responseStream: any; }
 `);
