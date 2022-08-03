@@ -1,34 +1,23 @@
 /* eslint-disable */
 import * as _m0 from 'protobufjs/minimal';
 
-export const protobufPackage = 'google.protobuf';
+export const protobufPackage = '';
 
-/**
- * A generic empty message that you can re-use to avoid defining duplicated
- * empty messages in your APIs. A typical example is to use it as the request
- * or the response type of an API method. For instance:
- *
- *     service Foo {
- *       rpc Bar(google.protobuf.Empty) returns (google.protobuf.Empty);
- *     }
- *
- * The JSON representation for `Empty` is empty JSON object `{}`.
- */
-export interface Empty {}
+export interface Record {}
 
-function createBaseEmpty(): Empty {
+function createBaseRecord(): Record {
   return {};
 }
 
-export const Empty = {
-  encode(_: Empty, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const Record = {
+  encode(_: Record, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Empty {
+  decode(input: _m0.Reader | Uint8Array, length?: number): Record {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseEmpty();
+    const message = createBaseRecord();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -40,17 +29,17 @@ export const Empty = {
     return message;
   },
 
-  fromJSON(_: any): Empty {
+  fromJSON(_: any): Record {
     return {};
   },
 
-  toJSON(_: Empty): unknown {
+  toJSON(_: Record): unknown {
     const obj: any = {};
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<Empty>, I>>(_: I): Empty {
-    const message = createBaseEmpty();
+  fromPartial<I extends Exact<DeepPartial<Record>, I>>(_: I): Record {
+    const message = createBaseRecord();
     return message;
   },
 };
