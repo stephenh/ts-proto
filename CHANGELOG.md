@@ -1,3 +1,10 @@
+## [1.121.3](https://github.com/stephenh/ts-proto/compare/v1.121.2...v1.121.3) (2022-08-06)
+
+
+### Bug Fixes
+
+* Use underscore separator in snakeToCamel. ([#648](https://github.com/stephenh/ts-proto/issues/648)) ([b374910](https://github.com/stephenh/ts-proto/commit/b374910a8fb1d0efe6c5c5322f8788cc3cc1ca6c))
+
 ## [1.121.2](https://github.com/stephenh/ts-proto/compare/v1.121.1...v1.121.2) (2022-08-06)
 
 
