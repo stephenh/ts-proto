@@ -1,3 +1,10 @@
+## [1.121.2](https://github.com/stephenh/ts-proto/compare/v1.121.1...v1.121.2) (2022-08-06)
+
+
+### Bug Fixes
+
+* Fix push_to_buf_registry check. ([22ac914](https://github.com/stephenh/ts-proto/commit/22ac914cd8626258ceb35fd435b899a819518988))
+
 ## [1.121.1](https://github.com/stephenh/ts-proto/compare/v1.121.0...v1.121.1) (2022-07-28)
 
 
