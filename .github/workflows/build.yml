@@ -71,7 +71,7 @@ jobs:
       release_version: ${{ steps.release.outputs.release_version }}
 
   push_to_buf_registry:
-    if: ${{ needs.release.outputs.released_version != '' }}
+    if: ${{ needs.release.outputs.release_version != '' }}
     name: Push Docker image to Buf Registry
     runs-on: ubuntu-latest
     environment: npm
