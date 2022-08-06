@@ -176,7 +176,7 @@ export function optionsFromParameter(parameter: string | undefined): Options {
   } else if ((options.snakeToCamel as any) === true) {
     options.snakeToCamel = ['keys', 'json'];
   } else if (typeof options.snakeToCamel === 'string') {
-    options.snakeToCamel = [options.snakeToCamel];
+    options.snakeToCamel = (options.snakeToCamel as string).split('_') as any;
   }
 
   if (options.useJsonWireFormat) {
