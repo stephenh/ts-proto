@@ -347,6 +347,8 @@ Generated code will be placed in the Gradle build directory.
 
    Note that to use the `json_name` attribute, you'll have to use the `json`.
 
+   The default behavior is `keys_json`, i.e. both will be camel cased, and `json_name` will be used if set.
+
 - With `--ts_proto_opt=outputEncodeMethods=false`, the `Message.encode` and `Message.decode` methods for working with protobuf-encoded/binary data will not be output.
 
   This is useful if you want "only types".
