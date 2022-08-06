@@ -425,27 +425,33 @@ function makeByteUtils() {
   const bytesFromBase64 = conditionalOutput(
     'bytesFromBase64',
     code`
-      const atob: (b64: string) => string = ${globalThis}.atob || ((b64) => ${globalThis}.Buffer.from(b64, 'base64').toString('binary'));
       function bytesFromBase64(b64: string): Uint8Array {
-        const bin = atob(b64);
-        const arr = new Uint8Array(bin.length);
-        for (let i = 0; i < bin.length; ++i) {
-            arr[i] = bin.charCodeAt(i);
+        if (${globalThis}.Buffer) {
+          return ${globalThis}.Buffer.from(b64, 'base64');
+        } else {
+          const bin = ${globalThis}.atob(b64);
+          const arr = new Uint8Array(bin.length);
+          for (let i = 0; i < bin.length; ++i) {
+              arr[i] = bin.charCodeAt(i);
+          }
+          return arr;
         }
-        return arr;
       }
     `
   );
   const base64FromBytes = conditionalOutput(
     'base64FromBytes',
     code`
-      const btoa : (bin: string) => string = ${globalThis}.btoa || ((bin) => ${globalThis}.Buffer.from(bin, 'binary').toString('base64'));
       function base64FromBytes(arr: Uint8Array): string {
-        const bin: string[] = [];
-        arr.forEach((byte) => {
-          bin.push(String.fromCharCode(byte));
-        });
-        return btoa(bin.join(''));
+        if (${globalThis}.Buffer) {
+          return ${globalThis}.Buffer.from(arr).toString('base64')
+        } else {
+          const bin: string[] = [];
+          arr.forEach((byte) => {
+            bin.push(String.fromCharCode(byte));
+          });
+          return ${globalThis}.btoa(bin.join(''));
+        }
       }
     `
   );
