@@ -98,6 +98,11 @@ describe('options', () => {
     expect(options).toMatchObject({ snakeToCamel: ['keys'] });
   });
 
+  it('can set snakeToCamel as two values', () => {
+    const options = optionsFromParameter('snakeToCamel=keys_json');
+    expect(options).toMatchObject({ snakeToCamel: ['keys', 'json'] });
+  });
+
   it('can set multiple values as an array', () => {
     const options = optionsFromParameter('foo=one,foo=two');
     expect(options).toMatchObject({ foo: ['one', 'two'] });

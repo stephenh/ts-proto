@@ -339,7 +339,15 @@ Generated code will be placed in the Gradle build directory.
 
 - With `--ts_proto_opt=lowerCaseServiceMethods=true`, the method names of service methods will be lowered/camel-case, i.e. `service.findFoo` instead of `service.FindFoo`.
 
-- With `--ts_proto_opt=snakeToCamel=false`, fields will be kept snake case. `snakeToCamel` can also be set as string with `--ts_proto_opt=snakeToCamel=keys,json`. `keys` will keep field names as camelCase and `json` will keep json field names as camelCase. Empty string will keep field names as snake_case.
+- With `--ts_proto_opt=snakeToCamel=false`, fields will be kept snake case in both the message keys and the `toJSON` / `fromJSON` methods.
+
+  `snakeToCamel` can also be set as a `_`-delimited list of strings (comma is reserved as the flag delimited), i.e. `--ts_proto_opt=snakeToCamel=keys_json`, where including `keys` will make message keys be camel case and including `json` will make JSON keys be camel case.
+
+   Empty string, i.e. `snakeToCamel=`, will keep both messages keys and `JSON` keys as snake case (it is the same as `snakeToCamel=false`).
+
+   Note that to use the `json_name` attribute, you'll have to use the `json`.
+
+   The default behavior is `keys_json`, i.e. both will be camel cased, and `json_name` will be used if set.
 
 - With `--ts_proto_opt=outputEncodeMethods=false`, the `Message.encode` and `Message.decode` methods for working with protobuf-encoded/binary data will not be output.
 
