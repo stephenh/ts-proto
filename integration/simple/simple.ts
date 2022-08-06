@@ -71,6 +71,7 @@ export interface Simple {
   blobs: Uint8Array[];
   birthday: DateMessage | undefined;
   blob: Uint8Array;
+  enabled: boolean;
 }
 
 export interface Child {
@@ -308,6 +309,7 @@ function createBaseSimple(): Simple {
     blobs: [],
     birthday: undefined,
     blob: new Uint8Array(),
+    enabled: false,
   };
 }
 
@@ -355,6 +357,9 @@ export const Simple = {
     }
     if (message.blob.length !== 0) {
       writer.uint32(106).bytes(message.blob);
+    }
+    if (message.enabled === true) {
+      writer.uint32(112).bool(message.enabled);
     }
     return writer;
   },
@@ -419,6 +424,9 @@ export const Simple = {
         case 13:
           message.blob = reader.bytes();
           break;
+        case 14:
+          message.enabled = reader.bool();
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -444,6 +452,7 @@ export const Simple = {
       blobs: Array.isArray(object?.blobs) ? object.blobs.map((e: any) => bytesFromBase64(e)) : [],
       birthday: isSet(object.birthday) ? DateMessage.fromJSON(object.birthday) : undefined,
       blob: isSet(object.blob) ? bytesFromBase64(object.blob) : new Uint8Array(),
+      enabled: isSet(object.enabled) ? Boolean(object.enabled) : false,
     };
   },
 
@@ -484,6 +493,7 @@ export const Simple = {
       (obj.birthday = message.birthday ? DateMessage.toJSON(message.birthday) : undefined);
     message.blob !== undefined &&
       (obj.blob = base64FromBytes(message.blob !== undefined ? message.blob : new Uint8Array()));
+    message.enabled !== undefined && (obj.enabled = message.enabled);
     return obj;
   },
 
@@ -504,6 +514,7 @@ export const Simple = {
     message.birthday =
       object.birthday !== undefined && object.birthday !== null ? DateMessage.fromPartial(object.birthday) : undefined;
     message.blob = object.blob ?? new Uint8Array();
+    message.enabled = object.enabled ?? false;
     return message;
   },
 };
