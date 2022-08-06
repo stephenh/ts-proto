@@ -19,6 +19,7 @@ describe('simple json', () => {
       coins: [2, 4, 6],
       snacks: ['a', 'b'],
       oldStates: [PbState.ON, PbState.OFF],
+      enabled: false,
     };
     // when it goes to json and back to us
     const s2 = Simple.fromJSON(PbSimple.fromObject(s1).toJSON());
@@ -111,6 +112,7 @@ describe('simple json', () => {
       snacks: null,
       oldStates: null,
       id: null,
+      enabled: null,
     };
     const s2 = Simple.fromJSON(s1);
     expect(s2).toMatchInlineSnapshot(`
@@ -122,6 +124,7 @@ describe('simple json', () => {
         "child": undefined,
         "coins": Array [],
         "createdAt": undefined,
+        "enabled": false,
         "grandChildren": Array [],
         "name": "",
         "oldStates": Array [],
@@ -144,6 +147,7 @@ describe('simple json', () => {
         "child": undefined,
         "coins": Array [],
         "createdAt": undefined,
+        "enabled": false,
         "grandChildren": Array [],
         "name": "",
         "oldStates": Array [],
@@ -306,6 +310,7 @@ describe('simple json', () => {
       blobs: [],
       blob: new Uint8Array(),
       birthday: undefined,
+      enabled: true,
     };
     expect(Simple.toJSON(s1)).toMatchInlineSnapshot(`
       Object {
@@ -322,6 +327,7 @@ describe('simple json', () => {
           6,
         ],
         "createdAt": "1970-01-01T00:00:01.000Z",
+        "enabled": true,
         "grandChildren": Array [
           Object {
             "name": "grand1",
