@@ -1,3 +1,10 @@
+## [1.121.4](https://github.com/stephenh/ts-proto/compare/v1.121.3...v1.121.4) (2022-08-07)
+
+
+### Performance Improvements
+
+* Faster base64FromBytes & bytesFromBase64 on Node.JS ([#649](https://github.com/stephenh/ts-proto/issues/649)) ([82ab341](https://github.com/stephenh/ts-proto/commit/82ab341557fba1a4933c4613d5c20dbf897905fa))
+
 ## [1.121.3](https://github.com/stephenh/ts-proto/compare/v1.121.2...v1.121.3) (2022-08-06)
 
 
