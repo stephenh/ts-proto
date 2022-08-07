@@ -46,6 +46,7 @@ export type Options = {
   outputTypeRegistry: boolean;
   stringEnums: boolean;
   constEnums: boolean;
+  enumUnspecifiedAsUndefined: boolean;
   enumsAsLiterals: boolean;
   outputClientImpl: boolean | 'grpc-web';
   outputServices: ServiceOption[];
@@ -88,6 +89,7 @@ export function defaultOptions(): Options {
     outputTypeRegistry: false,
     stringEnums: false,
     constEnums: false,
+    enumUnspecifiedAsUndefined: false,
     enumsAsLiterals: false,
     outputClientImpl: true,
     outputServices: [],
@@ -187,6 +189,13 @@ export function optionsFromParameter(parameter: string | undefined): Options {
       // useJsonWireFormat implies stringEnums=true and useDate=string
       options.stringEnums = true;
       options.useDate = DateOption.STRING;
+    }
+  }
+
+  if (options.enumUnspecifiedAsUndefined) {
+    // enumUnspecifiedAsUndefined requires stringEnums=true
+    if (!options.stringEnums) {
+      options.enumUnspecifiedAsUndefined = false;
     }
   }
 

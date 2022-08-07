@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+message DividerData {
+    enum DividerType {
+        DIVIDER_TYPE_UNSPECIFIED = 0;
+        DOUBLE = 1;
+        SINGLE = 2;
+        DASHED = 3;
+        DOTTED = 4;
+    }
+
+    DividerType type = 1;
+}

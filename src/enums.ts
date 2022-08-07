@@ -31,6 +31,11 @@ export function generateEnum(
   enumDesc.value.forEach((valueDesc, index) => {
     const info = sourceInfo.lookup(Fields.enum.value, index);
     maybeAddComment(info, chunks, valueDesc.options?.deprecated, `${valueDesc.name} - `);
+
+    if (options.enumUnspecifiedAsUndefined && valueDesc.number === 0) {
+      return;
+    }
+
     chunks.push(
       code`${valueDesc.name} ${delimiter} ${options.stringEnums ? `"${valueDesc.name}"` : valueDesc.number.toString()},`
     );
@@ -45,7 +50,11 @@ export function generateEnum(
   if (options.enumsAsLiterals) {
     chunks.push(code`} as const`);
     chunks.push(code`\n`);
-    chunks.push(code`export type ${def(fullName)} = typeof ${def(fullName)}[keyof typeof ${def(fullName)}]`);
+    chunks.push(
+      code`export type ${def(fullName)} = typeof ${def(fullName)}[keyof typeof ${def(fullName)}]${
+        options.enumUnspecifiedAsUndefined ? ' | undefined' : ''
+      }`
+    );
   } else {
     chunks.push(code`}`);
   }
@@ -72,12 +81,22 @@ export function generateEnumFromJson(ctx: Context, fullName: string, enumDesc: E
   const chunks: Code[] = [];
 
   const functionName = camelCase(fullName) + 'FromJSON';
-  chunks.push(code`export function ${def(functionName)}(object: any): ${fullName} {`);
+  const returnType = options.enumUnspecifiedAsUndefined ? `${fullName} | undefined` : fullName;
+  chunks.push(code`export function ${def(functionName)}(object: any): ${returnType} {`);
   chunks.push(code`switch (object) {`);
 
   for (const valueDesc of enumDesc.value) {
     chunks.push(code`
-      case ${valueDesc.number}:
+      case ${valueDesc.number}:`);
+
+    if (options.enumUnspecifiedAsUndefined && valueDesc.number === 0) {
+      chunks.push(code`
+      case undefined:
+        return undefined`);
+      continue;
+    }
+
+    chunks.push(code`
       case "${valueDesc.name}":
         return ${fullName}.${valueDesc.name};
     `);
@@ -110,26 +129,32 @@ export function generateEnumToJson(ctx: Context, fullName: string, enumDesc: Enu
   const chunks: Code[] = [];
 
   const functionName = camelCase(fullName) + 'ToJSON';
-  chunks.push(
-    code`export function ${def(functionName)}(object: ${fullName}): ${
-      ctx.options.useNumericEnumForJson ? 'number' : 'string'
-    } {`
-  );
+  const paramType = options.enumUnspecifiedAsUndefined ? `${fullName} | undefined` : fullName;
+  const returnType = options.useNumericEnumForJson
+    ? 'number'
+    : 'string' + (options.enumUnspecifiedAsUndefined ? ' | undefined' : '');
+  chunks.push(code`export function ${def(functionName)}(object: ${paramType}): ${returnType} {`);
   chunks.push(code`switch (object) {`);
 
   for (const valueDesc of enumDesc.value) {
-    if (ctx.options.useNumericEnumForJson) {
+    if (options.useNumericEnumForJson) {
       chunks.push(code`case ${fullName}.${valueDesc.name}: return ${valueDesc.number};`);
-    } else {
-      chunks.push(code`case ${fullName}.${valueDesc.name}: return "${valueDesc.name}";`);
+      continue;
     }
+
+    if (options.enumUnspecifiedAsUndefined && valueDesc.number === 0) {
+      chunks.push(code`case undefined: return undefined;`);
+      continue;
+    }
+
+    chunks.push(code`case ${fullName}.${valueDesc.name}: return "${valueDesc.name}";`);
   }
 
   if (options.unrecognizedEnum) {
     chunks.push(code`
       case ${fullName}.${UNRECOGNIZED_ENUM_NAME}:`);
 
-    if (ctx.options.useNumericEnumForJson) {
+    if (options.useNumericEnumForJson) {
       chunks.push(code`
       default:
         return ${UNRECOGNIZED_ENUM_VALUE};
@@ -160,10 +185,16 @@ export function generateEnumToNumber(ctx: Context, fullName: string, enumDesc: E
   const chunks: Code[] = [];
 
   const functionName = camelCase(fullName) + 'ToNumber';
-  chunks.push(code`export function ${def(functionName)}(object: ${fullName}): number {`);
+  const paramType = options.enumUnspecifiedAsUndefined ? `${fullName} | undefined` : fullName;
+
+  chunks.push(code`export function ${def(functionName)}(object: ${paramType}): number {`);
   chunks.push(code`switch (object) {`);
   for (const valueDesc of enumDesc.value) {
-    chunks.push(code`case ${fullName}.${valueDesc.name}: return ${valueDesc.number};`);
+    if (options.enumUnspecifiedAsUndefined && valueDesc.number === 0) {
+      chunks.push(code`case undefined: return 0`);
+    } else {
+      chunks.push(code`case ${fullName}.${valueDesc.name}: return ${valueDesc.number};`);
+    }
   }
 
   if (options.unrecognizedEnum) {

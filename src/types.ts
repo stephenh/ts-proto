@@ -99,7 +99,11 @@ export function basicTypeName(
       }
     case FieldDescriptorProto_Type.TYPE_MESSAGE:
     case FieldDescriptorProto_Type.TYPE_ENUM:
-      return messageToTypeName(ctx, field.typeName, { ...typeOptions, repeated: isRepeated(field) });
+      const name = messageToTypeName(ctx, field.typeName, { ...typeOptions, repeated: isRepeated(field) });
+      if (typeOptions.keepValueType || field.type !== FieldDescriptorProto_Type.TYPE_ENUM) {
+        return name;
+      }
+      return options.enumUnspecifiedAsUndefined ? code`(${name} | undefined)` : name;
     default:
       return code`${field.typeName}`;
   }
@@ -190,7 +194,9 @@ export function defaultValue(ctx: Context, field: FieldDescriptorProto): any {
       // and I believe the semantics of those in the proto2 world are generally undefined.
       const enumProto = typeMap.get(field.typeName)![2] as EnumDescriptorProto;
       const zerothValue = enumProto.value.find((v) => v.number === 0) || enumProto.value[0];
-      if (options.stringEnums) {
+      if (options.enumUnspecifiedAsUndefined) {
+        return 'undefined';
+      } else if (options.stringEnums) {
         const enumType = messageToTypeName(ctx, field.typeName);
         return code`${enumType}.${zerothValue.name}`;
       } else {
@@ -257,6 +263,9 @@ export function notDefaultCheck(
       // and I believe the semantics of those in the proto2 world are generally undefined.
       const enumProto = typeMap.get(field.typeName)![2] as EnumDescriptorProto;
       const zerothValue = enumProto.value.find((v) => v.number === 0) || enumProto.value[0];
+      if (options.enumUnspecifiedAsUndefined) {
+        return code`${maybeNotUndefinedAnd} ${place} !== undefined`;
+      }
       if (options.stringEnums) {
         const enumType = messageToTypeName(ctx, field.typeName);
         return code`${maybeNotUndefinedAnd} ${place} !== ${enumType}.${zerothValue.name}`;

@@ -9,6 +9,7 @@ describe('options', () => {
         "constEnums": false,
         "context": false,
         "emitImportedFiles": true,
+        "enumUnspecifiedAsUndefined": false,
         "enumsAsLiterals": false,
         "env": "both",
         "esModuleInterop": false,
@@ -139,6 +140,13 @@ describe('options', () => {
       onlyTypes: true,
       stringEnums: true,
       useDate: DateOption.STRING,
+    });
+  });
+
+  it('enumUnspecifiedAsUndefined requires stringEnums', () => {
+    const options = optionsFromParameter('enumUnspecifiedAsUndefined=true');
+    expect(options).toMatchObject({
+      enumUnspecifiedAsUndefined: false,
     });
   });
 });

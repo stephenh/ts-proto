@@ -1636,13 +1636,14 @@ function generateWrap(ctx: Context, fullProtoTypeName: string, fieldNames: Struc
     }`);
   }
 
+  const nullValue = ctx.options.enumUnspecifiedAsUndefined ? 'undefined' : 'NullValue.NULL_VALUE';
   if (isAnyValueTypeName(fullProtoTypeName)) {
     if (ctx.options.oneof === OneofOption.UNIONS) {
       chunks.push(code`wrap(value: any): Value {
         const result = createBaseValue();
 
         if (value === null) {
-          result.kind = {$case: '${fieldNames.nullValue}', ${fieldNames.nullValue}: NullValue.NULL_VALUE};
+          result.kind = {$case: '${fieldNames.nullValue}', ${fieldNames.nullValue}: ${nullValue}};
         } else if (typeof value === 'boolean') {
           result.kind = {$case: '${fieldNames.boolValue}', ${fieldNames.boolValue}: value};
         } else if (typeof value === 'number') {
@@ -1664,7 +1665,7 @@ function generateWrap(ctx: Context, fullProtoTypeName: string, fieldNames: Struc
         const result = createBaseValue();
 
         if (value === null) {
-          result.${fieldNames.nullValue} = NullValue.NULL_VALUE;
+          result.${fieldNames.nullValue} = ${nullValue};
         } else if (typeof value === 'boolean') {
           result.${fieldNames.boolValue} = value;
         } else if (typeof value === 'number') {

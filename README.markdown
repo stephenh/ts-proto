@@ -365,6 +365,12 @@ Generated code will be placed in the Gradle build directory.
 
   (Requires `outputEncodeMethods=false`.)
 
+- With `--ts_proto_opt=enumUnspecifiedAsUndefined=true`, the unspecified enum value will be `undefined` insteadof number or string(when `enumsAsLiterals=true`)
+  
+  Ensure use field number 0 as default enum value, see [protobuf3 doc](https://developers.google.com/protocol-buffers/docs/proto3#default).
+
+  (Requires `stringEnums=true`.)
+
 - With `--ts_proto_opt=outputClientImpl=false`, the client implementations, i.e. `FooServiceClientImpl`, that implement the client-side (in Twirp, see next option for `grpc-web`) RPC interfaces will not be output.
 
 - With `--ts_proto_opt=outputClientImpl=grpc-web`, the client implementations, i.e. `FooServiceClientImpl`, will use the [@improbable-eng/grpc-web](https://github.com/improbable-eng/grpc-web) library at runtime to send grpc messages to a grpc-web backend.
