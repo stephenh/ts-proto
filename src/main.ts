@@ -209,7 +209,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
   }
 
   let hasServerStreamingMethods = false;
-  let hasStreamingMethods = false;
+  let hasClientStreamingMethods = false;
 
   visitServices(fileDesc, sourceInfo, (serviceDesc, sInfo) => {
     if (options.nestJs) {
@@ -248,20 +248,18 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
             chunks.push(generateGrpcClientImpl(ctx, fileDesc, serviceDesc));
             chunks.push(generateGrpcServiceDesc(fileDesc, serviceDesc));
             serviceDesc.method.forEach((method) => {
-              if (!method.clientStreaming) {
-                chunks.push(generateGrpcMethodDesc(ctx, serviceDesc, method));
-              }
-              if (method.serverStreaming) {
-                hasServerStreamingMethods = true;
-              }
+              chunks.push(generateGrpcMethodDesc(ctx, serviceDesc, method));
             });
           }
         }
       });
     }
-    serviceDesc.method.forEach((methodDesc, index) => {
-      if (methodDesc.serverStreaming || methodDesc.clientStreaming) {
-        hasStreamingMethods = true;
+    serviceDesc.method.forEach((methodDesc) => {
+      if (methodDesc.serverStreaming) {
+        hasServerStreamingMethods = true;
+      }
+      if (methodDesc.clientStreaming) {
+        hasClientStreamingMethods = true;
       }
     });
   });
@@ -272,9 +270,9 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
     fileDesc.service.length > 0
   ) {
     if (options.outputClientImpl === true) {
-      chunks.push(generateRpcType(ctx, hasStreamingMethods));
+      chunks.push(generateRpcType(ctx, hasServerStreamingMethods || hasClientStreamingMethods));
     } else if (options.outputClientImpl === 'grpc-web') {
-      chunks.push(addGrpcWebMisc(ctx, hasServerStreamingMethods));
+      chunks.push(addGrpcWebMisc(ctx, hasClientStreamingMethods, hasServerStreamingMethods));
     }
   }
 

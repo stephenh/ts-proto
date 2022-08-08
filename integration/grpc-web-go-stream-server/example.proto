@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package rpx;
+option go_package = "lib/rpx";
+
+import "google/protobuf/empty.proto";
+
+message PingRequest {
+  string value = 1;
+}
+
+message PingResponse {
+  string Value = 1;
+}
+
+service TestService {
+  rpc PingEmpty(google.protobuf.Empty) returns (PingResponse) {}
+
+  rpc Ping(PingRequest) returns (PingResponse) {}
+
+  rpc PingError(PingRequest) returns (google.protobuf.Empty) {}
+
+  rpc PingList(PingRequest) returns (stream PingResponse) {}
+
+  rpc PingPongBidi(stream PingRequest) returns (stream PingResponse) {}
+
+  rpc PingStream(stream PingRequest) returns (PingResponse) {}
+}
