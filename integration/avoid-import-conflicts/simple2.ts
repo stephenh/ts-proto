@@ -42,6 +42,45 @@ export function simpleEnumToJSON(object: SimpleEnum): string {
   }
 }
 
+export enum FooService {
+  FOO_SERVICE_DEFAULT = 0,
+  FOO_SERVICE_FOO = 1,
+  FOO_SERVICE_BAR = 2,
+  UNRECOGNIZED = -1,
+}
+
+export function fooServiceFromJSON(object: any): FooService {
+  switch (object) {
+    case 0:
+    case 'FOO_SERVICE_DEFAULT':
+      return FooService.FOO_SERVICE_DEFAULT;
+    case 1:
+    case 'FOO_SERVICE_FOO':
+      return FooService.FOO_SERVICE_FOO;
+    case 2:
+    case 'FOO_SERVICE_BAR':
+      return FooService.FOO_SERVICE_BAR;
+    case -1:
+    case 'UNRECOGNIZED':
+    default:
+      return FooService.UNRECOGNIZED;
+  }
+}
+
+export function fooServiceToJSON(object: FooService): string {
+  switch (object) {
+    case FooService.FOO_SERVICE_DEFAULT:
+      return 'FOO_SERVICE_DEFAULT';
+    case FooService.FOO_SERVICE_FOO:
+      return 'FOO_SERVICE_FOO';
+    case FooService.FOO_SERVICE_BAR:
+      return 'FOO_SERVICE_BAR';
+    case FooService.UNRECOGNIZED:
+    default:
+      return 'UNRECOGNIZED';
+  }
+}
+
 export interface Simple {
   name: string;
   age: number;
