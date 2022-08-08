@@ -1,5 +1,5 @@
 import { MethodDescriptorProto, FileDescriptorProto, ServiceDescriptorProto } from 'ts-proto-descriptors';
-import { Code, code, imp, joinCode } from 'ts-poet';
+import { Code, code, def, imp, joinCode } from 'ts-poet';
 import {
   BatchMethod,
   detectBatchMethod,
@@ -45,7 +45,7 @@ export function generateService(
 
   maybeAddComment(sourceInfo, chunks, serviceDesc.options?.deprecated);
   const maybeTypeVar = options.context ? `<${contextTypeVar}>` : '';
-  chunks.push(code`export interface ${serviceDesc.name}${maybeTypeVar} {`);
+  chunks.push(code`export interface ${def(serviceDesc.name)}${maybeTypeVar} {`);
 
   serviceDesc.method.forEach((methodDesc, index) => {
     assertInstanceOf(methodDesc, FormattedMethodDescriptor);
@@ -185,7 +185,7 @@ export function generateServiceClientImpl(
   const { name } = serviceDesc;
   const i = options.context ? `${name}<Context>` : name;
   const t = options.context ? `<${contextTypeVar}>` : '';
-  chunks.push(code`export class ${name}ClientImpl${t} implements ${i} {`);
+  chunks.push(code`export class ${name}ClientImpl${t} implements ${def(i)} {`);
 
   // Create the constructor(rpc: Rpc)
   const rpcType = options.context ? 'Rpc<Context>' : 'Rpc';
