@@ -1,27 +1,28 @@
 import { Options } from './options';
 
-export function maybeSnakeToCamel(s: string, options: Pick<Options, 'snakeToCamel'>): string {
-  if (options.snakeToCamel.includes('keys') && s.includes('_')) {
-    const hasLowerCase = !!s.match(/[a-z]/);
-    return s
-      .split('_')
-      .map((word, i) => {
-        // If the word is already mixed case, leave the exist case as-is
-        word = hasLowerCase ? word : word.toLowerCase();
-        return i === 0 ? word : capitalize(word);
-      })
-      .join('');
+/** Converts `key` to TS/JS camel-case idiom, unless overridden not to. */
+export function maybeSnakeToCamel(key: string, options: Pick<Options, 'snakeToCamel'>): string {
+  if (options.snakeToCamel.includes('keys') && key.includes('_')) {
+    return snakeToCamel(key);
   } else {
-    return s;
+    return key;
   }
 }
 
-export function camelToSnake(s: string): string {
+export function snakeToCamel(s: string): string {
+  const hasLowerCase = !!s.match(/[a-z]/);
   return s
-    .replace(/[\w]([A-Z])/g, function (m) {
-      return m[0] + '_' + m[1];
+    .split('_')
+    .map((word, i) => {
+      // If the word is already mixed case, leave the existing case as-is
+      word = hasLowerCase ? word : word.toLowerCase();
+      return i === 0 ? word : capitalize(word);
     })
-    .toUpperCase();
+    .join('');
+}
+
+export function camelToSnake(s: string): string {
+  return s.replace(/\w([A-Z])/g, (m) => m[0] + '_' + m[1]).toUpperCase();
 }
 
 export function capitalize(s: string): string {
