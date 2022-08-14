@@ -1,5 +1,6 @@
 import { maybeSnakeToCamel } from '../src/case';
 import { Options, optionsFromParameter } from '../src/options';
+import { getFieldJsonName } from '../src/utils';
 
 const keys = optionsFromParameter('snakeToCamel=keys');
 
@@ -44,5 +45,15 @@ describe('case', () => {
 
   it('converts snake to camel with first underscore and camelize other', () => {
     expect(maybeSnakeToCamel('_uuid_foo', { snakeToCamel: ['keys'] })).toEqual('UuidFoo');
+  });
+
+  describe('getFieldJsonName', () => {
+    it('keeps snake case when jsonName is probably not set', () => {
+      expect(getFieldJsonName({ name: 'foo_bar', jsonName: 'fooBar' }, { snakeToCamel: [] })).toBe('foo_bar');
+    });
+
+    it('uses jsonName when it is set', () => {
+      expect(getFieldJsonName({ name: 'foo_bar', jsonName: 'foo' }, { snakeToCamel: [] })).toBe('foo');
+    });
   });
 });

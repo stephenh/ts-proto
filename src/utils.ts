@@ -9,7 +9,7 @@ import {
 import ReadStream = NodeJS.ReadStream;
 import { SourceDescription } from './sourceInfo';
 import { Options, ServiceOption } from './options';
-import { camelCase } from './case';
+import { camelCase, snakeToCamel } from './case';
 
 export function protoFilesToGenerate(request: CodeGeneratorRequest): FileDescriptorProto[] {
   return request.protoFile.filter((f) => request.fileToGenerate.includes(f.name));
@@ -174,13 +174,20 @@ export class FormattedMethodDescriptor implements MethodDescriptorProto {
   }
 }
 
-export function getFieldJsonName(field: FieldDescriptorProto, options: Options): string {
+export function getFieldJsonName(
+  field: Pick<FieldDescriptorProto, 'name' | 'jsonName'>,
+  options: Pick<Options, 'snakeToCamel'>
+): string {
   // jsonName will be camelCased by the protocol compiler, plus can be overridden by the user,
   // so just use that instead of our own maybeSnakeToCamel
   if (options.snakeToCamel.includes('json')) {
     return field.jsonName;
   } else {
-    return field.name;
+    // The user wants to keep snake case in the JSON, but we still want to see if the jsonName
+    // attribute is set as an explicit override.
+    const probableJsonName = snakeToCamel(field.name);
+    const isJsonNameSet = probableJsonName !== field.jsonName;
+    return isJsonNameSet ? field.jsonName : field.name;
   }
 }
 
