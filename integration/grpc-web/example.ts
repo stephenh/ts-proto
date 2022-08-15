@@ -845,9 +845,7 @@ export class GrpcWebImpl {
           if (response.status === grpc.Code.OK) {
             resolve(response.message);
           } else {
-            const err = new Error(response.statusMessage) as GrpcWebError;
-            err.code = response.status;
-            err.metadata = response.trailers;
+            const err = new GrpcWebError(response.statusMessage, response.status, response.trailers);
             reject(err);
           }
         },
@@ -917,7 +915,9 @@ function isSet(value: any): boolean {
   return value !== null && value !== undefined;
 }
 
-export interface GrpcWebError extends Error {
-  code: grpc.Code;
-  metadata: grpc.Metadata;
+export class GrpcWebError extends Error {
+  constructor(message: string, public code: grpc.Code, public metadata: grpc.Metadata) {
+    super(message);
+    Object.setPrototypeOf(this, GrpcWebError.prototype);
+  }
 }

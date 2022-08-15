@@ -35,8 +35,8 @@ async function main() {
   }
 
   const obs = client.ActiveUserSettingsStream({});
-  await obs.forEach(value => {
-    console.log("Got", value);
+  await obs.forEach((value) => {
+    console.log('Got', value);
   });
 }
 

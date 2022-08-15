@@ -248,9 +248,7 @@ function createPromiseUnaryMethod(ctx: Context): Code {
             if (response.status === grpc.Code.OK) {
               resolve(response.message);
             } else {
-              const err = new Error(response.statusMessage) as ${ctx.utils.GrpcWebError};
-              err.code = response.status;
-              err.metadata = response.trailers;
+              const err = new ${ctx.utils.GrpcWebError}(response.statusMessage, response.status, response.trailers);
               reject(err);
             }
           },
@@ -281,9 +279,7 @@ function createObservableUnaryMethod(ctx: Context): Code {
           debug: this.options.debug,
           onEnd: (next) => {
             if (next.status !== 0) {
-              const err = new Error(next.statusMessage) as ${ctx.utils.GrpcWebError};
-              err.code = next.status;
-              err.metadata = next.trailers;
+              const err = new ${ctx.utils.GrpcWebError}(next.statusMessage, next.status, next.trailers);
               observer.error(err);
             } else {
               observer.next(next.message as any);

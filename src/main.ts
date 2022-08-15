@@ -317,7 +317,7 @@ export type Utils = ReturnType<typeof makeDeepPartial> &
   ReturnType<typeof makeLongUtils> &
   ReturnType<typeof makeComparisonUtils> &
   ReturnType<typeof makeNiceGrpcServerStreamingMethodResult> &
-  ReturnType<typeof makeGrpcWebErrorInterface>;
+  ReturnType<typeof makeGrpcWebErrorClass>;
 
 /** These are runtime utility methods used by the generated code. */
 export function makeUtils(options: Options): Utils {
@@ -331,7 +331,7 @@ export function makeUtils(options: Options): Utils {
     ...longs,
     ...makeComparisonUtils(),
     ...makeNiceGrpcServerStreamingMethodResult(),
-    ...makeGrpcWebErrorInterface(),
+    ...makeGrpcWebErrorClass(),
   };
 }
 
@@ -673,13 +673,15 @@ function makeNiceGrpcServerStreamingMethodResult() {
   return { NiceGrpcServerStreamingMethodResult };
 }
 
-function makeGrpcWebErrorInterface() {
+function makeGrpcWebErrorClass() {
   const GrpcWebError = conditionalOutput(
     'GrpcWebError',
     code`
-      export interface GrpcWebError extends Error {
-        code: grpc.Code;
-        metadata: grpc.Metadata;
+      export class GrpcWebError extends Error {
+        constructor(message: string, public code: grpc.Code, public metadata: grpc.Metadata) {
+          super(message);
+          Object.setPrototypeOf(this, GrpcWebError.prototype);
+        }
       }
     `
   );
