@@ -438,6 +438,5 @@ function isSet(value: any): boolean {
 export class GrpcWebError extends Error {
   constructor(message: string, public code: grpc.Code, public metadata: grpc.Metadata) {
     super(message);
-    Object.setPrototypeOf(this, GrpcWebError.prototype);
   }
 }
