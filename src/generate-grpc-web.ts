@@ -214,7 +214,7 @@ function generateGrpcWebImpl(ctx: Context, returnObservable: boolean, hasStreami
   if (returnObservable) {
     chunks.push(createObservableUnaryMethod(ctx));
   } else {
-    chunks.push(createPromiseUnaryMethod());
+    chunks.push(createPromiseUnaryMethod(ctx));
   }
 
   if (hasStreamingMethods) {
@@ -225,7 +225,7 @@ function generateGrpcWebImpl(ctx: Context, returnObservable: boolean, hasStreami
   return joinCode(chunks, { trim: false });
 }
 
-function createPromiseUnaryMethod(): Code {
+function createPromiseUnaryMethod(ctx: Context): Code {
   return code`
     unary<T extends UnaryMethodDefinitionish>(
       methodDesc: T,
@@ -248,9 +248,7 @@ function createPromiseUnaryMethod(): Code {
             if (response.status === grpc.Code.OK) {
               resolve(response.message);
             } else {
-              const err = new Error(response.statusMessage) as any;
-              err.code = response.status;
-              err.metadata = response.trailers;
+              const err = new ${ctx.utils.GrpcWebError}(response.statusMessage, response.status, response.trailers);
               reject(err);
             }
           },
@@ -281,7 +279,8 @@ function createObservableUnaryMethod(ctx: Context): Code {
           debug: this.options.debug,
           onEnd: (next) => {
             if (next.status !== 0) {
-              observer.error({ code: next.status, message: next.statusMessage });
+              const err = new ${ctx.utils.GrpcWebError}(next.statusMessage, next.status, next.trailers);
+              observer.error(err);
             } else {
               observer.next(next.message as any);
               observer.complete();
