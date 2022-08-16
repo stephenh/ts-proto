@@ -15,6 +15,7 @@ describe('options', () => {
         "exportCommonSymbols": true,
         "fileSuffix": "",
         "forceLong": "number",
+        "generateOptionalsInBaseInstance": true,
         "importSuffix": "",
         "lowerCaseServiceMethods": true,
         "metadataType": undefined,
