@@ -397,6 +397,8 @@ Generated code will be placed in the Gradle build directory.
 
 - With `--ts_proto_opt=outputTypeRegistry=true`, the type registry will be generated that can be used to resolve message types by fully-qualified name. Also, each message will get extra `$type` field containing fully-qualified name.
 
+- With `--ts_proto_opt=outputJsonFieldNames=true`, each message will get an extra `$jsonFields` object containing a mapping from each message key to it's corresponding JSON name.
+
 - With `--ts_proto_opt=outputServices=grpc-js`, ts-proto will output service definitions and server / client stubs in [grpc-js](https://github.com/grpc/grpc-node/tree/master/packages/grpc-js) format.
 
 - With `--ts_proto_opt=outputServices=generic-definitions`, ts-proto will output generic (framework-agnostic) service definitions. These definitions contain descriptors for each method with links to request and response types, which allows to generate server and client stubs at runtime, and also generate strong types for them at compile time. An example of a library that uses this approach is [nice-grpc](https://github.com/deeplay-io/nice-grpc).

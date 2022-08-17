@@ -44,6 +44,7 @@ export type Options = {
   outputJsonMethods: boolean;
   outputPartialMethods: boolean;
   outputTypeRegistry: boolean;
+  outputJsonFieldNames: boolean;
   stringEnums: boolean;
   constEnums: boolean;
   enumsAsLiterals: boolean;
@@ -86,6 +87,7 @@ export function defaultOptions(): Options {
     outputJsonMethods: true,
     outputPartialMethods: true,
     outputTypeRegistry: false,
+    outputJsonFieldNames: false,
     stringEnums: false,
     constEnums: false,
     enumsAsLiterals: false,

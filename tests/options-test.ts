@@ -30,6 +30,7 @@ describe('options', () => {
           "default",
         ],
         "outputTypeRegistry": false,
+        "outputJsonFieldNames": false,
         "returnObservable": false,
         "snakeToCamel": Array [
           "json",
@@ -76,6 +77,13 @@ describe('options', () => {
     const options = optionsFromParameter('outputServices=grpc-js');
     expect(options).toMatchObject({
       outputServices: [ServiceOption.GRPC],
+    });
+  });
+
+  it('can set outputJsonFieldNames to boolean', () => {
+    const options = optionsFromParameter('outputJsonFieldNames=true');
+    expect(options).toMatchObject({
+      outputJsonFieldNames: true,
     });
   });
 

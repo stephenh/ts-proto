@@ -162,6 +162,9 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
         if (options.outputTypeRegistry) {
           staticMembers.push(code`$type: '${fullTypeName}' as const`);
         }
+        if (options.outputJsonFieldNames) {
+          staticMembers.push(generateJsonFieldNames(options, message));
+        }
 
         if (options.outputEncodeMethods) {
           staticMembers.push(generateEncode(ctx, fullName, message));
@@ -333,6 +336,18 @@ export function makeUtils(options: Options): Utils {
     ...makeNiceGrpcServerStreamingMethodResult(),
     ...makeGrpcWebErrorClass(),
   };
+}
+
+function generateJsonFieldNames(options: Options, descriptor: DescriptorProto): Code {
+  const members = [];
+
+  for (let field of descriptor.field) {
+    const keyName = maybeSnakeToCamel(field.name, options);
+    const jsonName = getFieldJsonName(field, options);
+    members.push(code`${keyName}: "${jsonName}"`);
+  }
+
+  return code`$jsonFields: { ${joinCode(members, { on: ',\n' })} } as const`;
 }
 
 function makeLongUtils(options: Options, bytes: ReturnType<typeof makeByteUtils>) {
