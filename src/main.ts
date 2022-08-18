@@ -800,7 +800,7 @@ function generateBaseInstanceFactory(
       continue;
     }
 
-    if (!options.generateOptionalsInBaseInstance && isOptionalProperty(field, messageDesc.options, options)) {
+    if (options.omitOptionalUndefineds && isOptionalProperty(field, messageDesc.options, options)) {
       continue;
     }
 
