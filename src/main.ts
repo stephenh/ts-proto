@@ -1125,11 +1125,29 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
         }
       `);
     } else if (isScalar(field) || isEnum(field)) {
-      chunks.push(code`
-        if (${notDefaultCheck(ctx, field, messageDesc.options, `message.${fieldName}`)}) {
-          ${writeSnippet(`message.${fieldName}`)};
+      /**
+       *
+       * this is needed for proto2 when a default value may not be set on the server
+       * so remove the if statement around the snippet
+       */
+
+      const snippet = writeSnippet(`message.${fieldName}`);
+
+      const { disableDefaultCheck, disableDefaultEnumCheck } = options;
+
+      if (disableDefaultCheck) {
+        chunks.push(code`${snippet};`);
+      } else {
+        if (isEnum(field) && disableDefaultEnumCheck) {
+          chunks.push(code`${snippet};`);
+        } else {
+          chunks.push(code`
+           if (${notDefaultCheck(ctx, field, messageDesc.options, `message.${fieldName}`)}) {
+             ${snippet};
+           }
+         `);
         }
-      `);
+      }
     } else {
       chunks.push(code`${writeSnippet(`message.${fieldName}`)};`);
     }
