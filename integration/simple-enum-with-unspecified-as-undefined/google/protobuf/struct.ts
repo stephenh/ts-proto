@@ -11,7 +11,7 @@ export const protobufPackage = 'google.protobuf';
  */
 export enum NullValue {
   /** NULL_VALUE - Null value. */
-  UNRECOGNIZED = 'UNRECOGNIZED',
+  UNRECOGNIZED = -1,
 }
 
 export function nullValueFromJSON(object: any): NullValue | undefined {
@@ -34,16 +34,6 @@ export function nullValueToJSON(object: NullValue | undefined): string | undefin
     case NullValue.UNRECOGNIZED:
     default:
       return 'UNRECOGNIZED';
-  }
-}
-
-export function nullValueToNumber(object: NullValue | undefined): number {
-  switch (object) {
-    case undefined:
-      return 0;
-    case NullValue.UNRECOGNIZED:
-    default:
-      return -1;
   }
 }
 
@@ -262,7 +252,7 @@ function createBaseValue(): Value {
 export const Value = {
   encode(message: Value, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.nullValue !== undefined) {
-      writer.uint32(8).int32(nullValueToNumber(message.nullValue));
+      writer.uint32(8).int32(message.nullValue);
     }
     if (message.numberValue !== undefined) {
       writer.uint32(17).double(message.numberValue);
@@ -290,7 +280,7 @@ export const Value = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.nullValue = nullValueFromJSON(reader.int32());
+          message.nullValue = reader.int32() as any;
           break;
         case 2:
           message.numberValue = reader.double();

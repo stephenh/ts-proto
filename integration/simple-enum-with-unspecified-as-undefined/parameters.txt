@@ -1,0 +1,1 @@
+enumUnspecifiedAsUndefined=true,outputClientImpl=false

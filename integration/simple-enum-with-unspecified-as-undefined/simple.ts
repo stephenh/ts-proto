@@ -1,13 +1,13 @@
 /* eslint-disable */
-import { NullValue, nullValueToNumber, nullValueFromJSON, nullValueToJSON } from './google/protobuf/struct';
+import { NullValue, nullValueFromJSON, nullValueToJSON } from './google/protobuf/struct';
 import * as _m0 from 'protobufjs/minimal';
 
 export const protobufPackage = 'simple';
 
 export enum StateEnum {
-  ON = 'ON',
-  OFF = 'OFF',
-  UNRECOGNIZED = 'UNRECOGNIZED',
+  ON = 2,
+  OFF = 3,
+  UNRECOGNIZED = -1,
 }
 
 export function stateEnumFromJSON(object: any): StateEnum | undefined {
@@ -43,20 +43,6 @@ export function stateEnumToJSON(object: StateEnum | undefined): string | undefin
   }
 }
 
-export function stateEnumToNumber(object: StateEnum | undefined): number {
-  switch (object) {
-    case undefined:
-      return 0;
-    case StateEnum.ON:
-      return 2;
-    case StateEnum.OFF:
-      return 3;
-    case StateEnum.UNRECOGNIZED:
-    default:
-      return -1;
-  }
-}
-
 export interface Simple {
   name: string;
   state: StateEnum | undefined;
@@ -80,15 +66,15 @@ export const Simple = {
       writer.uint32(10).string(message.name);
     }
     if (message.state !== undefined) {
-      writer.uint32(32).int32(stateEnumToNumber(message.state));
+      writer.uint32(32).int32(message.state);
     }
     writer.uint32(42).fork();
     for (const v of message.states) {
-      writer.int32(stateEnumToNumber(v));
+      writer.int32(v || 0);
     }
     writer.ldelim();
     if (message.nullValue !== undefined) {
-      writer.uint32(48).int32(nullValueToNumber(message.nullValue));
+      writer.uint32(48).int32(message.nullValue);
     }
     Object.entries(message.stateMap).forEach(([key, value]) => {
       Simple_StateMapEntry.encode({ key: key as any, value }, writer.uint32(58).fork()).ldelim();
@@ -107,20 +93,20 @@ export const Simple = {
           message.name = reader.string();
           break;
         case 4:
-          message.state = stateEnumFromJSON(reader.int32());
+          message.state = reader.int32() as any;
           break;
         case 5:
           if ((tag & 7) === 2) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
-              message.states.push(stateEnumFromJSON(reader.int32()));
+              message.states.push(reader.int32() as any);
             }
           } else {
-            message.states.push(stateEnumFromJSON(reader.int32()));
+            message.states.push(reader.int32() as any);
           }
           break;
         case 6:
-          message.nullValue = nullValueFromJSON(reader.int32());
+          message.nullValue = reader.int32() as any;
           break;
         case 7:
           const entry7 = Simple_StateMapEntry.decode(reader, reader.uint32());
@@ -199,7 +185,7 @@ export const Simple_StateMapEntry = {
       writer.uint32(10).string(message.key);
     }
     if (message.value !== undefined) {
-      writer.uint32(16).int32(stateEnumToNumber(message.value));
+      writer.uint32(16).int32(message.value);
     }
     return writer;
   },
@@ -215,7 +201,7 @@ export const Simple_StateMapEntry = {
           message.key = reader.string();
           break;
         case 2:
-          message.value = stateEnumFromJSON(reader.int32());
+          message.value = reader.int32() as any;
           break;
         default:
           reader.skipType(tag & 7);

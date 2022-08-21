@@ -142,11 +142,4 @@ describe('options', () => {
       useDate: DateOption.STRING,
     });
   });
-
-  it('enumUnspecifiedAsUndefined requires stringEnums', () => {
-    const options = optionsFromParameter('enumUnspecifiedAsUndefined=true');
-    expect(options).toMatchObject({
-      enumUnspecifiedAsUndefined: false,
-    });
-  });
 });

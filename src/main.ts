@@ -1073,7 +1073,7 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
         const listWriteSnippet = code`
           writer.uint32(${tag}).fork();
           for (const v of message.${fieldName}) {
-            writer.${toReaderCall(field)}(v);
+            writer.${toReaderCall(field)}(v${options.enumUnspecifiedAsUndefined && isEnum(field) ? ' || 0' : ''});
           }
           writer.ldelim();
         `;

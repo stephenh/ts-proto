@@ -20,6 +20,7 @@ export type DividerData_DividerType = typeof DividerData_DividerType[keyof typeo
 export function dividerData_DividerTypeFromJSON(object: any): DividerData_DividerType | undefined {
   switch (object) {
     case 0:
+    case 'DIVIDER_TYPE_UNSPECIFIED':
     case undefined:
       return undefined;
     case 1:

@@ -91,6 +91,7 @@ export function generateEnumFromJson(ctx: Context, fullName: string, enumDesc: E
 
     if (options.enumUnspecifiedAsUndefined && valueDesc.number === 0) {
       chunks.push(code`
+      case "${valueDesc.name}":
       case undefined:
         return undefined`);
       continue;

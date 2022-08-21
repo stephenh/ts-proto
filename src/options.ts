@@ -192,13 +192,6 @@ export function optionsFromParameter(parameter: string | undefined): Options {
     }
   }
 
-  if (options.enumUnspecifiedAsUndefined) {
-    // enumUnspecifiedAsUndefined requires stringEnums=true
-    if (!options.stringEnums) {
-      options.enumUnspecifiedAsUndefined = false;
-    }
-  }
-
   return options;
 }
 

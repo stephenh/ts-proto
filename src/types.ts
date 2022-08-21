@@ -98,9 +98,10 @@ export function basicTypeName(
         return code`Uint8Array`;
       }
     case FieldDescriptorProto_Type.TYPE_MESSAGE:
+      return messageToTypeName(ctx, field.typeName, { ...typeOptions, repeated: isRepeated(field) });
     case FieldDescriptorProto_Type.TYPE_ENUM:
       const name = messageToTypeName(ctx, field.typeName, { ...typeOptions, repeated: isRepeated(field) });
-      if (typeOptions.keepValueType || field.type !== FieldDescriptorProto_Type.TYPE_ENUM) {
+      if (typeOptions.keepValueType) {
         return name;
       }
       return options.enumUnspecifiedAsUndefined ? code`(${name} | undefined)` : name;
