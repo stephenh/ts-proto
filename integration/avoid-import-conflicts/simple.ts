@@ -1,9 +1,12 @@
 /* eslint-disable */
 import {
   SimpleEnum as SimpleEnum1,
-  Simple as Simple2,
-  simpleEnumFromJSON as simpleEnumFromJSON3,
-  simpleEnumToJSON as simpleEnumToJSON4,
+  FooService as FooService2,
+  Simple as Simple3,
+  simpleEnumFromJSON as simpleEnumFromJSON4,
+  simpleEnumToJSON as simpleEnumToJSON5,
+  fooServiceFromJSON,
+  fooServiceToJSON,
 } from './simple2';
 import * as _m0 from 'protobufjs/minimal';
 
@@ -50,12 +53,20 @@ export function simpleEnumToJSON(object: SimpleEnum): string {
 
 export interface Simple {
   name: string;
-  otherSimple: Simple2 | undefined;
+  otherSimple: Simple3 | undefined;
 }
 
 export interface SimpleEnums {
   localEnum: SimpleEnum;
   importEnum: SimpleEnum1;
+}
+
+export interface FooServiceCreateRequest {
+  kind: FooService2;
+}
+
+export interface FooServiceCreateResponse {
+  kind: FooService2;
 }
 
 function createBaseSimple(): Simple {
@@ -68,7 +79,7 @@ export const Simple = {
       writer.uint32(10).string(message.name);
     }
     if (message.otherSimple !== undefined) {
-      Simple2.encode(message.otherSimple, writer.uint32(18).fork()).ldelim();
+      Simple3.encode(message.otherSimple, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
@@ -84,7 +95,7 @@ export const Simple = {
           message.name = reader.string();
           break;
         case 2:
-          message.otherSimple = Simple2.decode(reader, reader.uint32());
+          message.otherSimple = Simple3.decode(reader, reader.uint32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -97,7 +108,7 @@ export const Simple = {
   fromJSON(object: any): Simple {
     return {
       name: isSet(object.name) ? String(object.name) : '',
-      otherSimple: isSet(object.otherSimple) ? Simple2.fromJSON(object.otherSimple) : undefined,
+      otherSimple: isSet(object.otherSimple) ? Simple3.fromJSON(object.otherSimple) : undefined,
     };
   },
 
@@ -105,7 +116,7 @@ export const Simple = {
     const obj: any = {};
     message.name !== undefined && (obj.name = message.name);
     message.otherSimple !== undefined &&
-      (obj.otherSimple = message.otherSimple ? Simple2.toJSON(message.otherSimple) : undefined);
+      (obj.otherSimple = message.otherSimple ? Simple3.toJSON(message.otherSimple) : undefined);
     return obj;
   },
 
@@ -114,7 +125,7 @@ export const Simple = {
     message.name = object.name ?? '';
     message.otherSimple =
       object.otherSimple !== undefined && object.otherSimple !== null
-        ? Simple2.fromPartial(object.otherSimple)
+        ? Simple3.fromPartial(object.otherSimple)
         : undefined;
     return message;
   },
@@ -159,14 +170,14 @@ export const SimpleEnums = {
   fromJSON(object: any): SimpleEnums {
     return {
       localEnum: isSet(object.localEnum) ? simpleEnumFromJSON(object.localEnum) : 0,
-      importEnum: isSet(object.importEnum) ? simpleEnumFromJSON3(object.importEnum) : 0,
+      importEnum: isSet(object.importEnum) ? simpleEnumFromJSON4(object.importEnum) : 0,
     };
   },
 
   toJSON(message: SimpleEnums): unknown {
     const obj: any = {};
     message.localEnum !== undefined && (obj.localEnum = simpleEnumToJSON(message.localEnum));
-    message.importEnum !== undefined && (obj.importEnum = simpleEnumToJSON4(message.importEnum));
+    message.importEnum !== undefined && (obj.importEnum = simpleEnumToJSON5(message.importEnum));
     return obj;
   },
 
@@ -177,6 +188,125 @@ export const SimpleEnums = {
     return message;
   },
 };
+
+function createBaseFooServiceCreateRequest(): FooServiceCreateRequest {
+  return { kind: 0 };
+}
+
+export const FooServiceCreateRequest = {
+  encode(message: FooServiceCreateRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.kind !== 0) {
+      writer.uint32(8).int32(message.kind);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): FooServiceCreateRequest {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseFooServiceCreateRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.kind = reader.int32() as any;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): FooServiceCreateRequest {
+    return {
+      kind: isSet(object.kind) ? fooServiceFromJSON(object.kind) : 0,
+    };
+  },
+
+  toJSON(message: FooServiceCreateRequest): unknown {
+    const obj: any = {};
+    message.kind !== undefined && (obj.kind = fooServiceToJSON(message.kind));
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<FooServiceCreateRequest>, I>>(object: I): FooServiceCreateRequest {
+    const message = createBaseFooServiceCreateRequest();
+    message.kind = object.kind ?? 0;
+    return message;
+  },
+};
+
+function createBaseFooServiceCreateResponse(): FooServiceCreateResponse {
+  return { kind: 0 };
+}
+
+export const FooServiceCreateResponse = {
+  encode(message: FooServiceCreateResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.kind !== 0) {
+      writer.uint32(8).int32(message.kind);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): FooServiceCreateResponse {
+    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseFooServiceCreateResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          message.kind = reader.int32() as any;
+          break;
+        default:
+          reader.skipType(tag & 7);
+          break;
+      }
+    }
+    return message;
+  },
+
+  fromJSON(object: any): FooServiceCreateResponse {
+    return {
+      kind: isSet(object.kind) ? fooServiceFromJSON(object.kind) : 0,
+    };
+  },
+
+  toJSON(message: FooServiceCreateResponse): unknown {
+    const obj: any = {};
+    message.kind !== undefined && (obj.kind = fooServiceToJSON(message.kind));
+    return obj;
+  },
+
+  fromPartial<I extends Exact<DeepPartial<FooServiceCreateResponse>, I>>(object: I): FooServiceCreateResponse {
+    const message = createBaseFooServiceCreateResponse();
+    message.kind = object.kind ?? 0;
+    return message;
+  },
+};
+
+export interface FooService {
+  Create(request: FooServiceCreateRequest): Promise<FooServiceCreateResponse>;
+}
+
+export class FooServiceClientImpl implements FooService {
+  private readonly rpc: Rpc;
+  constructor(rpc: Rpc) {
+    this.rpc = rpc;
+    this.Create = this.Create.bind(this);
+  }
+  Create(request: FooServiceCreateRequest): Promise<FooServiceCreateResponse> {
+    const data = FooServiceCreateRequest.encode(request).finish();
+    const promise = this.rpc.request('simple.FooService', 'Create', data);
+    return promise.then((data) => FooServiceCreateResponse.decode(new _m0.Reader(data)));
+  }
+}
+
+interface Rpc {
+  request(service: string, method: string, data: Uint8Array): Promise<Uint8Array>;
+}
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
@@ -193,7 +323,7 @@ export type DeepPartial<T> = T extends Builtin
 type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin
   ? P
-  : P & { [K in keyof P]: Exact<P[K], I[K]> } & Record<Exclude<keyof I, KeysOfUnion<P>>, never>;
+  : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;

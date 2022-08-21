@@ -1,3 +1,25 @@
+# [1.122.0](https://github.com/stephenh/ts-proto/compare/v1.121.6...v1.122.0) (2022-08-15)
+
+
+### Features
+
+* **Grpc-Web:** Add & export GrpcWebError type ([#593](https://github.com/stephenh/ts-proto/issues/593)) ([645987d](https://github.com/stephenh/ts-proto/commit/645987d023e666290e87086f5a0770c34e2fe978))
+
+## [1.121.6](https://github.com/stephenh/ts-proto/compare/v1.121.5...v1.121.6) (2022-08-14)
+
+
+### Bug Fixes
+
+* Use jsonName even with snakeToCamel=false. ([#653](https://github.com/stephenh/ts-proto/issues/653)) ([1144886](https://github.com/stephenh/ts-proto/commit/1144886ef43eaf97b780c7aafb2c123fd49b3fe5)), closes [#635](https://github.com/stephenh/ts-proto/issues/635)
+
+## [1.121.5](https://github.com/stephenh/ts-proto/compare/v1.121.4...v1.121.5) (2022-08-08)
+
+
+### Bug Fixes
+
+* remove Record word conflict ([#638](https://github.com/stephenh/ts-proto/issues/638)) ([5664d09](https://github.com/stephenh/ts-proto/commit/5664d097ac33da423b0f4e79f962fd71912358a0))
+* resolve import collisions for services ([#651](https://github.com/stephenh/ts-proto/issues/651)) ([ee0296f](https://github.com/stephenh/ts-proto/commit/ee0296ffe087665b54bac714e964e7243010fb22))
+
 ## [1.121.4](https://github.com/stephenh/ts-proto/compare/v1.121.3...v1.121.4) (2022-08-07)
 
 

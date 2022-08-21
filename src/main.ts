@@ -316,7 +316,8 @@ export type Utils = ReturnType<typeof makeDeepPartial> &
   ReturnType<typeof makeByteUtils> &
   ReturnType<typeof makeLongUtils> &
   ReturnType<typeof makeComparisonUtils> &
-  ReturnType<typeof makeNiceGrpcServerStreamingMethodResult>;
+  ReturnType<typeof makeNiceGrpcServerStreamingMethodResult> &
+  ReturnType<typeof makeGrpcWebErrorClass>;
 
 /** These are runtime utility methods used by the generated code. */
 export function makeUtils(options: Options): Utils {
@@ -330,6 +331,7 @@ export function makeUtils(options: Options): Utils {
     ...longs,
     ...makeComparisonUtils(),
     ...makeNiceGrpcServerStreamingMethodResult(),
+    ...makeGrpcWebErrorClass(),
   };
 }
 
@@ -486,7 +488,7 @@ function makeDeepPartial(options: Options, longs: ReturnType<typeof makeLongUtil
       ${maybeExport} type Exact<P, I extends P> = P extends ${Builtin}
         ? P
         : P &
-        { [K in keyof P]: Exact<P[K], I[K]> } & Record<Exclude<keyof I, KeysOfUnion<P> ${maybeExcludeType}>, never>;
+        { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P> ${maybeExcludeType}>]: never };
     `
   );
 
@@ -669,6 +671,21 @@ function makeNiceGrpcServerStreamingMethodResult() {
   );
 
   return { NiceGrpcServerStreamingMethodResult };
+}
+
+function makeGrpcWebErrorClass() {
+  const GrpcWebError = conditionalOutput(
+    'GrpcWebError',
+    code`
+      export class GrpcWebError extends Error {
+        constructor(message: string, public code: grpc.Code, public metadata: grpc.Metadata) {
+          super(message);
+        }
+      }
+    `
+  );
+
+  return { GrpcWebError };
 }
 
 // Create the interface with properties

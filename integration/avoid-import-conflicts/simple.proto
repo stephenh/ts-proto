@@ -18,4 +18,15 @@ message SimpleEnums {
   simple2.SimpleEnum import_enum = 2;
 }
 
+message FooServiceCreateRequest {
+  simple2.FooService kind = 1;
+}
+
+message FooServiceCreateResponse {
+  simple2.FooService kind = 1;
+}
+
+service FooService {
+  rpc Create  (FooServiceCreateRequest) returns (FooServiceCreateResponse);
+}
 

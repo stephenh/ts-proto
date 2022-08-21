@@ -405,7 +405,8 @@ export class GrpcWebImpl {
         debug: this.options.debug,
         onEnd: (next) => {
           if (next.status !== 0) {
-            observer.error({ code: next.status, message: next.statusMessage });
+            const err = new GrpcWebError(next.statusMessage, next.status, next.trailers);
+            observer.error(err);
           } else {
             observer.next(next.message as any);
             observer.complete();
@@ -431,8 +432,14 @@ export type DeepPartial<T> = T extends Builtin
 type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin
   ? P
-  : P & { [K in keyof P]: Exact<P[K], I[K]> } & Record<Exclude<keyof I, KeysOfUnion<P>>, never>;
+  : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+export class GrpcWebError extends Error {
+  constructor(message: string, public code: grpc.Code, public metadata: grpc.Metadata) {
+    super(message);
+  }
 }
