@@ -113,6 +113,9 @@ version: v1
 plugins:
   - remote: buf.build/stephenh/plugins/ts-proto
     out: ../gen/ts
+    opt:
+      - outputServices=...
+      - useExactTypes=...    
 ```
 
 # Goals
