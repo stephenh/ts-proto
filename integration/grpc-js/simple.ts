@@ -17,8 +17,10 @@ import {
   ServiceError,
   UntypedServiceImplementation,
 } from "@grpc/grpc-js";
-import { Timestamp } from "./google/protobuf/timestamp";
+import * as _m0 from "protobufjs/minimal";
 import { Empty } from "./google/protobuf/empty";
+import { ListValue, Struct, Value } from "./google/protobuf/struct";
+import { Timestamp } from "./google/protobuf/timestamp";
 import {
   BoolValue,
   BytesValue,
@@ -30,8 +32,6 @@ import {
   UInt32Value,
   UInt64Value,
 } from "./google/protobuf/wrappers";
-import { ListValue, Struct, Value } from "./google/protobuf/struct";
-import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "simple";
 
@@ -617,7 +617,7 @@ export interface TestClient extends Client {
 }
 
 export const TestClient = makeGenericClientConstructor(TestService, "simple.Test") as unknown as {
-  new (address: string, credentials: ChannelCredentials, options?: Partial<ChannelOptions>): TestClient;
+  new(address: string, credentials: ChannelCredentials, options?: Partial<ChannelOptions>): TestClient;
   service: typeof TestService;
 };
 

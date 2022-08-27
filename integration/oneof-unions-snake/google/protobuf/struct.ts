@@ -159,7 +159,7 @@ export const Struct = {
   wrap(object: { [key: string]: any } | undefined): Struct {
     const struct = createBaseStruct();
     if (object !== undefined) {
-      Object.keys(object).forEach((key) => {
+      Object.keys(object).forEach(key => {
         struct.fields[key] = object[key];
       });
     }
@@ -168,7 +168,7 @@ export const Struct = {
 
   unwrap(message: Struct): { [key: string]: any } {
     const object: { [key: string]: any } = {};
-    Object.keys(message.fields).forEach((key) => {
+    Object.keys(message.fields).forEach(key => {
       object[key] = message.fields[key];
     });
     return object;
@@ -313,8 +313,9 @@ export const Value = {
 
   toJSON(message: Value): unknown {
     const obj: any = {};
-    message.kind?.$case === "null_value" &&
-      (obj.null_value = message.kind?.null_value !== undefined ? nullValueToJSON(message.kind?.null_value) : undefined);
+    message.kind?.$case === "null_value" && (obj.null_value = message.kind?.null_value !== undefined
+      ? nullValueToJSON(message.kind?.null_value)
+      : undefined);
     message.kind?.$case === "number_value" && (obj.number_value = message.kind?.number_value);
     message.kind?.$case === "string_value" && (obj.string_value = message.kind?.string_value);
     message.kind?.$case === "bool_value" && (obj.bool_value = message.kind?.bool_value);
@@ -331,16 +332,16 @@ export const Value = {
       message.kind = { $case: "null_value", null_value: object.kind.null_value };
     }
     if (
-      object.kind?.$case === "number_value" &&
-      object.kind?.number_value !== undefined &&
-      object.kind?.number_value !== null
+      object.kind?.$case === "number_value"
+      && object.kind?.number_value !== undefined
+      && object.kind?.number_value !== null
     ) {
       message.kind = { $case: "number_value", number_value: object.kind.number_value };
     }
     if (
-      object.kind?.$case === "string_value" &&
-      object.kind?.string_value !== undefined &&
-      object.kind?.string_value !== null
+      object.kind?.$case === "string_value"
+      && object.kind?.string_value !== undefined
+      && object.kind?.string_value !== null
     ) {
       message.kind = { $case: "string_value", string_value: object.kind.string_value };
     }
@@ -350,9 +351,9 @@ export const Value = {
       message.kind = { $case: "bool_value", bool_value: object.kind.bool_value };
     }
     if (
-      object.kind?.$case === "struct_value" &&
-      object.kind?.struct_value !== undefined &&
-      object.kind?.struct_value !== null
+      object.kind?.$case === "struct_value"
+      && object.kind?.struct_value !== undefined
+      && object.kind?.struct_value !== null
     ) {
       message.kind = { $case: "struct_value", struct_value: object.kind.struct_value };
     }
@@ -442,7 +443,7 @@ export const ListValue = {
   toJSON(message: ListValue): unknown {
     const obj: any = {};
     if (message.values) {
-      obj.values = message.values.map((e) => e);
+      obj.values = message.values.map(e => e);
     } else {
       obj.values = [];
     }

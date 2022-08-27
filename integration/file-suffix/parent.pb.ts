@@ -1,7 +1,7 @@
 /* eslint-disable */
+import * as _m0 from "protobufjs/minimal";
 import { Child, ChildEnum, childEnumFromJSON, childEnumToJSON } from "./child.pb";
 import { Timestamp } from "./google/protobuf/timestamp.pb";
-import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "file_suffix";
 

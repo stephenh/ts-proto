@@ -1,6 +1,6 @@
 /* eslint-disable */
-import { Bar } from "./bar";
 import * as _m0 from "protobufjs/minimal";
+import { Bar } from "./bar";
 
 export interface Foo {
   name: string;

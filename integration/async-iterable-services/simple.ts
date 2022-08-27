@@ -111,7 +111,7 @@ export class EchoerClientImpl implements Echoer {
   Echo(request: EchoMsg): Promise<EchoMsg> {
     const data = EchoMsg.encode(request).finish();
     const promise = this.rpc.request("simple.Echoer", "Echo", data);
-    return promise.then((data) => EchoMsg.decode(new _m0.Reader(data)));
+    return promise.then(data => EchoMsg.decode(new _m0.Reader(data)));
   }
 
   EchoServerStream(request: EchoMsg): AsyncIterable<EchoMsg> {
@@ -123,7 +123,7 @@ export class EchoerClientImpl implements Echoer {
   EchoClientStream(request: AsyncIterable<EchoMsg>): Promise<EchoMsg> {
     const data = EchoMsg.encodeTransform(request);
     const promise = this.rpc.clientStreamingRequest("simple.Echoer", "EchoClientStream", data);
-    return promise.then((data) => EchoMsg.decode(new _m0.Reader(data)));
+    return promise.then(data => EchoMsg.decode(new _m0.Reader(data)));
   }
 
   EchoBidiStream(request: AsyncIterable<EchoMsg>): AsyncIterable<EchoMsg> {

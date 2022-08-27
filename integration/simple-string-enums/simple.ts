@@ -1,6 +1,6 @@
 /* eslint-disable */
-import { NullValue, nullValueFromJSON, nullValueToJSON, nullValueToNumber } from "./google/protobuf/struct";
 import * as _m0 from "protobufjs/minimal";
+import { NullValue, nullValueFromJSON, nullValueToJSON, nullValueToNumber } from "./google/protobuf/struct";
 
 export const protobufPackage = "simple";
 
@@ -156,7 +156,7 @@ export const Simple = {
     message.name !== undefined && (obj.name = message.name);
     message.state !== undefined && (obj.state = stateEnumToJSON(message.state));
     if (message.states) {
-      obj.states = message.states.map((e) => stateEnumToJSON(e));
+      obj.states = message.states.map(e => stateEnumToJSON(e));
     } else {
       obj.states = [];
     }

@@ -1,10 +1,10 @@
 /* eslint-disable */
-import { Timestamp } from "./google/protobuf/timestamp";
 import * as Long from "long";
-import { ImportedThing } from "./import_dir/thing";
 import * as _m0 from "protobufjs/minimal";
-import { BoolValue, Int32Value, StringValue } from "./google/protobuf/wrappers";
 import { Struct } from "./google/protobuf/struct";
+import { Timestamp } from "./google/protobuf/timestamp";
+import { BoolValue, Int32Value, StringValue } from "./google/protobuf/wrappers";
+import { ImportedThing } from "./import_dir/thing";
 
 export const protobufPackage = "simple";
 
@@ -381,22 +381,22 @@ export const Simple = {
     message.child !== undefined && (obj.child = message.child ? Child.toJSON(message.child) : undefined);
     message.state !== undefined && (obj.state = stateEnumToJSON(message.state));
     if (message.grand_children) {
-      obj.grand_children = message.grand_children.map((e) => e ? Child.toJSON(e) : undefined);
+      obj.grand_children = message.grand_children.map(e => e ? Child.toJSON(e) : undefined);
     } else {
       obj.grand_children = [];
     }
     if (message.coins) {
-      obj.coins = message.coins.map((e) => Math.round(e));
+      obj.coins = message.coins.map(e => Math.round(e));
     } else {
       obj.coins = [];
     }
     if (message.snacks) {
-      obj.snacks = message.snacks.map((e) => e);
+      obj.snacks = message.snacks.map(e => e);
     } else {
       obj.snacks = [];
     }
     if (message.old_states) {
-      obj.old_states = message.old_states.map((e) => stateEnumToJSON(e));
+      obj.old_states = message.old_states.map(e => stateEnumToJSON(e));
     } else {
       obj.old_states = [];
     }
@@ -533,8 +533,8 @@ export const Nested = {
   toJSON(message: Nested): unknown {
     const obj: any = {};
     message.name !== undefined && (obj.name = message.name);
-    message.message !== undefined &&
-      (obj.message = message.message ? Nested_InnerMessage.toJSON(message.message) : undefined);
+    message.message !== undefined
+      && (obj.message = message.message ? Nested_InnerMessage.toJSON(message.message) : undefined);
     message.state !== undefined && (obj.state = nested_InnerEnumToJSON(message.state));
     return obj;
   },
@@ -596,8 +596,8 @@ export const Nested_InnerMessage = {
   toJSON(message: Nested_InnerMessage): unknown {
     const obj: any = {};
     message.name !== undefined && (obj.name = message.name);
-    message.deep !== undefined &&
-      (obj.deep = message.deep ? Nested_InnerMessage_DeepMessage.toJSON(message.deep) : undefined);
+    message.deep !== undefined
+      && (obj.deep = message.deep ? Nested_InnerMessage_DeepMessage.toJSON(message.deep) : undefined);
     return obj;
   },
 
@@ -788,12 +788,12 @@ export const SimpleWithWrappers = {
     message.age !== undefined && (obj.age = message.age);
     message.enabled !== undefined && (obj.enabled = message.enabled);
     if (message.coins) {
-      obj.coins = message.coins.map((e) => e);
+      obj.coins = message.coins.map(e => e);
     } else {
       obj.coins = [];
     }
     if (message.snacks) {
-      obj.snacks = message.snacks.map((e) => e);
+      obj.snacks = message.snacks.map(e => e);
     } else {
       obj.snacks = [];
     }
@@ -1609,7 +1609,7 @@ export class PingServiceClientImpl implements PingService {
   ping(request: PingRequest): Promise<PingResponse> {
     const data = PingRequest.encode(request).finish();
     const promise = this.rpc.request("simple.PingService", "ping", data);
-    return promise.then((data) => PingResponse.decode(new _m0.Reader(data)));
+    return promise.then(data => PingResponse.decode(new _m0.Reader(data)));
   }
 }
 

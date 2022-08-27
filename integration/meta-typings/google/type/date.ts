@@ -1,6 +1,6 @@
 /* eslint-disable */
-import { FileDescriptorProto } from "ts-proto-descriptors";
 import * as _m0 from "protobufjs/minimal";
+import { FileDescriptorProto } from "ts-proto-descriptors";
 
 export const protobufPackage = "google.type";
 

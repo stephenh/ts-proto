@@ -1,7 +1,7 @@
 /* eslint-disable */
+import * as _m0 from "protobufjs/minimal";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
-import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "";
 
@@ -111,7 +111,7 @@ export class UserStateClientImpl implements UserState {
   GetUsers(request: Empty): Observable<User> {
     const data = Empty.encode(request).finish();
     const result = this.rpc.serverStreamingRequest("UserState", "GetUsers", data);
-    return result.pipe(map((data) => User.decode(new _m0.Reader(data))));
+    return result.pipe(map(data => User.decode(new _m0.Reader(data))));
   }
 }
 

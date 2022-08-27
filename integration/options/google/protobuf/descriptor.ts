@@ -1,7 +1,7 @@
 /* eslint-disable */
-import { FileDescriptorProto as FileDescriptorProto1 } from "ts-proto-descriptors";
 import * as Long from "long";
 import * as _m0 from "protobufjs/minimal";
+import { FileDescriptorProto as FileDescriptorProto1 } from "ts-proto-descriptors";
 
 export const protobufPackage = "google.protobuf";
 
@@ -4403,7 +4403,7 @@ export const protoMetadata: ProtoMetadata = {
         "path": [4, 1, 2, 1],
         "span": [63, 2, 30],
         "leadingComments": "",
-        "trailingComments": ' e.g. "foo", "foo.bar", etc.\n',
+        "trailingComments": " e.g. \"foo\", \"foo.bar\", etc.\n",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 1, 2, 2],
@@ -4440,7 +4440,7 @@ export const protoMetadata: ProtoMetadata = {
       }, {
         "path": [4, 1, 2, 11],
         "span": [89, 2, 30],
-        "leadingComments": ' The syntax of the proto file.\n The supported values are "proto2" and "proto3".\n',
+        "leadingComments": " The syntax of the proto file.\n The supported values are \"proto2\" and \"proto3\".\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
@@ -4587,7 +4587,7 @@ export const protoMetadata: ProtoMetadata = {
         "path": [4, 4, 2, 6],
         "span": [202, 2, 36],
         "leadingComments":
-          ' For numeric types, contains the original text representation of the value.\n For booleans, "true" or "false".\n For strings, contains the default text contents (not escaped in any way).\n For bytes, contains the C escaped value.  All bytes >= 128 are escaped.\n TODO(kenton):  Base-64 encode?\n',
+          " For numeric types, contains the original text representation of the value.\n For booleans, \"true\" or \"false\".\n For strings, contains the default text contents (not escaped in any way).\n For bytes, contains the C escaped value.  All bytes >= 128 are escaped.\n TODO(kenton):  Base-64 encode?\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
@@ -4608,7 +4608,7 @@ export const protoMetadata: ProtoMetadata = {
         "path": [4, 4, 2, 10],
         "span": [237, 2, 37],
         "leadingComments":
-          ' If true, this is a proto3 "optional". When a proto3 field is optional, it\n tracks presence regardless of field type.\n\n When proto3_optional is true, this field must be belong to a oneof to\n signal to old proto3 clients that presence is tracked for this field. This\n oneof is known as a "synthetic" oneof, and this field must be its sole\n member (each proto3 optional field gets its own synthetic oneof). Synthetic\n oneofs exist in the descriptor only, and do not generate any API. Synthetic\n oneofs must be ordered after all "real" oneofs.\n\n For message fields, proto3_optional doesn\'t create any semantic change,\n since non-repeated message fields always track presence. However it still\n indicates the semantic detail of whether the user wrote "optional" or not.\n This can be useful for round-tripping the .proto file. For consistency we\n give message fields a synthetic oneof also, even though it is not required\n to track presence. This is especially important because the parser can\'t\n tell if a field is a message or an enum, so it must always create a\n synthetic oneof.\n\n Proto2 optional fields do not set this flag, because they already indicate\n optional with `LABEL_OPTIONAL`.\n',
+          " If true, this is a proto3 \"optional\". When a proto3 field is optional, it\n tracks presence regardless of field type.\n\n When proto3_optional is true, this field must be belong to a oneof to\n signal to old proto3 clients that presence is tracked for this field. This\n oneof is known as a \"synthetic\" oneof, and this field must be its sole\n member (each proto3 optional field gets its own synthetic oneof). Synthetic\n oneofs exist in the descriptor only, and do not generate any API. Synthetic\n oneofs must be ordered after all \"real\" oneofs.\n\n For message fields, proto3_optional doesn't create any semantic change,\n since non-repeated message fields always track presence. However it still\n indicates the semantic detail of whether the user wrote \"optional\" or not.\n This can be useful for round-tripping the .proto file. For consistency we\n give message fields a synthetic oneof also, even though it is not required\n to track presence. This is especially important because the parser can't\n tell if a field is a message or an enum, so it must always create a\n synthetic oneof.\n\n Proto2 optional fields do not set this flag, because they already indicate\n optional with `LABEL_OPTIONAL`.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
@@ -4762,7 +4762,7 @@ export const protoMetadata: ProtoMetadata = {
         "path": [4, 10, 2, 7],
         "span": [406, 2, 59],
         "leadingComments":
-          ' Should generic services be generated in each language?  "Generic" services\n are not specific to any particular RPC system.  They are generated by the\n main code generators in each language (without additional plugins).\n Generic services were the only kind of service generation supported by\n early versions of google.protobuf.\n\n Generic services are now considered deprecated in favor of using plugins\n that generate code specific to your particular RPC system.  Therefore,\n these default to false.  Old code which depends on generic services should\n explicitly set them to true.\n',
+          " Should generic services be generated in each language?  \"Generic\" services\n are not specific to any particular RPC system.  They are generated by the\n main code generators in each language (without additional plugins).\n Generic services were the only kind of service generation supported by\n early versions of google.protobuf.\n\n Generic services are now considered deprecated in favor of using plugins\n that generate code specific to your particular RPC system.  Therefore,\n these default to false.  Old code which depends on generic services should\n explicitly set them to true.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
@@ -4831,14 +4831,14 @@ export const protoMetadata: ProtoMetadata = {
         "path": [4, 10, 2, 20],
         "span": [457, 2, 58],
         "leadingComments":
-          ' The parser stores options it doesn\'t recognize here.\n See the documentation for the "Options" section above.\n',
+          " The parser stores options it doesn't recognize here.\n See the documentation for the \"Options\" section above.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 10, 5],
         "span": [461, 2, 25],
         "leadingComments":
-          ' Clients can define custom options in extensions of this message.\n See the documentation for the "Options" section above.\n',
+          " Clients can define custom options in extensions of this message.\n See the documentation for the \"Options\" section above.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
@@ -4852,7 +4852,7 @@ export const protoMetadata: ProtoMetadata = {
         "path": [4, 11, 2, 1],
         "span": [490, 2, 70],
         "leadingComments":
-          ' Disables the generation of the standard "descriptor()" accessor, which can\n conflict with a field of the same name.  This is meant to make migration\n from proto1 easier; new code should avoid fields named "descriptor".\n',
+          " Disables the generation of the standard \"descriptor()\" accessor, which can\n conflict with a field of the same name.  This is meant to make migration\n from proto1 easier; new code should avoid fields named \"descriptor\".\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
@@ -4917,7 +4917,7 @@ export const protoMetadata: ProtoMetadata = {
         "path": [4, 12, 2, 2],
         "span": [566, 2, 51],
         "leadingComments":
-          ' The jstype option determines the JavaScript type used for values of the\n field.  The option is permitted only for 64 bit integral and fixed types\n (int64, uint64, sint64, fixed64, sfixed64).  A field with jstype JS_STRING\n is represented as JavaScript string, which avoids loss of precision that\n can happen when a large value is converted to a floating point JavaScript.\n Specifying JS_NUMBER for the jstype causes the generated JavaScript code to\n use the JavaScript "number" type.  The behavior of the default option\n JS_NORMAL is implementation dependent.\n\n This option is an enum to permit additional types to be added, e.g.\n goog.math.Integer.\n',
+          " The jstype option determines the JavaScript type used for values of the\n field.  The option is permitted only for 64 bit integral and fixed types\n (int64, uint64, sint64, fixed64, sfixed64).  A field with jstype JS_STRING\n is represented as JavaScript string, which avoids loss of precision that\n can happen when a large value is converted to a floating point JavaScript.\n Specifying JS_NUMBER for the jstype causes the generated JavaScript code to\n use the JavaScript \"number\" type.  The behavior of the default option\n JS_NORMAL is implementation dependent.\n\n This option is an enum to permit additional types to be added, e.g.\n goog.math.Integer.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
@@ -5110,7 +5110,7 @@ export const protoMetadata: ProtoMetadata = {
         "path": [4, 18, 3, 0],
         "span": [734, 2, 737, 3],
         "leadingComments":
-          ' The name of the uninterpreted option.  Each string represents a segment in\n a dot-separated name.  is_extension is true iff a segment represents an\n extension (denoted with parentheses in options specs in .proto files).\n E.g.,{ ["foo", false], ["bar.baz", true], ["qux", false] } represents\n "foo.(bar.baz).qux".\n',
+          " The name of the uninterpreted option.  Each string represents a segment in\n a dot-separated name.  is_extension is true iff a segment represents an\n extension (denoted with parentheses in options specs in .proto files).\n E.g.,{ [\"foo\", false], [\"bar.baz\", true], [\"qux\", false] } represents\n \"foo.(bar.baz).qux\".\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
@@ -5133,7 +5133,7 @@ export const protoMetadata: ProtoMetadata = {
         "path": [4, 19, 2, 0],
         "span": [799, 2, 33],
         "leadingComments":
-          ' A Location identifies a piece of source code in a .proto file which\n corresponds to a particular definition.  This information is intended\n to be useful to IDEs, code indexers, documentation generators, and similar\n tools.\n\n For example, say we have a file like:\n   message Foo {\n     optional string foo = 1;\n   }\n Let\'s look at just the field definition:\n   optional string foo = 1;\n   ^       ^^     ^^  ^  ^^^\n   a       bc     de  f  ghi\n We have the following locations:\n   span   path               represents\n   [a,i)  [ 4, 0, 2, 0 ]     The whole field definition.\n   [a,b)  [ 4, 0, 2, 0, 4 ]  The label (optional).\n   [c,d)  [ 4, 0, 2, 0, 5 ]  The type (string).\n   [e,f)  [ 4, 0, 2, 0, 1 ]  The name (foo).\n   [g,h)  [ 4, 0, 2, 0, 3 ]  The number (1).\n\n Notes:\n - A location may refer to a repeated field itself (i.e. not to any\n   particular index within it).  This is used whenever a set of elements are\n   logically enclosed in a single code segment.  For example, an entire\n   extend block (possibly containing multiple extension definitions) will\n   have an outer location whose path refers to the "extensions" repeated\n   field without an index.\n - Multiple locations may have the same path.  This happens when a single\n   logical declaration is spread out across multiple places.  The most\n   obvious example is the "extend" block again -- there may be multiple\n   extend blocks in the same scope, each of which will have the same path.\n - A location\'s span is not always a subset of its parent\'s span.  For\n   example, the "extendee" of an extension declaration appears at the\n   beginning of the "extend" block and is shared by all extensions within\n   the block.\n - Just because a location\'s span is a subset of some other location\'s span\n   does not mean that it is a descendant.  For example, a "group" defines\n   both a type and a field in a single declaration.  Thus, the locations\n   corresponding to the type and field and their components will overlap.\n - Code which tries to interpret locations should probably be designed to\n   ignore those that it doesn\'t understand, as more types of locations could\n   be recorded in the future.\n',
+          " A Location identifies a piece of source code in a .proto file which\n corresponds to a particular definition.  This information is intended\n to be useful to IDEs, code indexers, documentation generators, and similar\n tools.\n\n For example, say we have a file like:\n   message Foo {\n     optional string foo = 1;\n   }\n Let's look at just the field definition:\n   optional string foo = 1;\n   ^       ^^     ^^  ^  ^^^\n   a       bc     de  f  ghi\n We have the following locations:\n   span   path               represents\n   [a,i)  [ 4, 0, 2, 0 ]     The whole field definition.\n   [a,b)  [ 4, 0, 2, 0, 4 ]  The label (optional).\n   [c,d)  [ 4, 0, 2, 0, 5 ]  The type (string).\n   [e,f)  [ 4, 0, 2, 0, 1 ]  The name (foo).\n   [g,h)  [ 4, 0, 2, 0, 3 ]  The number (1).\n\n Notes:\n - A location may refer to a repeated field itself (i.e. not to any\n   particular index within it).  This is used whenever a set of elements are\n   logically enclosed in a single code segment.  For example, an entire\n   extend block (possibly containing multiple extension definitions) will\n   have an outer location whose path refers to the \"extensions\" repeated\n   field without an index.\n - Multiple locations may have the same path.  This happens when a single\n   logical declaration is spread out across multiple places.  The most\n   obvious example is the \"extend\" block again -- there may be multiple\n   extend blocks in the same scope, each of which will have the same path.\n - A location's span is not always a subset of its parent's span.  For\n   example, the \"extendee\" of an extension declaration appears at the\n   beginning of the \"extend\" block and is shared by all extensions within\n   the block.\n - Just because a location's span is a subset of some other location's span\n   does not mean that it is a descendant.  For example, a \"group\" defines\n   both a type and a field in a single declaration.  Thus, the locations\n   corresponding to the type and field and their components will overlap.\n - Code which tries to interpret locations should probably be designed to\n   ignore those that it doesn't understand, as more types of locations could\n   be recorded in the future.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {

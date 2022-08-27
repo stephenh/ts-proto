@@ -207,8 +207,10 @@ export const PleaseChoose = {
     message.name !== undefined && (obj.name = message.name);
     message.choice?.$case === "aNumber" && (obj.aNumber = message.choice?.aNumber);
     message.choice?.$case === "aString" && (obj.aString = message.choice?.aString);
-    message.choice?.$case === "aMessage" &&
-      (obj.aMessage = message.choice?.aMessage ? PleaseChoose_Submessage.toJSON(message.choice?.aMessage) : undefined);
+    message.choice?.$case === "aMessage"
+      && (obj.aMessage = message.choice?.aMessage
+        ? PleaseChoose_Submessage.toJSON(message.choice?.aMessage)
+        : undefined);
     message.choice?.$case === "aBool" && (obj.aBool = message.choice?.aBool);
     message.choice?.$case === "bunchaBytes" && (obj.bunchaBytes = message.choice?.bunchaBytes !== undefined
       ? base64FromBytes(message.choice?.bunchaBytes)
@@ -220,8 +222,8 @@ export const PleaseChoose = {
     message.eitherOr?.$case === "either" && (obj.either = message.eitherOr?.either);
     message.eitherOr?.$case === "or" && (obj.or = message.eitherOr?.or);
     message.eitherOr?.$case === "thirdOption" && (obj.thirdOption = message.eitherOr?.thirdOption);
-    message.signature !== undefined &&
-      (obj.signature = base64FromBytes(message.signature !== undefined ? message.signature : new Uint8Array()));
+    message.signature !== undefined
+      && (obj.signature = base64FromBytes(message.signature !== undefined ? message.signature : new Uint8Array()));
     message.value !== undefined && (obj.value = message.value);
     return obj;
   },
@@ -244,9 +246,9 @@ export const PleaseChoose = {
       message.choice = { $case: "aBool", aBool: object.choice.aBool };
     }
     if (
-      object.choice?.$case === "bunchaBytes" &&
-      object.choice?.bunchaBytes !== undefined &&
-      object.choice?.bunchaBytes !== null
+      object.choice?.$case === "bunchaBytes"
+      && object.choice?.bunchaBytes !== undefined
+      && object.choice?.bunchaBytes !== null
     ) {
       message.choice = { $case: "bunchaBytes", bunchaBytes: object.choice.bunchaBytes };
     }
@@ -263,9 +265,9 @@ export const PleaseChoose = {
       message.eitherOr = { $case: "or", or: object.eitherOr.or };
     }
     if (
-      object.eitherOr?.$case === "thirdOption" &&
-      object.eitherOr?.thirdOption !== undefined &&
-      object.eitherOr?.thirdOption !== null
+      object.eitherOr?.$case === "thirdOption"
+      && object.eitherOr?.thirdOption !== undefined
+      && object.eitherOr?.thirdOption !== null
     ) {
       message.eitherOr = { $case: "thirdOption", thirdOption: object.eitherOr.thirdOption };
     }
