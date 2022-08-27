@@ -1,3 +1,10 @@
+# [1.123.0](https://github.com/stephenh/ts-proto/compare/v1.122.0...v1.123.0) (2022-08-27)
+
+
+### Features
+
+* Bump ts-poet for dprint, also use tsx ([#660](https://github.com/stephenh/ts-proto/issues/660)) ([348a465](https://github.com/stephenh/ts-proto/commit/348a4651b42d5ff64fd07e36ef9ca7d7e76f4277))
+
 # [1.122.0](https://github.com/stephenh/ts-proto/compare/v1.121.6...v1.122.0) (2022-08-15)
 
 
