@@ -40,10 +40,7 @@ function createBaseDateMessage(): DateMessage {
 }
 
 export const DateMessage = {
-  encode(
-    message: DateMessage,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: DateMessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.year !== 0) {
       writer.uint32(8).int32(message.year);
     }
@@ -56,10 +53,7 @@ export const DateMessage = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): DateMessage {
+  decode(input: _m0.Reader | Uint8Array, length?: number): DateMessage {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDateMessage();
@@ -98,20 +92,10 @@ export interface ProtoMetadata {
   options?: {
     options?: { [key: string]: any };
     services?: {
-      [key: string]: {
-        options?: { [key: string]: any };
-        methods?: { [key: string]: { [key: string]: any } };
-      };
+      [key: string]: { options?: { [key: string]: any }; methods?: { [key: string]: { [key: string]: any } } };
     };
-    messages?: {
-      [key: string]: ProtoMetaMessageOptions;
-    };
-    enums?: {
-      [key: string]: {
-        options?: { [key: string]: any };
-        values?: { [key: string]: { [key: string]: any } };
-      };
-    };
+    messages?: { [key: string]: ProtoMetaMessageOptions };
+    enums?: { [key: string]: { options?: { [key: string]: any }; values?: { [key: string]: { [key: string]: any } } } };
   };
 }
 
@@ -207,8 +191,7 @@ export const protoMetadata: ProtoMetadata = {
       }, {
         "path": [4, 0, 2, 0],
         "span": [39, 2, 17],
-        "leadingComments":
-          " Year of date. Must be from 1 to 9999, or 0 if specifying a date without\n a year.\n",
+        "leadingComments": " Year of date. Must be from 1 to 9999, or 0 if specifying a date without\n a year.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {

@@ -1,9 +1,6 @@
 /* eslint-disable */
 import { FileDescriptorProto } from "ts-proto-descriptors";
-import {
-  protoMetadata as protoMetadata1,
-  Timestamp,
-} from "../google/protobuf/timestamp";
+import { protoMetadata as protoMetadata1, Timestamp } from "../google/protobuf/timestamp";
 import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "simple";
@@ -17,21 +14,14 @@ function createBaseImportedThing(): ImportedThing {
 }
 
 export const ImportedThing = {
-  encode(
-    message: ImportedThing,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: ImportedThing, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.createdAt !== undefined) {
-      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(10).fork())
-        .ldelim();
+      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): ImportedThing {
+  decode(input: _m0.Reader | Uint8Array, length?: number): ImportedThing {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseImportedThing();
@@ -39,9 +29,7 @@ export const ImportedThing = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.createdAt = fromTimestamp(
-            Timestamp.decode(reader, reader.uint32()),
-          );
+          message.createdAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -66,20 +54,10 @@ export interface ProtoMetadata {
   options?: {
     options?: { [key: string]: any };
     services?: {
-      [key: string]: {
-        options?: { [key: string]: any };
-        methods?: { [key: string]: { [key: string]: any } };
-      };
+      [key: string]: { options?: { [key: string]: any }; methods?: { [key: string]: { [key: string]: any } } };
     };
-    messages?: {
-      [key: string]: ProtoMetaMessageOptions;
-    };
-    enums?: {
-      [key: string]: {
-        options?: { [key: string]: any };
-        values?: { [key: string]: { [key: string]: any } };
-      };
-    };
+    messages?: { [key: string]: ProtoMetaMessageOptions };
+    enums?: { [key: string]: { options?: { [key: string]: any }; values?: { [key: string]: { [key: string]: any } } } };
   };
 }
 

@@ -29,20 +29,14 @@ function createBaseHeroById(): HeroById {
 }
 
 export const HeroById = {
-  encode(
-    message: HeroById,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: HeroById, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.id !== 0) {
       writer.uint32(8).int32(message.id);
     }
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): HeroById {
+  decode(input: _m0.Reader | Uint8Array, length?: number): HeroById {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseHeroById();
@@ -61,9 +55,7 @@ export const HeroById = {
   },
 
   fromJSON(object: any): HeroById {
-    return {
-      id: isSet(object.id) ? Number(object.id) : 0,
-    };
+    return { id: isSet(object.id) ? Number(object.id) : 0 };
   },
 
   toJSON(message: HeroById): unknown {
@@ -84,20 +76,14 @@ function createBaseVillainById(): VillainById {
 }
 
 export const VillainById = {
-  encode(
-    message: VillainById,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: VillainById, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.id !== 0) {
       writer.uint32(8).int32(message.id);
     }
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): VillainById {
+  decode(input: _m0.Reader | Uint8Array, length?: number): VillainById {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseVillainById();
@@ -116,9 +102,7 @@ export const VillainById = {
   },
 
   fromJSON(object: any): VillainById {
-    return {
-      id: isSet(object.id) ? Number(object.id) : 0,
-    };
+    return { id: isSet(object.id) ? Number(object.id) : 0 };
   },
 
   toJSON(message: VillainById): unknown {
@@ -127,9 +111,7 @@ export const VillainById = {
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<VillainById>, I>>(
-    object: I,
-  ): VillainById {
+  fromPartial<I extends Exact<DeepPartial<VillainById>, I>>(object: I): VillainById {
     const message = createBaseVillainById();
     message.id = object.id ?? 0;
     return message;
@@ -141,10 +123,7 @@ function createBaseHero(): Hero {
 }
 
 export const Hero = {
-  encode(
-    message: Hero,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: Hero, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.id !== 0) {
       writer.uint32(8).int32(message.id);
     }
@@ -154,10 +133,7 @@ export const Hero = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): Hero {
+  decode(input: _m0.Reader | Uint8Array, length?: number): Hero {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseHero();
@@ -179,10 +155,7 @@ export const Hero = {
   },
 
   fromJSON(object: any): Hero {
-    return {
-      id: isSet(object.id) ? Number(object.id) : 0,
-      name: isSet(object.name) ? String(object.name) : "",
-    };
+    return { id: isSet(object.id) ? Number(object.id) : 0, name: isSet(object.name) ? String(object.name) : "" };
   },
 
   toJSON(message: Hero): unknown {
@@ -205,10 +178,7 @@ function createBaseVillain(): Villain {
 }
 
 export const Villain = {
-  encode(
-    message: Villain,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: Villain, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.id !== 0) {
       writer.uint32(8).int32(message.id);
     }
@@ -218,10 +188,7 @@ export const Villain = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): Villain {
+  decode(input: _m0.Reader | Uint8Array, length?: number): Villain {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseVillain();
@@ -243,10 +210,7 @@ export const Villain = {
   },
 
   fromJSON(object: any): Villain {
-    return {
-      id: isSet(object.id) ? Number(object.id) : 0,
-      name: isSet(object.name) ? String(object.name) : "",
-    };
+    return { id: isSet(object.id) ? Number(object.id) : 0, name: isSet(object.name) ? String(object.name) : "" };
   },
 
   toJSON(message: Villain): unknown {
@@ -267,10 +231,7 @@ export const Villain = {
 export interface HeroService {
   FindOneHero(request: HeroById, metadata?: Foo): Promise<Hero>;
   FindOneVillain(request: VillainById, metadata?: Foo): Promise<Villain>;
-  FindManyVillain(
-    request: Observable<VillainById>,
-    metadata?: Foo,
-  ): Observable<Villain>;
+  FindManyVillain(request: Observable<VillainById>, metadata?: Foo): Observable<Villain>;
 }
 
 export class HeroServiceClientImpl implements HeroService {
@@ -281,41 +242,21 @@ export class HeroServiceClientImpl implements HeroService {
     this.FindOneVillain = this.FindOneVillain.bind(this);
     this.FindManyVillain = this.FindManyVillain.bind(this);
   }
-  FindOneHero(
-    request: HeroById,
-  ): Promise<Hero> {
+  FindOneHero(request: HeroById): Promise<Hero> {
     const data = HeroById.encode(request).finish();
-    const promise = this.rpc.request(
-      "hero.HeroService",
-      "FindOneHero",
-      data,
-    );
+    const promise = this.rpc.request("hero.HeroService", "FindOneHero", data);
     return promise.then((data) => Hero.decode(new _m0.Reader(data)));
   }
 
-  FindOneVillain(
-    request: VillainById,
-  ): Promise<Villain> {
+  FindOneVillain(request: VillainById): Promise<Villain> {
     const data = VillainById.encode(request).finish();
-    const promise = this.rpc.request(
-      "hero.HeroService",
-      "FindOneVillain",
-      data,
-    );
+    const promise = this.rpc.request("hero.HeroService", "FindOneVillain", data);
     return promise.then((data) => Villain.decode(new _m0.Reader(data)));
   }
 
-  FindManyVillain(
-    request: Observable<VillainById>,
-  ): Observable<Villain> {
-    const data = request.pipe(
-      map((request) => VillainById.encode(request).finish()),
-    );
-    const result = this.rpc.bidirectionalStreamingRequest(
-      "hero.HeroService",
-      "FindManyVillain",
-      data,
-    );
+  FindManyVillain(request: Observable<VillainById>): Observable<Villain> {
+    const data = request.pipe(map((request) => VillainById.encode(request).finish()));
+    const result = this.rpc.bidirectionalStreamingRequest("hero.HeroService", "FindManyVillain", data);
     return result.pipe(map((data) => Villain.decode(new _m0.Reader(data))));
   }
 }
@@ -353,49 +294,22 @@ export const HeroServiceDefinition = {
 } as const;
 
 interface Rpc {
-  request(
-    service: string,
-    method: string,
-    data: Uint8Array,
-  ): Promise<Uint8Array>;
-  clientStreamingRequest(
-    service: string,
-    method: string,
-    data: Observable<Uint8Array>,
-  ): Promise<Uint8Array>;
-  serverStreamingRequest(
-    service: string,
-    method: string,
-    data: Uint8Array,
-  ): Observable<Uint8Array>;
-  bidirectionalStreamingRequest(
-    service: string,
-    method: string,
-    data: Observable<Uint8Array>,
-  ): Observable<Uint8Array>;
+  request(service: string, method: string, data: Uint8Array): Promise<Uint8Array>;
+  clientStreamingRequest(service: string, method: string, data: Observable<Uint8Array>): Promise<Uint8Array>;
+  serverStreamingRequest(service: string, method: string, data: Uint8Array): Observable<Uint8Array>;
+  bidirectionalStreamingRequest(service: string, method: string, data: Observable<Uint8Array>): Observable<Uint8Array>;
 }
 
-type Builtin =
-  | Date
-  | Function
-  | Uint8Array
-  | string
-  | number
-  | boolean
-  | undefined;
+type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
-  : 
-    & P
-    & { [K in keyof P]: Exact<P[K], I[K]> }
-    & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
+  : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;

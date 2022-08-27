@@ -25,17 +25,11 @@ export interface Villain {
 export const HERO_PACKAGE_NAME = "hero";
 
 export interface HeroServiceClient {
-  findOneHero(
-    request: HeroById,
-  ): Observable<Hero>;
+  findOneHero(request: HeroById): Observable<Hero>;
 
-  findOneVillain(
-    request: VillainById,
-  ): Observable<Villain>;
+  findOneVillain(request: VillainById): Observable<Villain>;
 
-  findManyVillain(
-    request: Observable<VillainById>,
-  ): Observable<Villain>;
+  findManyVillain(request: Observable<VillainById>): Observable<Villain>;
 }
 
 export interface HeroServiceController {
@@ -50,27 +44,13 @@ export function HeroServiceControllerMethods() {
   return function (constructor: Function) {
     const grpcMethods: string[] = ["findOneHero", "findOneVillain"];
     for (const method of grpcMethods) {
-      const descriptor: any = Reflect.getOwnPropertyDescriptor(
-        constructor.prototype,
-        method,
-      );
-      GrpcMethod("HeroService", method)(
-        constructor.prototype[method],
-        method,
-        descriptor,
-      );
+      const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
+      GrpcMethod("HeroService", method)(constructor.prototype[method], method, descriptor);
     }
     const grpcStreamMethods: string[] = ["findManyVillain"];
     for (const method of grpcStreamMethods) {
-      const descriptor: any = Reflect.getOwnPropertyDescriptor(
-        constructor.prototype,
-        method,
-      );
-      GrpcStreamMethod("HeroService", method)(
-        constructor.prototype[method],
-        method,
-        descriptor,
-      );
+      const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
+      GrpcStreamMethod("HeroService", method)(constructor.prototype[method], method, descriptor);
     }
   };
 }

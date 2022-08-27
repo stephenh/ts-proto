@@ -104,10 +104,7 @@ function createBaseOptionalsTest(): OptionalsTest {
 }
 
 export const OptionalsTest = {
-  encode(
-    message: OptionalsTest,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: OptionalsTest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.id !== undefined && message.id !== 0) {
       writer.uint32(8).int32(message.id);
     }
@@ -162,10 +159,7 @@ export const OptionalsTest = {
       }
       writer.ldelim();
     }
-    if (
-      message.repDescription !== undefined &&
-      message.repDescription.length !== 0
-    ) {
+    if (message.repDescription !== undefined && message.repDescription.length !== 0) {
       for (const v of message.repDescription) {
         writer.uint32(130).string(v!);
       }
@@ -197,18 +191,12 @@ export const OptionalsTest = {
       writer.uint32(218).bytes(message.optData);
     }
     Object.entries(message.translations || {}).forEach(([key, value]) => {
-      OptionalsTest_TranslationsEntry.encode(
-        { key: key as any, value },
-        writer.uint32(242).fork(),
-      ).ldelim();
+      OptionalsTest_TranslationsEntry.encode({ key: key as any, value }, writer.uint32(242).fork()).ldelim();
     });
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): OptionalsTest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): OptionalsTest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseOptionalsTest();
@@ -307,10 +295,7 @@ export const OptionalsTest = {
           message.optData = reader.bytes();
           break;
         case 30:
-          const entry30 = OptionalsTest_TranslationsEntry.decode(
-            reader,
-            reader.uint32(),
-          );
+          const entry30 = OptionalsTest_TranslationsEntry.decode(reader, reader.uint32());
           if (entry30.value !== undefined) {
             message.translations![entry30.key] = entry30.value;
           }
@@ -331,53 +316,26 @@ export const OptionalsTest = {
       long: isSet(object.long) ? Number(object.long) : 0,
       truth: isSet(object.truth) ? Boolean(object.truth) : false,
       description: isSet(object.description) ? String(object.description) : "",
-      data: isSet(object.data)
-        ? bytesFromBase64(object.data)
-        : new Uint8Array(),
-      repId: Array.isArray(object?.repId)
-        ? object.repId.map((e: any) => Number(e))
-        : [],
-      repChild: Array.isArray(object?.repChild)
-        ? object.repChild.map((e: any) => Child.fromJSON(e))
-        : [],
-      repState: Array.isArray(object?.repState)
-        ? object.repState.map((e: any) => stateEnumFromJSON(e))
-        : [],
-      repLong: Array.isArray(object?.repLong)
-        ? object.repLong.map((e: any) => Number(e))
-        : [],
-      repTruth: Array.isArray(object?.repTruth)
-        ? object.repTruth.map((e: any) => Boolean(e))
-        : [],
-      repDescription: Array.isArray(object?.repDescription)
-        ? object.repDescription.map((e: any) => String(e))
-        : [],
-      repData: Array.isArray(object?.repData)
-        ? object.repData.map((e: any) => bytesFromBase64(e))
-        : [],
+      data: isSet(object.data) ? bytesFromBase64(object.data) : new Uint8Array(),
+      repId: Array.isArray(object?.repId) ? object.repId.map((e: any) => Number(e)) : [],
+      repChild: Array.isArray(object?.repChild) ? object.repChild.map((e: any) => Child.fromJSON(e)) : [],
+      repState: Array.isArray(object?.repState) ? object.repState.map((e: any) => stateEnumFromJSON(e)) : [],
+      repLong: Array.isArray(object?.repLong) ? object.repLong.map((e: any) => Number(e)) : [],
+      repTruth: Array.isArray(object?.repTruth) ? object.repTruth.map((e: any) => Boolean(e)) : [],
+      repDescription: Array.isArray(object?.repDescription) ? object.repDescription.map((e: any) => String(e)) : [],
+      repData: Array.isArray(object?.repData) ? object.repData.map((e: any) => bytesFromBase64(e)) : [],
       optId: isSet(object.optId) ? Number(object.optId) : undefined,
-      optChild: isSet(object.optChild)
-        ? Child.fromJSON(object.optChild)
-        : undefined,
-      optState: isSet(object.optState)
-        ? stateEnumFromJSON(object.optState)
-        : undefined,
+      optChild: isSet(object.optChild) ? Child.fromJSON(object.optChild) : undefined,
+      optState: isSet(object.optState) ? stateEnumFromJSON(object.optState) : undefined,
       optLong: isSet(object.optLong) ? Number(object.optLong) : undefined,
       optTruth: isSet(object.optTruth) ? Boolean(object.optTruth) : undefined,
-      optDescription: isSet(object.optDescription)
-        ? String(object.optDescription)
-        : undefined,
-      optData: isSet(object.optData)
-        ? bytesFromBase64(object.optData)
-        : undefined,
+      optDescription: isSet(object.optDescription) ? String(object.optDescription) : undefined,
+      optData: isSet(object.optData) ? bytesFromBase64(object.optData) : undefined,
       translations: isObject(object.translations)
-        ? Object.entries(object.translations).reduce<{ [key: string]: string }>(
-          (acc, [key, value]) => {
-            acc[key] = String(value);
-            return acc;
-          },
-          {},
-        )
+        ? Object.entries(object.translations).reduce<{ [key: string]: string }>((acc, [key, value]) => {
+          acc[key] = String(value);
+          return acc;
+        }, {})
         : {},
     };
   },
@@ -385,26 +343,20 @@ export const OptionalsTest = {
   toJSON(message: OptionalsTest): unknown {
     const obj: any = {};
     message.id !== undefined && (obj.id = Math.round(message.id));
-    message.child !== undefined &&
-      (obj.child = message.child ? Child.toJSON(message.child) : undefined);
+    message.child !== undefined && (obj.child = message.child ? Child.toJSON(message.child) : undefined);
     message.state !== undefined && (obj.state = stateEnumToJSON(message.state));
     message.long !== undefined && (obj.long = Math.round(message.long));
     message.truth !== undefined && (obj.truth = message.truth);
-    message.description !== undefined &&
-      (obj.description = message.description);
+    message.description !== undefined && (obj.description = message.description);
     message.data !== undefined &&
-      (obj.data = base64FromBytes(
-        message.data !== undefined ? message.data : new Uint8Array(),
-      ));
+      (obj.data = base64FromBytes(message.data !== undefined ? message.data : new Uint8Array()));
     if (message.repId) {
       obj.repId = message.repId.map((e) => Math.round(e));
     } else {
       obj.repId = [];
     }
     if (message.repChild) {
-      obj.repChild = message.repChild.map((e) =>
-        e ? Child.toJSON(e) : undefined
-      );
+      obj.repChild = message.repChild.map((e) => e ? Child.toJSON(e) : undefined);
     } else {
       obj.repChild = [];
     }
@@ -429,30 +381,19 @@ export const OptionalsTest = {
       obj.repDescription = [];
     }
     if (message.repData) {
-      obj.repData = message.repData.map((e) =>
-        base64FromBytes(e !== undefined ? e : new Uint8Array())
-      );
+      obj.repData = message.repData.map((e) => base64FromBytes(e !== undefined ? e : new Uint8Array()));
     } else {
       obj.repData = [];
     }
     message.optId !== undefined && (obj.optId = Math.round(message.optId));
-    message.optChild !== undefined &&
-      (obj.optChild = message.optChild
-        ? Child.toJSON(message.optChild)
-        : undefined);
+    message.optChild !== undefined && (obj.optChild = message.optChild ? Child.toJSON(message.optChild) : undefined);
     message.optState !== undefined &&
-      (obj.optState = message.optState !== undefined
-        ? stateEnumToJSON(message.optState)
-        : undefined);
-    message.optLong !== undefined &&
-      (obj.optLong = Math.round(message.optLong));
+      (obj.optState = message.optState !== undefined ? stateEnumToJSON(message.optState) : undefined);
+    message.optLong !== undefined && (obj.optLong = Math.round(message.optLong));
     message.optTruth !== undefined && (obj.optTruth = message.optTruth);
-    message.optDescription !== undefined &&
-      (obj.optDescription = message.optDescription);
+    message.optDescription !== undefined && (obj.optDescription = message.optDescription);
     message.optData !== undefined &&
-      (obj.optData = message.optData !== undefined
-        ? base64FromBytes(message.optData)
-        : undefined);
+      (obj.optData = message.optData !== undefined ? base64FromBytes(message.optData) : undefined);
     obj.translations = {};
     if (message.translations) {
       Object.entries(message.translations).forEach(([k, v]) => {
@@ -462,14 +403,10 @@ export const OptionalsTest = {
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<OptionalsTest>, I>>(
-    object: I,
-  ): OptionalsTest {
+  fromPartial<I extends Exact<DeepPartial<OptionalsTest>, I>>(object: I): OptionalsTest {
     const message = createBaseOptionalsTest();
     message.id = object.id ?? 0;
-    message.child = (object.child !== undefined && object.child !== null)
-      ? Child.fromPartial(object.child)
-      : undefined;
+    message.child = (object.child !== undefined && object.child !== null) ? Child.fromPartial(object.child) : undefined;
     message.state = object.state ?? 0;
     message.long = object.long ?? 0;
     message.truth = object.truth ?? false;
@@ -483,23 +420,23 @@ export const OptionalsTest = {
     message.repDescription = object.repDescription?.map((e) => e) || [];
     message.repData = object.repData?.map((e) => e) || [];
     message.optId = object.optId ?? undefined;
-    message.optChild =
-      (object.optChild !== undefined && object.optChild !== null)
-        ? Child.fromPartial(object.optChild)
-        : undefined;
+    message.optChild = (object.optChild !== undefined && object.optChild !== null)
+      ? Child.fromPartial(object.optChild)
+      : undefined;
     message.optState = object.optState ?? undefined;
     message.optLong = object.optLong ?? undefined;
     message.optTruth = object.optTruth ?? undefined;
     message.optDescription = object.optDescription ?? undefined;
     message.optData = object.optData ?? undefined;
-    message.translations = Object.entries(object.translations ?? {}).reduce<
-      { [key: string]: string }
-    >((acc, [key, value]) => {
-      if (value !== undefined) {
-        acc[key] = String(value);
-      }
-      return acc;
-    }, {});
+    message.translations = Object.entries(object.translations ?? {}).reduce<{ [key: string]: string }>(
+      (acc, [key, value]) => {
+        if (value !== undefined) {
+          acc[key] = String(value);
+        }
+        return acc;
+      },
+      {},
+    );
     return message;
   },
 };
@@ -509,10 +446,7 @@ function createBaseOptionalsTest_TranslationsEntry(): OptionalsTest_Translations
 }
 
 export const OptionalsTest_TranslationsEntry = {
-  encode(
-    message: OptionalsTest_TranslationsEntry,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: OptionalsTest_TranslationsEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.key !== "") {
       writer.uint32(10).string(message.key);
     }
@@ -522,10 +456,7 @@ export const OptionalsTest_TranslationsEntry = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): OptionalsTest_TranslationsEntry {
+  decode(input: _m0.Reader | Uint8Array, length?: number): OptionalsTest_TranslationsEntry {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseOptionalsTest_TranslationsEntry();
@@ -547,10 +478,7 @@ export const OptionalsTest_TranslationsEntry = {
   },
 
   fromJSON(object: any): OptionalsTest_TranslationsEntry {
-    return {
-      key: isSet(object.key) ? String(object.key) : "",
-      value: isSet(object.value) ? String(object.value) : "",
-    };
+    return { key: isSet(object.key) ? String(object.key) : "", value: isSet(object.value) ? String(object.value) : "" };
   },
 
   toJSON(message: OptionalsTest_TranslationsEntry): unknown {
@@ -575,17 +503,11 @@ function createBaseChild(): Child {
 }
 
 export const Child = {
-  encode(
-    _: Child,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(_: Child, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): Child {
+  decode(input: _m0.Reader | Uint8Array, length?: number): Child {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseChild();
@@ -659,27 +581,16 @@ function base64FromBytes(arr: Uint8Array): string {
   }
 }
 
-type Builtin =
-  | Date
-  | Function
-  | Uint8Array
-  | string
-  | number
-  | boolean
-  | undefined;
+type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
-  : 
-    & P
-    & { [K in keyof P]: Exact<P[K], I[K]> }
-    & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
+  : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function longToNumber(long: Long): number {
   if (long.gt(Number.MAX_SAFE_INTEGER)) {

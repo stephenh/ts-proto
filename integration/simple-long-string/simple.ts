@@ -43,10 +43,7 @@ function createBaseNumbers(): Numbers {
 }
 
 export const Numbers = {
-  encode(
-    message: Numbers,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: Numbers, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.double !== 0) {
       writer.uint32(9).double(message.double);
     }
@@ -84,22 +81,15 @@ export const Numbers = {
       writer.uint32(97).sfixed64(message.sfixed64);
     }
     if (message.guint64 !== undefined) {
-      UInt64Value.encode({ value: message.guint64! }, writer.uint32(106).fork())
-        .ldelim();
+      UInt64Value.encode({ value: message.guint64! }, writer.uint32(106).fork()).ldelim();
     }
     if (message.timestamp !== undefined) {
-      Timestamp.encode(
-        toTimestamp(message.timestamp),
-        writer.uint32(114).fork(),
-      ).ldelim();
+      Timestamp.encode(toTimestamp(message.timestamp), writer.uint32(114).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): Numbers {
+  decode(input: _m0.Reader | Uint8Array, length?: number): Numbers {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNumbers();
@@ -146,9 +136,7 @@ export const Numbers = {
           message.guint64 = UInt64Value.decode(reader, reader.uint32()).value;
           break;
         case 14:
-          message.timestamp = fromTimestamp(
-            Timestamp.decode(reader, reader.uint32()),
-          );
+          message.timestamp = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -173,9 +161,7 @@ export const Numbers = {
       sfixed32: isSet(object.sfixed32) ? Number(object.sfixed32) : 0,
       sfixed64: isSet(object.sfixed64) ? String(object.sfixed64) : "0",
       guint64: isSet(object.guint64) ? String(object.guint64) : undefined,
-      timestamp: isSet(object.timestamp)
-        ? fromJsonTimestamp(object.timestamp)
-        : undefined,
+      timestamp: isSet(object.timestamp) ? fromJsonTimestamp(object.timestamp) : undefined,
     };
   },
 
@@ -189,15 +175,12 @@ export const Numbers = {
     message.uint64 !== undefined && (obj.uint64 = message.uint64);
     message.sint32 !== undefined && (obj.sint32 = Math.round(message.sint32));
     message.sint64 !== undefined && (obj.sint64 = message.sint64);
-    message.fixed32 !== undefined &&
-      (obj.fixed32 = Math.round(message.fixed32));
+    message.fixed32 !== undefined && (obj.fixed32 = Math.round(message.fixed32));
     message.fixed64 !== undefined && (obj.fixed64 = message.fixed64);
-    message.sfixed32 !== undefined &&
-      (obj.sfixed32 = Math.round(message.sfixed32));
+    message.sfixed32 !== undefined && (obj.sfixed32 = Math.round(message.sfixed32));
     message.sfixed64 !== undefined && (obj.sfixed64 = message.sfixed64);
     message.guint64 !== undefined && (obj.guint64 = message.guint64);
-    message.timestamp !== undefined &&
-      (obj.timestamp = message.timestamp.toISOString());
+    message.timestamp !== undefined && (obj.timestamp = message.timestamp.toISOString());
     return obj;
   },
 
@@ -221,27 +204,16 @@ export const Numbers = {
   },
 };
 
-type Builtin =
-  | Date
-  | Function
-  | Uint8Array
-  | string
-  | number
-  | boolean
-  | undefined;
+type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
-  : 
-    & P
-    & { [K in keyof P]: Exact<P[K], I[K]> }
-    & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
+  : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function toTimestamp(date: Date): Timestamp {
   const seconds = Math.trunc(date.getTime() / 1_000).toString();

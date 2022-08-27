@@ -1,23 +1,9 @@
 /* eslint-disable */
 import { FileDescriptorProto } from "ts-proto-descriptors";
-import {
-  DateMessage,
-  protoMetadata as protoMetadata1,
-} from "./google/type/date";
-import {
-  BoolValue,
-  Int32Value,
-  protoMetadata as protoMetadata2,
-  StringValue,
-} from "./google/protobuf/wrappers";
-import {
-  protoMetadata as protoMetadata3,
-  Timestamp,
-} from "./google/protobuf/timestamp";
-import {
-  ImportedThing,
-  protoMetadata as protoMetadata4,
-} from "./import_dir/thing";
+import { DateMessage, protoMetadata as protoMetadata1 } from "./google/type/date";
+import { BoolValue, Int32Value, protoMetadata as protoMetadata2, StringValue } from "./google/protobuf/wrappers";
+import { protoMetadata as protoMetadata3, Timestamp } from "./google/protobuf/timestamp";
+import { ImportedThing, protoMetadata as protoMetadata4 } from "./import_dir/thing";
 import * as Long from "long";
 import * as _m0 from "protobufjs/minimal";
 
@@ -185,13 +171,19 @@ export interface Numbers {
 /** For testing proto3's field presence feature. */
 export interface SimpleButOptional {
   /** Name field */
-  name?: string | undefined;
+  name?:
+    | string
+    | undefined;
   /** Age */
-  age?: number | undefined;
+  age?:
+    | number
+    | undefined;
   /** This comment will also attach */
   createdAt?: Date | undefined;
   child?: Child | undefined;
-  state?: StateEnum | undefined;
+  state?:
+    | StateEnum
+    | undefined;
   /** A thing (imported from thing) */
   thing?: ImportedThing | undefined;
   birthday?: DateMessage | undefined;
@@ -219,10 +211,7 @@ function createBaseSimple(): Simple {
 }
 
 export const Simple = {
-  encode(
-    message: Simple,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: Simple, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
@@ -230,8 +219,7 @@ export const Simple = {
       writer.uint32(16).int32(message.age);
     }
     if (message.createdAt !== undefined) {
-      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(74).fork())
-        .ldelim();
+      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(74).fork()).ldelim();
     }
     if (message.child !== undefined) {
       Child.encode(message.child, writer.uint32(26).fork()).ldelim();
@@ -270,10 +258,7 @@ export const Simple = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): Simple {
+  decode(input: _m0.Reader | Uint8Array, length?: number): Simple {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimple();
@@ -287,9 +272,7 @@ export const Simple = {
           message.age = reader.int32();
           break;
         case 9:
-          message.createdAt = fromTimestamp(
-            Timestamp.decode(reader, reader.uint32()),
-          );
+          message.createdAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           break;
         case 3:
           message.child = Child.decode(reader, reader.uint32());
@@ -349,10 +332,7 @@ function createBaseChild(): Child {
 }
 
 export const Child = {
-  encode(
-    message: Child,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: Child, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
@@ -362,10 +342,7 @@ export const Child = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): Child {
+  decode(input: _m0.Reader | Uint8Array, length?: number): Child {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseChild();
@@ -392,16 +369,12 @@ function createBaseNested(): Nested {
 }
 
 export const Nested = {
-  encode(
-    message: Nested,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: Nested, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
     if (message.message !== undefined) {
-      Nested_InnerMessage.encode(message.message, writer.uint32(18).fork())
-        .ldelim();
+      Nested_InnerMessage.encode(message.message, writer.uint32(18).fork()).ldelim();
     }
     if (message.state !== 0) {
       writer.uint32(24).int32(message.state);
@@ -409,10 +382,7 @@ export const Nested = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): Nested {
+  decode(input: _m0.Reader | Uint8Array, length?: number): Nested {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNested();
@@ -442,26 +412,17 @@ function createBaseNested_InnerMessage(): Nested_InnerMessage {
 }
 
 export const Nested_InnerMessage = {
-  encode(
-    message: Nested_InnerMessage,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: Nested_InnerMessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
     if (message.deep !== undefined) {
-      Nested_InnerMessage_DeepMessage.encode(
-        message.deep,
-        writer.uint32(18).fork(),
-      ).ldelim();
+      Nested_InnerMessage_DeepMessage.encode(message.deep, writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): Nested_InnerMessage {
+  decode(input: _m0.Reader | Uint8Array, length?: number): Nested_InnerMessage {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNested_InnerMessage();
@@ -472,10 +433,7 @@ export const Nested_InnerMessage = {
           message.name = reader.string();
           break;
         case 2:
-          message.deep = Nested_InnerMessage_DeepMessage.decode(
-            reader,
-            reader.uint32(),
-          );
+          message.deep = Nested_InnerMessage_DeepMessage.decode(reader, reader.uint32());
           break;
         default:
           reader.skipType(tag & 7);
@@ -491,20 +449,14 @@ function createBaseNested_InnerMessage_DeepMessage(): Nested_InnerMessage_DeepMe
 }
 
 export const Nested_InnerMessage_DeepMessage = {
-  encode(
-    message: Nested_InnerMessage_DeepMessage,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: Nested_InnerMessage_DeepMessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): Nested_InnerMessage_DeepMessage {
+  decode(input: _m0.Reader | Uint8Array, length?: number): Nested_InnerMessage_DeepMessage {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNested_InnerMessage_DeepMessage();
@@ -528,10 +480,7 @@ function createBaseOneOfMessage(): OneOfMessage {
 }
 
 export const OneOfMessage = {
-  encode(
-    message: OneOfMessage,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: OneOfMessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.first !== undefined) {
       writer.uint32(10).string(message.first);
     }
@@ -541,10 +490,7 @@ export const OneOfMessage = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): OneOfMessage {
+  decode(input: _m0.Reader | Uint8Array, length?: number): OneOfMessage {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseOneOfMessage();
@@ -567,31 +513,19 @@ export const OneOfMessage = {
 };
 
 function createBaseSimpleWithWrappers(): SimpleWithWrappers {
-  return {
-    name: undefined,
-    age: undefined,
-    enabled: undefined,
-    coins: [],
-    snacks: [],
-  };
+  return { name: undefined, age: undefined, enabled: undefined, coins: [], snacks: [] };
 }
 
 export const SimpleWithWrappers = {
-  encode(
-    message: SimpleWithWrappers,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: SimpleWithWrappers, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.name !== undefined) {
-      StringValue.encode({ value: message.name! }, writer.uint32(10).fork())
-        .ldelim();
+      StringValue.encode({ value: message.name! }, writer.uint32(10).fork()).ldelim();
     }
     if (message.age !== undefined) {
-      Int32Value.encode({ value: message.age! }, writer.uint32(18).fork())
-        .ldelim();
+      Int32Value.encode({ value: message.age! }, writer.uint32(18).fork()).ldelim();
     }
     if (message.enabled !== undefined) {
-      BoolValue.encode({ value: message.enabled! }, writer.uint32(26).fork())
-        .ldelim();
+      BoolValue.encode({ value: message.enabled! }, writer.uint32(26).fork()).ldelim();
     }
     for (const v of message.coins) {
       Int32Value.encode({ value: v!! }, writer.uint32(50).fork()).ldelim();
@@ -602,10 +536,7 @@ export const SimpleWithWrappers = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): SimpleWithWrappers {
+  decode(input: _m0.Reader | Uint8Array, length?: number): SimpleWithWrappers {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithWrappers();
@@ -625,9 +556,7 @@ export const SimpleWithWrappers = {
           message.coins.push(Int32Value.decode(reader, reader.uint32()).value);
           break;
         case 7:
-          message.snacks.push(
-            StringValue.decode(reader, reader.uint32()).value,
-          );
+          message.snacks.push(StringValue.decode(reader, reader.uint32()).value);
           break;
         default:
           reader.skipType(tag & 7);
@@ -643,20 +572,14 @@ function createBaseEntity(): Entity {
 }
 
 export const Entity = {
-  encode(
-    message: Entity,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: Entity, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.id !== 0) {
       writer.uint32(8).int32(message.id);
     }
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): Entity {
+  decode(input: _m0.Reader | Uint8Array, length?: number): Entity {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEntity();
@@ -676,57 +599,30 @@ export const Entity = {
 };
 
 function createBaseSimpleWithMap(): SimpleWithMap {
-  return {
-    entitiesById: {},
-    nameLookup: {},
-    intLookup: {},
-    mapOfTimestamps: {},
-    mapOfBytes: {},
-  };
+  return { entitiesById: {}, nameLookup: {}, intLookup: {}, mapOfTimestamps: {}, mapOfBytes: {} };
 }
 
 export const SimpleWithMap = {
-  encode(
-    message: SimpleWithMap,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: SimpleWithMap, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     Object.entries(message.entitiesById).forEach(([key, value]) => {
-      SimpleWithMap_EntitiesByIdEntry.encode(
-        { key: key as any, value },
-        writer.uint32(10).fork(),
-      ).ldelim();
+      SimpleWithMap_EntitiesByIdEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).ldelim();
     });
     Object.entries(message.nameLookup).forEach(([key, value]) => {
-      SimpleWithMap_NameLookupEntry.encode(
-        { key: key as any, value },
-        writer.uint32(18).fork(),
-      ).ldelim();
+      SimpleWithMap_NameLookupEntry.encode({ key: key as any, value }, writer.uint32(18).fork()).ldelim();
     });
     Object.entries(message.intLookup).forEach(([key, value]) => {
-      SimpleWithMap_IntLookupEntry.encode(
-        { key: key as any, value },
-        writer.uint32(26).fork(),
-      ).ldelim();
+      SimpleWithMap_IntLookupEntry.encode({ key: key as any, value }, writer.uint32(26).fork()).ldelim();
     });
     Object.entries(message.mapOfTimestamps).forEach(([key, value]) => {
-      SimpleWithMap_MapOfTimestampsEntry.encode(
-        { key: key as any, value },
-        writer.uint32(34).fork(),
-      ).ldelim();
+      SimpleWithMap_MapOfTimestampsEntry.encode({ key: key as any, value }, writer.uint32(34).fork()).ldelim();
     });
     Object.entries(message.mapOfBytes).forEach(([key, value]) => {
-      SimpleWithMap_MapOfBytesEntry.encode(
-        { key: key as any, value },
-        writer.uint32(42).fork(),
-      ).ldelim();
+      SimpleWithMap_MapOfBytesEntry.encode({ key: key as any, value }, writer.uint32(42).fork()).ldelim();
     });
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): SimpleWithMap {
+  decode(input: _m0.Reader | Uint8Array, length?: number): SimpleWithMap {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithMap();
@@ -734,46 +630,31 @@ export const SimpleWithMap = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          const entry1 = SimpleWithMap_EntitiesByIdEntry.decode(
-            reader,
-            reader.uint32(),
-          );
+          const entry1 = SimpleWithMap_EntitiesByIdEntry.decode(reader, reader.uint32());
           if (entry1.value !== undefined) {
             message.entitiesById[entry1.key] = entry1.value;
           }
           break;
         case 2:
-          const entry2 = SimpleWithMap_NameLookupEntry.decode(
-            reader,
-            reader.uint32(),
-          );
+          const entry2 = SimpleWithMap_NameLookupEntry.decode(reader, reader.uint32());
           if (entry2.value !== undefined) {
             message.nameLookup[entry2.key] = entry2.value;
           }
           break;
         case 3:
-          const entry3 = SimpleWithMap_IntLookupEntry.decode(
-            reader,
-            reader.uint32(),
-          );
+          const entry3 = SimpleWithMap_IntLookupEntry.decode(reader, reader.uint32());
           if (entry3.value !== undefined) {
             message.intLookup[entry3.key] = entry3.value;
           }
           break;
         case 4:
-          const entry4 = SimpleWithMap_MapOfTimestampsEntry.decode(
-            reader,
-            reader.uint32(),
-          );
+          const entry4 = SimpleWithMap_MapOfTimestampsEntry.decode(reader, reader.uint32());
           if (entry4.value !== undefined) {
             message.mapOfTimestamps[entry4.key] = entry4.value;
           }
           break;
         case 5:
-          const entry5 = SimpleWithMap_MapOfBytesEntry.decode(
-            reader,
-            reader.uint32(),
-          );
+          const entry5 = SimpleWithMap_MapOfBytesEntry.decode(reader, reader.uint32());
           if (entry5.value !== undefined) {
             message.mapOfBytes[entry5.key] = entry5.value;
           }
@@ -792,10 +673,7 @@ function createBaseSimpleWithMap_EntitiesByIdEntry(): SimpleWithMap_EntitiesById
 }
 
 export const SimpleWithMap_EntitiesByIdEntry = {
-  encode(
-    message: SimpleWithMap_EntitiesByIdEntry,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: SimpleWithMap_EntitiesByIdEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.key !== 0) {
       writer.uint32(8).int32(message.key);
     }
@@ -805,10 +683,7 @@ export const SimpleWithMap_EntitiesByIdEntry = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): SimpleWithMap_EntitiesByIdEntry {
+  decode(input: _m0.Reader | Uint8Array, length?: number): SimpleWithMap_EntitiesByIdEntry {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithMap_EntitiesByIdEntry();
@@ -835,10 +710,7 @@ function createBaseSimpleWithMap_NameLookupEntry(): SimpleWithMap_NameLookupEntr
 }
 
 export const SimpleWithMap_NameLookupEntry = {
-  encode(
-    message: SimpleWithMap_NameLookupEntry,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: SimpleWithMap_NameLookupEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.key !== "") {
       writer.uint32(10).string(message.key);
     }
@@ -848,10 +720,7 @@ export const SimpleWithMap_NameLookupEntry = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): SimpleWithMap_NameLookupEntry {
+  decode(input: _m0.Reader | Uint8Array, length?: number): SimpleWithMap_NameLookupEntry {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithMap_NameLookupEntry();
@@ -878,10 +747,7 @@ function createBaseSimpleWithMap_IntLookupEntry(): SimpleWithMap_IntLookupEntry 
 }
 
 export const SimpleWithMap_IntLookupEntry = {
-  encode(
-    message: SimpleWithMap_IntLookupEntry,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: SimpleWithMap_IntLookupEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.key !== 0) {
       writer.uint32(8).int32(message.key);
     }
@@ -891,10 +757,7 @@ export const SimpleWithMap_IntLookupEntry = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): SimpleWithMap_IntLookupEntry {
+  decode(input: _m0.Reader | Uint8Array, length?: number): SimpleWithMap_IntLookupEntry {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithMap_IntLookupEntry();
@@ -921,24 +784,17 @@ function createBaseSimpleWithMap_MapOfTimestampsEntry(): SimpleWithMap_MapOfTime
 }
 
 export const SimpleWithMap_MapOfTimestampsEntry = {
-  encode(
-    message: SimpleWithMap_MapOfTimestampsEntry,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: SimpleWithMap_MapOfTimestampsEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.key !== "") {
       writer.uint32(10).string(message.key);
     }
     if (message.value !== undefined) {
-      Timestamp.encode(toTimestamp(message.value), writer.uint32(18).fork())
-        .ldelim();
+      Timestamp.encode(toTimestamp(message.value), writer.uint32(18).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): SimpleWithMap_MapOfTimestampsEntry {
+  decode(input: _m0.Reader | Uint8Array, length?: number): SimpleWithMap_MapOfTimestampsEntry {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithMap_MapOfTimestampsEntry();
@@ -949,9 +805,7 @@ export const SimpleWithMap_MapOfTimestampsEntry = {
           message.key = reader.string();
           break;
         case 2:
-          message.value = fromTimestamp(
-            Timestamp.decode(reader, reader.uint32()),
-          );
+          message.value = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -967,10 +821,7 @@ function createBaseSimpleWithMap_MapOfBytesEntry(): SimpleWithMap_MapOfBytesEntr
 }
 
 export const SimpleWithMap_MapOfBytesEntry = {
-  encode(
-    message: SimpleWithMap_MapOfBytesEntry,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: SimpleWithMap_MapOfBytesEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.key !== "") {
       writer.uint32(10).string(message.key);
     }
@@ -980,10 +831,7 @@ export const SimpleWithMap_MapOfBytesEntry = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): SimpleWithMap_MapOfBytesEntry {
+  decode(input: _m0.Reader | Uint8Array, length?: number): SimpleWithMap_MapOfBytesEntry {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithMap_MapOfBytesEntry();
@@ -1010,23 +858,14 @@ function createBaseSimpleWithSnakeCaseMap(): SimpleWithSnakeCaseMap {
 }
 
 export const SimpleWithSnakeCaseMap = {
-  encode(
-    message: SimpleWithSnakeCaseMap,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: SimpleWithSnakeCaseMap, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     Object.entries(message.entitiesById).forEach(([key, value]) => {
-      SimpleWithSnakeCaseMap_EntitiesByIdEntry.encode({
-        key: key as any,
-        value,
-      }, writer.uint32(10).fork()).ldelim();
+      SimpleWithSnakeCaseMap_EntitiesByIdEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).ldelim();
     });
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): SimpleWithSnakeCaseMap {
+  decode(input: _m0.Reader | Uint8Array, length?: number): SimpleWithSnakeCaseMap {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithSnakeCaseMap();
@@ -1034,10 +873,7 @@ export const SimpleWithSnakeCaseMap = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          const entry1 = SimpleWithSnakeCaseMap_EntitiesByIdEntry.decode(
-            reader,
-            reader.uint32(),
-          );
+          const entry1 = SimpleWithSnakeCaseMap_EntitiesByIdEntry.decode(reader, reader.uint32());
           if (entry1.value !== undefined) {
             message.entitiesById[entry1.key] = entry1.value;
           }
@@ -1056,10 +892,7 @@ function createBaseSimpleWithSnakeCaseMap_EntitiesByIdEntry(): SimpleWithSnakeCa
 }
 
 export const SimpleWithSnakeCaseMap_EntitiesByIdEntry = {
-  encode(
-    message: SimpleWithSnakeCaseMap_EntitiesByIdEntry,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: SimpleWithSnakeCaseMap_EntitiesByIdEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.key !== 0) {
       writer.uint32(8).int32(message.key);
     }
@@ -1069,10 +902,7 @@ export const SimpleWithSnakeCaseMap_EntitiesByIdEntry = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): SimpleWithSnakeCaseMap_EntitiesByIdEntry {
+  decode(input: _m0.Reader | Uint8Array, length?: number): SimpleWithSnakeCaseMap_EntitiesByIdEntry {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithSnakeCaseMap_EntitiesByIdEntry();
@@ -1099,23 +929,14 @@ function createBaseSimpleWithMapOfEnums(): SimpleWithMapOfEnums {
 }
 
 export const SimpleWithMapOfEnums = {
-  encode(
-    message: SimpleWithMapOfEnums,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: SimpleWithMapOfEnums, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     Object.entries(message.enumsById).forEach(([key, value]) => {
-      SimpleWithMapOfEnums_EnumsByIdEntry.encode(
-        { key: key as any, value },
-        writer.uint32(10).fork(),
-      ).ldelim();
+      SimpleWithMapOfEnums_EnumsByIdEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).ldelim();
     });
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): SimpleWithMapOfEnums {
+  decode(input: _m0.Reader | Uint8Array, length?: number): SimpleWithMapOfEnums {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithMapOfEnums();
@@ -1123,10 +944,7 @@ export const SimpleWithMapOfEnums = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          const entry1 = SimpleWithMapOfEnums_EnumsByIdEntry.decode(
-            reader,
-            reader.uint32(),
-          );
+          const entry1 = SimpleWithMapOfEnums_EnumsByIdEntry.decode(reader, reader.uint32());
           if (entry1.value !== undefined) {
             message.enumsById[entry1.key] = entry1.value;
           }
@@ -1145,10 +963,7 @@ function createBaseSimpleWithMapOfEnums_EnumsByIdEntry(): SimpleWithMapOfEnums_E
 }
 
 export const SimpleWithMapOfEnums_EnumsByIdEntry = {
-  encode(
-    message: SimpleWithMapOfEnums_EnumsByIdEntry,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: SimpleWithMapOfEnums_EnumsByIdEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.key !== 0) {
       writer.uint32(8).int32(message.key);
     }
@@ -1158,10 +973,7 @@ export const SimpleWithMapOfEnums_EnumsByIdEntry = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): SimpleWithMapOfEnums_EnumsByIdEntry {
+  decode(input: _m0.Reader | Uint8Array, length?: number): SimpleWithMapOfEnums_EnumsByIdEntry {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithMapOfEnums_EnumsByIdEntry();
@@ -1188,20 +1000,14 @@ function createBasePingRequest(): PingRequest {
 }
 
 export const PingRequest = {
-  encode(
-    message: PingRequest,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: PingRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.input !== "") {
       writer.uint32(10).string(message.input);
     }
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): PingRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): PingRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePingRequest();
@@ -1225,20 +1031,14 @@ function createBasePingResponse(): PingResponse {
 }
 
 export const PingResponse = {
-  encode(
-    message: PingResponse,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: PingResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.output !== "") {
       writer.uint32(10).string(message.output);
     }
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): PingResponse {
+  decode(input: _m0.Reader | Uint8Array, length?: number): PingResponse {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePingResponse();
@@ -1275,10 +1075,7 @@ function createBaseNumbers(): Numbers {
 }
 
 export const Numbers = {
-  encode(
-    message: Numbers,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: Numbers, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.double !== 0) {
       writer.uint32(9).double(message.double);
     }
@@ -1318,10 +1115,7 @@ export const Numbers = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): Numbers {
+  decode(input: _m0.Reader | Uint8Array, length?: number): Numbers {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNumbers();
@@ -1386,10 +1180,7 @@ function createBaseSimpleButOptional(): SimpleButOptional {
 }
 
 export const SimpleButOptional = {
-  encode(
-    message: SimpleButOptional,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: SimpleButOptional, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.name !== undefined) {
       writer.uint32(10).string(message.name);
     }
@@ -1397,8 +1188,7 @@ export const SimpleButOptional = {
       writer.uint32(16).int32(message.age);
     }
     if (message.createdAt !== undefined) {
-      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(74).fork())
-        .ldelim();
+      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(74).fork()).ldelim();
     }
     if (message.child !== undefined) {
       Child.encode(message.child, writer.uint32(26).fork()).ldelim();
@@ -1415,10 +1205,7 @@ export const SimpleButOptional = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): SimpleButOptional {
+  decode(input: _m0.Reader | Uint8Array, length?: number): SimpleButOptional {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleButOptional();
@@ -1432,9 +1219,7 @@ export const SimpleButOptional = {
           message.age = reader.int32();
           break;
         case 9:
-          message.createdAt = fromTimestamp(
-            Timestamp.decode(reader, reader.uint32()),
-          );
+          message.createdAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           break;
         case 3:
           message.child = Child.decode(reader, reader.uint32());
@@ -1462,17 +1247,11 @@ function createBaseEmpty(): Empty {
 }
 
 export const Empty = {
-  encode(
-    _: Empty,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(_: Empty, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): Empty {
+  decode(input: _m0.Reader | Uint8Array, length?: number): Empty {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEmpty();
@@ -1498,25 +1277,15 @@ export class PingServiceClientImpl implements PingService {
     this.rpc = rpc;
     this.ping = this.ping.bind(this);
   }
-  ping(
-    request: PingRequest,
-  ): Promise<PingResponse> {
+  ping(request: PingRequest): Promise<PingResponse> {
     const data = PingRequest.encode(request).finish();
-    const promise = this.rpc.request(
-      "simple.PingService",
-      "ping",
-      data,
-    );
+    const promise = this.rpc.request("simple.PingService", "ping", data);
     return promise.then((data) => PingResponse.decode(new _m0.Reader(data)));
   }
 }
 
 interface Rpc {
-  request(
-    service: string,
-    method: string,
-    data: Uint8Array,
-  ): Promise<Uint8Array>;
+  request(service: string, method: string, data: Uint8Array): Promise<Uint8Array>;
 }
 
 type ProtoMetaMessageOptions = {
@@ -1533,20 +1302,10 @@ export interface ProtoMetadata {
   options?: {
     options?: { [key: string]: any };
     services?: {
-      [key: string]: {
-        options?: { [key: string]: any };
-        methods?: { [key: string]: { [key: string]: any } };
-      };
+      [key: string]: { options?: { [key: string]: any }; methods?: { [key: string]: { [key: string]: any } } };
     };
-    messages?: {
-      [key: string]: ProtoMetaMessageOptions;
-    };
-    enums?: {
-      [key: string]: {
-        options?: { [key: string]: any };
-        values?: { [key: string]: { [key: string]: any } };
-      };
-    };
+    messages?: { [key: string]: ProtoMetaMessageOptions };
+    enums?: { [key: string]: { options?: { [key: string]: any }; values?: { [key: string]: { [key: string]: any } } } };
   };
 }
 
@@ -1875,11 +1634,11 @@ export const protoMetadata: ProtoMetadata = {
       }],
       "enumType": [{
         "name": "InnerEnum",
-        "value": [
-          { "name": "UNKNOWN_INNER", "number": 0, "options": undefined },
-          { "name": "GOOD", "number": 100, "options": undefined },
-          { "name": "BAD", "number": 1000, "options": undefined },
-        ],
+        "value": [{ "name": "UNKNOWN_INNER", "number": 0, "options": undefined }, {
+          "name": "GOOD",
+          "number": 100,
+          "options": undefined,
+        }, { "name": "BAD", "number": 1000, "options": undefined }],
         "options": undefined,
         "reservedRange": [],
         "reservedName": [],
@@ -2859,15 +2618,12 @@ export const protoMetadata: ProtoMetadata = {
     ".simple.SimpleWithMap.EntitiesByIdEntry": SimpleWithMap_EntitiesByIdEntry,
     ".simple.SimpleWithMap.NameLookupEntry": SimpleWithMap_NameLookupEntry,
     ".simple.SimpleWithMap.IntLookupEntry": SimpleWithMap_IntLookupEntry,
-    ".simple.SimpleWithMap.MapOfTimestampsEntry":
-      SimpleWithMap_MapOfTimestampsEntry,
+    ".simple.SimpleWithMap.MapOfTimestampsEntry": SimpleWithMap_MapOfTimestampsEntry,
     ".simple.SimpleWithMap.MapOfBytesEntry": SimpleWithMap_MapOfBytesEntry,
     ".simple.SimpleWithSnakeCaseMap": SimpleWithSnakeCaseMap,
-    ".simple.SimpleWithSnakeCaseMap.EntitiesByIdEntry":
-      SimpleWithSnakeCaseMap_EntitiesByIdEntry,
+    ".simple.SimpleWithSnakeCaseMap.EntitiesByIdEntry": SimpleWithSnakeCaseMap_EntitiesByIdEntry,
     ".simple.SimpleWithMapOfEnums": SimpleWithMapOfEnums,
-    ".simple.SimpleWithMapOfEnums.EnumsByIdEntry":
-      SimpleWithMapOfEnums_EnumsByIdEntry,
+    ".simple.SimpleWithMapOfEnums.EnumsByIdEntry": SimpleWithMapOfEnums_EnumsByIdEntry,
     ".simple.PingRequest": PingRequest,
     ".simple.PingResponse": PingResponse,
     ".simple.Numbers": Numbers,
@@ -2875,12 +2631,7 @@ export const protoMetadata: ProtoMetadata = {
     ".simple.Empty": Empty,
     ".simple.PingService": PingServiceClientImpl,
   },
-  dependencies: [
-    protoMetadata1,
-    protoMetadata2,
-    protoMetadata3,
-    protoMetadata4,
-  ],
+  dependencies: [protoMetadata1, protoMetadata2, protoMetadata3, protoMetadata4],
 };
 
 declare var self: any | undefined;

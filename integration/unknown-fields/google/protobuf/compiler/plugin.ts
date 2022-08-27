@@ -147,10 +147,7 @@ function createBaseVersion(): Version {
 }
 
 export const Version = {
-  encode(
-    message: Version,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: Version, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.major !== 0) {
       writer.uint32(8).int32(message.major);
     }
@@ -180,10 +177,7 @@ export const Version = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): Version {
+  decode(input: _m0.Reader | Uint8Array, length?: number): Version {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseVersion();
@@ -218,19 +212,11 @@ export const Version = {
 };
 
 function createBaseCodeGeneratorRequest(): CodeGeneratorRequest {
-  return {
-    fileToGenerate: [],
-    parameter: "",
-    protoFile: [],
-    compilerVersion: undefined,
-  };
+  return { fileToGenerate: [], parameter: "", protoFile: [], compilerVersion: undefined };
 }
 
 export const CodeGeneratorRequest = {
-  encode(
-    message: CodeGeneratorRequest,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: CodeGeneratorRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     for (const v of message.fileToGenerate) {
       writer.uint32(10).string(v!);
     }
@@ -241,8 +227,7 @@ export const CodeGeneratorRequest = {
       FileDescriptorProto.encode(v!, writer.uint32(122).fork()).ldelim();
     }
     if (message.compilerVersion !== undefined) {
-      Version.encode(message.compilerVersion, writer.uint32(26).fork())
-        .ldelim();
+      Version.encode(message.compilerVersion, writer.uint32(26).fork()).ldelim();
     }
     if ("_unknownFields" in message) {
       const msgUnknownFields: any = (message as any)["_unknownFields"];
@@ -261,10 +246,7 @@ export const CodeGeneratorRequest = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): CodeGeneratorRequest {
+  decode(input: _m0.Reader | Uint8Array, length?: number): CodeGeneratorRequest {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCodeGeneratorRequest();
@@ -279,9 +261,7 @@ export const CodeGeneratorRequest = {
           message.parameter = reader.string();
           break;
         case 15:
-          message.protoFile.push(
-            FileDescriptorProto.decode(reader, reader.uint32()),
-          );
+          message.protoFile.push(FileDescriptorProto.decode(reader, reader.uint32()));
           break;
         case 3:
           message.compilerVersion = Version.decode(reader, reader.uint32());
@@ -305,10 +285,7 @@ function createBaseCodeGeneratorResponse(): CodeGeneratorResponse {
 }
 
 export const CodeGeneratorResponse = {
-  encode(
-    message: CodeGeneratorResponse,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: CodeGeneratorResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.error !== "") {
       writer.uint32(10).string(message.error);
     }
@@ -335,10 +312,7 @@ export const CodeGeneratorResponse = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): CodeGeneratorResponse {
+  decode(input: _m0.Reader | Uint8Array, length?: number): CodeGeneratorResponse {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCodeGeneratorResponse();
@@ -353,9 +327,7 @@ export const CodeGeneratorResponse = {
           message.supportedFeatures = longToNumber(reader.uint64() as Long);
           break;
         case 15:
-          message.file.push(
-            CodeGeneratorResponse_File.decode(reader, reader.uint32()),
-          );
+          message.file.push(CodeGeneratorResponse_File.decode(reader, reader.uint32()));
           break;
         default:
           const startPos = reader.pos;
@@ -372,19 +344,11 @@ export const CodeGeneratorResponse = {
 };
 
 function createBaseCodeGeneratorResponse_File(): CodeGeneratorResponse_File {
-  return {
-    name: "",
-    insertionPoint: "",
-    content: "",
-    generatedCodeInfo: undefined,
-  };
+  return { name: "", insertionPoint: "", content: "", generatedCodeInfo: undefined };
 }
 
 export const CodeGeneratorResponse_File = {
-  encode(
-    message: CodeGeneratorResponse_File,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: CodeGeneratorResponse_File, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
@@ -395,10 +359,7 @@ export const CodeGeneratorResponse_File = {
       writer.uint32(122).string(message.content);
     }
     if (message.generatedCodeInfo !== undefined) {
-      GeneratedCodeInfo.encode(
-        message.generatedCodeInfo,
-        writer.uint32(130).fork(),
-      ).ldelim();
+      GeneratedCodeInfo.encode(message.generatedCodeInfo, writer.uint32(130).fork()).ldelim();
     }
     if ("_unknownFields" in message) {
       const msgUnknownFields: any = (message as any)["_unknownFields"];
@@ -417,10 +378,7 @@ export const CodeGeneratorResponse_File = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): CodeGeneratorResponse_File {
+  decode(input: _m0.Reader | Uint8Array, length?: number): CodeGeneratorResponse_File {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCodeGeneratorResponse_File();
@@ -438,10 +396,7 @@ export const CodeGeneratorResponse_File = {
           message.content = reader.string();
           break;
         case 16:
-          message.generatedCodeInfo = GeneratedCodeInfo.decode(
-            reader,
-            reader.uint32(),
-          );
+          message.generatedCodeInfo = GeneratedCodeInfo.decode(reader, reader.uint32());
           break;
         default:
           const startPos = reader.pos;

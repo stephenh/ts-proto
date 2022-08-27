@@ -26,64 +26,32 @@ export interface Villain {
 export const HERO_PACKAGE_NAME = "hero";
 
 export interface HeroServiceClient {
-  findOneHero(
-    request: HeroById,
-    metadata?: Metadata,
-  ): Observable<Hero>;
+  findOneHero(request: HeroById, metadata?: Metadata): Observable<Hero>;
 
-  findOneVillain(
-    request: VillainById,
-    metadata?: Metadata,
-  ): Observable<Villain>;
+  findOneVillain(request: VillainById, metadata?: Metadata): Observable<Villain>;
 
-  findManyVillain(
-    request: Observable<VillainById>,
-    metadata?: Metadata,
-  ): Observable<Villain>;
+  findManyVillain(request: Observable<VillainById>, metadata?: Metadata): Observable<Villain>;
 }
 
 export interface HeroServiceController {
-  findOneHero(request: HeroById, metadata?: Metadata):
-    | Promise<Hero>
-    | Observable<Hero>
-    | Hero;
+  findOneHero(request: HeroById, metadata?: Metadata): Promise<Hero> | Observable<Hero> | Hero;
 
-  findOneVillain(request: VillainById, metadata?: Metadata):
-    | Promise<Villain>
-    | Observable<Villain>
-    | Villain;
+  findOneVillain(request: VillainById, metadata?: Metadata): Promise<Villain> | Observable<Villain> | Villain;
 
-  findManyVillain(
-    request: Observable<VillainById>,
-    metadata?: Metadata,
-  ): Observable<Villain>;
+  findManyVillain(request: Observable<VillainById>, metadata?: Metadata): Observable<Villain>;
 }
 
 export function HeroServiceControllerMethods() {
   return function (constructor: Function) {
     const grpcMethods: string[] = ["findOneHero", "findOneVillain"];
     for (const method of grpcMethods) {
-      const descriptor: any = Reflect.getOwnPropertyDescriptor(
-        constructor.prototype,
-        method,
-      );
-      GrpcMethod("HeroService", method)(
-        constructor.prototype[method],
-        method,
-        descriptor,
-      );
+      const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
+      GrpcMethod("HeroService", method)(constructor.prototype[method], method, descriptor);
     }
     const grpcStreamMethods: string[] = ["findManyVillain"];
     for (const method of grpcStreamMethods) {
-      const descriptor: any = Reflect.getOwnPropertyDescriptor(
-        constructor.prototype,
-        method,
-      );
-      GrpcStreamMethod("HeroService", method)(
-        constructor.prototype[method],
-        method,
-        descriptor,
-      );
+      const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
+      GrpcStreamMethod("HeroService", method)(constructor.prototype[method], method, descriptor);
     }
   };
 }

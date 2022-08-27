@@ -28,21 +28,14 @@ function createBaseFoo(): Foo {
 export const Foo = {
   $type: "foo.Foo" as const,
 
-  encode(
-    message: Foo,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: Foo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.timestamp !== undefined) {
-      Timestamp.encode(toTimestamp(message.timestamp), writer.uint32(10).fork())
-        .ldelim();
+      Timestamp.encode(toTimestamp(message.timestamp), writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): Foo {
+  decode(input: _m0.Reader | Uint8Array, length?: number): Foo {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFoo();
@@ -50,9 +43,7 @@ export const Foo = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.timestamp = fromTimestamp(
-            Timestamp.decode(reader, reader.uint32()),
-          );
+          message.timestamp = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -63,18 +54,12 @@ export const Foo = {
   },
 
   fromJSON(object: any): Foo {
-    return {
-      $type: Foo.$type,
-      timestamp: isSet(object.timestamp)
-        ? fromJsonTimestamp(object.timestamp)
-        : undefined,
-    };
+    return { $type: Foo.$type, timestamp: isSet(object.timestamp) ? fromJsonTimestamp(object.timestamp) : undefined };
   },
 
   toJSON(message: Foo): unknown {
     const obj: any = {};
-    message.timestamp !== undefined &&
-      (obj.timestamp = message.timestamp.toISOString());
+    message.timestamp !== undefined && (obj.timestamp = message.timestamp.toISOString());
     return obj;
   },
 
@@ -94,21 +79,14 @@ function createBaseFoo2(): Foo2 {
 export const Foo2 = {
   $type: "foo.Foo2" as const,
 
-  encode(
-    message: Foo2,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: Foo2, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.timestamp !== undefined) {
-      Timestamp.encode(toTimestamp(message.timestamp), writer.uint32(10).fork())
-        .ldelim();
+      Timestamp.encode(toTimestamp(message.timestamp), writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): Foo2 {
+  decode(input: _m0.Reader | Uint8Array, length?: number): Foo2 {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFoo2();
@@ -116,9 +94,7 @@ export const Foo2 = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.timestamp = fromTimestamp(
-            Timestamp.decode(reader, reader.uint32()),
-          );
+          message.timestamp = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -129,18 +105,12 @@ export const Foo2 = {
   },
 
   fromJSON(object: any): Foo2 {
-    return {
-      $type: Foo2.$type,
-      timestamp: isSet(object.timestamp)
-        ? fromJsonTimestamp(object.timestamp)
-        : undefined,
-    };
+    return { $type: Foo2.$type, timestamp: isSet(object.timestamp) ? fromJsonTimestamp(object.timestamp) : undefined };
   },
 
   toJSON(message: Foo2): unknown {
     const obj: any = {};
-    message.timestamp !== undefined &&
-      (obj.timestamp = message.timestamp.toISOString());
+    message.timestamp !== undefined && (obj.timestamp = message.timestamp.toISOString());
     return obj;
   },
 
@@ -160,21 +130,14 @@ function createBaseWithStruct(): WithStruct {
 export const WithStruct = {
   $type: "foo.WithStruct" as const,
 
-  encode(
-    message: WithStruct,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: WithStruct, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.struct !== undefined) {
-      Struct.encode(Struct.wrap(message.struct), writer.uint32(10).fork())
-        .ldelim();
+      Struct.encode(Struct.wrap(message.struct), writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): WithStruct {
+  decode(input: _m0.Reader | Uint8Array, length?: number): WithStruct {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseWithStruct();
@@ -182,9 +145,7 @@ export const WithStruct = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.struct = Struct.unwrap(
-            Struct.decode(reader, reader.uint32()),
-          );
+          message.struct = Struct.unwrap(Struct.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -195,10 +156,7 @@ export const WithStruct = {
   },
 
   fromJSON(object: any): WithStruct {
-    return {
-      $type: WithStruct.$type,
-      struct: isObject(object.struct) ? object.struct : undefined,
-    };
+    return { $type: WithStruct.$type, struct: isObject(object.struct) ? object.struct : undefined };
   },
 
   toJSON(message: WithStruct): unknown {
@@ -207,9 +165,7 @@ export const WithStruct = {
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<WithStruct>, I>>(
-    object: I,
-  ): WithStruct {
+  fromPartial<I extends Exact<DeepPartial<WithStruct>, I>>(object: I): WithStruct {
     const message = createBaseWithStruct();
     message.struct = object.struct ?? undefined;
     return message;
@@ -218,27 +174,16 @@ export const WithStruct = {
 
 messageTypeRegistry.set(WithStruct.$type, WithStruct);
 
-type Builtin =
-  | Date
-  | Function
-  | Uint8Array
-  | string
-  | number
-  | boolean
-  | undefined;
+type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in Exclude<keyof T, "$type">]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
-  : 
-    & P
-    & { [K in keyof P]: Exact<P[K], I[K]> }
-    & { [K in Exclude<keyof I, KeysOfUnion<P> | "$type">]: never };
+  : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P> | "$type">]: never };
 
 function toTimestamp(date: Date): Timestamp {
   const seconds = date.getTime() / 1_000;

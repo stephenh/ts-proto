@@ -21,7 +21,9 @@ export interface Simple {
    *
    * @deprecated
    */
-  child: Child | undefined;
+  child:
+    | Child
+    | undefined;
   /** @deprecated */
   testField: string;
   testNotDeprecated: string;
@@ -32,20 +34,11 @@ export interface Child {
 }
 
 function createBaseSimple(): Simple {
-  return {
-    name: "",
-    age: 0,
-    child: undefined,
-    testField: "",
-    testNotDeprecated: "",
-  };
+  return { name: "", age: 0, child: undefined, testField: "", testNotDeprecated: "" };
 }
 
 export const Simple = {
-  encode(
-    message: Simple,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: Simple, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
@@ -64,10 +57,7 @@ export const Simple = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): Simple {
+  decode(input: _m0.Reader | Uint8Array, length?: number): Simple {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimple();
@@ -103,9 +93,7 @@ export const Simple = {
       age: isSet(object.age) ? Number(object.age) : 0,
       child: isSet(object.child) ? Child.fromJSON(object.child) : undefined,
       testField: isSet(object.testField) ? String(object.testField) : "",
-      testNotDeprecated: isSet(object.testNotDeprecated)
-        ? String(object.testNotDeprecated)
-        : "",
+      testNotDeprecated: isSet(object.testNotDeprecated) ? String(object.testNotDeprecated) : "",
     };
   },
 
@@ -113,11 +101,9 @@ export const Simple = {
     const obj: any = {};
     message.name !== undefined && (obj.name = message.name);
     message.age !== undefined && (obj.age = Math.round(message.age));
-    message.child !== undefined &&
-      (obj.child = message.child ? Child.toJSON(message.child) : undefined);
+    message.child !== undefined && (obj.child = message.child ? Child.toJSON(message.child) : undefined);
     message.testField !== undefined && (obj.testField = message.testField);
-    message.testNotDeprecated !== undefined &&
-      (obj.testNotDeprecated = message.testNotDeprecated);
+    message.testNotDeprecated !== undefined && (obj.testNotDeprecated = message.testNotDeprecated);
     return obj;
   },
 
@@ -125,9 +111,7 @@ export const Simple = {
     const message = createBaseSimple();
     message.name = object.name ?? "";
     message.age = object.age ?? 0;
-    message.child = (object.child !== undefined && object.child !== null)
-      ? Child.fromPartial(object.child)
-      : undefined;
+    message.child = (object.child !== undefined && object.child !== null) ? Child.fromPartial(object.child) : undefined;
     message.testField = object.testField ?? "";
     message.testNotDeprecated = object.testNotDeprecated ?? "";
     return message;
@@ -139,20 +123,14 @@ function createBaseChild(): Child {
 }
 
 export const Child = {
-  encode(
-    message: Child,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: Child, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): Child {
+  decode(input: _m0.Reader | Uint8Array, length?: number): Child {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseChild();
@@ -171,9 +149,7 @@ export const Child = {
   },
 
   fromJSON(object: any): Child {
-    return {
-      name: isSet(object.name) ? String(object.name) : "",
-    };
+    return { name: isSet(object.name) ? String(object.name) : "" };
   },
 
   toJSON(message: Child): unknown {
@@ -189,27 +165,16 @@ export const Child = {
   },
 };
 
-type Builtin =
-  | Date
-  | Function
-  | Uint8Array
-  | string
-  | number
-  | boolean
-  | undefined;
+type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
-  : 
-    & P
-    & { [K in keyof P]: Exact<P[K], I[K]> }
-    & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
+  : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;

@@ -1,10 +1,7 @@
 /* eslint-disable */
 import { FileDescriptorProto as FileDescriptorProto1 } from "ts-proto-descriptors";
 import { protoMetadata as protoMetadata1 } from "./google/protobuf/descriptor";
-import {
-  protoMetadata as protoMetadata2,
-  Something,
-} from "./something/something";
+import { protoMetadata as protoMetadata2, Something } from "./something/something";
 import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "";
@@ -33,10 +30,7 @@ function createBaseMyMessage(): MyMessage {
 }
 
 export const MyMessage = {
-  encode(
-    message: MyMessage,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: MyMessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.foo !== undefined) {
       writer.uint32(8).int32(message.foo);
     }
@@ -52,10 +46,7 @@ export const MyMessage = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): MyMessage {
+  decode(input: _m0.Reader | Uint8Array, length?: number): MyMessage {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMyMessage();
@@ -88,17 +79,11 @@ function createBaseRequestType(): RequestType {
 }
 
 export const RequestType = {
-  encode(
-    _: RequestType,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(_: RequestType, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): RequestType {
+  decode(input: _m0.Reader | Uint8Array, length?: number): RequestType {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseRequestType();
@@ -119,17 +104,11 @@ function createBaseResponseType(): ResponseType {
 }
 
 export const ResponseType = {
-  encode(
-    _: ResponseType,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(_: ResponseType, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): ResponseType {
+  decode(input: _m0.Reader | Uint8Array, length?: number): ResponseType {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseResponseType();
@@ -155,25 +134,15 @@ export class MyServiceClientImpl implements MyService {
     this.rpc = rpc;
     this.MyMethod = this.MyMethod.bind(this);
   }
-  MyMethod(
-    request: RequestType,
-  ): Promise<ResponseType> {
+  MyMethod(request: RequestType): Promise<ResponseType> {
     const data = RequestType.encode(request).finish();
-    const promise = this.rpc.request(
-      "MyService",
-      "MyMethod",
-      data,
-    );
+    const promise = this.rpc.request("MyService", "MyMethod", data);
     return promise.then((data) => ResponseType.decode(new _m0.Reader(data)));
   }
 }
 
 interface Rpc {
-  request(
-    service: string,
-    method: string,
-    data: Uint8Array,
-  ): Promise<Uint8Array>;
+  request(service: string, method: string, data: Uint8Array): Promise<Uint8Array>;
 }
 
 type ProtoMetaMessageOptions = {
@@ -190,20 +159,10 @@ export interface ProtoMetadata {
   options?: {
     options?: { [key: string]: any };
     services?: {
-      [key: string]: {
-        options?: { [key: string]: any };
-        methods?: { [key: string]: { [key: string]: any } };
-      };
+      [key: string]: { options?: { [key: string]: any }; methods?: { [key: string]: { [key: string]: any } } };
     };
-    messages?: {
-      [key: string]: ProtoMetaMessageOptions;
-    };
-    enums?: {
-      [key: string]: {
-        options?: { [key: string]: any };
-        values?: { [key: string]: { [key: string]: any } };
-      };
-    };
+    messages?: { [key: string]: ProtoMetaMessageOptions };
+    enums?: { [key: string]: { options?: { [key: string]: any }; values?: { [key: string]: { [key: string]: any } } } };
   };
 }
 
@@ -211,10 +170,7 @@ export const protoMetadata: ProtoMetadata = {
   fileDescriptor: FileDescriptorProto1.fromPartial({
     "name": "options.proto",
     "package": "",
-    "dependency": [
-      "google/protobuf/descriptor.proto",
-      "something/something.proto",
-    ],
+    "dependency": ["google/protobuf/descriptor.proto", "something/something.proto"],
     "publicDependency": [],
     "weakDependency": [],
     "messageType": [{
@@ -328,16 +284,12 @@ export const protoMetadata: ProtoMetadata = {
     }],
     "enumType": [{
       "name": "MyEnum",
-      "value": [{
-        "name": "FOO",
-        "number": 0,
-        "options": { "deprecated": false, "uninterpretedOption": [] },
-      }, { "name": "BAR", "number": 1, "options": undefined }],
-      "options": {
-        "allowAlias": false,
-        "deprecated": false,
-        "uninterpretedOption": [],
-      },
+      "value": [{ "name": "FOO", "number": 0, "options": { "deprecated": false, "uninterpretedOption": [] } }, {
+        "name": "BAR",
+        "number": 1,
+        "options": undefined,
+      }],
+      "options": { "allowAlias": false, "deprecated": false, "uninterpretedOption": [] },
       "reservedRange": [],
       "reservedName": [],
     }],
@@ -347,11 +299,7 @@ export const protoMetadata: ProtoMetadata = {
         "name": "MyMethod",
         "inputType": ".RequestType",
         "outputType": ".ResponseType",
-        "options": {
-          "deprecated": false,
-          "idempotencyLevel": 0,
-          "uninterpretedOption": [],
-        },
+        "options": { "deprecated": false, "idempotencyLevel": 0, "uninterpretedOption": [] },
         "clientStreaming": false,
         "serverStreaming": false,
       }],
@@ -495,11 +443,7 @@ export const protoMetadata: ProtoMetadata = {
         options: { "my_message_option": 1234 },
         fields: {
           "foo": { "my_field_option": 4.5 },
-          "foo_2": {
-            "something": Something.decode(
-              Buffer.from("CgV3b3JsZBIDe9kC", "base64"),
-            ),
-          },
+          "foo_2": { "something": Something.decode(Buffer.from("CgV3b3JsZBIDe9kC", "base64")) },
         },
         oneof: { "qux": { "my_oneof_option": 42 } },
       },
@@ -509,21 +453,11 @@ export const protoMetadata: ProtoMetadata = {
         options: { "my_service_option": 0 },
         methods: {
           "MyMethod": {
-            "my_method_option": MyMessage.decode(
-              Buffer.from(
-                "CJYBEJYBGgtTb21lIHN0cmluZyILU29tZSBzdHJpbmc=",
-                "base64",
-              ),
-            ),
+            "my_method_option": MyMessage.decode(Buffer.from("CJYBEJYBGgtTb21lIHN0cmluZyILU29tZSBzdHJpbmc=", "base64")),
           },
         },
       },
     },
-    enums: {
-      "MyEnum": {
-        options: { "my_enum_option": true },
-        values: { "FOO": { "my_enum_value_option": 321 } },
-      },
-    },
+    enums: { "MyEnum": { options: { "my_enum_option": true }, values: { "FOO": { "my_enum_value_option": 321 } } } },
   },
 };

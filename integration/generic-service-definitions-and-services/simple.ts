@@ -12,20 +12,14 @@ function createBaseTestMessage(): TestMessage {
 }
 
 export const TestMessage = {
-  encode(
-    message: TestMessage,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: TestMessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.value !== "") {
       writer.uint32(10).string(message.value);
     }
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): TestMessage {
+  decode(input: _m0.Reader | Uint8Array, length?: number): TestMessage {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTestMessage();
@@ -44,9 +38,7 @@ export const TestMessage = {
   },
 
   fromJSON(object: any): TestMessage {
-    return {
-      value: isSet(object.value) ? String(object.value) : "",
-    };
+    return { value: isSet(object.value) ? String(object.value) : "" };
   },
 
   toJSON(message: TestMessage): unknown {
@@ -55,9 +47,7 @@ export const TestMessage = {
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<TestMessage>, I>>(
-    object: I,
-  ): TestMessage {
+  fromPartial<I extends Exact<DeepPartial<TestMessage>, I>>(object: I): TestMessage {
     const message = createBaseTestMessage();
     message.value = object.value ?? "";
     return message;
@@ -117,9 +107,7 @@ export const TestDefinition = {
       requestStream: false,
       responseType: TestMessage,
       responseStream: false,
-      options: {
-        idempotencyLevel: "IDEMPOTENT",
-      },
+      options: { idempotencyLevel: "IDEMPOTENT" },
     },
     noSideEffects: {
       name: "NoSideEffects",
@@ -127,34 +115,21 @@ export const TestDefinition = {
       requestStream: false,
       responseType: TestMessage,
       responseStream: false,
-      options: {
-        idempotencyLevel: "NO_SIDE_EFFECTS",
-      },
+      options: { idempotencyLevel: "NO_SIDE_EFFECTS" },
     },
   },
 } as const;
 
-type Builtin =
-  | Date
-  | Function
-  | Uint8Array
-  | string
-  | number
-  | boolean
-  | undefined;
+type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
-  : 
-    & P
-    & { [K in keyof P]: Exact<P[K], I[K]> }
-    & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
+  : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;

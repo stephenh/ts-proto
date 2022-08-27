@@ -27,21 +27,14 @@ function createBaseTestMessage(): TestMessage {
 }
 
 export const TestMessage = {
-  encode(
-    message: TestMessage,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: TestMessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.timestamp !== undefined) {
-      Timestamp.encode(toTimestamp(message.timestamp), writer.uint32(10).fork())
-        .ldelim();
+      Timestamp.encode(toTimestamp(message.timestamp), writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): TestMessage {
+  decode(input: _m0.Reader | Uint8Array, length?: number): TestMessage {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTestMessage();
@@ -49,9 +42,7 @@ export const TestMessage = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.timestamp = fromTimestamp(
-            Timestamp.decode(reader, reader.uint32()),
-          );
+          message.timestamp = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -62,17 +53,12 @@ export const TestMessage = {
   },
 
   fromJSON(object: any): TestMessage {
-    return {
-      timestamp: isSet(object.timestamp)
-        ? fromJsonTimestamp(object.timestamp)
-        : undefined,
-    };
+    return { timestamp: isSet(object.timestamp) ? fromJsonTimestamp(object.timestamp) : undefined };
   },
 
   toJSON(message: TestMessage): unknown {
     const obj: any = {};
-    message.timestamp !== undefined &&
-      (obj.timestamp = message.timestamp.toISOString());
+    message.timestamp !== undefined && (obj.timestamp = message.timestamp.toISOString());
     return obj;
   },
 
@@ -278,62 +264,20 @@ export interface TestServiceImplementation<CallContextExt = {}> {
    *
    * @deprecated
    */
-  unary(
-    request: Empty,
-    context: CallContext & CallContextExt,
-  ): Promise<DeepPartial<Empty>>;
-  unaryStringValue(
-    request: StringValue,
-    context: CallContext & CallContextExt,
-  ): Promise<DeepPartial<StringValue>>;
-  unaryInt64Value(
-    request: Int64Value,
-    context: CallContext & CallContextExt,
-  ): Promise<DeepPartial<Int64Value>>;
-  unaryUint64Value(
-    request: UInt64Value,
-    context: CallContext & CallContextExt,
-  ): Promise<DeepPartial<UInt64Value>>;
-  unaryInt32Value(
-    request: Int32Value,
-    context: CallContext & CallContextExt,
-  ): Promise<DeepPartial<Int32Value>>;
-  unaryUInt32Value(
-    request: UInt32Value,
-    context: CallContext & CallContextExt,
-  ): Promise<DeepPartial<UInt32Value>>;
-  unaryBytesValue(
-    request: BytesValue,
-    context: CallContext & CallContextExt,
-  ): Promise<DeepPartial<BytesValue>>;
-  unaryFloatValue(
-    request: FloatValue,
-    context: CallContext & CallContextExt,
-  ): Promise<DeepPartial<FloatValue>>;
-  unaryDoubleValue(
-    request: DoubleValue,
-    context: CallContext & CallContextExt,
-  ): Promise<DeepPartial<DoubleValue>>;
-  unaryBoolValue(
-    request: BoolValue,
-    context: CallContext & CallContextExt,
-  ): Promise<DeepPartial<BoolValue>>;
-  unaryTimestamp(
-    request: Timestamp,
-    context: CallContext & CallContextExt,
-  ): Promise<DeepPartial<Timestamp>>;
-  struct(
-    request: Struct,
-    context: CallContext & CallContextExt,
-  ): Promise<DeepPartial<Struct>>;
-  value(
-    request: Value,
-    context: CallContext & CallContextExt,
-  ): Promise<DeepPartial<Value>>;
-  listValue(
-    request: ListValue,
-    context: CallContext & CallContextExt,
-  ): Promise<DeepPartial<ListValue>>;
+  unary(request: Empty, context: CallContext & CallContextExt): Promise<DeepPartial<Empty>>;
+  unaryStringValue(request: StringValue, context: CallContext & CallContextExt): Promise<DeepPartial<StringValue>>;
+  unaryInt64Value(request: Int64Value, context: CallContext & CallContextExt): Promise<DeepPartial<Int64Value>>;
+  unaryUint64Value(request: UInt64Value, context: CallContext & CallContextExt): Promise<DeepPartial<UInt64Value>>;
+  unaryInt32Value(request: Int32Value, context: CallContext & CallContextExt): Promise<DeepPartial<Int32Value>>;
+  unaryUInt32Value(request: UInt32Value, context: CallContext & CallContextExt): Promise<DeepPartial<UInt32Value>>;
+  unaryBytesValue(request: BytesValue, context: CallContext & CallContextExt): Promise<DeepPartial<BytesValue>>;
+  unaryFloatValue(request: FloatValue, context: CallContext & CallContextExt): Promise<DeepPartial<FloatValue>>;
+  unaryDoubleValue(request: DoubleValue, context: CallContext & CallContextExt): Promise<DeepPartial<DoubleValue>>;
+  unaryBoolValue(request: BoolValue, context: CallContext & CallContextExt): Promise<DeepPartial<BoolValue>>;
+  unaryTimestamp(request: Timestamp, context: CallContext & CallContextExt): Promise<DeepPartial<Timestamp>>;
+  struct(request: Struct, context: CallContext & CallContextExt): Promise<DeepPartial<Struct>>;
+  value(request: Value, context: CallContext & CallContextExt): Promise<DeepPartial<Value>>;
+  listValue(request: ListValue, context: CallContext & CallContextExt): Promise<DeepPartial<ListValue>>;
   /** Server Streaming */
   serverStreaming(
     request: TestMessage,
@@ -373,62 +317,20 @@ export interface TestClient<CallOptionsExt = {}> {
    *
    * @deprecated
    */
-  unary(
-    request: DeepPartial<Empty>,
-    options?: CallOptions & CallOptionsExt,
-  ): Promise<Empty>;
-  unaryStringValue(
-    request: DeepPartial<StringValue>,
-    options?: CallOptions & CallOptionsExt,
-  ): Promise<StringValue>;
-  unaryInt64Value(
-    request: DeepPartial<Int64Value>,
-    options?: CallOptions & CallOptionsExt,
-  ): Promise<Int64Value>;
-  unaryUint64Value(
-    request: DeepPartial<UInt64Value>,
-    options?: CallOptions & CallOptionsExt,
-  ): Promise<UInt64Value>;
-  unaryInt32Value(
-    request: DeepPartial<Int32Value>,
-    options?: CallOptions & CallOptionsExt,
-  ): Promise<Int32Value>;
-  unaryUInt32Value(
-    request: DeepPartial<UInt32Value>,
-    options?: CallOptions & CallOptionsExt,
-  ): Promise<UInt32Value>;
-  unaryBytesValue(
-    request: DeepPartial<BytesValue>,
-    options?: CallOptions & CallOptionsExt,
-  ): Promise<BytesValue>;
-  unaryFloatValue(
-    request: DeepPartial<FloatValue>,
-    options?: CallOptions & CallOptionsExt,
-  ): Promise<FloatValue>;
-  unaryDoubleValue(
-    request: DeepPartial<DoubleValue>,
-    options?: CallOptions & CallOptionsExt,
-  ): Promise<DoubleValue>;
-  unaryBoolValue(
-    request: DeepPartial<BoolValue>,
-    options?: CallOptions & CallOptionsExt,
-  ): Promise<BoolValue>;
-  unaryTimestamp(
-    request: DeepPartial<Timestamp>,
-    options?: CallOptions & CallOptionsExt,
-  ): Promise<Timestamp>;
-  struct(
-    request: DeepPartial<Struct>,
-    options?: CallOptions & CallOptionsExt,
-  ): Promise<Struct>;
-  value(
-    request: DeepPartial<Value>,
-    options?: CallOptions & CallOptionsExt,
-  ): Promise<Value>;
-  listValue(
-    request: DeepPartial<ListValue>,
-    options?: CallOptions & CallOptionsExt,
-  ): Promise<ListValue>;
+  unary(request: DeepPartial<Empty>, options?: CallOptions & CallOptionsExt): Promise<Empty>;
+  unaryStringValue(request: DeepPartial<StringValue>, options?: CallOptions & CallOptionsExt): Promise<StringValue>;
+  unaryInt64Value(request: DeepPartial<Int64Value>, options?: CallOptions & CallOptionsExt): Promise<Int64Value>;
+  unaryUint64Value(request: DeepPartial<UInt64Value>, options?: CallOptions & CallOptionsExt): Promise<UInt64Value>;
+  unaryInt32Value(request: DeepPartial<Int32Value>, options?: CallOptions & CallOptionsExt): Promise<Int32Value>;
+  unaryUInt32Value(request: DeepPartial<UInt32Value>, options?: CallOptions & CallOptionsExt): Promise<UInt32Value>;
+  unaryBytesValue(request: DeepPartial<BytesValue>, options?: CallOptions & CallOptionsExt): Promise<BytesValue>;
+  unaryFloatValue(request: DeepPartial<FloatValue>, options?: CallOptions & CallOptionsExt): Promise<FloatValue>;
+  unaryDoubleValue(request: DeepPartial<DoubleValue>, options?: CallOptions & CallOptionsExt): Promise<DoubleValue>;
+  unaryBoolValue(request: DeepPartial<BoolValue>, options?: CallOptions & CallOptionsExt): Promise<BoolValue>;
+  unaryTimestamp(request: DeepPartial<Timestamp>, options?: CallOptions & CallOptionsExt): Promise<Timestamp>;
+  struct(request: DeepPartial<Struct>, options?: CallOptions & CallOptionsExt): Promise<Struct>;
+  value(request: DeepPartial<Value>, options?: CallOptions & CallOptionsExt): Promise<Value>;
+  listValue(request: DeepPartial<ListValue>, options?: CallOptions & CallOptionsExt): Promise<ListValue>;
   /** Server Streaming */
   serverStreaming(
     request: DeepPartial<TestMessage>,
@@ -438,10 +340,7 @@ export interface TestClient<CallOptionsExt = {}> {
     request: DeepPartial<StringValue>,
     options?: CallOptions & CallOptionsExt,
   ): AsyncIterable<StringValue>;
-  serverStreamingStruct(
-    request: DeepPartial<Struct>,
-    options?: CallOptions & CallOptionsExt,
-  ): AsyncIterable<Struct>;
+  serverStreamingStruct(request: DeepPartial<Struct>, options?: CallOptions & CallOptionsExt): AsyncIterable<Struct>;
   /** Client Streaming */
   clientStreaming(
     request: AsyncIterable<DeepPartial<TestMessage>>,
@@ -462,18 +361,10 @@ export interface TestClient<CallOptionsExt = {}> {
   ): AsyncIterable<StringValue>;
 }
 
-type Builtin =
-  | Date
-  | Function
-  | Uint8Array
-  | string
-  | number
-  | boolean
-  | undefined;
+type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
@@ -503,6 +394,4 @@ function isSet(value: any): boolean {
   return value !== null && value !== undefined;
 }
 
-export type ServerStreamingMethodResult<Response> = {
-  [Symbol.asyncIterator](): AsyncIterator<Response, void>;
-};
+export type ServerStreamingMethodResult<Response> = { [Symbol.asyncIterator](): AsyncIterator<Response, void> };

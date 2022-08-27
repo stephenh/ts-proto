@@ -18,10 +18,7 @@ function createBasePoint(): Point {
 }
 
 export const Point = {
-  encode(
-    message: Point,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: Point, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.lat !== 0) {
       writer.uint32(9).double(message.lat);
     }
@@ -31,10 +28,7 @@ export const Point = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): Point {
+  decode(input: _m0.Reader | Uint8Array, length?: number): Point {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePoint();
@@ -56,10 +50,7 @@ export const Point = {
   },
 
   fromJSON(object: any): Point {
-    return {
-      lat: isSet(object.lat) ? Number(object.lat) : 0,
-      lng: isSet(object.lng) ? Number(object.lng) : 0,
-    };
+    return { lat: isSet(object.lat) ? Number(object.lat) : 0, lng: isSet(object.lng) ? Number(object.lng) : 0 };
   },
 
   toJSON(message: Point): unknown {
@@ -82,10 +73,7 @@ function createBaseArea(): Area {
 }
 
 export const Area = {
-  encode(
-    message: Area,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: Area, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.nw !== undefined) {
       Point.encode(message.nw, writer.uint32(10).fork()).ldelim();
     }
@@ -95,10 +83,7 @@ export const Area = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): Area {
+  decode(input: _m0.Reader | Uint8Array, length?: number): Area {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseArea();
@@ -128,46 +113,29 @@ export const Area = {
 
   toJSON(message: Area): unknown {
     const obj: any = {};
-    message.nw !== undefined &&
-      (obj.nw = message.nw ? Point.toJSON(message.nw) : undefined);
-    message.se !== undefined &&
-      (obj.se = message.se ? Point.toJSON(message.se) : undefined);
+    message.nw !== undefined && (obj.nw = message.nw ? Point.toJSON(message.nw) : undefined);
+    message.se !== undefined && (obj.se = message.se ? Point.toJSON(message.se) : undefined);
     return obj;
   },
 
   fromPartial<I extends Exact<DeepPartial<Area>, I>>(object: I): Area {
     const message = createBaseArea();
-    message.nw = (object.nw !== undefined && object.nw !== null)
-      ? Point.fromPartial(object.nw)
-      : undefined;
-    message.se = (object.se !== undefined && object.se !== null)
-      ? Point.fromPartial(object.se)
-      : undefined;
+    message.nw = (object.nw !== undefined && object.nw !== null) ? Point.fromPartial(object.nw) : undefined;
+    message.se = (object.se !== undefined && object.se !== null) ? Point.fromPartial(object.se) : undefined;
     return message;
   },
 };
 
-type Builtin =
-  | Date
-  | Function
-  | Uint8Array
-  | string
-  | number
-  | boolean
-  | undefined;
+type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
-  : 
-    & P
-    & { [K in keyof P]: Exact<P[K], I[K]> }
-    & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
+  : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;

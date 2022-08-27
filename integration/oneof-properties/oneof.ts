@@ -9,13 +9,17 @@ export interface PleaseChoose {
    * Use this if you want a number. Numbers are great. Who doesn't
    * like them?
    */
-  aNumber: number | undefined;
+  aNumber:
+    | number
+    | undefined;
   /**
    * Use this if you want a string. Strings are also nice. Not as
    * nice as numbers, but what are you going to do...
    */
   aString: string | undefined;
-  aMessage: PleaseChoose_Submessage | undefined;
+  aMessage:
+    | PleaseChoose_Submessage
+    | undefined;
   /**
    * We also added a bool option! This was added after the 'age'
    * field, so it has a higher number.
@@ -36,9 +40,7 @@ export enum PleaseChoose_StateEnum {
   UNRECOGNIZED = -1,
 }
 
-export function pleaseChoose_StateEnumFromJSON(
-  object: any,
-): PleaseChoose_StateEnum {
+export function pleaseChoose_StateEnumFromJSON(object: any): PleaseChoose_StateEnum {
   switch (object) {
     case 0:
     case "UNKNOWN":
@@ -56,9 +58,7 @@ export function pleaseChoose_StateEnumFromJSON(
   }
 }
 
-export function pleaseChoose_StateEnumToJSON(
-  object: PleaseChoose_StateEnum,
-): string {
+export function pleaseChoose_StateEnumToJSON(object: PleaseChoose_StateEnum): string {
   switch (object) {
     case PleaseChoose_StateEnum.UNKNOWN:
       return "UNKNOWN";
@@ -93,10 +93,7 @@ function createBasePleaseChoose(): PleaseChoose {
 }
 
 export const PleaseChoose = {
-  encode(
-    message: PleaseChoose,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: PleaseChoose, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
@@ -107,8 +104,7 @@ export const PleaseChoose = {
       writer.uint32(26).string(message.aString);
     }
     if (message.aMessage !== undefined) {
-      PleaseChoose_Submessage.encode(message.aMessage, writer.uint32(34).fork())
-        .ldelim();
+      PleaseChoose_Submessage.encode(message.aMessage, writer.uint32(34).fork()).ldelim();
     }
     if (message.aBool !== undefined) {
       writer.uint32(48).bool(message.aBool);
@@ -134,10 +130,7 @@ export const PleaseChoose = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): PleaseChoose {
+  decode(input: _m0.Reader | Uint8Array, length?: number): PleaseChoose {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePleaseChoose();
@@ -154,10 +147,7 @@ export const PleaseChoose = {
           message.aString = reader.string();
           break;
         case 4:
-          message.aMessage = PleaseChoose_Submessage.decode(
-            reader,
-            reader.uint32(),
-          );
+          message.aMessage = PleaseChoose_Submessage.decode(reader, reader.uint32());
           break;
         case 6:
           message.aBool = reader.bool();
@@ -193,22 +183,14 @@ export const PleaseChoose = {
       name: isSet(object.name) ? String(object.name) : "",
       aNumber: isSet(object.aNumber) ? Number(object.aNumber) : undefined,
       aString: isSet(object.aString) ? String(object.aString) : undefined,
-      aMessage: isSet(object.aMessage)
-        ? PleaseChoose_Submessage.fromJSON(object.aMessage)
-        : undefined,
+      aMessage: isSet(object.aMessage) ? PleaseChoose_Submessage.fromJSON(object.aMessage) : undefined,
       aBool: isSet(object.aBool) ? Boolean(object.aBool) : undefined,
-      bunchaBytes: isSet(object.bunchaBytes)
-        ? bytesFromBase64(object.bunchaBytes)
-        : undefined,
-      anEnum: isSet(object.anEnum)
-        ? pleaseChoose_StateEnumFromJSON(object.anEnum)
-        : undefined,
+      bunchaBytes: isSet(object.bunchaBytes) ? bytesFromBase64(object.bunchaBytes) : undefined,
+      anEnum: isSet(object.anEnum) ? pleaseChoose_StateEnumFromJSON(object.anEnum) : undefined,
       age: isSet(object.age) ? Number(object.age) : 0,
       either: isSet(object.either) ? String(object.either) : undefined,
       or: isSet(object.or) ? String(object.or) : undefined,
-      thirdOption: isSet(object.thirdOption)
-        ? String(object.thirdOption)
-        : undefined,
+      thirdOption: isSet(object.thirdOption) ? String(object.thirdOption) : undefined,
     };
   },
 
@@ -218,37 +200,27 @@ export const PleaseChoose = {
     message.aNumber !== undefined && (obj.aNumber = message.aNumber);
     message.aString !== undefined && (obj.aString = message.aString);
     message.aMessage !== undefined &&
-      (obj.aMessage = message.aMessage
-        ? PleaseChoose_Submessage.toJSON(message.aMessage)
-        : undefined);
+      (obj.aMessage = message.aMessage ? PleaseChoose_Submessage.toJSON(message.aMessage) : undefined);
     message.aBool !== undefined && (obj.aBool = message.aBool);
     message.bunchaBytes !== undefined &&
-      (obj.bunchaBytes = message.bunchaBytes !== undefined
-        ? base64FromBytes(message.bunchaBytes)
-        : undefined);
+      (obj.bunchaBytes = message.bunchaBytes !== undefined ? base64FromBytes(message.bunchaBytes) : undefined);
     message.anEnum !== undefined &&
-      (obj.anEnum = message.anEnum !== undefined
-        ? pleaseChoose_StateEnumToJSON(message.anEnum)
-        : undefined);
+      (obj.anEnum = message.anEnum !== undefined ? pleaseChoose_StateEnumToJSON(message.anEnum) : undefined);
     message.age !== undefined && (obj.age = Math.round(message.age));
     message.either !== undefined && (obj.either = message.either);
     message.or !== undefined && (obj.or = message.or);
-    message.thirdOption !== undefined &&
-      (obj.thirdOption = message.thirdOption);
+    message.thirdOption !== undefined && (obj.thirdOption = message.thirdOption);
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<PleaseChoose>, I>>(
-    object: I,
-  ): PleaseChoose {
+  fromPartial<I extends Exact<DeepPartial<PleaseChoose>, I>>(object: I): PleaseChoose {
     const message = createBasePleaseChoose();
     message.name = object.name ?? "";
     message.aNumber = object.aNumber ?? undefined;
     message.aString = object.aString ?? undefined;
-    message.aMessage =
-      (object.aMessage !== undefined && object.aMessage !== null)
-        ? PleaseChoose_Submessage.fromPartial(object.aMessage)
-        : undefined;
+    message.aMessage = (object.aMessage !== undefined && object.aMessage !== null)
+      ? PleaseChoose_Submessage.fromPartial(object.aMessage)
+      : undefined;
     message.aBool = object.aBool ?? undefined;
     message.bunchaBytes = object.bunchaBytes ?? undefined;
     message.anEnum = object.anEnum ?? undefined;
@@ -265,20 +237,14 @@ function createBasePleaseChoose_Submessage(): PleaseChoose_Submessage {
 }
 
 export const PleaseChoose_Submessage = {
-  encode(
-    message: PleaseChoose_Submessage,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: PleaseChoose_Submessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): PleaseChoose_Submessage {
+  decode(input: _m0.Reader | Uint8Array, length?: number): PleaseChoose_Submessage {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePleaseChoose_Submessage();
@@ -297,9 +263,7 @@ export const PleaseChoose_Submessage = {
   },
 
   fromJSON(object: any): PleaseChoose_Submessage {
-    return {
-      name: isSet(object.name) ? String(object.name) : "",
-    };
+    return { name: isSet(object.name) ? String(object.name) : "" };
   },
 
   toJSON(message: PleaseChoose_Submessage): unknown {
@@ -308,9 +272,7 @@ export const PleaseChoose_Submessage = {
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<PleaseChoose_Submessage>, I>>(
-    object: I,
-  ): PleaseChoose_Submessage {
+  fromPartial<I extends Exact<DeepPartial<PleaseChoose_Submessage>, I>>(object: I): PleaseChoose_Submessage {
     const message = createBasePleaseChoose_Submessage();
     message.name = object.name ?? "";
     return message;
@@ -361,27 +323,16 @@ function base64FromBytes(arr: Uint8Array): string {
   }
 }
 
-type Builtin =
-  | Date
-  | Function
-  | Uint8Array
-  | string
-  | number
-  | boolean
-  | undefined;
+type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
-  : 
-    & P
-    & { [K in keyof P]: Exact<P[K], I[K]> }
-    & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
+  : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;

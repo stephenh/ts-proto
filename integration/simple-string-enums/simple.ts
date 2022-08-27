@@ -1,10 +1,5 @@
 /* eslint-disable */
-import {
-  NullValue,
-  nullValueFromJSON,
-  nullValueToJSON,
-  nullValueToNumber,
-} from "./google/protobuf/struct";
+import { NullValue, nullValueFromJSON, nullValueToJSON, nullValueToNumber } from "./google/protobuf/struct";
 import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "simple";
@@ -76,20 +71,11 @@ export interface Simple_StateMapEntry {
 }
 
 function createBaseSimple(): Simple {
-  return {
-    name: "",
-    state: StateEnum.UNKNOWN,
-    states: [],
-    nullValue: NullValue.NULL_VALUE,
-    stateMap: {},
-  };
+  return { name: "", state: StateEnum.UNKNOWN, states: [], nullValue: NullValue.NULL_VALUE, stateMap: {} };
 }
 
 export const Simple = {
-  encode(
-    message: Simple,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: Simple, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
@@ -105,18 +91,12 @@ export const Simple = {
       writer.uint32(48).int32(nullValueToNumber(message.nullValue));
     }
     Object.entries(message.stateMap).forEach(([key, value]) => {
-      Simple_StateMapEntry.encode(
-        { key: key as any, value },
-        writer.uint32(58).fork(),
-      ).ldelim();
+      Simple_StateMapEntry.encode({ key: key as any, value }, writer.uint32(58).fork()).ldelim();
     });
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): Simple {
+  decode(input: _m0.Reader | Uint8Array, length?: number): Simple {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimple();
@@ -159,23 +139,14 @@ export const Simple = {
   fromJSON(object: any): Simple {
     return {
       name: isSet(object.name) ? String(object.name) : "",
-      state: isSet(object.state)
-        ? stateEnumFromJSON(object.state)
-        : StateEnum.UNKNOWN,
-      states: Array.isArray(object?.states)
-        ? object.states.map((e: any) => stateEnumFromJSON(e))
-        : [],
-      nullValue: isSet(object.nullValue)
-        ? nullValueFromJSON(object.nullValue)
-        : NullValue.NULL_VALUE,
+      state: isSet(object.state) ? stateEnumFromJSON(object.state) : StateEnum.UNKNOWN,
+      states: Array.isArray(object?.states) ? object.states.map((e: any) => stateEnumFromJSON(e)) : [],
+      nullValue: isSet(object.nullValue) ? nullValueFromJSON(object.nullValue) : NullValue.NULL_VALUE,
       stateMap: isObject(object.stateMap)
-        ? Object.entries(object.stateMap).reduce<{ [key: string]: StateEnum }>(
-          (acc, [key, value]) => {
-            acc[key] = stateEnumFromJSON(value);
-            return acc;
-          },
-          {},
-        )
+        ? Object.entries(object.stateMap).reduce<{ [key: string]: StateEnum }>((acc, [key, value]) => {
+          acc[key] = stateEnumFromJSON(value);
+          return acc;
+        }, {})
         : {},
     };
   },
@@ -189,8 +160,7 @@ export const Simple = {
     } else {
       obj.states = [];
     }
-    message.nullValue !== undefined &&
-      (obj.nullValue = nullValueToJSON(message.nullValue));
+    message.nullValue !== undefined && (obj.nullValue = nullValueToJSON(message.nullValue));
     obj.stateMap = {};
     if (message.stateMap) {
       Object.entries(message.stateMap).forEach(([k, v]) => {
@@ -206,14 +176,15 @@ export const Simple = {
     message.state = object.state ?? StateEnum.UNKNOWN;
     message.states = object.states?.map((e) => e) || [];
     message.nullValue = object.nullValue ?? NullValue.NULL_VALUE;
-    message.stateMap = Object.entries(object.stateMap ?? {}).reduce<
-      { [key: string]: StateEnum }
-    >((acc, [key, value]) => {
-      if (value !== undefined) {
-        acc[key] = value as StateEnum;
-      }
-      return acc;
-    }, {});
+    message.stateMap = Object.entries(object.stateMap ?? {}).reduce<{ [key: string]: StateEnum }>(
+      (acc, [key, value]) => {
+        if (value !== undefined) {
+          acc[key] = value as StateEnum;
+        }
+        return acc;
+      },
+      {},
+    );
     return message;
   },
 };
@@ -223,10 +194,7 @@ function createBaseSimple_StateMapEntry(): Simple_StateMapEntry {
 }
 
 export const Simple_StateMapEntry = {
-  encode(
-    message: Simple_StateMapEntry,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: Simple_StateMapEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.key !== "") {
       writer.uint32(10).string(message.key);
     }
@@ -236,10 +204,7 @@ export const Simple_StateMapEntry = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): Simple_StateMapEntry {
+  decode(input: _m0.Reader | Uint8Array, length?: number): Simple_StateMapEntry {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimple_StateMapEntry();
@@ -263,9 +228,7 @@ export const Simple_StateMapEntry = {
   fromJSON(object: any): Simple_StateMapEntry {
     return {
       key: isSet(object.key) ? String(object.key) : "",
-      value: isSet(object.value)
-        ? stateEnumFromJSON(object.value)
-        : StateEnum.UNKNOWN,
+      value: isSet(object.value) ? stateEnumFromJSON(object.value) : StateEnum.UNKNOWN,
     };
   },
 
@@ -276,9 +239,7 @@ export const Simple_StateMapEntry = {
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<Simple_StateMapEntry>, I>>(
-    object: I,
-  ): Simple_StateMapEntry {
+  fromPartial<I extends Exact<DeepPartial<Simple_StateMapEntry>, I>>(object: I): Simple_StateMapEntry {
     const message = createBaseSimple_StateMapEntry();
     message.key = object.key ?? "";
     message.value = object.value ?? StateEnum.UNKNOWN;
@@ -286,27 +247,16 @@ export const Simple_StateMapEntry = {
   },
 };
 
-type Builtin =
-  | Date
-  | Function
-  | Uint8Array
-  | string
-  | number
-  | boolean
-  | undefined;
+type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
-  : 
-    & P
-    & { [K in keyof P]: Exact<P[K], I[K]> }
-    & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
+  : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function isObject(value: any): boolean {
   return typeof value === "object" && value !== null;

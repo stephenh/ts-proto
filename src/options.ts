@@ -1,3 +1,6 @@
+import { Code } from "ts-poet";
+import { ToStringOpts } from "ts-poet/build/Code";
+
 export enum LongOption {
   NUMBER = "number",
   LONG = "long",
@@ -208,7 +211,10 @@ function parseParameter(parameter: string): Options {
   return options;
 }
 
-export function getTsPoetOpts(_options: Options): { forceModuleImport?: string[]; forceDefaultImport?: string[] } {
+export function getTsPoetOpts(_options: Options): ToStringOpts {
   const imports = ["protobufjs/minimal" + _options.importSuffix];
-  return _options.esModuleInterop ? { forceDefaultImport: imports } : { forceModuleImport: imports };
+  return {
+    dprintOptions: { preferSingleLine: true, lineWidth: 120 },
+    ...(_options.esModuleInterop ? { forceDefaultImport: imports } : { forceModuleImport: imports }),
+  };
 }

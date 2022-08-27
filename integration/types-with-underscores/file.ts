@@ -15,20 +15,14 @@ function createBaseBaz(): Baz {
 }
 
 export const Baz = {
-  encode(
-    message: Baz,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: Baz, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.foo !== undefined) {
       FooBar.encode(message.foo, writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): Baz {
+  decode(input: _m0.Reader | Uint8Array, length?: number): Baz {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseBaz();
@@ -47,23 +41,18 @@ export const Baz = {
   },
 
   fromJSON(object: any): Baz {
-    return {
-      foo: isSet(object.foo) ? FooBar.fromJSON(object.foo) : undefined,
-    };
+    return { foo: isSet(object.foo) ? FooBar.fromJSON(object.foo) : undefined };
   },
 
   toJSON(message: Baz): unknown {
     const obj: any = {};
-    message.foo !== undefined &&
-      (obj.foo = message.foo ? FooBar.toJSON(message.foo) : undefined);
+    message.foo !== undefined && (obj.foo = message.foo ? FooBar.toJSON(message.foo) : undefined);
     return obj;
   },
 
   fromPartial<I extends Exact<DeepPartial<Baz>, I>>(object: I): Baz {
     const message = createBaseBaz();
-    message.foo = (object.foo !== undefined && object.foo !== null)
-      ? FooBar.fromPartial(object.foo)
-      : undefined;
+    message.foo = (object.foo !== undefined && object.foo !== null) ? FooBar.fromPartial(object.foo) : undefined;
     return message;
   },
 };
@@ -73,17 +62,11 @@ function createBaseFooBar(): FooBar {
 }
 
 export const FooBar = {
-  encode(
-    _: FooBar,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(_: FooBar, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): FooBar {
+  decode(input: _m0.Reader | Uint8Array, length?: number): FooBar {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFooBar();
@@ -113,27 +96,16 @@ export const FooBar = {
   },
 };
 
-type Builtin =
-  | Date
-  | Function
-  | Uint8Array
-  | string
-  | number
-  | boolean
-  | undefined;
+type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
-  : 
-    & P
-    & { [K in keyof P]: Exact<P[K], I[K]> }
-    & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
+  : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;

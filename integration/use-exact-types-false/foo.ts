@@ -13,10 +13,7 @@ function createBaseFoo(): Foo {
 }
 
 export const Foo = {
-  encode(
-    message: Foo,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: Foo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.bar !== "") {
       writer.uint32(10).string(message.bar);
     }
@@ -26,10 +23,7 @@ export const Foo = {
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): Foo {
+  decode(input: _m0.Reader | Uint8Array, length?: number): Foo {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFoo();
@@ -51,10 +45,7 @@ export const Foo = {
   },
 
   fromJSON(object: any): Foo {
-    return {
-      bar: isSet(object.bar) ? String(object.bar) : "",
-      baz: isSet(object.baz) ? String(object.baz) : "",
-    };
+    return { bar: isSet(object.bar) ? String(object.bar) : "", baz: isSet(object.baz) ? String(object.baz) : "" };
   },
 
   toJSON(message: Foo): unknown {
@@ -72,18 +63,10 @@ export const Foo = {
   },
 };
 
-type Builtin =
-  | Date
-  | Function
-  | Uint8Array
-  | string
-  | number
-  | boolean
-  | undefined;
+type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 

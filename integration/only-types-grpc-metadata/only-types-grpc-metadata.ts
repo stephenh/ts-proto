@@ -12,8 +12,5 @@ export interface GetBasicResponse {
 }
 
 export interface BasicService {
-  getBasic(
-    request: GetBasicRequest,
-    metadata?: Metadata,
-  ): Promise<GetBasicResponse>;
+  getBasic(request: GetBasicRequest, metadata?: Metadata): Promise<GetBasicResponse>;
 }

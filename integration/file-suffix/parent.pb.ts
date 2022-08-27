@@ -1,10 +1,5 @@
 /* eslint-disable */
-import {
-  Child,
-  ChildEnum,
-  childEnumFromJSON,
-  childEnumToJSON,
-} from "./child.pb";
+import { Child, ChildEnum, childEnumFromJSON, childEnumToJSON } from "./child.pb";
 import { Timestamp } from "./google/protobuf/timestamp.pb";
 import * as _m0 from "protobufjs/minimal";
 
@@ -21,10 +16,7 @@ function createBaseParent(): Parent {
 }
 
 export const Parent = {
-  encode(
-    message: Parent,
-    writer: _m0.Writer = _m0.Writer.create(),
-  ): _m0.Writer {
+  encode(message: Parent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.child !== undefined) {
       Child.encode(message.child, writer.uint32(10).fork()).ldelim();
     }
@@ -32,16 +24,12 @@ export const Parent = {
       writer.uint32(16).int32(message.childEnum);
     }
     if (message.createdAt !== undefined) {
-      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(26).fork())
-        .ldelim();
+      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(26).fork()).ldelim();
     }
     return writer;
   },
 
-  decode(
-    input: _m0.Reader | Uint8Array,
-    length?: number,
-  ): Parent {
+  decode(input: _m0.Reader | Uint8Array, length?: number): Parent {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseParent();
@@ -55,9 +43,7 @@ export const Parent = {
           message.childEnum = reader.int32() as any;
           break;
         case 3:
-          message.createdAt = fromTimestamp(
-            Timestamp.decode(reader, reader.uint32()),
-          );
+          message.createdAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -70,58 +56,38 @@ export const Parent = {
   fromJSON(object: any): Parent {
     return {
       child: isSet(object.child) ? Child.fromJSON(object.child) : undefined,
-      childEnum: isSet(object.childEnum)
-        ? childEnumFromJSON(object.childEnum)
-        : 0,
-      createdAt: isSet(object.createdAt)
-        ? fromJsonTimestamp(object.createdAt)
-        : undefined,
+      childEnum: isSet(object.childEnum) ? childEnumFromJSON(object.childEnum) : 0,
+      createdAt: isSet(object.createdAt) ? fromJsonTimestamp(object.createdAt) : undefined,
     };
   },
 
   toJSON(message: Parent): unknown {
     const obj: any = {};
-    message.child !== undefined &&
-      (obj.child = message.child ? Child.toJSON(message.child) : undefined);
-    message.childEnum !== undefined &&
-      (obj.childEnum = childEnumToJSON(message.childEnum));
-    message.createdAt !== undefined &&
-      (obj.createdAt = message.createdAt.toISOString());
+    message.child !== undefined && (obj.child = message.child ? Child.toJSON(message.child) : undefined);
+    message.childEnum !== undefined && (obj.childEnum = childEnumToJSON(message.childEnum));
+    message.createdAt !== undefined && (obj.createdAt = message.createdAt.toISOString());
     return obj;
   },
 
   fromPartial<I extends Exact<DeepPartial<Parent>, I>>(object: I): Parent {
     const message = createBaseParent();
-    message.child = (object.child !== undefined && object.child !== null)
-      ? Child.fromPartial(object.child)
-      : undefined;
+    message.child = (object.child !== undefined && object.child !== null) ? Child.fromPartial(object.child) : undefined;
     message.childEnum = object.childEnum ?? 0;
     message.createdAt = object.createdAt ?? undefined;
     return message;
   },
 };
 
-type Builtin =
-  | Date
-  | Function
-  | Uint8Array
-  | string
-  | number
-  | boolean
-  | undefined;
+type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
-  : 
-    & P
-    & { [K in keyof P]: Exact<P[K], I[K]> }
-    & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
+  : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function toTimestamp(date: Date): Timestamp {
   const seconds = date.getTime() / 1_000;
