@@ -23,7 +23,7 @@
     "format": "prettier --write {src,tests}/**/*.ts integration/*.ts",
     "format:check": "prettier --list-different {src,tests}/**/*.ts",
     "setup:docker": "docker compose build",
-    "watch": "ts-node integration/watch.ts"
+    "watch": "tsx integration/watch.ts"
   },
   "files": [
     "build"
@@ -58,7 +58,7 @@
     "rxjs": "^7.4.0",
     "semantic-release": "^19.0.3",
     "ts-jest": "^28.0.5",
-    "ts-node": "^10.8.1",
+    "tsx": "^3.8.2",
     "typescript": "^4.7.4",
     "uglify-js": "^3.16.1"
   },
