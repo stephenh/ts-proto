@@ -1,37 +1,37 @@
-import { maybeAddComment } from '../src/utils';
-import { Code, joinCode } from 'ts-poet';
+import { maybeAddComment } from "../src/utils";
+import { Code, joinCode } from "ts-poet";
 
-describe('utils', () => {
-  describe('maybeAddComment', () => {
-    it('handles single-line impl comments', () => {
+describe("utils", () => {
+  describe("maybeAddComment", () => {
+    it("handles single-line impl comments", () => {
       // Foo
       const chunks: Code[] = [];
-      maybeAddComment({ leadingComments: ' Foo\n' }, chunks);
+      maybeAddComment({ leadingComments: " Foo\n" }, chunks);
       expect(joinCode(chunks).toCodeString()).toMatchInlineSnapshot(`"/** Foo */"`);
     });
 
-    it('handles single-dot star comments', () => {
+    it("handles single-dot star comments", () => {
       // /* Foo */
       const chunks: Code[] = [];
-      maybeAddComment({ leadingComments: ' Foo ' }, chunks);
+      maybeAddComment({ leadingComments: " Foo " }, chunks);
       expect(joinCode(chunks).toCodeString()).toMatchInlineSnapshot(`"/** Foo */"`);
     });
 
-    it('handles single-line double-dot star comments', () => {
+    it("handles single-line double-dot star comments", () => {
       // /** Foo */
       const chunks: Code[] = [];
-      maybeAddComment({ leadingComments: ' * Foo ' }, chunks);
+      maybeAddComment({ leadingComments: " * Foo " }, chunks);
       expect(joinCode(chunks).toCodeString()).toMatchInlineSnapshot(`"/** Foo */"`);
     });
 
-    it('handles double-line double-dot star comments', () => {
+    it("handles double-line double-dot star comments", () => {
       // /**
       //  * Foo
       //  *
       //  * bar.
       //  */
       const chunks: Code[] = [];
-      maybeAddComment({ leadingComments: '*\n Foo\n \n bar.\n' }, chunks);
+      maybeAddComment({ leadingComments: "*\n Foo\n \n bar.\n" }, chunks);
       expect(joinCode(chunks).toCodeString()).toMatchInlineSnapshot(`
         "/**
          * Foo
@@ -41,11 +41,11 @@ describe('utils', () => {
       `);
     });
 
-    it('handles double-line impl comments', () => {
+    it("handles double-line impl comments", () => {
       // // Foo
       // // Bar
       const chunks: Code[] = [];
-      maybeAddComment({ leadingComments: ' Foo\n Bar\n' }, chunks);
+      maybeAddComment({ leadingComments: " Foo\n Bar\n" }, chunks);
       expect(joinCode(chunks).toCodeString()).toMatchInlineSnapshot(`
         "/**
          * Foo

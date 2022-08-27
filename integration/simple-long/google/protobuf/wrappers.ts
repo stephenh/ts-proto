@@ -1,8 +1,8 @@
 /* eslint-disable */
-import * as Long from 'long';
-import * as _m0 from 'protobufjs/minimal';
+import * as Long from "long";
+import * as _m0 from "protobufjs/minimal";
 
-export const protobufPackage = 'google.protobuf';
+export const protobufPackage = "google.protobuf";
 
 /**
  * Wrapper message for `double`.
@@ -125,9 +125,7 @@ export const DoubleValue = {
   },
 
   fromJSON(object: any): DoubleValue {
-    return {
-      value: isSet(object.value) ? Number(object.value) : 0,
-    };
+    return { value: isSet(object.value) ? Number(object.value) : 0 };
   },
 
   toJSON(message: DoubleValue): unknown {
@@ -174,9 +172,7 @@ export const FloatValue = {
   },
 
   fromJSON(object: any): FloatValue {
-    return {
-      value: isSet(object.value) ? Number(object.value) : 0,
-    };
+    return { value: isSet(object.value) ? Number(object.value) : 0 };
   },
 
   toJSON(message: FloatValue): unknown {
@@ -223,9 +219,7 @@ export const Int64Value = {
   },
 
   fromJSON(object: any): Int64Value {
-    return {
-      value: isSet(object.value) ? Long.fromValue(object.value) : Long.ZERO,
-    };
+    return { value: isSet(object.value) ? Long.fromValue(object.value) : Long.ZERO };
   },
 
   toJSON(message: Int64Value): unknown {
@@ -236,7 +230,7 @@ export const Int64Value = {
 
   fromPartial<I extends Exact<DeepPartial<Int64Value>, I>>(object: I): Int64Value {
     const message = createBaseInt64Value();
-    message.value = object.value !== undefined && object.value !== null ? Long.fromValue(object.value) : Long.ZERO;
+    message.value = (object.value !== undefined && object.value !== null) ? Long.fromValue(object.value) : Long.ZERO;
     return message;
   },
 };
@@ -272,9 +266,7 @@ export const UInt64Value = {
   },
 
   fromJSON(object: any): UInt64Value {
-    return {
-      value: isSet(object.value) ? Long.fromValue(object.value) : Long.UZERO,
-    };
+    return { value: isSet(object.value) ? Long.fromValue(object.value) : Long.UZERO };
   },
 
   toJSON(message: UInt64Value): unknown {
@@ -285,7 +277,7 @@ export const UInt64Value = {
 
   fromPartial<I extends Exact<DeepPartial<UInt64Value>, I>>(object: I): UInt64Value {
     const message = createBaseUInt64Value();
-    message.value = object.value !== undefined && object.value !== null ? Long.fromValue(object.value) : Long.UZERO;
+    message.value = (object.value !== undefined && object.value !== null) ? Long.fromValue(object.value) : Long.UZERO;
     return message;
   },
 };
@@ -321,9 +313,7 @@ export const Int32Value = {
   },
 
   fromJSON(object: any): Int32Value {
-    return {
-      value: isSet(object.value) ? Number(object.value) : 0,
-    };
+    return { value: isSet(object.value) ? Number(object.value) : 0 };
   },
 
   toJSON(message: Int32Value): unknown {
@@ -370,9 +360,7 @@ export const UInt32Value = {
   },
 
   fromJSON(object: any): UInt32Value {
-    return {
-      value: isSet(object.value) ? Number(object.value) : 0,
-    };
+    return { value: isSet(object.value) ? Number(object.value) : 0 };
   },
 
   toJSON(message: UInt32Value): unknown {
@@ -419,9 +407,7 @@ export const BoolValue = {
   },
 
   fromJSON(object: any): BoolValue {
-    return {
-      value: isSet(object.value) ? Boolean(object.value) : false,
-    };
+    return { value: isSet(object.value) ? Boolean(object.value) : false };
   },
 
   toJSON(message: BoolValue): unknown {
@@ -438,12 +424,12 @@ export const BoolValue = {
 };
 
 function createBaseStringValue(): StringValue {
-  return { value: '' };
+  return { value: "" };
 }
 
 export const StringValue = {
   encode(message: StringValue, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.value !== '') {
+    if (message.value !== "") {
       writer.uint32(10).string(message.value);
     }
     return writer;
@@ -468,9 +454,7 @@ export const StringValue = {
   },
 
   fromJSON(object: any): StringValue {
-    return {
-      value: isSet(object.value) ? String(object.value) : '',
-    };
+    return { value: isSet(object.value) ? String(object.value) : "" };
   },
 
   toJSON(message: StringValue): unknown {
@@ -481,7 +465,7 @@ export const StringValue = {
 
   fromPartial<I extends Exact<DeepPartial<StringValue>, I>>(object: I): StringValue {
     const message = createBaseStringValue();
-    message.value = object.value ?? '';
+    message.value = object.value ?? "";
     return message;
   },
 };
@@ -517,9 +501,7 @@ export const BytesValue = {
   },
 
   fromJSON(object: any): BytesValue {
-    return {
-      value: isSet(object.value) ? bytesFromBase64(object.value) : new Uint8Array(),
-    };
+    return { value: isSet(object.value) ? bytesFromBase64(object.value) : new Uint8Array() };
   },
 
   toJSON(message: BytesValue): unknown {
@@ -540,16 +522,24 @@ declare var self: any | undefined;
 declare var window: any | undefined;
 declare var global: any | undefined;
 var globalThis: any = (() => {
-  if (typeof globalThis !== 'undefined') return globalThis;
-  if (typeof self !== 'undefined') return self;
-  if (typeof window !== 'undefined') return window;
-  if (typeof global !== 'undefined') return global;
-  throw 'Unable to locate global object';
+  if (typeof globalThis !== "undefined") {
+    return globalThis;
+  }
+  if (typeof self !== "undefined") {
+    return self;
+  }
+  if (typeof window !== "undefined") {
+    return window;
+  }
+  if (typeof global !== "undefined") {
+    return global;
+  }
+  throw "Unable to locate global object";
 })();
 
 function bytesFromBase64(b64: string): Uint8Array {
   if (globalThis.Buffer) {
-    return Uint8Array.from(globalThis.Buffer.from(b64, 'base64'));
+    return Uint8Array.from(globalThis.Buffer.from(b64, "base64"));
   } else {
     const bin = globalThis.atob(b64);
     const arr = new Uint8Array(bin.length);
@@ -562,33 +552,26 @@ function bytesFromBase64(b64: string): Uint8Array {
 
 function base64FromBytes(arr: Uint8Array): string {
   if (globalThis.Buffer) {
-    return globalThis.Buffer.from(arr).toString('base64');
+    return globalThis.Buffer.from(arr).toString("base64");
   } else {
     const bin: string[] = [];
     arr.forEach((byte) => {
       bin.push(String.fromCharCode(byte));
     });
-    return globalThis.btoa(bin.join(''));
+    return globalThis.btoa(bin.join(""));
   }
 }
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
-export type DeepPartial<T> = T extends Builtin
-  ? T
-  : T extends Long
-  ? string | number | Long
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U>
-  ? ReadonlyArray<DeepPartial<U>>
-  : T extends {}
-  ? { [K in keyof T]?: DeepPartial<T[K]> }
+export type DeepPartial<T> = T extends Builtin ? T
+  : T extends Long ? string | number | Long : T extends Array<infer U> ? Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-export type Exact<P, I extends P> = P extends Builtin
-  ? P
+export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 // If you get a compile-error about 'Constructor<Long> and ... have no overlap',

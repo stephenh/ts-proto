@@ -1,9 +1,9 @@
 /* eslint-disable */
-import * as DataLoader from 'dataloader';
-import * as hash from 'object-hash';
-import * as _m0 from 'protobufjs/minimal';
+import * as DataLoader from "dataloader";
+import * as hash from "object-hash";
+import * as _m0 from "protobufjs/minimal";
 
-export const protobufPackage = '';
+export const protobufPackage = "";
 
 export interface NumPair {
   num1: number;
@@ -55,10 +55,7 @@ export const NumPair = {
   },
 
   fromJSON(object: any): NumPair {
-    return {
-      num1: isSet(object.num1) ? Number(object.num1) : 0,
-      num2: isSet(object.num2) ? Number(object.num2) : 0,
-    };
+    return { num1: isSet(object.num1) ? Number(object.num1) : 0, num2: isSet(object.num2) ? Number(object.num2) : 0 };
   },
 
   toJSON(message: NumPair): unknown {
@@ -107,9 +104,7 @@ export const NumSingle = {
   },
 
   fromJSON(object: any): NumSingle {
-    return {
-      num: isSet(object.num) ? Number(object.num) : 0,
-    };
+    return { num: isSet(object.num) ? Number(object.num) : 0 };
   },
 
   toJSON(message: NumSingle): unknown {
@@ -165,9 +160,7 @@ export const Numbers = {
   },
 
   fromJSON(object: any): Numbers {
-    return {
-      num: Array.isArray(object?.num) ? object.num.map((e: any) => Number(e)) : [],
-    };
+    return { num: Array.isArray(object?.num) ? object.num.map((e: any) => Number(e)) : [] };
   },
 
   toJSON(message: Numbers): unknown {
@@ -204,32 +197,29 @@ export class MathServiceClientImpl<Context extends DataLoaders> implements MathS
   }
   add(ctx: Context, request: NumPair): Promise<NumSingle> {
     const data = NumPair.encode(request).finish();
-    const promise = this.rpc.request(ctx, 'MathService', 'Add', data);
+    const promise = this.rpc.request(ctx, "MathService", "Add", data);
     return promise.then((data) => NumSingle.decode(new _m0.Reader(data)));
   }
 
   absoluteValue(ctx: Context, request: NumSingle): Promise<NumSingle> {
     const data = NumSingle.encode(request).finish();
-    const promise = this.rpc.request(ctx, 'MathService', 'AbsoluteValue', data);
+    const promise = this.rpc.request(ctx, "MathService", "AbsoluteValue", data);
     return promise.then((data) => NumSingle.decode(new _m0.Reader(data)));
   }
 
   getDouble(ctx: Context, nu: number): Promise<number> {
-    const dl = ctx.getDataLoader('MathService.BatchDouble', () => {
-      return new DataLoader<number, number>(
-        (num) => {
-          const request = { num };
-          return this.batchDouble(ctx, request).then((res) => res.num);
-        },
-        { cacheKeyFn: hash, ...ctx.rpcDataLoaderOptions }
-      );
+    const dl = ctx.getDataLoader("MathService.BatchDouble", () => {
+      return new DataLoader<number, number>((num) => {
+        const request = { num };
+        return this.batchDouble(ctx, request).then((res) => res.num);
+      }, { cacheKeyFn: hash, ...ctx.rpcDataLoaderOptions });
     });
     return dl.load(nu);
   }
 
   batchDouble(ctx: Context, request: Numbers): Promise<Numbers> {
     const data = Numbers.encode(request).finish();
-    const promise = this.rpc.request(ctx, 'MathService', 'BatchDouble', data);
+    const promise = this.rpc.request(ctx, "MathService", "BatchDouble", data);
     return promise.then((data) => Numbers.decode(new _m0.Reader(data)));
   }
 }
@@ -249,19 +239,13 @@ export interface DataLoaders {
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
-export type DeepPartial<T> = T extends Builtin
-  ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U>
-  ? ReadonlyArray<DeepPartial<U>>
-  : T extends {}
-  ? { [K in keyof T]?: DeepPartial<T[K]> }
+export type DeepPartial<T> = T extends Builtin ? T
+  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-export type Exact<P, I extends P> = P extends Builtin
-  ? P
+export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function isSet(value: any): boolean {

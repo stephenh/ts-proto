@@ -1,4 +1,4 @@
-import { code, Code } from 'ts-poet';
+import { code, Code } from "ts-poet";
 
 /** Creates a function to transform a message Source to a Uint8Array Source. */
 export function generateEncodeTransform(fullName: string): Code {

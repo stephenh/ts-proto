@@ -1,13 +1,14 @@
 /* eslint-disable */
-import * as _m0 from 'protobufjs/minimal';
+import * as _m0 from "protobufjs/minimal";
 
-export const protobufPackage = '';
+export const protobufPackage = "";
 
 export interface Baz {
   foo: FooBar | undefined;
 }
 
-export interface FooBar {}
+export interface FooBar {
+}
 
 function createBaseBaz(): Baz {
   return { foo: undefined };
@@ -40,9 +41,7 @@ export const Baz = {
   },
 
   fromJSON(object: any): Baz {
-    return {
-      foo: isSet(object.foo) ? FooBar.fromJSON(object.foo) : undefined,
-    };
+    return { foo: isSet(object.foo) ? FooBar.fromJSON(object.foo) : undefined };
   },
 
   toJSON(message: Baz): unknown {
@@ -53,7 +52,7 @@ export const Baz = {
 
   fromPartial<I extends Exact<DeepPartial<Baz>, I>>(object: I): Baz {
     const message = createBaseBaz();
-    message.foo = object.foo !== undefined && object.foo !== null ? FooBar.fromPartial(object.foo) : undefined;
+    message.foo = (object.foo !== undefined && object.foo !== null) ? FooBar.fromPartial(object.foo) : undefined;
     return message;
   },
 };
@@ -99,19 +98,13 @@ export const FooBar = {
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
-export type DeepPartial<T> = T extends Builtin
-  ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U>
-  ? ReadonlyArray<DeepPartial<U>>
-  : T extends {}
-  ? { [K in keyof T]?: DeepPartial<T[K]> }
+export type DeepPartial<T> = T extends Builtin ? T
+  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-export type Exact<P, I extends P> = P extends Builtin
-  ? P
+export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function isSet(value: any): boolean {

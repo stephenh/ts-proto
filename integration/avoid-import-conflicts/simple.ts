@@ -1,16 +1,16 @@
 /* eslint-disable */
 import {
-  SimpleEnum as SimpleEnum1,
   FooService as FooService2,
-  Simple as Simple3,
-  simpleEnumFromJSON as simpleEnumFromJSON4,
-  simpleEnumToJSON as simpleEnumToJSON5,
   fooServiceFromJSON,
   fooServiceToJSON,
-} from './simple2';
-import * as _m0 from 'protobufjs/minimal';
+  Simple as Simple3,
+  SimpleEnum as SimpleEnum1,
+  simpleEnumFromJSON as simpleEnumFromJSON4,
+  simpleEnumToJSON as simpleEnumToJSON5,
+} from "./simple2";
+import * as _m0 from "protobufjs/minimal";
 
-export const protobufPackage = 'simple';
+export const protobufPackage = "simple";
 
 export enum SimpleEnum {
   LOCAL_DEFAULT = 0,
@@ -22,16 +22,16 @@ export enum SimpleEnum {
 export function simpleEnumFromJSON(object: any): SimpleEnum {
   switch (object) {
     case 0:
-    case 'LOCAL_DEFAULT':
+    case "LOCAL_DEFAULT":
       return SimpleEnum.LOCAL_DEFAULT;
     case 1:
-    case 'LOCAL_FOO':
+    case "LOCAL_FOO":
       return SimpleEnum.LOCAL_FOO;
     case 2:
-    case 'LOCAL_BAR':
+    case "LOCAL_BAR":
       return SimpleEnum.LOCAL_BAR;
     case -1:
-    case 'UNRECOGNIZED':
+    case "UNRECOGNIZED":
     default:
       return SimpleEnum.UNRECOGNIZED;
   }
@@ -40,14 +40,14 @@ export function simpleEnumFromJSON(object: any): SimpleEnum {
 export function simpleEnumToJSON(object: SimpleEnum): string {
   switch (object) {
     case SimpleEnum.LOCAL_DEFAULT:
-      return 'LOCAL_DEFAULT';
+      return "LOCAL_DEFAULT";
     case SimpleEnum.LOCAL_FOO:
-      return 'LOCAL_FOO';
+      return "LOCAL_FOO";
     case SimpleEnum.LOCAL_BAR:
-      return 'LOCAL_BAR';
+      return "LOCAL_BAR";
     case SimpleEnum.UNRECOGNIZED:
     default:
-      return 'UNRECOGNIZED';
+      return "UNRECOGNIZED";
   }
 }
 
@@ -70,12 +70,12 @@ export interface FooServiceCreateResponse {
 }
 
 function createBaseSimple(): Simple {
-  return { name: '', otherSimple: undefined };
+  return { name: "", otherSimple: undefined };
 }
 
 export const Simple = {
   encode(message: Simple, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.name !== '') {
+    if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
     if (message.otherSimple !== undefined) {
@@ -107,7 +107,7 @@ export const Simple = {
 
   fromJSON(object: any): Simple {
     return {
-      name: isSet(object.name) ? String(object.name) : '',
+      name: isSet(object.name) ? String(object.name) : "",
       otherSimple: isSet(object.otherSimple) ? Simple3.fromJSON(object.otherSimple) : undefined,
     };
   },
@@ -122,11 +122,10 @@ export const Simple = {
 
   fromPartial<I extends Exact<DeepPartial<Simple>, I>>(object: I): Simple {
     const message = createBaseSimple();
-    message.name = object.name ?? '';
-    message.otherSimple =
-      object.otherSimple !== undefined && object.otherSimple !== null
-        ? Simple3.fromPartial(object.otherSimple)
-        : undefined;
+    message.name = object.name ?? "";
+    message.otherSimple = (object.otherSimple !== undefined && object.otherSimple !== null)
+      ? Simple3.fromPartial(object.otherSimple)
+      : undefined;
     return message;
   },
 };
@@ -220,9 +219,7 @@ export const FooServiceCreateRequest = {
   },
 
   fromJSON(object: any): FooServiceCreateRequest {
-    return {
-      kind: isSet(object.kind) ? fooServiceFromJSON(object.kind) : 0,
-    };
+    return { kind: isSet(object.kind) ? fooServiceFromJSON(object.kind) : 0 };
   },
 
   toJSON(message: FooServiceCreateRequest): unknown {
@@ -269,9 +266,7 @@ export const FooServiceCreateResponse = {
   },
 
   fromJSON(object: any): FooServiceCreateResponse {
-    return {
-      kind: isSet(object.kind) ? fooServiceFromJSON(object.kind) : 0,
-    };
+    return { kind: isSet(object.kind) ? fooServiceFromJSON(object.kind) : 0 };
   },
 
   toJSON(message: FooServiceCreateResponse): unknown {
@@ -299,7 +294,7 @@ export class FooServiceClientImpl implements FooService {
   }
   Create(request: FooServiceCreateRequest): Promise<FooServiceCreateResponse> {
     const data = FooServiceCreateRequest.encode(request).finish();
-    const promise = this.rpc.request('simple.FooService', 'Create', data);
+    const promise = this.rpc.request("simple.FooService", "Create", data);
     return promise.then((data) => FooServiceCreateResponse.decode(new _m0.Reader(data)));
   }
 }
@@ -310,19 +305,13 @@ interface Rpc {
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
-export type DeepPartial<T> = T extends Builtin
-  ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U>
-  ? ReadonlyArray<DeepPartial<U>>
-  : T extends {}
-  ? { [K in keyof T]?: DeepPartial<T[K]> }
+export type DeepPartial<T> = T extends Builtin ? T
+  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-export type Exact<P, I extends P> = P extends Builtin
-  ? P
+export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function isSet(value: any): boolean {

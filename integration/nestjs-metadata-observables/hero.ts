@@ -1,9 +1,9 @@
 /* eslint-disable */
-import { GrpcMethod, GrpcStreamMethod } from '@nestjs/microservices';
-import { Metadata } from '@grpc/grpc-js';
-import { Observable } from 'rxjs';
+import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
+import { Metadata } from "@grpc/grpc-js";
+import { Observable } from "rxjs";
 
-export const protobufPackage = 'hero';
+export const protobufPackage = "hero";
 
 export interface HeroById {
   id: number;
@@ -23,7 +23,7 @@ export interface Villain {
   name: string;
 }
 
-export const HERO_PACKAGE_NAME = 'hero';
+export const HERO_PACKAGE_NAME = "hero";
 
 export interface HeroServiceClient {
   findOneHero(request: HeroById, metadata?: Metadata): Observable<Hero>;
@@ -43,17 +43,17 @@ export interface HeroServiceController {
 
 export function HeroServiceControllerMethods() {
   return function (constructor: Function) {
-    const grpcMethods: string[] = ['findOneHero', 'findOneVillain'];
+    const grpcMethods: string[] = ["findOneHero", "findOneVillain"];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-      GrpcMethod('HeroService', method)(constructor.prototype[method], method, descriptor);
+      GrpcMethod("HeroService", method)(constructor.prototype[method], method, descriptor);
     }
-    const grpcStreamMethods: string[] = ['findManyVillain'];
+    const grpcStreamMethods: string[] = ["findManyVillain"];
     for (const method of grpcStreamMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-      GrpcStreamMethod('HeroService', method)(constructor.prototype[method], method, descriptor);
+      GrpcStreamMethod("HeroService", method)(constructor.prototype[method], method, descriptor);
     }
   };
 }
 
-export const HERO_SERVICE_NAME = 'HeroService';
+export const HERO_SERVICE_NAME = "HeroService";

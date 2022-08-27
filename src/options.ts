@@ -1,39 +1,42 @@
+import { Code } from "ts-poet";
+import { ToStringOpts } from "ts-poet/build/Code";
+
 export enum LongOption {
-  NUMBER = 'number',
-  LONG = 'long',
-  STRING = 'string',
+  NUMBER = "number",
+  LONG = "long",
+  STRING = "string",
 }
 
 export enum DateOption {
-  DATE = 'date',
-  STRING = 'string',
-  TIMESTAMP = 'timestamp',
+  DATE = "date",
+  STRING = "string",
+  TIMESTAMP = "timestamp",
 }
 
 export enum EnvOption {
-  NODE = 'node',
-  BROWSER = 'browser',
-  BOTH = 'both',
+  NODE = "node",
+  BROWSER = "browser",
+  BOTH = "both",
 }
 
 export enum OneofOption {
-  PROPERTIES = 'properties',
-  UNIONS = 'unions',
+  PROPERTIES = "properties",
+  UNIONS = "unions",
 }
 
 export enum ServiceOption {
-  GRPC = 'grpc-js',
-  NICE_GRPC = 'nice-grpc',
-  GENERIC = 'generic-definitions',
-  DEFAULT = 'default',
-  NONE = 'none',
+  GRPC = "grpc-js",
+  NICE_GRPC = "nice-grpc",
+  GENERIC = "generic-definitions",
+  DEFAULT = "default",
+  NONE = "none",
 }
 
 export type Options = {
   context: boolean;
-  snakeToCamel: Array<'json' | 'keys'>;
+  snakeToCamel: Array<"json" | "keys">;
   forceLong: LongOption;
-  useOptionals: boolean | 'none' | 'messages' | 'all'; // boolean is deprecated
+  useOptionals: boolean | "none" | "messages" | "all"; // boolean is deprecated
   useDate: DateOption;
   useMongoObjectId: boolean;
   oneof: OneofOption;
@@ -47,7 +50,7 @@ export type Options = {
   stringEnums: boolean;
   constEnums: boolean;
   enumsAsLiterals: boolean;
-  outputClientImpl: boolean | 'grpc-web';
+  outputClientImpl: boolean | "grpc-web";
   outputServices: ServiceOption[];
   addGrpcMetadata: boolean;
   metadataType: string | undefined;
@@ -72,15 +75,15 @@ export type Options = {
 export function defaultOptions(): Options {
   return {
     context: false,
-    snakeToCamel: ['json', 'keys'],
+    snakeToCamel: ["json", "keys"],
     forceLong: LongOption.NUMBER,
-    useOptionals: 'none',
+    useOptionals: "none",
     useDate: DateOption.DATE,
     useMongoObjectId: false,
     oneof: OneofOption.PROPERTIES,
     esModuleInterop: false,
-    fileSuffix: '',
-    importSuffix: '',
+    fileSuffix: "",
+    importSuffix: "",
     lowerCaseServiceMethods: false,
     outputEncodeMethods: true,
     outputJsonMethods: true,
@@ -155,7 +158,7 @@ export function optionsFromParameter(parameter: string | undefined): Options {
   }
 
   // Existing type-coercion inside parseParameter leaves a little to be desired.
-  if (typeof options.outputServices == 'string') {
+  if (typeof options.outputServices == "string") {
     options.outputServices = [options.outputServices];
   }
 
@@ -174,9 +177,9 @@ export function optionsFromParameter(parameter: string | undefined): Options {
   if ((options.snakeToCamel as any) === false) {
     options.snakeToCamel = [];
   } else if ((options.snakeToCamel as any) === true) {
-    options.snakeToCamel = ['keys', 'json'];
-  } else if (typeof options.snakeToCamel === 'string') {
-    options.snakeToCamel = (options.snakeToCamel as string).split('_') as any;
+    options.snakeToCamel = ["keys", "json"];
+  } else if (typeof options.snakeToCamel === "string") {
+    options.snakeToCamel = (options.snakeToCamel as string).split("_") as any;
   }
 
   if (options.useJsonWireFormat) {
@@ -196,9 +199,9 @@ export function optionsFromParameter(parameter: string | undefined): Options {
 // A very naive parse function, eventually could/should use iots/runtypes
 function parseParameter(parameter: string): Options {
   const options = {} as any;
-  const pairs = parameter.split(',').map((s) => s.split('='));
+  const pairs = parameter.split(",").map((s) => s.split("="));
   pairs.forEach(([key, _value]) => {
-    const value = _value === 'true' ? true : _value === 'false' ? false : _value;
+    const value = _value === "true" ? true : _value === "false" ? false : _value;
     if (options[key]) {
       options[key] = [options[key], value];
     } else {
@@ -208,7 +211,10 @@ function parseParameter(parameter: string): Options {
   return options;
 }
 
-export function getTsPoetOpts(_options: Options): { forceModuleImport?: string[]; forceDefaultImport?: string[] } {
-  const imports = ['protobufjs/minimal' + _options.importSuffix];
-  return _options.esModuleInterop ? { forceDefaultImport: imports } : { forceModuleImport: imports };
+export function getTsPoetOpts(_options: Options): ToStringOpts {
+  const imports = ["protobufjs/minimal" + _options.importSuffix];
+  return {
+    dprintOptions: { preferSingleLine: true, lineWidth: 120 },
+    ...(_options.esModuleInterop ? { forceDefaultImport: imports } : { forceModuleImport: imports }),
+  };
 }

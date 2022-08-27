@@ -1,8 +1,8 @@
 /* eslint-disable */
-import * as Long from 'long';
-import * as _m0 from 'protobufjs/minimal';
+import * as Long from "long";
+import * as _m0 from "protobufjs/minimal";
 
-export const protobufPackage = 'optionalstest';
+export const protobufPackage = "optionalstest";
 
 export enum StateEnum {
   UNKNOWN = 0,
@@ -14,16 +14,16 @@ export enum StateEnum {
 export function stateEnumFromJSON(object: any): StateEnum {
   switch (object) {
     case 0:
-    case 'UNKNOWN':
+    case "UNKNOWN":
       return StateEnum.UNKNOWN;
     case 2:
-    case 'ON':
+    case "ON":
       return StateEnum.ON;
     case 3:
-    case 'OFF':
+    case "OFF":
       return StateEnum.OFF;
     case -1:
-    case 'UNRECOGNIZED':
+    case "UNRECOGNIZED":
     default:
       return StateEnum.UNRECOGNIZED;
   }
@@ -32,14 +32,14 @@ export function stateEnumFromJSON(object: any): StateEnum {
 export function stateEnumToJSON(object: StateEnum): string {
   switch (object) {
     case StateEnum.UNKNOWN:
-      return 'UNKNOWN';
+      return "UNKNOWN";
     case StateEnum.ON:
-      return 'ON';
+      return "ON";
     case StateEnum.OFF:
-      return 'OFF';
+      return "OFF";
     case StateEnum.UNRECOGNIZED:
     default:
-      return 'UNRECOGNIZED';
+      return "UNRECOGNIZED";
   }
 }
 
@@ -73,7 +73,8 @@ export interface OptionalsTest_TranslationsEntry {
   value: string;
 }
 
-export interface Child {}
+export interface Child {
+}
 
 function createBaseOptionalsTest(): OptionalsTest {
   return {
@@ -82,7 +83,7 @@ function createBaseOptionalsTest(): OptionalsTest {
     state: 0,
     long: 0,
     truth: false,
-    description: '',
+    description: "",
     data: new Uint8Array(),
     repId: [],
     repChild: [],
@@ -119,7 +120,7 @@ export const OptionalsTest = {
     if (message.truth === true) {
       writer.uint32(40).bool(message.truth);
     }
-    if (message.description !== undefined && message.description !== '') {
+    if (message.description !== undefined && message.description !== "") {
       writer.uint32(50).string(message.description);
     }
     if (message.data !== undefined && message.data.length !== 0) {
@@ -314,7 +315,7 @@ export const OptionalsTest = {
       state: isSet(object.state) ? stateEnumFromJSON(object.state) : 0,
       long: isSet(object.long) ? Number(object.long) : 0,
       truth: isSet(object.truth) ? Boolean(object.truth) : false,
-      description: isSet(object.description) ? String(object.description) : '',
+      description: isSet(object.description) ? String(object.description) : "",
       data: isSet(object.data) ? bytesFromBase64(object.data) : new Uint8Array(),
       repId: Array.isArray(object?.repId) ? object.repId.map((e: any) => Number(e)) : [],
       repChild: Array.isArray(object?.repChild) ? object.repChild.map((e: any) => Child.fromJSON(e)) : [],
@@ -332,9 +333,9 @@ export const OptionalsTest = {
       optData: isSet(object.optData) ? bytesFromBase64(object.optData) : undefined,
       translations: isObject(object.translations)
         ? Object.entries(object.translations).reduce<{ [key: string]: string }>((acc, [key, value]) => {
-            acc[key] = String(value);
-            return acc;
-          }, {})
+          acc[key] = String(value);
+          return acc;
+        }, {})
         : {},
     };
   },
@@ -355,7 +356,7 @@ export const OptionalsTest = {
       obj.repId = [];
     }
     if (message.repChild) {
-      obj.repChild = message.repChild.map((e) => (e ? Child.toJSON(e) : undefined));
+      obj.repChild = message.repChild.map((e) => e ? Child.toJSON(e) : undefined);
     } else {
       obj.repChild = [];
     }
@@ -405,11 +406,11 @@ export const OptionalsTest = {
   fromPartial<I extends Exact<DeepPartial<OptionalsTest>, I>>(object: I): OptionalsTest {
     const message = createBaseOptionalsTest();
     message.id = object.id ?? 0;
-    message.child = object.child !== undefined && object.child !== null ? Child.fromPartial(object.child) : undefined;
+    message.child = (object.child !== undefined && object.child !== null) ? Child.fromPartial(object.child) : undefined;
     message.state = object.state ?? 0;
     message.long = object.long ?? 0;
     message.truth = object.truth ?? false;
-    message.description = object.description ?? '';
+    message.description = object.description ?? "";
     message.data = object.data ?? new Uint8Array();
     message.repId = object.repId?.map((e) => e) || [];
     message.repChild = object.repChild?.map((e) => Child.fromPartial(e)) || [];
@@ -419,8 +420,9 @@ export const OptionalsTest = {
     message.repDescription = object.repDescription?.map((e) => e) || [];
     message.repData = object.repData?.map((e) => e) || [];
     message.optId = object.optId ?? undefined;
-    message.optChild =
-      object.optChild !== undefined && object.optChild !== null ? Child.fromPartial(object.optChild) : undefined;
+    message.optChild = (object.optChild !== undefined && object.optChild !== null)
+      ? Child.fromPartial(object.optChild)
+      : undefined;
     message.optState = object.optState ?? undefined;
     message.optLong = object.optLong ?? undefined;
     message.optTruth = object.optTruth ?? undefined;
@@ -433,22 +435,22 @@ export const OptionalsTest = {
         }
         return acc;
       },
-      {}
+      {},
     );
     return message;
   },
 };
 
 function createBaseOptionalsTest_TranslationsEntry(): OptionalsTest_TranslationsEntry {
-  return { key: '', value: '' };
+  return { key: "", value: "" };
 }
 
 export const OptionalsTest_TranslationsEntry = {
   encode(message: OptionalsTest_TranslationsEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.key !== '') {
+    if (message.key !== "") {
       writer.uint32(10).string(message.key);
     }
-    if (message.value !== '') {
+    if (message.value !== "") {
       writer.uint32(18).string(message.value);
     }
     return writer;
@@ -476,10 +478,7 @@ export const OptionalsTest_TranslationsEntry = {
   },
 
   fromJSON(object: any): OptionalsTest_TranslationsEntry {
-    return {
-      key: isSet(object.key) ? String(object.key) : '',
-      value: isSet(object.value) ? String(object.value) : '',
-    };
+    return { key: isSet(object.key) ? String(object.key) : "", value: isSet(object.value) ? String(object.value) : "" };
   },
 
   toJSON(message: OptionalsTest_TranslationsEntry): unknown {
@@ -490,11 +489,11 @@ export const OptionalsTest_TranslationsEntry = {
   },
 
   fromPartial<I extends Exact<DeepPartial<OptionalsTest_TranslationsEntry>, I>>(
-    object: I
+    object: I,
   ): OptionalsTest_TranslationsEntry {
     const message = createBaseOptionalsTest_TranslationsEntry();
-    message.key = object.key ?? '';
-    message.value = object.value ?? '';
+    message.key = object.key ?? "";
+    message.value = object.value ?? "";
     return message;
   },
 };
@@ -542,16 +541,24 @@ declare var self: any | undefined;
 declare var window: any | undefined;
 declare var global: any | undefined;
 var globalThis: any = (() => {
-  if (typeof globalThis !== 'undefined') return globalThis;
-  if (typeof self !== 'undefined') return self;
-  if (typeof window !== 'undefined') return window;
-  if (typeof global !== 'undefined') return global;
-  throw 'Unable to locate global object';
+  if (typeof globalThis !== "undefined") {
+    return globalThis;
+  }
+  if (typeof self !== "undefined") {
+    return self;
+  }
+  if (typeof window !== "undefined") {
+    return window;
+  }
+  if (typeof global !== "undefined") {
+    return global;
+  }
+  throw "Unable to locate global object";
 })();
 
 function bytesFromBase64(b64: string): Uint8Array {
   if (globalThis.Buffer) {
-    return Uint8Array.from(globalThis.Buffer.from(b64, 'base64'));
+    return Uint8Array.from(globalThis.Buffer.from(b64, "base64"));
   } else {
     const bin = globalThis.atob(b64);
     const arr = new Uint8Array(bin.length);
@@ -564,36 +571,30 @@ function bytesFromBase64(b64: string): Uint8Array {
 
 function base64FromBytes(arr: Uint8Array): string {
   if (globalThis.Buffer) {
-    return globalThis.Buffer.from(arr).toString('base64');
+    return globalThis.Buffer.from(arr).toString("base64");
   } else {
     const bin: string[] = [];
     arr.forEach((byte) => {
       bin.push(String.fromCharCode(byte));
     });
-    return globalThis.btoa(bin.join(''));
+    return globalThis.btoa(bin.join(""));
   }
 }
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
-export type DeepPartial<T> = T extends Builtin
-  ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U>
-  ? ReadonlyArray<DeepPartial<U>>
-  : T extends {}
-  ? { [K in keyof T]?: DeepPartial<T[K]> }
+export type DeepPartial<T> = T extends Builtin ? T
+  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-export type Exact<P, I extends P> = P extends Builtin
-  ? P
+export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function longToNumber(long: Long): number {
   if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new globalThis.Error('Value is larger than Number.MAX_SAFE_INTEGER');
+    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
   return long.toNumber();
 }
@@ -606,7 +607,7 @@ if (_m0.util.Long !== Long) {
 }
 
 function isObject(value: any): boolean {
-  return typeof value === 'object' && value !== null;
+  return typeof value === "object" && value !== null;
 }
 
 function isSet(value: any): boolean {

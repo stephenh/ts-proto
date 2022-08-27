@@ -1,7 +1,7 @@
 /* eslint-disable */
-import * as _m0 from 'protobufjs/minimal';
+import * as _m0 from "protobufjs/minimal";
 
-export const protobufPackage = 'google.protobuf';
+export const protobufPackage = "google.protobuf";
 
 /**
  * `NullValue` is a singleton enumeration to represent the null value for the
@@ -18,10 +18,10 @@ export enum NullValue {
 export function nullValueFromJSON(object: any): NullValue {
   switch (object) {
     case 0:
-    case 'NULL_VALUE':
+    case "NULL_VALUE":
       return NullValue.NULL_VALUE;
     case -1:
-    case 'UNRECOGNIZED':
+    case "UNRECOGNIZED":
     default:
       return NullValue.UNRECOGNIZED;
   }
@@ -30,10 +30,10 @@ export function nullValueFromJSON(object: any): NullValue {
 export function nullValueToJSON(object: NullValue): string {
   switch (object) {
     case NullValue.NULL_VALUE:
-      return 'NULL_VALUE';
+      return "NULL_VALUE";
     case NullValue.UNRECOGNIZED:
     default:
-      return 'UNRECOGNIZED';
+      return "UNRECOGNIZED";
   }
 }
 
@@ -67,15 +67,25 @@ export interface Struct_FieldsEntry {
  */
 export interface Value {
   /** Represents a null value. */
-  null_value: NullValue | undefined;
+  null_value:
+    | NullValue
+    | undefined;
   /** Represents a double value. */
-  number_value: number | undefined;
+  number_value:
+    | number
+    | undefined;
   /** Represents a string value. */
-  string_value: string | undefined;
+  string_value:
+    | string
+    | undefined;
   /** Represents a boolean value. */
-  bool_value: boolean | undefined;
+  bool_value:
+    | boolean
+    | undefined;
   /** Represents a structured value. */
-  struct_value: { [key: string]: any } | undefined;
+  struct_value:
+    | { [key: string]: any }
+    | undefined;
   /** Represents a repeated `Value`. */
   list_value: Array<any> | undefined;
 }
@@ -129,9 +139,9 @@ export const Struct = {
     return {
       fields: isObject(object.fields)
         ? Object.entries(object.fields).reduce<{ [key: string]: any | undefined }>((acc, [key, value]) => {
-            acc[key] = value as any | undefined;
-            return acc;
-          }, {})
+          acc[key] = value as any | undefined;
+          return acc;
+        }, {})
         : {},
     };
   },
@@ -156,7 +166,7 @@ export const Struct = {
         }
         return acc;
       },
-      {}
+      {},
     );
     return message;
   },
@@ -181,12 +191,12 @@ export const Struct = {
 };
 
 function createBaseStruct_FieldsEntry(): Struct_FieldsEntry {
-  return { key: '', value: undefined };
+  return { key: "", value: undefined };
 }
 
 export const Struct_FieldsEntry = {
   encode(message: Struct_FieldsEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.key !== '') {
+    if (message.key !== "") {
       writer.uint32(10).string(message.key);
     }
     if (message.value !== undefined) {
@@ -217,10 +227,7 @@ export const Struct_FieldsEntry = {
   },
 
   fromJSON(object: any): Struct_FieldsEntry {
-    return {
-      key: isSet(object.key) ? String(object.key) : '',
-      value: isSet(object?.value) ? object.value : undefined,
-    };
+    return { key: isSet(object.key) ? String(object.key) : "", value: isSet(object?.value) ? object.value : undefined };
   },
 
   toJSON(message: Struct_FieldsEntry): unknown {
@@ -232,7 +239,7 @@ export const Struct_FieldsEntry = {
 
   fromPartial<I extends Exact<DeepPartial<Struct_FieldsEntry>, I>>(object: I): Struct_FieldsEntry {
     const message = createBaseStruct_FieldsEntry();
-    message.key = object.key ?? '';
+    message.key = object.key ?? "";
     message.value = object.value ?? undefined;
     return message;
   },
@@ -344,18 +351,18 @@ export const Value = {
 
     if (value === null) {
       result.null_value = NullValue.NULL_VALUE;
-    } else if (typeof value === 'boolean') {
+    } else if (typeof value === "boolean") {
       result.bool_value = value;
-    } else if (typeof value === 'number') {
+    } else if (typeof value === "number") {
       result.number_value = value;
-    } else if (typeof value === 'string') {
+    } else if (typeof value === "string") {
       result.string_value = value;
     } else if (Array.isArray(value)) {
       result.list_value = value;
-    } else if (typeof value === 'object') {
+    } else if (typeof value === "object") {
       result.struct_value = value;
-    } else if (typeof value !== 'undefined') {
-      throw new Error('Unsupported any value type: ' + typeof value);
+    } else if (typeof value !== "undefined") {
+      throw new Error("Unsupported any value type: " + typeof value);
     }
 
     return result;
@@ -410,9 +417,7 @@ export const ListValue = {
   },
 
   fromJSON(object: any): ListValue {
-    return {
-      values: Array.isArray(object?.values) ? [...object.values] : [],
-    };
+    return { values: Array.isArray(object?.values) ? [...object.values] : [] };
   },
 
   toJSON(message: ListValue): unknown {
@@ -446,23 +451,17 @@ export const ListValue = {
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
-export type DeepPartial<T> = T extends Builtin
-  ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U>
-  ? ReadonlyArray<DeepPartial<U>>
-  : T extends {}
-  ? { [K in keyof T]?: DeepPartial<T[K]> }
+export type DeepPartial<T> = T extends Builtin ? T
+  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-export type Exact<P, I extends P> = P extends Builtin
-  ? P
+export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function isObject(value: any): boolean {
-  return typeof value === 'object' && value !== null;
+  return typeof value === "object" && value !== null;
 }
 
 function isSet(value: any): boolean {

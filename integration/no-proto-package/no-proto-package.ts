@@ -1,23 +1,24 @@
 /* eslint-disable */
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import * as _m0 from 'protobufjs/minimal';
+import { Observable } from "rxjs";
+import { map } from "rxjs/operators";
+import * as _m0 from "protobufjs/minimal";
 
-export const protobufPackage = '';
+export const protobufPackage = "";
 
 export interface User {
   name: string;
 }
 
-export interface Empty {}
+export interface Empty {
+}
 
 function createBaseUser(): User {
-  return { name: '' };
+  return { name: "" };
 }
 
 export const User = {
   encode(message: User, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.name !== '') {
+    if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
     return writer;
@@ -42,9 +43,7 @@ export const User = {
   },
 
   fromJSON(object: any): User {
-    return {
-      name: isSet(object.name) ? String(object.name) : '',
-    };
+    return { name: isSet(object.name) ? String(object.name) : "" };
   },
 
   toJSON(message: User): unknown {
@@ -55,7 +54,7 @@ export const User = {
 
   fromPartial<I extends Exact<DeepPartial<User>, I>>(object: I): User {
     const message = createBaseUser();
-    message.name = object.name ?? '';
+    message.name = object.name ?? "";
     return message;
   },
 };
@@ -111,7 +110,7 @@ export class UserStateClientImpl implements UserState {
   }
   GetUsers(request: Empty): Observable<User> {
     const data = Empty.encode(request).finish();
-    const result = this.rpc.serverStreamingRequest('UserState', 'GetUsers', data);
+    const result = this.rpc.serverStreamingRequest("UserState", "GetUsers", data);
     return result.pipe(map((data) => User.decode(new _m0.Reader(data))));
   }
 }
@@ -125,19 +124,13 @@ interface Rpc {
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
-export type DeepPartial<T> = T extends Builtin
-  ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U>
-  ? ReadonlyArray<DeepPartial<U>>
-  : T extends {}
-  ? { [K in keyof T]?: DeepPartial<T[K]> }
+export type DeepPartial<T> = T extends Builtin ? T
+  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-export type Exact<P, I extends P> = P extends Builtin
-  ? P
+export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function isSet(value: any): boolean {
