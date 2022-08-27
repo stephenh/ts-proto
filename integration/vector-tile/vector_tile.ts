@@ -116,7 +116,7 @@ export const Tile = {
   toJSON(message: Tile): unknown {
     const obj: any = {};
     if (message.layers) {
-      obj.layers = message.layers.map((e) => e ? Tile_Layer.toJSON(e) : undefined);
+      obj.layers = message.layers.map(e => e ? Tile_Layer.toJSON(e) : undefined);
     } else {
       obj.layers = [];
     }
@@ -312,13 +312,13 @@ export const Tile_Feature = {
     const obj: any = {};
     message.id !== undefined && (obj.id = Math.round(message.id));
     if (message.tags) {
-      obj.tags = message.tags.map((e) => Math.round(e));
+      obj.tags = message.tags.map(e => Math.round(e));
     } else {
       obj.tags = [];
     }
     message.type !== undefined && (obj.type = tile_GeomTypeToJSON(message.type));
     if (message.geometry) {
-      obj.geometry = message.geometry.map((e) => Math.round(e));
+      obj.geometry = message.geometry.map(e => Math.round(e));
     } else {
       obj.geometry = [];
     }
@@ -411,17 +411,17 @@ export const Tile_Layer = {
     message.version !== undefined && (obj.version = Math.round(message.version));
     message.name !== undefined && (obj.name = message.name);
     if (message.features) {
-      obj.features = message.features.map((e) => e ? Tile_Feature.toJSON(e) : undefined);
+      obj.features = message.features.map(e => e ? Tile_Feature.toJSON(e) : undefined);
     } else {
       obj.features = [];
     }
     if (message.keys) {
-      obj.keys = message.keys.map((e) => e);
+      obj.keys = message.keys.map(e => e);
     } else {
       obj.keys = [];
     }
     if (message.values) {
-      obj.values = message.values.map((e) => e ? Tile_Value.toJSON(e) : undefined);
+      obj.values = message.values.map(e => e ? Tile_Value.toJSON(e) : undefined);
     } else {
       obj.values = [];
     }

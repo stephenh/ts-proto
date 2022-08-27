@@ -348,52 +348,52 @@ export const OptionalsTest = {
     message.long !== undefined && (obj.long = Math.round(message.long));
     message.truth !== undefined && (obj.truth = message.truth);
     message.description !== undefined && (obj.description = message.description);
-    message.data !== undefined &&
-      (obj.data = base64FromBytes(message.data !== undefined ? message.data : new Uint8Array()));
+    message.data !== undefined
+      && (obj.data = base64FromBytes(message.data !== undefined ? message.data : new Uint8Array()));
     if (message.repId) {
-      obj.repId = message.repId.map((e) => Math.round(e));
+      obj.repId = message.repId.map(e => Math.round(e));
     } else {
       obj.repId = [];
     }
     if (message.repChild) {
-      obj.repChild = message.repChild.map((e) => e ? Child.toJSON(e) : undefined);
+      obj.repChild = message.repChild.map(e => e ? Child.toJSON(e) : undefined);
     } else {
       obj.repChild = [];
     }
     if (message.repState) {
-      obj.repState = message.repState.map((e) => stateEnumToJSON(e));
+      obj.repState = message.repState.map(e => stateEnumToJSON(e));
     } else {
       obj.repState = [];
     }
     if (message.repLong) {
-      obj.repLong = message.repLong.map((e) => Math.round(e));
+      obj.repLong = message.repLong.map(e => Math.round(e));
     } else {
       obj.repLong = [];
     }
     if (message.repTruth) {
-      obj.repTruth = message.repTruth.map((e) => e);
+      obj.repTruth = message.repTruth.map(e => e);
     } else {
       obj.repTruth = [];
     }
     if (message.repDescription) {
-      obj.repDescription = message.repDescription.map((e) => e);
+      obj.repDescription = message.repDescription.map(e => e);
     } else {
       obj.repDescription = [];
     }
     if (message.repData) {
-      obj.repData = message.repData.map((e) => base64FromBytes(e !== undefined ? e : new Uint8Array()));
+      obj.repData = message.repData.map(e => base64FromBytes(e !== undefined ? e : new Uint8Array()));
     } else {
       obj.repData = [];
     }
     message.optId !== undefined && (obj.optId = Math.round(message.optId));
     message.optChild !== undefined && (obj.optChild = message.optChild ? Child.toJSON(message.optChild) : undefined);
-    message.optState !== undefined &&
-      (obj.optState = message.optState !== undefined ? stateEnumToJSON(message.optState) : undefined);
+    message.optState !== undefined
+      && (obj.optState = message.optState !== undefined ? stateEnumToJSON(message.optState) : undefined);
     message.optLong !== undefined && (obj.optLong = Math.round(message.optLong));
     message.optTruth !== undefined && (obj.optTruth = message.optTruth);
     message.optDescription !== undefined && (obj.optDescription = message.optDescription);
-    message.optData !== undefined &&
-      (obj.optData = message.optData !== undefined ? base64FromBytes(message.optData) : undefined);
+    message.optData !== undefined
+      && (obj.optData = message.optData !== undefined ? base64FromBytes(message.optData) : undefined);
     obj.translations = {};
     if (message.translations) {
       Object.entries(message.translations).forEach(([k, v]) => {

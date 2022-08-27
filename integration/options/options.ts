@@ -1,8 +1,8 @@
 /* eslint-disable */
+import * as _m0 from "protobufjs/minimal";
 import { FileDescriptorProto as FileDescriptorProto1 } from "ts-proto-descriptors";
 import { protoMetadata as protoMetadata1 } from "./google/protobuf/descriptor";
 import { protoMetadata as protoMetadata2, Something } from "./something/something";
-import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "";
 
@@ -137,7 +137,7 @@ export class MyServiceClientImpl implements MyService {
   MyMethod(request: RequestType): Promise<ResponseType> {
     const data = RequestType.encode(request).finish();
     const promise = this.rpc.request("MyService", "MyMethod", data);
-    return promise.then((data) => ResponseType.decode(new _m0.Reader(data)));
+    return promise.then(data => ResponseType.decode(new _m0.Reader(data)));
   }
 }
 

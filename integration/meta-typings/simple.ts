@@ -1,11 +1,11 @@
 /* eslint-disable */
-import { FileDescriptorProto } from "ts-proto-descriptors";
-import { DateMessage, protoMetadata as protoMetadata1 } from "./google/type/date";
-import { BoolValue, Int32Value, protoMetadata as protoMetadata2, StringValue } from "./google/protobuf/wrappers";
-import { protoMetadata as protoMetadata3, Timestamp } from "./google/protobuf/timestamp";
-import { ImportedThing, protoMetadata as protoMetadata4 } from "./import_dir/thing";
 import * as Long from "long";
 import * as _m0 from "protobufjs/minimal";
+import { FileDescriptorProto } from "ts-proto-descriptors";
+import { protoMetadata as protoMetadata3, Timestamp } from "./google/protobuf/timestamp";
+import { BoolValue, Int32Value, protoMetadata as protoMetadata2, StringValue } from "./google/protobuf/wrappers";
+import { DateMessage, protoMetadata as protoMetadata1 } from "./google/type/date";
+import { ImportedThing, protoMetadata as protoMetadata4 } from "./import_dir/thing";
 
 export const protobufPackage = "simple";
 
@@ -1280,7 +1280,7 @@ export class PingServiceClientImpl implements PingService {
   ping(request: PingRequest): Promise<PingResponse> {
     const data = PingRequest.encode(request).finish();
     const promise = this.rpc.request("simple.PingService", "ping", data);
-    return promise.then((data) => PingResponse.decode(new _m0.Reader(data)));
+    return promise.then(data => PingResponse.decode(new _m0.Reader(data)));
   }
 }
 

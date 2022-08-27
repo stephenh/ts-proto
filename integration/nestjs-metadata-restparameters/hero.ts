@@ -1,6 +1,6 @@
 /* eslint-disable */
-import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
 import { Metadata } from "@grpc/grpc-js";
+import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
 import { Observable } from "rxjs";
 
 export const protobufPackage = "hero";
@@ -46,7 +46,7 @@ export interface HeroServiceController {
 }
 
 export function HeroServiceControllerMethods() {
-  return function (constructor: Function) {
+  return function(constructor: Function) {
     const grpcMethods: string[] = ["findOneHero", "findOneVillain"];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);

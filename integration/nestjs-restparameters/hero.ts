@@ -41,7 +41,7 @@ export interface HeroServiceController {
 }
 
 export function HeroServiceControllerMethods() {
-  return function (constructor: Function) {
+  return function(constructor: Function) {
     const grpcMethods: string[] = ["findOneHero", "findOneVillain"];
     for (const method of grpcMethods) {
       const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);

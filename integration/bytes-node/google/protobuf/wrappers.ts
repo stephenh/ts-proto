@@ -506,8 +506,8 @@ export const BytesValue = {
 
   toJSON(message: BytesValue): unknown {
     const obj: any = {};
-    message.value !== undefined &&
-      (obj.value = base64FromBytes(message.value !== undefined ? message.value : Buffer.alloc(0)));
+    message.value !== undefined
+      && (obj.value = base64FromBytes(message.value !== undefined ? message.value : Buffer.alloc(0)));
     return obj;
   },
 

@@ -1,7 +1,7 @@
 /* eslint-disable */
-import { Timestamp } from "./google/protobuf/timestamp";
-import { Empty } from "./google/protobuf/empty";
 import * as _m0 from "protobufjs/minimal";
+import { Empty } from "./google/protobuf/empty";
+import { Timestamp } from "./google/protobuf/timestamp";
 
 export const protobufPackage = "";
 
@@ -97,7 +97,7 @@ export const Todo = {
     message.id !== undefined && (obj.id = message.id);
     message.timestamp !== undefined && (obj.timestamp = message.timestamp.toISOString());
     if (message.repeatedTimestamp) {
-      obj.repeatedTimestamp = message.repeatedTimestamp.map((e) => e.toISOString());
+      obj.repeatedTimestamp = message.repeatedTimestamp.map(e => e.toISOString());
     } else {
       obj.repeatedTimestamp = [];
     }
@@ -201,7 +201,7 @@ export class ClockClientImpl implements Clock {
   Now(request: Empty): Promise<Date> {
     const data = Empty.encode(request).finish();
     const promise = this.rpc.request("Clock", "Now", data);
-    return promise.then((data) => fromTimestamp(Timestamp.decode(new _m0.Reader(data))));
+    return promise.then(data => fromTimestamp(Timestamp.decode(new _m0.Reader(data))));
   }
 }
 

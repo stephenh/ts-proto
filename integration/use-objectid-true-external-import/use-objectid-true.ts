@@ -95,7 +95,7 @@ export const Todo = {
     message.id !== undefined && (obj.id = message.id);
     message.oid !== undefined && (obj.oid = message.oid.toString());
     if (message.repeatedOid) {
-      obj.repeatedOid = message.repeatedOid.map((e) => e.toString());
+      obj.repeatedOid = message.repeatedOid.map(e => e.toString());
     } else {
       obj.repeatedOid = [];
     }

@@ -1,6 +1,6 @@
 /* eslint-disable */
-import { Timestamp } from "./google/protobuf/timestamp";
 import * as _m0 from "protobufjs/minimal";
+import { Timestamp } from "./google/protobuf/timestamp";
 
 export const protobufPackage = "";
 
@@ -96,7 +96,7 @@ export const Todo = {
     message.id !== undefined && (obj.id = message.id);
     message.timestamp !== undefined && (obj.timestamp = message.timestamp);
     if (message.repeatedTimestamp) {
-      obj.repeatedTimestamp = message.repeatedTimestamp.map((e) => e);
+      obj.repeatedTimestamp = message.repeatedTimestamp.map(e => e);
     } else {
       obj.repeatedTimestamp = [];
     }

@@ -1,6 +1,6 @@
 /* eslint-disable */
-import { Observable } from "rxjs";
 import * as _m0 from "protobufjs/minimal";
+import { Observable } from "rxjs";
 
 export const protobufPackage = "";
 

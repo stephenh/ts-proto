@@ -1,7 +1,7 @@
 /* eslint-disable */
+import * as _m0 from "protobufjs/minimal";
 import { FileDescriptorProto as FileDescriptorProto1 } from "ts-proto-descriptors";
 import { protoMetadata as protoMetadata1 } from "../google/protobuf/descriptor";
-import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "something";
 
