@@ -3,10 +3,10 @@ import {
   EnumDescriptorProto,
   FileDescriptorProto,
   ServiceDescriptorProto,
-} from 'ts-proto-descriptors';
-import SourceInfo, { Fields } from './sourceInfo';
-import { Options } from './options';
-import { maybeSnakeToCamel } from './case';
+} from "ts-proto-descriptors";
+import SourceInfo, { Fields } from "./sourceInfo";
+import { Options } from "./options";
+import { maybeSnakeToCamel } from "./case";
 
 type MessageVisitor = (
   fullName: string,
@@ -28,10 +28,10 @@ export function visit(
   messageFn: MessageVisitor,
   options: Options,
   enumFn: EnumVisitor = () => {},
-  tsPrefix: string = '',
-  protoPrefix: string = ''
+  tsPrefix: string = "",
+  protoPrefix: string = ""
 ): void {
-  const isRootFile = 'syntax' in proto;
+  const isRootFile = "syntax" in proto;
   const childEnumType = isRootFile ? Fields.file.enum_type : Fields.message.enum_type;
 
   proto.enumType.forEach((enumDesc, index) => {
@@ -43,7 +43,7 @@ export function visit(
     enumFn(tsFullName, enumDesc, nestedSourceInfo, protoFullName);
   });
 
-  const messages = 'messageType' in proto ? proto.messageType : proto.nestedType;
+  const messages = "messageType" in proto ? proto.messageType : proto.nestedType;
   const childType = isRootFile ? Fields.file.message_type : Fields.message.nested_type;
 
   messages.forEach((message, index) => {
@@ -53,11 +53,11 @@ export function visit(
     const tsFullName = tsPrefix + maybeSnakeToCamel(messageName(message), options);
     const nestedSourceInfo = sourceInfo.open(childType, index);
     messageFn(tsFullName, message, nestedSourceInfo, protoFullName);
-    visit(message, nestedSourceInfo, messageFn, options, enumFn, tsFullName + '_', protoFullName + '.');
+    visit(message, nestedSourceInfo, messageFn, options, enumFn, tsFullName + "_", protoFullName + ".");
   });
 }
 
-const builtInNames = ['Date'];
+const builtInNames = ["Date"];
 
 /** Potentially suffixes `Message` to names to avoid conflicts, i.e. with `Date`. */
 function messageName(message: DescriptorProto): string {

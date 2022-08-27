@@ -1,7 +1,7 @@
 /* eslint-disable */
-import * as _m0 from 'protobufjs/minimal';
+import * as _m0 from "protobufjs/minimal";
 
-export const protobufPackage = 'google.protobuf';
+export const protobufPackage = "google.protobuf";
 
 /**
  * `FieldMask` represents a set of symbolic field paths, for example:
@@ -37,7 +37,6 @@ export const protobufPackage = 'google.protobuf';
  * The result will not contain specific values for fields x,y and z
  * (their value will be set to the default, and omitted in proto text
  * output):
- *
  *
  *     f {
  *       a : 22
@@ -214,14 +213,20 @@ function createBaseFieldMask(): FieldMask {
 }
 
 export const FieldMask = {
-  encode(message: FieldMask, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: FieldMask,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     for (const v of message.paths) {
       writer.uint32(10).string(v!);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): FieldMask {
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): FieldMask {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFieldMask();
@@ -241,20 +246,21 @@ export const FieldMask = {
 
   fromJSON(object: any): FieldMask {
     return {
-      paths:
-        typeof object === 'string'
-          ? object.split(',').filter(Boolean)
-          : Array.isArray(object?.paths)
-          ? object.paths.map(String)
-          : [],
+      paths: typeof (object) === "string"
+        ? object.split(",").filter(Boolean)
+        : Array.isArray(object?.paths)
+        ? object.paths.map(String)
+        : [],
     };
   },
 
   toJSON(message: FieldMask): string {
-    return message.paths.join(',');
+    return message.paths.join(",");
   },
 
-  fromPartial<I extends Exact<DeepPartial<FieldMask>, I>>(object: I): FieldMask {
+  fromPartial<I extends Exact<DeepPartial<FieldMask>, I>>(
+    object: I,
+  ): FieldMask {
     const message = createBaseFieldMask();
     message.paths = object.paths?.map((e) => e) || [];
     return message;
@@ -273,19 +279,24 @@ export const FieldMask = {
   },
 };
 
-type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
+type Builtin =
+  | Date
+  | Function
+  | Uint8Array
+  | string
+  | number
+  | boolean
+  | undefined;
 
-export type DeepPartial<T> = T extends Builtin
-  ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U>
-  ? ReadonlyArray<DeepPartial<U>>
-  : T extends {}
-  ? { [K in keyof T]?: DeepPartial<T[K]> }
+export type DeepPartial<T> = T extends Builtin ? T
+  : T extends Array<infer U> ? Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-export type Exact<P, I extends P> = P extends Builtin
-  ? P
-  : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
+export type Exact<P, I extends P> = P extends Builtin ? P
+  : 
+    & P
+    & { [K in keyof P]: Exact<P[K], I[K]> }
+    & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };

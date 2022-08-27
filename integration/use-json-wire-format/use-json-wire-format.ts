@@ -1,5 +1,5 @@
 /* eslint-disable */
-export const protobufPackage = '';
+export const protobufPackage = "";
 
 export interface Todo {
   id?: string;

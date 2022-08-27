@@ -1,5 +1,5 @@
 /* eslint-disable */
-export const protobufPackage = 'google.protobuf';
+export const protobufPackage = "google.protobuf";
 
 /**
  * A Duration represents a signed, fixed-length span of time represented

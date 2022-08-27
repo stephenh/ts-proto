@@ -1,9 +1,12 @@
 /* eslint-disable */
-import { FileDescriptorProto } from 'ts-proto-descriptors';
-import { protoMetadata as protoMetadata1, Timestamp } from '../google/protobuf/timestamp';
-import * as _m0 from 'protobufjs/minimal';
+import { FileDescriptorProto } from "ts-proto-descriptors";
+import {
+  protoMetadata as protoMetadata1,
+  Timestamp,
+} from "../google/protobuf/timestamp";
+import * as _m0 from "protobufjs/minimal";
 
-export const protobufPackage = 'simple';
+export const protobufPackage = "simple";
 
 export interface ImportedThing {
   createdAt: Date | undefined;
@@ -14,14 +17,21 @@ function createBaseImportedThing(): ImportedThing {
 }
 
 export const ImportedThing = {
-  encode(message: ImportedThing, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: ImportedThing,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     if (message.createdAt !== undefined) {
-      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(10).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(10).fork())
+        .ldelim();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ImportedThing {
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): ImportedThing {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseImportedThing();
@@ -29,7 +39,9 @@ export const ImportedThing = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.createdAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.createdAt = fromTimestamp(
+            Timestamp.decode(reader, reader.uint32()),
+          );
           break;
         default:
           reader.skipType(tag & 7);
@@ -73,47 +85,43 @@ export interface ProtoMetadata {
 
 export const protoMetadata: ProtoMetadata = {
   fileDescriptor: FileDescriptorProto.fromPartial({
-    name: 'import_dir/thing.proto',
-    package: 'simple',
-    dependency: ['google/protobuf/timestamp.proto'],
-    publicDependency: [],
-    weakDependency: [],
-    messageType: [
-      {
-        name: 'ImportedThing',
-        field: [
-          {
-            name: 'created_at',
-            number: 1,
-            label: 1,
-            type: 11,
-            typeName: '.google.protobuf.Timestamp',
-            extendee: '',
-            defaultValue: '',
-            oneofIndex: 0,
-            jsonName: 'createdAt',
-            options: undefined,
-            proto3Optional: false,
-          },
-        ],
-        extension: [],
-        nestedType: [],
-        enumType: [],
-        extensionRange: [],
-        oneofDecl: [],
-        options: undefined,
-        reservedRange: [],
-        reservedName: [],
-      },
-    ],
-    enumType: [],
-    service: [],
-    extension: [],
-    options: undefined,
-    sourceCodeInfo: { location: [] },
-    syntax: 'proto3',
+    "name": "import_dir/thing.proto",
+    "package": "simple",
+    "dependency": ["google/protobuf/timestamp.proto"],
+    "publicDependency": [],
+    "weakDependency": [],
+    "messageType": [{
+      "name": "ImportedThing",
+      "field": [{
+        "name": "created_at",
+        "number": 1,
+        "label": 1,
+        "type": 11,
+        "typeName": ".google.protobuf.Timestamp",
+        "extendee": "",
+        "defaultValue": "",
+        "oneofIndex": 0,
+        "jsonName": "createdAt",
+        "options": undefined,
+        "proto3Optional": false,
+      }],
+      "extension": [],
+      "nestedType": [],
+      "enumType": [],
+      "extensionRange": [],
+      "oneofDecl": [],
+      "options": undefined,
+      "reservedRange": [],
+      "reservedName": [],
+    }],
+    "enumType": [],
+    "service": [],
+    "extension": [],
+    "options": undefined,
+    "sourceCodeInfo": { "location": [] },
+    "syntax": "proto3",
   }),
-  references: { '.simple.ImportedThing': ImportedThing },
+  references: { ".simple.ImportedThing": ImportedThing },
   dependencies: [protoMetadata1],
 };
 

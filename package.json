@@ -20,8 +20,8 @@
     "proto2pbjs:local": "integration/pbjs.sh",
     "bin2ts:local": "integration/codegen.sh",
     "test": "yarn jest -c jest.config.js --maxWorkers=2",
-    "prettier": "prettier --write {src,tests}/**/*.ts integration/*.ts",
-    "prettier:check": "prettier --list-different {src,tests}/**/*.ts",
+    "format": "prettier --write {src,tests}/**/*.ts integration/*.ts",
+    "format:check": "prettier --list-different {src,tests}/**/*.ts",
     "setup:docker": "docker compose build",
     "watch": "ts-node integration/watch.ts"
   },
@@ -67,7 +67,7 @@
     "dataloader": "^1.4.0",
     "object-hash": "^1.3.1",
     "protobufjs": "^6.11.3",
-    "ts-poet": "^4.15.0",
+    "ts-poet": "^5.0.1",
     "ts-proto-descriptors": "1.7.1"
   }
 }

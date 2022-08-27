@@ -2590,6 +2590,11 @@ deprecation@^2.0.0, deprecation@^2.3.1:
   resolved "https://registry.npmjs.org/deprecation/-/deprecation-2.3.1.tgz"
   integrity sha512-xmHIy4F3scKVwMsQ4WnVaS8bHOx0DmVwRywosKhaILI0ywMDWPtBSku2HNxRvF7jtwDRsoEwYQSfbxj8b7RlJQ==
 
+detect-libc@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/detect-libc/-/detect-libc-1.0.3.tgz#fa137c4bd698edf55cd5cd02ac559f91a4c4ba9b"
+  integrity sha512-pGjwhsmsp4kL2RTz08wcOlGN83otlqHeD/Z5T8GXZB+/YcpQ/dgo+lbU8ZsGxV0HIvqqxo9l7mqYwyYMD9bKDg==
+
 detect-newline@^3.0.0:
   version "3.1.0"
   resolved "https://registry.npmjs.org/detect-newline/-/detect-newline-3.1.0.tgz"
@@ -2636,6 +2641,13 @@ dot-prop@^5.1.0:
   integrity sha512-QM8q3zDe58hqUqjraQOmzZ1LIH9SWQJTlEKCH4kJ2oQvLZk7RbQXvtDM2XEq3fwkV9CCvvH4LA0AV+ogFsBM2Q==
   dependencies:
     is-obj "^2.0.0"
+
+dprint-node@^1.0.7:
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/dprint-node/-/dprint-node-1.0.7.tgz#f571eaf61affb3a696cff1bdde78a021875ba540"
+  integrity sha512-NTZOW9A7ipb0n7z7nC3wftvsbceircwVHSgzobJsEQa+7RnOMbhrfX5IflA6CtC4GA63DSAiHYXa4JKEy9F7cA==
+  dependencies:
+    detect-libc "^1.0.3"
 
 duplexer2@~0.1.0:
   version "0.1.4"
@@ -5585,11 +5597,6 @@ pkg-dir@^4.2.0:
   dependencies:
     find-up "^4.0.0"
 
-prettier@^2.5.1:
-  version "2.5.1"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.5.1.tgz#fff75fa9d519c54cf0fce328c1017d94546bc56a"
-  integrity sha512-vBZcPRUR5MZJwoyi3ZoyQlc1rXeEck8KgeC9AwwOn+exuxLxq5toTRDTSaVrXHxelDMHy9zlicw8u66yxoSUFg==
-
 prettier@^2.7.1:
   version "2.7.1"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.7.1.tgz#e235806850d057f97bb08368a4f7d899f7760c64"
@@ -6638,13 +6645,12 @@ ts-node@^10.8.1:
     v8-compile-cache-lib "^3.0.1"
     yn "3.1.1"
 
-ts-poet@^4.15.0:
-  version "4.15.0"
-  resolved "https://registry.yarnpkg.com/ts-poet/-/ts-poet-4.15.0.tgz#637145fa554d3b27c56541578df0ce08cd9eb328"
-  integrity sha512-sLLR8yQBvHzi9d4R1F4pd+AzQxBfzOSSjfxiJxQhkUoH5bL7RsAC6wgvtVUQdGqiCsyS9rT6/8X2FI7ipdir5g==
+ts-poet@^5.0.1:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/ts-poet/-/ts-poet-5.0.1.tgz#1add2ae027fa779748ad315898b39d73aa56b5fa"
+  integrity sha512-EqLEJ+IOuLN51L3O7XzXv2AAoqApq8pYl6tC4bNeFqYC1wCZMct811B09lvQI85o51vgUhw14Pd5Q7fmfxMBqQ==
   dependencies:
-    lodash "^4.17.15"
-    prettier "^2.5.1"
+    dprint-node "^1.0.7"
 
 ts-proto-descriptors@1.7.1:
   version "1.7.1"

@@ -1,8 +1,8 @@
 /* eslint-disable */
-import { Timestamp } from './google/protobuf/timestamp';
-import * as _m0 from 'protobufjs/minimal';
+import { Timestamp } from "./google/protobuf/timestamp";
+import * as _m0 from "protobufjs/minimal";
 
-export const protobufPackage = 'simple';
+export const protobufPackage = "simple";
 
 export interface ImportedThing {
   createdAt?: Date;
@@ -13,14 +13,21 @@ function createBaseImportedThing(): ImportedThing {
 }
 
 export const ImportedThing = {
-  encode(message: ImportedThing, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: ImportedThing,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     if (message.createdAt !== undefined) {
-      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(10).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(10).fork())
+        .ldelim();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ImportedThing {
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): ImportedThing {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseImportedThing();
@@ -28,7 +35,9 @@ export const ImportedThing = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.createdAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.createdAt = fromTimestamp(
+            Timestamp.decode(reader, reader.uint32()),
+          );
           break;
         default:
           reader.skipType(tag & 7);
@@ -40,39 +49,49 @@ export const ImportedThing = {
 
   fromJSON(object: any): ImportedThing {
     return {
-      createdAt: isSet(object.createdAt) ? fromJsonTimestamp(object.createdAt) : undefined,
+      createdAt: isSet(object.createdAt)
+        ? fromJsonTimestamp(object.createdAt)
+        : undefined,
     };
   },
 
   toJSON(message: ImportedThing): unknown {
     const obj: any = {};
-    message.createdAt !== undefined && (obj.createdAt = message.createdAt.toISOString());
+    message.createdAt !== undefined &&
+      (obj.createdAt = message.createdAt.toISOString());
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<ImportedThing>, I>>(object: I): ImportedThing {
+  fromPartial<I extends Exact<DeepPartial<ImportedThing>, I>>(
+    object: I,
+  ): ImportedThing {
     const message = createBaseImportedThing();
     message.createdAt = object.createdAt ?? undefined;
     return message;
   },
 };
 
-type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
+type Builtin =
+  | Date
+  | Function
+  | Uint8Array
+  | string
+  | number
+  | boolean
+  | undefined;
 
-export type DeepPartial<T> = T extends Builtin
-  ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U>
-  ? ReadonlyArray<DeepPartial<U>>
-  : T extends {}
-  ? { [K in keyof T]?: DeepPartial<T[K]> }
+export type DeepPartial<T> = T extends Builtin ? T
+  : T extends Array<infer U> ? Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-export type Exact<P, I extends P> = P extends Builtin
-  ? P
-  : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
+export type Exact<P, I extends P> = P extends Builtin ? P
+  : 
+    & P
+    & { [K in keyof P]: Exact<P[K], I[K]> }
+    & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function toTimestamp(date: Date): Timestamp {
   const seconds = date.getTime() / 1_000;
@@ -89,7 +108,7 @@ function fromTimestamp(t: Timestamp): Date {
 function fromJsonTimestamp(o: any): Date {
   if (o instanceof Date) {
     return o;
-  } else if (typeof o === 'string') {
+  } else if (typeof o === "string") {
     return new Date(o);
   } else {
     return fromTimestamp(Timestamp.fromJSON(o));

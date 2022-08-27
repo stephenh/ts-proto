@@ -1,9 +1,9 @@
 /* eslint-disable */
-import { FileDescriptorProto as FileDescriptorProto1 } from 'ts-proto-descriptors';
-import { protoMetadata as protoMetadata1 } from '../google/protobuf/descriptor';
-import * as _m0 from 'protobufjs/minimal';
+import { FileDescriptorProto as FileDescriptorProto1 } from "ts-proto-descriptors";
+import { protoMetadata as protoMetadata1 } from "../google/protobuf/descriptor";
+import * as _m0 from "protobufjs/minimal";
 
-export const protobufPackage = 'something';
+export const protobufPackage = "something";
 
 export interface Something {
   hello: string;
@@ -11,12 +11,15 @@ export interface Something {
 }
 
 function createBaseSomething(): Something {
-  return { hello: '', foo: [] };
+  return { hello: "", foo: [] };
 }
 
 export const Something = {
-  encode(message: Something, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.hello !== '') {
+  encode(
+    message: Something,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
+    if (message.hello !== "") {
       writer.uint32(10).string(message.hello);
     }
     writer.uint32(18).fork();
@@ -27,7 +30,10 @@ export const Something = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Something {
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): Something {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSomething();
@@ -89,73 +95,66 @@ export interface ProtoMetadata {
 
 export const protoMetadata: ProtoMetadata = {
   fileDescriptor: FileDescriptorProto1.fromPartial({
-    name: 'something/something.proto',
-    package: 'something',
-    dependency: ['google/protobuf/descriptor.proto'],
-    publicDependency: [],
-    weakDependency: [],
-    messageType: [
-      {
-        name: 'Something',
-        field: [
-          {
-            name: 'hello',
-            number: 1,
-            label: 1,
-            type: 9,
-            typeName: '',
-            extendee: '',
-            defaultValue: '',
-            oneofIndex: 0,
-            jsonName: 'hello',
-            options: undefined,
-            proto3Optional: false,
-          },
-          {
-            name: 'foo',
-            number: 2,
-            label: 3,
-            type: 5,
-            typeName: '',
-            extendee: '',
-            defaultValue: '',
-            oneofIndex: 0,
-            jsonName: 'foo',
-            options: undefined,
-            proto3Optional: false,
-          },
-        ],
-        extension: [],
-        nestedType: [],
-        enumType: [],
-        extensionRange: [],
-        oneofDecl: [],
-        options: undefined,
-        reservedRange: [],
-        reservedName: [],
-      },
-    ],
-    enumType: [],
-    service: [],
-    extension: [
-      {
-        name: 'something',
-        number: 1000,
-        label: 1,
-        type: 11,
-        typeName: '.something.Something',
-        extendee: '.google.protobuf.FieldOptions',
-        defaultValue: '',
-        oneofIndex: 0,
-        jsonName: 'something',
-        options: undefined,
-        proto3Optional: true,
-      },
-    ],
-    options: undefined,
-    sourceCodeInfo: { location: [] },
-    syntax: 'proto3',
+    "name": "something/something.proto",
+    "package": "something",
+    "dependency": ["google/protobuf/descriptor.proto"],
+    "publicDependency": [],
+    "weakDependency": [],
+    "messageType": [{
+      "name": "Something",
+      "field": [{
+        "name": "hello",
+        "number": 1,
+        "label": 1,
+        "type": 9,
+        "typeName": "",
+        "extendee": "",
+        "defaultValue": "",
+        "oneofIndex": 0,
+        "jsonName": "hello",
+        "options": undefined,
+        "proto3Optional": false,
+      }, {
+        "name": "foo",
+        "number": 2,
+        "label": 3,
+        "type": 5,
+        "typeName": "",
+        "extendee": "",
+        "defaultValue": "",
+        "oneofIndex": 0,
+        "jsonName": "foo",
+        "options": undefined,
+        "proto3Optional": false,
+      }],
+      "extension": [],
+      "nestedType": [],
+      "enumType": [],
+      "extensionRange": [],
+      "oneofDecl": [],
+      "options": undefined,
+      "reservedRange": [],
+      "reservedName": [],
+    }],
+    "enumType": [],
+    "service": [],
+    "extension": [{
+      "name": "something",
+      "number": 1000,
+      "label": 1,
+      "type": 11,
+      "typeName": ".something.Something",
+      "extendee": ".google.protobuf.FieldOptions",
+      "defaultValue": "",
+      "oneofIndex": 0,
+      "jsonName": "something",
+      "options": undefined,
+      "proto3Optional": true,
+    }],
+    "options": undefined,
+    "sourceCodeInfo": { "location": [] },
+    "syntax": "proto3",
   }),
-  references: { '.something.Something': Something },
+  references: { ".something.Something": Something },
   dependencies: [protoMetadata1],
 };

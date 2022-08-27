@@ -1,7 +1,7 @@
 /* eslint-disable */
-import * as _m0 from 'protobufjs/minimal';
+import * as _m0 from "protobufjs/minimal";
 
-export const protobufPackage = '';
+export const protobufPackage = "";
 
 export enum MyEnum {
   FOO = 0,
@@ -16,16 +16,21 @@ export interface MyMessage {
   quux: string | undefined;
 }
 
-export interface RequestType {}
+export interface RequestType {
+}
 
-export interface ResponseType {}
+export interface ResponseType {
+}
 
 function createBaseMyMessage(): MyMessage {
   return { foo: undefined, foo2: undefined, bar: undefined, quux: undefined };
 }
 
 export const MyMessage = {
-  encode(message: MyMessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: MyMessage,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     if (message.foo !== undefined) {
       writer.uint32(8).int32(message.foo);
     }
@@ -38,16 +43,16 @@ export const MyMessage = {
     if (message.quux !== undefined) {
       writer.uint32(34).string(message.quux);
     }
-    if ('_unknownFields' in message) {
-      const msgUnknownFields: any = (message as any)['_unknownFields'];
+    if ("_unknownFields" in message) {
+      const msgUnknownFields: any = (message as any)["_unknownFields"];
       for (const key of Object.keys(msgUnknownFields)) {
         const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
-          (writer as any)['_push'](
+          (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
-            value
+            value,
           );
         }
       }
@@ -55,7 +60,10 @@ export const MyMessage = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): MyMessage {
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): MyMessage {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMyMessage();
@@ -94,17 +102,20 @@ function createBaseRequestType(): RequestType {
 }
 
 export const RequestType = {
-  encode(message: RequestType, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if ('_unknownFields' in message) {
-      const msgUnknownFields: any = (message as any)['_unknownFields'];
+  encode(
+    message: RequestType,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
+    if ("_unknownFields" in message) {
+      const msgUnknownFields: any = (message as any)["_unknownFields"];
       for (const key of Object.keys(msgUnknownFields)) {
         const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
-          (writer as any)['_push'](
+          (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
-            value
+            value,
           );
         }
       }
@@ -112,7 +123,10 @@ export const RequestType = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): RequestType {
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): RequestType {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseRequestType();
@@ -139,17 +153,20 @@ function createBaseResponseType(): ResponseType {
 }
 
 export const ResponseType = {
-  encode(message: ResponseType, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if ('_unknownFields' in message) {
-      const msgUnknownFields: any = (message as any)['_unknownFields'];
+  encode(
+    message: ResponseType,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
+    if ("_unknownFields" in message) {
+      const msgUnknownFields: any = (message as any)["_unknownFields"];
       for (const key of Object.keys(msgUnknownFields)) {
         const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
-          (writer as any)['_push'](
+          (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
-            value
+            value,
           );
         }
       }
@@ -157,7 +174,10 @@ export const ResponseType = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ResponseType {
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): ResponseType {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseResponseType();
@@ -189,13 +209,23 @@ export class MyServiceClientImpl implements MyService {
     this.rpc = rpc;
     this.MyMethod = this.MyMethod.bind(this);
   }
-  MyMethod(request: RequestType): Promise<ResponseType> {
+  MyMethod(
+    request: RequestType,
+  ): Promise<ResponseType> {
     const data = RequestType.encode(request).finish();
-    const promise = this.rpc.request('MyService', 'MyMethod', data);
+    const promise = this.rpc.request(
+      "MyService",
+      "MyMethod",
+      data,
+    );
     return promise.then((data) => ResponseType.decode(new _m0.Reader(data)));
   }
 }
 
 interface Rpc {
-  request(service: string, method: string, data: Uint8Array): Promise<Uint8Array>;
+  request(
+    service: string,
+    method: string,
+    data: Uint8Array,
+  ): Promise<Uint8Array>;
 }

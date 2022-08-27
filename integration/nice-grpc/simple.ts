@@ -1,22 +1,22 @@
 /* eslint-disable */
-import { CallContext, CallOptions } from 'nice-grpc-common';
-import { Timestamp } from './google/protobuf/timestamp';
-import { Empty } from './google/protobuf/empty';
+import { CallContext, CallOptions } from "nice-grpc-common";
+import { Timestamp } from "./google/protobuf/timestamp";
+import { Empty } from "./google/protobuf/empty";
 import {
-  StringValue,
-  Int64Value,
-  UInt64Value,
-  Int32Value,
-  UInt32Value,
-  BytesValue,
-  FloatValue,
-  DoubleValue,
   BoolValue,
-} from './google/protobuf/wrappers';
-import { Struct, Value, ListValue } from './google/protobuf/struct';
-import * as _m0 from 'protobufjs/minimal';
+  BytesValue,
+  DoubleValue,
+  FloatValue,
+  Int32Value,
+  Int64Value,
+  StringValue,
+  UInt32Value,
+  UInt64Value,
+} from "./google/protobuf/wrappers";
+import { ListValue, Struct, Value } from "./google/protobuf/struct";
+import * as _m0 from "protobufjs/minimal";
 
-export const protobufPackage = 'simple';
+export const protobufPackage = "simple";
 
 export interface TestMessage {
   timestamp: Date | undefined;
@@ -27,14 +27,21 @@ function createBaseTestMessage(): TestMessage {
 }
 
 export const TestMessage = {
-  encode(message: TestMessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(
+    message: TestMessage,
+    writer: _m0.Writer = _m0.Writer.create(),
+  ): _m0.Writer {
     if (message.timestamp !== undefined) {
-      Timestamp.encode(toTimestamp(message.timestamp), writer.uint32(10).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.timestamp), writer.uint32(10).fork())
+        .ldelim();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): TestMessage {
+  decode(
+    input: _m0.Reader | Uint8Array,
+    length?: number,
+  ): TestMessage {
     const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTestMessage();
@@ -42,7 +49,9 @@ export const TestMessage = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.timestamp = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          message.timestamp = fromTimestamp(
+            Timestamp.decode(reader, reader.uint32()),
+          );
           break;
         default:
           reader.skipType(tag & 7);
@@ -54,13 +63,16 @@ export const TestMessage = {
 
   fromJSON(object: any): TestMessage {
     return {
-      timestamp: isSet(object.timestamp) ? fromJsonTimestamp(object.timestamp) : undefined,
+      timestamp: isSet(object.timestamp)
+        ? fromJsonTimestamp(object.timestamp)
+        : undefined,
     };
   },
 
   toJSON(message: TestMessage): unknown {
     const obj: any = {};
-    message.timestamp !== undefined && (obj.timestamp = message.timestamp.toISOString());
+    message.timestamp !== undefined &&
+      (obj.timestamp = message.timestamp.toISOString());
     return obj;
   },
 
@@ -78,8 +90,8 @@ export const TestMessage = {
  */
 export type TestDefinition = typeof TestDefinition;
 export const TestDefinition = {
-  name: 'Test',
-  fullName: 'simple.Test',
+  name: "Test",
+  fullName: "simple.Test",
   methods: {
     /**
      * Unary
@@ -87,7 +99,7 @@ export const TestDefinition = {
      * @deprecated
      */
     unary: {
-      name: 'Unary',
+      name: "Unary",
       requestType: Empty,
       requestStream: false,
       responseType: Empty,
@@ -95,7 +107,7 @@ export const TestDefinition = {
       options: {},
     },
     unaryStringValue: {
-      name: 'UnaryStringValue',
+      name: "UnaryStringValue",
       requestType: StringValue,
       requestStream: false,
       responseType: StringValue,
@@ -103,7 +115,7 @@ export const TestDefinition = {
       options: {},
     },
     unaryInt64Value: {
-      name: 'UnaryInt64Value',
+      name: "UnaryInt64Value",
       requestType: Int64Value,
       requestStream: false,
       responseType: Int64Value,
@@ -111,7 +123,7 @@ export const TestDefinition = {
       options: {},
     },
     unaryUint64Value: {
-      name: 'UnaryUint64Value',
+      name: "UnaryUint64Value",
       requestType: UInt64Value,
       requestStream: false,
       responseType: UInt64Value,
@@ -119,7 +131,7 @@ export const TestDefinition = {
       options: {},
     },
     unaryInt32Value: {
-      name: 'UnaryInt32Value',
+      name: "UnaryInt32Value",
       requestType: Int32Value,
       requestStream: false,
       responseType: Int32Value,
@@ -127,7 +139,7 @@ export const TestDefinition = {
       options: {},
     },
     unaryUInt32Value: {
-      name: 'UnaryUInt32Value',
+      name: "UnaryUInt32Value",
       requestType: UInt32Value,
       requestStream: false,
       responseType: UInt32Value,
@@ -135,7 +147,7 @@ export const TestDefinition = {
       options: {},
     },
     unaryBytesValue: {
-      name: 'UnaryBytesValue',
+      name: "UnaryBytesValue",
       requestType: BytesValue,
       requestStream: false,
       responseType: BytesValue,
@@ -143,7 +155,7 @@ export const TestDefinition = {
       options: {},
     },
     unaryFloatValue: {
-      name: 'UnaryFloatValue',
+      name: "UnaryFloatValue",
       requestType: FloatValue,
       requestStream: false,
       responseType: FloatValue,
@@ -151,7 +163,7 @@ export const TestDefinition = {
       options: {},
     },
     unaryDoubleValue: {
-      name: 'UnaryDoubleValue',
+      name: "UnaryDoubleValue",
       requestType: DoubleValue,
       requestStream: false,
       responseType: DoubleValue,
@@ -159,7 +171,7 @@ export const TestDefinition = {
       options: {},
     },
     unaryBoolValue: {
-      name: 'UnaryBoolValue',
+      name: "UnaryBoolValue",
       requestType: BoolValue,
       requestStream: false,
       responseType: BoolValue,
@@ -167,7 +179,7 @@ export const TestDefinition = {
       options: {},
     },
     unaryTimestamp: {
-      name: 'UnaryTimestamp',
+      name: "UnaryTimestamp",
       requestType: Timestamp,
       requestStream: false,
       responseType: Timestamp,
@@ -175,7 +187,7 @@ export const TestDefinition = {
       options: {},
     },
     struct: {
-      name: 'Struct',
+      name: "Struct",
       requestType: Struct,
       requestStream: false,
       responseType: Struct,
@@ -183,7 +195,7 @@ export const TestDefinition = {
       options: {},
     },
     value: {
-      name: 'Value',
+      name: "Value",
       requestType: Value,
       requestStream: false,
       responseType: Value,
@@ -191,7 +203,7 @@ export const TestDefinition = {
       options: {},
     },
     listValue: {
-      name: 'ListValue',
+      name: "ListValue",
       requestType: ListValue,
       requestStream: false,
       responseType: ListValue,
@@ -200,7 +212,7 @@ export const TestDefinition = {
     },
     /** Server Streaming */
     serverStreaming: {
-      name: 'ServerStreaming',
+      name: "ServerStreaming",
       requestType: TestMessage,
       requestStream: false,
       responseType: TestMessage,
@@ -208,7 +220,7 @@ export const TestDefinition = {
       options: {},
     },
     serverStreamingStringValue: {
-      name: 'ServerStreamingStringValue',
+      name: "ServerStreamingStringValue",
       requestType: StringValue,
       requestStream: false,
       responseType: StringValue,
@@ -216,7 +228,7 @@ export const TestDefinition = {
       options: {},
     },
     serverStreamingStruct: {
-      name: 'ServerStreamingStruct',
+      name: "ServerStreamingStruct",
       requestType: Struct,
       requestStream: false,
       responseType: Struct,
@@ -225,7 +237,7 @@ export const TestDefinition = {
     },
     /** Client Streaming */
     clientStreaming: {
-      name: 'ClientStreaming',
+      name: "ClientStreaming",
       requestType: TestMessage,
       requestStream: true,
       responseType: TestMessage,
@@ -233,7 +245,7 @@ export const TestDefinition = {
       options: {},
     },
     clientStreamingStringValue: {
-      name: 'ClientStreamingStringValue',
+      name: "ClientStreamingStringValue",
       requestType: StringValue,
       requestStream: true,
       responseType: StringValue,
@@ -242,7 +254,7 @@ export const TestDefinition = {
     },
     /** Bidi Streaming */
     bidiStreaming: {
-      name: 'BidiStreaming',
+      name: "BidiStreaming",
       requestType: TestMessage,
       requestStream: true,
       responseType: TestMessage,
@@ -250,7 +262,7 @@ export const TestDefinition = {
       options: {},
     },
     bidiStreamingStringValue: {
-      name: 'BidiStreamingStringValue',
+      name: "BidiStreamingStringValue",
       requestType: StringValue,
       requestStream: true,
       responseType: StringValue,
@@ -266,50 +278,92 @@ export interface TestServiceImplementation<CallContextExt = {}> {
    *
    * @deprecated
    */
-  unary(request: Empty, context: CallContext & CallContextExt): Promise<DeepPartial<Empty>>;
-  unaryStringValue(request: StringValue, context: CallContext & CallContextExt): Promise<DeepPartial<StringValue>>;
-  unaryInt64Value(request: Int64Value, context: CallContext & CallContextExt): Promise<DeepPartial<Int64Value>>;
-  unaryUint64Value(request: UInt64Value, context: CallContext & CallContextExt): Promise<DeepPartial<UInt64Value>>;
-  unaryInt32Value(request: Int32Value, context: CallContext & CallContextExt): Promise<DeepPartial<Int32Value>>;
-  unaryUInt32Value(request: UInt32Value, context: CallContext & CallContextExt): Promise<DeepPartial<UInt32Value>>;
-  unaryBytesValue(request: BytesValue, context: CallContext & CallContextExt): Promise<DeepPartial<BytesValue>>;
-  unaryFloatValue(request: FloatValue, context: CallContext & CallContextExt): Promise<DeepPartial<FloatValue>>;
-  unaryDoubleValue(request: DoubleValue, context: CallContext & CallContextExt): Promise<DeepPartial<DoubleValue>>;
-  unaryBoolValue(request: BoolValue, context: CallContext & CallContextExt): Promise<DeepPartial<BoolValue>>;
-  unaryTimestamp(request: Timestamp, context: CallContext & CallContextExt): Promise<DeepPartial<Timestamp>>;
-  struct(request: Struct, context: CallContext & CallContextExt): Promise<DeepPartial<Struct>>;
-  value(request: Value, context: CallContext & CallContextExt): Promise<DeepPartial<Value>>;
-  listValue(request: ListValue, context: CallContext & CallContextExt): Promise<DeepPartial<ListValue>>;
+  unary(
+    request: Empty,
+    context: CallContext & CallContextExt,
+  ): Promise<DeepPartial<Empty>>;
+  unaryStringValue(
+    request: StringValue,
+    context: CallContext & CallContextExt,
+  ): Promise<DeepPartial<StringValue>>;
+  unaryInt64Value(
+    request: Int64Value,
+    context: CallContext & CallContextExt,
+  ): Promise<DeepPartial<Int64Value>>;
+  unaryUint64Value(
+    request: UInt64Value,
+    context: CallContext & CallContextExt,
+  ): Promise<DeepPartial<UInt64Value>>;
+  unaryInt32Value(
+    request: Int32Value,
+    context: CallContext & CallContextExt,
+  ): Promise<DeepPartial<Int32Value>>;
+  unaryUInt32Value(
+    request: UInt32Value,
+    context: CallContext & CallContextExt,
+  ): Promise<DeepPartial<UInt32Value>>;
+  unaryBytesValue(
+    request: BytesValue,
+    context: CallContext & CallContextExt,
+  ): Promise<DeepPartial<BytesValue>>;
+  unaryFloatValue(
+    request: FloatValue,
+    context: CallContext & CallContextExt,
+  ): Promise<DeepPartial<FloatValue>>;
+  unaryDoubleValue(
+    request: DoubleValue,
+    context: CallContext & CallContextExt,
+  ): Promise<DeepPartial<DoubleValue>>;
+  unaryBoolValue(
+    request: BoolValue,
+    context: CallContext & CallContextExt,
+  ): Promise<DeepPartial<BoolValue>>;
+  unaryTimestamp(
+    request: Timestamp,
+    context: CallContext & CallContextExt,
+  ): Promise<DeepPartial<Timestamp>>;
+  struct(
+    request: Struct,
+    context: CallContext & CallContextExt,
+  ): Promise<DeepPartial<Struct>>;
+  value(
+    request: Value,
+    context: CallContext & CallContextExt,
+  ): Promise<DeepPartial<Value>>;
+  listValue(
+    request: ListValue,
+    context: CallContext & CallContextExt,
+  ): Promise<DeepPartial<ListValue>>;
   /** Server Streaming */
   serverStreaming(
     request: TestMessage,
-    context: CallContext & CallContextExt
+    context: CallContext & CallContextExt,
   ): ServerStreamingMethodResult<DeepPartial<TestMessage>>;
   serverStreamingStringValue(
     request: StringValue,
-    context: CallContext & CallContextExt
+    context: CallContext & CallContextExt,
   ): ServerStreamingMethodResult<DeepPartial<StringValue>>;
   serverStreamingStruct(
     request: Struct,
-    context: CallContext & CallContextExt
+    context: CallContext & CallContextExt,
   ): ServerStreamingMethodResult<DeepPartial<Struct>>;
   /** Client Streaming */
   clientStreaming(
     request: AsyncIterable<TestMessage>,
-    context: CallContext & CallContextExt
+    context: CallContext & CallContextExt,
   ): Promise<DeepPartial<TestMessage>>;
   clientStreamingStringValue(
     request: AsyncIterable<StringValue>,
-    context: CallContext & CallContextExt
+    context: CallContext & CallContextExt,
   ): Promise<DeepPartial<StringValue>>;
   /** Bidi Streaming */
   bidiStreaming(
     request: AsyncIterable<TestMessage>,
-    context: CallContext & CallContextExt
+    context: CallContext & CallContextExt,
   ): ServerStreamingMethodResult<DeepPartial<TestMessage>>;
   bidiStreamingStringValue(
     request: AsyncIterable<StringValue>,
-    context: CallContext & CallContextExt
+    context: CallContext & CallContextExt,
   ): ServerStreamingMethodResult<DeepPartial<StringValue>>;
 }
 
@@ -319,60 +373,108 @@ export interface TestClient<CallOptionsExt = {}> {
    *
    * @deprecated
    */
-  unary(request: DeepPartial<Empty>, options?: CallOptions & CallOptionsExt): Promise<Empty>;
-  unaryStringValue(request: DeepPartial<StringValue>, options?: CallOptions & CallOptionsExt): Promise<StringValue>;
-  unaryInt64Value(request: DeepPartial<Int64Value>, options?: CallOptions & CallOptionsExt): Promise<Int64Value>;
-  unaryUint64Value(request: DeepPartial<UInt64Value>, options?: CallOptions & CallOptionsExt): Promise<UInt64Value>;
-  unaryInt32Value(request: DeepPartial<Int32Value>, options?: CallOptions & CallOptionsExt): Promise<Int32Value>;
-  unaryUInt32Value(request: DeepPartial<UInt32Value>, options?: CallOptions & CallOptionsExt): Promise<UInt32Value>;
-  unaryBytesValue(request: DeepPartial<BytesValue>, options?: CallOptions & CallOptionsExt): Promise<BytesValue>;
-  unaryFloatValue(request: DeepPartial<FloatValue>, options?: CallOptions & CallOptionsExt): Promise<FloatValue>;
-  unaryDoubleValue(request: DeepPartial<DoubleValue>, options?: CallOptions & CallOptionsExt): Promise<DoubleValue>;
-  unaryBoolValue(request: DeepPartial<BoolValue>, options?: CallOptions & CallOptionsExt): Promise<BoolValue>;
-  unaryTimestamp(request: DeepPartial<Timestamp>, options?: CallOptions & CallOptionsExt): Promise<Timestamp>;
-  struct(request: DeepPartial<Struct>, options?: CallOptions & CallOptionsExt): Promise<Struct>;
-  value(request: DeepPartial<Value>, options?: CallOptions & CallOptionsExt): Promise<Value>;
-  listValue(request: DeepPartial<ListValue>, options?: CallOptions & CallOptionsExt): Promise<ListValue>;
+  unary(
+    request: DeepPartial<Empty>,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<Empty>;
+  unaryStringValue(
+    request: DeepPartial<StringValue>,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<StringValue>;
+  unaryInt64Value(
+    request: DeepPartial<Int64Value>,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<Int64Value>;
+  unaryUint64Value(
+    request: DeepPartial<UInt64Value>,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<UInt64Value>;
+  unaryInt32Value(
+    request: DeepPartial<Int32Value>,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<Int32Value>;
+  unaryUInt32Value(
+    request: DeepPartial<UInt32Value>,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<UInt32Value>;
+  unaryBytesValue(
+    request: DeepPartial<BytesValue>,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<BytesValue>;
+  unaryFloatValue(
+    request: DeepPartial<FloatValue>,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<FloatValue>;
+  unaryDoubleValue(
+    request: DeepPartial<DoubleValue>,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<DoubleValue>;
+  unaryBoolValue(
+    request: DeepPartial<BoolValue>,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<BoolValue>;
+  unaryTimestamp(
+    request: DeepPartial<Timestamp>,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<Timestamp>;
+  struct(
+    request: DeepPartial<Struct>,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<Struct>;
+  value(
+    request: DeepPartial<Value>,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<Value>;
+  listValue(
+    request: DeepPartial<ListValue>,
+    options?: CallOptions & CallOptionsExt,
+  ): Promise<ListValue>;
   /** Server Streaming */
   serverStreaming(
     request: DeepPartial<TestMessage>,
-    options?: CallOptions & CallOptionsExt
+    options?: CallOptions & CallOptionsExt,
   ): AsyncIterable<TestMessage>;
   serverStreamingStringValue(
     request: DeepPartial<StringValue>,
-    options?: CallOptions & CallOptionsExt
+    options?: CallOptions & CallOptionsExt,
   ): AsyncIterable<StringValue>;
-  serverStreamingStruct(request: DeepPartial<Struct>, options?: CallOptions & CallOptionsExt): AsyncIterable<Struct>;
+  serverStreamingStruct(
+    request: DeepPartial<Struct>,
+    options?: CallOptions & CallOptionsExt,
+  ): AsyncIterable<Struct>;
   /** Client Streaming */
   clientStreaming(
     request: AsyncIterable<DeepPartial<TestMessage>>,
-    options?: CallOptions & CallOptionsExt
+    options?: CallOptions & CallOptionsExt,
   ): Promise<TestMessage>;
   clientStreamingStringValue(
     request: AsyncIterable<DeepPartial<StringValue>>,
-    options?: CallOptions & CallOptionsExt
+    options?: CallOptions & CallOptionsExt,
   ): Promise<StringValue>;
   /** Bidi Streaming */
   bidiStreaming(
     request: AsyncIterable<DeepPartial<TestMessage>>,
-    options?: CallOptions & CallOptionsExt
+    options?: CallOptions & CallOptionsExt,
   ): AsyncIterable<TestMessage>;
   bidiStreamingStringValue(
     request: AsyncIterable<DeepPartial<StringValue>>,
-    options?: CallOptions & CallOptionsExt
+    options?: CallOptions & CallOptionsExt,
   ): AsyncIterable<StringValue>;
 }
 
-type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
+type Builtin =
+  | Date
+  | Function
+  | Uint8Array
+  | string
+  | number
+  | boolean
+  | undefined;
 
-export type DeepPartial<T> = T extends Builtin
-  ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U>
-  ? ReadonlyArray<DeepPartial<U>>
-  : T extends {}
-  ? { [K in keyof T]?: DeepPartial<T[K]> }
+export type DeepPartial<T> = T extends Builtin ? T
+  : T extends Array<infer U> ? Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 function toTimestamp(date: Date): Timestamp {
@@ -390,7 +492,7 @@ function fromTimestamp(t: Timestamp): Date {
 function fromJsonTimestamp(o: any): Date {
   if (o instanceof Date) {
     return o;
-  } else if (typeof o === 'string') {
+  } else if (typeof o === "string") {
     return new Date(o);
   } else {
     return fromTimestamp(Timestamp.fromJSON(o));

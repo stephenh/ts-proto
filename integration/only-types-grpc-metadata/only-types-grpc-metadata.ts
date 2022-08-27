@@ -1,7 +1,7 @@
 /* eslint-disable */
-import { Metadata } from '@grpc/grpc-js';
+import { Metadata } from "@grpc/grpc-js";
 
-export const protobufPackage = 'basic';
+export const protobufPackage = "basic";
 
 export interface GetBasicRequest {
   name: string;
@@ -12,5 +12,8 @@ export interface GetBasicResponse {
 }
 
 export interface BasicService {
-  getBasic(request: GetBasicRequest, metadata?: Metadata): Promise<GetBasicResponse>;
+  getBasic(
+    request: GetBasicRequest,
+    metadata?: Metadata,
+  ): Promise<GetBasicResponse>;
 }
