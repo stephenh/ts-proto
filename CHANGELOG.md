@@ -1,3 +1,10 @@
+## [1.123.1](https://github.com/stephenh/ts-proto/compare/v1.123.0...v1.123.1) (2022-08-27)
+
+
+### Bug Fixes
+
+* Bump ts-poet to use @dprint/typescript. ([#662](https://github.com/stephenh/ts-proto/issues/662)) ([84b64f4](https://github.com/stephenh/ts-proto/commit/84b64f4219f96199e8722678354430fbf00cebba))
+
 # [1.123.0](https://github.com/stephenh/ts-proto/compare/v1.122.0...v1.123.0) (2022-08-27)
 
 
