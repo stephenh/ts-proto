@@ -445,6 +445,8 @@ Generated code will be placed in the Gradle build directory.
 
 - With `--ts_proto_opt=useNumericEnumForJson=true`, the JSON converter (`toJSON`) will encode enum values as int, rather than a string literal.
 
+- With `--ts_proto_opt=initializeFieldsAsUndefined=false`, all optional field initializers will be omited from the generated base instances.
+
 ### NestJS Support
 
 We have a great way of working together with [nestjs](https://docs.nestjs.com/microservices/grpc). `ts-proto` generates `interfaces` and `decorators` for you controller, client. For more information see the [nestjs readme](NESTJS.markdown).

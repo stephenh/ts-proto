@@ -67,7 +67,7 @@ export type Options = {
   usePrototypeForDefaults: boolean;
   useJsonWireFormat: boolean;
   useNumericEnumForJson: boolean;
-  omitOptionalUndefineds: boolean;
+  initializeFieldsAsUndefined: boolean;
 };
 
 export function defaultOptions(): Options {
@@ -109,7 +109,7 @@ export function defaultOptions(): Options {
     usePrototypeForDefaults: false,
     useJsonWireFormat: false,
     useNumericEnumForJson: false,
-    omitOptionalUndefineds: false,
+    initializeFieldsAsUndefined: true,
   };
 }
 
@@ -190,6 +190,10 @@ export function optionsFromParameter(parameter: string | undefined): Options {
       options.stringEnums = true;
       options.useDate = DateOption.STRING;
     }
+  }
+
+  if (options.nestJs) {
+    options.initializeFieldsAsUndefined = false;
   }
 
   return options;
