@@ -482,7 +482,7 @@ const sendRequest: RpcImpl = (service, method, data) => {
   // Conventionally in gRPC, the request path looks like
   //   "package.names.ServiceName/MethodName",
   // we therefore construct such a string
-  const path = `${service}/${method}`;
+  const path = `/${service}/${method}`;
 
   return new Promise((resolve, reject) => {
     // makeUnaryRequest transmits the result (and error) with a callback
