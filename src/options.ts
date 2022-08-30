@@ -70,6 +70,8 @@ export type Options = {
   usePrototypeForDefaults: boolean;
   useJsonWireFormat: boolean;
   useNumericEnumForJson: boolean;
+  disableDefaultEnumCheck: boolean;
+  disableDefaultCheck: boolean;
 };
 
 export function defaultOptions(): Options {
@@ -111,6 +113,8 @@ export function defaultOptions(): Options {
     usePrototypeForDefaults: false,
     useJsonWireFormat: false,
     useNumericEnumForJson: false,
+    disableDefaultEnumCheck: false,
+    disableDefaultCheck: false,
   };
 }
 

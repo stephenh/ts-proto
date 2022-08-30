@@ -8,6 +8,8 @@ describe("options", () => {
         "addNestjsRestParameter": false,
         "constEnums": false,
         "context": false,
+        "disableDefaultCheck": false,
+        "disableDefaultEnumCheck": false,
         "emitImportedFiles": true,
         "enumsAsLiterals": false,
         "env": "both",

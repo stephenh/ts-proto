@@ -448,6 +448,11 @@ Generated code will be placed in the Gradle build directory.
 
 - With `--ts_proto_opt=useNumericEnumForJson=true`, the JSON converter (`toJSON`) will encode enum values as int, rather than a string literal.
 
+- With `--ts_proto_opt=disableDefaultCheck=true`, this will disable the if conditional around the encoder for a field which implicitly enforces the default value. For example if
+  `if(message.name !== ''){ Writer.uint32(1).string(message.name)}` this will become ` Writer.uint32(1).string(message.name)` so you can potential send an undefined to the server.
+
+- With `--ts_proto_opt=disableDefaultEnumCheck=true`, the same as `--ts_proto_opt=disableDefaultCheck=true` but only applied to enums.
+
 ### NestJS Support
 
 We have a great way of working together with [nestjs](https://docs.nestjs.com/microservices/grpc). `ts-proto` generates `interfaces` and `decorators` for you controller, client. For more information see the [nestjs readme](NESTJS.markdown).
