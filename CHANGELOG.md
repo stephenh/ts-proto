@@ -1,3 +1,10 @@
+# [1.125.0](https://github.com/stephenh/ts-proto/compare/v1.124.0...v1.125.0) (2022-09-03)
+
+
+### Features
+
+* omit optional fields in base instance ([#669](https://github.com/stephenh/ts-proto/issues/669)) ([47b60aa](https://github.com/stephenh/ts-proto/commit/47b60aab95533542cf762f152138f7ab4234de88))
+
 # [1.124.0](https://github.com/stephenh/ts-proto/compare/v1.123.1...v1.124.0) (2022-09-03)
 
 
