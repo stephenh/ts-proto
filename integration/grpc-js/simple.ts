@@ -617,7 +617,7 @@ export interface TestClient extends Client {
 }
 
 export const TestClient = makeGenericClientConstructor(TestService, "simple.Test") as unknown as {
-  new(address: string, credentials: ChannelCredentials, options?: Partial<ChannelOptions>): TestClient;
+  new (address: string, credentials: ChannelCredentials, options?: Partial<ChannelOptions>): TestClient;
   service: typeof TestService;
 };
 

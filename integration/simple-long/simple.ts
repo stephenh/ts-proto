@@ -131,12 +131,12 @@ export const SimpleWithWrappers = {
     message.enabled !== undefined && (obj.enabled = message.enabled);
     message.bananas !== undefined && (obj.bananas = message.bananas);
     if (message.coins) {
-      obj.coins = message.coins.map(e => e);
+      obj.coins = message.coins.map((e) => e);
     } else {
       obj.coins = [];
     }
     if (message.snacks) {
-      obj.snacks = message.snacks.map(e => e);
+      obj.snacks = message.snacks.map((e) => e);
     } else {
       obj.snacks = [];
     }
@@ -617,7 +617,7 @@ export const Numbers = {
     message.sfixed32 !== undefined && (obj.sfixed32 = Math.round(message.sfixed32));
     message.sfixed64 !== undefined && (obj.sfixed64 = (message.sfixed64 || Long.ZERO).toString());
     if (message.manyUint64) {
-      obj.manyUint64 = message.manyUint64.map(e => (e || Long.UZERO).toString());
+      obj.manyUint64 = message.manyUint64.map((e) => (e || Long.UZERO).toString());
     } else {
       obj.manyUint64 = [];
     }

@@ -96,7 +96,7 @@ export const Todo = {
     message.id !== undefined && (obj.id = message.id);
     message.timestamp !== undefined && (obj.timestamp = message.timestamp);
     if (message.repeatedTimestamp) {
-      obj.repeatedTimestamp = message.repeatedTimestamp.map(e => e);
+      obj.repeatedTimestamp = message.repeatedTimestamp.map((e) => e);
     } else {
       obj.repeatedTimestamp = [];
     }

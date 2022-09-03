@@ -83,7 +83,7 @@ export const BatchQueryRequest = {
   toJSON(message: BatchQueryRequest): unknown {
     const obj: any = {};
     if (message.ids) {
-      obj.ids = message.ids.map(e => e);
+      obj.ids = message.ids.map((e) => e);
     } else {
       obj.ids = [];
     }
@@ -134,7 +134,7 @@ export const BatchQueryResponse = {
   toJSON(message: BatchQueryResponse): unknown {
     const obj: any = {};
     if (message.entities) {
-      obj.entities = message.entities.map(e => e ? Entity.toJSON(e) : undefined);
+      obj.entities = message.entities.map((e) => e ? Entity.toJSON(e) : undefined);
     } else {
       obj.entities = [];
     }
@@ -185,7 +185,7 @@ export const BatchMapQueryRequest = {
   toJSON(message: BatchMapQueryRequest): unknown {
     const obj: any = {};
     if (message.ids) {
-      obj.ids = message.ids.map(e => e);
+      obj.ids = message.ids.map((e) => e);
     } else {
       obj.ids = [];
     }
@@ -589,7 +589,7 @@ export class EntityServiceClientImpl<Context extends DataLoaders> implements Ent
     const dl = ctx.getDataLoader("batching.EntityService.BatchQuery", () => {
       return new DataLoader<string, Entity>((ids) => {
         const request = { ids };
-        return this.BatchQuery(ctx, request).then(res => res.entities);
+        return this.BatchQuery(ctx, request).then((res) => res.entities);
       }, { cacheKeyFn: hash, ...ctx.rpcDataLoaderOptions });
     });
     return dl.load(id);
@@ -598,15 +598,15 @@ export class EntityServiceClientImpl<Context extends DataLoaders> implements Ent
   BatchQuery(ctx: Context, request: BatchQueryRequest): Promise<BatchQueryResponse> {
     const data = BatchQueryRequest.encode(request).finish();
     const promise = this.rpc.request(ctx, "batching.EntityService", "BatchQuery", data);
-    return promise.then(data => BatchQueryResponse.decode(new _m0.Reader(data)));
+    return promise.then((data) => BatchQueryResponse.decode(new _m0.Reader(data)));
   }
 
   GetMapQuery(ctx: Context, id: string): Promise<Entity> {
     const dl = ctx.getDataLoader("batching.EntityService.BatchMapQuery", () => {
       return new DataLoader<string, Entity>((ids) => {
         const request = { ids };
-        return this.BatchMapQuery(ctx, request).then(res => {
-          return ids.map(key => res.entities[key]);
+        return this.BatchMapQuery(ctx, request).then((res) => {
+          return ids.map((key) => res.entities[key]);
         });
       }, { cacheKeyFn: hash, ...ctx.rpcDataLoaderOptions });
     });
@@ -616,13 +616,13 @@ export class EntityServiceClientImpl<Context extends DataLoaders> implements Ent
   BatchMapQuery(ctx: Context, request: BatchMapQueryRequest): Promise<BatchMapQueryResponse> {
     const data = BatchMapQueryRequest.encode(request).finish();
     const promise = this.rpc.request(ctx, "batching.EntityService", "BatchMapQuery", data);
-    return promise.then(data => BatchMapQueryResponse.decode(new _m0.Reader(data)));
+    return promise.then((data) => BatchMapQueryResponse.decode(new _m0.Reader(data)));
   }
 
   GetOnlyMethod(ctx: Context, request: GetOnlyMethodRequest): Promise<GetOnlyMethodResponse> {
     const dl = ctx.getDataLoader("batching.EntityService.GetOnlyMethod", () => {
       return new DataLoader<GetOnlyMethodRequest, GetOnlyMethodResponse>((requests) => {
-        const responses = requests.map(async request => {
+        const responses = requests.map(async (request) => {
           const data = GetOnlyMethodRequest.encode(request).finish();
           const response = await this.rpc.request(ctx, "batching.EntityService", "GetOnlyMethod", data);
           return GetOnlyMethodResponse.decode(new _m0.Reader(response));
@@ -636,7 +636,7 @@ export class EntityServiceClientImpl<Context extends DataLoaders> implements Ent
   WriteMethod(ctx: Context, request: WriteMethodRequest): Promise<WriteMethodResponse> {
     const data = WriteMethodRequest.encode(request).finish();
     const promise = this.rpc.request(ctx, "batching.EntityService", "WriteMethod", data);
-    return promise.then(data => WriteMethodResponse.decode(new _m0.Reader(data)));
+    return promise.then((data) => WriteMethodResponse.decode(new _m0.Reader(data)));
   }
 }
 
