@@ -39,10 +39,7 @@ async function generate(binFile: string, baseDir: string, parameter: string) {
     const filePath = `${baseDir}/${path}`;
     const dirPath = parse(filePath).dir;
     await promisify(mkdir)(dirPath, { recursive: true }).catch(() => {});
-    await promisify(writeFile)(
-      filePath,
-      prefixDisableLinter(await code.toStringWithImports({ ...getTsPoetOpts(options), path }))
-    );
+    await promisify(writeFile)(filePath, code.toString({ ...getTsPoetOpts(options), path }));
   }
 
   if (options.outputTypeRegistry) {
@@ -54,10 +51,7 @@ async function generate(binFile: string, baseDir: string, parameter: string) {
 
     const filePath = `${baseDir}/${path}`;
 
-    await promisify(writeFile)(
-      filePath,
-      prefixDisableLinter(await code.toStringWithImports({ ...getTsPoetOpts(options), path }))
-    );
+    await promisify(writeFile)(filePath, code.toString({ ...getTsPoetOpts(options), path }));
   }
 }
 

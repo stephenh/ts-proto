@@ -28,8 +28,8 @@ async function main() {
   const files = await Promise.all(
     filesToGenerate.map(async (file) => {
       const [path, code] = generateFile(ctx, file);
-      const spec = await code.toStringWithImports({ ...getTsPoetOpts(options), path });
-      return { name: path, content: prefixDisableLinter(spec) };
+      const content = code.toString({ ...getTsPoetOpts(options), path });
+      return { name: path, content };
     })
   );
 
@@ -40,8 +40,8 @@ async function main() {
     const path = "typeRegistry.ts";
     const code = generateTypeRegistry(ctx);
 
-    const spec = await code.toStringWithImports({ ...getTsPoetOpts(options), path });
-    files.push({ name: path, content: prefixDisableLinter(spec) });
+    const content = code.toString({ ...getTsPoetOpts(options), path });
+    files.push({ name: path, content });
   }
 
   const response = CodeGeneratorResponse.fromPartial({
