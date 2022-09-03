@@ -214,6 +214,7 @@ function parseParameter(parameter: string): Options {
 export function getTsPoetOpts(_options: Options): ToStringOpts {
   const imports = ["protobufjs/minimal" + _options.importSuffix];
   return {
+    prefix: `/* eslint-disable */`,
     dprintOptions: { preferSingleLine: true, lineWidth: 120 },
     ...(_options.esModuleInterop ? { forceDefaultImport: imports } : { forceModuleImport: imports }),
   };

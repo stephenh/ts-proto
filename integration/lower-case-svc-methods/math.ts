@@ -166,7 +166,7 @@ export const Numbers = {
   toJSON(message: Numbers): unknown {
     const obj: any = {};
     if (message.num) {
-      obj.num = message.num.map(e => e);
+      obj.num = message.num.map((e) => e);
     } else {
       obj.num = [];
     }
@@ -198,20 +198,20 @@ export class MathServiceClientImpl<Context extends DataLoaders> implements MathS
   add(ctx: Context, request: NumPair): Promise<NumSingle> {
     const data = NumPair.encode(request).finish();
     const promise = this.rpc.request(ctx, "MathService", "Add", data);
-    return promise.then(data => NumSingle.decode(new _m0.Reader(data)));
+    return promise.then((data) => NumSingle.decode(new _m0.Reader(data)));
   }
 
   absoluteValue(ctx: Context, request: NumSingle): Promise<NumSingle> {
     const data = NumSingle.encode(request).finish();
     const promise = this.rpc.request(ctx, "MathService", "AbsoluteValue", data);
-    return promise.then(data => NumSingle.decode(new _m0.Reader(data)));
+    return promise.then((data) => NumSingle.decode(new _m0.Reader(data)));
   }
 
   getDouble(ctx: Context, nu: number): Promise<number> {
     const dl = ctx.getDataLoader("MathService.BatchDouble", () => {
       return new DataLoader<number, number>((num) => {
         const request = { num };
-        return this.batchDouble(ctx, request).then(res => res.num);
+        return this.batchDouble(ctx, request).then((res) => res.num);
       }, { cacheKeyFn: hash, ...ctx.rpcDataLoaderOptions });
     });
     return dl.load(nu);
@@ -220,7 +220,7 @@ export class MathServiceClientImpl<Context extends DataLoaders> implements MathS
   batchDouble(ctx: Context, request: Numbers): Promise<Numbers> {
     const data = Numbers.encode(request).finish();
     const promise = this.rpc.request(ctx, "MathService", "BatchDouble", data);
-    return promise.then(data => Numbers.decode(new _m0.Reader(data)));
+    return promise.then((data) => Numbers.decode(new _m0.Reader(data)));
   }
 }
 

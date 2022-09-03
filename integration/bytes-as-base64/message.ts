@@ -1,4 +1,5 @@
 /* eslint-disable */
+
 export const protobufPackage = "";
 
 export interface Message {
@@ -16,8 +17,8 @@ export const Message = {
 
   toJSON(message: Message): unknown {
     const obj: any = {};
-    message.data !== undefined
-      && (obj.data = base64FromBytes(message.data !== undefined ? message.data : new Uint8Array()));
+    message.data !== undefined &&
+      (obj.data = base64FromBytes(message.data !== undefined ? message.data : new Uint8Array()));
     return obj;
   },
 

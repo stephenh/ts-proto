@@ -338,16 +338,6 @@
   resolved "https://registry.yarnpkg.com/@colors/colors/-/colors-1.5.0.tgz#bb504579c1cae923e6576a4f5da43d25f97bdbd9"
   integrity sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==
 
-"@dprint/formatter@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@dprint/formatter/-/formatter-0.2.0.tgz#5eb044e0969ef5b918b26db42eb9d75e7c6661ee"
-  integrity sha512-E1q1JaOPeEUBhG//IUayqJQvNpqprZ0OCF8B/bIhUqSsMIp0Y74PgF8JPvDCrOdq43qiGUYAavVO8iCBHOoU/A==
-
-"@dprint/typescript@^0.71.2":
-  version "0.71.2"
-  resolved "https://registry.yarnpkg.com/@dprint/typescript/-/typescript-0.71.2.tgz#07cba75950be8aee753d6983d1f6144cba65db49"
-  integrity sha512-QpQJiJMxSMhqqOgVk1zrh+2ueQnZmBQ6aCtVgXKd3zxyVOEIj5CLarfDmza/9KFOU+5lKsprbGAQBskC+xODkw==
-
 "@esbuild-kit/cjs-loader@^2.3.3":
   version "2.3.3"
   resolved "https://registry.yarnpkg.com/@esbuild-kit/cjs-loader/-/cjs-loader-2.3.3.tgz#d65a8cc099d88ac58a571403428d82d1a791aefa"
@@ -2574,6 +2564,11 @@ deprecation@^2.0.0, deprecation@^2.3.1:
   resolved "https://registry.npmjs.org/deprecation/-/deprecation-2.3.1.tgz"
   integrity sha512-xmHIy4F3scKVwMsQ4WnVaS8bHOx0DmVwRywosKhaILI0ywMDWPtBSku2HNxRvF7jtwDRsoEwYQSfbxj8b7RlJQ==
 
+detect-libc@^1.0.3:
+  version "1.0.3"
+  resolved "https://registry.yarnpkg.com/detect-libc/-/detect-libc-1.0.3.tgz#fa137c4bd698edf55cd5cd02ac559f91a4c4ba9b"
+  integrity sha512-pGjwhsmsp4kL2RTz08wcOlGN83otlqHeD/Z5T8GXZB+/YcpQ/dgo+lbU8ZsGxV0HIvqqxo9l7mqYwyYMD9bKDg==
+
 detect-newline@^3.0.0:
   version "3.1.0"
   resolved "https://registry.npmjs.org/detect-newline/-/detect-newline-3.1.0.tgz"
@@ -2615,6 +2610,13 @@ dot-prop@^5.1.0:
   integrity sha512-QM8q3zDe58hqUqjraQOmzZ1LIH9SWQJTlEKCH4kJ2oQvLZk7RbQXvtDM2XEq3fwkV9CCvvH4LA0AV+ogFsBM2Q==
   dependencies:
     is-obj "^2.0.0"
+
+dprint-node@^1.0.7:
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/dprint-node/-/dprint-node-1.0.7.tgz#f571eaf61affb3a696cff1bdde78a021875ba540"
+  integrity sha512-NTZOW9A7ipb0n7z7nC3wftvsbceircwVHSgzobJsEQa+7RnOMbhrfX5IflA6CtC4GA63DSAiHYXa4JKEy9F7cA==
+  dependencies:
+    detect-libc "^1.0.3"
 
 duplexer2@~0.1.0:
   version "0.1.4"
@@ -6733,13 +6735,12 @@ ts-jest@^28.0.5:
     semver "7.x"
     yargs-parser "^21.0.1"
 
-ts-poet@^5.1.0:
-  version "5.1.0"
-  resolved "https://registry.yarnpkg.com/ts-poet/-/ts-poet-5.1.0.tgz#7f27bbef5c6ca43df066b405e89a5d8b3598c0bc"
-  integrity sha512-OaqL9852TaBgZtgOPlQw/Ab5KAdsZbZfNKz22prb8vsl4Iu9XMOv1V3DiFuaT3dnhhrhdFUe1SiXY3RaeYBiSw==
+ts-poet@^6.1.0:
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/ts-poet/-/ts-poet-6.1.0.tgz#c5c3d679dfce1fe39acb5f5415275c5d6a598cb7"
+  integrity sha512-PFwbNJjGrb44wzHUGQicG2/nhjR+3+k7zYLDTa8D61NVUitl7K/JgIc9/P+8oMNenntKzLc8tjLDOkPrxIhm6A==
   dependencies:
-    "@dprint/formatter" "^0.2.0"
-    "@dprint/typescript" "^0.71.2"
+    dprint-node "^1.0.7"
 
 ts-proto-descriptors@1.7.1:
   version "1.7.1"

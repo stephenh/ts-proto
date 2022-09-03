@@ -182,10 +182,10 @@ export const DashUserSettingsState = {
   toJSON(message: DashUserSettingsState): unknown {
     const obj: any = {};
     message.email !== undefined && (obj.email = message.email);
-    message.urls !== undefined
-      && (obj.urls = message.urls ? DashUserSettingsState_URLs.toJSON(message.urls) : undefined);
+    message.urls !== undefined &&
+      (obj.urls = message.urls ? DashUserSettingsState_URLs.toJSON(message.urls) : undefined);
     if (message.flashes) {
-      obj.flashes = message.flashes.map(e => e ? DashFlash.toJSON(e) : undefined);
+      obj.flashes = message.flashes.map((e) => e ? DashFlash.toJSON(e) : undefined);
     } else {
       obj.flashes = [];
     }
@@ -393,7 +393,7 @@ export class GrpcWebImpl {
     const maybeCombinedMetadata = metadata && this.options.metadata
       ? new BrowserHeaders({ ...this.options?.metadata.headersMap, ...metadata?.headersMap })
       : metadata || this.options.metadata;
-    return new Observable(observer => {
+    return new Observable((observer) => {
       grpc.unary(methodDesc, {
         request,
         host: this.host,

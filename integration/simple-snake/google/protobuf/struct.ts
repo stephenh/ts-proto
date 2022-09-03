@@ -174,7 +174,7 @@ export const Struct = {
   wrap(object: { [key: string]: any } | undefined): Struct {
     const struct = createBaseStruct();
     if (object !== undefined) {
-      Object.keys(object).forEach(key => {
+      Object.keys(object).forEach((key) => {
         struct.fields[key] = object[key];
       });
     }
@@ -183,7 +183,7 @@ export const Struct = {
 
   unwrap(message: Struct): { [key: string]: any } {
     const object: { [key: string]: any } = {};
-    Object.keys(message.fields).forEach(key => {
+    Object.keys(message.fields).forEach((key) => {
       object[key] = message.fields[key];
     });
     return object;
@@ -325,8 +325,8 @@ export const Value = {
 
   toJSON(message: Value): unknown {
     const obj: any = {};
-    message.null_value !== undefined
-      && (obj.null_value = message.null_value !== undefined ? nullValueToJSON(message.null_value) : undefined);
+    message.null_value !== undefined &&
+      (obj.null_value = message.null_value !== undefined ? nullValueToJSON(message.null_value) : undefined);
     message.number_value !== undefined && (obj.number_value = message.number_value);
     message.string_value !== undefined && (obj.string_value = message.string_value);
     message.bool_value !== undefined && (obj.bool_value = message.bool_value);
@@ -423,7 +423,7 @@ export const ListValue = {
   toJSON(message: ListValue): unknown {
     const obj: any = {};
     if (message.values) {
-      obj.values = message.values.map(e => e);
+      obj.values = message.values.map((e) => e);
     } else {
       obj.values = [];
     }

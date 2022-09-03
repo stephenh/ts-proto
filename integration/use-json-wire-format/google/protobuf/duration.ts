@@ -1,4 +1,5 @@
 /* eslint-disable */
+
 export const protobufPackage = "google.protobuf";
 
 /**

@@ -199,13 +199,13 @@ export const PleaseChoose = {
     message.name !== undefined && (obj.name = message.name);
     message.aNumber !== undefined && (obj.aNumber = message.aNumber);
     message.aString !== undefined && (obj.aString = message.aString);
-    message.aMessage !== undefined
-      && (obj.aMessage = message.aMessage ? PleaseChoose_Submessage.toJSON(message.aMessage) : undefined);
+    message.aMessage !== undefined &&
+      (obj.aMessage = message.aMessage ? PleaseChoose_Submessage.toJSON(message.aMessage) : undefined);
     message.aBool !== undefined && (obj.aBool = message.aBool);
-    message.bunchaBytes !== undefined
-      && (obj.bunchaBytes = message.bunchaBytes !== undefined ? base64FromBytes(message.bunchaBytes) : undefined);
-    message.anEnum !== undefined
-      && (obj.anEnum = message.anEnum !== undefined ? pleaseChoose_StateEnumToJSON(message.anEnum) : undefined);
+    message.bunchaBytes !== undefined &&
+      (obj.bunchaBytes = message.bunchaBytes !== undefined ? base64FromBytes(message.bunchaBytes) : undefined);
+    message.anEnum !== undefined &&
+      (obj.anEnum = message.anEnum !== undefined ? pleaseChoose_StateEnumToJSON(message.anEnum) : undefined);
     message.age !== undefined && (obj.age = Math.round(message.age));
     message.either !== undefined && (obj.either = message.either);
     message.or !== undefined && (obj.or = message.or);

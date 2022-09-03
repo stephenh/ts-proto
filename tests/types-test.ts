@@ -59,7 +59,7 @@ describe("types", () => {
       it(t.descr, async () => {
         const ctx = { options: defaultOptions(), utils: undefined as any as Utils, ...t };
         const got = messageToTypeName(ctx, t.protoType);
-        expect(await got.toStringWithImports()).toEqual(await t.expected.toStringWithImports());
+        expect(got.toString()).toEqual(t.expected.toString());
       })
     );
   });

@@ -137,7 +137,7 @@ export class MyServiceClientImpl implements MyService {
   MyMethod(request: RequestType): Promise<ResponseType> {
     const data = RequestType.encode(request).finish();
     const promise = this.rpc.request("MyService", "MyMethod", data);
-    return promise.then(data => ResponseType.decode(new _m0.Reader(data)));
+    return promise.then((data) => ResponseType.decode(new _m0.Reader(data)));
   }
 }
 

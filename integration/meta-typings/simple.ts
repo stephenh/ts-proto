@@ -1280,7 +1280,7 @@ export class PingServiceClientImpl implements PingService {
   ping(request: PingRequest): Promise<PingResponse> {
     const data = PingRequest.encode(request).finish();
     const promise = this.rpc.request("simple.PingService", "ping", data);
-    return promise.then(data => PingResponse.decode(new _m0.Reader(data)));
+    return promise.then((data) => PingResponse.decode(new _m0.Reader(data)));
   }
 }
 

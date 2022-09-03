@@ -119,7 +119,7 @@ export const Simple = {
     message.dollarStart !== undefined && (obj.$dollar = message.dollarStart);
     message.dollarEnd !== undefined && (obj.dollar$ = message.dollarEnd);
     if (message.hyphenList) {
-      obj["hyphen-list"] = message.hyphenList.map(e => e);
+      obj["hyphen-list"] = message.hyphenList.map((e) => e);
     } else {
       obj["hyphen-list"] = [];
     }

@@ -115,8 +115,8 @@ export const Simple = {
   toJSON(message: Simple): unknown {
     const obj: any = {};
     message.name !== undefined && (obj.name = message.name);
-    message.otherSimple !== undefined
-      && (obj.otherSimple = message.otherSimple ? Simple3.toJSON(message.otherSimple) : undefined);
+    message.otherSimple !== undefined &&
+      (obj.otherSimple = message.otherSimple ? Simple3.toJSON(message.otherSimple) : undefined);
     return obj;
   },
 
@@ -295,7 +295,7 @@ export class FooServiceClientImpl implements FooService {
   Create(request: FooServiceCreateRequest): Promise<FooServiceCreateResponse> {
     const data = FooServiceCreateRequest.encode(request).finish();
     const promise = this.rpc.request("simple.FooService", "Create", data);
-    return promise.then(data => FooServiceCreateResponse.decode(new _m0.Reader(data)));
+    return promise.then((data) => FooServiceCreateResponse.decode(new _m0.Reader(data)));
   }
 }
 

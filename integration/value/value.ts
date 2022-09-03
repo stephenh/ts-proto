@@ -82,12 +82,12 @@ export const ValueMessage = {
     message.value !== undefined && (obj.value = message.value);
     message.anyList !== undefined && (obj.anyList = message.anyList);
     if (message.repeatedAny) {
-      obj.repeatedAny = message.repeatedAny.map(e => e);
+      obj.repeatedAny = message.repeatedAny.map((e) => e);
     } else {
       obj.repeatedAny = [];
     }
     if (message.repeatedStrings) {
-      obj.repeatedStrings = message.repeatedStrings.map(e => e);
+      obj.repeatedStrings = message.repeatedStrings.map((e) => e);
     } else {
       obj.repeatedStrings = [];
     }
