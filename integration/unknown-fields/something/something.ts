@@ -1,7 +1,7 @@
 /* eslint-disable */
-import * as _m0 from 'protobufjs/minimal';
+import * as _m0 from "protobufjs/minimal";
 
-export const protobufPackage = 'something';
+export const protobufPackage = "something";
 
 export interface Something {
   hello: string;
@@ -9,12 +9,12 @@ export interface Something {
 }
 
 function createBaseSomething(): Something {
-  return { hello: '', foo: [] };
+  return { hello: "", foo: [] };
 }
 
 export const Something = {
   encode(message: Something, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.hello !== '') {
+    if (message.hello !== "") {
       writer.uint32(10).string(message.hello);
     }
     writer.uint32(18).fork();
@@ -22,16 +22,16 @@ export const Something = {
       writer.int32(v);
     }
     writer.ldelim();
-    if ('_unknownFields' in message) {
-      const msgUnknownFields: any = (message as any)['_unknownFields'];
+    if ("_unknownFields" in message) {
+      const msgUnknownFields: any = (message as any)["_unknownFields"];
       for (const key of Object.keys(msgUnknownFields)) {
         const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
-          (writer as any)['_push'](
+          (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
-            value
+            value,
           );
         }
       }

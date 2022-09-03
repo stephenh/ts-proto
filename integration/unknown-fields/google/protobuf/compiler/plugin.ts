@@ -1,9 +1,9 @@
 /* eslint-disable */
-import * as Long from 'long';
-import { FileDescriptorProto, GeneratedCodeInfo } from '../descriptor';
-import * as _m0 from 'protobufjs/minimal';
+import * as Long from "long";
+import * as _m0 from "protobufjs/minimal";
+import { FileDescriptorProto, GeneratedCodeInfo } from "../descriptor";
 
-export const protobufPackage = 'google.protobuf.compiler';
+export const protobufPackage = "google.protobuf.compiler";
 
 /** The version number of protocol compiler. */
 export interface Version {
@@ -143,7 +143,7 @@ export interface CodeGeneratorResponse_File {
 }
 
 function createBaseVersion(): Version {
-  return { major: 0, minor: 0, patch: 0, suffix: '' };
+  return { major: 0, minor: 0, patch: 0, suffix: "" };
 }
 
 export const Version = {
@@ -157,19 +157,19 @@ export const Version = {
     if (message.patch !== 0) {
       writer.uint32(24).int32(message.patch);
     }
-    if (message.suffix !== '') {
+    if (message.suffix !== "") {
       writer.uint32(34).string(message.suffix);
     }
-    if ('_unknownFields' in message) {
-      const msgUnknownFields: any = (message as any)['_unknownFields'];
+    if ("_unknownFields" in message) {
+      const msgUnknownFields: any = (message as any)["_unknownFields"];
       for (const key of Object.keys(msgUnknownFields)) {
         const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
-          (writer as any)['_push'](
+          (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
-            value
+            value,
           );
         }
       }
@@ -212,7 +212,7 @@ export const Version = {
 };
 
 function createBaseCodeGeneratorRequest(): CodeGeneratorRequest {
-  return { fileToGenerate: [], parameter: '', protoFile: [], compilerVersion: undefined };
+  return { fileToGenerate: [], parameter: "", protoFile: [], compilerVersion: undefined };
 }
 
 export const CodeGeneratorRequest = {
@@ -220,7 +220,7 @@ export const CodeGeneratorRequest = {
     for (const v of message.fileToGenerate) {
       writer.uint32(10).string(v!);
     }
-    if (message.parameter !== '') {
+    if (message.parameter !== "") {
       writer.uint32(18).string(message.parameter);
     }
     for (const v of message.protoFile) {
@@ -229,16 +229,16 @@ export const CodeGeneratorRequest = {
     if (message.compilerVersion !== undefined) {
       Version.encode(message.compilerVersion, writer.uint32(26).fork()).ldelim();
     }
-    if ('_unknownFields' in message) {
-      const msgUnknownFields: any = (message as any)['_unknownFields'];
+    if ("_unknownFields" in message) {
+      const msgUnknownFields: any = (message as any)["_unknownFields"];
       for (const key of Object.keys(msgUnknownFields)) {
         const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
-          (writer as any)['_push'](
+          (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
-            value
+            value,
           );
         }
       }
@@ -281,12 +281,12 @@ export const CodeGeneratorRequest = {
 };
 
 function createBaseCodeGeneratorResponse(): CodeGeneratorResponse {
-  return { error: '', supportedFeatures: 0, file: [] };
+  return { error: "", supportedFeatures: 0, file: [] };
 }
 
 export const CodeGeneratorResponse = {
   encode(message: CodeGeneratorResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.error !== '') {
+    if (message.error !== "") {
       writer.uint32(10).string(message.error);
     }
     if (message.supportedFeatures !== 0) {
@@ -295,16 +295,16 @@ export const CodeGeneratorResponse = {
     for (const v of message.file) {
       CodeGeneratorResponse_File.encode(v!, writer.uint32(122).fork()).ldelim();
     }
-    if ('_unknownFields' in message) {
-      const msgUnknownFields: any = (message as any)['_unknownFields'];
+    if ("_unknownFields" in message) {
+      const msgUnknownFields: any = (message as any)["_unknownFields"];
       for (const key of Object.keys(msgUnknownFields)) {
         const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
-          (writer as any)['_push'](
+          (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
-            value
+            value,
           );
         }
       }
@@ -344,33 +344,33 @@ export const CodeGeneratorResponse = {
 };
 
 function createBaseCodeGeneratorResponse_File(): CodeGeneratorResponse_File {
-  return { name: '', insertionPoint: '', content: '', generatedCodeInfo: undefined };
+  return { name: "", insertionPoint: "", content: "", generatedCodeInfo: undefined };
 }
 
 export const CodeGeneratorResponse_File = {
   encode(message: CodeGeneratorResponse_File, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.name !== '') {
+    if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
-    if (message.insertionPoint !== '') {
+    if (message.insertionPoint !== "") {
       writer.uint32(18).string(message.insertionPoint);
     }
-    if (message.content !== '') {
+    if (message.content !== "") {
       writer.uint32(122).string(message.content);
     }
     if (message.generatedCodeInfo !== undefined) {
       GeneratedCodeInfo.encode(message.generatedCodeInfo, writer.uint32(130).fork()).ldelim();
     }
-    if ('_unknownFields' in message) {
-      const msgUnknownFields: any = (message as any)['_unknownFields'];
+    if ("_unknownFields" in message) {
+      const msgUnknownFields: any = (message as any)["_unknownFields"];
       for (const key of Object.keys(msgUnknownFields)) {
         const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
-          (writer as any)['_push'](
+          (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
-            value
+            value,
           );
         }
       }
@@ -416,16 +416,24 @@ declare var self: any | undefined;
 declare var window: any | undefined;
 declare var global: any | undefined;
 var globalThis: any = (() => {
-  if (typeof globalThis !== 'undefined') return globalThis;
-  if (typeof self !== 'undefined') return self;
-  if (typeof window !== 'undefined') return window;
-  if (typeof global !== 'undefined') return global;
-  throw 'Unable to locate global object';
+  if (typeof globalThis !== "undefined") {
+    return globalThis;
+  }
+  if (typeof self !== "undefined") {
+    return self;
+  }
+  if (typeof window !== "undefined") {
+    return window;
+  }
+  if (typeof global !== "undefined") {
+    return global;
+  }
+  throw "Unable to locate global object";
 })();
 
 function longToNumber(long: Long): number {
   if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new globalThis.Error('Value is larger than Number.MAX_SAFE_INTEGER');
+    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
   return long.toNumber();
 }

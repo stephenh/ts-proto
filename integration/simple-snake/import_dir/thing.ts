@@ -1,8 +1,8 @@
 /* eslint-disable */
-import { Timestamp } from '../google/protobuf/timestamp';
-import * as _m0 from 'protobufjs/minimal';
+import * as _m0 from "protobufjs/minimal";
+import { Timestamp } from "../google/protobuf/timestamp";
 
-export const protobufPackage = 'simple';
+export const protobufPackage = "simple";
 
 export interface ImportedThing {
   created_at: Date | undefined;
@@ -39,9 +39,7 @@ export const ImportedThing = {
   },
 
   fromJSON(object: any): ImportedThing {
-    return {
-      created_at: isSet(object.created_at) ? fromJsonTimestamp(object.created_at) : undefined,
-    };
+    return { created_at: isSet(object.created_at) ? fromJsonTimestamp(object.created_at) : undefined };
   },
 
   toJSON(message: ImportedThing): unknown {
@@ -59,19 +57,13 @@ export const ImportedThing = {
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
-export type DeepPartial<T> = T extends Builtin
-  ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U>
-  ? ReadonlyArray<DeepPartial<U>>
-  : T extends {}
-  ? { [K in keyof T]?: DeepPartial<T[K]> }
+export type DeepPartial<T> = T extends Builtin ? T
+  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-export type Exact<P, I extends P> = P extends Builtin
-  ? P
+export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function toTimestamp(date: Date): Timestamp {
@@ -89,7 +81,7 @@ function fromTimestamp(t: Timestamp): Date {
 function fromJsonTimestamp(o: any): Date {
   if (o instanceof Date) {
     return o;
-  } else if (typeof o === 'string') {
+  } else if (typeof o === "string") {
     return new Date(o);
   } else {
     return fromTimestamp(Timestamp.fromJSON(o));

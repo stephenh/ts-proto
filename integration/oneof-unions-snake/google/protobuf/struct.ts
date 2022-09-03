@@ -1,7 +1,7 @@
 /* eslint-disable */
-import * as _m0 from 'protobufjs/minimal';
+import * as _m0 from "protobufjs/minimal";
 
-export const protobufPackage = 'google.protobuf';
+export const protobufPackage = "google.protobuf";
 
 /**
  * `NullValue` is a singleton enumeration to represent the null value for the
@@ -18,10 +18,10 @@ export enum NullValue {
 export function nullValueFromJSON(object: any): NullValue {
   switch (object) {
     case 0:
-    case 'NULL_VALUE':
+    case "NULL_VALUE":
       return NullValue.NULL_VALUE;
     case -1:
-    case 'UNRECOGNIZED':
+    case "UNRECOGNIZED":
     default:
       return NullValue.UNRECOGNIZED;
   }
@@ -30,10 +30,10 @@ export function nullValueFromJSON(object: any): NullValue {
 export function nullValueToJSON(object: NullValue): string {
   switch (object) {
     case NullValue.NULL_VALUE:
-      return 'NULL_VALUE';
+      return "NULL_VALUE";
     case NullValue.UNRECOGNIZED:
     default:
-      return 'UNRECOGNIZED';
+      return "UNRECOGNIZED";
   }
 }
 
@@ -67,12 +67,12 @@ export interface Struct_FieldsEntry {
  */
 export interface Value {
   kind?:
-    | { $case: 'null_value'; null_value: NullValue }
-    | { $case: 'number_value'; number_value: number }
-    | { $case: 'string_value'; string_value: string }
-    | { $case: 'bool_value'; bool_value: boolean }
-    | { $case: 'struct_value'; struct_value: { [key: string]: any } | undefined }
-    | { $case: 'list_value'; list_value: Array<any> | undefined };
+    | { $case: "null_value"; null_value: NullValue }
+    | { $case: "number_value"; number_value: number }
+    | { $case: "string_value"; string_value: string }
+    | { $case: "bool_value"; bool_value: boolean }
+    | { $case: "struct_value"; struct_value: { [key: string]: any } | undefined }
+    | { $case: "list_value"; list_value: Array<any> | undefined };
 }
 
 /**
@@ -124,9 +124,9 @@ export const Struct = {
     return {
       fields: isObject(object.fields)
         ? Object.entries(object.fields).reduce<{ [key: string]: any | undefined }>((acc, [key, value]) => {
-            acc[key] = value as any | undefined;
-            return acc;
-          }, {})
+          acc[key] = value as any | undefined;
+          return acc;
+        }, {})
         : {},
     };
   },
@@ -151,7 +151,7 @@ export const Struct = {
         }
         return acc;
       },
-      {}
+      {},
     );
     return message;
   },
@@ -159,7 +159,7 @@ export const Struct = {
   wrap(object: { [key: string]: any } | undefined): Struct {
     const struct = createBaseStruct();
     if (object !== undefined) {
-      Object.keys(object).forEach((key) => {
+      Object.keys(object).forEach(key => {
         struct.fields[key] = object[key];
       });
     }
@@ -168,7 +168,7 @@ export const Struct = {
 
   unwrap(message: Struct): { [key: string]: any } {
     const object: { [key: string]: any } = {};
-    Object.keys(message.fields).forEach((key) => {
+    Object.keys(message.fields).forEach(key => {
       object[key] = message.fields[key];
     });
     return object;
@@ -176,12 +176,12 @@ export const Struct = {
 };
 
 function createBaseStruct_FieldsEntry(): Struct_FieldsEntry {
-  return { key: '', value: undefined };
+  return { key: "", value: undefined };
 }
 
 export const Struct_FieldsEntry = {
   encode(message: Struct_FieldsEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.key !== '') {
+    if (message.key !== "") {
       writer.uint32(10).string(message.key);
     }
     if (message.value !== undefined) {
@@ -212,10 +212,7 @@ export const Struct_FieldsEntry = {
   },
 
   fromJSON(object: any): Struct_FieldsEntry {
-    return {
-      key: isSet(object.key) ? String(object.key) : '',
-      value: isSet(object?.value) ? object.value : undefined,
-    };
+    return { key: isSet(object.key) ? String(object.key) : "", value: isSet(object?.value) ? object.value : undefined };
   },
 
   toJSON(message: Struct_FieldsEntry): unknown {
@@ -227,7 +224,7 @@ export const Struct_FieldsEntry = {
 
   fromPartial<I extends Exact<DeepPartial<Struct_FieldsEntry>, I>>(object: I): Struct_FieldsEntry {
     const message = createBaseStruct_FieldsEntry();
-    message.key = object.key ?? '';
+    message.key = object.key ?? "";
     message.value = object.value ?? undefined;
     return message;
   },
@@ -239,22 +236,22 @@ function createBaseValue(): Value {
 
 export const Value = {
   encode(message: Value, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.kind?.$case === 'null_value') {
+    if (message.kind?.$case === "null_value") {
       writer.uint32(8).int32(message.kind.null_value);
     }
-    if (message.kind?.$case === 'number_value') {
+    if (message.kind?.$case === "number_value") {
       writer.uint32(17).double(message.kind.number_value);
     }
-    if (message.kind?.$case === 'string_value') {
+    if (message.kind?.$case === "string_value") {
       writer.uint32(26).string(message.kind.string_value);
     }
-    if (message.kind?.$case === 'bool_value') {
+    if (message.kind?.$case === "bool_value") {
       writer.uint32(32).bool(message.kind.bool_value);
     }
-    if (message.kind?.$case === 'struct_value') {
+    if (message.kind?.$case === "struct_value") {
       Struct.encode(Struct.wrap(message.kind.struct_value), writer.uint32(42).fork()).ldelim();
     }
-    if (message.kind?.$case === 'list_value') {
+    if (message.kind?.$case === "list_value") {
       ListValue.encode(ListValue.wrap(message.kind.list_value), writer.uint32(50).fork()).ldelim();
     }
     return writer;
@@ -268,23 +265,23 @@ export const Value = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.kind = { $case: 'null_value', null_value: reader.int32() as any };
+          message.kind = { $case: "null_value", null_value: reader.int32() as any };
           break;
         case 2:
-          message.kind = { $case: 'number_value', number_value: reader.double() };
+          message.kind = { $case: "number_value", number_value: reader.double() };
           break;
         case 3:
-          message.kind = { $case: 'string_value', string_value: reader.string() };
+          message.kind = { $case: "string_value", string_value: reader.string() };
           break;
         case 4:
-          message.kind = { $case: 'bool_value', bool_value: reader.bool() };
+          message.kind = { $case: "bool_value", bool_value: reader.bool() };
           break;
         case 5:
-          message.kind = { $case: 'struct_value', struct_value: Struct.unwrap(Struct.decode(reader, reader.uint32())) };
+          message.kind = { $case: "struct_value", struct_value: Struct.unwrap(Struct.decode(reader, reader.uint32())) };
           break;
         case 6:
           message.kind = {
-            $case: 'list_value',
+            $case: "list_value",
             list_value: ListValue.unwrap(ListValue.decode(reader, reader.uint32())),
           };
           break;
@@ -299,76 +296,71 @@ export const Value = {
   fromJSON(object: any): Value {
     return {
       kind: isSet(object.null_value)
-        ? { $case: 'null_value', null_value: nullValueFromJSON(object.null_value) }
+        ? { $case: "null_value", null_value: nullValueFromJSON(object.null_value) }
         : isSet(object.number_value)
-        ? { $case: 'number_value', number_value: Number(object.number_value) }
+        ? { $case: "number_value", number_value: Number(object.number_value) }
         : isSet(object.string_value)
-        ? { $case: 'string_value', string_value: String(object.string_value) }
+        ? { $case: "string_value", string_value: String(object.string_value) }
         : isSet(object.bool_value)
-        ? { $case: 'bool_value', bool_value: Boolean(object.bool_value) }
+        ? { $case: "bool_value", bool_value: Boolean(object.bool_value) }
         : isSet(object.struct_value)
-        ? { $case: 'struct_value', struct_value: object.struct_value }
+        ? { $case: "struct_value", struct_value: object.struct_value }
         : isSet(object.list_value)
-        ? { $case: 'list_value', list_value: [...object.list_value] }
+        ? { $case: "list_value", list_value: [...object.list_value] }
         : undefined,
     };
   },
 
   toJSON(message: Value): unknown {
     const obj: any = {};
-    message.kind?.$case === 'null_value' &&
-      (obj.null_value = message.kind?.null_value !== undefined ? nullValueToJSON(message.kind?.null_value) : undefined);
-    message.kind?.$case === 'number_value' && (obj.number_value = message.kind?.number_value);
-    message.kind?.$case === 'string_value' && (obj.string_value = message.kind?.string_value);
-    message.kind?.$case === 'bool_value' && (obj.bool_value = message.kind?.bool_value);
-    message.kind?.$case === 'struct_value' && (obj.struct_value = message.kind?.struct_value);
-    message.kind?.$case === 'list_value' && (obj.list_value = message.kind?.list_value);
+    message.kind?.$case === "null_value" && (obj.null_value = message.kind?.null_value !== undefined
+      ? nullValueToJSON(message.kind?.null_value)
+      : undefined);
+    message.kind?.$case === "number_value" && (obj.number_value = message.kind?.number_value);
+    message.kind?.$case === "string_value" && (obj.string_value = message.kind?.string_value);
+    message.kind?.$case === "bool_value" && (obj.bool_value = message.kind?.bool_value);
+    message.kind?.$case === "struct_value" && (obj.struct_value = message.kind?.struct_value);
+    message.kind?.$case === "list_value" && (obj.list_value = message.kind?.list_value);
     return obj;
   },
 
   fromPartial<I extends Exact<DeepPartial<Value>, I>>(object: I): Value {
     const message = createBaseValue();
     if (
-      object.kind?.$case === 'null_value' &&
-      object.kind?.null_value !== undefined &&
-      object.kind?.null_value !== null
+      object.kind?.$case === "null_value" && object.kind?.null_value !== undefined && object.kind?.null_value !== null
     ) {
-      message.kind = { $case: 'null_value', null_value: object.kind.null_value };
+      message.kind = { $case: "null_value", null_value: object.kind.null_value };
     }
     if (
-      object.kind?.$case === 'number_value' &&
-      object.kind?.number_value !== undefined &&
-      object.kind?.number_value !== null
+      object.kind?.$case === "number_value"
+      && object.kind?.number_value !== undefined
+      && object.kind?.number_value !== null
     ) {
-      message.kind = { $case: 'number_value', number_value: object.kind.number_value };
+      message.kind = { $case: "number_value", number_value: object.kind.number_value };
     }
     if (
-      object.kind?.$case === 'string_value' &&
-      object.kind?.string_value !== undefined &&
-      object.kind?.string_value !== null
+      object.kind?.$case === "string_value"
+      && object.kind?.string_value !== undefined
+      && object.kind?.string_value !== null
     ) {
-      message.kind = { $case: 'string_value', string_value: object.kind.string_value };
+      message.kind = { $case: "string_value", string_value: object.kind.string_value };
     }
     if (
-      object.kind?.$case === 'bool_value' &&
-      object.kind?.bool_value !== undefined &&
-      object.kind?.bool_value !== null
+      object.kind?.$case === "bool_value" && object.kind?.bool_value !== undefined && object.kind?.bool_value !== null
     ) {
-      message.kind = { $case: 'bool_value', bool_value: object.kind.bool_value };
+      message.kind = { $case: "bool_value", bool_value: object.kind.bool_value };
     }
     if (
-      object.kind?.$case === 'struct_value' &&
-      object.kind?.struct_value !== undefined &&
-      object.kind?.struct_value !== null
+      object.kind?.$case === "struct_value"
+      && object.kind?.struct_value !== undefined
+      && object.kind?.struct_value !== null
     ) {
-      message.kind = { $case: 'struct_value', struct_value: object.kind.struct_value };
+      message.kind = { $case: "struct_value", struct_value: object.kind.struct_value };
     }
     if (
-      object.kind?.$case === 'list_value' &&
-      object.kind?.list_value !== undefined &&
-      object.kind?.list_value !== null
+      object.kind?.$case === "list_value" && object.kind?.list_value !== undefined && object.kind?.list_value !== null
     ) {
-      message.kind = { $case: 'list_value', list_value: object.kind.list_value };
+      message.kind = { $case: "list_value", list_value: object.kind.list_value };
     }
     return message;
   },
@@ -377,36 +369,36 @@ export const Value = {
     const result = createBaseValue();
 
     if (value === null) {
-      result.kind = { $case: 'null_value', null_value: NullValue.NULL_VALUE };
-    } else if (typeof value === 'boolean') {
-      result.kind = { $case: 'bool_value', bool_value: value };
-    } else if (typeof value === 'number') {
-      result.kind = { $case: 'number_value', number_value: value };
-    } else if (typeof value === 'string') {
-      result.kind = { $case: 'string_value', string_value: value };
+      result.kind = { $case: "null_value", null_value: NullValue.NULL_VALUE };
+    } else if (typeof value === "boolean") {
+      result.kind = { $case: "bool_value", bool_value: value };
+    } else if (typeof value === "number") {
+      result.kind = { $case: "number_value", number_value: value };
+    } else if (typeof value === "string") {
+      result.kind = { $case: "string_value", string_value: value };
     } else if (Array.isArray(value)) {
-      result.kind = { $case: 'list_value', list_value: value };
-    } else if (typeof value === 'object') {
-      result.kind = { $case: 'struct_value', struct_value: value };
-    } else if (typeof value !== 'undefined') {
-      throw new Error('Unsupported any value type: ' + typeof value);
+      result.kind = { $case: "list_value", list_value: value };
+    } else if (typeof value === "object") {
+      result.kind = { $case: "struct_value", struct_value: value };
+    } else if (typeof value !== "undefined") {
+      throw new Error("Unsupported any value type: " + typeof value);
     }
 
     return result;
   },
 
   unwrap(message: Value): string | number | boolean | Object | null | Array<any> | undefined {
-    if (message.kind?.$case === 'null_value') {
+    if (message.kind?.$case === "null_value") {
       return null;
-    } else if (message.kind?.$case === 'number_value') {
+    } else if (message.kind?.$case === "number_value") {
       return message.kind?.number_value;
-    } else if (message.kind?.$case === 'string_value') {
+    } else if (message.kind?.$case === "string_value") {
       return message.kind?.string_value;
-    } else if (message.kind?.$case === 'bool_value') {
+    } else if (message.kind?.$case === "bool_value") {
       return message.kind?.bool_value;
-    } else if (message.kind?.$case === 'struct_value') {
+    } else if (message.kind?.$case === "struct_value") {
       return message.kind?.struct_value;
-    } else if (message.kind?.$case === 'list_value') {
+    } else if (message.kind?.$case === "list_value") {
       return message.kind?.list_value;
     } else {
       return undefined;
@@ -445,15 +437,13 @@ export const ListValue = {
   },
 
   fromJSON(object: any): ListValue {
-    return {
-      values: Array.isArray(object?.values) ? [...object.values] : [],
-    };
+    return { values: Array.isArray(object?.values) ? [...object.values] : [] };
   },
 
   toJSON(message: ListValue): unknown {
     const obj: any = {};
     if (message.values) {
-      obj.values = message.values.map((e) => e);
+      obj.values = message.values.map(e => e);
     } else {
       obj.values = [];
     }
@@ -481,25 +471,18 @@ export const ListValue = {
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
-export type DeepPartial<T> = T extends Builtin
-  ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U>
-  ? ReadonlyArray<DeepPartial<U>>
-  : T extends { $case: string }
-  ? { [K in keyof Omit<T, '$case'>]?: DeepPartial<T[K]> } & { $case: T['$case'] }
-  : T extends {}
-  ? { [K in keyof T]?: DeepPartial<T[K]> }
+export type DeepPartial<T> = T extends Builtin ? T
+  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends { $case: string } ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & { $case: T["$case"] }
+  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-export type Exact<P, I extends P> = P extends Builtin
-  ? P
+export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function isObject(value: any): boolean {
-  return typeof value === 'object' && value !== null;
+  return typeof value === "object" && value !== null;
 }
 
 function isSet(value: any): boolean {

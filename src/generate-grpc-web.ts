@@ -1,13 +1,13 @@
-import { MethodDescriptorProto, FileDescriptorProto, ServiceDescriptorProto } from 'ts-proto-descriptors';
-import { rawRequestType, requestType, responsePromiseOrObservable, responseType, observableType } from './types';
-import { Code, code, imp, joinCode } from 'ts-poet';
-import { Context } from './context';
-import { assertInstanceOf, FormattedMethodDescriptor, maybePrefixPackage } from './utils';
+import { MethodDescriptorProto, FileDescriptorProto, ServiceDescriptorProto } from "ts-proto-descriptors";
+import { rawRequestType, requestType, responsePromiseOrObservable, responseType, observableType } from "./types";
+import { Code, code, imp, joinCode } from "ts-poet";
+import { Context } from "./context";
+import { assertInstanceOf, FormattedMethodDescriptor, maybePrefixPackage } from "./utils";
 
-const grpc = imp('grpc@@improbable-eng/grpc-web');
-const share = imp('share@rxjs/operators');
-const take = imp('take@rxjs/operators');
-const BrowserHeaders = imp('BrowserHeaders@browser-headers');
+const grpc = imp("grpc@@improbable-eng/grpc-web");
+const share = imp("share@rxjs/operators");
+const take = imp("take@rxjs/operators");
+const BrowserHeaders = imp("BrowserHeaders@browser-headers");
 
 /** Generates a client that uses the `@improbable-web/grpc-web` library. */
 export function generateGrpcClientImpl(
@@ -42,7 +42,7 @@ export function generateGrpcClientImpl(
   }
 
   chunks.push(code`}`);
-  return joinCode(chunks, { trim: false, on: '\n' });
+  return joinCode(chunks, { trim: false, on: "\n" });
 }
 
 /** Creates the RPC methods that client code actually calls. */
@@ -63,7 +63,7 @@ function generateRpcMethod(ctx: Context, serviceDesc: ServiceDescriptorProto, me
   `;
   }
 
-  const method = methodDesc.serverStreaming ? 'invoke' : 'unary';
+  const method = methodDesc.serverStreaming ? "invoke" : "unary";
   return code`
     ${methodDesc.formattedName}(
       request: ${inputType},
@@ -134,7 +134,7 @@ export function generateGrpcMethodDesc(
       methodName: "${methodDesc.name}",
       service: ${serviceDesc.name}Desc,
       requestStream: false,
-      responseStream: ${methodDesc.serverStreaming ? 'true' : 'false'},
+      responseStream: ${methodDesc.serverStreaming ? "true" : "false"},
       requestType: ${requestFn} as any,
       responseType: ${responseFn} as any,
     };
@@ -155,7 +155,7 @@ export function addGrpcWebMisc(ctx: Context, hasStreamingMethods: boolean): Code
   chunks.push(code`type UnaryMethodDefinitionish = UnaryMethodDefinitionishR;`);
   chunks.push(generateGrpcWebRpcType(ctx, options.returnObservable, hasStreamingMethods));
   chunks.push(generateGrpcWebImpl(ctx, options.returnObservable, hasStreamingMethods));
-  return joinCode(chunks, { on: '\n\n' });
+  return joinCode(chunks, { on: "\n\n" });
 }
 
 /** Makes an `Rpc` interface to decouple from the low-level grpc-web `grpc.invoke and grpc.unary`/etc. methods. */
@@ -164,7 +164,7 @@ function generateGrpcWebRpcType(ctx: Context, returnObservable: boolean, hasStre
 
   chunks.push(code`interface Rpc {`);
 
-  const wrapper = returnObservable ? observableType(ctx) : 'Promise';
+  const wrapper = returnObservable ? observableType(ctx) : "Promise";
   chunks.push(code`
     unary<T extends UnaryMethodDefinitionish>(
       methodDesc: T,
@@ -184,7 +184,7 @@ function generateGrpcWebRpcType(ctx: Context, returnObservable: boolean, hasStre
   }
 
   chunks.push(code`}`);
-  return joinCode(chunks, { on: '\n' });
+  return joinCode(chunks, { on: "\n" });
 }
 
 /** Implements the `Rpc` interface by making calls using the `grpc.unary` method. */
@@ -192,7 +192,7 @@ function generateGrpcWebImpl(ctx: Context, returnObservable: boolean, hasStreami
   const options = code`
     {
       transport?: grpc.TransportFactory,
-      ${hasStreamingMethods ? 'streamingTransport?: grpc.TransportFactory,' : ``}
+      ${hasStreamingMethods ? "streamingTransport?: grpc.TransportFactory," : ``}
       debug?: boolean,
       metadata?: grpc.Metadata,
       upStreamRetryCodes?: number[],

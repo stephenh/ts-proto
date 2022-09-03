@@ -1,9 +1,9 @@
 /* eslint-disable */
-import { ChildEnum, Child, childEnumFromJSON, childEnumToJSON } from './child.pb';
-import { Timestamp } from './google/protobuf/timestamp.pb';
-import * as _m0 from 'protobufjs/minimal';
+import * as _m0 from "protobufjs/minimal";
+import { Child, ChildEnum, childEnumFromJSON, childEnumToJSON } from "./child.pb";
+import { Timestamp } from "./google/protobuf/timestamp.pb";
 
-export const protobufPackage = 'file_suffix';
+export const protobufPackage = "file_suffix";
 
 export interface Parent {
   child: Child | undefined;
@@ -71,7 +71,7 @@ export const Parent = {
 
   fromPartial<I extends Exact<DeepPartial<Parent>, I>>(object: I): Parent {
     const message = createBaseParent();
-    message.child = object.child !== undefined && object.child !== null ? Child.fromPartial(object.child) : undefined;
+    message.child = (object.child !== undefined && object.child !== null) ? Child.fromPartial(object.child) : undefined;
     message.childEnum = object.childEnum ?? 0;
     message.createdAt = object.createdAt ?? undefined;
     return message;
@@ -80,19 +80,13 @@ export const Parent = {
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
-export type DeepPartial<T> = T extends Builtin
-  ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U>
-  ? ReadonlyArray<DeepPartial<U>>
-  : T extends {}
-  ? { [K in keyof T]?: DeepPartial<T[K]> }
+export type DeepPartial<T> = T extends Builtin ? T
+  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-export type Exact<P, I extends P> = P extends Builtin
-  ? P
+export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function toTimestamp(date: Date): Timestamp {
@@ -110,7 +104,7 @@ function fromTimestamp(t: Timestamp): Date {
 function fromJsonTimestamp(o: any): Date {
   if (o instanceof Date) {
     return o;
-  } else if (typeof o === 'string') {
+  } else if (typeof o === "string") {
     return new Date(o);
   } else {
     return fromTimestamp(Timestamp.fromJSON(o));

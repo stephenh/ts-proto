@@ -1,7 +1,7 @@
 /* eslint-disable */
-import * as _m0 from 'protobufjs/minimal';
+import * as _m0 from "protobufjs/minimal";
 
-export const protobufPackage = '';
+export const protobufPackage = "";
 
 export interface Point {
   lat: number;
@@ -50,10 +50,7 @@ export const Point = {
   },
 
   fromJSON(object: any): Point {
-    return {
-      lat: isSet(object.lat) ? Number(object.lat) : 0,
-      lng: isSet(object.lng) ? Number(object.lng) : 0,
-    };
+    return { lat: isSet(object.lat) ? Number(object.lat) : 0, lng: isSet(object.lng) ? Number(object.lng) : 0 };
   },
 
   toJSON(message: Point): unknown {
@@ -123,27 +120,21 @@ export const Area = {
 
   fromPartial<I extends Exact<DeepPartial<Area>, I>>(object: I): Area {
     const message = createBaseArea();
-    message.nw = object.nw !== undefined && object.nw !== null ? Point.fromPartial(object.nw) : undefined;
-    message.se = object.se !== undefined && object.se !== null ? Point.fromPartial(object.se) : undefined;
+    message.nw = (object.nw !== undefined && object.nw !== null) ? Point.fromPartial(object.nw) : undefined;
+    message.se = (object.se !== undefined && object.se !== null) ? Point.fromPartial(object.se) : undefined;
     return message;
   },
 };
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
-export type DeepPartial<T> = T extends Builtin
-  ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U>
-  ? ReadonlyArray<DeepPartial<U>>
-  : T extends {}
-  ? { [K in keyof T]?: DeepPartial<T[K]> }
+export type DeepPartial<T> = T extends Builtin ? T
+  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-export type Exact<P, I extends P> = P extends Builtin
-  ? P
+export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function isSet(value: any): boolean {

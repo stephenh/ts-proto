@@ -1,8 +1,8 @@
 /* eslint-disable */
-import * as _m0 from 'protobufjs/minimal';
-import { Struct } from './google/protobuf/struct';
+import * as _m0 from "protobufjs/minimal";
+import { Struct } from "./google/protobuf/struct";
 
-export const protobufPackage = '';
+export const protobufPackage = "";
 
 export interface StructMessage {
   value: { [key: string]: any } | undefined;
@@ -39,9 +39,7 @@ export const StructMessage = {
   },
 
   fromJSON(object: any): StructMessage {
-    return {
-      value: isObject(object.value) ? object.value : undefined,
-    };
+    return { value: isObject(object.value) ? object.value : undefined };
   },
 
   toJSON(message: StructMessage): unknown {
@@ -59,21 +57,15 @@ export const StructMessage = {
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
-export type DeepPartial<T> = T extends Builtin
-  ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U>
-  ? ReadonlyArray<DeepPartial<U>>
-  : T extends {}
-  ? { [K in keyof T]?: DeepPartial<T[K]> }
+export type DeepPartial<T> = T extends Builtin ? T
+  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-export type Exact<P, I extends P> = P extends Builtin
-  ? P
+export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function isObject(value: any): boolean {
-  return typeof value === 'object' && value !== null;
+  return typeof value === "object" && value !== null;
 }

@@ -1,7 +1,7 @@
 /* eslint-disable */
-import * as _m0 from 'protobufjs/minimal';
+import * as _m0 from "protobufjs/minimal";
 
-export const protobufPackage = 'batching';
+export const protobufPackage = "batching";
 
 export interface BatchQueryRequest {
   ids: string[];
@@ -36,7 +36,8 @@ export interface WriteMethodRequest {
   id: string;
 }
 
-export interface WriteMethodResponse {}
+export interface WriteMethodResponse {
+}
 
 export interface Entity {
   id: string;
@@ -74,15 +75,13 @@ export const BatchQueryRequest = {
   },
 
   fromJSON(object: any): BatchQueryRequest {
-    return {
-      ids: Array.isArray(object?.ids) ? object.ids.map((e: any) => String(e)) : [],
-    };
+    return { ids: Array.isArray(object?.ids) ? object.ids.map((e: any) => String(e)) : [] };
   },
 
   toJSON(message: BatchQueryRequest): unknown {
     const obj: any = {};
     if (message.ids) {
-      obj.ids = message.ids.map((e) => e);
+      obj.ids = message.ids.map(e => e);
     } else {
       obj.ids = [];
     }
@@ -127,15 +126,13 @@ export const BatchQueryResponse = {
   },
 
   fromJSON(object: any): BatchQueryResponse {
-    return {
-      entities: Array.isArray(object?.entities) ? object.entities.map((e: any) => Entity.fromJSON(e)) : [],
-    };
+    return { entities: Array.isArray(object?.entities) ? object.entities.map((e: any) => Entity.fromJSON(e)) : [] };
   },
 
   toJSON(message: BatchQueryResponse): unknown {
     const obj: any = {};
     if (message.entities) {
-      obj.entities = message.entities.map((e) => (e ? Entity.toJSON(e) : undefined));
+      obj.entities = message.entities.map(e => e ? Entity.toJSON(e) : undefined);
     } else {
       obj.entities = [];
     }
@@ -180,15 +177,13 @@ export const BatchMapQueryRequest = {
   },
 
   fromJSON(object: any): BatchMapQueryRequest {
-    return {
-      ids: Array.isArray(object?.ids) ? object.ids.map((e: any) => String(e)) : [],
-    };
+    return { ids: Array.isArray(object?.ids) ? object.ids.map((e: any) => String(e)) : [] };
   },
 
   toJSON(message: BatchMapQueryRequest): unknown {
     const obj: any = {};
     if (message.ids) {
-      obj.ids = message.ids.map((e) => e);
+      obj.ids = message.ids.map(e => e);
     } else {
       obj.ids = [];
     }
@@ -239,9 +234,9 @@ export const BatchMapQueryResponse = {
     return {
       entities: isObject(object.entities)
         ? Object.entries(object.entities).reduce<{ [key: string]: Entity }>((acc, [key, value]) => {
-            acc[key] = Entity.fromJSON(value);
-            return acc;
-          }, {})
+          acc[key] = Entity.fromJSON(value);
+          return acc;
+        }, {})
         : {},
     };
   },
@@ -270,12 +265,12 @@ export const BatchMapQueryResponse = {
 };
 
 function createBaseBatchMapQueryResponse_EntitiesEntry(): BatchMapQueryResponse_EntitiesEntry {
-  return { key: '', value: undefined };
+  return { key: "", value: undefined };
 }
 
 export const BatchMapQueryResponse_EntitiesEntry = {
   encode(message: BatchMapQueryResponse_EntitiesEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.key !== '') {
+    if (message.key !== "") {
       writer.uint32(10).string(message.key);
     }
     if (message.value !== undefined) {
@@ -307,7 +302,7 @@ export const BatchMapQueryResponse_EntitiesEntry = {
 
   fromJSON(object: any): BatchMapQueryResponse_EntitiesEntry {
     return {
-      key: isSet(object.key) ? String(object.key) : '',
+      key: isSet(object.key) ? String(object.key) : "",
       value: isSet(object.value) ? Entity.fromJSON(object.value) : undefined,
     };
   },
@@ -320,22 +315,24 @@ export const BatchMapQueryResponse_EntitiesEntry = {
   },
 
   fromPartial<I extends Exact<DeepPartial<BatchMapQueryResponse_EntitiesEntry>, I>>(
-    object: I
+    object: I,
   ): BatchMapQueryResponse_EntitiesEntry {
     const message = createBaseBatchMapQueryResponse_EntitiesEntry();
-    message.key = object.key ?? '';
-    message.value = object.value !== undefined && object.value !== null ? Entity.fromPartial(object.value) : undefined;
+    message.key = object.key ?? "";
+    message.value = (object.value !== undefined && object.value !== null)
+      ? Entity.fromPartial(object.value)
+      : undefined;
     return message;
   },
 };
 
 function createBaseGetOnlyMethodRequest(): GetOnlyMethodRequest {
-  return { id: '' };
+  return { id: "" };
 }
 
 export const GetOnlyMethodRequest = {
   encode(message: GetOnlyMethodRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== '') {
+    if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
     return writer;
@@ -360,9 +357,7 @@ export const GetOnlyMethodRequest = {
   },
 
   fromJSON(object: any): GetOnlyMethodRequest {
-    return {
-      id: isSet(object.id) ? String(object.id) : '',
-    };
+    return { id: isSet(object.id) ? String(object.id) : "" };
   },
 
   toJSON(message: GetOnlyMethodRequest): unknown {
@@ -373,7 +368,7 @@ export const GetOnlyMethodRequest = {
 
   fromPartial<I extends Exact<DeepPartial<GetOnlyMethodRequest>, I>>(object: I): GetOnlyMethodRequest {
     const message = createBaseGetOnlyMethodRequest();
-    message.id = object.id ?? '';
+    message.id = object.id ?? "";
     return message;
   },
 };
@@ -409,9 +404,7 @@ export const GetOnlyMethodResponse = {
   },
 
   fromJSON(object: any): GetOnlyMethodResponse {
-    return {
-      entity: isSet(object.entity) ? Entity.fromJSON(object.entity) : undefined,
-    };
+    return { entity: isSet(object.entity) ? Entity.fromJSON(object.entity) : undefined };
   },
 
   toJSON(message: GetOnlyMethodResponse): unknown {
@@ -422,19 +415,20 @@ export const GetOnlyMethodResponse = {
 
   fromPartial<I extends Exact<DeepPartial<GetOnlyMethodResponse>, I>>(object: I): GetOnlyMethodResponse {
     const message = createBaseGetOnlyMethodResponse();
-    message.entity =
-      object.entity !== undefined && object.entity !== null ? Entity.fromPartial(object.entity) : undefined;
+    message.entity = (object.entity !== undefined && object.entity !== null)
+      ? Entity.fromPartial(object.entity)
+      : undefined;
     return message;
   },
 };
 
 function createBaseWriteMethodRequest(): WriteMethodRequest {
-  return { id: '' };
+  return { id: "" };
 }
 
 export const WriteMethodRequest = {
   encode(message: WriteMethodRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== '') {
+    if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
     return writer;
@@ -459,9 +453,7 @@ export const WriteMethodRequest = {
   },
 
   fromJSON(object: any): WriteMethodRequest {
-    return {
-      id: isSet(object.id) ? String(object.id) : '',
-    };
+    return { id: isSet(object.id) ? String(object.id) : "" };
   },
 
   toJSON(message: WriteMethodRequest): unknown {
@@ -472,7 +464,7 @@ export const WriteMethodRequest = {
 
   fromPartial<I extends Exact<DeepPartial<WriteMethodRequest>, I>>(object: I): WriteMethodRequest {
     const message = createBaseWriteMethodRequest();
-    message.id = object.id ?? '';
+    message.id = object.id ?? "";
     return message;
   },
 };
@@ -517,15 +509,15 @@ export const WriteMethodResponse = {
 };
 
 function createBaseEntity(): Entity {
-  return { id: '', name: '' };
+  return { id: "", name: "" };
 }
 
 export const Entity = {
   encode(message: Entity, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== '') {
+    if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
-    if (message.name !== '') {
+    if (message.name !== "") {
       writer.uint32(18).string(message.name);
     }
     return writer;
@@ -553,10 +545,7 @@ export const Entity = {
   },
 
   fromJSON(object: any): Entity {
-    return {
-      id: isSet(object.id) ? String(object.id) : '',
-      name: isSet(object.name) ? String(object.name) : '',
-    };
+    return { id: isSet(object.id) ? String(object.id) : "", name: isSet(object.name) ? String(object.name) : "" };
   },
 
   toJSON(message: Entity): unknown {
@@ -568,8 +557,8 @@ export const Entity = {
 
   fromPartial<I extends Exact<DeepPartial<Entity>, I>>(object: I): Entity {
     const message = createBaseEntity();
-    message.id = object.id ?? '';
-    message.name = object.name ?? '';
+    message.id = object.id ?? "";
+    message.name = object.name ?? "";
     return message;
   },
 };
@@ -594,26 +583,26 @@ export class EntityServiceClientImpl implements EntityService {
   }
   BatchQuery(request: BatchQueryRequest): Promise<BatchQueryResponse> {
     const data = BatchQueryRequest.encode(request).finish();
-    const promise = this.rpc.request('batching.EntityService', 'BatchQuery', data);
-    return promise.then((data) => BatchQueryResponse.decode(new _m0.Reader(data)));
+    const promise = this.rpc.request("batching.EntityService", "BatchQuery", data);
+    return promise.then(data => BatchQueryResponse.decode(new _m0.Reader(data)));
   }
 
   BatchMapQuery(request: BatchMapQueryRequest): Promise<BatchMapQueryResponse> {
     const data = BatchMapQueryRequest.encode(request).finish();
-    const promise = this.rpc.request('batching.EntityService', 'BatchMapQuery', data);
-    return promise.then((data) => BatchMapQueryResponse.decode(new _m0.Reader(data)));
+    const promise = this.rpc.request("batching.EntityService", "BatchMapQuery", data);
+    return promise.then(data => BatchMapQueryResponse.decode(new _m0.Reader(data)));
   }
 
   GetOnlyMethod(request: GetOnlyMethodRequest): Promise<GetOnlyMethodResponse> {
     const data = GetOnlyMethodRequest.encode(request).finish();
-    const promise = this.rpc.request('batching.EntityService', 'GetOnlyMethod', data);
-    return promise.then((data) => GetOnlyMethodResponse.decode(new _m0.Reader(data)));
+    const promise = this.rpc.request("batching.EntityService", "GetOnlyMethod", data);
+    return promise.then(data => GetOnlyMethodResponse.decode(new _m0.Reader(data)));
   }
 
   WriteMethod(request: WriteMethodRequest): Promise<WriteMethodResponse> {
     const data = WriteMethodRequest.encode(request).finish();
-    const promise = this.rpc.request('batching.EntityService', 'WriteMethod', data);
-    return promise.then((data) => WriteMethodResponse.decode(new _m0.Reader(data)));
+    const promise = this.rpc.request("batching.EntityService", "WriteMethod", data);
+    return promise.then(data => WriteMethodResponse.decode(new _m0.Reader(data)));
   }
 }
 
@@ -623,23 +612,17 @@ interface Rpc {
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
-export type DeepPartial<T> = T extends Builtin
-  ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U>
-  ? ReadonlyArray<DeepPartial<U>>
-  : T extends {}
-  ? { [K in keyof T]?: DeepPartial<T[K]> }
+export type DeepPartial<T> = T extends Builtin ? T
+  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-export type Exact<P, I extends P> = P extends Builtin
-  ? P
+export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function isObject(value: any): boolean {
-  return typeof value === 'object' && value !== null;
+  return typeof value === "object" && value !== null;
 }
 
 function isSet(value: any): boolean {

@@ -3,16 +3,16 @@ import {
   FileDescriptorProto,
   FieldDescriptorProto,
   FieldDescriptorProto_Type,
-} from 'ts-proto-descriptors';
-import { imp, code, Code, joinCode, def } from 'ts-poet';
-import { visit, visitServices } from './visit';
-import { Context } from './context';
-import SourceInfo from './sourceInfo';
-import { impFile, maybePrefixPackage } from './utils';
-import { basicTypeName, toReaderCall } from './types';
-import { Reader } from 'protobufjs/minimal';
+} from "ts-proto-descriptors";
+import { imp, code, Code, joinCode, def } from "ts-poet";
+import { visit, visitServices } from "./visit";
+import { Context } from "./context";
+import SourceInfo from "./sourceInfo";
+import { impFile, maybePrefixPackage } from "./utils";
+import { basicTypeName, toReaderCall } from "./types";
+import { Reader } from "protobufjs/minimal";
 
-const fileDescriptorProto = imp('FileDescriptorProto@ts-proto-descriptors');
+const fileDescriptorProto = imp("FileDescriptorProto@ts-proto-descriptors");
 
 const extensionCache: { [key: string]: { [key: string]: FieldDescriptorProto } } = {};
 
@@ -63,7 +63,7 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
   const references: Code[] = [];
 
   function addReference(localName: string, symbol: string): void {
-    references.push(code`'.${maybePrefixPackage(fileDesc, localName.replace(/_/g, '.'))}': ${symbol}`);
+    references.push(code`'.${maybePrefixPackage(fileDesc, localName.replace(/_/g, "."))}': ${symbol}`);
   }
 
   visit(
@@ -87,7 +87,7 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
   });
 
   const dependencies = fileDesc.dependency.map((dep) => {
-    return code`${impFile(options, `protoMetadata@./${dep.replace('.proto', '')}`)}`;
+    return code`${impFile(options, `protoMetadata@./${dep.replace(".proto", "")}`)}`;
   });
 
   // Use toObject so that we get enums as numbers (instead of the default toJSON behavior)
@@ -96,17 +96,17 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
   // Only keep locations that include comments
   descriptor.sourceCodeInfo = {
     location:
-      descriptor.sourceCodeInfo?.location.filter((loc) => loc['leadingComments'] || loc['trailingComments']) || [],
+      descriptor.sourceCodeInfo?.location.filter((loc) => loc["leadingComments"] || loc["trailingComments"]) || [],
   };
 
   let fileOptions: Code | undefined;
   if (fileDesc.options) {
     fileOptions = encodedOptionsToOptions(
       ctx,
-      '.google.protobuf.FileOptions',
-      (fileDesc.options as any)['_unknownFields']
+      ".google.protobuf.FileOptions",
+      (fileDesc.options as any)["_unknownFields"]
     );
-    delete (fileDesc.options as any)['_unknownFields'];
+    delete (fileDesc.options as any)["_unknownFields"];
   }
 
   const messagesOptions: Code[] = [];
@@ -124,10 +124,10 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
       if (method.options) {
         const methodOptions = encodedOptionsToOptions(
           ctx,
-          '.google.protobuf.MethodOptions',
-          (method.options as any)['_unknownFields']
+          ".google.protobuf.MethodOptions",
+          (method.options as any)["_unknownFields"]
         );
-        delete (method.options as any)['_unknownFields'];
+        delete (method.options as any)["_unknownFields"];
         if (methodOptions) {
           methodsOptions.push(code`'${method.name}': ${methodOptions}`);
         }
@@ -138,17 +138,17 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
     if (service.options) {
       serviceOptions = encodedOptionsToOptions(
         ctx,
-        '.google.protobuf.ServiceOptions',
-        (service.options as any)['_unknownFields']
+        ".google.protobuf.ServiceOptions",
+        (service.options as any)["_unknownFields"]
       );
-      delete (service.options as any)['_unknownFields'];
+      delete (service.options as any)["_unknownFields"];
     }
 
     if (methodsOptions.length > 0 || serviceOptions) {
       servicesOptions.push(code`
         '${service.name}': {
           options: ${serviceOptions},
-          methods: {${joinCode(methodsOptions, { on: ',' })}}
+          methods: {${joinCode(methodsOptions, { on: "," })}}
         }
       `);
     }
@@ -161,10 +161,10 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
       if (value.options) {
         const valueOptions = encodedOptionsToOptions(
           ctx,
-          '.google.protobuf.EnumValueOptions',
-          (value.options as any)['_unknownFields']
+          ".google.protobuf.EnumValueOptions",
+          (value.options as any)["_unknownFields"]
         );
-        delete (value.options as any)['_unknownFields'];
+        delete (value.options as any)["_unknownFields"];
         if (valueOptions) {
           valuesOptions.push(code`'${value.name}': ${valueOptions}`);
         }
@@ -175,36 +175,36 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
     if (Enum.options) {
       enumOptions = encodedOptionsToOptions(
         ctx,
-        '.google.protobuf.EnumOptions',
-        (Enum.options as any)['_unknownFields']
+        ".google.protobuf.EnumOptions",
+        (Enum.options as any)["_unknownFields"]
       );
-      delete (Enum.options as any)['_unknownFields'];
+      delete (Enum.options as any)["_unknownFields"];
     }
 
     if (valuesOptions.length > 0 || enumOptions) {
       enumsOptions.push(code`
         '${Enum.name}': {
           options: ${enumOptions},
-          values: {${joinCode(valuesOptions, { on: ',' })}}
+          values: {${joinCode(valuesOptions, { on: "," })}}
         }
       `);
     }
   });
 
   chunks.push(code`
-    export const ${def('protoMetadata')}: ProtoMetadata = {
+    export const ${def("protoMetadata")}: ProtoMetadata = {
       fileDescriptor: ${fileDescriptorProto}.fromPartial(${descriptor}),
-      references: { ${joinCode(references, { on: ',' })} },
-      dependencies: [${joinCode(dependencies, { on: ',' })}],
+      references: { ${joinCode(references, { on: "," })} },
+      dependencies: [${joinCode(dependencies, { on: "," })}],
       ${
         fileOptions || messagesOptions.length > 0 || servicesOptions.length > 0 || enumsOptions.length > 0
           ? code`options: {
-          ${fileOptions ? code`options: ${fileOptions},` : ''}
-          ${messagesOptions.length > 0 ? code`messages: {${joinCode(messagesOptions, { on: ',' })}},` : ''}
-          ${servicesOptions.length > 0 ? code`services: {${joinCode(servicesOptions, { on: ',' })}},` : ''}
-          ${enumsOptions.length > 0 ? code`enums: {${joinCode(enumsOptions, { on: ',' })}}` : ''}
+          ${fileOptions ? code`options: ${fileOptions},` : ""}
+          ${messagesOptions.length > 0 ? code`messages: {${joinCode(messagesOptions, { on: "," })}},` : ""}
+          ${servicesOptions.length > 0 ? code`services: {${joinCode(servicesOptions, { on: "," })}},` : ""}
+          ${enumsOptions.length > 0 ? code`enums: {${joinCode(enumsOptions, { on: "," })}}` : ""}
         }`
-          : ''
+          : ""
       }
     }
   `);
@@ -223,12 +223,12 @@ function getExtensionValue(ctx: Context, extension: FieldDescriptorProto, data: 
         return (reader.buf as Buffer).slice(reader.pos);
       })
     );
-    const result = resultBuffer.toString('base64');
+    const result = resultBuffer.toString("base64");
     return code`'${extension.name}': ${typeName}.decode(Buffer.from('${result}', 'base64'))`;
   } else {
     const reader = new Reader(data[0]);
     let value = (reader as any)[toReaderCall(extension)]();
-    if (typeof value === 'string') {
+    if (typeof value === "string") {
       value = code`"${value}"`;
     }
     return code`'${extension.name}': ${value}`;
@@ -252,7 +252,7 @@ function encodedOptionsToOptions(
   if (resultOptions.length == 0) {
     return undefined;
   }
-  return code`{${joinCode(resultOptions, { on: ',' })}}`;
+  return code`{${joinCode(resultOptions, { on: "," })}}`;
 }
 
 function resolveMessageOptions(ctx: Context, message: DescriptorProto): Code | undefined {
@@ -261,10 +261,10 @@ function resolveMessageOptions(ctx: Context, message: DescriptorProto): Code | u
     if (field.options) {
       const fieldOptions = encodedOptionsToOptions(
         ctx,
-        '.google.protobuf.FieldOptions',
-        (field.options as any)['_unknownFields']
+        ".google.protobuf.FieldOptions",
+        (field.options as any)["_unknownFields"]
       );
-      delete (field.options as any)['_unknownFields'];
+      delete (field.options as any)["_unknownFields"];
       if (fieldOptions) {
         fieldsOptions.push(code`'${field.name}': ${fieldOptions}`);
       }
@@ -276,10 +276,10 @@ function resolveMessageOptions(ctx: Context, message: DescriptorProto): Code | u
     if (oneOf.options) {
       const oneOfOptions = encodedOptionsToOptions(
         ctx,
-        '.google.protobuf.OneofOptions',
-        (oneOf.options as any)['_unknownFields']
+        ".google.protobuf.OneofOptions",
+        (oneOf.options as any)["_unknownFields"]
       );
-      delete (oneOf.options as any)['_unknownFields'];
+      delete (oneOf.options as any)["_unknownFields"];
       if (oneOfOptions) {
         oneOfsOptions.push(code`'${oneOf.name}': ${oneOfOptions}`);
       }
@@ -300,19 +300,19 @@ function resolveMessageOptions(ctx: Context, message: DescriptorProto): Code | u
   if (message.options) {
     messageOptions = encodedOptionsToOptions(
       ctx,
-      '.google.protobuf.MessageOptions',
-      (message.options as any)['_unknownFields']
+      ".google.protobuf.MessageOptions",
+      (message.options as any)["_unknownFields"]
     );
-    delete (message.options as any)['_unknownFields'];
+    delete (message.options as any)["_unknownFields"];
   }
 
   if (fieldsOptions.length > 0 || oneOfsOptions.length > 0 || nestedOptions.length > 0 || messageOptions) {
     return code`
       '${message.name}': {
-        ${messageOptions ? code`options: ${messageOptions},` : ''}
-        ${fieldsOptions.length > 0 ? code`fields: {${joinCode(fieldsOptions, { on: ',' })}},` : ''}
-        ${oneOfsOptions.length > 0 ? code`oneof: {${joinCode(oneOfsOptions, { on: ',' })}},` : ''}
-        ${nestedOptions.length > 0 ? code`nested: {${joinCode(nestedOptions, { on: ',' })}},` : ''}
+        ${messageOptions ? code`options: ${messageOptions},` : ""}
+        ${fieldsOptions.length > 0 ? code`fields: {${joinCode(fieldsOptions, { on: "," })}},` : ""}
+        ${oneOfsOptions.length > 0 ? code`oneof: {${joinCode(oneOfsOptions, { on: "," })}},` : ""}
+        ${nestedOptions.length > 0 ? code`nested: {${joinCode(nestedOptions, { on: "," })}},` : ""}
       }
     `;
   }

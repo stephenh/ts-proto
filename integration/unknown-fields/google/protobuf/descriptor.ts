@@ -1,8 +1,8 @@
 /* eslint-disable */
-import * as Long from 'long';
-import * as _m0 from 'protobufjs/minimal';
+import * as Long from "long";
+import * as _m0 from "protobufjs/minimal";
 
-export const protobufPackage = 'google.protobuf';
+export const protobufPackage = "google.protobuf";
 
 /**
  * The protocol compiler can output a FileDescriptorSet containing the .proto
@@ -32,14 +32,18 @@ export interface FileDescriptorProto {
   enumType: EnumDescriptorProto[];
   service: ServiceDescriptorProto[];
   extension: FieldDescriptorProto[];
-  options: FileOptions | undefined;
+  options:
+    | FileOptions
+    | undefined;
   /**
    * This field contains optional information about the original source code.
    * You may safely remove this entire field without harming runtime
    * functionality of the descriptors -- the information is needed only by
    * development tools.
    */
-  sourceCodeInfo: SourceCodeInfo | undefined;
+  sourceCodeInfo:
+    | SourceCodeInfo
+    | undefined;
   /**
    * The syntax of the proto file.
    * The supported values are "proto2" and "proto3".
@@ -133,7 +137,9 @@ export interface FieldDescriptorProto {
    * it to camelCase.
    */
   jsonName: string;
-  options: FieldOptions | undefined;
+  options:
+    | FieldOptions
+    | undefined;
   /**
    * If true, this is a proto3 "optional". When a proto3 field is optional, it
    * tracks presence regardless of field type.
@@ -222,7 +228,9 @@ export interface OneofDescriptorProto {
 export interface EnumDescriptorProto {
   name: string;
   value: EnumValueDescriptorProto[];
-  options: EnumOptions | undefined;
+  options:
+    | EnumOptions
+    | undefined;
   /**
    * Range of reserved numeric values. Reserved numeric values may not be used
    * by enum values in the same enum declaration. Reserved ranges may not
@@ -274,7 +282,9 @@ export interface MethodDescriptorProto {
    */
   inputType: string;
   outputType: string;
-  options: MethodOptions | undefined;
+  options:
+    | MethodOptions
+    | undefined;
   /** Identifies if client streams multiple client messages */
   clientStreaming: boolean;
   /** Identifies if server streams multiple server messages */
@@ -523,7 +533,6 @@ export interface FieldOptions {
    * interface is not affected by this option; const methods remain safe to
    * call from multiple threads concurrently, while non-const methods continue
    * to require exclusive access.
-   *
    *
    * Note that implementations may choose not to check required fields within
    * a lazy sub-message.  That is, calling IsInitialized() on the outer message
@@ -860,16 +869,16 @@ export const FileDescriptorSet = {
     for (const v of message.file) {
       FileDescriptorProto.encode(v!, writer.uint32(10).fork()).ldelim();
     }
-    if ('_unknownFields' in message) {
-      const msgUnknownFields: any = (message as any)['_unknownFields'];
+    if ("_unknownFields" in message) {
+      const msgUnknownFields: any = (message as any)["_unknownFields"];
       for (const key of Object.keys(msgUnknownFields)) {
         const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
-          (writer as any)['_push'](
+          (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
-            value
+            value,
           );
         }
       }
@@ -904,8 +913,8 @@ export const FileDescriptorSet = {
 
 function createBaseFileDescriptorProto(): FileDescriptorProto {
   return {
-    name: '',
-    package: '',
+    name: "",
+    package: "",
     dependency: [],
     publicDependency: [],
     weakDependency: [],
@@ -915,16 +924,16 @@ function createBaseFileDescriptorProto(): FileDescriptorProto {
     extension: [],
     options: undefined,
     sourceCodeInfo: undefined,
-    syntax: '',
+    syntax: "",
   };
 }
 
 export const FileDescriptorProto = {
   encode(message: FileDescriptorProto, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.name !== '') {
+    if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
-    if (message.package !== '') {
+    if (message.package !== "") {
       writer.uint32(18).string(message.package);
     }
     for (const v of message.dependency) {
@@ -958,19 +967,19 @@ export const FileDescriptorProto = {
     if (message.sourceCodeInfo !== undefined) {
       SourceCodeInfo.encode(message.sourceCodeInfo, writer.uint32(74).fork()).ldelim();
     }
-    if (message.syntax !== '') {
+    if (message.syntax !== "") {
       writer.uint32(98).string(message.syntax);
     }
-    if ('_unknownFields' in message) {
-      const msgUnknownFields: any = (message as any)['_unknownFields'];
+    if ("_unknownFields" in message) {
+      const msgUnknownFields: any = (message as any)["_unknownFields"];
       for (const key of Object.keys(msgUnknownFields)) {
         const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
-          (writer as any)['_push'](
+          (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
-            value
+            value,
           );
         }
       }
@@ -1052,7 +1061,7 @@ export const FileDescriptorProto = {
 
 function createBaseDescriptorProto(): DescriptorProto {
   return {
-    name: '',
+    name: "",
     field: [],
     extension: [],
     nestedType: [],
@@ -1067,7 +1076,7 @@ function createBaseDescriptorProto(): DescriptorProto {
 
 export const DescriptorProto = {
   encode(message: DescriptorProto, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.name !== '') {
+    if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
     for (const v of message.field) {
@@ -1097,16 +1106,16 @@ export const DescriptorProto = {
     for (const v of message.reservedName) {
       writer.uint32(82).string(v!);
     }
-    if ('_unknownFields' in message) {
-      const msgUnknownFields: any = (message as any)['_unknownFields'];
+    if ("_unknownFields" in message) {
+      const msgUnknownFields: any = (message as any)["_unknownFields"];
       for (const key of Object.keys(msgUnknownFields)) {
         const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
-          (writer as any)['_push'](
+          (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
-            value
+            value,
           );
         }
       }
@@ -1181,16 +1190,16 @@ export const DescriptorProto_ExtensionRange = {
     if (message.options !== undefined) {
       ExtensionRangeOptions.encode(message.options, writer.uint32(26).fork()).ldelim();
     }
-    if ('_unknownFields' in message) {
-      const msgUnknownFields: any = (message as any)['_unknownFields'];
+    if ("_unknownFields" in message) {
+      const msgUnknownFields: any = (message as any)["_unknownFields"];
       for (const key of Object.keys(msgUnknownFields)) {
         const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
-          (writer as any)['_push'](
+          (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
-            value
+            value,
           );
         }
       }
@@ -1241,16 +1250,16 @@ export const DescriptorProto_ReservedRange = {
     if (message.end !== 0) {
       writer.uint32(16).int32(message.end);
     }
-    if ('_unknownFields' in message) {
-      const msgUnknownFields: any = (message as any)['_unknownFields'];
+    if ("_unknownFields" in message) {
+      const msgUnknownFields: any = (message as any)["_unknownFields"];
       for (const key of Object.keys(msgUnknownFields)) {
         const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
-          (writer as any)['_push'](
+          (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
-            value
+            value,
           );
         }
       }
@@ -1295,16 +1304,16 @@ export const ExtensionRangeOptions = {
     for (const v of message.uninterpretedOption) {
       UninterpretedOption.encode(v!, writer.uint32(7994).fork()).ldelim();
     }
-    if ('_unknownFields' in message) {
-      const msgUnknownFields: any = (message as any)['_unknownFields'];
+    if ("_unknownFields" in message) {
+      const msgUnknownFields: any = (message as any)["_unknownFields"];
       for (const key of Object.keys(msgUnknownFields)) {
         const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
-          (writer as any)['_push'](
+          (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
-            value
+            value,
           );
         }
       }
@@ -1339,15 +1348,15 @@ export const ExtensionRangeOptions = {
 
 function createBaseFieldDescriptorProto(): FieldDescriptorProto {
   return {
-    name: '',
+    name: "",
     number: 0,
     label: 1,
     type: 1,
-    typeName: '',
-    extendee: '',
-    defaultValue: '',
+    typeName: "",
+    extendee: "",
+    defaultValue: "",
     oneofIndex: 0,
-    jsonName: '',
+    jsonName: "",
     options: undefined,
     proto3Optional: false,
   };
@@ -1355,7 +1364,7 @@ function createBaseFieldDescriptorProto(): FieldDescriptorProto {
 
 export const FieldDescriptorProto = {
   encode(message: FieldDescriptorProto, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.name !== '') {
+    if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
     if (message.number !== 0) {
@@ -1367,19 +1376,19 @@ export const FieldDescriptorProto = {
     if (message.type !== 1) {
       writer.uint32(40).int32(message.type);
     }
-    if (message.typeName !== '') {
+    if (message.typeName !== "") {
       writer.uint32(50).string(message.typeName);
     }
-    if (message.extendee !== '') {
+    if (message.extendee !== "") {
       writer.uint32(18).string(message.extendee);
     }
-    if (message.defaultValue !== '') {
+    if (message.defaultValue !== "") {
       writer.uint32(58).string(message.defaultValue);
     }
     if (message.oneofIndex !== 0) {
       writer.uint32(72).int32(message.oneofIndex);
     }
-    if (message.jsonName !== '') {
+    if (message.jsonName !== "") {
       writer.uint32(82).string(message.jsonName);
     }
     if (message.options !== undefined) {
@@ -1388,16 +1397,16 @@ export const FieldDescriptorProto = {
     if (message.proto3Optional === true) {
       writer.uint32(136).bool(message.proto3Optional);
     }
-    if ('_unknownFields' in message) {
-      const msgUnknownFields: any = (message as any)['_unknownFields'];
+    if ("_unknownFields" in message) {
+      const msgUnknownFields: any = (message as any)["_unknownFields"];
       for (const key of Object.keys(msgUnknownFields)) {
         const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
-          (writer as any)['_push'](
+          (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
-            value
+            value,
           );
         }
       }
@@ -1461,27 +1470,27 @@ export const FieldDescriptorProto = {
 };
 
 function createBaseOneofDescriptorProto(): OneofDescriptorProto {
-  return { name: '', options: undefined };
+  return { name: "", options: undefined };
 }
 
 export const OneofDescriptorProto = {
   encode(message: OneofDescriptorProto, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.name !== '') {
+    if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
     if (message.options !== undefined) {
       OneofOptions.encode(message.options, writer.uint32(18).fork()).ldelim();
     }
-    if ('_unknownFields' in message) {
-      const msgUnknownFields: any = (message as any)['_unknownFields'];
+    if ("_unknownFields" in message) {
+      const msgUnknownFields: any = (message as any)["_unknownFields"];
       for (const key of Object.keys(msgUnknownFields)) {
         const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
-          (writer as any)['_push'](
+          (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
-            value
+            value,
           );
         }
       }
@@ -1518,12 +1527,12 @@ export const OneofDescriptorProto = {
 };
 
 function createBaseEnumDescriptorProto(): EnumDescriptorProto {
-  return { name: '', value: [], options: undefined, reservedRange: [], reservedName: [] };
+  return { name: "", value: [], options: undefined, reservedRange: [], reservedName: [] };
 }
 
 export const EnumDescriptorProto = {
   encode(message: EnumDescriptorProto, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.name !== '') {
+    if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
     for (const v of message.value) {
@@ -1538,16 +1547,16 @@ export const EnumDescriptorProto = {
     for (const v of message.reservedName) {
       writer.uint32(42).string(v!);
     }
-    if ('_unknownFields' in message) {
-      const msgUnknownFields: any = (message as any)['_unknownFields'];
+    if ("_unknownFields" in message) {
+      const msgUnknownFields: any = (message as any)["_unknownFields"];
       for (const key of Object.keys(msgUnknownFields)) {
         const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
-          (writer as any)['_push'](
+          (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
-            value
+            value,
           );
         }
       }
@@ -1604,16 +1613,16 @@ export const EnumDescriptorProto_EnumReservedRange = {
     if (message.end !== 0) {
       writer.uint32(16).int32(message.end);
     }
-    if ('_unknownFields' in message) {
-      const msgUnknownFields: any = (message as any)['_unknownFields'];
+    if ("_unknownFields" in message) {
+      const msgUnknownFields: any = (message as any)["_unknownFields"];
       for (const key of Object.keys(msgUnknownFields)) {
         const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
-          (writer as any)['_push'](
+          (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
-            value
+            value,
           );
         }
       }
@@ -1650,12 +1659,12 @@ export const EnumDescriptorProto_EnumReservedRange = {
 };
 
 function createBaseEnumValueDescriptorProto(): EnumValueDescriptorProto {
-  return { name: '', number: 0, options: undefined };
+  return { name: "", number: 0, options: undefined };
 }
 
 export const EnumValueDescriptorProto = {
   encode(message: EnumValueDescriptorProto, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.name !== '') {
+    if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
     if (message.number !== 0) {
@@ -1664,16 +1673,16 @@ export const EnumValueDescriptorProto = {
     if (message.options !== undefined) {
       EnumValueOptions.encode(message.options, writer.uint32(26).fork()).ldelim();
     }
-    if ('_unknownFields' in message) {
-      const msgUnknownFields: any = (message as any)['_unknownFields'];
+    if ("_unknownFields" in message) {
+      const msgUnknownFields: any = (message as any)["_unknownFields"];
       for (const key of Object.keys(msgUnknownFields)) {
         const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
-          (writer as any)['_push'](
+          (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
-            value
+            value,
           );
         }
       }
@@ -1713,12 +1722,12 @@ export const EnumValueDescriptorProto = {
 };
 
 function createBaseServiceDescriptorProto(): ServiceDescriptorProto {
-  return { name: '', method: [], options: undefined };
+  return { name: "", method: [], options: undefined };
 }
 
 export const ServiceDescriptorProto = {
   encode(message: ServiceDescriptorProto, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.name !== '') {
+    if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
     for (const v of message.method) {
@@ -1727,16 +1736,16 @@ export const ServiceDescriptorProto = {
     if (message.options !== undefined) {
       ServiceOptions.encode(message.options, writer.uint32(26).fork()).ldelim();
     }
-    if ('_unknownFields' in message) {
-      const msgUnknownFields: any = (message as any)['_unknownFields'];
+    if ("_unknownFields" in message) {
+      const msgUnknownFields: any = (message as any)["_unknownFields"];
       for (const key of Object.keys(msgUnknownFields)) {
         const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
-          (writer as any)['_push'](
+          (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
-            value
+            value,
           );
         }
       }
@@ -1777,9 +1786,9 @@ export const ServiceDescriptorProto = {
 
 function createBaseMethodDescriptorProto(): MethodDescriptorProto {
   return {
-    name: '',
-    inputType: '',
-    outputType: '',
+    name: "",
+    inputType: "",
+    outputType: "",
     options: undefined,
     clientStreaming: false,
     serverStreaming: false,
@@ -1788,13 +1797,13 @@ function createBaseMethodDescriptorProto(): MethodDescriptorProto {
 
 export const MethodDescriptorProto = {
   encode(message: MethodDescriptorProto, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.name !== '') {
+    if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
-    if (message.inputType !== '') {
+    if (message.inputType !== "") {
       writer.uint32(18).string(message.inputType);
     }
-    if (message.outputType !== '') {
+    if (message.outputType !== "") {
       writer.uint32(26).string(message.outputType);
     }
     if (message.options !== undefined) {
@@ -1806,16 +1815,16 @@ export const MethodDescriptorProto = {
     if (message.serverStreaming === true) {
       writer.uint32(48).bool(message.serverStreaming);
     }
-    if ('_unknownFields' in message) {
-      const msgUnknownFields: any = (message as any)['_unknownFields'];
+    if ("_unknownFields" in message) {
+      const msgUnknownFields: any = (message as any)["_unknownFields"];
       for (const key of Object.keys(msgUnknownFields)) {
         const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
-          (writer as any)['_push'](
+          (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
-            value
+            value,
           );
         }
       }
@@ -1865,36 +1874,36 @@ export const MethodDescriptorProto = {
 
 function createBaseFileOptions(): FileOptions {
   return {
-    javaPackage: '',
-    javaOuterClassname: '',
+    javaPackage: "",
+    javaOuterClassname: "",
     javaMultipleFiles: false,
     javaGenerateEqualsAndHash: false,
     javaStringCheckUtf8: false,
     optimizeFor: 1,
-    goPackage: '',
+    goPackage: "",
     ccGenericServices: false,
     javaGenericServices: false,
     pyGenericServices: false,
     phpGenericServices: false,
     deprecated: false,
     ccEnableArenas: false,
-    objcClassPrefix: '',
-    csharpNamespace: '',
-    swiftPrefix: '',
-    phpClassPrefix: '',
-    phpNamespace: '',
-    phpMetadataNamespace: '',
-    rubyPackage: '',
+    objcClassPrefix: "",
+    csharpNamespace: "",
+    swiftPrefix: "",
+    phpClassPrefix: "",
+    phpNamespace: "",
+    phpMetadataNamespace: "",
+    rubyPackage: "",
     uninterpretedOption: [],
   };
 }
 
 export const FileOptions = {
   encode(message: FileOptions, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.javaPackage !== '') {
+    if (message.javaPackage !== "") {
       writer.uint32(10).string(message.javaPackage);
     }
-    if (message.javaOuterClassname !== '') {
+    if (message.javaOuterClassname !== "") {
       writer.uint32(66).string(message.javaOuterClassname);
     }
     if (message.javaMultipleFiles === true) {
@@ -1909,7 +1918,7 @@ export const FileOptions = {
     if (message.optimizeFor !== 1) {
       writer.uint32(72).int32(message.optimizeFor);
     }
-    if (message.goPackage !== '') {
+    if (message.goPackage !== "") {
       writer.uint32(90).string(message.goPackage);
     }
     if (message.ccGenericServices === true) {
@@ -1930,40 +1939,40 @@ export const FileOptions = {
     if (message.ccEnableArenas === true) {
       writer.uint32(248).bool(message.ccEnableArenas);
     }
-    if (message.objcClassPrefix !== '') {
+    if (message.objcClassPrefix !== "") {
       writer.uint32(290).string(message.objcClassPrefix);
     }
-    if (message.csharpNamespace !== '') {
+    if (message.csharpNamespace !== "") {
       writer.uint32(298).string(message.csharpNamespace);
     }
-    if (message.swiftPrefix !== '') {
+    if (message.swiftPrefix !== "") {
       writer.uint32(314).string(message.swiftPrefix);
     }
-    if (message.phpClassPrefix !== '') {
+    if (message.phpClassPrefix !== "") {
       writer.uint32(322).string(message.phpClassPrefix);
     }
-    if (message.phpNamespace !== '') {
+    if (message.phpNamespace !== "") {
       writer.uint32(330).string(message.phpNamespace);
     }
-    if (message.phpMetadataNamespace !== '') {
+    if (message.phpMetadataNamespace !== "") {
       writer.uint32(354).string(message.phpMetadataNamespace);
     }
-    if (message.rubyPackage !== '') {
+    if (message.rubyPackage !== "") {
       writer.uint32(362).string(message.rubyPackage);
     }
     for (const v of message.uninterpretedOption) {
       UninterpretedOption.encode(v!, writer.uint32(7994).fork()).ldelim();
     }
-    if ('_unknownFields' in message) {
-      const msgUnknownFields: any = (message as any)['_unknownFields'];
+    if ("_unknownFields" in message) {
+      const msgUnknownFields: any = (message as any)["_unknownFields"];
       for (const key of Object.keys(msgUnknownFields)) {
         const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
-          (writer as any)['_push'](
+          (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
-            value
+            value,
           );
         }
       }
@@ -2083,16 +2092,16 @@ export const MessageOptions = {
     for (const v of message.uninterpretedOption) {
       UninterpretedOption.encode(v!, writer.uint32(7994).fork()).ldelim();
     }
-    if ('_unknownFields' in message) {
-      const msgUnknownFields: any = (message as any)['_unknownFields'];
+    if ("_unknownFields" in message) {
+      const msgUnknownFields: any = (message as any)["_unknownFields"];
       for (const key of Object.keys(msgUnknownFields)) {
         const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
-          (writer as any)['_push'](
+          (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
-            value
+            value,
           );
         }
       }
@@ -2164,16 +2173,16 @@ export const FieldOptions = {
     for (const v of message.uninterpretedOption) {
       UninterpretedOption.encode(v!, writer.uint32(7994).fork()).ldelim();
     }
-    if ('_unknownFields' in message) {
-      const msgUnknownFields: any = (message as any)['_unknownFields'];
+    if ("_unknownFields" in message) {
+      const msgUnknownFields: any = (message as any)["_unknownFields"];
       for (const key of Object.keys(msgUnknownFields)) {
         const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
-          (writer as any)['_push'](
+          (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
-            value
+            value,
           );
         }
       }
@@ -2233,16 +2242,16 @@ export const OneofOptions = {
     for (const v of message.uninterpretedOption) {
       UninterpretedOption.encode(v!, writer.uint32(7994).fork()).ldelim();
     }
-    if ('_unknownFields' in message) {
-      const msgUnknownFields: any = (message as any)['_unknownFields'];
+    if ("_unknownFields" in message) {
+      const msgUnknownFields: any = (message as any)["_unknownFields"];
       for (const key of Object.keys(msgUnknownFields)) {
         const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
-          (writer as any)['_push'](
+          (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
-            value
+            value,
           );
         }
       }
@@ -2290,16 +2299,16 @@ export const EnumOptions = {
     for (const v of message.uninterpretedOption) {
       UninterpretedOption.encode(v!, writer.uint32(7994).fork()).ldelim();
     }
-    if ('_unknownFields' in message) {
-      const msgUnknownFields: any = (message as any)['_unknownFields'];
+    if ("_unknownFields" in message) {
+      const msgUnknownFields: any = (message as any)["_unknownFields"];
       for (const key of Object.keys(msgUnknownFields)) {
         const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
-          (writer as any)['_push'](
+          (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
-            value
+            value,
           );
         }
       }
@@ -2350,16 +2359,16 @@ export const EnumValueOptions = {
     for (const v of message.uninterpretedOption) {
       UninterpretedOption.encode(v!, writer.uint32(7994).fork()).ldelim();
     }
-    if ('_unknownFields' in message) {
-      const msgUnknownFields: any = (message as any)['_unknownFields'];
+    if ("_unknownFields" in message) {
+      const msgUnknownFields: any = (message as any)["_unknownFields"];
       for (const key of Object.keys(msgUnknownFields)) {
         const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
-          (writer as any)['_push'](
+          (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
-            value
+            value,
           );
         }
       }
@@ -2407,16 +2416,16 @@ export const ServiceOptions = {
     for (const v of message.uninterpretedOption) {
       UninterpretedOption.encode(v!, writer.uint32(7994).fork()).ldelim();
     }
-    if ('_unknownFields' in message) {
-      const msgUnknownFields: any = (message as any)['_unknownFields'];
+    if ("_unknownFields" in message) {
+      const msgUnknownFields: any = (message as any)["_unknownFields"];
       for (const key of Object.keys(msgUnknownFields)) {
         const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
-          (writer as any)['_push'](
+          (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
-            value
+            value,
           );
         }
       }
@@ -2467,16 +2476,16 @@ export const MethodOptions = {
     for (const v of message.uninterpretedOption) {
       UninterpretedOption.encode(v!, writer.uint32(7994).fork()).ldelim();
     }
-    if ('_unknownFields' in message) {
-      const msgUnknownFields: any = (message as any)['_unknownFields'];
+    if ("_unknownFields" in message) {
+      const msgUnknownFields: any = (message as any)["_unknownFields"];
       for (const key of Object.keys(msgUnknownFields)) {
         const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
-          (writer as any)['_push'](
+          (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
-            value
+            value,
           );
         }
       }
@@ -2518,12 +2527,12 @@ export const MethodOptions = {
 function createBaseUninterpretedOption(): UninterpretedOption {
   return {
     name: [],
-    identifierValue: '',
+    identifierValue: "",
     positiveIntValue: 0,
     negativeIntValue: 0,
     doubleValue: 0,
     stringValue: new Uint8Array(),
-    aggregateValue: '',
+    aggregateValue: "",
   };
 }
 
@@ -2532,7 +2541,7 @@ export const UninterpretedOption = {
     for (const v of message.name) {
       UninterpretedOption_NamePart.encode(v!, writer.uint32(18).fork()).ldelim();
     }
-    if (message.identifierValue !== '') {
+    if (message.identifierValue !== "") {
       writer.uint32(26).string(message.identifierValue);
     }
     if (message.positiveIntValue !== 0) {
@@ -2547,19 +2556,19 @@ export const UninterpretedOption = {
     if (message.stringValue.length !== 0) {
       writer.uint32(58).bytes(message.stringValue);
     }
-    if (message.aggregateValue !== '') {
+    if (message.aggregateValue !== "") {
       writer.uint32(66).string(message.aggregateValue);
     }
-    if ('_unknownFields' in message) {
-      const msgUnknownFields: any = (message as any)['_unknownFields'];
+    if ("_unknownFields" in message) {
+      const msgUnknownFields: any = (message as any)["_unknownFields"];
       for (const key of Object.keys(msgUnknownFields)) {
         const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
-          (writer as any)['_push'](
+          (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
-            value
+            value,
           );
         }
       }
@@ -2611,27 +2620,27 @@ export const UninterpretedOption = {
 };
 
 function createBaseUninterpretedOption_NamePart(): UninterpretedOption_NamePart {
-  return { namePart: '', isExtension: false };
+  return { namePart: "", isExtension: false };
 }
 
 export const UninterpretedOption_NamePart = {
   encode(message: UninterpretedOption_NamePart, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.namePart !== '') {
+    if (message.namePart !== "") {
       writer.uint32(10).string(message.namePart);
     }
     if (message.isExtension === true) {
       writer.uint32(16).bool(message.isExtension);
     }
-    if ('_unknownFields' in message) {
-      const msgUnknownFields: any = (message as any)['_unknownFields'];
+    if ("_unknownFields" in message) {
+      const msgUnknownFields: any = (message as any)["_unknownFields"];
       for (const key of Object.keys(msgUnknownFields)) {
         const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
-          (writer as any)['_push'](
+          (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
-            value
+            value,
           );
         }
       }
@@ -2676,16 +2685,16 @@ export const SourceCodeInfo = {
     for (const v of message.location) {
       SourceCodeInfo_Location.encode(v!, writer.uint32(10).fork()).ldelim();
     }
-    if ('_unknownFields' in message) {
-      const msgUnknownFields: any = (message as any)['_unknownFields'];
+    if ("_unknownFields" in message) {
+      const msgUnknownFields: any = (message as any)["_unknownFields"];
       for (const key of Object.keys(msgUnknownFields)) {
         const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
-          (writer as any)['_push'](
+          (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
-            value
+            value,
           );
         }
       }
@@ -2719,7 +2728,7 @@ export const SourceCodeInfo = {
 };
 
 function createBaseSourceCodeInfo_Location(): SourceCodeInfo_Location {
-  return { path: [], span: [], leadingComments: '', trailingComments: '', leadingDetachedComments: [] };
+  return { path: [], span: [], leadingComments: "", trailingComments: "", leadingDetachedComments: [] };
 }
 
 export const SourceCodeInfo_Location = {
@@ -2734,25 +2743,25 @@ export const SourceCodeInfo_Location = {
       writer.int32(v);
     }
     writer.ldelim();
-    if (message.leadingComments !== '') {
+    if (message.leadingComments !== "") {
       writer.uint32(26).string(message.leadingComments);
     }
-    if (message.trailingComments !== '') {
+    if (message.trailingComments !== "") {
       writer.uint32(34).string(message.trailingComments);
     }
     for (const v of message.leadingDetachedComments) {
       writer.uint32(50).string(v!);
     }
-    if ('_unknownFields' in message) {
-      const msgUnknownFields: any = (message as any)['_unknownFields'];
+    if ("_unknownFields" in message) {
+      const msgUnknownFields: any = (message as any)["_unknownFields"];
       for (const key of Object.keys(msgUnknownFields)) {
         const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
-          (writer as any)['_push'](
+          (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
-            value
+            value,
           );
         }
       }
@@ -2820,16 +2829,16 @@ export const GeneratedCodeInfo = {
     for (const v of message.annotation) {
       GeneratedCodeInfo_Annotation.encode(v!, writer.uint32(10).fork()).ldelim();
     }
-    if ('_unknownFields' in message) {
-      const msgUnknownFields: any = (message as any)['_unknownFields'];
+    if ("_unknownFields" in message) {
+      const msgUnknownFields: any = (message as any)["_unknownFields"];
       for (const key of Object.keys(msgUnknownFields)) {
         const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
-          (writer as any)['_push'](
+          (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
-            value
+            value,
           );
         }
       }
@@ -2863,7 +2872,7 @@ export const GeneratedCodeInfo = {
 };
 
 function createBaseGeneratedCodeInfo_Annotation(): GeneratedCodeInfo_Annotation {
-  return { path: [], sourceFile: '', begin: 0, end: 0 };
+  return { path: [], sourceFile: "", begin: 0, end: 0 };
 }
 
 export const GeneratedCodeInfo_Annotation = {
@@ -2873,7 +2882,7 @@ export const GeneratedCodeInfo_Annotation = {
       writer.int32(v);
     }
     writer.ldelim();
-    if (message.sourceFile !== '') {
+    if (message.sourceFile !== "") {
       writer.uint32(18).string(message.sourceFile);
     }
     if (message.begin !== 0) {
@@ -2882,16 +2891,16 @@ export const GeneratedCodeInfo_Annotation = {
     if (message.end !== 0) {
       writer.uint32(32).int32(message.end);
     }
-    if ('_unknownFields' in message) {
-      const msgUnknownFields: any = (message as any)['_unknownFields'];
+    if ("_unknownFields" in message) {
+      const msgUnknownFields: any = (message as any)["_unknownFields"];
       for (const key of Object.keys(msgUnknownFields)) {
         const values = msgUnknownFields[key] as Uint8Array[];
         for (const value of values) {
           writer.uint32(parseInt(key, 10));
-          (writer as any)['_push'](
+          (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
-            value
+            value,
           );
         }
       }
@@ -2944,16 +2953,24 @@ declare var self: any | undefined;
 declare var window: any | undefined;
 declare var global: any | undefined;
 var globalThis: any = (() => {
-  if (typeof globalThis !== 'undefined') return globalThis;
-  if (typeof self !== 'undefined') return self;
-  if (typeof window !== 'undefined') return window;
-  if (typeof global !== 'undefined') return global;
-  throw 'Unable to locate global object';
+  if (typeof globalThis !== "undefined") {
+    return globalThis;
+  }
+  if (typeof self !== "undefined") {
+    return self;
+  }
+  if (typeof window !== "undefined") {
+    return window;
+  }
+  if (typeof global !== "undefined") {
+    return global;
+  }
+  throw "Unable to locate global object";
 })();
 
 function longToNumber(long: Long): number {
   if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new globalThis.Error('Value is larger than Number.MAX_SAFE_INTEGER');
+    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
   return long.toNumber();
 }

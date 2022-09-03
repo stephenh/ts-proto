@@ -23,6 +23,6 @@ jobs:
       - name: install dependencies
         run: yarn install || echo "ignore failure"
       - name: Prettier
-        run: yarn prettier:check
+        run: yarn format:check
         env:
           CI: true

@@ -1,21 +1,21 @@
 /* eslint-disable */
-import { messageTypeRegistry } from '../typeRegistry';
-import { Foo } from '../foo';
-import * as _m0 from 'protobufjs/minimal';
+import * as _m0 from "protobufjs/minimal";
+import { Foo } from "../foo";
+import { messageTypeRegistry } from "../typeRegistry";
 
-export const protobufPackage = 'foo.bar';
+export const protobufPackage = "foo.bar";
 
 export interface Bar {
-  $type: 'foo.bar.Bar';
+  $type: "foo.bar.Bar";
   foo: Foo | undefined;
 }
 
 function createBaseBar(): Bar {
-  return { $type: 'foo.bar.Bar', foo: undefined };
+  return { $type: "foo.bar.Bar", foo: undefined };
 }
 
 export const Bar = {
-  $type: 'foo.bar.Bar' as const,
+  $type: "foo.bar.Bar" as const,
 
   encode(message: Bar, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.foo !== undefined) {
@@ -43,10 +43,7 @@ export const Bar = {
   },
 
   fromJSON(object: any): Bar {
-    return {
-      $type: Bar.$type,
-      foo: isSet(object.foo) ? Foo.fromJSON(object.foo) : undefined,
-    };
+    return { $type: Bar.$type, foo: isSet(object.foo) ? Foo.fromJSON(object.foo) : undefined };
   },
 
   toJSON(message: Bar): unknown {
@@ -57,7 +54,7 @@ export const Bar = {
 
   fromPartial<I extends Exact<DeepPartial<Bar>, I>>(object: I): Bar {
     const message = createBaseBar();
-    message.foo = object.foo !== undefined && object.foo !== null ? Foo.fromPartial(object.foo) : undefined;
+    message.foo = (object.foo !== undefined && object.foo !== null) ? Foo.fromPartial(object.foo) : undefined;
     return message;
   },
 };
@@ -66,20 +63,14 @@ messageTypeRegistry.set(Bar.$type, Bar);
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
-export type DeepPartial<T> = T extends Builtin
-  ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U>
-  ? ReadonlyArray<DeepPartial<U>>
-  : T extends {}
-  ? { [K in Exclude<keyof T, '$type'>]?: DeepPartial<T[K]> }
+export type DeepPartial<T> = T extends Builtin ? T
+  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends {} ? { [K in Exclude<keyof T, "$type">]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-export type Exact<P, I extends P> = P extends Builtin
-  ? P
-  : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P> | '$type'>]: never };
+export type Exact<P, I extends P> = P extends Builtin ? P
+  : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P> | "$type">]: never };
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;

@@ -1,6 +1,6 @@
-import { code, Code, joinCode } from 'ts-poet';
-import { Context } from './context';
-import { impFile } from './utils';
+import { code, Code, joinCode } from "ts-poet";
+import { Context } from "./context";
+import { impFile } from "./utils";
 
 export function generateTypeRegistry(ctx: Context): Code {
   const chunks: Code[] = [];
@@ -17,7 +17,7 @@ export function generateTypeRegistry(ctx: Context): Code {
 
   chunks.push(code` ${ctx.utils.Builtin.ifUsed} ${ctx.utils.DeepPartial.ifUsed}`);
 
-  return joinCode(chunks, { on: '\n\n' });
+  return joinCode(chunks, { on: "\n\n" });
 }
 
 function generateMessageType(ctx: Context): Code {
@@ -28,8 +28,8 @@ function generateMessageType(ctx: Context): Code {
   chunks.push(code`$type: Message['$type'];`);
 
   if (ctx.options.outputEncodeMethods) {
-    const Writer = impFile(ctx.options, 'Writer@protobufjs/minimal');
-    const Reader = impFile(ctx.options, 'Reader@protobufjs/minimal');
+    const Writer = impFile(ctx.options, "Writer@protobufjs/minimal");
+    const Reader = impFile(ctx.options, "Reader@protobufjs/minimal");
 
     chunks.push(code`encode(message: Message, writer?: ${Writer}): ${Writer};`);
     chunks.push(code`decode(input: ${Reader} | Uint8Array, length?: number): Message;`);
@@ -46,5 +46,5 @@ function generateMessageType(ctx: Context): Code {
 
   chunks.push(code`}`);
 
-  return joinCode(chunks, { on: '\n' });
+  return joinCode(chunks, { on: "\n" });
 }

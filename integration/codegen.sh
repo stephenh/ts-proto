@@ -52,7 +52,7 @@ for BIN_FILE in $BIN_FILES; do
   fi
 
   ((i=i%N)); ((i++==0)) && wait
-  "../node_modules/.bin/ts-node" "./codegen.ts" "${TEST_DIR}" "${BIN_FILE}" "${PARAMS}" &
+  "../node_modules/.bin/tsx" "./codegen.ts" "${TEST_DIR}" "${BIN_FILE}" "${PARAMS}" &
 done
 
 wait

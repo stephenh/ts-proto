@@ -1,5 +1,5 @@
-import { FileDescriptorProto, ServiceDescriptorProto } from 'ts-proto-descriptors';
-import { Code, code, imp, joinCode } from 'ts-poet';
+import { FileDescriptorProto, ServiceDescriptorProto } from "ts-proto-descriptors";
+import { Code, code, imp, joinCode } from "ts-poet";
 import {
   detectBatchMethod,
   isEmptyType,
@@ -7,13 +7,13 @@ import {
   responseObservable,
   responsePromise,
   responseType,
-} from './types';
-import SourceInfo, { Fields } from './sourceInfo';
-import { contextTypeVar } from './main';
-import { assertInstanceOf, FormattedMethodDescriptor, maybeAddComment, singular } from './utils';
-import { camelCase } from './case';
-import { Context } from './context';
-import { ServiceOption } from './options';
+} from "./types";
+import SourceInfo, { Fields } from "./sourceInfo";
+import { contextTypeVar } from "./main";
+import { assertInstanceOf, FormattedMethodDescriptor, maybeAddComment, singular } from "./utils";
+import { camelCase } from "./case";
+import { Context } from "./context";
+import { ServiceOption } from "./options";
 
 export function generateNestjsServiceController(
   ctx: Context,
@@ -24,10 +24,10 @@ export function generateNestjsServiceController(
   const { options } = ctx;
   const chunks: Code[] = [];
 
-  const Metadata = imp('Metadata@@grpc/grpc-js');
+  const Metadata = imp("Metadata@@grpc/grpc-js");
 
   maybeAddComment(sourceInfo, chunks, serviceDesc.options?.deprecated);
-  const t = options.context ? `<${contextTypeVar}>` : '';
+  const t = options.context ? `<${contextTypeVar}>` : "";
   chunks.push(code`
     export interface ${serviceDesc.name}Controller${t} {
   `);
@@ -44,7 +44,7 @@ export function generateNestjsServiceController(
     params.push(code`request: ${requestType(ctx, methodDesc)}`);
     // Use metadata as last argument for interface only configuration
     if (options.addGrpcMetadata) {
-      const q = options.addNestjsRestParameter ? '' : '?';
+      const q = options.addNestjsRestParameter ? "" : "?";
       params.push(code`metadata${q}: ${Metadata}`);
     }
     if (options.addNestjsRestParameter) {
@@ -67,13 +67,13 @@ export function generateNestjsServiceController(
     }
 
     chunks.push(code`
-      ${methodDesc.formattedName}(${joinCode(params, { on: ', ' })}): ${returns};
+      ${methodDesc.formattedName}(${joinCode(params, { on: ", " })}): ${returns};
     `);
 
     if (options.context) {
       const batchMethod = detectBatchMethod(ctx, fileDesc, serviceDesc, methodDesc);
       if (batchMethod) {
-        const maybeCtx = options.context ? 'ctx: Context,' : '';
+        const maybeCtx = options.context ? "ctx: Context," : "";
         chunks.push(code`
           ${batchMethod.singleMethodName}(
             ${maybeCtx}
@@ -85,7 +85,7 @@ export function generateNestjsServiceController(
   });
 
   chunks.push(code`}`);
-  return joinCode(chunks, { on: '\n\n' });
+  return joinCode(chunks, { on: "\n\n" });
 }
 
 export function generateNestjsServiceClient(
@@ -97,7 +97,7 @@ export function generateNestjsServiceClient(
   const { options } = ctx;
   const chunks: Code[] = [];
 
-  const Metadata = imp('Metadata@@grpc/grpc-js');
+  const Metadata = imp("Metadata@@grpc/grpc-js");
 
   maybeAddComment(sourceInfo, chunks);
   const t = options.context ? `<${contextTypeVar}>` : ``;
@@ -114,7 +114,7 @@ export function generateNestjsServiceClient(
     params.push(code`request: ${requestType(ctx, methodDesc)}`);
     // Use metadata as last argument for interface only configuration
     if (options.addGrpcMetadata) {
-      const q = options.addNestjsRestParameter ? '' : '?';
+      const q = options.addNestjsRestParameter ? "" : "?";
       params.push(code`metadata${q}: ${Metadata}`);
     }
     if (options.addNestjsRestParameter) {
@@ -128,14 +128,14 @@ export function generateNestjsServiceClient(
     maybeAddComment(info, chunks, methodDesc.options?.deprecated);
     chunks.push(code`
       ${methodDesc.formattedName}(
-        ${joinCode(params, { on: ',' })}
+        ${joinCode(params, { on: "," })}
       ): ${returns};
     `);
 
     if (options.context) {
       const batchMethod = detectBatchMethod(ctx, fileDesc, serviceDesc, methodDesc);
       if (batchMethod) {
-        const maybeContext = options.context ? `ctx: Context,` : '';
+        const maybeContext = options.context ? `ctx: Context,` : "";
         chunks.push(code`
           ${batchMethod.singleMethodName}(
             ${maybeContext}
@@ -147,13 +147,13 @@ export function generateNestjsServiceClient(
   });
 
   chunks.push(code`}`);
-  return joinCode(chunks, { on: '\n\n' });
+  return joinCode(chunks, { on: "\n\n" });
 }
 
 export function generateNestjsGrpcServiceMethodsDecorator(ctx: Context, serviceDesc: ServiceDescriptorProto): Code {
   const { options } = ctx;
-  const GrpcMethod = imp('GrpcMethod@@nestjs/microservices');
-  const GrpcStreamMethod = imp('GrpcStreamMethod@@nestjs/microservices');
+  const GrpcMethod = imp("GrpcMethod@@nestjs/microservices");
+  const GrpcStreamMethod = imp("GrpcStreamMethod@@nestjs/microservices");
 
   const grpcMethods = serviceDesc.method
     .filter((m) => !m.clientStreaming)
@@ -174,12 +174,12 @@ export function generateNestjsGrpcServiceMethodsDecorator(ctx: Context, serviceD
   return code`
     export function ${serviceDesc.name}ControllerMethods() {
       return function(constructor: Function) {
-        const grpcMethods: string[] = [${grpcMethods.join(', ')}];
+        const grpcMethods: string[] = [${grpcMethods.join(", ")}];
         for (const method of grpcMethods) {
           const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
           ${GrpcMethod}('${serviceDesc.name}', method)(constructor.prototype[method], method, descriptor);
         }
-        const grpcStreamMethods: string[] = [${grpcStreamMethods.join(', ')}];
+        const grpcStreamMethods: string[] = [${grpcStreamMethods.join(", ")}];
         for (const method of grpcStreamMethods) {
           const descriptor: any = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
           ${GrpcStreamMethod}('${serviceDesc.name}', method)(constructor.prototype[method], method, descriptor);

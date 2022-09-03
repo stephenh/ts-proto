@@ -1,9 +1,9 @@
 /* eslint-disable */
-import * as mongodb from 'mongodb';
-import * as _m0 from 'protobufjs/minimal';
-import { ObjectId } from './objectid/objectid';
+import * as mongodb from "mongodb";
+import * as _m0 from "protobufjs/minimal";
+import { ObjectId } from "./objectid/objectid";
 
-export const protobufPackage = 'foo';
+export const protobufPackage = "foo";
 
 export interface Todo {
   id: string;
@@ -19,12 +19,12 @@ export interface Todo_MapOfOidsEntry {
 }
 
 function createBaseTodo(): Todo {
-  return { id: '', oid: undefined, repeatedOid: [], optionalOid: undefined, mapOfOids: {} };
+  return { id: "", oid: undefined, repeatedOid: [], optionalOid: undefined, mapOfOids: {} };
 }
 
 export const Todo = {
   encode(message: Todo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== '') {
+    if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
     if (message.oid !== undefined) {
@@ -77,15 +77,15 @@ export const Todo = {
 
   fromJSON(object: any): Todo {
     return {
-      id: isSet(object.id) ? String(object.id) : '',
+      id: isSet(object.id) ? String(object.id) : "",
       oid: isSet(object.oid) ? fromJsonObjectId(object.oid) : undefined,
       repeatedOid: Array.isArray(object?.repeatedOid) ? object.repeatedOid.map((e: any) => fromJsonObjectId(e)) : [],
       optionalOid: isSet(object.optionalOid) ? fromJsonObjectId(object.optionalOid) : undefined,
       mapOfOids: isObject(object.mapOfOids)
         ? Object.entries(object.mapOfOids).reduce<{ [key: string]: mongodb.ObjectId }>((acc, [key, value]) => {
-            acc[key] = fromJsonObjectId(value);
-            return acc;
-          }, {})
+          acc[key] = fromJsonObjectId(value);
+          return acc;
+        }, {})
         : {},
     };
   },
@@ -95,7 +95,7 @@ export const Todo = {
     message.id !== undefined && (obj.id = message.id);
     message.oid !== undefined && (obj.oid = message.oid.toString());
     if (message.repeatedOid) {
-      obj.repeatedOid = message.repeatedOid.map((e) => e.toString());
+      obj.repeatedOid = message.repeatedOid.map(e => e.toString());
     } else {
       obj.repeatedOid = [];
     }
@@ -111,13 +111,12 @@ export const Todo = {
 
   fromPartial<I extends Exact<DeepPartial<Todo>, I>>(object: I): Todo {
     const message = createBaseTodo();
-    message.id = object.id ?? '';
-    message.oid = object.oid !== undefined && object.oid !== null ? (object.oid as mongodb.ObjectId) : undefined;
+    message.id = object.id ?? "";
+    message.oid = (object.oid !== undefined && object.oid !== null) ? object.oid as mongodb.ObjectId : undefined;
     message.repeatedOid = object.repeatedOid?.map((e) => e as mongodb.ObjectId) || [];
-    message.optionalOid =
-      object.optionalOid !== undefined && object.optionalOid !== null
-        ? (object.optionalOid as mongodb.ObjectId)
-        : undefined;
+    message.optionalOid = (object.optionalOid !== undefined && object.optionalOid !== null)
+      ? object.optionalOid as mongodb.ObjectId
+      : undefined;
     message.mapOfOids = Object.entries(object.mapOfOids ?? {}).reduce<{ [key: string]: mongodb.ObjectId }>(
       (acc, [key, value]) => {
         if (value !== undefined) {
@@ -125,19 +124,19 @@ export const Todo = {
         }
         return acc;
       },
-      {}
+      {},
     );
     return message;
   },
 };
 
 function createBaseTodo_MapOfOidsEntry(): Todo_MapOfOidsEntry {
-  return { key: '', value: undefined };
+  return { key: "", value: undefined };
 }
 
 export const Todo_MapOfOidsEntry = {
   encode(message: Todo_MapOfOidsEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.key !== '') {
+    if (message.key !== "") {
       writer.uint32(10).string(message.key);
     }
     if (message.value !== undefined) {
@@ -169,7 +168,7 @@ export const Todo_MapOfOidsEntry = {
 
   fromJSON(object: any): Todo_MapOfOidsEntry {
     return {
-      key: isSet(object.key) ? String(object.key) : '',
+      key: isSet(object.key) ? String(object.key) : "",
       value: isSet(object.value) ? fromJsonObjectId(object.value) : undefined,
     };
   },
@@ -183,34 +182,29 @@ export const Todo_MapOfOidsEntry = {
 
   fromPartial<I extends Exact<DeepPartial<Todo_MapOfOidsEntry>, I>>(object: I): Todo_MapOfOidsEntry {
     const message = createBaseTodo_MapOfOidsEntry();
-    message.key = object.key ?? '';
-    message.value =
-      object.value !== undefined && object.value !== null ? (object.value as mongodb.ObjectId) : undefined;
+    message.key = object.key ?? "";
+    message.value = (object.value !== undefined && object.value !== null)
+      ? object.value as mongodb.ObjectId
+      : undefined;
     return message;
   },
 };
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
-export type DeepPartial<T> = T extends Builtin
-  ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U>
-  ? ReadonlyArray<DeepPartial<U>>
-  : T extends {}
-  ? { [K in keyof T]?: DeepPartial<T[K]> }
+export type DeepPartial<T> = T extends Builtin ? T
+  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-export type Exact<P, I extends P> = P extends Builtin
-  ? P
+export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function fromJsonObjectId(o: any): mongodb.ObjectId {
   if (o instanceof mongodb.ObjectId) {
     return o;
-  } else if (typeof o === 'string') {
+  } else if (typeof o === "string") {
     return new mongodb.ObjectId(o);
   } else {
     return fromProtoObjectId(ObjectId.fromJSON(o));
@@ -227,7 +221,7 @@ function toProtoObjectId(oid: mongodb.ObjectId): ObjectId {
 }
 
 function isObject(value: any): boolean {
-  return typeof value === 'object' && value !== null;
+  return typeof value === "object" && value !== null;
 }
 
 function isSet(value: any): boolean {
