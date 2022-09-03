@@ -782,6 +782,7 @@ function generateBaseInstanceFactory(
   messageDesc: DescriptorProto,
   fullTypeName: string
 ): Code {
+  const { options } = ctx;
   const fields: Code[] = [];
 
   // When oneof=unions, we generate a single property with an ADT per `oneof` clause.
@@ -796,6 +797,10 @@ function generateBaseInstanceFactory(
         const name = maybeSnakeToCamel(messageDesc.oneofDecl[oneofIndex].name, ctx.options);
         fields.push(code`${name}: undefined`);
       }
+      continue;
+    }
+
+    if (!options.initializeFieldsAsUndefined && isOptionalProperty(field, messageDesc.options, options)) {
       continue;
     }
 
