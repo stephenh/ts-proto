@@ -450,6 +450,14 @@ Generated code will be placed in the Gradle build directory.
 
 - With `--ts_proto_opt=initializeFieldsAsUndefined=false`, all optional field initializers will be omited from the generated base instances.
 
+- With `--ts_proto_opt=Mgoogle/protobuf/empty.proto=./google3/protobuf/empty`, ('M' means 'importMapping', similar to [protoc-gen-go](https://developers.google.com/protocol-buffers/docs/reference/go-generated#package)), the generated code import path for `./google/protobuf/empty.ts` will reflect the overridden value:
+  
+  - `Mfoo/bar.proto=@myorg/some-lib` will map `foo/bar.proto` imports into `import ... from '@myorg/some-lib'`.
+  - `Mfoo/bar.proto=./some/local/lib` will map `foo/bar.proto` imports into `import ... from './some/local/lib'`.
+  - `Mfoo/bar.proto=some-modules/some-lib` will map `foo/bar.proto` imports into `import ... from 'some-module/some-lib'`.
+  - **Note**: Uses are accummulated, so multiple values are expected in the form of `--ts_proto_opt=M... --ts_proto_opt=M...` (one `ts_proto_opt` per mapping).
+  - **Note**: Proto files that match mapped imports **will not be generated**.
+
 ### NestJS Support
 
 We have a great way of working together with [nestjs](https://docs.nestjs.com/microservices/grpc). `ts-proto` generates `interfaces` and `decorators` for you controller, client. For more information see the [nestjs readme](NESTJS.markdown).

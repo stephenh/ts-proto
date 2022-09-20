@@ -4,6 +4,7 @@ describe("options", () => {
   it("can set outputJsonMethods with nestJs=true", () => {
     expect(optionsFromParameter("nestJs=true,outputJsonMethods=true")).toMatchInlineSnapshot(`
       Object {
+        "M": Object {},
         "addGrpcMetadata": false,
         "addNestjsRestParameter": false,
         "constEnums": false,

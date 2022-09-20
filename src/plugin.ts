@@ -26,11 +26,13 @@ async function main() {
 
   const filesToGenerate = options.emitImportedFiles ? request.protoFile : protoFilesToGenerate(request);
   const files = await Promise.all(
-    filesToGenerate.map(async (file) => {
-      const [path, code] = generateFile(ctx, file);
-      const content = code.toString({ ...getTsPoetOpts(options), path });
-      return { name: path, content };
-    })
+    filesToGenerate
+      .filter((file) => !options.M[file.name])
+      .map(async (file) => {
+        const [path, code] = generateFile(ctx, file);
+        const content = code.toString({ ...getTsPoetOpts(options), path });
+        return { name: path, content };
+      })
   );
 
   if (options.outputTypeRegistry) {

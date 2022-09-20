@@ -1,3 +1,4 @@
+import { parse } from "path";
 import { Code } from "ts-poet";
 import { ToStringOpts } from "ts-poet/build/Code";
 
@@ -71,6 +72,7 @@ export type Options = {
   useJsonWireFormat: boolean;
   useNumericEnumForJson: boolean;
   initializeFieldsAsUndefined: boolean;
+  M: { [from: string]: string };
 };
 
 export function defaultOptions(): Options {
@@ -113,6 +115,7 @@ export function defaultOptions(): Options {
     useJsonWireFormat: false,
     useNumericEnumForJson: false,
     initializeFieldsAsUndefined: true,
+    M: {},
   };
 }
 
@@ -134,6 +137,7 @@ export function optionsFromParameter(parameter: string | undefined): Options {
     }
     Object.assign(options, parsed);
   }
+
   // onlyTypes=true implies outputJsonMethods=false,outputEncodeMethods=false,outputClientImpl=false,nestJs=false
   if (options.onlyTypes) {
     options.outputJsonMethods = false;
@@ -205,16 +209,35 @@ export function optionsFromParameter(parameter: string | undefined): Options {
 // A very naive parse function, eventually could/should use iots/runtypes
 function parseParameter(parameter: string): Options {
   const options = {} as any;
-  const pairs = parameter.split(",").map((s) => s.split("="));
-  pairs.forEach(([key, _value]) => {
-    const value = _value === "true" ? true : _value === "false" ? false : _value;
-    if (options[key]) {
+  parameter.split(",").forEach((param) => {
+    // same as protoc-gen-go https://github.com/protocolbuffers/protobuf-go/blob/bf9455640daabb98c93b5b5e71628f3f813d57bb/compiler/protogen/protogen.go#L168-L171
+    const optionSeparatorPos = param.indexOf("=");
+    const key = param.substring(0, optionSeparatorPos);
+    const value = parseParamValue(param.substring(optionSeparatorPos + 1));
+    if (key.charAt(0) === "M") {
+      if (typeof value !== "string") {
+        console.warn(`ignoring invalid M option: '${param}'`);
+      } else {
+        const mKey = key.substring(1);
+        if (options.M[mKey]) {
+          console.warn(`received conflicting M options: '${param}' will override 'M${mKey}=${options.M[mKey]}'`);
+        }
+        if (param.endsWith(".ts")) {
+          console.warn(`received M option '${param}' ending in '.ts' this is usually a mistake`);
+        }
+        options.M[mKey] = value;
+      }
+    } else if (options[key]) {
       options[key] = [options[key], value];
     } else {
       options[key] = value;
     }
   });
   return options;
+}
+
+function parseParamValue(value: string): string | boolean {
+  return value === "true" ? true : value === "false" ? false : value;
 }
 
 export function getTsPoetOpts(_options: Options): ToStringOpts {
