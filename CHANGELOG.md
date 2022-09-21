@@ -1,3 +1,10 @@
+## [1.126.1](https://github.com/stephenh/ts-proto/compare/v1.126.0...v1.126.1) (2022-09-21)
+
+
+### Bug Fixes
+
+* **options:** initializes M opt to empty object ([#673](https://github.com/stephenh/ts-proto/issues/673)) ([cb76c5e](https://github.com/stephenh/ts-proto/commit/cb76c5ea565081d610be08451e452269c5d3837c))
+
 # [1.126.0](https://github.com/stephenh/ts-proto/compare/v1.125.0...v1.126.0) (2022-09-21)
 
 
