@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+package myorg.protos;
+
+message VeryVerySecret {
+    string the_secret = 1;
+}

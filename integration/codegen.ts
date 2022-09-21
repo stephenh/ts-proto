@@ -33,6 +33,9 @@ async function generate(binFile: string, baseDir: string, parameter: string) {
 
   for (let file of request.protoFile) {
     // Make a different utils per file to track per-file usage
+    if (options.M[file.name]) {
+      continue;
+    }
     const utils = makeUtils(options);
     const ctx: Context = { options, typeMap, utils };
     const [path, code] = generateFile(ctx, file);
