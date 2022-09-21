@@ -1,3 +1,10 @@
+# [1.126.0](https://github.com/stephenh/ts-proto/compare/v1.125.0...v1.126.0) (2022-09-21)
+
+
+### Features
+
+* **options:** adds protoc-gen-go-like M option ([#672](https://github.com/stephenh/ts-proto/issues/672)) ([9304e5d](https://github.com/stephenh/ts-proto/commit/9304e5db7172db53530fb08fe0486f56b2a17181)), closes [#596](https://github.com/stephenh/ts-proto/issues/596)
+
 # [1.125.0](https://github.com/stephenh/ts-proto/compare/v1.124.0...v1.125.0) (2022-09-03)
 
 
