@@ -208,7 +208,7 @@ export function optionsFromParameter(parameter: string | undefined): Options {
 
 // A very naive parse function, eventually could/should use iots/runtypes
 function parseParameter(parameter: string): Options {
-  const options = {} as any;
+  const options = { M: {} } as any;
   parameter.split(",").forEach((param) => {
     // same as protoc-gen-go https://github.com/protocolbuffers/protobuf-go/blob/bf9455640daabb98c93b5b5e71628f3f813d57bb/compiler/protogen/protogen.go#L168-L171
     const optionSeparatorPos = param.indexOf("=");
