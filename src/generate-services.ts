@@ -59,7 +59,7 @@ export function generateService(
 
     // the grpc-web clients auto-`fromPartial` the input before handing off to grpc-web's
     // serde runtime, so it's okay to accept partial results from the client
-    const partialInput = options.outputClientImpl === "grpc-web";
+    const partialInput = (options.outputClientImpl === "grpc-web") || options.forcePartials;
     const inputType = requestType(ctx, methodDesc, partialInput);
     params.push(code`request: ${inputType}`);
 
@@ -107,20 +107,23 @@ function generateRegularRpcMethod(
   ctx: Context,
   fileDesc: FileDescriptorProto,
   serviceDesc: ServiceDescriptorProto,
-  methodDesc: MethodDescriptorProto
+  methodDesc: MethodDescriptorProto,
+  forcePartials: boolean
 ): Code {
   assertInstanceOf(methodDesc, FormattedMethodDescriptor);
   const { options, utils } = ctx;
   const Reader = impFile(ctx.options, "Reader@protobufjs/minimal");
   const rawInputType = rawRequestType(ctx, methodDesc);
-  const inputType = requestType(ctx, methodDesc);
+  const inputType = requestType(ctx, methodDesc, forcePartials);
   const outputType = responseType(ctx, methodDesc);
   const rawOutputType = responseType(ctx, methodDesc, { keepValueType: true });
 
   const params = [...(options.context ? [code`ctx: Context`] : []), code`request: ${inputType}`];
   const maybeCtx = options.context ? "ctx," : "";
 
-  let encode = code`${rawInputType}.encode(request).finish()`;
+  const request = forcePartials ? code`${rawInputType}.fromPartial(request)` : "request";
+
+  let encode = code`${rawInputType}.encode(${request}).finish()`;
   let decode = code`data => ${outputType}.decode(new ${Reader}(data))`;
 
   if (options.useDate && rawOutputType.toString().includes("Timestamp")) {
@@ -212,7 +215,7 @@ export function generateServiceClientImpl(
     if (options.context && methodDesc.name.match(/^Get[A-Z]/)) {
       chunks.push(generateCachingRpcMethod(ctx, fileDesc, serviceDesc, methodDesc));
     } else {
-      chunks.push(generateRegularRpcMethod(ctx, fileDesc, serviceDesc, methodDesc));
+      chunks.push(generateRegularRpcMethod(ctx, fileDesc, serviceDesc, methodDesc, options.forcePartials));
     }
   }
 
@@ -287,9 +290,8 @@ function generateCachingRpcMethod(
     (requests) => {
       const responses = requests.map(async request => {
         const data = ${inputType}.encode(request).finish()
-        const response = await this.rpc.request(ctx, "${maybePrefixPackage(fileDesc, serviceDesc.name)}", "${
-    methodDesc.name
-  }", data);
+        const response = await this.rpc.request(ctx, "${maybePrefixPackage(fileDesc, serviceDesc.name)}", "${methodDesc.name
+    }", data);
         return ${outputType}.decode(new ${Reader}(response));
       });
       return Promise.all(responses);
