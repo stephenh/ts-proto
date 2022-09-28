@@ -362,6 +362,9 @@ Generated code will be placed in the Gradle build directory.
 
 - With `--ts_proto_opt=outputPartialMethods=false`, the `Message.fromPartial` methods for accepting partially-formed objects/object literals will not be output.
 
+- With `--ts_proto_opt=forcePartials=true`, the generated interfaces and clients for services will accept partials.  This is less type-safe, and similar to `optionalTypes=all` without adding ?'s to all of your interfaces.
+
+
 - With `--ts_proto_opt=stringEnums=true`, the generated enum types will be string-based instead of int-based.
 
   This is useful if you want "only types" and are using a gRPC REST Gateway configured to serialize enums as strings.
