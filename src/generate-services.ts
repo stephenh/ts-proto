@@ -59,7 +59,7 @@ export function generateService(
 
     // the grpc-web clients auto-`fromPartial` the input before handing off to grpc-web's
     // serde runtime, so it's okay to accept partial results from the client
-    const partialInput = (options.outputClientImpl === "grpc-web") || options.forcePartials;
+    const partialInput = options.outputClientImpl === "grpc-web" || options.forcePartials;
     const inputType = requestType(ctx, methodDesc, partialInput);
     params.push(code`request: ${inputType}`);
 
@@ -290,8 +290,9 @@ function generateCachingRpcMethod(
     (requests) => {
       const responses = requests.map(async request => {
         const data = ${inputType}.encode(request).finish()
-        const response = await this.rpc.request(ctx, "${maybePrefixPackage(fileDesc, serviceDesc.name)}", "${methodDesc.name
-    }", data);
+        const response = await this.rpc.request(ctx, "${maybePrefixPackage(fileDesc, serviceDesc.name)}", "${
+    methodDesc.name
+  }", data);
         return ${outputType}.decode(new ${Reader}(response));
       });
       return Promise.all(responses);
