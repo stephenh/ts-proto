@@ -16,6 +16,7 @@ describe("options", () => {
         "exportCommonSymbols": true,
         "fileSuffix": "",
         "forceLong": "number",
+        "forcePartials": false,
         "importSuffix": "",
         "initializeFieldsAsUndefined": false,
         "lowerCaseServiceMethods": true,
