@@ -1,9 +1,9 @@
 {
-  "name": "ts-proto",
+  "name": "ts-proto-promise",
   "version": "1.126.1",
   "description": "",
   "main": "build/plugin.js",
-  "repository": "github:stephenh/ts-proto",
+  "repository": "github:ssc-scott/ts-proto",
   "bin": {
     "protoc-gen-ts_proto": "./protoc-gen-ts_proto"
   },
