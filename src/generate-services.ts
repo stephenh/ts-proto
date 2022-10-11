@@ -164,7 +164,7 @@ function generateRegularRpcMethod(
       const data = ${encode};
       const ${returnVariable} = this.rpc.${rpcMethod}(
         ${maybeCtx}
-        "${maybePrefixPackage(fileDesc, serviceDesc.name)}",
+        this.service,
         "${methodDesc.name}",
         data
       );
@@ -190,8 +190,12 @@ export function generateServiceClientImpl(
   // Create the constructor(rpc: Rpc)
   const rpcType = options.context ? "Rpc<Context>" : "Rpc";
   chunks.push(code`private readonly rpc: ${rpcType};`);
-  chunks.push(code`constructor(rpc: ${rpcType}) {`);
+  chunks.push(code`private readonly service: string;`);
+  chunks.push(code`constructor(rpc: ${rpcType}, opts?: {service?: string}) {`);
+  const serviceID = maybePrefixPackage(fileDesc, serviceDesc.name);
+  chunks.push(code`this.service = opts?.service || "${serviceID}";`);
   chunks.push(code`this.rpc = rpc;`);
+
   // Bind each FooService method to the FooServiceImpl class
   for (const methodDesc of serviceDesc.method) {
     assertInstanceOf(methodDesc, FormattedMethodDescriptor);

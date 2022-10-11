@@ -189,7 +189,9 @@ export interface MathService<Context extends DataLoaders> {
 
 export class MathServiceClientImpl<Context extends DataLoaders> implements MathService<Context> {
   private readonly rpc: Rpc<Context>;
-  constructor(rpc: Rpc<Context>) {
+  private readonly service: string;
+  constructor(rpc: Rpc<Context>, opts?: { service?: string }) {
+    this.service = opts?.service || "MathService";
     this.rpc = rpc;
     this.add = this.add.bind(this);
     this.absoluteValue = this.absoluteValue.bind(this);
@@ -197,13 +199,13 @@ export class MathServiceClientImpl<Context extends DataLoaders> implements MathS
   }
   add(ctx: Context, request: NumPair): Promise<NumSingle> {
     const data = NumPair.encode(request).finish();
-    const promise = this.rpc.request(ctx, "MathService", "Add", data);
+    const promise = this.rpc.request(ctx, this.service, "Add", data);
     return promise.then((data) => NumSingle.decode(new _m0.Reader(data)));
   }
 
   absoluteValue(ctx: Context, request: NumSingle): Promise<NumSingle> {
     const data = NumSingle.encode(request).finish();
-    const promise = this.rpc.request(ctx, "MathService", "AbsoluteValue", data);
+    const promise = this.rpc.request(ctx, this.service, "AbsoluteValue", data);
     return promise.then((data) => NumSingle.decode(new _m0.Reader(data)));
   }
 
@@ -219,7 +221,7 @@ export class MathServiceClientImpl<Context extends DataLoaders> implements MathS
 
   batchDouble(ctx: Context, request: Numbers): Promise<Numbers> {
     const data = Numbers.encode(request).finish();
-    const promise = this.rpc.request(ctx, "MathService", "BatchDouble", data);
+    const promise = this.rpc.request(ctx, this.service, "BatchDouble", data);
     return promise.then((data) => Numbers.decode(new _m0.Reader(data)));
   }
 }

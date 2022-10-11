@@ -104,13 +104,15 @@ export interface UserState {
 
 export class UserStateClientImpl implements UserState {
   private readonly rpc: Rpc;
-  constructor(rpc: Rpc) {
+  private readonly service: string;
+  constructor(rpc: Rpc, opts?: { service?: string }) {
+    this.service = opts?.service || "UserState";
     this.rpc = rpc;
     this.GetUsers = this.GetUsers.bind(this);
   }
   GetUsers(request: Empty): Observable<User> {
     const data = Empty.encode(request).finish();
-    const result = this.rpc.serverStreamingRequest("UserState", "GetUsers", data);
+    const result = this.rpc.serverStreamingRequest(this.service, "GetUsers", data);
     return result.pipe(map((data) => User.decode(new _m0.Reader(data))));
   }
 }

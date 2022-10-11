@@ -597,20 +597,22 @@ export interface DashState {
 
 export class DashStateClientImpl implements DashState {
   private readonly rpc: Rpc;
-  constructor(rpc: Rpc) {
+  private readonly service: string;
+  constructor(rpc: Rpc, opts?: { service?: string }) {
+    this.service = opts?.service || "rpx.DashState";
     this.rpc = rpc;
     this.UserSettings = this.UserSettings.bind(this);
     this.ActiveUserSettingsStream = this.ActiveUserSettingsStream.bind(this);
   }
   UserSettings(request: Empty): Promise<DashUserSettingsState> {
     const data = Empty.encode(request).finish();
-    const promise = this.rpc.request("rpx.DashState", "UserSettings", data);
+    const promise = this.rpc.request(this.service, "UserSettings", data);
     return promise.then((data) => DashUserSettingsState.decode(new _m0.Reader(data)));
   }
 
   ActiveUserSettingsStream(request: Empty): Observable<DashUserSettingsState> {
     const data = Empty.encode(request).finish();
-    const result = this.rpc.serverStreamingRequest("rpx.DashState", "ActiveUserSettingsStream", data);
+    const result = this.rpc.serverStreamingRequest(this.service, "ActiveUserSettingsStream", data);
     return result.pipe(map((data) => DashUserSettingsState.decode(new _m0.Reader(data))));
   }
 }
@@ -628,7 +630,9 @@ export interface DashAPICreds {
 
 export class DashAPICredsClientImpl implements DashAPICreds {
   private readonly rpc: Rpc;
-  constructor(rpc: Rpc) {
+  private readonly service: string;
+  constructor(rpc: Rpc, opts?: { service?: string }) {
+    this.service = opts?.service || "rpx.DashAPICreds";
     this.rpc = rpc;
     this.Create = this.Create.bind(this);
     this.Update = this.Update.bind(this);
@@ -636,19 +640,19 @@ export class DashAPICredsClientImpl implements DashAPICreds {
   }
   Create(request: DashAPICredsCreateReq): Promise<DashCred> {
     const data = DashAPICredsCreateReq.encode(request).finish();
-    const promise = this.rpc.request("rpx.DashAPICreds", "Create", data);
+    const promise = this.rpc.request(this.service, "Create", data);
     return promise.then((data) => DashCred.decode(new _m0.Reader(data)));
   }
 
   Update(request: DashAPICredsUpdateReq): Promise<DashCred> {
     const data = DashAPICredsUpdateReq.encode(request).finish();
-    const promise = this.rpc.request("rpx.DashAPICreds", "Update", data);
+    const promise = this.rpc.request(this.service, "Update", data);
     return promise.then((data) => DashCred.decode(new _m0.Reader(data)));
   }
 
   Delete(request: DashAPICredsDeleteReq): Promise<DashCred> {
     const data = DashAPICredsDeleteReq.encode(request).finish();
-    const promise = this.rpc.request("rpx.DashAPICreds", "Delete", data);
+    const promise = this.rpc.request(this.service, "Delete", data);
     return promise.then((data) => DashCred.decode(new _m0.Reader(data)));
   }
 }

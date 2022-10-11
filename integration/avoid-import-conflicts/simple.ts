@@ -288,13 +288,15 @@ export interface FooService {
 
 export class FooServiceClientImpl implements FooService {
   private readonly rpc: Rpc;
-  constructor(rpc: Rpc) {
+  private readonly service: string;
+  constructor(rpc: Rpc, opts?: { service?: string }) {
+    this.service = opts?.service || "simple.FooService";
     this.rpc = rpc;
     this.Create = this.Create.bind(this);
   }
   Create(request: FooServiceCreateRequest): Promise<FooServiceCreateResponse> {
     const data = FooServiceCreateRequest.encode(request).finish();
-    const promise = this.rpc.request("simple.FooService", "Create", data);
+    const promise = this.rpc.request(this.service, "Create", data);
     return promise.then((data) => FooServiceCreateResponse.decode(new _m0.Reader(data)));
   }
 }

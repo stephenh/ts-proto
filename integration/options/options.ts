@@ -130,13 +130,15 @@ export interface MyService {
 
 export class MyServiceClientImpl implements MyService {
   private readonly rpc: Rpc;
-  constructor(rpc: Rpc) {
+  private readonly service: string;
+  constructor(rpc: Rpc, opts?: { service?: string }) {
+    this.service = opts?.service || "MyService";
     this.rpc = rpc;
     this.MyMethod = this.MyMethod.bind(this);
   }
   MyMethod(request: RequestType): Promise<ResponseType> {
     const data = RequestType.encode(request).finish();
-    const promise = this.rpc.request("MyService", "MyMethod", data);
+    const promise = this.rpc.request(this.service, "MyMethod", data);
     return promise.then((data) => ResponseType.decode(new _m0.Reader(data)));
   }
 }

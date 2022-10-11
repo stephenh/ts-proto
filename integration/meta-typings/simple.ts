@@ -1273,13 +1273,15 @@ export interface PingService {
 
 export class PingServiceClientImpl implements PingService {
   private readonly rpc: Rpc;
-  constructor(rpc: Rpc) {
+  private readonly service: string;
+  constructor(rpc: Rpc, opts?: { service?: string }) {
+    this.service = opts?.service || "simple.PingService";
     this.rpc = rpc;
     this.ping = this.ping.bind(this);
   }
   ping(request: PingRequest): Promise<PingResponse> {
     const data = PingRequest.encode(request).finish();
-    const promise = this.rpc.request("simple.PingService", "ping", data);
+    const promise = this.rpc.request(this.service, "ping", data);
     return promise.then((data) => PingResponse.decode(new _m0.Reader(data)));
   }
 }
