@@ -562,7 +562,7 @@ The commands below assume you have **Docker** installed. To use a **local** copy
 **Contributing**
 
 - Run `yarn build:test` and `yarn test` to make sure everything works.
-- Run `yarn prettier` to format the typescript files.
+- Run `yarn format` to format the typescript files.
 - Commit the changes:
   - Also include the generated `.bin` files for the tests where you added or modified `.proto` files.
     > These are checked into git so that the test suite can run without having to invoke the `protoc` build chain.
