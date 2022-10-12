@@ -6,8 +6,8 @@ import SourceInfo, { Fields } from "./sourceInfo";
 import { messageToTypeName } from "./types";
 import { assertInstanceOf, FormattedMethodDescriptor, maybeAddComment } from "./utils";
 
-const CallOptions = imp("CallOptions@nice-grpc-common");
-const CallContext = imp("CallContext@nice-grpc-common");
+const CallOptions = imp("t:CallOptions@nice-grpc-common");
+const CallContext = imp("t:CallContext@nice-grpc-common");
 
 /**
  * Generates server / client stubs for `nice-grpc` library.
