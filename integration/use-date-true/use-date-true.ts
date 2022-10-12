@@ -194,13 +194,15 @@ export interface Clock {
 
 export class ClockClientImpl implements Clock {
   private readonly rpc: Rpc;
-  constructor(rpc: Rpc) {
+  private readonly service: string;
+  constructor(rpc: Rpc, opts?: { service?: string }) {
+    this.service = opts?.service || "Clock";
     this.rpc = rpc;
     this.Now = this.Now.bind(this);
   }
   Now(request: Empty): Promise<Date> {
     const data = Empty.encode(request).finish();
-    const promise = this.rpc.request("Clock", "Now", data);
+    const promise = this.rpc.request(this.service, "Now", data);
     return promise.then((data) => fromTimestamp(Timestamp.decode(new _m0.Reader(data))));
   }
 }

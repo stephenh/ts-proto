@@ -101,7 +101,9 @@ export interface Echoer {
 
 export class EchoerClientImpl implements Echoer {
   private readonly rpc: Rpc;
-  constructor(rpc: Rpc) {
+  private readonly service: string;
+  constructor(rpc: Rpc, opts?: { service?: string }) {
+    this.service = opts?.service || "simple.Echoer";
     this.rpc = rpc;
     this.Echo = this.Echo.bind(this);
     this.EchoServerStream = this.EchoServerStream.bind(this);
@@ -110,25 +112,25 @@ export class EchoerClientImpl implements Echoer {
   }
   Echo(request: EchoMsg): Promise<EchoMsg> {
     const data = EchoMsg.encode(request).finish();
-    const promise = this.rpc.request("simple.Echoer", "Echo", data);
+    const promise = this.rpc.request(this.service, "Echo", data);
     return promise.then((data) => EchoMsg.decode(new _m0.Reader(data)));
   }
 
   EchoServerStream(request: EchoMsg): AsyncIterable<EchoMsg> {
     const data = EchoMsg.encode(request).finish();
-    const result = this.rpc.serverStreamingRequest("simple.Echoer", "EchoServerStream", data);
+    const result = this.rpc.serverStreamingRequest(this.service, "EchoServerStream", data);
     return EchoMsg.decodeTransform(result);
   }
 
   EchoClientStream(request: AsyncIterable<EchoMsg>): Promise<EchoMsg> {
     const data = EchoMsg.encodeTransform(request);
-    const promise = this.rpc.clientStreamingRequest("simple.Echoer", "EchoClientStream", data);
+    const promise = this.rpc.clientStreamingRequest(this.service, "EchoClientStream", data);
     return promise.then((data) => EchoMsg.decode(new _m0.Reader(data)));
   }
 
   EchoBidiStream(request: AsyncIterable<EchoMsg>): AsyncIterable<EchoMsg> {
     const data = EchoMsg.encodeTransform(request);
-    const result = this.rpc.bidirectionalStreamingRequest("simple.Echoer", "EchoBidiStream", data);
+    const result = this.rpc.bidirectionalStreamingRequest(this.service, "EchoBidiStream", data);
     return EchoMsg.decodeTransform(result);
   }
 }

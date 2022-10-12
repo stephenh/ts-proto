@@ -236,7 +236,9 @@ export interface HeroService {
 
 export class HeroServiceClientImpl implements HeroService {
   private readonly rpc: Rpc;
-  constructor(rpc: Rpc) {
+  private readonly service: string;
+  constructor(rpc: Rpc, opts?: { service?: string }) {
+    this.service = opts?.service || "hero.HeroService";
     this.rpc = rpc;
     this.FindOneHero = this.FindOneHero.bind(this);
     this.FindOneVillain = this.FindOneVillain.bind(this);
@@ -244,19 +246,19 @@ export class HeroServiceClientImpl implements HeroService {
   }
   FindOneHero(request: HeroById): Promise<Hero> {
     const data = HeroById.encode(request).finish();
-    const promise = this.rpc.request("hero.HeroService", "FindOneHero", data);
+    const promise = this.rpc.request(this.service, "FindOneHero", data);
     return promise.then((data) => Hero.decode(new _m0.Reader(data)));
   }
 
   FindOneVillain(request: VillainById): Promise<Villain> {
     const data = VillainById.encode(request).finish();
-    const promise = this.rpc.request("hero.HeroService", "FindOneVillain", data);
+    const promise = this.rpc.request(this.service, "FindOneVillain", data);
     return promise.then((data) => Villain.decode(new _m0.Reader(data)));
   }
 
   FindManyVillain(request: Observable<VillainById>): Observable<Villain> {
     const data = request.pipe(map((request) => VillainById.encode(request).finish()));
-    const result = this.rpc.bidirectionalStreamingRequest("hero.HeroService", "FindManyVillain", data);
+    const result = this.rpc.bidirectionalStreamingRequest(this.service, "FindManyVillain", data);
     return result.pipe(map((data) => Villain.decode(new _m0.Reader(data))));
   }
 }

@@ -574,7 +574,9 @@ export interface EntityService {
 
 export class EntityServiceClientImpl implements EntityService {
   private readonly rpc: Rpc;
-  constructor(rpc: Rpc) {
+  private readonly service: string;
+  constructor(rpc: Rpc, opts?: { service?: string }) {
+    this.service = opts?.service || "batching.EntityService";
     this.rpc = rpc;
     this.BatchQuery = this.BatchQuery.bind(this);
     this.BatchMapQuery = this.BatchMapQuery.bind(this);
@@ -583,25 +585,25 @@ export class EntityServiceClientImpl implements EntityService {
   }
   BatchQuery(request: BatchQueryRequest): Promise<BatchQueryResponse> {
     const data = BatchQueryRequest.encode(request).finish();
-    const promise = this.rpc.request("batching.EntityService", "BatchQuery", data);
+    const promise = this.rpc.request(this.service, "BatchQuery", data);
     return promise.then((data) => BatchQueryResponse.decode(new _m0.Reader(data)));
   }
 
   BatchMapQuery(request: BatchMapQueryRequest): Promise<BatchMapQueryResponse> {
     const data = BatchMapQueryRequest.encode(request).finish();
-    const promise = this.rpc.request("batching.EntityService", "BatchMapQuery", data);
+    const promise = this.rpc.request(this.service, "BatchMapQuery", data);
     return promise.then((data) => BatchMapQueryResponse.decode(new _m0.Reader(data)));
   }
 
   GetOnlyMethod(request: GetOnlyMethodRequest): Promise<GetOnlyMethodResponse> {
     const data = GetOnlyMethodRequest.encode(request).finish();
-    const promise = this.rpc.request("batching.EntityService", "GetOnlyMethod", data);
+    const promise = this.rpc.request(this.service, "GetOnlyMethod", data);
     return promise.then((data) => GetOnlyMethodResponse.decode(new _m0.Reader(data)));
   }
 
   WriteMethod(request: WriteMethodRequest): Promise<WriteMethodResponse> {
     const data = WriteMethodRequest.encode(request).finish();
-    const promise = this.rpc.request("batching.EntityService", "WriteMethod", data);
+    const promise = this.rpc.request(this.service, "WriteMethod", data);
     return promise.then((data) => WriteMethodResponse.decode(new _m0.Reader(data)));
   }
 }

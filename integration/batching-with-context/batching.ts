@@ -578,7 +578,9 @@ export interface EntityService<Context extends DataLoaders> {
 
 export class EntityServiceClientImpl<Context extends DataLoaders> implements EntityService<Context> {
   private readonly rpc: Rpc<Context>;
-  constructor(rpc: Rpc<Context>) {
+  private readonly service: string;
+  constructor(rpc: Rpc<Context>, opts?: { service?: string }) {
+    this.service = opts?.service || "batching.EntityService";
     this.rpc = rpc;
     this.BatchQuery = this.BatchQuery.bind(this);
     this.BatchMapQuery = this.BatchMapQuery.bind(this);
@@ -597,7 +599,7 @@ export class EntityServiceClientImpl<Context extends DataLoaders> implements Ent
 
   BatchQuery(ctx: Context, request: BatchQueryRequest): Promise<BatchQueryResponse> {
     const data = BatchQueryRequest.encode(request).finish();
-    const promise = this.rpc.request(ctx, "batching.EntityService", "BatchQuery", data);
+    const promise = this.rpc.request(ctx, this.service, "BatchQuery", data);
     return promise.then((data) => BatchQueryResponse.decode(new _m0.Reader(data)));
   }
 
@@ -615,7 +617,7 @@ export class EntityServiceClientImpl<Context extends DataLoaders> implements Ent
 
   BatchMapQuery(ctx: Context, request: BatchMapQueryRequest): Promise<BatchMapQueryResponse> {
     const data = BatchMapQueryRequest.encode(request).finish();
-    const promise = this.rpc.request(ctx, "batching.EntityService", "BatchMapQuery", data);
+    const promise = this.rpc.request(ctx, this.service, "BatchMapQuery", data);
     return promise.then((data) => BatchMapQueryResponse.decode(new _m0.Reader(data)));
   }
 
@@ -635,7 +637,7 @@ export class EntityServiceClientImpl<Context extends DataLoaders> implements Ent
 
   WriteMethod(ctx: Context, request: WriteMethodRequest): Promise<WriteMethodResponse> {
     const data = WriteMethodRequest.encode(request).finish();
-    const promise = this.rpc.request(ctx, "batching.EntityService", "WriteMethod", data);
+    const promise = this.rpc.request(ctx, this.service, "WriteMethod", data);
     return promise.then((data) => WriteMethodResponse.decode(new _m0.Reader(data)));
   }
 }
