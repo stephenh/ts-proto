@@ -1,3 +1,11 @@
+# [1.127.0](https://github.com/stephenh/ts-proto/compare/v1.126.1...v1.127.0) (2022-10-12)
+
+
+### Features
+
+* **client:** allow overriding the service identifier ([#683](https://github.com/stephenh/ts-proto/issues/683)) ([10c7c99](https://github.com/stephenh/ts-proto/commit/10c7c99b1f43705d640ab1e602a7c1799e31ac08))
+* Import CallContext and CallOptions as type ([#684](https://github.com/stephenh/ts-proto/issues/684)) ([8b388f6](https://github.com/stephenh/ts-proto/commit/8b388f6c9f57dac34ca5836a4313d8247bb0fceb)), closes [#677](https://github.com/stephenh/ts-proto/issues/677)
+
 ## [1.126.1](https://github.com/stephenh/ts-proto/compare/v1.126.0...v1.126.1) (2022-09-21)
 
 
