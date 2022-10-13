@@ -1,5 +1,6 @@
 /* eslint-disable */
-export const protobufPackage = 'google.protobuf';
+
+export const protobufPackage = "google.protobuf";
 
 /**
  * A generic empty message that you can re-use to avoid defining duplicated
@@ -12,6 +13,7 @@ export const protobufPackage = 'google.protobuf';
  *
  * The JSON representation for `Empty` is empty JSON object `{}`.
  */
-export interface Empty {}
+export interface Empty {
+}
 
-export const GOOGLE_PROTOBUF_PACKAGE_NAME = 'google.protobuf';
+export const GOOGLE_PROTOBUF_PACKAGE_NAME = "google.protobuf";
