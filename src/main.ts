@@ -145,6 +145,15 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
   if (options.nestJs) {
     const prefix = camelToSnake(fileDesc.package.replace(/\./g, "_"));
     chunks.push(code`export const ${prefix}_PACKAGE_NAME = '${fileDesc.package}';`);
+
+    if (
+      options.useDate === DateOption.DATE &&
+      fileDesc.messageType.find((message) =>
+        message.field.find((field) => field.typeName === '.google.protobuf.Timestamp')
+      )
+    ) {
+      chunks.push(makeProtobufTimestampWrapper());
+    }
   }
 
   if (options.outputEncodeMethods || options.outputJsonMethods || options.outputTypeRegistry) {
@@ -333,6 +342,22 @@ export function makeUtils(options: Options): Utils {
     ...makeNiceGrpcServerStreamingMethodResult(),
     ...makeGrpcWebErrorClass(),
   };
+}
+
+function makeProtobufTimestampWrapper() {
+  const wrappers = imp('wrappers@protobufjs');
+  return code`
+      ${wrappers}['.google.protobuf.Timestamp'] = {
+        fromObject(value: Date) {
+          return {
+            seconds: value.getTime() / 1000,
+            nanos: (value.getTime() % 1000) * 1e6,
+          };
+        },
+        toObject(message: { seconds: number; nanos: number }) {
+          return new Date(message.seconds * 1000 + message.nanos / 1e6);
+        },
+      } as any;`;
 }
 
 function makeLongUtils(options: Options, bytes: ReturnType<typeof makeByteUtils>) {
