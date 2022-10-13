@@ -149,7 +149,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
     if (
       options.useDate === DateOption.DATE &&
       fileDesc.messageType.find((message) =>
-        message.field.find((field) => field.typeName === '.google.protobuf.Timestamp')
+        message.field.find((field) => field.typeName === ".google.protobuf.Timestamp")
       )
     ) {
       chunks.push(makeProtobufTimestampWrapper());
@@ -345,7 +345,7 @@ export function makeUtils(options: Options): Utils {
 }
 
 function makeProtobufTimestampWrapper() {
-  const wrappers = imp('wrappers@protobufjs');
+  const wrappers = imp("wrappers@protobufjs");
   return code`
       ${wrappers}['.google.protobuf.Timestamp'] = {
         fromObject(value: Date) {
