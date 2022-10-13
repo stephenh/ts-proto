@@ -1,3 +1,10 @@
+# [1.128.0](https://github.com/stephenh/ts-proto/compare/v1.127.0...v1.128.0) (2022-10-13)
+
+
+### Features
+
+* added nestJsTimestampTypeWrapper ([#567](https://github.com/stephenh/ts-proto/issues/567)) ([59d451e](https://github.com/stephenh/ts-proto/commit/59d451e2857856ff54a3afe03ae115a1824df66f))
+
 # [1.127.0](https://github.com/stephenh/ts-proto/compare/v1.126.1...v1.127.0) (2022-10-12)
 
 
