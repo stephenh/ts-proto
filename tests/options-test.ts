@@ -44,6 +44,7 @@ describe("options", () => {
         "useDate": "timestamp",
         "useExactTypes": true,
         "useJsonWireFormat": false,
+        "useMapType": false,
         "useMongoObjectId": false,
         "useNumericEnumForJson": false,
         "useOptionals": "none",

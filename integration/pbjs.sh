@@ -104,3 +104,9 @@ if match "value"; then
   yarn run pbjs --force-message --force-number -t static-module -o integration/value/pbjs.js integration/value/value.proto
   yarn run pbts --no-comments -o integration/value/pbjs.d.ts integration/value/pbjs.js
 fi
+
+if match "use-map-type"; then
+  yarn pbjs --force-message --force-number -t static-module -o integration/use-map-type/pbjs.js integration/use-map-type/use-map-type.proto
+  yarn pbts --no-comments -o integration/use-map-type/pbjs.d.ts integration/use-map-type/pbjs.js
+fi
+
