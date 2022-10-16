@@ -1,3 +1,10 @@
+# [1.129.0](https://github.com/stephenh/ts-proto/compare/v1.128.0...v1.129.0) (2022-10-16)
+
+
+### Features
+
+* support `useMapType` option ([#686](https://github.com/stephenh/ts-proto/issues/686)) ([f2e80ab](https://github.com/stephenh/ts-proto/commit/f2e80ab3ecc3a438ecbd88b2170b8119ebadfcd3))
+
 # [1.128.0](https://github.com/stephenh/ts-proto/compare/v1.127.0...v1.128.0) (2022-10-13)
 
 
