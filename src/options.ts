@@ -72,6 +72,7 @@ export type Options = {
   useJsonWireFormat: boolean;
   useNumericEnumForJson: boolean;
   initializeFieldsAsUndefined: boolean;
+  useMapType: boolean;
   M: { [from: string]: string };
 };
 
@@ -115,6 +116,7 @@ export function defaultOptions(): Options {
     useJsonWireFormat: false,
     useNumericEnumForJson: false,
     initializeFieldsAsUndefined: true,
+    useMapType: false,
     M: {},
   };
 }

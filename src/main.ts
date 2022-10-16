@@ -833,7 +833,9 @@ function generateBaseInstanceFactory(
     const val = isWithinOneOf(field)
       ? "undefined"
       : isMapType(ctx, messageDesc, field)
-      ? "{}"
+      ? ctx.options.useMapType
+        ? "new Map()"
+        : "{}"
       : isRepeated(field)
       ? "[]"
       : defaultValue(ctx, field);
@@ -945,10 +947,14 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
       if (isMapType(ctx, messageDesc, field)) {
         // We need a unique const within the `cast` statement
         const varName = `entry${field.number}`;
+
+        const valueSetterSnippet = ctx.options.useMapType
+          ? `message.${fieldName}${maybeNonNullAssertion}.set(${varName}.key, ${varName}.value)`
+          : `message.${fieldName}${maybeNonNullAssertion}[${varName}.key] = ${varName}.value`;
         chunks.push(code`
           const ${varName} = ${readSnippet};
           if (${varName}.value !== undefined) {
-            message.${fieldName}${maybeNonNullAssertion}[${varName}.key] = ${varName}.value;
+            ${valueSetterSnippet};
           }
         `);
       } else if (packedType(field.type) === undefined) {
@@ -1071,11 +1077,20 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
             `
           : writeSnippet(`{ ${maybeTypeField} key: key as any, value }`);
         const optionalAlternative = isOptional ? " || {}" : "";
-        chunks.push(code`
-          Object.entries(message.${fieldName}${optionalAlternative}).forEach(([key, value]) => {
-            ${entryWriteSnippet}
-          });
-        `);
+
+        if (ctx.options.useMapType) {
+          chunks.push(code`
+            message.${fieldName}${optionalAlternative}.forEach((value, key) => {
+              ${entryWriteSnippet}
+            });
+          `);
+        } else {
+          chunks.push(code`
+            Object.entries(message.${fieldName}${optionalAlternative}).forEach(([key, value]) => {
+              ${entryWriteSnippet}
+            });
+          `);
+        }
       } else if (packedType(field.type) === undefined) {
         const listWriteSnippet = code`
           for (const v of message.${fieldName}) {
@@ -1325,14 +1340,26 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
       if (isMapType(ctx, messageDesc, field)) {
         const fieldType = toTypeName(ctx, messageDesc, field);
         const i = maybeCastToNumber(ctx, messageDesc, field, "key");
-        chunks.push(code`
-          ${fieldName}: ${ctx.utils.isObject}(${jsonProperty})
-            ? Object.entries(${jsonProperty}).reduce<${fieldType}>((acc, [key, value]) => {
-                acc[${i}] = ${readSnippet("value")};
-                return acc;
-              }, {})
-            : {},
-        `);
+
+        if (ctx.options.useMapType) {
+          chunks.push(code`
+            ${fieldName}: ${ctx.utils.isObject}(${jsonProperty})
+              ? Object.entries(${jsonProperty}).reduce<${fieldType}>((acc, [key, value]) => {
+                  acc.set(${i}, ${readSnippet("value")});
+                  return acc;
+                }, new Map())
+              : new Map(),
+          `);
+        } else {
+          chunks.push(code`
+            ${fieldName}: ${ctx.utils.isObject}(${jsonProperty})
+              ? Object.entries(${jsonProperty}).reduce<${fieldType}>((acc, [key, value]) => {
+                  acc[${i}] = ${readSnippet("value")};
+                  return acc;
+                }, {})
+              : {},
+          `);
+        }
       } else {
         const readValueSnippet = readSnippet("e");
         if (readValueSnippet.toString() === code`e`.toString()) {
@@ -1499,14 +1526,26 @@ function generateToJson(
 
     if (isMapType(ctx, messageDesc, field)) {
       // Maps might need their values transformed, i.e. bytes --> base64
-      chunks.push(code`
-        ${jsonProperty} = {};
-        if (message.${fieldName}) {
-          Object.entries(message.${fieldName}).forEach(([k, v]) => {
-            ${jsonProperty}[k] = ${readSnippet("v")};
-          });
-        }
-      `);
+
+      if (ctx.options.useMapType) {
+        chunks.push(code`
+          ${jsonProperty} = {};
+          if (message.${fieldName}) {
+            message.${fieldName}.forEach((v, k) => {
+              ${jsonProperty}[k] = ${readSnippet("v")};
+            });
+          }
+        `);
+      } else {
+        chunks.push(code`
+          ${jsonProperty} = {};
+          if (message.${fieldName}) {
+            Object.entries(message.${fieldName}).forEach(([k, v]) => {
+              ${jsonProperty}[k] = ${readSnippet("v")};
+            });
+          }
+        `);
+      }
     } else if (isRepeated(field)) {
       // Arrays might need their elements transformed
       chunks.push(code`
@@ -1615,14 +1654,29 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
       if (isMapType(ctx, messageDesc, field)) {
         const fieldType = toTypeName(ctx, messageDesc, field);
         const i = maybeCastToNumber(ctx, messageDesc, field, "key");
-        chunks.push(code`
-          message.${fieldName} = Object.entries(object.${fieldName} ?? {}).reduce<${fieldType}>((acc, [key, value]) => {
-            if (value !== undefined) {
-              acc[${i}] = ${readSnippet("value")};
-            }
-            return acc;
-          }, {});
-        `);
+
+        if (ctx.options.useMapType) {
+          chunks.push(code`
+            message.${fieldName} = (() => {
+              const m = new Map();
+              (object.${fieldName} as ${fieldType} ?? new Map()).forEach((value, key) => {
+                if (value !== undefined) {
+                  m.set(${i}, ${readSnippet("value")});
+                }
+              });
+              return m;
+            })();
+          `);
+        } else {
+          chunks.push(code`
+            message.${fieldName} = Object.entries(object.${fieldName} ?? {}).reduce<${fieldType}>((acc, [key, value]) => {
+              if (value !== undefined) {
+                acc[${i}] = ${readSnippet("value")};
+              }
+              return acc;
+            }, {});
+          `);
+        }
       } else {
         chunks.push(code`
           message.${fieldName} = object.${fieldName}?.map((e) => ${readSnippet("e")}) || [];

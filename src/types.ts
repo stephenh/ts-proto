@@ -591,6 +591,9 @@ export function toTypeName(ctx: Context, messageDesc: DescriptorProto, field: Fi
     const mapType = detectMapType(ctx, messageDesc, field);
     if (mapType) {
       const { keyType, valueType } = mapType;
+      if (ctx.options.useMapType) {
+        return code`Map<${keyType}, ${valueType}>`;
+      }
       return code`{ [key: ${keyType} ]: ${valueType} }`;
     }
     return code`${type}[]`;

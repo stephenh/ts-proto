@@ -458,6 +458,10 @@ Generated code will be placed in the Gradle build directory.
   - **Note**: Uses are accummulated, so multiple values are expected in the form of `--ts_proto_opt=M... --ts_proto_opt=M...` (one `ts_proto_opt` per mapping).
   - **Note**: Proto files that match mapped imports **will not be generated**.
 
+- With `--ts_proto_opt=useMapType=true`, the generated code for protobuf `map<key_type, value_type>` will become `Map<key_type, value_type>` that uses JavaScript Map type.
+
+  The default behavior is `useMapType=false`, which makes it generate the code for protobuf `map<key_type, value_type` with the key-value pair like `{[key: key_type]: value_type}`.
+
 ### NestJS Support
 
 We have a great way of working together with [nestjs](https://docs.nestjs.com/microservices/grpc). `ts-proto` generates `interfaces` and `decorators` for you controller, client. For more information see the [nestjs readme](NESTJS.markdown).
