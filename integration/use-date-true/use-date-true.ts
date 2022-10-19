@@ -215,8 +215,10 @@ export const ClockDefinition = {
     now: {
       name: "Now",
       requestType: Empty,
+      requestTypeName: ".google.protobuf.Empty",
       requestStream: false,
       responseType: Timestamp,
+      responseTypeName: ".google.protobuf.Timestamp",
       responseStream: false,
       options: {},
     },
