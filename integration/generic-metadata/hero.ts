@@ -256,7 +256,7 @@ export class HeroServiceClientImpl implements HeroService {
     return promise.then((data) => Villain.decode(new _m0.Reader(data)));
   }
 
-  FindManyVillain(request: Observable<VillainById>): Observable<Villain> {
+  FindManyVillain(request: VillainById): Observable<Villain> {
     const data = request.pipe(map((request) => VillainById.encode(request).finish()));
     const result = this.rpc.bidirectionalStreamingRequest(this.service, "FindManyVillain", data);
     return result.pipe(map((data) => Villain.decode(new _m0.Reader(data))));
