@@ -7,9 +7,9 @@ import { BoolValue, StringValue } from "./google/protobuf/wrappers";
 export const protobufPackage = "";
 
 export interface Clock {
-  Now(request: Empty): Promise<Date>;
-  NowString(request: Empty): Promise<string | undefined>;
-  NowBool(request: Empty): Promise<boolean | undefined>;
+  Now(request: Empty): Promise<Timestamp>;
+  NowString(request: StringValue): Promise<StringValue>;
+  NowBool(request: Empty): Promise<BoolValue>;
 }
 
 export class ClockClientImpl implements Clock {
@@ -22,22 +22,22 @@ export class ClockClientImpl implements Clock {
     this.NowString = this.NowString.bind(this);
     this.NowBool = this.NowBool.bind(this);
   }
-  Now(request: Empty): Promise<Date> {
+  Now(request: Empty): Promise<Timestamp> {
     const data = Empty.encode(request).finish();
     const promise = this.rpc.request(this.service, "Now", data);
-    return promise.then((data) => fromTimestamp(Timestamp.decode(new _m0.Reader(data))));
+    return promise.then((data) => Timestamp.decode(new _m0.Reader(data)));
   }
 
-  NowString(request: Empty): Promise<string | undefined> {
-    const data = Empty.encode(request).finish();
+  NowString(request: StringValue): Promise<StringValue> {
+    const data = StringValue.encode(request).finish();
     const promise = this.rpc.request(this.service, "NowString", data);
-    return promise.then((data) => string | undefined.decode(new _m0.Reader(data)));
+    return promise.then((data) => StringValue.decode(new _m0.Reader(data)));
   }
 
-  NowBool(request: Empty): Promise<boolean | undefined> {
+  NowBool(request: Empty): Promise<BoolValue> {
     const data = Empty.encode(request).finish();
     const promise = this.rpc.request(this.service, "NowBool", data);
-    return promise.then((data) => boolean | undefined.decode(new _m0.Reader(data)));
+    return promise.then((data) => BoolValue.decode(new _m0.Reader(data)));
   }
 }
 
@@ -56,7 +56,7 @@ export const ClockDefinition = {
     },
     nowString: {
       name: "NowString",
-      requestType: Empty,
+      requestType: StringValue,
       requestStream: false,
       responseType: StringValue,
       responseStream: false,
@@ -75,10 +75,4 @@ export const ClockDefinition = {
 
 interface Rpc {
   request(service: string, method: string, data: Uint8Array): Promise<Uint8Array>;
-}
-
-function fromTimestamp(t: Timestamp): Date {
-  let millis = t.seconds * 1_000;
-  millis += t.nanos / 1_000_000;
-  return new Date(millis);
 }

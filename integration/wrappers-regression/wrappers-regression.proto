@@ -5,6 +5,7 @@ import "google/protobuf/wrappers.proto";
 
 service Clock {
   rpc Now(google.protobuf.Empty) returns (google.protobuf.Timestamp);
-  rpc NowString(google.protobuf.Empty) returns (google.protobuf.StringValue);
+  rpc NowString(google.protobuf.StringValue)
+      returns (google.protobuf.StringValue);
   rpc NowBool(google.protobuf.Empty) returns (google.protobuf.BoolValue);
 }

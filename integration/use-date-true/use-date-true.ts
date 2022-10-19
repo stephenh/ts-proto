@@ -189,7 +189,7 @@ export const Todo_MapOfTimestampsEntry = {
 };
 
 export interface Clock {
-  Now(request: Empty): Promise<Date>;
+  Now(request: Empty): Promise<Timestamp>;
 }
 
 export class ClockClientImpl implements Clock {
@@ -200,10 +200,10 @@ export class ClockClientImpl implements Clock {
     this.rpc = rpc;
     this.Now = this.Now.bind(this);
   }
-  Now(request: Empty): Promise<Date> {
+  Now(request: Empty): Promise<Timestamp> {
     const data = Empty.encode(request).finish();
     const promise = this.rpc.request(this.service, "Now", data);
-    return promise.then((data) => fromTimestamp(Timestamp.decode(new _m0.Reader(data))));
+    return promise.then((data) => Timestamp.decode(new _m0.Reader(data)));
   }
 }
 

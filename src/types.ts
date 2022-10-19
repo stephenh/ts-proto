@@ -659,8 +659,12 @@ export function detectMapType(
   return undefined;
 }
 
-export function rawRequestType(ctx: Context, methodDesc: MethodDescriptorProto): Code {
-  return messageToTypeName(ctx, methodDesc.inputType);
+export function rawRequestType(
+  ctx: Context,
+  methodDesc: MethodDescriptorProto,
+  typeOptions: { keepValueType?: boolean; repeated?: boolean } = {}
+): Code {
+  return messageToTypeName(ctx, methodDesc.inputType, typeOptions);
 }
 
 export function observableType(ctx: Context): Code {
@@ -671,7 +675,7 @@ export function observableType(ctx: Context): Code {
 }
 
 export function requestType(ctx: Context, methodDesc: MethodDescriptorProto, partial: boolean = false): Code {
-  let typeName = rawRequestType(ctx, methodDesc);
+  let typeName = rawRequestType(ctx, methodDesc, { keepValueType: true });
 
   if (partial) {
     typeName = code`${ctx.utils.DeepPartial}<${typeName}>`;
@@ -692,11 +696,11 @@ export function responseType(
 }
 
 export function responsePromise(ctx: Context, methodDesc: MethodDescriptorProto): Code {
-  return code`Promise<${responseType(ctx, methodDesc)}>`;
+  return code`Promise<${responseType(ctx, methodDesc, { keepValueType: true })}>`;
 }
 
 export function responseObservable(ctx: Context, methodDesc: MethodDescriptorProto): Code {
-  return code`${observableType(ctx)}<${responseType(ctx, methodDesc)}>`;
+  return code`${observableType(ctx)}<${responseType(ctx, methodDesc, { keepValueType: true })}>`;
 }
 
 export function responsePromiseOrObservable(ctx: Context, methodDesc: MethodDescriptorProto): Code {

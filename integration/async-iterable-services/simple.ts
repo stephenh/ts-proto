@@ -122,13 +122,13 @@ export class EchoerClientImpl implements Echoer {
     return EchoMsg.decodeTransform(result);
   }
 
-  EchoClientStream(request: AsyncIterable<EchoMsg>): Promise<EchoMsg> {
+  EchoClientStream(request: EchoMsg): Promise<EchoMsg> {
     const data = EchoMsg.encodeTransform(request);
     const promise = this.rpc.clientStreamingRequest(this.service, "EchoClientStream", data);
     return promise.then((data) => EchoMsg.decode(new _m0.Reader(data)));
   }
 
-  EchoBidiStream(request: AsyncIterable<EchoMsg>): AsyncIterable<EchoMsg> {
+  EchoBidiStream(request: EchoMsg): AsyncIterable<EchoMsg> {
     const data = EchoMsg.encodeTransform(request);
     const result = this.rpc.bidirectionalStreamingRequest(this.service, "EchoBidiStream", data);
     return EchoMsg.decodeTransform(result);
