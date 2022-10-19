@@ -45,6 +45,7 @@ describe('simple', () => {
       blobs: [],
       blob: new Uint8Array(),
       birthday: undefined,
+      enabled: true,
     };
     expect(simple.name).toEqual('asdf');
   });
@@ -68,6 +69,7 @@ describe('simple', () => {
       thing: undefined,
       oldStates: [PbState.ON, PbState.OFF],
       blobs: [],
+      enabled: true,
     };
     const s2 = Simple.decode(Reader.create(PbSimple.encode(PbSimple.fromObject(s1)).finish()));
     expect(s2).toEqual({
@@ -94,6 +96,7 @@ describe('simple', () => {
       blobs: [],
       blob: new Uint8Array(),
       birthday: undefined,
+      enabled: true,
     };
     const s2 = PbSimple.toObject(PbSimple.decode(Simple.encode(s1).finish()));
 
@@ -138,6 +141,7 @@ describe('simple', () => {
         "blobs",
         "birthday",
         "blob",
+        "enabled",
       ]
     `);
   });
@@ -209,6 +213,7 @@ describe('simple', () => {
       blobs: [],
       blob: new Uint8Array(),
       birthday: undefined,
+      enabled: true,
     };
     const s2 = PbSimple.toObject(PbSimple.decode(Simple.encode(s1).finish()));
     delete (s1 as any).blob;
@@ -314,6 +319,7 @@ describe('simple', () => {
         "child": undefined,
         "coins": Array [],
         "createdAt": undefined,
+        "enabled": false,
         "grandChildren": Array [],
         "name": "",
         "oldStates": Array [],

@@ -1,5 +1,6 @@
 /* eslint-disable */
-export const protobufPackage = 'google.protobuf';
+
+export const protobufPackage = "google.protobuf";
 
 /**
  * `Any` contains an arbitrary serialized protocol buffer message along with a
@@ -55,7 +56,6 @@ export const protobufPackage = 'google.protobuf';
  * methods only use the fully qualified type name after the last '/'
  * in the type URL, for example "foo.bar.com/x/y.z" will yield type
  * name "y.z".
- *
  *
  * JSON
  * ====

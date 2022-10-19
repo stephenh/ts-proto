@@ -1,7 +1,7 @@
 /* eslint-disable */
-import type { Any } from './google/protobuf/any';
+import type { Any } from "./google/protobuf/any";
 
-export const protobufPackage = 'event';
+export const protobufPackage = "event";
 
 export interface Registration {
   eventName: string;

@@ -1,5 +1,6 @@
 /* eslint-disable */
-export const protobufPackage = 'google.protobuf';
+
+export const protobufPackage = "google.protobuf";
 
 /**
  * `FieldMask` represents a set of symbolic field paths, for example:
@@ -35,7 +36,6 @@ export const protobufPackage = 'google.protobuf';
  * The result will not contain specific values for fields x,y and z
  * (their value will be set to the default, and omitted in proto text
  * output):
- *
  *
  *     f {
  *       a : 22

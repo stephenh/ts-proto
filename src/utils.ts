@@ -1,15 +1,15 @@
-import { code, Code, imp, Import } from 'ts-poet';
+import { code, Code, imp, Import } from "ts-poet";
 import {
   CodeGeneratorRequest,
   FieldDescriptorProto,
   FileDescriptorProto,
   MethodDescriptorProto,
   MethodOptions,
-} from 'ts-proto-descriptors';
+} from "ts-proto-descriptors";
 import ReadStream = NodeJS.ReadStream;
-import { SourceDescription } from './sourceInfo';
-import { Options, ServiceOption } from './options';
-import { camelCase } from './case';
+import { SourceDescription } from "./sourceInfo";
+import { Options, ServiceOption } from "./options";
+import { camelCase, snakeToCamel } from "./case";
 
 export function protoFilesToGenerate(request: CodeGeneratorRequest): FileDescriptorProto[] {
   return request.protoFile.filter((f) => request.fileToGenerate.includes(f.name));
@@ -19,14 +19,14 @@ export function readToBuffer(stream: ReadStream): Promise<Buffer> {
   return new Promise((resolve) => {
     const ret: Array<Buffer | string> = [];
     let len = 0;
-    stream.on('readable', () => {
+    stream.on("readable", () => {
       let chunk;
       while ((chunk = stream.read())) {
         ret.push(chunk);
         len += chunk.length;
       }
     });
-    stream.on('end', () => {
+    stream.on("end", () => {
       resolve(Buffer.concat(ret as any, len));
     });
   });
@@ -53,17 +53,17 @@ const CloseComment = /\*\//g;
 
 /** Removes potentially harmful characters from comments and pushes it into chunks. */
 export function maybeAddComment(
-  desc: Partial<Pick<SourceDescription, 'leadingComments' | 'trailingComments'>>,
+  desc: Partial<Pick<SourceDescription, "leadingComments" | "trailingComments">>,
   chunks: Code[],
   deprecated?: boolean,
-  prefix: string = ''
+  prefix: string = ""
 ): void {
   let lines: string[] = [];
   if (desc.leadingComments || desc.trailingComments) {
-    let content = (desc.leadingComments || desc.trailingComments || '').replace(CloseComment, '* /').trim();
+    let content = (desc.leadingComments || desc.trailingComments || "").replace(CloseComment, "* /").trim();
 
     // Detect /** ... */ comments
-    const isDoubleStar = content.startsWith('*');
+    const isDoubleStar = content.startsWith("*");
     if (isDoubleStar) {
       content = content.substring(1).trim();
     }
@@ -73,21 +73,21 @@ export function maybeAddComment(
       content = prefix + content;
     }
 
-    lines = content.split('\n').map((l) => l.replace(/^ /, '').replace(/\n/, ''));
+    lines = content.split("\n").map((l) => l.replace(/^ /, "").replace(/\n/, ""));
   }
   // Deprecated comment should be added even if no other comment was added
   if (deprecated) {
     if (lines.length > 0) {
-      lines.push('');
+      lines.push("");
     }
-    lines.push('@deprecated');
+    lines.push("@deprecated");
   }
 
   let comment: Code;
   if (lines.length === 1) {
     comment = code`/** ${lines[0]} */`;
   } else {
-    comment = code`/**\n * ${lines.join('\n * ')}\n */`;
+    comment = code`/**\n * ${lines.join("\n * ")}\n */`;
   }
   if (lines.length > 0) {
     chunks.push(code`\n\n${comment}\n\n`);
@@ -102,7 +102,7 @@ export function prefixDisableLinter(spec: string): string {
 }
 
 export function maybePrefixPackage(fileDesc: FileDescriptorProto, rest: string): string {
-  const prefix = fileDesc.package === '' ? '' : `${fileDesc.package}.`;
+  const prefix = fileDesc.package === "" ? "" : `${fileDesc.package}.`;
   return `${prefix}${rest}`;
 }
 
@@ -174,13 +174,20 @@ export class FormattedMethodDescriptor implements MethodDescriptorProto {
   }
 }
 
-export function getFieldJsonName(field: FieldDescriptorProto, options: Options): string {
+export function getFieldJsonName(
+  field: Pick<FieldDescriptorProto, "name" | "jsonName">,
+  options: Pick<Options, "snakeToCamel">
+): string {
   // jsonName will be camelCased by the protocol compiler, plus can be overridden by the user,
   // so just use that instead of our own maybeSnakeToCamel
-  if (options.snakeToCamel.includes('json')) {
+  if (options.snakeToCamel.includes("json")) {
     return field.jsonName;
   } else {
-    return field.name;
+    // The user wants to keep snake case in the JSON, but we still want to see if the jsonName
+    // attribute is set as an explicit override.
+    const probableJsonName = snakeToCamel(field.name);
+    const isJsonNameSet = probableJsonName !== field.jsonName;
+    return isJsonNameSet ? field.jsonName : field.name;
   }
 }
 
@@ -194,15 +201,19 @@ export function getFieldJsonName(field: FieldDescriptorProto, options: Options):
 export function getPropertyAccessor(objectName: string, propertyName: string, optional: boolean = false): string {
   let validIdentifier = /^[a-zA-Z_$][\w$]*$/;
   return validIdentifier.test(propertyName)
-    ? `${objectName}${optional ? '?' : ''}.${propertyName}`
-    : `${objectName}${optional ? '?.' : ''}[${JSON.stringify(propertyName)}]`;
+    ? `${objectName}${optional ? "?" : ""}.${propertyName}`
+    : `${objectName}${optional ? "?." : ""}[${JSON.stringify(propertyName)}]`;
+}
+
+export function impFile(options: Options, spec: string) {
+  return imp(`${spec}${options.importSuffix}`);
 }
 
 export function impProto(options: Options, module: string, type: string): Import {
-  const importString = `${type}@./${module}${options.fileSuffix}`;
-  if (options.onlyTypes) {
-    return imp('t:' + importString);
-  } else {
-    return imp(importString);
+  const prefix = options.onlyTypes ? "t:" : "";
+  const protoFile = `${module}.proto`;
+  if (options.M[protoFile]) {
+    return imp(`${prefix}${type}@${options.M[protoFile]}`);
   }
+  return imp(`${prefix}${type}@./${module}${options.fileSuffix}${options.importSuffix}`);
 }

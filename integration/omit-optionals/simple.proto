@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+package omit;
+
+message TestMessage {
+    bool field1 = 1;
+    optional bool field2 = 2;
+}

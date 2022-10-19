@@ -1,4 +1,4 @@
-import { FileDescriptorProto } from 'ts-proto-descriptors';
+import { FileDescriptorProto } from "ts-proto-descriptors";
 
 /** This type is expecting a value from the Fields constant. */
 export type FieldID = number;
@@ -46,8 +46,8 @@ export interface SourceDescription {
 /** An empty SourceDescription for when one is not available. */
 class EmptyDescription implements SourceDescription {
   span = [];
-  leadingComments = '';
-  trailingComments = '';
+  leadingComments = "";
+  trailingComments = "";
   leadingDetachedComments = [];
 }
 
@@ -79,7 +79,7 @@ export default class SourceInfo implements SourceDescription {
     let map: SourceInfoMap = {};
     if (file.sourceCodeInfo && file.sourceCodeInfo.location) {
       file.sourceCodeInfo.location.forEach((loc) => {
-        map[loc.path.join('.')] = loc;
+        map[loc.path.join(".")] = loc;
       });
     }
     return new SourceInfo(map, new EmptyDescription());

@@ -1,19 +1,18 @@
-import { MethodDescriptorProto, FileDescriptorProto, ServiceDescriptorProto } from 'ts-proto-descriptors';
-import { rawRequestType, requestType, responsePromiseOrObservable, responseType } from './types';
-import { Code, code, imp, joinCode } from 'ts-poet';
-import { Context } from './context';
-import { assertInstanceOf, FormattedMethodDescriptor, maybePrefixPackage } from './utils';
+import { MethodDescriptorProto, FileDescriptorProto, ServiceDescriptorProto } from "ts-proto-descriptors";
+import { rawRequestType, requestType, responsePromiseOrObservable, responseType, observableType } from "./types";
+import { Code, code, imp, joinCode } from "ts-poet";
+import { Context } from "./context";
+import { assertInstanceOf, FormattedMethodDescriptor, maybePrefixPackage } from "./utils";
 
-const grpc = imp('grpc@@improbable-eng/grpc-web');
-const share = imp('share@rxjs/operators');
-const take = imp('take@rxjs/operators');
-const BrowserHeaders = imp('BrowserHeaders@browser-headers');
-const Observable = imp('Observable@rxjs');
+const grpc = imp("grpc@@improbable-eng/grpc-web");
+const share = imp("share@rxjs/operators");
+const take = imp("take@rxjs/operators");
+const BrowserHeaders = imp("BrowserHeaders@browser-headers");
 
 /** Generates a client that uses the `@improbable-web/grpc-web` library. */
 export function generateGrpcClientImpl(
   ctx: Context,
-  fileDesc: FileDescriptorProto,
+  _fileDesc: FileDescriptorProto,
   serviceDesc: ServiceDescriptorProto
 ): Code {
   const chunks: Code[] = [];
@@ -43,7 +42,7 @@ export function generateGrpcClientImpl(
   }
 
   chunks.push(code`}`);
-  return joinCode(chunks, { trim: false, on: '\n' });
+  return joinCode(chunks, { trim: false, on: "\n" });
 }
 
 /** Creates the RPC methods that client code actually calls. */
@@ -64,7 +63,7 @@ function generateRpcMethod(ctx: Context, serviceDesc: ServiceDescriptorProto, me
   `;
   }
 
-  const method = methodDesc.serverStreaming ? 'invoke' : 'unary';
+  const method = methodDesc.serverStreaming ? "invoke" : "unary";
   return code`
     ${methodDesc.formattedName}(
       request: ${inputType},
@@ -135,7 +134,7 @@ export function generateGrpcMethodDesc(
       methodName: "${methodDesc.name}",
       service: ${serviceDesc.name}Desc,
       requestStream: false,
-      responseStream: ${methodDesc.serverStreaming ? 'true' : 'false'},
+      responseStream: ${methodDesc.serverStreaming ? "true" : "false"},
       requestType: ${requestFn} as any,
       responseType: ${responseFn} as any,
     };
@@ -154,18 +153,18 @@ export function addGrpcWebMisc(ctx: Context, hasStreamingMethods: boolean): Code
     interface UnaryMethodDefinitionishR extends ${grpc}.UnaryMethodDefinition<any, any> { requestStream: any; responseStream: any; }
   `);
   chunks.push(code`type UnaryMethodDefinitionish = UnaryMethodDefinitionishR;`);
-  chunks.push(generateGrpcWebRpcType(options.returnObservable, hasStreamingMethods));
-  chunks.push(generateGrpcWebImpl(options.returnObservable, hasStreamingMethods));
-  return joinCode(chunks, { on: '\n\n' });
+  chunks.push(generateGrpcWebRpcType(ctx, options.returnObservable, hasStreamingMethods));
+  chunks.push(generateGrpcWebImpl(ctx, options.returnObservable, hasStreamingMethods));
+  return joinCode(chunks, { on: "\n\n" });
 }
 
 /** Makes an `Rpc` interface to decouple from the low-level grpc-web `grpc.invoke and grpc.unary`/etc. methods. */
-function generateGrpcWebRpcType(returnObservable: boolean, hasStreamingMethods: boolean): Code {
+function generateGrpcWebRpcType(ctx: Context, returnObservable: boolean, hasStreamingMethods: boolean): Code {
   const chunks: Code[] = [];
 
   chunks.push(code`interface Rpc {`);
 
-  const wrapper = returnObservable ? Observable : 'Promise';
+  const wrapper = returnObservable ? observableType(ctx) : "Promise";
   chunks.push(code`
     unary<T extends UnaryMethodDefinitionish>(
       methodDesc: T,
@@ -180,22 +179,23 @@ function generateGrpcWebRpcType(returnObservable: boolean, hasStreamingMethods: 
         methodDesc: T,
         request: any,
         metadata: grpc.Metadata | undefined,
-      ): ${Observable}<any>;
+      ): ${observableType(ctx)}<any>;
     `);
   }
 
   chunks.push(code`}`);
-  return joinCode(chunks, { on: '\n' });
+  return joinCode(chunks, { on: "\n" });
 }
 
 /** Implements the `Rpc` interface by making calls using the `grpc.unary` method. */
-function generateGrpcWebImpl(returnObservable: boolean, hasStreamingMethods: boolean): Code {
+function generateGrpcWebImpl(ctx: Context, returnObservable: boolean, hasStreamingMethods: boolean): Code {
   const options = code`
     {
       transport?: grpc.TransportFactory,
-      ${hasStreamingMethods ? 'streamingTransport?: grpc.TransportFactory,' : ``}
+      ${hasStreamingMethods ? "streamingTransport?: grpc.TransportFactory," : ``}
       debug?: boolean,
       metadata?: grpc.Metadata,
+      upStreamRetryCodes?: number[],
     }
   `;
 
@@ -212,20 +212,20 @@ function generateGrpcWebImpl(returnObservable: boolean, hasStreamingMethods: boo
   `);
 
   if (returnObservable) {
-    chunks.push(createObservableUnaryMethod());
+    chunks.push(createObservableUnaryMethod(ctx));
   } else {
-    chunks.push(createPromiseUnaryMethod());
+    chunks.push(createPromiseUnaryMethod(ctx));
   }
 
   if (hasStreamingMethods) {
-    chunks.push(createInvokeMethod());
+    chunks.push(createInvokeMethod(ctx));
   }
 
   chunks.push(code`}`);
   return joinCode(chunks, { trim: false });
 }
 
-function createPromiseUnaryMethod(): Code {
+function createPromiseUnaryMethod(ctx: Context): Code {
   return code`
     unary<T extends UnaryMethodDefinitionish>(
       methodDesc: T,
@@ -248,9 +248,7 @@ function createPromiseUnaryMethod(): Code {
             if (response.status === grpc.Code.OK) {
               resolve(response.message);
             } else {
-              const err = new Error(response.statusMessage) as any;
-              err.code = response.status;
-              err.metadata = response.trailers;
+              const err = new ${ctx.utils.GrpcWebError}(response.statusMessage, response.status, response.trailers);
               reject(err);
             }
           },
@@ -260,13 +258,13 @@ function createPromiseUnaryMethod(): Code {
   `;
 }
 
-function createObservableUnaryMethod(): Code {
+function createObservableUnaryMethod(ctx: Context): Code {
   return code`
     unary<T extends UnaryMethodDefinitionish>(
       methodDesc: T,
       _request: any,
       metadata: grpc.Metadata | undefined
-    ): ${Observable}<any> {
+    ): ${observableType(ctx)}<any> {
       const request = { ..._request, ...methodDesc.requestType };
       const maybeCombinedMetadata =
         metadata && this.options.metadata
@@ -281,7 +279,8 @@ function createObservableUnaryMethod(): Code {
           debug: this.options.debug,
           onEnd: (next) => {
             if (next.status !== 0) {
-              observer.error({ code: next.status, message: next.statusMessage });
+              const err = new ${ctx.utils.GrpcWebError}(next.statusMessage, next.status, next.trailers);
+              observer.error(err);
             } else {
               observer.next(next.message as any);
               observer.complete();
@@ -293,15 +292,14 @@ function createObservableUnaryMethod(): Code {
   `;
 }
 
-function createInvokeMethod() {
+function createInvokeMethod(ctx: Context) {
   return code`
     invoke<T extends UnaryMethodDefinitionish>(
       methodDesc: T,
       _request: any,
       metadata: grpc.Metadata | undefined
-    ): ${Observable}<any> {
-      // Status Response Codes (https://developers.google.com/maps-booking/reference/grpc-api/status_codes)
-      const upStreamCodes = [2, 4, 8, 9, 10, 13, 14, 15]; 
+    ): ${observableType(ctx)}<any> {
+      const upStreamCodes = this.options.upStreamRetryCodes || [];
       const DEFAULT_TIMEOUT_TIME: number = 3_000;
       const request = { ..._request, ...methodDesc.requestType };
       const maybeCombinedMetadata =
@@ -317,13 +315,16 @@ function createInvokeMethod() {
             metadata: maybeCombinedMetadata,
             debug: this.options.debug,
             onMessage: (next) => observer.next(next),
-            onEnd: (code: ${grpc}.Code, message: string) => {
+            onEnd: (code: ${grpc}.Code, message: string, trailers: ${grpc}.Metadata) => {
               if (code === 0) {
                 observer.complete();
               } else if (upStreamCodes.includes(code)) {
                 setTimeout(upStream, DEFAULT_TIMEOUT_TIME);
               } else {
-                observer.error(new Error(\`Error \${code} \${message}\`));
+                const err = new Error(message) as any;
+                err.code = code;
+                err.metadata = trailers;
+                observer.error(err);
               }
             },
           });

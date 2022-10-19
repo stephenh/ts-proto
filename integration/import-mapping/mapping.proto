@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package import_mapping;
+
+import "google/protobuf/duration.proto"; // mapped to @google/...
+import "google/protobuf/empty.proto"; // mapped to @google/...
+import "google/protobuf/struct.proto"; // mapped to wkt/...
+import "google/protobuf/timestamp.proto"; // not mapped
+import "some/internal/repo/very_private.proto"; // mapped to @myorg/proto-npm-package
+
+message WithEmtpy {
+    google.protobuf.Empty empty = 1;
+}
+
+message WithStruct {
+    google.protobuf.Struct strut = 1;
+}
+
+message WithTimestamp {
+    google.protobuf.Timestamp timestamp = 1;
+}
+
+message WithAll {
+    google.protobuf.Empty empty = 1;
+    google.protobuf.Struct strut = 2;
+    google.protobuf.Timestamp timestamp = 3;
+    google.protobuf.Duration duration = 4;
+    myorg.protos.VeryVerySecret very_very_secret = 5;
+}

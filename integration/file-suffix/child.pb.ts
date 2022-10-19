@@ -1,8 +1,7 @@
 /* eslint-disable */
-import * as Long from 'long';
-import * as _m0 from 'protobufjs/minimal';
+import * as _m0 from "protobufjs/minimal";
 
-export const protobufPackage = 'file_suffix';
+export const protobufPackage = "file_suffix";
 
 export enum ChildEnum {
   DEFAULT = 0,
@@ -13,13 +12,13 @@ export enum ChildEnum {
 export function childEnumFromJSON(object: any): ChildEnum {
   switch (object) {
     case 0:
-    case 'DEFAULT':
+    case "DEFAULT":
       return ChildEnum.DEFAULT;
     case 1:
-    case 'FOO':
+    case "FOO":
       return ChildEnum.FOO;
     case -1:
-    case 'UNRECOGNIZED':
+    case "UNRECOGNIZED":
     default:
       return ChildEnum.UNRECOGNIZED;
   }
@@ -28,12 +27,12 @@ export function childEnumFromJSON(object: any): ChildEnum {
 export function childEnumToJSON(object: ChildEnum): string {
   switch (object) {
     case ChildEnum.DEFAULT:
-      return 'DEFAULT';
+      return "DEFAULT";
     case ChildEnum.FOO:
-      return 'FOO';
+      return "FOO";
     case ChildEnum.UNRECOGNIZED:
     default:
-      return 'UNRECOGNIZED';
+      return "UNRECOGNIZED";
   }
 }
 
@@ -42,12 +41,12 @@ export interface Child {
 }
 
 function createBaseChild(): Child {
-  return { name: '' };
+  return { name: "" };
 }
 
 export const Child = {
   encode(message: Child, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.name !== '') {
+    if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
     return writer;
@@ -72,9 +71,7 @@ export const Child = {
   },
 
   fromJSON(object: any): Child {
-    return {
-      name: isSet(object.name) ? String(object.name) : '',
-    };
+    return { name: isSet(object.name) ? String(object.name) : "" };
   },
 
   toJSON(message: Child): unknown {
@@ -85,34 +82,21 @@ export const Child = {
 
   fromPartial<I extends Exact<DeepPartial<Child>, I>>(object: I): Child {
     const message = createBaseChild();
-    message.name = object.name ?? '';
+    message.name = object.name ?? "";
     return message;
   },
 };
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
-export type DeepPartial<T> = T extends Builtin
-  ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U>
-  ? ReadonlyArray<DeepPartial<U>>
-  : T extends {}
-  ? { [K in keyof T]?: DeepPartial<T[K]> }
+export type DeepPartial<T> = T extends Builtin ? T
+  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-export type Exact<P, I extends P> = P extends Builtin
-  ? P
-  : P & { [K in keyof P]: Exact<P[K], I[K]> } & Record<Exclude<keyof I, KeysOfUnion<P>>, never>;
-
-// If you get a compile-error about 'Constructor<Long> and ... have no overlap',
-// add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
-if (_m0.util.Long !== Long) {
-  _m0.util.Long = Long as any;
-  _m0.configure();
-}
+export type Exact<P, I extends P> = P extends Builtin ? P
+  : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;

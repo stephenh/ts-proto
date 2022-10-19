@@ -45,7 +45,7 @@ jobs:
           CI: true
 
   release:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
     needs: [build]
     steps:
@@ -71,6 +71,7 @@ jobs:
       release_version: ${{ steps.release.outputs.release_version }}
 
   push_to_buf_registry:
+    if: ${{ needs.release.outputs.release_version != '' }}
     name: Push Docker image to Buf Registry
     runs-on: ubuntu-latest
     environment: npm

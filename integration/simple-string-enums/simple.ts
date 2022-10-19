@@ -1,30 +1,29 @@
 /* eslint-disable */
-import * as Long from 'long';
-import * as _m0 from 'protobufjs/minimal';
-import { NullValue, nullValueToNumber, nullValueFromJSON, nullValueToJSON } from './google/protobuf/struct';
+import * as _m0 from "protobufjs/minimal";
+import { NullValue, nullValueFromJSON, nullValueToJSON, nullValueToNumber } from "./google/protobuf/struct";
 
-export const protobufPackage = 'simple';
+export const protobufPackage = "simple";
 
 export enum StateEnum {
-  UNKNOWN = 'UNKNOWN',
-  ON = 'ON',
-  OFF = 'OFF',
-  UNRECOGNIZED = 'UNRECOGNIZED',
+  UNKNOWN = "UNKNOWN",
+  ON = "ON",
+  OFF = "OFF",
+  UNRECOGNIZED = "UNRECOGNIZED",
 }
 
 export function stateEnumFromJSON(object: any): StateEnum {
   switch (object) {
     case 0:
-    case 'UNKNOWN':
+    case "UNKNOWN":
       return StateEnum.UNKNOWN;
     case 2:
-    case 'ON':
+    case "ON":
       return StateEnum.ON;
     case 3:
-    case 'OFF':
+    case "OFF":
       return StateEnum.OFF;
     case -1:
-    case 'UNRECOGNIZED':
+    case "UNRECOGNIZED":
     default:
       return StateEnum.UNRECOGNIZED;
   }
@@ -33,14 +32,14 @@ export function stateEnumFromJSON(object: any): StateEnum {
 export function stateEnumToJSON(object: StateEnum): string {
   switch (object) {
     case StateEnum.UNKNOWN:
-      return 'UNKNOWN';
+      return "UNKNOWN";
     case StateEnum.ON:
-      return 'ON';
+      return "ON";
     case StateEnum.OFF:
-      return 'OFF';
+      return "OFF";
     case StateEnum.UNRECOGNIZED:
     default:
-      return 'UNRECOGNIZED';
+      return "UNRECOGNIZED";
   }
 }
 
@@ -72,12 +71,12 @@ export interface Simple_StateMapEntry {
 }
 
 function createBaseSimple(): Simple {
-  return { name: '', state: StateEnum.UNKNOWN, states: [], nullValue: NullValue.NULL_VALUE, stateMap: {} };
+  return { name: "", state: StateEnum.UNKNOWN, states: [], nullValue: NullValue.NULL_VALUE, stateMap: {} };
 }
 
 export const Simple = {
   encode(message: Simple, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.name !== '') {
+    if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
     if (message.state !== StateEnum.UNKNOWN) {
@@ -139,15 +138,15 @@ export const Simple = {
 
   fromJSON(object: any): Simple {
     return {
-      name: isSet(object.name) ? String(object.name) : '',
+      name: isSet(object.name) ? String(object.name) : "",
       state: isSet(object.state) ? stateEnumFromJSON(object.state) : StateEnum.UNKNOWN,
       states: Array.isArray(object?.states) ? object.states.map((e: any) => stateEnumFromJSON(e)) : [],
       nullValue: isSet(object.nullValue) ? nullValueFromJSON(object.nullValue) : NullValue.NULL_VALUE,
       stateMap: isObject(object.stateMap)
         ? Object.entries(object.stateMap).reduce<{ [key: string]: StateEnum }>((acc, [key, value]) => {
-            acc[key] = stateEnumFromJSON(value);
-            return acc;
-          }, {})
+          acc[key] = stateEnumFromJSON(value);
+          return acc;
+        }, {})
         : {},
     };
   },
@@ -173,7 +172,7 @@ export const Simple = {
 
   fromPartial<I extends Exact<DeepPartial<Simple>, I>>(object: I): Simple {
     const message = createBaseSimple();
-    message.name = object.name ?? '';
+    message.name = object.name ?? "";
     message.state = object.state ?? StateEnum.UNKNOWN;
     message.states = object.states?.map((e) => e) || [];
     message.nullValue = object.nullValue ?? NullValue.NULL_VALUE;
@@ -184,19 +183,19 @@ export const Simple = {
         }
         return acc;
       },
-      {}
+      {},
     );
     return message;
   },
 };
 
 function createBaseSimple_StateMapEntry(): Simple_StateMapEntry {
-  return { key: '', value: StateEnum.UNKNOWN };
+  return { key: "", value: StateEnum.UNKNOWN };
 }
 
 export const Simple_StateMapEntry = {
   encode(message: Simple_StateMapEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.key !== '') {
+    if (message.key !== "") {
       writer.uint32(10).string(message.key);
     }
     if (message.value !== StateEnum.UNKNOWN) {
@@ -228,7 +227,7 @@ export const Simple_StateMapEntry = {
 
   fromJSON(object: any): Simple_StateMapEntry {
     return {
-      key: isSet(object.key) ? String(object.key) : '',
+      key: isSet(object.key) ? String(object.key) : "",
       value: isSet(object.value) ? stateEnumFromJSON(object.value) : StateEnum.UNKNOWN,
     };
   },
@@ -242,7 +241,7 @@ export const Simple_StateMapEntry = {
 
   fromPartial<I extends Exact<DeepPartial<Simple_StateMapEntry>, I>>(object: I): Simple_StateMapEntry {
     const message = createBaseSimple_StateMapEntry();
-    message.key = object.key ?? '';
+    message.key = object.key ?? "";
     message.value = object.value ?? StateEnum.UNKNOWN;
     return message;
   },
@@ -250,30 +249,17 @@ export const Simple_StateMapEntry = {
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
-export type DeepPartial<T> = T extends Builtin
-  ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U>
-  ? ReadonlyArray<DeepPartial<U>>
-  : T extends {}
-  ? { [K in keyof T]?: DeepPartial<T[K]> }
+export type DeepPartial<T> = T extends Builtin ? T
+  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-export type Exact<P, I extends P> = P extends Builtin
-  ? P
-  : P & { [K in keyof P]: Exact<P[K], I[K]> } & Record<Exclude<keyof I, KeysOfUnion<P>>, never>;
-
-// If you get a compile-error about 'Constructor<Long> and ... have no overlap',
-// add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
-if (_m0.util.Long !== Long) {
-  _m0.util.Long = Long as any;
-  _m0.configure();
-}
+export type Exact<P, I extends P> = P extends Builtin ? P
+  : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function isObject(value: any): boolean {
-  return typeof value === 'object' && value !== null;
+  return typeof value === "object" && value !== null;
 }
 
 function isSet(value: any): boolean {

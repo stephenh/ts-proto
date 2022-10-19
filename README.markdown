@@ -99,6 +99,13 @@ plugins:
     path: ../node_modules/ts-proto/protoc-gen-ts_proto
 ```
 
+To prevent `buf push` from reading irrelevent `.proto` files, configure `buf.yaml` like so:
+
+```yaml
+build:
+  excludes: [node_modules]
+```
+
 You can also use the official plugin published to the Buf Registry.
 
 ```yaml
@@ -106,9 +113,14 @@ version: v1
 plugins:
   - remote: buf.build/stephenh/plugins/ts-proto
     out: ../gen/ts
+    opt:
+      - outputServices=...
+      - useExactTypes=...    
 ```
 
 # Goals
+
+In terms of the code that `ts-proto` generates, the general goals are:
 
 - Idiomatic TypeScript/ES6 types
   - `ts-proto` is a clean break from either the built-in Google/Java-esque JS code of `protoc` or the "make `.d.ts` files the `*.js` comments" approach of `protobufjs`
@@ -117,6 +129,17 @@ plugins:
 - Interfaces over classes
   - As much as possible, types are just interfaces, so you can work with messages just like regular hashes/data structures.
 - Only supports codegen `*.proto`-to-`*.ts` workflow, currently no runtime reflection/loading of dynamic `.proto` files
+
+## Non-Goals
+
+Note that ts-proto is not an out-of-the-box RPC framework; instead it's more of a swiss-army knife (as witnessed by its many config options), that lets you build _exactly_ the RPC framework you'd like on top of it (i.e. that best integrates with your company's protobuf ecosystem; for better or worse, protobuf RPC is still a somewhat fragmented ecosystem).
+
+If you'd like an out-of-the-box RPC framework built on top of ts-proto, there are a few examples:
+
+- [nice-grpc](https://github.com/deeplay-io/nice-grpc)
+- [starpc](https://github.com/aperturerobotics/starpc)
+
+(Note for potential contributors, if you develop other frameworks/mini-frameworks, or even blog posts/tutorials, on using `ts-proto`, we're happy to link to them.)
 
 # Example Types
 
@@ -319,7 +342,15 @@ Generated code will be placed in the Gradle build directory.
 
 - With `--ts_proto_opt=lowerCaseServiceMethods=true`, the method names of service methods will be lowered/camel-case, i.e. `service.findFoo` instead of `service.FindFoo`.
 
-- With `--ts_proto_opt=snakeToCamel=false`, fields will be kept snake case. `snakeToCamel` can also be set as string with `--ts_proto_opt=snakeToCamel=keys,json`. `keys` will keep field names as camelCase and `json` will keep json field names as camelCase. Empty string will keep field names as snake_case.
+- With `--ts_proto_opt=snakeToCamel=false`, fields will be kept snake case in both the message keys and the `toJSON` / `fromJSON` methods.
+
+  `snakeToCamel` can also be set as a `_`-delimited list of strings (comma is reserved as the flag delimited), i.e. `--ts_proto_opt=snakeToCamel=keys_json`, where including `keys` will make message keys be camel case and including `json` will make JSON keys be camel case.
+
+   Empty string, i.e. `snakeToCamel=`, will keep both messages keys and `JSON` keys as snake case (it is the same as `snakeToCamel=false`).
+
+   Note that to use the `json_name` attribute, you'll have to use the `json`.
+
+   The default behavior is `keys_json`, i.e. both will be camel cased, and `json_name` will be used if set.
 
 - With `--ts_proto_opt=outputEncodeMethods=false`, the `Message.encode` and `Message.decode` methods for working with protobuf-encoded/binary data will not be output.
 
@@ -381,10 +412,14 @@ Generated code will be placed in the Gradle build directory.
 
 - With `--ts_proto_opt=outputServices=false`, or `=none`, ts-proto will output NO service definitions.
 
+- With `--ts_proto_opt=useAsyncIterable=true`, the generated services will use `AsyncIterable` instead of `Observable`.
+
 - With `--ts_proto_opt=emitImportedFiles=false`, ts-proto will not emit `google/protobuf/*` files unless you explicit add files to `protoc` like this
   `protoc --plugin=./node_modules/.bin/protoc-gen-ts_proto my_message.proto google/protobuf/duration.proto`
 
 - With `--ts_proto_opt=fileSuffix=<SUFFIX>`, ts-proto will emit generated files using the specified suffix. A `helloworld.proto` file with `fileSuffix=.pb` would be generated as `helloworld.pb.ts`. This is common behavior in other protoc plugins and provides a way to quickly glob all the generated files.
+
+- With `--ts_proto_opt=importSuffix=<SUFFIX>`, ts-proto will emit file imports using the specified suffix. An import of `helloworld.ts` with `fileSuffix=.js` would generate `import "helloworld.js"`. The default is to import without a file extension. Supported by TypeScript 4.7.x and up.
 
 - With `--ts_proto_opt=enumsAsLiterals=true`, the generated enum types will be enum-ish object with `as const`.
 
@@ -410,6 +445,22 @@ Generated code will be placed in the Gradle build directory.
 
   Requires `onlyTypes=true`. Implies `useDate=string` and `stringEnums=true`. This option is to generate types that can be directly used with marshalling/unmarshalling Protobuf messages serialized as JSON.  
   You may also want to set `useOptionals=all`, as gRPC gateways are not required to send default value for scalar values.
+
+- With `--ts_proto_opt=useNumericEnumForJson=true`, the JSON converter (`toJSON`) will encode enum values as int, rather than a string literal.
+
+- With `--ts_proto_opt=initializeFieldsAsUndefined=false`, all optional field initializers will be omited from the generated base instances.
+
+- With `--ts_proto_opt=Mgoogle/protobuf/empty.proto=./google3/protobuf/empty`, ('M' means 'importMapping', similar to [protoc-gen-go](https://developers.google.com/protocol-buffers/docs/reference/go-generated#package)), the generated code import path for `./google/protobuf/empty.ts` will reflect the overridden value:
+  
+  - `Mfoo/bar.proto=@myorg/some-lib` will map `foo/bar.proto` imports into `import ... from '@myorg/some-lib'`.
+  - `Mfoo/bar.proto=./some/local/lib` will map `foo/bar.proto` imports into `import ... from './some/local/lib'`.
+  - `Mfoo/bar.proto=some-modules/some-lib` will map `foo/bar.proto` imports into `import ... from 'some-module/some-lib'`.
+  - **Note**: Uses are accummulated, so multiple values are expected in the form of `--ts_proto_opt=M... --ts_proto_opt=M...` (one `ts_proto_opt` per mapping).
+  - **Note**: Proto files that match mapped imports **will not be generated**.
+
+- With `--ts_proto_opt=useMapType=true`, the generated code for protobuf `map<key_type, value_type>` will become `Map<key_type, value_type>` that uses JavaScript Map type.
+
+  The default behavior is `useMapType=false`, which makes it generate the code for protobuf `map<key_type, value_type` with the key-value pair like `{[key: key_type]: value_type}`.
 
 ### NestJS Support
 
@@ -445,7 +496,7 @@ const sendRequest: RpcImpl = (service, method, data) => {
   // Conventionally in gRPC, the request path looks like
   //   "package.names.ServiceName/MethodName",
   // we therefore construct such a string
-  const path = `${service}/${method}`;
+  const path = `/${service}/${method}`;
 
   return new Promise((resolve, reject) => {
     // makeUnaryRequest transmits the result (and error) with a callback
@@ -478,6 +529,8 @@ Kudos to our sponsors:
 If you need ts-proto customizations or priority support for your company, you can ping me at [via email](mailto:stephen.haberman@gmail.com).
 
 # Development
+
+This section describes how to contribute directly to ts-proto, i.e. it's not required for running `ts-proto` in `protoc` or using the generated TypeScript.
 
 **Requirements**
 
@@ -513,7 +566,7 @@ The commands below assume you have **Docker** installed. To use a **local** copy
 **Contributing**
 
 - Run `yarn build:test` and `yarn test` to make sure everything works.
-- Run `yarn prettier` to format the typescript files.
+- Run `yarn format` to format the typescript files.
 - Commit the changes:
   - Also include the generated `.bin` files for the tests where you added or modified `.proto` files.
     > These are checked into git so that the test suite can run without having to invoke the `protoc` build chain.

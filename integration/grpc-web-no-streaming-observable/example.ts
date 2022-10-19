@@ -1,12 +1,11 @@
 /* eslint-disable */
-import * as Long from 'long';
-import { grpc } from '@improbable-eng/grpc-web';
-import * as _m0 from 'protobufjs/minimal';
-import { Observable } from 'rxjs';
-import { BrowserHeaders } from 'browser-headers';
-import { take } from 'rxjs/operators';
+import { grpc } from "@improbable-eng/grpc-web";
+import { BrowserHeaders } from "browser-headers";
+import * as _m0 from "protobufjs/minimal";
+import { Observable } from "rxjs";
+import { take } from "rxjs/operators";
 
-export const protobufPackage = 'rpx';
+export const protobufPackage = "rpx";
 
 export interface DashFlash {
   msg: string;
@@ -24,19 +23,19 @@ export enum DashFlash_Type {
 export function dashFlash_TypeFromJSON(object: any): DashFlash_Type {
   switch (object) {
     case 0:
-    case 'Undefined':
+    case "Undefined":
       return DashFlash_Type.Undefined;
     case 1:
-    case 'Success':
+    case "Success":
       return DashFlash_Type.Success;
     case 2:
-    case 'Warn':
+    case "Warn":
       return DashFlash_Type.Warn;
     case 3:
-    case 'Error':
+    case "Error":
       return DashFlash_Type.Error;
     case -1:
-    case 'UNRECOGNIZED':
+    case "UNRECOGNIZED":
     default:
       return DashFlash_Type.UNRECOGNIZED;
   }
@@ -45,16 +44,16 @@ export function dashFlash_TypeFromJSON(object: any): DashFlash_Type {
 export function dashFlash_TypeToJSON(object: DashFlash_Type): string {
   switch (object) {
     case DashFlash_Type.Undefined:
-      return 'Undefined';
+      return "Undefined";
     case DashFlash_Type.Success:
-      return 'Success';
+      return "Success";
     case DashFlash_Type.Warn:
-      return 'Warn';
+      return "Warn";
     case DashFlash_Type.Error:
-      return 'Error';
+      return "Error";
     case DashFlash_Type.UNRECOGNIZED:
     default:
-      return 'UNRECOGNIZED';
+      return "UNRECOGNIZED";
   }
 }
 
@@ -69,15 +68,16 @@ export interface DashUserSettingsState_URLs {
   connectGithub: string;
 }
 
-export interface Empty {}
+export interface Empty {
+}
 
 function createBaseDashFlash(): DashFlash {
-  return { msg: '', type: 0 };
+  return { msg: "", type: 0 };
 }
 
 export const DashFlash = {
   encode(message: DashFlash, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.msg !== '') {
+    if (message.msg !== "") {
       writer.uint32(10).string(message.msg);
     }
     if (message.type !== 0) {
@@ -109,7 +109,7 @@ export const DashFlash = {
 
   fromJSON(object: any): DashFlash {
     return {
-      msg: isSet(object.msg) ? String(object.msg) : '',
+      msg: isSet(object.msg) ? String(object.msg) : "",
       type: isSet(object.type) ? dashFlash_TypeFromJSON(object.type) : 0,
     };
   },
@@ -123,19 +123,19 @@ export const DashFlash = {
 
   fromPartial<I extends Exact<DeepPartial<DashFlash>, I>>(object: I): DashFlash {
     const message = createBaseDashFlash();
-    message.msg = object.msg ?? '';
+    message.msg = object.msg ?? "";
     message.type = object.type ?? 0;
     return message;
   },
 };
 
 function createBaseDashUserSettingsState(): DashUserSettingsState {
-  return { email: '', urls: undefined, flashes: [] };
+  return { email: "", urls: undefined, flashes: [] };
 }
 
 export const DashUserSettingsState = {
   encode(message: DashUserSettingsState, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.email !== '') {
+    if (message.email !== "") {
       writer.uint32(10).string(message.email);
     }
     if (message.urls !== undefined) {
@@ -173,7 +173,7 @@ export const DashUserSettingsState = {
 
   fromJSON(object: any): DashUserSettingsState {
     return {
-      email: isSet(object.email) ? String(object.email) : '',
+      email: isSet(object.email) ? String(object.email) : "",
       urls: isSet(object.urls) ? DashUserSettingsState_URLs.fromJSON(object.urls) : undefined,
       flashes: Array.isArray(object?.flashes) ? object.flashes.map((e: any) => DashFlash.fromJSON(e)) : [],
     };
@@ -185,7 +185,7 @@ export const DashUserSettingsState = {
     message.urls !== undefined &&
       (obj.urls = message.urls ? DashUserSettingsState_URLs.toJSON(message.urls) : undefined);
     if (message.flashes) {
-      obj.flashes = message.flashes.map((e) => (e ? DashFlash.toJSON(e) : undefined));
+      obj.flashes = message.flashes.map((e) => e ? DashFlash.toJSON(e) : undefined);
     } else {
       obj.flashes = [];
     }
@@ -194,26 +194,25 @@ export const DashUserSettingsState = {
 
   fromPartial<I extends Exact<DeepPartial<DashUserSettingsState>, I>>(object: I): DashUserSettingsState {
     const message = createBaseDashUserSettingsState();
-    message.email = object.email ?? '';
-    message.urls =
-      object.urls !== undefined && object.urls !== null
-        ? DashUserSettingsState_URLs.fromPartial(object.urls)
-        : undefined;
+    message.email = object.email ?? "";
+    message.urls = (object.urls !== undefined && object.urls !== null)
+      ? DashUserSettingsState_URLs.fromPartial(object.urls)
+      : undefined;
     message.flashes = object.flashes?.map((e) => DashFlash.fromPartial(e)) || [];
     return message;
   },
 };
 
 function createBaseDashUserSettingsState_URLs(): DashUserSettingsState_URLs {
-  return { connectGoogle: '', connectGithub: '' };
+  return { connectGoogle: "", connectGithub: "" };
 }
 
 export const DashUserSettingsState_URLs = {
   encode(message: DashUserSettingsState_URLs, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.connectGoogle !== '') {
+    if (message.connectGoogle !== "") {
       writer.uint32(10).string(message.connectGoogle);
     }
-    if (message.connectGithub !== '') {
+    if (message.connectGithub !== "") {
       writer.uint32(18).string(message.connectGithub);
     }
     return writer;
@@ -242,8 +241,8 @@ export const DashUserSettingsState_URLs = {
 
   fromJSON(object: any): DashUserSettingsState_URLs {
     return {
-      connectGoogle: isSet(object.connectGoogle) ? String(object.connectGoogle) : '',
-      connectGithub: isSet(object.connectGithub) ? String(object.connectGithub) : '',
+      connectGoogle: isSet(object.connectGoogle) ? String(object.connectGoogle) : "",
+      connectGithub: isSet(object.connectGithub) ? String(object.connectGithub) : "",
     };
   },
 
@@ -256,8 +255,8 @@ export const DashUserSettingsState_URLs = {
 
   fromPartial<I extends Exact<DeepPartial<DashUserSettingsState_URLs>, I>>(object: I): DashUserSettingsState_URLs {
     const message = createBaseDashUserSettingsState_URLs();
-    message.connectGoogle = object.connectGoogle ?? '';
-    message.connectGithub = object.connectGithub ?? '';
+    message.connectGoogle = object.connectGoogle ?? "";
+    message.connectGithub = object.connectGithub ?? "";
     return message;
   },
 };
@@ -322,12 +321,10 @@ export class DashStateClientImpl implements DashState {
   }
 }
 
-export const DashStateDesc = {
-  serviceName: 'rpx.DashState',
-};
+export const DashStateDesc = { serviceName: "rpx.DashState" };
 
 export const DashStateUserSettingsDesc: UnaryMethodDefinitionish = {
-  methodName: 'UserSettings',
+  methodName: "UserSettings",
   service: DashStateDesc,
   requestStream: false,
   responseStream: false,
@@ -359,7 +356,7 @@ interface Rpc {
   unary<T extends UnaryMethodDefinitionish>(
     methodDesc: T,
     request: any,
-    metadata: grpc.Metadata | undefined
+    metadata: grpc.Metadata | undefined,
   ): Observable<any>;
 }
 
@@ -370,6 +367,7 @@ export class GrpcWebImpl {
 
     debug?: boolean;
     metadata?: grpc.Metadata;
+    upStreamRetryCodes?: number[];
   };
 
   constructor(
@@ -379,7 +377,8 @@ export class GrpcWebImpl {
 
       debug?: boolean;
       metadata?: grpc.Metadata;
-    }
+      upStreamRetryCodes?: number[];
+    },
   ) {
     this.host = host;
     this.options = options;
@@ -388,13 +387,12 @@ export class GrpcWebImpl {
   unary<T extends UnaryMethodDefinitionish>(
     methodDesc: T,
     _request: any,
-    metadata: grpc.Metadata | undefined
+    metadata: grpc.Metadata | undefined,
   ): Observable<any> {
     const request = { ..._request, ...methodDesc.requestType };
-    const maybeCombinedMetadata =
-      metadata && this.options.metadata
-        ? new BrowserHeaders({ ...this.options?.metadata.headersMap, ...metadata?.headersMap })
-        : metadata || this.options.metadata;
+    const maybeCombinedMetadata = metadata && this.options.metadata
+      ? new BrowserHeaders({ ...this.options?.metadata.headersMap, ...metadata?.headersMap })
+      : metadata || this.options.metadata;
     return new Observable((observer) => {
       grpc.unary(methodDesc, {
         request,
@@ -404,7 +402,8 @@ export class GrpcWebImpl {
         debug: this.options.debug,
         onEnd: (next) => {
           if (next.status !== 0) {
-            observer.error({ code: next.status, message: next.statusMessage });
+            const err = new GrpcWebError(next.statusMessage, next.status, next.trailers);
+            observer.error(err);
           } else {
             observer.next(next.message as any);
             observer.complete();
@@ -417,28 +416,21 @@ export class GrpcWebImpl {
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
-export type DeepPartial<T> = T extends Builtin
-  ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U>
-  ? ReadonlyArray<DeepPartial<U>>
-  : T extends {}
-  ? { [K in keyof T]?: DeepPartial<T[K]> }
+export type DeepPartial<T> = T extends Builtin ? T
+  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-export type Exact<P, I extends P> = P extends Builtin
-  ? P
-  : P & { [K in keyof P]: Exact<P[K], I[K]> } & Record<Exclude<keyof I, KeysOfUnion<P>>, never>;
-
-// If you get a compile-error about 'Constructor<Long> and ... have no overlap',
-// add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
-if (_m0.util.Long !== Long) {
-  _m0.util.Long = Long as any;
-  _m0.configure();
-}
+export type Exact<P, I extends P> = P extends Builtin ? P
+  : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+export class GrpcWebError extends Error {
+  constructor(message: string, public code: grpc.Code, public metadata: grpc.Metadata) {
+    super(message);
+  }
 }

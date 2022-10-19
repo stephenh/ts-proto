@@ -1,11 +1,10 @@
 /* eslint-disable */
-import * as Long from 'long';
-import * as _m0 from 'protobufjs/minimal';
-import { Observable } from 'rxjs';
-import { Foo } from './some-file';
-import { map } from 'rxjs/operators';
+import * as _m0 from "protobufjs/minimal";
+import { Observable } from "rxjs";
+import { map } from "rxjs/operators";
+import { Foo } from "./some-file";
 
-export const protobufPackage = 'hero';
+export const protobufPackage = "hero";
 
 export interface HeroById {
   id: number;
@@ -56,9 +55,7 @@ export const HeroById = {
   },
 
   fromJSON(object: any): HeroById {
-    return {
-      id: isSet(object.id) ? Number(object.id) : 0,
-    };
+    return { id: isSet(object.id) ? Number(object.id) : 0 };
   },
 
   toJSON(message: HeroById): unknown {
@@ -105,9 +102,7 @@ export const VillainById = {
   },
 
   fromJSON(object: any): VillainById {
-    return {
-      id: isSet(object.id) ? Number(object.id) : 0,
-    };
+    return { id: isSet(object.id) ? Number(object.id) : 0 };
   },
 
   toJSON(message: VillainById): unknown {
@@ -124,7 +119,7 @@ export const VillainById = {
 };
 
 function createBaseHero(): Hero {
-  return { id: 0, name: '' };
+  return { id: 0, name: "" };
 }
 
 export const Hero = {
@@ -132,7 +127,7 @@ export const Hero = {
     if (message.id !== 0) {
       writer.uint32(8).int32(message.id);
     }
-    if (message.name !== '') {
+    if (message.name !== "") {
       writer.uint32(18).string(message.name);
     }
     return writer;
@@ -160,10 +155,7 @@ export const Hero = {
   },
 
   fromJSON(object: any): Hero {
-    return {
-      id: isSet(object.id) ? Number(object.id) : 0,
-      name: isSet(object.name) ? String(object.name) : '',
-    };
+    return { id: isSet(object.id) ? Number(object.id) : 0, name: isSet(object.name) ? String(object.name) : "" };
   },
 
   toJSON(message: Hero): unknown {
@@ -176,13 +168,13 @@ export const Hero = {
   fromPartial<I extends Exact<DeepPartial<Hero>, I>>(object: I): Hero {
     const message = createBaseHero();
     message.id = object.id ?? 0;
-    message.name = object.name ?? '';
+    message.name = object.name ?? "";
     return message;
   },
 };
 
 function createBaseVillain(): Villain {
-  return { id: 0, name: '' };
+  return { id: 0, name: "" };
 }
 
 export const Villain = {
@@ -190,7 +182,7 @@ export const Villain = {
     if (message.id !== 0) {
       writer.uint32(8).int32(message.id);
     }
-    if (message.name !== '') {
+    if (message.name !== "") {
       writer.uint32(18).string(message.name);
     }
     return writer;
@@ -218,10 +210,7 @@ export const Villain = {
   },
 
   fromJSON(object: any): Villain {
-    return {
-      id: isSet(object.id) ? Number(object.id) : 0,
-      name: isSet(object.name) ? String(object.name) : '',
-    };
+    return { id: isSet(object.id) ? Number(object.id) : 0, name: isSet(object.name) ? String(object.name) : "" };
   },
 
   toJSON(message: Villain): unknown {
@@ -234,7 +223,7 @@ export const Villain = {
   fromPartial<I extends Exact<DeepPartial<Villain>, I>>(object: I): Villain {
     const message = createBaseVillain();
     message.id = object.id ?? 0;
-    message.name = object.name ?? '';
+    message.name = object.name ?? "";
     return message;
   },
 };
@@ -247,7 +236,9 @@ export interface HeroService {
 
 export class HeroServiceClientImpl implements HeroService {
   private readonly rpc: Rpc;
-  constructor(rpc: Rpc) {
+  private readonly service: string;
+  constructor(rpc: Rpc, opts?: { service?: string }) {
+    this.service = opts?.service || "hero.HeroService";
     this.rpc = rpc;
     this.FindOneHero = this.FindOneHero.bind(this);
     this.FindOneVillain = this.FindOneVillain.bind(this);
@@ -255,30 +246,30 @@ export class HeroServiceClientImpl implements HeroService {
   }
   FindOneHero(request: HeroById): Promise<Hero> {
     const data = HeroById.encode(request).finish();
-    const promise = this.rpc.request('hero.HeroService', 'FindOneHero', data);
+    const promise = this.rpc.request(this.service, "FindOneHero", data);
     return promise.then((data) => Hero.decode(new _m0.Reader(data)));
   }
 
   FindOneVillain(request: VillainById): Promise<Villain> {
     const data = VillainById.encode(request).finish();
-    const promise = this.rpc.request('hero.HeroService', 'FindOneVillain', data);
+    const promise = this.rpc.request(this.service, "FindOneVillain", data);
     return promise.then((data) => Villain.decode(new _m0.Reader(data)));
   }
 
   FindManyVillain(request: Observable<VillainById>): Observable<Villain> {
     const data = request.pipe(map((request) => VillainById.encode(request).finish()));
-    const result = this.rpc.bidirectionalStreamingRequest('hero.HeroService', 'FindManyVillain', data);
+    const result = this.rpc.bidirectionalStreamingRequest(this.service, "FindManyVillain", data);
     return result.pipe(map((data) => Villain.decode(new _m0.Reader(data))));
   }
 }
 
 export type HeroServiceDefinition = typeof HeroServiceDefinition;
 export const HeroServiceDefinition = {
-  name: 'HeroService',
-  fullName: 'hero.HeroService',
+  name: "HeroService",
+  fullName: "hero.HeroService",
   methods: {
     findOneHero: {
-      name: 'FindOneHero',
+      name: "FindOneHero",
       requestType: HeroById,
       requestStream: false,
       responseType: Hero,
@@ -286,7 +277,7 @@ export const HeroServiceDefinition = {
       options: {},
     },
     findOneVillain: {
-      name: 'FindOneVillain',
+      name: "FindOneVillain",
       requestType: VillainById,
       requestStream: false,
       responseType: Villain,
@@ -294,7 +285,7 @@ export const HeroServiceDefinition = {
       options: {},
     },
     findManyVillain: {
-      name: 'FindManyVillain',
+      name: "FindManyVillain",
       requestType: VillainById,
       requestStream: true,
       responseType: Villain,
@@ -313,27 +304,14 @@ interface Rpc {
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
-export type DeepPartial<T> = T extends Builtin
-  ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U>
-  ? ReadonlyArray<DeepPartial<U>>
-  : T extends {}
-  ? { [K in keyof T]?: DeepPartial<T[K]> }
+export type DeepPartial<T> = T extends Builtin ? T
+  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-export type Exact<P, I extends P> = P extends Builtin
-  ? P
-  : P & { [K in keyof P]: Exact<P[K], I[K]> } & Record<Exclude<keyof I, KeysOfUnion<P>>, never>;
-
-// If you get a compile-error about 'Constructor<Long> and ... have no overlap',
-// add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
-if (_m0.util.Long !== Long) {
-  _m0.util.Long = Long as any;
-  _m0.configure();
-}
+export type Exact<P, I extends P> = P extends Builtin ? P
+  : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;

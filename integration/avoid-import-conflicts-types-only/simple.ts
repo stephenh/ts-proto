@@ -1,7 +1,7 @@
 /* eslint-disable */
-import type { SimpleEnum as SimpleEnum1, Simple as Simple2 } from './simple2';
+import type { Simple as Simple2, SimpleEnum as SimpleEnum1 } from "./simple2";
 
-export const protobufPackage = 'simple';
+export const protobufPackage = "simple";
 
 export enum SimpleEnum {
   LOCAL_DEFAULT = 0,

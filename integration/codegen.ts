@@ -1,13 +1,13 @@
-import { CodeGeneratorRequest, FileDescriptorProto } from 'ts-proto-descriptors';
-import { mkdir, readFile, writeFile } from 'fs';
-import { parse } from 'path';
-import { promisify } from 'util';
-import { generateFile, makeUtils } from '../src/main';
-import { createTypeMap } from '../src/types';
-import { prefixDisableLinter } from '../src/utils';
-import { getTsPoetOpts, optionsFromParameter } from '../src/options';
-import { Context } from '../src/context';
-import { generateTypeRegistry } from '../src/generate-type-registry';
+import { CodeGeneratorRequest } from "ts-proto-descriptors";
+import { mkdir, readFile, writeFile } from "fs";
+import { parse } from "path";
+import { promisify } from "util";
+import { generateFile, makeUtils } from "../src/main";
+import { createTypeMap } from "../src/types";
+import { prefixDisableLinter } from "../src/utils";
+import { getTsPoetOpts, optionsFromParameter } from "../src/options";
+import { Context } from "../src/context";
+import { generateTypeRegistry } from "../src/generate-type-registry";
 
 /**
  * Generates output for our integration tests from their example proto files.
@@ -28,36 +28,33 @@ async function generate(binFile: string, baseDir: string, parameter: string) {
   const request = CodeGeneratorRequest.decode(stdin);
   request.parameter = parameter;
 
-  const options = optionsFromParameter(parameter || '');
+  const options = optionsFromParameter(parameter || "");
   const typeMap = createTypeMap(request, options);
 
   for (let file of request.protoFile) {
     // Make a different utils per file to track per-file usage
+    if (options.M[file.name]) {
+      continue;
+    }
     const utils = makeUtils(options);
     const ctx: Context = { options, typeMap, utils };
     const [path, code] = generateFile(ctx, file);
     const filePath = `${baseDir}/${path}`;
     const dirPath = parse(filePath).dir;
     await promisify(mkdir)(dirPath, { recursive: true }).catch(() => {});
-    await promisify(writeFile)(
-      filePath,
-      prefixDisableLinter(await code.toStringWithImports({ ...getTsPoetOpts(options), path }))
-    );
+    await promisify(writeFile)(filePath, code.toString({ ...getTsPoetOpts(options), path }));
   }
 
   if (options.outputTypeRegistry) {
     const utils = makeUtils(options);
     const ctx: Context = { options, typeMap, utils };
 
-    const path = 'typeRegistry.ts';
+    const path = "typeRegistry.ts";
     const code = generateTypeRegistry(ctx);
 
     const filePath = `${baseDir}/${path}`;
 
-    await promisify(writeFile)(
-      filePath,
-      prefixDisableLinter(await code.toStringWithImports({ ...getTsPoetOpts(options), path }))
-    );
+    await promisify(writeFile)(filePath, code.toString({ ...getTsPoetOpts(options), path }));
   }
 }
 

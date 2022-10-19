@@ -1,9 +1,8 @@
 /* eslint-disable */
-import * as Long from 'long';
-import * as _m0 from 'protobufjs/minimal';
-import { Observable } from 'rxjs';
+import * as _m0 from "protobufjs/minimal";
+import { Observable } from "rxjs";
 
-export const protobufPackage = '';
+export const protobufPackage = "";
 
 export interface ProduceRequest {
   ingredients: string;
@@ -14,12 +13,12 @@ export interface ProduceReply {
 }
 
 function createBaseProduceRequest(): ProduceRequest {
-  return { ingredients: '' };
+  return { ingredients: "" };
 }
 
 export const ProduceRequest = {
   encode(message: ProduceRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.ingredients !== '') {
+    if (message.ingredients !== "") {
       writer.uint32(10).string(message.ingredients);
     }
     return writer;
@@ -44,9 +43,7 @@ export const ProduceRequest = {
   },
 
   fromJSON(object: any): ProduceRequest {
-    return {
-      ingredients: isSet(object.ingredients) ? String(object.ingredients) : '',
-    };
+    return { ingredients: isSet(object.ingredients) ? String(object.ingredients) : "" };
   },
 
   toJSON(message: ProduceRequest): unknown {
@@ -57,18 +54,18 @@ export const ProduceRequest = {
 
   fromPartial<I extends Exact<DeepPartial<ProduceRequest>, I>>(object: I): ProduceRequest {
     const message = createBaseProduceRequest();
-    message.ingredients = object.ingredients ?? '';
+    message.ingredients = object.ingredients ?? "";
     return message;
   },
 };
 
 function createBaseProduceReply(): ProduceReply {
-  return { result: '' };
+  return { result: "" };
 }
 
 export const ProduceReply = {
   encode(message: ProduceReply, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.result !== '') {
+    if (message.result !== "") {
       writer.uint32(10).string(message.result);
     }
     return writer;
@@ -93,9 +90,7 @@ export const ProduceReply = {
   },
 
   fromJSON(object: any): ProduceReply {
-    return {
-      result: isSet(object.result) ? String(object.result) : '',
-    };
+    return { result: isSet(object.result) ? String(object.result) : "" };
   },
 
   toJSON(message: ProduceReply): unknown {
@@ -106,7 +101,7 @@ export const ProduceReply = {
 
   fromPartial<I extends Exact<DeepPartial<ProduceReply>, I>>(object: I): ProduceReply {
     const message = createBaseProduceReply();
-    message.result = object.result ?? '';
+    message.result = object.result ?? "";
     return message;
   },
 };
@@ -117,27 +112,14 @@ export interface Factory {
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
-export type DeepPartial<T> = T extends Builtin
-  ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U>
-  ? ReadonlyArray<DeepPartial<U>>
-  : T extends {}
-  ? { [K in keyof T]?: DeepPartial<T[K]> }
+export type DeepPartial<T> = T extends Builtin ? T
+  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-export type Exact<P, I extends P> = P extends Builtin
-  ? P
-  : P & { [K in keyof P]: Exact<P[K], I[K]> } & Record<Exclude<keyof I, KeysOfUnion<P>>, never>;
-
-// If you get a compile-error about 'Constructor<Long> and ... have no overlap',
-// add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
-if (_m0.util.Long !== Long) {
-  _m0.util.Long = Long as any;
-  _m0.configure();
-}
+export type Exact<P, I extends P> = P extends Builtin ? P
+  : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;

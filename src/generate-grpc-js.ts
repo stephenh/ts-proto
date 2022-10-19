@@ -1,28 +1,28 @@
-import { Code, code, def, imp, joinCode } from 'ts-poet';
-import { FileDescriptorProto, ServiceDescriptorProto } from 'ts-proto-descriptors';
-import { camelCase } from './case';
-import { Context } from './context';
-import SourceInfo, { Fields } from './sourceInfo';
-import { messageToTypeName, wrapperTypeName } from './types';
-import { assertInstanceOf, FormattedMethodDescriptor, maybeAddComment, maybePrefixPackage } from './utils';
-import { generateDecoder, generateEncoder } from './encode';
+import { Code, code, def, imp, joinCode } from "ts-poet";
+import { FileDescriptorProto, ServiceDescriptorProto } from "ts-proto-descriptors";
+import { camelCase } from "./case";
+import { Context } from "./context";
+import SourceInfo, { Fields } from "./sourceInfo";
+import { messageToTypeName, wrapperTypeName } from "./types";
+import { assertInstanceOf, FormattedMethodDescriptor, maybeAddComment, maybePrefixPackage } from "./utils";
+import { generateDecoder, generateEncoder } from "./encode";
 
-const CallOptions = imp('CallOptions@@grpc/grpc-js');
-const ChannelCredentials = imp('ChannelCredentials@@grpc/grpc-js');
-const ChannelOptions = imp('ChannelOptions@@grpc/grpc-js');
-const Client = imp('Client@@grpc/grpc-js');
-const ClientDuplexStream = imp('ClientDuplexStream@@grpc/grpc-js');
-const ClientReadableStream = imp('ClientReadableStream@@grpc/grpc-js');
-const ClientUnaryCall = imp('ClientUnaryCall@@grpc/grpc-js');
-const ClientWritableStream = imp('ClientWritableStream@@grpc/grpc-js');
-const handleBidiStreamingCall = imp('handleBidiStreamingCall@@grpc/grpc-js');
-const handleClientStreamingCall = imp('handleClientStreamingCall@@grpc/grpc-js');
-const handleServerStreamingCall = imp('handleServerStreamingCall@@grpc/grpc-js');
-const handleUnaryCall = imp('handleUnaryCall@@grpc/grpc-js');
-const UntypedServiceImplementation = imp('UntypedServiceImplementation@@grpc/grpc-js');
-const makeGenericClientConstructor = imp('makeGenericClientConstructor@@grpc/grpc-js');
-const Metadata = imp('Metadata@@grpc/grpc-js');
-const ServiceError = imp('ServiceError@@grpc/grpc-js');
+const CallOptions = imp("CallOptions@@grpc/grpc-js");
+const ChannelCredentials = imp("ChannelCredentials@@grpc/grpc-js");
+const ChannelOptions = imp("ChannelOptions@@grpc/grpc-js");
+const Client = imp("Client@@grpc/grpc-js");
+const ClientDuplexStream = imp("ClientDuplexStream@@grpc/grpc-js");
+const ClientReadableStream = imp("ClientReadableStream@@grpc/grpc-js");
+const ClientUnaryCall = imp("ClientUnaryCall@@grpc/grpc-js");
+const ClientWritableStream = imp("ClientWritableStream@@grpc/grpc-js");
+const handleBidiStreamingCall = imp("handleBidiStreamingCall@@grpc/grpc-js");
+const handleClientStreamingCall = imp("handleClientStreamingCall@@grpc/grpc-js");
+const handleServerStreamingCall = imp("handleServerStreamingCall@@grpc/grpc-js");
+const handleUnaryCall = imp("handleUnaryCall@@grpc/grpc-js");
+const UntypedServiceImplementation = imp("UntypedServiceImplementation@@grpc/grpc-js");
+const makeGenericClientConstructor = imp("makeGenericClientConstructor@@grpc/grpc-js");
+const Metadata = imp("Metadata@@grpc/grpc-js");
+const ServiceError = imp("ServiceError@@grpc/grpc-js");
 
 /**
  * Generates a service definition and server / client stubs for the
@@ -44,7 +44,7 @@ export function generateGrpcJsService(
     chunks.push(generateClientConstructor(fileDesc, serviceDesc));
   }
 
-  return joinCode(chunks, { on: '\n\n' });
+  return joinCode(chunks, { on: "\n\n" });
 }
 
 function generateServiceDefinition(
@@ -100,7 +100,7 @@ function generateServiceDefinition(
 
   chunks.push(code`} as const;`);
 
-  return joinCode(chunks, { on: '\n' });
+  return joinCode(chunks, { on: "\n" });
 }
 
 function generateServerStub(ctx: Context, sourceInfo: SourceInfo, serviceDesc: ServiceDescriptorProto) {
@@ -132,7 +132,7 @@ function generateServerStub(ctx: Context, sourceInfo: SourceInfo, serviceDesc: S
 
   chunks.push(code`}`);
 
-  return joinCode(chunks, { on: '\n' });
+  return joinCode(chunks, { on: "\n" });
 }
 
 function generateClientStub(ctx: Context, sourceInfo: SourceInfo, serviceDesc: ServiceDescriptorProto) {
@@ -224,7 +224,7 @@ function generateClientStub(ctx: Context, sourceInfo: SourceInfo, serviceDesc: S
 
   chunks.push(code`}`);
 
-  return joinCode(chunks, { on: '\n' });
+  return joinCode(chunks, { on: "\n" });
 }
 
 function generateClientConstructor(fileDesc: FileDescriptorProto, serviceDesc: ServiceDescriptorProto) {

@@ -1,33 +1,32 @@
 /* eslint-disable */
-import { messageTypeRegistry } from './typeRegistry';
-import * as Long from 'long';
-import * as _m0 from 'protobufjs/minimal';
-import { Timestamp } from './google/protobuf/timestamp';
-import { Struct } from './google/protobuf/struct';
+import * as _m0 from "protobufjs/minimal";
+import { Struct } from "./google/protobuf/struct";
+import { Timestamp } from "./google/protobuf/timestamp";
+import { messageTypeRegistry } from "./typeRegistry";
 
-export const protobufPackage = 'foo';
+export const protobufPackage = "foo";
 
 export interface Foo {
-  $type: 'foo.Foo';
+  $type: "foo.Foo";
   timestamp: Date | undefined;
 }
 
 export interface Foo2 {
-  $type: 'foo.Foo2';
+  $type: "foo.Foo2";
   timestamp: Date | undefined;
 }
 
 export interface WithStruct {
-  $type: 'foo.WithStruct';
+  $type: "foo.WithStruct";
   struct: { [key: string]: any } | undefined;
 }
 
 function createBaseFoo(): Foo {
-  return { $type: 'foo.Foo', timestamp: undefined };
+  return { $type: "foo.Foo", timestamp: undefined };
 }
 
 export const Foo = {
-  $type: 'foo.Foo' as const,
+  $type: "foo.Foo" as const,
 
   encode(message: Foo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.timestamp !== undefined) {
@@ -55,10 +54,7 @@ export const Foo = {
   },
 
   fromJSON(object: any): Foo {
-    return {
-      $type: Foo.$type,
-      timestamp: isSet(object.timestamp) ? fromJsonTimestamp(object.timestamp) : undefined,
-    };
+    return { $type: Foo.$type, timestamp: isSet(object.timestamp) ? fromJsonTimestamp(object.timestamp) : undefined };
   },
 
   toJSON(message: Foo): unknown {
@@ -77,11 +73,11 @@ export const Foo = {
 messageTypeRegistry.set(Foo.$type, Foo);
 
 function createBaseFoo2(): Foo2 {
-  return { $type: 'foo.Foo2', timestamp: undefined };
+  return { $type: "foo.Foo2", timestamp: undefined };
 }
 
 export const Foo2 = {
-  $type: 'foo.Foo2' as const,
+  $type: "foo.Foo2" as const,
 
   encode(message: Foo2, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.timestamp !== undefined) {
@@ -109,10 +105,7 @@ export const Foo2 = {
   },
 
   fromJSON(object: any): Foo2 {
-    return {
-      $type: Foo2.$type,
-      timestamp: isSet(object.timestamp) ? fromJsonTimestamp(object.timestamp) : undefined,
-    };
+    return { $type: Foo2.$type, timestamp: isSet(object.timestamp) ? fromJsonTimestamp(object.timestamp) : undefined };
   },
 
   toJSON(message: Foo2): unknown {
@@ -131,11 +124,11 @@ export const Foo2 = {
 messageTypeRegistry.set(Foo2.$type, Foo2);
 
 function createBaseWithStruct(): WithStruct {
-  return { $type: 'foo.WithStruct', struct: undefined };
+  return { $type: "foo.WithStruct", struct: undefined };
 }
 
 export const WithStruct = {
-  $type: 'foo.WithStruct' as const,
+  $type: "foo.WithStruct" as const,
 
   encode(message: WithStruct, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.struct !== undefined) {
@@ -163,10 +156,7 @@ export const WithStruct = {
   },
 
   fromJSON(object: any): WithStruct {
-    return {
-      $type: WithStruct.$type,
-      struct: isObject(object.struct) ? object.struct : undefined,
-    };
+    return { $type: WithStruct.$type, struct: isObject(object.struct) ? object.struct : undefined };
   },
 
   toJSON(message: WithStruct): unknown {
@@ -186,25 +176,19 @@ messageTypeRegistry.set(WithStruct.$type, WithStruct);
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
-export type DeepPartial<T> = T extends Builtin
-  ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U>
-  ? ReadonlyArray<DeepPartial<U>>
-  : T extends {}
-  ? { [K in Exclude<keyof T, '$type'>]?: DeepPartial<T[K]> }
+export type DeepPartial<T> = T extends Builtin ? T
+  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends {} ? { [K in Exclude<keyof T, "$type">]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-export type Exact<P, I extends P> = P extends Builtin
-  ? P
-  : P & { [K in keyof P]: Exact<P[K], I[K]> } & Record<Exclude<keyof I, KeysOfUnion<P> | '$type'>, never>;
+export type Exact<P, I extends P> = P extends Builtin ? P
+  : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P> | "$type">]: never };
 
 function toTimestamp(date: Date): Timestamp {
   const seconds = date.getTime() / 1_000;
   const nanos = (date.getTime() % 1_000) * 1_000_000;
-  return { $type: 'google.protobuf.Timestamp', seconds, nanos };
+  return { $type: "google.protobuf.Timestamp", seconds, nanos };
 }
 
 function fromTimestamp(t: Timestamp): Date {
@@ -216,22 +200,15 @@ function fromTimestamp(t: Timestamp): Date {
 function fromJsonTimestamp(o: any): Date {
   if (o instanceof Date) {
     return o;
-  } else if (typeof o === 'string') {
+  } else if (typeof o === "string") {
     return new Date(o);
   } else {
     return fromTimestamp(Timestamp.fromJSON(o));
   }
 }
 
-// If you get a compile-error about 'Constructor<Long> and ... have no overlap',
-// add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
-if (_m0.util.Long !== Long) {
-  _m0.util.Long = Long as any;
-  _m0.configure();
-}
-
 function isObject(value: any): boolean {
-  return typeof value === 'object' && value !== null;
+  return typeof value === "object" && value !== null;
 }
 
 function isSet(value: any): boolean {

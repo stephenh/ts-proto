@@ -1,11 +1,11 @@
 /* eslint-disable */
-import * as Long from 'long';
-import * as _m0 from 'protobufjs/minimal';
-import { ImportedThing } from './import_dir/thing';
-import { Timestamp } from './google/protobuf/timestamp';
-import { StringValue, Int32Value, BoolValue } from './google/protobuf/wrappers';
+import * as Long from "long";
+import * as _m0 from "protobufjs/minimal";
+import { Timestamp } from "./google/protobuf/timestamp";
+import { BoolValue, Int32Value, StringValue } from "./google/protobuf/wrappers";
+import { ImportedThing } from "./import_dir/thing";
 
-export const protobufPackage = 'simple';
+export const protobufPackage = "simple";
 
 /**
  * Adding a comment to the syntax will become the first
@@ -22,16 +22,16 @@ export enum StateEnum {
 export function stateEnumFromJSON(object: any): StateEnum {
   switch (object) {
     case 0:
-    case 'UNKNOWN':
+    case "UNKNOWN":
       return StateEnum.UNKNOWN;
     case 2:
-    case 'ON':
+    case "ON":
       return StateEnum.ON;
     case 3:
-    case 'OFF':
+    case "OFF":
       return StateEnum.OFF;
     case -1:
-    case 'UNRECOGNIZED':
+    case "UNRECOGNIZED":
     default:
       return StateEnum.UNRECOGNIZED;
   }
@@ -40,14 +40,14 @@ export function stateEnumFromJSON(object: any): StateEnum {
 export function stateEnumToJSON(object: StateEnum): string {
   switch (object) {
     case StateEnum.UNKNOWN:
-      return 'UNKNOWN';
+      return "UNKNOWN";
     case StateEnum.ON:
-      return 'ON';
+      return "ON";
     case StateEnum.OFF:
-      return 'OFF';
+      return "OFF";
     case StateEnum.UNRECOGNIZED:
     default:
-      return 'UNRECOGNIZED';
+      return "UNRECOGNIZED";
   }
 }
 
@@ -84,16 +84,16 @@ export enum Child_Type {
 export function child_TypeFromJSON(object: any): Child_Type {
   switch (object) {
     case 0:
-    case 'UNKNOWN':
+    case "UNKNOWN":
       return Child_Type.UNKNOWN;
     case 1:
-    case 'GOOD':
+    case "GOOD":
       return Child_Type.GOOD;
     case 2:
-    case 'BAD':
+    case "BAD":
       return Child_Type.BAD;
     case -1:
-    case 'UNRECOGNIZED':
+    case "UNRECOGNIZED":
     default:
       return Child_Type.UNRECOGNIZED;
   }
@@ -102,14 +102,14 @@ export function child_TypeFromJSON(object: any): Child_Type {
 export function child_TypeToJSON(object: Child_Type): string {
   switch (object) {
     case Child_Type.UNKNOWN:
-      return 'UNKNOWN';
+      return "UNKNOWN";
     case Child_Type.GOOD:
-      return 'GOOD';
+      return "GOOD";
     case Child_Type.BAD:
-      return 'BAD';
+      return "BAD";
     case Child_Type.UNRECOGNIZED:
     default:
-      return 'UNRECOGNIZED';
+      return "UNRECOGNIZED";
   }
 }
 
@@ -129,16 +129,16 @@ export enum Nested_InnerEnum {
 export function nested_InnerEnumFromJSON(object: any): Nested_InnerEnum {
   switch (object) {
     case 0:
-    case 'UNKNOWN_INNER':
+    case "UNKNOWN_INNER":
       return Nested_InnerEnum.UNKNOWN_INNER;
     case 100:
-    case 'GOOD':
+    case "GOOD":
       return Nested_InnerEnum.GOOD;
     case 1000:
-    case 'BAD':
+    case "BAD":
       return Nested_InnerEnum.BAD;
     case -1:
-    case 'UNRECOGNIZED':
+    case "UNRECOGNIZED":
     default:
       return Nested_InnerEnum.UNRECOGNIZED;
   }
@@ -147,14 +147,14 @@ export function nested_InnerEnumFromJSON(object: any): Nested_InnerEnum {
 export function nested_InnerEnumToJSON(object: Nested_InnerEnum): string {
   switch (object) {
     case Nested_InnerEnum.UNKNOWN_INNER:
-      return 'UNKNOWN_INNER';
+      return "UNKNOWN_INNER";
     case Nested_InnerEnum.GOOD:
-      return 'GOOD';
+      return "GOOD";
     case Nested_InnerEnum.BAD:
-      return 'BAD';
+      return "BAD";
     case Nested_InnerEnum.UNRECOGNIZED:
     default:
-      return 'UNRECOGNIZED';
+      return "UNRECOGNIZED";
   }
 }
 
@@ -240,7 +240,7 @@ export interface Numbers {
 
 function createBaseSimple(): Simple {
   return {
-    name: '',
+    name: "",
     age: 0,
     createdAt: undefined,
     child: undefined,
@@ -255,7 +255,7 @@ function createBaseSimple(): Simple {
 
 export const Simple = {
   encode(message: Simple, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.name !== '') {
+    if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
     if (message.age !== 0) {
@@ -353,7 +353,7 @@ export const Simple = {
 
   fromJSON(object: any): Simple {
     return {
-      name: isSet(object.name) ? String(object.name) : '',
+      name: isSet(object.name) ? String(object.name) : "",
       age: isSet(object.age) ? Number(object.age) : 0,
       createdAt: isSet(object.createdAt) ? fromJsonTimestamp(object.createdAt) : undefined,
       child: isSet(object.child) ? Child.fromJSON(object.child) : undefined,
@@ -376,7 +376,7 @@ export const Simple = {
     message.child !== undefined && (obj.child = message.child ? Child.toJSON(message.child) : undefined);
     message.state !== undefined && (obj.state = stateEnumToJSON(message.state));
     if (message.grandChildren) {
-      obj.grandChildren = message.grandChildren.map((e) => (e ? Child.toJSON(e) : undefined));
+      obj.grandChildren = message.grandChildren.map((e) => e ? Child.toJSON(e) : undefined);
     } else {
       obj.grandChildren = [];
     }
@@ -401,28 +401,29 @@ export const Simple = {
 
   fromPartial<I extends Exact<DeepPartial<Simple>, I>>(object: I): Simple {
     const message = createBaseSimple();
-    message.name = object.name ?? '';
+    message.name = object.name ?? "";
     message.age = object.age ?? 0;
     message.createdAt = object.createdAt ?? undefined;
-    message.child = object.child !== undefined && object.child !== null ? Child.fromPartial(object.child) : undefined;
+    message.child = (object.child !== undefined && object.child !== null) ? Child.fromPartial(object.child) : undefined;
     message.state = object.state ?? 0;
     message.grandChildren = object.grandChildren?.map((e) => Child.fromPartial(e)) || [];
     message.coins = object.coins?.map((e) => e) || [];
     message.snacks = object.snacks?.map((e) => e) || [];
     message.oldStates = object.oldStates?.map((e) => e) || [];
-    message.thing =
-      object.thing !== undefined && object.thing !== null ? ImportedThing.fromPartial(object.thing) : undefined;
+    message.thing = (object.thing !== undefined && object.thing !== null)
+      ? ImportedThing.fromPartial(object.thing)
+      : undefined;
     return message;
   },
 };
 
 function createBaseChild(): Child {
-  return { name: '', type: 0 };
+  return { name: "", type: 0 };
 }
 
 export const Child = {
   encode(message: Child, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.name !== '') {
+    if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
     if (message.type !== 0) {
@@ -454,7 +455,7 @@ export const Child = {
 
   fromJSON(object: any): Child {
     return {
-      name: isSet(object.name) ? String(object.name) : '',
+      name: isSet(object.name) ? String(object.name) : "",
       type: isSet(object.type) ? child_TypeFromJSON(object.type) : 0,
     };
   },
@@ -468,19 +469,19 @@ export const Child = {
 
   fromPartial<I extends Exact<DeepPartial<Child>, I>>(object: I): Child {
     const message = createBaseChild();
-    message.name = object.name ?? '';
+    message.name = object.name ?? "";
     message.type = object.type ?? 0;
     return message;
   },
 };
 
 function createBaseNested(): Nested {
-  return { name: '', message: undefined, state: 0 };
+  return { name: "", message: undefined, state: 0 };
 }
 
 export const Nested = {
   encode(message: Nested, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.name !== '') {
+    if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
     if (message.message !== undefined) {
@@ -518,7 +519,7 @@ export const Nested = {
 
   fromJSON(object: any): Nested {
     return {
-      name: isSet(object.name) ? String(object.name) : '',
+      name: isSet(object.name) ? String(object.name) : "",
       message: isSet(object.message) ? Nested_InnerMessage.fromJSON(object.message) : undefined,
       state: isSet(object.state) ? nested_InnerEnumFromJSON(object.state) : 0,
     };
@@ -535,23 +536,22 @@ export const Nested = {
 
   fromPartial<I extends Exact<DeepPartial<Nested>, I>>(object: I): Nested {
     const message = createBaseNested();
-    message.name = object.name ?? '';
-    message.message =
-      object.message !== undefined && object.message !== null
-        ? Nested_InnerMessage.fromPartial(object.message)
-        : undefined;
+    message.name = object.name ?? "";
+    message.message = (object.message !== undefined && object.message !== null)
+      ? Nested_InnerMessage.fromPartial(object.message)
+      : undefined;
     message.state = object.state ?? 0;
     return message;
   },
 };
 
 function createBaseNested_InnerMessage(): Nested_InnerMessage {
-  return { name: '', deep: undefined };
+  return { name: "", deep: undefined };
 }
 
 export const Nested_InnerMessage = {
   encode(message: Nested_InnerMessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.name !== '') {
+    if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
     if (message.deep !== undefined) {
@@ -583,7 +583,7 @@ export const Nested_InnerMessage = {
 
   fromJSON(object: any): Nested_InnerMessage {
     return {
-      name: isSet(object.name) ? String(object.name) : '',
+      name: isSet(object.name) ? String(object.name) : "",
       deep: isSet(object.deep) ? Nested_InnerMessage_DeepMessage.fromJSON(object.deep) : undefined,
     };
   },
@@ -598,22 +598,21 @@ export const Nested_InnerMessage = {
 
   fromPartial<I extends Exact<DeepPartial<Nested_InnerMessage>, I>>(object: I): Nested_InnerMessage {
     const message = createBaseNested_InnerMessage();
-    message.name = object.name ?? '';
-    message.deep =
-      object.deep !== undefined && object.deep !== null
-        ? Nested_InnerMessage_DeepMessage.fromPartial(object.deep)
-        : undefined;
+    message.name = object.name ?? "";
+    message.deep = (object.deep !== undefined && object.deep !== null)
+      ? Nested_InnerMessage_DeepMessage.fromPartial(object.deep)
+      : undefined;
     return message;
   },
 };
 
 function createBaseNested_InnerMessage_DeepMessage(): Nested_InnerMessage_DeepMessage {
-  return { name: '' };
+  return { name: "" };
 }
 
 export const Nested_InnerMessage_DeepMessage = {
   encode(message: Nested_InnerMessage_DeepMessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.name !== '') {
+    if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
     return writer;
@@ -638,9 +637,7 @@ export const Nested_InnerMessage_DeepMessage = {
   },
 
   fromJSON(object: any): Nested_InnerMessage_DeepMessage {
-    return {
-      name: isSet(object.name) ? String(object.name) : '',
-    };
+    return { name: isSet(object.name) ? String(object.name) : "" };
   },
 
   toJSON(message: Nested_InnerMessage_DeepMessage): unknown {
@@ -650,10 +647,10 @@ export const Nested_InnerMessage_DeepMessage = {
   },
 
   fromPartial<I extends Exact<DeepPartial<Nested_InnerMessage_DeepMessage>, I>>(
-    object: I
+    object: I,
   ): Nested_InnerMessage_DeepMessage {
     const message = createBaseNested_InnerMessage_DeepMessage();
-    message.name = object.name ?? '';
+    message.name = object.name ?? "";
     return message;
   },
 };
@@ -840,9 +837,7 @@ export const Entity = {
   },
 
   fromJSON(object: any): Entity {
-    return {
-      id: isSet(object.id) ? Number(object.id) : 0,
-    };
+    return { id: isSet(object.id) ? Number(object.id) : 0 };
   },
 
   toJSON(message: Entity): unknown {
@@ -913,21 +908,21 @@ export const SimpleWithMap = {
     return {
       entitiesById: isObject(object.entitiesById)
         ? Object.entries(object.entitiesById).reduce<{ [key: number]: Entity }>((acc, [key, value]) => {
-            acc[Number(key)] = Entity.fromJSON(value);
-            return acc;
-          }, {})
+          acc[Number(key)] = Entity.fromJSON(value);
+          return acc;
+        }, {})
         : {},
       nameLookup: isObject(object.nameLookup)
         ? Object.entries(object.nameLookup).reduce<{ [key: string]: string }>((acc, [key, value]) => {
-            acc[key] = String(value);
-            return acc;
-          }, {})
+          acc[key] = String(value);
+          return acc;
+        }, {})
         : {},
       intLookup: isObject(object.intLookup)
         ? Object.entries(object.intLookup).reduce<{ [key: number]: number }>((acc, [key, value]) => {
-            acc[Number(key)] = Number(value);
-            return acc;
-          }, {})
+          acc[Number(key)] = Number(value);
+          return acc;
+        }, {})
         : {},
     };
   },
@@ -964,7 +959,7 @@ export const SimpleWithMap = {
         }
         return acc;
       },
-      {}
+      {},
     );
     message.nameLookup = Object.entries(object.nameLookup ?? {}).reduce<{ [key: string]: string }>(
       (acc, [key, value]) => {
@@ -973,7 +968,7 @@ export const SimpleWithMap = {
         }
         return acc;
       },
-      {}
+      {},
     );
     message.intLookup = Object.entries(object.intLookup ?? {}).reduce<{ [key: number]: number }>(
       (acc, [key, value]) => {
@@ -982,7 +977,7 @@ export const SimpleWithMap = {
         }
         return acc;
       },
-      {}
+      {},
     );
     return message;
   },
@@ -1039,25 +1034,27 @@ export const SimpleWithMap_EntitiesByIdEntry = {
   },
 
   fromPartial<I extends Exact<DeepPartial<SimpleWithMap_EntitiesByIdEntry>, I>>(
-    object: I
+    object: I,
   ): SimpleWithMap_EntitiesByIdEntry {
     const message = createBaseSimpleWithMap_EntitiesByIdEntry();
     message.key = object.key ?? 0;
-    message.value = object.value !== undefined && object.value !== null ? Entity.fromPartial(object.value) : undefined;
+    message.value = (object.value !== undefined && object.value !== null)
+      ? Entity.fromPartial(object.value)
+      : undefined;
     return message;
   },
 };
 
 function createBaseSimpleWithMap_NameLookupEntry(): SimpleWithMap_NameLookupEntry {
-  return { key: '', value: '' };
+  return { key: "", value: "" };
 }
 
 export const SimpleWithMap_NameLookupEntry = {
   encode(message: SimpleWithMap_NameLookupEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.key !== '') {
+    if (message.key !== "") {
       writer.uint32(10).string(message.key);
     }
-    if (message.value !== '') {
+    if (message.value !== "") {
       writer.uint32(18).string(message.value);
     }
     return writer;
@@ -1085,10 +1082,7 @@ export const SimpleWithMap_NameLookupEntry = {
   },
 
   fromJSON(object: any): SimpleWithMap_NameLookupEntry {
-    return {
-      key: isSet(object.key) ? String(object.key) : '',
-      value: isSet(object.value) ? String(object.value) : '',
-    };
+    return { key: isSet(object.key) ? String(object.key) : "", value: isSet(object.value) ? String(object.value) : "" };
   },
 
   toJSON(message: SimpleWithMap_NameLookupEntry): unknown {
@@ -1099,11 +1093,11 @@ export const SimpleWithMap_NameLookupEntry = {
   },
 
   fromPartial<I extends Exact<DeepPartial<SimpleWithMap_NameLookupEntry>, I>>(
-    object: I
+    object: I,
   ): SimpleWithMap_NameLookupEntry {
     const message = createBaseSimpleWithMap_NameLookupEntry();
-    message.key = object.key ?? '';
-    message.value = object.value ?? '';
+    message.key = object.key ?? "";
+    message.value = object.value ?? "";
     return message;
   },
 };
@@ -1145,10 +1139,7 @@ export const SimpleWithMap_IntLookupEntry = {
   },
 
   fromJSON(object: any): SimpleWithMap_IntLookupEntry {
-    return {
-      key: isSet(object.key) ? Number(object.key) : 0,
-      value: isSet(object.value) ? Number(object.value) : 0,
-    };
+    return { key: isSet(object.key) ? Number(object.key) : 0, value: isSet(object.value) ? Number(object.value) : 0 };
   },
 
   toJSON(message: SimpleWithMap_IntLookupEntry): unknown {
@@ -1203,9 +1194,9 @@ export const SimpleWithSnakeCaseMap = {
     return {
       entitiesById: isObject(object.entitiesById)
         ? Object.entries(object.entitiesById).reduce<{ [key: number]: Entity }>((acc, [key, value]) => {
-            acc[Number(key)] = Entity.fromJSON(value);
-            return acc;
-          }, {})
+          acc[Number(key)] = Entity.fromJSON(value);
+          return acc;
+        }, {})
         : {},
     };
   },
@@ -1230,7 +1221,7 @@ export const SimpleWithSnakeCaseMap = {
         }
         return acc;
       },
-      {}
+      {},
     );
     return message;
   },
@@ -1287,22 +1278,24 @@ export const SimpleWithSnakeCaseMap_EntitiesByIdEntry = {
   },
 
   fromPartial<I extends Exact<DeepPartial<SimpleWithSnakeCaseMap_EntitiesByIdEntry>, I>>(
-    object: I
+    object: I,
   ): SimpleWithSnakeCaseMap_EntitiesByIdEntry {
     const message = createBaseSimpleWithSnakeCaseMap_EntitiesByIdEntry();
     message.key = object.key ?? 0;
-    message.value = object.value !== undefined && object.value !== null ? Entity.fromPartial(object.value) : undefined;
+    message.value = (object.value !== undefined && object.value !== null)
+      ? Entity.fromPartial(object.value)
+      : undefined;
     return message;
   },
 };
 
 function createBasePingRequest(): PingRequest {
-  return { input: '' };
+  return { input: "" };
 }
 
 export const PingRequest = {
   encode(message: PingRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.input !== '') {
+    if (message.input !== "") {
       writer.uint32(10).string(message.input);
     }
     return writer;
@@ -1327,9 +1320,7 @@ export const PingRequest = {
   },
 
   fromJSON(object: any): PingRequest {
-    return {
-      input: isSet(object.input) ? String(object.input) : '',
-    };
+    return { input: isSet(object.input) ? String(object.input) : "" };
   },
 
   toJSON(message: PingRequest): unknown {
@@ -1340,18 +1331,18 @@ export const PingRequest = {
 
   fromPartial<I extends Exact<DeepPartial<PingRequest>, I>>(object: I): PingRequest {
     const message = createBasePingRequest();
-    message.input = object.input ?? '';
+    message.input = object.input ?? "";
     return message;
   },
 };
 
 function createBasePingResponse(): PingResponse {
-  return { output: '' };
+  return { output: "" };
 }
 
 export const PingResponse = {
   encode(message: PingResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.output !== '') {
+    if (message.output !== "") {
       writer.uint32(10).string(message.output);
     }
     return writer;
@@ -1376,9 +1367,7 @@ export const PingResponse = {
   },
 
   fromJSON(object: any): PingResponse {
-    return {
-      output: isSet(object.output) ? String(object.output) : '',
-    };
+    return { output: isSet(object.output) ? String(object.output) : "" };
   },
 
   toJSON(message: PingResponse): unknown {
@@ -1389,7 +1378,7 @@ export const PingResponse = {
 
   fromPartial<I extends Exact<DeepPartial<PingResponse>, I>>(object: I): PingResponse {
     const message = createBasePingResponse();
-    message.output = object.output ?? '';
+    message.output = object.output ?? "";
     return message;
   },
 };
@@ -1561,13 +1550,15 @@ export interface PingService {
 
 export class PingServiceClientImpl implements PingService {
   private readonly rpc: Rpc;
-  constructor(rpc: Rpc) {
+  private readonly service: string;
+  constructor(rpc: Rpc, opts?: { service?: string }) {
+    this.service = opts?.service || "simple.PingService";
     this.rpc = rpc;
     this.ping = this.ping.bind(this);
   }
   ping(request: PingRequest): Promise<PingResponse> {
     const data = PingRequest.encode(request).finish();
-    const promise = this.rpc.request('simple.PingService', 'ping', data);
+    const promise = this.rpc.request(this.service, "ping", data);
     return promise.then((data) => PingResponse.decode(new _m0.Reader(data)));
   }
 }
@@ -1580,29 +1571,31 @@ declare var self: any | undefined;
 declare var window: any | undefined;
 declare var global: any | undefined;
 var globalThis: any = (() => {
-  if (typeof globalThis !== 'undefined') return globalThis;
-  if (typeof self !== 'undefined') return self;
-  if (typeof window !== 'undefined') return window;
-  if (typeof global !== 'undefined') return global;
-  throw 'Unable to locate global object';
+  if (typeof globalThis !== "undefined") {
+    return globalThis;
+  }
+  if (typeof self !== "undefined") {
+    return self;
+  }
+  if (typeof window !== "undefined") {
+    return window;
+  }
+  if (typeof global !== "undefined") {
+    return global;
+  }
+  throw "Unable to locate global object";
 })();
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
-export type DeepPartial<T> = T extends Builtin
-  ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U>
-  ? ReadonlyArray<DeepPartial<U>>
-  : T extends {}
-  ? { [K in keyof T]?: DeepPartial<T[K]> }
+export type DeepPartial<T> = T extends Builtin ? T
+  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-export type Exact<P, I extends P> = P extends Builtin
-  ? P
-  : P & { [K in keyof P]: Exact<P[K], I[K]> } & Record<Exclude<keyof I, KeysOfUnion<P>>, never>;
+export type Exact<P, I extends P> = P extends Builtin ? P
+  : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function toTimestamp(date: Date): Timestamp {
   const seconds = date.getTime() / 1_000;
@@ -1619,7 +1612,7 @@ function fromTimestamp(t: Timestamp): Date {
 function fromJsonTimestamp(o: any): Date {
   if (o instanceof Date) {
     return o;
-  } else if (typeof o === 'string') {
+  } else if (typeof o === "string") {
     return new Date(o);
   } else {
     return fromTimestamp(Timestamp.fromJSON(o));
@@ -1628,7 +1621,7 @@ function fromJsonTimestamp(o: any): Date {
 
 function longToNumber(long: Long): number {
   if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new globalThis.Error('Value is larger than Number.MAX_SAFE_INTEGER');
+    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
   return long.toNumber();
 }
@@ -1641,7 +1634,7 @@ if (_m0.util.Long !== Long) {
 }
 
 function isObject(value: any): boolean {
-  return typeof value === 'object' && value !== null;
+  return typeof value === "object" && value !== null;
 }
 
 function isSet(value: any): boolean {

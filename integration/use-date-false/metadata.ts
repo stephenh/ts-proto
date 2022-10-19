@@ -1,9 +1,8 @@
 /* eslint-disable */
-import * as Long from 'long';
-import * as _m0 from 'protobufjs/minimal';
-import { Timestamp } from './google/protobuf/timestamp';
+import * as _m0 from "protobufjs/minimal";
+import { Timestamp } from "./google/protobuf/timestamp";
 
-export const protobufPackage = '';
+export const protobufPackage = "";
 
 export interface Metadata {
   lastEdited: Timestamp | undefined;
@@ -40,9 +39,7 @@ export const Metadata = {
   },
 
   fromJSON(object: any): Metadata {
-    return {
-      lastEdited: isSet(object.lastEdited) ? fromJsonTimestamp(object.lastEdited) : undefined,
-    };
+    return { lastEdited: isSet(object.lastEdited) ? fromJsonTimestamp(object.lastEdited) : undefined };
   },
 
   toJSON(message: Metadata): unknown {
@@ -53,30 +50,23 @@ export const Metadata = {
 
   fromPartial<I extends Exact<DeepPartial<Metadata>, I>>(object: I): Metadata {
     const message = createBaseMetadata();
-    message.lastEdited =
-      object.lastEdited !== undefined && object.lastEdited !== null
-        ? Timestamp.fromPartial(object.lastEdited)
-        : undefined;
+    message.lastEdited = (object.lastEdited !== undefined && object.lastEdited !== null)
+      ? Timestamp.fromPartial(object.lastEdited)
+      : undefined;
     return message;
   },
 };
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
-export type DeepPartial<T> = T extends Builtin
-  ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U>
-  ? ReadonlyArray<DeepPartial<U>>
-  : T extends {}
-  ? { [K in keyof T]?: DeepPartial<T[K]> }
+export type DeepPartial<T> = T extends Builtin ? T
+  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-export type Exact<P, I extends P> = P extends Builtin
-  ? P
-  : P & { [K in keyof P]: Exact<P[K], I[K]> } & Record<Exclude<keyof I, KeysOfUnion<P>>, never>;
+export type Exact<P, I extends P> = P extends Builtin ? P
+  : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function toTimestamp(date: Date): Timestamp {
   const seconds = date.getTime() / 1_000;
@@ -93,18 +83,11 @@ function fromTimestamp(t: Timestamp): Date {
 function fromJsonTimestamp(o: any): Timestamp {
   if (o instanceof Date) {
     return toTimestamp(o);
-  } else if (typeof o === 'string') {
+  } else if (typeof o === "string") {
     return toTimestamp(new Date(o));
   } else {
     return Timestamp.fromJSON(o);
   }
-}
-
-// If you get a compile-error about 'Constructor<Long> and ... have no overlap',
-// add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
-if (_m0.util.Long !== Long) {
-  _m0.util.Long = Long as any;
-  _m0.configure();
 }
 
 function isSet(value: any): boolean {

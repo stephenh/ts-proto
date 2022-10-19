@@ -1,24 +1,24 @@
 /* eslint-disable */
-import * as Long from 'long';
-import * as _m0 from 'protobufjs/minimal';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import * as _m0 from "protobufjs/minimal";
+import { Observable } from "rxjs";
+import { map } from "rxjs/operators";
 
-export const protobufPackage = '';
+export const protobufPackage = "";
 
 export interface User {
   name: string;
 }
 
-export interface Empty {}
+export interface Empty {
+}
 
 function createBaseUser(): User {
-  return { name: '' };
+  return { name: "" };
 }
 
 export const User = {
   encode(message: User, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.name !== '') {
+    if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
     return writer;
@@ -43,9 +43,7 @@ export const User = {
   },
 
   fromJSON(object: any): User {
-    return {
-      name: isSet(object.name) ? String(object.name) : '',
-    };
+    return { name: isSet(object.name) ? String(object.name) : "" };
   },
 
   toJSON(message: User): unknown {
@@ -56,7 +54,7 @@ export const User = {
 
   fromPartial<I extends Exact<DeepPartial<User>, I>>(object: I): User {
     const message = createBaseUser();
-    message.name = object.name ?? '';
+    message.name = object.name ?? "";
     return message;
   },
 };
@@ -106,13 +104,15 @@ export interface UserState {
 
 export class UserStateClientImpl implements UserState {
   private readonly rpc: Rpc;
-  constructor(rpc: Rpc) {
+  private readonly service: string;
+  constructor(rpc: Rpc, opts?: { service?: string }) {
+    this.service = opts?.service || "UserState";
     this.rpc = rpc;
     this.GetUsers = this.GetUsers.bind(this);
   }
   GetUsers(request: Empty): Observable<User> {
     const data = Empty.encode(request).finish();
-    const result = this.rpc.serverStreamingRequest('UserState', 'GetUsers', data);
+    const result = this.rpc.serverStreamingRequest(this.service, "GetUsers", data);
     return result.pipe(map((data) => User.decode(new _m0.Reader(data))));
   }
 }
@@ -126,27 +126,14 @@ interface Rpc {
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
-export type DeepPartial<T> = T extends Builtin
-  ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U>
-  ? ReadonlyArray<DeepPartial<U>>
-  : T extends {}
-  ? { [K in keyof T]?: DeepPartial<T[K]> }
+export type DeepPartial<T> = T extends Builtin ? T
+  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-export type Exact<P, I extends P> = P extends Builtin
-  ? P
-  : P & { [K in keyof P]: Exact<P[K], I[K]> } & Record<Exclude<keyof I, KeysOfUnion<P>>, never>;
-
-// If you get a compile-error about 'Constructor<Long> and ... have no overlap',
-// add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
-if (_m0.util.Long !== Long) {
-  _m0.util.Long = Long as any;
-  _m0.configure();
-}
+export type Exact<P, I extends P> = P extends Builtin ? P
+  : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;

@@ -1,11 +1,11 @@
-import { code, def, Code, joinCode } from 'ts-poet';
-import { EnumDescriptorProto } from 'ts-proto-descriptors';
-import { maybeAddComment } from './utils';
-import { camelCase } from './case';
-import SourceInfo, { Fields } from './sourceInfo';
-import { Context } from './context';
+import { code, def, Code, joinCode } from "ts-poet";
+import { EnumDescriptorProto } from "ts-proto-descriptors";
+import { maybeAddComment } from "./utils";
+import { camelCase } from "./case";
+import SourceInfo, { Fields } from "./sourceInfo";
+import { Context } from "./context";
 
-const UNRECOGNIZED_ENUM_NAME = 'UNRECOGNIZED';
+const UNRECOGNIZED_ENUM_NAME = "UNRECOGNIZED";
 const UNRECOGNIZED_ENUM_VALUE = -1;
 
 // Output the `enum { Foo, A = 0, B = 1 }`
@@ -23,10 +23,10 @@ export function generateEnum(
   if (options.enumsAsLiterals) {
     chunks.push(code`export const ${def(fullName)} = {`);
   } else {
-    chunks.push(code`export ${options.constEnums ? 'const ' : ''}enum ${def(fullName)} {`);
+    chunks.push(code`export ${options.constEnums ? "const " : ""}enum ${def(fullName)} {`);
   }
 
-  const delimiter = options.enumsAsLiterals ? ':' : '=';
+  const delimiter = options.enumsAsLiterals ? ":" : "=";
 
   enumDesc.value.forEach((valueDesc, index) => {
     const info = sourceInfo.lookup(Fields.enum.value, index);
@@ -63,7 +63,7 @@ export function generateEnum(
     chunks.push(generateEnumToNumber(ctx, fullName, enumDesc));
   }
 
-  return joinCode(chunks, { on: '\n' });
+  return joinCode(chunks, { on: "\n" });
 }
 
 /** Generates a function with a big switch statement to decode JSON -> our enum. */
@@ -71,7 +71,7 @@ export function generateEnumFromJson(ctx: Context, fullName: string, enumDesc: E
   const { options, utils } = ctx;
   const chunks: Code[] = [];
 
-  const functionName = camelCase(fullName) + 'FromJSON';
+  const functionName = camelCase(fullName) + "FromJSON";
   chunks.push(code`export function ${def(functionName)}(object: any): ${fullName} {`);
   chunks.push(code`switch (object) {`);
 
@@ -100,7 +100,7 @@ export function generateEnumFromJson(ctx: Context, fullName: string, enumDesc: E
 
   chunks.push(code`}`);
   chunks.push(code`}`);
-  return joinCode(chunks, { on: '\n' });
+  return joinCode(chunks, { on: "\n" });
 }
 
 /** Generates a function with a big switch statement to encode our enum -> JSON. */
@@ -109,20 +109,37 @@ export function generateEnumToJson(ctx: Context, fullName: string, enumDesc: Enu
 
   const chunks: Code[] = [];
 
-  const functionName = camelCase(fullName) + 'ToJSON';
-  chunks.push(code`export function ${def(functionName)}(object: ${fullName}): string {`);
+  const functionName = camelCase(fullName) + "ToJSON";
+  chunks.push(
+    code`export function ${def(functionName)}(object: ${fullName}): ${
+      ctx.options.useNumericEnumForJson ? "number" : "string"
+    } {`
+  );
   chunks.push(code`switch (object) {`);
 
   for (const valueDesc of enumDesc.value) {
-    chunks.push(code`case ${fullName}.${valueDesc.name}: return "${valueDesc.name}";`);
+    if (ctx.options.useNumericEnumForJson) {
+      chunks.push(code`case ${fullName}.${valueDesc.name}: return ${valueDesc.number};`);
+    } else {
+      chunks.push(code`case ${fullName}.${valueDesc.name}: return "${valueDesc.name}";`);
+    }
   }
 
   if (options.unrecognizedEnum) {
     chunks.push(code`
-      case ${fullName}.${UNRECOGNIZED_ENUM_NAME}:
+      case ${fullName}.${UNRECOGNIZED_ENUM_NAME}:`);
+
+    if (ctx.options.useNumericEnumForJson) {
+      chunks.push(code`
+      default:
+        return ${UNRECOGNIZED_ENUM_VALUE};
+    `);
+    } else {
+      chunks.push(code`
       default:
         return "${UNRECOGNIZED_ENUM_NAME}";
     `);
+    }
   } else {
     // We use globalThis to avoid conflicts on protobuf types named `Error`.
     chunks.push(code`
@@ -133,7 +150,7 @@ export function generateEnumToJson(ctx: Context, fullName: string, enumDesc: Enu
 
   chunks.push(code`}`);
   chunks.push(code`}`);
-  return joinCode(chunks, { on: '\n' });
+  return joinCode(chunks, { on: "\n" });
 }
 
 /** Generates a function with a big switch statement to encode our string enum -> int value. */
@@ -142,7 +159,7 @@ export function generateEnumToNumber(ctx: Context, fullName: string, enumDesc: E
 
   const chunks: Code[] = [];
 
-  const functionName = camelCase(fullName) + 'ToNumber';
+  const functionName = camelCase(fullName) + "ToNumber";
   chunks.push(code`export function ${def(functionName)}(object: ${fullName}): number {`);
   chunks.push(code`switch (object) {`);
   for (const valueDesc of enumDesc.value) {
@@ -165,5 +182,5 @@ export function generateEnumToNumber(ctx: Context, fullName: string, enumDesc: E
 
   chunks.push(code`}`);
   chunks.push(code`}`);
-  return joinCode(chunks, { on: '\n' });
+  return joinCode(chunks, { on: "\n" });
 }

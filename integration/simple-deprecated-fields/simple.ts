@@ -1,8 +1,7 @@
 /* eslint-disable */
-import * as Long from 'long';
-import * as _m0 from 'protobufjs/minimal';
+import * as _m0 from "protobufjs/minimal";
 
-export const protobufPackage = 'simple';
+export const protobufPackage = "simple";
 
 export interface Simple {
   /**
@@ -22,7 +21,9 @@ export interface Simple {
    *
    * @deprecated
    */
-  child: Child | undefined;
+  child:
+    | Child
+    | undefined;
   /** @deprecated */
   testField: string;
   testNotDeprecated: string;
@@ -33,12 +34,12 @@ export interface Child {
 }
 
 function createBaseSimple(): Simple {
-  return { name: '', age: 0, child: undefined, testField: '', testNotDeprecated: '' };
+  return { name: "", age: 0, child: undefined, testField: "", testNotDeprecated: "" };
 }
 
 export const Simple = {
   encode(message: Simple, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.name !== '') {
+    if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
     if (message.age !== 0) {
@@ -47,10 +48,10 @@ export const Simple = {
     if (message.child !== undefined) {
       Child.encode(message.child, writer.uint32(26).fork()).ldelim();
     }
-    if (message.testField !== '') {
+    if (message.testField !== "") {
       writer.uint32(34).string(message.testField);
     }
-    if (message.testNotDeprecated !== '') {
+    if (message.testNotDeprecated !== "") {
       writer.uint32(42).string(message.testNotDeprecated);
     }
     return writer;
@@ -88,11 +89,11 @@ export const Simple = {
 
   fromJSON(object: any): Simple {
     return {
-      name: isSet(object.name) ? String(object.name) : '',
+      name: isSet(object.name) ? String(object.name) : "",
       age: isSet(object.age) ? Number(object.age) : 0,
       child: isSet(object.child) ? Child.fromJSON(object.child) : undefined,
-      testField: isSet(object.testField) ? String(object.testField) : '',
-      testNotDeprecated: isSet(object.testNotDeprecated) ? String(object.testNotDeprecated) : '',
+      testField: isSet(object.testField) ? String(object.testField) : "",
+      testNotDeprecated: isSet(object.testNotDeprecated) ? String(object.testNotDeprecated) : "",
     };
   },
 
@@ -108,22 +109,22 @@ export const Simple = {
 
   fromPartial<I extends Exact<DeepPartial<Simple>, I>>(object: I): Simple {
     const message = createBaseSimple();
-    message.name = object.name ?? '';
+    message.name = object.name ?? "";
     message.age = object.age ?? 0;
-    message.child = object.child !== undefined && object.child !== null ? Child.fromPartial(object.child) : undefined;
-    message.testField = object.testField ?? '';
-    message.testNotDeprecated = object.testNotDeprecated ?? '';
+    message.child = (object.child !== undefined && object.child !== null) ? Child.fromPartial(object.child) : undefined;
+    message.testField = object.testField ?? "";
+    message.testNotDeprecated = object.testNotDeprecated ?? "";
     return message;
   },
 };
 
 function createBaseChild(): Child {
-  return { name: '' };
+  return { name: "" };
 }
 
 export const Child = {
   encode(message: Child, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.name !== '') {
+    if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
     return writer;
@@ -148,9 +149,7 @@ export const Child = {
   },
 
   fromJSON(object: any): Child {
-    return {
-      name: isSet(object.name) ? String(object.name) : '',
-    };
+    return { name: isSet(object.name) ? String(object.name) : "" };
   },
 
   toJSON(message: Child): unknown {
@@ -161,34 +160,21 @@ export const Child = {
 
   fromPartial<I extends Exact<DeepPartial<Child>, I>>(object: I): Child {
     const message = createBaseChild();
-    message.name = object.name ?? '';
+    message.name = object.name ?? "";
     return message;
   },
 };
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
-export type DeepPartial<T> = T extends Builtin
-  ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U>
-  ? ReadonlyArray<DeepPartial<U>>
-  : T extends {}
-  ? { [K in keyof T]?: DeepPartial<T[K]> }
+export type DeepPartial<T> = T extends Builtin ? T
+  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-export type Exact<P, I extends P> = P extends Builtin
-  ? P
-  : P & { [K in keyof P]: Exact<P[K], I[K]> } & Record<Exclude<keyof I, KeysOfUnion<P>>, never>;
-
-// If you get a compile-error about 'Constructor<Long> and ... have no overlap',
-// add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
-if (_m0.util.Long !== Long) {
-  _m0.util.Long = Long as any;
-  _m0.configure();
-}
+export type Exact<P, I extends P> = P extends Builtin ? P
+  : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;

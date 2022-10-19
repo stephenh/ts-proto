@@ -1,10 +1,9 @@
 /* eslint-disable */
-import { FileDescriptorProto } from 'ts-proto-descriptors';
-import * as Long from 'long';
-import * as _m0 from 'protobufjs/minimal';
-import { protoMetadata as protoMetadata1, Timestamp } from '../google/protobuf/timestamp';
+import * as _m0 from "protobufjs/minimal";
+import { FileDescriptorProto } from "ts-proto-descriptors";
+import { protoMetadata as protoMetadata1, Timestamp } from "../google/protobuf/timestamp";
 
-export const protobufPackage = 'simple';
+export const protobufPackage = "simple";
 
 export interface ImportedThing {
   createdAt: Date | undefined;
@@ -55,66 +54,52 @@ export interface ProtoMetadata {
   options?: {
     options?: { [key: string]: any };
     services?: {
-      [key: string]: {
-        options?: { [key: string]: any };
-        methods?: { [key: string]: { [key: string]: any } };
-      };
+      [key: string]: { options?: { [key: string]: any }; methods?: { [key: string]: { [key: string]: any } } };
     };
-    messages?: {
-      [key: string]: ProtoMetaMessageOptions;
-    };
-    enums?: {
-      [key: string]: {
-        options?: { [key: string]: any };
-        values?: { [key: string]: { [key: string]: any } };
-      };
-    };
+    messages?: { [key: string]: ProtoMetaMessageOptions };
+    enums?: { [key: string]: { options?: { [key: string]: any }; values?: { [key: string]: { [key: string]: any } } } };
   };
 }
 
 export const protoMetadata: ProtoMetadata = {
   fileDescriptor: FileDescriptorProto.fromPartial({
-    name: 'import_dir/thing.proto',
-    package: 'simple',
-    dependency: ['google/protobuf/timestamp.proto'],
-    publicDependency: [],
-    weakDependency: [],
-    messageType: [
-      {
-        name: 'ImportedThing',
-        field: [
-          {
-            name: 'created_at',
-            number: 1,
-            label: 1,
-            type: 11,
-            typeName: '.google.protobuf.Timestamp',
-            extendee: '',
-            defaultValue: '',
-            oneofIndex: 0,
-            jsonName: 'createdAt',
-            options: undefined,
-            proto3Optional: false,
-          },
-        ],
-        extension: [],
-        nestedType: [],
-        enumType: [],
-        extensionRange: [],
-        oneofDecl: [],
-        options: undefined,
-        reservedRange: [],
-        reservedName: [],
-      },
-    ],
-    enumType: [],
-    service: [],
-    extension: [],
-    options: undefined,
-    sourceCodeInfo: { location: [] },
-    syntax: 'proto3',
+    "name": "import_dir/thing.proto",
+    "package": "simple",
+    "dependency": ["google/protobuf/timestamp.proto"],
+    "publicDependency": [],
+    "weakDependency": [],
+    "messageType": [{
+      "name": "ImportedThing",
+      "field": [{
+        "name": "created_at",
+        "number": 1,
+        "label": 1,
+        "type": 11,
+        "typeName": ".google.protobuf.Timestamp",
+        "extendee": "",
+        "defaultValue": "",
+        "oneofIndex": 0,
+        "jsonName": "createdAt",
+        "options": undefined,
+        "proto3Optional": false,
+      }],
+      "extension": [],
+      "nestedType": [],
+      "enumType": [],
+      "extensionRange": [],
+      "oneofDecl": [],
+      "options": undefined,
+      "reservedRange": [],
+      "reservedName": [],
+    }],
+    "enumType": [],
+    "service": [],
+    "extension": [],
+    "options": undefined,
+    "sourceCodeInfo": { "location": [] },
+    "syntax": "proto3",
   }),
-  references: { '.simple.ImportedThing': ImportedThing },
+  references: { ".simple.ImportedThing": ImportedThing },
   dependencies: [protoMetadata1],
 };
 
@@ -128,11 +113,4 @@ function fromTimestamp(t: Timestamp): Date {
   let millis = t.seconds * 1_000;
   millis += t.nanos / 1_000_000;
   return new Date(millis);
-}
-
-// If you get a compile-error about 'Constructor<Long> and ... have no overlap',
-// add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
-if (_m0.util.Long !== Long) {
-  _m0.util.Long = Long as any;
-  _m0.configure();
 }

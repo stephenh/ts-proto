@@ -1,8 +1,8 @@
 /* eslint-disable */
-import * as Long from 'long';
-import * as _m0 from 'protobufjs/minimal';
+import * as Long from "long";
+import * as _m0 from "protobufjs/minimal";
 
-export const protobufPackage = 'vector_tile';
+export const protobufPackage = "vector_tile";
 
 export interface Tile {
   layers: Tile_Layer[];
@@ -19,19 +19,19 @@ export enum Tile_GeomType {
 export function tile_GeomTypeFromJSON(object: any): Tile_GeomType {
   switch (object) {
     case 0:
-    case 'UNKNOWN':
+    case "UNKNOWN":
       return Tile_GeomType.UNKNOWN;
     case 1:
-    case 'POINT':
+    case "POINT":
       return Tile_GeomType.POINT;
     case 2:
-    case 'LINESTRING':
+    case "LINESTRING":
       return Tile_GeomType.LINESTRING;
     case 3:
-    case 'POLYGON':
+    case "POLYGON":
       return Tile_GeomType.POLYGON;
     case -1:
-    case 'UNRECOGNIZED':
+    case "UNRECOGNIZED":
     default:
       return Tile_GeomType.UNRECOGNIZED;
   }
@@ -40,16 +40,16 @@ export function tile_GeomTypeFromJSON(object: any): Tile_GeomType {
 export function tile_GeomTypeToJSON(object: Tile_GeomType): string {
   switch (object) {
     case Tile_GeomType.UNKNOWN:
-      return 'UNKNOWN';
+      return "UNKNOWN";
     case Tile_GeomType.POINT:
-      return 'POINT';
+      return "POINT";
     case Tile_GeomType.LINESTRING:
-      return 'LINESTRING';
+      return "LINESTRING";
     case Tile_GeomType.POLYGON:
-      return 'POLYGON';
+      return "POLYGON";
     case Tile_GeomType.UNRECOGNIZED:
     default:
-      return 'UNRECOGNIZED';
+      return "UNRECOGNIZED";
   }
 }
 
@@ -110,15 +110,13 @@ export const Tile = {
   },
 
   fromJSON(object: any): Tile {
-    return {
-      layers: Array.isArray(object?.layers) ? object.layers.map((e: any) => Tile_Layer.fromJSON(e)) : [],
-    };
+    return { layers: Array.isArray(object?.layers) ? object.layers.map((e: any) => Tile_Layer.fromJSON(e)) : [] };
   },
 
   toJSON(message: Tile): unknown {
     const obj: any = {};
     if (message.layers) {
-      obj.layers = message.layers.map((e) => (e ? Tile_Layer.toJSON(e) : undefined));
+      obj.layers = message.layers.map((e) => e ? Tile_Layer.toJSON(e) : undefined);
     } else {
       obj.layers = [];
     }
@@ -133,12 +131,12 @@ export const Tile = {
 };
 
 function createBaseTile_Value(): Tile_Value {
-  return { stringValue: '', floatValue: 0, doubleValue: 0, intValue: 0, uintValue: 0, sintValue: 0, boolValue: false };
+  return { stringValue: "", floatValue: 0, doubleValue: 0, intValue: 0, uintValue: 0, sintValue: 0, boolValue: false };
 }
 
 export const Tile_Value = {
   encode(message: Tile_Value, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.stringValue !== '') {
+    if (message.stringValue !== "") {
       writer.uint32(10).string(message.stringValue);
     }
     if (message.floatValue !== 0) {
@@ -200,7 +198,7 @@ export const Tile_Value = {
 
   fromJSON(object: any): Tile_Value {
     return {
-      stringValue: isSet(object.stringValue) ? String(object.stringValue) : '',
+      stringValue: isSet(object.stringValue) ? String(object.stringValue) : "",
       floatValue: isSet(object.floatValue) ? Number(object.floatValue) : 0,
       doubleValue: isSet(object.doubleValue) ? Number(object.doubleValue) : 0,
       intValue: isSet(object.intValue) ? Number(object.intValue) : 0,
@@ -224,7 +222,7 @@ export const Tile_Value = {
 
   fromPartial<I extends Exact<DeepPartial<Tile_Value>, I>>(object: I): Tile_Value {
     const message = createBaseTile_Value();
-    message.stringValue = object.stringValue ?? '';
+    message.stringValue = object.stringValue ?? "";
     message.floatValue = object.floatValue ?? 0;
     message.doubleValue = object.doubleValue ?? 0;
     message.intValue = object.intValue ?? 0;
@@ -338,7 +336,7 @@ export const Tile_Feature = {
 };
 
 function createBaseTile_Layer(): Tile_Layer {
-  return { version: 0, name: '', features: [], keys: [], values: [], extent: 0 };
+  return { version: 0, name: "", features: [], keys: [], values: [], extent: 0 };
 }
 
 export const Tile_Layer = {
@@ -346,7 +344,7 @@ export const Tile_Layer = {
     if (message.version !== 0) {
       writer.uint32(120).uint32(message.version);
     }
-    if (message.name !== '') {
+    if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
     for (const v of message.features) {
@@ -400,7 +398,7 @@ export const Tile_Layer = {
   fromJSON(object: any): Tile_Layer {
     return {
       version: isSet(object.version) ? Number(object.version) : 0,
-      name: isSet(object.name) ? String(object.name) : '',
+      name: isSet(object.name) ? String(object.name) : "",
       features: Array.isArray(object?.features) ? object.features.map((e: any) => Tile_Feature.fromJSON(e)) : [],
       keys: Array.isArray(object?.keys) ? object.keys.map((e: any) => String(e)) : [],
       values: Array.isArray(object?.values) ? object.values.map((e: any) => Tile_Value.fromJSON(e)) : [],
@@ -413,7 +411,7 @@ export const Tile_Layer = {
     message.version !== undefined && (obj.version = Math.round(message.version));
     message.name !== undefined && (obj.name = message.name);
     if (message.features) {
-      obj.features = message.features.map((e) => (e ? Tile_Feature.toJSON(e) : undefined));
+      obj.features = message.features.map((e) => e ? Tile_Feature.toJSON(e) : undefined);
     } else {
       obj.features = [];
     }
@@ -423,7 +421,7 @@ export const Tile_Layer = {
       obj.keys = [];
     }
     if (message.values) {
-      obj.values = message.values.map((e) => (e ? Tile_Value.toJSON(e) : undefined));
+      obj.values = message.values.map((e) => e ? Tile_Value.toJSON(e) : undefined);
     } else {
       obj.values = [];
     }
@@ -434,7 +432,7 @@ export const Tile_Layer = {
   fromPartial<I extends Exact<DeepPartial<Tile_Layer>, I>>(object: I): Tile_Layer {
     const message = createBaseTile_Layer();
     message.version = object.version ?? 0;
-    message.name = object.name ?? '';
+    message.name = object.name ?? "";
     message.features = object.features?.map((e) => Tile_Feature.fromPartial(e)) || [];
     message.keys = object.keys?.map((e) => e) || [];
     message.values = object.values?.map((e) => Tile_Value.fromPartial(e)) || [];
@@ -447,33 +445,35 @@ declare var self: any | undefined;
 declare var window: any | undefined;
 declare var global: any | undefined;
 var globalThis: any = (() => {
-  if (typeof globalThis !== 'undefined') return globalThis;
-  if (typeof self !== 'undefined') return self;
-  if (typeof window !== 'undefined') return window;
-  if (typeof global !== 'undefined') return global;
-  throw 'Unable to locate global object';
+  if (typeof globalThis !== "undefined") {
+    return globalThis;
+  }
+  if (typeof self !== "undefined") {
+    return self;
+  }
+  if (typeof window !== "undefined") {
+    return window;
+  }
+  if (typeof global !== "undefined") {
+    return global;
+  }
+  throw "Unable to locate global object";
 })();
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
-export type DeepPartial<T> = T extends Builtin
-  ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U>
-  ? ReadonlyArray<DeepPartial<U>>
-  : T extends {}
-  ? { [K in keyof T]?: DeepPartial<T[K]> }
+export type DeepPartial<T> = T extends Builtin ? T
+  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-export type Exact<P, I extends P> = P extends Builtin
-  ? P
-  : P & { [K in keyof P]: Exact<P[K], I[K]> } & Record<Exclude<keyof I, KeysOfUnion<P>>, never>;
+export type Exact<P, I extends P> = P extends Builtin ? P
+  : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function longToNumber(long: Long): number {
   if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new globalThis.Error('Value is larger than Number.MAX_SAFE_INTEGER');
+    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
   return long.toNumber();
 }

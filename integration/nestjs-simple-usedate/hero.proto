@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+package hero;
+
+service HeroService {
+    rpc AddOneHero (Hero) returns (google.protobuf.Empty) {}
+    rpc FindOneHero (HeroById) returns (Hero) {}
+    rpc FindOneVillain (VillainById) returns (Villain) {}
+    rpc FindManyVillain (stream VillainById) returns (stream Villain) {}
+    rpc FindManyVillainStreamIn (stream VillainById) returns (Villain) {}
+    rpc FindManyVillainStreamOut (VillainById) returns (stream Villain) {}
+}
+
+message HeroById {
+    int32 id = 1;
+}
+
+message VillainById {
+    int32 id = 1;
+}
+
+message Hero {
+    int32 id = 1;
+    string name = 2;
+    google.protobuf.Timestamp birth_date = 3;
+}
+
+message Villain {
+    int32 id = 1;
+    string name = 2;
+}

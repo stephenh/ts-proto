@@ -1,5 +1,6 @@
 /* eslint-disable */
-export const protobufPackage = 'simple2';
+
+export const protobufPackage = "simple2";
 
 export enum SimpleEnum {
   IMPORT_DEFAULT = 0,

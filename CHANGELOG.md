@@ -1,3 +1,180 @@
+# [1.129.0](https://github.com/stephenh/ts-proto/compare/v1.128.0...v1.129.0) (2022-10-16)
+
+
+### Features
+
+* support `useMapType` option ([#686](https://github.com/stephenh/ts-proto/issues/686)) ([f2e80ab](https://github.com/stephenh/ts-proto/commit/f2e80ab3ecc3a438ecbd88b2170b8119ebadfcd3))
+
+# [1.128.0](https://github.com/stephenh/ts-proto/compare/v1.127.0...v1.128.0) (2022-10-13)
+
+
+### Features
+
+* added nestJsTimestampTypeWrapper ([#567](https://github.com/stephenh/ts-proto/issues/567)) ([59d451e](https://github.com/stephenh/ts-proto/commit/59d451e2857856ff54a3afe03ae115a1824df66f))
+
+# [1.127.0](https://github.com/stephenh/ts-proto/compare/v1.126.1...v1.127.0) (2022-10-12)
+
+
+### Features
+
+* **client:** allow overriding the service identifier ([#683](https://github.com/stephenh/ts-proto/issues/683)) ([10c7c99](https://github.com/stephenh/ts-proto/commit/10c7c99b1f43705d640ab1e602a7c1799e31ac08))
+* Import CallContext and CallOptions as type ([#684](https://github.com/stephenh/ts-proto/issues/684)) ([8b388f6](https://github.com/stephenh/ts-proto/commit/8b388f6c9f57dac34ca5836a4313d8247bb0fceb)), closes [#677](https://github.com/stephenh/ts-proto/issues/677)
+
+## [1.126.1](https://github.com/stephenh/ts-proto/compare/v1.126.0...v1.126.1) (2022-09-21)
+
+
+### Bug Fixes
+
+* **options:** initializes M opt to empty object ([#673](https://github.com/stephenh/ts-proto/issues/673)) ([cb76c5e](https://github.com/stephenh/ts-proto/commit/cb76c5ea565081d610be08451e452269c5d3837c))
+
+# [1.126.0](https://github.com/stephenh/ts-proto/compare/v1.125.0...v1.126.0) (2022-09-21)
+
+
+### Features
+
+* **options:** adds protoc-gen-go-like M option ([#672](https://github.com/stephenh/ts-proto/issues/672)) ([9304e5d](https://github.com/stephenh/ts-proto/commit/9304e5db7172db53530fb08fe0486f56b2a17181)), closes [#596](https://github.com/stephenh/ts-proto/issues/596)
+
+# [1.125.0](https://github.com/stephenh/ts-proto/compare/v1.124.0...v1.125.0) (2022-09-03)
+
+
+### Features
+
+* omit optional fields in base instance ([#669](https://github.com/stephenh/ts-proto/issues/669)) ([47b60aa](https://github.com/stephenh/ts-proto/commit/47b60aab95533542cf762f152138f7ab4234de88))
+
+# [1.124.0](https://github.com/stephenh/ts-proto/compare/v1.123.1...v1.124.0) (2022-09-03)
+
+
+### Features
+
+* Bump ts poet for dprint perf increase ([#668](https://github.com/stephenh/ts-proto/issues/668)) ([961d388](https://github.com/stephenh/ts-proto/commit/961d388fa7dc7cb25fbe700526cbd481f3a48ae1))
+
+## [1.123.1](https://github.com/stephenh/ts-proto/compare/v1.123.0...v1.123.1) (2022-08-27)
+
+
+### Bug Fixes
+
+* Bump ts-poet to use @dprint/typescript. ([#662](https://github.com/stephenh/ts-proto/issues/662)) ([84b64f4](https://github.com/stephenh/ts-proto/commit/84b64f4219f96199e8722678354430fbf00cebba))
+
+# [1.123.0](https://github.com/stephenh/ts-proto/compare/v1.122.0...v1.123.0) (2022-08-27)
+
+
+### Features
+
+* Bump ts-poet for dprint, also use tsx ([#660](https://github.com/stephenh/ts-proto/issues/660)) ([348a465](https://github.com/stephenh/ts-proto/commit/348a4651b42d5ff64fd07e36ef9ca7d7e76f4277))
+
+# [1.122.0](https://github.com/stephenh/ts-proto/compare/v1.121.6...v1.122.0) (2022-08-15)
+
+
+### Features
+
+* **Grpc-Web:** Add & export GrpcWebError type ([#593](https://github.com/stephenh/ts-proto/issues/593)) ([645987d](https://github.com/stephenh/ts-proto/commit/645987d023e666290e87086f5a0770c34e2fe978))
+
+## [1.121.6](https://github.com/stephenh/ts-proto/compare/v1.121.5...v1.121.6) (2022-08-14)
+
+
+### Bug Fixes
+
+* Use jsonName even with snakeToCamel=false. ([#653](https://github.com/stephenh/ts-proto/issues/653)) ([1144886](https://github.com/stephenh/ts-proto/commit/1144886ef43eaf97b780c7aafb2c123fd49b3fe5)), closes [#635](https://github.com/stephenh/ts-proto/issues/635)
+
+## [1.121.5](https://github.com/stephenh/ts-proto/compare/v1.121.4...v1.121.5) (2022-08-08)
+
+
+### Bug Fixes
+
+* remove Record word conflict ([#638](https://github.com/stephenh/ts-proto/issues/638)) ([5664d09](https://github.com/stephenh/ts-proto/commit/5664d097ac33da423b0f4e79f962fd71912358a0))
+* resolve import collisions for services ([#651](https://github.com/stephenh/ts-proto/issues/651)) ([ee0296f](https://github.com/stephenh/ts-proto/commit/ee0296ffe087665b54bac714e964e7243010fb22))
+
+## [1.121.4](https://github.com/stephenh/ts-proto/compare/v1.121.3...v1.121.4) (2022-08-07)
+
+
+### Performance Improvements
+
+* Faster base64FromBytes & bytesFromBase64 on Node.JS ([#649](https://github.com/stephenh/ts-proto/issues/649)) ([82ab341](https://github.com/stephenh/ts-proto/commit/82ab341557fba1a4933c4613d5c20dbf897905fa))
+
+## [1.121.3](https://github.com/stephenh/ts-proto/compare/v1.121.2...v1.121.3) (2022-08-06)
+
+
+### Bug Fixes
+
+* Use underscore separator in snakeToCamel. ([#648](https://github.com/stephenh/ts-proto/issues/648)) ([b374910](https://github.com/stephenh/ts-proto/commit/b374910a8fb1d0efe6c5c5322f8788cc3cc1ca6c))
+
+## [1.121.2](https://github.com/stephenh/ts-proto/compare/v1.121.1...v1.121.2) (2022-08-06)
+
+
+### Bug Fixes
+
+* Fix push_to_buf_registry check. ([22ac914](https://github.com/stephenh/ts-proto/commit/22ac914cd8626258ceb35fd435b899a819518988))
+
+## [1.121.1](https://github.com/stephenh/ts-proto/compare/v1.121.0...v1.121.1) (2022-07-28)
+
+
+### Bug Fixes
+
+* Revert "feat: support grpc-web client straming ([#617](https://github.com/stephenh/ts-proto/issues/617))" ([#632](https://github.com/stephenh/ts-proto/issues/632)) ([2f4ecc7](https://github.com/stephenh/ts-proto/commit/2f4ecc7434df6b8f2ff08b929f9032170b04e858))
+
+# [1.121.0](https://github.com/stephenh/ts-proto/compare/v1.120.0...v1.121.0) (2022-07-28)
+
+
+### Features
+
+* Add use-numeric-enum-json option. ([#625](https://github.com/stephenh/ts-proto/issues/625)) ([cd53d8c](https://github.com/stephenh/ts-proto/commit/cd53d8cacd6b4b8fa6517242020b216dd18eebdf))
+
+# [1.120.0](https://github.com/stephenh/ts-proto/compare/v1.119.0...v1.120.0) (2022-07-21)
+
+
+### Features
+
+* add meta-data to stream error ([#620](https://github.com/stephenh/ts-proto/issues/620)) ([b68f301](https://github.com/stephenh/ts-proto/commit/b68f301b5fb4222a3fce676a7e5036cf00e77e11))
+
+# [1.119.0](https://github.com/stephenh/ts-proto/compare/v1.118.0...v1.119.0) (2022-07-21)
+
+
+### Features
+
+* support grpc-web client straming ([#617](https://github.com/stephenh/ts-proto/issues/617)) ([d3e7f1f](https://github.com/stephenh/ts-proto/commit/d3e7f1f4aac12db87c54d6357e557a351c96a2ca))
+
+# [1.118.0](https://github.com/stephenh/ts-proto/compare/v1.117.1...v1.118.0) (2022-07-19)
+
+
+### Features
+
+* add dynamic upStreamCodes option ([#618](https://github.com/stephenh/ts-proto/issues/618)) ([3091023](https://github.com/stephenh/ts-proto/commit/309102313273e09aef3a8480f4b46360ad82adaa))
+
+## [1.117.1](https://github.com/stephenh/ts-proto/compare/v1.117.0...v1.117.1) (2022-07-16)
+
+
+### Bug Fixes
+
+* import protobufjs/minimal with importSuffix ([#616](https://github.com/stephenh/ts-proto/issues/616)) ([b86291c](https://github.com/stephenh/ts-proto/commit/b86291c58b1cb9d4064944a6371e928b564aef7f))
+
+# [1.117.0](https://github.com/stephenh/ts-proto/compare/v1.116.1...v1.117.0) (2022-07-05)
+
+
+### Features
+
+* add importSuffix option and remove default .js suffix ([#612](https://github.com/stephenh/ts-proto/issues/612)) ([63a8895](https://github.com/stephenh/ts-proto/commit/63a8895f5a3a38fa3d5c0868f44e950e137fb697))
+
+## [1.116.1](https://github.com/stephenh/ts-proto/compare/v1.116.0...v1.116.1) (2022-07-02)
+
+
+### Bug Fixes
+
+* add .js suffix to proto cross-reference imports ([#602](https://github.com/stephenh/ts-proto/issues/602)) ([8dc38af](https://github.com/stephenh/ts-proto/commit/8dc38af40e68262cd53469ce3dc4dcac670365da)), closes [#601](https://github.com/stephenh/ts-proto/issues/601) [/github.com/kulshekhar/ts-jest/issues/1057#issuecomment-481406624](https://github.com//github.com/kulshekhar/ts-jest/issues/1057/issues/issuecomment-481406624)
+
+# [1.116.0](https://github.com/stephenh/ts-proto/compare/v1.115.5...v1.116.0) (2022-07-01)
+
+
+### Features
+
+* add option to use async iterables ([#605](https://github.com/stephenh/ts-proto/issues/605)) ([ca8ea8d](https://github.com/stephenh/ts-proto/commit/ca8ea8d761c02d3ca4da6eaa156acff35d88c510)), closes [#600](https://github.com/stephenh/ts-proto/issues/600)
+
+## [1.115.5](https://github.com/stephenh/ts-proto/compare/v1.115.4...v1.115.5) (2022-06-22)
+
+
+### Bug Fixes
+
+* remove Long import statement when Long was unused ([#599](https://github.com/stephenh/ts-proto/issues/599)) ([58dc10c](https://github.com/stephenh/ts-proto/commit/58dc10c61ec5a76d4b54ba9eddf34021979dd4aa))
+
 ## [1.115.4](https://github.com/stephenh/ts-proto/compare/v1.115.3...v1.115.4) (2022-06-05)
 
 

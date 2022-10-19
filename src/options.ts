@@ -1,44 +1,49 @@
+import { parse } from "path";
+import { Code } from "ts-poet";
+import { ToStringOpts } from "ts-poet/build/Code";
+
 export enum LongOption {
-  NUMBER = 'number',
-  LONG = 'long',
-  STRING = 'string',
+  NUMBER = "number",
+  LONG = "long",
+  STRING = "string",
 }
 
 export enum DateOption {
-  DATE = 'date',
-  STRING = 'string',
-  TIMESTAMP = 'timestamp',
+  DATE = "date",
+  STRING = "string",
+  TIMESTAMP = "timestamp",
 }
 
 export enum EnvOption {
-  NODE = 'node',
-  BROWSER = 'browser',
-  BOTH = 'both',
+  NODE = "node",
+  BROWSER = "browser",
+  BOTH = "both",
 }
 
 export enum OneofOption {
-  PROPERTIES = 'properties',
-  UNIONS = 'unions',
+  PROPERTIES = "properties",
+  UNIONS = "unions",
 }
 
 export enum ServiceOption {
-  GRPC = 'grpc-js',
-  NICE_GRPC = 'nice-grpc',
-  GENERIC = 'generic-definitions',
-  DEFAULT = 'default',
-  NONE = 'none',
+  GRPC = "grpc-js",
+  NICE_GRPC = "nice-grpc",
+  GENERIC = "generic-definitions",
+  DEFAULT = "default",
+  NONE = "none",
 }
 
 export type Options = {
   context: boolean;
-  snakeToCamel: Array<'json' | 'keys'>;
+  snakeToCamel: Array<"json" | "keys">;
   forceLong: LongOption;
-  useOptionals: boolean | 'none' | 'messages' | 'all'; // boolean is deprecated
+  useOptionals: boolean | "none" | "messages" | "all"; // boolean is deprecated
   useDate: DateOption;
   useMongoObjectId: boolean;
   oneof: OneofOption;
   esModuleInterop: boolean;
   fileSuffix: string;
+  importSuffix: string;
   outputEncodeMethods: boolean;
   outputJsonMethods: boolean;
   outputPartialMethods: boolean;
@@ -46,7 +51,7 @@ export type Options = {
   stringEnums: boolean;
   constEnums: boolean;
   enumsAsLiterals: boolean;
-  outputClientImpl: boolean | 'grpc-web';
+  outputClientImpl: boolean | "grpc-web";
   outputServices: ServiceOption[];
   addGrpcMetadata: boolean;
   metadataType: string | undefined;
@@ -61,22 +66,28 @@ export type Options = {
   onlyTypes: boolean;
   emitImportedFiles: boolean;
   useExactTypes: boolean;
+  useAsyncIterable: boolean;
   unknownFields: boolean;
   usePrototypeForDefaults: boolean;
   useJsonWireFormat: boolean;
+  useNumericEnumForJson: boolean;
+  initializeFieldsAsUndefined: boolean;
+  useMapType: boolean;
+  M: { [from: string]: string };
 };
 
 export function defaultOptions(): Options {
   return {
     context: false,
-    snakeToCamel: ['json', 'keys'],
+    snakeToCamel: ["json", "keys"],
     forceLong: LongOption.NUMBER,
-    useOptionals: 'none',
+    useOptionals: "none",
     useDate: DateOption.DATE,
     useMongoObjectId: false,
     oneof: OneofOption.PROPERTIES,
     esModuleInterop: false,
-    fileSuffix: '',
+    fileSuffix: "",
+    importSuffix: "",
     lowerCaseServiceMethods: false,
     outputEncodeMethods: true,
     outputJsonMethods: true,
@@ -99,9 +110,14 @@ export function defaultOptions(): Options {
     onlyTypes: false,
     emitImportedFiles: true,
     useExactTypes: true,
+    useAsyncIterable: false,
     unknownFields: false,
     usePrototypeForDefaults: false,
     useJsonWireFormat: false,
+    useNumericEnumForJson: false,
+    initializeFieldsAsUndefined: true,
+    useMapType: false,
+    M: {},
   };
 }
 
@@ -123,6 +139,7 @@ export function optionsFromParameter(parameter: string | undefined): Options {
     }
     Object.assign(options, parsed);
   }
+
   // onlyTypes=true implies outputJsonMethods=false,outputEncodeMethods=false,outputClientImpl=false,nestJs=false
   if (options.onlyTypes) {
     options.outputJsonMethods = false;
@@ -149,7 +166,7 @@ export function optionsFromParameter(parameter: string | undefined): Options {
   }
 
   // Existing type-coercion inside parseParameter leaves a little to be desired.
-  if (typeof options.outputServices == 'string') {
+  if (typeof options.outputServices == "string") {
     options.outputServices = [options.outputServices];
   }
 
@@ -168,9 +185,9 @@ export function optionsFromParameter(parameter: string | undefined): Options {
   if ((options.snakeToCamel as any) === false) {
     options.snakeToCamel = [];
   } else if ((options.snakeToCamel as any) === true) {
-    options.snakeToCamel = ['keys', 'json'];
-  } else if (typeof options.snakeToCamel === 'string') {
-    options.snakeToCamel = [options.snakeToCamel];
+    options.snakeToCamel = ["keys", "json"];
+  } else if (typeof options.snakeToCamel === "string") {
+    options.snakeToCamel = (options.snakeToCamel as string).split("_") as any;
   }
 
   if (options.useJsonWireFormat) {
@@ -184,16 +201,35 @@ export function optionsFromParameter(parameter: string | undefined): Options {
     }
   }
 
+  if (options.nestJs) {
+    options.initializeFieldsAsUndefined = false;
+  }
+
   return options;
 }
 
 // A very naive parse function, eventually could/should use iots/runtypes
 function parseParameter(parameter: string): Options {
-  const options = {} as any;
-  const pairs = parameter.split(',').map((s) => s.split('='));
-  pairs.forEach(([key, _value]) => {
-    const value = _value === 'true' ? true : _value === 'false' ? false : _value;
-    if (options[key]) {
+  const options = { M: {} } as any;
+  parameter.split(",").forEach((param) => {
+    // same as protoc-gen-go https://github.com/protocolbuffers/protobuf-go/blob/bf9455640daabb98c93b5b5e71628f3f813d57bb/compiler/protogen/protogen.go#L168-L171
+    const optionSeparatorPos = param.indexOf("=");
+    const key = param.substring(0, optionSeparatorPos);
+    const value = parseParamValue(param.substring(optionSeparatorPos + 1));
+    if (key.charAt(0) === "M") {
+      if (typeof value !== "string") {
+        console.warn(`ignoring invalid M option: '${param}'`);
+      } else {
+        const mKey = key.substring(1);
+        if (options.M[mKey]) {
+          console.warn(`received conflicting M options: '${param}' will override 'M${mKey}=${options.M[mKey]}'`);
+        }
+        if (param.endsWith(".ts")) {
+          console.warn(`received M option '${param}' ending in '.ts' this is usually a mistake`);
+        }
+        options.M[mKey] = value;
+      }
+    } else if (options[key]) {
       options[key] = [options[key], value];
     } else {
       options[key] = value;
@@ -202,6 +238,15 @@ function parseParameter(parameter: string): Options {
   return options;
 }
 
-export function getTsPoetOpts(options: Options): { forceModuleImport?: string[] } {
-  return { forceModuleImport: ['protobufjs/minimal'] };
+function parseParamValue(value: string): string | boolean {
+  return value === "true" ? true : value === "false" ? false : value;
+}
+
+export function getTsPoetOpts(_options: Options): ToStringOpts {
+  const imports = ["protobufjs/minimal" + _options.importSuffix];
+  return {
+    prefix: `/* eslint-disable */`,
+    dprintOptions: { preferSingleLine: true, lineWidth: 120 },
+    ...(_options.esModuleInterop ? { forceDefaultImport: imports } : { forceModuleImport: imports }),
+  };
 }

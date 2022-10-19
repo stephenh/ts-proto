@@ -1,13 +1,13 @@
-import { Code, code, def, imp, joinCode } from 'ts-poet';
-import { FileDescriptorProto, ServiceDescriptorProto } from 'ts-proto-descriptors';
-import { camelCase } from './case';
-import { Context } from './context';
-import SourceInfo, { Fields } from './sourceInfo';
-import { messageToTypeName } from './types';
-import { assertInstanceOf, FormattedMethodDescriptor, maybeAddComment } from './utils';
+import { Code, code, def, imp, joinCode } from "ts-poet";
+import { FileDescriptorProto, ServiceDescriptorProto } from "ts-proto-descriptors";
+import { camelCase } from "./case";
+import { Context } from "./context";
+import SourceInfo, { Fields } from "./sourceInfo";
+import { messageToTypeName } from "./types";
+import { assertInstanceOf, FormattedMethodDescriptor, maybeAddComment } from "./utils";
 
-const CallOptions = imp('CallOptions@nice-grpc-common');
-const CallContext = imp('CallContext@nice-grpc-common');
+const CallOptions = imp("t:CallOptions@nice-grpc-common");
+const CallContext = imp("t:CallContext@nice-grpc-common");
 
 /**
  * Generates server / client stubs for `nice-grpc` library.
@@ -23,7 +23,7 @@ export function generateNiceGrpcService(
   chunks.push(generateServerStub(ctx, sourceInfo, serviceDesc));
   chunks.push(generateClientStub(ctx, sourceInfo, serviceDesc));
 
-  return joinCode(chunks, { on: '\n\n' });
+  return joinCode(chunks, { on: "\n\n" });
 }
 
 function generateServerStub(ctx: Context, sourceInfo: SourceInfo, serviceDesc: ServiceDescriptorProto) {
@@ -86,7 +86,7 @@ function generateServerStub(ctx: Context, sourceInfo: SourceInfo, serviceDesc: S
 
   chunks.push(code`}`);
 
-  return joinCode(chunks, { on: '\n' });
+  return joinCode(chunks, { on: "\n" });
 }
 
 function generateClientStub(ctx: Context, sourceInfo: SourceInfo, serviceDesc: ServiceDescriptorProto) {
@@ -149,5 +149,5 @@ function generateClientStub(ctx: Context, sourceInfo: SourceInfo, serviceDesc: S
 
   chunks.push(code`}`);
 
-  return joinCode(chunks, { on: '\n' });
+  return joinCode(chunks, { on: "\n" });
 }

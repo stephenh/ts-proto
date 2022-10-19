@@ -1,0 +1,1 @@
+Mgoogle/protobuf/duration.proto=@google/protobuf/duration,Mgoogle/protobuf/empty.proto=@google/protobuf/empty,Mgoogle/protobuf/struct.proto=wkt/google/protobuf/struct,Mfoo/bar/baz.proto=@unused/bar,Msome/internal/repo/very_private.proto=@myorg/proto-npm-package
