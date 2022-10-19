@@ -480,8 +480,8 @@ export function valueTypeName(ctx: Context, typeName: string): Code | undefined 
       return ctx.options.env === EnvOption.NODE
         ? code`Buffer`
         : ctx.options.useJsonWireFormat
-        ? code`string`
-        : code`Uint8Array`;
+          ? code`string`
+          : code`Uint8Array`;
     case ".google.protobuf.ListValue":
       return code`Array<any>`;
     case ".google.protobuf.Value":
@@ -636,12 +636,12 @@ export function detectMapType(
   fieldDesc: FieldDescriptorProto
 ):
   | {
-      messageDesc: DescriptorProto;
-      keyField: FieldDescriptorProto;
-      keyType: Code;
-      valueField: FieldDescriptorProto;
-      valueType: Code;
-    }
+    messageDesc: DescriptorProto;
+    keyField: FieldDescriptorProto;
+    keyType: Code;
+    valueField: FieldDescriptorProto;
+    valueType: Code;
+  }
   | undefined {
   const { typeMap } = ctx;
   if (
@@ -692,7 +692,7 @@ export function responseType(
   methodDesc: MethodDescriptorProto,
   typeOptions: { keepValueType?: boolean; repeated?: boolean } = {}
 ): Code {
-  return messageToTypeName(ctx, methodDesc.outputType, typeOptions);
+  return messageToTypeName(ctx, methodDesc.outputType, { keepValueType: true });
 }
 
 export function responsePromise(ctx: Context, methodDesc: MethodDescriptorProto): Code {

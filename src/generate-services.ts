@@ -117,7 +117,7 @@ function generateRegularRpcMethod(
   const outputType = responseType(ctx, methodDesc);
   const rawOutputType = responseType(ctx, methodDesc, { keepValueType: true });
 
-  const params = [...(options.context ? [code`ctx: Context`] : []), code`request: ${rawInputType}`];
+  const params = [...(options.context ? [code`ctx: Context`] : []), code`request: ${inputType}`];
   const maybeCtx = options.context ? "ctx," : "";
 
   let encode = code`${rawInputType}.encode(request).finish()`;
@@ -291,9 +291,8 @@ function generateCachingRpcMethod(
     (requests) => {
       const responses = requests.map(async request => {
         const data = ${inputType}.encode(request).finish()
-        const response = await this.rpc.request(ctx, "${maybePrefixPackage(fileDesc, serviceDesc.name)}", "${
-    methodDesc.name
-  }", data);
+        const response = await this.rpc.request(ctx, "${maybePrefixPackage(fileDesc, serviceDesc.name)}", "${methodDesc.name
+    }", data);
         return ${outputType}.decode(new ${Reader}(response));
       });
       return Promise.all(responses);
