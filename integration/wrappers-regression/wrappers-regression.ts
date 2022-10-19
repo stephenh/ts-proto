@@ -1,5 +1,7 @@
 /* eslint-disable */
 import * as _m0 from "protobufjs/minimal";
+import { Observable } from "rxjs";
+import { map } from "rxjs/operators";
 import { Empty } from "./google/protobuf/empty";
 import { Timestamp } from "./google/protobuf/timestamp";
 import { BoolValue, StringValue } from "./google/protobuf/wrappers";
@@ -9,6 +11,7 @@ export const protobufPackage = "";
 export interface Clock {
   Now(request: Empty): Promise<Timestamp>;
   NowString(request: StringValue): Promise<StringValue>;
+  NowStringStream(request: Observable<StringValue>): Observable<StringValue>;
   NowBool(request: Empty): Promise<BoolValue>;
 }
 
@@ -20,6 +23,7 @@ export class ClockClientImpl implements Clock {
     this.rpc = rpc;
     this.Now = this.Now.bind(this);
     this.NowString = this.NowString.bind(this);
+    this.NowStringStream = this.NowStringStream.bind(this);
     this.NowBool = this.NowBool.bind(this);
   }
   Now(request: Empty): Promise<Timestamp> {
@@ -32,6 +36,12 @@ export class ClockClientImpl implements Clock {
     const data = StringValue.encode(request).finish();
     const promise = this.rpc.request(this.service, "NowString", data);
     return promise.then((data) => StringValue.decode(new _m0.Reader(data)));
+  }
+
+  NowStringStream(request: Observable<StringValue>): Observable<StringValue> {
+    const data = request.pipe(map((request) => StringValue.encode(request).finish()));
+    const result = this.rpc.bidirectionalStreamingRequest(this.service, "NowStringStream", data);
+    return result.pipe(map((data) => StringValue.decode(new _m0.Reader(data))));
   }
 
   NowBool(request: Empty): Promise<BoolValue> {
@@ -62,6 +72,14 @@ export const ClockDefinition = {
       responseStream: false,
       options: {},
     },
+    nowStringStream: {
+      name: "NowStringStream",
+      requestType: StringValue,
+      requestStream: true,
+      responseType: StringValue,
+      responseStream: true,
+      options: {},
+    },
     nowBool: {
       name: "NowBool",
       requestType: Empty,
@@ -75,4 +93,7 @@ export const ClockDefinition = {
 
 interface Rpc {
   request(service: string, method: string, data: Uint8Array): Promise<Uint8Array>;
+  clientStreamingRequest(service: string, method: string, data: Observable<Uint8Array>): Promise<Uint8Array>;
+  serverStreamingRequest(service: string, method: string, data: Uint8Array): Observable<Uint8Array>;
+  bidirectionalStreamingRequest(service: string, method: string, data: Observable<Uint8Array>): Observable<Uint8Array>;
 }

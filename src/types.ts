@@ -692,7 +692,7 @@ export function responseType(
   methodDesc: MethodDescriptorProto,
   typeOptions: { keepValueType?: boolean; repeated?: boolean } = {}
 ): Code {
-  return messageToTypeName(ctx, methodDesc.outputType, typeOptions);
+  return messageToTypeName(ctx, methodDesc.outputType, { keepValueType: true });
 }
 
 export function responsePromise(ctx: Context, methodDesc: MethodDescriptorProto): Code {
