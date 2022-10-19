@@ -168,7 +168,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
 
         const staticMembers: Code[] = [];
 
-        if (options.outputTypeRegistry) {
+        if (options.outputTypeRegistry === true) {
           staticMembers.push(code`$type: '${fullTypeName}' as const`);
         }
 
@@ -209,7 +209,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
           const messageTypeRegistry = impFile(options, "messageTypeRegistry@./typeRegistry");
 
           chunks.push(code`
-            ${messageTypeRegistry}.set(${fullName}.$type, ${fullName});
+            ${messageTypeRegistry}.set("${fullTypeName}", ${fullName});
           `);
         }
       },
@@ -518,7 +518,7 @@ function makeDeepPartial(options: Options, longs: ReturnType<typeof makeLongUtil
   );
 
   // Based on the type from ts-essentials
-  const keys = options.outputTypeRegistry ? code`Exclude<keyof T, '$type'>` : code`keyof T`;
+  const keys = options.outputTypeRegistry === true ? code`Exclude<keyof T, '$type'>` : code`keyof T`;
   const DeepPartial = conditionalOutput(
     "DeepPartial",
     code`
@@ -594,7 +594,7 @@ function makeTimestampMethods(options: Options, longs: ReturnType<typeof makeLon
     seconds = "Math.trunc(date.getTime() / 1_000).toString()";
   }
 
-  const maybeTypeField = options.outputTypeRegistry ? `$type: 'google.protobuf.Timestamp',` : "";
+  const maybeTypeField = options.outputTypeRegistry === true ? `$type: 'google.protobuf.Timestamp',` : "";
 
   const toTimestamp = conditionalOutput(
     "toTimestamp",
@@ -728,7 +728,7 @@ function generateInterfaceDeclaration(
   // interface name should be defined to avoid import collisions
   chunks.push(code`export interface ${def(fullName)} {`);
 
-  if (ctx.options.outputTypeRegistry) {
+  if (ctx.options.outputTypeRegistry === true) {
     chunks.push(code`$type: '${fullTypeName}',`);
   }
 
@@ -833,17 +833,17 @@ function generateBaseInstanceFactory(
     const val = isWithinOneOf(field)
       ? "undefined"
       : isMapType(ctx, messageDesc, field)
-      ? ctx.options.useMapType
-        ? "new Map()"
-        : "{}"
-      : isRepeated(field)
-      ? "[]"
-      : defaultValue(ctx, field);
+        ? ctx.options.useMapType
+          ? "new Map()"
+          : "{}"
+        : isRepeated(field)
+          ? "[]"
+          : defaultValue(ctx, field);
 
     fields.push(code`${name}: ${val}`);
   }
 
-  if (ctx.options.outputTypeRegistry) {
+  if (ctx.options.outputTypeRegistry === true) {
     fields.unshift(code`$type: '${fullTypeName}'`);
   }
 
@@ -1044,7 +1044,7 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
       writeSnippet = (place) =>
         code`${type}.encode(${utils.toTimestamp}(${place}), writer.uint32(${tag}).fork()).ldelim()`;
     } else if (isValueType(ctx, field)) {
-      const maybeTypeField = options.outputTypeRegistry ? `$type: '${field.typeName.slice(1)}',` : "";
+      const maybeTypeField = options.outputTypeRegistry === true ? `$type: '${field.typeName.slice(1)}',` : "";
 
       const type = basicTypeName(ctx, field, { keepValueType: true });
       const wrappedValue = (place: string): Code => {
@@ -1068,7 +1068,7 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
     if (isRepeated(field)) {
       if (isMapType(ctx, messageDesc, field)) {
         const valueType = (typeMap.get(field.typeName)![2] as DescriptorProto).field[1];
-        const maybeTypeField = options.outputTypeRegistry ? `$type: '${field.typeName.slice(1)}',` : "";
+        const maybeTypeField = options.outputTypeRegistry === true ? `$type: '${field.typeName.slice(1)}',` : "";
         const entryWriteSnippet = isValueType(ctx, valueType)
           ? code`
               if (value !== undefined) {
@@ -1218,7 +1218,7 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
       return {
   `);
 
-  if (ctx.options.outputTypeRegistry) {
+  if (ctx.options.outputTypeRegistry === true) {
     chunks.push(code`$type: ${fullName}.$type,`);
   }
 
