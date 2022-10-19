@@ -752,7 +752,11 @@ function generateInterfaceDeclaration(
     const type = toTypeName(ctx, messageDesc, fieldDesc);
     const q = isOptionalProperty(fieldDesc, messageDesc.options, options) ? "?" : "";
     console.log("HEEEELOOO!!!", name, q, type);
-    chunks.push(code`readonly ${name}${q}: ${type}, `);
+    if (ctx.options.useReadOnlyTypes) {
+      chunks.push(code`readonly ${name}${q}: ${type}, `);
+    } else {
+      chunks.push(code`${name}${q}: ${type}, `);
+    }
   });
 
   chunks.push(code`}`);

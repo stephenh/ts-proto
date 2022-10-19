@@ -73,6 +73,7 @@ export type Options = {
   useNumericEnumForJson: boolean;
   initializeFieldsAsUndefined: boolean;
   useMapType: boolean;
+  useReadOnlyTypes: boolean;
   M: { [from: string]: string };
 };
 
@@ -117,6 +118,7 @@ export function defaultOptions(): Options {
     useNumericEnumForJson: false,
     initializeFieldsAsUndefined: true,
     useMapType: false,
+    useReadOnlyTypes: false,
     M: {},
   };
 }
