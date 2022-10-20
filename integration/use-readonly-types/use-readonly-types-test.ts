@@ -9,6 +9,9 @@ describe("use-readonly-types", () => {
       stringArray: ["hello", "world"],
       subEntity: { subVal: 42 },
       subEntityArray: [{ subVal: 42 }, { subVal: 43 }],
+      fieldMask: ["the", "mask"],
+      listValue: ["the", "list"],
+      structValue: { the: "struct" },
     };
     const jsonFromObject = Entity.toJSON(m);
     const entityFromJSON = Entity.fromJSON(jsonFromObject);
@@ -22,6 +25,9 @@ describe("use-readonly-types", () => {
       stringArray: m.stringArray,
       subEntity: m.subEntity,
       subEntityArray: m.subEntityArray,
+      fieldMask: m.fieldMask,
+      listValue: m.listValue,
+      structValue: m.structValue,
     });
     const jsonFromDecoded = Entity.toJSON(decoded);
     expect(jsonFromDecoded).toEqual(jsonFromObject);
@@ -32,6 +38,9 @@ describe("use-readonly-types", () => {
       stringArray: m.stringArray,
       subEntity: m.subEntity,
       subEntityArray: m.subEntityArray,
+      fieldMask: m.fieldMask,
+      listValue: m.listValue,
+      structValue: m.structValue,
     });
     expect(partial).toEqual({
       intVal: m.intVal,
@@ -40,6 +49,7 @@ describe("use-readonly-types", () => {
       stringArray: m.stringArray,
       subEntity: m.subEntity,
       subEntityArray: m.subEntityArray,
+      fieldMask: m.fieldMask,
     });
   });
 });

@@ -1,5 +1,7 @@
 /* eslint-disable */
 import * as _m0 from "protobufjs/minimal";
+import { FieldMask } from "./google/protobuf/field_mask";
+import { ListValue, Struct } from "./google/protobuf/struct";
 
 export const protobufPackage = "";
 
@@ -10,6 +12,10 @@ export interface Entity {
   readonly stringArray: readonly string[];
   readonly subEntity: SubEntity | undefined;
   readonly subEntityArray: readonly SubEntity[];
+  readonly optionalIntVal?: number | undefined;
+  readonly fieldMask: readonly string[] | undefined;
+  readonly listValue: ReadonlyArray<any> | undefined;
+  readonly structValue: { [key: string]: any } | undefined;
 }
 
 export interface SubEntity {
@@ -17,7 +23,18 @@ export interface SubEntity {
 }
 
 function createBaseEntity(): Entity {
-  return { intVal: 0, stringVal: "", intArray: [], stringArray: [], subEntity: undefined, subEntityArray: [] };
+  return {
+    intVal: 0,
+    stringVal: "",
+    intArray: [],
+    stringArray: [],
+    subEntity: undefined,
+    subEntityArray: [],
+    optionalIntVal: undefined,
+    fieldMask: undefined,
+    listValue: undefined,
+    structValue: undefined,
+  };
 }
 
 export const Entity = {
@@ -41,6 +58,18 @@ export const Entity = {
     }
     for (const v of message.subEntityArray) {
       SubEntity.encode(v!, writer.uint32(50).fork()).ldelim();
+    }
+    if (message.optionalIntVal !== undefined) {
+      writer.uint32(56).int32(message.optionalIntVal);
+    }
+    if (message.fieldMask !== undefined) {
+      FieldMask.encode(FieldMask.wrap(message.fieldMask), writer.uint32(66).fork()).ldelim();
+    }
+    if (message.listValue !== undefined) {
+      ListValue.encode(ListValue.wrap(message.listValue), writer.uint32(74).fork()).ldelim();
+    }
+    if (message.structValue !== undefined) {
+      Struct.encode(Struct.wrap(message.structValue), writer.uint32(82).fork()).ldelim();
     }
     return writer;
   },
@@ -77,6 +106,18 @@ export const Entity = {
         case 6:
           message.subEntityArray.push(SubEntity.decode(reader, reader.uint32()));
           break;
+        case 7:
+          message.optionalIntVal = reader.int32();
+          break;
+        case 8:
+          message.fieldMask = FieldMask.unwrap(FieldMask.decode(reader, reader.uint32()));
+          break;
+        case 9:
+          message.listValue = ListValue.unwrap(ListValue.decode(reader, reader.uint32()));
+          break;
+        case 10:
+          message.structValue = Struct.unwrap(Struct.decode(reader, reader.uint32()));
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -95,6 +136,10 @@ export const Entity = {
       subEntityArray: Array.isArray(object?.subEntityArray)
         ? object.subEntityArray.map((e: any) => SubEntity.fromJSON(e))
         : [],
+      optionalIntVal: isSet(object.optionalIntVal) ? Number(object.optionalIntVal) : undefined,
+      fieldMask: isSet(object.fieldMask) ? FieldMask.unwrap(FieldMask.fromJSON(object.fieldMask)) : undefined,
+      listValue: Array.isArray(object.listValue) ? [...object.listValue] : undefined,
+      structValue: isObject(object.structValue) ? object.structValue : undefined,
     };
   },
 
@@ -119,6 +164,10 @@ export const Entity = {
     } else {
       obj.subEntityArray = [];
     }
+    message.optionalIntVal !== undefined && (obj.optionalIntVal = Math.round(message.optionalIntVal));
+    message.fieldMask !== undefined && (obj.fieldMask = FieldMask.toJSON(FieldMask.wrap(message.fieldMask)));
+    message.listValue !== undefined && (obj.listValue = message.listValue);
+    message.structValue !== undefined && (obj.structValue = message.structValue);
     return obj;
   },
 
@@ -132,6 +181,10 @@ export const Entity = {
       ? SubEntity.fromPartial(object.subEntity)
       : undefined;
     message.subEntityArray = object.subEntityArray?.map((e) => SubEntity.fromPartial(e)) || [];
+    message.optionalIntVal = object.optionalIntVal ?? undefined;
+    message.fieldMask = object.fieldMask ?? undefined;
+    message.listValue = object.listValue ?? undefined;
+    message.structValue = object.structValue ?? undefined;
     return message;
   },
 };
@@ -193,6 +246,10 @@ export type DeepPartial<T> = T extends Builtin ? T
 type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
+
+function isObject(value: any): boolean {
+  return typeof value === "object" && value !== null;
+}
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
