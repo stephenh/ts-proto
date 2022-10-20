@@ -487,7 +487,7 @@ export function valueTypeName(ctx: Context, typeName: string): Code | undefined 
     case ".google.protobuf.Value":
       return code`any`;
     case ".google.protobuf.Struct":
-      return code`{[key: string]: any}`;
+      return ctx.options.useReadonlyTypes ? code`{readonly [key: string]: any}` : code`{[key: string]: any}`;
     case ".google.protobuf.FieldMask":
       return ctx.options.useJsonWireFormat
         ? code`string`

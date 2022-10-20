@@ -15,7 +15,7 @@ export interface Entity {
   readonly optionalIntVal?: number | undefined;
   readonly fieldMask: readonly string[] | undefined;
   readonly listValue: ReadonlyArray<any> | undefined;
-  readonly structValue: { [key: string]: any } | undefined;
+  readonly structValue: { readonly [key: string]: any } | undefined;
 }
 
 export interface SubEntity {

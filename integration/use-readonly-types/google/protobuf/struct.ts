@@ -84,7 +84,7 @@ export interface Value {
     | undefined;
   /** Represents a structured value. */
   readonly structValue:
-    | { [key: string]: any }
+    | { readonly [key: string]: any }
     | undefined;
   /** Represents a repeated `Value`. */
   readonly listValue: ReadonlyArray<any> | undefined;
