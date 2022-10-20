@@ -1,5 +1,14 @@
 syntax = "proto3";
 
 message Entity {
-  int32 id = 1;
+  int32 intVal = 1;
+  string stringVal = 2;
+  repeated int32 intArray = 3;
+  repeated string stringArray = 4;
+  SubEntity subEntity = 5;
+  repeated SubEntity subEntityArray = 6;
+}
+
+message SubEntity {
+  int32 subVal = 1;
 }
