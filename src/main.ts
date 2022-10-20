@@ -751,7 +751,6 @@ function generateInterfaceDeclaration(
     const name = maybeSnakeToCamel(fieldDesc.name, options);
     const type = toTypeName(ctx, messageDesc, fieldDesc);
     const q = isOptionalProperty(fieldDesc, messageDesc.options, options) ? "?" : "";
-    console.log("HEEEELOOO!!!", name, q, type);
     if (ctx.options.useReadOnlyTypes) {
       chunks.push(code`readonly ${name}${q}: ${type}, `);
     } else {
@@ -879,8 +878,13 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
     ): ${fullName} {
       const reader = input instanceof ${Reader} ? input : new ${Reader}(input);
       let end = length === undefined ? reader.len : reader.pos + length;
-      const message = ${createBase};
   `);
+
+  if (options.useReadOnlyTypes) {
+    chunks.push(code`const message = ${createBase} as any;`);
+  } else {
+    chunks.push(code`const message = ${createBase};`);
+  }
 
   if (options.unknownFields) {
     chunks.push(code`(message as any)._unknownFields = {}`);
@@ -1597,7 +1601,11 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
     createBase = code`Object.create(${createBase}) as ${fullName}`;
   }
 
-  chunks.push(code`const message = ${createBase};`);
+  if (options.useReadOnlyTypes) {
+    chunks.push(code`const message = ${createBase} as any;`);
+  } else {
+    chunks.push(code`const message = ${createBase};`);
+  }
 
   // add a check for each incoming field
   messageDesc.field.forEach((field) => {

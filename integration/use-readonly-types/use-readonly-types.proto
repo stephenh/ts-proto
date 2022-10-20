@@ -1,0 +1,5 @@
+syntax = "proto3";
+
+message Entity {
+  int32 id = 1;
+}
