@@ -751,11 +751,7 @@ function generateInterfaceDeclaration(
     const name = maybeSnakeToCamel(fieldDesc.name, options);
     const type = toTypeName(ctx, messageDesc, fieldDesc);
     const q = isOptionalProperty(fieldDesc, messageDesc.options, options) ? "?" : "";
-    if (ctx.options.useReadonlyTypes) {
-      chunks.push(code`readonly ${name}${q}: ${type}, `);
-    } else {
-      chunks.push(code`${name}${q}: ${type}, `);
-    }
+    chunks.push(code`${ctx.options.useReadonlyTypes ? "readonly " : ""}${name}${q}: ${type}, `);
   });
 
   chunks.push(code`}`);
