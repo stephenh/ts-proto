@@ -1809,8 +1809,8 @@ function generateWrap(ctx: Context, fullProtoTypeName: string, fieldNames: Struc
   }
 
   if (isFieldMaskTypeName(fullProtoTypeName)) {
-    chunks.push(code`wrap(paths: string[]): FieldMask {
-      const result = createBaseFieldMask();
+    chunks.push(code`wrap(paths: ${ctx.options.useReadonlyTypes ? "readonly " : ""} string[]): FieldMask {
+      const result = createBaseFieldMask()${ctx.options.useReadonlyTypes ? " as any" : ""};
 
       result.paths = paths;
 
@@ -1879,9 +1879,15 @@ function generateUnwrap(ctx: Context, fullProtoTypeName: string, fieldNames: Str
   }
 
   if (isFieldMaskTypeName(fullProtoTypeName)) {
-    chunks.push(code`unwrap(message: FieldMask): string[] {
+    if (ctx.options.useReadonlyTypes) {
+      chunks.push(code`unwrap(message: any): string[] {
       return message.paths;
     }`);
+    } else {
+      chunks.push(code`unwrap(message: FieldMask): string[] {
+      return message.paths;
+    }`);
+    }
   }
 
   return chunks;
