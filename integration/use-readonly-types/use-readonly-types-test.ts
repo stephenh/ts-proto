@@ -50,6 +50,8 @@ describe("use-readonly-types", () => {
       subEntity: m.subEntity,
       subEntityArray: m.subEntityArray,
       fieldMask: m.fieldMask,
+      listValue: m.listValue,
+      structValue: m.structValue,
     });
   });
 });
