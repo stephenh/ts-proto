@@ -876,11 +876,7 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
       let end = length === undefined ? reader.len : reader.pos + length;
   `);
 
-  if (options.useReadonlyTypes) {
-    chunks.push(code`const message = ${createBase} as any;`);
-  } else {
-    chunks.push(code`const message = ${createBase};`);
-  }
+  chunks.push(code`const message = ${createBase}${options.useReadonlyTypes ? " as any" : ""};`);
 
   if (options.unknownFields) {
     chunks.push(code`(message as any)._unknownFields = {}`);
@@ -1597,11 +1593,7 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
     createBase = code`Object.create(${createBase}) as ${fullName}`;
   }
 
-  if (options.useReadonlyTypes) {
-    chunks.push(code`const message = ${createBase} as any;`);
-  } else {
-    chunks.push(code`const message = ${createBase};`);
-  }
+  chunks.push(code`const message = ${createBase}${options.useReadonlyTypes ? " as any" : ""};`);
 
   // add a check for each incoming field
   messageDesc.field.forEach((field) => {
