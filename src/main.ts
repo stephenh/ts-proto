@@ -751,7 +751,7 @@ function generateInterfaceDeclaration(
     const name = maybeSnakeToCamel(fieldDesc.name, options);
     const type = toTypeName(ctx, messageDesc, fieldDesc);
     const q = isOptionalProperty(fieldDesc, messageDesc.options, options) ? "?" : "";
-    if (ctx.options.useReadOnlyTypes) {
+    if (ctx.options.useReadonlyTypes) {
       chunks.push(code`readonly ${name}${q}: ${type}, `);
     } else {
       chunks.push(code`${name}${q}: ${type}, `);
@@ -880,7 +880,7 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
       let end = length === undefined ? reader.len : reader.pos + length;
   `);
 
-  if (options.useReadOnlyTypes) {
+  if (options.useReadonlyTypes) {
     chunks.push(code`const message = ${createBase} as any;`);
   } else {
     chunks.push(code`const message = ${createBase};`);
@@ -1601,7 +1601,7 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
     createBase = code`Object.create(${createBase}) as ${fullName}`;
   }
 
-  if (options.useReadOnlyTypes) {
+  if (options.useReadonlyTypes) {
     chunks.push(code`const message = ${createBase} as any;`);
   } else {
     chunks.push(code`const message = ${createBase};`);

@@ -6,10 +6,10 @@ export const protobufPackage = "";
 export interface Entity {
   readonly intVal: number;
   readonly stringVal: string;
-  readonly intArray: number[];
-  readonly stringArray: string[];
+  readonly intArray: readonly number[];
+  readonly stringArray: readonly string[];
   readonly subEntity: SubEntity | undefined;
-  readonly subEntityArray: SubEntity[];
+  readonly subEntityArray: readonly SubEntity[];
 }
 
 export interface SubEntity {
