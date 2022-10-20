@@ -49,7 +49,7 @@ describe("options", () => {
         "useNumericEnumForJson": false,
         "useOptionals": "none",
         "usePrototypeForDefaults": false,
-        "useReadOnlyTypes": false,
+        "useReadonlyTypes": false,
       }
     `);
   });
