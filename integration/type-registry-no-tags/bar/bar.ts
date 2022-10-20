@@ -14,6 +14,8 @@ function createBaseBar(): Bar {
 }
 
 export const Bar = {
+  $type: "foo.bar.Bar" as const,
+
   encode(message: Bar, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.foo !== undefined) {
       Foo.encode(message.foo, writer.uint32(10).fork()).ldelim();

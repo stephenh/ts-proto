@@ -168,7 +168,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
 
         const staticMembers: Code[] = [];
 
-        if (options.outputTypeRegistry === true) {
+        if (options.outputTypeRegistry) {
           staticMembers.push(code`$type: '${fullTypeName}' as const`);
         }
 
@@ -833,12 +833,12 @@ function generateBaseInstanceFactory(
     const val = isWithinOneOf(field)
       ? "undefined"
       : isMapType(ctx, messageDesc, field)
-      ? ctx.options.useMapType
-        ? "new Map()"
-        : "{}"
-      : isRepeated(field)
-      ? "[]"
-      : defaultValue(ctx, field);
+        ? ctx.options.useMapType
+          ? "new Map()"
+          : "{}"
+        : isRepeated(field)
+          ? "[]"
+          : defaultValue(ctx, field);
 
     fields.push(code`${name}: ${val}`);
   }

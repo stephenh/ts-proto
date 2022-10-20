@@ -2,6 +2,7 @@
 import * as _m0 from "protobufjs/minimal";
 
 export interface MessageType<Message extends UnknownMessage = UnknownMessage> {
+  $type: string;
   encode(message: Message, writer?: _m0.Writer): _m0.Writer;
   decode(input: _m0.Reader | Uint8Array, length?: number): Message;
   fromJSON(object: any): Message;

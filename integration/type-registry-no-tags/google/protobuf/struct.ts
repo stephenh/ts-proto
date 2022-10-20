@@ -106,6 +106,8 @@ function createBaseStruct(): Struct {
 }
 
 export const Struct = {
+  $type: "google.protobuf.Struct" as const,
+
   encode(message: Struct, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     Object.entries(message.fields).forEach(([key, value]) => {
       if (value !== undefined) {
@@ -198,6 +200,8 @@ function createBaseStruct_FieldsEntry(): Struct_FieldsEntry {
 }
 
 export const Struct_FieldsEntry = {
+  $type: "google.protobuf.Struct.FieldsEntry" as const,
+
   encode(message: Struct_FieldsEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.key !== "") {
       writer.uint32(10).string(message.key);
@@ -262,6 +266,8 @@ function createBaseValue(): Value {
 }
 
 export const Value = {
+  $type: "google.protobuf.Value" as const,
+
   encode(message: Value, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.nullValue !== undefined) {
       writer.uint32(8).int32(message.nullValue);
@@ -398,6 +404,8 @@ function createBaseListValue(): ListValue {
 }
 
 export const ListValue = {
+  $type: "google.protobuf.ListValue" as const,
+
   encode(message: ListValue, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     for (const v of message.values) {
       Value.encode(Value.wrap(v!), writer.uint32(10).fork()).ldelim();

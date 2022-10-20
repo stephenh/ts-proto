@@ -72,10 +72,8 @@ function generateMethodDefinition(ctx: Context, methodDesc: MethodDescriptorProt
     {
       name: '${methodDesc.name}',
       requestType: ${inputType},
-      requestTypeName: '${stripDot(methodDesc.inputType)}',
       requestStream: ${methodDesc.clientStreaming},
       responseType: ${outputType},
-      responseTypeName: '${stripDot(methodDesc.outputType)}',
       responseStream: ${methodDesc.serverStreaming},
       options: ${generateMethodOptions(methodDesc.options)}
     }

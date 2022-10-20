@@ -23,6 +23,8 @@ function createBaseFoo(): Foo {
 }
 
 export const Foo = {
+  $type: "foo.Foo" as const,
+
   encode(message: Foo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.timestamp !== undefined) {
       Timestamp.encode(toTimestamp(message.timestamp), writer.uint32(10).fork()).ldelim();
@@ -72,6 +74,8 @@ function createBaseFoo2(): Foo2 {
 }
 
 export const Foo2 = {
+  $type: "foo.Foo2" as const,
+
   encode(message: Foo2, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.timestamp !== undefined) {
       Timestamp.encode(toTimestamp(message.timestamp), writer.uint32(10).fork()).ldelim();
@@ -121,6 +125,8 @@ function createBaseWithStruct(): WithStruct {
 }
 
 export const WithStruct = {
+  $type: "foo.WithStruct" as const,
+
   encode(message: WithStruct, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.struct !== undefined) {
       Struct.encode(Struct.wrap(message.struct), writer.uint32(10).fork()).ldelim();

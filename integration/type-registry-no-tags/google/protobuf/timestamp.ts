@@ -117,6 +117,8 @@ function createBaseTimestamp(): Timestamp {
 }
 
 export const Timestamp = {
+  $type: "google.protobuf.Timestamp" as const,
+
   encode(message: Timestamp, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.seconds !== 0) {
       writer.uint32(8).int64(message.seconds);

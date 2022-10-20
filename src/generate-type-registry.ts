@@ -31,7 +31,9 @@ function generateMessageType(ctx: Context): Code {
 
   chunks.push(code`export interface MessageType<Message extends UnknownMessage = UnknownMessage> {`);
 
-  if (ctx.options.outputTypeRegistry != "no-tags") {
+  if (ctx.options.outputTypeRegistry == "no-tags") {
+    chunks.push(code`$type: string;`);
+  } else {
     chunks.push(code`$type: Message['$type'];`);
   }
 
