@@ -345,7 +345,11 @@ export function isOptionalProperty(
   const optionalMessages =
     options.useOptionals === true || options.useOptionals === "messages" || options.useOptionals === "all";
   const optionalAll = options.useOptionals === "all";
+  const optionalRepeatedAndOneOf = options.useOptionals === "repeated_and_oneof" || options.useOptionals === "all";
+
   return (
+    (optionalRepeatedAndOneOf && isRepeated(field)) ||
+    (optionalRepeatedAndOneOf && isWithinOneOf(field)) ||
     (optionalMessages && isMessage(field) && !isRepeated(field)) ||
     (optionalAll && !messageOptions?.mapEntry) ||
     field.proto3Optional
@@ -480,8 +484,8 @@ export function valueTypeName(ctx: Context, typeName: string): Code | undefined 
       return ctx.options.env === EnvOption.NODE
         ? code`Buffer`
         : ctx.options.useJsonWireFormat
-        ? code`string`
-        : code`Uint8Array`;
+          ? code`string`
+          : code`Uint8Array`;
     case ".google.protobuf.ListValue":
       return code`Array<any>`;
     case ".google.protobuf.Value":
@@ -620,9 +624,10 @@ export function toTypeName(ctx: Context, messageDesc: DescriptorProto, field: Fi
   if (
     (!isWithinOneOf(field) &&
       isMessage(field) &&
-      (options.useOptionals === false || options.useOptionals === "none")) ||
+      (options.useOptionals === false || options.useOptionals === "none" || options.useOptionals === "repeated_and_oneof")) ||
     (isWithinOneOf(field) && options.oneof === OneofOption.PROPERTIES) ||
-    (isWithinOneOf(field) && field.proto3Optional)
+    (isWithinOneOf(field) && field.proto3Optional) ||
+    (isWithinOneOf(field) && options.useOptionals === "repeated_and_oneof")
   ) {
     return code`${type} | undefined`;
   }
@@ -636,12 +641,12 @@ export function detectMapType(
   fieldDesc: FieldDescriptorProto
 ):
   | {
-      messageDesc: DescriptorProto;
-      keyField: FieldDescriptorProto;
-      keyType: Code;
-      valueField: FieldDescriptorProto;
-      valueType: Code;
-    }
+    messageDesc: DescriptorProto;
+    keyField: FieldDescriptorProto;
+    keyType: Code;
+    valueField: FieldDescriptorProto;
+    valueType: Code;
+  }
   | undefined {
   const { typeMap } = ctx;
   if (

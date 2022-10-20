@@ -37,7 +37,7 @@ export type Options = {
   context: boolean;
   snakeToCamel: Array<"json" | "keys">;
   forceLong: LongOption;
-  useOptionals: boolean | "none" | "messages" | "all"; // boolean is deprecated
+  useOptionals: boolean | "none" | "repeated_and_oneof" | "messages" | "all"; // boolean is deprecated
   useDate: DateOption;
   useMongoObjectId: boolean;
   oneof: OneofOption;
