@@ -1753,7 +1753,7 @@ function generateWrap(ctx: Context, fullProtoTypeName: string, fieldNames: Struc
   if (isAnyValueTypeName(fullProtoTypeName)) {
     if (ctx.options.oneof === OneofOption.UNIONS) {
       chunks.push(code`wrap(value: any): Value {
-        const result = createBaseValue();
+        const result = createBaseValue()${ctx.options.useReadonlyTypes ? " as any" : ""};
 
         if (value === null) {
           result.kind = {$case: '${fieldNames.nullValue}', ${fieldNames.nullValue}: NullValue.NULL_VALUE};
@@ -1775,7 +1775,7 @@ function generateWrap(ctx: Context, fullProtoTypeName: string, fieldNames: Struc
     }`);
     } else {
       chunks.push(code`wrap(value: any): Value {
-        const result = createBaseValue();
+        const result = createBaseValue()${ctx.options.useReadonlyTypes ? " as any" : ""};
 
         if (value === null) {
           result.${fieldNames.nullValue} = NullValue.NULL_VALUE;
@@ -1799,8 +1799,10 @@ function generateWrap(ctx: Context, fullProtoTypeName: string, fieldNames: Struc
   }
 
   if (isListValueTypeName(fullProtoTypeName)) {
-    chunks.push(code`wrap(value: Array<any> | undefined): ListValue {
-      const result = createBaseListValue();
+    chunks.push(code`wrap(value: ${
+      ctx.options.useReadonlyTypes ? "ReadonlyArray<any>" : "Array<any>"
+    } | undefined): ListValue {
+      const result = createBaseListValue()${ctx.options.useReadonlyTypes ? " as any" : ""};
 
       result.values = value ?? [];
 
@@ -1873,21 +1875,15 @@ function generateUnwrap(ctx: Context, fullProtoTypeName: string, fieldNames: Str
   }
 
   if (isListValueTypeName(fullProtoTypeName)) {
-    chunks.push(code`unwrap(message: ListValue): Array<any> {
+    chunks.push(code`unwrap(message: ${ctx.options.useReadonlyTypes ? "any" : "ListValue"}): Array<any> {
       return message.values;
     }`);
   }
 
   if (isFieldMaskTypeName(fullProtoTypeName)) {
-    if (ctx.options.useReadonlyTypes) {
-      chunks.push(code`unwrap(message: any): string[] {
+    chunks.push(code`unwrap(message: ${ctx.options.useReadonlyTypes ? "any" : "FieldMask"}): string[] {
       return message.paths;
     }`);
-    } else {
-      chunks.push(code`unwrap(message: FieldMask): string[] {
-      return message.paths;
-    }`);
-    }
   }
 
   return chunks;

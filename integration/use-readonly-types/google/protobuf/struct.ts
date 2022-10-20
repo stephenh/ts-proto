@@ -347,7 +347,7 @@ export const Value = {
   },
 
   wrap(value: any): Value {
-    const result = createBaseValue();
+    const result = createBaseValue() as any;
 
     if (value === null) {
       result.nullValue = NullValue.NULL_VALUE;
@@ -436,15 +436,15 @@ export const ListValue = {
     return message;
   },
 
-  wrap(value: Array<any> | undefined): ListValue {
-    const result = createBaseListValue();
+  wrap(value: ReadonlyArray<any> | undefined): ListValue {
+    const result = createBaseListValue() as any;
 
     result.values = value ?? [];
 
     return result;
   },
 
-  unwrap(message: ListValue): Array<any> {
+  unwrap(message: any): Array<any> {
     return message.values;
   },
 };
