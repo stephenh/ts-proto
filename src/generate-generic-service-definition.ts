@@ -60,6 +60,10 @@ export function generateGenericServiceDefinition(
   return joinCode(chunks, { on: "\n" });
 }
 
+function stripDot(str: string) {
+  return str.startsWith(".") ? str.slice(1) : str;
+}
+
 function generateMethodDefinition(ctx: Context, methodDesc: MethodDescriptorProto) {
   const inputType = messageToTypeName(ctx, methodDesc.inputType, { keepValueType: true });
   const outputType = messageToTypeName(ctx, methodDesc.outputType, { keepValueType: true });
@@ -68,10 +72,10 @@ function generateMethodDefinition(ctx: Context, methodDesc: MethodDescriptorProt
     {
       name: '${methodDesc.name}',
       requestType: ${inputType},
-      requestTypeName: '${methodDesc.inputType}',
+      requestTypeName: '${stripDot(methodDesc.inputType)}',
       requestStream: ${methodDesc.clientStreaming},
       responseType: ${outputType},
-      responseTypeName: '${methodDesc.outputType}',
+      responseTypeName: '${stripDot(methodDesc.outputType)}',
       responseStream: ${methodDesc.serverStreaming},
       options: ${generateMethodOptions(methodDesc.options)}
     }
