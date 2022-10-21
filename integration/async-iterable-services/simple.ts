@@ -135,7 +135,7 @@ export class EchoerClientImpl implements Echoer {
   }
 }
 
-interface Rpc {
+export interface Rpc {
   request(service: string, method: string, data: Uint8Array): Promise<Uint8Array>;
   clientStreamingRequest(service: string, method: string, data: AsyncIterable<Uint8Array>): Promise<Uint8Array>;
   serverStreamingRequest(service: string, method: string, data: Uint8Array): AsyncIterable<Uint8Array>;

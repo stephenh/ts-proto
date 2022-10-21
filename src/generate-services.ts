@@ -344,7 +344,7 @@ export function generateRpcType(ctx: Context, hasStreamingMethods: boolean): Cod
     ]);
   }
   const chunks: Code[] = [];
-  chunks.push(code`    interface Rpc${maybeContext} {`);
+  chunks.push(code`    export interface Rpc${maybeContext} {`);
   methods.forEach((method) => {
     chunks.push(code`
       ${method[0]}(

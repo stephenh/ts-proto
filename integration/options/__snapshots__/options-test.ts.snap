@@ -1515,18 +1515,6 @@ Object {
             "reservedName": Array [],
             "reservedRange": Array [
               Object {
-                "end": 5,
-                "start": 4,
-              },
-              Object {
-                "end": 6,
-                "start": 5,
-              },
-              Object {
-                "end": 7,
-                "start": 6,
-              },
-              Object {
                 "end": 9,
                 "start": 8,
               },
@@ -2337,7 +2325,7 @@ Object {
           "ccGenericServices": false,
           "csharpNamespace": "Google.Protobuf.Reflection",
           "deprecated": false,
-          "goPackage": "google.golang.org/protobuf/types/descriptorpb",
+          "goPackage": "github.com/golang/protobuf/protoc-gen-go/descriptor;descriptor",
           "javaGenerateEqualsAndHash": false,
           "javaGenericServices": false,
           "javaMultipleFiles": false,
@@ -3310,11 +3298,11 @@ Object {
               "trailingComments": "",
             },
             Object {
-              "leadingComments": " Controls the name of the wrapper Java class generated for the .proto file.
- That class will always contain the .proto file's getDescriptor() method as
- well as any top-level extensions defined in the .proto file.
- If java_multiple_files is disabled, then all the other classes from the
- .proto file will be nested inside the single wrapper outer class.
+              "leadingComments": " If set, all the classes from the .proto file are wrapped in a single
+ outer class with the given name.  This applies to both Proto1
+ (equivalent to the old \\"--one_java_file\\" option) and Proto2 (where
+ a .proto always translates to a single class, but you may want to
+ explicitly choose the class name).
 ",
               "leadingDetachedComments": Array [],
               "path": Array [
@@ -3331,10 +3319,10 @@ Object {
               "trailingComments": "",
             },
             Object {
-              "leadingComments": " If enabled, then the Java code generator will generate a separate .java
+              "leadingComments": " If set true, then the Java code generator will generate a separate .java
  file for each top-level message, enum, and service defined in the .proto
- file.  Thus, these types will *not* be nested inside the wrapper class
- named by java_outer_classname.  However, the wrapper class will still be
+ file.  Thus, these types will *not* be nested inside the outer class
+ named by java_outer_classname.  However, the outer class will still be
  generated to contain the file's getDescriptor() method as well as any
  top-level extensions defined in the file.
 ",
@@ -3821,7 +3809,7 @@ Object {
                 3,
               ],
               "span": Array [
-                521,
+                519,
                 2,
                 30,
               ],
@@ -3836,7 +3824,7 @@ Object {
                 9,
               ],
               "span": Array [
-                523,
+                521,
                 2,
                 13,
               ],
@@ -3852,7 +3840,7 @@ Object {
                 9,
               ],
               "span": Array [
-                524,
+                522,
                 2,
                 13,
               ],
@@ -3870,7 +3858,7 @@ Object {
                 4,
               ],
               "span": Array [
-                528,
+                526,
                 2,
                 58,
               ],
@@ -3886,7 +3874,7 @@ Object {
                 5,
               ],
               "span": Array [
-                531,
+                529,
                 2,
                 25,
               ],
@@ -3906,7 +3894,7 @@ Object {
                 0,
               ],
               "span": Array [
-                539,
+                537,
                 2,
                 46,
               ],
@@ -3925,7 +3913,7 @@ Object {
                 0,
               ],
               "span": Array [
-                542,
+                540,
                 4,
                 15,
               ],
@@ -3946,7 +3934,7 @@ Object {
                 1,
               ],
               "span": Array [
-                553,
+                551,
                 2,
                 27,
               ],
@@ -3973,7 +3961,7 @@ Object {
                 2,
               ],
               "span": Array [
-                566,
+                564,
                 2,
                 51,
               ],
@@ -3992,7 +3980,7 @@ Object {
                 0,
               ],
               "span": Array [
-                569,
+                567,
                 4,
                 18,
               ],
@@ -4011,7 +3999,7 @@ Object {
                 1,
               ],
               "span": Array [
-                572,
+                570,
                 4,
                 18,
               ],
@@ -4030,7 +4018,7 @@ Object {
                 2,
               ],
               "span": Array [
-                575,
+                573,
                 4,
                 18,
               ],
@@ -4074,7 +4062,7 @@ Object {
                 3,
               ],
               "span": Array [
-                606,
+                604,
                 2,
                 43,
               ],
@@ -4094,7 +4082,7 @@ Object {
                 4,
               ],
               "span": Array [
-                612,
+                610,
                 2,
                 49,
               ],
@@ -4111,7 +4099,7 @@ Object {
                 5,
               ],
               "span": Array [
-                615,
+                613,
                 2,
                 44,
               ],
@@ -4128,7 +4116,7 @@ Object {
                 6,
               ],
               "span": Array [
-                619,
+                617,
                 2,
                 58,
               ],
@@ -4144,7 +4132,7 @@ Object {
                 5,
               ],
               "span": Array [
-                622,
+                620,
                 2,
                 25,
               ],
@@ -4159,7 +4147,7 @@ Object {
                 9,
               ],
               "span": Array [
-                624,
+                622,
                 2,
                 13,
               ],
@@ -4177,7 +4165,7 @@ Object {
                 0,
               ],
               "span": Array [
-                629,
+                627,
                 2,
                 58,
               ],
@@ -4193,7 +4181,7 @@ Object {
                 5,
               ],
               "span": Array [
-                632,
+                630,
                 2,
                 25,
               ],
@@ -4211,7 +4199,7 @@ Object {
                 0,
               ],
               "span": Array [
-                639,
+                637,
                 2,
                 32,
               ],
@@ -4231,7 +4219,7 @@ Object {
                 1,
               ],
               "span": Array [
-                645,
+                643,
                 2,
                 49,
               ],
@@ -4246,7 +4234,7 @@ Object {
                 9,
               ],
               "span": Array [
-                647,
+                645,
                 2,
                 13,
               ],
@@ -4264,7 +4252,7 @@ Object {
                 2,
               ],
               "span": Array [
-                650,
+                648,
                 2,
                 58,
               ],
@@ -4280,7 +4268,7 @@ Object {
                 5,
               ],
               "span": Array [
-                653,
+                651,
                 2,
                 25,
               ],
@@ -4300,7 +4288,7 @@ Object {
                 0,
               ],
               "span": Array [
-                661,
+                659,
                 2,
                 49,
               ],
@@ -4317,7 +4305,7 @@ Object {
                 1,
               ],
               "span": Array [
-                664,
+                662,
                 2,
                 58,
               ],
@@ -4333,7 +4321,7 @@ Object {
                 5,
               ],
               "span": Array [
-                667,
+                665,
                 2,
                 25,
               ],
@@ -4359,7 +4347,7 @@ Object {
                 0,
               ],
               "span": Array [
-                681,
+                679,
                 2,
                 50,
               ],
@@ -4376,7 +4364,7 @@ Object {
                 1,
               ],
               "span": Array [
-                684,
+                682,
                 2,
                 58,
               ],
@@ -4392,7 +4380,7 @@ Object {
                 5,
               ],
               "span": Array [
-                687,
+                685,
                 2,
                 25,
               ],
@@ -4418,7 +4406,7 @@ Object {
                 0,
               ],
               "span": Array [
-                701,
+                699,
                 2,
                 50,
               ],
@@ -4437,9 +4425,9 @@ Object {
                 0,
               ],
               "span": Array [
-                706,
+                704,
                 2,
-                710,
+                708,
                 3,
               ],
               "trailingComments": "",
@@ -4456,7 +4444,7 @@ Object {
                 1,
               ],
               "span": Array [
-                708,
+                706,
                 4,
                 24,
               ],
@@ -4475,7 +4463,7 @@ Object {
                 2,
               ],
               "span": Array [
-                709,
+                707,
                 4,
                 19,
               ],
@@ -4493,7 +4481,7 @@ Object {
                 2,
               ],
               "span": Array [
-                715,
+                713,
                 2,
                 58,
               ],
@@ -4509,7 +4497,7 @@ Object {
                 5,
               ],
               "span": Array [
-                718,
+                716,
                 2,
                 25,
               ],
@@ -4529,9 +4517,9 @@ Object {
                 18,
               ],
               "span": Array [
-                728,
+                726,
                 0,
-                748,
+                746,
                 1,
               ],
               "trailingComments": "",
@@ -4551,9 +4539,9 @@ Object {
                 0,
               ],
               "span": Array [
-                734,
+                732,
                 2,
-                737,
+                735,
                 3,
               ],
               "trailingComments": "",
@@ -4570,7 +4558,7 @@ Object {
                 1,
               ],
               "span": Array [
-                742,
+                740,
                 2,
                 39,
               ],
@@ -4590,9 +4578,9 @@ Object {
                 19,
               ],
               "span": Array [
-                755,
+                753,
                 0,
-                884,
+                882,
                 1,
               ],
               "trailingComments": "",
@@ -4650,7 +4638,7 @@ Object {
                 0,
               ],
               "span": Array [
-                799,
+                797,
                 2,
                 33,
               ],
@@ -4691,7 +4679,7 @@ Object {
                 0,
               ],
               "span": Array [
-                824,
+                822,
                 4,
                 44,
               ],
@@ -4714,7 +4702,7 @@ Object {
                 1,
               ],
               "span": Array [
-                831,
+                829,
                 4,
                 44,
               ],
@@ -4779,7 +4767,7 @@ Object {
                 2,
               ],
               "span": Array [
-                880,
+                878,
                 4,
                 41,
               ],
@@ -4796,9 +4784,9 @@ Object {
                 20,
               ],
               "span": Array [
-                889,
+                887,
                 0,
-                910,
+                908,
                 1,
               ],
               "trailingComments": "",
@@ -4815,7 +4803,7 @@ Object {
                 0,
               ],
               "span": Array [
-                892,
+                890,
                 2,
                 37,
               ],
@@ -4835,7 +4823,7 @@ Object {
                 0,
               ],
               "span": Array [
-                896,
+                894,
                 4,
                 44,
               ],
@@ -4854,7 +4842,7 @@ Object {
                 1,
               ],
               "span": Array [
-                899,
+                897,
                 4,
                 36,
               ],
@@ -4874,7 +4862,7 @@ Object {
                 2,
               ],
               "span": Array [
-                903,
+                901,
                 4,
                 29,
               ],
@@ -4895,7 +4883,7 @@ Object {
                 3,
               ],
               "span": Array [
-                908,
+                906,
                 4,
                 27,
               ],
@@ -6621,18 +6609,6 @@ Object {
                 "reservedName": Array [],
                 "reservedRange": Array [
                   Object {
-                    "end": 5,
-                    "start": 4,
-                  },
-                  Object {
-                    "end": 6,
-                    "start": 5,
-                  },
-                  Object {
-                    "end": 7,
-                    "start": 6,
-                  },
-                  Object {
                     "end": 9,
                     "start": 8,
                   },
@@ -7443,7 +7419,7 @@ Object {
               "ccGenericServices": false,
               "csharpNamespace": "Google.Protobuf.Reflection",
               "deprecated": false,
-              "goPackage": "google.golang.org/protobuf/types/descriptorpb",
+              "goPackage": "github.com/golang/protobuf/protoc-gen-go/descriptor;descriptor",
               "javaGenerateEqualsAndHash": false,
               "javaGenericServices": false,
               "javaMultipleFiles": false,
@@ -8416,11 +8392,11 @@ Object {
                   "trailingComments": "",
                 },
                 Object {
-                  "leadingComments": " Controls the name of the wrapper Java class generated for the .proto file.
- That class will always contain the .proto file's getDescriptor() method as
- well as any top-level extensions defined in the .proto file.
- If java_multiple_files is disabled, then all the other classes from the
- .proto file will be nested inside the single wrapper outer class.
+                  "leadingComments": " If set, all the classes from the .proto file are wrapped in a single
+ outer class with the given name.  This applies to both Proto1
+ (equivalent to the old \\"--one_java_file\\" option) and Proto2 (where
+ a .proto always translates to a single class, but you may want to
+ explicitly choose the class name).
 ",
                   "leadingDetachedComments": Array [],
                   "path": Array [
@@ -8437,10 +8413,10 @@ Object {
                   "trailingComments": "",
                 },
                 Object {
-                  "leadingComments": " If enabled, then the Java code generator will generate a separate .java
+                  "leadingComments": " If set true, then the Java code generator will generate a separate .java
  file for each top-level message, enum, and service defined in the .proto
- file.  Thus, these types will *not* be nested inside the wrapper class
- named by java_outer_classname.  However, the wrapper class will still be
+ file.  Thus, these types will *not* be nested inside the outer class
+ named by java_outer_classname.  However, the outer class will still be
  generated to contain the file's getDescriptor() method as well as any
  top-level extensions defined in the file.
 ",
@@ -8927,7 +8903,7 @@ Object {
                     3,
                   ],
                   "span": Array [
-                    521,
+                    519,
                     2,
                     30,
                   ],
@@ -8942,7 +8918,7 @@ Object {
                     9,
                   ],
                   "span": Array [
-                    523,
+                    521,
                     2,
                     13,
                   ],
@@ -8958,7 +8934,7 @@ Object {
                     9,
                   ],
                   "span": Array [
-                    524,
+                    522,
                     2,
                     13,
                   ],
@@ -8976,7 +8952,7 @@ Object {
                     4,
                   ],
                   "span": Array [
-                    528,
+                    526,
                     2,
                     58,
                   ],
@@ -8992,7 +8968,7 @@ Object {
                     5,
                   ],
                   "span": Array [
-                    531,
+                    529,
                     2,
                     25,
                   ],
@@ -9012,7 +8988,7 @@ Object {
                     0,
                   ],
                   "span": Array [
-                    539,
+                    537,
                     2,
                     46,
                   ],
@@ -9031,7 +9007,7 @@ Object {
                     0,
                   ],
                   "span": Array [
-                    542,
+                    540,
                     4,
                     15,
                   ],
@@ -9052,7 +9028,7 @@ Object {
                     1,
                   ],
                   "span": Array [
-                    553,
+                    551,
                     2,
                     27,
                   ],
@@ -9079,7 +9055,7 @@ Object {
                     2,
                   ],
                   "span": Array [
-                    566,
+                    564,
                     2,
                     51,
                   ],
@@ -9098,7 +9074,7 @@ Object {
                     0,
                   ],
                   "span": Array [
-                    569,
+                    567,
                     4,
                     18,
                   ],
@@ -9117,7 +9093,7 @@ Object {
                     1,
                   ],
                   "span": Array [
-                    572,
+                    570,
                     4,
                     18,
                   ],
@@ -9136,7 +9112,7 @@ Object {
                     2,
                   ],
                   "span": Array [
-                    575,
+                    573,
                     4,
                     18,
                   ],
@@ -9180,7 +9156,7 @@ Object {
                     3,
                   ],
                   "span": Array [
-                    606,
+                    604,
                     2,
                     43,
                   ],
@@ -9200,7 +9176,7 @@ Object {
                     4,
                   ],
                   "span": Array [
-                    612,
+                    610,
                     2,
                     49,
                   ],
@@ -9217,7 +9193,7 @@ Object {
                     5,
                   ],
                   "span": Array [
-                    615,
+                    613,
                     2,
                     44,
                   ],
@@ -9234,7 +9210,7 @@ Object {
                     6,
                   ],
                   "span": Array [
-                    619,
+                    617,
                     2,
                     58,
                   ],
@@ -9250,7 +9226,7 @@ Object {
                     5,
                   ],
                   "span": Array [
-                    622,
+                    620,
                     2,
                     25,
                   ],
@@ -9265,7 +9241,7 @@ Object {
                     9,
                   ],
                   "span": Array [
-                    624,
+                    622,
                     2,
                     13,
                   ],
@@ -9283,7 +9259,7 @@ Object {
                     0,
                   ],
                   "span": Array [
-                    629,
+                    627,
                     2,
                     58,
                   ],
@@ -9299,7 +9275,7 @@ Object {
                     5,
                   ],
                   "span": Array [
-                    632,
+                    630,
                     2,
                     25,
                   ],
@@ -9317,7 +9293,7 @@ Object {
                     0,
                   ],
                   "span": Array [
-                    639,
+                    637,
                     2,
                     32,
                   ],
@@ -9337,7 +9313,7 @@ Object {
                     1,
                   ],
                   "span": Array [
-                    645,
+                    643,
                     2,
                     49,
                   ],
@@ -9352,7 +9328,7 @@ Object {
                     9,
                   ],
                   "span": Array [
-                    647,
+                    645,
                     2,
                     13,
                   ],
@@ -9370,7 +9346,7 @@ Object {
                     2,
                   ],
                   "span": Array [
-                    650,
+                    648,
                     2,
                     58,
                   ],
@@ -9386,7 +9362,7 @@ Object {
                     5,
                   ],
                   "span": Array [
-                    653,
+                    651,
                     2,
                     25,
                   ],
@@ -9406,7 +9382,7 @@ Object {
                     0,
                   ],
                   "span": Array [
-                    661,
+                    659,
                     2,
                     49,
                   ],
@@ -9423,7 +9399,7 @@ Object {
                     1,
                   ],
                   "span": Array [
-                    664,
+                    662,
                     2,
                     58,
                   ],
@@ -9439,7 +9415,7 @@ Object {
                     5,
                   ],
                   "span": Array [
-                    667,
+                    665,
                     2,
                     25,
                   ],
@@ -9465,7 +9441,7 @@ Object {
                     0,
                   ],
                   "span": Array [
-                    681,
+                    679,
                     2,
                     50,
                   ],
@@ -9482,7 +9458,7 @@ Object {
                     1,
                   ],
                   "span": Array [
-                    684,
+                    682,
                     2,
                     58,
                   ],
@@ -9498,7 +9474,7 @@ Object {
                     5,
                   ],
                   "span": Array [
-                    687,
+                    685,
                     2,
                     25,
                   ],
@@ -9524,7 +9500,7 @@ Object {
                     0,
                   ],
                   "span": Array [
-                    701,
+                    699,
                     2,
                     50,
                   ],
@@ -9543,9 +9519,9 @@ Object {
                     0,
                   ],
                   "span": Array [
-                    706,
+                    704,
                     2,
-                    710,
+                    708,
                     3,
                   ],
                   "trailingComments": "",
@@ -9562,7 +9538,7 @@ Object {
                     1,
                   ],
                   "span": Array [
-                    708,
+                    706,
                     4,
                     24,
                   ],
@@ -9581,7 +9557,7 @@ Object {
                     2,
                   ],
                   "span": Array [
-                    709,
+                    707,
                     4,
                     19,
                   ],
@@ -9599,7 +9575,7 @@ Object {
                     2,
                   ],
                   "span": Array [
-                    715,
+                    713,
                     2,
                     58,
                   ],
@@ -9615,7 +9591,7 @@ Object {
                     5,
                   ],
                   "span": Array [
-                    718,
+                    716,
                     2,
                     25,
                   ],
@@ -9635,9 +9611,9 @@ Object {
                     18,
                   ],
                   "span": Array [
-                    728,
+                    726,
                     0,
-                    748,
+                    746,
                     1,
                   ],
                   "trailingComments": "",
@@ -9657,9 +9633,9 @@ Object {
                     0,
                   ],
                   "span": Array [
-                    734,
+                    732,
                     2,
-                    737,
+                    735,
                     3,
                   ],
                   "trailingComments": "",
@@ -9676,7 +9652,7 @@ Object {
                     1,
                   ],
                   "span": Array [
-                    742,
+                    740,
                     2,
                     39,
                   ],
@@ -9696,9 +9672,9 @@ Object {
                     19,
                   ],
                   "span": Array [
-                    755,
+                    753,
                     0,
-                    884,
+                    882,
                     1,
                   ],
                   "trailingComments": "",
@@ -9756,7 +9732,7 @@ Object {
                     0,
                   ],
                   "span": Array [
-                    799,
+                    797,
                     2,
                     33,
                   ],
@@ -9797,7 +9773,7 @@ Object {
                     0,
                   ],
                   "span": Array [
-                    824,
+                    822,
                     4,
                     44,
                   ],
@@ -9820,7 +9796,7 @@ Object {
                     1,
                   ],
                   "span": Array [
-                    831,
+                    829,
                     4,
                     44,
                   ],
@@ -9885,7 +9861,7 @@ Object {
                     2,
                   ],
                   "span": Array [
-                    880,
+                    878,
                     4,
                     41,
                   ],
@@ -9902,9 +9878,9 @@ Object {
                     20,
                   ],
                   "span": Array [
-                    889,
+                    887,
                     0,
-                    910,
+                    908,
                     1,
                   ],
                   "trailingComments": "",
@@ -9921,7 +9897,7 @@ Object {
                     0,
                   ],
                   "span": Array [
-                    892,
+                    890,
                     2,
                     37,
                   ],
@@ -9941,7 +9917,7 @@ Object {
                     0,
                   ],
                   "span": Array [
-                    896,
+                    894,
                     4,
                     44,
                   ],
@@ -9960,7 +9936,7 @@ Object {
                     1,
                   ],
                   "span": Array [
-                    899,
+                    897,
                     4,
                     36,
                   ],
@@ -9980,7 +9956,7 @@ Object {
                     2,
                   ],
                   "span": Array [
-                    903,
+                    901,
                     4,
                     29,
                   ],
@@ -10001,7 +9977,7 @@ Object {
                     3,
                   ],
                   "span": Array [
-                    908,
+                    906,
                     4,
                     27,
                   ],

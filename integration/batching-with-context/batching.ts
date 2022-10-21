@@ -642,7 +642,7 @@ export class EntityServiceClientImpl<Context extends DataLoaders> implements Ent
   }
 }
 
-interface Rpc<Context> {
+export interface Rpc<Context> {
   request(ctx: Context, service: string, method: string, data: Uint8Array): Promise<Uint8Array>;
 }
 

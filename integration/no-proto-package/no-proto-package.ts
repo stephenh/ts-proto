@@ -117,7 +117,7 @@ export class UserStateClientImpl implements UserState {
   }
 }
 
-interface Rpc {
+export interface Rpc {
   request(service: string, method: string, data: Uint8Array): Promise<Uint8Array>;
   clientStreamingRequest(service: string, method: string, data: Observable<Uint8Array>): Promise<Uint8Array>;
   serverStreamingRequest(service: string, method: string, data: Uint8Array): Observable<Uint8Array>;

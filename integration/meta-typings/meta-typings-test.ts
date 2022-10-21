@@ -1,7 +1,7 @@
-import { protoMetadata } from './simple';
+import { protoMetadata } from "./simple";
 
-describe('simple', () => {
-  it('generates types correctly', () => {
+describe("simple", () => {
+  it("generates types correctly", () => {
     expect(protoMetadata).toMatchInlineSnapshot(`
       Object {
         "dependencies": Array [
@@ -869,7 +869,7 @@ describe('simple', () => {
                 "ccGenericServices": false,
                 "csharpNamespace": "Google.Protobuf.WellKnownTypes",
                 "deprecated": false,
-                "goPackage": "google.golang.org/protobuf/types/known/timestamppb",
+                "goPackage": "github.com/golang/protobuf/ptypes/timestamp",
                 "javaGenerateEqualsAndHash": false,
                 "javaGenericServices": false,
                 "javaMultipleFiles": true,
@@ -944,16 +944,7 @@ describe('simple', () => {
                .setNanos((int) ((millis % 1000) * 1000000)).build();
 
 
-       Example 5: Compute Timestamp from Java \`Instant.now()\`.
-
-           Instant now = Instant.now();
-
-           Timestamp timestamp =
-               Timestamp.newBuilder().setSeconds(now.getEpochSecond())
-                   .setNanos(now.getNano()).build();
-
-
-       Example 6: Compute Timestamp from current time in Python.
+       Example 5: Compute Timestamp from current time in Python.
 
            timestamp = Timestamp()
            timestamp.GetCurrentTime()
@@ -993,9 +984,9 @@ describe('simple', () => {
                       0,
                     ],
                     "span": Array [
-                      135,
+                      126,
                       0,
-                      146,
+                      137,
                       1,
                     ],
                     "trailingComments": "",
@@ -1013,7 +1004,7 @@ describe('simple', () => {
                       0,
                     ],
                     "span": Array [
-                      139,
+                      130,
                       2,
                       20,
                     ],
@@ -1033,7 +1024,7 @@ describe('simple', () => {
                       1,
                     ],
                     "span": Array [
-                      145,
+                      136,
                       2,
                       18,
                     ],
@@ -1106,7 +1097,7 @@ describe('simple', () => {
                     "ccGenericServices": false,
                     "csharpNamespace": "Google.Protobuf.WellKnownTypes",
                     "deprecated": false,
-                    "goPackage": "google.golang.org/protobuf/types/known/timestamppb",
+                    "goPackage": "github.com/golang/protobuf/ptypes/timestamp",
                     "javaGenerateEqualsAndHash": false,
                     "javaGenericServices": false,
                     "javaMultipleFiles": true,
@@ -1181,16 +1172,7 @@ describe('simple', () => {
                .setNanos((int) ((millis % 1000) * 1000000)).build();
 
 
-       Example 5: Compute Timestamp from Java \`Instant.now()\`.
-
-           Instant now = Instant.now();
-
-           Timestamp timestamp =
-               Timestamp.newBuilder().setSeconds(now.getEpochSecond())
-                   .setNanos(now.getNano()).build();
-
-
-       Example 6: Compute Timestamp from current time in Python.
+       Example 5: Compute Timestamp from current time in Python.
 
            timestamp = Timestamp()
            timestamp.GetCurrentTime()
@@ -1230,9 +1212,9 @@ describe('simple', () => {
                           0,
                         ],
                         "span": Array [
-                          135,
+                          126,
                           0,
-                          146,
+                          137,
                           1,
                         ],
                         "trailingComments": "",
@@ -1250,7 +1232,7 @@ describe('simple', () => {
                           0,
                         ],
                         "span": Array [
-                          139,
+                          130,
                           2,
                           20,
                         ],
@@ -1270,7 +1252,7 @@ describe('simple', () => {
                           1,
                         ],
                         "span": Array [
-                          145,
+                          136,
                           2,
                           18,
                         ],

@@ -301,18 +301,18 @@ export interface FileOptions {
    */
   javaPackage: string;
   /**
-   * Controls the name of the wrapper Java class generated for the .proto file.
-   * That class will always contain the .proto file's getDescriptor() method as
-   * well as any top-level extensions defined in the .proto file.
-   * If java_multiple_files is disabled, then all the other classes from the
-   * .proto file will be nested inside the single wrapper outer class.
+   * If set, all the classes from the .proto file are wrapped in a single
+   * outer class with the given name.  This applies to both Proto1
+   * (equivalent to the old "--one_java_file" option) and Proto2 (where
+   * a .proto always translates to a single class, but you may want to
+   * explicitly choose the class name).
    */
   javaOuterClassname: string;
   /**
-   * If enabled, then the Java code generator will generate a separate .java
+   * If set true, then the Java code generator will generate a separate .java
    * file for each top-level message, enum, and service defined in the .proto
-   * file.  Thus, these types will *not* be nested inside the wrapper class
-   * named by java_outer_classname.  However, the wrapper class will still be
+   * file.  Thus, these types will *not* be nested inside the outer class
+   * named by java_outer_classname.  However, the outer class will still be
    * generated to contain the file's getDescriptor() method as well as any
    * top-level extensions defined in the file.
    */
@@ -3698,10 +3698,7 @@ export const protoMetadata: ProtoMetadata = {
       "extensionRange": [{ "start": 1000, "end": 536870912, "options": undefined }],
       "oneofDecl": [],
       "options": undefined,
-      "reservedRange": [{ "start": 4, "end": 5 }, { "start": 5, "end": 6 }, { "start": 6, "end": 7 }, {
-        "start": 8,
-        "end": 9,
-      }, { "start": 9, "end": 10 }],
+      "reservedRange": [{ "start": 8, "end": 9 }, { "start": 9, "end": 10 }],
       "reservedName": [],
     }, {
       "name": "FieldOptions",
@@ -4356,7 +4353,7 @@ export const protoMetadata: ProtoMetadata = {
       "javaGenerateEqualsAndHash": false,
       "javaStringCheckUtf8": false,
       "optimizeFor": 1,
-      "goPackage": "google.golang.org/protobuf/types/descriptorpb",
+      "goPackage": "github.com/golang/protobuf/protoc-gen-go/descriptor;descriptor",
       "ccGenericServices": false,
       "javaGenericServices": false,
       "pyGenericServices": false,
@@ -4704,14 +4701,14 @@ export const protoMetadata: ProtoMetadata = {
         "path": [4, 10, 2, 1],
         "span": [355, 2, 43],
         "leadingComments":
-          " Controls the name of the wrapper Java class generated for the .proto file.\n That class will always contain the .proto file's getDescriptor() method as\n well as any top-level extensions defined in the .proto file.\n If java_multiple_files is disabled, then all the other classes from the\n .proto file will be nested inside the single wrapper outer class.\n",
+          ' If set, all the classes from the .proto file are wrapped in a single\n outer class with the given name.  This applies to both Proto1\n (equivalent to the old "--one_java_file" option) and Proto2 (where\n a .proto always translates to a single class, but you may want to\n explicitly choose the class name).\n',
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 10, 2, 2],
         "span": [363, 2, 59],
         "leadingComments":
-          " If enabled, then the Java code generator will generate a separate .java\n file for each top-level message, enum, and service defined in the .proto\n file.  Thus, these types will *not* be nested inside the wrapper class\n named by java_outer_classname.  However, the wrapper class will still be\n generated to contain the file's getDescriptor() method as well as any\n top-level extensions defined in the file.\n",
+          " If set true, then the Java code generator will generate a separate .java\n file for each top-level message, enum, and service defined in the .proto\n file.  Thus, these types will *not* be nested inside the outer class\n named by java_outer_classname.  However, the outer class will still be\n generated to contain the file's getDescriptor() method as well as any\n top-level extensions defined in the file.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
@@ -4864,183 +4861,183 @@ export const protoMetadata: ProtoMetadata = {
         "leadingDetachedComments": [],
       }, {
         "path": [4, 11, 2, 3],
-        "span": [521, 2, 30],
+        "span": [519, 2, 30],
         "leadingComments":
           " Whether the message is an automatically generated map entry type for the\n maps field.\n\n For maps fields:\n     map<KeyType, ValueType> map_field = 1;\n The parsed descriptor looks like:\n     message MapFieldEntry {\n         option map_entry = true;\n         optional KeyType key = 1;\n         optional ValueType value = 2;\n     }\n     repeated MapFieldEntry map_field = 1;\n\n Implementations may choose not to generate the map_entry=true message, but\n use a native map in the target language to hold the keys and values.\n The reflection APIs in such implementations still need to work as\n if the field is a repeated message field.\n\n NOTE: Do not set the option in .proto files. Always use the maps syntax\n instead. The option should only be implicitly set by the proto compiler\n parser.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 11, 9],
-        "span": [523, 2, 13],
+        "span": [521, 2, 13],
         "leadingComments": "",
         "trailingComments": " javalite_serializable\n",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 11, 9],
-        "span": [524, 2, 13],
+        "span": [522, 2, 13],
         "leadingComments": "",
         "trailingComments": " javanano_as_lite\n",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 11, 2, 4],
-        "span": [528, 2, 58],
+        "span": [526, 2, 58],
         "leadingComments": " The parser stores options it doesn't recognize here. See above.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 11, 5],
-        "span": [531, 2, 25],
+        "span": [529, 2, 25],
         "leadingComments": " Clients can define custom options in extensions of this message. See above.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 12, 2, 0],
-        "span": [539, 2, 46],
+        "span": [537, 2, 46],
         "leadingComments":
           " The ctype option instructs the C++ code generator to use a different\n representation of the field than it normally would.  See the specific\n options below.  This option is not yet implemented in the open source\n release -- sorry, we'll try to include it in a future version!\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 12, 4, 0, 2, 0],
-        "span": [542, 4, 15],
+        "span": [540, 4, 15],
         "leadingComments": " Default mode.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 12, 2, 1],
-        "span": [553, 2, 27],
+        "span": [551, 2, 27],
         "leadingComments":
           " The packed option can be enabled for repeated primitive fields to enable\n a more efficient representation on the wire. Rather than repeatedly\n writing the tag and type for each element, the entire array is encoded as\n a single length-delimited blob. In proto3, only explicit setting it to\n false will avoid using packed encoding.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 12, 2, 2],
-        "span": [566, 2, 51],
+        "span": [564, 2, 51],
         "leadingComments":
           ' The jstype option determines the JavaScript type used for values of the\n field.  The option is permitted only for 64 bit integral and fixed types\n (int64, uint64, sint64, fixed64, sfixed64).  A field with jstype JS_STRING\n is represented as JavaScript string, which avoids loss of precision that\n can happen when a large value is converted to a floating point JavaScript.\n Specifying JS_NUMBER for the jstype causes the generated JavaScript code to\n use the JavaScript "number" type.  The behavior of the default option\n JS_NORMAL is implementation dependent.\n\n This option is an enum to permit additional types to be added, e.g.\n goog.math.Integer.\n',
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 12, 4, 1, 2, 0],
-        "span": [569, 4, 18],
+        "span": [567, 4, 18],
         "leadingComments": " Use the default type.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 12, 4, 1, 2, 1],
-        "span": [572, 4, 18],
+        "span": [570, 4, 18],
         "leadingComments": " Use JavaScript strings.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 12, 4, 1, 2, 2],
-        "span": [575, 4, 18],
+        "span": [573, 4, 18],
         "leadingComments": " Use JavaScript numbers.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 12, 2, 3],
-        "span": [606, 2, 43],
+        "span": [604, 2, 43],
         "leadingComments":
           " Should this field be parsed lazily?  Lazy applies only to message-type\n fields.  It means that when the outer message is initially parsed, the\n inner message's contents will not be parsed but instead stored in encoded\n form.  The inner message will actually be parsed when it is first accessed.\n\n This is only a hint.  Implementations are free to choose whether to use\n eager or lazy parsing regardless of the value of this option.  However,\n setting this option true suggests that the protocol author believes that\n using lazy parsing on this field is worth the additional bookkeeping\n overhead typically needed to implement it.\n\n This option does not affect the public interface of any generated code;\n all method signatures remain the same.  Furthermore, thread-safety of the\n interface is not affected by this option; const methods remain safe to\n call from multiple threads concurrently, while non-const methods continue\n to require exclusive access.\n\n\n Note that implementations may choose not to check required fields within\n a lazy sub-message.  That is, calling IsInitialized() on the outer message\n may return true even if the inner message has missing required fields.\n This is necessary because otherwise the inner message would have to be\n parsed in order to perform the check, defeating the purpose of lazy\n parsing.  An implementation which chooses not to check required fields\n must be consistent about it.  That is, for any particular sub-message, the\n implementation must either *always* check its required fields, or *never*\n check its required fields, regardless of whether or not the message has\n been parsed.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 12, 2, 4],
-        "span": [612, 2, 49],
+        "span": [610, 2, 49],
         "leadingComments":
           " Is this field deprecated?\n Depending on the target platform, this can emit Deprecated annotations\n for accessors, or it will be completely ignored; in the very least, this\n is a formalization for deprecating fields.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 12, 2, 5],
-        "span": [615, 2, 44],
+        "span": [613, 2, 44],
         "leadingComments": " For Google-internal migration only. Do not use.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 12, 2, 6],
-        "span": [619, 2, 58],
+        "span": [617, 2, 58],
         "leadingComments": " The parser stores options it doesn't recognize here. See above.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 12, 5],
-        "span": [622, 2, 25],
+        "span": [620, 2, 25],
         "leadingComments": " Clients can define custom options in extensions of this message. See above.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 12, 9],
-        "span": [624, 2, 13],
+        "span": [622, 2, 13],
         "leadingComments": "",
         "trailingComments": " removed jtype\n",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 13, 2, 0],
-        "span": [629, 2, 58],
+        "span": [627, 2, 58],
         "leadingComments": " The parser stores options it doesn't recognize here. See above.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 13, 5],
-        "span": [632, 2, 25],
+        "span": [630, 2, 25],
         "leadingComments": " Clients can define custom options in extensions of this message. See above.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 14, 2, 0],
-        "span": [639, 2, 32],
+        "span": [637, 2, 32],
         "leadingComments": " Set this option to true to allow mapping different tag names to the same\n value.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 14, 2, 1],
-        "span": [645, 2, 49],
+        "span": [643, 2, 49],
         "leadingComments":
           " Is this enum deprecated?\n Depending on the target platform, this can emit Deprecated annotations\n for the enum, or it will be completely ignored; in the very least, this\n is a formalization for deprecating enums.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 14, 9],
-        "span": [647, 2, 13],
+        "span": [645, 2, 13],
         "leadingComments": "",
         "trailingComments": " javanano_as_lite\n",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 14, 2, 2],
-        "span": [650, 2, 58],
+        "span": [648, 2, 58],
         "leadingComments": " The parser stores options it doesn't recognize here. See above.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 14, 5],
-        "span": [653, 2, 25],
+        "span": [651, 2, 25],
         "leadingComments": " Clients can define custom options in extensions of this message. See above.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 15, 2, 0],
-        "span": [661, 2, 49],
+        "span": [659, 2, 49],
         "leadingComments":
           " Is this enum value deprecated?\n Depending on the target platform, this can emit Deprecated annotations\n for the enum value, or it will be completely ignored; in the very least,\n this is a formalization for deprecating enum values.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 15, 2, 1],
-        "span": [664, 2, 58],
+        "span": [662, 2, 58],
         "leadingComments": " The parser stores options it doesn't recognize here. See above.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 15, 5],
-        "span": [667, 2, 25],
+        "span": [665, 2, 25],
         "leadingComments": " Clients can define custom options in extensions of this message. See above.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 16, 2, 0],
-        "span": [681, 2, 50],
+        "span": [679, 2, 50],
         "leadingComments":
           " Is this service deprecated?\n Depending on the target platform, this can emit Deprecated annotations\n for the service, or it will be completely ignored; in the very least,\n this is a formalization for deprecating services.\n",
         "trailingComments": "",
@@ -5049,19 +5046,19 @@ export const protoMetadata: ProtoMetadata = {
         ],
       }, {
         "path": [4, 16, 2, 1],
-        "span": [684, 2, 58],
+        "span": [682, 2, 58],
         "leadingComments": " The parser stores options it doesn't recognize here. See above.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 16, 5],
-        "span": [687, 2, 25],
+        "span": [685, 2, 25],
         "leadingComments": " Clients can define custom options in extensions of this message. See above.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 17, 2, 0],
-        "span": [701, 2, 50],
+        "span": [699, 2, 50],
         "leadingComments":
           " Is this method deprecated?\n Depending on the target platform, this can emit Deprecated annotations\n for the method, or it will be completely ignored; in the very least,\n this is a formalization for deprecating methods.\n",
         "trailingComments": "",
@@ -5070,59 +5067,59 @@ export const protoMetadata: ProtoMetadata = {
         ],
       }, {
         "path": [4, 17, 4, 0],
-        "span": [706, 2, 710, 3],
+        "span": [704, 2, 708, 3],
         "leadingComments":
           " Is this method side-effect-free (or safe in HTTP parlance), or idempotent,\n or neither? HTTP based RPC implementation may choose GET verb for safe\n methods, and PUT verb for idempotent methods instead of the default POST.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 17, 4, 0, 2, 1],
-        "span": [708, 4, 24],
+        "span": [706, 4, 24],
         "leadingComments": "",
         "trailingComments": " implies idempotent\n",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 17, 4, 0, 2, 2],
-        "span": [709, 4, 19],
+        "span": [707, 4, 19],
         "leadingComments": "",
         "trailingComments": " idempotent, but may have side effects\n",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 17, 2, 2],
-        "span": [715, 2, 58],
+        "span": [713, 2, 58],
         "leadingComments": " The parser stores options it doesn't recognize here. See above.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 17, 5],
-        "span": [718, 2, 25],
+        "span": [716, 2, 25],
         "leadingComments": " Clients can define custom options in extensions of this message. See above.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 18],
-        "span": [728, 0, 748, 1],
+        "span": [726, 0, 746, 1],
         "leadingComments":
           " A message representing a option the parser does not recognize. This only\n appears in options protos created by the compiler::Parser class.\n DescriptorPool resolves these when building Descriptor objects. Therefore,\n options protos in descriptor objects (e.g. returned by Descriptor::options(),\n or produced by Descriptor::CopyTo()) will never have UninterpretedOptions\n in them.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 18, 3, 0],
-        "span": [734, 2, 737, 3],
+        "span": [732, 2, 735, 3],
         "leadingComments":
           ' The name of the uninterpreted option.  Each string represents a segment in\n a dot-separated name.  is_extension is true iff a segment represents an\n extension (denoted with parentheses in options specs in .proto files).\n E.g.,{ ["foo", false], ["bar.baz", true], ["qux", false] } represents\n "foo.(bar.baz).qux".\n',
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 18, 2, 1],
-        "span": [742, 2, 39],
+        "span": [740, 2, 39],
         "leadingComments":
           " The value of the uninterpreted option, in whatever type the tokenizer\n identified it as during parsing. Exactly one of these should be set.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 19],
-        "span": [755, 0, 884, 1],
+        "span": [753, 0, 882, 1],
         "leadingComments":
           " Encapsulates information about the original source file from which a\n FileDescriptorProto was generated.\n",
         "trailingComments": "",
@@ -5131,69 +5128,69 @@ export const protoMetadata: ProtoMetadata = {
         ],
       }, {
         "path": [4, 19, 2, 0],
-        "span": [799, 2, 33],
+        "span": [797, 2, 33],
         "leadingComments":
           ' A Location identifies a piece of source code in a .proto file which\n corresponds to a particular definition.  This information is intended\n to be useful to IDEs, code indexers, documentation generators, and similar\n tools.\n\n For example, say we have a file like:\n   message Foo {\n     optional string foo = 1;\n   }\n Let\'s look at just the field definition:\n   optional string foo = 1;\n   ^       ^^     ^^  ^  ^^^\n   a       bc     de  f  ghi\n We have the following locations:\n   span   path               represents\n   [a,i)  [ 4, 0, 2, 0 ]     The whole field definition.\n   [a,b)  [ 4, 0, 2, 0, 4 ]  The label (optional).\n   [c,d)  [ 4, 0, 2, 0, 5 ]  The type (string).\n   [e,f)  [ 4, 0, 2, 0, 1 ]  The name (foo).\n   [g,h)  [ 4, 0, 2, 0, 3 ]  The number (1).\n\n Notes:\n - A location may refer to a repeated field itself (i.e. not to any\n   particular index within it).  This is used whenever a set of elements are\n   logically enclosed in a single code segment.  For example, an entire\n   extend block (possibly containing multiple extension definitions) will\n   have an outer location whose path refers to the "extensions" repeated\n   field without an index.\n - Multiple locations may have the same path.  This happens when a single\n   logical declaration is spread out across multiple places.  The most\n   obvious example is the "extend" block again -- there may be multiple\n   extend blocks in the same scope, each of which will have the same path.\n - A location\'s span is not always a subset of its parent\'s span.  For\n   example, the "extendee" of an extension declaration appears at the\n   beginning of the "extend" block and is shared by all extensions within\n   the block.\n - Just because a location\'s span is a subset of some other location\'s span\n   does not mean that it is a descendant.  For example, a "group" defines\n   both a type and a field in a single declaration.  Thus, the locations\n   corresponding to the type and field and their components will overlap.\n - Code which tries to interpret locations should probably be designed to\n   ignore those that it doesn\'t understand, as more types of locations could\n   be recorded in the future.\n',
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 19, 3, 0, 2, 0],
-        "span": [824, 4, 44],
+        "span": [822, 4, 44],
         "leadingComments":
           " Identifies which part of the FileDescriptorProto was defined at this\n location.\n\n Each element is a field number or an index.  They form a path from\n the root FileDescriptorProto to the place where the definition.  For\n example, this path:\n   [ 4, 3, 2, 7, 1 ]\n refers to:\n   file.message_type(3)  // 4, 3\n       .field(7)         // 2, 7\n       .name()           // 1\n This is because FileDescriptorProto.message_type has field number 4:\n   repeated DescriptorProto message_type = 4;\n and DescriptorProto.field has field number 2:\n   repeated FieldDescriptorProto field = 2;\n and FieldDescriptorProto.name has field number 1:\n   optional string name = 1;\n\n Thus, the above path gives the location of a field name.  If we removed\n the last element:\n   [ 4, 3, 2, 7 ]\n this path refers to the whole field declaration (from the beginning\n of the label to the terminating semicolon).\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 19, 3, 0, 2, 1],
-        "span": [831, 4, 44],
+        "span": [829, 4, 44],
         "leadingComments":
           " Always has exactly three or four elements: start line, start column,\n end line (optional, otherwise assumed same as start line), end column.\n These are packed into a single field for efficiency.  Note that line\n and column numbers are zero-based -- typically you will want to add\n 1 to each before displaying to a user.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 19, 3, 0, 2, 2],
-        "span": [880, 4, 41],
+        "span": [878, 4, 41],
         "leadingComments":
           " If this SourceCodeInfo represents a complete declaration, these are any\n comments appearing before and after the declaration which appear to be\n attached to the declaration.\n\n A series of line comments appearing on consecutive lines, with no other\n tokens appearing on those lines, will be treated as a single comment.\n\n leading_detached_comments will keep paragraphs of comments that appear\n before (but not connected to) the current element. Each paragraph,\n separated by empty lines, will be one comment element in the repeated\n field.\n\n Only the comment content is provided; comment markers (e.g. //) are\n stripped out.  For block comments, leading whitespace and an asterisk\n will be stripped from the beginning of each line other than the first.\n Newlines are included in the output.\n\n Examples:\n\n   optional int32 foo = 1;  // Comment attached to foo.\n   // Comment attached to bar.\n   optional int32 bar = 2;\n\n   optional string baz = 3;\n   // Comment attached to baz.\n   // Another line attached to baz.\n\n   // Comment attached to qux.\n   //\n   // Another line attached to qux.\n   optional double qux = 4;\n\n   // Detached comment for corge. This is not leading or trailing comments\n   // to qux or corge because there are blank lines separating it from\n   // both.\n\n   // Detached comment for corge paragraph 2.\n\n   optional string corge = 5;\n   /* Block comment attached\n    * to corge.  Leading asterisks\n    * will be removed. */\n   /* Block comment attached to\n    * grault. */\n   optional int32 grault = 6;\n\n   // ignored detached comments.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 20],
-        "span": [889, 0, 910, 1],
+        "span": [887, 0, 908, 1],
         "leadingComments":
           " Describes the relationship between generated code and its original source\n file. A GeneratedCodeInfo message is associated with only one generated\n source file, but may contain references to different source .proto files.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 20, 2, 0],
-        "span": [892, 2, 37],
+        "span": [890, 2, 37],
         "leadingComments":
           " An Annotation connects some span of text in generated code to an element\n of its generating .proto file.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 20, 3, 0, 2, 0],
-        "span": [896, 4, 44],
+        "span": [894, 4, 44],
         "leadingComments":
           " Identifies the element in the original source .proto file. This field\n is formatted the same as SourceCodeInfo.Location.path.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 20, 3, 0, 2, 1],
-        "span": [899, 4, 36],
+        "span": [897, 4, 36],
         "leadingComments": " Identifies the filesystem path to the original source .proto.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 20, 3, 0, 2, 2],
-        "span": [903, 4, 29],
+        "span": [901, 4, 29],
         "leadingComments":
           " Identifies the starting offset in bytes in the generated code\n that relates to the identified object.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 20, 3, 0, 2, 3],
-        "span": [908, 4, 27],
+        "span": [906, 4, 27],
         "leadingComments":
           " Identifies the ending offset in bytes in the generated code that\n relates to the identified offset. The end offset should be one past\n the last relevant byte (so the length of the text = end - begin).\n",
         "trailingComments": "",
