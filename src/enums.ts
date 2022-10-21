@@ -1,9 +1,10 @@
 import { code, def, Code, joinCode } from "ts-poet";
-import { EnumDescriptorProto } from "ts-proto-descriptors";
+import { EnumDescriptorProto, EnumValueDescriptorProto } from "ts-proto-descriptors";
 import { maybeAddComment } from "./utils";
-import { camelCase } from "./case";
+import { camelCase, camelToSnake } from "./case";
 import SourceInfo, { Fields } from "./sourceInfo";
 import { Context } from "./context";
+import { RemoveEnumPrefixOption } from './options';
 
 const UNRECOGNIZED_ENUM_NAME = "UNRECOGNIZED";
 const UNRECOGNIZED_ENUM_VALUE = -1;
@@ -30,9 +31,11 @@ export function generateEnum(
 
   enumDesc.value.forEach((valueDesc, index) => {
     const info = sourceInfo.lookup(Fields.enum.value, index);
-    maybeAddComment(info, chunks, valueDesc.options?.deprecated, `${valueDesc.name} - `);
+    const valueName = getValueName(ctx, fullName, valueDesc);
+    const memberName = getMemberName(ctx, fullName, valueDesc);
+    maybeAddComment(info, chunks, valueDesc.options?.deprecated, `${memberName} - `);
     chunks.push(
-      code`${valueDesc.name} ${delimiter} ${options.stringEnums ? `"${valueDesc.name}"` : valueDesc.number.toString()},`
+      code`${memberName} ${delimiter} ${options.stringEnums ? `"${valueName}"` : valueDesc.number.toString()},`
     );
   });
 
@@ -76,10 +79,12 @@ export function generateEnumFromJson(ctx: Context, fullName: string, enumDesc: E
   chunks.push(code`switch (object) {`);
 
   for (const valueDesc of enumDesc.value) {
+    const memberName = getMemberName(ctx, fullName, valueDesc);
+    const valueName = getValueName(ctx, fullName, valueDesc);
     chunks.push(code`
       case ${valueDesc.number}:
-      case "${valueDesc.name}":
-        return ${fullName}.${valueDesc.name};
+      case "${valueName}":
+        return ${fullName}.${memberName};
     `);
   }
 
@@ -119,9 +124,12 @@ export function generateEnumToJson(ctx: Context, fullName: string, enumDesc: Enu
 
   for (const valueDesc of enumDesc.value) {
     if (ctx.options.useNumericEnumForJson) {
-      chunks.push(code`case ${fullName}.${valueDesc.name}: return ${valueDesc.number};`);
+      const memberName = getMemberName(ctx, fullName, valueDesc);
+      chunks.push(code`case ${fullName}.${memberName}: return ${valueDesc.number};`);
     } else {
-      chunks.push(code`case ${fullName}.${valueDesc.name}: return "${valueDesc.name}";`);
+      const memberName = getMemberName(ctx, fullName, valueDesc);
+      const valueName = getValueName(ctx, fullName, valueDesc);
+      chunks.push(code`case ${fullName}.${memberName}: return "${valueName}";`);
     }
   }
 
@@ -163,7 +171,7 @@ export function generateEnumToNumber(ctx: Context, fullName: string, enumDesc: E
   chunks.push(code`export function ${def(functionName)}(object: ${fullName}): number {`);
   chunks.push(code`switch (object) {`);
   for (const valueDesc of enumDesc.value) {
-    chunks.push(code`case ${fullName}.${valueDesc.name}: return ${valueDesc.number};`);
+    chunks.push(code`case ${fullName}.${getMemberName(ctx, fullName, valueDesc)}: return ${valueDesc.number};`);
   }
 
   if (options.unrecognizedEnum) {
@@ -183,4 +191,18 @@ export function generateEnumToNumber(ctx: Context, fullName: string, enumDesc: E
   chunks.push(code`}`);
   chunks.push(code`}`);
   return joinCode(chunks, { on: "\n" });
+}
+
+function getMemberName(ctx: Context, fullName: string, valueDesc: EnumValueDescriptorProto): string {
+  if ([RemoveEnumPrefixOption.ALL, RemoveEnumPrefixOption.MEMBERS].includes(ctx.options.removeEnumPrefix)) {
+    return valueDesc.name.replace(`${camelToSnake(fullName)}_`, '');
+  }
+  return valueDesc.name;
+}
+
+function getValueName(ctx: Context, fullName: string, valueDesc: EnumValueDescriptorProto): string {
+  if (ctx.options.removeEnumPrefix === RemoveEnumPrefixOption.ALL) {
+    return valueDesc.name.replace(`${camelToSnake(fullName)}_`, '');
+  }
+  return valueDesc.name;
 }
