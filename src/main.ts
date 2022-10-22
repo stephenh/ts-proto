@@ -751,7 +751,7 @@ function generateInterfaceDeclaration(
     const name = maybeSnakeToCamel(fieldDesc.name, options);
     const type = toTypeName(ctx, messageDesc, fieldDesc);
     const q = isOptionalProperty(fieldDesc, messageDesc.options, options) ? "?" : "";
-    chunks.push(code`${name}${q}: ${type}, `);
+    chunks.push(code`${ctx.options.useReadonlyTypes ? "readonly " : ""}${name}${q}: ${type}, `);
   });
 
   chunks.push(code`}`);
@@ -874,8 +874,9 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
     ): ${fullName} {
       const reader = input instanceof ${Reader} ? input : new ${Reader}(input);
       let end = length === undefined ? reader.len : reader.pos + length;
-      const message = ${createBase};
   `);
+
+  chunks.push(code`const message = ${createBase}${options.useReadonlyTypes ? " as any" : ""};`);
 
   if (options.unknownFields) {
     chunks.push(code`(message as any)._unknownFields = {}`);
@@ -1592,7 +1593,7 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
     createBase = code`Object.create(${createBase}) as ${fullName}`;
   }
 
-  chunks.push(code`const message = ${createBase};`);
+  chunks.push(code`const message = ${createBase}${options.useReadonlyTypes ? " as any" : ""};`);
 
   // add a check for each incoming field
   messageDesc.field.forEach((field) => {
@@ -1740,7 +1741,7 @@ function generateWrap(ctx: Context, fullProtoTypeName: string, fieldNames: Struc
   if (isAnyValueTypeName(fullProtoTypeName)) {
     if (ctx.options.oneof === OneofOption.UNIONS) {
       chunks.push(code`wrap(value: any): Value {
-        const result = createBaseValue();
+        const result = createBaseValue()${ctx.options.useReadonlyTypes ? " as any" : ""};
 
         if (value === null) {
           result.kind = {$case: '${fieldNames.nullValue}', ${fieldNames.nullValue}: NullValue.NULL_VALUE};
@@ -1762,7 +1763,7 @@ function generateWrap(ctx: Context, fullProtoTypeName: string, fieldNames: Struc
     }`);
     } else {
       chunks.push(code`wrap(value: any): Value {
-        const result = createBaseValue();
+        const result = createBaseValue()${ctx.options.useReadonlyTypes ? " as any" : ""};
 
         if (value === null) {
           result.${fieldNames.nullValue} = NullValue.NULL_VALUE;
@@ -1786,8 +1787,10 @@ function generateWrap(ctx: Context, fullProtoTypeName: string, fieldNames: Struc
   }
 
   if (isListValueTypeName(fullProtoTypeName)) {
-    chunks.push(code`wrap(value: Array<any> | undefined): ListValue {
-      const result = createBaseListValue();
+    chunks.push(code`wrap(value: ${
+      ctx.options.useReadonlyTypes ? "ReadonlyArray<any>" : "Array<any>"
+    } | undefined): ListValue {
+      const result = createBaseListValue()${ctx.options.useReadonlyTypes ? " as any" : ""};
 
       result.values = value ?? [];
 
@@ -1796,8 +1799,8 @@ function generateWrap(ctx: Context, fullProtoTypeName: string, fieldNames: Struc
   }
 
   if (isFieldMaskTypeName(fullProtoTypeName)) {
-    chunks.push(code`wrap(paths: string[]): FieldMask {
-      const result = createBaseFieldMask();
+    chunks.push(code`wrap(paths: ${ctx.options.useReadonlyTypes ? "readonly " : ""} string[]): FieldMask {
+      const result = createBaseFieldMask()${ctx.options.useReadonlyTypes ? " as any" : ""};
 
       result.paths = paths;
 
@@ -1860,13 +1863,13 @@ function generateUnwrap(ctx: Context, fullProtoTypeName: string, fieldNames: Str
   }
 
   if (isListValueTypeName(fullProtoTypeName)) {
-    chunks.push(code`unwrap(message: ListValue): Array<any> {
+    chunks.push(code`unwrap(message: ${ctx.options.useReadonlyTypes ? "any" : "ListValue"}): Array<any> {
       return message.values;
     }`);
   }
 
   if (isFieldMaskTypeName(fullProtoTypeName)) {
-    chunks.push(code`unwrap(message: FieldMask): string[] {
+    chunks.push(code`unwrap(message: ${ctx.options.useReadonlyTypes ? "any" : "FieldMask"}): string[] {
       return message.paths;
     }`);
   }

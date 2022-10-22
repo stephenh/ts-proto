@@ -483,13 +483,17 @@ export function valueTypeName(ctx: Context, typeName: string): Code | undefined 
         ? code`string`
         : code`Uint8Array`;
     case ".google.protobuf.ListValue":
-      return code`Array<any>`;
+      return ctx.options.useReadonlyTypes ? code`ReadonlyArray<any>` : code`Array<any>`;
     case ".google.protobuf.Value":
       return code`any`;
     case ".google.protobuf.Struct":
-      return code`{[key: string]: any}`;
+      return ctx.options.useReadonlyTypes ? code`{readonly [key: string]: any}` : code`{[key: string]: any}`;
     case ".google.protobuf.FieldMask":
-      return ctx.options.useJsonWireFormat ? code`string` : code`string[]`;
+      return ctx.options.useJsonWireFormat
+        ? code`string`
+        : ctx.options.useReadonlyTypes
+        ? code`readonly string[]`
+        : code`string[]`;
     case ".google.protobuf.Duration":
       return ctx.options.useJsonWireFormat ? code`string` : undefined;
     case ".google.protobuf.Timestamp":
@@ -595,6 +599,9 @@ export function toTypeName(ctx: Context, messageDesc: DescriptorProto, field: Fi
         return code`Map<${keyType}, ${valueType}>`;
       }
       return code`{ [key: ${keyType} ]: ${valueType} }`;
+    }
+    if (ctx.options.useReadonlyTypes) {
+      return code`readonly ${type}[]`;
     }
     return code`${type}[]`;
   }
