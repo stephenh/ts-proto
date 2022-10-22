@@ -1,3 +1,10 @@
+# [1.130.0](https://github.com/stephenh/ts-proto/compare/v1.129.0...v1.130.0) (2022-10-22)
+
+
+### Features
+
+* support `useReadonlyTypes` option ([#691](https://github.com/stephenh/ts-proto/issues/691)) ([4b87334](https://github.com/stephenh/ts-proto/commit/4b8733452fb59cea3b9fb4721159b97e6df59854))
+
 # [1.129.0](https://github.com/stephenh/ts-proto/compare/v1.128.0...v1.129.0) (2022-10-16)
 
 
