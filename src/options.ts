@@ -74,6 +74,7 @@ export type Options = {
   initializeFieldsAsUndefined: boolean;
   useMapType: boolean;
   useReadonlyTypes: boolean;
+  useSnakeTypeName: boolean;
   M: { [from: string]: string };
 };
 
@@ -119,6 +120,7 @@ export function defaultOptions(): Options {
     initializeFieldsAsUndefined: true,
     useMapType: false,
     useReadonlyTypes: false,
+    useSnakeTypeName: true,
     M: {},
   };
 }
