@@ -1,3 +1,10 @@
+# [1.131.0](https://github.com/stephenh/ts-proto/compare/v1.130.0...v1.131.0) (2022-10-25)
+
+
+### Features
+
+* option useSnakeTypeName ([#694](https://github.com/stephenh/ts-proto/issues/694)) ([ad73ff9](https://github.com/stephenh/ts-proto/commit/ad73ff9341d0d593156d10b5d96c4a47afdc802d))
+
 # [1.130.0](https://github.com/stephenh/ts-proto/compare/v1.129.0...v1.130.0) (2022-10-22)
 
 
