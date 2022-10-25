@@ -464,6 +464,24 @@ Generated code will be placed in the Gradle build directory.
 
 - With `--ts_proto_opt=useReadonlyTypes=true`, the generated types will be declared as immutable using typescript's `readonly` modifer.
 
+- With `--ts_proto_opt=useSnakeTypeName=false` will remove snake casing from types. 
+  
+  Example Protobuf
+  ```protobuf
+  message Box {
+      message Element {
+            message Image {
+                  enum Alignment {
+                        LEFT = 1;
+                        CENTER = 2;
+                        RIGHT = 3;
+                  }
+            }
+        }
+  }
+  ```
+  by default this is enabled which would generate a type of `Box_Element_Image_Alignment`. By disabling this option the type that is generated would be `BoxElementImageAlignment`. 
+
 ### NestJS Support
 
 We have a great way of working together with [nestjs](https://docs.nestjs.com/microservices/grpc). `ts-proto` generates `interfaces` and `decorators` for you controller, client. For more information see the [nestjs readme](NESTJS.markdown).
