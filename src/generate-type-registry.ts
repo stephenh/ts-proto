@@ -7,9 +7,15 @@ export function generateTypeRegistry(ctx: Context): Code {
 
   chunks.push(generateMessageType(ctx));
 
-  chunks.push(code`
-    export type UnknownMessage = {$type: string};
-  `);
+  if (ctx.options.outputTypeRegistry == "no-tags") {
+    chunks.push(code`
+      export type UnknownMessage = {};
+    `);
+  } else {
+    chunks.push(code`
+      export type UnknownMessage = {$type: string};
+    `);
+  }
 
   chunks.push(code`
     export const messageTypeRegistry = new Map<string, MessageType>();
@@ -25,7 +31,11 @@ function generateMessageType(ctx: Context): Code {
 
   chunks.push(code`export interface MessageType<Message extends UnknownMessage = UnknownMessage> {`);
 
-  chunks.push(code`$type: Message['$type'];`);
+  if (ctx.options.outputTypeRegistry == "no-tags") {
+    chunks.push(code`$type: string;`);
+  } else {
+    chunks.push(code`$type: Message['$type'];`);
+  }
 
   if (ctx.options.outputEncodeMethods) {
     const Writer = impFile(ctx.options, "Writer@protobufjs/minimal");

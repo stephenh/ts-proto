@@ -112,7 +112,7 @@ function generateRegularRpcMethod(
   assertInstanceOf(methodDesc, FormattedMethodDescriptor);
   const { options, utils } = ctx;
   const Reader = impFile(ctx.options, "Reader@protobufjs/minimal");
-  const rawInputType = rawRequestType(ctx, methodDesc);
+  const rawInputType = rawRequestType(ctx, methodDesc, { keepValueType: true });
   const inputType = requestType(ctx, methodDesc);
   const outputType = responseType(ctx, methodDesc);
   const rawOutputType = responseType(ctx, methodDesc, { keepValueType: true });
@@ -121,11 +121,11 @@ function generateRegularRpcMethod(
   const maybeCtx = options.context ? "ctx," : "";
 
   let encode = code`${rawInputType}.encode(request).finish()`;
-  let decode = code`data => ${outputType}.decode(new ${Reader}(data))`;
+  let decode = code`data => ${rawOutputType}.decode(new ${Reader}(data))`;
 
-  if (options.useDate && rawOutputType.toString().includes("Timestamp")) {
-    decode = code`data => ${utils.fromTimestamp}(${rawOutputType}.decode(new ${Reader}(data)))`;
-  }
+  // if (options.useDate && rawOutputType.toString().includes("Timestamp")) {
+  //   decode = code`data => ${utils.fromTimestamp}(${rawOutputType}.decode(new ${Reader}(data)))`;
+  // }
   if (methodDesc.clientStreaming) {
     if (options.useAsyncIterable) {
       encode = code`${rawInputType}.encodeTransform(request)`;

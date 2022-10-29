@@ -174,7 +174,7 @@ export const Timestamp = {
   },
 };
 
-messageTypeRegistry.set(Timestamp.$type, Timestamp);
+messageTypeRegistry.set("google.protobuf.Timestamp", Timestamp);
 
 declare var self: any | undefined;
 declare var window: any | undefined;

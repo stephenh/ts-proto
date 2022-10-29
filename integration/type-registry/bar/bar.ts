@@ -59,7 +59,7 @@ export const Bar = {
   },
 };
 
-messageTypeRegistry.set(Bar.$type, Bar);
+messageTypeRegistry.set("foo.bar.Bar", Bar);
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 

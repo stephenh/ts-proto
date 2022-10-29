@@ -60,6 +60,10 @@ export function generateGenericServiceDefinition(
   return joinCode(chunks, { on: "\n" });
 }
 
+function stripDot(str: string) {
+  return str.startsWith(".") ? str.slice(1) : str;
+}
+
 function generateMethodDefinition(ctx: Context, methodDesc: MethodDescriptorProto) {
   const inputType = messageToTypeName(ctx, methodDesc.inputType, { keepValueType: true });
   const outputType = messageToTypeName(ctx, methodDesc.outputType, { keepValueType: true });

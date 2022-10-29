@@ -398,7 +398,7 @@ Generated code will be placed in the Gradle build directory.
 
 - With `--ts_proto_opt=outputSchema=true`, meta typings will be generated that can later be used in other code generators.
 
-- With `--ts_proto_opt=outputTypeRegistry=true`, the type registry will be generated that can be used to resolve message types by fully-qualified name. Also, each message will get extra `$type` field containing fully-qualified name.
+- With `--ts_proto_opt=outputTypeRegistry=true`, the type registry will be generated that can be used to resolve message types by fully-qualified name. Also, each message will get extra `$type` field containing fully-qualified name.  If you would prefer to avoid the `$type`, you can  `--ts_proto_opt=outputTypeRegistry=no-tags`
 
 - With `--ts_proto_opt=outputServices=grpc-js`, ts-proto will output service definitions and server / client stubs in [grpc-js](https://github.com/grpc/grpc-node/tree/master/packages/grpc-js) format.
 

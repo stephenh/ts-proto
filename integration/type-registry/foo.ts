@@ -70,7 +70,7 @@ export const Foo = {
   },
 };
 
-messageTypeRegistry.set(Foo.$type, Foo);
+messageTypeRegistry.set("foo.Foo", Foo);
 
 function createBaseFoo2(): Foo2 {
   return { $type: "foo.Foo2", timestamp: undefined };
@@ -121,7 +121,7 @@ export const Foo2 = {
   },
 };
 
-messageTypeRegistry.set(Foo2.$type, Foo2);
+messageTypeRegistry.set("foo.Foo2", Foo2);
 
 function createBaseWithStruct(): WithStruct {
   return { $type: "foo.WithStruct", struct: undefined };
@@ -172,7 +172,7 @@ export const WithStruct = {
   },
 };
 
-messageTypeRegistry.set(WithStruct.$type, WithStruct);
+messageTypeRegistry.set("foo.WithStruct", WithStruct);
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 

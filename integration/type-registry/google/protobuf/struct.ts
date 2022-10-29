@@ -63,8 +63,8 @@ export interface Struct_FieldsEntry {
 /**
  * `Value` represents a dynamically typed value which can be either
  * null, a number, a string, a boolean, a recursive struct value, or a
- * list of values. A producer of value is expected to set one of these
- * variants. Absence of any variant indicates an error.
+ * list of values. A producer of value is expected to set one of that
+ * variants, absence of any variant indicates an error.
  *
  * The JSON representation for `Value` is JSON value.
  */
@@ -201,7 +201,7 @@ export const Struct = {
   },
 };
 
-messageTypeRegistry.set(Struct.$type, Struct);
+messageTypeRegistry.set("google.protobuf.Struct", Struct);
 
 function createBaseStruct_FieldsEntry(): Struct_FieldsEntry {
   return { $type: "google.protobuf.Struct.FieldsEntry", key: "", value: undefined };
@@ -264,7 +264,7 @@ export const Struct_FieldsEntry = {
   },
 };
 
-messageTypeRegistry.set(Struct_FieldsEntry.$type, Struct_FieldsEntry);
+messageTypeRegistry.set("google.protobuf.Struct.FieldsEntry", Struct_FieldsEntry);
 
 function createBaseValue(): Value {
   return {
@@ -411,7 +411,7 @@ export const Value = {
   },
 };
 
-messageTypeRegistry.set(Value.$type, Value);
+messageTypeRegistry.set("google.protobuf.Value", Value);
 
 function createBaseListValue(): ListValue {
   return { $type: "google.protobuf.ListValue", values: [] };
@@ -478,7 +478,7 @@ export const ListValue = {
   },
 };
 
-messageTypeRegistry.set(ListValue.$type, ListValue);
+messageTypeRegistry.set("google.protobuf.ListValue", ListValue);
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 

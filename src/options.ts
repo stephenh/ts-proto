@@ -47,7 +47,7 @@ export type Options = {
   outputEncodeMethods: boolean;
   outputJsonMethods: boolean;
   outputPartialMethods: boolean;
-  outputTypeRegistry: boolean;
+  outputTypeRegistry: boolean | "no-tags";
   stringEnums: boolean;
   constEnums: boolean;
   enumsAsLiterals: boolean;
