@@ -702,7 +702,7 @@ function makeGrpcWebErrorClass() {
   const GrpcWebError = conditionalOutput(
     "GrpcWebError",
     code`
-      export class GrpcWebError extends Error {
+      export class GrpcWebError extends global.Error {
         constructor(message: string, public code: grpc.Code, public metadata: grpc.Metadata) {
           super(message);
         }
