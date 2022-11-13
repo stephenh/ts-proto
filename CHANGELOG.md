@@ -1,3 +1,10 @@
+## [1.131.1](https://github.com/stephenh/ts-proto/compare/v1.131.0...v1.131.1) (2022-11-13)
+
+
+### Bug Fixes
+
+* Extend `global.Error` to avoid import collisions with Error proto msgs ([#699](https://github.com/stephenh/ts-proto/issues/699)) ([e9d8f91](https://github.com/stephenh/ts-proto/commit/e9d8f9123b7b3c5e274035fa3f2644b370915181))
+
 # [1.131.0](https://github.com/stephenh/ts-proto/compare/v1.130.0...v1.131.0) (2022-10-25)
 
 
