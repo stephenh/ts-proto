@@ -28,7 +28,7 @@ export const protobufPackage = "google.protobuf";
  *       foo = any.unpack(Foo.class);
  *     }
  *
- * Example 3: Pack and unpack a message in Python.
+ *  Example 3: Pack and unpack a message in Python.
  *
  *     foo = Foo(...)
  *     any = Any()
@@ -38,7 +38,7 @@ export const protobufPackage = "google.protobuf";
  *       any.Unpack(foo)
  *       ...
  *
- * Example 4: Pack and unpack a message in Go
+ *  Example 4: Pack and unpack a message in Go
  *
  *      foo := &pb.Foo{...}
  *      any, err := anypb.New(foo)
@@ -58,7 +58,7 @@ export const protobufPackage = "google.protobuf";
  * name "y.z".
  *
  * JSON
- *
+ * ====
  * The JSON representation of an `Any` value uses the regular
  * representation of the deserialized, embedded message, with an
  * additional field `@type` which contains the type URL. Example:
