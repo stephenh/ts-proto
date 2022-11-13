@@ -1,3 +1,10 @@
+## [1.131.2](https://github.com/stephenh/ts-proto/compare/v1.131.1...v1.131.2) (2022-11-13)
+
+
+### Bug Fixes
+
+* Adding a failing regression test for wrapper types ([#689](https://github.com/stephenh/ts-proto/issues/689)) ([bde2e28](https://github.com/stephenh/ts-proto/commit/bde2e28ad70bf05ebb21effcdb1caad7217c8291))
+
 ## [1.131.1](https://github.com/stephenh/ts-proto/compare/v1.131.0...v1.131.1) (2022-11-13)
 
 
