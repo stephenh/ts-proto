@@ -14,6 +14,10 @@ message Entity {
   google.protobuf.FieldMask fieldMask = 8;
   google.protobuf.ListValue listValue = 9;
   google.protobuf.Struct structValue = 10;
+  oneof oneOfValue {
+    string theStringValue = 11;
+    int32 theIntValue = 12;
+  }
 }
 
 message SubEntity {

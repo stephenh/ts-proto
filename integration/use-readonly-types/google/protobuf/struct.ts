@@ -66,28 +66,13 @@ export interface Struct_FieldsEntry {
  * The JSON representation for `Value` is JSON value.
  */
 export interface Value {
-  /** Represents a null value. */
-  readonly nullValue:
-    | NullValue
-    | undefined;
-  /** Represents a double value. */
-  readonly numberValue:
-    | number
-    | undefined;
-  /** Represents a string value. */
-  readonly stringValue:
-    | string
-    | undefined;
-  /** Represents a boolean value. */
-  readonly boolValue:
-    | boolean
-    | undefined;
-  /** Represents a structured value. */
-  readonly structValue:
-    | { readonly [key: string]: any }
-    | undefined;
-  /** Represents a repeated `Value`. */
-  readonly listValue: ReadonlyArray<any> | undefined;
+  readonly kind?:
+    | { readonly $case: "nullValue"; readonly nullValue: NullValue }
+    | { readonly $case: "numberValue"; readonly numberValue: number }
+    | { readonly $case: "stringValue"; readonly stringValue: string }
+    | { readonly $case: "boolValue"; readonly boolValue: boolean }
+    | { readonly $case: "structValue"; readonly structValue: { readonly [key: string]: any } | undefined }
+    | { readonly $case: "listValue"; readonly listValue: ReadonlyArray<any> | undefined };
 }
 
 /**
@@ -246,35 +231,28 @@ export const Struct_FieldsEntry = {
 };
 
 function createBaseValue(): Value {
-  return {
-    nullValue: undefined,
-    numberValue: undefined,
-    stringValue: undefined,
-    boolValue: undefined,
-    structValue: undefined,
-    listValue: undefined,
-  };
+  return { kind: undefined };
 }
 
 export const Value = {
   encode(message: Value, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.nullValue !== undefined) {
-      writer.uint32(8).int32(message.nullValue);
+    if (message.kind?.$case === "nullValue") {
+      writer.uint32(8).int32(message.kind.nullValue);
     }
-    if (message.numberValue !== undefined) {
-      writer.uint32(17).double(message.numberValue);
+    if (message.kind?.$case === "numberValue") {
+      writer.uint32(17).double(message.kind.numberValue);
     }
-    if (message.stringValue !== undefined) {
-      writer.uint32(26).string(message.stringValue);
+    if (message.kind?.$case === "stringValue") {
+      writer.uint32(26).string(message.kind.stringValue);
     }
-    if (message.boolValue !== undefined) {
-      writer.uint32(32).bool(message.boolValue);
+    if (message.kind?.$case === "boolValue") {
+      writer.uint32(32).bool(message.kind.boolValue);
     }
-    if (message.structValue !== undefined) {
-      Struct.encode(Struct.wrap(message.structValue), writer.uint32(42).fork()).ldelim();
+    if (message.kind?.$case === "structValue") {
+      Struct.encode(Struct.wrap(message.kind.structValue), writer.uint32(42).fork()).ldelim();
     }
-    if (message.listValue !== undefined) {
-      ListValue.encode(ListValue.wrap(message.listValue), writer.uint32(50).fork()).ldelim();
+    if (message.kind?.$case === "listValue") {
+      ListValue.encode(ListValue.wrap(message.kind.listValue), writer.uint32(50).fork()).ldelim();
     }
     return writer;
   },
@@ -287,22 +265,22 @@ export const Value = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.nullValue = reader.int32() as any;
+          message.kind = { $case: "nullValue", nullValue: reader.int32() as any };
           break;
         case 2:
-          message.numberValue = reader.double();
+          message.kind = { $case: "numberValue", numberValue: reader.double() };
           break;
         case 3:
-          message.stringValue = reader.string();
+          message.kind = { $case: "stringValue", stringValue: reader.string() };
           break;
         case 4:
-          message.boolValue = reader.bool();
+          message.kind = { $case: "boolValue", boolValue: reader.bool() };
           break;
         case 5:
-          message.structValue = Struct.unwrap(Struct.decode(reader, reader.uint32()));
+          message.kind = { $case: "structValue", structValue: Struct.unwrap(Struct.decode(reader, reader.uint32())) };
           break;
         case 6:
-          message.listValue = ListValue.unwrap(ListValue.decode(reader, reader.uint32()));
+          message.kind = { $case: "listValue", listValue: ListValue.unwrap(ListValue.decode(reader, reader.uint32())) };
           break;
         default:
           reader.skipType(tag & 7);
@@ -314,35 +292,66 @@ export const Value = {
 
   fromJSON(object: any): Value {
     return {
-      nullValue: isSet(object.nullValue) ? nullValueFromJSON(object.nullValue) : undefined,
-      numberValue: isSet(object.numberValue) ? Number(object.numberValue) : undefined,
-      stringValue: isSet(object.stringValue) ? String(object.stringValue) : undefined,
-      boolValue: isSet(object.boolValue) ? Boolean(object.boolValue) : undefined,
-      structValue: isObject(object.structValue) ? object.structValue : undefined,
-      listValue: Array.isArray(object.listValue) ? [...object.listValue] : undefined,
+      kind: isSet(object.nullValue)
+        ? { $case: "nullValue", nullValue: nullValueFromJSON(object.nullValue) }
+        : isSet(object.numberValue)
+        ? { $case: "numberValue", numberValue: Number(object.numberValue) }
+        : isSet(object.stringValue)
+        ? { $case: "stringValue", stringValue: String(object.stringValue) }
+        : isSet(object.boolValue)
+        ? { $case: "boolValue", boolValue: Boolean(object.boolValue) }
+        : isSet(object.structValue)
+        ? { $case: "structValue", structValue: object.structValue }
+        : isSet(object.listValue)
+        ? { $case: "listValue", listValue: [...object.listValue] }
+        : undefined,
     };
   },
 
   toJSON(message: Value): unknown {
     const obj: any = {};
-    message.nullValue !== undefined &&
-      (obj.nullValue = message.nullValue !== undefined ? nullValueToJSON(message.nullValue) : undefined);
-    message.numberValue !== undefined && (obj.numberValue = message.numberValue);
-    message.stringValue !== undefined && (obj.stringValue = message.stringValue);
-    message.boolValue !== undefined && (obj.boolValue = message.boolValue);
-    message.structValue !== undefined && (obj.structValue = message.structValue);
-    message.listValue !== undefined && (obj.listValue = message.listValue);
+    message.kind?.$case === "nullValue" &&
+      (obj.nullValue = message.kind?.nullValue !== undefined ? nullValueToJSON(message.kind?.nullValue) : undefined);
+    message.kind?.$case === "numberValue" && (obj.numberValue = message.kind?.numberValue);
+    message.kind?.$case === "stringValue" && (obj.stringValue = message.kind?.stringValue);
+    message.kind?.$case === "boolValue" && (obj.boolValue = message.kind?.boolValue);
+    message.kind?.$case === "structValue" && (obj.structValue = message.kind?.structValue);
+    message.kind?.$case === "listValue" && (obj.listValue = message.kind?.listValue);
     return obj;
   },
 
   fromPartial<I extends Exact<DeepPartial<Value>, I>>(object: I): Value {
     const message = createBaseValue() as any;
-    message.nullValue = object.nullValue ?? undefined;
-    message.numberValue = object.numberValue ?? undefined;
-    message.stringValue = object.stringValue ?? undefined;
-    message.boolValue = object.boolValue ?? undefined;
-    message.structValue = object.structValue ?? undefined;
-    message.listValue = object.listValue ?? undefined;
+    if (object.kind?.$case === "nullValue" && object.kind?.nullValue !== undefined && object.kind?.nullValue !== null) {
+      message.kind = { $case: "nullValue", nullValue: object.kind.nullValue };
+    }
+    if (
+      object.kind?.$case === "numberValue" &&
+      object.kind?.numberValue !== undefined &&
+      object.kind?.numberValue !== null
+    ) {
+      message.kind = { $case: "numberValue", numberValue: object.kind.numberValue };
+    }
+    if (
+      object.kind?.$case === "stringValue" &&
+      object.kind?.stringValue !== undefined &&
+      object.kind?.stringValue !== null
+    ) {
+      message.kind = { $case: "stringValue", stringValue: object.kind.stringValue };
+    }
+    if (object.kind?.$case === "boolValue" && object.kind?.boolValue !== undefined && object.kind?.boolValue !== null) {
+      message.kind = { $case: "boolValue", boolValue: object.kind.boolValue };
+    }
+    if (
+      object.kind?.$case === "structValue" &&
+      object.kind?.structValue !== undefined &&
+      object.kind?.structValue !== null
+    ) {
+      message.kind = { $case: "structValue", structValue: object.kind.structValue };
+    }
+    if (object.kind?.$case === "listValue" && object.kind?.listValue !== undefined && object.kind?.listValue !== null) {
+      message.kind = { $case: "listValue", listValue: object.kind.listValue };
+    }
     return message;
   },
 
@@ -350,17 +359,17 @@ export const Value = {
     const result = createBaseValue() as any;
 
     if (value === null) {
-      result.nullValue = NullValue.NULL_VALUE;
+      result.kind = { $case: "nullValue", nullValue: NullValue.NULL_VALUE };
     } else if (typeof value === "boolean") {
-      result.boolValue = value;
+      result.kind = { $case: "boolValue", boolValue: value };
     } else if (typeof value === "number") {
-      result.numberValue = value;
+      result.kind = { $case: "numberValue", numberValue: value };
     } else if (typeof value === "string") {
-      result.stringValue = value;
+      result.kind = { $case: "stringValue", stringValue: value };
     } else if (Array.isArray(value)) {
-      result.listValue = value;
+      result.kind = { $case: "listValue", listValue: value };
     } else if (typeof value === "object") {
-      result.structValue = value;
+      result.kind = { $case: "structValue", structValue: value };
     } else if (typeof value !== "undefined") {
       throw new Error("Unsupported any value type: " + typeof value);
     }
@@ -369,20 +378,21 @@ export const Value = {
   },
 
   unwrap(message: Value): string | number | boolean | Object | null | Array<any> | undefined {
-    if (message?.stringValue !== undefined) {
-      return message.stringValue;
-    } else if (message?.numberValue !== undefined) {
-      return message.numberValue;
-    } else if (message?.boolValue !== undefined) {
-      return message.boolValue;
-    } else if (message?.structValue !== undefined) {
-      return message.structValue;
-    } else if (message?.listValue !== undefined) {
-      return message.listValue;
-    } else if (message?.nullValue !== undefined) {
+    if (message.kind?.$case === "nullValue") {
       return null;
+    } else if (message.kind?.$case === "numberValue") {
+      return message.kind?.numberValue;
+    } else if (message.kind?.$case === "stringValue") {
+      return message.kind?.stringValue;
+    } else if (message.kind?.$case === "boolValue") {
+      return message.kind?.boolValue;
+    } else if (message.kind?.$case === "structValue") {
+      return message.kind?.structValue;
+    } else if (message.kind?.$case === "listValue") {
+      return message.kind?.listValue;
+    } else {
+      return undefined;
     }
-    return undefined;
   },
 };
 
@@ -453,6 +463,8 @@ type Builtin = Date | Function | Uint8Array | string | number | boolean | undefi
 
 export type DeepPartial<T> = T extends Builtin ? T
   : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends { readonly $case: string }
+    ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & { readonly $case: T["$case"] }
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 

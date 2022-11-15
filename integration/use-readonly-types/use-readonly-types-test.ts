@@ -12,6 +12,7 @@ describe("use-readonly-types", () => {
       fieldMask: ["the", "mask"],
       listValue: ["the", "list"],
       structValue: { the: "struct" },
+      oneOfValue: { $case: "theStringValue", theStringValue: "theString" },
     };
     const jsonFromObject = Entity.toJSON(m);
     const entityFromJSON = Entity.fromJSON(jsonFromObject);
@@ -28,6 +29,7 @@ describe("use-readonly-types", () => {
       fieldMask: m.fieldMask,
       listValue: m.listValue,
       structValue: m.structValue,
+      oneOfValue: m.oneOfValue,
     });
     const jsonFromDecoded = Entity.toJSON(decoded);
     expect(jsonFromDecoded).toEqual(jsonFromObject);

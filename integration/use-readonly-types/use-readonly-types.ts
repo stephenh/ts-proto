@@ -16,6 +16,10 @@ export interface Entity {
   readonly fieldMask: readonly string[] | undefined;
   readonly listValue: ReadonlyArray<any> | undefined;
   readonly structValue: { readonly [key: string]: any } | undefined;
+  readonly oneOfValue?: { readonly $case: "theStringValue"; readonly theStringValue: string } | {
+    readonly $case: "theIntValue";
+    readonly theIntValue: number;
+  };
 }
 
 export interface SubEntity {
@@ -34,6 +38,7 @@ function createBaseEntity(): Entity {
     fieldMask: undefined,
     listValue: undefined,
     structValue: undefined,
+    oneOfValue: undefined,
   };
 }
 
@@ -70,6 +75,12 @@ export const Entity = {
     }
     if (message.structValue !== undefined) {
       Struct.encode(Struct.wrap(message.structValue), writer.uint32(82).fork()).ldelim();
+    }
+    if (message.oneOfValue?.$case === "theStringValue") {
+      writer.uint32(90).string(message.oneOfValue.theStringValue);
+    }
+    if (message.oneOfValue?.$case === "theIntValue") {
+      writer.uint32(96).int32(message.oneOfValue.theIntValue);
     }
     return writer;
   },
@@ -118,6 +129,12 @@ export const Entity = {
         case 10:
           message.structValue = Struct.unwrap(Struct.decode(reader, reader.uint32()));
           break;
+        case 11:
+          message.oneOfValue = { $case: "theStringValue", theStringValue: reader.string() };
+          break;
+        case 12:
+          message.oneOfValue = { $case: "theIntValue", theIntValue: reader.int32() };
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -140,6 +157,11 @@ export const Entity = {
       fieldMask: isSet(object.fieldMask) ? FieldMask.unwrap(FieldMask.fromJSON(object.fieldMask)) : undefined,
       listValue: Array.isArray(object.listValue) ? [...object.listValue] : undefined,
       structValue: isObject(object.structValue) ? object.structValue : undefined,
+      oneOfValue: isSet(object.theStringValue)
+        ? { $case: "theStringValue", theStringValue: String(object.theStringValue) }
+        : isSet(object.theIntValue)
+        ? { $case: "theIntValue", theIntValue: Number(object.theIntValue) }
+        : undefined,
     };
   },
 
@@ -168,6 +190,8 @@ export const Entity = {
     message.fieldMask !== undefined && (obj.fieldMask = FieldMask.toJSON(FieldMask.wrap(message.fieldMask)));
     message.listValue !== undefined && (obj.listValue = message.listValue);
     message.structValue !== undefined && (obj.structValue = message.structValue);
+    message.oneOfValue?.$case === "theStringValue" && (obj.theStringValue = message.oneOfValue?.theStringValue);
+    message.oneOfValue?.$case === "theIntValue" && (obj.theIntValue = Math.round(message.oneOfValue?.theIntValue));
     return obj;
   },
 
@@ -185,6 +209,20 @@ export const Entity = {
     message.fieldMask = object.fieldMask ?? undefined;
     message.listValue = object.listValue ?? undefined;
     message.structValue = object.structValue ?? undefined;
+    if (
+      object.oneOfValue?.$case === "theStringValue" &&
+      object.oneOfValue?.theStringValue !== undefined &&
+      object.oneOfValue?.theStringValue !== null
+    ) {
+      message.oneOfValue = { $case: "theStringValue", theStringValue: object.oneOfValue.theStringValue };
+    }
+    if (
+      object.oneOfValue?.$case === "theIntValue" &&
+      object.oneOfValue?.theIntValue !== undefined &&
+      object.oneOfValue?.theIntValue !== null
+    ) {
+      message.oneOfValue = { $case: "theIntValue", theIntValue: object.oneOfValue.theIntValue };
+    }
     return message;
   },
 };
@@ -240,6 +278,8 @@ type Builtin = Date | Function | Uint8Array | string | number | boolean | undefi
 
 export type DeepPartial<T> = T extends Builtin ? T
   : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends { readonly $case: string }
+    ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & { readonly $case: T["$case"] }
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
