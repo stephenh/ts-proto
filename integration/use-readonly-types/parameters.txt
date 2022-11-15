@@ -1,1 +1,1 @@
-useReadonlyTypes=true
+useReadonlyTypes=true,oneof=unions
