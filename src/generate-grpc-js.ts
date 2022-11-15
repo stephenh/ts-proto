@@ -1,15 +1,14 @@
 import { Code, code, def, imp, joinCode } from "ts-poet";
 import { FileDescriptorProto, ServiceDescriptorProto } from "ts-proto-descriptors";
-import { camelCase } from "./case";
 import { Context } from "./context";
 import SourceInfo, { Fields } from "./sourceInfo";
-import { messageToTypeName, wrapperTypeName } from "./types";
+import { messageToTypeName } from "./types";
 import { assertInstanceOf, FormattedMethodDescriptor, maybeAddComment, maybePrefixPackage } from "./utils";
 import { generateDecoder, generateEncoder } from "./encode";
 
 const CallOptions = imp("CallOptions@@grpc/grpc-js");
 const ChannelCredentials = imp("ChannelCredentials@@grpc/grpc-js");
-const ChannelOptions = imp("ChannelOptions@@grpc/grpc-js");
+const ClientOptions = imp("ClientOptions@@grpc/grpc-js");
 const Client = imp("Client@@grpc/grpc-js");
 const ClientDuplexStream = imp("ClientDuplexStream@@grpc/grpc-js");
 const ClientReadableStream = imp("ClientReadableStream@@grpc/grpc-js");
@@ -236,7 +235,7 @@ function generateClientConstructor(fileDesc: FileDescriptorProto, serviceDesc: S
       new (
         address: string,
         credentials: ${ChannelCredentials},
-        options?: Partial<${ChannelOptions}>,
+        options?: Partial<${ClientOptions}>,
       ): ${serviceDesc.name}Client;
       service: typeof ${serviceDesc.name}Service;
     }
