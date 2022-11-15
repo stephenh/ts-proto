@@ -67,27 +67,27 @@ export interface Struct_FieldsEntry {
  */
 export interface Value {
   /** Represents a null value. */
-  readonly nullValue:
+  readonly nullValue?:
     | NullValue
     | undefined;
   /** Represents a double value. */
-  readonly numberValue:
+  readonly numberValue?:
     | number
     | undefined;
   /** Represents a string value. */
-  readonly stringValue:
+  readonly stringValue?:
     | string
     | undefined;
   /** Represents a boolean value. */
-  readonly boolValue:
+  readonly boolValue?:
     | boolean
     | undefined;
   /** Represents a structured value. */
-  readonly structValue:
+  readonly structValue?:
     | { readonly [key: string]: any }
     | undefined;
   /** Represents a repeated `Value`. */
-  readonly listValue: ReadonlyArray<any> | undefined;
+  readonly listValue?: ReadonlyArray<any> | undefined;
 }
 
 /**

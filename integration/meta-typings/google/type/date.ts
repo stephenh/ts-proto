@@ -180,7 +180,6 @@ export const protoMetadata: ProtoMetadata = {
       "rubyPackage": "",
       "uninterpretedOption": [],
     },
-<<<<<<< HEAD
     "sourceCodeInfo": {
       "location": [{
         "path": [4, 0],
@@ -210,42 +209,6 @@ export const protoMetadata: ProtoMetadata = {
         "trailingComments": "",
         "leadingDetachedComments": [],
       }],
-=======
-    sourceCodeInfo: {
-      location: [
-        {
-          path: [4, 0],
-          span: [36, 0, 49, 1],
-          leadingComments:
-            ' Represents a whole or partial calendar date, e.g. a birthday. The time of day\r\n and time zone are either specified elsewhere or are not significant. The date\r\n is relative to the Proleptic Gregorian Calendar. This can represent:\r\n\r\n * A full date, with non-zero year, month and day values\r\n * A month and day value, with a zero year, e.g. an anniversary\r\n * A year on its own, with zero month and day values\r\n * A year and month value, with a zero day, e.g. a credit card expiration date\r\n\r\n Related types are [google.type.TimeOfDay][google.type.TimeOfDay] and `google.protobuf.Timestamp`.\r\n',
-          trailingComments: '',
-          leadingDetachedComments: [],
-        },
-        {
-          path: [4, 0, 2, 0],
-          span: [39, 2, 17],
-          leadingComments: ' Year of date. Must be from 1 to 9999, or 0 if specifying a date without\r\n a year.\r\n',
-          trailingComments: '',
-          leadingDetachedComments: [],
-        },
-        {
-          path: [4, 0, 2, 1],
-          span: [43, 2, 18],
-          leadingComments:
-            ' Month of year. Must be from 1 to 12, or 0 if specifying a year without a\r\n month and day.\r\n',
-          trailingComments: '',
-          leadingDetachedComments: [],
-        },
-        {
-          path: [4, 0, 2, 2],
-          span: [48, 2, 16],
-          leadingComments:
-            ' Day of month. Must be from 1 to 31 and valid for the year and month, or 0\r\n if specifying a year by itself or a year and month where the day is not\r\n significant.\r\n',
-          trailingComments: '',
-          leadingDetachedComments: [],
-        },
-      ],
->>>>>>> 6896257 (feat(plugin): optional fields for oneof properties)
     },
     "syntax": "proto3",
   }),

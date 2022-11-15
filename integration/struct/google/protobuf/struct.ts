@@ -67,37 +67,25 @@ export interface Struct_FieldsEntry {
  */
 export interface Value {
   /** Represents a null value. */
-<<<<<<< HEAD
-  nullValue:
+  nullValue?:
     | NullValue
     | undefined;
   /** Represents a double value. */
-  numberValue:
+  numberValue?:
     | number
     | undefined;
   /** Represents a string value. */
-  stringValue:
+  stringValue?:
     | string
     | undefined;
   /** Represents a boolean value. */
-  boolValue:
+  boolValue?:
     | boolean
     | undefined;
   /** Represents a structured value. */
-  structValue:
+  structValue?:
     | { [key: string]: any }
     | undefined;
-=======
-  nullValue?: NullValue | undefined;
-  /** Represents a double value. */
-  numberValue?: number | undefined;
-  /** Represents a string value. */
-  stringValue?: string | undefined;
-  /** Represents a boolean value. */
-  boolValue?: boolean | undefined;
-  /** Represents a structured value. */
-  structValue?: { [key: string]: any } | undefined;
->>>>>>> 6896257 (feat(plugin): optional fields for oneof properties)
   /** Represents a repeated `Value`. */
   listValue?: Array<any> | undefined;
 }
