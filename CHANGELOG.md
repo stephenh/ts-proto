@@ -1,3 +1,10 @@
+## [1.132.1](https://github.com/stephenh/ts-proto/compare/v1.132.0...v1.132.1) (2022-11-15)
+
+
+### Bug Fixes
+
+* use-readonly-types for oneof unions ([#706](https://github.com/stephenh/ts-proto/issues/706)) ([bc854ba](https://github.com/stephenh/ts-proto/commit/bc854bac083b8818d5fad77bc2e7995cfb01798e))
+
 # [1.132.0](https://github.com/stephenh/ts-proto/compare/v1.131.2...v1.132.0) (2022-11-15)
 
 
