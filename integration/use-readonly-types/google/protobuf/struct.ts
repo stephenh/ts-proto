@@ -66,13 +66,13 @@ export interface Struct_FieldsEntry {
  * The JSON representation for `Value` is JSON value.
  */
 export interface Value {
-  kind?:
-    | { $case: "nullValue"; nullValue: NullValue }
-    | { $case: "numberValue"; numberValue: number }
-    | { $case: "stringValue"; stringValue: string }
-    | { $case: "boolValue"; boolValue: boolean }
-    | { $case: "structValue"; structValue: { readonly [key: string]: any } | undefined }
-    | { $case: "listValue"; listValue: ReadonlyArray<any> | undefined };
+  readonly kind?:
+    | { readonly $case: "nullValue"; readonly nullValue: NullValue }
+    | { readonly $case: "numberValue"; readonly numberValue: number }
+    | { readonly $case: "stringValue"; readonly stringValue: string }
+    | { readonly $case: "boolValue"; readonly boolValue: boolean }
+    | { readonly $case: "structValue"; readonly structValue: { readonly [key: string]: any } | undefined }
+    | { readonly $case: "listValue"; readonly listValue: ReadonlyArray<any> | undefined };
 }
 
 /**
@@ -463,7 +463,8 @@ type Builtin = Date | Function | Uint8Array | string | number | boolean | undefi
 
 export type DeepPartial<T> = T extends Builtin ? T
   : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
-  : T extends { $case: string } ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & { $case: T["$case"] }
+  : T extends { readonly $case: string }
+    ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & { readonly $case: T["$case"] }
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 

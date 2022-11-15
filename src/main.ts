@@ -489,8 +489,10 @@ function makeDeepPartial(options: Options, longs: ReturnType<typeof makeLongUtil
   let oneofCase = "";
   if (options.oneof === OneofOption.UNIONS) {
     oneofCase = `
-      : T extends { $case: string }
-      ? { [K in keyof Omit<T, '$case'>]?: DeepPartial<T[K]> } & { $case: T['$case'] }
+      : T extends { ${options.useReadonlyTypes ? "readonly " : ""}$case: string }
+      ? { [K in keyof Omit<T, '$case'>]?: DeepPartial<T[K]> } & { ${
+        options.useReadonlyTypes ? "readonly " : ""
+      }$case: T['$case'] }
     `;
   }
 
@@ -770,13 +772,15 @@ function generateOneofProperty(
     fields.map((f) => {
       let fieldName = maybeSnakeToCamel(f.name, options);
       let typeName = toTypeName(ctx, messageDesc, f);
-      return code`{ $case: '${fieldName}', ${fieldName}: ${typeName} }`;
+      return code`{ ${ctx.options.useReadonlyTypes ? "readonly " : ""}$case: '${fieldName}', ${
+        ctx.options.useReadonlyTypes ? "readonly " : ""
+      }${fieldName}: ${typeName} }`;
     }),
     { on: " | " }
   );
 
   const name = maybeSnakeToCamel(messageDesc.oneofDecl[oneofIndex].name, options);
-  return code`${name}?: ${unionType},`;
+  return code`${ctx.options.useReadonlyTypes ? "readonly " : ""}${name}?: ${unionType},`;
 
   /*
   // Ideally we'd put the comments for each oneof field next to the anonymous
