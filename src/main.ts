@@ -489,10 +489,8 @@ function makeDeepPartial(options: Options, longs: ReturnType<typeof makeLongUtil
   let oneofCase = "";
   if (options.oneof === OneofOption.UNIONS) {
     oneofCase = `
-      : T extends { ${options.useReadonlyTypes ? "readonly " : ""}$case: string }
-      ? { [K in keyof Omit<T, '$case'>]?: DeepPartial<T[K]> } & { ${
-        options.useReadonlyTypes ? "readonly " : ""
-      }$case: T['$case'] }
+      : T extends { ${maybeReadonly(options)}$case: string }
+      ? { [K in keyof Omit<T, '$case'>]?: DeepPartial<T[K]> } & { ${maybeReadonly(options)}$case: T['$case'] }
     `;
   }
 
@@ -753,7 +751,7 @@ function generateInterfaceDeclaration(
     const name = maybeSnakeToCamel(fieldDesc.name, options);
     const type = toTypeName(ctx, messageDesc, fieldDesc);
     const q = isOptionalProperty(fieldDesc, messageDesc.options, options) ? "?" : "";
-    chunks.push(code`${ctx.options.useReadonlyTypes ? "readonly " : ""}${name}${q}: ${type}, `);
+    chunks.push(code`${maybeReadonly(options)}${name}${q}: ${type}, `);
   });
 
   chunks.push(code`}`);
@@ -772,15 +770,15 @@ function generateOneofProperty(
     fields.map((f) => {
       let fieldName = maybeSnakeToCamel(f.name, options);
       let typeName = toTypeName(ctx, messageDesc, f);
-      return code`{ ${ctx.options.useReadonlyTypes ? "readonly " : ""}$case: '${fieldName}', ${
-        ctx.options.useReadonlyTypes ? "readonly " : ""
-      }${fieldName}: ${typeName} }`;
+      return code`{ ${maybeReadonly(options)}$case: '${fieldName}', ${maybeReadonly(
+        options
+      )}${fieldName}: ${typeName} }`;
     }),
     { on: " | " }
   );
 
   const name = maybeSnakeToCamel(messageDesc.oneofDecl[oneofIndex].name, options);
-  return code`${ctx.options.useReadonlyTypes ? "readonly " : ""}${name}?: ${unionType},`;
+  return code`${maybeReadonly(options)}${name}?: ${unionType},`;
 
   /*
   // Ideally we'd put the comments for each oneof field next to the anonymous
@@ -880,7 +878,7 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
       let end = length === undefined ? reader.len : reader.pos + length;
   `);
 
-  chunks.push(code`const message = ${createBase}${options.useReadonlyTypes ? " as any" : ""};`);
+  chunks.push(code`const message = ${createBase}${maybeAsAny(options)};`);
 
   if (options.unknownFields) {
     chunks.push(code`(message as any)._unknownFields = {}`);
@@ -1597,7 +1595,7 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
     createBase = code`Object.create(${createBase}) as ${fullName}`;
   }
 
-  chunks.push(code`const message = ${createBase}${options.useReadonlyTypes ? " as any" : ""};`);
+  chunks.push(code`const message = ${createBase}${maybeAsAny(options)};`);
 
   // add a check for each incoming field
   messageDesc.field.forEach((field) => {
@@ -1745,7 +1743,7 @@ function generateWrap(ctx: Context, fullProtoTypeName: string, fieldNames: Struc
   if (isAnyValueTypeName(fullProtoTypeName)) {
     if (ctx.options.oneof === OneofOption.UNIONS) {
       chunks.push(code`wrap(value: any): Value {
-        const result = createBaseValue()${ctx.options.useReadonlyTypes ? " as any" : ""};
+        const result = createBaseValue()${maybeAsAny(ctx.options)};
 
         if (value === null) {
           result.kind = {$case: '${fieldNames.nullValue}', ${fieldNames.nullValue}: NullValue.NULL_VALUE};
@@ -1767,7 +1765,7 @@ function generateWrap(ctx: Context, fullProtoTypeName: string, fieldNames: Struc
     }`);
     } else {
       chunks.push(code`wrap(value: any): Value {
-        const result = createBaseValue()${ctx.options.useReadonlyTypes ? " as any" : ""};
+        const result = createBaseValue()${maybeAsAny(ctx.options)};
 
         if (value === null) {
           result.${fieldNames.nullValue} = NullValue.NULL_VALUE;
@@ -1794,7 +1792,7 @@ function generateWrap(ctx: Context, fullProtoTypeName: string, fieldNames: Struc
     chunks.push(code`wrap(value: ${
       ctx.options.useReadonlyTypes ? "ReadonlyArray<any>" : "Array<any>"
     } | undefined): ListValue {
-      const result = createBaseListValue()${ctx.options.useReadonlyTypes ? " as any" : ""};
+      const result = createBaseListValue()${maybeAsAny(ctx.options)};
 
       result.values = value ?? [];
 
@@ -1803,8 +1801,8 @@ function generateWrap(ctx: Context, fullProtoTypeName: string, fieldNames: Struc
   }
 
   if (isFieldMaskTypeName(fullProtoTypeName)) {
-    chunks.push(code`wrap(paths: ${ctx.options.useReadonlyTypes ? "readonly " : ""} string[]): FieldMask {
-      const result = createBaseFieldMask()${ctx.options.useReadonlyTypes ? " as any" : ""};
+    chunks.push(code`wrap(paths: ${maybeReadonly(ctx.options)} string[]): FieldMask {
+      const result = createBaseFieldMask()${maybeAsAny(ctx.options)};
 
       result.paths = paths;
 
@@ -1895,4 +1893,12 @@ function maybeCastToNumber(
   } else {
     return `Number(${variableName})`;
   }
+}
+
+function maybeReadonly(options: Options): string {
+  return options.useReadonlyTypes ? "readonly " : "";
+}
+
+function maybeAsAny(options: Options): string {
+  return options.useReadonlyTypes ? " as any" : "";
 }
