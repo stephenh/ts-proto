@@ -1,3 +1,10 @@
+# [1.132.0](https://github.com/stephenh/ts-proto/compare/v1.131.2...v1.132.0) (2022-11-15)
+
+
+### Features
+
+* change channel options to client options in generate grpc/js ([#704](https://github.com/stephenh/ts-proto/issues/704)) ([c4ac8ac](https://github.com/stephenh/ts-proto/commit/c4ac8ac12aaee0c897985f944ffe3f122e28eba9))
+
 ## [1.131.2](https://github.com/stephenh/ts-proto/compare/v1.131.1...v1.131.2) (2022-11-13)
 
 
