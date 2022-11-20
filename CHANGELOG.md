@@ -1,3 +1,10 @@
+# [1.133.0](https://github.com/stephenh/ts-proto/compare/v1.132.1...v1.133.0) (2022-11-20)
+
+
+### Features
+
+* optional one of properties ([#705](https://github.com/stephenh/ts-proto/issues/705)) ([4c6cbb0](https://github.com/stephenh/ts-proto/commit/4c6cbb0ff71e053c634732e295ed812901d368ae))
+
 ## [1.132.1](https://github.com/stephenh/ts-proto/compare/v1.132.0...v1.132.1) (2022-11-15)
 
 
