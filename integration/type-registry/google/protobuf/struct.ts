@@ -71,27 +71,27 @@ export interface Struct_FieldsEntry {
 export interface Value {
   $type: "google.protobuf.Value";
   /** Represents a null value. */
-  nullValue:
+  nullValue?:
     | NullValue
     | undefined;
   /** Represents a double value. */
-  numberValue:
+  numberValue?:
     | number
     | undefined;
   /** Represents a string value. */
-  stringValue:
+  stringValue?:
     | string
     | undefined;
   /** Represents a boolean value. */
-  boolValue:
+  boolValue?:
     | boolean
     | undefined;
   /** Represents a structured value. */
-  structValue:
+  structValue?:
     | { [key: string]: any }
     | undefined;
   /** Represents a repeated `Value`. */
-  listValue: Array<any> | undefined;
+  listValue?: Array<any> | undefined;
 }
 
 /**
