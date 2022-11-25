@@ -1,3 +1,10 @@
+# [1.134.0](https://github.com/stephenh/ts-proto/compare/v1.133.0...v1.134.0) (2022-11-25)
+
+
+### Features
+
+* conditionally add "Service" to nice-grpc's generated service interface name ([#710](https://github.com/stephenh/ts-proto/issues/710)) ([7c39cc0](https://github.com/stephenh/ts-proto/commit/7c39cc0729403dcb63ef353357fae3548b5a6667))
+
 # [1.133.0](https://github.com/stephenh/ts-proto/compare/v1.132.1...v1.133.0) (2022-11-20)
 
 
