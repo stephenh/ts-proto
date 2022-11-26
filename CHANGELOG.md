@@ -1,3 +1,10 @@
+# [1.135.0](https://github.com/stephenh/ts-proto/compare/v1.134.0...v1.135.0) (2022-11-26)
+
+
+### Features
+
+* Bump ts poet for perf increase ([#714](https://github.com/stephenh/ts-proto/issues/714)) ([0068dc8](https://github.com/stephenh/ts-proto/commit/0068dc8c8c34263ac4a7bc5866408453fc2c8b11))
+
 # [1.134.0](https://github.com/stephenh/ts-proto/compare/v1.133.0...v1.134.0) (2022-11-25)
 
 
