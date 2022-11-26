@@ -6735,10 +6735,10 @@ ts-jest@^28.0.5:
     semver "7.x"
     yargs-parser "^21.0.1"
 
-ts-poet@^6.1.0:
-  version "6.1.0"
-  resolved "https://registry.yarnpkg.com/ts-poet/-/ts-poet-6.1.0.tgz#c5c3d679dfce1fe39acb5f5415275c5d6a598cb7"
-  integrity sha512-PFwbNJjGrb44wzHUGQicG2/nhjR+3+k7zYLDTa8D61NVUitl7K/JgIc9/P+8oMNenntKzLc8tjLDOkPrxIhm6A==
+ts-poet@^6.2.0:
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/ts-poet/-/ts-poet-6.2.0.tgz#67087f8dca261cfd1c13a89bc798c8005cb699ca"
+  integrity sha512-IVgi9uFBD8nTJQuIXTL2vz5ljyLA99fDTxbRvS+lAnVZhlEGWhZR+tHczX8BEJSoN0PE2Ux1csVhNXnhgaFWPg==
   dependencies:
     dprint-node "^1.0.7"
 
