@@ -766,19 +766,18 @@ function generateOneofProperty(
 ): Code {
   const { options } = ctx;
   const fields = messageDesc.field.filter((field) => isWithinOneOf(field) && field.oneofIndex === oneofIndex);
+  const mbReadonly = maybeReadonly(options);
   const unionType = joinCode(
     fields.map((f) => {
       let fieldName = maybeSnakeToCamel(f.name, options);
       let typeName = toTypeName(ctx, messageDesc, f);
-      return code`{ ${maybeReadonly(options)}$case: '${fieldName}', ${maybeReadonly(
-        options
-      )}${fieldName}: ${typeName} }`;
+      return code`{ ${mbReadonly}$case: '${fieldName}', ${mbReadonly}${fieldName}: ${typeName} }`;
     }),
     { on: " | " }
   );
 
   const name = maybeSnakeToCamel(messageDesc.oneofDecl[oneofIndex].name, options);
-  return code`${maybeReadonly(options)}${name}?: ${unionType},`;
+  return code`${mbReadonly}${name}?: ${unionType},`;
 
   /*
   // Ideally we'd put the comments for each oneof field next to the anonymous
