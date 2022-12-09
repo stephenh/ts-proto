@@ -3,7 +3,6 @@
     "target": "es2018",
     "lib": ["es2018"],
     "module": "commonjs",
-    "allowSyntheticDefaultImports": true,
     "strict": true,
     "outDir": "build",
     "skipLibCheck": true,
