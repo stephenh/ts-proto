@@ -1,4 +1,4 @@
-import { camelCase as lodashCamelCase } from "lodash";
+import { camelCase as camelCaseAnything } from "case-anything";
 
 import { Options } from "./options";
 
@@ -36,11 +36,11 @@ export function camelCase(s: string): string {
 }
 
 export function camelCaseGrpc(s: string): string {
-  /* This function is calling into lodash to perform the exact same semantics found
-   * inside the grpc nodejs library.
-   * Camel case splitting must be done by word i.e
+  /* This function uses the exact same semantics found inside the grpc
+   * nodejs library. Camel case splitting must be done by word i.e
    * GetAPIValue must become getApiValue (notice the API becomes Api).
    * This needs to be followed otherwise it will not succeed.
    */
-  return lodashCamelCase(s);
+
+  return camelCaseAnything(s);
 }
