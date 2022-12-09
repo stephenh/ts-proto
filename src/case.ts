@@ -1,3 +1,4 @@
+import { camelCase as lodashCamelCase } from "lodash";
 import { Options } from "./options";
 
 /** Converts `key` to TS/JS camel-case idiom, unless overridden not to. */
@@ -31,4 +32,8 @@ export function capitalize(s: string): string {
 
 export function camelCase(s: string): string {
   return s.substring(0, 1).toLowerCase() + s.substring(1);
+}
+
+export function camelCaseGrpc(s: string): string {
+  return lodashCamelCase(s);
 }

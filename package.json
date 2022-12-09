@@ -43,6 +43,7 @@
     "@semantic-release/npm": "^7.1.0",
     "@semantic-release/release-notes-generator": "^9.0.2",
     "@types/jest": "^26.0.22",
+    "@types/lodash": "^4.14.191",
     "@types/node": "^14.14.37",
     "chokidar": "^3.5.2",
     "jest": "^28.1.2",
