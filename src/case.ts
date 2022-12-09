@@ -39,7 +39,7 @@ export function camelCaseGrpc(s: string): string {
   /* This function uses the exact same semantics found inside the grpc
    * nodejs library. Camel case splitting must be done by word i.e
    * GetAPIValue must become getApiValue (notice the API becomes Api).
-   * This needs to be followed otherwise it will not succeed.
+   * This needs to be followed otherwise it will not succeed in the grpc nodejs module.
    */
 
   return camelCaseAnything(s);
