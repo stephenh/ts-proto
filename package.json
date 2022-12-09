@@ -65,5 +65,6 @@
     "protobufjs": "^6.11.3",
     "ts-poet": "^6.2.0",
     "ts-proto-descriptors": "1.7.1"
-  }
+  },
+  "packageManager": "yarn@3.3.0"
 }
