@@ -11,3 +11,4 @@ protoc \
   ./google/protobuf/compiler/plugin.proto
 
 ./node_modules/.bin/tsc -p tsconfig.json
+
