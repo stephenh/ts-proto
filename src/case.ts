@@ -1,4 +1,4 @@
-import { camelCase as lodashCamelCase } from "lodash";
+import lodashCamelCase from "lodash.camelcase";
 
 import { Options } from "./options";
 
