@@ -1967,7 +1967,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/lodash@npm:^4.14.191":
+"@types/lodash.camelcase@npm:^4.3.7":
+  version: 4.3.7
+  resolution: "@types/lodash.camelcase@npm:4.3.7"
+  dependencies:
+    "@types/lodash": "*"
+  checksum: ef068b921ab439f7b1a2c0ebbd890ba64ba437fc6aeb5e3ac18d34da30f9054fceaac5ccfdfa9e12b2fc403e10910439d3ebf92ba2f93de03c2f02261adfc000
+  languageName: node
+  linkType: hard
+
+"@types/lodash@npm:*":
   version: 4.14.191
   resolution: "@types/lodash@npm:4.14.191"
   checksum: ba0d5434e10690869f32d5ea49095250157cae502f10d57de0a723fd72229ce6c6a4979576f0f13e0aa9fbe3ce2457bfb9fa7d4ec3d6daba56730a51906d1491
@@ -6042,7 +6051,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash@npm:^4.14.191, lodash@npm:^4.17.13, lodash@npm:^4.17.15, lodash@npm:^4.17.21, lodash@npm:^4.17.4":
+"lodash@npm:^4.17.13, lodash@npm:^4.17.15, lodash@npm:^4.17.21, lodash@npm:^4.17.4":
   version: 4.17.21
   resolution: "lodash@npm:4.17.21"
   checksum: eb835a2e51d381e561e508ce932ea50a8e5a68f4ebdd771ea240d3048244a8d13658acbd502cd4829768c56f2e16bdd4340b9ea141297d472517b83868e677f7
@@ -8962,14 +8971,14 @@ __metadata:
     "@semantic-release/npm": ^7.1.0
     "@semantic-release/release-notes-generator": ^9.0.2
     "@types/jest": ^26.0.22
-    "@types/lodash": ^4.14.191
+    "@types/lodash.camelcase": ^4.3.7
     "@types/node": ^14.14.37
     "@types/object-hash": ^1.3.0
     chokidar: ^3.5.2
     dataloader: ^1.4.0
     jest: ^28.1.2
     jest-ts-webcompat-resolver: ^1.0.0
-    lodash: ^4.14.191
+    lodash.camelcase: ^4.3.0
     mongodb: ^4.3.0
     nice-grpc: ^1.1.1
     object-hash: ^1.3.1
