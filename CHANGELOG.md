@@ -1,3 +1,10 @@
+## [1.135.1](https://github.com/stephenh/ts-proto/compare/v1.135.0...v1.135.1) (2022-12-09)
+
+
+### Bug Fixes
+
+* Add functionality for grpc camel case to respect splitting by word ([#721](https://github.com/stephenh/ts-proto/issues/721)) ([4af040c](https://github.com/stephenh/ts-proto/commit/4af040c233792862db85c07d01d1b210a13cae2c)), closes [#722](https://github.com/stephenh/ts-proto/issues/722)
+
 # [1.135.0](https://github.com/stephenh/ts-proto/compare/v1.134.0...v1.135.0) (2022-11-26)
 
 
