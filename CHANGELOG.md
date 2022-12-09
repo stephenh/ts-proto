@@ -1,3 +1,10 @@
+## [1.135.2](https://github.com/stephenh/ts-proto/compare/v1.135.1...v1.135.2) (2022-12-09)
+
+
+### Bug Fixes
+
+* Fix buf publishing with yarn v3. ([#726](https://github.com/stephenh/ts-proto/issues/726)) ([e125d2b](https://github.com/stephenh/ts-proto/commit/e125d2bad21acfb27579b1ce252151678a91f2bc))
+
 ## [1.135.1](https://github.com/stephenh/ts-proto/compare/v1.135.0...v1.135.1) (2022-12-09)
 
 
