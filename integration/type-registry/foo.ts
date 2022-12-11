@@ -21,7 +21,7 @@ export interface WithStruct {
   struct: { [key: string]: any } | undefined;
 }
 
-function createBaseFoo(): Foo {
+export function createBaseFoo(): Foo {
   return { $type: "foo.Foo", timestamp: undefined };
 }
 
@@ -72,7 +72,7 @@ export const Foo = {
 
 messageTypeRegistry.set(Foo.$type, Foo);
 
-function createBaseFoo2(): Foo2 {
+export function createBaseFoo2(): Foo2 {
   return { $type: "foo.Foo2", timestamp: undefined };
 }
 
@@ -123,7 +123,7 @@ export const Foo2 = {
 
 messageTypeRegistry.set(Foo2.$type, Foo2);
 
-function createBaseWithStruct(): WithStruct {
+export function createBaseWithStruct(): WithStruct {
   return { $type: "foo.WithStruct", struct: undefined };
 }
 

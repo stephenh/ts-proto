@@ -24,7 +24,7 @@ export interface Numbers {
   sfixed64: number;
 }
 
-function createBaseSimple(): Simple {
+export function createBaseSimple(): Simple {
   return { name: "", age: 0 };
 }
 
@@ -79,7 +79,7 @@ export const Simple = {
   },
 };
 
-function createBaseNumbers(): Numbers {
+export function createBaseNumbers(): Numbers {
   return {
     double: 0,
     float: 0,

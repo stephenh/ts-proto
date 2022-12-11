@@ -18,7 +18,7 @@ export interface Todo_MapOfOidsEntry {
   value: mongodb.ObjectId | undefined;
 }
 
-function createBaseTodo(): Todo {
+export function createBaseTodo(): Todo {
   return { id: "", oid: undefined, repeatedOid: [], optionalOid: undefined, mapOfOids: {} };
 }
 
@@ -130,7 +130,7 @@ export const Todo = {
   },
 };
 
-function createBaseTodo_MapOfOidsEntry(): Todo_MapOfOidsEntry {
+export function createBaseTodo_MapOfOidsEntry(): Todo_MapOfOidsEntry {
   return { key: "", value: undefined };
 }
 

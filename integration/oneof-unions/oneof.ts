@@ -71,7 +71,7 @@ export interface SimpleButOptional {
   age?: number | undefined;
 }
 
-function createBasePleaseChoose(): PleaseChoose {
+export function createBasePleaseChoose(): PleaseChoose {
   return { name: "", choice: undefined, age: 0, eitherOr: undefined, signature: new Uint8Array(), value: undefined };
 }
 
@@ -275,7 +275,7 @@ export const PleaseChoose = {
   },
 };
 
-function createBasePleaseChoose_Submessage(): PleaseChoose_Submessage {
+export function createBasePleaseChoose_Submessage(): PleaseChoose_Submessage {
   return { name: "" };
 }
 
@@ -322,7 +322,7 @@ export const PleaseChoose_Submessage = {
   },
 };
 
-function createBaseSimpleButOptional(): SimpleButOptional {
+export function createBaseSimpleButOptional(): SimpleButOptional {
   return { name: undefined, age: undefined };
 }
 

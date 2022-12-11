@@ -8,7 +8,7 @@ export interface StructMessage {
   value: { [key: string]: any } | undefined;
 }
 
-function createBaseStructMessage(): StructMessage {
+export function createBaseStructMessage(): StructMessage {
   return { value: undefined };
 }
 

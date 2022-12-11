@@ -860,7 +860,7 @@ export interface GeneratedCodeInfo_Annotation {
   end: number;
 }
 
-function createBaseFileDescriptorSet(): FileDescriptorSet {
+export function createBaseFileDescriptorSet(): FileDescriptorSet {
   return { file: [] };
 }
 
@@ -911,7 +911,7 @@ export const FileDescriptorSet = {
   },
 };
 
-function createBaseFileDescriptorProto(): FileDescriptorProto {
+export function createBaseFileDescriptorProto(): FileDescriptorProto {
   return {
     name: "",
     package: "",
@@ -1059,7 +1059,7 @@ export const FileDescriptorProto = {
   },
 };
 
-function createBaseDescriptorProto(): DescriptorProto {
+export function createBaseDescriptorProto(): DescriptorProto {
   return {
     name: "",
     field: [],
@@ -1175,7 +1175,7 @@ export const DescriptorProto = {
   },
 };
 
-function createBaseDescriptorProto_ExtensionRange(): DescriptorProto_ExtensionRange {
+export function createBaseDescriptorProto_ExtensionRange(): DescriptorProto_ExtensionRange {
   return { start: 0, end: 0, options: undefined };
 }
 
@@ -1238,7 +1238,7 @@ export const DescriptorProto_ExtensionRange = {
   },
 };
 
-function createBaseDescriptorProto_ReservedRange(): DescriptorProto_ReservedRange {
+export function createBaseDescriptorProto_ReservedRange(): DescriptorProto_ReservedRange {
   return { start: 0, end: 0 };
 }
 
@@ -1295,7 +1295,7 @@ export const DescriptorProto_ReservedRange = {
   },
 };
 
-function createBaseExtensionRangeOptions(): ExtensionRangeOptions {
+export function createBaseExtensionRangeOptions(): ExtensionRangeOptions {
   return { uninterpretedOption: [] };
 }
 
@@ -1346,7 +1346,7 @@ export const ExtensionRangeOptions = {
   },
 };
 
-function createBaseFieldDescriptorProto(): FieldDescriptorProto {
+export function createBaseFieldDescriptorProto(): FieldDescriptorProto {
   return {
     name: "",
     number: 0,
@@ -1469,7 +1469,7 @@ export const FieldDescriptorProto = {
   },
 };
 
-function createBaseOneofDescriptorProto(): OneofDescriptorProto {
+export function createBaseOneofDescriptorProto(): OneofDescriptorProto {
   return { name: "", options: undefined };
 }
 
@@ -1526,7 +1526,7 @@ export const OneofDescriptorProto = {
   },
 };
 
-function createBaseEnumDescriptorProto(): EnumDescriptorProto {
+export function createBaseEnumDescriptorProto(): EnumDescriptorProto {
   return { name: "", value: [], options: undefined, reservedRange: [], reservedName: [] };
 }
 
@@ -1601,7 +1601,7 @@ export const EnumDescriptorProto = {
   },
 };
 
-function createBaseEnumDescriptorProto_EnumReservedRange(): EnumDescriptorProto_EnumReservedRange {
+export function createBaseEnumDescriptorProto_EnumReservedRange(): EnumDescriptorProto_EnumReservedRange {
   return { start: 0, end: 0 };
 }
 
@@ -1658,7 +1658,7 @@ export const EnumDescriptorProto_EnumReservedRange = {
   },
 };
 
-function createBaseEnumValueDescriptorProto(): EnumValueDescriptorProto {
+export function createBaseEnumValueDescriptorProto(): EnumValueDescriptorProto {
   return { name: "", number: 0, options: undefined };
 }
 
@@ -1721,7 +1721,7 @@ export const EnumValueDescriptorProto = {
   },
 };
 
-function createBaseServiceDescriptorProto(): ServiceDescriptorProto {
+export function createBaseServiceDescriptorProto(): ServiceDescriptorProto {
   return { name: "", method: [], options: undefined };
 }
 
@@ -1784,7 +1784,7 @@ export const ServiceDescriptorProto = {
   },
 };
 
-function createBaseMethodDescriptorProto(): MethodDescriptorProto {
+export function createBaseMethodDescriptorProto(): MethodDescriptorProto {
   return {
     name: "",
     inputType: "",
@@ -1872,7 +1872,7 @@ export const MethodDescriptorProto = {
   },
 };
 
-function createBaseFileOptions(): FileOptions {
+export function createBaseFileOptions(): FileOptions {
   return {
     javaPackage: "",
     javaOuterClassname: "",
@@ -2065,7 +2065,7 @@ export const FileOptions = {
   },
 };
 
-function createBaseMessageOptions(): MessageOptions {
+export function createBaseMessageOptions(): MessageOptions {
   return {
     messageSetWireFormat: false,
     noStandardDescriptorAccessor: false,
@@ -2146,7 +2146,7 @@ export const MessageOptions = {
   },
 };
 
-function createBaseFieldOptions(): FieldOptions {
+export function createBaseFieldOptions(): FieldOptions {
   return { ctype: 0, packed: false, jstype: 0, lazy: false, deprecated: false, weak: false, uninterpretedOption: [] };
 }
 
@@ -2233,7 +2233,7 @@ export const FieldOptions = {
   },
 };
 
-function createBaseOneofOptions(): OneofOptions {
+export function createBaseOneofOptions(): OneofOptions {
   return { uninterpretedOption: [] };
 }
 
@@ -2284,7 +2284,7 @@ export const OneofOptions = {
   },
 };
 
-function createBaseEnumOptions(): EnumOptions {
+export function createBaseEnumOptions(): EnumOptions {
   return { allowAlias: false, deprecated: false, uninterpretedOption: [] };
 }
 
@@ -2347,7 +2347,7 @@ export const EnumOptions = {
   },
 };
 
-function createBaseEnumValueOptions(): EnumValueOptions {
+export function createBaseEnumValueOptions(): EnumValueOptions {
   return { deprecated: false, uninterpretedOption: [] };
 }
 
@@ -2404,7 +2404,7 @@ export const EnumValueOptions = {
   },
 };
 
-function createBaseServiceOptions(): ServiceOptions {
+export function createBaseServiceOptions(): ServiceOptions {
   return { deprecated: false, uninterpretedOption: [] };
 }
 
@@ -2461,7 +2461,7 @@ export const ServiceOptions = {
   },
 };
 
-function createBaseMethodOptions(): MethodOptions {
+export function createBaseMethodOptions(): MethodOptions {
   return { deprecated: false, idempotencyLevel: 0, uninterpretedOption: [] };
 }
 
@@ -2524,7 +2524,7 @@ export const MethodOptions = {
   },
 };
 
-function createBaseUninterpretedOption(): UninterpretedOption {
+export function createBaseUninterpretedOption(): UninterpretedOption {
   return {
     name: [],
     identifierValue: "",
@@ -2619,7 +2619,7 @@ export const UninterpretedOption = {
   },
 };
 
-function createBaseUninterpretedOption_NamePart(): UninterpretedOption_NamePart {
+export function createBaseUninterpretedOption_NamePart(): UninterpretedOption_NamePart {
   return { namePart: "", isExtension: false };
 }
 
@@ -2676,7 +2676,7 @@ export const UninterpretedOption_NamePart = {
   },
 };
 
-function createBaseSourceCodeInfo(): SourceCodeInfo {
+export function createBaseSourceCodeInfo(): SourceCodeInfo {
   return { location: [] };
 }
 
@@ -2727,7 +2727,7 @@ export const SourceCodeInfo = {
   },
 };
 
-function createBaseSourceCodeInfo_Location(): SourceCodeInfo_Location {
+export function createBaseSourceCodeInfo_Location(): SourceCodeInfo_Location {
   return { path: [], span: [], leadingComments: "", trailingComments: "", leadingDetachedComments: [] };
 }
 
@@ -2820,7 +2820,7 @@ export const SourceCodeInfo_Location = {
   },
 };
 
-function createBaseGeneratedCodeInfo(): GeneratedCodeInfo {
+export function createBaseGeneratedCodeInfo(): GeneratedCodeInfo {
   return { annotation: [] };
 }
 
@@ -2871,7 +2871,7 @@ export const GeneratedCodeInfo = {
   },
 };
 
-function createBaseGeneratedCodeInfo_Annotation(): GeneratedCodeInfo_Annotation {
+export function createBaseGeneratedCodeInfo_Annotation(): GeneratedCodeInfo_Annotation {
   return { path: [], sourceFile: "", begin: 0, end: 0 };
 }
 

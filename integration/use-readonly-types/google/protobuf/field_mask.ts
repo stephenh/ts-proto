@@ -208,7 +208,7 @@ export interface FieldMask {
   readonly paths: readonly string[];
 }
 
-function createBaseFieldMask(): FieldMask {
+export function createBaseFieldMask(): FieldMask {
   return { paths: [] };
 }
 

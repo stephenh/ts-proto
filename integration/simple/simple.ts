@@ -301,7 +301,7 @@ export interface SimpleButOptional {
 export interface Empty {
 }
 
-function createBaseSimple(): Simple {
+export function createBaseSimple(): Simple {
   return {
     name: "",
     age: 0,
@@ -528,7 +528,7 @@ export const Simple = {
   },
 };
 
-function createBaseChild(): Child {
+export function createBaseChild(): Child {
   return { name: "", type: 0 };
 }
 
@@ -586,7 +586,7 @@ export const Child = {
   },
 };
 
-function createBaseNested(): Nested {
+export function createBaseNested(): Nested {
   return { name: "", message: undefined, state: 0 };
 }
 
@@ -656,7 +656,7 @@ export const Nested = {
   },
 };
 
-function createBaseNested_InnerMessage(): Nested_InnerMessage {
+export function createBaseNested_InnerMessage(): Nested_InnerMessage {
   return { name: "", deep: undefined };
 }
 
@@ -717,7 +717,7 @@ export const Nested_InnerMessage = {
   },
 };
 
-function createBaseNested_InnerMessage_DeepMessage(): Nested_InnerMessage_DeepMessage {
+export function createBaseNested_InnerMessage_DeepMessage(): Nested_InnerMessage_DeepMessage {
   return { name: "" };
 }
 
@@ -766,7 +766,7 @@ export const Nested_InnerMessage_DeepMessage = {
   },
 };
 
-function createBaseOneOfMessage(): OneOfMessage {
+export function createBaseOneOfMessage(): OneOfMessage {
   return { first: undefined, last: undefined };
 }
 
@@ -824,7 +824,7 @@ export const OneOfMessage = {
   },
 };
 
-function createBaseSimpleWithWrappers(): SimpleWithWrappers {
+export function createBaseSimpleWithWrappers(): SimpleWithWrappers {
   return { name: undefined, age: undefined, enabled: undefined, coins: [], snacks: [], id: undefined };
 }
 
@@ -926,7 +926,7 @@ export const SimpleWithWrappers = {
   },
 };
 
-function createBaseEntity(): Entity {
+export function createBaseEntity(): Entity {
   return { id: 0 };
 }
 
@@ -973,7 +973,7 @@ export const Entity = {
   },
 };
 
-function createBaseSimpleWithMap(): SimpleWithMap {
+export function createBaseSimpleWithMap(): SimpleWithMap {
   return {
     entitiesById: {},
     nameLookup: {},
@@ -1235,7 +1235,7 @@ export const SimpleWithMap = {
   },
 };
 
-function createBaseSimpleWithMap_EntitiesByIdEntry(): SimpleWithMap_EntitiesByIdEntry {
+export function createBaseSimpleWithMap_EntitiesByIdEntry(): SimpleWithMap_EntitiesByIdEntry {
   return { key: 0, value: undefined };
 }
 
@@ -1297,7 +1297,7 @@ export const SimpleWithMap_EntitiesByIdEntry = {
   },
 };
 
-function createBaseSimpleWithMap_NameLookupEntry(): SimpleWithMap_NameLookupEntry {
+export function createBaseSimpleWithMap_NameLookupEntry(): SimpleWithMap_NameLookupEntry {
   return { key: "", value: "" };
 }
 
@@ -1354,7 +1354,7 @@ export const SimpleWithMap_NameLookupEntry = {
   },
 };
 
-function createBaseSimpleWithMap_IntLookupEntry(): SimpleWithMap_IntLookupEntry {
+export function createBaseSimpleWithMap_IntLookupEntry(): SimpleWithMap_IntLookupEntry {
   return { key: 0, value: 0 };
 }
 
@@ -1409,7 +1409,7 @@ export const SimpleWithMap_IntLookupEntry = {
   },
 };
 
-function createBaseSimpleWithMap_MapOfTimestampsEntry(): SimpleWithMap_MapOfTimestampsEntry {
+export function createBaseSimpleWithMap_MapOfTimestampsEntry(): SimpleWithMap_MapOfTimestampsEntry {
   return { key: "", value: undefined };
 }
 
@@ -1469,7 +1469,7 @@ export const SimpleWithMap_MapOfTimestampsEntry = {
   },
 };
 
-function createBaseSimpleWithMap_MapOfBytesEntry(): SimpleWithMap_MapOfBytesEntry {
+export function createBaseSimpleWithMap_MapOfBytesEntry(): SimpleWithMap_MapOfBytesEntry {
   return { key: "", value: new Uint8Array() };
 }
 
@@ -1530,7 +1530,7 @@ export const SimpleWithMap_MapOfBytesEntry = {
   },
 };
 
-function createBaseSimpleWithMap_MapOfStringValuesEntry(): SimpleWithMap_MapOfStringValuesEntry {
+export function createBaseSimpleWithMap_MapOfStringValuesEntry(): SimpleWithMap_MapOfStringValuesEntry {
   return { key: "", value: undefined };
 }
 
@@ -1590,7 +1590,7 @@ export const SimpleWithMap_MapOfStringValuesEntry = {
   },
 };
 
-function createBaseSimpleWithMap_LongLookupEntry(): SimpleWithMap_LongLookupEntry {
+export function createBaseSimpleWithMap_LongLookupEntry(): SimpleWithMap_LongLookupEntry {
   return { key: 0, value: 0 };
 }
 
@@ -1647,7 +1647,7 @@ export const SimpleWithMap_LongLookupEntry = {
   },
 };
 
-function createBaseSimpleWithSnakeCaseMap(): SimpleWithSnakeCaseMap {
+export function createBaseSimpleWithSnakeCaseMap(): SimpleWithSnakeCaseMap {
   return { entitiesById: {} };
 }
 
@@ -1717,7 +1717,7 @@ export const SimpleWithSnakeCaseMap = {
   },
 };
 
-function createBaseSimpleWithSnakeCaseMap_EntitiesByIdEntry(): SimpleWithSnakeCaseMap_EntitiesByIdEntry {
+export function createBaseSimpleWithSnakeCaseMap_EntitiesByIdEntry(): SimpleWithSnakeCaseMap_EntitiesByIdEntry {
   return { key: 0, value: undefined };
 }
 
@@ -1779,7 +1779,7 @@ export const SimpleWithSnakeCaseMap_EntitiesByIdEntry = {
   },
 };
 
-function createBaseSimpleWithMapOfEnums(): SimpleWithMapOfEnums {
+export function createBaseSimpleWithMapOfEnums(): SimpleWithMapOfEnums {
   return { enumsById: {} };
 }
 
@@ -1849,7 +1849,7 @@ export const SimpleWithMapOfEnums = {
   },
 };
 
-function createBaseSimpleWithMapOfEnums_EnumsByIdEntry(): SimpleWithMapOfEnums_EnumsByIdEntry {
+export function createBaseSimpleWithMapOfEnums_EnumsByIdEntry(): SimpleWithMapOfEnums_EnumsByIdEntry {
   return { key: 0, value: 0 };
 }
 
@@ -1909,7 +1909,7 @@ export const SimpleWithMapOfEnums_EnumsByIdEntry = {
   },
 };
 
-function createBasePingRequest(): PingRequest {
+export function createBasePingRequest(): PingRequest {
   return { input: "" };
 }
 
@@ -1956,7 +1956,7 @@ export const PingRequest = {
   },
 };
 
-function createBasePingResponse(): PingResponse {
+export function createBasePingResponse(): PingResponse {
   return { output: "" };
 }
 
@@ -2003,7 +2003,7 @@ export const PingResponse = {
   },
 };
 
-function createBaseNumbers(): Numbers {
+export function createBaseNumbers(): Numbers {
   return {
     double: 0,
     float: 0,
@@ -2164,7 +2164,7 @@ export const Numbers = {
   },
 };
 
-function createBaseSimpleButOptional(): SimpleButOptional {
+export function createBaseSimpleButOptional(): SimpleButOptional {
   return {
     name: undefined,
     age: undefined,
@@ -2281,7 +2281,7 @@ export const SimpleButOptional = {
   },
 };
 
-function createBaseEmpty(): Empty {
+export function createBaseEmpty(): Empty {
   return {};
 }
 

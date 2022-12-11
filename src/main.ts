@@ -849,7 +849,7 @@ function generateBaseInstanceFactory(
   }
 
   return code`
-    function createBase${fullName}(): ${fullName} {
+    export function createBase${fullName}(): ${fullName} {
       return { ${joinCode(fields, { on: "," })} };
     }
   `;

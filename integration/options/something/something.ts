@@ -10,7 +10,7 @@ export interface Something {
   foo: number[];
 }
 
-function createBaseSomething(): Something {
+export function createBaseSomething(): Something {
   return { hello: "", foo: [] };
 }
 

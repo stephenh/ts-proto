@@ -23,7 +23,7 @@ export interface Numbers {
   timestamp: Date | undefined;
 }
 
-function createBaseNumbers(): Numbers {
+export function createBaseNumbers(): Numbers {
   return {
     double: 0,
     float: 0,

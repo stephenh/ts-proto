@@ -11,7 +11,7 @@ export interface Error {
   name: string;
 }
 
-function createBaseObject(): Object {
+export function createBaseObject(): Object {
   return { name: "" };
 }
 
@@ -58,7 +58,7 @@ export const Object = {
   },
 };
 
-function createBaseError(): Error {
+export function createBaseError(): Error {
   return { name: "" };
 }
 

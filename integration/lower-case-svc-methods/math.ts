@@ -18,7 +18,7 @@ export interface Numbers {
   num: number[];
 }
 
-function createBaseNumPair(): NumPair {
+export function createBaseNumPair(): NumPair {
   return { num1: 0, num2: 0 };
 }
 
@@ -73,7 +73,7 @@ export const NumPair = {
   },
 };
 
-function createBaseNumSingle(): NumSingle {
+export function createBaseNumSingle(): NumSingle {
   return { num: 0 };
 }
 
@@ -120,7 +120,7 @@ export const NumSingle = {
   },
 };
 
-function createBaseNumbers(): Numbers {
+export function createBaseNumbers(): Numbers {
   return { num: [] };
 }
 

@@ -22,7 +22,7 @@ export interface RequestType {
 export interface ResponseType {
 }
 
-function createBaseMyMessage(): MyMessage {
+export function createBaseMyMessage(): MyMessage {
   return { foo: undefined, foo2: undefined, bar: undefined, quux: undefined };
 }
 
@@ -91,7 +91,7 @@ export const MyMessage = {
   },
 };
 
-function createBaseRequestType(): RequestType {
+export function createBaseRequestType(): RequestType {
   return {};
 }
 
@@ -136,7 +136,7 @@ export const RequestType = {
   },
 };
 
-function createBaseResponseType(): ResponseType {
+export function createBaseResponseType(): ResponseType {
   return {};
 }
 

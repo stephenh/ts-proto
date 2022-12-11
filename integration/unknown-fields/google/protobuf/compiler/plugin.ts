@@ -142,7 +142,7 @@ export interface CodeGeneratorResponse_File {
   generatedCodeInfo: GeneratedCodeInfo | undefined;
 }
 
-function createBaseVersion(): Version {
+export function createBaseVersion(): Version {
   return { major: 0, minor: 0, patch: 0, suffix: "" };
 }
 
@@ -211,7 +211,7 @@ export const Version = {
   },
 };
 
-function createBaseCodeGeneratorRequest(): CodeGeneratorRequest {
+export function createBaseCodeGeneratorRequest(): CodeGeneratorRequest {
   return { fileToGenerate: [], parameter: "", protoFile: [], compilerVersion: undefined };
 }
 
@@ -280,7 +280,7 @@ export const CodeGeneratorRequest = {
   },
 };
 
-function createBaseCodeGeneratorResponse(): CodeGeneratorResponse {
+export function createBaseCodeGeneratorResponse(): CodeGeneratorResponse {
   return { error: "", supportedFeatures: 0, file: [] };
 }
 
@@ -343,7 +343,7 @@ export const CodeGeneratorResponse = {
   },
 };
 
-function createBaseCodeGeneratorResponse_File(): CodeGeneratorResponse_File {
+export function createBaseCodeGeneratorResponse_File(): CodeGeneratorResponse_File {
   return { name: "", insertionPoint: "", content: "", generatedCodeInfo: undefined };
 }
 

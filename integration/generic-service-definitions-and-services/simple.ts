@@ -7,7 +7,7 @@ export interface TestMessage {
   value: string;
 }
 
-function createBaseTestMessage(): TestMessage {
+export function createBaseTestMessage(): TestMessage {
   return { value: "" };
 }
 

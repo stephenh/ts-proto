@@ -8,7 +8,7 @@ export interface FieldMaskMessage {
   fieldMask: string[] | undefined;
 }
 
-function createBaseFieldMaskMessage(): FieldMaskMessage {
+export function createBaseFieldMaskMessage(): FieldMaskMessage {
   return { fieldMask: undefined };
 }
 

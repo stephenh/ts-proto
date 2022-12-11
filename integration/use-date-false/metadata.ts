@@ -8,7 +8,7 @@ export interface Metadata {
   lastEdited: Timestamp | undefined;
 }
 
-function createBaseMetadata(): Metadata {
+export function createBaseMetadata(): Metadata {
   return { lastEdited: undefined };
 }
 

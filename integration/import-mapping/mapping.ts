@@ -28,7 +28,7 @@ export interface WithAll {
   veryVerySecret: VeryVerySecret | undefined;
 }
 
-function createBaseWithEmtpy(): WithEmtpy {
+export function createBaseWithEmtpy(): WithEmtpy {
   return { empty: undefined };
 }
 
@@ -75,7 +75,7 @@ export const WithEmtpy = {
   },
 };
 
-function createBaseWithStruct(): WithStruct {
+export function createBaseWithStruct(): WithStruct {
   return { strut: undefined };
 }
 
@@ -122,7 +122,7 @@ export const WithStruct = {
   },
 };
 
-function createBaseWithTimestamp(): WithTimestamp {
+export function createBaseWithTimestamp(): WithTimestamp {
   return { timestamp: undefined };
 }
 
@@ -169,7 +169,7 @@ export const WithTimestamp = {
   },
 };
 
-function createBaseWithAll(): WithAll {
+export function createBaseWithAll(): WithAll {
   return { empty: undefined, strut: undefined, timestamp: undefined, duration: undefined, veryVerySecret: undefined };
 }
 

@@ -22,7 +22,7 @@ export interface TestMessage {
   timestamp: Date | undefined;
 }
 
-function createBaseTestMessage(): TestMessage {
+export function createBaseTestMessage(): TestMessage {
   return { timestamp: undefined };
 }
 

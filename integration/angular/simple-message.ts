@@ -7,7 +7,7 @@ export interface SimpleMessage {
   numberField: number;
 }
 
-function createBaseSimpleMessage(): SimpleMessage {
+export function createBaseSimpleMessage(): SimpleMessage {
   return { numberField: 0 };
 }
 

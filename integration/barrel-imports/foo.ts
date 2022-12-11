@@ -7,7 +7,7 @@ export interface Foo {
   bar: Bar | undefined;
 }
 
-function createBaseFoo(): Foo {
+export function createBaseFoo(): Foo {
   return { name: "", bar: undefined };
 }
 

@@ -6,7 +6,7 @@ export interface Bar {
   age: number;
 }
 
-function createBaseBar(): Bar {
+export function createBaseBar(): Bar {
   return { name: "", age: 0 };
 }
 

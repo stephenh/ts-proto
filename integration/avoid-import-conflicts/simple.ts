@@ -69,7 +69,7 @@ export interface FooServiceCreateResponse {
   kind: FooService2;
 }
 
-function createBaseSimple(): Simple {
+export function createBaseSimple(): Simple {
   return { name: "", otherSimple: undefined };
 }
 
@@ -130,7 +130,7 @@ export const Simple = {
   },
 };
 
-function createBaseSimpleEnums(): SimpleEnums {
+export function createBaseSimpleEnums(): SimpleEnums {
   return { localEnum: 0, importEnum: 0 };
 }
 
@@ -188,7 +188,7 @@ export const SimpleEnums = {
   },
 };
 
-function createBaseFooServiceCreateRequest(): FooServiceCreateRequest {
+export function createBaseFooServiceCreateRequest(): FooServiceCreateRequest {
   return { kind: 0 };
 }
 
@@ -235,7 +235,7 @@ export const FooServiceCreateRequest = {
   },
 };
 
-function createBaseFooServiceCreateResponse(): FooServiceCreateResponse {
+export function createBaseFooServiceCreateResponse(): FooServiceCreateResponse {
   return { kind: 0 };
 }
 

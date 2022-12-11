@@ -9,7 +9,7 @@ export interface Point {
   dataWrapped: Buffer | undefined;
 }
 
-function createBasePoint(): Point {
+export function createBasePoint(): Point {
   return { data: Buffer.alloc(0), dataWrapped: undefined };
 }
 

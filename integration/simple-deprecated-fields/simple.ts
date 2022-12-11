@@ -33,7 +33,7 @@ export interface Child {
   name: string;
 }
 
-function createBaseSimple(): Simple {
+export function createBaseSimple(): Simple {
   return { name: "", age: 0, child: undefined, testField: "", testNotDeprecated: "" };
 }
 
@@ -118,7 +118,7 @@ export const Simple = {
   },
 };
 
-function createBaseChild(): Child {
+export function createBaseChild(): Child {
   return { name: "" };
 }
 

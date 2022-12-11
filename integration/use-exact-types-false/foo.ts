@@ -8,7 +8,7 @@ export interface Foo {
   baz: string;
 }
 
-function createBaseFoo(): Foo {
+export function createBaseFoo(): Foo {
   return { bar: "", baz: "" };
 }
 

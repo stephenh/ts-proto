@@ -95,7 +95,7 @@ export interface BytesValue {
   value: Uint8Array;
 }
 
-function createBaseDoubleValue(): DoubleValue {
+export function createBaseDoubleValue(): DoubleValue {
   return { value: 0 };
 }
 
@@ -126,7 +126,7 @@ export const DoubleValue = {
   },
 };
 
-function createBaseFloatValue(): FloatValue {
+export function createBaseFloatValue(): FloatValue {
   return { value: 0 };
 }
 
@@ -157,7 +157,7 @@ export const FloatValue = {
   },
 };
 
-function createBaseInt64Value(): Int64Value {
+export function createBaseInt64Value(): Int64Value {
   return { value: 0 };
 }
 
@@ -188,7 +188,7 @@ export const Int64Value = {
   },
 };
 
-function createBaseUInt64Value(): UInt64Value {
+export function createBaseUInt64Value(): UInt64Value {
   return { value: 0 };
 }
 
@@ -219,7 +219,7 @@ export const UInt64Value = {
   },
 };
 
-function createBaseInt32Value(): Int32Value {
+export function createBaseInt32Value(): Int32Value {
   return { value: 0 };
 }
 
@@ -250,7 +250,7 @@ export const Int32Value = {
   },
 };
 
-function createBaseUInt32Value(): UInt32Value {
+export function createBaseUInt32Value(): UInt32Value {
   return { value: 0 };
 }
 
@@ -281,7 +281,7 @@ export const UInt32Value = {
   },
 };
 
-function createBaseBoolValue(): BoolValue {
+export function createBaseBoolValue(): BoolValue {
   return { value: false };
 }
 
@@ -312,7 +312,7 @@ export const BoolValue = {
   },
 };
 
-function createBaseStringValue(): StringValue {
+export function createBaseStringValue(): StringValue {
   return { value: "" };
 }
 
@@ -343,7 +343,7 @@ export const StringValue = {
   },
 };
 
-function createBaseBytesValue(): BytesValue {
+export function createBaseBytesValue(): BytesValue {
   return { value: new Uint8Array() };
 }
 

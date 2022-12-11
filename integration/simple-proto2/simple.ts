@@ -40,7 +40,7 @@ export interface Issue56 {
   test: EnumWithoutZero;
 }
 
-function createBaseIssue56(): Issue56 {
+export function createBaseIssue56(): Issue56 {
   return { test: 1 };
 }
 

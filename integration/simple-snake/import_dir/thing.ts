@@ -8,7 +8,7 @@ export interface ImportedThing {
   created_at: Date | undefined;
 }
 
-function createBaseImportedThing(): ImportedThing {
+export function createBaseImportedThing(): ImportedThing {
   return { created_at: undefined };
 }
 

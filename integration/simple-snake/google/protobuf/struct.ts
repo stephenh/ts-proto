@@ -100,7 +100,7 @@ export interface ListValue {
   values: any[];
 }
 
-function createBaseStruct(): Struct {
+export function createBaseStruct(): Struct {
   return { fields: {} };
 }
 
@@ -190,7 +190,7 @@ export const Struct = {
   },
 };
 
-function createBaseStruct_FieldsEntry(): Struct_FieldsEntry {
+export function createBaseStruct_FieldsEntry(): Struct_FieldsEntry {
   return { key: "", value: undefined };
 }
 
@@ -245,7 +245,7 @@ export const Struct_FieldsEntry = {
   },
 };
 
-function createBaseValue(): Value {
+export function createBaseValue(): Value {
   return {
     null_value: undefined,
     number_value: undefined,
@@ -386,7 +386,7 @@ export const Value = {
   },
 };
 
-function createBaseListValue(): ListValue {
+export function createBaseListValue(): ListValue {
   return { values: [] };
 }
 

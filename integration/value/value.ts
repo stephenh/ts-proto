@@ -13,7 +13,7 @@ export interface ValueMessage {
   structValue: { [key: string]: any } | undefined;
 }
 
-function createBaseValueMessage(): ValueMessage {
+export function createBaseValueMessage(): ValueMessage {
   return { value: undefined, anyList: undefined, repeatedAny: [], repeatedStrings: [], structValue: undefined };
 }
 

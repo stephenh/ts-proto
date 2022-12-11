@@ -8,7 +8,7 @@ export interface EchoMsg {
   body: string;
 }
 
-function createBaseEchoMsg(): EchoMsg {
+export function createBaseEchoMsg(): EchoMsg {
   return { body: "" };
 }
 

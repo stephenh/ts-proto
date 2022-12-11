@@ -8,7 +8,7 @@ export interface TestMessage {
   field2?: boolean | undefined;
 }
 
-function createBaseTestMessage(): TestMessage {
+export function createBaseTestMessage(): TestMessage {
   return { field1: false };
 }
 

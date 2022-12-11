@@ -86,7 +86,7 @@ export interface Simple {
   age: number;
 }
 
-function createBaseSimple(): Simple {
+export function createBaseSimple(): Simple {
   return { name: "", age: 0 };
 }
 

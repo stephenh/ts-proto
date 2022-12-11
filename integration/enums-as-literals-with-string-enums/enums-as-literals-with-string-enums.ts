@@ -70,7 +70,7 @@ export function dividerData_DividerTypeToNumber(object: DividerData_DividerType)
   }
 }
 
-function createBaseDividerData(): DividerData {
+export function createBaseDividerData(): DividerData {
   return { type: DividerData_DividerType.DOUBLE };
 }
 

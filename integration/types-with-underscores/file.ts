@@ -10,7 +10,7 @@ export interface Baz {
 export interface FooBar {
 }
 
-function createBaseBaz(): Baz {
+export function createBaseBaz(): Baz {
   return { foo: undefined };
 }
 
@@ -57,7 +57,7 @@ export const Baz = {
   },
 };
 
-function createBaseFooBar(): FooBar {
+export function createBaseFooBar(): FooBar {
   return {};
 }
 

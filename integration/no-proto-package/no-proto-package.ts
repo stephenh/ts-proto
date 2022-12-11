@@ -12,7 +12,7 @@ export interface User {
 export interface Empty {
 }
 
-function createBaseUser(): User {
+export function createBaseUser(): User {
   return { name: "" };
 }
 
@@ -59,7 +59,7 @@ export const User = {
   },
 };
 
-function createBaseEmpty(): Empty {
+export function createBaseEmpty(): Empty {
   return {};
 }
 

@@ -35,7 +35,7 @@ export interface DateMessage {
   day: number;
 }
 
-function createBaseDateMessage(): DateMessage {
+export function createBaseDateMessage(): DateMessage {
   return { year: 0, month: 0, day: 0 };
 }
 

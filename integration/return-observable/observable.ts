@@ -12,7 +12,7 @@ export interface ProduceReply {
   result: string;
 }
 
-function createBaseProduceRequest(): ProduceRequest {
+export function createBaseProduceRequest(): ProduceRequest {
   return { ingredients: "" };
 }
 
@@ -59,7 +59,7 @@ export const ProduceRequest = {
   },
 };
 
-function createBaseProduceReply(): ProduceReply {
+export function createBaseProduceReply(): ProduceReply {
   return { result: "" };
 }
 

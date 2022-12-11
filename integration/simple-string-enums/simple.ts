@@ -70,7 +70,7 @@ export interface Simple_StateMapEntry {
   value: StateEnum;
 }
 
-function createBaseSimple(): Simple {
+export function createBaseSimple(): Simple {
   return { name: "", state: StateEnum.UNKNOWN, states: [], nullValue: NullValue.NULL_VALUE, stateMap: {} };
 }
 
@@ -189,7 +189,7 @@ export const Simple = {
   },
 };
 
-function createBaseSimple_StateMapEntry(): Simple_StateMapEntry {
+export function createBaseSimple_StateMapEntry(): Simple_StateMapEntry {
   return { key: "", value: StateEnum.UNKNOWN };
 }
 
