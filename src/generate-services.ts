@@ -105,16 +105,13 @@ export function generateService(
 
 function generateRegularRpcMethod(
   ctx: Context,
-  fileDesc: FileDescriptorProto,
-  serviceDesc: ServiceDescriptorProto,
   methodDesc: MethodDescriptorProto
 ): Code {
   assertInstanceOf(methodDesc, FormattedMethodDescriptor);
-  const { options, utils } = ctx;
+  const { options } = ctx;
   const Reader = impFile(ctx.options, "Reader@protobufjs/minimal");
   const rawInputType = rawRequestType(ctx, methodDesc, { keepValueType: true });
   const inputType = requestType(ctx, methodDesc);
-  const outputType = responseType(ctx, methodDesc);
   const rawOutputType = responseType(ctx, methodDesc, { keepValueType: true });
 
   const params = [...(options.context ? [code`ctx: Context`] : []), code`request: ${inputType}`];
@@ -216,7 +213,7 @@ export function generateServiceClientImpl(
     if (options.context && methodDesc.name.match(/^Get[A-Z]/)) {
       chunks.push(generateCachingRpcMethod(ctx, fileDesc, serviceDesc, methodDesc));
     } else {
-      chunks.push(generateRegularRpcMethod(ctx, fileDesc, serviceDesc, methodDesc));
+      chunks.push(generateRegularRpcMethod(ctx, methodDesc));
     }
   }
 

@@ -161,7 +161,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
     visit(
       fileDesc,
       sourceInfo,
-      (fullName, message, sInfo, fullProtoTypeName) => {
+      (fullName, message, _sInfo, fullProtoTypeName) => {
         const fullTypeName = maybePrefixPackage(fileDesc, fullProtoTypeName);
 
         chunks.push(generateBaseInstanceFactory(ctx, fullName, message, fullTypeName));
@@ -268,7 +268,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
         }
       });
     }
-    serviceDesc.method.forEach((methodDesc, index) => {
+    serviceDesc.method.forEach((methodDesc, _index) => {
       if (methodDesc.serverStreaming || methodDesc.clientStreaming) {
         hasStreamingMethods = true;
       }
@@ -335,7 +335,7 @@ export function makeUtils(options: Options): Utils {
   return {
     ...bytes,
     ...makeDeepPartial(options, longs),
-    ...makeObjectIdMethods(options),
+    ...makeObjectIdMethods(),
     ...makeTimestampMethods(options, longs),
     ...longs,
     ...makeComparisonUtils(),
@@ -538,7 +538,7 @@ function makeDeepPartial(options: Options, longs: ReturnType<typeof makeLongUtil
   return { Builtin, DeepPartial, Exact };
 }
 
-function makeObjectIdMethods(options: Options) {
+function makeObjectIdMethods() {
   const mongodb = imp("mongodb*mongodb");
 
   const fromProtoObjectId = conditionalOutput(

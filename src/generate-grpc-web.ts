@@ -25,7 +25,7 @@ export function generateGrpcClientImpl(
   // Create the constructor(rpc: Rpc)
   chunks.push(code`
     private readonly rpc: Rpc;
-    
+
     constructor(rpc: Rpc) {
   `);
   chunks.push(code`this.rpc = rpc;`);
