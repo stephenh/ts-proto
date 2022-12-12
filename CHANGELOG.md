@@ -1,3 +1,10 @@
+## [1.135.3](https://github.com/stephenh/ts-proto/compare/v1.135.2...v1.135.3) (2022-12-12)
+
+
+### Bug Fixes
+
+* return grpc-web response without toObject method ([#728](https://github.com/stephenh/ts-proto/issues/728)) ([7431aa8](https://github.com/stephenh/ts-proto/commit/7431aa8e5718ad8a8fe48651798f203995bf705b)), closes [stephenh/ts-proto#636](https://github.com/stephenh/ts-proto/issues/636)
+
 ## [1.135.2](https://github.com/stephenh/ts-proto/compare/v1.135.1...v1.135.2) (2022-12-09)
 
 
