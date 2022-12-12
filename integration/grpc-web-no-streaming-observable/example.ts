@@ -335,10 +335,11 @@ export const DashStateUserSettingsDesc: UnaryMethodDefinitionish = {
   } as any,
   responseType: {
     deserializeBinary(data: Uint8Array) {
+      const value = DashUserSettingsState.decode(data);
       return {
-        ...DashUserSettingsState.decode(data),
+        ...value,
         toObject() {
-          return this;
+          return value;
         },
       };
     },

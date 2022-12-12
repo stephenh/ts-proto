@@ -125,7 +125,11 @@ export function generateGrpcMethodDesc(
   // we want/what grpc-web's runtime needs.
   const responseFn = code`{
     deserializeBinary(data: Uint8Array) {
-      return { ...${outputType}.decode(data), toObject() { return this; } };
+      const value = ${outputType}.decode(data);
+      return {
+        ...value,
+        toObject() { return value; },
+      };
     }
   }`;
 
@@ -246,7 +250,7 @@ function createPromiseUnaryMethod(ctx: Context): Code {
           debug: this.options.debug,
           onEnd: function (response) {
             if (response.status === grpc.Code.OK) {
-              resolve(response.message);
+              resolve(response.message!.toObject());
             } else {
               const err = new ${ctx.utils.GrpcWebError}(response.statusMessage, response.status, response.trailers);
               reject(err);
