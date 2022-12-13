@@ -1,0 +1,19 @@
+syntax = "proto3";
+package simple;
+
+// Echoer service returns the given message.
+service Echoer {
+  // Echo returns the given message.
+  rpc Echo(EchoMsg) returns (EchoMsg);
+  // EchoServerStream is an example of a server -> client one-way stream.
+  rpc EchoServerStream(EchoMsg) returns (stream EchoMsg);
+  // EchoClientStream is an example of client->server one-way stream.
+  rpc EchoClientStream(stream EchoMsg) returns (EchoMsg);
+  // EchoBidiStream is an example of a two-way stream.
+  rpc EchoBidiStream(stream EchoMsg) returns (stream EchoMsg);
+}
+
+// EchoMsg is the message body for Echo.
+message EchoMsg {
+  string body = 1;
+}

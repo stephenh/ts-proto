@@ -65,6 +65,7 @@ export type Options = {
   outputSchema: boolean;
   onlyTypes: boolean;
   emitImportedFiles: boolean;
+  useAbortSignal: boolean;
   useExactTypes: boolean;
   useAsyncIterable: boolean;
   unknownFields: boolean;
@@ -112,6 +113,7 @@ export function defaultOptions(): Options {
     onlyTypes: false,
     emitImportedFiles: true,
     useExactTypes: true,
+    useAbortSignal: false,
     useAsyncIterable: false,
     unknownFields: false,
     usePrototypeForDefaults: false,
