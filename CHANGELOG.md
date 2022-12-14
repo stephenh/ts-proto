@@ -1,3 +1,10 @@
+# [1.136.0](https://github.com/stephenh/ts-proto/compare/v1.135.3...v1.136.0) (2022-12-14)
+
+
+### Features
+
+* RPC: add useAbortSignal option ([#731](https://github.com/stephenh/ts-proto/issues/731)) ([69313a7](https://github.com/stephenh/ts-proto/commit/69313a7a0f19c41c61824081e12ed680fda32b74)), closes [#730](https://github.com/stephenh/ts-proto/issues/730)
+
 ## [1.135.3](https://github.com/stephenh/ts-proto/compare/v1.135.2...v1.135.3) (2022-12-12)
 
 
