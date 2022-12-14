@@ -40,6 +40,7 @@ describe("options", () => {
         "stringEnums": false,
         "unknownFields": false,
         "unrecognizedEnum": true,
+        "useAbortSignal": false,
         "useAsyncIterable": false,
         "useDate": "timestamp",
         "useExactTypes": true,

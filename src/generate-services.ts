@@ -62,6 +62,9 @@ export function generateService(
     const partialInput = options.outputClientImpl === "grpc-web";
     const inputType = requestType(ctx, methodDesc, partialInput);
     params.push(code`request: ${inputType}`);
+    if (options.useAbortSignal) {
+      params.push(code`abortSignal?: AbortSignal`);
+    }
 
     // Use metadata as last argument for interface only configuration
     if (options.outputClientImpl === "grpc-web") {
@@ -103,22 +106,21 @@ export function generateService(
   return joinCode(chunks, { on: "\n" });
 }
 
-function generateRegularRpcMethod(
-  ctx: Context,
-  fileDesc: FileDescriptorProto,
-  serviceDesc: ServiceDescriptorProto,
-  methodDesc: MethodDescriptorProto
-): Code {
+function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProto): Code {
   assertInstanceOf(methodDesc, FormattedMethodDescriptor);
-  const { options, utils } = ctx;
+  const { options } = ctx;
   const Reader = impFile(ctx.options, "Reader@protobufjs/minimal");
   const rawInputType = rawRequestType(ctx, methodDesc, { keepValueType: true });
   const inputType = requestType(ctx, methodDesc);
-  const outputType = responseType(ctx, methodDesc);
   const rawOutputType = responseType(ctx, methodDesc, { keepValueType: true });
 
-  const params = [...(options.context ? [code`ctx: Context`] : []), code`request: ${inputType}`];
+  const params = [
+    ...(options.context ? [code`ctx: Context`] : []),
+    code`request: ${inputType}`,
+    ...(options.useAbortSignal ? [code`abortSignal?: AbortSignal`] : []),
+  ];
   const maybeCtx = options.context ? "ctx," : "";
+  const maybeAbortSignal = options.useAbortSignal ? "abortSignal || undefined," : "";
 
   let encode = code`${rawInputType}.encode(request).finish()`;
   let decode = code`data => ${rawOutputType}.decode(new ${Reader}(data))`;
@@ -166,7 +168,8 @@ function generateRegularRpcMethod(
         ${maybeCtx}
         this.service,
         "${methodDesc.name}",
-        data
+        data,
+        ${maybeAbortSignal}
       );
       return ${decode};
     }
@@ -216,7 +219,7 @@ export function generateServiceClientImpl(
     if (options.context && methodDesc.name.match(/^Get[A-Z]/)) {
       chunks.push(generateCachingRpcMethod(ctx, fileDesc, serviceDesc, methodDesc));
     } else {
-      chunks.push(generateRegularRpcMethod(ctx, fileDesc, serviceDesc, methodDesc));
+      chunks.push(generateRegularRpcMethod(ctx, methodDesc));
     }
   }
 
@@ -332,6 +335,7 @@ export function generateRpcType(ctx: Context, hasStreamingMethods: boolean): Cod
   const { options } = ctx;
   const maybeContext = options.context ? "<Context>" : "";
   const maybeContextParam = options.context ? "ctx: Context," : "";
+  const maybeAbortSignalParam = options.useAbortSignal ? "abortSignal?: AbortSignal," : "";
   const methods = [[code`request`, code`Uint8Array`, code`Promise<Uint8Array>`]];
   if (hasStreamingMethods) {
     const observable = observableType(ctx);
@@ -351,7 +355,8 @@ export function generateRpcType(ctx: Context, hasStreamingMethods: boolean): Cod
         ${maybeContextParam}
         service: string,
         method: string,
-        data: ${method[1]}
+        data: ${method[1]},
+        ${maybeAbortSignalParam}
       ): ${method[2]};`);
   });
   chunks.push(code`    }`);
