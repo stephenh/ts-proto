@@ -1,3 +1,10 @@
+## [1.136.1](https://github.com/stephenh/ts-proto/compare/v1.136.0...v1.136.1) (2022-12-16)
+
+
+### Bug Fixes
+
+* Avoid namespace conflict on globalThis. ([#735](https://github.com/stephenh/ts-proto/issues/735)) ([71e919e](https://github.com/stephenh/ts-proto/commit/71e919e7de4a2482e9389a5cbfd76853a1db73fb)), closes [#732](https://github.com/stephenh/ts-proto/issues/732)
+
 # [1.136.0](https://github.com/stephenh/ts-proto/compare/v1.135.3...v1.136.0) (2022-12-14)
 
 
