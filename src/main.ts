@@ -944,32 +944,39 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
 
     // and then use the snippet to handle repeated fields if necessary
     if (isRepeated(field)) {
-      const maybeNonNullAssertion = ctx.options.useOptionals === "all" ? "!" : "";
+      const initialValue = isMapType(ctx, messageDesc, field) ? (ctx.options.useMapType ? "new Map()" : "{}") : "[]";
+      const maybeInitalize =
+        ctx.options.useOptionals === "all" ? `message.${fieldName} = message.${fieldName} ?? ${initialValue}` : "";
 
       if (isMapType(ctx, messageDesc, field)) {
         // We need a unique const within the `cast` statement
         const varName = `entry${field.number}`;
 
         const valueSetterSnippet = ctx.options.useMapType
-          ? `message.${fieldName}${maybeNonNullAssertion}.set(${varName}.key, ${varName}.value)`
-          : `message.${fieldName}${maybeNonNullAssertion}[${varName}.key] = ${varName}.value`;
+          ? `message.${fieldName}.set(${varName}.key, ${varName}.value)`
+          : `message.${fieldName}[${varName}.key] = ${varName}.value`;
         chunks.push(code`
+          ${maybeInitalize}
           const ${varName} = ${readSnippet};
           if (${varName}.value !== undefined) {
             ${valueSetterSnippet};
           }
         `);
       } else if (packedType(field.type) === undefined) {
-        chunks.push(code`message.${fieldName}${maybeNonNullAssertion}.push(${readSnippet});`);
+        chunks.push(code`
+          ${maybeInitalize}
+          message.${fieldName}.push(${readSnippet});
+        `);
       } else {
         chunks.push(code`
+          ${maybeInitalize}
           if ((tag & 7) === 2) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
-              message.${fieldName}${maybeNonNullAssertion}.push(${readSnippet});
+              message.${fieldName}.push(${readSnippet});
             }
           } else {
-            message.${fieldName}${maybeNonNullAssertion}.push(${readSnippet});
+            message.${fieldName}.push(${readSnippet});
           }
         `);
       }
