@@ -30,7 +30,7 @@ export function stateEnumFromJSON(object: any): StateEnum {
     case "OFF":
       return StateEnum.OFF;
     default:
-      throw new globalThis.Error("Unrecognized enum value " + object + " for enum StateEnum");
+      throw new tsProtoGlobalThis.Error("Unrecognized enum value " + object + " for enum StateEnum");
   }
 }
 
@@ -43,7 +43,7 @@ export function stateEnumToJSON(object: StateEnum): string {
     case StateEnum.OFF:
       return "OFF";
     default:
-      throw new globalThis.Error("Unrecognized enum value " + object + " for enum StateEnum");
+      throw new tsProtoGlobalThis.Error("Unrecognized enum value " + object + " for enum StateEnum");
   }
 }
 
@@ -88,7 +88,7 @@ export function child_TypeFromJSON(object: any): Child_Type {
     case "BAD":
       return Child_Type.BAD;
     default:
-      throw new globalThis.Error("Unrecognized enum value " + object + " for enum Child_Type");
+      throw new tsProtoGlobalThis.Error("Unrecognized enum value " + object + " for enum Child_Type");
   }
 }
 
@@ -101,7 +101,7 @@ export function child_TypeToJSON(object: Child_Type): string {
     case Child_Type.BAD:
       return "BAD";
     default:
-      throw new globalThis.Error("Unrecognized enum value " + object + " for enum Child_Type");
+      throw new tsProtoGlobalThis.Error("Unrecognized enum value " + object + " for enum Child_Type");
   }
 }
 
@@ -129,7 +129,7 @@ export function nested_InnerEnumFromJSON(object: any): Nested_InnerEnum {
     case "BAD":
       return Nested_InnerEnum.BAD;
     default:
-      throw new globalThis.Error("Unrecognized enum value " + object + " for enum Nested_InnerEnum");
+      throw new tsProtoGlobalThis.Error("Unrecognized enum value " + object + " for enum Nested_InnerEnum");
   }
 }
 
@@ -142,7 +142,7 @@ export function nested_InnerEnumToJSON(object: Nested_InnerEnum): string {
     case Nested_InnerEnum.BAD:
       return "BAD";
     default:
-      throw new globalThis.Error("Unrecognized enum value " + object + " for enum Nested_InnerEnum");
+      throw new tsProtoGlobalThis.Error("Unrecognized enum value " + object + " for enum Nested_InnerEnum");
   }
 }
 
@@ -1558,7 +1558,7 @@ interface Rpc {
 declare var self: any | undefined;
 declare var window: any | undefined;
 declare var global: any | undefined;
-var globalThis: any = (() => {
+var tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") {
     return globalThis;
   }
@@ -1609,7 +1609,7 @@ function fromJsonTimestamp(o: any): Date {
 
 function longToNumber(long: Long): number {
   if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+    throw new tsProtoGlobalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
   return long.toNumber();
 }
