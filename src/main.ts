@@ -340,7 +340,7 @@ export function makeUtils(options: Options): Utils {
     ...longs,
     ...makeComparisonUtils(),
     ...makeNiceGrpcServerStreamingMethodResult(),
-    ...makeGrpcWebErrorClass(),
+    ...makeGrpcWebErrorClass(bytes),
   };
 }
 
@@ -434,12 +434,12 @@ function makeLongUtils(options: Options, bytes: ReturnType<typeof makeByteUtils>
 
 function makeByteUtils() {
   const globalThis = conditionalOutput(
-    "globalThis",
+    "tsProtoGlobalThis",
     code`
       declare var self: any | undefined;
       declare var window: any | undefined;
       declare var global: any | undefined;
-      var globalThis: any = (() => {
+      var tsProtoGlobalThis: any = (() => {
         if (typeof globalThis !== "undefined") return globalThis;
         if (typeof self !== "undefined") return self;
         if (typeof window !== "undefined") return window;
@@ -698,11 +698,11 @@ function makeNiceGrpcServerStreamingMethodResult() {
   return { NiceGrpcServerStreamingMethodResult };
 }
 
-function makeGrpcWebErrorClass() {
+function makeGrpcWebErrorClass(bytes: ReturnType<typeof makeByteUtils>) {
   const GrpcWebError = conditionalOutput(
     "GrpcWebError",
     code`
-      export class GrpcWebError extends globalThis.Error {
+      export class GrpcWebError extends ${bytes.globalThis}.Error {
         constructor(message: string, public code: grpc.Code, public metadata: grpc.Metadata) {
           super(message);
         }
