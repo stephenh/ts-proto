@@ -1728,9 +1728,9 @@ type StructFieldNames = {
 function generateWrap(ctx: Context, fullProtoTypeName: string, fieldNames: StructFieldNames): Code[] {
   const chunks: Code[] = [];
   if (isStructTypeName(fullProtoTypeName)) {
-    let setStatement = 'struct.fields[key] = object[key];';
+    let setStatement = "struct.fields[key] = object[key];";
     if (ctx.options.useMapType) {
-      setStatement = 'struct.fields.set(key, object[key]);';
+      setStatement = "struct.fields.set(key, object[key]);";
     }
 
     chunks.push(code`wrap(object: {[key: string]: any} | undefined): Struct {
@@ -1820,9 +1820,9 @@ function generateWrap(ctx: Context, fullProtoTypeName: string, fieldNames: Struc
 function generateUnwrap(ctx: Context, fullProtoTypeName: string, fieldNames: StructFieldNames): Code[] {
   const chunks: Code[] = [];
   if (isStructTypeName(fullProtoTypeName)) {
-    let setStatement = 'object[key] = message.fields[key];';
+    let setStatement = "object[key] = message.fields[key];";
     if (ctx.options.useMapType) {
-      setStatement = 'object[key] = message.fields.get(key);'
+      setStatement = "object[key] = message.fields.get(key);";
     }
 
     chunks.push(code`unwrap(message: Struct): {[key: string]: any} {
