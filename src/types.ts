@@ -202,6 +202,8 @@ export function defaultValue(ctx: Context, field: FieldDescriptorProto): any {
         return code`${utils.Long}.UZERO`;
       } else if (options.forceLong === LongOption.STRING) {
         return '"0"';
+      } else if (options.forceLong === LongOption.BIGINT) {
+        return 'BigInt("0")';
       } else {
         return 0;
       }
@@ -212,6 +214,8 @@ export function defaultValue(ctx: Context, field: FieldDescriptorProto): any {
         return code`${utils.Long}.ZERO`;
       } else if (options.forceLong === LongOption.STRING) {
         return '"0"';
+      } else if (options.forceLong === LongOption.BIGINT) {
+        return 'BigInt("0")';
       } else {
         return 0;
       }
@@ -272,6 +276,8 @@ export function notDefaultCheck(
         return code`${maybeNotUndefinedAnd} !${place}.isZero()`;
       } else if (options.forceLong === LongOption.STRING) {
         return code`${maybeNotUndefinedAnd} ${place} !== "0"`;
+      } else if (options.forceLong === LongOption.BIGINT) {
+        return code`${maybeNotUndefinedAnd} ${place} !== BigInt("0")`;
       } else {
         return code`${maybeNotUndefinedAnd} ${place} !== 0`;
       }
@@ -532,6 +538,8 @@ function longTypeName(ctx: Context): Code {
     return code`${utils.Long}`;
   } else if (options.forceLong === LongOption.STRING) {
     return code`string`;
+  } else if (options.forceLong === LongOption.BIGINT) {
+    return code`bigint`;
   } else {
     return code`number`;
   }

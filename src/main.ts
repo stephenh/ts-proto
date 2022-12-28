@@ -417,6 +417,15 @@ function makeLongUtils(options: Options, bytes: ReturnType<typeof makeByteUtils>
     `
   );
 
+  const longToBigint = conditionalOutput(
+    "longToBigint",
+    code`
+      function longToBigint(long: ${Long}) {
+        return BigInt(long.toString());
+      }
+    `
+  );
+
   const longToNumber = conditionalOutput(
     "longToNumber",
     code`
@@ -429,7 +438,7 @@ function makeLongUtils(options: Options, bytes: ReturnType<typeof makeByteUtils>
     `
   );
 
-  return { numberToLong, longToNumber, longToString, Long };
+  return { numberToLong, longToNumber, longToString, longToBigint, Long };
 }
 
 function makeByteUtils() {
@@ -586,6 +595,9 @@ function makeTimestampMethods(options: Options, longs: ReturnType<typeof makeLon
   if (options.forceLong === LongOption.LONG) {
     toNumberCode = "t.seconds.toNumber()";
     seconds = code`${longs.numberToLong}(date.getTime() / 1_000)`;
+  } else if (options.forceLong === LongOption.BIGINT) {
+    toNumberCode = "Number(t.seconds.toString())";
+    seconds = code`BigInt(Math.trunc(date.getTime() / 1_000))`;
   } else if (options.forceLong === LongOption.STRING) {
     toNumberCode = "Number(t.seconds)";
     // Must discard the fractional piece here
@@ -908,6 +920,8 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
           readSnippet = code`${readSnippet} as Long`;
         } else if (options.forceLong === LongOption.STRING) {
           readSnippet = code`${utils.longToString}(${readSnippet} as Long)`;
+        } else if (options.forceLong === LongOption.BIGINT) {
+          readSnippet = code`${utils.longToBigint}(${readSnippet} as Long)`;
         } else {
           readSnippet = code`${utils.longToNumber}(${readSnippet} as Long)`;
         }
@@ -1024,6 +1038,9 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
 
   // then add a case for each field
   messageDesc.field.forEach((field) => {
+    // const convert = (x: string) => options.forceLong === LongOption.BIGINT 
+    //   ? `${x}.toString()`
+    //   : x;
     const fieldName = maybeSnakeToCamel(field.name, options);
 
     // get a generic writer.doSomething based on the basic type
@@ -1032,6 +1049,9 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
       const tag = ((field.number << 3) | basicWireType(field.type)) >>> 0;
       const toNumber = getEnumMethod(ctx, field.typeName, "ToNumber");
       writeSnippet = (place) => code`writer.uint32(${tag}).${toReaderCall(field)}(${toNumber}(${place}))`;
+    } else if (isLong(field) && options.forceLong === LongOption.BIGINT) {
+      const tag = ((field.number << 3) | basicWireType(field.type)) >>> 0;
+      writeSnippet = (place) => code`writer.uint32(${tag}).${toReaderCall(field)}(${place}.toString())`;
     } else if (isScalar(field) || isEnum(field)) {
       const tag = ((field.number << 3) | basicWireType(field.type)) >>> 0;
       writeSnippet = (place) => code`writer.uint32(${tag}).${toReaderCall(field)}(${place})`;
@@ -1261,6 +1281,8 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
         } else if (isLong(field) && options.forceLong === LongOption.LONG) {
           const cstr = capitalize(basicTypeName(ctx, field, { keepValueType: true }).toCodeString());
           return code`${cstr}.fromValue(${from})`;
+        } else if (isLong(field) && options.forceLong === LongOption.BIGINT) {
+          return code`BigInt(${from})`;
         } else {
           const cstr = capitalize(basicTypeName(ctx, field, { keepValueType: true }).toCodeString());
           return code`${cstr}(${from})`;
@@ -1285,6 +1307,8 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
         const valueType = valueTypeName(ctx, field.typeName)!;
         if (isLongValueType(field) && options.forceLong === LongOption.LONG) {
           return code`${capitalize(valueType.toCodeString())}.fromValue(${from})`;
+        } else if (isLongValueType(field) && options.forceLong === LongOption.BIGINT) {
+          return code`BigInt(${from})`;
         } else if (isBytesValueType(field)) {
           return code`new ${capitalize(valueType.toCodeString())}(${from})`;
         } else {
@@ -1492,6 +1516,8 @@ function generateToJson(
           return code`${utils.fromTimestamp}(${from}).toISOString()`;
         } else if (isLong(valueType) && options.forceLong === LongOption.LONG) {
           return code`${from}.toString()`;
+        } else if (isLong(valueType) && options.forceLong === LongOption.BIGINT) {
+          return code`${from}.toString()`;
         } else if (isWholeNumber(valueType) && !(isLong(valueType) && options.forceLong === LongOption.STRING)) {
           return code`Math.round(${from})`;
         } else if (isScalar(valueType) || isValueType(ctx, valueType)) {
@@ -1519,6 +1545,8 @@ function generateToJson(
       } else if (isLong(field) && options.forceLong === LongOption.LONG) {
         const v = isWithinOneOf(field) ? "undefined" : defaultValue(ctx, field);
         return code`(${from} || ${v}).toString()`;
+      } else if (isLong(field) && options.forceLong === LongOption.BIGINT) {
+        return code`${from}.toString()`;
       } else if (isWholeNumber(field) && !(isLong(field) && options.forceLong === LongOption.STRING)) {
         return code`Math.round(${from})`;
       } else {
