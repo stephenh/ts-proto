@@ -1038,9 +1038,6 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
 
   // then add a case for each field
   messageDesc.field.forEach((field) => {
-    // const convert = (x: string) => options.forceLong === LongOption.BIGINT 
-    //   ? `${x}.toString()`
-    //   : x;
     const fieldName = maybeSnakeToCamel(field.name, options);
 
     // get a generic writer.doSomething based on the basic type
