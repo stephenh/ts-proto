@@ -10,6 +10,7 @@ describe("use-map-type", () => {
       stringToBytes: new Map([["bar", new TextEncoder().encode("buz")]]),
       int64ToInt64: new Map([[3, 4]]),
       mapOfTimestamps: new Map([["qux", now]]),
+      struct: { foo: 1 },
     };
 
     const jsonFromObject = Maps.toJSON(m);
@@ -24,6 +25,7 @@ describe("use-map-type", () => {
       stringToBytes: new Map([["bar", Buffer.from(new TextEncoder().encode("buz"))]]),
       int64ToInt64: m.int64ToInt64,
       mapOfTimestamps: m.mapOfTimestamps,
+      struct: { foo: 1 },
     });
     const jsonFromDecoded = Maps.toJSON(decoded);
     expect(jsonFromDecoded).toEqual(jsonFromObject);
