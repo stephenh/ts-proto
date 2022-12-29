@@ -1,3 +1,16 @@
+# [1.137.0](https://github.com/stephenh/ts-proto/compare/v1.136.1...v1.137.0) (2022-12-29)
+
+
+### Bug Fixes
+
+* Additional fix for structs with useMapType. ([#743](https://github.com/stephenh/ts-proto/issues/743)) ([3264b0f](https://github.com/stephenh/ts-proto/commit/3264b0f4a98f3e00b262ce8af7927b0bc0375160))
+* Fix codegen for google.protobuf.Struct with useMapType=true ([#740](https://github.com/stephenh/ts-proto/issues/740)) ([0647151](https://github.com/stephenh/ts-proto/commit/0647151b356d7b22f8baf72b70f5a0353259b404))
+
+
+### Features
+
+* added bigint force long option ([#742](https://github.com/stephenh/ts-proto/issues/742)) ([3964e57](https://github.com/stephenh/ts-proto/commit/3964e575a6bdf90bbde937bcc71ac1f0255831b3))
+
 ## [1.136.1](https://github.com/stephenh/ts-proto/compare/v1.136.0...v1.136.1) (2022-12-16)
 
 
