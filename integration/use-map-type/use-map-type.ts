@@ -1,6 +1,7 @@
 /* eslint-disable */
 import * as Long from "long";
 import * as _m0 from "protobufjs/minimal";
+import { Struct } from "./google/protobuf/struct";
 import { Timestamp } from "./google/protobuf/timestamp";
 
 export const protobufPackage = "simple";
@@ -15,6 +16,7 @@ export interface Maps {
   stringToBytes: Map<string, Uint8Array>;
   int64ToInt64: Map<number, number>;
   mapOfTimestamps: Map<string, Date>;
+  struct: { [key: string]: any } | undefined;
 }
 
 export interface Maps_StrToEntityEntry {
@@ -96,6 +98,7 @@ function createBaseMaps(): Maps {
     stringToBytes: new Map(),
     int64ToInt64: new Map(),
     mapOfTimestamps: new Map(),
+    struct: undefined,
   };
 }
 
@@ -116,6 +119,9 @@ export const Maps = {
     message.mapOfTimestamps.forEach((value, key) => {
       Maps_MapOfTimestampsEntry.encode({ key: key as any, value }, writer.uint32(42).fork()).ldelim();
     });
+    if (message.struct !== undefined) {
+      Struct.encode(Struct.wrap(message.struct), writer.uint32(50).fork()).ldelim();
+    }
     return writer;
   },
 
@@ -155,6 +161,9 @@ export const Maps = {
           if (entry5.value !== undefined) {
             message.mapOfTimestamps.set(entry5.key, entry5.value);
           }
+          break;
+        case 6:
+          message.struct = Struct.unwrap(Struct.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -196,6 +205,7 @@ export const Maps = {
           return acc;
         }, new Map())
         : new Map(),
+      struct: isObject(object.struct) ? object.struct : undefined,
     };
   },
 
@@ -231,6 +241,7 @@ export const Maps = {
         obj.mapOfTimestamps[k] = v.toISOString();
       });
     }
+    message.struct !== undefined && (obj.struct = message.struct);
     return obj;
   },
 
@@ -281,6 +292,7 @@ export const Maps = {
       });
       return m;
     })();
+    message.struct = object.struct ?? undefined;
     return message;
   },
 };

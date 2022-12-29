@@ -1820,18 +1820,23 @@ function generateWrap(ctx: Context, fullProtoTypeName: string, fieldNames: Struc
 function generateUnwrap(ctx: Context, fullProtoTypeName: string, fieldNames: StructFieldNames): Code[] {
   const chunks: Code[] = [];
   if (isStructTypeName(fullProtoTypeName)) {
-    let setStatement = "object[key] = message.fields[key];";
     if (ctx.options.useMapType) {
-      setStatement = "object[key] = message.fields.get(key);";
+      chunks.push(code`unwrap(message: Struct): {[key: string]: any} {
+        const object: { [key: string]: any } = {};
+        [...message.fields.keys()].forEach((key) => {
+          object[key] = message.fields.get(key);
+        });
+        return object;
+      }`);
+    } else {
+      chunks.push(code`unwrap(message: Struct): {[key: string]: any} {
+        const object: { [key: string]: any } = {};
+        Object.keys(message.fields).forEach(key => {
+          object[key] = message.fields[key];     
+        });
+        return object;
+      }`);
     }
-
-    chunks.push(code`unwrap(message: Struct): {[key: string]: any} {
-      const object: { [key: string]: any } = {};
-      Object.keys(message.fields).forEach(key => {
-        ${setStatement}
-      });
-      return object;
-    }`);
   }
 
   if (isAnyValueTypeName(fullProtoTypeName)) {
@@ -1852,24 +1857,24 @@ function generateUnwrap(ctx: Context, fullProtoTypeName: string, fieldNames: Str
         } else {
           return undefined;
         }
-    }`);
+      }`);
     } else {
       chunks.push(code`unwrap(message: Value): string | number | boolean | Object | null | Array<any> | undefined {
-      if (message?.${fieldNames.stringValue} !== undefined) {
-        return message.${fieldNames.stringValue};
-      } else if (message?.${fieldNames.numberValue} !== undefined) {
-        return message.${fieldNames.numberValue};
-      } else if (message?.${fieldNames.boolValue} !== undefined) {
-        return message.${fieldNames.boolValue};
-      } else if (message?.${fieldNames.structValue} !== undefined) {
-        return message.${fieldNames.structValue};
-      } else if (message?.${fieldNames.listValue} !== undefined) {
-          return message.${fieldNames.listValue};
-      } else if (message?.${fieldNames.nullValue} !== undefined) {
-        return null;
-      }
-      return undefined;
-    }`);
+        if (message?.${fieldNames.stringValue} !== undefined) {
+          return message.${fieldNames.stringValue};
+        } else if (message?.${fieldNames.numberValue} !== undefined) {
+          return message.${fieldNames.numberValue};
+        } else if (message?.${fieldNames.boolValue} !== undefined) {
+          return message.${fieldNames.boolValue};
+        } else if (message?.${fieldNames.structValue} !== undefined) {
+          return message.${fieldNames.structValue};
+        } else if (message?.${fieldNames.listValue} !== undefined) {
+            return message.${fieldNames.listValue};
+        } else if (message?.${fieldNames.nullValue} !== undefined) {
+          return null;
+        }
+        return undefined;
+      }`);
     }
   }
 
