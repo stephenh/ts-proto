@@ -12,6 +12,7 @@
 - [Overview](#overview)
 - [QuickStart](#quickstart)
   - [Buf](#buf)
+  - [ESM](#esm)
 - [Goals](#goals)
 - [Example Types](#example-types)
 - [Highlights](#highlights)
@@ -116,7 +117,7 @@ plugins:
       - useExactTypes=...
 ```
 
-## ESM / esModuleInterop
+## ESM
 
 If you're using a modern TS setup with either `esModuleInterop` or running in an ESM environment, you'll need to pass `ts_proto_opt`s of:
 
@@ -574,7 +575,7 @@ The commands below assume you have **Docker** installed. To use a **local** copy
 
 - Check out the [repository]() for the latest code.
 - Run `yarn install` to install the dependencies.
-- Run `yarn build:test` or `yarn build:test:local` to generate the test files.
+- Run `yarn build:test` to generate the test files.
   > _This runs the following commands:_
   >
   > - `proto2bin` — Converts integration test `.proto` files to `.bin`.
@@ -584,25 +585,24 @@ The commands below assume you have **Docker** installed. To use a **local** copy
 
 **Workflow**
 
-- Modifying the plugin implementation:
-  - The most important logic is found in [src/main.ts](src/main.ts).
-  - Run `yarn bin2ts` or `yarn bin2ts:local`.  
-    _Since the proto files were not changed, you only need to regenerate the typescript files._
-  - Run `yarn test` to verify the typescript files are compatible with the reference implementation, and pass other tests.
-- Updating or adding `.proto` files in the integration directory:
-  - Run `yarn watch` to automatically regenerate test files when proto files change.
-    - Or run `yarn build:test` to regenerate all integration test files.
-  - Run `yarn test` to retest.
-
-**Contributing**
-
-- Run `yarn build:test` and `yarn test` to make sure everything works.
-- Run `yarn format` to format the typescript files.
-- Commit the changes:
-  - Also include the generated `.bin` files for the tests where you added or modified `.proto` files.
-    > These are checked into git so that the test suite can run without having to invoke the `protoc` build chain.
-  - Also include the generated `.ts` files.
-- Create a pull request
+- Add/update an integration test for your use case
+  - Either find an existing `integration/*` test that is close enough to your use case, e.g. has a `parameters.txt` that matches the `ts_proto_opt` params necessary to reproduce your use case
+  - If creating a new integration test:
+    - Make a new `integration/your-new-test/parameters.txt` with the necessary `ts_proto_opt` params
+    - Create a minimal `integration/your-new-test/your-new-test.proto` schema to reproduce your use case
+  - After any changes to `your-new-test.proto`, or an existing `integration/*.proto` file, run `yarn proto2bin`
+    - You can also leave `yarn watch` running, and it should "just do the right thing"
+  - Add/update a `integration/your-new-test/some-test.ts` unit test, even if it's as trivial as just making sure the generated code compiles
+- Modify the `ts-proto` code generation logic:
+  - Most important logic is found in [src/main.ts](src/main.ts).
+  - After any changes to `src/*.ts` files, run `yarn bin2ts` to re-codegen all integration tests
+    - Or `yarn bin2ts your-new-test` to re-codegen a specific test
+    - Again leaving `yarn watch` running should "just do the right thing"
+- Run `yarn test` to verify your changes pass all existing tests
+- Commit and submit a PR
+  - Run `yarn format` to format the typescript files.
+  - Make sure to `git add` all of the `*.proto`, `*.bin`, and `*.ts` files in `integration/your-new-test`
+    - Sometimes checking in generated code is frowned upon, but given ts-proto's main job is to generate code, seeing the codegen diffs in PRs is helpful
 
 **Dockerized Protoc**
 
