@@ -196,9 +196,9 @@ export const TestService = {
     requestStream: false,
     responseStream: false,
     requestSerialize: (value: Date) => Buffer.from(Timestamp.encode(toTimestamp(value)).finish()),
-    requestDeserialize: (value: Buffer) => Timestamp.decode(value),
+    requestDeserialize: (value: Buffer) => fromTimestamp(Timestamp.decode(value)),
     responseSerialize: (value: Date) => Buffer.from(Timestamp.encode(toTimestamp(value)).finish()),
-    responseDeserialize: (value: Buffer) => Timestamp.decode(value),
+    responseDeserialize: (value: Buffer) => fromTimestamp(Timestamp.decode(value)),
   },
   struct: {
     path: "/simple.Test/Struct",
