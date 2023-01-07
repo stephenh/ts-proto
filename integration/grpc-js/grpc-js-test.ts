@@ -151,7 +151,7 @@ describe("grpc-js-test", () => {
 
     const client = new TestClient(`localhost:${port}`, ChannelCredentials.createInsecure());
 
-    expect.assertions(26);
+    expect.assertions(28);
 
     expect(TestClient.service).toEqual(TestService);
 
@@ -208,6 +208,11 @@ describe("grpc-js-test", () => {
     );
 
     const timestamp = new Date();
+
+    client.unaryTimestamp(timestamp, (error: ServiceError | null, response: Date | undefined) => {
+      expect(error).toBeNull();
+      expect(response).toStrictEqual(timestamp);
+    });
 
     const serverStreamingCall = client.serverStreaming({ timestamp });
     serverStreamingCall.on("data", (response) => {
