@@ -1,3 +1,10 @@
+## [1.137.1](https://github.com/stephenh/ts-proto/compare/v1.137.0...v1.137.1) (2023-01-07)
+
+
+### Bug Fixes
+
+* grpc-js timestamp conversion ([#755](https://github.com/stephenh/ts-proto/issues/755)) ([9d24bd3](https://github.com/stephenh/ts-proto/commit/9d24bd39d0fbebf636ba4aaf6567988bc177a413)), closes [#754](https://github.com/stephenh/ts-proto/issues/754)
+
 # [1.137.0](https://github.com/stephenh/ts-proto/compare/v1.136.1...v1.137.0) (2022-12-29)
 
 
