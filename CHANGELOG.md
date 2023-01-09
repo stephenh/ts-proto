@@ -1,3 +1,10 @@
+## [1.137.2](https://github.com/stephenh/ts-proto/compare/v1.137.1...v1.137.2) (2023-01-09)
+
+
+### Bug Fixes
+
+* repeated uint64 fields do not encode properly with bigint option ([#751](https://github.com/stephenh/ts-proto/issues/751)) ([dcdd7e2](https://github.com/stephenh/ts-proto/commit/dcdd7e23479721d127138eeda8b143c100a0730a))
+
 ## [1.137.1](https://github.com/stephenh/ts-proto/compare/v1.137.0...v1.137.1) (2023-01-07)
 
 
