@@ -21,6 +21,7 @@ export interface Numbers {
   sfixed64: bigint;
   guint64: bigint | undefined;
   timestamp: Date | undefined;
+  uint64s: bigint[];
 }
 
 function createBaseNumbers(): Numbers {
@@ -39,6 +40,7 @@ function createBaseNumbers(): Numbers {
     sfixed64: BigInt("0"),
     guint64: undefined,
     timestamp: undefined,
+    uint64s: [],
   };
 }
 
@@ -86,6 +88,11 @@ export const Numbers = {
     if (message.timestamp !== undefined) {
       Timestamp.encode(toTimestamp(message.timestamp), writer.uint32(114).fork()).ldelim();
     }
+    writer.uint32(122).fork();
+    for (const v of message.uint64s) {
+      writer.uint64(v.toString());
+    }
+    writer.ldelim();
     return writer;
   },
 
@@ -138,6 +145,16 @@ export const Numbers = {
         case 14:
           message.timestamp = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           break;
+        case 15:
+          if ((tag & 7) === 2) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.uint64s.push(longToBigint(reader.uint64() as Long));
+            }
+          } else {
+            message.uint64s.push(longToBigint(reader.uint64() as Long));
+          }
+          break;
         default:
           reader.skipType(tag & 7);
           break;
@@ -162,6 +179,7 @@ export const Numbers = {
       sfixed64: isSet(object.sfixed64) ? BigInt(object.sfixed64) : BigInt("0"),
       guint64: isSet(object.guint64) ? BigInt(object.guint64) : undefined,
       timestamp: isSet(object.timestamp) ? fromJsonTimestamp(object.timestamp) : undefined,
+      uint64s: Array.isArray(object?.uint64s) ? object.uint64s.map((e: any) => BigInt(e)) : [],
     };
   },
 
@@ -181,6 +199,11 @@ export const Numbers = {
     message.sfixed64 !== undefined && (obj.sfixed64 = message.sfixed64.toString());
     message.guint64 !== undefined && (obj.guint64 = message.guint64);
     message.timestamp !== undefined && (obj.timestamp = message.timestamp.toISOString());
+    if (message.uint64s) {
+      obj.uint64s = message.uint64s.map((e) => e.toString());
+    } else {
+      obj.uint64s = [];
+    }
     return obj;
   },
 
@@ -200,6 +223,7 @@ export const Numbers = {
     message.sfixed64 = object.sfixed64 ?? BigInt("0");
     message.guint64 = object.guint64 ?? undefined;
     message.timestamp = object.timestamp ?? undefined;
+    message.uint64s = object.uint64s?.map((e) => e) || [];
     return message;
   },
 };

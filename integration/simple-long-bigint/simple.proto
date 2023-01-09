@@ -19,4 +19,5 @@ message Numbers {
   sfixed64 sfixed64 = 12;
   google.protobuf.UInt64Value guint64 = 13;
   google.protobuf.Timestamp timestamp = 14;
+  repeated uint64 uint64s = 15;
 }
