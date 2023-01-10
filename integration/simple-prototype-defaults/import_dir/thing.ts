@@ -48,6 +48,10 @@ export const ImportedThing = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<ImportedThing>, I>>(base?: I): ImportedThing {
+    return ImportedThing.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<ImportedThing>, I>>(object: I): ImportedThing {
     const message = Object.create(createBaseImportedThing()) as ImportedThing;
     message.createdAt = object.createdAt ?? undefined;

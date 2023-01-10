@@ -143,6 +143,10 @@ export const SimpleWithWrappers = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<SimpleWithWrappers>, I>>(base?: I): SimpleWithWrappers {
+    return SimpleWithWrappers.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<SimpleWithWrappers>, I>>(object: I): SimpleWithWrappers {
     const message = createBaseSimpleWithWrappers();
     message.name = object.name ?? undefined;
@@ -254,6 +258,10 @@ export const SimpleWithMap = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<SimpleWithMap>, I>>(base?: I): SimpleWithMap {
+    return SimpleWithMap.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<SimpleWithMap>, I>>(object: I): SimpleWithMap {
     const message = createBaseSimpleWithMap();
     message.nameLookup = Object.entries(object.nameLookup ?? {}).reduce<{ [key: string]: string }>(
@@ -334,6 +342,10 @@ export const SimpleWithMap_NameLookupEntry = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<SimpleWithMap_NameLookupEntry>, I>>(base?: I): SimpleWithMap_NameLookupEntry {
+    return SimpleWithMap_NameLookupEntry.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<SimpleWithMap_NameLookupEntry>, I>>(
     object: I,
   ): SimpleWithMap_NameLookupEntry {
@@ -389,6 +401,10 @@ export const SimpleWithMap_IntLookupEntry = {
     message.key !== undefined && (obj.key = Math.round(message.key));
     message.value !== undefined && (obj.value = Math.round(message.value));
     return obj;
+  },
+
+  create<I extends Exact<DeepPartial<SimpleWithMap_IntLookupEntry>, I>>(base?: I): SimpleWithMap_IntLookupEntry {
+    return SimpleWithMap_IntLookupEntry.fromPartial(base ?? {});
   },
 
   fromPartial<I extends Exact<DeepPartial<SimpleWithMap_IntLookupEntry>, I>>(object: I): SimpleWithMap_IntLookupEntry {
@@ -447,6 +463,10 @@ export const SimpleWithMap_LongLookupEntry = {
     message.key !== undefined && (obj.key = message.key);
     message.value !== undefined && (obj.value = (message.value || Long.ZERO).toString());
     return obj;
+  },
+
+  create<I extends Exact<DeepPartial<SimpleWithMap_LongLookupEntry>, I>>(base?: I): SimpleWithMap_LongLookupEntry {
+    return SimpleWithMap_LongLookupEntry.fromPartial(base ?? {});
   },
 
   fromPartial<I extends Exact<DeepPartial<SimpleWithMap_LongLookupEntry>, I>>(
@@ -622,6 +642,10 @@ export const Numbers = {
       obj.manyUint64 = [];
     }
     return obj;
+  },
+
+  create<I extends Exact<DeepPartial<Numbers>, I>>(base?: I): Numbers {
+    return Numbers.fromPartial(base ?? {});
   },
 
   fromPartial<I extends Exact<DeepPartial<Numbers>, I>>(object: I): Numbers {

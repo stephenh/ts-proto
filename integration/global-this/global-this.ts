@@ -51,6 +51,10 @@ export const Object = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<Object>, I>>(base?: I): Object {
+    return Object.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<Object>, I>>(object: I): Object {
     const message = createBaseObject();
     message.name = object.name ?? "";
@@ -96,6 +100,10 @@ export const Error = {
     const obj: any = {};
     message.name !== undefined && (obj.name = message.name);
     return obj;
+  },
+
+  create<I extends Exact<DeepPartial<Error>, I>>(base?: I): Error {
+    return Error.fromPartial(base ?? {});
   },
 
   fromPartial<I extends Exact<DeepPartial<Error>, I>>(object: I): Error {

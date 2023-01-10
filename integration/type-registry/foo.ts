@@ -63,6 +63,10 @@ export const Foo = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<Foo>, I>>(base?: I): Foo {
+    return Foo.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<Foo>, I>>(object: I): Foo {
     const message = createBaseFoo();
     message.timestamp = object.timestamp ?? undefined;
@@ -114,6 +118,10 @@ export const Foo2 = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<Foo2>, I>>(base?: I): Foo2 {
+    return Foo2.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<Foo2>, I>>(object: I): Foo2 {
     const message = createBaseFoo2();
     message.timestamp = object.timestamp ?? undefined;
@@ -163,6 +171,10 @@ export const WithStruct = {
     const obj: any = {};
     message.struct !== undefined && (obj.struct = message.struct);
     return obj;
+  },
+
+  create<I extends Exact<DeepPartial<WithStruct>, I>>(base?: I): WithStruct {
+    return WithStruct.fromPartial(base ?? {});
   },
 
   fromPartial<I extends Exact<DeepPartial<WithStruct>, I>>(object: I): WithStruct {
