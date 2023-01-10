@@ -161,6 +161,10 @@ export const Timestamp = {
     return obj;
   },
 
+  create(base?: DeepPartial<Timestamp>): Timestamp {
+    return Timestamp.fromPartial(base ?? {});
+  },
+
   fromPartial(object: DeepPartial<Timestamp>): Timestamp {
     const message = createBaseTimestamp();
     message.seconds = object.seconds ?? 0;

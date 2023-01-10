@@ -53,6 +53,10 @@ export const SimpleStruct = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<SimpleStruct>, I>>(base?: I): SimpleStruct {
+    return SimpleStruct.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<SimpleStruct>, I>>(object: I): SimpleStruct {
     const message = createBaseSimpleStruct();
     message.simple_struct = object.simple_struct ?? undefined;

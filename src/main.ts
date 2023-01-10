@@ -1599,10 +1599,27 @@ function generateToJson(
 }
 
 function generateFromPartial(ctx: Context, fullName: string, messageDesc: DescriptorProto): Code {
-  const { options, utils, typeMap } = ctx;
+  const { options, utils } = ctx;
   const chunks: Code[] = [];
 
-  // create the basic function declaration
+  // create the create function definition
+  if (ctx.options.useExactTypes) {
+    chunks.push(code`
+      create<I extends ${utils.Exact}<${utils.DeepPartial}<${fullName}>, I>>(base?: I): ${fullName} {
+    `);
+  } else {
+    chunks.push(code`
+      create(base?: ${utils.DeepPartial}<${fullName}>): ${fullName} {
+    `);
+  }
+
+  chunks.push(code`
+    return ${fullName}.fromPartial(base ?? {})
+  `);
+
+  chunks.push(code`},`, code``);
+
+  // create the fromPartial function declaration
   const paramName = messageDesc.field.length > 0 ? "object" : "_";
 
   if (ctx.options.useExactTypes) {

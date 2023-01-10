@@ -62,6 +62,10 @@ export const TestMessage = {
     return obj;
   },
 
+  create(base?: DeepPartial<TestMessage>): TestMessage {
+    return TestMessage.fromPartial(base ?? {});
+  },
+
   fromPartial(object: DeepPartial<TestMessage>): TestMessage {
     const message = createBaseTestMessage();
     message.timestamp = object.timestamp ?? undefined;

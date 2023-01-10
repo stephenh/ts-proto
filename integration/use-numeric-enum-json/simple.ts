@@ -156,6 +156,10 @@ export const Simple = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<Simple>, I>>(base?: I): Simple {
+    return Simple.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<Simple>, I>>(object: I): Simple {
     const message = createBaseSimple();
     message.name = object.name ?? "";
@@ -223,6 +227,10 @@ export const Simple_StateMapEntry = {
     message.key !== undefined && (obj.key = message.key);
     message.value !== undefined && (obj.value = stateEnumToJSON(message.value));
     return obj;
+  },
+
+  create<I extends Exact<DeepPartial<Simple_StateMapEntry>, I>>(base?: I): Simple_StateMapEntry {
+    return Simple_StateMapEntry.fromPartial(base ?? {});
   },
 
   fromPartial<I extends Exact<DeepPartial<Simple_StateMapEntry>, I>>(object: I): Simple_StateMapEntry {

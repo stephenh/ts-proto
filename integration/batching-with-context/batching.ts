@@ -90,6 +90,10 @@ export const BatchQueryRequest = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<BatchQueryRequest>, I>>(base?: I): BatchQueryRequest {
+    return BatchQueryRequest.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<BatchQueryRequest>, I>>(object: I): BatchQueryRequest {
     const message = createBaseBatchQueryRequest();
     message.ids = object.ids?.map((e) => e) || [];
@@ -141,6 +145,10 @@ export const BatchQueryResponse = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<BatchQueryResponse>, I>>(base?: I): BatchQueryResponse {
+    return BatchQueryResponse.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<BatchQueryResponse>, I>>(object: I): BatchQueryResponse {
     const message = createBaseBatchQueryResponse();
     message.entities = object.entities?.map((e) => Entity.fromPartial(e)) || [];
@@ -190,6 +198,10 @@ export const BatchMapQueryRequest = {
       obj.ids = [];
     }
     return obj;
+  },
+
+  create<I extends Exact<DeepPartial<BatchMapQueryRequest>, I>>(base?: I): BatchMapQueryRequest {
+    return BatchMapQueryRequest.fromPartial(base ?? {});
   },
 
   fromPartial<I extends Exact<DeepPartial<BatchMapQueryRequest>, I>>(object: I): BatchMapQueryRequest {
@@ -254,6 +266,10 @@ export const BatchMapQueryResponse = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<BatchMapQueryResponse>, I>>(base?: I): BatchMapQueryResponse {
+    return BatchMapQueryResponse.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<BatchMapQueryResponse>, I>>(object: I): BatchMapQueryResponse {
     const message = createBaseBatchMapQueryResponse();
     message.entities = Object.entries(object.entities ?? {}).reduce<{ [key: string]: Entity }>((acc, [key, value]) => {
@@ -316,6 +332,12 @@ export const BatchMapQueryResponse_EntitiesEntry = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<BatchMapQueryResponse_EntitiesEntry>, I>>(
+    base?: I,
+  ): BatchMapQueryResponse_EntitiesEntry {
+    return BatchMapQueryResponse_EntitiesEntry.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<BatchMapQueryResponse_EntitiesEntry>, I>>(
     object: I,
   ): BatchMapQueryResponse_EntitiesEntry {
@@ -368,6 +390,10 @@ export const GetOnlyMethodRequest = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<GetOnlyMethodRequest>, I>>(base?: I): GetOnlyMethodRequest {
+    return GetOnlyMethodRequest.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<GetOnlyMethodRequest>, I>>(object: I): GetOnlyMethodRequest {
     const message = createBaseGetOnlyMethodRequest();
     message.id = object.id ?? "";
@@ -413,6 +439,10 @@ export const GetOnlyMethodResponse = {
     const obj: any = {};
     message.entity !== undefined && (obj.entity = message.entity ? Entity.toJSON(message.entity) : undefined);
     return obj;
+  },
+
+  create<I extends Exact<DeepPartial<GetOnlyMethodResponse>, I>>(base?: I): GetOnlyMethodResponse {
+    return GetOnlyMethodResponse.fromPartial(base ?? {});
   },
 
   fromPartial<I extends Exact<DeepPartial<GetOnlyMethodResponse>, I>>(object: I): GetOnlyMethodResponse {
@@ -464,6 +494,10 @@ export const WriteMethodRequest = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<WriteMethodRequest>, I>>(base?: I): WriteMethodRequest {
+    return WriteMethodRequest.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<WriteMethodRequest>, I>>(object: I): WriteMethodRequest {
     const message = createBaseWriteMethodRequest();
     message.id = object.id ?? "";
@@ -502,6 +536,10 @@ export const WriteMethodResponse = {
   toJSON(_: WriteMethodResponse): unknown {
     const obj: any = {};
     return obj;
+  },
+
+  create<I extends Exact<DeepPartial<WriteMethodResponse>, I>>(base?: I): WriteMethodResponse {
+    return WriteMethodResponse.fromPartial(base ?? {});
   },
 
   fromPartial<I extends Exact<DeepPartial<WriteMethodResponse>, I>>(_: I): WriteMethodResponse {
@@ -555,6 +593,10 @@ export const Entity = {
     message.id !== undefined && (obj.id = message.id);
     message.name !== undefined && (obj.name = message.name);
     return obj;
+  },
+
+  create<I extends Exact<DeepPartial<Entity>, I>>(base?: I): Entity {
+    return Entity.fromPartial(base ?? {});
   },
 
   fromPartial<I extends Exact<DeepPartial<Entity>, I>>(object: I): Entity {

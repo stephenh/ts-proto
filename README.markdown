@@ -167,6 +167,10 @@ Along with `encode`/`decode` factory methods:
 
 ```typescript
 export const Simple = {
+  create(baseObject?: DeepPartial<Simple>): Simple {
+    ...
+  },
+
   encode(message: Simple, writer: Writer = Writer.create()): Writer {
     ...
   },
@@ -332,7 +336,7 @@ Generated code will be placed in the Gradle build directory.
 
   So, between typo-prevention, reader inconsistency, and proper initialization, ts-proto recommends using `useOptionals=none` as the "most safe" option.
 
-  All that said, this approach does require writers/creators to set every field (although `fromPartial` is meant to address this), so if you still want to have optional fields, you can set `useOptionals=messages` or `useOptionals=all`.
+  All that said, this approach does require writers/creators to set every field (although `fromPartial` and `create` are meant to address this), so if you still want to have optional fields, you can set `useOptionals=messages` or `useOptionals=all`.
 
   (See [this issue](https://github.com/stephenh/ts-proto/issues/120#issuecomment-678375833) and [this issue](https://github.com/stephenh/ts-proto/issues/397#issuecomment-977259118) for discussions on `useOptional`.)
 
@@ -368,7 +372,7 @@ Generated code will be placed in the Gradle build directory.
 
   This is also useful if you want "only types".
 
-- With `--ts_proto_opt=outputPartialMethods=false`, the `Message.fromPartial` methods for accepting partially-formed objects/object literals will not be output.
+- With `--ts_proto_opt=outputPartialMethods=false`, the `Message.fromPartial` and `Message.create` methods for accepting partially-formed objects/object literals will not be output.
 
 - With `--ts_proto_opt=stringEnums=true`, the generated enum types will be string-based instead of int-based.
 
@@ -433,9 +437,9 @@ Generated code will be placed in the Gradle build directory.
 
 - With `--ts_proto_opt=enumsAsLiterals=true`, the generated enum types will be enum-ish object with `as const`.
 
-- With `--ts_proto_opt=useExactTypes=false`, the generated `fromPartial` method will not use Exact types.
+- With `--ts_proto_opt=useExactTypes=false`, the generated `fromPartial` and `create` methods will not use Exact types.
 
-  The default behavior is `useExactTypes=true`, which makes `fromPartial` use Exact type for its argument to make TypeScript reject any unknown properties.
+  The default behavior is `useExactTypes=true`, which makes `fromPartial` and `create` use Exact type for its argument to make TypeScript reject any unknown properties.
 
 - With `--ts_proto_opt=unknownFields=true`, all unknown fields will be parsed and output as arrays of buffers.
 

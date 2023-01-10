@@ -60,6 +60,10 @@ export const Point = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<Point>, I>>(base?: I): Point {
+    return Point.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<Point>, I>>(object: I): Point {
     const message = createBasePoint();
     message.data = object.data ?? Buffer.alloc(0);

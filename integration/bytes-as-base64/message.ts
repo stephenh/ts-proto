@@ -22,6 +22,10 @@ export const Message = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<Message>, I>>(base?: I): Message {
+    return Message.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<Message>, I>>(object: I): Message {
     const message = createBaseMessage();
     message.data = object.data ?? new Uint8Array();

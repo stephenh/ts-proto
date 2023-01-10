@@ -65,6 +65,10 @@ export const NumPair = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<NumPair>, I>>(base?: I): NumPair {
+    return NumPair.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<NumPair>, I>>(object: I): NumPair {
     const message = createBaseNumPair();
     message.num1 = object.num1 ?? 0;
@@ -111,6 +115,10 @@ export const NumSingle = {
     const obj: any = {};
     message.num !== undefined && (obj.num = message.num);
     return obj;
+  },
+
+  create<I extends Exact<DeepPartial<NumSingle>, I>>(base?: I): NumSingle {
+    return NumSingle.fromPartial(base ?? {});
   },
 
   fromPartial<I extends Exact<DeepPartial<NumSingle>, I>>(object: I): NumSingle {
@@ -171,6 +179,10 @@ export const Numbers = {
       obj.num = [];
     }
     return obj;
+  },
+
+  create<I extends Exact<DeepPartial<Numbers>, I>>(base?: I): Numbers {
+    return Numbers.fromPartial(base ?? {});
   },
 
   fromPartial<I extends Exact<DeepPartial<Numbers>, I>>(object: I): Numbers {

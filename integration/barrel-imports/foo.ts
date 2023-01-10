@@ -57,6 +57,10 @@ export const Foo = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<Foo>, I>>(base?: I): Foo {
+    return Foo.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<Foo>, I>>(object: I): Foo {
     const message = createBaseFoo();
     message.name = object.name ?? "";

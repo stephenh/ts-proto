@@ -252,6 +252,10 @@ export const FieldMask = {
     return message.paths.join(",");
   },
 
+  create<I extends Exact<DeepPartial<FieldMask>, I>>(base?: I): FieldMask {
+    return FieldMask.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<FieldMask>, I>>(object: I): FieldMask {
     const message = createBaseFieldMask() as any;
     message.paths = object.paths?.map((e) => e) || [];
