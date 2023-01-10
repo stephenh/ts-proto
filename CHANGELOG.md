@@ -1,3 +1,10 @@
+# [1.138.0](https://github.com/stephenh/ts-proto/compare/v1.137.2...v1.138.0) (2023-01-10)
+
+
+### Features
+
+* add create utility function to message defintions ([#760](https://github.com/stephenh/ts-proto/issues/760)) ([44fc7b2](https://github.com/stephenh/ts-proto/commit/44fc7b23ae72ec9c4fca86bee9a9774be097c058))
+
 ## [1.137.2](https://github.com/stephenh/ts-proto/compare/v1.137.1...v1.137.2) (2023-01-09)
 
 
