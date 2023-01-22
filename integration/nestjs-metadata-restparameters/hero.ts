@@ -25,6 +25,30 @@ export interface Villain {
 
 export const HERO_PACKAGE_NAME = "hero";
 
+function createBaseHeroById(): HeroById {
+  return { id: 0 };
+}
+
+export const HeroById = {};
+
+function createBaseVillainById(): VillainById {
+  return { id: 0 };
+}
+
+export const VillainById = {};
+
+function createBaseHero(): Hero {
+  return { id: 0, name: "" };
+}
+
+export const Hero = {};
+
+function createBaseVillain(): Villain {
+  return { id: 0, name: "" };
+}
+
+export const Villain = {};
+
 export interface HeroServiceClient {
   findOneHero(request: HeroById, metadata: Metadata, ...rest: any): Observable<Hero>;
 

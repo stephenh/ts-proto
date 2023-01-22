@@ -5,7 +5,7 @@ export class SampleService implements HeroServiceController {
   addOneHero(request: Hero): void {}
 
   findOneHero(request: HeroById): Promise<Hero> {
-    return Promise.resolve({ id: 1, name: 'test', birthDate: undefined });
+    return Promise.resolve({ id: 1, name: 'test', birthDate: undefined, externalData: { foo: 'bar', fizz: 1, nested: { isFailing: false, array: [1, 'foo', ['bar']] } } });
   }
 
   findOneVillain(request: VillainById): Promise<Villain> {

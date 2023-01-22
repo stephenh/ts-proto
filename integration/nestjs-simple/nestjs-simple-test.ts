@@ -37,13 +37,13 @@ describe('nestjs-simple-test nestjs', () => {
   });
 
   it('should addOneHero', async () => {
-    const emptyResponse = await heroService.addOneHero({ id: 3, name: 'Toon', birthDate: undefined }).toPromise();
+    const emptyResponse = await heroService.addOneHero({ id: 3, name: 'Toon', birthDate: undefined, externalData: { some: 'data' } }).toPromise();
     expect(emptyResponse).toEqual({});
   });
 
   it('should findOneHero', async () => {
     const hero = await heroService.findOneHero({ id: 1 }).toPromise();
-    expect(hero).toEqual({ id: 1, name: 'Stephenh', birthDate: { seconds: 1, nanos: 2 } });
+    expect(hero).toEqual({ id: 1, name: 'Stephenh', birthDate: { seconds: 1, nanos: 2 }, externalData: { foo: 'bar', fizz: 1, nested: { isFailing: false, arr: [1,'foo',['bar']] } } });
   });
 
   it('should findOneVillain', async () => {

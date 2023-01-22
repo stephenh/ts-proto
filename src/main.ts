@@ -154,9 +154,25 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
     ) {
       chunks.push(makeProtobufTimestampWrapper());
     }
+
+    if (
+      fileDesc.messageType.find((message) =>
+        message.field.find((field) => field.typeName === ".google.protobuf.Struct")
+      )
+    ) {
+      const structFieldNames = {
+        nullValue: maybeSnakeToCamel("null_value", ctx.options),
+        numberValue: maybeSnakeToCamel("number_value", ctx.options),
+        stringValue: maybeSnakeToCamel("string_value", ctx.options),
+        boolValue: maybeSnakeToCamel("bool_value", ctx.options),
+        structValue: maybeSnakeToCamel("struct_value", ctx.options),
+        listValue: maybeSnakeToCamel("list_value", ctx.options),
+      };
+      chunks.push(makeProtobufStructWrapper(options, structFieldNames));
+    }
   }
 
-  if (options.outputEncodeMethods || options.outputJsonMethods || options.outputTypeRegistry) {
+  if (options.outputEncodeMethods || options.outputJsonMethods || options.outputTypeRegistry || options.nestJs) {
     // then add the encoder/decoder/base instance
     visit(
       fileDesc,
@@ -356,6 +372,48 @@ function makeProtobufTimestampWrapper() {
         },
         toObject(message: { seconds: number; nanos: number }) {
           return new Date(message.seconds * 1000 + message.nanos / 1e6);
+        },
+      } as any;`;
+}
+
+function makeProtobufStructWrapper(options: Options, fieldNames: StructFieldNames) {
+  const wrappers = imp("wrappers@protobufjs");
+  const Struct = impProto(options, "google/protobuf/struct", "Struct");
+  const Value = impProto(options, "google/protobuf/struct", "Value");
+  return code`
+  const wrapStruct = (value: any, nested = false): any => {
+    const valueType = typeof value;
+    const primitiveValueTypes = {
+      number: 'numberValue',
+      string: 'stringValue',
+      boolean: 'boolValue'
+    }
+    if (Object.keys(primitiveValueTypes).includes(valueType)) {
+      return ${Value}.wrap(value);
+    }
+    if (Array.isArray(value)) {
+      return {
+        listValue: {
+          values: value.map((item) => wrapStruct(item))
+        }
+      };
+    }
+    if (valueType === 'object') {
+      const res = nested ? { structValue: { fields: {} as any } } : { fields: {} as any };
+      Object.keys(value).forEach((field) => {
+        if (nested) {
+          res.structValue!.fields[field] = wrapStruct(value[field], true)
+        } else {
+          res.fields![field] = wrapStruct(value[field], true)
+        }
+      })
+      return res;
+    }
+  }
+      ${wrappers}['.google.protobuf.Struct'] = {
+        fromObject: wrapStruct,
+        toObject(message: Struct) {
+          return message ? ${Struct}.unwrap(message) : message;
         },
       } as any;`;
 }
@@ -1867,15 +1925,20 @@ function generateUnwrap(ctx: Context, fullProtoTypeName: string, fieldNames: Str
       chunks.push(code`unwrap(message: Struct): {[key: string]: any} {
         const object: { [key: string]: any } = {};
         [...message.fields.keys()].forEach((key) => {
-          object[key] = message.fields.get(key);
+          const unwrappedValue = Value.unwrap(message.fields.get(key));
+          object[key] = unwrappedValue !== undefined ? unwrappedValue : message.fields.get(key);
         });
         return object;
       }`);
     } else {
       chunks.push(code`unwrap(message: Struct): {[key: string]: any} {
+        if (!message.fields) {
+          return message;
+        }
         const object: { [key: string]: any } = {};
         Object.keys(message.fields).forEach(key => {
-          object[key] = message.fields[key];     
+          const unwrappedValue = Value.unwrap(message.fields[key]);
+          object[key] = unwrappedValue !== undefined ? unwrappedValue : message.fields[key];
         });
         return object;
       }`);
@@ -1902,18 +1965,18 @@ function generateUnwrap(ctx: Context, fullProtoTypeName: string, fieldNames: Str
         }
       }`);
     } else {
-      chunks.push(code`unwrap(message: Value): string | number | boolean | Object | null | Array<any> | undefined {
-        if (message?.${fieldNames.stringValue} !== undefined) {
+      chunks.push(code`unwrap(message: any): string | number | boolean | Object | null | Array<any> | undefined {
+        if (message?.hasOwnProperty('${fieldNames.stringValue}') && message?.${fieldNames.stringValue} !== undefined) {
           return message.${fieldNames.stringValue};
-        } else if (message?.${fieldNames.numberValue} !== undefined) {
+        } else if (message?.hasOwnProperty('${fieldNames.numberValue}') && message?.${fieldNames.numberValue} !== undefined) {
           return message.${fieldNames.numberValue};
-        } else if (message?.${fieldNames.boolValue} !== undefined) {
+        } else if (message?.hasOwnProperty('${fieldNames.boolValue}') && message?.${fieldNames.boolValue} !== undefined) {
           return message.${fieldNames.boolValue};
-        } else if (message?.${fieldNames.structValue} !== undefined) {
-          return message.${fieldNames.structValue};
-        } else if (message?.${fieldNames.listValue} !== undefined) {
+        } else if (message?.hasOwnProperty('${fieldNames.structValue}') && message?.${fieldNames.structValue} !== undefined) {
+          return Struct.unwrap(message.${fieldNames.structValue} as any);
+        } else if (message?.hasOwnProperty('${fieldNames.listValue}') && message?.${fieldNames.listValue} !== undefined) {
             return message.${fieldNames.listValue};
-        } else if (message?.${fieldNames.nullValue} !== undefined) {
+        } else if (message?.hasOwnProperty('${fieldNames.nullValue}') && message?.${fieldNames.nullValue} !== undefined) {
           return null;
         }
         return undefined;

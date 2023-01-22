@@ -110,3 +110,9 @@ export interface Timestamp {
 }
 
 export const GOOGLE_PROTOBUF_PACKAGE_NAME = "google.protobuf";
+
+function createBaseTimestamp(): Timestamp {
+  return { seconds: 0, nanos: 0 };
+}
+
+export const Timestamp = {};

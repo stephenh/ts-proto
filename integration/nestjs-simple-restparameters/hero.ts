@@ -12,6 +12,12 @@ export interface User {
 
 export const HERO_PACKAGE_NAME = "hero";
 
+function createBaseUser(): User {
+  return { id: 0, name: "" };
+}
+
+export const User = {};
+
 export interface HeroServiceClient {
   findCurrentUser(request: Empty, ...rest: any): Observable<User>;
 }

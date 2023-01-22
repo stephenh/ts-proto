@@ -36,6 +36,30 @@ wrappers[".google.protobuf.Timestamp"] = {
   },
 } as any;
 
+function createBaseHeroById(): HeroById {
+  return { id: 0 };
+}
+
+export const HeroById = {};
+
+function createBaseVillainById(): VillainById {
+  return { id: 0 };
+}
+
+export const VillainById = {};
+
+function createBaseHero(): Hero {
+  return { id: 0, name: "", birthDate: undefined };
+}
+
+export const Hero = {};
+
+function createBaseVillain(): Villain {
+  return { id: 0, name: "" };
+}
+
+export const Villain = {};
+
 export interface HeroServiceClient {
   addOneHero(request: Hero): Observable<Empty>;
 

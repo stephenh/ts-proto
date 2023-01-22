@@ -186,9 +186,13 @@ export const Struct = {
   },
 
   unwrap(message: Struct): { [key: string]: any } {
+    if (!message.fields) {
+      return message;
+    }
     const object: { [key: string]: any } = {};
     Object.keys(message.fields).forEach((key) => {
-      object[key] = message.fields[key];
+      const unwrappedValue = Value.unwrap(message.fields[key]);
+      object[key] = unwrappedValue !== undefined ? unwrappedValue : message.fields[key];
     });
     return object;
   },
@@ -380,18 +384,18 @@ export const Value = {
     return result;
   },
 
-  unwrap(message: Value): string | number | boolean | Object | null | Array<any> | undefined {
-    if (message?.stringValue !== undefined) {
+  unwrap(message: any): string | number | boolean | Object | null | Array<any> | undefined {
+    if (message?.hasOwnProperty("stringValue") && message?.stringValue !== undefined) {
       return message.stringValue;
-    } else if (message?.numberValue !== undefined) {
+    } else if (message?.hasOwnProperty("numberValue") && message?.numberValue !== undefined) {
       return message.numberValue;
-    } else if (message?.boolValue !== undefined) {
+    } else if (message?.hasOwnProperty("boolValue") && message?.boolValue !== undefined) {
       return message.boolValue;
-    } else if (message?.structValue !== undefined) {
-      return message.structValue;
-    } else if (message?.listValue !== undefined) {
+    } else if (message?.hasOwnProperty("structValue") && message?.structValue !== undefined) {
+      return Struct.unwrap(message.structValue as any);
+    } else if (message?.hasOwnProperty("listValue") && message?.listValue !== undefined) {
       return message.listValue;
-    } else if (message?.nullValue !== undefined) {
+    } else if (message?.hasOwnProperty("nullValue") && message?.nullValue !== undefined) {
       return null;
     }
     return undefined;

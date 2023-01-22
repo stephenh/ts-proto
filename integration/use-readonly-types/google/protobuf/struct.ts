@@ -171,9 +171,13 @@ export const Struct = {
   },
 
   unwrap(message: Struct): { [key: string]: any } {
+    if (!message.fields) {
+      return message;
+    }
     const object: { [key: string]: any } = {};
     Object.keys(message.fields).forEach((key) => {
-      object[key] = message.fields[key];
+      const unwrappedValue = Value.unwrap(message.fields[key]);
+      object[key] = unwrappedValue !== undefined ? unwrappedValue : message.fields[key];
     });
     return object;
   },
