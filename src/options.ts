@@ -77,6 +77,7 @@ export type Options = {
   useMapType: boolean;
   useReadonlyTypes: boolean;
   useSnakeTypeName: boolean;
+  visitorPattern: boolean;
   M: { [from: string]: string };
 };
 
@@ -124,6 +125,7 @@ export function defaultOptions(): Options {
     useMapType: false,
     useReadonlyTypes: false,
     useSnakeTypeName: true,
+    visitorPattern: false,
     M: {},
   };
 }

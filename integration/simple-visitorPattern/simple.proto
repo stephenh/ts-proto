@@ -1,0 +1,17 @@
+syntax = "proto3";
+package simple;
+
+message Simple {
+  // Name field
+  string name = 1;
+  /** Age field */
+  int32 age = 2;
+  repeated Child child = 3;
+  string test_field = 4;
+  string test_second_field = 5 ;
+}
+
+message Child {
+  string name = 1;
+  repeated Child child = 2;
+}

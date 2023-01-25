@@ -52,6 +52,7 @@ describe("options", () => {
         "usePrototypeForDefaults": false,
         "useReadonlyTypes": false,
         "useSnakeTypeName": true,
+        "visitorPattern": false,
       }
     `);
   });

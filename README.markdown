@@ -289,6 +289,16 @@ Generated code will be placed in the Gradle build directory.
 
 ### Supported options
 
+- With `--ts_proto_opt=visitorPattern=true`, the messages will implement the Visitor pattern. Each type will have a visit function that can be called with a visitor interface as argument. The function will call back the correct method of the visitor. The visitor interface requires implementations for visiting each type. There is only one visitor per file, that can visit all messages in defined in the proto file.
+
+```
+export interface Visitor{
+  visitMyType1(): void;
+  visitMyType2(): void;
+  ...
+}
+```
+
 - With `--ts_proto_opt=context=true`, the services will have a Go-style `ctx` parameter, which is useful for tracing/logging/etc. if you're not using node's `async_hooks` api due to performance reasons.
 
 - With `--ts_proto_opt=forceLong=long`, all 64-bit numbers will be parsed as instances of `Long` (using the [long](https://www.npmjs.com/package/long) library).

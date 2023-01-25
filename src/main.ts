@@ -79,6 +79,8 @@ import { generateGrpcJsService } from "./generate-grpc-js";
 import { generateGenericServiceDefinition } from "./generate-generic-service-definition";
 import { generateNiceGrpcService } from "./generate-nice-grpc";
 
+const visitingTypes: string[] = []; // if adding visitorPattern: for each interface, add a method to the visitor
+
 export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [string, Code] {
   const { options, utils } = ctx;
 
@@ -112,6 +114,11 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
   // Indicate this file's source protobuf package for reflective use with google.protobuf.Any
   if (options.exportCommonSymbols) {
     chunks.push(code`export const protobufPackage = '${fileDesc.package}';`);
+  }
+
+  // define the visitable interface
+  if(options.visitorPattern){
+    chunks.push(code`export interface PBVisitable{visit(visitor: Visitor): void; }`);
   }
 
   // Syntax, unlike most fields, is not repeated and thus does not use an index
@@ -294,6 +301,14 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
 
   if (options.outputSchema) {
     chunks.push(...generateSchema(ctx, fileDesc, sourceInfo));
+  }
+
+  if(options.visitorPattern){
+    chunks.push(code`export interface Visitor{`);
+    for (const visitingType of visitingTypes) {
+      chunks.push(code`visit${visitingType}(obj: ${visitingType}): void;`); 
+    }
+    chunks.push(code`}`);
   }
 
   chunks.push(
@@ -735,10 +750,15 @@ function generateInterfaceDeclaration(
 ): Code {
   const { options } = ctx;
   const chunks: Code[] = [];
+  let maybeExtendVisitable = "";
+  if(options.visitorPattern){
+    maybeExtendVisitable = " extends PBVisitable"
+    visitingTypes.push(fullName);
+  }
 
   maybeAddComment(sourceInfo, chunks, messageDesc.options?.deprecated);
   // interface name should be defined to avoid import collisions
-  chunks.push(code`export interface ${def(fullName)} {`);
+  chunks.push(code`export interface ${def(fullName)}${maybeExtendVisitable} {`);
 
   if (ctx.options.outputTypeRegistry) {
     chunks.push(code`$type: '${fullTypeName}',`);
@@ -860,9 +880,10 @@ function generateBaseInstanceFactory(
     fields.unshift(code`$type: '${fullTypeName}'`);
   }
 
+
   return code`
     function createBase${fullName}(): ${fullName} {
-      return { ${joinCode(fields, { on: "," })} };
+      return {${maybeVisitableImpl(options, fullName)}${joinCode(fields, { on: "," })}};
     }
   `;
 }
@@ -1235,7 +1256,7 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
   // create the basic function declaration
   chunks.push(code`
     fromJSON(${messageDesc.field.length > 0 ? "object" : "_"}: any): ${fullName} {
-      return {
+      return {${maybeVisitableImpl(options, fullName)}
   `);
 
   if (ctx.options.outputTypeRegistry) {
@@ -1958,4 +1979,12 @@ function maybeReadonly(options: Options): string {
 
 function maybeAsAny(options: Options): string {
   return options.useReadonlyTypes ? " as any" : "";
+}
+
+function maybeVisitableImpl(options: Options, fullName: string): string {
+  let maybeVisitableStr = ""
+  if (options.visitorPattern){
+    maybeVisitableStr = `visit(visitor:Visitor){visitor.visit${fullName}(this);},`;
+  }
+  return maybeVisitableStr;
 }
