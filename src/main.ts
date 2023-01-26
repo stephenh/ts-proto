@@ -1298,12 +1298,12 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
             return code`${utils.bytesFromBase64}(${from})`;
           }
         } else if (isLong(field) && options.forceLong === LongOption.LONG) {
-          const cstr = capitalize(basicTypeName(ctx, field, { keepValueType: true }).toCodeString());
+          const cstr = capitalize(basicTypeName(ctx, field, { keepValueType: true }).toCodeString([]));
           return code`${cstr}.fromValue(${from})`;
         } else if (isLong(field) && options.forceLong === LongOption.BIGINT) {
           return code`BigInt(${from})`;
         } else {
-          const cstr = capitalize(basicTypeName(ctx, field, { keepValueType: true }).toCodeString());
+          const cstr = capitalize(basicTypeName(ctx, field, { keepValueType: true }).toCodeString([]));
           return code`${cstr}(${from})`;
         }
       } else if (isObjectId(field) && options.useMongoObjectId) {
@@ -1325,13 +1325,13 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
       } else if (isValueType(ctx, field)) {
         const valueType = valueTypeName(ctx, field.typeName)!;
         if (isLongValueType(field) && options.forceLong === LongOption.LONG) {
-          return code`${capitalize(valueType.toCodeString())}.fromValue(${from})`;
+          return code`${capitalize(valueType.toCodeString([]))}.fromValue(${from})`;
         } else if (isLongValueType(field) && options.forceLong === LongOption.BIGINT) {
           return code`BigInt(${from})`;
         } else if (isBytesValueType(field)) {
-          return code`new ${capitalize(valueType.toCodeString())}(${from})`;
+          return code`new ${capitalize(valueType.toCodeString([]))}(${from})`;
         } else {
-          return code`${capitalize(valueType.toCodeString())}(${from})`;
+          return code`${capitalize(valueType.toCodeString([]))}(${from})`;
         }
       } else if (isMessage(field)) {
         if (isRepeated(field) && isMapType(ctx, messageDesc, field)) {
@@ -1350,7 +1350,7 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
               const fromJson = getEnumMethod(ctx, valueField.typeName, "FromJSON");
               return code`${fromJson}(${from})`;
             } else {
-              const cstr = capitalize(valueType.toCodeString());
+              const cstr = capitalize(valueType.toCodeString([]));
               return code`${cstr}(${from})`;
             }
           } else if (isObjectId(valueField) && options.useMongoObjectId) {
@@ -1686,7 +1686,7 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
             } else if (isLong(valueField) && options.forceLong === LongOption.LONG) {
               return code`Long.fromValue(${from})`;
             } else {
-              const cstr = capitalize(valueType.toCodeString());
+              const cstr = capitalize(valueType.toCodeString([]));
               return code`${cstr}(${from})`;
             }
           } else if (isAnyValueType(valueField)) {
@@ -1760,7 +1760,7 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
           message.${oneofName} = { $case: '${fieldName}', ${fieldName}: ${v} };
         }
       `);
-    } else if (readSnippet(`x`).toCodeString() == "x") {
+    } else if (readSnippet(`x`).toCodeString([]) == "x") {
       // An optimized case of the else below that works when `readSnippet` returns the plain input
       const fallback = isWithinOneOf(field) ? "undefined" : defaultValue(ctx, field);
       chunks.push(code`message.${fieldName} = object.${fieldName} ?? ${fallback};`);
@@ -1966,7 +1966,7 @@ function maybeCastToNumber(
   variableName: string
 ): string {
   const { keyType } = detectMapType(ctx, messageDesc, field)!;
-  if (keyType.toCodeString() === "string") {
+  if (keyType.toCodeString([]) === "string") {
     return variableName;
   } else {
     return `Number(${variableName})`;
