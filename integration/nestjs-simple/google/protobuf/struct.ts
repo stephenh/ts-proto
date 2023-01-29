@@ -179,7 +179,7 @@ export const Value = {
     } else if (message?.hasOwnProperty("structValue") && message?.structValue !== undefined) {
       return Struct.unwrap(message.structValue as any);
     } else if (message?.hasOwnProperty("listValue") && message?.listValue !== undefined) {
-      return message.listValue.values.map(Value.unwrap);
+      return message.listValue;
     } else if (message?.hasOwnProperty("nullValue") && message?.nullValue !== undefined) {
       return null;
     }
