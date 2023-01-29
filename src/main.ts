@@ -1079,6 +1079,14 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
     ): ${Writer} {
   `);
 
+  const processedOneofs = new Set<number>();
+  const oneOfFieldsDict = messageDesc.field
+    .filter((field) => isWithinOneOfThatShouldBeUnion(options, field))
+    .reduce<{ [key: number]: FieldDescriptorProto[] }>(
+      (result, field) => ((result[field.oneofIndex] || (result[field.oneofIndex] = [])).push(field), result),
+      {}
+    );
+
   // then add a case for each field
   messageDesc.field.forEach((field) => {
     const fieldName = maybeSnakeToCamel(field.name, options);
@@ -1173,12 +1181,20 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
         }
       }
     } else if (isWithinOneOfThatShouldBeUnion(options, field)) {
-      let oneofName = maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options);
-      chunks.push(code`
-        if (message.${oneofName}?.$case === '${fieldName}') {
-          ${writeSnippet(`message.${oneofName}.${fieldName}`)};
+      if (!processedOneofs.has(field.oneofIndex)) {
+        processedOneofs.add(field.oneofIndex);
+
+        const oneofName = maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options);
+        chunks.push(code`switch (message.${oneofName}?.$case) {`);
+        for (const oneOfField of oneOfFieldsDict[field.oneofIndex]) {
+          const writeSnippet = getEncodeWriteSnippet(ctx, oneOfField);
+          const oneOfFieldName = maybeSnakeToCamel(oneOfField.name, ctx.options);
+          chunks.push(code`case "${oneOfFieldName}": 
+            ${writeSnippet(`message.${oneofName}.${oneOfFieldName}`)}; 
+            break;`);
         }
-      `);
+        chunks.push(code`}`);
+      }
     } else if (isWithinOneOf(field)) {
       // Oneofs don't have a default value check b/c they need to denote which-oneof presence
       chunks.push(code`

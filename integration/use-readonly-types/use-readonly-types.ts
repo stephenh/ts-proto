@@ -76,11 +76,13 @@ export const Entity = {
     if (message.structValue !== undefined) {
       Struct.encode(Struct.wrap(message.structValue), writer.uint32(82).fork()).ldelim();
     }
-    if (message.oneOfValue?.$case === "theStringValue") {
-      writer.uint32(90).string(message.oneOfValue.theStringValue);
-    }
-    if (message.oneOfValue?.$case === "theIntValue") {
-      writer.uint32(96).int32(message.oneOfValue.theIntValue);
+    switch (message.oneOfValue?.$case) {
+      case "theStringValue":
+        writer.uint32(90).string(message.oneOfValue.theStringValue);
+        break;
+      case "theIntValue":
+        writer.uint32(96).int32(message.oneOfValue.theIntValue);
+        break;
     }
     return writer;
   },
