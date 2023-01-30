@@ -136,12 +136,6 @@ export const Struct = {
   },
 };
 
-function createBaseStruct_FieldsEntry(): Struct_FieldsEntry {
-  return { key: "", value: undefined };
-}
-
-export const Struct_FieldsEntry = {};
-
 function createBaseValue(): Value {
   return {};
 }

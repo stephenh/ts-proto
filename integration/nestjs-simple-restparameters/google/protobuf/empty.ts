@@ -17,9 +17,3 @@ export interface Empty {
 }
 
 export const GOOGLE_PROTOBUF_PACKAGE_NAME = "google.protobuf";
-
-function createBaseEmpty(): Empty {
-  return {};
-}
-
-export const Empty = {};

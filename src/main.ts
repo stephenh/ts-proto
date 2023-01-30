@@ -172,6 +172,9 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
     }
   }
 
+  // We add `nestJs` here because enough though it doesn't use our encode/decode methods
+  // for most/vanilla messages, we do generate static wrap/unwrap methods for the special
+  // Struct/Value/wrapper types and use the `wrappers[...]` to have NestJS know about them.
   if (options.outputEncodeMethods || options.outputJsonMethods || options.outputTypeRegistry || options.nestJs) {
     // then add the encoder/decoder/base instance
     visit(
@@ -179,8 +182,12 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
       sourceInfo,
       (fullName, message, _sInfo, fullProtoTypeName) => {
         const fullTypeName = maybePrefixPackage(fileDesc, fullProtoTypeName);
+        const outputWrapAndUnwrap = isWrapperType(fullTypeName);
 
-        chunks.push(generateBaseInstanceFactory(ctx, fullName, message, fullTypeName));
+        // Only decode, fromPartial, and wrap use the createBase method
+        if (options.outputEncodeMethods || options.outputPartialMethods || outputWrapAndUnwrap) {
+          chunks.push(generateBaseInstanceFactory(ctx, fullName, message, fullTypeName));
+        }
 
         const staticMembers: Code[] = [];
 
@@ -215,15 +222,16 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
         staticMembers.push(...generateWrap(ctx, fullTypeName, structFieldNames));
         staticMembers.push(...generateUnwrap(ctx, fullTypeName, structFieldNames));
 
-        chunks.push(code`
-          export const ${def(fullName)} = {
-            ${joinCode(staticMembers, { on: ",\n\n" })}
-          };
-        `);
+        if (staticMembers.length > 0) {
+          chunks.push(code`
+            export const ${def(fullName)} = {
+              ${joinCode(staticMembers, { on: ",\n\n" })}
+            };
+          `);
+        }
 
         if (options.outputTypeRegistry) {
           const messageTypeRegistry = impFile(options, "messageTypeRegistry@./typeRegistry");
-
           chunks.push(code`
             ${messageTypeRegistry}.set(${fullName}.$type, ${fullName});
           `);
@@ -1825,6 +1833,16 @@ type StructFieldNames = {
   structValue: string;
   listValue: string;
 };
+
+/** Whether we need to generate `.wrap` and `.unwrap` methods for the given type. */
+function isWrapperType(fullProtoTypeName: string): boolean {
+  return (
+    isStructTypeName(fullProtoTypeName) ||
+    isAnyValueTypeName(fullProtoTypeName) ||
+    isListValueTypeName(fullProtoTypeName) ||
+    isFieldMaskTypeName(fullProtoTypeName)
+  );
+}
 
 function generateWrap(ctx: Context, fullProtoTypeName: string, fieldNames: StructFieldNames): Code[] {
   const chunks: Code[] = [];
