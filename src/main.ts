@@ -155,11 +155,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
       chunks.push(makeProtobufTimestampWrapper());
     }
 
-    if (
-      fileDesc.messageType.find((message) =>
-        message.field.find((field) => field.typeName === ".google.protobuf.Struct")
-      )
-    ) {
+    if (fileDesc.messageType.find((message) => message.field.find(isStructType))) {
       const structFieldNames = {
         nullValue: maybeSnakeToCamel("null_value", ctx.options),
         numberValue: maybeSnakeToCamel("number_value", ctx.options),
