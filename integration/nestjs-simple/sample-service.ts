@@ -1,22 +1,27 @@
-import { HeroServiceController, HeroById, Hero, Villain, VillainById } from './hero';
-import { Observable, Subject } from 'rxjs';
+import { HeroServiceController, HeroById, Hero, Villain, VillainById } from "./hero";
+import { Observable, Subject } from "rxjs";
 
 export class SampleService implements HeroServiceController {
   addOneHero(request: Hero): void {}
 
   findOneHero(request: HeroById): Promise<Hero> {
-    return Promise.resolve({ id: 1, name: 'test', birthDate: undefined, externalData: { foo: 'bar', fizz: 1, nested: { isFailing: false, array: [1, 'foo', ['bar']] } } });
+    return Promise.resolve({
+      id: 1,
+      name: "test",
+      birthDate: undefined,
+      externalData: { foo: "bar", fizz: 1, nested: { isFailing: false, array: [1, "foo", ["bar"]] } },
+    });
   }
 
   findOneVillain(request: VillainById): Promise<Villain> {
-    return Promise.resolve({ id: 1, name: 'test' });
+    return Promise.resolve({ id: 1, name: "test" });
   }
 
   findManyVillain(request: Observable<VillainById>): Observable<Villain> {
     const hero$ = new Subject<Villain>();
 
     const onNext = (villainById: VillainById) => {
-      hero$.next({ id: 1, name: 'test' });
+      hero$.next({ id: 1, name: "test" });
     };
     const onComplete = () => hero$.complete();
     request.subscribe(onNext, null, onComplete);
@@ -25,13 +30,13 @@ export class SampleService implements HeroServiceController {
   }
 
   async findManyVillainStreamIn(request: Observable<VillainById>): Promise<Villain> {
-    return { id: 1, name: 'test' };
+    return { id: 1, name: "test" };
   }
 
   findManyVillainStreamOut(request: VillainById): Observable<Villain> {
     // Kinda making this up
     const hero$ = new Subject<Villain>();
-    hero$.next({ id: 1, name: 'test' });
+    hero$.next({ id: 1, name: "test" });
     hero$.complete();
     return hero$.asObservable();
   }
