@@ -264,9 +264,7 @@ export const FieldMask = {
 
   wrap(paths: readonly string[]): FieldMask {
     const result = createBaseFieldMask() as any;
-
     result.paths = paths;
-
     return result;
   },
 

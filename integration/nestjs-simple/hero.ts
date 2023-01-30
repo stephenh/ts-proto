@@ -3,7 +3,7 @@ import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
 import { wrappers } from "protobufjs";
 import { Observable } from "rxjs";
 import { Empty } from "./google/protobuf/empty";
-import { Struct, Value } from "./google/protobuf/struct";
+import { Struct } from "./google/protobuf/struct";
 import { Timestamp } from "./google/protobuf/timestamp";
 
 export const protobufPackage = "hero";
@@ -30,33 +30,7 @@ export interface Villain {
 
 export const HERO_PACKAGE_NAME = "hero";
 
-const wrapStruct = (value: any, nested = false): any => {
-  const valueType = typeof value;
-  const primitiveValueTypes = { number: "numberValue", string: "stringValue", boolean: "boolValue" };
-  if (Object.keys(primitiveValueTypes).includes(valueType)) {
-    return Value.wrap(value);
-  }
-  if (Array.isArray(value)) {
-    return { listValue: { values: value.map((item) => wrapStruct(item)) } };
-  }
-  if (valueType === "object") {
-    const res = nested ? { structValue: { fields: {} as any } } : { fields: {} as any };
-    Object.keys(value).forEach((field) => {
-      if (nested) {
-        res.structValue!.fields[field] = wrapStruct(value[field], true);
-      } else {
-        res.fields![field] = wrapStruct(value[field], true);
-      }
-    });
-    return res;
-  }
-};
-wrappers[".google.protobuf.Struct"] = {
-  fromObject: wrapStruct,
-  toObject(message: Struct) {
-    return message ? Struct.unwrap(message) : message;
-  },
-} as any;
+wrappers[".google.protobuf.Struct"] = { fromObject: Struct.wrap, toObject: Struct.unwrap } as any;
 
 export interface HeroServiceClient {
   addOneHero(request: Hero): Observable<Empty>;

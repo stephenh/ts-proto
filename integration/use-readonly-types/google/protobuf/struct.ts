@@ -164,21 +164,19 @@ export const Struct = {
     const struct = createBaseStruct();
     if (object !== undefined) {
       Object.keys(object).forEach((key) => {
-        struct.fields[key] = object[key];
+        struct.fields[key] = Value.wrap(object[key]);
       });
     }
     return struct;
   },
 
   unwrap(message: Struct): { [key: string]: any } {
-    if (!message.fields) {
-      return message;
-    }
     const object: { [key: string]: any } = {};
-    Object.keys(message.fields).forEach((key) => {
-      const unwrappedValue = Value.unwrap(message.fields[key]);
-      object[key] = unwrappedValue !== undefined ? unwrappedValue : message.fields[key];
-    });
+    if (message.fields) {
+      Object.keys(message.fields).forEach((key) => {
+        object[key] = Value.unwrap(message.fields[key]);
+      });
+    }
     return object;
   },
 };
@@ -372,43 +370,40 @@ export const Value = {
   },
 
   wrap(value: any): Value {
-    const result = createBaseValue() as any;
-
+    const result = {} as any;
     if (value === null) {
-      result.kind = { $case: "nullValue", nullValue: NullValue.NULL_VALUE };
+      result.nullValue = NullValue.NULL_VALUE;
     } else if (typeof value === "boolean") {
-      result.kind = { $case: "boolValue", boolValue: value };
+      result.boolValue = value;
     } else if (typeof value === "number") {
-      result.kind = { $case: "numberValue", numberValue: value };
+      result.numberValue = value;
     } else if (typeof value === "string") {
-      result.kind = { $case: "stringValue", stringValue: value };
+      result.stringValue = value;
     } else if (Array.isArray(value)) {
-      result.kind = { $case: "listValue", listValue: value };
+      result.listValue = ListValue.wrap(value);
     } else if (typeof value === "object") {
-      result.kind = { $case: "structValue", structValue: value };
+      result.structValue = Struct.wrap(value);
     } else if (typeof value !== "undefined") {
       throw new Error("Unsupported any value type: " + typeof value);
     }
-
     return result;
   },
 
-  unwrap(message: Value): string | number | boolean | Object | null | Array<any> | undefined {
-    if (message.kind?.$case === "nullValue") {
+  unwrap(message: any): string | number | boolean | Object | null | Array<any> | undefined {
+    if (message?.hasOwnProperty("stringValue") && message.stringValue !== undefined) {
+      return message.stringValue;
+    } else if (message?.hasOwnProperty("numberValue") && message?.numberValue !== undefined) {
+      return message.numberValue;
+    } else if (message?.hasOwnProperty("boolValue") && message?.boolValue !== undefined) {
+      return message.boolValue;
+    } else if (message?.hasOwnProperty("structValue") && message?.structValue !== undefined) {
+      return Struct.unwrap(message.structValue as any);
+    } else if (message?.hasOwnProperty("listValue") && message?.listValue !== undefined) {
+      return ListValue.unwrap(message.listValue);
+    } else if (message?.hasOwnProperty("nullValue") && message?.nullValue !== undefined) {
       return null;
-    } else if (message.kind?.$case === "numberValue") {
-      return message.kind?.numberValue;
-    } else if (message.kind?.$case === "stringValue") {
-      return message.kind?.stringValue;
-    } else if (message.kind?.$case === "boolValue") {
-      return message.kind?.boolValue;
-    } else if (message.kind?.$case === "structValue") {
-      return message.kind?.structValue;
-    } else if (message.kind?.$case === "listValue") {
-      return message.kind?.listValue;
-    } else {
-      return undefined;
     }
+    return undefined;
   },
 };
 
@@ -466,17 +461,13 @@ export const ListValue = {
     return message;
   },
 
-  wrap(value: ReadonlyArray<any> | undefined): ListValue {
-    const result = createBaseListValue() as any;
-
-    result.values = value ?? [];
-
-    return result;
+  wrap(array: ReadonlyArray<any> | undefined): ListValue {
+    return { values: (array ?? []).map(Value.wrap) };
   },
 
   unwrap(message: any): Array<any> {
     if (message?.hasOwnProperty("values") && Array.isArray(message.values)) {
-      return message.values.map((value: any) => Value.unwrap(value) || value);
+      return message.values.map(Value.unwrap);
     } else {
       return message as any;
     }

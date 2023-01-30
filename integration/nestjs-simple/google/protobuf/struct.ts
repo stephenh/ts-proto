@@ -80,34 +80,6 @@ export interface ListValue {
 
 export const GOOGLE_PROTOBUF_PACKAGE_NAME = "google.protobuf";
 
-const wrapStruct = (value: any, nested = false): any => {
-  const valueType = typeof value;
-  const primitiveValueTypes = { number: "numberValue", string: "stringValue", boolean: "boolValue" };
-  if (Object.keys(primitiveValueTypes).includes(valueType)) {
-    return Value.wrap(value);
-  }
-  if (Array.isArray(value)) {
-    return { listValue: { values: value.map((item) => wrapStruct(item)) } };
-  }
-  if (valueType === "object") {
-    const res = nested ? { structValue: { fields: {} as any } } : { fields: {} as any };
-    Object.keys(value).forEach((field) => {
-      if (nested) {
-        res.structValue!.fields[field] = wrapStruct(value[field], true);
-      } else {
-        res.fields![field] = wrapStruct(value[field], true);
-      }
-    });
-    return res;
-  }
-};
-wrappers[".google.protobuf.Struct"] = {
-  fromObject: wrapStruct,
-  toObject(message: Struct) {
-    return message ? Struct.unwrap(message) : message;
-  },
-} as any;
-
 function createBaseStruct(): Struct {
   return { fields: {} };
 }
@@ -117,21 +89,19 @@ export const Struct = {
     const struct = createBaseStruct();
     if (object !== undefined) {
       Object.keys(object).forEach((key) => {
-        struct.fields[key] = object[key];
+        struct.fields[key] = Value.wrap(object[key]);
       });
     }
     return struct;
   },
 
   unwrap(message: Struct): { [key: string]: any } {
-    if (!message.fields) {
-      return message;
-    }
     const object: { [key: string]: any } = {};
-    Object.keys(message.fields).forEach((key) => {
-      const unwrappedValue = Value.unwrap(message.fields[key]);
-      object[key] = unwrappedValue !== undefined ? unwrappedValue : message.fields[key];
-    });
+    if (message.fields) {
+      Object.keys(message.fields).forEach((key) => {
+        object[key] = Value.unwrap(message.fields[key]);
+      });
+    }
     return object;
   },
 };
@@ -142,8 +112,7 @@ function createBaseValue(): Value {
 
 export const Value = {
   wrap(value: any): Value {
-    const result = createBaseValue();
-
+    const result = {} as any;
     if (value === null) {
       result.nullValue = NullValue.NULL_VALUE;
     } else if (typeof value === "boolean") {
@@ -153,18 +122,17 @@ export const Value = {
     } else if (typeof value === "string") {
       result.stringValue = value;
     } else if (Array.isArray(value)) {
-      result.listValue = value;
+      result.listValue = ListValue.wrap(value);
     } else if (typeof value === "object") {
-      result.structValue = value;
+      result.structValue = Struct.wrap(value);
     } else if (typeof value !== "undefined") {
       throw new Error("Unsupported any value type: " + typeof value);
     }
-
     return result;
   },
 
   unwrap(message: any): string | number | boolean | Object | null | Array<any> | undefined {
-    if (message?.hasOwnProperty("stringValue") && message?.stringValue !== undefined) {
+    if (message?.hasOwnProperty("stringValue") && message.stringValue !== undefined) {
       return message.stringValue;
     } else if (message?.hasOwnProperty("numberValue") && message?.numberValue !== undefined) {
       return message.numberValue;
@@ -186,19 +154,17 @@ function createBaseListValue(): ListValue {
 }
 
 export const ListValue = {
-  wrap(value: Array<any> | undefined): ListValue {
-    const result = createBaseListValue();
-
-    result.values = value ?? [];
-
-    return result;
+  wrap(array: Array<any> | undefined): ListValue {
+    return { values: (array ?? []).map(Value.wrap) };
   },
 
   unwrap(message: ListValue): Array<any> {
     if (message?.hasOwnProperty("values") && Array.isArray(message.values)) {
-      return message.values.map((value: any) => Value.unwrap(value) || value);
+      return message.values.map(Value.unwrap);
     } else {
       return message as any;
     }
   },
 };
+
+wrappers[".google.protobuf.Struct"] = { fromObject: Struct.wrap, toObject: Struct.unwrap } as any;

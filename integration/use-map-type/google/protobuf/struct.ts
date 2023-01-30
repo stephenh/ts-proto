@@ -179,7 +179,7 @@ export const Struct = {
     const struct = createBaseStruct();
     if (object !== undefined) {
       Object.keys(object).forEach((key) => {
-        struct.fields.set(key, object[key]);
+        struct.fields.set(key, Value.wrap(object[key]));
       });
     }
     return struct;
@@ -188,8 +188,7 @@ export const Struct = {
   unwrap(message: Struct): { [key: string]: any } {
     const object: { [key: string]: any } = {};
     [...message.fields.keys()].forEach((key) => {
-      const unwrappedValue = Value.unwrap(message.fields.get(key));
-      object[key] = unwrappedValue !== undefined ? unwrappedValue : message.fields.get(key);
+      object[key] = Value.unwrap(message.fields.get(key));
     });
     return object;
   },
@@ -360,8 +359,7 @@ export const Value = {
   },
 
   wrap(value: any): Value {
-    const result = createBaseValue();
-
+    const result = {} as any;
     if (value === null) {
       result.nullValue = NullValue.NULL_VALUE;
     } else if (typeof value === "boolean") {
@@ -371,18 +369,17 @@ export const Value = {
     } else if (typeof value === "string") {
       result.stringValue = value;
     } else if (Array.isArray(value)) {
-      result.listValue = value;
+      result.listValue = ListValue.wrap(value);
     } else if (typeof value === "object") {
-      result.structValue = value;
+      result.structValue = Struct.wrap(value);
     } else if (typeof value !== "undefined") {
       throw new Error("Unsupported any value type: " + typeof value);
     }
-
     return result;
   },
 
   unwrap(message: any): string | number | boolean | Object | null | Array<any> | undefined {
-    if (message?.hasOwnProperty("stringValue") && message?.stringValue !== undefined) {
+    if (message?.hasOwnProperty("stringValue") && message.stringValue !== undefined) {
       return message.stringValue;
     } else if (message?.hasOwnProperty("numberValue") && message?.numberValue !== undefined) {
       return message.numberValue;
@@ -453,17 +450,13 @@ export const ListValue = {
     return message;
   },
 
-  wrap(value: Array<any> | undefined): ListValue {
-    const result = createBaseListValue();
-
-    result.values = value ?? [];
-
-    return result;
+  wrap(array: Array<any> | undefined): ListValue {
+    return { values: (array ?? []).map(Value.wrap) };
   },
 
   unwrap(message: ListValue): Array<any> {
     if (message?.hasOwnProperty("values") && Array.isArray(message.values)) {
-      return message.values.map((value: any) => Value.unwrap(value) || value);
+      return message.values.map(Value.unwrap);
     } else {
       return message as any;
     }
