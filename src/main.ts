@@ -1975,7 +1975,7 @@ function generateUnwrap(ctx: Context, fullProtoTypeName: string, fieldNames: Str
         } else if (message?.hasOwnProperty('${fieldNames.structValue}') && message?.${fieldNames.structValue} !== undefined) {
           return Struct.unwrap(message.${fieldNames.structValue} as any);
         } else if (message?.hasOwnProperty('${fieldNames.listValue}') && message?.${fieldNames.listValue} !== undefined) {
-            return message.${fieldNames.listValue};
+            return ListValue.unwrap(message.${fieldNames.listValue});
         } else if (message?.hasOwnProperty('${fieldNames.nullValue}') && message?.${fieldNames.nullValue} !== undefined) {
           return null;
         }
@@ -1986,7 +1986,11 @@ function generateUnwrap(ctx: Context, fullProtoTypeName: string, fieldNames: Str
 
   if (isListValueTypeName(fullProtoTypeName)) {
     chunks.push(code`unwrap(message: ${ctx.options.useReadonlyTypes ? "any" : "ListValue"}): Array<any> {
-      return message.values;
+      if (message?.hasOwnProperty('values') && Array.isArray(message.values)) {
+        return message.values.map((value: any) => Value.unwrap(value) || value);
+      } else {
+        return message as any;
+      }
     }`);
   }
 

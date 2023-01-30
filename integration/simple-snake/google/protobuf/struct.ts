@@ -394,7 +394,7 @@ export const Value = {
     } else if (message?.hasOwnProperty("struct_value") && message?.struct_value !== undefined) {
       return Struct.unwrap(message.struct_value as any);
     } else if (message?.hasOwnProperty("list_value") && message?.list_value !== undefined) {
-      return message.list_value;
+      return ListValue.unwrap(message.list_value);
     } else if (message?.hasOwnProperty("null_value") && message?.null_value !== undefined) {
       return null;
     }
@@ -465,7 +465,11 @@ export const ListValue = {
   },
 
   unwrap(message: ListValue): Array<any> {
-    return message.values;
+    if (message?.hasOwnProperty("values") && Array.isArray(message.values)) {
+      return message.values.map((value: any) => Value.unwrap(value) || value);
+    } else {
+      return message as any;
+    }
   },
 };
 
