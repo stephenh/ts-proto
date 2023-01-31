@@ -78,6 +78,15 @@ import { ConditionalOutput } from "ts-poet/build/ConditionalOutput";
 import { generateGrpcJsService } from "./generate-grpc-js";
 import { generateGenericServiceDefinition } from "./generate-generic-service-definition";
 import { generateNiceGrpcService } from "./generate-nice-grpc";
+import {
+  generateUnwrap,
+  generateUnwrapDeep,
+  generateUnwrapShallow,
+  generateWrap,
+  generateWrapDeep,
+  generateWrapShallow,
+  isWrapperType,
+} from "./generate-struct-wrappers";
 
 export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [string, Code] {
   const { options, utils } = ctx;
@@ -203,8 +212,13 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
           structValue: maybeSnakeToCamel("struct_value", ctx.options),
           listValue: maybeSnakeToCamel("list_value", ctx.options),
         };
-        staticMembers.push(...generateWrap(ctx, fullTypeName, structFieldNames));
-        staticMembers.push(...generateUnwrap(ctx, fullTypeName, structFieldNames));
+        if (options.nestJs) {
+          staticMembers.push(...generateWrapDeep(ctx, fullTypeName, structFieldNames));
+          staticMembers.push(...generateUnwrapDeep(ctx, fullTypeName, structFieldNames));
+        } else {
+          staticMembers.push(...generateWrapShallow(ctx, fullTypeName, structFieldNames));
+          staticMembers.push(...generateUnwrapShallow(ctx, fullTypeName, structFieldNames));
+        }
 
         if (staticMembers.length > 0) {
           chunks.push(code`
@@ -1781,147 +1795,6 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
   chunks.push(code`return message;`);
   chunks.push(code`}`);
   return joinCode(chunks, { on: "\n" });
-}
-
-type StructFieldNames = {
-  nullValue: string;
-  numberValue: string;
-  stringValue: string;
-  boolValue: string;
-  structValue: string;
-  listValue: string;
-};
-
-/** Whether we need to generate `.wrap` and `.unwrap` methods for the given type. */
-function isWrapperType(fullProtoTypeName: string): boolean {
-  return (
-    isStructTypeName(fullProtoTypeName) ||
-    isAnyValueTypeName(fullProtoTypeName) ||
-    isListValueTypeName(fullProtoTypeName) ||
-    isFieldMaskTypeName(fullProtoTypeName)
-  );
-}
-
-function generateWrap(ctx: Context, fullProtoTypeName: string, fieldNames: StructFieldNames): Code[] {
-  const chunks: Code[] = [];
-  if (isStructTypeName(fullProtoTypeName)) {
-    let setStatement = "struct.fields[key] = Value.wrap(object[key]);";
-    if (ctx.options.useMapType) {
-      setStatement = "struct.fields.set(key, Value.wrap(object[key]));";
-    }
-    chunks.push(code`wrap(object: {[key: string]: any} | undefined): Struct {
-      const struct = createBaseStruct();
-      if (object !== undefined) {
-        Object.keys(object).forEach(key => {
-          ${setStatement}
-        });
-      }
-      return struct;
-    }`);
-  }
-
-  if (isAnyValueTypeName(fullProtoTypeName)) {
-    // Turn ts-proto representation --> proto representation
-    chunks.push(code`wrap(value: any): Value {
-      const result = {} as any;
-      if (value === null) {
-        result.${fieldNames.nullValue} = NullValue.NULL_VALUE;
-      } else if (typeof value === 'boolean') {
-        result.${fieldNames.boolValue} = value;
-      } else if (typeof value === 'number') {
-        result.${fieldNames.numberValue} = value;
-      } else if (typeof value === 'string') {
-        result.${fieldNames.stringValue} = value;
-      } else if (Array.isArray(value)) {
-        result.${fieldNames.listValue} = ListValue.wrap(value);
-      } else if (typeof value === 'object') {
-        result.${fieldNames.structValue} = Struct.wrap(value);
-      } else if (typeof value !== 'undefined') {
-        throw new Error('Unsupported any value type: ' + typeof value);
-      }
-      return result;
-    }`);
-  }
-
-  if (isListValueTypeName(fullProtoTypeName)) {
-    const maybeReadyOnly = ctx.options.useReadonlyTypes ? "Readonly" : "";
-    chunks.push(code`wrap(array: ${maybeReadyOnly}Array<any> | undefined): ListValue {
-      return { values: (array ?? []).map(Value.wrap) };
-    }`);
-  }
-
-  if (isFieldMaskTypeName(fullProtoTypeName)) {
-    chunks.push(code`wrap(paths: ${maybeReadonly(ctx.options)} string[]): FieldMask {
-      const result = createBaseFieldMask()${maybeAsAny(ctx.options)};
-      result.paths = paths;
-      return result;
-    }`);
-  }
-
-  return chunks;
-}
-
-function generateUnwrap(ctx: Context, fullProtoTypeName: string, fieldNames: StructFieldNames): Code[] {
-  const chunks: Code[] = [];
-  if (isStructTypeName(fullProtoTypeName)) {
-    if (ctx.options.useMapType) {
-      chunks.push(code`unwrap(message: Struct): {[key: string]: any} {
-        const object: { [key: string]: any } = {};
-        [...message.fields.keys()].forEach((key) => {
-          object[key] = Value.unwrap(message.fields.get(key));
-        });
-        return object;
-      }`);
-    } else {
-      chunks.push(code`unwrap(message: Struct): {[key: string]: any} {
-        const object: { [key: string]: any } = {};
-        if (message.fields) {
-          Object.keys(message.fields).forEach(key => {
-            object[key] = Value.unwrap(message.fields[key]);
-          });
-        }
-        return object;
-      }`);
-    }
-  }
-
-  if (isAnyValueTypeName(fullProtoTypeName)) {
-    // Put proto encoding into idiomatic ts-proto
-    chunks.push(code`unwrap(message: any): string | number | boolean | Object | null | Array<any> | undefined {
-      if (message?.hasOwnProperty('${fieldNames.stringValue}') && message.${fieldNames.stringValue} !== undefined) {
-        return message.${fieldNames.stringValue};
-      } else if (message?.hasOwnProperty('${fieldNames.numberValue}') && message?.${fieldNames.numberValue} !== undefined) {
-        return message.${fieldNames.numberValue};
-      } else if (message?.hasOwnProperty('${fieldNames.boolValue}') && message?.${fieldNames.boolValue} !== undefined) {
-        return message.${fieldNames.boolValue};
-      } else if (message?.hasOwnProperty('${fieldNames.structValue}') && message?.${fieldNames.structValue} !== undefined) {
-        return Struct.unwrap(message.${fieldNames.structValue} as any);
-      } else if (message?.hasOwnProperty('${fieldNames.listValue}') && message?.${fieldNames.listValue} !== undefined) {
-        return ListValue.unwrap(message.${fieldNames.listValue});
-      } else if (message?.hasOwnProperty('${fieldNames.nullValue}') && message?.${fieldNames.nullValue} !== undefined) {
-        return null;
-      }
-      return undefined;
-    }`);
-  }
-
-  if (isListValueTypeName(fullProtoTypeName)) {
-    chunks.push(code`unwrap(message: ${ctx.options.useReadonlyTypes ? "any" : "ListValue"}): Array<any> {
-      if (message?.hasOwnProperty('values') && Array.isArray(message.values)) {
-        return message.values.map(Value.unwrap);
-      } else {
-        return message as any;
-      }
-    }`);
-  }
-
-  if (isFieldMaskTypeName(fullProtoTypeName)) {
-    chunks.push(code`unwrap(message: ${ctx.options.useReadonlyTypes ? "any" : "FieldMask"}): string[] {
-      return message.paths;
-    }`);
-  }
-
-  return chunks;
 }
 
 export const contextTypeVar = "Context extends DataLoaders";

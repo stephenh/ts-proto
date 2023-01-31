@@ -164,7 +164,7 @@ export const Struct = {
     const struct = createBaseStruct();
     if (object !== undefined) {
       Object.keys(object).forEach((key) => {
-        struct.fields[key] = Value.wrap(object[key]);
+        struct.fields[key] = object[key];
       });
     }
     return struct;
@@ -174,7 +174,7 @@ export const Struct = {
     const object: { [key: string]: any } = {};
     if (message.fields) {
       Object.keys(message.fields).forEach((key) => {
-        object[key] = Value.unwrap(message.fields[key]);
+        object[key] = message.fields[key];
       });
     }
     return object;
@@ -380,9 +380,9 @@ export const Value = {
     } else if (typeof value === "string") {
       result.stringValue = value;
     } else if (Array.isArray(value)) {
-      result.listValue = ListValue.wrap(value);
+      result.listValue = value;
     } else if (typeof value === "object") {
-      result.structValue = Struct.wrap(value);
+      result.structValue = value;
     } else if (typeof value !== "undefined") {
       throw new Error("Unsupported any value type: " + typeof value);
     }
@@ -397,9 +397,9 @@ export const Value = {
     } else if (message?.hasOwnProperty("boolValue") && message?.boolValue !== undefined) {
       return message.boolValue;
     } else if (message?.hasOwnProperty("structValue") && message?.structValue !== undefined) {
-      return Struct.unwrap(message.structValue as any);
+      return message.structValue as any;
     } else if (message?.hasOwnProperty("listValue") && message?.listValue !== undefined) {
-      return ListValue.unwrap(message.listValue);
+      return message.listValue;
     } else if (message?.hasOwnProperty("nullValue") && message?.nullValue !== undefined) {
       return null;
     }
@@ -462,12 +462,12 @@ export const ListValue = {
   },
 
   wrap(array: Array<any> | undefined): ListValue {
-    return { values: (array ?? []).map(Value.wrap) };
+    return { values: (array ?? []) };
   },
 
   unwrap(message: ListValue): Array<any> {
     if (message?.hasOwnProperty("values") && Array.isArray(message.values)) {
-      return message.values.map(Value.unwrap);
+      return message.values;
     } else {
       return message as any;
     }
