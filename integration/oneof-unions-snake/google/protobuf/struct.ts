@@ -379,40 +379,41 @@ export const Value = {
   },
 
   wrap(value: any): Value {
-    const result = {} as any;
+    const result = createBaseValue();
     if (value === null) {
-      result.null_value = NullValue.NULL_VALUE;
+      result.kind = { $case: "null_value", null_value: NullValue.NULL_VALUE };
     } else if (typeof value === "boolean") {
-      result.bool_value = value;
+      result.kind = { $case: "bool_value", bool_value: value };
     } else if (typeof value === "number") {
-      result.number_value = value;
+      result.kind = { $case: "number_value", number_value: value };
     } else if (typeof value === "string") {
-      result.string_value = value;
+      result.kind = { $case: "string_value", string_value: value };
     } else if (Array.isArray(value)) {
-      result.list_value = value;
+      result.kind = { $case: "list_value", list_value: value };
     } else if (typeof value === "object") {
-      result.struct_value = value;
+      result.kind = { $case: "struct_value", struct_value: value };
     } else if (typeof value !== "undefined") {
       throw new Error("Unsupported any value type: " + typeof value);
     }
     return result;
   },
 
-  unwrap(message: any): string | number | boolean | Object | null | Array<any> | undefined {
-    if (message?.hasOwnProperty("string_value") && message.string_value !== undefined) {
-      return message.string_value;
-    } else if (message?.hasOwnProperty("number_value") && message?.number_value !== undefined) {
-      return message.number_value;
-    } else if (message?.hasOwnProperty("bool_value") && message?.bool_value !== undefined) {
-      return message.bool_value;
-    } else if (message?.hasOwnProperty("struct_value") && message?.struct_value !== undefined) {
-      return message.struct_value as any;
-    } else if (message?.hasOwnProperty("list_value") && message?.list_value !== undefined) {
-      return message.list_value;
-    } else if (message?.hasOwnProperty("null_value") && message?.null_value !== undefined) {
+  unwrap(message: Value): string | number | boolean | Object | null | Array<any> | undefined {
+    if (message.kind?.$case === "null_value") {
       return null;
+    } else if (message.kind?.$case === "number_value") {
+      return message.kind?.number_value;
+    } else if (message.kind?.$case === "string_value") {
+      return message.kind?.string_value;
+    } else if (message.kind?.$case === "bool_value") {
+      return message.kind?.bool_value;
+    } else if (message.kind?.$case === "struct_value") {
+      return message.kind?.struct_value;
+    } else if (message.kind?.$case === "list_value") {
+      return message.kind?.list_value;
+    } else {
+      return undefined;
     }
-    return undefined;
   },
 };
 
@@ -471,7 +472,9 @@ export const ListValue = {
   },
 
   wrap(array: Array<any> | undefined): ListValue {
-    return { values: (array ?? []) };
+    const result = createBaseListValue();
+    result.values = array ?? [];
+    return result;
   },
 
   unwrap(message: ListValue): Array<any> {

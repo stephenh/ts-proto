@@ -371,7 +371,7 @@ export const Value = {
   },
 
   wrap(value: any): Value {
-    const result = {} as any;
+    const result = createBaseValue();
     if (value === null) {
       result.nullValue = NullValue.NULL_VALUE;
     } else if (typeof value === "boolean") {
@@ -391,17 +391,17 @@ export const Value = {
   },
 
   unwrap(message: any): string | number | boolean | Object | null | Array<any> | undefined {
-    if (message?.hasOwnProperty("stringValue") && message.stringValue !== undefined) {
+    if (message.stringValue !== undefined) {
       return message.stringValue;
-    } else if (message?.hasOwnProperty("numberValue") && message?.numberValue !== undefined) {
+    } else if (message?.numberValue !== undefined) {
       return message.numberValue;
-    } else if (message?.hasOwnProperty("boolValue") && message?.boolValue !== undefined) {
+    } else if (message?.boolValue !== undefined) {
       return message.boolValue;
-    } else if (message?.hasOwnProperty("structValue") && message?.structValue !== undefined) {
+    } else if (message?.structValue !== undefined) {
       return message.structValue as any;
-    } else if (message?.hasOwnProperty("listValue") && message?.listValue !== undefined) {
+    } else if (message?.listValue !== undefined) {
       return message.listValue;
-    } else if (message?.hasOwnProperty("nullValue") && message?.nullValue !== undefined) {
+    } else if (message?.nullValue !== undefined) {
       return null;
     }
     return undefined;
@@ -463,7 +463,9 @@ export const ListValue = {
   },
 
   wrap(array: Array<any> | undefined): ListValue {
-    return { values: (array ?? []) };
+    const result = createBaseListValue();
+    result.values = array ?? [];
+    return result;
   },
 
   unwrap(message: ListValue): Array<any> {

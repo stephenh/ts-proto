@@ -370,40 +370,41 @@ export const Value = {
   },
 
   wrap(value: any): Value {
-    const result = {} as any;
+    const result = createBaseValue() as any;
     if (value === null) {
-      result.nullValue = NullValue.NULL_VALUE;
+      result.kind = { $case: "nullValue", nullValue: NullValue.NULL_VALUE };
     } else if (typeof value === "boolean") {
-      result.boolValue = value;
+      result.kind = { $case: "boolValue", boolValue: value };
     } else if (typeof value === "number") {
-      result.numberValue = value;
+      result.kind = { $case: "numberValue", numberValue: value };
     } else if (typeof value === "string") {
-      result.stringValue = value;
+      result.kind = { $case: "stringValue", stringValue: value };
     } else if (Array.isArray(value)) {
-      result.listValue = value;
+      result.kind = { $case: "listValue", listValue: value };
     } else if (typeof value === "object") {
-      result.structValue = value;
+      result.kind = { $case: "structValue", structValue: value };
     } else if (typeof value !== "undefined") {
       throw new Error("Unsupported any value type: " + typeof value);
     }
     return result;
   },
 
-  unwrap(message: any): string | number | boolean | Object | null | Array<any> | undefined {
-    if (message?.hasOwnProperty("stringValue") && message.stringValue !== undefined) {
-      return message.stringValue;
-    } else if (message?.hasOwnProperty("numberValue") && message?.numberValue !== undefined) {
-      return message.numberValue;
-    } else if (message?.hasOwnProperty("boolValue") && message?.boolValue !== undefined) {
-      return message.boolValue;
-    } else if (message?.hasOwnProperty("structValue") && message?.structValue !== undefined) {
-      return message.structValue as any;
-    } else if (message?.hasOwnProperty("listValue") && message?.listValue !== undefined) {
-      return message.listValue;
-    } else if (message?.hasOwnProperty("nullValue") && message?.nullValue !== undefined) {
+  unwrap(message: Value): string | number | boolean | Object | null | Array<any> | undefined {
+    if (message.kind?.$case === "nullValue") {
       return null;
+    } else if (message.kind?.$case === "numberValue") {
+      return message.kind?.numberValue;
+    } else if (message.kind?.$case === "stringValue") {
+      return message.kind?.stringValue;
+    } else if (message.kind?.$case === "boolValue") {
+      return message.kind?.boolValue;
+    } else if (message.kind?.$case === "structValue") {
+      return message.kind?.structValue;
+    } else if (message.kind?.$case === "listValue") {
+      return message.kind?.listValue;
+    } else {
+      return undefined;
     }
-    return undefined;
   },
 };
 
@@ -462,7 +463,9 @@ export const ListValue = {
   },
 
   wrap(array: ReadonlyArray<any> | undefined): ListValue {
-    return { values: (array ?? []) };
+    const result = createBaseListValue() as any;
+    result.values = array ?? [];
+    return result;
   },
 
   unwrap(message: any): Array<any> {

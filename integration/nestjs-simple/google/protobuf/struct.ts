@@ -155,7 +155,9 @@ function createBaseListValue(): ListValue {
 
 export const ListValue = {
   wrap(array: Array<any> | undefined): ListValue {
-    return { values: (array ?? []).map(Value.wrap) };
+    const result = createBaseListValue();
+    result.values = (array ?? []).map(Value.wrap);
+    return result;
   },
 
   unwrap(message: ListValue): Array<any> {
