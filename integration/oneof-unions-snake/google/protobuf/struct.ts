@@ -172,9 +172,11 @@ export const Struct = {
 
   unwrap(message: Struct): { [key: string]: any } {
     const object: { [key: string]: any } = {};
-    Object.keys(message.fields).forEach((key) => {
-      object[key] = message.fields[key];
-    });
+    if (message.fields) {
+      Object.keys(message.fields).forEach((key) => {
+        object[key] = message.fields[key];
+      });
+    }
     return object;
   },
 };
@@ -378,7 +380,6 @@ export const Value = {
 
   wrap(value: any): Value {
     const result = createBaseValue();
-
     if (value === null) {
       result.kind = { $case: "null_value", null_value: NullValue.NULL_VALUE };
     } else if (typeof value === "boolean") {
@@ -394,7 +395,6 @@ export const Value = {
     } else if (typeof value !== "undefined") {
       throw new Error("Unsupported any value type: " + typeof value);
     }
-
     return result;
   },
 
@@ -471,16 +471,18 @@ export const ListValue = {
     return message;
   },
 
-  wrap(value: Array<any> | undefined): ListValue {
+  wrap(array: Array<any> | undefined): ListValue {
     const result = createBaseListValue();
-
-    result.values = value ?? [];
-
+    result.values = array ?? [];
     return result;
   },
 
   unwrap(message: ListValue): Array<any> {
-    return message.values;
+    if (message?.hasOwnProperty("values") && Array.isArray(message.values)) {
+      return message.values;
+    } else {
+      return message as any;
+    }
   },
 };
 

@@ -187,9 +187,11 @@ export const Struct = {
 
   unwrap(message: Struct): { [key: string]: any } {
     const object: { [key: string]: any } = {};
-    Object.keys(message.fields).forEach((key) => {
-      object[key] = message.fields[key];
-    });
+    if (message.fields) {
+      Object.keys(message.fields).forEach((key) => {
+        object[key] = message.fields[key];
+      });
+    }
     return object;
   },
 };
@@ -360,7 +362,6 @@ export const Value = {
 
   wrap(value: any): Value {
     const result = createBaseValue();
-
     if (value === null) {
       result.null_value = NullValue.NULL_VALUE;
     } else if (typeof value === "boolean") {
@@ -376,19 +377,18 @@ export const Value = {
     } else if (typeof value !== "undefined") {
       throw new Error("Unsupported any value type: " + typeof value);
     }
-
     return result;
   },
 
-  unwrap(message: Value): string | number | boolean | Object | null | Array<any> | undefined {
-    if (message?.string_value !== undefined) {
+  unwrap(message: any): string | number | boolean | Object | null | Array<any> | undefined {
+    if (message.string_value !== undefined) {
       return message.string_value;
     } else if (message?.number_value !== undefined) {
       return message.number_value;
     } else if (message?.bool_value !== undefined) {
       return message.bool_value;
     } else if (message?.struct_value !== undefined) {
-      return message.struct_value;
+      return message.struct_value as any;
     } else if (message?.list_value !== undefined) {
       return message.list_value;
     } else if (message?.null_value !== undefined) {
@@ -452,16 +452,18 @@ export const ListValue = {
     return message;
   },
 
-  wrap(value: Array<any> | undefined): ListValue {
+  wrap(array: Array<any> | undefined): ListValue {
     const result = createBaseListValue();
-
-    result.values = value ?? [];
-
+    result.values = array ?? [];
     return result;
   },
 
   unwrap(message: ListValue): Array<any> {
-    return message.values;
+    if (message?.hasOwnProperty("values") && Array.isArray(message.values)) {
+      return message.values;
+    } else {
+      return message as any;
+    }
   },
 };
 

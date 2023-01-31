@@ -1,7 +1,9 @@
 /* eslint-disable */
 import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
+import { wrappers } from "protobufjs";
 import { Observable } from "rxjs";
 import { Empty } from "./google/protobuf/empty";
+import { Struct } from "./google/protobuf/struct";
 import { Timestamp } from "./google/protobuf/timestamp";
 
 export const protobufPackage = "hero";
@@ -18,6 +20,7 @@ export interface Hero {
   id: number;
   name: string;
   birthDate: Timestamp | undefined;
+  externalData: { [key: string]: any } | undefined;
 }
 
 export interface Villain {
@@ -26,6 +29,8 @@ export interface Villain {
 }
 
 export const HERO_PACKAGE_NAME = "hero";
+
+wrappers[".google.protobuf.Struct"] = { fromObject: Struct.wrap, toObject: Struct.unwrap } as any;
 
 export interface HeroServiceClient {
   addOneHero(request: Hero): Observable<Empty>;

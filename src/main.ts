@@ -78,6 +78,15 @@ import { ConditionalOutput } from "ts-poet/build/ConditionalOutput";
 import { generateGrpcJsService } from "./generate-grpc-js";
 import { generateGenericServiceDefinition } from "./generate-generic-service-definition";
 import { generateNiceGrpcService } from "./generate-nice-grpc";
+import {
+  generateUnwrap,
+  generateUnwrapDeep,
+  generateUnwrapShallow,
+  generateWrap,
+  generateWrapDeep,
+  generateWrapShallow,
+  isWrapperType,
+} from "./generate-struct-wrappers";
 
 export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [string, Code] {
   const { options, utils } = ctx;
@@ -156,15 +165,22 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
     }
   }
 
-  if (options.outputEncodeMethods || options.outputJsonMethods || options.outputTypeRegistry) {
+  // We add `nestJs` here because enough though it doesn't use our encode/decode methods
+  // for most/vanilla messages, we do generate static wrap/unwrap methods for the special
+  // Struct/Value/wrapper types and use the `wrappers[...]` to have NestJS know about them.
+  if (options.outputEncodeMethods || options.outputJsonMethods || options.outputTypeRegistry || options.nestJs) {
     // then add the encoder/decoder/base instance
     visit(
       fileDesc,
       sourceInfo,
       (fullName, message, _sInfo, fullProtoTypeName) => {
         const fullTypeName = maybePrefixPackage(fileDesc, fullProtoTypeName);
+        const outputWrapAndUnwrap = isWrapperType(fullTypeName);
 
-        chunks.push(generateBaseInstanceFactory(ctx, fullName, message, fullTypeName));
+        // Only decode, fromPartial, and wrap use the createBase method
+        if (options.outputEncodeMethods || options.outputPartialMethods || outputWrapAndUnwrap) {
+          chunks.push(generateBaseInstanceFactory(ctx, fullName, message, fullTypeName));
+        }
 
         const staticMembers: Code[] = [];
 
@@ -196,18 +212,24 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
           structValue: maybeSnakeToCamel("struct_value", ctx.options),
           listValue: maybeSnakeToCamel("list_value", ctx.options),
         };
-        staticMembers.push(...generateWrap(ctx, fullTypeName, structFieldNames));
-        staticMembers.push(...generateUnwrap(ctx, fullTypeName, structFieldNames));
+        if (options.nestJs) {
+          staticMembers.push(...generateWrapDeep(ctx, fullTypeName, structFieldNames));
+          staticMembers.push(...generateUnwrapDeep(ctx, fullTypeName, structFieldNames));
+        } else {
+          staticMembers.push(...generateWrapShallow(ctx, fullTypeName, structFieldNames));
+          staticMembers.push(...generateUnwrapShallow(ctx, fullTypeName, structFieldNames));
+        }
 
-        chunks.push(code`
-          export const ${def(fullName)} = {
-            ${joinCode(staticMembers, { on: ",\n\n" })}
-          };
-        `);
+        if (staticMembers.length > 0) {
+          chunks.push(code`
+            export const ${def(fullName)} = {
+              ${joinCode(staticMembers, { on: ",\n\n" })}
+            };
+          `);
+        }
 
         if (options.outputTypeRegistry) {
           const messageTypeRegistry = impFile(options, "messageTypeRegistry@./typeRegistry");
-
           chunks.push(code`
             ${messageTypeRegistry}.set(${fullName}.$type, ${fullName});
           `);
@@ -215,6 +237,12 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
       },
       options
     );
+  }
+
+  if (options.nestJs) {
+    if (fileDesc.messageType.find((message) => message.field.find(isStructType))) {
+      chunks.push(makeProtobufStructWrapper(options));
+    }
   }
 
   let hasServerStreamingMethods = false;
@@ -358,6 +386,16 @@ function makeProtobufTimestampWrapper() {
           return new Date(message.seconds * 1000 + message.nanos / 1e6);
         },
       } as any;`;
+}
+
+function makeProtobufStructWrapper(options: Options) {
+  const wrappers = imp("wrappers@protobufjs");
+  const Struct = impProto(options, "google/protobuf/struct", "Struct");
+  return code`
+    ${wrappers}['.google.protobuf.Struct'] = {
+      fromObject: ${Struct}.wrap,
+      toObject: ${Struct}.unwrap,
+    } as any;`;
 }
 
 function makeLongUtils(options: Options, bytes: ReturnType<typeof makeByteUtils>) {
@@ -1757,183 +1795,6 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
   chunks.push(code`return message;`);
   chunks.push(code`}`);
   return joinCode(chunks, { on: "\n" });
-}
-
-type StructFieldNames = {
-  nullValue: string;
-  numberValue: string;
-  stringValue: string;
-  boolValue: string;
-  structValue: string;
-  listValue: string;
-};
-
-function generateWrap(ctx: Context, fullProtoTypeName: string, fieldNames: StructFieldNames): Code[] {
-  const chunks: Code[] = [];
-  if (isStructTypeName(fullProtoTypeName)) {
-    let setStatement = "struct.fields[key] = object[key];";
-    if (ctx.options.useMapType) {
-      setStatement = "struct.fields.set(key, object[key]);";
-    }
-
-    chunks.push(code`wrap(object: {[key: string]: any} | undefined): Struct {
-      const struct = createBaseStruct();
-      if (object !== undefined) {
-        Object.keys(object).forEach(key => {
-          ${setStatement}
-        });
-      }
-      return struct;
-    }`);
-  }
-
-  if (isAnyValueTypeName(fullProtoTypeName)) {
-    if (ctx.options.oneof === OneofOption.UNIONS) {
-      chunks.push(code`wrap(value: any): Value {
-        const result = createBaseValue()${maybeAsAny(ctx.options)};
-
-        if (value === null) {
-          result.kind = {$case: '${fieldNames.nullValue}', ${fieldNames.nullValue}: NullValue.NULL_VALUE};
-        } else if (typeof value === 'boolean') {
-          result.kind = {$case: '${fieldNames.boolValue}', ${fieldNames.boolValue}: value};
-        } else if (typeof value === 'number') {
-          result.kind = {$case: '${fieldNames.numberValue}', ${fieldNames.numberValue}: value};
-        } else if (typeof value === 'string') {
-          result.kind = {$case: '${fieldNames.stringValue}', ${fieldNames.stringValue}: value};
-        } else if (Array.isArray(value)) {
-          result.kind = {$case: '${fieldNames.listValue}', ${fieldNames.listValue}: value};
-        } else if (typeof value === 'object') {
-          result.kind = {$case: '${fieldNames.structValue}', ${fieldNames.structValue}: value};
-        } else if (typeof value !== 'undefined') {
-          throw new Error('Unsupported any value type: ' + typeof value);
-        }
-
-        return result;
-    }`);
-    } else {
-      chunks.push(code`wrap(value: any): Value {
-        const result = createBaseValue()${maybeAsAny(ctx.options)};
-
-        if (value === null) {
-          result.${fieldNames.nullValue} = NullValue.NULL_VALUE;
-        } else if (typeof value === 'boolean') {
-          result.${fieldNames.boolValue} = value;
-        } else if (typeof value === 'number') {
-          result.${fieldNames.numberValue} = value;
-        } else if (typeof value === 'string') {
-          result.${fieldNames.stringValue} = value;
-        } else if (Array.isArray(value)) {
-          result.${fieldNames.listValue} = value;
-        } else if (typeof value === 'object') {
-          result.${fieldNames.structValue} = value;
-        } else if (typeof value !== 'undefined') {
-          throw new Error('Unsupported any value type: ' + typeof value);
-        }
-
-        return result;
-    }`);
-    }
-  }
-
-  if (isListValueTypeName(fullProtoTypeName)) {
-    chunks.push(code`wrap(value: ${
-      ctx.options.useReadonlyTypes ? "ReadonlyArray<any>" : "Array<any>"
-    } | undefined): ListValue {
-      const result = createBaseListValue()${maybeAsAny(ctx.options)};
-
-      result.values = value ?? [];
-
-      return result;
-    }`);
-  }
-
-  if (isFieldMaskTypeName(fullProtoTypeName)) {
-    chunks.push(code`wrap(paths: ${maybeReadonly(ctx.options)} string[]): FieldMask {
-      const result = createBaseFieldMask()${maybeAsAny(ctx.options)};
-
-      result.paths = paths;
-
-      return result;
-    }`);
-  }
-
-  return chunks;
-}
-
-function generateUnwrap(ctx: Context, fullProtoTypeName: string, fieldNames: StructFieldNames): Code[] {
-  const chunks: Code[] = [];
-  if (isStructTypeName(fullProtoTypeName)) {
-    if (ctx.options.useMapType) {
-      chunks.push(code`unwrap(message: Struct): {[key: string]: any} {
-        const object: { [key: string]: any } = {};
-        [...message.fields.keys()].forEach((key) => {
-          object[key] = message.fields.get(key);
-        });
-        return object;
-      }`);
-    } else {
-      chunks.push(code`unwrap(message: Struct): {[key: string]: any} {
-        const object: { [key: string]: any } = {};
-        Object.keys(message.fields).forEach(key => {
-          object[key] = message.fields[key];     
-        });
-        return object;
-      }`);
-    }
-  }
-
-  if (isAnyValueTypeName(fullProtoTypeName)) {
-    if (ctx.options.oneof === OneofOption.UNIONS) {
-      chunks.push(code`unwrap(message: Value): string | number | boolean | Object | null | Array<any> | undefined {
-        if (message.kind?.$case === '${fieldNames.nullValue}') {
-          return null;
-        } else if (message.kind?.$case === '${fieldNames.numberValue}') {
-          return message.kind?.${fieldNames.numberValue};
-        } else if (message.kind?.$case === '${fieldNames.stringValue}') {
-          return message.kind?.${fieldNames.stringValue};
-        } else if (message.kind?.$case === '${fieldNames.boolValue}') {
-          return message.kind?.${fieldNames.boolValue};
-        } else if (message.kind?.$case === '${fieldNames.structValue}') {
-          return message.kind?.${fieldNames.structValue};
-        } else if (message.kind?.$case === '${fieldNames.listValue}') {
-          return message.kind?.${fieldNames.listValue};
-        } else {
-          return undefined;
-        }
-      }`);
-    } else {
-      chunks.push(code`unwrap(message: Value): string | number | boolean | Object | null | Array<any> | undefined {
-        if (message?.${fieldNames.stringValue} !== undefined) {
-          return message.${fieldNames.stringValue};
-        } else if (message?.${fieldNames.numberValue} !== undefined) {
-          return message.${fieldNames.numberValue};
-        } else if (message?.${fieldNames.boolValue} !== undefined) {
-          return message.${fieldNames.boolValue};
-        } else if (message?.${fieldNames.structValue} !== undefined) {
-          return message.${fieldNames.structValue};
-        } else if (message?.${fieldNames.listValue} !== undefined) {
-            return message.${fieldNames.listValue};
-        } else if (message?.${fieldNames.nullValue} !== undefined) {
-          return null;
-        }
-        return undefined;
-      }`);
-    }
-  }
-
-  if (isListValueTypeName(fullProtoTypeName)) {
-    chunks.push(code`unwrap(message: ${ctx.options.useReadonlyTypes ? "any" : "ListValue"}): Array<any> {
-      return message.values;
-    }`);
-  }
-
-  if (isFieldMaskTypeName(fullProtoTypeName)) {
-    chunks.push(code`unwrap(message: ${ctx.options.useReadonlyTypes ? "any" : "FieldMask"}): string[] {
-      return message.paths;
-    }`);
-  }
-
-  return chunks;
 }
 
 export const contextTypeVar = "Context extends DataLoaders";
