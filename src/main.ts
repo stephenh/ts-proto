@@ -79,10 +79,8 @@ import { generateGrpcJsService } from "./generate-grpc-js";
 import { generateGenericServiceDefinition } from "./generate-generic-service-definition";
 import { generateNiceGrpcService } from "./generate-nice-grpc";
 import {
-  generateUnwrap,
   generateUnwrapDeep,
   generateUnwrapShallow,
-  generateWrap,
   generateWrapDeep,
   generateWrapShallow,
   isWrapperType,
