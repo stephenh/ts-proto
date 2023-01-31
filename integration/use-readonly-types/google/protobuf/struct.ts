@@ -246,23 +246,25 @@ function createBaseValue(): Value {
 
 export const Value = {
   encode(message: Value, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.kind?.$case === "nullValue") {
-      writer.uint32(8).int32(message.kind.nullValue);
-    }
-    if (message.kind?.$case === "numberValue") {
-      writer.uint32(17).double(message.kind.numberValue);
-    }
-    if (message.kind?.$case === "stringValue") {
-      writer.uint32(26).string(message.kind.stringValue);
-    }
-    if (message.kind?.$case === "boolValue") {
-      writer.uint32(32).bool(message.kind.boolValue);
-    }
-    if (message.kind?.$case === "structValue") {
-      Struct.encode(Struct.wrap(message.kind.structValue), writer.uint32(42).fork()).ldelim();
-    }
-    if (message.kind?.$case === "listValue") {
-      ListValue.encode(ListValue.wrap(message.kind.listValue), writer.uint32(50).fork()).ldelim();
+    switch (message.kind?.$case) {
+      case "nullValue":
+        writer.uint32(8).int32(message.kind.nullValue);
+        break;
+      case "numberValue":
+        writer.uint32(17).double(message.kind.numberValue);
+        break;
+      case "stringValue":
+        writer.uint32(26).string(message.kind.stringValue);
+        break;
+      case "boolValue":
+        writer.uint32(32).bool(message.kind.boolValue);
+        break;
+      case "structValue":
+        Struct.encode(Struct.wrap(message.kind.structValue), writer.uint32(42).fork()).ldelim();
+        break;
+      case "listValue":
+        ListValue.encode(ListValue.wrap(message.kind.listValue), writer.uint32(50).fork()).ldelim();
+        break;
     }
     return writer;
   },

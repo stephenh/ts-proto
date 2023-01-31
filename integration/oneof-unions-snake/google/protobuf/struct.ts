@@ -246,23 +246,25 @@ function createBaseValue(): Value {
 
 export const Value = {
   encode(message: Value, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.kind?.$case === "null_value") {
-      writer.uint32(8).int32(message.kind.null_value);
-    }
-    if (message.kind?.$case === "number_value") {
-      writer.uint32(17).double(message.kind.number_value);
-    }
-    if (message.kind?.$case === "string_value") {
-      writer.uint32(26).string(message.kind.string_value);
-    }
-    if (message.kind?.$case === "bool_value") {
-      writer.uint32(32).bool(message.kind.bool_value);
-    }
-    if (message.kind?.$case === "struct_value") {
-      Struct.encode(Struct.wrap(message.kind.struct_value), writer.uint32(42).fork()).ldelim();
-    }
-    if (message.kind?.$case === "list_value") {
-      ListValue.encode(ListValue.wrap(message.kind.list_value), writer.uint32(50).fork()).ldelim();
+    switch (message.kind?.$case) {
+      case "null_value":
+        writer.uint32(8).int32(message.kind.null_value);
+        break;
+      case "number_value":
+        writer.uint32(17).double(message.kind.number_value);
+        break;
+      case "string_value":
+        writer.uint32(26).string(message.kind.string_value);
+        break;
+      case "bool_value":
+        writer.uint32(32).bool(message.kind.bool_value);
+        break;
+      case "struct_value":
+        Struct.encode(Struct.wrap(message.kind.struct_value), writer.uint32(42).fork()).ldelim();
+        break;
+      case "list_value":
+        ListValue.encode(ListValue.wrap(message.kind.list_value), writer.uint32(50).fork()).ldelim();
+        break;
     }
     return writer;
   },

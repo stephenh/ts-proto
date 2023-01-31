@@ -80,35 +80,39 @@ export const PleaseChoose = {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
-    if (message.choice?.$case === "aNumber") {
-      writer.uint32(17).double(message.choice.aNumber);
-    }
-    if (message.choice?.$case === "aString") {
-      writer.uint32(26).string(message.choice.aString);
-    }
-    if (message.choice?.$case === "aMessage") {
-      PleaseChoose_Submessage.encode(message.choice.aMessage, writer.uint32(34).fork()).ldelim();
-    }
-    if (message.choice?.$case === "aBool") {
-      writer.uint32(48).bool(message.choice.aBool);
-    }
-    if (message.choice?.$case === "bunchaBytes") {
-      writer.uint32(82).bytes(message.choice.bunchaBytes);
-    }
-    if (message.choice?.$case === "anEnum") {
-      writer.uint32(88).int32(message.choice.anEnum);
+    switch (message.choice?.$case) {
+      case "aNumber":
+        writer.uint32(17).double(message.choice.aNumber);
+        break;
+      case "aString":
+        writer.uint32(26).string(message.choice.aString);
+        break;
+      case "aMessage":
+        PleaseChoose_Submessage.encode(message.choice.aMessage, writer.uint32(34).fork()).ldelim();
+        break;
+      case "aBool":
+        writer.uint32(48).bool(message.choice.aBool);
+        break;
+      case "bunchaBytes":
+        writer.uint32(82).bytes(message.choice.bunchaBytes);
+        break;
+      case "anEnum":
+        writer.uint32(88).int32(message.choice.anEnum);
+        break;
     }
     if (message.age !== 0) {
       writer.uint32(40).uint32(message.age);
     }
-    if (message.eitherOr?.$case === "either") {
-      writer.uint32(58).string(message.eitherOr.either);
-    }
-    if (message.eitherOr?.$case === "or") {
-      writer.uint32(66).string(message.eitherOr.or);
-    }
-    if (message.eitherOr?.$case === "thirdOption") {
-      writer.uint32(74).string(message.eitherOr.thirdOption);
+    switch (message.eitherOr?.$case) {
+      case "either":
+        writer.uint32(58).string(message.eitherOr.either);
+        break;
+      case "or":
+        writer.uint32(66).string(message.eitherOr.or);
+        break;
+      case "thirdOption":
+        writer.uint32(74).string(message.eitherOr.thirdOption);
+        break;
     }
     if (message.signature.length !== 0) {
       writer.uint32(98).bytes(message.signature);

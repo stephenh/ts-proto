@@ -1059,6 +1059,49 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
   return joinCode(chunks, { on: "\n" });
 }
 
+/** Returns a generic writer.doSomething based on the basic type */
+function getEncodeWriteSnippet(ctx: Context, field: FieldDescriptorProto): (place: string) => Code {
+  const { options, utils } = ctx;
+  if (isEnum(field) && options.stringEnums) {
+    const tag = ((field.number << 3) | basicWireType(field.type)) >>> 0;
+    const toNumber = getEnumMethod(ctx, field.typeName, "ToNumber");
+    return (place) => code`writer.uint32(${tag}).${toReaderCall(field)}(${toNumber}(${place}))`;
+  } else if (isLong(field) && options.forceLong === LongOption.BIGINT) {
+    const tag = ((field.number << 3) | basicWireType(field.type)) >>> 0;
+    return (place) => code`writer.uint32(${tag}).${toReaderCall(field)}(${place}.toString())`;
+  } else if (isScalar(field) || isEnum(field)) {
+    const tag = ((field.number << 3) | basicWireType(field.type)) >>> 0;
+    return (place) => code`writer.uint32(${tag}).${toReaderCall(field)}(${place})`;
+  } else if (isObjectId(field) && options.useMongoObjectId) {
+    const tag = ((field.number << 3) | 2) >>> 0;
+    const type = basicTypeName(ctx, field, { keepValueType: true });
+    return (place) => code`${type}.encode(${utils.toProtoObjectId}(${place}), writer.uint32(${tag}).fork()).ldelim()`;
+  } else if (isTimestamp(field) && (options.useDate === DateOption.DATE || options.useDate === DateOption.STRING)) {
+    const tag = ((field.number << 3) | 2) >>> 0;
+    const type = basicTypeName(ctx, field, { keepValueType: true });
+    return (place) => code`${type}.encode(${utils.toTimestamp}(${place}), writer.uint32(${tag}).fork()).ldelim()`;
+  } else if (isValueType(ctx, field)) {
+    const maybeTypeField = options.outputTypeRegistry ? `$type: '${field.typeName.slice(1)}',` : "";
+
+    const type = basicTypeName(ctx, field, { keepValueType: true });
+    const wrappedValue = (place: string): Code => {
+      if (isAnyValueType(field) || isListValueType(field) || isStructType(field) || isFieldMaskType(field)) {
+        return code`${type}.wrap(${place})`;
+      }
+      return code`{${maybeTypeField} value: ${place}!}`;
+    };
+
+    const tag = ((field.number << 3) | 2) >>> 0;
+    return (place) => code`${type}.encode(${wrappedValue(place)}, writer.uint32(${tag}).fork()).ldelim()`;
+  } else if (isMessage(field)) {
+    const tag = ((field.number << 3) | 2) >>> 0;
+    const type = basicTypeName(ctx, field);
+    return (place) => code`${type}.encode(${place}, writer.uint32(${tag}).fork()).ldelim()`;
+  } else {
+    throw new Error(`Unhandled field ${field}`);
+  }
+}
+
 /** Creates a function to encode a message by loop overing the tags. */
 function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorProto): Code {
   const { options, utils, typeMap } = ctx;
@@ -1074,52 +1117,20 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
     ): ${Writer} {
   `);
 
+  const processedOneofs = new Set<number>();
+  const oneOfFieldsDict = messageDesc.field
+    .filter((field) => isWithinOneOfThatShouldBeUnion(options, field))
+    .reduce<{ [key: number]: FieldDescriptorProto[] }>(
+      (result, field) => ((result[field.oneofIndex] || (result[field.oneofIndex] = [])).push(field), result),
+      {}
+    );
+
   // then add a case for each field
   messageDesc.field.forEach((field) => {
     const fieldName = maybeSnakeToCamel(field.name, options);
 
     // get a generic writer.doSomething based on the basic type
-    let writeSnippet: (place: string) => Code;
-    if (isEnum(field) && options.stringEnums) {
-      const tag = ((field.number << 3) | basicWireType(field.type)) >>> 0;
-      const toNumber = getEnumMethod(ctx, field.typeName, "ToNumber");
-      writeSnippet = (place) => code`writer.uint32(${tag}).${toReaderCall(field)}(${toNumber}(${place}))`;
-    } else if (isLong(field) && options.forceLong === LongOption.BIGINT) {
-      const tag = ((field.number << 3) | basicWireType(field.type)) >>> 0;
-      writeSnippet = (place) => code`writer.uint32(${tag}).${toReaderCall(field)}(${place}.toString())`;
-    } else if (isScalar(field) || isEnum(field)) {
-      const tag = ((field.number << 3) | basicWireType(field.type)) >>> 0;
-      writeSnippet = (place) => code`writer.uint32(${tag}).${toReaderCall(field)}(${place})`;
-    } else if (isObjectId(field) && options.useMongoObjectId) {
-      const tag = ((field.number << 3) | 2) >>> 0;
-      const type = basicTypeName(ctx, field, { keepValueType: true });
-      writeSnippet = (place) =>
-        code`${type}.encode(${utils.toProtoObjectId}(${place}), writer.uint32(${tag}).fork()).ldelim()`;
-    } else if (isTimestamp(field) && (options.useDate === DateOption.DATE || options.useDate === DateOption.STRING)) {
-      const tag = ((field.number << 3) | 2) >>> 0;
-      const type = basicTypeName(ctx, field, { keepValueType: true });
-      writeSnippet = (place) =>
-        code`${type}.encode(${utils.toTimestamp}(${place}), writer.uint32(${tag}).fork()).ldelim()`;
-    } else if (isValueType(ctx, field)) {
-      const maybeTypeField = options.outputTypeRegistry ? `$type: '${field.typeName.slice(1)}',` : "";
-
-      const type = basicTypeName(ctx, field, { keepValueType: true });
-      const wrappedValue = (place: string): Code => {
-        if (isAnyValueType(field) || isListValueType(field) || isStructType(field) || isFieldMaskType(field)) {
-          return code`${type}.wrap(${place})`;
-        }
-        return code`{${maybeTypeField} value: ${place}!}`;
-      };
-
-      const tag = ((field.number << 3) | 2) >>> 0;
-      writeSnippet = (place) => code`${type}.encode(${wrappedValue(place)}, writer.uint32(${tag}).fork()).ldelim()`;
-    } else if (isMessage(field)) {
-      const tag = ((field.number << 3) | 2) >>> 0;
-      const type = basicTypeName(ctx, field);
-      writeSnippet = (place) => code`${type}.encode(${place}, writer.uint32(${tag}).fork()).ldelim()`;
-    } else {
-      throw new Error(`Unhandled field ${field}`);
-    }
+    const writeSnippet = getEncodeWriteSnippet(ctx, field);
 
     const isOptional = isOptionalProperty(field, messageDesc.options, options);
     if (isRepeated(field)) {
@@ -1208,12 +1219,20 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
         }
       }
     } else if (isWithinOneOfThatShouldBeUnion(options, field)) {
-      let oneofName = maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options);
-      chunks.push(code`
-        if (message.${oneofName}?.$case === '${fieldName}') {
-          ${writeSnippet(`message.${oneofName}.${fieldName}`)};
+      if (!processedOneofs.has(field.oneofIndex)) {
+        processedOneofs.add(field.oneofIndex);
+
+        const oneofName = maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options);
+        chunks.push(code`switch (message.${oneofName}?.$case) {`);
+        for (const oneOfField of oneOfFieldsDict[field.oneofIndex]) {
+          const writeSnippet = getEncodeWriteSnippet(ctx, oneOfField);
+          const oneOfFieldName = maybeSnakeToCamel(oneOfField.name, ctx.options);
+          chunks.push(code`case "${oneOfFieldName}": 
+            ${writeSnippet(`message.${oneofName}.${oneOfFieldName}`)}; 
+            break;`);
         }
-      `);
+        chunks.push(code`}`);
+      }
     } else if (isWithinOneOf(field)) {
       // Oneofs don't have a default value check b/c they need to denote which-oneof presence
       chunks.push(code`
