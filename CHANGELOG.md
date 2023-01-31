@@ -1,3 +1,15 @@
+# [1.139.0](https://github.com/stephenh/ts-proto/compare/v1.138.0...v1.139.0) (2023-01-31)
+
+
+### Features
+
+* add support for Struct in NestJS ([#762](https://github.com/stephenh/ts-proto/issues/762)) ([e8c6d8b](https://github.com/stephenh/ts-proto/commit/e8c6d8ba7bee902dbbda0c36dd9f6accfd222542))
+
+
+### Performance Improvements
+
+* generate switch statement for oneof union encode ([#767](https://github.com/stephenh/ts-proto/issues/767)) ([c3fd1e3](https://github.com/stephenh/ts-proto/commit/c3fd1e3e487d1da3e8c792354d6491cadb067ff4))
+
 # [1.138.0](https://github.com/stephenh/ts-proto/compare/v1.137.2...v1.138.0) (2023-01-10)
 
 
