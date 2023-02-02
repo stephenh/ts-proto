@@ -4,7 +4,7 @@ import * as _m0 from "protobufjs/minimal";
 export const protobufPackage = "simple";
 
 export interface PBVisitable {
-  visit(visitor: Visitor): void;
+  accept(visitor: Visitor): void;
 }
 
 export interface Simple extends PBVisitable {
@@ -24,7 +24,7 @@ export interface Child extends PBVisitable {
 
 function createBaseSimple(): Simple {
   return {
-    visit(visitor: Visitor) {
+    accept(visitor: Visitor) {
       visitor.visitSimple(this);
     },
     name: "",
@@ -87,7 +87,7 @@ export const Simple = {
 
   fromJSON(object: any): Simple {
     return {
-      visit(visitor: Visitor) {
+      accept(visitor: Visitor) {
         visitor.visitSimple(this);
       },
       name: isSet(object.name) ? String(object.name) : "",
@@ -129,7 +129,7 @@ export const Simple = {
 
 function createBaseChild(): Child {
   return {
-    visit(visitor: Visitor) {
+    accept(visitor: Visitor) {
       visitor.visitChild(this);
     },
     name: "",
@@ -171,7 +171,7 @@ export const Child = {
 
   fromJSON(object: any): Child {
     return {
-      visit(visitor: Visitor) {
+      accept(visitor: Visitor) {
         visitor.visitChild(this);
       },
       name: isSet(object.name) ? String(object.name) : "",

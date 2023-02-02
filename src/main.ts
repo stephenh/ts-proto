@@ -118,7 +118,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
 
   // define the visitable interface
   if(options.visitorPattern){
-    chunks.push(code`export interface PBVisitable{visit(visitor: Visitor): void; }`);
+    chunks.push(code`export interface PBVisitable{accept(visitor: Visitor): void; }`);
   }
 
   // Syntax, unlike most fields, is not repeated and thus does not use an index
@@ -1984,7 +1984,7 @@ function maybeAsAny(options: Options): string {
 function maybeVisitableImpl(options: Options, fullName: string): string {
   let maybeVisitableStr = ""
   if (options.visitorPattern){
-    maybeVisitableStr = `visit(visitor:Visitor){visitor.visit${fullName}(this);},`;
+    maybeVisitableStr = `accept(visitor:Visitor){visitor.visit${fullName}(this);},`;
   }
   return maybeVisitableStr;
 }
