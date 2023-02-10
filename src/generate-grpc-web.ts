@@ -271,13 +271,17 @@ function createPromiseUnaryMethod(ctx: Context): Code {
           },
         });
 
-        ${useAbortSignal ? `
+        ${
+          useAbortSignal
+            ? `
         const abortHandler = () => {
           client.close();
           reject(new Error("Aborted"));
         }
   
-        if (abortSignal) abortSignal.addEventListener("abort", abortHandler);` : ""}
+        if (abortSignal) abortSignal.addEventListener("abort", abortHandler);`
+            : ""
+        }
       });
     }
   `;
@@ -318,12 +322,16 @@ function createObservableUnaryMethod(ctx: Context): Code {
         });
 
 
-      ${useAbortSignal ? `
+      ${
+        useAbortSignal
+          ? `
         const abortHandler = () => {
           observer.error("Aborted");
           client.close();
         };
-        if (abortSignal) abortSignal.addEventListener("abort", abortHandler);` : ""}
+        if (abortSignal) abortSignal.addEventListener("abort", abortHandler);`
+          : ""
+      }
       });
 
       }).pipe(${take}(1));
@@ -334,7 +342,7 @@ function createObservableUnaryMethod(ctx: Context): Code {
 function createInvokeMethod(ctx: Context) {
   const { options } = ctx;
   const { useAbortSignal } = options;
-  
+
   return code`
     invoke<T extends UnaryMethodDefinitionish>(
       methodDesc: T,
@@ -375,12 +383,16 @@ function createInvokeMethod(ctx: Context) {
             if (!observer.closed) return client.close()
           });
 
-          ${useAbortSignal ? `
+          ${
+            useAbortSignal
+              ? `
           const abortHandler = () => {
             observer.error("Aborted");
             client.close();
           };
-          if (abortSignal) abortSignal.addEventListener("abort", abortHandler);` : ""}
+          if (abortSignal) abortSignal.addEventListener("abort", abortHandler);`
+              : ""
+          }
         });
         upStream();
       }).pipe(${share}());
