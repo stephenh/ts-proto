@@ -332,7 +332,6 @@ function createObservableUnaryMethod(ctx: Context): Code {
         if (abortSignal) abortSignal.addEventListener("abort", abortHandler);`
           : ""
       }
-      });
 
       }).pipe(${take}(1));
     } 

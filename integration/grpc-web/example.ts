@@ -918,7 +918,11 @@ export class GrpcWebImpl {
             }
           },
         });
-        observer.add(() => client.close());
+        observer.add(() => {
+          if (!observer.closed) {
+            return client.close();
+          }
+        });
       });
       upStream();
     }).pipe(share());
