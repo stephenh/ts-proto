@@ -321,7 +321,11 @@ export const Empty = {
  * but with the streaming method removed.
  */
 export interface DashState {
-  UserSettings(request: DeepPartial<Empty>, metadata?: grpc.Metadata): Observable<DashUserSettingsState>;
+  UserSettings(
+    request: DeepPartial<Empty>,
+    abortSignal?: AbortSignal,
+    metadata?: grpc.Metadata,
+  ): Observable<DashUserSettingsState>;
 }
 
 export class DashStateClientImpl implements DashState {
@@ -332,8 +336,12 @@ export class DashStateClientImpl implements DashState {
     this.UserSettings = this.UserSettings.bind(this);
   }
 
-  UserSettings(request: DeepPartial<Empty>, metadata?: grpc.Metadata): Observable<DashUserSettingsState> {
-    return this.rpc.unary(DashStateUserSettingsDesc, Empty.fromPartial(request), metadata);
+  UserSettings(
+    request: DeepPartial<Empty>,
+    abortSignal: AbortSignal | undefined,
+    metadata?: grpc.Metadata,
+  ): Observable<DashUserSettingsState> {
+    return this.rpc.unary(DashStateUserSettingsDesc, Empty.fromPartial(request), abortSignal, metadata);
   }
 }
 
@@ -373,6 +381,7 @@ interface Rpc {
   unary<T extends UnaryMethodDefinitionish>(
     methodDesc: T,
     request: any,
+    abortSignal: AbortSignal | undefined,
     metadata: grpc.Metadata | undefined,
   ): Observable<any>;
 }
@@ -404,6 +413,7 @@ export class GrpcWebImpl {
   unary<T extends UnaryMethodDefinitionish>(
     methodDesc: T,
     _request: any,
+    abortSignal: AbortSignal | undefined,
     metadata: grpc.Metadata | undefined,
   ): Observable<any> {
     const request = { ..._request, ...methodDesc.requestType };
@@ -411,7 +421,7 @@ export class GrpcWebImpl {
       ? new BrowserHeaders({ ...this.options?.metadata.headersMap, ...metadata?.headersMap })
       : metadata || this.options.metadata;
     return new Observable((observer) => {
-      grpc.unary(methodDesc, {
+      const client = grpc.unary(methodDesc, {
         request,
         host: this.host,
         metadata: maybeCombinedMetadata,
@@ -427,6 +437,14 @@ export class GrpcWebImpl {
           }
         },
       });
+
+      const abortHandler = () => {
+        observer.error("Aborted");
+        client.close();
+      };
+      if (abortSignal) {
+        abortSignal.addEventListener("abort", abortHandler);
+      }
     }).pipe(take(1));
   }
 }
