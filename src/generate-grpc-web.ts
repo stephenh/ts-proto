@@ -242,6 +242,16 @@ function createPromiseUnaryMethod(ctx: Context): Code {
   const { options } = ctx;
   const { useAbortSignal } = options;
 
+  const maybeAbortSignal = useAbortSignal
+    ? `
+      const abortHandler = () => {
+        client.close();
+        reject(new Error("Aborted"));
+      }
+
+      if (abortSignal) abortSignal.addEventListener("abort", abortHandler);`
+    : "";
+
   return code`
     unary<T extends UnaryMethodDefinitionish>(
       methodDesc: T,
@@ -271,17 +281,7 @@ function createPromiseUnaryMethod(ctx: Context): Code {
           },
         });
 
-        ${
-          useAbortSignal
-            ? `
-        const abortHandler = () => {
-          client.close();
-          reject(new Error("Aborted"));
-        }
-  
-        if (abortSignal) abortSignal.addEventListener("abort", abortHandler);`
-            : ""
-        }
+        ${maybeAbortSignal}
       });
     }
   `;
@@ -291,6 +291,14 @@ function createObservableUnaryMethod(ctx: Context): Code {
   const { options } = ctx;
   const { useAbortSignal } = options;
 
+  const maybeAbortSignal = useAbortSignal
+    ? `
+      const abortHandler = () => {
+        observer.error("Aborted");
+        client.close();
+      };
+      if (abortSignal) abortSignal.addEventListener("abort", abortHandler);`
+    : "";
   return code`
     unary<T extends UnaryMethodDefinitionish>(
       methodDesc: T,
@@ -322,16 +330,7 @@ function createObservableUnaryMethod(ctx: Context): Code {
         });
 
 
-      ${
-        useAbortSignal
-          ? `
-        const abortHandler = () => {
-          observer.error("Aborted");
-          client.close();
-        };
-        if (abortSignal) abortSignal.addEventListener("abort", abortHandler);`
-          : ""
-      }
+      ${maybeAbortSignal}
 
       }).pipe(${take}(1));
     } 
@@ -341,6 +340,15 @@ function createObservableUnaryMethod(ctx: Context): Code {
 function createInvokeMethod(ctx: Context) {
   const { options } = ctx;
   const { useAbortSignal } = options;
+
+  const maybeAbortSignal = useAbortSignal
+    ? `
+      const abortHandler = () => {
+        observer.error("Aborted");
+        client.close();
+      };
+      if (abortSignal) abortSignal.addEventListener("abort", abortHandler);`
+    : "";
 
   return code`
     invoke<T extends UnaryMethodDefinitionish>(
@@ -382,16 +390,7 @@ function createInvokeMethod(ctx: Context) {
             if (!observer.closed) return client.close()
           });
 
-          ${
-            useAbortSignal
-              ? `
-          const abortHandler = () => {
-            observer.error("Aborted");
-            client.close();
-          };
-          if (abortSignal) abortSignal.addEventListener("abort", abortHandler);`
-              : ""
-          }
+          ${maybeAbortSignal}
         });
         upStream();
       }).pipe(${share}());
