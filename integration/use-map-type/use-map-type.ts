@@ -1,6 +1,7 @@
 /* eslint-disable */
 import * as Long from "long";
 import * as _m0 from "protobufjs/minimal";
+import { Struct } from "./google/protobuf/struct";
 import { Timestamp } from "./google/protobuf/timestamp";
 
 export const protobufPackage = "simple";
@@ -15,6 +16,7 @@ export interface Maps {
   stringToBytes: Map<string, Uint8Array>;
   int64ToInt64: Map<number, number>;
   mapOfTimestamps: Map<string, Date>;
+  struct: { [key: string]: any } | undefined;
 }
 
 export interface Maps_StrToEntityEntry {
@@ -82,6 +84,10 @@ export const Entity = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<Entity>, I>>(base?: I): Entity {
+    return Entity.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<Entity>, I>>(object: I): Entity {
     const message = createBaseEntity();
     message.id = object.id ?? 0;
@@ -96,6 +102,7 @@ function createBaseMaps(): Maps {
     stringToBytes: new Map(),
     int64ToInt64: new Map(),
     mapOfTimestamps: new Map(),
+    struct: undefined,
   };
 }
 
@@ -116,6 +123,9 @@ export const Maps = {
     message.mapOfTimestamps.forEach((value, key) => {
       Maps_MapOfTimestampsEntry.encode({ key: key as any, value }, writer.uint32(42).fork()).ldelim();
     });
+    if (message.struct !== undefined) {
+      Struct.encode(Struct.wrap(message.struct), writer.uint32(50).fork()).ldelim();
+    }
     return writer;
   },
 
@@ -155,6 +165,9 @@ export const Maps = {
           if (entry5.value !== undefined) {
             message.mapOfTimestamps.set(entry5.key, entry5.value);
           }
+          break;
+        case 6:
+          message.struct = Struct.unwrap(Struct.decode(reader, reader.uint32()));
           break;
         default:
           reader.skipType(tag & 7);
@@ -196,6 +209,7 @@ export const Maps = {
           return acc;
         }, new Map())
         : new Map(),
+      struct: isObject(object.struct) ? object.struct : undefined,
     };
   },
 
@@ -231,7 +245,12 @@ export const Maps = {
         obj.mapOfTimestamps[k] = v.toISOString();
       });
     }
+    message.struct !== undefined && (obj.struct = message.struct);
     return obj;
+  },
+
+  create<I extends Exact<DeepPartial<Maps>, I>>(base?: I): Maps {
+    return Maps.fromPartial(base ?? {});
   },
 
   fromPartial<I extends Exact<DeepPartial<Maps>, I>>(object: I): Maps {
@@ -281,6 +300,7 @@ export const Maps = {
       });
       return m;
     })();
+    message.struct = object.struct ?? undefined;
     return message;
   },
 };
@@ -333,6 +353,10 @@ export const Maps_StrToEntityEntry = {
     message.key !== undefined && (obj.key = message.key);
     message.value !== undefined && (obj.value = message.value ? Entity.toJSON(message.value) : undefined);
     return obj;
+  },
+
+  create<I extends Exact<DeepPartial<Maps_StrToEntityEntry>, I>>(base?: I): Maps_StrToEntityEntry {
+    return Maps_StrToEntityEntry.fromPartial(base ?? {});
   },
 
   fromPartial<I extends Exact<DeepPartial<Maps_StrToEntityEntry>, I>>(object: I): Maps_StrToEntityEntry {
@@ -390,6 +414,10 @@ export const Maps_Int32ToInt32Entry = {
     message.key !== undefined && (obj.key = Math.round(message.key));
     message.value !== undefined && (obj.value = Math.round(message.value));
     return obj;
+  },
+
+  create<I extends Exact<DeepPartial<Maps_Int32ToInt32Entry>, I>>(base?: I): Maps_Int32ToInt32Entry {
+    return Maps_Int32ToInt32Entry.fromPartial(base ?? {});
   },
 
   fromPartial<I extends Exact<DeepPartial<Maps_Int32ToInt32Entry>, I>>(object: I): Maps_Int32ToInt32Entry {
@@ -451,6 +479,10 @@ export const Maps_StringToBytesEntry = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<Maps_StringToBytesEntry>, I>>(base?: I): Maps_StringToBytesEntry {
+    return Maps_StringToBytesEntry.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<Maps_StringToBytesEntry>, I>>(object: I): Maps_StringToBytesEntry {
     const message = createBaseMaps_StringToBytesEntry();
     message.key = object.key ?? "";
@@ -504,6 +536,10 @@ export const Maps_Int64ToInt64Entry = {
     message.key !== undefined && (obj.key = Math.round(message.key));
     message.value !== undefined && (obj.value = Math.round(message.value));
     return obj;
+  },
+
+  create<I extends Exact<DeepPartial<Maps_Int64ToInt64Entry>, I>>(base?: I): Maps_Int64ToInt64Entry {
+    return Maps_Int64ToInt64Entry.fromPartial(base ?? {});
   },
 
   fromPartial<I extends Exact<DeepPartial<Maps_Int64ToInt64Entry>, I>>(object: I): Maps_Int64ToInt64Entry {
@@ -564,6 +600,10 @@ export const Maps_MapOfTimestampsEntry = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<Maps_MapOfTimestampsEntry>, I>>(base?: I): Maps_MapOfTimestampsEntry {
+    return Maps_MapOfTimestampsEntry.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<Maps_MapOfTimestampsEntry>, I>>(object: I): Maps_MapOfTimestampsEntry {
     const message = createBaseMaps_MapOfTimestampsEntry();
     message.key = object.key ?? "";
@@ -575,7 +615,7 @@ export const Maps_MapOfTimestampsEntry = {
 declare var self: any | undefined;
 declare var window: any | undefined;
 declare var global: any | undefined;
-var globalThis: any = (() => {
+var tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") {
     return globalThis;
   }
@@ -592,10 +632,10 @@ var globalThis: any = (() => {
 })();
 
 function bytesFromBase64(b64: string): Uint8Array {
-  if (globalThis.Buffer) {
-    return Uint8Array.from(globalThis.Buffer.from(b64, "base64"));
+  if (tsProtoGlobalThis.Buffer) {
+    return Uint8Array.from(tsProtoGlobalThis.Buffer.from(b64, "base64"));
   } else {
-    const bin = globalThis.atob(b64);
+    const bin = tsProtoGlobalThis.atob(b64);
     const arr = new Uint8Array(bin.length);
     for (let i = 0; i < bin.length; ++i) {
       arr[i] = bin.charCodeAt(i);
@@ -605,14 +645,14 @@ function bytesFromBase64(b64: string): Uint8Array {
 }
 
 function base64FromBytes(arr: Uint8Array): string {
-  if (globalThis.Buffer) {
-    return globalThis.Buffer.from(arr).toString("base64");
+  if (tsProtoGlobalThis.Buffer) {
+    return tsProtoGlobalThis.Buffer.from(arr).toString("base64");
   } else {
     const bin: string[] = [];
     arr.forEach((byte) => {
       bin.push(String.fromCharCode(byte));
     });
-    return globalThis.btoa(bin.join(""));
+    return tsProtoGlobalThis.btoa(bin.join(""));
   }
 }
 
@@ -651,7 +691,7 @@ function fromJsonTimestamp(o: any): Date {
 
 function longToNumber(long: Long): number {
   if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+    throw new tsProtoGlobalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
   return long.toNumber();
 }

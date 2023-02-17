@@ -1,6 +1,33 @@
 import { SimpleWithMap } from './simple';
 
 describe('simple', () => {
+  it('can use create with an empty value', () => {
+    const s1 = SimpleWithMap.create()
+    expect(s1).toMatchInlineSnapshot(`
+      Object {
+        "intLookup": Object {},
+        "longLookup": Object {},
+        "nameLookup": Object {},
+      }
+    `);
+  });
+
+  it('can use create with a partial value', () => {
+    const s1 = SimpleWithMap.create({
+      intLookup: { 1: 2, 2: 1 },
+    })
+    expect(s1).toMatchInlineSnapshot(`
+      Object {
+        "intLookup": Object {
+          "1": 2,
+          "2": 1,
+        },
+        "longLookup": Object {},
+        "nameLookup": Object {},
+      }
+    `);
+  });
+
   it('can fromPartial maps', () => {
     const s1 = SimpleWithMap.fromPartial({
       intLookup: { 1: 2, 2: 1 },

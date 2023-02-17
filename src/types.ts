@@ -202,6 +202,8 @@ export function defaultValue(ctx: Context, field: FieldDescriptorProto): any {
         return code`${utils.Long}.UZERO`;
       } else if (options.forceLong === LongOption.STRING) {
         return '"0"';
+      } else if (options.forceLong === LongOption.BIGINT) {
+        return 'BigInt("0")';
       } else {
         return 0;
       }
@@ -212,6 +214,8 @@ export function defaultValue(ctx: Context, field: FieldDescriptorProto): any {
         return code`${utils.Long}.ZERO`;
       } else if (options.forceLong === LongOption.STRING) {
         return '"0"';
+      } else if (options.forceLong === LongOption.BIGINT) {
+        return 'BigInt("0")';
       } else {
         return 0;
       }
@@ -272,6 +276,8 @@ export function notDefaultCheck(
         return code`${maybeNotUndefinedAnd} !${place}.isZero()`;
       } else if (options.forceLong === LongOption.STRING) {
         return code`${maybeNotUndefinedAnd} ${place} !== "0"`;
+      } else if (options.forceLong === LongOption.BIGINT) {
+        return code`${maybeNotUndefinedAnd} ${place} !== BigInt("0")`;
       } else {
         return code`${maybeNotUndefinedAnd} ${place} !== 0`;
       }
@@ -337,6 +343,7 @@ export function isScalar(field: FieldDescriptorProto): boolean {
 // properties. When useOptionals='all', all fields are translated into
 // optional properties, with the exception of map Entry key/values, which must
 // always be present.
+// OneOf fields are always optional, whenever oneof=unions option not in use.
 export function isOptionalProperty(
   field: FieldDescriptorProto,
   messageOptions: MessageOptions | undefined,
@@ -348,6 +355,8 @@ export function isOptionalProperty(
   return (
     (optionalMessages && isMessage(field) && !isRepeated(field)) ||
     (optionalAll && !messageOptions?.mapEntry) ||
+    // don't bother verifying that oneof is not union. union oneofs generate their own properties.
+    isWithinOneOf(field) ||
     field.proto3Optional
   );
 }
@@ -483,13 +492,17 @@ export function valueTypeName(ctx: Context, typeName: string): Code | undefined 
         ? code`string`
         : code`Uint8Array`;
     case ".google.protobuf.ListValue":
-      return code`Array<any>`;
+      return ctx.options.useReadonlyTypes ? code`ReadonlyArray<any>` : code`Array<any>`;
     case ".google.protobuf.Value":
       return code`any`;
     case ".google.protobuf.Struct":
-      return code`{[key: string]: any}`;
+      return ctx.options.useReadonlyTypes ? code`{readonly [key: string]: any}` : code`{[key: string]: any}`;
     case ".google.protobuf.FieldMask":
-      return ctx.options.useJsonWireFormat ? code`string` : code`string[]`;
+      return ctx.options.useJsonWireFormat
+        ? code`string`
+        : ctx.options.useReadonlyTypes
+        ? code`readonly string[]`
+        : code`string[]`;
     case ".google.protobuf.Duration":
       return ctx.options.useJsonWireFormat ? code`string` : undefined;
     case ".google.protobuf.Timestamp":
@@ -525,6 +538,8 @@ function longTypeName(ctx: Context): Code {
     return code`${utils.Long}`;
   } else if (options.forceLong === LongOption.STRING) {
     return code`string`;
+  } else if (options.forceLong === LongOption.BIGINT) {
+    return code`bigint`;
   } else {
     return code`number`;
   }
@@ -596,6 +611,9 @@ export function toTypeName(ctx: Context, messageDesc: DescriptorProto, field: Fi
       }
       return code`{ [key: ${keyType} ]: ${valueType} }`;
     }
+    if (ctx.options.useReadonlyTypes) {
+      return code`readonly ${type}[]`;
+    }
     return code`${type}[]`;
   }
 
@@ -659,8 +677,12 @@ export function detectMapType(
   return undefined;
 }
 
-export function rawRequestType(ctx: Context, methodDesc: MethodDescriptorProto): Code {
-  return messageToTypeName(ctx, methodDesc.inputType);
+export function rawRequestType(
+  ctx: Context,
+  methodDesc: MethodDescriptorProto,
+  typeOptions: { keepValueType?: boolean; repeated?: boolean } = {}
+): Code {
+  return messageToTypeName(ctx, methodDesc.inputType, typeOptions);
 }
 
 export function observableType(ctx: Context): Code {
@@ -671,7 +693,7 @@ export function observableType(ctx: Context): Code {
 }
 
 export function requestType(ctx: Context, methodDesc: MethodDescriptorProto, partial: boolean = false): Code {
-  let typeName = rawRequestType(ctx, methodDesc);
+  let typeName = rawRequestType(ctx, methodDesc, { keepValueType: true });
 
   if (partial) {
     typeName = code`${ctx.utils.DeepPartial}<${typeName}>`;
@@ -688,15 +710,15 @@ export function responseType(
   methodDesc: MethodDescriptorProto,
   typeOptions: { keepValueType?: boolean; repeated?: boolean } = {}
 ): Code {
-  return messageToTypeName(ctx, methodDesc.outputType, typeOptions);
+  return messageToTypeName(ctx, methodDesc.outputType, { keepValueType: true });
 }
 
 export function responsePromise(ctx: Context, methodDesc: MethodDescriptorProto): Code {
-  return code`Promise<${responseType(ctx, methodDesc)}>`;
+  return code`Promise<${responseType(ctx, methodDesc, { keepValueType: true })}>`;
 }
 
 export function responseObservable(ctx: Context, methodDesc: MethodDescriptorProto): Code {
-  return code`${observableType(ctx)}<${responseType(ctx, methodDesc)}>`;
+  return code`${observableType(ctx)}<${responseType(ctx, methodDesc, { keepValueType: true })}>`;
 }
 
 export function responsePromiseOrObservable(ctx: Context, methodDesc: MethodDescriptorProto): Code {

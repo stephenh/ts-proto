@@ -95,6 +95,10 @@ export const ValueMessage = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<ValueMessage>, I>>(base?: I): ValueMessage {
+    return ValueMessage.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<ValueMessage>, I>>(object: I): ValueMessage {
     const message = createBaseValueMessage();
     message.value = object.value ?? undefined;

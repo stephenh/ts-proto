@@ -78,8 +78,8 @@ export interface Nested_InnerMessage_DeepMessage {
 }
 
 export interface OneOfMessage {
-  first: string | undefined;
-  last: string | undefined;
+  first?: string | undefined;
+  last?: string | undefined;
 }
 
 export interface SimpleWithWrappers {
@@ -2639,7 +2639,7 @@ export const protoMetadata: ProtoMetadata = {
 declare var self: any | undefined;
 declare var window: any | undefined;
 declare var global: any | undefined;
-var globalThis: any = (() => {
+var tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") {
     return globalThis;
   }
@@ -2669,7 +2669,7 @@ function fromTimestamp(t: Timestamp): Date {
 
 function longToNumber(long: Long): number {
   if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+    throw new tsProtoGlobalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
   return long.toNumber();
 }

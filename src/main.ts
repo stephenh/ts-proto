@@ -78,6 +78,13 @@ import { ConditionalOutput } from "ts-poet/build/ConditionalOutput";
 import { generateGrpcJsService } from "./generate-grpc-js";
 import { generateGenericServiceDefinition } from "./generate-generic-service-definition";
 import { generateNiceGrpcService } from "./generate-nice-grpc";
+import {
+  generateUnwrapDeep,
+  generateUnwrapShallow,
+  generateWrapDeep,
+  generateWrapShallow,
+  isWrapperType,
+} from "./generate-struct-wrappers";
 
 export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [string, Code] {
   const { options, utils } = ctx;
@@ -156,15 +163,22 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
     }
   }
 
-  if (options.outputEncodeMethods || options.outputJsonMethods || options.outputTypeRegistry) {
+  // We add `nestJs` here because enough though it doesn't use our encode/decode methods
+  // for most/vanilla messages, we do generate static wrap/unwrap methods for the special
+  // Struct/Value/wrapper types and use the `wrappers[...]` to have NestJS know about them.
+  if (options.outputEncodeMethods || options.outputJsonMethods || options.outputTypeRegistry || options.nestJs) {
     // then add the encoder/decoder/base instance
     visit(
       fileDesc,
       sourceInfo,
-      (fullName, message, sInfo, fullProtoTypeName) => {
+      (fullName, message, _sInfo, fullProtoTypeName) => {
         const fullTypeName = maybePrefixPackage(fileDesc, fullProtoTypeName);
+        const outputWrapAndUnwrap = isWrapperType(fullTypeName);
 
-        chunks.push(generateBaseInstanceFactory(ctx, fullName, message, fullTypeName));
+        // Only decode, fromPartial, and wrap use the createBase method
+        if (options.outputEncodeMethods || options.outputPartialMethods || outputWrapAndUnwrap) {
+          chunks.push(generateBaseInstanceFactory(ctx, fullName, message, fullTypeName));
+        }
 
         const staticMembers: Code[] = [];
 
@@ -196,18 +210,24 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
           structValue: maybeSnakeToCamel("struct_value", ctx.options),
           listValue: maybeSnakeToCamel("list_value", ctx.options),
         };
-        staticMembers.push(...generateWrap(ctx, fullTypeName, structFieldNames));
-        staticMembers.push(...generateUnwrap(ctx, fullTypeName, structFieldNames));
+        if (options.nestJs) {
+          staticMembers.push(...generateWrapDeep(ctx, fullTypeName, structFieldNames));
+          staticMembers.push(...generateUnwrapDeep(ctx, fullTypeName, structFieldNames));
+        } else {
+          staticMembers.push(...generateWrapShallow(ctx, fullTypeName, structFieldNames));
+          staticMembers.push(...generateUnwrapShallow(ctx, fullTypeName, structFieldNames));
+        }
 
-        chunks.push(code`
-          export const ${def(fullName)} = {
-            ${joinCode(staticMembers, { on: ",\n\n" })}
-          };
-        `);
+        if (staticMembers.length > 0) {
+          chunks.push(code`
+            export const ${def(fullName)} = {
+              ${joinCode(staticMembers, { on: ",\n\n" })}
+            };
+          `);
+        }
 
         if (options.outputTypeRegistry) {
           const messageTypeRegistry = impFile(options, "messageTypeRegistry@./typeRegistry");
-
           chunks.push(code`
             ${messageTypeRegistry}.set(${fullName}.$type, ${fullName});
           `);
@@ -215,6 +235,12 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
       },
       options
     );
+  }
+
+  if (options.nestJs) {
+    if (fileDesc.messageType.find((message) => message.field.find(isStructType))) {
+      chunks.push(makeProtobufStructWrapper(options));
+    }
   }
 
   let hasServerStreamingMethods = false;
@@ -268,7 +294,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
         }
       });
     }
-    serviceDesc.method.forEach((methodDesc, index) => {
+    serviceDesc.method.forEach((methodDesc, _index) => {
       if (methodDesc.serverStreaming || methodDesc.clientStreaming) {
         hasStreamingMethods = true;
       }
@@ -335,12 +361,12 @@ export function makeUtils(options: Options): Utils {
   return {
     ...bytes,
     ...makeDeepPartial(options, longs),
-    ...makeObjectIdMethods(options),
+    ...makeObjectIdMethods(),
     ...makeTimestampMethods(options, longs),
     ...longs,
     ...makeComparisonUtils(),
     ...makeNiceGrpcServerStreamingMethodResult(),
-    ...makeGrpcWebErrorClass(),
+    ...makeGrpcWebErrorClass(bytes),
   };
 }
 
@@ -358,6 +384,16 @@ function makeProtobufTimestampWrapper() {
           return new Date(message.seconds * 1000 + message.nanos / 1e6);
         },
       } as any;`;
+}
+
+function makeProtobufStructWrapper(options: Options) {
+  const wrappers = imp("wrappers@protobufjs");
+  const Struct = impProto(options, "google/protobuf/struct", "Struct");
+  return code`
+    ${wrappers}['.google.protobuf.Struct'] = {
+      fromObject: ${Struct}.wrap,
+      toObject: ${Struct}.unwrap,
+    } as any;`;
 }
 
 function makeLongUtils(options: Options, bytes: ReturnType<typeof makeByteUtils>) {
@@ -417,6 +453,15 @@ function makeLongUtils(options: Options, bytes: ReturnType<typeof makeByteUtils>
     `
   );
 
+  const longToBigint = conditionalOutput(
+    "longToBigint",
+    code`
+      function longToBigint(long: ${Long}) {
+        return BigInt(long.toString());
+      }
+    `
+  );
+
   const longToNumber = conditionalOutput(
     "longToNumber",
     code`
@@ -429,17 +474,17 @@ function makeLongUtils(options: Options, bytes: ReturnType<typeof makeByteUtils>
     `
   );
 
-  return { numberToLong, longToNumber, longToString, Long };
+  return { numberToLong, longToNumber, longToString, longToBigint, Long };
 }
 
 function makeByteUtils() {
   const globalThis = conditionalOutput(
-    "globalThis",
+    "tsProtoGlobalThis",
     code`
       declare var self: any | undefined;
       declare var window: any | undefined;
       declare var global: any | undefined;
-      var globalThis: any = (() => {
+      var tsProtoGlobalThis: any = (() => {
         if (typeof globalThis !== "undefined") return globalThis;
         if (typeof self !== "undefined") return self;
         if (typeof window !== "undefined") return window;
@@ -489,8 +534,8 @@ function makeDeepPartial(options: Options, longs: ReturnType<typeof makeLongUtil
   let oneofCase = "";
   if (options.oneof === OneofOption.UNIONS) {
     oneofCase = `
-      : T extends { $case: string }
-      ? { [K in keyof Omit<T, '$case'>]?: DeepPartial<T[K]> } & { $case: T['$case'] }
+      : T extends { ${maybeReadonly(options)}$case: string }
+      ? { [K in keyof Omit<T, '$case'>]?: DeepPartial<T[K]> } & { ${maybeReadonly(options)}$case: T['$case'] }
     `;
   }
 
@@ -538,7 +583,7 @@ function makeDeepPartial(options: Options, longs: ReturnType<typeof makeLongUtil
   return { Builtin, DeepPartial, Exact };
 }
 
-function makeObjectIdMethods(options: Options) {
+function makeObjectIdMethods() {
   const mongodb = imp("mongodb*mongodb");
 
   const fromProtoObjectId = conditionalOutput(
@@ -586,6 +631,9 @@ function makeTimestampMethods(options: Options, longs: ReturnType<typeof makeLon
   if (options.forceLong === LongOption.LONG) {
     toNumberCode = "t.seconds.toNumber()";
     seconds = code`${longs.numberToLong}(date.getTime() / 1_000)`;
+  } else if (options.forceLong === LongOption.BIGINT) {
+    toNumberCode = "Number(t.seconds.toString())";
+    seconds = code`BigInt(Math.trunc(date.getTime() / 1_000))`;
   } else if (options.forceLong === LongOption.STRING) {
     toNumberCode = "Number(t.seconds)";
     // Must discard the fractional piece here
@@ -698,11 +746,11 @@ function makeNiceGrpcServerStreamingMethodResult() {
   return { NiceGrpcServerStreamingMethodResult };
 }
 
-function makeGrpcWebErrorClass() {
+function makeGrpcWebErrorClass(bytes: ReturnType<typeof makeByteUtils>) {
   const GrpcWebError = conditionalOutput(
     "GrpcWebError",
     code`
-      export class GrpcWebError extends Error {
+      export class GrpcWebError extends ${bytes.globalThis}.Error {
         constructor(message: string, public code: grpc.Code, public metadata: grpc.Metadata) {
           super(message);
         }
@@ -751,7 +799,7 @@ function generateInterfaceDeclaration(
     const name = maybeSnakeToCamel(fieldDesc.name, options);
     const type = toTypeName(ctx, messageDesc, fieldDesc);
     const q = isOptionalProperty(fieldDesc, messageDesc.options, options) ? "?" : "";
-    chunks.push(code`${name}${q}: ${type}, `);
+    chunks.push(code`${maybeReadonly(options)}${name}${q}: ${type}, `);
   });
 
   chunks.push(code`}`);
@@ -766,17 +814,18 @@ function generateOneofProperty(
 ): Code {
   const { options } = ctx;
   const fields = messageDesc.field.filter((field) => isWithinOneOf(field) && field.oneofIndex === oneofIndex);
+  const mbReadonly = maybeReadonly(options);
   const unionType = joinCode(
     fields.map((f) => {
       let fieldName = maybeSnakeToCamel(f.name, options);
       let typeName = toTypeName(ctx, messageDesc, f);
-      return code`{ $case: '${fieldName}', ${fieldName}: ${typeName} }`;
+      return code`{ ${mbReadonly}$case: '${fieldName}', ${mbReadonly}${fieldName}: ${typeName} }`;
     }),
     { on: " | " }
   );
 
   const name = maybeSnakeToCamel(messageDesc.oneofDecl[oneofIndex].name, options);
-  return code`${name}?: ${unionType},`;
+  return code`${mbReadonly}${name}?: ${unionType},`;
 
   /*
   // Ideally we'd put the comments for each oneof field next to the anonymous
@@ -874,8 +923,9 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
     ): ${fullName} {
       const reader = input instanceof ${Reader} ? input : new ${Reader}(input);
       let end = length === undefined ? reader.len : reader.pos + length;
-      const message = ${createBase};
   `);
+
+  chunks.push(code`const message = ${createBase}${maybeAsAny(options)};`);
 
   if (options.unknownFields) {
     chunks.push(code`(message as any)._unknownFields = {}`);
@@ -906,6 +956,8 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
           readSnippet = code`${readSnippet} as Long`;
         } else if (options.forceLong === LongOption.STRING) {
           readSnippet = code`${utils.longToString}(${readSnippet} as Long)`;
+        } else if (options.forceLong === LongOption.BIGINT) {
+          readSnippet = code`${utils.longToBigint}(${readSnippet} as Long)`;
         } else {
           readSnippet = code`${utils.longToNumber}(${readSnippet} as Long)`;
         }
@@ -1005,6 +1057,49 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
   return joinCode(chunks, { on: "\n" });
 }
 
+/** Returns a generic writer.doSomething based on the basic type */
+function getEncodeWriteSnippet(ctx: Context, field: FieldDescriptorProto): (place: string) => Code {
+  const { options, utils } = ctx;
+  if (isEnum(field) && options.stringEnums) {
+    const tag = ((field.number << 3) | basicWireType(field.type)) >>> 0;
+    const toNumber = getEnumMethod(ctx, field.typeName, "ToNumber");
+    return (place) => code`writer.uint32(${tag}).${toReaderCall(field)}(${toNumber}(${place}))`;
+  } else if (isLong(field) && options.forceLong === LongOption.BIGINT) {
+    const tag = ((field.number << 3) | basicWireType(field.type)) >>> 0;
+    return (place) => code`writer.uint32(${tag}).${toReaderCall(field)}(${place}.toString())`;
+  } else if (isScalar(field) || isEnum(field)) {
+    const tag = ((field.number << 3) | basicWireType(field.type)) >>> 0;
+    return (place) => code`writer.uint32(${tag}).${toReaderCall(field)}(${place})`;
+  } else if (isObjectId(field) && options.useMongoObjectId) {
+    const tag = ((field.number << 3) | 2) >>> 0;
+    const type = basicTypeName(ctx, field, { keepValueType: true });
+    return (place) => code`${type}.encode(${utils.toProtoObjectId}(${place}), writer.uint32(${tag}).fork()).ldelim()`;
+  } else if (isTimestamp(field) && (options.useDate === DateOption.DATE || options.useDate === DateOption.STRING)) {
+    const tag = ((field.number << 3) | 2) >>> 0;
+    const type = basicTypeName(ctx, field, { keepValueType: true });
+    return (place) => code`${type}.encode(${utils.toTimestamp}(${place}), writer.uint32(${tag}).fork()).ldelim()`;
+  } else if (isValueType(ctx, field)) {
+    const maybeTypeField = options.outputTypeRegistry ? `$type: '${field.typeName.slice(1)}',` : "";
+
+    const type = basicTypeName(ctx, field, { keepValueType: true });
+    const wrappedValue = (place: string): Code => {
+      if (isAnyValueType(field) || isListValueType(field) || isStructType(field) || isFieldMaskType(field)) {
+        return code`${type}.wrap(${place})`;
+      }
+      return code`{${maybeTypeField} value: ${place}!}`;
+    };
+
+    const tag = ((field.number << 3) | 2) >>> 0;
+    return (place) => code`${type}.encode(${wrappedValue(place)}, writer.uint32(${tag}).fork()).ldelim()`;
+  } else if (isMessage(field)) {
+    const tag = ((field.number << 3) | 2) >>> 0;
+    const type = basicTypeName(ctx, field);
+    return (place) => code`${type}.encode(${place}, writer.uint32(${tag}).fork()).ldelim()`;
+  } else {
+    throw new Error(`Unhandled field ${field}`);
+  }
+}
+
 /** Creates a function to encode a message by loop overing the tags. */
 function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorProto): Code {
   const { options, utils, typeMap } = ctx;
@@ -1020,49 +1115,20 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
     ): ${Writer} {
   `);
 
+  const processedOneofs = new Set<number>();
+  const oneOfFieldsDict = messageDesc.field
+    .filter((field) => isWithinOneOfThatShouldBeUnion(options, field))
+    .reduce<{ [key: number]: FieldDescriptorProto[] }>(
+      (result, field) => ((result[field.oneofIndex] || (result[field.oneofIndex] = [])).push(field), result),
+      {}
+    );
+
   // then add a case for each field
   messageDesc.field.forEach((field) => {
     const fieldName = maybeSnakeToCamel(field.name, options);
 
     // get a generic writer.doSomething based on the basic type
-    let writeSnippet: (place: string) => Code;
-    if (isEnum(field) && options.stringEnums) {
-      const tag = ((field.number << 3) | basicWireType(field.type)) >>> 0;
-      const toNumber = getEnumMethod(ctx, field.typeName, "ToNumber");
-      writeSnippet = (place) => code`writer.uint32(${tag}).${toReaderCall(field)}(${toNumber}(${place}))`;
-    } else if (isScalar(field) || isEnum(field)) {
-      const tag = ((field.number << 3) | basicWireType(field.type)) >>> 0;
-      writeSnippet = (place) => code`writer.uint32(${tag}).${toReaderCall(field)}(${place})`;
-    } else if (isObjectId(field) && options.useMongoObjectId) {
-      const tag = ((field.number << 3) | 2) >>> 0;
-      const type = basicTypeName(ctx, field, { keepValueType: true });
-      writeSnippet = (place) =>
-        code`${type}.encode(${utils.toProtoObjectId}(${place}), writer.uint32(${tag}).fork()).ldelim()`;
-    } else if (isTimestamp(field) && (options.useDate === DateOption.DATE || options.useDate === DateOption.STRING)) {
-      const tag = ((field.number << 3) | 2) >>> 0;
-      const type = basicTypeName(ctx, field, { keepValueType: true });
-      writeSnippet = (place) =>
-        code`${type}.encode(${utils.toTimestamp}(${place}), writer.uint32(${tag}).fork()).ldelim()`;
-    } else if (isValueType(ctx, field)) {
-      const maybeTypeField = options.outputTypeRegistry ? `$type: '${field.typeName.slice(1)}',` : "";
-
-      const type = basicTypeName(ctx, field, { keepValueType: true });
-      const wrappedValue = (place: string): Code => {
-        if (isAnyValueType(field) || isListValueType(field) || isStructType(field) || isFieldMaskType(field)) {
-          return code`${type}.wrap(${place})`;
-        }
-        return code`{${maybeTypeField} value: ${place}!}`;
-      };
-
-      const tag = ((field.number << 3) | 2) >>> 0;
-      writeSnippet = (place) => code`${type}.encode(${wrappedValue(place)}, writer.uint32(${tag}).fork()).ldelim()`;
-    } else if (isMessage(field)) {
-      const tag = ((field.number << 3) | 2) >>> 0;
-      const type = basicTypeName(ctx, field);
-      writeSnippet = (place) => code`${type}.encode(${place}, writer.uint32(${tag}).fork()).ldelim()`;
-    } else {
-      throw new Error(`Unhandled field ${field}`);
-    }
+    const writeSnippet = getEncodeWriteSnippet(ctx, field);
 
     const isOptional = isOptionalProperty(field, messageDesc.options, options);
     if (isRepeated(field)) {
@@ -1132,10 +1198,11 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
       } else {
         // Ideally we'd reuse `writeSnippet` but it has tagging embedded inside of it.
         const tag = ((field.number << 3) | 2) >>> 0;
+        const rhs = (x: string) => (isLong(field) && options.forceLong === LongOption.BIGINT ? `${x}.toString()` : x);
         const listWriteSnippet = code`
           writer.uint32(${tag}).fork();
           for (const v of message.${fieldName}) {
-            writer.${toReaderCall(field)}(v);
+            writer.${toReaderCall(field)}(${rhs("v")});
           }
           writer.ldelim();
         `;
@@ -1150,12 +1217,20 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
         }
       }
     } else if (isWithinOneOfThatShouldBeUnion(options, field)) {
-      let oneofName = maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options);
-      chunks.push(code`
-        if (message.${oneofName}?.$case === '${fieldName}') {
-          ${writeSnippet(`message.${oneofName}.${fieldName}`)};
+      if (!processedOneofs.has(field.oneofIndex)) {
+        processedOneofs.add(field.oneofIndex);
+
+        const oneofName = maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options);
+        chunks.push(code`switch (message.${oneofName}?.$case) {`);
+        for (const oneOfField of oneOfFieldsDict[field.oneofIndex]) {
+          const writeSnippet = getEncodeWriteSnippet(ctx, oneOfField);
+          const oneOfFieldName = maybeSnakeToCamel(oneOfField.name, ctx.options);
+          chunks.push(code`case "${oneOfFieldName}": 
+            ${writeSnippet(`message.${oneofName}.${oneOfFieldName}`)}; 
+            break;`);
         }
-      `);
+        chunks.push(code`}`);
+      }
     } else if (isWithinOneOf(field)) {
       // Oneofs don't have a default value check b/c they need to denote which-oneof presence
       chunks.push(code`
@@ -1259,6 +1334,8 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
         } else if (isLong(field) && options.forceLong === LongOption.LONG) {
           const cstr = capitalize(basicTypeName(ctx, field, { keepValueType: true }).toCodeString());
           return code`${cstr}.fromValue(${from})`;
+        } else if (isLong(field) && options.forceLong === LongOption.BIGINT) {
+          return code`BigInt(${from})`;
         } else {
           const cstr = capitalize(basicTypeName(ctx, field, { keepValueType: true }).toCodeString());
           return code`${cstr}(${from})`;
@@ -1283,6 +1360,8 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
         const valueType = valueTypeName(ctx, field.typeName)!;
         if (isLongValueType(field) && options.forceLong === LongOption.LONG) {
           return code`${capitalize(valueType.toCodeString())}.fromValue(${from})`;
+        } else if (isLongValueType(field) && options.forceLong === LongOption.BIGINT) {
+          return code`BigInt(${from})`;
         } else if (isBytesValueType(field)) {
           return code`new ${capitalize(valueType.toCodeString())}(${from})`;
         } else {
@@ -1490,6 +1569,8 @@ function generateToJson(
           return code`${utils.fromTimestamp}(${from}).toISOString()`;
         } else if (isLong(valueType) && options.forceLong === LongOption.LONG) {
           return code`${from}.toString()`;
+        } else if (isLong(valueType) && options.forceLong === LongOption.BIGINT) {
+          return code`${from}.toString()`;
         } else if (isWholeNumber(valueType) && !(isLong(valueType) && options.forceLong === LongOption.STRING)) {
           return code`Math.round(${from})`;
         } else if (isScalar(valueType) || isValueType(ctx, valueType)) {
@@ -1517,6 +1598,8 @@ function generateToJson(
       } else if (isLong(field) && options.forceLong === LongOption.LONG) {
         const v = isWithinOneOf(field) ? "undefined" : defaultValue(ctx, field);
         return code`(${from} || ${v}).toString()`;
+      } else if (isLong(field) && options.forceLong === LongOption.BIGINT) {
+        return code`${from}.toString()`;
       } else if (isWholeNumber(field) && !(isLong(field) && options.forceLong === LongOption.STRING)) {
         return code`Math.round(${from})`;
       } else {
@@ -1571,10 +1654,27 @@ function generateToJson(
 }
 
 function generateFromPartial(ctx: Context, fullName: string, messageDesc: DescriptorProto): Code {
-  const { options, utils, typeMap } = ctx;
+  const { options, utils } = ctx;
   const chunks: Code[] = [];
 
-  // create the basic function declaration
+  // create the create function definition
+  if (ctx.options.useExactTypes) {
+    chunks.push(code`
+      create<I extends ${utils.Exact}<${utils.DeepPartial}<${fullName}>, I>>(base?: I): ${fullName} {
+    `);
+  } else {
+    chunks.push(code`
+      create(base?: ${utils.DeepPartial}<${fullName}>): ${fullName} {
+    `);
+  }
+
+  chunks.push(code`
+    return ${fullName}.fromPartial(base ?? {})
+  `);
+
+  chunks.push(code`},`, code``);
+
+  // create the fromPartial function declaration
   const paramName = messageDesc.field.length > 0 ? "object" : "_";
 
   if (ctx.options.useExactTypes) {
@@ -1592,7 +1692,7 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
     createBase = code`Object.create(${createBase}) as ${fullName}`;
   }
 
-  chunks.push(code`const message = ${createBase};`);
+  chunks.push(code`const message = ${createBase}${maybeAsAny(options)};`);
 
   // add a check for each incoming field
   messageDesc.field.forEach((field) => {
@@ -1714,166 +1814,6 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
   return joinCode(chunks, { on: "\n" });
 }
 
-type StructFieldNames = {
-  nullValue: string;
-  numberValue: string;
-  stringValue: string;
-  boolValue: string;
-  structValue: string;
-  listValue: string;
-};
-
-function generateWrap(ctx: Context, fullProtoTypeName: string, fieldNames: StructFieldNames): Code[] {
-  const chunks: Code[] = [];
-  if (isStructTypeName(fullProtoTypeName)) {
-    chunks.push(code`wrap(object: {[key: string]: any} | undefined): Struct {
-      const struct = createBaseStruct();
-      if (object !== undefined) {
-        Object.keys(object).forEach(key => {
-          struct.fields[key] = object[key];
-        });
-      }
-      return struct;
-    }`);
-  }
-
-  if (isAnyValueTypeName(fullProtoTypeName)) {
-    if (ctx.options.oneof === OneofOption.UNIONS) {
-      chunks.push(code`wrap(value: any): Value {
-        const result = createBaseValue();
-
-        if (value === null) {
-          result.kind = {$case: '${fieldNames.nullValue}', ${fieldNames.nullValue}: NullValue.NULL_VALUE};
-        } else if (typeof value === 'boolean') {
-          result.kind = {$case: '${fieldNames.boolValue}', ${fieldNames.boolValue}: value};
-        } else if (typeof value === 'number') {
-          result.kind = {$case: '${fieldNames.numberValue}', ${fieldNames.numberValue}: value};
-        } else if (typeof value === 'string') {
-          result.kind = {$case: '${fieldNames.stringValue}', ${fieldNames.stringValue}: value};
-        } else if (Array.isArray(value)) {
-          result.kind = {$case: '${fieldNames.listValue}', ${fieldNames.listValue}: value};
-        } else if (typeof value === 'object') {
-          result.kind = {$case: '${fieldNames.structValue}', ${fieldNames.structValue}: value};
-        } else if (typeof value !== 'undefined') {
-          throw new Error('Unsupported any value type: ' + typeof value);
-        }
-
-        return result;
-    }`);
-    } else {
-      chunks.push(code`wrap(value: any): Value {
-        const result = createBaseValue();
-
-        if (value === null) {
-          result.${fieldNames.nullValue} = NullValue.NULL_VALUE;
-        } else if (typeof value === 'boolean') {
-          result.${fieldNames.boolValue} = value;
-        } else if (typeof value === 'number') {
-          result.${fieldNames.numberValue} = value;
-        } else if (typeof value === 'string') {
-          result.${fieldNames.stringValue} = value;
-        } else if (Array.isArray(value)) {
-          result.${fieldNames.listValue} = value;
-        } else if (typeof value === 'object') {
-          result.${fieldNames.structValue} = value;
-        } else if (typeof value !== 'undefined') {
-          throw new Error('Unsupported any value type: ' + typeof value);
-        }
-
-        return result;
-    }`);
-    }
-  }
-
-  if (isListValueTypeName(fullProtoTypeName)) {
-    chunks.push(code`wrap(value: Array<any> | undefined): ListValue {
-      const result = createBaseListValue();
-
-      result.values = value ?? [];
-
-      return result;
-    }`);
-  }
-
-  if (isFieldMaskTypeName(fullProtoTypeName)) {
-    chunks.push(code`wrap(paths: string[]): FieldMask {
-      const result = createBaseFieldMask();
-
-      result.paths = paths;
-
-      return result;
-    }`);
-  }
-
-  return chunks;
-}
-
-function generateUnwrap(ctx: Context, fullProtoTypeName: string, fieldNames: StructFieldNames): Code[] {
-  const chunks: Code[] = [];
-  if (isStructTypeName(fullProtoTypeName)) {
-    chunks.push(code`unwrap(message: Struct): {[key: string]: any} {
-      const object: { [key: string]: any } = {};
-      Object.keys(message.fields).forEach(key => {
-        object[key] = message.fields[key];
-      });
-      return object;
-    }`);
-  }
-
-  if (isAnyValueTypeName(fullProtoTypeName)) {
-    if (ctx.options.oneof === OneofOption.UNIONS) {
-      chunks.push(code`unwrap(message: Value): string | number | boolean | Object | null | Array<any> | undefined {
-        if (message.kind?.$case === '${fieldNames.nullValue}') {
-          return null;
-        } else if (message.kind?.$case === '${fieldNames.numberValue}') {
-          return message.kind?.${fieldNames.numberValue};
-        } else if (message.kind?.$case === '${fieldNames.stringValue}') {
-          return message.kind?.${fieldNames.stringValue};
-        } else if (message.kind?.$case === '${fieldNames.boolValue}') {
-          return message.kind?.${fieldNames.boolValue};
-        } else if (message.kind?.$case === '${fieldNames.structValue}') {
-          return message.kind?.${fieldNames.structValue};
-        } else if (message.kind?.$case === '${fieldNames.listValue}') {
-          return message.kind?.${fieldNames.listValue};
-        } else {
-          return undefined;
-        }
-    }`);
-    } else {
-      chunks.push(code`unwrap(message: Value): string | number | boolean | Object | null | Array<any> | undefined {
-      if (message?.${fieldNames.stringValue} !== undefined) {
-        return message.${fieldNames.stringValue};
-      } else if (message?.${fieldNames.numberValue} !== undefined) {
-        return message.${fieldNames.numberValue};
-      } else if (message?.${fieldNames.boolValue} !== undefined) {
-        return message.${fieldNames.boolValue};
-      } else if (message?.${fieldNames.structValue} !== undefined) {
-        return message.${fieldNames.structValue};
-      } else if (message?.${fieldNames.listValue} !== undefined) {
-          return message.${fieldNames.listValue};
-      } else if (message?.${fieldNames.nullValue} !== undefined) {
-        return null;
-      }
-      return undefined;
-    }`);
-    }
-  }
-
-  if (isListValueTypeName(fullProtoTypeName)) {
-    chunks.push(code`unwrap(message: ListValue): Array<any> {
-      return message.values;
-    }`);
-  }
-
-  if (isFieldMaskTypeName(fullProtoTypeName)) {
-    chunks.push(code`unwrap(message: FieldMask): string[] {
-      return message.paths;
-    }`);
-  }
-
-  return chunks;
-}
-
 export const contextTypeVar = "Context extends DataLoaders";
 
 function maybeCastToNumber(
@@ -1888,4 +1828,12 @@ function maybeCastToNumber(
   } else {
     return `Number(${variableName})`;
   }
+}
+
+function maybeReadonly(options: Options): string {
+  return options.useReadonlyTypes ? "readonly " : "";
+}
+
+function maybeAsAny(options: Options): string {
+  return options.useReadonlyTypes ? " as any" : "";
 }

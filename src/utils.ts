@@ -9,7 +9,7 @@ import {
 import ReadStream = NodeJS.ReadStream;
 import { SourceDescription } from "./sourceInfo";
 import { Options, ServiceOption } from "./options";
-import { camelCase, snakeToCamel } from "./case";
+import { camelCaseGrpc, snakeToCamel } from "./case";
 
 export function protoFilesToGenerate(request: CodeGeneratorRequest): FileDescriptorProto[] {
   return request.protoFile.filter((f) => request.fileToGenerate.includes(f.name));
@@ -167,7 +167,7 @@ export class FormattedMethodDescriptor implements MethodDescriptorProto {
     let result = methodName;
 
     if (options.lowerCaseServiceMethods || options.outputServices.includes(ServiceOption.GRPC)) {
-      result = camelCase(result);
+      result = camelCaseGrpc(result);
     }
 
     return result;

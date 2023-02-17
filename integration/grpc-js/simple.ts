@@ -2,9 +2,9 @@
 import {
   CallOptions,
   ChannelCredentials,
-  ChannelOptions,
   Client,
   ClientDuplexStream,
+  ClientOptions,
   ClientReadableStream,
   ClientUnaryCall,
   ClientWritableStream,
@@ -77,6 +77,10 @@ export const TestMessage = {
     const obj: any = {};
     message.timestamp !== undefined && (obj.timestamp = message.timestamp.toISOString());
     return obj;
+  },
+
+  create<I extends Exact<DeepPartial<TestMessage>, I>>(base?: I): TestMessage {
+    return TestMessage.fromPartial(base ?? {});
   },
 
   fromPartial<I extends Exact<DeepPartial<TestMessage>, I>>(object: I): TestMessage {
@@ -196,9 +200,9 @@ export const TestService = {
     requestStream: false,
     responseStream: false,
     requestSerialize: (value: Date) => Buffer.from(Timestamp.encode(toTimestamp(value)).finish()),
-    requestDeserialize: (value: Buffer) => Timestamp.decode(value),
+    requestDeserialize: (value: Buffer) => fromTimestamp(Timestamp.decode(value)),
     responseSerialize: (value: Date) => Buffer.from(Timestamp.encode(toTimestamp(value)).finish()),
-    responseDeserialize: (value: Buffer) => Timestamp.decode(value),
+    responseDeserialize: (value: Buffer) => fromTimestamp(Timestamp.decode(value)),
   },
   struct: {
     path: "/simple.Test/Struct",
@@ -617,7 +621,7 @@ export interface TestClient extends Client {
 }
 
 export const TestClient = makeGenericClientConstructor(TestService, "simple.Test") as unknown as {
-  new (address: string, credentials: ChannelCredentials, options?: Partial<ChannelOptions>): TestClient;
+  new (address: string, credentials: ChannelCredentials, options?: Partial<ClientOptions>): TestClient;
   service: typeof TestService;
 };
 

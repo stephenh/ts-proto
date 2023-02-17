@@ -52,6 +52,10 @@ export const ProduceRequest = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<ProduceRequest>, I>>(base?: I): ProduceRequest {
+    return ProduceRequest.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<ProduceRequest>, I>>(object: I): ProduceRequest {
     const message = createBaseProduceRequest();
     message.ingredients = object.ingredients ?? "";
@@ -97,6 +101,10 @@ export const ProduceReply = {
     const obj: any = {};
     message.result !== undefined && (obj.result = message.result);
     return obj;
+  },
+
+  create<I extends Exact<DeepPartial<ProduceReply>, I>>(base?: I): ProduceReply {
+    return ProduceReply.fromPartial(base ?? {});
   },
 
   fromPartial<I extends Exact<DeepPartial<ProduceReply>, I>>(object: I): ProduceReply {

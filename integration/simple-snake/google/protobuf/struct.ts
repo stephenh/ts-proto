@@ -67,27 +67,27 @@ export interface Struct_FieldsEntry {
  */
 export interface Value {
   /** Represents a null value. */
-  null_value:
+  null_value?:
     | NullValue
     | undefined;
   /** Represents a double value. */
-  number_value:
+  number_value?:
     | number
     | undefined;
   /** Represents a string value. */
-  string_value:
+  string_value?:
     | string
     | undefined;
   /** Represents a boolean value. */
-  bool_value:
+  bool_value?:
     | boolean
     | undefined;
   /** Represents a structured value. */
-  struct_value:
+  struct_value?:
     | { [key: string]: any }
     | undefined;
   /** Represents a repeated `Value`. */
-  list_value: Array<any> | undefined;
+  list_value?: Array<any> | undefined;
 }
 
 /**
@@ -157,6 +157,10 @@ export const Struct = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<Struct>, I>>(base?: I): Struct {
+    return Struct.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<Struct>, I>>(object: I): Struct {
     const message = createBaseStruct();
     message.fields = Object.entries(object.fields ?? {}).reduce<{ [key: string]: any | undefined }>(
@@ -183,9 +187,11 @@ export const Struct = {
 
   unwrap(message: Struct): { [key: string]: any } {
     const object: { [key: string]: any } = {};
-    Object.keys(message.fields).forEach((key) => {
-      object[key] = message.fields[key];
-    });
+    if (message.fields) {
+      Object.keys(message.fields).forEach((key) => {
+        object[key] = message.fields[key];
+      });
+    }
     return object;
   },
 };
@@ -235,6 +241,10 @@ export const Struct_FieldsEntry = {
     message.key !== undefined && (obj.key = message.key);
     message.value !== undefined && (obj.value = message.value);
     return obj;
+  },
+
+  create<I extends Exact<DeepPartial<Struct_FieldsEntry>, I>>(base?: I): Struct_FieldsEntry {
+    return Struct_FieldsEntry.fromPartial(base ?? {});
   },
 
   fromPartial<I extends Exact<DeepPartial<Struct_FieldsEntry>, I>>(object: I): Struct_FieldsEntry {
@@ -335,6 +345,10 @@ export const Value = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<Value>, I>>(base?: I): Value {
+    return Value.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<Value>, I>>(object: I): Value {
     const message = createBaseValue();
     message.null_value = object.null_value ?? undefined;
@@ -348,7 +362,6 @@ export const Value = {
 
   wrap(value: any): Value {
     const result = createBaseValue();
-
     if (value === null) {
       result.null_value = NullValue.NULL_VALUE;
     } else if (typeof value === "boolean") {
@@ -364,19 +377,18 @@ export const Value = {
     } else if (typeof value !== "undefined") {
       throw new Error("Unsupported any value type: " + typeof value);
     }
-
     return result;
   },
 
-  unwrap(message: Value): string | number | boolean | Object | null | Array<any> | undefined {
-    if (message?.string_value !== undefined) {
+  unwrap(message: any): string | number | boolean | Object | null | Array<any> | undefined {
+    if (message.string_value !== undefined) {
       return message.string_value;
     } else if (message?.number_value !== undefined) {
       return message.number_value;
     } else if (message?.bool_value !== undefined) {
       return message.bool_value;
     } else if (message?.struct_value !== undefined) {
-      return message.struct_value;
+      return message.struct_value as any;
     } else if (message?.list_value !== undefined) {
       return message.list_value;
     } else if (message?.null_value !== undefined) {
@@ -430,22 +442,28 @@ export const ListValue = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<ListValue>, I>>(base?: I): ListValue {
+    return ListValue.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<ListValue>, I>>(object: I): ListValue {
     const message = createBaseListValue();
     message.values = object.values?.map((e) => e) || [];
     return message;
   },
 
-  wrap(value: Array<any> | undefined): ListValue {
+  wrap(array: Array<any> | undefined): ListValue {
     const result = createBaseListValue();
-
-    result.values = value ?? [];
-
+    result.values = array ?? [];
     return result;
   },
 
   unwrap(message: ListValue): Array<any> {
-    return message.values;
+    if (message?.hasOwnProperty("values") && Array.isArray(message.values)) {
+      return message.values;
+    } else {
+      return message as any;
+    }
   },
 };
 

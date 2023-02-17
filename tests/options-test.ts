@@ -41,6 +41,7 @@ describe("options", () => {
         "stringEnums": false,
         "unknownFields": false,
         "unrecognizedEnum": true,
+        "useAbortSignal": false,
         "useAsyncIterable": false,
         "useDate": "timestamp",
         "useExactTypes": true,
@@ -50,6 +51,8 @@ describe("options", () => {
         "useNumericEnumForJson": false,
         "useOptionals": "none",
         "usePrototypeForDefaults": false,
+        "useReadonlyTypes": false,
+        "useSnakeTypeName": true,
       }
     `);
   });
@@ -133,6 +136,13 @@ describe("options", () => {
     const options = optionsFromParameter("useJsonWireFormat=true");
     expect(options).toMatchObject({
       useJsonWireFormat: false,
+    });
+  });
+
+  it("useSnakeTypeName", () => {
+    const options = optionsFromParameter("useSnakeTypeName=false");
+    expect(options).toMatchObject({
+      useSnakeTypeName: false,
     });
   });
 

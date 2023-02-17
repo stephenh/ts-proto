@@ -142,6 +142,10 @@ export const Struct = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<Struct>, I>>(base?: I): Struct {
+    return Struct.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<Struct>, I>>(object: I): Struct {
     const message = createBaseStruct();
     message.fields = Object.entries(object.fields ?? {}).reduce<{ [key: string]: any | undefined }>(
@@ -168,9 +172,11 @@ export const Struct = {
 
   unwrap(message: Struct): { [key: string]: any } {
     const object: { [key: string]: any } = {};
-    Object.keys(message.fields).forEach((key) => {
-      object[key] = message.fields[key];
-    });
+    if (message.fields) {
+      Object.keys(message.fields).forEach((key) => {
+        object[key] = message.fields[key];
+      });
+    }
     return object;
   },
 };
@@ -222,6 +228,10 @@ export const Struct_FieldsEntry = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<Struct_FieldsEntry>, I>>(base?: I): Struct_FieldsEntry {
+    return Struct_FieldsEntry.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<Struct_FieldsEntry>, I>>(object: I): Struct_FieldsEntry {
     const message = createBaseStruct_FieldsEntry();
     message.key = object.key ?? "";
@@ -236,23 +246,25 @@ function createBaseValue(): Value {
 
 export const Value = {
   encode(message: Value, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.kind?.$case === "null_value") {
-      writer.uint32(8).int32(message.kind.null_value);
-    }
-    if (message.kind?.$case === "number_value") {
-      writer.uint32(17).double(message.kind.number_value);
-    }
-    if (message.kind?.$case === "string_value") {
-      writer.uint32(26).string(message.kind.string_value);
-    }
-    if (message.kind?.$case === "bool_value") {
-      writer.uint32(32).bool(message.kind.bool_value);
-    }
-    if (message.kind?.$case === "struct_value") {
-      Struct.encode(Struct.wrap(message.kind.struct_value), writer.uint32(42).fork()).ldelim();
-    }
-    if (message.kind?.$case === "list_value") {
-      ListValue.encode(ListValue.wrap(message.kind.list_value), writer.uint32(50).fork()).ldelim();
+    switch (message.kind?.$case) {
+      case "null_value":
+        writer.uint32(8).int32(message.kind.null_value);
+        break;
+      case "number_value":
+        writer.uint32(17).double(message.kind.number_value);
+        break;
+      case "string_value":
+        writer.uint32(26).string(message.kind.string_value);
+        break;
+      case "bool_value":
+        writer.uint32(32).bool(message.kind.bool_value);
+        break;
+      case "struct_value":
+        Struct.encode(Struct.wrap(message.kind.struct_value), writer.uint32(42).fork()).ldelim();
+        break;
+      case "list_value":
+        ListValue.encode(ListValue.wrap(message.kind.list_value), writer.uint32(50).fork()).ldelim();
+        break;
     }
     return writer;
   },
@@ -323,6 +335,10 @@ export const Value = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<Value>, I>>(base?: I): Value {
+    return Value.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<Value>, I>>(object: I): Value {
     const message = createBaseValue();
     if (
@@ -366,7 +382,6 @@ export const Value = {
 
   wrap(value: any): Value {
     const result = createBaseValue();
-
     if (value === null) {
       result.kind = { $case: "null_value", null_value: NullValue.NULL_VALUE };
     } else if (typeof value === "boolean") {
@@ -382,7 +397,6 @@ export const Value = {
     } else if (typeof value !== "undefined") {
       throw new Error("Unsupported any value type: " + typeof value);
     }
-
     return result;
   },
 
@@ -449,22 +463,28 @@ export const ListValue = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<ListValue>, I>>(base?: I): ListValue {
+    return ListValue.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<ListValue>, I>>(object: I): ListValue {
     const message = createBaseListValue();
     message.values = object.values?.map((e) => e) || [];
     return message;
   },
 
-  wrap(value: Array<any> | undefined): ListValue {
+  wrap(array: Array<any> | undefined): ListValue {
     const result = createBaseListValue();
-
-    result.values = value ?? [];
-
+    result.values = array ?? [];
     return result;
   },
 
   unwrap(message: ListValue): Array<any> {
-    return message.values;
+    if (message?.hasOwnProperty("values") && Array.isArray(message.values)) {
+      return message.values;
+    } else {
+      return message as any;
+    }
   },
 };
 

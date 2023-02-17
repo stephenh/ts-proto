@@ -29,7 +29,8 @@ export function generateNiceGrpcService(
 function generateServerStub(ctx: Context, sourceInfo: SourceInfo, serviceDesc: ServiceDescriptorProto) {
   const chunks: Code[] = [];
 
-  chunks.push(code`export interface ${def(`${serviceDesc.name}ServiceImplementation`)}<CallContextExt = {}> {`);
+  const maybeSuffix = serviceDesc.name.endsWith("Service") ? "" : "Service";
+  chunks.push(code`export interface ${def(`${serviceDesc.name}${maybeSuffix}Implementation`)}<CallContextExt = {}> {`);
 
   for (const [index, methodDesc] of serviceDesc.method.entries()) {
     assertInstanceOf(methodDesc, FormattedMethodDescriptor);

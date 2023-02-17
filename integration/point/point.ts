@@ -60,6 +60,10 @@ export const Point = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<Point>, I>>(base?: I): Point {
+    return Point.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<Point>, I>>(object: I): Point {
     const message = createBasePoint();
     message.lat = object.lat ?? 0;
@@ -116,6 +120,10 @@ export const Area = {
     message.nw !== undefined && (obj.nw = message.nw ? Point.toJSON(message.nw) : undefined);
     message.se !== undefined && (obj.se = message.se ? Point.toJSON(message.se) : undefined);
     return obj;
+  },
+
+  create<I extends Exact<DeepPartial<Area>, I>>(base?: I): Area {
+    return Area.fromPartial(base ?? {});
   },
 
   fromPartial<I extends Exact<DeepPartial<Area>, I>>(object: I): Area {

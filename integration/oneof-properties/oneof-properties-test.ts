@@ -161,4 +161,12 @@ describe('oneof=properties (default)', () => {
     let fromJson = PleaseChoose.fromJSON(pbjsJson);
     expect(fromJson).toEqual(debbie);
   });
+
+  it('should allow to omit oneOf fields', () => {
+    const msg: PleaseChoose = {
+       name: 'foo',
+       age: 42,
+    };
+    expect(msg).toBeDefined();
+  });
 });

@@ -1,5 +1,8 @@
 syntax = "proto3";
+
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/struct.proto";
+
 
 package simple;
 
@@ -13,4 +16,5 @@ message Maps {
   map<string, bytes> string_to_bytes = 3;
   map<int64, int64> int64_to_int64 = 4;
   map<string, google.protobuf.Timestamp> map_of_timestamps = 5;
+  google.protobuf.Struct struct = 6;
 }

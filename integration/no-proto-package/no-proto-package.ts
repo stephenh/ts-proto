@@ -52,6 +52,10 @@ export const User = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<User>, I>>(base?: I): User {
+    return User.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<User>, I>>(object: I): User {
     const message = createBaseUser();
     message.name = object.name ?? "";
@@ -90,6 +94,10 @@ export const Empty = {
   toJSON(_: Empty): unknown {
     const obj: any = {};
     return obj;
+  },
+
+  create<I extends Exact<DeepPartial<Empty>, I>>(base?: I): Empty {
+    return Empty.fromPartial(base ?? {});
   },
 
   fromPartial<I extends Exact<DeepPartial<Empty>, I>>(_: I): Empty {

@@ -9,28 +9,28 @@ export interface PleaseChoose {
    * Use this if you want a number. Numbers are great. Who doesn't
    * like them?
    */
-  aNumber:
+  aNumber?:
     | number
     | undefined;
   /**
    * Use this if you want a string. Strings are also nice. Not as
    * nice as numbers, but what are you going to do...
    */
-  aString: string | undefined;
-  aMessage:
+  aString?: string | undefined;
+  aMessage?:
     | PleaseChoose_Submessage
     | undefined;
   /**
    * We also added a bool option! This was added after the 'age'
    * field, so it has a higher number.
    */
-  aBool: boolean | undefined;
-  bunchaBytes: Uint8Array | undefined;
-  anEnum: PleaseChoose_StateEnum | undefined;
+  aBool?: boolean | undefined;
+  bunchaBytes?: Uint8Array | undefined;
+  anEnum?: PleaseChoose_StateEnum | undefined;
   age: number;
-  either: string | undefined;
-  or: string | undefined;
-  thirdOption: string | undefined;
+  either?: string | undefined;
+  or?: string | undefined;
+  thirdOption?: string | undefined;
 }
 
 export enum PleaseChoose_StateEnum {
@@ -213,6 +213,10 @@ export const PleaseChoose = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<PleaseChoose>, I>>(base?: I): PleaseChoose {
+    return PleaseChoose.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<PleaseChoose>, I>>(object: I): PleaseChoose {
     const message = createBasePleaseChoose();
     message.name = object.name ?? "";
@@ -272,6 +276,10 @@ export const PleaseChoose_Submessage = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<PleaseChoose_Submessage>, I>>(base?: I): PleaseChoose_Submessage {
+    return PleaseChoose_Submessage.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<PleaseChoose_Submessage>, I>>(object: I): PleaseChoose_Submessage {
     const message = createBasePleaseChoose_Submessage();
     message.name = object.name ?? "";
@@ -282,7 +290,7 @@ export const PleaseChoose_Submessage = {
 declare var self: any | undefined;
 declare var window: any | undefined;
 declare var global: any | undefined;
-var globalThis: any = (() => {
+var tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") {
     return globalThis;
   }
@@ -299,10 +307,10 @@ var globalThis: any = (() => {
 })();
 
 function bytesFromBase64(b64: string): Uint8Array {
-  if (globalThis.Buffer) {
-    return Uint8Array.from(globalThis.Buffer.from(b64, "base64"));
+  if (tsProtoGlobalThis.Buffer) {
+    return Uint8Array.from(tsProtoGlobalThis.Buffer.from(b64, "base64"));
   } else {
-    const bin = globalThis.atob(b64);
+    const bin = tsProtoGlobalThis.atob(b64);
     const arr = new Uint8Array(bin.length);
     for (let i = 0; i < bin.length; ++i) {
       arr[i] = bin.charCodeAt(i);
@@ -312,14 +320,14 @@ function bytesFromBase64(b64: string): Uint8Array {
 }
 
 function base64FromBytes(arr: Uint8Array): string {
-  if (globalThis.Buffer) {
-    return globalThis.Buffer.from(arr).toString("base64");
+  if (tsProtoGlobalThis.Buffer) {
+    return tsProtoGlobalThis.Buffer.from(arr).toString("base64");
   } else {
     const bin: string[] = [];
     arr.forEach((byte) => {
       bin.push(String.fromCharCode(byte));
     });
-    return globalThis.btoa(bin.join(""));
+    return tsProtoGlobalThis.btoa(bin.join(""));
   }
 }
 

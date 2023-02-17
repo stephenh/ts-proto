@@ -39,6 +39,10 @@ export const Record = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<Record>, I>>(base?: I): Record {
+    return Record.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<Record>, I>>(_: I): Record {
     const message = createBaseRecord();
     return message;

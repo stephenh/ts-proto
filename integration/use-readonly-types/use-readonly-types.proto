@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+import "google/protobuf/field_mask.proto";
+import "google/protobuf/struct.proto";
+
+message Entity {
+  int32 intVal = 1;
+  string stringVal = 2;
+  repeated int32 intArray = 3;
+  repeated string stringArray = 4;
+  SubEntity subEntity = 5;
+  repeated SubEntity subEntityArray = 6;
+  optional int32 optionalIntVal = 7;
+  google.protobuf.FieldMask fieldMask = 8;
+  google.protobuf.ListValue listValue = 9;
+  google.protobuf.Struct structValue = 10;
+  oneof oneOfValue {
+    string theStringValue = 11;
+    int32 theIntValue = 12;
+  }
+}
+
+message SubEntity {
+  int32 subVal = 1;
+}
+
+/*
+
+google.protobuf.FieldMask ⇆ string[]
+google.protobuf.ListValue ⇆ any[]
+google.protobuf.Struct ⇆ { [key: string]: any }
+*/

@@ -45,6 +45,11 @@ if match "simple-long-string"; then
   yarn run pbts --no-comments -o integration/simple-long-string/pbjs.d.ts integration/simple-long-string/pbjs.js
 fi
 
+if match "simple-long-bigint"; then
+  yarn run pbjs --force-message --force-long -t static-module -o integration/simple-long-bigint/pbjs.js integration/simple-long-bigint/simple.proto
+  yarn run pbts --no-comments -o integration/simple-long-bigint/pbjs.d.ts integration/simple-long-bigint/pbjs.js
+fi
+
 if match "vector-tile"; then
   yarn run pbjs --force-message --force-number -t static-module -o integration/vector-tile/pbjs.js integration/vector-tile/vector_tile.proto
   yarn run pbts --no-comments -o integration/vector-tile/pbjs.d.ts integration/vector-tile/pbjs.js

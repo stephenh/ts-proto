@@ -58,6 +58,10 @@ export const TestMessage = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<TestMessage>, I>>(base?: I): TestMessage {
+    return TestMessage.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<TestMessage>, I>>(object: I): TestMessage {
     const message = createBaseTestMessage();
     message.field1 = object.field1 ?? false;

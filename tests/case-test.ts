@@ -1,4 +1,4 @@
-import { maybeSnakeToCamel } from "../src/case";
+import { maybeSnakeToCamel, camelCaseGrpc } from "../src/case";
 import { Options, optionsFromParameter } from "../src/options";
 import { getFieldJsonName } from "../src/utils";
 
@@ -45,6 +45,10 @@ describe("case", () => {
 
   it("converts snake to camel with first underscore and camelize other", () => {
     expect(maybeSnakeToCamel("_uuid_foo", { snakeToCamel: ["keys"] })).toEqual("UuidFoo");
+  });
+
+  it("converts string to camel case respecting word separation, getAPIValue === getApiValue", () => {
+    expect(camelCaseGrpc("GetAPIValue")).toEqual("getApiValue");
   });
 
   describe("getFieldJsonName", () => {

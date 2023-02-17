@@ -121,6 +121,10 @@ export const DashFlash = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<DashFlash>, I>>(base?: I): DashFlash {
+    return DashFlash.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<DashFlash>, I>>(object: I): DashFlash {
     const message = createBaseDashFlash();
     message.msg = object.msg ?? "";
@@ -192,6 +196,10 @@ export const DashUserSettingsState = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<DashUserSettingsState>, I>>(base?: I): DashUserSettingsState {
+    return DashUserSettingsState.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<DashUserSettingsState>, I>>(object: I): DashUserSettingsState {
     const message = createBaseDashUserSettingsState();
     message.email = object.email ?? "";
@@ -253,6 +261,10 @@ export const DashUserSettingsState_URLs = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<DashUserSettingsState_URLs>, I>>(base?: I): DashUserSettingsState_URLs {
+    return DashUserSettingsState_URLs.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<DashUserSettingsState_URLs>, I>>(object: I): DashUserSettingsState_URLs {
     const message = createBaseDashUserSettingsState_URLs();
     message.connectGoogle = object.connectGoogle ?? "";
@@ -292,6 +304,10 @@ export const Empty = {
   toJSON(_: Empty): unknown {
     const obj: any = {};
     return obj;
+  },
+
+  create<I extends Exact<DeepPartial<Empty>, I>>(base?: I): Empty {
+    return Empty.fromPartial(base ?? {});
   },
 
   fromPartial<I extends Exact<DeepPartial<Empty>, I>>(_: I): Empty {
@@ -335,10 +351,11 @@ export const DashStateUserSettingsDesc: UnaryMethodDefinitionish = {
   } as any,
   responseType: {
     deserializeBinary(data: Uint8Array) {
+      const value = DashUserSettingsState.decode(data);
       return {
-        ...DashUserSettingsState.decode(data),
+        ...value,
         toObject() {
-          return this;
+          return value;
         },
       };
     },
@@ -414,6 +431,25 @@ export class GrpcWebImpl {
   }
 }
 
+declare var self: any | undefined;
+declare var window: any | undefined;
+declare var global: any | undefined;
+var tsProtoGlobalThis: any = (() => {
+  if (typeof globalThis !== "undefined") {
+    return globalThis;
+  }
+  if (typeof self !== "undefined") {
+    return self;
+  }
+  if (typeof window !== "undefined") {
+    return window;
+  }
+  if (typeof global !== "undefined") {
+    return global;
+  }
+  throw "Unable to locate global object";
+})();
+
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
@@ -429,7 +465,7 @@ function isSet(value: any): boolean {
   return value !== null && value !== undefined;
 }
 
-export class GrpcWebError extends Error {
+export class GrpcWebError extends tsProtoGlobalThis.Error {
   constructor(message: string, public code: grpc.Code, public metadata: grpc.Metadata) {
     super(message);
   }

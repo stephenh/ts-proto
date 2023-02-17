@@ -6,6 +6,7 @@ export enum LongOption {
   NUMBER = "number",
   LONG = "long",
   STRING = "string",
+  BIGINT = "bigint",
 }
 
 export enum DateOption {
@@ -72,6 +73,7 @@ export type Options = {
   outputSchema: boolean;
   onlyTypes: boolean;
   emitImportedFiles: boolean;
+  useAbortSignal: boolean;
   useExactTypes: boolean;
   useAsyncIterable: boolean;
   unknownFields: boolean;
@@ -80,6 +82,8 @@ export type Options = {
   useNumericEnumForJson: boolean;
   initializeFieldsAsUndefined: boolean;
   useMapType: boolean;
+  useReadonlyTypes: boolean;
+  useSnakeTypeName: boolean;
   M: { [from: string]: string };
 };
 
@@ -118,6 +122,7 @@ export function defaultOptions(): Options {
     onlyTypes: false,
     emitImportedFiles: true,
     useExactTypes: true,
+    useAbortSignal: false,
     useAsyncIterable: false,
     unknownFields: false,
     usePrototypeForDefaults: false,
@@ -125,6 +130,8 @@ export function defaultOptions(): Options {
     useNumericEnumForJson: false,
     initializeFieldsAsUndefined: true,
     useMapType: false,
+    useReadonlyTypes: false,
+    useSnakeTypeName: true,
     M: {},
   };
 }

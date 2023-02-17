@@ -107,6 +107,10 @@ export const Simple = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<Simple>, I>>(base?: I): Simple {
+    return Simple.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<Simple>, I>>(object: I): Simple {
     const message = createBaseSimple();
     message.name = object.name ?? "";
@@ -156,6 +160,10 @@ export const Child = {
     const obj: any = {};
     message.name !== undefined && (obj.name = message.name);
     return obj;
+  },
+
+  create<I extends Exact<DeepPartial<Child>, I>>(base?: I): Child {
+    return Child.fromPartial(base ?? {});
   },
 
   fromPartial<I extends Exact<DeepPartial<Child>, I>>(object: I): Child {

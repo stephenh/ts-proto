@@ -123,6 +123,10 @@ export const Tile = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<Tile>, I>>(base?: I): Tile {
+    return Tile.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<Tile>, I>>(object: I): Tile {
     const message = createBaseTile();
     message.layers = object.layers?.map((e) => Tile_Layer.fromPartial(e)) || [];
@@ -218,6 +222,10 @@ export const Tile_Value = {
     message.sintValue !== undefined && (obj.sintValue = Math.round(message.sintValue));
     message.boolValue !== undefined && (obj.boolValue = message.boolValue);
     return obj;
+  },
+
+  create<I extends Exact<DeepPartial<Tile_Value>, I>>(base?: I): Tile_Value {
+    return Tile_Value.fromPartial(base ?? {});
   },
 
   fromPartial<I extends Exact<DeepPartial<Tile_Value>, I>>(object: I): Tile_Value {
@@ -325,6 +333,10 @@ export const Tile_Feature = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<Tile_Feature>, I>>(base?: I): Tile_Feature {
+    return Tile_Feature.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<Tile_Feature>, I>>(object: I): Tile_Feature {
     const message = createBaseTile_Feature();
     message.id = object.id ?? 0;
@@ -429,6 +441,10 @@ export const Tile_Layer = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<Tile_Layer>, I>>(base?: I): Tile_Layer {
+    return Tile_Layer.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<Tile_Layer>, I>>(object: I): Tile_Layer {
     const message = createBaseTile_Layer();
     message.version = object.version ?? 0;
@@ -444,7 +460,7 @@ export const Tile_Layer = {
 declare var self: any | undefined;
 declare var window: any | undefined;
 declare var global: any | undefined;
-var globalThis: any = (() => {
+var tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") {
     return globalThis;
   }
@@ -473,7 +489,7 @@ export type Exact<P, I extends P> = P extends Builtin ? P
 
 function longToNumber(long: Long): number {
   if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+    throw new tsProtoGlobalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
   return long.toNumber();
 }

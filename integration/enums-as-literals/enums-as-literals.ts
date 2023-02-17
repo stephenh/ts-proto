@@ -88,6 +88,10 @@ export const DividerData = {
     return obj;
   },
 
+  create<I extends Exact<DeepPartial<DividerData>, I>>(base?: I): DividerData {
+    return DividerData.fromPartial(base ?? {});
+  },
+
   fromPartial<I extends Exact<DeepPartial<DividerData>, I>>(object: I): DividerData {
     const message = createBaseDividerData();
     message.type = object.type ?? 0;
