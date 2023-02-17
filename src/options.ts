@@ -27,9 +27,9 @@ export enum OneofOption {
 }
 
 export enum RemoveEnumPrefixOption {
-  ALL = 'all',
-  MEMBERS = 'members',
-  NONE = 'none',
+  ALL = "all",
+  MEMBERS = "members",
+  NONE = "none",
 }
 
 export enum ServiceOption {

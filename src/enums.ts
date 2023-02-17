@@ -4,7 +4,7 @@ import { maybeAddComment } from "./utils";
 import { camelCase, camelToSnake } from "./case";
 import SourceInfo, { Fields } from "./sourceInfo";
 import { Context } from "./context";
-import { RemoveEnumPrefixOption } from './options';
+import { RemoveEnumPrefixOption } from "./options";
 
 const UNRECOGNIZED_ENUM_NAME = "UNRECOGNIZED";
 const UNRECOGNIZED_ENUM_VALUE = -1;
@@ -195,14 +195,14 @@ export function generateEnumToNumber(ctx: Context, fullName: string, enumDesc: E
 
 function getMemberName(ctx: Context, fullName: string, valueDesc: EnumValueDescriptorProto): string {
   if ([RemoveEnumPrefixOption.ALL, RemoveEnumPrefixOption.MEMBERS].includes(ctx.options.removeEnumPrefix)) {
-    return valueDesc.name.replace(`${camelToSnake(fullName)}_`, '');
+    return valueDesc.name.replace(`${camelToSnake(fullName)}_`, "");
   }
   return valueDesc.name;
 }
 
 function getValueName(ctx: Context, fullName: string, valueDesc: EnumValueDescriptorProto): string {
   if (ctx.options.removeEnumPrefix === RemoveEnumPrefixOption.ALL) {
-    return valueDesc.name.replace(`${camelToSnake(fullName)}_`, '');
+    return valueDesc.name.replace(`${camelToSnake(fullName)}_`, "");
   }
   return valueDesc.name;
 }
