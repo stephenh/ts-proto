@@ -323,8 +323,8 @@ export const Empty = {
 export interface DashState {
   UserSettings(
     request: DeepPartial<Empty>,
-    abortSignal?: AbortSignal,
     metadata?: grpc.Metadata,
+    abortSignal?: AbortSignal,
   ): Observable<DashUserSettingsState>;
 }
 
@@ -338,8 +338,8 @@ export class DashStateClientImpl implements DashState {
 
   UserSettings(
     request: DeepPartial<Empty>,
-    abortSignal: AbortSignal | undefined,
     metadata?: grpc.Metadata,
+    abortSignal?: AbortSignal,
   ): Observable<DashUserSettingsState> {
     return this.rpc.unary(DashStateUserSettingsDesc, Empty.fromPartial(request), abortSignal, metadata);
   }
@@ -381,8 +381,8 @@ interface Rpc {
   unary<T extends UnaryMethodDefinitionish>(
     methodDesc: T,
     request: any,
-    abortSignal: AbortSignal | undefined,
     metadata: grpc.Metadata | undefined,
+    abortSignal?: AbortSignal,
   ): Observable<any>;
 }
 
@@ -413,8 +413,8 @@ export class GrpcWebImpl {
   unary<T extends UnaryMethodDefinitionish>(
     methodDesc: T,
     _request: any,
-    abortSignal: AbortSignal | undefined,
     metadata: grpc.Metadata | undefined,
+    abortSignal?: AbortSignal,
   ): Observable<any> {
     const request = { ..._request, ...methodDesc.requestType };
     const maybeCombinedMetadata = metadata && this.options.metadata

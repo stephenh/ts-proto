@@ -58,8 +58,8 @@ function generateRpcMethod(ctx: Context, serviceDesc: ServiceDescriptorProto, me
     return code`
     ${methodDesc.formattedName}(
       request: ${inputType},
-      ${useAbortSignal ? "abortSignal: AbortSignal | undefined," : ""}
       metadata?: grpc.Metadata,
+      ${useAbortSignal ? "abortSignal?: AbortSignal," : ""}
     ): ${returns} {
       throw new Error('ts-proto does not yet support client streaming!');
     }
@@ -70,8 +70,8 @@ function generateRpcMethod(ctx: Context, serviceDesc: ServiceDescriptorProto, me
   return code`
     ${methodDesc.formattedName}(
       request: ${inputType},
-      ${useAbortSignal ? "abortSignal: AbortSignal | undefined," : ""}
       metadata?: grpc.Metadata,
+      ${useAbortSignal ? "abortSignal?: AbortSignal," : ""}
     ): ${returns} {
       return this.rpc.${method}(
         ${methodDescName(serviceDesc, methodDesc)},
@@ -180,8 +180,8 @@ function generateGrpcWebRpcType(ctx: Context, returnObservable: boolean, hasStre
     unary<T extends UnaryMethodDefinitionish>(
       methodDesc: T,
       request: any,
-      ${useAbortSignal ? "abortSignal: AbortSignal | undefined," : ""}
       metadata: grpc.Metadata | undefined,
+      ${useAbortSignal ? "abortSignal?: AbortSignal," : ""}
     ): ${wrapper}<any>;
   `);
 
@@ -190,8 +190,8 @@ function generateGrpcWebRpcType(ctx: Context, returnObservable: boolean, hasStre
       invoke<T extends UnaryMethodDefinitionish>(
         methodDesc: T,
         request: any,
-        ${useAbortSignal ? "abortSignal: AbortSignal | undefined," : ""}
         metadata: grpc.Metadata | undefined,
+        ${useAbortSignal ? "abortSignal?: AbortSignal," : ""}
       ): ${observableType(ctx)}<any>;
     `);
   }
@@ -256,8 +256,8 @@ function createPromiseUnaryMethod(ctx: Context): Code {
     unary<T extends UnaryMethodDefinitionish>(
       methodDesc: T,
       _request: any,
-      ${useAbortSignal ? "abortSignal: AbortSignal | undefined," : ""}
-      metadata: grpc.Metadata | undefined
+      metadata: grpc.Metadata | undefined,
+      ${useAbortSignal ? "abortSignal?: AbortSignal," : ""}
     ): Promise<any> {
       const request = { ..._request, ...methodDesc.requestType };
       const maybeCombinedMetadata =
@@ -303,8 +303,8 @@ function createObservableUnaryMethod(ctx: Context): Code {
     unary<T extends UnaryMethodDefinitionish>(
       methodDesc: T,
       _request: any,
-      ${useAbortSignal ? "abortSignal: AbortSignal | undefined," : ""}
-      metadata: grpc.Metadata | undefined
+      metadata: grpc.Metadata | undefined,
+      ${useAbortSignal ? "abortSignal?: AbortSignal," : ""}
     ): ${observableType(ctx)}<any> {
       const request = { ..._request, ...methodDesc.requestType };
       const maybeCombinedMetadata =
@@ -354,8 +354,8 @@ function createInvokeMethod(ctx: Context) {
     invoke<T extends UnaryMethodDefinitionish>(
       methodDesc: T,
       _request: any,
-      ${useAbortSignal ? "abortSignal: AbortSignal | undefined," : ""}
-      metadata: grpc.Metadata | undefined
+      metadata: grpc.Metadata | undefined,
+      ${useAbortSignal ? "abortSignal?: AbortSignal," : ""}
     ): ${observableType(ctx)}<any> {
       const upStreamCodes = this.options.upStreamRetryCodes || [];
       const DEFAULT_TIMEOUT_TIME: number = 3_000;

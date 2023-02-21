@@ -62,9 +62,6 @@ export function generateService(
     const partialInput = options.outputClientImpl === "grpc-web";
     const inputType = requestType(ctx, methodDesc, partialInput);
     params.push(code`request: ${inputType}`);
-    if (options.useAbortSignal) {
-      params.push(code`abortSignal?: AbortSignal`);
-    }
 
     // Use metadata as last argument for interface only configuration
     if (options.outputClientImpl === "grpc-web") {
@@ -77,6 +74,9 @@ export function generateService(
     } else if (options.metadataType) {
       const Metadata = imp(options.metadataType);
       params.push(code`metadata?: ${Metadata}`);
+    }
+    if (options.useAbortSignal) {
+      params.push(code`abortSignal?: AbortSignal`);
     }
     if (options.addNestjsRestParameter) {
       params.push(code`...rest: any`);
