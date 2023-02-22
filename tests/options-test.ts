@@ -32,6 +32,7 @@ describe("options", () => {
           "default",
         ],
         "outputTypeRegistry": false,
+        "removeEnumPrefix": false,
         "returnObservable": false,
         "snakeToCamel": Array [
           "json",
