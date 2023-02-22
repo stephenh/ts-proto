@@ -352,11 +352,9 @@ Generated code will be placed in the Gradle build directory.
 
 - With `--ts_proto_opt=unrecognizedEnum=false` enums will not contain an `UNRECOGNIZED` key with value of -1.
 
-- With `--ts_proto_opt=removeEnumPrefix=all` or `members` generated enums will have the enum name removed from both members and values (using `all`), or just members (using `members`)
+- With `--ts_proto_opt=removeEnumPrefix=true` generated enums will have the enum name removed from members.
 
-  `all`: `FooBar.FOO_BAR_BAZ = "FOO_BAR_BAZ"` will generate `FooBar.BAZ = "BAZ"`
-
-  `members`: `FooBar.FOO_BAR_BAZ = "FOO_BAR_BAZ"` will generate `FooBar.BAZ = "FOO_BAR_BAZ"`
+  `FooBar.FOO_BAR_BAZ = "FOO_BAR_BAZ"` will generate `FooBar.BAZ = "FOO_BAR_BAZ"`
 
 - With `--ts_proto_opt=lowerCaseServiceMethods=true`, the method names of service methods will be lowered/camel-case, i.e. `service.findFoo` instead of `service.FindFoo`.
 

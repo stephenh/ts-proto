@@ -1,1 +1,0 @@
-removeEnumPrefix=values,unrecognizedEnum=false
