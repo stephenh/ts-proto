@@ -166,7 +166,13 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
   // We add `nestJs` here because enough though it doesn't use our encode/decode methods
   // for most/vanilla messages, we do generate static wrap/unwrap methods for the special
   // Struct/Value/wrapper types and use the `wrappers[...]` to have NestJS know about them.
-  if (options.outputEncodeMethods || options.outputJsonMethods || options.outputTypeRegistry || options.nestJs) {
+  if (
+    options.outputEncodeMethods ||
+    options.outputJsonMethods ||
+    options.outputTypeAnnotations ||
+    options.outputTypeRegistry ||
+    options.nestJs
+  ) {
     // then add the encoder/decoder/base instance
     visit(
       fileDesc,
@@ -182,7 +188,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
 
         const staticMembers: Code[] = [];
 
-        if (options.outputTypeRegistry) {
+        if (options.outputTypeAnnotations || options.outputTypeRegistry) {
           staticMembers.push(code`$type: '${fullTypeName}' as const`);
         }
 
@@ -550,7 +556,7 @@ function makeDeepPartial(options: Options, longs: ReturnType<typeof makeLongUtil
   );
 
   // Based on https://github.com/sindresorhus/type-fest/pull/259
-  const maybeExcludeType = options.outputTypeRegistry ? `| '$type'` : "";
+  const maybeExcludeType = options.outputTypeAnnotations || options.outputTypeRegistry ? `| '$type'` : "";
   const Exact = conditionalOutput(
     "Exact",
     code`
@@ -563,7 +569,8 @@ function makeDeepPartial(options: Options, longs: ReturnType<typeof makeLongUtil
   );
 
   // Based on the type from ts-essentials
-  const keys = options.outputTypeRegistry ? code`Exclude<keyof T, '$type'>` : code`keyof T`;
+  const keys =
+    options.outputTypeAnnotations || options.outputTypeRegistry ? code`Exclude<keyof T, '$type'>` : code`keyof T`;
   const DeepPartial = conditionalOutput(
     "DeepPartial",
     code`
@@ -642,7 +649,8 @@ function makeTimestampMethods(options: Options, longs: ReturnType<typeof makeLon
     seconds = "Math.trunc(date.getTime() / 1_000).toString()";
   }
 
-  const maybeTypeField = options.outputTypeRegistry ? `$type: 'google.protobuf.Timestamp',` : "";
+  const maybeTypeField =
+    options.outputTypeRegistry || options.outputTypeRegistry ? `$type: 'google.protobuf.Timestamp',` : "";
 
   const toTimestamp = conditionalOutput(
     "toTimestamp",
@@ -776,7 +784,7 @@ function generateInterfaceDeclaration(
   // interface name should be defined to avoid import collisions
   chunks.push(code`export interface ${def(fullName)} {`);
 
-  if (ctx.options.outputTypeRegistry) {
+  if (ctx.options.outputTypeAnnotations || ctx.options.outputTypeRegistry) {
     chunks.push(code`$type: '${fullTypeName}',`);
   }
 
@@ -892,7 +900,7 @@ function generateBaseInstanceFactory(
     fields.push(code`${name}: ${val}`);
   }
 
-  if (ctx.options.outputTypeRegistry) {
+  if (ctx.options.outputTypeAnnotations || ctx.options.outputTypeRegistry) {
     fields.unshift(code`$type: '${fullTypeName}'`);
   }
 
@@ -1079,7 +1087,8 @@ function getEncodeWriteSnippet(ctx: Context, field: FieldDescriptorProto): (plac
     const type = basicTypeName(ctx, field, { keepValueType: true });
     return (place) => code`${type}.encode(${utils.toTimestamp}(${place}), writer.uint32(${tag}).fork()).ldelim()`;
   } else if (isValueType(ctx, field)) {
-    const maybeTypeField = options.outputTypeRegistry ? `$type: '${field.typeName.slice(1)}',` : "";
+    const maybeTypeField =
+      options.outputTypeAnnotations || options.outputTypeRegistry ? `$type: '${field.typeName.slice(1)}',` : "";
 
     const type = basicTypeName(ctx, field, { keepValueType: true });
     const wrappedValue = (place: string): Code => {
@@ -1134,7 +1143,8 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
     if (isRepeated(field)) {
       if (isMapType(ctx, messageDesc, field)) {
         const valueType = (typeMap.get(field.typeName)![2] as DescriptorProto).field[1];
-        const maybeTypeField = options.outputTypeRegistry ? `$type: '${field.typeName.slice(1)}',` : "";
+        const maybeTypeField =
+          options.outputTypeAnnotations || options.outputTypeRegistry ? `$type: '${field.typeName.slice(1)}',` : "";
         const entryWriteSnippet = isValueType(ctx, valueType)
           ? code`
               if (value !== undefined) {
@@ -1293,7 +1303,7 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
       return {
   `);
 
-  if (ctx.options.outputTypeRegistry) {
+  if (ctx.options.outputTypeAnnotations || ctx.options.outputTypeRegistry) {
     chunks.push(code`$type: ${fullName}.$type,`);
   }
 
