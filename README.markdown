@@ -404,7 +404,7 @@ Generated code will be placed in the Gradle build directory.
 
 - With `--ts_proto_opt=nestJs=true`, the defaults will change to generate [NestJS protobuf](https://docs.nestjs.com/microservices/grpc) friendly types & service interfaces that can be used in both the client-side and server-side of NestJS protobuf implementations. See the [nestjs readme](NESTJS.markdown) for more information and implementation examples.
 
-  Specifically `outputEncodeMethods`, `outputJsonMethods`, and `outputClientImpl` will all be false, and `lowerCaseServiceMethods` will be true.
+  Specifically `outputEncodeMethods`, `outputJsonMethods`, and `outputClientImpl` will all be false, `lowerCaseServiceMethods` will be true and `outputServices` will be ignored.
 
   Note that `addGrpcMetadata`, `addNestjsRestParameter` and `returnObservable` will still be false.
 
