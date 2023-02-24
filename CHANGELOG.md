@@ -1,3 +1,11 @@
+# [1.140.0](https://github.com/stephenh/ts-proto/compare/v1.139.0...v1.140.0) (2023-02-24)
+
+
+### Features
+
+* `removeEnumPrefix` option ([#779](https://github.com/stephenh/ts-proto/issues/779)) ([53733e6](https://github.com/stephenh/ts-proto/commit/53733e61232f19ffb4f30abecd55a63899e2310c))
+* implementation of useAbortSignal option for grpc-web ([#777](https://github.com/stephenh/ts-proto/issues/777)) ([7a3d429](https://github.com/stephenh/ts-proto/commit/7a3d4291806568a938e88f53a55683633f26ec4a))
+
 # [1.139.0](https://github.com/stephenh/ts-proto/compare/v1.138.0...v1.139.0) (2023-01-31)
 
 
