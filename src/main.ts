@@ -190,6 +190,12 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
           staticMembers.push(generateEncode(ctx, fullName, message));
           staticMembers.push(generateDecode(ctx, fullName, message));
         }
+        if(options.outputEncodeMethods === "encode"){
+          staticMembers.push(generateEncode(ctx, fullName, message));
+        }
+        if(options.outputEncodeMethods === "decode"){
+          staticMembers.push(generateDecode(ctx, fullName, message));
+        }
         if (options.useAsyncIterable) {
           staticMembers.push(generateEncodeTransform(fullName));
           staticMembers.push(generateDecodeTransform(fullName));
