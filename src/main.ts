@@ -185,11 +185,11 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
         if (options.outputTypeRegistry) {
           staticMembers.push(code`$type: '${fullTypeName}' as const`);
         }
-        if(typeof options.outputEncodeMethods === "string"){
+        if(options.outputEncodeMethods === "encode-only"){
           staticMembers.push(generateEncode(ctx, fullName, message));
         }
 
-        if (options.outputEncodeMethods && typeof options.outputEncodeMethods === "boolean") {
+        if (options.outputEncodeMethods === true) {
           staticMembers.push(generateEncode(ctx, fullName, message));
           staticMembers.push(generateDecode(ctx, fullName, message));
         }
