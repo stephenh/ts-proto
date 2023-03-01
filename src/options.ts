@@ -45,7 +45,7 @@ export type Options = {
   esModuleInterop: boolean;
   fileSuffix: string;
   importSuffix: string;
-  outputEncodeMethods: true | false | "encode-only"
+  outputEncodeMethods: true | false | "encode-only" | "decode-only" | "encode-no-creation"
   outputJsonMethods: boolean;
   outputPartialMethods: boolean;
   outputTypeRegistry: boolean;
