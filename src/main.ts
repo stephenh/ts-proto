@@ -176,7 +176,11 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
         const outputWrapAndUnwrap = isWrapperType(fullTypeName);
 
         // Only decode, fromPartial, and wrap use the createBase method
-        if (options.outputEncodeMethods && options.outputEncodeMethods !== "encode-no-creation" || options.outputPartialMethods || outputWrapAndUnwrap) {
+        if (
+          (options.outputEncodeMethods && options.outputEncodeMethods !== "encode-no-creation") ||
+          options.outputPartialMethods ||
+          outputWrapAndUnwrap
+        ) {
           chunks.push(generateBaseInstanceFactory(ctx, fullName, message, fullTypeName));
         }
 
@@ -187,10 +191,14 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
         }
 
         if (options.outputEncodeMethods) {
-          if(options.outputEncodeMethods === true || options.outputEncodeMethods === "encode-only" || options.outputEncodeMethods === "encode-no-creation"){
+          if (
+            options.outputEncodeMethods === true ||
+            options.outputEncodeMethods === "encode-only" ||
+            options.outputEncodeMethods === "encode-no-creation"
+          ) {
             staticMembers.push(generateEncode(ctx, fullName, message));
           }
-          if(options.outputEncodeMethods === true || options.outputEncodeMethods === "decode-only"){
+          if (options.outputEncodeMethods === true || options.outputEncodeMethods === "decode-only") {
             staticMembers.push(generateDecode(ctx, fullName, message));
           }
         }
