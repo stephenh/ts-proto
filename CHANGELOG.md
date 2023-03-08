@@ -1,3 +1,10 @@
+# [1.141.0](https://github.com/stephenh/ts-proto/compare/v1.140.0...v1.141.0) (2023-03-08)
+
+
+### Features
+
+* output-encode-only methods ([#787](https://github.com/stephenh/ts-proto/issues/787)) ([3594410](https://github.com/stephenh/ts-proto/commit/3594410cc18fecc9c6f76f8abf7bdf9fdd178acd))
+
 # [1.140.0](https://github.com/stephenh/ts-proto/compare/v1.139.0...v1.140.0) (2023-02-24)
 
 
