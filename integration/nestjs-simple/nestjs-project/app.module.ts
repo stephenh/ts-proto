@@ -1,8 +1,8 @@
-import { Module } from '@nestjs/common';
-import { ClientsModule, Transport } from '@nestjs/microservices';
-import { join } from 'path';
-import { HERO_PACKAGE_NAME } from '../hero';
-import { HeroController } from './hero.controller';
+import { Module } from "@nestjs/common";
+import { ClientsModule, Transport } from "@nestjs/microservices";
+import { join } from "path";
+import { HERO_PACKAGE_NAME } from "../hero";
+import { HeroController } from "./hero.controller";
 
 @Module({
   imports: [
@@ -11,9 +11,9 @@ import { HeroController } from './hero.controller';
         name: HERO_PACKAGE_NAME,
         transport: Transport.GRPC,
         options: {
-          url: '0.0.0.0:8080',
+          url: "0.0.0.0:8086",
           package: HERO_PACKAGE_NAME,
-          protoPath: join(__dirname, '../hero.proto'),
+          protoPath: join(__dirname, "../hero.proto"),
           loader: {
             longs: Number,
           },
