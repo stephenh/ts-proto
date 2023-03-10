@@ -21,9 +21,6 @@ import SourceInfo, { Fields } from "./sourceInfo";
 import { contextTypeVar } from "./main";
 import { Context } from "./context";
 
-const hash = imp("hash*object-hash");
-const dataloader = imp("DataLoader*dataloader");
-
 /**
  * Generates an interface for `serviceDesc`.
  *
@@ -42,6 +39,8 @@ export function generateService(
 ): Code {
   const { options } = ctx;
   const chunks: Code[] = [];
+
+
 
   maybeAddComment(sourceInfo, chunks, serviceDesc.options?.deprecated);
   const maybeTypeVar = options.context ? `<${contextTypeVar}>` : "";
@@ -228,7 +227,7 @@ export function generateServiceClientImpl(
 }
 
 /** We've found a BatchXxx method, create a synthetic GetXxx method that calls it. */
-function generateBatchingRpcMethod(_ctx: Context, batchMethod: BatchMethod): Code {
+function generateBatchingRpcMethod(ctx: Context, batchMethod: BatchMethod): Code {
   const {
     methodDesc,
     singleMethodName,
@@ -240,6 +239,11 @@ function generateBatchingRpcMethod(_ctx: Context, batchMethod: BatchMethod): Cod
     uniqueIdentifier,
   } = batchMethod;
   assertInstanceOf(methodDesc, FormattedMethodDescriptor);
+
+  const { options } = ctx;
+
+  const hash = options.esModuleInterop ? imp("hash=object-hash") : imp("hash*object-hash");
+  const dataloader = options.esModuleInterop ? imp("DataLoader=dataloader") : imp("DataLoader*dataloader");
 
   // Create the `(keys) => ...` lambda we'll pass to the DataLoader constructor
   const lambda: Code[] = [];
@@ -286,6 +290,12 @@ function generateCachingRpcMethod(
   methodDesc: MethodDescriptorProto
 ): Code {
   assertInstanceOf(methodDesc, FormattedMethodDescriptor);
+
+  const { options } = ctx;
+
+  const hash = options.esModuleInterop ? imp("hash=object-hash") : imp("hash*object-hash");
+  const dataloader = options.esModuleInterop ? imp("DataLoader=dataloader") : imp("DataLoader*dataloader");
+
   const inputType = requestType(ctx, methodDesc);
   const outputType = responseType(ctx, methodDesc);
   const uniqueIdentifier = `${maybePrefixPackage(fileDesc, serviceDesc.name)}.${methodDesc.name}`;
