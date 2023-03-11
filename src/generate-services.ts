@@ -40,8 +40,6 @@ export function generateService(
   const { options } = ctx;
   const chunks: Code[] = [];
 
-
-
   maybeAddComment(sourceInfo, chunks, serviceDesc.options?.deprecated);
   const maybeTypeVar = options.context ? `<${contextTypeVar}>` : "";
   chunks.push(code`export interface ${def(serviceDesc.name)}${maybeTypeVar} {`);
