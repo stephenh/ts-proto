@@ -7,21 +7,30 @@ describe("utils", () => {
       // Foo
       const chunks: Code[] = [];
       maybeAddComment({ leadingComments: " Foo\n" }, chunks);
-      expect(joinCode(chunks).toCodeString()).toMatchInlineSnapshot(`"/** Foo */"`);
+      expect(joinCode(chunks).toString()).toMatchInlineSnapshot(`
+        "/** Foo */
+        "
+      `);
     });
 
     it("handles single-dot star comments", () => {
       // /* Foo */
       const chunks: Code[] = [];
       maybeAddComment({ leadingComments: " Foo " }, chunks);
-      expect(joinCode(chunks).toCodeString()).toMatchInlineSnapshot(`"/** Foo */"`);
+      expect(joinCode(chunks).toString()).toMatchInlineSnapshot(`
+        "/** Foo */
+        "
+      `);
     });
 
     it("handles single-line double-dot star comments", () => {
       // /** Foo */
       const chunks: Code[] = [];
       maybeAddComment({ leadingComments: " * Foo " }, chunks);
-      expect(joinCode(chunks).toCodeString()).toMatchInlineSnapshot(`"/** Foo */"`);
+      expect(joinCode(chunks).toString()).toMatchInlineSnapshot(`
+        "/** Foo */
+        "
+      `);
     });
 
     it("handles double-line double-dot star comments", () => {
@@ -32,12 +41,13 @@ describe("utils", () => {
       //  */
       const chunks: Code[] = [];
       maybeAddComment({ leadingComments: "*\n Foo\n \n bar.\n" }, chunks);
-      expect(joinCode(chunks).toCodeString()).toMatchInlineSnapshot(`
+      expect(joinCode(chunks).toString()).toMatchInlineSnapshot(`
         "/**
          * Foo
-         * 
+         *
          * bar.
-         */"
+         */
+        "
       `);
     });
 
@@ -46,11 +56,12 @@ describe("utils", () => {
       // // Bar
       const chunks: Code[] = [];
       maybeAddComment({ leadingComments: " Foo\n Bar\n" }, chunks);
-      expect(joinCode(chunks).toCodeString()).toMatchInlineSnapshot(`
+      expect(joinCode(chunks).toString()).toMatchInlineSnapshot(`
         "/**
          * Foo
          * Bar
-         */"
+         */
+        "
       `);
     });
   });

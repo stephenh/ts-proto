@@ -341,7 +341,7 @@ export class DashStateClientImpl implements DashState {
     metadata?: grpc.Metadata,
     abortSignal?: AbortSignal,
   ): Observable<DashUserSettingsState> {
-    return this.rpc.unary(DashStateUserSettingsDesc, Empty.fromPartial(request), abortSignal, metadata);
+    return this.rpc.unary(DashStateUserSettingsDesc, Empty.fromPartial(request), metadata, abortSignal);
   }
 }
 

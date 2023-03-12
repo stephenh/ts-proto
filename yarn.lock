@@ -8822,12 +8822,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-poet@npm:^6.2.0":
-  version: 6.2.0
-  resolution: "ts-poet@npm:6.2.0"
+"ts-poet@npm:^6.4.1":
+  version: 6.4.1
+  resolution: "ts-poet@npm:6.4.1"
   dependencies:
     dprint-node: ^1.0.7
-  checksum: 5ca501e24c1dd7b1d2204ecdc8de594699536aef02e1d35656edc6dc9cb937d021ea2b47f744c80daed1cd2ad6660c61172538bca89722ee050586615be8e53b
+  checksum: 2595caa15fe374b4dd5e1c09fd26b3d5e2fa24ef6153c25a41a4c01ed999682daed9e5753ead72862a099d197dc2bf8827b083632abc78754d9f0d55462f3e55
   languageName: node
   linkType: hard
 
@@ -8876,7 +8876,7 @@ __metadata:
     rxjs: ^7.4.0
     semantic-release: ^19.0.3
     ts-jest: ^28.0.5
-    ts-poet: ^6.2.0
+    ts-poet: ^6.4.1
     ts-proto-descriptors: 1.7.1
     tsx: ^3.8.2
     typescript: ^4.9.4

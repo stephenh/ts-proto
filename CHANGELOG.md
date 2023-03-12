@@ -1,3 +1,10 @@
+## [1.141.1](https://github.com/stephenh/ts-proto/compare/v1.141.0...v1.141.1) (2023-03-11)
+
+
+### Bug Fixes
+
+* implement abort grpc web ([#785](https://github.com/stephenh/ts-proto/issues/785)) ([6a40d72](https://github.com/stephenh/ts-proto/commit/6a40d72d6a41d91264366d238dafd08291eba0b7))
+
 # [1.141.0](https://github.com/stephenh/ts-proto/compare/v1.140.0...v1.141.0) (2023-03-08)
 
 
