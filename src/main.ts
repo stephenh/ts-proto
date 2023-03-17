@@ -1020,25 +1020,43 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
         const valueSetterSnippet = ctx.options.useMapType
           ? `message.${fieldName}${maybeNonNullAssertion}.set(${varName}.key, ${varName}.value)`
           : `message.${fieldName}${maybeNonNullAssertion}[${varName}.key] = ${varName}.value`;
+        let initializerSnippet = '';
+        if (!options.initializeFieldsAsUndefined && isOptionalProperty(field, messageDesc.options, options)){
+          initializerSnippet = `
+            if(message.${fieldName} === undefined)
+              message.${fieldName} = ${ctx.options.useMapType ? 'new Map()' : '{}'};
+          `;
+        }
+
         chunks.push(code`
           const ${varName} = ${readSnippet};
           if (${varName}.value !== undefined) {
+            ${initializerSnippet}
             ${valueSetterSnippet};
           }
         `);
-      } else if (packedType(field.type) === undefined) {
-        chunks.push(code`message.${fieldName}${maybeNonNullAssertion}.push(${readSnippet});`);
       } else {
-        chunks.push(code`
-          if ((tag & 7) === 2) {
-            const end2 = reader.uint32() + reader.pos;
-            while (reader.pos < end2) {
+        if (!options.initializeFieldsAsUndefined && isOptionalProperty(field, messageDesc.options, options)){
+          chunks.push(code`
+            if(message.${fieldName} === undefined)
+              message.${fieldName} = [];
+          `);
+        }
+
+        if (packedType(field.type) === undefined) {
+          chunks.push(code`message.${fieldName}${maybeNonNullAssertion}.push(${readSnippet});`);
+        } else {
+          chunks.push(code`
+            if ((tag & 7) === 2) {
+              const end2 = reader.uint32() + reader.pos;
+              while (reader.pos < end2) {
+                message.${fieldName}${maybeNonNullAssertion}.push(${readSnippet});
+              }
+            } else {
               message.${fieldName}${maybeNonNullAssertion}.push(${readSnippet});
             }
-          } else {
-            message.${fieldName}${maybeNonNullAssertion}.push(${readSnippet});
-          }
-        `);
+          `);
+        }
       }
     } else if (isWithinOneOfThatShouldBeUnion(options, field)) {
       let oneofName = maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options);
