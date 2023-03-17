@@ -66,26 +66,43 @@ export const MyMessage = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.foo = reader.int32();
-          break;
+          continue;
         case 2:
+          if (tag != 16) {
+            break;
+          }
+
           message.foo2 = reader.int32();
-          break;
+          continue;
         case 3:
+          if (tag != 26) {
+            break;
+          }
+
           message.bar = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag != 34) {
+            break;
+          }
+
           message.quux = reader.string();
-          break;
-        default:
-          const startPos = reader.pos;
-          reader.skipType(tag & 7);
-          (message as any)._unknownFields[tag] = [
-            ...((message as any)._unknownFields[tag] || []),
-            reader.buf.slice(startPos, reader.pos),
-          ];
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      const startPos = reader.pos;
+      reader.skipType(tag & 7);
+      (message as any)._unknownFields[tag] = [
+        ...((message as any)._unknownFields[tag] || []),
+        reader.buf.slice(startPos, reader.pos),
+      ];
     }
     return message;
   },
@@ -122,15 +139,16 @@ export const RequestType = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        default:
-          const startPos = reader.pos;
-          reader.skipType(tag & 7);
-          (message as any)._unknownFields[tag] = [
-            ...((message as any)._unknownFields[tag] || []),
-            reader.buf.slice(startPos, reader.pos),
-          ];
-          break;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      const startPos = reader.pos;
+      reader.skipType(tag & 7);
+      (message as any)._unknownFields[tag] = [
+        ...((message as any)._unknownFields[tag] || []),
+        reader.buf.slice(startPos, reader.pos),
+      ];
     }
     return message;
   },
@@ -167,15 +185,16 @@ export const ResponseType = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        default:
-          const startPos = reader.pos;
-          reader.skipType(tag & 7);
-          (message as any)._unknownFields[tag] = [
-            ...((message as any)._unknownFields[tag] || []),
-            reader.buf.slice(startPos, reader.pos),
-          ];
-          break;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      const startPos = reader.pos;
+      reader.skipType(tag & 7);
+      (message as any)._unknownFields[tag] = [
+        ...((message as any)._unknownFields[tag] || []),
+        reader.buf.slice(startPos, reader.pos),
+      ];
     }
     return message;
   },

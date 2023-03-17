@@ -1,0 +1,34 @@
+syntax = "proto2";
+
+message GroupsOptionalTest {
+  optional int32 int1 = 1;
+  optional group Group = 2 {
+    optional string key = 1;
+    optional string value = 2;
+  }
+
+  optional int32 int3 = 3;
+}
+
+message GroupsRepeatedTest {
+  repeated int32 int1 = 1;
+  repeated group Group = 2 {
+    repeated string key = 1;
+    repeated string value = 2;
+  }
+
+  repeated int32 int3 = 3;
+}
+
+message GroupsNestedTest {
+  repeated int32 int1 = 1;
+  repeated group Group = 2 {
+    repeated group Nested = 1 {
+      repeated group Nested2 = 2 {
+        required string string1 = 1;
+      }
+    }
+  }
+
+  repeated int32 int3 = 3;
+}
