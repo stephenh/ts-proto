@@ -234,7 +234,7 @@ export function defaultValue(ctx: Context, field: FieldDescriptorProto): any {
         return "new Uint8Array()";
       }
     case FieldDescriptorProto_Type.TYPE_MESSAGE:
-    case FieldDescriptorProto_Type.TYPE_ENUM:
+    case FieldDescriptorProto_Type.TYPE_GROUP:
     default:
       return "undefined";
   }
