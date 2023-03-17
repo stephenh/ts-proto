@@ -59,7 +59,7 @@ export const BatchQueryRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): BatchQueryRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseBatchQueryRequest();
     while (reader.pos < end) {
@@ -114,7 +114,7 @@ export const BatchQueryResponse = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): BatchQueryResponse {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseBatchQueryResponse();
     while (reader.pos < end) {
@@ -169,7 +169,7 @@ export const BatchMapQueryRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): BatchMapQueryRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseBatchMapQueryRequest();
     while (reader.pos < end) {
@@ -224,7 +224,7 @@ export const BatchMapQueryResponse = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): BatchMapQueryResponse {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseBatchMapQueryResponse();
     while (reader.pos < end) {
@@ -298,7 +298,7 @@ export const BatchMapQueryResponse_EntitiesEntry = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): BatchMapQueryResponse_EntitiesEntry {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseBatchMapQueryResponse_EntitiesEntry();
     while (reader.pos < end) {
@@ -363,7 +363,7 @@ export const GetOnlyMethodRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): GetOnlyMethodRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetOnlyMethodRequest();
     while (reader.pos < end) {
@@ -414,7 +414,7 @@ export const GetOnlyMethodResponse = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): GetOnlyMethodResponse {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetOnlyMethodResponse();
     while (reader.pos < end) {
@@ -467,7 +467,7 @@ export const WriteMethodRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): WriteMethodRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseWriteMethodRequest();
     while (reader.pos < end) {
@@ -515,7 +515,7 @@ export const WriteMethodResponse = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): WriteMethodResponse {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseWriteMethodResponse();
     while (reader.pos < end) {
@@ -564,7 +564,7 @@ export const Entity = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Entity {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEntity();
     while (reader.pos < end) {
@@ -642,7 +642,7 @@ export class EntityServiceClientImpl<Context extends DataLoaders> implements Ent
   BatchQuery(ctx: Context, request: BatchQueryRequest): Promise<BatchQueryResponse> {
     const data = BatchQueryRequest.encode(request).finish();
     const promise = this.rpc.request(ctx, this.service, "BatchQuery", data);
-    return promise.then((data) => BatchQueryResponse.decode(new _m0.Reader(data)));
+    return promise.then((data) => BatchQueryResponse.decode(_m0.Reader.create(data)));
   }
 
   GetMapQuery(ctx: Context, id: string): Promise<Entity> {
@@ -660,7 +660,7 @@ export class EntityServiceClientImpl<Context extends DataLoaders> implements Ent
   BatchMapQuery(ctx: Context, request: BatchMapQueryRequest): Promise<BatchMapQueryResponse> {
     const data = BatchMapQueryRequest.encode(request).finish();
     const promise = this.rpc.request(ctx, this.service, "BatchMapQuery", data);
-    return promise.then((data) => BatchMapQueryResponse.decode(new _m0.Reader(data)));
+    return promise.then((data) => BatchMapQueryResponse.decode(_m0.Reader.create(data)));
   }
 
   GetOnlyMethod(ctx: Context, request: GetOnlyMethodRequest): Promise<GetOnlyMethodResponse> {
@@ -669,7 +669,7 @@ export class EntityServiceClientImpl<Context extends DataLoaders> implements Ent
         const responses = requests.map(async (request) => {
           const data = GetOnlyMethodRequest.encode(request).finish();
           const response = await this.rpc.request(ctx, "batching.EntityService", "GetOnlyMethod", data);
-          return GetOnlyMethodResponse.decode(new _m0.Reader(response));
+          return GetOnlyMethodResponse.decode(_m0.Reader.create(response));
         });
         return Promise.all(responses);
       }, { cacheKeyFn: hash, ...ctx.rpcDataLoaderOptions });
@@ -680,7 +680,7 @@ export class EntityServiceClientImpl<Context extends DataLoaders> implements Ent
   WriteMethod(ctx: Context, request: WriteMethodRequest): Promise<WriteMethodResponse> {
     const data = WriteMethodRequest.encode(request).finish();
     const promise = this.rpc.request(ctx, this.service, "WriteMethod", data);
-    return promise.then((data) => WriteMethodResponse.decode(new _m0.Reader(data)));
+    return promise.then((data) => WriteMethodResponse.decode(_m0.Reader.create(data)));
   }
 }
 

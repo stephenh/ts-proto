@@ -41,7 +41,7 @@ export const WithEmtpy = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): WithEmtpy {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseWithEmtpy();
     while (reader.pos < end) {
@@ -92,7 +92,7 @@ export const WithStruct = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): WithStruct {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseWithStruct();
     while (reader.pos < end) {
@@ -143,7 +143,7 @@ export const WithTimestamp = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): WithTimestamp {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseWithTimestamp();
     while (reader.pos < end) {
@@ -206,7 +206,7 @@ export const WithAll = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): WithAll {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseWithAll();
     while (reader.pos < end) {

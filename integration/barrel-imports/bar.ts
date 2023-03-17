@@ -22,7 +22,7 @@ export const Bar = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Bar {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseBar();
     while (reader.pos < end) {

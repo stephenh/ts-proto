@@ -36,7 +36,7 @@ export const Foo = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Foo {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFoo();
     while (reader.pos < end) {
@@ -91,7 +91,7 @@ export const Foo2 = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Foo2 {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFoo2();
     while (reader.pos < end) {
@@ -146,7 +146,7 @@ export const WithStruct = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): WithStruct {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseWithStruct();
     while (reader.pos < end) {

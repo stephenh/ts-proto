@@ -100,7 +100,7 @@ function createBaseDoubleValue(): DoubleValue {
 
 export const DoubleValue = {
   decode(input: _m0.Reader | Uint8Array, length?: number): DoubleValue {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDoubleValue();
     while (reader.pos < end) {
@@ -124,7 +124,7 @@ function createBaseFloatValue(): FloatValue {
 
 export const FloatValue = {
   decode(input: _m0.Reader | Uint8Array, length?: number): FloatValue {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFloatValue();
     while (reader.pos < end) {
@@ -148,7 +148,7 @@ function createBaseInt64Value(): Int64Value {
 
 export const Int64Value = {
   decode(input: _m0.Reader | Uint8Array, length?: number): Int64Value {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseInt64Value();
     while (reader.pos < end) {
@@ -172,7 +172,7 @@ function createBaseUInt64Value(): UInt64Value {
 
 export const UInt64Value = {
   decode(input: _m0.Reader | Uint8Array, length?: number): UInt64Value {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUInt64Value();
     while (reader.pos < end) {
@@ -196,7 +196,7 @@ function createBaseInt32Value(): Int32Value {
 
 export const Int32Value = {
   decode(input: _m0.Reader | Uint8Array, length?: number): Int32Value {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseInt32Value();
     while (reader.pos < end) {
@@ -220,7 +220,7 @@ function createBaseUInt32Value(): UInt32Value {
 
 export const UInt32Value = {
   decode(input: _m0.Reader | Uint8Array, length?: number): UInt32Value {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUInt32Value();
     while (reader.pos < end) {
@@ -244,7 +244,7 @@ function createBaseBoolValue(): BoolValue {
 
 export const BoolValue = {
   decode(input: _m0.Reader | Uint8Array, length?: number): BoolValue {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseBoolValue();
     while (reader.pos < end) {
@@ -268,7 +268,7 @@ function createBaseStringValue(): StringValue {
 
 export const StringValue = {
   decode(input: _m0.Reader | Uint8Array, length?: number): StringValue {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStringValue();
     while (reader.pos < end) {
@@ -292,7 +292,7 @@ function createBaseBytesValue(): BytesValue {
 
 export const BytesValue = {
   decode(input: _m0.Reader | Uint8Array, length?: number): BytesValue {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseBytesValue();
     while (reader.pos < end) {

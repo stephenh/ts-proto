@@ -178,7 +178,7 @@ export const Version = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Version {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseVersion();
     (message as any)._unknownFields = {};
@@ -247,7 +247,7 @@ export const CodeGeneratorRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): CodeGeneratorRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCodeGeneratorRequest();
     (message as any)._unknownFields = {};
@@ -313,7 +313,7 @@ export const CodeGeneratorResponse = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): CodeGeneratorResponse {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCodeGeneratorResponse();
     (message as any)._unknownFields = {};
@@ -379,7 +379,7 @@ export const CodeGeneratorResponse_File = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): CodeGeneratorResponse_File {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCodeGeneratorResponse_File();
     (message as any)._unknownFields = {};
