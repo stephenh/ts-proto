@@ -64,20 +64,23 @@ export const MyMessage = {
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 8:
           message.foo = reader.int32();
           break;
-        case 2:
+        case 16:
           message.foo2 = reader.int32();
           break;
-        case 3:
+        case 26:
           message.bar = reader.string();
           break;
-        case 4:
+        case 34:
           message.quux = reader.string();
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           const startPos = reader.pos;
           reader.skipType(tag & 7);
           (message as any)._unknownFields[tag] = [
@@ -121,8 +124,11 @@ export const RequestType = {
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
+      switch (tag) {
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           const startPos = reader.pos;
           reader.skipType(tag & 7);
           (message as any)._unknownFields[tag] = [
@@ -166,8 +172,11 @@ export const ResponseType = {
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
+      switch (tag) {
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           const startPos = reader.pos;
           reader.skipType(tag & 7);
           (message as any)._unknownFields[tag] = [

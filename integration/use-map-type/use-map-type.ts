@@ -62,11 +62,14 @@ export const Entity = {
     const message = createBaseEntity();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 8:
           message.id = reader.int32();
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }
@@ -135,41 +138,44 @@ export const Maps = {
     const message = createBaseMaps();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 10:
           const entry1 = Maps_StrToEntityEntry.decode(reader, reader.uint32());
           if (entry1.value !== undefined) {
             message.strToEntity.set(entry1.key, entry1.value);
           }
           break;
-        case 2:
+        case 18:
           const entry2 = Maps_Int32ToInt32Entry.decode(reader, reader.uint32());
           if (entry2.value !== undefined) {
             message.int32ToInt32.set(entry2.key, entry2.value);
           }
           break;
-        case 3:
+        case 26:
           const entry3 = Maps_StringToBytesEntry.decode(reader, reader.uint32());
           if (entry3.value !== undefined) {
             message.stringToBytes.set(entry3.key, entry3.value);
           }
           break;
-        case 4:
+        case 34:
           const entry4 = Maps_Int64ToInt64Entry.decode(reader, reader.uint32());
           if (entry4.value !== undefined) {
             message.int64ToInt64.set(entry4.key, entry4.value);
           }
           break;
-        case 5:
+        case 42:
           const entry5 = Maps_MapOfTimestampsEntry.decode(reader, reader.uint32());
           if (entry5.value !== undefined) {
             message.mapOfTimestamps.set(entry5.key, entry5.value);
           }
           break;
-        case 6:
+        case 50:
           message.struct = Struct.unwrap(Struct.decode(reader, reader.uint32()));
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }
@@ -326,14 +332,17 @@ export const Maps_StrToEntityEntry = {
     const message = createBaseMaps_StrToEntityEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 10:
           message.key = reader.string();
           break;
-        case 2:
+        case 18:
           message.value = Entity.decode(reader, reader.uint32());
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }
@@ -390,14 +399,17 @@ export const Maps_Int32ToInt32Entry = {
     const message = createBaseMaps_Int32ToInt32Entry();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 8:
           message.key = reader.int32();
           break;
-        case 2:
+        case 16:
           message.value = reader.int32();
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }
@@ -449,14 +461,17 @@ export const Maps_StringToBytesEntry = {
     const message = createBaseMaps_StringToBytesEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 10:
           message.key = reader.string();
           break;
-        case 2:
+        case 18:
           message.value = reader.bytes();
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }
@@ -512,14 +527,17 @@ export const Maps_Int64ToInt64Entry = {
     const message = createBaseMaps_Int64ToInt64Entry();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 8:
           message.key = longToNumber(reader.int64() as Long);
           break;
-        case 2:
+        case 16:
           message.value = longToNumber(reader.int64() as Long);
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }
@@ -571,14 +589,17 @@ export const Maps_MapOfTimestampsEntry = {
     const message = createBaseMaps_MapOfTimestampsEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 10:
           message.key = reader.string();
           break;
-        case 2:
+        case 18:
           message.value = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }

@@ -129,47 +129,50 @@ export const PleaseChoose = {
     const message = createBasePleaseChoose();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 10:
           message.name = reader.string();
           break;
-        case 2:
+        case 17:
           message.choice = { $case: "aNumber", aNumber: reader.double() };
           break;
-        case 3:
+        case 26:
           message.choice = { $case: "aString", aString: reader.string() };
           break;
-        case 4:
+        case 34:
           message.choice = { $case: "aMessage", aMessage: PleaseChoose_Submessage.decode(reader, reader.uint32()) };
           break;
-        case 6:
+        case 48:
           message.choice = { $case: "aBool", aBool: reader.bool() };
           break;
-        case 10:
+        case 82:
           message.choice = { $case: "bunchaBytes", bunchaBytes: reader.bytes() };
           break;
-        case 11:
+        case 88:
           message.choice = { $case: "anEnum", anEnum: reader.int32() as any };
           break;
-        case 5:
+        case 40:
           message.age = reader.uint32();
           break;
-        case 7:
+        case 58:
           message.eitherOr = { $case: "either", either: reader.string() };
           break;
-        case 8:
+        case 66:
           message.eitherOr = { $case: "or", or: reader.string() };
           break;
-        case 9:
+        case 74:
           message.eitherOr = { $case: "thirdOption", thirdOption: reader.string() };
           break;
-        case 12:
+        case 98:
           message.signature = reader.bytes();
           break;
-        case 13:
+        case 106:
           message.value = Value.unwrap(Value.decode(reader, reader.uint32()));
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }
@@ -301,11 +304,14 @@ export const PleaseChoose_Submessage = {
     const message = createBasePleaseChoose_Submessage();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 10:
           message.name = reader.string();
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }
@@ -355,14 +361,17 @@ export const SimpleButOptional = {
     const message = createBaseSimpleButOptional();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 10:
           message.name = reader.string();
           break;
-        case 2:
+        case 16:
           message.age = reader.int32();
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }

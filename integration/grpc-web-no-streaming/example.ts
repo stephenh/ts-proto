@@ -90,14 +90,17 @@ export const DashFlash = {
     const message = createBaseDashFlash();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 10:
           message.msg = reader.string();
           break;
-        case 2:
+        case 16:
           message.type = reader.int32() as any;
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }
@@ -155,17 +158,20 @@ export const DashUserSettingsState = {
     const message = createBaseDashUserSettingsState();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 10:
           message.email = reader.string();
           break;
-        case 6:
+        case 50:
           message.urls = DashUserSettingsState_URLs.decode(reader, reader.uint32());
           break;
-        case 7:
+        case 58:
           message.flashes.push(DashFlash.decode(reader, reader.uint32()));
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }
@@ -230,14 +236,17 @@ export const DashUserSettingsState_URLs = {
     const message = createBaseDashUserSettingsState_URLs();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 10:
           message.connectGoogle = reader.string();
           break;
-        case 2:
+        case 18:
           message.connectGithub = reader.string();
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }
@@ -286,8 +295,11 @@ export const Empty = {
     const message = createBaseEmpty();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
+      switch (tag) {
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }

@@ -66,11 +66,14 @@ export const DividerData = {
     const message = createBaseDividerData();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 8:
           message.type = reader.int32() as any;
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }

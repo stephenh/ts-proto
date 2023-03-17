@@ -64,11 +64,14 @@ export const BatchQueryRequest = {
     const message = createBaseBatchQueryRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 10:
           message.ids.push(reader.string());
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }
@@ -119,11 +122,14 @@ export const BatchQueryResponse = {
     const message = createBaseBatchQueryResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 10:
           message.entities.push(Entity.decode(reader, reader.uint32()));
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }
@@ -174,11 +180,14 @@ export const BatchMapQueryRequest = {
     const message = createBaseBatchMapQueryRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 10:
           message.ids.push(reader.string());
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }
@@ -229,14 +238,17 @@ export const BatchMapQueryResponse = {
     const message = createBaseBatchMapQueryResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 10:
           const entry1 = BatchMapQueryResponse_EntitiesEntry.decode(reader, reader.uint32());
           if (entry1.value !== undefined) {
             message.entities[entry1.key] = entry1.value;
           }
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }
@@ -303,14 +315,17 @@ export const BatchMapQueryResponse_EntitiesEntry = {
     const message = createBaseBatchMapQueryResponse_EntitiesEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 10:
           message.key = reader.string();
           break;
-        case 2:
+        case 18:
           message.value = Entity.decode(reader, reader.uint32());
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }
@@ -368,11 +383,14 @@ export const GetOnlyMethodRequest = {
     const message = createBaseGetOnlyMethodRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 10:
           message.id = reader.string();
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }
@@ -419,11 +437,14 @@ export const GetOnlyMethodResponse = {
     const message = createBaseGetOnlyMethodResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 10:
           message.entity = Entity.decode(reader, reader.uint32());
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }
@@ -472,11 +493,14 @@ export const WriteMethodRequest = {
     const message = createBaseWriteMethodRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 10:
           message.id = reader.string();
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }
@@ -520,8 +544,11 @@ export const WriteMethodResponse = {
     const message = createBaseWriteMethodResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
+      switch (tag) {
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }
@@ -569,14 +596,17 @@ export const Entity = {
     const message = createBaseEntity();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 10:
           message.id = reader.string();
           break;
-        case 2:
+        case 18:
           message.name = reader.string();
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }

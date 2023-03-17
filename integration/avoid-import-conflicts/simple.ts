@@ -90,14 +90,17 @@ export const Simple = {
     const message = createBaseSimple();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 10:
           message.name = reader.string();
           break;
-        case 2:
+        case 18:
           message.otherSimple = Simple3.decode(reader, reader.uint32());
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }
@@ -155,14 +158,17 @@ export const SimpleEnums = {
     const message = createBaseSimpleEnums();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 8:
           message.localEnum = reader.int32() as any;
           break;
-        case 2:
+        case 16:
           message.importEnum = reader.int32() as any;
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }
@@ -214,11 +220,14 @@ export const FooServiceCreateRequest = {
     const message = createBaseFooServiceCreateRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 8:
           message.kind = reader.int32() as any;
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }
@@ -265,11 +274,14 @@ export const FooServiceCreateResponse = {
     const message = createBaseFooServiceCreateResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 8:
           message.kind = reader.int32() as any;
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }

@@ -105,14 +105,17 @@ export const Struct = {
     const message = createBaseStruct();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 10:
           const entry1 = Struct_FieldsEntry.decode(reader, reader.uint32());
           if (entry1.value !== undefined) {
             message.fields[entry1.key] = entry1.value;
           }
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }
@@ -202,14 +205,17 @@ export const Struct_FieldsEntry = {
     const message = createBaseStruct_FieldsEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 10:
           message.key = reader.string();
           break;
-        case 2:
+        case 18:
           message.value = Value.unwrap(Value.decode(reader, reader.uint32()));
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }
@@ -275,29 +281,32 @@ export const Value = {
     const message = createBaseValue();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 8:
           message.kind = { $case: "null_value", null_value: reader.int32() as any };
           break;
-        case 2:
+        case 17:
           message.kind = { $case: "number_value", number_value: reader.double() };
           break;
-        case 3:
+        case 26:
           message.kind = { $case: "string_value", string_value: reader.string() };
           break;
-        case 4:
+        case 32:
           message.kind = { $case: "bool_value", bool_value: reader.bool() };
           break;
-        case 5:
+        case 42:
           message.kind = { $case: "struct_value", struct_value: Struct.unwrap(Struct.decode(reader, reader.uint32())) };
           break;
-        case 6:
+        case 50:
           message.kind = {
             $case: "list_value",
             list_value: ListValue.unwrap(ListValue.decode(reader, reader.uint32())),
           };
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }
@@ -437,11 +446,14 @@ export const ListValue = {
     const message = createBaseListValue();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 10:
           message.values.push(Value.unwrap(Value.decode(reader, reader.uint32())));
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }

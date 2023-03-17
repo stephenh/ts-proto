@@ -34,14 +34,17 @@ export const Point = {
     const message = createBasePoint();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 9:
           message.lat = reader.double();
           break;
-        case 2:
+        case 17:
           message.lng = reader.double();
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }
@@ -93,14 +96,17 @@ export const Area = {
     const message = createBaseArea();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 10:
           message.nw = Point.decode(reader, reader.uint32());
           break;
-        case 2:
+        case 18:
           message.se = Point.decode(reader, reader.uint32());
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }

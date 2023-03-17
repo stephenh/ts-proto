@@ -130,14 +130,17 @@ export const Struct = {
     const message = createBaseStruct();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 10:
           const entry1 = Struct_FieldsEntry.decode(reader, reader.uint32());
           if (entry1.value !== undefined) {
             message.fields[entry1.key] = entry1.value;
           }
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }
@@ -232,14 +235,17 @@ export const Struct_FieldsEntry = {
     const message = createBaseStruct_FieldsEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 10:
           message.key = reader.string();
           break;
-        case 2:
+        case 18:
           message.value = Value.unwrap(Value.decode(reader, reader.uint32()));
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }
@@ -319,26 +325,29 @@ export const Value = {
     const message = createBaseValue();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 8:
           message.nullValue = reader.int32() as any;
           break;
-        case 2:
+        case 17:
           message.numberValue = reader.double();
           break;
-        case 3:
+        case 26:
           message.stringValue = reader.string();
           break;
-        case 4:
+        case 32:
           message.boolValue = reader.bool();
           break;
-        case 5:
+        case 42:
           message.structValue = Struct.unwrap(Struct.decode(reader, reader.uint32()));
           break;
-        case 6:
+        case 50:
           message.listValue = ListValue.unwrap(ListValue.decode(reader, reader.uint32()));
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }
@@ -445,11 +454,14 @@ export const ListValue = {
     const message = createBaseListValue();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 10:
           message.values.push(Value.unwrap(Value.decode(reader, reader.uint32())));
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }

@@ -1,5 +1,5 @@
 import { code, Code, conditionalOutput, def, imp, joinCode } from "ts-poet";
-import { DescriptorProto, FieldDescriptorProto, FileDescriptorProto } from "ts-proto-descriptors";
+import { DescriptorProto, FieldDescriptorProto, FieldDescriptorProto_Type, FileDescriptorProto } from "ts-proto-descriptors";
 import {
   basicLongWireType,
   basicTypeName,
@@ -947,13 +947,14 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
   chunks.push(code`
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
+      switch (tag) {
   `);
 
   // add a case for each incoming field
   messageDesc.field.forEach((field) => {
     const fieldName = maybeSnakeToCamel(field.name, options);
-    chunks.push(code`case ${field.number}:`);
+    const tag = ((field.number << 3) | basicWireType(field.type)) >>> 0;
+    chunks.push(code`case ${tag}:`);
 
     // get a generic 'reader.doSomething' bit that is specific to the basic type
     let readSnippet: Code;
@@ -999,7 +1000,11 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
       readSnippet = code`${utils.fromProtoObjectId}(${type}.decode(reader, reader.uint32()))`;
     } else if (isMessage(field)) {
       const type = basicTypeName(ctx, field);
-      readSnippet = code`${type}.decode(reader, reader.uint32())`;
+
+      if(field.type == FieldDescriptorProto_Type.TYPE_GROUP)
+        readSnippet = code`${type}.decode(reader)`;
+      else
+        readSnippet = code`${type}.decode(reader, reader.uint32())`;
     } else {
       throw new Error(`Unhandled field ${field}`);
     }
@@ -1044,9 +1049,14 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
     chunks.push(code`break;`);
   });
 
+  chunks.push(code`
+    default:
+      if((tag & 7) == 4 || tag == 0)
+        return message;
+  `);
+
   if (options.unknownFields) {
     chunks.push(code`
-      default:
         const startPos = reader.pos;
         reader.skipType(tag & 7);
         (message as any)._unknownFields[tag] = [...((message as any)._unknownFields[tag] || []), reader.buf.slice(startPos, reader.pos)];
@@ -1054,7 +1064,6 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
     `);
   } else {
     chunks.push(code`
-      default:
         reader.skipType(tag & 7);
         break;
     `);
@@ -1104,8 +1113,14 @@ function getEncodeWriteSnippet(ctx: Context, field: FieldDescriptorProto): (plac
     const tag = ((field.number << 3) | 2) >>> 0;
     return (place) => code`${type}.encode(${wrappedValue(place)}, writer.uint32(${tag}).fork()).ldelim()`;
   } else if (isMessage(field)) {
-    const tag = ((field.number << 3) | 2) >>> 0;
     const type = basicTypeName(ctx, field);
+
+    if(field.type == FieldDescriptorProto_Type.TYPE_GROUP){
+      const startTag = ((field.number << 3) | 3) >>> 0, endTag = ((field.number << 3) | 4) >>> 0;
+      return (place) => code`${type}.encode(${place}, writer.uint32(${startTag})).uint32(${endTag})`;
+    }
+
+    const tag = ((field.number << 3) | 2) >>> 0;
     return (place) => code`${type}.encode(${place}, writer.uint32(${tag}).fork()).ldelim()`;
   } else {
     throw new Error(`Unhandled field ${field}`);
@@ -1237,8 +1252,8 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
         for (const oneOfField of oneOfFieldsDict[field.oneofIndex]) {
           const writeSnippet = getEncodeWriteSnippet(ctx, oneOfField);
           const oneOfFieldName = maybeSnakeToCamel(oneOfField.name, ctx.options);
-          chunks.push(code`case "${oneOfFieldName}": 
-            ${writeSnippet(`message.${oneofName}.${oneOfFieldName}`)}; 
+          chunks.push(code`case "${oneOfFieldName}":
+            ${writeSnippet(`message.${oneofName}.${oneOfFieldName}`)};
             break;`);
         }
         chunks.push(code`}`);

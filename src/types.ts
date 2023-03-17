@@ -44,7 +44,10 @@ export function basicWireType(type: FieldDescriptorProto_Type): number {
       return 0;
     case FieldDescriptorProto_Type.TYPE_STRING:
     case FieldDescriptorProto_Type.TYPE_BYTES:
+    case FieldDescriptorProto_Type.TYPE_MESSAGE:
       return 2;
+    case FieldDescriptorProto_Type.TYPE_GROUP:
+      return 3;
     default:
       throw new Error("Invalid type " + type);
   }
@@ -98,6 +101,7 @@ export function basicTypeName(
         return code`Uint8Array`;
       }
     case FieldDescriptorProto_Type.TYPE_MESSAGE:
+    case FieldDescriptorProto_Type.TYPE_GROUP:
     case FieldDescriptorProto_Type.TYPE_ENUM:
       return messageToTypeName(ctx, field.typeName, { ...typeOptions, repeated: isRepeated(field) });
     default:
@@ -230,6 +234,7 @@ export function defaultValue(ctx: Context, field: FieldDescriptorProto): any {
         return "new Uint8Array()";
       }
     case FieldDescriptorProto_Type.TYPE_MESSAGE:
+    case FieldDescriptorProto_Type.TYPE_ENUM:
     default:
       return "undefined";
   }
@@ -371,7 +376,7 @@ export function isBytes(field: FieldDescriptorProto): boolean {
 }
 
 export function isMessage(field: FieldDescriptorProto): boolean {
-  return field.type === FieldDescriptorProto_Type.TYPE_MESSAGE;
+  return field.type === FieldDescriptorProto_Type.TYPE_MESSAGE || field.type === FieldDescriptorProto_Type.TYPE_GROUP;
 }
 
 export function isEnum(field: FieldDescriptorProto): boolean {

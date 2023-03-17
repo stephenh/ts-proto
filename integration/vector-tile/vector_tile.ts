@@ -97,11 +97,14 @@ export const Tile = {
     const message = createBaseTile();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 3:
+      switch (tag) {
+        case 26:
           message.layers.push(Tile_Layer.decode(reader, reader.uint32()));
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }
@@ -170,29 +173,32 @@ export const Tile_Value = {
     const message = createBaseTile_Value();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 10:
           message.stringValue = reader.string();
           break;
-        case 2:
+        case 21:
           message.floatValue = reader.float();
           break;
-        case 3:
+        case 25:
           message.doubleValue = reader.double();
           break;
-        case 4:
+        case 32:
           message.intValue = longToNumber(reader.int64() as Long);
           break;
-        case 5:
+        case 40:
           message.uintValue = longToNumber(reader.uint64() as Long);
           break;
-        case 6:
+        case 48:
           message.sintValue = longToNumber(reader.sint64() as Long);
           break;
-        case 7:
+        case 56:
           message.boolValue = reader.bool();
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }
@@ -272,11 +278,11 @@ export const Tile_Feature = {
     const message = createBaseTile_Feature();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 8:
           message.id = longToNumber(reader.uint64() as Long);
           break;
-        case 2:
+        case 16:
           if ((tag & 7) === 2) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
@@ -286,10 +292,10 @@ export const Tile_Feature = {
             message.tags.push(reader.uint32());
           }
           break;
-        case 3:
+        case 24:
           message.type = reader.int32() as any;
           break;
-        case 4:
+        case 32:
           if ((tag & 7) === 2) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
@@ -300,6 +306,9 @@ export const Tile_Feature = {
           }
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }
@@ -380,26 +389,29 @@ export const Tile_Layer = {
     const message = createBaseTile_Layer();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 15:
+      switch (tag) {
+        case 120:
           message.version = reader.uint32();
           break;
-        case 1:
+        case 10:
           message.name = reader.string();
           break;
-        case 2:
+        case 18:
           message.features.push(Tile_Feature.decode(reader, reader.uint32()));
           break;
-        case 3:
+        case 26:
           message.keys.push(reader.string());
           break;
-        case 4:
+        case 34:
           message.values.push(Tile_Value.decode(reader, reader.uint32()));
           break;
-        case 5:
+        case 40:
           message.extent = reader.uint32();
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }

@@ -48,26 +48,29 @@ export const Todo = {
     const message = createBaseTodo();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 10:
           message.id = reader.string();
           break;
-        case 2:
+        case 18:
           message.oid = fromProtoObjectId(ObjectId.decode(reader, reader.uint32()));
           break;
-        case 3:
+        case 26:
           message.repeatedOid.push(fromProtoObjectId(ObjectId.decode(reader, reader.uint32())));
           break;
-        case 4:
+        case 34:
           message.optionalOid = fromProtoObjectId(ObjectId.decode(reader, reader.uint32()));
           break;
-        case 5:
+        case 42:
           const entry5 = Todo_MapOfOidsEntry.decode(reader, reader.uint32());
           if (entry5.value !== undefined) {
             message.mapOfOids[entry5.key] = entry5.value;
           }
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }
@@ -155,14 +158,17 @@ export const Todo_MapOfOidsEntry = {
     const message = createBaseTodo_MapOfOidsEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 10:
           message.key = reader.string();
           break;
-        case 2:
+        case 18:
           message.value = fromProtoObjectId(ObjectId.decode(reader, reader.uint32()));
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }

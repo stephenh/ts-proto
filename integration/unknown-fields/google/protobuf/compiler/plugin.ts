@@ -184,20 +184,23 @@ export const Version = {
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 8:
           message.major = reader.int32();
           break;
-        case 2:
+        case 16:
           message.minor = reader.int32();
           break;
-        case 3:
+        case 24:
           message.patch = reader.int32();
           break;
-        case 4:
+        case 34:
           message.suffix = reader.string();
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           const startPos = reader.pos;
           reader.skipType(tag & 7);
           (message as any)._unknownFields[tag] = [
@@ -253,20 +256,23 @@ export const CodeGeneratorRequest = {
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 10:
           message.fileToGenerate.push(reader.string());
           break;
-        case 2:
+        case 18:
           message.parameter = reader.string();
           break;
-        case 15:
+        case 122:
           message.protoFile.push(FileDescriptorProto.decode(reader, reader.uint32()));
           break;
-        case 3:
+        case 26:
           message.compilerVersion = Version.decode(reader, reader.uint32());
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           const startPos = reader.pos;
           reader.skipType(tag & 7);
           (message as any)._unknownFields[tag] = [
@@ -319,17 +325,20 @@ export const CodeGeneratorResponse = {
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 10:
           message.error = reader.string();
           break;
-        case 2:
+        case 16:
           message.supportedFeatures = longToNumber(reader.uint64() as Long);
           break;
-        case 15:
+        case 122:
           message.file.push(CodeGeneratorResponse_File.decode(reader, reader.uint32()));
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           const startPos = reader.pos;
           reader.skipType(tag & 7);
           (message as any)._unknownFields[tag] = [
@@ -385,20 +394,23 @@ export const CodeGeneratorResponse_File = {
     (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 10:
           message.name = reader.string();
           break;
-        case 2:
+        case 18:
           message.insertionPoint = reader.string();
           break;
-        case 15:
+        case 122:
           message.content = reader.string();
           break;
-        case 16:
+        case 130:
           message.generatedCodeInfo = GeneratedCodeInfo.decode(reader, reader.uint32());
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           const startPos = reader.pos;
           reader.skipType(tag & 7);
           (message as any)._unknownFields[tag] = [

@@ -102,50 +102,50 @@ export const Numbers = {
     const message = createBaseNumbers();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 9:
           message.double = reader.double();
           break;
-        case 2:
+        case 21:
           message.float = reader.float();
           break;
-        case 3:
+        case 24:
           message.int32 = reader.int32();
           break;
-        case 4:
+        case 32:
           message.int64 = longToBigint(reader.int64() as Long);
           break;
-        case 5:
+        case 40:
           message.uint32 = reader.uint32();
           break;
-        case 6:
+        case 48:
           message.uint64 = longToBigint(reader.uint64() as Long);
           break;
-        case 7:
+        case 56:
           message.sint32 = reader.sint32();
           break;
-        case 8:
+        case 64:
           message.sint64 = longToBigint(reader.sint64() as Long);
           break;
-        case 9:
+        case 77:
           message.fixed32 = reader.fixed32();
           break;
-        case 10:
+        case 81:
           message.fixed64 = longToBigint(reader.fixed64() as Long);
           break;
-        case 11:
+        case 93:
           message.sfixed32 = reader.sfixed32();
           break;
-        case 12:
+        case 97:
           message.sfixed64 = longToBigint(reader.sfixed64() as Long);
           break;
-        case 13:
+        case 106:
           message.guint64 = UInt64Value.decode(reader, reader.uint32()).value;
           break;
-        case 14:
+        case 114:
           message.timestamp = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           break;
-        case 15:
+        case 120:
           if ((tag & 7) === 2) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
@@ -156,6 +156,9 @@ export const Numbers = {
           }
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }

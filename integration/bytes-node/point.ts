@@ -30,14 +30,17 @@ export const Point = {
     const message = createBasePoint();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 10:
           message.data = reader.bytes() as Buffer;
           break;
-        case 2:
+        case 18:
           message.dataWrapped = BytesValue.decode(reader, reader.uint32()).value;
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }

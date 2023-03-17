@@ -26,11 +26,14 @@ export const FieldMaskMessage = {
     const message = createBaseFieldMaskMessage();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 10:
           message.fieldMask = FieldMask.unwrap(FieldMask.decode(reader, reader.uint32()));
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }

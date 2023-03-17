@@ -43,23 +43,26 @@ export const ValueMessage = {
     const message = createBaseValueMessage();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 10:
           message.value = Value.unwrap(Value.decode(reader, reader.uint32()));
           break;
-        case 2:
+        case 18:
           message.anyList = ListValue.unwrap(ListValue.decode(reader, reader.uint32()));
           break;
-        case 3:
+        case 26:
           message.repeatedAny.push(Value.unwrap(Value.decode(reader, reader.uint32())));
           break;
-        case 4:
+        case 34:
           message.repeatedStrings.push(StringValue.decode(reader, reader.uint32()).value);
           break;
-        case 5:
+        case 42:
           message.structValue = Struct.unwrap(Struct.decode(reader, reader.uint32()));
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }

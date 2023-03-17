@@ -93,14 +93,14 @@ export const Entity = {
     const message = createBaseEntity() as any;
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 8:
           message.intVal = reader.int32();
           break;
-        case 2:
+        case 18:
           message.stringVal = reader.string();
           break;
-        case 3:
+        case 24:
           if ((tag & 7) === 2) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
@@ -110,34 +110,37 @@ export const Entity = {
             message.intArray.push(reader.int32());
           }
           break;
-        case 4:
+        case 34:
           message.stringArray.push(reader.string());
           break;
-        case 5:
+        case 42:
           message.subEntity = SubEntity.decode(reader, reader.uint32());
           break;
-        case 6:
+        case 50:
           message.subEntityArray.push(SubEntity.decode(reader, reader.uint32()));
           break;
-        case 7:
+        case 56:
           message.optionalIntVal = reader.int32();
           break;
-        case 8:
+        case 66:
           message.fieldMask = FieldMask.unwrap(FieldMask.decode(reader, reader.uint32()));
           break;
-        case 9:
+        case 74:
           message.listValue = ListValue.unwrap(ListValue.decode(reader, reader.uint32()));
           break;
-        case 10:
+        case 82:
           message.structValue = Struct.unwrap(Struct.decode(reader, reader.uint32()));
           break;
-        case 11:
+        case 90:
           message.oneOfValue = { $case: "theStringValue", theStringValue: reader.string() };
           break;
-        case 12:
+        case 96:
           message.oneOfValue = { $case: "theIntValue", theIntValue: reader.int32() };
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }
@@ -251,11 +254,14 @@ export const SubEntity = {
     const message = createBaseSubEntity() as any;
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 8:
           message.subVal = reader.int32();
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }

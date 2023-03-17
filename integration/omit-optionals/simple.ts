@@ -29,14 +29,17 @@ export const TestMessage = {
     const message = createBaseTestMessage();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 8:
           message.field1 = reader.bool();
           break;
-        case 2:
+        case 16:
           message.field2 = reader.bool();
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }

@@ -88,14 +88,14 @@ export const Simple = {
     const message = createBaseSimple();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 10:
           message.name = reader.string();
           break;
-        case 4:
+        case 32:
           message.state = reader.int32() as any;
           break;
-        case 5:
+        case 40:
           if ((tag & 7) === 2) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
@@ -105,16 +105,19 @@ export const Simple = {
             message.states.push(reader.int32() as any);
           }
           break;
-        case 6:
+        case 48:
           message.nullValue = reader.int32() as any;
           break;
-        case 7:
+        case 58:
           const entry7 = Simple_StateMapEntry.decode(reader, reader.uint32());
           if (entry7.value !== undefined) {
             message.stateMap[entry7.key] = entry7.value;
           }
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }
@@ -200,14 +203,17 @@ export const Simple_StateMapEntry = {
     const message = createBaseSimple_StateMapEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 10:
           message.key = reader.string();
           break;
-        case 2:
+        case 16:
           message.value = reader.int32() as any;
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }

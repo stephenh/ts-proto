@@ -95,17 +95,20 @@ export const DividerData = {
     const message = createBaseDividerData();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 8:
           message.type = dividerData_DividerTypeFromJSON(reader.int32());
           break;
-        case 2:
+        case 18:
           const entry2 = DividerData_TypeMapEntry.decode(reader, reader.uint32());
           if (entry2.value !== undefined) {
             message.typeMap[entry2.key] = entry2.value;
           }
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }
@@ -178,14 +181,17 @@ export const DividerData_TypeMapEntry = {
     const message = createBaseDividerData_TypeMapEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 10:
           message.key = reader.string();
           break;
-        case 2:
+        case 16:
           message.value = dividerData_DividerTypeFromJSON(reader.int32());
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }

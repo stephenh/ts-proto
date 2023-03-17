@@ -264,26 +264,26 @@ export const Simple = {
     const message = createBaseSimple();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 10:
           message.name = reader.string();
           break;
-        case 2:
+        case 16:
           message.age = reader.int32();
           break;
-        case 9:
+        case 74:
           message.createdAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           break;
-        case 3:
+        case 26:
           message.child = Child.decode(reader, reader.uint32());
           break;
-        case 4:
+        case 32:
           message.state = reader.int32() as any;
           break;
-        case 5:
+        case 42:
           message.grandChildren.push(Child.decode(reader, reader.uint32()));
           break;
-        case 6:
+        case 48:
           if ((tag & 7) === 2) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
@@ -293,10 +293,10 @@ export const Simple = {
             message.coins.push(reader.int32());
           }
           break;
-        case 7:
+        case 58:
           message.snacks.push(reader.string());
           break;
-        case 8:
+        case 64:
           if ((tag & 7) === 2) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
@@ -306,19 +306,22 @@ export const Simple = {
             message.oldStates.push(reader.int32() as any);
           }
           break;
-        case 10:
+        case 82:
           message.thing = ImportedThing.decode(reader, reader.uint32());
           break;
-        case 11:
+        case 90:
           message.blobs.push(reader.bytes());
           break;
-        case 12:
+        case 98:
           message.birthday = DateMessage.decode(reader, reader.uint32());
           break;
-        case 13:
+        case 106:
           message.blob = reader.bytes();
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }
@@ -348,14 +351,17 @@ export const Child = {
     const message = createBaseChild();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 10:
           message.name = reader.string();
           break;
-        case 2:
+        case 16:
           message.type = reader.int32() as any;
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }
@@ -388,17 +394,20 @@ export const Nested = {
     const message = createBaseNested();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 10:
           message.name = reader.string();
           break;
-        case 2:
+        case 18:
           message.message = Nested_InnerMessage.decode(reader, reader.uint32());
           break;
-        case 3:
+        case 24:
           message.state = reader.int32() as any;
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }
@@ -428,14 +437,17 @@ export const Nested_InnerMessage = {
     const message = createBaseNested_InnerMessage();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 10:
           message.name = reader.string();
           break;
-        case 2:
+        case 18:
           message.deep = Nested_InnerMessage_DeepMessage.decode(reader, reader.uint32());
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }
@@ -462,11 +474,14 @@ export const Nested_InnerMessage_DeepMessage = {
     const message = createBaseNested_InnerMessage_DeepMessage();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 10:
           message.name = reader.string();
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }
@@ -496,14 +511,17 @@ export const OneOfMessage = {
     const message = createBaseOneOfMessage();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 10:
           message.first = reader.string();
           break;
-        case 2:
+        case 18:
           message.last = reader.string();
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }
@@ -542,23 +560,26 @@ export const SimpleWithWrappers = {
     const message = createBaseSimpleWithWrappers();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 10:
           message.name = StringValue.decode(reader, reader.uint32()).value;
           break;
-        case 2:
+        case 18:
           message.age = Int32Value.decode(reader, reader.uint32()).value;
           break;
-        case 3:
+        case 26:
           message.enabled = BoolValue.decode(reader, reader.uint32()).value;
           break;
-        case 6:
+        case 50:
           message.coins.push(Int32Value.decode(reader, reader.uint32()).value);
           break;
-        case 7:
+        case 58:
           message.snacks.push(StringValue.decode(reader, reader.uint32()).value);
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }
@@ -585,11 +606,14 @@ export const Entity = {
     const message = createBaseEntity();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 8:
           message.id = reader.int32();
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }
@@ -628,38 +652,41 @@ export const SimpleWithMap = {
     const message = createBaseSimpleWithMap();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 10:
           const entry1 = SimpleWithMap_EntitiesByIdEntry.decode(reader, reader.uint32());
           if (entry1.value !== undefined) {
             message.entitiesById[entry1.key] = entry1.value;
           }
           break;
-        case 2:
+        case 18:
           const entry2 = SimpleWithMap_NameLookupEntry.decode(reader, reader.uint32());
           if (entry2.value !== undefined) {
             message.nameLookup[entry2.key] = entry2.value;
           }
           break;
-        case 3:
+        case 26:
           const entry3 = SimpleWithMap_IntLookupEntry.decode(reader, reader.uint32());
           if (entry3.value !== undefined) {
             message.intLookup[entry3.key] = entry3.value;
           }
           break;
-        case 4:
+        case 34:
           const entry4 = SimpleWithMap_MapOfTimestampsEntry.decode(reader, reader.uint32());
           if (entry4.value !== undefined) {
             message.mapOfTimestamps[entry4.key] = entry4.value;
           }
           break;
-        case 5:
+        case 42:
           const entry5 = SimpleWithMap_MapOfBytesEntry.decode(reader, reader.uint32());
           if (entry5.value !== undefined) {
             message.mapOfBytes[entry5.key] = entry5.value;
           }
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }
@@ -689,14 +716,17 @@ export const SimpleWithMap_EntitiesByIdEntry = {
     const message = createBaseSimpleWithMap_EntitiesByIdEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 8:
           message.key = reader.int32();
           break;
-        case 2:
+        case 18:
           message.value = Entity.decode(reader, reader.uint32());
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }
@@ -726,14 +756,17 @@ export const SimpleWithMap_NameLookupEntry = {
     const message = createBaseSimpleWithMap_NameLookupEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 10:
           message.key = reader.string();
           break;
-        case 2:
+        case 18:
           message.value = reader.string();
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }
@@ -763,14 +796,17 @@ export const SimpleWithMap_IntLookupEntry = {
     const message = createBaseSimpleWithMap_IntLookupEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 8:
           message.key = reader.int32();
           break;
-        case 2:
+        case 16:
           message.value = reader.int32();
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }
@@ -800,14 +836,17 @@ export const SimpleWithMap_MapOfTimestampsEntry = {
     const message = createBaseSimpleWithMap_MapOfTimestampsEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 10:
           message.key = reader.string();
           break;
-        case 2:
+        case 18:
           message.value = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }
@@ -837,14 +876,17 @@ export const SimpleWithMap_MapOfBytesEntry = {
     const message = createBaseSimpleWithMap_MapOfBytesEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 10:
           message.key = reader.string();
           break;
-        case 2:
+        case 18:
           message.value = reader.bytes();
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }
@@ -871,14 +913,17 @@ export const SimpleWithSnakeCaseMap = {
     const message = createBaseSimpleWithSnakeCaseMap();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 10:
           const entry1 = SimpleWithSnakeCaseMap_EntitiesByIdEntry.decode(reader, reader.uint32());
           if (entry1.value !== undefined) {
             message.entitiesById[entry1.key] = entry1.value;
           }
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }
@@ -908,14 +953,17 @@ export const SimpleWithSnakeCaseMap_EntitiesByIdEntry = {
     const message = createBaseSimpleWithSnakeCaseMap_EntitiesByIdEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 8:
           message.key = reader.int32();
           break;
-        case 2:
+        case 18:
           message.value = Entity.decode(reader, reader.uint32());
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }
@@ -942,14 +990,17 @@ export const SimpleWithMapOfEnums = {
     const message = createBaseSimpleWithMapOfEnums();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 10:
           const entry1 = SimpleWithMapOfEnums_EnumsByIdEntry.decode(reader, reader.uint32());
           if (entry1.value !== undefined) {
             message.enumsById[entry1.key] = entry1.value;
           }
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }
@@ -979,14 +1030,17 @@ export const SimpleWithMapOfEnums_EnumsByIdEntry = {
     const message = createBaseSimpleWithMapOfEnums_EnumsByIdEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 8:
           message.key = reader.int32();
           break;
-        case 2:
+        case 16:
           message.value = reader.int32() as any;
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }
@@ -1013,11 +1067,14 @@ export const PingRequest = {
     const message = createBasePingRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 10:
           message.input = reader.string();
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }
@@ -1044,11 +1101,14 @@ export const PingResponse = {
     const message = createBasePingResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 10:
           message.output = reader.string();
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }
@@ -1121,44 +1181,47 @@ export const Numbers = {
     const message = createBaseNumbers();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 9:
           message.double = reader.double();
           break;
-        case 2:
+        case 21:
           message.float = reader.float();
           break;
-        case 3:
+        case 24:
           message.int32 = reader.int32();
           break;
-        case 4:
+        case 32:
           message.int64 = longToNumber(reader.int64() as Long);
           break;
-        case 5:
+        case 40:
           message.uint32 = reader.uint32();
           break;
-        case 6:
+        case 48:
           message.uint64 = longToNumber(reader.uint64() as Long);
           break;
-        case 7:
+        case 56:
           message.sint32 = reader.sint32();
           break;
-        case 8:
+        case 64:
           message.sint64 = longToNumber(reader.sint64() as Long);
           break;
-        case 9:
+        case 77:
           message.fixed32 = reader.fixed32();
           break;
-        case 10:
+        case 81:
           message.fixed64 = longToNumber(reader.fixed64() as Long);
           break;
-        case 11:
+        case 93:
           message.sfixed32 = reader.sfixed32();
           break;
-        case 12:
+        case 97:
           message.sfixed64 = longToNumber(reader.sfixed64() as Long);
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }
@@ -1211,29 +1274,32 @@ export const SimpleButOptional = {
     const message = createBaseSimpleButOptional();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
-        case 1:
+      switch (tag) {
+        case 10:
           message.name = reader.string();
           break;
-        case 2:
+        case 16:
           message.age = reader.int32();
           break;
-        case 9:
+        case 74:
           message.createdAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           break;
-        case 3:
+        case 26:
           message.child = Child.decode(reader, reader.uint32());
           break;
-        case 4:
+        case 32:
           message.state = reader.int32() as any;
           break;
-        case 10:
+        case 82:
           message.thing = ImportedThing.decode(reader, reader.uint32());
           break;
-        case 12:
+        case 98:
           message.birthday = DateMessage.decode(reader, reader.uint32());
           break;
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }
@@ -1257,8 +1323,11 @@ export const Empty = {
     const message = createBaseEmpty();
     while (reader.pos < end) {
       const tag = reader.uint32();
-      switch (tag >>> 3) {
+      switch (tag) {
         default:
+          if ((tag & 7) == 4 || tag == 0) {
+            return message;
+          }
           reader.skipType(tag & 7);
           break;
       }
