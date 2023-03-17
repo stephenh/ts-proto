@@ -57,7 +57,7 @@ export const Entity = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Entity {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEntity();
     while (reader.pos < end) {
@@ -133,7 +133,7 @@ export const Maps = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Maps {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMaps();
     while (reader.pos < end) {
@@ -327,7 +327,7 @@ export const Maps_StrToEntityEntry = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Maps_StrToEntityEntry {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMaps_StrToEntityEntry();
     while (reader.pos < end) {
@@ -394,7 +394,7 @@ export const Maps_Int32ToInt32Entry = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Maps_Int32ToInt32Entry {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMaps_Int32ToInt32Entry();
     while (reader.pos < end) {
@@ -456,7 +456,7 @@ export const Maps_StringToBytesEntry = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Maps_StringToBytesEntry {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMaps_StringToBytesEntry();
     while (reader.pos < end) {
@@ -522,7 +522,7 @@ export const Maps_Int64ToInt64Entry = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Maps_Int64ToInt64Entry {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMaps_Int64ToInt64Entry();
     while (reader.pos < end) {
@@ -584,7 +584,7 @@ export const Maps_MapOfTimestampsEntry = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Maps_MapOfTimestampsEntry {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMaps_MapOfTimestampsEntry();
     while (reader.pos < end) {

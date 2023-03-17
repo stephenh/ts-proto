@@ -21,7 +21,7 @@ export const EchoMsg = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): EchoMsg {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEchoMsg();
     while (reader.pos < end) {
@@ -120,7 +120,7 @@ export class EchoerClientImpl implements Echoer {
   Echo(request: EchoMsg): Promise<EchoMsg> {
     const data = EchoMsg.encode(request).finish();
     const promise = this.rpc.request(this.service, "Echo", data);
-    return promise.then((data) => EchoMsg.decode(new _m0.Reader(data)));
+    return promise.then((data) => EchoMsg.decode(_m0.Reader.create(data)));
   }
 
   EchoServerStream(request: EchoMsg): AsyncIterable<EchoMsg> {
@@ -132,7 +132,7 @@ export class EchoerClientImpl implements Echoer {
   EchoClientStream(request: AsyncIterable<EchoMsg>): Promise<EchoMsg> {
     const data = EchoMsg.encodeTransform(request);
     const promise = this.rpc.clientStreamingRequest(this.service, "EchoClientStream", data);
-    return promise.then((data) => EchoMsg.decode(new _m0.Reader(data)));
+    return promise.then((data) => EchoMsg.decode(_m0.Reader.create(data)));
   }
 
   EchoBidiStream(request: AsyncIterable<EchoMsg>): AsyncIterable<EchoMsg> {

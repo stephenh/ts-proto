@@ -43,7 +43,7 @@ export const Todo = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Todo {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTodo();
     while (reader.pos < end) {
@@ -153,7 +153,7 @@ export const Todo_MapOfTimestampsEntry = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Todo_MapOfTimestampsEntry {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTodo_MapOfTimestampsEntry();
     while (reader.pos < end) {
@@ -217,7 +217,7 @@ export class ClockClientImpl implements Clock {
   Now(request: Empty): Promise<Timestamp> {
     const data = Empty.encode(request).finish();
     const promise = this.rpc.request(this.service, "Now", data);
-    return promise.then((data) => Timestamp.decode(new _m0.Reader(data)));
+    return promise.then((data) => Timestamp.decode(_m0.Reader.create(data)));
   }
 }
 

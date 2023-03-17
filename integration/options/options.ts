@@ -47,7 +47,7 @@ export const MyMessage = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): MyMessage {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMyMessage();
     while (reader.pos < end) {
@@ -87,7 +87,7 @@ export const RequestType = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): RequestType {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseRequestType();
     while (reader.pos < end) {
@@ -115,7 +115,7 @@ export const ResponseType = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ResponseType {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseResponseType();
     while (reader.pos < end) {
@@ -148,7 +148,7 @@ export class MyServiceClientImpl implements MyService {
   MyMethod(request: RequestType): Promise<ResponseType> {
     const data = RequestType.encode(request).finish();
     const promise = this.rpc.request(this.service, "MyMethod", data);
-    return promise.then((data) => ResponseType.decode(new _m0.Reader(data)));
+    return promise.then((data) => ResponseType.decode(_m0.Reader.create(data)));
   }
 }
 

@@ -85,7 +85,7 @@ export const Simple = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Simple {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimple();
     while (reader.pos < end) {
@@ -153,7 +153,7 @@ export const SimpleEnums = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): SimpleEnums {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleEnums();
     while (reader.pos < end) {
@@ -215,7 +215,7 @@ export const FooServiceCreateRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): FooServiceCreateRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFooServiceCreateRequest();
     while (reader.pos < end) {
@@ -269,7 +269,7 @@ export const FooServiceCreateResponse = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): FooServiceCreateResponse {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFooServiceCreateResponse();
     while (reader.pos < end) {
@@ -325,7 +325,7 @@ export class FooServiceClientImpl implements FooService {
   Create(request: FooServiceCreateRequest): Promise<FooServiceCreateResponse> {
     const data = FooServiceCreateRequest.encode(request).finish();
     const promise = this.rpc.request(this.service, "Create", data);
-    return promise.then((data) => FooServiceCreateResponse.decode(new _m0.Reader(data)));
+    return promise.then((data) => FooServiceCreateResponse.decode(_m0.Reader.create(data)));
   }
 }
 

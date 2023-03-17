@@ -43,7 +43,7 @@ export const Todo = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Todo {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTodo();
     while (reader.pos < end) {
@@ -153,7 +153,7 @@ export const Todo_MapOfOidsEntry = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Todo_MapOfOidsEntry {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTodo_MapOfOidsEntry();
     while (reader.pos < end) {

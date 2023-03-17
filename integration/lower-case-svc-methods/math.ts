@@ -34,7 +34,7 @@ export const NumPair = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): NumPair {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNumPair();
     while (reader.pos < end) {
@@ -93,7 +93,7 @@ export const NumSingle = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): NumSingle {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNumSingle();
     while (reader.pos < end) {
@@ -149,7 +149,7 @@ export const Numbers = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Numbers {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNumbers();
     while (reader.pos < end) {
@@ -221,13 +221,13 @@ export class MathServiceClientImpl<Context extends DataLoaders> implements MathS
   add(ctx: Context, request: NumPair): Promise<NumSingle> {
     const data = NumPair.encode(request).finish();
     const promise = this.rpc.request(ctx, this.service, "Add", data);
-    return promise.then((data) => NumSingle.decode(new _m0.Reader(data)));
+    return promise.then((data) => NumSingle.decode(_m0.Reader.create(data)));
   }
 
   absoluteValue(ctx: Context, request: NumSingle): Promise<NumSingle> {
     const data = NumSingle.encode(request).finish();
     const promise = this.rpc.request(ctx, this.service, "AbsoluteValue", data);
-    return promise.then((data) => NumSingle.decode(new _m0.Reader(data)));
+    return promise.then((data) => NumSingle.decode(_m0.Reader.create(data)));
   }
 
   getDouble(ctx: Context, nu: number): Promise<number> {
@@ -243,7 +243,7 @@ export class MathServiceClientImpl<Context extends DataLoaders> implements MathS
   batchDouble(ctx: Context, request: Numbers): Promise<Numbers> {
     const data = Numbers.encode(request).finish();
     const promise = this.rpc.request(ctx, this.service, "BatchDouble", data);
-    return promise.then((data) => Numbers.decode(new _m0.Reader(data)));
+    return promise.then((data) => Numbers.decode(_m0.Reader.create(data)));
   }
 }
 

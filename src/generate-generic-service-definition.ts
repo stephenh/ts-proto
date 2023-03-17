@@ -71,12 +71,12 @@ function generateMethodDefinition(ctx: Context, methodDesc: MethodDescriptorProt
       requestStream: ${methodDesc.clientStreaming},
       responseType: ${outputType},
       responseStream: ${methodDesc.serverStreaming},
-      options: ${generateMethodOptions(methodDesc.options)}
+      options: ${generateMethodOptions(ctx, methodDesc.options)}
     }
   `;
 }
 
-function generateMethodOptions(options: MethodOptions | undefined) {
+function generateMethodOptions(ctx: Context, options: MethodOptions | undefined) {
   const chunks: Code[] = [];
 
   chunks.push(code`{`);
@@ -86,6 +86,27 @@ function generateMethodOptions(options: MethodOptions | undefined) {
       chunks.push(code`idempotencyLevel: 'IDEMPOTENT',`);
     } else if (options.idempotencyLevel === MethodOptions_IdempotencyLevel.NO_SIDE_EFFECTS) {
       chunks.push(code`idempotencyLevel: 'NO_SIDE_EFFECTS',`);
+    }
+
+    if ("_unknownFields" in options) {
+      const msgUnknownFields: any = (options as any)["_unknownFields"];
+      const unknownFieldsChunks: Code[] = [];
+
+      unknownFieldsChunks.push(code`{`);
+
+      for (const key of Object.keys(msgUnknownFields)) {
+        const values = msgUnknownFields[key] as Uint8Array[];
+        const valuesChunks: Code[] = [];
+
+        for (const value of values) {
+          valuesChunks.push(code`${ctx.options.env == 'node' ? 'Buffer.from' : 'new Uint8Array'}([${value.join(', ')}])`);
+        }
+
+        unknownFieldsChunks.push(code`${key}: [\n${joinCode(valuesChunks, { on: "," }).toCodeString()}\n],`);
+      }
+
+      unknownFieldsChunks.push(code`}`);
+      chunks.push(code`_unknownFields: ${joinCode(unknownFieldsChunks, { on: "\n" }).toCodeString()}`);
     }
   }
 

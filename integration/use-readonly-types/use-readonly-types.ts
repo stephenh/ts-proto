@@ -88,7 +88,7 @@ export const Entity = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Entity {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEntity() as any;
     while (reader.pos < end) {
@@ -249,7 +249,7 @@ export const SubEntity = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): SubEntity {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSubEntity() as any;
     while (reader.pos < end) {
