@@ -558,7 +558,9 @@ function makeDeepPartial(options: Options, longs: ReturnType<typeof makeLongUtil
 
   const Builtin = conditionalOutput(
     "Builtin",
-    code`type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;`
+    code`type Builtin = Date | Function | Uint8Array | string | number | boolean |${
+      options.forceLong === LongOption.BIGINT ? " bigint |" : ""
+    } undefined;`
   );
 
   // Based on https://github.com/sindresorhus/type-fest/pull/259
