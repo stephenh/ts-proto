@@ -1,3 +1,10 @@
+## [1.142.1](https://github.com/stephenh/ts-proto/compare/v1.142.0...v1.142.1) (2023-03-18)
+
+
+### Performance Improvements
+
+* use Reader.create ([#800](https://github.com/stephenh/ts-proto/issues/800)) ([869e448](https://github.com/stephenh/ts-proto/commit/869e44876c88ccfb82cb4a48731b340a0fb2c025))
+
 # [1.142.0](https://github.com/stephenh/ts-proto/compare/v1.141.1...v1.142.0) (2023-03-18)
 
 
