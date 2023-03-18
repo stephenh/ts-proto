@@ -1,3 +1,10 @@
+# [1.142.0](https://github.com/stephenh/ts-proto/compare/v1.141.1...v1.142.0) (2023-03-18)
+
+
+### Features
+
+* service options unknown methods ([#801](https://github.com/stephenh/ts-proto/issues/801)) ([994d0d0](https://github.com/stephenh/ts-proto/commit/994d0d0ac54b3e22cb27fa4c5b8a5b1d17b62521))
+
 ## [1.141.1](https://github.com/stephenh/ts-proto/compare/v1.141.0...v1.141.1) (2023-03-11)
 
 
