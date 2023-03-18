@@ -37,7 +37,7 @@ export const HeroById = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): HeroById {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseHeroById();
     while (reader.pos < end) {
@@ -88,7 +88,7 @@ export const VillainById = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): VillainById {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseVillainById();
     while (reader.pos < end) {
@@ -142,7 +142,7 @@ export const Hero = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Hero {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseHero();
     while (reader.pos < end) {
@@ -201,7 +201,7 @@ export const Villain = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Villain {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseVillain();
     while (reader.pos < end) {
@@ -263,19 +263,19 @@ export class HeroServiceClientImpl implements HeroService {
   FindOneHero(request: HeroById): Promise<Hero> {
     const data = HeroById.encode(request).finish();
     const promise = this.rpc.request(this.service, "FindOneHero", data);
-    return promise.then((data) => Hero.decode(new _m0.Reader(data)));
+    return promise.then((data) => Hero.decode(_m0.Reader.create(data)));
   }
 
   FindOneVillain(request: VillainById): Promise<Villain> {
     const data = VillainById.encode(request).finish();
     const promise = this.rpc.request(this.service, "FindOneVillain", data);
-    return promise.then((data) => Villain.decode(new _m0.Reader(data)));
+    return promise.then((data) => Villain.decode(_m0.Reader.create(data)));
   }
 
   FindManyVillain(request: Observable<VillainById>): Observable<Villain> {
     const data = request.pipe(map((request) => VillainById.encode(request).finish()));
     const result = this.rpc.bidirectionalStreamingRequest(this.service, "FindManyVillain", data);
-    return result.pipe(map((data) => Villain.decode(new _m0.Reader(data))));
+    return result.pipe(map((data) => Villain.decode(_m0.Reader.create(data))));
   }
 }
 

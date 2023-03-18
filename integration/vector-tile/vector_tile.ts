@@ -92,7 +92,7 @@ export const Tile = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Tile {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTile();
     while (reader.pos < end) {
@@ -165,7 +165,7 @@ export const Tile_Value = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Tile_Value {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTile_Value();
     while (reader.pos < end) {
@@ -267,7 +267,7 @@ export const Tile_Feature = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Tile_Feature {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTile_Feature();
     while (reader.pos < end) {
@@ -375,7 +375,7 @@ export const Tile_Layer = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Tile_Layer {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTile_Layer();
     while (reader.pos < end) {

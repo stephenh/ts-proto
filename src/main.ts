@@ -935,7 +935,7 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
       input: ${Reader} | Uint8Array,
       length?: number,
     ): ${fullName} {
-      const reader = input instanceof ${Reader} ? input : new ${Reader}(input);
+      const reader = input instanceof ${Reader} ? input : ${Reader}.create(input);
       let end = length === undefined ? reader.len : reader.pos + length;
   `);
 

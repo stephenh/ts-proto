@@ -123,10 +123,10 @@ function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProt
   const maybeAbortSignal = options.useAbortSignal ? "abortSignal || undefined," : "";
 
   let encode = code`${rawInputType}.encode(request).finish()`;
-  let decode = code`data => ${rawOutputType}.decode(new ${Reader}(data))`;
+  let decode = code`data => ${rawOutputType}.decode(${Reader}.create(data))`;
 
   // if (options.useDate && rawOutputType.toString().includes("Timestamp")) {
-  //   decode = code`data => ${utils.fromTimestamp}(${rawOutputType}.decode(new ${Reader}(data)))`;
+  //   decode = code`data => ${utils.fromTimestamp}(${rawOutputType}.decode(${Reader}.create(data)))`;
   // }
   if (methodDesc.clientStreaming) {
     if (options.useAsyncIterable) {
@@ -297,7 +297,7 @@ function generateCachingRpcMethod(
         const response = await this.rpc.request(ctx, "${maybePrefixPackage(fileDesc, serviceDesc.name)}", "${
     methodDesc.name
   }", data);
-        return ${outputType}.decode(new ${Reader}(response));
+        return ${outputType}.decode(${Reader}.create(response));
       });
       return Promise.all(responses);
     }

@@ -100,7 +100,7 @@ export const Struct = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Struct {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStruct();
     while (reader.pos < end) {
@@ -197,7 +197,7 @@ export const Struct_FieldsEntry = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Struct_FieldsEntry {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStruct_FieldsEntry();
     while (reader.pos < end) {
@@ -270,7 +270,7 @@ export const Value = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Value {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseValue();
     while (reader.pos < end) {
@@ -423,7 +423,7 @@ export const ListValue = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ListValue {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseListValue();
     while (reader.pos < end) {

@@ -20,7 +20,7 @@ export const TestMessage = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): TestMessage {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTestMessage();
     while (reader.pos < end) {
