@@ -76,7 +76,7 @@ export const GroupsOptionalTest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): GroupsOptionalTest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGroupsOptionalTest();
     (message as any)._unknownFields = {};
@@ -180,7 +180,7 @@ export const GroupsOptionalTest_Group = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): GroupsOptionalTest_Group {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGroupsOptionalTest_Group();
     (message as any)._unknownFields = {};
@@ -281,7 +281,7 @@ export const GroupsRepeatedTest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): GroupsRepeatedTest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGroupsRepeatedTest();
     (message as any)._unknownFields = {};
@@ -416,7 +416,7 @@ export const GroupsRepeatedTest_Group = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): GroupsRepeatedTest_Group {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGroupsRepeatedTest_Group();
     (message as any)._unknownFields = {};
@@ -528,7 +528,7 @@ export const GroupsNestedTest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): GroupsNestedTest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGroupsNestedTest();
     (message as any)._unknownFields = {};
@@ -658,7 +658,7 @@ export const GroupsNestedTest_Group = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): GroupsNestedTest_Group {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGroupsNestedTest_Group();
     (message as any)._unknownFields = {};
@@ -744,7 +744,7 @@ export const GroupsNestedTest_Group_Nested = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): GroupsNestedTest_Group_Nested {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGroupsNestedTest_Group_Nested();
     (message as any)._unknownFields = {};
@@ -830,7 +830,7 @@ export const GroupsNestedTest_Group_Nested_Nested2 = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): GroupsNestedTest_Group_Nested_Nested2 {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGroupsNestedTest_Group_Nested_Nested2();
     (message as any)._unknownFields = {};

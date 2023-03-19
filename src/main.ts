@@ -1020,6 +1020,9 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
     }
 
     // and then use the snippet to handle repeated fields if necessary
+    const initializerNecessary =
+      !options.initializeFieldsAsUndefined && isOptionalProperty(field, messageDesc.options, options);
+
     if (isRepeated(field)) {
       const maybeNonNullAssertion = ctx.options.useOptionals === "all" ? "!" : "";
 
@@ -1030,38 +1033,54 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
         const valueSetterSnippet = ctx.options.useMapType
           ? `message.${fieldName}${maybeNonNullAssertion}.set(${varName}.key, ${varName}.value)`
           : `message.${fieldName}${maybeNonNullAssertion}[${varName}.key] = ${varName}.value`;
+        const initializerSnippet = initializerNecessary
+          ? `
+            if(message.${fieldName} === undefined)
+              message.${fieldName} = ${ctx.options.useMapType ? "new Map()" : "{}"};
+            `
+          : "";
         chunks.push(code`
           ${tagCheck}
           const ${varName} = ${readSnippet};
           if (${varName}.value !== undefined) {
+            ${initializerSnippet}
             ${valueSetterSnippet};
           }
         `);
-      } else if (packedType(field.type) === undefined) {
-        chunks.push(code`
-          ${tagCheck}
-          message.${fieldName}${maybeNonNullAssertion}.push(${readSnippet});
-        `);
       } else {
-        const packedTag = ((field.number << 3) | 2) >>> 0;
-
-        chunks.push(code`
-          if(tag == ${tag}){
+        const initializerSnippet = initializerNecessary
+          ? `if(message.${fieldName} === undefined)
+              message.${fieldName} = [];`
+          : "";
+        if (packedType(field.type) === undefined) {
+          chunks.push(code`
+            ${tagCheck}
+            ${initializerSnippet}
             message.${fieldName}${maybeNonNullAssertion}.push(${readSnippet});
-            continue;
-          }
+          `);
+        } else {
+          const packedTag = ((field.number << 3) | 2) >>> 0;
 
-          if(tag == ${packedTag}){
-            const end2 = reader.uint32() + reader.pos;
-            while (reader.pos < end2) {
+          chunks.push(code`
+            if(tag == ${tag}){
+              ${initializerSnippet}
               message.${fieldName}${maybeNonNullAssertion}.push(${readSnippet});
+              continue;
             }
 
-            continue;
-          }
+            if(tag == ${packedTag}){
+              ${initializerSnippet}
+              const end2 = reader.uint32() + reader.pos;
+              while (reader.pos < end2) {
+                message.${fieldName}${maybeNonNullAssertion}.push(${readSnippet});
+              }
 
-          break;
-        `);
+              continue;
+            }
+
+            break;
+          `);
+        }
       }
     } else if (isWithinOneOfThatShouldBeUnion(options, field)) {
       let oneofName = maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options);
