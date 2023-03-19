@@ -33,7 +33,7 @@
     "@improbable-eng/grpc-web": "^0.14.0",
     "@improbable-eng/grpc-web-node-http-transport": "^0.14.0",
     "@nestjs/common": "^8.2.2",
-    "@nestjs/core": "^8.2.2",
+    "@nestjs/core": "^9.0.5",
     "@nestjs/microservices": "^8.2.2",
     "@semantic-release/changelog": "^5.0.1",
     "@semantic-release/commit-analyzer": "^8.0.1",
