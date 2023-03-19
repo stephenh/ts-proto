@@ -907,10 +907,14 @@ export const FileDescriptorSet = {
       }
       const startPos = reader.pos;
       reader.skipType(tag & 7);
-      (message as any)._unknownFields[tag] = [
-        ...((message as any)._unknownFields[tag] || []),
-        reader.buf.slice(startPos, reader.pos),
-      ];
+      const buf = reader.buf.slice(startPos, reader.pos);
+      const list = (message as any)._unknownFields[tag];
+
+      if (list === undefined) {
+        (message as any)._unknownFields[tag] = [buf];
+      } else {
+        list.push(buf);
+      }
     }
     return message;
   },
@@ -1108,10 +1112,14 @@ export const FileDescriptorProto = {
       }
       const startPos = reader.pos;
       reader.skipType(tag & 7);
-      (message as any)._unknownFields[tag] = [
-        ...((message as any)._unknownFields[tag] || []),
-        reader.buf.slice(startPos, reader.pos),
-      ];
+      const buf = reader.buf.slice(startPos, reader.pos);
+      const list = (message as any)._unknownFields[tag];
+
+      if (list === undefined) {
+        (message as any)._unknownFields[tag] = [buf];
+      } else {
+        list.push(buf);
+      }
     }
     return message;
   },
@@ -1265,10 +1273,14 @@ export const DescriptorProto = {
       }
       const startPos = reader.pos;
       reader.skipType(tag & 7);
-      (message as any)._unknownFields[tag] = [
-        ...((message as any)._unknownFields[tag] || []),
-        reader.buf.slice(startPos, reader.pos),
-      ];
+      const buf = reader.buf.slice(startPos, reader.pos);
+      const list = (message as any)._unknownFields[tag];
+
+      if (list === undefined) {
+        (message as any)._unknownFields[tag] = [buf];
+      } else {
+        list.push(buf);
+      }
     }
     return message;
   },
@@ -1341,10 +1353,14 @@ export const DescriptorProto_ExtensionRange = {
       }
       const startPos = reader.pos;
       reader.skipType(tag & 7);
-      (message as any)._unknownFields[tag] = [
-        ...((message as any)._unknownFields[tag] || []),
-        reader.buf.slice(startPos, reader.pos),
-      ];
+      const buf = reader.buf.slice(startPos, reader.pos);
+      const list = (message as any)._unknownFields[tag];
+
+      if (list === undefined) {
+        (message as any)._unknownFields[tag] = [buf];
+      } else {
+        list.push(buf);
+      }
     }
     return message;
   },
@@ -1407,10 +1423,14 @@ export const DescriptorProto_ReservedRange = {
       }
       const startPos = reader.pos;
       reader.skipType(tag & 7);
-      (message as any)._unknownFields[tag] = [
-        ...((message as any)._unknownFields[tag] || []),
-        reader.buf.slice(startPos, reader.pos),
-      ];
+      const buf = reader.buf.slice(startPos, reader.pos);
+      const list = (message as any)._unknownFields[tag];
+
+      if (list === undefined) {
+        (message as any)._unknownFields[tag] = [buf];
+      } else {
+        list.push(buf);
+      }
     }
     return message;
   },
@@ -1463,10 +1483,14 @@ export const ExtensionRangeOptions = {
       }
       const startPos = reader.pos;
       reader.skipType(tag & 7);
-      (message as any)._unknownFields[tag] = [
-        ...((message as any)._unknownFields[tag] || []),
-        reader.buf.slice(startPos, reader.pos),
-      ];
+      const buf = reader.buf.slice(startPos, reader.pos);
+      const list = (message as any)._unknownFields[tag];
+
+      if (list === undefined) {
+        (message as any)._unknownFields[tag] = [buf];
+      } else {
+        list.push(buf);
+      }
     }
     return message;
   },
@@ -1631,10 +1655,14 @@ export const FieldDescriptorProto = {
       }
       const startPos = reader.pos;
       reader.skipType(tag & 7);
-      (message as any)._unknownFields[tag] = [
-        ...((message as any)._unknownFields[tag] || []),
-        reader.buf.slice(startPos, reader.pos),
-      ];
+      const buf = reader.buf.slice(startPos, reader.pos);
+      const list = (message as any)._unknownFields[tag];
+
+      if (list === undefined) {
+        (message as any)._unknownFields[tag] = [buf];
+      } else {
+        list.push(buf);
+      }
     }
     return message;
   },
@@ -1697,10 +1725,14 @@ export const OneofDescriptorProto = {
       }
       const startPos = reader.pos;
       reader.skipType(tag & 7);
-      (message as any)._unknownFields[tag] = [
-        ...((message as any)._unknownFields[tag] || []),
-        reader.buf.slice(startPos, reader.pos),
-      ];
+      const buf = reader.buf.slice(startPos, reader.pos);
+      const list = (message as any)._unknownFields[tag];
+
+      if (list === undefined) {
+        (message as any)._unknownFields[tag] = [buf];
+      } else {
+        list.push(buf);
+      }
     }
     return message;
   },
@@ -1793,10 +1825,14 @@ export const EnumDescriptorProto = {
       }
       const startPos = reader.pos;
       reader.skipType(tag & 7);
-      (message as any)._unknownFields[tag] = [
-        ...((message as any)._unknownFields[tag] || []),
-        reader.buf.slice(startPos, reader.pos),
-      ];
+      const buf = reader.buf.slice(startPos, reader.pos);
+      const list = (message as any)._unknownFields[tag];
+
+      if (list === undefined) {
+        (message as any)._unknownFields[tag] = [buf];
+      } else {
+        list.push(buf);
+      }
     }
     return message;
   },
@@ -1859,10 +1895,14 @@ export const EnumDescriptorProto_EnumReservedRange = {
       }
       const startPos = reader.pos;
       reader.skipType(tag & 7);
-      (message as any)._unknownFields[tag] = [
-        ...((message as any)._unknownFields[tag] || []),
-        reader.buf.slice(startPos, reader.pos),
-      ];
+      const buf = reader.buf.slice(startPos, reader.pos);
+      const list = (message as any)._unknownFields[tag];
+
+      if (list === undefined) {
+        (message as any)._unknownFields[tag] = [buf];
+      } else {
+        list.push(buf);
+      }
     }
     return message;
   },
@@ -1935,10 +1975,14 @@ export const EnumValueDescriptorProto = {
       }
       const startPos = reader.pos;
       reader.skipType(tag & 7);
-      (message as any)._unknownFields[tag] = [
-        ...((message as any)._unknownFields[tag] || []),
-        reader.buf.slice(startPos, reader.pos),
-      ];
+      const buf = reader.buf.slice(startPos, reader.pos);
+      const list = (message as any)._unknownFields[tag];
+
+      if (list === undefined) {
+        (message as any)._unknownFields[tag] = [buf];
+      } else {
+        list.push(buf);
+      }
     }
     return message;
   },
@@ -2011,10 +2055,14 @@ export const ServiceDescriptorProto = {
       }
       const startPos = reader.pos;
       reader.skipType(tag & 7);
-      (message as any)._unknownFields[tag] = [
-        ...((message as any)._unknownFields[tag] || []),
-        reader.buf.slice(startPos, reader.pos),
-      ];
+      const buf = reader.buf.slice(startPos, reader.pos);
+      const list = (message as any)._unknownFields[tag];
+
+      if (list === undefined) {
+        (message as any)._unknownFields[tag] = [buf];
+      } else {
+        list.push(buf);
+      }
     }
     return message;
   },
@@ -2124,10 +2172,14 @@ export const MethodDescriptorProto = {
       }
       const startPos = reader.pos;
       reader.skipType(tag & 7);
-      (message as any)._unknownFields[tag] = [
-        ...((message as any)._unknownFields[tag] || []),
-        reader.buf.slice(startPos, reader.pos),
-      ];
+      const buf = reader.buf.slice(startPos, reader.pos);
+      const list = (message as any)._unknownFields[tag];
+
+      if (list === undefined) {
+        (message as any)._unknownFields[tag] = [buf];
+      } else {
+        list.push(buf);
+      }
     }
     return message;
   },
@@ -2402,10 +2454,14 @@ export const FileOptions = {
       }
       const startPos = reader.pos;
       reader.skipType(tag & 7);
-      (message as any)._unknownFields[tag] = [
-        ...((message as any)._unknownFields[tag] || []),
-        reader.buf.slice(startPos, reader.pos),
-      ];
+      const buf = reader.buf.slice(startPos, reader.pos);
+      const list = (message as any)._unknownFields[tag];
+
+      if (list === undefined) {
+        (message as any)._unknownFields[tag] = [buf];
+      } else {
+        list.push(buf);
+      }
     }
     return message;
   },
@@ -2504,10 +2560,14 @@ export const MessageOptions = {
       }
       const startPos = reader.pos;
       reader.skipType(tag & 7);
-      (message as any)._unknownFields[tag] = [
-        ...((message as any)._unknownFields[tag] || []),
-        reader.buf.slice(startPos, reader.pos),
-      ];
+      const buf = reader.buf.slice(startPos, reader.pos);
+      const list = (message as any)._unknownFields[tag];
+
+      if (list === undefined) {
+        (message as any)._unknownFields[tag] = [buf];
+      } else {
+        list.push(buf);
+      }
     }
     return message;
   },
@@ -2620,10 +2680,14 @@ export const FieldOptions = {
       }
       const startPos = reader.pos;
       reader.skipType(tag & 7);
-      (message as any)._unknownFields[tag] = [
-        ...((message as any)._unknownFields[tag] || []),
-        reader.buf.slice(startPos, reader.pos),
-      ];
+      const buf = reader.buf.slice(startPos, reader.pos);
+      const list = (message as any)._unknownFields[tag];
+
+      if (list === undefined) {
+        (message as any)._unknownFields[tag] = [buf];
+      } else {
+        list.push(buf);
+      }
     }
     return message;
   },
@@ -2676,10 +2740,14 @@ export const OneofOptions = {
       }
       const startPos = reader.pos;
       reader.skipType(tag & 7);
-      (message as any)._unknownFields[tag] = [
-        ...((message as any)._unknownFields[tag] || []),
-        reader.buf.slice(startPos, reader.pos),
-      ];
+      const buf = reader.buf.slice(startPos, reader.pos);
+      const list = (message as any)._unknownFields[tag];
+
+      if (list === undefined) {
+        (message as any)._unknownFields[tag] = [buf];
+      } else {
+        list.push(buf);
+      }
     }
     return message;
   },
@@ -2752,10 +2820,14 @@ export const EnumOptions = {
       }
       const startPos = reader.pos;
       reader.skipType(tag & 7);
-      (message as any)._unknownFields[tag] = [
-        ...((message as any)._unknownFields[tag] || []),
-        reader.buf.slice(startPos, reader.pos),
-      ];
+      const buf = reader.buf.slice(startPos, reader.pos);
+      const list = (message as any)._unknownFields[tag];
+
+      if (list === undefined) {
+        (message as any)._unknownFields[tag] = [buf];
+      } else {
+        list.push(buf);
+      }
     }
     return message;
   },
@@ -2818,10 +2890,14 @@ export const EnumValueOptions = {
       }
       const startPos = reader.pos;
       reader.skipType(tag & 7);
-      (message as any)._unknownFields[tag] = [
-        ...((message as any)._unknownFields[tag] || []),
-        reader.buf.slice(startPos, reader.pos),
-      ];
+      const buf = reader.buf.slice(startPos, reader.pos);
+      const list = (message as any)._unknownFields[tag];
+
+      if (list === undefined) {
+        (message as any)._unknownFields[tag] = [buf];
+      } else {
+        list.push(buf);
+      }
     }
     return message;
   },
@@ -2884,10 +2960,14 @@ export const ServiceOptions = {
       }
       const startPos = reader.pos;
       reader.skipType(tag & 7);
-      (message as any)._unknownFields[tag] = [
-        ...((message as any)._unknownFields[tag] || []),
-        reader.buf.slice(startPos, reader.pos),
-      ];
+      const buf = reader.buf.slice(startPos, reader.pos);
+      const list = (message as any)._unknownFields[tag];
+
+      if (list === undefined) {
+        (message as any)._unknownFields[tag] = [buf];
+      } else {
+        list.push(buf);
+      }
     }
     return message;
   },
@@ -2960,10 +3040,14 @@ export const MethodOptions = {
       }
       const startPos = reader.pos;
       reader.skipType(tag & 7);
-      (message as any)._unknownFields[tag] = [
-        ...((message as any)._unknownFields[tag] || []),
-        reader.buf.slice(startPos, reader.pos),
-      ];
+      const buf = reader.buf.slice(startPos, reader.pos);
+      const list = (message as any)._unknownFields[tag];
+
+      if (list === undefined) {
+        (message as any)._unknownFields[tag] = [buf];
+      } else {
+        list.push(buf);
+      }
     }
     return message;
   },
@@ -3084,10 +3168,14 @@ export const UninterpretedOption = {
       }
       const startPos = reader.pos;
       reader.skipType(tag & 7);
-      (message as any)._unknownFields[tag] = [
-        ...((message as any)._unknownFields[tag] || []),
-        reader.buf.slice(startPos, reader.pos),
-      ];
+      const buf = reader.buf.slice(startPos, reader.pos);
+      const list = (message as any)._unknownFields[tag];
+
+      if (list === undefined) {
+        (message as any)._unknownFields[tag] = [buf];
+      } else {
+        list.push(buf);
+      }
     }
     return message;
   },
@@ -3150,10 +3238,14 @@ export const UninterpretedOption_NamePart = {
       }
       const startPos = reader.pos;
       reader.skipType(tag & 7);
-      (message as any)._unknownFields[tag] = [
-        ...((message as any)._unknownFields[tag] || []),
-        reader.buf.slice(startPos, reader.pos),
-      ];
+      const buf = reader.buf.slice(startPos, reader.pos);
+      const list = (message as any)._unknownFields[tag];
+
+      if (list === undefined) {
+        (message as any)._unknownFields[tag] = [buf];
+      } else {
+        list.push(buf);
+      }
     }
     return message;
   },
@@ -3206,10 +3298,14 @@ export const SourceCodeInfo = {
       }
       const startPos = reader.pos;
       reader.skipType(tag & 7);
-      (message as any)._unknownFields[tag] = [
-        ...((message as any)._unknownFields[tag] || []),
-        reader.buf.slice(startPos, reader.pos),
-      ];
+      const buf = reader.buf.slice(startPos, reader.pos);
+      const list = (message as any)._unknownFields[tag];
+
+      if (list === undefined) {
+        (message as any)._unknownFields[tag] = [buf];
+      } else {
+        list.push(buf);
+      }
     }
     return message;
   },
@@ -3324,10 +3420,14 @@ export const SourceCodeInfo_Location = {
       }
       const startPos = reader.pos;
       reader.skipType(tag & 7);
-      (message as any)._unknownFields[tag] = [
-        ...((message as any)._unknownFields[tag] || []),
-        reader.buf.slice(startPos, reader.pos),
-      ];
+      const buf = reader.buf.slice(startPos, reader.pos);
+      const list = (message as any)._unknownFields[tag];
+
+      if (list === undefined) {
+        (message as any)._unknownFields[tag] = [buf];
+      } else {
+        list.push(buf);
+      }
     }
     return message;
   },
@@ -3380,10 +3480,14 @@ export const GeneratedCodeInfo = {
       }
       const startPos = reader.pos;
       reader.skipType(tag & 7);
-      (message as any)._unknownFields[tag] = [
-        ...((message as any)._unknownFields[tag] || []),
-        reader.buf.slice(startPos, reader.pos),
-      ];
+      const buf = reader.buf.slice(startPos, reader.pos);
+      const list = (message as any)._unknownFields[tag];
+
+      if (list === undefined) {
+        (message as any)._unknownFields[tag] = [buf];
+      } else {
+        list.push(buf);
+      }
     }
     return message;
   },
@@ -3477,10 +3581,14 @@ export const GeneratedCodeInfo_Annotation = {
       }
       const startPos = reader.pos;
       reader.skipType(tag & 7);
-      (message as any)._unknownFields[tag] = [
-        ...((message as any)._unknownFields[tag] || []),
-        reader.buf.slice(startPos, reader.pos),
-      ];
+      const buf = reader.buf.slice(startPos, reader.pos);
+      const list = (message as any)._unknownFields[tag];
+
+      if (list === undefined) {
+        (message as any)._unknownFields[tag] = [buf];
+      } else {
+        list.push(buf);
+      }
     }
     return message;
   },

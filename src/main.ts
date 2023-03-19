@@ -1108,7 +1108,13 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
     chunks.push(code`
         const startPos = reader.pos;
         reader.skipType(tag & 7);
-        (message as any)._unknownFields[tag] = [...((message as any)._unknownFields[tag] || []), reader.buf.slice(startPos, reader.pos)];
+        const buf = reader.buf.slice(startPos, reader.pos);
+        const list = (message as any)._unknownFields[tag];
+
+        if(list === undefined)
+          (message as any)._unknownFields[tag] = [buf];
+        else
+          list.push(buf);
     `);
   } else {
     chunks.push(code`
