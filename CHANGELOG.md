@@ -1,3 +1,20 @@
+# [1.143.0](https://github.com/stephenh/ts-proto/compare/v1.142.1...v1.143.0) (2023-03-19)
+
+
+### Bug Fixes
+
+* initialize undefined optional fields upon use ([#802](https://github.com/stephenh/ts-proto/issues/802)) ([ee52e06](https://github.com/stephenh/ts-proto/commit/ee52e06a95d7790d1252831f1bb01344c94f16a4))
+
+
+### Features
+
+* group encoding and decoding support ([#799](https://github.com/stephenh/ts-proto/issues/799)) ([5ebe3c0](https://github.com/stephenh/ts-proto/commit/5ebe3c07f5039db4f9b40e4e237d02d03c85a4e5))
+
+
+### Performance Improvements
+
+* use array.push to prevent reallocation on every field ([#804](https://github.com/stephenh/ts-proto/issues/804)) ([a6aea2c](https://github.com/stephenh/ts-proto/commit/a6aea2ca9e61611cf22417d23eb71a5d6e4f2164))
+
 ## [1.142.1](https://github.com/stephenh/ts-proto/compare/v1.142.0...v1.142.1) (2023-03-18)
 
 
