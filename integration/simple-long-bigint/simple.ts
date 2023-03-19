@@ -104,61 +104,124 @@ export const Numbers = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 9) {
+            break;
+          }
+
           message.double = reader.double();
-          break;
+          continue;
         case 2:
+          if (tag != 21) {
+            break;
+          }
+
           message.float = reader.float();
-          break;
+          continue;
         case 3:
+          if (tag != 24) {
+            break;
+          }
+
           message.int32 = reader.int32();
-          break;
+          continue;
         case 4:
+          if (tag != 32) {
+            break;
+          }
+
           message.int64 = longToBigint(reader.int64() as Long);
-          break;
+          continue;
         case 5:
+          if (tag != 40) {
+            break;
+          }
+
           message.uint32 = reader.uint32();
-          break;
+          continue;
         case 6:
+          if (tag != 48) {
+            break;
+          }
+
           message.uint64 = longToBigint(reader.uint64() as Long);
-          break;
+          continue;
         case 7:
+          if (tag != 56) {
+            break;
+          }
+
           message.sint32 = reader.sint32();
-          break;
+          continue;
         case 8:
+          if (tag != 64) {
+            break;
+          }
+
           message.sint64 = longToBigint(reader.sint64() as Long);
-          break;
+          continue;
         case 9:
+          if (tag != 77) {
+            break;
+          }
+
           message.fixed32 = reader.fixed32();
-          break;
+          continue;
         case 10:
+          if (tag != 81) {
+            break;
+          }
+
           message.fixed64 = longToBigint(reader.fixed64() as Long);
-          break;
+          continue;
         case 11:
+          if (tag != 93) {
+            break;
+          }
+
           message.sfixed32 = reader.sfixed32();
-          break;
+          continue;
         case 12:
+          if (tag != 97) {
+            break;
+          }
+
           message.sfixed64 = longToBigint(reader.sfixed64() as Long);
-          break;
+          continue;
         case 13:
+          if (tag != 106) {
+            break;
+          }
+
           message.guint64 = UInt64Value.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 14:
+          if (tag != 114) {
+            break;
+          }
+
           message.timestamp = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 15:
-          if ((tag & 7) === 2) {
+          if (tag == 120) {
+            message.uint64s.push(longToBigint(reader.uint64() as Long));
+            continue;
+          }
+
+          if (tag == 122) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
               message.uint64s.push(longToBigint(reader.uint64() as Long));
             }
-          } else {
-            message.uint64s.push(longToBigint(reader.uint64() as Long));
+
+            continue;
           }
-          break;
-        default:
-          reader.skipType(tag & 7);
+
           break;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },

@@ -1,5 +1,10 @@
 import { code, Code, conditionalOutput, def, imp, joinCode } from "ts-poet";
-import { DescriptorProto, FieldDescriptorProto, FileDescriptorProto } from "ts-proto-descriptors";
+import {
+  DescriptorProto,
+  FieldDescriptorProto,
+  FieldDescriptorProto_Type,
+  FileDescriptorProto,
+} from "ts-proto-descriptors";
 import {
   basicLongWireType,
   basicTypeName,
@@ -957,6 +962,12 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
     const fieldName = maybeSnakeToCamel(field.name, options);
     chunks.push(code`case ${field.number}:`);
 
+    const tag = ((field.number << 3) | basicWireType(field.type)) >>> 0;
+    const tagCheck = code`
+      if(tag != ${tag})
+        break;
+    `;
+
     // get a generic 'reader.doSomething' bit that is specific to the basic type
     let readSnippet: Code;
     if (isPrimitive(field)) {
@@ -1001,7 +1012,9 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
       readSnippet = code`${utils.fromProtoObjectId}(${type}.decode(reader, reader.uint32()))`;
     } else if (isMessage(field)) {
       const type = basicTypeName(ctx, field);
-      readSnippet = code`${type}.decode(reader, reader.uint32())`;
+
+      if (field.type == FieldDescriptorProto_Type.TYPE_GROUP) readSnippet = code`${type}.decode(reader)`;
+      else readSnippet = code`${type}.decode(reader, reader.uint32())`;
     } else {
       throw new Error(`Unhandled field ${field}`);
     }
@@ -1018,52 +1031,73 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
           ? `message.${fieldName}${maybeNonNullAssertion}.set(${varName}.key, ${varName}.value)`
           : `message.${fieldName}${maybeNonNullAssertion}[${varName}.key] = ${varName}.value`;
         chunks.push(code`
+          ${tagCheck}
           const ${varName} = ${readSnippet};
           if (${varName}.value !== undefined) {
             ${valueSetterSnippet};
           }
         `);
       } else if (packedType(field.type) === undefined) {
-        chunks.push(code`message.${fieldName}${maybeNonNullAssertion}.push(${readSnippet});`);
-      } else {
         chunks.push(code`
-          if ((tag & 7) === 2) {
+          ${tagCheck}
+          message.${fieldName}${maybeNonNullAssertion}.push(${readSnippet});
+        `);
+      } else {
+        const packedTag = ((field.number << 3) | 2) >>> 0;
+
+        chunks.push(code`
+          if(tag == ${tag}){
+            message.${fieldName}${maybeNonNullAssertion}.push(${readSnippet});
+            continue;
+          }
+
+          if(tag == ${packedTag}){
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
               message.${fieldName}${maybeNonNullAssertion}.push(${readSnippet});
             }
-          } else {
-            message.${fieldName}${maybeNonNullAssertion}.push(${readSnippet});
+
+            continue;
           }
+
+          break;
         `);
       }
     } else if (isWithinOneOfThatShouldBeUnion(options, field)) {
       let oneofName = maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options);
-      chunks.push(code`message.${oneofName} = { $case: '${fieldName}', ${fieldName}: ${readSnippet} };`);
+      chunks.push(code`
+        ${tagCheck}
+        message.${oneofName} = { $case: '${fieldName}', ${fieldName}: ${readSnippet} };
+      `);
     } else {
-      chunks.push(code`message.${fieldName} = ${readSnippet};`);
+      chunks.push(code`
+        ${tagCheck}
+        message.${fieldName} = ${readSnippet};
+      `);
     }
-    chunks.push(code`break;`);
+
+    if (!isRepeated(field) || packedType(field.type) === undefined) chunks.push(code`continue;`);
   });
+
+  chunks.push(code`}`);
+  chunks.push(code`
+      if((tag & 7) == 4 || tag == 0)
+        break;
+  `);
 
   if (options.unknownFields) {
     chunks.push(code`
-      default:
         const startPos = reader.pos;
         reader.skipType(tag & 7);
         (message as any)._unknownFields[tag] = [...((message as any)._unknownFields[tag] || []), reader.buf.slice(startPos, reader.pos)];
-        break;
     `);
   } else {
     chunks.push(code`
-      default:
         reader.skipType(tag & 7);
-        break;
     `);
   }
 
-  // and then wrap up the switch/while/return
-  chunks.push(code`}`);
+  // and then wrap up the while/return
   chunks.push(code`}`);
   chunks.push(code`return message;`);
 
@@ -1106,8 +1140,15 @@ function getEncodeWriteSnippet(ctx: Context, field: FieldDescriptorProto): (plac
     const tag = ((field.number << 3) | 2) >>> 0;
     return (place) => code`${type}.encode(${wrappedValue(place)}, writer.uint32(${tag}).fork()).ldelim()`;
   } else if (isMessage(field)) {
-    const tag = ((field.number << 3) | 2) >>> 0;
     const type = basicTypeName(ctx, field);
+
+    if (field.type == FieldDescriptorProto_Type.TYPE_GROUP) {
+      const startTag = ((field.number << 3) | 3) >>> 0,
+        endTag = ((field.number << 3) | 4) >>> 0;
+      return (place) => code`${type}.encode(${place}, writer.uint32(${startTag})).uint32(${endTag})`;
+    }
+
+    const tag = ((field.number << 3) | 2) >>> 0;
     return (place) => code`${type}.encode(${place}, writer.uint32(${tag}).fork()).ldelim()`;
   } else {
     throw new Error(`Unhandled field ${field}`);
@@ -1239,8 +1280,8 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
         for (const oneOfField of oneOfFieldsDict[field.oneofIndex]) {
           const writeSnippet = getEncodeWriteSnippet(ctx, oneOfField);
           const oneOfFieldName = maybeSnakeToCamel(oneOfField.name, ctx.options);
-          chunks.push(code`case "${oneOfFieldName}": 
-            ${writeSnippet(`message.${oneofName}.${oneOfFieldName}`)}; 
+          chunks.push(code`case "${oneOfFieldName}":
+            ${writeSnippet(`message.${oneofName}.${oneOfFieldName}`)};
             break;`);
         }
         chunks.push(code`}`);

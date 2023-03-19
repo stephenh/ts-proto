@@ -48,27 +48,38 @@ export const Something = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 10) {
+            break;
+          }
+
           message.hello = reader.string();
-          break;
+          continue;
         case 2:
-          if ((tag & 7) === 2) {
+          if (tag == 16) {
+            message.foo.push(reader.int32());
+            continue;
+          }
+
+          if (tag == 18) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
               message.foo.push(reader.int32());
             }
-          } else {
-            message.foo.push(reader.int32());
+
+            continue;
           }
-          break;
-        default:
-          const startPos = reader.pos;
-          reader.skipType(tag & 7);
-          (message as any)._unknownFields[tag] = [
-            ...((message as any)._unknownFields[tag] || []),
-            reader.buf.slice(startPos, reader.pos),
-          ];
+
           break;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      const startPos = reader.pos;
+      reader.skipType(tag & 7);
+      (message as any)._unknownFields[tag] = [
+        ...((message as any)._unknownFields[tag] || []),
+        reader.buf.slice(startPos, reader.pos),
+      ];
     }
     return message;
   },

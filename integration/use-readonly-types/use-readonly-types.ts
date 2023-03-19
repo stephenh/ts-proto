@@ -95,52 +95,103 @@ export const Entity = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.intVal = reader.int32();
-          break;
+          continue;
         case 2:
+          if (tag != 18) {
+            break;
+          }
+
           message.stringVal = reader.string();
-          break;
+          continue;
         case 3:
-          if ((tag & 7) === 2) {
+          if (tag == 24) {
+            message.intArray.push(reader.int32());
+            continue;
+          }
+
+          if (tag == 26) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
               message.intArray.push(reader.int32());
             }
-          } else {
-            message.intArray.push(reader.int32());
+
+            continue;
           }
+
           break;
         case 4:
+          if (tag != 34) {
+            break;
+          }
+
           message.stringArray.push(reader.string());
-          break;
+          continue;
         case 5:
+          if (tag != 42) {
+            break;
+          }
+
           message.subEntity = SubEntity.decode(reader, reader.uint32());
-          break;
+          continue;
         case 6:
+          if (tag != 50) {
+            break;
+          }
+
           message.subEntityArray.push(SubEntity.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 7:
+          if (tag != 56) {
+            break;
+          }
+
           message.optionalIntVal = reader.int32();
-          break;
+          continue;
         case 8:
+          if (tag != 66) {
+            break;
+          }
+
           message.fieldMask = FieldMask.unwrap(FieldMask.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 9:
+          if (tag != 74) {
+            break;
+          }
+
           message.listValue = ListValue.unwrap(ListValue.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 10:
+          if (tag != 82) {
+            break;
+          }
+
           message.structValue = Struct.unwrap(Struct.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 11:
+          if (tag != 90) {
+            break;
+          }
+
           message.oneOfValue = { $case: "theStringValue", theStringValue: reader.string() };
-          break;
+          continue;
         case 12:
+          if (tag != 96) {
+            break;
+          }
+
           message.oneOfValue = { $case: "theIntValue", theIntValue: reader.int32() };
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -253,12 +304,17 @@ export const SubEntity = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.subVal = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },

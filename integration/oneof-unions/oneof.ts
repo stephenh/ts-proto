@@ -131,48 +131,101 @@ export const PleaseChoose = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 10) {
+            break;
+          }
+
           message.name = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag != 17) {
+            break;
+          }
+
           message.choice = { $case: "aNumber", aNumber: reader.double() };
-          break;
+          continue;
         case 3:
+          if (tag != 26) {
+            break;
+          }
+
           message.choice = { $case: "aString", aString: reader.string() };
-          break;
+          continue;
         case 4:
+          if (tag != 34) {
+            break;
+          }
+
           message.choice = { $case: "aMessage", aMessage: PleaseChoose_Submessage.decode(reader, reader.uint32()) };
-          break;
+          continue;
         case 6:
+          if (tag != 48) {
+            break;
+          }
+
           message.choice = { $case: "aBool", aBool: reader.bool() };
-          break;
+          continue;
         case 10:
+          if (tag != 82) {
+            break;
+          }
+
           message.choice = { $case: "bunchaBytes", bunchaBytes: reader.bytes() };
-          break;
+          continue;
         case 11:
+          if (tag != 88) {
+            break;
+          }
+
           message.choice = { $case: "anEnum", anEnum: reader.int32() as any };
-          break;
+          continue;
         case 5:
+          if (tag != 40) {
+            break;
+          }
+
           message.age = reader.uint32();
-          break;
+          continue;
         case 7:
+          if (tag != 58) {
+            break;
+          }
+
           message.eitherOr = { $case: "either", either: reader.string() };
-          break;
+          continue;
         case 8:
+          if (tag != 66) {
+            break;
+          }
+
           message.eitherOr = { $case: "or", or: reader.string() };
-          break;
+          continue;
         case 9:
+          if (tag != 74) {
+            break;
+          }
+
           message.eitherOr = { $case: "thirdOption", thirdOption: reader.string() };
-          break;
+          continue;
         case 12:
+          if (tag != 98) {
+            break;
+          }
+
           message.signature = reader.bytes();
-          break;
+          continue;
         case 13:
+          if (tag != 106) {
+            break;
+          }
+
           message.value = Value.unwrap(Value.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -303,12 +356,17 @@ export const PleaseChoose_Submessage = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 10) {
+            break;
+          }
+
           message.name = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -357,15 +415,24 @@ export const SimpleButOptional = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 10) {
+            break;
+          }
+
           message.name = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag != 16) {
+            break;
+          }
+
           message.age = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },

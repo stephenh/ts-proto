@@ -186,26 +186,43 @@ export const Version = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.major = reader.int32();
-          break;
+          continue;
         case 2:
+          if (tag != 16) {
+            break;
+          }
+
           message.minor = reader.int32();
-          break;
+          continue;
         case 3:
+          if (tag != 24) {
+            break;
+          }
+
           message.patch = reader.int32();
-          break;
+          continue;
         case 4:
+          if (tag != 34) {
+            break;
+          }
+
           message.suffix = reader.string();
-          break;
-        default:
-          const startPos = reader.pos;
-          reader.skipType(tag & 7);
-          (message as any)._unknownFields[tag] = [
-            ...((message as any)._unknownFields[tag] || []),
-            reader.buf.slice(startPos, reader.pos),
-          ];
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      const startPos = reader.pos;
+      reader.skipType(tag & 7);
+      (message as any)._unknownFields[tag] = [
+        ...((message as any)._unknownFields[tag] || []),
+        reader.buf.slice(startPos, reader.pos),
+      ];
     }
     return message;
   },
@@ -255,26 +272,43 @@ export const CodeGeneratorRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 10) {
+            break;
+          }
+
           message.fileToGenerate.push(reader.string());
-          break;
+          continue;
         case 2:
+          if (tag != 18) {
+            break;
+          }
+
           message.parameter = reader.string();
-          break;
+          continue;
         case 15:
+          if (tag != 122) {
+            break;
+          }
+
           message.protoFile.push(FileDescriptorProto.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 3:
+          if (tag != 26) {
+            break;
+          }
+
           message.compilerVersion = Version.decode(reader, reader.uint32());
-          break;
-        default:
-          const startPos = reader.pos;
-          reader.skipType(tag & 7);
-          (message as any)._unknownFields[tag] = [
-            ...((message as any)._unknownFields[tag] || []),
-            reader.buf.slice(startPos, reader.pos),
-          ];
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      const startPos = reader.pos;
+      reader.skipType(tag & 7);
+      (message as any)._unknownFields[tag] = [
+        ...((message as any)._unknownFields[tag] || []),
+        reader.buf.slice(startPos, reader.pos),
+      ];
     }
     return message;
   },
@@ -321,23 +355,36 @@ export const CodeGeneratorResponse = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 10) {
+            break;
+          }
+
           message.error = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag != 16) {
+            break;
+          }
+
           message.supportedFeatures = longToNumber(reader.uint64() as Long);
-          break;
+          continue;
         case 15:
+          if (tag != 122) {
+            break;
+          }
+
           message.file.push(CodeGeneratorResponse_File.decode(reader, reader.uint32()));
-          break;
-        default:
-          const startPos = reader.pos;
-          reader.skipType(tag & 7);
-          (message as any)._unknownFields[tag] = [
-            ...((message as any)._unknownFields[tag] || []),
-            reader.buf.slice(startPos, reader.pos),
-          ];
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      const startPos = reader.pos;
+      reader.skipType(tag & 7);
+      (message as any)._unknownFields[tag] = [
+        ...((message as any)._unknownFields[tag] || []),
+        reader.buf.slice(startPos, reader.pos),
+      ];
     }
     return message;
   },
@@ -387,26 +434,43 @@ export const CodeGeneratorResponse_File = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 10) {
+            break;
+          }
+
           message.name = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag != 18) {
+            break;
+          }
+
           message.insertionPoint = reader.string();
-          break;
+          continue;
         case 15:
+          if (tag != 122) {
+            break;
+          }
+
           message.content = reader.string();
-          break;
+          continue;
         case 16:
+          if (tag != 130) {
+            break;
+          }
+
           message.generatedCodeInfo = GeneratedCodeInfo.decode(reader, reader.uint32());
-          break;
-        default:
-          const startPos = reader.pos;
-          reader.skipType(tag & 7);
-          (message as any)._unknownFields[tag] = [
-            ...((message as any)._unknownFields[tag] || []),
-            reader.buf.slice(startPos, reader.pos),
-          ];
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      const startPos = reader.pos;
+      reader.skipType(tag & 7);
+      (message as any)._unknownFields[tag] = [
+        ...((message as any)._unknownFields[tag] || []),
+        reader.buf.slice(startPos, reader.pos),
+      ];
     }
     return message;
   },

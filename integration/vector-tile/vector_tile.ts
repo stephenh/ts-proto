@@ -99,12 +99,17 @@ export const Tile = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 3:
+          if (tag != 26) {
+            break;
+          }
+
           message.layers.push(Tile_Layer.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -172,30 +177,59 @@ export const Tile_Value = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 10) {
+            break;
+          }
+
           message.stringValue = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag != 21) {
+            break;
+          }
+
           message.floatValue = reader.float();
-          break;
+          continue;
         case 3:
+          if (tag != 25) {
+            break;
+          }
+
           message.doubleValue = reader.double();
-          break;
+          continue;
         case 4:
+          if (tag != 32) {
+            break;
+          }
+
           message.intValue = longToNumber(reader.int64() as Long);
-          break;
+          continue;
         case 5:
+          if (tag != 40) {
+            break;
+          }
+
           message.uintValue = longToNumber(reader.uint64() as Long);
-          break;
+          continue;
         case 6:
+          if (tag != 48) {
+            break;
+          }
+
           message.sintValue = longToNumber(reader.sint64() as Long);
-          break;
+          continue;
         case 7:
+          if (tag != 56) {
+            break;
+          }
+
           message.boolValue = reader.bool();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -274,35 +308,56 @@ export const Tile_Feature = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.id = longToNumber(reader.uint64() as Long);
-          break;
+          continue;
         case 2:
-          if ((tag & 7) === 2) {
+          if (tag == 16) {
+            message.tags.push(reader.uint32());
+            continue;
+          }
+
+          if (tag == 18) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
               message.tags.push(reader.uint32());
             }
-          } else {
-            message.tags.push(reader.uint32());
+
+            continue;
           }
+
           break;
         case 3:
+          if (tag != 24) {
+            break;
+          }
+
           message.type = reader.int32() as any;
-          break;
+          continue;
         case 4:
-          if ((tag & 7) === 2) {
+          if (tag == 32) {
+            message.geometry.push(reader.uint32());
+            continue;
+          }
+
+          if (tag == 34) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
               message.geometry.push(reader.uint32());
             }
-          } else {
-            message.geometry.push(reader.uint32());
+
+            continue;
           }
-          break;
-        default:
-          reader.skipType(tag & 7);
+
           break;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -382,27 +437,52 @@ export const Tile_Layer = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 15:
+          if (tag != 120) {
+            break;
+          }
+
           message.version = reader.uint32();
-          break;
+          continue;
         case 1:
+          if (tag != 10) {
+            break;
+          }
+
           message.name = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag != 18) {
+            break;
+          }
+
           message.features.push(Tile_Feature.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 3:
+          if (tag != 26) {
+            break;
+          }
+
           message.keys.push(reader.string());
-          break;
+          continue;
         case 4:
+          if (tag != 34) {
+            break;
+          }
+
           message.values.push(Tile_Value.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 5:
+          if (tag != 40) {
+            break;
+          }
+
           message.extent = reader.uint32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
