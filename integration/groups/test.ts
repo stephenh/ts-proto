@@ -7,44 +7,52 @@ export interface GroupsOptionalTest {
   int1?: number;
   group?: GroupsOptionalTest_Group;
   int3?: number;
+  _unknownFields?: { [key: number]: Uint8Array[] };
 }
 
 export interface GroupsOptionalTest_Group {
   key?: string;
   value?: string;
+  _unknownFields?: { [key: number]: Uint8Array[] };
 }
 
 export interface GroupsRepeatedTest {
   int1?: number[];
   group?: GroupsRepeatedTest_Group[];
   int3?: number[];
+  _unknownFields?: { [key: number]: Uint8Array[] };
 }
 
 export interface GroupsRepeatedTest_Group {
   key?: string[];
   value?: string[];
+  _unknownFields?: { [key: number]: Uint8Array[] };
 }
 
 export interface GroupsNestedTest {
   int1?: number[];
   group?: GroupsNestedTest_Group[];
   int3?: number[];
+  _unknownFields?: { [key: number]: Uint8Array[] };
 }
 
 export interface GroupsNestedTest_Group {
   nested?: GroupsNestedTest_Group_Nested[];
+  _unknownFields?: { [key: number]: Uint8Array[] };
 }
 
 export interface GroupsNestedTest_Group_Nested {
   nested2?: GroupsNestedTest_Group_Nested_Nested2[];
+  _unknownFields?: { [key: number]: Uint8Array[] };
 }
 
 export interface GroupsNestedTest_Group_Nested_Nested2 {
   string1?: string;
+  _unknownFields?: { [key: number]: Uint8Array[] };
 }
 
 function createBaseGroupsOptionalTest(): GroupsOptionalTest {
-  return { int1: 0, group: undefined, int3: 0 };
+  return {};
 }
 
 export const GroupsOptionalTest = {
@@ -58,12 +66,12 @@ export const GroupsOptionalTest = {
     if (message.int3 !== undefined && message.int3 !== 0) {
       writer.uint32(24).int32(message.int3);
     }
-    if ("_unknownFields" in message) {
-      const msgUnknownFields: any = (message as any)["_unknownFields"];
-      for (const key of Object.keys(msgUnknownFields)) {
-        const values = msgUnknownFields[key] as Uint8Array[];
+    if (message._unknownFields !== undefined) {
+      for (const key in message._unknownFields) {
+        const values = message._unknownFields[key];
+        const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(parseInt(key, 10));
+          writer.uint32(tag);
           (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
@@ -79,7 +87,6 @@ export const GroupsOptionalTest = {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGroupsOptionalTest();
-    (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -111,10 +118,15 @@ export const GroupsOptionalTest = {
       const startPos = reader.pos;
       reader.skipType(tag & 7);
       const buf = reader.buf.slice(startPos, reader.pos);
-      const list = (message as any)._unknownFields[tag];
+
+      if (message._unknownFields === undefined) {
+        message._unknownFields = {};
+      }
+
+      const list = message._unknownFields[tag];
 
       if (list === undefined) {
-        (message as any)._unknownFields[tag] = [buf];
+        message._unknownFields[tag] = [buf];
       } else {
         list.push(buf);
       }
@@ -155,7 +167,7 @@ export const GroupsOptionalTest = {
 };
 
 function createBaseGroupsOptionalTest_Group(): GroupsOptionalTest_Group {
-  return { key: "", value: "" };
+  return {};
 }
 
 export const GroupsOptionalTest_Group = {
@@ -166,12 +178,12 @@ export const GroupsOptionalTest_Group = {
     if (message.value !== undefined && message.value !== "") {
       writer.uint32(18).string(message.value);
     }
-    if ("_unknownFields" in message) {
-      const msgUnknownFields: any = (message as any)["_unknownFields"];
-      for (const key of Object.keys(msgUnknownFields)) {
-        const values = msgUnknownFields[key] as Uint8Array[];
+    if (message._unknownFields !== undefined) {
+      for (const key in message._unknownFields) {
+        const values = message._unknownFields[key];
+        const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(parseInt(key, 10));
+          writer.uint32(tag);
           (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
@@ -187,7 +199,6 @@ export const GroupsOptionalTest_Group = {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGroupsOptionalTest_Group();
-    (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -212,10 +223,15 @@ export const GroupsOptionalTest_Group = {
       const startPos = reader.pos;
       reader.skipType(tag & 7);
       const buf = reader.buf.slice(startPos, reader.pos);
-      const list = (message as any)._unknownFields[tag];
+
+      if (message._unknownFields === undefined) {
+        message._unknownFields = {};
+      }
+
+      const list = message._unknownFields[tag];
 
       if (list === undefined) {
-        (message as any)._unknownFields[tag] = [buf];
+        message._unknownFields[tag] = [buf];
       } else {
         list.push(buf);
       }
@@ -247,7 +263,7 @@ export const GroupsOptionalTest_Group = {
 };
 
 function createBaseGroupsRepeatedTest(): GroupsRepeatedTest {
-  return { int1: [], group: [], int3: [] };
+  return {};
 }
 
 export const GroupsRepeatedTest = {
@@ -271,12 +287,12 @@ export const GroupsRepeatedTest = {
       }
       writer.ldelim();
     }
-    if ("_unknownFields" in message) {
-      const msgUnknownFields: any = (message as any)["_unknownFields"];
-      for (const key of Object.keys(msgUnknownFields)) {
-        const values = msgUnknownFields[key] as Uint8Array[];
+    if (message._unknownFields !== undefined) {
+      for (const key in message._unknownFields) {
+        const values = message._unknownFields[key];
+        const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(parseInt(key, 10));
+          writer.uint32(tag);
           (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
@@ -292,17 +308,22 @@ export const GroupsRepeatedTest = {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGroupsRepeatedTest();
-    (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
           if (tag == 8) {
+            if (message.int1 === undefined) {
+              message.int1 = [];
+            }
             message.int1!.push(reader.int32());
             continue;
           }
 
           if (tag == 10) {
+            if (message.int1 === undefined) {
+              message.int1 = [];
+            }
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
               message.int1!.push(reader.int32());
@@ -317,15 +338,24 @@ export const GroupsRepeatedTest = {
             break;
           }
 
+          if (message.group === undefined) {
+            message.group = [];
+          }
           message.group!.push(GroupsRepeatedTest_Group.decode(reader));
           continue;
         case 3:
           if (tag == 24) {
+            if (message.int3 === undefined) {
+              message.int3 = [];
+            }
             message.int3!.push(reader.int32());
             continue;
           }
 
           if (tag == 26) {
+            if (message.int3 === undefined) {
+              message.int3 = [];
+            }
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
               message.int3!.push(reader.int32());
@@ -342,10 +372,15 @@ export const GroupsRepeatedTest = {
       const startPos = reader.pos;
       reader.skipType(tag & 7);
       const buf = reader.buf.slice(startPos, reader.pos);
-      const list = (message as any)._unknownFields[tag];
+
+      if (message._unknownFields === undefined) {
+        message._unknownFields = {};
+      }
+
+      const list = message._unknownFields[tag];
 
       if (list === undefined) {
-        (message as any)._unknownFields[tag] = [buf];
+        message._unknownFields[tag] = [buf];
       } else {
         list.push(buf);
       }
@@ -395,7 +430,7 @@ export const GroupsRepeatedTest = {
 };
 
 function createBaseGroupsRepeatedTest_Group(): GroupsRepeatedTest_Group {
-  return { key: [], value: [] };
+  return {};
 }
 
 export const GroupsRepeatedTest_Group = {
@@ -410,12 +445,12 @@ export const GroupsRepeatedTest_Group = {
         writer.uint32(18).string(v!);
       }
     }
-    if ("_unknownFields" in message) {
-      const msgUnknownFields: any = (message as any)["_unknownFields"];
-      for (const key of Object.keys(msgUnknownFields)) {
-        const values = msgUnknownFields[key] as Uint8Array[];
+    if (message._unknownFields !== undefined) {
+      for (const key in message._unknownFields) {
+        const values = message._unknownFields[key];
+        const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(parseInt(key, 10));
+          writer.uint32(tag);
           (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
@@ -431,7 +466,6 @@ export const GroupsRepeatedTest_Group = {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGroupsRepeatedTest_Group();
-    (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -440,6 +474,9 @@ export const GroupsRepeatedTest_Group = {
             break;
           }
 
+          if (message.key === undefined) {
+            message.key = [];
+          }
           message.key!.push(reader.string());
           continue;
         case 2:
@@ -447,6 +484,9 @@ export const GroupsRepeatedTest_Group = {
             break;
           }
 
+          if (message.value === undefined) {
+            message.value = [];
+          }
           message.value!.push(reader.string());
           continue;
       }
@@ -456,10 +496,15 @@ export const GroupsRepeatedTest_Group = {
       const startPos = reader.pos;
       reader.skipType(tag & 7);
       const buf = reader.buf.slice(startPos, reader.pos);
-      const list = (message as any)._unknownFields[tag];
+
+      if (message._unknownFields === undefined) {
+        message._unknownFields = {};
+      }
+
+      const list = message._unknownFields[tag];
 
       if (list === undefined) {
-        (message as any)._unknownFields[tag] = [buf];
+        message._unknownFields[tag] = [buf];
       } else {
         list.push(buf);
       }
@@ -502,7 +547,7 @@ export const GroupsRepeatedTest_Group = {
 };
 
 function createBaseGroupsNestedTest(): GroupsNestedTest {
-  return { int1: [], group: [], int3: [] };
+  return {};
 }
 
 export const GroupsNestedTest = {
@@ -526,12 +571,12 @@ export const GroupsNestedTest = {
       }
       writer.ldelim();
     }
-    if ("_unknownFields" in message) {
-      const msgUnknownFields: any = (message as any)["_unknownFields"];
-      for (const key of Object.keys(msgUnknownFields)) {
-        const values = msgUnknownFields[key] as Uint8Array[];
+    if (message._unknownFields !== undefined) {
+      for (const key in message._unknownFields) {
+        const values = message._unknownFields[key];
+        const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(parseInt(key, 10));
+          writer.uint32(tag);
           (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
@@ -547,17 +592,22 @@ export const GroupsNestedTest = {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGroupsNestedTest();
-    (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
           if (tag == 8) {
+            if (message.int1 === undefined) {
+              message.int1 = [];
+            }
             message.int1!.push(reader.int32());
             continue;
           }
 
           if (tag == 10) {
+            if (message.int1 === undefined) {
+              message.int1 = [];
+            }
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
               message.int1!.push(reader.int32());
@@ -572,15 +622,24 @@ export const GroupsNestedTest = {
             break;
           }
 
+          if (message.group === undefined) {
+            message.group = [];
+          }
           message.group!.push(GroupsNestedTest_Group.decode(reader));
           continue;
         case 3:
           if (tag == 24) {
+            if (message.int3 === undefined) {
+              message.int3 = [];
+            }
             message.int3!.push(reader.int32());
             continue;
           }
 
           if (tag == 26) {
+            if (message.int3 === undefined) {
+              message.int3 = [];
+            }
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
               message.int3!.push(reader.int32());
@@ -597,10 +656,15 @@ export const GroupsNestedTest = {
       const startPos = reader.pos;
       reader.skipType(tag & 7);
       const buf = reader.buf.slice(startPos, reader.pos);
-      const list = (message as any)._unknownFields[tag];
+
+      if (message._unknownFields === undefined) {
+        message._unknownFields = {};
+      }
+
+      const list = message._unknownFields[tag];
 
       if (list === undefined) {
-        (message as any)._unknownFields[tag] = [buf];
+        message._unknownFields[tag] = [buf];
       } else {
         list.push(buf);
       }
@@ -650,7 +714,7 @@ export const GroupsNestedTest = {
 };
 
 function createBaseGroupsNestedTest_Group(): GroupsNestedTest_Group {
-  return { nested: [] };
+  return {};
 }
 
 export const GroupsNestedTest_Group = {
@@ -660,12 +724,12 @@ export const GroupsNestedTest_Group = {
         GroupsNestedTest_Group_Nested.encode(v!, writer.uint32(11)).uint32(12);
       }
     }
-    if ("_unknownFields" in message) {
-      const msgUnknownFields: any = (message as any)["_unknownFields"];
-      for (const key of Object.keys(msgUnknownFields)) {
-        const values = msgUnknownFields[key] as Uint8Array[];
+    if (message._unknownFields !== undefined) {
+      for (const key in message._unknownFields) {
+        const values = message._unknownFields[key];
+        const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(parseInt(key, 10));
+          writer.uint32(tag);
           (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
@@ -681,7 +745,6 @@ export const GroupsNestedTest_Group = {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGroupsNestedTest_Group();
-    (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -690,6 +753,9 @@ export const GroupsNestedTest_Group = {
             break;
           }
 
+          if (message.nested === undefined) {
+            message.nested = [];
+          }
           message.nested!.push(GroupsNestedTest_Group_Nested.decode(reader));
           continue;
       }
@@ -699,10 +765,15 @@ export const GroupsNestedTest_Group = {
       const startPos = reader.pos;
       reader.skipType(tag & 7);
       const buf = reader.buf.slice(startPos, reader.pos);
-      const list = (message as any)._unknownFields[tag];
+
+      if (message._unknownFields === undefined) {
+        message._unknownFields = {};
+      }
+
+      const list = message._unknownFields[tag];
 
       if (list === undefined) {
-        (message as any)._unknownFields[tag] = [buf];
+        message._unknownFields[tag] = [buf];
       } else {
         list.push(buf);
       }
@@ -740,7 +811,7 @@ export const GroupsNestedTest_Group = {
 };
 
 function createBaseGroupsNestedTest_Group_Nested(): GroupsNestedTest_Group_Nested {
-  return { nested2: [] };
+  return {};
 }
 
 export const GroupsNestedTest_Group_Nested = {
@@ -750,12 +821,12 @@ export const GroupsNestedTest_Group_Nested = {
         GroupsNestedTest_Group_Nested_Nested2.encode(v!, writer.uint32(19)).uint32(20);
       }
     }
-    if ("_unknownFields" in message) {
-      const msgUnknownFields: any = (message as any)["_unknownFields"];
-      for (const key of Object.keys(msgUnknownFields)) {
-        const values = msgUnknownFields[key] as Uint8Array[];
+    if (message._unknownFields !== undefined) {
+      for (const key in message._unknownFields) {
+        const values = message._unknownFields[key];
+        const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(parseInt(key, 10));
+          writer.uint32(tag);
           (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
@@ -771,7 +842,6 @@ export const GroupsNestedTest_Group_Nested = {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGroupsNestedTest_Group_Nested();
-    (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -780,6 +850,9 @@ export const GroupsNestedTest_Group_Nested = {
             break;
           }
 
+          if (message.nested2 === undefined) {
+            message.nested2 = [];
+          }
           message.nested2!.push(GroupsNestedTest_Group_Nested_Nested2.decode(reader));
           continue;
       }
@@ -789,10 +862,15 @@ export const GroupsNestedTest_Group_Nested = {
       const startPos = reader.pos;
       reader.skipType(tag & 7);
       const buf = reader.buf.slice(startPos, reader.pos);
-      const list = (message as any)._unknownFields[tag];
+
+      if (message._unknownFields === undefined) {
+        message._unknownFields = {};
+      }
+
+      const list = message._unknownFields[tag];
 
       if (list === undefined) {
-        (message as any)._unknownFields[tag] = [buf];
+        message._unknownFields[tag] = [buf];
       } else {
         list.push(buf);
       }
@@ -832,7 +910,7 @@ export const GroupsNestedTest_Group_Nested = {
 };
 
 function createBaseGroupsNestedTest_Group_Nested_Nested2(): GroupsNestedTest_Group_Nested_Nested2 {
-  return { string1: "" };
+  return {};
 }
 
 export const GroupsNestedTest_Group_Nested_Nested2 = {
@@ -840,12 +918,12 @@ export const GroupsNestedTest_Group_Nested_Nested2 = {
     if (message.string1 !== undefined && message.string1 !== "") {
       writer.uint32(10).string(message.string1);
     }
-    if ("_unknownFields" in message) {
-      const msgUnknownFields: any = (message as any)["_unknownFields"];
-      for (const key of Object.keys(msgUnknownFields)) {
-        const values = msgUnknownFields[key] as Uint8Array[];
+    if (message._unknownFields !== undefined) {
+      for (const key in message._unknownFields) {
+        const values = message._unknownFields[key];
+        const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(parseInt(key, 10));
+          writer.uint32(tag);
           (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
@@ -861,7 +939,6 @@ export const GroupsNestedTest_Group_Nested_Nested2 = {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGroupsNestedTest_Group_Nested_Nested2();
-    (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -879,10 +956,15 @@ export const GroupsNestedTest_Group_Nested_Nested2 = {
       const startPos = reader.pos;
       reader.skipType(tag & 7);
       const buf = reader.buf.slice(startPos, reader.pos);
-      const list = (message as any)._unknownFields[tag];
+
+      if (message._unknownFields === undefined) {
+        message._unknownFields = {};
+      }
+
+      const list = message._unknownFields[tag];
 
       if (list === undefined) {
-        (message as any)._unknownFields[tag] = [buf];
+        message._unknownFields[tag] = [buf];
       } else {
         list.push(buf);
       }

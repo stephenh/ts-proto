@@ -821,6 +821,10 @@ function generateInterfaceDeclaration(
     chunks.push(code`${maybeReadonly(options)}${name}${q}: ${type}, `);
   });
 
+  if (ctx.options.unknownFields) {
+    chunks.push(code`_unknownFields?: {[key: number]: Uint8Array[]},`);
+  }
+
   chunks.push(code`}`);
   return joinCode(chunks, { on: "\n" });
 }
@@ -915,6 +919,10 @@ function generateBaseInstanceFactory(
     fields.unshift(code`$type: '${fullTypeName}'`);
   }
 
+  if (ctx.options.unknownFields && ctx.options.initializeFieldsAsUndefined) {
+    fields.push(code`_unknownFields: {}`);
+  }
+
   return code`
     function createBase${fullName}(): ${fullName} {
       return { ${joinCode(fields, { on: "," })} };
@@ -945,10 +953,6 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
   `);
 
   chunks.push(code`const message = ${createBase}${maybeAsAny(options)};`);
-
-  if (options.unknownFields) {
-    chunks.push(code`(message as any)._unknownFields = {}`);
-  }
 
   // start the tag loop
   chunks.push(code`
@@ -1105,16 +1109,28 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
   `);
 
   if (options.unknownFields) {
-    chunks.push(code`
-        const startPos = reader.pos;
-        reader.skipType(tag & 7);
-        const buf = reader.buf.slice(startPos, reader.pos);
-        const list = (message as any)._unknownFields[tag];
+    let unknownFieldsInitializerSnippet = "";
+    let maybeNonNullAssertion = options.initializeFieldsAsUndefined ? "!" : "";
 
-        if(list === undefined)
-          (message as any)._unknownFields[tag] = [buf];
-        else
-          list.push(buf);
+    if (!options.initializeFieldsAsUndefined) {
+      unknownFieldsInitializerSnippet = `
+        if(message._unknownFields === undefined)
+          message._unknownFields = {};
+      `;
+    }
+
+    chunks.push(code`
+      const startPos = reader.pos;
+      reader.skipType(tag & 7);
+      const buf = reader.buf.slice(startPos, reader.pos);
+
+      ${unknownFieldsInitializerSnippet}
+      const list = message._unknownFields${maybeNonNullAssertion}[tag];
+
+      if(list === undefined)
+        message._unknownFields${maybeNonNullAssertion}[tag] = [buf];
+      else
+        list.push(buf);
     `);
   } else {
     chunks.push(code`
@@ -1336,12 +1352,12 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
   });
 
   if (options.unknownFields) {
-    chunks.push(code`if ('_unknownFields' in message) {
-      const msgUnknownFields: any = (message as any)['_unknownFields']
-      for (const key of Object.keys(msgUnknownFields)) {
-        const values = msgUnknownFields[key] as Uint8Array[];
+    chunks.push(code`if (message._unknownFields !== undefined) {
+      for (const key in message._unknownFields) {
+        const values = message._unknownFields[key];
+        const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(parseInt(key, 10));
+          writer.uint32(tag);
           (writer as any)['_push'](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,

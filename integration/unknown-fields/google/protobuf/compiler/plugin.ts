@@ -15,6 +15,7 @@ export interface Version {
    * be empty for mainline stable releases.
    */
   suffix: string;
+  _unknownFields?: { [key: number]: Uint8Array[] };
 }
 
 /** An encoded CodeGeneratorRequest is written to the plugin's stdin. */
@@ -46,6 +47,7 @@ export interface CodeGeneratorRequest {
   protoFile: FileDescriptorProto[];
   /** The version number of protocol compiler. */
   compilerVersion: Version | undefined;
+  _unknownFields?: { [key: number]: Uint8Array[] };
 }
 
 /** The plugin writes an encoded CodeGeneratorResponse to stdout. */
@@ -67,6 +69,7 @@ export interface CodeGeneratorResponse {
    */
   supportedFeatures: number;
   file: CodeGeneratorResponse_File[];
+  _unknownFields?: { [key: number]: Uint8Array[] };
 }
 
 /** Sync with code_generator.h. */
@@ -140,10 +143,11 @@ export interface CodeGeneratorResponse_File {
    * into the code generation metadata for the generated files.
    */
   generatedCodeInfo: GeneratedCodeInfo | undefined;
+  _unknownFields?: { [key: number]: Uint8Array[] };
 }
 
 function createBaseVersion(): Version {
-  return { major: 0, minor: 0, patch: 0, suffix: "" };
+  return { major: 0, minor: 0, patch: 0, suffix: "", _unknownFields: {} };
 }
 
 export const Version = {
@@ -160,12 +164,12 @@ export const Version = {
     if (message.suffix !== "") {
       writer.uint32(34).string(message.suffix);
     }
-    if ("_unknownFields" in message) {
-      const msgUnknownFields: any = (message as any)["_unknownFields"];
-      for (const key of Object.keys(msgUnknownFields)) {
-        const values = msgUnknownFields[key] as Uint8Array[];
+    if (message._unknownFields !== undefined) {
+      for (const key in message._unknownFields) {
+        const values = message._unknownFields[key];
+        const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(parseInt(key, 10));
+          writer.uint32(tag);
           (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
@@ -181,7 +185,6 @@ export const Version = {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseVersion();
-    (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -220,10 +223,11 @@ export const Version = {
       const startPos = reader.pos;
       reader.skipType(tag & 7);
       const buf = reader.buf.slice(startPos, reader.pos);
-      const list = (message as any)._unknownFields[tag];
+
+      const list = message._unknownFields![tag];
 
       if (list === undefined) {
-        (message as any)._unknownFields[tag] = [buf];
+        message._unknownFields![tag] = [buf];
       } else {
         list.push(buf);
       }
@@ -233,7 +237,7 @@ export const Version = {
 };
 
 function createBaseCodeGeneratorRequest(): CodeGeneratorRequest {
-  return { fileToGenerate: [], parameter: "", protoFile: [], compilerVersion: undefined };
+  return { fileToGenerate: [], parameter: "", protoFile: [], compilerVersion: undefined, _unknownFields: {} };
 }
 
 export const CodeGeneratorRequest = {
@@ -250,12 +254,12 @@ export const CodeGeneratorRequest = {
     if (message.compilerVersion !== undefined) {
       Version.encode(message.compilerVersion, writer.uint32(26).fork()).ldelim();
     }
-    if ("_unknownFields" in message) {
-      const msgUnknownFields: any = (message as any)["_unknownFields"];
-      for (const key of Object.keys(msgUnknownFields)) {
-        const values = msgUnknownFields[key] as Uint8Array[];
+    if (message._unknownFields !== undefined) {
+      for (const key in message._unknownFields) {
+        const values = message._unknownFields[key];
+        const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(parseInt(key, 10));
+          writer.uint32(tag);
           (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
@@ -271,7 +275,6 @@ export const CodeGeneratorRequest = {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCodeGeneratorRequest();
-    (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -310,10 +313,11 @@ export const CodeGeneratorRequest = {
       const startPos = reader.pos;
       reader.skipType(tag & 7);
       const buf = reader.buf.slice(startPos, reader.pos);
-      const list = (message as any)._unknownFields[tag];
+
+      const list = message._unknownFields![tag];
 
       if (list === undefined) {
-        (message as any)._unknownFields[tag] = [buf];
+        message._unknownFields![tag] = [buf];
       } else {
         list.push(buf);
       }
@@ -323,7 +327,7 @@ export const CodeGeneratorRequest = {
 };
 
 function createBaseCodeGeneratorResponse(): CodeGeneratorResponse {
-  return { error: "", supportedFeatures: 0, file: [] };
+  return { error: "", supportedFeatures: 0, file: [], _unknownFields: {} };
 }
 
 export const CodeGeneratorResponse = {
@@ -337,12 +341,12 @@ export const CodeGeneratorResponse = {
     for (const v of message.file) {
       CodeGeneratorResponse_File.encode(v!, writer.uint32(122).fork()).ldelim();
     }
-    if ("_unknownFields" in message) {
-      const msgUnknownFields: any = (message as any)["_unknownFields"];
-      for (const key of Object.keys(msgUnknownFields)) {
-        const values = msgUnknownFields[key] as Uint8Array[];
+    if (message._unknownFields !== undefined) {
+      for (const key in message._unknownFields) {
+        const values = message._unknownFields[key];
+        const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(parseInt(key, 10));
+          writer.uint32(tag);
           (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
@@ -358,7 +362,6 @@ export const CodeGeneratorResponse = {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCodeGeneratorResponse();
-    (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -390,10 +393,11 @@ export const CodeGeneratorResponse = {
       const startPos = reader.pos;
       reader.skipType(tag & 7);
       const buf = reader.buf.slice(startPos, reader.pos);
-      const list = (message as any)._unknownFields[tag];
+
+      const list = message._unknownFields![tag];
 
       if (list === undefined) {
-        (message as any)._unknownFields[tag] = [buf];
+        message._unknownFields![tag] = [buf];
       } else {
         list.push(buf);
       }
@@ -403,7 +407,7 @@ export const CodeGeneratorResponse = {
 };
 
 function createBaseCodeGeneratorResponse_File(): CodeGeneratorResponse_File {
-  return { name: "", insertionPoint: "", content: "", generatedCodeInfo: undefined };
+  return { name: "", insertionPoint: "", content: "", generatedCodeInfo: undefined, _unknownFields: {} };
 }
 
 export const CodeGeneratorResponse_File = {
@@ -420,12 +424,12 @@ export const CodeGeneratorResponse_File = {
     if (message.generatedCodeInfo !== undefined) {
       GeneratedCodeInfo.encode(message.generatedCodeInfo, writer.uint32(130).fork()).ldelim();
     }
-    if ("_unknownFields" in message) {
-      const msgUnknownFields: any = (message as any)["_unknownFields"];
-      for (const key of Object.keys(msgUnknownFields)) {
-        const values = msgUnknownFields[key] as Uint8Array[];
+    if (message._unknownFields !== undefined) {
+      for (const key in message._unknownFields) {
+        const values = message._unknownFields[key];
+        const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(parseInt(key, 10));
+          writer.uint32(tag);
           (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
@@ -441,7 +445,6 @@ export const CodeGeneratorResponse_File = {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCodeGeneratorResponse_File();
-    (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -480,10 +483,11 @@ export const CodeGeneratorResponse_File = {
       const startPos = reader.pos;
       reader.skipType(tag & 7);
       const buf = reader.buf.slice(startPos, reader.pos);
-      const list = (message as any)._unknownFields[tag];
+
+      const list = message._unknownFields![tag];
 
       if (list === undefined) {
-        (message as any)._unknownFields[tag] = [buf];
+        message._unknownFields![tag] = [buf];
       } else {
         list.push(buf);
       }

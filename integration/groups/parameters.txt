@@ -1,1 +1,1 @@
-useOptionals=all,unknownFields=true
+useOptionals=all,unknownFields=true,initializeFieldsAsUndefined=false
