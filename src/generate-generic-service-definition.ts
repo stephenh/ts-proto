@@ -88,14 +88,13 @@ function generateMethodOptions(ctx: Context, options: MethodOptions | undefined)
       chunks.push(code`idempotencyLevel: 'NO_SIDE_EFFECTS',`);
     }
 
-    if ("_unknownFields" in options) {
-      const msgUnknownFields: any = (options as any)["_unknownFields"];
+    if (options._unknownFields !== undefined) {
       const unknownFieldsChunks: Code[] = [];
 
       unknownFieldsChunks.push(code`{`);
 
-      for (const key of Object.keys(msgUnknownFields)) {
-        const values = msgUnknownFields[key] as Uint8Array[];
+      for (const key in options._unknownFields) {
+        const values = options._unknownFields[key];
         const valuesChunks: Code[] = [];
 
         for (const value of values) {

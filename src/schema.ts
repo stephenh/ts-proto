@@ -101,12 +101,8 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
 
   let fileOptions: Code | undefined;
   if (fileDesc.options) {
-    fileOptions = encodedOptionsToOptions(
-      ctx,
-      ".google.protobuf.FileOptions",
-      (fileDesc.options as any)["_unknownFields"]
-    );
-    delete (fileDesc.options as any)["_unknownFields"];
+    fileOptions = encodedOptionsToOptions(ctx, ".google.protobuf.FileOptions", fileDesc.options._unknownFields);
+    delete fileDesc.options._unknownFields;
   }
 
   const messagesOptions: Code[] = [];
@@ -125,9 +121,9 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
         const methodOptions = encodedOptionsToOptions(
           ctx,
           ".google.protobuf.MethodOptions",
-          (method.options as any)["_unknownFields"]
+          method.options._unknownFields
         );
-        delete (method.options as any)["_unknownFields"];
+        delete method.options._unknownFields;
         if (methodOptions) {
           methodsOptions.push(code`'${method.name}': ${methodOptions}`);
         }
@@ -136,12 +132,8 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
 
     let serviceOptions: Code | undefined;
     if (service.options) {
-      serviceOptions = encodedOptionsToOptions(
-        ctx,
-        ".google.protobuf.ServiceOptions",
-        (service.options as any)["_unknownFields"]
-      );
-      delete (service.options as any)["_unknownFields"];
+      serviceOptions = encodedOptionsToOptions(ctx, ".google.protobuf.ServiceOptions", service.options._unknownFields);
+      delete service.options._unknownFields;
     }
 
     if (methodsOptions.length > 0 || serviceOptions) {
@@ -162,9 +154,9 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
         const valueOptions = encodedOptionsToOptions(
           ctx,
           ".google.protobuf.EnumValueOptions",
-          (value.options as any)["_unknownFields"]
+          value.options._unknownFields
         );
-        delete (value.options as any)["_unknownFields"];
+        delete value.options._unknownFields;
         if (valueOptions) {
           valuesOptions.push(code`'${value.name}': ${valueOptions}`);
         }
@@ -173,12 +165,8 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
 
     let enumOptions: Code | undefined;
     if (Enum.options) {
-      enumOptions = encodedOptionsToOptions(
-        ctx,
-        ".google.protobuf.EnumOptions",
-        (Enum.options as any)["_unknownFields"]
-      );
-      delete (Enum.options as any)["_unknownFields"];
+      enumOptions = encodedOptionsToOptions(ctx, ".google.protobuf.EnumOptions", Enum.options._unknownFields);
+      delete Enum.options._unknownFields;
     }
 
     if (valuesOptions.length > 0 || enumOptions) {
@@ -239,13 +227,14 @@ function getExtensionValue(ctx: Context, extension: FieldDescriptorProto, data: 
 function encodedOptionsToOptions(
   ctx: Context,
   extendee: string,
-  encodedOptions: { [key: number]: Uint8Array[] }
+  encodedOptions?: { [key: number]: Uint8Array[] }
 ): Code | undefined {
   if (!encodedOptions) {
     return undefined;
   }
   const resultOptions: Code[] = [];
-  for (const [key, value] of Object.entries(encodedOptions)) {
+  for (const key in encodedOptions) {
+    const value = encodedOptions[key];
     const extension = extensionCache[extendee][parseInt(key, 10) >>> 3];
     resultOptions.push(getExtensionValue(ctx, extension, value));
   }
@@ -259,12 +248,8 @@ function resolveMessageOptions(ctx: Context, message: DescriptorProto): Code | u
   const fieldsOptions: Code[] = [];
   message.field.forEach((field) => {
     if (field.options) {
-      const fieldOptions = encodedOptionsToOptions(
-        ctx,
-        ".google.protobuf.FieldOptions",
-        (field.options as any)["_unknownFields"]
-      );
-      delete (field.options as any)["_unknownFields"];
+      const fieldOptions = encodedOptionsToOptions(ctx, ".google.protobuf.FieldOptions", field.options._unknownFields);
+      delete field.options._unknownFields;
       if (fieldOptions) {
         fieldsOptions.push(code`'${field.name}': ${fieldOptions}`);
       }
@@ -274,12 +259,8 @@ function resolveMessageOptions(ctx: Context, message: DescriptorProto): Code | u
   const oneOfsOptions: Code[] = [];
   message.oneofDecl.forEach((oneOf) => {
     if (oneOf.options) {
-      const oneOfOptions = encodedOptionsToOptions(
-        ctx,
-        ".google.protobuf.OneofOptions",
-        (oneOf.options as any)["_unknownFields"]
-      );
-      delete (oneOf.options as any)["_unknownFields"];
+      const oneOfOptions = encodedOptionsToOptions(ctx, ".google.protobuf.OneofOptions", oneOf.options._unknownFields);
+      delete oneOf.options._unknownFields;
       if (oneOfOptions) {
         oneOfsOptions.push(code`'${oneOf.name}': ${oneOfOptions}`);
       }
@@ -298,12 +279,8 @@ function resolveMessageOptions(ctx: Context, message: DescriptorProto): Code | u
 
   let messageOptions: Code | undefined;
   if (message.options) {
-    messageOptions = encodedOptionsToOptions(
-      ctx,
-      ".google.protobuf.MessageOptions",
-      (message.options as any)["_unknownFields"]
-    );
-    delete (message.options as any)["_unknownFields"];
+    messageOptions = encodedOptionsToOptions(ctx, ".google.protobuf.MessageOptions", message.options._unknownFields);
+    delete message.options._unknownFields;
   }
 
   if (fieldsOptions.length > 0 || oneOfsOptions.length > 0 || nestedOptions.length > 0 || messageOptions) {
