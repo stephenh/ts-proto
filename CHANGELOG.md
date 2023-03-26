@@ -1,3 +1,10 @@
+## [1.144.1](https://github.com/stephenh/ts-proto/compare/v1.144.0...v1.144.1) (2023-03-26)
+
+
+### Bug Fixes
+
+* Bump ts-proto-descriptors to restore any-less _unknownFields. ([#810](https://github.com/stephenh/ts-proto/issues/810)) ([de9c307](https://github.com/stephenh/ts-proto/commit/de9c3079210caed1d0d3da782a4d0f2e54f52652))
+
 # [1.144.0](https://github.com/stephenh/ts-proto/compare/v1.143.0...v1.144.0) (2023-03-26)
 
 
