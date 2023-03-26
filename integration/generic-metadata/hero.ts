@@ -318,7 +318,7 @@ export const HeroServiceDefinition = {
       requestStream: false,
       responseType: Hero,
       responseStream: false,
-      options: { _unknownFields: {} },
+      options: {},
     },
     findOneVillain: {
       name: "FindOneVillain",
@@ -326,7 +326,7 @@ export const HeroServiceDefinition = {
       requestStream: false,
       responseType: Villain,
       responseStream: false,
-      options: { _unknownFields: {} },
+      options: {},
     },
     findManyVillain: {
       name: "FindManyVillain",
@@ -334,7 +334,7 @@ export const HeroServiceDefinition = {
       requestStream: true,
       responseType: Villain,
       responseStream: true,
-      options: { _unknownFields: {} },
+      options: {},
     },
   },
 } as const;
