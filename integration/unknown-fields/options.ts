@@ -14,16 +14,19 @@ export interface MyMessage {
   foo2?: number | undefined;
   bar?: string | undefined;
   quux?: string | undefined;
+  _unknownFields?: { [key: number]: Uint8Array[] };
 }
 
 export interface RequestType {
+  _unknownFields?: { [key: number]: Uint8Array[] };
 }
 
 export interface ResponseType {
+  _unknownFields?: { [key: number]: Uint8Array[] };
 }
 
 function createBaseMyMessage(): MyMessage {
-  return { foo: undefined, foo2: undefined, bar: undefined, quux: undefined };
+  return { foo: undefined, foo2: undefined, bar: undefined, quux: undefined, _unknownFields: {} };
 }
 
 export const MyMessage = {
@@ -40,12 +43,12 @@ export const MyMessage = {
     if (message.quux !== undefined) {
       writer.uint32(34).string(message.quux);
     }
-    if ("_unknownFields" in message) {
-      const msgUnknownFields: any = (message as any)["_unknownFields"];
-      for (const key of Object.keys(msgUnknownFields)) {
-        const values = msgUnknownFields[key] as Uint8Array[];
+    if (message._unknownFields !== undefined) {
+      for (const key in message._unknownFields) {
+        const values = message._unknownFields[key];
+        const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(parseInt(key, 10));
+          writer.uint32(tag);
           (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
@@ -61,7 +64,6 @@ export const MyMessage = {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMyMessage();
-    (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -100,10 +102,11 @@ export const MyMessage = {
       const startPos = reader.pos;
       reader.skipType(tag & 7);
       const buf = reader.buf.slice(startPos, reader.pos);
-      const list = (message as any)._unknownFields[tag];
+
+      const list = message._unknownFields![tag];
 
       if (list === undefined) {
-        (message as any)._unknownFields[tag] = [buf];
+        message._unknownFields![tag] = [buf];
       } else {
         list.push(buf);
       }
@@ -113,17 +116,17 @@ export const MyMessage = {
 };
 
 function createBaseRequestType(): RequestType {
-  return {};
+  return { _unknownFields: {} };
 }
 
 export const RequestType = {
   encode(message: RequestType, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if ("_unknownFields" in message) {
-      const msgUnknownFields: any = (message as any)["_unknownFields"];
-      for (const key of Object.keys(msgUnknownFields)) {
-        const values = msgUnknownFields[key] as Uint8Array[];
+    if (message._unknownFields !== undefined) {
+      for (const key in message._unknownFields) {
+        const values = message._unknownFields[key];
+        const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(parseInt(key, 10));
+          writer.uint32(tag);
           (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
@@ -139,7 +142,6 @@ export const RequestType = {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseRequestType();
-    (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -150,10 +152,11 @@ export const RequestType = {
       const startPos = reader.pos;
       reader.skipType(tag & 7);
       const buf = reader.buf.slice(startPos, reader.pos);
-      const list = (message as any)._unknownFields[tag];
+
+      const list = message._unknownFields![tag];
 
       if (list === undefined) {
-        (message as any)._unknownFields[tag] = [buf];
+        message._unknownFields![tag] = [buf];
       } else {
         list.push(buf);
       }
@@ -163,17 +166,17 @@ export const RequestType = {
 };
 
 function createBaseResponseType(): ResponseType {
-  return {};
+  return { _unknownFields: {} };
 }
 
 export const ResponseType = {
   encode(message: ResponseType, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if ("_unknownFields" in message) {
-      const msgUnknownFields: any = (message as any)["_unknownFields"];
-      for (const key of Object.keys(msgUnknownFields)) {
-        const values = msgUnknownFields[key] as Uint8Array[];
+    if (message._unknownFields !== undefined) {
+      for (const key in message._unknownFields) {
+        const values = message._unknownFields[key];
+        const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(parseInt(key, 10));
+          writer.uint32(tag);
           (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
@@ -189,7 +192,6 @@ export const ResponseType = {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseResponseType();
-    (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -200,10 +202,11 @@ export const ResponseType = {
       const startPos = reader.pos;
       reader.skipType(tag & 7);
       const buf = reader.buf.slice(startPos, reader.pos);
-      const list = (message as any)._unknownFields[tag];
+
+      const list = message._unknownFields![tag];
 
       if (list === undefined) {
-        (message as any)._unknownFields[tag] = [buf];
+        message._unknownFields![tag] = [buf];
       } else {
         list.push(buf);
       }

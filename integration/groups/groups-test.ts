@@ -41,9 +41,7 @@ describe('groups-test', () => {
     const result = GroupsOptionalTest.decode(data);
 
     expect(result).toEqual({
-      int1: 0,
       group: {
-        key: '',
         value: 'key',
         _unknownFields: {
           [(15 << 3) | 2]: [Buffer.from([2, 1, 2])]
@@ -79,14 +77,12 @@ describe('groups-test', () => {
       int1: [1, 2, 3, 4],
       group: [
         {
-          key: [],
           value: ['key'],
           _unknownFields: {
             [(10 << 3) | 2]: [Buffer.from([2, 0xa, 0xb])]
           }
         },
       ],
-      int3: [],
       _unknownFields: {
         [(27 << 3) | 2]: [Buffer.from([2, 0x10, 0x20])]
       }
@@ -133,7 +129,6 @@ describe('groups-test', () => {
     const result = GroupsNestedTest.decode(data);
 
     expect(result).toEqual({
-      int1: [],
       ...test
     });
   });
