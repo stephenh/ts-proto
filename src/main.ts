@@ -1520,32 +1520,38 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
         const i = maybeCastToNumber(ctx, messageDesc, field, "key");
 
         if (ctx.options.useMapType) {
+          const fallback = noDefaultValue ? "undefined" : "new Map()";
+
           chunks.push(code`
             ${fieldName}: ${ctx.utils.isObject}(${jsonProperty})
               ? Object.entries(${jsonProperty}).reduce<${fieldType}>((acc, [key, value]) => {
                   acc.set(${i}, ${readSnippet("value")});
                   return acc;
                 }, new Map())
-              : new Map(),
+              : ${fallback},
           `);
         } else {
+          const fallback = noDefaultValue ? "undefined" : "{}";
+
           chunks.push(code`
             ${fieldName}: ${ctx.utils.isObject}(${jsonProperty})
               ? Object.entries(${jsonProperty}).reduce<${fieldType}>((acc, [key, value]) => {
                   acc[${i}] = ${readSnippet("value")};
                   return acc;
                 }, {})
-              : {},
+              : ${fallback},
           `);
         }
       } else {
+        const fallback = noDefaultValue ? "undefined" : "[]";
+
         const readValueSnippet = readSnippet("e");
         if (readValueSnippet.toString() === code`e`.toString()) {
           chunks.push(code`${fieldName}: Array.isArray(${jsonPropertyOptional}) ? [...${jsonProperty}] : [],`);
         } else {
           // Explicit `any` type required to make TS with noImplicitAny happy. `object` is also `any` here.
           chunks.push(code`
-            ${fieldName}: Array.isArray(${jsonPropertyOptional}) ? ${jsonProperty}.map((e: any) => ${readValueSnippet}): [],
+            ${fieldName}: Array.isArray(${jsonPropertyOptional}) ? ${jsonProperty}.map((e: any) => ${readValueSnippet}): ${fallback},
           `);
         }
       }
@@ -1584,7 +1590,7 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
           : undefined,
       `);
     } else {
-      const fallback = isWithinOneOf(field) ? "undefined" : defaultValue(ctx, field);
+      const fallback = isWithinOneOf(field) || noDefaultValue ? "undefined" : defaultValue(ctx, field);
       chunks.push(code`
         ${fieldName}: ${ctx.utils.isSet}(${jsonProperty})
           ? ${readSnippet(`${jsonProperty}`)}

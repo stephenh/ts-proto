@@ -421,20 +421,22 @@ export const OptionalsTest = {
 
   fromJSON(object: any): OptionalsTest {
     return {
-      id: isSet(object.id) ? Number(object.id) : 0,
+      id: isSet(object.id) ? Number(object.id) : undefined,
       child: isSet(object.child) ? Child.fromJSON(object.child) : undefined,
-      state: isSet(object.state) ? stateEnumFromJSON(object.state) : 0,
-      long: isSet(object.long) ? Number(object.long) : 0,
-      truth: isSet(object.truth) ? Boolean(object.truth) : false,
-      description: isSet(object.description) ? String(object.description) : "",
-      data: isSet(object.data) ? bytesFromBase64(object.data) : new Uint8Array(),
-      repId: Array.isArray(object?.repId) ? object.repId.map((e: any) => Number(e)) : [],
-      repChild: Array.isArray(object?.repChild) ? object.repChild.map((e: any) => Child.fromJSON(e)) : [],
-      repState: Array.isArray(object?.repState) ? object.repState.map((e: any) => stateEnumFromJSON(e)) : [],
-      repLong: Array.isArray(object?.repLong) ? object.repLong.map((e: any) => Number(e)) : [],
-      repTruth: Array.isArray(object?.repTruth) ? object.repTruth.map((e: any) => Boolean(e)) : [],
-      repDescription: Array.isArray(object?.repDescription) ? object.repDescription.map((e: any) => String(e)) : [],
-      repData: Array.isArray(object?.repData) ? object.repData.map((e: any) => bytesFromBase64(e)) : [],
+      state: isSet(object.state) ? stateEnumFromJSON(object.state) : undefined,
+      long: isSet(object.long) ? Number(object.long) : undefined,
+      truth: isSet(object.truth) ? Boolean(object.truth) : undefined,
+      description: isSet(object.description) ? String(object.description) : undefined,
+      data: isSet(object.data) ? bytesFromBase64(object.data) : undefined,
+      repId: Array.isArray(object?.repId) ? object.repId.map((e: any) => Number(e)) : undefined,
+      repChild: Array.isArray(object?.repChild) ? object.repChild.map((e: any) => Child.fromJSON(e)) : undefined,
+      repState: Array.isArray(object?.repState) ? object.repState.map((e: any) => stateEnumFromJSON(e)) : undefined,
+      repLong: Array.isArray(object?.repLong) ? object.repLong.map((e: any) => Number(e)) : undefined,
+      repTruth: Array.isArray(object?.repTruth) ? object.repTruth.map((e: any) => Boolean(e)) : undefined,
+      repDescription: Array.isArray(object?.repDescription)
+        ? object.repDescription.map((e: any) => String(e))
+        : undefined,
+      repData: Array.isArray(object?.repData) ? object.repData.map((e: any) => bytesFromBase64(e)) : undefined,
       optId: isSet(object.optId) ? Number(object.optId) : undefined,
       optChild: isSet(object.optChild) ? Child.fromJSON(object.optChild) : undefined,
       optState: isSet(object.optState) ? stateEnumFromJSON(object.optState) : undefined,
@@ -447,7 +449,7 @@ export const OptionalsTest = {
           acc[key] = String(value);
           return acc;
         }, {})
-        : {},
+        : undefined,
     };
   },
 
