@@ -520,20 +520,20 @@ export const OptionalsTest = {
 
   fromPartial<I extends Exact<DeepPartial<OptionalsTest>, I>>(object: I): OptionalsTest {
     const message = createBaseOptionalsTest();
-    message.id = object.id ?? 0;
+    message.id = object.id ?? undefined;
     message.child = (object.child !== undefined && object.child !== null) ? Child.fromPartial(object.child) : undefined;
-    message.state = object.state ?? 0;
-    message.long = object.long ?? 0;
-    message.truth = object.truth ?? false;
-    message.description = object.description ?? "";
-    message.data = object.data ?? new Uint8Array();
-    message.repId = object.repId?.map((e) => e) || [];
-    message.repChild = object.repChild?.map((e) => Child.fromPartial(e)) || [];
-    message.repState = object.repState?.map((e) => e) || [];
-    message.repLong = object.repLong?.map((e) => e) || [];
-    message.repTruth = object.repTruth?.map((e) => e) || [];
-    message.repDescription = object.repDescription?.map((e) => e) || [];
-    message.repData = object.repData?.map((e) => e) || [];
+    message.state = object.state ?? undefined;
+    message.long = object.long ?? undefined;
+    message.truth = object.truth ?? undefined;
+    message.description = object.description ?? undefined;
+    message.data = object.data ?? undefined;
+    message.repId = object.repId?.map((e) => e) || undefined;
+    message.repChild = object.repChild?.map((e) => Child.fromPartial(e)) || undefined;
+    message.repState = object.repState?.map((e) => e) || undefined;
+    message.repLong = object.repLong?.map((e) => e) || undefined;
+    message.repTruth = object.repTruth?.map((e) => e) || undefined;
+    message.repDescription = object.repDescription?.map((e) => e) || undefined;
+    message.repData = object.repData?.map((e) => e) || undefined;
     message.optId = object.optId ?? undefined;
     message.optChild = (object.optChild !== undefined && object.optChild !== null)
       ? Child.fromPartial(object.optChild)
@@ -543,15 +543,14 @@ export const OptionalsTest = {
     message.optTruth = object.optTruth ?? undefined;
     message.optDescription = object.optDescription ?? undefined;
     message.optData = object.optData ?? undefined;
-    message.translations = Object.entries(object.translations ?? {}).reduce<{ [key: string]: string }>(
-      (acc, [key, value]) => {
+    message.translations = (object.translations === undefined || object.translations === null)
+      ? undefined
+      : Object.entries(object.translations ?? {}).reduce<{ [key: string]: string }>((acc, [key, value]) => {
         if (value !== undefined) {
           acc[key] = String(value);
         }
         return acc;
-      },
-      {},
-    );
+      }, {});
     return message;
   },
 };

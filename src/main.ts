@@ -1508,6 +1508,9 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
       }
     };
 
+    const noDefaultValue =
+      !options.initializeFieldsAsUndefined && isOptionalProperty(field, messageDesc.options, options);
+
     // and then use the snippet to handle repeated fields if necessary
     if (canonicalFromJson[fullTypeName]?.[fieldName]) {
       chunks.push(code`${fieldName}: ${canonicalFromJson[fullTypeName][fieldName]("object")},`);
@@ -1845,15 +1848,22 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
       }
     };
 
+    const noDefaultValue =
+      !options.initializeFieldsAsUndefined && isOptionalProperty(field, messageDesc.options, options);
+
     // and then use the snippet to handle repeated fields if necessary
     if (isRepeated(field)) {
       if (isMapType(ctx, messageDesc, field)) {
         const fieldType = toTypeName(ctx, messageDesc, field);
         const i = maybeCastToNumber(ctx, messageDesc, field, "key");
 
+        const noValueSnippet = noDefaultValue
+          ? `(object.${fieldName} === undefined || object.${fieldName} === null) ? undefined : `
+          : "";
+
         if (ctx.options.useMapType) {
           chunks.push(code`
-            message.${fieldName} = (() => {
+            message.${fieldName} = ${noValueSnippet} (() => {
               const m = new Map();
               (object.${fieldName} as ${fieldType} ?? new Map()).forEach((value, key) => {
                 if (value !== undefined) {
@@ -1865,7 +1875,7 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
           `);
         } else {
           chunks.push(code`
-            message.${fieldName} = Object.entries(object.${fieldName} ?? {}).reduce<${fieldType}>((acc, [key, value]) => {
+            message.${fieldName} = ${noValueSnippet} Object.entries(object.${fieldName} ?? {}).reduce<${fieldType}>((acc, [key, value]) => {
               if (value !== undefined) {
                 acc[${i}] = ${readSnippet("value")};
               }
@@ -1874,8 +1884,10 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
           `);
         }
       } else {
+        const fallback = noDefaultValue ? "undefined" : "[]";
+
         chunks.push(code`
-          message.${fieldName} = object.${fieldName}?.map((e) => ${readSnippet("e")}) || [];
+          message.${fieldName} = object.${fieldName}?.map((e) => ${readSnippet("e")}) || ${fallback};
         `);
       }
     } else if (isWithinOneOfThatShouldBeUnion(options, field)) {
@@ -1892,10 +1904,10 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
       `);
     } else if (readSnippet(`x`).toCodeString([]) == "x") {
       // An optimized case of the else below that works when `readSnippet` returns the plain input
-      const fallback = isWithinOneOf(field) ? "undefined" : defaultValue(ctx, field);
+      const fallback = isWithinOneOf(field) || noDefaultValue ? "undefined" : defaultValue(ctx, field);
       chunks.push(code`message.${fieldName} = object.${fieldName} ?? ${fallback};`);
     } else {
-      const fallback = isWithinOneOf(field) ? "undefined" : defaultValue(ctx, field);
+      const fallback = isWithinOneOf(field) || noDefaultValue ? "undefined" : defaultValue(ctx, field);
       chunks.push(code`
         message.${fieldName} = (object.${fieldName} !== undefined && object.${fieldName} !== null)
           ? ${readSnippet(`object.${fieldName}`)}
