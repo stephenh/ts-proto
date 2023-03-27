@@ -113,19 +113,19 @@ function createBaseMaps(): Maps {
 
 export const Maps = {
   encode(message: Maps, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    message.strToEntity.forEach((value, key) => {
+    (message.strToEntity).forEach((value, key) => {
       Maps_StrToEntityEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).ldelim();
     });
-    message.int32ToInt32.forEach((value, key) => {
+    (message.int32ToInt32).forEach((value, key) => {
       Maps_Int32ToInt32Entry.encode({ key: key as any, value }, writer.uint32(18).fork()).ldelim();
     });
-    message.stringToBytes.forEach((value, key) => {
+    (message.stringToBytes).forEach((value, key) => {
       Maps_StringToBytesEntry.encode({ key: key as any, value }, writer.uint32(26).fork()).ldelim();
     });
-    message.int64ToInt64.forEach((value, key) => {
+    (message.int64ToInt64).forEach((value, key) => {
       Maps_Int64ToInt64Entry.encode({ key: key as any, value }, writer.uint32(34).fork()).ldelim();
     });
-    message.mapOfTimestamps.forEach((value, key) => {
+    (message.mapOfTimestamps).forEach((value, key) => {
       Maps_MapOfTimestampsEntry.encode({ key: key as any, value }, writer.uint32(42).fork()).ldelim();
     });
     if (message.struct !== undefined) {
@@ -298,7 +298,7 @@ export const Maps = {
       const m = new Map();
       (object.int32ToInt32 as Map<number, number> ?? new Map()).forEach((value, key) => {
         if (value !== undefined) {
-          m.set(Number(key), Number(value));
+          m.set(key, Number(value));
         }
       });
       return m;
@@ -316,7 +316,7 @@ export const Maps = {
       const m = new Map();
       (object.int64ToInt64 as Map<number, number> ?? new Map()).forEach((value, key) => {
         if (value !== undefined) {
-          m.set(Number(key), Number(value));
+          m.set(key, Number(value));
         }
       });
       return m;

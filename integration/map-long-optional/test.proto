@@ -1,0 +1,5 @@
+syntax = "proto2";
+
+message MapBigInt{
+  map<fixed64, int64> map = 1;
+}
