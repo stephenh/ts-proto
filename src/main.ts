@@ -1476,6 +1476,8 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
               }
             } else if (isLong(valueField) && options.forceLong === LongOption.LONG) {
               return code`Long.fromValue(${from} as Long | string)`;
+            } else if (isLong(valueField) && options.forceLong === LongOption.BIGINT) {
+              return code`BigInt(${from} as string | number | bigint | boolean)`;
             } else if (isEnum(valueField)) {
               const fromJson = getEnumMethod(ctx, valueField.typeName, "FromJSON");
               return code`${fromJson}(${from})`;
@@ -1514,7 +1516,7 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
     } else if (isRepeated(field)) {
       if (isMapType(ctx, messageDesc, field)) {
         const fieldType = toTypeName(ctx, messageDesc, field);
-        const i = maybeCastToNumber(ctx, messageDesc, field, "key");
+        const i = convertFromObjectKey(ctx, messageDesc, field, "key");
 
         if (ctx.options.useMapType) {
           chunks.push(code`
@@ -1705,13 +1707,14 @@ function generateToJson(
 
     if (isMapType(ctx, messageDesc, field)) {
       // Maps might need their values transformed, i.e. bytes --> base64
+      const i = convertToObjectKey(ctx, messageDesc, field, "k");
 
       if (ctx.options.useMapType) {
         chunks.push(code`
           ${jsonProperty} = {};
           if (message.${fieldName}) {
             message.${fieldName}.forEach((v, k) => {
-              ${jsonProperty}[k] = ${readSnippet("v")};
+              ${jsonProperty}[${i}] = ${readSnippet("v")};
             });
           }
         `);
@@ -1720,7 +1723,7 @@ function generateToJson(
           ${jsonProperty} = {};
           if (message.${fieldName}) {
             Object.entries(message.${fieldName}).forEach(([k, v]) => {
-              ${jsonProperty}[k] = ${readSnippet("v")};
+              ${jsonProperty}[${i}] = ${readSnippet("v")};
             });
           }
         `);
@@ -1815,6 +1818,8 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
               return code`${from} as ${valueType}`;
             } else if (isLong(valueField) && options.forceLong === LongOption.LONG) {
               return code`Long.fromValue(${from})`;
+            } else if (isLong(valueField) && options.forceLong === LongOption.BIGINT) {
+              return code`BigInt(${from} as string | number | bigint | boolean)`;
             } else {
               const cstr = capitalize(valueType.toCodeString([]));
               return code`${cstr}(${from})`;
@@ -1849,7 +1854,7 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
     if (isRepeated(field)) {
       if (isMapType(ctx, messageDesc, field)) {
         const fieldType = toTypeName(ctx, messageDesc, field);
-        const i = maybeCastToNumber(ctx, messageDesc, field, "key");
+        const i = convertFromObjectKey(ctx, messageDesc, field, "key");
 
         if (ctx.options.useMapType) {
           chunks.push(code`
@@ -1857,7 +1862,7 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
               const m = new Map();
               (object.${fieldName} as ${fieldType} ?? new Map()).forEach((value, key) => {
                 if (value !== undefined) {
-                  m.set(${i}, ${readSnippet("value")});
+                  m.set(key, ${readSnippet("value")});
                 }
               });
               return m;
@@ -1912,17 +1917,49 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
 
 export const contextTypeVar = "Context extends DataLoaders";
 
-function maybeCastToNumber(
+function convertFromObjectKey(
   ctx: Context,
   messageDesc: DescriptorProto,
   field: FieldDescriptorProto,
   variableName: string
-): string {
-  const { keyType } = detectMapType(ctx, messageDesc, field)!;
+): Code {
+  const { keyType, keyField } = detectMapType(ctx, messageDesc, field)!;
   if (keyType.toCodeString([]) === "string") {
-    return variableName;
+    return code`${variableName}`;
+  } else if (isLong(keyField) && ctx.options.useMapType) {
+    if (ctx.options.forceLong === LongOption.LONG) {
+      return code`${capitalize(keyType.toCodeString([]))}.fromValue(${variableName})`;
+    } else if (ctx.options.forceLong === LongOption.BIGINT) {
+      return code`BigInt(${variableName})`;
+    } else if (ctx.options.forceLong === LongOption.STRING) {
+      return code`String(${variableName})`;
+    } else {
+      return code`Number(${variableName})`;
+    }
   } else {
-    return `Number(${variableName})`;
+    return code`Number(${variableName})`;
+  }
+}
+
+function convertToObjectKey(
+  ctx: Context,
+  messageDesc: DescriptorProto,
+  field: FieldDescriptorProto,
+  variableName: string
+): Code {
+  const { keyType, keyField } = detectMapType(ctx, messageDesc, field)!;
+  if (keyType.toCodeString([]) === "string") {
+    return code`${variableName}`;
+  } else if (isLong(keyField) && ctx.options.useMapType) {
+    if (ctx.options.forceLong === LongOption.LONG) {
+      return code`${ctx.utils.longToNumber}(${variableName})`;
+    } else if (ctx.options.forceLong === LongOption.BIGINT) {
+      return code`${variableName}.toString()`;
+    } else {
+      return code`${variableName}`;
+    }
+  } else {
+    return code`${variableName}`;
   }
 }
 

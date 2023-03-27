@@ -106,7 +106,7 @@ function createBaseStruct(): Struct {
 
 export const Struct = {
   encode(message: Struct, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    message.fields.forEach((value, key) => {
+    (message.fields).forEach((value, key) => {
       if (value !== undefined) {
         Struct_FieldsEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).ldelim();
       }
