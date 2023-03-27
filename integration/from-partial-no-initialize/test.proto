@@ -1,0 +1,15 @@
+syntax = "proto2";
+
+message TPartialMessage{
+  required string field = 1;
+}
+
+message TPartial{
+  optional int32 number = 1;
+  optional string string = 2;
+  map<string, string> map = 3;
+  optional TPartialMessage message = 4;
+  repeated TPartialMessage repeated_message = 5;
+  repeated string repeated_string = 6;
+  repeated int32 repeated_number = 7;
+}

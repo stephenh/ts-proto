@@ -78,6 +78,7 @@ export type Options = {
   useMapType: boolean;
   useReadonlyTypes: boolean;
   useSnakeTypeName: boolean;
+  fromPartialDefaultInitialize: boolean;
   M: { [from: string]: string };
 };
 
@@ -126,6 +127,7 @@ export function defaultOptions(): Options {
     useMapType: false,
     useReadonlyTypes: false,
     useSnakeTypeName: true,
+    fromPartialDefaultInitialize: true,
     M: {},
   };
 }
