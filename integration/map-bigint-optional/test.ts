@@ -92,7 +92,7 @@ export const MapBigInt = {
           acc.set(BigInt(key), BigInt(value as string | number | bigint | boolean));
           return acc;
         }, new Map())
-        : new Map(),
+        : undefined,
     };
   },
 
@@ -113,7 +113,7 @@ export const MapBigInt = {
 
   fromPartial<I extends Exact<DeepPartial<MapBigInt>, I>>(object: I): MapBigInt {
     const message = createBaseMapBigInt();
-    message.map = (() => {
+    message.map = (object.map === undefined || object.map === null) ? undefined : (() => {
       const m = new Map();
       (object.map as Map<bigint, bigint> ?? new Map()).forEach((value, key) => {
         if (value !== undefined) {
