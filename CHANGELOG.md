@@ -1,3 +1,15 @@
+# [1.145.0](https://github.com/stephenh/ts-proto/compare/v1.144.1...v1.145.0) (2023-03-27)
+
+
+### Bug Fixes
+
+* various fixes ([#812](https://github.com/stephenh/ts-proto/issues/812)) ([ca18495](https://github.com/stephenh/ts-proto/commit/ca184958957b2c546e9a84173bc1c73425e33bc5))
+
+
+### Features
+
+* Update fromPartial and fromJson to respect initializeFieldsAsUndefined ([#811](https://github.com/stephenh/ts-proto/issues/811)) ([1615ae0](https://github.com/stephenh/ts-proto/commit/1615ae0b136bc8909e206b44f3bd6ec568a760e6))
+
 ## [1.144.1](https://github.com/stephenh/ts-proto/compare/v1.144.0...v1.144.1) (2023-03-26)
 
 
