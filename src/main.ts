@@ -1238,11 +1238,11 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
               }
             `
           : writeSnippet(`{ ${maybeTypeField} key: key as any, value }`);
-        const optionalAlternative = isOptional ? " || {}" : "";
+        const optionalAlternative = isOptional ? (ctx.options.useMapType ? " || new Map()" : " || {}") : "";
 
         if (ctx.options.useMapType) {
           chunks.push(code`
-            message.${fieldName}${optionalAlternative}.forEach((value, key) => {
+            (message.${fieldName}${optionalAlternative}).forEach((value, key) => {
               ${entryWriteSnippet}
             });
           `);
