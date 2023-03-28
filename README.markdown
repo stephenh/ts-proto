@@ -461,7 +461,7 @@ Generated code will be placed in the Gradle build directory.
 
 - With `--ts_proto_opt=useJsonWireFormat=true`, the generated code will reflect the JSON representation of Protobuf messages.
 
-  Requires `onlyTypes=true`. Implies `useDate=string` and `stringEnums=true`. This option is to generate types that can be directly used with marshalling/unmarshalling Protobuf messages serialized as JSON.  
+  Requires `onlyTypes=true`. Implies `useDate=string` and `stringEnums=true`. This option is to generate types that can be directly used with marshalling/unmarshalling Protobuf messages serialized as JSON.
   You may also want to set `useOptionals=all`, as gRPC gateways are not required to send default value for scalar values.
 
 - With `--ts_proto_opt=useNumericEnumForJson=true`, the JSON converter (`toJSON`) will encode enum values as int, rather than a string literal.
@@ -501,6 +501,11 @@ Generated code will be placed in the Gradle build directory.
   ```
 
   by default this is enabled which would generate a type of `Box_Element_Image_Alignment`. By disabling this option the type that is generated would be `BoxElementImageAlignment`.
+
+- With `--ts_proto_opt=outputExtensions=true`, the generated code will include proto2 extensions
+
+  Extension encode/decode methods are compliant with the `outputEncodeMethods` option, and if `unknownFields=true`,
+  the `setExtension` and `getExtension` methods will be created for extendable messages, also compliant with `outputEncodeMethods` (setExtension = encode, getExtension = decode).
 
 ### NestJS Support
 
