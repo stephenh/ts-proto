@@ -605,10 +605,10 @@ export function getEnumMethod(ctx: Context, enumProtoType: string, methodSuffix:
 }
 
 /** Return the TypeName for any field (primitive/message/etc.) as exposed in the interface. */
-export function toTypeName(ctx: Context, messageDesc: DescriptorProto, field: FieldDescriptorProto): Code {
+export function toTypeName(ctx: Context, messageDesc: DescriptorProto | undefined, field: FieldDescriptorProto): Code {
   let type = basicTypeName(ctx, field, { keepValueType: false });
   if (isRepeated(field)) {
-    const mapType = detectMapType(ctx, messageDesc, field);
+    const mapType = messageDesc ? detectMapType(ctx, messageDesc, field) : false;
     if (mapType) {
       const { keyType, valueType } = mapType;
       if (ctx.options.useMapType) {
