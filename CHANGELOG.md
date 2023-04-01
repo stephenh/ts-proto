@@ -1,3 +1,10 @@
+# [1.146.0](https://github.com/stephenh/ts-proto/compare/v1.145.0...v1.146.0) (2023-04-01)
+
+
+### Features
+
+* extensions ([#808](https://github.com/stephenh/ts-proto/issues/808)) ([f956128](https://github.com/stephenh/ts-proto/commit/f956128ad830f4538452d65dccedca3e08d6c871))
+
 # [1.145.0](https://github.com/stephenh/ts-proto/compare/v1.144.1...v1.145.0) (2023-03-27)
 
 
