@@ -2039,6 +2039,26 @@ export const ExtensionRangeOptions = {
     return writer;
   },
 
+  setExtension<T>(message: ExtensionRangeOptions, extension: Extension<T>, value: T): void {
+    const encoded = extension.encode!(value);
+
+    if (message._unknownFields !== undefined) {
+      delete message._unknownFields[extension.tag];
+
+      if (extension.singularTag !== undefined) {
+        delete message._unknownFields[extension.singularTag];
+      }
+    }
+
+    if (encoded.length !== 0) {
+      if (message._unknownFields === undefined) {
+        message._unknownFields = {};
+      }
+
+      message._unknownFields[extension.tag] = encoded;
+    }
+  },
+
   decode(input: _m0.Reader | Uint8Array, length?: number): ExtensionRangeOptions {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
@@ -2074,6 +2094,38 @@ export const ExtensionRangeOptions = {
       }
     }
     return message;
+  },
+
+  getExtension<T>(message: ExtensionRangeOptions, extension: Extension<T>): T | undefined {
+    let results: T | undefined = undefined;
+
+    if (message._unknownFields === undefined) {
+      return undefined;
+    }
+
+    let list = message._unknownFields[extension.tag];
+
+    if (list !== undefined) {
+      results = extension.decode!(extension.tag, list);
+    }
+
+    if (extension.singularTag === undefined) {
+      return results;
+    }
+
+    list = message._unknownFields[extension.singularTag];
+
+    if (list !== undefined) {
+      const results2 = extension.decode!(extension.singularTag, list);
+
+      if (results !== undefined && (results as any).length !== 0) {
+        results = (results as any).concat(results2);
+      } else {
+        results = results2;
+      }
+    }
+
+    return results;
   },
 
   fromJSON(object: any): ExtensionRangeOptions {
@@ -3196,6 +3248,26 @@ export const FileOptions = {
     return writer;
   },
 
+  setExtension<T>(message: FileOptions, extension: Extension<T>, value: T): void {
+    const encoded = extension.encode!(value);
+
+    if (message._unknownFields !== undefined) {
+      delete message._unknownFields[extension.tag];
+
+      if (extension.singularTag !== undefined) {
+        delete message._unknownFields[extension.singularTag];
+      }
+    }
+
+    if (encoded.length !== 0) {
+      if (message._unknownFields === undefined) {
+        message._unknownFields = {};
+      }
+
+      message._unknownFields[extension.tag] = encoded;
+    }
+  },
+
   decode(input: _m0.Reader | Uint8Array, length?: number): FileOptions {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
@@ -3373,6 +3445,38 @@ export const FileOptions = {
     return message;
   },
 
+  getExtension<T>(message: FileOptions, extension: Extension<T>): T | undefined {
+    let results: T | undefined = undefined;
+
+    if (message._unknownFields === undefined) {
+      return undefined;
+    }
+
+    let list = message._unknownFields[extension.tag];
+
+    if (list !== undefined) {
+      results = extension.decode!(extension.tag, list);
+    }
+
+    if (extension.singularTag === undefined) {
+      return results;
+    }
+
+    list = message._unknownFields[extension.singularTag];
+
+    if (list !== undefined) {
+      const results2 = extension.decode!(extension.singularTag, list);
+
+      if (results !== undefined && (results as any).length !== 0) {
+        results = (results as any).concat(results2);
+      } else {
+        results = results2;
+      }
+    }
+
+    return results;
+  },
+
   fromJSON(object: any): FileOptions {
     return {
       javaPackage: isSet(object.javaPackage) ? String(object.javaPackage) : "",
@@ -3509,6 +3613,26 @@ export const MessageOptions = {
     return writer;
   },
 
+  setExtension<T>(message: MessageOptions, extension: Extension<T>, value: T): void {
+    const encoded = extension.encode!(value);
+
+    if (message._unknownFields !== undefined) {
+      delete message._unknownFields[extension.tag];
+
+      if (extension.singularTag !== undefined) {
+        delete message._unknownFields[extension.singularTag];
+      }
+    }
+
+    if (encoded.length !== 0) {
+      if (message._unknownFields === undefined) {
+        message._unknownFields = {};
+      }
+
+      message._unknownFields[extension.tag] = encoded;
+    }
+  },
+
   decode(input: _m0.Reader | Uint8Array, length?: number): MessageOptions {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
@@ -3572,6 +3696,38 @@ export const MessageOptions = {
       }
     }
     return message;
+  },
+
+  getExtension<T>(message: MessageOptions, extension: Extension<T>): T | undefined {
+    let results: T | undefined = undefined;
+
+    if (message._unknownFields === undefined) {
+      return undefined;
+    }
+
+    let list = message._unknownFields[extension.tag];
+
+    if (list !== undefined) {
+      results = extension.decode!(extension.tag, list);
+    }
+
+    if (extension.singularTag === undefined) {
+      return results;
+    }
+
+    list = message._unknownFields[extension.singularTag];
+
+    if (list !== undefined) {
+      const results2 = extension.decode!(extension.singularTag, list);
+
+      if (results !== undefined && (results as any).length !== 0) {
+        results = (results as any).concat(results2);
+      } else {
+        results = results2;
+      }
+    }
+
+    return results;
   },
 
   fromJSON(object: any): MessageOptions {
@@ -3662,6 +3818,26 @@ export const FieldOptions = {
     return writer;
   },
 
+  setExtension<T>(message: FieldOptions, extension: Extension<T>, value: T): void {
+    const encoded = extension.encode!(value);
+
+    if (message._unknownFields !== undefined) {
+      delete message._unknownFields[extension.tag];
+
+      if (extension.singularTag !== undefined) {
+        delete message._unknownFields[extension.singularTag];
+      }
+    }
+
+    if (encoded.length !== 0) {
+      if (message._unknownFields === undefined) {
+        message._unknownFields = {};
+      }
+
+      message._unknownFields[extension.tag] = encoded;
+    }
+  },
+
   decode(input: _m0.Reader | Uint8Array, length?: number): FieldOptions {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
@@ -3741,6 +3917,38 @@ export const FieldOptions = {
     return message;
   },
 
+  getExtension<T>(message: FieldOptions, extension: Extension<T>): T | undefined {
+    let results: T | undefined = undefined;
+
+    if (message._unknownFields === undefined) {
+      return undefined;
+    }
+
+    let list = message._unknownFields[extension.tag];
+
+    if (list !== undefined) {
+      results = extension.decode!(extension.tag, list);
+    }
+
+    if (extension.singularTag === undefined) {
+      return results;
+    }
+
+    list = message._unknownFields[extension.singularTag];
+
+    if (list !== undefined) {
+      const results2 = extension.decode!(extension.singularTag, list);
+
+      if (results !== undefined && (results as any).length !== 0) {
+        results = (results as any).concat(results2);
+      } else {
+        results = results2;
+      }
+    }
+
+    return results;
+  },
+
   fromJSON(object: any): FieldOptions {
     return {
       ctype: isSet(object.ctype) ? fieldOptions_CTypeFromJSON(object.ctype) : 0,
@@ -3814,6 +4022,26 @@ export const OneofOptions = {
     return writer;
   },
 
+  setExtension<T>(message: OneofOptions, extension: Extension<T>, value: T): void {
+    const encoded = extension.encode!(value);
+
+    if (message._unknownFields !== undefined) {
+      delete message._unknownFields[extension.tag];
+
+      if (extension.singularTag !== undefined) {
+        delete message._unknownFields[extension.singularTag];
+      }
+    }
+
+    if (encoded.length !== 0) {
+      if (message._unknownFields === undefined) {
+        message._unknownFields = {};
+      }
+
+      message._unknownFields[extension.tag] = encoded;
+    }
+  },
+
   decode(input: _m0.Reader | Uint8Array, length?: number): OneofOptions {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
@@ -3849,6 +4077,38 @@ export const OneofOptions = {
       }
     }
     return message;
+  },
+
+  getExtension<T>(message: OneofOptions, extension: Extension<T>): T | undefined {
+    let results: T | undefined = undefined;
+
+    if (message._unknownFields === undefined) {
+      return undefined;
+    }
+
+    let list = message._unknownFields[extension.tag];
+
+    if (list !== undefined) {
+      results = extension.decode!(extension.tag, list);
+    }
+
+    if (extension.singularTag === undefined) {
+      return results;
+    }
+
+    list = message._unknownFields[extension.singularTag];
+
+    if (list !== undefined) {
+      const results2 = extension.decode!(extension.singularTag, list);
+
+      if (results !== undefined && (results as any).length !== 0) {
+        results = (results as any).concat(results2);
+      } else {
+        results = results2;
+      }
+    }
+
+    return results;
   },
 
   fromJSON(object: any): OneofOptions {
@@ -3912,6 +4172,26 @@ export const EnumOptions = {
     return writer;
   },
 
+  setExtension<T>(message: EnumOptions, extension: Extension<T>, value: T): void {
+    const encoded = extension.encode!(value);
+
+    if (message._unknownFields !== undefined) {
+      delete message._unknownFields[extension.tag];
+
+      if (extension.singularTag !== undefined) {
+        delete message._unknownFields[extension.singularTag];
+      }
+    }
+
+    if (encoded.length !== 0) {
+      if (message._unknownFields === undefined) {
+        message._unknownFields = {};
+      }
+
+      message._unknownFields[extension.tag] = encoded;
+    }
+  },
+
   decode(input: _m0.Reader | Uint8Array, length?: number): EnumOptions {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
@@ -3961,6 +4241,38 @@ export const EnumOptions = {
       }
     }
     return message;
+  },
+
+  getExtension<T>(message: EnumOptions, extension: Extension<T>): T | undefined {
+    let results: T | undefined = undefined;
+
+    if (message._unknownFields === undefined) {
+      return undefined;
+    }
+
+    let list = message._unknownFields[extension.tag];
+
+    if (list !== undefined) {
+      results = extension.decode!(extension.tag, list);
+    }
+
+    if (extension.singularTag === undefined) {
+      return results;
+    }
+
+    list = message._unknownFields[extension.singularTag];
+
+    if (list !== undefined) {
+      const results2 = extension.decode!(extension.singularTag, list);
+
+      if (results !== undefined && (results as any).length !== 0) {
+        results = (results as any).concat(results2);
+      } else {
+        results = results2;
+      }
+    }
+
+    return results;
   },
 
   fromJSON(object: any): EnumOptions {
@@ -4027,6 +4339,26 @@ export const EnumValueOptions = {
     return writer;
   },
 
+  setExtension<T>(message: EnumValueOptions, extension: Extension<T>, value: T): void {
+    const encoded = extension.encode!(value);
+
+    if (message._unknownFields !== undefined) {
+      delete message._unknownFields[extension.tag];
+
+      if (extension.singularTag !== undefined) {
+        delete message._unknownFields[extension.singularTag];
+      }
+    }
+
+    if (encoded.length !== 0) {
+      if (message._unknownFields === undefined) {
+        message._unknownFields = {};
+      }
+
+      message._unknownFields[extension.tag] = encoded;
+    }
+  },
+
   decode(input: _m0.Reader | Uint8Array, length?: number): EnumValueOptions {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
@@ -4069,6 +4401,38 @@ export const EnumValueOptions = {
       }
     }
     return message;
+  },
+
+  getExtension<T>(message: EnumValueOptions, extension: Extension<T>): T | undefined {
+    let results: T | undefined = undefined;
+
+    if (message._unknownFields === undefined) {
+      return undefined;
+    }
+
+    let list = message._unknownFields[extension.tag];
+
+    if (list !== undefined) {
+      results = extension.decode!(extension.tag, list);
+    }
+
+    if (extension.singularTag === undefined) {
+      return results;
+    }
+
+    list = message._unknownFields[extension.singularTag];
+
+    if (list !== undefined) {
+      const results2 = extension.decode!(extension.singularTag, list);
+
+      if (results !== undefined && (results as any).length !== 0) {
+        results = (results as any).concat(results2);
+      } else {
+        results = results2;
+      }
+    }
+
+    return results;
   },
 
   fromJSON(object: any): EnumValueOptions {
@@ -4132,6 +4496,26 @@ export const ServiceOptions = {
     return writer;
   },
 
+  setExtension<T>(message: ServiceOptions, extension: Extension<T>, value: T): void {
+    const encoded = extension.encode!(value);
+
+    if (message._unknownFields !== undefined) {
+      delete message._unknownFields[extension.tag];
+
+      if (extension.singularTag !== undefined) {
+        delete message._unknownFields[extension.singularTag];
+      }
+    }
+
+    if (encoded.length !== 0) {
+      if (message._unknownFields === undefined) {
+        message._unknownFields = {};
+      }
+
+      message._unknownFields[extension.tag] = encoded;
+    }
+  },
+
   decode(input: _m0.Reader | Uint8Array, length?: number): ServiceOptions {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
@@ -4174,6 +4558,38 @@ export const ServiceOptions = {
       }
     }
     return message;
+  },
+
+  getExtension<T>(message: ServiceOptions, extension: Extension<T>): T | undefined {
+    let results: T | undefined = undefined;
+
+    if (message._unknownFields === undefined) {
+      return undefined;
+    }
+
+    let list = message._unknownFields[extension.tag];
+
+    if (list !== undefined) {
+      results = extension.decode!(extension.tag, list);
+    }
+
+    if (extension.singularTag === undefined) {
+      return results;
+    }
+
+    list = message._unknownFields[extension.singularTag];
+
+    if (list !== undefined) {
+      const results2 = extension.decode!(extension.singularTag, list);
+
+      if (results !== undefined && (results as any).length !== 0) {
+        results = (results as any).concat(results2);
+      } else {
+        results = results2;
+      }
+    }
+
+    return results;
   },
 
   fromJSON(object: any): ServiceOptions {
@@ -4240,6 +4656,26 @@ export const MethodOptions = {
     return writer;
   },
 
+  setExtension<T>(message: MethodOptions, extension: Extension<T>, value: T): void {
+    const encoded = extension.encode!(value);
+
+    if (message._unknownFields !== undefined) {
+      delete message._unknownFields[extension.tag];
+
+      if (extension.singularTag !== undefined) {
+        delete message._unknownFields[extension.singularTag];
+      }
+    }
+
+    if (encoded.length !== 0) {
+      if (message._unknownFields === undefined) {
+        message._unknownFields = {};
+      }
+
+      message._unknownFields[extension.tag] = encoded;
+    }
+  },
+
   decode(input: _m0.Reader | Uint8Array, length?: number): MethodOptions {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
@@ -4289,6 +4725,38 @@ export const MethodOptions = {
       }
     }
     return message;
+  },
+
+  getExtension<T>(message: MethodOptions, extension: Extension<T>): T | undefined {
+    let results: T | undefined = undefined;
+
+    if (message._unknownFields === undefined) {
+      return undefined;
+    }
+
+    let list = message._unknownFields[extension.tag];
+
+    if (list !== undefined) {
+      results = extension.decode!(extension.tag, list);
+    }
+
+    if (extension.singularTag === undefined) {
+      return results;
+    }
+
+    list = message._unknownFields[extension.singularTag];
+
+    if (list !== undefined) {
+      const results2 = extension.decode!(extension.singularTag, list);
+
+      if (results !== undefined && (results as any).length !== 0) {
+        results = (results as any).concat(results2);
+      } else {
+        results = results2;
+      }
+    }
+
+    return results;
   },
 
   fromJSON(object: any): MethodOptions {
@@ -5170,4 +5638,14 @@ if (_m0.util.Long !== Long) {
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+export interface Extension<T> {
+  number: number;
+  tag: number;
+  singularTag?: number;
+  encode?: (message: T) => Uint8Array[];
+  decode?: (tag: number, input: Uint8Array[]) => T;
+  repeated: boolean;
+  packed: boolean;
 }

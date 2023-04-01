@@ -178,20 +178,30 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-proto-descriptors@1.7.1, ts-proto-descriptors@workspace:.":
+"ts-proto-descriptors@npm:1.8.0":
+  version: 1.8.0
+  resolution: "ts-proto-descriptors@npm:1.8.0"
+  dependencies:
+    long: ^4.0.0
+    protobufjs: ^6.8.8
+  checksum: 9a3be5d3c561c4b0d5ccba3b558db89f08c9fcf1ccd49457d1c2b56ddc2bc0ee37b7247020238a7734e0c860550b3c4730e22e724a8899470625524271658a6d
+  languageName: node
+  linkType: hard
+
+"ts-proto-descriptors@workspace:.":
   version: 0.0.0-use.local
   resolution: "ts-proto-descriptors@workspace:."
   dependencies:
     long: ^4.0.0
     protobufjs: ^6.8.8
-    ts-proto: ^1.144.0
+    ts-proto: ^1.146.0
     typescript: ^4.7.4
   languageName: unknown
   linkType: soft
 
-"ts-proto@npm:^1.144.0":
-  version: 1.144.0
-  resolution: "ts-proto@npm:1.144.0"
+"ts-proto@npm:^1.146.0":
+  version: 1.146.0
+  resolution: "ts-proto@npm:1.146.0"
   dependencies:
     "@types/object-hash": ^1.3.0
     case-anything: ^2.1.10
@@ -199,10 +209,10 @@ __metadata:
     object-hash: ^1.3.1
     protobufjs: ^6.11.3
     ts-poet: ^6.4.1
-    ts-proto-descriptors: 1.7.1
+    ts-proto-descriptors: 1.8.0
   bin:
     protoc-gen-ts_proto: protoc-gen-ts_proto
-  checksum: 799d6024aaa43bc02a23f1887046d2b34a0462fe98bfb40a5a535b3f8adf8f164b1bcc861b43dd819c5cd25517e050f316e08e84d0430817df21edb36d1fe727
+  checksum: cd14c650175ef97a042a6f50eb73dff38a6c4acec025ac6278156b822db61d34c83603958d33e2f6bd1cc967aa004a12ee7ff5300d8b04a02d6049d1505ed044
   languageName: node
   linkType: hard
 
