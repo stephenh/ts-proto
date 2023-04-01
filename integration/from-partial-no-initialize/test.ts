@@ -42,14 +42,14 @@ export const TPartialMessage = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.field = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -124,21 +124,21 @@ export const TPartial = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.number = reader.int32();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.string = reader.string();
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
@@ -147,19 +147,18 @@ export const TPartial = {
             if (message.map === undefined) {
               message.map = {};
             }
-
             message.map![entry3.key] = entry3.value;
           }
           continue;
         case 4:
-          if (tag != 34) {
+          if (tag !== 34) {
             break;
           }
 
           message.message = TPartialMessage.decode(reader, reader.uint32());
           continue;
         case 5:
-          if (tag != 42) {
+          if (tag !== 42) {
             break;
           }
 
@@ -169,7 +168,7 @@ export const TPartial = {
           message.repeatedMessage!.push(TPartialMessage.decode(reader, reader.uint32()));
           continue;
         case 6:
-          if (tag != 50) {
+          if (tag !== 50) {
             break;
           }
 
@@ -179,15 +178,16 @@ export const TPartial = {
           message.repeatedString!.push(reader.string());
           continue;
         case 7:
-          if (tag == 56) {
+          if (tag === 56) {
             if (message.repeatedNumber === undefined) {
               message.repeatedNumber = [];
             }
             message.repeatedNumber!.push(reader.int32());
+
             continue;
           }
 
-          if (tag == 58) {
+          if (tag === 58) {
             if (message.repeatedNumber === undefined) {
               message.repeatedNumber = [];
             }
@@ -201,7 +201,7 @@ export const TPartial = {
 
           break;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -311,21 +311,21 @@ export const TPartial_MapEntry = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.key = reader.string();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.value = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);

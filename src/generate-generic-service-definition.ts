@@ -103,11 +103,11 @@ function generateMethodOptions(ctx: Context, options: MethodOptions | undefined)
           );
         }
 
-        unknownFieldsChunks.push(code`${key}: [\n${joinCode(valuesChunks, { on: "," }).toCodeString([])}\n],`);
+        unknownFieldsChunks.push(code`${key}: [\n${joinCode(valuesChunks, { on: "," })}\n],`);
       }
 
       unknownFieldsChunks.push(code`}`);
-      chunks.push(code`_unknownFields: ${joinCode(unknownFieldsChunks, { on: "\n" }).toCodeString([])}`);
+      chunks.push(code`_unknownFields: ${joinCode(unknownFieldsChunks, { on: "\n" })}`);
     }
   }
 

@@ -49,7 +49,7 @@ export const MapBigInt = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
@@ -58,12 +58,11 @@ export const MapBigInt = {
             if (message.map === undefined) {
               message.map = new Map();
             }
-
             message.map!.set(entry1.key, entry1.value);
           }
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       const startPos = reader.pos;
@@ -163,21 +162,21 @@ export const MapBigInt_MapEntry = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 9) {
+          if (tag !== 9) {
             break;
           }
 
           message.key = reader.fixed64() as Long;
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.value = reader.int64() as Long;
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       const startPos = reader.pos;

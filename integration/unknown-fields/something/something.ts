@@ -48,19 +48,20 @@ export const Something = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.hello = reader.string();
           continue;
         case 2:
-          if (tag == 16) {
+          if (tag === 16) {
             message.foo.push(reader.int32());
+
             continue;
           }
 
-          if (tag == 18) {
+          if (tag === 18) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
               message.foo.push(reader.int32());
@@ -71,7 +72,7 @@ export const Something = {
 
           break;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       const startPos = reader.pos;
