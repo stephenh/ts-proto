@@ -25,6 +25,7 @@ describe("options", () => {
         "onlyTypes": false,
         "outputClientImpl": false,
         "outputEncodeMethods": false,
+        "outputExtensions": false,
         "outputJsonMethods": true,
         "outputPartialMethods": false,
         "outputSchema": false,
