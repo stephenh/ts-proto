@@ -181,64 +181,65 @@ export const OptionalsTest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.id = reader.int32();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.child = Child.decode(reader, reader.uint32());
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.state = reader.int32() as any;
           continue;
         case 4:
-          if (tag != 32) {
+          if (tag !== 32) {
             break;
           }
 
           message.long = longToNumber(reader.int64() as Long);
           continue;
         case 5:
-          if (tag != 40) {
+          if (tag !== 40) {
             break;
           }
 
           message.truth = reader.bool();
           continue;
         case 6:
-          if (tag != 50) {
+          if (tag !== 50) {
             break;
           }
 
           message.description = reader.string();
           continue;
         case 7:
-          if (tag != 58) {
+          if (tag !== 58) {
             break;
           }
 
           message.data = reader.bytes();
           continue;
         case 11:
-          if (tag == 88) {
+          if (tag === 88) {
             if (message.repId === undefined) {
               message.repId = [];
             }
             message.repId!.push(reader.int32());
+
             continue;
           }
 
-          if (tag == 90) {
+          if (tag === 90) {
             if (message.repId === undefined) {
               message.repId = [];
             }
@@ -252,7 +253,7 @@ export const OptionalsTest = {
 
           break;
         case 12:
-          if (tag != 98) {
+          if (tag !== 98) {
             break;
           }
 
@@ -262,15 +263,16 @@ export const OptionalsTest = {
           message.repChild!.push(Child.decode(reader, reader.uint32()));
           continue;
         case 13:
-          if (tag == 104) {
+          if (tag === 104) {
             if (message.repState === undefined) {
               message.repState = [];
             }
             message.repState!.push(reader.int32() as any);
+
             continue;
           }
 
-          if (tag == 106) {
+          if (tag === 106) {
             if (message.repState === undefined) {
               message.repState = [];
             }
@@ -284,15 +286,16 @@ export const OptionalsTest = {
 
           break;
         case 14:
-          if (tag == 112) {
+          if (tag === 112) {
             if (message.repLong === undefined) {
               message.repLong = [];
             }
             message.repLong!.push(longToNumber(reader.int64() as Long));
+
             continue;
           }
 
-          if (tag == 114) {
+          if (tag === 114) {
             if (message.repLong === undefined) {
               message.repLong = [];
             }
@@ -306,15 +309,16 @@ export const OptionalsTest = {
 
           break;
         case 15:
-          if (tag == 120) {
+          if (tag === 120) {
             if (message.repTruth === undefined) {
               message.repTruth = [];
             }
             message.repTruth!.push(reader.bool());
+
             continue;
           }
 
-          if (tag == 122) {
+          if (tag === 122) {
             if (message.repTruth === undefined) {
               message.repTruth = [];
             }
@@ -328,7 +332,7 @@ export const OptionalsTest = {
 
           break;
         case 16:
-          if (tag != 130) {
+          if (tag !== 130) {
             break;
           }
 
@@ -338,7 +342,7 @@ export const OptionalsTest = {
           message.repDescription!.push(reader.string());
           continue;
         case 17:
-          if (tag != 138) {
+          if (tag !== 138) {
             break;
           }
 
@@ -348,56 +352,56 @@ export const OptionalsTest = {
           message.repData!.push(reader.bytes());
           continue;
         case 21:
-          if (tag != 168) {
+          if (tag !== 168) {
             break;
           }
 
           message.optId = reader.int32();
           continue;
         case 22:
-          if (tag != 178) {
+          if (tag !== 178) {
             break;
           }
 
           message.optChild = Child.decode(reader, reader.uint32());
           continue;
         case 23:
-          if (tag != 184) {
+          if (tag !== 184) {
             break;
           }
 
           message.optState = reader.int32() as any;
           continue;
         case 24:
-          if (tag != 192) {
+          if (tag !== 192) {
             break;
           }
 
           message.optLong = longToNumber(reader.int64() as Long);
           continue;
         case 25:
-          if (tag != 200) {
+          if (tag !== 200) {
             break;
           }
 
           message.optTruth = reader.bool();
           continue;
         case 26:
-          if (tag != 210) {
+          if (tag !== 210) {
             break;
           }
 
           message.optDescription = reader.string();
           continue;
         case 27:
-          if (tag != 218) {
+          if (tag !== 218) {
             break;
           }
 
           message.optData = reader.bytes();
           continue;
         case 30:
-          if (tag != 242) {
+          if (tag !== 242) {
             break;
           }
 
@@ -406,12 +410,11 @@ export const OptionalsTest = {
             if (message.translations === undefined) {
               message.translations = {};
             }
-
             message.translations![entry30.key] = entry30.value;
           }
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -580,21 +583,21 @@ export const OptionalsTest_TranslationsEntry = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.key = reader.string();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.value = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);
@@ -644,7 +647,7 @@ export const Child = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       reader.skipType(tag & 7);

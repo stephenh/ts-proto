@@ -1026,8 +1026,11 @@ function getDecodeReadSnippet(ctx: Context, field: FieldDescriptorProto) {
   } else if (isMessage(field)) {
     const type = basicTypeName(ctx, field);
 
-    if (field.type == FieldDescriptorProto_Type.TYPE_GROUP) readSnippet = code`${type}.decode(reader)`;
-    else readSnippet = code`${type}.decode(reader, reader.uint32())`;
+    if (field.type == FieldDescriptorProto_Type.TYPE_GROUP) {
+      readSnippet = code`${type}.decode(reader)`;
+    } else {
+      readSnippet = code`${type}.decode(reader, reader.uint32())`;
+    }
   } else {
     throw new Error(`Unhandled field ${field}`);
   }
@@ -1073,8 +1076,9 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
 
     const tag = ((field.number << 3) | basicWireType(field.type)) >>> 0;
     const tagCheck = code`
-      if(tag != ${tag})
+      if (tag !== ${tag}) {
         break;
+      }
     `;
 
     // get a generic 'reader.doSomething' bit that is specific to the basic type
@@ -1096,9 +1100,9 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
           : `message.${fieldName}${maybeNonNullAssertion}[${varName}.key] = ${varName}.value`;
         const initializerSnippet = initializerNecessary
           ? `
-            if(message.${fieldName} === undefined)
+            if (message.${fieldName} === undefined) {
               message.${fieldName} = ${ctx.options.useMapType ? "new Map()" : "{}"};
-            `
+            }`
           : "";
         chunks.push(code`
           ${tagCheck}
@@ -1110,8 +1114,10 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
         `);
       } else {
         const initializerSnippet = initializerNecessary
-          ? `if(message.${fieldName} === undefined)
-              message.${fieldName} = [];`
+          ? `
+            if (message.${fieldName} === undefined) {
+              message.${fieldName} = [];
+            }`
           : "";
         if (packedType(field.type) === undefined) {
           chunks.push(code`
@@ -1123,13 +1129,14 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
           const packedTag = ((field.number << 3) | 2) >>> 0;
 
           chunks.push(code`
-            if(tag == ${tag}){
+            if (tag === ${tag}) {
               ${initializerSnippet}
               message.${fieldName}${maybeNonNullAssertion}.push(${readSnippet});
+
               continue;
             }
 
-            if(tag == ${packedTag}){
+            if (tag === ${packedTag}) {
               ${initializerSnippet}
               const end2 = reader.uint32() + reader.pos;
               while (reader.pos < end2) {
@@ -1156,13 +1163,16 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
       `);
     }
 
-    if (!isRepeated(field) || packedType(field.type) === undefined) chunks.push(code`continue;`);
+    if (!isRepeated(field) || packedType(field.type) === undefined) {
+      chunks.push(code`continue;`);
+    }
   });
 
   chunks.push(code`}`);
   chunks.push(code`
-      if((tag & 7) == 4 || tag == 0)
+      if ((tag & 7) === 4 || tag === 0) {
         break;
+      }
   `);
 
   if (options.unknownFields) {
@@ -1171,8 +1181,9 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
 
     if (!options.initializeFieldsAsUndefined) {
       unknownFieldsInitializerSnippet = `
-        if(message._unknownFields === undefined)
+        if (message._unknownFields === undefined) {
           message._unknownFields = {};
+        }
       `;
     }
 
@@ -1184,10 +1195,11 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
       ${unknownFieldsInitializerSnippet}
       const list = message._unknownFields${maybeNonNullAssertion}[tag];
 
-      if(list === undefined)
+      if (list === undefined) {
         message._unknownFields${maybeNonNullAssertion}[tag] = [buf];
-      else
+      } else {
         list.push(buf);
+      }
     `);
   } else {
     chunks.push(code`
@@ -1435,7 +1447,7 @@ function generateSetExtension(ctx: Context, fullName: string) {
     setExtension <T> (message: ${fullName}, extension: ${ctx.utils.Extension}<T>, value: T): void {
       const encoded = extension.encode!(value);
 
-      if (message._unknownFields !== undefined){
+      if (message._unknownFields !== undefined) {
         delete message._unknownFields[extension.tag];
 
         if (extension.singularTag !== undefined) {
@@ -1631,12 +1643,12 @@ function generateExtension(ctx: Context, message: DescriptorProto | undefined, e
         `);
       } else {
         chunks.push(code`
-          if(tag == ${packedTag}){
+          if (tag == ${packedTag}) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
               values.push(${readSnippet});
             }
-          }else{
+          } else {
             values.push(${readSnippet});
           }
         `);

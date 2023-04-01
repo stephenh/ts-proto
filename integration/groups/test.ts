@@ -91,28 +91,28 @@ export const GroupsOptionalTest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.int1 = reader.int32();
           continue;
         case 2:
-          if (tag != 19) {
+          if (tag !== 19) {
             break;
           }
 
           message.group = GroupsOptionalTest_Group.decode(reader);
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.int3 = reader.int32();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       const startPos = reader.pos;
@@ -203,21 +203,21 @@ export const GroupsOptionalTest_Group = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.key = reader.string();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.value = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       const startPos = reader.pos;
@@ -315,15 +315,16 @@ export const GroupsRepeatedTest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag == 8) {
+          if (tag === 8) {
             if (message.int1 === undefined) {
               message.int1 = [];
             }
             message.int1!.push(reader.int32());
+
             continue;
           }
 
-          if (tag == 10) {
+          if (tag === 10) {
             if (message.int1 === undefined) {
               message.int1 = [];
             }
@@ -337,7 +338,7 @@ export const GroupsRepeatedTest = {
 
           break;
         case 2:
-          if (tag != 19) {
+          if (tag !== 19) {
             break;
           }
 
@@ -347,15 +348,16 @@ export const GroupsRepeatedTest = {
           message.group!.push(GroupsRepeatedTest_Group.decode(reader));
           continue;
         case 3:
-          if (tag == 24) {
+          if (tag === 24) {
             if (message.int3 === undefined) {
               message.int3 = [];
             }
             message.int3!.push(reader.int32());
+
             continue;
           }
 
-          if (tag == 26) {
+          if (tag === 26) {
             if (message.int3 === undefined) {
               message.int3 = [];
             }
@@ -369,7 +371,7 @@ export const GroupsRepeatedTest = {
 
           break;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       const startPos = reader.pos;
@@ -475,7 +477,7 @@ export const GroupsRepeatedTest_Group = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
@@ -485,7 +487,7 @@ export const GroupsRepeatedTest_Group = {
           message.key!.push(reader.string());
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
@@ -495,7 +497,7 @@ export const GroupsRepeatedTest_Group = {
           message.value!.push(reader.string());
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       const startPos = reader.pos;
@@ -601,15 +603,16 @@ export const GroupsNestedTest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag == 8) {
+          if (tag === 8) {
             if (message.int1 === undefined) {
               message.int1 = [];
             }
             message.int1!.push(reader.int32());
+
             continue;
           }
 
-          if (tag == 10) {
+          if (tag === 10) {
             if (message.int1 === undefined) {
               message.int1 = [];
             }
@@ -623,7 +626,7 @@ export const GroupsNestedTest = {
 
           break;
         case 2:
-          if (tag != 19) {
+          if (tag !== 19) {
             break;
           }
 
@@ -633,15 +636,16 @@ export const GroupsNestedTest = {
           message.group!.push(GroupsNestedTest_Group.decode(reader));
           continue;
         case 3:
-          if (tag == 24) {
+          if (tag === 24) {
             if (message.int3 === undefined) {
               message.int3 = [];
             }
             message.int3!.push(reader.int32());
+
             continue;
           }
 
-          if (tag == 26) {
+          if (tag === 26) {
             if (message.int3 === undefined) {
               message.int3 = [];
             }
@@ -655,7 +659,7 @@ export const GroupsNestedTest = {
 
           break;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       const startPos = reader.pos;
@@ -756,7 +760,7 @@ export const GroupsNestedTest_Group = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 11) {
+          if (tag !== 11) {
             break;
           }
 
@@ -766,7 +770,7 @@ export const GroupsNestedTest_Group = {
           message.nested!.push(GroupsNestedTest_Group_Nested.decode(reader));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       const startPos = reader.pos;
@@ -853,7 +857,7 @@ export const GroupsNestedTest_Group_Nested = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 2:
-          if (tag != 19) {
+          if (tag !== 19) {
             break;
           }
 
@@ -863,7 +867,7 @@ export const GroupsNestedTest_Group_Nested = {
           message.nested2!.push(GroupsNestedTest_Group_Nested_Nested2.decode(reader));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       const startPos = reader.pos;
@@ -950,14 +954,14 @@ export const GroupsNestedTest_Group_Nested_Nested2 = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.string1 = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       const startPos = reader.pos;
