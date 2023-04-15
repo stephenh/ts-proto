@@ -1,7 +1,7 @@
 import { code, def, Code, joinCode } from "ts-poet";
 import { EnumDescriptorProto, EnumValueDescriptorProto } from "ts-proto-descriptors";
 import { maybeAddComment } from "./utils";
-import { camelCase, camelToSnake } from "./case";
+import { uncapitalize, camelToSnake } from "./case";
 import SourceInfo, { Fields } from "./sourceInfo";
 import { Context } from "./context";
 
@@ -73,7 +73,7 @@ export function generateEnumFromJson(ctx: Context, fullName: string, enumDesc: E
   const { options, utils } = ctx;
   const chunks: Code[] = [];
 
-  const functionName = camelCase(fullName) + "FromJSON";
+  const functionName = uncapitalize(fullName) + "FromJSON";
   chunks.push(code`export function ${def(functionName)}(object: any): ${fullName} {`);
   chunks.push(code`switch (object) {`);
 
@@ -113,7 +113,7 @@ export function generateEnumToJson(ctx: Context, fullName: string, enumDesc: Enu
 
   const chunks: Code[] = [];
 
-  const functionName = camelCase(fullName) + "ToJSON";
+  const functionName = uncapitalize(fullName) + "ToJSON";
   chunks.push(
     code`export function ${def(functionName)}(object: ${fullName}): ${
       ctx.options.useNumericEnumForJson ? "number" : "string"
@@ -166,7 +166,7 @@ export function generateEnumToNumber(ctx: Context, fullName: string, enumDesc: E
 
   const chunks: Code[] = [];
 
-  const functionName = camelCase(fullName) + "ToNumber";
+  const functionName = uncapitalize(fullName) + "ToNumber";
   chunks.push(code`export function ${def(functionName)}(object: ${fullName}): number {`);
   chunks.push(code`switch (object) {`);
   for (const valueDesc of enumDesc.value) {

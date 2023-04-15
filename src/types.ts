@@ -15,7 +15,7 @@ import { DateOption, EnvOption, LongOption, OneofOption, Options } from "./optio
 import { visit } from "./visit";
 import { fail, FormattedMethodDescriptor, impProto, maybePrefixPackage } from "./utils";
 import SourceInfo from "./sourceInfo";
-import { camelCase } from "./case";
+import { uncapitalize } from "./case";
 import { Context } from "./context";
 
 /** Based on https://github.com/dcodeIO/protobuf.js/blob/master/src/types.js#L37. */
@@ -601,7 +601,7 @@ function toModuleAndType(typeMap: TypeMap, protoType: string): [string, string, 
 
 export function getEnumMethod(ctx: Context, enumProtoType: string, methodSuffix: string): Import {
   const [module, type] = toModuleAndType(ctx.typeMap, enumProtoType);
-  return impProto(ctx.options, module, `${camelCase(type)}${methodSuffix}`);
+  return impProto(ctx.options, module, `${uncapitalize(type)}${methodSuffix}`);
 }
 
 /** Return the TypeName for any field (primitive/message/etc.) as exposed in the interface. */

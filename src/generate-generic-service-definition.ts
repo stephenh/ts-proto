@@ -6,7 +6,7 @@ import {
   MethodOptions_IdempotencyLevel,
   ServiceDescriptorProto,
 } from "ts-proto-descriptors";
-import { camelCase } from "./case";
+import { uncapitalize } from "./case";
 import { Context } from "./context";
 import SourceInfo, { Fields } from "./sourceInfo";
 import { messageToTypeName } from "./types";
@@ -48,7 +48,7 @@ export function generateGenericServiceDefinition(
     maybeAddComment(info, chunks, methodDesc.options?.deprecated);
 
     chunks.push(code`
-      ${camelCase(methodDesc.name)}: ${generateMethodDefinition(ctx, methodDesc)},
+      ${uncapitalize(methodDesc.name)}: ${generateMethodDefinition(ctx, methodDesc)},
     `);
   }
 
