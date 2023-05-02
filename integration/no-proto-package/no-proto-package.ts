@@ -25,19 +25,24 @@ export const User = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): User {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUser();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.name = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -73,16 +78,17 @@ export const Empty = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Empty {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEmpty();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        default:
-          reader.skipType(tag & 7);
-          break;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -121,7 +127,7 @@ export class UserStateClientImpl implements UserState {
   GetUsers(request: Empty): Observable<User> {
     const data = Empty.encode(request).finish();
     const result = this.rpc.serverStreamingRequest(this.service, "GetUsers", data);
-    return result.pipe(map((data) => User.decode(new _m0.Reader(data))));
+    return result.pipe(map((data) => User.decode(_m0.Reader.create(data))));
   }
 }
 

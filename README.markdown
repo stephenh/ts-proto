@@ -220,7 +220,7 @@ creating a class and calling the right getters/setters.
 
 - ObjectIds can be mapped as `mongodb.ObjectId`
 
-  (Configurable with the `useObjectId` parameter.)
+  (Configurable with the `useMongoObjectId` parameter.)
 
 # Auto-Batching / N+1 Prevention
 
@@ -410,7 +410,7 @@ Generated code will be placed in the Gradle build directory.
 
 - With `--ts_proto_opt=useDate=false`, fields of type `google.protobuf.Timestamp` will not be mapped to type `Date` in the generated types. See [Timestamp](#timestamp) for more details.
 
-- With `--ts_proto_opt=useObjectId=true`, fields of a type called ObjectId where the message is constructed to have on field called value that is a string will be mapped to type `mongodb.ObjectId` in the generated types. This will require your project to install the mongodb npm package. See [ObjectId](#objectid) for more details.
+- With `--ts_proto_opt=useMongoObjectId=true`, fields of a type called ObjectId where the message is constructed to have on field called value that is a string will be mapped to type `mongodb.ObjectId` in the generated types. This will require your project to install the mongodb npm package. See [ObjectId](#objectid) for more details.
 
 - With `--ts_proto_opt=outputSchema=true`, meta typings will be generated that can later be used in other code generators.
 
@@ -463,7 +463,7 @@ Generated code will be placed in the Gradle build directory.
 
 - With `--ts_proto_opt=useJsonWireFormat=true`, the generated code will reflect the JSON representation of Protobuf messages.
 
-  Requires `onlyTypes=true`. Implies `useDate=string` and `stringEnums=true`. This option is to generate types that can be directly used with marshalling/unmarshalling Protobuf messages serialized as JSON.  
+  Requires `onlyTypes=true`. Implies `useDate=string` and `stringEnums=true`. This option is to generate types that can be directly used with marshalling/unmarshalling Protobuf messages serialized as JSON.
   You may also want to set `useOptionals=all`, as gRPC gateways are not required to send default value for scalar values.
 
 - With `--ts_proto_opt=useNumericEnumForJson=true`, the JSON converter (`toJSON`) will encode enum values as int, rather than a string literal.
@@ -503,6 +503,11 @@ Generated code will be placed in the Gradle build directory.
   ```
 
   by default this is enabled which would generate a type of `Box_Element_Image_Alignment`. By disabling this option the type that is generated would be `BoxElementImageAlignment`.
+
+- With `--ts_proto_opt=outputExtensions=true`, the generated code will include proto2 extensions
+
+  Extension encode/decode methods are compliant with the `outputEncodeMethods` option, and if `unknownFields=true`,
+  the `setExtension` and `getExtension` methods will be created for extendable messages, also compliant with `outputEncodeMethods` (setExtension = encode, getExtension = decode).
 
 ### NestJS Support
 

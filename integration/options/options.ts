@@ -47,28 +47,45 @@ export const MyMessage = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): MyMessage {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMyMessage();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 8) {
+            break;
+          }
+
           message.foo = reader.int32();
-          break;
+          continue;
         case 2:
+          if (tag !== 16) {
+            break;
+          }
+
           message.foo2 = reader.int32();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.bar = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
+
           message.quux = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -84,16 +101,17 @@ export const RequestType = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): RequestType {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseRequestType();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        default:
-          reader.skipType(tag & 7);
-          break;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -109,16 +127,17 @@ export const ResponseType = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ResponseType {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseResponseType();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        default:
-          reader.skipType(tag & 7);
-          break;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -139,7 +158,7 @@ export class MyServiceClientImpl implements MyService {
   MyMethod(request: RequestType): Promise<ResponseType> {
     const data = RequestType.encode(request).finish();
     const promise = this.rpc.request(this.service, "MyMethod", data);
-    return promise.then((data) => ResponseType.decode(new _m0.Reader(data)));
+    return promise.then((data) => ResponseType.decode(_m0.Reader.create(data)));
   }
 }
 

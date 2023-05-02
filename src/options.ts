@@ -45,7 +45,7 @@ export type Options = {
   esModuleInterop: boolean;
   fileSuffix: string;
   importSuffix: string;
-  outputEncodeMethods: boolean;
+  outputEncodeMethods: true | false | "encode-only" | "decode-only" | "encode-no-creation";
   outputJsonMethods: boolean;
   outputPartialMethods: boolean;
   outputTypeAnnotations: boolean;
@@ -79,6 +79,7 @@ export type Options = {
   useMapType: boolean;
   useReadonlyTypes: boolean;
   useSnakeTypeName: boolean;
+  outputExtensions: boolean;
   M: { [from: string]: string };
 };
 
@@ -128,6 +129,7 @@ export function defaultOptions(): Options {
     useMapType: false,
     useReadonlyTypes: false,
     useSnakeTypeName: true,
+    outputExtensions: false,
     M: {},
   };
 }

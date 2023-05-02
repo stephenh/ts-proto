@@ -1,6 +1,6 @@
 import { Code, code, def, imp, joinCode } from "ts-poet";
 import { FileDescriptorProto, ServiceDescriptorProto } from "ts-proto-descriptors";
-import { camelCase } from "./case";
+import { uncapitalize } from "./case";
 import { Context } from "./context";
 import SourceInfo, { Fields } from "./sourceInfo";
 import { messageToTypeName } from "./types";
@@ -50,7 +50,7 @@ function generateServerStub(ctx: Context, sourceInfo: SourceInfo, serviceDesc: S
       if (methodDesc.serverStreaming) {
         // bidi streaming
         chunks.push(code`
-          ${camelCase(methodDesc.name)}(
+          ${uncapitalize(methodDesc.name)}(
             request: AsyncIterable<${inputType}>,
             context: ${CallContext} & CallContextExt,
           ): ${ServerStreamingMethodResult}<${outputType}>;
@@ -58,7 +58,7 @@ function generateServerStub(ctx: Context, sourceInfo: SourceInfo, serviceDesc: S
       } else {
         // client streaming
         chunks.push(code`
-          ${camelCase(methodDesc.name)}(
+          ${uncapitalize(methodDesc.name)}(
             request: AsyncIterable<${inputType}>,
             context: ${CallContext} & CallContextExt,
           ): Promise<${outputType}>;
@@ -68,7 +68,7 @@ function generateServerStub(ctx: Context, sourceInfo: SourceInfo, serviceDesc: S
       if (methodDesc.serverStreaming) {
         // server streaming
         chunks.push(code`
-          ${camelCase(methodDesc.name)}(
+          ${uncapitalize(methodDesc.name)}(
             request: ${inputType},
             context: ${CallContext} & CallContextExt,
           ): ${ServerStreamingMethodResult}<${outputType}>;
@@ -76,7 +76,7 @@ function generateServerStub(ctx: Context, sourceInfo: SourceInfo, serviceDesc: S
       } else {
         // unary
         chunks.push(code`
-          ${camelCase(methodDesc.name)}(
+          ${uncapitalize(methodDesc.name)}(
             request: ${inputType},
             context: ${CallContext} & CallContextExt,
           ): Promise<${outputType}>;
@@ -113,7 +113,7 @@ function generateClientStub(ctx: Context, sourceInfo: SourceInfo, serviceDesc: S
       if (methodDesc.serverStreaming) {
         // bidi streaming
         chunks.push(code`
-          ${camelCase(methodDesc.name)}(
+          ${uncapitalize(methodDesc.name)}(
             request: AsyncIterable<${inputType}>,
             options?: ${CallOptions} & CallOptionsExt,
           ): AsyncIterable<${outputType}>;
@@ -121,7 +121,7 @@ function generateClientStub(ctx: Context, sourceInfo: SourceInfo, serviceDesc: S
       } else {
         // client streaming
         chunks.push(code`
-          ${camelCase(methodDesc.name)}(
+          ${uncapitalize(methodDesc.name)}(
             request: AsyncIterable<${inputType}>,
             options?: ${CallOptions} & CallOptionsExt,
           ): Promise<${outputType}>;
@@ -131,7 +131,7 @@ function generateClientStub(ctx: Context, sourceInfo: SourceInfo, serviceDesc: S
       if (methodDesc.serverStreaming) {
         // server streaming
         chunks.push(code`
-          ${camelCase(methodDesc.name)}(
+          ${uncapitalize(methodDesc.name)}(
             request: ${inputType},
             options?: ${CallOptions} & CallOptionsExt,
           ): AsyncIterable<${outputType}>;
@@ -139,7 +139,7 @@ function generateClientStub(ctx: Context, sourceInfo: SourceInfo, serviceDesc: S
       } else {
         // unary
         chunks.push(code`
-          ${camelCase(methodDesc.name)}(
+          ${uncapitalize(methodDesc.name)}(
             request: ${inputType},
             options?: ${CallOptions} & CallOptionsExt,
           ): Promise<${outputType}>;

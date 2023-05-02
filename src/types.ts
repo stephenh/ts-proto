@@ -15,7 +15,7 @@ import { DateOption, EnvOption, LongOption, OneofOption, Options } from "./optio
 import { visit } from "./visit";
 import { fail, FormattedMethodDescriptor, impProto, maybePrefixPackage } from "./utils";
 import SourceInfo from "./sourceInfo";
-import { camelCase } from "./case";
+import { uncapitalize } from "./case";
 import { Context } from "./context";
 
 /** Based on https://github.com/dcodeIO/protobuf.js/blob/master/src/types.js#L37. */
@@ -44,7 +44,10 @@ export function basicWireType(type: FieldDescriptorProto_Type): number {
       return 0;
     case FieldDescriptorProto_Type.TYPE_STRING:
     case FieldDescriptorProto_Type.TYPE_BYTES:
+    case FieldDescriptorProto_Type.TYPE_MESSAGE:
       return 2;
+    case FieldDescriptorProto_Type.TYPE_GROUP:
+      return 3;
     default:
       throw new Error("Invalid type " + type);
   }
@@ -98,6 +101,7 @@ export function basicTypeName(
         return code`Uint8Array`;
       }
     case FieldDescriptorProto_Type.TYPE_MESSAGE:
+    case FieldDescriptorProto_Type.TYPE_GROUP:
     case FieldDescriptorProto_Type.TYPE_ENUM:
       return messageToTypeName(ctx, field.typeName, { ...typeOptions, repeated: isRepeated(field) });
     default:
@@ -230,6 +234,7 @@ export function defaultValue(ctx: Context, field: FieldDescriptorProto): any {
         return "new Uint8Array()";
       }
     case FieldDescriptorProto_Type.TYPE_MESSAGE:
+    case FieldDescriptorProto_Type.TYPE_GROUP:
     default:
       return "undefined";
   }
@@ -371,7 +376,7 @@ export function isBytes(field: FieldDescriptorProto): boolean {
 }
 
 export function isMessage(field: FieldDescriptorProto): boolean {
-  return field.type === FieldDescriptorProto_Type.TYPE_MESSAGE;
+  return field.type === FieldDescriptorProto_Type.TYPE_MESSAGE || field.type === FieldDescriptorProto_Type.TYPE_GROUP;
 }
 
 export function isEnum(field: FieldDescriptorProto): boolean {
@@ -596,14 +601,14 @@ function toModuleAndType(typeMap: TypeMap, protoType: string): [string, string, 
 
 export function getEnumMethod(ctx: Context, enumProtoType: string, methodSuffix: string): Import {
   const [module, type] = toModuleAndType(ctx.typeMap, enumProtoType);
-  return impProto(ctx.options, module, `${camelCase(type)}${methodSuffix}`);
+  return impProto(ctx.options, module, `${uncapitalize(type)}${methodSuffix}`);
 }
 
 /** Return the TypeName for any field (primitive/message/etc.) as exposed in the interface. */
-export function toTypeName(ctx: Context, messageDesc: DescriptorProto, field: FieldDescriptorProto): Code {
+export function toTypeName(ctx: Context, messageDesc: DescriptorProto | undefined, field: FieldDescriptorProto): Code {
   let type = basicTypeName(ctx, field, { keepValueType: false });
   if (isRepeated(field)) {
-    const mapType = detectMapType(ctx, messageDesc, field);
+    const mapType = messageDesc ? detectMapType(ctx, messageDesc, field) : false;
     if (mapType) {
       const { keyType, valueType } = mapType;
       if (ctx.options.useMapType) {

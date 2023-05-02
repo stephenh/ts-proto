@@ -1,3 +1,86 @@
+# [1.146.0](https://github.com/stephenh/ts-proto/compare/v1.145.0...v1.146.0) (2023-04-01)
+
+
+### Features
+
+* extensions ([#808](https://github.com/stephenh/ts-proto/issues/808)) ([f956128](https://github.com/stephenh/ts-proto/commit/f956128ad830f4538452d65dccedca3e08d6c871))
+
+# [1.145.0](https://github.com/stephenh/ts-proto/compare/v1.144.1...v1.145.0) (2023-03-27)
+
+
+### Bug Fixes
+
+* various fixes ([#812](https://github.com/stephenh/ts-proto/issues/812)) ([ca18495](https://github.com/stephenh/ts-proto/commit/ca184958957b2c546e9a84173bc1c73425e33bc5))
+
+
+### Features
+
+* Update fromPartial and fromJson to respect initializeFieldsAsUndefined ([#811](https://github.com/stephenh/ts-proto/issues/811)) ([1615ae0](https://github.com/stephenh/ts-proto/commit/1615ae0b136bc8909e206b44f3bd6ec568a760e6))
+
+## [1.144.1](https://github.com/stephenh/ts-proto/compare/v1.144.0...v1.144.1) (2023-03-26)
+
+
+### Bug Fixes
+
+* Bump ts-proto-descriptors to restore any-less _unknownFields. ([#810](https://github.com/stephenh/ts-proto/issues/810)) ([de9c307](https://github.com/stephenh/ts-proto/commit/de9c3079210caed1d0d3da782a4d0f2e54f52652))
+
+# [1.144.0](https://github.com/stephenh/ts-proto/compare/v1.143.0...v1.144.0) (2023-03-26)
+
+
+### Bug Fixes
+
+* Temporarily put anys back to release. ([c6f189e](https://github.com/stephenh/ts-proto/commit/c6f189e62605553707534a86bf1964ad178dbd73))
+
+
+### Features
+
+* include _unknownFields as a field ([#806](https://github.com/stephenh/ts-proto/issues/806)) ([6b4ba39](https://github.com/stephenh/ts-proto/commit/6b4ba39a0651a2352db2ac70eb91d21138ccf887))
+
+# [1.143.0](https://github.com/stephenh/ts-proto/compare/v1.142.1...v1.143.0) (2023-03-19)
+
+
+### Bug Fixes
+
+* initialize undefined optional fields upon use ([#802](https://github.com/stephenh/ts-proto/issues/802)) ([ee52e06](https://github.com/stephenh/ts-proto/commit/ee52e06a95d7790d1252831f1bb01344c94f16a4))
+
+
+### Features
+
+* group encoding and decoding support ([#799](https://github.com/stephenh/ts-proto/issues/799)) ([5ebe3c0](https://github.com/stephenh/ts-proto/commit/5ebe3c07f5039db4f9b40e4e237d02d03c85a4e5))
+
+
+### Performance Improvements
+
+* use array.push to prevent reallocation on every field ([#804](https://github.com/stephenh/ts-proto/issues/804)) ([a6aea2c](https://github.com/stephenh/ts-proto/commit/a6aea2ca9e61611cf22417d23eb71a5d6e4f2164))
+
+## [1.142.1](https://github.com/stephenh/ts-proto/compare/v1.142.0...v1.142.1) (2023-03-18)
+
+
+### Performance Improvements
+
+* use Reader.create ([#800](https://github.com/stephenh/ts-proto/issues/800)) ([869e448](https://github.com/stephenh/ts-proto/commit/869e44876c88ccfb82cb4a48731b340a0fb2c025))
+
+# [1.142.0](https://github.com/stephenh/ts-proto/compare/v1.141.1...v1.142.0) (2023-03-18)
+
+
+### Features
+
+* service options unknown methods ([#801](https://github.com/stephenh/ts-proto/issues/801)) ([994d0d0](https://github.com/stephenh/ts-proto/commit/994d0d0ac54b3e22cb27fa4c5b8a5b1d17b62521))
+
+## [1.141.1](https://github.com/stephenh/ts-proto/compare/v1.141.0...v1.141.1) (2023-03-11)
+
+
+### Bug Fixes
+
+* implement abort grpc web ([#785](https://github.com/stephenh/ts-proto/issues/785)) ([6a40d72](https://github.com/stephenh/ts-proto/commit/6a40d72d6a41d91264366d238dafd08291eba0b7))
+
+# [1.141.0](https://github.com/stephenh/ts-proto/compare/v1.140.0...v1.141.0) (2023-03-08)
+
+
+### Features
+
+* output-encode-only methods ([#787](https://github.com/stephenh/ts-proto/issues/787)) ([3594410](https://github.com/stephenh/ts-proto/commit/3594410cc18fecc9c6f76f8abf7bdf9fdd178acd))
+
 # [1.140.0](https://github.com/stephenh/ts-proto/compare/v1.139.0...v1.140.0) (2023-02-24)
 
 

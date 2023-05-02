@@ -107,19 +107,24 @@ export const DoubleValue = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): DoubleValue {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDoubleValue();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 9) {
+            break;
+          }
+
           message.value = reader.double();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -158,19 +163,24 @@ export const FloatValue = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): FloatValue {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFloatValue();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 13) {
+            break;
+          }
+
           message.value = reader.float();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -209,19 +219,24 @@ export const Int64Value = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Int64Value {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseInt64Value();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 8) {
+            break;
+          }
+
           message.value = longToNumber(reader.int64() as Long);
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -260,19 +275,24 @@ export const UInt64Value = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): UInt64Value {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUInt64Value();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 8) {
+            break;
+          }
+
           message.value = longToNumber(reader.uint64() as Long);
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -311,19 +331,24 @@ export const Int32Value = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Int32Value {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseInt32Value();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 8) {
+            break;
+          }
+
           message.value = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -362,19 +387,24 @@ export const UInt32Value = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): UInt32Value {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUInt32Value();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 8) {
+            break;
+          }
+
           message.value = reader.uint32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -413,19 +443,24 @@ export const BoolValue = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): BoolValue {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseBoolValue();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 8) {
+            break;
+          }
+
           message.value = reader.bool();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -464,19 +499,24 @@ export const StringValue = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): StringValue {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStringValue();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.value = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -515,19 +555,24 @@ export const BytesValue = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): BytesValue {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseBytesValue();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.value = reader.bytes() as Buffer;
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },

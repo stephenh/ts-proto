@@ -111,22 +111,31 @@ export const DashFlash = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): DashFlash {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDashFlash();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.msg = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 16) {
+            break;
+          }
+
           message.type = reader.int32() as any;
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -176,25 +185,38 @@ export const DashUserSettingsState = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): DashUserSettingsState {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDashUserSettingsState();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.email = reader.string();
-          break;
+          continue;
         case 6:
+          if (tag !== 50) {
+            break;
+          }
+
           message.urls = DashUserSettingsState_URLs.decode(reader, reader.uint32());
-          break;
+          continue;
         case 7:
+          if (tag !== 58) {
+            break;
+          }
+
           message.flashes.push(DashFlash.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -251,22 +273,31 @@ export const DashUserSettingsState_URLs = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): DashUserSettingsState_URLs {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDashUserSettingsState_URLs();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.connectGoogle = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.connectGithub = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -319,28 +350,45 @@ export const DashCred = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): DashCred {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDashCred();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.description = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.metadata = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
+
           message.token = reader.string();
-          break;
+          continue;
         case 7:
+          if (tag !== 58) {
+            break;
+          }
+
           message.id = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -393,22 +441,31 @@ export const DashAPICredsCreateReq = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): DashAPICredsCreateReq {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDashAPICredsCreateReq();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.description = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.metadata = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -461,28 +518,45 @@ export const DashAPICredsUpdateReq = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): DashAPICredsUpdateReq {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDashAPICredsUpdateReq();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.credSid = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.description = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.metadata = reader.string();
-          break;
+          continue;
         case 5:
+          if (tag !== 42) {
+            break;
+          }
+
           message.id = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -535,22 +609,31 @@ export const DashAPICredsDeleteReq = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): DashAPICredsDeleteReq {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDashAPICredsDeleteReq();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.credSid = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.id = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -591,16 +674,17 @@ export const Empty = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Empty {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEmpty();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        default:
-          reader.skipType(tag & 7);
-          break;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },

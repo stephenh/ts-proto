@@ -15,6 +15,7 @@ export interface Version {
    * be empty for mainline stable releases.
    */
   suffix: string;
+  _unknownFields?: { [key: number]: Uint8Array[] };
 }
 
 /** An encoded CodeGeneratorRequest is written to the plugin's stdin. */
@@ -46,6 +47,7 @@ export interface CodeGeneratorRequest {
   protoFile: FileDescriptorProto[];
   /** The version number of protocol compiler. */
   compilerVersion: Version | undefined;
+  _unknownFields?: { [key: number]: Uint8Array[] };
 }
 
 /** The plugin writes an encoded CodeGeneratorResponse to stdout. */
@@ -67,6 +69,7 @@ export interface CodeGeneratorResponse {
    */
   supportedFeatures: number;
   file: CodeGeneratorResponse_File[];
+  _unknownFields?: { [key: number]: Uint8Array[] };
 }
 
 /** Sync with code_generator.h. */
@@ -140,10 +143,11 @@ export interface CodeGeneratorResponse_File {
    * into the code generation metadata for the generated files.
    */
   generatedCodeInfo: GeneratedCodeInfo | undefined;
+  _unknownFields?: { [key: number]: Uint8Array[] };
 }
 
 function createBaseVersion(): Version {
-  return { major: 0, minor: 0, patch: 0, suffix: "" };
+  return { major: 0, minor: 0, patch: 0, suffix: "", _unknownFields: {} };
 }
 
 export const Version = {
@@ -160,12 +164,12 @@ export const Version = {
     if (message.suffix !== "") {
       writer.uint32(34).string(message.suffix);
     }
-    if ("_unknownFields" in message) {
-      const msgUnknownFields: any = (message as any)["_unknownFields"];
-      for (const key of Object.keys(msgUnknownFields)) {
-        const values = msgUnknownFields[key] as Uint8Array[];
+    if (message._unknownFields !== undefined) {
+      for (const key in message._unknownFields) {
+        const values = message._unknownFields[key];
+        const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(parseInt(key, 10));
+          writer.uint32(tag);
           (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
@@ -178,33 +182,54 @@ export const Version = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Version {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseVersion();
-    (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 8) {
+            break;
+          }
+
           message.major = reader.int32();
-          break;
+          continue;
         case 2:
+          if (tag !== 16) {
+            break;
+          }
+
           message.minor = reader.int32();
-          break;
+          continue;
         case 3:
+          if (tag !== 24) {
+            break;
+          }
+
           message.patch = reader.int32();
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
+
           message.suffix = reader.string();
-          break;
-        default:
-          const startPos = reader.pos;
-          reader.skipType(tag & 7);
-          (message as any)._unknownFields[tag] = [
-            ...((message as any)._unknownFields[tag] || []),
-            reader.buf.slice(startPos, reader.pos),
-          ];
-          break;
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      const startPos = reader.pos;
+      reader.skipType(tag & 7);
+      const buf = reader.buf.slice(startPos, reader.pos);
+
+      const list = message._unknownFields![tag];
+
+      if (list === undefined) {
+        message._unknownFields![tag] = [buf];
+      } else {
+        list.push(buf);
       }
     }
     return message;
@@ -212,7 +237,7 @@ export const Version = {
 };
 
 function createBaseCodeGeneratorRequest(): CodeGeneratorRequest {
-  return { fileToGenerate: [], parameter: "", protoFile: [], compilerVersion: undefined };
+  return { fileToGenerate: [], parameter: "", protoFile: [], compilerVersion: undefined, _unknownFields: {} };
 }
 
 export const CodeGeneratorRequest = {
@@ -229,12 +254,12 @@ export const CodeGeneratorRequest = {
     if (message.compilerVersion !== undefined) {
       Version.encode(message.compilerVersion, writer.uint32(26).fork()).ldelim();
     }
-    if ("_unknownFields" in message) {
-      const msgUnknownFields: any = (message as any)["_unknownFields"];
-      for (const key of Object.keys(msgUnknownFields)) {
-        const values = msgUnknownFields[key] as Uint8Array[];
+    if (message._unknownFields !== undefined) {
+      for (const key in message._unknownFields) {
+        const values = message._unknownFields[key];
+        const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(parseInt(key, 10));
+          writer.uint32(tag);
           (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
@@ -247,33 +272,54 @@ export const CodeGeneratorRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): CodeGeneratorRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCodeGeneratorRequest();
-    (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.fileToGenerate.push(reader.string());
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.parameter = reader.string();
-          break;
+          continue;
         case 15:
+          if (tag !== 122) {
+            break;
+          }
+
           message.protoFile.push(FileDescriptorProto.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.compilerVersion = Version.decode(reader, reader.uint32());
-          break;
-        default:
-          const startPos = reader.pos;
-          reader.skipType(tag & 7);
-          (message as any)._unknownFields[tag] = [
-            ...((message as any)._unknownFields[tag] || []),
-            reader.buf.slice(startPos, reader.pos),
-          ];
-          break;
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      const startPos = reader.pos;
+      reader.skipType(tag & 7);
+      const buf = reader.buf.slice(startPos, reader.pos);
+
+      const list = message._unknownFields![tag];
+
+      if (list === undefined) {
+        message._unknownFields![tag] = [buf];
+      } else {
+        list.push(buf);
       }
     }
     return message;
@@ -281,7 +327,7 @@ export const CodeGeneratorRequest = {
 };
 
 function createBaseCodeGeneratorResponse(): CodeGeneratorResponse {
-  return { error: "", supportedFeatures: 0, file: [] };
+  return { error: "", supportedFeatures: 0, file: [], _unknownFields: {} };
 }
 
 export const CodeGeneratorResponse = {
@@ -295,12 +341,12 @@ export const CodeGeneratorResponse = {
     for (const v of message.file) {
       CodeGeneratorResponse_File.encode(v!, writer.uint32(122).fork()).ldelim();
     }
-    if ("_unknownFields" in message) {
-      const msgUnknownFields: any = (message as any)["_unknownFields"];
-      for (const key of Object.keys(msgUnknownFields)) {
-        const values = msgUnknownFields[key] as Uint8Array[];
+    if (message._unknownFields !== undefined) {
+      for (const key in message._unknownFields) {
+        const values = message._unknownFields[key];
+        const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(parseInt(key, 10));
+          writer.uint32(tag);
           (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
@@ -313,30 +359,47 @@ export const CodeGeneratorResponse = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): CodeGeneratorResponse {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCodeGeneratorResponse();
-    (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.error = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 16) {
+            break;
+          }
+
           message.supportedFeatures = longToNumber(reader.uint64() as Long);
-          break;
+          continue;
         case 15:
+          if (tag !== 122) {
+            break;
+          }
+
           message.file.push(CodeGeneratorResponse_File.decode(reader, reader.uint32()));
-          break;
-        default:
-          const startPos = reader.pos;
-          reader.skipType(tag & 7);
-          (message as any)._unknownFields[tag] = [
-            ...((message as any)._unknownFields[tag] || []),
-            reader.buf.slice(startPos, reader.pos),
-          ];
-          break;
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      const startPos = reader.pos;
+      reader.skipType(tag & 7);
+      const buf = reader.buf.slice(startPos, reader.pos);
+
+      const list = message._unknownFields![tag];
+
+      if (list === undefined) {
+        message._unknownFields![tag] = [buf];
+      } else {
+        list.push(buf);
       }
     }
     return message;
@@ -344,7 +407,7 @@ export const CodeGeneratorResponse = {
 };
 
 function createBaseCodeGeneratorResponse_File(): CodeGeneratorResponse_File {
-  return { name: "", insertionPoint: "", content: "", generatedCodeInfo: undefined };
+  return { name: "", insertionPoint: "", content: "", generatedCodeInfo: undefined, _unknownFields: {} };
 }
 
 export const CodeGeneratorResponse_File = {
@@ -361,12 +424,12 @@ export const CodeGeneratorResponse_File = {
     if (message.generatedCodeInfo !== undefined) {
       GeneratedCodeInfo.encode(message.generatedCodeInfo, writer.uint32(130).fork()).ldelim();
     }
-    if ("_unknownFields" in message) {
-      const msgUnknownFields: any = (message as any)["_unknownFields"];
-      for (const key of Object.keys(msgUnknownFields)) {
-        const values = msgUnknownFields[key] as Uint8Array[];
+    if (message._unknownFields !== undefined) {
+      for (const key in message._unknownFields) {
+        const values = message._unknownFields[key];
+        const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(parseInt(key, 10));
+          writer.uint32(tag);
           (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
@@ -379,33 +442,54 @@ export const CodeGeneratorResponse_File = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): CodeGeneratorResponse_File {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCodeGeneratorResponse_File();
-    (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.name = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.insertionPoint = reader.string();
-          break;
+          continue;
         case 15:
+          if (tag !== 122) {
+            break;
+          }
+
           message.content = reader.string();
-          break;
+          continue;
         case 16:
+          if (tag !== 130) {
+            break;
+          }
+
           message.generatedCodeInfo = GeneratedCodeInfo.decode(reader, reader.uint32());
-          break;
-        default:
-          const startPos = reader.pos;
-          reader.skipType(tag & 7);
-          (message as any)._unknownFields[tag] = [
-            ...((message as any)._unknownFields[tag] || []),
-            reader.buf.slice(startPos, reader.pos),
-          ];
-          break;
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      const startPos = reader.pos;
+      reader.skipType(tag & 7);
+      const buf = reader.buf.slice(startPos, reader.pos);
+
+      const list = message._unknownFields![tag];
+
+      if (list === undefined) {
+        message._unknownFields![tag] = [buf];
+      } else {
+        list.push(buf);
       }
     }
     return message;

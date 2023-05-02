@@ -41,19 +41,24 @@ export const WithEmtpy = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): WithEmtpy {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseWithEmtpy();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.empty = Empty.decode(reader, reader.uint32());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -92,19 +97,24 @@ export const WithStruct = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): WithStruct {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseWithStruct();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.strut = Struct.unwrap(Struct.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -143,19 +153,24 @@ export const WithTimestamp = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): WithTimestamp {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseWithTimestamp();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.timestamp = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -206,31 +221,52 @@ export const WithAll = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): WithAll {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseWithAll();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.empty = Empty.decode(reader, reader.uint32());
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.strut = Struct.unwrap(Struct.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.timestamp = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
+
           message.duration = Duration.decode(reader, reader.uint32());
-          break;
+          continue;
         case 5:
+          if (tag !== 42) {
+            break;
+          }
+
           message.veryVerySecret = VeryVerySecret.decode(reader, reader.uint32());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },

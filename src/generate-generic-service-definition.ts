@@ -6,7 +6,7 @@ import {
   MethodOptions_IdempotencyLevel,
   ServiceDescriptorProto,
 } from "ts-proto-descriptors";
-import { camelCase } from "./case";
+import { uncapitalize } from "./case";
 import { Context } from "./context";
 import SourceInfo, { Fields } from "./sourceInfo";
 import { messageToTypeName } from "./types";
@@ -48,7 +48,7 @@ export function generateGenericServiceDefinition(
     maybeAddComment(info, chunks, methodDesc.options?.deprecated);
 
     chunks.push(code`
-      ${camelCase(methodDesc.name)}: ${generateMethodDefinition(ctx, methodDesc)},
+      ${uncapitalize(methodDesc.name)}: ${generateMethodDefinition(ctx, methodDesc)},
     `);
   }
 
@@ -71,12 +71,12 @@ function generateMethodDefinition(ctx: Context, methodDesc: MethodDescriptorProt
       requestStream: ${methodDesc.clientStreaming},
       responseType: ${outputType},
       responseStream: ${methodDesc.serverStreaming},
-      options: ${generateMethodOptions(methodDesc.options)}
+      options: ${generateMethodOptions(ctx, methodDesc.options)}
     }
   `;
 }
 
-function generateMethodOptions(options: MethodOptions | undefined) {
+function generateMethodOptions(ctx: Context, options: MethodOptions | undefined) {
   const chunks: Code[] = [];
 
   chunks.push(code`{`);
@@ -86,6 +86,28 @@ function generateMethodOptions(options: MethodOptions | undefined) {
       chunks.push(code`idempotencyLevel: 'IDEMPOTENT',`);
     } else if (options.idempotencyLevel === MethodOptions_IdempotencyLevel.NO_SIDE_EFFECTS) {
       chunks.push(code`idempotencyLevel: 'NO_SIDE_EFFECTS',`);
+    }
+
+    if (options._unknownFields !== undefined) {
+      const unknownFieldsChunks: Code[] = [];
+
+      unknownFieldsChunks.push(code`{`);
+
+      for (const key in options._unknownFields) {
+        const values = options._unknownFields[key];
+        const valuesChunks: Code[] = [];
+
+        for (const value of values) {
+          valuesChunks.push(
+            code`${ctx.options.env == "node" ? "Buffer.from" : "new Uint8Array"}([${value.join(", ")}])`
+          );
+        }
+
+        unknownFieldsChunks.push(code`${key}: [\n${joinCode(valuesChunks, { on: "," })}\n],`);
+      }
+
+      unknownFieldsChunks.push(code`}`);
+      chunks.push(code`_unknownFields: ${joinCode(unknownFieldsChunks, { on: "\n" })}`);
     }
   }
 

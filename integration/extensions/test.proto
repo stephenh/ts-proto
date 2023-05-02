@@ -1,0 +1,35 @@
+syntax = "proto2";
+
+message Extendable{
+  required string field = 1;
+
+  extensions 4 to max;
+}
+
+message Nested{
+  required string field = 1;
+
+  extend Extendable{
+    repeated Nested message = 4;
+  }
+}
+
+enum Enum{
+  ENUM_UNRECOGNIZED = 0;
+  ENUM_ONE = 1;
+  ENUM_TWO = 2;
+}
+
+extend Extendable{
+  repeated int32 packed = 5 [packed = true];
+  repeated int32 repeated = 6;
+  optional bytes bytes = 7;
+  optional string string = 8;
+  optional int64 long = 9;
+  optional fixed64 fixed = 10;
+  optional Enum enum_field = 11;
+  optional group Group = 12 {
+    optional string name = 1;
+    optional string value = 2;
+  }
+}

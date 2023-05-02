@@ -85,22 +85,31 @@ export const Simple = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Simple {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimple();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.name = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.otherSimple = Simple3.decode(reader, reader.uint32());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -150,22 +159,31 @@ export const SimpleEnums = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): SimpleEnums {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleEnums();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 8) {
+            break;
+          }
+
           message.localEnum = reader.int32() as any;
-          break;
+          continue;
         case 2:
+          if (tag !== 16) {
+            break;
+          }
+
           message.importEnum = reader.int32() as any;
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -209,19 +227,24 @@ export const FooServiceCreateRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): FooServiceCreateRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFooServiceCreateRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 8) {
+            break;
+          }
+
           message.kind = reader.int32() as any;
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -260,19 +283,24 @@ export const FooServiceCreateResponse = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): FooServiceCreateResponse {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFooServiceCreateResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 8) {
+            break;
+          }
+
           message.kind = reader.int32() as any;
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -313,7 +341,7 @@ export class FooServiceClientImpl implements FooService {
   Create(request: FooServiceCreateRequest): Promise<FooServiceCreateResponse> {
     const data = FooServiceCreateRequest.encode(request).finish();
     const promise = this.rpc.request(this.service, "Create", data);
-    return promise.then((data) => FooServiceCreateResponse.decode(new _m0.Reader(data)));
+    return promise.then((data) => FooServiceCreateResponse.decode(_m0.Reader.create(data)));
   }
 }
 

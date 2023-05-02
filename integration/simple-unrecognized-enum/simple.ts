@@ -281,60 +281,107 @@ export const Simple = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Simple {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimple();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.name = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 16) {
+            break;
+          }
+
           message.age = reader.int32();
-          break;
+          continue;
         case 9:
+          if (tag !== 74) {
+            break;
+          }
+
           message.createdAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.child = Child.decode(reader, reader.uint32());
-          break;
+          continue;
         case 4:
+          if (tag !== 32) {
+            break;
+          }
+
           message.state = reader.int32() as any;
-          break;
+          continue;
         case 5:
+          if (tag !== 42) {
+            break;
+          }
+
           message.grandChildren.push(Child.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 6:
-          if ((tag & 7) === 2) {
+          if (tag === 48) {
+            message.coins.push(reader.int32());
+
+            continue;
+          }
+
+          if (tag === 50) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
               message.coins.push(reader.int32());
             }
-          } else {
-            message.coins.push(reader.int32());
+
+            continue;
           }
+
           break;
         case 7:
+          if (tag !== 58) {
+            break;
+          }
+
           message.snacks.push(reader.string());
-          break;
+          continue;
         case 8:
-          if ((tag & 7) === 2) {
+          if (tag === 64) {
+            message.oldStates.push(reader.int32() as any);
+
+            continue;
+          }
+
+          if (tag === 66) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
               message.oldStates.push(reader.int32() as any);
             }
-          } else {
-            message.oldStates.push(reader.int32() as any);
+
+            continue;
           }
+
           break;
         case 10:
+          if (tag !== 82) {
+            break;
+          }
+
           message.thing = ImportedThing.decode(reader, reader.uint32());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -425,22 +472,31 @@ export const Child = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Child {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseChild();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.name = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 16) {
+            break;
+          }
+
           message.type = reader.int32() as any;
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -490,25 +546,38 @@ export const Nested = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Nested {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNested();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.name = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.message = Nested_InnerMessage.decode(reader, reader.uint32());
-          break;
+          continue;
         case 3:
+          if (tag !== 24) {
+            break;
+          }
+
           message.state = reader.int32() as any;
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -561,22 +630,31 @@ export const Nested_InnerMessage = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Nested_InnerMessage {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNested_InnerMessage();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.name = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.deep = Nested_InnerMessage_DeepMessage.decode(reader, reader.uint32());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -623,19 +701,24 @@ export const Nested_InnerMessage_DeepMessage = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Nested_InnerMessage_DeepMessage {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNested_InnerMessage_DeepMessage();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.name = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -679,22 +762,31 @@ export const OneOfMessage = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): OneOfMessage {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseOneOfMessage();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.first = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.last = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -750,31 +842,52 @@ export const SimpleWithWrappers = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): SimpleWithWrappers {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithWrappers();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.name = StringValue.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.age = Int32Value.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.enabled = BoolValue.decode(reader, reader.uint32()).value;
-          break;
+          continue;
         case 6:
+          if (tag !== 50) {
+            break;
+          }
+
           message.coins.push(Int32Value.decode(reader, reader.uint32()).value);
-          break;
+          continue;
         case 7:
+          if (tag !== 58) {
+            break;
+          }
+
           message.snacks.push(StringValue.decode(reader, reader.uint32()).value);
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -835,19 +948,24 @@ export const Entity = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Entity {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEntity();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 8) {
+            break;
+          }
+
           message.id = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -892,34 +1010,47 @@ export const SimpleWithMap = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): SimpleWithMap {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithMap();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           const entry1 = SimpleWithMap_EntitiesByIdEntry.decode(reader, reader.uint32());
           if (entry1.value !== undefined) {
             message.entitiesById[entry1.key] = entry1.value;
           }
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           const entry2 = SimpleWithMap_NameLookupEntry.decode(reader, reader.uint32());
           if (entry2.value !== undefined) {
             message.nameLookup[entry2.key] = entry2.value;
           }
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           const entry3 = SimpleWithMap_IntLookupEntry.decode(reader, reader.uint32());
           if (entry3.value !== undefined) {
             message.intLookup[entry3.key] = entry3.value;
           }
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -1023,22 +1154,31 @@ export const SimpleWithMap_EntitiesByIdEntry = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): SimpleWithMap_EntitiesByIdEntry {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithMap_EntitiesByIdEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 8) {
+            break;
+          }
+
           message.key = reader.int32();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.value = Entity.decode(reader, reader.uint32());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -1089,22 +1229,31 @@ export const SimpleWithMap_NameLookupEntry = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): SimpleWithMap_NameLookupEntry {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithMap_NameLookupEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.key = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.value = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -1150,22 +1299,31 @@ export const SimpleWithMap_IntLookupEntry = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): SimpleWithMap_IntLookupEntry {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithMap_IntLookupEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 8) {
+            break;
+          }
+
           message.key = reader.int32();
-          break;
+          continue;
         case 2:
+          if (tag !== 16) {
+            break;
+          }
+
           message.value = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -1206,22 +1364,27 @@ export const SimpleWithSnakeCaseMap = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): SimpleWithSnakeCaseMap {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithSnakeCaseMap();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           const entry1 = SimpleWithSnakeCaseMap_EntitiesByIdEntry.decode(reader, reader.uint32());
           if (entry1.value !== undefined) {
             message.entitiesById[entry1.key] = entry1.value;
           }
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -1283,22 +1446,31 @@ export const SimpleWithSnakeCaseMap_EntitiesByIdEntry = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): SimpleWithSnakeCaseMap_EntitiesByIdEntry {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithSnakeCaseMap_EntitiesByIdEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 8) {
+            break;
+          }
+
           message.key = reader.int32();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.value = Entity.decode(reader, reader.uint32());
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -1348,19 +1520,24 @@ export const PingRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): PingRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePingRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.input = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -1399,19 +1576,24 @@ export const PingResponse = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): PingResponse {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePingResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.output = reader.string();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -1496,52 +1678,101 @@ export const Numbers = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Numbers {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNumbers();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 9) {
+            break;
+          }
+
           message.double = reader.double();
-          break;
+          continue;
         case 2:
+          if (tag !== 21) {
+            break;
+          }
+
           message.float = reader.float();
-          break;
+          continue;
         case 3:
+          if (tag !== 24) {
+            break;
+          }
+
           message.int32 = reader.int32();
-          break;
+          continue;
         case 4:
+          if (tag !== 32) {
+            break;
+          }
+
           message.int64 = longToNumber(reader.int64() as Long);
-          break;
+          continue;
         case 5:
+          if (tag !== 40) {
+            break;
+          }
+
           message.uint32 = reader.uint32();
-          break;
+          continue;
         case 6:
+          if (tag !== 48) {
+            break;
+          }
+
           message.uint64 = longToNumber(reader.uint64() as Long);
-          break;
+          continue;
         case 7:
+          if (tag !== 56) {
+            break;
+          }
+
           message.sint32 = reader.sint32();
-          break;
+          continue;
         case 8:
+          if (tag !== 64) {
+            break;
+          }
+
           message.sint64 = longToNumber(reader.sint64() as Long);
-          break;
+          continue;
         case 9:
+          if (tag !== 77) {
+            break;
+          }
+
           message.fixed32 = reader.fixed32();
-          break;
+          continue;
         case 10:
+          if (tag !== 81) {
+            break;
+          }
+
           message.fixed64 = longToNumber(reader.fixed64() as Long);
-          break;
+          continue;
         case 11:
+          if (tag !== 93) {
+            break;
+          }
+
           message.sfixed32 = reader.sfixed32();
-          break;
+          continue;
         case 12:
+          if (tag !== 97) {
+            break;
+          }
+
           message.sfixed64 = longToNumber(reader.sfixed64() as Long);
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -1617,7 +1848,7 @@ export class PingServiceClientImpl implements PingService {
   ping(request: PingRequest): Promise<PingResponse> {
     const data = PingRequest.encode(request).finish();
     const promise = this.rpc.request(this.service, "ping", data);
-    return promise.then((data) => PingResponse.decode(new _m0.Reader(data)));
+    return promise.then((data) => PingResponse.decode(_m0.Reader.create(data)));
   }
 }
 

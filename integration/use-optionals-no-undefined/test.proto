@@ -1,0 +1,39 @@
+syntax = "proto3";
+package optionalstest;
+
+message OptionalsTest {
+  int32 id = 1;
+  Child child = 2;
+  StateEnum state = 3;
+  int64 long = 4;
+  bool truth = 5;
+  string description = 6;
+  bytes data = 7;
+
+  repeated int32 rep_id = 11;
+  repeated Child rep_child = 12;
+  repeated StateEnum rep_state = 13;
+  repeated int64 rep_long = 14;
+  repeated bool rep_truth = 15;
+  repeated string rep_description = 16;
+  repeated bytes rep_data = 17;
+
+  optional int32 opt_id = 21;
+  optional Child opt_child = 22;
+  optional StateEnum opt_state = 23;
+  optional int64 opt_long = 24;
+  optional bool opt_truth = 25;
+  optional string opt_description = 26;
+  optional bytes opt_data = 27;
+
+  map<string, string> translations = 30;
+}
+
+enum StateEnum {
+  UNKNOWN = 0;
+  ON = 2;
+  OFF = 3;
+}
+
+message Child {
+}

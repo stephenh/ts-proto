@@ -43,34 +43,55 @@ export const Todo = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Todo {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTodo();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.id = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.timestamp = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.repeatedTimestamp.push(fromTimestamp(Timestamp.decode(reader, reader.uint32())));
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
+
           message.optionalTimestamp = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 5:
+          if (tag !== 42) {
+            break;
+          }
+
           const entry5 = Todo_MapOfTimestampsEntry.decode(reader, reader.uint32());
           if (entry5.value !== undefined) {
             message.mapOfTimestamps[entry5.key] = entry5.value;
           }
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -150,22 +171,31 @@ export const Todo_MapOfTimestampsEntry = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Todo_MapOfTimestampsEntry {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTodo_MapOfTimestampsEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.key = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.value = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -211,7 +241,7 @@ export class ClockClientImpl implements Clock {
   Now(request: Empty): Promise<Timestamp> {
     const data = Empty.encode(request).finish();
     const promise = this.rpc.request(this.service, "Now", data);
-    return promise.then((data) => Timestamp.decode(new _m0.Reader(data)));
+    return promise.then((data) => Timestamp.decode(_m0.Reader.create(data)));
   }
 }
 

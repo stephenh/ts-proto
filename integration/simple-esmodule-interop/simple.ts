@@ -40,22 +40,31 @@ export const Simple = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Simple {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimple();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.name = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 16) {
+            break;
+          }
+
           message.age = reader.int32();
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },
@@ -142,52 +151,101 @@ export const Numbers = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Numbers {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNumbers();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 9) {
+            break;
+          }
+
           message.double = reader.double();
-          break;
+          continue;
         case 2:
+          if (tag !== 21) {
+            break;
+          }
+
           message.float = reader.float();
-          break;
+          continue;
         case 3:
+          if (tag !== 24) {
+            break;
+          }
+
           message.int32 = reader.int32();
-          break;
+          continue;
         case 4:
+          if (tag !== 32) {
+            break;
+          }
+
           message.int64 = longToNumber(reader.int64() as Long);
-          break;
+          continue;
         case 5:
+          if (tag !== 40) {
+            break;
+          }
+
           message.uint32 = reader.uint32();
-          break;
+          continue;
         case 6:
+          if (tag !== 48) {
+            break;
+          }
+
           message.uint64 = longToNumber(reader.uint64() as Long);
-          break;
+          continue;
         case 7:
+          if (tag !== 56) {
+            break;
+          }
+
           message.sint32 = reader.sint32();
-          break;
+          continue;
         case 8:
+          if (tag !== 64) {
+            break;
+          }
+
           message.sint64 = longToNumber(reader.sint64() as Long);
-          break;
+          continue;
         case 9:
+          if (tag !== 77) {
+            break;
+          }
+
           message.fixed32 = reader.fixed32();
-          break;
+          continue;
         case 10:
+          if (tag !== 81) {
+            break;
+          }
+
           message.fixed64 = longToNumber(reader.fixed64() as Long);
-          break;
+          continue;
         case 11:
+          if (tag !== 93) {
+            break;
+          }
+
           message.sfixed32 = reader.sfixed32();
-          break;
+          continue;
         case 12:
+          if (tag !== 97) {
+            break;
+          }
+
           message.sfixed64 = longToNumber(reader.sfixed64() as Long);
-          break;
-        default:
-          reader.skipType(tag & 7);
-          break;
+          continue;
       }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
     }
     return message;
   },

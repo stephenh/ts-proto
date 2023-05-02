@@ -10,6 +10,7 @@ export const protobufPackage = "google.protobuf";
  */
 export interface FileDescriptorSet {
   file: FileDescriptorProto[];
+  _unknownFields?: { [key: number]: Uint8Array[] };
 }
 
 /** Describes a complete .proto file. */
@@ -49,6 +50,7 @@ export interface FileDescriptorProto {
    * The supported values are "proto2" and "proto3".
    */
   syntax: string;
+  _unknownFields?: { [key: number]: Uint8Array[] };
 }
 
 /** Describes a message type. */
@@ -67,6 +69,7 @@ export interface DescriptorProto {
    * A given name may only be reserved once.
    */
   reservedName: string[];
+  _unknownFields?: { [key: number]: Uint8Array[] };
 }
 
 export interface DescriptorProto_ExtensionRange {
@@ -75,6 +78,7 @@ export interface DescriptorProto_ExtensionRange {
   /** Exclusive. */
   end: number;
   options: ExtensionRangeOptions | undefined;
+  _unknownFields?: { [key: number]: Uint8Array[] };
 }
 
 /**
@@ -87,11 +91,13 @@ export interface DescriptorProto_ReservedRange {
   start: number;
   /** Exclusive. */
   end: number;
+  _unknownFields?: { [key: number]: Uint8Array[] };
 }
 
 export interface ExtensionRangeOptions {
   /** The parser stores options it doesn't recognize here. See above. */
   uninterpretedOption: UninterpretedOption[];
+  _unknownFields?: { [key: number]: Uint8Array[] };
 }
 
 /** Describes a field within a message. */
@@ -164,6 +170,7 @@ export interface FieldDescriptorProto {
    * optional with `LABEL_OPTIONAL`.
    */
   proto3Optional: boolean;
+  _unknownFields?: { [key: number]: Uint8Array[] };
 }
 
 export enum FieldDescriptorProto_Type {
@@ -222,6 +229,7 @@ export enum FieldDescriptorProto_Label {
 export interface OneofDescriptorProto {
   name: string;
   options: OneofOptions | undefined;
+  _unknownFields?: { [key: number]: Uint8Array[] };
 }
 
 /** Describes an enum type. */
@@ -242,6 +250,7 @@ export interface EnumDescriptorProto {
    * be reserved once.
    */
   reservedName: string[];
+  _unknownFields?: { [key: number]: Uint8Array[] };
 }
 
 /**
@@ -257,6 +266,7 @@ export interface EnumDescriptorProto_EnumReservedRange {
   start: number;
   /** Inclusive. */
   end: number;
+  _unknownFields?: { [key: number]: Uint8Array[] };
 }
 
 /** Describes a value within an enum. */
@@ -264,6 +274,7 @@ export interface EnumValueDescriptorProto {
   name: string;
   number: number;
   options: EnumValueOptions | undefined;
+  _unknownFields?: { [key: number]: Uint8Array[] };
 }
 
 /** Describes a service. */
@@ -271,6 +282,7 @@ export interface ServiceDescriptorProto {
   name: string;
   method: MethodDescriptorProto[];
   options: ServiceOptions | undefined;
+  _unknownFields?: { [key: number]: Uint8Array[] };
 }
 
 /** Describes a method of a service. */
@@ -289,6 +301,7 @@ export interface MethodDescriptorProto {
   clientStreaming: boolean;
   /** Identifies if server streams multiple server messages */
   serverStreaming: boolean;
+  _unknownFields?: { [key: number]: Uint8Array[] };
 }
 
 export interface FileOptions {
@@ -410,6 +423,7 @@ export interface FileOptions {
    * See the documentation for the "Options" section above.
    */
   uninterpretedOption: UninterpretedOption[];
+  _unknownFields?: { [key: number]: Uint8Array[] };
 }
 
 /** Generated classes can be optimized for speed or code size. */
@@ -484,6 +498,7 @@ export interface MessageOptions {
   mapEntry: boolean;
   /** The parser stores options it doesn't recognize here. See above. */
   uninterpretedOption: UninterpretedOption[];
+  _unknownFields?: { [key: number]: Uint8Array[] };
 }
 
 export interface FieldOptions {
@@ -557,6 +572,7 @@ export interface FieldOptions {
   weak: boolean;
   /** The parser stores options it doesn't recognize here. See above. */
   uninterpretedOption: UninterpretedOption[];
+  _unknownFields?: { [key: number]: Uint8Array[] };
 }
 
 export enum FieldOptions_CType {
@@ -580,6 +596,7 @@ export enum FieldOptions_JSType {
 export interface OneofOptions {
   /** The parser stores options it doesn't recognize here. See above. */
   uninterpretedOption: UninterpretedOption[];
+  _unknownFields?: { [key: number]: Uint8Array[] };
 }
 
 export interface EnumOptions {
@@ -597,6 +614,7 @@ export interface EnumOptions {
   deprecated: boolean;
   /** The parser stores options it doesn't recognize here. See above. */
   uninterpretedOption: UninterpretedOption[];
+  _unknownFields?: { [key: number]: Uint8Array[] };
 }
 
 export interface EnumValueOptions {
@@ -609,6 +627,7 @@ export interface EnumValueOptions {
   deprecated: boolean;
   /** The parser stores options it doesn't recognize here. See above. */
   uninterpretedOption: UninterpretedOption[];
+  _unknownFields?: { [key: number]: Uint8Array[] };
 }
 
 export interface ServiceOptions {
@@ -621,6 +640,7 @@ export interface ServiceOptions {
   deprecated: boolean;
   /** The parser stores options it doesn't recognize here. See above. */
   uninterpretedOption: UninterpretedOption[];
+  _unknownFields?: { [key: number]: Uint8Array[] };
 }
 
 export interface MethodOptions {
@@ -634,6 +654,7 @@ export interface MethodOptions {
   idempotencyLevel: MethodOptions_IdempotencyLevel;
   /** The parser stores options it doesn't recognize here. See above. */
   uninterpretedOption: UninterpretedOption[];
+  _unknownFields?: { [key: number]: Uint8Array[] };
 }
 
 /**
@@ -670,6 +691,7 @@ export interface UninterpretedOption {
   doubleValue: number;
   stringValue: Uint8Array;
   aggregateValue: string;
+  _unknownFields?: { [key: number]: Uint8Array[] };
 }
 
 /**
@@ -682,6 +704,7 @@ export interface UninterpretedOption {
 export interface UninterpretedOption_NamePart {
   namePart: string;
   isExtension: boolean;
+  _unknownFields?: { [key: number]: Uint8Array[] };
 }
 
 /**
@@ -735,6 +758,7 @@ export interface SourceCodeInfo {
    *   be recorded in the future.
    */
   location: SourceCodeInfo_Location[];
+  _unknownFields?: { [key: number]: Uint8Array[] };
 }
 
 export interface SourceCodeInfo_Location {
@@ -824,6 +848,7 @@ export interface SourceCodeInfo_Location {
   leadingComments: string;
   trailingComments: string;
   leadingDetachedComments: string[];
+  _unknownFields?: { [key: number]: Uint8Array[] };
 }
 
 /**
@@ -837,6 +862,7 @@ export interface GeneratedCodeInfo {
    * of its generating .proto file.
    */
   annotation: GeneratedCodeInfo_Annotation[];
+  _unknownFields?: { [key: number]: Uint8Array[] };
 }
 
 export interface GeneratedCodeInfo_Annotation {
@@ -858,10 +884,11 @@ export interface GeneratedCodeInfo_Annotation {
    * the last relevant byte (so the length of the text = end - begin).
    */
   end: number;
+  _unknownFields?: { [key: number]: Uint8Array[] };
 }
 
 function createBaseFileDescriptorSet(): FileDescriptorSet {
-  return { file: [] };
+  return { file: [], _unknownFields: {} };
 }
 
 export const FileDescriptorSet = {
@@ -869,12 +896,12 @@ export const FileDescriptorSet = {
     for (const v of message.file) {
       FileDescriptorProto.encode(v!, writer.uint32(10).fork()).ldelim();
     }
-    if ("_unknownFields" in message) {
-      const msgUnknownFields: any = (message as any)["_unknownFields"];
-      for (const key of Object.keys(msgUnknownFields)) {
-        const values = msgUnknownFields[key] as Uint8Array[];
+    if (message._unknownFields !== undefined) {
+      for (const key in message._unknownFields) {
+        const values = message._unknownFields[key];
+        const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(parseInt(key, 10));
+          writer.uint32(tag);
           (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
@@ -887,24 +914,33 @@ export const FileDescriptorSet = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): FileDescriptorSet {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFileDescriptorSet();
-    (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.file.push(FileDescriptorProto.decode(reader, reader.uint32()));
-          break;
-        default:
-          const startPos = reader.pos;
-          reader.skipType(tag & 7);
-          (message as any)._unknownFields[tag] = [
-            ...((message as any)._unknownFields[tag] || []),
-            reader.buf.slice(startPos, reader.pos),
-          ];
-          break;
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      const startPos = reader.pos;
+      reader.skipType(tag & 7);
+      const buf = reader.buf.slice(startPos, reader.pos);
+
+      const list = message._unknownFields![tag];
+
+      if (list === undefined) {
+        message._unknownFields![tag] = [buf];
+      } else {
+        list.push(buf);
       }
     }
     return message;
@@ -925,6 +961,7 @@ function createBaseFileDescriptorProto(): FileDescriptorProto {
     options: undefined,
     sourceCodeInfo: undefined,
     syntax: "",
+    _unknownFields: {},
   };
 }
 
@@ -970,12 +1007,12 @@ export const FileDescriptorProto = {
     if (message.syntax !== "") {
       writer.uint32(98).string(message.syntax);
     }
-    if ("_unknownFields" in message) {
-      const msgUnknownFields: any = (message as any)["_unknownFields"];
-      for (const key of Object.keys(msgUnknownFields)) {
-        const values = msgUnknownFields[key] as Uint8Array[];
+    if (message._unknownFields !== undefined) {
+      for (const key in message._unknownFields) {
+        const values = message._unknownFields[key];
+        const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(parseInt(key, 10));
+          writer.uint32(tag);
           (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
@@ -988,71 +1025,130 @@ export const FileDescriptorProto = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): FileDescriptorProto {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFileDescriptorProto();
-    (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.name = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.package = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.dependency.push(reader.string());
-          break;
+          continue;
         case 10:
-          if ((tag & 7) === 2) {
+          if (tag === 80) {
+            message.publicDependency.push(reader.int32());
+
+            continue;
+          }
+
+          if (tag === 82) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
               message.publicDependency.push(reader.int32());
             }
-          } else {
-            message.publicDependency.push(reader.int32());
+
+            continue;
           }
+
           break;
         case 11:
-          if ((tag & 7) === 2) {
+          if (tag === 88) {
+            message.weakDependency.push(reader.int32());
+
+            continue;
+          }
+
+          if (tag === 90) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
               message.weakDependency.push(reader.int32());
             }
-          } else {
-            message.weakDependency.push(reader.int32());
+
+            continue;
           }
+
           break;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
+
           message.messageType.push(DescriptorProto.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 5:
+          if (tag !== 42) {
+            break;
+          }
+
           message.enumType.push(EnumDescriptorProto.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 6:
+          if (tag !== 50) {
+            break;
+          }
+
           message.service.push(ServiceDescriptorProto.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 7:
+          if (tag !== 58) {
+            break;
+          }
+
           message.extension.push(FieldDescriptorProto.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 8:
+          if (tag !== 66) {
+            break;
+          }
+
           message.options = FileOptions.decode(reader, reader.uint32());
-          break;
+          continue;
         case 9:
+          if (tag !== 74) {
+            break;
+          }
+
           message.sourceCodeInfo = SourceCodeInfo.decode(reader, reader.uint32());
-          break;
+          continue;
         case 12:
+          if (tag !== 98) {
+            break;
+          }
+
           message.syntax = reader.string();
-          break;
-        default:
-          const startPos = reader.pos;
-          reader.skipType(tag & 7);
-          (message as any)._unknownFields[tag] = [
-            ...((message as any)._unknownFields[tag] || []),
-            reader.buf.slice(startPos, reader.pos),
-          ];
-          break;
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      const startPos = reader.pos;
+      reader.skipType(tag & 7);
+      const buf = reader.buf.slice(startPos, reader.pos);
+
+      const list = message._unknownFields![tag];
+
+      if (list === undefined) {
+        message._unknownFields![tag] = [buf];
+      } else {
+        list.push(buf);
       }
     }
     return message;
@@ -1071,6 +1167,7 @@ function createBaseDescriptorProto(): DescriptorProto {
     options: undefined,
     reservedRange: [],
     reservedName: [],
+    _unknownFields: {},
   };
 }
 
@@ -1106,12 +1203,12 @@ export const DescriptorProto = {
     for (const v of message.reservedName) {
       writer.uint32(82).string(v!);
     }
-    if ("_unknownFields" in message) {
-      const msgUnknownFields: any = (message as any)["_unknownFields"];
-      for (const key of Object.keys(msgUnknownFields)) {
-        const values = msgUnknownFields[key] as Uint8Array[];
+    if (message._unknownFields !== undefined) {
+      for (const key in message._unknownFields) {
+        const values = message._unknownFields[key];
+        const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(parseInt(key, 10));
+          writer.uint32(tag);
           (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
@@ -1124,51 +1221,96 @@ export const DescriptorProto = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): DescriptorProto {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDescriptorProto();
-    (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.name = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.field.push(FieldDescriptorProto.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 6:
+          if (tag !== 50) {
+            break;
+          }
+
           message.extension.push(FieldDescriptorProto.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.nestedType.push(DescriptorProto.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
+
           message.enumType.push(EnumDescriptorProto.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 5:
+          if (tag !== 42) {
+            break;
+          }
+
           message.extensionRange.push(DescriptorProto_ExtensionRange.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 8:
+          if (tag !== 66) {
+            break;
+          }
+
           message.oneofDecl.push(OneofDescriptorProto.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 7:
+          if (tag !== 58) {
+            break;
+          }
+
           message.options = MessageOptions.decode(reader, reader.uint32());
-          break;
+          continue;
         case 9:
+          if (tag !== 74) {
+            break;
+          }
+
           message.reservedRange.push(DescriptorProto_ReservedRange.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 10:
+          if (tag !== 82) {
+            break;
+          }
+
           message.reservedName.push(reader.string());
-          break;
-        default:
-          const startPos = reader.pos;
-          reader.skipType(tag & 7);
-          (message as any)._unknownFields[tag] = [
-            ...((message as any)._unknownFields[tag] || []),
-            reader.buf.slice(startPos, reader.pos),
-          ];
-          break;
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      const startPos = reader.pos;
+      reader.skipType(tag & 7);
+      const buf = reader.buf.slice(startPos, reader.pos);
+
+      const list = message._unknownFields![tag];
+
+      if (list === undefined) {
+        message._unknownFields![tag] = [buf];
+      } else {
+        list.push(buf);
       }
     }
     return message;
@@ -1176,7 +1318,7 @@ export const DescriptorProto = {
 };
 
 function createBaseDescriptorProto_ExtensionRange(): DescriptorProto_ExtensionRange {
-  return { start: 0, end: 0, options: undefined };
+  return { start: 0, end: 0, options: undefined, _unknownFields: {} };
 }
 
 export const DescriptorProto_ExtensionRange = {
@@ -1190,12 +1332,12 @@ export const DescriptorProto_ExtensionRange = {
     if (message.options !== undefined) {
       ExtensionRangeOptions.encode(message.options, writer.uint32(26).fork()).ldelim();
     }
-    if ("_unknownFields" in message) {
-      const msgUnknownFields: any = (message as any)["_unknownFields"];
-      for (const key of Object.keys(msgUnknownFields)) {
-        const values = msgUnknownFields[key] as Uint8Array[];
+    if (message._unknownFields !== undefined) {
+      for (const key in message._unknownFields) {
+        const values = message._unknownFields[key];
+        const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(parseInt(key, 10));
+          writer.uint32(tag);
           (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
@@ -1208,30 +1350,47 @@ export const DescriptorProto_ExtensionRange = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): DescriptorProto_ExtensionRange {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDescriptorProto_ExtensionRange();
-    (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 8) {
+            break;
+          }
+
           message.start = reader.int32();
-          break;
+          continue;
         case 2:
+          if (tag !== 16) {
+            break;
+          }
+
           message.end = reader.int32();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.options = ExtensionRangeOptions.decode(reader, reader.uint32());
-          break;
-        default:
-          const startPos = reader.pos;
-          reader.skipType(tag & 7);
-          (message as any)._unknownFields[tag] = [
-            ...((message as any)._unknownFields[tag] || []),
-            reader.buf.slice(startPos, reader.pos),
-          ];
-          break;
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      const startPos = reader.pos;
+      reader.skipType(tag & 7);
+      const buf = reader.buf.slice(startPos, reader.pos);
+
+      const list = message._unknownFields![tag];
+
+      if (list === undefined) {
+        message._unknownFields![tag] = [buf];
+      } else {
+        list.push(buf);
       }
     }
     return message;
@@ -1239,7 +1398,7 @@ export const DescriptorProto_ExtensionRange = {
 };
 
 function createBaseDescriptorProto_ReservedRange(): DescriptorProto_ReservedRange {
-  return { start: 0, end: 0 };
+  return { start: 0, end: 0, _unknownFields: {} };
 }
 
 export const DescriptorProto_ReservedRange = {
@@ -1250,12 +1409,12 @@ export const DescriptorProto_ReservedRange = {
     if (message.end !== 0) {
       writer.uint32(16).int32(message.end);
     }
-    if ("_unknownFields" in message) {
-      const msgUnknownFields: any = (message as any)["_unknownFields"];
-      for (const key of Object.keys(msgUnknownFields)) {
-        const values = msgUnknownFields[key] as Uint8Array[];
+    if (message._unknownFields !== undefined) {
+      for (const key in message._unknownFields) {
+        const values = message._unknownFields[key];
+        const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(parseInt(key, 10));
+          writer.uint32(tag);
           (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
@@ -1268,27 +1427,40 @@ export const DescriptorProto_ReservedRange = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): DescriptorProto_ReservedRange {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDescriptorProto_ReservedRange();
-    (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 8) {
+            break;
+          }
+
           message.start = reader.int32();
-          break;
+          continue;
         case 2:
+          if (tag !== 16) {
+            break;
+          }
+
           message.end = reader.int32();
-          break;
-        default:
-          const startPos = reader.pos;
-          reader.skipType(tag & 7);
-          (message as any)._unknownFields[tag] = [
-            ...((message as any)._unknownFields[tag] || []),
-            reader.buf.slice(startPos, reader.pos),
-          ];
-          break;
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      const startPos = reader.pos;
+      reader.skipType(tag & 7);
+      const buf = reader.buf.slice(startPos, reader.pos);
+
+      const list = message._unknownFields![tag];
+
+      if (list === undefined) {
+        message._unknownFields![tag] = [buf];
+      } else {
+        list.push(buf);
       }
     }
     return message;
@@ -1296,7 +1468,7 @@ export const DescriptorProto_ReservedRange = {
 };
 
 function createBaseExtensionRangeOptions(): ExtensionRangeOptions {
-  return { uninterpretedOption: [] };
+  return { uninterpretedOption: [], _unknownFields: {} };
 }
 
 export const ExtensionRangeOptions = {
@@ -1304,12 +1476,12 @@ export const ExtensionRangeOptions = {
     for (const v of message.uninterpretedOption) {
       UninterpretedOption.encode(v!, writer.uint32(7994).fork()).ldelim();
     }
-    if ("_unknownFields" in message) {
-      const msgUnknownFields: any = (message as any)["_unknownFields"];
-      for (const key of Object.keys(msgUnknownFields)) {
-        const values = msgUnknownFields[key] as Uint8Array[];
+    if (message._unknownFields !== undefined) {
+      for (const key in message._unknownFields) {
+        const values = message._unknownFields[key];
+        const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(parseInt(key, 10));
+          writer.uint32(tag);
           (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
@@ -1322,24 +1494,33 @@ export const ExtensionRangeOptions = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ExtensionRangeOptions {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseExtensionRangeOptions();
-    (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 999:
+          if (tag !== 7994) {
+            break;
+          }
+
           message.uninterpretedOption.push(UninterpretedOption.decode(reader, reader.uint32()));
-          break;
-        default:
-          const startPos = reader.pos;
-          reader.skipType(tag & 7);
-          (message as any)._unknownFields[tag] = [
-            ...((message as any)._unknownFields[tag] || []),
-            reader.buf.slice(startPos, reader.pos),
-          ];
-          break;
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      const startPos = reader.pos;
+      reader.skipType(tag & 7);
+      const buf = reader.buf.slice(startPos, reader.pos);
+
+      const list = message._unknownFields![tag];
+
+      if (list === undefined) {
+        message._unknownFields![tag] = [buf];
+      } else {
+        list.push(buf);
       }
     }
     return message;
@@ -1359,6 +1540,7 @@ function createBaseFieldDescriptorProto(): FieldDescriptorProto {
     jsonName: "",
     options: undefined,
     proto3Optional: false,
+    _unknownFields: {},
   };
 }
 
@@ -1397,12 +1579,12 @@ export const FieldDescriptorProto = {
     if (message.proto3Optional === true) {
       writer.uint32(136).bool(message.proto3Optional);
     }
-    if ("_unknownFields" in message) {
-      const msgUnknownFields: any = (message as any)["_unknownFields"];
-      for (const key of Object.keys(msgUnknownFields)) {
-        const values = msgUnknownFields[key] as Uint8Array[];
+    if (message._unknownFields !== undefined) {
+      for (const key in message._unknownFields) {
+        const values = message._unknownFields[key];
+        const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(parseInt(key, 10));
+          writer.uint32(tag);
           (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
@@ -1415,54 +1597,103 @@ export const FieldDescriptorProto = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): FieldDescriptorProto {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFieldDescriptorProto();
-    (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.name = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 24) {
+            break;
+          }
+
           message.number = reader.int32();
-          break;
+          continue;
         case 4:
+          if (tag !== 32) {
+            break;
+          }
+
           message.label = reader.int32() as any;
-          break;
+          continue;
         case 5:
+          if (tag !== 40) {
+            break;
+          }
+
           message.type = reader.int32() as any;
-          break;
+          continue;
         case 6:
+          if (tag !== 50) {
+            break;
+          }
+
           message.typeName = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.extendee = reader.string();
-          break;
+          continue;
         case 7:
+          if (tag !== 58) {
+            break;
+          }
+
           message.defaultValue = reader.string();
-          break;
+          continue;
         case 9:
+          if (tag !== 72) {
+            break;
+          }
+
           message.oneofIndex = reader.int32();
-          break;
+          continue;
         case 10:
+          if (tag !== 82) {
+            break;
+          }
+
           message.jsonName = reader.string();
-          break;
+          continue;
         case 8:
+          if (tag !== 66) {
+            break;
+          }
+
           message.options = FieldOptions.decode(reader, reader.uint32());
-          break;
+          continue;
         case 17:
+          if (tag !== 136) {
+            break;
+          }
+
           message.proto3Optional = reader.bool();
-          break;
-        default:
-          const startPos = reader.pos;
-          reader.skipType(tag & 7);
-          (message as any)._unknownFields[tag] = [
-            ...((message as any)._unknownFields[tag] || []),
-            reader.buf.slice(startPos, reader.pos),
-          ];
-          break;
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      const startPos = reader.pos;
+      reader.skipType(tag & 7);
+      const buf = reader.buf.slice(startPos, reader.pos);
+
+      const list = message._unknownFields![tag];
+
+      if (list === undefined) {
+        message._unknownFields![tag] = [buf];
+      } else {
+        list.push(buf);
       }
     }
     return message;
@@ -1470,7 +1701,7 @@ export const FieldDescriptorProto = {
 };
 
 function createBaseOneofDescriptorProto(): OneofDescriptorProto {
-  return { name: "", options: undefined };
+  return { name: "", options: undefined, _unknownFields: {} };
 }
 
 export const OneofDescriptorProto = {
@@ -1481,12 +1712,12 @@ export const OneofDescriptorProto = {
     if (message.options !== undefined) {
       OneofOptions.encode(message.options, writer.uint32(18).fork()).ldelim();
     }
-    if ("_unknownFields" in message) {
-      const msgUnknownFields: any = (message as any)["_unknownFields"];
-      for (const key of Object.keys(msgUnknownFields)) {
-        const values = msgUnknownFields[key] as Uint8Array[];
+    if (message._unknownFields !== undefined) {
+      for (const key in message._unknownFields) {
+        const values = message._unknownFields[key];
+        const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(parseInt(key, 10));
+          writer.uint32(tag);
           (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
@@ -1499,27 +1730,40 @@ export const OneofDescriptorProto = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): OneofDescriptorProto {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseOneofDescriptorProto();
-    (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.name = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.options = OneofOptions.decode(reader, reader.uint32());
-          break;
-        default:
-          const startPos = reader.pos;
-          reader.skipType(tag & 7);
-          (message as any)._unknownFields[tag] = [
-            ...((message as any)._unknownFields[tag] || []),
-            reader.buf.slice(startPos, reader.pos),
-          ];
-          break;
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      const startPos = reader.pos;
+      reader.skipType(tag & 7);
+      const buf = reader.buf.slice(startPos, reader.pos);
+
+      const list = message._unknownFields![tag];
+
+      if (list === undefined) {
+        message._unknownFields![tag] = [buf];
+      } else {
+        list.push(buf);
       }
     }
     return message;
@@ -1527,7 +1771,7 @@ export const OneofDescriptorProto = {
 };
 
 function createBaseEnumDescriptorProto(): EnumDescriptorProto {
-  return { name: "", value: [], options: undefined, reservedRange: [], reservedName: [] };
+  return { name: "", value: [], options: undefined, reservedRange: [], reservedName: [], _unknownFields: {} };
 }
 
 export const EnumDescriptorProto = {
@@ -1547,12 +1791,12 @@ export const EnumDescriptorProto = {
     for (const v of message.reservedName) {
       writer.uint32(42).string(v!);
     }
-    if ("_unknownFields" in message) {
-      const msgUnknownFields: any = (message as any)["_unknownFields"];
-      for (const key of Object.keys(msgUnknownFields)) {
-        const values = msgUnknownFields[key] as Uint8Array[];
+    if (message._unknownFields !== undefined) {
+      for (const key in message._unknownFields) {
+        const values = message._unknownFields[key];
+        const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(parseInt(key, 10));
+          writer.uint32(tag);
           (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
@@ -1565,36 +1809,61 @@ export const EnumDescriptorProto = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): EnumDescriptorProto {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEnumDescriptorProto();
-    (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.name = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.value.push(EnumValueDescriptorProto.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.options = EnumOptions.decode(reader, reader.uint32());
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
+
           message.reservedRange.push(EnumDescriptorProto_EnumReservedRange.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 5:
+          if (tag !== 42) {
+            break;
+          }
+
           message.reservedName.push(reader.string());
-          break;
-        default:
-          const startPos = reader.pos;
-          reader.skipType(tag & 7);
-          (message as any)._unknownFields[tag] = [
-            ...((message as any)._unknownFields[tag] || []),
-            reader.buf.slice(startPos, reader.pos),
-          ];
-          break;
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      const startPos = reader.pos;
+      reader.skipType(tag & 7);
+      const buf = reader.buf.slice(startPos, reader.pos);
+
+      const list = message._unknownFields![tag];
+
+      if (list === undefined) {
+        message._unknownFields![tag] = [buf];
+      } else {
+        list.push(buf);
       }
     }
     return message;
@@ -1602,7 +1871,7 @@ export const EnumDescriptorProto = {
 };
 
 function createBaseEnumDescriptorProto_EnumReservedRange(): EnumDescriptorProto_EnumReservedRange {
-  return { start: 0, end: 0 };
+  return { start: 0, end: 0, _unknownFields: {} };
 }
 
 export const EnumDescriptorProto_EnumReservedRange = {
@@ -1613,12 +1882,12 @@ export const EnumDescriptorProto_EnumReservedRange = {
     if (message.end !== 0) {
       writer.uint32(16).int32(message.end);
     }
-    if ("_unknownFields" in message) {
-      const msgUnknownFields: any = (message as any)["_unknownFields"];
-      for (const key of Object.keys(msgUnknownFields)) {
-        const values = msgUnknownFields[key] as Uint8Array[];
+    if (message._unknownFields !== undefined) {
+      for (const key in message._unknownFields) {
+        const values = message._unknownFields[key];
+        const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(parseInt(key, 10));
+          writer.uint32(tag);
           (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
@@ -1631,27 +1900,40 @@ export const EnumDescriptorProto_EnumReservedRange = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): EnumDescriptorProto_EnumReservedRange {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEnumDescriptorProto_EnumReservedRange();
-    (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 8) {
+            break;
+          }
+
           message.start = reader.int32();
-          break;
+          continue;
         case 2:
+          if (tag !== 16) {
+            break;
+          }
+
           message.end = reader.int32();
-          break;
-        default:
-          const startPos = reader.pos;
-          reader.skipType(tag & 7);
-          (message as any)._unknownFields[tag] = [
-            ...((message as any)._unknownFields[tag] || []),
-            reader.buf.slice(startPos, reader.pos),
-          ];
-          break;
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      const startPos = reader.pos;
+      reader.skipType(tag & 7);
+      const buf = reader.buf.slice(startPos, reader.pos);
+
+      const list = message._unknownFields![tag];
+
+      if (list === undefined) {
+        message._unknownFields![tag] = [buf];
+      } else {
+        list.push(buf);
       }
     }
     return message;
@@ -1659,7 +1941,7 @@ export const EnumDescriptorProto_EnumReservedRange = {
 };
 
 function createBaseEnumValueDescriptorProto(): EnumValueDescriptorProto {
-  return { name: "", number: 0, options: undefined };
+  return { name: "", number: 0, options: undefined, _unknownFields: {} };
 }
 
 export const EnumValueDescriptorProto = {
@@ -1673,12 +1955,12 @@ export const EnumValueDescriptorProto = {
     if (message.options !== undefined) {
       EnumValueOptions.encode(message.options, writer.uint32(26).fork()).ldelim();
     }
-    if ("_unknownFields" in message) {
-      const msgUnknownFields: any = (message as any)["_unknownFields"];
-      for (const key of Object.keys(msgUnknownFields)) {
-        const values = msgUnknownFields[key] as Uint8Array[];
+    if (message._unknownFields !== undefined) {
+      for (const key in message._unknownFields) {
+        const values = message._unknownFields[key];
+        const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(parseInt(key, 10));
+          writer.uint32(tag);
           (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
@@ -1691,30 +1973,47 @@ export const EnumValueDescriptorProto = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): EnumValueDescriptorProto {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEnumValueDescriptorProto();
-    (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.name = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 16) {
+            break;
+          }
+
           message.number = reader.int32();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.options = EnumValueOptions.decode(reader, reader.uint32());
-          break;
-        default:
-          const startPos = reader.pos;
-          reader.skipType(tag & 7);
-          (message as any)._unknownFields[tag] = [
-            ...((message as any)._unknownFields[tag] || []),
-            reader.buf.slice(startPos, reader.pos),
-          ];
-          break;
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      const startPos = reader.pos;
+      reader.skipType(tag & 7);
+      const buf = reader.buf.slice(startPos, reader.pos);
+
+      const list = message._unknownFields![tag];
+
+      if (list === undefined) {
+        message._unknownFields![tag] = [buf];
+      } else {
+        list.push(buf);
       }
     }
     return message;
@@ -1722,7 +2021,7 @@ export const EnumValueDescriptorProto = {
 };
 
 function createBaseServiceDescriptorProto(): ServiceDescriptorProto {
-  return { name: "", method: [], options: undefined };
+  return { name: "", method: [], options: undefined, _unknownFields: {} };
 }
 
 export const ServiceDescriptorProto = {
@@ -1736,12 +2035,12 @@ export const ServiceDescriptorProto = {
     if (message.options !== undefined) {
       ServiceOptions.encode(message.options, writer.uint32(26).fork()).ldelim();
     }
-    if ("_unknownFields" in message) {
-      const msgUnknownFields: any = (message as any)["_unknownFields"];
-      for (const key of Object.keys(msgUnknownFields)) {
-        const values = msgUnknownFields[key] as Uint8Array[];
+    if (message._unknownFields !== undefined) {
+      for (const key in message._unknownFields) {
+        const values = message._unknownFields[key];
+        const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(parseInt(key, 10));
+          writer.uint32(tag);
           (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
@@ -1754,30 +2053,47 @@ export const ServiceDescriptorProto = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ServiceDescriptorProto {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseServiceDescriptorProto();
-    (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.name = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.method.push(MethodDescriptorProto.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.options = ServiceOptions.decode(reader, reader.uint32());
-          break;
-        default:
-          const startPos = reader.pos;
-          reader.skipType(tag & 7);
-          (message as any)._unknownFields[tag] = [
-            ...((message as any)._unknownFields[tag] || []),
-            reader.buf.slice(startPos, reader.pos),
-          ];
-          break;
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      const startPos = reader.pos;
+      reader.skipType(tag & 7);
+      const buf = reader.buf.slice(startPos, reader.pos);
+
+      const list = message._unknownFields![tag];
+
+      if (list === undefined) {
+        message._unknownFields![tag] = [buf];
+      } else {
+        list.push(buf);
       }
     }
     return message;
@@ -1792,6 +2108,7 @@ function createBaseMethodDescriptorProto(): MethodDescriptorProto {
     options: undefined,
     clientStreaming: false,
     serverStreaming: false,
+    _unknownFields: {},
   };
 }
 
@@ -1815,12 +2132,12 @@ export const MethodDescriptorProto = {
     if (message.serverStreaming === true) {
       writer.uint32(48).bool(message.serverStreaming);
     }
-    if ("_unknownFields" in message) {
-      const msgUnknownFields: any = (message as any)["_unknownFields"];
-      for (const key of Object.keys(msgUnknownFields)) {
-        const values = msgUnknownFields[key] as Uint8Array[];
+    if (message._unknownFields !== undefined) {
+      for (const key in message._unknownFields) {
+        const values = message._unknownFields[key];
+        const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(parseInt(key, 10));
+          writer.uint32(tag);
           (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
@@ -1833,39 +2150,68 @@ export const MethodDescriptorProto = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): MethodDescriptorProto {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMethodDescriptorProto();
-    (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.name = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.inputType = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.outputType = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
+
           message.options = MethodOptions.decode(reader, reader.uint32());
-          break;
+          continue;
         case 5:
+          if (tag !== 40) {
+            break;
+          }
+
           message.clientStreaming = reader.bool();
-          break;
+          continue;
         case 6:
+          if (tag !== 48) {
+            break;
+          }
+
           message.serverStreaming = reader.bool();
-          break;
-        default:
-          const startPos = reader.pos;
-          reader.skipType(tag & 7);
-          (message as any)._unknownFields[tag] = [
-            ...((message as any)._unknownFields[tag] || []),
-            reader.buf.slice(startPos, reader.pos),
-          ];
-          break;
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      const startPos = reader.pos;
+      reader.skipType(tag & 7);
+      const buf = reader.buf.slice(startPos, reader.pos);
+
+      const list = message._unknownFields![tag];
+
+      if (list === undefined) {
+        message._unknownFields![tag] = [buf];
+      } else {
+        list.push(buf);
       }
     }
     return message;
@@ -1895,6 +2241,7 @@ function createBaseFileOptions(): FileOptions {
     phpMetadataNamespace: "",
     rubyPackage: "",
     uninterpretedOption: [],
+    _unknownFields: {},
   };
 }
 
@@ -1963,12 +2310,12 @@ export const FileOptions = {
     for (const v of message.uninterpretedOption) {
       UninterpretedOption.encode(v!, writer.uint32(7994).fork()).ldelim();
     }
-    if ("_unknownFields" in message) {
-      const msgUnknownFields: any = (message as any)["_unknownFields"];
-      for (const key of Object.keys(msgUnknownFields)) {
-        const values = msgUnknownFields[key] as Uint8Array[];
+    if (message._unknownFields !== undefined) {
+      for (const key in message._unknownFields) {
+        const values = message._unknownFields[key];
+        const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(parseInt(key, 10));
+          writer.uint32(tag);
           (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
@@ -1981,84 +2328,173 @@ export const FileOptions = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): FileOptions {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFileOptions();
-    (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.javaPackage = reader.string();
-          break;
+          continue;
         case 8:
+          if (tag !== 66) {
+            break;
+          }
+
           message.javaOuterClassname = reader.string();
-          break;
+          continue;
         case 10:
+          if (tag !== 80) {
+            break;
+          }
+
           message.javaMultipleFiles = reader.bool();
-          break;
+          continue;
         case 20:
+          if (tag !== 160) {
+            break;
+          }
+
           message.javaGenerateEqualsAndHash = reader.bool();
-          break;
+          continue;
         case 27:
+          if (tag !== 216) {
+            break;
+          }
+
           message.javaStringCheckUtf8 = reader.bool();
-          break;
+          continue;
         case 9:
+          if (tag !== 72) {
+            break;
+          }
+
           message.optimizeFor = reader.int32() as any;
-          break;
+          continue;
         case 11:
+          if (tag !== 90) {
+            break;
+          }
+
           message.goPackage = reader.string();
-          break;
+          continue;
         case 16:
+          if (tag !== 128) {
+            break;
+          }
+
           message.ccGenericServices = reader.bool();
-          break;
+          continue;
         case 17:
+          if (tag !== 136) {
+            break;
+          }
+
           message.javaGenericServices = reader.bool();
-          break;
+          continue;
         case 18:
+          if (tag !== 144) {
+            break;
+          }
+
           message.pyGenericServices = reader.bool();
-          break;
+          continue;
         case 42:
+          if (tag !== 336) {
+            break;
+          }
+
           message.phpGenericServices = reader.bool();
-          break;
+          continue;
         case 23:
+          if (tag !== 184) {
+            break;
+          }
+
           message.deprecated = reader.bool();
-          break;
+          continue;
         case 31:
+          if (tag !== 248) {
+            break;
+          }
+
           message.ccEnableArenas = reader.bool();
-          break;
+          continue;
         case 36:
+          if (tag !== 290) {
+            break;
+          }
+
           message.objcClassPrefix = reader.string();
-          break;
+          continue;
         case 37:
+          if (tag !== 298) {
+            break;
+          }
+
           message.csharpNamespace = reader.string();
-          break;
+          continue;
         case 39:
+          if (tag !== 314) {
+            break;
+          }
+
           message.swiftPrefix = reader.string();
-          break;
+          continue;
         case 40:
+          if (tag !== 322) {
+            break;
+          }
+
           message.phpClassPrefix = reader.string();
-          break;
+          continue;
         case 41:
+          if (tag !== 330) {
+            break;
+          }
+
           message.phpNamespace = reader.string();
-          break;
+          continue;
         case 44:
+          if (tag !== 354) {
+            break;
+          }
+
           message.phpMetadataNamespace = reader.string();
-          break;
+          continue;
         case 45:
+          if (tag !== 362) {
+            break;
+          }
+
           message.rubyPackage = reader.string();
-          break;
+          continue;
         case 999:
+          if (tag !== 7994) {
+            break;
+          }
+
           message.uninterpretedOption.push(UninterpretedOption.decode(reader, reader.uint32()));
-          break;
-        default:
-          const startPos = reader.pos;
-          reader.skipType(tag & 7);
-          (message as any)._unknownFields[tag] = [
-            ...((message as any)._unknownFields[tag] || []),
-            reader.buf.slice(startPos, reader.pos),
-          ];
-          break;
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      const startPos = reader.pos;
+      reader.skipType(tag & 7);
+      const buf = reader.buf.slice(startPos, reader.pos);
+
+      const list = message._unknownFields![tag];
+
+      if (list === undefined) {
+        message._unknownFields![tag] = [buf];
+      } else {
+        list.push(buf);
       }
     }
     return message;
@@ -2072,6 +2508,7 @@ function createBaseMessageOptions(): MessageOptions {
     deprecated: false,
     mapEntry: false,
     uninterpretedOption: [],
+    _unknownFields: {},
   };
 }
 
@@ -2092,12 +2529,12 @@ export const MessageOptions = {
     for (const v of message.uninterpretedOption) {
       UninterpretedOption.encode(v!, writer.uint32(7994).fork()).ldelim();
     }
-    if ("_unknownFields" in message) {
-      const msgUnknownFields: any = (message as any)["_unknownFields"];
-      for (const key of Object.keys(msgUnknownFields)) {
-        const values = msgUnknownFields[key] as Uint8Array[];
+    if (message._unknownFields !== undefined) {
+      for (const key in message._unknownFields) {
+        const values = message._unknownFields[key];
+        const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(parseInt(key, 10));
+          writer.uint32(tag);
           (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
@@ -2110,36 +2547,61 @@ export const MessageOptions = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): MessageOptions {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMessageOptions();
-    (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 8) {
+            break;
+          }
+
           message.messageSetWireFormat = reader.bool();
-          break;
+          continue;
         case 2:
+          if (tag !== 16) {
+            break;
+          }
+
           message.noStandardDescriptorAccessor = reader.bool();
-          break;
+          continue;
         case 3:
+          if (tag !== 24) {
+            break;
+          }
+
           message.deprecated = reader.bool();
-          break;
+          continue;
         case 7:
+          if (tag !== 56) {
+            break;
+          }
+
           message.mapEntry = reader.bool();
-          break;
+          continue;
         case 999:
+          if (tag !== 7994) {
+            break;
+          }
+
           message.uninterpretedOption.push(UninterpretedOption.decode(reader, reader.uint32()));
-          break;
-        default:
-          const startPos = reader.pos;
-          reader.skipType(tag & 7);
-          (message as any)._unknownFields[tag] = [
-            ...((message as any)._unknownFields[tag] || []),
-            reader.buf.slice(startPos, reader.pos),
-          ];
-          break;
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      const startPos = reader.pos;
+      reader.skipType(tag & 7);
+      const buf = reader.buf.slice(startPos, reader.pos);
+
+      const list = message._unknownFields![tag];
+
+      if (list === undefined) {
+        message._unknownFields![tag] = [buf];
+      } else {
+        list.push(buf);
       }
     }
     return message;
@@ -2147,7 +2609,16 @@ export const MessageOptions = {
 };
 
 function createBaseFieldOptions(): FieldOptions {
-  return { ctype: 0, packed: false, jstype: 0, lazy: false, deprecated: false, weak: false, uninterpretedOption: [] };
+  return {
+    ctype: 0,
+    packed: false,
+    jstype: 0,
+    lazy: false,
+    deprecated: false,
+    weak: false,
+    uninterpretedOption: [],
+    _unknownFields: {},
+  };
 }
 
 export const FieldOptions = {
@@ -2173,12 +2644,12 @@ export const FieldOptions = {
     for (const v of message.uninterpretedOption) {
       UninterpretedOption.encode(v!, writer.uint32(7994).fork()).ldelim();
     }
-    if ("_unknownFields" in message) {
-      const msgUnknownFields: any = (message as any)["_unknownFields"];
-      for (const key of Object.keys(msgUnknownFields)) {
-        const values = msgUnknownFields[key] as Uint8Array[];
+    if (message._unknownFields !== undefined) {
+      for (const key in message._unknownFields) {
+        const values = message._unknownFields[key];
+        const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(parseInt(key, 10));
+          writer.uint32(tag);
           (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
@@ -2191,42 +2662,75 @@ export const FieldOptions = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): FieldOptions {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFieldOptions();
-    (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 8) {
+            break;
+          }
+
           message.ctype = reader.int32() as any;
-          break;
+          continue;
         case 2:
+          if (tag !== 16) {
+            break;
+          }
+
           message.packed = reader.bool();
-          break;
+          continue;
         case 6:
+          if (tag !== 48) {
+            break;
+          }
+
           message.jstype = reader.int32() as any;
-          break;
+          continue;
         case 5:
+          if (tag !== 40) {
+            break;
+          }
+
           message.lazy = reader.bool();
-          break;
+          continue;
         case 3:
+          if (tag !== 24) {
+            break;
+          }
+
           message.deprecated = reader.bool();
-          break;
+          continue;
         case 10:
+          if (tag !== 80) {
+            break;
+          }
+
           message.weak = reader.bool();
-          break;
+          continue;
         case 999:
+          if (tag !== 7994) {
+            break;
+          }
+
           message.uninterpretedOption.push(UninterpretedOption.decode(reader, reader.uint32()));
-          break;
-        default:
-          const startPos = reader.pos;
-          reader.skipType(tag & 7);
-          (message as any)._unknownFields[tag] = [
-            ...((message as any)._unknownFields[tag] || []),
-            reader.buf.slice(startPos, reader.pos),
-          ];
-          break;
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      const startPos = reader.pos;
+      reader.skipType(tag & 7);
+      const buf = reader.buf.slice(startPos, reader.pos);
+
+      const list = message._unknownFields![tag];
+
+      if (list === undefined) {
+        message._unknownFields![tag] = [buf];
+      } else {
+        list.push(buf);
       }
     }
     return message;
@@ -2234,7 +2738,7 @@ export const FieldOptions = {
 };
 
 function createBaseOneofOptions(): OneofOptions {
-  return { uninterpretedOption: [] };
+  return { uninterpretedOption: [], _unknownFields: {} };
 }
 
 export const OneofOptions = {
@@ -2242,12 +2746,12 @@ export const OneofOptions = {
     for (const v of message.uninterpretedOption) {
       UninterpretedOption.encode(v!, writer.uint32(7994).fork()).ldelim();
     }
-    if ("_unknownFields" in message) {
-      const msgUnknownFields: any = (message as any)["_unknownFields"];
-      for (const key of Object.keys(msgUnknownFields)) {
-        const values = msgUnknownFields[key] as Uint8Array[];
+    if (message._unknownFields !== undefined) {
+      for (const key in message._unknownFields) {
+        const values = message._unknownFields[key];
+        const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(parseInt(key, 10));
+          writer.uint32(tag);
           (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
@@ -2260,24 +2764,33 @@ export const OneofOptions = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): OneofOptions {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseOneofOptions();
-    (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 999:
+          if (tag !== 7994) {
+            break;
+          }
+
           message.uninterpretedOption.push(UninterpretedOption.decode(reader, reader.uint32()));
-          break;
-        default:
-          const startPos = reader.pos;
-          reader.skipType(tag & 7);
-          (message as any)._unknownFields[tag] = [
-            ...((message as any)._unknownFields[tag] || []),
-            reader.buf.slice(startPos, reader.pos),
-          ];
-          break;
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      const startPos = reader.pos;
+      reader.skipType(tag & 7);
+      const buf = reader.buf.slice(startPos, reader.pos);
+
+      const list = message._unknownFields![tag];
+
+      if (list === undefined) {
+        message._unknownFields![tag] = [buf];
+      } else {
+        list.push(buf);
       }
     }
     return message;
@@ -2285,7 +2798,7 @@ export const OneofOptions = {
 };
 
 function createBaseEnumOptions(): EnumOptions {
-  return { allowAlias: false, deprecated: false, uninterpretedOption: [] };
+  return { allowAlias: false, deprecated: false, uninterpretedOption: [], _unknownFields: {} };
 }
 
 export const EnumOptions = {
@@ -2299,12 +2812,12 @@ export const EnumOptions = {
     for (const v of message.uninterpretedOption) {
       UninterpretedOption.encode(v!, writer.uint32(7994).fork()).ldelim();
     }
-    if ("_unknownFields" in message) {
-      const msgUnknownFields: any = (message as any)["_unknownFields"];
-      for (const key of Object.keys(msgUnknownFields)) {
-        const values = msgUnknownFields[key] as Uint8Array[];
+    if (message._unknownFields !== undefined) {
+      for (const key in message._unknownFields) {
+        const values = message._unknownFields[key];
+        const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(parseInt(key, 10));
+          writer.uint32(tag);
           (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
@@ -2317,30 +2830,47 @@ export const EnumOptions = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): EnumOptions {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEnumOptions();
-    (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 2:
+          if (tag !== 16) {
+            break;
+          }
+
           message.allowAlias = reader.bool();
-          break;
+          continue;
         case 3:
+          if (tag !== 24) {
+            break;
+          }
+
           message.deprecated = reader.bool();
-          break;
+          continue;
         case 999:
+          if (tag !== 7994) {
+            break;
+          }
+
           message.uninterpretedOption.push(UninterpretedOption.decode(reader, reader.uint32()));
-          break;
-        default:
-          const startPos = reader.pos;
-          reader.skipType(tag & 7);
-          (message as any)._unknownFields[tag] = [
-            ...((message as any)._unknownFields[tag] || []),
-            reader.buf.slice(startPos, reader.pos),
-          ];
-          break;
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      const startPos = reader.pos;
+      reader.skipType(tag & 7);
+      const buf = reader.buf.slice(startPos, reader.pos);
+
+      const list = message._unknownFields![tag];
+
+      if (list === undefined) {
+        message._unknownFields![tag] = [buf];
+      } else {
+        list.push(buf);
       }
     }
     return message;
@@ -2348,7 +2878,7 @@ export const EnumOptions = {
 };
 
 function createBaseEnumValueOptions(): EnumValueOptions {
-  return { deprecated: false, uninterpretedOption: [] };
+  return { deprecated: false, uninterpretedOption: [], _unknownFields: {} };
 }
 
 export const EnumValueOptions = {
@@ -2359,12 +2889,12 @@ export const EnumValueOptions = {
     for (const v of message.uninterpretedOption) {
       UninterpretedOption.encode(v!, writer.uint32(7994).fork()).ldelim();
     }
-    if ("_unknownFields" in message) {
-      const msgUnknownFields: any = (message as any)["_unknownFields"];
-      for (const key of Object.keys(msgUnknownFields)) {
-        const values = msgUnknownFields[key] as Uint8Array[];
+    if (message._unknownFields !== undefined) {
+      for (const key in message._unknownFields) {
+        const values = message._unknownFields[key];
+        const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(parseInt(key, 10));
+          writer.uint32(tag);
           (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
@@ -2377,27 +2907,40 @@ export const EnumValueOptions = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): EnumValueOptions {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEnumValueOptions();
-    (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 8) {
+            break;
+          }
+
           message.deprecated = reader.bool();
-          break;
+          continue;
         case 999:
+          if (tag !== 7994) {
+            break;
+          }
+
           message.uninterpretedOption.push(UninterpretedOption.decode(reader, reader.uint32()));
-          break;
-        default:
-          const startPos = reader.pos;
-          reader.skipType(tag & 7);
-          (message as any)._unknownFields[tag] = [
-            ...((message as any)._unknownFields[tag] || []),
-            reader.buf.slice(startPos, reader.pos),
-          ];
-          break;
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      const startPos = reader.pos;
+      reader.skipType(tag & 7);
+      const buf = reader.buf.slice(startPos, reader.pos);
+
+      const list = message._unknownFields![tag];
+
+      if (list === undefined) {
+        message._unknownFields![tag] = [buf];
+      } else {
+        list.push(buf);
       }
     }
     return message;
@@ -2405,7 +2948,7 @@ export const EnumValueOptions = {
 };
 
 function createBaseServiceOptions(): ServiceOptions {
-  return { deprecated: false, uninterpretedOption: [] };
+  return { deprecated: false, uninterpretedOption: [], _unknownFields: {} };
 }
 
 export const ServiceOptions = {
@@ -2416,12 +2959,12 @@ export const ServiceOptions = {
     for (const v of message.uninterpretedOption) {
       UninterpretedOption.encode(v!, writer.uint32(7994).fork()).ldelim();
     }
-    if ("_unknownFields" in message) {
-      const msgUnknownFields: any = (message as any)["_unknownFields"];
-      for (const key of Object.keys(msgUnknownFields)) {
-        const values = msgUnknownFields[key] as Uint8Array[];
+    if (message._unknownFields !== undefined) {
+      for (const key in message._unknownFields) {
+        const values = message._unknownFields[key];
+        const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(parseInt(key, 10));
+          writer.uint32(tag);
           (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
@@ -2434,27 +2977,40 @@ export const ServiceOptions = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): ServiceOptions {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseServiceOptions();
-    (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 33:
+          if (tag !== 264) {
+            break;
+          }
+
           message.deprecated = reader.bool();
-          break;
+          continue;
         case 999:
+          if (tag !== 7994) {
+            break;
+          }
+
           message.uninterpretedOption.push(UninterpretedOption.decode(reader, reader.uint32()));
-          break;
-        default:
-          const startPos = reader.pos;
-          reader.skipType(tag & 7);
-          (message as any)._unknownFields[tag] = [
-            ...((message as any)._unknownFields[tag] || []),
-            reader.buf.slice(startPos, reader.pos),
-          ];
-          break;
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      const startPos = reader.pos;
+      reader.skipType(tag & 7);
+      const buf = reader.buf.slice(startPos, reader.pos);
+
+      const list = message._unknownFields![tag];
+
+      if (list === undefined) {
+        message._unknownFields![tag] = [buf];
+      } else {
+        list.push(buf);
       }
     }
     return message;
@@ -2462,7 +3018,7 @@ export const ServiceOptions = {
 };
 
 function createBaseMethodOptions(): MethodOptions {
-  return { deprecated: false, idempotencyLevel: 0, uninterpretedOption: [] };
+  return { deprecated: false, idempotencyLevel: 0, uninterpretedOption: [], _unknownFields: {} };
 }
 
 export const MethodOptions = {
@@ -2476,12 +3032,12 @@ export const MethodOptions = {
     for (const v of message.uninterpretedOption) {
       UninterpretedOption.encode(v!, writer.uint32(7994).fork()).ldelim();
     }
-    if ("_unknownFields" in message) {
-      const msgUnknownFields: any = (message as any)["_unknownFields"];
-      for (const key of Object.keys(msgUnknownFields)) {
-        const values = msgUnknownFields[key] as Uint8Array[];
+    if (message._unknownFields !== undefined) {
+      for (const key in message._unknownFields) {
+        const values = message._unknownFields[key];
+        const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(parseInt(key, 10));
+          writer.uint32(tag);
           (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
@@ -2494,30 +3050,47 @@ export const MethodOptions = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): MethodOptions {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMethodOptions();
-    (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 33:
+          if (tag !== 264) {
+            break;
+          }
+
           message.deprecated = reader.bool();
-          break;
+          continue;
         case 34:
+          if (tag !== 272) {
+            break;
+          }
+
           message.idempotencyLevel = reader.int32() as any;
-          break;
+          continue;
         case 999:
+          if (tag !== 7994) {
+            break;
+          }
+
           message.uninterpretedOption.push(UninterpretedOption.decode(reader, reader.uint32()));
-          break;
-        default:
-          const startPos = reader.pos;
-          reader.skipType(tag & 7);
-          (message as any)._unknownFields[tag] = [
-            ...((message as any)._unknownFields[tag] || []),
-            reader.buf.slice(startPos, reader.pos),
-          ];
-          break;
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      const startPos = reader.pos;
+      reader.skipType(tag & 7);
+      const buf = reader.buf.slice(startPos, reader.pos);
+
+      const list = message._unknownFields![tag];
+
+      if (list === undefined) {
+        message._unknownFields![tag] = [buf];
+      } else {
+        list.push(buf);
       }
     }
     return message;
@@ -2533,6 +3106,7 @@ function createBaseUninterpretedOption(): UninterpretedOption {
     doubleValue: 0,
     stringValue: new Uint8Array(),
     aggregateValue: "",
+    _unknownFields: {},
   };
 }
 
@@ -2559,12 +3133,12 @@ export const UninterpretedOption = {
     if (message.aggregateValue !== "") {
       writer.uint32(66).string(message.aggregateValue);
     }
-    if ("_unknownFields" in message) {
-      const msgUnknownFields: any = (message as any)["_unknownFields"];
-      for (const key of Object.keys(msgUnknownFields)) {
-        const values = msgUnknownFields[key] as Uint8Array[];
+    if (message._unknownFields !== undefined) {
+      for (const key in message._unknownFields) {
+        const values = message._unknownFields[key];
+        const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(parseInt(key, 10));
+          writer.uint32(tag);
           (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
@@ -2577,42 +3151,75 @@ export const UninterpretedOption = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): UninterpretedOption {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUninterpretedOption();
-    (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.name.push(UninterpretedOption_NamePart.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.identifierValue = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 32) {
+            break;
+          }
+
           message.positiveIntValue = longToNumber(reader.uint64() as Long);
-          break;
+          continue;
         case 5:
+          if (tag !== 40) {
+            break;
+          }
+
           message.negativeIntValue = longToNumber(reader.int64() as Long);
-          break;
+          continue;
         case 6:
+          if (tag !== 49) {
+            break;
+          }
+
           message.doubleValue = reader.double();
-          break;
+          continue;
         case 7:
+          if (tag !== 58) {
+            break;
+          }
+
           message.stringValue = reader.bytes();
-          break;
+          continue;
         case 8:
+          if (tag !== 66) {
+            break;
+          }
+
           message.aggregateValue = reader.string();
-          break;
-        default:
-          const startPos = reader.pos;
-          reader.skipType(tag & 7);
-          (message as any)._unknownFields[tag] = [
-            ...((message as any)._unknownFields[tag] || []),
-            reader.buf.slice(startPos, reader.pos),
-          ];
-          break;
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      const startPos = reader.pos;
+      reader.skipType(tag & 7);
+      const buf = reader.buf.slice(startPos, reader.pos);
+
+      const list = message._unknownFields![tag];
+
+      if (list === undefined) {
+        message._unknownFields![tag] = [buf];
+      } else {
+        list.push(buf);
       }
     }
     return message;
@@ -2620,7 +3227,7 @@ export const UninterpretedOption = {
 };
 
 function createBaseUninterpretedOption_NamePart(): UninterpretedOption_NamePart {
-  return { namePart: "", isExtension: false };
+  return { namePart: "", isExtension: false, _unknownFields: {} };
 }
 
 export const UninterpretedOption_NamePart = {
@@ -2631,12 +3238,12 @@ export const UninterpretedOption_NamePart = {
     if (message.isExtension === true) {
       writer.uint32(16).bool(message.isExtension);
     }
-    if ("_unknownFields" in message) {
-      const msgUnknownFields: any = (message as any)["_unknownFields"];
-      for (const key of Object.keys(msgUnknownFields)) {
-        const values = msgUnknownFields[key] as Uint8Array[];
+    if (message._unknownFields !== undefined) {
+      for (const key in message._unknownFields) {
+        const values = message._unknownFields[key];
+        const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(parseInt(key, 10));
+          writer.uint32(tag);
           (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
@@ -2649,27 +3256,40 @@ export const UninterpretedOption_NamePart = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): UninterpretedOption_NamePart {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUninterpretedOption_NamePart();
-    (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.namePart = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag !== 16) {
+            break;
+          }
+
           message.isExtension = reader.bool();
-          break;
-        default:
-          const startPos = reader.pos;
-          reader.skipType(tag & 7);
-          (message as any)._unknownFields[tag] = [
-            ...((message as any)._unknownFields[tag] || []),
-            reader.buf.slice(startPos, reader.pos),
-          ];
-          break;
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      const startPos = reader.pos;
+      reader.skipType(tag & 7);
+      const buf = reader.buf.slice(startPos, reader.pos);
+
+      const list = message._unknownFields![tag];
+
+      if (list === undefined) {
+        message._unknownFields![tag] = [buf];
+      } else {
+        list.push(buf);
       }
     }
     return message;
@@ -2677,7 +3297,7 @@ export const UninterpretedOption_NamePart = {
 };
 
 function createBaseSourceCodeInfo(): SourceCodeInfo {
-  return { location: [] };
+  return { location: [], _unknownFields: {} };
 }
 
 export const SourceCodeInfo = {
@@ -2685,12 +3305,12 @@ export const SourceCodeInfo = {
     for (const v of message.location) {
       SourceCodeInfo_Location.encode(v!, writer.uint32(10).fork()).ldelim();
     }
-    if ("_unknownFields" in message) {
-      const msgUnknownFields: any = (message as any)["_unknownFields"];
-      for (const key of Object.keys(msgUnknownFields)) {
-        const values = msgUnknownFields[key] as Uint8Array[];
+    if (message._unknownFields !== undefined) {
+      for (const key in message._unknownFields) {
+        const values = message._unknownFields[key];
+        const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(parseInt(key, 10));
+          writer.uint32(tag);
           (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
@@ -2703,24 +3323,33 @@ export const SourceCodeInfo = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): SourceCodeInfo {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSourceCodeInfo();
-    (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.location.push(SourceCodeInfo_Location.decode(reader, reader.uint32()));
-          break;
-        default:
-          const startPos = reader.pos;
-          reader.skipType(tag & 7);
-          (message as any)._unknownFields[tag] = [
-            ...((message as any)._unknownFields[tag] || []),
-            reader.buf.slice(startPos, reader.pos),
-          ];
-          break;
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      const startPos = reader.pos;
+      reader.skipType(tag & 7);
+      const buf = reader.buf.slice(startPos, reader.pos);
+
+      const list = message._unknownFields![tag];
+
+      if (list === undefined) {
+        message._unknownFields![tag] = [buf];
+      } else {
+        list.push(buf);
       }
     }
     return message;
@@ -2728,7 +3357,14 @@ export const SourceCodeInfo = {
 };
 
 function createBaseSourceCodeInfo_Location(): SourceCodeInfo_Location {
-  return { path: [], span: [], leadingComments: "", trailingComments: "", leadingDetachedComments: [] };
+  return {
+    path: [],
+    span: [],
+    leadingComments: "",
+    trailingComments: "",
+    leadingDetachedComments: [],
+    _unknownFields: {},
+  };
 }
 
 export const SourceCodeInfo_Location = {
@@ -2752,12 +3388,12 @@ export const SourceCodeInfo_Location = {
     for (const v of message.leadingDetachedComments) {
       writer.uint32(50).string(v!);
     }
-    if ("_unknownFields" in message) {
-      const msgUnknownFields: any = (message as any)["_unknownFields"];
-      for (const key of Object.keys(msgUnknownFields)) {
-        const values = msgUnknownFields[key] as Uint8Array[];
+    if (message._unknownFields !== undefined) {
+      for (const key in message._unknownFields) {
+        const values = message._unknownFields[key];
+        const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(parseInt(key, 10));
+          writer.uint32(tag);
           (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
@@ -2770,50 +3406,81 @@ export const SourceCodeInfo_Location = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): SourceCodeInfo_Location {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSourceCodeInfo_Location();
-    (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if ((tag & 7) === 2) {
+          if (tag === 8) {
+            message.path.push(reader.int32());
+
+            continue;
+          }
+
+          if (tag === 10) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
               message.path.push(reader.int32());
             }
-          } else {
-            message.path.push(reader.int32());
+
+            continue;
           }
+
           break;
         case 2:
-          if ((tag & 7) === 2) {
+          if (tag === 16) {
+            message.span.push(reader.int32());
+
+            continue;
+          }
+
+          if (tag === 18) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
               message.span.push(reader.int32());
             }
-          } else {
-            message.span.push(reader.int32());
+
+            continue;
           }
+
           break;
         case 3:
+          if (tag !== 26) {
+            break;
+          }
+
           message.leadingComments = reader.string();
-          break;
+          continue;
         case 4:
+          if (tag !== 34) {
+            break;
+          }
+
           message.trailingComments = reader.string();
-          break;
+          continue;
         case 6:
+          if (tag !== 50) {
+            break;
+          }
+
           message.leadingDetachedComments.push(reader.string());
-          break;
-        default:
-          const startPos = reader.pos;
-          reader.skipType(tag & 7);
-          (message as any)._unknownFields[tag] = [
-            ...((message as any)._unknownFields[tag] || []),
-            reader.buf.slice(startPos, reader.pos),
-          ];
-          break;
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      const startPos = reader.pos;
+      reader.skipType(tag & 7);
+      const buf = reader.buf.slice(startPos, reader.pos);
+
+      const list = message._unknownFields![tag];
+
+      if (list === undefined) {
+        message._unknownFields![tag] = [buf];
+      } else {
+        list.push(buf);
       }
     }
     return message;
@@ -2821,7 +3488,7 @@ export const SourceCodeInfo_Location = {
 };
 
 function createBaseGeneratedCodeInfo(): GeneratedCodeInfo {
-  return { annotation: [] };
+  return { annotation: [], _unknownFields: {} };
 }
 
 export const GeneratedCodeInfo = {
@@ -2829,12 +3496,12 @@ export const GeneratedCodeInfo = {
     for (const v of message.annotation) {
       GeneratedCodeInfo_Annotation.encode(v!, writer.uint32(10).fork()).ldelim();
     }
-    if ("_unknownFields" in message) {
-      const msgUnknownFields: any = (message as any)["_unknownFields"];
-      for (const key of Object.keys(msgUnknownFields)) {
-        const values = msgUnknownFields[key] as Uint8Array[];
+    if (message._unknownFields !== undefined) {
+      for (const key in message._unknownFields) {
+        const values = message._unknownFields[key];
+        const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(parseInt(key, 10));
+          writer.uint32(tag);
           (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
@@ -2847,24 +3514,33 @@ export const GeneratedCodeInfo = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): GeneratedCodeInfo {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGeneratedCodeInfo();
-    (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag !== 10) {
+            break;
+          }
+
           message.annotation.push(GeneratedCodeInfo_Annotation.decode(reader, reader.uint32()));
-          break;
-        default:
-          const startPos = reader.pos;
-          reader.skipType(tag & 7);
-          (message as any)._unknownFields[tag] = [
-            ...((message as any)._unknownFields[tag] || []),
-            reader.buf.slice(startPos, reader.pos),
-          ];
-          break;
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      const startPos = reader.pos;
+      reader.skipType(tag & 7);
+      const buf = reader.buf.slice(startPos, reader.pos);
+
+      const list = message._unknownFields![tag];
+
+      if (list === undefined) {
+        message._unknownFields![tag] = [buf];
+      } else {
+        list.push(buf);
       }
     }
     return message;
@@ -2872,7 +3548,7 @@ export const GeneratedCodeInfo = {
 };
 
 function createBaseGeneratedCodeInfo_Annotation(): GeneratedCodeInfo_Annotation {
-  return { path: [], sourceFile: "", begin: 0, end: 0 };
+  return { path: [], sourceFile: "", begin: 0, end: 0, _unknownFields: {} };
 }
 
 export const GeneratedCodeInfo_Annotation = {
@@ -2891,12 +3567,12 @@ export const GeneratedCodeInfo_Annotation = {
     if (message.end !== 0) {
       writer.uint32(32).int32(message.end);
     }
-    if ("_unknownFields" in message) {
-      const msgUnknownFields: any = (message as any)["_unknownFields"];
-      for (const key of Object.keys(msgUnknownFields)) {
-        const values = msgUnknownFields[key] as Uint8Array[];
+    if (message._unknownFields !== undefined) {
+      for (const key in message._unknownFields) {
+        const values = message._unknownFields[key];
+        const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(parseInt(key, 10));
+          writer.uint32(tag);
           (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
@@ -2909,40 +3585,64 @@ export const GeneratedCodeInfo_Annotation = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): GeneratedCodeInfo_Annotation {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGeneratedCodeInfo_Annotation();
-    (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if ((tag & 7) === 2) {
+          if (tag === 8) {
+            message.path.push(reader.int32());
+
+            continue;
+          }
+
+          if (tag === 10) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
               message.path.push(reader.int32());
             }
-          } else {
-            message.path.push(reader.int32());
+
+            continue;
           }
+
           break;
         case 2:
+          if (tag !== 18) {
+            break;
+          }
+
           message.sourceFile = reader.string();
-          break;
+          continue;
         case 3:
+          if (tag !== 24) {
+            break;
+          }
+
           message.begin = reader.int32();
-          break;
+          continue;
         case 4:
+          if (tag !== 32) {
+            break;
+          }
+
           message.end = reader.int32();
-          break;
-        default:
-          const startPos = reader.pos;
-          reader.skipType(tag & 7);
-          (message as any)._unknownFields[tag] = [
-            ...((message as any)._unknownFields[tag] || []),
-            reader.buf.slice(startPos, reader.pos),
-          ];
-          break;
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      const startPos = reader.pos;
+      reader.skipType(tag & 7);
+      const buf = reader.buf.slice(startPos, reader.pos);
+
+      const list = message._unknownFields![tag];
+
+      if (list === undefined) {
+        message._unknownFields![tag] = [buf];
+      } else {
+        list.push(buf);
       }
     }
     return message;

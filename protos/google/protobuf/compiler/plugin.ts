@@ -1,7 +1,7 @@
 /* eslint-disable */
-import * as Long from 'long';
-import { FileDescriptorProto, GeneratedCodeInfo } from '../descriptor.js';
-import * as _m0 from 'protobufjs/minimal';
+import * as Long from "long";
+import * as _m0 from "protobufjs/minimal";
+import { FileDescriptorProto, GeneratedCodeInfo } from "../descriptor";
 
 /** The version number of protocol compiler. */
 export interface Version {
@@ -13,6 +13,7 @@ export interface Version {
    * be empty for mainline stable releases.
    */
   suffix: string;
+  _unknownFields?: { [key: number]: Uint8Array[] };
 }
 
 /** An encoded CodeGeneratorRequest is written to the plugin's stdin. */
@@ -44,6 +45,7 @@ export interface CodeGeneratorRequest {
   protoFile: FileDescriptorProto[];
   /** The version number of protocol compiler. */
   compilerVersion: Version | undefined;
+  _unknownFields?: { [key: number]: Uint8Array[] };
 }
 
 /** The plugin writes an encoded CodeGeneratorResponse to stdout. */
@@ -65,6 +67,7 @@ export interface CodeGeneratorResponse {
    */
   supportedFeatures: number;
   file: CodeGeneratorResponse_File[];
+  _unknownFields?: { [key: number]: Uint8Array[] };
 }
 
 /** Sync with code_generator.h. */
@@ -77,13 +80,13 @@ export enum CodeGeneratorResponse_Feature {
 export function codeGeneratorResponse_FeatureFromJSON(object: any): CodeGeneratorResponse_Feature {
   switch (object) {
     case 0:
-    case 'FEATURE_NONE':
+    case "FEATURE_NONE":
       return CodeGeneratorResponse_Feature.FEATURE_NONE;
     case 1:
-    case 'FEATURE_PROTO3_OPTIONAL':
+    case "FEATURE_PROTO3_OPTIONAL":
       return CodeGeneratorResponse_Feature.FEATURE_PROTO3_OPTIONAL;
     case -1:
-    case 'UNRECOGNIZED':
+    case "UNRECOGNIZED":
     default:
       return CodeGeneratorResponse_Feature.UNRECOGNIZED;
   }
@@ -92,12 +95,12 @@ export function codeGeneratorResponse_FeatureFromJSON(object: any): CodeGenerato
 export function codeGeneratorResponse_FeatureToJSON(object: CodeGeneratorResponse_Feature): string {
   switch (object) {
     case CodeGeneratorResponse_Feature.FEATURE_NONE:
-      return 'FEATURE_NONE';
+      return "FEATURE_NONE";
     case CodeGeneratorResponse_Feature.FEATURE_PROTO3_OPTIONAL:
-      return 'FEATURE_PROTO3_OPTIONAL';
+      return "FEATURE_PROTO3_OPTIONAL";
     case CodeGeneratorResponse_Feature.UNRECOGNIZED:
     default:
-      return 'UNRECOGNIZED';
+      return "UNRECOGNIZED";
   }
 }
 
@@ -165,10 +168,11 @@ export interface CodeGeneratorResponse_File {
    * into the code generation metadata for the generated files.
    */
   generatedCodeInfo: GeneratedCodeInfo | undefined;
+  _unknownFields?: { [key: number]: Uint8Array[] };
 }
 
 function createBaseVersion(): Version {
-  return { major: 0, minor: 0, patch: 0, suffix: '' };
+  return { major: 0, minor: 0, patch: 0, suffix: "" };
 }
 
 export const Version = {
@@ -182,19 +186,19 @@ export const Version = {
     if (message.patch !== 0) {
       writer.uint32(24).int32(message.patch);
     }
-    if (message.suffix !== '') {
+    if (message.suffix !== "") {
       writer.uint32(34).string(message.suffix);
     }
-    if ('_unknownFields' in message) {
-      const msgUnknownFields: any = (message as any)['_unknownFields'];
-      for (const key of Object.keys(msgUnknownFields)) {
-        const values = msgUnknownFields[key] as Uint8Array[];
+    if (message._unknownFields !== undefined) {
+      for (const key in message._unknownFields) {
+        const values = message._unknownFields[key];
+        const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(parseInt(key, 10));
-          (writer as any)['_push'](
+          writer.uint32(tag);
+          (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
-            value
+            value,
           );
         }
       }
@@ -203,33 +207,58 @@ export const Version = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): Version {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = Object.create(createBaseVersion()) as Version;
-    (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 8) {
+            break;
+          }
+
           message.major = reader.int32();
-          break;
+          continue;
         case 2:
+          if (tag != 16) {
+            break;
+          }
+
           message.minor = reader.int32();
-          break;
+          continue;
         case 3:
+          if (tag != 24) {
+            break;
+          }
+
           message.patch = reader.int32();
-          break;
+          continue;
         case 4:
+          if (tag != 34) {
+            break;
+          }
+
           message.suffix = reader.string();
-          break;
-        default:
-          const startPos = reader.pos;
-          reader.skipType(tag & 7);
-          (message as any)._unknownFields[tag] = [
-            ...((message as any)._unknownFields[tag] || []),
-            reader.buf.slice(startPos, reader.pos),
-          ];
-          break;
+          continue;
+      }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      const startPos = reader.pos;
+      reader.skipType(tag & 7);
+      const buf = reader.buf.slice(startPos, reader.pos);
+
+      if (message._unknownFields === undefined) {
+        message._unknownFields = {};
+      }
+
+      const list = message._unknownFields[tag];
+
+      if (list === undefined) {
+        message._unknownFields[tag] = [buf];
+      } else {
+        list.push(buf);
       }
     }
     return message;
@@ -240,7 +269,7 @@ export const Version = {
       major: isSet(object.major) ? Number(object.major) : 0,
       minor: isSet(object.minor) ? Number(object.minor) : 0,
       patch: isSet(object.patch) ? Number(object.patch) : 0,
-      suffix: isSet(object.suffix) ? String(object.suffix) : '',
+      suffix: isSet(object.suffix) ? String(object.suffix) : "",
     };
   },
 
@@ -253,18 +282,22 @@ export const Version = {
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<Version>, I>>(object: I): Version {
+  create(base?: DeepPartial<Version>): Version {
+    return Version.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<Version>): Version {
     const message = Object.create(createBaseVersion()) as Version;
     message.major = object.major ?? 0;
     message.minor = object.minor ?? 0;
     message.patch = object.patch ?? 0;
-    message.suffix = object.suffix ?? '';
+    message.suffix = object.suffix ?? "";
     return message;
   },
 };
 
 function createBaseCodeGeneratorRequest(): CodeGeneratorRequest {
-  return { fileToGenerate: [], parameter: '', protoFile: [], compilerVersion: undefined };
+  return { fileToGenerate: [], parameter: "", protoFile: [], compilerVersion: undefined };
 }
 
 export const CodeGeneratorRequest = {
@@ -272,7 +305,7 @@ export const CodeGeneratorRequest = {
     for (const v of message.fileToGenerate) {
       writer.uint32(10).string(v!);
     }
-    if (message.parameter !== '') {
+    if (message.parameter !== "") {
       writer.uint32(18).string(message.parameter);
     }
     for (const v of message.protoFile) {
@@ -281,16 +314,16 @@ export const CodeGeneratorRequest = {
     if (message.compilerVersion !== undefined) {
       Version.encode(message.compilerVersion, writer.uint32(26).fork()).ldelim();
     }
-    if ('_unknownFields' in message) {
-      const msgUnknownFields: any = (message as any)['_unknownFields'];
-      for (const key of Object.keys(msgUnknownFields)) {
-        const values = msgUnknownFields[key] as Uint8Array[];
+    if (message._unknownFields !== undefined) {
+      for (const key in message._unknownFields) {
+        const values = message._unknownFields[key];
+        const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(parseInt(key, 10));
-          (writer as any)['_push'](
+          writer.uint32(tag);
+          (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
-            value
+            value,
           );
         }
       }
@@ -299,33 +332,58 @@ export const CodeGeneratorRequest = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): CodeGeneratorRequest {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = Object.create(createBaseCodeGeneratorRequest()) as CodeGeneratorRequest;
-    (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 10) {
+            break;
+          }
+
           message.fileToGenerate.push(reader.string());
-          break;
+          continue;
         case 2:
+          if (tag != 18) {
+            break;
+          }
+
           message.parameter = reader.string();
-          break;
+          continue;
         case 15:
+          if (tag != 122) {
+            break;
+          }
+
           message.protoFile.push(FileDescriptorProto.decode(reader, reader.uint32()));
-          break;
+          continue;
         case 3:
+          if (tag != 26) {
+            break;
+          }
+
           message.compilerVersion = Version.decode(reader, reader.uint32());
-          break;
-        default:
-          const startPos = reader.pos;
-          reader.skipType(tag & 7);
-          (message as any)._unknownFields[tag] = [
-            ...((message as any)._unknownFields[tag] || []),
-            reader.buf.slice(startPos, reader.pos),
-          ];
-          break;
+          continue;
+      }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      const startPos = reader.pos;
+      reader.skipType(tag & 7);
+      const buf = reader.buf.slice(startPos, reader.pos);
+
+      if (message._unknownFields === undefined) {
+        message._unknownFields = {};
+      }
+
+      const list = message._unknownFields[tag];
+
+      if (list === undefined) {
+        message._unknownFields[tag] = [buf];
+      } else {
+        list.push(buf);
       }
     }
     return message;
@@ -334,7 +392,7 @@ export const CodeGeneratorRequest = {
   fromJSON(object: any): CodeGeneratorRequest {
     return {
       fileToGenerate: Array.isArray(object?.fileToGenerate) ? object.fileToGenerate.map((e: any) => String(e)) : [],
-      parameter: isSet(object.parameter) ? String(object.parameter) : '',
+      parameter: isSet(object.parameter) ? String(object.parameter) : "",
       protoFile: Array.isArray(object?.protoFile)
         ? object.protoFile.map((e: any) => FileDescriptorProto.fromJSON(e))
         : [],
@@ -351,7 +409,7 @@ export const CodeGeneratorRequest = {
     }
     message.parameter !== undefined && (obj.parameter = message.parameter);
     if (message.protoFile) {
-      obj.protoFile = message.protoFile.map((e) => (e ? FileDescriptorProto.toJSON(e) : undefined));
+      obj.protoFile = message.protoFile.map((e) => e ? FileDescriptorProto.toJSON(e) : undefined);
     } else {
       obj.protoFile = [];
     }
@@ -360,26 +418,29 @@ export const CodeGeneratorRequest = {
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<CodeGeneratorRequest>, I>>(object: I): CodeGeneratorRequest {
+  create(base?: DeepPartial<CodeGeneratorRequest>): CodeGeneratorRequest {
+    return CodeGeneratorRequest.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<CodeGeneratorRequest>): CodeGeneratorRequest {
     const message = Object.create(createBaseCodeGeneratorRequest()) as CodeGeneratorRequest;
     message.fileToGenerate = object.fileToGenerate?.map((e) => e) || [];
-    message.parameter = object.parameter ?? '';
+    message.parameter = object.parameter ?? "";
     message.protoFile = object.protoFile?.map((e) => FileDescriptorProto.fromPartial(e)) || [];
-    message.compilerVersion =
-      object.compilerVersion !== undefined && object.compilerVersion !== null
-        ? Version.fromPartial(object.compilerVersion)
-        : undefined;
+    message.compilerVersion = (object.compilerVersion !== undefined && object.compilerVersion !== null)
+      ? Version.fromPartial(object.compilerVersion)
+      : undefined;
     return message;
   },
 };
 
 function createBaseCodeGeneratorResponse(): CodeGeneratorResponse {
-  return { error: '', supportedFeatures: 0, file: [] };
+  return { error: "", supportedFeatures: 0, file: [] };
 }
 
 export const CodeGeneratorResponse = {
   encode(message: CodeGeneratorResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.error !== '') {
+    if (message.error !== "") {
       writer.uint32(10).string(message.error);
     }
     if (message.supportedFeatures !== 0) {
@@ -388,16 +449,16 @@ export const CodeGeneratorResponse = {
     for (const v of message.file) {
       CodeGeneratorResponse_File.encode(v!, writer.uint32(122).fork()).ldelim();
     }
-    if ('_unknownFields' in message) {
-      const msgUnknownFields: any = (message as any)['_unknownFields'];
-      for (const key of Object.keys(msgUnknownFields)) {
-        const values = msgUnknownFields[key] as Uint8Array[];
+    if (message._unknownFields !== undefined) {
+      for (const key in message._unknownFields) {
+        const values = message._unknownFields[key];
+        const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(parseInt(key, 10));
-          (writer as any)['_push'](
+          writer.uint32(tag);
+          (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
-            value
+            value,
           );
         }
       }
@@ -406,30 +467,51 @@ export const CodeGeneratorResponse = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): CodeGeneratorResponse {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = Object.create(createBaseCodeGeneratorResponse()) as CodeGeneratorResponse;
-    (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 10) {
+            break;
+          }
+
           message.error = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag != 16) {
+            break;
+          }
+
           message.supportedFeatures = longToNumber(reader.uint64() as Long);
-          break;
+          continue;
         case 15:
+          if (tag != 122) {
+            break;
+          }
+
           message.file.push(CodeGeneratorResponse_File.decode(reader, reader.uint32()));
-          break;
-        default:
-          const startPos = reader.pos;
-          reader.skipType(tag & 7);
-          (message as any)._unknownFields[tag] = [
-            ...((message as any)._unknownFields[tag] || []),
-            reader.buf.slice(startPos, reader.pos),
-          ];
-          break;
+          continue;
+      }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      const startPos = reader.pos;
+      reader.skipType(tag & 7);
+      const buf = reader.buf.slice(startPos, reader.pos);
+
+      if (message._unknownFields === undefined) {
+        message._unknownFields = {};
+      }
+
+      const list = message._unknownFields[tag];
+
+      if (list === undefined) {
+        message._unknownFields[tag] = [buf];
+      } else {
+        list.push(buf);
       }
     }
     return message;
@@ -437,7 +519,7 @@ export const CodeGeneratorResponse = {
 
   fromJSON(object: any): CodeGeneratorResponse {
     return {
-      error: isSet(object.error) ? String(object.error) : '',
+      error: isSet(object.error) ? String(object.error) : "",
       supportedFeatures: isSet(object.supportedFeatures) ? Number(object.supportedFeatures) : 0,
       file: Array.isArray(object?.file) ? object.file.map((e: any) => CodeGeneratorResponse_File.fromJSON(e)) : [],
     };
@@ -448,16 +530,20 @@ export const CodeGeneratorResponse = {
     message.error !== undefined && (obj.error = message.error);
     message.supportedFeatures !== undefined && (obj.supportedFeatures = Math.round(message.supportedFeatures));
     if (message.file) {
-      obj.file = message.file.map((e) => (e ? CodeGeneratorResponse_File.toJSON(e) : undefined));
+      obj.file = message.file.map((e) => e ? CodeGeneratorResponse_File.toJSON(e) : undefined);
     } else {
       obj.file = [];
     }
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<CodeGeneratorResponse>, I>>(object: I): CodeGeneratorResponse {
+  create(base?: DeepPartial<CodeGeneratorResponse>): CodeGeneratorResponse {
+    return CodeGeneratorResponse.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<CodeGeneratorResponse>): CodeGeneratorResponse {
     const message = Object.create(createBaseCodeGeneratorResponse()) as CodeGeneratorResponse;
-    message.error = object.error ?? '';
+    message.error = object.error ?? "";
     message.supportedFeatures = object.supportedFeatures ?? 0;
     message.file = object.file?.map((e) => CodeGeneratorResponse_File.fromPartial(e)) || [];
     return message;
@@ -465,33 +551,33 @@ export const CodeGeneratorResponse = {
 };
 
 function createBaseCodeGeneratorResponse_File(): CodeGeneratorResponse_File {
-  return { name: '', insertionPoint: '', content: '', generatedCodeInfo: undefined };
+  return { name: "", insertionPoint: "", content: "", generatedCodeInfo: undefined };
 }
 
 export const CodeGeneratorResponse_File = {
   encode(message: CodeGeneratorResponse_File, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.name !== '') {
+    if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
-    if (message.insertionPoint !== '') {
+    if (message.insertionPoint !== "") {
       writer.uint32(18).string(message.insertionPoint);
     }
-    if (message.content !== '') {
+    if (message.content !== "") {
       writer.uint32(122).string(message.content);
     }
     if (message.generatedCodeInfo !== undefined) {
       GeneratedCodeInfo.encode(message.generatedCodeInfo, writer.uint32(130).fork()).ldelim();
     }
-    if ('_unknownFields' in message) {
-      const msgUnknownFields: any = (message as any)['_unknownFields'];
-      for (const key of Object.keys(msgUnknownFields)) {
-        const values = msgUnknownFields[key] as Uint8Array[];
+    if (message._unknownFields !== undefined) {
+      for (const key in message._unknownFields) {
+        const values = message._unknownFields[key];
+        const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(parseInt(key, 10));
-          (writer as any)['_push'](
+          writer.uint32(tag);
+          (writer as any)["_push"](
             (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
             value.length,
-            value
+            value,
           );
         }
       }
@@ -500,33 +586,58 @@ export const CodeGeneratorResponse_File = {
   },
 
   decode(input: _m0.Reader | Uint8Array, length?: number): CodeGeneratorResponse_File {
-    const reader = input instanceof _m0.Reader ? input : new _m0.Reader(input);
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = Object.create(createBaseCodeGeneratorResponse_File()) as CodeGeneratorResponse_File;
-    (message as any)._unknownFields = {};
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
+          if (tag != 10) {
+            break;
+          }
+
           message.name = reader.string();
-          break;
+          continue;
         case 2:
+          if (tag != 18) {
+            break;
+          }
+
           message.insertionPoint = reader.string();
-          break;
+          continue;
         case 15:
+          if (tag != 122) {
+            break;
+          }
+
           message.content = reader.string();
-          break;
+          continue;
         case 16:
+          if (tag != 130) {
+            break;
+          }
+
           message.generatedCodeInfo = GeneratedCodeInfo.decode(reader, reader.uint32());
-          break;
-        default:
-          const startPos = reader.pos;
-          reader.skipType(tag & 7);
-          (message as any)._unknownFields[tag] = [
-            ...((message as any)._unknownFields[tag] || []),
-            reader.buf.slice(startPos, reader.pos),
-          ];
-          break;
+          continue;
+      }
+      if ((tag & 7) == 4 || tag == 0) {
+        break;
+      }
+      const startPos = reader.pos;
+      reader.skipType(tag & 7);
+      const buf = reader.buf.slice(startPos, reader.pos);
+
+      if (message._unknownFields === undefined) {
+        message._unknownFields = {};
+      }
+
+      const list = message._unknownFields[tag];
+
+      if (list === undefined) {
+        message._unknownFields[tag] = [buf];
+      } else {
+        list.push(buf);
       }
     }
     return message;
@@ -534,9 +645,9 @@ export const CodeGeneratorResponse_File = {
 
   fromJSON(object: any): CodeGeneratorResponse_File {
     return {
-      name: isSet(object.name) ? String(object.name) : '',
-      insertionPoint: isSet(object.insertionPoint) ? String(object.insertionPoint) : '',
-      content: isSet(object.content) ? String(object.content) : '',
+      name: isSet(object.name) ? String(object.name) : "",
+      insertionPoint: isSet(object.insertionPoint) ? String(object.insertionPoint) : "",
+      content: isSet(object.content) ? String(object.content) : "",
       generatedCodeInfo: isSet(object.generatedCodeInfo)
         ? GeneratedCodeInfo.fromJSON(object.generatedCodeInfo)
         : undefined,
@@ -548,22 +659,24 @@ export const CodeGeneratorResponse_File = {
     message.name !== undefined && (obj.name = message.name);
     message.insertionPoint !== undefined && (obj.insertionPoint = message.insertionPoint);
     message.content !== undefined && (obj.content = message.content);
-    message.generatedCodeInfo !== undefined &&
-      (obj.generatedCodeInfo = message.generatedCodeInfo
-        ? GeneratedCodeInfo.toJSON(message.generatedCodeInfo)
-        : undefined);
+    message.generatedCodeInfo !== undefined && (obj.generatedCodeInfo = message.generatedCodeInfo
+      ? GeneratedCodeInfo.toJSON(message.generatedCodeInfo)
+      : undefined);
     return obj;
   },
 
-  fromPartial<I extends Exact<DeepPartial<CodeGeneratorResponse_File>, I>>(object: I): CodeGeneratorResponse_File {
+  create(base?: DeepPartial<CodeGeneratorResponse_File>): CodeGeneratorResponse_File {
+    return CodeGeneratorResponse_File.fromPartial(base ?? {});
+  },
+
+  fromPartial(object: DeepPartial<CodeGeneratorResponse_File>): CodeGeneratorResponse_File {
     const message = Object.create(createBaseCodeGeneratorResponse_File()) as CodeGeneratorResponse_File;
-    message.name = object.name ?? '';
-    message.insertionPoint = object.insertionPoint ?? '';
-    message.content = object.content ?? '';
-    message.generatedCodeInfo =
-      object.generatedCodeInfo !== undefined && object.generatedCodeInfo !== null
-        ? GeneratedCodeInfo.fromPartial(object.generatedCodeInfo)
-        : undefined;
+    message.name = object.name ?? "";
+    message.insertionPoint = object.insertionPoint ?? "";
+    message.content = object.content ?? "";
+    message.generatedCodeInfo = (object.generatedCodeInfo !== undefined && object.generatedCodeInfo !== null)
+      ? GeneratedCodeInfo.fromPartial(object.generatedCodeInfo)
+      : undefined;
     return message;
   },
 };
@@ -571,34 +684,32 @@ export const CodeGeneratorResponse_File = {
 declare var self: any | undefined;
 declare var window: any | undefined;
 declare var global: any | undefined;
-var globalThis: any = (() => {
-  if (typeof globalThis !== 'undefined') return globalThis;
-  if (typeof self !== 'undefined') return self;
-  if (typeof window !== 'undefined') return window;
-  if (typeof global !== 'undefined') return global;
-  throw 'Unable to locate global object';
+var tsProtoGlobalThis: any = (() => {
+  if (typeof globalThis !== "undefined") {
+    return globalThis;
+  }
+  if (typeof self !== "undefined") {
+    return self;
+  }
+  if (typeof window !== "undefined") {
+    return window;
+  }
+  if (typeof global !== "undefined") {
+    return global;
+  }
+  throw "Unable to locate global object";
 })();
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
-type DeepPartial<T> = T extends Builtin
-  ? T
-  : T extends Array<infer U>
-  ? Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U>
-  ? ReadonlyArray<DeepPartial<U>>
-  : T extends {}
-  ? { [K in keyof T]?: DeepPartial<T[K]> }
+type DeepPartial<T> = T extends Builtin ? T
+  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
-
-type KeysOfUnion<T> = T extends T ? keyof T : never;
-type Exact<P, I extends P> = P extends Builtin
-  ? P
-  : P & { [K in keyof P]: Exact<P[K], I[K]> } & Record<Exclude<keyof I, KeysOfUnion<P>>, never>;
 
 function longToNumber(long: Long): number {
   if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new globalThis.Error('Value is larger than Number.MAX_SAFE_INTEGER');
+    throw new tsProtoGlobalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
   return long.toNumber();
 }
