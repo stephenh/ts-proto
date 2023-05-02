@@ -1,3 +1,10 @@
+## [1.147.1](https://github.com/stephenh/ts-proto/compare/v1.147.0...v1.147.1) (2023-05-02)
+
+
+### Bug Fixes
+
+* Try fixing the Buf publish step. ([47ef176](https://github.com/stephenh/ts-proto/commit/47ef176056108bba8fb553f0d7b53d11e139bfbc))
+
 # [1.147.0](https://github.com/stephenh/ts-proto/compare/v1.146.0...v1.147.0) (2023-05-02)
 
 
