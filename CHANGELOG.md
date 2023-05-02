@@ -1,3 +1,10 @@
+# [1.147.0](https://github.com/stephenh/ts-proto/compare/v1.146.0...v1.147.0) (2023-05-02)
+
+
+### Features
+
+* Add type annotations flag ([#786](https://github.com/stephenh/ts-proto/issues/786)) ([b565ff5](https://github.com/stephenh/ts-proto/commit/b565ff57c0a64a3869ba7475c2b53f46504169d0))
+
 # [1.146.0](https://github.com/stephenh/ts-proto/compare/v1.145.0...v1.146.0) (2023-04-01)
 
 
