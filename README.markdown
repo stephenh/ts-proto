@@ -110,7 +110,7 @@ You can also use the official plugin published to the Buf Registry.
 ```yaml
 version: v1
 plugins:
-  - remote: buf.build/stephenh/plugins/ts-proto
+  - remote: buf.build/community/stephenh-ts-proto
     out: ../gen/ts
     opt:
       - outputServices=...
