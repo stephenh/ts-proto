@@ -696,7 +696,7 @@ function makeTimestampMethods(options: Options, longs: ReturnType<typeof makeLon
   }
 
   const maybeTypeField =
-    options.outputTypeRegistry || options.outputTypeRegistry ? `$type: 'google.protobuf.Timestamp',` : "";
+    options.outputTypeAnnotations || options.outputTypeRegistry ? `$type: 'google.protobuf.Timestamp',` : "";
 
   const toTimestamp = conditionalOutput(
     "toTimestamp",
@@ -1560,7 +1560,8 @@ function generateExtension(ctx: Context, message: DescriptorProto | undefined, e
         const type = basicTypeName(ctx, field, { keepValueType: true });
         return (place) => code`${type}.encode(${utils.toTimestamp}(${place}), writer.fork()).ldelim()`;
       } else if (isValueType(ctx, field)) {
-        const maybeTypeField = options.outputTypeRegistry ? `$type: '${field.typeName.slice(1)}',` : "";
+        const maybeTypeField =
+          options.outputTypeAnnotations || options.outputTypeRegistry ? `$type: '${field.typeName.slice(1)}',` : "";
 
         const type = basicTypeName(ctx, field, { keepValueType: true });
         const wrappedValue = (place: string): Code => {
