@@ -69,29 +69,3 @@ jobs:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
     outputs:
       release_version: ${{ steps.release.outputs.release_version }}
-
-  push_to_buf_registry:
-    if: ${{ needs.release.outputs.release_version != '' }}
-    name: Push Docker image to Buf Registry
-    runs-on: ubuntu-latest
-    environment: npm
-    needs: [release]
-    steps:
-      - name: Check out the repo
-        uses: actions/checkout@v3
-
-      - name: Log in to Buf Plugin Registry
-        uses: docker/login-action@v2
-        with:
-          registry: plugins.buf.build
-          username: ${{ secrets.BUF_USERNAME }}
-          password: ${{ secrets.BUF_PASSWORD }}
-
-      - name: Build Plugin image
-        run: docker build
-          --file ts-proto.Dockerfile
-          --tag plugins.buf.build/community/stephenh-ts-proto:v${{ needs.release.outputs.release_version }}-0
-          "."
-
-      - name: Push to Buf Registry
-        run: docker push plugins.buf.build/community/stephenh-ts-proto:v${{ needs.release.outputs.release_version }}-0
