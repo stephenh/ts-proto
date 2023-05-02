@@ -32,6 +32,7 @@ describe("options", () => {
         "outputServices": Array [
           "default",
         ],
+        "outputTypeAnnotations": false,
         "outputTypeRegistry": false,
         "removeEnumPrefix": false,
         "returnObservable": false,
