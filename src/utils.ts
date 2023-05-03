@@ -29,7 +29,7 @@ export function generateIndexFiles(files: FileDescriptorProto[], options: Option
   };
   for (const { name, package: pkg } of files) {
     const moduleName = name.replace(".proto", options.fileSuffix);
-    const pkgParts = pkg.split('.');
+    const pkgParts = pkg.length > 0 ? pkg.split('.') : [];
 
     const branch = pkgParts.reduce<PackageTree>((branch, part, i): PackageTree => {
       if (!(part in branch.leaves)) {
