@@ -2,10 +2,9 @@ import {
   CodeGeneratorRequest,
   CodeGeneratorResponse,
   CodeGeneratorResponse_Feature,
-  FileDescriptorProto,
 } from "ts-proto-descriptors";
 import { promisify } from "util";
-import { prefixDisableLinter, protoFilesToGenerate, readToBuffer } from "./utils";
+import { generateIndexFiles, protoFilesToGenerate, readToBuffer } from "./utils";
 import { generateFile, makeUtils } from "./main";
 import { createTypeMap } from "./types";
 import { Context } from "./context";
@@ -44,6 +43,13 @@ async function main() {
 
     const content = code.toString({ ...getTsPoetOpts(options), path });
     files.push({ name: path, content });
+  }
+
+  if (options.outputIndex) {
+    for (const [path, code] of generateIndexFiles(filesToGenerate, options)) {
+      const content = code.toString({ ...getTsPoetOpts(options), path });
+      files.push({ name: path, content });
+    }
   }
 
   const response = CodeGeneratorResponse.fromPartial({

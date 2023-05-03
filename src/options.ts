@@ -80,6 +80,7 @@ export type Options = {
   useReadonlyTypes: boolean;
   useSnakeTypeName: boolean;
   outputExtensions: boolean;
+  outputIndex: boolean;
   M: { [from: string]: string };
 };
 
@@ -130,6 +131,7 @@ export function defaultOptions(): Options {
     useReadonlyTypes: false,
     useSnakeTypeName: true,
     outputExtensions: false,
+    outputIndex: false,
     M: {},
   };
 }
