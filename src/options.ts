@@ -220,6 +220,10 @@ export function optionsFromParameter(parameter: string | undefined): Options {
     options.initializeFieldsAsUndefined = false;
   }
 
+  if (options.outputIndex) {
+    options.exportCommonSymbols = false;
+  }
+
   return options;
 }
 

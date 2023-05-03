@@ -29,7 +29,6 @@ export function generateIndexFiles(files: FileDescriptorProto[], options: Option
   };
   for (const { name, package: pkg } of files) {
     const moduleName = name.replace(".proto", options.fileSuffix);
-    const importName = camelCaseGrpc(path.basename(name, ".proto"));
     const pkgParts = pkg.split('.');
 
     const branch = pkgParts.reduce<PackageTree>((branch, part, i): PackageTree => {
@@ -45,7 +44,7 @@ export function generateIndexFiles(files: FileDescriptorProto[], options: Option
       }
       return branch.leaves[part];
     }, packageTree);
-    branch.chunks.push(code`export * as ${importName} from "./${moduleName}";`);
+    branch.chunks.push(code`export * from "./${moduleName}";`);
   }
 
   const indexFiles: [string, Code][] = [];
