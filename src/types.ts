@@ -694,7 +694,7 @@ export function observableType(ctx: Context): Code {
   if (ctx.options.useAsyncIterable) {
     return code`AsyncIterable`;
   }
-  return code`${imp("Observable@rxjs")}`;
+  return code`${imp("t:Observable@rxjs")}`;
 }
 
 export function requestType(ctx: Context, methodDesc: MethodDescriptorProto, partial: boolean = false): Code {
