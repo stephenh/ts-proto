@@ -1,3 +1,10 @@
+## [1.147.2](https://github.com/stephenh/ts-proto/compare/v1.147.1...v1.147.2) (2023-05-07)
+
+
+### Bug Fixes
+
+* import Observable as a type ([#826](https://github.com/stephenh/ts-proto/issues/826)) ([52e84ba](https://github.com/stephenh/ts-proto/commit/52e84ba7ee8826cf3b33455b38bacfd0c68884ea))
+
 ## [1.147.1](https://github.com/stephenh/ts-proto/compare/v1.147.0...v1.147.1) (2023-05-02)
 
 
