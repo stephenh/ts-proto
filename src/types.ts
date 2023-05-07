@@ -690,11 +690,14 @@ export function rawRequestType(
   return messageToTypeName(ctx, methodDesc.inputType, typeOptions);
 }
 
-export function observableType(ctx: Context): Code {
+export function observableType(ctx: Context, asType: boolean = false): Code {
   if (ctx.options.useAsyncIterable) {
     return code`AsyncIterable`;
+  } else if (asType) {
+    return code`${imp("t:Observable@rxjs")}`;
+  } else {
+    return code`${imp("Observable@rxjs")}`;
   }
-  return code`${imp("Observable@rxjs")}`;
 }
 
 export function requestType(ctx: Context, methodDesc: MethodDescriptorProto, partial: boolean = false): Code {
