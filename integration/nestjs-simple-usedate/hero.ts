@@ -53,13 +53,13 @@ export interface HeroServiceClient {
 export interface HeroServiceController {
   addOneHero(request: Hero): void;
 
-  findOneHero(request: HeroById): Promise<Hero> | Observable<Hero> | Hero;
+  findOneHero(request: HeroById): Promise<Hero> | Hero;
 
-  findOneVillain(request: VillainById): Promise<Villain> | Observable<Villain> | Villain;
+  findOneVillain(request: VillainById): Promise<Villain> | Villain;
 
   findManyVillain(request: Observable<VillainById>): Observable<Villain>;
 
-  findManyVillainStreamIn(request: Observable<VillainById>): Promise<Villain> | Observable<Villain> | Villain;
+  findManyVillainStreamIn(request: Observable<VillainById>): Promise<Villain> | Villain;
 
   findManyVillainStreamOut(request: VillainById): Observable<Villain>;
 }
