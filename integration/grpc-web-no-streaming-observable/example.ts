@@ -470,12 +470,11 @@ export class GrpcWebImpl {
         },
       });
 
-      const abortHandler = () => {
-        observer.error("Aborted");
-        client.close();
-      };
       if (abortSignal) {
-        abortSignal.addEventListener("abort", abortHandler);
+        abortSignal.addEventListener("abort", () => {
+          observer.error(abortSignal.reason);
+          client.close();
+        });
       }
     }).pipe(take(1));
   }

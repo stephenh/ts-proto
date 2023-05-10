@@ -244,12 +244,10 @@ function createPromiseUnaryMethod(ctx: Context): Code {
 
   const maybeAbortSignal = useAbortSignal
     ? `
-      const abortHandler = () => {
+      if (abortSignal) abortSignal.addEventListener("abort", () => {
         client.close();
-        reject(new Error("Aborted"));
-      }
-
-      if (abortSignal) abortSignal.addEventListener("abort", abortHandler);`
+        reject(abortSignal.reason);
+      });`
     : "";
 
   return code`
@@ -293,11 +291,10 @@ function createObservableUnaryMethod(ctx: Context): Code {
 
   const maybeAbortSignal = useAbortSignal
     ? `
-      const abortHandler = () => {
-        observer.error("Aborted");
+      if (abortSignal) abortSignal.addEventListener("abort", () => {
+        observer.error(abortSignal.reason);
         client.close();
-      };
-      if (abortSignal) abortSignal.addEventListener("abort", abortHandler);`
+      });`
     : "";
   return code`
     unary<T extends UnaryMethodDefinitionish>(
@@ -343,11 +340,10 @@ function createInvokeMethod(ctx: Context) {
 
   const maybeAbortSignal = useAbortSignal
     ? `
-      const abortHandler = () => {
-        observer.error("Aborted");
+      if (abortSignal) abortSignal.addEventListener("abort", () => {
+        observer.error(abortSignal.reason);
         client.close();
-      };
-      if (abortSignal) abortSignal.addEventListener("abort", abortHandler);`
+      });`
     : "";
 
   return code`
