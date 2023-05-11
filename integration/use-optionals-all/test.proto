@@ -1,6 +1,8 @@
 syntax = "proto3";
 package optionalstest;
 
+import "google/protobuf/timestamp.proto";
+
 message OptionalsTest {
   int32 id = 1;
   Child child = 2;
@@ -27,6 +29,8 @@ message OptionalsTest {
   optional bytes opt_data = 27;
 
   map<string, string> translations = 30;
+
+  google.protobuf.Timestamp timestamp = 31;
 }
 
 enum StateEnum {
@@ -35,5 +39,4 @@ enum StateEnum {
   OFF = 3;
 }
 
-message Child {
-}
+message Child {}
