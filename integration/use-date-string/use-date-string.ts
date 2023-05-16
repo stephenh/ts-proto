@@ -244,8 +244,8 @@ function toTimestamp(dateStr: string): Timestamp {
 }
 
 function fromTimestamp(t: Timestamp): string {
-  let millis = t.seconds * 1_000;
-  millis += t.nanos / 1_000_000;
+  let millis = (t.seconds || 0) * 1_000;
+  millis += (t.nanos || 0) / 1_000_000;
   return new Date(millis).toISOString();
 }
 
