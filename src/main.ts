@@ -723,15 +723,15 @@ function makeTimestampMethods(options: Options, longs: ReturnType<typeof makeLon
     options.useDate === DateOption.STRING
       ? code`
           function fromTimestamp(t: ${Timestamp}): string {
-            let millis = ${toNumberCode} * 1_000;
-            millis += t.nanos / 1_000_000;
+            let millis = (${toNumberCode} || 0) * 1_000;
+            millis += (t.nanos || 0) / 1_000_000;
             return new Date(millis).toISOString();
           }
         `
       : code`
           function fromTimestamp(t: ${Timestamp}): Date {
-            let millis = ${toNumberCode} * 1_000;
-            millis += t.nanos / 1_000_000;
+            let millis = (${toNumberCode} || 0) * 1_000;
+            millis += (t.nanos || 0) / 1_000_000;
             return new Date(millis);
           }
         `
