@@ -1,3 +1,10 @@
+## [1.147.3](https://github.com/stephenh/ts-proto/compare/v1.147.2...v1.147.3) (2023-05-16)
+
+
+### Bug Fixes
+
+* ensure generated fromTimestamp works when useOptionals=all ([#832](https://github.com/stephenh/ts-proto/issues/832)) ([1f82445](https://github.com/stephenh/ts-proto/commit/1f8244569de87ad99ed3676244e51291af9b3323))
+
 ## [1.147.2](https://github.com/stephenh/ts-proto/compare/v1.147.1...v1.147.2) (2023-05-07)
 
 
