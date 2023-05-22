@@ -383,8 +383,12 @@ function createInvokeMethod(ctx: Context) {
             },
           });
           observer.add(() => {
-           ${!useAbortSignal ? `return client.close();` : `if (!abortSignal || !abortSignal.aborted) 
-              return client.close();`}
+           ${
+             !useAbortSignal
+               ? `return client.close();`
+               : `if (!abortSignal || !abortSignal.aborted) 
+              return client.close();`
+           }
           });
 
           ${maybeAbortSignal}
