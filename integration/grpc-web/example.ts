@@ -1003,9 +1003,7 @@ export class GrpcWebImpl {
           },
         });
         observer.add(() => {
-          if (!observer.closed) {
-            return client.close();
-          }
+          return client.close();
         });
       });
       upStream();
