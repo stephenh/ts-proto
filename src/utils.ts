@@ -1,4 +1,4 @@
-import * as path from 'path';
+import * as path from "path";
 import { code, Code, imp, Import, joinCode } from "ts-poet";
 import {
   CodeGeneratorRequest,
@@ -17,9 +17,9 @@ export function protoFilesToGenerate(request: CodeGeneratorRequest): FileDescrip
 }
 
 type PackageTree = {
-  index: string,
-  chunks: Code[],
-  leaves: { [k: string]: PackageTree },
+  index: string;
+  chunks: Code[];
+  leaves: { [k: string]: PackageTree };
 };
 export function generateIndexFiles(files: FileDescriptorProto[], options: Options): [string, Code][] {
   const packageTree: PackageTree = {
@@ -29,12 +29,12 @@ export function generateIndexFiles(files: FileDescriptorProto[], options: Option
   };
   for (const { name, package: pkg } of files) {
     const moduleName = name.replace(".proto", options.fileSuffix);
-    const pkgParts = pkg.length > 0 ? pkg.split('.') : [];
+    const pkgParts = pkg.length > 0 ? pkg.split(".") : [];
 
     const branch = pkgParts.reduce<PackageTree>((branch, part, i): PackageTree => {
       if (!(part in branch.leaves)) {
         const prePkgParts = pkgParts.slice(0, i + 1);
-        const index = `index.${prePkgParts.join('.')}.ts`;
+        const index = `index.${prePkgParts.join(".")}.ts`;
         branch.chunks.push(code`export * as ${part} from "./${path.basename(index, ".ts")}";`);
         branch.leaves[part] = {
           index,
@@ -50,7 +50,7 @@ export function generateIndexFiles(files: FileDescriptorProto[], options: Option
   const indexFiles: [string, Code][] = [];
   let branches: PackageTree[] = [packageTree];
   let currentBranch;
-  while (currentBranch = branches.pop()) {
+  while ((currentBranch = branches.pop())) {
     indexFiles.push([currentBranch.index, joinCode(currentBranch.chunks)]);
     branches.push(...Object.values(currentBranch.leaves));
   }
