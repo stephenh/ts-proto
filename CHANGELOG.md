@@ -1,3 +1,10 @@
+# [1.148.0](https://github.com/stephenh/ts-proto/compare/v1.147.3...v1.148.0) (2023-05-23)
+
+
+### Features
+
+* Generate Index Files ([#821](https://github.com/stephenh/ts-proto/issues/821)) ([85bf206](https://github.com/stephenh/ts-proto/commit/85bf206ca8c1052849aea3e39522ad4918e0d736))
+
 ## [1.147.3](https://github.com/stephenh/ts-proto/compare/v1.147.2...v1.147.3) (2023-05-16)
 
 
