@@ -1,4 +1,5 @@
-import { code, Code, imp, Import } from "ts-poet";
+import * as path from "path";
+import { code, Code, imp, Import, joinCode } from "ts-poet";
 import {
   CodeGeneratorRequest,
   FieldDescriptorProto,
@@ -13,6 +14,48 @@ import { camelCaseGrpc, snakeToCamel } from "./case";
 
 export function protoFilesToGenerate(request: CodeGeneratorRequest): FileDescriptorProto[] {
   return request.protoFile.filter((f) => request.fileToGenerate.includes(f.name));
+}
+
+type PackageTree = {
+  index: string;
+  chunks: Code[];
+  leaves: { [k: string]: PackageTree };
+};
+export function generateIndexFiles(files: FileDescriptorProto[], options: Options): [string, Code][] {
+  const packageTree: PackageTree = {
+    index: "index.ts",
+    leaves: {},
+    chunks: [],
+  };
+  for (const { name, package: pkg } of files) {
+    const moduleName = name.replace(".proto", options.fileSuffix);
+    const pkgParts = pkg.length > 0 ? pkg.split(".") : [];
+
+    const branch = pkgParts.reduce<PackageTree>((branch, part, i): PackageTree => {
+      if (!(part in branch.leaves)) {
+        const prePkgParts = pkgParts.slice(0, i + 1);
+        const index = `index.${prePkgParts.join(".")}.ts`;
+        branch.chunks.push(code`export * as ${part} from "./${path.basename(index, ".ts")}";`);
+        branch.leaves[part] = {
+          index,
+          leaves: {},
+          chunks: [],
+        };
+      }
+      return branch.leaves[part];
+    }, packageTree);
+    branch.chunks.push(code`export * from "./${moduleName}";`);
+  }
+
+  const indexFiles: [string, Code][] = [];
+  let branches: PackageTree[] = [packageTree];
+  let currentBranch;
+  while ((currentBranch = branches.pop())) {
+    indexFiles.push([currentBranch.index, joinCode(currentBranch.chunks)]);
+    branches.push(...Object.values(currentBranch.leaves));
+  }
+
+  return indexFiles;
 }
 
 export function readToBuffer(stream: ReadStream): Promise<Buffer> {
