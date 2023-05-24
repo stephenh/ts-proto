@@ -353,11 +353,7 @@ export const Empty = {
  * but with the streaming method removed.
  */
 export interface DashState {
-  UserSettings(
-    request: DeepPartial<Empty>,
-    metadata?: grpc.Metadata,
-    abortSignal?: AbortSignal,
-  ): Observable<DashUserSettingsState>;
+  UserSettings(request: DeepPartial<Empty>, metadata?: grpc.Metadata): Observable<DashUserSettingsState>;
 }
 
 export class DashStateClientImpl implements DashState {
@@ -368,12 +364,8 @@ export class DashStateClientImpl implements DashState {
     this.UserSettings = this.UserSettings.bind(this);
   }
 
-  UserSettings(
-    request: DeepPartial<Empty>,
-    metadata?: grpc.Metadata,
-    abortSignal?: AbortSignal,
-  ): Observable<DashUserSettingsState> {
-    return this.rpc.unary(DashStateUserSettingsDesc, Empty.fromPartial(request), metadata, abortSignal);
+  UserSettings(request: DeepPartial<Empty>, metadata?: grpc.Metadata): Observable<DashUserSettingsState> {
+    return this.rpc.unary(DashStateUserSettingsDesc, Empty.fromPartial(request), metadata);
   }
 }
 
@@ -414,7 +406,6 @@ interface Rpc {
     methodDesc: T,
     request: any,
     metadata: grpc.Metadata | undefined,
-    abortSignal?: AbortSignal,
   ): Observable<any>;
 }
 
@@ -446,14 +437,13 @@ export class GrpcWebImpl {
     methodDesc: T,
     _request: any,
     metadata: grpc.Metadata | undefined,
-    abortSignal?: AbortSignal,
   ): Observable<any> {
     const request = { ..._request, ...methodDesc.requestType };
     const maybeCombinedMetadata = metadata && this.options.metadata
       ? new BrowserHeaders({ ...this.options?.metadata.headersMap, ...metadata?.headersMap })
       : metadata || this.options.metadata;
     return new Observable((observer) => {
-      const client = grpc.unary(methodDesc, {
+      grpc.unary(methodDesc, {
         request,
         host: this.host,
         metadata: maybeCombinedMetadata,
@@ -469,13 +459,6 @@ export class GrpcWebImpl {
           }
         },
       });
-
-      if (abortSignal) {
-        abortSignal.addEventListener("abort", () => {
-          observer.error(abortSignal.reason);
-          client.close();
-        });
-      }
     }).pipe(take(1));
   }
 }
