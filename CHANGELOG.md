@@ -1,3 +1,10 @@
+## [1.148.1](https://github.com/stephenh/ts-proto/compare/v1.148.0...v1.148.1) (2023-05-25)
+
+
+### Bug Fixes
+
+* add callback close condition ([#837](https://github.com/stephenh/ts-proto/issues/837)) ([2071c67](https://github.com/stephenh/ts-proto/commit/2071c67650a3ac80ec9b5845fec3227ee47841d0))
+
 # [1.148.0](https://github.com/stephenh/ts-proto/compare/v1.147.3...v1.148.0) (2023-05-23)
 
 
