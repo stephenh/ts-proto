@@ -709,12 +709,21 @@ export const Empty = {
 };
 
 export interface DashState {
-  UserSettings(request: DeepPartial<Empty>, metadata?: grpc.Metadata): Promise<DashUserSettingsState>;
-  ActiveUserSettingsStream(request: DeepPartial<Empty>, metadata?: grpc.Metadata): Observable<DashUserSettingsState>;
+  UserSettings(
+    request: DeepPartial<Empty>,
+    metadata?: grpc.Metadata,
+    abortSignal?: AbortSignal,
+  ): Promise<DashUserSettingsState>;
+  ActiveUserSettingsStream(
+    request: DeepPartial<Empty>,
+    metadata?: grpc.Metadata,
+    abortSignal?: AbortSignal,
+  ): Observable<DashUserSettingsState>;
   /** not supported in grpc-web, but should still compile */
   ChangeUserSettingsStream(
     request: Observable<DeepPartial<DashUserSettingsState>>,
     metadata?: grpc.Metadata,
+    abortSignal?: AbortSignal,
   ): Observable<DashUserSettingsState>;
 }
 
@@ -728,17 +737,26 @@ export class DashStateClientImpl implements DashState {
     this.ChangeUserSettingsStream = this.ChangeUserSettingsStream.bind(this);
   }
 
-  UserSettings(request: DeepPartial<Empty>, metadata?: grpc.Metadata): Promise<DashUserSettingsState> {
-    return this.rpc.unary(DashStateUserSettingsDesc, Empty.fromPartial(request), metadata);
+  UserSettings(
+    request: DeepPartial<Empty>,
+    metadata?: grpc.Metadata,
+    abortSignal?: AbortSignal,
+  ): Promise<DashUserSettingsState> {
+    return this.rpc.unary(DashStateUserSettingsDesc, Empty.fromPartial(request), metadata, abortSignal);
   }
 
-  ActiveUserSettingsStream(request: DeepPartial<Empty>, metadata?: grpc.Metadata): Observable<DashUserSettingsState> {
-    return this.rpc.invoke(DashStateActiveUserSettingsStreamDesc, Empty.fromPartial(request), metadata);
+  ActiveUserSettingsStream(
+    request: DeepPartial<Empty>,
+    metadata?: grpc.Metadata,
+    abortSignal?: AbortSignal,
+  ): Observable<DashUserSettingsState> {
+    return this.rpc.invoke(DashStateActiveUserSettingsStreamDesc, Empty.fromPartial(request), metadata, abortSignal);
   }
 
   ChangeUserSettingsStream(
     request: Observable<DeepPartial<DashUserSettingsState>>,
     metadata?: grpc.Metadata,
+    abortSignal?: AbortSignal,
   ): Observable<DashUserSettingsState> {
     throw new Error("ts-proto does not yet support client streaming!");
   }
@@ -798,9 +816,21 @@ export const DashStateActiveUserSettingsStreamDesc: UnaryMethodDefinitionish = {
  * ----------------------
  */
 export interface DashAPICreds {
-  Create(request: DeepPartial<DashAPICredsCreateReq>, metadata?: grpc.Metadata): Promise<DashCred>;
-  Update(request: DeepPartial<DashAPICredsUpdateReq>, metadata?: grpc.Metadata): Promise<DashCred>;
-  Delete(request: DeepPartial<DashAPICredsDeleteReq>, metadata?: grpc.Metadata): Promise<DashCred>;
+  Create(
+    request: DeepPartial<DashAPICredsCreateReq>,
+    metadata?: grpc.Metadata,
+    abortSignal?: AbortSignal,
+  ): Promise<DashCred>;
+  Update(
+    request: DeepPartial<DashAPICredsUpdateReq>,
+    metadata?: grpc.Metadata,
+    abortSignal?: AbortSignal,
+  ): Promise<DashCred>;
+  Delete(
+    request: DeepPartial<DashAPICredsDeleteReq>,
+    metadata?: grpc.Metadata,
+    abortSignal?: AbortSignal,
+  ): Promise<DashCred>;
 }
 
 export class DashAPICredsClientImpl implements DashAPICreds {
@@ -813,16 +843,28 @@ export class DashAPICredsClientImpl implements DashAPICreds {
     this.Delete = this.Delete.bind(this);
   }
 
-  Create(request: DeepPartial<DashAPICredsCreateReq>, metadata?: grpc.Metadata): Promise<DashCred> {
-    return this.rpc.unary(DashAPICredsCreateDesc, DashAPICredsCreateReq.fromPartial(request), metadata);
+  Create(
+    request: DeepPartial<DashAPICredsCreateReq>,
+    metadata?: grpc.Metadata,
+    abortSignal?: AbortSignal,
+  ): Promise<DashCred> {
+    return this.rpc.unary(DashAPICredsCreateDesc, DashAPICredsCreateReq.fromPartial(request), metadata, abortSignal);
   }
 
-  Update(request: DeepPartial<DashAPICredsUpdateReq>, metadata?: grpc.Metadata): Promise<DashCred> {
-    return this.rpc.unary(DashAPICredsUpdateDesc, DashAPICredsUpdateReq.fromPartial(request), metadata);
+  Update(
+    request: DeepPartial<DashAPICredsUpdateReq>,
+    metadata?: grpc.Metadata,
+    abortSignal?: AbortSignal,
+  ): Promise<DashCred> {
+    return this.rpc.unary(DashAPICredsUpdateDesc, DashAPICredsUpdateReq.fromPartial(request), metadata, abortSignal);
   }
 
-  Delete(request: DeepPartial<DashAPICredsDeleteReq>, metadata?: grpc.Metadata): Promise<DashCred> {
-    return this.rpc.unary(DashAPICredsDeleteDesc, DashAPICredsDeleteReq.fromPartial(request), metadata);
+  Delete(
+    request: DeepPartial<DashAPICredsDeleteReq>,
+    metadata?: grpc.Metadata,
+    abortSignal?: AbortSignal,
+  ): Promise<DashCred> {
+    return this.rpc.unary(DashAPICredsDeleteDesc, DashAPICredsDeleteReq.fromPartial(request), metadata, abortSignal);
   }
 }
 
@@ -909,11 +951,13 @@ interface Rpc {
     methodDesc: T,
     request: any,
     metadata: grpc.Metadata | undefined,
+    abortSignal?: AbortSignal,
   ): Promise<any>;
   invoke<T extends UnaryMethodDefinitionish>(
     methodDesc: T,
     request: any,
     metadata: grpc.Metadata | undefined,
+    abortSignal?: AbortSignal,
   ): Observable<any>;
 }
 
@@ -945,13 +989,14 @@ export class GrpcWebImpl {
     methodDesc: T,
     _request: any,
     metadata: grpc.Metadata | undefined,
+    abortSignal?: AbortSignal,
   ): Promise<any> {
     const request = { ..._request, ...methodDesc.requestType };
     const maybeCombinedMetadata = metadata && this.options.metadata
       ? new BrowserHeaders({ ...this.options?.metadata.headersMap, ...metadata?.headersMap })
       : metadata || this.options.metadata;
     return new Promise((resolve, reject) => {
-      grpc.unary(methodDesc, {
+      const client = grpc.unary(methodDesc, {
         request,
         host: this.host,
         metadata: maybeCombinedMetadata,
@@ -966,6 +1011,13 @@ export class GrpcWebImpl {
           }
         },
       });
+
+      if (abortSignal) {
+        abortSignal.addEventListener("abort", () => {
+          client.close();
+          reject(abortSignal.reason);
+        });
+      }
     });
   }
 
@@ -973,6 +1025,7 @@ export class GrpcWebImpl {
     methodDesc: T,
     _request: any,
     metadata: grpc.Metadata | undefined,
+    abortSignal?: AbortSignal,
   ): Observable<any> {
     const upStreamCodes = this.options.upStreamRetryCodes || [];
     const DEFAULT_TIMEOUT_TIME: number = 3_000;
@@ -1003,8 +1056,17 @@ export class GrpcWebImpl {
           },
         });
         observer.add(() => {
-          return client.close();
+          if (!abortSignal || !abortSignal.aborted) {
+            return client.close();
+          }
         });
+
+        if (abortSignal) {
+          abortSignal.addEventListener("abort", () => {
+            observer.error(abortSignal.reason);
+            client.close();
+          });
+        }
       });
       upStream();
     }).pipe(share());

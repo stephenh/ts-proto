@@ -1,0 +1,69 @@
+syntax = "proto3";
+
+package rpx;
+
+service DashState {
+  rpc UserSettings(Empty) returns (DashUserSettingsState);
+  rpc ActiveUserSettingsStream(Empty) returns (stream DashUserSettingsState);
+  // not supported in grpc-web, but should still compile
+  rpc ChangeUserSettingsStream (stream DashUserSettingsState) returns (stream DashUserSettingsState) {}
+}
+
+message DashFlash {
+  string msg = 1;
+  Type type = 2;
+
+  enum Type {
+    Undefined = 0;
+    Success = 1;
+    Warn = 2;
+    Error = 3;
+  }
+}
+
+message DashUserSettingsState {
+  string email = 1;
+  URLs urls = 6;
+  repeated DashFlash flashes = 7;
+
+  message URLs {
+    string connect_google = 1;
+    string connect_github = 2;
+  }
+}
+
+
+//----------------------
+// API Creds
+//----------------------
+service DashAPICreds {
+  rpc Create(DashAPICredsCreateReq) returns (DashCred);
+  rpc Update(DashAPICredsUpdateReq) returns (DashCred);
+  rpc Delete(DashAPICredsDeleteReq) returns (DashCred);
+}
+
+message DashCred {
+  string description = 2;
+  string metadata = 3;
+  string token = 4;
+  string id = 7;
+}
+
+message DashAPICredsCreateReq {
+  string description = 1;
+  string metadata = 2;
+}
+
+message DashAPICredsUpdateReq {
+  string cred_sid = 1;
+  string description = 2;
+  string metadata = 3;
+  string id = 5;
+}
+
+message DashAPICredsDeleteReq {
+  string cred_sid = 1;
+  string id = 3;
+}
+
+message Empty {}
