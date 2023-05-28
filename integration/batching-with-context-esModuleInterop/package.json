@@ -1,0 +1,10 @@
+{
+  "name": "batching-with-context-esmoduleinterop",
+  "version": "0",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "typescript": "^4.9.5"
+  }
+}

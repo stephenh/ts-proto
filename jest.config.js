@@ -6,6 +6,9 @@ module.exports = {
   resolver: 'jest-ts-webcompat-resolver',
   moduleFileExtensions: ['js', 'ts'],
   testMatch: ['<rootDir>/integration/**/*-test.ts', '<rootDir>/tests/**/*-test.ts'],
-  testPathIgnorePatterns: ['<rootDir>/integration/simple-esmodule-interop/*'],
+  testPathIgnorePatterns: [
+      '<rootDir>/integration/simple-esmodule-interop/*',
+      '<rootDir>/integration/batching-with-context-esModuleInterop/*'
+  ],
   testEnvironment: "node"
 };
