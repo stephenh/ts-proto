@@ -2,8 +2,8 @@ import { Todo } from "./use-objectid-true";
 
 import * as mongodb from "mongodb";
 
-const id1 = new mongodb.ObjectId();
-const id2 = new mongodb.ObjectId();
+const id1 = new mongodb.ObjectId("647ca164a22d71f13fb856f1");
+const id2 = new mongodb.ObjectId("647ca164a22d71f13fb856f2");
 
 describe("useMongoObjectId=true External Import", () => {
   it("generates types that compile and encode", () => {
@@ -21,14 +21,14 @@ describe("useMongoObjectId=true External Import", () => {
       {
         "id": "6883ed6e-bd0d-4817-ba58-c2a53c73edc2",
         "mapOfOids": {
-          "id1": "647c9f88f04b55a2ad916c7f",
-          "id2": "647c9f88f04b55a2ad916c80",
+          "id1": "647ca164a22d71f13fb856f1",
+          "id2": "647ca164a22d71f13fb856f2",
         },
-        "oid": "647c9f88f04b55a2ad916c7f",
+        "oid": "647ca164a22d71f13fb856f1",
         "optionalOid": undefined,
         "repeatedOid": [
-          "647c9f88f04b55a2ad916c7f",
-          "647c9f88f04b55a2ad916c80",
+          "647ca164a22d71f13fb856f1",
+          "647ca164a22d71f13fb856f2",
         ],
       }
     `);
@@ -37,13 +37,13 @@ describe("useMongoObjectId=true External Import", () => {
       {
         "id": "6883ed6e-bd0d-4817-ba58-c2a53c73edc2",
         "mapOfOids": {
-          "id1": "647c9f88f04b55a2ad916c7f",
-          "id2": "647c9f88f04b55a2ad916c80",
+          "id1": "647ca164a22d71f13fb856f1",
+          "id2": "647ca164a22d71f13fb856f2",
         },
-        "oid": "647c9f88f04b55a2ad916c7f",
+        "oid": "647ca164a22d71f13fb856f1",
         "repeatedOid": [
-          "647c9f88f04b55a2ad916c7f",
-          "647c9f88f04b55a2ad916c80",
+          "647ca164a22d71f13fb856f1",
+          "647ca164a22d71f13fb856f2",
         ],
       }
     `);
