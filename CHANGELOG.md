@@ -1,3 +1,10 @@
+## [1.148.2](https://github.com/stephenh/ts-proto/compare/v1.148.1...v1.148.2) (2023-06-04)
+
+
+### Bug Fixes
+
+* esModuleInterop not working for object-hash and dataloader imports ([#794](https://github.com/stephenh/ts-proto/issues/794)) ([9fc9632](https://github.com/stephenh/ts-proto/commit/9fc9632e03a18f7a2d6e95a72ff959be93199981))
+
 ## [1.148.1](https://github.com/stephenh/ts-proto/compare/v1.148.0...v1.148.1) (2023-05-25)
 
 
