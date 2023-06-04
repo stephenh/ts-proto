@@ -1,9 +1,9 @@
-import { SimpleButOptional } from './simple';
+import { SimpleButOptional } from "./simple";
 
-describe('simple-but-optional', () => {
-  it('can encode', () => {
+describe("simple-but-optional", () => {
+  it("can encode", () => {
     const s1: SimpleButOptional = {
-      name: 'Joe',
+      name: "Joe",
       age: 17,
       child: undefined,
       state: undefined,
@@ -22,13 +22,13 @@ describe('simple-but-optional', () => {
     };
     SimpleButOptional.encode(s1, mockWriter as any);
 
-    expect(mockWriter.string).toHaveBeenCalledWith('Joe');
+    expect(mockWriter.string).toHaveBeenCalledWith("Joe");
     expect(mockWriter.int32).toHaveBeenCalledWith(17);
   });
 
-  it('can encode to json', () => {
+  it("can encode to json", () => {
     const s1: SimpleButOptional = {
-      name: '',
+      name: "",
       age: 0,
       child: undefined,
       state: undefined,
@@ -38,7 +38,7 @@ describe('simple-but-optional', () => {
     };
 
     expect(SimpleButOptional.toJSON(s1)).toMatchInlineSnapshot(`
-      Object {
+      {
         "age": 0,
         "name": "",
       }

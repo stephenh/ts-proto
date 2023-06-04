@@ -1,22 +1,22 @@
-import { CodeGeneratorRequest } from './google/protobuf/compiler/plugin';
-import { promisify } from 'util';
-import { readFile } from 'fs';
+import { CodeGeneratorRequest } from "./google/protobuf/compiler/plugin";
+import { promisify } from "util";
+import { readFile } from "fs";
 
-describe('unknown-fields', () => {
-  it('decodes unknown fields', async () => {
-    const stdin = await promisify(readFile)(__dirname + '/options.bin');
+describe("unknown-fields", () => {
+  it("decodes unknown fields", async () => {
+    const stdin = await promisify(readFile)(__dirname + "/options.bin");
     const request = CodeGeneratorRequest.decode(stdin);
     expect(request.protoFile).toHaveLength(3);
     expect(request.protoFile[2].messageType).toMatchInlineSnapshot(`
-      Array [
-        Object {
-          "_unknownFields": Object {},
-          "enumType": Array [],
-          "extension": Array [],
-          "extensionRange": Array [],
-          "field": Array [
-            Object {
-              "_unknownFields": Object {},
+      [
+        {
+          "_unknownFields": {},
+          "enumType": [],
+          "extension": [],
+          "extensionRange": [],
+          "field": [
+            {
+              "_unknownFields": {},
               "defaultValue": "",
               "extendee": "",
               "jsonName": "foo",
@@ -24,11 +24,11 @@ describe('unknown-fields', () => {
               "name": "foo",
               "number": 1,
               "oneofIndex": 1,
-              "options": Object {
-                "_unknownFields": Object {
-                  "400021": Array [
-                    Object {
-                      "data": Array [
+              "options": {
+                "_unknownFields": {
+                  "400021": [
+                    {
+                      "data": [
                         0,
                         0,
                         144,
@@ -43,15 +43,15 @@ describe('unknown-fields', () => {
                 "jstype": 0,
                 "lazy": false,
                 "packed": false,
-                "uninterpretedOption": Array [],
+                "uninterpretedOption": [],
                 "weak": false,
               },
               "proto3Optional": true,
               "type": 5,
               "typeName": "",
             },
-            Object {
-              "_unknownFields": Object {},
+            {
+              "_unknownFields": {},
               "defaultValue": "",
               "extendee": "",
               "jsonName": "foo2",
@@ -59,11 +59,11 @@ describe('unknown-fields', () => {
               "name": "foo_2",
               "number": 2,
               "oneofIndex": 2,
-              "options": Object {
-                "_unknownFields": Object {
-                  "8002": Array [
-                    Object {
-                      "data": Array [
+              "options": {
+                "_unknownFields": {
+                  "8002": [
+                    {
+                      "data": [
                         12,
                         10,
                         5,
@@ -87,15 +87,15 @@ describe('unknown-fields', () => {
                 "jstype": 0,
                 "lazy": false,
                 "packed": false,
-                "uninterpretedOption": Array [],
+                "uninterpretedOption": [],
                 "weak": false,
               },
               "proto3Optional": true,
               "type": 5,
               "typeName": "",
             },
-            Object {
-              "_unknownFields": Object {},
+            {
+              "_unknownFields": {},
               "defaultValue": "",
               "extendee": "",
               "jsonName": "bar",
@@ -108,8 +108,8 @@ describe('unknown-fields', () => {
               "type": 9,
               "typeName": "",
             },
-            Object {
-              "_unknownFields": Object {},
+            {
+              "_unknownFields": {},
               "defaultValue": "",
               "extendee": "",
               "jsonName": "quux",
@@ -124,46 +124,46 @@ describe('unknown-fields', () => {
             },
           ],
           "name": "MyMessage",
-          "nestedType": Array [],
-          "oneofDecl": Array [
-            Object {
-              "_unknownFields": Object {},
+          "nestedType": [],
+          "oneofDecl": [
+            {
+              "_unknownFields": {},
               "name": "qux",
-              "options": Object {
-                "_unknownFields": Object {
-                  "400024": Array [
-                    Object {
-                      "data": Array [
+              "options": {
+                "_unknownFields": {
+                  "400024": [
+                    {
+                      "data": [
                         42,
                       ],
                       "type": "Buffer",
                     },
                   ],
                 },
-                "uninterpretedOption": Array [],
+                "uninterpretedOption": [],
               },
             },
-            Object {
-              "_unknownFields": Object {},
+            {
+              "_unknownFields": {},
               "name": "_foo",
               "options": undefined,
             },
-            Object {
-              "_unknownFields": Object {},
+            {
+              "_unknownFields": {},
               "name": "_foo_2",
               "options": undefined,
             },
-            Object {
-              "_unknownFields": Object {},
+            {
+              "_unknownFields": {},
               "name": "_bar",
               "options": undefined,
             },
           ],
-          "options": Object {
-            "_unknownFields": Object {
-              "400008": Array [
-                Object {
-                  "data": Array [
+          "options": {
+            "_unknownFields": {
+              "400008": [
+                {
+                  "data": [
                     210,
                     9,
                   ],
@@ -175,49 +175,49 @@ describe('unknown-fields', () => {
             "mapEntry": false,
             "messageSetWireFormat": false,
             "noStandardDescriptorAccessor": false,
-            "uninterpretedOption": Array [],
+            "uninterpretedOption": [],
           },
-          "reservedName": Array [],
-          "reservedRange": Array [],
+          "reservedName": [],
+          "reservedRange": [],
         },
-        Object {
-          "_unknownFields": Object {},
-          "enumType": Array [],
-          "extension": Array [],
-          "extensionRange": Array [],
-          "field": Array [],
+        {
+          "_unknownFields": {},
+          "enumType": [],
+          "extension": [],
+          "extensionRange": [],
+          "field": [],
           "name": "RequestType",
-          "nestedType": Array [],
-          "oneofDecl": Array [],
+          "nestedType": [],
+          "oneofDecl": [],
           "options": undefined,
-          "reservedName": Array [],
-          "reservedRange": Array [],
+          "reservedName": [],
+          "reservedRange": [],
         },
-        Object {
-          "_unknownFields": Object {},
-          "enumType": Array [],
-          "extension": Array [],
-          "extensionRange": Array [],
-          "field": Array [],
+        {
+          "_unknownFields": {},
+          "enumType": [],
+          "extension": [],
+          "extensionRange": [],
+          "field": [],
           "name": "ResponseType",
-          "nestedType": Array [],
-          "oneofDecl": Array [],
+          "nestedType": [],
+          "oneofDecl": [],
           "options": undefined,
-          "reservedName": Array [],
-          "reservedRange": Array [],
+          "reservedName": [],
+          "reservedRange": [],
         },
       ]
     `);
     expect(request.protoFile[2].enumType).toMatchInlineSnapshot(`
-      Array [
-        Object {
-          "_unknownFields": Object {},
+      [
+        {
+          "_unknownFields": {},
           "name": "MyEnum",
-          "options": Object {
-            "_unknownFields": Object {
-              "400032": Array [
-                Object {
-                  "data": Array [
+          "options": {
+            "_unknownFields": {
+              "400032": [
+                {
+                  "data": [
                     1,
                   ],
                   "type": "Buffer",
@@ -226,20 +226,20 @@ describe('unknown-fields', () => {
             },
             "allowAlias": false,
             "deprecated": false,
-            "uninterpretedOption": Array [],
+            "uninterpretedOption": [],
           },
-          "reservedName": Array [],
-          "reservedRange": Array [],
-          "value": Array [
-            Object {
-              "_unknownFields": Object {},
+          "reservedName": [],
+          "reservedRange": [],
+          "value": [
+            {
+              "_unknownFields": {},
               "name": "FOO",
               "number": 0,
-              "options": Object {
-                "_unknownFields": Object {
-                  "400040": Array [
-                    Object {
-                      "data": Array [
+              "options": {
+                "_unknownFields": {
+                  "400040": [
+                    {
+                      "data": [
                         193,
                         2,
                       ],
@@ -248,11 +248,11 @@ describe('unknown-fields', () => {
                   ],
                 },
                 "deprecated": false,
-                "uninterpretedOption": Array [],
+                "uninterpretedOption": [],
               },
             },
-            Object {
-              "_unknownFields": Object {},
+            {
+              "_unknownFields": {},
               "name": "BAR",
               "number": 1,
               "options": undefined,
@@ -262,20 +262,20 @@ describe('unknown-fields', () => {
       ]
     `);
     expect(request.protoFile[2].service).toMatchInlineSnapshot(`
-      Array [
-        Object {
-          "_unknownFields": Object {},
-          "method": Array [
-            Object {
-              "_unknownFields": Object {},
+      [
+        {
+          "_unknownFields": {},
+          "method": [
+            {
+              "_unknownFields": {},
               "clientStreaming": false,
               "inputType": ".RequestType",
               "name": "MyMethod",
-              "options": Object {
-                "_unknownFields": Object {
-                  "400058": Array [
-                    Object {
-                      "data": Array [
+              "options": {
+                "_unknownFields": {
+                  "400058": [
+                    {
+                      "data": [
                         3,
                         8,
                         150,
@@ -283,8 +283,8 @@ describe('unknown-fields', () => {
                       ],
                       "type": "Buffer",
                     },
-                    Object {
-                      "data": Array [
+                    {
+                      "data": [
                         3,
                         16,
                         150,
@@ -292,8 +292,8 @@ describe('unknown-fields', () => {
                       ],
                       "type": "Buffer",
                     },
-                    Object {
-                      "data": Array [
+                    {
+                      "data": [
                         13,
                         26,
                         11,
@@ -311,8 +311,8 @@ describe('unknown-fields', () => {
                       ],
                       "type": "Buffer",
                     },
-                    Object {
-                      "data": Array [
+                    {
+                      "data": [
                         13,
                         34,
                         11,
@@ -334,18 +334,18 @@ describe('unknown-fields', () => {
                 },
                 "deprecated": false,
                 "idempotencyLevel": 0,
-                "uninterpretedOption": Array [],
+                "uninterpretedOption": [],
               },
               "outputType": ".ResponseType",
               "serverStreaming": false,
             },
           ],
           "name": "MyService",
-          "options": Object {
-            "_unknownFields": Object {
-              "400048": Array [
-                Object {
-                  "data": Array [
+          "options": {
+            "_unknownFields": {
+              "400048": [
+                {
+                  "data": [
                     0,
                   ],
                   "type": "Buffer",
@@ -353,17 +353,17 @@ describe('unknown-fields', () => {
               ],
             },
             "deprecated": false,
-            "uninterpretedOption": Array [],
+            "uninterpretedOption": [],
           },
         },
       ]
     `);
     expect(request.protoFile[2].options).toMatchInlineSnapshot(`
-      Object {
-        "_unknownFields": Object {
-          "400002": Array [
-            Object {
-              "data": Array [
+      {
+        "_unknownFields": {
+          "400002": [
+            {
+              "data": [
                 12,
                 72,
                 101,
@@ -402,7 +402,7 @@ describe('unknown-fields', () => {
         "pyGenericServices": false,
         "rubyPackage": "",
         "swiftPrefix": "",
-        "uninterpretedOption": Array [],
+        "uninterpretedOption": [],
       }
     `);
 

@@ -1,10 +1,10 @@
-import { Simple, StateEnum } from './simple';
-import { NullValue } from './google/protobuf/struct';
+import { Simple, StateEnum } from "./simple";
+import { NullValue } from "./google/protobuf/struct";
 
-describe('simple-string-enums', () => {
-  it('encodes', () => {
+describe("simple-string-enums", () => {
+  it("encodes", () => {
     const s1: Simple = {
-      name: 'a',
+      name: "a",
       state: StateEnum.ON,
       states: [StateEnum.ON, StateEnum.OFF],
       nullValue: NullValue.NULL_VALUE,
@@ -13,14 +13,14 @@ describe('simple-string-enums', () => {
     const b = Simple.encode(s1).finish();
     const s2 = Simple.decode(b);
     expect(s2).toMatchInlineSnapshot(`
-      Object {
+      {
         "name": "a",
         "nullValue": "NULL_VALUE",
         "state": "ON",
-        "stateMap": Object {
+        "stateMap": {
           "on": "ON",
         },
-        "states": Array [
+        "states": [
           "ON",
           "OFF",
         ],

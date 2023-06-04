@@ -149,23 +149,23 @@ describe("number", () => {
   it("has fromPartial", () => {
     const s1 = Numbers.fromPartial({});
     expect(s1).toMatchInlineSnapshot(`
-  Object {
-    "double": 0,
-    "fixed32": 0,
-    "fixed64": 0n,
-    "float": 0,
-    "guint64": undefined,
-    "int32": 0,
-    "int64": 0n,
-    "sfixed32": 0,
-    "sfixed64": 0n,
-    "sint32": 0,
-    "sint64": 0n,
-    "timestamp": undefined,
-    "uint32": 0,
-    "uint64": 0n,
-    "uint64s": Array [],
-  }
-  `);
+      {
+        "double": 0,
+        "fixed32": 0,
+        "fixed64": 0n,
+        "float": 0,
+        "guint64": undefined,
+        "int32": 0,
+        "int64": 0n,
+        "sfixed32": 0,
+        "sfixed64": 0n,
+        "sint32": 0,
+        "sint64": 0n,
+        "timestamp": undefined,
+        "uint32": 0,
+        "uint64": 0n,
+        "uint64s": [],
+      }
+    `);
   });
 });

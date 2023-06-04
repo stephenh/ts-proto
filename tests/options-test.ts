@@ -3,8 +3,8 @@ import { DateOption, optionsFromParameter, ServiceOption } from "../src/options"
 describe("options", () => {
   it("can set outputJsonMethods with nestJs=true", () => {
     expect(optionsFromParameter("nestJs=true,outputJsonMethods=true")).toMatchInlineSnapshot(`
-      Object {
-        "M": Object {},
+      {
+        "M": {},
         "addGrpcMetadata": false,
         "addNestjsRestParameter": false,
         "constEnums": false,
@@ -30,14 +30,14 @@ describe("options", () => {
         "outputJsonMethods": true,
         "outputPartialMethods": false,
         "outputSchema": false,
-        "outputServices": Array [
+        "outputServices": [
           "default",
         ],
         "outputTypeAnnotations": false,
         "outputTypeRegistry": false,
         "removeEnumPrefix": false,
         "returnObservable": false,
-        "snakeToCamel": Array [
+        "snakeToCamel": [
           "json",
           "keys",
         ],
