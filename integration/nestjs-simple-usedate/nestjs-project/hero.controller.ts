@@ -1,16 +1,20 @@
-import { Controller } from '@nestjs/common';
-import { Observable, Subject } from 'rxjs';
-import { Hero, HeroById, HeroServiceController, HeroServiceControllerMethods, Villain, VillainById } from '../hero';
+import { Controller } from "@nestjs/common";
+import { Observable, Subject } from "rxjs";
+import { Hero, HeroById, HeroServiceController, HeroServiceControllerMethods, Villain, VillainById } from "../hero";
 
-@Controller('hero')
+@Controller("hero")
 @HeroServiceControllerMethods()
 export class HeroController implements HeroServiceController {
   private readonly heroes: Hero[] = [
-    { id: 1, name: 'Stephenh', birthDate: new Date("2000/01/01") },
-    { id: 2, name: 'Iangregsondev', birthDate: new Date("2000/02/02") },
+    { id: 1, name: "Stephenh", birthDate: new Date("2000/01/01") },
+    { id: 2, name: "Iangregsondev", birthDate: new Date("2000/02/02") },
+    { id: 3, name: "Bob", birthDate: undefined },
   ];
 
-  private readonly villains: Villain[] = [{ id: 1, name: 'John' }, { id: 2, name: 'Doe' }];
+  private readonly villains: Villain[] = [
+    { id: 1, name: "John" },
+    { id: 2, name: "Doe" },
+  ];
 
   addOneHero(request: Hero) {
     this.heroes.push(request);
