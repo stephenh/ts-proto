@@ -465,7 +465,7 @@ export const OptionalsTest = {
     message.truth !== undefined && (obj.truth = message.truth);
     message.description !== undefined && (obj.description = message.description);
     message.data !== undefined &&
-      (obj.data = base64FromBytes(message.data !== undefined ? message.data : new Uint8Array()));
+      (obj.data = base64FromBytes(message.data !== undefined ? message.data : new Uint8Array(0)));
     if (message.repId) {
       obj.repId = message.repId.map((e) => Math.round(e));
     } else {
@@ -497,7 +497,7 @@ export const OptionalsTest = {
       obj.repDescription = [];
     }
     if (message.repData) {
-      obj.repData = message.repData.map((e) => base64FromBytes(e !== undefined ? e : new Uint8Array()));
+      obj.repData = message.repData.map((e) => base64FromBytes(e !== undefined ? e : new Uint8Array(0)));
     } else {
       obj.repData = [];
     }

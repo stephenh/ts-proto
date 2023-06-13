@@ -42,7 +42,7 @@ describe('oneof=unions', () => {
       age: 37,
       choice: { $case: 'aBool', aBool: true },
       eitherOr: { $case: 'or', or: 'perhaps not' },
-      signature: new Uint8Array(),
+      signature: new Uint8Array(0),
       value: 'Debbie'
     });
   });
@@ -72,7 +72,7 @@ describe('oneof=unions', () => {
     expect(empty).toEqual({
       name: '',
       age: 0,
-      signature: new Uint8Array(),
+      signature: new Uint8Array(0),
     });
 
     let partial = PleaseChoose.fromPartial({
@@ -107,7 +107,7 @@ describe('oneof=unions', () => {
 
   it('fromJSON', () => {
     let empty = PleaseChoose.fromJSON({});
-    expect(empty).toEqual({ age: 0, name: '', signature: new Uint8Array() });
+    expect(empty).toEqual({ age: 0, name: '', signature: new Uint8Array(0) });
 
     let debbie: PleaseChoose = {
       name: 'Debbie',
