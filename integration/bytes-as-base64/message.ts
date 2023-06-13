@@ -7,18 +7,18 @@ export interface Message {
 }
 
 function createBaseMessage(): Message {
-  return { data: new Uint8Array() };
+  return { data: new Uint8Array(0) };
 }
 
 export const Message = {
   fromJSON(object: any): Message {
-    return { data: isSet(object.data) ? bytesFromBase64(object.data) : new Uint8Array() };
+    return { data: isSet(object.data) ? bytesFromBase64(object.data) : new Uint8Array(0) };
   },
 
   toJSON(message: Message): unknown {
     const obj: any = {};
     message.data !== undefined &&
-      (obj.data = base64FromBytes(message.data !== undefined ? message.data : new Uint8Array()));
+      (obj.data = base64FromBytes(message.data !== undefined ? message.data : new Uint8Array(0)));
     return obj;
   },
 
@@ -28,7 +28,7 @@ export const Message = {
 
   fromPartial<I extends Exact<DeepPartial<Message>, I>>(object: I): Message {
     const message = createBaseMessage();
-    message.data = object.data ?? new Uint8Array();
+    message.data = object.data ?? new Uint8Array(0);
     return message;
   },
 };

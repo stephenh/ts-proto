@@ -43,7 +43,7 @@ describe("simple", () => {
       createdAt: jan1,
       thing: undefined,
       blobs: [],
-      blob: new Uint8Array(),
+      blob: new Uint8Array(0),
       birthday: undefined,
       enabled: true,
     };
@@ -74,7 +74,7 @@ describe("simple", () => {
     const s2 = Simple.decode(Reader.create(PbSimple.encode(PbSimple.fromObject(s1)).finish()));
     expect(s2).toEqual({
       ...s1,
-      blob: new Uint8Array(),
+      blob: new Uint8Array(0),
     });
   });
 
@@ -94,7 +94,7 @@ describe("simple", () => {
       createdAt: jan1,
       thing: undefined,
       blobs: [],
-      blob: new Uint8Array(),
+      blob: new Uint8Array(0),
       birthday: undefined,
       enabled: true,
     };
@@ -211,7 +211,7 @@ describe("simple", () => {
       createdAt: jan1,
       thing: undefined,
       blobs: [],
-      blob: new Uint8Array(),
+      blob: new Uint8Array(0),
       birthday: undefined,
       enabled: true,
     };

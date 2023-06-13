@@ -314,7 +314,7 @@ function createBaseSimple(): Simple {
     thing: undefined,
     blobs: [],
     birthday: undefined,
-    blob: new Uint8Array(),
+    blob: new Uint8Array(0),
   };
 }
 
@@ -509,7 +509,7 @@ export const Simple = {
       thing: isSet(object.thing) ? ImportedThing.fromJSON(object.thing) : undefined,
       blobs: Array.isArray(object?.blobs) ? object.blobs.map((e: any) => bytesFromBase64(e)) : [],
       birthday: isSet(object.birthday) ? DateMessage.fromJSON(object.birthday) : undefined,
-      blob: isSet(object.blob) ? bytesFromBase64(object.blob) : new Uint8Array(),
+      blob: isSet(object.blob) ? bytesFromBase64(object.blob) : new Uint8Array(0),
     };
   },
 
@@ -542,14 +542,14 @@ export const Simple = {
     }
     message.thing !== undefined && (obj.thing = message.thing ? ImportedThing.toJSON(message.thing) : undefined);
     if (message.blobs) {
-      obj.blobs = message.blobs.map((e) => base64FromBytes(e !== undefined ? e : new Uint8Array()));
+      obj.blobs = message.blobs.map((e) => base64FromBytes(e !== undefined ? e : new Uint8Array(0)));
     } else {
       obj.blobs = [];
     }
     message.birthday !== undefined &&
       (obj.birthday = message.birthday ? DateMessage.toJSON(message.birthday) : undefined);
     message.blob !== undefined &&
-      (obj.blob = base64FromBytes(message.blob !== undefined ? message.blob : new Uint8Array()));
+      (obj.blob = base64FromBytes(message.blob !== undefined ? message.blob : new Uint8Array(0)));
     return obj;
   },
 
@@ -575,7 +575,7 @@ export const Simple = {
     message.birthday = (object.birthday !== undefined && object.birthday !== null)
       ? DateMessage.fromPartial(object.birthday)
       : undefined;
-    message.blob = object.blob ?? new Uint8Array();
+    message.blob = object.blob ?? new Uint8Array(0);
     return message;
   },
 };
@@ -1712,7 +1712,7 @@ export const SimpleWithMap_MapOfTimestampsEntry = {
 };
 
 function createBaseSimpleWithMap_MapOfBytesEntry(): SimpleWithMap_MapOfBytesEntry {
-  return { key: "", value: new Uint8Array() };
+  return { key: "", value: new Uint8Array(0) };
 }
 
 export const SimpleWithMap_MapOfBytesEntry = {
@@ -1759,7 +1759,7 @@ export const SimpleWithMap_MapOfBytesEntry = {
   fromJSON(object: any): SimpleWithMap_MapOfBytesEntry {
     return {
       key: isSet(object.key) ? String(object.key) : "",
-      value: isSet(object.value) ? bytesFromBase64(object.value) : new Uint8Array(),
+      value: isSet(object.value) ? bytesFromBase64(object.value) : new Uint8Array(0),
     };
   },
 
@@ -1767,7 +1767,7 @@ export const SimpleWithMap_MapOfBytesEntry = {
     const obj: any = {};
     message.key !== undefined && (obj.key = message.key);
     message.value !== undefined &&
-      (obj.value = base64FromBytes(message.value !== undefined ? message.value : new Uint8Array()));
+      (obj.value = base64FromBytes(message.value !== undefined ? message.value : new Uint8Array(0)));
     return obj;
   },
 
@@ -1780,7 +1780,7 @@ export const SimpleWithMap_MapOfBytesEntry = {
   ): SimpleWithMap_MapOfBytesEntry {
     const message = Object.create(createBaseSimpleWithMap_MapOfBytesEntry()) as SimpleWithMap_MapOfBytesEntry;
     message.key = object.key ?? "";
-    message.value = object.value ?? new Uint8Array();
+    message.value = object.value ?? new Uint8Array(0);
     return message;
   },
 };

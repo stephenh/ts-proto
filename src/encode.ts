@@ -50,7 +50,7 @@ export function generateEncoder(ctx: Context, typeName: string): Code {
     case "BoolValue":
       return code`${TypeValue}.encode({value: value ?? false}).finish()`;
     case "BytesValue":
-      return code`${TypeValue}.encode({value: value ?? new Uint8Array()}).finish()`;
+      return code`${TypeValue}.encode({value: value ?? new Uint8Array(0)}).finish()`;
   }
 
   throw new Error(`unknown wrapper type: ${name}`);

@@ -206,7 +206,7 @@ function createBaseSimple(): Simple {
     thing: undefined,
     blobs: [],
     birthday: undefined,
-    blob: new Uint8Array(),
+    blob: new Uint8Array(0),
   };
 }
 
@@ -1004,7 +1004,7 @@ export const SimpleWithMap_MapOfTimestampsEntry = {
 };
 
 function createBaseSimpleWithMap_MapOfBytesEntry(): SimpleWithMap_MapOfBytesEntry {
-  return { key: "", value: new Uint8Array() };
+  return { key: "", value: new Uint8Array(0) };
 }
 
 export const SimpleWithMap_MapOfBytesEntry = {

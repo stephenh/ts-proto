@@ -231,7 +231,7 @@ export function defaultValue(ctx: Context, field: FieldDescriptorProto): any {
       if (options.env === EnvOption.NODE) {
         return "Buffer.alloc(0)";
       } else {
-        return "new Uint8Array()";
+        return "new Uint8Array(0)";
       }
     case FieldDescriptorProto_Type.TYPE_MESSAGE:
     case FieldDescriptorProto_Type.TYPE_GROUP:

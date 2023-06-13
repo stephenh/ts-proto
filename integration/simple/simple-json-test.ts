@@ -29,7 +29,7 @@ describe("simple json", () => {
       ...s1,
       birthday: undefined,
       blobs: [],
-      blob: new Uint8Array(),
+      blob: new Uint8Array(0),
       createdAt: undefined,
       thing: undefined,
     });
@@ -308,7 +308,7 @@ describe("simple json", () => {
       createdAt: new Date(1_000),
       thing: undefined,
       blobs: [],
-      blob: new Uint8Array(),
+      blob: new Uint8Array(0),
       birthday: undefined,
       enabled: true,
     };

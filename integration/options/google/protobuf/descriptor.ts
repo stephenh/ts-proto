@@ -2559,7 +2559,7 @@ function createBaseUninterpretedOption(): UninterpretedOption {
     positiveIntValue: 0,
     negativeIntValue: 0,
     doubleValue: 0,
-    stringValue: new Uint8Array(),
+    stringValue: new Uint8Array(0),
     aggregateValue: "",
   };
 }

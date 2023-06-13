@@ -84,7 +84,7 @@ function createBaseOptionalsTest(): OptionalsTest {
     long: 0,
     truth: false,
     description: "",
-    data: new Uint8Array(),
+    data: new Uint8Array(0),
     repId: [],
     repChild: [],
     repState: [],
@@ -417,7 +417,7 @@ export const OptionalsTest = {
       long: isSet(object.long) ? Number(object.long) : 0,
       truth: isSet(object.truth) ? Boolean(object.truth) : false,
       description: isSet(object.description) ? String(object.description) : "",
-      data: isSet(object.data) ? bytesFromBase64(object.data) : new Uint8Array(),
+      data: isSet(object.data) ? bytesFromBase64(object.data) : new Uint8Array(0),
       repId: Array.isArray(object?.repId) ? object.repId.map((e: any) => Number(e)) : [],
       repChild: Array.isArray(object?.repChild) ? object.repChild.map((e: any) => Child.fromJSON(e)) : [],
       repState: Array.isArray(object?.repState) ? object.repState.map((e: any) => stateEnumFromJSON(e)) : [],
@@ -450,7 +450,7 @@ export const OptionalsTest = {
     message.truth !== undefined && (obj.truth = message.truth);
     message.description !== undefined && (obj.description = message.description);
     message.data !== undefined &&
-      (obj.data = base64FromBytes(message.data !== undefined ? message.data : new Uint8Array()));
+      (obj.data = base64FromBytes(message.data !== undefined ? message.data : new Uint8Array(0)));
     if (message.repId) {
       obj.repId = message.repId.map((e) => Math.round(e));
     } else {
@@ -482,7 +482,7 @@ export const OptionalsTest = {
       obj.repDescription = [];
     }
     if (message.repData) {
-      obj.repData = message.repData.map((e) => base64FromBytes(e !== undefined ? e : new Uint8Array()));
+      obj.repData = message.repData.map((e) => base64FromBytes(e !== undefined ? e : new Uint8Array(0)));
     } else {
       obj.repData = [];
     }
@@ -516,7 +516,7 @@ export const OptionalsTest = {
     message.long = object.long ?? 0;
     message.truth = object.truth ?? false;
     message.description = object.description ?? "";
-    message.data = object.data ?? new Uint8Array();
+    message.data = object.data ?? new Uint8Array(0);
     message.repId = object.repId?.map((e) => e) || [];
     message.repChild = object.repChild?.map((e) => Child.fromPartial(e)) || [];
     message.repState = object.repState?.map((e) => e) || [];

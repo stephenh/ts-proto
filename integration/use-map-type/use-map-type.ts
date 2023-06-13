@@ -477,7 +477,7 @@ export const Maps_Int32ToInt32Entry = {
 };
 
 function createBaseMaps_StringToBytesEntry(): Maps_StringToBytesEntry {
-  return { key: "", value: new Uint8Array() };
+  return { key: "", value: new Uint8Array(0) };
 }
 
 export const Maps_StringToBytesEntry = {
@@ -524,7 +524,7 @@ export const Maps_StringToBytesEntry = {
   fromJSON(object: any): Maps_StringToBytesEntry {
     return {
       key: isSet(object.key) ? String(object.key) : "",
-      value: isSet(object.value) ? bytesFromBase64(object.value) : new Uint8Array(),
+      value: isSet(object.value) ? bytesFromBase64(object.value) : new Uint8Array(0),
     };
   },
 
@@ -532,7 +532,7 @@ export const Maps_StringToBytesEntry = {
     const obj: any = {};
     message.key !== undefined && (obj.key = message.key);
     message.value !== undefined &&
-      (obj.value = base64FromBytes(message.value !== undefined ? message.value : new Uint8Array()));
+      (obj.value = base64FromBytes(message.value !== undefined ? message.value : new Uint8Array(0)));
     return obj;
   },
 
@@ -543,7 +543,7 @@ export const Maps_StringToBytesEntry = {
   fromPartial<I extends Exact<DeepPartial<Maps_StringToBytesEntry>, I>>(object: I): Maps_StringToBytesEntry {
     const message = createBaseMaps_StringToBytesEntry();
     message.key = object.key ?? "";
-    message.value = object.value ?? new Uint8Array();
+    message.value = object.value ?? new Uint8Array(0);
     return message;
   },
 };

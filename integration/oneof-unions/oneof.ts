@@ -72,7 +72,7 @@ export interface SimpleButOptional {
 }
 
 function createBasePleaseChoose(): PleaseChoose {
-  return { name: "", choice: undefined, age: 0, eitherOr: undefined, signature: new Uint8Array(), value: undefined };
+  return { name: "", choice: undefined, age: 0, eitherOr: undefined, signature: new Uint8Array(0), value: undefined };
 }
 
 export const PleaseChoose = {
@@ -254,7 +254,7 @@ export const PleaseChoose = {
         : isSet(object.thirdOption)
         ? { $case: "thirdOption", thirdOption: String(object.thirdOption) }
         : undefined,
-      signature: isSet(object.signature) ? bytesFromBase64(object.signature) : new Uint8Array(),
+      signature: isSet(object.signature) ? bytesFromBase64(object.signature) : new Uint8Array(0),
       value: isSet(object?.value) ? object.value : undefined,
     };
   },
@@ -278,7 +278,7 @@ export const PleaseChoose = {
     message.eitherOr?.$case === "or" && (obj.or = message.eitherOr?.or);
     message.eitherOr?.$case === "thirdOption" && (obj.thirdOption = message.eitherOr?.thirdOption);
     message.signature !== undefined &&
-      (obj.signature = base64FromBytes(message.signature !== undefined ? message.signature : new Uint8Array()));
+      (obj.signature = base64FromBytes(message.signature !== undefined ? message.signature : new Uint8Array(0)));
     message.value !== undefined && (obj.value = message.value);
     return obj;
   },
@@ -330,7 +330,7 @@ export const PleaseChoose = {
     ) {
       message.eitherOr = { $case: "thirdOption", thirdOption: object.eitherOr.thirdOption };
     }
-    message.signature = object.signature ?? new Uint8Array();
+    message.signature = object.signature ?? new Uint8Array(0);
     message.value = object.value ?? undefined;
     return message;
   },

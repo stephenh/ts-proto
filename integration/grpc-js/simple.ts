@@ -166,10 +166,10 @@ export const TestService = {
     requestStream: false,
     responseStream: false,
     requestSerialize: (value: Uint8Array | undefined) =>
-      Buffer.from(BytesValue.encode({ value: value ?? new Uint8Array() }).finish()),
+      Buffer.from(BytesValue.encode({ value: value ?? new Uint8Array(0) }).finish()),
     requestDeserialize: (value: Buffer) => BytesValue.decode(value).value,
     responseSerialize: (value: Uint8Array | undefined) =>
-      Buffer.from(BytesValue.encode({ value: value ?? new Uint8Array() }).finish()),
+      Buffer.from(BytesValue.encode({ value: value ?? new Uint8Array(0) }).finish()),
     responseDeserialize: (value: Buffer) => BytesValue.decode(value).value,
   },
   unaryFloatValue: {
