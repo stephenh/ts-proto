@@ -1,3 +1,10 @@
+# [1.149.0](https://github.com/stephenh/ts-proto/compare/v1.148.2...v1.149.0) (2023-06-13)
+
+
+### Features
+
+* support lib: es6 ([#850](https://github.com/stephenh/ts-proto/issues/850)) ([6280677](https://github.com/stephenh/ts-proto/commit/62806776beacb1e2b0ee921e4212f1e61ce5191e))
+
 ## [1.148.2](https://github.com/stephenh/ts-proto/compare/v1.148.1...v1.148.2) (2023-06-04)
 
 
