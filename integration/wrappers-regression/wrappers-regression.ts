@@ -15,11 +15,12 @@ export interface Clock {
   NowBool(request: Empty): Promise<BoolValue>;
 }
 
+export const ClockServiceName = "Clock";
 export class ClockClientImpl implements Clock {
   private readonly rpc: Rpc;
   private readonly service: string;
   constructor(rpc: Rpc, opts?: { service?: string }) {
-    this.service = opts?.service || "Clock";
+    this.service = opts?.service || ClockServiceName;
     this.rpc = rpc;
     this.Now = this.Now.bind(this);
     this.NowString = this.NowString.bind(this);

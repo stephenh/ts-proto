@@ -2776,11 +2776,12 @@ export interface PingService {
   ping(request: PingRequest): Promise<PingResponse>;
 }
 
+export const PingServiceServiceName = "simple.PingService";
 export class PingServiceClientImpl implements PingService {
   private readonly rpc: Rpc;
   private readonly service: string;
   constructor(rpc: Rpc, opts?: { service?: string }) {
-    this.service = opts?.service || "simple.PingService";
+    this.service = opts?.service || PingServiceServiceName;
     this.rpc = rpc;
     this.ping = this.ping.bind(this);
   }

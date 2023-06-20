@@ -278,11 +278,12 @@ export interface HeroService {
   FindManyVillain(request: Observable<VillainById>, metadata?: Foo): Observable<Villain>;
 }
 
+export const HeroServiceServiceName = "hero.HeroService";
 export class HeroServiceClientImpl implements HeroService {
   private readonly rpc: Rpc;
   private readonly service: string;
   constructor(rpc: Rpc, opts?: { service?: string }) {
-    this.service = opts?.service || "hero.HeroService";
+    this.service = opts?.service || HeroServiceServiceName;
     this.rpc = rpc;
     this.FindOneHero = this.FindOneHero.bind(this);
     this.FindOneVillain = this.FindOneVillain.bind(this);

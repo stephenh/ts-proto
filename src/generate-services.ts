@@ -181,8 +181,15 @@ export function generateServiceClientImpl(
   const { options } = ctx;
   const chunks: Code[] = [];
 
-  // Define the FooServiceImpl class
+  // Determine information about the service.
   const { name } = serviceDesc;
+  const serviceName = maybePrefixPackage(fileDesc, serviceDesc.name);
+
+  // Define the service name constant.
+  const serviceNameConst = `${name}ServiceName`;
+  chunks.push(code`export const ${serviceNameConst} = "${serviceName}";`);
+
+  // Define the FooServiceImpl class
   const i = options.context ? `${name}<Context>` : name;
   const t = options.context ? `<${contextTypeVar}>` : "";
   chunks.push(code`export class ${name}ClientImpl${t} implements ${def(i)} {`);
@@ -192,8 +199,7 @@ export function generateServiceClientImpl(
   chunks.push(code`private readonly rpc: ${rpcType};`);
   chunks.push(code`private readonly service: string;`);
   chunks.push(code`constructor(rpc: ${rpcType}, opts?: {service?: string}) {`);
-  const serviceID = maybePrefixPackage(fileDesc, serviceDesc.name);
-  chunks.push(code`this.service = opts?.service || "${serviceID}";`);
+  chunks.push(code`this.service = opts?.service || ${serviceNameConst};`);
   chunks.push(code`this.rpc = rpc;`);
 
   // Bind each FooService method to the FooServiceImpl class

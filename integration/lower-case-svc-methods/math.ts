@@ -221,11 +221,12 @@ export interface MathService<Context extends DataLoaders> {
   getDouble(ctx: Context, nu: number): Promise<number>;
 }
 
+export const MathServiceServiceName = "MathService";
 export class MathServiceClientImpl<Context extends DataLoaders> implements MathService<Context> {
   private readonly rpc: Rpc<Context>;
   private readonly service: string;
   constructor(rpc: Rpc<Context>, opts?: { service?: string }) {
-    this.service = opts?.service || "MathService";
+    this.service = opts?.service || MathServiceServiceName;
     this.rpc = rpc;
     this.add = this.add.bind(this);
     this.absoluteValue = this.absoluteValue.bind(this);
