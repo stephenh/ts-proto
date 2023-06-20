@@ -1,3 +1,10 @@
+# [1.150.0](https://github.com/stephenh/ts-proto/compare/v1.149.0...v1.150.0) (2023-06-20)
+
+
+### Features
+
+* expose service name as a separate exported constant ([#851](https://github.com/stephenh/ts-proto/issues/851)) ([84a4ed6](https://github.com/stephenh/ts-proto/commit/84a4ed610089363e3ee7a6a29581d8e0ef695f0d))
+
 # [1.149.0](https://github.com/stephenh/ts-proto/compare/v1.148.2...v1.149.0) (2023-06-13)
 
 
