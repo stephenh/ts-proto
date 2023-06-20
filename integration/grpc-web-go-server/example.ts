@@ -711,11 +711,12 @@ export interface DashState {
   ActiveUserSettingsStream(request: Empty): Observable<DashUserSettingsState>;
 }
 
+export const DashStateServiceName = "rpx.DashState";
 export class DashStateClientImpl implements DashState {
   private readonly rpc: Rpc;
   private readonly service: string;
   constructor(rpc: Rpc, opts?: { service?: string }) {
-    this.service = opts?.service || "rpx.DashState";
+    this.service = opts?.service || DashStateServiceName;
     this.rpc = rpc;
     this.UserSettings = this.UserSettings.bind(this);
     this.ActiveUserSettingsStream = this.ActiveUserSettingsStream.bind(this);
@@ -744,11 +745,12 @@ export interface DashAPICreds {
   Delete(request: DashAPICredsDeleteReq): Promise<DashCred>;
 }
 
+export const DashAPICredsServiceName = "rpx.DashAPICreds";
 export class DashAPICredsClientImpl implements DashAPICreds {
   private readonly rpc: Rpc;
   private readonly service: string;
   constructor(rpc: Rpc, opts?: { service?: string }) {
-    this.service = opts?.service || "rpx.DashAPICreds";
+    this.service = opts?.service || DashAPICredsServiceName;
     this.rpc = rpc;
     this.Create = this.Create.bind(this);
     this.Update = this.Update.bind(this);

@@ -668,11 +668,12 @@ export interface EntityService {
   WriteMethod(request: WriteMethodRequest): Promise<WriteMethodResponse>;
 }
 
+export const EntityServiceServiceName = "batching.EntityService";
 export class EntityServiceClientImpl implements EntityService {
   private readonly rpc: Rpc;
   private readonly service: string;
   constructor(rpc: Rpc, opts?: { service?: string }) {
-    this.service = opts?.service || "batching.EntityService";
+    this.service = opts?.service || EntityServiceServiceName;
     this.rpc = rpc;
     this.BatchQuery = this.BatchQuery.bind(this);
     this.BatchMapQuery = this.BatchMapQuery.bind(this);

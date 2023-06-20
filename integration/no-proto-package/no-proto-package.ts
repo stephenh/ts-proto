@@ -116,11 +116,12 @@ export interface UserState {
   GetUsers(request: Empty): Observable<User>;
 }
 
+export const UserStateServiceName = "UserState";
 export class UserStateClientImpl implements UserState {
   private readonly rpc: Rpc;
   private readonly service: string;
   constructor(rpc: Rpc, opts?: { service?: string }) {
-    this.service = opts?.service || "UserState";
+    this.service = opts?.service || UserStateServiceName;
     this.rpc = rpc;
     this.GetUsers = this.GetUsers.bind(this);
   }

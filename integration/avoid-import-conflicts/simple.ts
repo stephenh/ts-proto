@@ -330,11 +330,12 @@ export interface FooService {
   Create(request: FooServiceCreateRequest): Promise<FooServiceCreateResponse>;
 }
 
+export const FooServiceServiceName = "simple.FooService";
 export class FooServiceClientImpl implements FooService {
   private readonly rpc: Rpc;
   private readonly service: string;
   constructor(rpc: Rpc, opts?: { service?: string }) {
-    this.service = opts?.service || "simple.FooService";
+    this.service = opts?.service || FooServiceServiceName;
     this.rpc = rpc;
     this.Create = this.Create.bind(this);
   }

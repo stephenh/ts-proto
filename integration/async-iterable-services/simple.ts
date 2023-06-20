@@ -108,11 +108,12 @@ export interface Echoer {
   EchoBidiStream(request: AsyncIterable<EchoMsg>): AsyncIterable<EchoMsg>;
 }
 
+export const EchoerServiceName = "simple.Echoer";
 export class EchoerClientImpl implements Echoer {
   private readonly rpc: Rpc;
   private readonly service: string;
   constructor(rpc: Rpc, opts?: { service?: string }) {
-    this.service = opts?.service || "simple.Echoer";
+    this.service = opts?.service || EchoerServiceName;
     this.rpc = rpc;
     this.Echo = this.Echo.bind(this);
     this.EchoServerStream = this.EchoServerStream.bind(this);

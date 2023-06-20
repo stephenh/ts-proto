@@ -219,11 +219,12 @@ export interface MyService {
   MyMethod(request: RequestType): Promise<ResponseType>;
 }
 
+export const MyServiceServiceName = "MyService";
 export class MyServiceClientImpl implements MyService {
   private readonly rpc: Rpc;
   private readonly service: string;
   constructor(rpc: Rpc, opts?: { service?: string }) {
-    this.service = opts?.service || "MyService";
+    this.service = opts?.service || MyServiceServiceName;
     this.rpc = rpc;
     this.MyMethod = this.MyMethod.bind(this);
   }

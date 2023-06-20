@@ -230,11 +230,12 @@ export interface Clock {
   Now(request: Empty): Promise<Timestamp>;
 }
 
+export const ClockServiceName = "Clock";
 export class ClockClientImpl implements Clock {
   private readonly rpc: Rpc;
   private readonly service: string;
   constructor(rpc: Rpc, opts?: { service?: string }) {
-    this.service = opts?.service || "Clock";
+    this.service = opts?.service || ClockServiceName;
     this.rpc = rpc;
     this.Now = this.Now.bind(this);
   }
