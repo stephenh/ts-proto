@@ -1,3 +1,10 @@
+## [1.150.1](https://github.com/stephenh/ts-proto/compare/v1.150.0...v1.150.1) (2023-06-23)
+
+
+### Bug Fixes
+
+* don't generate transitively imported files for mapped imports ([#854](https://github.com/stephenh/ts-proto/issues/854)) ([edd9044](https://github.com/stephenh/ts-proto/commit/edd9044568739b089f1ec66b53d0cc36d540610b))
+
 # [1.150.0](https://github.com/stephenh/ts-proto/compare/v1.149.0...v1.150.0) (2023-06-20)
 
 
