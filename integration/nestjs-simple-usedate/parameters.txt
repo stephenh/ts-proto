@@ -1,1 +1,1 @@
-nestJs=true,useDate=true
+nestJs=true,forceLong=string,useDate=true

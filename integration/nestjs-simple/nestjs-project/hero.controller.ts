@@ -18,6 +18,12 @@ export class HeroController implements HeroServiceController {
       birthDate: { seconds: 1, nanos: 3 },
       externalData: { bar: 10, baz: "foo", isPassing: true },
     },
+    {
+      id: 3,
+      name: "Bob",
+      birthDate: undefined,
+      externalData: undefined,
+    },
   ];
 
   private readonly villains: Villain[] = [

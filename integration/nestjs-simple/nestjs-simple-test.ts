@@ -53,6 +53,14 @@ describe("nestjs-simple-test nestjs", () => {
     });
   });
 
+  it("should findOneHero with undefined timestamp", async () => {
+    const hero = await heroService.findOneHero({ id: 3 }).toPromise();
+    expect(hero).toEqual({
+      id: 3,
+      name: "Bob",
+    });
+  });
+
   it("should findOneVillain", async () => {
     const villain = await heroService.findOneVillain({ id: 1 }).toPromise();
     expect(villain).toEqual({ id: 1, name: "John" });
