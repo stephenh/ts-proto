@@ -18,16 +18,33 @@ async function main() {
   const typeMap = createTypeMap(request, options);
   const utils = makeUtils(options);
   const ctx: Context = { typeMap, options, utils };
+  let filesToGenerate;
 
-  const filesToGenerate = options.emitImportedFiles ? request.protoFile : protoFilesToGenerate(request);
+  if (options.emitImportedFiles) {
+    const fileSet = new Set();
+    const addFilesUnlessAliased = (filenames: string[]) => {
+      filenames
+        .filter((name) => !options.M[name])
+        .forEach((name) => {
+          fileSet.add(name);
+          const file = request.protoFile.find((file) => file.name === name);
+          if (file && file.dependency.length > 0) {
+            addFilesUnlessAliased(file.dependency);
+          }
+        });
+    };
+    addFilesUnlessAliased(request.fileToGenerate);
+    filesToGenerate = request.protoFile.filter((file) => fileSet.has(file.name));
+  } else {
+    filesToGenerate = protoFilesToGenerate(request).filter((file) => !options.M[file.name]);
+  }
+
   const files = await Promise.all(
-    filesToGenerate
-      .filter((file) => !options.M[file.name])
-      .map(async (file) => {
-        const [path, code] = generateFile(ctx, file);
-        const content = code.toString({ ...getTsPoetOpts(options), path });
-        return { name: path, content };
-      })
+    filesToGenerate.map(async (file) => {
+      const [path, code] = generateFile(ctx, file);
+      const content = code.toString({ ...getTsPoetOpts(options), path });
+      return { name: path, content };
+    })
   );
 
   if (options.outputTypeRegistry) {
