@@ -38,7 +38,7 @@ describe("nestjs-simple-test nestjs", () => {
 
   it("should addOneHero", async () => {
     const emptyResponse = await heroService
-      .addOneHero({ id: 3, name: "Toon", birthDate: undefined, externalData: { some: "data" } })
+      .addOneHero({ id: 3, name: "Toon", birthDate: undefined, externalData: { some: "data" }, nickName: "Guy", experience: 1000, isFamous: true })
       .toPromise();
     expect(emptyResponse).toEqual({});
   });

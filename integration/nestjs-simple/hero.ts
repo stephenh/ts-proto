@@ -21,6 +21,9 @@ export interface Hero {
   name: string;
   birthDate: Timestamp | undefined;
   externalData: { [key: string]: any } | undefined;
+  nickName: string | undefined;
+  isFamous: boolean | undefined;
+  experience: number | undefined;
 }
 
 export interface Villain {
@@ -31,6 +34,87 @@ export interface Villain {
 export const HERO_PACKAGE_NAME = "hero";
 
 wrappers[".google.protobuf.Struct"] = { fromObject: Struct.wrap, toObject: Struct.unwrap } as any;
+
+wrappers[".google.protobuf.StringValue"] = {
+  fromObject(value: any) {
+    return { value };
+  },
+  toObject(message: { value: any }) {
+    return message.value;
+  },
+} as any;
+
+wrappers[".google.protobuf.Int32Value"] = {
+  fromObject(value: any) {
+    return { value };
+  },
+  toObject(message: { value: any }) {
+    return message.value;
+  },
+} as any;
+
+wrappers[".google.protobuf.UInt32Value"] = {
+  fromObject(value: any) {
+    return { value };
+  },
+  toObject(message: { value: any }) {
+    return message.value;
+  },
+} as any;
+
+wrappers[".google.protobuf.DoubleValue"] = {
+  fromObject(value: any) {
+    return { value };
+  },
+  toObject(message: { value: any }) {
+    return message.value;
+  },
+} as any;
+
+wrappers[".google.protobuf.FloatValue"] = {
+  fromObject(value: any) {
+    return { value };
+  },
+  toObject(message: { value: any }) {
+    return message.value;
+  },
+} as any;
+
+wrappers[".google.protobuf.Int64Value"] = {
+  fromObject(value: any) {
+    return { value };
+  },
+  toObject(message: { value: any }) {
+    return message.value;
+  },
+} as any;
+
+wrappers[".google.protobuf.UInt64Value"] = {
+  fromObject(value: any) {
+    return { value };
+  },
+  toObject(message: { value: any }) {
+    return message.value;
+  },
+} as any;
+
+wrappers[".google.protobuf.BoolValue"] = {
+  fromObject(value: any) {
+    return { value };
+  },
+  toObject(message: { value: any }) {
+    return message.value;
+  },
+} as any;
+
+wrappers[".google.protobuf.BytesValue"] = {
+  fromObject(value: any) {
+    return { value };
+  },
+  toObject(message: { value: any }) {
+    return message.value;
+  },
+} as any;
 
 export interface HeroServiceClient {
   addOneHero(request: Hero): Observable<Empty>;

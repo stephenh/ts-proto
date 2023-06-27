@@ -19,7 +19,7 @@ import {
   isBytesValueType,
   isEnum,
   isFieldMaskType,
-  isFieldMaskTypeName,
+  isFieldMaskTypeName, isPrimitiveType,
   isListValueType,
   isListValueTypeName,
   isLong,
@@ -291,6 +291,12 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
     }
   }
 
+  if (options.nestJs) {
+    if (fileDesc.messageType.find((message) => message.field.find(isPrimitiveType))) {
+      chunks.push(...makeProtobufPrimitivesWrappers(options));
+    }
+  }
+
   let hasServerStreamingMethods = false;
   let hasStreamingMethods = false;
 
@@ -434,6 +440,36 @@ function makeProtobufTimestampWrapper() {
           return new Date(message.seconds * 1000 + message.nanos / 1e6);
         },
       } as any;`;
+}
+
+function makeProtobufPrimitivesWrappers(options: Options): Code[] {
+  const wrappers = imp("wrappers@protobufjs");
+  const chunks: Code[] = [];
+  const typeNames = [
+      'StringValue',
+      'Int32Value',
+      'UInt32Value',
+      'DoubleValue',
+      'FloatValue',
+      'Int64Value',
+      'UInt64Value',
+      'BoolValue',
+      'BytesValue',
+  ];
+
+  for (const typeName of typeNames) {
+    chunks.push(code`
+      ${wrappers}['.google.protobuf.${typeName}'] = {
+        fromObject(value: any) {
+          return { value };
+        },
+        toObject(message: { value: any }) {
+          return message.value;
+        },
+      } as any;`);
+  }
+
+  return chunks;
 }
 
 function makeProtobufStructWrapper(options: Options) {

@@ -10,6 +10,9 @@ export class SampleService implements HeroServiceController {
       name: "test",
       birthDate: undefined,
       externalData: { foo: "bar", fizz: 1, nested: { isFailing: false, array: [1, "foo", ["bar"]] } },
+      experience: 1000,
+      nickName: "test",
+      isFamous: true
     });
   }
 
