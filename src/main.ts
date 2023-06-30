@@ -602,7 +602,10 @@ function makeDeepPartial(options: Options, longs: ReturnType<typeof makeLongUtil
   );
 
   // Based on https://github.com/sindresorhus/type-fest/pull/259
-  const maybeExcludeType = options.outputTypeAnnotations || options.outputTypeRegistry ? `| '$type'` : "";
+  const maybeExcludeType =
+    (options.outputTypeAnnotations || options.outputTypeRegistry) && options.outputTypeAnnotations !== "const-only"
+      ? `| '$type'`
+      : "";
   const Exact = conditionalOutput(
     "Exact",
     code`
@@ -616,7 +619,9 @@ function makeDeepPartial(options: Options, longs: ReturnType<typeof makeLongUtil
 
   // Based on the type from ts-essentials
   const keys =
-    options.outputTypeAnnotations || options.outputTypeRegistry ? code`Exclude<keyof T, '$type'>` : code`keyof T`;
+    (options.outputTypeAnnotations || options.outputTypeRegistry) && options.outputTypeAnnotations !== "const-only"
+      ? code`Exclude<keyof T, '$type'>`
+      : code`keyof T`;
   const DeepPartial = conditionalOutput(
     "DeepPartial",
     code`
@@ -696,7 +701,9 @@ function makeTimestampMethods(options: Options, longs: ReturnType<typeof makeLon
   }
 
   const maybeTypeField =
-    options.outputTypeAnnotations || options.outputTypeRegistry ? `$type: 'google.protobuf.Timestamp',` : "";
+    (options.outputTypeAnnotations || options.outputTypeRegistry) && options.outputTypeAnnotations !== "const-only"
+      ? `$type: 'google.protobuf.Timestamp',`
+      : "";
 
   const toTimestamp = conditionalOutput(
     "toTimestamp",
@@ -851,7 +858,7 @@ function generateInterfaceDeclaration(
   // interface name should be defined to avoid import collisions
   chunks.push(code`export interface ${def(fullName)} {`);
 
-  if (ctx.options.outputTypeAnnotations || ctx.options.outputTypeRegistry) {
+  if ((options.outputTypeAnnotations || options.outputTypeRegistry) && options.outputTypeAnnotations !== "const-only") {
     chunks.push(code`$type: '${fullTypeName}',`);
   }
 
@@ -971,7 +978,7 @@ function generateBaseInstanceFactory(
     fields.push(code`${name}: ${val}`);
   }
 
-  if (ctx.options.outputTypeAnnotations || ctx.options.outputTypeRegistry) {
+  if ((options.outputTypeAnnotations || options.outputTypeRegistry) && options.outputTypeAnnotations !== "const-only") {
     fields.unshift(code`$type: '${fullTypeName}'`);
   }
 
@@ -1246,7 +1253,9 @@ function getEncodeWriteSnippet(ctx: Context, field: FieldDescriptorProto): (plac
     return (place) => code`${type}.encode(${utils.toTimestamp}(${place}), writer.uint32(${tag}).fork()).ldelim()`;
   } else if (isValueType(ctx, field)) {
     const maybeTypeField =
-      options.outputTypeAnnotations || options.outputTypeRegistry ? `$type: '${field.typeName.slice(1)}',` : "";
+      (options.outputTypeAnnotations || options.outputTypeRegistry) && options.outputTypeAnnotations !== "const-only"
+        ? `$type: '${field.typeName.slice(1)}',`
+        : "";
 
     const type = basicTypeName(ctx, field, { keepValueType: true });
     const wrappedValue = (place: string): Code => {
@@ -1309,7 +1318,10 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
       if (isMapType(ctx, messageDesc, field)) {
         const valueType = (typeMap.get(field.typeName)![2] as DescriptorProto).field[1];
         const maybeTypeField =
-          options.outputTypeAnnotations || options.outputTypeRegistry ? `$type: '${field.typeName.slice(1)}',` : "";
+          (options.outputTypeAnnotations || options.outputTypeRegistry) &&
+          options.outputTypeAnnotations !== "const-only"
+            ? `$type: '${field.typeName.slice(1)}',`
+            : "";
         const entryWriteSnippet = isValueType(ctx, valueType)
           ? code`
               if (value !== undefined) {
@@ -1561,7 +1573,10 @@ function generateExtension(ctx: Context, message: DescriptorProto | undefined, e
         return (place) => code`${type}.encode(${utils.toTimestamp}(${place}), writer.fork()).ldelim()`;
       } else if (isValueType(ctx, field)) {
         const maybeTypeField =
-          options.outputTypeAnnotations || options.outputTypeRegistry ? `$type: '${field.typeName.slice(1)}',` : "";
+          (options.outputTypeAnnotations || options.outputTypeRegistry) &&
+          options.outputTypeAnnotations !== "const-only"
+            ? `$type: '${field.typeName.slice(1)}',`
+            : "";
 
         const type = basicTypeName(ctx, field, { keepValueType: true });
         const wrappedValue = (place: string): Code => {
@@ -1706,7 +1721,7 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
       return {
   `);
 
-  if (ctx.options.outputTypeAnnotations || ctx.options.outputTypeRegistry) {
+  if ((options.outputTypeAnnotations || options.outputTypeRegistry) && options.outputTypeAnnotations !== "const-only") {
     chunks.push(code`$type: ${fullName}.$type,`);
   }
 

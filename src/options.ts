@@ -48,7 +48,7 @@ export type Options = {
   outputEncodeMethods: true | false | "encode-only" | "decode-only" | "encode-no-creation";
   outputJsonMethods: boolean;
   outputPartialMethods: boolean;
-  outputTypeAnnotations: boolean;
+  outputTypeAnnotations: boolean | "const-only";
   outputTypeRegistry: boolean;
   stringEnums: boolean;
   constEnums: boolean;
