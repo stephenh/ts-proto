@@ -1,3 +1,10 @@
+# [1.151.0](https://github.com/stephenh/ts-proto/compare/v1.150.1...v1.151.0) (2023-07-04)
+
+
+### Features
+
+* Add static-only variant to to outputTypeAnnotations option ([#858](https://github.com/stephenh/ts-proto/issues/858)) ([d7c4af7](https://github.com/stephenh/ts-proto/commit/d7c4af7e068200b30cf773703ef906595aec6042))
+
 ## [1.150.1](https://github.com/stephenh/ts-proto/compare/v1.150.0...v1.150.1) (2023-06-23)
 
 
