@@ -1,3 +1,10 @@
+## [1.151.1](https://github.com/stephenh/ts-proto/compare/v1.151.0...v1.151.1) (2023-07-05)
+
+
+### Bug Fixes
+
+* generate different MessageType when using static-only ([#863](https://github.com/stephenh/ts-proto/issues/863)) ([477e5f5](https://github.com/stephenh/ts-proto/commit/477e5f5bc0aaf70a92d7231f4a9e746d13b2bbcf)), closes [#861](https://github.com/stephenh/ts-proto/issues/861)
+
 # [1.151.0](https://github.com/stephenh/ts-proto/compare/v1.150.1...v1.151.0) (2023-07-04)
 
 
