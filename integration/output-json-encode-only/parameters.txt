@@ -1,0 +1,1 @@
+outputEncodeMethods=false,outputPartialMethods=false,outputJsonMethods=encode-only,nestJs=false

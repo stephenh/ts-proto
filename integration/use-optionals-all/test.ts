@@ -1,6 +1,7 @@
 /* eslint-disable */
 import * as Long from "long";
 import * as _m0 from "protobufjs/minimal";
+import { Timestamp } from "./google/protobuf/timestamp";
 
 export const protobufPackage = "optionalstest";
 
@@ -66,6 +67,7 @@ export interface OptionalsTest {
   optDescription?: string | undefined;
   optData?: Uint8Array | undefined;
   translations?: { [key: string]: string };
+  timestamp?: Date;
 }
 
 export interface OptionalsTest_TranslationsEntry {
@@ -100,6 +102,7 @@ function createBaseOptionalsTest(): OptionalsTest {
     optDescription: undefined,
     optData: undefined,
     translations: {},
+    timestamp: undefined,
   };
 }
 
@@ -193,6 +196,9 @@ export const OptionalsTest = {
     Object.entries(message.translations || {}).forEach(([key, value]) => {
       OptionalsTest_TranslationsEntry.encode({ key: key as any, value }, writer.uint32(242).fork()).ldelim();
     });
+    if (message.timestamp !== undefined) {
+      Timestamp.encode(toTimestamp(message.timestamp), writer.uint32(250).fork()).ldelim();
+    }
     return writer;
   },
 
@@ -400,6 +406,13 @@ export const OptionalsTest = {
             message.translations![entry30.key] = entry30.value;
           }
           continue;
+        case 31:
+          if (tag !== 250) {
+            break;
+          }
+
+          message.timestamp = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -438,6 +451,7 @@ export const OptionalsTest = {
           return acc;
         }, {})
         : {},
+      timestamp: isSet(object.timestamp) ? fromJsonTimestamp(object.timestamp) : undefined,
     };
   },
 
@@ -501,6 +515,7 @@ export const OptionalsTest = {
         obj.translations[k] = v;
       });
     }
+    message.timestamp !== undefined && (obj.timestamp = message.timestamp.toISOString());
     return obj;
   },
 
@@ -542,6 +557,7 @@ export const OptionalsTest = {
       },
       {},
     );
+    message.timestamp = object.timestamp ?? undefined;
     return message;
   },
 };
@@ -714,6 +730,28 @@ export type DeepPartial<T> = T extends Builtin ? T
 type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
+
+function toTimestamp(date: Date): Timestamp {
+  const seconds = date.getTime() / 1_000;
+  const nanos = (date.getTime() % 1_000) * 1_000_000;
+  return { seconds, nanos };
+}
+
+function fromTimestamp(t: Timestamp): Date {
+  let millis = (t.seconds || 0) * 1_000;
+  millis += (t.nanos || 0) / 1_000_000;
+  return new Date(millis);
+}
+
+function fromJsonTimestamp(o: any): Date {
+  if (o instanceof Date) {
+    return o;
+  } else if (typeof o === "string") {
+    return new Date(o);
+  } else {
+    return fromTimestamp(Timestamp.fromJSON(o));
+  }
+}
 
 function longToNumber(long: Long): number {
   if (long.gt(Number.MAX_SAFE_INTEGER)) {
