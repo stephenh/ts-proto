@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package foo;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/struct.proto";
+
+message Foo {
+  google.protobuf.Timestamp timestamp = 1;
+}
+
+message Foo2 {
+  google.protobuf.Timestamp timestamp = 1;
+}
+
+message WithStruct {
+  google.protobuf.Struct struct = 1;
+}

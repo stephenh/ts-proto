@@ -77,7 +77,7 @@ import {
 import { generateEncodeTransform, generateDecodeTransform } from "./generate-async-iterable";
 import { generateEnum } from "./enums";
 import { visit, visitServices } from "./visit";
-import { DateOption, EnvOption, LongOption, OneofOption, Options, ServiceOption } from "./options";
+import { addTypeToMessages, DateOption, EnvOption, LongOption, OneofOption, Options, ServiceOption } from "./options";
 import { Context } from "./context";
 import { generateSchema } from "./schema";
 import { ConditionalOutput } from "ts-poet/build/ConditionalOutput";
@@ -2299,10 +2299,4 @@ function maybeReadonly(options: Options): string {
 
 function maybeAsAny(options: Options): string {
   return options.useReadonlyTypes ? " as any" : "";
-}
-
-function addTypeToMessages(options: Options): boolean {
-  return (
-    (options.outputTypeAnnotations || options.outputTypeRegistry) && options.outputTypeAnnotations !== "static-only"
-  );
 }
