@@ -269,3 +269,9 @@ export function getTsPoetOpts(_options: Options): ToStringOpts {
     ...(_options.esModuleInterop ? { forceDefaultImport: imports } : { forceModuleImport: imports }),
   };
 }
+
+export function addTypeToMessages(options: Options): boolean {
+  return (
+    (options.outputTypeAnnotations || options.outputTypeRegistry) && options.outputTypeAnnotations !== "static-only"
+  );
+}
