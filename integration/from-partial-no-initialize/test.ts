@@ -4,17 +4,17 @@ import * as _m0 from "protobufjs/minimal";
 export const protobufPackage = "";
 
 export interface TPartialMessage {
-  field?: string;
+  field?: string | undefined;
 }
 
 export interface TPartial {
-  number?: number;
-  string?: string;
-  map?: { [key: string]: string };
-  message?: TPartialMessage;
-  repeatedMessage?: TPartialMessage[];
-  repeatedString?: string[];
-  repeatedNumber?: number[];
+  number?: number | undefined;
+  string?: string | undefined;
+  map?: { [key: string]: string } | undefined;
+  message?: TPartialMessage | undefined;
+  repeatedMessage?: TPartialMessage[] | undefined;
+  repeatedString?: string[] | undefined;
+  repeatedNumber?: number[] | undefined;
 }
 
 export interface TPartial_MapEntry {

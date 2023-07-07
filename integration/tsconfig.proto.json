@@ -1,12 +1,17 @@
 {
-  "extends": "../tsconfig.json",
+  "extends": ["../tsconfig.json", "@tsconfig/strictest/tsconfig.json"],
   "compilerOptions": {
     "lib": ["es2018", "DOM"],
+    "esModuleInterop": false,
+    "noUnusedParameters": false,
+    "noUnusedLocals": false
   },
   "include": [
-    "**/*-test.ts"
+    "**/*.ts"
   ],
   "exclude": [
+    "**/*-test.ts",
+    "codegen.ts",
     "angular",
     "batching-with-context-esModuleInterop",
     "import-mapping/mapping.ts",

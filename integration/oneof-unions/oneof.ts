@@ -12,12 +12,13 @@ export interface PleaseChoose {
     | { $case: "aMessage"; aMessage: PleaseChoose_Submessage }
     | { $case: "aBool"; aBool: boolean }
     | { $case: "bunchaBytes"; bunchaBytes: Uint8Array }
-    | { $case: "anEnum"; anEnum: PleaseChoose_StateEnum };
+    | { $case: "anEnum"; anEnum: PleaseChoose_StateEnum }
+    | undefined;
   age: number;
   eitherOr?: { $case: "either"; either: string } | { $case: "or"; or: string } | {
     $case: "thirdOption";
     thirdOption: string;
-  };
+  } | undefined;
   signature: Uint8Array;
   value: any | undefined;
 }
@@ -463,10 +464,10 @@ export const SimpleButOptional = {
   },
 };
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
+declare const self: any | undefined;
+declare const window: any | undefined;
+declare const global: any | undefined;
+const tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") {
     return globalThis;
   }

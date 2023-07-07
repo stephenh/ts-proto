@@ -5,7 +5,7 @@ import { Timestamp } from "../google/protobuf/timestamp";
 export const protobufPackage = "simple";
 
 export interface ImportedThing {
-  createdAt?: Date;
+  createdAt?: Date | undefined;
 }
 
 function createBaseImportedThing(): ImportedThing {

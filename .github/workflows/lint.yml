@@ -22,6 +22,10 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: install dependencies
         run: yarn install || echo "ignore failure"
+      - name: TypeScript
+        run: yarn tsc:check
+        env:
+          CI: true
       - name: Prettier
         run: yarn format:check
         env:

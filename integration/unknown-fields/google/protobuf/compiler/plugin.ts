@@ -15,7 +15,7 @@ export interface Version {
    * be empty for mainline stable releases.
    */
   suffix: string;
-  _unknownFields?: { [key: number]: Uint8Array[] };
+  _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
 /** An encoded CodeGeneratorRequest is written to the plugin's stdin. */
@@ -47,7 +47,7 @@ export interface CodeGeneratorRequest {
   protoFile: FileDescriptorProto[];
   /** The version number of protocol compiler. */
   compilerVersion: Version | undefined;
-  _unknownFields?: { [key: number]: Uint8Array[] };
+  _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
 /** The plugin writes an encoded CodeGeneratorResponse to stdout. */
@@ -69,7 +69,7 @@ export interface CodeGeneratorResponse {
    */
   supportedFeatures: number;
   file: CodeGeneratorResponse_File[];
-  _unknownFields?: { [key: number]: Uint8Array[] };
+  _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
 /** Sync with code_generator.h. */
@@ -143,7 +143,7 @@ export interface CodeGeneratorResponse_File {
    * into the code generation metadata for the generated files.
    */
   generatedCodeInfo: GeneratedCodeInfo | undefined;
-  _unknownFields?: { [key: number]: Uint8Array[] };
+  _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
 function createBaseVersion(): Version {
@@ -165,8 +165,7 @@ export const Version = {
       writer.uint32(34).string(message.suffix);
     }
     if (message._unknownFields !== undefined) {
-      for (const key in message._unknownFields) {
-        const values = message._unknownFields[key];
+      for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag);
@@ -255,8 +254,7 @@ export const CodeGeneratorRequest = {
       Version.encode(message.compilerVersion, writer.uint32(26).fork()).ldelim();
     }
     if (message._unknownFields !== undefined) {
-      for (const key in message._unknownFields) {
-        const values = message._unknownFields[key];
+      for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag);
@@ -342,8 +340,7 @@ export const CodeGeneratorResponse = {
       CodeGeneratorResponse_File.encode(v!, writer.uint32(122).fork()).ldelim();
     }
     if (message._unknownFields !== undefined) {
-      for (const key in message._unknownFields) {
-        const values = message._unknownFields[key];
+      for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag);
@@ -425,8 +422,7 @@ export const CodeGeneratorResponse_File = {
       GeneratedCodeInfo.encode(message.generatedCodeInfo, writer.uint32(130).fork()).ldelim();
     }
     if (message._unknownFields !== undefined) {
-      for (const key in message._unknownFields) {
-        const values = message._unknownFields[key];
+      for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag);
@@ -496,10 +492,10 @@ export const CodeGeneratorResponse_File = {
   },
 };
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
+declare const self: any | undefined;
+declare const window: any | undefined;
+declare const global: any | undefined;
+const tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") {
     return globalThis;
   }

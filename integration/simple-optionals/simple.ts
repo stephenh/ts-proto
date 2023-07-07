@@ -58,15 +58,15 @@ export interface Simple {
   /** Age */
   age: number;
   /** This comment will also attach */
-  createdAt?: Date;
-  child?: Child;
+  createdAt?: Date | undefined;
+  child?: Child | undefined;
   state: StateEnum;
   grandChildren: Child[];
   coins: number[];
   snacks: string[];
   oldStates: StateEnum[];
   /** A thing (imported from thing) */
-  thing?: ImportedThing;
+  thing?: ImportedThing | undefined;
 }
 
 export interface Child {
@@ -115,7 +115,7 @@ export function child_TypeToJSON(object: Child_Type): string {
 
 export interface Nested {
   name: string;
-  message?: Nested_InnerMessage;
+  message?: Nested_InnerMessage | undefined;
   state: Nested_InnerEnum;
 }
 
@@ -161,7 +161,7 @@ export function nested_InnerEnumToJSON(object: Nested_InnerEnum): string {
 /** Comment for a nested message * / */
 export interface Nested_InnerMessage {
   name: string;
-  deep?: Nested_InnerMessage_DeepMessage;
+  deep?: Nested_InnerMessage_DeepMessage | undefined;
 }
 
 export interface Nested_InnerMessage_DeepMessage {
@@ -174,9 +174,9 @@ export interface OneOfMessage {
 }
 
 export interface SimpleWithWrappers {
-  name?: string;
-  age?: number;
-  enabled?: boolean;
+  name?: string | undefined;
+  age?: number | undefined;
+  enabled?: boolean | undefined;
   coins: number[];
   snacks: string[];
 }
@@ -193,7 +193,7 @@ export interface SimpleWithMap {
 
 export interface SimpleWithMap_EntitiesByIdEntry {
   key: number;
-  value?: Entity;
+  value?: Entity | undefined;
 }
 
 export interface SimpleWithMap_NameLookupEntry {
@@ -212,7 +212,7 @@ export interface SimpleWithSnakeCaseMap {
 
 export interface SimpleWithSnakeCaseMap_EntitiesByIdEntry {
   key: number;
-  value?: Entity;
+  value?: Entity | undefined;
 }
 
 export interface PingRequest {
@@ -1869,10 +1869,10 @@ interface Rpc {
   request(service: string, method: string, data: Uint8Array): Promise<Uint8Array>;
 }
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
+declare const self: any | undefined;
+declare const window: any | undefined;
+declare const global: any | undefined;
+const tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") {
     return globalThis;
   }

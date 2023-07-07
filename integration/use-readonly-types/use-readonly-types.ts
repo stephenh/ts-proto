@@ -19,7 +19,7 @@ export interface Entity {
   readonly oneOfValue?: { readonly $case: "theStringValue"; readonly theStringValue: string } | {
     readonly $case: "theIntValue";
     readonly theIntValue: number;
-  };
+  } | undefined;
 }
 
 export interface SubEntity {

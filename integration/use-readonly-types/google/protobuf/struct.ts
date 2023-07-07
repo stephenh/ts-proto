@@ -72,7 +72,8 @@ export interface Value {
     | { readonly $case: "stringValue"; readonly stringValue: string }
     | { readonly $case: "boolValue"; readonly boolValue: boolean }
     | { readonly $case: "structValue"; readonly structValue: { readonly [key: string]: any } | undefined }
-    | { readonly $case: "listValue"; readonly listValue: ReadonlyArray<any> | undefined };
+    | { readonly $case: "listValue"; readonly listValue: ReadonlyArray<any> | undefined }
+    | undefined;
 }
 
 /**
