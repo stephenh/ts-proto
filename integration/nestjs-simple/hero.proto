@@ -3,6 +3,7 @@ syntax = "proto3";
 import "google/protobuf/empty.proto";
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/struct.proto";
+import "google/protobuf/wrappers.proto";
 
 package hero;
 
@@ -28,6 +29,9 @@ message Hero {
     string name = 2;
     .google.protobuf.Timestamp birth_date = 3;
     .google.protobuf.Struct external_data = 4;
+    .google.protobuf.StringValue nick_name = 5;
+    .google.protobuf.BoolValue is_famous = 6;
+    .google.protobuf.Int32Value experience = 7;
 }
 
 message Villain {

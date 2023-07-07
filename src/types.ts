@@ -467,6 +467,10 @@ export function isStructTypeName(typeName: string): boolean {
   return typeName === "google.protobuf.Struct" || typeName === ".google.protobuf.Struct";
 }
 
+export function isPrimitiveType(field: FieldDescriptorProto): boolean {
+  return !!primitiveWrapperTypeName(field.typeName);
+}
+
 export function isLongValueType(field: FieldDescriptorProto): boolean {
   return field.typeName === ".google.protobuf.Int64Value" || field.typeName === ".google.protobuf.UInt64Value";
 }
@@ -512,6 +516,33 @@ export function valueTypeName(ctx: Context, typeName: string): Code | undefined 
       return ctx.options.useJsonWireFormat ? code`string` : undefined;
     case ".google.protobuf.Timestamp":
       return ctx.options.useJsonWireFormat ? code`string` : undefined;
+    default:
+      return undefined;
+  }
+}
+
+export function primitiveWrapperTypeName(typeName: string): string | undefined {
+  switch (typeName) {
+    case "google.protobuf.StringValue":
+    case "google.protobuf.Int32Value":
+    case "google.protobuf.UInt32Value":
+    case "google.protobuf.DoubleValue":
+    case "google.protobuf.FloatValue":
+    case "google.protobuf.Int64Value":
+    case "google.protobuf.UInt64Value":
+    case "google.protobuf.BoolValue":
+    case "google.protobuf.BytesValue":
+      return typeName.split(".")[2];
+    case ".google.protobuf.StringValue":
+    case ".google.protobuf.Int32Value":
+    case ".google.protobuf.UInt32Value":
+    case ".google.protobuf.DoubleValue":
+    case ".google.protobuf.FloatValue":
+    case ".google.protobuf.Int64Value":
+    case ".google.protobuf.UInt64Value":
+    case ".google.protobuf.BoolValue":
+    case ".google.protobuf.BytesValue":
+      return typeName.split(".")[3];
     default:
       return undefined;
   }

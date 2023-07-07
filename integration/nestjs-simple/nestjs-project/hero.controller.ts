@@ -11,12 +11,18 @@ export class HeroController implements HeroServiceController {
       name: "Stephenh",
       birthDate: { seconds: 1, nanos: 2 },
       externalData: { foo: "bar", fizz: 1, nested: { isFailing: false, arr: [1, "foo", ["bar"]] } },
+      isFamous: true,
+      experience: 1000,
+      nickName: 'Hackerman'
     },
     {
       id: 2,
       name: "Iangregsondev",
       birthDate: { seconds: 1, nanos: 3 },
       externalData: { bar: 10, baz: "foo", isPassing: true },
+      isFamous: true,
+      experience: 1000,
+      nickName: 'Foo'
     },
     {
       id: 3,
