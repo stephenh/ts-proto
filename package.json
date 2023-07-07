@@ -63,7 +63,7 @@
     "case-anything": "^2.1.10",
     "dataloader": "^1.4.0",
     "object-hash": "^3.0.0",
-    "protobufjs": "^6.11.3",
+    "protobufjs": "^7.2.4",
     "ts-poet": "^6.4.1",
     "ts-proto-descriptors": "1.9.0"
   },
