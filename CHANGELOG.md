@@ -1,3 +1,10 @@
+## [1.152.1](https://github.com/stephenh/ts-proto/compare/v1.152.0...v1.152.1) (2023-07-10)
+
+
+### Bug Fixes
+
+* Fix invocation error. ([f4e26bd](https://github.com/stephenh/ts-proto/commit/f4e26bd44f6882318defab1fccd0d6a833823fc0))
+
 # [1.152.0](https://github.com/stephenh/ts-proto/compare/v1.151.1...v1.152.0) (2023-07-10)
 
 
