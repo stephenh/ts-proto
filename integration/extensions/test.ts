@@ -44,19 +44,19 @@ export function enumToJSON(object: Enum): string {
 }
 
 export interface Extendable {
-  field?: string;
-  _unknownFields?: { [key: number]: Uint8Array[] };
+  field?: string | undefined;
+  _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
 export interface Nested {
-  field?: string;
-  _unknownFields?: { [key: number]: Uint8Array[] };
+  field?: string | undefined;
+  _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
 export interface Group {
-  name?: string;
-  value?: string;
-  _unknownFields?: { [key: number]: Uint8Array[] };
+  name?: string | undefined;
+  value?: string | undefined;
+  _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
 function createBaseExtendable(): Extendable {
@@ -69,8 +69,7 @@ export const Extendable = {
       writer.uint32(10).string(message.field);
     }
     if (message._unknownFields !== undefined) {
-      for (const key in message._unknownFields) {
-        const values = message._unknownFields[key];
+      for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag);
@@ -216,7 +215,7 @@ export const Nested = {
     },
     decode: (tag: number, input: Uint8Array[]): Nested[] => {
       const values: Nested[] = [];
-      for (var buffer of input) {
+      for (const buffer of input) {
         const reader = _m0.Reader.create(buffer);
         values.push(Nested.decode(reader, reader.uint32()));
       }
@@ -230,8 +229,7 @@ export const Nested = {
       writer.uint32(10).string(message.field);
     }
     if (message._unknownFields !== undefined) {
-      for (const key in message._unknownFields) {
-        const values = message._unknownFields[key];
+      for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag);
@@ -317,8 +315,7 @@ export const Group = {
       writer.uint32(18).string(message.value);
     }
     if (message._unknownFields !== undefined) {
-      for (const key in message._unknownFields) {
-        const values = message._unknownFields[key];
+      for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag);
@@ -422,7 +419,7 @@ export const packed: Extension<number[]> = {
   },
   decode: (tag: number, input: Uint8Array[]): number[] => {
     const values: number[] = [];
-    for (var buffer of input) {
+    for (const buffer of input) {
       const reader = _m0.Reader.create(buffer);
       if (tag == 42) {
         const end2 = reader.uint32() + reader.pos;
@@ -457,7 +454,7 @@ export const repeated: Extension<number[]> = {
   },
   decode: (tag: number, input: Uint8Array[]): number[] => {
     const values: number[] = [];
-    for (var buffer of input) {
+    for (const buffer of input) {
       const reader = _m0.Reader.create(buffer);
       if (tag == 50) {
         const end2 = reader.uint32() + reader.pos;
@@ -488,7 +485,7 @@ export const bytes: Extension<Uint8Array> = {
     return encoded;
   },
   decode: (tag: number, input: Uint8Array[]): Uint8Array => {
-    const reader = _m0.Reader.create(input[input.length - 1]);
+    const reader = _m0.Reader.create(input[input.length - 1] ?? fail());
     return reader.bytes();
   },
 };
@@ -508,7 +505,7 @@ export const string: Extension<string> = {
     return encoded;
   },
   decode: (tag: number, input: Uint8Array[]): string => {
-    const reader = _m0.Reader.create(input[input.length - 1]);
+    const reader = _m0.Reader.create(input[input.length - 1] ?? fail());
     return reader.string();
   },
 };
@@ -528,7 +525,7 @@ export const long: Extension<Long> = {
     return encoded;
   },
   decode: (tag: number, input: Uint8Array[]): Long => {
-    const reader = _m0.Reader.create(input[input.length - 1]);
+    const reader = _m0.Reader.create(input[input.length - 1] ?? fail());
     return reader.int64() as Long;
   },
 };
@@ -548,7 +545,7 @@ export const fixed: Extension<Long> = {
     return encoded;
   },
   decode: (tag: number, input: Uint8Array[]): Long => {
-    const reader = _m0.Reader.create(input[input.length - 1]);
+    const reader = _m0.Reader.create(input[input.length - 1] ?? fail());
     return reader.fixed64() as Long;
   },
 };
@@ -568,7 +565,7 @@ export const enumField: Extension<Enum> = {
     return encoded;
   },
   decode: (tag: number, input: Uint8Array[]): Enum => {
-    const reader = _m0.Reader.create(input[input.length - 1]);
+    const reader = _m0.Reader.create(input[input.length - 1] ?? fail());
     return reader.int32() as any;
   },
 };
@@ -586,7 +583,7 @@ export const group: Extension<Group> = {
     return encoded;
   },
   decode: (tag: number, input: Uint8Array[]): Group => {
-    const reader = _m0.Reader.create(input[input.length - 1]);
+    const reader = _m0.Reader.create(input[input.length - 1] ?? fail());
     return Group.decode(reader);
   },
 };
@@ -622,4 +619,8 @@ export interface Extension<T> {
   decode?: (tag: number, input: Uint8Array[]) => T;
   repeated: boolean;
   packed: boolean;
+}
+
+function fail(message?: string): never {
+  throw new Error(message ?? "Failed");
 }

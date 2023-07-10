@@ -1868,6 +1868,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tsconfig/strictest@npm:^2.0.1":
+  version: 2.0.1
+  resolution: "@tsconfig/strictest@npm:2.0.1"
+  checksum: 3a9b913e06c20fee0a002fc22a925370525dd917853dee2e0082de763b10a61a69d72d60d02e243629da94b3e0b98843469a3b063c0ab2a5d6716183867dd114
+  languageName: node
+  linkType: hard
+
 "@tufjs/canonical-json@npm:1.0.0":
   version: 1.0.0
   resolution: "@tufjs/canonical-json@npm:1.0.0"
@@ -1991,7 +1998,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:>=12.12.47, @types/node@npm:^14.14.37":
+"@types/node@npm:*, @types/node@npm:>=12.12.47":
   version: 14.14.37
   resolution: "@types/node@npm:14.14.37"
   checksum: 647e671ac3815f428a07ae9353ebab93c5335d4d0a461ca837a79eebf55c04f28bee80f0c43881cdd8696f595feb112bc8eb74f6124125e02f79a7677374c187
@@ -2009,6 +2016,13 @@ __metadata:
   version: 13.13.9
   resolution: "@types/node@npm:13.13.9"
   checksum: 725d4eb060edd990ff9b83b3a41bccc4a0da9e623c5e6b21264f7133ba4a688f443c6d2075c9409e4d3dc9439f3d7f914b189872bbb1580b28ca63fba0b8bded
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:^16.18.38":
+  version: 16.18.38
+  resolution: "@types/node@npm:16.18.38"
+  checksum: a3baa141e49ce94486f083eea1240cf38479a73ba663e1bf3f52f85b466125821b6e3ea85ded38fde3901530aca4601291395a50eefcea533a4f3b45171bda28
   languageName: node
   linkType: hard
 
@@ -7992,8 +8006,9 @@ __metadata:
     "@semantic-release/github": ^9.0.2
     "@semantic-release/npm": ^10.0.3
     "@semantic-release/release-notes-generator": ^11.0.2
+    "@tsconfig/strictest": ^2.0.1
     "@types/jest": ^29.5.2
-    "@types/node": ^14.14.37
+    "@types/node": ^16.18.38
     "@types/object-hash": ^3.0.2
     case-anything: ^2.1.10
     chokidar: ^3.5.3

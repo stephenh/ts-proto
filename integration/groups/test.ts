@@ -4,51 +4,51 @@ import * as _m0 from "protobufjs/minimal";
 export const protobufPackage = "";
 
 export interface GroupsOptionalTest {
-  int1?: number;
-  group?: GroupsOptionalTest_Group;
-  int3?: number;
-  _unknownFields?: { [key: number]: Uint8Array[] };
+  int1?: number | undefined;
+  group?: GroupsOptionalTest_Group | undefined;
+  int3?: number | undefined;
+  _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
 export interface GroupsOptionalTest_Group {
-  key?: string;
-  value?: string;
-  _unknownFields?: { [key: number]: Uint8Array[] };
+  key?: string | undefined;
+  value?: string | undefined;
+  _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
 export interface GroupsRepeatedTest {
-  int1?: number[];
-  group?: GroupsRepeatedTest_Group[];
-  int3?: number[];
-  _unknownFields?: { [key: number]: Uint8Array[] };
+  int1?: number[] | undefined;
+  group?: GroupsRepeatedTest_Group[] | undefined;
+  int3?: number[] | undefined;
+  _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
 export interface GroupsRepeatedTest_Group {
-  key?: string[];
-  value?: string[];
-  _unknownFields?: { [key: number]: Uint8Array[] };
+  key?: string[] | undefined;
+  value?: string[] | undefined;
+  _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
 export interface GroupsNestedTest {
-  int1?: number[];
-  group?: GroupsNestedTest_Group[];
-  int3?: number[];
-  _unknownFields?: { [key: number]: Uint8Array[] };
+  int1?: number[] | undefined;
+  group?: GroupsNestedTest_Group[] | undefined;
+  int3?: number[] | undefined;
+  _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
 export interface GroupsNestedTest_Group {
-  nested?: GroupsNestedTest_Group_Nested[];
-  _unknownFields?: { [key: number]: Uint8Array[] };
+  nested?: GroupsNestedTest_Group_Nested[] | undefined;
+  _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
 export interface GroupsNestedTest_Group_Nested {
-  nested2?: GroupsNestedTest_Group_Nested_Nested2[];
-  _unknownFields?: { [key: number]: Uint8Array[] };
+  nested2?: GroupsNestedTest_Group_Nested_Nested2[] | undefined;
+  _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
 export interface GroupsNestedTest_Group_Nested_Nested2 {
-  string1?: string;
-  _unknownFields?: { [key: number]: Uint8Array[] };
+  string1?: string | undefined;
+  _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
 function createBaseGroupsOptionalTest(): GroupsOptionalTest {
@@ -67,8 +67,7 @@ export const GroupsOptionalTest = {
       writer.uint32(24).int32(message.int3);
     }
     if (message._unknownFields !== undefined) {
-      for (const key in message._unknownFields) {
-        const values = message._unknownFields[key];
+      for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag);
@@ -179,8 +178,7 @@ export const GroupsOptionalTest_Group = {
       writer.uint32(18).string(message.value);
     }
     if (message._unknownFields !== undefined) {
-      for (const key in message._unknownFields) {
-        const values = message._unknownFields[key];
+      for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag);
@@ -291,8 +289,7 @@ export const GroupsRepeatedTest = {
       writer.ldelim();
     }
     if (message._unknownFields !== undefined) {
-      for (const key in message._unknownFields) {
-        const values = message._unknownFields[key];
+      for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag);
@@ -453,8 +450,7 @@ export const GroupsRepeatedTest_Group = {
       }
     }
     if (message._unknownFields !== undefined) {
-      for (const key in message._unknownFields) {
-        const values = message._unknownFields[key];
+      for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag);
@@ -579,8 +575,7 @@ export const GroupsNestedTest = {
       writer.ldelim();
     }
     if (message._unknownFields !== undefined) {
-      for (const key in message._unknownFields) {
-        const values = message._unknownFields[key];
+      for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag);
@@ -736,8 +731,7 @@ export const GroupsNestedTest_Group = {
       }
     }
     if (message._unknownFields !== undefined) {
-      for (const key in message._unknownFields) {
-        const values = message._unknownFields[key];
+      for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag);
@@ -833,8 +827,7 @@ export const GroupsNestedTest_Group_Nested = {
       }
     }
     if (message._unknownFields !== undefined) {
-      for (const key in message._unknownFields) {
-        const values = message._unknownFields[key];
+      for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag);
@@ -930,8 +923,7 @@ export const GroupsNestedTest_Group_Nested_Nested2 = {
       writer.uint32(10).string(message.string1);
     }
     if (message._unknownFields !== undefined) {
-      for (const key in message._unknownFields) {
-        const values = message._unknownFields[key];
+      for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag);

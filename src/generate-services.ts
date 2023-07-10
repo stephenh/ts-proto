@@ -259,7 +259,7 @@ function generateBatchingRpcMethod(ctx: Context, batchMethod: BatchMethod): Code
     // If the return type is a map, lookup each key in the result
     lambda.push(code`
       return this.${methodDesc.formattedName}(ctx, request).then(res => {
-        return ${inputFieldName}.map(key => res.${outputFieldName}[key])
+        return ${inputFieldName}.map(key => res.${outputFieldName}[key] ?? ${ctx.utils.fail}())
       });
     `);
   } else {

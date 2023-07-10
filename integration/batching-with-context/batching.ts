@@ -705,7 +705,7 @@ export class EntityServiceClientImpl<Context extends DataLoaders> implements Ent
       return new DataLoader<string, Entity>((ids) => {
         const request = { ids };
         return this.BatchMapQuery(ctx, request).then((res) => {
-          return ids.map((key) => res.entities[key]);
+          return ids.map((key) => res.entities[key] ?? fail());
         });
       }, { cacheKeyFn: hash, ...ctx.rpcDataLoaderOptions });
     });
@@ -769,4 +769,8 @@ function isObject(value: any): boolean {
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+function fail(message?: string): never {
+  throw new Error(message ?? "Failed");
 }

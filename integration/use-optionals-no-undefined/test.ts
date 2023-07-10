@@ -44,20 +44,20 @@ export function stateEnumToJSON(object: StateEnum): string {
 }
 
 export interface OptionalsTest {
-  id?: number;
-  child?: Child;
-  state?: StateEnum;
-  long?: number;
-  truth?: boolean;
-  description?: string;
-  data?: Uint8Array;
-  repId?: number[];
-  repChild?: Child[];
-  repState?: StateEnum[];
-  repLong?: number[];
-  repTruth?: boolean[];
-  repDescription?: string[];
-  repData?: Uint8Array[];
+  id?: number | undefined;
+  child?: Child | undefined;
+  state?: StateEnum | undefined;
+  long?: number | undefined;
+  truth?: boolean | undefined;
+  description?: string | undefined;
+  data?: Uint8Array | undefined;
+  repId?: number[] | undefined;
+  repChild?: Child[] | undefined;
+  repState?: StateEnum[] | undefined;
+  repLong?: number[] | undefined;
+  repTruth?: boolean[] | undefined;
+  repDescription?: string[] | undefined;
+  repData?: Uint8Array[] | undefined;
   optId?: number | undefined;
   optChild?: Child | undefined;
   optState?: StateEnum | undefined;
@@ -65,7 +65,7 @@ export interface OptionalsTest {
   optTruth?: boolean | undefined;
   optDescription?: string | undefined;
   optData?: Uint8Array | undefined;
-  translations?: { [key: string]: string };
+  translations?: { [key: string]: string } | undefined;
 }
 
 export interface OptionalsTest_TranslationsEntry {
@@ -674,10 +674,10 @@ export const Child = {
   },
 };
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
+declare const self: any | undefined;
+declare const window: any | undefined;
+declare const global: any | undefined;
+const tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") {
     return globalThis;
   }

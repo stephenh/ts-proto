@@ -72,7 +72,8 @@ export interface Value {
     | { $case: "string_value"; string_value: string }
     | { $case: "bool_value"; bool_value: boolean }
     | { $case: "struct_value"; struct_value: { [key: string]: any } | undefined }
-    | { $case: "list_value"; list_value: Array<any> | undefined };
+    | { $case: "list_value"; list_value: Array<any> | undefined }
+    | undefined;
 }
 
 /**

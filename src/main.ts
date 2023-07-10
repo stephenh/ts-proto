@@ -401,7 +401,8 @@ export type Utils = ReturnType<typeof makeDeepPartial> &
   ReturnType<typeof makeComparisonUtils> &
   ReturnType<typeof makeNiceGrpcServerStreamingMethodResult> &
   ReturnType<typeof makeGrpcWebErrorClass> &
-  ReturnType<typeof makeExtensionClass>;
+  ReturnType<typeof makeExtensionClass> &
+  ReturnType<typeof makeAssertionUtils>;
 
 /** These are runtime utility methods used by the generated code. */
 export function makeUtils(options: Options): Utils {
@@ -417,6 +418,7 @@ export function makeUtils(options: Options): Utils {
     ...makeNiceGrpcServerStreamingMethodResult(),
     ...makeGrpcWebErrorClass(bytes),
     ...makeExtensionClass(options),
+    ...makeAssertionUtils(),
   };
 }
 
@@ -531,10 +533,10 @@ function makeByteUtils() {
   const globalThis = conditionalOutput(
     "tsProtoGlobalThis",
     code`
-      declare var self: any | undefined;
-      declare var window: any | undefined;
-      declare var global: any | undefined;
-      var tsProtoGlobalThis: any = (() => {
+      declare const self: any | undefined;
+      declare const window: any | undefined;
+      declare const global: any | undefined;
+      const tsProtoGlobalThis: any = (() => {
         if (typeof globalThis !== "undefined") return globalThis;
         if (typeof self !== "undefined") return self;
         if (typeof window !== "undefined") return window;
@@ -834,6 +836,19 @@ function makeExtensionClass(options: Options) {
   return { Extension };
 }
 
+function makeAssertionUtils() {
+  const fail = conditionalOutput(
+    "fail",
+    code`
+      function fail(message?: string): never {
+        throw new Error(message ?? "Failed");
+      }
+    `
+  );
+
+  return { fail };
+}
+
 // Create the interface with properties
 function generateInterfaceDeclaration(
   ctx: Context,
@@ -870,13 +885,16 @@ function generateInterfaceDeclaration(
     maybeAddComment(info, chunks, fieldDesc.options?.deprecated);
 
     const name = maybeSnakeToCamel(fieldDesc.name, options);
-    const type = toTypeName(ctx, messageDesc, fieldDesc);
-    const q = isOptionalProperty(fieldDesc, messageDesc.options, options) ? "?" : "";
-    chunks.push(code`${maybeReadonly(options)}${name}${q}: ${type}, `);
+    const isOptional = isOptionalProperty(fieldDesc, messageDesc.options, options);
+    const type = toTypeName(ctx, messageDesc, fieldDesc, isOptional);
+    if (isOptional && !type.toString().includes("undefined")) {
+      console.warn(name, type);
+    }
+    chunks.push(code`${maybeReadonly(options)}${name}${isOptional ? "?" : ""}: ${type}, `);
   });
 
   if (ctx.options.unknownFields) {
-    chunks.push(code`_unknownFields?: {[key: number]: Uint8Array[]},`);
+    chunks.push(code`_unknownFields?: {[key: number]: Uint8Array[]} | undefined,`);
   }
 
   chunks.push(code`}`);
@@ -902,7 +920,7 @@ function generateOneofProperty(
   );
 
   const name = maybeSnakeToCamel(messageDesc.oneofDecl[oneofIndex].name, options);
-  return code`${mbReadonly}${name}?: ${unionType},`;
+  return code`${mbReadonly}${name}?: ${unionType} | undefined,`;
 
   /*
   // Ideally we'd put the comments for each oneof field next to the anonymous
@@ -1428,8 +1446,7 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
 
   if (options.unknownFields) {
     chunks.push(code`if (message._unknownFields !== undefined) {
-      for (const key in message._unknownFields) {
-        const values = message._unknownFields[key];
+      for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag);
@@ -1639,7 +1656,7 @@ function generateExtension(ctx: Context, message: DescriptorProto | undefined, e
 
       // start loop over all buffers
       chunks.push(code`
-        for (var buffer of input) {
+        for (const buffer of input) {
           const reader = ${Reader}.create(buffer);
       `);
 
@@ -1669,7 +1686,7 @@ function generateExtension(ctx: Context, message: DescriptorProto | undefined, e
     } else {
       // pick the last entry, since it overrides all previous entries if not repeated
       chunks.push(code`
-          const reader = ${Reader}.create(input[input.length -1]);
+          const reader = ${Reader}.create(input[input.length -1] ?? ${ctx.utils.fail}());
           return ${readSnippet};
         },
       `);
