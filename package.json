@@ -16,7 +16,7 @@
     "proto2pbjs": "docker compose run --rm protoc pbjs.sh",
     "bin2ts": "docker compose run --rm protoc codegen.sh",
     "test": "yarn jest -c jest.config.js --maxWorkers=2",
-    "tsc:check": "./tsc-check.sh tsconfig.json integration/tsconfig.json integration/tsconfig.proto.json protos/tsconfig.json",
+    "tsc:check": "./tsc-check.sh tsconfig.json tests/tsconfig.json integration/tsconfig.json integration/tsconfig.proto.json protos/tsconfig.json",
     "format": "prettier --write {src,tests}/**/*.ts integration/*.ts",
     "format:check": "prettier --list-different {src,tests}/**/*.ts",
     "setup:docker": "docker compose build",
