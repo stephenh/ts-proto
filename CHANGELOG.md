@@ -1,3 +1,10 @@
+# [1.152.0](https://github.com/stephenh/ts-proto/compare/v1.151.1...v1.152.0) (2023-07-10)
+
+
+### Features
+
+* Ensure strict(er) TS compliance for the generated code ([#868](https://github.com/stephenh/ts-proto/issues/868)) ([1405d4b](https://github.com/stephenh/ts-proto/commit/1405d4bcc866343605946ac4a0b30e7de9c75e71))
+
 ## [1.151.1](https://github.com/stephenh/ts-proto/compare/v1.151.0...v1.151.1) (2023-07-05)
 
 
