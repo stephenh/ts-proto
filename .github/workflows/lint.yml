@@ -24,6 +24,7 @@ jobs:
         run: yarn install
       - name: Prepare Integration
         run: ./integration/pbjs.sh
+      # This will fail if any git-tracked file has changed
       - name: Codegen
         run: yarn bin2ts
       - name: TypeScript
