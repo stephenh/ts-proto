@@ -837,19 +837,16 @@ function makeExtensionClass(options: Options) {
 }
 
 function makeAssertionUtils() {
-  const unwrap = conditionalOutput(
-    "unwrap",
+  const fail = conditionalOutput(
+    "fail",
     code`
-    function unwrap<T>(value: T | undefined | null): T {
-      if (value === undefined || value === null) {
-        throw new Error('Expected value to be defined');
+      function fail(message?: string): never {
+        throw new Error(message ?? "Failed");
       }
-      return value;
-    }
     `
   );
 
-  return { unwrap };
+  return { fail };
 }
 
 // Create the interface with properties
@@ -1689,7 +1686,7 @@ function generateExtension(ctx: Context, message: DescriptorProto | undefined, e
     } else {
       // pick the last entry, since it overrides all previous entries if not repeated
       chunks.push(code`
-          const reader = ${Reader}.create(${ctx.utils.unwrap}(input[input.length -1]));
+          const reader = ${Reader}.create(input[input.length -1] ?? ${ctx.utils.fail}());
           return ${readSnippet};
         },
       `);

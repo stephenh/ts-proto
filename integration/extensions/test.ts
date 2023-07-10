@@ -485,7 +485,7 @@ export const bytes: Extension<Uint8Array> = {
     return encoded;
   },
   decode: (tag: number, input: Uint8Array[]): Uint8Array => {
-    const reader = _m0.Reader.create(unwrap(input[input.length - 1]));
+    const reader = _m0.Reader.create(input[input.length - 1] ?? fail());
     return reader.bytes();
   },
 };
@@ -505,7 +505,7 @@ export const string: Extension<string> = {
     return encoded;
   },
   decode: (tag: number, input: Uint8Array[]): string => {
-    const reader = _m0.Reader.create(unwrap(input[input.length - 1]));
+    const reader = _m0.Reader.create(input[input.length - 1] ?? fail());
     return reader.string();
   },
 };
@@ -525,7 +525,7 @@ export const long: Extension<Long> = {
     return encoded;
   },
   decode: (tag: number, input: Uint8Array[]): Long => {
-    const reader = _m0.Reader.create(unwrap(input[input.length - 1]));
+    const reader = _m0.Reader.create(input[input.length - 1] ?? fail());
     return reader.int64() as Long;
   },
 };
@@ -545,7 +545,7 @@ export const fixed: Extension<Long> = {
     return encoded;
   },
   decode: (tag: number, input: Uint8Array[]): Long => {
-    const reader = _m0.Reader.create(unwrap(input[input.length - 1]));
+    const reader = _m0.Reader.create(input[input.length - 1] ?? fail());
     return reader.fixed64() as Long;
   },
 };
@@ -565,7 +565,7 @@ export const enumField: Extension<Enum> = {
     return encoded;
   },
   decode: (tag: number, input: Uint8Array[]): Enum => {
-    const reader = _m0.Reader.create(unwrap(input[input.length - 1]));
+    const reader = _m0.Reader.create(input[input.length - 1] ?? fail());
     return reader.int32() as any;
   },
 };
@@ -583,7 +583,7 @@ export const group: Extension<Group> = {
     return encoded;
   },
   decode: (tag: number, input: Uint8Array[]): Group => {
-    const reader = _m0.Reader.create(unwrap(input[input.length - 1]));
+    const reader = _m0.Reader.create(input[input.length - 1] ?? fail());
     return Group.decode(reader);
   },
 };
@@ -621,9 +621,6 @@ export interface Extension<T> {
   packed: boolean;
 }
 
-function unwrap<T>(value: T | undefined | null): T {
-  if (value === undefined || value === null) {
-    throw new Error("Expected value to be defined");
-  }
-  return value;
+function fail(message?: string): never {
+  throw new Error(message ?? "Failed");
 }
