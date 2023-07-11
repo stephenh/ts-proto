@@ -30,7 +30,7 @@
   "license": "ISC",
   "devDependencies": {
     "@grpc/grpc-js": "^1.8.14",
-    "@grpc/proto-loader": "^0.6.13",
+    "@grpc/proto-loader": "^0.7.7",
     "@improbable-eng/grpc-web": "^0.14.0",
     "@improbable-eng/grpc-web-node-http-transport": "^0.14.0",
     "@nestjs/common": "^9.4.2",
@@ -52,6 +52,7 @@
     "mongodb": "^4.3.0",
     "nice-grpc": "^2.1.4",
     "prettier": "^2.8.8",
+    "protobufjs-cli": "^1.1.1",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.4.0",
     "semantic-release": "^21.0.3",
@@ -65,7 +66,7 @@
     "case-anything": "^2.1.10",
     "dataloader": "^1.4.0",
     "object-hash": "^3.0.0",
-    "protobufjs": "^6.11.3",
+    "protobufjs": "^7.2.4",
     "ts-poet": "^6.4.1",
     "ts-proto-descriptors": "1.9.0"
   },

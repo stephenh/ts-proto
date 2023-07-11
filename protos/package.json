@@ -12,7 +12,6 @@
     "dist/"
   ],
   "dependencies": {
-    "long": "^4.0.0",
     "protobufjs": "^6.8.8"
   },
   "devDependencies": {
