@@ -7828,12 +7828,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-proto-descriptors@npm:1.10.0":
-  version: 1.10.0
-  resolution: "ts-proto-descriptors@npm:1.10.0"
+"ts-proto-descriptors@npm:1.11.0":
+  version: 1.11.0
+  resolution: "ts-proto-descriptors@npm:1.11.0"
   dependencies:
     protobufjs: ^7.2.4
-  checksum: f28faea3af1984dafc7e04633fa4c5818dc7a974af3ca0e9740b097826750fff0f8dd09ae262e134041b28a666d7ecb8d985eda3ccbd45422e40fb494c6d2c3b
+  checksum: 3a94ce4342ba0d22bb08a8c220381f46a18ade353333087dfe300b52b453a3a3027cf9d736f8a06eacca799a15001e10814fe277105ac5369ff63b052b7f3bd6
   languageName: node
   linkType: hard
 
@@ -7875,7 +7875,7 @@ __metadata:
     semantic-release: ^21.0.3
     ts-jest: ^29.1.0
     ts-poet: ^6.4.1
-    ts-proto-descriptors: 1.10.0
+    ts-proto-descriptors: 1.11.0
     tsx: ^3.12.7
     typescript: ^5.1.3
     uglify-js: ^3.17.4
