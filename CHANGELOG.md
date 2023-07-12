@@ -1,3 +1,10 @@
+# [1.153.0](https://github.com/stephenh/ts-proto/compare/v1.152.1...v1.153.0) (2023-07-12)
+
+
+### Features
+
+* Update protobufjs (and peer dependencies) to ^7 ([#874](https://github.com/stephenh/ts-proto/issues/874)) ([7f979a7](https://github.com/stephenh/ts-proto/commit/7f979a70af2e42c8c429ae5f65787e0b43ccb706))
+
 ## [1.152.1](https://github.com/stephenh/ts-proto/compare/v1.152.0...v1.152.1) (2023-07-10)
 
 
