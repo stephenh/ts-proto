@@ -75,7 +75,7 @@ export const TestDefinition = {
       requestStream: false,
       responseType: TestMessage,
       responseStream: false,
-      options: {},
+      options: { _unknownFields: {} },
     },
     serverStreaming: {
       name: "ServerStreaming",
@@ -83,7 +83,7 @@ export const TestDefinition = {
       requestStream: false,
       responseType: TestMessage,
       responseStream: true,
-      options: {},
+      options: { _unknownFields: {} },
     },
     clientStreaming: {
       name: "ClientStreaming",
@@ -91,7 +91,7 @@ export const TestDefinition = {
       requestStream: true,
       responseType: TestMessage,
       responseStream: false,
-      options: {},
+      options: { _unknownFields: {} },
     },
     bidiStreaming: {
       name: "BidiStreaming",
@@ -99,7 +99,7 @@ export const TestDefinition = {
       requestStream: true,
       responseType: TestMessage,
       responseStream: true,
-      options: {},
+      options: { _unknownFields: {} },
     },
     /** @deprecated */
     deprecated: {
@@ -108,7 +108,7 @@ export const TestDefinition = {
       requestStream: false,
       responseType: TestMessage,
       responseStream: false,
-      options: {},
+      options: { _unknownFields: {} },
     },
     idempotent: {
       name: "Idempotent",
@@ -116,7 +116,7 @@ export const TestDefinition = {
       requestStream: false,
       responseType: TestMessage,
       responseStream: false,
-      options: { idempotencyLevel: "IDEMPOTENT" },
+      options: { idempotencyLevel: "IDEMPOTENT", _unknownFields: {} },
     },
     noSideEffects: {
       name: "NoSideEffects",
@@ -124,7 +124,7 @@ export const TestDefinition = {
       requestStream: false,
       responseType: TestMessage,
       responseStream: false,
-      options: { idempotencyLevel: "NO_SIDE_EFFECTS" },
+      options: { idempotencyLevel: "NO_SIDE_EFFECTS", _unknownFields: {} },
     },
   },
 } as const;

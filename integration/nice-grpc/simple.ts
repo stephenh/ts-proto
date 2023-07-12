@@ -99,7 +99,7 @@ export const TestDefinition = {
       requestStream: false,
       responseType: Empty,
       responseStream: false,
-      options: {},
+      options: { _unknownFields: {} },
     },
     unaryStringValue: {
       name: "UnaryStringValue",
@@ -212,7 +212,7 @@ export const TestDefinition = {
       requestStream: false,
       responseType: TestMessage,
       responseStream: true,
-      options: {},
+      options: { _unknownFields: {} },
     },
     serverStreamingStringValue: {
       name: "ServerStreamingStringValue",
@@ -220,7 +220,7 @@ export const TestDefinition = {
       requestStream: false,
       responseType: StringValue,
       responseStream: true,
-      options: {},
+      options: { _unknownFields: {} },
     },
     serverStreamingStruct: {
       name: "ServerStreamingStruct",
@@ -228,7 +228,7 @@ export const TestDefinition = {
       requestStream: false,
       responseType: Struct,
       responseStream: true,
-      options: {},
+      options: { _unknownFields: {} },
     },
     /** Client Streaming */
     clientStreaming: {
@@ -237,7 +237,7 @@ export const TestDefinition = {
       requestStream: true,
       responseType: TestMessage,
       responseStream: false,
-      options: {},
+      options: { _unknownFields: {} },
     },
     clientStreamingStringValue: {
       name: "ClientStreamingStringValue",
@@ -245,7 +245,7 @@ export const TestDefinition = {
       requestStream: true,
       responseType: StringValue,
       responseStream: false,
-      options: {},
+      options: { _unknownFields: {} },
     },
     /** Bidi Streaming */
     bidiStreaming: {
@@ -254,7 +254,7 @@ export const TestDefinition = {
       requestStream: true,
       responseType: TestMessage,
       responseStream: true,
-      options: {},
+      options: { _unknownFields: {} },
     },
     bidiStreamingStringValue: {
       name: "BidiStreamingStringValue",
@@ -262,7 +262,7 @@ export const TestDefinition = {
       requestStream: true,
       responseType: StringValue,
       responseStream: true,
-      options: {},
+      options: { _unknownFields: {} },
     },
   },
 } as const;
