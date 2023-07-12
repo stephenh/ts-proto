@@ -12,11 +12,10 @@
     "dist/"
   ],
   "dependencies": {
-    "long": "^4.0.0",
-    "protobufjs": "^6.8.8"
+    "protobufjs": "^7.0.0"
   },
   "devDependencies": {
     "ts-proto": "^1.146.0",
-    "typescript": "^4.7.4"
+    "typescript": "^5.1.3"
   }
 }
