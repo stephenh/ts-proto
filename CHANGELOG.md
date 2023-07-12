@@ -1,3 +1,10 @@
+## [1.153.2](https://github.com/stephenh/ts-proto/compare/v1.153.1...v1.153.2) (2023-07-12)
+
+
+### Bug Fixes
+
+* Move dataloader to a devDependency. ([#877](https://github.com/stephenh/ts-proto/issues/877)) ([dbe1a96](https://github.com/stephenh/ts-proto/commit/dbe1a967ced7863492f82a977d6e5d34f4f034a6))
+
 ## [1.153.1](https://github.com/stephenh/ts-proto/compare/v1.153.0...v1.153.1) (2023-07-12)
 
 
