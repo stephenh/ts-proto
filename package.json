@@ -68,7 +68,7 @@
     "object-hash": "^3.0.0",
     "protobufjs": "^7.2.4",
     "ts-poet": "^6.4.1",
-    "ts-proto-descriptors": "1.9.0"
+    "ts-proto-descriptors": "1.11.0"
   },
   "packageManager": "yarn@3.6.0"
 }
