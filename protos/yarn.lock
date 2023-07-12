@@ -176,7 +176,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"protobufjs@npm:^7.0.0":
+"protobufjs@npm:^7.2.4":
   version: 7.2.4
   resolution: "protobufjs@npm:7.2.4"
   dependencies:
@@ -219,7 +219,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ts-proto-descriptors@workspace:."
   dependencies:
-    protobufjs: ^7.0.0
+    protobufjs: ^7.2.4
     ts-proto: ^1.146.0
     typescript: ^5.1.3
   languageName: unknown

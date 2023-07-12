@@ -1,6 +1,6 @@
 {
   "name": "ts-proto-descriptors",
-  "version": "1.9.0",
+  "version": "1.10.0",
   "description": "",
   "repository": "github:stephenh/ts-proto",
   "keywords": [],
@@ -12,7 +12,7 @@
     "dist/"
   ],
   "dependencies": {
-    "protobufjs": "^7.0.0"
+    "protobufjs": "^7.2.4"
   },
   "devDependencies": {
     "ts-proto": "^1.146.0",
