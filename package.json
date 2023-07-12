@@ -46,11 +46,14 @@
     "@tsconfig/strictest": "^2.0.1",
     "@types/jest": "^29.5.2",
     "@types/node": "^16.18.38",
+    "@types/object-hash": "^3.0.2",
     "chokidar": "^3.5.3",
+    "dataloader": "^1.4.0",
     "jest": "^29.5.0",
     "jest-ts-webcompat-resolver": "^1.0.0",
     "mongodb": "^4.3.0",
     "nice-grpc": "^2.1.4",
+    "object-hash": "^3.0.0",
     "prettier": "^2.8.8",
     "protobufjs-cli": "^1.1.1",
     "reflect-metadata": "^0.1.13",
@@ -62,10 +65,7 @@
     "uglify-js": "^3.17.4"
   },
   "dependencies": {
-    "@types/object-hash": "^3.0.2",
     "case-anything": "^2.1.10",
-    "dataloader": "^1.4.0",
-    "object-hash": "^3.0.0",
     "protobufjs": "^7.2.4",
     "ts-poet": "^6.4.1",
     "ts-proto-descriptors": "1.11.0"
