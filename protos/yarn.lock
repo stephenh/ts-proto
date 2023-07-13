@@ -219,6 +219,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "ts-proto-descriptors@workspace:."
   dependencies:
+    long: ^4.0.0
     protobufjs: ^7.2.4
     ts-proto: ^1.153.0
     typescript: ^5.1.3
