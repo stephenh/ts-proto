@@ -113,19 +113,26 @@ export const Todo = {
 
   toJSON(message: Todo): unknown {
     const obj: any = {};
-    message.id !== undefined && (obj.id = message.id);
-    message.oid !== undefined && (obj.oid = message.oid.toString());
-    if (message.repeatedOid) {
-      obj.repeatedOid = message.repeatedOid.map((e) => e.toString());
-    } else {
-      obj.repeatedOid = [];
+    if (message.id !== "") {
+      obj.id = message.id;
     }
-    message.optionalOid !== undefined && (obj.optionalOid = message.optionalOid.toString());
-    obj.mapOfOids = {};
+    if (message.oid !== undefined) {
+      obj.oid = message.oid.toString();
+    }
+    if (message.repeatedOid?.length) {
+      obj.repeatedOid = message.repeatedOid.map((e) => e.toString());
+    }
+    if (message.optionalOid !== undefined) {
+      obj.optionalOid = message.optionalOid.toString();
+    }
     if (message.mapOfOids) {
-      Object.entries(message.mapOfOids).forEach(([k, v]) => {
-        obj.mapOfOids[k] = v.toString();
-      });
+      const entries = Object.entries(message.mapOfOids);
+      if (entries.length > 0) {
+        obj.mapOfOids = {};
+        entries.forEach(([k, v]) => {
+          obj.mapOfOids[k] = v.toString();
+        });
+      }
     }
     return obj;
   },
@@ -209,8 +216,12 @@ export const Todo_MapOfOidsEntry = {
 
   toJSON(message: Todo_MapOfOidsEntry): unknown {
     const obj: any = {};
-    message.key !== undefined && (obj.key = message.key);
-    message.value !== undefined && (obj.value = message.value.toString());
+    if (message.key !== "") {
+      obj.key = message.key;
+    }
+    if (message.value !== undefined) {
+      obj.value = message.value.toString();
+    }
     return obj;
   },
 

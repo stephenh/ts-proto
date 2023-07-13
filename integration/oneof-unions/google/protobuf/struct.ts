@@ -139,11 +139,14 @@ export const Struct = {
 
   toJSON(message: Struct): unknown {
     const obj: any = {};
-    obj.fields = {};
     if (message.fields) {
-      Object.entries(message.fields).forEach(([k, v]) => {
-        obj.fields[k] = v;
-      });
+      const entries = Object.entries(message.fields);
+      if (entries.length > 0) {
+        obj.fields = {};
+        entries.forEach(([k, v]) => {
+          obj.fields[k] = v;
+        });
+      }
     }
     return obj;
   },
@@ -238,8 +241,12 @@ export const Struct_FieldsEntry = {
 
   toJSON(message: Struct_FieldsEntry): unknown {
     const obj: any = {};
-    message.key !== undefined && (obj.key = message.key);
-    message.value !== undefined && (obj.value = message.value);
+    if (message.key !== "") {
+      obj.key = message.key;
+    }
+    if (message.value !== undefined) {
+      obj.value = message.value;
+    }
     return obj;
   },
 
@@ -362,13 +369,24 @@ export const Value = {
 
   toJSON(message: Value): unknown {
     const obj: any = {};
-    message.kind?.$case === "nullValue" &&
-      (obj.nullValue = message.kind?.nullValue !== undefined ? nullValueToJSON(message.kind?.nullValue) : undefined);
-    message.kind?.$case === "numberValue" && (obj.numberValue = message.kind?.numberValue);
-    message.kind?.$case === "stringValue" && (obj.stringValue = message.kind?.stringValue);
-    message.kind?.$case === "boolValue" && (obj.boolValue = message.kind?.boolValue);
-    message.kind?.$case === "structValue" && (obj.structValue = message.kind?.structValue);
-    message.kind?.$case === "listValue" && (obj.listValue = message.kind?.listValue);
+    if (message.kind?.$case === "nullValue") {
+      obj.nullValue = message.kind?.nullValue !== undefined ? nullValueToJSON(message.kind?.nullValue) : undefined;
+    }
+    if (message.kind?.$case === "numberValue") {
+      obj.numberValue = message.kind?.numberValue;
+    }
+    if (message.kind?.$case === "stringValue") {
+      obj.stringValue = message.kind?.stringValue;
+    }
+    if (message.kind?.$case === "boolValue") {
+      obj.boolValue = message.kind?.boolValue;
+    }
+    if (message.kind?.$case === "structValue") {
+      obj.structValue = message.kind?.structValue;
+    }
+    if (message.kind?.$case === "listValue") {
+      obj.listValue = message.kind?.listValue;
+    }
     return obj;
   },
 
@@ -491,10 +509,8 @@ export const ListValue = {
 
   toJSON(message: ListValue): unknown {
     const obj: any = {};
-    if (message.values) {
+    if (message.values?.length) {
       obj.values = message.values.map((e) => e);
-    } else {
-      obj.values = [];
     }
     return obj;
   },

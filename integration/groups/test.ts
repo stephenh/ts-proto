@@ -143,10 +143,15 @@ export const GroupsOptionalTest = {
 
   toJSON(message: GroupsOptionalTest): unknown {
     const obj: any = {};
-    message.int1 !== undefined && (obj.int1 = Math.round(message.int1));
-    message.group !== undefined &&
-      (obj.group = message.group ? GroupsOptionalTest_Group.toJSON(message.group) : undefined);
-    message.int3 !== undefined && (obj.int3 = Math.round(message.int3));
+    if (message.int1 !== undefined && message.int1 !== 0) {
+      obj.int1 = Math.round(message.int1);
+    }
+    if (message.group !== undefined) {
+      obj.group = message.group ? GroupsOptionalTest_Group.toJSON(message.group) : undefined;
+    }
+    if (message.int3 !== undefined && message.int3 !== 0) {
+      obj.int3 = Math.round(message.int3);
+    }
     return obj;
   },
 
@@ -246,8 +251,12 @@ export const GroupsOptionalTest_Group = {
 
   toJSON(message: GroupsOptionalTest_Group): unknown {
     const obj: any = {};
-    message.key !== undefined && (obj.key = message.key);
-    message.value !== undefined && (obj.value = message.value);
+    if (message.key !== undefined && message.key !== "") {
+      obj.key = message.key;
+    }
+    if (message.value !== undefined && message.value !== "") {
+      obj.value = message.value;
+    }
     return obj;
   },
 
@@ -402,20 +411,14 @@ export const GroupsRepeatedTest = {
 
   toJSON(message: GroupsRepeatedTest): unknown {
     const obj: any = {};
-    if (message.int1) {
+    if (message.int1?.length) {
       obj.int1 = message.int1.map((e) => Math.round(e));
-    } else {
-      obj.int1 = [];
     }
-    if (message.group) {
+    if (message.group?.length) {
       obj.group = message.group.map((e) => e ? GroupsRepeatedTest_Group.toJSON(e) : undefined);
-    } else {
-      obj.group = [];
     }
-    if (message.int3) {
+    if (message.int3?.length) {
       obj.int3 = message.int3.map((e) => Math.round(e));
-    } else {
-      obj.int3 = [];
     }
     return obj;
   },
@@ -524,15 +527,11 @@ export const GroupsRepeatedTest_Group = {
 
   toJSON(message: GroupsRepeatedTest_Group): unknown {
     const obj: any = {};
-    if (message.key) {
+    if (message.key?.length) {
       obj.key = message.key.map((e) => e);
-    } else {
-      obj.key = [];
     }
-    if (message.value) {
+    if (message.value?.length) {
       obj.value = message.value.map((e) => e);
-    } else {
-      obj.value = [];
     }
     return obj;
   },
@@ -688,20 +687,14 @@ export const GroupsNestedTest = {
 
   toJSON(message: GroupsNestedTest): unknown {
     const obj: any = {};
-    if (message.int1) {
+    if (message.int1?.length) {
       obj.int1 = message.int1.map((e) => Math.round(e));
-    } else {
-      obj.int1 = [];
     }
-    if (message.group) {
+    if (message.group?.length) {
       obj.group = message.group.map((e) => e ? GroupsNestedTest_Group.toJSON(e) : undefined);
-    } else {
-      obj.group = [];
     }
-    if (message.int3) {
+    if (message.int3?.length) {
       obj.int3 = message.int3.map((e) => Math.round(e));
-    } else {
-      obj.int3 = [];
     }
     return obj;
   },
@@ -796,10 +789,8 @@ export const GroupsNestedTest_Group = {
 
   toJSON(message: GroupsNestedTest_Group): unknown {
     const obj: any = {};
-    if (message.nested) {
+    if (message.nested?.length) {
       obj.nested = message.nested.map((e) => e ? GroupsNestedTest_Group_Nested.toJSON(e) : undefined);
-    } else {
-      obj.nested = [];
     }
     return obj;
   },
@@ -892,10 +883,8 @@ export const GroupsNestedTest_Group_Nested = {
 
   toJSON(message: GroupsNestedTest_Group_Nested): unknown {
     const obj: any = {};
-    if (message.nested2) {
+    if (message.nested2?.length) {
       obj.nested2 = message.nested2.map((e) => e ? GroupsNestedTest_Group_Nested_Nested2.toJSON(e) : undefined);
-    } else {
-      obj.nested2 = [];
     }
     return obj;
   },
@@ -981,7 +970,9 @@ export const GroupsNestedTest_Group_Nested_Nested2 = {
 
   toJSON(message: GroupsNestedTest_Group_Nested_Nested2): unknown {
     const obj: any = {};
-    message.string1 !== undefined && (obj.string1 = message.string1);
+    if (message.string1 !== undefined && message.string1 !== "") {
+      obj.string1 = message.string1;
+    }
     return obj;
   },
 

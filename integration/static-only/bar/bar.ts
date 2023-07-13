@@ -51,7 +51,9 @@ export const Bar = {
 
   toJSON(message: Bar): unknown {
     const obj: any = {};
-    message.foo !== undefined && (obj.foo = message.foo ? Foo.toJSON(message.foo) : undefined);
+    if (message.foo !== undefined) {
+      obj.foo = message.foo ? Foo.toJSON(message.foo) : undefined;
+    }
     return obj;
   },
 

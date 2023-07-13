@@ -87,10 +87,8 @@ export const BatchQueryRequest = {
 
   toJSON(message: BatchQueryRequest): unknown {
     const obj: any = {};
-    if (message.ids) {
+    if (message.ids?.length) {
       obj.ids = message.ids.map((e) => e);
-    } else {
-      obj.ids = [];
     }
     return obj;
   },
@@ -147,10 +145,8 @@ export const BatchQueryResponse = {
 
   toJSON(message: BatchQueryResponse): unknown {
     const obj: any = {};
-    if (message.entities) {
+    if (message.entities?.length) {
       obj.entities = message.entities.map((e) => e ? Entity.toJSON(e) : undefined);
-    } else {
-      obj.entities = [];
     }
     return obj;
   },
@@ -207,10 +203,8 @@ export const BatchMapQueryRequest = {
 
   toJSON(message: BatchMapQueryRequest): unknown {
     const obj: any = {};
-    if (message.ids) {
+    if (message.ids?.length) {
       obj.ids = message.ids.map((e) => e);
-    } else {
-      obj.ids = [];
     }
     return obj;
   },
@@ -277,11 +271,14 @@ export const BatchMapQueryResponse = {
 
   toJSON(message: BatchMapQueryResponse): unknown {
     const obj: any = {};
-    obj.entities = {};
     if (message.entities) {
-      Object.entries(message.entities).forEach(([k, v]) => {
-        obj.entities[k] = Entity.toJSON(v);
-      });
+      const entries = Object.entries(message.entities);
+      if (entries.length > 0) {
+        obj.entities = {};
+        entries.forEach(([k, v]) => {
+          obj.entities[k] = Entity.toJSON(v);
+        });
+      }
     }
     return obj;
   },
@@ -356,8 +353,12 @@ export const BatchMapQueryResponse_EntitiesEntry = {
 
   toJSON(message: BatchMapQueryResponse_EntitiesEntry): unknown {
     const obj: any = {};
-    message.key !== undefined && (obj.key = message.key);
-    message.value !== undefined && (obj.value = message.value ? Entity.toJSON(message.value) : undefined);
+    if (message.key !== "") {
+      obj.key = message.key;
+    }
+    if (message.value !== undefined) {
+      obj.value = message.value ? Entity.toJSON(message.value) : undefined;
+    }
     return obj;
   },
 
@@ -420,7 +421,9 @@ export const GetOnlyMethodRequest = {
 
   toJSON(message: GetOnlyMethodRequest): unknown {
     const obj: any = {};
-    message.id !== undefined && (obj.id = message.id);
+    if (message.id !== "") {
+      obj.id = message.id;
+    }
     return obj;
   },
 
@@ -476,7 +479,9 @@ export const GetOnlyMethodResponse = {
 
   toJSON(message: GetOnlyMethodResponse): unknown {
     const obj: any = {};
-    message.entity !== undefined && (obj.entity = message.entity ? Entity.toJSON(message.entity) : undefined);
+    if (message.entity !== undefined) {
+      obj.entity = message.entity ? Entity.toJSON(message.entity) : undefined;
+    }
     return obj;
   },
 
@@ -534,7 +539,9 @@ export const WriteMethodRequest = {
 
   toJSON(message: WriteMethodRequest): unknown {
     const obj: any = {};
-    message.id !== undefined && (obj.id = message.id);
+    if (message.id !== "") {
+      obj.id = message.id;
+    }
     return obj;
   },
 
@@ -644,8 +651,12 @@ export const Entity = {
 
   toJSON(message: Entity): unknown {
     const obj: any = {};
-    message.id !== undefined && (obj.id = message.id);
-    message.name !== undefined && (obj.name = message.name);
+    if (message.id !== "") {
+      obj.id = message.id;
+    }
+    if (message.name !== "") {
+      obj.name = message.name;
+    }
     return obj;
   },
 

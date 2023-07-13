@@ -147,8 +147,12 @@ export const DashFlash = {
 
   toJSON(message: DashFlash): unknown {
     const obj: any = {};
-    message.msg !== undefined && (obj.msg = message.msg);
-    message.type !== undefined && (obj.type = dashFlash_TypeToJSON(message.type));
+    if (message.msg !== "") {
+      obj.msg = message.msg;
+    }
+    if (message.type !== 0) {
+      obj.type = dashFlash_TypeToJSON(message.type);
+    }
     return obj;
   },
 
@@ -229,13 +233,14 @@ export const DashUserSettingsState = {
 
   toJSON(message: DashUserSettingsState): unknown {
     const obj: any = {};
-    message.email !== undefined && (obj.email = message.email);
-    message.urls !== undefined &&
-      (obj.urls = message.urls ? DashUserSettingsState_URLs.toJSON(message.urls) : undefined);
-    if (message.flashes) {
+    if (message.email !== "") {
+      obj.email = message.email;
+    }
+    if (message.urls !== undefined) {
+      obj.urls = message.urls ? DashUserSettingsState_URLs.toJSON(message.urls) : undefined;
+    }
+    if (message.flashes?.length) {
       obj.flashes = message.flashes.map((e) => e ? DashFlash.toJSON(e) : undefined);
-    } else {
-      obj.flashes = [];
     }
     return obj;
   },
@@ -309,8 +314,12 @@ export const DashUserSettingsState_URLs = {
 
   toJSON(message: DashUserSettingsState_URLs): unknown {
     const obj: any = {};
-    message.connectGoogle !== undefined && (obj.connectGoogle = message.connectGoogle);
-    message.connectGithub !== undefined && (obj.connectGithub = message.connectGithub);
+    if (message.connectGoogle !== "") {
+      obj.connectGoogle = message.connectGoogle;
+    }
+    if (message.connectGithub !== "") {
+      obj.connectGithub = message.connectGithub;
+    }
     return obj;
   },
 
@@ -402,10 +411,18 @@ export const DashCred = {
 
   toJSON(message: DashCred): unknown {
     const obj: any = {};
-    message.description !== undefined && (obj.description = message.description);
-    message.metadata !== undefined && (obj.metadata = message.metadata);
-    message.token !== undefined && (obj.token = message.token);
-    message.id !== undefined && (obj.id = message.id);
+    if (message.description !== "") {
+      obj.description = message.description;
+    }
+    if (message.metadata !== "") {
+      obj.metadata = message.metadata;
+    }
+    if (message.token !== "") {
+      obj.token = message.token;
+    }
+    if (message.id !== "") {
+      obj.id = message.id;
+    }
     return obj;
   },
 
@@ -477,8 +494,12 @@ export const DashAPICredsCreateReq = {
 
   toJSON(message: DashAPICredsCreateReq): unknown {
     const obj: any = {};
-    message.description !== undefined && (obj.description = message.description);
-    message.metadata !== undefined && (obj.metadata = message.metadata);
+    if (message.description !== "") {
+      obj.description = message.description;
+    }
+    if (message.metadata !== "") {
+      obj.metadata = message.metadata;
+    }
     return obj;
   },
 
@@ -570,10 +591,18 @@ export const DashAPICredsUpdateReq = {
 
   toJSON(message: DashAPICredsUpdateReq): unknown {
     const obj: any = {};
-    message.credSid !== undefined && (obj.credSid = message.credSid);
-    message.description !== undefined && (obj.description = message.description);
-    message.metadata !== undefined && (obj.metadata = message.metadata);
-    message.id !== undefined && (obj.id = message.id);
+    if (message.credSid !== "") {
+      obj.credSid = message.credSid;
+    }
+    if (message.description !== "") {
+      obj.description = message.description;
+    }
+    if (message.metadata !== "") {
+      obj.metadata = message.metadata;
+    }
+    if (message.id !== "") {
+      obj.id = message.id;
+    }
     return obj;
   },
 
@@ -645,8 +674,12 @@ export const DashAPICredsDeleteReq = {
 
   toJSON(message: DashAPICredsDeleteReq): unknown {
     const obj: any = {};
-    message.credSid !== undefined && (obj.credSid = message.credSid);
-    message.id !== undefined && (obj.id = message.id);
+    if (message.credSid !== "") {
+      obj.credSid = message.credSid;
+    }
+    if (message.id !== "") {
+      obj.id = message.id;
+    }
     return obj;
   },
 

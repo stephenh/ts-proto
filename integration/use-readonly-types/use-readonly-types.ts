@@ -221,31 +221,42 @@ export const Entity = {
 
   toJSON(message: Entity): unknown {
     const obj: any = {};
-    message.intVal !== undefined && (obj.intVal = Math.round(message.intVal));
-    message.stringVal !== undefined && (obj.stringVal = message.stringVal);
-    if (message.intArray) {
+    if (message.intVal !== 0) {
+      obj.intVal = Math.round(message.intVal);
+    }
+    if (message.stringVal !== "") {
+      obj.stringVal = message.stringVal;
+    }
+    if (message.intArray?.length) {
       obj.intArray = message.intArray.map((e) => Math.round(e));
-    } else {
-      obj.intArray = [];
     }
-    if (message.stringArray) {
+    if (message.stringArray?.length) {
       obj.stringArray = message.stringArray.map((e) => e);
-    } else {
-      obj.stringArray = [];
     }
-    message.subEntity !== undefined &&
-      (obj.subEntity = message.subEntity ? SubEntity.toJSON(message.subEntity) : undefined);
-    if (message.subEntityArray) {
+    if (message.subEntity !== undefined) {
+      obj.subEntity = message.subEntity ? SubEntity.toJSON(message.subEntity) : undefined;
+    }
+    if (message.subEntityArray?.length) {
       obj.subEntityArray = message.subEntityArray.map((e) => e ? SubEntity.toJSON(e) : undefined);
-    } else {
-      obj.subEntityArray = [];
     }
-    message.optionalIntVal !== undefined && (obj.optionalIntVal = Math.round(message.optionalIntVal));
-    message.fieldMask !== undefined && (obj.fieldMask = FieldMask.toJSON(FieldMask.wrap(message.fieldMask)));
-    message.listValue !== undefined && (obj.listValue = message.listValue);
-    message.structValue !== undefined && (obj.structValue = message.structValue);
-    message.oneOfValue?.$case === "theStringValue" && (obj.theStringValue = message.oneOfValue?.theStringValue);
-    message.oneOfValue?.$case === "theIntValue" && (obj.theIntValue = Math.round(message.oneOfValue?.theIntValue));
+    if (message.optionalIntVal !== undefined) {
+      obj.optionalIntVal = Math.round(message.optionalIntVal);
+    }
+    if (message.fieldMask !== undefined) {
+      obj.fieldMask = FieldMask.toJSON(FieldMask.wrap(message.fieldMask));
+    }
+    if (message.listValue !== undefined) {
+      obj.listValue = message.listValue;
+    }
+    if (message.structValue !== undefined) {
+      obj.structValue = message.structValue;
+    }
+    if (message.oneOfValue?.$case === "theStringValue") {
+      obj.theStringValue = message.oneOfValue?.theStringValue;
+    }
+    if (message.oneOfValue?.$case === "theIntValue") {
+      obj.theIntValue = Math.round(message.oneOfValue?.theIntValue);
+    }
     return obj;
   },
 
@@ -326,7 +337,9 @@ export const SubEntity = {
 
   toJSON(message: SubEntity): unknown {
     const obj: any = {};
-    message.subVal !== undefined && (obj.subVal = Math.round(message.subVal));
+    if (message.subVal !== 0) {
+      obj.subVal = Math.round(message.subVal);
+    }
     return obj;
   },
 

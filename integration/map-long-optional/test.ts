@@ -96,8 +96,8 @@ export const MapBigInt = {
 
   toJSON(message: MapBigInt): unknown {
     const obj: any = {};
-    obj.map = {};
-    if (message.map) {
+    if (message.map?.size) {
+      obj.map = {};
       message.map.forEach((v, k) => {
         obj.map[longToNumber(k)] = v.toString();
       });
@@ -205,8 +205,12 @@ export const MapBigInt_MapEntry = {
 
   toJSON(message: MapBigInt_MapEntry): unknown {
     const obj: any = {};
-    message.key !== undefined && (obj.key = (message.key || Long.UZERO).toString());
-    message.value !== undefined && (obj.value = (message.value || Long.ZERO).toString());
+    if (!message.key.isZero()) {
+      obj.key = (message.key || Long.UZERO).toString();
+    }
+    if (!message.value.isZero()) {
+      obj.value = (message.value || Long.ZERO).toString();
+    }
     return obj;
   },
 

@@ -53,7 +53,9 @@ export const User = {
 
   toJSON(message: User): unknown {
     const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
+    if (message.name !== "") {
+      obj.name = message.name;
+    }
     return obj;
   },
 

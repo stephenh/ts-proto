@@ -144,17 +144,29 @@ export const Simple = {
 
   toJSON(message: Simple): unknown {
     const obj: any = {};
-    message.name !== undefined && (obj.other_name = message.name);
-    message.age !== undefined && (obj.other_age = Math.round(message.age));
-    message.createdAt !== undefined && (obj.createdAt = message.createdAt.toISOString());
-    message.hyphen !== undefined && (obj["hyphened-name"] = message.hyphen);
-    message.spaces !== undefined && (obj["name with spaces"] = message.spaces);
-    message.dollarStart !== undefined && (obj.$dollar = message.dollarStart);
-    message.dollarEnd !== undefined && (obj.dollar$ = message.dollarEnd);
-    if (message.hyphenList) {
+    if (message.name !== "") {
+      obj.other_name = message.name;
+    }
+    if (message.age !== undefined) {
+      obj.other_age = Math.round(message.age);
+    }
+    if (message.createdAt !== undefined) {
+      obj.createdAt = message.createdAt.toISOString();
+    }
+    if (message.hyphen !== "") {
+      obj["hyphened-name"] = message.hyphen;
+    }
+    if (message.spaces !== "") {
+      obj["name with spaces"] = message.spaces;
+    }
+    if (message.dollarStart !== "") {
+      obj.$dollar = message.dollarStart;
+    }
+    if (message.dollarEnd !== "") {
+      obj.dollar$ = message.dollarEnd;
+    }
+    if (message.hyphenList?.length) {
       obj["hyphen-list"] = message.hyphenList.map((e) => e);
-    } else {
-      obj["hyphen-list"] = [];
     }
     return obj;
   },

@@ -69,7 +69,9 @@ export const WithEmtpy = {
 
   toJSON(message: WithEmtpy): unknown {
     const obj: any = {};
-    message.empty !== undefined && (obj.empty = message.empty ? Empty.toJSON(message.empty) : undefined);
+    if (message.empty !== undefined) {
+      obj.empty = message.empty ? Empty.toJSON(message.empty) : undefined;
+    }
     return obj;
   },
 
@@ -125,7 +127,9 @@ export const WithStruct = {
 
   toJSON(message: WithStruct): unknown {
     const obj: any = {};
-    message.strut !== undefined && (obj.strut = message.strut);
+    if (message.strut !== undefined) {
+      obj.strut = message.strut;
+    }
     return obj;
   },
 
@@ -181,7 +185,9 @@ export const WithTimestamp = {
 
   toJSON(message: WithTimestamp): unknown {
     const obj: any = {};
-    message.timestamp !== undefined && (obj.timestamp = message.timestamp.toISOString());
+    if (message.timestamp !== undefined) {
+      obj.timestamp = message.timestamp.toISOString();
+    }
     return obj;
   },
 
@@ -283,12 +289,21 @@ export const WithAll = {
 
   toJSON(message: WithAll): unknown {
     const obj: any = {};
-    message.empty !== undefined && (obj.empty = message.empty ? Empty.toJSON(message.empty) : undefined);
-    message.strut !== undefined && (obj.strut = message.strut);
-    message.timestamp !== undefined && (obj.timestamp = message.timestamp.toISOString());
-    message.duration !== undefined && (obj.duration = message.duration ? Duration.toJSON(message.duration) : undefined);
-    message.veryVerySecret !== undefined &&
-      (obj.veryVerySecret = message.veryVerySecret ? VeryVerySecret.toJSON(message.veryVerySecret) : undefined);
+    if (message.empty !== undefined) {
+      obj.empty = message.empty ? Empty.toJSON(message.empty) : undefined;
+    }
+    if (message.strut !== undefined) {
+      obj.strut = message.strut;
+    }
+    if (message.timestamp !== undefined) {
+      obj.timestamp = message.timestamp.toISOString();
+    }
+    if (message.duration !== undefined) {
+      obj.duration = message.duration ? Duration.toJSON(message.duration) : undefined;
+    }
+    if (message.veryVerySecret !== undefined) {
+      obj.veryVerySecret = message.veryVerySecret ? VeryVerySecret.toJSON(message.veryVerySecret) : undefined;
+    }
     return obj;
   },
 

@@ -179,7 +179,9 @@ export const Extendable = {
 
   toJSON(message: Extendable): unknown {
     const obj: any = {};
-    message.field !== undefined && (obj.field = message.field);
+    if (message.field !== undefined && message.field !== "") {
+      obj.field = message.field;
+    }
     return obj;
   },
 
@@ -287,7 +289,9 @@ export const Nested = {
 
   toJSON(message: Nested): unknown {
     const obj: any = {};
-    message.field !== undefined && (obj.field = message.field);
+    if (message.field !== undefined && message.field !== "") {
+      obj.field = message.field;
+    }
     return obj;
   },
 
@@ -383,8 +387,12 @@ export const Group = {
 
   toJSON(message: Group): unknown {
     const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
-    message.value !== undefined && (obj.value = message.value);
+    if (message.name !== undefined && message.name !== "") {
+      obj.name = message.name;
+    }
+    if (message.value !== undefined && message.value !== "") {
+      obj.value = message.value;
+    }
     return obj;
   },
 

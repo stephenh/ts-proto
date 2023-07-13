@@ -457,65 +457,81 @@ export const OptionalsTest = {
 
   toJSON(message: OptionalsTest): unknown {
     const obj: any = {};
-    message.id !== undefined && (obj.id = Math.round(message.id));
-    message.child !== undefined && (obj.child = message.child ? Child.toJSON(message.child) : undefined);
-    message.state !== undefined && (obj.state = stateEnumToJSON(message.state));
-    message.long !== undefined && (obj.long = Math.round(message.long));
-    message.truth !== undefined && (obj.truth = message.truth);
-    message.description !== undefined && (obj.description = message.description);
-    message.data !== undefined &&
-      (obj.data = base64FromBytes(message.data !== undefined ? message.data : new Uint8Array(0)));
-    if (message.repId) {
+    if (message.id !== undefined && message.id !== 0) {
+      obj.id = Math.round(message.id);
+    }
+    if (message.child !== undefined) {
+      obj.child = message.child ? Child.toJSON(message.child) : undefined;
+    }
+    if (message.state !== undefined && message.state !== 0) {
+      obj.state = stateEnumToJSON(message.state);
+    }
+    if (message.long !== undefined && message.long !== 0) {
+      obj.long = Math.round(message.long);
+    }
+    if (message.truth === true) {
+      obj.truth = message.truth;
+    }
+    if (message.description !== undefined && message.description !== "") {
+      obj.description = message.description;
+    }
+    if (message.data !== undefined && message.data.length !== 0) {
+      obj.data = base64FromBytes(message.data !== undefined ? message.data : new Uint8Array(0));
+    }
+    if (message.repId?.length) {
       obj.repId = message.repId.map((e) => Math.round(e));
-    } else {
-      obj.repId = [];
     }
-    if (message.repChild) {
+    if (message.repChild?.length) {
       obj.repChild = message.repChild.map((e) => e ? Child.toJSON(e) : undefined);
-    } else {
-      obj.repChild = [];
     }
-    if (message.repState) {
+    if (message.repState?.length) {
       obj.repState = message.repState.map((e) => stateEnumToJSON(e));
-    } else {
-      obj.repState = [];
     }
-    if (message.repLong) {
+    if (message.repLong?.length) {
       obj.repLong = message.repLong.map((e) => Math.round(e));
-    } else {
-      obj.repLong = [];
     }
-    if (message.repTruth) {
+    if (message.repTruth?.length) {
       obj.repTruth = message.repTruth.map((e) => e);
-    } else {
-      obj.repTruth = [];
     }
-    if (message.repDescription) {
+    if (message.repDescription?.length) {
       obj.repDescription = message.repDescription.map((e) => e);
-    } else {
-      obj.repDescription = [];
     }
-    if (message.repData) {
+    if (message.repData?.length) {
       obj.repData = message.repData.map((e) => base64FromBytes(e !== undefined ? e : new Uint8Array(0)));
-    } else {
-      obj.repData = [];
     }
-    message.optId !== undefined && (obj.optId = Math.round(message.optId));
-    message.optChild !== undefined && (obj.optChild = message.optChild ? Child.toJSON(message.optChild) : undefined);
-    message.optState !== undefined &&
-      (obj.optState = message.optState !== undefined ? stateEnumToJSON(message.optState) : undefined);
-    message.optLong !== undefined && (obj.optLong = Math.round(message.optLong));
-    message.optTruth !== undefined && (obj.optTruth = message.optTruth);
-    message.optDescription !== undefined && (obj.optDescription = message.optDescription);
-    message.optData !== undefined &&
-      (obj.optData = message.optData !== undefined ? base64FromBytes(message.optData) : undefined);
-    obj.translations = {};
+    if (message.optId !== undefined) {
+      obj.optId = Math.round(message.optId);
+    }
+    if (message.optChild !== undefined) {
+      obj.optChild = message.optChild ? Child.toJSON(message.optChild) : undefined;
+    }
+    if (message.optState !== undefined) {
+      obj.optState = message.optState !== undefined ? stateEnumToJSON(message.optState) : undefined;
+    }
+    if (message.optLong !== undefined) {
+      obj.optLong = Math.round(message.optLong);
+    }
+    if (message.optTruth !== undefined) {
+      obj.optTruth = message.optTruth;
+    }
+    if (message.optDescription !== undefined) {
+      obj.optDescription = message.optDescription;
+    }
+    if (message.optData !== undefined) {
+      obj.optData = message.optData !== undefined ? base64FromBytes(message.optData) : undefined;
+    }
     if (message.translations) {
-      Object.entries(message.translations).forEach(([k, v]) => {
-        obj.translations[k] = v;
-      });
+      const entries = Object.entries(message.translations);
+      if (entries.length > 0) {
+        obj.translations = {};
+        entries.forEach(([k, v]) => {
+          obj.translations[k] = v;
+        });
+      }
     }
-    message.timestamp !== undefined && (obj.timestamp = message.timestamp.toISOString());
+    if (message.timestamp !== undefined) {
+      obj.timestamp = message.timestamp.toISOString();
+    }
     return obj;
   },
 
@@ -613,8 +629,12 @@ export const OptionalsTest_TranslationsEntry = {
 
   toJSON(message: OptionalsTest_TranslationsEntry): unknown {
     const obj: any = {};
-    message.key !== undefined && (obj.key = message.key);
-    message.value !== undefined && (obj.value = message.value);
+    if (message.key !== "") {
+      obj.key = message.key;
+    }
+    if (message.value !== "") {
+      obj.value = message.value;
+    }
     return obj;
   },
 

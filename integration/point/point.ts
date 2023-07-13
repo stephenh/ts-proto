@@ -64,8 +64,12 @@ export const Point = {
 
   toJSON(message: Point): unknown {
     const obj: any = {};
-    message.lat !== undefined && (obj.lat = message.lat);
-    message.lng !== undefined && (obj.lng = message.lng);
+    if (message.lat !== 0) {
+      obj.lat = message.lat;
+    }
+    if (message.lng !== 0) {
+      obj.lng = message.lng;
+    }
     return obj;
   },
 
@@ -135,8 +139,12 @@ export const Area = {
 
   toJSON(message: Area): unknown {
     const obj: any = {};
-    message.nw !== undefined && (obj.nw = message.nw ? Point.toJSON(message.nw) : undefined);
-    message.se !== undefined && (obj.se = message.se ? Point.toJSON(message.se) : undefined);
+    if (message.nw !== undefined) {
+      obj.nw = message.nw ? Point.toJSON(message.nw) : undefined;
+    }
+    if (message.se !== undefined) {
+      obj.se = message.se ? Point.toJSON(message.se) : undefined;
+    }
     return obj;
   },
 

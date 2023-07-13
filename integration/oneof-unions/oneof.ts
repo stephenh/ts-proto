@@ -262,25 +262,49 @@ export const PleaseChoose = {
 
   toJSON(message: PleaseChoose): unknown {
     const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
-    message.choice?.$case === "aNumber" && (obj.aNumber = message.choice?.aNumber);
-    message.choice?.$case === "aString" && (obj.aString = message.choice?.aString);
-    message.choice?.$case === "aMessage" &&
-      (obj.aMessage = message.choice?.aMessage ? PleaseChoose_Submessage.toJSON(message.choice?.aMessage) : undefined);
-    message.choice?.$case === "aBool" && (obj.aBool = message.choice?.aBool);
-    message.choice?.$case === "bunchaBytes" && (obj.bunchaBytes = message.choice?.bunchaBytes !== undefined
-      ? base64FromBytes(message.choice?.bunchaBytes)
-      : undefined);
-    message.choice?.$case === "anEnum" && (obj.anEnum = message.choice?.anEnum !== undefined
-      ? pleaseChoose_StateEnumToJSON(message.choice?.anEnum)
-      : undefined);
-    message.age !== undefined && (obj.age = Math.round(message.age));
-    message.eitherOr?.$case === "either" && (obj.either = message.eitherOr?.either);
-    message.eitherOr?.$case === "or" && (obj.or = message.eitherOr?.or);
-    message.eitherOr?.$case === "thirdOption" && (obj.thirdOption = message.eitherOr?.thirdOption);
-    message.signature !== undefined &&
-      (obj.signature = base64FromBytes(message.signature !== undefined ? message.signature : new Uint8Array(0)));
-    message.value !== undefined && (obj.value = message.value);
+    if (message.name !== "") {
+      obj.name = message.name;
+    }
+    if (message.choice?.$case === "aNumber") {
+      obj.aNumber = message.choice?.aNumber;
+    }
+    if (message.choice?.$case === "aString") {
+      obj.aString = message.choice?.aString;
+    }
+    if (message.choice?.$case === "aMessage") {
+      obj.aMessage = message.choice?.aMessage ? PleaseChoose_Submessage.toJSON(message.choice?.aMessage) : undefined;
+    }
+    if (message.choice?.$case === "aBool") {
+      obj.aBool = message.choice?.aBool;
+    }
+    if (message.choice?.$case === "bunchaBytes") {
+      obj.bunchaBytes = message.choice?.bunchaBytes !== undefined
+        ? base64FromBytes(message.choice?.bunchaBytes)
+        : undefined;
+    }
+    if (message.choice?.$case === "anEnum") {
+      obj.anEnum = message.choice?.anEnum !== undefined
+        ? pleaseChoose_StateEnumToJSON(message.choice?.anEnum)
+        : undefined;
+    }
+    if (message.age !== 0) {
+      obj.age = Math.round(message.age);
+    }
+    if (message.eitherOr?.$case === "either") {
+      obj.either = message.eitherOr?.either;
+    }
+    if (message.eitherOr?.$case === "or") {
+      obj.or = message.eitherOr?.or;
+    }
+    if (message.eitherOr?.$case === "thirdOption") {
+      obj.thirdOption = message.eitherOr?.thirdOption;
+    }
+    if (message.signature.length !== 0) {
+      obj.signature = base64FromBytes(message.signature !== undefined ? message.signature : new Uint8Array(0));
+    }
+    if (message.value !== undefined) {
+      obj.value = message.value;
+    }
     return obj;
   },
 
@@ -378,7 +402,9 @@ export const PleaseChoose_Submessage = {
 
   toJSON(message: PleaseChoose_Submessage): unknown {
     const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
+    if (message.name !== "") {
+      obj.name = message.name;
+    }
     return obj;
   },
 
@@ -447,8 +473,12 @@ export const SimpleButOptional = {
 
   toJSON(message: SimpleButOptional): unknown {
     const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
-    message.age !== undefined && (obj.age = Math.round(message.age));
+    if (message.name !== undefined) {
+      obj.name = message.name;
+    }
+    if (message.age !== undefined) {
+      obj.age = Math.round(message.age);
+    }
     return obj;
   },
 

@@ -177,19 +177,26 @@ export const Simple = {
 
   toJSON(message: Simple): unknown {
     const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
-    message.state !== undefined && (obj.state = stateEnumToJSON(message.state));
-    if (message.states) {
-      obj.states = message.states.map((e) => stateEnumToJSON(e));
-    } else {
-      obj.states = [];
+    if (message.name !== "") {
+      obj.name = message.name;
     }
-    message.nullValue !== undefined && (obj.nullValue = nullValueToJSON(message.nullValue));
-    obj.stateMap = {};
+    if (message.state !== StateEnum.UNKNOWN) {
+      obj.state = stateEnumToJSON(message.state);
+    }
+    if (message.states?.length) {
+      obj.states = message.states.map((e) => stateEnumToJSON(e));
+    }
+    if (message.nullValue !== NullValue.NULL_VALUE) {
+      obj.nullValue = nullValueToJSON(message.nullValue);
+    }
     if (message.stateMap) {
-      Object.entries(message.stateMap).forEach(([k, v]) => {
-        obj.stateMap[k] = stateEnumToJSON(v);
-      });
+      const entries = Object.entries(message.stateMap);
+      if (entries.length > 0) {
+        obj.stateMap = {};
+        entries.forEach(([k, v]) => {
+          obj.stateMap[k] = stateEnumToJSON(v);
+        });
+      }
     }
     return obj;
   },
@@ -271,8 +278,12 @@ export const Simple_StateMapEntry = {
 
   toJSON(message: Simple_StateMapEntry): unknown {
     const obj: any = {};
-    message.key !== undefined && (obj.key = message.key);
-    message.value !== undefined && (obj.value = stateEnumToJSON(message.value));
+    if (message.key !== "") {
+      obj.key = message.key;
+    }
+    if (message.value !== StateEnum.UNKNOWN) {
+      obj.value = stateEnumToJSON(message.value);
+    }
     return obj;
   },
 

@@ -123,9 +123,12 @@ export const Simple = {
 
   toJSON(message: Simple): unknown {
     const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
-    message.otherSimple !== undefined &&
-      (obj.otherSimple = message.otherSimple ? Simple3.toJSON(message.otherSimple) : undefined);
+    if (message.name !== "") {
+      obj.name = message.name;
+    }
+    if (message.otherSimple !== undefined) {
+      obj.otherSimple = message.otherSimple ? Simple3.toJSON(message.otherSimple) : undefined;
+    }
     return obj;
   },
 
@@ -197,8 +200,12 @@ export const SimpleEnums = {
 
   toJSON(message: SimpleEnums): unknown {
     const obj: any = {};
-    message.localEnum !== undefined && (obj.localEnum = simpleEnumToJSON(message.localEnum));
-    message.importEnum !== undefined && (obj.importEnum = simpleEnumToJSON5(message.importEnum));
+    if (message.localEnum !== 0) {
+      obj.localEnum = simpleEnumToJSON(message.localEnum);
+    }
+    if (message.importEnum !== 0) {
+      obj.importEnum = simpleEnumToJSON5(message.importEnum);
+    }
     return obj;
   },
 
@@ -255,7 +262,9 @@ export const FooServiceCreateRequest = {
 
   toJSON(message: FooServiceCreateRequest): unknown {
     const obj: any = {};
-    message.kind !== undefined && (obj.kind = fooServiceToJSON(message.kind));
+    if (message.kind !== 0) {
+      obj.kind = fooServiceToJSON(message.kind);
+    }
     return obj;
   },
 
@@ -311,7 +320,9 @@ export const FooServiceCreateResponse = {
 
   toJSON(message: FooServiceCreateResponse): unknown {
     const obj: any = {};
-    message.kind !== undefined && (obj.kind = fooServiceToJSON(message.kind));
+    if (message.kind !== 0) {
+      obj.kind = fooServiceToJSON(message.kind);
+    }
     return obj;
   },
 

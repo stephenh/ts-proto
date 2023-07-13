@@ -2049,8 +2049,8 @@ function generateToJson(
 
       if (ctx.options.useMapType) {
         chunks.push(code`
-          ${jsonProperty} = {};
-          if (message.${fieldName}) {
+          if (message.${fieldName}?.size) {
+            ${jsonProperty} = {};
             message.${fieldName}.forEach((v, k) => {
               ${jsonProperty}[${i}] = ${readSnippet("v")};
             });
@@ -2058,31 +2058,43 @@ function generateToJson(
         `);
       } else {
         chunks.push(code`
-          ${jsonProperty} = {};
-          if (message.${fieldName}) {
-            Object.entries(message.${fieldName}).forEach(([k, v]) => {
-              ${jsonProperty}[${i}] = ${readSnippet("v")};
-            });
+        if (message.${fieldName}) {
+            const entries = Object.entries(message.${fieldName});
+            if (entries.length > 0) {
+              ${jsonProperty} = {};
+              entries.forEach(([k, v]) => {
+                ${jsonProperty}[${i}] = ${readSnippet("v")};
+              });
+            }
           }
         `);
       }
     } else if (isRepeated(field)) {
       // Arrays might need their elements transformed
       chunks.push(code`
-        if (message.${fieldName}) {
+        if (message.${fieldName}?.length) {
           ${jsonProperty} = message.${fieldName}.map(e => ${readSnippet("e")});
-        } else {
-          ${jsonProperty} = [];
         }
       `);
     } else if (isWithinOneOfThatShouldBeUnion(options, field)) {
       // oneofs in a union are only output as `oneof name = ...`
       const oneofName = maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options);
-      const v = readSnippet(`message.${oneofName}?.${fieldName}`);
-      chunks.push(code`message.${oneofName}?.$case === '${fieldName}' && (${jsonProperty} = ${v});`);
+      chunks.push(code`
+        if (message.${oneofName}?.$case === '${fieldName}') {
+          ${jsonProperty} = ${readSnippet(`message.${oneofName}?.${fieldName}`)};
+        }
+      `);
     } else {
-      const v = readSnippet(`message.${fieldName}`);
-      chunks.push(code`message.${fieldName} !== undefined && (${jsonProperty} = ${v});`);
+      const check =
+        (isScalar(field) || isEnum(field)) && !isWithinOneOf(field)
+          ? notDefaultCheck(ctx, field, messageDesc.options, `message.${fieldName}`)
+          : `message.${fieldName} !== undefined`;
+
+      chunks.push(code`
+        if (${check}) {
+          ${jsonProperty} = ${readSnippet(`message.${fieldName}`)};
+        }
+      `);
     }
   });
   chunks.push(code`return obj;`);

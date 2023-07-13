@@ -69,8 +69,12 @@ export const NumPair = {
 
   toJSON(message: NumPair): unknown {
     const obj: any = {};
-    message.num1 !== undefined && (obj.num1 = message.num1);
-    message.num2 !== undefined && (obj.num2 = message.num2);
+    if (message.num1 !== 0) {
+      obj.num1 = message.num1;
+    }
+    if (message.num2 !== 0) {
+      obj.num2 = message.num2;
+    }
     return obj;
   },
 
@@ -127,7 +131,9 @@ export const NumSingle = {
 
   toJSON(message: NumSingle): unknown {
     const obj: any = {};
-    message.num !== undefined && (obj.num = message.num);
+    if (message.num !== 0) {
+      obj.num = message.num;
+    }
     return obj;
   },
 
@@ -195,10 +201,8 @@ export const Numbers = {
 
   toJSON(message: Numbers): unknown {
     const obj: any = {};
-    if (message.num) {
+    if (message.num?.length) {
       obj.num = message.num.map((e) => e);
-    } else {
-      obj.num = [];
     }
     return obj;
   },
