@@ -88,7 +88,7 @@ export const BatchQueryRequest = {
   toJSON(message: BatchQueryRequest): unknown {
     const obj: any = {};
     if (message.ids?.length) {
-      obj.ids = message.ids.map((e) => e);
+      obj.ids = message.ids;
     }
     return obj;
   },
@@ -204,7 +204,7 @@ export const BatchMapQueryRequest = {
   toJSON(message: BatchMapQueryRequest): unknown {
     const obj: any = {};
     if (message.ids?.length) {
-      obj.ids = message.ids.map((e) => e);
+      obj.ids = message.ids;
     }
     return obj;
   },

@@ -231,7 +231,7 @@ export const Entity = {
       obj.intArray = message.intArray.map((e) => Math.round(e));
     }
     if (message.stringArray?.length) {
-      obj.stringArray = message.stringArray.map((e) => e);
+      obj.stringArray = message.stringArray;
     }
     if (message.subEntity !== undefined) {
       obj.subEntity = message.subEntity ? SubEntity.toJSON(message.subEntity) : undefined;

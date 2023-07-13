@@ -166,7 +166,7 @@ export const Simple = {
       obj.dollar$ = message.dollarEnd;
     }
     if (message.hyphenList?.length) {
-      obj["hyphen-list"] = message.hyphenList.map((e) => e);
+      obj["hyphen-list"] = message.hyphenList;
     }
     return obj;
   },

@@ -202,7 +202,7 @@ export const Numbers = {
   toJSON(message: Numbers): unknown {
     const obj: any = {};
     if (message.num?.length) {
-      obj.num = message.num.map((e) => e);
+      obj.num = message.num;
     }
     return obj;
   },

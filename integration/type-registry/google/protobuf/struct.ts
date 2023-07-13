@@ -526,7 +526,7 @@ export const ListValue = {
   toJSON(message: ListValue): unknown {
     const obj: any = {};
     if (message.values?.length) {
-      obj.values = message.values.map((e) => e);
+      obj.values = message.values;
     }
     return obj;
   },

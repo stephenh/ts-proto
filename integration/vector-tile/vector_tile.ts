@@ -524,7 +524,7 @@ export const Tile_Layer = {
       obj.features = message.features.map((e) => e ? Tile_Feature.toJSON(e) : undefined);
     }
     if (message.keys?.length) {
-      obj.keys = message.keys.map((e) => e);
+      obj.keys = message.keys;
     }
     if (message.values?.length) {
       obj.values = message.values.map((e) => e ? Tile_Value.toJSON(e) : undefined);

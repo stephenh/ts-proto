@@ -121,7 +121,7 @@ export const Todo = {
       obj.timestamp = message.timestamp;
     }
     if (message.repeatedTimestamp?.length) {
-      obj.repeatedTimestamp = message.repeatedTimestamp.map((e) => e);
+      obj.repeatedTimestamp = message.repeatedTimestamp;
     }
     if (message.optionalTimestamp !== undefined) {
       obj.optionalTimestamp = message.optionalTimestamp;

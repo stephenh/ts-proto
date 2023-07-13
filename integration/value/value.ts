@@ -107,10 +107,10 @@ export const ValueMessage = {
       obj.anyList = message.anyList;
     }
     if (message.repeatedAny?.length) {
-      obj.repeatedAny = message.repeatedAny.map((e) => e);
+      obj.repeatedAny = message.repeatedAny;
     }
     if (message.repeatedStrings?.length) {
-      obj.repeatedStrings = message.repeatedStrings.map((e) => e);
+      obj.repeatedStrings = message.repeatedStrings;
     }
     if (message.structValue !== undefined) {
       obj.structValue = message.structValue;

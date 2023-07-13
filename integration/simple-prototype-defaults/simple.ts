@@ -537,7 +537,7 @@ export const Simple = {
       obj.coins = message.coins.map((e) => Math.round(e));
     }
     if (message.snacks?.length) {
-      obj.snacks = message.snacks.map((e) => e);
+      obj.snacks = message.snacks;
     }
     if (message.oldStates?.length) {
       obj.oldStates = message.oldStates.map((e) => stateEnumToJSON(e));
@@ -1071,10 +1071,10 @@ export const SimpleWithWrappers = {
       obj.enabled = message.enabled;
     }
     if (message.coins?.length) {
-      obj.coins = message.coins.map((e) => e);
+      obj.coins = message.coins;
     }
     if (message.snacks?.length) {
-      obj.snacks = message.snacks.map((e) => e);
+      obj.snacks = message.snacks;
     }
     if (message.id !== undefined) {
       obj.id = message.id;

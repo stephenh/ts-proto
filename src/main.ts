@@ -2071,9 +2071,11 @@ function generateToJson(
       }
     } else if (isRepeated(field)) {
       // Arrays might need their elements transformed
+      const transformElement = readSnippet("e");
+      const maybeMap = transformElement.toCodeString([]) !== "e" ? code`.map(e => ${transformElement})` : "";
       chunks.push(code`
         if (message.${fieldName}?.length) {
-          ${jsonProperty} = message.${fieldName}.map(e => ${readSnippet("e")});
+          ${jsonProperty} = message.${fieldName}${maybeMap};
         }
       `);
     } else if (isWithinOneOfThatShouldBeUnion(options, field)) {

@@ -528,10 +528,10 @@ export const GroupsRepeatedTest_Group = {
   toJSON(message: GroupsRepeatedTest_Group): unknown {
     const obj: any = {};
     if (message.key?.length) {
-      obj.key = message.key.map((e) => e);
+      obj.key = message.key;
     }
     if (message.value?.length) {
-      obj.value = message.value.map((e) => e);
+      obj.value = message.value;
     }
     return obj;
   },

@@ -164,10 +164,10 @@ export const SimpleWithWrappers = {
       obj.bananas = message.bananas;
     }
     if (message.coins?.length) {
-      obj.coins = message.coins.map((e) => e);
+      obj.coins = message.coins;
     }
     if (message.snacks?.length) {
-      obj.snacks = message.snacks.map((e) => e);
+      obj.snacks = message.snacks;
     }
     return obj;
   },

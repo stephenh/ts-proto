@@ -492,10 +492,10 @@ export const OptionalsTest = {
       obj.repLong = message.repLong.map((e) => Math.round(e));
     }
     if (message.repTruth?.length) {
-      obj.repTruth = message.repTruth.map((e) => e);
+      obj.repTruth = message.repTruth;
     }
     if (message.repDescription?.length) {
-      obj.repDescription = message.repDescription.map((e) => e);
+      obj.repDescription = message.repDescription;
     }
     if (message.repData?.length) {
       obj.repData = message.repData.map((e) => base64FromBytes(e !== undefined ? e : new Uint8Array(0)));

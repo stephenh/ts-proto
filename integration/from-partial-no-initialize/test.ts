@@ -258,7 +258,7 @@ export const TPartial = {
       obj.repeatedMessage = message.repeatedMessage.map((e) => e ? TPartialMessage.toJSON(e) : undefined);
     }
     if (message.repeatedString?.length) {
-      obj.repeatedString = message.repeatedString.map((e) => e);
+      obj.repeatedString = message.repeatedString;
     }
     if (message.repeatedNumber?.length) {
       obj.repeatedNumber = message.repeatedNumber.map((e) => Math.round(e));
