@@ -35,7 +35,7 @@ export function generateService(
   ctx: Context,
   fileDesc: FileDescriptorProto,
   sourceInfo: SourceInfo,
-  serviceDesc: ServiceDescriptorProto
+  serviceDesc: ServiceDescriptorProto,
 ): Code {
   const { options } = ctx;
   const chunks: Code[] = [];
@@ -82,8 +82,8 @@ export function generateService(
     chunks.push(
       code`${methodDesc.formattedName}(${joinCode(params, { on: "," })}): ${responsePromiseOrObservable(
         ctx,
-        methodDesc
-      )};`
+        methodDesc,
+      )};`,
     );
 
     // If this is a batch method, auto-generate the singular version of it
@@ -176,7 +176,7 @@ function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProt
 export function generateServiceClientImpl(
   ctx: Context,
   fileDesc: FileDescriptorProto,
-  serviceDesc: ServiceDescriptorProto
+  serviceDesc: ServiceDescriptorProto,
 ): Code {
   const { options } = ctx;
   const chunks: Code[] = [];
@@ -291,7 +291,7 @@ function generateCachingRpcMethod(
   ctx: Context,
   fileDesc: FileDescriptorProto,
   serviceDesc: ServiceDescriptorProto,
-  methodDesc: MethodDescriptorProto
+  methodDesc: MethodDescriptorProto,
 ): Code {
   assertInstanceOf(methodDesc, FormattedMethodDescriptor);
 
@@ -309,8 +309,8 @@ function generateCachingRpcMethod(
       const responses = requests.map(async request => {
         const data = ${inputType}.encode(request).finish()
         const response = await this.rpc.request(ctx, "${maybePrefixPackage(fileDesc, serviceDesc.name)}", "${
-    methodDesc.name
-  }", data);
+          methodDesc.name
+        }", data);
         return ${outputType}.decode(${Reader}.create(response));
       });
       return Promise.all(responses);

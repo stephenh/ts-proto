@@ -13,7 +13,7 @@ export function generateEnum(
   ctx: Context,
   fullName: string,
   enumDesc: EnumDescriptorProto,
-  sourceInfo: SourceInfo
+  sourceInfo: SourceInfo,
 ): Code {
   const { options } = ctx;
   const chunks: Code[] = [];
@@ -34,15 +34,15 @@ export function generateEnum(
     const memberName = getMemberName(ctx, fullName, valueDesc);
     maybeAddComment(info, chunks, valueDesc.options?.deprecated, `${memberName} - `);
     chunks.push(
-      code`${memberName} ${delimiter} ${options.stringEnums ? `"${valueName}"` : valueDesc.number.toString()},`
+      code`${memberName} ${delimiter} ${options.stringEnums ? `"${valueName}"` : valueDesc.number.toString()},`,
     );
   });
 
   if (options.unrecognizedEnum)
     chunks.push(code`
       ${UNRECOGNIZED_ENUM_NAME} ${delimiter} ${
-      options.stringEnums ? `"${UNRECOGNIZED_ENUM_NAME}"` : UNRECOGNIZED_ENUM_VALUE.toString()
-    },`);
+        options.stringEnums ? `"${UNRECOGNIZED_ENUM_NAME}"` : UNRECOGNIZED_ENUM_VALUE.toString()
+      },`);
 
   if (options.enumsAsLiterals) {
     chunks.push(code`} as const`);
@@ -117,7 +117,7 @@ export function generateEnumToJson(ctx: Context, fullName: string, enumDesc: Enu
   chunks.push(
     code`export function ${def(functionName)}(object: ${fullName}): ${
       ctx.options.useNumericEnumForJson ? "number" : "string"
-    } {`
+    } {`,
   );
   chunks.push(code`switch (object) {`);
 

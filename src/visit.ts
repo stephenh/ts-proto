@@ -12,14 +12,14 @@ type MessageVisitor = (
   fullName: string,
   desc: DescriptorProto,
   sourceInfo: SourceInfo,
-  fullProtoTypeName: string
+  fullProtoTypeName: string,
 ) => void;
 
 type EnumVisitor = (
   fullName: string,
   desc: EnumDescriptorProto,
   sourceInfo: SourceInfo,
-  fullProtoTypeName: string
+  fullProtoTypeName: string,
 ) => void;
 
 export function visit(
@@ -29,7 +29,7 @@ export function visit(
   options: Options,
   enumFn: EnumVisitor = () => {},
   tsPrefix: string = "",
-  protoPrefix: string = ""
+  protoPrefix: string = "",
 ): void {
   const isRootFile = "syntax" in proto;
   const childEnumType = isRootFile ? Fields.file.enum_type : Fields.message.enum_type;
@@ -69,7 +69,7 @@ function messageName(message: DescriptorProto): string {
 export function visitServices(
   proto: FileDescriptorProto,
   sourceInfo: SourceInfo,
-  serviceFn: (desc: ServiceDescriptorProto, sourceInfo: SourceInfo) => void
+  serviceFn: (desc: ServiceDescriptorProto, sourceInfo: SourceInfo) => void,
 ): void {
   proto.service.forEach((serviceDesc, index) => {
     const nestedSourceInfo = sourceInfo.open(Fields.file.service, index);

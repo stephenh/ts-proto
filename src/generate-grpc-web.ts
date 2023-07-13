@@ -13,7 +13,7 @@ const BrowserHeaders = imp("BrowserHeaders@browser-headers");
 export function generateGrpcClientImpl(
   ctx: Context,
   _fileDesc: FileDescriptorProto,
-  serviceDesc: ServiceDescriptorProto
+  serviceDesc: ServiceDescriptorProto,
 ): Code {
   const chunks: Code[] = [];
 
@@ -102,7 +102,7 @@ export function generateGrpcServiceDesc(fileDesc: FileDescriptorProto, serviceDe
 export function generateGrpcMethodDesc(
   ctx: Context,
   serviceDesc: ServiceDescriptorProto,
-  methodDesc: MethodDescriptorProto
+  methodDesc: MethodDescriptorProto,
 ): Code {
   const inputType = requestType(ctx, methodDesc);
   const outputType = responseType(ctx, methodDesc);

@@ -97,12 +97,12 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
 
   if (options.useOptionals === false) {
     console.warn(
-      "ts-proto: Passing useOptionals as a boolean option is deprecated and will be removed in a future version. Please pass the string 'none' instead of false."
+      "ts-proto: Passing useOptionals as a boolean option is deprecated and will be removed in a future version. Please pass the string 'none' instead of false.",
     );
     options.useOptionals = "none";
   } else if (options.useOptionals === true) {
     console.warn(
-      "ts-proto: Passing useOptionals as a boolean option is deprecated and will be removed in a future version. Please pass the string 'messages' instead of true."
+      "ts-proto: Passing useOptionals as a boolean option is deprecated and will be removed in a future version. Please pass the string 'messages' instead of true.",
     );
     options.useOptionals = "messages";
   }
@@ -145,13 +145,13 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
     sourceInfo,
     (fullName, message, sInfo, fullProtoTypeName) => {
       chunks.push(
-        generateInterfaceDeclaration(ctx, fullName, message, sInfo, maybePrefixPackage(fileDesc, fullProtoTypeName))
+        generateInterfaceDeclaration(ctx, fullName, message, sInfo, maybePrefixPackage(fileDesc, fullProtoTypeName)),
       );
     },
     options,
     (fullName, enumDesc, sInfo) => {
       chunks.push(generateEnum(ctx, fullName, enumDesc, sInfo));
-    }
+    },
   );
 
   // If nestJs=true export [package]_PACKAGE_NAME and [service]_SERVICE_NAME const
@@ -162,7 +162,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
     if (
       options.useDate === DateOption.DATE &&
       fileDesc.messageType.find((message) =>
-        message.field.find((field) => field.typeName === ".google.protobuf.Timestamp")
+        message.field.find((field) => field.typeName === ".google.protobuf.Timestamp"),
       )
     ) {
       chunks.push(makeProtobufTimestampWrapper());
@@ -273,7 +273,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
           `);
         }
       },
-      options
+      options,
     );
   }
 
@@ -377,7 +377,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
       } else {
         return code``;
       }
-    })
+    }),
   );
 
   // Finally, reset method definitions to their original state (unformatted)
@@ -483,7 +483,7 @@ function makeLongUtils(options: Options, bytes: ReturnType<typeof makeByteUtils>
         ${util}.Long = ${LongImp} as any;
         ${configure}();
       }
-    `
+    `,
   );
 
   // TODO This is unused?
@@ -493,7 +493,7 @@ function makeLongUtils(options: Options, bytes: ReturnType<typeof makeByteUtils>
       function numberToLong(number: number) {
         return ${Long}.fromNumber(number);
       }
-    `
+    `,
   );
 
   const longToString = conditionalOutput(
@@ -502,7 +502,7 @@ function makeLongUtils(options: Options, bytes: ReturnType<typeof makeByteUtils>
       function longToString(long: ${Long}) {
         return long.toString();
       }
-    `
+    `,
   );
 
   const longToBigint = conditionalOutput(
@@ -511,7 +511,7 @@ function makeLongUtils(options: Options, bytes: ReturnType<typeof makeByteUtils>
       function longToBigint(long: ${Long}) {
         return BigInt(long.toString());
       }
-    `
+    `,
   );
 
   const longToNumber = conditionalOutput(
@@ -523,7 +523,7 @@ function makeLongUtils(options: Options, bytes: ReturnType<typeof makeByteUtils>
         }
         return long.toNumber();
       }
-    `
+    `,
   );
 
   return { numberToLong, longToNumber, longToString, longToBigint, Long };
@@ -543,7 +543,7 @@ function makeByteUtils() {
         if (typeof global !== "undefined") return global;
         throw "Unable to locate global object";
       })();
-    `
+    `,
   );
 
   const bytesFromBase64 = conditionalOutput(
@@ -561,7 +561,7 @@ function makeByteUtils() {
           return arr;
         }
       }
-    `
+    `,
   );
   const base64FromBytes = conditionalOutput(
     "base64FromBytes",
@@ -577,7 +577,7 @@ function makeByteUtils() {
           return ${globalThis}.btoa(bin.join(''));
         }
       }
-    `
+    `,
   );
   return { globalThis, bytesFromBase64, base64FromBytes };
 }
@@ -600,7 +600,7 @@ function makeDeepPartial(options: Options, longs: ReturnType<typeof makeLongUtil
     "Builtin",
     code`type Builtin = Date | Function | Uint8Array | string | number | boolean |${
       options.forceLong === LongOption.BIGINT ? " bigint |" : ""
-    } undefined;`
+    } undefined;`,
   );
 
   // Based on https://github.com/sindresorhus/type-fest/pull/259
@@ -613,7 +613,7 @@ function makeDeepPartial(options: Options, longs: ReturnType<typeof makeLongUtil
         ? P
         : P &
         { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P> ${maybeExcludeType}>]: never };
-    `
+    `,
   );
 
   // Based on the type from ts-essentials
@@ -631,7 +631,7 @@ function makeDeepPartial(options: Options, longs: ReturnType<typeof makeLongUtil
         : T extends {}
         ? { [K in ${keys}]?: DeepPartial<T[K]> }
         : Partial<T>;
-    `
+    `,
   );
 
   return { Builtin, DeepPartial, Exact };
@@ -646,7 +646,7 @@ function makeObjectIdMethods() {
       function fromProtoObjectId(oid: ObjectId): ${mongodb}.ObjectId {
         return new ${mongodb}.ObjectId(oid.value);
       }
-    `
+    `,
   );
 
   const fromJsonObjectId = conditionalOutput(
@@ -661,7 +661,7 @@ function makeObjectIdMethods() {
           return ${fromProtoObjectId}(ObjectId.fromJSON(o));
         }
       }
-    `
+    `,
   );
 
   const toProtoObjectId = conditionalOutput(
@@ -671,7 +671,7 @@ function makeObjectIdMethods() {
         const value = oid.toString();
         return { value };
       }
-    `
+    `,
   );
 
   return { fromJsonObjectId, fromProtoObjectId, toProtoObjectId };
@@ -715,7 +715,7 @@ function makeTimestampMethods(options: Options, longs: ReturnType<typeof makeLon
             const nanos = (date.getTime() % 1_000) * 1_000_000;
             return { ${maybeTypeField} seconds, nanos };
           }
-        `
+        `,
   );
 
   const fromTimestamp = conditionalOutput(
@@ -734,7 +734,7 @@ function makeTimestampMethods(options: Options, longs: ReturnType<typeof makeLon
             millis += (t.nanos || 0) / 1_000_000;
             return new Date(millis);
           }
-        `
+        `,
   );
 
   const fromJsonTimestamp = conditionalOutput(
@@ -761,7 +761,7 @@ function makeTimestampMethods(options: Options, longs: ReturnType<typeof makeLon
             return Timestamp.fromJSON(o);
           }
         }
-      `
+      `,
   );
 
   return { toTimestamp, fromTimestamp, fromJsonTimestamp };
@@ -773,7 +773,7 @@ function makeComparisonUtils() {
     code`
     function isObject(value: any): boolean {
       return typeof value === 'object' && value !== null;
-    }`
+    }`,
   );
 
   const isSet = conditionalOutput(
@@ -781,7 +781,7 @@ function makeComparisonUtils() {
     code`
     function isSet(value: any): boolean {
       return value !== null && value !== undefined;
-    }`
+    }`,
   );
 
   return { isObject, isSet };
@@ -794,7 +794,7 @@ function makeNiceGrpcServerStreamingMethodResult() {
       export type ServerStreamingMethodResult<Response> = {
         [Symbol.asyncIterator](): AsyncIterator<Response, void>;
       };
-    `
+    `,
   );
 
   return { NiceGrpcServerStreamingMethodResult };
@@ -809,7 +809,7 @@ function makeGrpcWebErrorClass(bytes: ReturnType<typeof makeByteUtils>) {
           super(message);
         }
       }
-    `
+    `,
   );
 
   return { GrpcWebError };
@@ -830,7 +830,7 @@ function makeExtensionClass(options: Options) {
         repeated: boolean;
         packed: boolean;
       }
-    `
+    `,
   );
 
   return { Extension };
@@ -843,7 +843,7 @@ function makeAssertionUtils() {
       function fail(message?: string): never {
         throw new Error(message ?? "Failed");
       }
-    `
+    `,
   );
 
   return { fail };
@@ -855,7 +855,7 @@ function generateInterfaceDeclaration(
   fullName: string,
   messageDesc: DescriptorProto,
   sourceInfo: SourceInfo,
-  fullTypeName: string
+  fullTypeName: string,
 ): Code {
   const { options } = ctx;
   const chunks: Code[] = [];
@@ -905,7 +905,7 @@ function generateOneofProperty(
   ctx: Context,
   messageDesc: DescriptorProto,
   oneofIndex: number,
-  sourceInfo: SourceInfo
+  sourceInfo: SourceInfo,
 ): Code {
   const { options } = ctx;
   const fields = messageDesc.field.filter((field) => isWithinOneOf(field) && field.oneofIndex === oneofIndex);
@@ -916,7 +916,7 @@ function generateOneofProperty(
       let typeName = toTypeName(ctx, messageDesc, f);
       return code`{ ${mbReadonly}$case: '${fieldName}', ${mbReadonly}${fieldName}: ${typeName} }`;
     }),
-    { on: " | " }
+    { on: " | " },
   );
 
   const name = maybeSnakeToCamel(messageDesc.oneofDecl[oneofIndex].name, options);
@@ -949,7 +949,7 @@ function generateBaseInstanceFactory(
   ctx: Context,
   fullName: string,
   messageDesc: DescriptorProto,
-  fullTypeName: string
+  fullTypeName: string,
 ): Code {
   const { options } = ctx;
   const fields: Code[] = [];
@@ -1309,7 +1309,7 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
     .filter((field) => isWithinOneOfThatShouldBeUnion(options, field))
     .reduce<{ [key: number]: FieldDescriptorProto[] }>(
       (result, field) => ((result[field.oneofIndex] || (result[field.oneofIndex] = [])).push(field), result),
-      {}
+      {},
     );
 
   // then add a case for each field
@@ -1723,7 +1723,7 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
   }
 
   const oneofFieldsCases = messageDesc.oneofDecl.map((oneof, oneofIndex) =>
-    messageDesc.field.filter(isWithinOneOf).filter((field) => field.oneofIndex === oneofIndex)
+    messageDesc.field.filter(isWithinOneOf).filter((field) => field.oneofIndex === oneofIndex),
   );
 
   const canonicalFromJson: { [key: string]: { [field: string]: (from: string) => Code } } = {
@@ -1912,7 +1912,7 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
       chunks.push(
         code`${fieldName}: ${ctx.utils.isObject}(${jsonProperty})
           ? ${readSnippet(`${jsonProperty}`)}
-          : undefined,`
+          : undefined,`,
       );
     } else if (isListValueType(field)) {
       chunks.push(code`
@@ -1950,7 +1950,7 @@ function generateToJson(
   ctx: Context,
   fullName: string,
   fullProtobufTypeName: string,
-  messageDesc: DescriptorProto
+  messageDesc: DescriptorProto,
 ): Code {
   const { options, utils, typeMap } = ctx;
   const chunks: Code[] = [];
@@ -2268,7 +2268,7 @@ function convertFromObjectKey(
   ctx: Context,
   messageDesc: DescriptorProto,
   field: FieldDescriptorProto,
-  variableName: string
+  variableName: string,
 ): Code {
   const { keyType, keyField } = detectMapType(ctx, messageDesc, field)!;
   if (keyType.toCodeString([]) === "string") {
@@ -2292,7 +2292,7 @@ function convertToObjectKey(
   ctx: Context,
   messageDesc: DescriptorProto,
   field: FieldDescriptorProto,
-  variableName: string
+  variableName: string,
 ): Code {
   const { keyType, keyField } = detectMapType(ctx, messageDesc, field)!;
   if (keyType.toCodeString([]) === "string") {

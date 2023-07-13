@@ -31,7 +31,7 @@ export function generateGrpcJsService(
   ctx: Context,
   fileDesc: FileDescriptorProto,
   sourceInfo: SourceInfo,
-  serviceDesc: ServiceDescriptorProto
+  serviceDesc: ServiceDescriptorProto,
 ): Code {
   const { options } = ctx;
   const chunks: Code[] = [];
@@ -50,7 +50,7 @@ function generateServiceDefinition(
   ctx: Context,
   fileDesc: FileDescriptorProto,
   sourceInfo: SourceInfo,
-  serviceDesc: ServiceDescriptorProto
+  serviceDesc: ServiceDescriptorProto,
 ) {
   const chunks: Code[] = [];
 

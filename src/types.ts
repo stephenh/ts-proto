@@ -71,7 +71,7 @@ export function basicLongWireType(type: FieldDescriptorProto_Type): number | und
 export function basicTypeName(
   ctx: Context,
   field: FieldDescriptorProto,
-  typeOptions: { keepValueType?: boolean } = {}
+  typeOptions: { keepValueType?: boolean } = {},
 ): Code {
   const { options } = ctx;
   switch (field.type) {
@@ -245,7 +245,7 @@ export function notDefaultCheck(
   ctx: Context,
   field: FieldDescriptorProto,
   messageOptions: MessageOptions | undefined,
-  place: string
+  place: string,
 ): Code {
   const { typeMap, options } = ctx;
   const isOptional = isOptionalProperty(field, messageOptions, options);
@@ -311,7 +311,7 @@ export function createTypeMap(request: CodeGeneratorRequest, options: Options): 
       tsFullName: string,
       desc: DescriptorProto | EnumDescriptorProto,
       s: SourceInfo,
-      protoFullName: string
+      protoFullName: string,
     ): void {
       // package is optional, but make sure we have a dot-prefixed type name either way
       const prefix = file.package.length === 0 ? "" : `.${file.package}`;
@@ -352,7 +352,7 @@ export function isScalar(field: FieldDescriptorProto): boolean {
 export function isOptionalProperty(
   field: FieldDescriptorProto,
   messageOptions: MessageOptions | undefined,
-  options: Options
+  options: Options,
 ): boolean {
   const optionalMessages =
     options.useOptionals === true || options.useOptionals === "messages" || options.useOptionals === "all";
@@ -554,7 +554,7 @@ function longTypeName(ctx: Context): Code {
 export function messageToTypeName(
   ctx: Context,
   protoType: string,
-  typeOptions: { keepValueType?: boolean; repeated?: boolean } = {}
+  typeOptions: { keepValueType?: boolean; repeated?: boolean } = {},
 ): Code {
   const { options, typeMap } = ctx;
   // Watch for the wrapper types `.google.protobuf.*Value`. If we're mapping
@@ -602,7 +602,7 @@ export function toTypeName(
   ctx: Context,
   messageDesc: DescriptorProto | undefined,
   field: FieldDescriptorProto,
-  ensureOptional = false
+  ensureOptional = false,
 ): Code {
   function finalize(type: Code, isOptional: boolean) {
     if (isOptional) {
@@ -652,14 +652,14 @@ export function toTypeName(
       (options.useOptionals === false || options.useOptionals === "none")) ||
       (isWithinOneOf(field) && options.oneof === OneofOption.PROPERTIES) ||
       (isWithinOneOf(field) && field.proto3Optional) ||
-      ensureOptional
+      ensureOptional,
   );
 }
 
 export function detectMapType(
   ctx: Context,
   messageDesc: DescriptorProto,
-  fieldDesc: FieldDescriptorProto
+  fieldDesc: FieldDescriptorProto,
 ):
   | {
       messageDesc: DescriptorProto;
@@ -688,7 +688,7 @@ export function detectMapType(
 export function rawRequestType(
   ctx: Context,
   methodDesc: MethodDescriptorProto,
-  typeOptions: { keepValueType?: boolean; repeated?: boolean } = {}
+  typeOptions: { keepValueType?: boolean; repeated?: boolean } = {},
 ): Code {
   return messageToTypeName(ctx, methodDesc.inputType, typeOptions);
 }
@@ -719,7 +719,7 @@ export function requestType(ctx: Context, methodDesc: MethodDescriptorProto, par
 export function responseType(
   ctx: Context,
   methodDesc: MethodDescriptorProto,
-  typeOptions: { keepValueType?: boolean; repeated?: boolean } = {}
+  typeOptions: { keepValueType?: boolean; repeated?: boolean } = {},
 ): Code {
   return messageToTypeName(ctx, methodDesc.outputType, { keepValueType: true });
 }
@@ -756,7 +756,7 @@ export function detectBatchMethod(
   ctx: Context,
   fileDesc: FileDescriptorProto,
   serviceDesc: ServiceDescriptorProto,
-  methodDesc: MethodDescriptorProto
+  methodDesc: MethodDescriptorProto,
 ): BatchMethod | undefined {
   const { typeMap } = ctx;
   const nameMatches = methodDesc.name.startsWith("Batch");
