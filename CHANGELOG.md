@@ -1,3 +1,10 @@
+## [1.153.3](https://github.com/stephenh/ts-proto/compare/v1.153.2...v1.153.3) (2023-07-13)
+
+
+### Bug Fixes
+
+* Bump ts-proto-descriptors w/long back. ([#880](https://github.com/stephenh/ts-proto/issues/880)) ([d27e19c](https://github.com/stephenh/ts-proto/commit/d27e19c84420d46dff0fc1914ce724ec15f86185))
+
 ## [1.153.2](https://github.com/stephenh/ts-proto/compare/v1.153.1...v1.153.2) (2023-07-12)
 
 
