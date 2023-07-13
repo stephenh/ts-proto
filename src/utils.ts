@@ -99,7 +99,7 @@ export function maybeAddComment(
   desc: Partial<Pick<SourceDescription, "leadingComments" | "trailingComments">>,
   chunks: Code[],
   deprecated?: boolean,
-  prefix: string = ""
+  prefix: string = "",
 ): void {
   let lines: string[] = [];
   if (desc.leadingComments || desc.trailingComments) {
@@ -219,7 +219,7 @@ export class FormattedMethodDescriptor implements MethodDescriptorProto {
 
 export function getFieldJsonName(
   field: Pick<FieldDescriptorProto, "name" | "jsonName">,
-  options: Pick<Options, "snakeToCamel">
+  options: Pick<Options, "snakeToCamel">,
 ): string {
   // jsonName will be camelCased by the protocol compiler, plus can be overridden by the user,
   // so just use that instead of our own maybeSnakeToCamel

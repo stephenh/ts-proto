@@ -16,7 +16,7 @@ export function generateNiceGrpcService(
   ctx: Context,
   fileDesc: FileDescriptorProto,
   sourceInfo: SourceInfo,
-  serviceDesc: ServiceDescriptorProto
+  serviceDesc: ServiceDescriptorProto,
 ): Code {
   const chunks: Code[] = [];
 

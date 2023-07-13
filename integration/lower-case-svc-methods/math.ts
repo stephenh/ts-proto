@@ -246,9 +246,9 @@ export class MathServiceClientImpl<Context extends DataLoaders> implements MathS
 
   getDouble(ctx: Context, nu: number): Promise<number> {
     const dl = ctx.getDataLoader("MathService.BatchDouble", () => {
-      return new DataLoader<number, number>((num) => {
+      return new DataLoader<number, number, string>((num) => {
         const request = { num };
-        return this.batchDouble(ctx, request).then((res) => res.num);
+        return this.batchDouble(ctx, request as any).then((res) => res.num);
       }, { cacheKeyFn: hash, ...ctx.rpcDataLoaderOptions });
     });
     return dl.load(nu);

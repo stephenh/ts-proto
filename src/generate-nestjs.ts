@@ -19,7 +19,7 @@ export function generateNestjsServiceController(
   ctx: Context,
   fileDesc: FileDescriptorProto,
   sourceInfo: SourceInfo,
-  serviceDesc: ServiceDescriptorProto
+  serviceDesc: ServiceDescriptorProto,
 ): Code {
   const { options } = ctx;
   const chunks: Code[] = [];
@@ -92,7 +92,7 @@ export function generateNestjsServiceClient(
   ctx: Context,
   fileDesc: FileDescriptorProto,
   sourceInfo: SourceInfo,
-  serviceDesc: ServiceDescriptorProto
+  serviceDesc: ServiceDescriptorProto,
 ): Code {
   const { options } = ctx;
   const chunks: Code[] = [];

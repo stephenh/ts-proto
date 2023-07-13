@@ -60,7 +60,7 @@ describe("types", () => {
         const ctx = { options: defaultOptions(), utils: undefined as any as Utils, ...t };
         const got = messageToTypeName(ctx, t.protoType);
         expect(got.toString()).toEqual(t.expected.toString());
-      })
+      }),
     );
   });
 });

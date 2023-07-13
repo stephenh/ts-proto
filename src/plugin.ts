@@ -44,7 +44,7 @@ async function main() {
       const [path, code] = generateFile(ctx, file);
       const content = code.toString({ ...getTsPoetOpts(options), path });
       return { name: path, content };
-    })
+    }),
   );
 
   if (options.outputTypeRegistry) {
