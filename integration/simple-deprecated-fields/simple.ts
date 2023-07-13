@@ -127,7 +127,7 @@ export const Simple = {
       obj.age = Math.round(message.age);
     }
     if (message.child !== undefined) {
-      obj.child = message.child ? Child.toJSON(message.child) : undefined;
+      obj.child = Child.toJSON(message.child);
     }
     if (message.testField !== "") {
       obj.testField = message.testField;

@@ -251,16 +251,16 @@ export const PleaseChoose = {
       obj.aString = message.aString;
     }
     if (message.aMessage !== undefined) {
-      obj.aMessage = message.aMessage ? PleaseChoose_Submessage.toJSON(message.aMessage) : undefined;
+      obj.aMessage = PleaseChoose_Submessage.toJSON(message.aMessage);
     }
     if (message.aBool !== undefined) {
       obj.aBool = message.aBool;
     }
     if (message.bunchaBytes !== undefined) {
-      obj.bunchaBytes = message.bunchaBytes !== undefined ? base64FromBytes(message.bunchaBytes) : undefined;
+      obj.bunchaBytes = base64FromBytes(message.bunchaBytes);
     }
     if (message.anEnum !== undefined) {
-      obj.anEnum = message.anEnum !== undefined ? pleaseChoose_StateEnumToJSON(message.anEnum) : undefined;
+      obj.anEnum = pleaseChoose_StateEnumToJSON(message.anEnum);
     }
     if (message.age !== 0) {
       obj.age = Math.round(message.age);

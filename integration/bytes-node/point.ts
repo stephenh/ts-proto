@@ -64,7 +64,7 @@ export const Point = {
   toJSON(message: Point): unknown {
     const obj: any = {};
     if (message.data.length !== 0) {
-      obj.data = base64FromBytes(message.data !== undefined ? message.data : Buffer.alloc(0));
+      obj.data = base64FromBytes(message.data);
     }
     if (message.dataWrapped !== undefined) {
       obj.dataWrapped = message.dataWrapped;

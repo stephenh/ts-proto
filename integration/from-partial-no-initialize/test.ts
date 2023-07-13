@@ -252,10 +252,10 @@ export const TPartial = {
       }
     }
     if (message.message !== undefined) {
-      obj.message = message.message ? TPartialMessage.toJSON(message.message) : undefined;
+      obj.message = TPartialMessage.toJSON(message.message);
     }
     if (message.repeatedMessage?.length) {
-      obj.repeatedMessage = message.repeatedMessage.map((e) => e ? TPartialMessage.toJSON(e) : undefined);
+      obj.repeatedMessage = message.repeatedMessage.map((e) => TPartialMessage.toJSON(e));
     }
     if (message.repeatedString?.length) {
       obj.repeatedString = message.repeatedString;

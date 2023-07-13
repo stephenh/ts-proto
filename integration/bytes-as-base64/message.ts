@@ -18,7 +18,7 @@ export const Message = {
   toJSON(message: Message): unknown {
     const obj: any = {};
     if (message.data.length !== 0) {
-      obj.data = base64FromBytes(message.data !== undefined ? message.data : new Uint8Array(0));
+      obj.data = base64FromBytes(message.data);
     }
     return obj;
   },

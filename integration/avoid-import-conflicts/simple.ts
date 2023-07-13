@@ -127,7 +127,7 @@ export const Simple = {
       obj.name = message.name;
     }
     if (message.otherSimple !== undefined) {
-      obj.otherSimple = message.otherSimple ? Simple3.toJSON(message.otherSimple) : undefined;
+      obj.otherSimple = Simple3.toJSON(message.otherSimple);
     }
     return obj;
   },

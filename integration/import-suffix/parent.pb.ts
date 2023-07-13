@@ -77,7 +77,7 @@ export const Parent = {
   toJSON(message: Parent): unknown {
     const obj: any = {};
     if (message.child !== undefined) {
-      obj.child = message.child ? Child.toJSON(message.child) : undefined;
+      obj.child = Child.toJSON(message.child);
     }
     if (message.childEnum !== 0) {
       obj.childEnum = childEnumToJSON(message.childEnum);

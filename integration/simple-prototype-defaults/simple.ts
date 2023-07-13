@@ -525,13 +525,13 @@ export const Simple = {
       obj.createdAt = message.createdAt.toISOString();
     }
     if (message.child !== undefined) {
-      obj.child = message.child ? Child.toJSON(message.child) : undefined;
+      obj.child = Child.toJSON(message.child);
     }
     if (message.state !== 0) {
       obj.state = stateEnumToJSON(message.state);
     }
     if (message.grandChildren?.length) {
-      obj.grandChildren = message.grandChildren.map((e) => e ? Child.toJSON(e) : undefined);
+      obj.grandChildren = message.grandChildren.map((e) => Child.toJSON(e));
     }
     if (message.coins?.length) {
       obj.coins = message.coins.map((e) => Math.round(e));
@@ -543,16 +543,16 @@ export const Simple = {
       obj.oldStates = message.oldStates.map((e) => stateEnumToJSON(e));
     }
     if (message.thing !== undefined) {
-      obj.thing = message.thing ? ImportedThing.toJSON(message.thing) : undefined;
+      obj.thing = ImportedThing.toJSON(message.thing);
     }
     if (message.blobs?.length) {
-      obj.blobs = message.blobs.map((e) => base64FromBytes(e !== undefined ? e : new Uint8Array(0)));
+      obj.blobs = message.blobs.map((e) => base64FromBytes(e));
     }
     if (message.birthday !== undefined) {
-      obj.birthday = message.birthday ? DateMessage.toJSON(message.birthday) : undefined;
+      obj.birthday = DateMessage.toJSON(message.birthday);
     }
     if (message.blob.length !== 0) {
-      obj.blob = base64FromBytes(message.blob !== undefined ? message.blob : new Uint8Array(0));
+      obj.blob = base64FromBytes(message.blob);
     }
     return obj;
   },
@@ -728,7 +728,7 @@ export const Nested = {
       obj.name = message.name;
     }
     if (message.message !== undefined) {
-      obj.message = message.message ? Nested_InnerMessage.toJSON(message.message) : undefined;
+      obj.message = Nested_InnerMessage.toJSON(message.message);
     }
     if (message.state !== 0) {
       obj.state = nested_InnerEnumToJSON(message.state);
@@ -809,7 +809,7 @@ export const Nested_InnerMessage = {
       obj.name = message.name;
     }
     if (message.deep !== undefined) {
-      obj.deep = message.deep ? Nested_InnerMessage_DeepMessage.toJSON(message.deep) : undefined;
+      obj.deep = Nested_InnerMessage_DeepMessage.toJSON(message.deep);
     }
     return obj;
   },
@@ -1530,7 +1530,7 @@ export const SimpleWithMap_EntitiesByIdEntry = {
       obj.key = Math.round(message.key);
     }
     if (message.value !== undefined) {
-      obj.value = message.value ? Entity.toJSON(message.value) : undefined;
+      obj.value = Entity.toJSON(message.value);
     }
     return obj;
   },
@@ -1834,7 +1834,7 @@ export const SimpleWithMap_MapOfBytesEntry = {
       obj.key = message.key;
     }
     if (message.value.length !== 0) {
-      obj.value = base64FromBytes(message.value !== undefined ? message.value : new Uint8Array(0));
+      obj.value = base64FromBytes(message.value);
     }
     return obj;
   },
@@ -2152,7 +2152,7 @@ export const SimpleWithSnakeCaseMap_EntitiesByIdEntry = {
       obj.key = Math.round(message.key);
     }
     if (message.value !== undefined) {
-      obj.value = message.value ? Entity.toJSON(message.value) : undefined;
+      obj.value = Entity.toJSON(message.value);
     }
     return obj;
   },
@@ -2823,16 +2823,16 @@ export const SimpleButOptional = {
       obj.createdAt = message.createdAt.toISOString();
     }
     if (message.child !== undefined) {
-      obj.child = message.child ? Child.toJSON(message.child) : undefined;
+      obj.child = Child.toJSON(message.child);
     }
     if (message.state !== undefined) {
-      obj.state = message.state !== undefined ? stateEnumToJSON(message.state) : undefined;
+      obj.state = stateEnumToJSON(message.state);
     }
     if (message.thing !== undefined) {
-      obj.thing = message.thing ? ImportedThing.toJSON(message.thing) : undefined;
+      obj.thing = ImportedThing.toJSON(message.thing);
     }
     if (message.birthday !== undefined) {
-      obj.birthday = message.birthday ? DateMessage.toJSON(message.birthday) : undefined;
+      obj.birthday = DateMessage.toJSON(message.birthday);
     }
     return obj;
   },

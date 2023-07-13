@@ -382,7 +382,7 @@ export const Value = {
   toJSON(message: Value): unknown {
     const obj: any = {};
     if (message.null_value !== undefined) {
-      obj.null_value = message.null_value !== undefined ? nullValueToJSON(message.null_value) : undefined;
+      obj.null_value = nullValueToJSON(message.null_value);
     }
     if (message.number_value !== undefined) {
       obj.number_value = message.number_value;

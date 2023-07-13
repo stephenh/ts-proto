@@ -144,7 +144,7 @@ export const BatchQueryResponse = {
   toJSON(message: BatchQueryResponse): unknown {
     const obj: any = {};
     if (message.entities?.length) {
-      obj.entities = message.entities.map((e) => e ? Entity.toJSON(e) : undefined);
+      obj.entities = message.entities.map((e) => Entity.toJSON(e));
     }
     return obj;
   },
@@ -355,7 +355,7 @@ export const BatchMapQueryResponse_EntitiesEntry = {
       obj.key = message.key;
     }
     if (message.value !== undefined) {
-      obj.value = message.value ? Entity.toJSON(message.value) : undefined;
+      obj.value = Entity.toJSON(message.value);
     }
     return obj;
   },
@@ -478,7 +478,7 @@ export const GetOnlyMethodResponse = {
   toJSON(message: GetOnlyMethodResponse): unknown {
     const obj: any = {};
     if (message.entity !== undefined) {
-      obj.entity = message.entity ? Entity.toJSON(message.entity) : undefined;
+      obj.entity = Entity.toJSON(message.entity);
     }
     return obj;
   },

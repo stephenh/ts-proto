@@ -65,7 +65,7 @@ export const Foo = {
       obj.name = message.name;
     }
     if (message.bar !== undefined) {
-      obj.bar = message.bar ? Bar.toJSON(message.bar) : undefined;
+      obj.bar = Bar.toJSON(message.bar);
     }
     return obj;
   },

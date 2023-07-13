@@ -52,7 +52,7 @@ export const Baz = {
   toJSON(message: Baz): unknown {
     const obj: any = {};
     if (message.foo !== undefined) {
-      obj.foo = message.foo ? FooBar.toJSON(message.foo) : undefined;
+      obj.foo = FooBar.toJSON(message.foo);
     }
     return obj;
   },

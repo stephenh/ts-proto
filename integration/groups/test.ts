@@ -147,7 +147,7 @@ export const GroupsOptionalTest = {
       obj.int1 = Math.round(message.int1);
     }
     if (message.group !== undefined) {
-      obj.group = message.group ? GroupsOptionalTest_Group.toJSON(message.group) : undefined;
+      obj.group = GroupsOptionalTest_Group.toJSON(message.group);
     }
     if (message.int3 !== undefined && message.int3 !== 0) {
       obj.int3 = Math.round(message.int3);
@@ -415,7 +415,7 @@ export const GroupsRepeatedTest = {
       obj.int1 = message.int1.map((e) => Math.round(e));
     }
     if (message.group?.length) {
-      obj.group = message.group.map((e) => e ? GroupsRepeatedTest_Group.toJSON(e) : undefined);
+      obj.group = message.group.map((e) => GroupsRepeatedTest_Group.toJSON(e));
     }
     if (message.int3?.length) {
       obj.int3 = message.int3.map((e) => Math.round(e));
@@ -691,7 +691,7 @@ export const GroupsNestedTest = {
       obj.int1 = message.int1.map((e) => Math.round(e));
     }
     if (message.group?.length) {
-      obj.group = message.group.map((e) => e ? GroupsNestedTest_Group.toJSON(e) : undefined);
+      obj.group = message.group.map((e) => GroupsNestedTest_Group.toJSON(e));
     }
     if (message.int3?.length) {
       obj.int3 = message.int3.map((e) => Math.round(e));
@@ -790,7 +790,7 @@ export const GroupsNestedTest_Group = {
   toJSON(message: GroupsNestedTest_Group): unknown {
     const obj: any = {};
     if (message.nested?.length) {
-      obj.nested = message.nested.map((e) => e ? GroupsNestedTest_Group_Nested.toJSON(e) : undefined);
+      obj.nested = message.nested.map((e) => GroupsNestedTest_Group_Nested.toJSON(e));
     }
     return obj;
   },
@@ -884,7 +884,7 @@ export const GroupsNestedTest_Group_Nested = {
   toJSON(message: GroupsNestedTest_Group_Nested): unknown {
     const obj: any = {};
     if (message.nested2?.length) {
-      obj.nested2 = message.nested2.map((e) => e ? GroupsNestedTest_Group_Nested_Nested2.toJSON(e) : undefined);
+      obj.nested2 = message.nested2.map((e) => GroupsNestedTest_Group_Nested_Nested2.toJSON(e));
     }
     return obj;
   },

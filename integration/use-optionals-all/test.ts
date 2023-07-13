@@ -461,7 +461,7 @@ export const OptionalsTest = {
       obj.id = Math.round(message.id);
     }
     if (message.child !== undefined) {
-      obj.child = message.child ? Child.toJSON(message.child) : undefined;
+      obj.child = Child.toJSON(message.child);
     }
     if (message.state !== undefined && message.state !== 0) {
       obj.state = stateEnumToJSON(message.state);
@@ -476,13 +476,13 @@ export const OptionalsTest = {
       obj.description = message.description;
     }
     if (message.data !== undefined && message.data.length !== 0) {
-      obj.data = base64FromBytes(message.data !== undefined ? message.data : new Uint8Array(0));
+      obj.data = base64FromBytes(message.data);
     }
     if (message.repId?.length) {
       obj.repId = message.repId.map((e) => Math.round(e));
     }
     if (message.repChild?.length) {
-      obj.repChild = message.repChild.map((e) => e ? Child.toJSON(e) : undefined);
+      obj.repChild = message.repChild.map((e) => Child.toJSON(e));
     }
     if (message.repState?.length) {
       obj.repState = message.repState.map((e) => stateEnumToJSON(e));
@@ -497,16 +497,16 @@ export const OptionalsTest = {
       obj.repDescription = message.repDescription;
     }
     if (message.repData?.length) {
-      obj.repData = message.repData.map((e) => base64FromBytes(e !== undefined ? e : new Uint8Array(0)));
+      obj.repData = message.repData.map((e) => base64FromBytes(e));
     }
     if (message.optId !== undefined) {
       obj.optId = Math.round(message.optId);
     }
     if (message.optChild !== undefined) {
-      obj.optChild = message.optChild ? Child.toJSON(message.optChild) : undefined;
+      obj.optChild = Child.toJSON(message.optChild);
     }
     if (message.optState !== undefined) {
-      obj.optState = message.optState !== undefined ? stateEnumToJSON(message.optState) : undefined;
+      obj.optState = stateEnumToJSON(message.optState);
     }
     if (message.optLong !== undefined) {
       obj.optLong = Math.round(message.optLong);
@@ -518,7 +518,7 @@ export const OptionalsTest = {
       obj.optDescription = message.optDescription;
     }
     if (message.optData !== undefined) {
-      obj.optData = message.optData !== undefined ? base64FromBytes(message.optData) : undefined;
+      obj.optData = base64FromBytes(message.optData);
     }
     if (message.translations) {
       const entries = Object.entries(message.translations);

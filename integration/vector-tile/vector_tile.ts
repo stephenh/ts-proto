@@ -121,7 +121,7 @@ export const Tile = {
   toJSON(message: Tile): unknown {
     const obj: any = {};
     if (message.layers?.length) {
-      obj.layers = message.layers.map((e) => e ? Tile_Layer.toJSON(e) : undefined);
+      obj.layers = message.layers.map((e) => Tile_Layer.toJSON(e));
     }
     return obj;
   },
@@ -521,13 +521,13 @@ export const Tile_Layer = {
       obj.name = message.name;
     }
     if (message.features?.length) {
-      obj.features = message.features.map((e) => e ? Tile_Feature.toJSON(e) : undefined);
+      obj.features = message.features.map((e) => Tile_Feature.toJSON(e));
     }
     if (message.keys?.length) {
       obj.keys = message.keys;
     }
     if (message.values?.length) {
-      obj.values = message.values.map((e) => e ? Tile_Value.toJSON(e) : undefined);
+      obj.values = message.values.map((e) => Tile_Value.toJSON(e));
     }
     if (message.extent !== 0) {
       obj.extent = Math.round(message.extent);

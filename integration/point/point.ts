@@ -140,10 +140,10 @@ export const Area = {
   toJSON(message: Area): unknown {
     const obj: any = {};
     if (message.nw !== undefined) {
-      obj.nw = message.nw ? Point.toJSON(message.nw) : undefined;
+      obj.nw = Point.toJSON(message.nw);
     }
     if (message.se !== undefined) {
-      obj.se = message.se ? Point.toJSON(message.se) : undefined;
+      obj.se = Point.toJSON(message.se);
     }
     return obj;
   },

@@ -397,7 +397,7 @@ export const Maps_StrToEntityEntry = {
       obj.key = message.key;
     }
     if (message.value !== undefined) {
-      obj.value = message.value ? Entity.toJSON(message.value) : undefined;
+      obj.value = Entity.toJSON(message.value);
     }
     return obj;
   },
@@ -546,7 +546,7 @@ export const Maps_StringToBytesEntry = {
       obj.key = message.key;
     }
     if (message.value.length !== 0) {
-      obj.value = base64FromBytes(message.value !== undefined ? message.value : new Uint8Array(0));
+      obj.value = base64FromBytes(message.value);
     }
     return obj;
   },

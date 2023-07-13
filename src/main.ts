@@ -1976,9 +1976,7 @@ function generateToJson(
     const readSnippet = (from: string): Code => {
       if (isEnum(field)) {
         const toJson = getEnumMethod(ctx, field.typeName, "ToJSON");
-        return isWithinOneOf(field)
-          ? code`${from} !== undefined ? ${toJson}(${from}) : undefined`
-          : code`${toJson}(${from})`;
+        return code`${toJson}(${from})`;
       } else if (isObjectId(field) && options.useMongoObjectId) {
         return code`${from}.toString()`;
       } else if (isTimestamp(field) && options.useDate === DateOption.DATE) {
@@ -2024,16 +2022,11 @@ function generateToJson(
         return code`${type}.toJSON(${type}.wrap(${from}))`;
       } else if (isMessage(field) && !isValueType(ctx, field) && !isMapType(ctx, messageDesc, field)) {
         const type = basicTypeName(ctx, field, { keepValueType: true });
-        return code`${from} ? ${type}.toJSON(${from}) : ${defaultValue(ctx, field)}`;
+        return code`${type}.toJSON(${from})`;
       } else if (isBytes(field)) {
-        if (isWithinOneOf(field)) {
-          return code`${from} !== undefined ? ${utils.base64FromBytes}(${from}) : undefined`;
-        } else {
-          return code`${utils.base64FromBytes}(${from} !== undefined ? ${from} : ${defaultValue(ctx, field)})`;
-        }
+        return code`${utils.base64FromBytes}(${from})`;
       } else if (isLong(field) && options.forceLong === LongOption.LONG) {
-        const v = isWithinOneOf(field) ? "undefined" : defaultValue(ctx, field);
-        return code`(${from} || ${v}).toString()`;
+        return code`(${from} || ${defaultValue(ctx, field)}).toString()`;
       } else if (isLong(field) && options.forceLong === LongOption.BIGINT) {
         return code`${from}.toString()`;
       } else if (isWholeNumber(field) && !(isLong(field) && options.forceLong === LongOption.STRING)) {
@@ -2083,7 +2076,7 @@ function generateToJson(
       const oneofName = maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options);
       chunks.push(code`
         if (message.${oneofName}?.$case === '${fieldName}') {
-          ${jsonProperty} = ${readSnippet(`message.${oneofName}?.${fieldName}`)};
+          ${jsonProperty} = ${readSnippet(`message.${oneofName}.${fieldName}`)};
         }
       `);
     } else {

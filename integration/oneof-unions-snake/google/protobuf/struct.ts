@@ -373,22 +373,22 @@ export const Value = {
   toJSON(message: Value): unknown {
     const obj: any = {};
     if (message.kind?.$case === "null_value") {
-      obj.null_value = message.kind?.null_value !== undefined ? nullValueToJSON(message.kind?.null_value) : undefined;
+      obj.null_value = nullValueToJSON(message.kind.null_value);
     }
     if (message.kind?.$case === "number_value") {
-      obj.number_value = message.kind?.number_value;
+      obj.number_value = message.kind.number_value;
     }
     if (message.kind?.$case === "string_value") {
-      obj.string_value = message.kind?.string_value;
+      obj.string_value = message.kind.string_value;
     }
     if (message.kind?.$case === "bool_value") {
-      obj.bool_value = message.kind?.bool_value;
+      obj.bool_value = message.kind.bool_value;
     }
     if (message.kind?.$case === "struct_value") {
-      obj.struct_value = message.kind?.struct_value;
+      obj.struct_value = message.kind.struct_value;
     }
     if (message.kind?.$case === "list_value") {
-      obj.list_value = message.kind?.list_value;
+      obj.list_value = message.kind.list_value;
     }
     return obj;
   },

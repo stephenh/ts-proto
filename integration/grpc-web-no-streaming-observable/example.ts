@@ -215,10 +215,10 @@ export const DashUserSettingsState = {
       obj.email = message.email;
     }
     if (message.urls !== undefined) {
-      obj.urls = message.urls ? DashUserSettingsState_URLs.toJSON(message.urls) : undefined;
+      obj.urls = DashUserSettingsState_URLs.toJSON(message.urls);
     }
     if (message.flashes?.length) {
-      obj.flashes = message.flashes.map((e) => e ? DashFlash.toJSON(e) : undefined);
+      obj.flashes = message.flashes.map((e) => DashFlash.toJSON(e));
     }
     return obj;
   },

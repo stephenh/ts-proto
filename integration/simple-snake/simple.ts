@@ -432,13 +432,13 @@ export const Simple = {
       obj.created_at = message.created_at.toISOString();
     }
     if (message.child !== undefined) {
-      obj.child = message.child ? Child.toJSON(message.child) : undefined;
+      obj.child = Child.toJSON(message.child);
     }
     if (message.state !== 0) {
       obj.state = stateEnumToJSON(message.state);
     }
     if (message.grand_children?.length) {
-      obj.grand_children = message.grand_children.map((e) => e ? Child.toJSON(e) : undefined);
+      obj.grand_children = message.grand_children.map((e) => Child.toJSON(e));
     }
     if (message.coins?.length) {
       obj.coins = message.coins.map((e) => Math.round(e));
@@ -450,7 +450,7 @@ export const Simple = {
       obj.old_states = message.old_states.map((e) => stateEnumToJSON(e));
     }
     if (message.thing !== undefined) {
-      obj.thing = message.thing ? ImportedThing.toJSON(message.thing) : undefined;
+      obj.thing = ImportedThing.toJSON(message.thing);
     }
     return obj;
   },
@@ -621,7 +621,7 @@ export const Nested = {
       obj.name = message.name;
     }
     if (message.message !== undefined) {
-      obj.message = message.message ? Nested_InnerMessage.toJSON(message.message) : undefined;
+      obj.message = Nested_InnerMessage.toJSON(message.message);
     }
     if (message.state !== 0) {
       obj.state = nested_InnerEnumToJSON(message.state);
@@ -702,7 +702,7 @@ export const Nested_InnerMessage = {
       obj.name = message.name;
     }
     if (message.deep !== undefined) {
-      obj.deep = message.deep ? Nested_InnerMessage_DeepMessage.toJSON(message.deep) : undefined;
+      obj.deep = Nested_InnerMessage_DeepMessage.toJSON(message.deep);
     }
     return obj;
   },
@@ -1248,7 +1248,7 @@ export const SimpleWithMap_EntitiesByIdEntry = {
       obj.key = Math.round(message.key);
     }
     if (message.value !== undefined) {
-      obj.value = message.value ? Entity.toJSON(message.value) : undefined;
+      obj.value = Entity.toJSON(message.value);
     }
     return obj;
   },
@@ -1555,7 +1555,7 @@ export const SimpleWithSnakeCaseMap_EntitiesByIdEntry = {
       obj.key = Math.round(message.key);
     }
     if (message.value !== undefined) {
-      obj.value = message.value ? Entity.toJSON(message.value) : undefined;
+      obj.value = Entity.toJSON(message.value);
     }
     return obj;
   },

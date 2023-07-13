@@ -70,7 +70,7 @@ export const WithEmtpy = {
   toJSON(message: WithEmtpy): unknown {
     const obj: any = {};
     if (message.empty !== undefined) {
-      obj.empty = message.empty ? Empty.toJSON(message.empty) : undefined;
+      obj.empty = Empty.toJSON(message.empty);
     }
     return obj;
   },
@@ -290,7 +290,7 @@ export const WithAll = {
   toJSON(message: WithAll): unknown {
     const obj: any = {};
     if (message.empty !== undefined) {
-      obj.empty = message.empty ? Empty.toJSON(message.empty) : undefined;
+      obj.empty = Empty.toJSON(message.empty);
     }
     if (message.strut !== undefined) {
       obj.strut = message.strut;
@@ -299,10 +299,10 @@ export const WithAll = {
       obj.timestamp = message.timestamp.toISOString();
     }
     if (message.duration !== undefined) {
-      obj.duration = message.duration ? Duration.toJSON(message.duration) : undefined;
+      obj.duration = Duration.toJSON(message.duration);
     }
     if (message.veryVerySecret !== undefined) {
-      obj.veryVerySecret = message.veryVerySecret ? VeryVerySecret.toJSON(message.veryVerySecret) : undefined;
+      obj.veryVerySecret = VeryVerySecret.toJSON(message.veryVerySecret);
     }
     return obj;
   },

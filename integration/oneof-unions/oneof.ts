@@ -266,41 +266,37 @@ export const PleaseChoose = {
       obj.name = message.name;
     }
     if (message.choice?.$case === "aNumber") {
-      obj.aNumber = message.choice?.aNumber;
+      obj.aNumber = message.choice.aNumber;
     }
     if (message.choice?.$case === "aString") {
-      obj.aString = message.choice?.aString;
+      obj.aString = message.choice.aString;
     }
     if (message.choice?.$case === "aMessage") {
-      obj.aMessage = message.choice?.aMessage ? PleaseChoose_Submessage.toJSON(message.choice?.aMessage) : undefined;
+      obj.aMessage = PleaseChoose_Submessage.toJSON(message.choice.aMessage);
     }
     if (message.choice?.$case === "aBool") {
-      obj.aBool = message.choice?.aBool;
+      obj.aBool = message.choice.aBool;
     }
     if (message.choice?.$case === "bunchaBytes") {
-      obj.bunchaBytes = message.choice?.bunchaBytes !== undefined
-        ? base64FromBytes(message.choice?.bunchaBytes)
-        : undefined;
+      obj.bunchaBytes = base64FromBytes(message.choice.bunchaBytes);
     }
     if (message.choice?.$case === "anEnum") {
-      obj.anEnum = message.choice?.anEnum !== undefined
-        ? pleaseChoose_StateEnumToJSON(message.choice?.anEnum)
-        : undefined;
+      obj.anEnum = pleaseChoose_StateEnumToJSON(message.choice.anEnum);
     }
     if (message.age !== 0) {
       obj.age = Math.round(message.age);
     }
     if (message.eitherOr?.$case === "either") {
-      obj.either = message.eitherOr?.either;
+      obj.either = message.eitherOr.either;
     }
     if (message.eitherOr?.$case === "or") {
-      obj.or = message.eitherOr?.or;
+      obj.or = message.eitherOr.or;
     }
     if (message.eitherOr?.$case === "thirdOption") {
-      obj.thirdOption = message.eitherOr?.thirdOption;
+      obj.thirdOption = message.eitherOr.thirdOption;
     }
     if (message.signature.length !== 0) {
-      obj.signature = base64FromBytes(message.signature !== undefined ? message.signature : new Uint8Array(0));
+      obj.signature = base64FromBytes(message.signature);
     }
     if (message.value !== undefined) {
       obj.value = message.value;

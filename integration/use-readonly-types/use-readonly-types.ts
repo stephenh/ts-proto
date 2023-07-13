@@ -234,10 +234,10 @@ export const Entity = {
       obj.stringArray = message.stringArray;
     }
     if (message.subEntity !== undefined) {
-      obj.subEntity = message.subEntity ? SubEntity.toJSON(message.subEntity) : undefined;
+      obj.subEntity = SubEntity.toJSON(message.subEntity);
     }
     if (message.subEntityArray?.length) {
-      obj.subEntityArray = message.subEntityArray.map((e) => e ? SubEntity.toJSON(e) : undefined);
+      obj.subEntityArray = message.subEntityArray.map((e) => SubEntity.toJSON(e));
     }
     if (message.optionalIntVal !== undefined) {
       obj.optionalIntVal = Math.round(message.optionalIntVal);
@@ -252,10 +252,10 @@ export const Entity = {
       obj.structValue = message.structValue;
     }
     if (message.oneOfValue?.$case === "theStringValue") {
-      obj.theStringValue = message.oneOfValue?.theStringValue;
+      obj.theStringValue = message.oneOfValue.theStringValue;
     }
     if (message.oneOfValue?.$case === "theIntValue") {
-      obj.theIntValue = Math.round(message.oneOfValue?.theIntValue);
+      obj.theIntValue = Math.round(message.oneOfValue.theIntValue);
     }
     return obj;
   },
