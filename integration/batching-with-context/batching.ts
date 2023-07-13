@@ -686,9 +686,9 @@ export class EntityServiceClientImpl<Context extends DataLoaders> implements Ent
   }
   GetQuery(ctx: Context, id: string): Promise<Entity> {
     const dl = ctx.getDataLoader("batching.EntityService.BatchQuery", () => {
-      return new DataLoader<string, Entity>((ids) => {
+      return new DataLoader<string, Entity, string>((ids) => {
         const request = { ids };
-        return this.BatchQuery(ctx, request).then((res) => res.entities);
+        return this.BatchQuery(ctx, request as any).then((res) => res.entities);
       }, { cacheKeyFn: hash, ...ctx.rpcDataLoaderOptions });
     });
     return dl.load(id);
@@ -702,9 +702,9 @@ export class EntityServiceClientImpl<Context extends DataLoaders> implements Ent
 
   GetMapQuery(ctx: Context, id: string): Promise<Entity> {
     const dl = ctx.getDataLoader("batching.EntityService.BatchMapQuery", () => {
-      return new DataLoader<string, Entity>((ids) => {
+      return new DataLoader<string, Entity, string>((ids) => {
         const request = { ids };
-        return this.BatchMapQuery(ctx, request).then((res) => {
+        return this.BatchMapQuery(ctx, request as any).then((res) => {
           return ids.map((key) => res.entities[key] ?? fail());
         });
       }, { cacheKeyFn: hash, ...ctx.rpcDataLoaderOptions });
@@ -720,7 +720,7 @@ export class EntityServiceClientImpl<Context extends DataLoaders> implements Ent
 
   GetOnlyMethod(ctx: Context, request: GetOnlyMethodRequest): Promise<GetOnlyMethodResponse> {
     const dl = ctx.getDataLoader("batching.EntityService.GetOnlyMethod", () => {
-      return new DataLoader<GetOnlyMethodRequest, GetOnlyMethodResponse>((requests) => {
+      return new DataLoader<GetOnlyMethodRequest, GetOnlyMethodResponse, string>((requests) => {
         const responses = requests.map(async (request) => {
           const data = GetOnlyMethodRequest.encode(request).finish();
           const response = await this.rpc.request(ctx, "batching.EntityService", "GetOnlyMethod", data);

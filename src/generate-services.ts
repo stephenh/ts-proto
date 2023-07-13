@@ -258,14 +258,14 @@ function generateBatchingRpcMethod(ctx: Context, batchMethod: BatchMethod): Code
   if (mapType) {
     // If the return type is a map, lookup each key in the result
     lambda.push(code`
-      return this.${methodDesc.formattedName}(ctx, request).then(res => {
+      return this.${methodDesc.formattedName}(ctx, request as any).then(res => {
         return ${inputFieldName}.map(key => res.${outputFieldName}[key] ?? ${ctx.utils.fail}())
       });
     `);
   } else {
     // Otherwise assume they come back in order
     lambda.push(code`
-      return this.${methodDesc.formattedName}(ctx, request).then(res => res.${outputFieldName})
+      return this.${methodDesc.formattedName}(ctx, request as any).then(res => res.${outputFieldName})
     `);
   }
   lambda.push(code`}`);
@@ -276,7 +276,7 @@ function generateBatchingRpcMethod(ctx: Context, batchMethod: BatchMethod): Code
       ${singular(inputFieldName)}: ${inputType}
     ): Promise<${outputType}> {
       const dl = ctx.getDataLoader("${uniqueIdentifier}", () => {
-        return new ${dataloader}<${inputType}, ${outputType}>(
+        return new ${dataloader}<${inputType}, ${outputType}, string>(
           ${joinCode(lambda)},
           { cacheKeyFn: ${hash}, ...ctx.rpcDataLoaderOptions }
         );
@@ -323,7 +323,7 @@ function generateCachingRpcMethod(
       request: ${inputType},
     ): Promise<${outputType}> {
       const dl = ctx.getDataLoader("${uniqueIdentifier}", () => {
-        return new ${dataloader}<${inputType}, ${outputType}>(
+        return new ${dataloader}<${inputType}, ${outputType}, string>(
           ${lambda},
           { cacheKeyFn: ${hash}, ...ctx.rpcDataLoaderOptions },
         );
