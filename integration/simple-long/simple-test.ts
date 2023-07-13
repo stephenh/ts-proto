@@ -73,7 +73,6 @@ describe("simple", () => {
           "1": "2",
           "2": "1",
         },
-        "nameLookup": {},
       }
     `);
 
