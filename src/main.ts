@@ -451,9 +451,8 @@ function makeProtobufStructWrapper(options: Options) {
 function makeLongUtils(options: Options, bytes: ReturnType<typeof makeByteUtils>) {
   // Regardless of which `forceLong` config option we're using, we always use
   // the `long` library to either represent or at least sanity-check 64-bit values
-  const { importSuffix } = options;
-  const util = impFile(options, `util@protobufjs/minimal${importSuffix}`);
-  const configure = impFile(options, `configure@protobufjs/minimal${importSuffix}`);
+  const util = impFile(options, `util@protobufjs/minimal`);
+  const configure = impFile(options, `configure@protobufjs/minimal`);
   const LongImp = imp("Long=long");
 
   // Instead of exposing `LongImp` directly, let callers think that they are getting the

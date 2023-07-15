@@ -1,6 +1,5 @@
 /* eslint-disable */
 import * as _m0 from "protobufjs/minimal.js";
-import { configure, util } from "protobufjs/minimal.js.js";
 import Long = require("long");
 
 export const protobufPackage = "google.protobuf";
@@ -224,9 +223,9 @@ function longToNumber(long: Long): number {
   return long.toNumber();
 }
 
-if (util.Long !== Long) {
-  util.Long = Long as any;
-  configure();
+if (_m0.util.Long !== Long) {
+  _m0.util.Long = Long as any;
+  _m0.configure();
 }
 
 function isSet(value: any): boolean {
