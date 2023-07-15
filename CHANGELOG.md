@@ -1,3 +1,10 @@
+# [1.154.0](https://github.com/stephenh/ts-proto/compare/v1.153.3...v1.154.0) (2023-07-15)
+
+
+### Features
+
+* Normalize `toJSON` output by omitting fields set to their default values ([#878](https://github.com/stephenh/ts-proto/issues/878)) ([50958d6](https://github.com/stephenh/ts-proto/commit/50958d639435a32a76d59fc57565e3677f5be39e))
+
 ## [1.153.3](https://github.com/stephenh/ts-proto/compare/v1.153.2...v1.153.3) (2023-07-13)
 
 
