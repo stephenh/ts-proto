@@ -1976,9 +1976,7 @@ function generateToJson(
     const readSnippet = (from: string): Code => {
       if (isEnum(field)) {
         const toJson = getEnumMethod(ctx, field.typeName, "ToJSON");
-        return isWithinOneOf(field)
-          ? code`${from} !== undefined ? ${toJson}(${from}) : undefined`
-          : code`${toJson}(${from})`;
+        return code`${toJson}(${from})`;
       } else if (isObjectId(field) && options.useMongoObjectId) {
         return code`${from}.toString()`;
       } else if (isTimestamp(field) && options.useDate === DateOption.DATE) {
@@ -2024,16 +2022,11 @@ function generateToJson(
         return code`${type}.toJSON(${type}.wrap(${from}))`;
       } else if (isMessage(field) && !isValueType(ctx, field) && !isMapType(ctx, messageDesc, field)) {
         const type = basicTypeName(ctx, field, { keepValueType: true });
-        return code`${from} ? ${type}.toJSON(${from}) : ${defaultValue(ctx, field)}`;
+        return code`${type}.toJSON(${from})`;
       } else if (isBytes(field)) {
-        if (isWithinOneOf(field)) {
-          return code`${from} !== undefined ? ${utils.base64FromBytes}(${from}) : undefined`;
-        } else {
-          return code`${utils.base64FromBytes}(${from} !== undefined ? ${from} : ${defaultValue(ctx, field)})`;
-        }
+        return code`${utils.base64FromBytes}(${from})`;
       } else if (isLong(field) && options.forceLong === LongOption.LONG) {
-        const v = isWithinOneOf(field) ? "undefined" : defaultValue(ctx, field);
-        return code`(${from} || ${v}).toString()`;
+        return code`(${from} || ${defaultValue(ctx, field)}).toString()`;
       } else if (isLong(field) && options.forceLong === LongOption.BIGINT) {
         return code`${from}.toString()`;
       } else if (isWholeNumber(field) && !(isLong(field) && options.forceLong === LongOption.STRING)) {
@@ -2049,8 +2042,8 @@ function generateToJson(
 
       if (ctx.options.useMapType) {
         chunks.push(code`
-          ${jsonProperty} = {};
-          if (message.${fieldName}) {
+          if (message.${fieldName}?.size) {
+            ${jsonProperty} = {};
             message.${fieldName}.forEach((v, k) => {
               ${jsonProperty}[${i}] = ${readSnippet("v")};
             });
@@ -2058,31 +2051,45 @@ function generateToJson(
         `);
       } else {
         chunks.push(code`
-          ${jsonProperty} = {};
-          if (message.${fieldName}) {
-            Object.entries(message.${fieldName}).forEach(([k, v]) => {
-              ${jsonProperty}[${i}] = ${readSnippet("v")};
-            });
+        if (message.${fieldName}) {
+            const entries = Object.entries(message.${fieldName});
+            if (entries.length > 0) {
+              ${jsonProperty} = {};
+              entries.forEach(([k, v]) => {
+                ${jsonProperty}[${i}] = ${readSnippet("v")};
+              });
+            }
           }
         `);
       }
     } else if (isRepeated(field)) {
       // Arrays might need their elements transformed
+      const transformElement = readSnippet("e");
+      const maybeMap = transformElement.toCodeString([]) !== "e" ? code`.map(e => ${transformElement})` : "";
       chunks.push(code`
-        if (message.${fieldName}) {
-          ${jsonProperty} = message.${fieldName}.map(e => ${readSnippet("e")});
-        } else {
-          ${jsonProperty} = [];
+        if (message.${fieldName}?.length) {
+          ${jsonProperty} = message.${fieldName}${maybeMap};
         }
       `);
     } else if (isWithinOneOfThatShouldBeUnion(options, field)) {
       // oneofs in a union are only output as `oneof name = ...`
       const oneofName = maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options);
-      const v = readSnippet(`message.${oneofName}?.${fieldName}`);
-      chunks.push(code`message.${oneofName}?.$case === '${fieldName}' && (${jsonProperty} = ${v});`);
+      chunks.push(code`
+        if (message.${oneofName}?.$case === '${fieldName}') {
+          ${jsonProperty} = ${readSnippet(`message.${oneofName}.${fieldName}`)};
+        }
+      `);
     } else {
-      const v = readSnippet(`message.${fieldName}`);
-      chunks.push(code`message.${fieldName} !== undefined && (${jsonProperty} = ${v});`);
+      const check =
+        (isScalar(field) || isEnum(field)) && !isWithinOneOf(field)
+          ? notDefaultCheck(ctx, field, messageDesc.options, `message.${fieldName}`)
+          : `message.${fieldName} !== undefined`;
+
+      chunks.push(code`
+        if (${check}) {
+          ${jsonProperty} = ${readSnippet(`message.${fieldName}`)};
+        }
+      `);
     }
   });
   chunks.push(code`return obj;`);

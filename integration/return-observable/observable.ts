@@ -53,7 +53,9 @@ export const ProduceRequest = {
 
   toJSON(message: ProduceRequest): unknown {
     const obj: any = {};
-    message.ingredients !== undefined && (obj.ingredients = message.ingredients);
+    if (message.ingredients !== "") {
+      obj.ingredients = message.ingredients;
+    }
     return obj;
   },
 
@@ -109,7 +111,9 @@ export const ProduceReply = {
 
   toJSON(message: ProduceReply): unknown {
     const obj: any = {};
-    message.result !== undefined && (obj.result = message.result);
+    if (message.result !== "") {
+      obj.result = message.result;
+    }
     return obj;
   },
 

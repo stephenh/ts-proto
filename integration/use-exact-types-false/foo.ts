@@ -59,8 +59,12 @@ export const Foo = {
 
   toJSON(message: Foo): unknown {
     const obj: any = {};
-    message.bar !== undefined && (obj.bar = message.bar);
-    message.baz !== undefined && (obj.baz = message.baz);
+    if (message.bar !== "") {
+      obj.bar = message.bar;
+    }
+    if (message.baz !== "") {
+      obj.baz = message.baz;
+    }
     return obj;
   },
 

@@ -153,11 +153,14 @@ export const Struct = {
 
   toJSON(message: Struct): unknown {
     const obj: any = {};
-    obj.fields = {};
     if (message.fields) {
-      Object.entries(message.fields).forEach(([k, v]) => {
-        obj.fields[k] = v;
-      });
+      const entries = Object.entries(message.fields);
+      if (entries.length > 0) {
+        obj.fields = {};
+        entries.forEach(([k, v]) => {
+          obj.fields[k] = v;
+        });
+      }
     }
     return obj;
   },
@@ -252,8 +255,12 @@ export const Struct_FieldsEntry = {
 
   toJSON(message: Struct_FieldsEntry): unknown {
     const obj: any = {};
-    message.key !== undefined && (obj.key = message.key);
-    message.value !== undefined && (obj.value = message.value);
+    if (message.key !== "") {
+      obj.key = message.key;
+    }
+    if (message.value !== undefined) {
+      obj.value = message.value;
+    }
     return obj;
   },
 
@@ -374,13 +381,24 @@ export const Value = {
 
   toJSON(message: Value): unknown {
     const obj: any = {};
-    message.null_value !== undefined &&
-      (obj.null_value = message.null_value !== undefined ? nullValueToJSON(message.null_value) : undefined);
-    message.number_value !== undefined && (obj.number_value = message.number_value);
-    message.string_value !== undefined && (obj.string_value = message.string_value);
-    message.bool_value !== undefined && (obj.bool_value = message.bool_value);
-    message.struct_value !== undefined && (obj.struct_value = message.struct_value);
-    message.list_value !== undefined && (obj.list_value = message.list_value);
+    if (message.null_value !== undefined) {
+      obj.null_value = nullValueToJSON(message.null_value);
+    }
+    if (message.number_value !== undefined) {
+      obj.number_value = message.number_value;
+    }
+    if (message.string_value !== undefined) {
+      obj.string_value = message.string_value;
+    }
+    if (message.bool_value !== undefined) {
+      obj.bool_value = message.bool_value;
+    }
+    if (message.struct_value !== undefined) {
+      obj.struct_value = message.struct_value;
+    }
+    if (message.list_value !== undefined) {
+      obj.list_value = message.list_value;
+    }
     return obj;
   },
 
@@ -478,10 +496,8 @@ export const ListValue = {
 
   toJSON(message: ListValue): unknown {
     const obj: any = {};
-    if (message.values) {
-      obj.values = message.values.map((e) => e);
-    } else {
-      obj.values = [];
+    if (message.values?.length) {
+      obj.values = message.values;
     }
     return obj;
   },

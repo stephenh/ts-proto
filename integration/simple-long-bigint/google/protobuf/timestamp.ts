@@ -165,8 +165,12 @@ export const Timestamp = {
 
   toJSON(message: Timestamp): unknown {
     const obj: any = {};
-    message.seconds !== undefined && (obj.seconds = message.seconds.toString());
-    message.nanos !== undefined && (obj.nanos = Math.round(message.nanos));
+    if (message.seconds !== BigInt("0")) {
+      obj.seconds = message.seconds.toString();
+    }
+    if (message.nanos !== 0) {
+      obj.nanos = Math.round(message.nanos);
+    }
     return obj;
   },
 

@@ -62,8 +62,12 @@ export const TestMessage = {
 
   toJSON(message: TestMessage): unknown {
     const obj: any = {};
-    message.field1 !== undefined && (obj.field1 = message.field1);
-    message.field2 !== undefined && (obj.field2 = message.field2);
+    if (message.field1 === true) {
+      obj.field1 = message.field1;
+    }
+    if (message.field2 !== undefined) {
+      obj.field2 = message.field2;
+    }
     return obj;
   },
 

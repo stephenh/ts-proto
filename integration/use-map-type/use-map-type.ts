@@ -85,7 +85,9 @@ export const Entity = {
 
   toJSON(message: Entity): unknown {
     const obj: any = {};
-    message.id !== undefined && (obj.id = Math.round(message.id));
+    if (message.id !== 0) {
+      obj.id = Math.round(message.id);
+    }
     return obj;
   },
 
@@ -245,37 +247,39 @@ export const Maps = {
 
   toJSON(message: Maps): unknown {
     const obj: any = {};
-    obj.strToEntity = {};
-    if (message.strToEntity) {
+    if (message.strToEntity?.size) {
+      obj.strToEntity = {};
       message.strToEntity.forEach((v, k) => {
         obj.strToEntity[k] = Entity.toJSON(v);
       });
     }
-    obj.int32ToInt32 = {};
-    if (message.int32ToInt32) {
+    if (message.int32ToInt32?.size) {
+      obj.int32ToInt32 = {};
       message.int32ToInt32.forEach((v, k) => {
         obj.int32ToInt32[k] = Math.round(v);
       });
     }
-    obj.stringToBytes = {};
-    if (message.stringToBytes) {
+    if (message.stringToBytes?.size) {
+      obj.stringToBytes = {};
       message.stringToBytes.forEach((v, k) => {
         obj.stringToBytes[k] = base64FromBytes(v);
       });
     }
-    obj.int64ToInt64 = {};
-    if (message.int64ToInt64) {
+    if (message.int64ToInt64?.size) {
+      obj.int64ToInt64 = {};
       message.int64ToInt64.forEach((v, k) => {
         obj.int64ToInt64[k] = Math.round(v);
       });
     }
-    obj.mapOfTimestamps = {};
-    if (message.mapOfTimestamps) {
+    if (message.mapOfTimestamps?.size) {
+      obj.mapOfTimestamps = {};
       message.mapOfTimestamps.forEach((v, k) => {
         obj.mapOfTimestamps[k] = v.toISOString();
       });
     }
-    message.struct !== undefined && (obj.struct = message.struct);
+    if (message.struct !== undefined) {
+      obj.struct = message.struct;
+    }
     return obj;
   },
 
@@ -389,8 +393,12 @@ export const Maps_StrToEntityEntry = {
 
   toJSON(message: Maps_StrToEntityEntry): unknown {
     const obj: any = {};
-    message.key !== undefined && (obj.key = message.key);
-    message.value !== undefined && (obj.value = message.value ? Entity.toJSON(message.value) : undefined);
+    if (message.key !== "") {
+      obj.key = message.key;
+    }
+    if (message.value !== undefined) {
+      obj.value = Entity.toJSON(message.value);
+    }
     return obj;
   },
 
@@ -459,8 +467,12 @@ export const Maps_Int32ToInt32Entry = {
 
   toJSON(message: Maps_Int32ToInt32Entry): unknown {
     const obj: any = {};
-    message.key !== undefined && (obj.key = Math.round(message.key));
-    message.value !== undefined && (obj.value = Math.round(message.value));
+    if (message.key !== 0) {
+      obj.key = Math.round(message.key);
+    }
+    if (message.value !== 0) {
+      obj.value = Math.round(message.value);
+    }
     return obj;
   },
 
@@ -530,9 +542,12 @@ export const Maps_StringToBytesEntry = {
 
   toJSON(message: Maps_StringToBytesEntry): unknown {
     const obj: any = {};
-    message.key !== undefined && (obj.key = message.key);
-    message.value !== undefined &&
-      (obj.value = base64FromBytes(message.value !== undefined ? message.value : new Uint8Array(0)));
+    if (message.key !== "") {
+      obj.key = message.key;
+    }
+    if (message.value.length !== 0) {
+      obj.value = base64FromBytes(message.value);
+    }
     return obj;
   },
 
@@ -599,8 +614,12 @@ export const Maps_Int64ToInt64Entry = {
 
   toJSON(message: Maps_Int64ToInt64Entry): unknown {
     const obj: any = {};
-    message.key !== undefined && (obj.key = Math.round(message.key));
-    message.value !== undefined && (obj.value = Math.round(message.value));
+    if (message.key !== 0) {
+      obj.key = Math.round(message.key);
+    }
+    if (message.value !== 0) {
+      obj.value = Math.round(message.value);
+    }
     return obj;
   },
 
@@ -670,8 +689,12 @@ export const Maps_MapOfTimestampsEntry = {
 
   toJSON(message: Maps_MapOfTimestampsEntry): unknown {
     const obj: any = {};
-    message.key !== undefined && (obj.key = message.key);
-    message.value !== undefined && (obj.value = message.value.toISOString());
+    if (message.key !== "") {
+      obj.key = message.key;
+    }
+    if (message.value !== undefined) {
+      obj.value = message.value.toISOString();
+    }
     return obj;
   },
 

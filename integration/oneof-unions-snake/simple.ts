@@ -54,7 +54,9 @@ export const SimpleStruct = {
 
   toJSON(message: SimpleStruct): unknown {
     const obj: any = {};
-    message.simple_struct !== undefined && (obj.simple_struct = message.simple_struct);
+    if (message.simple_struct !== undefined) {
+      obj.simple_struct = message.simple_struct;
+    }
     return obj;
   },
 

@@ -151,19 +151,23 @@ export const SimpleWithWrappers = {
 
   toJSON(message: SimpleWithWrappers): unknown {
     const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
-    message.age !== undefined && (obj.age = message.age);
-    message.enabled !== undefined && (obj.enabled = message.enabled);
-    message.bananas !== undefined && (obj.bananas = message.bananas);
-    if (message.coins) {
-      obj.coins = message.coins.map((e) => e);
-    } else {
-      obj.coins = [];
+    if (message.name !== undefined) {
+      obj.name = message.name;
     }
-    if (message.snacks) {
-      obj.snacks = message.snacks.map((e) => e);
-    } else {
-      obj.snacks = [];
+    if (message.age !== undefined) {
+      obj.age = message.age;
+    }
+    if (message.enabled !== undefined) {
+      obj.enabled = message.enabled;
+    }
+    if (message.bananas !== undefined) {
+      obj.bananas = message.bananas;
+    }
+    if (message.coins?.length) {
+      obj.coins = message.coins;
+    }
+    if (message.snacks?.length) {
+      obj.snacks = message.snacks;
     }
     return obj;
   },
@@ -275,23 +279,32 @@ export const SimpleWithMap = {
 
   toJSON(message: SimpleWithMap): unknown {
     const obj: any = {};
-    obj.nameLookup = {};
     if (message.nameLookup) {
-      Object.entries(message.nameLookup).forEach(([k, v]) => {
-        obj.nameLookup[k] = v;
-      });
+      const entries = Object.entries(message.nameLookup);
+      if (entries.length > 0) {
+        obj.nameLookup = {};
+        entries.forEach(([k, v]) => {
+          obj.nameLookup[k] = v;
+        });
+      }
     }
-    obj.intLookup = {};
     if (message.intLookup) {
-      Object.entries(message.intLookup).forEach(([k, v]) => {
-        obj.intLookup[k] = Math.round(v);
-      });
+      const entries = Object.entries(message.intLookup);
+      if (entries.length > 0) {
+        obj.intLookup = {};
+        entries.forEach(([k, v]) => {
+          obj.intLookup[k] = Math.round(v);
+        });
+      }
     }
-    obj.longLookup = {};
     if (message.longLookup) {
-      Object.entries(message.longLookup).forEach(([k, v]) => {
-        obj.longLookup[k] = v.toString();
-      });
+      const entries = Object.entries(message.longLookup);
+      if (entries.length > 0) {
+        obj.longLookup = {};
+        entries.forEach(([k, v]) => {
+          obj.longLookup[k] = v.toString();
+        });
+      }
     }
     return obj;
   },
@@ -384,8 +397,12 @@ export const SimpleWithMap_NameLookupEntry = {
 
   toJSON(message: SimpleWithMap_NameLookupEntry): unknown {
     const obj: any = {};
-    message.key !== undefined && (obj.key = message.key);
-    message.value !== undefined && (obj.value = message.value);
+    if (message.key !== "") {
+      obj.key = message.key;
+    }
+    if (message.value !== "") {
+      obj.value = message.value;
+    }
     return obj;
   },
 
@@ -454,8 +471,12 @@ export const SimpleWithMap_IntLookupEntry = {
 
   toJSON(message: SimpleWithMap_IntLookupEntry): unknown {
     const obj: any = {};
-    message.key !== undefined && (obj.key = Math.round(message.key));
-    message.value !== undefined && (obj.value = Math.round(message.value));
+    if (message.key !== 0) {
+      obj.key = Math.round(message.key);
+    }
+    if (message.value !== 0) {
+      obj.value = Math.round(message.value);
+    }
     return obj;
   },
 
@@ -525,8 +546,12 @@ export const SimpleWithMap_LongLookupEntry = {
 
   toJSON(message: SimpleWithMap_LongLookupEntry): unknown {
     const obj: any = {};
-    message.key !== undefined && (obj.key = message.key);
-    message.value !== undefined && (obj.value = (message.value || Long.ZERO).toString());
+    if (message.key !== "") {
+      obj.key = message.key;
+    }
+    if (!message.value.isZero()) {
+      obj.value = (message.value || Long.ZERO).toString();
+    }
     return obj;
   },
 
@@ -745,22 +770,44 @@ export const Numbers = {
 
   toJSON(message: Numbers): unknown {
     const obj: any = {};
-    message.double !== undefined && (obj.double = message.double);
-    message.float !== undefined && (obj.float = message.float);
-    message.int32 !== undefined && (obj.int32 = Math.round(message.int32));
-    message.int64 !== undefined && (obj.int64 = (message.int64 || Long.ZERO).toString());
-    message.uint32 !== undefined && (obj.uint32 = Math.round(message.uint32));
-    message.uint64 !== undefined && (obj.uint64 = (message.uint64 || Long.UZERO).toString());
-    message.sint32 !== undefined && (obj.sint32 = Math.round(message.sint32));
-    message.sint64 !== undefined && (obj.sint64 = (message.sint64 || Long.ZERO).toString());
-    message.fixed32 !== undefined && (obj.fixed32 = Math.round(message.fixed32));
-    message.fixed64 !== undefined && (obj.fixed64 = (message.fixed64 || Long.UZERO).toString());
-    message.sfixed32 !== undefined && (obj.sfixed32 = Math.round(message.sfixed32));
-    message.sfixed64 !== undefined && (obj.sfixed64 = (message.sfixed64 || Long.ZERO).toString());
-    if (message.manyUint64) {
+    if (message.double !== 0) {
+      obj.double = message.double;
+    }
+    if (message.float !== 0) {
+      obj.float = message.float;
+    }
+    if (message.int32 !== 0) {
+      obj.int32 = Math.round(message.int32);
+    }
+    if (!message.int64.isZero()) {
+      obj.int64 = (message.int64 || Long.ZERO).toString();
+    }
+    if (message.uint32 !== 0) {
+      obj.uint32 = Math.round(message.uint32);
+    }
+    if (!message.uint64.isZero()) {
+      obj.uint64 = (message.uint64 || Long.UZERO).toString();
+    }
+    if (message.sint32 !== 0) {
+      obj.sint32 = Math.round(message.sint32);
+    }
+    if (!message.sint64.isZero()) {
+      obj.sint64 = (message.sint64 || Long.ZERO).toString();
+    }
+    if (message.fixed32 !== 0) {
+      obj.fixed32 = Math.round(message.fixed32);
+    }
+    if (!message.fixed64.isZero()) {
+      obj.fixed64 = (message.fixed64 || Long.UZERO).toString();
+    }
+    if (message.sfixed32 !== 0) {
+      obj.sfixed32 = Math.round(message.sfixed32);
+    }
+    if (!message.sfixed64.isZero()) {
+      obj.sfixed64 = (message.sfixed64 || Long.ZERO).toString();
+    }
+    if (message.manyUint64?.length) {
       obj.manyUint64 = message.manyUint64.map((e) => (e || Long.UZERO).toString());
-    } else {
-      obj.manyUint64 = [];
     }
     return obj;
   },

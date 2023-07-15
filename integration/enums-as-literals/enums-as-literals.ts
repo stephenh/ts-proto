@@ -89,7 +89,9 @@ export const DividerData = {
 
   toJSON(message: DividerData): unknown {
     const obj: any = {};
-    message.type !== undefined && (obj.type = dividerData_DividerTypeToJSON(message.type));
+    if (message.type !== 0) {
+      obj.type = dividerData_DividerTypeToJSON(message.type);
+    }
     return obj;
   },
 

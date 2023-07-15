@@ -48,7 +48,9 @@ export const SimpleMessage = {
 
   toJSON(message: SimpleMessage): unknown {
     const obj: any = {};
-    message.numberField !== undefined && (obj.numberField = Math.round(message.numberField));
+    if (message.numberField !== 0) {
+      obj.numberField = Math.round(message.numberField);
+    }
     return obj;
   },
 

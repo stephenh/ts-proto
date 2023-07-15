@@ -114,19 +114,26 @@ export const Todo = {
 
   toJSON(message: Todo): unknown {
     const obj: any = {};
-    message.id !== undefined && (obj.id = message.id);
-    message.timestamp !== undefined && (obj.timestamp = message.timestamp);
-    if (message.repeatedTimestamp) {
-      obj.repeatedTimestamp = message.repeatedTimestamp.map((e) => e);
-    } else {
-      obj.repeatedTimestamp = [];
+    if (message.id !== "") {
+      obj.id = message.id;
     }
-    message.optionalTimestamp !== undefined && (obj.optionalTimestamp = message.optionalTimestamp);
-    obj.mapOfTimestamps = {};
+    if (message.timestamp !== undefined) {
+      obj.timestamp = message.timestamp;
+    }
+    if (message.repeatedTimestamp?.length) {
+      obj.repeatedTimestamp = message.repeatedTimestamp;
+    }
+    if (message.optionalTimestamp !== undefined) {
+      obj.optionalTimestamp = message.optionalTimestamp;
+    }
     if (message.mapOfTimestamps) {
-      Object.entries(message.mapOfTimestamps).forEach(([k, v]) => {
-        obj.mapOfTimestamps[k] = v;
-      });
+      const entries = Object.entries(message.mapOfTimestamps);
+      if (entries.length > 0) {
+        obj.mapOfTimestamps = {};
+        entries.forEach(([k, v]) => {
+          obj.mapOfTimestamps[k] = v;
+        });
+      }
     }
     return obj;
   },
@@ -208,8 +215,12 @@ export const Todo_MapOfTimestampsEntry = {
 
   toJSON(message: Todo_MapOfTimestampsEntry): unknown {
     const obj: any = {};
-    message.key !== undefined && (obj.key = message.key);
-    message.value !== undefined && (obj.value = message.value);
+    if (message.key !== "") {
+      obj.key = message.key;
+    }
+    if (message.value !== undefined) {
+      obj.value = message.value;
+    }
     return obj;
   },
 

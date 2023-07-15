@@ -136,12 +136,17 @@ export const DividerData = {
 
   toJSON(message: DividerData): unknown {
     const obj: any = {};
-    message.type !== undefined && (obj.type = dividerData_DividerTypeToJSON(message.type));
-    obj.typeMap = {};
+    if (message.type !== DividerData_DividerType.DOUBLE) {
+      obj.type = dividerData_DividerTypeToJSON(message.type);
+    }
     if (message.typeMap) {
-      Object.entries(message.typeMap).forEach(([k, v]) => {
-        obj.typeMap[k] = dividerData_DividerTypeToJSON(v);
-      });
+      const entries = Object.entries(message.typeMap);
+      if (entries.length > 0) {
+        obj.typeMap = {};
+        entries.forEach(([k, v]) => {
+          obj.typeMap[k] = dividerData_DividerTypeToJSON(v);
+        });
+      }
     }
     return obj;
   },
@@ -220,8 +225,12 @@ export const DividerData_TypeMapEntry = {
 
   toJSON(message: DividerData_TypeMapEntry): unknown {
     const obj: any = {};
-    message.key !== undefined && (obj.key = message.key);
-    message.value !== undefined && (obj.value = dividerData_DividerTypeToJSON(message.value));
+    if (message.key !== "") {
+      obj.key = message.key;
+    }
+    if (message.value !== DividerData_DividerType.DOUBLE) {
+      obj.value = dividerData_DividerTypeToJSON(message.value);
+    }
     return obj;
   },
 

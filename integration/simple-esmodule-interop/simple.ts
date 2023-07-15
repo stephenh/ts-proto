@@ -75,8 +75,12 @@ export const Simple = {
 
   toJSON(message: Simple): unknown {
     const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
-    message.age !== undefined && (obj.age = Math.round(message.age));
+    if (message.name !== "") {
+      obj.name = message.name;
+    }
+    if (message.age !== 0) {
+      obj.age = Math.round(message.age);
+    }
     return obj;
   },
 
@@ -269,18 +273,42 @@ export const Numbers = {
 
   toJSON(message: Numbers): unknown {
     const obj: any = {};
-    message.double !== undefined && (obj.double = message.double);
-    message.float !== undefined && (obj.float = message.float);
-    message.int32 !== undefined && (obj.int32 = Math.round(message.int32));
-    message.int64 !== undefined && (obj.int64 = Math.round(message.int64));
-    message.uint32 !== undefined && (obj.uint32 = Math.round(message.uint32));
-    message.uint64 !== undefined && (obj.uint64 = Math.round(message.uint64));
-    message.sint32 !== undefined && (obj.sint32 = Math.round(message.sint32));
-    message.sint64 !== undefined && (obj.sint64 = Math.round(message.sint64));
-    message.fixed32 !== undefined && (obj.fixed32 = Math.round(message.fixed32));
-    message.fixed64 !== undefined && (obj.fixed64 = Math.round(message.fixed64));
-    message.sfixed32 !== undefined && (obj.sfixed32 = Math.round(message.sfixed32));
-    message.sfixed64 !== undefined && (obj.sfixed64 = Math.round(message.sfixed64));
+    if (message.double !== 0) {
+      obj.double = message.double;
+    }
+    if (message.float !== 0) {
+      obj.float = message.float;
+    }
+    if (message.int32 !== 0) {
+      obj.int32 = Math.round(message.int32);
+    }
+    if (message.int64 !== 0) {
+      obj.int64 = Math.round(message.int64);
+    }
+    if (message.uint32 !== 0) {
+      obj.uint32 = Math.round(message.uint32);
+    }
+    if (message.uint64 !== 0) {
+      obj.uint64 = Math.round(message.uint64);
+    }
+    if (message.sint32 !== 0) {
+      obj.sint32 = Math.round(message.sint32);
+    }
+    if (message.sint64 !== 0) {
+      obj.sint64 = Math.round(message.sint64);
+    }
+    if (message.fixed32 !== 0) {
+      obj.fixed32 = Math.round(message.fixed32);
+    }
+    if (message.fixed64 !== 0) {
+      obj.fixed64 = Math.round(message.fixed64);
+    }
+    if (message.sfixed32 !== 0) {
+      obj.sfixed32 = Math.round(message.sfixed32);
+    }
+    if (message.sfixed64 !== 0) {
+      obj.sfixed64 = Math.round(message.sfixed64);
+    }
     return obj;
   },
 
