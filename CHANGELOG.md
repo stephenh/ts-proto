@@ -1,3 +1,10 @@
+## [1.155.1](https://github.com/stephenh/ts-proto/compare/v1.155.0...v1.155.1) (2023-07-15)
+
+
+### Bug Fixes
+
+* Bump descriptors. ([#883](https://github.com/stephenh/ts-proto/issues/883)) ([e2cf184](https://github.com/stephenh/ts-proto/commit/e2cf1848c1c70a8bbe73756e1cf530c5d70f5ce2))
+
 # [1.155.0](https://github.com/stephenh/ts-proto/compare/v1.154.0...v1.155.0) (2023-07-15)
 
 
