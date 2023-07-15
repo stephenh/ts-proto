@@ -6,7 +6,7 @@
 protoc \
   --plugin=./node_modules/ts-proto/protoc-gen-ts_proto \
   --ts_proto_out=. \
-  --ts_proto_opt=useExactTypes=false,initializeFieldsAsUndefined=false,exportCommonSymbols=false,unknownFields=true,usePrototypeForDefaults=true,outputExtensions=true \
+  --ts_proto_opt=esModuleInterop=true,useExactTypes=false,initializeFieldsAsUndefined=false,exportCommonSymbols=false,unknownFields=true,usePrototypeForDefaults=true,outputExtensions=true \
   ./google/protobuf/descriptor.proto \
   ./google/protobuf/compiler/plugin.proto
 
