@@ -451,26 +451,10 @@ function makeProtobufStructWrapper(options: Options) {
 function makeLongUtils(options: Options, bytes: ReturnType<typeof makeByteUtils>) {
   // Regardless of which `forceLong` config option we're using, we always use
   // the `long` library to either represent or at least sanity-check 64-bit values
-  const util = impFile(options, "util@protobufjs/minimal");
-  const configure = impFile(options, "configure@protobufjs/minimal");
-
-  // Before esModuleInterop, we had to use 'import * as Long from long` b/c long is
-  // an `export =` module and exports only the Long constructor (which is callable).
-  // See https://www.typescriptlang.org/docs/handbook/modules.html#export--and-import--require.
-  //
-  // With esModuleInterop on, `* as Long` is no longer the constructor, it's the module,
-  // so we want to go back to `import { Long } from long`, which is specifically forbidden
-  // due to `export =` w/o esModuleInterop.
-  //
-  // I.e there is not an import for long that "just works" in both esModuleInterop and
-  // not esModuleInterop.
-  const LongImp = options.esModuleInterop ? imp("Long=long") : imp("Long*long");
-
-  const disclaimer = options.esModuleInterop
-    ? ""
-    : `
-    // If you get a compile-error about 'Constructor<Long> and ... have no overlap',
-    // add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.`;
+  const { importSuffix } = options;
+  const util = impFile(options, `util@protobufjs/minimal${importSuffix}`);
+  const configure = impFile(options, `configure@protobufjs/minimal${importSuffix}`);
+  const LongImp = imp("Long=long");
 
   // Instead of exposing `LongImp` directly, let callers think that they are getting the
   // `imp(Long)` but really it is that + our long initialization snippet. This means the
@@ -478,7 +462,6 @@ function makeLongUtils(options: Options, bytes: ReturnType<typeof makeByteUtils>
   const Long = conditionalOutput(
     "Long",
     code`
-      ${disclaimer}
       if (${util}.Long !== ${LongImp}) {
         ${util}.Long = ${LongImp} as any;
         ${configure}();
