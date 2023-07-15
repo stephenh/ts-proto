@@ -1,3 +1,10 @@
+# [1.155.0](https://github.com/stephenh/ts-proto/compare/v1.154.0...v1.155.0) (2023-07-15)
+
+
+### Features
+
+* Upgrade to long 5.0.0. ([#882](https://github.com/stephenh/ts-proto/issues/882)) ([4c1e7a6](https://github.com/stephenh/ts-proto/commit/4c1e7a6e02f974f193063a83ce7a472b14f2d2d0))
+
 # [1.154.0](https://github.com/stephenh/ts-proto/compare/v1.153.3...v1.154.0) (2023-07-15)
 
 
