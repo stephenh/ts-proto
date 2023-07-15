@@ -274,10 +274,18 @@ export const Version = {
 
   toJSON(message: Version): unknown {
     const obj: any = {};
-    message.major !== undefined && (obj.major = Math.round(message.major));
-    message.minor !== undefined && (obj.minor = Math.round(message.minor));
-    message.patch !== undefined && (obj.patch = Math.round(message.patch));
-    message.suffix !== undefined && (obj.suffix = message.suffix);
+    if (message.major !== 0) {
+      obj.major = Math.round(message.major);
+    }
+    if (message.minor !== 0) {
+      obj.minor = Math.round(message.minor);
+    }
+    if (message.patch !== 0) {
+      obj.patch = Math.round(message.patch);
+    }
+    if (message.suffix !== "") {
+      obj.suffix = message.suffix;
+    }
     return obj;
   },
 
@@ -400,19 +408,18 @@ export const CodeGeneratorRequest = {
 
   toJSON(message: CodeGeneratorRequest): unknown {
     const obj: any = {};
-    if (message.fileToGenerate) {
-      obj.fileToGenerate = message.fileToGenerate.map((e) => e);
-    } else {
-      obj.fileToGenerate = [];
+    if (message.fileToGenerate?.length) {
+      obj.fileToGenerate = message.fileToGenerate;
     }
-    message.parameter !== undefined && (obj.parameter = message.parameter);
-    if (message.protoFile) {
-      obj.protoFile = message.protoFile.map((e) => e ? FileDescriptorProto.toJSON(e) : undefined);
-    } else {
-      obj.protoFile = [];
+    if (message.parameter !== "") {
+      obj.parameter = message.parameter;
     }
-    message.compilerVersion !== undefined &&
-      (obj.compilerVersion = message.compilerVersion ? Version.toJSON(message.compilerVersion) : undefined);
+    if (message.protoFile?.length) {
+      obj.protoFile = message.protoFile.map((e) => FileDescriptorProto.toJSON(e));
+    }
+    if (message.compilerVersion !== undefined) {
+      obj.compilerVersion = Version.toJSON(message.compilerVersion);
+    }
     return obj;
   },
 
@@ -524,12 +531,14 @@ export const CodeGeneratorResponse = {
 
   toJSON(message: CodeGeneratorResponse): unknown {
     const obj: any = {};
-    message.error !== undefined && (obj.error = message.error);
-    message.supportedFeatures !== undefined && (obj.supportedFeatures = Math.round(message.supportedFeatures));
-    if (message.file) {
-      obj.file = message.file.map((e) => e ? CodeGeneratorResponse_File.toJSON(e) : undefined);
-    } else {
-      obj.file = [];
+    if (message.error !== "") {
+      obj.error = message.error;
+    }
+    if (message.supportedFeatures !== 0) {
+      obj.supportedFeatures = Math.round(message.supportedFeatures);
+    }
+    if (message.file?.length) {
+      obj.file = message.file.map((e) => CodeGeneratorResponse_File.toJSON(e));
     }
     return obj;
   },
@@ -652,12 +661,18 @@ export const CodeGeneratorResponse_File = {
 
   toJSON(message: CodeGeneratorResponse_File): unknown {
     const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
-    message.insertionPoint !== undefined && (obj.insertionPoint = message.insertionPoint);
-    message.content !== undefined && (obj.content = message.content);
-    message.generatedCodeInfo !== undefined && (obj.generatedCodeInfo = message.generatedCodeInfo
-      ? GeneratedCodeInfo.toJSON(message.generatedCodeInfo)
-      : undefined);
+    if (message.name !== "") {
+      obj.name = message.name;
+    }
+    if (message.insertionPoint !== "") {
+      obj.insertionPoint = message.insertionPoint;
+    }
+    if (message.content !== "") {
+      obj.content = message.content;
+    }
+    if (message.generatedCodeInfo !== undefined) {
+      obj.generatedCodeInfo = GeneratedCodeInfo.toJSON(message.generatedCodeInfo);
+    }
     return obj;
   },
 
