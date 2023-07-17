@@ -88,7 +88,7 @@ export default class SourceInfo implements SourceDescription {
   // Private
   private constructor(
     private readonly sourceCode: SourceInfoMap,
-    private readonly selfDescription: SourceDescription
+    private readonly selfDescription: SourceDescription,
   ) {}
 
   /** Returns the code span [start line, start column, end line] */

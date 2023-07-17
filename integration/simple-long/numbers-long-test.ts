@@ -1,5 +1,5 @@
 import { Reader } from "protobufjs";
-import * as Long from "long";
+import Long = require("long");
 import { Numbers } from "./simple";
 import { simple as pbjs } from "./pbjs";
 import INumbers = pbjs.INumbers;

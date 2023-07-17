@@ -1,8 +1,8 @@
 /* eslint-disable */
-import * as Long from "long";
 import * as _m0 from "protobufjs/minimal";
 import { Timestamp } from "./google/protobuf/timestamp";
 import { UInt64Value } from "./google/protobuf/wrappers";
+import Long = require("long");
 
 export const protobufPackage = "simple";
 
@@ -249,24 +249,50 @@ export const Numbers = {
 
   toJSON(message: Numbers): unknown {
     const obj: any = {};
-    message.double !== undefined && (obj.double = message.double);
-    message.float !== undefined && (obj.float = message.float);
-    message.int32 !== undefined && (obj.int32 = Math.round(message.int32));
-    message.int64 !== undefined && (obj.int64 = message.int64.toString());
-    message.uint32 !== undefined && (obj.uint32 = Math.round(message.uint32));
-    message.uint64 !== undefined && (obj.uint64 = message.uint64.toString());
-    message.sint32 !== undefined && (obj.sint32 = Math.round(message.sint32));
-    message.sint64 !== undefined && (obj.sint64 = message.sint64.toString());
-    message.fixed32 !== undefined && (obj.fixed32 = Math.round(message.fixed32));
-    message.fixed64 !== undefined && (obj.fixed64 = message.fixed64.toString());
-    message.sfixed32 !== undefined && (obj.sfixed32 = Math.round(message.sfixed32));
-    message.sfixed64 !== undefined && (obj.sfixed64 = message.sfixed64.toString());
-    message.guint64 !== undefined && (obj.guint64 = message.guint64);
-    message.timestamp !== undefined && (obj.timestamp = message.timestamp.toISOString());
-    if (message.uint64s) {
+    if (message.double !== 0) {
+      obj.double = message.double;
+    }
+    if (message.float !== 0) {
+      obj.float = message.float;
+    }
+    if (message.int32 !== 0) {
+      obj.int32 = Math.round(message.int32);
+    }
+    if (message.int64 !== BigInt("0")) {
+      obj.int64 = message.int64.toString();
+    }
+    if (message.uint32 !== 0) {
+      obj.uint32 = Math.round(message.uint32);
+    }
+    if (message.uint64 !== BigInt("0")) {
+      obj.uint64 = message.uint64.toString();
+    }
+    if (message.sint32 !== 0) {
+      obj.sint32 = Math.round(message.sint32);
+    }
+    if (message.sint64 !== BigInt("0")) {
+      obj.sint64 = message.sint64.toString();
+    }
+    if (message.fixed32 !== 0) {
+      obj.fixed32 = Math.round(message.fixed32);
+    }
+    if (message.fixed64 !== BigInt("0")) {
+      obj.fixed64 = message.fixed64.toString();
+    }
+    if (message.sfixed32 !== 0) {
+      obj.sfixed32 = Math.round(message.sfixed32);
+    }
+    if (message.sfixed64 !== BigInt("0")) {
+      obj.sfixed64 = message.sfixed64.toString();
+    }
+    if (message.guint64 !== undefined) {
+      obj.guint64 = message.guint64;
+    }
+    if (message.timestamp !== undefined) {
+      obj.timestamp = message.timestamp.toISOString();
+    }
+    if (message.uint64s?.length) {
       obj.uint64s = message.uint64s.map((e) => e.toString());
-    } else {
-      obj.uint64s = [];
     }
     return obj;
   },
@@ -333,8 +359,6 @@ function longToBigint(long: Long) {
   return BigInt(long.toString());
 }
 
-// If you get a compile-error about 'Constructor<Long> and ... have no overlap',
-// add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
 if (_m0.util.Long !== Long) {
   _m0.util.Long = Long as any;
   _m0.configure();

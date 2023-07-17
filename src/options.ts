@@ -261,12 +261,15 @@ function parseParamValue(value: string): string | boolean {
   return value === "true" ? true : value === "false" ? false : value;
 }
 
-export function getTsPoetOpts(_options: Options): ToStringOpts {
-  const imports = ["protobufjs/minimal" + _options.importSuffix];
+export function getTsPoetOpts(options: Options): ToStringOpts {
+  const { importSuffix, esModuleInterop } = options;
+  const pbjs = "protobufjs/minimal" + importSuffix;
   return {
     prefix: `/* eslint-disable */`,
     dprintOptions: { preferSingleLine: true, lineWidth: 120 },
-    ...(_options.esModuleInterop ? { forceDefaultImport: imports } : { forceModuleImport: imports }),
+    forceRequireImport: esModuleInterop ? [] : ["long"],
+    forceDefaultImport: esModuleInterop ? [pbjs] : [],
+    forceModuleImport: esModuleInterop ? [] : [pbjs],
   };
 }
 

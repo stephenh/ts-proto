@@ -120,11 +120,21 @@ export const Simple = {
 
   toJSON(message: Simple): unknown {
     const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
-    message.age !== undefined && (obj.age = Math.round(message.age));
-    message.child !== undefined && (obj.child = message.child ? Child.toJSON(message.child) : undefined);
-    message.testField !== undefined && (obj.testField = message.testField);
-    message.testNotDeprecated !== undefined && (obj.testNotDeprecated = message.testNotDeprecated);
+    if (message.name !== "") {
+      obj.name = message.name;
+    }
+    if (message.age !== 0) {
+      obj.age = Math.round(message.age);
+    }
+    if (message.child !== undefined) {
+      obj.child = Child.toJSON(message.child);
+    }
+    if (message.testField !== "") {
+      obj.testField = message.testField;
+    }
+    if (message.testNotDeprecated !== "") {
+      obj.testNotDeprecated = message.testNotDeprecated;
+    }
     return obj;
   },
 
@@ -184,7 +194,9 @@ export const Child = {
 
   toJSON(message: Child): unknown {
     const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
+    if (message.name !== "") {
+      obj.name = message.name;
+    }
     return obj;
   },
 

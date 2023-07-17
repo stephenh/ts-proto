@@ -1,6 +1,6 @@
 /* eslint-disable */
-import * as Long from "long";
 import * as _m0 from "protobufjs/minimal";
+import Long = require("long");
 
 export const protobufPackage = "vector_tile";
 
@@ -120,10 +120,8 @@ export const Tile = {
 
   toJSON(message: Tile): unknown {
     const obj: any = {};
-    if (message.layers) {
-      obj.layers = message.layers.map((e) => e ? Tile_Layer.toJSON(e) : undefined);
-    } else {
-      obj.layers = [];
+    if (message.layers?.length) {
+      obj.layers = message.layers.map((e) => Tile_Layer.toJSON(e));
     }
     return obj;
   },
@@ -248,13 +246,27 @@ export const Tile_Value = {
 
   toJSON(message: Tile_Value): unknown {
     const obj: any = {};
-    message.stringValue !== undefined && (obj.stringValue = message.stringValue);
-    message.floatValue !== undefined && (obj.floatValue = message.floatValue);
-    message.doubleValue !== undefined && (obj.doubleValue = message.doubleValue);
-    message.intValue !== undefined && (obj.intValue = Math.round(message.intValue));
-    message.uintValue !== undefined && (obj.uintValue = Math.round(message.uintValue));
-    message.sintValue !== undefined && (obj.sintValue = Math.round(message.sintValue));
-    message.boolValue !== undefined && (obj.boolValue = message.boolValue);
+    if (message.stringValue !== "") {
+      obj.stringValue = message.stringValue;
+    }
+    if (message.floatValue !== 0) {
+      obj.floatValue = message.floatValue;
+    }
+    if (message.doubleValue !== 0) {
+      obj.doubleValue = message.doubleValue;
+    }
+    if (message.intValue !== 0) {
+      obj.intValue = Math.round(message.intValue);
+    }
+    if (message.uintValue !== 0) {
+      obj.uintValue = Math.round(message.uintValue);
+    }
+    if (message.sintValue !== 0) {
+      obj.sintValue = Math.round(message.sintValue);
+    }
+    if (message.boolValue === true) {
+      obj.boolValue = message.boolValue;
+    }
     return obj;
   },
 
@@ -375,17 +387,17 @@ export const Tile_Feature = {
 
   toJSON(message: Tile_Feature): unknown {
     const obj: any = {};
-    message.id !== undefined && (obj.id = Math.round(message.id));
-    if (message.tags) {
-      obj.tags = message.tags.map((e) => Math.round(e));
-    } else {
-      obj.tags = [];
+    if (message.id !== 0) {
+      obj.id = Math.round(message.id);
     }
-    message.type !== undefined && (obj.type = tile_GeomTypeToJSON(message.type));
-    if (message.geometry) {
+    if (message.tags?.length) {
+      obj.tags = message.tags.map((e) => Math.round(e));
+    }
+    if (message.type !== 0) {
+      obj.type = tile_GeomTypeToJSON(message.type);
+    }
+    if (message.geometry?.length) {
       obj.geometry = message.geometry.map((e) => Math.round(e));
-    } else {
-      obj.geometry = [];
     }
     return obj;
   },
@@ -502,24 +514,24 @@ export const Tile_Layer = {
 
   toJSON(message: Tile_Layer): unknown {
     const obj: any = {};
-    message.version !== undefined && (obj.version = Math.round(message.version));
-    message.name !== undefined && (obj.name = message.name);
-    if (message.features) {
-      obj.features = message.features.map((e) => e ? Tile_Feature.toJSON(e) : undefined);
-    } else {
-      obj.features = [];
+    if (message.version !== 0) {
+      obj.version = Math.round(message.version);
     }
-    if (message.keys) {
-      obj.keys = message.keys.map((e) => e);
-    } else {
-      obj.keys = [];
+    if (message.name !== "") {
+      obj.name = message.name;
     }
-    if (message.values) {
-      obj.values = message.values.map((e) => e ? Tile_Value.toJSON(e) : undefined);
-    } else {
-      obj.values = [];
+    if (message.features?.length) {
+      obj.features = message.features.map((e) => Tile_Feature.toJSON(e));
     }
-    message.extent !== undefined && (obj.extent = Math.round(message.extent));
+    if (message.keys?.length) {
+      obj.keys = message.keys;
+    }
+    if (message.values?.length) {
+      obj.values = message.values.map((e) => Tile_Value.toJSON(e));
+    }
+    if (message.extent !== 0) {
+      obj.extent = Math.round(message.extent);
+    }
     return obj;
   },
 
@@ -539,10 +551,10 @@ export const Tile_Layer = {
   },
 };
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
+declare const self: any | undefined;
+declare const window: any | undefined;
+declare const global: any | undefined;
+const tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") {
     return globalThis;
   }
@@ -576,8 +588,6 @@ function longToNumber(long: Long): number {
   return long.toNumber();
 }
 
-// If you get a compile-error about 'Constructor<Long> and ... have no overlap',
-// add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
 if (_m0.util.Long !== Long) {
   _m0.util.Long = Long as any;
   _m0.configure();

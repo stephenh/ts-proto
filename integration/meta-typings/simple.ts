@@ -1,11 +1,11 @@
 /* eslint-disable */
-import * as Long from "long";
 import * as _m0 from "protobufjs/minimal";
 import { FileDescriptorProto } from "ts-proto-descriptors";
 import { protoMetadata as protoMetadata3, Timestamp } from "./google/protobuf/timestamp";
 import { BoolValue, Int32Value, protoMetadata as protoMetadata2, StringValue } from "./google/protobuf/wrappers";
 import { DateMessage, protoMetadata as protoMetadata1 } from "./google/type/date";
 import { ImportedThing, protoMetadata as protoMetadata4 } from "./import_dir/thing";
+import Long = require("long");
 
 export const protobufPackage = "simple";
 
@@ -2950,10 +2950,10 @@ export const protoMetadata: ProtoMetadata = {
   dependencies: [protoMetadata1, protoMetadata2, protoMetadata3, protoMetadata4],
 };
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
+declare const self: any | undefined;
+declare const window: any | undefined;
+declare const global: any | undefined;
+const tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") {
     return globalThis;
   }
@@ -2988,8 +2988,6 @@ function longToNumber(long: Long): number {
   return long.toNumber();
 }
 
-// If you get a compile-error about 'Constructor<Long> and ... have no overlap',
-// add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
 if (_m0.util.Long !== Long) {
   _m0.util.Long = Long as any;
   _m0.configure();

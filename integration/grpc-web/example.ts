@@ -149,8 +149,12 @@ export const DashFlash = {
 
   toJSON(message: DashFlash): unknown {
     const obj: any = {};
-    message.msg !== undefined && (obj.msg = message.msg);
-    message.type !== undefined && (obj.type = dashFlash_TypeToJSON(message.type));
+    if (message.msg !== "") {
+      obj.msg = message.msg;
+    }
+    if (message.type !== 0) {
+      obj.type = dashFlash_TypeToJSON(message.type);
+    }
     return obj;
   },
 
@@ -231,13 +235,14 @@ export const DashUserSettingsState = {
 
   toJSON(message: DashUserSettingsState): unknown {
     const obj: any = {};
-    message.email !== undefined && (obj.email = message.email);
-    message.urls !== undefined &&
-      (obj.urls = message.urls ? DashUserSettingsState_URLs.toJSON(message.urls) : undefined);
-    if (message.flashes) {
-      obj.flashes = message.flashes.map((e) => e ? DashFlash.toJSON(e) : undefined);
-    } else {
-      obj.flashes = [];
+    if (message.email !== "") {
+      obj.email = message.email;
+    }
+    if (message.urls !== undefined) {
+      obj.urls = DashUserSettingsState_URLs.toJSON(message.urls);
+    }
+    if (message.flashes?.length) {
+      obj.flashes = message.flashes.map((e) => DashFlash.toJSON(e));
     }
     return obj;
   },
@@ -311,8 +316,12 @@ export const DashUserSettingsState_URLs = {
 
   toJSON(message: DashUserSettingsState_URLs): unknown {
     const obj: any = {};
-    message.connectGoogle !== undefined && (obj.connectGoogle = message.connectGoogle);
-    message.connectGithub !== undefined && (obj.connectGithub = message.connectGithub);
+    if (message.connectGoogle !== "") {
+      obj.connectGoogle = message.connectGoogle;
+    }
+    if (message.connectGithub !== "") {
+      obj.connectGithub = message.connectGithub;
+    }
     return obj;
   },
 
@@ -404,10 +413,18 @@ export const DashCred = {
 
   toJSON(message: DashCred): unknown {
     const obj: any = {};
-    message.description !== undefined && (obj.description = message.description);
-    message.metadata !== undefined && (obj.metadata = message.metadata);
-    message.token !== undefined && (obj.token = message.token);
-    message.id !== undefined && (obj.id = message.id);
+    if (message.description !== "") {
+      obj.description = message.description;
+    }
+    if (message.metadata !== "") {
+      obj.metadata = message.metadata;
+    }
+    if (message.token !== "") {
+      obj.token = message.token;
+    }
+    if (message.id !== "") {
+      obj.id = message.id;
+    }
     return obj;
   },
 
@@ -479,8 +496,12 @@ export const DashAPICredsCreateReq = {
 
   toJSON(message: DashAPICredsCreateReq): unknown {
     const obj: any = {};
-    message.description !== undefined && (obj.description = message.description);
-    message.metadata !== undefined && (obj.metadata = message.metadata);
+    if (message.description !== "") {
+      obj.description = message.description;
+    }
+    if (message.metadata !== "") {
+      obj.metadata = message.metadata;
+    }
     return obj;
   },
 
@@ -572,10 +593,18 @@ export const DashAPICredsUpdateReq = {
 
   toJSON(message: DashAPICredsUpdateReq): unknown {
     const obj: any = {};
-    message.credSid !== undefined && (obj.credSid = message.credSid);
-    message.description !== undefined && (obj.description = message.description);
-    message.metadata !== undefined && (obj.metadata = message.metadata);
-    message.id !== undefined && (obj.id = message.id);
+    if (message.credSid !== "") {
+      obj.credSid = message.credSid;
+    }
+    if (message.description !== "") {
+      obj.description = message.description;
+    }
+    if (message.metadata !== "") {
+      obj.metadata = message.metadata;
+    }
+    if (message.id !== "") {
+      obj.id = message.id;
+    }
     return obj;
   },
 
@@ -647,8 +676,12 @@ export const DashAPICredsDeleteReq = {
 
   toJSON(message: DashAPICredsDeleteReq): unknown {
     const obj: any = {};
-    message.credSid !== undefined && (obj.credSid = message.credSid);
-    message.id !== undefined && (obj.id = message.id);
+    if (message.credSid !== "") {
+      obj.credSid = message.credSid;
+    }
+    if (message.id !== "") {
+      obj.id = message.id;
+    }
     return obj;
   },
 
@@ -949,14 +982,14 @@ export class GrpcWebImpl {
     const request = { ..._request, ...methodDesc.requestType };
     const maybeCombinedMetadata = metadata && this.options.metadata
       ? new BrowserHeaders({ ...this.options?.metadata.headersMap, ...metadata?.headersMap })
-      : metadata || this.options.metadata;
+      : metadata ?? this.options.metadata;
     return new Promise((resolve, reject) => {
       grpc.unary(methodDesc, {
         request,
         host: this.host,
-        metadata: maybeCombinedMetadata,
-        transport: this.options.transport,
-        debug: this.options.debug,
+        metadata: maybeCombinedMetadata ?? {},
+        ...(this.options.transport !== undefined ? { transport: this.options.transport } : {}),
+        debug: this.options.debug ?? false,
         onEnd: function (response) {
           if (response.status === grpc.Code.OK) {
             resolve(response.message!.toObject());
@@ -974,20 +1007,21 @@ export class GrpcWebImpl {
     _request: any,
     metadata: grpc.Metadata | undefined,
   ): Observable<any> {
-    const upStreamCodes = this.options.upStreamRetryCodes || [];
+    const upStreamCodes = this.options.upStreamRetryCodes ?? [];
     const DEFAULT_TIMEOUT_TIME: number = 3_000;
     const request = { ..._request, ...methodDesc.requestType };
+    const transport = this.options.streamingTransport ?? this.options.transport;
     const maybeCombinedMetadata = metadata && this.options.metadata
       ? new BrowserHeaders({ ...this.options?.metadata.headersMap, ...metadata?.headersMap })
-      : metadata || this.options.metadata;
+      : metadata ?? this.options.metadata;
     return new Observable((observer) => {
       const upStream = (() => {
         const client = grpc.invoke(methodDesc, {
           host: this.host,
           request,
-          transport: this.options.streamingTransport || this.options.transport,
-          metadata: maybeCombinedMetadata,
-          debug: this.options.debug,
+          ...(transport !== undefined ? { transport } : {}),
+          metadata: maybeCombinedMetadata ?? {},
+          debug: this.options.debug ?? false,
           onMessage: (next) => observer.next(next),
           onEnd: (code: grpc.Code, message: string, trailers: grpc.Metadata) => {
             if (code === 0) {
@@ -1011,10 +1045,10 @@ export class GrpcWebImpl {
   }
 }
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
+declare const self: any | undefined;
+declare const window: any | undefined;
+declare const global: any | undefined;
+const tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") {
     return globalThis;
   }

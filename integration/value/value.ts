@@ -100,19 +100,21 @@ export const ValueMessage = {
 
   toJSON(message: ValueMessage): unknown {
     const obj: any = {};
-    message.value !== undefined && (obj.value = message.value);
-    message.anyList !== undefined && (obj.anyList = message.anyList);
-    if (message.repeatedAny) {
-      obj.repeatedAny = message.repeatedAny.map((e) => e);
-    } else {
-      obj.repeatedAny = [];
+    if (message.value !== undefined) {
+      obj.value = message.value;
     }
-    if (message.repeatedStrings) {
-      obj.repeatedStrings = message.repeatedStrings.map((e) => e);
-    } else {
-      obj.repeatedStrings = [];
+    if (message.anyList !== undefined) {
+      obj.anyList = message.anyList;
     }
-    message.structValue !== undefined && (obj.structValue = message.structValue);
+    if (message.repeatedAny?.length) {
+      obj.repeatedAny = message.repeatedAny;
+    }
+    if (message.repeatedStrings?.length) {
+      obj.repeatedStrings = message.repeatedStrings;
+    }
+    if (message.structValue !== undefined) {
+      obj.structValue = message.structValue;
+    }
     return obj;
   },
 

@@ -35,7 +35,7 @@ export function generateService(
   ctx: Context,
   fileDesc: FileDescriptorProto,
   sourceInfo: SourceInfo,
-  serviceDesc: ServiceDescriptorProto
+  serviceDesc: ServiceDescriptorProto,
 ): Code {
   const { options } = ctx;
   const chunks: Code[] = [];
@@ -82,8 +82,8 @@ export function generateService(
     chunks.push(
       code`${methodDesc.formattedName}(${joinCode(params, { on: "," })}): ${responsePromiseOrObservable(
         ctx,
-        methodDesc
-      )};`
+        methodDesc,
+      )};`,
     );
 
     // If this is a batch method, auto-generate the singular version of it
@@ -176,7 +176,7 @@ function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProt
 export function generateServiceClientImpl(
   ctx: Context,
   fileDesc: FileDescriptorProto,
-  serviceDesc: ServiceDescriptorProto
+  serviceDesc: ServiceDescriptorProto,
 ): Code {
   const { options } = ctx;
   const chunks: Code[] = [];
@@ -258,14 +258,14 @@ function generateBatchingRpcMethod(ctx: Context, batchMethod: BatchMethod): Code
   if (mapType) {
     // If the return type is a map, lookup each key in the result
     lambda.push(code`
-      return this.${methodDesc.formattedName}(ctx, request).then(res => {
-        return ${inputFieldName}.map(key => res.${outputFieldName}[key])
+      return this.${methodDesc.formattedName}(ctx, request as any).then(res => {
+        return ${inputFieldName}.map(key => res.${outputFieldName}[key] ?? ${ctx.utils.fail}())
       });
     `);
   } else {
     // Otherwise assume they come back in order
     lambda.push(code`
-      return this.${methodDesc.formattedName}(ctx, request).then(res => res.${outputFieldName})
+      return this.${methodDesc.formattedName}(ctx, request as any).then(res => res.${outputFieldName})
     `);
   }
   lambda.push(code`}`);
@@ -276,7 +276,7 @@ function generateBatchingRpcMethod(ctx: Context, batchMethod: BatchMethod): Code
       ${singular(inputFieldName)}: ${inputType}
     ): Promise<${outputType}> {
       const dl = ctx.getDataLoader("${uniqueIdentifier}", () => {
-        return new ${dataloader}<${inputType}, ${outputType}>(
+        return new ${dataloader}<${inputType}, ${outputType}, string>(
           ${joinCode(lambda)},
           { cacheKeyFn: ${hash}, ...ctx.rpcDataLoaderOptions }
         );
@@ -291,7 +291,7 @@ function generateCachingRpcMethod(
   ctx: Context,
   fileDesc: FileDescriptorProto,
   serviceDesc: ServiceDescriptorProto,
-  methodDesc: MethodDescriptorProto
+  methodDesc: MethodDescriptorProto,
 ): Code {
   assertInstanceOf(methodDesc, FormattedMethodDescriptor);
 
@@ -309,8 +309,8 @@ function generateCachingRpcMethod(
       const responses = requests.map(async request => {
         const data = ${inputType}.encode(request).finish()
         const response = await this.rpc.request(ctx, "${maybePrefixPackage(fileDesc, serviceDesc.name)}", "${
-    methodDesc.name
-  }", data);
+          methodDesc.name
+        }", data);
         return ${outputType}.decode(${Reader}.create(response));
       });
       return Promise.all(responses);
@@ -323,7 +323,7 @@ function generateCachingRpcMethod(
       request: ${inputType},
     ): Promise<${outputType}> {
       const dl = ctx.getDataLoader("${uniqueIdentifier}", () => {
-        return new ${dataloader}<${inputType}, ${outputType}>(
+        return new ${dataloader}<${inputType}, ${outputType}, string>(
           ${lambda},
           { cacheKeyFn: ${hash}, ...ctx.rpcDataLoaderOptions },
         );

@@ -4,51 +4,51 @@ import * as _m0 from "protobufjs/minimal";
 export const protobufPackage = "";
 
 export interface GroupsOptionalTest {
-  int1?: number;
-  group?: GroupsOptionalTest_Group;
-  int3?: number;
-  _unknownFields?: { [key: number]: Uint8Array[] };
+  int1?: number | undefined;
+  group?: GroupsOptionalTest_Group | undefined;
+  int3?: number | undefined;
+  _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
 export interface GroupsOptionalTest_Group {
-  key?: string;
-  value?: string;
-  _unknownFields?: { [key: number]: Uint8Array[] };
+  key?: string | undefined;
+  value?: string | undefined;
+  _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
 export interface GroupsRepeatedTest {
-  int1?: number[];
-  group?: GroupsRepeatedTest_Group[];
-  int3?: number[];
-  _unknownFields?: { [key: number]: Uint8Array[] };
+  int1?: number[] | undefined;
+  group?: GroupsRepeatedTest_Group[] | undefined;
+  int3?: number[] | undefined;
+  _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
 export interface GroupsRepeatedTest_Group {
-  key?: string[];
-  value?: string[];
-  _unknownFields?: { [key: number]: Uint8Array[] };
+  key?: string[] | undefined;
+  value?: string[] | undefined;
+  _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
 export interface GroupsNestedTest {
-  int1?: number[];
-  group?: GroupsNestedTest_Group[];
-  int3?: number[];
-  _unknownFields?: { [key: number]: Uint8Array[] };
+  int1?: number[] | undefined;
+  group?: GroupsNestedTest_Group[] | undefined;
+  int3?: number[] | undefined;
+  _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
 export interface GroupsNestedTest_Group {
-  nested?: GroupsNestedTest_Group_Nested[];
-  _unknownFields?: { [key: number]: Uint8Array[] };
+  nested?: GroupsNestedTest_Group_Nested[] | undefined;
+  _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
 export interface GroupsNestedTest_Group_Nested {
-  nested2?: GroupsNestedTest_Group_Nested_Nested2[];
-  _unknownFields?: { [key: number]: Uint8Array[] };
+  nested2?: GroupsNestedTest_Group_Nested_Nested2[] | undefined;
+  _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
 export interface GroupsNestedTest_Group_Nested_Nested2 {
-  string1?: string;
-  _unknownFields?: { [key: number]: Uint8Array[] };
+  string1?: string | undefined;
+  _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
 function createBaseGroupsOptionalTest(): GroupsOptionalTest {
@@ -67,8 +67,7 @@ export const GroupsOptionalTest = {
       writer.uint32(24).int32(message.int3);
     }
     if (message._unknownFields !== undefined) {
-      for (const key in message._unknownFields) {
-        const values = message._unknownFields[key];
+      for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag);
@@ -144,10 +143,15 @@ export const GroupsOptionalTest = {
 
   toJSON(message: GroupsOptionalTest): unknown {
     const obj: any = {};
-    message.int1 !== undefined && (obj.int1 = Math.round(message.int1));
-    message.group !== undefined &&
-      (obj.group = message.group ? GroupsOptionalTest_Group.toJSON(message.group) : undefined);
-    message.int3 !== undefined && (obj.int3 = Math.round(message.int3));
+    if (message.int1 !== undefined && message.int1 !== 0) {
+      obj.int1 = Math.round(message.int1);
+    }
+    if (message.group !== undefined) {
+      obj.group = GroupsOptionalTest_Group.toJSON(message.group);
+    }
+    if (message.int3 !== undefined && message.int3 !== 0) {
+      obj.int3 = Math.round(message.int3);
+    }
     return obj;
   },
 
@@ -179,8 +183,7 @@ export const GroupsOptionalTest_Group = {
       writer.uint32(18).string(message.value);
     }
     if (message._unknownFields !== undefined) {
-      for (const key in message._unknownFields) {
-        const values = message._unknownFields[key];
+      for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag);
@@ -248,8 +251,12 @@ export const GroupsOptionalTest_Group = {
 
   toJSON(message: GroupsOptionalTest_Group): unknown {
     const obj: any = {};
-    message.key !== undefined && (obj.key = message.key);
-    message.value !== undefined && (obj.value = message.value);
+    if (message.key !== undefined && message.key !== "") {
+      obj.key = message.key;
+    }
+    if (message.value !== undefined && message.value !== "") {
+      obj.value = message.value;
+    }
     return obj;
   },
 
@@ -291,8 +298,7 @@ export const GroupsRepeatedTest = {
       writer.ldelim();
     }
     if (message._unknownFields !== undefined) {
-      for (const key in message._unknownFields) {
-        const values = message._unknownFields[key];
+      for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag);
@@ -405,20 +411,14 @@ export const GroupsRepeatedTest = {
 
   toJSON(message: GroupsRepeatedTest): unknown {
     const obj: any = {};
-    if (message.int1) {
+    if (message.int1?.length) {
       obj.int1 = message.int1.map((e) => Math.round(e));
-    } else {
-      obj.int1 = [];
     }
-    if (message.group) {
-      obj.group = message.group.map((e) => e ? GroupsRepeatedTest_Group.toJSON(e) : undefined);
-    } else {
-      obj.group = [];
+    if (message.group?.length) {
+      obj.group = message.group.map((e) => GroupsRepeatedTest_Group.toJSON(e));
     }
-    if (message.int3) {
+    if (message.int3?.length) {
       obj.int3 = message.int3.map((e) => Math.round(e));
-    } else {
-      obj.int3 = [];
     }
     return obj;
   },
@@ -453,8 +453,7 @@ export const GroupsRepeatedTest_Group = {
       }
     }
     if (message._unknownFields !== undefined) {
-      for (const key in message._unknownFields) {
-        const values = message._unknownFields[key];
+      for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag);
@@ -528,15 +527,11 @@ export const GroupsRepeatedTest_Group = {
 
   toJSON(message: GroupsRepeatedTest_Group): unknown {
     const obj: any = {};
-    if (message.key) {
-      obj.key = message.key.map((e) => e);
-    } else {
-      obj.key = [];
+    if (message.key?.length) {
+      obj.key = message.key;
     }
-    if (message.value) {
-      obj.value = message.value.map((e) => e);
-    } else {
-      obj.value = [];
+    if (message.value?.length) {
+      obj.value = message.value;
     }
     return obj;
   },
@@ -579,8 +574,7 @@ export const GroupsNestedTest = {
       writer.ldelim();
     }
     if (message._unknownFields !== undefined) {
-      for (const key in message._unknownFields) {
-        const values = message._unknownFields[key];
+      for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag);
@@ -693,20 +687,14 @@ export const GroupsNestedTest = {
 
   toJSON(message: GroupsNestedTest): unknown {
     const obj: any = {};
-    if (message.int1) {
+    if (message.int1?.length) {
       obj.int1 = message.int1.map((e) => Math.round(e));
-    } else {
-      obj.int1 = [];
     }
-    if (message.group) {
-      obj.group = message.group.map((e) => e ? GroupsNestedTest_Group.toJSON(e) : undefined);
-    } else {
-      obj.group = [];
+    if (message.group?.length) {
+      obj.group = message.group.map((e) => GroupsNestedTest_Group.toJSON(e));
     }
-    if (message.int3) {
+    if (message.int3?.length) {
       obj.int3 = message.int3.map((e) => Math.round(e));
-    } else {
-      obj.int3 = [];
     }
     return obj;
   },
@@ -736,8 +724,7 @@ export const GroupsNestedTest_Group = {
       }
     }
     if (message._unknownFields !== undefined) {
-      for (const key in message._unknownFields) {
-        const values = message._unknownFields[key];
+      for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag);
@@ -802,10 +789,8 @@ export const GroupsNestedTest_Group = {
 
   toJSON(message: GroupsNestedTest_Group): unknown {
     const obj: any = {};
-    if (message.nested) {
-      obj.nested = message.nested.map((e) => e ? GroupsNestedTest_Group_Nested.toJSON(e) : undefined);
-    } else {
-      obj.nested = [];
+    if (message.nested?.length) {
+      obj.nested = message.nested.map((e) => GroupsNestedTest_Group_Nested.toJSON(e));
     }
     return obj;
   },
@@ -833,8 +818,7 @@ export const GroupsNestedTest_Group_Nested = {
       }
     }
     if (message._unknownFields !== undefined) {
-      for (const key in message._unknownFields) {
-        const values = message._unknownFields[key];
+      for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag);
@@ -899,10 +883,8 @@ export const GroupsNestedTest_Group_Nested = {
 
   toJSON(message: GroupsNestedTest_Group_Nested): unknown {
     const obj: any = {};
-    if (message.nested2) {
-      obj.nested2 = message.nested2.map((e) => e ? GroupsNestedTest_Group_Nested_Nested2.toJSON(e) : undefined);
-    } else {
-      obj.nested2 = [];
+    if (message.nested2?.length) {
+      obj.nested2 = message.nested2.map((e) => GroupsNestedTest_Group_Nested_Nested2.toJSON(e));
     }
     return obj;
   },
@@ -930,8 +912,7 @@ export const GroupsNestedTest_Group_Nested_Nested2 = {
       writer.uint32(10).string(message.string1);
     }
     if (message._unknownFields !== undefined) {
-      for (const key in message._unknownFields) {
-        const values = message._unknownFields[key];
+      for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag);
@@ -989,7 +970,9 @@ export const GroupsNestedTest_Group_Nested_Nested2 = {
 
   toJSON(message: GroupsNestedTest_Group_Nested_Nested2): unknown {
     const obj: any = {};
-    message.string1 !== undefined && (obj.string1 = message.string1);
+    if (message.string1 !== undefined && message.string1 !== "") {
+      obj.string1 = message.string1;
+    }
     return obj;
   },
 

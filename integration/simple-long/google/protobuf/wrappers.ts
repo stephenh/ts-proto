@@ -1,5 +1,5 @@
 /* eslint-disable */
-import * as Long from "long";
+import Long = require("long");
 import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "google.protobuf";
@@ -135,7 +135,9 @@ export const DoubleValue = {
 
   toJSON(message: DoubleValue): unknown {
     const obj: any = {};
-    message.value !== undefined && (obj.value = message.value);
+    if (message.value !== 0) {
+      obj.value = message.value;
+    }
     return obj;
   },
 
@@ -191,7 +193,9 @@ export const FloatValue = {
 
   toJSON(message: FloatValue): unknown {
     const obj: any = {};
-    message.value !== undefined && (obj.value = message.value);
+    if (message.value !== 0) {
+      obj.value = message.value;
+    }
     return obj;
   },
 
@@ -247,7 +251,9 @@ export const Int64Value = {
 
   toJSON(message: Int64Value): unknown {
     const obj: any = {};
-    message.value !== undefined && (obj.value = (message.value || Long.ZERO).toString());
+    if (!message.value.isZero()) {
+      obj.value = (message.value || Long.ZERO).toString();
+    }
     return obj;
   },
 
@@ -303,7 +309,9 @@ export const UInt64Value = {
 
   toJSON(message: UInt64Value): unknown {
     const obj: any = {};
-    message.value !== undefined && (obj.value = (message.value || Long.UZERO).toString());
+    if (!message.value.isZero()) {
+      obj.value = (message.value || Long.UZERO).toString();
+    }
     return obj;
   },
 
@@ -359,7 +367,9 @@ export const Int32Value = {
 
   toJSON(message: Int32Value): unknown {
     const obj: any = {};
-    message.value !== undefined && (obj.value = Math.round(message.value));
+    if (message.value !== 0) {
+      obj.value = Math.round(message.value);
+    }
     return obj;
   },
 
@@ -415,7 +425,9 @@ export const UInt32Value = {
 
   toJSON(message: UInt32Value): unknown {
     const obj: any = {};
-    message.value !== undefined && (obj.value = Math.round(message.value));
+    if (message.value !== 0) {
+      obj.value = Math.round(message.value);
+    }
     return obj;
   },
 
@@ -471,7 +483,9 @@ export const BoolValue = {
 
   toJSON(message: BoolValue): unknown {
     const obj: any = {};
-    message.value !== undefined && (obj.value = message.value);
+    if (message.value === true) {
+      obj.value = message.value;
+    }
     return obj;
   },
 
@@ -527,7 +541,9 @@ export const StringValue = {
 
   toJSON(message: StringValue): unknown {
     const obj: any = {};
-    message.value !== undefined && (obj.value = message.value);
+    if (message.value !== "") {
+      obj.value = message.value;
+    }
     return obj;
   },
 
@@ -583,8 +599,9 @@ export const BytesValue = {
 
   toJSON(message: BytesValue): unknown {
     const obj: any = {};
-    message.value !== undefined &&
-      (obj.value = base64FromBytes(message.value !== undefined ? message.value : new Uint8Array(0)));
+    if (message.value.length !== 0) {
+      obj.value = base64FromBytes(message.value);
+    }
     return obj;
   },
 
@@ -599,10 +616,10 @@ export const BytesValue = {
   },
 };
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
+declare const self: any | undefined;
+declare const window: any | undefined;
+declare const global: any | undefined;
+const tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") {
     return globalThis;
   }
@@ -655,8 +672,6 @@ type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
-// If you get a compile-error about 'Constructor<Long> and ... have no overlap',
-// add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
 if (_m0.util.Long !== Long) {
   _m0.util.Long = Long as any;
   _m0.configure();

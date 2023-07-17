@@ -728,25 +728,14 @@ Foo.fromJSON({ bar: "" }); // => { bar: '' }
 Foo.fromJSON({ bar: "baz" }); // => { bar: 'baz' }
 ```
 
-When writing JSON, `ts-proto` currently does **not** normalize message when converting to JSON, other than omitting unset fields, but it may do so in the future.
+When writing JSON, `ts-proto` normalizes messages by omitting unset fields and fields set to their default values.
 
 ```typescript
-// Current ts-proto behavior
-Foo.toJSON({}); // => { }
-Foo.toJSON({ bar: undefined }); // => { }
-Foo.toJSON({ bar: "" }); // => { bar: '' } - note: this is the default value, but it's not omitted
-Foo.toJSON({ bar: "baz" }); // => { bar: 'baz' }
-```
-
-```typescript
-// Possible future behavior, where ts-proto would normalize message
 Foo.toJSON({}); // => { }
 Foo.toJSON({ bar: undefined }); // => { }
 Foo.toJSON({ bar: "" }); // => { } - note: omitting the default value, as expected
 Foo.toJSON({ bar: "baz" }); // => { bar: 'baz' }
 ```
-
-- Please open an issue if you need this behavior.
 
 # Well-Known Types
 

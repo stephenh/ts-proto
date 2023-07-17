@@ -63,9 +63,12 @@ export const Point = {
 
   toJSON(message: Point): unknown {
     const obj: any = {};
-    message.data !== undefined &&
-      (obj.data = base64FromBytes(message.data !== undefined ? message.data : Buffer.alloc(0)));
-    message.dataWrapped !== undefined && (obj.dataWrapped = message.dataWrapped);
+    if (message.data.length !== 0) {
+      obj.data = base64FromBytes(message.data);
+    }
+    if (message.dataWrapped !== undefined) {
+      obj.dataWrapped = message.dataWrapped;
+    }
     return obj;
   },
 
@@ -81,10 +84,10 @@ export const Point = {
   },
 };
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
+declare const self: any | undefined;
+declare const window: any | undefined;
+declare const global: any | undefined;
+const tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") {
     return globalThis;
   }

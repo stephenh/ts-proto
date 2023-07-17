@@ -125,8 +125,12 @@ export const DashFlash = {
 
   toJSON(message: DashFlash): unknown {
     const obj: any = {};
-    message.msg !== undefined && (obj.msg = message.msg);
-    message.type !== undefined && (obj.type = dashFlash_TypeToJSON(message.type));
+    if (message.msg !== "") {
+      obj.msg = message.msg;
+    }
+    if (message.type !== 0) {
+      obj.type = dashFlash_TypeToJSON(message.type);
+    }
     return obj;
   },
 
@@ -207,13 +211,14 @@ export const DashUserSettingsState = {
 
   toJSON(message: DashUserSettingsState): unknown {
     const obj: any = {};
-    message.email !== undefined && (obj.email = message.email);
-    message.urls !== undefined &&
-      (obj.urls = message.urls ? DashUserSettingsState_URLs.toJSON(message.urls) : undefined);
-    if (message.flashes) {
-      obj.flashes = message.flashes.map((e) => e ? DashFlash.toJSON(e) : undefined);
-    } else {
-      obj.flashes = [];
+    if (message.email !== "") {
+      obj.email = message.email;
+    }
+    if (message.urls !== undefined) {
+      obj.urls = DashUserSettingsState_URLs.toJSON(message.urls);
+    }
+    if (message.flashes?.length) {
+      obj.flashes = message.flashes.map((e) => DashFlash.toJSON(e));
     }
     return obj;
   },
@@ -287,8 +292,12 @@ export const DashUserSettingsState_URLs = {
 
   toJSON(message: DashUserSettingsState_URLs): unknown {
     const obj: any = {};
-    message.connectGoogle !== undefined && (obj.connectGoogle = message.connectGoogle);
-    message.connectGithub !== undefined && (obj.connectGithub = message.connectGithub);
+    if (message.connectGoogle !== "") {
+      obj.connectGoogle = message.connectGoogle;
+    }
+    if (message.connectGithub !== "") {
+      obj.connectGithub = message.connectGithub;
+    }
     return obj;
   },
 
@@ -441,14 +450,14 @@ export class GrpcWebImpl {
     const request = { ..._request, ...methodDesc.requestType };
     const maybeCombinedMetadata = metadata && this.options.metadata
       ? new BrowserHeaders({ ...this.options?.metadata.headersMap, ...metadata?.headersMap })
-      : metadata || this.options.metadata;
+      : metadata ?? this.options.metadata;
     return new Observable((observer) => {
       grpc.unary(methodDesc, {
         request,
         host: this.host,
-        metadata: maybeCombinedMetadata,
-        transport: this.options.transport,
-        debug: this.options.debug,
+        metadata: maybeCombinedMetadata ?? {},
+        ...(this.options.transport !== undefined ? { transport: this.options.transport } : {}),
+        debug: this.options.debug ?? false,
         onEnd: (next) => {
           if (next.status !== 0) {
             const err = new GrpcWebError(next.statusMessage, next.status, next.trailers);
@@ -463,10 +472,10 @@ export class GrpcWebImpl {
   }
 }
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
+declare const self: any | undefined;
+declare const window: any | undefined;
+declare const global: any | undefined;
+const tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") {
     return globalThis;
   }

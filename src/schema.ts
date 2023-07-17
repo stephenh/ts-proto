@@ -77,7 +77,7 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
     options,
     (fullName) => {
       addReference(fullName, fullName);
-    }
+    },
   );
 
   visitServices(fileDesc, sourceInfo, (serviceDesc) => {
@@ -121,7 +121,7 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
         const methodOptions = encodedOptionsToOptions(
           ctx,
           ".google.protobuf.MethodOptions",
-          method.options._unknownFields
+          method.options._unknownFields,
         );
         delete method.options._unknownFields;
         if (methodOptions) {
@@ -154,7 +154,7 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
         const valueOptions = encodedOptionsToOptions(
           ctx,
           ".google.protobuf.EnumValueOptions",
-          value.options._unknownFields
+          value.options._unknownFields,
         );
         delete value.options._unknownFields;
         if (valueOptions) {
@@ -209,7 +209,7 @@ function getExtensionValue(ctx: Context, extension: FieldDescriptorProto, data: 
         const reader = new Reader(d);
         reader.uint32();
         return (reader.buf as Buffer).slice(reader.pos);
-      })
+      }),
     );
     const result = resultBuffer.toString("base64");
     return code`'${extension.name}': ${typeName}.decode(Buffer.from('${result}', 'base64'))`;
@@ -227,7 +227,7 @@ function getExtensionValue(ctx: Context, extension: FieldDescriptorProto, data: 
 function encodedOptionsToOptions(
   ctx: Context,
   extendee: string,
-  encodedOptions?: { [key: number]: Uint8Array[] }
+  encodedOptions?: { [key: number]: Uint8Array[] },
 ): Code | undefined {
   if (!encodedOptions) {
     return undefined;

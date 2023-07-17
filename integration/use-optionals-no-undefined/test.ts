@@ -1,6 +1,6 @@
 /* eslint-disable */
-import * as Long from "long";
 import * as _m0 from "protobufjs/minimal";
+import Long = require("long");
 
 export const protobufPackage = "optionalstest";
 
@@ -44,20 +44,20 @@ export function stateEnumToJSON(object: StateEnum): string {
 }
 
 export interface OptionalsTest {
-  id?: number;
-  child?: Child;
-  state?: StateEnum;
-  long?: number;
-  truth?: boolean;
-  description?: string;
-  data?: Uint8Array;
-  repId?: number[];
-  repChild?: Child[];
-  repState?: StateEnum[];
-  repLong?: number[];
-  repTruth?: boolean[];
-  repDescription?: string[];
-  repData?: Uint8Array[];
+  id?: number | undefined;
+  child?: Child | undefined;
+  state?: StateEnum | undefined;
+  long?: number | undefined;
+  truth?: boolean | undefined;
+  description?: string | undefined;
+  data?: Uint8Array | undefined;
+  repId?: number[] | undefined;
+  repChild?: Child[] | undefined;
+  repState?: StateEnum[] | undefined;
+  repLong?: number[] | undefined;
+  repTruth?: boolean[] | undefined;
+  repDescription?: string[] | undefined;
+  repData?: Uint8Array[] | undefined;
   optId?: number | undefined;
   optChild?: Child | undefined;
   optState?: StateEnum | undefined;
@@ -65,7 +65,7 @@ export interface OptionalsTest {
   optTruth?: boolean | undefined;
   optDescription?: string | undefined;
   optData?: Uint8Array | undefined;
-  translations?: { [key: string]: string };
+  translations?: { [key: string]: string } | undefined;
 }
 
 export interface OptionalsTest_TranslationsEntry {
@@ -458,63 +458,77 @@ export const OptionalsTest = {
 
   toJSON(message: OptionalsTest): unknown {
     const obj: any = {};
-    message.id !== undefined && (obj.id = Math.round(message.id));
-    message.child !== undefined && (obj.child = message.child ? Child.toJSON(message.child) : undefined);
-    message.state !== undefined && (obj.state = stateEnumToJSON(message.state));
-    message.long !== undefined && (obj.long = Math.round(message.long));
-    message.truth !== undefined && (obj.truth = message.truth);
-    message.description !== undefined && (obj.description = message.description);
-    message.data !== undefined &&
-      (obj.data = base64FromBytes(message.data !== undefined ? message.data : new Uint8Array(0)));
-    if (message.repId) {
+    if (message.id !== undefined && message.id !== 0) {
+      obj.id = Math.round(message.id);
+    }
+    if (message.child !== undefined) {
+      obj.child = Child.toJSON(message.child);
+    }
+    if (message.state !== undefined && message.state !== 0) {
+      obj.state = stateEnumToJSON(message.state);
+    }
+    if (message.long !== undefined && message.long !== 0) {
+      obj.long = Math.round(message.long);
+    }
+    if (message.truth === true) {
+      obj.truth = message.truth;
+    }
+    if (message.description !== undefined && message.description !== "") {
+      obj.description = message.description;
+    }
+    if (message.data !== undefined && message.data.length !== 0) {
+      obj.data = base64FromBytes(message.data);
+    }
+    if (message.repId?.length) {
       obj.repId = message.repId.map((e) => Math.round(e));
-    } else {
-      obj.repId = [];
     }
-    if (message.repChild) {
-      obj.repChild = message.repChild.map((e) => e ? Child.toJSON(e) : undefined);
-    } else {
-      obj.repChild = [];
+    if (message.repChild?.length) {
+      obj.repChild = message.repChild.map((e) => Child.toJSON(e));
     }
-    if (message.repState) {
+    if (message.repState?.length) {
       obj.repState = message.repState.map((e) => stateEnumToJSON(e));
-    } else {
-      obj.repState = [];
     }
-    if (message.repLong) {
+    if (message.repLong?.length) {
       obj.repLong = message.repLong.map((e) => Math.round(e));
-    } else {
-      obj.repLong = [];
     }
-    if (message.repTruth) {
-      obj.repTruth = message.repTruth.map((e) => e);
-    } else {
-      obj.repTruth = [];
+    if (message.repTruth?.length) {
+      obj.repTruth = message.repTruth;
     }
-    if (message.repDescription) {
-      obj.repDescription = message.repDescription.map((e) => e);
-    } else {
-      obj.repDescription = [];
+    if (message.repDescription?.length) {
+      obj.repDescription = message.repDescription;
     }
-    if (message.repData) {
-      obj.repData = message.repData.map((e) => base64FromBytes(e !== undefined ? e : new Uint8Array(0)));
-    } else {
-      obj.repData = [];
+    if (message.repData?.length) {
+      obj.repData = message.repData.map((e) => base64FromBytes(e));
     }
-    message.optId !== undefined && (obj.optId = Math.round(message.optId));
-    message.optChild !== undefined && (obj.optChild = message.optChild ? Child.toJSON(message.optChild) : undefined);
-    message.optState !== undefined &&
-      (obj.optState = message.optState !== undefined ? stateEnumToJSON(message.optState) : undefined);
-    message.optLong !== undefined && (obj.optLong = Math.round(message.optLong));
-    message.optTruth !== undefined && (obj.optTruth = message.optTruth);
-    message.optDescription !== undefined && (obj.optDescription = message.optDescription);
-    message.optData !== undefined &&
-      (obj.optData = message.optData !== undefined ? base64FromBytes(message.optData) : undefined);
-    obj.translations = {};
+    if (message.optId !== undefined) {
+      obj.optId = Math.round(message.optId);
+    }
+    if (message.optChild !== undefined) {
+      obj.optChild = Child.toJSON(message.optChild);
+    }
+    if (message.optState !== undefined) {
+      obj.optState = stateEnumToJSON(message.optState);
+    }
+    if (message.optLong !== undefined) {
+      obj.optLong = Math.round(message.optLong);
+    }
+    if (message.optTruth !== undefined) {
+      obj.optTruth = message.optTruth;
+    }
+    if (message.optDescription !== undefined) {
+      obj.optDescription = message.optDescription;
+    }
+    if (message.optData !== undefined) {
+      obj.optData = base64FromBytes(message.optData);
+    }
     if (message.translations) {
-      Object.entries(message.translations).forEach(([k, v]) => {
-        obj.translations[k] = v;
-      });
+      const entries = Object.entries(message.translations);
+      if (entries.length > 0) {
+        obj.translations = {};
+        entries.forEach(([k, v]) => {
+          obj.translations[k] = v;
+        });
+      }
     }
     return obj;
   },
@@ -611,8 +625,12 @@ export const OptionalsTest_TranslationsEntry = {
 
   toJSON(message: OptionalsTest_TranslationsEntry): unknown {
     const obj: any = {};
-    message.key !== undefined && (obj.key = message.key);
-    message.value !== undefined && (obj.value = message.value);
+    if (message.key !== "") {
+      obj.key = message.key;
+    }
+    if (message.value !== "") {
+      obj.value = message.value;
+    }
     return obj;
   },
 
@@ -674,10 +692,10 @@ export const Child = {
   },
 };
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
+declare const self: any | undefined;
+declare const window: any | undefined;
+declare const global: any | undefined;
+const tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") {
     return globalThis;
   }
@@ -736,8 +754,6 @@ function longToNumber(long: Long): number {
   return long.toNumber();
 }
 
-// If you get a compile-error about 'Constructor<Long> and ... have no overlap',
-// add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
 if (_m0.util.Long !== Long) {
   _m0.util.Long = Long as any;
   _m0.configure();

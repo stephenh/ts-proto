@@ -49,7 +49,9 @@ export const FieldMaskMessage = {
 
   toJSON(message: FieldMaskMessage): unknown {
     const obj: any = {};
-    message.fieldMask !== undefined && (obj.fieldMask = FieldMask.toJSON(FieldMask.wrap(message.fieldMask)));
+    if (message.fieldMask !== undefined) {
+      obj.fieldMask = FieldMask.toJSON(FieldMask.wrap(message.fieldMask));
+    }
     return obj;
   },
 

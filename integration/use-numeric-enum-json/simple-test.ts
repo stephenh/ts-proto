@@ -14,7 +14,7 @@ describe('use-numeric-enum-json', () => {
     const json = Simple.toJSON(s);
 
     // Make sure that enum values are encoded as integers.
-    expect(json).toEqual({ name: 'a', nullValue: 0, state: 2, stateMap: { on: 2 }, states: [2, 3] });
+    expect(json).toEqual({ name: 'a', state: 2, stateMap: { on: 2 }, states: [2, 3] });
 
     // Original object can be recovered from the json.
     expect(Simple.fromJSON(json)).toEqual(s);

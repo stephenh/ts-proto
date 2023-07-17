@@ -81,7 +81,9 @@ export const EchoMsg = {
 
   toJSON(message: EchoMsg): unknown {
     const obj: any = {};
-    message.body !== undefined && (obj.body = message.body);
+    if (message.body !== "") {
+      obj.body = message.body;
+    }
     return obj;
   },
 

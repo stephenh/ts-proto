@@ -1,3 +1,66 @@
+## [1.155.1](https://github.com/stephenh/ts-proto/compare/v1.155.0...v1.155.1) (2023-07-15)
+
+
+### Bug Fixes
+
+* Bump descriptors. ([#883](https://github.com/stephenh/ts-proto/issues/883)) ([e2cf184](https://github.com/stephenh/ts-proto/commit/e2cf1848c1c70a8bbe73756e1cf530c5d70f5ce2))
+
+# [1.155.0](https://github.com/stephenh/ts-proto/compare/v1.154.0...v1.155.0) (2023-07-15)
+
+
+### Features
+
+* Upgrade to long 5.0.0. ([#882](https://github.com/stephenh/ts-proto/issues/882)) ([4c1e7a6](https://github.com/stephenh/ts-proto/commit/4c1e7a6e02f974f193063a83ce7a472b14f2d2d0))
+
+# [1.154.0](https://github.com/stephenh/ts-proto/compare/v1.153.3...v1.154.0) (2023-07-15)
+
+
+### Features
+
+* Normalize `toJSON` output by omitting fields set to their default values ([#878](https://github.com/stephenh/ts-proto/issues/878)) ([50958d6](https://github.com/stephenh/ts-proto/commit/50958d639435a32a76d59fc57565e3677f5be39e))
+
+## [1.153.3](https://github.com/stephenh/ts-proto/compare/v1.153.2...v1.153.3) (2023-07-13)
+
+
+### Bug Fixes
+
+* Bump ts-proto-descriptors w/long back. ([#880](https://github.com/stephenh/ts-proto/issues/880)) ([d27e19c](https://github.com/stephenh/ts-proto/commit/d27e19c84420d46dff0fc1914ce724ec15f86185))
+
+## [1.153.2](https://github.com/stephenh/ts-proto/compare/v1.153.1...v1.153.2) (2023-07-12)
+
+
+### Bug Fixes
+
+* Move dataloader to a devDependency. ([#877](https://github.com/stephenh/ts-proto/issues/877)) ([dbe1a96](https://github.com/stephenh/ts-proto/commit/dbe1a967ced7863492f82a977d6e5d34f4f034a6))
+
+## [1.153.1](https://github.com/stephenh/ts-proto/compare/v1.153.0...v1.153.1) (2023-07-12)
+
+
+### Bug Fixes
+
+* Bump ts-proto-descriptors. ([#876](https://github.com/stephenh/ts-proto/issues/876)) ([ad57819](https://github.com/stephenh/ts-proto/commit/ad57819a16b5f3886bde3c8f63231dc70f84d250))
+
+# [1.153.0](https://github.com/stephenh/ts-proto/compare/v1.152.1...v1.153.0) (2023-07-12)
+
+
+### Features
+
+* Update protobufjs (and peer dependencies) to ^7 ([#874](https://github.com/stephenh/ts-proto/issues/874)) ([7f979a7](https://github.com/stephenh/ts-proto/commit/7f979a70af2e42c8c429ae5f65787e0b43ccb706))
+
+## [1.152.1](https://github.com/stephenh/ts-proto/compare/v1.152.0...v1.152.1) (2023-07-10)
+
+
+### Bug Fixes
+
+* Fix invocation error. ([f4e26bd](https://github.com/stephenh/ts-proto/commit/f4e26bd44f6882318defab1fccd0d6a833823fc0))
+
+# [1.152.0](https://github.com/stephenh/ts-proto/compare/v1.151.1...v1.152.0) (2023-07-10)
+
+
+### Features
+
+* Ensure strict(er) TS compliance for the generated code ([#868](https://github.com/stephenh/ts-proto/issues/868)) ([1405d4b](https://github.com/stephenh/ts-proto/commit/1405d4bcc866343605946ac4a0b30e7de9c75e71))
+
 ## [1.151.1](https://github.com/stephenh/ts-proto/compare/v1.151.0...v1.151.1) (2023-07-05)
 
 

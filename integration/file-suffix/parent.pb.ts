@@ -76,9 +76,15 @@ export const Parent = {
 
   toJSON(message: Parent): unknown {
     const obj: any = {};
-    message.child !== undefined && (obj.child = message.child ? Child.toJSON(message.child) : undefined);
-    message.childEnum !== undefined && (obj.childEnum = childEnumToJSON(message.childEnum));
-    message.createdAt !== undefined && (obj.createdAt = message.createdAt.toISOString());
+    if (message.child !== undefined) {
+      obj.child = Child.toJSON(message.child);
+    }
+    if (message.childEnum !== 0) {
+      obj.childEnum = childEnumToJSON(message.childEnum);
+    }
+    if (message.createdAt !== undefined) {
+      obj.createdAt = message.createdAt.toISOString();
+    }
     return obj;
   },
 

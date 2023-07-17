@@ -45,14 +45,14 @@ describe("types", () => {
         typeMap: new Map(),
         protoType: ".google.protobuf.StringValue",
         options: { ...defaultOptions(), useOptionals: true },
-        expected: code`string`,
+        expected: code`string | undefined`,
       },
       {
         descr: 'value types (useOptionals="all")',
         typeMap: new Map(),
         protoType: ".google.protobuf.StringValue",
         options: { ...defaultOptions(), useOptionals: "all" },
-        expected: code`string`,
+        expected: code`string | undefined`,
       },
     ];
     testCases.forEach((t) =>
@@ -60,7 +60,7 @@ describe("types", () => {
         const ctx = { options: defaultOptions(), utils: undefined as any as Utils, ...t };
         const got = messageToTypeName(ctx, t.protoType);
         expect(got.toString()).toEqual(t.expected.toString());
-      })
+      }),
     );
   });
 });

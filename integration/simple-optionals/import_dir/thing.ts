@@ -5,7 +5,7 @@ import { Timestamp } from "../google/protobuf/timestamp";
 export const protobufPackage = "simple";
 
 export interface ImportedThing {
-  createdAt?: Date;
+  createdAt?: Date | undefined;
 }
 
 function createBaseImportedThing(): ImportedThing {
@@ -49,7 +49,9 @@ export const ImportedThing = {
 
   toJSON(message: ImportedThing): unknown {
     const obj: any = {};
-    message.createdAt !== undefined && (obj.createdAt = message.createdAt.toISOString());
+    if (message.createdAt !== undefined) {
+      obj.createdAt = message.createdAt.toISOString();
+    }
     return obj;
   },
 

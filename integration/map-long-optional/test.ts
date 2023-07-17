@@ -1,18 +1,18 @@
 /* eslint-disable */
-import * as Long from "long";
+import Long = require("long");
 import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "";
 
 export interface MapBigInt {
-  map?: Map<Long, Long>;
-  _unknownFields?: { [key: number]: Uint8Array[] };
+  map?: Map<Long, Long> | undefined;
+  _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
 export interface MapBigInt_MapEntry {
   key: Long;
   value: Long;
-  _unknownFields?: { [key: number]: Uint8Array[] };
+  _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
 function createBaseMapBigInt(): MapBigInt {
@@ -25,8 +25,7 @@ export const MapBigInt = {
       MapBigInt_MapEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).ldelim();
     });
     if (message._unknownFields !== undefined) {
-      for (const key in message._unknownFields) {
-        const values = message._unknownFields[key];
+      for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag);
@@ -97,8 +96,8 @@ export const MapBigInt = {
 
   toJSON(message: MapBigInt): unknown {
     const obj: any = {};
-    obj.map = {};
-    if (message.map) {
+    if (message.map?.size) {
+      obj.map = {};
       message.map.forEach((v, k) => {
         obj.map[longToNumber(k)] = v.toString();
       });
@@ -138,8 +137,7 @@ export const MapBigInt_MapEntry = {
       writer.uint32(16).int64(message.value);
     }
     if (message._unknownFields !== undefined) {
-      for (const key in message._unknownFields) {
-        const values = message._unknownFields[key];
+      for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag);
@@ -207,8 +205,12 @@ export const MapBigInt_MapEntry = {
 
   toJSON(message: MapBigInt_MapEntry): unknown {
     const obj: any = {};
-    message.key !== undefined && (obj.key = (message.key || Long.UZERO).toString());
-    message.value !== undefined && (obj.value = (message.value || Long.ZERO).toString());
+    if (!message.key.isZero()) {
+      obj.key = (message.key || Long.UZERO).toString();
+    }
+    if (!message.value.isZero()) {
+      obj.value = (message.value || Long.ZERO).toString();
+    }
     return obj;
   },
 
@@ -224,10 +226,10 @@ export const MapBigInt_MapEntry = {
   },
 };
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
+declare const self: any | undefined;
+declare const window: any | undefined;
+declare const global: any | undefined;
+const tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") {
     return globalThis;
   }
@@ -262,8 +264,6 @@ function longToNumber(long: Long): number {
   return long.toNumber();
 }
 
-// If you get a compile-error about 'Constructor<Long> and ... have no overlap',
-// add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
 if (_m0.util.Long !== Long) {
   _m0.util.Long = Long as any;
   _m0.configure();

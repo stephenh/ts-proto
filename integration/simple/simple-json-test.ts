@@ -247,16 +247,10 @@ describe("simple json", () => {
     const json = SimpleWithMap.toJSON(s1);
     expect(json).toMatchInlineSnapshot(`
       {
-        "entitiesById": {},
-        "intLookup": {},
-        "longLookup": {},
         "mapOfBytes": {
           "a": "AQI=",
           "b": "AQID",
         },
-        "mapOfStringValues": {},
-        "mapOfTimestamps": {},
-        "nameLookup": {},
       }
     `);
   });
@@ -315,11 +309,8 @@ describe("simple json", () => {
     expect(Simple.toJSON(s1)).toMatchInlineSnapshot(`
       {
         "age": 1,
-        "blob": "",
-        "blobs": [],
         "child": {
           "name": "foo",
-          "type": "UNKNOWN",
         },
         "coins": [
           2,
@@ -331,11 +322,9 @@ describe("simple json", () => {
         "grandChildren": [
           {
             "name": "grand1",
-            "type": "UNKNOWN",
           },
           {
             "name": "grand2",
-            "type": "UNKNOWN",
           },
         ],
         "name": "asdf",
@@ -352,32 +341,15 @@ describe("simple json", () => {
     `);
   });
 
-  it("can encode empty objects", () => {
-    expect(Simple.toJSON({} as Simple)).toMatchInlineSnapshot(`
-      {
-        "blobs": [],
-        "coins": [],
-        "grandChildren": [],
-        "oldStates": [],
-        "snacks": [],
-      }
-    `);
-  });
-
   it("can encode nested enums", () => {
-    const s1 = { child: { name: "a", type: Child_Type.GOOD } } as Simple;
+    const s1 = Simple.fromPartial({ child: { name: "a", type: Child_Type.GOOD } });
     const s2 = Simple.toJSON(s1);
     expect(s2).toMatchInlineSnapshot(`
       {
-        "blobs": [],
         "child": {
           "name": "a",
           "type": "GOOD",
         },
-        "coins": [],
-        "grandChildren": [],
-        "oldStates": [],
-        "snacks": [],
       }
     `);
   });
@@ -425,12 +397,7 @@ describe("simple json", () => {
       id: undefined,
     };
     const s2 = SimpleWithWrappers.toJSON(s1);
-    expect(s2).toMatchInlineSnapshot(`
-      {
-        "coins": [],
-        "snacks": [],
-      }
-    `);
+    expect(s2).toMatchInlineSnapshot(`{}`);
   });
 
   it("can decode enum falsey values", () => {

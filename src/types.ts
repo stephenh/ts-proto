@@ -71,7 +71,7 @@ export function basicLongWireType(type: FieldDescriptorProto_Type): number | und
 export function basicTypeName(
   ctx: Context,
   field: FieldDescriptorProto,
-  typeOptions: { keepValueType?: boolean } = {}
+  typeOptions: { keepValueType?: boolean } = {},
 ): Code {
   const { options } = ctx;
   switch (field.type) {
@@ -245,7 +245,7 @@ export function notDefaultCheck(
   ctx: Context,
   field: FieldDescriptorProto,
   messageOptions: MessageOptions | undefined,
-  place: string
+  place: string,
 ): Code {
   const { typeMap, options } = ctx;
   const isOptional = isOptionalProperty(field, messageOptions, options);
@@ -311,7 +311,7 @@ export function createTypeMap(request: CodeGeneratorRequest, options: Options): 
       tsFullName: string,
       desc: DescriptorProto | EnumDescriptorProto,
       s: SourceInfo,
-      protoFullName: string
+      protoFullName: string,
     ): void {
       // package is optional, but make sure we have a dot-prefixed type name either way
       const prefix = file.package.length === 0 ? "" : `.${file.package}`;
@@ -352,7 +352,7 @@ export function isScalar(field: FieldDescriptorProto): boolean {
 export function isOptionalProperty(
   field: FieldDescriptorProto,
   messageOptions: MessageOptions | undefined,
-  options: Options
+  options: Options,
 ): boolean {
   const optionalMessages =
     options.useOptionals === true || options.useOptionals === "messages" || options.useOptionals === "all";
@@ -554,23 +554,16 @@ function longTypeName(ctx: Context): Code {
 export function messageToTypeName(
   ctx: Context,
   protoType: string,
-  typeOptions: { keepValueType?: boolean; repeated?: boolean } = {}
+  typeOptions: { keepValueType?: boolean; repeated?: boolean } = {},
 ): Code {
   const { options, typeMap } = ctx;
   // Watch for the wrapper types `.google.protobuf.*Value`. If we're mapping
   // them to basic built-in types, we union the type with undefined to
   // indicate the value is optional. Exceptions:
   // - If the field is repeated, values cannot be undefined.
-  // - If useOptionals='messages' or useOptionals='all', all non-scalar types
-  //   are already optional properties, so there's no need for that union.
   let valueType = valueTypeName(ctx, protoType);
   if (!typeOptions.keepValueType && valueType) {
-    if (
-      !!typeOptions.repeated ||
-      options.useOptionals === true ||
-      options.useOptionals === "messages" ||
-      options.useOptionals === "all"
-    ) {
+    if (typeOptions.repeated ?? false) {
       return valueType;
     }
     return code`${valueType} | undefined`;
@@ -605,27 +598,39 @@ export function getEnumMethod(ctx: Context, enumProtoType: string, methodSuffix:
 }
 
 /** Return the TypeName for any field (primitive/message/etc.) as exposed in the interface. */
-export function toTypeName(ctx: Context, messageDesc: DescriptorProto | undefined, field: FieldDescriptorProto): Code {
+export function toTypeName(
+  ctx: Context,
+  messageDesc: DescriptorProto | undefined,
+  field: FieldDescriptorProto,
+  ensureOptional = false,
+): Code {
+  function finalize(type: Code, isOptional: boolean) {
+    if (isOptional) {
+      return code`${type} | undefined`;
+    }
+    return type;
+  }
+
   let type = basicTypeName(ctx, field, { keepValueType: false });
   if (isRepeated(field)) {
     const mapType = messageDesc ? detectMapType(ctx, messageDesc, field) : false;
     if (mapType) {
       const { keyType, valueType } = mapType;
       if (ctx.options.useMapType) {
-        return code`Map<${keyType}, ${valueType}>`;
+        return finalize(code`Map<${keyType}, ${valueType}>`, ensureOptional);
       }
-      return code`{ [key: ${keyType} ]: ${valueType} }`;
+      return finalize(code`{ [key: ${keyType} ]: ${valueType} }`, ensureOptional);
     }
     if (ctx.options.useReadonlyTypes) {
-      return code`readonly ${type}[]`;
+      return finalize(code`readonly ${type}[]`, ensureOptional);
     }
-    return code`${type}[]`;
+    return finalize(code`${type}[]`, ensureOptional);
   }
 
   if (isValueType(ctx, field)) {
     // google.protobuf.*Value types are already unioned with `undefined`
     // in messageToTypeName, so no need to consider them for that here.
-    return type;
+    return finalize(type, false);
   }
 
   // By default (useOptionals='none', oneof=properties), non-scalar fields
@@ -640,23 +645,21 @@ export function toTypeName(ctx: Context, messageDesc: DescriptorProto | undefine
   // clause, spelling each option out inside a large type union. No need for
   // union with `undefined` here, either.
   const { options } = ctx;
-  if (
+  return finalize(
+    type,
     (!isWithinOneOf(field) &&
       isMessage(field) &&
       (options.useOptionals === false || options.useOptionals === "none")) ||
-    (isWithinOneOf(field) && options.oneof === OneofOption.PROPERTIES) ||
-    (isWithinOneOf(field) && field.proto3Optional)
-  ) {
-    return code`${type} | undefined`;
-  }
-
-  return type;
+      (isWithinOneOf(field) && options.oneof === OneofOption.PROPERTIES) ||
+      (isWithinOneOf(field) && field.proto3Optional) ||
+      ensureOptional,
+  );
 }
 
 export function detectMapType(
   ctx: Context,
   messageDesc: DescriptorProto,
-  fieldDesc: FieldDescriptorProto
+  fieldDesc: FieldDescriptorProto,
 ):
   | {
       messageDesc: DescriptorProto;
@@ -685,7 +688,7 @@ export function detectMapType(
 export function rawRequestType(
   ctx: Context,
   methodDesc: MethodDescriptorProto,
-  typeOptions: { keepValueType?: boolean; repeated?: boolean } = {}
+  typeOptions: { keepValueType?: boolean; repeated?: boolean } = {},
 ): Code {
   return messageToTypeName(ctx, methodDesc.inputType, typeOptions);
 }
@@ -716,7 +719,7 @@ export function requestType(ctx: Context, methodDesc: MethodDescriptorProto, par
 export function responseType(
   ctx: Context,
   methodDesc: MethodDescriptorProto,
-  typeOptions: { keepValueType?: boolean; repeated?: boolean } = {}
+  typeOptions: { keepValueType?: boolean; repeated?: boolean } = {},
 ): Code {
   return messageToTypeName(ctx, methodDesc.outputType, { keepValueType: true });
 }
@@ -753,7 +756,7 @@ export function detectBatchMethod(
   ctx: Context,
   fileDesc: FileDescriptorProto,
   serviceDesc: ServiceDescriptorProto,
-  methodDesc: MethodDescriptorProto
+  methodDesc: MethodDescriptorProto,
 ): BatchMethod | undefined {
   const { typeMap } = ctx;
   const nameMatches = methodDesc.name.startsWith("Batch");

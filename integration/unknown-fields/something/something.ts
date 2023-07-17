@@ -6,7 +6,7 @@ export const protobufPackage = "something";
 export interface Something {
   hello: string;
   foo: number[];
-  _unknownFields?: { [key: number]: Uint8Array[] };
+  _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
 function createBaseSomething(): Something {
@@ -24,8 +24,7 @@ export const Something = {
     }
     writer.ldelim();
     if (message._unknownFields !== undefined) {
-      for (const key in message._unknownFields) {
-        const values = message._unknownFields[key];
+      for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag);

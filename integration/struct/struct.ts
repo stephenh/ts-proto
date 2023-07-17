@@ -49,7 +49,9 @@ export const StructMessage = {
 
   toJSON(message: StructMessage): unknown {
     const obj: any = {};
-    message.value !== undefined && (obj.value = message.value);
+    if (message.value !== undefined) {
+      obj.value = message.value;
+    }
     return obj;
   },
 

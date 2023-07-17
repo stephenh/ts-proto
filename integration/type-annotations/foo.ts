@@ -63,7 +63,9 @@ export const Foo = {
 
   toJSON(message: Foo): unknown {
     const obj: any = {};
-    message.timestamp !== undefined && (obj.timestamp = message.timestamp.toISOString());
+    if (message.timestamp !== undefined) {
+      obj.timestamp = message.timestamp.toISOString();
+    }
     return obj;
   },
 
@@ -121,7 +123,9 @@ export const Foo2 = {
 
   toJSON(message: Foo2): unknown {
     const obj: any = {};
-    message.timestamp !== undefined && (obj.timestamp = message.timestamp.toISOString());
+    if (message.timestamp !== undefined) {
+      obj.timestamp = message.timestamp.toISOString();
+    }
     return obj;
   },
 
@@ -179,7 +183,9 @@ export const WithStruct = {
 
   toJSON(message: WithStruct): unknown {
     const obj: any = {};
-    message.struct !== undefined && (obj.struct = message.struct);
+    if (message.struct !== undefined) {
+      obj.struct = message.struct;
+    }
     return obj;
   },
 

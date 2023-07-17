@@ -4,17 +4,17 @@ import * as _m0 from "protobufjs/minimal";
 export const protobufPackage = "";
 
 export interface TPartialMessage {
-  field?: string;
+  field?: string | undefined;
 }
 
 export interface TPartial {
-  number?: number;
-  string?: string;
-  map?: { [key: string]: string };
-  message?: TPartialMessage;
-  repeatedMessage?: TPartialMessage[];
-  repeatedString?: string[];
-  repeatedNumber?: number[];
+  number?: number | undefined;
+  string?: string | undefined;
+  map?: { [key: string]: string } | undefined;
+  message?: TPartialMessage | undefined;
+  repeatedMessage?: TPartialMessage[] | undefined;
+  repeatedString?: string[] | undefined;
+  repeatedNumber?: number[] | undefined;
 }
 
 export interface TPartial_MapEntry {
@@ -63,7 +63,9 @@ export const TPartialMessage = {
 
   toJSON(message: TPartialMessage): unknown {
     const obj: any = {};
-    message.field !== undefined && (obj.field = message.field);
+    if (message.field !== undefined && message.field !== "") {
+      obj.field = message.field;
+    }
     return obj;
   },
 
@@ -234,30 +236,32 @@ export const TPartial = {
 
   toJSON(message: TPartial): unknown {
     const obj: any = {};
-    message.number !== undefined && (obj.number = Math.round(message.number));
-    message.string !== undefined && (obj.string = message.string);
-    obj.map = {};
+    if (message.number !== undefined && message.number !== 0) {
+      obj.number = Math.round(message.number);
+    }
+    if (message.string !== undefined && message.string !== "") {
+      obj.string = message.string;
+    }
     if (message.map) {
-      Object.entries(message.map).forEach(([k, v]) => {
-        obj.map[k] = v;
-      });
+      const entries = Object.entries(message.map);
+      if (entries.length > 0) {
+        obj.map = {};
+        entries.forEach(([k, v]) => {
+          obj.map[k] = v;
+        });
+      }
     }
-    message.message !== undefined &&
-      (obj.message = message.message ? TPartialMessage.toJSON(message.message) : undefined);
-    if (message.repeatedMessage) {
-      obj.repeatedMessage = message.repeatedMessage.map((e) => e ? TPartialMessage.toJSON(e) : undefined);
-    } else {
-      obj.repeatedMessage = [];
+    if (message.message !== undefined) {
+      obj.message = TPartialMessage.toJSON(message.message);
     }
-    if (message.repeatedString) {
-      obj.repeatedString = message.repeatedString.map((e) => e);
-    } else {
-      obj.repeatedString = [];
+    if (message.repeatedMessage?.length) {
+      obj.repeatedMessage = message.repeatedMessage.map((e) => TPartialMessage.toJSON(e));
     }
-    if (message.repeatedNumber) {
+    if (message.repeatedString?.length) {
+      obj.repeatedString = message.repeatedString;
+    }
+    if (message.repeatedNumber?.length) {
       obj.repeatedNumber = message.repeatedNumber.map((e) => Math.round(e));
-    } else {
-      obj.repeatedNumber = [];
     }
     return obj;
   },
@@ -339,8 +343,12 @@ export const TPartial_MapEntry = {
 
   toJSON(message: TPartial_MapEntry): unknown {
     const obj: any = {};
-    message.key !== undefined && (obj.key = message.key);
-    message.value !== undefined && (obj.value = message.value);
+    if (message.key !== "") {
+      obj.key = message.key;
+    }
+    if (message.value !== "") {
+      obj.value = message.value;
+    }
     return obj;
   },
 

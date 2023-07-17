@@ -12,12 +12,13 @@ export interface PleaseChoose {
     | { $case: "aMessage"; aMessage: PleaseChoose_Submessage }
     | { $case: "aBool"; aBool: boolean }
     | { $case: "bunchaBytes"; bunchaBytes: Uint8Array }
-    | { $case: "anEnum"; anEnum: PleaseChoose_StateEnum };
+    | { $case: "anEnum"; anEnum: PleaseChoose_StateEnum }
+    | undefined;
   age: number;
   eitherOr?: { $case: "either"; either: string } | { $case: "or"; or: string } | {
     $case: "thirdOption";
     thirdOption: string;
-  };
+  } | undefined;
   signature: Uint8Array;
   value: any | undefined;
 }
@@ -261,25 +262,45 @@ export const PleaseChoose = {
 
   toJSON(message: PleaseChoose): unknown {
     const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
-    message.choice?.$case === "aNumber" && (obj.aNumber = message.choice?.aNumber);
-    message.choice?.$case === "aString" && (obj.aString = message.choice?.aString);
-    message.choice?.$case === "aMessage" &&
-      (obj.aMessage = message.choice?.aMessage ? PleaseChoose_Submessage.toJSON(message.choice?.aMessage) : undefined);
-    message.choice?.$case === "aBool" && (obj.aBool = message.choice?.aBool);
-    message.choice?.$case === "bunchaBytes" && (obj.bunchaBytes = message.choice?.bunchaBytes !== undefined
-      ? base64FromBytes(message.choice?.bunchaBytes)
-      : undefined);
-    message.choice?.$case === "anEnum" && (obj.anEnum = message.choice?.anEnum !== undefined
-      ? pleaseChoose_StateEnumToJSON(message.choice?.anEnum)
-      : undefined);
-    message.age !== undefined && (obj.age = Math.round(message.age));
-    message.eitherOr?.$case === "either" && (obj.either = message.eitherOr?.either);
-    message.eitherOr?.$case === "or" && (obj.or = message.eitherOr?.or);
-    message.eitherOr?.$case === "thirdOption" && (obj.thirdOption = message.eitherOr?.thirdOption);
-    message.signature !== undefined &&
-      (obj.signature = base64FromBytes(message.signature !== undefined ? message.signature : new Uint8Array(0)));
-    message.value !== undefined && (obj.value = message.value);
+    if (message.name !== "") {
+      obj.name = message.name;
+    }
+    if (message.choice?.$case === "aNumber") {
+      obj.aNumber = message.choice.aNumber;
+    }
+    if (message.choice?.$case === "aString") {
+      obj.aString = message.choice.aString;
+    }
+    if (message.choice?.$case === "aMessage") {
+      obj.aMessage = PleaseChoose_Submessage.toJSON(message.choice.aMessage);
+    }
+    if (message.choice?.$case === "aBool") {
+      obj.aBool = message.choice.aBool;
+    }
+    if (message.choice?.$case === "bunchaBytes") {
+      obj.bunchaBytes = base64FromBytes(message.choice.bunchaBytes);
+    }
+    if (message.choice?.$case === "anEnum") {
+      obj.anEnum = pleaseChoose_StateEnumToJSON(message.choice.anEnum);
+    }
+    if (message.age !== 0) {
+      obj.age = Math.round(message.age);
+    }
+    if (message.eitherOr?.$case === "either") {
+      obj.either = message.eitherOr.either;
+    }
+    if (message.eitherOr?.$case === "or") {
+      obj.or = message.eitherOr.or;
+    }
+    if (message.eitherOr?.$case === "thirdOption") {
+      obj.thirdOption = message.eitherOr.thirdOption;
+    }
+    if (message.signature.length !== 0) {
+      obj.signature = base64FromBytes(message.signature);
+    }
+    if (message.value !== undefined) {
+      obj.value = message.value;
+    }
     return obj;
   },
 
@@ -377,7 +398,9 @@ export const PleaseChoose_Submessage = {
 
   toJSON(message: PleaseChoose_Submessage): unknown {
     const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
+    if (message.name !== "") {
+      obj.name = message.name;
+    }
     return obj;
   },
 
@@ -446,8 +469,12 @@ export const SimpleButOptional = {
 
   toJSON(message: SimpleButOptional): unknown {
     const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
-    message.age !== undefined && (obj.age = Math.round(message.age));
+    if (message.name !== undefined) {
+      obj.name = message.name;
+    }
+    if (message.age !== undefined) {
+      obj.age = Math.round(message.age);
+    }
     return obj;
   },
 
@@ -463,10 +490,10 @@ export const SimpleButOptional = {
   },
 };
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
+declare const self: any | undefined;
+declare const window: any | undefined;
+declare const global: any | undefined;
+const tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") {
     return globalThis;
   }

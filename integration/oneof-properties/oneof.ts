@@ -241,20 +241,39 @@ export const PleaseChoose = {
 
   toJSON(message: PleaseChoose): unknown {
     const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
-    message.aNumber !== undefined && (obj.aNumber = message.aNumber);
-    message.aString !== undefined && (obj.aString = message.aString);
-    message.aMessage !== undefined &&
-      (obj.aMessage = message.aMessage ? PleaseChoose_Submessage.toJSON(message.aMessage) : undefined);
-    message.aBool !== undefined && (obj.aBool = message.aBool);
-    message.bunchaBytes !== undefined &&
-      (obj.bunchaBytes = message.bunchaBytes !== undefined ? base64FromBytes(message.bunchaBytes) : undefined);
-    message.anEnum !== undefined &&
-      (obj.anEnum = message.anEnum !== undefined ? pleaseChoose_StateEnumToJSON(message.anEnum) : undefined);
-    message.age !== undefined && (obj.age = Math.round(message.age));
-    message.either !== undefined && (obj.either = message.either);
-    message.or !== undefined && (obj.or = message.or);
-    message.thirdOption !== undefined && (obj.thirdOption = message.thirdOption);
+    if (message.name !== "") {
+      obj.name = message.name;
+    }
+    if (message.aNumber !== undefined) {
+      obj.aNumber = message.aNumber;
+    }
+    if (message.aString !== undefined) {
+      obj.aString = message.aString;
+    }
+    if (message.aMessage !== undefined) {
+      obj.aMessage = PleaseChoose_Submessage.toJSON(message.aMessage);
+    }
+    if (message.aBool !== undefined) {
+      obj.aBool = message.aBool;
+    }
+    if (message.bunchaBytes !== undefined) {
+      obj.bunchaBytes = base64FromBytes(message.bunchaBytes);
+    }
+    if (message.anEnum !== undefined) {
+      obj.anEnum = pleaseChoose_StateEnumToJSON(message.anEnum);
+    }
+    if (message.age !== 0) {
+      obj.age = Math.round(message.age);
+    }
+    if (message.either !== undefined) {
+      obj.either = message.either;
+    }
+    if (message.or !== undefined) {
+      obj.or = message.or;
+    }
+    if (message.thirdOption !== undefined) {
+      obj.thirdOption = message.thirdOption;
+    }
     return obj;
   },
 
@@ -322,7 +341,9 @@ export const PleaseChoose_Submessage = {
 
   toJSON(message: PleaseChoose_Submessage): unknown {
     const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
+    if (message.name !== "") {
+      obj.name = message.name;
+    }
     return obj;
   },
 
@@ -337,10 +358,10 @@ export const PleaseChoose_Submessage = {
   },
 };
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
+declare const self: any | undefined;
+declare const window: any | undefined;
+declare const global: any | undefined;
+const tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") {
     return globalThis;
   }
