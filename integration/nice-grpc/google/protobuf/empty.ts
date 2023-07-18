@@ -42,13 +42,13 @@ export const Empty = {
     return message;
   },
 
+  fromJSON(_: any): Empty {
+    return {};
+  },
+
   toJSON(_: Empty): unknown {
     const obj: any = {};
     return obj;
-  },
-
-  fromJSON(_: any): Empty {
-    return {};
   },
 
   create(base?: DeepPartial<Empty>): Empty {

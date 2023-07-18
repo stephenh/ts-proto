@@ -81,16 +81,16 @@ export const BatchQueryRequest = {
     return message;
   },
 
+  fromJSON(object: any): BatchQueryRequest {
+    return { ids: Array.isArray(object?.ids) ? object.ids.map((e: any) => String(e)) : [] };
+  },
+
   toJSON(message: BatchQueryRequest): unknown {
     const obj: any = {};
     if (message.ids?.length) {
       obj.ids = message.ids;
     }
     return obj;
-  },
-
-  fromJSON(object: any): BatchQueryRequest {
-    return { ids: Array.isArray(object?.ids) ? object.ids.map((e: any) => String(e)) : [] };
   },
 
   create<I extends Exact<DeepPartial<BatchQueryRequest>, I>>(base?: I): BatchQueryRequest {
@@ -139,16 +139,16 @@ export const BatchQueryResponse = {
     return message;
   },
 
+  fromJSON(object: any): BatchQueryResponse {
+    return { entities: Array.isArray(object?.entities) ? object.entities.map((e: any) => Entity.fromJSON(e)) : [] };
+  },
+
   toJSON(message: BatchQueryResponse): unknown {
     const obj: any = {};
     if (message.entities?.length) {
       obj.entities = message.entities.map((e) => Entity.toJSON(e));
     }
     return obj;
-  },
-
-  fromJSON(object: any): BatchQueryResponse {
-    return { entities: Array.isArray(object?.entities) ? object.entities.map((e: any) => Entity.fromJSON(e)) : [] };
   },
 
   create<I extends Exact<DeepPartial<BatchQueryResponse>, I>>(base?: I): BatchQueryResponse {
@@ -197,16 +197,16 @@ export const BatchMapQueryRequest = {
     return message;
   },
 
+  fromJSON(object: any): BatchMapQueryRequest {
+    return { ids: Array.isArray(object?.ids) ? object.ids.map((e: any) => String(e)) : [] };
+  },
+
   toJSON(message: BatchMapQueryRequest): unknown {
     const obj: any = {};
     if (message.ids?.length) {
       obj.ids = message.ids;
     }
     return obj;
-  },
-
-  fromJSON(object: any): BatchMapQueryRequest {
-    return { ids: Array.isArray(object?.ids) ? object.ids.map((e: any) => String(e)) : [] };
   },
 
   create<I extends Exact<DeepPartial<BatchMapQueryRequest>, I>>(base?: I): BatchMapQueryRequest {
@@ -258,6 +258,17 @@ export const BatchMapQueryResponse = {
     return message;
   },
 
+  fromJSON(object: any): BatchMapQueryResponse {
+    return {
+      entities: isObject(object.entities)
+        ? Object.entries(object.entities).reduce<{ [key: string]: Entity }>((acc, [key, value]) => {
+          acc[key] = Entity.fromJSON(value);
+          return acc;
+        }, {})
+        : {},
+    };
+  },
+
   toJSON(message: BatchMapQueryResponse): unknown {
     const obj: any = {};
     if (message.entities) {
@@ -270,17 +281,6 @@ export const BatchMapQueryResponse = {
       }
     }
     return obj;
-  },
-
-  fromJSON(object: any): BatchMapQueryResponse {
-    return {
-      entities: isObject(object.entities)
-        ? Object.entries(object.entities).reduce<{ [key: string]: Entity }>((acc, [key, value]) => {
-          acc[key] = Entity.fromJSON(value);
-          return acc;
-        }, {})
-        : {},
-    };
   },
 
   create<I extends Exact<DeepPartial<BatchMapQueryResponse>, I>>(base?: I): BatchMapQueryResponse {
@@ -344,6 +344,13 @@ export const BatchMapQueryResponse_EntitiesEntry = {
     return message;
   },
 
+  fromJSON(object: any): BatchMapQueryResponse_EntitiesEntry {
+    return {
+      key: isSet(object.key) ? String(object.key) : "",
+      value: isSet(object.value) ? Entity.fromJSON(object.value) : undefined,
+    };
+  },
+
   toJSON(message: BatchMapQueryResponse_EntitiesEntry): unknown {
     const obj: any = {};
     if (message.key !== "") {
@@ -353,13 +360,6 @@ export const BatchMapQueryResponse_EntitiesEntry = {
       obj.value = Entity.toJSON(message.value);
     }
     return obj;
-  },
-
-  fromJSON(object: any): BatchMapQueryResponse_EntitiesEntry {
-    return {
-      key: isSet(object.key) ? String(object.key) : "",
-      value: isSet(object.value) ? Entity.fromJSON(object.value) : undefined,
-    };
   },
 
   create<I extends Exact<DeepPartial<BatchMapQueryResponse_EntitiesEntry>, I>>(
@@ -415,16 +415,16 @@ export const GetOnlyMethodRequest = {
     return message;
   },
 
+  fromJSON(object: any): GetOnlyMethodRequest {
+    return { id: isSet(object.id) ? String(object.id) : "" };
+  },
+
   toJSON(message: GetOnlyMethodRequest): unknown {
     const obj: any = {};
     if (message.id !== "") {
       obj.id = message.id;
     }
     return obj;
-  },
-
-  fromJSON(object: any): GetOnlyMethodRequest {
-    return { id: isSet(object.id) ? String(object.id) : "" };
   },
 
   create<I extends Exact<DeepPartial<GetOnlyMethodRequest>, I>>(base?: I): GetOnlyMethodRequest {
@@ -473,16 +473,16 @@ export const GetOnlyMethodResponse = {
     return message;
   },
 
+  fromJSON(object: any): GetOnlyMethodResponse {
+    return { entity: isSet(object.entity) ? Entity.fromJSON(object.entity) : undefined };
+  },
+
   toJSON(message: GetOnlyMethodResponse): unknown {
     const obj: any = {};
     if (message.entity !== undefined) {
       obj.entity = Entity.toJSON(message.entity);
     }
     return obj;
-  },
-
-  fromJSON(object: any): GetOnlyMethodResponse {
-    return { entity: isSet(object.entity) ? Entity.fromJSON(object.entity) : undefined };
   },
 
   create<I extends Exact<DeepPartial<GetOnlyMethodResponse>, I>>(base?: I): GetOnlyMethodResponse {
@@ -533,16 +533,16 @@ export const WriteMethodRequest = {
     return message;
   },
 
+  fromJSON(object: any): WriteMethodRequest {
+    return { id: isSet(object.id) ? String(object.id) : "" };
+  },
+
   toJSON(message: WriteMethodRequest): unknown {
     const obj: any = {};
     if (message.id !== "") {
       obj.id = message.id;
     }
     return obj;
-  },
-
-  fromJSON(object: any): WriteMethodRequest {
-    return { id: isSet(object.id) ? String(object.id) : "" };
   },
 
   create<I extends Exact<DeepPartial<WriteMethodRequest>, I>>(base?: I): WriteMethodRequest {
@@ -581,13 +581,13 @@ export const WriteMethodResponse = {
     return message;
   },
 
+  fromJSON(_: any): WriteMethodResponse {
+    return {};
+  },
+
   toJSON(_: WriteMethodResponse): unknown {
     const obj: any = {};
     return obj;
-  },
-
-  fromJSON(_: any): WriteMethodResponse {
-    return {};
   },
 
   create<I extends Exact<DeepPartial<WriteMethodResponse>, I>>(base?: I): WriteMethodResponse {
@@ -645,6 +645,10 @@ export const Entity = {
     return message;
   },
 
+  fromJSON(object: any): Entity {
+    return { id: isSet(object.id) ? String(object.id) : "", name: isSet(object.name) ? String(object.name) : "" };
+  },
+
   toJSON(message: Entity): unknown {
     const obj: any = {};
     if (message.id !== "") {
@@ -654,10 +658,6 @@ export const Entity = {
       obj.name = message.name;
     }
     return obj;
-  },
-
-  fromJSON(object: any): Entity {
-    return { id: isSet(object.id) ? String(object.id) : "", name: isSet(object.name) ? String(object.name) : "" };
   },
 
   create<I extends Exact<DeepPartial<Entity>, I>>(base?: I): Entity {

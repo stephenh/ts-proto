@@ -79,16 +79,16 @@ export const Entity = {
     return message;
   },
 
+  fromJSON(object: any): Entity {
+    return { id: isSet(object.id) ? Number(object.id) : 0 };
+  },
+
   toJSON(message: Entity): unknown {
     const obj: any = {};
     if (message.id !== 0) {
       obj.id = Math.round(message.id);
     }
     return obj;
-  },
-
-  fromJSON(object: any): Entity {
-    return { id: isSet(object.id) ? Number(object.id) : 0 };
   },
 
   create<I extends Exact<DeepPartial<Entity>, I>>(base?: I): Entity {
@@ -209,6 +209,42 @@ export const Maps = {
     return message;
   },
 
+  fromJSON(object: any): Maps {
+    return {
+      strToEntity: isObject(object.strToEntity)
+        ? Object.entries(object.strToEntity).reduce<Map<string, Entity>>((acc, [key, value]) => {
+          acc.set(key, Entity.fromJSON(value));
+          return acc;
+        }, new Map())
+        : new Map(),
+      int32ToInt32: isObject(object.int32ToInt32)
+        ? Object.entries(object.int32ToInt32).reduce<Map<number, number>>((acc, [key, value]) => {
+          acc.set(Number(key), Number(value));
+          return acc;
+        }, new Map())
+        : new Map(),
+      stringToBytes: isObject(object.stringToBytes)
+        ? Object.entries(object.stringToBytes).reduce<Map<string, Uint8Array>>((acc, [key, value]) => {
+          acc.set(key, bytesFromBase64(value as string));
+          return acc;
+        }, new Map())
+        : new Map(),
+      int64ToInt64: isObject(object.int64ToInt64)
+        ? Object.entries(object.int64ToInt64).reduce<Map<number, number>>((acc, [key, value]) => {
+          acc.set(Number(key), Number(value));
+          return acc;
+        }, new Map())
+        : new Map(),
+      mapOfTimestamps: isObject(object.mapOfTimestamps)
+        ? Object.entries(object.mapOfTimestamps).reduce<Map<string, Date>>((acc, [key, value]) => {
+          acc.set(key, fromJsonTimestamp(value));
+          return acc;
+        }, new Map())
+        : new Map(),
+      struct: isObject(object.struct) ? object.struct : undefined,
+    };
+  },
+
   toJSON(message: Maps): unknown {
     const obj: any = {};
     if (message.strToEntity?.size) {
@@ -245,42 +281,6 @@ export const Maps = {
       obj.struct = message.struct;
     }
     return obj;
-  },
-
-  fromJSON(object: any): Maps {
-    return {
-      strToEntity: isObject(object.strToEntity)
-        ? Object.entries(object.strToEntity).reduce<Map<string, Entity>>((acc, [key, value]) => {
-          acc.set(key, Entity.fromJSON(value));
-          return acc;
-        }, new Map())
-        : new Map(),
-      int32ToInt32: isObject(object.int32ToInt32)
-        ? Object.entries(object.int32ToInt32).reduce<Map<number, number>>((acc, [key, value]) => {
-          acc.set(Number(key), Number(value));
-          return acc;
-        }, new Map())
-        : new Map(),
-      stringToBytes: isObject(object.stringToBytes)
-        ? Object.entries(object.stringToBytes).reduce<Map<string, Uint8Array>>((acc, [key, value]) => {
-          acc.set(key, bytesFromBase64(value as string));
-          return acc;
-        }, new Map())
-        : new Map(),
-      int64ToInt64: isObject(object.int64ToInt64)
-        ? Object.entries(object.int64ToInt64).reduce<Map<number, number>>((acc, [key, value]) => {
-          acc.set(Number(key), Number(value));
-          return acc;
-        }, new Map())
-        : new Map(),
-      mapOfTimestamps: isObject(object.mapOfTimestamps)
-        ? Object.entries(object.mapOfTimestamps).reduce<Map<string, Date>>((acc, [key, value]) => {
-          acc.set(key, fromJsonTimestamp(value));
-          return acc;
-        }, new Map())
-        : new Map(),
-      struct: isObject(object.struct) ? object.struct : undefined,
-    };
   },
 
   create<I extends Exact<DeepPartial<Maps>, I>>(base?: I): Maps {
@@ -384,6 +384,13 @@ export const Maps_StrToEntityEntry = {
     return message;
   },
 
+  fromJSON(object: any): Maps_StrToEntityEntry {
+    return {
+      key: isSet(object.key) ? String(object.key) : "",
+      value: isSet(object.value) ? Entity.fromJSON(object.value) : undefined,
+    };
+  },
+
   toJSON(message: Maps_StrToEntityEntry): unknown {
     const obj: any = {};
     if (message.key !== "") {
@@ -393,13 +400,6 @@ export const Maps_StrToEntityEntry = {
       obj.value = Entity.toJSON(message.value);
     }
     return obj;
-  },
-
-  fromJSON(object: any): Maps_StrToEntityEntry {
-    return {
-      key: isSet(object.key) ? String(object.key) : "",
-      value: isSet(object.value) ? Entity.fromJSON(object.value) : undefined,
-    };
   },
 
   create<I extends Exact<DeepPartial<Maps_StrToEntityEntry>, I>>(base?: I): Maps_StrToEntityEntry {
@@ -461,6 +461,10 @@ export const Maps_Int32ToInt32Entry = {
     return message;
   },
 
+  fromJSON(object: any): Maps_Int32ToInt32Entry {
+    return { key: isSet(object.key) ? Number(object.key) : 0, value: isSet(object.value) ? Number(object.value) : 0 };
+  },
+
   toJSON(message: Maps_Int32ToInt32Entry): unknown {
     const obj: any = {};
     if (message.key !== 0) {
@@ -470,10 +474,6 @@ export const Maps_Int32ToInt32Entry = {
       obj.value = Math.round(message.value);
     }
     return obj;
-  },
-
-  fromJSON(object: any): Maps_Int32ToInt32Entry {
-    return { key: isSet(object.key) ? Number(object.key) : 0, value: isSet(object.value) ? Number(object.value) : 0 };
   },
 
   create<I extends Exact<DeepPartial<Maps_Int32ToInt32Entry>, I>>(base?: I): Maps_Int32ToInt32Entry {
@@ -533,6 +533,13 @@ export const Maps_StringToBytesEntry = {
     return message;
   },
 
+  fromJSON(object: any): Maps_StringToBytesEntry {
+    return {
+      key: isSet(object.key) ? String(object.key) : "",
+      value: isSet(object.value) ? bytesFromBase64(object.value) : new Uint8Array(0),
+    };
+  },
+
   toJSON(message: Maps_StringToBytesEntry): unknown {
     const obj: any = {};
     if (message.key !== "") {
@@ -542,13 +549,6 @@ export const Maps_StringToBytesEntry = {
       obj.value = base64FromBytes(message.value);
     }
     return obj;
-  },
-
-  fromJSON(object: any): Maps_StringToBytesEntry {
-    return {
-      key: isSet(object.key) ? String(object.key) : "",
-      value: isSet(object.value) ? bytesFromBase64(object.value) : new Uint8Array(0),
-    };
   },
 
   create<I extends Exact<DeepPartial<Maps_StringToBytesEntry>, I>>(base?: I): Maps_StringToBytesEntry {
@@ -608,6 +608,10 @@ export const Maps_Int64ToInt64Entry = {
     return message;
   },
 
+  fromJSON(object: any): Maps_Int64ToInt64Entry {
+    return { key: isSet(object.key) ? Number(object.key) : 0, value: isSet(object.value) ? Number(object.value) : 0 };
+  },
+
   toJSON(message: Maps_Int64ToInt64Entry): unknown {
     const obj: any = {};
     if (message.key !== 0) {
@@ -617,10 +621,6 @@ export const Maps_Int64ToInt64Entry = {
       obj.value = Math.round(message.value);
     }
     return obj;
-  },
-
-  fromJSON(object: any): Maps_Int64ToInt64Entry {
-    return { key: isSet(object.key) ? Number(object.key) : 0, value: isSet(object.value) ? Number(object.value) : 0 };
   },
 
   create<I extends Exact<DeepPartial<Maps_Int64ToInt64Entry>, I>>(base?: I): Maps_Int64ToInt64Entry {
@@ -680,6 +680,13 @@ export const Maps_MapOfTimestampsEntry = {
     return message;
   },
 
+  fromJSON(object: any): Maps_MapOfTimestampsEntry {
+    return {
+      key: isSet(object.key) ? String(object.key) : "",
+      value: isSet(object.value) ? fromJsonTimestamp(object.value) : undefined,
+    };
+  },
+
   toJSON(message: Maps_MapOfTimestampsEntry): unknown {
     const obj: any = {};
     if (message.key !== "") {
@@ -689,13 +696,6 @@ export const Maps_MapOfTimestampsEntry = {
       obj.value = message.value.toISOString();
     }
     return obj;
-  },
-
-  fromJSON(object: any): Maps_MapOfTimestampsEntry {
-    return {
-      key: isSet(object.key) ? String(object.key) : "",
-      value: isSet(object.value) ? fromJsonTimestamp(object.value) : undefined,
-    };
   },
 
   create<I extends Exact<DeepPartial<Maps_MapOfTimestampsEntry>, I>>(base?: I): Maps_MapOfTimestampsEntry {

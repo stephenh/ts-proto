@@ -40,16 +40,16 @@ export const A = {
     return message;
   },
 
+  fromJSON(object: any): A {
+    return { a: isSet(object.a) ? String(object.a) : "" };
+  },
+
   toJSON(message: A): unknown {
     const obj: any = {};
     if (message.a !== "") {
       obj.a = message.a;
     }
     return obj;
-  },
-
-  fromJSON(object: any): A {
-    return { a: isSet(object.a) ? String(object.a) : "" };
   },
 
   create<I extends Exact<DeepPartial<A>, I>>(base?: I): A {

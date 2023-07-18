@@ -83,17 +83,6 @@ export const MapBigInt = {
     return message;
   },
 
-  toJSON(message: MapBigInt): unknown {
-    const obj: any = {};
-    if (message.map?.size) {
-      obj.map = {};
-      message.map.forEach((v, k) => {
-        obj.map[k] = v;
-      });
-    }
-    return obj;
-  },
-
   fromJSON(object: any): MapBigInt {
     return {
       map: isObject(object.map)
@@ -103,6 +92,17 @@ export const MapBigInt = {
         }, new Map())
         : undefined,
     };
+  },
+
+  toJSON(message: MapBigInt): unknown {
+    const obj: any = {};
+    if (message.map?.size) {
+      obj.map = {};
+      message.map.forEach((v, k) => {
+        obj.map[k] = v;
+      });
+    }
+    return obj;
   },
 
   create<I extends Exact<DeepPartial<MapBigInt>, I>>(base?: I): MapBigInt {
@@ -196,6 +196,13 @@ export const MapBigInt_MapEntry = {
     return message;
   },
 
+  fromJSON(object: any): MapBigInt_MapEntry {
+    return {
+      key: isSet(object.key) ? String(object.key) : "0",
+      value: isSet(object.value) ? String(object.value) : "0",
+    };
+  },
+
   toJSON(message: MapBigInt_MapEntry): unknown {
     const obj: any = {};
     if (message.key !== "0") {
@@ -205,13 +212,6 @@ export const MapBigInt_MapEntry = {
       obj.value = message.value;
     }
     return obj;
-  },
-
-  fromJSON(object: any): MapBigInt_MapEntry {
-    return {
-      key: isSet(object.key) ? String(object.key) : "0",
-      value: isSet(object.value) ? String(object.value) : "0",
-    };
   },
 
   create<I extends Exact<DeepPartial<MapBigInt_MapEntry>, I>>(base?: I): MapBigInt_MapEntry {

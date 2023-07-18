@@ -57,16 +57,16 @@ export const TPartialMessage = {
     return message;
   },
 
+  fromJSON(object: any): TPartialMessage {
+    return { field: isSet(object.field) ? String(object.field) : undefined };
+  },
+
   toJSON(message: TPartialMessage): unknown {
     const obj: any = {};
     if (message.field !== undefined && message.field !== "") {
       obj.field = message.field;
     }
     return obj;
-  },
-
-  fromJSON(object: any): TPartialMessage {
-    return { field: isSet(object.field) ? String(object.field) : undefined };
   },
 
   create<I extends Exact<DeepPartial<TPartialMessage>, I>>(base?: I): TPartialMessage {
@@ -211,6 +211,29 @@ export const TPartial = {
     return message;
   },
 
+  fromJSON(object: any): TPartial {
+    return {
+      number: isSet(object.number) ? Number(object.number) : undefined,
+      string: isSet(object.string) ? String(object.string) : undefined,
+      map: isObject(object.map)
+        ? Object.entries(object.map).reduce<{ [key: string]: string }>((acc, [key, value]) => {
+          acc[key] = String(value);
+          return acc;
+        }, {})
+        : undefined,
+      message: isSet(object.message) ? TPartialMessage.fromJSON(object.message) : undefined,
+      repeatedMessage: Array.isArray(object?.repeatedMessage)
+        ? object.repeatedMessage.map((e: any) => TPartialMessage.fromJSON(e))
+        : undefined,
+      repeatedString: Array.isArray(object?.repeatedString)
+        ? object.repeatedString.map((e: any) => String(e))
+        : undefined,
+      repeatedNumber: Array.isArray(object?.repeatedNumber)
+        ? object.repeatedNumber.map((e: any) => Number(e))
+        : undefined,
+    };
+  },
+
   toJSON(message: TPartial): unknown {
     const obj: any = {};
     if (message.number !== undefined && message.number !== 0) {
@@ -241,29 +264,6 @@ export const TPartial = {
       obj.repeatedNumber = message.repeatedNumber.map((e) => Math.round(e));
     }
     return obj;
-  },
-
-  fromJSON(object: any): TPartial {
-    return {
-      number: isSet(object.number) ? Number(object.number) : undefined,
-      string: isSet(object.string) ? String(object.string) : undefined,
-      map: isObject(object.map)
-        ? Object.entries(object.map).reduce<{ [key: string]: string }>((acc, [key, value]) => {
-          acc[key] = String(value);
-          return acc;
-        }, {})
-        : undefined,
-      message: isSet(object.message) ? TPartialMessage.fromJSON(object.message) : undefined,
-      repeatedMessage: Array.isArray(object?.repeatedMessage)
-        ? object.repeatedMessage.map((e: any) => TPartialMessage.fromJSON(e))
-        : undefined,
-      repeatedString: Array.isArray(object?.repeatedString)
-        ? object.repeatedString.map((e: any) => String(e))
-        : undefined,
-      repeatedNumber: Array.isArray(object?.repeatedNumber)
-        ? object.repeatedNumber.map((e: any) => Number(e))
-        : undefined,
-    };
   },
 
   create<I extends Exact<DeepPartial<TPartial>, I>>(base?: I): TPartial {
@@ -337,6 +337,10 @@ export const TPartial_MapEntry = {
     return message;
   },
 
+  fromJSON(object: any): TPartial_MapEntry {
+    return { key: isSet(object.key) ? String(object.key) : "", value: isSet(object.value) ? String(object.value) : "" };
+  },
+
   toJSON(message: TPartial_MapEntry): unknown {
     const obj: any = {};
     if (message.key !== "") {
@@ -346,10 +350,6 @@ export const TPartial_MapEntry = {
       obj.value = message.value;
     }
     return obj;
-  },
-
-  fromJSON(object: any): TPartial_MapEntry {
-    return { key: isSet(object.key) ? String(object.key) : "", value: isSet(object.value) ? String(object.value) : "" };
   },
 
   create<I extends Exact<DeepPartial<TPartial_MapEntry>, I>>(base?: I): TPartial_MapEntry {

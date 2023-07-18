@@ -150,6 +150,18 @@ export const Struct = {
     return message;
   },
 
+  fromJSON(object: any): Struct {
+    return {
+      $type: Struct.$type,
+      fields: isObject(object.fields)
+        ? Object.entries(object.fields).reduce<{ [key: string]: any | undefined }>((acc, [key, value]) => {
+          acc[key] = value as any | undefined;
+          return acc;
+        }, {})
+        : {},
+    };
+  },
+
   toJSON(message: Struct): unknown {
     const obj: any = {};
     if (message.fields) {
@@ -162,18 +174,6 @@ export const Struct = {
       }
     }
     return obj;
-  },
-
-  fromJSON(object: any): Struct {
-    return {
-      $type: Struct.$type,
-      fields: isObject(object.fields)
-        ? Object.entries(object.fields).reduce<{ [key: string]: any | undefined }>((acc, [key, value]) => {
-          acc[key] = value as any | undefined;
-          return acc;
-        }, {})
-        : {},
-    };
   },
 
   create<I extends Exact<DeepPartial<Struct>, I>>(base?: I): Struct {
@@ -264,6 +264,14 @@ export const Struct_FieldsEntry = {
     return message;
   },
 
+  fromJSON(object: any): Struct_FieldsEntry {
+    return {
+      $type: Struct_FieldsEntry.$type,
+      key: isSet(object.key) ? String(object.key) : "",
+      value: isSet(object?.value) ? object.value : undefined,
+    };
+  },
+
   toJSON(message: Struct_FieldsEntry): unknown {
     const obj: any = {};
     if (message.key !== "") {
@@ -273,14 +281,6 @@ export const Struct_FieldsEntry = {
       obj.value = message.value;
     }
     return obj;
-  },
-
-  fromJSON(object: any): Struct_FieldsEntry {
-    return {
-      $type: Struct_FieldsEntry.$type,
-      key: isSet(object.key) ? String(object.key) : "",
-      value: isSet(object?.value) ? object.value : undefined,
-    };
   },
 
   create<I extends Exact<DeepPartial<Struct_FieldsEntry>, I>>(base?: I): Struct_FieldsEntry {
@@ -392,6 +392,18 @@ export const Value = {
     return message;
   },
 
+  fromJSON(object: any): Value {
+    return {
+      $type: Value.$type,
+      nullValue: isSet(object.nullValue) ? nullValueFromJSON(object.nullValue) : undefined,
+      numberValue: isSet(object.numberValue) ? Number(object.numberValue) : undefined,
+      stringValue: isSet(object.stringValue) ? String(object.stringValue) : undefined,
+      boolValue: isSet(object.boolValue) ? Boolean(object.boolValue) : undefined,
+      structValue: isObject(object.structValue) ? object.structValue : undefined,
+      listValue: Array.isArray(object.listValue) ? [...object.listValue] : undefined,
+    };
+  },
+
   toJSON(message: Value): unknown {
     const obj: any = {};
     if (message.nullValue !== undefined) {
@@ -413,18 +425,6 @@ export const Value = {
       obj.listValue = message.listValue;
     }
     return obj;
-  },
-
-  fromJSON(object: any): Value {
-    return {
-      $type: Value.$type,
-      nullValue: isSet(object.nullValue) ? nullValueFromJSON(object.nullValue) : undefined,
-      numberValue: isSet(object.numberValue) ? Number(object.numberValue) : undefined,
-      stringValue: isSet(object.stringValue) ? String(object.stringValue) : undefined,
-      boolValue: isSet(object.boolValue) ? Boolean(object.boolValue) : undefined,
-      structValue: isObject(object.structValue) ? object.structValue : undefined,
-      listValue: Array.isArray(object.listValue) ? [...object.listValue] : undefined,
-    };
   },
 
   create<I extends Exact<DeepPartial<Value>, I>>(base?: I): Value {
@@ -519,16 +519,16 @@ export const ListValue = {
     return message;
   },
 
+  fromJSON(object: any): ListValue {
+    return { $type: ListValue.$type, values: Array.isArray(object?.values) ? [...object.values] : [] };
+  },
+
   toJSON(message: ListValue): unknown {
     const obj: any = {};
     if (message.values?.length) {
       obj.values = message.values;
     }
     return obj;
-  },
-
-  fromJSON(object: any): ListValue {
-    return { $type: ListValue.$type, values: Array.isArray(object?.values) ? [...object.values] : [] };
   },
 
   create<I extends Exact<DeepPartial<ListValue>, I>>(base?: I): ListValue {

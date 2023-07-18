@@ -43,16 +43,16 @@ export const FieldMaskMessage = {
     return message;
   },
 
+  fromJSON(object: any): FieldMaskMessage {
+    return { fieldMask: isSet(object.fieldMask) ? FieldMask.unwrap(FieldMask.fromJSON(object.fieldMask)) : undefined };
+  },
+
   toJSON(message: FieldMaskMessage): unknown {
     const obj: any = {};
     if (message.fieldMask !== undefined) {
       obj.fieldMask = FieldMask.toJSON(FieldMask.wrap(message.fieldMask));
     }
     return obj;
-  },
-
-  fromJSON(object: any): FieldMaskMessage {
-    return { fieldMask: isSet(object.fieldMask) ? FieldMask.unwrap(FieldMask.fromJSON(object.fieldMask)) : undefined };
   },
 
   create<I extends Exact<DeepPartial<FieldMaskMessage>, I>>(base?: I): FieldMaskMessage {

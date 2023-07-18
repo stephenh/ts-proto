@@ -122,6 +122,18 @@ export const DividerData = {
     return message;
   },
 
+  fromJSON(object: any): DividerData {
+    return {
+      type: isSet(object.type) ? dividerData_DividerTypeFromJSON(object.type) : DividerData_DividerType.DOUBLE,
+      typeMap: isObject(object.typeMap)
+        ? Object.entries(object.typeMap).reduce<{ [key: string]: DividerData_DividerType }>((acc, [key, value]) => {
+          acc[key] = dividerData_DividerTypeFromJSON(value);
+          return acc;
+        }, {})
+        : {},
+    };
+  },
+
   toJSON(message: DividerData): unknown {
     const obj: any = {};
     if (message.type !== DividerData_DividerType.DOUBLE) {
@@ -137,18 +149,6 @@ export const DividerData = {
       }
     }
     return obj;
-  },
-
-  fromJSON(object: any): DividerData {
-    return {
-      type: isSet(object.type) ? dividerData_DividerTypeFromJSON(object.type) : DividerData_DividerType.DOUBLE,
-      typeMap: isObject(object.typeMap)
-        ? Object.entries(object.typeMap).reduce<{ [key: string]: DividerData_DividerType }>((acc, [key, value]) => {
-          acc[key] = dividerData_DividerTypeFromJSON(value);
-          return acc;
-        }, {})
-        : {},
-    };
   },
 
   create<I extends Exact<DeepPartial<DividerData>, I>>(base?: I): DividerData {
@@ -216,6 +216,13 @@ export const DividerData_TypeMapEntry = {
     return message;
   },
 
+  fromJSON(object: any): DividerData_TypeMapEntry {
+    return {
+      key: isSet(object.key) ? String(object.key) : "",
+      value: isSet(object.value) ? dividerData_DividerTypeFromJSON(object.value) : DividerData_DividerType.DOUBLE,
+    };
+  },
+
   toJSON(message: DividerData_TypeMapEntry): unknown {
     const obj: any = {};
     if (message.key !== "") {
@@ -225,13 +232,6 @@ export const DividerData_TypeMapEntry = {
       obj.value = dividerData_DividerTypeToJSON(message.value);
     }
     return obj;
-  },
-
-  fromJSON(object: any): DividerData_TypeMapEntry {
-    return {
-      key: isSet(object.key) ? String(object.key) : "",
-      value: isSet(object.value) ? dividerData_DividerTypeFromJSON(object.value) : DividerData_DividerType.DOUBLE,
-    };
   },
 
   create<I extends Exact<DeepPartial<DividerData_TypeMapEntry>, I>>(base?: I): DividerData_TypeMapEntry {

@@ -114,16 +114,16 @@ export const Tile = {
     return message;
   },
 
+  fromJSON(object: any): Tile {
+    return { layers: Array.isArray(object?.layers) ? object.layers.map((e: any) => Tile_Layer.fromJSON(e)) : [] };
+  },
+
   toJSON(message: Tile): unknown {
     const obj: any = {};
     if (message.layers?.length) {
       obj.layers = message.layers.map((e) => Tile_Layer.toJSON(e));
     }
     return obj;
-  },
-
-  fromJSON(object: any): Tile {
-    return { layers: Array.isArray(object?.layers) ? object.layers.map((e: any) => Tile_Layer.fromJSON(e)) : [] };
   },
 
   create<I extends Exact<DeepPartial<Tile>, I>>(base?: I): Tile {
@@ -232,6 +232,18 @@ export const Tile_Value = {
     return message;
   },
 
+  fromJSON(object: any): Tile_Value {
+    return {
+      stringValue: isSet(object.stringValue) ? String(object.stringValue) : "",
+      floatValue: isSet(object.floatValue) ? Number(object.floatValue) : 0,
+      doubleValue: isSet(object.doubleValue) ? Number(object.doubleValue) : 0,
+      intValue: isSet(object.intValue) ? Number(object.intValue) : 0,
+      uintValue: isSet(object.uintValue) ? Number(object.uintValue) : 0,
+      sintValue: isSet(object.sintValue) ? Number(object.sintValue) : 0,
+      boolValue: isSet(object.boolValue) ? Boolean(object.boolValue) : false,
+    };
+  },
+
   toJSON(message: Tile_Value): unknown {
     const obj: any = {};
     if (message.stringValue !== "") {
@@ -256,18 +268,6 @@ export const Tile_Value = {
       obj.boolValue = message.boolValue;
     }
     return obj;
-  },
-
-  fromJSON(object: any): Tile_Value {
-    return {
-      stringValue: isSet(object.stringValue) ? String(object.stringValue) : "",
-      floatValue: isSet(object.floatValue) ? Number(object.floatValue) : 0,
-      doubleValue: isSet(object.doubleValue) ? Number(object.doubleValue) : 0,
-      intValue: isSet(object.intValue) ? Number(object.intValue) : 0,
-      uintValue: isSet(object.uintValue) ? Number(object.uintValue) : 0,
-      sintValue: isSet(object.sintValue) ? Number(object.sintValue) : 0,
-      boolValue: isSet(object.boolValue) ? Boolean(object.boolValue) : false,
-    };
   },
 
   create<I extends Exact<DeepPartial<Tile_Value>, I>>(base?: I): Tile_Value {
@@ -376,6 +376,15 @@ export const Tile_Feature = {
     return message;
   },
 
+  fromJSON(object: any): Tile_Feature {
+    return {
+      id: isSet(object.id) ? Number(object.id) : 0,
+      tags: Array.isArray(object?.tags) ? object.tags.map((e: any) => Number(e)) : [],
+      type: isSet(object.type) ? tile_GeomTypeFromJSON(object.type) : 0,
+      geometry: Array.isArray(object?.geometry) ? object.geometry.map((e: any) => Number(e)) : [],
+    };
+  },
+
   toJSON(message: Tile_Feature): unknown {
     const obj: any = {};
     if (message.id !== 0) {
@@ -391,15 +400,6 @@ export const Tile_Feature = {
       obj.geometry = message.geometry.map((e) => Math.round(e));
     }
     return obj;
-  },
-
-  fromJSON(object: any): Tile_Feature {
-    return {
-      id: isSet(object.id) ? Number(object.id) : 0,
-      tags: Array.isArray(object?.tags) ? object.tags.map((e: any) => Number(e)) : [],
-      type: isSet(object.type) ? tile_GeomTypeFromJSON(object.type) : 0,
-      geometry: Array.isArray(object?.geometry) ? object.geometry.map((e: any) => Number(e)) : [],
-    };
   },
 
   create<I extends Exact<DeepPartial<Tile_Feature>, I>>(base?: I): Tile_Feature {
@@ -501,6 +501,17 @@ export const Tile_Layer = {
     return message;
   },
 
+  fromJSON(object: any): Tile_Layer {
+    return {
+      version: isSet(object.version) ? Number(object.version) : 0,
+      name: isSet(object.name) ? String(object.name) : "",
+      features: Array.isArray(object?.features) ? object.features.map((e: any) => Tile_Feature.fromJSON(e)) : [],
+      keys: Array.isArray(object?.keys) ? object.keys.map((e: any) => String(e)) : [],
+      values: Array.isArray(object?.values) ? object.values.map((e: any) => Tile_Value.fromJSON(e)) : [],
+      extent: isSet(object.extent) ? Number(object.extent) : 0,
+    };
+  },
+
   toJSON(message: Tile_Layer): unknown {
     const obj: any = {};
     if (message.version !== 0) {
@@ -522,17 +533,6 @@ export const Tile_Layer = {
       obj.extent = Math.round(message.extent);
     }
     return obj;
-  },
-
-  fromJSON(object: any): Tile_Layer {
-    return {
-      version: isSet(object.version) ? Number(object.version) : 0,
-      name: isSet(object.name) ? String(object.name) : "",
-      features: Array.isArray(object?.features) ? object.features.map((e: any) => Tile_Feature.fromJSON(e)) : [],
-      keys: Array.isArray(object?.keys) ? object.keys.map((e: any) => String(e)) : [],
-      values: Array.isArray(object?.values) ? object.values.map((e: any) => Tile_Value.fromJSON(e)) : [],
-      extent: isSet(object.extent) ? Number(object.extent) : 0,
-    };
   },
 
   create<I extends Exact<DeepPartial<Tile_Layer>, I>>(base?: I): Tile_Layer {

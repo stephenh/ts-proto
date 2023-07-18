@@ -47,16 +47,16 @@ export const User = {
     return message;
   },
 
+  fromJSON(object: any): User {
+    return { name: isSet(object.name) ? String(object.name) : "" };
+  },
+
   toJSON(message: User): unknown {
     const obj: any = {};
     if (message.name !== "") {
       obj.name = message.name;
     }
     return obj;
-  },
-
-  fromJSON(object: any): User {
-    return { name: isSet(object.name) ? String(object.name) : "" };
   },
 
   create<I extends Exact<DeepPartial<User>, I>>(base?: I): User {
@@ -95,13 +95,13 @@ export const Empty = {
     return message;
   },
 
+  fromJSON(_: any): Empty {
+    return {};
+  },
+
   toJSON(_: Empty): unknown {
     const obj: any = {};
     return obj;
-  },
-
-  fromJSON(_: any): Empty {
-    return {};
   },
 
   create<I extends Exact<DeepPartial<Empty>, I>>(base?: I): Empty {

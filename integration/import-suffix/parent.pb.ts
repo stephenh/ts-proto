@@ -66,6 +66,14 @@ export const Parent = {
     return message;
   },
 
+  fromJSON(object: any): Parent {
+    return {
+      child: isSet(object.child) ? Child.fromJSON(object.child) : undefined,
+      childEnum: isSet(object.childEnum) ? childEnumFromJSON(object.childEnum) : 0,
+      createdAt: isSet(object.createdAt) ? fromJsonTimestamp(object.createdAt) : undefined,
+    };
+  },
+
   toJSON(message: Parent): unknown {
     const obj: any = {};
     if (message.child !== undefined) {
@@ -78,14 +86,6 @@ export const Parent = {
       obj.createdAt = message.createdAt.toISOString();
     }
     return obj;
-  },
-
-  fromJSON(object: any): Parent {
-    return {
-      child: isSet(object.child) ? Child.fromJSON(object.child) : undefined,
-      childEnum: isSet(object.childEnum) ? childEnumFromJSON(object.childEnum) : 0,
-      createdAt: isSet(object.createdAt) ? fromJsonTimestamp(object.createdAt) : undefined,
-    };
   },
 
   create<I extends Exact<DeepPartial<Parent>, I>>(base?: I): Parent {

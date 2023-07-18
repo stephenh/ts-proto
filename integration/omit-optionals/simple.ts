@@ -53,6 +53,13 @@ export const TestMessage = {
     return message;
   },
 
+  fromJSON(object: any): TestMessage {
+    return {
+      field1: isSet(object.field1) ? Boolean(object.field1) : false,
+      field2: isSet(object.field2) ? Boolean(object.field2) : undefined,
+    };
+  },
+
   toJSON(message: TestMessage): unknown {
     const obj: any = {};
     if (message.field1 === true) {
@@ -62,13 +69,6 @@ export const TestMessage = {
       obj.field2 = message.field2;
     }
     return obj;
-  },
-
-  fromJSON(object: any): TestMessage {
-    return {
-      field1: isSet(object.field1) ? Boolean(object.field1) : false,
-      field2: isSet(object.field2) ? Boolean(object.field2) : undefined,
-    };
   },
 
   create<I extends Exact<DeepPartial<TestMessage>, I>>(base?: I): TestMessage {

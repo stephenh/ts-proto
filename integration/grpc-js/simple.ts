@@ -74,16 +74,16 @@ export const TestMessage = {
     return message;
   },
 
+  fromJSON(object: any): TestMessage {
+    return { timestamp: isSet(object.timestamp) ? fromJsonTimestamp(object.timestamp) : undefined };
+  },
+
   toJSON(message: TestMessage): unknown {
     const obj: any = {};
     if (message.timestamp !== undefined) {
       obj.timestamp = message.timestamp.toISOString();
     }
     return obj;
-  },
-
-  fromJSON(object: any): TestMessage {
-    return { timestamp: isSet(object.timestamp) ? fromJsonTimestamp(object.timestamp) : undefined };
   },
 
   create<I extends Exact<DeepPartial<TestMessage>, I>>(base?: I): TestMessage {

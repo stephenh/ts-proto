@@ -53,6 +53,10 @@ export const Foo = {
     return message;
   },
 
+  fromJSON(object: any): Foo {
+    return { bar: isSet(object.bar) ? String(object.bar) : "", baz: isSet(object.baz) ? String(object.baz) : "" };
+  },
+
   toJSON(message: Foo): unknown {
     const obj: any = {};
     if (message.bar !== "") {
@@ -62,10 +66,6 @@ export const Foo = {
       obj.baz = message.baz;
     }
     return obj;
-  },
-
-  fromJSON(object: any): Foo {
-    return { bar: isSet(object.bar) ? String(object.bar) : "", baz: isSet(object.baz) ? String(object.baz) : "" };
   },
 
   create(base?: DeepPartial<Foo>): Foo {

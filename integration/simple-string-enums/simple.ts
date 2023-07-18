@@ -160,6 +160,21 @@ export const Simple = {
     return message;
   },
 
+  fromJSON(object: any): Simple {
+    return {
+      name: isSet(object.name) ? String(object.name) : "",
+      state: isSet(object.state) ? stateEnumFromJSON(object.state) : StateEnum.UNKNOWN,
+      states: Array.isArray(object?.states) ? object.states.map((e: any) => stateEnumFromJSON(e)) : [],
+      nullValue: isSet(object.nullValue) ? nullValueFromJSON(object.nullValue) : NullValue.NULL_VALUE,
+      stateMap: isObject(object.stateMap)
+        ? Object.entries(object.stateMap).reduce<{ [key: string]: StateEnum }>((acc, [key, value]) => {
+          acc[key] = stateEnumFromJSON(value);
+          return acc;
+        }, {})
+        : {},
+    };
+  },
+
   toJSON(message: Simple): unknown {
     const obj: any = {};
     if (message.name !== "") {
@@ -184,21 +199,6 @@ export const Simple = {
       }
     }
     return obj;
-  },
-
-  fromJSON(object: any): Simple {
-    return {
-      name: isSet(object.name) ? String(object.name) : "",
-      state: isSet(object.state) ? stateEnumFromJSON(object.state) : StateEnum.UNKNOWN,
-      states: Array.isArray(object?.states) ? object.states.map((e: any) => stateEnumFromJSON(e)) : [],
-      nullValue: isSet(object.nullValue) ? nullValueFromJSON(object.nullValue) : NullValue.NULL_VALUE,
-      stateMap: isObject(object.stateMap)
-        ? Object.entries(object.stateMap).reduce<{ [key: string]: StateEnum }>((acc, [key, value]) => {
-          acc[key] = stateEnumFromJSON(value);
-          return acc;
-        }, {})
-        : {},
-    };
   },
 
   create<I extends Exact<DeepPartial<Simple>, I>>(base?: I): Simple {
@@ -269,6 +269,13 @@ export const Simple_StateMapEntry = {
     return message;
   },
 
+  fromJSON(object: any): Simple_StateMapEntry {
+    return {
+      key: isSet(object.key) ? String(object.key) : "",
+      value: isSet(object.value) ? stateEnumFromJSON(object.value) : StateEnum.UNKNOWN,
+    };
+  },
+
   toJSON(message: Simple_StateMapEntry): unknown {
     const obj: any = {};
     if (message.key !== "") {
@@ -278,13 +285,6 @@ export const Simple_StateMapEntry = {
       obj.value = stateEnumToJSON(message.value);
     }
     return obj;
-  },
-
-  fromJSON(object: any): Simple_StateMapEntry {
-    return {
-      key: isSet(object.key) ? String(object.key) : "",
-      value: isSet(object.value) ? stateEnumFromJSON(object.value) : StateEnum.UNKNOWN,
-    };
   },
 
   create<I extends Exact<DeepPartial<Simple_StateMapEntry>, I>>(base?: I): Simple_StateMapEntry {

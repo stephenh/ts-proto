@@ -105,16 +105,16 @@ export const DividerData = {
     return message;
   },
 
+  fromJSON(object: any): DividerData {
+    return { type: isSet(object.type) ? dividerData_DividerTypeFromJSON(object.type) : DividerData_DividerType.DOUBLE };
+  },
+
   toJSON(message: DividerData): unknown {
     const obj: any = {};
     if (message.type !== DividerData_DividerType.DOUBLE) {
       obj.type = dividerData_DividerTypeToJSON(message.type);
     }
     return obj;
-  },
-
-  fromJSON(object: any): DividerData {
-    return { type: isSet(object.type) ? dividerData_DividerTypeFromJSON(object.type) : DividerData_DividerType.DOUBLE };
   },
 
   create<I extends Exact<DeepPartial<DividerData>, I>>(base?: I): DividerData {

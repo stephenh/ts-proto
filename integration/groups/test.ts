@@ -133,6 +133,14 @@ export const GroupsOptionalTest = {
     return message;
   },
 
+  fromJSON(object: any): GroupsOptionalTest {
+    return {
+      int1: isSet(object.int1) ? Number(object.int1) : undefined,
+      group: isSet(object.group) ? GroupsOptionalTest_Group.fromJSON(object.group) : undefined,
+      int3: isSet(object.int3) ? Number(object.int3) : undefined,
+    };
+  },
+
   toJSON(message: GroupsOptionalTest): unknown {
     const obj: any = {};
     if (message.int1 !== undefined && message.int1 !== 0) {
@@ -145,14 +153,6 @@ export const GroupsOptionalTest = {
       obj.int3 = Math.round(message.int3);
     }
     return obj;
-  },
-
-  fromJSON(object: any): GroupsOptionalTest {
-    return {
-      int1: isSet(object.int1) ? Number(object.int1) : undefined,
-      group: isSet(object.group) ? GroupsOptionalTest_Group.fromJSON(object.group) : undefined,
-      int3: isSet(object.int3) ? Number(object.int3) : undefined,
-    };
   },
 
   create<I extends Exact<DeepPartial<GroupsOptionalTest>, I>>(base?: I): GroupsOptionalTest {
@@ -242,6 +242,13 @@ export const GroupsOptionalTest_Group = {
     return message;
   },
 
+  fromJSON(object: any): GroupsOptionalTest_Group {
+    return {
+      key: isSet(object.key) ? String(object.key) : undefined,
+      value: isSet(object.value) ? String(object.value) : undefined,
+    };
+  },
+
   toJSON(message: GroupsOptionalTest_Group): unknown {
     const obj: any = {};
     if (message.key !== undefined && message.key !== "") {
@@ -251,13 +258,6 @@ export const GroupsOptionalTest_Group = {
       obj.value = message.value;
     }
     return obj;
-  },
-
-  fromJSON(object: any): GroupsOptionalTest_Group {
-    return {
-      key: isSet(object.key) ? String(object.key) : undefined,
-      value: isSet(object.value) ? String(object.value) : undefined,
-    };
   },
 
   create<I extends Exact<DeepPartial<GroupsOptionalTest_Group>, I>>(base?: I): GroupsOptionalTest_Group {
@@ -399,6 +399,16 @@ export const GroupsRepeatedTest = {
     return message;
   },
 
+  fromJSON(object: any): GroupsRepeatedTest {
+    return {
+      int1: Array.isArray(object?.int1) ? object.int1.map((e: any) => Number(e)) : undefined,
+      group: Array.isArray(object?.group)
+        ? object.group.map((e: any) => GroupsRepeatedTest_Group.fromJSON(e))
+        : undefined,
+      int3: Array.isArray(object?.int3) ? object.int3.map((e: any) => Number(e)) : undefined,
+    };
+  },
+
   toJSON(message: GroupsRepeatedTest): unknown {
     const obj: any = {};
     if (message.int1?.length) {
@@ -411,16 +421,6 @@ export const GroupsRepeatedTest = {
       obj.int3 = message.int3.map((e) => Math.round(e));
     }
     return obj;
-  },
-
-  fromJSON(object: any): GroupsRepeatedTest {
-    return {
-      int1: Array.isArray(object?.int1) ? object.int1.map((e: any) => Number(e)) : undefined,
-      group: Array.isArray(object?.group)
-        ? object.group.map((e: any) => GroupsRepeatedTest_Group.fromJSON(e))
-        : undefined,
-      int3: Array.isArray(object?.int3) ? object.int3.map((e: any) => Number(e)) : undefined,
-    };
   },
 
   create<I extends Exact<DeepPartial<GroupsRepeatedTest>, I>>(base?: I): GroupsRepeatedTest {
@@ -518,6 +518,13 @@ export const GroupsRepeatedTest_Group = {
     return message;
   },
 
+  fromJSON(object: any): GroupsRepeatedTest_Group {
+    return {
+      key: Array.isArray(object?.key) ? object.key.map((e: any) => String(e)) : undefined,
+      value: Array.isArray(object?.value) ? object.value.map((e: any) => String(e)) : undefined,
+    };
+  },
+
   toJSON(message: GroupsRepeatedTest_Group): unknown {
     const obj: any = {};
     if (message.key?.length) {
@@ -527,13 +534,6 @@ export const GroupsRepeatedTest_Group = {
       obj.value = message.value;
     }
     return obj;
-  },
-
-  fromJSON(object: any): GroupsRepeatedTest_Group {
-    return {
-      key: Array.isArray(object?.key) ? object.key.map((e: any) => String(e)) : undefined,
-      value: Array.isArray(object?.value) ? object.value.map((e: any) => String(e)) : undefined,
-    };
   },
 
   create<I extends Exact<DeepPartial<GroupsRepeatedTest_Group>, I>>(base?: I): GroupsRepeatedTest_Group {
@@ -675,6 +675,16 @@ export const GroupsNestedTest = {
     return message;
   },
 
+  fromJSON(object: any): GroupsNestedTest {
+    return {
+      int1: Array.isArray(object?.int1) ? object.int1.map((e: any) => Number(e)) : undefined,
+      group: Array.isArray(object?.group)
+        ? object.group.map((e: any) => GroupsNestedTest_Group.fromJSON(e))
+        : undefined,
+      int3: Array.isArray(object?.int3) ? object.int3.map((e: any) => Number(e)) : undefined,
+    };
+  },
+
   toJSON(message: GroupsNestedTest): unknown {
     const obj: any = {};
     if (message.int1?.length) {
@@ -687,16 +697,6 @@ export const GroupsNestedTest = {
       obj.int3 = message.int3.map((e) => Math.round(e));
     }
     return obj;
-  },
-
-  fromJSON(object: any): GroupsNestedTest {
-    return {
-      int1: Array.isArray(object?.int1) ? object.int1.map((e: any) => Number(e)) : undefined,
-      group: Array.isArray(object?.group)
-        ? object.group.map((e: any) => GroupsNestedTest_Group.fromJSON(e))
-        : undefined,
-      int3: Array.isArray(object?.int3) ? object.int3.map((e: any) => Number(e)) : undefined,
-    };
   },
 
   create<I extends Exact<DeepPartial<GroupsNestedTest>, I>>(base?: I): GroupsNestedTest {
@@ -779,20 +779,20 @@ export const GroupsNestedTest_Group = {
     return message;
   },
 
-  toJSON(message: GroupsNestedTest_Group): unknown {
-    const obj: any = {};
-    if (message.nested?.length) {
-      obj.nested = message.nested.map((e) => GroupsNestedTest_Group_Nested.toJSON(e));
-    }
-    return obj;
-  },
-
   fromJSON(object: any): GroupsNestedTest_Group {
     return {
       nested: Array.isArray(object?.nested)
         ? object.nested.map((e: any) => GroupsNestedTest_Group_Nested.fromJSON(e))
         : undefined,
     };
+  },
+
+  toJSON(message: GroupsNestedTest_Group): unknown {
+    const obj: any = {};
+    if (message.nested?.length) {
+      obj.nested = message.nested.map((e) => GroupsNestedTest_Group_Nested.toJSON(e));
+    }
+    return obj;
   },
 
   create<I extends Exact<DeepPartial<GroupsNestedTest_Group>, I>>(base?: I): GroupsNestedTest_Group {
@@ -873,20 +873,20 @@ export const GroupsNestedTest_Group_Nested = {
     return message;
   },
 
-  toJSON(message: GroupsNestedTest_Group_Nested): unknown {
-    const obj: any = {};
-    if (message.nested2?.length) {
-      obj.nested2 = message.nested2.map((e) => GroupsNestedTest_Group_Nested_Nested2.toJSON(e));
-    }
-    return obj;
-  },
-
   fromJSON(object: any): GroupsNestedTest_Group_Nested {
     return {
       nested2: Array.isArray(object?.nested2)
         ? object.nested2.map((e: any) => GroupsNestedTest_Group_Nested_Nested2.fromJSON(e))
         : undefined,
     };
+  },
+
+  toJSON(message: GroupsNestedTest_Group_Nested): unknown {
+    const obj: any = {};
+    if (message.nested2?.length) {
+      obj.nested2 = message.nested2.map((e) => GroupsNestedTest_Group_Nested_Nested2.toJSON(e));
+    }
+    return obj;
   },
 
   create<I extends Exact<DeepPartial<GroupsNestedTest_Group_Nested>, I>>(base?: I): GroupsNestedTest_Group_Nested {
@@ -964,16 +964,16 @@ export const GroupsNestedTest_Group_Nested_Nested2 = {
     return message;
   },
 
+  fromJSON(object: any): GroupsNestedTest_Group_Nested_Nested2 {
+    return { string1: isSet(object.string1) ? String(object.string1) : undefined };
+  },
+
   toJSON(message: GroupsNestedTest_Group_Nested_Nested2): unknown {
     const obj: any = {};
     if (message.string1 !== undefined && message.string1 !== "") {
       obj.string1 = message.string1;
     }
     return obj;
-  },
-
-  fromJSON(object: any): GroupsNestedTest_Group_Nested_Nested2 {
-    return { string1: isSet(object.string1) ? String(object.string1) : undefined };
   },
 
   create<I extends Exact<DeepPartial<GroupsNestedTest_Group_Nested_Nested2>, I>>(

@@ -173,16 +173,16 @@ export const Extendable = {
     return results;
   },
 
+  fromJSON(object: any): Extendable {
+    return { field: isSet(object.field) ? String(object.field) : undefined };
+  },
+
   toJSON(message: Extendable): unknown {
     const obj: any = {};
     if (message.field !== undefined && message.field !== "") {
       obj.field = message.field;
     }
     return obj;
-  },
-
-  fromJSON(object: any): Extendable {
-    return { field: isSet(object.field) ? String(object.field) : undefined };
   },
 
   create<I extends Exact<DeepPartial<Extendable>, I>>(base?: I): Extendable {
@@ -283,16 +283,16 @@ export const Nested = {
     return message;
   },
 
+  fromJSON(object: any): Nested {
+    return { field: isSet(object.field) ? String(object.field) : undefined };
+  },
+
   toJSON(message: Nested): unknown {
     const obj: any = {};
     if (message.field !== undefined && message.field !== "") {
       obj.field = message.field;
     }
     return obj;
-  },
-
-  fromJSON(object: any): Nested {
-    return { field: isSet(object.field) ? String(object.field) : undefined };
   },
 
   create<I extends Exact<DeepPartial<Nested>, I>>(base?: I): Nested {
@@ -378,6 +378,13 @@ export const Group = {
     return message;
   },
 
+  fromJSON(object: any): Group {
+    return {
+      name: isSet(object.name) ? String(object.name) : undefined,
+      value: isSet(object.value) ? String(object.value) : undefined,
+    };
+  },
+
   toJSON(message: Group): unknown {
     const obj: any = {};
     if (message.name !== undefined && message.name !== "") {
@@ -387,13 +394,6 @@ export const Group = {
       obj.value = message.value;
     }
     return obj;
-  },
-
-  fromJSON(object: any): Group {
-    return {
-      name: isSet(object.name) ? String(object.name) : undefined,
-      value: isSet(object.value) ? String(object.value) : undefined,
-    };
   },
 
   create<I extends Exact<DeepPartial<Group>, I>>(base?: I): Group {

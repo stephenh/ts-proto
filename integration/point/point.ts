@@ -58,6 +58,10 @@ export const Point = {
     return message;
   },
 
+  fromJSON(object: any): Point {
+    return { lat: isSet(object.lat) ? Number(object.lat) : 0, lng: isSet(object.lng) ? Number(object.lng) : 0 };
+  },
+
   toJSON(message: Point): unknown {
     const obj: any = {};
     if (message.lat !== 0) {
@@ -67,10 +71,6 @@ export const Point = {
       obj.lng = message.lng;
     }
     return obj;
-  },
-
-  fromJSON(object: any): Point {
-    return { lat: isSet(object.lat) ? Number(object.lat) : 0, lng: isSet(object.lng) ? Number(object.lng) : 0 };
   },
 
   create<I extends Exact<DeepPartial<Point>, I>>(base?: I): Point {
@@ -130,6 +130,13 @@ export const Area = {
     return message;
   },
 
+  fromJSON(object: any): Area {
+    return {
+      nw: isSet(object.nw) ? Point.fromJSON(object.nw) : undefined,
+      se: isSet(object.se) ? Point.fromJSON(object.se) : undefined,
+    };
+  },
+
   toJSON(message: Area): unknown {
     const obj: any = {};
     if (message.nw !== undefined) {
@@ -139,13 +146,6 @@ export const Area = {
       obj.se = Point.toJSON(message.se);
     }
     return obj;
-  },
-
-  fromJSON(object: any): Area {
-    return {
-      nw: isSet(object.nw) ? Point.fromJSON(object.nw) : undefined,
-      se: isSet(object.se) ? Point.fromJSON(object.se) : undefined,
-    };
   },
 
   create<I extends Exact<DeepPartial<Area>, I>>(base?: I): Area {

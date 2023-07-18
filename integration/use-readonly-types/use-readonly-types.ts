@@ -197,6 +197,28 @@ export const Entity = {
     return message;
   },
 
+  fromJSON(object: any): Entity {
+    return {
+      intVal: isSet(object.intVal) ? Number(object.intVal) : 0,
+      stringVal: isSet(object.stringVal) ? String(object.stringVal) : "",
+      intArray: Array.isArray(object?.intArray) ? object.intArray.map((e: any) => Number(e)) : [],
+      stringArray: Array.isArray(object?.stringArray) ? object.stringArray.map((e: any) => String(e)) : [],
+      subEntity: isSet(object.subEntity) ? SubEntity.fromJSON(object.subEntity) : undefined,
+      subEntityArray: Array.isArray(object?.subEntityArray)
+        ? object.subEntityArray.map((e: any) => SubEntity.fromJSON(e))
+        : [],
+      optionalIntVal: isSet(object.optionalIntVal) ? Number(object.optionalIntVal) : undefined,
+      fieldMask: isSet(object.fieldMask) ? FieldMask.unwrap(FieldMask.fromJSON(object.fieldMask)) : undefined,
+      listValue: Array.isArray(object.listValue) ? [...object.listValue] : undefined,
+      structValue: isObject(object.structValue) ? object.structValue : undefined,
+      oneOfValue: isSet(object.theStringValue)
+        ? { $case: "theStringValue", theStringValue: String(object.theStringValue) }
+        : isSet(object.theIntValue)
+        ? { $case: "theIntValue", theIntValue: Number(object.theIntValue) }
+        : undefined,
+    };
+  },
+
   toJSON(message: Entity): unknown {
     const obj: any = {};
     if (message.intVal !== 0) {
@@ -236,28 +258,6 @@ export const Entity = {
       obj.theIntValue = Math.round(message.oneOfValue.theIntValue);
     }
     return obj;
-  },
-
-  fromJSON(object: any): Entity {
-    return {
-      intVal: isSet(object.intVal) ? Number(object.intVal) : 0,
-      stringVal: isSet(object.stringVal) ? String(object.stringVal) : "",
-      intArray: Array.isArray(object?.intArray) ? object.intArray.map((e: any) => Number(e)) : [],
-      stringArray: Array.isArray(object?.stringArray) ? object.stringArray.map((e: any) => String(e)) : [],
-      subEntity: isSet(object.subEntity) ? SubEntity.fromJSON(object.subEntity) : undefined,
-      subEntityArray: Array.isArray(object?.subEntityArray)
-        ? object.subEntityArray.map((e: any) => SubEntity.fromJSON(e))
-        : [],
-      optionalIntVal: isSet(object.optionalIntVal) ? Number(object.optionalIntVal) : undefined,
-      fieldMask: isSet(object.fieldMask) ? FieldMask.unwrap(FieldMask.fromJSON(object.fieldMask)) : undefined,
-      listValue: Array.isArray(object.listValue) ? [...object.listValue] : undefined,
-      structValue: isObject(object.structValue) ? object.structValue : undefined,
-      oneOfValue: isSet(object.theStringValue)
-        ? { $case: "theStringValue", theStringValue: String(object.theStringValue) }
-        : isSet(object.theIntValue)
-        ? { $case: "theIntValue", theIntValue: Number(object.theIntValue) }
-        : undefined,
-    };
   },
 
   create<I extends Exact<DeepPartial<Entity>, I>>(base?: I): Entity {
@@ -331,16 +331,16 @@ export const SubEntity = {
     return message;
   },
 
+  fromJSON(object: any): SubEntity {
+    return { subVal: isSet(object.subVal) ? Number(object.subVal) : 0 };
+  },
+
   toJSON(message: SubEntity): unknown {
     const obj: any = {};
     if (message.subVal !== 0) {
       obj.subVal = Math.round(message.subVal);
     }
     return obj;
-  },
-
-  fromJSON(object: any): SubEntity {
-    return { subVal: isSet(object.subVal) ? Number(object.subVal) : 0 };
   },
 
   create<I extends Exact<DeepPartial<SubEntity>, I>>(base?: I): SubEntity {

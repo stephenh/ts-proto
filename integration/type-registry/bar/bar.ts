@@ -47,16 +47,16 @@ export const Bar = {
     return message;
   },
 
+  fromJSON(object: any): Bar {
+    return { $type: Bar.$type, foo: isSet(object.foo) ? Foo.fromJSON(object.foo) : undefined };
+  },
+
   toJSON(message: Bar): unknown {
     const obj: any = {};
     if (message.foo !== undefined) {
       obj.foo = Foo.toJSON(message.foo);
     }
     return obj;
-  },
-
-  fromJSON(object: any): Bar {
-    return { $type: Bar.$type, foo: isSet(object.foo) ? Foo.fromJSON(object.foo) : undefined };
   },
 
   create<I extends Exact<DeepPartial<Bar>, I>>(base?: I): Bar {

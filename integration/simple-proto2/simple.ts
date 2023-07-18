@@ -75,16 +75,16 @@ export const Issue56 = {
     return message;
   },
 
+  fromJSON(object: any): Issue56 {
+    return { test: isSet(object.test) ? enumWithoutZeroFromJSON(object.test) : 1 };
+  },
+
   toJSON(message: Issue56): unknown {
     const obj: any = {};
     if (message.test !== 1) {
       obj.test = enumWithoutZeroToJSON(message.test);
     }
     return obj;
-  },
-
-  fromJSON(object: any): Issue56 {
-    return { test: isSet(object.test) ? enumWithoutZeroFromJSON(object.test) : 1 };
   },
 
   create<I extends Exact<DeepPartial<Issue56>, I>>(base?: I): Issue56 {

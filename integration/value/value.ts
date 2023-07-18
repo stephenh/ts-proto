@@ -88,6 +88,16 @@ export const ValueMessage = {
     return message;
   },
 
+  fromJSON(object: any): ValueMessage {
+    return {
+      value: isSet(object?.value) ? object.value : undefined,
+      anyList: Array.isArray(object.anyList) ? [...object.anyList] : undefined,
+      repeatedAny: Array.isArray(object?.repeatedAny) ? [...object.repeatedAny] : [],
+      repeatedStrings: Array.isArray(object?.repeatedStrings) ? object.repeatedStrings.map((e: any) => String(e)) : [],
+      structValue: isObject(object.structValue) ? object.structValue : undefined,
+    };
+  },
+
   toJSON(message: ValueMessage): unknown {
     const obj: any = {};
     if (message.value !== undefined) {
@@ -106,16 +116,6 @@ export const ValueMessage = {
       obj.structValue = message.structValue;
     }
     return obj;
-  },
-
-  fromJSON(object: any): ValueMessage {
-    return {
-      value: isSet(object?.value) ? object.value : undefined,
-      anyList: Array.isArray(object.anyList) ? [...object.anyList] : undefined,
-      repeatedAny: Array.isArray(object?.repeatedAny) ? [...object.repeatedAny] : [],
-      repeatedStrings: Array.isArray(object?.repeatedStrings) ? object.repeatedStrings.map((e: any) => String(e)) : [],
-      structValue: isObject(object.structValue) ? object.structValue : undefined,
-    };
   },
 
   create<I extends Exact<DeepPartial<ValueMessage>, I>>(base?: I): ValueMessage {

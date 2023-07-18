@@ -75,16 +75,16 @@ export const Child = {
     return message;
   },
 
+  fromJSON(object: any): Child {
+    return { name: isSet(object.name) ? String(object.name) : "" };
+  },
+
   toJSON(message: Child): unknown {
     const obj: any = {};
     if (message.name !== "") {
       obj.name = message.name;
     }
     return obj;
-  },
-
-  fromJSON(object: any): Child {
-    return { name: isSet(object.name) ? String(object.name) : "" };
   },
 
   create<I extends Exact<DeepPartial<Child>, I>>(base?: I): Child {

@@ -51,6 +51,10 @@ export const Bar = {
     return message;
   },
 
+  fromJSON(object: any): Bar {
+    return { name: isSet(object.name) ? String(object.name) : "", age: isSet(object.age) ? Number(object.age) : 0 };
+  },
+
   toJSON(message: Bar): unknown {
     const obj: any = {};
     if (message.name !== "") {
@@ -60,10 +64,6 @@ export const Bar = {
       obj.age = Math.round(message.age);
     }
     return obj;
-  },
-
-  fromJSON(object: any): Bar {
-    return { name: isSet(object.name) ? String(object.name) : "", age: isSet(object.age) ? Number(object.age) : 0 };
   },
 
   create<I extends Exact<DeepPartial<Bar>, I>>(base?: I): Bar {

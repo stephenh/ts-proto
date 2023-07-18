@@ -46,16 +46,16 @@ export const Object = {
     return message;
   },
 
+  fromJSON(object: any): Object {
+    return { name: isSet(object.name) ? String(object.name) : "" };
+  },
+
   toJSON(message: Object): unknown {
     const obj: any = {};
     if (message.name !== "") {
       obj.name = message.name;
     }
     return obj;
-  },
-
-  fromJSON(object: any): Object {
-    return { name: isSet(object.name) ? String(object.name) : "" };
   },
 
   create<I extends Exact<DeepPartial<Object>, I>>(base?: I): Object {
@@ -104,16 +104,16 @@ export const Error = {
     return message;
   },
 
+  fromJSON(object: any): Error {
+    return { name: isSet(object.name) ? String(object.name) : "" };
+  },
+
   toJSON(message: Error): unknown {
     const obj: any = {};
     if (message.name !== "") {
       obj.name = message.name;
     }
     return obj;
-  },
-
-  fromJSON(object: any): Error {
-    return { name: isSet(object.name) ? String(object.name) : "" };
   },
 
   create<I extends Exact<DeepPartial<Error>, I>>(base?: I): Error {

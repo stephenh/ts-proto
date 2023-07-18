@@ -55,16 +55,16 @@ export const TimestampMessage = {
     return message;
   },
 
+  fromJSON(object: any): TimestampMessage {
+    return { timestamp: isSet(object.timestamp) ? String(object.timestamp) : undefined };
+  },
+
   toJSON(message: TimestampMessage): unknown {
     const obj: any = {};
     if (message.timestamp !== undefined) {
       obj.timestamp = message.timestamp;
     }
     return obj;
-  },
-
-  fromJSON(object: any): TimestampMessage {
-    return { timestamp: isSet(object.timestamp) ? String(object.timestamp) : undefined };
   },
 
   create<I extends Exact<DeepPartial<TimestampMessage>, I>>(base?: I): TimestampMessage {

@@ -160,6 +160,14 @@ export const Timestamp = {
     return message;
   },
 
+  fromJSON(object: any): Timestamp {
+    return {
+      $type: Timestamp.$type,
+      seconds: isSet(object.seconds) ? Number(object.seconds) : 0,
+      nanos: isSet(object.nanos) ? Number(object.nanos) : 0,
+    };
+  },
+
   toJSON(message: Timestamp): unknown {
     const obj: any = {};
     if (message.seconds !== 0) {
@@ -169,14 +177,6 @@ export const Timestamp = {
       obj.nanos = Math.round(message.nanos);
     }
     return obj;
-  },
-
-  fromJSON(object: any): Timestamp {
-    return {
-      $type: Timestamp.$type,
-      seconds: isSet(object.seconds) ? Number(object.seconds) : 0,
-      nanos: isSet(object.nanos) ? Number(object.nanos) : 0,
-    };
   },
 
   create<I extends Exact<DeepPartial<Timestamp>, I>>(base?: I): Timestamp {

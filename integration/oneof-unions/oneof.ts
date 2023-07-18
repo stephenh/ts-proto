@@ -231,6 +231,35 @@ export const PleaseChoose = {
     return message;
   },
 
+  fromJSON(object: any): PleaseChoose {
+    return {
+      name: isSet(object.name) ? String(object.name) : "",
+      choice: isSet(object.aNumber)
+        ? { $case: "aNumber", aNumber: Number(object.aNumber) }
+        : isSet(object.aString)
+        ? { $case: "aString", aString: String(object.aString) }
+        : isSet(object.aMessage)
+        ? { $case: "aMessage", aMessage: PleaseChoose_Submessage.fromJSON(object.aMessage) }
+        : isSet(object.aBool)
+        ? { $case: "aBool", aBool: Boolean(object.aBool) }
+        : isSet(object.bunchaBytes)
+        ? { $case: "bunchaBytes", bunchaBytes: bytesFromBase64(object.bunchaBytes) }
+        : isSet(object.anEnum)
+        ? { $case: "anEnum", anEnum: pleaseChoose_StateEnumFromJSON(object.anEnum) }
+        : undefined,
+      age: isSet(object.age) ? Number(object.age) : 0,
+      eitherOr: isSet(object.either)
+        ? { $case: "either", either: String(object.either) }
+        : isSet(object.or)
+        ? { $case: "or", or: String(object.or) }
+        : isSet(object.thirdOption)
+        ? { $case: "thirdOption", thirdOption: String(object.thirdOption) }
+        : undefined,
+      signature: isSet(object.signature) ? bytesFromBase64(object.signature) : new Uint8Array(0),
+      value: isSet(object?.value) ? object.value : undefined,
+    };
+  },
+
   toJSON(message: PleaseChoose): unknown {
     const obj: any = {};
     if (message.name !== "") {
@@ -273,35 +302,6 @@ export const PleaseChoose = {
       obj.value = message.value;
     }
     return obj;
-  },
-
-  fromJSON(object: any): PleaseChoose {
-    return {
-      name: isSet(object.name) ? String(object.name) : "",
-      choice: isSet(object.aNumber)
-        ? { $case: "aNumber", aNumber: Number(object.aNumber) }
-        : isSet(object.aString)
-        ? { $case: "aString", aString: String(object.aString) }
-        : isSet(object.aMessage)
-        ? { $case: "aMessage", aMessage: PleaseChoose_Submessage.fromJSON(object.aMessage) }
-        : isSet(object.aBool)
-        ? { $case: "aBool", aBool: Boolean(object.aBool) }
-        : isSet(object.bunchaBytes)
-        ? { $case: "bunchaBytes", bunchaBytes: bytesFromBase64(object.bunchaBytes) }
-        : isSet(object.anEnum)
-        ? { $case: "anEnum", anEnum: pleaseChoose_StateEnumFromJSON(object.anEnum) }
-        : undefined,
-      age: isSet(object.age) ? Number(object.age) : 0,
-      eitherOr: isSet(object.either)
-        ? { $case: "either", either: String(object.either) }
-        : isSet(object.or)
-        ? { $case: "or", or: String(object.or) }
-        : isSet(object.thirdOption)
-        ? { $case: "thirdOption", thirdOption: String(object.thirdOption) }
-        : undefined,
-      signature: isSet(object.signature) ? bytesFromBase64(object.signature) : new Uint8Array(0),
-      value: isSet(object?.value) ? object.value : undefined,
-    };
   },
 
   create<I extends Exact<DeepPartial<PleaseChoose>, I>>(base?: I): PleaseChoose {
@@ -392,16 +392,16 @@ export const PleaseChoose_Submessage = {
     return message;
   },
 
+  fromJSON(object: any): PleaseChoose_Submessage {
+    return { name: isSet(object.name) ? String(object.name) : "" };
+  },
+
   toJSON(message: PleaseChoose_Submessage): unknown {
     const obj: any = {};
     if (message.name !== "") {
       obj.name = message.name;
     }
     return obj;
-  },
-
-  fromJSON(object: any): PleaseChoose_Submessage {
-    return { name: isSet(object.name) ? String(object.name) : "" };
   },
 
   create<I extends Exact<DeepPartial<PleaseChoose_Submessage>, I>>(base?: I): PleaseChoose_Submessage {
@@ -460,6 +460,13 @@ export const SimpleButOptional = {
     return message;
   },
 
+  fromJSON(object: any): SimpleButOptional {
+    return {
+      name: isSet(object.name) ? String(object.name) : undefined,
+      age: isSet(object.age) ? Number(object.age) : undefined,
+    };
+  },
+
   toJSON(message: SimpleButOptional): unknown {
     const obj: any = {};
     if (message.name !== undefined) {
@@ -469,13 +476,6 @@ export const SimpleButOptional = {
       obj.age = Math.round(message.age);
     }
     return obj;
-  },
-
-  fromJSON(object: any): SimpleButOptional {
-    return {
-      name: isSet(object.name) ? String(object.name) : undefined,
-      age: isSet(object.age) ? Number(object.age) : undefined,
-    };
   },
 
   create<I extends Exact<DeepPartial<SimpleButOptional>, I>>(base?: I): SimpleButOptional {

@@ -140,6 +140,13 @@ export const DashFlash = {
     return message;
   },
 
+  fromJSON(object: any): DashFlash {
+    return {
+      msg: isSet(object.msg) ? String(object.msg) : "",
+      type: isSet(object.type) ? dashFlash_TypeFromJSON(object.type) : 0,
+    };
+  },
+
   toJSON(message: DashFlash): unknown {
     const obj: any = {};
     if (message.msg !== "") {
@@ -149,13 +156,6 @@ export const DashFlash = {
       obj.type = dashFlash_TypeToJSON(message.type);
     }
     return obj;
-  },
-
-  fromJSON(object: any): DashFlash {
-    return {
-      msg: isSet(object.msg) ? String(object.msg) : "",
-      type: isSet(object.type) ? dashFlash_TypeFromJSON(object.type) : 0,
-    };
   },
 
   create<I extends Exact<DeepPartial<DashFlash>, I>>(base?: I): DashFlash {
@@ -225,6 +225,14 @@ export const DashUserSettingsState = {
     return message;
   },
 
+  fromJSON(object: any): DashUserSettingsState {
+    return {
+      email: isSet(object.email) ? String(object.email) : "",
+      urls: isSet(object.urls) ? DashUserSettingsState_URLs.fromJSON(object.urls) : undefined,
+      flashes: Array.isArray(object?.flashes) ? object.flashes.map((e: any) => DashFlash.fromJSON(e)) : [],
+    };
+  },
+
   toJSON(message: DashUserSettingsState): unknown {
     const obj: any = {};
     if (message.email !== "") {
@@ -237,14 +245,6 @@ export const DashUserSettingsState = {
       obj.flashes = message.flashes.map((e) => DashFlash.toJSON(e));
     }
     return obj;
-  },
-
-  fromJSON(object: any): DashUserSettingsState {
-    return {
-      email: isSet(object.email) ? String(object.email) : "",
-      urls: isSet(object.urls) ? DashUserSettingsState_URLs.fromJSON(object.urls) : undefined,
-      flashes: Array.isArray(object?.flashes) ? object.flashes.map((e: any) => DashFlash.fromJSON(e)) : [],
-    };
   },
 
   create<I extends Exact<DeepPartial<DashUserSettingsState>, I>>(base?: I): DashUserSettingsState {
@@ -307,6 +307,13 @@ export const DashUserSettingsState_URLs = {
     return message;
   },
 
+  fromJSON(object: any): DashUserSettingsState_URLs {
+    return {
+      connectGoogle: isSet(object.connectGoogle) ? String(object.connectGoogle) : "",
+      connectGithub: isSet(object.connectGithub) ? String(object.connectGithub) : "",
+    };
+  },
+
   toJSON(message: DashUserSettingsState_URLs): unknown {
     const obj: any = {};
     if (message.connectGoogle !== "") {
@@ -316,13 +323,6 @@ export const DashUserSettingsState_URLs = {
       obj.connectGithub = message.connectGithub;
     }
     return obj;
-  },
-
-  fromJSON(object: any): DashUserSettingsState_URLs {
-    return {
-      connectGoogle: isSet(object.connectGoogle) ? String(object.connectGoogle) : "",
-      connectGithub: isSet(object.connectGithub) ? String(object.connectGithub) : "",
-    };
   },
 
   create<I extends Exact<DeepPartial<DashUserSettingsState_URLs>, I>>(base?: I): DashUserSettingsState_URLs {
@@ -402,6 +402,15 @@ export const DashCred = {
     return message;
   },
 
+  fromJSON(object: any): DashCred {
+    return {
+      description: isSet(object.description) ? String(object.description) : "",
+      metadata: isSet(object.metadata) ? String(object.metadata) : "",
+      token: isSet(object.token) ? String(object.token) : "",
+      id: isSet(object.id) ? String(object.id) : "",
+    };
+  },
+
   toJSON(message: DashCred): unknown {
     const obj: any = {};
     if (message.description !== "") {
@@ -417,15 +426,6 @@ export const DashCred = {
       obj.id = message.id;
     }
     return obj;
-  },
-
-  fromJSON(object: any): DashCred {
-    return {
-      description: isSet(object.description) ? String(object.description) : "",
-      metadata: isSet(object.metadata) ? String(object.metadata) : "",
-      token: isSet(object.token) ? String(object.token) : "",
-      id: isSet(object.id) ? String(object.id) : "",
-    };
   },
 
   create<I extends Exact<DeepPartial<DashCred>, I>>(base?: I): DashCred {
@@ -487,6 +487,13 @@ export const DashAPICredsCreateReq = {
     return message;
   },
 
+  fromJSON(object: any): DashAPICredsCreateReq {
+    return {
+      description: isSet(object.description) ? String(object.description) : "",
+      metadata: isSet(object.metadata) ? String(object.metadata) : "",
+    };
+  },
+
   toJSON(message: DashAPICredsCreateReq): unknown {
     const obj: any = {};
     if (message.description !== "") {
@@ -496,13 +503,6 @@ export const DashAPICredsCreateReq = {
       obj.metadata = message.metadata;
     }
     return obj;
-  },
-
-  fromJSON(object: any): DashAPICredsCreateReq {
-    return {
-      description: isSet(object.description) ? String(object.description) : "",
-      metadata: isSet(object.metadata) ? String(object.metadata) : "",
-    };
   },
 
   create<I extends Exact<DeepPartial<DashAPICredsCreateReq>, I>>(base?: I): DashAPICredsCreateReq {
@@ -582,6 +582,15 @@ export const DashAPICredsUpdateReq = {
     return message;
   },
 
+  fromJSON(object: any): DashAPICredsUpdateReq {
+    return {
+      credSid: isSet(object.credSid) ? String(object.credSid) : "",
+      description: isSet(object.description) ? String(object.description) : "",
+      metadata: isSet(object.metadata) ? String(object.metadata) : "",
+      id: isSet(object.id) ? String(object.id) : "",
+    };
+  },
+
   toJSON(message: DashAPICredsUpdateReq): unknown {
     const obj: any = {};
     if (message.credSid !== "") {
@@ -597,15 +606,6 @@ export const DashAPICredsUpdateReq = {
       obj.id = message.id;
     }
     return obj;
-  },
-
-  fromJSON(object: any): DashAPICredsUpdateReq {
-    return {
-      credSid: isSet(object.credSid) ? String(object.credSid) : "",
-      description: isSet(object.description) ? String(object.description) : "",
-      metadata: isSet(object.metadata) ? String(object.metadata) : "",
-      id: isSet(object.id) ? String(object.id) : "",
-    };
   },
 
   create<I extends Exact<DeepPartial<DashAPICredsUpdateReq>, I>>(base?: I): DashAPICredsUpdateReq {
@@ -667,6 +667,13 @@ export const DashAPICredsDeleteReq = {
     return message;
   },
 
+  fromJSON(object: any): DashAPICredsDeleteReq {
+    return {
+      credSid: isSet(object.credSid) ? String(object.credSid) : "",
+      id: isSet(object.id) ? String(object.id) : "",
+    };
+  },
+
   toJSON(message: DashAPICredsDeleteReq): unknown {
     const obj: any = {};
     if (message.credSid !== "") {
@@ -676,13 +683,6 @@ export const DashAPICredsDeleteReq = {
       obj.id = message.id;
     }
     return obj;
-  },
-
-  fromJSON(object: any): DashAPICredsDeleteReq {
-    return {
-      credSid: isSet(object.credSid) ? String(object.credSid) : "",
-      id: isSet(object.id) ? String(object.id) : "",
-    };
   },
 
   create<I extends Exact<DeepPartial<DashAPICredsDeleteReq>, I>>(base?: I): DashAPICredsDeleteReq {
@@ -722,13 +722,13 @@ export const Empty = {
     return message;
   },
 
+  fromJSON(_: any): Empty {
+    return {};
+  },
+
   toJSON(_: Empty): unknown {
     const obj: any = {};
     return obj;
-  },
-
-  fromJSON(_: any): Empty {
-    return {};
   },
 
   create<I extends Exact<DeepPartial<Empty>, I>>(base?: I): Empty {

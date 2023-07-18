@@ -45,16 +45,16 @@ export const Baz = {
     return message;
   },
 
+  fromJSON(object: any): Baz {
+    return { foo: isSet(object.foo) ? FooBar.fromJSON(object.foo) : undefined };
+  },
+
   toJSON(message: Baz): unknown {
     const obj: any = {};
     if (message.foo !== undefined) {
       obj.foo = FooBar.toJSON(message.foo);
     }
     return obj;
-  },
-
-  fromJSON(object: any): Baz {
-    return { foo: isSet(object.foo) ? FooBar.fromJSON(object.foo) : undefined };
   },
 
   create<I extends Exact<DeepPartial<Baz>, I>>(base?: I): Baz {
@@ -93,13 +93,13 @@ export const FooBar = {
     return message;
   },
 
+  fromJSON(_: any): FooBar {
+    return {};
+  },
+
   toJSON(_: FooBar): unknown {
     const obj: any = {};
     return obj;
-  },
-
-  fromJSON(_: any): FooBar {
-    return {};
   },
 
   create<I extends Exact<DeepPartial<FooBar>, I>>(base?: I): FooBar {

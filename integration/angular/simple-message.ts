@@ -42,16 +42,16 @@ export const SimpleMessage = {
     return message;
   },
 
+  fromJSON(object: any): SimpleMessage {
+    return { numberField: isSet(object.numberField) ? Number(object.numberField) : 0 };
+  },
+
   toJSON(message: SimpleMessage): unknown {
     const obj: any = {};
     if (message.numberField !== 0) {
       obj.numberField = Math.round(message.numberField);
     }
     return obj;
-  },
-
-  fromJSON(object: any): SimpleMessage {
-    return { numberField: isSet(object.numberField) ? Number(object.numberField) : 0 };
   },
 
   create<I extends Exact<DeepPartial<SimpleMessage>, I>>(base?: I): SimpleMessage {
