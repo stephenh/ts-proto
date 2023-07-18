@@ -43,16 +43,16 @@ export const StructMessage = {
     return message;
   },
 
-  fromJSON(object: any): StructMessage {
-    return { value: isObject(object.value) ? object.value : undefined };
-  },
-
   toJSON(message: StructMessage): unknown {
     const obj: any = {};
     if (message.value !== undefined) {
       obj.value = message.value;
     }
     return obj;
+  },
+
+  fromJSON(object: any): StructMessage {
+    return { value: isObject(object.value) ? object.value : undefined };
   },
 
   create<I extends Exact<DeepPartial<StructMessage>, I>>(base?: I): StructMessage {

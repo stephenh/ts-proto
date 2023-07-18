@@ -236,14 +236,13 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
         }
         if (options.outputJsonMethods) {
           if(options.outputJsonMethods  === true ||
-            options.outputEncodeMethods === "encode-only" ||
-            options.outputEncodeMethods === "encode-no-creation"
+            options.outputJsonMethods === "encode-only"
           ){
-            staticMembers.push(generateFromJson(ctx, fullName, fullTypeName, message));
+            staticMembers.push(generateToJson(ctx, fullName, fullTypeName, message));
           }
 
-          if (options.outputEncodeMethods === true || options.outputEncodeMethods === "decode-only") {
-            staticMembers.push(generateToJson(ctx, fullName, fullTypeName, message));
+          if (options.outputJsonMethods === true || options.outputJsonMethods === "decode-only") {
+            staticMembers.push(generateFromJson(ctx, fullName, fullTypeName, message));
           }
         }
         if (options.outputPartialMethods) {

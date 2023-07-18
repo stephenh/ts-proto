@@ -89,14 +89,6 @@ export const DateMessage = {
     return message;
   },
 
-  fromJSON(object: any): DateMessage {
-    return {
-      year: isSet(object.year) ? Number(object.year) : 0,
-      month: isSet(object.month) ? Number(object.month) : 0,
-      day: isSet(object.day) ? Number(object.day) : 0,
-    };
-  },
-
   toJSON(message: DateMessage): unknown {
     const obj: any = {};
     if (message.year !== 0) {
@@ -109,6 +101,14 @@ export const DateMessage = {
       obj.day = Math.round(message.day);
     }
     return obj;
+  },
+
+  fromJSON(object: any): DateMessage {
+    return {
+      year: isSet(object.year) ? Number(object.year) : 0,
+      month: isSet(object.month) ? Number(object.month) : 0,
+      day: isSet(object.day) ? Number(object.day) : 0,
+    };
   },
 
   create<I extends Exact<DeepPartial<DateMessage>, I>>(base?: I): DateMessage {

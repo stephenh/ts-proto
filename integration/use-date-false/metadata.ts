@@ -43,16 +43,16 @@ export const Metadata = {
     return message;
   },
 
-  fromJSON(object: any): Metadata {
-    return { lastEdited: isSet(object.lastEdited) ? fromJsonTimestamp(object.lastEdited) : undefined };
-  },
-
   toJSON(message: Metadata): unknown {
     const obj: any = {};
     if (message.lastEdited !== undefined) {
       obj.lastEdited = fromTimestamp(message.lastEdited).toISOString();
     }
     return obj;
+  },
+
+  fromJSON(object: any): Metadata {
+    return { lastEdited: isSet(object.lastEdited) ? fromJsonTimestamp(object.lastEdited) : undefined };
   },
 
   create<I extends Exact<DeepPartial<Metadata>, I>>(base?: I): Metadata {

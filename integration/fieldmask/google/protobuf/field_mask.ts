@@ -243,6 +243,10 @@ export const FieldMask = {
     return message;
   },
 
+  toJSON(message: FieldMask): string {
+    return message.paths.join(",");
+  },
+
   fromJSON(object: any): FieldMask {
     return {
       paths: typeof (object) === "string"
@@ -251,10 +255,6 @@ export const FieldMask = {
         ? object.paths.map(String)
         : [],
     };
-  },
-
-  toJSON(message: FieldMask): string {
-    return message.paths.join(",");
   },
 
   create<I extends Exact<DeepPartial<FieldMask>, I>>(base?: I): FieldMask {

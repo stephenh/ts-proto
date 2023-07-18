@@ -59,16 +59,16 @@ export const HeroById = {
     return message;
   },
 
-  fromJSON(object: any): HeroById {
-    return { id: isSet(object.id) ? Number(object.id) : 0 };
-  },
-
   toJSON(message: HeroById): unknown {
     const obj: any = {};
     if (message.id !== 0) {
       obj.id = Math.round(message.id);
     }
     return obj;
+  },
+
+  fromJSON(object: any): HeroById {
+    return { id: isSet(object.id) ? Number(object.id) : 0 };
   },
 
   create<I extends Exact<DeepPartial<HeroById>, I>>(base?: I): HeroById {
@@ -117,16 +117,16 @@ export const VillainById = {
     return message;
   },
 
-  fromJSON(object: any): VillainById {
-    return { id: isSet(object.id) ? Number(object.id) : 0 };
-  },
-
   toJSON(message: VillainById): unknown {
     const obj: any = {};
     if (message.id !== 0) {
       obj.id = Math.round(message.id);
     }
     return obj;
+  },
+
+  fromJSON(object: any): VillainById {
+    return { id: isSet(object.id) ? Number(object.id) : 0 };
   },
 
   create<I extends Exact<DeepPartial<VillainById>, I>>(base?: I): VillainById {
@@ -185,10 +185,6 @@ export const Hero = {
     return message;
   },
 
-  fromJSON(object: any): Hero {
-    return { id: isSet(object.id) ? Number(object.id) : 0, name: isSet(object.name) ? String(object.name) : "" };
-  },
-
   toJSON(message: Hero): unknown {
     const obj: any = {};
     if (message.id !== 0) {
@@ -198,6 +194,10 @@ export const Hero = {
       obj.name = message.name;
     }
     return obj;
+  },
+
+  fromJSON(object: any): Hero {
+    return { id: isSet(object.id) ? Number(object.id) : 0, name: isSet(object.name) ? String(object.name) : "" };
   },
 
   create<I extends Exact<DeepPartial<Hero>, I>>(base?: I): Hero {
@@ -257,10 +257,6 @@ export const Villain = {
     return message;
   },
 
-  fromJSON(object: any): Villain {
-    return { id: isSet(object.id) ? Number(object.id) : 0, name: isSet(object.name) ? String(object.name) : "" };
-  },
-
   toJSON(message: Villain): unknown {
     const obj: any = {};
     if (message.id !== 0) {
@@ -270,6 +266,10 @@ export const Villain = {
       obj.name = message.name;
     }
     return obj;
+  },
+
+  fromJSON(object: any): Villain {
+    return { id: isSet(object.id) ? Number(object.id) : 0, name: isSet(object.name) ? String(object.name) : "" };
   },
 
   create<I extends Exact<DeepPartial<Villain>, I>>(base?: I): Villain {

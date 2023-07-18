@@ -48,16 +48,16 @@ export const SimpleStruct = {
     return message;
   },
 
-  fromJSON(object: any): SimpleStruct {
-    return { simple_struct: isObject(object.simple_struct) ? object.simple_struct : undefined };
-  },
-
   toJSON(message: SimpleStruct): unknown {
     const obj: any = {};
     if (message.simple_struct !== undefined) {
       obj.simple_struct = message.simple_struct;
     }
     return obj;
+  },
+
+  fromJSON(object: any): SimpleStruct {
+    return { simple_struct: isObject(object.simple_struct) ? object.simple_struct : undefined };
   },
 
   create<I extends Exact<DeepPartial<SimpleStruct>, I>>(base?: I): SimpleStruct {

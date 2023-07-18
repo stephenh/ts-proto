@@ -58,16 +58,16 @@ export const Foo = {
     return message;
   },
 
-  fromJSON(object: any): Foo {
-    return { $type: Foo.$type, timestamp: isSet(object.timestamp) ? fromJsonTimestamp(object.timestamp) : undefined };
-  },
-
   toJSON(message: Foo): unknown {
     const obj: any = {};
     if (message.timestamp !== undefined) {
       obj.timestamp = message.timestamp.toISOString();
     }
     return obj;
+  },
+
+  fromJSON(object: any): Foo {
+    return { $type: Foo.$type, timestamp: isSet(object.timestamp) ? fromJsonTimestamp(object.timestamp) : undefined };
   },
 
   create<I extends Exact<DeepPartial<Foo>, I>>(base?: I): Foo {
@@ -120,16 +120,16 @@ export const Foo2 = {
     return message;
   },
 
-  fromJSON(object: any): Foo2 {
-    return { $type: Foo2.$type, timestamp: isSet(object.timestamp) ? fromJsonTimestamp(object.timestamp) : undefined };
-  },
-
   toJSON(message: Foo2): unknown {
     const obj: any = {};
     if (message.timestamp !== undefined) {
       obj.timestamp = message.timestamp.toISOString();
     }
     return obj;
+  },
+
+  fromJSON(object: any): Foo2 {
+    return { $type: Foo2.$type, timestamp: isSet(object.timestamp) ? fromJsonTimestamp(object.timestamp) : undefined };
   },
 
   create<I extends Exact<DeepPartial<Foo2>, I>>(base?: I): Foo2 {
@@ -182,16 +182,16 @@ export const WithStruct = {
     return message;
   },
 
-  fromJSON(object: any): WithStruct {
-    return { $type: WithStruct.$type, struct: isObject(object.struct) ? object.struct : undefined };
-  },
-
   toJSON(message: WithStruct): unknown {
     const obj: any = {};
     if (message.struct !== undefined) {
       obj.struct = message.struct;
     }
     return obj;
+  },
+
+  fromJSON(object: any): WithStruct {
+    return { $type: WithStruct.$type, struct: isObject(object.struct) ? object.struct : undefined };
   },
 
   create<I extends Exact<DeepPartial<WithStruct>, I>>(base?: I): WithStruct {

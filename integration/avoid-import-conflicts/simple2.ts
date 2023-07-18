@@ -131,10 +131,6 @@ export const Simple = {
     return message;
   },
 
-  fromJSON(object: any): Simple {
-    return { name: isSet(object.name) ? String(object.name) : "", age: isSet(object.age) ? Number(object.age) : 0 };
-  },
-
   toJSON(message: Simple): unknown {
     const obj: any = {};
     if (message.name !== "") {
@@ -144,6 +140,10 @@ export const Simple = {
       obj.age = Math.round(message.age);
     }
     return obj;
+  },
+
+  fromJSON(object: any): Simple {
+    return { name: isSet(object.name) ? String(object.name) : "", age: isSet(object.age) ? Number(object.age) : 0 };
   },
 
   create<I extends Exact<DeepPartial<Simple>, I>>(base?: I): Simple {

@@ -54,13 +54,6 @@ export const Point = {
     return message;
   },
 
-  fromJSON(object: any): Point {
-    return {
-      data: isSet(object.data) ? Buffer.from(bytesFromBase64(object.data)) : Buffer.alloc(0),
-      dataWrapped: isSet(object.dataWrapped) ? new Buffer(object.dataWrapped) : undefined,
-    };
-  },
-
   toJSON(message: Point): unknown {
     const obj: any = {};
     if (message.data.length !== 0) {
@@ -70,6 +63,13 @@ export const Point = {
       obj.dataWrapped = message.dataWrapped;
     }
     return obj;
+  },
+
+  fromJSON(object: any): Point {
+    return {
+      data: isSet(object.data) ? Buffer.from(bytesFromBase64(object.data)) : Buffer.alloc(0),
+      dataWrapped: isSet(object.dataWrapped) ? new Buffer(object.dataWrapped) : undefined,
+    };
   },
 
   create<I extends Exact<DeepPartial<Point>, I>>(base?: I): Point {

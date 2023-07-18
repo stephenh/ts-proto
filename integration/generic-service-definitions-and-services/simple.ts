@@ -42,16 +42,16 @@ export const TestMessage = {
     return message;
   },
 
-  fromJSON(object: any): TestMessage {
-    return { value: isSet(object.value) ? String(object.value) : "" };
-  },
-
   toJSON(message: TestMessage): unknown {
     const obj: any = {};
     if (message.value !== "") {
       obj.value = message.value;
     }
     return obj;
+  },
+
+  fromJSON(object: any): TestMessage {
+    return { value: isSet(object.value) ? String(object.value) : "" };
   },
 
   create<I extends Exact<DeepPartial<TestMessage>, I>>(base?: I): TestMessage {

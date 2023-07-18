@@ -63,10 +63,6 @@ export const NumPair = {
     return message;
   },
 
-  fromJSON(object: any): NumPair {
-    return { num1: isSet(object.num1) ? Number(object.num1) : 0, num2: isSet(object.num2) ? Number(object.num2) : 0 };
-  },
-
   toJSON(message: NumPair): unknown {
     const obj: any = {};
     if (message.num1 !== 0) {
@@ -76,6 +72,10 @@ export const NumPair = {
       obj.num2 = message.num2;
     }
     return obj;
+  },
+
+  fromJSON(object: any): NumPair {
+    return { num1: isSet(object.num1) ? Number(object.num1) : 0, num2: isSet(object.num2) ? Number(object.num2) : 0 };
   },
 
   create<I extends Exact<DeepPartial<NumPair>, I>>(base?: I): NumPair {
@@ -125,16 +125,16 @@ export const NumSingle = {
     return message;
   },
 
-  fromJSON(object: any): NumSingle {
-    return { num: isSet(object.num) ? Number(object.num) : 0 };
-  },
-
   toJSON(message: NumSingle): unknown {
     const obj: any = {};
     if (message.num !== 0) {
       obj.num = message.num;
     }
     return obj;
+  },
+
+  fromJSON(object: any): NumSingle {
+    return { num: isSet(object.num) ? Number(object.num) : 0 };
   },
 
   create<I extends Exact<DeepPartial<NumSingle>, I>>(base?: I): NumSingle {
@@ -195,16 +195,16 @@ export const Numbers = {
     return message;
   },
 
-  fromJSON(object: any): Numbers {
-    return { num: Array.isArray(object?.num) ? object.num.map((e: any) => Number(e)) : [] };
-  },
-
   toJSON(message: Numbers): unknown {
     const obj: any = {};
     if (message.num?.length) {
       obj.num = message.num;
     }
     return obj;
+  },
+
+  fromJSON(object: any): Numbers {
+    return { num: Array.isArray(object?.num) ? object.num.map((e: any) => Number(e)) : [] };
   },
 
   create<I extends Exact<DeepPartial<Numbers>, I>>(base?: I): Numbers {

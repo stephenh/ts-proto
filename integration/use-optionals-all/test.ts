@@ -422,39 +422,6 @@ export const OptionalsTest = {
     return message;
   },
 
-  fromJSON(object: any): OptionalsTest {
-    return {
-      id: isSet(object.id) ? Number(object.id) : 0,
-      child: isSet(object.child) ? Child.fromJSON(object.child) : undefined,
-      state: isSet(object.state) ? stateEnumFromJSON(object.state) : 0,
-      long: isSet(object.long) ? Number(object.long) : 0,
-      truth: isSet(object.truth) ? Boolean(object.truth) : false,
-      description: isSet(object.description) ? String(object.description) : "",
-      data: isSet(object.data) ? bytesFromBase64(object.data) : new Uint8Array(0),
-      repId: Array.isArray(object?.repId) ? object.repId.map((e: any) => Number(e)) : [],
-      repChild: Array.isArray(object?.repChild) ? object.repChild.map((e: any) => Child.fromJSON(e)) : [],
-      repState: Array.isArray(object?.repState) ? object.repState.map((e: any) => stateEnumFromJSON(e)) : [],
-      repLong: Array.isArray(object?.repLong) ? object.repLong.map((e: any) => Number(e)) : [],
-      repTruth: Array.isArray(object?.repTruth) ? object.repTruth.map((e: any) => Boolean(e)) : [],
-      repDescription: Array.isArray(object?.repDescription) ? object.repDescription.map((e: any) => String(e)) : [],
-      repData: Array.isArray(object?.repData) ? object.repData.map((e: any) => bytesFromBase64(e)) : [],
-      optId: isSet(object.optId) ? Number(object.optId) : undefined,
-      optChild: isSet(object.optChild) ? Child.fromJSON(object.optChild) : undefined,
-      optState: isSet(object.optState) ? stateEnumFromJSON(object.optState) : undefined,
-      optLong: isSet(object.optLong) ? Number(object.optLong) : undefined,
-      optTruth: isSet(object.optTruth) ? Boolean(object.optTruth) : undefined,
-      optDescription: isSet(object.optDescription) ? String(object.optDescription) : undefined,
-      optData: isSet(object.optData) ? bytesFromBase64(object.optData) : undefined,
-      translations: isObject(object.translations)
-        ? Object.entries(object.translations).reduce<{ [key: string]: string }>((acc, [key, value]) => {
-          acc[key] = String(value);
-          return acc;
-        }, {})
-        : {},
-      timestamp: isSet(object.timestamp) ? fromJsonTimestamp(object.timestamp) : undefined,
-    };
-  },
-
   toJSON(message: OptionalsTest): unknown {
     const obj: any = {};
     if (message.id !== undefined && message.id !== 0) {
@@ -533,6 +500,39 @@ export const OptionalsTest = {
       obj.timestamp = message.timestamp.toISOString();
     }
     return obj;
+  },
+
+  fromJSON(object: any): OptionalsTest {
+    return {
+      id: isSet(object.id) ? Number(object.id) : 0,
+      child: isSet(object.child) ? Child.fromJSON(object.child) : undefined,
+      state: isSet(object.state) ? stateEnumFromJSON(object.state) : 0,
+      long: isSet(object.long) ? Number(object.long) : 0,
+      truth: isSet(object.truth) ? Boolean(object.truth) : false,
+      description: isSet(object.description) ? String(object.description) : "",
+      data: isSet(object.data) ? bytesFromBase64(object.data) : new Uint8Array(0),
+      repId: Array.isArray(object?.repId) ? object.repId.map((e: any) => Number(e)) : [],
+      repChild: Array.isArray(object?.repChild) ? object.repChild.map((e: any) => Child.fromJSON(e)) : [],
+      repState: Array.isArray(object?.repState) ? object.repState.map((e: any) => stateEnumFromJSON(e)) : [],
+      repLong: Array.isArray(object?.repLong) ? object.repLong.map((e: any) => Number(e)) : [],
+      repTruth: Array.isArray(object?.repTruth) ? object.repTruth.map((e: any) => Boolean(e)) : [],
+      repDescription: Array.isArray(object?.repDescription) ? object.repDescription.map((e: any) => String(e)) : [],
+      repData: Array.isArray(object?.repData) ? object.repData.map((e: any) => bytesFromBase64(e)) : [],
+      optId: isSet(object.optId) ? Number(object.optId) : undefined,
+      optChild: isSet(object.optChild) ? Child.fromJSON(object.optChild) : undefined,
+      optState: isSet(object.optState) ? stateEnumFromJSON(object.optState) : undefined,
+      optLong: isSet(object.optLong) ? Number(object.optLong) : undefined,
+      optTruth: isSet(object.optTruth) ? Boolean(object.optTruth) : undefined,
+      optDescription: isSet(object.optDescription) ? String(object.optDescription) : undefined,
+      optData: isSet(object.optData) ? bytesFromBase64(object.optData) : undefined,
+      translations: isObject(object.translations)
+        ? Object.entries(object.translations).reduce<{ [key: string]: string }>((acc, [key, value]) => {
+          acc[key] = String(value);
+          return acc;
+        }, {})
+        : {},
+      timestamp: isSet(object.timestamp) ? fromJsonTimestamp(object.timestamp) : undefined,
+    };
   },
 
   create<I extends Exact<DeepPartial<OptionalsTest>, I>>(base?: I): OptionalsTest {
@@ -623,10 +623,6 @@ export const OptionalsTest_TranslationsEntry = {
     return message;
   },
 
-  fromJSON(object: any): OptionalsTest_TranslationsEntry {
-    return { key: isSet(object.key) ? String(object.key) : "", value: isSet(object.value) ? String(object.value) : "" };
-  },
-
   toJSON(message: OptionalsTest_TranslationsEntry): unknown {
     const obj: any = {};
     if (message.key !== "") {
@@ -636,6 +632,10 @@ export const OptionalsTest_TranslationsEntry = {
       obj.value = message.value;
     }
     return obj;
+  },
+
+  fromJSON(object: any): OptionalsTest_TranslationsEntry {
+    return { key: isSet(object.key) ? String(object.key) : "", value: isSet(object.value) ? String(object.value) : "" };
   },
 
   create<I extends Exact<DeepPartial<OptionalsTest_TranslationsEntry>, I>>(base?: I): OptionalsTest_TranslationsEntry {
@@ -677,13 +677,13 @@ export const Child = {
     return message;
   },
 
-  fromJSON(_: any): Child {
-    return {};
-  },
-
   toJSON(_: Child): unknown {
     const obj: any = {};
     return obj;
+  },
+
+  fromJSON(_: any): Child {
+    return {};
   },
 
   create<I extends Exact<DeepPartial<Child>, I>>(base?: I): Child {

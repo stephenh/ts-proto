@@ -108,16 +108,6 @@ export const Simple = {
     return message;
   },
 
-  fromJSON(object: any): Simple {
-    return {
-      name: isSet(object.name) ? String(object.name) : "",
-      age: isSet(object.age) ? Number(object.age) : 0,
-      child: isSet(object.child) ? Child.fromJSON(object.child) : undefined,
-      testField: isSet(object.testField) ? String(object.testField) : "",
-      testNotDeprecated: isSet(object.testNotDeprecated) ? String(object.testNotDeprecated) : "",
-    };
-  },
-
   toJSON(message: Simple): unknown {
     const obj: any = {};
     if (message.name !== "") {
@@ -136,6 +126,16 @@ export const Simple = {
       obj.testNotDeprecated = message.testNotDeprecated;
     }
     return obj;
+  },
+
+  fromJSON(object: any): Simple {
+    return {
+      name: isSet(object.name) ? String(object.name) : "",
+      age: isSet(object.age) ? Number(object.age) : 0,
+      child: isSet(object.child) ? Child.fromJSON(object.child) : undefined,
+      testField: isSet(object.testField) ? String(object.testField) : "",
+      testNotDeprecated: isSet(object.testNotDeprecated) ? String(object.testNotDeprecated) : "",
+    };
   },
 
   create<I extends Exact<DeepPartial<Simple>, I>>(base?: I): Simple {
@@ -188,16 +188,16 @@ export const Child = {
     return message;
   },
 
-  fromJSON(object: any): Child {
-    return { name: isSet(object.name) ? String(object.name) : "" };
-  },
-
   toJSON(message: Child): unknown {
     const obj: any = {};
     if (message.name !== "") {
       obj.name = message.name;
     }
     return obj;
+  },
+
+  fromJSON(object: any): Child {
+    return { name: isSet(object.name) ? String(object.name) : "" };
   },
 
   create<I extends Exact<DeepPartial<Child>, I>>(base?: I): Child {

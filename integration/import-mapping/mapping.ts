@@ -63,16 +63,16 @@ export const WithEmtpy = {
     return message;
   },
 
-  fromJSON(object: any): WithEmtpy {
-    return { empty: isSet(object.empty) ? Empty.fromJSON(object.empty) : undefined };
-  },
-
   toJSON(message: WithEmtpy): unknown {
     const obj: any = {};
     if (message.empty !== undefined) {
       obj.empty = Empty.toJSON(message.empty);
     }
     return obj;
+  },
+
+  fromJSON(object: any): WithEmtpy {
+    return { empty: isSet(object.empty) ? Empty.fromJSON(object.empty) : undefined };
   },
 
   create<I extends Exact<DeepPartial<WithEmtpy>, I>>(base?: I): WithEmtpy {
@@ -121,16 +121,16 @@ export const WithStruct = {
     return message;
   },
 
-  fromJSON(object: any): WithStruct {
-    return { strut: isObject(object.strut) ? object.strut : undefined };
-  },
-
   toJSON(message: WithStruct): unknown {
     const obj: any = {};
     if (message.strut !== undefined) {
       obj.strut = message.strut;
     }
     return obj;
+  },
+
+  fromJSON(object: any): WithStruct {
+    return { strut: isObject(object.strut) ? object.strut : undefined };
   },
 
   create<I extends Exact<DeepPartial<WithStruct>, I>>(base?: I): WithStruct {
@@ -179,16 +179,16 @@ export const WithTimestamp = {
     return message;
   },
 
-  fromJSON(object: any): WithTimestamp {
-    return { timestamp: isSet(object.timestamp) ? fromJsonTimestamp(object.timestamp) : undefined };
-  },
-
   toJSON(message: WithTimestamp): unknown {
     const obj: any = {};
     if (message.timestamp !== undefined) {
       obj.timestamp = message.timestamp.toISOString();
     }
     return obj;
+  },
+
+  fromJSON(object: any): WithTimestamp {
+    return { timestamp: isSet(object.timestamp) ? fromJsonTimestamp(object.timestamp) : undefined };
   },
 
   create<I extends Exact<DeepPartial<WithTimestamp>, I>>(base?: I): WithTimestamp {
@@ -277,16 +277,6 @@ export const WithAll = {
     return message;
   },
 
-  fromJSON(object: any): WithAll {
-    return {
-      empty: isSet(object.empty) ? Empty.fromJSON(object.empty) : undefined,
-      strut: isObject(object.strut) ? object.strut : undefined,
-      timestamp: isSet(object.timestamp) ? fromJsonTimestamp(object.timestamp) : undefined,
-      duration: isSet(object.duration) ? Duration.fromJSON(object.duration) : undefined,
-      veryVerySecret: isSet(object.veryVerySecret) ? VeryVerySecret.fromJSON(object.veryVerySecret) : undefined,
-    };
-  },
-
   toJSON(message: WithAll): unknown {
     const obj: any = {};
     if (message.empty !== undefined) {
@@ -305,6 +295,16 @@ export const WithAll = {
       obj.veryVerySecret = VeryVerySecret.toJSON(message.veryVerySecret);
     }
     return obj;
+  },
+
+  fromJSON(object: any): WithAll {
+    return {
+      empty: isSet(object.empty) ? Empty.fromJSON(object.empty) : undefined,
+      strut: isObject(object.strut) ? object.strut : undefined,
+      timestamp: isSet(object.timestamp) ? fromJsonTimestamp(object.timestamp) : undefined,
+      duration: isSet(object.duration) ? Duration.fromJSON(object.duration) : undefined,
+      veryVerySecret: isSet(object.veryVerySecret) ? VeryVerySecret.fromJSON(object.veryVerySecret) : undefined,
+    };
   },
 
   create<I extends Exact<DeepPartial<WithAll>, I>>(base?: I): WithAll {

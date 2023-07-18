@@ -75,16 +75,16 @@ export const EchoMsg = {
     }
   },
 
-  fromJSON(object: any): EchoMsg {
-    return { body: isSet(object.body) ? String(object.body) : "" };
-  },
-
   toJSON(message: EchoMsg): unknown {
     const obj: any = {};
     if (message.body !== "") {
       obj.body = message.body;
     }
     return obj;
+  },
+
+  fromJSON(object: any): EchoMsg {
+    return { body: isSet(object.body) ? String(object.body) : "" };
   },
 
   create<I extends Exact<DeepPartial<EchoMsg>, I>>(base?: I): EchoMsg {

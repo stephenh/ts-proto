@@ -1,1 +1,1 @@
-outputJsonMethods=decode-only,outputPartialMethods=false,outputJsonMethods=false,nestJs=false
+outputEncodeMethods=false,outputPartialMethods=false,outputJsonMethods=decode-only,nestJs=false

@@ -138,17 +138,6 @@ export const SimpleWithWrappers = {
     return message;
   },
 
-  fromJSON(object: any): SimpleWithWrappers {
-    return {
-      name: isSet(object.name) ? String(object.name) : undefined,
-      age: isSet(object.age) ? Number(object.age) : undefined,
-      enabled: isSet(object.enabled) ? Boolean(object.enabled) : undefined,
-      bananas: isSet(object.bananas) ? Long.fromValue(object.bananas) : undefined,
-      coins: Array.isArray(object?.coins) ? object.coins.map((e: any) => Number(e)) : [],
-      snacks: Array.isArray(object?.snacks) ? object.snacks.map((e: any) => String(e)) : [],
-    };
-  },
-
   toJSON(message: SimpleWithWrappers): unknown {
     const obj: any = {};
     if (message.name !== undefined) {
@@ -170,6 +159,17 @@ export const SimpleWithWrappers = {
       obj.snacks = message.snacks;
     }
     return obj;
+  },
+
+  fromJSON(object: any): SimpleWithWrappers {
+    return {
+      name: isSet(object.name) ? String(object.name) : undefined,
+      age: isSet(object.age) ? Number(object.age) : undefined,
+      enabled: isSet(object.enabled) ? Boolean(object.enabled) : undefined,
+      bananas: isSet(object.bananas) ? Long.fromValue(object.bananas) : undefined,
+      coins: Array.isArray(object?.coins) ? object.coins.map((e: any) => Number(e)) : [],
+      snacks: Array.isArray(object?.snacks) ? object.snacks.map((e: any) => String(e)) : [],
+    };
   },
 
   create<I extends Exact<DeepPartial<SimpleWithWrappers>, I>>(base?: I): SimpleWithWrappers {
@@ -254,29 +254,6 @@ export const SimpleWithMap = {
     return message;
   },
 
-  fromJSON(object: any): SimpleWithMap {
-    return {
-      nameLookup: isObject(object.nameLookup)
-        ? Object.entries(object.nameLookup).reduce<{ [key: string]: string }>((acc, [key, value]) => {
-          acc[key] = String(value);
-          return acc;
-        }, {})
-        : {},
-      intLookup: isObject(object.intLookup)
-        ? Object.entries(object.intLookup).reduce<{ [key: number]: number }>((acc, [key, value]) => {
-          acc[Number(key)] = Number(value);
-          return acc;
-        }, {})
-        : {},
-      longLookup: isObject(object.longLookup)
-        ? Object.entries(object.longLookup).reduce<{ [key: string]: Long }>((acc, [key, value]) => {
-          acc[key] = Long.fromValue(value as Long | string);
-          return acc;
-        }, {})
-        : {},
-    };
-  },
-
   toJSON(message: SimpleWithMap): unknown {
     const obj: any = {};
     if (message.nameLookup) {
@@ -307,6 +284,29 @@ export const SimpleWithMap = {
       }
     }
     return obj;
+  },
+
+  fromJSON(object: any): SimpleWithMap {
+    return {
+      nameLookup: isObject(object.nameLookup)
+        ? Object.entries(object.nameLookup).reduce<{ [key: string]: string }>((acc, [key, value]) => {
+          acc[key] = String(value);
+          return acc;
+        }, {})
+        : {},
+      intLookup: isObject(object.intLookup)
+        ? Object.entries(object.intLookup).reduce<{ [key: number]: number }>((acc, [key, value]) => {
+          acc[Number(key)] = Number(value);
+          return acc;
+        }, {})
+        : {},
+      longLookup: isObject(object.longLookup)
+        ? Object.entries(object.longLookup).reduce<{ [key: string]: Long }>((acc, [key, value]) => {
+          acc[key] = Long.fromValue(value as Long | string);
+          return acc;
+        }, {})
+        : {},
+    };
   },
 
   create<I extends Exact<DeepPartial<SimpleWithMap>, I>>(base?: I): SimpleWithMap {
@@ -391,10 +391,6 @@ export const SimpleWithMap_NameLookupEntry = {
     return message;
   },
 
-  fromJSON(object: any): SimpleWithMap_NameLookupEntry {
-    return { key: isSet(object.key) ? String(object.key) : "", value: isSet(object.value) ? String(object.value) : "" };
-  },
-
   toJSON(message: SimpleWithMap_NameLookupEntry): unknown {
     const obj: any = {};
     if (message.key !== "") {
@@ -404,6 +400,10 @@ export const SimpleWithMap_NameLookupEntry = {
       obj.value = message.value;
     }
     return obj;
+  },
+
+  fromJSON(object: any): SimpleWithMap_NameLookupEntry {
+    return { key: isSet(object.key) ? String(object.key) : "", value: isSet(object.value) ? String(object.value) : "" };
   },
 
   create<I extends Exact<DeepPartial<SimpleWithMap_NameLookupEntry>, I>>(base?: I): SimpleWithMap_NameLookupEntry {
@@ -465,10 +465,6 @@ export const SimpleWithMap_IntLookupEntry = {
     return message;
   },
 
-  fromJSON(object: any): SimpleWithMap_IntLookupEntry {
-    return { key: isSet(object.key) ? Number(object.key) : 0, value: isSet(object.value) ? Number(object.value) : 0 };
-  },
-
   toJSON(message: SimpleWithMap_IntLookupEntry): unknown {
     const obj: any = {};
     if (message.key !== 0) {
@@ -478,6 +474,10 @@ export const SimpleWithMap_IntLookupEntry = {
       obj.value = Math.round(message.value);
     }
     return obj;
+  },
+
+  fromJSON(object: any): SimpleWithMap_IntLookupEntry {
+    return { key: isSet(object.key) ? Number(object.key) : 0, value: isSet(object.value) ? Number(object.value) : 0 };
   },
 
   create<I extends Exact<DeepPartial<SimpleWithMap_IntLookupEntry>, I>>(base?: I): SimpleWithMap_IntLookupEntry {
@@ -537,13 +537,6 @@ export const SimpleWithMap_LongLookupEntry = {
     return message;
   },
 
-  fromJSON(object: any): SimpleWithMap_LongLookupEntry {
-    return {
-      key: isSet(object.key) ? String(object.key) : "",
-      value: isSet(object.value) ? Long.fromValue(object.value) : Long.ZERO,
-    };
-  },
-
   toJSON(message: SimpleWithMap_LongLookupEntry): unknown {
     const obj: any = {};
     if (message.key !== "") {
@@ -553,6 +546,13 @@ export const SimpleWithMap_LongLookupEntry = {
       obj.value = (message.value || Long.ZERO).toString();
     }
     return obj;
+  },
+
+  fromJSON(object: any): SimpleWithMap_LongLookupEntry {
+    return {
+      key: isSet(object.key) ? String(object.key) : "",
+      value: isSet(object.value) ? Long.fromValue(object.value) : Long.ZERO,
+    };
   },
 
   create<I extends Exact<DeepPartial<SimpleWithMap_LongLookupEntry>, I>>(base?: I): SimpleWithMap_LongLookupEntry {
@@ -750,24 +750,6 @@ export const Numbers = {
     return message;
   },
 
-  fromJSON(object: any): Numbers {
-    return {
-      double: isSet(object.double) ? Number(object.double) : 0,
-      float: isSet(object.float) ? Number(object.float) : 0,
-      int32: isSet(object.int32) ? Number(object.int32) : 0,
-      int64: isSet(object.int64) ? Long.fromValue(object.int64) : Long.ZERO,
-      uint32: isSet(object.uint32) ? Number(object.uint32) : 0,
-      uint64: isSet(object.uint64) ? Long.fromValue(object.uint64) : Long.UZERO,
-      sint32: isSet(object.sint32) ? Number(object.sint32) : 0,
-      sint64: isSet(object.sint64) ? Long.fromValue(object.sint64) : Long.ZERO,
-      fixed32: isSet(object.fixed32) ? Number(object.fixed32) : 0,
-      fixed64: isSet(object.fixed64) ? Long.fromValue(object.fixed64) : Long.UZERO,
-      sfixed32: isSet(object.sfixed32) ? Number(object.sfixed32) : 0,
-      sfixed64: isSet(object.sfixed64) ? Long.fromValue(object.sfixed64) : Long.ZERO,
-      manyUint64: Array.isArray(object?.manyUint64) ? object.manyUint64.map((e: any) => Long.fromValue(e)) : [],
-    };
-  },
-
   toJSON(message: Numbers): unknown {
     const obj: any = {};
     if (message.double !== 0) {
@@ -810,6 +792,24 @@ export const Numbers = {
       obj.manyUint64 = message.manyUint64.map((e) => (e || Long.UZERO).toString());
     }
     return obj;
+  },
+
+  fromJSON(object: any): Numbers {
+    return {
+      double: isSet(object.double) ? Number(object.double) : 0,
+      float: isSet(object.float) ? Number(object.float) : 0,
+      int32: isSet(object.int32) ? Number(object.int32) : 0,
+      int64: isSet(object.int64) ? Long.fromValue(object.int64) : Long.ZERO,
+      uint32: isSet(object.uint32) ? Number(object.uint32) : 0,
+      uint64: isSet(object.uint64) ? Long.fromValue(object.uint64) : Long.UZERO,
+      sint32: isSet(object.sint32) ? Number(object.sint32) : 0,
+      sint64: isSet(object.sint64) ? Long.fromValue(object.sint64) : Long.ZERO,
+      fixed32: isSet(object.fixed32) ? Number(object.fixed32) : 0,
+      fixed64: isSet(object.fixed64) ? Long.fromValue(object.fixed64) : Long.UZERO,
+      sfixed32: isSet(object.sfixed32) ? Number(object.sfixed32) : 0,
+      sfixed64: isSet(object.sfixed64) ? Long.fromValue(object.sfixed64) : Long.ZERO,
+      manyUint64: Array.isArray(object?.manyUint64) ? object.manyUint64.map((e: any) => Long.fromValue(e)) : [],
+    };
   },
 
   create<I extends Exact<DeepPartial<Numbers>, I>>(base?: I): Numbers {

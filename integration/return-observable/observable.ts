@@ -47,16 +47,16 @@ export const ProduceRequest = {
     return message;
   },
 
-  fromJSON(object: any): ProduceRequest {
-    return { ingredients: isSet(object.ingredients) ? String(object.ingredients) : "" };
-  },
-
   toJSON(message: ProduceRequest): unknown {
     const obj: any = {};
     if (message.ingredients !== "") {
       obj.ingredients = message.ingredients;
     }
     return obj;
+  },
+
+  fromJSON(object: any): ProduceRequest {
+    return { ingredients: isSet(object.ingredients) ? String(object.ingredients) : "" };
   },
 
   create<I extends Exact<DeepPartial<ProduceRequest>, I>>(base?: I): ProduceRequest {
@@ -105,16 +105,16 @@ export const ProduceReply = {
     return message;
   },
 
-  fromJSON(object: any): ProduceReply {
-    return { result: isSet(object.result) ? String(object.result) : "" };
-  },
-
   toJSON(message: ProduceReply): unknown {
     const obj: any = {};
     if (message.result !== "") {
       obj.result = message.result;
     }
     return obj;
+  },
+
+  fromJSON(object: any): ProduceReply {
+    return { result: isSet(object.result) ? String(object.result) : "" };
   },
 
   create<I extends Exact<DeepPartial<ProduceReply>, I>>(base?: I): ProduceReply {

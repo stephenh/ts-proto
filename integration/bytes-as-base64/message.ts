@@ -11,16 +11,16 @@ function createBaseMessage(): Message {
 }
 
 export const Message = {
-  fromJSON(object: any): Message {
-    return { data: isSet(object.data) ? bytesFromBase64(object.data) : new Uint8Array(0) };
-  },
-
   toJSON(message: Message): unknown {
     const obj: any = {};
     if (message.data.length !== 0) {
       obj.data = base64FromBytes(message.data);
     }
     return obj;
+  },
+
+  fromJSON(object: any): Message {
+    return { data: isSet(object.data) ? bytesFromBase64(object.data) : new Uint8Array(0) };
   },
 
   create<I extends Exact<DeepPartial<Message>, I>>(base?: I): Message {

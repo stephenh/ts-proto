@@ -203,25 +203,6 @@ export const Numbers = {
     return message;
   },
 
-  fromJSON(object: any): Numbers {
-    return {
-      double: isSet(object.double) ? Number(object.double) : 0,
-      float: isSet(object.float) ? Number(object.float) : 0,
-      int32: isSet(object.int32) ? Number(object.int32) : 0,
-      int64: isSet(object.int64) ? String(object.int64) : "0",
-      uint32: isSet(object.uint32) ? Number(object.uint32) : 0,
-      uint64: isSet(object.uint64) ? String(object.uint64) : "0",
-      sint32: isSet(object.sint32) ? Number(object.sint32) : 0,
-      sint64: isSet(object.sint64) ? String(object.sint64) : "0",
-      fixed32: isSet(object.fixed32) ? Number(object.fixed32) : 0,
-      fixed64: isSet(object.fixed64) ? String(object.fixed64) : "0",
-      sfixed32: isSet(object.sfixed32) ? Number(object.sfixed32) : 0,
-      sfixed64: isSet(object.sfixed64) ? String(object.sfixed64) : "0",
-      guint64: isSet(object.guint64) ? String(object.guint64) : undefined,
-      timestamp: isSet(object.timestamp) ? fromJsonTimestamp(object.timestamp) : undefined,
-    };
-  },
-
   toJSON(message: Numbers): unknown {
     const obj: any = {};
     if (message.double !== 0) {
@@ -267,6 +248,25 @@ export const Numbers = {
       obj.timestamp = message.timestamp.toISOString();
     }
     return obj;
+  },
+
+  fromJSON(object: any): Numbers {
+    return {
+      double: isSet(object.double) ? Number(object.double) : 0,
+      float: isSet(object.float) ? Number(object.float) : 0,
+      int32: isSet(object.int32) ? Number(object.int32) : 0,
+      int64: isSet(object.int64) ? String(object.int64) : "0",
+      uint32: isSet(object.uint32) ? Number(object.uint32) : 0,
+      uint64: isSet(object.uint64) ? String(object.uint64) : "0",
+      sint32: isSet(object.sint32) ? Number(object.sint32) : 0,
+      sint64: isSet(object.sint64) ? String(object.sint64) : "0",
+      fixed32: isSet(object.fixed32) ? Number(object.fixed32) : 0,
+      fixed64: isSet(object.fixed64) ? String(object.fixed64) : "0",
+      sfixed32: isSet(object.sfixed32) ? Number(object.sfixed32) : 0,
+      sfixed64: isSet(object.sfixed64) ? String(object.sfixed64) : "0",
+      guint64: isSet(object.guint64) ? String(object.guint64) : undefined,
+      timestamp: isSet(object.timestamp) ? fromJsonTimestamp(object.timestamp) : undefined,
+    };
   },
 
   create<I extends Exact<DeepPartial<Numbers>, I>>(base?: I): Numbers {

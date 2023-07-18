@@ -114,13 +114,6 @@ export const DashFlash = {
     return message;
   },
 
-  fromJSON(object: any): DashFlash {
-    return {
-      msg: isSet(object.msg) ? String(object.msg) : "",
-      type: isSet(object.type) ? dashFlash_TypeFromJSON(object.type) : 0,
-    };
-  },
-
   toJSON(message: DashFlash): unknown {
     const obj: any = {};
     if (message.msg !== "") {
@@ -130,6 +123,13 @@ export const DashFlash = {
       obj.type = dashFlash_TypeToJSON(message.type);
     }
     return obj;
+  },
+
+  fromJSON(object: any): DashFlash {
+    return {
+      msg: isSet(object.msg) ? String(object.msg) : "",
+      type: isSet(object.type) ? dashFlash_TypeFromJSON(object.type) : 0,
+    };
   },
 
   create<I extends Exact<DeepPartial<DashFlash>, I>>(base?: I): DashFlash {
@@ -199,14 +199,6 @@ export const DashUserSettingsState = {
     return message;
   },
 
-  fromJSON(object: any): DashUserSettingsState {
-    return {
-      email: isSet(object.email) ? String(object.email) : "",
-      urls: isSet(object.urls) ? DashUserSettingsState_URLs.fromJSON(object.urls) : undefined,
-      flashes: Array.isArray(object?.flashes) ? object.flashes.map((e: any) => DashFlash.fromJSON(e)) : [],
-    };
-  },
-
   toJSON(message: DashUserSettingsState): unknown {
     const obj: any = {};
     if (message.email !== "") {
@@ -219,6 +211,14 @@ export const DashUserSettingsState = {
       obj.flashes = message.flashes.map((e) => DashFlash.toJSON(e));
     }
     return obj;
+  },
+
+  fromJSON(object: any): DashUserSettingsState {
+    return {
+      email: isSet(object.email) ? String(object.email) : "",
+      urls: isSet(object.urls) ? DashUserSettingsState_URLs.fromJSON(object.urls) : undefined,
+      flashes: Array.isArray(object?.flashes) ? object.flashes.map((e: any) => DashFlash.fromJSON(e)) : [],
+    };
   },
 
   create<I extends Exact<DeepPartial<DashUserSettingsState>, I>>(base?: I): DashUserSettingsState {
@@ -281,13 +281,6 @@ export const DashUserSettingsState_URLs = {
     return message;
   },
 
-  fromJSON(object: any): DashUserSettingsState_URLs {
-    return {
-      connectGoogle: isSet(object.connectGoogle) ? String(object.connectGoogle) : "",
-      connectGithub: isSet(object.connectGithub) ? String(object.connectGithub) : "",
-    };
-  },
-
   toJSON(message: DashUserSettingsState_URLs): unknown {
     const obj: any = {};
     if (message.connectGoogle !== "") {
@@ -297,6 +290,13 @@ export const DashUserSettingsState_URLs = {
       obj.connectGithub = message.connectGithub;
     }
     return obj;
+  },
+
+  fromJSON(object: any): DashUserSettingsState_URLs {
+    return {
+      connectGoogle: isSet(object.connectGoogle) ? String(object.connectGoogle) : "",
+      connectGithub: isSet(object.connectGithub) ? String(object.connectGithub) : "",
+    };
   },
 
   create<I extends Exact<DeepPartial<DashUserSettingsState_URLs>, I>>(base?: I): DashUserSettingsState_URLs {
@@ -336,13 +336,13 @@ export const Empty = {
     return message;
   },
 
-  fromJSON(_: any): Empty {
-    return {};
-  },
-
   toJSON(_: Empty): unknown {
     const obj: any = {};
     return obj;
+  },
+
+  fromJSON(_: any): Empty {
+    return {};
   },
 
   create<I extends Exact<DeepPartial<Empty>, I>>(base?: I): Empty {

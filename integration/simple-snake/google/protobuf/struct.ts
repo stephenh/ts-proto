@@ -140,17 +140,6 @@ export const Struct = {
     return message;
   },
 
-  fromJSON(object: any): Struct {
-    return {
-      fields: isObject(object.fields)
-        ? Object.entries(object.fields).reduce<{ [key: string]: any | undefined }>((acc, [key, value]) => {
-          acc[key] = value as any | undefined;
-          return acc;
-        }, {})
-        : {},
-    };
-  },
-
   toJSON(message: Struct): unknown {
     const obj: any = {};
     if (message.fields) {
@@ -163,6 +152,17 @@ export const Struct = {
       }
     }
     return obj;
+  },
+
+  fromJSON(object: any): Struct {
+    return {
+      fields: isObject(object.fields)
+        ? Object.entries(object.fields).reduce<{ [key: string]: any | undefined }>((acc, [key, value]) => {
+          acc[key] = value as any | undefined;
+          return acc;
+        }, {})
+        : {},
+    };
   },
 
   create<I extends Exact<DeepPartial<Struct>, I>>(base?: I): Struct {
@@ -249,10 +249,6 @@ export const Struct_FieldsEntry = {
     return message;
   },
 
-  fromJSON(object: any): Struct_FieldsEntry {
-    return { key: isSet(object.key) ? String(object.key) : "", value: isSet(object?.value) ? object.value : undefined };
-  },
-
   toJSON(message: Struct_FieldsEntry): unknown {
     const obj: any = {};
     if (message.key !== "") {
@@ -262,6 +258,10 @@ export const Struct_FieldsEntry = {
       obj.value = message.value;
     }
     return obj;
+  },
+
+  fromJSON(object: any): Struct_FieldsEntry {
+    return { key: isSet(object.key) ? String(object.key) : "", value: isSet(object?.value) ? object.value : undefined };
   },
 
   create<I extends Exact<DeepPartial<Struct_FieldsEntry>, I>>(base?: I): Struct_FieldsEntry {
@@ -368,17 +368,6 @@ export const Value = {
     return message;
   },
 
-  fromJSON(object: any): Value {
-    return {
-      null_value: isSet(object.null_value) ? nullValueFromJSON(object.null_value) : undefined,
-      number_value: isSet(object.number_value) ? Number(object.number_value) : undefined,
-      string_value: isSet(object.string_value) ? String(object.string_value) : undefined,
-      bool_value: isSet(object.bool_value) ? Boolean(object.bool_value) : undefined,
-      struct_value: isObject(object.struct_value) ? object.struct_value : undefined,
-      list_value: Array.isArray(object.list_value) ? [...object.list_value] : undefined,
-    };
-  },
-
   toJSON(message: Value): unknown {
     const obj: any = {};
     if (message.null_value !== undefined) {
@@ -400,6 +389,17 @@ export const Value = {
       obj.list_value = message.list_value;
     }
     return obj;
+  },
+
+  fromJSON(object: any): Value {
+    return {
+      null_value: isSet(object.null_value) ? nullValueFromJSON(object.null_value) : undefined,
+      number_value: isSet(object.number_value) ? Number(object.number_value) : undefined,
+      string_value: isSet(object.string_value) ? String(object.string_value) : undefined,
+      bool_value: isSet(object.bool_value) ? Boolean(object.bool_value) : undefined,
+      struct_value: isObject(object.struct_value) ? object.struct_value : undefined,
+      list_value: Array.isArray(object.list_value) ? [...object.list_value] : undefined,
+    };
   },
 
   create<I extends Exact<DeepPartial<Value>, I>>(base?: I): Value {
@@ -490,16 +490,16 @@ export const ListValue = {
     return message;
   },
 
-  fromJSON(object: any): ListValue {
-    return { values: Array.isArray(object?.values) ? [...object.values] : [] };
-  },
-
   toJSON(message: ListValue): unknown {
     const obj: any = {};
     if (message.values?.length) {
       obj.values = message.values;
     }
     return obj;
+  },
+
+  fromJSON(object: any): ListValue {
+    return { values: Array.isArray(object?.values) ? [...object.values] : [] };
   },
 
   create<I extends Exact<DeepPartial<ListValue>, I>>(base?: I): ListValue {

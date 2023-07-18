@@ -96,21 +96,6 @@ export const Todo = {
     return message;
   },
 
-  fromJSON(object: any): Todo {
-    return {
-      id: isSet(object.id) ? String(object.id) : "",
-      oid: isSet(object.oid) ? fromJsonObjectId(object.oid) : undefined,
-      repeatedOid: Array.isArray(object?.repeatedOid) ? object.repeatedOid.map((e: any) => fromJsonObjectId(e)) : [],
-      optionalOid: isSet(object.optionalOid) ? fromJsonObjectId(object.optionalOid) : undefined,
-      mapOfOids: isObject(object.mapOfOids)
-        ? Object.entries(object.mapOfOids).reduce<{ [key: string]: mongodb.ObjectId }>((acc, [key, value]) => {
-          acc[key] = fromJsonObjectId(value);
-          return acc;
-        }, {})
-        : {},
-    };
-  },
-
   toJSON(message: Todo): unknown {
     const obj: any = {};
     if (message.id !== "") {
@@ -135,6 +120,21 @@ export const Todo = {
       }
     }
     return obj;
+  },
+
+  fromJSON(object: any): Todo {
+    return {
+      id: isSet(object.id) ? String(object.id) : "",
+      oid: isSet(object.oid) ? fromJsonObjectId(object.oid) : undefined,
+      repeatedOid: Array.isArray(object?.repeatedOid) ? object.repeatedOid.map((e: any) => fromJsonObjectId(e)) : [],
+      optionalOid: isSet(object.optionalOid) ? fromJsonObjectId(object.optionalOid) : undefined,
+      mapOfOids: isObject(object.mapOfOids)
+        ? Object.entries(object.mapOfOids).reduce<{ [key: string]: mongodb.ObjectId }>((acc, [key, value]) => {
+          acc[key] = fromJsonObjectId(value);
+          return acc;
+        }, {})
+        : {},
+    };
   },
 
   create<I extends Exact<DeepPartial<Todo>, I>>(base?: I): Todo {
@@ -207,13 +207,6 @@ export const Todo_MapOfOidsEntry = {
     return message;
   },
 
-  fromJSON(object: any): Todo_MapOfOidsEntry {
-    return {
-      key: isSet(object.key) ? String(object.key) : "",
-      value: isSet(object.value) ? fromJsonObjectId(object.value) : undefined,
-    };
-  },
-
   toJSON(message: Todo_MapOfOidsEntry): unknown {
     const obj: any = {};
     if (message.key !== "") {
@@ -223,6 +216,13 @@ export const Todo_MapOfOidsEntry = {
       obj.value = message.value.toString();
     }
     return obj;
+  },
+
+  fromJSON(object: any): Todo_MapOfOidsEntry {
+    return {
+      key: isSet(object.key) ? String(object.key) : "",
+      value: isSet(object.value) ? fromJsonObjectId(object.value) : undefined,
+    };
   },
 
   create<I extends Exact<DeepPartial<Todo_MapOfOidsEntry>, I>>(base?: I): Todo_MapOfOidsEntry {

@@ -6,8 +6,8 @@ import {
   fooServiceToJSON,
   Simple as Simple3,
   SimpleEnum as SimpleEnum1,
-  simpleEnumFromJSON as simpleEnumFromJSON4,
-  simpleEnumToJSON as simpleEnumToJSON5,
+  simpleEnumFromJSON as simpleEnumFromJSON5,
+  simpleEnumToJSON as simpleEnumToJSON4,
 } from "./simple2";
 
 export const protobufPackage = "simple";
@@ -114,13 +114,6 @@ export const Simple = {
     return message;
   },
 
-  fromJSON(object: any): Simple {
-    return {
-      name: isSet(object.name) ? String(object.name) : "",
-      otherSimple: isSet(object.otherSimple) ? Simple3.fromJSON(object.otherSimple) : undefined,
-    };
-  },
-
   toJSON(message: Simple): unknown {
     const obj: any = {};
     if (message.name !== "") {
@@ -130,6 +123,13 @@ export const Simple = {
       obj.otherSimple = Simple3.toJSON(message.otherSimple);
     }
     return obj;
+  },
+
+  fromJSON(object: any): Simple {
+    return {
+      name: isSet(object.name) ? String(object.name) : "",
+      otherSimple: isSet(object.otherSimple) ? Simple3.fromJSON(object.otherSimple) : undefined,
+    };
   },
 
   create<I extends Exact<DeepPartial<Simple>, I>>(base?: I): Simple {
@@ -191,22 +191,22 @@ export const SimpleEnums = {
     return message;
   },
 
-  fromJSON(object: any): SimpleEnums {
-    return {
-      localEnum: isSet(object.localEnum) ? simpleEnumFromJSON(object.localEnum) : 0,
-      importEnum: isSet(object.importEnum) ? simpleEnumFromJSON4(object.importEnum) : 0,
-    };
-  },
-
   toJSON(message: SimpleEnums): unknown {
     const obj: any = {};
     if (message.localEnum !== 0) {
       obj.localEnum = simpleEnumToJSON(message.localEnum);
     }
     if (message.importEnum !== 0) {
-      obj.importEnum = simpleEnumToJSON5(message.importEnum);
+      obj.importEnum = simpleEnumToJSON4(message.importEnum);
     }
     return obj;
+  },
+
+  fromJSON(object: any): SimpleEnums {
+    return {
+      localEnum: isSet(object.localEnum) ? simpleEnumFromJSON(object.localEnum) : 0,
+      importEnum: isSet(object.importEnum) ? simpleEnumFromJSON5(object.importEnum) : 0,
+    };
   },
 
   create<I extends Exact<DeepPartial<SimpleEnums>, I>>(base?: I): SimpleEnums {
@@ -256,16 +256,16 @@ export const FooServiceCreateRequest = {
     return message;
   },
 
-  fromJSON(object: any): FooServiceCreateRequest {
-    return { kind: isSet(object.kind) ? fooServiceFromJSON(object.kind) : 0 };
-  },
-
   toJSON(message: FooServiceCreateRequest): unknown {
     const obj: any = {};
     if (message.kind !== 0) {
       obj.kind = fooServiceToJSON(message.kind);
     }
     return obj;
+  },
+
+  fromJSON(object: any): FooServiceCreateRequest {
+    return { kind: isSet(object.kind) ? fooServiceFromJSON(object.kind) : 0 };
   },
 
   create<I extends Exact<DeepPartial<FooServiceCreateRequest>, I>>(base?: I): FooServiceCreateRequest {
@@ -314,16 +314,16 @@ export const FooServiceCreateResponse = {
     return message;
   },
 
-  fromJSON(object: any): FooServiceCreateResponse {
-    return { kind: isSet(object.kind) ? fooServiceFromJSON(object.kind) : 0 };
-  },
-
   toJSON(message: FooServiceCreateResponse): unknown {
     const obj: any = {};
     if (message.kind !== 0) {
       obj.kind = fooServiceToJSON(message.kind);
     }
     return obj;
+  },
+
+  fromJSON(object: any): FooServiceCreateResponse {
+    return { kind: isSet(object.kind) ? fooServiceFromJSON(object.kind) : 0 };
   },
 
   create<I extends Exact<DeepPartial<FooServiceCreateResponse>, I>>(base?: I): FooServiceCreateResponse {

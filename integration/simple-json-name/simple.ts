@@ -129,19 +129,6 @@ export const Simple = {
     return message;
   },
 
-  fromJSON(object: any): Simple {
-    return {
-      name: isSet(object.other_name) ? String(object.other_name) : "",
-      age: isSet(object.other_age) ? Number(object.other_age) : undefined,
-      createdAt: isSet(object.createdAt) ? fromJsonTimestamp(object.createdAt) : undefined,
-      hyphen: isSet(object["hyphened-name"]) ? String(object["hyphened-name"]) : "",
-      spaces: isSet(object["name with spaces"]) ? String(object["name with spaces"]) : "",
-      dollarStart: isSet(object.$dollar) ? String(object.$dollar) : "",
-      dollarEnd: isSet(object.dollar$) ? String(object.dollar$) : "",
-      hyphenList: Array.isArray(object?.["hyphen-list"]) ? object["hyphen-list"].map((e: any) => String(e)) : [],
-    };
-  },
-
   toJSON(message: Simple): unknown {
     const obj: any = {};
     if (message.name !== "") {
@@ -169,6 +156,19 @@ export const Simple = {
       obj["hyphen-list"] = message.hyphenList;
     }
     return obj;
+  },
+
+  fromJSON(object: any): Simple {
+    return {
+      name: isSet(object.other_name) ? String(object.other_name) : "",
+      age: isSet(object.other_age) ? Number(object.other_age) : undefined,
+      createdAt: isSet(object.createdAt) ? fromJsonTimestamp(object.createdAt) : undefined,
+      hyphen: isSet(object["hyphened-name"]) ? String(object["hyphened-name"]) : "",
+      spaces: isSet(object["name with spaces"]) ? String(object["name with spaces"]) : "",
+      dollarStart: isSet(object.$dollar) ? String(object.$dollar) : "",
+      dollarEnd: isSet(object.dollar$) ? String(object.dollar$) : "",
+      hyphenList: Array.isArray(object?.["hyphen-list"]) ? object["hyphen-list"].map((e: any) => String(e)) : [],
+    };
   },
 
   create<I extends Exact<DeepPartial<Simple>, I>>(base?: I): Simple {

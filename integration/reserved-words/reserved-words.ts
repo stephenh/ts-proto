@@ -31,13 +31,13 @@ export const Record = {
     return message;
   },
 
-  fromJSON(_: any): Record {
-    return {};
-  },
-
   toJSON(_: Record): unknown {
     const obj: any = {};
     return obj;
+  },
+
+  fromJSON(_: any): Record {
+    return {};
   },
 
   create<I extends Exact<DeepPartial<Record>, I>>(base?: I): Record {

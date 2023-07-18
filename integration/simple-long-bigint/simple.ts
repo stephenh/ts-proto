@@ -227,26 +227,6 @@ export const Numbers = {
     return message;
   },
 
-  fromJSON(object: any): Numbers {
-    return {
-      double: isSet(object.double) ? Number(object.double) : 0,
-      float: isSet(object.float) ? Number(object.float) : 0,
-      int32: isSet(object.int32) ? Number(object.int32) : 0,
-      int64: isSet(object.int64) ? BigInt(object.int64) : BigInt("0"),
-      uint32: isSet(object.uint32) ? Number(object.uint32) : 0,
-      uint64: isSet(object.uint64) ? BigInt(object.uint64) : BigInt("0"),
-      sint32: isSet(object.sint32) ? Number(object.sint32) : 0,
-      sint64: isSet(object.sint64) ? BigInt(object.sint64) : BigInt("0"),
-      fixed32: isSet(object.fixed32) ? Number(object.fixed32) : 0,
-      fixed64: isSet(object.fixed64) ? BigInt(object.fixed64) : BigInt("0"),
-      sfixed32: isSet(object.sfixed32) ? Number(object.sfixed32) : 0,
-      sfixed64: isSet(object.sfixed64) ? BigInt(object.sfixed64) : BigInt("0"),
-      guint64: isSet(object.guint64) ? BigInt(object.guint64) : undefined,
-      timestamp: isSet(object.timestamp) ? fromJsonTimestamp(object.timestamp) : undefined,
-      uint64s: Array.isArray(object?.uint64s) ? object.uint64s.map((e: any) => BigInt(e)) : [],
-    };
-  },
-
   toJSON(message: Numbers): unknown {
     const obj: any = {};
     if (message.double !== 0) {
@@ -295,6 +275,26 @@ export const Numbers = {
       obj.uint64s = message.uint64s.map((e) => e.toString());
     }
     return obj;
+  },
+
+  fromJSON(object: any): Numbers {
+    return {
+      double: isSet(object.double) ? Number(object.double) : 0,
+      float: isSet(object.float) ? Number(object.float) : 0,
+      int32: isSet(object.int32) ? Number(object.int32) : 0,
+      int64: isSet(object.int64) ? BigInt(object.int64) : BigInt("0"),
+      uint32: isSet(object.uint32) ? Number(object.uint32) : 0,
+      uint64: isSet(object.uint64) ? BigInt(object.uint64) : BigInt("0"),
+      sint32: isSet(object.sint32) ? Number(object.sint32) : 0,
+      sint64: isSet(object.sint64) ? BigInt(object.sint64) : BigInt("0"),
+      fixed32: isSet(object.fixed32) ? Number(object.fixed32) : 0,
+      fixed64: isSet(object.fixed64) ? BigInt(object.fixed64) : BigInt("0"),
+      sfixed32: isSet(object.sfixed32) ? Number(object.sfixed32) : 0,
+      sfixed64: isSet(object.sfixed64) ? BigInt(object.sfixed64) : BigInt("0"),
+      guint64: isSet(object.guint64) ? BigInt(object.guint64) : undefined,
+      timestamp: isSet(object.timestamp) ? fromJsonTimestamp(object.timestamp) : undefined,
+      uint64s: Array.isArray(object?.uint64s) ? object.uint64s.map((e: any) => BigInt(e)) : [],
+    };
   },
 
   create<I extends Exact<DeepPartial<Numbers>, I>>(base?: I): Numbers {

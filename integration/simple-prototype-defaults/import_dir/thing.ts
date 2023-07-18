@@ -43,16 +43,16 @@ export const ImportedThing = {
     return message;
   },
 
-  fromJSON(object: any): ImportedThing {
-    return { createdAt: isSet(object.createdAt) ? fromJsonTimestamp(object.createdAt) : undefined };
-  },
-
   toJSON(message: ImportedThing): unknown {
     const obj: any = {};
     if (message.createdAt !== undefined) {
       obj.createdAt = message.createdAt.toISOString();
     }
     return obj;
+  },
+
+  fromJSON(object: any): ImportedThing {
+    return { createdAt: isSet(object.createdAt) ? fromJsonTimestamp(object.createdAt) : undefined };
   },
 
   create<I extends Exact<DeepPartial<ImportedThing>, I>>(base?: I): ImportedThing {

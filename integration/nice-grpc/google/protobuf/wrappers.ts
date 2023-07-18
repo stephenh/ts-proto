@@ -129,16 +129,16 @@ export const DoubleValue = {
     return message;
   },
 
-  fromJSON(object: any): DoubleValue {
-    return { value: isSet(object.value) ? Number(object.value) : 0 };
-  },
-
   toJSON(message: DoubleValue): unknown {
     const obj: any = {};
     if (message.value !== 0) {
       obj.value = message.value;
     }
     return obj;
+  },
+
+  fromJSON(object: any): DoubleValue {
+    return { value: isSet(object.value) ? Number(object.value) : 0 };
   },
 
   create(base?: DeepPartial<DoubleValue>): DoubleValue {
@@ -187,16 +187,16 @@ export const FloatValue = {
     return message;
   },
 
-  fromJSON(object: any): FloatValue {
-    return { value: isSet(object.value) ? Number(object.value) : 0 };
-  },
-
   toJSON(message: FloatValue): unknown {
     const obj: any = {};
     if (message.value !== 0) {
       obj.value = message.value;
     }
     return obj;
+  },
+
+  fromJSON(object: any): FloatValue {
+    return { value: isSet(object.value) ? Number(object.value) : 0 };
   },
 
   create(base?: DeepPartial<FloatValue>): FloatValue {
@@ -245,16 +245,16 @@ export const Int64Value = {
     return message;
   },
 
-  fromJSON(object: any): Int64Value {
-    return { value: isSet(object.value) ? Number(object.value) : 0 };
-  },
-
   toJSON(message: Int64Value): unknown {
     const obj: any = {};
     if (message.value !== 0) {
       obj.value = Math.round(message.value);
     }
     return obj;
+  },
+
+  fromJSON(object: any): Int64Value {
+    return { value: isSet(object.value) ? Number(object.value) : 0 };
   },
 
   create(base?: DeepPartial<Int64Value>): Int64Value {
@@ -303,16 +303,16 @@ export const UInt64Value = {
     return message;
   },
 
-  fromJSON(object: any): UInt64Value {
-    return { value: isSet(object.value) ? Number(object.value) : 0 };
-  },
-
   toJSON(message: UInt64Value): unknown {
     const obj: any = {};
     if (message.value !== 0) {
       obj.value = Math.round(message.value);
     }
     return obj;
+  },
+
+  fromJSON(object: any): UInt64Value {
+    return { value: isSet(object.value) ? Number(object.value) : 0 };
   },
 
   create(base?: DeepPartial<UInt64Value>): UInt64Value {
@@ -361,16 +361,16 @@ export const Int32Value = {
     return message;
   },
 
-  fromJSON(object: any): Int32Value {
-    return { value: isSet(object.value) ? Number(object.value) : 0 };
-  },
-
   toJSON(message: Int32Value): unknown {
     const obj: any = {};
     if (message.value !== 0) {
       obj.value = Math.round(message.value);
     }
     return obj;
+  },
+
+  fromJSON(object: any): Int32Value {
+    return { value: isSet(object.value) ? Number(object.value) : 0 };
   },
 
   create(base?: DeepPartial<Int32Value>): Int32Value {
@@ -419,16 +419,16 @@ export const UInt32Value = {
     return message;
   },
 
-  fromJSON(object: any): UInt32Value {
-    return { value: isSet(object.value) ? Number(object.value) : 0 };
-  },
-
   toJSON(message: UInt32Value): unknown {
     const obj: any = {};
     if (message.value !== 0) {
       obj.value = Math.round(message.value);
     }
     return obj;
+  },
+
+  fromJSON(object: any): UInt32Value {
+    return { value: isSet(object.value) ? Number(object.value) : 0 };
   },
 
   create(base?: DeepPartial<UInt32Value>): UInt32Value {
@@ -477,16 +477,16 @@ export const BoolValue = {
     return message;
   },
 
-  fromJSON(object: any): BoolValue {
-    return { value: isSet(object.value) ? Boolean(object.value) : false };
-  },
-
   toJSON(message: BoolValue): unknown {
     const obj: any = {};
     if (message.value === true) {
       obj.value = message.value;
     }
     return obj;
+  },
+
+  fromJSON(object: any): BoolValue {
+    return { value: isSet(object.value) ? Boolean(object.value) : false };
   },
 
   create(base?: DeepPartial<BoolValue>): BoolValue {
@@ -535,16 +535,16 @@ export const StringValue = {
     return message;
   },
 
-  fromJSON(object: any): StringValue {
-    return { value: isSet(object.value) ? String(object.value) : "" };
-  },
-
   toJSON(message: StringValue): unknown {
     const obj: any = {};
     if (message.value !== "") {
       obj.value = message.value;
     }
     return obj;
+  },
+
+  fromJSON(object: any): StringValue {
+    return { value: isSet(object.value) ? String(object.value) : "" };
   },
 
   create(base?: DeepPartial<StringValue>): StringValue {
@@ -593,16 +593,16 @@ export const BytesValue = {
     return message;
   },
 
-  fromJSON(object: any): BytesValue {
-    return { value: isSet(object.value) ? bytesFromBase64(object.value) : new Uint8Array(0) };
-  },
-
   toJSON(message: BytesValue): unknown {
     const obj: any = {};
     if (message.value.length !== 0) {
       obj.value = base64FromBytes(message.value);
     }
     return obj;
+  },
+
+  fromJSON(object: any): BytesValue {
+    return { value: isSet(object.value) ? bytesFromBase64(object.value) : new Uint8Array(0) };
   },
 
   create(base?: DeepPartial<BytesValue>): BytesValue {

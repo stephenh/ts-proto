@@ -52,13 +52,6 @@ export const Foo = {
     return message;
   },
 
-  fromJSON(object: any): Foo {
-    return {
-      name: isSet(object.name) ? String(object.name) : "",
-      bar: isSet(object.bar) ? Bar.fromJSON(object.bar) : undefined,
-    };
-  },
-
   toJSON(message: Foo): unknown {
     const obj: any = {};
     if (message.name !== "") {
@@ -68,6 +61,13 @@ export const Foo = {
       obj.bar = Bar.toJSON(message.bar);
     }
     return obj;
+  },
+
+  fromJSON(object: any): Foo {
+    return {
+      name: isSet(object.name) ? String(object.name) : "",
+      bar: isSet(object.bar) ? Bar.fromJSON(object.bar) : undefined,
+    };
   },
 
   create<I extends Exact<DeepPartial<Foo>, I>>(base?: I): Foo {
