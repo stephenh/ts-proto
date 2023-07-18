@@ -238,12 +238,9 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
           if (options.outputJsonMethods === true || options.outputJsonMethods === "decode-only") {
             staticMembers.push(generateFromJson(ctx, fullName, fullTypeName, message));
           }
-          if(options.outputJsonMethods  === true ||
-            options.outputJsonMethods === "encode-only"
-          ){
+          if (options.outputJsonMethods === true || options.outputJsonMethods === "encode-only") {
             staticMembers.push(generateToJson(ctx, fullName, fullTypeName, message));
           }
-
         }
         if (options.outputPartialMethods) {
           staticMembers.push(generateFromPartial(ctx, fullName, message));
