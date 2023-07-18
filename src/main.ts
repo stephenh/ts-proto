@@ -235,8 +235,16 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
           staticMembers.push(generateDecodeTransform(fullName));
         }
         if (options.outputJsonMethods) {
-          staticMembers.push(generateFromJson(ctx, fullName, fullTypeName, message));
-          staticMembers.push(generateToJson(ctx, fullName, fullTypeName, message));
+          if(options.outputJsonMethods  === true ||
+            options.outputEncodeMethods === "encode-only" ||
+            options.outputEncodeMethods === "encode-no-creation"
+          ){
+            staticMembers.push(generateFromJson(ctx, fullName, fullTypeName, message));
+          }
+
+          if (options.outputEncodeMethods === true || options.outputEncodeMethods === "decode-only") {
+            staticMembers.push(generateToJson(ctx, fullName, fullTypeName, message));
+          }
         }
         if (options.outputPartialMethods) {
           staticMembers.push(generateFromPartial(ctx, fullName, message));
