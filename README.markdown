@@ -376,6 +376,10 @@ Generated code will be placed in the Gradle build directory.
 
   This is also useful if you want "only types".
 
+- With `--ts_proto_opt=outputJsonMethods=to-only` and `--ts_proto_opt=outputJsonMethods=from-only` you will be able to export only one between the `Message.toJSON` and `Message.fromJSON` methods.
+
+  This is useful if you're using ts-proto just to `encode` or `decode` and not for both.
+
 - With `--ts_proto_opt=outputPartialMethods=false`, the `Message.fromPartial` and `Message.create` methods for accepting partially-formed objects/object literals will not be output.
 
 - With `--ts_proto_opt=stringEnums=true`, the generated enum types will be string-based instead of int-based.

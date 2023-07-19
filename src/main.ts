@@ -235,10 +235,10 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
           staticMembers.push(generateDecodeTransform(fullName));
         }
         if (options.outputJsonMethods) {
-          if (options.outputJsonMethods === true || options.outputJsonMethods === "decode-only") {
+          if (options.outputJsonMethods === true || options.outputJsonMethods === "from-only") {
             staticMembers.push(generateFromJson(ctx, fullName, fullTypeName, message));
           }
-          if (options.outputJsonMethods === true || options.outputJsonMethods === "encode-only") {
+          if (options.outputJsonMethods === true || options.outputJsonMethods === "to-only") {
             staticMembers.push(generateToJson(ctx, fullName, fullTypeName, message));
           }
         }
