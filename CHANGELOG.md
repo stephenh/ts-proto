@@ -1,3 +1,10 @@
+# [1.156.0](https://github.com/stephenh/ts-proto/compare/v1.155.1...v1.156.0) (2023-07-20)
+
+
+### Features
+
+* **ts-proto-#859:** added encode-only options to toJSON methods ([#886](https://github.com/stephenh/ts-proto/issues/886)) ([d0cf57d](https://github.com/stephenh/ts-proto/commit/d0cf57d9a1aebdec3bec67585658362b1a38d6a3)), closes [ts-proto-#859](https://github.com/ts-proto-/issues/859) [ts-proto-#859](https://github.com/ts-proto-/issues/859) [ts-proto#859](https://github.com/ts-proto/issues/859) [ts-proto#859](https://github.com/ts-proto/issues/859) [ts-proto-#859](https://github.com/ts-proto-/issues/859)
+
 ## [1.155.1](https://github.com/stephenh/ts-proto/compare/v1.155.0...v1.155.1) (2023-07-15)
 
 
