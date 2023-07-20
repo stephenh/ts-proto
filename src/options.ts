@@ -46,7 +46,7 @@ export type Options = {
   fileSuffix: string;
   importSuffix: string;
   outputEncodeMethods: true | false | "encode-only" | "decode-only" | "encode-no-creation";
-  outputJsonMethods: boolean;
+  outputJsonMethods: true | false | "to-only" | "from-only";
   outputPartialMethods: boolean;
   outputTypeAnnotations: boolean | "static-only";
   outputTypeRegistry: boolean;
