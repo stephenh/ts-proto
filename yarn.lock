@@ -5312,6 +5312,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"long@npm:^5.2.3":
+  version: 5.2.3
+  resolution: "long@npm:5.2.3"
+  checksum: 885ede7c3de4facccbd2cacc6168bae3a02c3e836159ea4252c87b6e34d40af819824b2d4edce330bfb5c4d6e8ce3ec5864bdcf9473fa1f53a4f8225860e5897
+  languageName: node
+  linkType: hard
+
 "lru-cache@npm:^6.0.0":
   version: 6.0.0
   resolution: "lru-cache@npm:6.0.0"
@@ -7807,13 +7814,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-proto-descriptors@npm:1.14.0":
-  version: 1.14.0
-  resolution: "ts-proto-descriptors@npm:1.14.0"
+"ts-proto-descriptors@npm:1.15.0":
+  version: 1.15.0
+  resolution: "ts-proto-descriptors@npm:1.15.0"
   dependencies:
-    long: ^5.0.0
+    long: ^5.2.3
     protobufjs: ^7.2.4
-  checksum: 640486137fda4085d0efe1a4a47642396da958d3592e50f813585a7d64042bd4544e6154445921ba93083401179a7bca7e30ee5833ecc06a10a235eff48f93ff
+  checksum: 50e77d7c89dc52e9e74ee859e3232cece527d59ddcce515852059df70b4d80b49e73eb65166ec87f6f9238cadc2c77eb05695724f82aa4501bc2378fb2457643
   languageName: node
   linkType: hard
 
@@ -7855,7 +7862,7 @@ __metadata:
     semantic-release: ^21.0.7
     ts-jest: ^29.1.1
     ts-poet: ^6.5.0
-    ts-proto-descriptors: 1.14.0
+    ts-proto-descriptors: 1.15.0
     tsx: ^3.12.7
     typescript: ^5.1.6
     uglify-js: ^3.17.4
