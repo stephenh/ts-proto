@@ -93,7 +93,7 @@ export function defaultOptions(): Options {
     useDate: DateOption.DATE,
     useMongoObjectId: false,
     oneof: OneofOption.PROPERTIES,
-    esModuleInterop: false,
+    esModuleInterop: true,
     fileSuffix: "",
     importSuffix: "",
     lowerCaseServiceMethods: false,
