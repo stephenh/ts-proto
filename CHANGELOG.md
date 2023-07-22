@@ -1,3 +1,10 @@
+## [1.156.1](https://github.com/stephenh/ts-proto/compare/v1.156.0...v1.156.1) (2023-07-22)
+
+
+### Bug Fixes
+
+* Depend specifically on long 5.2.3. ([#892](https://github.com/stephenh/ts-proto/issues/892)) ([2b976f2](https://github.com/stephenh/ts-proto/commit/2b976f295fc1fbab6d0fb5ad86cfad26ed722c8a))
+
 # [1.156.0](https://github.com/stephenh/ts-proto/compare/v1.155.1...v1.156.0) (2023-07-20)
 
 
