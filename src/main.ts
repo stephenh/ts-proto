@@ -2091,18 +2091,16 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
   if (ctx.options.useExactTypes) {
     chunks.push(code`
       create<I extends ${utils.Exact}<${utils.DeepPartial}<${fullName}>, I>>(base?: I): ${fullName} {
+        return ${fullName}.fromPartial(base ?? ({} as any));
+      },  
     `);
   } else {
     chunks.push(code`
       create(base?: ${utils.DeepPartial}<${fullName}>): ${fullName} {
+        return ${fullName}.fromPartial(base ?? {});
+      },  
     `);
   }
-
-  chunks.push(code`
-    return ${fullName}.fromPartial(base ?? {})
-  `);
-
-  chunks.push(code`},`, code``);
 
   // create the fromPartial function declaration
   const paramName = messageDesc.field.length > 0 ? "object" : "_";
