@@ -56,9 +56,8 @@ export const StructMessage = {
   },
 
   create<I extends Exact<DeepPartial<StructMessage>, I>>(base?: I): StructMessage {
-    return StructMessage.fromPartial(base ?? {});
+    return StructMessage.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<StructMessage>, I>>(object: I): StructMessage {
     const message = createBaseStructMessage();
     message.value = object.value ?? undefined;

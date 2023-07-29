@@ -58,9 +58,8 @@ export const Baz = {
   },
 
   create<I extends Exact<DeepPartial<Baz>, I>>(base?: I): Baz {
-    return Baz.fromPartial(base ?? {});
+    return Baz.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Baz>, I>>(object: I): Baz {
     const message = createBaseBaz();
     message.foo = (object.foo !== undefined && object.foo !== null) ? FooBar.fromPartial(object.foo) : undefined;
@@ -103,9 +102,8 @@ export const FooBar = {
   },
 
   create<I extends Exact<DeepPartial<FooBar>, I>>(base?: I): FooBar {
-    return FooBar.fromPartial(base ?? {});
+    return FooBar.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<FooBar>, I>>(_: I): FooBar {
     const message = createBaseFooBar();
     return message;

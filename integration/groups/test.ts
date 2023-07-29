@@ -156,9 +156,8 @@ export const GroupsOptionalTest = {
   },
 
   create<I extends Exact<DeepPartial<GroupsOptionalTest>, I>>(base?: I): GroupsOptionalTest {
-    return GroupsOptionalTest.fromPartial(base ?? {});
+    return GroupsOptionalTest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<GroupsOptionalTest>, I>>(object: I): GroupsOptionalTest {
     const message = createBaseGroupsOptionalTest();
     message.int1 = object.int1 ?? undefined;
@@ -261,9 +260,8 @@ export const GroupsOptionalTest_Group = {
   },
 
   create<I extends Exact<DeepPartial<GroupsOptionalTest_Group>, I>>(base?: I): GroupsOptionalTest_Group {
-    return GroupsOptionalTest_Group.fromPartial(base ?? {});
+    return GroupsOptionalTest_Group.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<GroupsOptionalTest_Group>, I>>(object: I): GroupsOptionalTest_Group {
     const message = createBaseGroupsOptionalTest_Group();
     message.key = object.key ?? undefined;
@@ -424,9 +422,8 @@ export const GroupsRepeatedTest = {
   },
 
   create<I extends Exact<DeepPartial<GroupsRepeatedTest>, I>>(base?: I): GroupsRepeatedTest {
-    return GroupsRepeatedTest.fromPartial(base ?? {});
+    return GroupsRepeatedTest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<GroupsRepeatedTest>, I>>(object: I): GroupsRepeatedTest {
     const message = createBaseGroupsRepeatedTest();
     message.int1 = object.int1?.map((e) => e) || undefined;
@@ -537,9 +534,8 @@ export const GroupsRepeatedTest_Group = {
   },
 
   create<I extends Exact<DeepPartial<GroupsRepeatedTest_Group>, I>>(base?: I): GroupsRepeatedTest_Group {
-    return GroupsRepeatedTest_Group.fromPartial(base ?? {});
+    return GroupsRepeatedTest_Group.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<GroupsRepeatedTest_Group>, I>>(object: I): GroupsRepeatedTest_Group {
     const message = createBaseGroupsRepeatedTest_Group();
     message.key = object.key?.map((e) => e) || undefined;
@@ -700,9 +696,8 @@ export const GroupsNestedTest = {
   },
 
   create<I extends Exact<DeepPartial<GroupsNestedTest>, I>>(base?: I): GroupsNestedTest {
-    return GroupsNestedTest.fromPartial(base ?? {});
+    return GroupsNestedTest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<GroupsNestedTest>, I>>(object: I): GroupsNestedTest {
     const message = createBaseGroupsNestedTest();
     message.int1 = object.int1?.map((e) => e) || undefined;
@@ -796,9 +791,8 @@ export const GroupsNestedTest_Group = {
   },
 
   create<I extends Exact<DeepPartial<GroupsNestedTest_Group>, I>>(base?: I): GroupsNestedTest_Group {
-    return GroupsNestedTest_Group.fromPartial(base ?? {});
+    return GroupsNestedTest_Group.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<GroupsNestedTest_Group>, I>>(object: I): GroupsNestedTest_Group {
     const message = createBaseGroupsNestedTest_Group();
     message.nested = object.nested?.map((e) => GroupsNestedTest_Group_Nested.fromPartial(e)) || undefined;
@@ -890,9 +884,8 @@ export const GroupsNestedTest_Group_Nested = {
   },
 
   create<I extends Exact<DeepPartial<GroupsNestedTest_Group_Nested>, I>>(base?: I): GroupsNestedTest_Group_Nested {
-    return GroupsNestedTest_Group_Nested.fromPartial(base ?? {});
+    return GroupsNestedTest_Group_Nested.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<GroupsNestedTest_Group_Nested>, I>>(
     object: I,
   ): GroupsNestedTest_Group_Nested {
@@ -979,9 +972,8 @@ export const GroupsNestedTest_Group_Nested_Nested2 = {
   create<I extends Exact<DeepPartial<GroupsNestedTest_Group_Nested_Nested2>, I>>(
     base?: I,
   ): GroupsNestedTest_Group_Nested_Nested2 {
-    return GroupsNestedTest_Group_Nested_Nested2.fromPartial(base ?? {});
+    return GroupsNestedTest_Group_Nested_Nested2.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<GroupsNestedTest_Group_Nested_Nested2>, I>>(
     object: I,
   ): GroupsNestedTest_Group_Nested_Nested2 {

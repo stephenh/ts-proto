@@ -88,9 +88,8 @@ export const Issue56 = {
   },
 
   create<I extends Exact<DeepPartial<Issue56>, I>>(base?: I): Issue56 {
-    return Issue56.fromPartial(base ?? {});
+    return Issue56.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Issue56>, I>>(object: I): Issue56 {
     const message = createBaseIssue56();
     message.test = object.test ?? 1;

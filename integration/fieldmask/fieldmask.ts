@@ -56,9 +56,8 @@ export const FieldMaskMessage = {
   },
 
   create<I extends Exact<DeepPartial<FieldMaskMessage>, I>>(base?: I): FieldMaskMessage {
-    return FieldMaskMessage.fromPartial(base ?? {});
+    return FieldMaskMessage.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<FieldMaskMessage>, I>>(object: I): FieldMaskMessage {
     const message = createBaseFieldMaskMessage();
     message.fieldMask = object.fieldMask ?? undefined;

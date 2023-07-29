@@ -133,9 +133,8 @@ export const Simple = {
   },
 
   create<I extends Exact<DeepPartial<Simple>, I>>(base?: I): Simple {
-    return Simple.fromPartial(base ?? {});
+    return Simple.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Simple>, I>>(object: I): Simple {
     const message = createBaseSimple();
     message.name = object.name ?? "";
@@ -210,9 +209,8 @@ export const SimpleEnums = {
   },
 
   create<I extends Exact<DeepPartial<SimpleEnums>, I>>(base?: I): SimpleEnums {
-    return SimpleEnums.fromPartial(base ?? {});
+    return SimpleEnums.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<SimpleEnums>, I>>(object: I): SimpleEnums {
     const message = createBaseSimpleEnums();
     message.localEnum = object.localEnum ?? 0;
@@ -269,9 +267,8 @@ export const FooServiceCreateRequest = {
   },
 
   create<I extends Exact<DeepPartial<FooServiceCreateRequest>, I>>(base?: I): FooServiceCreateRequest {
-    return FooServiceCreateRequest.fromPartial(base ?? {});
+    return FooServiceCreateRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<FooServiceCreateRequest>, I>>(object: I): FooServiceCreateRequest {
     const message = createBaseFooServiceCreateRequest();
     message.kind = object.kind ?? 0;
@@ -327,9 +324,8 @@ export const FooServiceCreateResponse = {
   },
 
   create<I extends Exact<DeepPartial<FooServiceCreateResponse>, I>>(base?: I): FooServiceCreateResponse {
-    return FooServiceCreateResponse.fromPartial(base ?? {});
+    return FooServiceCreateResponse.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<FooServiceCreateResponse>, I>>(object: I): FooServiceCreateResponse {
     const message = createBaseFooServiceCreateResponse();
     message.kind = object.kind ?? 0;

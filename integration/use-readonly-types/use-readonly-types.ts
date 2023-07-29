@@ -261,9 +261,8 @@ export const Entity = {
   },
 
   create<I extends Exact<DeepPartial<Entity>, I>>(base?: I): Entity {
-    return Entity.fromPartial(base ?? {});
+    return Entity.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Entity>, I>>(object: I): Entity {
     const message = createBaseEntity() as any;
     message.intVal = object.intVal ?? 0;
@@ -344,9 +343,8 @@ export const SubEntity = {
   },
 
   create<I extends Exact<DeepPartial<SubEntity>, I>>(base?: I): SubEntity {
-    return SubEntity.fromPartial(base ?? {});
+    return SubEntity.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<SubEntity>, I>>(object: I): SubEntity {
     const message = createBaseSubEntity() as any;
     message.subVal = object.subVal ?? 0;

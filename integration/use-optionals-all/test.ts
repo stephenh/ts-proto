@@ -536,9 +536,8 @@ export const OptionalsTest = {
   },
 
   create<I extends Exact<DeepPartial<OptionalsTest>, I>>(base?: I): OptionalsTest {
-    return OptionalsTest.fromPartial(base ?? {});
+    return OptionalsTest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<OptionalsTest>, I>>(object: I): OptionalsTest {
     const message = createBaseOptionalsTest();
     message.id = object.id ?? 0;
@@ -639,9 +638,8 @@ export const OptionalsTest_TranslationsEntry = {
   },
 
   create<I extends Exact<DeepPartial<OptionalsTest_TranslationsEntry>, I>>(base?: I): OptionalsTest_TranslationsEntry {
-    return OptionalsTest_TranslationsEntry.fromPartial(base ?? {});
+    return OptionalsTest_TranslationsEntry.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<OptionalsTest_TranslationsEntry>, I>>(
     object: I,
   ): OptionalsTest_TranslationsEntry {
@@ -687,9 +685,8 @@ export const Child = {
   },
 
   create<I extends Exact<DeepPartial<Child>, I>>(base?: I): Child {
-    return Child.fromPartial(base ?? {});
+    return Child.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Child>, I>>(_: I): Child {
     const message = createBaseChild();
     return message;

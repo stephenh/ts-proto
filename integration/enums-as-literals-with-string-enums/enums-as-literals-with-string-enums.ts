@@ -118,9 +118,8 @@ export const DividerData = {
   },
 
   create<I extends Exact<DeepPartial<DividerData>, I>>(base?: I): DividerData {
-    return DividerData.fromPartial(base ?? {});
+    return DividerData.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DividerData>, I>>(object: I): DividerData {
     const message = createBaseDividerData();
     message.type = object.type ?? DividerData_DividerType.DOUBLE;

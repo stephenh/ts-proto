@@ -140,9 +140,8 @@ export const Todo = {
   },
 
   create<I extends Exact<DeepPartial<Todo>, I>>(base?: I): Todo {
-    return Todo.fromPartial(base ?? {});
+    return Todo.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Todo>, I>>(object: I): Todo {
     const message = createBaseTodo();
     message.id = object.id ?? "";
@@ -226,9 +225,8 @@ export const Todo_MapOfTimestampsEntry = {
   },
 
   create<I extends Exact<DeepPartial<Todo_MapOfTimestampsEntry>, I>>(base?: I): Todo_MapOfTimestampsEntry {
-    return Todo_MapOfTimestampsEntry.fromPartial(base ?? {});
+    return Todo_MapOfTimestampsEntry.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Todo_MapOfTimestampsEntry>, I>>(object: I): Todo_MapOfTimestampsEntry {
     const message = createBaseTodo_MapOfTimestampsEntry();
     message.key = object.key ?? "";

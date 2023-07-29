@@ -68,9 +68,8 @@ export const TimestampMessage = {
   },
 
   create<I extends Exact<DeepPartial<TimestampMessage>, I>>(base?: I): TimestampMessage {
-    return TimestampMessage.fromPartial(base ?? {});
+    return TimestampMessage.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<TimestampMessage>, I>>(object: I): TimestampMessage {
     const message = createBaseTimestampMessage();
     message.timestamp = (object.timestamp !== undefined && object.timestamp !== null)

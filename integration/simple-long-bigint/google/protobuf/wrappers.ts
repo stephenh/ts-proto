@@ -142,9 +142,8 @@ export const DoubleValue = {
   },
 
   create<I extends Exact<DeepPartial<DoubleValue>, I>>(base?: I): DoubleValue {
-    return DoubleValue.fromPartial(base ?? {});
+    return DoubleValue.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DoubleValue>, I>>(object: I): DoubleValue {
     const message = createBaseDoubleValue();
     message.value = object.value ?? 0;
@@ -200,9 +199,8 @@ export const FloatValue = {
   },
 
   create<I extends Exact<DeepPartial<FloatValue>, I>>(base?: I): FloatValue {
-    return FloatValue.fromPartial(base ?? {});
+    return FloatValue.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<FloatValue>, I>>(object: I): FloatValue {
     const message = createBaseFloatValue();
     message.value = object.value ?? 0;
@@ -258,9 +256,8 @@ export const Int64Value = {
   },
 
   create<I extends Exact<DeepPartial<Int64Value>, I>>(base?: I): Int64Value {
-    return Int64Value.fromPartial(base ?? {});
+    return Int64Value.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Int64Value>, I>>(object: I): Int64Value {
     const message = createBaseInt64Value();
     message.value = object.value ?? BigInt("0");
@@ -316,9 +313,8 @@ export const UInt64Value = {
   },
 
   create<I extends Exact<DeepPartial<UInt64Value>, I>>(base?: I): UInt64Value {
-    return UInt64Value.fromPartial(base ?? {});
+    return UInt64Value.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<UInt64Value>, I>>(object: I): UInt64Value {
     const message = createBaseUInt64Value();
     message.value = object.value ?? BigInt("0");
@@ -374,9 +370,8 @@ export const Int32Value = {
   },
 
   create<I extends Exact<DeepPartial<Int32Value>, I>>(base?: I): Int32Value {
-    return Int32Value.fromPartial(base ?? {});
+    return Int32Value.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Int32Value>, I>>(object: I): Int32Value {
     const message = createBaseInt32Value();
     message.value = object.value ?? 0;
@@ -432,9 +427,8 @@ export const UInt32Value = {
   },
 
   create<I extends Exact<DeepPartial<UInt32Value>, I>>(base?: I): UInt32Value {
-    return UInt32Value.fromPartial(base ?? {});
+    return UInt32Value.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<UInt32Value>, I>>(object: I): UInt32Value {
     const message = createBaseUInt32Value();
     message.value = object.value ?? 0;
@@ -490,9 +484,8 @@ export const BoolValue = {
   },
 
   create<I extends Exact<DeepPartial<BoolValue>, I>>(base?: I): BoolValue {
-    return BoolValue.fromPartial(base ?? {});
+    return BoolValue.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<BoolValue>, I>>(object: I): BoolValue {
     const message = createBaseBoolValue();
     message.value = object.value ?? false;
@@ -548,9 +541,8 @@ export const StringValue = {
   },
 
   create<I extends Exact<DeepPartial<StringValue>, I>>(base?: I): StringValue {
-    return StringValue.fromPartial(base ?? {});
+    return StringValue.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<StringValue>, I>>(object: I): StringValue {
     const message = createBaseStringValue();
     message.value = object.value ?? "";
@@ -606,9 +598,8 @@ export const BytesValue = {
   },
 
   create<I extends Exact<DeepPartial<BytesValue>, I>>(base?: I): BytesValue {
-    return BytesValue.fromPartial(base ?? {});
+    return BytesValue.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<BytesValue>, I>>(object: I): BytesValue {
     const message = createBaseBytesValue();
     message.value = object.value ?? new Uint8Array(0);

@@ -71,7 +71,6 @@ export const Foo = {
   create(base?: DeepPartial<Foo>): Foo {
     return Foo.fromPartial(base ?? {});
   },
-
   fromPartial(object: DeepPartial<Foo>): Foo {
     const message = createBaseFoo();
     message.bar = object.bar ?? "";

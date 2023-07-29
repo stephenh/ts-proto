@@ -70,9 +70,8 @@ export const TPartialMessage = {
   },
 
   create<I extends Exact<DeepPartial<TPartialMessage>, I>>(base?: I): TPartialMessage {
-    return TPartialMessage.fromPartial(base ?? {});
+    return TPartialMessage.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<TPartialMessage>, I>>(object: I): TPartialMessage {
     const message = createBaseTPartialMessage();
     message.field = object.field ?? undefined;
@@ -267,9 +266,8 @@ export const TPartial = {
   },
 
   create<I extends Exact<DeepPartial<TPartial>, I>>(base?: I): TPartial {
-    return TPartial.fromPartial(base ?? {});
+    return TPartial.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<TPartial>, I>>(object: I): TPartial {
     const message = createBaseTPartial();
     message.number = object.number ?? undefined;
@@ -353,9 +351,8 @@ export const TPartial_MapEntry = {
   },
 
   create<I extends Exact<DeepPartial<TPartial_MapEntry>, I>>(base?: I): TPartial_MapEntry {
-    return TPartial_MapEntry.fromPartial(base ?? {});
+    return TPartial_MapEntry.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<TPartial_MapEntry>, I>>(object: I): TPartial_MapEntry {
     const message = createBaseTPartial_MapEntry();
     message.key = object.key ?? "";
