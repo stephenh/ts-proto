@@ -135,9 +135,8 @@ export const DashFlash = {
   },
 
   create<I extends Exact<DeepPartial<DashFlash>, I>>(base?: I): DashFlash {
-    return DashFlash.fromPartial(base ?? {});
+    return DashFlash.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DashFlash>, I>>(object: I): DashFlash {
     const message = createBaseDashFlash();
     message.msg = object.msg ?? "";
@@ -224,9 +223,8 @@ export const DashUserSettingsState = {
   },
 
   create<I extends Exact<DeepPartial<DashUserSettingsState>, I>>(base?: I): DashUserSettingsState {
-    return DashUserSettingsState.fromPartial(base ?? {});
+    return DashUserSettingsState.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DashUserSettingsState>, I>>(object: I): DashUserSettingsState {
     const message = createBaseDashUserSettingsState();
     message.email = object.email ?? "";
@@ -302,9 +300,8 @@ export const DashUserSettingsState_URLs = {
   },
 
   create<I extends Exact<DeepPartial<DashUserSettingsState_URLs>, I>>(base?: I): DashUserSettingsState_URLs {
-    return DashUserSettingsState_URLs.fromPartial(base ?? {});
+    return DashUserSettingsState_URLs.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DashUserSettingsState_URLs>, I>>(object: I): DashUserSettingsState_URLs {
     const message = createBaseDashUserSettingsState_URLs();
     message.connectGoogle = object.connectGoogle ?? "";
@@ -348,9 +345,8 @@ export const Empty = {
   },
 
   create<I extends Exact<DeepPartial<Empty>, I>>(base?: I): Empty {
-    return Empty.fromPartial(base ?? {});
+    return Empty.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Empty>, I>>(_: I): Empty {
     const message = createBaseEmpty();
     return message;

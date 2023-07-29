@@ -305,9 +305,8 @@ export const PleaseChoose = {
   },
 
   create<I extends Exact<DeepPartial<PleaseChoose>, I>>(base?: I): PleaseChoose {
-    return PleaseChoose.fromPartial(base ?? {});
+    return PleaseChoose.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<PleaseChoose>, I>>(object: I): PleaseChoose {
     const message = createBasePleaseChoose();
     message.name = object.name ?? "";
@@ -405,9 +404,8 @@ export const PleaseChoose_Submessage = {
   },
 
   create<I extends Exact<DeepPartial<PleaseChoose_Submessage>, I>>(base?: I): PleaseChoose_Submessage {
-    return PleaseChoose_Submessage.fromPartial(base ?? {});
+    return PleaseChoose_Submessage.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<PleaseChoose_Submessage>, I>>(object: I): PleaseChoose_Submessage {
     const message = createBasePleaseChoose_Submessage();
     message.name = object.name ?? "";
@@ -479,9 +477,8 @@ export const SimpleButOptional = {
   },
 
   create<I extends Exact<DeepPartial<SimpleButOptional>, I>>(base?: I): SimpleButOptional {
-    return SimpleButOptional.fromPartial(base ?? {});
+    return SimpleButOptional.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<SimpleButOptional>, I>>(object: I): SimpleButOptional {
     const message = createBaseSimpleButOptional();
     message.name = object.name ?? undefined;

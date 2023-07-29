@@ -72,9 +72,8 @@ export const HeroById = {
   },
 
   create<I extends Exact<DeepPartial<HeroById>, I>>(base?: I): HeroById {
-    return HeroById.fromPartial(base ?? {});
+    return HeroById.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<HeroById>, I>>(object: I): HeroById {
     const message = createBaseHeroById();
     message.id = object.id ?? 0;
@@ -130,9 +129,8 @@ export const VillainById = {
   },
 
   create<I extends Exact<DeepPartial<VillainById>, I>>(base?: I): VillainById {
-    return VillainById.fromPartial(base ?? {});
+    return VillainById.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<VillainById>, I>>(object: I): VillainById {
     const message = createBaseVillainById();
     message.id = object.id ?? 0;
@@ -201,9 +199,8 @@ export const Hero = {
   },
 
   create<I extends Exact<DeepPartial<Hero>, I>>(base?: I): Hero {
-    return Hero.fromPartial(base ?? {});
+    return Hero.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Hero>, I>>(object: I): Hero {
     const message = createBaseHero();
     message.id = object.id ?? 0;
@@ -273,9 +270,8 @@ export const Villain = {
   },
 
   create<I extends Exact<DeepPartial<Villain>, I>>(base?: I): Villain {
-    return Villain.fromPartial(base ?? {});
+    return Villain.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Villain>, I>>(object: I): Villain {
     const message = createBaseVillain();
     message.id = object.id ?? 0;

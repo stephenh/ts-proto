@@ -52,9 +52,8 @@ export const Empty = {
   },
 
   create<I extends Exact<DeepPartial<Empty>, I>>(base?: I): Empty {
-    return Empty.fromPartial(base ?? {});
+    return Empty.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Empty>, I>>(_: I): Empty {
     const message = createBaseEmpty();
     return message;

@@ -92,9 +92,8 @@ export const Entity = {
   },
 
   create<I extends Exact<DeepPartial<Entity>, I>>(base?: I): Entity {
-    return Entity.fromPartial(base ?? {});
+    return Entity.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Entity>, I>>(object: I): Entity {
     const message = createBaseEntity();
     message.id = object.id ?? 0;
@@ -284,9 +283,8 @@ export const Maps = {
   },
 
   create<I extends Exact<DeepPartial<Maps>, I>>(base?: I): Maps {
-    return Maps.fromPartial(base ?? {});
+    return Maps.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Maps>, I>>(object: I): Maps {
     const message = createBaseMaps();
     message.strToEntity = (() => {
@@ -403,9 +401,8 @@ export const Maps_StrToEntityEntry = {
   },
 
   create<I extends Exact<DeepPartial<Maps_StrToEntityEntry>, I>>(base?: I): Maps_StrToEntityEntry {
-    return Maps_StrToEntityEntry.fromPartial(base ?? {});
+    return Maps_StrToEntityEntry.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Maps_StrToEntityEntry>, I>>(object: I): Maps_StrToEntityEntry {
     const message = createBaseMaps_StrToEntityEntry();
     message.key = object.key ?? "";
@@ -477,9 +474,8 @@ export const Maps_Int32ToInt32Entry = {
   },
 
   create<I extends Exact<DeepPartial<Maps_Int32ToInt32Entry>, I>>(base?: I): Maps_Int32ToInt32Entry {
-    return Maps_Int32ToInt32Entry.fromPartial(base ?? {});
+    return Maps_Int32ToInt32Entry.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Maps_Int32ToInt32Entry>, I>>(object: I): Maps_Int32ToInt32Entry {
     const message = createBaseMaps_Int32ToInt32Entry();
     message.key = object.key ?? 0;
@@ -552,9 +548,8 @@ export const Maps_StringToBytesEntry = {
   },
 
   create<I extends Exact<DeepPartial<Maps_StringToBytesEntry>, I>>(base?: I): Maps_StringToBytesEntry {
-    return Maps_StringToBytesEntry.fromPartial(base ?? {});
+    return Maps_StringToBytesEntry.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Maps_StringToBytesEntry>, I>>(object: I): Maps_StringToBytesEntry {
     const message = createBaseMaps_StringToBytesEntry();
     message.key = object.key ?? "";
@@ -624,9 +619,8 @@ export const Maps_Int64ToInt64Entry = {
   },
 
   create<I extends Exact<DeepPartial<Maps_Int64ToInt64Entry>, I>>(base?: I): Maps_Int64ToInt64Entry {
-    return Maps_Int64ToInt64Entry.fromPartial(base ?? {});
+    return Maps_Int64ToInt64Entry.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Maps_Int64ToInt64Entry>, I>>(object: I): Maps_Int64ToInt64Entry {
     const message = createBaseMaps_Int64ToInt64Entry();
     message.key = object.key ?? 0;
@@ -699,9 +693,8 @@ export const Maps_MapOfTimestampsEntry = {
   },
 
   create<I extends Exact<DeepPartial<Maps_MapOfTimestampsEntry>, I>>(base?: I): Maps_MapOfTimestampsEntry {
-    return Maps_MapOfTimestampsEntry.fromPartial(base ?? {});
+    return Maps_MapOfTimestampsEntry.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Maps_MapOfTimestampsEntry>, I>>(object: I): Maps_MapOfTimestampsEntry {
     const message = createBaseMaps_MapOfTimestampsEntry();
     message.key = object.key ?? "";

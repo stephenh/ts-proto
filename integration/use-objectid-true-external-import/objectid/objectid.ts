@@ -55,9 +55,8 @@ export const ObjectId = {
   },
 
   create<I extends Exact<DeepPartial<ObjectId>, I>>(base?: I): ObjectId {
-    return ObjectId.fromPartial(base ?? {});
+    return ObjectId.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ObjectId>, I>>(object: I): ObjectId {
     const message = createBaseObjectId();
     message.value = object.value ?? "";

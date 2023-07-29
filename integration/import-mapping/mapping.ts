@@ -76,9 +76,8 @@ export const WithEmtpy = {
   },
 
   create<I extends Exact<DeepPartial<WithEmtpy>, I>>(base?: I): WithEmtpy {
-    return WithEmtpy.fromPartial(base ?? {});
+    return WithEmtpy.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<WithEmtpy>, I>>(object: I): WithEmtpy {
     const message = createBaseWithEmtpy();
     message.empty = (object.empty !== undefined && object.empty !== null) ? Empty.fromPartial(object.empty) : undefined;
@@ -134,9 +133,8 @@ export const WithStruct = {
   },
 
   create<I extends Exact<DeepPartial<WithStruct>, I>>(base?: I): WithStruct {
-    return WithStruct.fromPartial(base ?? {});
+    return WithStruct.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<WithStruct>, I>>(object: I): WithStruct {
     const message = createBaseWithStruct();
     message.strut = object.strut ?? undefined;
@@ -192,9 +190,8 @@ export const WithTimestamp = {
   },
 
   create<I extends Exact<DeepPartial<WithTimestamp>, I>>(base?: I): WithTimestamp {
-    return WithTimestamp.fromPartial(base ?? {});
+    return WithTimestamp.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<WithTimestamp>, I>>(object: I): WithTimestamp {
     const message = createBaseWithTimestamp();
     message.timestamp = object.timestamp ?? undefined;
@@ -308,9 +305,8 @@ export const WithAll = {
   },
 
   create<I extends Exact<DeepPartial<WithAll>, I>>(base?: I): WithAll {
-    return WithAll.fromPartial(base ?? {});
+    return WithAll.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<WithAll>, I>>(object: I): WithAll {
     const message = createBaseWithAll();
     message.empty = (object.empty !== undefined && object.empty !== null) ? Empty.fromPartial(object.empty) : undefined;

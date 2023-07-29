@@ -188,9 +188,8 @@ export const Simple = {
   },
 
   create<I extends Exact<DeepPartial<Simple>, I>>(base?: I): Simple {
-    return Simple.fromPartial(base ?? {});
+    return Simple.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Simple>, I>>(object: I): Simple {
     const message = createBaseSimple();
     message.name = object.name ?? "";
@@ -274,9 +273,8 @@ export const Simple_StateMapEntry = {
   },
 
   create<I extends Exact<DeepPartial<Simple_StateMapEntry>, I>>(base?: I): Simple_StateMapEntry {
-    return Simple_StateMapEntry.fromPartial(base ?? {});
+    return Simple_StateMapEntry.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Simple_StateMapEntry>, I>>(object: I): Simple_StateMapEntry {
     const message = createBaseSimple_StateMapEntry();
     message.key = object.key ?? "";
