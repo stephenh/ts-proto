@@ -1,3 +1,10 @@
+## [1.156.2](https://github.com/stephenh/ts-proto/compare/v1.156.1...v1.156.2) (2023-07-29)
+
+
+### Bug Fixes
+
+* Add 'as any' in create ([#895](https://github.com/stephenh/ts-proto/issues/895)) ([4214d5a](https://github.com/stephenh/ts-proto/commit/4214d5af98817f317760298b1b2e03a8e956329c)), closes [#838](https://github.com/stephenh/ts-proto/issues/838)
+
 ## [1.156.1](https://github.com/stephenh/ts-proto/compare/v1.156.0...v1.156.1) (2023-07-22)
 
 
