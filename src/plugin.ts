@@ -22,17 +22,18 @@ async function main() {
 
   if (options.emitImportedFiles) {
     const fileSet = new Set();
-    const addFilesUnlessAliased = (filenames: string[]) => {
+    function addFilesUnlessAliased(filenames: string[]) {
       filenames
         .filter((name) => !options.M[name])
         .forEach((name) => {
+          if (fileSet.has(name)) return;
           fileSet.add(name);
           const file = request.protoFile.find((file) => file.name === name);
           if (file && file.dependency.length > 0) {
             addFilesUnlessAliased(file.dependency);
           }
         });
-    };
+    }
     addFilesUnlessAliased(request.fileToGenerate);
     filesToGenerate = request.protoFile.filter((file) => fileSet.has(file.name));
   } else {
