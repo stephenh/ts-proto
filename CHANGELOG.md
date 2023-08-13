@@ -1,3 +1,10 @@
+## [1.156.3](https://github.com/stephenh/ts-proto/compare/v1.156.2...v1.156.3) (2023-08-13)
+
+
+### Bug Fixes
+
+* Only check file dependencies once/file. ([#901](https://github.com/stephenh/ts-proto/issues/901)) ([8d61980](https://github.com/stephenh/ts-proto/commit/8d6198020a5ec775b0dbaf7e08924f4bdcc677f8)), closes [#900](https://github.com/stephenh/ts-proto/issues/900)
+
 ## [1.156.2](https://github.com/stephenh/ts-proto/compare/v1.156.1...v1.156.2) (2023-07-29)
 
 
