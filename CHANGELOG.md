@@ -1,3 +1,10 @@
+## [1.156.5](https://github.com/stephenh/ts-proto/compare/v1.156.4...v1.156.5) (2023-08-15)
+
+
+### Bug Fixes
+
+* remove-enum-prefix for nested enums ([#903](https://github.com/stephenh/ts-proto/issues/903)) ([efdbf47](https://github.com/stephenh/ts-proto/commit/efdbf476b26c49c1bc56f9404f49667f2acc1f8b))
+
 ## [1.156.4](https://github.com/stephenh/ts-proto/compare/v1.156.3...v1.156.4) (2023-08-15)
 
 
