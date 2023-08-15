@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+enum Foo {
+    FOO_UNSPECIFIED = 0;
+    FOO_BAR = 1;
+    FOO_BAZ = 2;
+}
+
+enum Bar {
+    BAR_UNSPECIFIED = 0;
+    BAZ = 1;
+    QUX = 2;
+}
+
+message EnumFields {
+    Foo foo = 1;
+    Bar bar = 2;
+}
