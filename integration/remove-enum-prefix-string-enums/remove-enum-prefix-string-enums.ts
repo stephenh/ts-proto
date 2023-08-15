@@ -99,30 +99,139 @@ export function barToNumber(object: Bar): number {
   }
 }
 
-export interface EnumFields {
+export interface WithNestedEnum {
   foo: Foo;
-  bar: Bar;
+  Bar: Bar;
+  baz: WithNestedEnum_Baz;
+  qux: WithNestedEnum_Qux;
 }
 
-function createBaseEnumFields(): EnumFields {
-  return { foo: Foo.UNSPECIFIED, bar: Bar.UNSPECIFIED };
+export enum WithNestedEnum_Baz {
+  UNSPECIFIED = "BAZ_UNSPECIFIED",
+  ONE = "BAZ_ONE",
+  TWO = "BAZ_TWO",
 }
 
-export const EnumFields = {
-  encode(message: EnumFields, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export function withNestedEnum_BazFromJSON(object: any): WithNestedEnum_Baz {
+  switch (object) {
+    case 0:
+    case "BAZ_UNSPECIFIED":
+      return WithNestedEnum_Baz.UNSPECIFIED;
+    case 1:
+    case "BAZ_ONE":
+      return WithNestedEnum_Baz.ONE;
+    case 2:
+    case "BAZ_TWO":
+      return WithNestedEnum_Baz.TWO;
+    default:
+      throw new tsProtoGlobalThis.Error("Unrecognized enum value " + object + " for enum WithNestedEnum_Baz");
+  }
+}
+
+export function withNestedEnum_BazToJSON(object: WithNestedEnum_Baz): string {
+  switch (object) {
+    case WithNestedEnum_Baz.UNSPECIFIED:
+      return "BAZ_UNSPECIFIED";
+    case WithNestedEnum_Baz.ONE:
+      return "BAZ_ONE";
+    case WithNestedEnum_Baz.TWO:
+      return "BAZ_TWO";
+    default:
+      throw new tsProtoGlobalThis.Error("Unrecognized enum value " + object + " for enum WithNestedEnum_Baz");
+  }
+}
+
+export function withNestedEnum_BazToNumber(object: WithNestedEnum_Baz): number {
+  switch (object) {
+    case WithNestedEnum_Baz.UNSPECIFIED:
+      return 0;
+    case WithNestedEnum_Baz.ONE:
+      return 1;
+    case WithNestedEnum_Baz.TWO:
+      return 2;
+    default:
+      throw new tsProtoGlobalThis.Error("Unrecognized enum value " + object + " for enum WithNestedEnum_Baz");
+  }
+}
+
+export enum WithNestedEnum_Qux {
+  UNSPECIFIED = "QUX_UNSPECIFIED",
+  ONE = "ONE",
+  TWO = "TWO",
+}
+
+export function withNestedEnum_QuxFromJSON(object: any): WithNestedEnum_Qux {
+  switch (object) {
+    case 0:
+    case "QUX_UNSPECIFIED":
+      return WithNestedEnum_Qux.UNSPECIFIED;
+    case 1:
+    case "ONE":
+      return WithNestedEnum_Qux.ONE;
+    case 2:
+    case "TWO":
+      return WithNestedEnum_Qux.TWO;
+    default:
+      throw new tsProtoGlobalThis.Error("Unrecognized enum value " + object + " for enum WithNestedEnum_Qux");
+  }
+}
+
+export function withNestedEnum_QuxToJSON(object: WithNestedEnum_Qux): string {
+  switch (object) {
+    case WithNestedEnum_Qux.UNSPECIFIED:
+      return "QUX_UNSPECIFIED";
+    case WithNestedEnum_Qux.ONE:
+      return "ONE";
+    case WithNestedEnum_Qux.TWO:
+      return "TWO";
+    default:
+      throw new tsProtoGlobalThis.Error("Unrecognized enum value " + object + " for enum WithNestedEnum_Qux");
+  }
+}
+
+export function withNestedEnum_QuxToNumber(object: WithNestedEnum_Qux): number {
+  switch (object) {
+    case WithNestedEnum_Qux.UNSPECIFIED:
+      return 0;
+    case WithNestedEnum_Qux.ONE:
+      return 1;
+    case WithNestedEnum_Qux.TWO:
+      return 2;
+    default:
+      throw new tsProtoGlobalThis.Error("Unrecognized enum value " + object + " for enum WithNestedEnum_Qux");
+  }
+}
+
+function createBaseWithNestedEnum(): WithNestedEnum {
+  return {
+    foo: Foo.UNSPECIFIED,
+    Bar: Bar.UNSPECIFIED,
+    baz: WithNestedEnum_Baz.UNSPECIFIED,
+    qux: WithNestedEnum_Qux.UNSPECIFIED,
+  };
+}
+
+export const WithNestedEnum = {
+  encode(message: WithNestedEnum, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.foo !== Foo.UNSPECIFIED) {
       writer.uint32(8).int32(fooToNumber(message.foo));
     }
-    if (message.bar !== Bar.UNSPECIFIED) {
-      writer.uint32(16).int32(barToNumber(message.bar));
+    if (message.Bar !== Bar.UNSPECIFIED) {
+      writer.uint32(16).int32(barToNumber(message.Bar));
+    }
+    if (message.baz !== WithNestedEnum_Baz.UNSPECIFIED) {
+      writer.uint32(24).int32(withNestedEnum_BazToNumber(message.baz));
+    }
+    if (message.qux !== WithNestedEnum_Qux.UNSPECIFIED) {
+      writer.uint32(32).int32(withNestedEnum_QuxToNumber(message.qux));
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): EnumFields {
+  decode(input: _m0.Reader | Uint8Array, length?: number): WithNestedEnum {
     const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseEnumFields();
+    const message = createBaseWithNestedEnum();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -138,7 +247,21 @@ export const EnumFields = {
             break;
           }
 
-          message.bar = barFromJSON(reader.int32());
+          message.Bar = barFromJSON(reader.int32());
+          continue;
+        case 3:
+          if (tag !== 24) {
+            break;
+          }
+
+          message.baz = withNestedEnum_BazFromJSON(reader.int32());
+          continue;
+        case 4:
+          if (tag !== 32) {
+            break;
+          }
+
+          message.qux = withNestedEnum_QuxFromJSON(reader.int32());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -149,31 +272,41 @@ export const EnumFields = {
     return message;
   },
 
-  fromJSON(object: any): EnumFields {
+  fromJSON(object: any): WithNestedEnum {
     return {
       foo: isSet(object.foo) ? fooFromJSON(object.foo) : Foo.UNSPECIFIED,
-      bar: isSet(object.bar) ? barFromJSON(object.bar) : Bar.UNSPECIFIED,
+      Bar: isSet(object.Bar) ? barFromJSON(object.Bar) : Bar.UNSPECIFIED,
+      baz: isSet(object.baz) ? withNestedEnum_BazFromJSON(object.baz) : WithNestedEnum_Baz.UNSPECIFIED,
+      qux: isSet(object.qux) ? withNestedEnum_QuxFromJSON(object.qux) : WithNestedEnum_Qux.UNSPECIFIED,
     };
   },
 
-  toJSON(message: EnumFields): unknown {
+  toJSON(message: WithNestedEnum): unknown {
     const obj: any = {};
     if (message.foo !== Foo.UNSPECIFIED) {
       obj.foo = fooToJSON(message.foo);
     }
-    if (message.bar !== Bar.UNSPECIFIED) {
-      obj.bar = barToJSON(message.bar);
+    if (message.Bar !== Bar.UNSPECIFIED) {
+      obj.Bar = barToJSON(message.Bar);
+    }
+    if (message.baz !== WithNestedEnum_Baz.UNSPECIFIED) {
+      obj.baz = withNestedEnum_BazToJSON(message.baz);
+    }
+    if (message.qux !== WithNestedEnum_Qux.UNSPECIFIED) {
+      obj.qux = withNestedEnum_QuxToJSON(message.qux);
     }
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<EnumFields>, I>>(base?: I): EnumFields {
-    return EnumFields.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<WithNestedEnum>, I>>(base?: I): WithNestedEnum {
+    return WithNestedEnum.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<EnumFields>, I>>(object: I): EnumFields {
-    const message = createBaseEnumFields();
+  fromPartial<I extends Exact<DeepPartial<WithNestedEnum>, I>>(object: I): WithNestedEnum {
+    const message = createBaseWithNestedEnum();
     message.foo = object.foo ?? Foo.UNSPECIFIED;
-    message.bar = object.bar ?? Bar.UNSPECIFIED;
+    message.Bar = object.Bar ?? Bar.UNSPECIFIED;
+    message.baz = object.baz ?? WithNestedEnum_Baz.UNSPECIFIED;
+    message.qux = object.qux ?? WithNestedEnum_Qux.UNSPECIFIED;
     return message;
   },
 };

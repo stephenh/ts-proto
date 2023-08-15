@@ -31,7 +31,7 @@ export function generateEnum(
   enumDesc.value.forEach((valueDesc, index) => {
     const info = sourceInfo.lookup(Fields.enum.value, index);
     const valueName = getValueName(ctx, fullName, valueDesc);
-    const memberName = getMemberName(ctx, fullName, valueDesc);
+    const memberName = getMemberName(ctx, enumDesc, valueDesc);
     maybeAddComment(info, chunks, valueDesc.options?.deprecated, `${memberName} - `);
     chunks.push(
       code`${memberName} ${delimiter} ${options.stringEnums ? `"${valueName}"` : valueDesc.number.toString()},`,
@@ -78,7 +78,7 @@ export function generateEnumFromJson(ctx: Context, fullName: string, enumDesc: E
   chunks.push(code`switch (object) {`);
 
   for (const valueDesc of enumDesc.value) {
-    const memberName = getMemberName(ctx, fullName, valueDesc);
+    const memberName = getMemberName(ctx, enumDesc, valueDesc);
     const valueName = getValueName(ctx, fullName, valueDesc);
     chunks.push(code`
       case ${valueDesc.number}:
@@ -123,10 +123,10 @@ export function generateEnumToJson(ctx: Context, fullName: string, enumDesc: Enu
 
   for (const valueDesc of enumDesc.value) {
     if (ctx.options.useNumericEnumForJson) {
-      const memberName = getMemberName(ctx, fullName, valueDesc);
+      const memberName = getMemberName(ctx, enumDesc, valueDesc);
       chunks.push(code`case ${fullName}.${memberName}: return ${valueDesc.number};`);
     } else {
-      const memberName = getMemberName(ctx, fullName, valueDesc);
+      const memberName = getMemberName(ctx, enumDesc, valueDesc);
       const valueName = getValueName(ctx, fullName, valueDesc);
       chunks.push(code`case ${fullName}.${memberName}: return "${valueName}";`);
     }
@@ -170,7 +170,7 @@ export function generateEnumToNumber(ctx: Context, fullName: string, enumDesc: E
   chunks.push(code`export function ${def(functionName)}(object: ${fullName}): number {`);
   chunks.push(code`switch (object) {`);
   for (const valueDesc of enumDesc.value) {
-    chunks.push(code`case ${fullName}.${getMemberName(ctx, fullName, valueDesc)}: return ${valueDesc.number};`);
+    chunks.push(code`case ${fullName}.${getMemberName(ctx, enumDesc, valueDesc)}: return ${valueDesc.number};`);
   }
 
   if (options.unrecognizedEnum) {
@@ -192,9 +192,13 @@ export function generateEnumToNumber(ctx: Context, fullName: string, enumDesc: E
   return joinCode(chunks, { on: "\n" });
 }
 
-export function getMemberName(ctx: Context, fullName: string, valueDesc: EnumValueDescriptorProto): string {
+export function getMemberName(
+  ctx: Context,
+  enumDesc: EnumDescriptorProto,
+  valueDesc: EnumValueDescriptorProto,
+): string {
   if (ctx.options.removeEnumPrefix) {
-    return valueDesc.name.replace(`${camelToSnake(fullName)}_`, "");
+    return valueDesc.name.replace(`${camelToSnake(enumDesc.name)}_`, "");
   }
   return valueDesc.name;
 }

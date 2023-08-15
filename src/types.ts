@@ -195,11 +195,10 @@ export function defaultValue(ctx: Context, field: FieldDescriptorProto): any {
       // and I believe the semantics of those in the proto2 world are generally undefined.
       const typeInfo = typeMap.get(field.typeName)!;
       const enumProto = typeInfo[2] as EnumDescriptorProto;
-      const enumFullName = typeInfo[1];
       const zerothValue = enumProto.value.find((v) => v.number === 0) || enumProto.value[0];
       if (options.stringEnums) {
         const enumType = messageToTypeName(ctx, field.typeName);
-        return code`${enumType}.${getEnumMemberName(ctx, enumFullName, zerothValue)}`;
+        return code`${enumType}.${getEnumMemberName(ctx, enumProto, zerothValue)}`;
       } else {
         return zerothValue.number;
       }
@@ -269,11 +268,10 @@ export function notDefaultCheck(
       // and I believe the semantics of those in the proto2 world are generally undefined.
       const typeInfo = typeMap.get(field.typeName)!;
       const enumProto = typeInfo[2] as EnumDescriptorProto;
-      const enumFullName = typeInfo[1];
       const zerothValue = enumProto.value.find((v) => v.number === 0) || enumProto.value[0];
       if (options.stringEnums) {
         const enumType = messageToTypeName(ctx, field.typeName);
-        const enumValue = getEnumMemberName(ctx, enumFullName, zerothValue);
+        const enumValue = getEnumMemberName(ctx, enumProto, zerothValue);
         return code`${maybeNotUndefinedAnd} ${place} !== ${enumType}.${enumValue}`;
       } else {
         return code`${maybeNotUndefinedAnd} ${place} !== ${zerothValue.number}`;
