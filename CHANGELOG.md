@@ -1,3 +1,10 @@
+## [1.156.4](https://github.com/stephenh/ts-proto/compare/v1.156.3...v1.156.4) (2023-08-15)
+
+
+### Bug Fixes
+
+* enum default value when remove-enum-prefix and string-enum both on ([#902](https://github.com/stephenh/ts-proto/issues/902)) ([594b137](https://github.com/stephenh/ts-proto/commit/594b137cdffbf6256b9d0ee6bb82822ce22c7b94))
+
 ## [1.156.3](https://github.com/stephenh/ts-proto/compare/v1.156.2...v1.156.3) (2023-08-13)
 
 
