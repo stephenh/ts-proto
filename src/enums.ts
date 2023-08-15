@@ -192,7 +192,7 @@ export function generateEnumToNumber(ctx: Context, fullName: string, enumDesc: E
   return joinCode(chunks, { on: "\n" });
 }
 
-function getMemberName(ctx: Context, fullName: string, valueDesc: EnumValueDescriptorProto): string {
+export function getMemberName(ctx: Context, fullName: string, valueDesc: EnumValueDescriptorProto): string {
   if (ctx.options.removeEnumPrefix) {
     return valueDesc.name.replace(`${camelToSnake(fullName)}_`, "");
   }

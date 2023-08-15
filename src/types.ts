@@ -17,6 +17,7 @@ import { fail, FormattedMethodDescriptor, impProto, maybePrefixPackage } from ".
 import SourceInfo from "./sourceInfo";
 import { uncapitalize } from "./case";
 import { Context } from "./context";
+import { getMemberName as getEnumMemberName } from "./enums";
 
 /** Based on https://github.com/dcodeIO/protobuf.js/blob/master/src/types.js#L37. */
 export function basicWireType(type: FieldDescriptorProto_Type): number {
@@ -192,11 +193,13 @@ export function defaultValue(ctx: Context, field: FieldDescriptorProto): any {
       // to probe and see if zero is an allowed value. If it's not, pick the first one.
       // This is probably not great, but it's only used in fromJSON and fromPartial,
       // and I believe the semantics of those in the proto2 world are generally undefined.
-      const enumProto = typeMap.get(field.typeName)![2] as EnumDescriptorProto;
+      const typeInfo = typeMap.get(field.typeName)!;
+      const enumProto = typeInfo[2] as EnumDescriptorProto;
+      const enumFullName = typeInfo[1];
       const zerothValue = enumProto.value.find((v) => v.number === 0) || enumProto.value[0];
       if (options.stringEnums) {
         const enumType = messageToTypeName(ctx, field.typeName);
-        return code`${enumType}.${zerothValue.name}`;
+        return code`${enumType}.${getEnumMemberName(ctx, enumFullName, zerothValue)}`;
       } else {
         return zerothValue.number;
       }
@@ -264,11 +267,14 @@ export function notDefaultCheck(
       // to probe and see if zero is an allowed value. If it's not, pick the first one.
       // This is probably not great, but it's only used in fromJSON and fromPartial,
       // and I believe the semantics of those in the proto2 world are generally undefined.
-      const enumProto = typeMap.get(field.typeName)![2] as EnumDescriptorProto;
+      const typeInfo = typeMap.get(field.typeName)!;
+      const enumProto = typeInfo[2] as EnumDescriptorProto;
+      const enumFullName = typeInfo[1];
       const zerothValue = enumProto.value.find((v) => v.number === 0) || enumProto.value[0];
       if (options.stringEnums) {
         const enumType = messageToTypeName(ctx, field.typeName);
-        return code`${maybeNotUndefinedAnd} ${place} !== ${enumType}.${zerothValue.name}`;
+        const enumValue = getEnumMemberName(ctx, enumFullName, zerothValue);
+        return code`${maybeNotUndefinedAnd} ${place} !== ${enumType}.${enumValue}`;
       } else {
         return code`${maybeNotUndefinedAnd} ${place} !== ${zerothValue.number}`;
       }
