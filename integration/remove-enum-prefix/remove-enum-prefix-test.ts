@@ -5,13 +5,13 @@ import {
   fooToJSON,
   barFromJSON,
   barToJSON,
-  WithNestedEnum_Baz,
-  WithNestedEnum_Qux,
   withNestedEnum_BazFromJSON,
+  WithNestedEnum_Baz,
   withNestedEnum_BazToJSON,
   withNestedEnum_QuxFromJSON,
   withNestedEnum_QuxToJSON,
-} from "./remove-enum-prefix-string-enums";
+  WithNestedEnum_Qux,
+} from "./remove-enum-prefix";
 
 function testEnumFromJSONAndToJSON<ENUM>(
   fromJSON: (s: string) => ENUM,
@@ -24,7 +24,7 @@ function testEnumFromJSONAndToJSON<ENUM>(
   }
 }
 
-describe("remove-enum-prefix-string-enums", () => {
+describe("remove-enum-prefix", () => {
   it("encode and decode correctly", () => {
     testEnumFromJSONAndToJSON(fooFromJSON, fooToJSON, {
       FOO_UNSPECIFIED: Foo.UNSPECIFIED,

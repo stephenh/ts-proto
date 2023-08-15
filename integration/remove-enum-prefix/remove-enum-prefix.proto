@@ -11,3 +11,22 @@ enum Bar {
     BAZ = 1;
     QUX = 2;
 }
+
+message WithNestedEnum {
+    enum Baz {
+        BAZ_UNSPECIFIED = 0;
+        BAZ_ONE = 1;
+        BAZ_TWO = 2;
+    }
+
+    enum Qux {
+        QUX_UNSPECIFIED = 0;
+        ONE = 1;
+        TWO = 2;
+    }
+
+    Foo foo = 1;
+    Bar Bar = 2;
+    Baz baz = 3;
+    Qux qux = 4;
+}
