@@ -1,3 +1,10 @@
+## [1.156.6](https://github.com/stephenh/ts-proto/compare/v1.156.5...v1.156.6) (2023-08-16)
+
+
+### Bug Fixes
+
+* use correct imports for optional fields ([#904](https://github.com/stephenh/ts-proto/issues/904)) ([fa13ec7](https://github.com/stephenh/ts-proto/commit/fa13ec752c6564af045081548f5fc5cabb687151))
+
 ## [1.156.5](https://github.com/stephenh/ts-proto/compare/v1.156.4...v1.156.5) (2023-08-15)
 
 
