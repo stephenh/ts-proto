@@ -873,9 +873,6 @@ function generateInterfaceDeclaration(
     const name = maybeSnakeToCamel(fieldDesc.name, options);
     const isOptional = isOptionalProperty(fieldDesc, messageDesc.options, options);
     const type = toTypeName(ctx, messageDesc, fieldDesc, isOptional);
-    if (isOptional && !type.toString().includes("undefined")) {
-      console.warn(name, type);
-    }
     chunks.push(code`${maybeReadonly(options)}${name}${isOptional ? "?" : ""}: ${type}, `);
   });
 

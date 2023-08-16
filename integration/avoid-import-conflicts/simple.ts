@@ -56,6 +56,11 @@ export interface Simple {
   otherSimple: Simple3 | undefined;
 }
 
+export interface DifferentSimple {
+  name: string;
+  otherOptionalSimple2?: Simple3 | undefined;
+}
+
 export interface SimpleEnums {
   localEnum: SimpleEnum;
   importEnum: SimpleEnum1;
@@ -140,6 +145,84 @@ export const Simple = {
     message.name = object.name ?? "";
     message.otherSimple = (object.otherSimple !== undefined && object.otherSimple !== null)
       ? Simple3.fromPartial(object.otherSimple)
+      : undefined;
+    return message;
+  },
+};
+
+function createBaseDifferentSimple(): DifferentSimple {
+  return { name: "", otherOptionalSimple2: undefined };
+}
+
+export const DifferentSimple = {
+  encode(message: DifferentSimple, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.name !== "") {
+      writer.uint32(10).string(message.name);
+    }
+    if (message.otherOptionalSimple2 !== undefined) {
+      Simple3.encode(message.otherOptionalSimple2, writer.uint32(18).fork()).ldelim();
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): DifferentSimple {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseDifferentSimple();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 10) {
+            break;
+          }
+
+          message.name = reader.string();
+          continue;
+        case 2:
+          if (tag !== 18) {
+            break;
+          }
+
+          message.otherOptionalSimple2 = Simple3.decode(reader, reader.uint32());
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): DifferentSimple {
+    return {
+      name: isSet(object.name) ? String(object.name) : "",
+      otherOptionalSimple2: isSet(object.otherOptionalSimple2)
+        ? Simple3.fromJSON(object.otherOptionalSimple2)
+        : undefined,
+    };
+  },
+
+  toJSON(message: DifferentSimple): unknown {
+    const obj: any = {};
+    if (message.name !== "") {
+      obj.name = message.name;
+    }
+    if (message.otherOptionalSimple2 !== undefined) {
+      obj.otherOptionalSimple2 = Simple3.toJSON(message.otherOptionalSimple2);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<DifferentSimple>, I>>(base?: I): DifferentSimple {
+    return DifferentSimple.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<DifferentSimple>, I>>(object: I): DifferentSimple {
+    const message = createBaseDifferentSimple();
+    message.name = object.name ?? "";
+    message.otherOptionalSimple2 = (object.otherOptionalSimple2 !== undefined && object.otherOptionalSimple2 !== null)
+      ? Simple3.fromPartial(object.otherOptionalSimple2)
       : undefined;
     return message;
   },
