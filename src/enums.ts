@@ -41,8 +41,8 @@ export function generateEnum(
   if (options.unrecognizedEnum)
     chunks.push(code`
       ${UNRECOGNIZED_ENUM_NAME} ${delimiter} ${
-        options.stringEnums ? `"${UNRECOGNIZED_ENUM_NAME}"` : UNRECOGNIZED_ENUM_VALUE.toString()
-      },`);
+      options.stringEnums ? `"${UNRECOGNIZED_ENUM_NAME}"` : UNRECOGNIZED_ENUM_VALUE.toString()
+    },`);
 
   if (options.enumsAsLiterals) {
     chunks.push(code`} as const`);
