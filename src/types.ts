@@ -620,7 +620,7 @@ export function toTypeName(
     const mapType = messageDesc ? detectMapType(ctx, messageDesc, field) : false;
     if (mapType) {
       const { keyType, valueType } = mapType;
-      if (ctx.options.useMapType) {
+      if (shouldGenerateJSMapType(ctx, messageDesc!, field)) {
         return finalize(code`Map<${keyType}, ${valueType}>`, ensureOptional);
       }
       return finalize(code`{ [key: ${keyType} ]: ${valueType} }`, ensureOptional);
@@ -658,6 +658,29 @@ export function toTypeName(
       (isWithinOneOf(field) && field.proto3Optional) ||
       ensureOptional,
   );
+}
+
+/**
+ * For a protobuf map field, if the generated code should use the javascript Map type.
+ *
+ * If the type of a protobuf map key corresponds to the Long type, we always use the Map type. This avoids generating
+ * invalid code such as below (using Long as key of a javascript object):
+ *
+ * export interface Foo {
+ *  bar: { [key: Long]: Long }
+ * }
+ *
+ * See https://github.com/stephenh/ts-proto/issues/708 for more details.
+ */
+export function shouldGenerateJSMapType(ctx: Context, message: DescriptorProto, field: FieldDescriptorProto): boolean {
+  if (ctx.options.useMapType) {
+    return true;
+  }
+  const mapType = detectMapType(ctx, message, field);
+  if (!mapType) {
+    return false;
+  }
+  return isLong(mapType.keyField) && ctx.options.forceLong === LongOption.LONG;
 }
 
 export function detectMapType(
