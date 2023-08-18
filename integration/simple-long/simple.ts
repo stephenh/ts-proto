@@ -17,8 +17,7 @@ export interface SimpleWithWrappers {
 export interface SimpleWithMap {
   nameLookup: { [key: string]: string };
   intLookup: { [key: number]: number };
-  /** Ideally we'd test map<int64, int64> but we present maps as JS objects and `Long` cannot be used as a keys. */
-  longLookup: { [key: string]: Long };
+  longLookup: Map<Long, Long>;
 }
 
 export interface SimpleWithMap_NameLookupEntry {
@@ -32,7 +31,7 @@ export interface SimpleWithMap_IntLookupEntry {
 }
 
 export interface SimpleWithMap_LongLookupEntry {
-  key: string;
+  key: Long;
   value: Long;
 }
 
@@ -190,7 +189,7 @@ export const SimpleWithWrappers = {
 };
 
 function createBaseSimpleWithMap(): SimpleWithMap {
-  return { nameLookup: {}, intLookup: {}, longLookup: {} };
+  return { nameLookup: {}, intLookup: {}, longLookup: new Map() };
 }
 
 export const SimpleWithMap = {
@@ -201,7 +200,7 @@ export const SimpleWithMap = {
     Object.entries(message.intLookup).forEach(([key, value]) => {
       SimpleWithMap_IntLookupEntry.encode({ key: key as any, value }, writer.uint32(26).fork()).ldelim();
     });
-    Object.entries(message.longLookup).forEach(([key, value]) => {
+    (message.longLookup).forEach((value, key) => {
       SimpleWithMap_LongLookupEntry.encode({ key: key as any, value }, writer.uint32(34).fork()).ldelim();
     });
     return writer;
@@ -241,7 +240,7 @@ export const SimpleWithMap = {
 
           const entry4 = SimpleWithMap_LongLookupEntry.decode(reader, reader.uint32());
           if (entry4.value !== undefined) {
-            message.longLookup[entry4.key] = entry4.value;
+            message.longLookup.set(entry4.key, entry4.value);
           }
           continue;
       }
@@ -268,11 +267,11 @@ export const SimpleWithMap = {
         }, {})
         : {},
       longLookup: isObject(object.longLookup)
-        ? Object.entries(object.longLookup).reduce<{ [key: string]: Long }>((acc, [key, value]) => {
-          acc[key] = Long.fromValue(value as Long | string);
+        ? Object.entries(object.longLookup).reduce<Map<Long, Long>>((acc, [key, value]) => {
+          acc.set(Long.fromValue(key), Long.fromValue(value as Long | string));
           return acc;
-        }, {})
-        : {},
+        }, new Map())
+        : new Map(),
     };
   },
 
@@ -296,14 +295,11 @@ export const SimpleWithMap = {
         });
       }
     }
-    if (message.longLookup) {
-      const entries = Object.entries(message.longLookup);
-      if (entries.length > 0) {
-        obj.longLookup = {};
-        entries.forEach(([k, v]) => {
-          obj.longLookup[k] = v.toString();
-        });
-      }
+    if (message.longLookup?.size) {
+      obj.longLookup = {};
+      message.longLookup.forEach((v, k) => {
+        obj.longLookup[longToNumber(k)] = v.toString();
+      });
     }
     return obj;
   },
@@ -331,15 +327,15 @@ export const SimpleWithMap = {
       },
       {},
     );
-    message.longLookup = Object.entries(object.longLookup ?? {}).reduce<{ [key: string]: Long }>(
-      (acc, [key, value]) => {
+    message.longLookup = (() => {
+      const m = new Map();
+      (object.longLookup as Map<Long, Long> ?? new Map()).forEach((value, key) => {
         if (value !== undefined) {
-          acc[key] = Long.fromValue(value);
+          m.set(key, Long.fromValue(value));
         }
-        return acc;
-      },
-      {},
-    );
+      });
+      return m;
+    })();
     return message;
   },
 };
@@ -489,13 +485,13 @@ export const SimpleWithMap_IntLookupEntry = {
 };
 
 function createBaseSimpleWithMap_LongLookupEntry(): SimpleWithMap_LongLookupEntry {
-  return { key: "", value: Long.ZERO };
+  return { key: Long.ZERO, value: Long.ZERO };
 }
 
 export const SimpleWithMap_LongLookupEntry = {
   encode(message: SimpleWithMap_LongLookupEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.key !== "") {
-      writer.uint32(10).string(message.key);
+    if (!message.key.isZero()) {
+      writer.uint32(8).int64(message.key);
     }
     if (!message.value.isZero()) {
       writer.uint32(16).int64(message.value);
@@ -511,11 +507,11 @@ export const SimpleWithMap_LongLookupEntry = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag !== 10) {
+          if (tag !== 8) {
             break;
           }
 
-          message.key = reader.string();
+          message.key = reader.int64() as Long;
           continue;
         case 2:
           if (tag !== 16) {
@@ -535,15 +531,15 @@ export const SimpleWithMap_LongLookupEntry = {
 
   fromJSON(object: any): SimpleWithMap_LongLookupEntry {
     return {
-      key: isSet(object.key) ? String(object.key) : "",
+      key: isSet(object.key) ? Long.fromValue(object.key) : Long.ZERO,
       value: isSet(object.value) ? Long.fromValue(object.value) : Long.ZERO,
     };
   },
 
   toJSON(message: SimpleWithMap_LongLookupEntry): unknown {
     const obj: any = {};
-    if (message.key !== "") {
-      obj.key = message.key;
+    if (!message.key.isZero()) {
+      obj.key = (message.key || Long.ZERO).toString();
     }
     if (!message.value.isZero()) {
       obj.value = (message.value || Long.ZERO).toString();
@@ -558,7 +554,7 @@ export const SimpleWithMap_LongLookupEntry = {
     object: I,
   ): SimpleWithMap_LongLookupEntry {
     const message = createBaseSimpleWithMap_LongLookupEntry();
-    message.key = object.key ?? "";
+    message.key = (object.key !== undefined && object.key !== null) ? Long.fromValue(object.key) : Long.ZERO;
     message.value = (object.value !== undefined && object.value !== null) ? Long.fromValue(object.value) : Long.ZERO;
     return message;
   },
@@ -837,6 +833,25 @@ export const Numbers = {
   },
 };
 
+declare const self: any | undefined;
+declare const window: any | undefined;
+declare const global: any | undefined;
+const tsProtoGlobalThis: any = (() => {
+  if (typeof globalThis !== "undefined") {
+    return globalThis;
+  }
+  if (typeof self !== "undefined") {
+    return self;
+  }
+  if (typeof window !== "undefined") {
+    return window;
+  }
+  if (typeof global !== "undefined") {
+    return global;
+  }
+  throw "Unable to locate global object";
+})();
+
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
@@ -848,6 +863,13 @@ export type DeepPartial<T> = T extends Builtin ? T
 type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
+
+function longToNumber(long: Long): number {
+  if (long.gt(Number.MAX_SAFE_INTEGER)) {
+    throw new tsProtoGlobalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+  }
+  return long.toNumber();
+}
 
 if (_m0.util.Long !== Long) {
   _m0.util.Long = Long as any;

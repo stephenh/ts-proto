@@ -42,6 +42,7 @@ import {
   packedType,
   toReaderCall,
   toTypeName,
+  shouldGenerateJSMapType,
   valueTypeName,
 } from "./types";
 import SourceInfo, { Fields } from "./sourceInfo";
@@ -960,7 +961,7 @@ function generateBaseInstanceFactory(
     const val = isWithinOneOf(field)
       ? "undefined"
       : isMapType(ctx, messageDesc, field)
-      ? ctx.options.useMapType
+      ? shouldGenerateJSMapType(ctx, messageDesc, field)
         ? "new Map()"
         : "{}"
       : isRepeated(field)
@@ -1098,17 +1099,22 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
     if (isRepeated(field)) {
       const maybeNonNullAssertion = ctx.options.useOptionals === "all" ? "!" : "";
 
-      if (isMapType(ctx, messageDesc, field)) {
+      const mapType = detectMapType(ctx, messageDesc, field);
+      if (mapType) {
         // We need a unique const within the `cast` statement
         const varName = `entry${field.number}`;
+        const generateMapType = shouldGenerateJSMapType(ctx, messageDesc, field);
 
-        const valueSetterSnippet = ctx.options.useMapType
-          ? `message.${fieldName}${maybeNonNullAssertion}.set(${varName}.key, ${varName}.value)`
-          : `message.${fieldName}${maybeNonNullAssertion}[${varName}.key] = ${varName}.value`;
+        let valueSetterSnippet: string;
+        if (generateMapType) {
+          valueSetterSnippet = `message.${fieldName}${maybeNonNullAssertion}.set(${varName}.key, ${varName}.value)`;
+        } else {
+          valueSetterSnippet = `message.${fieldName}${maybeNonNullAssertion}[${varName}.key] = ${varName}.value`;
+        }
         const initializerSnippet = initializerNecessary
           ? `
             if (message.${fieldName} === undefined) {
-              message.${fieldName} = ${ctx.options.useMapType ? "new Map()" : "{}"};
+              message.${fieldName} = ${generateMapType ? "new Map()" : "{}"};
             }`
           : "";
         chunks.push(code`
@@ -1314,9 +1320,10 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
               }
             `
           : writeSnippet(`{ ${maybeTypeField} key: key as any, value }`);
-        const optionalAlternative = isOptional ? (ctx.options.useMapType ? " || new Map()" : " || {}") : "";
+        const useMapType = shouldGenerateJSMapType(ctx, messageDesc, field);
+        const optionalAlternative = isOptional ? (useMapType ? " || new Map()" : " || {}") : "";
 
-        if (ctx.options.useMapType) {
+        if (useMapType) {
           chunks.push(code`
             (message.${fieldName}${optionalAlternative}).forEach((value, key) => {
               ${entryWriteSnippet}
@@ -1833,7 +1840,7 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
         const fieldType = toTypeName(ctx, messageDesc, field);
         const i = convertFromObjectKey(ctx, messageDesc, field, "key");
 
-        if (ctx.options.useMapType) {
+        if (shouldGenerateJSMapType(ctx, messageDesc, field)) {
           const fallback = noDefaultValue ? "undefined" : "new Map()";
 
           chunks.push(code`
@@ -2023,7 +2030,7 @@ function generateToJson(
       // Maps might need their values transformed, i.e. bytes --> base64
       const i = convertToObjectKey(ctx, messageDesc, field, "k");
 
-      if (ctx.options.useMapType) {
+      if (shouldGenerateJSMapType(ctx, messageDesc, field)) {
         chunks.push(code`
           if (message.${fieldName}?.size) {
             ${jsonProperty} = {};
@@ -2189,7 +2196,7 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
           ? `(object.${fieldName} === undefined || object.${fieldName} === null) ? undefined : `
           : "";
 
-        if (ctx.options.useMapType) {
+        if (shouldGenerateJSMapType(ctx, messageDesc, field)) {
           chunks.push(code`
             message.${fieldName} = ${noValueSnippet} (() => {
               const m = new Map();
@@ -2261,7 +2268,7 @@ function convertFromObjectKey(
   const { keyType, keyField } = detectMapType(ctx, messageDesc, field)!;
   if (keyType.toCodeString([]) === "string") {
     return code`${variableName}`;
-  } else if (isLong(keyField) && ctx.options.useMapType) {
+  } else if (isLong(keyField) && shouldGenerateJSMapType(ctx, messageDesc, field)) {
     if (ctx.options.forceLong === LongOption.LONG) {
       return code`${capitalize(keyType.toCodeString([]))}.fromValue(${variableName})`;
     } else if (ctx.options.forceLong === LongOption.BIGINT) {
@@ -2285,7 +2292,7 @@ function convertToObjectKey(
   const { keyType, keyField } = detectMapType(ctx, messageDesc, field)!;
   if (keyType.toCodeString([]) === "string") {
     return code`${variableName}`;
-  } else if (isLong(keyField) && ctx.options.useMapType) {
+  } else if (isLong(keyField) && shouldGenerateJSMapType(ctx, messageDesc, field)) {
     if (ctx.options.forceLong === LongOption.LONG) {
       return code`${ctx.utils.longToNumber}(${variableName})`;
     } else if (ctx.options.forceLong === LongOption.BIGINT) {
