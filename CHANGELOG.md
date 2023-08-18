@@ -1,3 +1,10 @@
+## [1.156.7](https://github.com/stephenh/ts-proto/compare/v1.156.6...v1.156.7) (2023-08-18)
+
+
+### Bug Fixes
+
+* always use Map for int64 keys ([#708](https://github.com/stephenh/ts-proto/issues/708)) ([#905](https://github.com/stephenh/ts-proto/issues/905)) ([cf2fb59](https://github.com/stephenh/ts-proto/commit/cf2fb59de20f8a60ead23294439dacbdbe6dfc14))
+
 ## [1.156.6](https://github.com/stephenh/ts-proto/compare/v1.156.5...v1.156.6) (2023-08-16)
 
 
