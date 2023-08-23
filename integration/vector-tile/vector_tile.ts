@@ -127,9 +127,8 @@ export const Tile = {
   },
 
   create<I extends Exact<DeepPartial<Tile>, I>>(base?: I): Tile {
-    return Tile.fromPartial(base ?? {});
+    return Tile.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Tile>, I>>(object: I): Tile {
     const message = createBaseTile();
     message.layers = object.layers?.map((e) => Tile_Layer.fromPartial(e)) || [];
@@ -271,9 +270,8 @@ export const Tile_Value = {
   },
 
   create<I extends Exact<DeepPartial<Tile_Value>, I>>(base?: I): Tile_Value {
-    return Tile_Value.fromPartial(base ?? {});
+    return Tile_Value.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Tile_Value>, I>>(object: I): Tile_Value {
     const message = createBaseTile_Value();
     message.stringValue = object.stringValue ?? "";
@@ -403,9 +401,8 @@ export const Tile_Feature = {
   },
 
   create<I extends Exact<DeepPartial<Tile_Feature>, I>>(base?: I): Tile_Feature {
-    return Tile_Feature.fromPartial(base ?? {});
+    return Tile_Feature.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Tile_Feature>, I>>(object: I): Tile_Feature {
     const message = createBaseTile_Feature();
     message.id = object.id ?? 0;
@@ -536,9 +533,8 @@ export const Tile_Layer = {
   },
 
   create<I extends Exact<DeepPartial<Tile_Layer>, I>>(base?: I): Tile_Layer {
-    return Tile_Layer.fromPartial(base ?? {});
+    return Tile_Layer.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Tile_Layer>, I>>(object: I): Tile_Layer {
     const message = createBaseTile_Layer();
     message.version = object.version ?? 0;

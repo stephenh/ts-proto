@@ -88,9 +88,8 @@ export const EchoMsg = {
   },
 
   create<I extends Exact<DeepPartial<EchoMsg>, I>>(base?: I): EchoMsg {
-    return EchoMsg.fromPartial(base ?? {});
+    return EchoMsg.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<EchoMsg>, I>>(object: I): EchoMsg {
     const message = createBaseEchoMsg();
     message.body = object.body ?? "";

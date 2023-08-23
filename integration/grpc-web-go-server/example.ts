@@ -157,9 +157,8 @@ export const DashFlash = {
   },
 
   create<I extends Exact<DeepPartial<DashFlash>, I>>(base?: I): DashFlash {
-    return DashFlash.fromPartial(base ?? {});
+    return DashFlash.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DashFlash>, I>>(object: I): DashFlash {
     const message = createBaseDashFlash();
     message.msg = object.msg ?? "";
@@ -246,9 +245,8 @@ export const DashUserSettingsState = {
   },
 
   create<I extends Exact<DeepPartial<DashUserSettingsState>, I>>(base?: I): DashUserSettingsState {
-    return DashUserSettingsState.fromPartial(base ?? {});
+    return DashUserSettingsState.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DashUserSettingsState>, I>>(object: I): DashUserSettingsState {
     const message = createBaseDashUserSettingsState();
     message.email = object.email ?? "";
@@ -324,9 +322,8 @@ export const DashUserSettingsState_URLs = {
   },
 
   create<I extends Exact<DeepPartial<DashUserSettingsState_URLs>, I>>(base?: I): DashUserSettingsState_URLs {
-    return DashUserSettingsState_URLs.fromPartial(base ?? {});
+    return DashUserSettingsState_URLs.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DashUserSettingsState_URLs>, I>>(object: I): DashUserSettingsState_URLs {
     const message = createBaseDashUserSettingsState_URLs();
     message.connectGoogle = object.connectGoogle ?? "";
@@ -427,9 +424,8 @@ export const DashCred = {
   },
 
   create<I extends Exact<DeepPartial<DashCred>, I>>(base?: I): DashCred {
-    return DashCred.fromPartial(base ?? {});
+    return DashCred.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DashCred>, I>>(object: I): DashCred {
     const message = createBaseDashCred();
     message.description = object.description ?? "";
@@ -504,9 +500,8 @@ export const DashAPICredsCreateReq = {
   },
 
   create<I extends Exact<DeepPartial<DashAPICredsCreateReq>, I>>(base?: I): DashAPICredsCreateReq {
-    return DashAPICredsCreateReq.fromPartial(base ?? {});
+    return DashAPICredsCreateReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DashAPICredsCreateReq>, I>>(object: I): DashAPICredsCreateReq {
     const message = createBaseDashAPICredsCreateReq();
     message.description = object.description ?? "";
@@ -607,9 +602,8 @@ export const DashAPICredsUpdateReq = {
   },
 
   create<I extends Exact<DeepPartial<DashAPICredsUpdateReq>, I>>(base?: I): DashAPICredsUpdateReq {
-    return DashAPICredsUpdateReq.fromPartial(base ?? {});
+    return DashAPICredsUpdateReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DashAPICredsUpdateReq>, I>>(object: I): DashAPICredsUpdateReq {
     const message = createBaseDashAPICredsUpdateReq();
     message.credSid = object.credSid ?? "";
@@ -684,9 +678,8 @@ export const DashAPICredsDeleteReq = {
   },
 
   create<I extends Exact<DeepPartial<DashAPICredsDeleteReq>, I>>(base?: I): DashAPICredsDeleteReq {
-    return DashAPICredsDeleteReq.fromPartial(base ?? {});
+    return DashAPICredsDeleteReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DashAPICredsDeleteReq>, I>>(object: I): DashAPICredsDeleteReq {
     const message = createBaseDashAPICredsDeleteReq();
     message.credSid = object.credSid ?? "";
@@ -730,9 +723,8 @@ export const Empty = {
   },
 
   create<I extends Exact<DeepPartial<Empty>, I>>(base?: I): Empty {
-    return Empty.fromPartial(base ?? {});
+    return Empty.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Empty>, I>>(_: I): Empty {
     const message = createBaseEmpty();
     return message;

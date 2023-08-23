@@ -1,6 +1,6 @@
 {
   "name": "ts-proto",
-  "version": "1.155.1",
+  "version": "1.156.7",
   "description": "",
   "main": "build/plugin.js",
   "repository": "github:stephenh/ts-proto",
@@ -54,7 +54,7 @@
     "mongodb": "^5.7.0",
     "nice-grpc": "^2.1.4",
     "object-hash": "^3.0.0",
-    "prettier": "^3.0.0",
+    "prettier": "^2.8.8",
     "protobufjs-cli": "^1.1.1",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
@@ -68,7 +68,7 @@
     "case-anything": "^2.1.13",
     "protobufjs": "^7.2.4",
     "ts-poet": "^6.5.0",
-    "ts-proto-descriptors": "1.14.0"
+    "ts-proto-descriptors": "1.15.0"
   },
   "packageManager": "yarn@3.6.0"
 }

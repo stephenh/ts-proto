@@ -106,9 +106,8 @@ export const MapBigInt = {
   },
 
   create<I extends Exact<DeepPartial<MapBigInt>, I>>(base?: I): MapBigInt {
-    return MapBigInt.fromPartial(base ?? {});
+    return MapBigInt.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<MapBigInt>, I>>(object: I): MapBigInt {
     const message = createBaseMapBigInt();
     message.map = (object.map === undefined || object.map === null) ? undefined : (() => {
@@ -215,9 +214,8 @@ export const MapBigInt_MapEntry = {
   },
 
   create<I extends Exact<DeepPartial<MapBigInt_MapEntry>, I>>(base?: I): MapBigInt_MapEntry {
-    return MapBigInt_MapEntry.fromPartial(base ?? {});
+    return MapBigInt_MapEntry.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<MapBigInt_MapEntry>, I>>(object: I): MapBigInt_MapEntry {
     const message = createBaseMapBigInt_MapEntry();
     message.key = (object.key !== undefined && object.key !== null) ? Long.fromValue(object.key) : Long.UZERO;

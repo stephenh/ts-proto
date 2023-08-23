@@ -186,9 +186,8 @@ export const Extendable = {
   },
 
   create<I extends Exact<DeepPartial<Extendable>, I>>(base?: I): Extendable {
-    return Extendable.fromPartial(base ?? {});
+    return Extendable.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Extendable>, I>>(object: I): Extendable {
     const message = createBaseExtendable();
     message.field = object.field ?? undefined;
@@ -296,9 +295,8 @@ export const Nested = {
   },
 
   create<I extends Exact<DeepPartial<Nested>, I>>(base?: I): Nested {
-    return Nested.fromPartial(base ?? {});
+    return Nested.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Nested>, I>>(object: I): Nested {
     const message = createBaseNested();
     message.field = object.field ?? undefined;
@@ -397,9 +395,8 @@ export const Group = {
   },
 
   create<I extends Exact<DeepPartial<Group>, I>>(base?: I): Group {
-    return Group.fromPartial(base ?? {});
+    return Group.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Group>, I>>(object: I): Group {
     const message = createBaseGroup();
     message.name = object.name ?? undefined;

@@ -112,9 +112,8 @@ export const DateMessage = {
   },
 
   create<I extends Exact<DeepPartial<DateMessage>, I>>(base?: I): DateMessage {
-    return DateMessage.fromPartial(base ?? {});
+    return DateMessage.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DateMessage>, I>>(object: I): DateMessage {
     const message = createBaseDateMessage();
     message.year = object.year ?? 0;

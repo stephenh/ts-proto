@@ -1,3 +1,59 @@
+## [1.156.7](https://github.com/stephenh/ts-proto/compare/v1.156.6...v1.156.7) (2023-08-18)
+
+
+### Bug Fixes
+
+* always use Map for int64 keys ([#708](https://github.com/stephenh/ts-proto/issues/708)) ([#905](https://github.com/stephenh/ts-proto/issues/905)) ([cf2fb59](https://github.com/stephenh/ts-proto/commit/cf2fb59de20f8a60ead23294439dacbdbe6dfc14))
+
+## [1.156.6](https://github.com/stephenh/ts-proto/compare/v1.156.5...v1.156.6) (2023-08-16)
+
+
+### Bug Fixes
+
+* use correct imports for optional fields ([#904](https://github.com/stephenh/ts-proto/issues/904)) ([fa13ec7](https://github.com/stephenh/ts-proto/commit/fa13ec752c6564af045081548f5fc5cabb687151))
+
+## [1.156.5](https://github.com/stephenh/ts-proto/compare/v1.156.4...v1.156.5) (2023-08-15)
+
+
+### Bug Fixes
+
+* remove-enum-prefix for nested enums ([#903](https://github.com/stephenh/ts-proto/issues/903)) ([efdbf47](https://github.com/stephenh/ts-proto/commit/efdbf476b26c49c1bc56f9404f49667f2acc1f8b))
+
+## [1.156.4](https://github.com/stephenh/ts-proto/compare/v1.156.3...v1.156.4) (2023-08-15)
+
+
+### Bug Fixes
+
+* enum default value when remove-enum-prefix and string-enum both on ([#902](https://github.com/stephenh/ts-proto/issues/902)) ([594b137](https://github.com/stephenh/ts-proto/commit/594b137cdffbf6256b9d0ee6bb82822ce22c7b94))
+
+## [1.156.3](https://github.com/stephenh/ts-proto/compare/v1.156.2...v1.156.3) (2023-08-13)
+
+
+### Bug Fixes
+
+* Only check file dependencies once/file. ([#901](https://github.com/stephenh/ts-proto/issues/901)) ([8d61980](https://github.com/stephenh/ts-proto/commit/8d6198020a5ec775b0dbaf7e08924f4bdcc677f8)), closes [#900](https://github.com/stephenh/ts-proto/issues/900)
+
+## [1.156.2](https://github.com/stephenh/ts-proto/compare/v1.156.1...v1.156.2) (2023-07-29)
+
+
+### Bug Fixes
+
+* Add 'as any' in create ([#895](https://github.com/stephenh/ts-proto/issues/895)) ([4214d5a](https://github.com/stephenh/ts-proto/commit/4214d5af98817f317760298b1b2e03a8e956329c)), closes [#838](https://github.com/stephenh/ts-proto/issues/838)
+
+## [1.156.1](https://github.com/stephenh/ts-proto/compare/v1.156.0...v1.156.1) (2023-07-22)
+
+
+### Bug Fixes
+
+* Depend specifically on long 5.2.3. ([#892](https://github.com/stephenh/ts-proto/issues/892)) ([2b976f2](https://github.com/stephenh/ts-proto/commit/2b976f295fc1fbab6d0fb5ad86cfad26ed722c8a))
+
+# [1.156.0](https://github.com/stephenh/ts-proto/compare/v1.155.1...v1.156.0) (2023-07-20)
+
+
+### Features
+
+* **ts-proto-#859:** added encode-only options to toJSON methods ([#886](https://github.com/stephenh/ts-proto/issues/886)) ([d0cf57d](https://github.com/stephenh/ts-proto/commit/d0cf57d9a1aebdec3bec67585658362b1a38d6a3)), closes [ts-proto-#859](https://github.com/ts-proto-/issues/859) [ts-proto-#859](https://github.com/ts-proto-/issues/859) [ts-proto#859](https://github.com/ts-proto/issues/859) [ts-proto#859](https://github.com/ts-proto/issues/859) [ts-proto-#859](https://github.com/ts-proto-/issues/859)
+
 ## [1.155.1](https://github.com/stephenh/ts-proto/compare/v1.155.0...v1.155.1) (2023-07-15)
 
 

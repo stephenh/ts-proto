@@ -89,9 +89,8 @@ export const Parent = {
   },
 
   create<I extends Exact<DeepPartial<Parent>, I>>(base?: I): Parent {
-    return Parent.fromPartial(base ?? {});
+    return Parent.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Parent>, I>>(object: I): Parent {
     const message = createBaseParent();
     message.child = (object.child !== undefined && object.child !== null) ? Child.fromPartial(object.child) : undefined;
