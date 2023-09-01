@@ -35,7 +35,7 @@ export function generateIndexFiles(files: FileDescriptorProto[], options: Option
       if (!(part in branch.leaves)) {
         const prePkgParts = pkgParts.slice(0, i + 1);
         const index = `index.${prePkgParts.join(".")}.ts`;
-        branch.chunks.push(code`export * as ${part} from "./${path.basename(index, ".ts")}";`);
+        branch.chunks.push(code`export * as ${part} from "./${path.basename(index, ".ts")}${options.importSuffix}";`);
         branch.leaves[part] = {
           index,
           leaves: {},
@@ -44,7 +44,7 @@ export function generateIndexFiles(files: FileDescriptorProto[], options: Option
       }
       return branch.leaves[part];
     }, packageTree);
-    branch.chunks.push(code`export * from "./${moduleName}";`);
+    branch.chunks.push(code`export * from "./${moduleName}${options.importSuffix}";`);
   }
 
   const indexFiles: [string, Code][] = [];

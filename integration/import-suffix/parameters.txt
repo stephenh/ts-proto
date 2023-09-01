@@ -1,1 +1,1 @@
-fileSuffix=.pb,importSuffix=.js
+outputIndex=true,fileSuffix=.pb,importSuffix=.js

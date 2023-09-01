@@ -3,8 +3,6 @@ import * as _m0 from "protobufjs/minimal.js";
 import { Child, ChildEnum, childEnumFromJSON, childEnumToJSON } from "./child.pb.js";
 import { Timestamp } from "./google/protobuf/timestamp.pb.js";
 
-export const protobufPackage = "file_suffix";
-
 export interface Parent {
   child: Child | undefined;
   childEnum: ChildEnum;
@@ -102,13 +100,13 @@ export const Parent = {
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
-export type DeepPartial<T> = T extends Builtin ? T
+type DeepPartial<T> = T extends Builtin ? T
   : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-export type Exact<P, I extends P> = P extends Builtin ? P
+type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function toTimestamp(date: Date): Timestamp {
