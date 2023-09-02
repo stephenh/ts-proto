@@ -156,9 +156,10 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
 
   // If nestJs=true export [package]_PACKAGE_NAME and [service]_SERVICE_NAME const
   if (options.nestJs) {
-    const prefix = camelToSnake(fileDesc.package.replace(/\./g, "_"));
-    chunks.push(code`export const ${prefix}_PACKAGE_NAME = '${fileDesc.package}';`);
-
+    if (options.exportCommonSymbols) {
+      const prefix = camelToSnake(fileDesc.package.replace(/\./g, "_"));
+      chunks.push(code`export const ${prefix}_PACKAGE_NAME = '${fileDesc.package}';`);
+    }
     if (
       options.useDate === DateOption.DATE &&
       fileDesc.messageType.find((message) =>
