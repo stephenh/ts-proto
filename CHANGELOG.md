@@ -1,3 +1,10 @@
+## [1.156.8](https://github.com/stephenh/ts-proto/compare/v1.156.7...v1.156.8) (2023-09-03)
+
+
+### Bug Fixes
+
+* fixing exportCommonSymbols in nestjs ([#916](https://github.com/stephenh/ts-proto/issues/916)) ([daf41f7](https://github.com/stephenh/ts-proto/commit/daf41f7c2654e801994c0791fb3f9f178b5d8ad8))
+
 ## [1.156.7](https://github.com/stephenh/ts-proto/compare/v1.156.6...v1.156.7) (2023-08-18)
 
 
