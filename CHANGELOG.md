@@ -1,3 +1,10 @@
+# [1.157.0](https://github.com/stephenh/ts-proto/compare/v1.156.8...v1.157.0) (2023-09-03)
+
+
+### Features
+
+* enum decoding ([#910](https://github.com/stephenh/ts-proto/issues/910)) ([9e0a0b5](https://github.com/stephenh/ts-proto/commit/9e0a0b5c86004313f65eae88b8dc5e63deaaf251)), closes [ts-proto-#859](https://github.com/ts-proto-/issues/859) [ts-proto#859](https://github.com/ts-proto/issues/859) [ts-proto#859](https://github.com/ts-proto/issues/859) [ts-proto-#859](https://github.com/ts-proto-/issues/859) [#909](https://github.com/stephenh/ts-proto/issues/909)
+
 ## [1.156.8](https://github.com/stephenh/ts-proto/compare/v1.156.7...v1.156.8) (2023-09-03)
 
 
