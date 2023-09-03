@@ -52,11 +52,15 @@ export function generateEnum(
     chunks.push(code`}`);
   }
 
-  if (options.outputJsonMethods || (options.stringEnums && options.outputEncodeMethods)) {
+  if (
+    options.outputJsonMethods === true ||
+    options.outputJsonMethods === "from-only" ||
+    (options.stringEnums && options.outputEncodeMethods)
+  ) {
     chunks.push(code`\n`);
     chunks.push(generateEnumFromJson(ctx, fullName, enumDesc));
   }
-  if (options.outputJsonMethods) {
+  if (options.outputJsonMethods === true || options.outputJsonMethods === "to-only") {
     chunks.push(code`\n`);
     chunks.push(generateEnumToJson(ctx, fullName, enumDesc));
   }
