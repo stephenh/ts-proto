@@ -92,6 +92,7 @@ import {
   generateWrapShallow,
   isWrapperType,
 } from "./generate-struct-wrappers";
+import { TransformStreamDefaultController } from "node:stream/web";
 
 export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [string, Code] {
   const { options, utils } = ctx;
@@ -2071,8 +2072,9 @@ function generateToJson(
         }
       `);
     } else {
+      let emitDefaultValuesForJson = ctx.options.emitDefaultValues.includes("json-methods");
       const check =
-        (isScalar(field) || isEnum(field)) && !isWithinOneOf(field)
+        (isScalar(field) || isEnum(field)) && !(isWithinOneOf(field) || emitDefaultValuesForJson)
           ? notDefaultCheck(ctx, field, messageDesc.options, `message.${fieldName}`)
           : `message.${fieldName} !== undefined`;
 
