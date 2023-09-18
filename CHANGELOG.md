@@ -1,3 +1,10 @@
+## [1.157.1](https://github.com/stephenh/ts-proto/compare/v1.157.0...v1.157.1) (2023-09-18)
+
+
+### Bug Fixes
+
+* Update type imports syntax on gRPC generation ([#921](https://github.com/stephenh/ts-proto/issues/921)) ([b10ab31](https://github.com/stephenh/ts-proto/commit/b10ab31a479420413998840eab866ab51f72285d))
+
 # [1.157.0](https://github.com/stephenh/ts-proto/compare/v1.156.8...v1.157.0) (2023-09-03)
 
 
