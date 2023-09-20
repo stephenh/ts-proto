@@ -9,6 +9,7 @@ describe("options", () => {
         "addNestjsRestParameter": false,
         "constEnums": false,
         "context": false,
+        "emitDefaultValues": [],
         "emitImportedFiles": true,
         "enumsAsLiterals": false,
         "env": "both",

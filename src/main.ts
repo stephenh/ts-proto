@@ -92,7 +92,6 @@ import {
   generateWrapShallow,
   isWrapperType,
 } from "./generate-struct-wrappers";
-import { TransformStreamDefaultController } from "node:stream/web";
 
 export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [string, Code] {
   const { options, utils } = ctx;
