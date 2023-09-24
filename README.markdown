@@ -517,6 +517,8 @@ Generated code will be placed in the Gradle build directory.
 
   This will disable `exportCommonSymbols` to avoid name collisions on the common symbols.
 
+- With `--emitDefaultValues=json-methods`, the generated toJSON method will emit scalars like `0` and `""` as json fields.
+
 ### NestJS Support
 
 We have a great way of working together with [nestjs](https://docs.nestjs.com/microservices/grpc). `ts-proto` generates `interfaces` and `decorators` for you controller, client. For more information see the [nestjs readme](NESTJS.markdown).

@@ -39,6 +39,7 @@ export type Options = {
   snakeToCamel: Array<"json" | "keys">;
   forceLong: LongOption;
   useOptionals: boolean | "none" | "messages" | "all"; // boolean is deprecated
+  emitDefaultValues: Array<"json-methods">;
   useDate: DateOption;
   useMongoObjectId: boolean;
   oneof: OneofOption;
@@ -88,6 +89,7 @@ export function defaultOptions(): Options {
   return {
     context: false,
     snakeToCamel: ["json", "keys"],
+    emitDefaultValues: [],
     forceLong: LongOption.NUMBER,
     useOptionals: "none",
     useDate: DateOption.DATE,
@@ -203,6 +205,12 @@ export function optionsFromParameter(parameter: string | undefined): Options {
     options.snakeToCamel = ["keys", "json"];
   } else if (typeof options.snakeToCamel === "string") {
     options.snakeToCamel = (options.snakeToCamel as string).split("_") as any;
+  }
+
+  if ((options.emitDefaultValues as any) === "json-methods") {
+    options.emitDefaultValues = ["json-methods"];
+  } else {
+    options.emitDefaultValues = [];
   }
 
   if (options.useJsonWireFormat) {

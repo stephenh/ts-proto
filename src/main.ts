@@ -2071,8 +2071,9 @@ function generateToJson(
         }
       `);
     } else {
+      let emitDefaultValuesForJson = ctx.options.emitDefaultValues.includes("json-methods");
       const check =
-        (isScalar(field) || isEnum(field)) && !isWithinOneOf(field)
+        (isScalar(field) || isEnum(field)) && !(isWithinOneOf(field) || emitDefaultValuesForJson)
           ? notDefaultCheck(ctx, field, messageDesc.options, `message.${fieldName}`)
           : `message.${fieldName} !== undefined`;
 
