@@ -1,3 +1,10 @@
+# [1.158.0](https://github.com/stephenh/ts-proto/compare/v1.157.1...v1.158.0) (2023-09-24)
+
+
+### Features
+
+* adds support for emitting default scalar values in json ([#919](https://github.com/stephenh/ts-proto/issues/919)) ([01f529f](https://github.com/stephenh/ts-proto/commit/01f529f2b0eed486356ff6add9a43aabde3d1d0d))
+
 ## [1.157.1](https://github.com/stephenh/ts-proto/compare/v1.157.0...v1.157.1) (2023-09-18)
 
 
