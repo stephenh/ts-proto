@@ -112,12 +112,12 @@ export interface Timestamp {
 }
 
 function createBaseTimestamp(): Timestamp {
-  return { seconds: BigInt("0"), nanos: 0 };
+  return { seconds: 0n, nanos: 0 };
 }
 
 export const Timestamp = {
   encode(message: Timestamp, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.seconds !== BigInt("0")) {
+    if (message.seconds !== 0n) {
       writer.uint32(8).int64(message.seconds.toString());
     }
     if (message.nanos !== 0) {
@@ -158,14 +158,14 @@ export const Timestamp = {
 
   fromJSON(object: any): Timestamp {
     return {
-      seconds: isSet(object.seconds) ? BigInt(object.seconds) : BigInt("0"),
+      seconds: isSet(object.seconds) ? BigInt(object.seconds) : 0n,
       nanos: isSet(object.nanos) ? Number(object.nanos) : 0,
     };
   },
 
   toJSON(message: Timestamp): unknown {
     const obj: any = {};
-    if (message.seconds !== BigInt("0")) {
+    if (message.seconds !== 0n) {
       obj.seconds = message.seconds.toString();
     }
     if (message.nanos !== 0) {
@@ -179,7 +179,7 @@ export const Timestamp = {
   },
   fromPartial<I extends Exact<DeepPartial<Timestamp>, I>>(object: I): Timestamp {
     const message = createBaseTimestamp();
-    message.seconds = object.seconds ?? BigInt("0");
+    message.seconds = object.seconds ?? 0n;
     message.nanos = object.nanos ?? 0;
     return message;
   },
