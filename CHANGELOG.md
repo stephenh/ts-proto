@@ -1,3 +1,10 @@
+# [1.159.0](https://github.com/stephenh/ts-proto/compare/v1.158.1...v1.159.0) (2023-09-30)
+
+
+### Features
+
+* Add globalThisPolyfill, defaults false. ([#931](https://github.com/stephenh/ts-proto/issues/931)) ([085fa21](https://github.com/stephenh/ts-proto/commit/085fa21603a74544af192f404289c2e62ecfd8f6))
+
 ## [1.158.1](https://github.com/stephenh/ts-proto/compare/v1.158.0...v1.158.1) (2023-09-30)
 
 
