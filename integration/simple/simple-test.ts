@@ -242,11 +242,15 @@ describe("simple", () => {
       mapOfBytes: {},
       mapOfStringValues: { a: "1", b: "", c: undefined },
       longLookup: { 1: 2, 2: 1 },
+      boolLookup: new Map([[true, 1]]),
     };
     // const s2 = PbSimpleWithMap.toObject(PbSimpleWithMap.decode(SimpleWithMap.encode(s1).finish()));
     const s2 = SimpleWithMap.decode(SimpleWithMap.encode(s1).finish());
     expect(s2).toMatchInlineSnapshot(`
       {
+        "boolLookup": Map {
+          true => 1,
+        },
         "entitiesById": {
           "1": {
             "id": 1,
@@ -285,6 +289,7 @@ describe("simple", () => {
       mapOfBytes: {},
       mapOfStringValues: { foo: "", bar: undefined },
       longLookup: { 1: 2, 2: 1 },
+      boolLookup: new Map([[true, 1]]),
     };
     const s2 = SimpleWithMap.decode(SimpleWithMap.encode(s1).finish());
     expect(s2).toEqual(s1);
@@ -305,6 +310,7 @@ describe("simple", () => {
       mapOfTimestamps: {},
       mapOfBytes: {},
       mapOfStringValues: {},
+      boolLookup: new Map(),
     });
   });
 
@@ -345,6 +351,7 @@ describe("simple", () => {
     });
     expect(s1).toMatchInlineSnapshot(`
       {
+        "boolLookup": Map {},
         "entitiesById": {},
         "intLookup": {
           "1": 2,
