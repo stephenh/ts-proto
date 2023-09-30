@@ -14,14 +14,12 @@ import {
   detectMapType,
   getEnumMethod,
   isAnyValueType,
-  isAnyValueTypeName,
   isBytes,
   isBytesValueType,
   isEnum,
   isFieldMaskType,
   isFieldMaskTypeName,
   isListValueType,
-  isListValueTypeName,
   isLong,
   isLongValueType,
   isMapType,
@@ -32,7 +30,6 @@ import {
   isRepeated,
   isScalar,
   isStructType,
-  isStructTypeName,
   isTimestamp,
   isValueType,
   isWholeNumber,
@@ -40,21 +37,21 @@ import {
   isWithinOneOfThatShouldBeUnion,
   notDefaultCheck,
   packedType,
+  shouldGenerateJSMapType,
   toReaderCall,
   toTypeName,
-  shouldGenerateJSMapType,
   valueTypeName,
 } from "./types";
 import SourceInfo, { Fields } from "./sourceInfo";
 import {
   assertInstanceOf,
-  getFieldJsonName,
   FormattedMethodDescriptor,
+  getFieldJsonName,
+  getPropertyAccessor,
+  impFile,
   impProto,
   maybeAddComment,
   maybePrefixPackage,
-  getPropertyAccessor,
-  impFile,
 } from "./utils";
 import { camelToSnake, capitalize, maybeSnakeToCamel } from "./case";
 import {
@@ -75,7 +72,7 @@ import {
   generateGrpcMethodDesc,
   generateGrpcServiceDesc,
 } from "./generate-grpc-web";
-import { generateEncodeTransform, generateDecodeTransform } from "./generate-async-iterable";
+import { generateDecodeTransform, generateEncodeTransform } from "./generate-async-iterable";
 import { generateEnum } from "./enums";
 import { visit, visitServices } from "./visit";
 import { addTypeToMessages, DateOption, EnvOption, LongOption, OneofOption, Options, ServiceOption } from "./options";
@@ -2287,6 +2284,8 @@ function convertFromObjectKey(
     } else {
       return code`${ctx.utils.globalThis}.Number(${variableName})`;
     }
+  } else if (keyField.type === FieldDescriptorProto_Type.TYPE_BOOL) {
+    return code`${ctx.utils.globalThis}.Boolean(${variableName})`;
   } else {
     return code`${ctx.utils.globalThis}.Number(${variableName})`;
   }
@@ -2309,6 +2308,8 @@ function convertToObjectKey(
     } else {
       return code`${variableName}`;
     }
+  } else if (keyField.type === FieldDescriptorProto_Type.TYPE_BOOL) {
+    return code`${ctx.utils.globalThis}.String(${variableName})`;
   } else {
     return code`${variableName}`;
   }

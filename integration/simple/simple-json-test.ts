@@ -183,9 +183,13 @@ describe("simple json", () => {
     const s1 = {
       entitiesById: { "1": { id: "1" } },
       intLookup: { 1: 0 },
+      boolLookup: { true: 0 },
     };
     expect(SimpleWithMap.fromJSON(s1)).toMatchInlineSnapshot(`
       {
+        "boolLookup": Map {
+          true => 0,
+        },
         "entitiesById": {
           "1": {
             "id": 1,
@@ -215,6 +219,7 @@ describe("simple json", () => {
     const s1 = SimpleWithMap.fromJSON(json);
     expect(s1).toMatchInlineSnapshot(`
       {
+        "boolLookup": Map {},
         "entitiesById": {},
         "intLookup": {},
         "longLookup": {},
@@ -231,7 +236,7 @@ describe("simple json", () => {
     expect(s1.mapOfTimestamps["b"]).toBeInstanceOf(Date);
   });
 
-  it("encodes maps of bytes", () => {
+  it("encodes maps", () => {
     const s1: SimpleWithMap = {
       entitiesById: {},
       intLookup: {},
@@ -243,10 +248,14 @@ describe("simple json", () => {
       },
       mapOfStringValues: {},
       longLookup: {},
+      boolLookup: new Map([[true, 1]]),
     };
     const json = SimpleWithMap.toJSON(s1);
     expect(json).toMatchInlineSnapshot(`
       {
+        "boolLookup": {
+          "true": 1,
+        },
         "mapOfBytes": {
           "a": "AQI=",
           "b": "AQID",
@@ -265,6 +274,7 @@ describe("simple json", () => {
     const s1 = SimpleWithMap.fromJSON(json);
     expect(s1).toMatchInlineSnapshot(`
       {
+        "boolLookup": Map {},
         "entitiesById": {},
         "intLookup": {},
         "longLookup": {},
