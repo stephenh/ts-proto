@@ -669,15 +669,15 @@ function makeTimestampMethods(options: Options, longs: ReturnType<typeof makeLon
   const Timestamp = impProto(options, "google/protobuf/timestamp", "Timestamp");
 
   let seconds: string | Code = "date.getTime() / 1_000";
-  let toNumberCode = "t.seconds";
+  let toNumberCode: string | Code = "t.seconds";
   if (options.forceLong === LongOption.LONG) {
     toNumberCode = "t.seconds.toNumber()";
     seconds = code`${longs.numberToLong}(date.getTime() / 1_000)`;
   } else if (options.forceLong === LongOption.BIGINT) {
-    toNumberCode = `${bytes.globalThis}.Number(t.seconds.toString())`;
+    toNumberCode = code`${bytes.globalThis}.Number(t.seconds.toString())`;
     seconds = code`BigInt(Math.trunc(date.getTime() / 1_000))`;
   } else if (options.forceLong === LongOption.STRING) {
-    toNumberCode = `${bytes.globalThis}.Number(t.seconds)`;
+    toNumberCode = code`${bytes.globalThis}.Number(t.seconds)`;
     // Must discard the fractional piece here
     // Otherwise the fraction ends up on the seconds when parsed as a Long
     // (note this only occurs when the string is > 8 characters)
@@ -691,7 +691,7 @@ function makeTimestampMethods(options: Options, longs: ReturnType<typeof makeLon
     options.useDate === DateOption.STRING
       ? code`
           function toTimestamp(dateStr: string): ${Timestamp} {
-            const date = new Date(dateStr);
+            const date = new ${bytes.globalThis}.Date(dateStr);
             const seconds = ${seconds};
             const nanos = (date.getTime() % 1_000) * 1_000_000;
             return { ${maybeTypeField} seconds, nanos };
@@ -713,14 +713,14 @@ function makeTimestampMethods(options: Options, longs: ReturnType<typeof makeLon
           function fromTimestamp(t: ${Timestamp}): string {
             let millis = (${toNumberCode} || 0) * 1_000;
             millis += (t.nanos || 0) / 1_000_000;
-            return new Date(millis).toISOString();
+            return new ${bytes.globalThis}.Date(millis).toISOString();
           }
         `
       : code`
           function fromTimestamp(t: ${Timestamp}): Date {
             let millis = (${toNumberCode} || 0) * 1_000;
             millis += (t.nanos || 0) / 1_000_000;
-            return new Date(millis);
+            return new ${bytes.globalThis}.Date(millis);
           }
         `,
   );
@@ -730,10 +730,10 @@ function makeTimestampMethods(options: Options, longs: ReturnType<typeof makeLon
     options.useDate === DateOption.DATE
       ? code`
         function fromJsonTimestamp(o: any): Date {
-          if (o instanceof Date) {
+          if (o instanceof ${bytes.globalThis}.Date) {
             return o;
           } else if (typeof o === "string") {
-            return new Date(o);
+            return new ${bytes.globalThis}.Date(o);
           } else {
             return ${fromTimestamp}(Timestamp.fromJSON(o));
           }
@@ -741,10 +741,10 @@ function makeTimestampMethods(options: Options, longs: ReturnType<typeof makeLon
       `
       : code`
         function fromJsonTimestamp(o: any): Timestamp {
-          if (o instanceof Date) {
+          if (o instanceof ${bytes.globalThis}.Date) {
             return ${toTimestamp}(o);
           } else if (typeof o === "string") {
-            return ${toTimestamp}(new Date(o));
+            return ${toTimestamp}(new ${bytes.globalThis}.Date(o));
           } else {
             return Timestamp.fromJSON(o);
           }
