@@ -91,9 +91,11 @@ export const ValueMessage = {
   fromJSON(object: any): ValueMessage {
     return {
       value: isSet(object?.value) ? object.value : undefined,
-      anyList: Array.isArray(object.anyList) ? [...object.anyList] : undefined,
-      repeatedAny: Array.isArray(object?.repeatedAny) ? [...object.repeatedAny] : [],
-      repeatedStrings: Array.isArray(object?.repeatedStrings) ? object.repeatedStrings.map((e: any) => String(e)) : [],
+      anyList: tsProtoGlobalThis.Array.isArray(object.anyList) ? [...object.anyList] : undefined,
+      repeatedAny: tsProtoGlobalThis.Array.isArray(object?.repeatedAny) ? [...object.repeatedAny] : [],
+      repeatedStrings: tsProtoGlobalThis.Array.isArray(object?.repeatedStrings)
+        ? object.repeatedStrings.map((e: any) => String(e))
+        : [],
       structValue: isObject(object.structValue) ? object.structValue : undefined,
     };
   },
@@ -131,6 +133,25 @@ export const ValueMessage = {
     return message;
   },
 };
+
+declare const self: any | undefined;
+declare const window: any | undefined;
+declare const global: any | undefined;
+const tsProtoGlobalThis: any = (() => {
+  if (typeof globalThis !== "undefined") {
+    return globalThis;
+  }
+  if (typeof self !== "undefined") {
+    return self;
+  }
+  if (typeof window !== "undefined") {
+    return window;
+  }
+  if (typeof global !== "undefined") {
+    return global;
+  }
+  throw "Unable to locate global object";
+})();
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 

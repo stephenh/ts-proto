@@ -143,8 +143,8 @@ export const SimpleWithWrappers = {
       age: isSet(object.age) ? Number(object.age) : undefined,
       enabled: isSet(object.enabled) ? Boolean(object.enabled) : undefined,
       bananas: isSet(object.bananas) ? Long.fromValue(object.bananas) : undefined,
-      coins: Array.isArray(object?.coins) ? object.coins.map((e: any) => Number(e)) : [],
-      snacks: Array.isArray(object?.snacks) ? object.snacks.map((e: any) => String(e)) : [],
+      coins: tsProtoGlobalThis.Array.isArray(object?.coins) ? object.coins.map((e: any) => Number(e)) : [],
+      snacks: tsProtoGlobalThis.Array.isArray(object?.snacks) ? object.snacks.map((e: any) => String(e)) : [],
     };
   },
 
@@ -262,7 +262,7 @@ export const SimpleWithMap = {
         : {},
       intLookup: isObject(object.intLookup)
         ? Object.entries(object.intLookup).reduce<{ [key: number]: number }>((acc, [key, value]) => {
-          acc[Number(key)] = Number(value);
+          acc[tsProtoGlobalThis.Number(key)] = Number(value);
           return acc;
         }, {})
         : {},
@@ -321,7 +321,7 @@ export const SimpleWithMap = {
     message.intLookup = Object.entries(object.intLookup ?? {}).reduce<{ [key: number]: number }>(
       (acc, [key, value]) => {
         if (value !== undefined) {
-          acc[Number(key)] = Number(value);
+          acc[tsProtoGlobalThis.Number(key)] = Number(value);
         }
         return acc;
       },
@@ -755,7 +755,9 @@ export const Numbers = {
       fixed64: isSet(object.fixed64) ? Long.fromValue(object.fixed64) : Long.UZERO,
       sfixed32: isSet(object.sfixed32) ? Number(object.sfixed32) : 0,
       sfixed64: isSet(object.sfixed64) ? Long.fromValue(object.sfixed64) : Long.ZERO,
-      manyUint64: Array.isArray(object?.manyUint64) ? object.manyUint64.map((e: any) => Long.fromValue(e)) : [],
+      manyUint64: tsProtoGlobalThis.Array.isArray(object?.manyUint64)
+        ? object.manyUint64.map((e: any) => Long.fromValue(e))
+        : [],
     };
   },
 
@@ -865,7 +867,7 @@ export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function longToNumber(long: Long): number {
-  if (long.gt(Number.MAX_SAFE_INTEGER)) {
+  if (long.gt(tsProtoGlobalThis.Number.MAX_SAFE_INTEGER)) {
     throw new tsProtoGlobalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
   return long.toNumber();

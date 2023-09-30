@@ -228,7 +228,9 @@ export const DashUserSettingsState = {
     return {
       email: isSet(object.email) ? String(object.email) : "",
       urls: isSet(object.urls) ? DashUserSettingsState_URLs.fromJSON(object.urls) : undefined,
-      flashes: Array.isArray(object?.flashes) ? object.flashes.map((e: any) => DashFlash.fromJSON(e)) : [],
+      flashes: tsProtoGlobalThis.Array.isArray(object?.flashes)
+        ? object.flashes.map((e: any) => DashFlash.fromJSON(e))
+        : [],
     };
   },
 

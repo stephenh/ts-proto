@@ -121,7 +121,7 @@ function base64FromBytes(arr: Uint8Array): string {
   } else {
     const bin: string[] = [];
     arr.forEach((byte) => {
-      bin.push(String.fromCharCode(byte));
+      bin.push(tsProtoGlobalThis.String.fromCharCode(byte));
     });
     return tsProtoGlobalThis.btoa(bin.join(""));
   }

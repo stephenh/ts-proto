@@ -57,7 +57,7 @@ export function generateWrapDeep(ctx: Context, fullProtoTypeName: string, fieldN
         result.${fieldNames.numberValue} = value;
       } else if (typeof value === 'string') {
         result.${fieldNames.stringValue} = value;
-      } else if (Array.isArray(value)) {
+      } else if (${ctx.utils.globalThis}.Array.isArray(value)) {
         result.${fieldNames.listValue} = ListValue.wrap(value);
       } else if (typeof value === 'object') {
         result.${fieldNames.structValue} = Struct.wrap(value);
@@ -141,7 +141,7 @@ export function generateUnwrapDeep(ctx: Context, fullProtoTypeName: string, fiel
 
   if (isListValueTypeName(fullProtoTypeName)) {
     chunks.push(code`unwrap(message: ${ctx.options.useReadonlyTypes ? "any" : "ListValue"}): Array<any> {
-      if (message?.hasOwnProperty('values') && Array.isArray(message.values)) {
+      if (message?.hasOwnProperty('values') && ${ctx.utils.globalThis}.Array.isArray(message.values)) {
         return message.values.map(Value.unwrap);
       } else {
         return message as any;
@@ -193,7 +193,7 @@ export function generateWrapShallow(ctx: Context, fullProtoTypeName: string, fie
           result.kind = {$case: '${fieldNames.numberValue}', ${fieldNames.numberValue}: value};
         } else if (typeof value === 'string') {
           result.kind = {$case: '${fieldNames.stringValue}', ${fieldNames.stringValue}: value};
-        } else if (Array.isArray(value)) {
+        } else if (${ctx.utils.globalThis}.Array.isArray(value)) {
           result.kind = {$case: '${fieldNames.listValue}', ${fieldNames.listValue}: value};
         } else if (typeof value === 'object') {
           result.kind = {$case: '${fieldNames.structValue}', ${fieldNames.structValue}: value};
@@ -213,7 +213,7 @@ export function generateWrapShallow(ctx: Context, fullProtoTypeName: string, fie
           result.${fieldNames.numberValue} = value;
         } else if (typeof value === 'string') {
           result.${fieldNames.stringValue} = value;
-        } else if (Array.isArray(value)) {
+        } else if (${ctx.utils.globalThis}.Array.isArray(value)) {
           result.${fieldNames.listValue} = value;
         } else if (typeof value === 'object') {
           result.${fieldNames.structValue} = value;
@@ -315,7 +315,7 @@ export function generateUnwrapShallow(ctx: Context, fullProtoTypeName: string, f
 
   if (isListValueTypeName(fullProtoTypeName)) {
     chunks.push(code`unwrap(message: ${ctx.options.useReadonlyTypes ? "any" : "ListValue"}): Array<any> {
-      if (message?.hasOwnProperty('values') && Array.isArray(message.values)) {
+      if (message?.hasOwnProperty('values') && ${ctx.utils.globalThis}.Array.isArray(message.values)) {
         return message.values;
       } else {
         return message as any;

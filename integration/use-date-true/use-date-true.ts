@@ -100,7 +100,7 @@ export const Todo = {
     return {
       id: isSet(object.id) ? String(object.id) : "",
       timestamp: isSet(object.timestamp) ? fromJsonTimestamp(object.timestamp) : undefined,
-      repeatedTimestamp: Array.isArray(object?.repeatedTimestamp)
+      repeatedTimestamp: tsProtoGlobalThis.Array.isArray(object?.repeatedTimestamp)
         ? object.repeatedTimestamp.map((e: any) => fromJsonTimestamp(e))
         : [],
       optionalTimestamp: isSet(object.optionalTimestamp) ? fromJsonTimestamp(object.optionalTimestamp) : undefined,
@@ -275,6 +275,25 @@ interface Rpc {
   request(service: string, method: string, data: Uint8Array): Promise<Uint8Array>;
 }
 
+declare const self: any | undefined;
+declare const window: any | undefined;
+declare const global: any | undefined;
+const tsProtoGlobalThis: any = (() => {
+  if (typeof globalThis !== "undefined") {
+    return globalThis;
+  }
+  if (typeof self !== "undefined") {
+    return self;
+  }
+  if (typeof window !== "undefined") {
+    return window;
+  }
+  if (typeof global !== "undefined") {
+    return global;
+  }
+  throw "Unable to locate global object";
+})();
+
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
@@ -295,14 +314,14 @@ function toTimestamp(date: Date): Timestamp {
 function fromTimestamp(t: Timestamp): Date {
   let millis = (t.seconds || 0) * 1_000;
   millis += (t.nanos || 0) / 1_000_000;
-  return new Date(millis);
+  return new tsProtoGlobalThis.Date(millis);
 }
 
 function fromJsonTimestamp(o: any): Date {
-  if (o instanceof Date) {
+  if (o instanceof tsProtoGlobalThis.Date) {
     return o;
   } else if (typeof o === "string") {
-    return new Date(o);
+    return new tsProtoGlobalThis.Date(o);
   } else {
     return fromTimestamp(Timestamp.fromJSON(o));
   }

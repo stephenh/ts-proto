@@ -194,7 +194,7 @@ export const Numbers = {
   },
 
   fromJSON(object: any): Numbers {
-    return { num: Array.isArray(object?.num) ? object.num.map((e: any) => Number(e)) : [] };
+    return { num: tsProtoGlobalThis.Array.isArray(object?.num) ? object.num.map((e: any) => Number(e)) : [] };
   },
 
   toJSON(message: Numbers): unknown {
@@ -274,6 +274,25 @@ export interface DataLoaders {
   rpcDataLoaderOptions?: DataLoaderOptions;
   getDataLoader<T>(identifier: string, constructorFn: () => T): T;
 }
+
+declare const self: any | undefined;
+declare const window: any | undefined;
+declare const global: any | undefined;
+const tsProtoGlobalThis: any = (() => {
+  if (typeof globalThis !== "undefined") {
+    return globalThis;
+  }
+  if (typeof self !== "undefined") {
+    return self;
+  }
+  if (typeof window !== "undefined") {
+    return window;
+  }
+  if (typeof global !== "undefined") {
+    return global;
+  }
+  throw "Unable to locate global object";
+})();
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 

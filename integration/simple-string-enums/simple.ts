@@ -164,7 +164,9 @@ export const Simple = {
     return {
       name: isSet(object.name) ? String(object.name) : "",
       state: isSet(object.state) ? stateEnumFromJSON(object.state) : StateEnum.UNKNOWN,
-      states: Array.isArray(object?.states) ? object.states.map((e: any) => stateEnumFromJSON(e)) : [],
+      states: tsProtoGlobalThis.Array.isArray(object?.states)
+        ? object.states.map((e: any) => stateEnumFromJSON(e))
+        : [],
       nullValue: isSet(object.nullValue) ? nullValueFromJSON(object.nullValue) : NullValue.NULL_VALUE,
       stateMap: isObject(object.stateMap)
         ? Object.entries(object.stateMap).reduce<{ [key: string]: StateEnum }>((acc, [key, value]) => {
@@ -296,6 +298,25 @@ export const Simple_StateMapEntry = {
     return message;
   },
 };
+
+declare const self: any | undefined;
+declare const window: any | undefined;
+declare const global: any | undefined;
+const tsProtoGlobalThis: any = (() => {
+  if (typeof globalThis !== "undefined") {
+    return globalThis;
+  }
+  if (typeof self !== "undefined") {
+    return self;
+  }
+  if (typeof window !== "undefined") {
+    return window;
+  }
+  if (typeof global !== "undefined") {
+    return global;
+  }
+  throw "Unable to locate global object";
+})();
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
