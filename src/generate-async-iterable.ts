@@ -11,11 +11,11 @@ export function generateEncodeTransform(utils: Utils, fullName: string): Code {
     ): AsyncIterable<Uint8Array> {
       for await (const pkt of source) {
         if (${utils.globalThis}.Array.isArray(pkt)) {
-          for (const p of pkt) {
+          for (const p of (pkt as any)) {
             yield* [${fullName}.encode(p).finish()]
           }
         } else {
-          yield* [${fullName}.encode(pkt).finish()]
+          yield* [${fullName}.encode(pkt as any).finish()]
         }
       }
     }
@@ -32,11 +32,11 @@ export function generateDecodeTransform(utils: Utils, fullName: string): Code {
     ): AsyncIterable<${fullName}> {
       for await (const pkt of source) {
         if (${utils.globalThis}.Array.isArray(pkt)) {
-          for (const p of pkt) {
+          for (const p of (pkt as any)) {
             yield* [${fullName}.decode(p)]
           }
         } else {
-          yield* [${fullName}.decode(pkt)]
+          yield* [${fullName}.decode(pkt as any)]
         }
       }
     }

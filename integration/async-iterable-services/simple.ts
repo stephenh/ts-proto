@@ -50,11 +50,11 @@ export const EchoMsg = {
   ): AsyncIterable<Uint8Array> {
     for await (const pkt of source) {
       if (tsProtoGlobalThis.Array.isArray(pkt)) {
-        for (const p of pkt) {
+        for (const p of (pkt as any)) {
           yield* [EchoMsg.encode(p).finish()];
         }
       } else {
-        yield* [EchoMsg.encode(pkt).finish()];
+        yield* [EchoMsg.encode(pkt as any).finish()];
       }
     }
   },
@@ -66,11 +66,11 @@ export const EchoMsg = {
   ): AsyncIterable<EchoMsg> {
     for await (const pkt of source) {
       if (tsProtoGlobalThis.Array.isArray(pkt)) {
-        for (const p of pkt) {
+        for (const p of (pkt as any)) {
           yield* [EchoMsg.decode(p)];
         }
       } else {
-        yield* [EchoMsg.decode(pkt)];
+        yield* [EchoMsg.decode(pkt as any)];
       }
     }
   },
