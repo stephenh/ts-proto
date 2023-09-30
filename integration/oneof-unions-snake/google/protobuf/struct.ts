@@ -445,7 +445,7 @@ export const Value = {
       result.kind = { $case: "number_value", number_value: value };
     } else if (typeof value === "string") {
       result.kind = { $case: "string_value", string_value: value };
-    } else if (tsProtoGlobalThis.Array.isArray(value)) {
+    } else if (globalThis.Array.isArray(value)) {
       result.kind = { $case: "list_value", list_value: value };
     } else if (typeof value === "object") {
       result.kind = { $case: "struct_value", struct_value: value };
@@ -510,7 +510,7 @@ export const ListValue = {
   },
 
   fromJSON(object: any): ListValue {
-    return { values: tsProtoGlobalThis.Array.isArray(object?.values) ? [...object.values] : [] };
+    return { values: globalThis.Array.isArray(object?.values) ? [...object.values] : [] };
   },
 
   toJSON(message: ListValue): unknown {
@@ -537,32 +537,13 @@ export const ListValue = {
   },
 
   unwrap(message: ListValue): Array<any> {
-    if (message?.hasOwnProperty("values") && tsProtoGlobalThis.Array.isArray(message.values)) {
+    if (message?.hasOwnProperty("values") && globalThis.Array.isArray(message.values)) {
       return message.values;
     } else {
       return message as any;
     }
   },
 };
-
-declare const self: any | undefined;
-declare const window: any | undefined;
-declare const global: any | undefined;
-const tsProtoGlobalThis: any = (() => {
-  if (typeof globalThis !== "undefined") {
-    return globalThis;
-  }
-  if (typeof self !== "undefined") {
-    return self;
-  }
-  if (typeof window !== "undefined") {
-    return window;
-  }
-  if (typeof global !== "undefined") {
-    return global;
-  }
-  throw "Unable to locate global object";
-})();
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 

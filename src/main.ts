@@ -412,7 +412,7 @@ export type Utils = ReturnType<typeof makeDeepPartial> &
 
 /** These are runtime utility methods used by the generated code. */
 export function makeUtils(options: Options): Utils {
-  const bytes = makeByteUtils();
+  const bytes = makeByteUtils(options);
   const longs = makeLongUtils(options, bytes);
   return {
     ...bytes,
@@ -517,14 +517,14 @@ function makeLongUtils(options: Options, bytes: ReturnType<typeof makeByteUtils>
   return { numberToLong, longToNumber, longToString, longToBigint, Long };
 }
 
-function makeByteUtils() {
-  const globalThis = conditionalOutput(
-    "tsProtoGlobalThis",
+function makeByteUtils(options: Options) {
+  const globalThisPolyfill = conditionalOutput(
+    "gt",
     code`
       declare const self: any | undefined;
       declare const window: any | undefined;
       declare const global: any | undefined;
-      const tsProtoGlobalThis: any = (() => {
+      const gt: any = (() => {
         if (typeof globalThis !== "undefined") return globalThis;
         if (typeof self !== "undefined") return self;
         if (typeof window !== "undefined") return window;
@@ -533,6 +533,7 @@ function makeByteUtils() {
       })();
     `,
   );
+  const globalThis = options.globalThisPolyfill ? globalThisPolyfill : conditionalOutput("globalThis", code``);
 
   const bytesFromBase64 = conditionalOutput(
     "bytesFromBase64",

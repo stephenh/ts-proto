@@ -431,21 +431,19 @@ export const OptionalsTest = {
       truth: isSet(object.truth) ? Boolean(object.truth) : undefined,
       description: isSet(object.description) ? String(object.description) : undefined,
       data: isSet(object.data) ? bytesFromBase64(object.data) : undefined,
-      repId: tsProtoGlobalThis.Array.isArray(object?.repId) ? object.repId.map((e: any) => Number(e)) : undefined,
-      repChild: tsProtoGlobalThis.Array.isArray(object?.repChild)
+      repId: globalThis.Array.isArray(object?.repId) ? object.repId.map((e: any) => Number(e)) : undefined,
+      repChild: globalThis.Array.isArray(object?.repChild)
         ? object.repChild.map((e: any) => Child.fromJSON(e))
         : undefined,
-      repState: tsProtoGlobalThis.Array.isArray(object?.repState)
+      repState: globalThis.Array.isArray(object?.repState)
         ? object.repState.map((e: any) => stateEnumFromJSON(e))
         : undefined,
-      repLong: tsProtoGlobalThis.Array.isArray(object?.repLong) ? object.repLong.map((e: any) => Number(e)) : undefined,
-      repTruth: tsProtoGlobalThis.Array.isArray(object?.repTruth)
-        ? object.repTruth.map((e: any) => Boolean(e))
-        : undefined,
-      repDescription: tsProtoGlobalThis.Array.isArray(object?.repDescription)
+      repLong: globalThis.Array.isArray(object?.repLong) ? object.repLong.map((e: any) => Number(e)) : undefined,
+      repTruth: globalThis.Array.isArray(object?.repTruth) ? object.repTruth.map((e: any) => Boolean(e)) : undefined,
+      repDescription: globalThis.Array.isArray(object?.repDescription)
         ? object.repDescription.map((e: any) => String(e))
         : undefined,
-      repData: tsProtoGlobalThis.Array.isArray(object?.repData)
+      repData: globalThis.Array.isArray(object?.repData)
         ? object.repData.map((e: any) => bytesFromBase64(e))
         : undefined,
       optId: isSet(object.optId) ? Number(object.optId) : undefined,
@@ -697,30 +695,11 @@ export const Child = {
   },
 };
 
-declare const self: any | undefined;
-declare const window: any | undefined;
-declare const global: any | undefined;
-const tsProtoGlobalThis: any = (() => {
-  if (typeof globalThis !== "undefined") {
-    return globalThis;
-  }
-  if (typeof self !== "undefined") {
-    return self;
-  }
-  if (typeof window !== "undefined") {
-    return window;
-  }
-  if (typeof global !== "undefined") {
-    return global;
-  }
-  throw "Unable to locate global object";
-})();
-
 function bytesFromBase64(b64: string): Uint8Array {
-  if (tsProtoGlobalThis.Buffer) {
-    return Uint8Array.from(tsProtoGlobalThis.Buffer.from(b64, "base64"));
+  if (globalThis.Buffer) {
+    return Uint8Array.from(globalThis.Buffer.from(b64, "base64"));
   } else {
-    const bin = tsProtoGlobalThis.atob(b64);
+    const bin = globalThis.atob(b64);
     const arr = new Uint8Array(bin.length);
     for (let i = 0; i < bin.length; ++i) {
       arr[i] = bin.charCodeAt(i);
@@ -730,14 +709,14 @@ function bytesFromBase64(b64: string): Uint8Array {
 }
 
 function base64FromBytes(arr: Uint8Array): string {
-  if (tsProtoGlobalThis.Buffer) {
-    return tsProtoGlobalThis.Buffer.from(arr).toString("base64");
+  if (globalThis.Buffer) {
+    return globalThis.Buffer.from(arr).toString("base64");
   } else {
     const bin: string[] = [];
     arr.forEach((byte) => {
-      bin.push(tsProtoGlobalThis.String.fromCharCode(byte));
+      bin.push(globalThis.String.fromCharCode(byte));
     });
-    return tsProtoGlobalThis.btoa(bin.join(""));
+    return globalThis.btoa(bin.join(""));
   }
 }
 
@@ -753,8 +732,8 @@ export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function longToNumber(long: Long): number {
-  if (long.gt(tsProtoGlobalThis.Number.MAX_SAFE_INTEGER)) {
-    throw new tsProtoGlobalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+  if (long.gt(globalThis.Number.MAX_SAFE_INTEGER)) {
+    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
   return long.toNumber();
 }

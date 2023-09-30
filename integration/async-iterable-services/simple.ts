@@ -49,7 +49,7 @@ export const EchoMsg = {
     source: AsyncIterable<EchoMsg | EchoMsg[]> | Iterable<EchoMsg | EchoMsg[]>,
   ): AsyncIterable<Uint8Array> {
     for await (const pkt of source) {
-      if (tsProtoGlobalThis.Array.isArray(pkt)) {
+      if (globalThis.Array.isArray(pkt)) {
         for (const p of (pkt as any)) {
           yield* [EchoMsg.encode(p).finish()];
         }
@@ -65,7 +65,7 @@ export const EchoMsg = {
     source: AsyncIterable<Uint8Array | Uint8Array[]> | Iterable<Uint8Array | Uint8Array[]>,
   ): AsyncIterable<EchoMsg> {
     for await (const pkt of source) {
-      if (tsProtoGlobalThis.Array.isArray(pkt)) {
+      if (globalThis.Array.isArray(pkt)) {
         for (const p of (pkt as any)) {
           yield* [EchoMsg.decode(p)];
         }
@@ -156,25 +156,6 @@ interface Rpc {
     data: AsyncIterable<Uint8Array>,
   ): AsyncIterable<Uint8Array>;
 }
-
-declare const self: any | undefined;
-declare const window: any | undefined;
-declare const global: any | undefined;
-const tsProtoGlobalThis: any = (() => {
-  if (typeof globalThis !== "undefined") {
-    return globalThis;
-  }
-  if (typeof self !== "undefined") {
-    return self;
-  }
-  if (typeof window !== "undefined") {
-    return window;
-  }
-  if (typeof global !== "undefined") {
-    return global;
-  }
-  throw "Unable to locate global object";
-})();
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 

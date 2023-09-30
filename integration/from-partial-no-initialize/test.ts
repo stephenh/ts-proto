@@ -221,13 +221,13 @@ export const TPartial = {
         }, {})
         : undefined,
       message: isSet(object.message) ? TPartialMessage.fromJSON(object.message) : undefined,
-      repeatedMessage: tsProtoGlobalThis.Array.isArray(object?.repeatedMessage)
+      repeatedMessage: globalThis.Array.isArray(object?.repeatedMessage)
         ? object.repeatedMessage.map((e: any) => TPartialMessage.fromJSON(e))
         : undefined,
-      repeatedString: tsProtoGlobalThis.Array.isArray(object?.repeatedString)
+      repeatedString: globalThis.Array.isArray(object?.repeatedString)
         ? object.repeatedString.map((e: any) => String(e))
         : undefined,
-      repeatedNumber: tsProtoGlobalThis.Array.isArray(object?.repeatedNumber)
+      repeatedNumber: globalThis.Array.isArray(object?.repeatedNumber)
         ? object.repeatedNumber.map((e: any) => Number(e))
         : undefined,
     };
@@ -360,25 +360,6 @@ export const TPartial_MapEntry = {
     return message;
   },
 };
-
-declare const self: any | undefined;
-declare const window: any | undefined;
-declare const global: any | undefined;
-const tsProtoGlobalThis: any = (() => {
-  if (typeof globalThis !== "undefined") {
-    return globalThis;
-  }
-  if (typeof self !== "undefined") {
-    return self;
-  }
-  if (typeof window !== "undefined") {
-    return window;
-  }
-  if (typeof global !== "undefined") {
-    return global;
-  }
-  throw "Unable to locate global object";
-})();
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 

@@ -201,17 +201,15 @@ export const Entity = {
     return {
       intVal: isSet(object.intVal) ? Number(object.intVal) : 0,
       stringVal: isSet(object.stringVal) ? String(object.stringVal) : "",
-      intArray: tsProtoGlobalThis.Array.isArray(object?.intArray) ? object.intArray.map((e: any) => Number(e)) : [],
-      stringArray: tsProtoGlobalThis.Array.isArray(object?.stringArray)
-        ? object.stringArray.map((e: any) => String(e))
-        : [],
+      intArray: globalThis.Array.isArray(object?.intArray) ? object.intArray.map((e: any) => Number(e)) : [],
+      stringArray: globalThis.Array.isArray(object?.stringArray) ? object.stringArray.map((e: any) => String(e)) : [],
       subEntity: isSet(object.subEntity) ? SubEntity.fromJSON(object.subEntity) : undefined,
-      subEntityArray: tsProtoGlobalThis.Array.isArray(object?.subEntityArray)
+      subEntityArray: globalThis.Array.isArray(object?.subEntityArray)
         ? object.subEntityArray.map((e: any) => SubEntity.fromJSON(e))
         : [],
       optionalIntVal: isSet(object.optionalIntVal) ? Number(object.optionalIntVal) : undefined,
       fieldMask: isSet(object.fieldMask) ? FieldMask.unwrap(FieldMask.fromJSON(object.fieldMask)) : undefined,
-      listValue: tsProtoGlobalThis.Array.isArray(object.listValue) ? [...object.listValue] : undefined,
+      listValue: globalThis.Array.isArray(object.listValue) ? [...object.listValue] : undefined,
       structValue: isObject(object.structValue) ? object.structValue : undefined,
       oneOfValue: isSet(object.theStringValue)
         ? { $case: "theStringValue", theStringValue: String(object.theStringValue) }
@@ -353,25 +351,6 @@ export const SubEntity = {
     return message;
   },
 };
-
-declare const self: any | undefined;
-declare const window: any | undefined;
-declare const global: any | undefined;
-const tsProtoGlobalThis: any = (() => {
-  if (typeof globalThis !== "undefined") {
-    return globalThis;
-  }
-  if (typeof self !== "undefined") {
-    return self;
-  }
-  if (typeof window !== "undefined") {
-    return window;
-  }
-  if (typeof global !== "undefined") {
-    return global;
-  }
-  throw "Unable to locate global object";
-})();
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 

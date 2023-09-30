@@ -116,9 +116,7 @@ export const Tile = {
 
   fromJSON(object: any): Tile {
     return {
-      layers: tsProtoGlobalThis.Array.isArray(object?.layers)
-        ? object.layers.map((e: any) => Tile_Layer.fromJSON(e))
-        : [],
+      layers: globalThis.Array.isArray(object?.layers) ? object.layers.map((e: any) => Tile_Layer.fromJSON(e)) : [],
     };
   },
 
@@ -381,9 +379,9 @@ export const Tile_Feature = {
   fromJSON(object: any): Tile_Feature {
     return {
       id: isSet(object.id) ? Number(object.id) : 0,
-      tags: tsProtoGlobalThis.Array.isArray(object?.tags) ? object.tags.map((e: any) => Number(e)) : [],
+      tags: globalThis.Array.isArray(object?.tags) ? object.tags.map((e: any) => Number(e)) : [],
       type: isSet(object.type) ? tile_GeomTypeFromJSON(object.type) : 0,
-      geometry: tsProtoGlobalThis.Array.isArray(object?.geometry) ? object.geometry.map((e: any) => Number(e)) : [],
+      geometry: globalThis.Array.isArray(object?.geometry) ? object.geometry.map((e: any) => Number(e)) : [],
     };
   },
 
@@ -506,13 +504,11 @@ export const Tile_Layer = {
     return {
       version: isSet(object.version) ? Number(object.version) : 0,
       name: isSet(object.name) ? String(object.name) : "",
-      features: tsProtoGlobalThis.Array.isArray(object?.features)
+      features: globalThis.Array.isArray(object?.features)
         ? object.features.map((e: any) => Tile_Feature.fromJSON(e))
         : [],
-      keys: tsProtoGlobalThis.Array.isArray(object?.keys) ? object.keys.map((e: any) => String(e)) : [],
-      values: tsProtoGlobalThis.Array.isArray(object?.values)
-        ? object.values.map((e: any) => Tile_Value.fromJSON(e))
-        : [],
+      keys: globalThis.Array.isArray(object?.keys) ? object.keys.map((e: any) => String(e)) : [],
+      values: globalThis.Array.isArray(object?.values) ? object.values.map((e: any) => Tile_Value.fromJSON(e)) : [],
       extent: isSet(object.extent) ? Number(object.extent) : 0,
     };
   },
@@ -555,25 +551,6 @@ export const Tile_Layer = {
   },
 };
 
-declare const self: any | undefined;
-declare const window: any | undefined;
-declare const global: any | undefined;
-const tsProtoGlobalThis: any = (() => {
-  if (typeof globalThis !== "undefined") {
-    return globalThis;
-  }
-  if (typeof self !== "undefined") {
-    return self;
-  }
-  if (typeof window !== "undefined") {
-    return window;
-  }
-  if (typeof global !== "undefined") {
-    return global;
-  }
-  throw "Unable to locate global object";
-})();
-
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
@@ -586,8 +563,8 @@ export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function longToNumber(long: Long): number {
-  if (long.gt(tsProtoGlobalThis.Number.MAX_SAFE_INTEGER)) {
-    throw new tsProtoGlobalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+  if (long.gt(globalThis.Number.MAX_SAFE_INTEGER)) {
+    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
   return long.toNumber();
 }

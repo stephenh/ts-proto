@@ -138,7 +138,7 @@ export const Simple = {
       spaces: isSet(object["name with spaces"]) ? String(object["name with spaces"]) : "",
       dollarStart: isSet(object.$dollar) ? String(object.$dollar) : "",
       dollarEnd: isSet(object.dollar$) ? String(object.dollar$) : "",
-      hyphenList: tsProtoGlobalThis.Array.isArray(object?.["hyphen-list"])
+      hyphenList: globalThis.Array.isArray(object?.["hyphen-list"])
         ? object["hyphen-list"].map((e: any) => String(e))
         : [],
     };
@@ -190,25 +190,6 @@ export const Simple = {
   },
 };
 
-declare const self: any | undefined;
-declare const window: any | undefined;
-declare const global: any | undefined;
-const tsProtoGlobalThis: any = (() => {
-  if (typeof globalThis !== "undefined") {
-    return globalThis;
-  }
-  if (typeof self !== "undefined") {
-    return self;
-  }
-  if (typeof window !== "undefined") {
-    return window;
-  }
-  if (typeof global !== "undefined") {
-    return global;
-  }
-  throw "Unable to locate global object";
-})();
-
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
@@ -229,14 +210,14 @@ function toTimestamp(date: Date): Timestamp {
 function fromTimestamp(t: Timestamp): Date {
   let millis = (t.seconds || 0) * 1_000;
   millis += (t.nanos || 0) / 1_000_000;
-  return new tsProtoGlobalThis.Date(millis);
+  return new globalThis.Date(millis);
 }
 
 function fromJsonTimestamp(o: any): Date {
-  if (o instanceof tsProtoGlobalThis.Date) {
+  if (o instanceof globalThis.Date) {
     return o;
   } else if (typeof o === "string") {
-    return new tsProtoGlobalThis.Date(o);
+    return new globalThis.Date(o);
   } else {
     return fromTimestamp(Timestamp.fromJSON(o));
   }
