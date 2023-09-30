@@ -1437,7 +1437,7 @@ export const SimpleWithMap = {
     if (message.boolLookup?.size) {
       obj.boolLookup = {};
       message.boolLookup.forEach((v, k) => {
-        obj.boolLookup[k] = Math.round(v);
+        obj.boolLookup[globalThis.String(k)] = Math.round(v);
       });
     }
     return obj;

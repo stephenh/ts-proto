@@ -2308,6 +2308,8 @@ function convertToObjectKey(
     } else {
       return code`${variableName}`;
     }
+  } else if (keyField.type === FieldDescriptorProto_Type.TYPE_BOOL) {
+    return code`${ctx.utils.globalThis}.String(${variableName})`;
   } else {
     return code`${variableName}`;
   }
