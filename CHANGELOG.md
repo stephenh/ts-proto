@@ -1,3 +1,10 @@
+## [1.159.1](https://github.com/stephenh/ts-proto/compare/v1.159.0...v1.159.1) (2023-09-30)
+
+
+### Bug Fixes
+
+* Use a Map when map keys are boolean. ([#933](https://github.com/stephenh/ts-proto/issues/933)) ([c1253a3](https://github.com/stephenh/ts-proto/commit/c1253a3761405d7a2ffe4d15f4c3ffb364697a02)), closes [#926](https://github.com/stephenh/ts-proto/issues/926)
+
 # [1.159.0](https://github.com/stephenh/ts-proto/compare/v1.158.1...v1.159.0) (2023-09-30)
 
 
