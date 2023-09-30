@@ -379,7 +379,7 @@ export const Value = {
       stringValue: isSet(object.stringValue) ? String(object.stringValue) : undefined,
       boolValue: isSet(object.boolValue) ? Boolean(object.boolValue) : undefined,
       structValue: isObject(object.structValue) ? object.structValue : undefined,
-      listValue: tsProtoGlobalThis.Array.isArray(object.listValue) ? [...object.listValue] : undefined,
+      listValue: globalThis.Array.isArray(object.listValue) ? [...object.listValue] : undefined,
     };
   },
 
@@ -430,7 +430,7 @@ export const Value = {
       result.numberValue = value;
     } else if (typeof value === "string") {
       result.stringValue = value;
-    } else if (tsProtoGlobalThis.Array.isArray(value)) {
+    } else if (globalThis.Array.isArray(value)) {
       result.listValue = value;
     } else if (typeof value === "object") {
       result.structValue = value;
@@ -496,7 +496,7 @@ export const ListValue = {
   },
 
   fromJSON(object: any): ListValue {
-    return { values: tsProtoGlobalThis.Array.isArray(object?.values) ? [...object.values] : [] };
+    return { values: globalThis.Array.isArray(object?.values) ? [...object.values] : [] };
   },
 
   toJSON(message: ListValue): unknown {
@@ -523,32 +523,13 @@ export const ListValue = {
   },
 
   unwrap(message: ListValue): Array<any> {
-    if (message?.hasOwnProperty("values") && tsProtoGlobalThis.Array.isArray(message.values)) {
+    if (message?.hasOwnProperty("values") && globalThis.Array.isArray(message.values)) {
       return message.values;
     } else {
       return message as any;
     }
   },
 };
-
-declare const self: any | undefined;
-declare const window: any | undefined;
-declare const global: any | undefined;
-const tsProtoGlobalThis: any = (() => {
-  if (typeof globalThis !== "undefined") {
-    return globalThis;
-  }
-  if (typeof self !== "undefined") {
-    return self;
-  }
-  if (typeof window !== "undefined") {
-    return window;
-  }
-  if (typeof global !== "undefined") {
-    return global;
-  }
-  throw "Unable to locate global object";
-})();
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 

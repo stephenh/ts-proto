@@ -405,12 +405,12 @@ export const Simple = {
       createdAt: isSet(object.createdAt) ? fromJsonTimestamp(object.createdAt) : undefined,
       child: isSet(object.child) ? Child.fromJSON(object.child) : undefined,
       state: isSet(object.state) ? stateEnumFromJSON(object.state) : 0,
-      grandChildren: tsProtoGlobalThis.Array.isArray(object?.grandChildren)
+      grandChildren: globalThis.Array.isArray(object?.grandChildren)
         ? object.grandChildren.map((e: any) => Child.fromJSON(e))
         : [],
-      coins: tsProtoGlobalThis.Array.isArray(object?.coins) ? object.coins.map((e: any) => Number(e)) : [],
-      snacks: tsProtoGlobalThis.Array.isArray(object?.snacks) ? object.snacks.map((e: any) => String(e)) : [],
-      oldStates: tsProtoGlobalThis.Array.isArray(object?.oldStates)
+      coins: globalThis.Array.isArray(object?.coins) ? object.coins.map((e: any) => Number(e)) : [],
+      snacks: globalThis.Array.isArray(object?.snacks) ? object.snacks.map((e: any) => String(e)) : [],
+      oldStates: globalThis.Array.isArray(object?.oldStates)
         ? object.oldStates.map((e: any) => stateEnumFromJSON(e))
         : [],
       thing: isSet(object.thing) ? ImportedThing.fromJSON(object.thing) : undefined,
@@ -927,8 +927,8 @@ export const SimpleWithWrappers = {
       name: isSet(object.name) ? String(object.name) : undefined,
       age: isSet(object.age) ? Number(object.age) : undefined,
       enabled: isSet(object.enabled) ? Boolean(object.enabled) : undefined,
-      coins: tsProtoGlobalThis.Array.isArray(object?.coins) ? object.coins.map((e: any) => Number(e)) : [],
-      snacks: tsProtoGlobalThis.Array.isArray(object?.snacks) ? object.snacks.map((e: any) => String(e)) : [],
+      coins: globalThis.Array.isArray(object?.coins) ? object.coins.map((e: any) => Number(e)) : [],
+      snacks: globalThis.Array.isArray(object?.snacks) ? object.snacks.map((e: any) => String(e)) : [],
     };
   },
 
@@ -1091,7 +1091,7 @@ export const SimpleWithMap = {
     return {
       entitiesById: isObject(object.entitiesById)
         ? Object.entries(object.entitiesById).reduce<{ [key: number]: Entity }>((acc, [key, value]) => {
-          acc[tsProtoGlobalThis.Number(key)] = Entity.fromJSON(value);
+          acc[globalThis.Number(key)] = Entity.fromJSON(value);
           return acc;
         }, {})
         : {},
@@ -1103,7 +1103,7 @@ export const SimpleWithMap = {
         : {},
       intLookup: isObject(object.intLookup)
         ? Object.entries(object.intLookup).reduce<{ [key: number]: number }>((acc, [key, value]) => {
-          acc[tsProtoGlobalThis.Number(key)] = Number(value);
+          acc[globalThis.Number(key)] = Number(value);
           return acc;
         }, {})
         : {},
@@ -1150,7 +1150,7 @@ export const SimpleWithMap = {
     message.entitiesById = Object.entries(object.entitiesById ?? {}).reduce<{ [key: number]: Entity }>(
       (acc, [key, value]) => {
         if (value !== undefined) {
-          acc[tsProtoGlobalThis.Number(key)] = Entity.fromPartial(value);
+          acc[globalThis.Number(key)] = Entity.fromPartial(value);
         }
         return acc;
       },
@@ -1168,7 +1168,7 @@ export const SimpleWithMap = {
     message.intLookup = Object.entries(object.intLookup ?? {}).reduce<{ [key: number]: number }>(
       (acc, [key, value]) => {
         if (value !== undefined) {
-          acc[tsProtoGlobalThis.Number(key)] = Number(value);
+          acc[globalThis.Number(key)] = Number(value);
         }
         return acc;
       },
@@ -1442,7 +1442,7 @@ export const SimpleWithSnakeCaseMap = {
     return {
       entitiesById: isObject(object.entitiesById)
         ? Object.entries(object.entitiesById).reduce<{ [key: number]: Entity }>((acc, [key, value]) => {
-          acc[tsProtoGlobalThis.Number(key)] = Entity.fromJSON(value);
+          acc[globalThis.Number(key)] = Entity.fromJSON(value);
           return acc;
         }, {})
         : {},
@@ -1471,7 +1471,7 @@ export const SimpleWithSnakeCaseMap = {
     message.entitiesById = Object.entries(object.entitiesById ?? {}).reduce<{ [key: number]: Entity }>(
       (acc, [key, value]) => {
         if (value !== undefined) {
-          acc[tsProtoGlobalThis.Number(key)] = Entity.fromPartial(value);
+          acc[globalThis.Number(key)] = Entity.fromPartial(value);
         }
         return acc;
       },
@@ -1936,25 +1936,6 @@ interface Rpc {
   request(service: string, method: string, data: Uint8Array): Promise<Uint8Array>;
 }
 
-declare const self: any | undefined;
-declare const window: any | undefined;
-declare const global: any | undefined;
-const tsProtoGlobalThis: any = (() => {
-  if (typeof globalThis !== "undefined") {
-    return globalThis;
-  }
-  if (typeof self !== "undefined") {
-    return self;
-  }
-  if (typeof window !== "undefined") {
-    return window;
-  }
-  if (typeof global !== "undefined") {
-    return global;
-  }
-  throw "Unable to locate global object";
-})();
-
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
@@ -1975,22 +1956,22 @@ function toTimestamp(date: Date): Timestamp {
 function fromTimestamp(t: Timestamp): Date {
   let millis = (t.seconds || 0) * 1_000;
   millis += (t.nanos || 0) / 1_000_000;
-  return new tsProtoGlobalThis.Date(millis);
+  return new globalThis.Date(millis);
 }
 
 function fromJsonTimestamp(o: any): Date {
-  if (o instanceof tsProtoGlobalThis.Date) {
+  if (o instanceof globalThis.Date) {
     return o;
   } else if (typeof o === "string") {
-    return new tsProtoGlobalThis.Date(o);
+    return new globalThis.Date(o);
   } else {
     return fromTimestamp(Timestamp.fromJSON(o));
   }
 }
 
 function longToNumber(long: Long): number {
-  if (long.gt(tsProtoGlobalThis.Number.MAX_SAFE_INTEGER)) {
-    throw new tsProtoGlobalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+  if (long.gt(globalThis.Number.MAX_SAFE_INTEGER)) {
+    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
   return long.toNumber();
 }

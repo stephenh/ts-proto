@@ -431,21 +431,15 @@ export const OptionalsTest = {
       truth: isSet(object.truth) ? Boolean(object.truth) : false,
       description: isSet(object.description) ? String(object.description) : "",
       data: isSet(object.data) ? bytesFromBase64(object.data) : new Uint8Array(0),
-      repId: tsProtoGlobalThis.Array.isArray(object?.repId) ? object.repId.map((e: any) => Number(e)) : [],
-      repChild: tsProtoGlobalThis.Array.isArray(object?.repChild)
-        ? object.repChild.map((e: any) => Child.fromJSON(e))
-        : [],
-      repState: tsProtoGlobalThis.Array.isArray(object?.repState)
-        ? object.repState.map((e: any) => stateEnumFromJSON(e))
-        : [],
-      repLong: tsProtoGlobalThis.Array.isArray(object?.repLong) ? object.repLong.map((e: any) => Number(e)) : [],
-      repTruth: tsProtoGlobalThis.Array.isArray(object?.repTruth) ? object.repTruth.map((e: any) => Boolean(e)) : [],
-      repDescription: tsProtoGlobalThis.Array.isArray(object?.repDescription)
+      repId: globalThis.Array.isArray(object?.repId) ? object.repId.map((e: any) => Number(e)) : [],
+      repChild: globalThis.Array.isArray(object?.repChild) ? object.repChild.map((e: any) => Child.fromJSON(e)) : [],
+      repState: globalThis.Array.isArray(object?.repState) ? object.repState.map((e: any) => stateEnumFromJSON(e)) : [],
+      repLong: globalThis.Array.isArray(object?.repLong) ? object.repLong.map((e: any) => Number(e)) : [],
+      repTruth: globalThis.Array.isArray(object?.repTruth) ? object.repTruth.map((e: any) => Boolean(e)) : [],
+      repDescription: globalThis.Array.isArray(object?.repDescription)
         ? object.repDescription.map((e: any) => String(e))
         : [],
-      repData: tsProtoGlobalThis.Array.isArray(object?.repData)
-        ? object.repData.map((e: any) => bytesFromBase64(e))
-        : [],
+      repData: globalThis.Array.isArray(object?.repData) ? object.repData.map((e: any) => bytesFromBase64(e)) : [],
       optId: isSet(object.optId) ? Number(object.optId) : undefined,
       optChild: isSet(object.optChild) ? Child.fromJSON(object.optChild) : undefined,
       optState: isSet(object.optState) ? stateEnumFromJSON(object.optState) : undefined,
@@ -701,30 +695,11 @@ export const Child = {
   },
 };
 
-declare const self: any | undefined;
-declare const window: any | undefined;
-declare const global: any | undefined;
-const tsProtoGlobalThis: any = (() => {
-  if (typeof globalThis !== "undefined") {
-    return globalThis;
-  }
-  if (typeof self !== "undefined") {
-    return self;
-  }
-  if (typeof window !== "undefined") {
-    return window;
-  }
-  if (typeof global !== "undefined") {
-    return global;
-  }
-  throw "Unable to locate global object";
-})();
-
 function bytesFromBase64(b64: string): Uint8Array {
-  if (tsProtoGlobalThis.Buffer) {
-    return Uint8Array.from(tsProtoGlobalThis.Buffer.from(b64, "base64"));
+  if (globalThis.Buffer) {
+    return Uint8Array.from(globalThis.Buffer.from(b64, "base64"));
   } else {
-    const bin = tsProtoGlobalThis.atob(b64);
+    const bin = globalThis.atob(b64);
     const arr = new Uint8Array(bin.length);
     for (let i = 0; i < bin.length; ++i) {
       arr[i] = bin.charCodeAt(i);
@@ -734,14 +709,14 @@ function bytesFromBase64(b64: string): Uint8Array {
 }
 
 function base64FromBytes(arr: Uint8Array): string {
-  if (tsProtoGlobalThis.Buffer) {
-    return tsProtoGlobalThis.Buffer.from(arr).toString("base64");
+  if (globalThis.Buffer) {
+    return globalThis.Buffer.from(arr).toString("base64");
   } else {
     const bin: string[] = [];
     arr.forEach((byte) => {
-      bin.push(tsProtoGlobalThis.String.fromCharCode(byte));
+      bin.push(globalThis.String.fromCharCode(byte));
     });
-    return tsProtoGlobalThis.btoa(bin.join(""));
+    return globalThis.btoa(bin.join(""));
   }
 }
 
@@ -765,22 +740,22 @@ function toTimestamp(date: Date): Timestamp {
 function fromTimestamp(t: Timestamp): Date {
   let millis = (t.seconds || 0) * 1_000;
   millis += (t.nanos || 0) / 1_000_000;
-  return new tsProtoGlobalThis.Date(millis);
+  return new globalThis.Date(millis);
 }
 
 function fromJsonTimestamp(o: any): Date {
-  if (o instanceof tsProtoGlobalThis.Date) {
+  if (o instanceof globalThis.Date) {
     return o;
   } else if (typeof o === "string") {
-    return new tsProtoGlobalThis.Date(o);
+    return new globalThis.Date(o);
   } else {
     return fromTimestamp(Timestamp.fromJSON(o));
   }
 }
 
 function longToNumber(long: Long): number {
-  if (long.gt(tsProtoGlobalThis.Number.MAX_SAFE_INTEGER)) {
-    throw new tsProtoGlobalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+  if (long.gt(globalThis.Number.MAX_SAFE_INTEGER)) {
+    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
   return long.toNumber();
 }

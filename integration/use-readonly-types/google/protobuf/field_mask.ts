@@ -246,9 +246,9 @@ export const FieldMask = {
   fromJSON(object: any): FieldMask {
     return {
       paths: typeof (object) === "string"
-        ? object.split(",").filter(tsProtoGlobalThis.Boolean)
-        : tsProtoGlobalThis.Array.isArray(object?.paths)
-        ? object.paths.map(tsProtoGlobalThis.String)
+        ? object.split(",").filter(globalThis.Boolean)
+        : globalThis.Array.isArray(object?.paths)
+        ? object.paths.map(globalThis.String)
         : [],
     };
   },
@@ -276,25 +276,6 @@ export const FieldMask = {
     return message.paths;
   },
 };
-
-declare const self: any | undefined;
-declare const window: any | undefined;
-declare const global: any | undefined;
-const tsProtoGlobalThis: any = (() => {
-  if (typeof globalThis !== "undefined") {
-    return globalThis;
-  }
-  if (typeof self !== "undefined") {
-    return self;
-  }
-  if (typeof window !== "undefined") {
-    return window;
-  }
-  if (typeof global !== "undefined") {
-    return global;
-  }
-  throw "Unable to locate global object";
-})();
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 

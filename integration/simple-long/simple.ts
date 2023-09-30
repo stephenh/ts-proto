@@ -143,8 +143,8 @@ export const SimpleWithWrappers = {
       age: isSet(object.age) ? Number(object.age) : undefined,
       enabled: isSet(object.enabled) ? Boolean(object.enabled) : undefined,
       bananas: isSet(object.bananas) ? Long.fromValue(object.bananas) : undefined,
-      coins: tsProtoGlobalThis.Array.isArray(object?.coins) ? object.coins.map((e: any) => Number(e)) : [],
-      snacks: tsProtoGlobalThis.Array.isArray(object?.snacks) ? object.snacks.map((e: any) => String(e)) : [],
+      coins: globalThis.Array.isArray(object?.coins) ? object.coins.map((e: any) => Number(e)) : [],
+      snacks: globalThis.Array.isArray(object?.snacks) ? object.snacks.map((e: any) => String(e)) : [],
     };
   },
 
@@ -262,7 +262,7 @@ export const SimpleWithMap = {
         : {},
       intLookup: isObject(object.intLookup)
         ? Object.entries(object.intLookup).reduce<{ [key: number]: number }>((acc, [key, value]) => {
-          acc[tsProtoGlobalThis.Number(key)] = Number(value);
+          acc[globalThis.Number(key)] = Number(value);
           return acc;
         }, {})
         : {},
@@ -321,7 +321,7 @@ export const SimpleWithMap = {
     message.intLookup = Object.entries(object.intLookup ?? {}).reduce<{ [key: number]: number }>(
       (acc, [key, value]) => {
         if (value !== undefined) {
-          acc[tsProtoGlobalThis.Number(key)] = Number(value);
+          acc[globalThis.Number(key)] = Number(value);
         }
         return acc;
       },
@@ -755,7 +755,7 @@ export const Numbers = {
       fixed64: isSet(object.fixed64) ? Long.fromValue(object.fixed64) : Long.UZERO,
       sfixed32: isSet(object.sfixed32) ? Number(object.sfixed32) : 0,
       sfixed64: isSet(object.sfixed64) ? Long.fromValue(object.sfixed64) : Long.ZERO,
-      manyUint64: tsProtoGlobalThis.Array.isArray(object?.manyUint64)
+      manyUint64: globalThis.Array.isArray(object?.manyUint64)
         ? object.manyUint64.map((e: any) => Long.fromValue(e))
         : [],
     };
@@ -835,25 +835,6 @@ export const Numbers = {
   },
 };
 
-declare const self: any | undefined;
-declare const window: any | undefined;
-declare const global: any | undefined;
-const tsProtoGlobalThis: any = (() => {
-  if (typeof globalThis !== "undefined") {
-    return globalThis;
-  }
-  if (typeof self !== "undefined") {
-    return self;
-  }
-  if (typeof window !== "undefined") {
-    return window;
-  }
-  if (typeof global !== "undefined") {
-    return global;
-  }
-  throw "Unable to locate global object";
-})();
-
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
@@ -867,8 +848,8 @@ export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function longToNumber(long: Long): number {
-  if (long.gt(tsProtoGlobalThis.Number.MAX_SAFE_INTEGER)) {
-    throw new tsProtoGlobalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+  if (long.gt(globalThis.Number.MAX_SAFE_INTEGER)) {
+    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
   return long.toNumber();
 }

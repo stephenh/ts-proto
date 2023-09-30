@@ -289,6 +289,10 @@ Generated code will be placed in the Gradle build directory.
 
 ### Supported options
 
+- With `--ts_proto_opt=globalThisPolyfill=true`, ts-proto will include a polyfill for globalThis.
+
+  Defaults to `false`, i.e. we assume `globalThis` is available.
+
 - With `--ts_proto_opt=context=true`, the services will have a Go-style `ctx` parameter, which is useful for tracing/logging/etc. if you're not using node's `async_hooks` api due to performance reasons.
 
 - With `--ts_proto_opt=forceLong=long`, all 64-bit numbers will be parsed as instances of `Long` (using the [long](https://www.npmjs.com/package/long) library).

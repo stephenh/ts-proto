@@ -218,7 +218,7 @@ export const Maps = {
         : new Map(),
       int32ToInt32: isObject(object.int32ToInt32)
         ? Object.entries(object.int32ToInt32).reduce<Map<number, number>>((acc, [key, value]) => {
-          acc.set(tsProtoGlobalThis.Number(key), Number(value));
+          acc.set(globalThis.Number(key), Number(value));
           return acc;
         }, new Map())
         : new Map(),
@@ -230,7 +230,7 @@ export const Maps = {
         : new Map(),
       int64ToInt64: isObject(object.int64ToInt64)
         ? Object.entries(object.int64ToInt64).reduce<Map<number, number>>((acc, [key, value]) => {
-          acc.set(tsProtoGlobalThis.Number(key), Number(value));
+          acc.set(globalThis.Number(key), Number(value));
           return acc;
         }, new Map())
         : new Map(),
@@ -703,30 +703,11 @@ export const Maps_MapOfTimestampsEntry = {
   },
 };
 
-declare const self: any | undefined;
-declare const window: any | undefined;
-declare const global: any | undefined;
-const tsProtoGlobalThis: any = (() => {
-  if (typeof globalThis !== "undefined") {
-    return globalThis;
-  }
-  if (typeof self !== "undefined") {
-    return self;
-  }
-  if (typeof window !== "undefined") {
-    return window;
-  }
-  if (typeof global !== "undefined") {
-    return global;
-  }
-  throw "Unable to locate global object";
-})();
-
 function bytesFromBase64(b64: string): Uint8Array {
-  if (tsProtoGlobalThis.Buffer) {
-    return Uint8Array.from(tsProtoGlobalThis.Buffer.from(b64, "base64"));
+  if (globalThis.Buffer) {
+    return Uint8Array.from(globalThis.Buffer.from(b64, "base64"));
   } else {
-    const bin = tsProtoGlobalThis.atob(b64);
+    const bin = globalThis.atob(b64);
     const arr = new Uint8Array(bin.length);
     for (let i = 0; i < bin.length; ++i) {
       arr[i] = bin.charCodeAt(i);
@@ -736,14 +717,14 @@ function bytesFromBase64(b64: string): Uint8Array {
 }
 
 function base64FromBytes(arr: Uint8Array): string {
-  if (tsProtoGlobalThis.Buffer) {
-    return tsProtoGlobalThis.Buffer.from(arr).toString("base64");
+  if (globalThis.Buffer) {
+    return globalThis.Buffer.from(arr).toString("base64");
   } else {
     const bin: string[] = [];
     arr.forEach((byte) => {
-      bin.push(tsProtoGlobalThis.String.fromCharCode(byte));
+      bin.push(globalThis.String.fromCharCode(byte));
     });
-    return tsProtoGlobalThis.btoa(bin.join(""));
+    return globalThis.btoa(bin.join(""));
   }
 }
 
@@ -767,22 +748,22 @@ function toTimestamp(date: Date): Timestamp {
 function fromTimestamp(t: Timestamp): Date {
   let millis = (t.seconds || 0) * 1_000;
   millis += (t.nanos || 0) / 1_000_000;
-  return new tsProtoGlobalThis.Date(millis);
+  return new globalThis.Date(millis);
 }
 
 function fromJsonTimestamp(o: any): Date {
-  if (o instanceof tsProtoGlobalThis.Date) {
+  if (o instanceof globalThis.Date) {
     return o;
   } else if (typeof o === "string") {
-    return new tsProtoGlobalThis.Date(o);
+    return new globalThis.Date(o);
   } else {
     return fromTimestamp(Timestamp.fromJSON(o));
   }
 }
 
 function longToNumber(long: Long): number {
-  if (long.gt(tsProtoGlobalThis.Number.MAX_SAFE_INTEGER)) {
-    throw new tsProtoGlobalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+  if (long.gt(globalThis.Number.MAX_SAFE_INTEGER)) {
+    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
   return long.toNumber();
 }

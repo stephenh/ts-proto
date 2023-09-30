@@ -21,7 +21,7 @@ export function fooFromJSON(object: any): Foo {
     case "FOO_BAZ":
       return Foo.BAZ;
     default:
-      throw new tsProtoGlobalThis.Error("Unrecognized enum value " + object + " for enum Foo");
+      throw new globalThis.Error("Unrecognized enum value " + object + " for enum Foo");
   }
 }
 
@@ -34,7 +34,7 @@ export function fooToJSON(object: Foo): string {
     case Foo.BAZ:
       return "FOO_BAZ";
     default:
-      throw new tsProtoGlobalThis.Error("Unrecognized enum value " + object + " for enum Foo");
+      throw new globalThis.Error("Unrecognized enum value " + object + " for enum Foo");
   }
 }
 
@@ -47,7 +47,7 @@ export function fooToNumber(object: Foo): number {
     case Foo.BAZ:
       return 2;
     default:
-      throw new tsProtoGlobalThis.Error("Unrecognized enum value " + object + " for enum Foo");
+      throw new globalThis.Error("Unrecognized enum value " + object + " for enum Foo");
   }
 }
 
@@ -69,7 +69,7 @@ export function barFromJSON(object: any): Bar {
     case "QUX":
       return Bar.QUX;
     default:
-      throw new tsProtoGlobalThis.Error("Unrecognized enum value " + object + " for enum Bar");
+      throw new globalThis.Error("Unrecognized enum value " + object + " for enum Bar");
   }
 }
 
@@ -82,7 +82,7 @@ export function barToJSON(object: Bar): string {
     case Bar.QUX:
       return "QUX";
     default:
-      throw new tsProtoGlobalThis.Error("Unrecognized enum value " + object + " for enum Bar");
+      throw new globalThis.Error("Unrecognized enum value " + object + " for enum Bar");
   }
 }
 
@@ -95,7 +95,7 @@ export function barToNumber(object: Bar): number {
     case Bar.QUX:
       return 2;
     default:
-      throw new tsProtoGlobalThis.Error("Unrecognized enum value " + object + " for enum Bar");
+      throw new globalThis.Error("Unrecognized enum value " + object + " for enum Bar");
   }
 }
 
@@ -124,7 +124,7 @@ export function withNestedEnum_BazFromJSON(object: any): WithNestedEnum_Baz {
     case "BAZ_TWO":
       return WithNestedEnum_Baz.TWO;
     default:
-      throw new tsProtoGlobalThis.Error("Unrecognized enum value " + object + " for enum WithNestedEnum_Baz");
+      throw new globalThis.Error("Unrecognized enum value " + object + " for enum WithNestedEnum_Baz");
   }
 }
 
@@ -137,7 +137,7 @@ export function withNestedEnum_BazToJSON(object: WithNestedEnum_Baz): string {
     case WithNestedEnum_Baz.TWO:
       return "BAZ_TWO";
     default:
-      throw new tsProtoGlobalThis.Error("Unrecognized enum value " + object + " for enum WithNestedEnum_Baz");
+      throw new globalThis.Error("Unrecognized enum value " + object + " for enum WithNestedEnum_Baz");
   }
 }
 
@@ -150,7 +150,7 @@ export function withNestedEnum_BazToNumber(object: WithNestedEnum_Baz): number {
     case WithNestedEnum_Baz.TWO:
       return 2;
     default:
-      throw new tsProtoGlobalThis.Error("Unrecognized enum value " + object + " for enum WithNestedEnum_Baz");
+      throw new globalThis.Error("Unrecognized enum value " + object + " for enum WithNestedEnum_Baz");
   }
 }
 
@@ -172,7 +172,7 @@ export function withNestedEnum_QuxFromJSON(object: any): WithNestedEnum_Qux {
     case "TWO":
       return WithNestedEnum_Qux.TWO;
     default:
-      throw new tsProtoGlobalThis.Error("Unrecognized enum value " + object + " for enum WithNestedEnum_Qux");
+      throw new globalThis.Error("Unrecognized enum value " + object + " for enum WithNestedEnum_Qux");
   }
 }
 
@@ -185,7 +185,7 @@ export function withNestedEnum_QuxToJSON(object: WithNestedEnum_Qux): string {
     case WithNestedEnum_Qux.TWO:
       return "TWO";
     default:
-      throw new tsProtoGlobalThis.Error("Unrecognized enum value " + object + " for enum WithNestedEnum_Qux");
+      throw new globalThis.Error("Unrecognized enum value " + object + " for enum WithNestedEnum_Qux");
   }
 }
 
@@ -198,7 +198,7 @@ export function withNestedEnum_QuxToNumber(object: WithNestedEnum_Qux): number {
     case WithNestedEnum_Qux.TWO:
       return 2;
     default:
-      throw new tsProtoGlobalThis.Error("Unrecognized enum value " + object + " for enum WithNestedEnum_Qux");
+      throw new globalThis.Error("Unrecognized enum value " + object + " for enum WithNestedEnum_Qux");
   }
 }
 
@@ -310,25 +310,6 @@ export const WithNestedEnum = {
     return message;
   },
 };
-
-declare const self: any | undefined;
-declare const window: any | undefined;
-declare const global: any | undefined;
-const tsProtoGlobalThis: any = (() => {
-  if (typeof globalThis !== "undefined") {
-    return globalThis;
-  }
-  if (typeof self !== "undefined") {
-    return self;
-  }
-  if (typeof window !== "undefined") {
-    return window;
-  }
-  if (typeof global !== "undefined") {
-    return global;
-  }
-  throw "Unable to locate global object";
-})();
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 

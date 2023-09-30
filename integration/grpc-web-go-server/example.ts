@@ -226,9 +226,7 @@ export const DashUserSettingsState = {
     return {
       email: isSet(object.email) ? String(object.email) : "",
       urls: isSet(object.urls) ? DashUserSettingsState_URLs.fromJSON(object.urls) : undefined,
-      flashes: tsProtoGlobalThis.Array.isArray(object?.flashes)
-        ? object.flashes.map((e: any) => DashFlash.fromJSON(e))
-        : [],
+      flashes: globalThis.Array.isArray(object?.flashes) ? object.flashes.map((e: any) => DashFlash.fromJSON(e)) : [],
     };
   },
 
@@ -808,25 +806,6 @@ interface Rpc {
   serverStreamingRequest(service: string, method: string, data: Uint8Array): Observable<Uint8Array>;
   bidirectionalStreamingRequest(service: string, method: string, data: Observable<Uint8Array>): Observable<Uint8Array>;
 }
-
-declare const self: any | undefined;
-declare const window: any | undefined;
-declare const global: any | undefined;
-const tsProtoGlobalThis: any = (() => {
-  if (typeof globalThis !== "undefined") {
-    return globalThis;
-  }
-  if (typeof self !== "undefined") {
-    return self;
-  }
-  if (typeof window !== "undefined") {
-    return window;
-  }
-  if (typeof global !== "undefined") {
-    return global;
-  }
-  throw "Unable to locate global object";
-})();
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
