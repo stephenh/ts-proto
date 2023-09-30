@@ -233,8 +233,8 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
           }
         }
         if (options.useAsyncIterable) {
-          staticMembers.push(generateEncodeTransform(fullName));
-          staticMembers.push(generateDecodeTransform(fullName));
+          staticMembers.push(generateEncodeTransform(ctx.utils, fullName));
+          staticMembers.push(generateDecodeTransform(ctx.utils, fullName));
         }
         if (options.outputJsonMethods) {
           if (options.outputJsonMethods === true || options.outputJsonMethods === "from-only") {
@@ -418,7 +418,7 @@ export function makeUtils(options: Options): Utils {
     ...bytes,
     ...makeDeepPartial(options, longs),
     ...makeObjectIdMethods(),
-    ...makeTimestampMethods(options, longs),
+    ...makeTimestampMethods(options, longs, bytes),
     ...longs,
     ...makeComparisonUtils(),
     ...makeNiceGrpcServerStreamingMethodResult(),
@@ -506,7 +506,7 @@ function makeLongUtils(options: Options, bytes: ReturnType<typeof makeByteUtils>
     "longToNumber",
     code`
       function longToNumber(long: ${Long}): number {
-        if (long.gt(Number.MAX_SAFE_INTEGER)) {
+        if (long.gt(${bytes.globalThis}.Number.MAX_SAFE_INTEGER)) {
           throw new ${bytes.globalThis}.Error("Value is larger than Number.MAX_SAFE_INTEGER")
         }
         return long.toNumber();
@@ -560,7 +560,7 @@ function makeByteUtils() {
         } else {
           const bin: string[] = [];
           arr.forEach((byte) => {
-            bin.push(String.fromCharCode(byte));
+            bin.push(${globalThis}.String.fromCharCode(byte));
           });
           return ${globalThis}.btoa(bin.join(''));
         }
@@ -665,7 +665,7 @@ function makeObjectIdMethods() {
   return { fromJsonObjectId, fromProtoObjectId, toProtoObjectId };
 }
 
-function makeTimestampMethods(options: Options, longs: ReturnType<typeof makeLongUtils>) {
+function makeTimestampMethods(options: Options, longs: ReturnType<typeof makeLongUtils>, bytes: ReturnType<typeof makeByteUtils>) {
   const Timestamp = impProto(options, "google/protobuf/timestamp", "Timestamp");
 
   let seconds: string | Code = "date.getTime() / 1_000";
@@ -674,10 +674,10 @@ function makeTimestampMethods(options: Options, longs: ReturnType<typeof makeLon
     toNumberCode = "t.seconds.toNumber()";
     seconds = code`${longs.numberToLong}(date.getTime() / 1_000)`;
   } else if (options.forceLong === LongOption.BIGINT) {
-    toNumberCode = "Number(t.seconds.toString())";
+    toNumberCode = `${bytes.globalThis}.Number(t.seconds.toString())`;
     seconds = code`BigInt(Math.trunc(date.getTime() / 1_000))`;
   } else if (options.forceLong === LongOption.STRING) {
-    toNumberCode = "Number(t.seconds)";
+    toNumberCode = `${bytes.globalThis}.Number(t.seconds)`;
     // Must discard the fractional piece here
     // Otherwise the fraction ends up on the seconds when parsed as a Long
     // (note this only occurs when the string is > 8 characters)
@@ -1720,9 +1720,9 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
   const canonicalFromJson: { [key: string]: { [field: string]: (from: string) => Code } } = {
     ["google.protobuf.FieldMask"]: {
       paths: (from: string) => code`typeof(${from}) === 'string'
-        ? ${from}.split(",").filter(Boolean)
-        : Array.isArray(${from}?.paths)
-        ? ${from}.paths.map(String)
+        ? ${from}.split(",").filter(${ctx.utils.globalThis}.Boolean)
+        : ${ctx.utils.globalThis}.Array.isArray(${from}?.paths)
+        ? ${from}.paths.map(${ctx.utils.globalThis}.String)
         : []`,
     },
   };
@@ -1759,7 +1759,7 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
       } else if (isObjectId(field) && options.useMongoObjectId) {
         return code`${utils.fromJsonObjectId}(${from})`;
       } else if (isTimestamp(field) && options.useDate === DateOption.STRING) {
-        return code`String(${from})`;
+        return code`${utils.globalThis}.String(${from})`;
       } else if (
         isTimestamp(field) &&
         (options.useDate === DateOption.DATE || options.useDate === DateOption.TIMESTAMP)
@@ -1808,7 +1808,7 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
           } else if (isObjectId(valueField) && options.useMongoObjectId) {
             return code`${utils.fromJsonObjectId}(${from})`;
           } else if (isTimestamp(valueField) && options.useDate === DateOption.STRING) {
-            return code`String(${from})`;
+            return code`${utils.globalThis}.String(${from})`;
           } else if (
             isTimestamp(valueField) &&
             (options.useDate === DateOption.DATE || options.useDate === DateOption.TIMESTAMP)
@@ -1869,11 +1869,11 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
 
         const readValueSnippet = readSnippet("e");
         if (readValueSnippet.toString() === code`e`.toString()) {
-          chunks.push(code`${fieldName}: Array.isArray(${jsonPropertyOptional}) ? [...${jsonProperty}] : [],`);
+          chunks.push(code`${fieldName}: ${ctx.utils.globalThis}.Array.isArray(${jsonPropertyOptional}) ? [...${jsonProperty}] : [],`);
         } else {
           // Explicit `any` type required to make TS with noImplicitAny happy. `object` is also `any` here.
           chunks.push(code`
-            ${fieldName}: Array.isArray(${jsonPropertyOptional}) ? ${jsonProperty}.map((e: any) => ${readValueSnippet}): ${fallback},
+            ${fieldName}: ${ctx.utils.globalThis}.Array.isArray(${jsonPropertyOptional}) ? ${jsonProperty}.map((e: any) => ${readValueSnippet}): ${fallback},
           `);
         }
       }
@@ -1907,7 +1907,7 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
       );
     } else if (isListValueType(field)) {
       chunks.push(code`
-        ${fieldName}: Array.isArray(${jsonProperty})
+        ${fieldName}: ${ctx.utils.globalThis}.Array.isArray(${jsonProperty})
           ? ${readSnippet(`${jsonProperty}`)}
           : undefined,
       `);
@@ -2276,12 +2276,12 @@ function convertFromObjectKey(
     } else if (ctx.options.forceLong === LongOption.BIGINT) {
       return code`BigInt(${variableName})`;
     } else if (ctx.options.forceLong === LongOption.STRING) {
-      return code`String(${variableName})`;
+      return code`${ctx.utils.globalThis}.String(${variableName})`;
     } else {
-      return code`Number(${variableName})`;
+      return code`${ctx.utils.globalThis}.Number(${variableName})`;
     }
   } else {
-    return code`Number(${variableName})`;
+    return code`${ctx.utils.globalThis}.Number(${variableName})`;
   }
 }
 
