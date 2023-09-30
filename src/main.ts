@@ -665,7 +665,11 @@ function makeObjectIdMethods() {
   return { fromJsonObjectId, fromProtoObjectId, toProtoObjectId };
 }
 
-function makeTimestampMethods(options: Options, longs: ReturnType<typeof makeLongUtils>, bytes: ReturnType<typeof makeByteUtils>) {
+function makeTimestampMethods(
+  options: Options,
+  longs: ReturnType<typeof makeLongUtils>,
+  bytes: ReturnType<typeof makeByteUtils>,
+) {
   const Timestamp = impProto(options, "google/protobuf/timestamp", "Timestamp");
 
   let seconds: string | Code = "date.getTime() / 1_000";
@@ -1869,7 +1873,9 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
 
         const readValueSnippet = readSnippet("e");
         if (readValueSnippet.toString() === code`e`.toString()) {
-          chunks.push(code`${fieldName}: ${ctx.utils.globalThis}.Array.isArray(${jsonPropertyOptional}) ? [...${jsonProperty}] : [],`);
+          chunks.push(
+            code`${fieldName}: ${ctx.utils.globalThis}.Array.isArray(${jsonPropertyOptional}) ? [...${jsonProperty}] : [],`,
+          );
         } else {
           // Explicit `any` type required to make TS with noImplicitAny happy. `object` is also `any` here.
           chunks.push(code`
