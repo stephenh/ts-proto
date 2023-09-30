@@ -680,7 +680,10 @@ export function shouldGenerateJSMapType(ctx: Context, message: DescriptorProto, 
   if (!mapType) {
     return false;
   }
-  return isLong(mapType.keyField) && ctx.options.forceLong === LongOption.LONG;
+  return (
+    mapType.keyField.type === FieldDescriptorProto_Type.TYPE_BOOL ||
+    (isLong(mapType.keyField) && ctx.options.forceLong === LongOption.LONG)
+  );
 }
 
 export function detectMapType(

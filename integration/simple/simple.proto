@@ -99,6 +99,7 @@ message SimpleWithMap {
   map<string, bytes> mapOfBytes = 5;
   map<string, google.protobuf.StringValue> mapOfStringValues = 6;
   map<int64, int64> longLookup = 7;
+  map<bool, int64> boolLookup = 8;
 }
 
 message SimpleWithSnakeCaseMap {

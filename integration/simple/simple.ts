@@ -199,6 +199,7 @@ export interface SimpleWithMap {
   mapOfBytes: { [key: string]: Uint8Array };
   mapOfStringValues: { [key: string]: string | undefined };
   longLookup: { [key: number]: number };
+  boolLookup: Map<boolean, number>;
 }
 
 export interface SimpleWithMap_EntitiesByIdEntry {
@@ -233,6 +234,11 @@ export interface SimpleWithMap_MapOfStringValuesEntry {
 
 export interface SimpleWithMap_LongLookupEntry {
   key: number;
+  value: number;
+}
+
+export interface SimpleWithMap_BoolLookupEntry {
+  key: boolean;
   value: number;
 }
 
@@ -1176,6 +1182,7 @@ function createBaseSimpleWithMap(): SimpleWithMap {
     mapOfBytes: {},
     mapOfStringValues: {},
     longLookup: {},
+    boolLookup: new Map(),
   };
 }
 
@@ -1203,6 +1210,9 @@ export const SimpleWithMap = {
     });
     Object.entries(message.longLookup).forEach(([key, value]) => {
       SimpleWithMap_LongLookupEntry.encode({ key: key as any, value }, writer.uint32(58).fork()).ldelim();
+    });
+    (message.boolLookup).forEach((value, key) => {
+      SimpleWithMap_BoolLookupEntry.encode({ key: key as any, value }, writer.uint32(66).fork()).ldelim();
     });
     return writer;
   },
@@ -1284,6 +1294,16 @@ export const SimpleWithMap = {
             message.longLookup[entry7.key] = entry7.value;
           }
           continue;
+        case 8:
+          if (tag !== 66) {
+            break;
+          }
+
+          const entry8 = SimpleWithMap_BoolLookupEntry.decode(reader, reader.uint32());
+          if (entry8.value !== undefined) {
+            message.boolLookup.set(entry8.key, entry8.value);
+          }
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1340,6 +1360,12 @@ export const SimpleWithMap = {
           return acc;
         }, {})
         : {},
+      boolLookup: isObject(object.boolLookup)
+        ? Object.entries(object.boolLookup).reduce<Map<boolean, number>>((acc, [key, value]) => {
+          acc.set(globalThis.Boolean(key), Number(value));
+          return acc;
+        }, new Map())
+        : new Map(),
     };
   },
 
@@ -1407,6 +1433,12 @@ export const SimpleWithMap = {
           obj.longLookup[k] = Math.round(v);
         });
       }
+    }
+    if (message.boolLookup?.size) {
+      obj.boolLookup = {};
+      message.boolLookup.forEach((v, k) => {
+        obj.boolLookup[k] = Math.round(v);
+      });
     }
     return obj;
   },
@@ -1478,6 +1510,15 @@ export const SimpleWithMap = {
       },
       {},
     );
+    message.boolLookup = (() => {
+      const m = new Map();
+      (object.boolLookup as Map<boolean, number> ?? new Map()).forEach((value, key) => {
+        if (value !== undefined) {
+          m.set(key, Number(value));
+        }
+      });
+      return m;
+    })();
     return message;
   },
 };
@@ -2004,6 +2045,82 @@ export const SimpleWithMap_LongLookupEntry = {
   ): SimpleWithMap_LongLookupEntry {
     const message = createBaseSimpleWithMap_LongLookupEntry();
     message.key = object.key ?? 0;
+    message.value = object.value ?? 0;
+    return message;
+  },
+};
+
+function createBaseSimpleWithMap_BoolLookupEntry(): SimpleWithMap_BoolLookupEntry {
+  return { key: false, value: 0 };
+}
+
+export const SimpleWithMap_BoolLookupEntry = {
+  encode(message: SimpleWithMap_BoolLookupEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+    if (message.key === true) {
+      writer.uint32(8).bool(message.key);
+    }
+    if (message.value !== 0) {
+      writer.uint32(16).int64(message.value);
+    }
+    return writer;
+  },
+
+  decode(input: _m0.Reader | Uint8Array, length?: number): SimpleWithMap_BoolLookupEntry {
+    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseSimpleWithMap_BoolLookupEntry();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1:
+          if (tag !== 8) {
+            break;
+          }
+
+          message.key = reader.bool();
+          continue;
+        case 2:
+          if (tag !== 16) {
+            break;
+          }
+
+          message.value = longToNumber(reader.int64() as Long);
+          continue;
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skipType(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): SimpleWithMap_BoolLookupEntry {
+    return {
+      key: isSet(object.key) ? Boolean(object.key) : false,
+      value: isSet(object.value) ? Number(object.value) : 0,
+    };
+  },
+
+  toJSON(message: SimpleWithMap_BoolLookupEntry): unknown {
+    const obj: any = {};
+    if (message.key === true) {
+      obj.key = message.key;
+    }
+    if (message.value !== 0) {
+      obj.value = Math.round(message.value);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<SimpleWithMap_BoolLookupEntry>, I>>(base?: I): SimpleWithMap_BoolLookupEntry {
+    return SimpleWithMap_BoolLookupEntry.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<SimpleWithMap_BoolLookupEntry>, I>>(
+    object: I,
+  ): SimpleWithMap_BoolLookupEntry {
+    const message = createBaseSimpleWithMap_BoolLookupEntry();
+    message.key = object.key ?? false;
     message.value = object.value ?? 0;
     return message;
   },
