@@ -267,7 +267,7 @@ export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function toTimestamp(dateStr: string): Timestamp {
-  const date = new Date(dateStr);
+  const date = new tsProtoGlobalThis.Date(dateStr);
   const seconds = date.getTime() / 1_000;
   const nanos = (date.getTime() % 1_000) * 1_000_000;
   return { seconds, nanos };
@@ -276,7 +276,7 @@ function toTimestamp(dateStr: string): Timestamp {
 function fromTimestamp(t: Timestamp): string {
   let millis = (t.seconds || 0) * 1_000;
   millis += (t.nanos || 0) / 1_000_000;
-  return new Date(millis).toISOString();
+  return new tsProtoGlobalThis.Date(millis).toISOString();
 }
 
 function isObject(value: any): boolean {
