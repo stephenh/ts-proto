@@ -82,7 +82,7 @@ export const BatchQueryRequest = {
   },
 
   fromJSON(object: any): BatchQueryRequest {
-    return { ids: Array.isArray(object?.ids) ? object.ids.map((e: any) => String(e)) : [] };
+    return { ids: tsProtoGlobalThis.Array.isArray(object?.ids) ? object.ids.map((e: any) => String(e)) : [] };
   },
 
   toJSON(message: BatchQueryRequest): unknown {
@@ -139,7 +139,11 @@ export const BatchQueryResponse = {
   },
 
   fromJSON(object: any): BatchQueryResponse {
-    return { entities: Array.isArray(object?.entities) ? object.entities.map((e: any) => Entity.fromJSON(e)) : [] };
+    return {
+      entities: tsProtoGlobalThis.Array.isArray(object?.entities)
+        ? object.entities.map((e: any) => Entity.fromJSON(e))
+        : [],
+    };
   },
 
   toJSON(message: BatchQueryResponse): unknown {
@@ -196,7 +200,7 @@ export const BatchMapQueryRequest = {
   },
 
   fromJSON(object: any): BatchMapQueryRequest {
-    return { ids: Array.isArray(object?.ids) ? object.ids.map((e: any) => String(e)) : [] };
+    return { ids: tsProtoGlobalThis.Array.isArray(object?.ids) ? object.ids.map((e: any) => String(e)) : [] };
   },
 
   toJSON(message: BatchMapQueryRequest): unknown {
@@ -752,6 +756,25 @@ export interface DataLoaders {
   rpcDataLoaderOptions?: DataLoaderOptions;
   getDataLoader<T>(identifier: string, constructorFn: () => T): T;
 }
+
+declare const self: any | undefined;
+declare const window: any | undefined;
+declare const global: any | undefined;
+const tsProtoGlobalThis: any = (() => {
+  if (typeof globalThis !== "undefined") {
+    return globalThis;
+  }
+  if (typeof self !== "undefined") {
+    return self;
+  }
+  if (typeof window !== "undefined") {
+    return window;
+  }
+  if (typeof global !== "undefined") {
+    return global;
+  }
+  throw "Unable to locate global object";
+})();
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 

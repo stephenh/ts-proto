@@ -218,7 +218,7 @@ export const Maps = {
         : new Map(),
       int32ToInt32: isObject(object.int32ToInt32)
         ? Object.entries(object.int32ToInt32).reduce<Map<number, number>>((acc, [key, value]) => {
-          acc.set(Number(key), Number(value));
+          acc.set(tsProtoGlobalThis.Number(key), Number(value));
           return acc;
         }, new Map())
         : new Map(),
@@ -230,7 +230,7 @@ export const Maps = {
         : new Map(),
       int64ToInt64: isObject(object.int64ToInt64)
         ? Object.entries(object.int64ToInt64).reduce<Map<number, number>>((acc, [key, value]) => {
-          acc.set(Number(key), Number(value));
+          acc.set(tsProtoGlobalThis.Number(key), Number(value));
           return acc;
         }, new Map())
         : new Map(),
@@ -741,7 +741,7 @@ function base64FromBytes(arr: Uint8Array): string {
   } else {
     const bin: string[] = [];
     arr.forEach((byte) => {
-      bin.push(String.fromCharCode(byte));
+      bin.push(tsProtoGlobalThis.String.fromCharCode(byte));
     });
     return tsProtoGlobalThis.btoa(bin.join(""));
   }
@@ -781,7 +781,7 @@ function fromJsonTimestamp(o: any): Date {
 }
 
 function longToNumber(long: Long): number {
-  if (long.gt(Number.MAX_SAFE_INTEGER)) {
+  if (long.gt(tsProtoGlobalThis.Number.MAX_SAFE_INTEGER)) {
     throw new tsProtoGlobalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
   return long.toNumber();

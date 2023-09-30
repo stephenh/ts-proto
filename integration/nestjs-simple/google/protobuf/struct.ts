@@ -121,7 +121,7 @@ export const Value = {
       result.numberValue = value;
     } else if (typeof value === "string") {
       result.stringValue = value;
-    } else if (Array.isArray(value)) {
+    } else if (tsProtoGlobalThis.Array.isArray(value)) {
       result.listValue = ListValue.wrap(value);
     } else if (typeof value === "object") {
       result.structValue = Struct.wrap(value);
@@ -161,7 +161,7 @@ export const ListValue = {
   },
 
   unwrap(message: ListValue): Array<any> {
-    if (message?.hasOwnProperty("values") && Array.isArray(message.values)) {
+    if (message?.hasOwnProperty("values") && tsProtoGlobalThis.Array.isArray(message.values)) {
       return message.values.map(Value.unwrap);
     } else {
       return message as any;
@@ -170,3 +170,22 @@ export const ListValue = {
 };
 
 wrappers[".google.protobuf.Struct"] = { fromObject: Struct.wrap, toObject: Struct.unwrap } as any;
+
+declare const self: any | undefined;
+declare const window: any | undefined;
+declare const global: any | undefined;
+const tsProtoGlobalThis: any = (() => {
+  if (typeof globalThis !== "undefined") {
+    return globalThis;
+  }
+  if (typeof self !== "undefined") {
+    return self;
+  }
+  if (typeof window !== "undefined") {
+    return window;
+  }
+  if (typeof global !== "undefined") {
+    return global;
+  }
+  throw "Unable to locate global object";
+})();

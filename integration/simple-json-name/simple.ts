@@ -138,7 +138,9 @@ export const Simple = {
       spaces: isSet(object["name with spaces"]) ? String(object["name with spaces"]) : "",
       dollarStart: isSet(object.$dollar) ? String(object.$dollar) : "",
       dollarEnd: isSet(object.dollar$) ? String(object.dollar$) : "",
-      hyphenList: Array.isArray(object?.["hyphen-list"]) ? object["hyphen-list"].map((e: any) => String(e)) : [],
+      hyphenList: tsProtoGlobalThis.Array.isArray(object?.["hyphen-list"])
+        ? object["hyphen-list"].map((e: any) => String(e))
+        : [],
     };
   },
 
@@ -187,6 +189,25 @@ export const Simple = {
     return message;
   },
 };
+
+declare const self: any | undefined;
+declare const window: any | undefined;
+declare const global: any | undefined;
+const tsProtoGlobalThis: any = (() => {
+  if (typeof globalThis !== "undefined") {
+    return globalThis;
+  }
+  if (typeof self !== "undefined") {
+    return self;
+  }
+  if (typeof window !== "undefined") {
+    return window;
+  }
+  if (typeof global !== "undefined") {
+    return global;
+  }
+  throw "Unable to locate global object";
+})();
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 

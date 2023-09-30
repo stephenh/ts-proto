@@ -212,7 +212,7 @@ export type DeepPartial<T> = T extends Builtin ? T
   : Partial<T>;
 
 function longToNumber(long: Long): number {
-  if (long.gt(Number.MAX_SAFE_INTEGER)) {
+  if (long.gt(tsProtoGlobalThis.Number.MAX_SAFE_INTEGER)) {
     throw new tsProtoGlobalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
   return long.toNumber();

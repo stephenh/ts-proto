@@ -100,7 +100,9 @@ export const Todo = {
     return {
       id: isSet(object.id) ? String(object.id) : "",
       oid: isSet(object.oid) ? fromJsonObjectId(object.oid) : undefined,
-      repeatedOid: Array.isArray(object?.repeatedOid) ? object.repeatedOid.map((e: any) => fromJsonObjectId(e)) : [],
+      repeatedOid: tsProtoGlobalThis.Array.isArray(object?.repeatedOid)
+        ? object.repeatedOid.map((e: any) => fromJsonObjectId(e))
+        : [],
       optionalOid: isSet(object.optionalOid) ? fromJsonObjectId(object.optionalOid) : undefined,
       mapOfOids: isObject(object.mapOfOids)
         ? Object.entries(object.mapOfOids).reduce<{ [key: string]: mongodb.ObjectId }>((acc, [key, value]) => {
@@ -236,6 +238,25 @@ export const Todo_MapOfOidsEntry = {
     return message;
   },
 };
+
+declare const self: any | undefined;
+declare const window: any | undefined;
+declare const global: any | undefined;
+const tsProtoGlobalThis: any = (() => {
+  if (typeof globalThis !== "undefined") {
+    return globalThis;
+  }
+  if (typeof self !== "undefined") {
+    return self;
+  }
+  if (typeof window !== "undefined") {
+    return window;
+  }
+  if (typeof global !== "undefined") {
+    return global;
+  }
+  throw "Unable to locate global object";
+})();
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 

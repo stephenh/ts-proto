@@ -98,14 +98,16 @@ export const Todo = {
   fromJSON(object: any): Todo {
     return {
       id: isSet(object.id) ? String(object.id) : "",
-      timestamp: isSet(object.timestamp) ? String(object.timestamp) : undefined,
-      repeatedTimestamp: Array.isArray(object?.repeatedTimestamp)
-        ? object.repeatedTimestamp.map((e: any) => String(e))
+      timestamp: isSet(object.timestamp) ? tsProtoGlobalThis.String(object.timestamp) : undefined,
+      repeatedTimestamp: tsProtoGlobalThis.Array.isArray(object?.repeatedTimestamp)
+        ? object.repeatedTimestamp.map((e: any) => tsProtoGlobalThis.String(e))
         : [],
-      optionalTimestamp: isSet(object.optionalTimestamp) ? String(object.optionalTimestamp) : undefined,
+      optionalTimestamp: isSet(object.optionalTimestamp)
+        ? tsProtoGlobalThis.String(object.optionalTimestamp)
+        : undefined,
       mapOfTimestamps: isObject(object.mapOfTimestamps)
         ? Object.entries(object.mapOfTimestamps).reduce<{ [key: string]: string }>((acc, [key, value]) => {
-          acc[key] = String(value);
+          acc[key] = tsProtoGlobalThis.String(value);
           return acc;
         }, {})
         : {},
@@ -208,7 +210,7 @@ export const Todo_MapOfTimestampsEntry = {
   fromJSON(object: any): Todo_MapOfTimestampsEntry {
     return {
       key: isSet(object.key) ? String(object.key) : "",
-      value: isSet(object.value) ? String(object.value) : undefined,
+      value: isSet(object.value) ? tsProtoGlobalThis.String(object.value) : undefined,
     };
   },
 
@@ -233,6 +235,25 @@ export const Todo_MapOfTimestampsEntry = {
     return message;
   },
 };
+
+declare const self: any | undefined;
+declare const window: any | undefined;
+declare const global: any | undefined;
+const tsProtoGlobalThis: any = (() => {
+  if (typeof globalThis !== "undefined") {
+    return globalThis;
+  }
+  if (typeof self !== "undefined") {
+    return self;
+  }
+  if (typeof window !== "undefined") {
+    return window;
+  }
+  if (typeof global !== "undefined") {
+    return global;
+  }
+  throw "Unable to locate global object";
+})();
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 

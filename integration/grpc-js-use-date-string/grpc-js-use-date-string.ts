@@ -53,7 +53,7 @@ export const TimestampMessage = {
   },
 
   fromJSON(object: any): TimestampMessage {
-    return { timestamp: isSet(object.timestamp) ? String(object.timestamp) : undefined };
+    return { timestamp: isSet(object.timestamp) ? tsProtoGlobalThis.String(object.timestamp) : undefined };
   },
 
   toJSON(message: TimestampMessage): unknown {
@@ -135,6 +135,25 @@ export const TestClient = makeGenericClientConstructor(TestService, "simple.Test
   new (address: string, credentials: ChannelCredentials, options?: Partial<ClientOptions>): TestClient;
   service: typeof TestService;
 };
+
+declare const self: any | undefined;
+declare const window: any | undefined;
+declare const global: any | undefined;
+const tsProtoGlobalThis: any = (() => {
+  if (typeof globalThis !== "undefined") {
+    return globalThis;
+  }
+  if (typeof self !== "undefined") {
+    return self;
+  }
+  if (typeof window !== "undefined") {
+    return window;
+  }
+  if (typeof global !== "undefined") {
+    return global;
+  }
+  throw "Unable to locate global object";
+})();
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 

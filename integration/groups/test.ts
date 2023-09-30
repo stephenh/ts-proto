@@ -399,11 +399,11 @@ export const GroupsRepeatedTest = {
 
   fromJSON(object: any): GroupsRepeatedTest {
     return {
-      int1: Array.isArray(object?.int1) ? object.int1.map((e: any) => Number(e)) : undefined,
-      group: Array.isArray(object?.group)
+      int1: tsProtoGlobalThis.Array.isArray(object?.int1) ? object.int1.map((e: any) => Number(e)) : undefined,
+      group: tsProtoGlobalThis.Array.isArray(object?.group)
         ? object.group.map((e: any) => GroupsRepeatedTest_Group.fromJSON(e))
         : undefined,
-      int3: Array.isArray(object?.int3) ? object.int3.map((e: any) => Number(e)) : undefined,
+      int3: tsProtoGlobalThis.Array.isArray(object?.int3) ? object.int3.map((e: any) => Number(e)) : undefined,
     };
   },
 
@@ -517,8 +517,8 @@ export const GroupsRepeatedTest_Group = {
 
   fromJSON(object: any): GroupsRepeatedTest_Group {
     return {
-      key: Array.isArray(object?.key) ? object.key.map((e: any) => String(e)) : undefined,
-      value: Array.isArray(object?.value) ? object.value.map((e: any) => String(e)) : undefined,
+      key: tsProtoGlobalThis.Array.isArray(object?.key) ? object.key.map((e: any) => String(e)) : undefined,
+      value: tsProtoGlobalThis.Array.isArray(object?.value) ? object.value.map((e: any) => String(e)) : undefined,
     };
   },
 
@@ -673,11 +673,11 @@ export const GroupsNestedTest = {
 
   fromJSON(object: any): GroupsNestedTest {
     return {
-      int1: Array.isArray(object?.int1) ? object.int1.map((e: any) => Number(e)) : undefined,
-      group: Array.isArray(object?.group)
+      int1: tsProtoGlobalThis.Array.isArray(object?.int1) ? object.int1.map((e: any) => Number(e)) : undefined,
+      group: tsProtoGlobalThis.Array.isArray(object?.group)
         ? object.group.map((e: any) => GroupsNestedTest_Group.fromJSON(e))
         : undefined,
-      int3: Array.isArray(object?.int3) ? object.int3.map((e: any) => Number(e)) : undefined,
+      int3: tsProtoGlobalThis.Array.isArray(object?.int3) ? object.int3.map((e: any) => Number(e)) : undefined,
     };
   },
 
@@ -776,7 +776,7 @@ export const GroupsNestedTest_Group = {
 
   fromJSON(object: any): GroupsNestedTest_Group {
     return {
-      nested: Array.isArray(object?.nested)
+      nested: tsProtoGlobalThis.Array.isArray(object?.nested)
         ? object.nested.map((e: any) => GroupsNestedTest_Group_Nested.fromJSON(e))
         : undefined,
     };
@@ -869,7 +869,7 @@ export const GroupsNestedTest_Group_Nested = {
 
   fromJSON(object: any): GroupsNestedTest_Group_Nested {
     return {
-      nested2: Array.isArray(object?.nested2)
+      nested2: tsProtoGlobalThis.Array.isArray(object?.nested2)
         ? object.nested2.map((e: any) => GroupsNestedTest_Group_Nested_Nested2.fromJSON(e))
         : undefined,
     };
@@ -982,6 +982,25 @@ export const GroupsNestedTest_Group_Nested_Nested2 = {
     return message;
   },
 };
+
+declare const self: any | undefined;
+declare const window: any | undefined;
+declare const global: any | undefined;
+const tsProtoGlobalThis: any = (() => {
+  if (typeof globalThis !== "undefined") {
+    return globalThis;
+  }
+  if (typeof self !== "undefined") {
+    return self;
+  }
+  if (typeof window !== "undefined") {
+    return window;
+  }
+  if (typeof global !== "undefined") {
+    return global;
+  }
+  throw "Unable to locate global object";
+})();
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 

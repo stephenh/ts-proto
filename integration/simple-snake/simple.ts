@@ -410,12 +410,14 @@ export const Simple = {
       created_at: isSet(object.created_at) ? fromJsonTimestamp(object.created_at) : undefined,
       child: isSet(object.child) ? Child.fromJSON(object.child) : undefined,
       state: isSet(object.state) ? stateEnumFromJSON(object.state) : 0,
-      grand_children: Array.isArray(object?.grand_children)
+      grand_children: tsProtoGlobalThis.Array.isArray(object?.grand_children)
         ? object.grand_children.map((e: any) => Child.fromJSON(e))
         : [],
-      coins: Array.isArray(object?.coins) ? object.coins.map((e: any) => Number(e)) : [],
-      snacks: Array.isArray(object?.snacks) ? object.snacks.map((e: any) => String(e)) : [],
-      old_states: Array.isArray(object?.old_states) ? object.old_states.map((e: any) => stateEnumFromJSON(e)) : [],
+      coins: tsProtoGlobalThis.Array.isArray(object?.coins) ? object.coins.map((e: any) => Number(e)) : [],
+      snacks: tsProtoGlobalThis.Array.isArray(object?.snacks) ? object.snacks.map((e: any) => String(e)) : [],
+      old_states: tsProtoGlobalThis.Array.isArray(object?.old_states)
+        ? object.old_states.map((e: any) => stateEnumFromJSON(e))
+        : [],
       thing: isSet(object.thing) ? ImportedThing.fromJSON(object.thing) : undefined,
     };
   },
@@ -930,8 +932,8 @@ export const SimpleWithWrappers = {
       name: isSet(object.name) ? String(object.name) : undefined,
       age: isSet(object.age) ? Number(object.age) : undefined,
       enabled: isSet(object.enabled) ? Boolean(object.enabled) : undefined,
-      coins: Array.isArray(object?.coins) ? object.coins.map((e: any) => Number(e)) : [],
-      snacks: Array.isArray(object?.snacks) ? object.snacks.map((e: any) => String(e)) : [],
+      coins: tsProtoGlobalThis.Array.isArray(object?.coins) ? object.coins.map((e: any) => Number(e)) : [],
+      snacks: tsProtoGlobalThis.Array.isArray(object?.snacks) ? object.snacks.map((e: any) => String(e)) : [],
     };
   },
 
@@ -1094,7 +1096,7 @@ export const SimpleWithMap = {
     return {
       entitiesById: isObject(object.entitiesById)
         ? Object.entries(object.entitiesById).reduce<{ [key: number]: Entity }>((acc, [key, value]) => {
-          acc[Number(key)] = Entity.fromJSON(value);
+          acc[tsProtoGlobalThis.Number(key)] = Entity.fromJSON(value);
           return acc;
         }, {})
         : {},
@@ -1106,7 +1108,7 @@ export const SimpleWithMap = {
         : {},
       intLookup: isObject(object.intLookup)
         ? Object.entries(object.intLookup).reduce<{ [key: number]: number }>((acc, [key, value]) => {
-          acc[Number(key)] = Number(value);
+          acc[tsProtoGlobalThis.Number(key)] = Number(value);
           return acc;
         }, {})
         : {},
@@ -1153,7 +1155,7 @@ export const SimpleWithMap = {
     message.entitiesById = Object.entries(object.entitiesById ?? {}).reduce<{ [key: number]: Entity }>(
       (acc, [key, value]) => {
         if (value !== undefined) {
-          acc[Number(key)] = Entity.fromPartial(value);
+          acc[tsProtoGlobalThis.Number(key)] = Entity.fromPartial(value);
         }
         return acc;
       },
@@ -1171,7 +1173,7 @@ export const SimpleWithMap = {
     message.intLookup = Object.entries(object.intLookup ?? {}).reduce<{ [key: number]: number }>(
       (acc, [key, value]) => {
         if (value !== undefined) {
-          acc[Number(key)] = Number(value);
+          acc[tsProtoGlobalThis.Number(key)] = Number(value);
         }
         return acc;
       },
@@ -1445,7 +1447,7 @@ export const SimpleWithSnakeCaseMap = {
     return {
       entities_by_id: isObject(object.entities_by_id)
         ? Object.entries(object.entities_by_id).reduce<{ [key: number]: Entity }>((acc, [key, value]) => {
-          acc[Number(key)] = Entity.fromJSON(value);
+          acc[tsProtoGlobalThis.Number(key)] = Entity.fromJSON(value);
           return acc;
         }, {})
         : {},
@@ -1474,7 +1476,7 @@ export const SimpleWithSnakeCaseMap = {
     message.entities_by_id = Object.entries(object.entities_by_id ?? {}).reduce<{ [key: number]: Entity }>(
       (acc, [key, value]) => {
         if (value !== undefined) {
-          acc[Number(key)] = Entity.fromPartial(value);
+          acc[tsProtoGlobalThis.Number(key)] = Entity.fromPartial(value);
         }
         return acc;
       },
@@ -2049,7 +2051,7 @@ function fromJsonTimestamp(o: any): Date {
 }
 
 function longToNumber(long: Long): number {
-  if (long.gt(Number.MAX_SAFE_INTEGER)) {
+  if (long.gt(tsProtoGlobalThis.Number.MAX_SAFE_INTEGER)) {
     throw new tsProtoGlobalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
   return long.toNumber();
