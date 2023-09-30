@@ -1,3 +1,10 @@
+## [1.158.1](https://github.com/stephenh/ts-proto/compare/v1.158.0...v1.158.1) (2023-09-30)
+
+
+### Bug Fixes
+
+* Use globalThis for Array/String/Boolean ([#930](https://github.com/stephenh/ts-proto/issues/930)) ([9a252c3](https://github.com/stephenh/ts-proto/commit/9a252c3d4cf988496f6de17cc378dbb09a1baf92))
+
 # [1.158.0](https://github.com/stephenh/ts-proto/compare/v1.157.1...v1.158.0) (2023-09-24)
 
 
