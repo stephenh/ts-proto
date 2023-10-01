@@ -325,8 +325,8 @@ Generated code will be placed in the Gradle build directory.
 
   ```typescript
   interface SomeMessage {
-    firstName: string | undefined;
-    lastName: string | undefined;
+    firstName: string;
+    lastName: string;
   }
   // Declared with a typo
   const data = { firstName: "a", lastTypo: "b" };
@@ -334,13 +334,13 @@ Generated code will be placed in the Gradle build directory.
   const message: SomeMessage = { ...data };
   ```
 
-  For a consistent API, if `SomeMessage.lastName` is optional `lastName?`, then readers have to check _two_ empty conditions: a) is `lastName` `undefined` (b/c it was created in-memory and left unset), or b) is `lastName` empty string (b/c we read `SomeMessage` off the wire and correctly set `lastName` to empty string)?
+  For a consistent API, if `SomeMessage.lastName` is optional `lastName?`, then readers have to check _two_ empty conditions: a) is `lastName` `undefined` (b/c it was created in-memory and left unset), or b) is `lastName` empty string (b/c we read `SomeMessage` off the wire and, per the proto3 spec, initialized `lastName` to empty string)?
 
   For ensuring proper initialization, if later `SomeMessage.middleInitial` is added, but it's marked as optional `middleInitial?`, you may have many call sites in production code that _should_ now be passing `middleInitial` to create a valid `SomeMessage`, but are not.
 
   So, between typo-prevention, reader inconsistency, and proper initialization, ts-proto recommends using `useOptionals=none` as the "most safe" option.
 
-  All that said, this approach does require writers/creators to set every field (although `fromPartial` and `create` are meant to address this), so if you still want to have optional fields, you can set `useOptionals=messages` or `useOptionals=all`.
+  All that said, this approach does require writers/creators to set every field (although `fromPartial` and `create` are meant to address this), so if you still want to have optional keys, you can set `useOptionals=messages` or `useOptionals=all`.
 
   (See [this issue](https://github.com/stephenh/ts-proto/issues/120#issuecomment-678375833) and [this issue](https://github.com/stephenh/ts-proto/issues/397#issuecomment-977259118) for discussions on `useOptional`.)
 
