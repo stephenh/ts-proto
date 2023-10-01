@@ -209,7 +209,7 @@ export function defaultValue(ctx: Context, field: FieldDescriptorProto): any {
       } else if (options.forceLong === LongOption.STRING) {
         return '"0"';
       } else if (options.forceLong === LongOption.BIGINT) {
-        return 'BigInt("0")';
+        return '0n';
       } else {
         return 0;
       }
@@ -221,7 +221,7 @@ export function defaultValue(ctx: Context, field: FieldDescriptorProto): any {
       } else if (options.forceLong === LongOption.STRING) {
         return '"0"';
       } else if (options.forceLong === LongOption.BIGINT) {
-        return 'BigInt("0")';
+        return '0n';
       } else {
         return 0;
       }
@@ -286,7 +286,7 @@ export function notDefaultCheck(
       } else if (options.forceLong === LongOption.STRING) {
         return code`${maybeNotUndefinedAnd} ${place} !== "0"`;
       } else if (options.forceLong === LongOption.BIGINT) {
-        return code`${maybeNotUndefinedAnd} ${place} !== BigInt("0")`;
+        return code`${maybeNotUndefinedAnd} ${place} !== 0n`;
       } else {
         return code`${maybeNotUndefinedAnd} ${place} !== 0`;
       }

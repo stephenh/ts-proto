@@ -29,15 +29,15 @@ function createBaseNumbers(): Numbers {
     double: 0,
     float: 0,
     int32: 0,
-    int64: BigInt("0"),
+    int64: 0n,
     uint32: 0,
-    uint64: BigInt("0"),
+    uint64: 0n,
     sint32: 0,
-    sint64: BigInt("0"),
+    sint64: 0n,
     fixed32: 0,
-    fixed64: BigInt("0"),
+    fixed64: 0n,
     sfixed32: 0,
-    sfixed64: BigInt("0"),
+    sfixed64: 0n,
     guint64: undefined,
     timestamp: undefined,
     uint64s: [],
@@ -55,31 +55,31 @@ export const Numbers = {
     if (message.int32 !== 0) {
       writer.uint32(24).int32(message.int32);
     }
-    if (message.int64 !== BigInt("0")) {
+    if (message.int64 !== 0n) {
       writer.uint32(32).int64(message.int64.toString());
     }
     if (message.uint32 !== 0) {
       writer.uint32(40).uint32(message.uint32);
     }
-    if (message.uint64 !== BigInt("0")) {
+    if (message.uint64 !== 0n) {
       writer.uint32(48).uint64(message.uint64.toString());
     }
     if (message.sint32 !== 0) {
       writer.uint32(56).sint32(message.sint32);
     }
-    if (message.sint64 !== BigInt("0")) {
+    if (message.sint64 !== 0n) {
       writer.uint32(64).sint64(message.sint64.toString());
     }
     if (message.fixed32 !== 0) {
       writer.uint32(77).fixed32(message.fixed32);
     }
-    if (message.fixed64 !== BigInt("0")) {
+    if (message.fixed64 !== 0n) {
       writer.uint32(81).fixed64(message.fixed64.toString());
     }
     if (message.sfixed32 !== 0) {
       writer.uint32(93).sfixed32(message.sfixed32);
     }
-    if (message.sfixed64 !== BigInt("0")) {
+    if (message.sfixed64 !== 0n) {
       writer.uint32(97).sfixed64(message.sfixed64.toString());
     }
     if (message.guint64 !== undefined) {
@@ -232,15 +232,15 @@ export const Numbers = {
       double: isSet(object.double) ? Number(object.double) : 0,
       float: isSet(object.float) ? Number(object.float) : 0,
       int32: isSet(object.int32) ? Number(object.int32) : 0,
-      int64: isSet(object.int64) ? BigInt(object.int64) : BigInt("0"),
+      int64: isSet(object.int64) ? BigInt(object.int64) : 0n,
       uint32: isSet(object.uint32) ? Number(object.uint32) : 0,
-      uint64: isSet(object.uint64) ? BigInt(object.uint64) : BigInt("0"),
+      uint64: isSet(object.uint64) ? BigInt(object.uint64) : 0n,
       sint32: isSet(object.sint32) ? Number(object.sint32) : 0,
-      sint64: isSet(object.sint64) ? BigInt(object.sint64) : BigInt("0"),
+      sint64: isSet(object.sint64) ? BigInt(object.sint64) : 0n,
       fixed32: isSet(object.fixed32) ? Number(object.fixed32) : 0,
-      fixed64: isSet(object.fixed64) ? BigInt(object.fixed64) : BigInt("0"),
+      fixed64: isSet(object.fixed64) ? BigInt(object.fixed64) : 0n,
       sfixed32: isSet(object.sfixed32) ? Number(object.sfixed32) : 0,
-      sfixed64: isSet(object.sfixed64) ? BigInt(object.sfixed64) : BigInt("0"),
+      sfixed64: isSet(object.sfixed64) ? BigInt(object.sfixed64) : 0n,
       guint64: isSet(object.guint64) ? BigInt(object.guint64) : undefined,
       timestamp: isSet(object.timestamp) ? fromJsonTimestamp(object.timestamp) : undefined,
       uint64s: globalThis.Array.isArray(object?.uint64s) ? object.uint64s.map((e: any) => BigInt(e)) : [],
@@ -258,31 +258,31 @@ export const Numbers = {
     if (message.int32 !== 0) {
       obj.int32 = Math.round(message.int32);
     }
-    if (message.int64 !== BigInt("0")) {
+    if (message.int64 !== 0n) {
       obj.int64 = message.int64.toString();
     }
     if (message.uint32 !== 0) {
       obj.uint32 = Math.round(message.uint32);
     }
-    if (message.uint64 !== BigInt("0")) {
+    if (message.uint64 !== 0n) {
       obj.uint64 = message.uint64.toString();
     }
     if (message.sint32 !== 0) {
       obj.sint32 = Math.round(message.sint32);
     }
-    if (message.sint64 !== BigInt("0")) {
+    if (message.sint64 !== 0n) {
       obj.sint64 = message.sint64.toString();
     }
     if (message.fixed32 !== 0) {
       obj.fixed32 = Math.round(message.fixed32);
     }
-    if (message.fixed64 !== BigInt("0")) {
+    if (message.fixed64 !== 0n) {
       obj.fixed64 = message.fixed64.toString();
     }
     if (message.sfixed32 !== 0) {
       obj.sfixed32 = Math.round(message.sfixed32);
     }
-    if (message.sfixed64 !== BigInt("0")) {
+    if (message.sfixed64 !== 0n) {
       obj.sfixed64 = message.sfixed64.toString();
     }
     if (message.guint64 !== undefined) {
@@ -305,15 +305,15 @@ export const Numbers = {
     message.double = object.double ?? 0;
     message.float = object.float ?? 0;
     message.int32 = object.int32 ?? 0;
-    message.int64 = object.int64 ?? BigInt("0");
+    message.int64 = object.int64 ?? 0n;
     message.uint32 = object.uint32 ?? 0;
-    message.uint64 = object.uint64 ?? BigInt("0");
+    message.uint64 = object.uint64 ?? 0n;
     message.sint32 = object.sint32 ?? 0;
-    message.sint64 = object.sint64 ?? BigInt("0");
+    message.sint64 = object.sint64 ?? 0n;
     message.fixed32 = object.fixed32 ?? 0;
-    message.fixed64 = object.fixed64 ?? BigInt("0");
+    message.fixed64 = object.fixed64 ?? 0n;
     message.sfixed32 = object.sfixed32 ?? 0;
-    message.sfixed64 = object.sfixed64 ?? BigInt("0");
+    message.sfixed64 = object.sfixed64 ?? 0n;
     message.guint64 = object.guint64 ?? undefined;
     message.timestamp = object.timestamp ?? undefined;
     message.uint64s = object.uint64s?.map((e) => e) || [];
