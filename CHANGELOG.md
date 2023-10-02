@@ -1,3 +1,10 @@
+## [1.159.2](https://github.com/stephenh/ts-proto/compare/v1.159.1...v1.159.2) (2023-10-02)
+
+
+### Bug Fixes
+
+* Support using messages called String/Boolean/Number/Array ([#934](https://github.com/stephenh/ts-proto/issues/934)) ([f75159b](https://github.com/stephenh/ts-proto/commit/f75159bde85c8d85a2be938c6e3db78c77318890)), closes [#927](https://github.com/stephenh/ts-proto/issues/927)
+
 ## [1.159.1](https://github.com/stephenh/ts-proto/compare/v1.159.0...v1.159.1) (2023-09-30)
 
 
