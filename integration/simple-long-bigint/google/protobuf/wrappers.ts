@@ -130,7 +130,7 @@ export const DoubleValue = {
   },
 
   fromJSON(object: any): DoubleValue {
-    return { value: isSet(object.value) ? Number(object.value) : 0 };
+    return { value: isSet(object.value) ? globalThis.Number(object.value) : 0 };
   },
 
   toJSON(message: DoubleValue): unknown {
@@ -187,7 +187,7 @@ export const FloatValue = {
   },
 
   fromJSON(object: any): FloatValue {
-    return { value: isSet(object.value) ? Number(object.value) : 0 };
+    return { value: isSet(object.value) ? globalThis.Number(object.value) : 0 };
   },
 
   toJSON(message: FloatValue): unknown {
@@ -358,7 +358,7 @@ export const Int32Value = {
   },
 
   fromJSON(object: any): Int32Value {
-    return { value: isSet(object.value) ? Number(object.value) : 0 };
+    return { value: isSet(object.value) ? globalThis.Number(object.value) : 0 };
   },
 
   toJSON(message: Int32Value): unknown {
@@ -415,7 +415,7 @@ export const UInt32Value = {
   },
 
   fromJSON(object: any): UInt32Value {
-    return { value: isSet(object.value) ? Number(object.value) : 0 };
+    return { value: isSet(object.value) ? globalThis.Number(object.value) : 0 };
   },
 
   toJSON(message: UInt32Value): unknown {
@@ -472,7 +472,7 @@ export const BoolValue = {
   },
 
   fromJSON(object: any): BoolValue {
-    return { value: isSet(object.value) ? Boolean(object.value) : false };
+    return { value: isSet(object.value) ? globalThis.Boolean(object.value) : false };
   },
 
   toJSON(message: BoolValue): unknown {
@@ -529,7 +529,7 @@ export const StringValue = {
   },
 
   fromJSON(object: any): StringValue {
-    return { value: isSet(object.value) ? String(object.value) : "" };
+    return { value: isSet(object.value) ? globalThis.String(object.value) : "" };
   },
 
   toJSON(message: StringValue): unknown {
@@ -635,7 +635,8 @@ function base64FromBytes(arr: Uint8Array): string {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | bigint | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 

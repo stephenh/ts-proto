@@ -60,7 +60,7 @@ export const HeroById = {
   },
 
   fromJSON(object: any): HeroById {
-    return { id: isSet(object.id) ? Number(object.id) : 0 };
+    return { id: isSet(object.id) ? globalThis.Number(object.id) : 0 };
   },
 
   toJSON(message: HeroById): unknown {
@@ -117,7 +117,7 @@ export const VillainById = {
   },
 
   fromJSON(object: any): VillainById {
-    return { id: isSet(object.id) ? Number(object.id) : 0 };
+    return { id: isSet(object.id) ? globalThis.Number(object.id) : 0 };
   },
 
   toJSON(message: VillainById): unknown {
@@ -184,7 +184,10 @@ export const Hero = {
   },
 
   fromJSON(object: any): Hero {
-    return { id: isSet(object.id) ? Number(object.id) : 0, name: isSet(object.name) ? String(object.name) : "" };
+    return {
+      id: isSet(object.id) ? globalThis.Number(object.id) : 0,
+      name: isSet(object.name) ? globalThis.String(object.name) : "",
+    };
   },
 
   toJSON(message: Hero): unknown {
@@ -255,7 +258,10 @@ export const Villain = {
   },
 
   fromJSON(object: any): Villain {
-    return { id: isSet(object.id) ? Number(object.id) : 0, name: isSet(object.name) ? String(object.name) : "" };
+    return {
+      id: isSet(object.id) ? globalThis.Number(object.id) : 0,
+      name: isSet(object.name) ? globalThis.String(object.name) : "",
+    };
   },
 
   toJSON(message: Villain): unknown {
@@ -358,7 +364,8 @@ interface Rpc {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 

@@ -235,13 +235,13 @@ export const Tile_Value = {
 
   fromJSON(object: any): Tile_Value {
     return {
-      stringValue: isSet(object.stringValue) ? String(object.stringValue) : "",
-      floatValue: isSet(object.floatValue) ? Number(object.floatValue) : 0,
-      doubleValue: isSet(object.doubleValue) ? Number(object.doubleValue) : 0,
-      intValue: isSet(object.intValue) ? Number(object.intValue) : 0,
-      uintValue: isSet(object.uintValue) ? Number(object.uintValue) : 0,
-      sintValue: isSet(object.sintValue) ? Number(object.sintValue) : 0,
-      boolValue: isSet(object.boolValue) ? Boolean(object.boolValue) : false,
+      stringValue: isSet(object.stringValue) ? globalThis.String(object.stringValue) : "",
+      floatValue: isSet(object.floatValue) ? globalThis.Number(object.floatValue) : 0,
+      doubleValue: isSet(object.doubleValue) ? globalThis.Number(object.doubleValue) : 0,
+      intValue: isSet(object.intValue) ? globalThis.Number(object.intValue) : 0,
+      uintValue: isSet(object.uintValue) ? globalThis.Number(object.uintValue) : 0,
+      sintValue: isSet(object.sintValue) ? globalThis.Number(object.sintValue) : 0,
+      boolValue: isSet(object.boolValue) ? globalThis.Boolean(object.boolValue) : false,
     };
   },
 
@@ -378,10 +378,10 @@ export const Tile_Feature = {
 
   fromJSON(object: any): Tile_Feature {
     return {
-      id: isSet(object.id) ? Number(object.id) : 0,
-      tags: globalThis.Array.isArray(object?.tags) ? object.tags.map((e: any) => Number(e)) : [],
+      id: isSet(object.id) ? globalThis.Number(object.id) : 0,
+      tags: globalThis.Array.isArray(object?.tags) ? object.tags.map((e: any) => globalThis.Number(e)) : [],
       type: isSet(object.type) ? tile_GeomTypeFromJSON(object.type) : 0,
-      geometry: globalThis.Array.isArray(object?.geometry) ? object.geometry.map((e: any) => Number(e)) : [],
+      geometry: globalThis.Array.isArray(object?.geometry) ? object.geometry.map((e: any) => globalThis.Number(e)) : [],
     };
   },
 
@@ -502,14 +502,14 @@ export const Tile_Layer = {
 
   fromJSON(object: any): Tile_Layer {
     return {
-      version: isSet(object.version) ? Number(object.version) : 0,
-      name: isSet(object.name) ? String(object.name) : "",
+      version: isSet(object.version) ? globalThis.Number(object.version) : 0,
+      name: isSet(object.name) ? globalThis.String(object.name) : "",
       features: globalThis.Array.isArray(object?.features)
         ? object.features.map((e: any) => Tile_Feature.fromJSON(e))
         : [],
-      keys: globalThis.Array.isArray(object?.keys) ? object.keys.map((e: any) => String(e)) : [],
+      keys: globalThis.Array.isArray(object?.keys) ? object.keys.map((e: any) => globalThis.String(e)) : [],
       values: globalThis.Array.isArray(object?.values) ? object.values.map((e: any) => Tile_Value.fromJSON(e)) : [],
-      extent: isSet(object.extent) ? Number(object.extent) : 0,
+      extent: isSet(object.extent) ? globalThis.Number(object.extent) : 0,
     };
   },
 
@@ -554,7 +554,8 @@ export const Tile_Layer = {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 

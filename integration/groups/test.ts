@@ -135,9 +135,9 @@ export const GroupsOptionalTest = {
 
   fromJSON(object: any): GroupsOptionalTest {
     return {
-      int1: isSet(object.int1) ? Number(object.int1) : undefined,
+      int1: isSet(object.int1) ? globalThis.Number(object.int1) : undefined,
       group: isSet(object.group) ? GroupsOptionalTest_Group.fromJSON(object.group) : undefined,
-      int3: isSet(object.int3) ? Number(object.int3) : undefined,
+      int3: isSet(object.int3) ? globalThis.Number(object.int3) : undefined,
     };
   },
 
@@ -243,8 +243,8 @@ export const GroupsOptionalTest_Group = {
 
   fromJSON(object: any): GroupsOptionalTest_Group {
     return {
-      key: isSet(object.key) ? String(object.key) : undefined,
-      value: isSet(object.value) ? String(object.value) : undefined,
+      key: isSet(object.key) ? globalThis.String(object.key) : undefined,
+      value: isSet(object.value) ? globalThis.String(object.value) : undefined,
     };
   },
 
@@ -399,11 +399,11 @@ export const GroupsRepeatedTest = {
 
   fromJSON(object: any): GroupsRepeatedTest {
     return {
-      int1: globalThis.Array.isArray(object?.int1) ? object.int1.map((e: any) => Number(e)) : undefined,
+      int1: globalThis.Array.isArray(object?.int1) ? object.int1.map((e: any) => globalThis.Number(e)) : undefined,
       group: globalThis.Array.isArray(object?.group)
         ? object.group.map((e: any) => GroupsRepeatedTest_Group.fromJSON(e))
         : undefined,
-      int3: globalThis.Array.isArray(object?.int3) ? object.int3.map((e: any) => Number(e)) : undefined,
+      int3: globalThis.Array.isArray(object?.int3) ? object.int3.map((e: any) => globalThis.Number(e)) : undefined,
     };
   },
 
@@ -517,8 +517,8 @@ export const GroupsRepeatedTest_Group = {
 
   fromJSON(object: any): GroupsRepeatedTest_Group {
     return {
-      key: globalThis.Array.isArray(object?.key) ? object.key.map((e: any) => String(e)) : undefined,
-      value: globalThis.Array.isArray(object?.value) ? object.value.map((e: any) => String(e)) : undefined,
+      key: globalThis.Array.isArray(object?.key) ? object.key.map((e: any) => globalThis.String(e)) : undefined,
+      value: globalThis.Array.isArray(object?.value) ? object.value.map((e: any) => globalThis.String(e)) : undefined,
     };
   },
 
@@ -673,11 +673,11 @@ export const GroupsNestedTest = {
 
   fromJSON(object: any): GroupsNestedTest {
     return {
-      int1: globalThis.Array.isArray(object?.int1) ? object.int1.map((e: any) => Number(e)) : undefined,
+      int1: globalThis.Array.isArray(object?.int1) ? object.int1.map((e: any) => globalThis.Number(e)) : undefined,
       group: globalThis.Array.isArray(object?.group)
         ? object.group.map((e: any) => GroupsNestedTest_Group.fromJSON(e))
         : undefined,
-      int3: globalThis.Array.isArray(object?.int3) ? object.int3.map((e: any) => Number(e)) : undefined,
+      int3: globalThis.Array.isArray(object?.int3) ? object.int3.map((e: any) => globalThis.Number(e)) : undefined,
     };
   },
 
@@ -958,7 +958,7 @@ export const GroupsNestedTest_Group_Nested_Nested2 = {
   },
 
   fromJSON(object: any): GroupsNestedTest_Group_Nested_Nested2 {
-    return { string1: isSet(object.string1) ? String(object.string1) : undefined };
+    return { string1: isSet(object.string1) ? globalThis.String(object.string1) : undefined };
   },
 
   toJSON(message: GroupsNestedTest_Group_Nested_Nested2): unknown {
@@ -986,7 +986,8 @@ export const GroupsNestedTest_Group_Nested_Nested2 = {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 

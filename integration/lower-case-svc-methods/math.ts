@@ -64,7 +64,10 @@ export const NumPair = {
   },
 
   fromJSON(object: any): NumPair {
-    return { num1: isSet(object.num1) ? Number(object.num1) : 0, num2: isSet(object.num2) ? Number(object.num2) : 0 };
+    return {
+      num1: isSet(object.num1) ? globalThis.Number(object.num1) : 0,
+      num2: isSet(object.num2) ? globalThis.Number(object.num2) : 0,
+    };
   },
 
   toJSON(message: NumPair): unknown {
@@ -125,7 +128,7 @@ export const NumSingle = {
   },
 
   fromJSON(object: any): NumSingle {
-    return { num: isSet(object.num) ? Number(object.num) : 0 };
+    return { num: isSet(object.num) ? globalThis.Number(object.num) : 0 };
   },
 
   toJSON(message: NumSingle): unknown {
@@ -194,7 +197,7 @@ export const Numbers = {
   },
 
   fromJSON(object: any): Numbers {
-    return { num: globalThis.Array.isArray(object?.num) ? object.num.map((e: any) => Number(e)) : [] };
+    return { num: globalThis.Array.isArray(object?.num) ? object.num.map((e: any) => globalThis.Number(e)) : [] };
   },
 
   toJSON(message: Numbers): unknown {
@@ -278,7 +281,8 @@ export interface DataLoaders {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 

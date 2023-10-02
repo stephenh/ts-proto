@@ -70,7 +70,10 @@ export const Simple = {
   },
 
   fromJSON(object: any): Simple {
-    return { name: isSet(object.name) ? String(object.name) : "", age: isSet(object.age) ? Number(object.age) : 0 };
+    return {
+      name: isSet(object.name) ? globalThis.String(object.name) : "",
+      age: isSet(object.age) ? globalThis.Number(object.age) : 0,
+    };
   },
 
   toJSON(message: Simple): unknown {
@@ -255,18 +258,18 @@ export const Numbers = {
 
   fromJSON(object: any): Numbers {
     return {
-      double: isSet(object.double) ? Number(object.double) : 0,
-      float: isSet(object.float) ? Number(object.float) : 0,
-      int32: isSet(object.int32) ? Number(object.int32) : 0,
-      int64: isSet(object.int64) ? Number(object.int64) : 0,
-      uint32: isSet(object.uint32) ? Number(object.uint32) : 0,
-      uint64: isSet(object.uint64) ? Number(object.uint64) : 0,
-      sint32: isSet(object.sint32) ? Number(object.sint32) : 0,
-      sint64: isSet(object.sint64) ? Number(object.sint64) : 0,
-      fixed32: isSet(object.fixed32) ? Number(object.fixed32) : 0,
-      fixed64: isSet(object.fixed64) ? Number(object.fixed64) : 0,
-      sfixed32: isSet(object.sfixed32) ? Number(object.sfixed32) : 0,
-      sfixed64: isSet(object.sfixed64) ? Number(object.sfixed64) : 0,
+      double: isSet(object.double) ? globalThis.Number(object.double) : 0,
+      float: isSet(object.float) ? globalThis.Number(object.float) : 0,
+      int32: isSet(object.int32) ? globalThis.Number(object.int32) : 0,
+      int64: isSet(object.int64) ? globalThis.Number(object.int64) : 0,
+      uint32: isSet(object.uint32) ? globalThis.Number(object.uint32) : 0,
+      uint64: isSet(object.uint64) ? globalThis.Number(object.uint64) : 0,
+      sint32: isSet(object.sint32) ? globalThis.Number(object.sint32) : 0,
+      sint64: isSet(object.sint64) ? globalThis.Number(object.sint64) : 0,
+      fixed32: isSet(object.fixed32) ? globalThis.Number(object.fixed32) : 0,
+      fixed64: isSet(object.fixed64) ? globalThis.Number(object.fixed64) : 0,
+      sfixed32: isSet(object.sfixed32) ? globalThis.Number(object.sfixed32) : 0,
+      sfixed64: isSet(object.sfixed64) ? globalThis.Number(object.sfixed64) : 0,
     };
   },
 
@@ -335,7 +338,8 @@ export const Numbers = {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 

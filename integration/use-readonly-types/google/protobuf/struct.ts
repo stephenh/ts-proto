@@ -235,7 +235,10 @@ export const Struct_FieldsEntry = {
   },
 
   fromJSON(object: any): Struct_FieldsEntry {
-    return { key: isSet(object.key) ? String(object.key) : "", value: isSet(object?.value) ? object.value : undefined };
+    return {
+      key: isSet(object.key) ? globalThis.String(object.key) : "",
+      value: isSet(object?.value) ? object.value : undefined,
+    };
   },
 
   toJSON(message: Struct_FieldsEntry): unknown {
@@ -352,11 +355,11 @@ export const Value = {
       kind: isSet(object.nullValue)
         ? { $case: "nullValue", nullValue: nullValueFromJSON(object.nullValue) }
         : isSet(object.numberValue)
-        ? { $case: "numberValue", numberValue: Number(object.numberValue) }
+        ? { $case: "numberValue", numberValue: globalThis.Number(object.numberValue) }
         : isSet(object.stringValue)
-        ? { $case: "stringValue", stringValue: String(object.stringValue) }
+        ? { $case: "stringValue", stringValue: globalThis.String(object.stringValue) }
         : isSet(object.boolValue)
-        ? { $case: "boolValue", boolValue: Boolean(object.boolValue) }
+        ? { $case: "boolValue", boolValue: globalThis.Boolean(object.boolValue) }
         : isSet(object.structValue)
         ? { $case: "structValue", structValue: object.structValue }
         : isSet(object.listValue)
@@ -539,7 +542,8 @@ export const ListValue = {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends { readonly $case: string }
     ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & { readonly $case: T["$case"] }
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }

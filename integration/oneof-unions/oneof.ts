@@ -233,27 +233,27 @@ export const PleaseChoose = {
 
   fromJSON(object: any): PleaseChoose {
     return {
-      name: isSet(object.name) ? String(object.name) : "",
+      name: isSet(object.name) ? globalThis.String(object.name) : "",
       choice: isSet(object.aNumber)
-        ? { $case: "aNumber", aNumber: Number(object.aNumber) }
+        ? { $case: "aNumber", aNumber: globalThis.Number(object.aNumber) }
         : isSet(object.aString)
-        ? { $case: "aString", aString: String(object.aString) }
+        ? { $case: "aString", aString: globalThis.String(object.aString) }
         : isSet(object.aMessage)
         ? { $case: "aMessage", aMessage: PleaseChoose_Submessage.fromJSON(object.aMessage) }
         : isSet(object.aBool)
-        ? { $case: "aBool", aBool: Boolean(object.aBool) }
+        ? { $case: "aBool", aBool: globalThis.Boolean(object.aBool) }
         : isSet(object.bunchaBytes)
         ? { $case: "bunchaBytes", bunchaBytes: bytesFromBase64(object.bunchaBytes) }
         : isSet(object.anEnum)
         ? { $case: "anEnum", anEnum: pleaseChoose_StateEnumFromJSON(object.anEnum) }
         : undefined,
-      age: isSet(object.age) ? Number(object.age) : 0,
+      age: isSet(object.age) ? globalThis.Number(object.age) : 0,
       eitherOr: isSet(object.either)
-        ? { $case: "either", either: String(object.either) }
+        ? { $case: "either", either: globalThis.String(object.either) }
         : isSet(object.or)
-        ? { $case: "or", or: String(object.or) }
+        ? { $case: "or", or: globalThis.String(object.or) }
         : isSet(object.thirdOption)
-        ? { $case: "thirdOption", thirdOption: String(object.thirdOption) }
+        ? { $case: "thirdOption", thirdOption: globalThis.String(object.thirdOption) }
         : undefined,
       signature: isSet(object.signature) ? bytesFromBase64(object.signature) : new Uint8Array(0),
       value: isSet(object?.value) ? object.value : undefined,
@@ -392,7 +392,7 @@ export const PleaseChoose_Submessage = {
   },
 
   fromJSON(object: any): PleaseChoose_Submessage {
-    return { name: isSet(object.name) ? String(object.name) : "" };
+    return { name: isSet(object.name) ? globalThis.String(object.name) : "" };
   },
 
   toJSON(message: PleaseChoose_Submessage): unknown {
@@ -460,8 +460,8 @@ export const SimpleButOptional = {
 
   fromJSON(object: any): SimpleButOptional {
     return {
-      name: isSet(object.name) ? String(object.name) : undefined,
-      age: isSet(object.age) ? Number(object.age) : undefined,
+      name: isSet(object.name) ? globalThis.String(object.name) : undefined,
+      age: isSet(object.age) ? globalThis.Number(object.age) : undefined,
     };
   },
 
@@ -515,7 +515,8 @@ function base64FromBytes(arr: Uint8Array): string {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends { $case: string } ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & { $case: T["$case"] }
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;

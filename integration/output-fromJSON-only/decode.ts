@@ -8,7 +8,7 @@ export interface Encode {
 
 export const Encode = {
   fromJSON(object: any): Encode {
-    return { encode: isSet(object.encode) ? String(object.encode) : "" };
+    return { encode: isSet(object.encode) ? globalThis.String(object.encode) : "" };
   },
 };
 

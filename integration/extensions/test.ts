@@ -174,7 +174,7 @@ export const Extendable = {
   },
 
   fromJSON(object: any): Extendable {
-    return { field: isSet(object.field) ? String(object.field) : undefined };
+    return { field: isSet(object.field) ? globalThis.String(object.field) : undefined };
   },
 
   toJSON(message: Extendable): unknown {
@@ -283,7 +283,7 @@ export const Nested = {
   },
 
   fromJSON(object: any): Nested {
-    return { field: isSet(object.field) ? String(object.field) : undefined };
+    return { field: isSet(object.field) ? globalThis.String(object.field) : undefined };
   },
 
   toJSON(message: Nested): unknown {
@@ -378,8 +378,8 @@ export const Group = {
 
   fromJSON(object: any): Group {
     return {
-      name: isSet(object.name) ? String(object.name) : undefined,
-      value: isSet(object.value) ? String(object.value) : undefined,
+      name: isSet(object.name) ? globalThis.String(object.name) : undefined,
+      value: isSet(object.value) ? globalThis.String(object.value) : undefined,
     };
   },
 
@@ -596,7 +596,7 @@ export const group: Extension<Group> = {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Long ? string | number | Long : T extends Array<infer U> ? Array<DeepPartial<U>>
+  : T extends Long ? string | number | Long : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;

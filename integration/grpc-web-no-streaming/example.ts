@@ -116,7 +116,7 @@ export const DashFlash = {
 
   fromJSON(object: any): DashFlash {
     return {
-      msg: isSet(object.msg) ? String(object.msg) : "",
+      msg: isSet(object.msg) ? globalThis.String(object.msg) : "",
       type: isSet(object.type) ? dashFlash_TypeFromJSON(object.type) : 0,
     };
   },
@@ -200,7 +200,7 @@ export const DashUserSettingsState = {
 
   fromJSON(object: any): DashUserSettingsState {
     return {
-      email: isSet(object.email) ? String(object.email) : "",
+      email: isSet(object.email) ? globalThis.String(object.email) : "",
       urls: isSet(object.urls) ? DashUserSettingsState_URLs.fromJSON(object.urls) : undefined,
       flashes: globalThis.Array.isArray(object?.flashes) ? object.flashes.map((e: any) => DashFlash.fromJSON(e)) : [],
     };
@@ -281,8 +281,8 @@ export const DashUserSettingsState_URLs = {
 
   fromJSON(object: any): DashUserSettingsState_URLs {
     return {
-      connectGoogle: isSet(object.connectGoogle) ? String(object.connectGoogle) : "",
-      connectGithub: isSet(object.connectGithub) ? String(object.connectGithub) : "",
+      connectGoogle: isSet(object.connectGoogle) ? globalThis.String(object.connectGoogle) : "",
+      connectGithub: isSet(object.connectGithub) ? globalThis.String(object.connectGithub) : "",
     };
   },
 
@@ -468,7 +468,8 @@ export class GrpcWebImpl {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 

@@ -114,7 +114,7 @@ export const MapBigInt = {
       const m = new Map();
       (object.map as Map<string, string> ?? new Map()).forEach((value, key) => {
         if (value !== undefined) {
-          m.set(key, String(value));
+          m.set(key, globalThis.String(value));
         }
       });
       return m;
@@ -197,8 +197,8 @@ export const MapBigInt_MapEntry = {
 
   fromJSON(object: any): MapBigInt_MapEntry {
     return {
-      key: isSet(object.key) ? String(object.key) : "0",
-      value: isSet(object.value) ? String(object.value) : "0",
+      key: isSet(object.key) ? globalThis.String(object.key) : "0",
+      value: isSet(object.value) ? globalThis.String(object.value) : "0",
     };
   },
 
@@ -227,7 +227,8 @@ export const MapBigInt_MapEntry = {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 

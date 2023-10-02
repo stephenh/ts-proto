@@ -424,34 +424,38 @@ export const OptionalsTest = {
 
   fromJSON(object: any): OptionalsTest {
     return {
-      id: isSet(object.id) ? Number(object.id) : undefined,
+      id: isSet(object.id) ? globalThis.Number(object.id) : undefined,
       child: isSet(object.child) ? Child.fromJSON(object.child) : undefined,
       state: isSet(object.state) ? stateEnumFromJSON(object.state) : undefined,
-      long: isSet(object.long) ? Number(object.long) : undefined,
-      truth: isSet(object.truth) ? Boolean(object.truth) : undefined,
-      description: isSet(object.description) ? String(object.description) : undefined,
+      long: isSet(object.long) ? globalThis.Number(object.long) : undefined,
+      truth: isSet(object.truth) ? globalThis.Boolean(object.truth) : undefined,
+      description: isSet(object.description) ? globalThis.String(object.description) : undefined,
       data: isSet(object.data) ? bytesFromBase64(object.data) : undefined,
-      repId: globalThis.Array.isArray(object?.repId) ? object.repId.map((e: any) => Number(e)) : undefined,
+      repId: globalThis.Array.isArray(object?.repId) ? object.repId.map((e: any) => globalThis.Number(e)) : undefined,
       repChild: globalThis.Array.isArray(object?.repChild)
         ? object.repChild.map((e: any) => Child.fromJSON(e))
         : undefined,
       repState: globalThis.Array.isArray(object?.repState)
         ? object.repState.map((e: any) => stateEnumFromJSON(e))
         : undefined,
-      repLong: globalThis.Array.isArray(object?.repLong) ? object.repLong.map((e: any) => Number(e)) : undefined,
-      repTruth: globalThis.Array.isArray(object?.repTruth) ? object.repTruth.map((e: any) => Boolean(e)) : undefined,
+      repLong: globalThis.Array.isArray(object?.repLong)
+        ? object.repLong.map((e: any) => globalThis.Number(e))
+        : undefined,
+      repTruth: globalThis.Array.isArray(object?.repTruth)
+        ? object.repTruth.map((e: any) => globalThis.Boolean(e))
+        : undefined,
       repDescription: globalThis.Array.isArray(object?.repDescription)
-        ? object.repDescription.map((e: any) => String(e))
+        ? object.repDescription.map((e: any) => globalThis.String(e))
         : undefined,
       repData: globalThis.Array.isArray(object?.repData)
         ? object.repData.map((e: any) => bytesFromBase64(e))
         : undefined,
-      optId: isSet(object.optId) ? Number(object.optId) : undefined,
+      optId: isSet(object.optId) ? globalThis.Number(object.optId) : undefined,
       optChild: isSet(object.optChild) ? Child.fromJSON(object.optChild) : undefined,
       optState: isSet(object.optState) ? stateEnumFromJSON(object.optState) : undefined,
-      optLong: isSet(object.optLong) ? Number(object.optLong) : undefined,
-      optTruth: isSet(object.optTruth) ? Boolean(object.optTruth) : undefined,
-      optDescription: isSet(object.optDescription) ? String(object.optDescription) : undefined,
+      optLong: isSet(object.optLong) ? globalThis.Number(object.optLong) : undefined,
+      optTruth: isSet(object.optTruth) ? globalThis.Boolean(object.optTruth) : undefined,
+      optDescription: isSet(object.optDescription) ? globalThis.String(object.optDescription) : undefined,
       optData: isSet(object.optData) ? bytesFromBase64(object.optData) : undefined,
       translations: isObject(object.translations)
         ? Object.entries(object.translations).reduce<{ [key: string]: string }>((acc, [key, value]) => {
@@ -571,7 +575,7 @@ export const OptionalsTest = {
       ? undefined
       : Object.entries(object.translations ?? {}).reduce<{ [key: string]: string }>((acc, [key, value]) => {
         if (value !== undefined) {
-          acc[key] = String(value);
+          acc[key] = globalThis.String(value);
         }
         return acc;
       }, {});
@@ -625,7 +629,10 @@ export const OptionalsTest_TranslationsEntry = {
   },
 
   fromJSON(object: any): OptionalsTest_TranslationsEntry {
-    return { key: isSet(object.key) ? String(object.key) : "", value: isSet(object.value) ? String(object.value) : "" };
+    return {
+      key: isSet(object.key) ? globalThis.String(object.key) : "",
+      value: isSet(object.value) ? globalThis.String(object.value) : "",
+    };
   },
 
   toJSON(message: OptionalsTest_TranslationsEntry): unknown {
@@ -723,7 +730,8 @@ function base64FromBytes(arr: Uint8Array): string {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 

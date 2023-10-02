@@ -256,7 +256,10 @@ export const Struct_FieldsEntry = {
   },
 
   fromJSON(object: any): Struct_FieldsEntry {
-    return { key: isSet(object.key) ? String(object.key) : "", value: isSet(object?.value) ? object.value : undefined };
+    return {
+      key: isSet(object.key) ? globalThis.String(object.key) : "",
+      value: isSet(object?.value) ? object.value : undefined,
+    };
   },
 
   toJSON(message: Struct_FieldsEntry): unknown {
@@ -380,9 +383,9 @@ export const Value = {
   fromJSON(object: any): Value {
     return {
       nullValue: isSet(object.nullValue) ? nullValueFromJSON(object.nullValue) : undefined,
-      numberValue: isSet(object.numberValue) ? Number(object.numberValue) : undefined,
-      stringValue: isSet(object.stringValue) ? String(object.stringValue) : undefined,
-      boolValue: isSet(object.boolValue) ? Boolean(object.boolValue) : undefined,
+      numberValue: isSet(object.numberValue) ? globalThis.Number(object.numberValue) : undefined,
+      stringValue: isSet(object.stringValue) ? globalThis.String(object.stringValue) : undefined,
+      boolValue: isSet(object.boolValue) ? globalThis.Boolean(object.boolValue) : undefined,
       structValue: isObject(object.structValue) ? object.structValue : undefined,
       listValue: globalThis.Array.isArray(object.listValue) ? [...object.listValue] : undefined,
     };
@@ -543,7 +546,8 @@ messageTypeRegistry.set(ListValue.$type, ListValue);
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 

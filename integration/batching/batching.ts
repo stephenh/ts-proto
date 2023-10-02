@@ -80,7 +80,7 @@ export const BatchQueryRequest = {
   },
 
   fromJSON(object: any): BatchQueryRequest {
-    return { ids: globalThis.Array.isArray(object?.ids) ? object.ids.map((e: any) => String(e)) : [] };
+    return { ids: globalThis.Array.isArray(object?.ids) ? object.ids.map((e: any) => globalThis.String(e)) : [] };
   },
 
   toJSON(message: BatchQueryRequest): unknown {
@@ -196,7 +196,7 @@ export const BatchMapQueryRequest = {
   },
 
   fromJSON(object: any): BatchMapQueryRequest {
-    return { ids: globalThis.Array.isArray(object?.ids) ? object.ids.map((e: any) => String(e)) : [] };
+    return { ids: globalThis.Array.isArray(object?.ids) ? object.ids.map((e: any) => globalThis.String(e)) : [] };
   },
 
   toJSON(message: BatchMapQueryRequest): unknown {
@@ -342,7 +342,7 @@ export const BatchMapQueryResponse_EntitiesEntry = {
 
   fromJSON(object: any): BatchMapQueryResponse_EntitiesEntry {
     return {
-      key: isSet(object.key) ? String(object.key) : "",
+      key: isSet(object.key) ? globalThis.String(object.key) : "",
       value: isSet(object.value) ? Entity.fromJSON(object.value) : undefined,
     };
   },
@@ -411,7 +411,7 @@ export const GetOnlyMethodRequest = {
   },
 
   fromJSON(object: any): GetOnlyMethodRequest {
-    return { id: isSet(object.id) ? String(object.id) : "" };
+    return { id: isSet(object.id) ? globalThis.String(object.id) : "" };
   },
 
   toJSON(message: GetOnlyMethodRequest): unknown {
@@ -527,7 +527,7 @@ export const WriteMethodRequest = {
   },
 
   fromJSON(object: any): WriteMethodRequest {
-    return { id: isSet(object.id) ? String(object.id) : "" };
+    return { id: isSet(object.id) ? globalThis.String(object.id) : "" };
   },
 
   toJSON(message: WriteMethodRequest): unknown {
@@ -637,7 +637,10 @@ export const Entity = {
   },
 
   fromJSON(object: any): Entity {
-    return { id: isSet(object.id) ? String(object.id) : "", name: isSet(object.name) ? String(object.name) : "" };
+    return {
+      id: isSet(object.id) ? globalThis.String(object.id) : "",
+      name: isSet(object.name) ? globalThis.String(object.name) : "",
+    };
   },
 
   toJSON(message: Entity): unknown {
@@ -715,7 +718,8 @@ interface Rpc {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 

@@ -142,7 +142,7 @@ export const DashFlash = {
 
   fromJSON(object: any): DashFlash {
     return {
-      msg: isSet(object.msg) ? String(object.msg) : "",
+      msg: isSet(object.msg) ? globalThis.String(object.msg) : "",
       type: isSet(object.type) ? dashFlash_TypeFromJSON(object.type) : 0,
     };
   },
@@ -226,7 +226,7 @@ export const DashUserSettingsState = {
 
   fromJSON(object: any): DashUserSettingsState {
     return {
-      email: isSet(object.email) ? String(object.email) : "",
+      email: isSet(object.email) ? globalThis.String(object.email) : "",
       urls: isSet(object.urls) ? DashUserSettingsState_URLs.fromJSON(object.urls) : undefined,
       flashes: globalThis.Array.isArray(object?.flashes) ? object.flashes.map((e: any) => DashFlash.fromJSON(e)) : [],
     };
@@ -307,8 +307,8 @@ export const DashUserSettingsState_URLs = {
 
   fromJSON(object: any): DashUserSettingsState_URLs {
     return {
-      connectGoogle: isSet(object.connectGoogle) ? String(object.connectGoogle) : "",
-      connectGithub: isSet(object.connectGithub) ? String(object.connectGithub) : "",
+      connectGoogle: isSet(object.connectGoogle) ? globalThis.String(object.connectGoogle) : "",
+      connectGithub: isSet(object.connectGithub) ? globalThis.String(object.connectGithub) : "",
     };
   },
 
@@ -401,10 +401,10 @@ export const DashCred = {
 
   fromJSON(object: any): DashCred {
     return {
-      description: isSet(object.description) ? String(object.description) : "",
-      metadata: isSet(object.metadata) ? String(object.metadata) : "",
-      token: isSet(object.token) ? String(object.token) : "",
-      id: isSet(object.id) ? String(object.id) : "",
+      description: isSet(object.description) ? globalThis.String(object.description) : "",
+      metadata: isSet(object.metadata) ? globalThis.String(object.metadata) : "",
+      token: isSet(object.token) ? globalThis.String(object.token) : "",
+      id: isSet(object.id) ? globalThis.String(object.id) : "",
     };
   },
 
@@ -485,8 +485,8 @@ export const DashAPICredsCreateReq = {
 
   fromJSON(object: any): DashAPICredsCreateReq {
     return {
-      description: isSet(object.description) ? String(object.description) : "",
-      metadata: isSet(object.metadata) ? String(object.metadata) : "",
+      description: isSet(object.description) ? globalThis.String(object.description) : "",
+      metadata: isSet(object.metadata) ? globalThis.String(object.metadata) : "",
     };
   },
 
@@ -579,10 +579,10 @@ export const DashAPICredsUpdateReq = {
 
   fromJSON(object: any): DashAPICredsUpdateReq {
     return {
-      credSid: isSet(object.credSid) ? String(object.credSid) : "",
-      description: isSet(object.description) ? String(object.description) : "",
-      metadata: isSet(object.metadata) ? String(object.metadata) : "",
-      id: isSet(object.id) ? String(object.id) : "",
+      credSid: isSet(object.credSid) ? globalThis.String(object.credSid) : "",
+      description: isSet(object.description) ? globalThis.String(object.description) : "",
+      metadata: isSet(object.metadata) ? globalThis.String(object.metadata) : "",
+      id: isSet(object.id) ? globalThis.String(object.id) : "",
     };
   },
 
@@ -663,8 +663,8 @@ export const DashAPICredsDeleteReq = {
 
   fromJSON(object: any): DashAPICredsDeleteReq {
     return {
-      credSid: isSet(object.credSid) ? String(object.credSid) : "",
-      id: isSet(object.id) ? String(object.id) : "",
+      credSid: isSet(object.credSid) ? globalThis.String(object.credSid) : "",
+      id: isSet(object.id) ? globalThis.String(object.id) : "",
     };
   },
 
@@ -1102,7 +1102,8 @@ export class GrpcWebImpl {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 

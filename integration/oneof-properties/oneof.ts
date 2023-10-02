@@ -225,17 +225,17 @@ export const PleaseChoose = {
 
   fromJSON(object: any): PleaseChoose {
     return {
-      name: isSet(object.name) ? String(object.name) : "",
-      aNumber: isSet(object.aNumber) ? Number(object.aNumber) : undefined,
-      aString: isSet(object.aString) ? String(object.aString) : undefined,
+      name: isSet(object.name) ? globalThis.String(object.name) : "",
+      aNumber: isSet(object.aNumber) ? globalThis.Number(object.aNumber) : undefined,
+      aString: isSet(object.aString) ? globalThis.String(object.aString) : undefined,
       aMessage: isSet(object.aMessage) ? PleaseChoose_Submessage.fromJSON(object.aMessage) : undefined,
-      aBool: isSet(object.aBool) ? Boolean(object.aBool) : undefined,
+      aBool: isSet(object.aBool) ? globalThis.Boolean(object.aBool) : undefined,
       bunchaBytes: isSet(object.bunchaBytes) ? bytesFromBase64(object.bunchaBytes) : undefined,
       anEnum: isSet(object.anEnum) ? pleaseChoose_StateEnumFromJSON(object.anEnum) : undefined,
-      age: isSet(object.age) ? Number(object.age) : 0,
-      either: isSet(object.either) ? String(object.either) : undefined,
-      or: isSet(object.or) ? String(object.or) : undefined,
-      thirdOption: isSet(object.thirdOption) ? String(object.thirdOption) : undefined,
+      age: isSet(object.age) ? globalThis.Number(object.age) : 0,
+      either: isSet(object.either) ? globalThis.String(object.either) : undefined,
+      or: isSet(object.or) ? globalThis.String(object.or) : undefined,
+      thirdOption: isSet(object.thirdOption) ? globalThis.String(object.thirdOption) : undefined,
     };
   },
 
@@ -335,7 +335,7 @@ export const PleaseChoose_Submessage = {
   },
 
   fromJSON(object: any): PleaseChoose_Submessage {
-    return { name: isSet(object.name) ? String(object.name) : "" };
+    return { name: isSet(object.name) ? globalThis.String(object.name) : "" };
   },
 
   toJSON(message: PleaseChoose_Submessage): unknown {
@@ -384,7 +384,8 @@ function base64FromBytes(arr: Uint8Array): string {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
