@@ -76,7 +76,7 @@ export const EchoMsg = {
   },
 
   fromJSON(object: any): EchoMsg {
-    return { body: isSet(object.body) ? String(object.body) : "" };
+    return { body: isSet(object.body) ? globalThis.String(object.body) : "" };
   },
 
   toJSON(message: EchoMsg): unknown {
@@ -160,7 +160,8 @@ interface Rpc {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 

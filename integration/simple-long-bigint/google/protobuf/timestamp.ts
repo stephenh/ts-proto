@@ -159,7 +159,7 @@ export const Timestamp = {
   fromJSON(object: any): Timestamp {
     return {
       seconds: isSet(object.seconds) ? BigInt(object.seconds) : BigInt("0"),
-      nanos: isSet(object.nanos) ? Number(object.nanos) : 0,
+      nanos: isSet(object.nanos) ? globalThis.Number(object.nanos) : 0,
     };
   },
 
@@ -188,7 +188,8 @@ export const Timestamp = {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | bigint | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 

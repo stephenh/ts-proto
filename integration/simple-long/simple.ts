@@ -312,7 +312,7 @@ export const SimpleWithMap = {
     message.nameLookup = Object.entries(object.nameLookup ?? {}).reduce<{ [key: string]: string }>(
       (acc, [key, value]) => {
         if (value !== undefined) {
-          acc[key] = String(value);
+          acc[key] = globalThis.String(value);
         }
         return acc;
       },
@@ -321,7 +321,7 @@ export const SimpleWithMap = {
     message.intLookup = Object.entries(object.intLookup ?? {}).reduce<{ [key: number]: number }>(
       (acc, [key, value]) => {
         if (value !== undefined) {
-          acc[globalThis.Number(key)] = Number(value);
+          acc[globalThis.Number(key)] = globalThis.Number(value);
         }
         return acc;
       },
@@ -386,7 +386,10 @@ export const SimpleWithMap_NameLookupEntry = {
   },
 
   fromJSON(object: any): SimpleWithMap_NameLookupEntry {
-    return { key: isSet(object.key) ? String(object.key) : "", value: isSet(object.value) ? String(object.value) : "" };
+    return {
+      key: isSet(object.key) ? globalThis.String(object.key) : "",
+      value: isSet(object.value) ? globalThis.String(object.value) : "",
+    };
   },
 
   toJSON(message: SimpleWithMap_NameLookupEntry): unknown {
@@ -459,7 +462,10 @@ export const SimpleWithMap_IntLookupEntry = {
   },
 
   fromJSON(object: any): SimpleWithMap_IntLookupEntry {
-    return { key: isSet(object.key) ? Number(object.key) : 0, value: isSet(object.value) ? Number(object.value) : 0 };
+    return {
+      key: isSet(object.key) ? globalThis.Number(object.key) : 0,
+      value: isSet(object.value) ? globalThis.Number(object.value) : 0,
+    };
   },
 
   toJSON(message: SimpleWithMap_IntLookupEntry): unknown {
@@ -743,17 +749,17 @@ export const Numbers = {
 
   fromJSON(object: any): Numbers {
     return {
-      double: isSet(object.double) ? Number(object.double) : 0,
-      float: isSet(object.float) ? Number(object.float) : 0,
-      int32: isSet(object.int32) ? Number(object.int32) : 0,
+      double: isSet(object.double) ? globalThis.Number(object.double) : 0,
+      float: isSet(object.float) ? globalThis.Number(object.float) : 0,
+      int32: isSet(object.int32) ? globalThis.Number(object.int32) : 0,
       int64: isSet(object.int64) ? Long.fromValue(object.int64) : Long.ZERO,
-      uint32: isSet(object.uint32) ? Number(object.uint32) : 0,
+      uint32: isSet(object.uint32) ? globalThis.Number(object.uint32) : 0,
       uint64: isSet(object.uint64) ? Long.fromValue(object.uint64) : Long.UZERO,
-      sint32: isSet(object.sint32) ? Number(object.sint32) : 0,
+      sint32: isSet(object.sint32) ? globalThis.Number(object.sint32) : 0,
       sint64: isSet(object.sint64) ? Long.fromValue(object.sint64) : Long.ZERO,
-      fixed32: isSet(object.fixed32) ? Number(object.fixed32) : 0,
+      fixed32: isSet(object.fixed32) ? globalThis.Number(object.fixed32) : 0,
       fixed64: isSet(object.fixed64) ? Long.fromValue(object.fixed64) : Long.UZERO,
-      sfixed32: isSet(object.sfixed32) ? Number(object.sfixed32) : 0,
+      sfixed32: isSet(object.sfixed32) ? globalThis.Number(object.sfixed32) : 0,
       sfixed64: isSet(object.sfixed64) ? Long.fromValue(object.sfixed64) : Long.ZERO,
       manyUint64: globalThis.Array.isArray(object?.manyUint64)
         ? object.manyUint64.map((e: any) => Long.fromValue(e))
@@ -838,7 +844,7 @@ export const Numbers = {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Long ? string | number | Long : T extends Array<infer U> ? Array<DeepPartial<U>>
+  : T extends Long ? string | number | Long : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;

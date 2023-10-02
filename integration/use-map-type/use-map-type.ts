@@ -80,7 +80,7 @@ export const Entity = {
   },
 
   fromJSON(object: any): Entity {
-    return { id: isSet(object.id) ? Number(object.id) : 0 };
+    return { id: isSet(object.id) ? globalThis.Number(object.id) : 0 };
   },
 
   toJSON(message: Entity): unknown {
@@ -300,7 +300,7 @@ export const Maps = {
       const m = new Map();
       (object.int32ToInt32 as Map<number, number> ?? new Map()).forEach((value, key) => {
         if (value !== undefined) {
-          m.set(key, Number(value));
+          m.set(key, globalThis.Number(value));
         }
       });
       return m;
@@ -318,7 +318,7 @@ export const Maps = {
       const m = new Map();
       (object.int64ToInt64 as Map<number, number> ?? new Map()).forEach((value, key) => {
         if (value !== undefined) {
-          m.set(key, Number(value));
+          m.set(key, globalThis.Number(value));
         }
       });
       return m;
@@ -384,7 +384,7 @@ export const Maps_StrToEntityEntry = {
 
   fromJSON(object: any): Maps_StrToEntityEntry {
     return {
-      key: isSet(object.key) ? String(object.key) : "",
+      key: isSet(object.key) ? globalThis.String(object.key) : "",
       value: isSet(object.value) ? Entity.fromJSON(object.value) : undefined,
     };
   },
@@ -459,7 +459,10 @@ export const Maps_Int32ToInt32Entry = {
   },
 
   fromJSON(object: any): Maps_Int32ToInt32Entry {
-    return { key: isSet(object.key) ? Number(object.key) : 0, value: isSet(object.value) ? Number(object.value) : 0 };
+    return {
+      key: isSet(object.key) ? globalThis.Number(object.key) : 0,
+      value: isSet(object.value) ? globalThis.Number(object.value) : 0,
+    };
   },
 
   toJSON(message: Maps_Int32ToInt32Entry): unknown {
@@ -531,7 +534,7 @@ export const Maps_StringToBytesEntry = {
 
   fromJSON(object: any): Maps_StringToBytesEntry {
     return {
-      key: isSet(object.key) ? String(object.key) : "",
+      key: isSet(object.key) ? globalThis.String(object.key) : "",
       value: isSet(object.value) ? bytesFromBase64(object.value) : new Uint8Array(0),
     };
   },
@@ -604,7 +607,10 @@ export const Maps_Int64ToInt64Entry = {
   },
 
   fromJSON(object: any): Maps_Int64ToInt64Entry {
-    return { key: isSet(object.key) ? Number(object.key) : 0, value: isSet(object.value) ? Number(object.value) : 0 };
+    return {
+      key: isSet(object.key) ? globalThis.Number(object.key) : 0,
+      value: isSet(object.value) ? globalThis.Number(object.value) : 0,
+    };
   },
 
   toJSON(message: Maps_Int64ToInt64Entry): unknown {
@@ -676,7 +682,7 @@ export const Maps_MapOfTimestampsEntry = {
 
   fromJSON(object: any): Maps_MapOfTimestampsEntry {
     return {
-      key: isSet(object.key) ? String(object.key) : "",
+      key: isSet(object.key) ? globalThis.String(object.key) : "",
       value: isSet(object.value) ? fromJsonTimestamp(object.value) : undefined,
     };
   },
@@ -731,7 +737,8 @@ function base64FromBytes(arr: Uint8Array): string {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 

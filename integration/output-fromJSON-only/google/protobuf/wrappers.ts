@@ -94,49 +94,49 @@ export interface BytesValue {
 
 export const DoubleValue = {
   fromJSON(object: any): DoubleValue {
-    return { value: isSet(object.value) ? Number(object.value) : 0 };
+    return { value: isSet(object.value) ? globalThis.Number(object.value) : 0 };
   },
 };
 
 export const FloatValue = {
   fromJSON(object: any): FloatValue {
-    return { value: isSet(object.value) ? Number(object.value) : 0 };
+    return { value: isSet(object.value) ? globalThis.Number(object.value) : 0 };
   },
 };
 
 export const Int64Value = {
   fromJSON(object: any): Int64Value {
-    return { value: isSet(object.value) ? Number(object.value) : 0 };
+    return { value: isSet(object.value) ? globalThis.Number(object.value) : 0 };
   },
 };
 
 export const UInt64Value = {
   fromJSON(object: any): UInt64Value {
-    return { value: isSet(object.value) ? Number(object.value) : 0 };
+    return { value: isSet(object.value) ? globalThis.Number(object.value) : 0 };
   },
 };
 
 export const Int32Value = {
   fromJSON(object: any): Int32Value {
-    return { value: isSet(object.value) ? Number(object.value) : 0 };
+    return { value: isSet(object.value) ? globalThis.Number(object.value) : 0 };
   },
 };
 
 export const UInt32Value = {
   fromJSON(object: any): UInt32Value {
-    return { value: isSet(object.value) ? Number(object.value) : 0 };
+    return { value: isSet(object.value) ? globalThis.Number(object.value) : 0 };
   },
 };
 
 export const BoolValue = {
   fromJSON(object: any): BoolValue {
-    return { value: isSet(object.value) ? Boolean(object.value) : false };
+    return { value: isSet(object.value) ? globalThis.Boolean(object.value) : false };
   },
 };
 
 export const StringValue = {
   fromJSON(object: any): StringValue {
-    return { value: isSet(object.value) ? String(object.value) : "" };
+    return { value: isSet(object.value) ? globalThis.String(object.value) : "" };
   },
 };
 

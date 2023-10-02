@@ -58,7 +58,7 @@ export const TPartialMessage = {
   },
 
   fromJSON(object: any): TPartialMessage {
-    return { field: isSet(object.field) ? String(object.field) : undefined };
+    return { field: isSet(object.field) ? globalThis.String(object.field) : undefined };
   },
 
   toJSON(message: TPartialMessage): unknown {
@@ -212,8 +212,8 @@ export const TPartial = {
 
   fromJSON(object: any): TPartial {
     return {
-      number: isSet(object.number) ? Number(object.number) : undefined,
-      string: isSet(object.string) ? String(object.string) : undefined,
+      number: isSet(object.number) ? globalThis.Number(object.number) : undefined,
+      string: isSet(object.string) ? globalThis.String(object.string) : undefined,
       map: isObject(object.map)
         ? Object.entries(object.map).reduce<{ [key: string]: string }>((acc, [key, value]) => {
           acc[key] = String(value);
@@ -225,10 +225,10 @@ export const TPartial = {
         ? object.repeatedMessage.map((e: any) => TPartialMessage.fromJSON(e))
         : undefined,
       repeatedString: globalThis.Array.isArray(object?.repeatedString)
-        ? object.repeatedString.map((e: any) => String(e))
+        ? object.repeatedString.map((e: any) => globalThis.String(e))
         : undefined,
       repeatedNumber: globalThis.Array.isArray(object?.repeatedNumber)
-        ? object.repeatedNumber.map((e: any) => Number(e))
+        ? object.repeatedNumber.map((e: any) => globalThis.Number(e))
         : undefined,
     };
   },
@@ -276,7 +276,7 @@ export const TPartial = {
       ? undefined
       : Object.entries(object.map ?? {}).reduce<{ [key: string]: string }>((acc, [key, value]) => {
         if (value !== undefined) {
-          acc[key] = String(value);
+          acc[key] = globalThis.String(value);
         }
         return acc;
       }, {});
@@ -336,7 +336,10 @@ export const TPartial_MapEntry = {
   },
 
   fromJSON(object: any): TPartial_MapEntry {
-    return { key: isSet(object.key) ? String(object.key) : "", value: isSet(object.value) ? String(object.value) : "" };
+    return {
+      key: isSet(object.key) ? globalThis.String(object.key) : "",
+      value: isSet(object.value) ? globalThis.String(object.value) : "",
+    };
   },
 
   toJSON(message: TPartial_MapEntry): unknown {
@@ -364,7 +367,8 @@ export const TPartial_MapEntry = {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 

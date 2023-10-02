@@ -110,11 +110,11 @@ export const Simple = {
 
   fromJSON(object: any): Simple {
     return {
-      name: isSet(object.name) ? String(object.name) : "",
-      age: isSet(object.age) ? Number(object.age) : 0,
+      name: isSet(object.name) ? globalThis.String(object.name) : "",
+      age: isSet(object.age) ? globalThis.Number(object.age) : 0,
       child: isSet(object.child) ? Child.fromJSON(object.child) : undefined,
-      testField: isSet(object.testField) ? String(object.testField) : "",
-      testNotDeprecated: isSet(object.testNotDeprecated) ? String(object.testNotDeprecated) : "",
+      testField: isSet(object.testField) ? globalThis.String(object.testField) : "",
+      testNotDeprecated: isSet(object.testNotDeprecated) ? globalThis.String(object.testNotDeprecated) : "",
     };
   },
 
@@ -188,7 +188,7 @@ export const Child = {
   },
 
   fromJSON(object: any): Child {
-    return { name: isSet(object.name) ? String(object.name) : "" };
+    return { name: isSet(object.name) ? globalThis.String(object.name) : "" };
   },
 
   toJSON(message: Child): unknown {
@@ -212,7 +212,8 @@ export const Child = {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 

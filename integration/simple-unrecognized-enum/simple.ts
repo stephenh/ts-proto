@@ -388,16 +388,16 @@ export const Simple = {
 
   fromJSON(object: any): Simple {
     return {
-      name: isSet(object.name) ? String(object.name) : "",
-      age: isSet(object.age) ? Number(object.age) : 0,
+      name: isSet(object.name) ? globalThis.String(object.name) : "",
+      age: isSet(object.age) ? globalThis.Number(object.age) : 0,
       createdAt: isSet(object.createdAt) ? fromJsonTimestamp(object.createdAt) : undefined,
       child: isSet(object.child) ? Child.fromJSON(object.child) : undefined,
       state: isSet(object.state) ? stateEnumFromJSON(object.state) : 0,
       grandChildren: globalThis.Array.isArray(object?.grandChildren)
         ? object.grandChildren.map((e: any) => Child.fromJSON(e))
         : [],
-      coins: globalThis.Array.isArray(object?.coins) ? object.coins.map((e: any) => Number(e)) : [],
-      snacks: globalThis.Array.isArray(object?.snacks) ? object.snacks.map((e: any) => String(e)) : [],
+      coins: globalThis.Array.isArray(object?.coins) ? object.coins.map((e: any) => globalThis.Number(e)) : [],
+      snacks: globalThis.Array.isArray(object?.snacks) ? object.snacks.map((e: any) => globalThis.String(e)) : [],
       oldStates: globalThis.Array.isArray(object?.oldStates)
         ? object.oldStates.map((e: any) => stateEnumFromJSON(e))
         : [],
@@ -508,7 +508,7 @@ export const Child = {
 
   fromJSON(object: any): Child {
     return {
-      name: isSet(object.name) ? String(object.name) : "",
+      name: isSet(object.name) ? globalThis.String(object.name) : "",
       type: isSet(object.type) ? child_TypeFromJSON(object.type) : 0,
     };
   },
@@ -592,7 +592,7 @@ export const Nested = {
 
   fromJSON(object: any): Nested {
     return {
-      name: isSet(object.name) ? String(object.name) : "",
+      name: isSet(object.name) ? globalThis.String(object.name) : "",
       message: isSet(object.message) ? Nested_InnerMessage.fromJSON(object.message) : undefined,
       state: isSet(object.state) ? nested_InnerEnumFromJSON(object.state) : 0,
     };
@@ -673,7 +673,7 @@ export const Nested_InnerMessage = {
 
   fromJSON(object: any): Nested_InnerMessage {
     return {
-      name: isSet(object.name) ? String(object.name) : "",
+      name: isSet(object.name) ? globalThis.String(object.name) : "",
       deep: isSet(object.deep) ? Nested_InnerMessage_DeepMessage.fromJSON(object.deep) : undefined,
     };
   },
@@ -738,7 +738,7 @@ export const Nested_InnerMessage_DeepMessage = {
   },
 
   fromJSON(object: any): Nested_InnerMessage_DeepMessage {
-    return { name: isSet(object.name) ? String(object.name) : "" };
+    return { name: isSet(object.name) ? globalThis.String(object.name) : "" };
   },
 
   toJSON(message: Nested_InnerMessage_DeepMessage): unknown {
@@ -808,8 +808,8 @@ export const OneOfMessage = {
 
   fromJSON(object: any): OneOfMessage {
     return {
-      first: isSet(object.first) ? String(object.first) : undefined,
-      last: isSet(object.last) ? String(object.last) : undefined,
+      first: isSet(object.first) ? globalThis.String(object.first) : undefined,
+      last: isSet(object.last) ? globalThis.String(object.last) : undefined,
     };
   },
 
@@ -990,7 +990,7 @@ export const Entity = {
   },
 
   fromJSON(object: any): Entity {
-    return { id: isSet(object.id) ? Number(object.id) : 0 };
+    return { id: isSet(object.id) ? globalThis.Number(object.id) : 0 };
   },
 
   toJSON(message: Entity): unknown {
@@ -1147,7 +1147,7 @@ export const SimpleWithMap = {
     message.nameLookup = Object.entries(object.nameLookup ?? {}).reduce<{ [key: string]: string }>(
       (acc, [key, value]) => {
         if (value !== undefined) {
-          acc[key] = String(value);
+          acc[key] = globalThis.String(value);
         }
         return acc;
       },
@@ -1156,7 +1156,7 @@ export const SimpleWithMap = {
     message.intLookup = Object.entries(object.intLookup ?? {}).reduce<{ [key: number]: number }>(
       (acc, [key, value]) => {
         if (value !== undefined) {
-          acc[globalThis.Number(key)] = Number(value);
+          acc[globalThis.Number(key)] = globalThis.Number(value);
         }
         return acc;
       },
@@ -1213,7 +1213,7 @@ export const SimpleWithMap_EntitiesByIdEntry = {
 
   fromJSON(object: any): SimpleWithMap_EntitiesByIdEntry {
     return {
-      key: isSet(object.key) ? Number(object.key) : 0,
+      key: isSet(object.key) ? globalThis.Number(object.key) : 0,
       value: isSet(object.value) ? Entity.fromJSON(object.value) : undefined,
     };
   },
@@ -1290,7 +1290,10 @@ export const SimpleWithMap_NameLookupEntry = {
   },
 
   fromJSON(object: any): SimpleWithMap_NameLookupEntry {
-    return { key: isSet(object.key) ? String(object.key) : "", value: isSet(object.value) ? String(object.value) : "" };
+    return {
+      key: isSet(object.key) ? globalThis.String(object.key) : "",
+      value: isSet(object.value) ? globalThis.String(object.value) : "",
+    };
   },
 
   toJSON(message: SimpleWithMap_NameLookupEntry): unknown {
@@ -1363,7 +1366,10 @@ export const SimpleWithMap_IntLookupEntry = {
   },
 
   fromJSON(object: any): SimpleWithMap_IntLookupEntry {
-    return { key: isSet(object.key) ? Number(object.key) : 0, value: isSet(object.value) ? Number(object.value) : 0 };
+    return {
+      key: isSet(object.key) ? globalThis.Number(object.key) : 0,
+      value: isSet(object.value) ? globalThis.Number(object.value) : 0,
+    };
   },
 
   toJSON(message: SimpleWithMap_IntLookupEntry): unknown {
@@ -1516,7 +1522,7 @@ export const SimpleWithSnakeCaseMap_EntitiesByIdEntry = {
 
   fromJSON(object: any): SimpleWithSnakeCaseMap_EntitiesByIdEntry {
     return {
-      key: isSet(object.key) ? Number(object.key) : 0,
+      key: isSet(object.key) ? globalThis.Number(object.key) : 0,
       value: isSet(object.value) ? Entity.fromJSON(object.value) : undefined,
     };
   },
@@ -1585,7 +1591,7 @@ export const PingRequest = {
   },
 
   fromJSON(object: any): PingRequest {
-    return { input: isSet(object.input) ? String(object.input) : "" };
+    return { input: isSet(object.input) ? globalThis.String(object.input) : "" };
   },
 
   toJSON(message: PingRequest): unknown {
@@ -1642,7 +1648,7 @@ export const PingResponse = {
   },
 
   fromJSON(object: any): PingResponse {
-    return { output: isSet(object.output) ? String(object.output) : "" };
+    return { output: isSet(object.output) ? globalThis.String(object.output) : "" };
   },
 
   toJSON(message: PingResponse): unknown {
@@ -1823,18 +1829,18 @@ export const Numbers = {
 
   fromJSON(object: any): Numbers {
     return {
-      double: isSet(object.double) ? Number(object.double) : 0,
-      float: isSet(object.float) ? Number(object.float) : 0,
-      int32: isSet(object.int32) ? Number(object.int32) : 0,
-      int64: isSet(object.int64) ? Number(object.int64) : 0,
-      uint32: isSet(object.uint32) ? Number(object.uint32) : 0,
-      uint64: isSet(object.uint64) ? Number(object.uint64) : 0,
-      sint32: isSet(object.sint32) ? Number(object.sint32) : 0,
-      sint64: isSet(object.sint64) ? Number(object.sint64) : 0,
-      fixed32: isSet(object.fixed32) ? Number(object.fixed32) : 0,
-      fixed64: isSet(object.fixed64) ? Number(object.fixed64) : 0,
-      sfixed32: isSet(object.sfixed32) ? Number(object.sfixed32) : 0,
-      sfixed64: isSet(object.sfixed64) ? Number(object.sfixed64) : 0,
+      double: isSet(object.double) ? globalThis.Number(object.double) : 0,
+      float: isSet(object.float) ? globalThis.Number(object.float) : 0,
+      int32: isSet(object.int32) ? globalThis.Number(object.int32) : 0,
+      int64: isSet(object.int64) ? globalThis.Number(object.int64) : 0,
+      uint32: isSet(object.uint32) ? globalThis.Number(object.uint32) : 0,
+      uint64: isSet(object.uint64) ? globalThis.Number(object.uint64) : 0,
+      sint32: isSet(object.sint32) ? globalThis.Number(object.sint32) : 0,
+      sint64: isSet(object.sint64) ? globalThis.Number(object.sint64) : 0,
+      fixed32: isSet(object.fixed32) ? globalThis.Number(object.fixed32) : 0,
+      fixed64: isSet(object.fixed64) ? globalThis.Number(object.fixed64) : 0,
+      sfixed32: isSet(object.sfixed32) ? globalThis.Number(object.sfixed32) : 0,
+      sfixed64: isSet(object.sfixed64) ? globalThis.Number(object.sfixed64) : 0,
     };
   },
 
@@ -1927,7 +1933,8 @@ interface Rpc {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 

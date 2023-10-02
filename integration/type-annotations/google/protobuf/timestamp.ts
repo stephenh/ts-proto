@@ -162,8 +162,8 @@ export const Timestamp = {
   fromJSON(object: any): Timestamp {
     return {
       $type: Timestamp.$type,
-      seconds: isSet(object.seconds) ? Number(object.seconds) : 0,
-      nanos: isSet(object.nanos) ? Number(object.nanos) : 0,
+      seconds: isSet(object.seconds) ? globalThis.Number(object.seconds) : 0,
+      nanos: isSet(object.nanos) ? globalThis.Number(object.nanos) : 0,
     };
   },
 
@@ -192,7 +192,8 @@ export const Timestamp = {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in Exclude<keyof T, "$type">]?: DeepPartial<T[K]> }
   : Partial<T>;
 

@@ -48,7 +48,7 @@ export const ProduceRequest = {
   },
 
   fromJSON(object: any): ProduceRequest {
-    return { ingredients: isSet(object.ingredients) ? String(object.ingredients) : "" };
+    return { ingredients: isSet(object.ingredients) ? globalThis.String(object.ingredients) : "" };
   },
 
   toJSON(message: ProduceRequest): unknown {
@@ -105,7 +105,7 @@ export const ProduceReply = {
   },
 
   fromJSON(object: any): ProduceReply {
-    return { result: isSet(object.result) ? String(object.result) : "" };
+    return { result: isSet(object.result) ? globalThis.String(object.result) : "" };
   },
 
   toJSON(message: ProduceReply): unknown {
@@ -133,7 +133,8 @@ export interface Factory {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 

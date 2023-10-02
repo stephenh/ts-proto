@@ -121,7 +121,7 @@ export const Simple = {
 
   fromJSON(object: any): Simple {
     return {
-      name: isSet(object.name) ? String(object.name) : "",
+      name: isSet(object.name) ? globalThis.String(object.name) : "",
       otherSimple: isSet(object.otherSimple) ? Simple3.fromJSON(object.otherSimple) : undefined,
     };
   },
@@ -197,7 +197,7 @@ export const DifferentSimple = {
 
   fromJSON(object: any): DifferentSimple {
     return {
-      name: isSet(object.name) ? String(object.name) : "",
+      name: isSet(object.name) ? globalThis.String(object.name) : "",
       otherOptionalSimple2: isSet(object.otherOptionalSimple2)
         ? Simple3.fromJSON(object.otherOptionalSimple2)
         : undefined,
@@ -443,7 +443,8 @@ interface Rpc {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 

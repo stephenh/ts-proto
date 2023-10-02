@@ -148,7 +148,7 @@ export const Simple = {
 
   fromJSON(object: any): Simple {
     return {
-      name: isSet(object.name) ? String(object.name) : "",
+      name: isSet(object.name) ? globalThis.String(object.name) : "",
       state: isSet(object.state) ? stateEnumFromJSON(object.state) : 0,
       states: globalThis.Array.isArray(object?.states) ? object.states.map((e: any) => stateEnumFromJSON(e)) : [],
       nullValue: isSet(object.nullValue) ? nullValueFromJSON(object.nullValue) : 0,
@@ -256,7 +256,7 @@ export const Simple_StateMapEntry = {
 
   fromJSON(object: any): Simple_StateMapEntry {
     return {
-      key: isSet(object.key) ? String(object.key) : "",
+      key: isSet(object.key) ? globalThis.String(object.key) : "",
       value: isSet(object.value) ? stateEnumFromJSON(object.value) : 0,
     };
   },
@@ -286,7 +286,8 @@ export const Simple_StateMapEntry = {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 

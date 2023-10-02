@@ -131,15 +131,15 @@ export const Simple = {
 
   fromJSON(object: any): Simple {
     return {
-      name: isSet(object.other_name) ? String(object.other_name) : "",
-      age: isSet(object.other_age) ? Number(object.other_age) : undefined,
+      name: isSet(object.other_name) ? globalThis.String(object.other_name) : "",
+      age: isSet(object.other_age) ? globalThis.Number(object.other_age) : undefined,
       createdAt: isSet(object.createdAt) ? fromJsonTimestamp(object.createdAt) : undefined,
-      hyphen: isSet(object["hyphened-name"]) ? String(object["hyphened-name"]) : "",
-      spaces: isSet(object["name with spaces"]) ? String(object["name with spaces"]) : "",
-      dollarStart: isSet(object.$dollar) ? String(object.$dollar) : "",
-      dollarEnd: isSet(object.dollar$) ? String(object.dollar$) : "",
+      hyphen: isSet(object["hyphened-name"]) ? globalThis.String(object["hyphened-name"]) : "",
+      spaces: isSet(object["name with spaces"]) ? globalThis.String(object["name with spaces"]) : "",
+      dollarStart: isSet(object.$dollar) ? globalThis.String(object.$dollar) : "",
+      dollarEnd: isSet(object.dollar$) ? globalThis.String(object.dollar$) : "",
       hyphenList: globalThis.Array.isArray(object?.["hyphen-list"])
-        ? object["hyphen-list"].map((e: any) => String(e))
+        ? object["hyphen-list"].map((e: any) => globalThis.String(e))
         : [],
     };
   },
@@ -193,7 +193,8 @@ export const Simple = {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 

@@ -98,7 +98,7 @@ export const Todo = {
 
   fromJSON(object: any): Todo {
     return {
-      id: isSet(object.id) ? String(object.id) : "",
+      id: isSet(object.id) ? globalThis.String(object.id) : "",
       oid: isSet(object.oid) ? fromJsonObjectId(object.oid) : undefined,
       repeatedOid: globalThis.Array.isArray(object?.repeatedOid)
         ? object.repeatedOid.map((e: any) => fromJsonObjectId(e))
@@ -210,7 +210,7 @@ export const Todo_MapOfOidsEntry = {
 
   fromJSON(object: any): Todo_MapOfOidsEntry {
     return {
-      key: isSet(object.key) ? String(object.key) : "",
+      key: isSet(object.key) ? globalThis.String(object.key) : "",
       value: isSet(object.value) ? fromJsonObjectId(object.value) : undefined,
     };
   },
@@ -242,7 +242,8 @@ export const Todo_MapOfOidsEntry = {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 

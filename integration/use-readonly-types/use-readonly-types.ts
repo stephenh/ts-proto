@@ -199,22 +199,24 @@ export const Entity = {
 
   fromJSON(object: any): Entity {
     return {
-      intVal: isSet(object.intVal) ? Number(object.intVal) : 0,
-      stringVal: isSet(object.stringVal) ? String(object.stringVal) : "",
-      intArray: globalThis.Array.isArray(object?.intArray) ? object.intArray.map((e: any) => Number(e)) : [],
-      stringArray: globalThis.Array.isArray(object?.stringArray) ? object.stringArray.map((e: any) => String(e)) : [],
+      intVal: isSet(object.intVal) ? globalThis.Number(object.intVal) : 0,
+      stringVal: isSet(object.stringVal) ? globalThis.String(object.stringVal) : "",
+      intArray: globalThis.Array.isArray(object?.intArray) ? object.intArray.map((e: any) => globalThis.Number(e)) : [],
+      stringArray: globalThis.Array.isArray(object?.stringArray)
+        ? object.stringArray.map((e: any) => globalThis.String(e))
+        : [],
       subEntity: isSet(object.subEntity) ? SubEntity.fromJSON(object.subEntity) : undefined,
       subEntityArray: globalThis.Array.isArray(object?.subEntityArray)
         ? object.subEntityArray.map((e: any) => SubEntity.fromJSON(e))
         : [],
-      optionalIntVal: isSet(object.optionalIntVal) ? Number(object.optionalIntVal) : undefined,
+      optionalIntVal: isSet(object.optionalIntVal) ? globalThis.Number(object.optionalIntVal) : undefined,
       fieldMask: isSet(object.fieldMask) ? FieldMask.unwrap(FieldMask.fromJSON(object.fieldMask)) : undefined,
       listValue: globalThis.Array.isArray(object.listValue) ? [...object.listValue] : undefined,
       structValue: isObject(object.structValue) ? object.structValue : undefined,
       oneOfValue: isSet(object.theStringValue)
-        ? { $case: "theStringValue", theStringValue: String(object.theStringValue) }
+        ? { $case: "theStringValue", theStringValue: globalThis.String(object.theStringValue) }
         : isSet(object.theIntValue)
-        ? { $case: "theIntValue", theIntValue: Number(object.theIntValue) }
+        ? { $case: "theIntValue", theIntValue: globalThis.Number(object.theIntValue) }
         : undefined,
     };
   },
@@ -331,7 +333,7 @@ export const SubEntity = {
   },
 
   fromJSON(object: any): SubEntity {
-    return { subVal: isSet(object.subVal) ? Number(object.subVal) : 0 };
+    return { subVal: isSet(object.subVal) ? globalThis.Number(object.subVal) : 0 };
   },
 
   toJSON(message: SubEntity): unknown {
@@ -355,7 +357,8 @@ export const SubEntity = {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends { readonly $case: string }
     ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & { readonly $case: T["$case"] }
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
