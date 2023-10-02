@@ -610,8 +610,8 @@ function makeDeepPartial(options: Options, longs: ReturnType<typeof makeLongUtil
       ${maybeExport} type DeepPartial<T> =  T extends ${Builtin}
         ? T
         ${maybeLong}
-        : T extends Array<infer U>
-        ? Array<DeepPartial<U>>
+        : T extends globalThis.Array<infer U>
+        ? globalThis.Array<DeepPartial<U>>
         : T extends ReadonlyArray<infer U>
         ? ReadonlyArray<DeepPartial<U>>${oneofCase}
         : T extends {}
@@ -1756,7 +1756,7 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
           return code`BigInt(${from})`;
         } else {
           const cstr = capitalize(basicTypeName(ctx, field, { keepValueType: true }).toCodeString([]));
-          return code`${cstr}(${from})`;
+          return code`${utils.globalThis}.${cstr}(${from})`;
         }
       } else if (isObjectId(field) && options.useMongoObjectId) {
         return code`${utils.fromJsonObjectId}(${from})`;
@@ -2161,7 +2161,7 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
               return code`BigInt(${from} as string | number | bigint | boolean)`;
             } else {
               const cstr = capitalize(valueType.toCodeString([]));
-              return code`${cstr}(${from})`;
+              return code`${utils.globalThis}.${cstr}(${from})`;
             }
           } else if (isAnyValueType(valueField)) {
             return code`${from}`;
