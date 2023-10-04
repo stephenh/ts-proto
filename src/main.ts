@@ -1403,7 +1403,7 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
           writer.ldelim();
         `;
 
-        if (options.forceLong === LongOption.BIGINT) {
+        if (isLong(field) && options.forceLong === LongOption.BIGINT) {
           const fieldType = toReaderCall(field);
           switch (fieldType) {
             case 'int64': case 'sint64': case 'sfixed64':
