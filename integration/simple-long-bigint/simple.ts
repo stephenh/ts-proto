@@ -56,30 +56,45 @@ export const Numbers = {
       writer.uint32(24).int32(message.int32);
     }
     if (message.int64 !== BigInt("0")) {
+      if (BigInt.asIntN(64, message.int64) !== message.int64) {
+        throw new Error("value provided for field message.int64 of type int64 too large");
+      }
       writer.uint32(32).int64(message.int64.toString());
     }
     if (message.uint32 !== 0) {
       writer.uint32(40).uint32(message.uint32);
     }
     if (message.uint64 !== BigInt("0")) {
+      if (BigInt.asUintN(64, message.uint64) !== message.uint64) {
+        throw new Error("value provided for field message.uint64 of type uint64 too large");
+      }
       writer.uint32(48).uint64(message.uint64.toString());
     }
     if (message.sint32 !== 0) {
       writer.uint32(56).sint32(message.sint32);
     }
     if (message.sint64 !== BigInt("0")) {
+      if (BigInt.asIntN(64, message.sint64) !== message.sint64) {
+        throw new Error("value provided for field message.sint64 of type sint64 too large");
+      }
       writer.uint32(64).sint64(message.sint64.toString());
     }
     if (message.fixed32 !== 0) {
       writer.uint32(77).fixed32(message.fixed32);
     }
     if (message.fixed64 !== BigInt("0")) {
+      if (BigInt.asUintN(64, message.fixed64) !== message.fixed64) {
+        throw new Error("value provided for field message.fixed64 of type fixed64 too large");
+      }
       writer.uint32(81).fixed64(message.fixed64.toString());
     }
     if (message.sfixed32 !== 0) {
       writer.uint32(93).sfixed32(message.sfixed32);
     }
     if (message.sfixed64 !== BigInt("0")) {
+      if (BigInt.asIntN(64, message.sfixed64) !== message.sfixed64) {
+        throw new Error("value provided for field message.sfixed64 of type sfixed64 too large");
+      }
       writer.uint32(97).sfixed64(message.sfixed64.toString());
     }
     if (message.guint64 !== undefined) {
@@ -90,6 +105,9 @@ export const Numbers = {
     }
     writer.uint32(122).fork();
     for (const v of message.uint64s) {
+      if (BigInt.asUintN(64, v) !== v) {
+        throw new Error("a value provided in array field uint64s of type uint64 is too large");
+      }
       writer.uint64(v.toString());
     }
     writer.ldelim();

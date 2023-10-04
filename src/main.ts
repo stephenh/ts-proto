@@ -1240,7 +1240,21 @@ function getEncodeWriteSnippet(ctx: Context, field: FieldDescriptorProto): (plac
     return (place) => code`writer.uint32(${tag}).${toReaderCall(field)}(${toNumber}(${place}))`;
   } else if (isLong(field) && options.forceLong === LongOption.BIGINT) {
     const tag = ((field.number << 3) | basicWireType(field.type)) >>> 0;
-    return (place) => code`writer.uint32(${tag}).${toReaderCall(field)}(${place}.toString())`;
+    const fieldType = toReaderCall(field);
+    switch (fieldType) {
+      case 'int64': case 'sint64': case 'sfixed64':
+        return (place) => code`if (BigInt.asIntN(64, ${place}) !== ${place}) {
+          throw new Error('value provided for field ${place} of type ${fieldType} too large');
+        }
+        writer.uint32(${tag}).${toReaderCall(field)}(${place}.toString())`;
+      case 'uint64': case 'fixed64':
+        return (place) => code`if (BigInt.asUintN(64, ${place}) !== ${place}) {
+          throw new Error('value provided for field ${place} of type ${fieldType} too large');
+        }
+        writer.uint32(${tag}).${toReaderCall(field)}(${place}.toString())`;
+      default:
+        throw new Error(`unexpected BigInt type: ${fieldType}`);
+    }
   } else if (isScalar(field) || isEnum(field)) {
     const tag = ((field.number << 3) | basicWireType(field.type)) >>> 0;
     return (place) => code`writer.uint32(${tag}).${toReaderCall(field)}(${place})`;
@@ -1381,13 +1395,45 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
         // Ideally we'd reuse `writeSnippet` but it has tagging embedded inside of it.
         const tag = ((field.number << 3) | 2) >>> 0;
         const rhs = (x: string) => (isLong(field) && options.forceLong === LongOption.BIGINT ? `${x}.toString()` : x);
-        const listWriteSnippet = code`
+        let listWriteSnippet = code`
           writer.uint32(${tag}).fork();
           for (const v of message.${fieldName}) {
             writer.${toReaderCall(field)}(${rhs("v")});
           }
           writer.ldelim();
         `;
+
+        if (options.forceLong === LongOption.BIGINT) {
+          const fieldType = toReaderCall(field);
+          switch (fieldType) {
+            case 'int64': case 'sint64': case 'sfixed64':
+              listWriteSnippet = code`
+                writer.uint32(${tag}).fork();
+                for (const v of message.${fieldName}) {
+                  if (BigInt.asIntN(64, v) !== v) {
+                    throw new Error('a value provided in array field ${fieldName} of type ${fieldType} is too large');
+                  }
+                  writer.${toReaderCall(field)}(${rhs("v")});
+                }
+                writer.ldelim();
+              `;
+              break;
+            case 'uint64': case 'fixed64':
+              listWriteSnippet = code`
+                writer.uint32(${tag}).fork();
+                for (const v of message.${fieldName}) {
+                  if (BigInt.asUintN(64, v) !== v) {
+                    throw new Error('a value provided in array field ${fieldName} of type ${fieldType} is too large');
+                  }                
+                  writer.${toReaderCall(field)}(${rhs("v")});
+                }
+                writer.ldelim();
+              `;
+              break;
+            default:
+              throw new Error(`unexpected BigInt type: ${fieldType}`);
+          }
+        }
         if (isOptional) {
           chunks.push(code`
             if (message.${fieldName} !== undefined && message.${fieldName}.length !== 0) {
