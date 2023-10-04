@@ -59,7 +59,7 @@ export const TimestampMessage = {
   toJSON(message: TimestampMessage): unknown {
     const obj: any = {};
     if (message.timestamp !== undefined) {
-      obj.timestamp = fromTimestamp(message.timestamp).toISOString();
+      obj.timestamp = message.timestamp;
     }
     return obj;
   },
@@ -154,12 +154,6 @@ function toTimestamp(date: Date): Timestamp {
   const seconds = date.getTime() / 1_000;
   const nanos = (date.getTime() % 1_000) * 1_000_000;
   return { seconds, nanos };
-}
-
-function fromTimestamp(t: Timestamp): Date {
-  let millis = (t.seconds || 0) * 1_000;
-  millis += (t.nanos || 0) / 1_000_000;
-  return new globalThis.Date(millis);
 }
 
 function fromJsonTimestamp(o: any): Timestamp {

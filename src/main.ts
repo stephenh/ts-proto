@@ -1979,7 +1979,7 @@ function generateToJson(
       } else if (isTimestamp(field) && options.useDate === DateOption.STRING) {
         return code`${from}`;
       } else if (isTimestamp(field) && options.useDate === DateOption.TIMESTAMP) {
-        return code`${utils.fromTimestamp}(${from}).toISOString()`;
+        return code`${from}`;
       } else if (isMapType(ctx, messageDesc, field)) {
         // For map types, drill-in and then admittedly re-hard-code our per-value-type logic
         const valueType = (typeMap.get(field.typeName)![2] as DescriptorProto).field[1];

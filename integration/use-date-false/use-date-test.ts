@@ -19,14 +19,23 @@ describe("useDate=false", () => {
     const json = Metadata.toJSON({ lastEdited: nov29 });
     expect(json).toMatchInlineSnapshot(`
       {
-        "lastEdited": "1973-11-29T21:33:09.234Z",
+        "lastEdited": {
+          "nanos": 234567890,
+          "seconds": 123456789,
+        },
       }
     `);
     expect(Metadata.fromJSON(json).lastEdited).toMatchInlineSnapshot(`
       {
-        "nanos": 234000000,
-        "seconds": 123456789.234,
+        "nanos": 234567890,
+        "seconds": 123456789,
       }
     `);
+  });
+
+  it("doesn't lose precision in encoding/decoding", () => {
+    const d = Metadata.fromJSON(Metadata.toJSON({ lastEdited: nov29 }));
+    expect(d.lastEdited?.seconds).toStrictEqual(nov29.seconds);
+    expect(d.lastEdited?.nanos).toStrictEqual(nov29.nanos);
   });
 });
