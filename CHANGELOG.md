@@ -1,3 +1,10 @@
+## [1.159.3](https://github.com/stephenh/ts-proto/compare/v1.159.2...v1.159.3) (2023-10-04)
+
+
+### Bug Fixes
+
+* toJSON methods don't respect useDate=false ([#935](https://github.com/stephenh/ts-proto/issues/935)) ([#937](https://github.com/stephenh/ts-proto/issues/937)) ([acdfb0a](https://github.com/stephenh/ts-proto/commit/acdfb0a100c9de1d51cb1710cc3fb40566d16706))
+
 ## [1.159.2](https://github.com/stephenh/ts-proto/compare/v1.159.1...v1.159.2) (2023-10-02)
 
 
