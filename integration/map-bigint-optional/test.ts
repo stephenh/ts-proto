@@ -130,9 +130,15 @@ function createBaseMapBigInt_MapEntry(): MapBigInt_MapEntry {
 export const MapBigInt_MapEntry = {
   encode(message: MapBigInt_MapEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.key !== BigInt("0")) {
+      if (BigInt.asUintN(64, message.key) !== message.key) {
+        throw new Error("value provided for field message.key of type fixed64 too large");
+      }
       writer.uint32(9).fixed64(message.key.toString());
     }
     if (message.value !== BigInt("0")) {
+      if (BigInt.asIntN(64, message.value) !== message.value) {
+        throw new Error("value provided for field message.value of type int64 too large");
+      }
       writer.uint32(16).int64(message.value.toString());
     }
     if (message._unknownFields !== undefined) {
