@@ -1242,12 +1242,15 @@ function getEncodeWriteSnippet(ctx: Context, field: FieldDescriptorProto): (plac
     const tag = ((field.number << 3) | basicWireType(field.type)) >>> 0;
     const fieldType = toReaderCall(field);
     switch (fieldType) {
-      case 'int64': case 'sint64': case 'sfixed64':
+      case "int64":
+      case "sint64":
+      case "sfixed64":
         return (place) => code`if (BigInt.asIntN(64, ${place}) !== ${place}) {
           throw new Error('value provided for field ${place} of type ${fieldType} too large');
         }
         writer.uint32(${tag}).${toReaderCall(field)}(${place}.toString())`;
-      case 'uint64': case 'fixed64':
+      case "uint64":
+      case "fixed64":
         return (place) => code`if (BigInt.asUintN(64, ${place}) !== ${place}) {
           throw new Error('value provided for field ${place} of type ${fieldType} too large');
         }
@@ -1406,7 +1409,9 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
         if (isLong(field) && options.forceLong === LongOption.BIGINT) {
           const fieldType = toReaderCall(field);
           switch (fieldType) {
-            case 'int64': case 'sint64': case 'sfixed64':
+            case "int64":
+            case "sint64":
+            case "sfixed64":
               listWriteSnippet = code`
                 writer.uint32(${tag}).fork();
                 for (const v of message.${fieldName}) {
@@ -1418,7 +1423,8 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
                 writer.ldelim();
               `;
               break;
-            case 'uint64': case 'fixed64':
+            case "uint64":
+            case "fixed64":
               listWriteSnippet = code`
                 writer.uint32(${tag}).fork();
                 for (const v of message.${fieldName}) {
