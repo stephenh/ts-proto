@@ -1,3 +1,10 @@
+# [1.160.0](https://github.com/stephenh/ts-proto/compare/v1.159.3...v1.160.0) (2023-10-05)
+
+
+### Features
+
+* add bigint input validation ([#938](https://github.com/stephenh/ts-proto/issues/938)) ([0f9b6b1](https://github.com/stephenh/ts-proto/commit/0f9b6b1c5982427f77b111466a11c18e57b070bd))
+
 ## [1.159.3](https://github.com/stephenh/ts-proto/compare/v1.159.2...v1.159.3) (2023-10-04)
 
 
