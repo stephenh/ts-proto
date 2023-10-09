@@ -52,6 +52,7 @@ describe("options", () => {
         "useAsyncIterable": false,
         "useDate": "timestamp",
         "useExactTypes": true,
+        "useJsonName": false,
         "useJsonWireFormat": false,
         "useMapType": false,
         "useMongoObjectId": false,

@@ -877,7 +877,7 @@ function generateInterfaceDeclaration(
     const info = sourceInfo.lookup(Fields.message.field, index);
     maybeAddComment(info, chunks, fieldDesc.options?.deprecated);
 
-    const name = maybeSnakeToCamel(fieldDesc.name, options);
+    const name = maybeSnakeToCamel(options.useJsonName ? fieldDesc.jsonName : fieldDesc.name, options);
     const isOptional = isOptionalProperty(fieldDesc, messageDesc.options, options);
     const type = toTypeName(ctx, messageDesc, fieldDesc, isOptional);
     chunks.push(code`${maybeReadonly(options)}${name}${isOptional ? "?" : ""}: ${type}, `);

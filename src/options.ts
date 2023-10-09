@@ -77,6 +77,7 @@ export type Options = {
   useAsyncIterable: boolean;
   unknownFields: boolean;
   usePrototypeForDefaults: boolean;
+  useJsonName: boolean;
   useJsonWireFormat: boolean;
   useNumericEnumForJson: boolean;
   initializeFieldsAsUndefined: boolean;
@@ -132,6 +133,7 @@ export function defaultOptions(): Options {
     useAsyncIterable: false,
     unknownFields: false,
     usePrototypeForDefaults: false,
+    useJsonName: false,
     useJsonWireFormat: false,
     useNumericEnumForJson: false,
     initializeFieldsAsUndefined: true,
