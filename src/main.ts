@@ -46,12 +46,13 @@ import SourceInfo, { Fields } from "./sourceInfo";
 import {
   assertInstanceOf,
   FormattedMethodDescriptor,
-  getFieldJsonName,
   getPropertyAccessor,
+  propertyNameComposition,
   impFile,
   impProto,
   maybeAddComment,
   maybePrefixPackage,
+  getFieldJsonName,
 } from "./utils";
 import { camelToSnake, capitalize, maybeSnakeToCamel } from "./case";
 import {
@@ -876,11 +877,10 @@ function generateInterfaceDeclaration(
 
     const info = sourceInfo.lookup(Fields.message.field, index);
     maybeAddComment(info, chunks, fieldDesc.options?.deprecated);
-
-    const name = maybeSnakeToCamel(options.useJsonName ? fieldDesc.jsonName : fieldDesc.name, options);
+    const { validatedPropertyName } = propertyNameComposition(fieldDesc, options);
     const isOptional = isOptionalProperty(fieldDesc, messageDesc.options, options);
     const type = toTypeName(ctx, messageDesc, fieldDesc, isOptional);
-    chunks.push(code`${maybeReadonly(options)}${name}${isOptional ? "?" : ""}: ${type}, `);
+    chunks.push(code`${maybeReadonly(options)}${validatedPropertyName}${isOptional ? "?" : ""}: ${type}, `);
   });
 
   if (ctx.options.unknownFields) {
@@ -953,7 +953,9 @@ function generateBaseInstanceFactory(
       if (!processedOneofs.has(oneofIndex)) {
         processedOneofs.add(oneofIndex);
 
-        const name = maybeSnakeToCamel(messageDesc.oneofDecl[oneofIndex].name, ctx.options);
+        const name = options.useJsonName
+          ? propertyNameComposition(field, options).validatedPropertyName
+          : maybeSnakeToCamel(messageDesc.oneofDecl[oneofIndex].name, ctx.options);
         fields.push(code`${name}: undefined`);
       }
       continue;
@@ -963,7 +965,7 @@ function generateBaseInstanceFactory(
       continue;
     }
 
-    const name = maybeSnakeToCamel(field.name, ctx.options);
+    const { validatedPropertyName } = propertyNameComposition(field, options);
     const val = isWithinOneOf(field)
       ? "undefined"
       : isMapType(ctx, messageDesc, field)
@@ -974,7 +976,7 @@ function generateBaseInstanceFactory(
       ? "[]"
       : defaultValue(ctx, field);
 
-    fields.push(code`${name}: ${val}`);
+    fields.push(code`${validatedPropertyName}: ${val}`);
   }
 
   if (addTypeToMessages(options)) {
@@ -1085,7 +1087,8 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
 
   // add a case for each incoming field
   messageDesc.field.forEach((field) => {
-    const fieldName = maybeSnakeToCamel(field.name, options);
+    const { propertyName } = propertyNameComposition(field, options);
+    const messageProperty = getPropertyAccessor("message", propertyName);
     chunks.push(code`case ${field.number}:`);
 
     const tag = ((field.number << 3) | basicWireType(field.type)) >>> 0;
@@ -1113,14 +1116,14 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
 
         let valueSetterSnippet: string;
         if (generateMapType) {
-          valueSetterSnippet = `message.${fieldName}${maybeNonNullAssertion}.set(${varName}.key, ${varName}.value)`;
+          valueSetterSnippet = `${messageProperty}${maybeNonNullAssertion}.set(${varName}.key, ${varName}.value)`;
         } else {
-          valueSetterSnippet = `message.${fieldName}${maybeNonNullAssertion}[${varName}.key] = ${varName}.value`;
+          valueSetterSnippet = `${messageProperty}${maybeNonNullAssertion}[${varName}.key] = ${varName}.value`;
         }
         const initializerSnippet = initializerNecessary
           ? `
-            if (message.${fieldName} === undefined) {
-              message.${fieldName} = ${generateMapType ? "new Map()" : "{}"};
+            if (${messageProperty} === undefined) {
+              ${messageProperty} = ${generateMapType ? "new Map()" : "{}"};
             }`
           : "";
         chunks.push(code`
@@ -1134,15 +1137,15 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
       } else {
         const initializerSnippet = initializerNecessary
           ? `
-            if (message.${fieldName} === undefined) {
-              message.${fieldName} = [];
+            if (${messageProperty} === undefined) {
+              ${messageProperty} = [];
             }`
           : "";
         if (packedType(field.type) === undefined) {
           chunks.push(code`
             ${tagCheck}
             ${initializerSnippet}
-            message.${fieldName}${maybeNonNullAssertion}.push(${readSnippet});
+            ${messageProperty}${maybeNonNullAssertion}.push(${readSnippet});
           `);
         } else {
           const packedTag = ((field.number << 3) | 2) >>> 0;
@@ -1150,7 +1153,7 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
           chunks.push(code`
             if (tag === ${tag}) {
               ${initializerSnippet}
-              message.${fieldName}${maybeNonNullAssertion}.push(${readSnippet});
+              ${messageProperty}${maybeNonNullAssertion}.push(${readSnippet});
 
               continue;
             }
@@ -1159,7 +1162,7 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
               ${initializerSnippet}
               const end2 = reader.uint32() + reader.pos;
               while (reader.pos < end2) {
-                message.${fieldName}${maybeNonNullAssertion}.push(${readSnippet});
+                ${messageProperty}${maybeNonNullAssertion}.push(${readSnippet});
               }
 
               continue;
@@ -1170,15 +1173,17 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
         }
       }
     } else if (isWithinOneOfThatShouldBeUnion(options, field)) {
-      let oneofName = maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options);
+      const oneofNameWithMessage = options.useJsonName
+        ? messageProperty
+        : getPropertyAccessor("message", maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options));
       chunks.push(code`
         ${tagCheck}
-        message.${oneofName} = { $case: '${fieldName}', ${fieldName}: ${readSnippet} };
+        ${oneofNameWithMessage} = { $case: '${propertyName}', ${propertyName}: ${readSnippet} };
       `);
     } else {
       chunks.push(code`
         ${tagCheck}
-        message.${fieldName} = ${readSnippet};
+        ${messageProperty} = ${readSnippet};
       `);
     }
 
@@ -1326,7 +1331,8 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
 
   // then add a case for each field
   messageDesc.field.forEach((field) => {
-    const fieldName = maybeSnakeToCamel(field.name, options);
+    const { propertyName, validatedPropertyName } = propertyNameComposition(field, options);
+    const messageProperty = getPropertyAccessor("message", propertyName);
 
     // get a generic writer.doSomething based on the basic type
     const writeSnippet = getEncodeWriteSnippet(ctx, field);
@@ -1348,26 +1354,26 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
 
         if (useMapType) {
           chunks.push(code`
-            (message.${fieldName}${optionalAlternative}).forEach((value, key) => {
+            (${messageProperty}${optionalAlternative}).forEach((value, key) => {
               ${entryWriteSnippet}
             });
           `);
         } else {
           chunks.push(code`
-            Object.entries(message.${fieldName}${optionalAlternative}).forEach(([key, value]) => {
+            Object.entries(${messageProperty}${optionalAlternative}).forEach(([key, value]) => {
               ${entryWriteSnippet}
             });
           `);
         }
       } else if (packedType(field.type) === undefined) {
         const listWriteSnippet = code`
-          for (const v of message.${fieldName}) {
+          for (const v of ${messageProperty}) {
             ${writeSnippet("v!")};
           }
         `;
         if (isOptional) {
           chunks.push(code`
-            if (message.${fieldName} !== undefined && message.${fieldName}.length !== 0) {
+            if (${messageProperty} !== undefined && ${messageProperty}.length !== 0) {
               ${listWriteSnippet}
             }
           `);
@@ -1383,14 +1389,14 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
         const toNumber = getEnumMethod(ctx, field.typeName, "ToNumber");
         const listWriteSnippet = code`
           writer.uint32(${tag}).fork();
-          for (const v of message.${fieldName}) {
+          for (const v of ${messageProperty}) {
             writer.${toReaderCall(field)}(${toNumber}(v));
           }
           writer.ldelim();
         `;
         if (isOptional) {
           chunks.push(code`
-            if (message.${fieldName} !== undefined && message.${fieldName}.length !== 0) {
+            if (${messageProperty} !== undefined && ${messageProperty}.length !== 0) {
               ${listWriteSnippet}
             }
           `);
@@ -1403,7 +1409,7 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
         const rhs = (x: string) => (isLong(field) && options.forceLong === LongOption.BIGINT ? `${x}.toString()` : x);
         let listWriteSnippet = code`
           writer.uint32(${tag}).fork();
-          for (const v of message.${fieldName}) {
+          for (const v of ${messageProperty}) {
             writer.${toReaderCall(field)}(${rhs("v")});
           }
           writer.ldelim();
@@ -1417,9 +1423,9 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
             case "sfixed64":
               listWriteSnippet = code`
                 writer.uint32(${tag}).fork();
-                for (const v of message.${fieldName}) {
+                for (const v of ${messageProperty}) {
                   if (BigInt.asIntN(64, v) !== v) {
-                    throw new Error('a value provided in array field ${fieldName} of type ${fieldType} is too large');
+                    throw new Error('a value provided in array field ${propertyName} of type ${fieldType} is too large');
                   }
                   writer.${toReaderCall(field)}(${rhs("v")});
                 }
@@ -1430,9 +1436,9 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
             case "fixed64":
               listWriteSnippet = code`
                 writer.uint32(${tag}).fork();
-                for (const v of message.${fieldName}) {
+                for (const v of ${messageProperty}) {
                   if (BigInt.asUintN(64, v) !== v) {
-                    throw new Error('a value provided in array field ${fieldName} of type ${fieldType} is too large');
+                    throw new Error('a value provided in array field ${propertyName} of type ${fieldType} is too large');
                   }                
                   writer.${toReaderCall(field)}(${rhs("v")});
                 }
@@ -1445,7 +1451,7 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
         }
         if (isOptional) {
           chunks.push(code`
-            if (message.${fieldName} !== undefined && message.${fieldName}.length !== 0) {
+            if (${messageProperty} !== undefined && ${messageProperty}.length !== 0) {
               ${listWriteSnippet}
             }
           `);
@@ -1457,13 +1463,15 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
       if (!processedOneofs.has(field.oneofIndex)) {
         processedOneofs.add(field.oneofIndex);
 
-        const oneofName = maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options);
-        chunks.push(code`switch (message.${oneofName}?.$case) {`);
+        const oneofNameWithMessage = options.useJsonName
+          ? messageProperty
+          : getPropertyAccessor("message", maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options));
+        chunks.push(code`switch (${oneofNameWithMessage}?.$case) {`);
         for (const oneOfField of oneOfFieldsDict[field.oneofIndex]) {
           const writeSnippet = getEncodeWriteSnippet(ctx, oneOfField);
           const oneOfFieldName = maybeSnakeToCamel(oneOfField.name, ctx.options);
           chunks.push(code`case "${oneOfFieldName}":
-            ${writeSnippet(`message.${oneofName}.${oneOfFieldName}`)};
+            ${writeSnippet(`${oneofNameWithMessage}.${oneOfFieldName}`)};
             break;`);
         }
         chunks.push(code`}`);
@@ -1471,24 +1479,24 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
     } else if (isWithinOneOf(field)) {
       // Oneofs don't have a default value check b/c they need to denote which-oneof presence
       chunks.push(code`
-        if (message.${fieldName} !== undefined) {
-          ${writeSnippet(`message.${fieldName}`)};
+        if (${messageProperty} !== undefined) {
+          ${writeSnippet(`${messageProperty}`)};
         }
       `);
     } else if (isMessage(field)) {
       chunks.push(code`
-        if (message.${fieldName} !== undefined) {
-          ${writeSnippet(`message.${fieldName}`)};
+        if (${messageProperty} !== undefined) {
+          ${writeSnippet(`${messageProperty}`)};
         }
       `);
     } else if (isScalar(field) || isEnum(field)) {
       chunks.push(code`
-        if (${notDefaultCheck(ctx, field, messageDesc.options, `message.${fieldName}`)}) {
-          ${writeSnippet(`message.${fieldName}`)};
+        if (${notDefaultCheck(ctx, field, messageDesc.options, `${messageProperty}`)}) {
+          ${writeSnippet(`${messageProperty}`)};
         }
       `);
     } else {
-      chunks.push(code`${writeSnippet(`message.${fieldName}`)};`);
+      chunks.push(code`${writeSnippet(`${messageProperty}`)};`);
     }
   });
 
@@ -1786,7 +1794,7 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
 
   // add a check for each incoming field
   messageDesc.field.forEach((field) => {
-    const fieldName = maybeSnakeToCamel(field.name, options);
+    const { validatedPropertyName: fieldName } = propertyNameComposition(field, options);
     const jsonName = getFieldJsonName(field, options);
     const jsonProperty = getPropertyAccessor("object", jsonName);
     const jsonPropertyOptional = getPropertyAccessor("object", jsonName, true);
@@ -2019,9 +2027,10 @@ function generateToJson(
 
   // then add a case for each field
   messageDesc.field.forEach((field) => {
-    const fieldName = maybeSnakeToCamel(field.name, options);
+    const { validatedPropertyName: fieldName, propertyName } = propertyNameComposition(field, options);
     const jsonName = getFieldJsonName(field, options);
     const jsonProperty = getPropertyAccessor("obj", jsonName);
+    const messageProperty = getPropertyAccessor("message", propertyName);
 
     const readSnippet = (from: string): Code => {
       if (isEnum(field)) {
@@ -2092,17 +2101,17 @@ function generateToJson(
 
       if (shouldGenerateJSMapType(ctx, messageDesc, field)) {
         chunks.push(code`
-          if (message.${fieldName}?.size) {
+          if (${messageProperty}?.size) {
             ${jsonProperty} = {};
-            message.${fieldName}.forEach((v, k) => {
+            ${messageProperty}.forEach((v, k) => {
               ${jsonProperty}[${i}] = ${readSnippet("v")};
             });
           }
         `);
       } else {
         chunks.push(code`
-        if (message.${fieldName}) {
-            const entries = Object.entries(message.${fieldName});
+        if (${messageProperty}) {
+            const entries = Object.entries(${messageProperty});
             if (entries.length > 0) {
               ${jsonProperty} = {};
               entries.forEach(([k, v]) => {
@@ -2117,28 +2126,30 @@ function generateToJson(
       const transformElement = readSnippet("e");
       const maybeMap = transformElement.toCodeString([]) !== "e" ? code`.map(e => ${transformElement})` : "";
       chunks.push(code`
-        if (message.${fieldName}?.length) {
-          ${jsonProperty} = message.${fieldName}${maybeMap};
+        if (${messageProperty}?.length) {
+          ${jsonProperty} = ${messageProperty}${maybeMap};
         }
       `);
     } else if (isWithinOneOfThatShouldBeUnion(options, field)) {
       // oneofs in a union are only output as `oneof name = ...`
-      const oneofName = maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options);
+      const oneofNameWithMessage = options.useJsonName
+        ? messageProperty
+        : getPropertyAccessor("message", maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options));
       chunks.push(code`
-        if (message.${oneofName}?.$case === '${fieldName}') {
-          ${jsonProperty} = ${readSnippet(`message.${oneofName}.${fieldName}`)};
+        if (${oneofNameWithMessage}?.$case === '${fieldName}') {
+          ${jsonProperty} = ${readSnippet(`${oneofNameWithMessage}.${fieldName}`)};
         }
       `);
     } else {
       let emitDefaultValuesForJson = ctx.options.emitDefaultValues.includes("json-methods");
       const check =
         (isScalar(field) || isEnum(field)) && !(isWithinOneOf(field) || emitDefaultValuesForJson)
-          ? notDefaultCheck(ctx, field, messageDesc.options, `message.${fieldName}`)
-          : `message.${fieldName} !== undefined`;
+          ? notDefaultCheck(ctx, field, messageDesc.options, `${messageProperty}`)
+          : `${messageProperty} !== undefined`;
 
       chunks.push(code`
         if (${check}) {
-          ${jsonProperty} = ${readSnippet(`message.${fieldName}`)};
+          ${jsonProperty} = ${readSnippet(`${messageProperty}`)};
         }
       `);
     }
@@ -2189,7 +2200,9 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
 
   // add a check for each incoming field
   messageDesc.field.forEach((field) => {
-    const fieldName = maybeSnakeToCamel(field.name, options);
+    const { propertyName } = propertyNameComposition(field, options);
+    const messageProperty = getPropertyAccessor("message", propertyName);
+    const objectProperty = getPropertyAccessor("object", propertyName);
 
     const readSnippet = (from: string): Code => {
       if ((isLong(field) || isLongValueType(field)) && options.forceLong === LongOption.LONG) {
@@ -2254,14 +2267,14 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
         const i = convertFromObjectKey(ctx, messageDesc, field, "key");
 
         const noValueSnippet = noDefaultValue
-          ? `(object.${fieldName} === undefined || object.${fieldName} === null) ? undefined : `
+          ? `(${objectProperty} === undefined || ${objectProperty} === null) ? undefined : `
           : "";
 
         if (shouldGenerateJSMapType(ctx, messageDesc, field)) {
           chunks.push(code`
-            message.${fieldName} = ${noValueSnippet} (() => {
+            ${messageProperty} = ${noValueSnippet} (() => {
               const m = new Map();
-              (object.${fieldName} as ${fieldType} ?? new Map()).forEach((value, key) => {
+              (${objectProperty} as ${fieldType} ?? new Map()).forEach((value, key) => {
                 if (value !== undefined) {
                   m.set(key, ${readSnippet("value")});
                 }
@@ -2271,7 +2284,7 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
           `);
         } else {
           chunks.push(code`
-            message.${fieldName} = ${noValueSnippet} Object.entries(object.${fieldName} ?? {}).reduce<${fieldType}>((acc, [key, value]) => {
+            ${messageProperty} = ${noValueSnippet} Object.entries(${objectProperty} ?? {}).reduce<${fieldType}>((acc, [key, value]) => {
               if (value !== undefined) {
                 acc[${i}] = ${readSnippet("value")};
               }
@@ -2283,30 +2296,34 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
         const fallback = noDefaultValue ? "undefined" : "[]";
 
         chunks.push(code`
-          message.${fieldName} = object.${fieldName}?.map((e) => ${readSnippet("e")}) || ${fallback};
+          ${messageProperty} = ${objectProperty}?.map((e) => ${readSnippet("e")}) || ${fallback};
         `);
       }
     } else if (isWithinOneOfThatShouldBeUnion(options, field)) {
-      let oneofName = maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options);
-      const v = readSnippet(`object.${oneofName}.${fieldName}`);
+      const oneofName = options.useJsonName
+        ? propertyName
+        : maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options);
+      const oneofNameWithMessage = getPropertyAccessor("message", oneofName);
+      const oneofNameWithObject = getPropertyAccessor("object", oneofName);
+      const v = readSnippet(`${oneofNameWithObject}.${propertyName}`);
       chunks.push(code`
         if (
-          object.${oneofName}?.$case === '${fieldName}'
-          && object.${oneofName}?.${fieldName} !== undefined
-          && object.${oneofName}?.${fieldName} !== null
+          ${oneofNameWithObject}?.$case === '${propertyName}'
+          && ${oneofNameWithObject}?.${propertyName} !== undefined
+          && ${oneofNameWithObject}?.${propertyName} !== null
         ) {
-          message.${oneofName} = { $case: '${fieldName}', ${fieldName}: ${v} };
+          ${oneofNameWithMessage} = { $case: '${propertyName}', ${propertyName}: ${v} };
         }
       `);
     } else if (readSnippet(`x`).toCodeString([]) == "x") {
       // An optimized case of the else below that works when `readSnippet` returns the plain input
       const fallback = isWithinOneOf(field) || noDefaultValue ? "undefined" : defaultValue(ctx, field);
-      chunks.push(code`message.${fieldName} = object.${fieldName} ?? ${fallback};`);
+      chunks.push(code`${messageProperty} = ${objectProperty} ?? ${fallback};`);
     } else {
       const fallback = isWithinOneOf(field) || noDefaultValue ? "undefined" : defaultValue(ctx, field);
       chunks.push(code`
-        message.${fieldName} = (object.${fieldName} !== undefined && object.${fieldName} !== null)
-          ? ${readSnippet(`object.${fieldName}`)}
+        ${messageProperty} = (${objectProperty} !== undefined && ${objectProperty} !== null)
+          ? ${readSnippet(`${objectProperty}`)}
           : ${fallback};
       `);
     }

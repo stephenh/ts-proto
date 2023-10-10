@@ -477,6 +477,8 @@ Generated code will be placed in the Gradle build directory.
 
   Note that, as indicated, this means Object.keys will not include set-by-default fields, so if you have code that iterates over messages keys in a generic fashion, it will have to also iterate over keys inherited from the prototype.
 
+- With `--ts_proto_opt=useJsonName=true`, `json_name` defined in protofiles will be used instead of message field names.
+
 - With `--ts_proto_opt=useJsonWireFormat=true`, the generated code will reflect the JSON representation of Protobuf messages.
 
   Requires `onlyTypes=true`. Implies `useDate=string` and `stringEnums=true`. This option is to generate types that can be directly used with marshalling/unmarshalling Protobuf messages serialized as JSON.

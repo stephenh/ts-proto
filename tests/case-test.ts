@@ -53,11 +53,21 @@ describe("case", () => {
 
   describe("getFieldJsonName", () => {
     it("keeps snake case when jsonName is probably not set", () => {
-      expect(getFieldJsonName({ name: "foo_bar", jsonName: "fooBar" }, { snakeToCamel: [] })).toBe("foo_bar");
+      expect(getFieldJsonName({ name: "foo_bar", jsonName: "fooBar" }, { snakeToCamel: [], useJsonName: false })).toBe(
+        "foo_bar",
+      );
     });
 
     it("uses jsonName when it is set", () => {
-      expect(getFieldJsonName({ name: "foo_bar", jsonName: "foo" }, { snakeToCamel: [] })).toBe("foo");
+      expect(getFieldJsonName({ name: "foo_bar", jsonName: "foo" }, { snakeToCamel: [], useJsonName: false })).toBe(
+        "foo",
+      );
+    });
+
+    it('uses jsonName when "useJsonName" is explicitly set', () => {
+      expect(getFieldJsonName({ name: "foo_bar", jsonName: "foo" }, { snakeToCamel: [], useJsonName: true })).toBe(
+        "foo",
+      );
     });
   });
 });

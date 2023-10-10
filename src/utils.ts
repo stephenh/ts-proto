@@ -10,7 +10,7 @@ import {
 import ReadStream = NodeJS.ReadStream;
 import { SourceDescription } from "./sourceInfo";
 import { Options, ServiceOption } from "./options";
-import { camelCaseGrpc, snakeToCamel } from "./case";
+import { camelCaseGrpc, maybeSnakeToCamel, snakeToCamel } from "./case";
 
 export function protoFilesToGenerate(request: CodeGeneratorRequest): FileDescriptorProto[] {
   return request.protoFile.filter((f) => request.fileToGenerate.includes(f.name));
@@ -219,8 +219,12 @@ export class FormattedMethodDescriptor implements MethodDescriptorProto {
 
 export function getFieldJsonName(
   field: Pick<FieldDescriptorProto, "name" | "jsonName">,
-  options: Pick<Options, "snakeToCamel">,
+  options: Pick<Options, "snakeToCamel" | "useJsonName">,
 ): string {
+  // use "json_name" defined in a proto file
+  if (options.useJsonName) {
+    return field.jsonName;
+  }
   // jsonName will be camelCased by the protocol compiler, plus can be overridden by the user,
   // so just use that instead of our own maybeSnakeToCamel
   if (options.snakeToCamel.includes("json")) {
@@ -234,6 +238,35 @@ export function getFieldJsonName(
   }
 }
 
+export function propertyNameComposition(
+  field: Pick<FieldDescriptorProto, "name" | "jsonName">,
+  options: Pick<Options, "snakeToCamel" | "useJsonName">,
+): { propertyName: string; validatedPropertyName: string } {
+  if (options.useJsonName) {
+    const jsonName = field.jsonName;
+    return {
+      propertyName: jsonName,
+      validatedPropertyName: validateObjectProperty(jsonName),
+    };
+  }
+  const propertyName = maybeSnakeToCamel(field.name, options);
+  return {
+    propertyName,
+    validatedPropertyName: propertyName,
+  };
+}
+
+/**
+ * https://github.com/eslint-community/eslint-plugin-security/blob/main/docs/the-dangers-of-square-bracket-notation.md
+ */
+function isValidateObjectProperty(propertyName: string): boolean {
+  return /^[a-zA-Z_$][\w$]*$/.test(propertyName);
+}
+
+function validateObjectProperty(propertyName: string): string {
+  return isValidateObjectProperty(propertyName) ? propertyName : JSON.stringify(propertyName);
+}
+
 /**
  * Returns a snippet for reading an object's property, such as `foo.bar`, or `foo['bar']` if the property name contains unusual characters.
  * For simplicity, we don't match the ECMA 5/6 rules for valid identifiers exactly, and return array syntax liberally.
@@ -242,10 +275,9 @@ export function getFieldJsonName(
  * @param optional
  */
 export function getPropertyAccessor(objectName: string, propertyName: string, optional: boolean = false): string {
-  let validIdentifier = /^[a-zA-Z_$][\w$]*$/;
-  return validIdentifier.test(propertyName)
+  return isValidateObjectProperty(propertyName)
     ? `${objectName}${optional ? "?" : ""}.${propertyName}`
-    : `${objectName}${optional ? "?." : ""}[${JSON.stringify(propertyName)}]`;
+    : `${objectName}${optional ? "?." : ""}[${validateObjectProperty(propertyName)}]`;
 }
 
 export function impFile(options: Options, spec: string) {
