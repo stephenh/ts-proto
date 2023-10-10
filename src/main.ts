@@ -672,11 +672,14 @@ function makeTimestampMethods(
 
   let seconds: string | Code = "date.getTime() / 1_000";
   let toNumberCode: string | Code = "t.seconds";
+  const makeToNumberCode = (methodCall: string) =>
+    `t.seconds${options.useOptionals === "all" ? "?" : ""}.${methodCall}`;
+
   if (options.forceLong === LongOption.LONG) {
-    toNumberCode = "t.seconds.toNumber()";
+    toNumberCode = makeToNumberCode("toNumber()");
     seconds = code`${longs.numberToLong}(date.getTime() / 1_000)`;
   } else if (options.forceLong === LongOption.BIGINT) {
-    toNumberCode = code`${bytes.globalThis}.Number(t.seconds.toString())`;
+    toNumberCode = code`${bytes.globalThis}.Number(${makeToNumberCode("toString()")})`;
     seconds = code`BigInt(Math.trunc(date.getTime() / 1_000))`;
   } else if (options.forceLong === LongOption.STRING) {
     toNumberCode = code`${bytes.globalThis}.Number(t.seconds)`;
