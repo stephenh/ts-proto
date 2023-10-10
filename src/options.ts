@@ -66,6 +66,8 @@ export type Options = {
   nestJs: boolean;
   env: EnvOption;
   unrecognizedEnum: boolean;
+  unrecognizedEnumName: string;
+  unrecognizedEnumValue: number;
   exportCommonSymbols: boolean;
   outputSchema: boolean;
   onlyTypes: boolean;
@@ -119,6 +121,8 @@ export function defaultOptions(): Options {
     nestJs: false,
     env: EnvOption.BOTH,
     unrecognizedEnum: true,
+    unrecognizedEnumName: "UNRECOGNIZED",
+    unrecognizedEnumValue: -1,
     exportCommonSymbols: true,
     outputSchema: false,
     onlyTypes: false,
@@ -232,6 +236,11 @@ export function optionsFromParameter(parameter: string | undefined): Options {
 
   if (options.outputIndex) {
     options.exportCommonSymbols = false;
+  }
+
+  if (options.unrecognizedEnumValue) {
+    // Make sure to cast number options to an actual number
+    options.unrecognizedEnumValue = Number(options.unrecognizedEnumValue);
   }
 
   return options;

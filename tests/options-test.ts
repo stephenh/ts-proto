@@ -46,6 +46,8 @@ describe("options", () => {
         "stringEnums": false,
         "unknownFields": false,
         "unrecognizedEnum": true,
+        "unrecognizedEnumName": "UNRECOGNIZED",
+        "unrecognizedEnumValue": -1,
         "useAbortSignal": false,
         "useAsyncIterable": false,
         "useDate": "timestamp",

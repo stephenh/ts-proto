@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+enum StateEnum {
+  UNKNOWN_STATE = 0;
+  ON = 2;
+  OFF = 3;
+}

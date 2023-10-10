@@ -14,15 +14,15 @@
   - [Buf](#buf)
   - [ESM](#esm)
 - [Goals](#goals)
+  - [Non-Goals](#non-goals)
 - [Example Types](#example-types)
 - [Highlights](#highlights)
 - [Auto-Batching / N+1 Prevention](#auto-batching--n1-prevention)
 - [Usage](#usage)
-  - [Supported options](#supported-options)
-  - [Only Types](#only-types)
-  - [NestJS Support](#nestjs-support)
-  - [Watch Mode](#watch-mode)
-  - [Basic gRPC implementation](#basic-grpc-implementation)
+    - [Supported options](#supported-options)
+    - [NestJS Support](#nestjs-support)
+    - [Watch Mode](#watch-mode)
+    - [Basic gRPC implementation](#basic-grpc-implementation)
 - [Sponsors](#sponsors)
 - [Development](#development)
 - [Assumptions](#assumptions)
@@ -354,7 +354,15 @@ Generated code will be placed in the Gradle build directory.
 
   See the "OneOf Handling" section.
 
-- With `--ts_proto_opt=unrecognizedEnum=false` enums will not contain an `UNRECOGNIZED` key with value of -1.
+- With `--ts_proto_opt=unrecognizedEnumName=<NAME>` enums will contain a key `<NAME>` with value of the `unrecognizedEnumValue` option.
+
+  Defaults to `UNRECOGNIZED`.
+
+- With `--ts_proto_opt=unrecognizedEnumValue=<NUMBER>` enums will contain a key provided by the `unrecognizedEnumName` option with value of `<NUMBER>`.
+
+  Defaults to `-1`.
+
+- With `--ts_proto_opt=unrecognizedEnum=false` enums will not contain an unrecognized enum key and value as provided by the `unrecognizedEnumName` and `unrecognizedEnumValue` options.
 
 - With `--ts_proto_opt=removeEnumPrefix=true` generated enums will have the enum name removed from members.
 
