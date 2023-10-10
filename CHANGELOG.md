@@ -1,3 +1,10 @@
+# [1.161.0](https://github.com/stephenh/ts-proto/compare/v1.160.0...v1.161.0) (2023-10-10)
+
+
+### Features
+
+* add unrecognizedEnumName and unrecognizedEnumValue options ([#946](https://github.com/stephenh/ts-proto/issues/946)) ([cd61e90](https://github.com/stephenh/ts-proto/commit/cd61e90e59844795fb5d7d86ec99bd37d2fdf21b))
+
 # [1.160.0](https://github.com/stephenh/ts-proto/compare/v1.159.3...v1.160.0) (2023-10-05)
 
 
