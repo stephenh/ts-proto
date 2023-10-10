@@ -1,3 +1,10 @@
+## [1.161.1](https://github.com/stephenh/ts-proto/compare/v1.161.0...v1.161.1) (2023-10-10)
+
+
+### Bug Fixes
+
+* use optional chaining when both `forceLong=long` and `useOptionals=all` options are set in the generated fromTimestamp function ([#949](https://github.com/stephenh/ts-proto/issues/949)) ([b00db6f](https://github.com/stephenh/ts-proto/commit/b00db6fa42d511b9bef602a231a1f093664cd40c))
+
 # [1.161.0](https://github.com/stephenh/ts-proto/compare/v1.160.0...v1.161.0) (2023-10-10)
 
 
