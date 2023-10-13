@@ -1,3 +1,10 @@
+# [1.162.0](https://github.com/stephenh/ts-proto/compare/v1.161.1...v1.162.0) (2023-10-13)
+
+
+### Features
+
+* support `json_name` defined in a proto file ([#943](https://github.com/stephenh/ts-proto/issues/943)) ([de989af](https://github.com/stephenh/ts-proto/commit/de989af0d9bf9910dc3c047a18d97f289bffe2ee))
+
 ## [1.161.1](https://github.com/stephenh/ts-proto/compare/v1.161.0...v1.161.1) (2023-10-10)
 
 
