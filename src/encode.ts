@@ -20,7 +20,7 @@ export function generateEncoder(ctx: Context, typeName: string): Code {
     return code`${TimestampValue}.encode(${value}).finish()`;
   }
 
-  if (name == "Struct") {
+  if (name == "Struct" || name == "Value") {
     const StructType = impProto(ctx.options, "google/protobuf/struct", name);
     return code`${StructType}.encode(${StructType}.wrap(value)).finish()`;
   }
@@ -75,7 +75,7 @@ export function generateDecoder(ctx: Context, typeName: string): Code {
     return decoder;
   }
 
-  if (name == "Struct" || name == "ListValue") {
+  if (name == "Struct" || name == "ListValue" || name == "Value") {
     TypeValue = impProto(ctx.options, "google/protobuf/struct", name);
     return code`${TypeValue}.unwrap(${TypeValue}.decode(value))`;
   }

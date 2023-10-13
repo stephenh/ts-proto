@@ -535,6 +535,7 @@ export function wrapperTypeName(typeName: string): string | undefined {
     case ".google.protobuf.ListValue":
     case ".google.protobuf.Timestamp":
     case ".google.protobuf.Struct":
+    case ".google.protobuf.Value":
       return typeName.split(".")[3];
     default:
       return undefined;
