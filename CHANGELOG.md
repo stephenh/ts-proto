@@ -1,3 +1,10 @@
+## [1.162.1](https://github.com/stephenh/ts-proto/compare/v1.162.0...v1.162.1) (2023-10-13)
+
+
+### Bug Fixes
+
+* Simplify safe key handling. ([#950](https://github.com/stephenh/ts-proto/issues/950)) ([5e0e6ca](https://github.com/stephenh/ts-proto/commit/5e0e6ca1d76f5c9aaef5f40a9cc685538251a5f9))
+
 # [1.162.0](https://github.com/stephenh/ts-proto/compare/v1.161.1...v1.162.0) (2023-10-13)
 
 
