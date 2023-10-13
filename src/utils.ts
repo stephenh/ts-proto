@@ -238,33 +238,26 @@ export function getFieldJsonName(
   }
 }
 
-export function propertyNameComposition(
+export function getFieldName(
   field: Pick<FieldDescriptorProto, "name" | "jsonName">,
   options: Pick<Options, "snakeToCamel" | "useJsonName">,
-): { propertyName: string; validatedPropertyName: string } {
+): string {
   if (options.useJsonName) {
-    const jsonName = field.jsonName;
-    return {
-      propertyName: jsonName,
-      validatedPropertyName: validateObjectProperty(jsonName),
-    };
+    return field.jsonName;
   }
-  const propertyName = maybeSnakeToCamel(field.name, options);
-  return {
-    propertyName,
-    validatedPropertyName: propertyName,
-  };
+  return maybeSnakeToCamel(field.name, options);
 }
 
 /**
  * https://github.com/eslint-community/eslint-plugin-security/blob/main/docs/the-dangers-of-square-bracket-notation.md
  */
-function isValidateObjectProperty(propertyName: string): boolean {
+function isValidIdentifier(propertyName: string): boolean {
   return /^[a-zA-Z_$][\w$]*$/.test(propertyName);
 }
 
-function validateObjectProperty(propertyName: string): string {
-  return isValidateObjectProperty(propertyName) ? propertyName : JSON.stringify(propertyName);
+/** Returns `bar` or `"bar"` if `propertyName` isn't a safe property name. */
+export function safeAccessor(propertyName: string): string {
+  return isValidIdentifier(propertyName) ? propertyName : JSON.stringify(propertyName);
 }
 
 /**
@@ -275,9 +268,9 @@ function validateObjectProperty(propertyName: string): string {
  * @param optional
  */
 export function getPropertyAccessor(objectName: string, propertyName: string, optional: boolean = false): string {
-  return isValidateObjectProperty(propertyName)
+  return isValidIdentifier(propertyName)
     ? `${objectName}${optional ? "?" : ""}.${propertyName}`
-    : `${objectName}${optional ? "?." : ""}[${validateObjectProperty(propertyName)}]`;
+    : `${objectName}${optional ? "?." : ""}[${safeAccessor(propertyName)}]`;
 }
 
 export function impFile(options: Options, spec: string) {
