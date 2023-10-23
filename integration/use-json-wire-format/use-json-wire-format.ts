@@ -3,8 +3,8 @@
 export const protobufPackage = "";
 
 export interface Todo {
-  id?: string;
-  timestamp?: string;
-  duration?: string;
-  updateMask?: string;
+  id?: string | undefined;
+  timestamp?: string | undefined;
+  duration?: string | undefined;
+  updateMask?: string | undefined;
 }

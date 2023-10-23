@@ -13,7 +13,7 @@ const BrowserHeaders = imp("BrowserHeaders@browser-headers");
 export function generateGrpcClientImpl(
   ctx: Context,
   _fileDesc: FileDescriptorProto,
-  serviceDesc: ServiceDescriptorProto
+  serviceDesc: ServiceDescriptorProto,
 ): Code {
   const chunks: Code[] = [];
 
@@ -102,7 +102,7 @@ export function generateGrpcServiceDesc(fileDesc: FileDescriptorProto, serviceDe
 export function generateGrpcMethodDesc(
   ctx: Context,
   serviceDesc: ServiceDescriptorProto,
-  methodDesc: MethodDescriptorProto
+  methodDesc: MethodDescriptorProto,
 ): Code {
   const inputType = requestType(ctx, methodDesc);
   const outputType = responseType(ctx, methodDesc);
@@ -244,12 +244,10 @@ function createPromiseUnaryMethod(ctx: Context): Code {
 
   const maybeAbortSignal = useAbortSignal
     ? `
-      const abortHandler = () => {
+      if (abortSignal) abortSignal.addEventListener("abort", () => {
         client.close();
-        reject(new Error("Aborted"));
-      }
-
-      if (abortSignal) abortSignal.addEventListener("abort", abortHandler);`
+        reject(abortSignal.reason);
+      });`
     : "";
 
   return code`
@@ -260,17 +258,16 @@ function createPromiseUnaryMethod(ctx: Context): Code {
       ${useAbortSignal ? "abortSignal?: AbortSignal," : ""}
     ): Promise<any> {
       const request = { ..._request, ...methodDesc.requestType };
-      const maybeCombinedMetadata =
-        metadata && this.options.metadata
-          ? new ${BrowserHeaders}({ ...this.options?.metadata.headersMap, ...metadata?.headersMap })
-          : metadata || this.options.metadata;
+      const maybeCombinedMetadata = metadata && this.options.metadata
+        ? new ${BrowserHeaders}({ ...this.options?.metadata.headersMap, ...metadata?.headersMap })
+        : metadata ?? this.options.metadata;
       return new Promise((resolve, reject) => {
         ${useAbortSignal ? `const client =` : ""} ${grpc}.unary(methodDesc, {
           request,
           host: this.host,
-          metadata: maybeCombinedMetadata,
-          transport: this.options.transport,
-          debug: this.options.debug,
+          metadata: maybeCombinedMetadata ?? {},
+          ...(this.options.transport !== undefined ? {transport: this.options.transport} : {}),
+          debug: this.options.debug ?? false,
           onEnd: function (response) {
             if (response.status === grpc.Code.OK) {
               resolve(response.message!.toObject());
@@ -293,11 +290,10 @@ function createObservableUnaryMethod(ctx: Context): Code {
 
   const maybeAbortSignal = useAbortSignal
     ? `
-      const abortHandler = () => {
-        observer.error("Aborted");
+      if (abortSignal) abortSignal.addEventListener("abort", () => {
+        observer.error(abortSignal.reason);
         client.close();
-      };
-      if (abortSignal) abortSignal.addEventListener("abort", abortHandler);`
+      });`
     : "";
   return code`
     unary<T extends UnaryMethodDefinitionish>(
@@ -307,17 +303,16 @@ function createObservableUnaryMethod(ctx: Context): Code {
       ${useAbortSignal ? "abortSignal?: AbortSignal," : ""}
     ): ${observableType(ctx)}<any> {
       const request = { ..._request, ...methodDesc.requestType };
-      const maybeCombinedMetadata =
-        metadata && this.options.metadata
-          ? new ${BrowserHeaders}({ ...this.options?.metadata.headersMap, ...metadata?.headersMap })
-          : metadata || this.options.metadata;
+      const maybeCombinedMetadata = metadata && this.options.metadata
+        ? new ${BrowserHeaders}({ ...this.options?.metadata.headersMap, ...metadata?.headersMap })
+        : metadata ?? this.options.metadata;
       return new Observable(observer => {
         ${useAbortSignal ? `const client =` : ""} ${grpc}.unary(methodDesc, {
           request,
           host: this.host,
-          metadata: maybeCombinedMetadata,
-          transport: this.options.transport,
-          debug: this.options.debug,
+          metadata: maybeCombinedMetadata ?? {},
+          ...(this.options.transport !== undefined ? {transport: this.options.transport} : {}),
+          debug: this.options.debug ?? false,
           onEnd: (next) => {
             if (next.status !== 0) {
               const err = new ${ctx.utils.GrpcWebError}(next.statusMessage, next.status, next.trailers);
@@ -343,11 +338,10 @@ function createInvokeMethod(ctx: Context) {
 
   const maybeAbortSignal = useAbortSignal
     ? `
-      const abortHandler = () => {
-        observer.error("Aborted");
+      if (abortSignal) abortSignal.addEventListener("abort", () => {
+        observer.error(abortSignal.reason);
         client.close();
-      };
-      if (abortSignal) abortSignal.addEventListener("abort", abortHandler);`
+      });`
     : "";
 
   return code`
@@ -357,21 +351,21 @@ function createInvokeMethod(ctx: Context) {
       metadata: grpc.Metadata | undefined,
       ${useAbortSignal ? "abortSignal?: AbortSignal," : ""}
     ): ${observableType(ctx)}<any> {
-      const upStreamCodes = this.options.upStreamRetryCodes || [];
+      const upStreamCodes = this.options.upStreamRetryCodes ?? [];
       const DEFAULT_TIMEOUT_TIME: number = 3_000;
       const request = { ..._request, ...methodDesc.requestType };
-      const maybeCombinedMetadata =
-      metadata && this.options.metadata
+      const transport = this.options.streamingTransport ?? this.options.transport;
+      const maybeCombinedMetadata = metadata && this.options.metadata
         ? new ${BrowserHeaders}({ ...this.options?.metadata.headersMap, ...metadata?.headersMap })
-        : metadata || this.options.metadata;
+        : metadata ?? this.options.metadata;
       return new Observable(observer => {
         const upStream = (() => {
           const client = ${grpc}.invoke(methodDesc, {
             host: this.host,
             request,
-            transport: this.options.streamingTransport || this.options.transport,
-            metadata: maybeCombinedMetadata,
-            debug: this.options.debug,
+            ...(transport !== undefined ? {transport} : {}),
+            metadata: maybeCombinedMetadata ?? {},
+            debug: this.options.debug ?? false,
             onMessage: (next) => observer.next(next),
             onEnd: (code: ${grpc}.Code, message: string, trailers: ${grpc}.Metadata) => {
               if (code === 0) {
@@ -387,7 +381,12 @@ function createInvokeMethod(ctx: Context) {
             },
           });
           observer.add(() => {
-            if (!observer.closed) return client.close()
+           ${
+             !useAbortSignal
+               ? `return client.close();`
+               : `if (!abortSignal || !abortSignal.aborted) 
+              return client.close();`
+           }
           });
 
           ${maybeAbortSignal}

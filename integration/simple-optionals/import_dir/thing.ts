@@ -5,7 +5,7 @@ import { Timestamp } from "../google/protobuf/timestamp";
 export const protobufPackage = "simple";
 
 export interface ImportedThing {
-  createdAt?: Date;
+  createdAt?: Date | undefined;
 }
 
 function createBaseImportedThing(): ImportedThing {
@@ -49,14 +49,15 @@ export const ImportedThing = {
 
   toJSON(message: ImportedThing): unknown {
     const obj: any = {};
-    message.createdAt !== undefined && (obj.createdAt = message.createdAt.toISOString());
+    if (message.createdAt !== undefined) {
+      obj.createdAt = message.createdAt.toISOString();
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ImportedThing>, I>>(base?: I): ImportedThing {
-    return ImportedThing.fromPartial(base ?? {});
+    return ImportedThing.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ImportedThing>, I>>(object: I): ImportedThing {
     const message = createBaseImportedThing();
     message.createdAt = object.createdAt ?? undefined;
@@ -67,7 +68,8 @@ export const ImportedThing = {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
@@ -82,16 +84,16 @@ function toTimestamp(date: Date): Timestamp {
 }
 
 function fromTimestamp(t: Timestamp): Date {
-  let millis = t.seconds * 1_000;
-  millis += t.nanos / 1_000_000;
-  return new Date(millis);
+  let millis = (t.seconds || 0) * 1_000;
+  millis += (t.nanos || 0) / 1_000_000;
+  return new globalThis.Date(millis);
 }
 
 function fromJsonTimestamp(o: any): Date {
-  if (o instanceof Date) {
+  if (o instanceof globalThis.Date) {
     return o;
   } else if (typeof o === "string") {
-    return new Date(o);
+    return new globalThis.Date(o);
   } else {
     return fromTimestamp(Timestamp.fromJSON(o));
   }

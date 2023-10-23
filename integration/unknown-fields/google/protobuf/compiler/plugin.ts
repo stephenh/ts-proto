@@ -1,7 +1,7 @@
 /* eslint-disable */
-import * as Long from "long";
 import * as _m0 from "protobufjs/minimal";
 import { FileDescriptorProto, GeneratedCodeInfo } from "../descriptor";
+import Long = require("long");
 
 export const protobufPackage = "google.protobuf.compiler";
 
@@ -15,7 +15,7 @@ export interface Version {
    * be empty for mainline stable releases.
    */
   suffix: string;
-  _unknownFields?: { [key: number]: Uint8Array[] };
+  _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
 /** An encoded CodeGeneratorRequest is written to the plugin's stdin. */
@@ -47,7 +47,7 @@ export interface CodeGeneratorRequest {
   protoFile: FileDescriptorProto[];
   /** The version number of protocol compiler. */
   compilerVersion: Version | undefined;
-  _unknownFields?: { [key: number]: Uint8Array[] };
+  _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
 /** The plugin writes an encoded CodeGeneratorResponse to stdout. */
@@ -69,7 +69,7 @@ export interface CodeGeneratorResponse {
    */
   supportedFeatures: number;
   file: CodeGeneratorResponse_File[];
-  _unknownFields?: { [key: number]: Uint8Array[] };
+  _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
 /** Sync with code_generator.h. */
@@ -143,7 +143,7 @@ export interface CodeGeneratorResponse_File {
    * into the code generation metadata for the generated files.
    */
   generatedCodeInfo: GeneratedCodeInfo | undefined;
-  _unknownFields?: { [key: number]: Uint8Array[] };
+  _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
 function createBaseVersion(): Version {
@@ -165,8 +165,7 @@ export const Version = {
       writer.uint32(34).string(message.suffix);
     }
     if (message._unknownFields !== undefined) {
-      for (const key in message._unknownFields) {
-        const values = message._unknownFields[key];
+      for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag);
@@ -255,8 +254,7 @@ export const CodeGeneratorRequest = {
       Version.encode(message.compilerVersion, writer.uint32(26).fork()).ldelim();
     }
     if (message._unknownFields !== undefined) {
-      for (const key in message._unknownFields) {
-        const values = message._unknownFields[key];
+      for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag);
@@ -342,8 +340,7 @@ export const CodeGeneratorResponse = {
       CodeGeneratorResponse_File.encode(v!, writer.uint32(122).fork()).ldelim();
     }
     if (message._unknownFields !== undefined) {
-      for (const key in message._unknownFields) {
-        const values = message._unknownFields[key];
+      for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag);
@@ -425,8 +422,7 @@ export const CodeGeneratorResponse_File = {
       GeneratedCodeInfo.encode(message.generatedCodeInfo, writer.uint32(130).fork()).ldelim();
     }
     if (message._unknownFields !== undefined) {
-      for (const key in message._unknownFields) {
-        const values = message._unknownFields[key];
+      for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag);
@@ -496,34 +492,13 @@ export const CodeGeneratorResponse_File = {
   },
 };
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
-  if (typeof globalThis !== "undefined") {
-    return globalThis;
-  }
-  if (typeof self !== "undefined") {
-    return self;
-  }
-  if (typeof window !== "undefined") {
-    return window;
-  }
-  if (typeof global !== "undefined") {
-    return global;
-  }
-  throw "Unable to locate global object";
-})();
-
 function longToNumber(long: Long): number {
-  if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new tsProtoGlobalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+  if (long.gt(globalThis.Number.MAX_SAFE_INTEGER)) {
+    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
   return long.toNumber();
 }
 
-// If you get a compile-error about 'Constructor<Long> and ... have no overlap',
-// add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
 if (_m0.util.Long !== Long) {
   _m0.util.Long = Long as any;
   _m0.configure();

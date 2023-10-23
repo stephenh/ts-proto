@@ -1,12 +1,15 @@
 {
+  "extends": "../tsconfig.json",
   "compilerOptions": {
-    "target": "es2018",
-    "lib": ["es2018"],
-    "module": "commonjs",
-    "strict": true,
-    "outDir": "build",
-    "skipLibCheck": true,
-    "experimentalDecorators": true
+    "lib": ["es2018", "DOM"],
   },
-  "include": ["./"]
+  "include": [
+    "**/*-test.ts"
+  ],
+  "exclude": [
+    "angular",
+    "batching-with-context-esModuleInterop",
+    "import-mapping/mapping.ts",
+    "simple-esmodule-interop"
+  ]
 }

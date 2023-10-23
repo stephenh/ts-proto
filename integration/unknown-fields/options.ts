@@ -14,15 +14,15 @@ export interface MyMessage {
   foo2?: number | undefined;
   bar?: string | undefined;
   quux?: string | undefined;
-  _unknownFields?: { [key: number]: Uint8Array[] };
+  _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
 export interface RequestType {
-  _unknownFields?: { [key: number]: Uint8Array[] };
+  _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
 export interface ResponseType {
-  _unknownFields?: { [key: number]: Uint8Array[] };
+  _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
 function createBaseMyMessage(): MyMessage {
@@ -44,8 +44,7 @@ export const MyMessage = {
       writer.uint32(34).string(message.quux);
     }
     if (message._unknownFields !== undefined) {
-      for (const key in message._unknownFields) {
-        const values = message._unknownFields[key];
+      for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag);
@@ -122,8 +121,7 @@ function createBaseRequestType(): RequestType {
 export const RequestType = {
   encode(message: RequestType, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message._unknownFields !== undefined) {
-      for (const key in message._unknownFields) {
-        const values = message._unknownFields[key];
+      for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag);
@@ -172,8 +170,7 @@ function createBaseResponseType(): ResponseType {
 export const ResponseType = {
   encode(message: ResponseType, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message._unknownFields !== undefined) {
-      for (const key in message._unknownFields) {
-        const values = message._unknownFields[key];
+      for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag);
@@ -219,11 +216,12 @@ export interface MyService {
   MyMethod(request: RequestType): Promise<ResponseType>;
 }
 
+export const MyServiceServiceName = "MyService";
 export class MyServiceClientImpl implements MyService {
   private readonly rpc: Rpc;
   private readonly service: string;
   constructor(rpc: Rpc, opts?: { service?: string }) {
-    this.service = opts?.service || "MyService";
+    this.service = opts?.service || MyServiceServiceName;
     this.rpc = rpc;
     this.MyMethod = this.MyMethod.bind(this);
   }

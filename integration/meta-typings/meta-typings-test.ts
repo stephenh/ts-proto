@@ -1,23 +1,23 @@
-import { protoMetadata } from './simple';
+import { protoMetadata } from "./simple";
 
-describe('simple', () => {
-  it('generates types correctly', () => {
+describe("simple", () => {
+  it("generates types correctly", () => {
     expect(protoMetadata).toMatchInlineSnapshot(`
-      Object {
-        "dependencies": Array [
-          Object {
-            "dependencies": Array [],
-            "fileDescriptor": Object {
-              "dependency": Array [],
-              "enumType": Array [],
-              "extension": Array [],
-              "messageType": Array [
-                Object {
-                  "enumType": Array [],
-                  "extension": Array [],
-                  "extensionRange": Array [],
-                  "field": Array [
-                    Object {
+      {
+        "dependencies": [
+          {
+            "dependencies": [],
+            "fileDescriptor": {
+              "dependency": [],
+              "enumType": [],
+              "extension": [],
+              "messageType": [
+                {
+                  "enumType": [],
+                  "extension": [],
+                  "extensionRange": [],
+                  "field": [
+                    {
                       "defaultValue": "",
                       "extendee": "",
                       "jsonName": "year",
@@ -30,7 +30,7 @@ describe('simple', () => {
                       "type": 5,
                       "typeName": "",
                     },
-                    Object {
+                    {
                       "defaultValue": "",
                       "extendee": "",
                       "jsonName": "month",
@@ -43,7 +43,7 @@ describe('simple', () => {
                       "type": 5,
                       "typeName": "",
                     },
-                    Object {
+                    {
                       "defaultValue": "",
                       "extendee": "",
                       "jsonName": "day",
@@ -58,15 +58,15 @@ describe('simple', () => {
                     },
                   ],
                   "name": "Date",
-                  "nestedType": Array [],
-                  "oneofDecl": Array [],
+                  "nestedType": [],
+                  "oneofDecl": [],
                   "options": undefined,
-                  "reservedName": Array [],
-                  "reservedRange": Array [],
+                  "reservedName": [],
+                  "reservedRange": [],
                 },
               ],
               "name": "google/type/date.proto",
-              "options": Object {
+              "options": {
                 "ccEnableArenas": true,
                 "ccGenericServices": false,
                 "csharpNamespace": "",
@@ -87,14 +87,14 @@ describe('simple', () => {
                 "pyGenericServices": false,
                 "rubyPackage": "",
                 "swiftPrefix": "",
-                "uninterpretedOption": Array [],
+                "uninterpretedOption": [],
               },
               "package": "google.type",
-              "publicDependency": Array [],
-              "service": Array [],
-              "sourceCodeInfo": Object {
-                "location": Array [
-                  Object {
+              "publicDependency": [],
+              "service": [],
+              "sourceCodeInfo": {
+                "location": [
+                  {
                     "leadingComments": " Represents a whole or partial calendar date, e.g. a birthday. The time of day
        and time zone are either specified elsewhere or are not significant. The date
        is relative to the Proleptic Gregorian Calendar. This can represent:
@@ -106,12 +106,12 @@ describe('simple', () => {
 
        Related types are [google.type.TimeOfDay][google.type.TimeOfDay] and \`google.protobuf.Timestamp\`.
       ",
-                    "leadingDetachedComments": Array [],
-                    "path": Array [
+                    "leadingDetachedComments": [],
+                    "path": [
                       4,
                       0,
                     ],
-                    "span": Array [
+                    "span": [
                       36,
                       0,
                       49,
@@ -119,55 +119,55 @@ describe('simple', () => {
                     ],
                     "trailingComments": "",
                   },
-                  Object {
+                  {
                     "leadingComments": " Year of date. Must be from 1 to 9999, or 0 if specifying a date without
        a year.
       ",
-                    "leadingDetachedComments": Array [],
-                    "path": Array [
+                    "leadingDetachedComments": [],
+                    "path": [
                       4,
                       0,
                       2,
                       0,
                     ],
-                    "span": Array [
+                    "span": [
                       39,
                       2,
                       17,
                     ],
                     "trailingComments": "",
                   },
-                  Object {
+                  {
                     "leadingComments": " Month of year. Must be from 1 to 12, or 0 if specifying a year without a
        month and day.
       ",
-                    "leadingDetachedComments": Array [],
-                    "path": Array [
+                    "leadingDetachedComments": [],
+                    "path": [
                       4,
                       0,
                       2,
                       1,
                     ],
-                    "span": Array [
+                    "span": [
                       43,
                       2,
                       18,
                     ],
                     "trailingComments": "",
                   },
-                  Object {
+                  {
                     "leadingComments": " Day of month. Must be from 1 to 31 and valid for the year and month, or 0
        if specifying a year by itself or a year and month where the day is not
        significant.
       ",
-                    "leadingDetachedComments": Array [],
-                    "path": Array [
+                    "leadingDetachedComments": [],
+                    "path": [
                       4,
                       0,
                       2,
                       2,
                     ],
-                    "span": Array [
+                    "span": [
                       48,
                       2,
                       16,
@@ -177,28 +177,28 @@ describe('simple', () => {
                 ],
               },
               "syntax": "proto3",
-              "weakDependency": Array [],
+              "weakDependency": [],
             },
-            "references": Object {
-              ".google.type.DateMessage": Object {
+            "references": {
+              ".google.type.DateMessage": {
                 "decode": [Function],
                 "encode": [Function],
               },
             },
           },
-          Object {
-            "dependencies": Array [],
-            "fileDescriptor": Object {
-              "dependency": Array [],
-              "enumType": Array [],
-              "extension": Array [],
-              "messageType": Array [
-                Object {
-                  "enumType": Array [],
-                  "extension": Array [],
-                  "extensionRange": Array [],
-                  "field": Array [
-                    Object {
+          {
+            "dependencies": [],
+            "fileDescriptor": {
+              "dependency": [],
+              "enumType": [],
+              "extension": [],
+              "messageType": [
+                {
+                  "enumType": [],
+                  "extension": [],
+                  "extensionRange": [],
+                  "field": [
+                    {
                       "defaultValue": "",
                       "extendee": "",
                       "jsonName": "value",
@@ -213,18 +213,18 @@ describe('simple', () => {
                     },
                   ],
                   "name": "DoubleValue",
-                  "nestedType": Array [],
-                  "oneofDecl": Array [],
+                  "nestedType": [],
+                  "oneofDecl": [],
                   "options": undefined,
-                  "reservedName": Array [],
-                  "reservedRange": Array [],
+                  "reservedName": [],
+                  "reservedRange": [],
                 },
-                Object {
-                  "enumType": Array [],
-                  "extension": Array [],
-                  "extensionRange": Array [],
-                  "field": Array [
-                    Object {
+                {
+                  "enumType": [],
+                  "extension": [],
+                  "extensionRange": [],
+                  "field": [
+                    {
                       "defaultValue": "",
                       "extendee": "",
                       "jsonName": "value",
@@ -239,18 +239,18 @@ describe('simple', () => {
                     },
                   ],
                   "name": "FloatValue",
-                  "nestedType": Array [],
-                  "oneofDecl": Array [],
+                  "nestedType": [],
+                  "oneofDecl": [],
                   "options": undefined,
-                  "reservedName": Array [],
-                  "reservedRange": Array [],
+                  "reservedName": [],
+                  "reservedRange": [],
                 },
-                Object {
-                  "enumType": Array [],
-                  "extension": Array [],
-                  "extensionRange": Array [],
-                  "field": Array [
-                    Object {
+                {
+                  "enumType": [],
+                  "extension": [],
+                  "extensionRange": [],
+                  "field": [
+                    {
                       "defaultValue": "",
                       "extendee": "",
                       "jsonName": "value",
@@ -265,18 +265,18 @@ describe('simple', () => {
                     },
                   ],
                   "name": "Int64Value",
-                  "nestedType": Array [],
-                  "oneofDecl": Array [],
+                  "nestedType": [],
+                  "oneofDecl": [],
                   "options": undefined,
-                  "reservedName": Array [],
-                  "reservedRange": Array [],
+                  "reservedName": [],
+                  "reservedRange": [],
                 },
-                Object {
-                  "enumType": Array [],
-                  "extension": Array [],
-                  "extensionRange": Array [],
-                  "field": Array [
-                    Object {
+                {
+                  "enumType": [],
+                  "extension": [],
+                  "extensionRange": [],
+                  "field": [
+                    {
                       "defaultValue": "",
                       "extendee": "",
                       "jsonName": "value",
@@ -291,18 +291,18 @@ describe('simple', () => {
                     },
                   ],
                   "name": "UInt64Value",
-                  "nestedType": Array [],
-                  "oneofDecl": Array [],
+                  "nestedType": [],
+                  "oneofDecl": [],
                   "options": undefined,
-                  "reservedName": Array [],
-                  "reservedRange": Array [],
+                  "reservedName": [],
+                  "reservedRange": [],
                 },
-                Object {
-                  "enumType": Array [],
-                  "extension": Array [],
-                  "extensionRange": Array [],
-                  "field": Array [
-                    Object {
+                {
+                  "enumType": [],
+                  "extension": [],
+                  "extensionRange": [],
+                  "field": [
+                    {
                       "defaultValue": "",
                       "extendee": "",
                       "jsonName": "value",
@@ -317,18 +317,18 @@ describe('simple', () => {
                     },
                   ],
                   "name": "Int32Value",
-                  "nestedType": Array [],
-                  "oneofDecl": Array [],
+                  "nestedType": [],
+                  "oneofDecl": [],
                   "options": undefined,
-                  "reservedName": Array [],
-                  "reservedRange": Array [],
+                  "reservedName": [],
+                  "reservedRange": [],
                 },
-                Object {
-                  "enumType": Array [],
-                  "extension": Array [],
-                  "extensionRange": Array [],
-                  "field": Array [
-                    Object {
+                {
+                  "enumType": [],
+                  "extension": [],
+                  "extensionRange": [],
+                  "field": [
+                    {
                       "defaultValue": "",
                       "extendee": "",
                       "jsonName": "value",
@@ -343,18 +343,18 @@ describe('simple', () => {
                     },
                   ],
                   "name": "UInt32Value",
-                  "nestedType": Array [],
-                  "oneofDecl": Array [],
+                  "nestedType": [],
+                  "oneofDecl": [],
                   "options": undefined,
-                  "reservedName": Array [],
-                  "reservedRange": Array [],
+                  "reservedName": [],
+                  "reservedRange": [],
                 },
-                Object {
-                  "enumType": Array [],
-                  "extension": Array [],
-                  "extensionRange": Array [],
-                  "field": Array [
-                    Object {
+                {
+                  "enumType": [],
+                  "extension": [],
+                  "extensionRange": [],
+                  "field": [
+                    {
                       "defaultValue": "",
                       "extendee": "",
                       "jsonName": "value",
@@ -369,18 +369,18 @@ describe('simple', () => {
                     },
                   ],
                   "name": "BoolValue",
-                  "nestedType": Array [],
-                  "oneofDecl": Array [],
+                  "nestedType": [],
+                  "oneofDecl": [],
                   "options": undefined,
-                  "reservedName": Array [],
-                  "reservedRange": Array [],
+                  "reservedName": [],
+                  "reservedRange": [],
                 },
-                Object {
-                  "enumType": Array [],
-                  "extension": Array [],
-                  "extensionRange": Array [],
-                  "field": Array [
-                    Object {
+                {
+                  "enumType": [],
+                  "extension": [],
+                  "extensionRange": [],
+                  "field": [
+                    {
                       "defaultValue": "",
                       "extendee": "",
                       "jsonName": "value",
@@ -395,18 +395,18 @@ describe('simple', () => {
                     },
                   ],
                   "name": "StringValue",
-                  "nestedType": Array [],
-                  "oneofDecl": Array [],
+                  "nestedType": [],
+                  "oneofDecl": [],
                   "options": undefined,
-                  "reservedName": Array [],
-                  "reservedRange": Array [],
+                  "reservedName": [],
+                  "reservedRange": [],
                 },
-                Object {
-                  "enumType": Array [],
-                  "extension": Array [],
-                  "extensionRange": Array [],
-                  "field": Array [
-                    Object {
+                {
+                  "enumType": [],
+                  "extension": [],
+                  "extensionRange": [],
+                  "field": [
+                    {
                       "defaultValue": "",
                       "extendee": "",
                       "jsonName": "value",
@@ -421,15 +421,15 @@ describe('simple', () => {
                     },
                   ],
                   "name": "BytesValue",
-                  "nestedType": Array [],
-                  "oneofDecl": Array [],
+                  "nestedType": [],
+                  "oneofDecl": [],
                   "options": undefined,
-                  "reservedName": Array [],
-                  "reservedRange": Array [],
+                  "reservedName": [],
+                  "reservedRange": [],
                 },
               ],
               "name": "google/protobuf/wrappers.proto",
-              "options": Object {
+              "options": {
                 "ccEnableArenas": true,
                 "ccGenericServices": false,
                 "csharpNamespace": "Google.Protobuf.WellKnownTypes",
@@ -450,24 +450,24 @@ describe('simple', () => {
                 "pyGenericServices": false,
                 "rubyPackage": "",
                 "swiftPrefix": "",
-                "uninterpretedOption": Array [],
+                "uninterpretedOption": [],
               },
               "package": "google.protobuf",
-              "publicDependency": Array [],
-              "service": Array [],
-              "sourceCodeInfo": Object {
-                "location": Array [
-                  Object {
+              "publicDependency": [],
+              "service": [],
+              "sourceCodeInfo": {
+                "location": [
+                  {
                     "leadingComments": " Wrapper message for \`double\`.
 
        The JSON representation for \`DoubleValue\` is JSON number.
       ",
-                    "leadingDetachedComments": Array [],
-                    "path": Array [
+                    "leadingDetachedComments": [],
+                    "path": [
                       4,
                       0,
                     ],
-                    "span": Array [
+                    "span": [
                       50,
                       0,
                       53,
@@ -475,34 +475,34 @@ describe('simple', () => {
                     ],
                     "trailingComments": "",
                   },
-                  Object {
+                  {
                     "leadingComments": " The double value.
       ",
-                    "leadingDetachedComments": Array [],
-                    "path": Array [
+                    "leadingDetachedComments": [],
+                    "path": [
                       4,
                       0,
                       2,
                       0,
                     ],
-                    "span": Array [
+                    "span": [
                       52,
                       2,
                       19,
                     ],
                     "trailingComments": "",
                   },
-                  Object {
+                  {
                     "leadingComments": " Wrapper message for \`float\`.
 
        The JSON representation for \`FloatValue\` is JSON number.
       ",
-                    "leadingDetachedComments": Array [],
-                    "path": Array [
+                    "leadingDetachedComments": [],
+                    "path": [
                       4,
                       1,
                     ],
-                    "span": Array [
+                    "span": [
                       58,
                       0,
                       61,
@@ -510,34 +510,34 @@ describe('simple', () => {
                     ],
                     "trailingComments": "",
                   },
-                  Object {
+                  {
                     "leadingComments": " The float value.
       ",
-                    "leadingDetachedComments": Array [],
-                    "path": Array [
+                    "leadingDetachedComments": [],
+                    "path": [
                       4,
                       1,
                       2,
                       0,
                     ],
-                    "span": Array [
+                    "span": [
                       60,
                       2,
                       18,
                     ],
                     "trailingComments": "",
                   },
-                  Object {
+                  {
                     "leadingComments": " Wrapper message for \`int64\`.
 
        The JSON representation for \`Int64Value\` is JSON string.
       ",
-                    "leadingDetachedComments": Array [],
-                    "path": Array [
+                    "leadingDetachedComments": [],
+                    "path": [
                       4,
                       2,
                     ],
-                    "span": Array [
+                    "span": [
                       66,
                       0,
                       69,
@@ -545,34 +545,34 @@ describe('simple', () => {
                     ],
                     "trailingComments": "",
                   },
-                  Object {
+                  {
                     "leadingComments": " The int64 value.
       ",
-                    "leadingDetachedComments": Array [],
-                    "path": Array [
+                    "leadingDetachedComments": [],
+                    "path": [
                       4,
                       2,
                       2,
                       0,
                     ],
-                    "span": Array [
+                    "span": [
                       68,
                       2,
                       18,
                     ],
                     "trailingComments": "",
                   },
-                  Object {
+                  {
                     "leadingComments": " Wrapper message for \`uint64\`.
 
        The JSON representation for \`UInt64Value\` is JSON string.
       ",
-                    "leadingDetachedComments": Array [],
-                    "path": Array [
+                    "leadingDetachedComments": [],
+                    "path": [
                       4,
                       3,
                     ],
-                    "span": Array [
+                    "span": [
                       74,
                       0,
                       77,
@@ -580,34 +580,34 @@ describe('simple', () => {
                     ],
                     "trailingComments": "",
                   },
-                  Object {
+                  {
                     "leadingComments": " The uint64 value.
       ",
-                    "leadingDetachedComments": Array [],
-                    "path": Array [
+                    "leadingDetachedComments": [],
+                    "path": [
                       4,
                       3,
                       2,
                       0,
                     ],
-                    "span": Array [
+                    "span": [
                       76,
                       2,
                       19,
                     ],
                     "trailingComments": "",
                   },
-                  Object {
+                  {
                     "leadingComments": " Wrapper message for \`int32\`.
 
        The JSON representation for \`Int32Value\` is JSON number.
       ",
-                    "leadingDetachedComments": Array [],
-                    "path": Array [
+                    "leadingDetachedComments": [],
+                    "path": [
                       4,
                       4,
                     ],
-                    "span": Array [
+                    "span": [
                       82,
                       0,
                       85,
@@ -615,34 +615,34 @@ describe('simple', () => {
                     ],
                     "trailingComments": "",
                   },
-                  Object {
+                  {
                     "leadingComments": " The int32 value.
       ",
-                    "leadingDetachedComments": Array [],
-                    "path": Array [
+                    "leadingDetachedComments": [],
+                    "path": [
                       4,
                       4,
                       2,
                       0,
                     ],
-                    "span": Array [
+                    "span": [
                       84,
                       2,
                       18,
                     ],
                     "trailingComments": "",
                   },
-                  Object {
+                  {
                     "leadingComments": " Wrapper message for \`uint32\`.
 
        The JSON representation for \`UInt32Value\` is JSON number.
       ",
-                    "leadingDetachedComments": Array [],
-                    "path": Array [
+                    "leadingDetachedComments": [],
+                    "path": [
                       4,
                       5,
                     ],
-                    "span": Array [
+                    "span": [
                       90,
                       0,
                       93,
@@ -650,34 +650,34 @@ describe('simple', () => {
                     ],
                     "trailingComments": "",
                   },
-                  Object {
+                  {
                     "leadingComments": " The uint32 value.
       ",
-                    "leadingDetachedComments": Array [],
-                    "path": Array [
+                    "leadingDetachedComments": [],
+                    "path": [
                       4,
                       5,
                       2,
                       0,
                     ],
-                    "span": Array [
+                    "span": [
                       92,
                       2,
                       19,
                     ],
                     "trailingComments": "",
                   },
-                  Object {
+                  {
                     "leadingComments": " Wrapper message for \`bool\`.
 
        The JSON representation for \`BoolValue\` is JSON \`true\` and \`false\`.
       ",
-                    "leadingDetachedComments": Array [],
-                    "path": Array [
+                    "leadingDetachedComments": [],
+                    "path": [
                       4,
                       6,
                     ],
-                    "span": Array [
+                    "span": [
                       98,
                       0,
                       101,
@@ -685,34 +685,34 @@ describe('simple', () => {
                     ],
                     "trailingComments": "",
                   },
-                  Object {
+                  {
                     "leadingComments": " The bool value.
       ",
-                    "leadingDetachedComments": Array [],
-                    "path": Array [
+                    "leadingDetachedComments": [],
+                    "path": [
                       4,
                       6,
                       2,
                       0,
                     ],
-                    "span": Array [
+                    "span": [
                       100,
                       2,
                       17,
                     ],
                     "trailingComments": "",
                   },
-                  Object {
+                  {
                     "leadingComments": " Wrapper message for \`string\`.
 
        The JSON representation for \`StringValue\` is JSON string.
       ",
-                    "leadingDetachedComments": Array [],
-                    "path": Array [
+                    "leadingDetachedComments": [],
+                    "path": [
                       4,
                       7,
                     ],
-                    "span": Array [
+                    "span": [
                       106,
                       0,
                       109,
@@ -720,34 +720,34 @@ describe('simple', () => {
                     ],
                     "trailingComments": "",
                   },
-                  Object {
+                  {
                     "leadingComments": " The string value.
       ",
-                    "leadingDetachedComments": Array [],
-                    "path": Array [
+                    "leadingDetachedComments": [],
+                    "path": [
                       4,
                       7,
                       2,
                       0,
                     ],
-                    "span": Array [
+                    "span": [
                       108,
                       2,
                       19,
                     ],
                     "trailingComments": "",
                   },
-                  Object {
+                  {
                     "leadingComments": " Wrapper message for \`bytes\`.
 
        The JSON representation for \`BytesValue\` is JSON string.
       ",
-                    "leadingDetachedComments": Array [],
-                    "path": Array [
+                    "leadingDetachedComments": [],
+                    "path": [
                       4,
                       8,
                     ],
-                    "span": Array [
+                    "span": [
                       114,
                       0,
                       117,
@@ -755,17 +755,17 @@ describe('simple', () => {
                     ],
                     "trailingComments": "",
                   },
-                  Object {
+                  {
                     "leadingComments": " The bytes value.
       ",
-                    "leadingDetachedComments": Array [],
-                    "path": Array [
+                    "leadingDetachedComments": [],
+                    "path": [
                       4,
                       8,
                       2,
                       0,
                     ],
-                    "span": Array [
+                    "span": [
                       116,
                       2,
                       18,
@@ -775,60 +775,60 @@ describe('simple', () => {
                 ],
               },
               "syntax": "proto3",
-              "weakDependency": Array [],
+              "weakDependency": [],
             },
-            "references": Object {
-              ".google.protobuf.BoolValue": Object {
+            "references": {
+              ".google.protobuf.BoolValue": {
                 "decode": [Function],
                 "encode": [Function],
               },
-              ".google.protobuf.BytesValue": Object {
+              ".google.protobuf.BytesValue": {
                 "decode": [Function],
                 "encode": [Function],
               },
-              ".google.protobuf.DoubleValue": Object {
+              ".google.protobuf.DoubleValue": {
                 "decode": [Function],
                 "encode": [Function],
               },
-              ".google.protobuf.FloatValue": Object {
+              ".google.protobuf.FloatValue": {
                 "decode": [Function],
                 "encode": [Function],
               },
-              ".google.protobuf.Int32Value": Object {
+              ".google.protobuf.Int32Value": {
                 "decode": [Function],
                 "encode": [Function],
               },
-              ".google.protobuf.Int64Value": Object {
+              ".google.protobuf.Int64Value": {
                 "decode": [Function],
                 "encode": [Function],
               },
-              ".google.protobuf.StringValue": Object {
+              ".google.protobuf.StringValue": {
                 "decode": [Function],
                 "encode": [Function],
               },
-              ".google.protobuf.UInt32Value": Object {
+              ".google.protobuf.UInt32Value": {
                 "decode": [Function],
                 "encode": [Function],
               },
-              ".google.protobuf.UInt64Value": Object {
+              ".google.protobuf.UInt64Value": {
                 "decode": [Function],
                 "encode": [Function],
               },
             },
           },
-          Object {
-            "dependencies": Array [],
-            "fileDescriptor": Object {
-              "dependency": Array [],
-              "enumType": Array [],
-              "extension": Array [],
-              "messageType": Array [
-                Object {
-                  "enumType": Array [],
-                  "extension": Array [],
-                  "extensionRange": Array [],
-                  "field": Array [
-                    Object {
+          {
+            "dependencies": [],
+            "fileDescriptor": {
+              "dependency": [],
+              "enumType": [],
+              "extension": [],
+              "messageType": [
+                {
+                  "enumType": [],
+                  "extension": [],
+                  "extensionRange": [],
+                  "field": [
+                    {
                       "defaultValue": "",
                       "extendee": "",
                       "jsonName": "seconds",
@@ -841,7 +841,7 @@ describe('simple', () => {
                       "type": 3,
                       "typeName": "",
                     },
-                    Object {
+                    {
                       "defaultValue": "",
                       "extendee": "",
                       "jsonName": "nanos",
@@ -856,15 +856,15 @@ describe('simple', () => {
                     },
                   ],
                   "name": "Timestamp",
-                  "nestedType": Array [],
-                  "oneofDecl": Array [],
+                  "nestedType": [],
+                  "oneofDecl": [],
                   "options": undefined,
-                  "reservedName": Array [],
-                  "reservedRange": Array [],
+                  "reservedName": [],
+                  "reservedRange": [],
                 },
               ],
               "name": "google/protobuf/timestamp.proto",
-              "options": Object {
+              "options": {
                 "ccEnableArenas": true,
                 "ccGenericServices": false,
                 "csharpNamespace": "Google.Protobuf.WellKnownTypes",
@@ -885,21 +885,21 @@ describe('simple', () => {
                 "pyGenericServices": false,
                 "rubyPackage": "",
                 "swiftPrefix": "",
-                "uninterpretedOption": Array [],
+                "uninterpretedOption": [],
               },
               "package": "google.protobuf",
-              "publicDependency": Array [],
-              "service": Array [],
-              "sourceCodeInfo": Object {
-                "location": Array [
-                  Object {
+              "publicDependency": [],
+              "service": [],
+              "sourceCodeInfo": {
+                "location": [
+                  {
                     "leadingComments": " A Timestamp represents a point in time independent of any time zone or local
        calendar, encoded as a count of seconds and fractions of seconds at
        nanosecond resolution. The count is relative to an epoch at UTC midnight on
        January 1, 1970, in the proleptic Gregorian calendar which extends the
        Gregorian calendar backwards to year one.
 
-       All minutes are 60 seconds long. Leap seconds are \\"smeared\\" so that no leap
+       All minutes are 60 seconds long. Leap seconds are "smeared" so that no leap
        second table is needed for interpretation, using a [24-hour linear
        smear](https://developers.google.com/time/smear).
 
@@ -962,16 +962,16 @@ describe('simple', () => {
 
        In JSON format, the Timestamp type is encoded as a string in the
        [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format. That is, the
-       format is \\"{year}-{month}-{day}T{hour}:{min}:{sec}[.{frac_sec}]Z\\"
+       format is "{year}-{month}-{day}T{hour}:{min}:{sec}[.{frac_sec}]Z"
        where {year} is always expressed using four digits while {month}, {day},
        {hour}, {min}, and {sec} are zero-padded to two digits each. The fractional
        seconds, which can go up to 9 digits (i.e. up to 1 nanosecond resolution),
-       are optional. The \\"Z\\" suffix indicates the timezone (\\"UTC\\"); the timezone
+       are optional. The "Z" suffix indicates the timezone ("UTC"); the timezone
        is required. A proto3 JSON serializer should always use UTC (as indicated by
-       \\"Z\\") when printing the Timestamp type and a proto3 JSON parser should be
+       "Z") when printing the Timestamp type and a proto3 JSON parser should be
        able to accept both UTC and other timezones (as indicated by an offset).
 
-       For example, \\"2017-01-15T01:30:15.01Z\\" encodes 15.01 seconds past
+       For example, "2017-01-15T01:30:15.01Z" encodes 15.01 seconds past
        01:30 UTC on January 15, 2017.
 
        In JavaScript, one can convert a Date object to this format using the
@@ -987,12 +987,12 @@ describe('simple', () => {
 
 
       ",
-                    "leadingDetachedComments": Array [],
-                    "path": Array [
+                    "leadingDetachedComments": [],
+                    "path": [
                       4,
                       0,
                     ],
-                    "span": Array [
+                    "span": [
                       135,
                       0,
                       146,
@@ -1000,39 +1000,39 @@ describe('simple', () => {
                     ],
                     "trailingComments": "",
                   },
-                  Object {
+                  {
                     "leadingComments": " Represents seconds of UTC time since Unix epoch
        1970-01-01T00:00:00Z. Must be from 0001-01-01T00:00:00Z to
        9999-12-31T23:59:59Z inclusive.
       ",
-                    "leadingDetachedComments": Array [],
-                    "path": Array [
+                    "leadingDetachedComments": [],
+                    "path": [
                       4,
                       0,
                       2,
                       0,
                     ],
-                    "span": Array [
+                    "span": [
                       139,
                       2,
                       20,
                     ],
                     "trailingComments": "",
                   },
-                  Object {
+                  {
                     "leadingComments": " Non-negative fractions of a second at nanosecond resolution. Negative
        second values with fractions must still have non-negative nanos values
        that count forward in time. Must be from 0 to 999,999,999
        inclusive.
       ",
-                    "leadingDetachedComments": Array [],
-                    "path": Array [
+                    "leadingDetachedComments": [],
+                    "path": [
                       4,
                       0,
                       2,
                       1,
                     ],
-                    "span": Array [
+                    "span": [
                       145,
                       2,
                       18,
@@ -1042,30 +1042,30 @@ describe('simple', () => {
                 ],
               },
               "syntax": "proto3",
-              "weakDependency": Array [],
+              "weakDependency": [],
             },
-            "references": Object {
-              ".google.protobuf.Timestamp": Object {
+            "references": {
+              ".google.protobuf.Timestamp": {
                 "decode": [Function],
                 "encode": [Function],
               },
             },
           },
-          Object {
-            "dependencies": Array [
-              Object {
-                "dependencies": Array [],
-                "fileDescriptor": Object {
-                  "dependency": Array [],
-                  "enumType": Array [],
-                  "extension": Array [],
-                  "messageType": Array [
-                    Object {
-                      "enumType": Array [],
-                      "extension": Array [],
-                      "extensionRange": Array [],
-                      "field": Array [
-                        Object {
+          {
+            "dependencies": [
+              {
+                "dependencies": [],
+                "fileDescriptor": {
+                  "dependency": [],
+                  "enumType": [],
+                  "extension": [],
+                  "messageType": [
+                    {
+                      "enumType": [],
+                      "extension": [],
+                      "extensionRange": [],
+                      "field": [
+                        {
                           "defaultValue": "",
                           "extendee": "",
                           "jsonName": "seconds",
@@ -1078,7 +1078,7 @@ describe('simple', () => {
                           "type": 3,
                           "typeName": "",
                         },
-                        Object {
+                        {
                           "defaultValue": "",
                           "extendee": "",
                           "jsonName": "nanos",
@@ -1093,15 +1093,15 @@ describe('simple', () => {
                         },
                       ],
                       "name": "Timestamp",
-                      "nestedType": Array [],
-                      "oneofDecl": Array [],
+                      "nestedType": [],
+                      "oneofDecl": [],
                       "options": undefined,
-                      "reservedName": Array [],
-                      "reservedRange": Array [],
+                      "reservedName": [],
+                      "reservedRange": [],
                     },
                   ],
                   "name": "google/protobuf/timestamp.proto",
-                  "options": Object {
+                  "options": {
                     "ccEnableArenas": true,
                     "ccGenericServices": false,
                     "csharpNamespace": "Google.Protobuf.WellKnownTypes",
@@ -1122,21 +1122,21 @@ describe('simple', () => {
                     "pyGenericServices": false,
                     "rubyPackage": "",
                     "swiftPrefix": "",
-                    "uninterpretedOption": Array [],
+                    "uninterpretedOption": [],
                   },
                   "package": "google.protobuf",
-                  "publicDependency": Array [],
-                  "service": Array [],
-                  "sourceCodeInfo": Object {
-                    "location": Array [
-                      Object {
+                  "publicDependency": [],
+                  "service": [],
+                  "sourceCodeInfo": {
+                    "location": [
+                      {
                         "leadingComments": " A Timestamp represents a point in time independent of any time zone or local
        calendar, encoded as a count of seconds and fractions of seconds at
        nanosecond resolution. The count is relative to an epoch at UTC midnight on
        January 1, 1970, in the proleptic Gregorian calendar which extends the
        Gregorian calendar backwards to year one.
 
-       All minutes are 60 seconds long. Leap seconds are \\"smeared\\" so that no leap
+       All minutes are 60 seconds long. Leap seconds are "smeared" so that no leap
        second table is needed for interpretation, using a [24-hour linear
        smear](https://developers.google.com/time/smear).
 
@@ -1199,16 +1199,16 @@ describe('simple', () => {
 
        In JSON format, the Timestamp type is encoded as a string in the
        [RFC 3339](https://www.ietf.org/rfc/rfc3339.txt) format. That is, the
-       format is \\"{year}-{month}-{day}T{hour}:{min}:{sec}[.{frac_sec}]Z\\"
+       format is "{year}-{month}-{day}T{hour}:{min}:{sec}[.{frac_sec}]Z"
        where {year} is always expressed using four digits while {month}, {day},
        {hour}, {min}, and {sec} are zero-padded to two digits each. The fractional
        seconds, which can go up to 9 digits (i.e. up to 1 nanosecond resolution),
-       are optional. The \\"Z\\" suffix indicates the timezone (\\"UTC\\"); the timezone
+       are optional. The "Z" suffix indicates the timezone ("UTC"); the timezone
        is required. A proto3 JSON serializer should always use UTC (as indicated by
-       \\"Z\\") when printing the Timestamp type and a proto3 JSON parser should be
+       "Z") when printing the Timestamp type and a proto3 JSON parser should be
        able to accept both UTC and other timezones (as indicated by an offset).
 
-       For example, \\"2017-01-15T01:30:15.01Z\\" encodes 15.01 seconds past
+       For example, "2017-01-15T01:30:15.01Z" encodes 15.01 seconds past
        01:30 UTC on January 15, 2017.
 
        In JavaScript, one can convert a Date object to this format using the
@@ -1224,12 +1224,12 @@ describe('simple', () => {
 
 
       ",
-                        "leadingDetachedComments": Array [],
-                        "path": Array [
+                        "leadingDetachedComments": [],
+                        "path": [
                           4,
                           0,
                         ],
-                        "span": Array [
+                        "span": [
                           135,
                           0,
                           146,
@@ -1237,39 +1237,39 @@ describe('simple', () => {
                         ],
                         "trailingComments": "",
                       },
-                      Object {
+                      {
                         "leadingComments": " Represents seconds of UTC time since Unix epoch
        1970-01-01T00:00:00Z. Must be from 0001-01-01T00:00:00Z to
        9999-12-31T23:59:59Z inclusive.
       ",
-                        "leadingDetachedComments": Array [],
-                        "path": Array [
+                        "leadingDetachedComments": [],
+                        "path": [
                           4,
                           0,
                           2,
                           0,
                         ],
-                        "span": Array [
+                        "span": [
                           139,
                           2,
                           20,
                         ],
                         "trailingComments": "",
                       },
-                      Object {
+                      {
                         "leadingComments": " Non-negative fractions of a second at nanosecond resolution. Negative
        second values with fractions must still have non-negative nanos values
        that count forward in time. Must be from 0 to 999,999,999
        inclusive.
       ",
-                        "leadingDetachedComments": Array [],
-                        "path": Array [
+                        "leadingDetachedComments": [],
+                        "path": [
                           4,
                           0,
                           2,
                           1,
                         ],
-                        "span": Array [
+                        "span": [
                           145,
                           2,
                           18,
@@ -1279,29 +1279,29 @@ describe('simple', () => {
                     ],
                   },
                   "syntax": "proto3",
-                  "weakDependency": Array [],
+                  "weakDependency": [],
                 },
-                "references": Object {
-                  ".google.protobuf.Timestamp": Object {
+                "references": {
+                  ".google.protobuf.Timestamp": {
                     "decode": [Function],
                     "encode": [Function],
                   },
                 },
               },
             ],
-            "fileDescriptor": Object {
-              "dependency": Array [
+            "fileDescriptor": {
+              "dependency": [
                 "google/protobuf/timestamp.proto",
               ],
-              "enumType": Array [],
-              "extension": Array [],
-              "messageType": Array [
-                Object {
-                  "enumType": Array [],
-                  "extension": Array [],
-                  "extensionRange": Array [],
-                  "field": Array [
-                    Object {
+              "enumType": [],
+              "extension": [],
+              "messageType": [
+                {
+                  "enumType": [],
+                  "extension": [],
+                  "extensionRange": [],
+                  "field": [
+                    {
                       "defaultValue": "",
                       "extendee": "",
                       "jsonName": "createdAt",
@@ -1316,57 +1316,57 @@ describe('simple', () => {
                     },
                   ],
                   "name": "ImportedThing",
-                  "nestedType": Array [],
-                  "oneofDecl": Array [],
+                  "nestedType": [],
+                  "oneofDecl": [],
                   "options": undefined,
-                  "reservedName": Array [],
-                  "reservedRange": Array [],
+                  "reservedName": [],
+                  "reservedRange": [],
                 },
               ],
               "name": "import_dir/thing.proto",
               "options": undefined,
               "package": "simple",
-              "publicDependency": Array [],
-              "service": Array [],
-              "sourceCodeInfo": Object {
-                "location": Array [],
+              "publicDependency": [],
+              "service": [],
+              "sourceCodeInfo": {
+                "location": [],
               },
               "syntax": "proto3",
-              "weakDependency": Array [],
+              "weakDependency": [],
             },
-            "references": Object {
-              ".simple.ImportedThing": Object {
+            "references": {
+              ".simple.ImportedThing": {
                 "decode": [Function],
                 "encode": [Function],
               },
             },
           },
         ],
-        "fileDescriptor": Object {
-          "dependency": Array [
+        "fileDescriptor": {
+          "dependency": [
             "google/type/date.proto",
             "google/protobuf/wrappers.proto",
             "google/protobuf/timestamp.proto",
             "import_dir/thing.proto",
           ],
-          "enumType": Array [
-            Object {
+          "enumType": [
+            {
               "name": "StateEnum",
               "options": undefined,
-              "reservedName": Array [],
-              "reservedRange": Array [],
-              "value": Array [
-                Object {
+              "reservedName": [],
+              "reservedRange": [],
+              "value": [
+                {
                   "name": "UNKNOWN",
                   "number": 0,
                   "options": undefined,
                 },
-                Object {
+                {
                   "name": "ON",
                   "number": 2,
                   "options": undefined,
                 },
-                Object {
+                {
                   "name": "OFF",
                   "number": 3,
                   "options": undefined,
@@ -1374,14 +1374,14 @@ describe('simple', () => {
               ],
             },
           ],
-          "extension": Array [],
-          "messageType": Array [
-            Object {
-              "enumType": Array [],
-              "extension": Array [],
-              "extensionRange": Array [],
-              "field": Array [
-                Object {
+          "extension": [],
+          "messageType": [
+            {
+              "enumType": [],
+              "extension": [],
+              "extensionRange": [],
+              "field": [
+                {
                   "defaultValue": "",
                   "extendee": "",
                   "jsonName": "name",
@@ -1394,7 +1394,7 @@ describe('simple', () => {
                   "type": 9,
                   "typeName": "",
                 },
-                Object {
+                {
                   "defaultValue": "",
                   "extendee": "",
                   "jsonName": "age",
@@ -1407,7 +1407,7 @@ describe('simple', () => {
                   "type": 5,
                   "typeName": "",
                 },
-                Object {
+                {
                   "defaultValue": "",
                   "extendee": "",
                   "jsonName": "createdAt",
@@ -1420,7 +1420,7 @@ describe('simple', () => {
                   "type": 11,
                   "typeName": ".google.protobuf.Timestamp",
                 },
-                Object {
+                {
                   "defaultValue": "",
                   "extendee": "",
                   "jsonName": "child",
@@ -1433,7 +1433,7 @@ describe('simple', () => {
                   "type": 11,
                   "typeName": ".simple.Child",
                 },
-                Object {
+                {
                   "defaultValue": "",
                   "extendee": "",
                   "jsonName": "state",
@@ -1446,7 +1446,7 @@ describe('simple', () => {
                   "type": 14,
                   "typeName": ".simple.StateEnum",
                 },
-                Object {
+                {
                   "defaultValue": "",
                   "extendee": "",
                   "jsonName": "grandChildren",
@@ -1459,7 +1459,7 @@ describe('simple', () => {
                   "type": 11,
                   "typeName": ".simple.Child",
                 },
-                Object {
+                {
                   "defaultValue": "",
                   "extendee": "",
                   "jsonName": "coins",
@@ -1472,7 +1472,7 @@ describe('simple', () => {
                   "type": 5,
                   "typeName": "",
                 },
-                Object {
+                {
                   "defaultValue": "",
                   "extendee": "",
                   "jsonName": "snacks",
@@ -1485,7 +1485,7 @@ describe('simple', () => {
                   "type": 9,
                   "typeName": "",
                 },
-                Object {
+                {
                   "defaultValue": "",
                   "extendee": "",
                   "jsonName": "oldStates",
@@ -1498,7 +1498,7 @@ describe('simple', () => {
                   "type": 14,
                   "typeName": ".simple.StateEnum",
                 },
-                Object {
+                {
                   "defaultValue": "",
                   "extendee": "",
                   "jsonName": "thing",
@@ -1511,7 +1511,7 @@ describe('simple', () => {
                   "type": 11,
                   "typeName": ".simple.ImportedThing",
                 },
-                Object {
+                {
                   "defaultValue": "",
                   "extendee": "",
                   "jsonName": "blobs",
@@ -1524,7 +1524,7 @@ describe('simple', () => {
                   "type": 12,
                   "typeName": "",
                 },
-                Object {
+                {
                   "defaultValue": "",
                   "extendee": "",
                   "jsonName": "birthday",
@@ -1537,7 +1537,7 @@ describe('simple', () => {
                   "type": 11,
                   "typeName": ".google.type.Date",
                 },
-                Object {
+                {
                   "defaultValue": "",
                   "extendee": "",
                   "jsonName": "blob",
@@ -1552,31 +1552,31 @@ describe('simple', () => {
                 },
               ],
               "name": "Simple",
-              "nestedType": Array [],
-              "oneofDecl": Array [],
+              "nestedType": [],
+              "oneofDecl": [],
               "options": undefined,
-              "reservedName": Array [],
-              "reservedRange": Array [],
+              "reservedName": [],
+              "reservedRange": [],
             },
-            Object {
-              "enumType": Array [
-                Object {
+            {
+              "enumType": [
+                {
                   "name": "Type",
                   "options": undefined,
-                  "reservedName": Array [],
-                  "reservedRange": Array [],
-                  "value": Array [
-                    Object {
+                  "reservedName": [],
+                  "reservedRange": [],
+                  "value": [
+                    {
                       "name": "UNKNOWN",
                       "number": 0,
                       "options": undefined,
                     },
-                    Object {
+                    {
                       "name": "GOOD",
                       "number": 1,
                       "options": undefined,
                     },
-                    Object {
+                    {
                       "name": "BAD",
                       "number": 2,
                       "options": undefined,
@@ -1584,10 +1584,10 @@ describe('simple', () => {
                   ],
                 },
               ],
-              "extension": Array [],
-              "extensionRange": Array [],
-              "field": Array [
-                Object {
+              "extension": [],
+              "extensionRange": [],
+              "field": [
+                {
                   "defaultValue": "",
                   "extendee": "",
                   "jsonName": "name",
@@ -1600,7 +1600,7 @@ describe('simple', () => {
                   "type": 9,
                   "typeName": "",
                 },
-                Object {
+                {
                   "defaultValue": "",
                   "extendee": "",
                   "jsonName": "type",
@@ -1615,31 +1615,31 @@ describe('simple', () => {
                 },
               ],
               "name": "Child",
-              "nestedType": Array [],
-              "oneofDecl": Array [],
+              "nestedType": [],
+              "oneofDecl": [],
               "options": undefined,
-              "reservedName": Array [],
-              "reservedRange": Array [],
+              "reservedName": [],
+              "reservedRange": [],
             },
-            Object {
-              "enumType": Array [
-                Object {
+            {
+              "enumType": [
+                {
                   "name": "InnerEnum",
                   "options": undefined,
-                  "reservedName": Array [],
-                  "reservedRange": Array [],
-                  "value": Array [
-                    Object {
+                  "reservedName": [],
+                  "reservedRange": [],
+                  "value": [
+                    {
                       "name": "UNKNOWN_INNER",
                       "number": 0,
                       "options": undefined,
                     },
-                    Object {
+                    {
                       "name": "GOOD",
                       "number": 100,
                       "options": undefined,
                     },
-                    Object {
+                    {
                       "name": "BAD",
                       "number": 1000,
                       "options": undefined,
@@ -1647,10 +1647,10 @@ describe('simple', () => {
                   ],
                 },
               ],
-              "extension": Array [],
-              "extensionRange": Array [],
-              "field": Array [
-                Object {
+              "extension": [],
+              "extensionRange": [],
+              "field": [
+                {
                   "defaultValue": "",
                   "extendee": "",
                   "jsonName": "name",
@@ -1663,7 +1663,7 @@ describe('simple', () => {
                   "type": 9,
                   "typeName": "",
                 },
-                Object {
+                {
                   "defaultValue": "",
                   "extendee": "",
                   "jsonName": "message",
@@ -1676,7 +1676,7 @@ describe('simple', () => {
                   "type": 11,
                   "typeName": ".simple.Nested.InnerMessage",
                 },
-                Object {
+                {
                   "defaultValue": "",
                   "extendee": "",
                   "jsonName": "state",
@@ -1691,13 +1691,13 @@ describe('simple', () => {
                 },
               ],
               "name": "Nested",
-              "nestedType": Array [
-                Object {
-                  "enumType": Array [],
-                  "extension": Array [],
-                  "extensionRange": Array [],
-                  "field": Array [
-                    Object {
+              "nestedType": [
+                {
+                  "enumType": [],
+                  "extension": [],
+                  "extensionRange": [],
+                  "field": [
+                    {
                       "defaultValue": "",
                       "extendee": "",
                       "jsonName": "name",
@@ -1710,7 +1710,7 @@ describe('simple', () => {
                       "type": 9,
                       "typeName": "",
                     },
-                    Object {
+                    {
                       "defaultValue": "",
                       "extendee": "",
                       "jsonName": "deep",
@@ -1725,13 +1725,13 @@ describe('simple', () => {
                     },
                   ],
                   "name": "InnerMessage",
-                  "nestedType": Array [
-                    Object {
-                      "enumType": Array [],
-                      "extension": Array [],
-                      "extensionRange": Array [],
-                      "field": Array [
-                        Object {
+                  "nestedType": [
+                    {
+                      "enumType": [],
+                      "extension": [],
+                      "extensionRange": [],
+                      "field": [
+                        {
                           "defaultValue": "",
                           "extendee": "",
                           "jsonName": "name",
@@ -1746,30 +1746,30 @@ describe('simple', () => {
                         },
                       ],
                       "name": "DeepMessage",
-                      "nestedType": Array [],
-                      "oneofDecl": Array [],
+                      "nestedType": [],
+                      "oneofDecl": [],
                       "options": undefined,
-                      "reservedName": Array [],
-                      "reservedRange": Array [],
+                      "reservedName": [],
+                      "reservedRange": [],
                     },
                   ],
-                  "oneofDecl": Array [],
+                  "oneofDecl": [],
                   "options": undefined,
-                  "reservedName": Array [],
-                  "reservedRange": Array [],
+                  "reservedName": [],
+                  "reservedRange": [],
                 },
               ],
-              "oneofDecl": Array [],
+              "oneofDecl": [],
               "options": undefined,
-              "reservedName": Array [],
-              "reservedRange": Array [],
+              "reservedName": [],
+              "reservedRange": [],
             },
-            Object {
-              "enumType": Array [],
-              "extension": Array [],
-              "extensionRange": Array [],
-              "field": Array [
-                Object {
+            {
+              "enumType": [],
+              "extension": [],
+              "extensionRange": [],
+              "field": [
+                {
                   "defaultValue": "",
                   "extendee": "",
                   "jsonName": "first",
@@ -1782,7 +1782,7 @@ describe('simple', () => {
                   "type": 9,
                   "typeName": "",
                 },
-                Object {
+                {
                   "defaultValue": "",
                   "extendee": "",
                   "jsonName": "last",
@@ -1797,23 +1797,23 @@ describe('simple', () => {
                 },
               ],
               "name": "OneOfMessage",
-              "nestedType": Array [],
-              "oneofDecl": Array [
-                Object {
+              "nestedType": [],
+              "oneofDecl": [
+                {
                   "name": "name_fields",
                   "options": undefined,
                 },
               ],
               "options": undefined,
-              "reservedName": Array [],
-              "reservedRange": Array [],
+              "reservedName": [],
+              "reservedRange": [],
             },
-            Object {
-              "enumType": Array [],
-              "extension": Array [],
-              "extensionRange": Array [],
-              "field": Array [
-                Object {
+            {
+              "enumType": [],
+              "extension": [],
+              "extensionRange": [],
+              "field": [
+                {
                   "defaultValue": "",
                   "extendee": "",
                   "jsonName": "name",
@@ -1826,7 +1826,7 @@ describe('simple', () => {
                   "type": 11,
                   "typeName": ".google.protobuf.StringValue",
                 },
-                Object {
+                {
                   "defaultValue": "",
                   "extendee": "",
                   "jsonName": "age",
@@ -1839,7 +1839,7 @@ describe('simple', () => {
                   "type": 11,
                   "typeName": ".google.protobuf.Int32Value",
                 },
-                Object {
+                {
                   "defaultValue": "",
                   "extendee": "",
                   "jsonName": "enabled",
@@ -1852,7 +1852,7 @@ describe('simple', () => {
                   "type": 11,
                   "typeName": ".google.protobuf.BoolValue",
                 },
-                Object {
+                {
                   "defaultValue": "",
                   "extendee": "",
                   "jsonName": "coins",
@@ -1865,7 +1865,7 @@ describe('simple', () => {
                   "type": 11,
                   "typeName": ".google.protobuf.Int32Value",
                 },
-                Object {
+                {
                   "defaultValue": "",
                   "extendee": "",
                   "jsonName": "snacks",
@@ -1880,18 +1880,18 @@ describe('simple', () => {
                 },
               ],
               "name": "SimpleWithWrappers",
-              "nestedType": Array [],
-              "oneofDecl": Array [],
+              "nestedType": [],
+              "oneofDecl": [],
               "options": undefined,
-              "reservedName": Array [],
-              "reservedRange": Array [],
+              "reservedName": [],
+              "reservedRange": [],
             },
-            Object {
-              "enumType": Array [],
-              "extension": Array [],
-              "extensionRange": Array [],
-              "field": Array [
-                Object {
+            {
+              "enumType": [],
+              "extension": [],
+              "extensionRange": [],
+              "field": [
+                {
                   "defaultValue": "",
                   "extendee": "",
                   "jsonName": "id",
@@ -1906,18 +1906,18 @@ describe('simple', () => {
                 },
               ],
               "name": "Entity",
-              "nestedType": Array [],
-              "oneofDecl": Array [],
+              "nestedType": [],
+              "oneofDecl": [],
               "options": undefined,
-              "reservedName": Array [],
-              "reservedRange": Array [],
+              "reservedName": [],
+              "reservedRange": [],
             },
-            Object {
-              "enumType": Array [],
-              "extension": Array [],
-              "extensionRange": Array [],
-              "field": Array [
-                Object {
+            {
+              "enumType": [],
+              "extension": [],
+              "extensionRange": [],
+              "field": [
+                {
                   "defaultValue": "",
                   "extendee": "",
                   "jsonName": "entitiesById",
@@ -1930,7 +1930,7 @@ describe('simple', () => {
                   "type": 11,
                   "typeName": ".simple.SimpleWithMap.EntitiesByIdEntry",
                 },
-                Object {
+                {
                   "defaultValue": "",
                   "extendee": "",
                   "jsonName": "nameLookup",
@@ -1943,7 +1943,7 @@ describe('simple', () => {
                   "type": 11,
                   "typeName": ".simple.SimpleWithMap.NameLookupEntry",
                 },
-                Object {
+                {
                   "defaultValue": "",
                   "extendee": "",
                   "jsonName": "intLookup",
@@ -1956,7 +1956,7 @@ describe('simple', () => {
                   "type": 11,
                   "typeName": ".simple.SimpleWithMap.IntLookupEntry",
                 },
-                Object {
+                {
                   "defaultValue": "",
                   "extendee": "",
                   "jsonName": "mapOfTimestamps",
@@ -1969,7 +1969,7 @@ describe('simple', () => {
                   "type": 11,
                   "typeName": ".simple.SimpleWithMap.MapOfTimestampsEntry",
                 },
-                Object {
+                {
                   "defaultValue": "",
                   "extendee": "",
                   "jsonName": "mapOfBytes",
@@ -1984,13 +1984,13 @@ describe('simple', () => {
                 },
               ],
               "name": "SimpleWithMap",
-              "nestedType": Array [
-                Object {
-                  "enumType": Array [],
-                  "extension": Array [],
-                  "extensionRange": Array [],
-                  "field": Array [
-                    Object {
+              "nestedType": [
+                {
+                  "enumType": [],
+                  "extension": [],
+                  "extensionRange": [],
+                  "field": [
+                    {
                       "defaultValue": "",
                       "extendee": "",
                       "jsonName": "key",
@@ -2003,7 +2003,7 @@ describe('simple', () => {
                       "type": 5,
                       "typeName": "",
                     },
-                    Object {
+                    {
                       "defaultValue": "",
                       "extendee": "",
                       "jsonName": "value",
@@ -2018,24 +2018,24 @@ describe('simple', () => {
                     },
                   ],
                   "name": "EntitiesByIdEntry",
-                  "nestedType": Array [],
-                  "oneofDecl": Array [],
-                  "options": Object {
+                  "nestedType": [],
+                  "oneofDecl": [],
+                  "options": {
                     "deprecated": false,
                     "mapEntry": true,
                     "messageSetWireFormat": false,
                     "noStandardDescriptorAccessor": false,
-                    "uninterpretedOption": Array [],
+                    "uninterpretedOption": [],
                   },
-                  "reservedName": Array [],
-                  "reservedRange": Array [],
+                  "reservedName": [],
+                  "reservedRange": [],
                 },
-                Object {
-                  "enumType": Array [],
-                  "extension": Array [],
-                  "extensionRange": Array [],
-                  "field": Array [
-                    Object {
+                {
+                  "enumType": [],
+                  "extension": [],
+                  "extensionRange": [],
+                  "field": [
+                    {
                       "defaultValue": "",
                       "extendee": "",
                       "jsonName": "key",
@@ -2048,7 +2048,7 @@ describe('simple', () => {
                       "type": 9,
                       "typeName": "",
                     },
-                    Object {
+                    {
                       "defaultValue": "",
                       "extendee": "",
                       "jsonName": "value",
@@ -2063,24 +2063,24 @@ describe('simple', () => {
                     },
                   ],
                   "name": "NameLookupEntry",
-                  "nestedType": Array [],
-                  "oneofDecl": Array [],
-                  "options": Object {
+                  "nestedType": [],
+                  "oneofDecl": [],
+                  "options": {
                     "deprecated": false,
                     "mapEntry": true,
                     "messageSetWireFormat": false,
                     "noStandardDescriptorAccessor": false,
-                    "uninterpretedOption": Array [],
+                    "uninterpretedOption": [],
                   },
-                  "reservedName": Array [],
-                  "reservedRange": Array [],
+                  "reservedName": [],
+                  "reservedRange": [],
                 },
-                Object {
-                  "enumType": Array [],
-                  "extension": Array [],
-                  "extensionRange": Array [],
-                  "field": Array [
-                    Object {
+                {
+                  "enumType": [],
+                  "extension": [],
+                  "extensionRange": [],
+                  "field": [
+                    {
                       "defaultValue": "",
                       "extendee": "",
                       "jsonName": "key",
@@ -2093,7 +2093,7 @@ describe('simple', () => {
                       "type": 5,
                       "typeName": "",
                     },
-                    Object {
+                    {
                       "defaultValue": "",
                       "extendee": "",
                       "jsonName": "value",
@@ -2108,24 +2108,24 @@ describe('simple', () => {
                     },
                   ],
                   "name": "IntLookupEntry",
-                  "nestedType": Array [],
-                  "oneofDecl": Array [],
-                  "options": Object {
+                  "nestedType": [],
+                  "oneofDecl": [],
+                  "options": {
                     "deprecated": false,
                     "mapEntry": true,
                     "messageSetWireFormat": false,
                     "noStandardDescriptorAccessor": false,
-                    "uninterpretedOption": Array [],
+                    "uninterpretedOption": [],
                   },
-                  "reservedName": Array [],
-                  "reservedRange": Array [],
+                  "reservedName": [],
+                  "reservedRange": [],
                 },
-                Object {
-                  "enumType": Array [],
-                  "extension": Array [],
-                  "extensionRange": Array [],
-                  "field": Array [
-                    Object {
+                {
+                  "enumType": [],
+                  "extension": [],
+                  "extensionRange": [],
+                  "field": [
+                    {
                       "defaultValue": "",
                       "extendee": "",
                       "jsonName": "key",
@@ -2138,7 +2138,7 @@ describe('simple', () => {
                       "type": 9,
                       "typeName": "",
                     },
-                    Object {
+                    {
                       "defaultValue": "",
                       "extendee": "",
                       "jsonName": "value",
@@ -2153,24 +2153,24 @@ describe('simple', () => {
                     },
                   ],
                   "name": "MapOfTimestampsEntry",
-                  "nestedType": Array [],
-                  "oneofDecl": Array [],
-                  "options": Object {
+                  "nestedType": [],
+                  "oneofDecl": [],
+                  "options": {
                     "deprecated": false,
                     "mapEntry": true,
                     "messageSetWireFormat": false,
                     "noStandardDescriptorAccessor": false,
-                    "uninterpretedOption": Array [],
+                    "uninterpretedOption": [],
                   },
-                  "reservedName": Array [],
-                  "reservedRange": Array [],
+                  "reservedName": [],
+                  "reservedRange": [],
                 },
-                Object {
-                  "enumType": Array [],
-                  "extension": Array [],
-                  "extensionRange": Array [],
-                  "field": Array [
-                    Object {
+                {
+                  "enumType": [],
+                  "extension": [],
+                  "extensionRange": [],
+                  "field": [
+                    {
                       "defaultValue": "",
                       "extendee": "",
                       "jsonName": "key",
@@ -2183,7 +2183,7 @@ describe('simple', () => {
                       "type": 9,
                       "typeName": "",
                     },
-                    Object {
+                    {
                       "defaultValue": "",
                       "extendee": "",
                       "jsonName": "value",
@@ -2198,30 +2198,30 @@ describe('simple', () => {
                     },
                   ],
                   "name": "MapOfBytesEntry",
-                  "nestedType": Array [],
-                  "oneofDecl": Array [],
-                  "options": Object {
+                  "nestedType": [],
+                  "oneofDecl": [],
+                  "options": {
                     "deprecated": false,
                     "mapEntry": true,
                     "messageSetWireFormat": false,
                     "noStandardDescriptorAccessor": false,
-                    "uninterpretedOption": Array [],
+                    "uninterpretedOption": [],
                   },
-                  "reservedName": Array [],
-                  "reservedRange": Array [],
+                  "reservedName": [],
+                  "reservedRange": [],
                 },
               ],
-              "oneofDecl": Array [],
+              "oneofDecl": [],
               "options": undefined,
-              "reservedName": Array [],
-              "reservedRange": Array [],
+              "reservedName": [],
+              "reservedRange": [],
             },
-            Object {
-              "enumType": Array [],
-              "extension": Array [],
-              "extensionRange": Array [],
-              "field": Array [
-                Object {
+            {
+              "enumType": [],
+              "extension": [],
+              "extensionRange": [],
+              "field": [
+                {
                   "defaultValue": "",
                   "extendee": "",
                   "jsonName": "entitiesById",
@@ -2236,13 +2236,13 @@ describe('simple', () => {
                 },
               ],
               "name": "SimpleWithSnakeCaseMap",
-              "nestedType": Array [
-                Object {
-                  "enumType": Array [],
-                  "extension": Array [],
-                  "extensionRange": Array [],
-                  "field": Array [
-                    Object {
+              "nestedType": [
+                {
+                  "enumType": [],
+                  "extension": [],
+                  "extensionRange": [],
+                  "field": [
+                    {
                       "defaultValue": "",
                       "extendee": "",
                       "jsonName": "key",
@@ -2255,7 +2255,7 @@ describe('simple', () => {
                       "type": 5,
                       "typeName": "",
                     },
-                    Object {
+                    {
                       "defaultValue": "",
                       "extendee": "",
                       "jsonName": "value",
@@ -2270,30 +2270,30 @@ describe('simple', () => {
                     },
                   ],
                   "name": "EntitiesByIdEntry",
-                  "nestedType": Array [],
-                  "oneofDecl": Array [],
-                  "options": Object {
+                  "nestedType": [],
+                  "oneofDecl": [],
+                  "options": {
                     "deprecated": false,
                     "mapEntry": true,
                     "messageSetWireFormat": false,
                     "noStandardDescriptorAccessor": false,
-                    "uninterpretedOption": Array [],
+                    "uninterpretedOption": [],
                   },
-                  "reservedName": Array [],
-                  "reservedRange": Array [],
+                  "reservedName": [],
+                  "reservedRange": [],
                 },
               ],
-              "oneofDecl": Array [],
+              "oneofDecl": [],
               "options": undefined,
-              "reservedName": Array [],
-              "reservedRange": Array [],
+              "reservedName": [],
+              "reservedRange": [],
             },
-            Object {
-              "enumType": Array [],
-              "extension": Array [],
-              "extensionRange": Array [],
-              "field": Array [
-                Object {
+            {
+              "enumType": [],
+              "extension": [],
+              "extensionRange": [],
+              "field": [
+                {
                   "defaultValue": "",
                   "extendee": "",
                   "jsonName": "enumsById",
@@ -2308,13 +2308,13 @@ describe('simple', () => {
                 },
               ],
               "name": "SimpleWithMapOfEnums",
-              "nestedType": Array [
-                Object {
-                  "enumType": Array [],
-                  "extension": Array [],
-                  "extensionRange": Array [],
-                  "field": Array [
-                    Object {
+              "nestedType": [
+                {
+                  "enumType": [],
+                  "extension": [],
+                  "extensionRange": [],
+                  "field": [
+                    {
                       "defaultValue": "",
                       "extendee": "",
                       "jsonName": "key",
@@ -2327,7 +2327,7 @@ describe('simple', () => {
                       "type": 5,
                       "typeName": "",
                     },
-                    Object {
+                    {
                       "defaultValue": "",
                       "extendee": "",
                       "jsonName": "value",
@@ -2342,30 +2342,30 @@ describe('simple', () => {
                     },
                   ],
                   "name": "EnumsByIdEntry",
-                  "nestedType": Array [],
-                  "oneofDecl": Array [],
-                  "options": Object {
+                  "nestedType": [],
+                  "oneofDecl": [],
+                  "options": {
                     "deprecated": false,
                     "mapEntry": true,
                     "messageSetWireFormat": false,
                     "noStandardDescriptorAccessor": false,
-                    "uninterpretedOption": Array [],
+                    "uninterpretedOption": [],
                   },
-                  "reservedName": Array [],
-                  "reservedRange": Array [],
+                  "reservedName": [],
+                  "reservedRange": [],
                 },
               ],
-              "oneofDecl": Array [],
+              "oneofDecl": [],
               "options": undefined,
-              "reservedName": Array [],
-              "reservedRange": Array [],
+              "reservedName": [],
+              "reservedRange": [],
             },
-            Object {
-              "enumType": Array [],
-              "extension": Array [],
-              "extensionRange": Array [],
-              "field": Array [
-                Object {
+            {
+              "enumType": [],
+              "extension": [],
+              "extensionRange": [],
+              "field": [
+                {
                   "defaultValue": "",
                   "extendee": "",
                   "jsonName": "input",
@@ -2380,18 +2380,18 @@ describe('simple', () => {
                 },
               ],
               "name": "PingRequest",
-              "nestedType": Array [],
-              "oneofDecl": Array [],
+              "nestedType": [],
+              "oneofDecl": [],
               "options": undefined,
-              "reservedName": Array [],
-              "reservedRange": Array [],
+              "reservedName": [],
+              "reservedRange": [],
             },
-            Object {
-              "enumType": Array [],
-              "extension": Array [],
-              "extensionRange": Array [],
-              "field": Array [
-                Object {
+            {
+              "enumType": [],
+              "extension": [],
+              "extensionRange": [],
+              "field": [
+                {
                   "defaultValue": "",
                   "extendee": "",
                   "jsonName": "output",
@@ -2406,18 +2406,18 @@ describe('simple', () => {
                 },
               ],
               "name": "PingResponse",
-              "nestedType": Array [],
-              "oneofDecl": Array [],
+              "nestedType": [],
+              "oneofDecl": [],
               "options": undefined,
-              "reservedName": Array [],
-              "reservedRange": Array [],
+              "reservedName": [],
+              "reservedRange": [],
             },
-            Object {
-              "enumType": Array [],
-              "extension": Array [],
-              "extensionRange": Array [],
-              "field": Array [
-                Object {
+            {
+              "enumType": [],
+              "extension": [],
+              "extensionRange": [],
+              "field": [
+                {
                   "defaultValue": "",
                   "extendee": "",
                   "jsonName": "double",
@@ -2430,7 +2430,7 @@ describe('simple', () => {
                   "type": 1,
                   "typeName": "",
                 },
-                Object {
+                {
                   "defaultValue": "",
                   "extendee": "",
                   "jsonName": "float",
@@ -2443,7 +2443,7 @@ describe('simple', () => {
                   "type": 2,
                   "typeName": "",
                 },
-                Object {
+                {
                   "defaultValue": "",
                   "extendee": "",
                   "jsonName": "int32",
@@ -2456,7 +2456,7 @@ describe('simple', () => {
                   "type": 5,
                   "typeName": "",
                 },
-                Object {
+                {
                   "defaultValue": "",
                   "extendee": "",
                   "jsonName": "int64",
@@ -2469,7 +2469,7 @@ describe('simple', () => {
                   "type": 3,
                   "typeName": "",
                 },
-                Object {
+                {
                   "defaultValue": "",
                   "extendee": "",
                   "jsonName": "uint32",
@@ -2482,7 +2482,7 @@ describe('simple', () => {
                   "type": 13,
                   "typeName": "",
                 },
-                Object {
+                {
                   "defaultValue": "",
                   "extendee": "",
                   "jsonName": "uint64",
@@ -2495,7 +2495,7 @@ describe('simple', () => {
                   "type": 4,
                   "typeName": "",
                 },
-                Object {
+                {
                   "defaultValue": "",
                   "extendee": "",
                   "jsonName": "sint32",
@@ -2508,7 +2508,7 @@ describe('simple', () => {
                   "type": 17,
                   "typeName": "",
                 },
-                Object {
+                {
                   "defaultValue": "",
                   "extendee": "",
                   "jsonName": "sint64",
@@ -2521,7 +2521,7 @@ describe('simple', () => {
                   "type": 18,
                   "typeName": "",
                 },
-                Object {
+                {
                   "defaultValue": "",
                   "extendee": "",
                   "jsonName": "fixed32",
@@ -2534,7 +2534,7 @@ describe('simple', () => {
                   "type": 7,
                   "typeName": "",
                 },
-                Object {
+                {
                   "defaultValue": "",
                   "extendee": "",
                   "jsonName": "fixed64",
@@ -2547,7 +2547,7 @@ describe('simple', () => {
                   "type": 6,
                   "typeName": "",
                 },
-                Object {
+                {
                   "defaultValue": "",
                   "extendee": "",
                   "jsonName": "sfixed32",
@@ -2560,7 +2560,7 @@ describe('simple', () => {
                   "type": 15,
                   "typeName": "",
                 },
-                Object {
+                {
                   "defaultValue": "",
                   "extendee": "",
                   "jsonName": "sfixed64",
@@ -2575,18 +2575,18 @@ describe('simple', () => {
                 },
               ],
               "name": "Numbers",
-              "nestedType": Array [],
-              "oneofDecl": Array [],
+              "nestedType": [],
+              "oneofDecl": [],
               "options": undefined,
-              "reservedName": Array [],
-              "reservedRange": Array [],
+              "reservedName": [],
+              "reservedRange": [],
             },
-            Object {
-              "enumType": Array [],
-              "extension": Array [],
-              "extensionRange": Array [],
-              "field": Array [
-                Object {
+            {
+              "enumType": [],
+              "extension": [],
+              "extensionRange": [],
+              "field": [
+                {
                   "defaultValue": "",
                   "extendee": "",
                   "jsonName": "name",
@@ -2599,7 +2599,7 @@ describe('simple', () => {
                   "type": 9,
                   "typeName": "",
                 },
-                Object {
+                {
                   "defaultValue": "",
                   "extendee": "",
                   "jsonName": "age",
@@ -2612,7 +2612,7 @@ describe('simple', () => {
                   "type": 5,
                   "typeName": "",
                 },
-                Object {
+                {
                   "defaultValue": "",
                   "extendee": "",
                   "jsonName": "createdAt",
@@ -2625,7 +2625,7 @@ describe('simple', () => {
                   "type": 11,
                   "typeName": ".google.protobuf.Timestamp",
                 },
-                Object {
+                {
                   "defaultValue": "",
                   "extendee": "",
                   "jsonName": "child",
@@ -2638,7 +2638,7 @@ describe('simple', () => {
                   "type": 11,
                   "typeName": ".simple.Child",
                 },
-                Object {
+                {
                   "defaultValue": "",
                   "extendee": "",
                   "jsonName": "state",
@@ -2651,7 +2651,7 @@ describe('simple', () => {
                   "type": 14,
                   "typeName": ".simple.StateEnum",
                 },
-                Object {
+                {
                   "defaultValue": "",
                   "extendee": "",
                   "jsonName": "thing",
@@ -2664,7 +2664,7 @@ describe('simple', () => {
                   "type": 11,
                   "typeName": ".simple.ImportedThing",
                 },
-                Object {
+                {
                   "defaultValue": "",
                   "extendee": "",
                   "jsonName": "birthday",
@@ -2679,62 +2679,62 @@ describe('simple', () => {
                 },
               ],
               "name": "SimpleButOptional",
-              "nestedType": Array [],
-              "oneofDecl": Array [
-                Object {
+              "nestedType": [],
+              "oneofDecl": [
+                {
                   "name": "_name",
                   "options": undefined,
                 },
-                Object {
+                {
                   "name": "_age",
                   "options": undefined,
                 },
-                Object {
+                {
                   "name": "_created_at",
                   "options": undefined,
                 },
-                Object {
+                {
                   "name": "_child",
                   "options": undefined,
                 },
-                Object {
+                {
                   "name": "_state",
                   "options": undefined,
                 },
-                Object {
+                {
                   "name": "_thing",
                   "options": undefined,
                 },
-                Object {
+                {
                   "name": "_birthday",
                   "options": undefined,
                 },
               ],
               "options": undefined,
-              "reservedName": Array [],
-              "reservedRange": Array [],
+              "reservedName": [],
+              "reservedRange": [],
             },
-            Object {
-              "enumType": Array [],
-              "extension": Array [],
-              "extensionRange": Array [],
-              "field": Array [],
+            {
+              "enumType": [],
+              "extension": [],
+              "extensionRange": [],
+              "field": [],
               "name": "Empty",
-              "nestedType": Array [],
-              "oneofDecl": Array [],
+              "nestedType": [],
+              "oneofDecl": [],
               "options": undefined,
-              "reservedName": Array [],
-              "reservedRange": Array [],
+              "reservedName": [],
+              "reservedRange": [],
             },
           ],
           "name": "simple.proto",
           "options": undefined,
           "package": "simple",
-          "publicDependency": Array [],
-          "service": Array [
-            Object {
-              "method": Array [
-                Object {
+          "publicDependency": [],
+          "service": [
+            {
+              "method": [
+                {
                   "clientStreaming": false,
                   "inputType": ".simple.PingRequest",
                   "name": "ping",
@@ -2747,35 +2747,35 @@ describe('simple', () => {
               "options": undefined,
             },
           ],
-          "sourceCodeInfo": Object {
-            "location": Array [
-              Object {
+          "sourceCodeInfo": {
+            "location": [
+              {
                 "leadingComments": " Adding a comment to the syntax will become the first
        comment in the output source file.
       ",
-                "leadingDetachedComments": Array [],
-                "path": Array [
+                "leadingDetachedComments": [],
+                "path": [
                   12,
                 ],
-                "span": Array [
+                "span": [
                   2,
                   0,
                   18,
                 ],
                 "trailingComments": "",
               },
-              Object {
+              {
                 "leadingComments": "* Example comment on the Simple message ",
-                "leadingDetachedComments": Array [
+                "leadingDetachedComments": [
                   " This comment is seperated by a blank non-comment line, and will detatch from 
        the following comment on the message Simple.
       ",
                 ],
-                "path": Array [
+                "path": [
                   4,
                   0,
                 ],
-                "span": Array [
+                "span": [
                   13,
                   0,
                   30,
@@ -2783,49 +2783,49 @@ describe('simple', () => {
                 ],
                 "trailingComments": "",
               },
-              Object {
+              {
                 "leadingComments": " Name field
       ",
-                "leadingDetachedComments": Array [],
-                "path": Array [
+                "leadingDetachedComments": [],
+                "path": [
                   4,
                   0,
                   2,
                   0,
                 ],
-                "span": Array [
+                "span": [
                   15,
                   2,
                   18,
                 ],
                 "trailingComments": "",
               },
-              Object {
+              {
                 "leadingComments": " Age ",
-                "leadingDetachedComments": Array [],
-                "path": Array [
+                "leadingDetachedComments": [],
+                "path": [
                   4,
                   0,
                   2,
                   1,
                 ],
-                "span": Array [
+                "span": [
                   17,
                   2,
                   16,
                 ],
                 "trailingComments": "",
               },
-              Object {
+              {
                 "leadingComments": "",
-                "leadingDetachedComments": Array [],
-                "path": Array [
+                "leadingDetachedComments": [],
+                "path": [
                   4,
                   0,
                   2,
                   2,
                 ],
-                "span": Array [
+                "span": [
                   18,
                   2,
                   43,
@@ -2833,34 +2833,34 @@ describe('simple', () => {
                 "trailingComments": " This comment will also attach
       ",
               },
-              Object {
+              {
                 "leadingComments": " A thing (imported from thing)
       ",
-                "leadingDetachedComments": Array [],
-                "path": Array [
+                "leadingDetachedComments": [],
+                "path": [
                   4,
                   0,
                   2,
                   9,
                 ],
-                "span": Array [
+                "span": [
                   26,
                   2,
                   27,
                 ],
                 "trailingComments": "",
               },
-              Object {
+              {
                 "leadingComments": " Comment for a nested message */
       ",
-                "leadingDetachedComments": Array [],
-                "path": Array [
+                "leadingDetachedComments": [],
+                "path": [
                   4,
                   2,
                   3,
                   0,
                 ],
-                "span": Array [
+                "span": [
                   54,
                   2,
                   61,
@@ -2868,14 +2868,14 @@ describe('simple', () => {
                 ],
                 "trailingComments": "",
               },
-              Object {
+              {
                 "leadingComments": "* For testing proto3's field presence feature. ",
-                "leadingDetachedComments": Array [],
-                "path": Array [
+                "leadingDetachedComments": [],
+                "path": [
                   4,
                   12,
                 ],
-                "span": Array [
+                "span": [
                   133,
                   0,
                   144,
@@ -2883,49 +2883,49 @@ describe('simple', () => {
                 ],
                 "trailingComments": "",
               },
-              Object {
+              {
                 "leadingComments": " Name field
       ",
-                "leadingDetachedComments": Array [],
-                "path": Array [
+                "leadingDetachedComments": [],
+                "path": [
                   4,
                   12,
                   2,
                   0,
                 ],
-                "span": Array [
+                "span": [
                   135,
                   2,
                   27,
                 ],
                 "trailingComments": "",
               },
-              Object {
+              {
                 "leadingComments": " Age ",
-                "leadingDetachedComments": Array [],
-                "path": Array [
+                "leadingDetachedComments": [],
+                "path": [
                   4,
                   12,
                   2,
                   1,
                 ],
-                "span": Array [
+                "span": [
                   137,
                   2,
                   25,
                 ],
                 "trailingComments": "",
               },
-              Object {
+              {
                 "leadingComments": "",
-                "leadingDetachedComments": Array [],
-                "path": Array [
+                "leadingDetachedComments": [],
+                "path": [
                   4,
                   12,
                   2,
                   2,
                 ],
-                "span": Array [
+                "span": [
                   138,
                   2,
                   52,
@@ -2933,17 +2933,17 @@ describe('simple', () => {
                 "trailingComments": " This comment will also attach
       ",
               },
-              Object {
+              {
                 "leadingComments": " A thing (imported from thing)
       ",
-                "leadingDetachedComments": Array [],
-                "path": Array [
+                "leadingDetachedComments": [],
+                "path": [
                   4,
                   12,
                   2,
                   5,
                 ],
-                "span": Array [
+                "span": [
                   142,
                   2,
                   36,
@@ -2953,14 +2953,14 @@ describe('simple', () => {
             ],
           },
           "syntax": "proto3",
-          "weakDependency": Array [],
+          "weakDependency": [],
         },
-        "references": Object {
-          ".simple.Child": Object {
+        "references": {
+          ".simple.Child": {
             "decode": [Function],
             "encode": [Function],
           },
-          ".simple.Child.Type": Object {
+          ".simple.Child.Type": {
             "-1": "UNRECOGNIZED",
             "0": "UNKNOWN",
             "1": "GOOD",
@@ -2970,19 +2970,19 @@ describe('simple', () => {
             "UNKNOWN": 0,
             "UNRECOGNIZED": -1,
           },
-          ".simple.Empty": Object {
+          ".simple.Empty": {
             "decode": [Function],
             "encode": [Function],
           },
-          ".simple.Entity": Object {
+          ".simple.Entity": {
             "decode": [Function],
             "encode": [Function],
           },
-          ".simple.Nested": Object {
+          ".simple.Nested": {
             "decode": [Function],
             "encode": [Function],
           },
-          ".simple.Nested.InnerEnum": Object {
+          ".simple.Nested.InnerEnum": {
             "-1": "UNRECOGNIZED",
             "0": "UNKNOWN_INNER",
             "100": "GOOD",
@@ -2992,84 +2992,84 @@ describe('simple', () => {
             "UNKNOWN_INNER": 0,
             "UNRECOGNIZED": -1,
           },
-          ".simple.Nested.InnerMessage": Object {
+          ".simple.Nested.InnerMessage": {
             "decode": [Function],
             "encode": [Function],
           },
-          ".simple.Nested.InnerMessage.DeepMessage": Object {
+          ".simple.Nested.InnerMessage.DeepMessage": {
             "decode": [Function],
             "encode": [Function],
           },
-          ".simple.Numbers": Object {
+          ".simple.Numbers": {
             "decode": [Function],
             "encode": [Function],
           },
-          ".simple.OneOfMessage": Object {
+          ".simple.OneOfMessage": {
             "decode": [Function],
             "encode": [Function],
           },
-          ".simple.PingRequest": Object {
+          ".simple.PingRequest": {
             "decode": [Function],
             "encode": [Function],
           },
-          ".simple.PingResponse": Object {
+          ".simple.PingResponse": {
             "decode": [Function],
             "encode": [Function],
           },
           ".simple.PingService": [Function],
-          ".simple.Simple": Object {
+          ".simple.Simple": {
             "decode": [Function],
             "encode": [Function],
           },
-          ".simple.SimpleButOptional": Object {
+          ".simple.SimpleButOptional": {
             "decode": [Function],
             "encode": [Function],
           },
-          ".simple.SimpleWithMap": Object {
+          ".simple.SimpleWithMap": {
             "decode": [Function],
             "encode": [Function],
           },
-          ".simple.SimpleWithMap.EntitiesByIdEntry": Object {
+          ".simple.SimpleWithMap.EntitiesByIdEntry": {
             "decode": [Function],
             "encode": [Function],
           },
-          ".simple.SimpleWithMap.IntLookupEntry": Object {
+          ".simple.SimpleWithMap.IntLookupEntry": {
             "decode": [Function],
             "encode": [Function],
           },
-          ".simple.SimpleWithMap.MapOfBytesEntry": Object {
+          ".simple.SimpleWithMap.MapOfBytesEntry": {
             "decode": [Function],
             "encode": [Function],
           },
-          ".simple.SimpleWithMap.MapOfTimestampsEntry": Object {
+          ".simple.SimpleWithMap.MapOfTimestampsEntry": {
             "decode": [Function],
             "encode": [Function],
           },
-          ".simple.SimpleWithMap.NameLookupEntry": Object {
+          ".simple.SimpleWithMap.NameLookupEntry": {
             "decode": [Function],
             "encode": [Function],
           },
-          ".simple.SimpleWithMapOfEnums": Object {
+          ".simple.SimpleWithMapOfEnums": {
             "decode": [Function],
             "encode": [Function],
           },
-          ".simple.SimpleWithMapOfEnums.EnumsByIdEntry": Object {
+          ".simple.SimpleWithMapOfEnums.EnumsByIdEntry": {
             "decode": [Function],
             "encode": [Function],
           },
-          ".simple.SimpleWithSnakeCaseMap": Object {
+          ".simple.SimpleWithSnakeCaseMap": {
             "decode": [Function],
             "encode": [Function],
           },
-          ".simple.SimpleWithSnakeCaseMap.EntitiesByIdEntry": Object {
+          ".simple.SimpleWithSnakeCaseMap.EntitiesByIdEntry": {
             "decode": [Function],
             "encode": [Function],
           },
-          ".simple.SimpleWithWrappers": Object {
+          ".simple.SimpleWithWrappers": {
             "decode": [Function],
             "encode": [Function],
           },
-          ".simple.StateEnum": Object {
+          ".simple.StateEnum": {
             "-1": "UNRECOGNIZED",
             "0": "UNKNOWN",
             "2": "ON",

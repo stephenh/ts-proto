@@ -14,15 +14,15 @@
   - [Buf](#buf)
   - [ESM](#esm)
 - [Goals](#goals)
+  - [Non-Goals](#non-goals)
 - [Example Types](#example-types)
 - [Highlights](#highlights)
 - [Auto-Batching / N+1 Prevention](#auto-batching--n1-prevention)
 - [Usage](#usage)
-  - [Supported options](#supported-options)
-  - [Only Types](#only-types)
-  - [NestJS Support](#nestjs-support)
-  - [Watch Mode](#watch-mode)
-  - [Basic gRPC implementation](#basic-grpc-implementation)
+    - [Supported options](#supported-options)
+    - [NestJS Support](#nestjs-support)
+    - [Watch Mode](#watch-mode)
+    - [Basic gRPC implementation](#basic-grpc-implementation)
 - [Sponsors](#sponsors)
 - [Development](#development)
 - [Assumptions](#assumptions)
@@ -78,8 +78,8 @@ It will also generate client implementations of `PingService`; currently [Twirp]
 - `npm install ts-proto`
 - `protoc --plugin=./node_modules/.bin/protoc-gen-ts_proto --ts_proto_out=. ./simple.proto`
   - (Note that the output parameter name, `ts_proto_out`, is named based on the suffix of the plugin's name, i.e. "ts_proto" suffix in the `--plugin=./node_modules/.bin/protoc-gen-ts_proto` parameter becomes the `_out` prefix, per `protoc`'s CLI conventions.)
-  - On Windows, use `protoc --plugin=protoc-gen-ts_proto=.\node_modules\.bin\protoc-gen-ts_proto.cmd --ts_proto_out=. ./simple.proto` (see [#93](https://github.com/stephenh/ts-proto/issues/93))
-  - Ensure you're using a modern `protoc`, i.e. the original `protoc` `3.0.0` doesn't support the `_opt` flag
+  - On Windows, use `protoc --plugin=protoc-gen-ts_proto=".\\node_modules\\.bin\\protoc-gen-ts_proto.cmd" --ts_proto_out=. ./simple.proto` (see [#93](https://github.com/stephenh/ts-proto/issues/93))
+  - Ensure you're using a modern `protoc` (see [installation instructions for your platform](https://grpc.io/docs/protoc-installation/), i.e. `protoc` v`3.0.0` doesn't support the `_opt` flag
 
 This will generate `*.ts` source files for the given `*.proto` types.
 
@@ -289,6 +289,10 @@ Generated code will be placed in the Gradle build directory.
 
 ### Supported options
 
+- With `--ts_proto_opt=globalThisPolyfill=true`, ts-proto will include a polyfill for globalThis.
+
+  Defaults to `false`, i.e. we assume `globalThis` is available.
+
 - With `--ts_proto_opt=context=true`, the services will have a Go-style `ctx` parameter, which is useful for tracing/logging/etc. if you're not using node's `async_hooks` api due to performance reasons.
 
 - With `--ts_proto_opt=forceLong=long`, all 64-bit numbers will be parsed as instances of `Long` (using the [long](https://www.npmjs.com/package/long) library).
@@ -321,8 +325,8 @@ Generated code will be placed in the Gradle build directory.
 
   ```typescript
   interface SomeMessage {
-    firstName: string | undefined;
-    lastName: string | undefined;
+    firstName: string;
+    lastName: string;
   }
   // Declared with a typo
   const data = { firstName: "a", lastTypo: "b" };
@@ -330,17 +334,17 @@ Generated code will be placed in the Gradle build directory.
   const message: SomeMessage = { ...data };
   ```
 
-  For a consistent API, if `SomeMessage.lastName` is optional `lastName?`, then readers have to check _two_ empty conditions: a) is `lastName` `undefined` (b/c it was created in-memory and left unset), or b) is `lastName` empty string (b/c we read `SomeMessage` off the wire and correctly set `lastName` to empty string)?
+  For a consistent API, if `SomeMessage.lastName` is optional `lastName?`, then readers have to check _two_ empty conditions: a) is `lastName` `undefined` (b/c it was created in-memory and left unset), or b) is `lastName` empty string (b/c we read `SomeMessage` off the wire and, per the proto3 spec, initialized `lastName` to empty string)?
 
   For ensuring proper initialization, if later `SomeMessage.middleInitial` is added, but it's marked as optional `middleInitial?`, you may have many call sites in production code that _should_ now be passing `middleInitial` to create a valid `SomeMessage`, but are not.
 
   So, between typo-prevention, reader inconsistency, and proper initialization, ts-proto recommends using `useOptionals=none` as the "most safe" option.
 
-  All that said, this approach does require writers/creators to set every field (although `fromPartial` and `create` are meant to address this), so if you still want to have optional fields, you can set `useOptionals=messages` or `useOptionals=all`.
+  All that said, this approach does require writers/creators to set every field (although `fromPartial` and `create` are meant to address this), so if you still want to have optional keys, you can set `useOptionals=messages` or `useOptionals=all`.
 
   (See [this issue](https://github.com/stephenh/ts-proto/issues/120#issuecomment-678375833) and [this issue](https://github.com/stephenh/ts-proto/issues/397#issuecomment-977259118) for discussions on `useOptional`.)
 
-- With `--ts_proto_opt=exportCommonSymbols=false`, utility types like `DeepPartial` won't be `export`d.
+- With `--ts_proto_opt=exportCommonSymbols=false`, utility types like `DeepPartial` and `protobufPackage` won't be `export`d.
 
   This should make it possible to use create barrel imports of the generated output, i.e. `import * from ./foo` and `import * from ./bar`.
 
@@ -350,7 +354,15 @@ Generated code will be placed in the Gradle build directory.
 
   See the "OneOf Handling" section.
 
-- With `--ts_proto_opt=unrecognizedEnum=false` enums will not contain an `UNRECOGNIZED` key with value of -1.
+- With `--ts_proto_opt=unrecognizedEnumName=<NAME>` enums will contain a key `<NAME>` with value of the `unrecognizedEnumValue` option.
+
+  Defaults to `UNRECOGNIZED`.
+
+- With `--ts_proto_opt=unrecognizedEnumValue=<NUMBER>` enums will contain a key provided by the `unrecognizedEnumName` option with value of `<NUMBER>`.
+
+  Defaults to `-1`.
+
+- With `--ts_proto_opt=unrecognizedEnum=false` enums will not contain an unrecognized enum key and value as provided by the `unrecognizedEnumName` and `unrecognizedEnumValue` options.
 
 - With `--ts_proto_opt=removeEnumPrefix=true` generated enums will have the enum name removed from members.
 
@@ -375,6 +387,10 @@ Generated code will be placed in the Gradle build directory.
 - With `--ts_proto_opt=outputJsonMethods=false`, the `Message.fromJSON` and `Message.toJSON` methods for working with JSON-coded data will not be output.
 
   This is also useful if you want "only types".
+
+- With `--ts_proto_opt=outputJsonMethods=to-only` and `--ts_proto_opt=outputJsonMethods=from-only` you will be able to export only one between the `Message.toJSON` and `Message.fromJSON` methods.
+
+  This is useful if you're using ts-proto just to `encode` or `decode` and not for both.
 
 - With `--ts_proto_opt=outputPartialMethods=false`, the `Message.fromPartial` and `Message.create` methods for accepting partially-formed objects/object literals will not be output.
 
@@ -414,7 +430,7 @@ Generated code will be placed in the Gradle build directory.
 
 - With `--ts_proto_opt=outputSchema=true`, meta typings will be generated that can later be used in other code generators.
 
-- With `--ts_proto_opt=outputTypeAnnotations=true`, each message will be given a `$type` field containing its fully-qualified name.
+- With `--ts_proto_opt=outputTypeAnnotations=true`, each message will be given a `$type` field containing its fully-qualified name. You can use `--ts_proto_opt=outputTypeAnnotations=static-only` to omit it from the `interface` declaration.
 
 - With `--ts_proto_opt=outputTypeRegistry=true`, the type registry will be generated that can be used to resolve message types by fully-qualified name. Also, each message will be given a `$type` field containing its fully-qualified name.
 
@@ -460,6 +476,8 @@ Generated code will be placed in the Gradle build directory.
   When enabled, default values are inherited from a prototype, and so code can use Object.keys().includes("someField") to detect if someField was actually decoded or not.
 
   Note that, as indicated, this means Object.keys will not include set-by-default fields, so if you have code that iterates over messages keys in a generic fashion, it will have to also iterate over keys inherited from the prototype.
+
+- With `--ts_proto_opt=useJsonName=true`, `json_name` defined in protofiles will be used instead of message field names.
 
 - With `--ts_proto_opt=useJsonWireFormat=true`, the generated code will reflect the JSON representation of Protobuf messages.
 
@@ -508,6 +526,12 @@ Generated code will be placed in the Gradle build directory.
 
   Extension encode/decode methods are compliant with the `outputEncodeMethods` option, and if `unknownFields=true`,
   the `setExtension` and `getExtension` methods will be created for extendable messages, also compliant with `outputEncodeMethods` (setExtension = encode, getExtension = decode).
+
+- With `--ts_proto_opt=outputIndex=true`, index files will be generated based on the proto package namespaces.
+
+  This will disable `exportCommonSymbols` to avoid name collisions on the common symbols.
+
+- With `--emitDefaultValues=json-methods`, the generated toJSON method will emit scalars like `0` and `""` as json fields.
 
 ### NestJS Support
 
@@ -724,25 +748,14 @@ Foo.fromJSON({ bar: "" }); // => { bar: '' }
 Foo.fromJSON({ bar: "baz" }); // => { bar: 'baz' }
 ```
 
-When writing JSON, `ts-proto` currently does **not** normalize message when converting to JSON, other than omitting unset fields, but it may do so in the future.
+When writing JSON, `ts-proto` normalizes messages by omitting unset fields and fields set to their default values.
 
 ```typescript
-// Current ts-proto behavior
-Foo.toJSON({}); // => { }
-Foo.toJSON({ bar: undefined }); // => { }
-Foo.toJSON({ bar: "" }); // => { bar: '' } - note: this is the default value, but it's not omitted
-Foo.toJSON({ bar: "baz" }); // => { bar: 'baz' }
-```
-
-```typescript
-// Possible future behavior, where ts-proto would normalize message
 Foo.toJSON({}); // => { }
 Foo.toJSON({ bar: undefined }); // => { }
 Foo.toJSON({ bar: "" }); // => { } - note: omitting the default value, as expected
 Foo.toJSON({ bar: "baz" }); // => { bar: 'baz' }
 ```
-
-- Please open an issue if you need this behavior.
 
 # Well-Known Types
 

@@ -118,22 +118,25 @@ export const DashFlash = {
 
   fromJSON(object: any): DashFlash {
     return {
-      msg: isSet(object.msg) ? String(object.msg) : "",
+      msg: isSet(object.msg) ? globalThis.String(object.msg) : "",
       type: isSet(object.type) ? dashFlash_TypeFromJSON(object.type) : 0,
     };
   },
 
   toJSON(message: DashFlash): unknown {
     const obj: any = {};
-    message.msg !== undefined && (obj.msg = message.msg);
-    message.type !== undefined && (obj.type = dashFlash_TypeToJSON(message.type));
+    if (message.msg !== "") {
+      obj.msg = message.msg;
+    }
+    if (message.type !== 0) {
+      obj.type = dashFlash_TypeToJSON(message.type);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<DashFlash>, I>>(base?: I): DashFlash {
-    return DashFlash.fromPartial(base ?? {});
+    return DashFlash.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DashFlash>, I>>(object: I): DashFlash {
     const message = createBaseDashFlash();
     message.msg = object.msg ?? "";
@@ -199,29 +202,29 @@ export const DashUserSettingsState = {
 
   fromJSON(object: any): DashUserSettingsState {
     return {
-      email: isSet(object.email) ? String(object.email) : "",
+      email: isSet(object.email) ? globalThis.String(object.email) : "",
       urls: isSet(object.urls) ? DashUserSettingsState_URLs.fromJSON(object.urls) : undefined,
-      flashes: Array.isArray(object?.flashes) ? object.flashes.map((e: any) => DashFlash.fromJSON(e)) : [],
+      flashes: globalThis.Array.isArray(object?.flashes) ? object.flashes.map((e: any) => DashFlash.fromJSON(e)) : [],
     };
   },
 
   toJSON(message: DashUserSettingsState): unknown {
     const obj: any = {};
-    message.email !== undefined && (obj.email = message.email);
-    message.urls !== undefined &&
-      (obj.urls = message.urls ? DashUserSettingsState_URLs.toJSON(message.urls) : undefined);
-    if (message.flashes) {
-      obj.flashes = message.flashes.map((e) => e ? DashFlash.toJSON(e) : undefined);
-    } else {
-      obj.flashes = [];
+    if (message.email !== "") {
+      obj.email = message.email;
+    }
+    if (message.urls !== undefined) {
+      obj.urls = DashUserSettingsState_URLs.toJSON(message.urls);
+    }
+    if (message.flashes?.length) {
+      obj.flashes = message.flashes.map((e) => DashFlash.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<DashUserSettingsState>, I>>(base?: I): DashUserSettingsState {
-    return DashUserSettingsState.fromPartial(base ?? {});
+    return DashUserSettingsState.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DashUserSettingsState>, I>>(object: I): DashUserSettingsState {
     const message = createBaseDashUserSettingsState();
     message.email = object.email ?? "";
@@ -280,22 +283,25 @@ export const DashUserSettingsState_URLs = {
 
   fromJSON(object: any): DashUserSettingsState_URLs {
     return {
-      connectGoogle: isSet(object.connectGoogle) ? String(object.connectGoogle) : "",
-      connectGithub: isSet(object.connectGithub) ? String(object.connectGithub) : "",
+      connectGoogle: isSet(object.connectGoogle) ? globalThis.String(object.connectGoogle) : "",
+      connectGithub: isSet(object.connectGithub) ? globalThis.String(object.connectGithub) : "",
     };
   },
 
   toJSON(message: DashUserSettingsState_URLs): unknown {
     const obj: any = {};
-    message.connectGoogle !== undefined && (obj.connectGoogle = message.connectGoogle);
-    message.connectGithub !== undefined && (obj.connectGithub = message.connectGithub);
+    if (message.connectGoogle !== "") {
+      obj.connectGoogle = message.connectGoogle;
+    }
+    if (message.connectGithub !== "") {
+      obj.connectGithub = message.connectGithub;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<DashUserSettingsState_URLs>, I>>(base?: I): DashUserSettingsState_URLs {
-    return DashUserSettingsState_URLs.fromPartial(base ?? {});
+    return DashUserSettingsState_URLs.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DashUserSettingsState_URLs>, I>>(object: I): DashUserSettingsState_URLs {
     const message = createBaseDashUserSettingsState_URLs();
     message.connectGoogle = object.connectGoogle ?? "";
@@ -339,9 +345,8 @@ export const Empty = {
   },
 
   create<I extends Exact<DeepPartial<Empty>, I>>(base?: I): Empty {
-    return Empty.fromPartial(base ?? {});
+    return Empty.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Empty>, I>>(_: I): Empty {
     const message = createBaseEmpty();
     return message;
@@ -353,11 +358,7 @@ export const Empty = {
  * but with the streaming method removed.
  */
 export interface DashState {
-  UserSettings(
-    request: DeepPartial<Empty>,
-    metadata?: grpc.Metadata,
-    abortSignal?: AbortSignal,
-  ): Observable<DashUserSettingsState>;
+  UserSettings(request: DeepPartial<Empty>, metadata?: grpc.Metadata): Observable<DashUserSettingsState>;
 }
 
 export class DashStateClientImpl implements DashState {
@@ -368,12 +369,8 @@ export class DashStateClientImpl implements DashState {
     this.UserSettings = this.UserSettings.bind(this);
   }
 
-  UserSettings(
-    request: DeepPartial<Empty>,
-    metadata?: grpc.Metadata,
-    abortSignal?: AbortSignal,
-  ): Observable<DashUserSettingsState> {
-    return this.rpc.unary(DashStateUserSettingsDesc, Empty.fromPartial(request), metadata, abortSignal);
+  UserSettings(request: DeepPartial<Empty>, metadata?: grpc.Metadata): Observable<DashUserSettingsState> {
+    return this.rpc.unary(DashStateUserSettingsDesc, Empty.fromPartial(request), metadata);
   }
 }
 
@@ -414,7 +411,6 @@ interface Rpc {
     methodDesc: T,
     request: any,
     metadata: grpc.Metadata | undefined,
-    abortSignal?: AbortSignal,
   ): Observable<any>;
 }
 
@@ -446,19 +442,18 @@ export class GrpcWebImpl {
     methodDesc: T,
     _request: any,
     metadata: grpc.Metadata | undefined,
-    abortSignal?: AbortSignal,
   ): Observable<any> {
     const request = { ..._request, ...methodDesc.requestType };
     const maybeCombinedMetadata = metadata && this.options.metadata
       ? new BrowserHeaders({ ...this.options?.metadata.headersMap, ...metadata?.headersMap })
-      : metadata || this.options.metadata;
+      : metadata ?? this.options.metadata;
     return new Observable((observer) => {
-      const client = grpc.unary(methodDesc, {
+      grpc.unary(methodDesc, {
         request,
         host: this.host,
-        metadata: maybeCombinedMetadata,
-        transport: this.options.transport,
-        debug: this.options.debug,
+        metadata: maybeCombinedMetadata ?? {},
+        ...(this.options.transport !== undefined ? { transport: this.options.transport } : {}),
+        debug: this.options.debug ?? false,
         onEnd: (next) => {
           if (next.status !== 0) {
             const err = new GrpcWebError(next.statusMessage, next.status, next.trailers);
@@ -469,41 +464,15 @@ export class GrpcWebImpl {
           }
         },
       });
-
-      const abortHandler = () => {
-        observer.error("Aborted");
-        client.close();
-      };
-      if (abortSignal) {
-        abortSignal.addEventListener("abort", abortHandler);
-      }
     }).pipe(take(1));
   }
 }
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
-  if (typeof globalThis !== "undefined") {
-    return globalThis;
-  }
-  if (typeof self !== "undefined") {
-    return self;
-  }
-  if (typeof window !== "undefined") {
-    return window;
-  }
-  if (typeof global !== "undefined") {
-    return global;
-  }
-  throw "Unable to locate global object";
-})();
-
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
@@ -515,7 +484,7 @@ function isSet(value: any): boolean {
   return value !== null && value !== undefined;
 }
 
-export class GrpcWebError extends tsProtoGlobalThis.Error {
+export class GrpcWebError extends globalThis.Error {
   constructor(message: string, public code: grpc.Code, public metadata: grpc.Metadata) {
     super(message);
   }

@@ -1,13 +1,10 @@
 /* eslint-disable */
-import {
+import { ChannelCredentials, Client, makeGenericClientConstructor, Metadata } from "@grpc/grpc-js";
+import type {
   CallOptions,
-  ChannelCredentials,
-  Client,
   ClientOptions,
   ClientUnaryCall,
   handleUnaryCall,
-  makeGenericClientConstructor,
-  Metadata,
   ServiceError,
   UntypedServiceImplementation,
 } from "@grpc/grpc-js";
@@ -56,19 +53,20 @@ export const TimestampMessage = {
   },
 
   fromJSON(object: any): TimestampMessage {
-    return { timestamp: isSet(object.timestamp) ? String(object.timestamp) : undefined };
+    return { timestamp: isSet(object.timestamp) ? globalThis.String(object.timestamp) : undefined };
   },
 
   toJSON(message: TimestampMessage): unknown {
     const obj: any = {};
-    message.timestamp !== undefined && (obj.timestamp = message.timestamp);
+    if (message.timestamp !== undefined) {
+      obj.timestamp = message.timestamp;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<TimestampMessage>, I>>(base?: I): TimestampMessage {
-    return TimestampMessage.fromPartial(base ?? {});
+    return TimestampMessage.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<TimestampMessage>, I>>(object: I): TimestampMessage {
     const message = createBaseTimestampMessage();
     message.timestamp = object.timestamp ?? undefined;
@@ -141,7 +139,8 @@ export const TestClient = makeGenericClientConstructor(TestService, "simple.Test
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
@@ -150,16 +149,16 @@ export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function toTimestamp(dateStr: string): Timestamp {
-  const date = new Date(dateStr);
+  const date = new globalThis.Date(dateStr);
   const seconds = date.getTime() / 1_000;
   const nanos = (date.getTime() % 1_000) * 1_000_000;
   return { seconds, nanos };
 }
 
 function fromTimestamp(t: Timestamp): string {
-  let millis = t.seconds * 1_000;
-  millis += t.nanos / 1_000_000;
-  return new Date(millis).toISOString();
+  let millis = (t.seconds || 0) * 1_000;
+  millis += (t.nanos || 0) / 1_000_000;
+  return new globalThis.Date(millis).toISOString();
 }
 
 function isSet(value: any): boolean {

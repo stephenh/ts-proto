@@ -49,14 +49,15 @@ export const FieldMaskMessage = {
 
   toJSON(message: FieldMaskMessage): unknown {
     const obj: any = {};
-    message.fieldMask !== undefined && (obj.fieldMask = FieldMask.toJSON(FieldMask.wrap(message.fieldMask)));
+    if (message.fieldMask !== undefined) {
+      obj.fieldMask = FieldMask.toJSON(FieldMask.wrap(message.fieldMask));
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<FieldMaskMessage>, I>>(base?: I): FieldMaskMessage {
-    return FieldMaskMessage.fromPartial(base ?? {});
+    return FieldMaskMessage.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<FieldMaskMessage>, I>>(object: I): FieldMaskMessage {
     const message = createBaseFieldMaskMessage();
     message.fieldMask = object.fieldMask ?? undefined;
@@ -67,7 +68,8 @@ export const FieldMaskMessage = {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 

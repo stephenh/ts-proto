@@ -43,19 +43,20 @@ export const SimpleMessage = {
   },
 
   fromJSON(object: any): SimpleMessage {
-    return { numberField: isSet(object.numberField) ? Number(object.numberField) : 0 };
+    return { numberField: isSet(object.numberField) ? globalThis.Number(object.numberField) : 0 };
   },
 
   toJSON(message: SimpleMessage): unknown {
     const obj: any = {};
-    message.numberField !== undefined && (obj.numberField = Math.round(message.numberField));
+    if (message.numberField !== 0) {
+      obj.numberField = Math.round(message.numberField);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<SimpleMessage>, I>>(base?: I): SimpleMessage {
-    return SimpleMessage.fromPartial(base ?? {});
+    return SimpleMessage.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<SimpleMessage>, I>>(object: I): SimpleMessage {
     const message = createBaseSimpleMessage();
     message.numberField = object.numberField ?? 0;
@@ -66,7 +67,8 @@ export const SimpleMessage = {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 

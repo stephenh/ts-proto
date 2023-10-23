@@ -89,14 +89,15 @@ export const DividerData = {
 
   toJSON(message: DividerData): unknown {
     const obj: any = {};
-    message.type !== undefined && (obj.type = dividerData_DividerTypeToJSON(message.type));
+    if (message.type !== 0) {
+      obj.type = dividerData_DividerTypeToJSON(message.type);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<DividerData>, I>>(base?: I): DividerData {
-    return DividerData.fromPartial(base ?? {});
+    return DividerData.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DividerData>, I>>(object: I): DividerData {
     const message = createBaseDividerData();
     message.type = object.type ?? 0;
@@ -107,7 +108,8 @@ export const DividerData = {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 

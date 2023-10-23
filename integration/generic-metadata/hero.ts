@@ -60,19 +60,20 @@ export const HeroById = {
   },
 
   fromJSON(object: any): HeroById {
-    return { id: isSet(object.id) ? Number(object.id) : 0 };
+    return { id: isSet(object.id) ? globalThis.Number(object.id) : 0 };
   },
 
   toJSON(message: HeroById): unknown {
     const obj: any = {};
-    message.id !== undefined && (obj.id = Math.round(message.id));
+    if (message.id !== 0) {
+      obj.id = Math.round(message.id);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<HeroById>, I>>(base?: I): HeroById {
-    return HeroById.fromPartial(base ?? {});
+    return HeroById.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<HeroById>, I>>(object: I): HeroById {
     const message = createBaseHeroById();
     message.id = object.id ?? 0;
@@ -116,19 +117,20 @@ export const VillainById = {
   },
 
   fromJSON(object: any): VillainById {
-    return { id: isSet(object.id) ? Number(object.id) : 0 };
+    return { id: isSet(object.id) ? globalThis.Number(object.id) : 0 };
   },
 
   toJSON(message: VillainById): unknown {
     const obj: any = {};
-    message.id !== undefined && (obj.id = Math.round(message.id));
+    if (message.id !== 0) {
+      obj.id = Math.round(message.id);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<VillainById>, I>>(base?: I): VillainById {
-    return VillainById.fromPartial(base ?? {});
+    return VillainById.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<VillainById>, I>>(object: I): VillainById {
     const message = createBaseVillainById();
     message.id = object.id ?? 0;
@@ -182,20 +184,26 @@ export const Hero = {
   },
 
   fromJSON(object: any): Hero {
-    return { id: isSet(object.id) ? Number(object.id) : 0, name: isSet(object.name) ? String(object.name) : "" };
+    return {
+      id: isSet(object.id) ? globalThis.Number(object.id) : 0,
+      name: isSet(object.name) ? globalThis.String(object.name) : "",
+    };
   },
 
   toJSON(message: Hero): unknown {
     const obj: any = {};
-    message.id !== undefined && (obj.id = Math.round(message.id));
-    message.name !== undefined && (obj.name = message.name);
+    if (message.id !== 0) {
+      obj.id = Math.round(message.id);
+    }
+    if (message.name !== "") {
+      obj.name = message.name;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Hero>, I>>(base?: I): Hero {
-    return Hero.fromPartial(base ?? {});
+    return Hero.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Hero>, I>>(object: I): Hero {
     const message = createBaseHero();
     message.id = object.id ?? 0;
@@ -250,20 +258,26 @@ export const Villain = {
   },
 
   fromJSON(object: any): Villain {
-    return { id: isSet(object.id) ? Number(object.id) : 0, name: isSet(object.name) ? String(object.name) : "" };
+    return {
+      id: isSet(object.id) ? globalThis.Number(object.id) : 0,
+      name: isSet(object.name) ? globalThis.String(object.name) : "",
+    };
   },
 
   toJSON(message: Villain): unknown {
     const obj: any = {};
-    message.id !== undefined && (obj.id = Math.round(message.id));
-    message.name !== undefined && (obj.name = message.name);
+    if (message.id !== 0) {
+      obj.id = Math.round(message.id);
+    }
+    if (message.name !== "") {
+      obj.name = message.name;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Villain>, I>>(base?: I): Villain {
-    return Villain.fromPartial(base ?? {});
+    return Villain.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Villain>, I>>(object: I): Villain {
     const message = createBaseVillain();
     message.id = object.id ?? 0;
@@ -278,11 +292,12 @@ export interface HeroService {
   FindManyVillain(request: Observable<VillainById>, metadata?: Foo): Observable<Villain>;
 }
 
+export const HeroServiceServiceName = "hero.HeroService";
 export class HeroServiceClientImpl implements HeroService {
   private readonly rpc: Rpc;
   private readonly service: string;
   constructor(rpc: Rpc, opts?: { service?: string }) {
-    this.service = opts?.service || "hero.HeroService";
+    this.service = opts?.service || HeroServiceServiceName;
     this.rpc = rpc;
     this.FindOneHero = this.FindOneHero.bind(this);
     this.FindOneVillain = this.FindOneVillain.bind(this);
@@ -349,7 +364,8 @@ interface Rpc {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 

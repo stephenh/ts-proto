@@ -21,9 +21,6 @@ import SourceInfo, { Fields } from "./sourceInfo";
 import { contextTypeVar } from "./main";
 import { Context } from "./context";
 
-const hash = imp("hash*object-hash");
-const dataloader = imp("DataLoader*dataloader");
-
 /**
  * Generates an interface for `serviceDesc`.
  *
@@ -38,7 +35,7 @@ export function generateService(
   ctx: Context,
   fileDesc: FileDescriptorProto,
   sourceInfo: SourceInfo,
-  serviceDesc: ServiceDescriptorProto
+  serviceDesc: ServiceDescriptorProto,
 ): Code {
   const { options } = ctx;
   const chunks: Code[] = [];
@@ -85,8 +82,8 @@ export function generateService(
     chunks.push(
       code`${methodDesc.formattedName}(${joinCode(params, { on: "," })}): ${responsePromiseOrObservable(
         ctx,
-        methodDesc
-      )};`
+        methodDesc,
+      )};`,
     );
 
     // If this is a batch method, auto-generate the singular version of it
@@ -179,13 +176,20 @@ function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProt
 export function generateServiceClientImpl(
   ctx: Context,
   fileDesc: FileDescriptorProto,
-  serviceDesc: ServiceDescriptorProto
+  serviceDesc: ServiceDescriptorProto,
 ): Code {
   const { options } = ctx;
   const chunks: Code[] = [];
 
-  // Define the FooServiceImpl class
+  // Determine information about the service.
   const { name } = serviceDesc;
+  const serviceName = maybePrefixPackage(fileDesc, serviceDesc.name);
+
+  // Define the service name constant.
+  const serviceNameConst = `${name}ServiceName`;
+  chunks.push(code`export const ${serviceNameConst} = "${serviceName}";`);
+
+  // Define the FooServiceImpl class
   const i = options.context ? `${name}<Context>` : name;
   const t = options.context ? `<${contextTypeVar}>` : "";
   chunks.push(code`export class ${name}ClientImpl${t} implements ${def(i)} {`);
@@ -195,8 +199,7 @@ export function generateServiceClientImpl(
   chunks.push(code`private readonly rpc: ${rpcType};`);
   chunks.push(code`private readonly service: string;`);
   chunks.push(code`constructor(rpc: ${rpcType}, opts?: {service?: string}) {`);
-  const serviceID = maybePrefixPackage(fileDesc, serviceDesc.name);
-  chunks.push(code`this.service = opts?.service || "${serviceID}";`);
+  chunks.push(code`this.service = opts?.service || ${serviceNameConst};`);
   chunks.push(code`this.rpc = rpc;`);
 
   // Bind each FooService method to the FooServiceImpl class
@@ -228,7 +231,7 @@ export function generateServiceClientImpl(
 }
 
 /** We've found a BatchXxx method, create a synthetic GetXxx method that calls it. */
-function generateBatchingRpcMethod(_ctx: Context, batchMethod: BatchMethod): Code {
+function generateBatchingRpcMethod(ctx: Context, batchMethod: BatchMethod): Code {
   const {
     methodDesc,
     singleMethodName,
@@ -241,6 +244,11 @@ function generateBatchingRpcMethod(_ctx: Context, batchMethod: BatchMethod): Cod
   } = batchMethod;
   assertInstanceOf(methodDesc, FormattedMethodDescriptor);
 
+  const { options } = ctx;
+
+  const hash = options.esModuleInterop ? imp("hash=object-hash") : imp("hash*object-hash");
+  const dataloader = options.esModuleInterop ? imp("DataLoader=dataloader") : imp("DataLoader*dataloader");
+
   // Create the `(keys) => ...` lambda we'll pass to the DataLoader constructor
   const lambda: Code[] = [];
   lambda.push(code`
@@ -250,14 +258,14 @@ function generateBatchingRpcMethod(_ctx: Context, batchMethod: BatchMethod): Cod
   if (mapType) {
     // If the return type is a map, lookup each key in the result
     lambda.push(code`
-      return this.${methodDesc.formattedName}(ctx, request).then(res => {
-        return ${inputFieldName}.map(key => res.${outputFieldName}[key])
+      return this.${methodDesc.formattedName}(ctx, request as any).then(res => {
+        return ${inputFieldName}.map(key => res.${outputFieldName}[key] ?? ${ctx.utils.fail}())
       });
     `);
   } else {
     // Otherwise assume they come back in order
     lambda.push(code`
-      return this.${methodDesc.formattedName}(ctx, request).then(res => res.${outputFieldName})
+      return this.${methodDesc.formattedName}(ctx, request as any).then(res => res.${outputFieldName})
     `);
   }
   lambda.push(code`}`);
@@ -268,7 +276,7 @@ function generateBatchingRpcMethod(_ctx: Context, batchMethod: BatchMethod): Cod
       ${singular(inputFieldName)}: ${inputType}
     ): Promise<${outputType}> {
       const dl = ctx.getDataLoader("${uniqueIdentifier}", () => {
-        return new ${dataloader}<${inputType}, ${outputType}>(
+        return new ${dataloader}<${inputType}, ${outputType}, string>(
           ${joinCode(lambda)},
           { cacheKeyFn: ${hash}, ...ctx.rpcDataLoaderOptions }
         );
@@ -283,9 +291,15 @@ function generateCachingRpcMethod(
   ctx: Context,
   fileDesc: FileDescriptorProto,
   serviceDesc: ServiceDescriptorProto,
-  methodDesc: MethodDescriptorProto
+  methodDesc: MethodDescriptorProto,
 ): Code {
   assertInstanceOf(methodDesc, FormattedMethodDescriptor);
+
+  const { options } = ctx;
+
+  const hash = options.esModuleInterop ? imp("hash=object-hash") : imp("hash*object-hash");
+  const dataloader = options.esModuleInterop ? imp("DataLoader=dataloader") : imp("DataLoader*dataloader");
+
   const inputType = requestType(ctx, methodDesc);
   const outputType = responseType(ctx, methodDesc);
   const uniqueIdentifier = `${maybePrefixPackage(fileDesc, serviceDesc.name)}.${methodDesc.name}`;
@@ -309,7 +323,7 @@ function generateCachingRpcMethod(
       request: ${inputType},
     ): Promise<${outputType}> {
       const dl = ctx.getDataLoader("${uniqueIdentifier}", () => {
-        return new ${dataloader}<${inputType}, ${outputType}>(
+        return new ${dataloader}<${inputType}, ${outputType}, string>(
           ${lambda},
           { cacheKeyFn: ${hash}, ...ctx.rpcDataLoaderOptions },
         );
@@ -338,7 +352,7 @@ export function generateRpcType(ctx: Context, hasStreamingMethods: boolean): Cod
   const maybeAbortSignalParam = options.useAbortSignal ? "abortSignal?: AbortSignal," : "";
   const methods = [[code`request`, code`Uint8Array`, code`Promise<Uint8Array>`]];
   if (hasStreamingMethods) {
-    const observable = observableType(ctx);
+    const observable = observableType(ctx, true);
     methods.push([code`clientStreamingRequest`, code`${observable}<Uint8Array>`, code`Promise<Uint8Array>`]);
     methods.push([code`serverStreamingRequest`, code`Uint8Array`, code`${observable}<Uint8Array>`]);
     methods.push([

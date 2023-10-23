@@ -13,6 +13,11 @@ message Simple {
   simple2.Simple otherSimple = 2;
 }
 
+message DifferentSimple {
+  string name = 1;
+  optional simple2.Simple otherOptionalSimple2 = 2;
+}
+
 message SimpleEnums {
   SimpleEnum local_enum = 1;
   simple2.SimpleEnum import_enum = 2;

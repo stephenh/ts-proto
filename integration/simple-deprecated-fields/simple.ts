@@ -110,28 +110,37 @@ export const Simple = {
 
   fromJSON(object: any): Simple {
     return {
-      name: isSet(object.name) ? String(object.name) : "",
-      age: isSet(object.age) ? Number(object.age) : 0,
+      name: isSet(object.name) ? globalThis.String(object.name) : "",
+      age: isSet(object.age) ? globalThis.Number(object.age) : 0,
       child: isSet(object.child) ? Child.fromJSON(object.child) : undefined,
-      testField: isSet(object.testField) ? String(object.testField) : "",
-      testNotDeprecated: isSet(object.testNotDeprecated) ? String(object.testNotDeprecated) : "",
+      testField: isSet(object.testField) ? globalThis.String(object.testField) : "",
+      testNotDeprecated: isSet(object.testNotDeprecated) ? globalThis.String(object.testNotDeprecated) : "",
     };
   },
 
   toJSON(message: Simple): unknown {
     const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
-    message.age !== undefined && (obj.age = Math.round(message.age));
-    message.child !== undefined && (obj.child = message.child ? Child.toJSON(message.child) : undefined);
-    message.testField !== undefined && (obj.testField = message.testField);
-    message.testNotDeprecated !== undefined && (obj.testNotDeprecated = message.testNotDeprecated);
+    if (message.name !== "") {
+      obj.name = message.name;
+    }
+    if (message.age !== 0) {
+      obj.age = Math.round(message.age);
+    }
+    if (message.child !== undefined) {
+      obj.child = Child.toJSON(message.child);
+    }
+    if (message.testField !== "") {
+      obj.testField = message.testField;
+    }
+    if (message.testNotDeprecated !== "") {
+      obj.testNotDeprecated = message.testNotDeprecated;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Simple>, I>>(base?: I): Simple {
-    return Simple.fromPartial(base ?? {});
+    return Simple.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Simple>, I>>(object: I): Simple {
     const message = createBaseSimple();
     message.name = object.name ?? "";
@@ -179,19 +188,20 @@ export const Child = {
   },
 
   fromJSON(object: any): Child {
-    return { name: isSet(object.name) ? String(object.name) : "" };
+    return { name: isSet(object.name) ? globalThis.String(object.name) : "" };
   },
 
   toJSON(message: Child): unknown {
     const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
+    if (message.name !== "") {
+      obj.name = message.name;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Child>, I>>(base?: I): Child {
-    return Child.fromPartial(base ?? {});
+    return Child.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Child>, I>>(object: I): Child {
     const message = createBaseChild();
     message.name = object.name ?? "";
@@ -202,7 +212,8 @@ export const Child = {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 

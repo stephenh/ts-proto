@@ -1,8 +1,8 @@
 /* eslint-disable */
-import * as Long from "long";
 import * as _m0 from "protobufjs/minimal";
 import { Timestamp } from "./google/protobuf/timestamp";
 import { UInt64Value } from "./google/protobuf/wrappers";
+import Long = require("long");
 
 export const protobufPackage = "simple";
 
@@ -56,30 +56,45 @@ export const Numbers = {
       writer.uint32(24).int32(message.int32);
     }
     if (message.int64 !== BigInt("0")) {
+      if (BigInt.asIntN(64, message.int64) !== message.int64) {
+        throw new Error("value provided for field message.int64 of type int64 too large");
+      }
       writer.uint32(32).int64(message.int64.toString());
     }
     if (message.uint32 !== 0) {
       writer.uint32(40).uint32(message.uint32);
     }
     if (message.uint64 !== BigInt("0")) {
+      if (BigInt.asUintN(64, message.uint64) !== message.uint64) {
+        throw new Error("value provided for field message.uint64 of type uint64 too large");
+      }
       writer.uint32(48).uint64(message.uint64.toString());
     }
     if (message.sint32 !== 0) {
       writer.uint32(56).sint32(message.sint32);
     }
     if (message.sint64 !== BigInt("0")) {
+      if (BigInt.asIntN(64, message.sint64) !== message.sint64) {
+        throw new Error("value provided for field message.sint64 of type sint64 too large");
+      }
       writer.uint32(64).sint64(message.sint64.toString());
     }
     if (message.fixed32 !== 0) {
       writer.uint32(77).fixed32(message.fixed32);
     }
     if (message.fixed64 !== BigInt("0")) {
+      if (BigInt.asUintN(64, message.fixed64) !== message.fixed64) {
+        throw new Error("value provided for field message.fixed64 of type fixed64 too large");
+      }
       writer.uint32(81).fixed64(message.fixed64.toString());
     }
     if (message.sfixed32 !== 0) {
       writer.uint32(93).sfixed32(message.sfixed32);
     }
     if (message.sfixed64 !== BigInt("0")) {
+      if (BigInt.asIntN(64, message.sfixed64) !== message.sfixed64) {
+        throw new Error("value provided for field message.sfixed64 of type sfixed64 too large");
+      }
       writer.uint32(97).sfixed64(message.sfixed64.toString());
     }
     if (message.guint64 !== undefined) {
@@ -90,6 +105,9 @@ export const Numbers = {
     }
     writer.uint32(122).fork();
     for (const v of message.uint64s) {
+      if (BigInt.asUintN(64, v) !== v) {
+        throw new Error("a value provided in array field uint64s of type uint64 is too large");
+      }
       writer.uint64(v.toString());
     }
     writer.ldelim();
@@ -229,52 +247,77 @@ export const Numbers = {
 
   fromJSON(object: any): Numbers {
     return {
-      double: isSet(object.double) ? Number(object.double) : 0,
-      float: isSet(object.float) ? Number(object.float) : 0,
-      int32: isSet(object.int32) ? Number(object.int32) : 0,
+      double: isSet(object.double) ? globalThis.Number(object.double) : 0,
+      float: isSet(object.float) ? globalThis.Number(object.float) : 0,
+      int32: isSet(object.int32) ? globalThis.Number(object.int32) : 0,
       int64: isSet(object.int64) ? BigInt(object.int64) : BigInt("0"),
-      uint32: isSet(object.uint32) ? Number(object.uint32) : 0,
+      uint32: isSet(object.uint32) ? globalThis.Number(object.uint32) : 0,
       uint64: isSet(object.uint64) ? BigInt(object.uint64) : BigInt("0"),
-      sint32: isSet(object.sint32) ? Number(object.sint32) : 0,
+      sint32: isSet(object.sint32) ? globalThis.Number(object.sint32) : 0,
       sint64: isSet(object.sint64) ? BigInt(object.sint64) : BigInt("0"),
-      fixed32: isSet(object.fixed32) ? Number(object.fixed32) : 0,
+      fixed32: isSet(object.fixed32) ? globalThis.Number(object.fixed32) : 0,
       fixed64: isSet(object.fixed64) ? BigInt(object.fixed64) : BigInt("0"),
-      sfixed32: isSet(object.sfixed32) ? Number(object.sfixed32) : 0,
+      sfixed32: isSet(object.sfixed32) ? globalThis.Number(object.sfixed32) : 0,
       sfixed64: isSet(object.sfixed64) ? BigInt(object.sfixed64) : BigInt("0"),
       guint64: isSet(object.guint64) ? BigInt(object.guint64) : undefined,
       timestamp: isSet(object.timestamp) ? fromJsonTimestamp(object.timestamp) : undefined,
-      uint64s: Array.isArray(object?.uint64s) ? object.uint64s.map((e: any) => BigInt(e)) : [],
+      uint64s: globalThis.Array.isArray(object?.uint64s) ? object.uint64s.map((e: any) => BigInt(e)) : [],
     };
   },
 
   toJSON(message: Numbers): unknown {
     const obj: any = {};
-    message.double !== undefined && (obj.double = message.double);
-    message.float !== undefined && (obj.float = message.float);
-    message.int32 !== undefined && (obj.int32 = Math.round(message.int32));
-    message.int64 !== undefined && (obj.int64 = message.int64.toString());
-    message.uint32 !== undefined && (obj.uint32 = Math.round(message.uint32));
-    message.uint64 !== undefined && (obj.uint64 = message.uint64.toString());
-    message.sint32 !== undefined && (obj.sint32 = Math.round(message.sint32));
-    message.sint64 !== undefined && (obj.sint64 = message.sint64.toString());
-    message.fixed32 !== undefined && (obj.fixed32 = Math.round(message.fixed32));
-    message.fixed64 !== undefined && (obj.fixed64 = message.fixed64.toString());
-    message.sfixed32 !== undefined && (obj.sfixed32 = Math.round(message.sfixed32));
-    message.sfixed64 !== undefined && (obj.sfixed64 = message.sfixed64.toString());
-    message.guint64 !== undefined && (obj.guint64 = message.guint64);
-    message.timestamp !== undefined && (obj.timestamp = message.timestamp.toISOString());
-    if (message.uint64s) {
+    if (message.double !== 0) {
+      obj.double = message.double;
+    }
+    if (message.float !== 0) {
+      obj.float = message.float;
+    }
+    if (message.int32 !== 0) {
+      obj.int32 = Math.round(message.int32);
+    }
+    if (message.int64 !== BigInt("0")) {
+      obj.int64 = message.int64.toString();
+    }
+    if (message.uint32 !== 0) {
+      obj.uint32 = Math.round(message.uint32);
+    }
+    if (message.uint64 !== BigInt("0")) {
+      obj.uint64 = message.uint64.toString();
+    }
+    if (message.sint32 !== 0) {
+      obj.sint32 = Math.round(message.sint32);
+    }
+    if (message.sint64 !== BigInt("0")) {
+      obj.sint64 = message.sint64.toString();
+    }
+    if (message.fixed32 !== 0) {
+      obj.fixed32 = Math.round(message.fixed32);
+    }
+    if (message.fixed64 !== BigInt("0")) {
+      obj.fixed64 = message.fixed64.toString();
+    }
+    if (message.sfixed32 !== 0) {
+      obj.sfixed32 = Math.round(message.sfixed32);
+    }
+    if (message.sfixed64 !== BigInt("0")) {
+      obj.sfixed64 = message.sfixed64.toString();
+    }
+    if (message.guint64 !== undefined) {
+      obj.guint64 = message.guint64;
+    }
+    if (message.timestamp !== undefined) {
+      obj.timestamp = message.timestamp.toISOString();
+    }
+    if (message.uint64s?.length) {
       obj.uint64s = message.uint64s.map((e) => e.toString());
-    } else {
-      obj.uint64s = [];
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Numbers>, I>>(base?: I): Numbers {
-    return Numbers.fromPartial(base ?? {});
+    return Numbers.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Numbers>, I>>(object: I): Numbers {
     const message = createBaseNumbers();
     message.double = object.double ?? 0;
@@ -299,7 +342,8 @@ export const Numbers = {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | bigint | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
@@ -314,16 +358,16 @@ function toTimestamp(date: Date): Timestamp {
 }
 
 function fromTimestamp(t: Timestamp): Date {
-  let millis = Number(t.seconds.toString()) * 1_000;
-  millis += t.nanos / 1_000_000;
-  return new Date(millis);
+  let millis = (globalThis.Number(t.seconds.toString()) || 0) * 1_000;
+  millis += (t.nanos || 0) / 1_000_000;
+  return new globalThis.Date(millis);
 }
 
 function fromJsonTimestamp(o: any): Date {
-  if (o instanceof Date) {
+  if (o instanceof globalThis.Date) {
     return o;
   } else if (typeof o === "string") {
-    return new Date(o);
+    return new globalThis.Date(o);
   } else {
     return fromTimestamp(Timestamp.fromJSON(o));
   }
@@ -333,8 +377,6 @@ function longToBigint(long: Long) {
   return BigInt(long.toString());
 }
 
-// If you get a compile-error about 'Constructor<Long> and ... have no overlap',
-// add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
 if (_m0.util.Long !== Long) {
   _m0.util.Long = Long as any;
   _m0.configure();

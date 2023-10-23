@@ -140,22 +140,25 @@ export const DashFlash = {
 
   fromJSON(object: any): DashFlash {
     return {
-      msg: isSet(object.msg) ? String(object.msg) : "",
+      msg: isSet(object.msg) ? globalThis.String(object.msg) : "",
       type: isSet(object.type) ? dashFlash_TypeFromJSON(object.type) : 0,
     };
   },
 
   toJSON(message: DashFlash): unknown {
     const obj: any = {};
-    message.msg !== undefined && (obj.msg = message.msg);
-    message.type !== undefined && (obj.type = dashFlash_TypeToJSON(message.type));
+    if (message.msg !== "") {
+      obj.msg = message.msg;
+    }
+    if (message.type !== 0) {
+      obj.type = dashFlash_TypeToJSON(message.type);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<DashFlash>, I>>(base?: I): DashFlash {
-    return DashFlash.fromPartial(base ?? {});
+    return DashFlash.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DashFlash>, I>>(object: I): DashFlash {
     const message = createBaseDashFlash();
     message.msg = object.msg ?? "";
@@ -221,29 +224,29 @@ export const DashUserSettingsState = {
 
   fromJSON(object: any): DashUserSettingsState {
     return {
-      email: isSet(object.email) ? String(object.email) : "",
+      email: isSet(object.email) ? globalThis.String(object.email) : "",
       urls: isSet(object.urls) ? DashUserSettingsState_URLs.fromJSON(object.urls) : undefined,
-      flashes: Array.isArray(object?.flashes) ? object.flashes.map((e: any) => DashFlash.fromJSON(e)) : [],
+      flashes: globalThis.Array.isArray(object?.flashes) ? object.flashes.map((e: any) => DashFlash.fromJSON(e)) : [],
     };
   },
 
   toJSON(message: DashUserSettingsState): unknown {
     const obj: any = {};
-    message.email !== undefined && (obj.email = message.email);
-    message.urls !== undefined &&
-      (obj.urls = message.urls ? DashUserSettingsState_URLs.toJSON(message.urls) : undefined);
-    if (message.flashes) {
-      obj.flashes = message.flashes.map((e) => e ? DashFlash.toJSON(e) : undefined);
-    } else {
-      obj.flashes = [];
+    if (message.email !== "") {
+      obj.email = message.email;
+    }
+    if (message.urls !== undefined) {
+      obj.urls = DashUserSettingsState_URLs.toJSON(message.urls);
+    }
+    if (message.flashes?.length) {
+      obj.flashes = message.flashes.map((e) => DashFlash.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<DashUserSettingsState>, I>>(base?: I): DashUserSettingsState {
-    return DashUserSettingsState.fromPartial(base ?? {});
+    return DashUserSettingsState.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DashUserSettingsState>, I>>(object: I): DashUserSettingsState {
     const message = createBaseDashUserSettingsState();
     message.email = object.email ?? "";
@@ -302,22 +305,25 @@ export const DashUserSettingsState_URLs = {
 
   fromJSON(object: any): DashUserSettingsState_URLs {
     return {
-      connectGoogle: isSet(object.connectGoogle) ? String(object.connectGoogle) : "",
-      connectGithub: isSet(object.connectGithub) ? String(object.connectGithub) : "",
+      connectGoogle: isSet(object.connectGoogle) ? globalThis.String(object.connectGoogle) : "",
+      connectGithub: isSet(object.connectGithub) ? globalThis.String(object.connectGithub) : "",
     };
   },
 
   toJSON(message: DashUserSettingsState_URLs): unknown {
     const obj: any = {};
-    message.connectGoogle !== undefined && (obj.connectGoogle = message.connectGoogle);
-    message.connectGithub !== undefined && (obj.connectGithub = message.connectGithub);
+    if (message.connectGoogle !== "") {
+      obj.connectGoogle = message.connectGoogle;
+    }
+    if (message.connectGithub !== "") {
+      obj.connectGithub = message.connectGithub;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<DashUserSettingsState_URLs>, I>>(base?: I): DashUserSettingsState_URLs {
-    return DashUserSettingsState_URLs.fromPartial(base ?? {});
+    return DashUserSettingsState_URLs.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DashUserSettingsState_URLs>, I>>(object: I): DashUserSettingsState_URLs {
     const message = createBaseDashUserSettingsState_URLs();
     message.connectGoogle = object.connectGoogle ?? "";
@@ -393,26 +399,33 @@ export const DashCred = {
 
   fromJSON(object: any): DashCred {
     return {
-      description: isSet(object.description) ? String(object.description) : "",
-      metadata: isSet(object.metadata) ? String(object.metadata) : "",
-      token: isSet(object.token) ? String(object.token) : "",
-      id: isSet(object.id) ? String(object.id) : "",
+      description: isSet(object.description) ? globalThis.String(object.description) : "",
+      metadata: isSet(object.metadata) ? globalThis.String(object.metadata) : "",
+      token: isSet(object.token) ? globalThis.String(object.token) : "",
+      id: isSet(object.id) ? globalThis.String(object.id) : "",
     };
   },
 
   toJSON(message: DashCred): unknown {
     const obj: any = {};
-    message.description !== undefined && (obj.description = message.description);
-    message.metadata !== undefined && (obj.metadata = message.metadata);
-    message.token !== undefined && (obj.token = message.token);
-    message.id !== undefined && (obj.id = message.id);
+    if (message.description !== "") {
+      obj.description = message.description;
+    }
+    if (message.metadata !== "") {
+      obj.metadata = message.metadata;
+    }
+    if (message.token !== "") {
+      obj.token = message.token;
+    }
+    if (message.id !== "") {
+      obj.id = message.id;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<DashCred>, I>>(base?: I): DashCred {
-    return DashCred.fromPartial(base ?? {});
+    return DashCred.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DashCred>, I>>(object: I): DashCred {
     const message = createBaseDashCred();
     message.description = object.description ?? "";
@@ -470,22 +483,25 @@ export const DashAPICredsCreateReq = {
 
   fromJSON(object: any): DashAPICredsCreateReq {
     return {
-      description: isSet(object.description) ? String(object.description) : "",
-      metadata: isSet(object.metadata) ? String(object.metadata) : "",
+      description: isSet(object.description) ? globalThis.String(object.description) : "",
+      metadata: isSet(object.metadata) ? globalThis.String(object.metadata) : "",
     };
   },
 
   toJSON(message: DashAPICredsCreateReq): unknown {
     const obj: any = {};
-    message.description !== undefined && (obj.description = message.description);
-    message.metadata !== undefined && (obj.metadata = message.metadata);
+    if (message.description !== "") {
+      obj.description = message.description;
+    }
+    if (message.metadata !== "") {
+      obj.metadata = message.metadata;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<DashAPICredsCreateReq>, I>>(base?: I): DashAPICredsCreateReq {
-    return DashAPICredsCreateReq.fromPartial(base ?? {});
+    return DashAPICredsCreateReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DashAPICredsCreateReq>, I>>(object: I): DashAPICredsCreateReq {
     const message = createBaseDashAPICredsCreateReq();
     message.description = object.description ?? "";
@@ -561,26 +577,33 @@ export const DashAPICredsUpdateReq = {
 
   fromJSON(object: any): DashAPICredsUpdateReq {
     return {
-      credSid: isSet(object.credSid) ? String(object.credSid) : "",
-      description: isSet(object.description) ? String(object.description) : "",
-      metadata: isSet(object.metadata) ? String(object.metadata) : "",
-      id: isSet(object.id) ? String(object.id) : "",
+      credSid: isSet(object.credSid) ? globalThis.String(object.credSid) : "",
+      description: isSet(object.description) ? globalThis.String(object.description) : "",
+      metadata: isSet(object.metadata) ? globalThis.String(object.metadata) : "",
+      id: isSet(object.id) ? globalThis.String(object.id) : "",
     };
   },
 
   toJSON(message: DashAPICredsUpdateReq): unknown {
     const obj: any = {};
-    message.credSid !== undefined && (obj.credSid = message.credSid);
-    message.description !== undefined && (obj.description = message.description);
-    message.metadata !== undefined && (obj.metadata = message.metadata);
-    message.id !== undefined && (obj.id = message.id);
+    if (message.credSid !== "") {
+      obj.credSid = message.credSid;
+    }
+    if (message.description !== "") {
+      obj.description = message.description;
+    }
+    if (message.metadata !== "") {
+      obj.metadata = message.metadata;
+    }
+    if (message.id !== "") {
+      obj.id = message.id;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<DashAPICredsUpdateReq>, I>>(base?: I): DashAPICredsUpdateReq {
-    return DashAPICredsUpdateReq.fromPartial(base ?? {});
+    return DashAPICredsUpdateReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DashAPICredsUpdateReq>, I>>(object: I): DashAPICredsUpdateReq {
     const message = createBaseDashAPICredsUpdateReq();
     message.credSid = object.credSid ?? "";
@@ -638,22 +661,25 @@ export const DashAPICredsDeleteReq = {
 
   fromJSON(object: any): DashAPICredsDeleteReq {
     return {
-      credSid: isSet(object.credSid) ? String(object.credSid) : "",
-      id: isSet(object.id) ? String(object.id) : "",
+      credSid: isSet(object.credSid) ? globalThis.String(object.credSid) : "",
+      id: isSet(object.id) ? globalThis.String(object.id) : "",
     };
   },
 
   toJSON(message: DashAPICredsDeleteReq): unknown {
     const obj: any = {};
-    message.credSid !== undefined && (obj.credSid = message.credSid);
-    message.id !== undefined && (obj.id = message.id);
+    if (message.credSid !== "") {
+      obj.credSid = message.credSid;
+    }
+    if (message.id !== "") {
+      obj.id = message.id;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<DashAPICredsDeleteReq>, I>>(base?: I): DashAPICredsDeleteReq {
-    return DashAPICredsDeleteReq.fromPartial(base ?? {});
+    return DashAPICredsDeleteReq.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DashAPICredsDeleteReq>, I>>(object: I): DashAPICredsDeleteReq {
     const message = createBaseDashAPICredsDeleteReq();
     message.credSid = object.credSid ?? "";
@@ -697,9 +723,8 @@ export const Empty = {
   },
 
   create<I extends Exact<DeepPartial<Empty>, I>>(base?: I): Empty {
-    return Empty.fromPartial(base ?? {});
+    return Empty.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Empty>, I>>(_: I): Empty {
     const message = createBaseEmpty();
     return message;
@@ -711,11 +736,12 @@ export interface DashState {
   ActiveUserSettingsStream(request: Empty): Observable<DashUserSettingsState>;
 }
 
+export const DashStateServiceName = "rpx.DashState";
 export class DashStateClientImpl implements DashState {
   private readonly rpc: Rpc;
   private readonly service: string;
   constructor(rpc: Rpc, opts?: { service?: string }) {
-    this.service = opts?.service || "rpx.DashState";
+    this.service = opts?.service || DashStateServiceName;
     this.rpc = rpc;
     this.UserSettings = this.UserSettings.bind(this);
     this.ActiveUserSettingsStream = this.ActiveUserSettingsStream.bind(this);
@@ -744,11 +770,12 @@ export interface DashAPICreds {
   Delete(request: DashAPICredsDeleteReq): Promise<DashCred>;
 }
 
+export const DashAPICredsServiceName = "rpx.DashAPICreds";
 export class DashAPICredsClientImpl implements DashAPICreds {
   private readonly rpc: Rpc;
   private readonly service: string;
   constructor(rpc: Rpc, opts?: { service?: string }) {
-    this.service = opts?.service || "rpx.DashAPICreds";
+    this.service = opts?.service || DashAPICredsServiceName;
     this.rpc = rpc;
     this.Create = this.Create.bind(this);
     this.Update = this.Update.bind(this);
@@ -783,7 +810,8 @@ interface Rpc {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 

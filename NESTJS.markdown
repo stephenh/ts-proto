@@ -113,3 +113,5 @@ export class AppService implements OnModuleInit {
   (Requires `nestJs=true`.)
 
 - With `--ts_proto_opt=nestJs=true`, the defaults will change to generate [NestJS protobuf](https://docs.nestjs.com/microservices/grpc) friendly types & service interfaces that can be used in both the client-side and server-side of NestJS protobuf implementations.
+
+- With `--ts_proto_opt=exportCommonSymbols=false`, the plugin will not generate the export with the specified package name.

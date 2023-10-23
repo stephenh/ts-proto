@@ -70,20 +70,26 @@ export const Simple = {
   },
 
   fromJSON(object: any): Simple {
-    return { name: isSet(object.name) ? String(object.name) : "", age: isSet(object.age) ? Number(object.age) : 0 };
+    return {
+      name: isSet(object.name) ? globalThis.String(object.name) : "",
+      age: isSet(object.age) ? globalThis.Number(object.age) : 0,
+    };
   },
 
   toJSON(message: Simple): unknown {
     const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
-    message.age !== undefined && (obj.age = Math.round(message.age));
+    if (message.name !== "") {
+      obj.name = message.name;
+    }
+    if (message.age !== 0) {
+      obj.age = Math.round(message.age);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Simple>, I>>(base?: I): Simple {
-    return Simple.fromPartial(base ?? {});
+    return Simple.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Simple>, I>>(object: I): Simple {
     const message = createBaseSimple();
     message.name = object.name ?? "";
@@ -252,42 +258,65 @@ export const Numbers = {
 
   fromJSON(object: any): Numbers {
     return {
-      double: isSet(object.double) ? Number(object.double) : 0,
-      float: isSet(object.float) ? Number(object.float) : 0,
-      int32: isSet(object.int32) ? Number(object.int32) : 0,
-      int64: isSet(object.int64) ? Number(object.int64) : 0,
-      uint32: isSet(object.uint32) ? Number(object.uint32) : 0,
-      uint64: isSet(object.uint64) ? Number(object.uint64) : 0,
-      sint32: isSet(object.sint32) ? Number(object.sint32) : 0,
-      sint64: isSet(object.sint64) ? Number(object.sint64) : 0,
-      fixed32: isSet(object.fixed32) ? Number(object.fixed32) : 0,
-      fixed64: isSet(object.fixed64) ? Number(object.fixed64) : 0,
-      sfixed32: isSet(object.sfixed32) ? Number(object.sfixed32) : 0,
-      sfixed64: isSet(object.sfixed64) ? Number(object.sfixed64) : 0,
+      double: isSet(object.double) ? globalThis.Number(object.double) : 0,
+      float: isSet(object.float) ? globalThis.Number(object.float) : 0,
+      int32: isSet(object.int32) ? globalThis.Number(object.int32) : 0,
+      int64: isSet(object.int64) ? globalThis.Number(object.int64) : 0,
+      uint32: isSet(object.uint32) ? globalThis.Number(object.uint32) : 0,
+      uint64: isSet(object.uint64) ? globalThis.Number(object.uint64) : 0,
+      sint32: isSet(object.sint32) ? globalThis.Number(object.sint32) : 0,
+      sint64: isSet(object.sint64) ? globalThis.Number(object.sint64) : 0,
+      fixed32: isSet(object.fixed32) ? globalThis.Number(object.fixed32) : 0,
+      fixed64: isSet(object.fixed64) ? globalThis.Number(object.fixed64) : 0,
+      sfixed32: isSet(object.sfixed32) ? globalThis.Number(object.sfixed32) : 0,
+      sfixed64: isSet(object.sfixed64) ? globalThis.Number(object.sfixed64) : 0,
     };
   },
 
   toJSON(message: Numbers): unknown {
     const obj: any = {};
-    message.double !== undefined && (obj.double = message.double);
-    message.float !== undefined && (obj.float = message.float);
-    message.int32 !== undefined && (obj.int32 = Math.round(message.int32));
-    message.int64 !== undefined && (obj.int64 = Math.round(message.int64));
-    message.uint32 !== undefined && (obj.uint32 = Math.round(message.uint32));
-    message.uint64 !== undefined && (obj.uint64 = Math.round(message.uint64));
-    message.sint32 !== undefined && (obj.sint32 = Math.round(message.sint32));
-    message.sint64 !== undefined && (obj.sint64 = Math.round(message.sint64));
-    message.fixed32 !== undefined && (obj.fixed32 = Math.round(message.fixed32));
-    message.fixed64 !== undefined && (obj.fixed64 = Math.round(message.fixed64));
-    message.sfixed32 !== undefined && (obj.sfixed32 = Math.round(message.sfixed32));
-    message.sfixed64 !== undefined && (obj.sfixed64 = Math.round(message.sfixed64));
+    if (message.double !== 0) {
+      obj.double = message.double;
+    }
+    if (message.float !== 0) {
+      obj.float = message.float;
+    }
+    if (message.int32 !== 0) {
+      obj.int32 = Math.round(message.int32);
+    }
+    if (message.int64 !== 0) {
+      obj.int64 = Math.round(message.int64);
+    }
+    if (message.uint32 !== 0) {
+      obj.uint32 = Math.round(message.uint32);
+    }
+    if (message.uint64 !== 0) {
+      obj.uint64 = Math.round(message.uint64);
+    }
+    if (message.sint32 !== 0) {
+      obj.sint32 = Math.round(message.sint32);
+    }
+    if (message.sint64 !== 0) {
+      obj.sint64 = Math.round(message.sint64);
+    }
+    if (message.fixed32 !== 0) {
+      obj.fixed32 = Math.round(message.fixed32);
+    }
+    if (message.fixed64 !== 0) {
+      obj.fixed64 = Math.round(message.fixed64);
+    }
+    if (message.sfixed32 !== 0) {
+      obj.sfixed32 = Math.round(message.sfixed32);
+    }
+    if (message.sfixed64 !== 0) {
+      obj.sfixed64 = Math.round(message.sfixed64);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Numbers>, I>>(base?: I): Numbers {
-    return Numbers.fromPartial(base ?? {});
+    return Numbers.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Numbers>, I>>(object: I): Numbers {
     const message = createBaseNumbers();
     message.double = object.double ?? 0;
@@ -306,29 +335,11 @@ export const Numbers = {
   },
 };
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
-  if (typeof globalThis !== "undefined") {
-    return globalThis;
-  }
-  if (typeof self !== "undefined") {
-    return self;
-  }
-  if (typeof window !== "undefined") {
-    return window;
-  }
-  if (typeof global !== "undefined") {
-    return global;
-  }
-  throw "Unable to locate global object";
-})();
-
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
@@ -337,8 +348,8 @@ export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function longToNumber(long: Long): number {
-  if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new tsProtoGlobalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+  if (long.gt(globalThis.Number.MAX_SAFE_INTEGER)) {
+    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
   return long.toNumber();
 }

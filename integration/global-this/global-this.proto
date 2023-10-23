@@ -8,3 +8,19 @@ message Object {
 message Error {
   string name = 1;
 }
+
+message String {
+  string value = 1;
+}
+
+message Boolean {
+  bool value = 1;
+}
+
+message Number {
+  double value = 1;
+}
+
+message Array {
+  repeated String values = 1;
+}

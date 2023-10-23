@@ -19,7 +19,7 @@ export interface Entity {
   readonly oneOfValue?: { readonly $case: "theStringValue"; readonly theStringValue: string } | {
     readonly $case: "theIntValue";
     readonly theIntValue: number;
-  };
+  } | undefined;
 }
 
 export interface SubEntity {
@@ -199,60 +199,72 @@ export const Entity = {
 
   fromJSON(object: any): Entity {
     return {
-      intVal: isSet(object.intVal) ? Number(object.intVal) : 0,
-      stringVal: isSet(object.stringVal) ? String(object.stringVal) : "",
-      intArray: Array.isArray(object?.intArray) ? object.intArray.map((e: any) => Number(e)) : [],
-      stringArray: Array.isArray(object?.stringArray) ? object.stringArray.map((e: any) => String(e)) : [],
+      intVal: isSet(object.intVal) ? globalThis.Number(object.intVal) : 0,
+      stringVal: isSet(object.stringVal) ? globalThis.String(object.stringVal) : "",
+      intArray: globalThis.Array.isArray(object?.intArray) ? object.intArray.map((e: any) => globalThis.Number(e)) : [],
+      stringArray: globalThis.Array.isArray(object?.stringArray)
+        ? object.stringArray.map((e: any) => globalThis.String(e))
+        : [],
       subEntity: isSet(object.subEntity) ? SubEntity.fromJSON(object.subEntity) : undefined,
-      subEntityArray: Array.isArray(object?.subEntityArray)
+      subEntityArray: globalThis.Array.isArray(object?.subEntityArray)
         ? object.subEntityArray.map((e: any) => SubEntity.fromJSON(e))
         : [],
-      optionalIntVal: isSet(object.optionalIntVal) ? Number(object.optionalIntVal) : undefined,
+      optionalIntVal: isSet(object.optionalIntVal) ? globalThis.Number(object.optionalIntVal) : undefined,
       fieldMask: isSet(object.fieldMask) ? FieldMask.unwrap(FieldMask.fromJSON(object.fieldMask)) : undefined,
-      listValue: Array.isArray(object.listValue) ? [...object.listValue] : undefined,
+      listValue: globalThis.Array.isArray(object.listValue) ? [...object.listValue] : undefined,
       structValue: isObject(object.structValue) ? object.structValue : undefined,
       oneOfValue: isSet(object.theStringValue)
-        ? { $case: "theStringValue", theStringValue: String(object.theStringValue) }
+        ? { $case: "theStringValue", theStringValue: globalThis.String(object.theStringValue) }
         : isSet(object.theIntValue)
-        ? { $case: "theIntValue", theIntValue: Number(object.theIntValue) }
+        ? { $case: "theIntValue", theIntValue: globalThis.Number(object.theIntValue) }
         : undefined,
     };
   },
 
   toJSON(message: Entity): unknown {
     const obj: any = {};
-    message.intVal !== undefined && (obj.intVal = Math.round(message.intVal));
-    message.stringVal !== undefined && (obj.stringVal = message.stringVal);
-    if (message.intArray) {
+    if (message.intVal !== 0) {
+      obj.intVal = Math.round(message.intVal);
+    }
+    if (message.stringVal !== "") {
+      obj.stringVal = message.stringVal;
+    }
+    if (message.intArray?.length) {
       obj.intArray = message.intArray.map((e) => Math.round(e));
-    } else {
-      obj.intArray = [];
     }
-    if (message.stringArray) {
-      obj.stringArray = message.stringArray.map((e) => e);
-    } else {
-      obj.stringArray = [];
+    if (message.stringArray?.length) {
+      obj.stringArray = message.stringArray;
     }
-    message.subEntity !== undefined &&
-      (obj.subEntity = message.subEntity ? SubEntity.toJSON(message.subEntity) : undefined);
-    if (message.subEntityArray) {
-      obj.subEntityArray = message.subEntityArray.map((e) => e ? SubEntity.toJSON(e) : undefined);
-    } else {
-      obj.subEntityArray = [];
+    if (message.subEntity !== undefined) {
+      obj.subEntity = SubEntity.toJSON(message.subEntity);
     }
-    message.optionalIntVal !== undefined && (obj.optionalIntVal = Math.round(message.optionalIntVal));
-    message.fieldMask !== undefined && (obj.fieldMask = FieldMask.toJSON(FieldMask.wrap(message.fieldMask)));
-    message.listValue !== undefined && (obj.listValue = message.listValue);
-    message.structValue !== undefined && (obj.structValue = message.structValue);
-    message.oneOfValue?.$case === "theStringValue" && (obj.theStringValue = message.oneOfValue?.theStringValue);
-    message.oneOfValue?.$case === "theIntValue" && (obj.theIntValue = Math.round(message.oneOfValue?.theIntValue));
+    if (message.subEntityArray?.length) {
+      obj.subEntityArray = message.subEntityArray.map((e) => SubEntity.toJSON(e));
+    }
+    if (message.optionalIntVal !== undefined) {
+      obj.optionalIntVal = Math.round(message.optionalIntVal);
+    }
+    if (message.fieldMask !== undefined) {
+      obj.fieldMask = FieldMask.toJSON(FieldMask.wrap(message.fieldMask));
+    }
+    if (message.listValue !== undefined) {
+      obj.listValue = message.listValue;
+    }
+    if (message.structValue !== undefined) {
+      obj.structValue = message.structValue;
+    }
+    if (message.oneOfValue?.$case === "theStringValue") {
+      obj.theStringValue = message.oneOfValue.theStringValue;
+    }
+    if (message.oneOfValue?.$case === "theIntValue") {
+      obj.theIntValue = Math.round(message.oneOfValue.theIntValue);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Entity>, I>>(base?: I): Entity {
-    return Entity.fromPartial(base ?? {});
+    return Entity.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Entity>, I>>(object: I): Entity {
     const message = createBaseEntity() as any;
     message.intVal = object.intVal ?? 0;
@@ -321,19 +333,20 @@ export const SubEntity = {
   },
 
   fromJSON(object: any): SubEntity {
-    return { subVal: isSet(object.subVal) ? Number(object.subVal) : 0 };
+    return { subVal: isSet(object.subVal) ? globalThis.Number(object.subVal) : 0 };
   },
 
   toJSON(message: SubEntity): unknown {
     const obj: any = {};
-    message.subVal !== undefined && (obj.subVal = Math.round(message.subVal));
+    if (message.subVal !== 0) {
+      obj.subVal = Math.round(message.subVal);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<SubEntity>, I>>(base?: I): SubEntity {
-    return SubEntity.fromPartial(base ?? {});
+    return SubEntity.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<SubEntity>, I>>(object: I): SubEntity {
     const message = createBaseSubEntity() as any;
     message.subVal = object.subVal ?? 0;
@@ -344,7 +357,8 @@ export const SubEntity = {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends { readonly $case: string }
     ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & { readonly $case: T["$case"] }
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }

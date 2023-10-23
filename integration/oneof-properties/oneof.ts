@@ -225,43 +225,61 @@ export const PleaseChoose = {
 
   fromJSON(object: any): PleaseChoose {
     return {
-      name: isSet(object.name) ? String(object.name) : "",
-      aNumber: isSet(object.aNumber) ? Number(object.aNumber) : undefined,
-      aString: isSet(object.aString) ? String(object.aString) : undefined,
+      name: isSet(object.name) ? globalThis.String(object.name) : "",
+      aNumber: isSet(object.aNumber) ? globalThis.Number(object.aNumber) : undefined,
+      aString: isSet(object.aString) ? globalThis.String(object.aString) : undefined,
       aMessage: isSet(object.aMessage) ? PleaseChoose_Submessage.fromJSON(object.aMessage) : undefined,
-      aBool: isSet(object.aBool) ? Boolean(object.aBool) : undefined,
+      aBool: isSet(object.aBool) ? globalThis.Boolean(object.aBool) : undefined,
       bunchaBytes: isSet(object.bunchaBytes) ? bytesFromBase64(object.bunchaBytes) : undefined,
       anEnum: isSet(object.anEnum) ? pleaseChoose_StateEnumFromJSON(object.anEnum) : undefined,
-      age: isSet(object.age) ? Number(object.age) : 0,
-      either: isSet(object.either) ? String(object.either) : undefined,
-      or: isSet(object.or) ? String(object.or) : undefined,
-      thirdOption: isSet(object.thirdOption) ? String(object.thirdOption) : undefined,
+      age: isSet(object.age) ? globalThis.Number(object.age) : 0,
+      either: isSet(object.either) ? globalThis.String(object.either) : undefined,
+      or: isSet(object.or) ? globalThis.String(object.or) : undefined,
+      thirdOption: isSet(object.thirdOption) ? globalThis.String(object.thirdOption) : undefined,
     };
   },
 
   toJSON(message: PleaseChoose): unknown {
     const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
-    message.aNumber !== undefined && (obj.aNumber = message.aNumber);
-    message.aString !== undefined && (obj.aString = message.aString);
-    message.aMessage !== undefined &&
-      (obj.aMessage = message.aMessage ? PleaseChoose_Submessage.toJSON(message.aMessage) : undefined);
-    message.aBool !== undefined && (obj.aBool = message.aBool);
-    message.bunchaBytes !== undefined &&
-      (obj.bunchaBytes = message.bunchaBytes !== undefined ? base64FromBytes(message.bunchaBytes) : undefined);
-    message.anEnum !== undefined &&
-      (obj.anEnum = message.anEnum !== undefined ? pleaseChoose_StateEnumToJSON(message.anEnum) : undefined);
-    message.age !== undefined && (obj.age = Math.round(message.age));
-    message.either !== undefined && (obj.either = message.either);
-    message.or !== undefined && (obj.or = message.or);
-    message.thirdOption !== undefined && (obj.thirdOption = message.thirdOption);
+    if (message.name !== "") {
+      obj.name = message.name;
+    }
+    if (message.aNumber !== undefined) {
+      obj.aNumber = message.aNumber;
+    }
+    if (message.aString !== undefined) {
+      obj.aString = message.aString;
+    }
+    if (message.aMessage !== undefined) {
+      obj.aMessage = PleaseChoose_Submessage.toJSON(message.aMessage);
+    }
+    if (message.aBool !== undefined) {
+      obj.aBool = message.aBool;
+    }
+    if (message.bunchaBytes !== undefined) {
+      obj.bunchaBytes = base64FromBytes(message.bunchaBytes);
+    }
+    if (message.anEnum !== undefined) {
+      obj.anEnum = pleaseChoose_StateEnumToJSON(message.anEnum);
+    }
+    if (message.age !== 0) {
+      obj.age = Math.round(message.age);
+    }
+    if (message.either !== undefined) {
+      obj.either = message.either;
+    }
+    if (message.or !== undefined) {
+      obj.or = message.or;
+    }
+    if (message.thirdOption !== undefined) {
+      obj.thirdOption = message.thirdOption;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<PleaseChoose>, I>>(base?: I): PleaseChoose {
-    return PleaseChoose.fromPartial(base ?? {});
+    return PleaseChoose.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<PleaseChoose>, I>>(object: I): PleaseChoose {
     const message = createBasePleaseChoose();
     message.name = object.name ?? "";
@@ -317,19 +335,20 @@ export const PleaseChoose_Submessage = {
   },
 
   fromJSON(object: any): PleaseChoose_Submessage {
-    return { name: isSet(object.name) ? String(object.name) : "" };
+    return { name: isSet(object.name) ? globalThis.String(object.name) : "" };
   },
 
   toJSON(message: PleaseChoose_Submessage): unknown {
     const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
+    if (message.name !== "") {
+      obj.name = message.name;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<PleaseChoose_Submessage>, I>>(base?: I): PleaseChoose_Submessage {
-    return PleaseChoose_Submessage.fromPartial(base ?? {});
+    return PleaseChoose_Submessage.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<PleaseChoose_Submessage>, I>>(object: I): PleaseChoose_Submessage {
     const message = createBasePleaseChoose_Submessage();
     message.name = object.name ?? "";
@@ -337,30 +356,11 @@ export const PleaseChoose_Submessage = {
   },
 };
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
-  if (typeof globalThis !== "undefined") {
-    return globalThis;
-  }
-  if (typeof self !== "undefined") {
-    return self;
-  }
-  if (typeof window !== "undefined") {
-    return window;
-  }
-  if (typeof global !== "undefined") {
-    return global;
-  }
-  throw "Unable to locate global object";
-})();
-
 function bytesFromBase64(b64: string): Uint8Array {
-  if (tsProtoGlobalThis.Buffer) {
-    return Uint8Array.from(tsProtoGlobalThis.Buffer.from(b64, "base64"));
+  if (globalThis.Buffer) {
+    return Uint8Array.from(globalThis.Buffer.from(b64, "base64"));
   } else {
-    const bin = tsProtoGlobalThis.atob(b64);
+    const bin = globalThis.atob(b64);
     const arr = new Uint8Array(bin.length);
     for (let i = 0; i < bin.length; ++i) {
       arr[i] = bin.charCodeAt(i);
@@ -370,21 +370,22 @@ function bytesFromBase64(b64: string): Uint8Array {
 }
 
 function base64FromBytes(arr: Uint8Array): string {
-  if (tsProtoGlobalThis.Buffer) {
-    return tsProtoGlobalThis.Buffer.from(arr).toString("base64");
+  if (globalThis.Buffer) {
+    return globalThis.Buffer.from(arr).toString("base64");
   } else {
     const bin: string[] = [];
     arr.forEach((byte) => {
-      bin.push(String.fromCharCode(byte));
+      bin.push(globalThis.String.fromCharCode(byte));
     });
-    return tsProtoGlobalThis.btoa(bin.join(""));
+    return globalThis.btoa(bin.join(""));
   }
 }
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 

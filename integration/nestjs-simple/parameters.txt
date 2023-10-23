@@ -1,1 +1,1 @@
-nestJs=true
+nestJs=true,globalThisPolyfill=true

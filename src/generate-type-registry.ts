@@ -1,15 +1,22 @@
 import { code, Code, joinCode } from "ts-poet";
 import { Context } from "./context";
 import { impFile } from "./utils";
+import { addTypeToMessages } from "./options";
 
 export function generateTypeRegistry(ctx: Context): Code {
   const chunks: Code[] = [];
 
   chunks.push(generateMessageType(ctx));
 
-  chunks.push(code`
+  if (addTypeToMessages(ctx.options)) {
+    chunks.push(code`
     export type UnknownMessage = {$type: string};
   `);
+  } else {
+    chunks.push(code`
+    export type UnknownMessage = unknown;
+  `);
+  }
 
   chunks.push(code`
     export const messageTypeRegistry = new Map<string, MessageType>();
@@ -25,7 +32,11 @@ function generateMessageType(ctx: Context): Code {
 
   chunks.push(code`export interface MessageType<Message extends UnknownMessage = UnknownMessage> {`);
 
-  chunks.push(code`$type: Message['$type'];`);
+  if (addTypeToMessages(ctx.options)) {
+    chunks.push(code`$type: Message['$type'];`);
+  } else {
+    chunks.push(code`$type: string;`);
+  }
 
   if (ctx.options.outputEncodeMethods) {
     const Writer = impFile(ctx.options, "Writer@protobufjs/minimal");

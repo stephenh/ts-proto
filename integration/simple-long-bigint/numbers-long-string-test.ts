@@ -1,11 +1,17 @@
 import { Reader } from "protobufjs";
-import * as Long from "long";
+import Long = require("long");
 import { Numbers } from "./simple";
 import { simple as pbjs, google } from "./pbjs";
 import INumbers = pbjs.INumbers;
 import PbNumbers = pbjs.Numbers;
 import UInt64Value = google.protobuf.UInt64Value;
 import PbTimestamp = google.protobuf.Timestamp;
+
+
+// 18_446_744_073_709_551_615n
+const MAX_UINT64 = BigInt("18446744073709551615")
+// 9_223_372_036_854_775_807n
+const MAX_INT64 = BigInt("9223372036854775807")
 
 describe("number", () => {
   it("generates types correctly", () => {
@@ -149,23 +155,70 @@ describe("number", () => {
   it("has fromPartial", () => {
     const s1 = Numbers.fromPartial({});
     expect(s1).toMatchInlineSnapshot(`
-  Object {
-    "double": 0,
-    "fixed32": 0,
-    "fixed64": 0n,
-    "float": 0,
-    "guint64": undefined,
-    "int32": 0,
-    "int64": 0n,
-    "sfixed32": 0,
-    "sfixed64": 0n,
-    "sint32": 0,
-    "sint64": 0n,
-    "timestamp": undefined,
-    "uint32": 0,
-    "uint64": 0n,
-    "uint64s": Array [],
-  }
-  `);
+      {
+        "double": 0,
+        "fixed32": 0,
+        "fixed64": 0n,
+        "float": 0,
+        "guint64": undefined,
+        "int32": 0,
+        "int64": 0n,
+        "sfixed32": 0,
+        "sfixed64": 0n,
+        "sint32": 0,
+        "sint64": 0n,
+        "timestamp": undefined,
+        "uint32": 0,
+        "uint64": 0n,
+        "uint64s": [],
+      }
+    `);
+  });
+
+  it('throws error on too large bigints', () => {
+    const testCases = [
+      {
+        failValue: { int64: MAX_INT64 + BigInt("1") },
+        failMsg: "value provided for field message.int64 of type int64 too large",
+        passValue: { int64: MAX_INT64 },
+      },
+      {
+        failValue: { uint64: MAX_UINT64 + BigInt("1") },
+        failMsg: "value provided for field message.uint64 of type uint64 too large",
+        passValue: { uint64: MAX_UINT64 },
+      },
+      {
+        failValue: { sint64: MAX_INT64 + BigInt("1") },
+        failMsg: "value provided for field message.sint64 of type sint64 too large",
+        passValue: { sint64: MAX_INT64 },
+      },
+      {
+        failValue: { fixed64: MAX_UINT64 + BigInt("1") },
+        failMsg: "value provided for field message.fixed64 of type fixed64 too large",
+        passValue: { fixed64: MAX_UINT64 },
+      },
+      {
+        failValue: { sfixed64: MAX_INT64 + BigInt("1") },
+        failMsg: "value provided for field message.sfixed64 of type sfixed64 too large",
+        passValue: { sfixed64: MAX_INT64 },
+      },
+      {
+        failValue: { guint64: MAX_UINT64 + BigInt("1") },
+        failMsg: "value provided for field message.value of type uint64 too large",
+        passValue: { guint64: MAX_UINT64 },
+      },
+      {
+        failValue: { uint64s: [MAX_UINT64 + BigInt("1")] },
+        failMsg: "a value provided in array field uint64s of type uint64 is too large",
+        passValue: { uint64s: [MAX_UINT64] },
+      }
+    ];
+
+    for (const testCase of testCases) {
+      const failValue = Numbers.fromPartial(testCase.failValue);
+      expect(() => { Numbers.encode(failValue) }).toThrow(testCase.failMsg);
+      const passValue = Numbers.fromPartial(testCase.passValue);
+      expect(() => Numbers.encode(passValue).finish()).not.toThrowError();
+    }
   });
 });

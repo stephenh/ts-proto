@@ -1,0 +1,9 @@
+message Test {
+  enum TestType {
+    TEST_TYPE_UNSPECIFIED = 0;
+    TEST_TYPE_EVENT = 1;
+    TEST_TYPE_METRIC = 2;
+    TEST_TYPE_DERIVED = 3;
+  }
+
+}

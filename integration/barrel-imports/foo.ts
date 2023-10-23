@@ -54,22 +54,25 @@ export const Foo = {
 
   fromJSON(object: any): Foo {
     return {
-      name: isSet(object.name) ? String(object.name) : "",
+      name: isSet(object.name) ? globalThis.String(object.name) : "",
       bar: isSet(object.bar) ? Bar.fromJSON(object.bar) : undefined,
     };
   },
 
   toJSON(message: Foo): unknown {
     const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
-    message.bar !== undefined && (obj.bar = message.bar ? Bar.toJSON(message.bar) : undefined);
+    if (message.name !== "") {
+      obj.name = message.name;
+    }
+    if (message.bar !== undefined) {
+      obj.bar = Bar.toJSON(message.bar);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Foo>, I>>(base?: I): Foo {
-    return Foo.fromPartial(base ?? {});
+    return Foo.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Foo>, I>>(object: I): Foo {
     const message = createBaseFoo();
     message.name = object.name ?? "";
@@ -81,7 +84,8 @@ export const Foo = {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 

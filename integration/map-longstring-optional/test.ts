@@ -1,18 +1,18 @@
 /* eslint-disable */
-import * as Long from "long";
 import * as _m0 from "protobufjs/minimal";
+import Long = require("long");
 
 export const protobufPackage = "";
 
 export interface MapBigInt {
-  map?: Map<string, string>;
-  _unknownFields?: { [key: number]: Uint8Array[] };
+  map?: Map<string, string> | undefined;
+  _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
 export interface MapBigInt_MapEntry {
   key: string;
   value: string;
-  _unknownFields?: { [key: number]: Uint8Array[] };
+  _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
 function createBaseMapBigInt(): MapBigInt {
@@ -25,8 +25,7 @@ export const MapBigInt = {
       MapBigInt_MapEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).ldelim();
     });
     if (message._unknownFields !== undefined) {
-      for (const key in message._unknownFields) {
-        const values = message._unknownFields[key];
+      for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag);
@@ -97,8 +96,8 @@ export const MapBigInt = {
 
   toJSON(message: MapBigInt): unknown {
     const obj: any = {};
-    obj.map = {};
-    if (message.map) {
+    if (message.map?.size) {
+      obj.map = {};
       message.map.forEach((v, k) => {
         obj.map[k] = v;
       });
@@ -107,16 +106,15 @@ export const MapBigInt = {
   },
 
   create<I extends Exact<DeepPartial<MapBigInt>, I>>(base?: I): MapBigInt {
-    return MapBigInt.fromPartial(base ?? {});
+    return MapBigInt.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<MapBigInt>, I>>(object: I): MapBigInt {
     const message = createBaseMapBigInt();
     message.map = (object.map === undefined || object.map === null) ? undefined : (() => {
       const m = new Map();
       (object.map as Map<string, string> ?? new Map()).forEach((value, key) => {
         if (value !== undefined) {
-          m.set(key, String(value));
+          m.set(key, globalThis.String(value));
         }
       });
       return m;
@@ -138,8 +136,7 @@ export const MapBigInt_MapEntry = {
       writer.uint32(16).int64(message.value);
     }
     if (message._unknownFields !== undefined) {
-      for (const key in message._unknownFields) {
-        const values = message._unknownFields[key];
+      for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag);
@@ -200,22 +197,25 @@ export const MapBigInt_MapEntry = {
 
   fromJSON(object: any): MapBigInt_MapEntry {
     return {
-      key: isSet(object.key) ? String(object.key) : "0",
-      value: isSet(object.value) ? String(object.value) : "0",
+      key: isSet(object.key) ? globalThis.String(object.key) : "0",
+      value: isSet(object.value) ? globalThis.String(object.value) : "0",
     };
   },
 
   toJSON(message: MapBigInt_MapEntry): unknown {
     const obj: any = {};
-    message.key !== undefined && (obj.key = message.key);
-    message.value !== undefined && (obj.value = message.value);
+    if (message.key !== "0") {
+      obj.key = message.key;
+    }
+    if (message.value !== "0") {
+      obj.value = message.value;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<MapBigInt_MapEntry>, I>>(base?: I): MapBigInt_MapEntry {
-    return MapBigInt_MapEntry.fromPartial(base ?? {});
+    return MapBigInt_MapEntry.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<MapBigInt_MapEntry>, I>>(object: I): MapBigInt_MapEntry {
     const message = createBaseMapBigInt_MapEntry();
     message.key = object.key ?? "0";
@@ -227,7 +227,8 @@ export const MapBigInt_MapEntry = {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
@@ -239,8 +240,6 @@ function longToString(long: Long) {
   return long.toString();
 }
 
-// If you get a compile-error about 'Constructor<Long> and ... have no overlap',
-// add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
 if (_m0.util.Long !== Long) {
   _m0.util.Long = Long as any;
   _m0.configure();

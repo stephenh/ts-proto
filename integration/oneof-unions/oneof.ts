@@ -12,12 +12,13 @@ export interface PleaseChoose {
     | { $case: "aMessage"; aMessage: PleaseChoose_Submessage }
     | { $case: "aBool"; aBool: boolean }
     | { $case: "bunchaBytes"; bunchaBytes: Uint8Array }
-    | { $case: "anEnum"; anEnum: PleaseChoose_StateEnum };
+    | { $case: "anEnum"; anEnum: PleaseChoose_StateEnum }
+    | undefined;
   age: number;
   eitherOr?: { $case: "either"; either: string } | { $case: "or"; or: string } | {
     $case: "thirdOption";
     thirdOption: string;
-  };
+  } | undefined;
   signature: Uint8Array;
   value: any | undefined;
 }
@@ -72,7 +73,7 @@ export interface SimpleButOptional {
 }
 
 function createBasePleaseChoose(): PleaseChoose {
-  return { name: "", choice: undefined, age: 0, eitherOr: undefined, signature: new Uint8Array(), value: undefined };
+  return { name: "", choice: undefined, age: 0, eitherOr: undefined, signature: new Uint8Array(0), value: undefined };
 }
 
 export const PleaseChoose = {
@@ -232,61 +233,80 @@ export const PleaseChoose = {
 
   fromJSON(object: any): PleaseChoose {
     return {
-      name: isSet(object.name) ? String(object.name) : "",
+      name: isSet(object.name) ? globalThis.String(object.name) : "",
       choice: isSet(object.aNumber)
-        ? { $case: "aNumber", aNumber: Number(object.aNumber) }
+        ? { $case: "aNumber", aNumber: globalThis.Number(object.aNumber) }
         : isSet(object.aString)
-        ? { $case: "aString", aString: String(object.aString) }
+        ? { $case: "aString", aString: globalThis.String(object.aString) }
         : isSet(object.aMessage)
         ? { $case: "aMessage", aMessage: PleaseChoose_Submessage.fromJSON(object.aMessage) }
         : isSet(object.aBool)
-        ? { $case: "aBool", aBool: Boolean(object.aBool) }
+        ? { $case: "aBool", aBool: globalThis.Boolean(object.aBool) }
         : isSet(object.bunchaBytes)
         ? { $case: "bunchaBytes", bunchaBytes: bytesFromBase64(object.bunchaBytes) }
         : isSet(object.anEnum)
         ? { $case: "anEnum", anEnum: pleaseChoose_StateEnumFromJSON(object.anEnum) }
         : undefined,
-      age: isSet(object.age) ? Number(object.age) : 0,
+      age: isSet(object.age) ? globalThis.Number(object.age) : 0,
       eitherOr: isSet(object.either)
-        ? { $case: "either", either: String(object.either) }
+        ? { $case: "either", either: globalThis.String(object.either) }
         : isSet(object.or)
-        ? { $case: "or", or: String(object.or) }
+        ? { $case: "or", or: globalThis.String(object.or) }
         : isSet(object.thirdOption)
-        ? { $case: "thirdOption", thirdOption: String(object.thirdOption) }
+        ? { $case: "thirdOption", thirdOption: globalThis.String(object.thirdOption) }
         : undefined,
-      signature: isSet(object.signature) ? bytesFromBase64(object.signature) : new Uint8Array(),
+      signature: isSet(object.signature) ? bytesFromBase64(object.signature) : new Uint8Array(0),
       value: isSet(object?.value) ? object.value : undefined,
     };
   },
 
   toJSON(message: PleaseChoose): unknown {
     const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
-    message.choice?.$case === "aNumber" && (obj.aNumber = message.choice?.aNumber);
-    message.choice?.$case === "aString" && (obj.aString = message.choice?.aString);
-    message.choice?.$case === "aMessage" &&
-      (obj.aMessage = message.choice?.aMessage ? PleaseChoose_Submessage.toJSON(message.choice?.aMessage) : undefined);
-    message.choice?.$case === "aBool" && (obj.aBool = message.choice?.aBool);
-    message.choice?.$case === "bunchaBytes" && (obj.bunchaBytes = message.choice?.bunchaBytes !== undefined
-      ? base64FromBytes(message.choice?.bunchaBytes)
-      : undefined);
-    message.choice?.$case === "anEnum" && (obj.anEnum = message.choice?.anEnum !== undefined
-      ? pleaseChoose_StateEnumToJSON(message.choice?.anEnum)
-      : undefined);
-    message.age !== undefined && (obj.age = Math.round(message.age));
-    message.eitherOr?.$case === "either" && (obj.either = message.eitherOr?.either);
-    message.eitherOr?.$case === "or" && (obj.or = message.eitherOr?.or);
-    message.eitherOr?.$case === "thirdOption" && (obj.thirdOption = message.eitherOr?.thirdOption);
-    message.signature !== undefined &&
-      (obj.signature = base64FromBytes(message.signature !== undefined ? message.signature : new Uint8Array()));
-    message.value !== undefined && (obj.value = message.value);
+    if (message.name !== "") {
+      obj.name = message.name;
+    }
+    if (message.choice?.$case === "aNumber") {
+      obj.aNumber = message.choice.aNumber;
+    }
+    if (message.choice?.$case === "aString") {
+      obj.aString = message.choice.aString;
+    }
+    if (message.choice?.$case === "aMessage") {
+      obj.aMessage = PleaseChoose_Submessage.toJSON(message.choice.aMessage);
+    }
+    if (message.choice?.$case === "aBool") {
+      obj.aBool = message.choice.aBool;
+    }
+    if (message.choice?.$case === "bunchaBytes") {
+      obj.bunchaBytes = base64FromBytes(message.choice.bunchaBytes);
+    }
+    if (message.choice?.$case === "anEnum") {
+      obj.anEnum = pleaseChoose_StateEnumToJSON(message.choice.anEnum);
+    }
+    if (message.age !== 0) {
+      obj.age = Math.round(message.age);
+    }
+    if (message.eitherOr?.$case === "either") {
+      obj.either = message.eitherOr.either;
+    }
+    if (message.eitherOr?.$case === "or") {
+      obj.or = message.eitherOr.or;
+    }
+    if (message.eitherOr?.$case === "thirdOption") {
+      obj.thirdOption = message.eitherOr.thirdOption;
+    }
+    if (message.signature.length !== 0) {
+      obj.signature = base64FromBytes(message.signature);
+    }
+    if (message.value !== undefined) {
+      obj.value = message.value;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<PleaseChoose>, I>>(base?: I): PleaseChoose {
-    return PleaseChoose.fromPartial(base ?? {});
+    return PleaseChoose.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<PleaseChoose>, I>>(object: I): PleaseChoose {
     const message = createBasePleaseChoose();
     message.name = object.name ?? "";
@@ -330,7 +350,7 @@ export const PleaseChoose = {
     ) {
       message.eitherOr = { $case: "thirdOption", thirdOption: object.eitherOr.thirdOption };
     }
-    message.signature = object.signature ?? new Uint8Array();
+    message.signature = object.signature ?? new Uint8Array(0);
     message.value = object.value ?? undefined;
     return message;
   },
@@ -372,19 +392,20 @@ export const PleaseChoose_Submessage = {
   },
 
   fromJSON(object: any): PleaseChoose_Submessage {
-    return { name: isSet(object.name) ? String(object.name) : "" };
+    return { name: isSet(object.name) ? globalThis.String(object.name) : "" };
   },
 
   toJSON(message: PleaseChoose_Submessage): unknown {
     const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
+    if (message.name !== "") {
+      obj.name = message.name;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<PleaseChoose_Submessage>, I>>(base?: I): PleaseChoose_Submessage {
-    return PleaseChoose_Submessage.fromPartial(base ?? {});
+    return PleaseChoose_Submessage.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<PleaseChoose_Submessage>, I>>(object: I): PleaseChoose_Submessage {
     const message = createBasePleaseChoose_Submessage();
     message.name = object.name ?? "";
@@ -439,22 +460,25 @@ export const SimpleButOptional = {
 
   fromJSON(object: any): SimpleButOptional {
     return {
-      name: isSet(object.name) ? String(object.name) : undefined,
-      age: isSet(object.age) ? Number(object.age) : undefined,
+      name: isSet(object.name) ? globalThis.String(object.name) : undefined,
+      age: isSet(object.age) ? globalThis.Number(object.age) : undefined,
     };
   },
 
   toJSON(message: SimpleButOptional): unknown {
     const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
-    message.age !== undefined && (obj.age = Math.round(message.age));
+    if (message.name !== undefined) {
+      obj.name = message.name;
+    }
+    if (message.age !== undefined) {
+      obj.age = Math.round(message.age);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<SimpleButOptional>, I>>(base?: I): SimpleButOptional {
-    return SimpleButOptional.fromPartial(base ?? {});
+    return SimpleButOptional.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<SimpleButOptional>, I>>(object: I): SimpleButOptional {
     const message = createBaseSimpleButOptional();
     message.name = object.name ?? undefined;
@@ -463,30 +487,11 @@ export const SimpleButOptional = {
   },
 };
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
-  if (typeof globalThis !== "undefined") {
-    return globalThis;
-  }
-  if (typeof self !== "undefined") {
-    return self;
-  }
-  if (typeof window !== "undefined") {
-    return window;
-  }
-  if (typeof global !== "undefined") {
-    return global;
-  }
-  throw "Unable to locate global object";
-})();
-
 function bytesFromBase64(b64: string): Uint8Array {
-  if (tsProtoGlobalThis.Buffer) {
-    return Uint8Array.from(tsProtoGlobalThis.Buffer.from(b64, "base64"));
+  if (globalThis.Buffer) {
+    return Uint8Array.from(globalThis.Buffer.from(b64, "base64"));
   } else {
-    const bin = tsProtoGlobalThis.atob(b64);
+    const bin = globalThis.atob(b64);
     const arr = new Uint8Array(bin.length);
     for (let i = 0; i < bin.length; ++i) {
       arr[i] = bin.charCodeAt(i);
@@ -496,21 +501,22 @@ function bytesFromBase64(b64: string): Uint8Array {
 }
 
 function base64FromBytes(arr: Uint8Array): string {
-  if (tsProtoGlobalThis.Buffer) {
-    return tsProtoGlobalThis.Buffer.from(arr).toString("base64");
+  if (globalThis.Buffer) {
+    return globalThis.Buffer.from(arr).toString("base64");
   } else {
     const bin: string[] = [];
     arr.forEach((byte) => {
-      bin.push(String.fromCharCode(byte));
+      bin.push(globalThis.String.fromCharCode(byte));
     });
-    return tsProtoGlobalThis.btoa(bin.join(""));
+    return globalThis.btoa(bin.join(""));
   }
 }
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends { $case: string } ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & { $case: T["$case"] }
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;

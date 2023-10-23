@@ -41,9 +41,8 @@ export const Record = {
   },
 
   create<I extends Exact<DeepPartial<Record>, I>>(base?: I): Record {
-    return Record.fromPartial(base ?? {});
+    return Record.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Record>, I>>(_: I): Record {
     const message = createBaseRecord();
     return message;
@@ -53,7 +52,8 @@ export const Record = {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 

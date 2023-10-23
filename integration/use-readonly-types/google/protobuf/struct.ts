@@ -72,7 +72,8 @@ export interface Value {
     | { readonly $case: "stringValue"; readonly stringValue: string }
     | { readonly $case: "boolValue"; readonly boolValue: boolean }
     | { readonly $case: "structValue"; readonly structValue: { readonly [key: string]: any } | undefined }
-    | { readonly $case: "listValue"; readonly listValue: ReadonlyArray<any> | undefined };
+    | { readonly $case: "listValue"; readonly listValue: ReadonlyArray<any> | undefined }
+    | undefined;
 }
 
 /**
@@ -138,19 +139,21 @@ export const Struct = {
 
   toJSON(message: Struct): unknown {
     const obj: any = {};
-    obj.fields = {};
     if (message.fields) {
-      Object.entries(message.fields).forEach(([k, v]) => {
-        obj.fields[k] = v;
-      });
+      const entries = Object.entries(message.fields);
+      if (entries.length > 0) {
+        obj.fields = {};
+        entries.forEach(([k, v]) => {
+          obj.fields[k] = v;
+        });
+      }
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Struct>, I>>(base?: I): Struct {
-    return Struct.fromPartial(base ?? {});
+    return Struct.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Struct>, I>>(object: I): Struct {
     const message = createBaseStruct() as any;
     message.fields = Object.entries(object.fields ?? {}).reduce<{ [key: string]: any | undefined }>(
@@ -232,20 +235,26 @@ export const Struct_FieldsEntry = {
   },
 
   fromJSON(object: any): Struct_FieldsEntry {
-    return { key: isSet(object.key) ? String(object.key) : "", value: isSet(object?.value) ? object.value : undefined };
+    return {
+      key: isSet(object.key) ? globalThis.String(object.key) : "",
+      value: isSet(object?.value) ? object.value : undefined,
+    };
   },
 
   toJSON(message: Struct_FieldsEntry): unknown {
     const obj: any = {};
-    message.key !== undefined && (obj.key = message.key);
-    message.value !== undefined && (obj.value = message.value);
+    if (message.key !== "") {
+      obj.key = message.key;
+    }
+    if (message.value !== undefined) {
+      obj.value = message.value;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Struct_FieldsEntry>, I>>(base?: I): Struct_FieldsEntry {
-    return Struct_FieldsEntry.fromPartial(base ?? {});
+    return Struct_FieldsEntry.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Struct_FieldsEntry>, I>>(object: I): Struct_FieldsEntry {
     const message = createBaseStruct_FieldsEntry() as any;
     message.key = object.key ?? "";
@@ -346,11 +355,11 @@ export const Value = {
       kind: isSet(object.nullValue)
         ? { $case: "nullValue", nullValue: nullValueFromJSON(object.nullValue) }
         : isSet(object.numberValue)
-        ? { $case: "numberValue", numberValue: Number(object.numberValue) }
+        ? { $case: "numberValue", numberValue: globalThis.Number(object.numberValue) }
         : isSet(object.stringValue)
-        ? { $case: "stringValue", stringValue: String(object.stringValue) }
+        ? { $case: "stringValue", stringValue: globalThis.String(object.stringValue) }
         : isSet(object.boolValue)
-        ? { $case: "boolValue", boolValue: Boolean(object.boolValue) }
+        ? { $case: "boolValue", boolValue: globalThis.Boolean(object.boolValue) }
         : isSet(object.structValue)
         ? { $case: "structValue", structValue: object.structValue }
         : isSet(object.listValue)
@@ -361,20 +370,30 @@ export const Value = {
 
   toJSON(message: Value): unknown {
     const obj: any = {};
-    message.kind?.$case === "nullValue" &&
-      (obj.nullValue = message.kind?.nullValue !== undefined ? nullValueToJSON(message.kind?.nullValue) : undefined);
-    message.kind?.$case === "numberValue" && (obj.numberValue = message.kind?.numberValue);
-    message.kind?.$case === "stringValue" && (obj.stringValue = message.kind?.stringValue);
-    message.kind?.$case === "boolValue" && (obj.boolValue = message.kind?.boolValue);
-    message.kind?.$case === "structValue" && (obj.structValue = message.kind?.structValue);
-    message.kind?.$case === "listValue" && (obj.listValue = message.kind?.listValue);
+    if (message.kind?.$case === "nullValue") {
+      obj.nullValue = nullValueToJSON(message.kind.nullValue);
+    }
+    if (message.kind?.$case === "numberValue") {
+      obj.numberValue = message.kind.numberValue;
+    }
+    if (message.kind?.$case === "stringValue") {
+      obj.stringValue = message.kind.stringValue;
+    }
+    if (message.kind?.$case === "boolValue") {
+      obj.boolValue = message.kind.boolValue;
+    }
+    if (message.kind?.$case === "structValue") {
+      obj.structValue = message.kind.structValue;
+    }
+    if (message.kind?.$case === "listValue") {
+      obj.listValue = message.kind.listValue;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Value>, I>>(base?: I): Value {
-    return Value.fromPartial(base ?? {});
+    return Value.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Value>, I>>(object: I): Value {
     const message = createBaseValue() as any;
     if (object.kind?.$case === "nullValue" && object.kind?.nullValue !== undefined && object.kind?.nullValue !== null) {
@@ -420,7 +439,7 @@ export const Value = {
       result.kind = { $case: "numberValue", numberValue: value };
     } else if (typeof value === "string") {
       result.kind = { $case: "stringValue", stringValue: value };
-    } else if (Array.isArray(value)) {
+    } else if (globalThis.Array.isArray(value)) {
       result.kind = { $case: "listValue", listValue: value };
     } else if (typeof value === "object") {
       result.kind = { $case: "structValue", structValue: value };
@@ -485,23 +504,20 @@ export const ListValue = {
   },
 
   fromJSON(object: any): ListValue {
-    return { values: Array.isArray(object?.values) ? [...object.values] : [] };
+    return { values: globalThis.Array.isArray(object?.values) ? [...object.values] : [] };
   },
 
   toJSON(message: ListValue): unknown {
     const obj: any = {};
-    if (message.values) {
-      obj.values = message.values.map((e) => e);
-    } else {
-      obj.values = [];
+    if (message.values?.length) {
+      obj.values = message.values;
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ListValue>, I>>(base?: I): ListValue {
-    return ListValue.fromPartial(base ?? {});
+    return ListValue.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ListValue>, I>>(object: I): ListValue {
     const message = createBaseListValue() as any;
     message.values = object.values?.map((e) => e) || [];
@@ -515,7 +531,7 @@ export const ListValue = {
   },
 
   unwrap(message: any): Array<any> {
-    if (message?.hasOwnProperty("values") && Array.isArray(message.values)) {
+    if (message?.hasOwnProperty("values") && globalThis.Array.isArray(message.values)) {
       return message.values;
     } else {
       return message as any;
@@ -526,7 +542,8 @@ export const ListValue = {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends { readonly $case: string }
     ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & { readonly $case: T["$case"] }
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }

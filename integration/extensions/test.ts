@@ -1,5 +1,5 @@
 /* eslint-disable */
-import * as Long from "long";
+import Long = require("long");
 import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "";
@@ -44,19 +44,19 @@ export function enumToJSON(object: Enum): string {
 }
 
 export interface Extendable {
-  field?: string;
-  _unknownFields?: { [key: number]: Uint8Array[] };
+  field?: string | undefined;
+  _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
 export interface Nested {
-  field?: string;
-  _unknownFields?: { [key: number]: Uint8Array[] };
+  field?: string | undefined;
+  _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
 export interface Group {
-  name?: string;
-  value?: string;
-  _unknownFields?: { [key: number]: Uint8Array[] };
+  name?: string | undefined;
+  value?: string | undefined;
+  _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
 function createBaseExtendable(): Extendable {
@@ -69,8 +69,7 @@ export const Extendable = {
       writer.uint32(10).string(message.field);
     }
     if (message._unknownFields !== undefined) {
-      for (const key in message._unknownFields) {
-        const values = message._unknownFields[key];
+      for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag);
@@ -175,19 +174,20 @@ export const Extendable = {
   },
 
   fromJSON(object: any): Extendable {
-    return { field: isSet(object.field) ? String(object.field) : undefined };
+    return { field: isSet(object.field) ? globalThis.String(object.field) : undefined };
   },
 
   toJSON(message: Extendable): unknown {
     const obj: any = {};
-    message.field !== undefined && (obj.field = message.field);
+    if (message.field !== undefined && message.field !== "") {
+      obj.field = message.field;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Extendable>, I>>(base?: I): Extendable {
-    return Extendable.fromPartial(base ?? {});
+    return Extendable.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Extendable>, I>>(object: I): Extendable {
     const message = createBaseExtendable();
     message.field = object.field ?? undefined;
@@ -216,7 +216,7 @@ export const Nested = {
     },
     decode: (tag: number, input: Uint8Array[]): Nested[] => {
       const values: Nested[] = [];
-      for (var buffer of input) {
+      for (const buffer of input) {
         const reader = _m0.Reader.create(buffer);
         values.push(Nested.decode(reader, reader.uint32()));
       }
@@ -230,8 +230,7 @@ export const Nested = {
       writer.uint32(10).string(message.field);
     }
     if (message._unknownFields !== undefined) {
-      for (const key in message._unknownFields) {
-        const values = message._unknownFields[key];
+      for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag);
@@ -284,19 +283,20 @@ export const Nested = {
   },
 
   fromJSON(object: any): Nested {
-    return { field: isSet(object.field) ? String(object.field) : undefined };
+    return { field: isSet(object.field) ? globalThis.String(object.field) : undefined };
   },
 
   toJSON(message: Nested): unknown {
     const obj: any = {};
-    message.field !== undefined && (obj.field = message.field);
+    if (message.field !== undefined && message.field !== "") {
+      obj.field = message.field;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Nested>, I>>(base?: I): Nested {
-    return Nested.fromPartial(base ?? {});
+    return Nested.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Nested>, I>>(object: I): Nested {
     const message = createBaseNested();
     message.field = object.field ?? undefined;
@@ -317,8 +317,7 @@ export const Group = {
       writer.uint32(18).string(message.value);
     }
     if (message._unknownFields !== undefined) {
-      for (const key in message._unknownFields) {
-        const values = message._unknownFields[key];
+      for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag);
@@ -379,22 +378,25 @@ export const Group = {
 
   fromJSON(object: any): Group {
     return {
-      name: isSet(object.name) ? String(object.name) : undefined,
-      value: isSet(object.value) ? String(object.value) : undefined,
+      name: isSet(object.name) ? globalThis.String(object.name) : undefined,
+      value: isSet(object.value) ? globalThis.String(object.value) : undefined,
     };
   },
 
   toJSON(message: Group): unknown {
     const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
-    message.value !== undefined && (obj.value = message.value);
+    if (message.name !== undefined && message.name !== "") {
+      obj.name = message.name;
+    }
+    if (message.value !== undefined && message.value !== "") {
+      obj.value = message.value;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Group>, I>>(base?: I): Group {
-    return Group.fromPartial(base ?? {});
+    return Group.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Group>, I>>(object: I): Group {
     const message = createBaseGroup();
     message.name = object.name ?? undefined;
@@ -422,7 +424,7 @@ export const packed: Extension<number[]> = {
   },
   decode: (tag: number, input: Uint8Array[]): number[] => {
     const values: number[] = [];
-    for (var buffer of input) {
+    for (const buffer of input) {
       const reader = _m0.Reader.create(buffer);
       if (tag == 42) {
         const end2 = reader.uint32() + reader.pos;
@@ -457,7 +459,7 @@ export const repeated: Extension<number[]> = {
   },
   decode: (tag: number, input: Uint8Array[]): number[] => {
     const values: number[] = [];
-    for (var buffer of input) {
+    for (const buffer of input) {
       const reader = _m0.Reader.create(buffer);
       if (tag == 50) {
         const end2 = reader.uint32() + reader.pos;
@@ -488,7 +490,7 @@ export const bytes: Extension<Uint8Array> = {
     return encoded;
   },
   decode: (tag: number, input: Uint8Array[]): Uint8Array => {
-    const reader = _m0.Reader.create(input[input.length - 1]);
+    const reader = _m0.Reader.create(input[input.length - 1] ?? fail());
     return reader.bytes();
   },
 };
@@ -508,7 +510,7 @@ export const string: Extension<string> = {
     return encoded;
   },
   decode: (tag: number, input: Uint8Array[]): string => {
-    const reader = _m0.Reader.create(input[input.length - 1]);
+    const reader = _m0.Reader.create(input[input.length - 1] ?? fail());
     return reader.string();
   },
 };
@@ -528,7 +530,7 @@ export const long: Extension<Long> = {
     return encoded;
   },
   decode: (tag: number, input: Uint8Array[]): Long => {
-    const reader = _m0.Reader.create(input[input.length - 1]);
+    const reader = _m0.Reader.create(input[input.length - 1] ?? fail());
     return reader.int64() as Long;
   },
 };
@@ -548,7 +550,7 @@ export const fixed: Extension<Long> = {
     return encoded;
   },
   decode: (tag: number, input: Uint8Array[]): Long => {
-    const reader = _m0.Reader.create(input[input.length - 1]);
+    const reader = _m0.Reader.create(input[input.length - 1] ?? fail());
     return reader.fixed64() as Long;
   },
 };
@@ -568,7 +570,7 @@ export const enumField: Extension<Enum> = {
     return encoded;
   },
   decode: (tag: number, input: Uint8Array[]): Enum => {
-    const reader = _m0.Reader.create(input[input.length - 1]);
+    const reader = _m0.Reader.create(input[input.length - 1] ?? fail());
     return reader.int32() as any;
   },
 };
@@ -586,7 +588,7 @@ export const group: Extension<Group> = {
     return encoded;
   },
   decode: (tag: number, input: Uint8Array[]): Group => {
-    const reader = _m0.Reader.create(input[input.length - 1]);
+    const reader = _m0.Reader.create(input[input.length - 1] ?? fail());
     return Group.decode(reader);
   },
 };
@@ -594,7 +596,7 @@ export const group: Extension<Group> = {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Long ? string | number | Long : T extends Array<infer U> ? Array<DeepPartial<U>>
+  : T extends Long ? string | number | Long : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
@@ -603,8 +605,6 @@ type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
-// If you get a compile-error about 'Constructor<Long> and ... have no overlap',
-// add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
 if (_m0.util.Long !== Long) {
   _m0.util.Long = Long as any;
   _m0.configure();
@@ -622,4 +622,8 @@ export interface Extension<T> {
   decode?: (tag: number, input: Uint8Array[]) => T;
   repeated: boolean;
   packed: boolean;
+}
+
+function fail(message?: string): never {
+  throw new Error(message ?? "Failed");
 }

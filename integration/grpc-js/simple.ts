@@ -1,19 +1,21 @@
 /* eslint-disable */
 import {
-  CallOptions,
   ChannelCredentials,
   Client,
   ClientDuplexStream,
-  ClientOptions,
   ClientReadableStream,
-  ClientUnaryCall,
   ClientWritableStream,
   handleBidiStreamingCall,
   handleClientStreamingCall,
   handleServerStreamingCall,
-  handleUnaryCall,
   makeGenericClientConstructor,
   Metadata,
+} from "@grpc/grpc-js";
+import type {
+  CallOptions,
+  ClientOptions,
+  ClientUnaryCall,
+  handleUnaryCall,
   ServiceError,
   UntypedServiceImplementation,
 } from "@grpc/grpc-js";
@@ -80,14 +82,15 @@ export const TestMessage = {
 
   toJSON(message: TestMessage): unknown {
     const obj: any = {};
-    message.timestamp !== undefined && (obj.timestamp = message.timestamp.toISOString());
+    if (message.timestamp !== undefined) {
+      obj.timestamp = message.timestamp.toISOString();
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<TestMessage>, I>>(base?: I): TestMessage {
-    return TestMessage.fromPartial(base ?? {});
+    return TestMessage.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<TestMessage>, I>>(object: I): TestMessage {
     const message = createBaseTestMessage();
     message.timestamp = object.timestamp ?? undefined;
@@ -166,10 +169,10 @@ export const TestService = {
     requestStream: false,
     responseStream: false,
     requestSerialize: (value: Uint8Array | undefined) =>
-      Buffer.from(BytesValue.encode({ value: value ?? new Uint8Array() }).finish()),
+      Buffer.from(BytesValue.encode({ value: value ?? new Uint8Array(0) }).finish()),
     requestDeserialize: (value: Buffer) => BytesValue.decode(value).value,
     responseSerialize: (value: Uint8Array | undefined) =>
-      Buffer.from(BytesValue.encode({ value: value ?? new Uint8Array() }).finish()),
+      Buffer.from(BytesValue.encode({ value: value ?? new Uint8Array(0) }).finish()),
     responseDeserialize: (value: Buffer) => BytesValue.decode(value).value,
   },
   unaryFloatValue: {
@@ -224,10 +227,10 @@ export const TestService = {
     path: "/simple.Test/Value",
     requestStream: false,
     responseStream: false,
-    requestSerialize: (value: any | undefined) => Buffer.from(Value.encode(value).finish()),
-    requestDeserialize: (value: Buffer) => Value.decode(value),
-    responseSerialize: (value: any | undefined) => Buffer.from(Value.encode(value).finish()),
-    responseDeserialize: (value: Buffer) => Value.decode(value),
+    requestSerialize: (value: any | undefined) => Buffer.from(Value.encode(Value.wrap(value)).finish()),
+    requestDeserialize: (value: Buffer) => Value.unwrap(Value.decode(value)),
+    responseSerialize: (value: any | undefined) => Buffer.from(Value.encode(Value.wrap(value)).finish()),
+    responseDeserialize: (value: Buffer) => Value.unwrap(Value.decode(value)),
   },
   listValue: {
     path: "/simple.Test/ListValue",
@@ -633,7 +636,8 @@ export const TestClient = makeGenericClientConstructor(TestService, "simple.Test
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
@@ -648,16 +652,16 @@ function toTimestamp(date: Date): Timestamp {
 }
 
 function fromTimestamp(t: Timestamp): Date {
-  let millis = t.seconds * 1_000;
-  millis += t.nanos / 1_000_000;
-  return new Date(millis);
+  let millis = (t.seconds || 0) * 1_000;
+  millis += (t.nanos || 0) / 1_000_000;
+  return new globalThis.Date(millis);
 }
 
 function fromJsonTimestamp(o: any): Date {
-  if (o instanceof Date) {
+  if (o instanceof globalThis.Date) {
     return o;
   } else if (typeof o === "string") {
-    return new Date(o);
+    return new globalThis.Date(o);
   } else {
     return fromTimestamp(Timestamp.fromJSON(o));
   }

@@ -148,9 +148,9 @@ export const Simple = {
 
   fromJSON(object: any): Simple {
     return {
-      name: isSet(object.name) ? String(object.name) : "",
+      name: isSet(object.name) ? globalThis.String(object.name) : "",
       state: isSet(object.state) ? stateEnumFromJSON(object.state) : 0,
-      states: Array.isArray(object?.states) ? object.states.map((e: any) => stateEnumFromJSON(e)) : [],
+      states: globalThis.Array.isArray(object?.states) ? object.states.map((e: any) => stateEnumFromJSON(e)) : [],
       nullValue: isSet(object.nullValue) ? nullValueFromJSON(object.nullValue) : 0,
       stateMap: isObject(object.stateMap)
         ? Object.entries(object.stateMap).reduce<{ [key: string]: StateEnum }>((acc, [key, value]) => {
@@ -163,27 +163,33 @@ export const Simple = {
 
   toJSON(message: Simple): unknown {
     const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
-    message.state !== undefined && (obj.state = stateEnumToJSON(message.state));
-    if (message.states) {
-      obj.states = message.states.map((e) => stateEnumToJSON(e));
-    } else {
-      obj.states = [];
+    if (message.name !== "") {
+      obj.name = message.name;
     }
-    message.nullValue !== undefined && (obj.nullValue = nullValueToJSON(message.nullValue));
-    obj.stateMap = {};
+    if (message.state !== 0) {
+      obj.state = stateEnumToJSON(message.state);
+    }
+    if (message.states?.length) {
+      obj.states = message.states.map((e) => stateEnumToJSON(e));
+    }
+    if (message.nullValue !== 0) {
+      obj.nullValue = nullValueToJSON(message.nullValue);
+    }
     if (message.stateMap) {
-      Object.entries(message.stateMap).forEach(([k, v]) => {
-        obj.stateMap[k] = stateEnumToJSON(v);
-      });
+      const entries = Object.entries(message.stateMap);
+      if (entries.length > 0) {
+        obj.stateMap = {};
+        entries.forEach(([k, v]) => {
+          obj.stateMap[k] = stateEnumToJSON(v);
+        });
+      }
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Simple>, I>>(base?: I): Simple {
-    return Simple.fromPartial(base ?? {});
+    return Simple.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Simple>, I>>(object: I): Simple {
     const message = createBaseSimple();
     message.name = object.name ?? "";
@@ -250,22 +256,25 @@ export const Simple_StateMapEntry = {
 
   fromJSON(object: any): Simple_StateMapEntry {
     return {
-      key: isSet(object.key) ? String(object.key) : "",
+      key: isSet(object.key) ? globalThis.String(object.key) : "",
       value: isSet(object.value) ? stateEnumFromJSON(object.value) : 0,
     };
   },
 
   toJSON(message: Simple_StateMapEntry): unknown {
     const obj: any = {};
-    message.key !== undefined && (obj.key = message.key);
-    message.value !== undefined && (obj.value = stateEnumToJSON(message.value));
+    if (message.key !== "") {
+      obj.key = message.key;
+    }
+    if (message.value !== 0) {
+      obj.value = stateEnumToJSON(message.value);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Simple_StateMapEntry>, I>>(base?: I): Simple_StateMapEntry {
-    return Simple_StateMapEntry.fromPartial(base ?? {});
+    return Simple_StateMapEntry.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Simple_StateMapEntry>, I>>(object: I): Simple_StateMapEntry {
     const message = createBaseSimple_StateMapEntry();
     message.key = object.key ?? "";
@@ -277,7 +286,8 @@ export const Simple_StateMapEntry = {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 

@@ -91,24 +91,29 @@ export const DateMessage = {
 
   fromJSON(object: any): DateMessage {
     return {
-      year: isSet(object.year) ? Number(object.year) : 0,
-      month: isSet(object.month) ? Number(object.month) : 0,
-      day: isSet(object.day) ? Number(object.day) : 0,
+      year: isSet(object.year) ? globalThis.Number(object.year) : 0,
+      month: isSet(object.month) ? globalThis.Number(object.month) : 0,
+      day: isSet(object.day) ? globalThis.Number(object.day) : 0,
     };
   },
 
   toJSON(message: DateMessage): unknown {
     const obj: any = {};
-    message.year !== undefined && (obj.year = Math.round(message.year));
-    message.month !== undefined && (obj.month = Math.round(message.month));
-    message.day !== undefined && (obj.day = Math.round(message.day));
+    if (message.year !== 0) {
+      obj.year = Math.round(message.year);
+    }
+    if (message.month !== 0) {
+      obj.month = Math.round(message.month);
+    }
+    if (message.day !== 0) {
+      obj.day = Math.round(message.day);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<DateMessage>, I>>(base?: I): DateMessage {
-    return DateMessage.fromPartial(base ?? {});
+    return DateMessage.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DateMessage>, I>>(object: I): DateMessage {
     const message = createBaseDateMessage();
     message.year = object.year ?? 0;
@@ -121,7 +126,8 @@ export const DateMessage = {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 

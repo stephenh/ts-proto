@@ -51,14 +51,15 @@ export const Baz = {
 
   toJSON(message: Baz): unknown {
     const obj: any = {};
-    message.foo !== undefined && (obj.foo = message.foo ? FooBar.toJSON(message.foo) : undefined);
+    if (message.foo !== undefined) {
+      obj.foo = FooBar.toJSON(message.foo);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Baz>, I>>(base?: I): Baz {
-    return Baz.fromPartial(base ?? {});
+    return Baz.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Baz>, I>>(object: I): Baz {
     const message = createBaseBaz();
     message.foo = (object.foo !== undefined && object.foo !== null) ? FooBar.fromPartial(object.foo) : undefined;
@@ -101,9 +102,8 @@ export const FooBar = {
   },
 
   create<I extends Exact<DeepPartial<FooBar>, I>>(base?: I): FooBar {
-    return FooBar.fromPartial(base ?? {});
+    return FooBar.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<FooBar>, I>>(_: I): FooBar {
     const message = createBaseFooBar();
     return message;
@@ -113,7 +113,8 @@ export const FooBar = {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 

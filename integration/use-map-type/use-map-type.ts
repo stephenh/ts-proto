@@ -1,8 +1,8 @@
 /* eslint-disable */
-import * as Long from "long";
 import * as _m0 from "protobufjs/minimal";
 import { Struct } from "./google/protobuf/struct";
 import { Timestamp } from "./google/protobuf/timestamp";
+import Long = require("long");
 
 export const protobufPackage = "simple";
 
@@ -80,19 +80,20 @@ export const Entity = {
   },
 
   fromJSON(object: any): Entity {
-    return { id: isSet(object.id) ? Number(object.id) : 0 };
+    return { id: isSet(object.id) ? globalThis.Number(object.id) : 0 };
   },
 
   toJSON(message: Entity): unknown {
     const obj: any = {};
-    message.id !== undefined && (obj.id = Math.round(message.id));
+    if (message.id !== 0) {
+      obj.id = Math.round(message.id);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Entity>, I>>(base?: I): Entity {
-    return Entity.fromPartial(base ?? {});
+    return Entity.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Entity>, I>>(object: I): Entity {
     const message = createBaseEntity();
     message.id = object.id ?? 0;
@@ -217,7 +218,7 @@ export const Maps = {
         : new Map(),
       int32ToInt32: isObject(object.int32ToInt32)
         ? Object.entries(object.int32ToInt32).reduce<Map<number, number>>((acc, [key, value]) => {
-          acc.set(Number(key), Number(value));
+          acc.set(globalThis.Number(key), Number(value));
           return acc;
         }, new Map())
         : new Map(),
@@ -229,7 +230,7 @@ export const Maps = {
         : new Map(),
       int64ToInt64: isObject(object.int64ToInt64)
         ? Object.entries(object.int64ToInt64).reduce<Map<number, number>>((acc, [key, value]) => {
-          acc.set(Number(key), Number(value));
+          acc.set(globalThis.Number(key), Number(value));
           return acc;
         }, new Map())
         : new Map(),
@@ -245,44 +246,45 @@ export const Maps = {
 
   toJSON(message: Maps): unknown {
     const obj: any = {};
-    obj.strToEntity = {};
-    if (message.strToEntity) {
+    if (message.strToEntity?.size) {
+      obj.strToEntity = {};
       message.strToEntity.forEach((v, k) => {
         obj.strToEntity[k] = Entity.toJSON(v);
       });
     }
-    obj.int32ToInt32 = {};
-    if (message.int32ToInt32) {
+    if (message.int32ToInt32?.size) {
+      obj.int32ToInt32 = {};
       message.int32ToInt32.forEach((v, k) => {
         obj.int32ToInt32[k] = Math.round(v);
       });
     }
-    obj.stringToBytes = {};
-    if (message.stringToBytes) {
+    if (message.stringToBytes?.size) {
+      obj.stringToBytes = {};
       message.stringToBytes.forEach((v, k) => {
         obj.stringToBytes[k] = base64FromBytes(v);
       });
     }
-    obj.int64ToInt64 = {};
-    if (message.int64ToInt64) {
+    if (message.int64ToInt64?.size) {
+      obj.int64ToInt64 = {};
       message.int64ToInt64.forEach((v, k) => {
         obj.int64ToInt64[k] = Math.round(v);
       });
     }
-    obj.mapOfTimestamps = {};
-    if (message.mapOfTimestamps) {
+    if (message.mapOfTimestamps?.size) {
+      obj.mapOfTimestamps = {};
       message.mapOfTimestamps.forEach((v, k) => {
         obj.mapOfTimestamps[k] = v.toISOString();
       });
     }
-    message.struct !== undefined && (obj.struct = message.struct);
+    if (message.struct !== undefined) {
+      obj.struct = message.struct;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Maps>, I>>(base?: I): Maps {
-    return Maps.fromPartial(base ?? {});
+    return Maps.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Maps>, I>>(object: I): Maps {
     const message = createBaseMaps();
     message.strToEntity = (() => {
@@ -298,7 +300,7 @@ export const Maps = {
       const m = new Map();
       (object.int32ToInt32 as Map<number, number> ?? new Map()).forEach((value, key) => {
         if (value !== undefined) {
-          m.set(key, Number(value));
+          m.set(key, globalThis.Number(value));
         }
       });
       return m;
@@ -316,7 +318,7 @@ export const Maps = {
       const m = new Map();
       (object.int64ToInt64 as Map<number, number> ?? new Map()).forEach((value, key) => {
         if (value !== undefined) {
-          m.set(key, Number(value));
+          m.set(key, globalThis.Number(value));
         }
       });
       return m;
@@ -382,22 +384,25 @@ export const Maps_StrToEntityEntry = {
 
   fromJSON(object: any): Maps_StrToEntityEntry {
     return {
-      key: isSet(object.key) ? String(object.key) : "",
+      key: isSet(object.key) ? globalThis.String(object.key) : "",
       value: isSet(object.value) ? Entity.fromJSON(object.value) : undefined,
     };
   },
 
   toJSON(message: Maps_StrToEntityEntry): unknown {
     const obj: any = {};
-    message.key !== undefined && (obj.key = message.key);
-    message.value !== undefined && (obj.value = message.value ? Entity.toJSON(message.value) : undefined);
+    if (message.key !== "") {
+      obj.key = message.key;
+    }
+    if (message.value !== undefined) {
+      obj.value = Entity.toJSON(message.value);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Maps_StrToEntityEntry>, I>>(base?: I): Maps_StrToEntityEntry {
-    return Maps_StrToEntityEntry.fromPartial(base ?? {});
+    return Maps_StrToEntityEntry.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Maps_StrToEntityEntry>, I>>(object: I): Maps_StrToEntityEntry {
     const message = createBaseMaps_StrToEntityEntry();
     message.key = object.key ?? "";
@@ -454,20 +459,26 @@ export const Maps_Int32ToInt32Entry = {
   },
 
   fromJSON(object: any): Maps_Int32ToInt32Entry {
-    return { key: isSet(object.key) ? Number(object.key) : 0, value: isSet(object.value) ? Number(object.value) : 0 };
+    return {
+      key: isSet(object.key) ? globalThis.Number(object.key) : 0,
+      value: isSet(object.value) ? globalThis.Number(object.value) : 0,
+    };
   },
 
   toJSON(message: Maps_Int32ToInt32Entry): unknown {
     const obj: any = {};
-    message.key !== undefined && (obj.key = Math.round(message.key));
-    message.value !== undefined && (obj.value = Math.round(message.value));
+    if (message.key !== 0) {
+      obj.key = Math.round(message.key);
+    }
+    if (message.value !== 0) {
+      obj.value = Math.round(message.value);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Maps_Int32ToInt32Entry>, I>>(base?: I): Maps_Int32ToInt32Entry {
-    return Maps_Int32ToInt32Entry.fromPartial(base ?? {});
+    return Maps_Int32ToInt32Entry.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Maps_Int32ToInt32Entry>, I>>(object: I): Maps_Int32ToInt32Entry {
     const message = createBaseMaps_Int32ToInt32Entry();
     message.key = object.key ?? 0;
@@ -477,7 +488,7 @@ export const Maps_Int32ToInt32Entry = {
 };
 
 function createBaseMaps_StringToBytesEntry(): Maps_StringToBytesEntry {
-  return { key: "", value: new Uint8Array() };
+  return { key: "", value: new Uint8Array(0) };
 }
 
 export const Maps_StringToBytesEntry = {
@@ -523,27 +534,29 @@ export const Maps_StringToBytesEntry = {
 
   fromJSON(object: any): Maps_StringToBytesEntry {
     return {
-      key: isSet(object.key) ? String(object.key) : "",
-      value: isSet(object.value) ? bytesFromBase64(object.value) : new Uint8Array(),
+      key: isSet(object.key) ? globalThis.String(object.key) : "",
+      value: isSet(object.value) ? bytesFromBase64(object.value) : new Uint8Array(0),
     };
   },
 
   toJSON(message: Maps_StringToBytesEntry): unknown {
     const obj: any = {};
-    message.key !== undefined && (obj.key = message.key);
-    message.value !== undefined &&
-      (obj.value = base64FromBytes(message.value !== undefined ? message.value : new Uint8Array()));
+    if (message.key !== "") {
+      obj.key = message.key;
+    }
+    if (message.value.length !== 0) {
+      obj.value = base64FromBytes(message.value);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Maps_StringToBytesEntry>, I>>(base?: I): Maps_StringToBytesEntry {
-    return Maps_StringToBytesEntry.fromPartial(base ?? {});
+    return Maps_StringToBytesEntry.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Maps_StringToBytesEntry>, I>>(object: I): Maps_StringToBytesEntry {
     const message = createBaseMaps_StringToBytesEntry();
     message.key = object.key ?? "";
-    message.value = object.value ?? new Uint8Array();
+    message.value = object.value ?? new Uint8Array(0);
     return message;
   },
 };
@@ -594,20 +607,26 @@ export const Maps_Int64ToInt64Entry = {
   },
 
   fromJSON(object: any): Maps_Int64ToInt64Entry {
-    return { key: isSet(object.key) ? Number(object.key) : 0, value: isSet(object.value) ? Number(object.value) : 0 };
+    return {
+      key: isSet(object.key) ? globalThis.Number(object.key) : 0,
+      value: isSet(object.value) ? globalThis.Number(object.value) : 0,
+    };
   },
 
   toJSON(message: Maps_Int64ToInt64Entry): unknown {
     const obj: any = {};
-    message.key !== undefined && (obj.key = Math.round(message.key));
-    message.value !== undefined && (obj.value = Math.round(message.value));
+    if (message.key !== 0) {
+      obj.key = Math.round(message.key);
+    }
+    if (message.value !== 0) {
+      obj.value = Math.round(message.value);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Maps_Int64ToInt64Entry>, I>>(base?: I): Maps_Int64ToInt64Entry {
-    return Maps_Int64ToInt64Entry.fromPartial(base ?? {});
+    return Maps_Int64ToInt64Entry.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Maps_Int64ToInt64Entry>, I>>(object: I): Maps_Int64ToInt64Entry {
     const message = createBaseMaps_Int64ToInt64Entry();
     message.key = object.key ?? 0;
@@ -663,22 +682,25 @@ export const Maps_MapOfTimestampsEntry = {
 
   fromJSON(object: any): Maps_MapOfTimestampsEntry {
     return {
-      key: isSet(object.key) ? String(object.key) : "",
+      key: isSet(object.key) ? globalThis.String(object.key) : "",
       value: isSet(object.value) ? fromJsonTimestamp(object.value) : undefined,
     };
   },
 
   toJSON(message: Maps_MapOfTimestampsEntry): unknown {
     const obj: any = {};
-    message.key !== undefined && (obj.key = message.key);
-    message.value !== undefined && (obj.value = message.value.toISOString());
+    if (message.key !== "") {
+      obj.key = message.key;
+    }
+    if (message.value !== undefined) {
+      obj.value = message.value.toISOString();
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Maps_MapOfTimestampsEntry>, I>>(base?: I): Maps_MapOfTimestampsEntry {
-    return Maps_MapOfTimestampsEntry.fromPartial(base ?? {});
+    return Maps_MapOfTimestampsEntry.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Maps_MapOfTimestampsEntry>, I>>(object: I): Maps_MapOfTimestampsEntry {
     const message = createBaseMaps_MapOfTimestampsEntry();
     message.key = object.key ?? "";
@@ -687,30 +709,11 @@ export const Maps_MapOfTimestampsEntry = {
   },
 };
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
-  if (typeof globalThis !== "undefined") {
-    return globalThis;
-  }
-  if (typeof self !== "undefined") {
-    return self;
-  }
-  if (typeof window !== "undefined") {
-    return window;
-  }
-  if (typeof global !== "undefined") {
-    return global;
-  }
-  throw "Unable to locate global object";
-})();
-
 function bytesFromBase64(b64: string): Uint8Array {
-  if (tsProtoGlobalThis.Buffer) {
-    return Uint8Array.from(tsProtoGlobalThis.Buffer.from(b64, "base64"));
+  if (globalThis.Buffer) {
+    return Uint8Array.from(globalThis.Buffer.from(b64, "base64"));
   } else {
-    const bin = tsProtoGlobalThis.atob(b64);
+    const bin = globalThis.atob(b64);
     const arr = new Uint8Array(bin.length);
     for (let i = 0; i < bin.length; ++i) {
       arr[i] = bin.charCodeAt(i);
@@ -720,21 +723,22 @@ function bytesFromBase64(b64: string): Uint8Array {
 }
 
 function base64FromBytes(arr: Uint8Array): string {
-  if (tsProtoGlobalThis.Buffer) {
-    return tsProtoGlobalThis.Buffer.from(arr).toString("base64");
+  if (globalThis.Buffer) {
+    return globalThis.Buffer.from(arr).toString("base64");
   } else {
     const bin: string[] = [];
     arr.forEach((byte) => {
-      bin.push(String.fromCharCode(byte));
+      bin.push(globalThis.String.fromCharCode(byte));
     });
-    return tsProtoGlobalThis.btoa(bin.join(""));
+    return globalThis.btoa(bin.join(""));
   }
 }
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
@@ -749,30 +753,28 @@ function toTimestamp(date: Date): Timestamp {
 }
 
 function fromTimestamp(t: Timestamp): Date {
-  let millis = t.seconds * 1_000;
-  millis += t.nanos / 1_000_000;
-  return new Date(millis);
+  let millis = (t.seconds || 0) * 1_000;
+  millis += (t.nanos || 0) / 1_000_000;
+  return new globalThis.Date(millis);
 }
 
 function fromJsonTimestamp(o: any): Date {
-  if (o instanceof Date) {
+  if (o instanceof globalThis.Date) {
     return o;
   } else if (typeof o === "string") {
-    return new Date(o);
+    return new globalThis.Date(o);
   } else {
     return fromTimestamp(Timestamp.fromJSON(o));
   }
 }
 
 function longToNumber(long: Long): number {
-  if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new tsProtoGlobalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+  if (long.gt(globalThis.Number.MAX_SAFE_INTEGER)) {
+    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
   return long.toNumber();
 }
 
-// If you get a compile-error about 'Constructor<Long> and ... have no overlap',
-// add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
 if (_m0.util.Long !== Long) {
   _m0.util.Long = Long as any;
   _m0.configure();

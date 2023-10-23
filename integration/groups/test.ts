@@ -4,51 +4,51 @@ import * as _m0 from "protobufjs/minimal";
 export const protobufPackage = "";
 
 export interface GroupsOptionalTest {
-  int1?: number;
-  group?: GroupsOptionalTest_Group;
-  int3?: number;
-  _unknownFields?: { [key: number]: Uint8Array[] };
+  int1?: number | undefined;
+  group?: GroupsOptionalTest_Group | undefined;
+  int3?: number | undefined;
+  _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
 export interface GroupsOptionalTest_Group {
-  key?: string;
-  value?: string;
-  _unknownFields?: { [key: number]: Uint8Array[] };
+  key?: string | undefined;
+  value?: string | undefined;
+  _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
 export interface GroupsRepeatedTest {
-  int1?: number[];
-  group?: GroupsRepeatedTest_Group[];
-  int3?: number[];
-  _unknownFields?: { [key: number]: Uint8Array[] };
+  int1?: number[] | undefined;
+  group?: GroupsRepeatedTest_Group[] | undefined;
+  int3?: number[] | undefined;
+  _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
 export interface GroupsRepeatedTest_Group {
-  key?: string[];
-  value?: string[];
-  _unknownFields?: { [key: number]: Uint8Array[] };
+  key?: string[] | undefined;
+  value?: string[] | undefined;
+  _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
 export interface GroupsNestedTest {
-  int1?: number[];
-  group?: GroupsNestedTest_Group[];
-  int3?: number[];
-  _unknownFields?: { [key: number]: Uint8Array[] };
+  int1?: number[] | undefined;
+  group?: GroupsNestedTest_Group[] | undefined;
+  int3?: number[] | undefined;
+  _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
 export interface GroupsNestedTest_Group {
-  nested?: GroupsNestedTest_Group_Nested[];
-  _unknownFields?: { [key: number]: Uint8Array[] };
+  nested?: GroupsNestedTest_Group_Nested[] | undefined;
+  _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
 export interface GroupsNestedTest_Group_Nested {
-  nested2?: GroupsNestedTest_Group_Nested_Nested2[];
-  _unknownFields?: { [key: number]: Uint8Array[] };
+  nested2?: GroupsNestedTest_Group_Nested_Nested2[] | undefined;
+  _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
 export interface GroupsNestedTest_Group_Nested_Nested2 {
-  string1?: string;
-  _unknownFields?: { [key: number]: Uint8Array[] };
+  string1?: string | undefined;
+  _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
 function createBaseGroupsOptionalTest(): GroupsOptionalTest {
@@ -67,8 +67,7 @@ export const GroupsOptionalTest = {
       writer.uint32(24).int32(message.int3);
     }
     if (message._unknownFields !== undefined) {
-      for (const key in message._unknownFields) {
-        const values = message._unknownFields[key];
+      for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag);
@@ -136,25 +135,29 @@ export const GroupsOptionalTest = {
 
   fromJSON(object: any): GroupsOptionalTest {
     return {
-      int1: isSet(object.int1) ? Number(object.int1) : undefined,
+      int1: isSet(object.int1) ? globalThis.Number(object.int1) : undefined,
       group: isSet(object.group) ? GroupsOptionalTest_Group.fromJSON(object.group) : undefined,
-      int3: isSet(object.int3) ? Number(object.int3) : undefined,
+      int3: isSet(object.int3) ? globalThis.Number(object.int3) : undefined,
     };
   },
 
   toJSON(message: GroupsOptionalTest): unknown {
     const obj: any = {};
-    message.int1 !== undefined && (obj.int1 = Math.round(message.int1));
-    message.group !== undefined &&
-      (obj.group = message.group ? GroupsOptionalTest_Group.toJSON(message.group) : undefined);
-    message.int3 !== undefined && (obj.int3 = Math.round(message.int3));
+    if (message.int1 !== undefined && message.int1 !== 0) {
+      obj.int1 = Math.round(message.int1);
+    }
+    if (message.group !== undefined) {
+      obj.group = GroupsOptionalTest_Group.toJSON(message.group);
+    }
+    if (message.int3 !== undefined && message.int3 !== 0) {
+      obj.int3 = Math.round(message.int3);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<GroupsOptionalTest>, I>>(base?: I): GroupsOptionalTest {
-    return GroupsOptionalTest.fromPartial(base ?? {});
+    return GroupsOptionalTest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<GroupsOptionalTest>, I>>(object: I): GroupsOptionalTest {
     const message = createBaseGroupsOptionalTest();
     message.int1 = object.int1 ?? undefined;
@@ -179,8 +182,7 @@ export const GroupsOptionalTest_Group = {
       writer.uint32(18).string(message.value);
     }
     if (message._unknownFields !== undefined) {
-      for (const key in message._unknownFields) {
-        const values = message._unknownFields[key];
+      for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag);
@@ -241,22 +243,25 @@ export const GroupsOptionalTest_Group = {
 
   fromJSON(object: any): GroupsOptionalTest_Group {
     return {
-      key: isSet(object.key) ? String(object.key) : undefined,
-      value: isSet(object.value) ? String(object.value) : undefined,
+      key: isSet(object.key) ? globalThis.String(object.key) : undefined,
+      value: isSet(object.value) ? globalThis.String(object.value) : undefined,
     };
   },
 
   toJSON(message: GroupsOptionalTest_Group): unknown {
     const obj: any = {};
-    message.key !== undefined && (obj.key = message.key);
-    message.value !== undefined && (obj.value = message.value);
+    if (message.key !== undefined && message.key !== "") {
+      obj.key = message.key;
+    }
+    if (message.value !== undefined && message.value !== "") {
+      obj.value = message.value;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<GroupsOptionalTest_Group>, I>>(base?: I): GroupsOptionalTest_Group {
-    return GroupsOptionalTest_Group.fromPartial(base ?? {});
+    return GroupsOptionalTest_Group.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<GroupsOptionalTest_Group>, I>>(object: I): GroupsOptionalTest_Group {
     const message = createBaseGroupsOptionalTest_Group();
     message.key = object.key ?? undefined;
@@ -291,8 +296,7 @@ export const GroupsRepeatedTest = {
       writer.ldelim();
     }
     if (message._unknownFields !== undefined) {
-      for (const key in message._unknownFields) {
-        const values = message._unknownFields[key];
+      for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag);
@@ -395,38 +399,31 @@ export const GroupsRepeatedTest = {
 
   fromJSON(object: any): GroupsRepeatedTest {
     return {
-      int1: Array.isArray(object?.int1) ? object.int1.map((e: any) => Number(e)) : undefined,
-      group: Array.isArray(object?.group)
+      int1: globalThis.Array.isArray(object?.int1) ? object.int1.map((e: any) => globalThis.Number(e)) : undefined,
+      group: globalThis.Array.isArray(object?.group)
         ? object.group.map((e: any) => GroupsRepeatedTest_Group.fromJSON(e))
         : undefined,
-      int3: Array.isArray(object?.int3) ? object.int3.map((e: any) => Number(e)) : undefined,
+      int3: globalThis.Array.isArray(object?.int3) ? object.int3.map((e: any) => globalThis.Number(e)) : undefined,
     };
   },
 
   toJSON(message: GroupsRepeatedTest): unknown {
     const obj: any = {};
-    if (message.int1) {
+    if (message.int1?.length) {
       obj.int1 = message.int1.map((e) => Math.round(e));
-    } else {
-      obj.int1 = [];
     }
-    if (message.group) {
-      obj.group = message.group.map((e) => e ? GroupsRepeatedTest_Group.toJSON(e) : undefined);
-    } else {
-      obj.group = [];
+    if (message.group?.length) {
+      obj.group = message.group.map((e) => GroupsRepeatedTest_Group.toJSON(e));
     }
-    if (message.int3) {
+    if (message.int3?.length) {
       obj.int3 = message.int3.map((e) => Math.round(e));
-    } else {
-      obj.int3 = [];
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<GroupsRepeatedTest>, I>>(base?: I): GroupsRepeatedTest {
-    return GroupsRepeatedTest.fromPartial(base ?? {});
+    return GroupsRepeatedTest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<GroupsRepeatedTest>, I>>(object: I): GroupsRepeatedTest {
     const message = createBaseGroupsRepeatedTest();
     message.int1 = object.int1?.map((e) => e) || undefined;
@@ -453,8 +450,7 @@ export const GroupsRepeatedTest_Group = {
       }
     }
     if (message._unknownFields !== undefined) {
-      for (const key in message._unknownFields) {
-        const values = message._unknownFields[key];
+      for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag);
@@ -521,30 +517,25 @@ export const GroupsRepeatedTest_Group = {
 
   fromJSON(object: any): GroupsRepeatedTest_Group {
     return {
-      key: Array.isArray(object?.key) ? object.key.map((e: any) => String(e)) : undefined,
-      value: Array.isArray(object?.value) ? object.value.map((e: any) => String(e)) : undefined,
+      key: globalThis.Array.isArray(object?.key) ? object.key.map((e: any) => globalThis.String(e)) : undefined,
+      value: globalThis.Array.isArray(object?.value) ? object.value.map((e: any) => globalThis.String(e)) : undefined,
     };
   },
 
   toJSON(message: GroupsRepeatedTest_Group): unknown {
     const obj: any = {};
-    if (message.key) {
-      obj.key = message.key.map((e) => e);
-    } else {
-      obj.key = [];
+    if (message.key?.length) {
+      obj.key = message.key;
     }
-    if (message.value) {
-      obj.value = message.value.map((e) => e);
-    } else {
-      obj.value = [];
+    if (message.value?.length) {
+      obj.value = message.value;
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<GroupsRepeatedTest_Group>, I>>(base?: I): GroupsRepeatedTest_Group {
-    return GroupsRepeatedTest_Group.fromPartial(base ?? {});
+    return GroupsRepeatedTest_Group.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<GroupsRepeatedTest_Group>, I>>(object: I): GroupsRepeatedTest_Group {
     const message = createBaseGroupsRepeatedTest_Group();
     message.key = object.key?.map((e) => e) || undefined;
@@ -579,8 +570,7 @@ export const GroupsNestedTest = {
       writer.ldelim();
     }
     if (message._unknownFields !== undefined) {
-      for (const key in message._unknownFields) {
-        const values = message._unknownFields[key];
+      for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag);
@@ -683,38 +673,31 @@ export const GroupsNestedTest = {
 
   fromJSON(object: any): GroupsNestedTest {
     return {
-      int1: Array.isArray(object?.int1) ? object.int1.map((e: any) => Number(e)) : undefined,
-      group: Array.isArray(object?.group)
+      int1: globalThis.Array.isArray(object?.int1) ? object.int1.map((e: any) => globalThis.Number(e)) : undefined,
+      group: globalThis.Array.isArray(object?.group)
         ? object.group.map((e: any) => GroupsNestedTest_Group.fromJSON(e))
         : undefined,
-      int3: Array.isArray(object?.int3) ? object.int3.map((e: any) => Number(e)) : undefined,
+      int3: globalThis.Array.isArray(object?.int3) ? object.int3.map((e: any) => globalThis.Number(e)) : undefined,
     };
   },
 
   toJSON(message: GroupsNestedTest): unknown {
     const obj: any = {};
-    if (message.int1) {
+    if (message.int1?.length) {
       obj.int1 = message.int1.map((e) => Math.round(e));
-    } else {
-      obj.int1 = [];
     }
-    if (message.group) {
-      obj.group = message.group.map((e) => e ? GroupsNestedTest_Group.toJSON(e) : undefined);
-    } else {
-      obj.group = [];
+    if (message.group?.length) {
+      obj.group = message.group.map((e) => GroupsNestedTest_Group.toJSON(e));
     }
-    if (message.int3) {
+    if (message.int3?.length) {
       obj.int3 = message.int3.map((e) => Math.round(e));
-    } else {
-      obj.int3 = [];
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<GroupsNestedTest>, I>>(base?: I): GroupsNestedTest {
-    return GroupsNestedTest.fromPartial(base ?? {});
+    return GroupsNestedTest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<GroupsNestedTest>, I>>(object: I): GroupsNestedTest {
     const message = createBaseGroupsNestedTest();
     message.int1 = object.int1?.map((e) => e) || undefined;
@@ -736,8 +719,7 @@ export const GroupsNestedTest_Group = {
       }
     }
     if (message._unknownFields !== undefined) {
-      for (const key in message._unknownFields) {
-        const values = message._unknownFields[key];
+      for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag);
@@ -794,7 +776,7 @@ export const GroupsNestedTest_Group = {
 
   fromJSON(object: any): GroupsNestedTest_Group {
     return {
-      nested: Array.isArray(object?.nested)
+      nested: globalThis.Array.isArray(object?.nested)
         ? object.nested.map((e: any) => GroupsNestedTest_Group_Nested.fromJSON(e))
         : undefined,
     };
@@ -802,18 +784,15 @@ export const GroupsNestedTest_Group = {
 
   toJSON(message: GroupsNestedTest_Group): unknown {
     const obj: any = {};
-    if (message.nested) {
-      obj.nested = message.nested.map((e) => e ? GroupsNestedTest_Group_Nested.toJSON(e) : undefined);
-    } else {
-      obj.nested = [];
+    if (message.nested?.length) {
+      obj.nested = message.nested.map((e) => GroupsNestedTest_Group_Nested.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<GroupsNestedTest_Group>, I>>(base?: I): GroupsNestedTest_Group {
-    return GroupsNestedTest_Group.fromPartial(base ?? {});
+    return GroupsNestedTest_Group.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<GroupsNestedTest_Group>, I>>(object: I): GroupsNestedTest_Group {
     const message = createBaseGroupsNestedTest_Group();
     message.nested = object.nested?.map((e) => GroupsNestedTest_Group_Nested.fromPartial(e)) || undefined;
@@ -833,8 +812,7 @@ export const GroupsNestedTest_Group_Nested = {
       }
     }
     if (message._unknownFields !== undefined) {
-      for (const key in message._unknownFields) {
-        const values = message._unknownFields[key];
+      for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag);
@@ -891,7 +869,7 @@ export const GroupsNestedTest_Group_Nested = {
 
   fromJSON(object: any): GroupsNestedTest_Group_Nested {
     return {
-      nested2: Array.isArray(object?.nested2)
+      nested2: globalThis.Array.isArray(object?.nested2)
         ? object.nested2.map((e: any) => GroupsNestedTest_Group_Nested_Nested2.fromJSON(e))
         : undefined,
     };
@@ -899,18 +877,15 @@ export const GroupsNestedTest_Group_Nested = {
 
   toJSON(message: GroupsNestedTest_Group_Nested): unknown {
     const obj: any = {};
-    if (message.nested2) {
-      obj.nested2 = message.nested2.map((e) => e ? GroupsNestedTest_Group_Nested_Nested2.toJSON(e) : undefined);
-    } else {
-      obj.nested2 = [];
+    if (message.nested2?.length) {
+      obj.nested2 = message.nested2.map((e) => GroupsNestedTest_Group_Nested_Nested2.toJSON(e));
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<GroupsNestedTest_Group_Nested>, I>>(base?: I): GroupsNestedTest_Group_Nested {
-    return GroupsNestedTest_Group_Nested.fromPartial(base ?? {});
+    return GroupsNestedTest_Group_Nested.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<GroupsNestedTest_Group_Nested>, I>>(
     object: I,
   ): GroupsNestedTest_Group_Nested {
@@ -930,8 +905,7 @@ export const GroupsNestedTest_Group_Nested_Nested2 = {
       writer.uint32(10).string(message.string1);
     }
     if (message._unknownFields !== undefined) {
-      for (const key in message._unknownFields) {
-        const values = message._unknownFields[key];
+      for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag);
@@ -984,21 +958,22 @@ export const GroupsNestedTest_Group_Nested_Nested2 = {
   },
 
   fromJSON(object: any): GroupsNestedTest_Group_Nested_Nested2 {
-    return { string1: isSet(object.string1) ? String(object.string1) : undefined };
+    return { string1: isSet(object.string1) ? globalThis.String(object.string1) : undefined };
   },
 
   toJSON(message: GroupsNestedTest_Group_Nested_Nested2): unknown {
     const obj: any = {};
-    message.string1 !== undefined && (obj.string1 = message.string1);
+    if (message.string1 !== undefined && message.string1 !== "") {
+      obj.string1 = message.string1;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<GroupsNestedTest_Group_Nested_Nested2>, I>>(
     base?: I,
   ): GroupsNestedTest_Group_Nested_Nested2 {
-    return GroupsNestedTest_Group_Nested_Nested2.fromPartial(base ?? {});
+    return GroupsNestedTest_Group_Nested_Nested2.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<GroupsNestedTest_Group_Nested_Nested2>, I>>(
     object: I,
   ): GroupsNestedTest_Group_Nested_Nested2 {
@@ -1011,7 +986,8 @@ export const GroupsNestedTest_Group_Nested_Nested2 = {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 

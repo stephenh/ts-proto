@@ -1,13 +1,10 @@
 /* eslint-disable */
-import {
+import { ChannelCredentials, Client, makeGenericClientConstructor, Metadata } from "@grpc/grpc-js";
+import type {
   CallOptions,
-  ChannelCredentials,
-  Client,
   ClientOptions,
   ClientUnaryCall,
   handleUnaryCall,
-  makeGenericClientConstructor,
-  Metadata,
   ServiceError,
   UntypedServiceImplementation,
 } from "@grpc/grpc-js";
@@ -61,14 +58,15 @@ export const TimestampMessage = {
 
   toJSON(message: TimestampMessage): unknown {
     const obj: any = {};
-    message.timestamp !== undefined && (obj.timestamp = message.timestamp.toISOString());
+    if (message.timestamp !== undefined) {
+      obj.timestamp = message.timestamp.toISOString();
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<TimestampMessage>, I>>(base?: I): TimestampMessage {
-    return TimestampMessage.fromPartial(base ?? {});
+    return TimestampMessage.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<TimestampMessage>, I>>(object: I): TimestampMessage {
     const message = createBaseTimestampMessage();
     message.timestamp = object.timestamp ?? undefined;
@@ -141,7 +139,8 @@ export const TestClient = makeGenericClientConstructor(TestService, "simple.Test
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
@@ -156,16 +155,16 @@ function toTimestamp(date: Date): Timestamp {
 }
 
 function fromTimestamp(t: Timestamp): Date {
-  let millis = t.seconds * 1_000;
-  millis += t.nanos / 1_000_000;
-  return new Date(millis);
+  let millis = (t.seconds || 0) * 1_000;
+  millis += (t.nanos || 0) / 1_000_000;
+  return new globalThis.Date(millis);
 }
 
 function fromJsonTimestamp(o: any): Date {
-  if (o instanceof Date) {
+  if (o instanceof globalThis.Date) {
     return o;
   } else if (typeof o === "string") {
-    return new Date(o);
+    return new globalThis.Date(o);
   } else {
     return fromTimestamp(Timestamp.fromJSON(o));
   }

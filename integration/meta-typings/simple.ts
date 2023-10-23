@@ -1,11 +1,11 @@
 /* eslint-disable */
-import * as Long from "long";
 import * as _m0 from "protobufjs/minimal";
 import { FileDescriptorProto } from "ts-proto-descriptors";
 import { protoMetadata as protoMetadata3, Timestamp } from "./google/protobuf/timestamp";
 import { BoolValue, Int32Value, protoMetadata as protoMetadata2, StringValue } from "./google/protobuf/wrappers";
 import { DateMessage, protoMetadata as protoMetadata1 } from "./google/type/date";
 import { ImportedThing, protoMetadata as protoMetadata4 } from "./import_dir/thing";
+import Long = require("long");
 
 export const protobufPackage = "simple";
 
@@ -206,7 +206,7 @@ function createBaseSimple(): Simple {
     thing: undefined,
     blobs: [],
     birthday: undefined,
-    blob: new Uint8Array(),
+    blob: new Uint8Array(0),
   };
 }
 
@@ -1004,7 +1004,7 @@ export const SimpleWithMap_MapOfTimestampsEntry = {
 };
 
 function createBaseSimpleWithMap_MapOfBytesEntry(): SimpleWithMap_MapOfBytesEntry {
-  return { key: "", value: new Uint8Array() };
+  return { key: "", value: new Uint8Array(0) };
 }
 
 export const SimpleWithMap_MapOfBytesEntry = {
@@ -1584,11 +1584,12 @@ export interface PingService {
   ping(request: PingRequest): Promise<PingResponse>;
 }
 
+export const PingServiceServiceName = "simple.PingService";
 export class PingServiceClientImpl implements PingService {
   private readonly rpc: Rpc;
   private readonly service: string;
   constructor(rpc: Rpc, opts?: { service?: string }) {
-    this.service = opts?.service || "simple.PingService";
+    this.service = opts?.service || PingServiceServiceName;
     this.rpc = rpc;
     this.ping = this.ping.bind(this);
   }
@@ -2949,25 +2950,6 @@ export const protoMetadata: ProtoMetadata = {
   dependencies: [protoMetadata1, protoMetadata2, protoMetadata3, protoMetadata4],
 };
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
-  if (typeof globalThis !== "undefined") {
-    return globalThis;
-  }
-  if (typeof self !== "undefined") {
-    return self;
-  }
-  if (typeof window !== "undefined") {
-    return window;
-  }
-  if (typeof global !== "undefined") {
-    return global;
-  }
-  throw "Unable to locate global object";
-})();
-
 function toTimestamp(date: Date): Timestamp {
   const seconds = date.getTime() / 1_000;
   const nanos = (date.getTime() % 1_000) * 1_000_000;
@@ -2975,20 +2957,18 @@ function toTimestamp(date: Date): Timestamp {
 }
 
 function fromTimestamp(t: Timestamp): Date {
-  let millis = t.seconds * 1_000;
-  millis += t.nanos / 1_000_000;
-  return new Date(millis);
+  let millis = (t.seconds || 0) * 1_000;
+  millis += (t.nanos || 0) / 1_000_000;
+  return new globalThis.Date(millis);
 }
 
 function longToNumber(long: Long): number {
-  if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new tsProtoGlobalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+  if (long.gt(globalThis.Number.MAX_SAFE_INTEGER)) {
+    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
   return long.toNumber();
 }
 
-// If you get a compile-error about 'Constructor<Long> and ... have no overlap',
-// add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
 if (_m0.util.Long !== Long) {
   _m0.util.Long = Long as any;
   _m0.configure();

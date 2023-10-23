@@ -59,20 +59,26 @@ export const Point = {
   },
 
   fromJSON(object: any): Point {
-    return { lat: isSet(object.lat) ? Number(object.lat) : 0, lng: isSet(object.lng) ? Number(object.lng) : 0 };
+    return {
+      lat: isSet(object.lat) ? globalThis.Number(object.lat) : 0,
+      lng: isSet(object.lng) ? globalThis.Number(object.lng) : 0,
+    };
   },
 
   toJSON(message: Point): unknown {
     const obj: any = {};
-    message.lat !== undefined && (obj.lat = message.lat);
-    message.lng !== undefined && (obj.lng = message.lng);
+    if (message.lat !== 0) {
+      obj.lat = message.lat;
+    }
+    if (message.lng !== 0) {
+      obj.lng = message.lng;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Point>, I>>(base?: I): Point {
-    return Point.fromPartial(base ?? {});
+    return Point.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Point>, I>>(object: I): Point {
     const message = createBasePoint();
     message.lat = object.lat ?? 0;
@@ -135,15 +141,18 @@ export const Area = {
 
   toJSON(message: Area): unknown {
     const obj: any = {};
-    message.nw !== undefined && (obj.nw = message.nw ? Point.toJSON(message.nw) : undefined);
-    message.se !== undefined && (obj.se = message.se ? Point.toJSON(message.se) : undefined);
+    if (message.nw !== undefined) {
+      obj.nw = Point.toJSON(message.nw);
+    }
+    if (message.se !== undefined) {
+      obj.se = Point.toJSON(message.se);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<Area>, I>>(base?: I): Area {
-    return Area.fromPartial(base ?? {});
+    return Area.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Area>, I>>(object: I): Area {
     const message = createBaseArea();
     message.nw = (object.nw !== undefined && object.nw !== null) ? Point.fromPartial(object.nw) : undefined;
@@ -155,7 +164,8 @@ export const Area = {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 

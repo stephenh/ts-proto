@@ -1,4 +1,5 @@
-import { code, Code, imp, Import } from "ts-poet";
+import * as path from "path";
+import { code, Code, imp, Import, joinCode } from "ts-poet";
 import {
   CodeGeneratorRequest,
   FieldDescriptorProto,
@@ -9,10 +10,52 @@ import {
 import ReadStream = NodeJS.ReadStream;
 import { SourceDescription } from "./sourceInfo";
 import { Options, ServiceOption } from "./options";
-import { camelCaseGrpc, snakeToCamel } from "./case";
+import { camelCaseGrpc, maybeSnakeToCamel, snakeToCamel } from "./case";
 
 export function protoFilesToGenerate(request: CodeGeneratorRequest): FileDescriptorProto[] {
   return request.protoFile.filter((f) => request.fileToGenerate.includes(f.name));
+}
+
+type PackageTree = {
+  index: string;
+  chunks: Code[];
+  leaves: { [k: string]: PackageTree };
+};
+export function generateIndexFiles(files: FileDescriptorProto[], options: Options): [string, Code][] {
+  const packageTree: PackageTree = {
+    index: "index.ts",
+    leaves: {},
+    chunks: [],
+  };
+  for (const { name, package: pkg } of files) {
+    const moduleName = name.replace(".proto", options.fileSuffix);
+    const pkgParts = pkg.length > 0 ? pkg.split(".") : [];
+
+    const branch = pkgParts.reduce<PackageTree>((branch, part, i): PackageTree => {
+      if (!(part in branch.leaves)) {
+        const prePkgParts = pkgParts.slice(0, i + 1);
+        const index = `index.${prePkgParts.join(".")}.ts`;
+        branch.chunks.push(code`export * as ${part} from "./${path.basename(index, ".ts")}";`);
+        branch.leaves[part] = {
+          index,
+          leaves: {},
+          chunks: [],
+        };
+      }
+      return branch.leaves[part];
+    }, packageTree);
+    branch.chunks.push(code`export * from "./${moduleName}";`);
+  }
+
+  const indexFiles: [string, Code][] = [];
+  let branches: PackageTree[] = [packageTree];
+  let currentBranch;
+  while ((currentBranch = branches.pop())) {
+    indexFiles.push([currentBranch.index, joinCode(currentBranch.chunks)]);
+    branches.push(...Object.values(currentBranch.leaves));
+  }
+
+  return indexFiles;
 }
 
 export function readToBuffer(stream: ReadStream): Promise<Buffer> {
@@ -56,7 +99,7 @@ export function maybeAddComment(
   desc: Partial<Pick<SourceDescription, "leadingComments" | "trailingComments">>,
   chunks: Code[],
   deprecated?: boolean,
-  prefix: string = ""
+  prefix: string = "",
 ): void {
   let lines: string[] = [];
   if (desc.leadingComments || desc.trailingComments) {
@@ -176,8 +219,12 @@ export class FormattedMethodDescriptor implements MethodDescriptorProto {
 
 export function getFieldJsonName(
   field: Pick<FieldDescriptorProto, "name" | "jsonName">,
-  options: Pick<Options, "snakeToCamel">
+  options: Pick<Options, "snakeToCamel" | "useJsonName">,
 ): string {
+  // use "json_name" defined in a proto file
+  if (options.useJsonName) {
+    return field.jsonName;
+  }
   // jsonName will be camelCased by the protocol compiler, plus can be overridden by the user,
   // so just use that instead of our own maybeSnakeToCamel
   if (options.snakeToCamel.includes("json")) {
@@ -191,6 +238,28 @@ export function getFieldJsonName(
   }
 }
 
+export function getFieldName(
+  field: Pick<FieldDescriptorProto, "name" | "jsonName">,
+  options: Pick<Options, "snakeToCamel" | "useJsonName">,
+): string {
+  if (options.useJsonName) {
+    return field.jsonName;
+  }
+  return maybeSnakeToCamel(field.name, options);
+}
+
+/**
+ * https://github.com/eslint-community/eslint-plugin-security/blob/main/docs/the-dangers-of-square-bracket-notation.md
+ */
+function isValidIdentifier(propertyName: string): boolean {
+  return /^[a-zA-Z_$][\w$]*$/.test(propertyName);
+}
+
+/** Returns `bar` or `"bar"` if `propertyName` isn't a safe property name. */
+export function safeAccessor(propertyName: string): string {
+  return isValidIdentifier(propertyName) ? propertyName : JSON.stringify(propertyName);
+}
+
 /**
  * Returns a snippet for reading an object's property, such as `foo.bar`, or `foo['bar']` if the property name contains unusual characters.
  * For simplicity, we don't match the ECMA 5/6 rules for valid identifiers exactly, and return array syntax liberally.
@@ -199,10 +268,9 @@ export function getFieldJsonName(
  * @param optional
  */
 export function getPropertyAccessor(objectName: string, propertyName: string, optional: boolean = false): string {
-  let validIdentifier = /^[a-zA-Z_$][\w$]*$/;
-  return validIdentifier.test(propertyName)
+  return isValidIdentifier(propertyName)
     ? `${objectName}${optional ? "?" : ""}.${propertyName}`
-    : `${objectName}${optional ? "?." : ""}[${JSON.stringify(propertyName)}]`;
+    : `${objectName}${optional ? "?." : ""}[${safeAccessor(propertyName)}]`;
 }
 
 export function impFile(options: Options, spec: string) {

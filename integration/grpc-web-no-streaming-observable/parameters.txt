@@ -1,1 +1,1 @@
-outputClientImpl=grpc-web,returnObservable=true,useAbortSignal=true
+outputClientImpl=grpc-web,returnObservable=true

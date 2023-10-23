@@ -54,14 +54,15 @@ export const SimpleStruct = {
 
   toJSON(message: SimpleStruct): unknown {
     const obj: any = {};
-    message.simple_struct !== undefined && (obj.simple_struct = message.simple_struct);
+    if (message.simple_struct !== undefined) {
+      obj.simple_struct = message.simple_struct;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<SimpleStruct>, I>>(base?: I): SimpleStruct {
-    return SimpleStruct.fromPartial(base ?? {});
+    return SimpleStruct.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<SimpleStruct>, I>>(object: I): SimpleStruct {
     const message = createBaseSimpleStruct();
     message.simple_struct = object.simple_struct ?? undefined;
@@ -72,7 +73,8 @@ export const SimpleStruct = {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends { $case: string } ? { [K in keyof Omit<T, "$case">]?: DeepPartial<T[K]> } & { $case: T["$case"] }
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;

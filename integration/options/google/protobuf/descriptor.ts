@@ -1,7 +1,7 @@
 /* eslint-disable */
-import * as Long from "long";
 import * as _m0 from "protobufjs/minimal";
 import { FileDescriptorProto as FileDescriptorProto1 } from "ts-proto-descriptors";
+import Long = require("long");
 
 export const protobufPackage = "google.protobuf";
 
@@ -2559,7 +2559,7 @@ function createBaseUninterpretedOption(): UninterpretedOption {
     positiveIntValue: 0,
     negativeIntValue: 0,
     doubleValue: 0,
-    stringValue: new Uint8Array(),
+    stringValue: new Uint8Array(0),
     aggregateValue: "",
   };
 }
@@ -5782,34 +5782,13 @@ export const protoMetadata: ProtoMetadata = {
   dependencies: [],
 };
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
-  if (typeof globalThis !== "undefined") {
-    return globalThis;
-  }
-  if (typeof self !== "undefined") {
-    return self;
-  }
-  if (typeof window !== "undefined") {
-    return window;
-  }
-  if (typeof global !== "undefined") {
-    return global;
-  }
-  throw "Unable to locate global object";
-})();
-
 function longToNumber(long: Long): number {
-  if (long.gt(Number.MAX_SAFE_INTEGER)) {
-    throw new tsProtoGlobalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
+  if (long.gt(globalThis.Number.MAX_SAFE_INTEGER)) {
+    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
   return long.toNumber();
 }
 
-// If you get a compile-error about 'Constructor<Long> and ... have no overlap',
-// add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
 if (_m0.util.Long !== Long) {
   _m0.util.Long = Long as any;
   _m0.configure();

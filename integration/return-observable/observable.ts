@@ -48,19 +48,20 @@ export const ProduceRequest = {
   },
 
   fromJSON(object: any): ProduceRequest {
-    return { ingredients: isSet(object.ingredients) ? String(object.ingredients) : "" };
+    return { ingredients: isSet(object.ingredients) ? globalThis.String(object.ingredients) : "" };
   },
 
   toJSON(message: ProduceRequest): unknown {
     const obj: any = {};
-    message.ingredients !== undefined && (obj.ingredients = message.ingredients);
+    if (message.ingredients !== "") {
+      obj.ingredients = message.ingredients;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ProduceRequest>, I>>(base?: I): ProduceRequest {
-    return ProduceRequest.fromPartial(base ?? {});
+    return ProduceRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ProduceRequest>, I>>(object: I): ProduceRequest {
     const message = createBaseProduceRequest();
     message.ingredients = object.ingredients ?? "";
@@ -104,19 +105,20 @@ export const ProduceReply = {
   },
 
   fromJSON(object: any): ProduceReply {
-    return { result: isSet(object.result) ? String(object.result) : "" };
+    return { result: isSet(object.result) ? globalThis.String(object.result) : "" };
   },
 
   toJSON(message: ProduceReply): unknown {
     const obj: any = {};
-    message.result !== undefined && (obj.result = message.result);
+    if (message.result !== "") {
+      obj.result = message.result;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<ProduceReply>, I>>(base?: I): ProduceReply {
-    return ProduceReply.fromPartial(base ?? {});
+    return ProduceReply.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<ProduceReply>, I>>(object: I): ProduceReply {
     const message = createBaseProduceReply();
     message.result = object.result ?? "";
@@ -131,7 +133,8 @@ export interface Factory {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 

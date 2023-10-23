@@ -3,12 +3,13 @@ import { DateOption, optionsFromParameter, ServiceOption } from "../src/options"
 describe("options", () => {
   it("can set outputJsonMethods with nestJs=true", () => {
     expect(optionsFromParameter("nestJs=true,outputJsonMethods=true")).toMatchInlineSnapshot(`
-      Object {
-        "M": Object {},
+      {
+        "M": {},
         "addGrpcMetadata": false,
         "addNestjsRestParameter": false,
         "constEnums": false,
         "context": false,
+        "emitDefaultValues": [],
         "emitImportedFiles": true,
         "enumsAsLiterals": false,
         "env": "both",
@@ -16,6 +17,7 @@ describe("options", () => {
         "exportCommonSymbols": true,
         "fileSuffix": "",
         "forceLong": "number",
+        "globalThisPolyfill": false,
         "importSuffix": "",
         "initializeFieldsAsUndefined": false,
         "lowerCaseServiceMethods": true,
@@ -26,27 +28,31 @@ describe("options", () => {
         "outputClientImpl": false,
         "outputEncodeMethods": false,
         "outputExtensions": false,
+        "outputIndex": false,
         "outputJsonMethods": true,
         "outputPartialMethods": false,
         "outputSchema": false,
-        "outputServices": Array [
+        "outputServices": [
           "default",
         ],
         "outputTypeAnnotations": false,
         "outputTypeRegistry": false,
         "removeEnumPrefix": false,
         "returnObservable": false,
-        "snakeToCamel": Array [
+        "snakeToCamel": [
           "json",
           "keys",
         ],
         "stringEnums": false,
         "unknownFields": false,
         "unrecognizedEnum": true,
+        "unrecognizedEnumName": "UNRECOGNIZED",
+        "unrecognizedEnumValue": -1,
         "useAbortSignal": false,
         "useAsyncIterable": false,
         "useDate": "timestamp",
         "useExactTypes": true,
+        "useJsonName": false,
         "useJsonWireFormat": false,
         "useMapType": false,
         "useMongoObjectId": false,

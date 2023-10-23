@@ -4,7 +4,7 @@ import { parse } from "path";
 import { promisify } from "util";
 import { generateFile, makeUtils } from "../src/main";
 import { createTypeMap } from "../src/types";
-import { prefixDisableLinter } from "../src/utils";
+import { generateIndexFiles } from "../src/utils";
 import { getTsPoetOpts, optionsFromParameter } from "../src/options";
 import { Context } from "../src/context";
 import { generateTypeRegistry } from "../src/generate-type-registry";
@@ -55,6 +55,15 @@ async function generate(binFile: string, baseDir: string, parameter: string) {
     const filePath = `${baseDir}/${path}`;
 
     await promisify(writeFile)(filePath, code.toString({ ...getTsPoetOpts(options), path }));
+  }
+
+  if (options.outputIndex) {
+    for (const [path, code] of generateIndexFiles(request.protoFile, options)) {
+      const filePath = `${baseDir}/${path}`;
+      const dirPath = parse(filePath).dir;
+      await promisify(mkdir)(dirPath, { recursive: true }).catch(() => {});
+      await promisify(writeFile)(filePath, code.toString({ ...getTsPoetOpts(options), path }));
+    }
   }
 }
 

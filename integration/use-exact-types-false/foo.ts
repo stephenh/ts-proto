@@ -54,20 +54,26 @@ export const Foo = {
   },
 
   fromJSON(object: any): Foo {
-    return { bar: isSet(object.bar) ? String(object.bar) : "", baz: isSet(object.baz) ? String(object.baz) : "" };
+    return {
+      bar: isSet(object.bar) ? globalThis.String(object.bar) : "",
+      baz: isSet(object.baz) ? globalThis.String(object.baz) : "",
+    };
   },
 
   toJSON(message: Foo): unknown {
     const obj: any = {};
-    message.bar !== undefined && (obj.bar = message.bar);
-    message.baz !== undefined && (obj.baz = message.baz);
+    if (message.bar !== "") {
+      obj.bar = message.bar;
+    }
+    if (message.baz !== "") {
+      obj.baz = message.baz;
+    }
     return obj;
   },
 
   create(base?: DeepPartial<Foo>): Foo {
     return Foo.fromPartial(base ?? {});
   },
-
   fromPartial(object: DeepPartial<Foo>): Foo {
     const message = createBaseFoo();
     message.bar = object.bar ?? "";
@@ -79,7 +85,8 @@ export const Foo = {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 

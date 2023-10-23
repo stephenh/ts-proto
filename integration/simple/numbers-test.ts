@@ -1,11 +1,11 @@
-import { Reader } from 'protobufjs';
-import { Numbers } from './simple';
-import { simple as pbjs } from './pbjs';
+import { Reader } from "protobufjs";
+import { Numbers } from "./simple";
+import { simple as pbjs } from "./pbjs";
 import INumbers = pbjs.INumbers;
 import PbNumbers = pbjs.Numbers;
 
-describe('number', () => {
-  it('generates types correctly', () => {
+describe("number", () => {
+  it("generates types correctly", () => {
     const simple: Numbers = {
       double: 0,
       float: 1,
@@ -23,7 +23,7 @@ describe('number', () => {
     expect(simple.int64).toEqual(3);
   });
 
-  it('can decode', () => {
+  it("can decode", () => {
     const s1: INumbers = {
       double: 1,
       float: 2,
@@ -40,12 +40,12 @@ describe('number', () => {
     };
     const s2 = Numbers.decode(Reader.create(PbNumbers.encode(PbNumbers.fromObject(s1)).finish()));
     expect(s2).toEqual(s1);
-    expect(typeof s2.uint32).toEqual('number');
-    expect(typeof s2.int64).toEqual('number');
+    expect(typeof s2.uint32).toEqual("number");
+    expect(typeof s2.int64).toEqual("number");
     expect(s2.int64).toEqual(4);
   });
 
-  it('can encode', () => {
+  it("can encode", () => {
     const s1: Numbers = {
       double: 1,
       float: 2,
@@ -67,7 +67,7 @@ describe('number', () => {
     });
   });
 
-  it('can decode and fallback to default values', () => {
+  it("can decode and fallback to default values", () => {
     const s1: INumbers = {};
     const s2 = Numbers.decode(Reader.create(PbNumbers.encode(PbNumbers.fromObject(s1)).finish()));
     expect(s2.double).toEqual(0);
@@ -83,7 +83,7 @@ describe('number', () => {
     expect(s2.sfixed32).toEqual(0);
   });
 
-  it('observes how pbjs handles null', () => {
+  it("observes how pbjs handles null", () => {
     // the types are in theory only useful for construction
     const s1 = PbNumbers.fromObject({ double: null, float: 1 });
     // as after construction, they return the empty string
@@ -92,23 +92,23 @@ describe('number', () => {
     expect(s2.double).toEqual(0);
   });
 
-  it('has fromPartial', () => {
+  it("has fromPartial", () => {
     const s1 = Numbers.fromPartial({});
     expect(s1).toMatchInlineSnapshot(`
-  Object {
-    "double": 0,
-    "fixed32": 0,
-    "fixed64": 0,
-    "float": 0,
-    "int32": 0,
-    "int64": 0,
-    "sfixed32": 0,
-    "sfixed64": 0,
-    "sint32": 0,
-    "sint64": 0,
-    "uint32": 0,
-    "uint64": 0,
-  }
-  `);
+      {
+        "double": 0,
+        "fixed32": 0,
+        "fixed64": 0,
+        "float": 0,
+        "int32": 0,
+        "int64": 0,
+        "sfixed32": 0,
+        "sfixed64": 0,
+        "sint32": 0,
+        "sint64": 0,
+        "uint32": 0,
+        "uint64": 0,
+      }
+    `);
   });
 });

@@ -1,6 +1,6 @@
 /* eslint-disable */
-import * as Long from "long";
-import * as _m0 from "protobufjs/minimal";
+import Long from "long";
+import _m0 from "protobufjs/minimal";
 import { FileDescriptorProto, GeneratedCodeInfo } from "../descriptor";
 
 /** The version number of protocol compiler. */
@@ -13,7 +13,7 @@ export interface Version {
    * be empty for mainline stable releases.
    */
   suffix: string;
-  _unknownFields?: { [key: number]: Uint8Array[] };
+  _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
 /** An encoded CodeGeneratorRequest is written to the plugin's stdin. */
@@ -45,7 +45,7 @@ export interface CodeGeneratorRequest {
   protoFile: FileDescriptorProto[];
   /** The version number of protocol compiler. */
   compilerVersion: Version | undefined;
-  _unknownFields?: { [key: number]: Uint8Array[] };
+  _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
 /** The plugin writes an encoded CodeGeneratorResponse to stdout. */
@@ -67,7 +67,7 @@ export interface CodeGeneratorResponse {
    */
   supportedFeatures: number;
   file: CodeGeneratorResponse_File[];
-  _unknownFields?: { [key: number]: Uint8Array[] };
+  _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
 /** Sync with code_generator.h. */
@@ -168,7 +168,7 @@ export interface CodeGeneratorResponse_File {
    * into the code generation metadata for the generated files.
    */
   generatedCodeInfo: GeneratedCodeInfo | undefined;
-  _unknownFields?: { [key: number]: Uint8Array[] };
+  _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
 function createBaseVersion(): Version {
@@ -190,8 +190,7 @@ export const Version = {
       writer.uint32(34).string(message.suffix);
     }
     if (message._unknownFields !== undefined) {
-      for (const key in message._unknownFields) {
-        const values = message._unknownFields[key];
+      for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag);
@@ -214,35 +213,35 @@ export const Version = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 8) {
+          if (tag !== 8) {
             break;
           }
 
           message.major = reader.int32();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.minor = reader.int32();
           continue;
         case 3:
-          if (tag != 24) {
+          if (tag !== 24) {
             break;
           }
 
           message.patch = reader.int32();
           continue;
         case 4:
-          if (tag != 34) {
+          if (tag !== 34) {
             break;
           }
 
           message.suffix = reader.string();
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       const startPos = reader.pos;
@@ -275,10 +274,18 @@ export const Version = {
 
   toJSON(message: Version): unknown {
     const obj: any = {};
-    message.major !== undefined && (obj.major = Math.round(message.major));
-    message.minor !== undefined && (obj.minor = Math.round(message.minor));
-    message.patch !== undefined && (obj.patch = Math.round(message.patch));
-    message.suffix !== undefined && (obj.suffix = message.suffix);
+    if (message.major !== 0) {
+      obj.major = Math.round(message.major);
+    }
+    if (message.minor !== 0) {
+      obj.minor = Math.round(message.minor);
+    }
+    if (message.patch !== 0) {
+      obj.patch = Math.round(message.patch);
+    }
+    if (message.suffix !== "") {
+      obj.suffix = message.suffix;
+    }
     return obj;
   },
 
@@ -315,8 +322,7 @@ export const CodeGeneratorRequest = {
       Version.encode(message.compilerVersion, writer.uint32(26).fork()).ldelim();
     }
     if (message._unknownFields !== undefined) {
-      for (const key in message._unknownFields) {
-        const values = message._unknownFields[key];
+      for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag);
@@ -339,35 +345,35 @@ export const CodeGeneratorRequest = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.fileToGenerate.push(reader.string());
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.parameter = reader.string();
           continue;
         case 15:
-          if (tag != 122) {
+          if (tag !== 122) {
             break;
           }
 
           message.protoFile.push(FileDescriptorProto.decode(reader, reader.uint32()));
           continue;
         case 3:
-          if (tag != 26) {
+          if (tag !== 26) {
             break;
           }
 
           message.compilerVersion = Version.decode(reader, reader.uint32());
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       const startPos = reader.pos;
@@ -402,19 +408,18 @@ export const CodeGeneratorRequest = {
 
   toJSON(message: CodeGeneratorRequest): unknown {
     const obj: any = {};
-    if (message.fileToGenerate) {
-      obj.fileToGenerate = message.fileToGenerate.map((e) => e);
-    } else {
-      obj.fileToGenerate = [];
+    if (message.fileToGenerate?.length) {
+      obj.fileToGenerate = message.fileToGenerate;
     }
-    message.parameter !== undefined && (obj.parameter = message.parameter);
-    if (message.protoFile) {
-      obj.protoFile = message.protoFile.map((e) => e ? FileDescriptorProto.toJSON(e) : undefined);
-    } else {
-      obj.protoFile = [];
+    if (message.parameter !== "") {
+      obj.parameter = message.parameter;
     }
-    message.compilerVersion !== undefined &&
-      (obj.compilerVersion = message.compilerVersion ? Version.toJSON(message.compilerVersion) : undefined);
+    if (message.protoFile?.length) {
+      obj.protoFile = message.protoFile.map((e) => FileDescriptorProto.toJSON(e));
+    }
+    if (message.compilerVersion !== undefined) {
+      obj.compilerVersion = Version.toJSON(message.compilerVersion);
+    }
     return obj;
   },
 
@@ -450,8 +455,7 @@ export const CodeGeneratorResponse = {
       CodeGeneratorResponse_File.encode(v!, writer.uint32(122).fork()).ldelim();
     }
     if (message._unknownFields !== undefined) {
-      for (const key in message._unknownFields) {
-        const values = message._unknownFields[key];
+      for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag);
@@ -474,28 +478,28 @@ export const CodeGeneratorResponse = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.error = reader.string();
           continue;
         case 2:
-          if (tag != 16) {
+          if (tag !== 16) {
             break;
           }
 
           message.supportedFeatures = longToNumber(reader.uint64() as Long);
           continue;
         case 15:
-          if (tag != 122) {
+          if (tag !== 122) {
             break;
           }
 
           message.file.push(CodeGeneratorResponse_File.decode(reader, reader.uint32()));
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       const startPos = reader.pos;
@@ -527,12 +531,14 @@ export const CodeGeneratorResponse = {
 
   toJSON(message: CodeGeneratorResponse): unknown {
     const obj: any = {};
-    message.error !== undefined && (obj.error = message.error);
-    message.supportedFeatures !== undefined && (obj.supportedFeatures = Math.round(message.supportedFeatures));
-    if (message.file) {
-      obj.file = message.file.map((e) => e ? CodeGeneratorResponse_File.toJSON(e) : undefined);
-    } else {
-      obj.file = [];
+    if (message.error !== "") {
+      obj.error = message.error;
+    }
+    if (message.supportedFeatures !== 0) {
+      obj.supportedFeatures = Math.round(message.supportedFeatures);
+    }
+    if (message.file?.length) {
+      obj.file = message.file.map((e) => CodeGeneratorResponse_File.toJSON(e));
     }
     return obj;
   },
@@ -569,8 +575,7 @@ export const CodeGeneratorResponse_File = {
       GeneratedCodeInfo.encode(message.generatedCodeInfo, writer.uint32(130).fork()).ldelim();
     }
     if (message._unknownFields !== undefined) {
-      for (const key in message._unknownFields) {
-        const values = message._unknownFields[key];
+      for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
           writer.uint32(tag);
@@ -593,35 +598,35 @@ export const CodeGeneratorResponse_File = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          if (tag != 10) {
+          if (tag !== 10) {
             break;
           }
 
           message.name = reader.string();
           continue;
         case 2:
-          if (tag != 18) {
+          if (tag !== 18) {
             break;
           }
 
           message.insertionPoint = reader.string();
           continue;
         case 15:
-          if (tag != 122) {
+          if (tag !== 122) {
             break;
           }
 
           message.content = reader.string();
           continue;
         case 16:
-          if (tag != 130) {
+          if (tag !== 130) {
             break;
           }
 
           message.generatedCodeInfo = GeneratedCodeInfo.decode(reader, reader.uint32());
           continue;
       }
-      if ((tag & 7) == 4 || tag == 0) {
+      if ((tag & 7) === 4 || tag === 0) {
         break;
       }
       const startPos = reader.pos;
@@ -656,12 +661,18 @@ export const CodeGeneratorResponse_File = {
 
   toJSON(message: CodeGeneratorResponse_File): unknown {
     const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
-    message.insertionPoint !== undefined && (obj.insertionPoint = message.insertionPoint);
-    message.content !== undefined && (obj.content = message.content);
-    message.generatedCodeInfo !== undefined && (obj.generatedCodeInfo = message.generatedCodeInfo
-      ? GeneratedCodeInfo.toJSON(message.generatedCodeInfo)
-      : undefined);
+    if (message.name !== "") {
+      obj.name = message.name;
+    }
+    if (message.insertionPoint !== "") {
+      obj.insertionPoint = message.insertionPoint;
+    }
+    if (message.content !== "") {
+      obj.content = message.content;
+    }
+    if (message.generatedCodeInfo !== undefined) {
+      obj.generatedCodeInfo = GeneratedCodeInfo.toJSON(message.generatedCodeInfo);
+    }
     return obj;
   },
 
@@ -681,10 +692,10 @@ export const CodeGeneratorResponse_File = {
   },
 };
 
-declare var self: any | undefined;
-declare var window: any | undefined;
-declare var global: any | undefined;
-var tsProtoGlobalThis: any = (() => {
+declare const self: any | undefined;
+declare const window: any | undefined;
+declare const global: any | undefined;
+const tsProtoGlobalThis: any = (() => {
   if (typeof globalThis !== "undefined") {
     return globalThis;
   }
@@ -714,8 +725,6 @@ function longToNumber(long: Long): number {
   return long.toNumber();
 }
 
-// If you get a compile-error about 'Constructor<Long> and ... have no overlap',
-// add '--ts_proto_opt=esModuleInterop=true' as a flag when calling 'protoc'.
 if (_m0.util.Long !== Long) {
   _m0.util.Long = Long as any;
   _m0.configure();

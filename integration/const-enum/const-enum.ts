@@ -136,20 +136,24 @@ export const DividerData = {
 
   toJSON(message: DividerData): unknown {
     const obj: any = {};
-    message.type !== undefined && (obj.type = dividerData_DividerTypeToJSON(message.type));
-    obj.typeMap = {};
+    if (message.type !== DividerData_DividerType.DOUBLE) {
+      obj.type = dividerData_DividerTypeToJSON(message.type);
+    }
     if (message.typeMap) {
-      Object.entries(message.typeMap).forEach(([k, v]) => {
-        obj.typeMap[k] = dividerData_DividerTypeToJSON(v);
-      });
+      const entries = Object.entries(message.typeMap);
+      if (entries.length > 0) {
+        obj.typeMap = {};
+        entries.forEach(([k, v]) => {
+          obj.typeMap[k] = dividerData_DividerTypeToJSON(v);
+        });
+      }
     }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<DividerData>, I>>(base?: I): DividerData {
-    return DividerData.fromPartial(base ?? {});
+    return DividerData.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DividerData>, I>>(object: I): DividerData {
     const message = createBaseDividerData();
     message.type = object.type ?? DividerData_DividerType.DOUBLE;
@@ -213,22 +217,25 @@ export const DividerData_TypeMapEntry = {
 
   fromJSON(object: any): DividerData_TypeMapEntry {
     return {
-      key: isSet(object.key) ? String(object.key) : "",
+      key: isSet(object.key) ? globalThis.String(object.key) : "",
       value: isSet(object.value) ? dividerData_DividerTypeFromJSON(object.value) : DividerData_DividerType.DOUBLE,
     };
   },
 
   toJSON(message: DividerData_TypeMapEntry): unknown {
     const obj: any = {};
-    message.key !== undefined && (obj.key = message.key);
-    message.value !== undefined && (obj.value = dividerData_DividerTypeToJSON(message.value));
+    if (message.key !== "") {
+      obj.key = message.key;
+    }
+    if (message.value !== DividerData_DividerType.DOUBLE) {
+      obj.value = dividerData_DividerTypeToJSON(message.value);
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<DividerData_TypeMapEntry>, I>>(base?: I): DividerData_TypeMapEntry {
-    return DividerData_TypeMapEntry.fromPartial(base ?? {});
+    return DividerData_TypeMapEntry.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<DividerData_TypeMapEntry>, I>>(object: I): DividerData_TypeMapEntry {
     const message = createBaseDividerData_TypeMapEntry();
     message.key = object.key ?? "";
@@ -240,7 +247,8 @@ export const DividerData_TypeMapEntry = {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 

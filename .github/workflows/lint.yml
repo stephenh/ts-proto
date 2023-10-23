@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [14.x]
+        node-version: [20.x]
 
     steps:
       - uses: actions/checkout@v3
@@ -21,7 +21,18 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - name: install dependencies
-        run: yarn install || echo "ignore failure"
+        run: yarn install
+      - name: Prepare Integration
+        run: ./integration/pbjs.sh
+      - name: Codegen
+        run: yarn bin2ts
+      # This will fail if any git-tracked file has changed
+      - name: Diff Output
+        run: git status && git diff --exit-code
+      - name: TypeScript
+        run: yarn tsc:check
+        env:
+          CI: true
       - name: Prettier
         run: yarn format:check
         env:

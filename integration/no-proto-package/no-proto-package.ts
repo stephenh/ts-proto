@@ -48,19 +48,20 @@ export const User = {
   },
 
   fromJSON(object: any): User {
-    return { name: isSet(object.name) ? String(object.name) : "" };
+    return { name: isSet(object.name) ? globalThis.String(object.name) : "" };
   },
 
   toJSON(message: User): unknown {
     const obj: any = {};
-    message.name !== undefined && (obj.name = message.name);
+    if (message.name !== "") {
+      obj.name = message.name;
+    }
     return obj;
   },
 
   create<I extends Exact<DeepPartial<User>, I>>(base?: I): User {
-    return User.fromPartial(base ?? {});
+    return User.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<User>, I>>(object: I): User {
     const message = createBaseUser();
     message.name = object.name ?? "";
@@ -103,9 +104,8 @@ export const Empty = {
   },
 
   create<I extends Exact<DeepPartial<Empty>, I>>(base?: I): Empty {
-    return Empty.fromPartial(base ?? {});
+    return Empty.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<Empty>, I>>(_: I): Empty {
     const message = createBaseEmpty();
     return message;
@@ -116,11 +116,12 @@ export interface UserState {
   GetUsers(request: Empty): Observable<User>;
 }
 
+export const UserStateServiceName = "UserState";
 export class UserStateClientImpl implements UserState {
   private readonly rpc: Rpc;
   private readonly service: string;
   constructor(rpc: Rpc, opts?: { service?: string }) {
-    this.service = opts?.service || "UserState";
+    this.service = opts?.service || UserStateServiceName;
     this.rpc = rpc;
     this.GetUsers = this.GetUsers.bind(this);
   }
@@ -141,7 +142,8 @@ interface Rpc {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends Array<infer U> ? Array<DeepPartial<U>> : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 

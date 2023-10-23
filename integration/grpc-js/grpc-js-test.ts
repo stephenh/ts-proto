@@ -214,6 +214,21 @@ describe("grpc-js-test", () => {
       expect(response).toStrictEqual(timestamp);
     });
 
+    client.value({ foo: "bar" }, (error: ServiceError | null, response: any) => {
+        expect(error).toBeNull();
+        expect(response).toEqual({ foo: "bar" });
+    });
+
+    client.value(12, (error: ServiceError | null, response: any) => {
+      expect(error).toBeNull();
+      expect(response).toEqual(12);
+    });
+
+    client.struct({ foo: "bar" }, (error: ServiceError | null, response: any) => {
+      expect(error).toBeNull();
+      expect(response).toEqual({ foo: "bar" });
+    });
+
     const serverStreamingCall = client.serverStreaming({ timestamp });
     serverStreamingCall.on("data", (response) => {
       expect(response.timestamp).toEqual(timestamp);
