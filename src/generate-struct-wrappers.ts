@@ -150,9 +150,7 @@ export function generateUnwrapDeep(ctx: Context, fullProtoTypeName: string, fiel
   }
 
   if (isFieldMaskTypeName(fullProtoTypeName)) {
-    chunks.push(code`unwrap(message: ${ctx.options.useReadonlyTypes ? "any" : "FieldMask"}): string[] {
-      return message.paths;
-    }`);
+    chunks.push(generateFieldMaskUnwrap(ctx));
   }
 
   return chunks;
@@ -324,12 +322,19 @@ export function generateUnwrapShallow(ctx: Context, fullProtoTypeName: string, f
   }
 
   if (isFieldMaskTypeName(fullProtoTypeName)) {
-    chunks.push(code`unwrap(message: ${ctx.options.useReadonlyTypes ? "any" : "FieldMask"}): string[] {
-      return message.paths;
-    }`);
+    chunks.push(generateFieldMaskUnwrap(ctx));
   }
 
   return chunks;
+}
+
+function generateFieldMaskUnwrap(ctx: Context): Code {
+  const returnType = ctx.options.useOptionals === "all" ? "string[] | undefined" : "string[]";
+  const pathModifier = ctx.options.useOptionals === "all" ? "?" : "";
+
+  return code`unwrap(message: ${ctx.options.useReadonlyTypes ? "any" : "FieldMask"}): ${returnType} {
+    return message${pathModifier}.paths;
+  }`;
 }
 
 function maybeReadonly(options: Options): string {
