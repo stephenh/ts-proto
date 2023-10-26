@@ -1995,11 +1995,18 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
   return joinCode(chunks, { on: "\n" });
 }
 
-function generateCanonicalToJson(fullName: string, fullProtobufTypeName: string): Code | undefined {
+function generateCanonicalToJson(
+  fullName: string,
+  fullProtobufTypeName: string,
+  { useOptionals }: Options,
+): Code | undefined {
   if (isFieldMaskTypeName(fullProtobufTypeName)) {
+    const returnType = useOptionals === "all" ? "string | undefined" : "string";
+    const pathModifier = useOptionals === "all" ? "?" : "";
+
     return code`
-    toJSON(message: ${fullName}): string {
-      return message.paths.join(',');
+    toJSON(message: ${fullName}): ${returnType} {
+      return message.paths${pathModifier}.join(',');
     }
   `;
   }
@@ -2015,7 +2022,7 @@ function generateToJson(
   const { options, utils, typeMap } = ctx;
   const chunks: Code[] = [];
 
-  const canonicalToJson = generateCanonicalToJson(fullName, fullProtobufTypeName);
+  const canonicalToJson = generateCanonicalToJson(fullName, fullProtobufTypeName, options);
   if (canonicalToJson) {
     chunks.push(canonicalToJson);
     return joinCode(chunks, { on: "\n" });
