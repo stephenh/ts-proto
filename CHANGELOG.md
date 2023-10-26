@@ -1,3 +1,10 @@
+## [1.162.2](https://github.com/stephenh/ts-proto/compare/v1.162.1...v1.162.2) (2023-10-26)
+
+
+### Bug Fixes
+
+* return types and optional chaining in field masks when `useOptionals=all` ([#957](https://github.com/stephenh/ts-proto/issues/957)) ([a3d7bd4](https://github.com/stephenh/ts-proto/commit/a3d7bd4eaf0b25cd8d7991cc85893ce3d8ab7937))
+
 ## [1.162.1](https://github.com/stephenh/ts-proto/compare/v1.162.0...v1.162.1) (2023-10-13)
 
 
