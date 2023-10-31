@@ -52,6 +52,21 @@ export function generateEnum(
     chunks.push(code`} as const`);
     chunks.push(code`\n`);
     chunks.push(code`export type ${def(fullName)} = typeof ${def(fullName)}[keyof typeof ${def(fullName)}]`);
+    chunks.push(code`\n`)
+    chunks.push(code`export namespace ${def(fullName)} {`)
+
+    enumDesc.value.forEach((valueDesc) => {
+      const memberName = getMemberName(ctx, enumDesc, valueDesc);
+      chunks.push(code`export type ${memberName} = typeof ${def(fullName)}.${memberName};`);
+    });
+
+    if (options.unrecognizedEnum && !unrecognizedEnum.present) {
+      chunks.push(
+        code`export type ${options.unrecognizedEnumName} = typeof ${def(fullName)}.${options.unrecognizedEnumName};`
+      );
+    }
+
+    chunks.push(code`}`);
   } else {
     chunks.push(code`}`);
   }
