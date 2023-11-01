@@ -52,8 +52,8 @@ export function generateEnum(
     chunks.push(code`} as const`);
     chunks.push(code`\n`);
     chunks.push(code`export type ${def(fullName)} = typeof ${def(fullName)}[keyof typeof ${def(fullName)}]`);
-    chunks.push(code`\n`)
-    chunks.push(code`export namespace ${def(fullName)} {`)
+    chunks.push(code`\n`);
+    chunks.push(code`export namespace ${def(fullName)} {`);
 
     enumDesc.value.forEach((valueDesc) => {
       const memberName = getMemberName(ctx, enumDesc, valueDesc);
@@ -62,7 +62,7 @@ export function generateEnum(
 
     if (options.unrecognizedEnum && !unrecognizedEnum.present) {
       chunks.push(
-        code`export type ${options.unrecognizedEnumName} = typeof ${def(fullName)}.${options.unrecognizedEnumName};`
+        code`export type ${options.unrecognizedEnumName} = typeof ${def(fullName)}.${options.unrecognizedEnumName};`,
       );
     }
 
