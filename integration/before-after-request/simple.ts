@@ -329,7 +329,7 @@ function createBaseFooServiceCreateRequest(): FooServiceCreateRequest {
   return { $type: "simple.FooServiceCreateRequest", kind: 0 };
 }
 
-export const FooServiceCreateRequest: MessageType<FooServiceCreateRequest> = {
+export const FooServiceCreateRequest = {
   $type: "simple.FooServiceCreateRequest" as const,
 
   encode(message: FooServiceCreateRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
@@ -377,13 +377,11 @@ export const FooServiceCreateRequest: MessageType<FooServiceCreateRequest> = {
   create<I extends Exact<DeepPartial<FooServiceCreateRequest>, I>>(base?: I): FooServiceCreateRequest {
     return FooServiceCreateRequest.fromPartial(base ?? ({} as any));
   },
-
   fromPartial<I extends Exact<DeepPartial<FooServiceCreateRequest>, I>>(object: I): FooServiceCreateRequest {
     const message = createBaseFooServiceCreateRequest();
     message.kind = object.kind ?? 0;
     return message;
   },
-  kind: 0,
 };
 
 messageTypeRegistry.set(FooServiceCreateRequest.$type, FooServiceCreateRequest);
@@ -392,7 +390,7 @@ function createBaseFooServiceCreateResponse(): FooServiceCreateResponse {
   return { $type: "simple.FooServiceCreateResponse", kind: 0 };
 }
 
-export const FooServiceCreateResponse: MessageType<FooServiceCreateResponse> = {
+export const FooServiceCreateResponse = {
   $type: "simple.FooServiceCreateResponse" as const,
 
   encode(message: FooServiceCreateResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
@@ -445,7 +443,6 @@ export const FooServiceCreateResponse: MessageType<FooServiceCreateResponse> = {
     message.kind = object.kind ?? 0;
     return message;
   },
-  kind: 0,
 };
 
 messageTypeRegistry.set(FooServiceCreateResponse.$type, FooServiceCreateResponse);
@@ -465,11 +462,19 @@ export class FooServiceClientImpl implements FooService {
   }
   Create(request: FooServiceCreateRequest): Promise<FooServiceCreateResponse> {
     const data = FooServiceCreateRequest.encode(request).finish();
-    if (this.rpc.beforeRequest && messageTypeRegistry.get(FooServiceCreateRequest.$type) !== undefined) {
-      this.rpc.beforeRequest(messageTypeRegistry.get(FooServiceCreateRequest.$type));
+    const requestMethod = messageTypeRegistry.get(request.$type);
+    if (this.rpc.beforeRequest && requestMethod) {
+      this.rpc.beforeRequest(requestMethod);
     }
     const promise = this.rpc.request(this.service, "Create", data);
-    return promise.then((data) => FooServiceCreateResponse.decode(_m0.Reader.create(data)));
+    return promise.then((data) => {
+      const response = FooServiceCreateResponse.decode(_m0.Reader.create(data));
+      const responseMethod = messageTypeRegistry.get(response.$type);
+      if (response && this.rpc.afterResponse && responseMethod) {
+        this.rpc.afterResponse(responseMethod);
+      }
+      return response;
+    });
   }
 }
 
