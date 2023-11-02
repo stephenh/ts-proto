@@ -11,6 +11,14 @@ export const DividerData_DividerType = { DOUBLE: 0, SINGLE: 1, DASHED: 2, DOTTED
 
 export type DividerData_DividerType = typeof DividerData_DividerType[keyof typeof DividerData_DividerType];
 
+export namespace DividerData_DividerType {
+  export type DOUBLE = typeof DividerData_DividerType.DOUBLE;
+  export type SINGLE = typeof DividerData_DividerType.SINGLE;
+  export type DASHED = typeof DividerData_DividerType.DASHED;
+  export type DOTTED = typeof DividerData_DividerType.DOTTED;
+  export type UNRECOGNIZED = typeof DividerData_DividerType.UNRECOGNIZED;
+}
+
 export function dividerData_DividerTypeFromJSON(object: any): DividerData_DividerType {
   switch (object) {
     case 0:
