@@ -152,10 +152,9 @@ export const Simple = {
   fromPartial<I extends Exact<DeepPartial<Simple>, I>>(object: I): Simple {
     const message = createBaseSimple();
     message.name = object.name ?? "";
-    message.otherSimple =
-      object.otherSimple !== undefined && object.otherSimple !== null
-        ? Simple3.fromPartial(object.otherSimple)
-        : undefined;
+    message.otherSimple = (object.otherSimple !== undefined && object.otherSimple !== null)
+      ? Simple3.fromPartial(object.otherSimple)
+      : undefined;
     return message;
   },
 };
@@ -236,10 +235,9 @@ export const DifferentSimple = {
   fromPartial<I extends Exact<DeepPartial<DifferentSimple>, I>>(object: I): DifferentSimple {
     const message = createBaseDifferentSimple();
     message.name = object.name ?? "";
-    message.otherOptionalSimple2 =
-      object.otherOptionalSimple2 !== undefined && object.otherOptionalSimple2 !== null
-        ? Simple3.fromPartial(object.otherOptionalSimple2)
-        : undefined;
+    message.otherOptionalSimple2 = (object.otherOptionalSimple2 !== undefined && object.otherOptionalSimple2 !== null)
+      ? Simple3.fromPartial(object.otherOptionalSimple2)
+      : undefined;
     return message;
   },
 };
@@ -470,7 +468,7 @@ export class FooServiceClientImpl implements FooService {
     return promise.then((data) => {
       const response = FooServiceCreateResponse.decode(_m0.Reader.create(data));
       const responseMethod = messageTypeRegistry.get(response.$type);
-      if (response && this.rpc.afterResponse && responseMethod) {
+      if (this.rpc.afterResponse && responseMethod) {
         this.rpc.afterResponse(responseMethod);
       }
       return response;
@@ -486,19 +484,14 @@ interface Rpc {
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
-export type DeepPartial<T> = T extends Builtin
-  ? T
-  : T extends globalThis.Array<infer U>
-  ? globalThis.Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U>
-  ? ReadonlyArray<DeepPartial<U>>
-  : T extends {}
-  ? { [K in Exclude<keyof T, "$type">]?: DeepPartial<T[K]> }
+export type DeepPartial<T> = T extends Builtin ? T
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends {} ? { [K in Exclude<keyof T, "$type">]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-export type Exact<P, I extends P> = P extends Builtin
-  ? P
+export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P> | "$type">]: never };
 
 function isSet(value: any): boolean {

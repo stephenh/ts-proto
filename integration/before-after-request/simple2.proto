@@ -1,0 +1,20 @@
+syntax = "proto3";
+package simple2;
+
+enum SimpleEnum {
+  IMPORT_DEFAULT = 0;
+  IMPORT_FOO = 10;
+  IMPORT_BAR = 11;
+}
+
+enum FooService {
+  FOO_SERVICE_DEFAULT = 0;
+  FOO_SERVICE_FOO = 1;
+  FOO_SERVICE_BAR = 2;
+}
+
+message Simple {
+  string name = 1;
+  int32 age = 2;
+}
+
