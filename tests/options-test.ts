@@ -172,6 +172,7 @@ describe("options", () => {
     expect(options).toMatchObject({
       outputAfterResponse: true,
       outputTypeRegistry: true,
+      outputServices: [ServiceOption.DEFAULT],
     });
   });
 
@@ -180,6 +181,7 @@ describe("options", () => {
     expect(options).toMatchObject({
       outputBeforeRequest: true,
       outputTypeRegistry: true,
+      outputServices: [ServiceOption.DEFAULT],
     });
   });
 });

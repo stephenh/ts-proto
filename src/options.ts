@@ -246,6 +246,7 @@ export function optionsFromParameter(parameter: string | undefined): Options {
 
   if (options.outputBeforeRequest || options.outputAfterResponse) {
     options.outputTypeRegistry = true;
+    options.outputServices = [ServiceOption.DEFAULT];
   }
 
   if (options.unrecognizedEnumValue) {
