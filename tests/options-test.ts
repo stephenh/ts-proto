@@ -2,6 +2,7 @@ import { DateOption, optionsFromParameter, ServiceOption } from "../src/options"
 
 describe("options", () => {
   it("can set outputJsonMethods with nestJs=true", () => {
+    console.log(optionsFromParameter("nestJs=true,outputJsonMethods=true"));
     expect(optionsFromParameter("nestJs=true,outputJsonMethods=true")).toMatchInlineSnapshot(`
       {
         "M": {},
@@ -25,6 +26,8 @@ describe("options", () => {
         "nestJs": true,
         "oneof": "properties",
         "onlyTypes": false,
+        "outputAfterResponse": false,
+        "outputBeforeRequest": false,
         "outputClientImpl": false,
         "outputEncodeMethods": false,
         "outputExtensions": false,
@@ -161,6 +164,22 @@ describe("options", () => {
       onlyTypes: true,
       stringEnums: true,
       useDate: DateOption.STRING,
+    });
+  });
+
+  it("outputAfterResponse implies outputTypeRegistry=true", () => {
+    const options = optionsFromParameter("outputAfterResponse=true");
+    expect(options).toMatchObject({
+      outputAfterResponse: true,
+      outputTypeRegistry: true,
+    });
+  });
+
+  it("outputBeforeRequest implies outputTypeRegistry=true", () => {
+    const options = optionsFromParameter("outputBeforeRequest=true");
+    expect(options).toMatchObject({
+      outputBeforeRequest: true,
+      outputTypeRegistry: true,
     });
   });
 });

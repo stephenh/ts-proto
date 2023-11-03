@@ -177,8 +177,7 @@ function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProt
     ${methodDesc.formattedName}(
       ${joinCode(params, { on: "," })}
     ): ${responsePromiseOrObservable(ctx, methodDesc)} {
-      const data = ${encode};
-      ${beforeRequest}
+      const data = ${encode}; ${beforeRequest ? beforeRequest : ""}
       const ${returnVariable} = this.rpc.${rpcMethod}(
         ${maybeCtx}
         this.service,
