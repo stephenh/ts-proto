@@ -1,3 +1,10 @@
+# [1.163.0](https://github.com/stephenh/ts-proto/compare/v1.162.2...v1.163.0) (2023-11-02)
+
+
+### Features
+
+* generate type namespaces for enums as literals ([#960](https://github.com/stephenh/ts-proto/issues/960)) ([e2619f6](https://github.com/stephenh/ts-proto/commit/e2619f6191e8bfb1deaf8474c26ea386c5c34e63))
+
 ## [1.162.2](https://github.com/stephenh/ts-proto/compare/v1.162.1...v1.162.2) (2023-10-26)
 
 
