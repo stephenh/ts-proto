@@ -122,18 +122,17 @@ function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProt
   let encode = code`${rawInputType}.encode(request).finish()`;
   let beforeRequest;
   if (options.outputBeforeRequest) {
-    beforeRequest = code`const requestMethod = messageTypeRegistry.get(request.$type);
-    if (this.rpc.beforeRequest && requestMethod) {
-      this.rpc.beforeRequest(requestMethod);
+    beforeRequest = code`
+    if (this.rpc.beforeRequest) {
+      this.rpc.beforeRequest(request);
     }`;
   }
   let decode = code`data => ${rawOutputType}.decode(${Reader}.create(data))`;
   if (options.outputAfterResponse) {
     decode = code`data => {
       const response = ${rawOutputType}.decode(${Reader}.create(data));
-      const responseMethod = messageTypeRegistry.get(response.$type);
-      if (this.rpc.afterResponse && responseMethod) {
-        this.rpc.afterResponse(responseMethod);
+      if (this.rpc.afterResponse) {
+        this.rpc.afterResponse(response);
       }
       return response;
     }`;
@@ -369,12 +368,12 @@ export function generateRpcType(ctx: Context, hasStreamingMethods: boolean): Cod
   const maybeAbortSignalParam = options.useAbortSignal ? "abortSignal?: AbortSignal," : "";
   const methods = [[code`request`, code`Uint8Array`, code`Promise<Uint8Array>`]];
   const additionalMethods = [];
-  const messageType = impFile(options, "MessageType@./typeRegistry");
+  const is$TypePresent = options.outputTypeAnnotations || options.outputTypeRegistry;
   if (options.outputAfterResponse) {
-    additionalMethods.push(code`afterResponse?(response: ${messageType}): void;`);
+    additionalMethods.push(code`afterResponse?(response: { ${is$TypePresent ? "$type: string" : ""} }): void;`);
   }
   if (options.outputBeforeRequest) {
-    additionalMethods.push(code`beforeRequest?(request: ${messageType}): void;`);
+    additionalMethods.push(code`beforeRequest?(request: { ${is$TypePresent ? "$type: string" : ""} }): void;`);
   }
   if (hasStreamingMethods) {
     const observable = observableType(ctx, true);

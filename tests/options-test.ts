@@ -167,20 +167,18 @@ describe("options", () => {
     });
   });
 
-  it("outputAfterResponse implies outputTypeRegistry=true", () => {
+  it("outputAfterResponse implies default service", () => {
     const options = optionsFromParameter("outputAfterResponse=true");
     expect(options).toMatchObject({
       outputAfterResponse: true,
-      outputTypeRegistry: true,
       outputServices: [ServiceOption.DEFAULT],
     });
   });
 
-  it("outputBeforeRequest implies outputTypeRegistry=true", () => {
+  it("outputBeforeRequest implies default service", () => {
     const options = optionsFromParameter("outputBeforeRequest=true");
     expect(options).toMatchObject({
       outputBeforeRequest: true,
-      outputTypeRegistry: true,
       outputServices: [ServiceOption.DEFAULT],
     });
   });

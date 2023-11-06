@@ -1,1 +1,1 @@
-outputBeforeRequest=true,outputAfterResponse=true,outputTypeRegistry=true
+outputBeforeRequest=true,outputAfterResponse=true

@@ -3,8 +3,8 @@ import { MessageType } from "./typeRegistry";
 
 interface Rpc {
   request(service: string, method: string, data: Uint8Array): Promise<Uint8Array>;
-  afterResponse?(response: MessageType): void;
-  beforeRequest?(request: MessageType): void;
+  afterResponse?(response: {}): void;
+  beforeRequest?(request: {}): void;
 }
 
 describe("before-after-request", () => {
@@ -29,14 +29,14 @@ describe("before-after-request", () => {
     const req = FooServiceCreateRequest.create(exampleData);
     client = new FooServiceClientImpl({ ...rpc, beforeRequest: beforeRequest });
     await client.Create(req);
-    expect(beforeRequest).toHaveBeenCalled();
+    expect(beforeRequest).toHaveBeenCalledWith(req);
   });
 
   it("performs function after request if specified", async () => {
     const req = FooServiceCreateRequest.create(exampleData);
     client = new FooServiceClientImpl({ ...rpc, afterResponse: afterResponse });
     await client.Create(req);
-    expect(afterResponse).toHaveBeenCalled();
+    expect(afterResponse).toHaveBeenCalledWith({ $type: "simple.FooServiceCreateResponse", ...exampleData });
   });
 
   it("doesn't perform function before or after request if they are not specified", async () => {

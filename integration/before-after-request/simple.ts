@@ -9,7 +9,6 @@ import {
   simpleEnumFromJSON as simpleEnumFromJSON4,
   simpleEnumToJSON as simpleEnumToJSON5,
 } from "./simple2";
-import { MessageType, messageTypeRegistry } from "./typeRegistry";
 
 export const protobufPackage = "simple";
 
@@ -53,40 +52,33 @@ export function simpleEnumToJSON(object: SimpleEnum): string {
 }
 
 export interface Simple {
-  $type: "simple.Simple";
   name: string;
   otherSimple: Simple3 | undefined;
 }
 
 export interface DifferentSimple {
-  $type: "simple.DifferentSimple";
   name: string;
   otherOptionalSimple2?: Simple3 | undefined;
 }
 
 export interface SimpleEnums {
-  $type: "simple.SimpleEnums";
   localEnum: SimpleEnum;
   importEnum: SimpleEnum1;
 }
 
 export interface FooServiceCreateRequest {
-  $type: "simple.FooServiceCreateRequest";
   kind: FooService2;
 }
 
 export interface FooServiceCreateResponse {
-  $type: "simple.FooServiceCreateResponse";
   kind: FooService2;
 }
 
 function createBaseSimple(): Simple {
-  return { $type: "simple.Simple", name: "", otherSimple: undefined };
+  return { name: "", otherSimple: undefined };
 }
 
 export const Simple = {
-  $type: "simple.Simple" as const,
-
   encode(message: Simple, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
@@ -129,7 +121,6 @@ export const Simple = {
 
   fromJSON(object: any): Simple {
     return {
-      $type: Simple.$type,
       name: isSet(object.name) ? globalThis.String(object.name) : "",
       otherSimple: isSet(object.otherSimple) ? Simple3.fromJSON(object.otherSimple) : undefined,
     };
@@ -159,15 +150,11 @@ export const Simple = {
   },
 };
 
-messageTypeRegistry.set(Simple.$type, Simple);
-
 function createBaseDifferentSimple(): DifferentSimple {
-  return { $type: "simple.DifferentSimple", name: "", otherOptionalSimple2: undefined };
+  return { name: "", otherOptionalSimple2: undefined };
 }
 
 export const DifferentSimple = {
-  $type: "simple.DifferentSimple" as const,
-
   encode(message: DifferentSimple, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
@@ -210,7 +197,6 @@ export const DifferentSimple = {
 
   fromJSON(object: any): DifferentSimple {
     return {
-      $type: DifferentSimple.$type,
       name: isSet(object.name) ? globalThis.String(object.name) : "",
       otherOptionalSimple2: isSet(object.otherOptionalSimple2)
         ? Simple3.fromJSON(object.otherOptionalSimple2)
@@ -242,15 +228,11 @@ export const DifferentSimple = {
   },
 };
 
-messageTypeRegistry.set(DifferentSimple.$type, DifferentSimple);
-
 function createBaseSimpleEnums(): SimpleEnums {
-  return { $type: "simple.SimpleEnums", localEnum: 0, importEnum: 0 };
+  return { localEnum: 0, importEnum: 0 };
 }
 
 export const SimpleEnums = {
-  $type: "simple.SimpleEnums" as const,
-
   encode(message: SimpleEnums, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.localEnum !== 0) {
       writer.uint32(8).int32(message.localEnum);
@@ -293,7 +275,6 @@ export const SimpleEnums = {
 
   fromJSON(object: any): SimpleEnums {
     return {
-      $type: SimpleEnums.$type,
       localEnum: isSet(object.localEnum) ? simpleEnumFromJSON(object.localEnum) : 0,
       importEnum: isSet(object.importEnum) ? simpleEnumFromJSON4(object.importEnum) : 0,
     };
@@ -321,15 +302,11 @@ export const SimpleEnums = {
   },
 };
 
-messageTypeRegistry.set(SimpleEnums.$type, SimpleEnums);
-
 function createBaseFooServiceCreateRequest(): FooServiceCreateRequest {
-  return { $type: "simple.FooServiceCreateRequest", kind: 0 };
+  return { kind: 0 };
 }
 
 export const FooServiceCreateRequest = {
-  $type: "simple.FooServiceCreateRequest" as const,
-
   encode(message: FooServiceCreateRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.kind !== 0) {
       writer.uint32(8).int32(message.kind);
@@ -361,7 +338,7 @@ export const FooServiceCreateRequest = {
   },
 
   fromJSON(object: any): FooServiceCreateRequest {
-    return { $type: FooServiceCreateRequest.$type, kind: isSet(object.kind) ? fooServiceFromJSON(object.kind) : 0 };
+    return { kind: isSet(object.kind) ? fooServiceFromJSON(object.kind) : 0 };
   },
 
   toJSON(message: FooServiceCreateRequest): unknown {
@@ -382,15 +359,11 @@ export const FooServiceCreateRequest = {
   },
 };
 
-messageTypeRegistry.set(FooServiceCreateRequest.$type, FooServiceCreateRequest);
-
 function createBaseFooServiceCreateResponse(): FooServiceCreateResponse {
-  return { $type: "simple.FooServiceCreateResponse", kind: 0 };
+  return { kind: 0 };
 }
 
 export const FooServiceCreateResponse = {
-  $type: "simple.FooServiceCreateResponse" as const,
-
   encode(message: FooServiceCreateResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.kind !== 0) {
       writer.uint32(8).int32(message.kind);
@@ -422,7 +395,7 @@ export const FooServiceCreateResponse = {
   },
 
   fromJSON(object: any): FooServiceCreateResponse {
-    return { $type: FooServiceCreateResponse.$type, kind: isSet(object.kind) ? fooServiceFromJSON(object.kind) : 0 };
+    return { kind: isSet(object.kind) ? fooServiceFromJSON(object.kind) : 0 };
   },
 
   toJSON(message: FooServiceCreateResponse): unknown {
@@ -443,8 +416,6 @@ export const FooServiceCreateResponse = {
   },
 };
 
-messageTypeRegistry.set(FooServiceCreateResponse.$type, FooServiceCreateResponse);
-
 export interface FooService {
   Create(request: FooServiceCreateRequest): Promise<FooServiceCreateResponse>;
 }
@@ -460,16 +431,14 @@ export class FooServiceClientImpl implements FooService {
   }
   Create(request: FooServiceCreateRequest): Promise<FooServiceCreateResponse> {
     const data = FooServiceCreateRequest.encode(request).finish();
-    const requestMethod = messageTypeRegistry.get(request.$type);
-    if (this.rpc.beforeRequest && requestMethod) {
-      this.rpc.beforeRequest(requestMethod);
+    if (this.rpc.beforeRequest) {
+      this.rpc.beforeRequest(request);
     }
     const promise = this.rpc.request(this.service, "Create", data);
     return promise.then((data) => {
       const response = FooServiceCreateResponse.decode(_m0.Reader.create(data));
-      const responseMethod = messageTypeRegistry.get(response.$type);
-      if (this.rpc.afterResponse && responseMethod) {
-        this.rpc.afterResponse(responseMethod);
+      if (this.rpc.afterResponse) {
+        this.rpc.afterResponse(response);
       }
       return response;
     });
@@ -478,8 +447,8 @@ export class FooServiceClientImpl implements FooService {
 
 interface Rpc {
   request(service: string, method: string, data: Uint8Array): Promise<Uint8Array>;
-  afterResponse?(response: MessageType): void;
-  beforeRequest?(request: MessageType): void;
+  afterResponse?(response: {}): void;
+  beforeRequest?(request: {}): void;
 }
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
@@ -487,12 +456,12 @@ type Builtin = Date | Function | Uint8Array | string | number | boolean | undefi
 export type DeepPartial<T> = T extends Builtin ? T
   : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
-  : T extends {} ? { [K in Exclude<keyof T, "$type">]?: DeepPartial<T[K]> }
+  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
-  : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P> | "$type">]: never };
+  : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
