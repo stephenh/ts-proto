@@ -368,12 +368,11 @@ export function generateRpcType(ctx: Context, hasStreamingMethods: boolean): Cod
   const maybeAbortSignalParam = options.useAbortSignal ? "abortSignal?: AbortSignal," : "";
   const methods = [[code`request`, code`Uint8Array`, code`Promise<Uint8Array>`]];
   const additionalMethods = [];
-  const is$TypePresent = options.outputTypeAnnotations || options.outputTypeRegistry;
-  if (options.outputAfterResponse) {
-    additionalMethods.push(code`afterResponse?(response: { ${is$TypePresent ? "$type: string" : ""} }): void;`);
-  }
   if (options.outputBeforeRequest) {
-    additionalMethods.push(code`beforeRequest?(request: { ${is$TypePresent ? "$type: string" : ""} }): void;`);
+    additionalMethods.push(code`beforeRequest?<T extends { [k in keyof T]: unknown }>(request: T): void;`);
+  }
+  if (options.outputAfterResponse) {
+    additionalMethods.push(code`afterResponse?<T extends { [k in keyof T]: unknown }>(response: T): void;`);
   }
   if (hasStreamingMethods) {
     const observable = observableType(ctx, true);

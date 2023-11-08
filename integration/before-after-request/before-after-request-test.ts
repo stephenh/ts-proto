@@ -3,8 +3,8 @@ import { MessageType } from "./typeRegistry";
 
 interface Rpc {
   request(service: string, method: string, data: Uint8Array): Promise<Uint8Array>;
-  afterResponse?(response: {}): void;
-  beforeRequest?(request: {}): void;
+  beforeRequest?<T extends { [k in keyof T]: unknown }>(request: T): void;
+  afterResponse?<T extends { [k in keyof T]: unknown }>(response: T): void;
 }
 
 describe("before-after-request", () => {
@@ -20,9 +20,7 @@ describe("before-after-request", () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    jest
-      .spyOn(FooServiceCreateResponse, "decode")
-      .mockReturnValue({ $type: "simple.FooServiceCreateResponse", ...exampleData });
+    jest.spyOn(FooServiceCreateResponse, "decode").mockReturnValue(exampleData);
   });
 
   it("performs function before request if specified", async () => {
@@ -36,7 +34,7 @@ describe("before-after-request", () => {
     const req = FooServiceCreateRequest.create(exampleData);
     client = new FooServiceClientImpl({ ...rpc, afterResponse: afterResponse });
     await client.Create(req);
-    expect(afterResponse).toHaveBeenCalledWith({ $type: "simple.FooServiceCreateResponse", ...exampleData });
+    expect(afterResponse).toHaveBeenCalledWith(exampleData);
   });
 
   it("doesn't perform function before or after request if they are not specified", async () => {

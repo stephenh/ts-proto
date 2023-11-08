@@ -447,8 +447,8 @@ export class FooServiceClientImpl implements FooService {
 
 interface Rpc {
   request(service: string, method: string, data: Uint8Array): Promise<Uint8Array>;
-  afterResponse?(response: {}): void;
-  beforeRequest?(request: {}): void;
+  beforeRequest?<T extends { [k in keyof T]: unknown }>(request: T): void;
+  afterResponse?<T extends { [k in keyof T]: unknown }>(response: T): void;
 }
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
