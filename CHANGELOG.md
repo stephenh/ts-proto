@@ -1,3 +1,10 @@
+# [1.164.0](https://github.com/stephenh/ts-proto/compare/v1.163.0...v1.164.0) (2023-11-09)
+
+
+### Features
+
+* add before and after request methods to base service ([#961](https://github.com/stephenh/ts-proto/issues/961)) ([19ba6a5](https://github.com/stephenh/ts-proto/commit/19ba6a50c6fd4f574e20315e1ec721c5e04dab25))
+
 # [1.163.0](https://github.com/stephenh/ts-proto/compare/v1.162.2...v1.163.0) (2023-11-02)
 
 
