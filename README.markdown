@@ -446,6 +446,10 @@ Generated code will be placed in the Gradle build directory.
 
 - With `--ts_proto_opt=outputServices=false`, or `=none`, ts-proto will output NO service definitions.
 
+- With `--ts_proto_opt=outputBeforeRequest=true`, ts-proto will add a function definition to the Rpc interface definition with the signature: `beforeRequest(request: <RequestType>)`. It will will also automatically set `outputTypeRegistry=true` and `outputServices=true`. Each of the Service's methods will call `beforeRequest` before performing it's request.
+
+- With `--ts_proto_opt=outputAfterResponse=true`, ts-proto will add a function definition to the Rpc interface definition with the signature: `afterResponse(response: <ResponseType>)`. It will will also automatically set `outputTypeRegistry=true` and `outputServices=true`. Each of the Service's methods will call `afterResponse` before returning the response.
+
 - With `--ts_proto_opt=useAbortSignal=true`, the generated services will accept an `AbortSignal` to cancel RPC calls.
 
 - With `--ts_proto_opt=useAsyncIterable=true`, the generated services will use `AsyncIterable` instead of `Observable`.

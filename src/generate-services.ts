@@ -120,7 +120,23 @@ function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProt
   const maybeAbortSignal = options.useAbortSignal ? "abortSignal || undefined," : "";
 
   let encode = code`${rawInputType}.encode(request).finish()`;
+  let beforeRequest;
+  if (options.outputBeforeRequest) {
+    beforeRequest = code`
+    if (this.rpc.beforeRequest) {
+      this.rpc.beforeRequest(request);
+    }`;
+  }
   let decode = code`data => ${rawOutputType}.decode(${Reader}.create(data))`;
+  if (options.outputAfterResponse) {
+    decode = code`data => {
+      const response = ${rawOutputType}.decode(${Reader}.create(data));
+      if (this.rpc.afterResponse) {
+        this.rpc.afterResponse(response);
+      }
+      return response;
+    }`;
+  }
 
   // if (options.useDate && rawOutputType.toString().includes("Timestamp")) {
   //   decode = code`data => ${utils.fromTimestamp}(${rawOutputType}.decode(${Reader}.create(data)))`;
@@ -160,7 +176,7 @@ function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProt
     ${methodDesc.formattedName}(
       ${joinCode(params, { on: "," })}
     ): ${responsePromiseOrObservable(ctx, methodDesc)} {
-      const data = ${encode};
+      const data = ${encode}; ${beforeRequest ? beforeRequest : ""}
       const ${returnVariable} = this.rpc.${rpcMethod}(
         ${maybeCtx}
         this.service,
@@ -351,6 +367,13 @@ export function generateRpcType(ctx: Context, hasStreamingMethods: boolean): Cod
   const maybeContextParam = options.context ? "ctx: Context," : "";
   const maybeAbortSignalParam = options.useAbortSignal ? "abortSignal?: AbortSignal," : "";
   const methods = [[code`request`, code`Uint8Array`, code`Promise<Uint8Array>`]];
+  const additionalMethods = [];
+  if (options.outputBeforeRequest) {
+    additionalMethods.push(code`beforeRequest?<T extends { [k in keyof T]: unknown }>(request: T): void;`);
+  }
+  if (options.outputAfterResponse) {
+    additionalMethods.push(code`afterResponse?<T extends { [k in keyof T]: unknown }>(response: T): void;`);
+  }
   if (hasStreamingMethods) {
     const observable = observableType(ctx, true);
     methods.push([code`clientStreamingRequest`, code`${observable}<Uint8Array>`, code`Promise<Uint8Array>`]);
@@ -373,6 +396,7 @@ export function generateRpcType(ctx: Context, hasStreamingMethods: boolean): Cod
         ${maybeAbortSignalParam}
       ): ${method[2]};`);
   });
+  additionalMethods.forEach((method) => chunks.push(method));
   chunks.push(code`    }`);
   return joinCode(chunks, { on: "\n" });
 }
