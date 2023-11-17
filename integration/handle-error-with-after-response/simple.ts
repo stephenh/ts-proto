@@ -150,10 +150,11 @@ export class BasicServiceClientImpl implements BasicService {
           }
           return response;
         } catch (error) {
+          if (error instanceof Error && this.rpc.handleError) {
+            throw this.rpc.handleError(this.service, "GetBasic", error);
+          }
           throw error;
         }
-      }).catch((error) => {
-        throw error;
       });
     } catch (error) {
       if (error instanceof Error && this.rpc.handleError) {

@@ -52,6 +52,30 @@ describe("before-after-request", () => {
     decodeSpy.mockRestore();
   });
 
+  it("performs handleError if error occurs when calling afterResponse", async () => {
+    const decodeSpy = jest.spyOn(GetBasicResponse, "decode").mockReturnValue(exampleData);
+    const req = GetBasicRequest.create(exampleData);
+    const res = GetBasicResponse.create(exampleData);
+
+    const afterResponse = jest.fn(() => {
+      throw err;
+    });
+    client = new BasicServiceClientImpl({
+      ...rpc,
+      handleError: handleError,
+      afterResponse: afterResponse,
+    });
+    try {
+      await client.GetBasic(req);
+    } catch (error) {
+      expect(error).toBe(modifiedError);
+      expect(decodeSpy).toHaveBeenCalledTimes(1);
+      expect(afterResponse).toHaveBeenCalledWith(BasicServiceServiceName, "GetBasic", res);
+      expect(handleError).toHaveBeenCalledWith(BasicServiceServiceName, "GetBasic", err);
+    }
+    decodeSpy.mockRestore();
+  });
+
   it("doesn't perform handleError if it is not specified", async () => {
     const req = GetBasicRequest.create(exampleData);
     client = new BasicServiceClientImpl(rpc);

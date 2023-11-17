@@ -169,9 +169,9 @@ function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProt
   } else if (options.outputErrorHandler) {
     returnVariable = "promise";
     if (options.outputAfterResponse) {
-      decode = code`promise.then(data => { try ${decode} catch (error) { throw error } }).catch((error) => { throw error })`;
+      decode = code`promise.then(data => { try ${decode} catch (error) { ${errorHandler} } } )`;
     } else {
-      decode = code`promise.then(data => { try { return ${decode} } catch (error) { throw error } }).catch((error) => { throw error })`;
+      decode = code`promise.then(data => { try { return ${decode} } catch (error) { ${errorHandler} } } )`;
     }
   } else {
     returnVariable = "promise";

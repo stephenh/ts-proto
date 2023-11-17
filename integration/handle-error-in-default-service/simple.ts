@@ -146,10 +146,11 @@ export class BasicServiceClientImpl implements BasicService {
         try {
           return GetBasicResponse.decode(_m0.Reader.create(data));
         } catch (error) {
+          if (error instanceof Error && this.rpc.handleError) {
+            throw this.rpc.handleError(this.service, "GetBasic", error);
+          }
           throw error;
         }
-      }).catch((error) => {
-        throw error;
       });
     } catch (error) {
       if (error instanceof Error && this.rpc.handleError) {
