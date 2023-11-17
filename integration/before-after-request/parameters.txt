@@ -1,1 +1,1 @@
-outputBeforeRequest=true,outputAfterResponse=true
+outputBeforeRequest=true,outputAfterResponse=true,outputServices=default,outputServices=generic-definitions,

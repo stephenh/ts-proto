@@ -89,6 +89,7 @@ export type Options = {
   M: { [from: string]: string };
   outputBeforeRequest: boolean;
   outputAfterResponse: boolean;
+  outputErrorHandler: boolean;
 };
 
 export function defaultOptions(): Options {
@@ -147,6 +148,7 @@ export function defaultOptions(): Options {
     M: {},
     outputBeforeRequest: false,
     outputAfterResponse: false,
+    outputErrorHandler: false,
   };
 }
 
@@ -244,8 +246,12 @@ export function optionsFromParameter(parameter: string | undefined): Options {
     options.exportCommonSymbols = false;
   }
 
-  if (options.outputBeforeRequest || options.outputAfterResponse) {
+  if (options.outputBeforeRequest || options.outputAfterResponse || options.outputErrorHandler) {
+    const includesGeneric = options.outputServices.includes(ServiceOption.GENERIC);
     options.outputServices = [ServiceOption.DEFAULT];
+    if (includesGeneric) {
+      options.outputServices.push(ServiceOption.GENERIC);
+    }
   }
 
   if (options.unrecognizedEnumValue) {

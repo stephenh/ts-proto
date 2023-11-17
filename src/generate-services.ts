@@ -119,20 +119,30 @@ function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProt
   const maybeCtx = options.context ? "ctx," : "";
   const maybeAbortSignal = options.useAbortSignal ? "abortSignal || undefined," : "";
 
+  let errorHandler;
+  if (options.outputErrorHandler) {
+    errorHandler = code`
+      if (error instanceof Error && this.rpc.handleError) {
+        throw this.rpc.handleError(this.service, "${methodDesc.name}", error);
+      }
+      throw error;
+    `;
+  }
+
   let encode = code`${rawInputType}.encode(request).finish()`;
   let beforeRequest;
   if (options.outputBeforeRequest) {
     beforeRequest = code`
     if (this.rpc.beforeRequest) {
-      this.rpc.beforeRequest(request);
+      this.rpc.beforeRequest(this.service, "${methodDesc.name}", request);
     }`;
   }
-  let decode = code`data => ${rawOutputType}.decode(${Reader}.create(data))`;
+  let decode = code`${rawOutputType}.decode(${Reader}.create(data))`;
   if (options.outputAfterResponse) {
-    decode = code`data => {
+    decode = code`{
       const response = ${rawOutputType}.decode(${Reader}.create(data));
       if (this.rpc.afterResponse) {
-        this.rpc.afterResponse(response);
+        this.rpc.afterResponse(this.service, "${methodDesc.name}", response);
       }
       return response;
     }`;
@@ -154,11 +164,19 @@ function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProt
     if (options.useAsyncIterable) {
       decode = code`${rawOutputType}.decodeTransform(result)`;
     } else {
-      decode = code`result.pipe(${imp("map@rxjs/operators")}(${decode}))`;
+      decode = code`result.pipe(${imp("map@rxjs/operators")}(data => ${decode}))`;
+    }
+  }
+  if (options.outputErrorHandler) {
+    returnVariable = "promise";
+    if (options.outputAfterResponse) {
+      decode = code`promise.then(data => { try ${decode} catch (error) { ${errorHandler} } } )`;
+    } else {
+      decode = code`promise.then(data => { try { return ${decode} } catch (error) { ${errorHandler} } } )`;
     }
   } else {
     returnVariable = "promise";
-    decode = code`promise.then(${decode})`;
+    decode = code`promise.then(data => ${decode})`;
   }
 
   let rpcMethod: string;
@@ -176,6 +194,7 @@ function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProt
     ${methodDesc.formattedName}(
       ${joinCode(params, { on: "," })}
     ): ${responsePromiseOrObservable(ctx, methodDesc)} {
+      ${options.outputErrorHandler ? "try {" : ""}
       const data = ${encode}; ${beforeRequest ? beforeRequest : ""}
       const ${returnVariable} = this.rpc.${rpcMethod}(
         ${maybeCtx}
@@ -185,6 +204,7 @@ function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProt
         ${maybeAbortSignal}
       );
       return ${decode};
+      ${errorHandler ? code` } catch (error) { ${errorHandler} }` : ""}
     }
   `;
 }
@@ -369,11 +389,19 @@ export function generateRpcType(ctx: Context, hasStreamingMethods: boolean): Cod
   const methods = [[code`request`, code`Uint8Array`, code`Promise<Uint8Array>`]];
   const additionalMethods = [];
   if (options.outputBeforeRequest) {
-    additionalMethods.push(code`beforeRequest?<T extends { [k in keyof T]: unknown }>(request: T): void;`);
+    additionalMethods.push(
+      code`beforeRequest?<T extends { [k in keyof T]: unknown }>(service: string, method: string, request: T): void;`,
+    );
   }
   if (options.outputAfterResponse) {
-    additionalMethods.push(code`afterResponse?<T extends { [k in keyof T]: unknown }>(response: T): void;`);
+    additionalMethods.push(
+      code`afterResponse?<T extends { [k in keyof T]: unknown }>(service: string, method: string, response: T): void;`,
+    );
   }
+  if (options.outputErrorHandler) {
+    additionalMethods.push(code`handleError?(service: string, method: string, error: Error): Error;`);
+  }
+
   if (hasStreamingMethods) {
     const observable = observableType(ctx, true);
     methods.push([code`clientStreamingRequest`, code`${observable}<Uint8Array>`, code`Promise<Uint8Array>`]);

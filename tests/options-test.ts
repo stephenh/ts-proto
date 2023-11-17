@@ -30,6 +30,7 @@ describe("options", () => {
         "outputBeforeRequest": false,
         "outputClientImpl": false,
         "outputEncodeMethods": false,
+        "outputErrorHandler": false,
         "outputExtensions": false,
         "outputIndex": false,
         "outputJsonMethods": true,
@@ -180,6 +181,16 @@ describe("options", () => {
     expect(options).toMatchObject({
       outputBeforeRequest: true,
       outputServices: [ServiceOption.DEFAULT],
+    });
+  });
+
+  it("outputAfterResponse implies default service but allows generics too", () => {
+    const options = optionsFromParameter(
+      "outputBeforeRequest=true,outputServices=generic-definitions,outputServices=default",
+    );
+    expect(options).toMatchObject({
+      outputBeforeRequest: true,
+      outputServices: [ServiceOption.DEFAULT, ServiceOption.GENERIC],
     });
   });
 });
