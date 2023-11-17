@@ -16,6 +16,7 @@ import {
   maybeAddComment,
   maybePrefixPackage,
   singular,
+  tryCatchBlock,
 } from "./utils";
 import SourceInfo, { Fields } from "./sourceInfo";
 import { contextTypeVar } from "./main";
@@ -139,13 +140,13 @@ function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProt
   }
   let decode = code`${rawOutputType}.decode(${Reader}.create(data))`;
   if (options.outputAfterResponse) {
-    decode = code`{
+    decode = code`
       const response = ${rawOutputType}.decode(${Reader}.create(data));
       if (this.rpc.afterResponse) {
         this.rpc.afterResponse(this.service, "${methodDesc.name}", response);
       }
       return response;
-    }`;
+    `;
   }
 
   // if (options.useDate && rawOutputType.toString().includes("Timestamp")) {
@@ -158,24 +159,14 @@ function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProt
       encode = code`request.pipe(${imp("map@rxjs/operators")}(request => ${encode}))`;
     }
   }
+
+  const returnStatement = createDefaultServiceReturn(ctx, methodDesc, decode, errorHandler);
+
   let returnVariable: string;
   if (options.returnObservable || methodDesc.serverStreaming) {
     returnVariable = "result";
-    if (options.useAsyncIterable) {
-      decode = code`${rawOutputType}.decodeTransform(result)`;
-    } else {
-      decode = code`result.pipe(${imp("map@rxjs/operators")}(data => ${decode}))`;
-    }
-  } else if (options.outputErrorHandler) {
-    returnVariable = "promise";
-    if (options.outputAfterResponse) {
-      decode = code`promise.then(data => { try ${decode} catch (error) { ${errorHandler} } } )`;
-    } else {
-      decode = code`promise.then(data => { try { return ${decode} } catch (error) { ${errorHandler} } } )`;
-    }
   } else {
     returnVariable = "promise";
-    decode = code`promise.then(data => ${decode})`;
   }
 
   let rpcMethod: string;
@@ -202,10 +193,36 @@ function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProt
         data,
         ${maybeAbortSignal}
       );
-      return ${decode};
+      return ${returnStatement};
       ${errorHandler ? code` } catch (error) { ${errorHandler} }` : ""}
     }
   `;
+}
+
+function createDefaultServiceReturn(
+  ctx: Context,
+  methodDesc: MethodDescriptorProto,
+  decode: Code,
+  errorHandler?: Code,
+): Code {
+  const { options } = ctx;
+  const rawOutputType = responseType(ctx, methodDesc, { keepValueType: true });
+  if (options.returnObservable || methodDesc.serverStreaming) {
+    if (options.useAsyncIterable) {
+      return code`${rawOutputType}.decodeTransform(result)`;
+    } else {
+      return code`result.pipe(${imp("map@rxjs/operators")}(data => ${decode}))`;
+    }
+  }
+
+  if (options.outputAfterResponse && errorHandler) {
+    return code`promise.then(data => { ${tryCatchBlock(decode, errorHandler)} })`;
+  } else if (errorHandler) {
+    return code`promise.then(data => { ${tryCatchBlock(code`return ${decode}`, errorHandler)} } )`;
+  } else if (options.outputAfterResponse) {
+    return code`promise.then(data => { ${decode} } )`;
+  }
+  return code`promise.then(data => ${decode})`;
 }
 
 export function generateServiceClientImpl(
