@@ -144,7 +144,11 @@ export class BasicServiceClientImpl implements BasicService {
       const promise = this.rpc.request(this.service, "GetBasic", data);
       return promise.then((data) => {
         try {
-          return GetBasicResponse.decode(_m0.Reader.create(data));
+          const response = GetBasicResponse.decode(_m0.Reader.create(data));
+          if (this.rpc.afterResponse) {
+            this.rpc.afterResponse(this.service, "GetBasic", response);
+          }
+          return response;
         } catch (error) {
           throw error;
         }
@@ -162,6 +166,7 @@ export class BasicServiceClientImpl implements BasicService {
 
 interface Rpc {
   request(service: string, method: string, data: Uint8Array): Promise<Uint8Array>;
+  afterResponse?<T extends { [k in keyof T]: unknown }>(service: string, method: string, response: T): void;
   handleError?(service: string, method: string, error: Error): Error;
 }
 

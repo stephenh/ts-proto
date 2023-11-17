@@ -1,1 +1,1 @@
-outputServices=default,outputAfterResponse=true,outputErrorHandler=true
+outputServices=default,outputErrorHandler=true
