@@ -147,6 +147,8 @@ If you'd like an out-of-the-box RPC framework built on top of ts-proto, there ar
 
 (Note for potential contributors, if you develop other frameworks/mini-frameworks, or even blog posts/tutorials, on using `ts-proto`, we're happy to link to them.)
 
+We also don't support clients for `google.api.http`-based [Google Cloud](https://cloud.google.com/endpoints/docs/grpc/transcoding) APIs, see [#948](https://github.com/stephenh/ts-proto/issues/948) if you'd like to submit a PR.
+
 # Example Types
 
 The generated types are "just data", i.e.:
