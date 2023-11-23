@@ -336,14 +336,6 @@ function createInvokeMethod(ctx: Context) {
   const { options } = ctx;
   const { useAbortSignal } = options;
 
-  const maybeAbortSignal = useAbortSignal
-    ? `
-      if (abortSignal) abortSignal.addEventListener("abort", () => {
-        observer.error(abortSignal.reason);
-        client.close();
-      });`
-    : "";
-
   return code`
     invoke<T extends UnaryMethodDefinitionish>(
       methodDesc: T,
@@ -380,16 +372,29 @@ function createInvokeMethod(ctx: Context) {
               }
             },
           });
-          observer.add(() => {
-           ${
-             !useAbortSignal
-               ? `return client.close();`
-               : `if (!abortSignal || !abortSignal.aborted) 
-              return client.close();`
-           }
-          });
+          ${
+            useAbortSignal
+              ? `
+          if (abortSignal) {
+            const abort = () => {
+              observer.error(abortSignal.reason);
+              client.close();
+            };
+            abortSignal.addEventListener("abort", abort);
+            observer.add(() => {
+              if (abortSignal.aborted) {
+                return;
+              }
 
-          ${maybeAbortSignal}
+              abortSignal.removeEventListener('abort', abort); 
+              client.close();
+            });
+          } else {
+            observer.add(() => client.close());
+          }
+          `
+              : `observer.add(() => client.close());`
+          }
         });
         upStream();
       }).pipe(${share}());

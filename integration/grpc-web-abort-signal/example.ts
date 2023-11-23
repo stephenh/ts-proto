@@ -1081,17 +1081,23 @@ export class GrpcWebImpl {
             }
           },
         });
-        observer.add(() => {
-          if (!abortSignal || !abortSignal.aborted) {
-            return client.close();
-          }
-        });
 
         if (abortSignal) {
-          abortSignal.addEventListener("abort", () => {
+          const abort = () => {
             observer.error(abortSignal.reason);
             client.close();
+          };
+          abortSignal.addEventListener("abort", abort);
+          observer.add(() => {
+            if (abortSignal.aborted) {
+              return;
+            }
+
+            abortSignal.removeEventListener("abort", abort);
+            client.close();
           });
+        } else {
+          observer.add(() => client.close());
         }
       });
       upStream();
