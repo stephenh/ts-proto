@@ -15,6 +15,11 @@ export enum DateOption {
   TIMESTAMP = "timestamp",
 }
 
+export enum JsonTimestampOption {
+  RFC3339 = "rfc3339",
+  RAW = "raw",
+}
+
 export enum EnvOption {
   NODE = "node",
   BROWSER = "browser",
@@ -42,6 +47,7 @@ export type Options = {
   useOptionals: boolean | "none" | "messages" | "all"; // boolean is deprecated
   emitDefaultValues: Array<"json-methods">;
   useDate: DateOption;
+  useJsonTimestamp: JsonTimestampOption;
   useMongoObjectId: boolean;
   oneof: OneofOption;
   esModuleInterop: boolean;
@@ -100,6 +106,7 @@ export function defaultOptions(): Options {
     forceLong: LongOption.NUMBER,
     useOptionals: "none",
     useDate: DateOption.DATE,
+    useJsonTimestamp: JsonTimestampOption.RFC3339,
     useMongoObjectId: false,
     oneof: OneofOption.PROPERTIES,
     esModuleInterop: false,

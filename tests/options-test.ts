@@ -56,6 +56,7 @@ describe("options", () => {
         "useDate": "timestamp",
         "useExactTypes": true,
         "useJsonName": false,
+        "useJsonTimestamp": "rfc3339",
         "useJsonWireFormat": false,
         "useMapType": false,
         "useMongoObjectId": false,

@@ -1,0 +1,2 @@
+useDate=false
+useJsonTimestamp=raw

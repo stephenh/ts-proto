@@ -1,4 +1,5 @@
 import { code, Code, conditionalOutput, def, imp, joinCode } from "ts-poet";
+import { ConditionalOutput } from "ts-poet/build/ConditionalOutput";
 import {
   DescriptorProto,
   FieldDescriptorProto,
@@ -6,6 +7,50 @@ import {
   FieldDescriptorProto_Type,
   FileDescriptorProto,
 } from "ts-proto-descriptors";
+import { camelToSnake, capitalize, maybeSnakeToCamel } from "./case";
+import { Context } from "./context";
+import { generateEnum } from "./enums";
+import { generateDecodeTransform, generateEncodeTransform } from "./generate-async-iterable";
+import { generateGenericServiceDefinition } from "./generate-generic-service-definition";
+import { generateGrpcJsService } from "./generate-grpc-js";
+import {
+  addGrpcWebMisc,
+  generateGrpcClientImpl,
+  generateGrpcMethodDesc,
+  generateGrpcServiceDesc,
+} from "./generate-grpc-web";
+import {
+  generateNestjsGrpcServiceMethodsDecorator,
+  generateNestjsServiceClient,
+  generateNestjsServiceController,
+} from "./generate-nestjs";
+import { generateNiceGrpcService } from "./generate-nice-grpc";
+import {
+  generateDataLoaderOptionsType,
+  generateDataLoadersType,
+  generateRpcType,
+  generateService,
+  generateServiceClientImpl,
+} from "./generate-services";
+import {
+  generateUnwrapDeep,
+  generateUnwrapShallow,
+  generateWrapDeep,
+  generateWrapShallow,
+  isWrapperType,
+} from "./generate-struct-wrappers";
+import {
+  addTypeToMessages,
+  DateOption,
+  EnvOption,
+  JsonTimestampOption,
+  LongOption,
+  OneofOption,
+  Options,
+  ServiceOption,
+} from "./options";
+import { generateSchema } from "./schema";
+import SourceInfo, { Fields } from "./sourceInfo";
 import {
   basicLongWireType,
   basicTypeName,
@@ -42,55 +87,19 @@ import {
   toTypeName,
   valueTypeName,
 } from "./types";
-import SourceInfo, { Fields } from "./sourceInfo";
 import {
   assertInstanceOf,
   FormattedMethodDescriptor,
+  getFieldJsonName,
+  getFieldName,
   getPropertyAccessor,
   impFile,
   impProto,
   maybeAddComment,
   maybePrefixPackage,
-  getFieldJsonName,
-  getFieldName,
   safeAccessor,
 } from "./utils";
-import { camelToSnake, capitalize, maybeSnakeToCamel } from "./case";
-import {
-  generateNestjsGrpcServiceMethodsDecorator,
-  generateNestjsServiceClient,
-  generateNestjsServiceController,
-} from "./generate-nestjs";
-import {
-  generateDataLoaderOptionsType,
-  generateDataLoadersType,
-  generateRpcType,
-  generateService,
-  generateServiceClientImpl,
-} from "./generate-services";
-import {
-  addGrpcWebMisc,
-  generateGrpcClientImpl,
-  generateGrpcMethodDesc,
-  generateGrpcServiceDesc,
-} from "./generate-grpc-web";
-import { generateDecodeTransform, generateEncodeTransform } from "./generate-async-iterable";
-import { generateEnum } from "./enums";
 import { visit, visitServices } from "./visit";
-import { addTypeToMessages, DateOption, EnvOption, LongOption, OneofOption, Options, ServiceOption } from "./options";
-import { Context } from "./context";
-import { generateSchema } from "./schema";
-import { ConditionalOutput } from "ts-poet/build/ConditionalOutput";
-import { generateGrpcJsService } from "./generate-grpc-js";
-import { generateGenericServiceDefinition } from "./generate-generic-service-definition";
-import { generateNiceGrpcService } from "./generate-nice-grpc";
-import {
-  generateUnwrapDeep,
-  generateUnwrapShallow,
-  generateWrapDeep,
-  generateWrapShallow,
-  isWrapperType,
-} from "./generate-struct-wrappers";
 
 export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [string, Code] {
   const { options, utils } = ctx;
@@ -2052,7 +2061,10 @@ function generateToJson(
       } else if (isTimestamp(field) && options.useDate === DateOption.STRING) {
         return code`${from}`;
       } else if (isTimestamp(field) && options.useDate === DateOption.TIMESTAMP) {
-        return code`${from}`;
+        if (options.useJsonTimestamp === JsonTimestampOption.RAW) {
+          return code`${from}`;
+        }
+        return code`${utils.fromTimestamp}(${from}).toISOString()`;
       } else if (isMapType(ctx, messageDesc, field)) {
         // For map types, drill-in and then admittedly re-hard-code our per-value-type logic
         const valueType = (typeMap.get(field.typeName)![2] as DescriptorProto).field[1];
