@@ -44,13 +44,13 @@ export const Metadata = {
   },
 
   fromJSON(object: any): Metadata {
-    return { lastEdited: isSet(object.lastEdited) ? fromJsonTimestamp(object.lastEdited) : undefined };
+    return { lastEdited: isSet(object.lastEdited) ? Timestamp.fromJSON(object.lastEdited) : undefined };
   },
 
   toJSON(message: Metadata): unknown {
     const obj: any = {};
     if (message.lastEdited !== undefined) {
-      obj.lastEdited = fromTimestamp(message.lastEdited).toISOString();
+      obj.lastEdited = Timestamp.toJSON(message.lastEdited);
     }
     return obj;
   },
@@ -78,28 +78,6 @@ export type DeepPartial<T> = T extends Builtin ? T
 type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
-
-function toTimestamp(date: Date): Timestamp {
-  const seconds = date.getTime() / 1_000;
-  const nanos = (date.getTime() % 1_000) * 1_000_000;
-  return { seconds, nanos };
-}
-
-function fromTimestamp(t: Timestamp): Date {
-  let millis = (t.seconds || 0) * 1_000;
-  millis += (t.nanos || 0) / 1_000_000;
-  return new globalThis.Date(millis);
-}
-
-function fromJsonTimestamp(o: any): Timestamp {
-  if (o instanceof globalThis.Date) {
-    return toTimestamp(o);
-  } else if (typeof o === "string") {
-    return toTimestamp(new globalThis.Date(o));
-  } else {
-    return Timestamp.fromJSON(o);
-  }
-}
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;

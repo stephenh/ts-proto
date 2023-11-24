@@ -891,10 +891,13 @@ ExampleMessage.encode({ anything: true });
 ## Timestamp
 
 The representation of `google.protobuf.Timestamp` is configurable by the `useDate` flag.
+The `useJsonTimestamp` flag controls precision when `useDate` is `false`.
 
 | Protobuf well-known type    | Default/`useDate=true` | `useDate=false`                      | `useDate=string` |
 | --------------------------- | ---------------------- | ------------------------------------ | ---------------- |
 | `google.protobuf.Timestamp` | `Date`                 | `{ seconds: number, nanos: number }` | `string`         |
+
+When using `useDate=false` and `useJsonTimestamp=raw` timestamp is represented as `{ seconds: number, nanos: number }`, but has nanosecond precision.
 
 # Number Types
 
