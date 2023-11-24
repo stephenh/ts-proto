@@ -1,3 +1,10 @@
+## [1.164.1](https://github.com/stephenh/ts-proto/compare/v1.164.0...v1.164.1) (2023-11-24)
+
+
+### Bug Fixes
+
+* revert useDate=false behaviour; add useJsonTimestamp option ([#969](https://github.com/stephenh/ts-proto/issues/969)) ([15ae516](https://github.com/stephenh/ts-proto/commit/15ae516ae09b27d5adf41b5e85fe509792c5854e))
+
 # [1.164.0](https://github.com/stephenh/ts-proto/compare/v1.163.0...v1.164.0) (2023-11-09)
 
 
