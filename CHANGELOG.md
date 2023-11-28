@@ -1,3 +1,10 @@
+## [1.164.2](https://github.com/stephenh/ts-proto/compare/v1.164.1...v1.164.2) (2023-11-28)
+
+
+### Bug Fixes
+
+* Don't close client if we've already aborted ([#968](https://github.com/stephenh/ts-proto/issues/968)) ([7ee1507](https://github.com/stephenh/ts-proto/commit/7ee15075b2f35fac92790885c02f5a0edba9a76a))
+
 ## [1.164.1](https://github.com/stephenh/ts-proto/compare/v1.164.0...v1.164.1) (2023-11-24)
 
 
