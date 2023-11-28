@@ -31,8 +31,8 @@ describe("before-after-request", () => {
     try {
       await client.GetBasic(req);
     } catch (error) {
-      expect(error).toBe(modifiedError);
-      expect(handleError).toHaveBeenCalledWith(BasicServiceServiceName, "GetBasic", err);
+      expect(error).toBe(err);
+      expect(handleError).not.toHaveBeenCalled();
     }
     encodeSpy.mockRestore();
   });

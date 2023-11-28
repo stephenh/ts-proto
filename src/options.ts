@@ -87,9 +87,9 @@ export type Options = {
   outputExtensions: boolean;
   outputIndex: boolean;
   M: { [from: string]: string };
-  outputBeforeRequest: boolean;
-  outputAfterResponse: boolean;
-  outputErrorHandler: boolean;
+  rpcBeforeRequest: boolean;
+  rpcAfterResponse: boolean;
+  rpcErrorHandler: boolean;
 };
 
 export function defaultOptions(): Options {
@@ -146,9 +146,9 @@ export function defaultOptions(): Options {
     outputExtensions: false,
     outputIndex: false,
     M: {},
-    outputBeforeRequest: false,
-    outputAfterResponse: false,
-    outputErrorHandler: false,
+    rpcBeforeRequest: false,
+    rpcAfterResponse: false,
+    rpcErrorHandler: false,
   };
 }
 
@@ -246,7 +246,7 @@ export function optionsFromParameter(parameter: string | undefined): Options {
     options.exportCommonSymbols = false;
   }
 
-  if (options.outputBeforeRequest || options.outputAfterResponse || options.outputErrorHandler) {
+  if (options.rpcBeforeRequest || options.rpcAfterResponse || options.rpcErrorHandler) {
     const includesGeneric = options.outputServices.includes(ServiceOption.GENERIC);
     options.outputServices = [ServiceOption.DEFAULT];
     if (includesGeneric) {

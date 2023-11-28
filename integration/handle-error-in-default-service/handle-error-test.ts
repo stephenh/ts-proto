@@ -22,7 +22,7 @@ describe("before-after-request", () => {
     jest.clearAllMocks();
   });
 
-  it("performs handleError if error occurs during main request code block", async () => {
+  it("doesn't perform handleError if error occurs during encode step", async () => {
     const encodeSpy = jest.spyOn(GetBasicRequest, "encode").mockImplementation(() => {
       throw err;
     });
@@ -31,8 +31,8 @@ describe("before-after-request", () => {
     try {
       await client.GetBasic(req);
     } catch (error) {
-      expect(error).toBe(modifiedError);
-      expect(handleError).toHaveBeenCalledWith(BasicServiceServiceName, "GetBasic", err);
+      expect(error).toBe(err);
+      expect(handleError).not.toHaveBeenCalled();
     }
     encodeSpy.mockRestore();
   });

@@ -446,11 +446,11 @@ Generated code will be placed in the Gradle build directory.
 
 - With `--ts_proto_opt=outputServices=false`, or `=none`, ts-proto will output NO service definitions.
 
-- With `--ts_proto_opt=outputBeforeRequest=true`, ts-proto will add a function definition to the Rpc interface definition with the signature: `beforeRequest(service: string, message: string, request: <RequestType>)`. It will will also automatically set `outputServices=default`. Each of the Service's methods will call `beforeRequest` before performing it's request.
+- With `--ts_proto_opt=rpcBeforeRequest=true`, ts-proto will add a function definition to the Rpc interface definition with the signature: `beforeRequest(service: string, message: string, request: <RequestType>)`. It will will also automatically set `outputServices=default`. Each of the Service's methods will call `beforeRequest` before performing it's request.
 
-- With `--ts_proto_opt=outputAfterResponse=true`, ts-proto will add a function definition to the Rpc interface definition with the signature: `afterResponse(service: string, message: string, response: <ResponseType>)`. It will will also automatically set `outputServices=default`. Each of the Service's methods will call `afterResponse` before returning the response.
+- With `--ts_proto_opt=rpcAfterResponse=true`, ts-proto will add a function definition to the Rpc interface definition with the signature: `afterResponse(service: string, message: string, response: <ResponseType>)`. It will will also automatically set `outputServices=default`. Each of the Service's methods will call `afterResponse` before returning the response.
 
-- With `--ts_proto_opt=outputErrorHandler=true`, ts-proto will add a function definition to the Rpc interface definition with the signature: `handleError(service: string, message: string, error: Error)`. It will will also automatically set `outputServices=default`.
+- With `--ts_proto_opt=rpcErrorHandler=true`, ts-proto will add a function definition to the Rpc interface definition with the signature: `handleError(service: string, message: string, error: Error)`. It will will also automatically set `outputServices=default`.
 
 - With `--ts_proto_opt=useAbortSignal=true`, the generated services will accept an `AbortSignal` to cancel RPC calls.
 

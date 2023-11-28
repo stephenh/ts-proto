@@ -139,25 +139,20 @@ export class BasicServiceClientImpl implements BasicService {
     this.GetBasic = this.GetBasic.bind(this);
   }
   GetBasic(request: GetBasicRequest): Promise<GetBasicResponse> {
-    try {
-      const data = GetBasicRequest.encode(request).finish();
-      const promise = this.rpc.request(this.service, "GetBasic", data);
-      return promise.then((data) => {
-        try {
-          return GetBasicResponse.decode(_m0.Reader.create(data));
-        } catch (error) {
-          if (error instanceof Error && this.rpc.handleError) {
-            throw this.rpc.handleError(this.service, "GetBasic", error);
-          }
-          throw error;
-        }
-      });
-    } catch (error) {
-      if (error instanceof Error && this.rpc.handleError) {
-        throw this.rpc.handleError(this.service, "GetBasic", error);
+    const data = GetBasicRequest.encode(request).finish();
+    const promise = this.rpc.request(this.service, "GetBasic", data);
+    return promise.then((data) => {
+      try {
+        return GetBasicResponse.decode(_m0.Reader.create(data));
+      } catch (error) {
+        return Promise.reject(error);
       }
-      throw error;
-    }
+    }).catch((error) => {
+      if (error instanceof Error && this.rpc.handleError) {
+        return Promise.reject(this.rpc.handleError(this.service, "GetBasic", error));
+      }
+      return Promise.reject(error);
+    });
   }
 }
 

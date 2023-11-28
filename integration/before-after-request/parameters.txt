@@ -1,1 +1,1 @@
-outputBeforeRequest=true,outputAfterResponse=true,outputServices=default,outputServices=generic-definitions,
+rpcBeforeRequest=true,rpcAfterResponse=true,outputServices=default,outputServices=generic-definitions,

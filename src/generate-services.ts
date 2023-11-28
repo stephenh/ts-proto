@@ -121,25 +121,25 @@ function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProt
   const maybeAbortSignal = options.useAbortSignal ? "abortSignal || undefined," : "";
 
   let errorHandler;
-  if (options.outputErrorHandler) {
+  if (options.rpcErrorHandler) {
     errorHandler = code`
       if (error instanceof Error && this.rpc.handleError) {
-        throw this.rpc.handleError(this.service, "${methodDesc.name}", error);
+        return Promise.reject(this.rpc.handleError(this.service, "${methodDesc.name}", error));
       }
-      throw error;
+      return Promise.reject(error);
     `;
   }
 
   let encode = code`${rawInputType}.encode(request).finish()`;
   let beforeRequest;
-  if (options.outputBeforeRequest) {
+  if (options.rpcBeforeRequest) {
     beforeRequest = code`
     if (this.rpc.beforeRequest) {
       this.rpc.beforeRequest(this.service, "${methodDesc.name}", request);
     }`;
   }
   let decode = code`${rawOutputType}.decode(${Reader}.create(data))`;
-  if (options.outputAfterResponse) {
+  if (options.rpcAfterResponse) {
     decode = code`
       const response = ${rawOutputType}.decode(${Reader}.create(data));
       if (this.rpc.afterResponse) {
@@ -184,7 +184,6 @@ function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProt
     ${methodDesc.formattedName}(
       ${joinCode(params, { on: "," })}
     ): ${responsePromiseOrObservable(ctx, methodDesc)} {
-      ${options.outputErrorHandler ? "try {" : ""}
       const data = ${encode}; ${beforeRequest ? beforeRequest : ""}
       const ${returnVariable} = this.rpc.${rpcMethod}(
         ${maybeCtx}
@@ -194,7 +193,6 @@ function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProt
         ${maybeAbortSignal}
       );
       return ${returnStatement};
-      ${errorHandler ? code` } catch (error) { ${errorHandler} }` : ""}
     }
   `;
 }
@@ -215,11 +213,16 @@ function createDefaultServiceReturn(
     }
   }
 
-  if (options.outputAfterResponse && errorHandler) {
-    return code`promise.then(data => { ${tryCatchBlock(decode, errorHandler)} })`;
-  } else if (errorHandler) {
-    return code`promise.then(data => { ${tryCatchBlock(code`return ${decode}`, errorHandler)} } )`;
-  } else if (options.outputAfterResponse) {
+  if (errorHandler) {
+    let tryBlock = decode;
+    if (!options.rpcAfterResponse) {
+      tryBlock = code`return ${decode}`;
+    }
+    return code`promise.then(data => { ${tryCatchBlock(
+      tryBlock,
+      code`return Promise.reject(error);`,
+    )}}).catch((error) => { ${errorHandler} })`;
+  } else if (options.rpcAfterResponse) {
     return code`promise.then(data => { ${decode} } )`;
   }
   return code`promise.then(data => ${decode})`;
@@ -404,17 +407,17 @@ export function generateRpcType(ctx: Context, hasStreamingMethods: boolean): Cod
   const maybeAbortSignalParam = options.useAbortSignal ? "abortSignal?: AbortSignal," : "";
   const methods = [[code`request`, code`Uint8Array`, code`Promise<Uint8Array>`]];
   const additionalMethods = [];
-  if (options.outputBeforeRequest) {
+  if (options.rpcBeforeRequest) {
     additionalMethods.push(
       code`beforeRequest?<T extends { [k in keyof T]: unknown }>(service: string, method: string, request: T): void;`,
     );
   }
-  if (options.outputAfterResponse) {
+  if (options.rpcAfterResponse) {
     additionalMethods.push(
       code`afterResponse?<T extends { [k in keyof T]: unknown }>(service: string, method: string, response: T): void;`,
     );
   }
-  if (options.outputErrorHandler) {
+  if (options.rpcErrorHandler) {
     additionalMethods.push(code`handleError?(service: string, method: string, error: Error): Error;`);
   }
 

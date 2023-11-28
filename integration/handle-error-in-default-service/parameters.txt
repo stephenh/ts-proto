@@ -1,1 +1,1 @@
-outputServices=default,outputErrorHandler=true
+outputServices=default,rpcErrorHandler=true
