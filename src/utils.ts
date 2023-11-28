@@ -285,3 +285,11 @@ export function impProto(options: Options, module: string, type: string): Import
   }
   return imp(`${prefix}${type}@./${module}${options.fileSuffix}${options.importSuffix}`);
 }
+
+export function tryCatchBlock(tryBlock: Code | string, handleErrorBlock: Code | string): Code {
+  return code`try {
+    ${tryBlock}
+  } catch (error) {
+    ${handleErrorBlock}
+  }`;
+}

@@ -26,8 +26,6 @@ describe("options", () => {
         "nestJs": true,
         "oneof": "properties",
         "onlyTypes": false,
-        "outputAfterResponse": false,
-        "outputBeforeRequest": false,
         "outputClientImpl": false,
         "outputEncodeMethods": false,
         "outputExtensions": false,
@@ -42,6 +40,9 @@ describe("options", () => {
         "outputTypeRegistry": false,
         "removeEnumPrefix": false,
         "returnObservable": false,
+        "rpcAfterResponse": false,
+        "rpcBeforeRequest": false,
+        "rpcErrorHandler": false,
         "snakeToCamel": [
           "json",
           "keys",
@@ -168,19 +169,29 @@ describe("options", () => {
     });
   });
 
-  it("outputAfterResponse implies default service", () => {
-    const options = optionsFromParameter("outputAfterResponse=true");
+  it("rpcAfterResponse implies default service", () => {
+    const options = optionsFromParameter("rpcAfterResponse=true");
     expect(options).toMatchObject({
-      outputAfterResponse: true,
+      rpcAfterResponse: true,
       outputServices: [ServiceOption.DEFAULT],
     });
   });
 
-  it("outputBeforeRequest implies default service", () => {
-    const options = optionsFromParameter("outputBeforeRequest=true");
+  it("rpcBeforeRequest implies default service", () => {
+    const options = optionsFromParameter("rpcBeforeRequest=true");
     expect(options).toMatchObject({
-      outputBeforeRequest: true,
+      rpcBeforeRequest: true,
       outputServices: [ServiceOption.DEFAULT],
+    });
+  });
+
+  it("rpcAfterResponse implies default service but allows generics too", () => {
+    const options = optionsFromParameter(
+      "rpcBeforeRequest=true,outputServices=generic-definitions,outputServices=default",
+    );
+    expect(options).toMatchObject({
+      rpcBeforeRequest: true,
+      outputServices: [ServiceOption.DEFAULT, ServiceOption.GENERIC],
     });
   });
 });

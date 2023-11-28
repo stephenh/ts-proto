@@ -15,7 +15,7 @@
     "proto2bin-node": "docker compose run --rm node update-bins.sh",
     "proto2pbjs": "docker compose run --rm protoc pbjs.sh",
     "bin2ts": "docker compose run --rm protoc codegen.sh",
-    "test": "yarn jest -c jest.config.js --maxWorkers=2",
+    "test": "yarn jest -c jest.config.js",
     "tsc:check": "./tsc-check.sh tsconfig.json tests/tsconfig.json integration/tsconfig.json integration/tsconfig.proto.json protos/tsconfig.json",
     "format": "prettier --write {src,tests}/**/*.ts integration/*.ts",
     "format:check": "prettier --list-different {src,tests}/**/*.ts",

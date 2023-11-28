@@ -1,5 +1,9 @@
-import { FooServiceClientImpl, FooServiceCreateRequest, FooServiceCreateResponse } from "./simple";
-import { MessageType } from "./typeRegistry";
+import {
+  FooServiceClientImpl,
+  FooServiceCreateRequest,
+  FooServiceCreateResponse,
+  FooServiceServiceName,
+} from "./simple";
 
 interface Rpc {
   request(service: string, method: string, data: Uint8Array): Promise<Uint8Array>;
@@ -27,14 +31,14 @@ describe("before-after-request", () => {
     const req = FooServiceCreateRequest.create(exampleData);
     client = new FooServiceClientImpl({ ...rpc, beforeRequest: beforeRequest });
     await client.Create(req);
-    expect(beforeRequest).toHaveBeenCalledWith(req);
+    expect(beforeRequest).toHaveBeenCalledWith(FooServiceServiceName, "Create", req);
   });
 
   it("performs function after request if specified", async () => {
     const req = FooServiceCreateRequest.create(exampleData);
     client = new FooServiceClientImpl({ ...rpc, afterResponse: afterResponse });
     await client.Create(req);
-    expect(afterResponse).toHaveBeenCalledWith(exampleData);
+    expect(afterResponse).toHaveBeenCalledWith(FooServiceServiceName, "Create", exampleData);
   });
 
   it("doesn't perform function before or after request if they are not specified", async () => {

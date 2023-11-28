@@ -432,23 +432,39 @@ export class FooServiceClientImpl implements FooService {
   Create(request: FooServiceCreateRequest): Promise<FooServiceCreateResponse> {
     const data = FooServiceCreateRequest.encode(request).finish();
     if (this.rpc.beforeRequest) {
-      this.rpc.beforeRequest(request);
+      this.rpc.beforeRequest(this.service, "Create", request);
     }
     const promise = this.rpc.request(this.service, "Create", data);
     return promise.then((data) => {
       const response = FooServiceCreateResponse.decode(_m0.Reader.create(data));
       if (this.rpc.afterResponse) {
-        this.rpc.afterResponse(response);
+        this.rpc.afterResponse(this.service, "Create", response);
       }
       return response;
     });
   }
 }
 
+export type FooServiceDefinition = typeof FooServiceDefinition;
+export const FooServiceDefinition = {
+  name: "FooService",
+  fullName: "simple.FooService",
+  methods: {
+    create: {
+      name: "Create",
+      requestType: FooServiceCreateRequest,
+      requestStream: false,
+      responseType: FooServiceCreateResponse,
+      responseStream: false,
+      options: {},
+    },
+  },
+} as const;
+
 interface Rpc {
   request(service: string, method: string, data: Uint8Array): Promise<Uint8Array>;
-  beforeRequest?<T extends { [k in keyof T]: unknown }>(request: T): void;
-  afterResponse?<T extends { [k in keyof T]: unknown }>(response: T): void;
+  beforeRequest?<T extends { [k in keyof T]: unknown }>(service: string, method: string, request: T): void;
+  afterResponse?<T extends { [k in keyof T]: unknown }>(service: string, method: string, response: T): void;
 }
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;

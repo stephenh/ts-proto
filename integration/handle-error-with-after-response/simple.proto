@@ -1,0 +1,14 @@
+syntax = "proto3";
+package basic;
+
+message GetBasicRequest {
+  string name = 1;
+}
+
+message GetBasicResponse {
+  string name = 1;
+}
+
+service BasicService {
+  rpc GetBasic (GetBasicRequest) returns (GetBasicResponse) {}
+}
