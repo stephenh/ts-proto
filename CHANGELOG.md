@@ -1,3 +1,10 @@
+# [1.165.0](https://github.com/stephenh/ts-proto/compare/v1.164.2...v1.165.0) (2023-11-28)
+
+
+### Features
+
+* add error handler to rpc interface ([#965](https://github.com/stephenh/ts-proto/issues/965)) ([47cd16e](https://github.com/stephenh/ts-proto/commit/47cd16e048e19ebc0b8673bccffdade678cc0363))
+
 ## [1.164.2](https://github.com/stephenh/ts-proto/compare/v1.164.1...v1.164.2) (2023-11-28)
 
 
