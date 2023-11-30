@@ -25,6 +25,11 @@ import {
   generateNestjsServiceController,
 } from "./generate-nestjs";
 import { generateNiceGrpcService } from "./generate-nice-grpc";
+import { 
+  generateNtrvlService,
+  generateNtrvlServiceClientImpl,
+  generateNtrvlRpcType
+} from "./generate-ntrvl";
 import {
   generateDataLoaderOptionsType,
   generateDataLoadersType,
@@ -325,6 +330,9 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
       }
 
       chunks.push(code`export const ${serviceConstName} = "${serviceDesc.name}";`);
+    } else if (options.ntrvl) {
+      chunks.push(generateNtrvlService(ctx, fileDesc, sInfo, serviceDesc));
+      chunks.push(generateNtrvlServiceClientImpl(ctx, fileDesc, serviceDesc));
     } else {
       const uniqueServices = [...new Set(options.outputServices)].sort();
       uniqueServices.forEach((outputService) => {
@@ -372,6 +380,8 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
       chunks.push(generateRpcType(ctx, hasStreamingMethods));
     } else if (options.outputClientImpl === "grpc-web") {
       chunks.push(addGrpcWebMisc(ctx, hasServerStreamingMethods));
+    } else if (options.outputClientImpl === "ntrvl") {
+      chunks.push(generateNtrvlRpcType(ctx, hasStreamingMethods));
     }
   }
 

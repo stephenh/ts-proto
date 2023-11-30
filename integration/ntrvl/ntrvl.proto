@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+service CoolService {
+  rpc get_bruh(GetBruhRequest) returns (GetBruhResponse) {}
+}
+
+message Bruh {
+  string id = 1;
+  string name = 2;
+  bool is_chill = 3;
+}
+
+message Brah {
+  string id = 1;
+}
+
+message GetBruhRequest {
+  string id = 1;
+}
+
+message GetBruhResponse {
+  Bruh bruh = 1;
+}

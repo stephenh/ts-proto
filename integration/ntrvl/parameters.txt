@@ -1,0 +1,1 @@
+ntrvl=true,snakeToCamel=false

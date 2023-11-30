@@ -62,7 +62,7 @@ export type Options = {
   constEnums: boolean;
   removeEnumPrefix: boolean;
   enumsAsLiterals: boolean;
-  outputClientImpl: boolean | "grpc-web";
+  outputClientImpl: boolean | "grpc-web" | 'ntrvl';
   outputServices: ServiceOption[];
   addGrpcMetadata: boolean;
   metadataType: string | undefined;
@@ -96,6 +96,7 @@ export type Options = {
   rpcBeforeRequest: boolean;
   rpcAfterResponse: boolean;
   rpcErrorHandler: boolean;
+  ntrvl: boolean;
 };
 
 export function defaultOptions(): Options {
@@ -168,12 +169,18 @@ const nestJsOptions: Partial<Options> = {
   useDate: DateOption.TIMESTAMP,
 };
 
+const ntrvlOptions: Partial<Options> = {
+  outputClientImpl: 'ntrvl',
+}
+
 export function optionsFromParameter(parameter: string | undefined): Options {
   const options = defaultOptions();
   if (parameter) {
     const parsed = parseParameter(parameter);
     if (parsed.nestJs) {
       Object.assign(options, nestJsOptions);
+    } else if (parsed.ntrvl) {
+      Object.assign(options, ntrvlOptions);
     }
     Object.assign(options, parsed);
   }
