@@ -613,12 +613,12 @@ This section describes how to contribute directly to ts-proto, i.e. it's not req
 
 **Requirements**
 
-- [Docker](https://www.docker.com) or [protoc](https://github.com/protocolbuffers/protobuf/releases) v3.19.1
+- [Docker](https://www.docker.com)
 - `yarn` — `npm install -g yarn`
 
 **Setup**
 
-The commands below assume you have **Docker** installed. To use a **local** copy of `protoc` without docker, use commands suffixed with `:local`. If you are using OS X, install **coreutils**, `brew install coreutils`.
+The commands below assume you have **Docker** installed. If you are using OS X, install **coreutils**, `brew install coreutils`.
 
 - Check out the [repository]() for the latest code.
 - Run `yarn install` to install the dependencies.
