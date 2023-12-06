@@ -1,3 +1,10 @@
+## [1.165.1](https://github.com/stephenh/ts-proto/compare/v1.165.0...v1.165.1) (2023-12-06)
+
+
+### Bug Fixes
+
+* do not mention :local scripts ([#974](https://github.com/stephenh/ts-proto/issues/974)) ([ef30da5](https://github.com/stephenh/ts-proto/commit/ef30da58d60b9098eb50b7e27489ac8ef854022e))
+
 # [1.165.0](https://github.com/stephenh/ts-proto/compare/v1.164.2...v1.165.0) (2023-11-28)
 
 
