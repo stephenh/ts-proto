@@ -40,7 +40,7 @@ service DashAPICreds {
   rpc Create(DashAPICredsCreateReq) returns (DashCred);
   rpc Update(DashAPICredsUpdateReq) returns (DashCred);
   rpc Delete(DashAPICredsDeleteReq) returns (DashCred);
-  rpc Uppercasse(google.protobuf.StringValue) returns (google.protobuf.StringValue);
+  rpc Uppercase(google.protobuf.StringValue) returns (google.protobuf.StringValue);
 }
 
 message DashCred {
