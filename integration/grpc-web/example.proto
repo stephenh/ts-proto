@@ -1,5 +1,5 @@
 syntax = "proto3";
-
+import "google/protobuf/wrappers.proto";
 package rpx;
 
 service DashState {
@@ -40,6 +40,7 @@ service DashAPICreds {
   rpc Create(DashAPICredsCreateReq) returns (DashCred);
   rpc Update(DashAPICredsUpdateReq) returns (DashCred);
   rpc Delete(DashAPICredsDeleteReq) returns (DashCred);
+  rpc Uppercasse(google.protobuf.StringValue) returns (google.protobuf.StringValue);
 }
 
 message DashCred {
