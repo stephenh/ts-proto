@@ -651,6 +651,10 @@ The commands below assume you have **Docker** installed. If you are using OS X, 
   - Make sure to `git add` all of the `*.proto`, `*.bin`, and `*.ts` files in `integration/your-new-test`
     - Sometimes checking in generated code is frowned upon, but given ts-proto's main job is to generate code, seeing the codegen diffs in PRs is helpful
 
+**Testing in your projects**
+
+You can test your local ts-proto changes in your own projects by running `yarn add ts-proto@./path/to/ts-proto`, as long as you run `yarn build` manually.
+
 **Dockerized Protoc**
 
 The repository includes a dockerized version of `protoc`, which is configured in [docker-compose.yml](docker-compose.yml).
