@@ -1,3 +1,10 @@
+## [1.165.2](https://github.com/stephenh/ts-proto/compare/v1.165.1...v1.165.2) (2023-12-20)
+
+
+### Bug Fixes
+
+* Fix generating wrong web-rpc implementation for wrapper-type method arg ([#978](https://github.com/stephenh/ts-proto/issues/978)) ([063fd29](https://github.com/stephenh/ts-proto/commit/063fd29974e0e917ad69cd5a158ee233edb5e019))
+
 ## [1.165.1](https://github.com/stephenh/ts-proto/compare/v1.165.0...v1.165.1) (2023-12-06)
 
 
