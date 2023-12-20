@@ -50,7 +50,7 @@ function generateRpcMethod(ctx: Context, serviceDesc: ServiceDescriptorProto, me
   assertInstanceOf(methodDesc, FormattedMethodDescriptor);
   const { options } = ctx;
   const { useAbortSignal } = options;
-  const requestMessage = rawRequestType(ctx, methodDesc);
+  const requestMessage = requestType(ctx, methodDesc, false);
   const inputType = requestType(ctx, methodDesc, true);
   const returns = responsePromiseOrObservable(ctx, methodDesc);
 

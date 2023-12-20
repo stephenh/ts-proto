@@ -4,6 +4,7 @@ import { BrowserHeaders } from "browser-headers";
 import * as _m0 from "protobufjs/minimal";
 import { Observable } from "rxjs";
 import { share } from "rxjs/operators";
+import { StringValue } from "./google/protobuf/wrappers";
 
 export const protobufPackage = "rpx";
 
@@ -826,6 +827,7 @@ export interface DashAPICreds {
   Create(request: DeepPartial<DashAPICredsCreateReq>, metadata?: grpc.Metadata): Promise<DashCred>;
   Update(request: DeepPartial<DashAPICredsUpdateReq>, metadata?: grpc.Metadata): Promise<DashCred>;
   Delete(request: DeepPartial<DashAPICredsDeleteReq>, metadata?: grpc.Metadata): Promise<DashCred>;
+  Uppercase(request: DeepPartial<StringValue>, metadata?: grpc.Metadata): Promise<StringValue>;
 }
 
 export class DashAPICredsClientImpl implements DashAPICreds {
@@ -836,6 +838,7 @@ export class DashAPICredsClientImpl implements DashAPICreds {
     this.Create = this.Create.bind(this);
     this.Update = this.Update.bind(this);
     this.Delete = this.Delete.bind(this);
+    this.Uppercase = this.Uppercase.bind(this);
   }
 
   Create(request: DeepPartial<DashAPICredsCreateReq>, metadata?: grpc.Metadata): Promise<DashCred> {
@@ -848,6 +851,10 @@ export class DashAPICredsClientImpl implements DashAPICreds {
 
   Delete(request: DeepPartial<DashAPICredsDeleteReq>, metadata?: grpc.Metadata): Promise<DashCred> {
     return this.rpc.unary(DashAPICredsDeleteDesc, DashAPICredsDeleteReq.fromPartial(request), metadata);
+  }
+
+  Uppercase(request: DeepPartial<StringValue>, metadata?: grpc.Metadata): Promise<StringValue> {
+    return this.rpc.unary(DashAPICredsUppercaseDesc, StringValue.fromPartial(request), metadata);
   }
 }
 
@@ -912,6 +919,29 @@ export const DashAPICredsDeleteDesc: UnaryMethodDefinitionish = {
   responseType: {
     deserializeBinary(data: Uint8Array) {
       const value = DashCred.decode(data);
+      return {
+        ...value,
+        toObject() {
+          return value;
+        },
+      };
+    },
+  } as any,
+};
+
+export const DashAPICredsUppercaseDesc: UnaryMethodDefinitionish = {
+  methodName: "Uppercase",
+  service: DashAPICredsDesc,
+  requestStream: false,
+  responseStream: false,
+  requestType: {
+    serializeBinary() {
+      return StringValue.encode(this).finish();
+    },
+  } as any,
+  responseType: {
+    deserializeBinary(data: Uint8Array) {
+      const value = StringValue.decode(data);
       return {
         ...value,
         toObject() {
