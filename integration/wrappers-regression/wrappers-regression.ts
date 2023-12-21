@@ -10,7 +10,7 @@ export const protobufPackage = "";
 
 export interface Clock {
   Now(request: Empty): Promise<Timestamp>;
-  NowString(request: StringValue): Promise<StringValue>;
+  NowString(request: string | undefined): Promise<StringValue>;
   NowStringStream(request: Observable<StringValue>): Observable<StringValue>;
   NowBool(request: Empty): Promise<BoolValue>;
 }

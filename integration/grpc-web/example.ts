@@ -827,7 +827,7 @@ export interface DashAPICreds {
   Create(request: DeepPartial<DashAPICredsCreateReq>, metadata?: grpc.Metadata): Promise<DashCred>;
   Update(request: DeepPartial<DashAPICredsUpdateReq>, metadata?: grpc.Metadata): Promise<DashCred>;
   Delete(request: DeepPartial<DashAPICredsDeleteReq>, metadata?: grpc.Metadata): Promise<DashCred>;
-  Uppercase(request: DeepPartial<StringValue>, metadata?: grpc.Metadata): Promise<StringValue>;
+  Uppercase(request: string | undefined, metadata?: grpc.Metadata): Promise<StringValue>;
 }
 
 export class DashAPICredsClientImpl implements DashAPICreds {

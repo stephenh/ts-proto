@@ -8,6 +8,7 @@ import {
   responsePromiseOrObservable,
   responseType,
   observableType,
+  valueTypeName,
 } from "./types";
 import {
   assertInstanceOf,
@@ -57,8 +58,9 @@ export function generateService(
 
     // the grpc-web clients auto-`fromPartial` the input before handing off to grpc-web's
     // serde runtime, so it's okay to accept partial results from the client
+    const isValueType = valueTypeName(ctx, methodDesc.inputType) !== undefined;
     const partialInput = options.outputClientImpl === "grpc-web";
-    const inputType = requestType(ctx, methodDesc, partialInput);
+    const inputType = requestType(ctx, methodDesc, partialInput && !isValueType, !isValueType || methodDesc.clientStreaming);
     params.push(code`request: ${inputType}`);
 
     // Use metadata as last argument for interface only configuration

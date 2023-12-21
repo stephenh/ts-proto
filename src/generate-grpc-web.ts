@@ -51,9 +51,9 @@ function generateRpcMethod(ctx: Context, serviceDesc: ServiceDescriptorProto, me
   const { options } = ctx;
   const { useAbortSignal } = options;
   const isValueType = valueTypeName(ctx, methodDesc.inputType) !== undefined;
-  const inputType = isValueType ? rawRequestType(ctx, methodDesc) : requestType(ctx, methodDesc, true);
+  const inputType = requestType(ctx, methodDesc, true && !isValueType, false);
   const inputValue = isValueType ? '{ value: request }' : 'request';
-  const requestMessage = requestType(ctx, methodDesc, false);
+  const requestMessage = requestType(ctx, methodDesc, false, true);
   const returns = responsePromiseOrObservable(ctx, methodDesc);
 
   if (methodDesc.clientStreaming) {
