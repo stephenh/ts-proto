@@ -84,16 +84,16 @@ export class HeroController implements HeroServiceController {
 
 ```typescript
 // ...
-import { HeroById, Hero, HeroServiceController, HeroesService, HERO_SERVICE_NAME, HERO_PACKAGE_NAME } from '../hero';
+import { HeroById, Hero, HeroServiceController, HeroesServiceClient, HERO_SERVICE_NAME, HERO_PACKAGE_NAME } from '../hero';
 
 @Injectable()
 export class AppService implements OnModuleInit {
-  private heroesService: HeroesService;
+  private heroesService: HeroesServiceClient;
 
   constructor(@Inject(HERO_PACKAGE_NAME) private client: ClientGrpc) {}
 
   onModuleInit(): void {
-    this.heroesService = this.client.getService<HeroesService>(HERO_SERVICE_NAME);
+    this.heroesService = this.client.getService<HeroesServiceClient>(HERO_SERVICE_NAME);
   }
 
   getHero(): Observable<Hero> {
