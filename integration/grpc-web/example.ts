@@ -853,8 +853,8 @@ export class DashAPICredsClientImpl implements DashAPICreds {
     return this.rpc.unary(DashAPICredsDeleteDesc, DashAPICredsDeleteReq.fromPartial(request), metadata);
   }
 
-  Uppercase(request: DeepPartial<StringValue>, metadata?: grpc.Metadata): Promise<StringValue> {
-    return this.rpc.unary(DashAPICredsUppercaseDesc, StringValue.fromPartial(request), metadata);
+  Uppercase(request: string | undefined, metadata?: grpc.Metadata): Promise<StringValue> {
+    return this.rpc.unary(DashAPICredsUppercaseDesc, StringValue.fromPartial({ value: request }), metadata);
   }
 }
 
