@@ -40,7 +40,7 @@ export class ClockClientImpl implements Clock {
   }
 
   NowStringStream(request: Observable<StringValue>): Observable<StringValue> {
-    const data = request.pipe(map((request) => StringValue.encode({ value: request }).finish()));
+    const data = request.pipe(map((request) => StringValue.encode(request).finish()));
     const result = this.rpc.bidirectionalStreamingRequest(this.service, "NowStringStream", data);
     return result.pipe(map((data) => StringValue.decode(_m0.Reader.create(data))));
   }
