@@ -133,8 +133,9 @@ function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProt
     `;
   }
 
-  const inputValue = isValueType && !methodDesc.clientStreaming ? '{ value: request }' : 'request';
-  let encode = code`${rawInputType}.encode(${inputValue}).finish()`;
+  let encode = isValueType && !methodDesc.clientStreaming
+    ? code`${rawInputType}.encode(${rawInputType}.fromPartial({ value: request })).finish()`
+    : code`${rawInputType}.encode(request).finish()`;
   let beforeRequest;
   if (options.rpcBeforeRequest) {
     beforeRequest = code`

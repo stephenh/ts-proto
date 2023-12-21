@@ -34,7 +34,7 @@ export class ClockClientImpl implements Clock {
   }
 
   NowString(request: string | undefined): Promise<StringValue> {
-    const data = StringValue.encode({ value: request }).finish();
+    const data = StringValue.encode(StringValue.fromPartial({ value: request })).finish();
     const promise = this.rpc.request(this.service, "NowString", data);
     return promise.then((data) => StringValue.decode(_m0.Reader.create(data)));
   }
