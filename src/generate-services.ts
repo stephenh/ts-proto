@@ -111,7 +111,8 @@ function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProt
   const { options } = ctx;
   const Reader = impFile(ctx.options, "Reader@protobufjs/minimal");
   const rawInputType = rawRequestType(ctx, methodDesc, { keepValueType: true });
-  const inputType = requestType(ctx, methodDesc);
+  const isValueType = valueTypeName(ctx, methodDesc.inputType) !== undefined;
+  const inputType = requestType(ctx, methodDesc, false, !isValueType || methodDesc.clientStreaming);
   const rawOutputType = responseType(ctx, methodDesc, { keepValueType: true });
 
   const params = [
@@ -132,7 +133,8 @@ function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProt
     `;
   }
 
-  let encode = code`${rawInputType}.encode(request).finish()`;
+  const inputValue = isValueType ? '{ value: request }' : 'request';
+  let encode = code`${rawInputType}.encode(${inputValue}).finish()`;
   let beforeRequest;
   if (options.rpcBeforeRequest) {
     beforeRequest = code`

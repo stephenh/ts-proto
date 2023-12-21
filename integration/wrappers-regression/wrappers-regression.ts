@@ -33,14 +33,14 @@ export class ClockClientImpl implements Clock {
     return promise.then((data) => Timestamp.decode(_m0.Reader.create(data)));
   }
 
-  NowString(request: StringValue): Promise<StringValue> {
-    const data = StringValue.encode(request).finish();
+  NowString(request: string | undefined): Promise<StringValue> {
+    const data = StringValue.encode({ value: request }).finish();
     const promise = this.rpc.request(this.service, "NowString", data);
     return promise.then((data) => StringValue.decode(_m0.Reader.create(data)));
   }
 
   NowStringStream(request: Observable<StringValue>): Observable<StringValue> {
-    const data = request.pipe(map((request) => StringValue.encode(request).finish()));
+    const data = request.pipe(map((request) => StringValue.encode({ value: request }).finish()));
     const result = this.rpc.bidirectionalStreamingRequest(this.service, "NowStringStream", data);
     return result.pipe(map((data) => StringValue.decode(_m0.Reader.create(data))));
   }
