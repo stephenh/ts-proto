@@ -1,3 +1,10 @@
+## [1.165.3](https://github.com/stephenh/ts-proto/compare/v1.165.2...v1.165.3) (2023-12-26)
+
+
+### Bug Fixes
+
+* add serviceName to grpc-js client constructor type ([#980](https://github.com/stephenh/ts-proto/issues/980)) ([2c6682d](https://github.com/stephenh/ts-proto/commit/2c6682df400a5b1e4bcb9c5bc233dbd7a65df987))
+
 ## [1.165.2](https://github.com/stephenh/ts-proto/compare/v1.165.1...v1.165.2) (2023-12-20)
 
 
