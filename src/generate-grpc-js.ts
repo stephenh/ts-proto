@@ -238,6 +238,7 @@ function generateClientConstructor(fileDesc: FileDescriptorProto, serviceDesc: S
         options?: Partial<${ClientOptions}>,
       ): ${serviceDesc.name}Client;
       service: typeof ${serviceDesc.name}Service;
+      serviceName: string;
     }
   `;
 }
