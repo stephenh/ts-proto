@@ -12,6 +12,7 @@ export enum LongOption {
 export enum DateOption {
   DATE = "date",
   STRING = "string",
+  STRING_NANO = "string-nano",
   TIMESTAMP = "timestamp",
 }
 

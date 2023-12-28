@@ -248,7 +248,7 @@ export type Exact<P, I extends P> = P extends Builtin ? P
 
 function toTimestamp(dateStr: string): Timestamp {
   const date = new globalThis.Date(dateStr);
-  const seconds = date.getTime() / 1_000;
+  const seconds = Math.trunc(date.getTime() / 1_000);
   const nanos = (date.getTime() % 1_000) * 1_000_000;
   return { seconds, nanos };
 }
