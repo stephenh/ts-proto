@@ -899,11 +899,13 @@ ExampleMessage.encode({ anything: true });
 The representation of `google.protobuf.Timestamp` is configurable by the `useDate` flag.
 The `useJsonTimestamp` flag controls precision when `useDate` is `false`.
 
-| Protobuf well-known type    | Default/`useDate=true` | `useDate=false`                      | `useDate=string` |
-| --------------------------- | ---------------------- | ------------------------------------ | ---------------- |
-| `google.protobuf.Timestamp` | `Date`                 | `{ seconds: number, nanos: number }` | `string`         |
+| Protobuf well-known type    | Default/`useDate=true` | `useDate=false`                      | `useDate=string` | `useDate=string-nano` |
+| --------------------------- | ---------------------- | ------------------------------------ | ---------------- | --------------------- |
+| `google.protobuf.Timestamp` | `Date`                 | `{ seconds: number, nanos: number }` | `string`         | `string`              |
 
 When using `useDate=false` and `useJsonTimestamp=raw` timestamp is represented as `{ seconds: number, nanos: number }`, but has nanosecond precision.
+
+When using `useDate=string-nano` timestamp is represented as an ISO string with nanosecond precision `1970-01-01T14:27:59.987654321Z` and relies on [nano-date](https://www.npmjs.com/package/nano-date) library for conversion. You'll need to install it in your project.
 
 # Number Types
 

@@ -2334,6 +2334,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"bignumber.js@npm:^9.0.0":
+  version: 9.1.2
+  resolution: "bignumber.js@npm:9.1.2"
+  checksum: 582c03af77ec9cb0ebd682a373ee6c66475db94a4325f92299621d544aa4bd45cb45fd60001610e94aef8ae98a0905fa538241d9638d4422d57abbeeac6fadaf
+  languageName: node
+  linkType: hard
+
 "bin-links@npm:^4.0.1":
   version: 4.0.1
   resolution: "bin-links@npm:4.0.1"
@@ -5428,6 +5435,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"map-or-similar@npm:^1.5.0":
+  version: 1.5.0
+  resolution: "map-or-similar@npm:1.5.0"
+  checksum: f65c0d420e272d0fce4e24db35f6a08109218480bca1d61eaa442cbe6cf46270b840218d3b5e94e4bfcc2595f1d0a1fa5885df750b52aac9ab1d437b29dcce38
+  languageName: node
+  linkType: hard
+
 "markdown-it-anchor@npm:^8.4.1":
   version: 8.6.7
   resolution: "markdown-it-anchor@npm:8.6.7"
@@ -5491,6 +5505,15 @@ __metadata:
   version: 1.0.1
   resolution: "mdurl@npm:1.0.1"
   checksum: 71731ecba943926bfbf9f9b51e28b5945f9411c4eda80894221b47cc105afa43ba2da820732b436f0798fd3edbbffcd1fc1415843c41a87fea08a41cc1e3d02b
+  languageName: node
+  linkType: hard
+
+"memoizerific@npm:^1.11.2":
+  version: 1.11.3
+  resolution: "memoizerific@npm:1.11.3"
+  dependencies:
+    map-or-similar: ^1.5.0
+  checksum: d51bdc3ed8c39b4b73845c90eb62d243ddf21899914352d0c303f5e1d477abcb192f4c605e008caa4a31d823225eeb22a99ba5ee825fb88d0c33382db3aee95a
   languageName: node
   linkType: hard
 
@@ -5804,6 +5827,16 @@ __metadata:
   version: 1.0.0
   resolution: "mute-stream@npm:1.0.0"
   checksum: 36fc968b0e9c9c63029d4f9dc63911950a3bdf55c9a87f58d3a266289b67180201cade911e7699f8b2fa596b34c9db43dad37649e3f7fdd13c3bb9edb0017ee7
+  languageName: node
+  linkType: hard
+
+"nano-date@npm:^4.1.0":
+  version: 4.1.0
+  resolution: "nano-date@npm:4.1.0"
+  dependencies:
+    bignumber.js: ^9.0.0
+    memoizerific: ^1.11.2
+  checksum: 7029b3c1db439e612ce4fdf426b33d4d930bfa682edf6c4c8d3d30b66a89d1f995215ebc06b04a53d2b8c4b5a95d0a25250fb7d66f067f9eca0b546fe918698b
   languageName: node
   linkType: hard
 
@@ -7852,6 +7885,7 @@ __metadata:
     jest: ^29.6.1
     jest-ts-webcompat-resolver: ^1.0.0
     mongodb: ^5.7.0
+    nano-date: ^4.1.0
     nice-grpc: ^2.1.4
     object-hash: ^3.0.0
     prettier: ^2.8.8

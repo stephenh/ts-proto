@@ -25,7 +25,7 @@ describe("useDate=false", () => {
     expect(Metadata.fromJSON(json).lastEdited).toMatchInlineSnapshot(`
       {
         "nanos": 234000000,
-        "seconds": 123456789.234,
+        "seconds": 123456789,
       }
     `);
   });

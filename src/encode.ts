@@ -14,7 +14,11 @@ export function generateEncoder(ctx: Context, typeName: string): Code {
     const TimestampValue = impProto(ctx.options, "google/protobuf/timestamp", name);
 
     let value = code`value`;
-    if (ctx.options.useDate === DateOption.DATE || ctx.options.useDate === DateOption.STRING) {
+    if (
+      ctx.options.useDate === DateOption.DATE ||
+      ctx.options.useDate === DateOption.STRING ||
+      ctx.options.useDate === DateOption.STRING_NANO
+    ) {
       value = code`${ctx.utils.toTimestamp}(${value})`;
     }
     return code`${TimestampValue}.encode(${value}).finish()`;
@@ -69,7 +73,11 @@ export function generateDecoder(ctx: Context, typeName: string): Code {
     TypeValue = impProto(ctx.options, "google/protobuf/timestamp", name);
 
     const decoder = code`${TypeValue}.decode(value)`;
-    if (ctx.options.useDate === DateOption.DATE || ctx.options.useDate === DateOption.STRING) {
+    if (
+      ctx.options.useDate === DateOption.DATE ||
+      ctx.options.useDate === DateOption.STRING ||
+      ctx.options.useDate === DateOption.STRING_NANO
+    ) {
       return code`${ctx.utils.fromTimestamp}(${decoder})`;
     }
     return decoder;

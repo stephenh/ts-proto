@@ -8,13 +8,14 @@ import type {
   ServiceError,
   UntypedServiceImplementation,
 } from "@grpc/grpc-js";
+import NanoDate from "nano-date";
 import * as _m0 from "protobufjs/minimal";
 import { Timestamp } from "./google/protobuf/timestamp";
 
 export const protobufPackage = "simple";
 
 export interface TimestampMessage {
-  timestamp: Timestamp | undefined;
+  timestamp: string | undefined;
 }
 
 function createBaseTimestampMessage(): TimestampMessage {
@@ -24,7 +25,7 @@ function createBaseTimestampMessage(): TimestampMessage {
 export const TimestampMessage = {
   encode(message: TimestampMessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.timestamp !== undefined) {
-      Timestamp.encode(message.timestamp, writer.uint32(10).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.timestamp), writer.uint32(10).fork()).ldelim();
     }
     return writer;
   },
@@ -41,7 +42,7 @@ export const TimestampMessage = {
             break;
           }
 
-          message.timestamp = Timestamp.decode(reader, reader.uint32());
+          message.timestamp = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -53,13 +54,13 @@ export const TimestampMessage = {
   },
 
   fromJSON(object: any): TimestampMessage {
-    return { timestamp: isSet(object.timestamp) ? fromJsonTimestamp(object.timestamp) : undefined };
+    return { timestamp: isSet(object.timestamp) ? globalThis.String(object.timestamp) : undefined };
   },
 
   toJSON(message: TimestampMessage): unknown {
     const obj: any = {};
     if (message.timestamp !== undefined) {
-      obj.timestamp = fromTimestamp(message.timestamp).toISOString();
+      obj.timestamp = message.timestamp;
     }
     return obj;
   },
@@ -69,9 +70,7 @@ export const TimestampMessage = {
   },
   fromPartial<I extends Exact<DeepPartial<TimestampMessage>, I>>(object: I): TimestampMessage {
     const message = createBaseTimestampMessage();
-    message.timestamp = (object.timestamp !== undefined && object.timestamp !== null)
-      ? Timestamp.fromPartial(object.timestamp)
-      : undefined;
+    message.timestamp = object.timestamp ?? undefined;
     return message;
   },
 };
@@ -82,10 +81,10 @@ export const TestService = {
     path: "/simple.Test/SimpleNow",
     requestStream: false,
     responseStream: false,
-    requestSerialize: (value: Timestamp) => Buffer.from(Timestamp.encode(value).finish()),
-    requestDeserialize: (value: Buffer) => Timestamp.decode(value),
-    responseSerialize: (value: Timestamp) => Buffer.from(Timestamp.encode(value).finish()),
-    responseDeserialize: (value: Buffer) => Timestamp.decode(value),
+    requestSerialize: (value: string) => Buffer.from(Timestamp.encode(toTimestamp(value)).finish()),
+    requestDeserialize: (value: Buffer) => fromTimestamp(Timestamp.decode(value)),
+    responseSerialize: (value: string) => Buffer.from(Timestamp.encode(toTimestamp(value)).finish()),
+    responseDeserialize: (value: Buffer) => fromTimestamp(Timestamp.decode(value)),
   },
   wrappedNow: {
     path: "/simple.Test/WrappedNow",
@@ -99,22 +98,22 @@ export const TestService = {
 } as const;
 
 export interface TestServer extends UntypedServiceImplementation {
-  simpleNow: handleUnaryCall<Timestamp, Timestamp>;
+  simpleNow: handleUnaryCall<string, string>;
   wrappedNow: handleUnaryCall<TimestampMessage, TimestampMessage>;
 }
 
 export interface TestClient extends Client {
-  simpleNow(request: Timestamp, callback: (error: ServiceError | null, response: Timestamp) => void): ClientUnaryCall;
+  simpleNow(request: string, callback: (error: ServiceError | null, response: string) => void): ClientUnaryCall;
   simpleNow(
-    request: Timestamp,
+    request: string,
     metadata: Metadata,
-    callback: (error: ServiceError | null, response: Timestamp) => void,
+    callback: (error: ServiceError | null, response: string) => void,
   ): ClientUnaryCall;
   simpleNow(
-    request: Timestamp,
+    request: string,
     metadata: Metadata,
     options: Partial<CallOptions>,
-    callback: (error: ServiceError | null, response: Timestamp) => void,
+    callback: (error: ServiceError | null, response: string) => void,
   ): ClientUnaryCall;
   wrappedNow(
     request: TimestampMessage,
@@ -151,26 +150,31 @@ type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
-function toTimestamp(date: Date): Timestamp {
+function toTimestamp(dateStr: string): Timestamp {
+  const nanoDate = new NanoDate(dateStr);
+
+  const date = { getTime: (): number => nanoDate.valueOf() } as const;
   const seconds = Math.trunc(date.getTime() / 1_000);
-  const nanos = (date.getTime() % 1_000) * 1_000_000;
+
+  let nanos = nanoDate.getMilliseconds() * 1_000_000;
+  nanos += nanoDate.getMicroseconds() * 1_000;
+  nanos += nanoDate.getNanoseconds();
+
   return { seconds, nanos };
 }
 
-function fromTimestamp(t: Timestamp): Date {
-  let millis = (t.seconds || 0) * 1_000;
-  millis += (t.nanos || 0) / 1_000_000;
-  return new globalThis.Date(millis);
-}
+function fromTimestamp(t: Timestamp): string {
+  const seconds = t.seconds || 0;
+  const nanos = (t.nanos || 0) % 1_000;
+  const micros = Math.trunc(((t.nanos || 0) % 1_000_000) / 1_000);
+  let millis = seconds * 1_000;
+  millis += Math.trunc((t.nanos || 0) / 1_000_000);
 
-function fromJsonTimestamp(o: any): Timestamp {
-  if (o instanceof globalThis.Date) {
-    return toTimestamp(o);
-  } else if (typeof o === "string") {
-    return toTimestamp(new globalThis.Date(o));
-  } else {
-    return Timestamp.fromJSON(o);
-  }
+  const nanoDate = new NanoDate(millis);
+  nanoDate.setMicroseconds(micros);
+  nanoDate.setNanoseconds(nanos);
+
+  return nanoDate.toISOStringFull();
 }
 
 function isSet(value: any): boolean {
