@@ -1,6 +1,6 @@
 {
   "name": "ts-proto",
-  "version": "1.165.3",
+  "version": "1.166.0",
   "description": "",
   "main": "build/plugin.js",
   "repository": "github:stephenh/ts-proto",

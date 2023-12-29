@@ -1,3 +1,10 @@
+# [1.166.0](https://github.com/stephenh/ts-proto/compare/v1.165.3...v1.166.0) (2023-12-29)
+
+
+### Features
+
+* add useDate=string-nano option ([#981](https://github.com/stephenh/ts-proto/issues/981)) ([dc84098](https://github.com/stephenh/ts-proto/commit/dc840985d2afdd85e0b311c55aa831bac5da8ce4))
+
 ## [1.165.3](https://github.com/stephenh/ts-proto/compare/v1.165.2...v1.165.3) (2023-12-26)
 
 
