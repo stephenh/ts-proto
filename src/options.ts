@@ -1,5 +1,3 @@
-import { parse } from "path";
-import { Code } from "ts-poet";
 import { ToStringOpts } from "ts-poet/build/Code";
 
 export enum LongOption {
@@ -202,14 +200,18 @@ export function optionsFromParameter(parameter: string | undefined): Options {
   if ((options.outputServices as any) === false) {
     options.outputServices = [ServiceOption.NONE];
   }
-
   // Existing type-coercion inside parseParameter leaves a little to be desired.
   if (typeof options.outputServices == "string") {
     options.outputServices = [options.outputServices];
   }
-
-  if (options.outputServices.length == 0) {
+  // Assume the user wants the default service output, unless they're using nestJs, which has
+  // its own controllers output (although nestjs users can ask for other services too).
+  if (options.outputServices.length == 0 && !options.nestJs) {
     options.outputServices = [ServiceOption.DEFAULT];
+  }
+  // If using nestJs + other services, add the encode methods back
+  if (options.nestJs && options.outputServices.length > 0) {
+    options.outputEncodeMethods = true;
   }
 
   if ((options.useDate as any) === true) {

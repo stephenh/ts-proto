@@ -310,52 +310,50 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
 
   visitServices(fileDesc, sourceInfo, (serviceDesc, sInfo) => {
     if (options.nestJs) {
-      // NestJS is sufficiently different that we special case all of the client/server interfaces
-
+      // NestJS is sufficiently different that we special case the client/server interfaces
       // generate nestjs grpc client interface
       chunks.push(generateNestjsServiceClient(ctx, fileDesc, sInfo, serviceDesc));
       // and the service controller interface
       chunks.push(generateNestjsServiceController(ctx, fileDesc, sInfo, serviceDesc));
       // generate nestjs grpc service controller decorator
       chunks.push(generateNestjsGrpcServiceMethodsDecorator(ctx, serviceDesc));
-
       let serviceConstName = `${camelToSnake(serviceDesc.name)}_NAME`;
       if (!serviceDesc.name.toLowerCase().endsWith("service")) {
         serviceConstName = `${camelToSnake(serviceDesc.name)}_SERVICE_NAME`;
       }
-
       chunks.push(code`export const ${serviceConstName} = "${serviceDesc.name}";`);
-    } else {
-      const uniqueServices = [...new Set(options.outputServices)].sort();
-      uniqueServices.forEach((outputService) => {
-        if (outputService === ServiceOption.GRPC) {
-          chunks.push(generateGrpcJsService(ctx, fileDesc, sInfo, serviceDesc));
-        } else if (outputService === ServiceOption.NICE_GRPC) {
-          chunks.push(generateNiceGrpcService(ctx, fileDesc, sInfo, serviceDesc));
-        } else if (outputService === ServiceOption.GENERIC) {
-          chunks.push(generateGenericServiceDefinition(ctx, fileDesc, sInfo, serviceDesc));
-        } else if (outputService === ServiceOption.DEFAULT) {
-          // This service could be Twirp or grpc-web or JSON (maybe). So far all of their
-          // interfaces are fairly similar so we share the same service interface.
-          chunks.push(generateService(ctx, fileDesc, sInfo, serviceDesc));
-
-          if (options.outputClientImpl === true) {
-            chunks.push(generateServiceClientImpl(ctx, fileDesc, serviceDesc));
-          } else if (options.outputClientImpl === "grpc-web") {
-            chunks.push(generateGrpcClientImpl(ctx, fileDesc, serviceDesc));
-            chunks.push(generateGrpcServiceDesc(fileDesc, serviceDesc));
-            serviceDesc.method.forEach((method) => {
-              if (!method.clientStreaming) {
-                chunks.push(generateGrpcMethodDesc(ctx, serviceDesc, method));
-              }
-              if (method.serverStreaming) {
-                hasServerStreamingMethods = true;
-              }
-            });
-          }
-        }
-      });
     }
+
+    const uniqueServices = [...new Set(options.outputServices)].sort();
+    uniqueServices.forEach((outputService) => {
+      if (outputService === ServiceOption.GRPC) {
+        chunks.push(generateGrpcJsService(ctx, fileDesc, sInfo, serviceDesc));
+      } else if (outputService === ServiceOption.NICE_GRPC) {
+        chunks.push(generateNiceGrpcService(ctx, fileDesc, sInfo, serviceDesc));
+      } else if (outputService === ServiceOption.GENERIC) {
+        chunks.push(generateGenericServiceDefinition(ctx, fileDesc, sInfo, serviceDesc));
+      } else if (outputService === ServiceOption.DEFAULT) {
+        // This service could be Twirp or grpc-web or JSON (maybe). So far all of their
+        // interfaces are fairly similar so we share the same service interface.
+        chunks.push(generateService(ctx, fileDesc, sInfo, serviceDesc));
+
+        if (options.outputClientImpl === true) {
+          chunks.push(generateServiceClientImpl(ctx, fileDesc, serviceDesc));
+        } else if (options.outputClientImpl === "grpc-web") {
+          chunks.push(generateGrpcClientImpl(ctx, fileDesc, serviceDesc));
+          chunks.push(generateGrpcServiceDesc(fileDesc, serviceDesc));
+          serviceDesc.method.forEach((method) => {
+            if (!method.clientStreaming) {
+              chunks.push(generateGrpcMethodDesc(ctx, serviceDesc, method));
+            }
+            if (method.serverStreaming) {
+              hasServerStreamingMethods = true;
+            }
+          });
+        }
+      }
+    });
+
     serviceDesc.method.forEach((methodDesc, _index) => {
       if (methodDesc.serverStreaming || methodDesc.clientStreaming) {
         hasStreamingMethods = true;

@@ -208,11 +208,9 @@ export class FormattedMethodDescriptor implements MethodDescriptorProto {
    */
   public static formatName(methodName: string, options: Options) {
     let result = methodName;
-
     if (options.lowerCaseServiceMethods || options.outputServices.includes(ServiceOption.GRPC)) {
       if (options.snakeToCamel) result = camelCaseGrpc(result);
     }
-
     return result;
   }
 }
