@@ -152,7 +152,7 @@ export class BasicServiceClientImpl implements BasicService {
         return Promise.reject(error);
       }
     }).catch((error) => {
-      if (error instanceof Error && this.rpc.handleError) {
+      if (this.rpc.handleError) {
         return Promise.reject(this.rpc.handleError(this.service, "GetBasic", error));
       }
       return Promise.reject(error);
