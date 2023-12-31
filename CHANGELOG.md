@@ -1,3 +1,10 @@
+## [1.166.2](https://github.com/stephenh/ts-proto/compare/v1.166.1...v1.166.2) (2023-12-31)
+
+
+### Bug Fixes
+
+* error handling on non-Error type errors ([#983](https://github.com/stephenh/ts-proto/issues/983)) ([8c567fc](https://github.com/stephenh/ts-proto/commit/8c567fc6e4cefdf96a2e021e8ca72d6ee45cc26e))
+
 ## [1.166.1](https://github.com/stephenh/ts-proto/compare/v1.166.0...v1.166.1) (2023-12-31)
 
 
