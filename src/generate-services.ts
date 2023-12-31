@@ -123,7 +123,7 @@ function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProt
   let errorHandler;
   if (options.rpcErrorHandler) {
     errorHandler = code`
-      if (error instanceof Error && this.rpc.handleError) {
+      if (this.rpc.handleError) {
         return Promise.reject(this.rpc.handleError(this.service, "${methodDesc.name}", error));
       }
       return Promise.reject(error);
