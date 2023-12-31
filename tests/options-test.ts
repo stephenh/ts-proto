@@ -2,7 +2,6 @@ import { DateOption, optionsFromParameter, ServiceOption } from "../src/options"
 
 describe("options", () => {
   it("can set outputJsonMethods with nestJs=true", () => {
-    console.log(optionsFromParameter("nestJs=true,outputJsonMethods=true"));
     expect(optionsFromParameter("nestJs=true,outputJsonMethods=true")).toMatchInlineSnapshot(`
       {
         "M": {},
@@ -33,9 +32,7 @@ describe("options", () => {
         "outputJsonMethods": true,
         "outputPartialMethods": false,
         "outputSchema": false,
-        "outputServices": [
-          "default",
-        ],
+        "outputServices": [],
         "outputTypeAnnotations": false,
         "outputTypeRegistry": false,
         "removeEnumPrefix": false,
@@ -70,11 +67,12 @@ describe("options", () => {
     `);
   });
 
-  it("can set outputJsonMethods with nestJs=true", () => {
+  it("can set addGrpcMetadata=false", () => {
     const options = optionsFromParameter("outputClientImpl=grpc-web,addGrpcMetadata=false");
     expect(options).toMatchObject({
       outputClientImpl: "grpc-web",
       addGrpcMetadata: false,
+      outputServices: ["default"],
     });
   });
 
