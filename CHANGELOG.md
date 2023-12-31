@@ -1,3 +1,10 @@
+## [1.166.1](https://github.com/stephenh/ts-proto/compare/v1.166.0...v1.166.1) (2023-12-31)
+
+
+### Bug Fixes
+
+* Allow other services with nestJs. ([#982](https://github.com/stephenh/ts-proto/issues/982)) ([45bba3c](https://github.com/stephenh/ts-proto/commit/45bba3ce7ce723682a6ba2e2104d43ab3fd6978c))
+
 # [1.166.0](https://github.com/stephenh/ts-proto/compare/v1.165.3...v1.166.0) (2023-12-29)
 
 
