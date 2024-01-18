@@ -1,3 +1,10 @@
+## [1.166.3](https://github.com/stephenh/ts-proto/compare/v1.166.2...v1.166.3) (2024-01-18)
+
+
+### Bug Fixes
+
+* add support of importSuffix=.js for index files ([#986](https://github.com/stephenh/ts-proto/issues/986)) ([183cf03](https://github.com/stephenh/ts-proto/commit/183cf039895184edd365e6cb7bb9751426ac56f4))
+
 ## [1.166.2](https://github.com/stephenh/ts-proto/compare/v1.166.1...v1.166.2) (2023-12-31)
 
 
