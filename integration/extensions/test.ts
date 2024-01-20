@@ -625,5 +625,5 @@ export interface Extension<T> {
 }
 
 function fail(message?: string): never {
-  throw new Error(message ?? "Failed");
+  throw new globalThis.Error(message ?? "Failed");
 }

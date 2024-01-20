@@ -430,7 +430,7 @@ export function makeUtils(options: Options): Utils {
     ...makeNiceGrpcServerStreamingMethodResult(),
     ...makeGrpcWebErrorClass(bytes),
     ...makeExtensionClass(options),
-    ...makeAssertionUtils(),
+    ...makeAssertionUtils(bytes),
   };
 }
 
@@ -869,12 +869,12 @@ function makeExtensionClass(options: Options) {
   return { Extension };
 }
 
-function makeAssertionUtils() {
+function makeAssertionUtils(bytes: ReturnType<typeof makeByteUtils>) {
   const fail = conditionalOutput(
     "fail",
     code`
       function fail(message?: string): never {
-        throw new Error(message ?? "Failed");
+        throw new ${bytes.globalThis}.Error(message ?? "Failed");
       }
     `,
   );
@@ -1298,13 +1298,13 @@ function getEncodeWriteSnippet(ctx: Context, field: FieldDescriptorProto): (plac
       case "sint64":
       case "sfixed64":
         return (place) => code`if (BigInt.asIntN(64, ${place}) !== ${place}) {
-          throw new Error('value provided for field ${place} of type ${fieldType} too large');
+          throw new ${utils.globalThis}.Error('value provided for field ${place} of type ${fieldType} too large');
         }
         writer.uint32(${tag}).${toReaderCall(field)}(${place}.toString())`;
       case "uint64":
       case "fixed64":
         return (place) => code`if (BigInt.asUintN(64, ${place}) !== ${place}) {
-          throw new Error('value provided for field ${place} of type ${fieldType} too large');
+          throw new ${utils.globalThis}.Error('value provided for field ${place} of type ${fieldType} too large');
         }
         writer.uint32(${tag}).${toReaderCall(field)}(${place}.toString())`;
       default:
@@ -1474,7 +1474,9 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
                 writer.uint32(${tag}).fork();
                 for (const v of ${messageProperty}) {
                   if (BigInt.asIntN(64, v) !== v) {
-                    throw new Error('a value provided in array field ${fieldName} of type ${fieldType} is too large');
+                    throw new ${
+                      utils.globalThis
+                    }.Error('a value provided in array field ${fieldName} of type ${fieldType} is too large');
                   }
                   writer.${toReaderCall(field)}(${rhs("v")});
                 }
@@ -1487,7 +1489,9 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
                 writer.uint32(${tag}).fork();
                 for (const v of ${messageProperty}) {
                   if (BigInt.asUintN(64, v) !== v) {
-                    throw new Error('a value provided in array field ${fieldName} of type ${fieldType} is too large');
+                    throw new ${
+                      utils.globalThis
+                    }.Error('a value provided in array field ${fieldName} of type ${fieldType} is too large');
                   }                
                   writer.${toReaderCall(field)}(${rhs("v")});
                 }

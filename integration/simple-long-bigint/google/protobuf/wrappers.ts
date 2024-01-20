@@ -216,7 +216,7 @@ export const Int64Value = {
   encode(message: Int64Value, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.value !== BigInt("0")) {
       if (BigInt.asIntN(64, message.value) !== message.value) {
-        throw new Error("value provided for field message.value of type int64 too large");
+        throw new globalThis.Error("value provided for field message.value of type int64 too large");
       }
       writer.uint32(8).int64(message.value.toString());
     }
@@ -276,7 +276,7 @@ export const UInt64Value = {
   encode(message: UInt64Value, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.value !== BigInt("0")) {
       if (BigInt.asUintN(64, message.value) !== message.value) {
-        throw new Error("value provided for field message.value of type uint64 too large");
+        throw new globalThis.Error("value provided for field message.value of type uint64 too large");
       }
       writer.uint32(8).uint64(message.value.toString());
     }

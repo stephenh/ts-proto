@@ -62,7 +62,7 @@ export function generateWrapDeep(ctx: Context, fullProtoTypeName: string, fieldN
       } else if (typeof value === 'object') {
         result.${fieldNames.structValue} = Struct.wrap(value);
       } else if (typeof value !== 'undefined') {
-        throw new Error('Unsupported any value type: ' + typeof value);
+        throw new ${ctx.utils.globalThis}.Error('Unsupported any value type: ' + typeof value);
       }
       return result;
     }`);
@@ -196,7 +196,7 @@ export function generateWrapShallow(ctx: Context, fullProtoTypeName: string, fie
         } else if (typeof value === 'object') {
           result.kind = {$case: '${fieldNames.structValue}', ${fieldNames.structValue}: value};
         } else if (typeof value !== 'undefined') {
-          throw new Error('Unsupported any value type: ' + typeof value);
+          throw new ${ctx.utils.globalThis}.Error('Unsupported any value type: ' + typeof value);
         }
         return result;
     }`);
@@ -216,7 +216,7 @@ export function generateWrapShallow(ctx: Context, fullProtoTypeName: string, fie
         } else if (typeof value === 'object') {
           result.${fieldNames.structValue} = value;
         } else if (typeof value !== 'undefined') {
-          throw new Error('Unsupported any value type: ' + typeof value);
+          throw new ${ctx.utils.globalThis}.Error('Unsupported any value type: ' + typeof value);
         }
         return result;
       }`);

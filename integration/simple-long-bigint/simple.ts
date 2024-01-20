@@ -57,7 +57,7 @@ export const Numbers = {
     }
     if (message.int64 !== BigInt("0")) {
       if (BigInt.asIntN(64, message.int64) !== message.int64) {
-        throw new Error("value provided for field message.int64 of type int64 too large");
+        throw new globalThis.Error("value provided for field message.int64 of type int64 too large");
       }
       writer.uint32(32).int64(message.int64.toString());
     }
@@ -66,7 +66,7 @@ export const Numbers = {
     }
     if (message.uint64 !== BigInt("0")) {
       if (BigInt.asUintN(64, message.uint64) !== message.uint64) {
-        throw new Error("value provided for field message.uint64 of type uint64 too large");
+        throw new globalThis.Error("value provided for field message.uint64 of type uint64 too large");
       }
       writer.uint32(48).uint64(message.uint64.toString());
     }
@@ -75,7 +75,7 @@ export const Numbers = {
     }
     if (message.sint64 !== BigInt("0")) {
       if (BigInt.asIntN(64, message.sint64) !== message.sint64) {
-        throw new Error("value provided for field message.sint64 of type sint64 too large");
+        throw new globalThis.Error("value provided for field message.sint64 of type sint64 too large");
       }
       writer.uint32(64).sint64(message.sint64.toString());
     }
@@ -84,7 +84,7 @@ export const Numbers = {
     }
     if (message.fixed64 !== BigInt("0")) {
       if (BigInt.asUintN(64, message.fixed64) !== message.fixed64) {
-        throw new Error("value provided for field message.fixed64 of type fixed64 too large");
+        throw new globalThis.Error("value provided for field message.fixed64 of type fixed64 too large");
       }
       writer.uint32(81).fixed64(message.fixed64.toString());
     }
@@ -93,7 +93,7 @@ export const Numbers = {
     }
     if (message.sfixed64 !== BigInt("0")) {
       if (BigInt.asIntN(64, message.sfixed64) !== message.sfixed64) {
-        throw new Error("value provided for field message.sfixed64 of type sfixed64 too large");
+        throw new globalThis.Error("value provided for field message.sfixed64 of type sfixed64 too large");
       }
       writer.uint32(97).sfixed64(message.sfixed64.toString());
     }
@@ -106,7 +106,7 @@ export const Numbers = {
     writer.uint32(122).fork();
     for (const v of message.uint64s) {
       if (BigInt.asUintN(64, v) !== v) {
-        throw new Error("a value provided in array field uint64s of type uint64 is too large");
+        throw new globalThis.Error("a value provided in array field uint64s of type uint64 is too large");
       }
       writer.uint64(v.toString());
     }
