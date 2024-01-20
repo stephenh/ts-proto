@@ -453,7 +453,7 @@ export const Value = {
     } else if (typeof value === "object") {
       result.kind = { $case: "struct_value", struct_value: value };
     } else if (typeof value !== "undefined") {
-      throw new Error("Unsupported any value type: " + typeof value);
+      throw new globalThis.Error("Unsupported any value type: " + typeof value);
     }
     return result;
   },

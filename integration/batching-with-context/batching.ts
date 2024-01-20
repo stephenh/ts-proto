@@ -779,5 +779,5 @@ function isSet(value: any): boolean {
 }
 
 function fail(message?: string): never {
-  throw new Error(message ?? "Failed");
+  throw new globalThis.Error(message ?? "Failed");
 }
