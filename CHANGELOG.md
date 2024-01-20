@@ -1,3 +1,10 @@
+## [1.166.4](https://github.com/stephenh/ts-proto/compare/v1.166.3...v1.166.4) (2024-01-20)
+
+
+### Bug Fixes
+
+* Add missing globalThis prefixes. ([#988](https://github.com/stephenh/ts-proto/issues/988)) ([86aca54](https://github.com/stephenh/ts-proto/commit/86aca54afdcda88bc77b77c9c363f422e0f66be7)), closes [#987](https://github.com/stephenh/ts-proto/issues/987)
+
 ## [1.166.3](https://github.com/stephenh/ts-proto/compare/v1.166.2...v1.166.3) (2024-01-18)
 
 
