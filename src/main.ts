@@ -139,7 +139,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
   // Syntax, unlike most fields, is not repeated and thus does not use an index
   const sourceInfo = SourceInfo.fromDescriptor(fileDesc);
   const headerComment = sourceInfo.lookup(Fields.file.syntax, undefined);
-  maybeAddComment(headerComment, chunks, fileDesc.options?.deprecated);
+  maybeAddComment(options, headerComment, chunks, fileDesc.options?.deprecated);
 
   // Apply formatting to methods here, so they propagate globally
   for (let svc of fileDesc.service) {
@@ -893,7 +893,7 @@ function generateInterfaceDeclaration(
   const { options } = ctx;
   const chunks: Code[] = [];
 
-  maybeAddComment(sourceInfo, chunks, messageDesc.options?.deprecated);
+  maybeAddComment(options, sourceInfo, chunks, messageDesc.options?.deprecated);
   // interface name should be defined to avoid import collisions
   chunks.push(code`export interface ${def(fullName)} {`);
 
@@ -915,7 +915,7 @@ function generateInterfaceDeclaration(
     }
 
     const info = sourceInfo.lookup(Fields.message.field, index);
-    maybeAddComment(info, chunks, fieldDesc.options?.deprecated);
+    maybeAddComment(options, info, chunks, fieldDesc.options?.deprecated);
     const fieldKey = safeAccessor(getFieldName(fieldDesc, options));
     const isOptional = isOptionalProperty(fieldDesc, messageDesc.options, options);
     const type = toTypeName(ctx, messageDesc, fieldDesc, isOptional);
@@ -957,14 +957,14 @@ function generateOneofProperty(
   // that ability. For now just concatenate all comments into one big one.
   let comments: Array<string> = [];
   const info = sourceInfo.lookup(Fields.message.oneof_decl, oneofIndex);
-  maybeAddComment(info, (text) => comments.push(text));
+  maybeAddComment(options, info, (text) => comments.push(text));
   messageDesc.field.forEach((field, index) => {
     if (!isWithinOneOf(field) || field.oneofIndex !== oneofIndex) {
       return;
     }
     const info = sourceInfo.lookup(Fields.message.field, index);
     const name = maybeSnakeToCamel(field.name, options);
-    maybeAddComment(info, (text) => comments.push(name + '\n' + text));
+    maybeAddComment(options, info, (text) => comments.push(name + '\n' + text));
   });
   if (comments.length) {
     prop = prop.addJavadoc(comments.join('\n'));
@@ -1492,7 +1492,7 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
                     throw new ${
                       utils.globalThis
                     }.Error('a value provided in array field ${fieldName} of type ${fieldType} is too large');
-                  }                
+                  }
                   writer.${toReaderCall(field)}(${rhs("v")});
                 }
                 writer.ldelim();
@@ -2249,13 +2249,13 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
     chunks.push(code`
       create<I extends ${utils.Exact}<${utils.DeepPartial}<${fullName}>, I>>(base?: I): ${fullName} {
         return ${fullName}.fromPartial(base ?? ({} as any));
-      },  
+      },
     `);
   } else {
     chunks.push(code`
       create(base?: ${utils.DeepPartial}<${fullName}>): ${fullName} {
         return ${fullName}.fromPartial(base ?? {});
-      },  
+      },
     `);
   }
 

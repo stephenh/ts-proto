@@ -18,7 +18,7 @@ export function generateEnum(
   const chunks: Code[] = [];
   let unrecognizedEnum: UnrecognizedEnum = { present: false };
 
-  maybeAddComment(sourceInfo, chunks, enumDesc.options?.deprecated);
+  maybeAddComment(options, sourceInfo, chunks, enumDesc.options?.deprecated);
 
   if (options.enumsAsLiterals) {
     chunks.push(code`export const ${def(fullName)} = {`);
@@ -35,7 +35,7 @@ export function generateEnum(
     if (valueDesc.number === options.unrecognizedEnumValue) {
       unrecognizedEnum = { present: true, name: memberName };
     }
-    maybeAddComment(info, chunks, valueDesc.options?.deprecated, `${memberName} - `);
+    maybeAddComment(options, info, chunks, valueDesc.options?.deprecated, `${memberName} - `);
     chunks.push(
       code`${memberName} ${delimiter} ${options.stringEnums ? `"${valueName}"` : valueDesc.number.toString()},`,
     );

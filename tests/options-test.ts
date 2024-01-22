@@ -7,6 +7,7 @@ describe("options", () => {
         "M": {},
         "addGrpcMetadata": false,
         "addNestjsRestParameter": false,
+        "comments": true,
         "constEnums": false,
         "context": false,
         "emitDefaultValues": [],
