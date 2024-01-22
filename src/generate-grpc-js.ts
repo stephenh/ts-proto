@@ -54,7 +54,7 @@ function generateServiceDefinition(
 ) {
   const chunks: Code[] = [];
 
-  maybeAddComment(sourceInfo, chunks, serviceDesc.options?.deprecated);
+  maybeAddComment(ctx.options, sourceInfo, chunks, serviceDesc.options?.deprecated);
 
   // Service definition type
   const name = def(`${serviceDesc.name}Service`);
@@ -74,7 +74,7 @@ function generateServiceDefinition(
     const outputType = messageToTypeName(ctx, methodDesc.outputType);
 
     const info = sourceInfo.lookup(Fields.service.method, index);
-    maybeAddComment(info, chunks, methodDesc.options?.deprecated);
+    maybeAddComment(ctx.options, info, chunks, methodDesc.options?.deprecated);
 
     const inputEncoder = generateEncoder(ctx, methodDesc.inputType);
     const outputEncoder = generateEncoder(ctx, methodDesc.outputType);
@@ -114,7 +114,7 @@ function generateServerStub(ctx: Context, sourceInfo: SourceInfo, serviceDesc: S
     const outputType = messageToTypeName(ctx, methodDesc.outputType);
 
     const info = sourceInfo.lookup(Fields.service.method, index);
-    maybeAddComment(info, chunks, methodDesc.options?.deprecated);
+    maybeAddComment(ctx.options, info, chunks, methodDesc.options?.deprecated);
 
     const callType = methodDesc.clientStreaming
       ? methodDesc.serverStreaming
@@ -146,7 +146,7 @@ function generateClientStub(ctx: Context, sourceInfo: SourceInfo, serviceDesc: S
     const outputType = messageToTypeName(ctx, methodDesc.outputType);
 
     const info = sourceInfo.lookup(Fields.service.method, index);
-    maybeAddComment(info, chunks, methodDesc.options?.deprecated);
+    maybeAddComment(ctx.options, info, chunks, methodDesc.options?.deprecated);
 
     const responseCallback = code`(error: ${ServiceError} | null, response: ${outputType}) => void`;
 

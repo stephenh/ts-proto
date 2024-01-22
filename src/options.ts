@@ -95,6 +95,7 @@ export type Options = {
   rpcBeforeRequest: boolean;
   rpcAfterResponse: boolean;
   rpcErrorHandler: boolean;
+  comments: boolean;
 };
 
 export function defaultOptions(): Options {
@@ -155,6 +156,7 @@ export function defaultOptions(): Options {
     rpcBeforeRequest: false,
     rpcAfterResponse: false,
     rpcErrorHandler: false,
+    comments: true,
   };
 }
 

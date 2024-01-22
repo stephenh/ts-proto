@@ -23,7 +23,7 @@ export function generateGenericServiceDefinition(
 ) {
   const chunks: Code[] = [];
 
-  maybeAddComment(sourceInfo, chunks, serviceDesc.options?.deprecated);
+  maybeAddComment(ctx.options, sourceInfo, chunks, serviceDesc.options?.deprecated);
 
   // Service definition type
   const name = def(`${serviceDesc.name}Definition`);
@@ -45,7 +45,7 @@ export function generateGenericServiceDefinition(
 
   for (const [index, methodDesc] of serviceDesc.method.entries()) {
     const info = sourceInfo.lookup(Fields.service.method, index);
-    maybeAddComment(info, chunks, methodDesc.options?.deprecated);
+    maybeAddComment(ctx.options, info, chunks, methodDesc.options?.deprecated);
 
     chunks.push(code`
       ${uncapitalize(methodDesc.name)}: ${generateMethodDefinition(ctx, methodDesc)},

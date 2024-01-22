@@ -96,11 +96,16 @@ const CloseComment = /\*\//g;
 
 /** Removes potentially harmful characters from comments and pushes it into chunks. */
 export function maybeAddComment(
+  options: Pick<Options, "comments">,
   desc: Partial<Pick<SourceDescription, "leadingComments" | "trailingComments">>,
   chunks: Code[],
   deprecated?: boolean,
   prefix: string = "",
 ): void {
+  if (!options.comments) {
+    return;
+  }
+
   let lines: string[] = [];
   if (desc.leadingComments || desc.trailingComments) {
     let content = (desc.leadingComments || desc.trailingComments || "").replace(CloseComment, "* /").trim();

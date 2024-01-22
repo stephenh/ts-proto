@@ -41,14 +41,14 @@ export function generateService(
   const { options } = ctx;
   const chunks: Code[] = [];
 
-  maybeAddComment(sourceInfo, chunks, serviceDesc.options?.deprecated);
+  maybeAddComment(options, sourceInfo, chunks, serviceDesc.options?.deprecated);
   const maybeTypeVar = options.context ? `<${contextTypeVar}>` : "";
   chunks.push(code`export interface ${def(serviceDesc.name)}${maybeTypeVar} {`);
 
   serviceDesc.method.forEach((methodDesc, index) => {
     assertInstanceOf(methodDesc, FormattedMethodDescriptor);
     const info = sourceInfo.lookup(Fields.service.method, index);
-    maybeAddComment(info, chunks, methodDesc.options?.deprecated);
+    maybeAddComment(options, info, chunks, methodDesc.options?.deprecated);
 
     const params: Code[] = [];
     if (options.context) {
