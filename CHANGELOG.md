@@ -1,3 +1,10 @@
+# [1.167.0](https://github.com/stephenh/ts-proto/compare/v1.166.4...v1.167.0) (2024-01-22)
+
+
+### Features
+
+* Allow comments to be omitted ([#989](https://github.com/stephenh/ts-proto/issues/989)) ([cb7eef7](https://github.com/stephenh/ts-proto/commit/cb7eef73f425251f6d09c90710fb8e5c93f56bdf))
+
 ## [1.166.4](https://github.com/stephenh/ts-proto/compare/v1.166.3...v1.166.4) (2024-01-20)
 
 
