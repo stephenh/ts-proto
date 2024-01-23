@@ -6,6 +6,7 @@ services:
       dockerfile: "protoc.Dockerfile"
       args:
         - "ARCH=${ARCH:-x86_64}"
+    platform: linux/amd64
     volumes:
       - ".:/ts-proto"
       - "${PWD:-.}:/host"
