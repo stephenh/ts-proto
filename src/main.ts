@@ -382,6 +382,15 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
     chunks.push(...generateSchema(ctx, fileDesc, sourceInfo));
   }
 
+  // https://www.typescriptlang.org/docs/handbook/2/modules.html:
+  // > In TypeScript, just as in ECMAScript 2015, any file containing a top-level import or export is considered a module.
+  // > Conversely, a file without any top-level import or export declarations is treated as a script whose contents are available in the global scope (and therefore to modules as well).
+  //
+  // Thus, to mark an empty file a module, we need to add `export {}` to it.
+  if (options.esModuleInterop && chunks.length === 0) {
+    chunks.push(code`export {};`);
+  }
+
   chunks.push(
     ...Object.values(utils).map((v) => {
       if (v instanceof ConditionalOutput) {

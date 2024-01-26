@@ -1,0 +1,9 @@
+syntax = "proto2";
+
+package foo;
+
+message Extendable{
+  required string field = 1;
+
+  extensions 4 to max;
+}

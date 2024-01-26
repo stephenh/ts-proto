@@ -1,0 +1,9 @@
+syntax = "proto2";
+
+import "base.proto";
+
+package foo;
+
+extend Extendable{
+  optional int32 bar = 10;
+}
