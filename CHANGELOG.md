@@ -1,3 +1,10 @@
+## [1.167.1](https://github.com/stephenh/ts-proto/compare/v1.167.0...v1.167.1) (2024-01-26)
+
+
+### Bug Fixes
+
+* generate modules for empty files with esModuleInterop ([#992](https://github.com/stephenh/ts-proto/issues/992)) ([f0629ab](https://github.com/stephenh/ts-proto/commit/f0629ab0e9e0eded12142f363858d3dd8e292acd))
+
 # [1.167.0](https://github.com/stephenh/ts-proto/compare/v1.166.4...v1.167.0) (2024-01-22)
 
 
