@@ -42,6 +42,7 @@ For the client we simply pass the **client** interface to the `client.getService
 ```typescript
 // ...
 import { HeroById, Hero, HeroServiceController, VillainById, Villain, HeroServiceControllerMethods } from '../hero';
+import { Ctx, Payload } from '@nestjs/microservices';
 
 @Controller('hero')
 // Generated decorator that applies all the @GrpcMethod and @GrpcStreamMethod to the right methods
@@ -61,7 +62,10 @@ export class HeroController implements HeroServiceController {
     return this.heroes.find(({ id }) => id === data.id)!;
   }
 
-  async findOneVillain(data: VillainById): Promise<Villain> {
+  async findOneVillain(
+    @Payload() data: VillainById,
+    @Ctx() metadata: Metadata,
+  ): Promise<Villain> {
     return this.villains.find(({ id }) => id === data.id)!;
   }
 
