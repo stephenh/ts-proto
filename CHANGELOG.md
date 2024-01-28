@@ -1,3 +1,10 @@
+## [1.167.2](https://github.com/stephenh/ts-proto/compare/v1.167.1...v1.167.2) (2024-01-28)
+
+
+### Bug Fixes
+
+* ensure docker-compose platform is amd64 ([#990](https://github.com/stephenh/ts-proto/issues/990)) ([bdf4710](https://github.com/stephenh/ts-proto/commit/bdf4710b76aafc3fde47aa77a5786387e2236242))
+
 ## [1.167.1](https://github.com/stephenh/ts-proto/compare/v1.167.0...v1.167.1) (2024-01-26)
 
 
