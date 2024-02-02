@@ -132,11 +132,13 @@ function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProt
 
   let encode = code`${rawInputType}.encode(request).finish()`;
   let beforeRequest;
-  if (options.rpcBeforeRequest) {
-    beforeRequest = code`
-    if (this.rpc.beforeRequest) {
-      this.rpc.beforeRequest(this.service, "${methodDesc.name}", request);
-    }`;
+  if (options.rpcBeforeRequest && !methodDesc.clientStreaming) {
+    beforeRequest = generateBeforeRequest(methodDesc.name);
+  } else if (methodDesc.clientStreaming && options.rpcBeforeRequest) {
+    encode = code`{const encodedRequest = ${encode}; ${generateBeforeRequest(
+      methodDesc.name,
+      "encodedRequest",
+    )}; return encodedRequest}`;
   }
   let decode = code`${rawOutputType}.decode(${Reader}.create(data))`;
   if (options.rpcAfterResponse) {
@@ -197,6 +199,13 @@ function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProt
   `;
 }
 
+function generateBeforeRequest(methodName: string, requestVariableName: string = "request") {
+  return code`
+    if (this.rpc.beforeRequest) {
+      this.rpc.beforeRequest(this.service, "${methodName}", ${requestVariableName});
+    }`;
+}
+
 function createDefaultServiceReturn(
   ctx: Context,
   methodDesc: MethodDescriptorProto,
@@ -205,11 +214,15 @@ function createDefaultServiceReturn(
 ): Code {
   const { options } = ctx;
   const rawOutputType = responseType(ctx, methodDesc, { keepValueType: true });
+  let returnStatement = code`data => ${decode}`;
+  if (options.rpcAfterResponse) {
+    returnStatement = code`data => { ${decode} }`;
+  }
   if (options.returnObservable || methodDesc.serverStreaming) {
     if (options.useAsyncIterable) {
       return code`${rawOutputType}.decodeTransform(result)`;
     } else {
-      return code`result.pipe(${imp("map@rxjs/operators")}(data => ${decode}))`;
+      return code`result.pipe(${imp("map@rxjs/operators")}(${returnStatement}))`;
     }
   }
 
@@ -222,10 +235,8 @@ function createDefaultServiceReturn(
       tryBlock,
       code`return Promise.reject(error);`,
     )}}).catch((error) => { ${errorHandler} })`;
-  } else if (options.rpcAfterResponse) {
-    return code`promise.then(data => { ${decode} } )`;
   }
-  return code`promise.then(data => ${decode})`;
+  return code`promise.then(${returnStatement})`;
 }
 
 export function generateServiceClientImpl(
