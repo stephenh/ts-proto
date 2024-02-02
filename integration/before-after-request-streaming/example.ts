@@ -791,10 +791,11 @@ export class DashStateClientImpl implements DashState {
 
   ChangeUserSettingsStream(request: Observable<DashUserSettingsState>): Observable<DashUserSettingsState> {
     const data = request.pipe(map((request) => {
-      DashUserSettingsState.encode(request).finish();
+      const encodedRequest = DashUserSettingsState.encode(request).finish();
       if (this.rpc.beforeRequest) {
-        this.rpc.beforeRequest(this.service, "ChangeUserSettingsStream", request);
+        this.rpc.beforeRequest(this.service, "ChangeUserSettingsStream", encodedRequest);
       }
+      return encodedRequest;
     }));
     const result = this.rpc.bidirectionalStreamingRequest(this.service, "ChangeUserSettingsStream", data);
     return result.pipe(map((data) => {
