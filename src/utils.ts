@@ -296,3 +296,10 @@ export function tryCatchBlock(tryBlock: Code | string, handleErrorBlock: Code | 
     ${handleErrorBlock}
   }`;
 }
+
+export function arrowFunction(params: string, body: Code | string, isOneLine: boolean = true): Code {
+  if (isOneLine) {
+    return code`(${params}) => ${body}`;
+  }
+  return code`(${params}) => { ${body} }`;
+}

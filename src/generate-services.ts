@@ -10,6 +10,7 @@ import {
   observableType,
 } from "./types";
 import {
+  arrowFunction,
   assertInstanceOf,
   FormattedMethodDescriptor,
   impFile,
@@ -132,11 +133,13 @@ function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProt
 
   let encode = code`${rawInputType}.encode(request).finish()`;
   let beforeRequest;
-  if (options.rpcBeforeRequest) {
-    beforeRequest = code`
-    if (this.rpc.beforeRequest) {
-      this.rpc.beforeRequest(this.service, "${methodDesc.name}", request);
-    }`;
+  if (options.rpcBeforeRequest && !methodDesc.clientStreaming) {
+    beforeRequest = generateBeforeRequest(methodDesc.name);
+  } else if (methodDesc.clientStreaming && options.rpcBeforeRequest) {
+    encode = code`{const encodedRequest = ${encode}; ${generateBeforeRequest(
+      methodDesc.name,
+      "encodedRequest",
+    )}; return encodedRequest}`;
   }
   let decode = code`${rawOutputType}.decode(${Reader}.create(data))`;
   if (options.rpcAfterResponse) {
@@ -197,6 +200,13 @@ function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProt
   `;
 }
 
+function generateBeforeRequest(methodName: string, requestVariableName: string = "request") {
+  return code`
+    if (this.rpc.beforeRequest) {
+      this.rpc.beforeRequest(this.service, "${methodName}", ${requestVariableName});
+    }`;
+}
+
 function createDefaultServiceReturn(
   ctx: Context,
   methodDesc: MethodDescriptorProto,
@@ -205,27 +215,31 @@ function createDefaultServiceReturn(
 ): Code {
   const { options } = ctx;
   const rawOutputType = responseType(ctx, methodDesc, { keepValueType: true });
+  const returnStatement = arrowFunction("data", decode, !options.rpcAfterResponse);
+
   if (options.returnObservable || methodDesc.serverStreaming) {
     if (options.useAsyncIterable) {
       return code`${rawOutputType}.decodeTransform(result)`;
     } else {
-      return code`result.pipe(${imp("map@rxjs/operators")}(data => ${decode}))`;
+      if (errorHandler) {
+        const tc = arrowFunction("data", tryCatchBlock(decode, code`throw error`), !options.rpcAfterResponse);
+        return code`result.pipe(${imp("map@rxjs/operators")}(${tc}))`;
+      }
+      return code`result.pipe(${imp("map@rxjs/operators")}(${returnStatement}))`;
     }
   }
 
   if (errorHandler) {
-    let tryBlock = decode;
     if (!options.rpcAfterResponse) {
-      tryBlock = code`return ${decode}`;
+      decode = code`return ${decode}`;
     }
-    return code`promise.then(data => { ${tryCatchBlock(
-      tryBlock,
-      code`return Promise.reject(error);`,
-    )}}).catch((error) => { ${errorHandler} })`;
-  } else if (options.rpcAfterResponse) {
-    return code`promise.then(data => { ${decode} } )`;
+    return code`promise.then(${arrowFunction(
+      "data",
+      tryCatchBlock(decode, code`return Promise.reject(error);`),
+      false,
+    )}).catch(${arrowFunction("error", errorHandler, false)})`;
   }
-  return code`promise.then(data => ${decode})`;
+  return code`promise.then(${returnStatement})`;
 }
 
 export function generateServiceClientImpl(
