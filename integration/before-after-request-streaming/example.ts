@@ -91,7 +91,8 @@ export interface DashAPICredsDeleteReq {
   id: string;
 }
 
-export interface Empty {}
+export interface Empty {
+}
 
 function createBaseDashFlash(): DashFlash {
   return { msg: "", type: 0 };
@@ -250,10 +251,9 @@ export const DashUserSettingsState = {
   fromPartial<I extends Exact<DeepPartial<DashUserSettingsState>, I>>(object: I): DashUserSettingsState {
     const message = createBaseDashUserSettingsState();
     message.email = object.email ?? "";
-    message.urls =
-      object.urls !== undefined && object.urls !== null
-        ? DashUserSettingsState_URLs.fromPartial(object.urls)
-        : undefined;
+    message.urls = (object.urls !== undefined && object.urls !== null)
+      ? DashUserSettingsState_URLs.fromPartial(object.urls)
+      : undefined;
     message.flashes = object.flashes?.map((e) => DashFlash.fromPartial(e)) || [];
     return message;
   },
@@ -756,24 +756,22 @@ export class DashStateClientImpl implements DashState {
       this.rpc.beforeRequest(this.service, "UserSettings", request);
     }
     const promise = this.rpc.request(this.service, "UserSettings", data);
-    return promise
-      .then((data) => {
-        try {
-          const response = DashUserSettingsState.decode(_m0.Reader.create(data));
-          if (this.rpc.afterResponse) {
-            this.rpc.afterResponse(this.service, "UserSettings", response);
-          }
-          return response;
-        } catch (error) {
-          return Promise.reject(error);
+    return promise.then((data) => {
+      try {
+        const response = DashUserSettingsState.decode(_m0.Reader.create(data));
+        if (this.rpc.afterResponse) {
+          this.rpc.afterResponse(this.service, "UserSettings", response);
         }
-      })
-      .catch((error) => {
-        if (this.rpc.handleError) {
-          return Promise.reject(this.rpc.handleError(this.service, "UserSettings", error));
-        }
+        return response;
+      } catch (error) {
         return Promise.reject(error);
-      });
+      }
+    }).catch((error) => {
+      if (this.rpc.handleError) {
+        return Promise.reject(this.rpc.handleError(this.service, "UserSettings", error));
+      }
+      return Promise.reject(error);
+    });
   }
 
   ActiveUserSettingsStream(request: Empty): Observable<DashUserSettingsState> {
@@ -782,37 +780,39 @@ export class DashStateClientImpl implements DashState {
       this.rpc.beforeRequest(this.service, "ActiveUserSettingsStream", request);
     }
     const result = this.rpc.serverStreamingRequest(this.service, "ActiveUserSettingsStream", data);
-    return result.pipe(
-      map((data) => {
+    return result.pipe(map((data) => {
+      try {
         const response = DashUserSettingsState.decode(_m0.Reader.create(data));
         if (this.rpc.afterResponse) {
           this.rpc.afterResponse(this.service, "ActiveUserSettingsStream", response);
         }
         return response;
-      }),
-    );
+      } catch (error) {
+        throw error;
+      }
+    }));
   }
 
   ChangeUserSettingsStream(request: Observable<DashUserSettingsState>): Observable<DashUserSettingsState> {
-    const data = request.pipe(
-      map((request) => {
-        const encodedRequest = DashUserSettingsState.encode(request).finish();
-        if (this.rpc.beforeRequest) {
-          this.rpc.beforeRequest(this.service, "ChangeUserSettingsStream", encodedRequest);
-        }
-        return encodedRequest;
-      }),
-    );
+    const data = request.pipe(map((request) => {
+      const encodedRequest = DashUserSettingsState.encode(request).finish();
+      if (this.rpc.beforeRequest) {
+        this.rpc.beforeRequest(this.service, "ChangeUserSettingsStream", encodedRequest);
+      }
+      return encodedRequest;
+    }));
     const result = this.rpc.bidirectionalStreamingRequest(this.service, "ChangeUserSettingsStream", data);
-    return result.pipe(
-      map((data) => {
+    return result.pipe(map((data) => {
+      try {
         const response = DashUserSettingsState.decode(_m0.Reader.create(data));
         if (this.rpc.afterResponse) {
           this.rpc.afterResponse(this.service, "ChangeUserSettingsStream", response);
         }
         return response;
-      }),
-    );
+      } catch (error) {
+        throw error;
+      }
+    }));
   }
 }
 
@@ -879,24 +879,22 @@ export class DashAPICredsClientImpl implements DashAPICreds {
       this.rpc.beforeRequest(this.service, "Create", request);
     }
     const promise = this.rpc.request(this.service, "Create", data);
-    return promise
-      .then((data) => {
-        try {
-          const response = DashCred.decode(_m0.Reader.create(data));
-          if (this.rpc.afterResponse) {
-            this.rpc.afterResponse(this.service, "Create", response);
-          }
-          return response;
-        } catch (error) {
-          return Promise.reject(error);
+    return promise.then((data) => {
+      try {
+        const response = DashCred.decode(_m0.Reader.create(data));
+        if (this.rpc.afterResponse) {
+          this.rpc.afterResponse(this.service, "Create", response);
         }
-      })
-      .catch((error) => {
-        if (this.rpc.handleError) {
-          return Promise.reject(this.rpc.handleError(this.service, "Create", error));
-        }
+        return response;
+      } catch (error) {
         return Promise.reject(error);
-      });
+      }
+    }).catch((error) => {
+      if (this.rpc.handleError) {
+        return Promise.reject(this.rpc.handleError(this.service, "Create", error));
+      }
+      return Promise.reject(error);
+    });
   }
 
   Update(request: DashAPICredsUpdateReq): Promise<DashCred> {
@@ -905,24 +903,22 @@ export class DashAPICredsClientImpl implements DashAPICreds {
       this.rpc.beforeRequest(this.service, "Update", request);
     }
     const promise = this.rpc.request(this.service, "Update", data);
-    return promise
-      .then((data) => {
-        try {
-          const response = DashCred.decode(_m0.Reader.create(data));
-          if (this.rpc.afterResponse) {
-            this.rpc.afterResponse(this.service, "Update", response);
-          }
-          return response;
-        } catch (error) {
-          return Promise.reject(error);
+    return promise.then((data) => {
+      try {
+        const response = DashCred.decode(_m0.Reader.create(data));
+        if (this.rpc.afterResponse) {
+          this.rpc.afterResponse(this.service, "Update", response);
         }
-      })
-      .catch((error) => {
-        if (this.rpc.handleError) {
-          return Promise.reject(this.rpc.handleError(this.service, "Update", error));
-        }
+        return response;
+      } catch (error) {
         return Promise.reject(error);
-      });
+      }
+    }).catch((error) => {
+      if (this.rpc.handleError) {
+        return Promise.reject(this.rpc.handleError(this.service, "Update", error));
+      }
+      return Promise.reject(error);
+    });
   }
 
   Delete(request: DashAPICredsDeleteReq): Promise<DashCred> {
@@ -931,24 +927,22 @@ export class DashAPICredsClientImpl implements DashAPICreds {
       this.rpc.beforeRequest(this.service, "Delete", request);
     }
     const promise = this.rpc.request(this.service, "Delete", data);
-    return promise
-      .then((data) => {
-        try {
-          const response = DashCred.decode(_m0.Reader.create(data));
-          if (this.rpc.afterResponse) {
-            this.rpc.afterResponse(this.service, "Delete", response);
-          }
-          return response;
-        } catch (error) {
-          return Promise.reject(error);
+    return promise.then((data) => {
+      try {
+        const response = DashCred.decode(_m0.Reader.create(data));
+        if (this.rpc.afterResponse) {
+          this.rpc.afterResponse(this.service, "Delete", response);
         }
-      })
-      .catch((error) => {
-        if (this.rpc.handleError) {
-          return Promise.reject(this.rpc.handleError(this.service, "Delete", error));
-        }
+        return response;
+      } catch (error) {
         return Promise.reject(error);
-      });
+      }
+    }).catch((error) => {
+      if (this.rpc.handleError) {
+        return Promise.reject(this.rpc.handleError(this.service, "Delete", error));
+      }
+      return Promise.reject(error);
+    });
   }
 
   Uppercase(request: StringValue): Promise<StringValue> {
@@ -957,24 +951,22 @@ export class DashAPICredsClientImpl implements DashAPICreds {
       this.rpc.beforeRequest(this.service, "Uppercase", request);
     }
     const promise = this.rpc.request(this.service, "Uppercase", data);
-    return promise
-      .then((data) => {
-        try {
-          const response = StringValue.decode(_m0.Reader.create(data));
-          if (this.rpc.afterResponse) {
-            this.rpc.afterResponse(this.service, "Uppercase", response);
-          }
-          return response;
-        } catch (error) {
-          return Promise.reject(error);
+    return promise.then((data) => {
+      try {
+        const response = StringValue.decode(_m0.Reader.create(data));
+        if (this.rpc.afterResponse) {
+          this.rpc.afterResponse(this.service, "Uppercase", response);
         }
-      })
-      .catch((error) => {
-        if (this.rpc.handleError) {
-          return Promise.reject(this.rpc.handleError(this.service, "Uppercase", error));
-        }
+        return response;
+      } catch (error) {
         return Promise.reject(error);
-      });
+      }
+    }).catch((error) => {
+      if (this.rpc.handleError) {
+        return Promise.reject(this.rpc.handleError(this.service, "Uppercase", error));
+      }
+      return Promise.reject(error);
+    });
   }
 }
 
@@ -1035,19 +1027,14 @@ interface Rpc {
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
-export type DeepPartial<T> = T extends Builtin
-  ? T
-  : T extends globalThis.Array<infer U>
-  ? globalThis.Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U>
-  ? ReadonlyArray<DeepPartial<U>>
-  : T extends {}
-  ? { [K in keyof T]?: DeepPartial<T[K]> }
+export type DeepPartial<T> = T extends Builtin ? T
+  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-export type Exact<P, I extends P> = P extends Builtin
-  ? P
+export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function isSet(value: any): boolean {

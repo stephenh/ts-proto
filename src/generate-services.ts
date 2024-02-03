@@ -10,6 +10,7 @@ import {
   observableType,
 } from "./types";
 import {
+  arrowFunction,
   assertInstanceOf,
   FormattedMethodDescriptor,
   impFile,
@@ -214,27 +215,29 @@ function createDefaultServiceReturn(
 ): Code {
   const { options } = ctx;
   const rawOutputType = responseType(ctx, methodDesc, { keepValueType: true });
-  let returnStatement = code`data => ${decode}`;
-  if (options.rpcAfterResponse) {
-    returnStatement = code`data => { ${decode} }`;
-  }
+  const returnStatement = arrowFunction("data", decode, !options.rpcAfterResponse);
+
   if (options.returnObservable || methodDesc.serverStreaming) {
     if (options.useAsyncIterable) {
       return code`${rawOutputType}.decodeTransform(result)`;
     } else {
+      if (errorHandler) {
+        const tc = arrowFunction("data", tryCatchBlock(decode, code`throw error`), !options.rpcAfterResponse);
+        return code`result.pipe(${imp("map@rxjs/operators")}(${tc}))`;
+      }
       return code`result.pipe(${imp("map@rxjs/operators")}(${returnStatement}))`;
     }
   }
 
   if (errorHandler) {
-    let tryBlock = decode;
     if (!options.rpcAfterResponse) {
-      tryBlock = code`return ${decode}`;
+      decode = code`return ${decode}`;
     }
-    return code`promise.then(data => { ${tryCatchBlock(
-      tryBlock,
-      code`return Promise.reject(error);`,
-    )}}).catch((error) => { ${errorHandler} })`;
+    return code`promise.then(${arrowFunction(
+      "data",
+      tryCatchBlock(decode, code`return Promise.reject(error);`),
+      false,
+    )}).catch(${arrowFunction("error", errorHandler, false)})`;
   }
   return code`promise.then(${returnStatement})`;
 }
