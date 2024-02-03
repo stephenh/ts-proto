@@ -1,3 +1,10 @@
+## [1.167.3](https://github.com/stephenh/ts-proto/compare/v1.167.2...v1.167.3) (2024-02-03)
+
+
+### Bug Fixes
+
+* ensure default service streaming methods compile when middleware methods are enabled ([#996](https://github.com/stephenh/ts-proto/issues/996)) ([a9e975b](https://github.com/stephenh/ts-proto/commit/a9e975b41b760970da264a48cc3fb4ecc4b57a1d))
+
 ## [1.167.2](https://github.com/stephenh/ts-proto/compare/v1.167.1...v1.167.2) (2024-01-28)
 
 
