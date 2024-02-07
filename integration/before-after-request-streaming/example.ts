@@ -1022,7 +1022,7 @@ interface Rpc {
   bidirectionalStreamingRequest(service: string, method: string, data: Observable<Uint8Array>): Observable<Uint8Array>;
   beforeRequest?<T extends { [k in keyof T]: unknown }>(service: string, method: string, request: T): void;
   afterResponse?<T extends { [k in keyof T]: unknown }>(service: string, method: string, response: T): void;
-  handleError?(service: string, method: string, error: Error): Error;
+  handleError?(service: string, method: string, error: globalThis.Error): globalThis.Error;
 }
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;

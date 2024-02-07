@@ -158,7 +158,7 @@ export class BasicServiceClientImpl implements BasicService {
 
 interface Rpc {
   request(service: string, method: string, data: Uint8Array): Promise<Uint8Array>;
-  handleError?(service: string, method: string, error: Error): Error;
+  handleError?(service: string, method: string, error: globalThis.Error): globalThis.Error;
 }
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;

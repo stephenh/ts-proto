@@ -432,7 +432,9 @@ export function generateRpcType(ctx: Context, hasStreamingMethods: boolean): Cod
     );
   }
   if (options.rpcErrorHandler) {
-    additionalMethods.push(code`handleError?(service: string, method: string, error: Error): Error;`);
+    additionalMethods.push(
+      code`handleError?(service: string, method: string, error: globalThis.Error): globalThis.Error;`,
+    );
   }
 
   if (hasStreamingMethods) {
