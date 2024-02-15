@@ -245,7 +245,7 @@ export const FieldMask = {
 
   fromJSON(object: any): FieldMask {
     return {
-      paths: typeof (object) === "string"
+      paths: typeof object === "string"
         ? object.split(",").filter(globalThis.Boolean)
         : globalThis.Array.isArray(object?.paths)
         ? object.paths.map(globalThis.String)
