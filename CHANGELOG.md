@@ -1,3 +1,10 @@
+## [1.167.5](https://github.com/stephenh/ts-proto/compare/v1.167.4...v1.167.5) (2024-02-15)
+
+
+### Bug Fixes
+
+* import fails when folder name overlaps with file name ([#1000](https://github.com/stephenh/ts-proto/issues/1000)) ([1e68e6f](https://github.com/stephenh/ts-proto/commit/1e68e6f0b2ca6fbffc51c0abe9b0f127350dd766))
+
 ## [1.167.4](https://github.com/stephenh/ts-proto/compare/v1.167.3...v1.167.4) (2024-02-15)
 
 
