@@ -1,3 +1,10 @@
+## [1.167.4](https://github.com/stephenh/ts-proto/compare/v1.167.3...v1.167.4) (2024-02-15)
+
+
+### Bug Fixes
+
+* don't reference globalThis.Buffer when env=browser ([#967](https://github.com/stephenh/ts-proto/issues/967)) ([#999](https://github.com/stephenh/ts-proto/issues/999)) ([0d34612](https://github.com/stephenh/ts-proto/commit/0d34612ce8878b1dccbeb001686ef4051080e043))
+
 ## [1.167.3](https://github.com/stephenh/ts-proto/compare/v1.167.2...v1.167.3) (2024-02-03)
 
 
