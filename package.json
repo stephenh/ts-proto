@@ -68,7 +68,7 @@
   "dependencies": {
     "case-anything": "^2.1.13",
     "protobufjs": "^7.2.4",
-    "ts-poet": "^6.5.0",
+    "ts-poet": "^6.7.0",
     "ts-proto-descriptors": "1.15.0"
   },
   "packageManager": "yarn@3.6.0"

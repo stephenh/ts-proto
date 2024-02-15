@@ -1211,7 +1211,7 @@ export const SimpleWithMap = {
     Object.entries(message.longLookup).forEach(([key, value]) => {
       SimpleWithMap_LongLookupEntry.encode({ key: key as any, value }, writer.uint32(58).fork()).ldelim();
     });
-    (message.boolLookup).forEach((value, key) => {
+    message.boolLookup.forEach((value, key) => {
       SimpleWithMap_BoolLookupEntry.encode({ key: key as any, value }, writer.uint32(66).fork()).ldelim();
     });
     return writer;

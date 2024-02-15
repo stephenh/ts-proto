@@ -1060,7 +1060,7 @@ export class GrpcWebImpl {
       ? new BrowserHeaders({ ...this.options?.metadata.headersMap, ...metadata?.headersMap })
       : metadata ?? this.options.metadata;
     return new Observable((observer) => {
-      const upStream = (() => {
+      const upStream = () => {
         const client = grpc.invoke(methodDesc, {
           host: this.host,
           request,
@@ -1099,7 +1099,7 @@ export class GrpcWebImpl {
         } else {
           observer.add(() => client.close());
         }
-      });
+      };
       upStream();
     }).pipe(share());
   }
