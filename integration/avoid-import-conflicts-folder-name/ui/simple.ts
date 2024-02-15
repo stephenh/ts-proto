@@ -5,7 +5,7 @@ import {
   SimpleEnum as SimpleEnum1,
   simpleEnumFromJSON as simpleEnumFromJSON3,
   simpleEnumToJSON as simpleEnumToJSON4,
-} from "./";
+} from "../ui";
 
 export const protobufPackage = "simple";
 
