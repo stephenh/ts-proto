@@ -3111,12 +3111,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dprint-node@npm:^1.0.7":
-  version: 1.0.7
-  resolution: "dprint-node@npm:1.0.7"
+"dprint-node@npm:^1.0.8":
+  version: 1.0.8
+  resolution: "dprint-node@npm:1.0.8"
   dependencies:
     detect-libc: ^1.0.3
-  checksum: cd29f8e2b7de334273b4f53d24072718139635408b015963bcc80829cc785a84591462585b5b569791c8b1420c5672bec7499bda70d7298c58c8a3f43796e659
+  checksum: ac53b71296d155664319877f0e8c9fe94e084457ce9aae68081b9dd7165916f2829222923c59b1399d95680362f18a8da5994e7f76a8f52035e02bbd14ba76bc
   languageName: node
   linkType: hard
 
@@ -7838,12 +7838,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-poet@npm:^6.5.0":
-  version: 6.5.0
-  resolution: "ts-poet@npm:6.5.0"
+"ts-poet@npm:^6.7.0":
+  version: 6.7.0
+  resolution: "ts-poet@npm:6.7.0"
   dependencies:
-    dprint-node: ^1.0.7
-  checksum: 1a3705c7864cb0dc6f9305884a91a6582fdd93257977324cda8ea7e3e5dbd7525cbc3fb4d5753a088356a4b8b3fb9245d83c244740f52881725a79ab36d0d168
+    dprint-node: ^1.0.8
+  checksum: 7dd56fd5c14c95456fde929535b896e76b563b8c597bf314206934763d96da2ff10e01bbf24ddf8a0c4db7890dc2cae96ff086dfd166f639a75bac86d4d74f44
   languageName: node
   linkType: hard
 
@@ -7895,7 +7895,7 @@ __metadata:
     rxjs: ^7.8.1
     semantic-release: ^21.0.7
     ts-jest: ^29.1.1
-    ts-poet: ^6.5.0
+    ts-poet: ^6.7.0
     ts-proto-descriptors: 1.15.0
     tsx: ^3.12.7
     typescript: ^5.1.6
