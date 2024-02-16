@@ -436,7 +436,7 @@ export function makeUtils(options: Options): Utils {
     ...makeTimestampMethods(options, longs, bytes),
     ...longs,
     ...makeComparisonUtils(),
-    ...makeNiceGrpcServerStreamingMethodResult(),
+    ...makeNiceGrpcServerStreamingMethodResult(options),
     ...makeGrpcWebErrorClass(bytes),
     ...makeExtensionClass(options),
     ...makeAssertionUtils(bytes),
@@ -872,14 +872,20 @@ function makeComparisonUtils() {
   return { isObject, isSet };
 }
 
-function makeNiceGrpcServerStreamingMethodResult() {
+function makeNiceGrpcServerStreamingMethodResult(options: Options) {
   const NiceGrpcServerStreamingMethodResult = conditionalOutput(
     "ServerStreamingMethodResult",
-    code`
-      export type ServerStreamingMethodResult<Response> = {
-        [Symbol.asyncIterator](): AsyncIterator<Response, void>;
-      };
-    `,
+    options.outputIndex
+      ? code`
+        type ServerStreamingMethodResult<Response> = {
+          [Symbol.asyncIterator](): AsyncIterator<Response, void>;
+        };
+      `
+      : code`
+        export type ServerStreamingMethodResult<Response> = {
+          [Symbol.asyncIterator](): AsyncIterator<Response, void>;
+        };
+      `,
   );
 
   return { NiceGrpcServerStreamingMethodResult };
