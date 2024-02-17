@@ -1,3 +1,10 @@
+## [1.167.7](https://github.com/stephenh/ts-proto/compare/v1.167.6...v1.167.7) (2024-02-17)
+
+
+### Bug Fixes
+
+* Use as any on globalThis.Buffer check. ([#1004](https://github.com/stephenh/ts-proto/issues/1004)) ([11d06b4](https://github.com/stephenh/ts-proto/commit/11d06b4455a1f27793bfe172fffaf05b7a3400db)), closes [#967](https://github.com/stephenh/ts-proto/issues/967)
+
 ## [1.167.6](https://github.com/stephenh/ts-proto/compare/v1.167.5...v1.167.6) (2024-02-17)
 
 
