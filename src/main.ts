@@ -609,7 +609,7 @@ function makeByteUtils(options: Options) {
         return base64FromBytesBrowserSnippet;
       default:
         return code`
-          if (${globalThis}.Buffer) {
+          if ((${globalThis} as any).Buffer) {
             ${base64FromBytesNodeSnippet}
           } else {
             ${base64FromBytesBrowserSnippet}
