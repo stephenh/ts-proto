@@ -1,3 +1,10 @@
+## [1.167.6](https://github.com/stephenh/ts-proto/compare/v1.167.5...v1.167.6) (2024-02-17)
+
+
+### Bug Fixes
+
+* conditional export ([#1003](https://github.com/stephenh/ts-proto/issues/1003)) ([4a15839](https://github.com/stephenh/ts-proto/commit/4a15839943b501af750b9d142dba2cb3889b4617))
+
 ## [1.167.5](https://github.com/stephenh/ts-proto/compare/v1.167.4...v1.167.5) (2024-02-15)
 
 
