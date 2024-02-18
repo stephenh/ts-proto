@@ -571,8 +571,8 @@ function makeByteUtils(options: Options) {
         return bytesFromBase64BrowserSnippet;
       default:
         return code`
-          if (${globalThis}.Buffer) {
-            ${bytesFromBase64NodeSnippet}
+        if ((${globalThis} as any).Buffer) {
+          ${bytesFromBase64NodeSnippet}
           } else {
             ${bytesFromBase64BrowserSnippet}
           }
