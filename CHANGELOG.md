@@ -1,3 +1,10 @@
+## [1.167.8](https://github.com/stephenh/ts-proto/compare/v1.167.7...v1.167.8) (2024-02-18)
+
+
+### Bug Fixes
+
+* Use as any on globalThis.Buffer check for bytesFromBase64 ([#1005](https://github.com/stephenh/ts-proto/issues/1005)) ([bae741c](https://github.com/stephenh/ts-proto/commit/bae741cba9c22d08118e25619ba3e427e1c7bf9d)), closes [#1004](https://github.com/stephenh/ts-proto/issues/1004) [#967](https://github.com/stephenh/ts-proto/issues/967)
+
 ## [1.167.7](https://github.com/stephenh/ts-proto/compare/v1.167.6...v1.167.7) (2024-02-17)
 
 
