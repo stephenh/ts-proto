@@ -131,6 +131,11 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
   const moduleName = fileDesc.name.replace(".proto", suffix);
   const chunks: Code[] = [];
 
+  // to handle proto2 optionals and default values, we need to track whether or not we are
+  // processing a proto2 file. there is no metadata that tells us this, so we have to infer it
+  // based on whether or not we are processing a proto3 file:
+  const isProto3File = fileDesc.syntax === "proto3";
+
   // Indicate this file's source protobuf package for reflective use with google.protobuf.Any
   if (options.exportCommonSymbols) {
     chunks.push(code`export const protobufPackage = '${fileDesc.package}';`);
@@ -210,7 +215,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
           options.outputPartialMethods ||
           outputWrapAndUnwrap
         ) {
-          chunks.push(generateBaseInstanceFactory(ctx, fullName, message, fullTypeName));
+          chunks.push(generateBaseInstanceFactory(ctx, fullName, message, fullTypeName, isProto3File));
         }
 
         const staticMembers: Code[] = [];
@@ -221,7 +226,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
 
         if (options.outputExtensions) {
           for (const extension of message.extension) {
-            const { name, type, extensionInfo } = generateExtension(ctx, message, extension);
+            const { name, type, extensionInfo } = generateExtension(ctx, message, extension, isProto3File);
 
             staticMembers.push(code`${name}: <${ctx.utils.Extension}<${type}>> ${extensionInfo}`);
           }
@@ -233,14 +238,14 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
             options.outputEncodeMethods === "encode-only" ||
             options.outputEncodeMethods === "encode-no-creation"
           ) {
-            staticMembers.push(generateEncode(ctx, fullName, message));
+            staticMembers.push(generateEncode(ctx, fullName, message, isProto3File));
 
             if (options.outputExtensions && options.unknownFields && message.extensionRange.length) {
               staticMembers.push(generateSetExtension(ctx, fullName));
             }
           }
           if (options.outputEncodeMethods === true || options.outputEncodeMethods === "decode-only") {
-            staticMembers.push(generateDecode(ctx, fullName, message));
+            staticMembers.push(generateDecode(ctx, fullName, message, isProto3File));
 
             if (options.outputExtensions && options.unknownFields && message.extensionRange.length) {
               staticMembers.push(generateGetExtension(ctx, fullName));
@@ -253,10 +258,10 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
         }
         if (options.outputJsonMethods) {
           if (options.outputJsonMethods === true || options.outputJsonMethods === "from-only") {
-            staticMembers.push(generateFromJson(ctx, fullName, fullTypeName, message));
+            staticMembers.push(generateFromJson(ctx, fullName, fullTypeName, message, isProto3File));
           }
           if (options.outputJsonMethods === true || options.outputJsonMethods === "to-only") {
-            staticMembers.push(generateToJson(ctx, fullName, fullTypeName, message));
+            staticMembers.push(generateToJson(ctx, fullName, fullTypeName, message, isProto3File));
           }
         }
         if (options.outputPartialMethods) {
@@ -300,7 +305,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
 
   if (options.outputExtensions) {
     for (const extension of fileDesc.extension) {
-      const { name, type, extensionInfo } = generateExtension(ctx, undefined, extension);
+      const { name, type, extensionInfo } = generateExtension(ctx, undefined, extension, isProto3File);
 
       chunks.push(code`export const ${name}: ${ctx.utils.Extension}<${type}> = ${extensionInfo};`);
     }
@@ -1045,6 +1050,7 @@ function generateBaseInstanceFactory(
   fullName: string,
   messageDesc: DescriptorProto,
   fullTypeName: string,
+  isProto3File: boolean,
 ): Code {
   const { options } = ctx;
   const fields: Code[] = [];
@@ -1066,7 +1072,7 @@ function generateBaseInstanceFactory(
       continue;
     }
 
-    if (!options.initializeFieldsAsUndefined && isOptionalProperty(field, messageDesc.options, options)) {
+    if (!options.initializeFieldsAsUndefined && isOptionalProperty(field, messageDesc.options, options, isProto3File)) {
       continue;
     }
 
@@ -1165,7 +1171,7 @@ function getDecodeReadSnippet(ctx: Context, field: FieldDescriptorProto) {
 }
 
 /** Creates a function to decode a message by loop overing the tags. */
-function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorProto): Code {
+function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorProto, isProto3File: boolean): Code {
   const { options, utils, typeMap } = ctx;
   const chunks: Code[] = [];
 
@@ -1213,7 +1219,7 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
 
     // and then use the snippet to handle repeated fields if necessary
     const initializerNecessary =
-      !options.initializeFieldsAsUndefined && isOptionalProperty(field, messageDesc.options, options);
+      !options.initializeFieldsAsUndefined && isOptionalProperty(field, messageDesc.options, options, isProto3File);
 
     if (isRepeated(field)) {
       const maybeNonNullAssertion = ctx.options.useOptionals === "all" ? "!" : "";
@@ -1422,7 +1428,7 @@ function getEncodeWriteSnippet(ctx: Context, field: FieldDescriptorProto): (plac
 }
 
 /** Creates a function to encode a message by loop overing the tags. */
-function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorProto): Code {
+function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorProto, isProto3File: boolean): Code {
   const { options, utils, typeMap } = ctx;
   const chunks: Code[] = [];
 
@@ -1452,7 +1458,7 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
     // get a generic writer.doSomething based on the basic type
     const writeSnippet = getEncodeWriteSnippet(ctx, field);
 
-    const isOptional = isOptionalProperty(field, messageDesc.options, options);
+    const isOptional = isOptionalProperty(field, messageDesc.options, options, isProto3File);
     if (isRepeated(field)) {
       if (isMapType(ctx, messageDesc, field)) {
         const valueType = (typeMap.get(field.typeName)![2] as DescriptorProto).field[1];
@@ -1610,7 +1616,7 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
       `);
     } else if (isScalar(field) || isEnum(field)) {
       chunks.push(code`
-        if (${notDefaultCheck(ctx, field, messageDesc.options, `${messageProperty}`)}) {
+        if (${notDefaultCheck(ctx, field, messageDesc.options, `${messageProperty}`, isProto3File)}) {
           ${writeSnippet(`${messageProperty}`)};
         }
       `);
@@ -1700,7 +1706,12 @@ function generateGetExtension(ctx: Context, fullName: string) {
   `;
 }
 
-function generateExtension(ctx: Context, message: DescriptorProto | undefined, extension: FieldDescriptorProto) {
+function generateExtension(
+  ctx: Context,
+  message: DescriptorProto | undefined,
+  extension: FieldDescriptorProto,
+  isProto3File: boolean,
+) {
   const type = toTypeName(ctx, message, extension);
   const packedTag =
     isRepeated(extension) && packedType(extension.type) !== undefined ? ((extension.number << 3) | 2) >>> 0 : undefined;
@@ -1805,7 +1816,7 @@ function generateExtension(ctx: Context, message: DescriptorProto | undefined, e
       }
     } else if (isScalar(extension) || isEnum(extension)) {
       chunks.push(code`
-        if (${notDefaultCheck(ctx, extension, message?.options, "value")}) {
+        if (${notDefaultCheck(ctx, extension, message?.options, "value", isProto3File)}) {
           const writer = ${Writer}.create();
           ${writeSnippet("value")};
           encoded.push(writer.finish());
@@ -1888,7 +1899,13 @@ function generateExtension(ctx: Context, message: DescriptorProto | undefined, e
  * This is very similar to decode, we loop through looking for properties, with
  * a few special cases for https://developers.google.com/protocol-buffers/docs/proto3#json.
  * */
-function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, messageDesc: DescriptorProto): Code {
+function generateFromJson(
+  ctx: Context,
+  fullName: string,
+  fullTypeName: string,
+  messageDesc: DescriptorProto,
+  isProto3File: boolean,
+): Code {
   const { options, utils, typeMap } = ctx;
   const chunks: Code[] = [];
 
@@ -2027,7 +2044,7 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
     };
 
     const noDefaultValue =
-      !options.initializeFieldsAsUndefined && isOptionalProperty(field, messageDesc.options, options);
+      !options.initializeFieldsAsUndefined && isOptionalProperty(field, messageDesc.options, options, isProto3File);
 
     // and then use the snippet to handle repeated fields if necessary
     if (canonicalFromJson[fullTypeName]?.[fieldName]) {
@@ -2147,6 +2164,7 @@ function generateToJson(
   fullName: string,
   fullProtobufTypeName: string,
   messageDesc: DescriptorProto,
+  isProto3File: boolean,
 ): Code {
   const { options, utils, typeMap } = ctx;
   const chunks: Code[] = [];
@@ -2291,7 +2309,7 @@ function generateToJson(
       let emitDefaultValuesForJson = ctx.options.emitDefaultValues.includes("json-methods");
       const check =
         (isScalar(field) || isEnum(field)) && !(isWithinOneOf(field) || emitDefaultValuesForJson)
-          ? notDefaultCheck(ctx, field, messageDesc.options, `${messageProperty}`)
+          ? notDefaultCheck(ctx, field, messageDesc.options, `${messageProperty}`, isProto3File)
           : `${messageProperty} !== undefined`;
 
       chunks.push(code`
@@ -2410,7 +2428,7 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
     };
 
     const noDefaultValue =
-      !options.initializeFieldsAsUndefined && isOptionalProperty(field, messageDesc.options, options);
+      !options.initializeFieldsAsUndefined && isOptionalProperty(field, messageDesc.options, options, true);
 
     // and then use the snippet to handle repeated fields if necessary
     if (isRepeated(field)) {

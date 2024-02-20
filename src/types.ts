@@ -248,9 +248,10 @@ export function notDefaultCheck(
   field: FieldDescriptorProto,
   messageOptions: MessageOptions | undefined,
   place: string,
+  isProto3File: boolean,
 ): Code {
   const { typeMap, options } = ctx;
-  const isOptional = isOptionalProperty(field, messageOptions, options);
+  const isOptional = isOptionalProperty(field, messageOptions, options, isProto3File);
   const maybeNotUndefinedAnd = isOptional ? `${place} !== undefined && ` : "";
   switch (field.type) {
     case FieldDescriptorProto_Type.TYPE_DOUBLE:
