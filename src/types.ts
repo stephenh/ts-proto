@@ -321,6 +321,14 @@ export function createTypeMap(request: CodeGeneratorRequest, options: Options): 
       const prefix = file.package.length === 0 ? "" : `.${file.package}`;
       typeMap.set(`${prefix}.${protoFullName}`, [moduleName, tsFullName, desc]);
     }
+    file.syntax === "proto3" &&
+      file.messageType.forEach((message) =>
+        message.field.forEach((field) => {
+          if (field.label === FieldDescriptorProto_Label.LABEL_OPTIONAL && !field.proto3Optional) {
+            field.label = FieldDescriptorProto_Label.LABEL_REQUIRED;
+          }
+        }),
+      );
     visit(file, SourceInfo.empty(), saveMapping, options, saveMapping);
   }
   return typeMap;
@@ -364,6 +372,7 @@ export function isOptionalProperty(
   return (
     (optionalMessages && isMessage(field) && !isRepeated(field)) ||
     (optionalAll && !messageOptions?.mapEntry) ||
+    (field.label === FieldDescriptorProto_Label.LABEL_OPTIONAL && !messageOptions?.mapEntry) ||
     // don't bother verifying that oneof is not union. union oneofs generate their own properties.
     isWithinOneOf(field) ||
     field.proto3Optional
