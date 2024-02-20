@@ -154,7 +154,14 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
     sourceInfo,
     (fullName, message, sInfo, fullProtoTypeName) => {
       chunks.push(
-        generateInterfaceDeclaration(ctx, fullName, message, sInfo, maybePrefixPackage(fileDesc, fullProtoTypeName)),
+        generateInterfaceDeclaration(
+          ctx,
+          fullName,
+          message,
+          sInfo,
+          maybePrefixPackage(fileDesc, fullProtoTypeName),
+          fileDesc.syntax === "proto3",
+        ),
       );
     },
     options,
@@ -947,6 +954,7 @@ function generateInterfaceDeclaration(
   messageDesc: DescriptorProto,
   sourceInfo: SourceInfo,
   fullTypeName: string,
+  isProto3File: boolean,
 ): Code {
   const { options } = ctx;
   const chunks: Code[] = [];
@@ -975,7 +983,7 @@ function generateInterfaceDeclaration(
     const info = sourceInfo.lookup(Fields.message.field, index);
     maybeAddComment(options, info, chunks, fieldDesc.options?.deprecated);
     const fieldKey = safeAccessor(getFieldName(fieldDesc, options));
-    const isOptional = isOptionalProperty(fieldDesc, messageDesc.options, options);
+    const isOptional = isOptionalProperty(fieldDesc, messageDesc.options, options, isProto3File);
     const type = toTypeName(ctx, messageDesc, fieldDesc, isOptional);
     chunks.push(code`${maybeReadonly(options)}${fieldKey}${isOptional ? "?" : ""}: ${type}, `);
   });
