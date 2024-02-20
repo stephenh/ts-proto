@@ -1,0 +1,36 @@
+syntax = "proto2";
+package simple;
+
+message Simple {
+    required string name = 1;
+    optional int32 age = 2;
+
+    message OldAddress {
+        optional string street = 1;
+        required string city = 2;
+    }
+
+    message NewAddress {
+        required string street = 1;
+        required string city = 2;
+        required string country = 3;
+    }
+
+    oneof address {
+        OldAddress old_address = 4 [deprecated = true];
+        NewAddress new_address = 5;
+    }
+
+    optional string email = 6 [default = "test@gmail.com"];
+
+    optional bool hasLoggedInRecently = 7 [default = true];
+
+    optional bytes profilePic = 8;
+
+    repeated int32 luckyNumbers = 9;
+
+    map<string, string> properties = 10;
+}
+
+
+
