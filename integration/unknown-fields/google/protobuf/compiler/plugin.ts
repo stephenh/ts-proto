@@ -7,14 +7,16 @@ export const protobufPackage = "google.protobuf.compiler";
 
 /** The version number of protocol compiler. */
 export interface Version {
-  major: number;
-  minor: number;
-  patch: number;
+  major?: number | undefined;
+  minor?: number | undefined;
+  patch?:
+    | number
+    | undefined;
   /**
    * A suffix for alpha, beta or rc release, e.g., "alpha-1", "rc2". It should
    * be empty for mainline stable releases.
    */
-  suffix: string;
+  suffix?: string | undefined;
   _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
@@ -27,7 +29,9 @@ export interface CodeGeneratorRequest {
    */
   fileToGenerate: string[];
   /** The generator parameter passed on the command-line. */
-  parameter: string;
+  parameter?:
+    | string
+    | undefined;
   /**
    * FileDescriptorProtos for all files in files_to_generate and everything
    * they import.  The files will appear in topological order, so each file
@@ -46,7 +50,7 @@ export interface CodeGeneratorRequest {
    */
   protoFile: FileDescriptorProto[];
   /** The version number of protocol compiler. */
-  compilerVersion: Version | undefined;
+  compilerVersion?: Version | undefined;
   _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
@@ -62,12 +66,14 @@ export interface CodeGeneratorResponse {
    * unparseable -- should be reported by writing a message to stderr and
    * exiting with a non-zero status code.
    */
-  error: string;
+  error?:
+    | string
+    | undefined;
   /**
    * A bitmask of supported features that the code generator supports.
    * This is a bitwise "or" of values from the Feature enum.
    */
-  supportedFeatures: number;
+  supportedFeatures?: number | undefined;
   file: CodeGeneratorResponse_File[];
   _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
@@ -94,7 +100,9 @@ export interface CodeGeneratorResponse_File {
    * this writing protoc does not optimize for this -- it will read the entire
    * CodeGeneratorResponse before writing files to disk.
    */
-  name: string;
+  name?:
+    | string
+    | undefined;
   /**
    * If non-empty, indicates that the named file should already exist, and the
    * content here is to be inserted into that file at a defined insertion
@@ -134,15 +142,19 @@ export interface CodeGeneratorResponse_File {
    *
    * If |insertion_point| is present, |name| must also be present.
    */
-  insertionPoint: string;
+  insertionPoint?:
+    | string
+    | undefined;
   /** The file contents. */
-  content: string;
+  content?:
+    | string
+    | undefined;
   /**
    * Information describing the file content being inserted. If an insertion
    * point is used, this information will be appropriately offset and inserted
    * into the code generation metadata for the generated files.
    */
-  generatedCodeInfo: GeneratedCodeInfo | undefined;
+  generatedCodeInfo?: GeneratedCodeInfo | undefined;
   _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
@@ -152,16 +164,16 @@ function createBaseVersion(): Version {
 
 export const Version = {
   encode(message: Version, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.major !== 0) {
+    if (message.major !== undefined && message.major !== 0) {
       writer.uint32(8).int32(message.major);
     }
-    if (message.minor !== 0) {
+    if (message.minor !== undefined && message.minor !== 0) {
       writer.uint32(16).int32(message.minor);
     }
-    if (message.patch !== 0) {
+    if (message.patch !== undefined && message.patch !== 0) {
       writer.uint32(24).int32(message.patch);
     }
-    if (message.suffix !== "") {
+    if (message.suffix !== undefined && message.suffix !== "") {
       writer.uint32(34).string(message.suffix);
     }
     if (message._unknownFields !== undefined) {
@@ -244,7 +256,7 @@ export const CodeGeneratorRequest = {
     for (const v of message.fileToGenerate) {
       writer.uint32(10).string(v!);
     }
-    if (message.parameter !== "") {
+    if (message.parameter !== undefined && message.parameter !== "") {
       writer.uint32(18).string(message.parameter);
     }
     for (const v of message.protoFile) {
@@ -330,10 +342,10 @@ function createBaseCodeGeneratorResponse(): CodeGeneratorResponse {
 
 export const CodeGeneratorResponse = {
   encode(message: CodeGeneratorResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.error !== "") {
+    if (message.error !== undefined && message.error !== "") {
       writer.uint32(10).string(message.error);
     }
-    if (message.supportedFeatures !== 0) {
+    if (message.supportedFeatures !== undefined && message.supportedFeatures !== 0) {
       writer.uint32(16).uint64(message.supportedFeatures);
     }
     for (const v of message.file) {
@@ -409,13 +421,13 @@ function createBaseCodeGeneratorResponse_File(): CodeGeneratorResponse_File {
 
 export const CodeGeneratorResponse_File = {
   encode(message: CodeGeneratorResponse_File, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.name !== "") {
+    if (message.name !== undefined && message.name !== "") {
       writer.uint32(10).string(message.name);
     }
-    if (message.insertionPoint !== "") {
+    if (message.insertionPoint !== undefined && message.insertionPoint !== "") {
       writer.uint32(18).string(message.insertionPoint);
     }
-    if (message.content !== "") {
+    if (message.content !== undefined && message.content !== "") {
       writer.uint32(122).string(message.content);
     }
     if (message.generatedCodeInfo !== undefined) {
