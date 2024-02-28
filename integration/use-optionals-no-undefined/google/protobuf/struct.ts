@@ -49,12 +49,12 @@ export function nullValueToJSON(object: NullValue): string {
  */
 export interface Struct {
   /** Unordered map of dynamically typed values. */
-  fields: { [key: string]: any | undefined };
+  fields?: { [key: string]: any | undefined } | undefined;
 }
 
 export interface Struct_FieldsEntry {
   key: string;
-  value: any | undefined;
+  value?: any | undefined;
 }
 
 /**
@@ -97,18 +97,16 @@ export interface Value {
  */
 export interface ListValue {
   /** Repeated field of dynamically typed values. */
-  values: any[];
+  values?: any[] | undefined;
 }
 
 function createBaseStruct(): Struct {
-  return { fields: {} };
+  return {};
 }
 
 export const Struct = {
-  $type: "google.protobuf.Struct" as const,
-
   encode(message: Struct, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    Object.entries(message.fields).forEach(([key, value]) => {
+    Object.entries(message.fields || {}).forEach(([key, value]) => {
       if (value !== undefined) {
         Struct_FieldsEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).ldelim();
       }
@@ -130,7 +128,10 @@ export const Struct = {
 
           const entry1 = Struct_FieldsEntry.decode(reader, reader.uint32());
           if (entry1.value !== undefined) {
-            message.fields[entry1.key] = entry1.value;
+            if (message.fields === undefined) {
+              message.fields = {};
+            }
+            message.fields![entry1.key] = entry1.value;
           }
           continue;
       }
@@ -149,7 +150,7 @@ export const Struct = {
           acc[key] = value as any | undefined;
           return acc;
         }, {})
-        : {},
+        : undefined,
     };
   },
 
@@ -172,21 +173,20 @@ export const Struct = {
   },
   fromPartial<I extends Exact<DeepPartial<Struct>, I>>(object: I): Struct {
     const message = createBaseStruct();
-    message.fields = Object.entries(object.fields ?? {}).reduce<{ [key: string]: any | undefined }>(
-      (acc, [key, value]) => {
+    message.fields = (object.fields === undefined || object.fields === null)
+      ? undefined
+      : Object.entries(object.fields ?? {}).reduce<{ [key: string]: any | undefined }>((acc, [key, value]) => {
         if (value !== undefined) {
           acc[key] = value;
         }
         return acc;
-      },
-      {},
-    );
+      }, {});
     return message;
   },
 
   wrap(object: { [key: string]: any } | undefined): Struct {
     const struct = createBaseStruct();
-
+    struct.fields ??= {};
     if (object !== undefined) {
       for (const key of Object.keys(object)) {
         struct.fields[key] = object[key];
@@ -207,12 +207,10 @@ export const Struct = {
 };
 
 function createBaseStruct_FieldsEntry(): Struct_FieldsEntry {
-  return { key: "", value: undefined };
+  return { key: "" };
 }
 
 export const Struct_FieldsEntry = {
-  $type: "google.protobuf.Struct.FieldsEntry" as const,
-
   encode(message: Struct_FieldsEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.key !== "") {
       writer.uint32(10).string(message.key);
@@ -283,19 +281,10 @@ export const Struct_FieldsEntry = {
 };
 
 function createBaseValue(): Value {
-  return {
-    nullValue: undefined,
-    numberValue: undefined,
-    stringValue: undefined,
-    boolValue: undefined,
-    structValue: undefined,
-    listValue: undefined,
-  };
+  return {};
 }
 
 export const Value = {
-  $type: "google.protobuf.Value" as const,
-
   encode(message: Value, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.nullValue !== undefined) {
       writer.uint32(8).int32(message.nullValue);
@@ -463,15 +452,15 @@ export const Value = {
 };
 
 function createBaseListValue(): ListValue {
-  return { values: [] };
+  return {};
 }
 
 export const ListValue = {
-  $type: "google.protobuf.ListValue" as const,
-
   encode(message: ListValue, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    for (const v of message.values) {
-      Value.encode(Value.wrap(v!), writer.uint32(10).fork()).ldelim();
+    if (message.values !== undefined && message.values.length !== 0) {
+      for (const v of message.values) {
+        Value.encode(Value.wrap(v!), writer.uint32(10).fork()).ldelim();
+      }
     }
     return writer;
   },
@@ -488,7 +477,10 @@ export const ListValue = {
             break;
           }
 
-          message.values.push(Value.unwrap(Value.decode(reader, reader.uint32())));
+          if (message.values === undefined) {
+            message.values = [];
+          }
+          message.values!.push(Value.unwrap(Value.decode(reader, reader.uint32())));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -516,7 +508,7 @@ export const ListValue = {
   },
   fromPartial<I extends Exact<DeepPartial<ListValue>, I>>(object: I): ListValue {
     const message = createBaseListValue();
-    message.values = object.values?.map((e) => e) || [];
+    message.values = object.values?.map((e) => e) || undefined;
     return message;
   },
 

@@ -49,12 +49,12 @@ export function nullValueToJSON(object: NullValue): string {
  */
 export interface Struct {
   /** Unordered map of dynamically typed values. */
-  fields: { [key: string]: any | undefined };
+  fields?: { [key: string]: any | undefined } | undefined;
 }
 
 export interface Struct_FieldsEntry {
   key: string;
-  value: any | undefined;
+  value?: any | undefined;
 }
 
 /**
@@ -97,7 +97,7 @@ export interface Value {
  */
 export interface ListValue {
   /** Repeated field of dynamically typed values. */
-  values: any[];
+  values?: any[] | undefined;
 }
 
 function createBaseStruct(): Struct {
@@ -105,10 +105,8 @@ function createBaseStruct(): Struct {
 }
 
 export const Struct = {
-  $type: "google.protobuf.Struct" as const,
-
   encode(message: Struct, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    Object.entries(message.fields).forEach(([key, value]) => {
+    Object.entries(message.fields || {}).forEach(([key, value]) => {
       if (value !== undefined) {
         Struct_FieldsEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).ldelim();
       }
@@ -130,7 +128,7 @@ export const Struct = {
 
           const entry1 = Struct_FieldsEntry.decode(reader, reader.uint32());
           if (entry1.value !== undefined) {
-            message.fields[entry1.key] = entry1.value;
+            message.fields![entry1.key] = entry1.value;
           }
           continue;
       }
@@ -186,7 +184,7 @@ export const Struct = {
 
   wrap(object: { [key: string]: any } | undefined): Struct {
     const struct = createBaseStruct();
-
+    struct.fields ??= {};
     if (object !== undefined) {
       for (const key of Object.keys(object)) {
         struct.fields[key] = object[key];
@@ -211,8 +209,6 @@ function createBaseStruct_FieldsEntry(): Struct_FieldsEntry {
 }
 
 export const Struct_FieldsEntry = {
-  $type: "google.protobuf.Struct.FieldsEntry" as const,
-
   encode(message: Struct_FieldsEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.key !== "") {
       writer.uint32(10).string(message.key);
@@ -294,8 +290,6 @@ function createBaseValue(): Value {
 }
 
 export const Value = {
-  $type: "google.protobuf.Value" as const,
-
   encode(message: Value, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
     if (message.nullValue !== undefined) {
       writer.uint32(8).int32(message.nullValue);
@@ -467,11 +461,11 @@ function createBaseListValue(): ListValue {
 }
 
 export const ListValue = {
-  $type: "google.protobuf.ListValue" as const,
-
   encode(message: ListValue, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    for (const v of message.values) {
-      Value.encode(Value.wrap(v!), writer.uint32(10).fork()).ldelim();
+    if (message.values !== undefined && message.values.length !== 0) {
+      for (const v of message.values) {
+        Value.encode(Value.wrap(v!), writer.uint32(10).fork()).ldelim();
+      }
     }
     return writer;
   },
@@ -488,7 +482,7 @@ export const ListValue = {
             break;
           }
 
-          message.values.push(Value.unwrap(Value.decode(reader, reader.uint32())));
+          message.values!.push(Value.unwrap(Value.decode(reader, reader.uint32())));
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {

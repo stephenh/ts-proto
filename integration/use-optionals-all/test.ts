@@ -1,5 +1,6 @@
 /* eslint-disable */
 import * as _m0 from "protobufjs/minimal";
+import { Struct } from "./google/protobuf/struct";
 import { Timestamp } from "./google/protobuf/timestamp";
 import Long = require("long");
 
@@ -68,6 +69,7 @@ export interface OptionalsTest {
   optData?: Uint8Array | undefined;
   translations?: { [key: string]: string } | undefined;
   timestamp?: Date | undefined;
+  struct?: { [key: string]: any } | undefined;
 }
 
 export interface OptionalsTest_TranslationsEntry {
@@ -103,6 +105,7 @@ function createBaseOptionalsTest(): OptionalsTest {
     optData: undefined,
     translations: {},
     timestamp: undefined,
+    struct: undefined,
   };
 }
 
@@ -198,6 +201,9 @@ export const OptionalsTest = {
     });
     if (message.timestamp !== undefined) {
       Timestamp.encode(toTimestamp(message.timestamp), writer.uint32(250).fork()).ldelim();
+    }
+    if (message.struct !== undefined) {
+      Struct.encode(Struct.wrap(message.struct), writer.uint32(258).fork()).ldelim();
     }
     return writer;
   },
@@ -413,6 +419,13 @@ export const OptionalsTest = {
 
           message.timestamp = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
+        case 32:
+          if (tag !== 258) {
+            break;
+          }
+
+          message.struct = Struct.unwrap(Struct.decode(reader, reader.uint32()));
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -456,6 +469,7 @@ export const OptionalsTest = {
         }, {})
         : {},
       timestamp: isSet(object.timestamp) ? fromJsonTimestamp(object.timestamp) : undefined,
+      struct: isObject(object.struct) ? object.struct : undefined,
     };
   },
 
@@ -536,6 +550,9 @@ export const OptionalsTest = {
     if (message.timestamp !== undefined) {
       obj.timestamp = message.timestamp.toISOString();
     }
+    if (message.struct !== undefined) {
+      obj.struct = message.struct;
+    }
     return obj;
   },
 
@@ -577,6 +594,7 @@ export const OptionalsTest = {
       {},
     );
     message.timestamp = object.timestamp ?? undefined;
+    message.struct = object.struct ?? undefined;
     return message;
   },
 };
