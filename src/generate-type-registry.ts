@@ -1,9 +1,9 @@
 import { code, Code, joinCode } from "ts-poet";
-import { Context } from "./context";
+import { BaseContext } from "./context";
 import { impFile } from "./utils";
 import { addTypeToMessages } from "./options";
 
-export function generateTypeRegistry(ctx: Context): Code {
+export function generateTypeRegistry(ctx: BaseContext): Code {
   const chunks: Code[] = [];
 
   chunks.push(generateMessageType(ctx));
@@ -27,7 +27,7 @@ export function generateTypeRegistry(ctx: Context): Code {
   return joinCode(chunks, { on: "\n\n" });
 }
 
-function generateMessageType(ctx: Context): Code {
+function generateMessageType(ctx: BaseContext): Code {
   const chunks: Code[] = [];
 
   chunks.push(code`export interface MessageType<Message extends UnknownMessage = UnknownMessage> {`);

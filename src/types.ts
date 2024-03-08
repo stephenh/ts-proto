@@ -16,7 +16,7 @@ import { visit } from "./visit";
 import { fail, FormattedMethodDescriptor, impProto, maybePrefixPackage } from "./utils";
 import SourceInfo from "./sourceInfo";
 import { uncapitalize } from "./case";
-import { Context } from "./context";
+import { BaseContext, Context } from "./context";
 import { getMemberName as getEnumMemberName } from "./enums";
 
 /** Based on https://github.com/dcodeIO/protobuf.js/blob/master/src/types.js#L37. */
@@ -248,10 +248,9 @@ export function notDefaultCheck(
   field: FieldDescriptorProto,
   messageOptions: MessageOptions | undefined,
   place: string,
-  isProto3File: boolean,
 ): Code {
-  const { typeMap, options } = ctx;
-  const isOptional = isOptionalProperty(field, messageOptions, options, isProto3File);
+  const { typeMap, options, currentFile } = ctx;
+  const isOptional = isOptionalProperty(field, messageOptions, options, currentFile.isProto3Syntax);
   const maybeNotUndefinedAnd = isOptional ? `${place} !== undefined && ` : "";
   switch (field.type) {
     case FieldDescriptorProto_Type.TYPE_DOUBLE:
@@ -358,7 +357,7 @@ export function isOptionalProperty(
   field: FieldDescriptorProto,
   messageOptions: MessageOptions | undefined,
   options: Options,
-  isProto3File: boolean,
+  isProto3Syntax: boolean,
 ): boolean {
   const optionalMessages =
     options.useOptionals === true || options.useOptionals === "messages" || options.useOptionals === "all";
@@ -366,7 +365,7 @@ export function isOptionalProperty(
   return (
     (optionalMessages && isMessage(field) && !isRepeated(field)) ||
     (optionalAll && !messageOptions?.mapEntry) ||
-    (!isProto3File && field.label === FieldDescriptorProto_Label.LABEL_OPTIONAL && !messageOptions?.mapEntry) ||
+    (!isProto3Syntax && field.label === FieldDescriptorProto_Label.LABEL_OPTIONAL && !messageOptions?.mapEntry) ||
     // don't bother verifying that oneof is not union. union oneofs generate their own properties.
     isWithinOneOf(field) ||
     field.proto3Optional

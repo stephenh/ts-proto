@@ -10,6 +10,7 @@ describe("options", () => {
         "comments": true,
         "constEnums": false,
         "context": false,
+        "disableProto2Optionals": false,
         "emitDefaultValues": [],
         "emitImportedFiles": true,
         "enumsAsLiterals": false,

@@ -57,7 +57,12 @@ describe("types", () => {
     ];
     testCases.forEach((t) =>
       it(t.descr, async () => {
-        const ctx = { options: defaultOptions(), utils: undefined as any as Utils, ...t };
+        const ctx = {
+          options: defaultOptions(),
+          utils: undefined as any as Utils,
+          ...t,
+          currentFile: { isProto3Syntax: false },
+        };
         const got = messageToTypeName(ctx, t.protoType);
         expect(got.toString()).toEqual(t.expected.toString());
       }),
