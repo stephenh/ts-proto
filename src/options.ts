@@ -55,7 +55,7 @@ export type Options = {
   outputEncodeMethods: true | false | "encode-only" | "decode-only" | "encode-no-creation";
   outputJsonMethods: true | false | "to-only" | "from-only";
   outputPartialMethods: boolean;
-  outputTypeAnnotations: boolean | "static-only";
+  outputTypeAnnotations: boolean | "static-only" | "optional";
   outputTypeRegistry: boolean;
   stringEnums: boolean;
   constEnums: boolean;
