@@ -1,3 +1,10 @@
+# [1.168.0](https://github.com/stephenh/ts-proto/compare/v1.167.9...v1.168.0) (2024-03-08)
+
+
+### Features
+
+* allow `$type` to be optional ([#1013](https://github.com/stephenh/ts-proto/issues/1013)) ([f285557](https://github.com/stephenh/ts-proto/commit/f285557a4f77d4b75327de2c13cf0917b0361f14))
+
 ## [1.167.9](https://github.com/stephenh/ts-proto/compare/v1.167.8...v1.167.9) (2024-02-28)
 
 
