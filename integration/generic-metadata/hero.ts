@@ -303,19 +303,19 @@ export class HeroServiceClientImpl implements HeroService {
     this.FindOneVillain = this.FindOneVillain.bind(this);
     this.FindManyVillain = this.FindManyVillain.bind(this);
   }
-  FindOneHero(request: HeroById): Promise<Hero> {
+  FindOneHero(request: HeroById, metadata?: Foo): Promise<Hero> {
     const data = HeroById.encode(request).finish();
     const promise = this.rpc.request(this.service, "FindOneHero", data);
     return promise.then((data) => Hero.decode(_m0.Reader.create(data)));
   }
 
-  FindOneVillain(request: VillainById): Promise<Villain> {
+  FindOneVillain(request: VillainById, metadata?: Foo): Promise<Villain> {
     const data = VillainById.encode(request).finish();
     const promise = this.rpc.request(this.service, "FindOneVillain", data);
     return promise.then((data) => Villain.decode(_m0.Reader.create(data)));
   }
 
-  FindManyVillain(request: Observable<VillainById>): Observable<Villain> {
+  FindManyVillain(request: Observable<VillainById>, metadata?: Foo): Observable<Villain> {
     const data = request.pipe(map((request) => VillainById.encode(request).finish()));
     const result = this.rpc.bidirectionalStreamingRequest(this.service, "FindManyVillain", data);
     return result.pipe(map((data) => Villain.decode(_m0.Reader.create(data))));
@@ -355,10 +355,20 @@ export const HeroServiceDefinition = {
 } as const;
 
 interface Rpc {
-  request(service: string, method: string, data: Uint8Array): Promise<Uint8Array>;
-  clientStreamingRequest(service: string, method: string, data: Observable<Uint8Array>): Promise<Uint8Array>;
-  serverStreamingRequest(service: string, method: string, data: Uint8Array): Observable<Uint8Array>;
-  bidirectionalStreamingRequest(service: string, method: string, data: Observable<Uint8Array>): Observable<Uint8Array>;
+  request(service: string, method: string, data: Uint8Array, metadata?: Foo): Promise<Uint8Array>;
+  clientStreamingRequest(
+    service: string,
+    method: string,
+    data: Observable<Uint8Array>,
+    metadata?: Foo,
+  ): Promise<Uint8Array>;
+  serverStreamingRequest(service: string, method: string, data: Uint8Array, metadata?: Foo): Observable<Uint8Array>;
+  bidirectionalStreamingRequest(
+    service: string,
+    method: string,
+    data: Observable<Uint8Array>,
+    metadata?: Foo,
+  ): Observable<Uint8Array>;
 }
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;

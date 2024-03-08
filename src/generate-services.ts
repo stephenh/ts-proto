@@ -66,14 +66,15 @@ export function generateService(
     if (options.outputClientImpl === "grpc-web") {
       // We have to use grpc.Metadata where grpc will come from @improbable-eng
       params.push(code`metadata?: grpc.Metadata`);
-    } else if (options.addGrpcMetadata) {
-      const Metadata = imp("Metadata@@grpc/grpc-js");
-      const q = options.addNestjsRestParameter ? "" : "?";
-      params.push(code`metadata${q}: ${Metadata}`);
     } else if (options.metadataType) {
+      // custom `metadataType` has precedence over `addGrpcMetadata` that injects Metadata from grpc-js
       const Metadata = imp(options.metadataType);
       params.push(code`metadata?: ${Metadata}`);
+    } else if (options.addGrpcMetadata) {
+      const Metadata = imp("Metadata@@grpc/grpc-js");
+      params.push(code`metadata?: ${Metadata}`);
     }
+
     if (options.useAbortSignal) {
       params.push(code`abortSignal?: AbortSignal`);
     }
@@ -112,13 +113,16 @@ function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProt
   const rawInputType = rawRequestType(ctx, methodDesc, { keepValueType: true });
   const inputType = requestType(ctx, methodDesc);
   const rawOutputType = responseType(ctx, methodDesc, { keepValueType: true });
+  const metadataType = options.metadataType ? imp(options.metadataType) : imp("Metadata@@grpc/grpc-js");
 
   const params = [
     ...(options.context ? [code`ctx: Context`] : []),
     code`request: ${inputType}`,
+    ...(options.metadataType || options.addGrpcMetadata ? [code`metadata?: ${metadataType}`] : []),
     ...(options.useAbortSignal ? [code`abortSignal?: AbortSignal`] : []),
   ];
   const maybeCtx = options.context ? "ctx," : "";
+  const maybeMetadata = options.addGrpcMetadata ? "metadata," : "";
   const maybeAbortSignal = options.useAbortSignal ? "abortSignal || undefined," : "";
 
   let errorHandler;
@@ -193,6 +197,7 @@ function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProt
         this.service,
         "${methodDesc.name}",
         data,
+        ${maybeMetadata}
         ${maybeAbortSignal}
       );
       return ${returnStatement};
@@ -416,8 +421,11 @@ function generateCachingRpcMethod(
  */
 export function generateRpcType(ctx: Context, hasStreamingMethods: boolean): Code {
   const { options } = ctx;
+  const metadata = options.metadataType ? imp(options.metadataType) : imp("Metadata@@grpc/grpc-js");
+  const metadataType = metadata.symbol;
   const maybeContext = options.context ? "<Context>" : "";
   const maybeContextParam = options.context ? "ctx: Context," : "";
+  const maybeMetadataParam = options.metadataType || options.addGrpcMetadata ? `metadata?: ${metadataType},` : "";
   const maybeAbortSignalParam = options.useAbortSignal ? "abortSignal?: AbortSignal," : "";
   const methods = [[code`request`, code`Uint8Array`, code`Promise<Uint8Array>`]];
   const additionalMethods = [];
@@ -456,6 +464,7 @@ export function generateRpcType(ctx: Context, hasStreamingMethods: boolean): Cod
         service: string,
         method: string,
         data: ${method[1]},
+        ${maybeMetadataParam}
         ${maybeAbortSignalParam}
       ): ${method[2]};`);
   });

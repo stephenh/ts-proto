@@ -1,0 +1,1 @@
+metadataType=Foo@./custom-metadata,outputServices=default,addGrpcMetadata=true
