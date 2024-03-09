@@ -241,9 +241,8 @@ export function defaultValue(ctx: Context, field: FieldDescriptorProto): any {
     case FieldDescriptorProto_Type.TYPE_BYTES:
       if (options.env === EnvOption.NODE) {
         return "Buffer.alloc(0)";
-      } else {
-        return "new Uint8Array(0)";
       }
+      return "new Uint8Array(0)";
     case FieldDescriptorProto_Type.TYPE_MESSAGE:
     case FieldDescriptorProto_Type.TYPE_GROUP:
     default:
@@ -260,6 +259,7 @@ export function notDefaultCheck(
 ): Code {
   const { typeMap, options, currentFile } = ctx;
   const isOptional = isOptionalProperty(field, messageOptions, options, currentFile.isProto3Syntax);
+  const useDefaultValue = !currentFile.isProto3Syntax && field.defaultValue !== undefined;
   const maybeNotUndefinedAnd = isOptional ? `${place} !== undefined && ` : "";
   switch (field.type) {
     case FieldDescriptorProto_Type.TYPE_DOUBLE:
@@ -269,7 +269,9 @@ export function notDefaultCheck(
     case FieldDescriptorProto_Type.TYPE_SINT32:
     case FieldDescriptorProto_Type.TYPE_FIXED32:
     case FieldDescriptorProto_Type.TYPE_SFIXED32:
-      return code`${maybeNotUndefinedAnd} ${place} !== 0`;
+    case FieldDescriptorProto_Type.TYPE_BOOL:
+    case FieldDescriptorProto_Type.TYPE_STRING:
+      return code`${maybeNotUndefinedAnd} ${place} !== ${defaultValue(ctx, field)}`;
     case FieldDescriptorProto_Type.TYPE_ENUM:
       // proto3 enforces enums starting at 0, however proto2 does not, so we have
       // to probe and see if zero is an allowed value. If it's not, pick the first one.
@@ -277,13 +279,13 @@ export function notDefaultCheck(
       // and I believe the semantics of those in the proto2 world are generally undefined.
       const typeInfo = typeMap.get(field.typeName)!;
       const enumProto = typeInfo[2] as EnumDescriptorProto;
-      const zerothValue = enumProto.value.find((v) => v.number === 0) || enumProto.value[0];
+      const defaultEnum = enumProto.value.find((v) => v.number === defaultValue(ctx, field)) || enumProto.value[0];
       if (options.stringEnums) {
         const enumType = messageToTypeName(ctx, field.typeName);
-        const enumValue = getEnumMemberName(ctx, enumProto, zerothValue);
+        const enumValue = getEnumMemberName(ctx, enumProto, defaultEnum);
         return code`${maybeNotUndefinedAnd} ${place} !== ${enumType}.${enumValue}`;
       } else {
-        return code`${maybeNotUndefinedAnd} ${place} !== ${zerothValue.number}`;
+        return code`${maybeNotUndefinedAnd} ${place} !== ${defaultEnum.number}`;
       }
     case FieldDescriptorProto_Type.TYPE_UINT64:
     case FieldDescriptorProto_Type.TYPE_FIXED64:
@@ -291,20 +293,17 @@ export function notDefaultCheck(
     case FieldDescriptorProto_Type.TYPE_SINT64:
     case FieldDescriptorProto_Type.TYPE_SFIXED64:
       if (options.forceLong === LongOption.LONG) {
+        if (useDefaultValue) {
+          return code`${maybeNotUndefinedAnd} !${place}.equals(${defaultValue(ctx, field)})`;
+        }
         return code`${maybeNotUndefinedAnd} !${place}.isZero()`;
-      } else if (options.forceLong === LongOption.STRING) {
-        return code`${maybeNotUndefinedAnd} ${place} !== "0"`;
-      } else if (options.forceLong === LongOption.BIGINT) {
-        return code`${maybeNotUndefinedAnd} ${place} !== BigInt("0")`;
       } else {
-        return code`${maybeNotUndefinedAnd} ${place} !== 0`;
+        return code`${maybeNotUndefinedAnd} ${place} !== ${defaultValue(ctx, field)}`;
       }
-    case FieldDescriptorProto_Type.TYPE_BOOL:
-      return code`${place} === true`;
-    case FieldDescriptorProto_Type.TYPE_STRING:
-      return code`${maybeNotUndefinedAnd} ${place} !== ""`;
     case FieldDescriptorProto_Type.TYPE_BYTES:
-      return code`${maybeNotUndefinedAnd} ${place}.length !== 0`;
+      if (options.env === EnvOption.NODE) {
+      }
+      return code`${maybeNotUndefinedAnd} ${place}.length !== ${defaultValue(ctx, field).length}`;
     default:
       throw new Error("Not implemented for the given type.");
   }
