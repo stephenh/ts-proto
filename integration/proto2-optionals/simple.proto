@@ -1,9 +1,20 @@
 syntax = "proto2";
 package simple;
 
+enum Corpus {
+    CORPUS_UNSPECIFIED = 0;
+    CORPUS_UNIVERSAL = 1;
+    CORPUS_WEB = 2;
+    CORPUS_IMAGES = 3;
+    CORPUS_LOCAL = 4;
+    CORPUS_NEWS = 5;
+    CORPUS_PRODUCTS = 6;
+    CORPUS_VIDEO = 7;
+  }
+
 message Simple {
-    required string name = 1;
-    optional int32 age = 2;
+    required string name = 1 [default = "23"];
+    required int32 age = 2 [default = 89];
 
     message OldAddress {
         optional string street = 1;
@@ -21,15 +32,21 @@ message Simple {
         NewAddress new_address = 5;
     }
 
-    optional string email = 6 [default = "test@gmail.com"];
+    required string email = 6 [default = "test@gmail.com"];
 
-    optional bool hasLoggedInRecently = 7 [default = true];
+    required bool hasLoggedInRecently = 7 [default = true];
 
     optional bytes profilePic = 8;
 
     repeated int32 luckyNumbers = 9;
 
     map<string, string> properties = 10;
+
+    required float salary = 11 [default = 100.4569];
+
+    required Corpus corpus = 12 [default = CORPUS_UNIVERSAL];
+
+    required int64 id = 13 [default = 123456789109284];
 }
 
 

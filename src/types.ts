@@ -178,7 +178,9 @@ export function packedType(type: FieldDescriptorProto_Type): number | undefined 
 }
 
 export function defaultValue(ctx: Context, field: FieldDescriptorProto): any {
-  const { typeMap, options, utils } = ctx;
+  const { typeMap, options, utils, currentFile } = ctx;
+  const useDefaultValue = !currentFile.isProto3Syntax && field.defaultValue !== undefined;
+  const numbericDefaultVal = useDefaultValue ? field.defaultValue : 0;
   switch (field.type) {
     case FieldDescriptorProto_Type.TYPE_DOUBLE:
     case FieldDescriptorProto_Type.TYPE_FLOAT:
@@ -187,7 +189,7 @@ export function defaultValue(ctx: Context, field: FieldDescriptorProto): any {
     case FieldDescriptorProto_Type.TYPE_SINT32:
     case FieldDescriptorProto_Type.TYPE_FIXED32:
     case FieldDescriptorProto_Type.TYPE_SFIXED32:
-      return 0;
+      return numbericDefaultVal;
     case FieldDescriptorProto_Type.TYPE_ENUM:
       // proto3 enforces enums starting at 0, however proto2 does not, so we have
       // to probe and see if zero is an allowed value. If it's not, pick the first one.
@@ -195,40 +197,47 @@ export function defaultValue(ctx: Context, field: FieldDescriptorProto): any {
       // and I believe the semantics of those in the proto2 world are generally undefined.
       const typeInfo = typeMap.get(field.typeName)!;
       const enumProto = typeInfo[2] as EnumDescriptorProto;
-      const zerothValue = enumProto.value.find((v) => v.number === 0) || enumProto.value[0];
+      const defaultEnum =
+        enumProto.value.find((v) => (useDefaultValue ? v.name === field.defaultValue : v.number === 0)) ||
+        enumProto.value[0];
+
       if (options.stringEnums) {
         const enumType = messageToTypeName(ctx, field.typeName);
-        return code`${enumType}.${getEnumMemberName(ctx, enumProto, zerothValue)}`;
+        return code`${enumType}.${getEnumMemberName(ctx, enumProto, defaultEnum)}`;
       } else {
-        return zerothValue.number;
+        return defaultEnum.number;
       }
     case FieldDescriptorProto_Type.TYPE_UINT64:
     case FieldDescriptorProto_Type.TYPE_FIXED64:
       if (options.forceLong === LongOption.LONG) {
-        return code`${utils.Long}.UZERO`;
+        return code`${utils.Long}.${useDefaultValue ? "fromNumber" : "UZERO"}${
+          useDefaultValue ? `(${numbericDefaultVal})` : ""
+        }`;
       } else if (options.forceLong === LongOption.STRING) {
-        return '"0"';
+        return `"${numbericDefaultVal}"`;
       } else if (options.forceLong === LongOption.BIGINT) {
-        return 'BigInt("0")';
+        return `BigInt("${numbericDefaultVal}")`;
       } else {
-        return 0;
+        return numbericDefaultVal;
       }
     case FieldDescriptorProto_Type.TYPE_INT64:
     case FieldDescriptorProto_Type.TYPE_SINT64:
     case FieldDescriptorProto_Type.TYPE_SFIXED64:
       if (options.forceLong === LongOption.LONG) {
-        return code`${utils.Long}.ZERO`;
+        return code`${utils.Long}.${useDefaultValue ? "fromNumber" : "ZERO"}${
+          useDefaultValue ? `(${numbericDefaultVal})` : ""
+        }`;
       } else if (options.forceLong === LongOption.STRING) {
-        return '"0"';
+        return `"${numbericDefaultVal}"`;
       } else if (options.forceLong === LongOption.BIGINT) {
-        return 'BigInt("0")';
+        return `BigInt("${numbericDefaultVal}")`;
       } else {
-        return 0;
+        return numbericDefaultVal;
       }
     case FieldDescriptorProto_Type.TYPE_BOOL:
-      return false;
+      return useDefaultValue ? field.defaultValue : false;
     case FieldDescriptorProto_Type.TYPE_STRING:
-      return '""';
+      return useDefaultValue ? `"${field.defaultValue}"` : '""';
     case FieldDescriptorProto_Type.TYPE_BYTES:
       if (options.env === EnvOption.NODE) {
         return "Buffer.alloc(0)";

@@ -1,21 +1,92 @@
 /* eslint-disable */
+import Long = require("long");
 import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "simple";
 
+export enum Corpus {
+  CORPUS_UNSPECIFIED = 0,
+  CORPUS_UNIVERSAL = 1,
+  CORPUS_WEB = 2,
+  CORPUS_IMAGES = 3,
+  CORPUS_LOCAL = 4,
+  CORPUS_NEWS = 5,
+  CORPUS_PRODUCTS = 6,
+  CORPUS_VIDEO = 7,
+  UNRECOGNIZED = -1,
+}
+
+export function corpusFromJSON(object: any): Corpus {
+  switch (object) {
+    case 0:
+    case "CORPUS_UNSPECIFIED":
+      return Corpus.CORPUS_UNSPECIFIED;
+    case 1:
+    case "CORPUS_UNIVERSAL":
+      return Corpus.CORPUS_UNIVERSAL;
+    case 2:
+    case "CORPUS_WEB":
+      return Corpus.CORPUS_WEB;
+    case 3:
+    case "CORPUS_IMAGES":
+      return Corpus.CORPUS_IMAGES;
+    case 4:
+    case "CORPUS_LOCAL":
+      return Corpus.CORPUS_LOCAL;
+    case 5:
+    case "CORPUS_NEWS":
+      return Corpus.CORPUS_NEWS;
+    case 6:
+    case "CORPUS_PRODUCTS":
+      return Corpus.CORPUS_PRODUCTS;
+    case 7:
+    case "CORPUS_VIDEO":
+      return Corpus.CORPUS_VIDEO;
+    case -1:
+    case "UNRECOGNIZED":
+    default:
+      return Corpus.UNRECOGNIZED;
+  }
+}
+
+export function corpusToJSON(object: Corpus): string {
+  switch (object) {
+    case Corpus.CORPUS_UNSPECIFIED:
+      return "CORPUS_UNSPECIFIED";
+    case Corpus.CORPUS_UNIVERSAL:
+      return "CORPUS_UNIVERSAL";
+    case Corpus.CORPUS_WEB:
+      return "CORPUS_WEB";
+    case Corpus.CORPUS_IMAGES:
+      return "CORPUS_IMAGES";
+    case Corpus.CORPUS_LOCAL:
+      return "CORPUS_LOCAL";
+    case Corpus.CORPUS_NEWS:
+      return "CORPUS_NEWS";
+    case Corpus.CORPUS_PRODUCTS:
+      return "CORPUS_PRODUCTS";
+    case Corpus.CORPUS_VIDEO:
+      return "CORPUS_VIDEO";
+    case Corpus.UNRECOGNIZED:
+    default:
+      return "UNRECOGNIZED";
+  }
+}
+
 export interface Simple {
   name: string;
-  age?:
-    | number
-    | undefined;
+  age: number;
   /** @deprecated */
   oldAddress?: Simple_OldAddress | undefined;
   newAddress?: Simple_NewAddress | undefined;
-  email?: string | undefined;
-  hasLoggedInRecently?: boolean | undefined;
+  email: string;
+  hasLoggedInRecently: boolean;
   profilePic?: Uint8Array | undefined;
   luckyNumbers: number[];
   properties: { [key: string]: string };
+  salary: number;
+  corpus: Corpus;
+  id: Long;
 }
 
 export interface Simple_OldAddress {
@@ -36,15 +107,15 @@ export interface Simple_PropertiesEntry {
 
 function createBaseSimple(): Simple {
   return {
-    name: "",
-    age: 0,
-    oldAddress: undefined,
-    newAddress: undefined,
-    email: "",
-    hasLoggedInRecently: false,
-    profilePic: new Uint8Array(0),
+    name: "23",
+    age: 89,
+    email: "test@gmail.com",
+    hasLoggedInRecently: true,
     luckyNumbers: [],
     properties: {},
+    salary: 100.456902,
+    corpus: 1,
+    id: Long.fromNumber(123456789109284),
   };
 }
 
@@ -53,7 +124,7 @@ export const Simple = {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
-    if (message.age !== undefined && message.age !== 0) {
+    if (message.age !== 0) {
       writer.uint32(16).int32(message.age);
     }
     if (message.oldAddress !== undefined) {
@@ -62,7 +133,7 @@ export const Simple = {
     if (message.newAddress !== undefined) {
       Simple_NewAddress.encode(message.newAddress, writer.uint32(42).fork()).ldelim();
     }
-    if (message.email !== undefined && message.email !== "") {
+    if (message.email !== "") {
       writer.uint32(50).string(message.email);
     }
     if (message.hasLoggedInRecently === true) {
@@ -79,6 +150,15 @@ export const Simple = {
     Object.entries(message.properties).forEach(([key, value]) => {
       Simple_PropertiesEntry.encode({ key: key as any, value }, writer.uint32(82).fork()).ldelim();
     });
+    if (message.salary !== 0) {
+      writer.uint32(93).float(message.salary);
+    }
+    if (message.corpus !== 0) {
+      writer.uint32(96).int32(message.corpus);
+    }
+    if (!message.id.isZero()) {
+      writer.uint32(104).int64(message.id);
+    }
     return writer;
   },
 
@@ -165,6 +245,27 @@ export const Simple = {
             message.properties[entry10.key] = entry10.value;
           }
           continue;
+        case 11:
+          if (tag !== 93) {
+            break;
+          }
+
+          message.salary = reader.float();
+          continue;
+        case 12:
+          if (tag !== 96) {
+            break;
+          }
+
+          message.corpus = reader.int32() as any;
+          continue;
+        case 13:
+          if (tag !== 104) {
+            break;
+          }
+
+          message.id = reader.int64() as Long;
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -176,13 +277,13 @@ export const Simple = {
 
   fromJSON(object: any): Simple {
     return {
-      name: isSet(object.name) ? globalThis.String(object.name) : "",
-      age: isSet(object.age) ? globalThis.Number(object.age) : 0,
+      name: isSet(object.name) ? globalThis.String(object.name) : "23",
+      age: isSet(object.age) ? globalThis.Number(object.age) : 89,
       oldAddress: isSet(object.oldAddress) ? Simple_OldAddress.fromJSON(object.oldAddress) : undefined,
       newAddress: isSet(object.newAddress) ? Simple_NewAddress.fromJSON(object.newAddress) : undefined,
-      email: isSet(object.email) ? globalThis.String(object.email) : "",
-      hasLoggedInRecently: isSet(object.hasLoggedInRecently) ? globalThis.Boolean(object.hasLoggedInRecently) : false,
-      profilePic: isSet(object.profilePic) ? bytesFromBase64(object.profilePic) : new Uint8Array(0),
+      email: isSet(object.email) ? globalThis.String(object.email) : "test@gmail.com",
+      hasLoggedInRecently: isSet(object.hasLoggedInRecently) ? globalThis.Boolean(object.hasLoggedInRecently) : true,
+      profilePic: isSet(object.profilePic) ? bytesFromBase64(object.profilePic) : undefined,
       luckyNumbers: globalThis.Array.isArray(object?.luckyNumbers)
         ? object.luckyNumbers.map((e: any) => globalThis.Number(e))
         : [],
@@ -192,6 +293,9 @@ export const Simple = {
           return acc;
         }, {})
         : {},
+      salary: isSet(object.salary) ? globalThis.Number(object.salary) : 100.456902,
+      corpus: isSet(object.corpus) ? corpusFromJSON(object.corpus) : 1,
+      id: isSet(object.id) ? Long.fromValue(object.id) : Long.fromNumber(123456789109284),
     };
   },
 
@@ -200,7 +304,7 @@ export const Simple = {
     if (message.name !== "") {
       obj.name = message.name;
     }
-    if (message.age !== undefined && message.age !== 0) {
+    if (message.age !== 0) {
       obj.age = Math.round(message.age);
     }
     if (message.oldAddress !== undefined) {
@@ -209,7 +313,7 @@ export const Simple = {
     if (message.newAddress !== undefined) {
       obj.newAddress = Simple_NewAddress.toJSON(message.newAddress);
     }
-    if (message.email !== undefined && message.email !== "") {
+    if (message.email !== "") {
       obj.email = message.email;
     }
     if (message.hasLoggedInRecently === true) {
@@ -230,6 +334,15 @@ export const Simple = {
         });
       }
     }
+    if (message.salary !== 0) {
+      obj.salary = message.salary;
+    }
+    if (message.corpus !== 0) {
+      obj.corpus = corpusToJSON(message.corpus);
+    }
+    if (!message.id.isZero()) {
+      obj.id = (message.id || Long.fromNumber(123456789109284)).toString();
+    }
     return obj;
   },
 
@@ -238,16 +351,16 @@ export const Simple = {
   },
   fromPartial<I extends Exact<DeepPartial<Simple>, I>>(object: I): Simple {
     const message = createBaseSimple();
-    message.name = object.name ?? "";
-    message.age = object.age ?? 0;
+    message.name = object.name ?? "23";
+    message.age = object.age ?? 89;
     message.oldAddress = (object.oldAddress !== undefined && object.oldAddress !== null)
       ? Simple_OldAddress.fromPartial(object.oldAddress)
       : undefined;
     message.newAddress = (object.newAddress !== undefined && object.newAddress !== null)
       ? Simple_NewAddress.fromPartial(object.newAddress)
       : undefined;
-    message.email = object.email ?? "";
-    message.hasLoggedInRecently = object.hasLoggedInRecently ?? false;
+    message.email = object.email ?? "test@gmail.com";
+    message.hasLoggedInRecently = object.hasLoggedInRecently ?? true;
     message.profilePic = object.profilePic ?? new Uint8Array(0);
     message.luckyNumbers = object.luckyNumbers?.map((e) => e) || [];
     message.properties = Object.entries(object.properties ?? {}).reduce<{ [key: string]: string }>(
@@ -259,12 +372,17 @@ export const Simple = {
       },
       {},
     );
+    message.salary = object.salary ?? 100.456902;
+    message.corpus = object.corpus ?? 1;
+    message.id = (object.id !== undefined && object.id !== null)
+      ? Long.fromValue(object.id)
+      : Long.fromNumber(123456789109284);
     return message;
   },
 };
 
 function createBaseSimple_OldAddress(): Simple_OldAddress {
-  return { street: "", city: "" };
+  return { city: "" };
 }
 
 export const Simple_OldAddress = {
@@ -310,7 +428,7 @@ export const Simple_OldAddress = {
 
   fromJSON(object: any): Simple_OldAddress {
     return {
-      street: isSet(object.street) ? globalThis.String(object.street) : "",
+      street: isSet(object.street) ? globalThis.String(object.street) : undefined,
       city: isSet(object.city) ? globalThis.String(object.city) : "",
     };
   },
@@ -528,7 +646,7 @@ function base64FromBytes(arr: Uint8Array): string {
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
 export type DeepPartial<T> = T extends Builtin ? T
-  : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends Long ? string | number | Long : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
@@ -536,6 +654,11 @@ export type DeepPartial<T> = T extends Builtin ? T
 type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
+
+if (_m0.util.Long !== Long) {
+  _m0.util.Long = Long as any;
+  _m0.configure();
+}
 
 function isObject(value: any): boolean {
   return typeof value === "object" && value !== null;

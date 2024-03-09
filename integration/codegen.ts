@@ -38,7 +38,7 @@ async function generate(binFile: string, baseDir: string, parameter: string) {
     }
     const utils = makeUtils(options);
     const ctx: BaseContext = { options, typeMap, utils };
-    const [path, code] = generateFile({ ...ctx, file: createFileContext(file) }, file);
+    const [path, code] = generateFile({ ...ctx, currentFile: createFileContext(file) }, file);
     const filePath = `${baseDir}/${path}`;
     const dirPath = parse(filePath).dir;
     await promisify(mkdir)(dirPath, { recursive: true }).catch(() => {});
