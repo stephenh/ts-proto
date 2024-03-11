@@ -179,7 +179,7 @@ export function packedType(type: FieldDescriptorProto_Type): number | undefined 
 
 export function defaultValue(ctx: Context, field: FieldDescriptorProto): any {
   const { typeMap, options, utils, currentFile } = ctx;
-  const useDefaultValue = !currentFile.isProto3Syntax && field.defaultValue !== undefined;
+  const useDefaultValue = !currentFile.isProto3Syntax && field.defaultValue;
   const numbericDefaultVal = useDefaultValue ? field.defaultValue : 0;
   switch (field.type) {
     case FieldDescriptorProto_Type.TYPE_DOUBLE:
@@ -299,7 +299,7 @@ export function notDefaultCheck(
       }
     case FieldDescriptorProto_Type.TYPE_BYTES:
       // todo(proto2): need to look into all the possible default values for the bytes type, and handle each one
-      return code`${maybeNotUndefinedAnd} ${place}.length !== ${defaultValue(ctx, field).length}`;
+      return code`${maybeNotUndefinedAnd} ${place}.length !== 0`;
     default:
       throw new Error("Not implemented for the given type.");
   }
