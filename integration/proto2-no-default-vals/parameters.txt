@@ -1,1 +1,1 @@
-initializeFieldsAsUndefined=false,disableProto2DefaultValues=true
+disableProto2DefaultValues=true
