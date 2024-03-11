@@ -1,1 +1,1 @@
-initializeFieldsAsUndefined=false
+initializeFieldsAsUndefined=false,forceLong=long

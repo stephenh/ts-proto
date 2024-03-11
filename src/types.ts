@@ -239,6 +239,7 @@ export function defaultValue(ctx: Context, field: FieldDescriptorProto): any {
     case FieldDescriptorProto_Type.TYPE_STRING:
       return useDefaultValue ? `"${field.defaultValue}"` : '""';
     case FieldDescriptorProto_Type.TYPE_BYTES:
+      // todo(proto2): need to look into all the possible default values for the bytes type, and handle each one
       if (options.env === EnvOption.NODE) {
         return "Buffer.alloc(0)";
       }
@@ -259,7 +260,6 @@ export function notDefaultCheck(
 ): Code {
   const { typeMap, options, currentFile } = ctx;
   const isOptional = isOptionalProperty(field, messageOptions, options, currentFile.isProto3Syntax);
-  const useDefaultValue = !currentFile.isProto3Syntax && field.defaultValue !== undefined;
   const maybeNotUndefinedAnd = isOptional ? `${place} !== undefined && ` : "";
   switch (field.type) {
     case FieldDescriptorProto_Type.TYPE_DOUBLE:
@@ -293,16 +293,12 @@ export function notDefaultCheck(
     case FieldDescriptorProto_Type.TYPE_SINT64:
     case FieldDescriptorProto_Type.TYPE_SFIXED64:
       if (options.forceLong === LongOption.LONG) {
-        if (useDefaultValue) {
-          return code`${maybeNotUndefinedAnd} !${place}.equals(${defaultValue(ctx, field)})`;
-        }
-        return code`${maybeNotUndefinedAnd} !${place}.isZero()`;
+        return code`${maybeNotUndefinedAnd} !${place}.equals(${defaultValue(ctx, field)})`;
       } else {
         return code`${maybeNotUndefinedAnd} ${place} !== ${defaultValue(ctx, field)}`;
       }
     case FieldDescriptorProto_Type.TYPE_BYTES:
-      if (options.env === EnvOption.NODE) {
-      }
+      // todo(proto2): need to look into all the possible default values for the bytes type, and handle each one
       return code`${maybeNotUndefinedAnd} ${place}.length !== ${defaultValue(ctx, field).length}`;
     default:
       throw new Error("Not implemented for the given type.");

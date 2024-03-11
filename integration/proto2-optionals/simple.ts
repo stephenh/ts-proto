@@ -1,8 +1,7 @@
 /* eslint-disable */
-import * as _m0 from "protobufjs/minimal";
 import Long = require("long");
+import * as _m0 from "protobufjs/minimal";
 
-Long.fromNumber(123).eq;
 export const protobufPackage = "simple";
 
 export enum Corpus {
@@ -87,7 +86,7 @@ export interface Simple {
   properties: { [key: string]: string };
   salary: number;
   corpus: Corpus;
-  id: number;
+  id: Long;
 }
 
 export interface Simple_OldAddress {
@@ -116,7 +115,7 @@ function createBaseSimple(): Simple {
     properties: {},
     salary: 100.456902,
     corpus: 1,
-    id: 123456789109284,
+    id: Long.fromNumber(123456789109284),
   };
 }
 
@@ -157,7 +156,7 @@ export const Simple = {
     if (message.corpus !== 1) {
       writer.uint32(96).int32(message.corpus);
     }
-    if (message.id !== 123456789109284) {
+    if (!message.id.equals(Long.fromNumber(123456789109284))) {
       writer.uint32(104).int64(message.id);
     }
     return writer;
@@ -265,7 +264,7 @@ export const Simple = {
             break;
           }
 
-          message.id = longToNumber(reader.int64() as Long);
+          message.id = reader.int64() as Long;
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -290,13 +289,13 @@ export const Simple = {
         : [],
       properties: isObject(object.properties)
         ? Object.entries(object.properties).reduce<{ [key: string]: string }>((acc, [key, value]) => {
-            acc[key] = String(value);
-            return acc;
-          }, {})
+          acc[key] = String(value);
+          return acc;
+        }, {})
         : {},
       salary: isSet(object.salary) ? globalThis.Number(object.salary) : 100.456902,
       corpus: isSet(object.corpus) ? corpusFromJSON(object.corpus) : 1,
-      id: isSet(object.id) ? globalThis.Number(object.id) : 123456789109284,
+      id: isSet(object.id) ? Long.fromValue(object.id) : Long.fromNumber(123456789109284),
     };
   },
 
@@ -341,8 +340,8 @@ export const Simple = {
     if (message.corpus !== 1) {
       obj.corpus = corpusToJSON(message.corpus);
     }
-    if (message.id !== 123456789109284) {
-      obj.id = Math.round(message.id);
+    if (!message.id.equals(Long.fromNumber(123456789109284))) {
+      obj.id = (message.id || Long.fromNumber(123456789109284)).toString();
     }
     return obj;
   },
@@ -354,14 +353,12 @@ export const Simple = {
     const message = createBaseSimple();
     message.name = object.name ?? "23";
     message.age = object.age ?? 89;
-    message.oldAddress =
-      object.oldAddress !== undefined && object.oldAddress !== null
-        ? Simple_OldAddress.fromPartial(object.oldAddress)
-        : undefined;
-    message.newAddress =
-      object.newAddress !== undefined && object.newAddress !== null
-        ? Simple_NewAddress.fromPartial(object.newAddress)
-        : undefined;
+    message.oldAddress = (object.oldAddress !== undefined && object.oldAddress !== null)
+      ? Simple_OldAddress.fromPartial(object.oldAddress)
+      : undefined;
+    message.newAddress = (object.newAddress !== undefined && object.newAddress !== null)
+      ? Simple_NewAddress.fromPartial(object.newAddress)
+      : undefined;
     message.email = object.email ?? "test@gmail.com";
     message.hasLoggedInRecently = object.hasLoggedInRecently ?? true;
     message.profilePic = object.profilePic ?? new Uint8Array(0);
@@ -377,7 +374,9 @@ export const Simple = {
     );
     message.salary = object.salary ?? 100.456902;
     message.corpus = object.corpus ?? 1;
-    message.id = object.id ?? 123456789109284;
+    message.id = (object.id !== undefined && object.id !== null)
+      ? Long.fromValue(object.id)
+      : Long.fromNumber(123456789109284);
     return message;
   },
 };
@@ -646,27 +645,15 @@ function base64FromBytes(arr: Uint8Array): string {
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
-export type DeepPartial<T> = T extends Builtin
-  ? T
-  : T extends globalThis.Array<infer U>
-  ? globalThis.Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U>
-  ? ReadonlyArray<DeepPartial<U>>
-  : T extends {}
-  ? { [K in keyof T]?: DeepPartial<T[K]> }
+export type DeepPartial<T> = T extends Builtin ? T
+  : T extends Long ? string | number | Long : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-export type Exact<P, I extends P> = P extends Builtin
-  ? P
+export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
-
-function longToNumber(long: Long): number {
-  if (long.gt(globalThis.Number.MAX_SAFE_INTEGER)) {
-    throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
-  }
-  return long.toNumber();
-}
 
 if (_m0.util.Long !== Long) {
   _m0.util.Long = Long as any;
