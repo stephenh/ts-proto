@@ -382,7 +382,7 @@ describe("unknown-fields", () => {
             },
           ],
         },
-        "ccEnableArenas": false,
+        "ccEnableArenas": true,
         "ccGenericServices": false,
         "csharpNamespace": "",
         "deprecated": false,
