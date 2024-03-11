@@ -179,7 +179,7 @@ export function packedType(type: FieldDescriptorProto_Type): number | undefined 
 
 export function defaultValue(ctx: Context, field: FieldDescriptorProto): any {
   const { typeMap, options, utils, currentFile } = ctx;
-  const useDefaultValue = !currentFile.isProto3Syntax && field.defaultValue;
+  const useDefaultValue = !currentFile.isProto3Syntax && !options.disableProto2DefaultValues && field.defaultValue;
   const numbericDefaultVal = useDefaultValue ? field.defaultValue : 0;
   switch (field.type) {
     case FieldDescriptorProto_Type.TYPE_DOUBLE:
@@ -369,7 +369,11 @@ export function isOptionalProperty(
   return (
     (optionalMessages && isMessage(field) && !isRepeated(field)) ||
     (optionalAll && !messageOptions?.mapEntry) ||
-    (!isProto3Syntax && field.label === FieldDescriptorProto_Label.LABEL_OPTIONAL && !messageOptions?.mapEntry) ||
+    // file is proto2, we have enabled proto2 optionals, and the field itself is optional
+    (!isProto3Syntax &&
+      field.label === FieldDescriptorProto_Label.LABEL_OPTIONAL &&
+      !messageOptions?.mapEntry &&
+      !options.disableProto2Optionals) ||
     // don't bother verifying that oneof is not union. union oneofs generate their own properties.
     isWithinOneOf(field) ||
     field.proto3Optional

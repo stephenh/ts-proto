@@ -97,6 +97,7 @@ export type Options = {
   rpcErrorHandler: boolean;
   comments: boolean;
   disableProto2Optionals: boolean;
+  disableProto2DefaultValues: boolean;
 };
 
 export function defaultOptions(): Options {
@@ -159,6 +160,7 @@ export function defaultOptions(): Options {
     rpcErrorHandler: false,
     comments: true,
     disableProto2Optionals: false,
+    disableProto2DefaultValues: false,
   };
 }
 
