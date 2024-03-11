@@ -1662,7 +1662,7 @@ export const FieldDescriptorProto = {
     if (message.options !== undefined) {
       FieldOptions.encode(message.options, writer.uint32(66).fork()).ldelim();
     }
-    if (message.proto3Optional === true) {
+    if (message.proto3Optional !== undefined && message.proto3Optional !== false) {
       writer.uint32(136).bool(message.proto3Optional);
     }
     if (message._unknownFields !== undefined) {
@@ -2206,10 +2206,10 @@ export const MethodDescriptorProto = {
     if (message.options !== undefined) {
       MethodOptions.encode(message.options, writer.uint32(34).fork()).ldelim();
     }
-    if (message.clientStreaming === true) {
+    if (message.clientStreaming !== undefined && message.clientStreaming !== false) {
       writer.uint32(40).bool(message.clientStreaming);
     }
-    if (message.serverStreaming === true) {
+    if (message.serverStreaming !== undefined && message.serverStreaming !== false) {
       writer.uint32(48).bool(message.serverStreaming);
     }
     if (message._unknownFields !== undefined) {
@@ -2311,7 +2311,7 @@ function createBaseFileOptions(): FileOptions {
     pyGenericServices: false,
     phpGenericServices: false,
     deprecated: false,
-    ccEnableArenas: false,
+    ccEnableArenas: true,
     objcClassPrefix: "",
     csharpNamespace: "",
     swiftPrefix: "",
@@ -2332,13 +2332,13 @@ export const FileOptions = {
     if (message.javaOuterClassname !== undefined && message.javaOuterClassname !== "") {
       writer.uint32(66).string(message.javaOuterClassname);
     }
-    if (message.javaMultipleFiles === true) {
+    if (message.javaMultipleFiles !== undefined && message.javaMultipleFiles !== false) {
       writer.uint32(80).bool(message.javaMultipleFiles);
     }
-    if (message.javaGenerateEqualsAndHash === true) {
+    if (message.javaGenerateEqualsAndHash !== undefined && message.javaGenerateEqualsAndHash !== false) {
       writer.uint32(160).bool(message.javaGenerateEqualsAndHash);
     }
-    if (message.javaStringCheckUtf8 === true) {
+    if (message.javaStringCheckUtf8 !== undefined && message.javaStringCheckUtf8 !== false) {
       writer.uint32(216).bool(message.javaStringCheckUtf8);
     }
     if (message.optimizeFor !== undefined && message.optimizeFor !== 1) {
@@ -2347,22 +2347,22 @@ export const FileOptions = {
     if (message.goPackage !== undefined && message.goPackage !== "") {
       writer.uint32(90).string(message.goPackage);
     }
-    if (message.ccGenericServices === true) {
+    if (message.ccGenericServices !== undefined && message.ccGenericServices !== false) {
       writer.uint32(128).bool(message.ccGenericServices);
     }
-    if (message.javaGenericServices === true) {
+    if (message.javaGenericServices !== undefined && message.javaGenericServices !== false) {
       writer.uint32(136).bool(message.javaGenericServices);
     }
-    if (message.pyGenericServices === true) {
+    if (message.pyGenericServices !== undefined && message.pyGenericServices !== false) {
       writer.uint32(144).bool(message.pyGenericServices);
     }
-    if (message.phpGenericServices === true) {
+    if (message.phpGenericServices !== undefined && message.phpGenericServices !== false) {
       writer.uint32(336).bool(message.phpGenericServices);
     }
-    if (message.deprecated === true) {
+    if (message.deprecated !== undefined && message.deprecated !== false) {
       writer.uint32(184).bool(message.deprecated);
     }
-    if (message.ccEnableArenas === true) {
+    if (message.ccEnableArenas !== undefined && message.ccEnableArenas !== true) {
       writer.uint32(248).bool(message.ccEnableArenas);
     }
     if (message.objcClassPrefix !== undefined && message.objcClassPrefix !== "") {
@@ -2592,16 +2592,16 @@ function createBaseMessageOptions(): MessageOptions {
 
 export const MessageOptions = {
   encode(message: MessageOptions, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.messageSetWireFormat === true) {
+    if (message.messageSetWireFormat !== undefined && message.messageSetWireFormat !== false) {
       writer.uint32(8).bool(message.messageSetWireFormat);
     }
-    if (message.noStandardDescriptorAccessor === true) {
+    if (message.noStandardDescriptorAccessor !== undefined && message.noStandardDescriptorAccessor !== false) {
       writer.uint32(16).bool(message.noStandardDescriptorAccessor);
     }
-    if (message.deprecated === true) {
+    if (message.deprecated !== undefined && message.deprecated !== false) {
       writer.uint32(24).bool(message.deprecated);
     }
-    if (message.mapEntry === true) {
+    if (message.mapEntry !== undefined && message.mapEntry !== false) {
       writer.uint32(56).bool(message.mapEntry);
     }
     for (const v of message.uninterpretedOption) {
@@ -2703,19 +2703,19 @@ export const FieldOptions = {
     if (message.ctype !== undefined && message.ctype !== 0) {
       writer.uint32(8).int32(message.ctype);
     }
-    if (message.packed === true) {
+    if (message.packed !== undefined && message.packed !== false) {
       writer.uint32(16).bool(message.packed);
     }
     if (message.jstype !== undefined && message.jstype !== 0) {
       writer.uint32(48).int32(message.jstype);
     }
-    if (message.lazy === true) {
+    if (message.lazy !== undefined && message.lazy !== false) {
       writer.uint32(40).bool(message.lazy);
     }
-    if (message.deprecated === true) {
+    if (message.deprecated !== undefined && message.deprecated !== false) {
       writer.uint32(24).bool(message.deprecated);
     }
-    if (message.weak === true) {
+    if (message.weak !== undefined && message.weak !== false) {
       writer.uint32(80).bool(message.weak);
     }
     for (const v of message.uninterpretedOption) {
@@ -2878,10 +2878,10 @@ function createBaseEnumOptions(): EnumOptions {
 
 export const EnumOptions = {
   encode(message: EnumOptions, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.allowAlias === true) {
+    if (message.allowAlias !== undefined && message.allowAlias !== false) {
       writer.uint32(16).bool(message.allowAlias);
     }
-    if (message.deprecated === true) {
+    if (message.deprecated !== undefined && message.deprecated !== false) {
       writer.uint32(24).bool(message.deprecated);
     }
     for (const v of message.uninterpretedOption) {
@@ -2957,7 +2957,7 @@ function createBaseEnumValueOptions(): EnumValueOptions {
 
 export const EnumValueOptions = {
   encode(message: EnumValueOptions, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.deprecated === true) {
+    if (message.deprecated !== undefined && message.deprecated !== false) {
       writer.uint32(8).bool(message.deprecated);
     }
     for (const v of message.uninterpretedOption) {
@@ -3026,7 +3026,7 @@ function createBaseServiceOptions(): ServiceOptions {
 
 export const ServiceOptions = {
   encode(message: ServiceOptions, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.deprecated === true) {
+    if (message.deprecated !== undefined && message.deprecated !== false) {
       writer.uint32(264).bool(message.deprecated);
     }
     for (const v of message.uninterpretedOption) {
@@ -3095,7 +3095,7 @@ function createBaseMethodOptions(): MethodOptions {
 
 export const MethodOptions = {
   encode(message: MethodOptions, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.deprecated === true) {
+    if (message.deprecated !== undefined && message.deprecated !== false) {
       writer.uint32(264).bool(message.deprecated);
     }
     if (message.idempotencyLevel !== undefined && message.idempotencyLevel !== 0) {
@@ -3305,7 +3305,7 @@ export const UninterpretedOption_NamePart = {
     if (message.namePart !== "") {
       writer.uint32(10).string(message.namePart);
     }
-    if (message.isExtension === true) {
+    if (message.isExtension !== false) {
       writer.uint32(16).bool(message.isExtension);
     }
     if (message._unknownFields !== undefined) {

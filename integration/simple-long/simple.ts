@@ -496,10 +496,10 @@ function createBaseSimpleWithMap_LongLookupEntry(): SimpleWithMap_LongLookupEntr
 
 export const SimpleWithMap_LongLookupEntry = {
   encode(message: SimpleWithMap_LongLookupEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (!message.key.isZero()) {
+    if (!message.key.equals(Long.ZERO)) {
       writer.uint32(8).int64(message.key);
     }
-    if (!message.value.isZero()) {
+    if (!message.value.equals(Long.ZERO)) {
       writer.uint32(16).int64(message.value);
     }
     return writer;
@@ -544,10 +544,10 @@ export const SimpleWithMap_LongLookupEntry = {
 
   toJSON(message: SimpleWithMap_LongLookupEntry): unknown {
     const obj: any = {};
-    if (!message.key.isZero()) {
+    if (!message.key.equals(Long.ZERO)) {
       obj.key = (message.key || Long.ZERO).toString();
     }
-    if (!message.value.isZero()) {
+    if (!message.value.equals(Long.ZERO)) {
       obj.value = (message.value || Long.ZERO).toString();
     }
     return obj;
@@ -595,31 +595,31 @@ export const Numbers = {
     if (message.int32 !== 0) {
       writer.uint32(24).int32(message.int32);
     }
-    if (!message.int64.isZero()) {
+    if (!message.int64.equals(Long.ZERO)) {
       writer.uint32(32).int64(message.int64);
     }
     if (message.uint32 !== 0) {
       writer.uint32(40).uint32(message.uint32);
     }
-    if (!message.uint64.isZero()) {
+    if (!message.uint64.equals(Long.UZERO)) {
       writer.uint32(48).uint64(message.uint64);
     }
     if (message.sint32 !== 0) {
       writer.uint32(56).sint32(message.sint32);
     }
-    if (!message.sint64.isZero()) {
+    if (!message.sint64.equals(Long.ZERO)) {
       writer.uint32(64).sint64(message.sint64);
     }
     if (message.fixed32 !== 0) {
       writer.uint32(77).fixed32(message.fixed32);
     }
-    if (!message.fixed64.isZero()) {
+    if (!message.fixed64.equals(Long.UZERO)) {
       writer.uint32(81).fixed64(message.fixed64);
     }
     if (message.sfixed32 !== 0) {
       writer.uint32(93).sfixed32(message.sfixed32);
     }
-    if (!message.sfixed64.isZero()) {
+    if (!message.sfixed64.equals(Long.ZERO)) {
       writer.uint32(97).sfixed64(message.sfixed64);
     }
     writer.uint32(106).fork();
@@ -778,31 +778,31 @@ export const Numbers = {
     if (message.int32 !== 0) {
       obj.int32 = Math.round(message.int32);
     }
-    if (!message.int64.isZero()) {
+    if (!message.int64.equals(Long.ZERO)) {
       obj.int64 = (message.int64 || Long.ZERO).toString();
     }
     if (message.uint32 !== 0) {
       obj.uint32 = Math.round(message.uint32);
     }
-    if (!message.uint64.isZero()) {
+    if (!message.uint64.equals(Long.UZERO)) {
       obj.uint64 = (message.uint64 || Long.UZERO).toString();
     }
     if (message.sint32 !== 0) {
       obj.sint32 = Math.round(message.sint32);
     }
-    if (!message.sint64.isZero()) {
+    if (!message.sint64.equals(Long.ZERO)) {
       obj.sint64 = (message.sint64 || Long.ZERO).toString();
     }
     if (message.fixed32 !== 0) {
       obj.fixed32 = Math.round(message.fixed32);
     }
-    if (!message.fixed64.isZero()) {
+    if (!message.fixed64.equals(Long.UZERO)) {
       obj.fixed64 = (message.fixed64 || Long.UZERO).toString();
     }
     if (message.sfixed32 !== 0) {
       obj.sfixed32 = Math.round(message.sfixed32);
     }
-    if (!message.sfixed64.isZero()) {
+    if (!message.sfixed64.equals(Long.ZERO)) {
       obj.sfixed64 = (message.sfixed64 || Long.ZERO).toString();
     }
     if (message.manyUint64?.length) {

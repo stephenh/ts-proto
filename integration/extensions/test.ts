@@ -522,7 +522,7 @@ export const long: Extension<Long> = {
   packed: false,
   encode: (value: Long): Uint8Array[] => {
     const encoded: Uint8Array[] = [];
-    if (value !== undefined && !value.isZero()) {
+    if (value !== undefined && !value.equals(Long.ZERO)) {
       const writer = _m0.Writer.create();
       writer.int64(value);
       encoded.push(writer.finish());
@@ -542,7 +542,7 @@ export const fixed: Extension<Long> = {
   packed: false,
   encode: (value: Long): Uint8Array[] => {
     const encoded: Uint8Array[] = [];
-    if (value !== undefined && !value.isZero()) {
+    if (value !== undefined && !value.equals(Long.UZERO)) {
       const writer = _m0.Writer.create();
       writer.fixed64(value);
       encoded.push(writer.finish());

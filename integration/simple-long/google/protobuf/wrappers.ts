@@ -214,7 +214,7 @@ function createBaseInt64Value(): Int64Value {
 
 export const Int64Value = {
   encode(message: Int64Value, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (!message.value.isZero()) {
+    if (!message.value.equals(Long.ZERO)) {
       writer.uint32(8).int64(message.value);
     }
     return writer;
@@ -249,7 +249,7 @@ export const Int64Value = {
 
   toJSON(message: Int64Value): unknown {
     const obj: any = {};
-    if (!message.value.isZero()) {
+    if (!message.value.equals(Long.ZERO)) {
       obj.value = (message.value || Long.ZERO).toString();
     }
     return obj;
@@ -271,7 +271,7 @@ function createBaseUInt64Value(): UInt64Value {
 
 export const UInt64Value = {
   encode(message: UInt64Value, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (!message.value.isZero()) {
+    if (!message.value.equals(Long.UZERO)) {
       writer.uint32(8).uint64(message.value);
     }
     return writer;
@@ -306,7 +306,7 @@ export const UInt64Value = {
 
   toJSON(message: UInt64Value): unknown {
     const obj: any = {};
-    if (!message.value.isZero()) {
+    if (!message.value.equals(Long.UZERO)) {
       obj.value = (message.value || Long.UZERO).toString();
     }
     return obj;
@@ -442,7 +442,7 @@ function createBaseBoolValue(): BoolValue {
 
 export const BoolValue = {
   encode(message: BoolValue, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.value === true) {
+    if (message.value !== false) {
       writer.uint32(8).bool(message.value);
     }
     return writer;
@@ -477,7 +477,7 @@ export const BoolValue = {
 
   toJSON(message: BoolValue): unknown {
     const obj: any = {};
-    if (message.value === true) {
+    if (message.value !== false) {
       obj.value = message.value;
     }
     return obj;

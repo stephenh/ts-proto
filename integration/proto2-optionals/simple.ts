@@ -139,7 +139,7 @@ export const Simple = {
     if (message.hasLoggedInRecently !== true) {
       writer.uint32(56).bool(message.hasLoggedInRecently);
     }
-    if (message.profilePic !== undefined && message.profilePic.length !== 17) {
+    if (message.profilePic !== undefined && message.profilePic.length !== 0) {
       writer.uint32(66).bytes(message.profilePic);
     }
     writer.uint32(74).fork();
@@ -319,7 +319,7 @@ export const Simple = {
     if (message.hasLoggedInRecently !== true) {
       obj.hasLoggedInRecently = message.hasLoggedInRecently;
     }
-    if (message.profilePic !== undefined && message.profilePic.length !== 17) {
+    if (message.profilePic !== undefined && message.profilePic.length !== 0) {
       obj.profilePic = base64FromBytes(message.profilePic);
     }
     if (message.luckyNumbers?.length) {

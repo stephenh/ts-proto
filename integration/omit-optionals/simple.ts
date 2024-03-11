@@ -14,7 +14,7 @@ function createBaseTestMessage(): TestMessage {
 
 export const TestMessage = {
   encode(message: TestMessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.field1 === true) {
+    if (message.field1 !== false) {
       writer.uint32(8).bool(message.field1);
     }
     if (message.field2 !== undefined) {
@@ -62,7 +62,7 @@ export const TestMessage = {
 
   toJSON(message: TestMessage): unknown {
     const obj: any = {};
-    if (message.field1 === true) {
+    if (message.field1 !== false) {
       obj.field1 = message.field1;
     }
     if (message.field2 !== undefined) {

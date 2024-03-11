@@ -119,7 +119,7 @@ function createBaseTimestamp(): Timestamp {
 
 export const Timestamp = {
   encode(message: Timestamp, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.seconds !== undefined && !message.seconds.isZero()) {
+    if (message.seconds !== undefined && !message.seconds.equals(Long.ZERO)) {
       writer.uint32(8).int64(message.seconds);
     }
     if (message.nanos !== undefined && message.nanos !== 0) {
@@ -167,7 +167,7 @@ export const Timestamp = {
 
   toJSON(message: Timestamp): unknown {
     const obj: any = {};
-    if (message.seconds !== undefined && !message.seconds.isZero()) {
+    if (message.seconds !== undefined && !message.seconds.equals(Long.ZERO)) {
       obj.seconds = (message.seconds || Long.ZERO).toString();
     }
     if (message.nanos !== undefined && message.nanos !== 0) {
