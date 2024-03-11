@@ -1,0 +1,59 @@
+syntax = "proto2";
+package simple;
+
+message OptionalsTest {
+    repeated int32 rep_id = 1;
+    repeated Child rep_child = 2;
+    repeated StateEnum rep_state = 3;
+    repeated int64 rep_long = 4;
+    repeated bool rep_truth = 5;
+    repeated string rep_description = 6;
+    repeated bytes rep_data = 7;
+    repeated float rep_float = 8;
+
+    optional int32 opt_id = 11;
+    optional Child opt_child = 12;
+    optional StateEnum opt_state = 13;
+    optional int64 opt_long = 14;
+    optional bool opt_truth = 15;
+    optional string opt_description = 16;
+    optional bytes opt_data = 17;
+    optional float opt_float = 18;
+
+    required int32 req_id = 21;
+    required Child req_child = 22;
+    required StateEnum req_state = 23;
+    required int64 req_long = 24;
+    required bool req_truth = 25;
+    required string req_description = 26;
+    required bytes req_data = 27;
+    required float req_float = 28;
+
+    required int32 req_defval_id = 31 [default = 100];
+    required StateEnum req_defval_state = 33 [default = ON];
+    required int64 req_defval_long = 34 [default = 7812378193];
+    required bool req_defval_truth = 35 [default = true];
+    required string req_defval_description = 36 [default = "Some description"];
+    required bytes req_defval_data = 37 [default = "abc"];
+    required float req_defval_float = 38 [default = 0.12354];
+
+    optional int32 opt_defval_id = 41 [default = 100];
+    optional StateEnum opt_defval_state = 43 [default = ON];
+    optional int64 opt_defval_long = 44 [default = 7812378193];
+    optional bool opt_defval_truth = 45 [default = true];
+    optional string opt_defval_description = 46 [default = "Some description"];
+    optional bytes opt_defval_data = 47 [default = "abc"];
+    optional float opt_defval_float = 48 [default = 0.12354];
+
+    map<string, string> translations = 50;
+}
+
+enum StateEnum {
+  UNKNOWN = 0;
+  ON = 2;
+  OFF = 3;
+}
+
+message Child {}
+
+
