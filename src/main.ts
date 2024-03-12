@@ -948,7 +948,7 @@ function generateInterfaceDeclaration(
   sourceInfo: SourceInfo,
   fullTypeName: string,
 ): Code {
-  const { options } = ctx;
+  const { options, currentFile } = ctx;
   const chunks: Code[] = [];
 
   maybeAddComment(options, sourceInfo, chunks, messageDesc.options?.deprecated);
@@ -975,7 +975,7 @@ function generateInterfaceDeclaration(
     const info = sourceInfo.lookup(Fields.message.field, index);
     maybeAddComment(options, info, chunks, fieldDesc.options?.deprecated);
     const fieldKey = safeAccessor(getFieldName(fieldDesc, options));
-    const isOptional = isOptionalProperty(fieldDesc, messageDesc.options, options);
+    const isOptional = isOptionalProperty(fieldDesc, messageDesc.options, options, currentFile.isProto3Syntax);
     const type = toTypeName(ctx, messageDesc, fieldDesc, isOptional);
     chunks.push(code`${maybeReadonly(options)}${fieldKey}${isOptional ? "?" : ""}: ${type}, `);
   });
@@ -1038,7 +1038,7 @@ function generateBaseInstanceFactory(
   messageDesc: DescriptorProto,
   fullTypeName: string,
 ): Code {
-  const { options } = ctx;
+  const { options, currentFile } = ctx;
   const fields: Code[] = [];
 
   // When oneof=unions, we generate a single property with an ADT per `oneof` clause.
@@ -1058,7 +1058,10 @@ function generateBaseInstanceFactory(
       continue;
     }
 
-    if (!options.initializeFieldsAsUndefined && isOptionalProperty(field, messageDesc.options, options)) {
+    if (
+      !options.initializeFieldsAsUndefined &&
+      isOptionalProperty(field, messageDesc.options, options, currentFile.isProto3Syntax)
+    ) {
       continue;
     }
 
@@ -1158,7 +1161,7 @@ function getDecodeReadSnippet(ctx: Context, field: FieldDescriptorProto) {
 
 /** Creates a function to decode a message by loop overing the tags. */
 function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorProto): Code {
-  const { options, utils, typeMap } = ctx;
+  const { options, currentFile } = ctx;
   const chunks: Code[] = [];
 
   let createBase = code`createBase${fullName}()`;
@@ -1205,7 +1208,8 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
 
     // and then use the snippet to handle repeated fields if necessary
     const initializerNecessary =
-      !options.initializeFieldsAsUndefined && isOptionalProperty(field, messageDesc.options, options);
+      !options.initializeFieldsAsUndefined &&
+      isOptionalProperty(field, messageDesc.options, options, currentFile.isProto3Syntax);
 
     if (isRepeated(field)) {
       const maybeNonNullAssertion = ctx.options.useOptionals === "all" ? "!" : "";
@@ -1415,7 +1419,7 @@ function getEncodeWriteSnippet(ctx: Context, field: FieldDescriptorProto): (plac
 
 /** Creates a function to encode a message by loop overing the tags. */
 function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorProto): Code {
-  const { options, utils, typeMap } = ctx;
+  const { options, utils, typeMap, currentFile } = ctx;
   const chunks: Code[] = [];
 
   const Writer = impFile(ctx.options, "Writer@protobufjs/minimal");
@@ -1444,7 +1448,7 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
     // get a generic writer.doSomething based on the basic type
     const writeSnippet = getEncodeWriteSnippet(ctx, field);
 
-    const isOptional = isOptionalProperty(field, messageDesc.options, options);
+    const isOptional = isOptionalProperty(field, messageDesc.options, options, currentFile.isProto3Syntax);
     if (isRepeated(field)) {
       if (isMapType(ctx, messageDesc, field)) {
         const valueType = (typeMap.get(field.typeName)![2] as DescriptorProto).field[1];
@@ -1881,7 +1885,7 @@ function generateExtension(ctx: Context, message: DescriptorProto | undefined, e
  * a few special cases for https://developers.google.com/protocol-buffers/docs/proto3#json.
  * */
 function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, messageDesc: DescriptorProto): Code {
-  const { options, utils, typeMap } = ctx;
+  const { options, utils, currentFile } = ctx;
   const chunks: Code[] = [];
 
   // create the basic function declaration
@@ -2019,7 +2023,8 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
     };
 
     const noDefaultValue =
-      !options.initializeFieldsAsUndefined && isOptionalProperty(field, messageDesc.options, options);
+      !options.initializeFieldsAsUndefined &&
+      isOptionalProperty(field, messageDesc.options, options, currentFile.isProto3Syntax);
 
     // and then use the snippet to handle repeated fields if necessary
     if (canonicalFromJson[fullTypeName]?.[fieldName]) {
@@ -2402,7 +2407,7 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
     };
 
     const noDefaultValue =
-      !options.initializeFieldsAsUndefined && isOptionalProperty(field, messageDesc.options, options);
+      !options.initializeFieldsAsUndefined && isOptionalProperty(field, messageDesc.options, options, true);
 
     // and then use the snippet to handle repeated fields if necessary
     if (isRepeated(field)) {

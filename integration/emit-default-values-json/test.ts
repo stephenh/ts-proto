@@ -120,7 +120,7 @@ export const DefaultValuesTest = {
     if (message.long !== 0) {
       writer.uint32(32).int64(message.long);
     }
-    if (message.truth === true) {
+    if (message.truth !== false) {
       writer.uint32(40).bool(message.truth);
     }
     if (message.description !== "") {

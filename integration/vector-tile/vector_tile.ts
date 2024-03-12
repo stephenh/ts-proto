@@ -54,19 +54,19 @@ export function tile_GeomTypeToJSON(object: Tile_GeomType): string {
 }
 
 export interface Tile_Value {
-  stringValue: string;
-  floatValue: number;
-  doubleValue: number;
-  intValue: number;
-  uintValue: number;
-  sintValue: number;
-  boolValue: boolean;
+  stringValue?: string | undefined;
+  floatValue?: number | undefined;
+  doubleValue?: number | undefined;
+  intValue?: number | undefined;
+  uintValue?: number | undefined;
+  sintValue?: number | undefined;
+  boolValue?: boolean | undefined;
 }
 
 export interface Tile_Feature {
-  id: number;
+  id?: number | undefined;
   tags: number[];
-  type: Tile_GeomType;
+  type?: Tile_GeomType | undefined;
   geometry: number[];
 }
 
@@ -76,7 +76,7 @@ export interface Tile_Layer {
   features: Tile_Feature[];
   keys: string[];
   values: Tile_Value[];
-  extent: number;
+  extent?: number | undefined;
 }
 
 function createBaseTile(): Tile {
@@ -144,25 +144,25 @@ function createBaseTile_Value(): Tile_Value {
 
 export const Tile_Value = {
   encode(message: Tile_Value, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.stringValue !== "") {
+    if (message.stringValue !== undefined && message.stringValue !== "") {
       writer.uint32(10).string(message.stringValue);
     }
-    if (message.floatValue !== 0) {
+    if (message.floatValue !== undefined && message.floatValue !== 0) {
       writer.uint32(21).float(message.floatValue);
     }
-    if (message.doubleValue !== 0) {
+    if (message.doubleValue !== undefined && message.doubleValue !== 0) {
       writer.uint32(25).double(message.doubleValue);
     }
-    if (message.intValue !== 0) {
+    if (message.intValue !== undefined && message.intValue !== 0) {
       writer.uint32(32).int64(message.intValue);
     }
-    if (message.uintValue !== 0) {
+    if (message.uintValue !== undefined && message.uintValue !== 0) {
       writer.uint32(40).uint64(message.uintValue);
     }
-    if (message.sintValue !== 0) {
+    if (message.sintValue !== undefined && message.sintValue !== 0) {
       writer.uint32(48).sint64(message.sintValue);
     }
-    if (message.boolValue === true) {
+    if (message.boolValue !== undefined && message.boolValue !== false) {
       writer.uint32(56).bool(message.boolValue);
     }
     return writer;
@@ -247,25 +247,25 @@ export const Tile_Value = {
 
   toJSON(message: Tile_Value): unknown {
     const obj: any = {};
-    if (message.stringValue !== "") {
+    if (message.stringValue !== undefined && message.stringValue !== "") {
       obj.stringValue = message.stringValue;
     }
-    if (message.floatValue !== 0) {
+    if (message.floatValue !== undefined && message.floatValue !== 0) {
       obj.floatValue = message.floatValue;
     }
-    if (message.doubleValue !== 0) {
+    if (message.doubleValue !== undefined && message.doubleValue !== 0) {
       obj.doubleValue = message.doubleValue;
     }
-    if (message.intValue !== 0) {
+    if (message.intValue !== undefined && message.intValue !== 0) {
       obj.intValue = Math.round(message.intValue);
     }
-    if (message.uintValue !== 0) {
+    if (message.uintValue !== undefined && message.uintValue !== 0) {
       obj.uintValue = Math.round(message.uintValue);
     }
-    if (message.sintValue !== 0) {
+    if (message.sintValue !== undefined && message.sintValue !== 0) {
       obj.sintValue = Math.round(message.sintValue);
     }
-    if (message.boolValue === true) {
+    if (message.boolValue !== undefined && message.boolValue !== false) {
       obj.boolValue = message.boolValue;
     }
     return obj;
@@ -293,7 +293,7 @@ function createBaseTile_Feature(): Tile_Feature {
 
 export const Tile_Feature = {
   encode(message: Tile_Feature, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.id !== 0) {
+    if (message.id !== undefined && message.id !== 0) {
       writer.uint32(8).uint64(message.id);
     }
     writer.uint32(18).fork();
@@ -301,7 +301,7 @@ export const Tile_Feature = {
       writer.uint32(v);
     }
     writer.ldelim();
-    if (message.type !== 0) {
+    if (message.type !== undefined && message.type !== 0) {
       writer.uint32(24).int32(message.type);
     }
     writer.uint32(34).fork();
@@ -387,13 +387,13 @@ export const Tile_Feature = {
 
   toJSON(message: Tile_Feature): unknown {
     const obj: any = {};
-    if (message.id !== 0) {
+    if (message.id !== undefined && message.id !== 0) {
       obj.id = Math.round(message.id);
     }
     if (message.tags?.length) {
       obj.tags = message.tags.map((e) => Math.round(e));
     }
-    if (message.type !== 0) {
+    if (message.type !== undefined && message.type !== 0) {
       obj.type = tile_GeomTypeToJSON(message.type);
     }
     if (message.geometry?.length) {
@@ -416,12 +416,12 @@ export const Tile_Feature = {
 };
 
 function createBaseTile_Layer(): Tile_Layer {
-  return { version: 0, name: "", features: [], keys: [], values: [], extent: 0 };
+  return { version: 1, name: "", features: [], keys: [], values: [], extent: 4096 };
 }
 
 export const Tile_Layer = {
   encode(message: Tile_Layer, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.version !== 0) {
+    if (message.version !== 1) {
       writer.uint32(120).uint32(message.version);
     }
     if (message.name !== "") {
@@ -436,7 +436,7 @@ export const Tile_Layer = {
     for (const v of message.values) {
       Tile_Value.encode(v!, writer.uint32(34).fork()).ldelim();
     }
-    if (message.extent !== 0) {
+    if (message.extent !== undefined && message.extent !== 4096) {
       writer.uint32(40).uint32(message.extent);
     }
     return writer;
@@ -502,20 +502,20 @@ export const Tile_Layer = {
 
   fromJSON(object: any): Tile_Layer {
     return {
-      version: isSet(object.version) ? globalThis.Number(object.version) : 0,
+      version: isSet(object.version) ? globalThis.Number(object.version) : 1,
       name: isSet(object.name) ? globalThis.String(object.name) : "",
       features: globalThis.Array.isArray(object?.features)
         ? object.features.map((e: any) => Tile_Feature.fromJSON(e))
         : [],
       keys: globalThis.Array.isArray(object?.keys) ? object.keys.map((e: any) => globalThis.String(e)) : [],
       values: globalThis.Array.isArray(object?.values) ? object.values.map((e: any) => Tile_Value.fromJSON(e)) : [],
-      extent: isSet(object.extent) ? globalThis.Number(object.extent) : 0,
+      extent: isSet(object.extent) ? globalThis.Number(object.extent) : 4096,
     };
   },
 
   toJSON(message: Tile_Layer): unknown {
     const obj: any = {};
-    if (message.version !== 0) {
+    if (message.version !== 1) {
       obj.version = Math.round(message.version);
     }
     if (message.name !== "") {
@@ -530,7 +530,7 @@ export const Tile_Layer = {
     if (message.values?.length) {
       obj.values = message.values.map((e) => Tile_Value.toJSON(e));
     }
-    if (message.extent !== 0) {
+    if (message.extent !== undefined && message.extent !== 4096) {
       obj.extent = Math.round(message.extent);
     }
     return obj;
@@ -541,12 +541,12 @@ export const Tile_Layer = {
   },
   fromPartial<I extends Exact<DeepPartial<Tile_Layer>, I>>(object: I): Tile_Layer {
     const message = createBaseTile_Layer();
-    message.version = object.version ?? 0;
+    message.version = object.version ?? 1;
     message.name = object.name ?? "";
     message.features = object.features?.map((e) => Tile_Feature.fromPartial(e)) || [];
     message.keys = object.keys?.map((e) => e) || [];
     message.values = object.values?.map((e) => Tile_Value.fromPartial(e)) || [];
-    message.extent = object.extent ?? 0;
+    message.extent = object.extent ?? 4096;
     return message;
   },
 };

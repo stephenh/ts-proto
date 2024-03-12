@@ -442,7 +442,7 @@ function createBaseBoolValue(): BoolValue {
 
 export const BoolValue = {
   encode(message: BoolValue, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.value === true) {
+    if (message.value !== false) {
       writer.uint32(8).bool(message.value);
     }
     return writer;
@@ -477,7 +477,7 @@ export const BoolValue = {
 
   toJSON(message: BoolValue): unknown {
     const obj: any = {};
-    if (message.value === true) {
+    if (message.value !== false) {
       obj.value = message.value;
     }
     return obj;

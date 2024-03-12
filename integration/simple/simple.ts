@@ -371,7 +371,7 @@ export const Simple = {
     if (message.blob.length !== 0) {
       writer.uint32(106).bytes(message.blob);
     }
-    if (message.enabled === true) {
+    if (message.enabled !== false) {
       writer.uint32(112).bool(message.enabled);
     }
     return writer;
@@ -575,7 +575,7 @@ export const Simple = {
     if (message.blob.length !== 0) {
       obj.blob = base64FromBytes(message.blob);
     }
-    if (message.enabled === true) {
+    if (message.enabled !== false) {
       obj.enabled = message.enabled;
     }
     return obj;
@@ -2065,7 +2065,7 @@ function createBaseSimpleWithMap_BoolLookupEntry(): SimpleWithMap_BoolLookupEntr
 
 export const SimpleWithMap_BoolLookupEntry = {
   encode(message: SimpleWithMap_BoolLookupEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.key === true) {
+    if (message.key !== false) {
       writer.uint32(8).bool(message.key);
     }
     if (message.value !== 0) {
@@ -2113,7 +2113,7 @@ export const SimpleWithMap_BoolLookupEntry = {
 
   toJSON(message: SimpleWithMap_BoolLookupEntry): unknown {
     const obj: any = {};
-    if (message.key === true) {
+    if (message.key !== false) {
       obj.key = message.key;
     }
     if (message.value !== 0) {

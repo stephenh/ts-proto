@@ -204,7 +204,7 @@ function createBaseBoolean(): Boolean {
 
 export const Boolean = {
   encode(message: Boolean, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.value === true) {
+    if (message.value !== false) {
       writer.uint32(8).bool(message.value);
     }
     return writer;
@@ -239,7 +239,7 @@ export const Boolean = {
 
   toJSON(message: Boolean): unknown {
     const obj: any = {};
-    if (message.value === true) {
+    if (message.value !== false) {
       obj.value = message.value;
     }
     return obj;

@@ -16,9 +16,13 @@ export interface FileDescriptorSet {
 /** Describes a complete .proto file. */
 export interface FileDescriptorProto {
   /** file name, relative to root of source tree */
-  name: string;
+  name?:
+    | string
+    | undefined;
   /** e.g. "foo", "foo.bar", etc. */
-  package: string;
+  package?:
+    | string
+    | undefined;
   /** Names of files imported by this file. */
   dependency: string[];
   /** Indexes of the public imported files in the dependency list above. */
@@ -33,7 +37,7 @@ export interface FileDescriptorProto {
   enumType: EnumDescriptorProto[];
   service: ServiceDescriptorProto[];
   extension: FieldDescriptorProto[];
-  options:
+  options?:
     | FileOptions
     | undefined;
   /**
@@ -42,27 +46,27 @@ export interface FileDescriptorProto {
    * functionality of the descriptors -- the information is needed only by
    * development tools.
    */
-  sourceCodeInfo:
+  sourceCodeInfo?:
     | SourceCodeInfo
     | undefined;
   /**
    * The syntax of the proto file.
    * The supported values are "proto2" and "proto3".
    */
-  syntax: string;
+  syntax?: string | undefined;
   _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
 /** Describes a message type. */
 export interface DescriptorProto {
-  name: string;
+  name?: string | undefined;
   field: FieldDescriptorProto[];
   extension: FieldDescriptorProto[];
   nestedType: DescriptorProto[];
   enumType: EnumDescriptorProto[];
   extensionRange: DescriptorProto_ExtensionRange[];
   oneofDecl: OneofDescriptorProto[];
-  options: MessageOptions | undefined;
+  options?: MessageOptions | undefined;
   reservedRange: DescriptorProto_ReservedRange[];
   /**
    * Reserved field names, which may not be used by fields in the same message.
@@ -74,10 +78,12 @@ export interface DescriptorProto {
 
 export interface DescriptorProto_ExtensionRange {
   /** Inclusive. */
-  start: number;
+  start?:
+    | number
+    | undefined;
   /** Exclusive. */
-  end: number;
-  options: ExtensionRangeOptions | undefined;
+  end?: number | undefined;
+  options?: ExtensionRangeOptions | undefined;
   _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
@@ -88,9 +94,11 @@ export interface DescriptorProto_ExtensionRange {
  */
 export interface DescriptorProto_ReservedRange {
   /** Inclusive. */
-  start: number;
+  start?:
+    | number
+    | undefined;
   /** Exclusive. */
-  end: number;
+  end?: number | undefined;
   _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
@@ -102,14 +110,18 @@ export interface ExtensionRangeOptions {
 
 /** Describes a field within a message. */
 export interface FieldDescriptorProto {
-  name: string;
-  number: number;
-  label: FieldDescriptorProto_Label;
+  name?: string | undefined;
+  number?: number | undefined;
+  label?:
+    | FieldDescriptorProto_Label
+    | undefined;
   /**
    * If type_name is set, this need not be set.  If both this and type_name
    * are set, this must be one of TYPE_ENUM, TYPE_MESSAGE or TYPE_GROUP.
    */
-  type: FieldDescriptorProto_Type;
+  type?:
+    | FieldDescriptorProto_Type
+    | undefined;
   /**
    * For message and enum types, this is the name of the type.  If the name
    * starts with a '.', it is fully-qualified.  Otherwise, C++-like scoping
@@ -117,12 +129,16 @@ export interface FieldDescriptorProto {
    * message are searched, then within the parent, on up to the root
    * namespace).
    */
-  typeName: string;
+  typeName?:
+    | string
+    | undefined;
   /**
    * For extensions, this is the name of the type being extended.  It is
    * resolved in the same manner as type_name.
    */
-  extendee: string;
+  extendee?:
+    | string
+    | undefined;
   /**
    * For numeric types, contains the original text representation of the value.
    * For booleans, "true" or "false".
@@ -130,20 +146,24 @@ export interface FieldDescriptorProto {
    * For bytes, contains the C escaped value.  All bytes >= 128 are escaped.
    * TODO(kenton):  Base-64 encode?
    */
-  defaultValue: string;
+  defaultValue?:
+    | string
+    | undefined;
   /**
    * If set, gives the index of a oneof in the containing type's oneof_decl
    * list.  This field is a member of that oneof.
    */
-  oneofIndex: number;
+  oneofIndex?:
+    | number
+    | undefined;
   /**
    * JSON name of this field. The value is set by protocol compiler. If the
    * user has set a "json_name" option on this field, that option's value
    * will be used. Otherwise, it's deduced from the field's name by converting
    * it to camelCase.
    */
-  jsonName: string;
-  options:
+  jsonName?: string | undefined;
+  options?:
     | FieldOptions
     | undefined;
   /**
@@ -169,7 +189,7 @@ export interface FieldDescriptorProto {
    * Proto2 optional fields do not set this flag, because they already indicate
    * optional with `LABEL_OPTIONAL`.
    */
-  proto3Optional: boolean;
+  proto3Optional?: boolean | undefined;
   _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
@@ -227,16 +247,16 @@ export enum FieldDescriptorProto_Label {
 
 /** Describes a oneof. */
 export interface OneofDescriptorProto {
-  name: string;
-  options: OneofOptions | undefined;
+  name?: string | undefined;
+  options?: OneofOptions | undefined;
   _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
 /** Describes an enum type. */
 export interface EnumDescriptorProto {
-  name: string;
+  name?: string | undefined;
   value: EnumValueDescriptorProto[];
-  options:
+  options?:
     | EnumOptions
     | undefined;
   /**
@@ -263,44 +283,50 @@ export interface EnumDescriptorProto {
  */
 export interface EnumDescriptorProto_EnumReservedRange {
   /** Inclusive. */
-  start: number;
+  start?:
+    | number
+    | undefined;
   /** Inclusive. */
-  end: number;
+  end?: number | undefined;
   _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
 /** Describes a value within an enum. */
 export interface EnumValueDescriptorProto {
-  name: string;
-  number: number;
-  options: EnumValueOptions | undefined;
+  name?: string | undefined;
+  number?: number | undefined;
+  options?: EnumValueOptions | undefined;
   _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
 /** Describes a service. */
 export interface ServiceDescriptorProto {
-  name: string;
+  name?: string | undefined;
   method: MethodDescriptorProto[];
-  options: ServiceOptions | undefined;
+  options?: ServiceOptions | undefined;
   _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
 /** Describes a method of a service. */
 export interface MethodDescriptorProto {
-  name: string;
+  name?:
+    | string
+    | undefined;
   /**
    * Input and output type names.  These are resolved in the same way as
    * FieldDescriptorProto.type_name, but must refer to a message type.
    */
-  inputType: string;
-  outputType: string;
-  options:
+  inputType?: string | undefined;
+  outputType?: string | undefined;
+  options?:
     | MethodOptions
     | undefined;
   /** Identifies if client streams multiple client messages */
-  clientStreaming: boolean;
+  clientStreaming?:
+    | boolean
+    | undefined;
   /** Identifies if server streams multiple server messages */
-  serverStreaming: boolean;
+  serverStreaming?: boolean | undefined;
   _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
@@ -311,7 +337,9 @@ export interface FileOptions {
    * inappropriate because proto packages do not normally start with backwards
    * domain names.
    */
-  javaPackage: string;
+  javaPackage?:
+    | string
+    | undefined;
   /**
    * If set, all the classes from the .proto file are wrapped in a single
    * outer class with the given name.  This applies to both Proto1
@@ -319,7 +347,9 @@ export interface FileOptions {
    * a .proto always translates to a single class, but you may want to
    * explicitly choose the class name).
    */
-  javaOuterClassname: string;
+  javaOuterClassname?:
+    | string
+    | undefined;
   /**
    * If set true, then the Java code generator will generate a separate .java
    * file for each top-level message, enum, and service defined in the .proto
@@ -328,13 +358,17 @@ export interface FileOptions {
    * generated to contain the file's getDescriptor() method as well as any
    * top-level extensions defined in the file.
    */
-  javaMultipleFiles: boolean;
+  javaMultipleFiles?:
+    | boolean
+    | undefined;
   /**
    * This option does nothing.
    *
    * @deprecated
    */
-  javaGenerateEqualsAndHash: boolean;
+  javaGenerateEqualsAndHash?:
+    | boolean
+    | undefined;
   /**
    * If set true, then the Java2 code generator will generate code that
    * throws an exception whenever an attempt is made to assign a non-UTF-8
@@ -343,8 +377,10 @@ export interface FileOptions {
    * However, an extension field still accepts non-UTF-8 byte sequences.
    * This option has no effect on when used with the lite runtime.
    */
-  javaStringCheckUtf8: boolean;
-  optimizeFor: FileOptions_OptimizeMode;
+  javaStringCheckUtf8?: boolean | undefined;
+  optimizeFor?:
+    | FileOptions_OptimizeMode
+    | undefined;
   /**
    * Sets the Go package where structs generated from this .proto will be
    * placed. If omitted, the Go package will be derived from the following:
@@ -352,7 +388,9 @@ export interface FileOptions {
    *   - Otherwise, the package statement in the .proto file, if present.
    *   - Otherwise, the basename of the .proto file, without extension.
    */
-  goPackage: string;
+  goPackage?:
+    | string
+    | undefined;
   /**
    * Should generic services be generated in each language?  "Generic" services
    * are not specific to any particular RPC system.  They are generated by the
@@ -365,59 +403,79 @@ export interface FileOptions {
    * these default to false.  Old code which depends on generic services should
    * explicitly set them to true.
    */
-  ccGenericServices: boolean;
-  javaGenericServices: boolean;
-  pyGenericServices: boolean;
-  phpGenericServices: boolean;
+  ccGenericServices?: boolean | undefined;
+  javaGenericServices?: boolean | undefined;
+  pyGenericServices?: boolean | undefined;
+  phpGenericServices?:
+    | boolean
+    | undefined;
   /**
    * Is this file deprecated?
    * Depending on the target platform, this can emit Deprecated annotations
    * for everything in the file, or it will be completely ignored; in the very
    * least, this is a formalization for deprecating files.
    */
-  deprecated: boolean;
+  deprecated?:
+    | boolean
+    | undefined;
   /**
    * Enables the use of arenas for the proto messages in this file. This applies
    * only to generated classes for C++.
    */
-  ccEnableArenas: boolean;
+  ccEnableArenas?:
+    | boolean
+    | undefined;
   /**
    * Sets the objective c class prefix which is prepended to all objective c
    * generated classes from this .proto. There is no default.
    */
-  objcClassPrefix: string;
+  objcClassPrefix?:
+    | string
+    | undefined;
   /** Namespace for generated classes; defaults to the package. */
-  csharpNamespace: string;
+  csharpNamespace?:
+    | string
+    | undefined;
   /**
    * By default Swift generators will take the proto package and CamelCase it
    * replacing '.' with underscore and use that to prefix the types/symbols
    * defined. When this options is provided, they will use this value instead
    * to prefix the types/symbols defined.
    */
-  swiftPrefix: string;
+  swiftPrefix?:
+    | string
+    | undefined;
   /**
    * Sets the php class prefix which is prepended to all php generated classes
    * from this .proto. Default is empty.
    */
-  phpClassPrefix: string;
+  phpClassPrefix?:
+    | string
+    | undefined;
   /**
    * Use this option to change the namespace of php generated classes. Default
    * is empty. When this option is empty, the package name will be used for
    * determining the namespace.
    */
-  phpNamespace: string;
+  phpNamespace?:
+    | string
+    | undefined;
   /**
    * Use this option to change the namespace of php generated metadata classes.
    * Default is empty. When this option is empty, the proto file name will be
    * used for determining the namespace.
    */
-  phpMetadataNamespace: string;
+  phpMetadataNamespace?:
+    | string
+    | undefined;
   /**
    * Use this option to change the package of ruby generated classes. Default
    * is empty. When this option is not set, the package name will be used for
    * determining the ruby package.
    */
-  rubyPackage: string;
+  rubyPackage?:
+    | string
+    | undefined;
   /**
    * The parser stores options it doesn't recognize here.
    * See the documentation for the "Options" section above.
@@ -458,20 +516,26 @@ export interface MessageOptions {
    * Because this is an option, the above two restrictions are not enforced by
    * the protocol compiler.
    */
-  messageSetWireFormat: boolean;
+  messageSetWireFormat?:
+    | boolean
+    | undefined;
   /**
    * Disables the generation of the standard "descriptor()" accessor, which can
    * conflict with a field of the same name.  This is meant to make migration
    * from proto1 easier; new code should avoid fields named "descriptor".
    */
-  noStandardDescriptorAccessor: boolean;
+  noStandardDescriptorAccessor?:
+    | boolean
+    | undefined;
   /**
    * Is this message deprecated?
    * Depending on the target platform, this can emit Deprecated annotations
    * for the message, or it will be completely ignored; in the very least,
    * this is a formalization for deprecating messages.
    */
-  deprecated: boolean;
+  deprecated?:
+    | boolean
+    | undefined;
   /**
    * Whether the message is an automatically generated map entry type for the
    * maps field.
@@ -495,7 +559,9 @@ export interface MessageOptions {
    * instead. The option should only be implicitly set by the proto compiler
    * parser.
    */
-  mapEntry: boolean;
+  mapEntry?:
+    | boolean
+    | undefined;
   /** The parser stores options it doesn't recognize here. See above. */
   uninterpretedOption: UninterpretedOption[];
   _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
@@ -508,7 +574,9 @@ export interface FieldOptions {
    * options below.  This option is not yet implemented in the open source
    * release -- sorry, we'll try to include it in a future version!
    */
-  ctype: FieldOptions_CType;
+  ctype?:
+    | FieldOptions_CType
+    | undefined;
   /**
    * The packed option can be enabled for repeated primitive fields to enable
    * a more efficient representation on the wire. Rather than repeatedly
@@ -516,7 +584,9 @@ export interface FieldOptions {
    * a single length-delimited blob. In proto3, only explicit setting it to
    * false will avoid using packed encoding.
    */
-  packed: boolean;
+  packed?:
+    | boolean
+    | undefined;
   /**
    * The jstype option determines the JavaScript type used for values of the
    * field.  The option is permitted only for 64 bit integral and fixed types
@@ -530,7 +600,9 @@ export interface FieldOptions {
    * This option is an enum to permit additional types to be added, e.g.
    * goog.math.Integer.
    */
-  jstype: FieldOptions_JSType;
+  jstype?:
+    | FieldOptions_JSType
+    | undefined;
   /**
    * Should this field be parsed lazily?  Lazy applies only to message-type
    * fields.  It means that when the outer message is initially parsed, the
@@ -560,16 +632,22 @@ export interface FieldOptions {
    * check its required fields, regardless of whether or not the message has
    * been parsed.
    */
-  lazy: boolean;
+  lazy?:
+    | boolean
+    | undefined;
   /**
    * Is this field deprecated?
    * Depending on the target platform, this can emit Deprecated annotations
    * for accessors, or it will be completely ignored; in the very least, this
    * is a formalization for deprecating fields.
    */
-  deprecated: boolean;
+  deprecated?:
+    | boolean
+    | undefined;
   /** For Google-internal migration only. Do not use. */
-  weak: boolean;
+  weak?:
+    | boolean
+    | undefined;
   /** The parser stores options it doesn't recognize here. See above. */
   uninterpretedOption: UninterpretedOption[];
   _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
@@ -604,14 +682,18 @@ export interface EnumOptions {
    * Set this option to true to allow mapping different tag names to the same
    * value.
    */
-  allowAlias: boolean;
+  allowAlias?:
+    | boolean
+    | undefined;
   /**
    * Is this enum deprecated?
    * Depending on the target platform, this can emit Deprecated annotations
    * for the enum, or it will be completely ignored; in the very least, this
    * is a formalization for deprecating enums.
    */
-  deprecated: boolean;
+  deprecated?:
+    | boolean
+    | undefined;
   /** The parser stores options it doesn't recognize here. See above. */
   uninterpretedOption: UninterpretedOption[];
   _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
@@ -624,7 +706,9 @@ export interface EnumValueOptions {
    * for the enum value, or it will be completely ignored; in the very least,
    * this is a formalization for deprecating enum values.
    */
-  deprecated: boolean;
+  deprecated?:
+    | boolean
+    | undefined;
   /** The parser stores options it doesn't recognize here. See above. */
   uninterpretedOption: UninterpretedOption[];
   _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
@@ -637,7 +721,9 @@ export interface ServiceOptions {
    * for the service, or it will be completely ignored; in the very least,
    * this is a formalization for deprecating services.
    */
-  deprecated: boolean;
+  deprecated?:
+    | boolean
+    | undefined;
   /** The parser stores options it doesn't recognize here. See above. */
   uninterpretedOption: UninterpretedOption[];
   _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
@@ -650,8 +736,10 @@ export interface MethodOptions {
    * for the method, or it will be completely ignored; in the very least,
    * this is a formalization for deprecating methods.
    */
-  deprecated: boolean;
-  idempotencyLevel: MethodOptions_IdempotencyLevel;
+  deprecated?: boolean | undefined;
+  idempotencyLevel?:
+    | MethodOptions_IdempotencyLevel
+    | undefined;
   /** The parser stores options it doesn't recognize here. See above. */
   uninterpretedOption: UninterpretedOption[];
   _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
@@ -685,12 +773,12 @@ export interface UninterpretedOption {
    * The value of the uninterpreted option, in whatever type the tokenizer
    * identified it as during parsing. Exactly one of these should be set.
    */
-  identifierValue: string;
-  positiveIntValue: number;
-  negativeIntValue: number;
-  doubleValue: number;
-  stringValue: Uint8Array;
-  aggregateValue: string;
+  identifierValue?: string | undefined;
+  positiveIntValue?: number | undefined;
+  negativeIntValue?: number | undefined;
+  doubleValue?: number | undefined;
+  stringValue?: Uint8Array | undefined;
+  aggregateValue?: string | undefined;
   _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
@@ -845,8 +933,8 @@ export interface SourceCodeInfo_Location {
    *
    *   // ignored detached comments.
    */
-  leadingComments: string;
-  trailingComments: string;
+  leadingComments?: string | undefined;
+  trailingComments?: string | undefined;
   leadingDetachedComments: string[];
   _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
@@ -872,18 +960,22 @@ export interface GeneratedCodeInfo_Annotation {
    */
   path: number[];
   /** Identifies the filesystem path to the original source .proto. */
-  sourceFile: string;
+  sourceFile?:
+    | string
+    | undefined;
   /**
    * Identifies the starting offset in bytes in the generated code
    * that relates to the identified object.
    */
-  begin: number;
+  begin?:
+    | number
+    | undefined;
   /**
    * Identifies the ending offset in bytes in the generated code that
    * relates to the identified offset. The end offset should be one past
    * the last relevant byte (so the length of the text = end - begin).
    */
-  end: number;
+  end?: number | undefined;
   _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
@@ -966,10 +1058,10 @@ function createBaseFileDescriptorProto(): FileDescriptorProto {
 
 export const FileDescriptorProto = {
   encode(message: FileDescriptorProto, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.name !== "") {
+    if (message.name !== undefined && message.name !== "") {
       writer.uint32(10).string(message.name);
     }
-    if (message.package !== "") {
+    if (message.package !== undefined && message.package !== "") {
       writer.uint32(18).string(message.package);
     }
     for (const v of message.dependency) {
@@ -1003,7 +1095,7 @@ export const FileDescriptorProto = {
     if (message.sourceCodeInfo !== undefined) {
       SourceCodeInfo.encode(message.sourceCodeInfo, writer.uint32(74).fork()).ldelim();
     }
-    if (message.syntax !== "") {
+    if (message.syntax !== undefined && message.syntax !== "") {
       writer.uint32(98).string(message.syntax);
     }
     if (message._unknownFields !== undefined) {
@@ -1171,7 +1263,7 @@ function createBaseDescriptorProto(): DescriptorProto {
 
 export const DescriptorProto = {
   encode(message: DescriptorProto, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.name !== "") {
+    if (message.name !== undefined && message.name !== "") {
       writer.uint32(10).string(message.name);
     }
     for (const v of message.field) {
@@ -1320,10 +1412,10 @@ function createBaseDescriptorProto_ExtensionRange(): DescriptorProto_ExtensionRa
 
 export const DescriptorProto_ExtensionRange = {
   encode(message: DescriptorProto_ExtensionRange, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.start !== 0) {
+    if (message.start !== undefined && message.start !== 0) {
       writer.uint32(8).int32(message.start);
     }
-    if (message.end !== 0) {
+    if (message.end !== undefined && message.end !== 0) {
       writer.uint32(16).int32(message.end);
     }
     if (message.options !== undefined) {
@@ -1399,10 +1491,10 @@ function createBaseDescriptorProto_ReservedRange(): DescriptorProto_ReservedRang
 
 export const DescriptorProto_ReservedRange = {
   encode(message: DescriptorProto_ReservedRange, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.start !== 0) {
+    if (message.start !== undefined && message.start !== 0) {
       writer.uint32(8).int32(message.start);
     }
-    if (message.end !== 0) {
+    if (message.end !== undefined && message.end !== 0) {
       writer.uint32(16).int32(message.end);
     }
     if (message._unknownFields !== undefined) {
@@ -1540,37 +1632,37 @@ function createBaseFieldDescriptorProto(): FieldDescriptorProto {
 
 export const FieldDescriptorProto = {
   encode(message: FieldDescriptorProto, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.name !== "") {
+    if (message.name !== undefined && message.name !== "") {
       writer.uint32(10).string(message.name);
     }
-    if (message.number !== 0) {
+    if (message.number !== undefined && message.number !== 0) {
       writer.uint32(24).int32(message.number);
     }
-    if (message.label !== 1) {
+    if (message.label !== undefined && message.label !== 1) {
       writer.uint32(32).int32(message.label);
     }
-    if (message.type !== 1) {
+    if (message.type !== undefined && message.type !== 1) {
       writer.uint32(40).int32(message.type);
     }
-    if (message.typeName !== "") {
+    if (message.typeName !== undefined && message.typeName !== "") {
       writer.uint32(50).string(message.typeName);
     }
-    if (message.extendee !== "") {
+    if (message.extendee !== undefined && message.extendee !== "") {
       writer.uint32(18).string(message.extendee);
     }
-    if (message.defaultValue !== "") {
+    if (message.defaultValue !== undefined && message.defaultValue !== "") {
       writer.uint32(58).string(message.defaultValue);
     }
-    if (message.oneofIndex !== 0) {
+    if (message.oneofIndex !== undefined && message.oneofIndex !== 0) {
       writer.uint32(72).int32(message.oneofIndex);
     }
-    if (message.jsonName !== "") {
+    if (message.jsonName !== undefined && message.jsonName !== "") {
       writer.uint32(82).string(message.jsonName);
     }
     if (message.options !== undefined) {
       FieldOptions.encode(message.options, writer.uint32(66).fork()).ldelim();
     }
-    if (message.proto3Optional === true) {
+    if (message.proto3Optional !== undefined && message.proto3Optional !== false) {
       writer.uint32(136).bool(message.proto3Optional);
     }
     if (message._unknownFields !== undefined) {
@@ -1699,7 +1791,7 @@ function createBaseOneofDescriptorProto(): OneofDescriptorProto {
 
 export const OneofDescriptorProto = {
   encode(message: OneofDescriptorProto, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.name !== "") {
+    if (message.name !== undefined && message.name !== "") {
       writer.uint32(10).string(message.name);
     }
     if (message.options !== undefined) {
@@ -1768,7 +1860,7 @@ function createBaseEnumDescriptorProto(): EnumDescriptorProto {
 
 export const EnumDescriptorProto = {
   encode(message: EnumDescriptorProto, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.name !== "") {
+    if (message.name !== undefined && message.name !== "") {
       writer.uint32(10).string(message.name);
     }
     for (const v of message.value) {
@@ -1867,10 +1959,10 @@ function createBaseEnumDescriptorProto_EnumReservedRange(): EnumDescriptorProto_
 
 export const EnumDescriptorProto_EnumReservedRange = {
   encode(message: EnumDescriptorProto_EnumReservedRange, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.start !== 0) {
+    if (message.start !== undefined && message.start !== 0) {
       writer.uint32(8).int32(message.start);
     }
-    if (message.end !== 0) {
+    if (message.end !== undefined && message.end !== 0) {
       writer.uint32(16).int32(message.end);
     }
     if (message._unknownFields !== undefined) {
@@ -1936,10 +2028,10 @@ function createBaseEnumValueDescriptorProto(): EnumValueDescriptorProto {
 
 export const EnumValueDescriptorProto = {
   encode(message: EnumValueDescriptorProto, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.name !== "") {
+    if (message.name !== undefined && message.name !== "") {
       writer.uint32(10).string(message.name);
     }
-    if (message.number !== 0) {
+    if (message.number !== undefined && message.number !== 0) {
       writer.uint32(16).int32(message.number);
     }
     if (message.options !== undefined) {
@@ -2015,7 +2107,7 @@ function createBaseServiceDescriptorProto(): ServiceDescriptorProto {
 
 export const ServiceDescriptorProto = {
   encode(message: ServiceDescriptorProto, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.name !== "") {
+    if (message.name !== undefined && message.name !== "") {
       writer.uint32(10).string(message.name);
     }
     for (const v of message.method) {
@@ -2102,22 +2194,22 @@ function createBaseMethodDescriptorProto(): MethodDescriptorProto {
 
 export const MethodDescriptorProto = {
   encode(message: MethodDescriptorProto, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.name !== "") {
+    if (message.name !== undefined && message.name !== "") {
       writer.uint32(10).string(message.name);
     }
-    if (message.inputType !== "") {
+    if (message.inputType !== undefined && message.inputType !== "") {
       writer.uint32(18).string(message.inputType);
     }
-    if (message.outputType !== "") {
+    if (message.outputType !== undefined && message.outputType !== "") {
       writer.uint32(26).string(message.outputType);
     }
     if (message.options !== undefined) {
       MethodOptions.encode(message.options, writer.uint32(34).fork()).ldelim();
     }
-    if (message.clientStreaming === true) {
+    if (message.clientStreaming !== undefined && message.clientStreaming !== false) {
       writer.uint32(40).bool(message.clientStreaming);
     }
-    if (message.serverStreaming === true) {
+    if (message.serverStreaming !== undefined && message.serverStreaming !== false) {
       writer.uint32(48).bool(message.serverStreaming);
     }
     if (message._unknownFields !== undefined) {
@@ -2219,7 +2311,7 @@ function createBaseFileOptions(): FileOptions {
     pyGenericServices: false,
     phpGenericServices: false,
     deprecated: false,
-    ccEnableArenas: false,
+    ccEnableArenas: true,
     objcClassPrefix: "",
     csharpNamespace: "",
     swiftPrefix: "",
@@ -2234,64 +2326,64 @@ function createBaseFileOptions(): FileOptions {
 
 export const FileOptions = {
   encode(message: FileOptions, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.javaPackage !== "") {
+    if (message.javaPackage !== undefined && message.javaPackage !== "") {
       writer.uint32(10).string(message.javaPackage);
     }
-    if (message.javaOuterClassname !== "") {
+    if (message.javaOuterClassname !== undefined && message.javaOuterClassname !== "") {
       writer.uint32(66).string(message.javaOuterClassname);
     }
-    if (message.javaMultipleFiles === true) {
+    if (message.javaMultipleFiles !== undefined && message.javaMultipleFiles !== false) {
       writer.uint32(80).bool(message.javaMultipleFiles);
     }
-    if (message.javaGenerateEqualsAndHash === true) {
+    if (message.javaGenerateEqualsAndHash !== undefined && message.javaGenerateEqualsAndHash !== false) {
       writer.uint32(160).bool(message.javaGenerateEqualsAndHash);
     }
-    if (message.javaStringCheckUtf8 === true) {
+    if (message.javaStringCheckUtf8 !== undefined && message.javaStringCheckUtf8 !== false) {
       writer.uint32(216).bool(message.javaStringCheckUtf8);
     }
-    if (message.optimizeFor !== 1) {
+    if (message.optimizeFor !== undefined && message.optimizeFor !== 1) {
       writer.uint32(72).int32(message.optimizeFor);
     }
-    if (message.goPackage !== "") {
+    if (message.goPackage !== undefined && message.goPackage !== "") {
       writer.uint32(90).string(message.goPackage);
     }
-    if (message.ccGenericServices === true) {
+    if (message.ccGenericServices !== undefined && message.ccGenericServices !== false) {
       writer.uint32(128).bool(message.ccGenericServices);
     }
-    if (message.javaGenericServices === true) {
+    if (message.javaGenericServices !== undefined && message.javaGenericServices !== false) {
       writer.uint32(136).bool(message.javaGenericServices);
     }
-    if (message.pyGenericServices === true) {
+    if (message.pyGenericServices !== undefined && message.pyGenericServices !== false) {
       writer.uint32(144).bool(message.pyGenericServices);
     }
-    if (message.phpGenericServices === true) {
+    if (message.phpGenericServices !== undefined && message.phpGenericServices !== false) {
       writer.uint32(336).bool(message.phpGenericServices);
     }
-    if (message.deprecated === true) {
+    if (message.deprecated !== undefined && message.deprecated !== false) {
       writer.uint32(184).bool(message.deprecated);
     }
-    if (message.ccEnableArenas === true) {
+    if (message.ccEnableArenas !== undefined && message.ccEnableArenas !== true) {
       writer.uint32(248).bool(message.ccEnableArenas);
     }
-    if (message.objcClassPrefix !== "") {
+    if (message.objcClassPrefix !== undefined && message.objcClassPrefix !== "") {
       writer.uint32(290).string(message.objcClassPrefix);
     }
-    if (message.csharpNamespace !== "") {
+    if (message.csharpNamespace !== undefined && message.csharpNamespace !== "") {
       writer.uint32(298).string(message.csharpNamespace);
     }
-    if (message.swiftPrefix !== "") {
+    if (message.swiftPrefix !== undefined && message.swiftPrefix !== "") {
       writer.uint32(314).string(message.swiftPrefix);
     }
-    if (message.phpClassPrefix !== "") {
+    if (message.phpClassPrefix !== undefined && message.phpClassPrefix !== "") {
       writer.uint32(322).string(message.phpClassPrefix);
     }
-    if (message.phpNamespace !== "") {
+    if (message.phpNamespace !== undefined && message.phpNamespace !== "") {
       writer.uint32(330).string(message.phpNamespace);
     }
-    if (message.phpMetadataNamespace !== "") {
+    if (message.phpMetadataNamespace !== undefined && message.phpMetadataNamespace !== "") {
       writer.uint32(354).string(message.phpMetadataNamespace);
     }
-    if (message.rubyPackage !== "") {
+    if (message.rubyPackage !== undefined && message.rubyPackage !== "") {
       writer.uint32(362).string(message.rubyPackage);
     }
     for (const v of message.uninterpretedOption) {
@@ -2500,16 +2592,16 @@ function createBaseMessageOptions(): MessageOptions {
 
 export const MessageOptions = {
   encode(message: MessageOptions, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.messageSetWireFormat === true) {
+    if (message.messageSetWireFormat !== undefined && message.messageSetWireFormat !== false) {
       writer.uint32(8).bool(message.messageSetWireFormat);
     }
-    if (message.noStandardDescriptorAccessor === true) {
+    if (message.noStandardDescriptorAccessor !== undefined && message.noStandardDescriptorAccessor !== false) {
       writer.uint32(16).bool(message.noStandardDescriptorAccessor);
     }
-    if (message.deprecated === true) {
+    if (message.deprecated !== undefined && message.deprecated !== false) {
       writer.uint32(24).bool(message.deprecated);
     }
-    if (message.mapEntry === true) {
+    if (message.mapEntry !== undefined && message.mapEntry !== false) {
       writer.uint32(56).bool(message.mapEntry);
     }
     for (const v of message.uninterpretedOption) {
@@ -2608,22 +2700,22 @@ function createBaseFieldOptions(): FieldOptions {
 
 export const FieldOptions = {
   encode(message: FieldOptions, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.ctype !== 0) {
+    if (message.ctype !== undefined && message.ctype !== 0) {
       writer.uint32(8).int32(message.ctype);
     }
-    if (message.packed === true) {
+    if (message.packed !== undefined && message.packed !== false) {
       writer.uint32(16).bool(message.packed);
     }
-    if (message.jstype !== 0) {
+    if (message.jstype !== undefined && message.jstype !== 0) {
       writer.uint32(48).int32(message.jstype);
     }
-    if (message.lazy === true) {
+    if (message.lazy !== undefined && message.lazy !== false) {
       writer.uint32(40).bool(message.lazy);
     }
-    if (message.deprecated === true) {
+    if (message.deprecated !== undefined && message.deprecated !== false) {
       writer.uint32(24).bool(message.deprecated);
     }
-    if (message.weak === true) {
+    if (message.weak !== undefined && message.weak !== false) {
       writer.uint32(80).bool(message.weak);
     }
     for (const v of message.uninterpretedOption) {
@@ -2786,10 +2878,10 @@ function createBaseEnumOptions(): EnumOptions {
 
 export const EnumOptions = {
   encode(message: EnumOptions, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.allowAlias === true) {
+    if (message.allowAlias !== undefined && message.allowAlias !== false) {
       writer.uint32(16).bool(message.allowAlias);
     }
-    if (message.deprecated === true) {
+    if (message.deprecated !== undefined && message.deprecated !== false) {
       writer.uint32(24).bool(message.deprecated);
     }
     for (const v of message.uninterpretedOption) {
@@ -2865,7 +2957,7 @@ function createBaseEnumValueOptions(): EnumValueOptions {
 
 export const EnumValueOptions = {
   encode(message: EnumValueOptions, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.deprecated === true) {
+    if (message.deprecated !== undefined && message.deprecated !== false) {
       writer.uint32(8).bool(message.deprecated);
     }
     for (const v of message.uninterpretedOption) {
@@ -2934,7 +3026,7 @@ function createBaseServiceOptions(): ServiceOptions {
 
 export const ServiceOptions = {
   encode(message: ServiceOptions, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.deprecated === true) {
+    if (message.deprecated !== undefined && message.deprecated !== false) {
       writer.uint32(264).bool(message.deprecated);
     }
     for (const v of message.uninterpretedOption) {
@@ -3003,10 +3095,10 @@ function createBaseMethodOptions(): MethodOptions {
 
 export const MethodOptions = {
   encode(message: MethodOptions, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.deprecated === true) {
+    if (message.deprecated !== undefined && message.deprecated !== false) {
       writer.uint32(264).bool(message.deprecated);
     }
-    if (message.idempotencyLevel !== 0) {
+    if (message.idempotencyLevel !== undefined && message.idempotencyLevel !== 0) {
       writer.uint32(272).int32(message.idempotencyLevel);
     }
     for (const v of message.uninterpretedOption) {
@@ -3094,22 +3186,22 @@ export const UninterpretedOption = {
     for (const v of message.name) {
       UninterpretedOption_NamePart.encode(v!, writer.uint32(18).fork()).ldelim();
     }
-    if (message.identifierValue !== "") {
+    if (message.identifierValue !== undefined && message.identifierValue !== "") {
       writer.uint32(26).string(message.identifierValue);
     }
-    if (message.positiveIntValue !== 0) {
+    if (message.positiveIntValue !== undefined && message.positiveIntValue !== 0) {
       writer.uint32(32).uint64(message.positiveIntValue);
     }
-    if (message.negativeIntValue !== 0) {
+    if (message.negativeIntValue !== undefined && message.negativeIntValue !== 0) {
       writer.uint32(40).int64(message.negativeIntValue);
     }
-    if (message.doubleValue !== 0) {
+    if (message.doubleValue !== undefined && message.doubleValue !== 0) {
       writer.uint32(49).double(message.doubleValue);
     }
-    if (message.stringValue.length !== 0) {
+    if (message.stringValue !== undefined && message.stringValue.length !== 0) {
       writer.uint32(58).bytes(message.stringValue);
     }
-    if (message.aggregateValue !== "") {
+    if (message.aggregateValue !== undefined && message.aggregateValue !== "") {
       writer.uint32(66).string(message.aggregateValue);
     }
     if (message._unknownFields !== undefined) {
@@ -3213,7 +3305,7 @@ export const UninterpretedOption_NamePart = {
     if (message.namePart !== "") {
       writer.uint32(10).string(message.namePart);
     }
-    if (message.isExtension === true) {
+    if (message.isExtension !== false) {
       writer.uint32(16).bool(message.isExtension);
     }
     if (message._unknownFields !== undefined) {
@@ -3355,10 +3447,10 @@ export const SourceCodeInfo_Location = {
       writer.int32(v);
     }
     writer.ldelim();
-    if (message.leadingComments !== "") {
+    if (message.leadingComments !== undefined && message.leadingComments !== "") {
       writer.uint32(26).string(message.leadingComments);
     }
-    if (message.trailingComments !== "") {
+    if (message.trailingComments !== undefined && message.trailingComments !== "") {
       writer.uint32(34).string(message.trailingComments);
     }
     for (const v of message.leadingDetachedComments) {
@@ -3532,13 +3624,13 @@ export const GeneratedCodeInfo_Annotation = {
       writer.int32(v);
     }
     writer.ldelim();
-    if (message.sourceFile !== "") {
+    if (message.sourceFile !== undefined && message.sourceFile !== "") {
       writer.uint32(18).string(message.sourceFile);
     }
-    if (message.begin !== 0) {
+    if (message.begin !== undefined && message.begin !== 0) {
       writer.uint32(24).int32(message.begin);
     }
-    if (message.end !== 0) {
+    if (message.end !== undefined && message.end !== 0) {
       writer.uint32(32).int32(message.end);
     }
     if (message._unknownFields !== undefined) {

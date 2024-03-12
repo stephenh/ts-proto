@@ -96,7 +96,7 @@ export const OptionalsTest = {
     if (message.long !== undefined && message.long !== 0) {
       writer.uint32(32).int64(message.long);
     }
-    if (message.truth === true) {
+    if (message.truth !== undefined && message.truth !== false) {
       writer.uint32(40).bool(message.truth);
     }
     if (message.description !== undefined && message.description !== "") {
@@ -493,7 +493,7 @@ export const OptionalsTest = {
     if (message.long !== undefined && message.long !== 0) {
       obj.long = Math.round(message.long);
     }
-    if (message.truth === true) {
+    if (message.truth !== undefined && message.truth !== false) {
       obj.truth = message.truth;
     }
     if (message.description !== undefined && message.description !== "") {

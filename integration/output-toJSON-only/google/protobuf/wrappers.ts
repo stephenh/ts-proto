@@ -155,7 +155,7 @@ export const UInt32Value = {
 export const BoolValue = {
   toJSON(message: BoolValue): unknown {
     const obj: any = {};
-    if (message.value === true) {
+    if (message.value !== false) {
       obj.value = message.value;
     }
     return obj;

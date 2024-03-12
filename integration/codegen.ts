@@ -6,7 +6,7 @@ import { generateFile, makeUtils } from "../src/main";
 import { createTypeMap } from "../src/types";
 import { generateIndexFiles } from "../src/utils";
 import { getTsPoetOpts, optionsFromParameter } from "../src/options";
-import { Context } from "../src/context";
+import { BaseContext, createFileContext } from "../src/context";
 import { generateTypeRegistry } from "../src/generate-type-registry";
 
 /**
@@ -37,8 +37,8 @@ async function generate(binFile: string, baseDir: string, parameter: string) {
       continue;
     }
     const utils = makeUtils(options);
-    const ctx: Context = { options, typeMap, utils };
-    const [path, code] = generateFile(ctx, file);
+    const ctx: BaseContext = { options, typeMap, utils };
+    const [path, code] = generateFile({ ...ctx, currentFile: createFileContext(file) }, file);
     const filePath = `${baseDir}/${path}`;
     const dirPath = parse(filePath).dir;
     await promisify(mkdir)(dirPath, { recursive: true }).catch(() => {});
@@ -47,7 +47,7 @@ async function generate(binFile: string, baseDir: string, parameter: string) {
 
   if (options.outputTypeRegistry) {
     const utils = makeUtils(options);
-    const ctx: Context = { options, typeMap, utils };
+    const ctx: BaseContext = { options, typeMap, utils };
 
     const path = "typeRegistry.ts";
     const code = generateTypeRegistry(ctx);

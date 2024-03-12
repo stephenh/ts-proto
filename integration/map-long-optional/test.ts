@@ -129,10 +129,10 @@ function createBaseMapBigInt_MapEntry(): MapBigInt_MapEntry {
 
 export const MapBigInt_MapEntry = {
   encode(message: MapBigInt_MapEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (!message.key.isZero()) {
+    if (!message.key.equals(Long.UZERO)) {
       writer.uint32(9).fixed64(message.key);
     }
-    if (!message.value.isZero()) {
+    if (!message.value.equals(Long.ZERO)) {
       writer.uint32(16).int64(message.value);
     }
     if (message._unknownFields !== undefined) {
@@ -204,10 +204,10 @@ export const MapBigInt_MapEntry = {
 
   toJSON(message: MapBigInt_MapEntry): unknown {
     const obj: any = {};
-    if (!message.key.isZero()) {
+    if (!message.key.equals(Long.UZERO)) {
       obj.key = (message.key || Long.UZERO).toString();
     }
-    if (!message.value.isZero()) {
+    if (!message.value.equals(Long.ZERO)) {
       obj.value = (message.value || Long.ZERO).toString();
     }
     return obj;

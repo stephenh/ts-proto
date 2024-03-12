@@ -3,7 +3,7 @@ import { promisify } from "util";
 import { generateIndexFiles, protoFilesToGenerate, readToBuffer } from "./utils";
 import { generateFile, makeUtils } from "./main";
 import { createTypeMap } from "./types";
-import { Context } from "./context";
+import { BaseContext, Context, createFileContext } from "./context";
 import { getTsPoetOpts, optionsFromParameter } from "./options";
 import { generateTypeRegistry } from "./generate-type-registry";
 
@@ -17,7 +17,7 @@ async function main() {
   const options = optionsFromParameter(request.parameter);
   const typeMap = createTypeMap(request, options);
   const utils = makeUtils(options);
-  const ctx: Context = { typeMap, options, utils };
+  const ctx: BaseContext = { typeMap, options, utils };
   let filesToGenerate;
 
   if (options.emitImportedFiles) {
@@ -42,7 +42,7 @@ async function main() {
 
   const files = await Promise.all(
     filesToGenerate.map(async (file) => {
-      const [path, code] = generateFile(ctx, file);
+      const [path, code] = generateFile({ ...ctx, currentFile: createFileContext(file) }, file);
       const content = code.toString({ ...getTsPoetOpts(options), path });
       return { name: path, content };
     }),
@@ -50,7 +50,7 @@ async function main() {
 
   if (options.outputTypeRegistry) {
     const utils = makeUtils(options);
-    const ctx: Context = { options, typeMap, utils };
+    const ctx: BaseContext = { options, typeMap, utils };
 
     const path = "typeRegistry.ts";
     const code = generateTypeRegistry(ctx);
