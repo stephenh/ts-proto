@@ -496,9 +496,9 @@ Generated code will be placed in the Gradle build directory.
 
 - With `--ts_proto_opt=initializeFieldsAsUndefined=false`, all optional field initializers will be omited from the generated base instances.
 
-- With `--ts_proto_opt=disableProto2Optionals=true`, all optional fields on proto2 files will not be set to be optional.
+- With `--ts_proto_opt=disableProto2Optionals=true`, all optional fields on proto2 files will not be set to be optional. Please note that this flag is primarily for preserving ts-proto's legacy handling of proto2 files, to avoid breaking changes, and as a result, it is not intended to be used moving forward.
 
-- With `--ts_proto_opt=disableProto2DefaultValues=true`, all fields in proto2 files that specify a default value will not actually use that default value.
+- With `--ts_proto_opt=disableProto2DefaultValues=true`, all fields in proto2 files that specify a default value will not actually use that default value. Please note that this flag is primarily for preserving ts-proto's legacy handling of proto2 files, to avoid breaking changes, and as a result, it is not intended to be used moving forward.
 
 - With `--ts_proto_opt=Mgoogle/protobuf/empty.proto=./google3/protobuf/empty`, ('M' means 'importMapping', similar to [protoc-gen-go](https://developers.google.com/protocol-buffers/docs/reference/go-generated#package)), the generated code import path for `./google/protobuf/empty.ts` will reflect the overridden value:
 
