@@ -1,3 +1,10 @@
+# [1.169.0](https://github.com/stephenh/ts-proto/compare/v1.168.0...v1.169.0) (2024-03-12)
+
+
+### Features
+
+* support proto2 optional and default value fields ([#1007](https://github.com/stephenh/ts-proto/issues/1007)) ([1fa1e61](https://github.com/stephenh/ts-proto/commit/1fa1e61b0a0ff22949a1acadb38630f6f5bf6179)), closes [#973](https://github.com/stephenh/ts-proto/issues/973)
+
 # [1.168.0](https://github.com/stephenh/ts-proto/compare/v1.167.9...v1.168.0) (2024-03-08)
 
 
