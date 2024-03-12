@@ -31,15 +31,20 @@ export function generateWrapDeep(ctx: Context, fullProtoTypeName: string, fieldN
   const chunks: Code[] = [];
   if (isStructTypeName(fullProtoTypeName)) {
     let setStatement = "struct.fields[key] = Value.wrap(object[key]);";
+    let defaultFields = "struct.fields ??= {};";
     if (ctx.options.useMapType) {
       setStatement = "struct.fields.set(key, Value.wrap(object[key]));";
+      defaultFields = "struct.fields ??= new Map<string, any | undefined>();";
     }
+    if (ctx.options.useOptionals !== "all") defaultFields = "";
+
     chunks.push(code`wrap(object: {[key: string]: any} | undefined): Struct {
       const struct = createBaseStruct();
+      ${defaultFields}
       if (object !== undefined) {
-        Object.keys(object).forEach(key => {
+        for (const key of Object.keys(object)) {
           ${setStatement}
-        });
+        }
       }
       return struct;
     }`);
@@ -99,18 +104,20 @@ export function generateUnwrapDeep(ctx: Context, fullProtoTypeName: string, fiel
     if (ctx.options.useMapType) {
       chunks.push(code`unwrap(message: Struct): {[key: string]: any} {
         const object: { [key: string]: any } = {};
-        [...message.fields.keys()].forEach((key) => {
-          object[key] = Value.unwrap(message.fields.get(key));
-        });
+        if (message.fields) {
+          for (const key of message.fields.keys()) {
+            object[key] = Value.unwrap(message.fields.get(key));
+          }
+        }
         return object;
       }`);
     } else {
       chunks.push(code`unwrap(message: Struct): {[key: string]: any} {
         const object: { [key: string]: any } = {};
         if (message.fields) {
-          Object.keys(message.fields).forEach(key => {
+          for (const key of Object.keys(message.fields)) {
             object[key] = Value.unwrap(message.fields[key]);
-          });
+          }
         }
         return object;
       }`);
@@ -165,15 +172,20 @@ export function generateWrapShallow(ctx: Context, fullProtoTypeName: string, fie
   const chunks: Code[] = [];
   if (isStructTypeName(fullProtoTypeName)) {
     let setStatement = "struct.fields[key] = object[key];";
+    let defaultFields = "struct.fields ??= {};";
     if (ctx.options.useMapType) {
       setStatement = "struct.fields.set(key, object[key]);";
+      defaultFields = "struct.fields ??= new Map<string, any | undefined>();";
     }
+    if (ctx.options.useOptionals !== "all") defaultFields = "";
+
     chunks.push(code`wrap(object: {[key: string]: any} | undefined): Struct {
       const struct = createBaseStruct();
+      ${defaultFields}
       if (object !== undefined) {
-        Object.keys(object).forEach(key => {
+        for (const key of Object.keys(object)) {
           ${setStatement}
-        });
+        }
       }
       return struct;
     }`);
@@ -254,18 +266,20 @@ export function generateUnwrapShallow(ctx: Context, fullProtoTypeName: string, f
     if (ctx.options.useMapType) {
       chunks.push(code`unwrap(message: Struct): {[key: string]: any} {
         const object: { [key: string]: any } = {};
-        [...message.fields.keys()].forEach((key) => {
-          object[key] = message.fields.get(key);
-        });
+        if (message.fields) {
+          for (const key of message.fields.keys()) {
+            object[key] = message.fields.get(key);
+          }
+        }
         return object;
       }`);
     } else {
       chunks.push(code`unwrap(message: Struct): {[key: string]: any} {
         const object: { [key: string]: any } = {};
         if (message.fields) {
-          Object.keys(message.fields).forEach(key => {
+          for (const key of Object.keys(message.fields)) {
             object[key] = message.fields[key];
-          });
+          }
         }
         return object;
       }`);

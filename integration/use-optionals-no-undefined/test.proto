@@ -1,6 +1,8 @@
 syntax = "proto3";
 package optionalstest;
 
+import "google/protobuf/struct.proto";
+
 message OptionalsTest {
   int32 id = 1;
   Child child = 2;
@@ -27,6 +29,8 @@ message OptionalsTest {
   optional bytes opt_data = 27;
 
   map<string, string> translations = 30;
+  
+  google.protobuf.Struct struct = 32;
 }
 
 enum StateEnum {

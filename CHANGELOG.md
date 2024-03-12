@@ -1,3 +1,17 @@
+# [1.168.0](https://github.com/stephenh/ts-proto/compare/v1.167.9...v1.168.0) (2024-03-08)
+
+
+### Features
+
+* allow `$type` to be optional ([#1013](https://github.com/stephenh/ts-proto/issues/1013)) ([f285557](https://github.com/stephenh/ts-proto/commit/f285557a4f77d4b75327de2c13cf0917b0361f14))
+
+## [1.167.9](https://github.com/stephenh/ts-proto/compare/v1.167.8...v1.167.9) (2024-02-28)
+
+
+### Bug Fixes
+
+* typescript errors for struct with optional=all ([#1008](https://github.com/stephenh/ts-proto/issues/1008)) ([e838e38](https://github.com/stephenh/ts-proto/commit/e838e3801e0ef5e8b5a14ead7d7dfc0ad3532cf1)), closes [#578](https://github.com/stephenh/ts-proto/issues/578)
+
 ## [1.167.8](https://github.com/stephenh/ts-proto/compare/v1.167.7...v1.167.8) (2024-02-18)
 
 

@@ -956,7 +956,7 @@ function generateInterfaceDeclaration(
   chunks.push(code`export interface ${def(fullName)} {`);
 
   if (addTypeToMessages(options)) {
-    chunks.push(code`$type: '${fullTypeName}',`);
+    chunks.push(code`$type${options.outputTypeAnnotations === "optional" ? "?" : ""}: '${fullTypeName}',`);
   }
 
   // When oneof=unions, we generate a single property with an ADT per `oneof` clause.

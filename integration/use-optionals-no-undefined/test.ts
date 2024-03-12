@@ -1,5 +1,6 @@
 /* eslint-disable */
 import * as _m0 from "protobufjs/minimal";
+import { Struct } from "./google/protobuf/struct";
 import Long = require("long");
 
 export const protobufPackage = "optionalstest";
@@ -66,6 +67,7 @@ export interface OptionalsTest {
   optDescription?: string | undefined;
   optData?: Uint8Array | undefined;
   translations?: { [key: string]: string } | undefined;
+  struct?: { [key: string]: any } | undefined;
 }
 
 export interface OptionalsTest_TranslationsEntry {
@@ -170,6 +172,9 @@ export const OptionalsTest = {
     Object.entries(message.translations || {}).forEach(([key, value]) => {
       OptionalsTest_TranslationsEntry.encode({ key: key as any, value }, writer.uint32(242).fork()).ldelim();
     });
+    if (message.struct !== undefined) {
+      Struct.encode(Struct.wrap(message.struct), writer.uint32(258).fork()).ldelim();
+    }
     return writer;
   },
 
@@ -413,6 +418,13 @@ export const OptionalsTest = {
             message.translations![entry30.key] = entry30.value;
           }
           continue;
+        case 32:
+          if (tag !== 258) {
+            break;
+          }
+
+          message.struct = Struct.unwrap(Struct.decode(reader, reader.uint32()));
+          continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -463,6 +475,7 @@ export const OptionalsTest = {
           return acc;
         }, {})
         : undefined,
+      struct: isObject(object.struct) ? object.struct : undefined,
     };
   },
 
@@ -540,6 +553,9 @@ export const OptionalsTest = {
         });
       }
     }
+    if (message.struct !== undefined) {
+      obj.struct = message.struct;
+    }
     return obj;
   },
 
@@ -579,6 +595,7 @@ export const OptionalsTest = {
         }
         return acc;
       }, {});
+    message.struct = object.struct ?? undefined;
     return message;
   },
 };

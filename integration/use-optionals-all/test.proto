@@ -2,6 +2,7 @@ syntax = "proto3";
 package optionalstest;
 
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/struct.proto";
 
 message OptionalsTest {
   int32 id = 1;
@@ -31,6 +32,7 @@ message OptionalsTest {
   map<string, string> translations = 30;
 
   google.protobuf.Timestamp timestamp = 31;
+  google.protobuf.Struct struct = 32;
 }
 
 enum StateEnum {
