@@ -1,3 +1,10 @@
+## [1.169.1](https://github.com/stephenh/ts-proto/compare/v1.169.0...v1.169.1) (2024-03-13)
+
+
+### Bug Fixes
+
+* fixed addGrpcMetadata option ([#761](https://github.com/stephenh/ts-proto/issues/761)) ([cb2b573](https://github.com/stephenh/ts-proto/commit/cb2b5733ddd71589a00a4960906c65869303706b))
+
 # [1.169.0](https://github.com/stephenh/ts-proto/compare/v1.168.0...v1.169.0) (2024-03-12)
 
 
