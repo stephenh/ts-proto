@@ -5,8 +5,8 @@
     "module": "commonjs",
     "strict": true,
     "outDir": "build",
-    "skipLibCheck": true,
-    "experimentalDecorators": true,
+    // Users aren't guaranteed to have this true, so leave it false
+    "skipLibCheck": false,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true
   },

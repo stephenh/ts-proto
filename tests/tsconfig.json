@@ -5,7 +5,7 @@
     "module": "commonjs",
     "strict": true,
     "outDir": "build",
-    "skipLibCheck": true,
+    "skipLibCheck": false,
     "experimentalDecorators": true
   },
   "include": ["./*.ts"],
