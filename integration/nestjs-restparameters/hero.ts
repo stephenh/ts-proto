@@ -33,9 +33,9 @@ export interface HeroServiceClient {
 }
 
 export interface HeroServiceController {
-  findOneHero(request: HeroById, ...rest: any): Promise<Hero> | Observable<Hero> | Hero;
+  findOneHero(request: HeroById, ...rest: any): Promise<Hero> | Hero;
 
-  findOneVillain(request: VillainById, ...rest: any): Promise<Villain> | Observable<Villain> | Villain;
+  findOneVillain(request: VillainById, ...rest: any): Promise<Villain> | Villain;
 
   findManyVillain(request: Observable<VillainById>, ...rest: any): Observable<Villain>;
 }
