@@ -10,7 +10,7 @@ export const protobufPackage = "";
 
 export interface Clock {
   Now(request: Empty): Promise<Timestamp>;
-  NowString(request: StringValue): Promise<StringValue>;
+  NowString(request: string | undefined): Promise<StringValue>;
   NowStringStream(request: Observable<StringValue>): Observable<StringValue>;
   NowBool(request: Empty): Promise<BoolValue>;
 }
@@ -33,8 +33,8 @@ export class ClockClientImpl implements Clock {
     return promise.then((data) => Timestamp.decode(_m0.Reader.create(data)));
   }
 
-  NowString(request: StringValue): Promise<StringValue> {
-    const data = StringValue.encode(request).finish();
+  NowString(request: string | undefined): Promise<StringValue> {
+    const data = StringValue.encode(StringValue.fromPartial({ value: request })).finish();
     const promise = this.rpc.request(this.service, "NowString", data);
     return promise.then((data) => StringValue.decode(_m0.Reader.create(data)));
   }
