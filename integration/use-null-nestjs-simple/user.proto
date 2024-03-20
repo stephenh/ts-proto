@@ -1,0 +1,52 @@
+syntax = "proto3";
+
+package user;
+
+
+/**
+    Most ORMs ignore the `undefined` value, either we have the value from DB or it's null. 
+    with this flag you can have better alignment with your ORM ( drizzle, TypeOrm, PrismaJS, etc) Entities. 
+    Or when you wanna share the grpc interfaces with NextJS `getStaticProps` and `getServerSideProps` in which they won't accept `undefined` ( it will cause runtime error )
+    please check https://sdorra.dev/posts/2023-03-20-typescript-undefined-to-null for more info
+    let's say on querying the database with relations, there might be a value for the relation or not (it's null). 
+    with this flag the generated interfaces will be aligned with it. 
+    now let's say you have a grpc method which might return user's profile as well or not ( depending on querying the relation or not )
+    with `optional` modifier you can replicate this as well. the optional field will have `ProfileInfo | null | undefined (implicitly)`
+**/
+
+service UserService {
+    rpc AddOneUser (User) returns (google.protobuf.Empty) {}
+    rpc FindOneUser (UserById) returns (User) {}
+    rpc FindManyUser (stream UserById) returns (stream User) {}
+}
+
+message ProfileInfo {
+    int32 id = 1;
+    string bio = 2;
+    string phone = 3;
+}
+
+message Department {
+    int32 id = 1;
+    string name = 2;
+}
+
+message User {
+    int32 id = 1;
+    string username = 2;
+    /*
+     ProfileInfo will be optional in typescript, implicitly the type will be ProfileInfo | null | undefined
+     this is needed in cases where you don't wanna provide any value for the profile.
+    */
+    optional ProfileInfo profile = 3;
+
+    /*
+      Department only accepts a Department type or null, so this means you have to pass it null if there is no value available.
+    */
+    Department  department = 4;
+}
+
+message UserById {
+    int32 id = 1;
+}
+  

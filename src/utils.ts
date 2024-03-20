@@ -303,3 +303,26 @@ export function arrowFunction(params: string, body: Code | string, isOneLine: bo
   }
   return code`(${params}) => { ${body} }`;
 }
+
+export function nullOrUndefined(options: Pick<Options, "useNullAsOptional">) {
+  return options.useNullAsOptional ? "null" : "undefined";
+}
+export function maybeCheckIsNotNull(options: Pick<Options, "useNullAsOptional">, typeName: string, prefix?: string) {
+  return options.useNullAsOptional ? ` ${prefix} ${typeName} !== null` : "";
+}
+export function maybeCheckIsNull(options: Pick<Options, "useNullAsOptional">, typeName: string, prefix?: string) {
+  return options.useNullAsOptional ? ` ${prefix} ${typeName} === null` : "";
+}
+
+export const withOrMaybeCheckIsNotNull = (options: Pick<Options, "useNullAsOptional">, typeName: string) => {
+  return maybeCheckIsNotNull(options, typeName, "||");
+};
+export const withOrMaybeCheckIsNull = (options: Pick<Options, "useNullAsOptional">, typeName: string) => {
+  return maybeCheckIsNull(options, typeName, "||");
+};
+export const withAndMaybeCheckIsNotNull = (options: Pick<Options, "useNullAsOptional">, typeName: string) => {
+  return maybeCheckIsNotNull(options, typeName, "&&");
+};
+export const withAndMaybeCheckIsNull = (options: Pick<Options, "useNullAsOptional">, typeName: string) => {
+  return maybeCheckIsNotNull(options, typeName, "&&");
+};

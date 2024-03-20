@@ -98,6 +98,7 @@ export type Options = {
   comments: boolean;
   disableProto2Optionals: boolean;
   disableProto2DefaultValues: boolean;
+  useNullAsOptional: boolean;
 };
 
 export function defaultOptions(): Options {
@@ -161,6 +162,7 @@ export function defaultOptions(): Options {
     comments: true,
     disableProto2Optionals: false,
     disableProto2DefaultValues: false,
+    useNullAsOptional: false,
   };
 }
 
