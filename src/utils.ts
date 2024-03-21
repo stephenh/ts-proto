@@ -314,15 +314,15 @@ export function maybeCheckIsNull(options: Pick<Options, "useNullAsOptional">, ty
   return options.useNullAsOptional ? ` ${prefix} ${typeName} === null` : "";
 }
 
-export const withOrMaybeCheckIsNotNull = (options: Pick<Options, "useNullAsOptional">, typeName: string) => {
+export function withOrMaybeCheckIsNotNull(options: Pick<Options, "useNullAsOptional">, typeName: string) {
   return maybeCheckIsNotNull(options, typeName, "||");
-};
-export const withOrMaybeCheckIsNull = (options: Pick<Options, "useNullAsOptional">, typeName: string) => {
+}
+export function withOrMaybeCheckIsNull(options: Pick<Options, "useNullAsOptional">, typeName: string) {
   return maybeCheckIsNull(options, typeName, "||");
-};
-export const withAndMaybeCheckIsNotNull = (options: Pick<Options, "useNullAsOptional">, typeName: string) => {
+}
+export function withAndMaybeCheckIsNotNull(options: Pick<Options, "useNullAsOptional">, typeName: string) {
   return maybeCheckIsNotNull(options, typeName, "&&");
-};
-export const withAndMaybeCheckIsNull = (options: Pick<Options, "useNullAsOptional">, typeName: string) => {
+}
+export function withAndMaybeCheckIsNull(options: Pick<Options, "useNullAsOptional">, typeName: string) {
   return maybeCheckIsNotNull(options, typeName, "&&");
-};
+}
