@@ -12,7 +12,7 @@ export interface ProfileInfo {
 export interface User {
   id: number;
   username: string;
-  profile?: ProfileInfo | null;
+  profile?: ProfileInfo | null | undefined;
 }
 
 export interface UserById {

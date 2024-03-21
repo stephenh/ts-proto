@@ -547,7 +547,7 @@ Generated code will be placed in the Gradle build directory.
 
 - With `--ts_proto_opt=comments=false`, comments won't be copied from the proto files to the generated code.
 
-- With `--ts_proto_opt=useNullAsOptional=true`, `undefined` values will be converted to `null`, and if you use `optional` label in your `.proto` file, the field implicitly will have `undefined` type as well. for example:
+- With `--ts_proto_opt=useNullAsOptional=true`, `undefined` values will be converted to `null`, and if you use `optional` label in your `.proto` file, the field will have `undefined` type as well. for example:
 
 ```protobuf
 message ProfileInfo {
@@ -565,7 +565,7 @@ message User {
     int32 id = 1;
     string username = 2;
     /*
-     ProfileInfo will be optional in typescript, implicitly the type will be ProfileInfo | null | undefined
+     ProfileInfo will be optional in typescript, the type will be ProfileInfo | null | undefined
      this is needed in cases where you don't wanna provide any value for the profile.
     */
     optional ProfileInfo profile = 3;
@@ -594,7 +594,7 @@ export interface Department {
 export interface User {
   id: number;
   username: string;
-  profile?: ProfileInfo | null; // check this one
+  profile?: ProfileInfo | null | undefined; // check this one
   department: Department | null; // check this one
 }
 ```

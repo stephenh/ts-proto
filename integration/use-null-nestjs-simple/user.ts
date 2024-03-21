@@ -20,12 +20,13 @@ export interface User {
   id: number;
   username: string;
   /**
-   * ProfileInfo will be optional in typescript, implicitly the type will be ProfileInfo | null | undefined
+   * ProfileInfo will be optional in typescript, the type will be ProfileInfo | null | undefined
    * this is needed in cases where you don't wanna provide any value for the profile.
    */
   profile?:
     | ProfileInfo
-    | null;
+    | null
+    | undefined;
   /** Department only accepts a Department type or null, so this means you have to pass it null if there is no value available. */
   department: Department | null;
 }

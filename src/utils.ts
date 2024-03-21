@@ -304,8 +304,8 @@ export function arrowFunction(params: string, body: Code | string, isOneLine: bo
   return code`(${params}) => { ${body} }`;
 }
 
-export function nullOrUndefined(options: Pick<Options, "useNullAsOptional">) {
-  return options.useNullAsOptional ? "null" : "undefined";
+export function nullOrUndefined(options: Pick<Options, "useNullAsOptional">, hasProto3Optional: boolean = false) {
+  return options.useNullAsOptional ? `null ${hasProto3Optional ? "| undefined" : ""}` : "undefined";
 }
 export function maybeCheckIsNotNull(options: Pick<Options, "useNullAsOptional">, typeName: string, prefix?: string) {
   return options.useNullAsOptional ? ` ${prefix} ${typeName} !== null` : "";

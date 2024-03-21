@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+import "google/protobuf/empty.proto";
+
 package user;
 
 
@@ -10,8 +12,8 @@ package user;
     please check https://sdorra.dev/posts/2023-03-20-typescript-undefined-to-null for more info
     let's say on querying the database with relations, there might be a value for the relation or not (it's null). 
     with this flag the generated interfaces will be aligned with it. 
-    now let's say you have a grpc method which might return user's profile as well or not ( depending on querying the relation or not )
-    with `optional` modifier you can replicate this as well. the optional field will have `ProfileInfo | null | undefined (implicitly)`
+    now let's say you have a grpc method which might return user's profile as well or not ( depending on querying the relation or not for example )
+    with `optional` modifier you can replicate this as well. the optional field will have `ProfileInfo | null | undefined`
 **/
 
 service UserService {
@@ -35,7 +37,7 @@ message User {
     int32 id = 1;
     string username = 2;
     /*
-     ProfileInfo will be optional in typescript, implicitly the type will be ProfileInfo | null | undefined
+     ProfileInfo will be optional in typescript, the type will be ProfileInfo | null | undefined
      this is needed in cases where you don't wanna provide any value for the profile.
     */
     optional ProfileInfo profile = 3;
