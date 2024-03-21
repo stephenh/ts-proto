@@ -6,8 +6,6 @@ import { Empty } from "./google/protobuf/empty";
 import { Struct } from "./google/protobuf/struct";
 import { Timestamp } from "./google/protobuf/timestamp";
 
-export const protobufPackage = "hero";
-
 export interface HeroById {
   id: number;
 }

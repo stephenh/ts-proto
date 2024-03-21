@@ -258,7 +258,9 @@ export function optionsFromParameter(parameter: string | undefined): Options {
     options.initializeFieldsAsUndefined = false;
   }
 
-  if (options.outputIndex) {
+  // since when nestJs=true, we have distinct protobuf package names we should exclude it here
+  // otherwise, the common symbols won't be generated at all
+  if (options.outputIndex && !options.nestJs) {
     options.exportCommonSymbols = false;
   }
 

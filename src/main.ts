@@ -132,7 +132,8 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
   const chunks: Code[] = [];
 
   // Indicate this file's source protobuf package for reflective use with google.protobuf.Any
-  if (options.exportCommonSymbols) {
+  // since when nestJs=true, we have distinct protobuf package names we should exclude it here
+  if (options.exportCommonSymbols && !options.nestJs) {
     chunks.push(code`export const protobufPackage = '${fileDesc.package}';`);
   }
 
