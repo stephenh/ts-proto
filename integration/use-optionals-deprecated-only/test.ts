@@ -61,7 +61,8 @@ export interface OptionalsTest {
   data?: Uint8Array | undefined;
   repId: number[];
   /** @deprecated */
-  repState: StateEnum[];
+  repState?: StateEnum[] | undefined;
+  repStateV2: StateEnum[];
   repLong: number[];
   repTruth: boolean[];
   repDescription: string[];
@@ -93,6 +94,7 @@ function createBaseOptionalsTest(): OptionalsTest {
     data: new Uint8Array(0),
     repId: [],
     repState: [],
+    repStateV2: [],
     repLong: [],
     repTruth: [],
     repDescription: [],
@@ -118,7 +120,7 @@ export const OptionalsTest = {
     if (message.long !== 0) {
       writer.uint32(24).int64(message.long);
     }
-    if (message.truth === true) {
+    if (message.truth !== undefined && message.truth !== false) {
       writer.uint32(32).bool(message.truth);
     }
     if (message.description !== undefined && message.description !== "") {
@@ -132,47 +134,54 @@ export const OptionalsTest = {
       writer.int32(v);
     }
     writer.ldelim();
-    writer.uint32(66).fork();
-    for (const v of message.repState) {
+    if (message.repState !== undefined && message.repState.length !== 0) {
+      writer.uint32(66).fork();
+      for (const v of message.repState) {
+        writer.int32(v);
+      }
+      writer.ldelim();
+    }
+    writer.uint32(74).fork();
+    for (const v of message.repStateV2) {
       writer.int32(v);
     }
     writer.ldelim();
-    writer.uint32(74).fork();
+    writer.uint32(82).fork();
     for (const v of message.repLong) {
       writer.int64(v);
     }
     writer.ldelim();
-    writer.uint32(82).fork();
+    writer.uint32(90).fork();
     for (const v of message.repTruth) {
       writer.bool(v);
     }
     writer.ldelim();
     for (const v of message.repDescription) {
-      writer.uint32(90).string(v!);
+      writer.uint32(98).string(v!);
     }
     for (const v of message.repData) {
-      writer.uint32(98).bytes(v!);
+      writer.uint32(106).bytes(v!);
     }
     if (message.optId !== undefined) {
-      writer.uint32(104).int32(message.optId);
+      writer.uint32(112).int32(message.optId);
     }
     if (message.optState !== undefined) {
-      writer.uint32(112).int32(message.optState);
+      writer.uint32(120).int32(message.optState);
     }
     if (message.optLong !== undefined) {
-      writer.uint32(120).int64(message.optLong);
+      writer.uint32(128).int64(message.optLong);
     }
     if (message.optTruth !== undefined) {
-      writer.uint32(128).bool(message.optTruth);
+      writer.uint32(136).bool(message.optTruth);
     }
     if (message.optDescription !== undefined) {
-      writer.uint32(138).string(message.optDescription);
+      writer.uint32(146).string(message.optDescription);
     }
     if (message.optData !== undefined) {
-      writer.uint32(146).bytes(message.optData);
+      writer.uint32(154).bytes(message.optData);
     }
     Object.entries(message.translations).forEach(([key, value]) => {
-      OptionalsTest_TranslationsEntry.encode({ key: key as any, value }, writer.uint32(154).fork()).ldelim();
+      OptionalsTest_TranslationsEntry.encode({ key: key as any, value }, writer.uint32(162).fork()).ldelim();
     });
     return writer;
   },
@@ -228,7 +237,7 @@ export const OptionalsTest = {
           continue;
         case 7:
           if (tag === 56) {
-            message.repId.push(reader.int32());
+            message.repId!.push(reader.int32());
 
             continue;
           }
@@ -236,7 +245,7 @@ export const OptionalsTest = {
           if (tag === 58) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
-              message.repId.push(reader.int32());
+              message.repId!.push(reader.int32());
             }
 
             continue;
@@ -245,7 +254,7 @@ export const OptionalsTest = {
           break;
         case 8:
           if (tag === 64) {
-            message.repState.push(reader.int32() as any);
+            message.repState!.push(reader.int32() as any);
 
             continue;
           }
@@ -253,7 +262,7 @@ export const OptionalsTest = {
           if (tag === 66) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
-              message.repState.push(reader.int32() as any);
+              message.repState!.push(reader.int32() as any);
             }
 
             continue;
@@ -262,7 +271,7 @@ export const OptionalsTest = {
           break;
         case 9:
           if (tag === 72) {
-            message.repLong.push(longToNumber(reader.int64() as Long));
+            message.repStateV2!.push(reader.int32() as any);
 
             continue;
           }
@@ -270,7 +279,7 @@ export const OptionalsTest = {
           if (tag === 74) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
-              message.repLong.push(longToNumber(reader.int64() as Long));
+              message.repStateV2!.push(reader.int32() as any);
             }
 
             continue;
@@ -279,7 +288,7 @@ export const OptionalsTest = {
           break;
         case 10:
           if (tag === 80) {
-            message.repTruth.push(reader.bool());
+            message.repLong!.push(longToNumber(reader.int64() as Long));
 
             continue;
           }
@@ -287,7 +296,7 @@ export const OptionalsTest = {
           if (tag === 82) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
-              message.repTruth.push(reader.bool());
+              message.repLong!.push(longToNumber(reader.int64() as Long));
             }
 
             continue;
@@ -295,69 +304,86 @@ export const OptionalsTest = {
 
           break;
         case 11:
-          if (tag !== 90) {
-            break;
+          if (tag === 88) {
+            message.repTruth!.push(reader.bool());
+
+            continue;
           }
 
-          message.repDescription.push(reader.string());
-          continue;
+          if (tag === 90) {
+            const end2 = reader.uint32() + reader.pos;
+            while (reader.pos < end2) {
+              message.repTruth!.push(reader.bool());
+            }
+
+            continue;
+          }
+
+          break;
         case 12:
           if (tag !== 98) {
             break;
           }
 
-          message.repData.push(reader.bytes());
+          message.repDescription!.push(reader.string());
           continue;
         case 13:
-          if (tag !== 104) {
+          if (tag !== 106) {
             break;
           }
 
-          message.optId = reader.int32();
+          message.repData!.push(reader.bytes());
           continue;
         case 14:
           if (tag !== 112) {
             break;
           }
 
-          message.optState = reader.int32() as any;
+          message.optId = reader.int32();
           continue;
         case 15:
           if (tag !== 120) {
             break;
           }
 
-          message.optLong = longToNumber(reader.int64() as Long);
+          message.optState = reader.int32() as any;
           continue;
         case 16:
           if (tag !== 128) {
             break;
           }
 
-          message.optTruth = reader.bool();
+          message.optLong = longToNumber(reader.int64() as Long);
           continue;
         case 17:
-          if (tag !== 138) {
+          if (tag !== 136) {
             break;
           }
 
-          message.optDescription = reader.string();
+          message.optTruth = reader.bool();
           continue;
         case 18:
           if (tag !== 146) {
             break;
           }
 
-          message.optData = reader.bytes();
+          message.optDescription = reader.string();
           continue;
         case 19:
           if (tag !== 154) {
             break;
           }
 
-          const entry19 = OptionalsTest_TranslationsEntry.decode(reader, reader.uint32());
-          if (entry19.value !== undefined) {
-            message.translations[entry19.key] = entry19.value;
+          message.optData = reader.bytes();
+          continue;
+        case 20:
+          if (tag !== 162) {
+            break;
+          }
+
+          const entry20 = OptionalsTest_TranslationsEntry.decode(reader, reader.uint32());
+          if (entry20.value !== undefined) {
+            message.translations![entry20.key] = entry20.value;
           }
           continue;
       }
@@ -379,6 +405,9 @@ export const OptionalsTest = {
       data: isSet(object.data) ? bytesFromBase64(object.data) : new Uint8Array(0),
       repId: globalThis.Array.isArray(object?.repId) ? object.repId.map((e: any) => globalThis.Number(e)) : [],
       repState: globalThis.Array.isArray(object?.repState) ? object.repState.map((e: any) => stateEnumFromJSON(e)) : [],
+      repStateV2: globalThis.Array.isArray(object?.repStateV2)
+        ? object.repStateV2.map((e: any) => stateEnumFromJSON(e))
+        : [],
       repLong: globalThis.Array.isArray(object?.repLong) ? object.repLong.map((e: any) => globalThis.Number(e)) : [],
       repTruth: globalThis.Array.isArray(object?.repTruth)
         ? object.repTruth.map((e: any) => globalThis.Boolean(e))
@@ -413,7 +442,7 @@ export const OptionalsTest = {
     if (message.long !== 0) {
       obj.long = Math.round(message.long);
     }
-    if (message.truth === true) {
+    if (message.truth !== undefined && message.truth !== false) {
       obj.truth = message.truth;
     }
     if (message.description !== undefined && message.description !== "") {
@@ -427,6 +456,9 @@ export const OptionalsTest = {
     }
     if (message.repState?.length) {
       obj.repState = message.repState.map((e) => stateEnumToJSON(e));
+    }
+    if (message.repStateV2?.length) {
+      obj.repStateV2 = message.repStateV2.map((e) => stateEnumToJSON(e));
     }
     if (message.repLong?.length) {
       obj.repLong = message.repLong.map((e) => Math.round(e));
@@ -483,6 +515,7 @@ export const OptionalsTest = {
     message.data = object.data ?? new Uint8Array(0);
     message.repId = object.repId?.map((e) => e) || [];
     message.repState = object.repState?.map((e) => e) || [];
+    message.repStateV2 = object.repStateV2?.map((e) => e) || [];
     message.repLong = object.repLong?.map((e) => e) || [];
     message.repTruth = object.repTruth?.map((e) => e) || [];
     message.repDescription = object.repDescription?.map((e) => e) || [];

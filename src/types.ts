@@ -352,9 +352,12 @@ export function isScalar(field: FieldDescriptorProto): boolean {
   return scalarTypes.includes(field.type);
 }
 
-// When useOptionals='deprecatedOnly', all deprecated fields are translated into optional
 // When useOptionals='messages', non-scalar fields are translated into optional
-// properties. When useOptionals='all', all fields are translated into
+// properties.
+// When useOptionals='all', all fields are translated into
+// optional properties, with the exception of map Entry key/values, which must
+// always be present.
+// When useOptionals='deprecatedOnly', all deprecated fields are translated into
 // optional properties, with the exception of map Entry key/values, which must
 // always be present.
 // OneOf fields are always optional, whenever oneof=unions option not in use.
@@ -371,13 +374,12 @@ export function isOptionalProperty(
 
   return (
     (optionalMessages && isMessage(field) && !isRepeated(field)) ||
-    (optionalAll && !messageOptions?.mapEntry) ||
+    ((optionalAll || deprecatedOnly) && !messageOptions?.mapEntry) ||
     // file is proto2, we have enabled proto2 optionals, and the field itself is optional
     (!isProto3Syntax &&
       field.label === FieldDescriptorProto_Label.LABEL_OPTIONAL &&
       !messageOptions?.mapEntry &&
       !options.disableProto2Optionals) ||
-    (deprecatedOnly && !isMessage(field) && !isRepeated(field)) ||
     // don't bother verifying that oneof is not union. union oneofs generate their own properties.
     isWithinOneOf(field) ||
     field.proto3Optional

@@ -5,9 +5,8 @@ describe('useOptionals=deprecatedOnly', () => {
     const test: OptionalsTest = {
       id: 1,
       long: 10,
-
       repId: [1, 2],
-      repState: [StateEnum.ON, StateEnum.OFF],
+      repStateV2: [StateEnum.ON, StateEnum.OFF],
       repLong: [11, 12],
       repTruth: [true, false],
       repDescription: ["hello", "world"],
@@ -35,7 +34,8 @@ describe('useOptionals=deprecatedOnly', () => {
       data: new Uint8Array(0),
 
       repId: [1, 2],
-      repState: [StateEnum.ON, StateEnum.OFF],
+      repState: [],
+      repStateV2: [StateEnum.ON, StateEnum.OFF],
       repLong: [11, 12],
       repTruth: [true, false],
       repDescription: ["hello", "world"],
