@@ -1212,8 +1212,8 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
       isOptionalProperty(field, messageDesc.options, options, currentFile.isProto3Syntax);
 
     if (isRepeated(field)) {
-      const maybeNonNullAssertion = ctx.options.useOptionals === "all" || ctx.options.useOptionals === "deprecatedOnly"  ? "!" : "";
-
+      const maybeNonNullAssertion =
+        ctx.options.useOptionals === "all" || ctx.options.useOptionals === "deprecatedOnly" ? "!" : "";
       const mapType = detectMapType(ctx, messageDesc, field);
       if (mapType) {
         // We need a unique const within the `cast` statement
