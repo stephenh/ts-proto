@@ -61,6 +61,7 @@ describe("options", () => {
         "useJsonWireFormat": false,
         "useMapType": false,
         "useMongoObjectId": false,
+        "useNullAsOptional": false,
         "useNumericEnumForJson": false,
         "useOptionals": "none",
         "usePrototypeForDefaults": false,
@@ -193,6 +194,14 @@ describe("options", () => {
     expect(options).toMatchObject({
       rpcBeforeRequest: true,
       outputServices: [ServiceOption.DEFAULT, ServiceOption.GENERIC],
+    });
+  });
+
+  it("allow use 'null' instead of 'undefined'", () => {
+    const options = optionsFromParameter("useNullAsOptional=true");
+    expect(options).toMatchObject({
+      useNullAsOptional: true,
+      // outputServices: [ServiceOption.DEFAULT, ServiceOption.GENERIC],
     });
   });
 });

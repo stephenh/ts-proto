@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package useNullAsOptional;
+
+message ProfileInfo {
+  int32 id = 1;
+  string bio = 2;
+  string phone = 3;
+}
+
+message User {
+  int32 id = 1;
+  string username = 2;
+  optional ProfileInfo profile = 3;
+}
+
+message UserById {
+  int32 id = 1;
+}
+
+service HeroService {
+    rpc FindOneHero (UserById) returns (User) {}
+}
