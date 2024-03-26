@@ -43,7 +43,7 @@ export type Options = {
   snakeToCamel: Array<"json" | "keys">;
   forceLong: LongOption;
   globalThisPolyfill: boolean;
-  useOptionals: boolean | "none" | "messages" | "all"; // boolean is deprecated
+  useOptionals: boolean | "none" | "deprecatedOnly" | "messages" | "all"; // boolean is deprecated
   emitDefaultValues: Array<"json-methods">;
   useDate: DateOption;
   useJsonTimestamp: JsonTimestampOption;

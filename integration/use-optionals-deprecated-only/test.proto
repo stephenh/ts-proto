@@ -1,0 +1,35 @@
+syntax = "proto3";
+package optionalstest;
+
+message OptionalsTest {
+  int32 id = 1;
+  StateEnum state = 2 [deprecated = true];
+  int64 long = 3;
+  bool truth = 4 [deprecated = true];
+  string description = 5 [deprecated = true];
+  bytes data = 6 [deprecated = true];
+
+  repeated int32 rep_id = 7;
+  repeated StateEnum rep_state = 8 [deprecated = true];
+  repeated StateEnum rep_state_v2 = 9;
+  repeated int64 rep_long = 10;
+  repeated bool rep_truth = 11;
+  repeated string rep_description = 12;
+  repeated bytes rep_data = 13;
+
+  optional int32 opt_id = 14;
+  optional StateEnum opt_state = 15 [deprecated = true];
+  optional int64 opt_long = 16;
+  optional bool opt_truth = 17;
+  optional string opt_description = 18;
+  optional bytes opt_data = 19;
+
+  map<string, string> translations = 20;
+}
+
+enum StateEnum {
+  option deprecated = true;
+  UNKNOWN = 0;
+  ON = 1;
+  OFF = 2;
+}
