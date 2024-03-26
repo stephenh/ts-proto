@@ -1,3 +1,10 @@
+# [1.170.0](https://github.com/stephenh/ts-proto/compare/v1.169.1...v1.170.0) (2024-03-26)
+
+
+### Features
+
+* support deprecatedOnly option to make deprecated fields optional ([#1010](https://github.com/stephenh/ts-proto/issues/1010)) ([db23004](https://github.com/stephenh/ts-proto/commit/db230041f69fa6a7ff17db55595e7b8805e655ba))
+
 ## [1.169.1](https://github.com/stephenh/ts-proto/compare/v1.169.0...v1.169.1) (2024-03-13)
 
 
