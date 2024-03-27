@@ -1,8 +1,6 @@
 /* eslint-disable */
 import { wrappers } from "protobufjs";
 
-export const protobufPackage = "google.protobuf";
-
 /**
  * `NullValue` is a singleton enumeration to represent the null value for the
  * `Value` type union.
