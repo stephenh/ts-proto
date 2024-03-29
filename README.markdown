@@ -724,6 +724,28 @@ As this will automatically enforce only one of `field_a` or `field_b` "being set
 
 In ts-proto's currently-unscheduled 2.x release, `oneof=unions` will become the default behavior.
 
+## OneOf Type Helpers
+
+The following helper types may make it easier to work with the types generated from `oneof=unions`:
+
+```ts
+/** Extracts all the case names from a oneOf field. */
+type OneOfCases<T> = T extends { $case: infer U extends string } ? U : never;
+
+/** Extracts a union of all the value types from a oneOf field */
+type OneOfValues<T> = T extends { $case: infer U extends string; [key: string]: unknown }
+  ? T[U]
+  : never;
+
+/** Extracts the specific type of a oneOf case based on its field name */
+type OneOfCase<T, K extends OneOfCases<T>> = T extends {
+  $case: infer U extends K;
+  [key: string]: unknown;
+}
+  ? T[U]
+  : never;
+```
+
 # Default values and unset fields
 
 In core Protobuf (and so also `ts-proto`), values that are _unset_ or equal to the default value are not sent over the wire.
