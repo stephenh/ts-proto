@@ -1,3 +1,10 @@
+# [1.171.0](https://github.com/stephenh/ts-proto/compare/v1.170.0...v1.171.0) (2024-03-30)
+
+
+### Features
+
+* added useNullAsOptional option ([#1017](https://github.com/stephenh/ts-proto/issues/1017)) ([573f63e](https://github.com/stephenh/ts-proto/commit/573f63e761beef3981539cfbe29f786374186923)), closes [#869](https://github.com/stephenh/ts-proto/issues/869)
+
 # [1.170.0](https://github.com/stephenh/ts-proto/compare/v1.169.1...v1.170.0) (2024-03-26)
 
 
