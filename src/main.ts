@@ -96,8 +96,13 @@ import {
   impFile,
   impProto,
   maybeAddComment,
+  nullOrUndefined,
   maybePrefixPackage,
   safeAccessor,
+  withOrMaybeCheckIsNull,
+  withAndMaybeCheckIsNotNull,
+  withOrMaybeCheckIsNotNull,
+  withAndMaybeCheckIsNull,
 } from "./utils";
 import { visit, visitServices } from "./visit";
 
@@ -1007,7 +1012,7 @@ function generateOneofProperty(
   );
 
   const name = maybeSnakeToCamel(messageDesc.oneofDecl[oneofIndex].name, options);
-  return code`${mbReadonly}${name}?: ${unionType} | undefined,`;
+  return code`${mbReadonly}${name}?: ${unionType} | ${nullOrUndefined(options)},`;
 
   /*
   // Ideally we'd put the comments for each oneof field next to the anonymous
@@ -1053,7 +1058,7 @@ function generateBaseInstanceFactory(
         const name = options.useJsonName
           ? getFieldName(field, options)
           : maybeSnakeToCamel(messageDesc.oneofDecl[oneofIndex].name, ctx.options);
-        fields.push(code`${safeAccessor(name)}: undefined`);
+        fields.push(code`${safeAccessor(name)}: ${nullOrUndefined(options)}`);
       }
       continue;
     }
@@ -1067,7 +1072,7 @@ function generateBaseInstanceFactory(
 
     const fieldKey = safeAccessor(getFieldName(field, options));
     const val = isWithinOneOf(field)
-      ? "undefined"
+      ? nullOrUndefined(options)
       : isMapType(ctx, messageDesc, field)
       ? shouldGenerateJSMapType(ctx, messageDesc, field)
         ? "new Map()"
@@ -1228,14 +1233,14 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
         }
         const initializerSnippet = initializerNecessary
           ? `
-            if (${messageProperty} === undefined) {
+            if (${messageProperty} === undefined ${withOrMaybeCheckIsNull(options, messageProperty)}) {
               ${messageProperty} = ${generateMapType ? "new Map()" : "{}"};
             }`
           : "";
         chunks.push(code`
           ${tagCheck}
           const ${varName} = ${readSnippet};
-          if (${varName}.value !== undefined) {
+          if (${varName}.value !== undefined ${withAndMaybeCheckIsNotNull(options, `${varName}.value`)}) {
             ${initializerSnippet}
             ${valueSetterSnippet};
           }
@@ -1243,7 +1248,7 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
       } else {
         const initializerSnippet = initializerNecessary
           ? `
-            if (${messageProperty} === undefined) {
+            if (${messageProperty} === undefined ${withOrMaybeCheckIsNull(options, messageProperty)}) {
               ${messageProperty} = [];
             }`
           : "";
@@ -1311,7 +1316,7 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
 
     if (!options.initializeFieldsAsUndefined) {
       unknownFieldsInitializerSnippet = `
-        if (message._unknownFields === undefined) {
+        if (message._unknownFields === undefined ${withOrMaybeCheckIsNull(options, `message._unknownFields`)}) {
           message._unknownFields = {};
         }
       `;
@@ -1325,7 +1330,7 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
       ${unknownFieldsInitializerSnippet}
       const list = message._unknownFields${maybeNonNullAssertion}[tag];
 
-      if (list === undefined) {
+      if (list === undefined ${withOrMaybeCheckIsNull(options, `message._unknownFields`)}) {
         message._unknownFields${maybeNonNullAssertion}[tag] = [buf];
       } else {
         list.push(buf);
@@ -1455,7 +1460,7 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
         const maybeTypeField = addTypeToMessages(options) ? `$type: '${field.typeName.slice(1)}',` : "";
         const entryWriteSnippet = isValueType(ctx, valueType)
           ? code`
-              if (value !== undefined) {
+              if (value !== undefined ${withOrMaybeCheckIsNotNull(options, `value`)}) {
                 ${writeSnippet(`{ ${maybeTypeField} key: key as any, value }`)};
               }
             `
@@ -1566,7 +1571,10 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
         }
         if (isOptional) {
           chunks.push(code`
-            if (${messageProperty} !== undefined && ${messageProperty}.length !== 0) {
+            if (${messageProperty} !== undefined ${withAndMaybeCheckIsNotNull(
+            options,
+            messageProperty,
+          )} && ${messageProperty}.length !== 0) {
               ${listWriteSnippet}
             }
           `);
@@ -1594,13 +1602,13 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
     } else if (isWithinOneOf(field)) {
       // Oneofs don't have a default value check b/c they need to denote which-oneof presence
       chunks.push(code`
-        if (${messageProperty} !== undefined) {
+        if (${messageProperty} !== undefined ${withAndMaybeCheckIsNotNull(options, messageProperty)}) {
           ${writeSnippet(`${messageProperty}`)};
         }
       `);
     } else if (isMessage(field)) {
       chunks.push(code`
-        if (${messageProperty} !== undefined) {
+        if (${messageProperty} !== undefined ${withAndMaybeCheckIsNotNull(options, messageProperty)}) {
           ${writeSnippet(`${messageProperty}`)};
         }
       `);
@@ -2035,7 +2043,7 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
         const i = convertFromObjectKey(ctx, messageDesc, field, "key");
 
         if (shouldGenerateJSMapType(ctx, messageDesc, field)) {
-          const fallback = noDefaultValue ? "undefined" : "new Map()";
+          const fallback = noDefaultValue ? nullOrUndefined(options) : "new Map()";
 
           chunks.push(code`
             ${fieldKey}: ${ctx.utils.isObject}(${jsonProperty})
@@ -2046,7 +2054,7 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
               : ${fallback},
           `);
         } else {
-          const fallback = noDefaultValue ? "undefined" : "{}";
+          const fallback = noDefaultValue ? nullOrUndefined(options) : "{}";
 
           chunks.push(code`
             ${fieldKey}: ${ctx.utils.isObject}(${jsonProperty})
@@ -2058,7 +2066,7 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
           `);
         }
       } else {
-        const fallback = noDefaultValue ? "undefined" : "[]";
+        const fallback = noDefaultValue ? nullOrUndefined(options) : "[]";
 
         const readValueSnippet = readSnippet("e");
         if (readValueSnippet.toString() === code`e`.toString()) {
@@ -2087,27 +2095,27 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
       chunks.push(code`${ternaryIf} ? ${ternaryThen}} : `);
 
       if (field === lastCase) {
-        chunks.push(code`undefined,`);
+        chunks.push(code`${nullOrUndefined(options)},`);
       }
     } else if (isAnyValueType(field)) {
       chunks.push(code`${fieldKey}: ${ctx.utils.isSet}(${jsonPropertyOptional})
         ? ${readSnippet(`${jsonProperty}`)}
-        : undefined,
+        : ${nullOrUndefined(options)},
       `);
     } else if (isStructType(field)) {
       chunks.push(
         code`${fieldKey}: ${ctx.utils.isObject}(${jsonProperty})
           ? ${readSnippet(`${jsonProperty}`)}
-          : undefined,`,
+          : ${nullOrUndefined(options)},`,
       );
     } else if (isListValueType(field)) {
       chunks.push(code`
         ${fieldKey}: ${ctx.utils.globalThis}.Array.isArray(${jsonProperty})
           ? ${readSnippet(`${jsonProperty}`)}
-          : undefined,
+          : ${nullOrUndefined(options)},
       `);
     } else {
-      const fallback = isWithinOneOf(field) || noDefaultValue ? "undefined" : defaultValue(ctx, field);
+      const fallback = isWithinOneOf(field) || noDefaultValue ? nullOrUndefined(options) : defaultValue(ctx, field);
       chunks.push(code`
         ${fieldKey}: ${ctx.utils.isSet}(${jsonProperty})
           ? ${readSnippet(`${jsonProperty}`)}
@@ -2124,10 +2132,10 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
 function generateCanonicalToJson(
   fullName: string,
   fullProtobufTypeName: string,
-  { useOptionals }: Options,
+  { useOptionals, useNullAsOptional }: Options,
 ): Code | undefined {
   if (isFieldMaskTypeName(fullProtobufTypeName)) {
-    const returnType = useOptionals === "all" ? "string | undefined" : "string";
+    const returnType = useOptionals === "all" ? `string | ${nullOrUndefined({ useNullAsOptional })}` : "string";
     const pathModifier = useOptionals === "all" ? "?" : "";
 
     return code`
@@ -2289,7 +2297,7 @@ function generateToJson(
       const check =
         (isScalar(field) || isEnum(field)) && !(isWithinOneOf(field) || emitDefaultValuesForJson)
           ? notDefaultCheck(ctx, field, messageDesc.options, `${messageProperty}`)
-          : `${messageProperty} !== undefined`;
+          : `${messageProperty} !== undefined ${withAndMaybeCheckIsNotNull(options, messageProperty)}`;
 
       chunks.push(code`
         if (${check}) {

@@ -13,7 +13,14 @@ import {
 import { code, Code, imp, Import } from "ts-poet";
 import { DateOption, EnvOption, LongOption, OneofOption, Options } from "./options";
 import { visit } from "./visit";
-import { fail, FormattedMethodDescriptor, impProto, maybePrefixPackage } from "./utils";
+import {
+  fail,
+  FormattedMethodDescriptor,
+  impProto,
+  nullOrUndefined,
+  maybePrefixPackage,
+  withAndMaybeCheckIsNotNull,
+} from "./utils";
 import SourceInfo from "./sourceInfo";
 import { uncapitalize } from "./case";
 import { BaseContext, Context } from "./context";
@@ -247,7 +254,7 @@ export function defaultValue(ctx: Context, field: FieldDescriptorProto): any {
     case FieldDescriptorProto_Type.TYPE_MESSAGE:
     case FieldDescriptorProto_Type.TYPE_GROUP:
     default:
-      return "undefined";
+      return nullOrUndefined(options);
   }
 }
 
@@ -260,7 +267,9 @@ export function notDefaultCheck(
 ): Code {
   const { typeMap, options, currentFile } = ctx;
   const isOptional = isOptionalProperty(field, messageOptions, options, currentFile.isProto3Syntax);
-  const maybeNotUndefinedAnd = isOptional ? `${place} !== undefined && ` : "";
+  const maybeNotUndefinedAnd = isOptional
+    ? `${place} !== undefined ${withAndMaybeCheckIsNotNull(options, place)} &&`
+    : "";
   switch (field.type) {
     case FieldDescriptorProto_Type.TYPE_DOUBLE:
     case FieldDescriptorProto_Type.TYPE_FLOAT:
@@ -587,7 +596,7 @@ export function messageToTypeName(
     if (typeOptions.repeated ?? false) {
       return valueType;
     }
-    return code`${valueType} | undefined`;
+    return code`${valueType} | ${nullOrUndefined(options)}`;
   }
   // Look for other special prototypes like Timestamp that aren't technically wrapper types
   if (!typeOptions.keepValueType && protoType === ".google.protobuf.Timestamp") {
@@ -627,7 +636,7 @@ export function toTypeName(
 ): Code {
   function finalize(type: Code, isOptional: boolean) {
     if (isOptional) {
-      return code`${type} | undefined`;
+      return code`${type} | ${nullOrUndefined(ctx.options, field.proto3Optional)}`;
     }
     return type;
   }

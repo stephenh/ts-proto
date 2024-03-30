@@ -54,6 +54,13 @@ describe("types", () => {
         options: { ...defaultOptions(), useOptionals: "all" },
         expected: code`string | undefined`,
       },
+      {
+        descr: 'use "null" value instead of "undefined" (useNullAsOptional=true)',
+        typeMap: new Map(),
+        protoType: ".google.protobuf.StringValue",
+        options: { ...defaultOptions(), useNullAsOptional: true },
+        expected: code`string | null`,
+      },
     ];
     testCases.forEach((t) =>
       it(t.descr, async () => {
