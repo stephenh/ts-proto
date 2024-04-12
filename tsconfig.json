@@ -6,7 +6,8 @@
     "strict": true,
     "outDir": "build",
     "skipLibCheck": true,
-    "experimentalDecorators": true
+    "experimentalDecorators": true,
+    "declaration": true
   },
   "include": ["src"]
 }
