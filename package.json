@@ -7,6 +7,7 @@
   "bin": {
     "protoc-gen-ts_proto": "./protoc-gen-ts_proto"
   },
+  "types": "build/index.d.ts",
   "scripts": {
     "build": "yarn tsc",
     "build:test": "yarn proto2bin && yarn proto2pbjs && yarn bin2ts",
