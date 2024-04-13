@@ -1,3 +1,10 @@
+# [1.172.0](https://github.com/stephenh/ts-proto/compare/v1.171.0...v1.172.0) (2024-04-13)
+
+
+### Features
+
+* export options types ([#1027](https://github.com/stephenh/ts-proto/issues/1027)) ([9652586](https://github.com/stephenh/ts-proto/commit/965258656efaa07cc8b72feb8c6b8e202a000940))
+
 # [1.171.0](https://github.com/stephenh/ts-proto/compare/v1.170.0...v1.171.0) (2024-03-30)
 
 
