@@ -1,0 +1,1 @@
+forceLong=number,useJsTypeOverride=true

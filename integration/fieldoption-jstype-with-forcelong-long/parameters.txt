@@ -1,0 +1,1 @@
+forceLong=long,useJsTypeOverride=true
