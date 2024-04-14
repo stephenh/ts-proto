@@ -56,6 +56,7 @@ describe("options", () => {
         "useAsyncIterable": false,
         "useDate": "timestamp",
         "useExactTypes": true,
+        "useJsTypeOverride": false,
         "useJsonName": false,
         "useJsonTimestamp": "rfc3339",
         "useJsonWireFormat": false,

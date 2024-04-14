@@ -5,6 +5,7 @@ import {
   FieldDescriptorProto,
   FieldDescriptorProto_Label,
   FieldDescriptorProto_Type,
+  FieldOptions_JSType,
   FileDescriptorProto,
 } from "ts-proto-descriptors";
 import { camelToSnake, capitalize, maybeSnakeToCamel } from "./case";
@@ -58,12 +59,14 @@ import {
   defaultValue,
   detectMapType,
   getEnumMethod,
+  getFieldOptionsJsType,
   isAnyValueType,
   isBytes,
   isBytesValueType,
   isEnum,
   isFieldMaskType,
   isFieldMaskTypeName,
+  isJsTypeFieldOption,
   isListValueType,
   isLong,
   isLongValueType,
@@ -1110,8 +1113,19 @@ function getDecodeReadSnippet(ctx: Context, field: FieldDescriptorProto) {
       if (options.env === EnvOption.NODE) {
         readSnippet = code`${readSnippet} as Buffer`;
       }
+      // Do we want this to take preference over forceLong? I'd assume yes, since this is on a more granular level,
+      // but it could also be an plugin option to determine what takes precedence
     } else if (basicLongWireType(field.type) !== undefined) {
-      if (options.forceLong === LongOption.LONG) {
+      if (isJsTypeFieldOption(options, field)) {
+        switch (field!.options!.jstype) {
+          case FieldOptions_JSType.JS_NUMBER:
+            readSnippet = code`${utils.longToNumber}(${readSnippet} as Long)`;
+            break;
+          case FieldOptions_JSType.JS_STRING:
+            readSnippet = code`${utils.longToString}(${readSnippet} as Long)`;
+            break;
+        }
+      } else if (options.forceLong === LongOption.LONG) {
         readSnippet = code`${readSnippet} as Long`;
       } else if (options.forceLong === LongOption.STRING) {
         readSnippet = code`${utils.longToString}(${readSnippet} as Long)`;
@@ -1351,7 +1365,7 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
 }
 
 /** Returns a generic writer.doSomething based on the basic type */
-function getEncodeWriteSnippet(ctx: Context, field: FieldDescriptorProto): (place: string) => Code {
+function getEncodeWriteSnippet(ctx: Context, field: FieldDescriptorProto): (place: string, placeAlt?: string) => Code {
   const { options, utils } = ctx;
   if (isEnum(field) && options.stringEnums) {
     const tag = ((field.number << 3) | basicWireType(field.type)) >>> 0;
@@ -1364,13 +1378,13 @@ function getEncodeWriteSnippet(ctx: Context, field: FieldDescriptorProto): (plac
       case "int64":
       case "sint64":
       case "sfixed64":
-        return (place) => code`if (BigInt.asIntN(64, ${place}) !== ${place}) {
+        return (place, placeAlt) => code`if (BigInt.asIntN(64, ${place}) !== ${placeAlt ?? place}) {
           throw new ${utils.globalThis}.Error('value provided for field ${place} of type ${fieldType} too large');
         }
         writer.uint32(${tag}).${toReaderCall(field)}(${place}.toString())`;
       case "uint64":
       case "fixed64":
-        return (place) => code`if (BigInt.asUintN(64, ${place}) !== ${place}) {
+        return (place, placeAlt) => code`if (BigInt.asUintN(64, ${place}) !== ${placeAlt ?? place}) {
           throw new ${utils.globalThis}.Error('value provided for field ${place} of type ${fieldType} too large');
         }
         writer.uint32(${tag}).${toReaderCall(field)}(${place}.toString())`;
@@ -1613,9 +1627,15 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
         }
       `);
     } else if (isScalar(field) || isEnum(field)) {
+      const isJsType = isScalar(field) && isJsTypeFieldOption(options, field);
+      const body =
+        isJsType && options.forceLong === LongOption.BIGINT
+          ? writeSnippet(`BigInt(${messageProperty})`)
+          : writeSnippet(`${messageProperty}`);
+
       chunks.push(code`
         if (${notDefaultCheck(ctx, field, messageDesc.options, `${messageProperty}`)}) {
-          ${writeSnippet(`${messageProperty}`)};
+          ${body};
         }
       `);
     } else {
@@ -1747,6 +1767,7 @@ function generateExtension(ctx: Context, message: DescriptorProto | undefined, e
         return (place) => code`writer.${toReaderCall(field)}(${place})`;
       } else if (isObjectId(field) && options.useMongoObjectId) {
         const type = basicTypeName(ctx, field, { keepValueType: true });
+
         return (place) => code`${type}.encode(${utils.toProtoObjectId}(${place}), writer.fork()).ldelim()`;
       } else if (
         isTimestamp(field) &&
@@ -1941,6 +1962,12 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
           } else {
             return code`${utils.bytesFromBase64}(${from})`;
           }
+        } else if (isLong(field) && isJsTypeFieldOption(options, field)) {
+          const fieldType = getFieldOptionsJsType(field, ctx.options) ?? field.type;
+          const cstr = capitalize(
+            basicTypeName(ctx, { ...field, type: fieldType }, { keepValueType: true }).toCodeString([]),
+          );
+          return code`${utils.globalThis}.${cstr}(${from})`;
         } else if (isLong(field) && options.forceLong === LongOption.LONG) {
           const cstr = capitalize(basicTypeName(ctx, field, { keepValueType: true }).toCodeString([]));
           return code`${cstr}.fromValue(${from})`;
@@ -2236,6 +2263,16 @@ function generateToJson(
         return code`${type}.toJSON(${from})`;
       } else if (isBytes(field)) {
         return code`${utils.base64FromBytes}(${from})`;
+      } else if (isLong(field) && isJsTypeFieldOption(options, field)) {
+        const fieldType = getFieldOptionsJsType(field, ctx.options) ?? field.type;
+        if (!fieldType) {
+          return code`${from}`;
+        }
+
+        const cstr = capitalize(
+          basicTypeName(ctx, { ...field, type: fieldType }, { keepValueType: true }).toCodeString([]),
+        );
+        return code`${utils.globalThis}.${cstr}(${from})`;
       } else if (isLong(field) && options.forceLong === LongOption.LONG) {
         return code`(${from} || ${defaultValue(ctx, field)}).toString()`;
       } else if (isLong(field) && options.forceLong === LongOption.BIGINT) {
@@ -2357,7 +2394,11 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
     const objectProperty = getPropertyAccessor("object", fieldName);
 
     const readSnippet = (from: string): Code => {
-      if ((isLong(field) || isLongValueType(field)) && options.forceLong === LongOption.LONG) {
+      if (
+        (isLong(field) || isLongValueType(field)) &&
+        options.forceLong === LongOption.LONG &&
+        !isJsTypeFieldOption(options, field)
+      ) {
         return code`Long.fromValue(${from})`;
       } else if (isObjectId(field) && options.useMongoObjectId) {
         return code`${from} as mongodb.ObjectId`;

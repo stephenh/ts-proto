@@ -5,6 +5,7 @@ import {
   FieldDescriptorProto,
   FieldDescriptorProto_Label,
   FieldDescriptorProto_Type,
+  FieldOptions_JSType,
   FileDescriptorProto,
   MessageOptions,
   MethodDescriptorProto,
@@ -82,7 +83,10 @@ export function basicTypeName(
   typeOptions: { keepValueType?: boolean } = {},
 ): Code {
   const { options } = ctx;
-  switch (field.type) {
+
+  const fieldType = getFieldOptionsJsType(field, ctx.options) ?? field.type;
+
+  switch (fieldType) {
     case FieldDescriptorProto_Type.TYPE_DOUBLE:
     case FieldDescriptorProto_Type.TYPE_FLOAT:
     case FieldDescriptorProto_Type.TYPE_INT32:
@@ -96,8 +100,10 @@ export function basicTypeName(
     case FieldDescriptorProto_Type.TYPE_SINT64:
     case FieldDescriptorProto_Type.TYPE_FIXED64:
     case FieldDescriptorProto_Type.TYPE_SFIXED64:
-      // this handles 2^53, Long is only needed for 2^64; this is effectively pbjs's forceNumber
-      return longTypeName(ctx);
+      return isJsTypeFieldOption(options, field)
+        ? jsTypeName(field) ?? longTypeName(ctx)
+        : // this handles 2^53, Long is only needed for 2^64; this is effectively pbjs's forceNumber
+          longTypeName(ctx);
     case FieldDescriptorProto_Type.TYPE_BOOL:
       return code`boolean`;
     case FieldDescriptorProto_Type.TYPE_STRING:
@@ -184,10 +190,26 @@ export function packedType(type: FieldDescriptorProto_Type): number | undefined 
   }
 }
 
+export function getFieldOptionsJsType(
+  field: FieldDescriptorProto,
+  options: Options,
+): FieldDescriptorProto_Type | undefined {
+  if (!options.useJsTypeOverride || field.options?.jstype === undefined) {
+    return;
+  }
+
+  switch (field.options.jstype) {
+    case FieldOptions_JSType.JS_STRING:
+      return FieldDescriptorProto_Type.TYPE_STRING;
+    case FieldOptions_JSType.JS_NUMBER:
+      return FieldDescriptorProto_Type.TYPE_INT64;
+  }
+}
+
 export function defaultValue(ctx: Context, field: FieldDescriptorProto): any {
   const { typeMap, options, utils, currentFile } = ctx;
   const useDefaultValue = !currentFile.isProto3Syntax && !options.disableProto2DefaultValues && field.defaultValue;
-  const numbericDefaultVal = useDefaultValue ? field.defaultValue : 0;
+  const numericDefaultVal = useDefaultValue ? field.defaultValue : 0;
   switch (field.type) {
     case FieldDescriptorProto_Type.TYPE_DOUBLE:
     case FieldDescriptorProto_Type.TYPE_FLOAT:
@@ -196,7 +218,7 @@ export function defaultValue(ctx: Context, field: FieldDescriptorProto): any {
     case FieldDescriptorProto_Type.TYPE_SINT32:
     case FieldDescriptorProto_Type.TYPE_FIXED32:
     case FieldDescriptorProto_Type.TYPE_SFIXED32:
-      return numbericDefaultVal;
+      return numericDefaultVal;
     case FieldDescriptorProto_Type.TYPE_ENUM:
       // proto3 enforces enums starting at 0, however proto2 does not, so we have
       // to probe and see if zero is an allowed value. If it's not, pick the first one.
@@ -214,32 +236,35 @@ export function defaultValue(ctx: Context, field: FieldDescriptorProto): any {
       } else {
         return defaultEnum.number;
       }
+
+    case FieldDescriptorProto_Type.TYPE_INT64:
     case FieldDescriptorProto_Type.TYPE_UINT64:
     case FieldDescriptorProto_Type.TYPE_FIXED64:
-      if (options.forceLong === LongOption.LONG) {
-        return code`${utils.Long}.${useDefaultValue ? "fromNumber" : "UZERO"}${
-          useDefaultValue ? `(${numbericDefaultVal})` : ""
-        }`;
-      } else if (options.forceLong === LongOption.STRING) {
-        return `"${numbericDefaultVal}"`;
-      } else if (options.forceLong === LongOption.BIGINT) {
-        return `BigInt("${numbericDefaultVal}")`;
-      } else {
-        return numbericDefaultVal;
-      }
-    case FieldDescriptorProto_Type.TYPE_INT64:
     case FieldDescriptorProto_Type.TYPE_SINT64:
     case FieldDescriptorProto_Type.TYPE_SFIXED64:
+      if (isJsTypeFieldOption(options, field)) {
+        switch (field.options!.jstype) {
+          case FieldOptions_JSType.JS_STRING:
+            return `"${numericDefaultVal}"`;
+          case FieldOptions_JSType.JS_NUMBER:
+            return numericDefaultVal;
+        }
+      }
+
       if (options.forceLong === LongOption.LONG) {
-        return code`${utils.Long}.${useDefaultValue ? "fromNumber" : "ZERO"}${
-          useDefaultValue ? `(${numbericDefaultVal})` : ""
+        const value =
+          field.type === FieldDescriptorProto_Type.TYPE_UINT64 || field.type === FieldDescriptorProto_Type.TYPE_FIXED64
+            ? "UZERO"
+            : "ZERO";
+        return code`${utils.Long}.${useDefaultValue ? "fromNumber" : value}${
+          useDefaultValue ? `(${numericDefaultVal})` : ""
         }`;
       } else if (options.forceLong === LongOption.STRING) {
-        return `"${numbericDefaultVal}"`;
+        return `"${numericDefaultVal}"`;
       } else if (options.forceLong === LongOption.BIGINT) {
-        return `BigInt("${numbericDefaultVal}")`;
+        return `BigInt("${numericDefaultVal}")`;
       } else {
-        return numbericDefaultVal;
+        return numericDefaultVal;
       }
     case FieldDescriptorProto_Type.TYPE_BOOL:
       return useDefaultValue ? field.defaultValue : false;
@@ -301,7 +326,7 @@ export function notDefaultCheck(
     case FieldDescriptorProto_Type.TYPE_INT64:
     case FieldDescriptorProto_Type.TYPE_SINT64:
     case FieldDescriptorProto_Type.TYPE_SFIXED64:
-      if (options.forceLong === LongOption.LONG) {
+      if (options.forceLong === LongOption.LONG && !isJsTypeFieldOption(options, field)) {
         return code`${maybeNotUndefinedAnd} !${place}.equals(${defaultValue(ctx, field)})`;
       } else {
         return code`${maybeNotUndefinedAnd} ${place} !== ${defaultValue(ctx, field)}`;
@@ -580,6 +605,14 @@ function longTypeName(ctx: Context): Code {
   }
 }
 
+function jsTypeName(field: FieldDescriptorProto): Code | undefined {
+  if (field.options?.jstype === FieldOptions_JSType.JS_STRING) {
+    return code`string`;
+  } else if (field.options?.jstype === FieldOptions_JSType.JS_NUMBER) {
+    return code`number`;
+  }
+}
+
 /** Maps `.some_proto_namespace.Message` to a TypeName. */
 export function messageToTypeName(
   ctx: Context,
@@ -641,7 +674,10 @@ export function toTypeName(
     return type;
   }
 
-  let type = basicTypeName(ctx, field, { keepValueType: false });
+  const fieldType = getFieldOptionsJsType(field, ctx.options) ?? field.type;
+
+  const type = basicTypeName(ctx, { ...field, type: fieldType }, { keepValueType: false });
+
   if (isRepeated(field)) {
     const mapType = messageDesc ? detectMapType(ctx, messageDesc, field) : false;
     if (mapType) {
@@ -850,4 +886,11 @@ export function detectBatchMethod(
 
 function hasSingleRepeatedField(messageDesc: DescriptorProto): boolean {
   return messageDesc.field.length == 1 && messageDesc.field[0].label === FieldDescriptorProto_Label.LABEL_REPEATED;
+}
+
+export function isJsTypeFieldOption(options: Options, field: FieldDescriptorProto): boolean {
+  return (
+    options.useJsTypeOverride &&
+    (field.options?.jstype === FieldOptions_JSType.JS_NUMBER || field.options?.jstype === FieldOptions_JSType.JS_STRING)
+  );
 }
