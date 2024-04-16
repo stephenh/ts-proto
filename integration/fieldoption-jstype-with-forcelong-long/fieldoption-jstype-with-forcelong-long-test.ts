@@ -1,7 +1,7 @@
 import { FieldOption } from "./fieldoption-jstype-with-forcelong-long";
 import { hexToUint8Array, uint8ArrayToHex } from "../utils";
-// TODO: Fix this to use a ES import?
-const Long = require("Long");
+// @ts-ignore
+import Long = require("long");
 
 describe("FieldOption jstype with ForceLong long", () => {
   describe("encode", () => {
