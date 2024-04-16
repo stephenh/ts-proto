@@ -22,7 +22,7 @@ export const FieldOption = {
     if (message.numberField !== 0) {
       writer.uint32(16).int64(message.numberField);
     }
-    if (message.stringField !== "") {
+    if (message.stringField !== "0") {
       writer.uint32(24).int64(message.stringField);
     }
     return writer;
@@ -92,33 +92,25 @@ export const FieldOption = {
   },
   fromPartial<I extends Exact<DeepPartial<FieldOption>, I>>(object: I): FieldOption {
     const message = createBaseFieldOption();
-    message.normalField =
-      object.normalField !== undefined && object.normalField !== null ? Long.fromValue(object.normalField) : Long.ZERO;
-    message.numberField =
-      object.numberField !== undefined && object.numberField !== null ? Long.fromValue(object.numberField) : 0;
-    message.stringField =
-      object.stringField !== undefined && object.stringField !== null ? Long.fromValue(object.stringField) : "";
+    message.normalField = (object.normalField !== undefined && object.normalField !== null)
+      ? Long.fromValue(object.normalField)
+      : Long.ZERO;
+    message.numberField = object.numberField ?? 0;
+    message.stringField = object.stringField ?? "0";
     return message;
   },
 };
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
-export type DeepPartial<T> = T extends Builtin
-  ? T
-  : T extends Long
-  ? string | number | Long
-  : T extends globalThis.Array<infer U>
-  ? globalThis.Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U>
-  ? ReadonlyArray<DeepPartial<U>>
-  : T extends {}
-  ? { [K in keyof T]?: DeepPartial<T[K]> }
+export type DeepPartial<T> = T extends Builtin ? T
+  : T extends Long ? string | number | Long : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-export type Exact<P, I extends P> = P extends Builtin
-  ? P
+export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function longToNumber(long: Long): number {

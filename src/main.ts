@@ -1113,8 +1113,6 @@ function getDecodeReadSnippet(ctx: Context, field: FieldDescriptorProto) {
       if (options.env === EnvOption.NODE) {
         readSnippet = code`${readSnippet} as Buffer`;
       }
-      // Do we want this to take preference over forceLong? I'd assume yes, since this is on a more granular level,
-      // but it could also be an plugin option to determine what takes precedence
     } else if (basicLongWireType(field.type) !== undefined) {
       if (isJsTypeFieldOption(options, field)) {
         switch (field!.options!.jstype) {
