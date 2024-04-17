@@ -14,6 +14,7 @@
     "codegen.ts",
     "angular",
     "batching-with-context-esModuleInterop",
+    "extension-import/*.ts",
     "import-mapping/mapping.ts",
     "simple-esmodule-interop"
   ]
