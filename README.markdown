@@ -796,6 +796,14 @@ type OneOfCase<T, K extends OneOfCases<T>> = T extends {
 }
   ? T[U]
   : never;
+
+/** Extracts the specific type of a value type from a oneOf field */
+export type OneOfValue<T, K extends OneOfCases<T>> = T extends {
+  $case: K;
+  [key: string]: unknown;
+}
+  ? T
+  : never;
 ```
 
 # Default values and unset fields
