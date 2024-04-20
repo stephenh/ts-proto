@@ -62,7 +62,7 @@
     "rxjs": "^7.8.1",
     "semantic-release": "^21.0.7",
     "ts-jest": "^29.1.1",
-    "tsx": "^3.12.7",
+    "tsx": "^3.14.0",
     "typescript": "^5.1.6",
     "uglify-js": "^3.17.4"
   },
