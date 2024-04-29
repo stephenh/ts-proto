@@ -203,6 +203,11 @@ export function getFieldOptionsJsType(
       return FieldDescriptorProto_Type.TYPE_STRING;
     case FieldOptions_JSType.JS_NUMBER:
       return FieldDescriptorProto_Type.TYPE_INT64;
+    // In the case of JS_NORMAL, we don't want to override the type, so we return
+    case FieldOptions_JSType.JS_NORMAL:
+    // In the case of UNRECOGNIZED, we assume defualt behavior and we don't want to override the type, so we return
+    case FieldOptions_JSType.UNRECOGNIZED:
+      return;
   }
 }
 
