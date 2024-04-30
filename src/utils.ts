@@ -319,3 +319,19 @@ export function withAndMaybeCheckIsNotNull(options: Pick<Options, "useNullAsOpti
 export function withAndMaybeCheckIsNull(options: Pick<Options, "useNullAsOptional">, typeName: string) {
   return maybeCheckIsNotNull(options, typeName, "&&");
 }
+
+export async function getVersions(request: CodeGeneratorRequest) {
+  let protocVersion = "unknown";
+  if (request.compilerVersion) {
+    const { major, minor, patch } = request.compilerVersion;
+    protocVersion = `v${major}.${minor}.${patch}`;
+  }
+
+  const packageJson = await import("../package.json");
+  const tsProtoVersion = `v${packageJson.version}`;
+
+  return {
+    protocVersion,
+    tsProtoVersion,
+  };
+}
