@@ -22,10 +22,10 @@ async function main() {
   let protocVersion = "unknown";
   if (request.compilerVersion) {
     const { major, minor, patch } = request.compilerVersion;
-    protocVersion = `${major}.${minor}.${patch}`;
+    protocVersion = `v${major}.${minor}.${patch}`;
   }
 
-  const tsProtoVersion = await import("../package.json").then((pkg) => pkg.version);
+  const tsProtoVersion = await import("../package.json").then((pkg) => `v${pkg.version}`);
 
   const options = optionsFromParameter(request.parameter);
   const typeMap = createTypeMap(request, options);
