@@ -305,6 +305,8 @@ Generated code will be placed in the Gradle build directory.
 
   The default behavior is `forceLong=number`, which will internally still use the `long` library to encode/decode values on the wire (so you will still see a `util.Long = Long` line in your output), but will convert the `long` values to `number` automatically for you. Note that a runtime error is thrown if, while doing this conversion, a 64-bit value is larger than can be correctly stored as a `number`.
 
+- With `--ts_proto_opt=useJsTypeOverride`, 64-bit numbers will be ouput as the [FieldOption.JSType](https://protobuf.dev/reference/java/api-docs/com/google/protobuf/DescriptorProtos.FieldOptions.JSType) specified on the field. This takes precendence over the `forceLong` option provided.
+
 - With `--ts_proto_opt=esModuleInterop=true` changes output to be `esModuleInterop` compliant.
 
   Specifically the `Long` imports will be generated as `import Long from 'long'` instead of `import * as Long from 'long'`.
