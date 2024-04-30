@@ -142,13 +142,6 @@ export function maybeAddComment(
   }
 }
 
-// Comment block at the top of every source file, since these comments require specific
-// syntax incompatible with ts-poet, we will hard-code the string and prepend to the
-// generator output.
-export function prefixDisableLinter(spec: string): string {
-  return `/* eslint-disable */\n${spec}`;
-}
-
 export function maybePrefixPackage(fileDesc: FileDescriptorProto, rest: string): string {
   const prefix = fileDesc.package === "" ? "" : `${fileDesc.package}.`;
   return `${prefix}${rest}`;
