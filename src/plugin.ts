@@ -5,7 +5,7 @@ import {
   FileDescriptorProto,
 } from "ts-proto-descriptors";
 import { promisify } from "util";
-import { generateIndexFiles, protoFilesToGenerate, readToBuffer } from "./utils";
+import { generateIndexFiles, getVersions, protoFilesToGenerate, readToBuffer } from "./utils";
 import { generateFile, makeUtils } from "./main";
 import { createTypeMap } from "./types";
 import { BaseContext, createFileContext } from "./context";
@@ -19,13 +19,7 @@ async function main() {
   // const request = CodeGeneratorRequest.fromObject(json);
   const request = CodeGeneratorRequest.decode(stdin);
 
-  let protocVersion = "unknown";
-  if (request.compilerVersion) {
-    const { major, minor, patch } = request.compilerVersion;
-    protocVersion = `v${major}.${minor}.${patch}`;
-  }
-
-  const tsProtoVersion = await import("../package.json").then((pkg) => `v${pkg.version}`);
+  const { protocVersion, tsProtoVersion } = await getVersions(request);
 
   const options = optionsFromParameter(request.parameter);
   const typeMap = createTypeMap(request, options);
@@ -53,8 +47,6 @@ async function main() {
   } else {
     filesToGenerate = protoFilesToGenerate(request).filter((file) => !options.M[file.name]);
   }
-  console.warn("TCL ~ filesToGenerate.map ~ tsProtoVersion:", tsProtoVersion);
-  console.warn("TCL ~ filesToGenerate.map ~ protocVersion:", protocVersion);
 
   const files = await Promise.all(
     filesToGenerate.map(async (file) => {
