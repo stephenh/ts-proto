@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package int64;
+
+message Int64FieldOption {
+  int64 normalField = 1 [jstype = JS_NORMAL];
+  int64 numberField = 2 [jstype = JS_NUMBER];
+  int64 stringField = 3 [jstype = JS_STRING];
+}
+
+message UInt64FieldOption {
+  uint64 normalField = 1 [jstype = JS_NORMAL];
+  uint64 numberField = 2 [jstype = JS_NUMBER];
+  uint64 stringField = 3 [jstype = JS_STRING];
+}
+
+message SInt64FieldOption {
+  sint64 normalField = 1 [jstype = JS_NORMAL];
+  sint64 numberField = 2 [jstype = JS_NUMBER];
+  sint64 stringField = 3 [jstype = JS_STRING];
+}
+
+message Fixed64FieldOption {
+  fixed64 normalField = 1 [jstype = JS_NORMAL];
+  fixed64 numberField = 2 [jstype = JS_NUMBER];
+  fixed64 stringField = 3 [jstype = JS_STRING];
+}
+
+message SFixed64FieldOption {
+  sfixed64 normalField = 1 [jstype = JS_NORMAL];
+  sfixed64 numberField = 2 [jstype = JS_NUMBER];
+  sfixed64 stringField = 3 [jstype = JS_STRING];
+}

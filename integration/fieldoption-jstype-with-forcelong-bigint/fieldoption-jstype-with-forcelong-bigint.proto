@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package foo;
+
+message FieldOption {
+  int64 normalField = 1 [jstype = JS_NORMAL];
+  int64 numberField = 2 [jstype = JS_NUMBER];
+  int64 stringField = 3 [jstype = JS_STRING];
+}

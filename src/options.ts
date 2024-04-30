@@ -42,6 +42,7 @@ export type Options = {
   context: boolean;
   snakeToCamel: Array<"json" | "keys">;
   forceLong: LongOption;
+  useJsTypeOverride: boolean;
   globalThisPolyfill: boolean;
   useOptionals: boolean | "none" | "deprecatedOnly" | "messages" | "all"; // boolean is deprecated
   emitDefaultValues: Array<"json-methods">;
@@ -108,6 +109,7 @@ export function defaultOptions(): Options {
     emitDefaultValues: [],
     globalThisPolyfill: false,
     forceLong: LongOption.NUMBER,
+    useJsTypeOverride: false,
     useOptionals: "none",
     useDate: DateOption.DATE,
     useJsonTimestamp: JsonTimestampOption.RFC3339,
