@@ -1,3 +1,10 @@
+# [1.173.0](https://github.com/stephenh/ts-proto/compare/v1.172.0...v1.173.0) (2024-04-30)
+
+
+### Features
+
+* Add js type support ([#1030](https://github.com/stephenh/ts-proto/issues/1030)) ([0dd951b](https://github.com/stephenh/ts-proto/commit/0dd951bf4d1a4c48f3d261c85cfa03586d20c13c)), closes [#958](https://github.com/stephenh/ts-proto/issues/958)
+
 # [1.172.0](https://github.com/stephenh/ts-proto/compare/v1.171.0...v1.172.0) (2024-04-13)
 
 
