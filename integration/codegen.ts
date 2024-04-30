@@ -26,6 +26,8 @@ async function main() {
 async function generate(binFile: string, baseDir: string, parameter: string) {
   const stdin = await promisify(readFile)(binFile);
   const request = CodeGeneratorRequest.decode(stdin);
+  // Lazy way of keeping esModuleInterop=false for the tests
+  parameter = `esModuleInterop=false,${parameter}`;
   request.parameter = parameter;
 
   const options = optionsFromParameter(parameter || "");
