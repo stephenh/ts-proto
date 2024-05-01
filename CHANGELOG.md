@@ -1,3 +1,10 @@
+# [1.174.0](https://github.com/stephenh/ts-proto/compare/v1.173.0...v1.174.0) (2024-05-01)
+
+
+### Features
+
+* add generated code comments ([#1037](https://github.com/stephenh/ts-proto/issues/1037)) ([cdd4a76](https://github.com/stephenh/ts-proto/commit/cdd4a76238e292cb00d6a09d84e6b393ddde8204))
+
 # [1.173.0](https://github.com/stephenh/ts-proto/compare/v1.172.0...v1.173.0) (2024-04-30)
 
 
