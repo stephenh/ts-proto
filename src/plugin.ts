@@ -1,9 +1,14 @@
-import { CodeGeneratorRequest, CodeGeneratorResponse, CodeGeneratorResponse_Feature } from "ts-proto-descriptors";
+import {
+  CodeGeneratorRequest,
+  CodeGeneratorResponse,
+  CodeGeneratorResponse_Feature,
+  FileDescriptorProto,
+} from "ts-proto-descriptors";
 import { promisify } from "util";
-import { generateIndexFiles, protoFilesToGenerate, readToBuffer } from "./utils";
+import { generateIndexFiles, getVersions, protoFilesToGenerate, readToBuffer } from "./utils";
 import { generateFile, makeUtils } from "./main";
 import { createTypeMap } from "./types";
-import { BaseContext, Context, createFileContext } from "./context";
+import { BaseContext, createFileContext } from "./context";
 import { getTsPoetOpts, optionsFromParameter } from "./options";
 import { generateTypeRegistry } from "./generate-type-registry";
 
@@ -14,11 +19,14 @@ async function main() {
   // const request = CodeGeneratorRequest.fromObject(json);
   const request = CodeGeneratorRequest.decode(stdin);
 
+  const { protocVersion, tsProtoVersion } = await getVersions(request);
+
   const options = optionsFromParameter(request.parameter);
   const typeMap = createTypeMap(request, options);
   const utils = makeUtils(options);
   const ctx: BaseContext = { typeMap, options, utils };
-  let filesToGenerate;
+
+  let filesToGenerate: FileDescriptorProto[];
 
   if (options.emitImportedFiles) {
     const fileSet = new Set();
@@ -43,7 +51,7 @@ async function main() {
   const files = await Promise.all(
     filesToGenerate.map(async (file) => {
       const [path, code] = generateFile({ ...ctx, currentFile: createFileContext(file) }, file);
-      const content = code.toString({ ...getTsPoetOpts(options), path });
+      const content = code.toString({ ...getTsPoetOpts(options, tsProtoVersion, protocVersion, file.name), path });
       return { name: path, content };
     }),
   );
@@ -55,13 +63,13 @@ async function main() {
     const path = "typeRegistry.ts";
     const code = generateTypeRegistry(ctx);
 
-    const content = code.toString({ ...getTsPoetOpts(options), path });
+    const content = code.toString({ ...getTsPoetOpts(options, tsProtoVersion, protocVersion), path });
     files.push({ name: path, content });
   }
 
   if (options.outputIndex) {
     for (const [path, code] of generateIndexFiles(filesToGenerate, options)) {
-      const content = code.toString({ ...getTsPoetOpts(options), path });
+      const content = code.toString({ ...getTsPoetOpts(options, tsProtoVersion, protocVersion), path });
       files.push({ name: path, content });
     }
   }

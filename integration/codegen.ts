@@ -4,7 +4,7 @@ import { parse } from "path";
 import { promisify } from "util";
 import { generateFile, makeUtils } from "../src/main";
 import { createTypeMap } from "../src/types";
-import { generateIndexFiles } from "../src/utils";
+import { generateIndexFiles, getVersions } from "../src/utils";
 import { getTsPoetOpts, optionsFromParameter } from "../src/options";
 import { BaseContext, createFileContext } from "../src/context";
 import { generateTypeRegistry } from "../src/generate-type-registry";
@@ -28,6 +28,8 @@ async function generate(binFile: string, baseDir: string, parameter: string) {
   const request = CodeGeneratorRequest.decode(stdin);
   request.parameter = parameter;
 
+  const { protocVersion, tsProtoVersion } = await getVersions(request);
+
   const options = optionsFromParameter(parameter || "");
   const typeMap = createTypeMap(request, options);
 
@@ -42,7 +44,10 @@ async function generate(binFile: string, baseDir: string, parameter: string) {
     const filePath = `${baseDir}/${path}`;
     const dirPath = parse(filePath).dir;
     await promisify(mkdir)(dirPath, { recursive: true }).catch(() => {});
-    await promisify(writeFile)(filePath, code.toString({ ...getTsPoetOpts(options), path }));
+    await promisify(writeFile)(
+      filePath,
+      code.toString({ ...getTsPoetOpts(options, tsProtoVersion, protocVersion, file.name), path }),
+    );
   }
 
   if (options.outputTypeRegistry) {
@@ -54,7 +59,10 @@ async function generate(binFile: string, baseDir: string, parameter: string) {
 
     const filePath = `${baseDir}/${path}`;
 
-    await promisify(writeFile)(filePath, code.toString({ ...getTsPoetOpts(options), path }));
+    await promisify(writeFile)(
+      filePath,
+      code.toString({ ...getTsPoetOpts(options, tsProtoVersion, protocVersion), path }),
+    );
   }
 
   if (options.outputIndex) {
@@ -62,7 +70,10 @@ async function generate(binFile: string, baseDir: string, parameter: string) {
       const filePath = `${baseDir}/${path}`;
       const dirPath = parse(filePath).dir;
       await promisify(mkdir)(dirPath, { recursive: true }).catch(() => {});
-      await promisify(writeFile)(filePath, code.toString({ ...getTsPoetOpts(options), path }));
+      await promisify(writeFile)(
+        filePath,
+        code.toString({ ...getTsPoetOpts(options, tsProtoVersion, protocVersion), path }),
+      );
     }
   }
 }

@@ -142,13 +142,6 @@ export function maybeAddComment(
   }
 }
 
-// Comment block at the top of every source file, since these comments require specific
-// syntax incompatible with ts-poet, we will hard-code the string and prepend to the
-// generator output.
-export function prefixDisableLinter(spec: string): string {
-  return `/* eslint-disable */\n${spec}`;
-}
-
 export function maybePrefixPackage(fileDesc: FileDescriptorProto, rest: string): string {
   const prefix = fileDesc.package === "" ? "" : `${fileDesc.package}.`;
   return `${prefix}${rest}`;
@@ -325,4 +318,21 @@ export function withAndMaybeCheckIsNotNull(options: Pick<Options, "useNullAsOpti
 }
 export function withAndMaybeCheckIsNull(options: Pick<Options, "useNullAsOptional">, typeName: string) {
   return maybeCheckIsNotNull(options, typeName, "&&");
+}
+
+export async function getVersions(request: CodeGeneratorRequest) {
+  let protocVersion = "unknown";
+  if (request.compilerVersion) {
+    const { major, minor, patch } = request.compilerVersion;
+    protocVersion = `v${major}.${minor}.${patch}`;
+  }
+
+  const path: string = "../package.json";
+  const packageJson = await import(path);
+  const tsProtoVersion = `v${packageJson?.version ?? "unknown"}`;
+
+  return {
+    protocVersion,
+    tsProtoVersion,
+  };
 }
