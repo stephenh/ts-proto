@@ -8,7 +8,6 @@
 import { FileDescriptorProto as FileDescriptorProto1 } from "ts-proto-descriptors";
 import { protoMetadata as protoMetadata1 } from "./google/protobuf/descriptor";
 import { protoMetadata as protoMetadata2 } from "./something/something";
-import type { Something } from "./something/something";
 
 export const protobufPackage = "";
 
@@ -325,23 +324,11 @@ export const protoMetadata: ProtoMetadata = {
     messages: {
       "MyMessage": {
         options: { "my_message_option": 1234 },
-        fields: {
-          "foo": { "my_field_option": 4.5 },
-          "foo_2": { "something": Something.decode(Buffer.from("CgV3b3JsZBIDe9kC", "base64")) },
-        },
+        fields: { "foo": { "my_field_option": 4.5 } },
         oneof: { "qux": { "my_oneof_option": 42 } },
       },
     },
-    services: {
-      "MyService": {
-        options: { "my_service_option": 0 },
-        methods: {
-          "MyMethod": {
-            "my_method_option": MyMessage.decode(Buffer.from("CJYBEJYBGgtTb21lIHN0cmluZyILU29tZSBzdHJpbmc=", "base64")),
-          },
-        },
-      },
-    },
+    services: { "MyService": { options: { "my_service_option": 0 }, methods: {} } },
     enums: { "MyEnum": { options: { "my_enum_option": true }, values: { "FOO": { "my_enum_value_option": 321 } } } },
   },
 };

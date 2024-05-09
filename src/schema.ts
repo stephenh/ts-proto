@@ -246,6 +246,7 @@ function encodedOptionsToOptions(
       // We should fix this so that we can always create an option definition by
       // somehow premptively decoding the encoded value and then inserting it into
       // the option defintion.
+      // please refer to inteegration/options-types-only to see this in action
       resultOptions.push(getExtensionValue(ctx, extension, value));
     }
   }
@@ -257,8 +258,9 @@ function encodedOptionsToOptions(
 
 function shouldAddOptionDefinition(ctx: Context, extension: FieldDescriptorProto) {
   return (
-    extension.type == FieldDescriptorProto_Type.TYPE_MESSAGE &&
-    (ctx.options.outputEncodeMethods === true || ctx.options.outputEncodeMethods == "decode-only")
+    extension.type !== FieldDescriptorProto_Type.TYPE_MESSAGE ||
+    ctx.options.outputEncodeMethods === true ||
+    ctx.options.outputEncodeMethods == "decode-only"
   );
 }
 
