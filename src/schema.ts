@@ -236,12 +236,30 @@ function encodedOptionsToOptions(
   for (const key in encodedOptions) {
     const value = encodedOptions[key];
     const extension = extensionCache[extendee][parseInt(key, 10) >>> 3];
-    resultOptions.push(getExtensionValue(ctx, extension, value));
+    if (shouldAddOptionDefinition(ctx, extension)) {
+      // todo: we should be able to create an option definition ALWAYS, however,
+      // we currently cannot do that because the if the extension is a sub-message
+      // (and thus, not just a straightforward value), we don't have an JSON object
+      // representation of the option - just it's encoded value. Our approach in
+      // getExtensionValue is to decode the encoded value into a message, but this
+      // Message.decode(...) method is not always included in the generated code.
+      // We should fix this so that we can always create an option definition by
+      // somehow premptively decoding the encoded value and then inserting it into
+      // the option defintion.
+      resultOptions.push(getExtensionValue(ctx, extension, value));
+    }
   }
   if (resultOptions.length == 0) {
     return undefined;
   }
   return code`{${joinCode(resultOptions, { on: "," })}}`;
+}
+
+function shouldAddOptionDefinition(ctx: Context, extension: FieldDescriptorProto) {
+  return (
+    extension.type == FieldDescriptorProto_Type.TYPE_MESSAGE &&
+    (ctx.options.outputEncodeMethods === true || ctx.options.outputEncodeMethods == "decode-only")
+  );
 }
 
 function resolveMessageOptions(ctx: Context, message: DescriptorProto): Code | undefined {
