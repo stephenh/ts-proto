@@ -7,6 +7,7 @@ describe("options", () => {
         "M": {},
         "addGrpcMetadata": false,
         "addNestjsRestParameter": false,
+        "annotateFilesWithVersion": true,
         "comments": true,
         "constEnums": false,
         "context": false,

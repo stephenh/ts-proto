@@ -31,6 +31,16 @@ async function generate(binFile: string, baseDir: string, parameter: string) {
   const { protocVersion, tsProtoVersion } = await getVersions(request);
 
   const options = optionsFromParameter(parameter || "");
+
+  // we have to check for the parameter as a string here because the
+  // default value of the parameter is true.
+  if (parameter.includes("annotateFilesWithVersion=true")) {
+    options.annotateFilesWithVersion = true;
+  } else {
+    // we practically always want to not annotate files with version in tests
+    // as this will make snapshots fail on every version bump
+    options.annotateFilesWithVersion = false;
+  }
   const typeMap = createTypeMap(request, options);
 
   for (let file of request.protoFile) {
