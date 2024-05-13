@@ -1,3 +1,10 @@
+# [1.175.0](https://github.com/stephenh/ts-proto/compare/v1.174.0...v1.175.0) (2024-05-13)
+
+
+### Features
+
+* optionally output versions used to generate files ([#1040](https://github.com/stephenh/ts-proto/issues/1040)) ([53d6799](https://github.com/stephenh/ts-proto/commit/53d67995526770213ecf91c15645b9c74e7e5bd4))
+
 # [1.174.0](https://github.com/stephenh/ts-proto/compare/v1.173.0...v1.174.0) (2024-05-01)
 
 
