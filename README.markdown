@@ -432,6 +432,8 @@ Generated code will be placed in the Gradle build directory.
 
 - With `--ts_proto_opt=useMongoObjectId=true`, fields of a type called ObjectId where the message is constructed to have on field called value that is a string will be mapped to type `mongodb.ObjectId` in the generated types. This will require your project to install the mongodb npm package. See [ObjectId](#objectid) for more details.
 
+- With `--ts_proto_opt=annotateFilesWithVersion=false`, the generated files will not contain the versions of `protoc` and `ts-proto` used to generate the file. This option is normally set to `true`, such that files list the versions used.
+
 - With `--ts_proto_opt=outputSchema=true`, meta typings will be generated that can later be used in other code generators.
 
 - With `--ts_proto_opt=outputTypeAnnotations=true`, each message will be given a `$type` field containing its fully-qualified name. You can use `--ts_proto_opt=outputTypeAnnotations=static-only` to omit it from the `interface` declaration, or `--ts_proto_opt=outputTypeAnnotations=optional` to make it an optional property on the `interface` definition. The latter option may be useful if you want to use the `$type` field for runtime type checking on responses from a server.
@@ -787,9 +789,7 @@ The following helper types may make it easier to work with the types generated f
 type OneOfCases<T> = T extends { $case: infer U extends string } ? U : never;
 
 /** Extracts a union of all the value types from a oneOf field */
-type OneOfValues<T> = T extends { $case: infer U extends string; [key: string]: unknown }
-  ? T[U]
-  : never;
+type OneOfValues<T> = T extends { $case: infer U extends string; [key: string]: unknown } ? T[U] : never;
 
 /** Extracts the specific type of a oneOf case based on its field name */
 type OneOfCase<T, K extends OneOfCases<T>> = T extends {
