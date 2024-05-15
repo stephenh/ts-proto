@@ -1,3 +1,10 @@
+## [1.175.1](https://github.com/stephenh/ts-proto/compare/v1.175.0...v1.175.1) (2024-05-15)
+
+
+### Bug Fixes
+
+* `outputSchema=true` when `onlyTypes=true` ([#1039](https://github.com/stephenh/ts-proto/issues/1039)) ([064665f](https://github.com/stephenh/ts-proto/commit/064665f064e072f9d530f84e45f605fd4b5a749c))
+
 # [1.175.0](https://github.com/stephenh/ts-proto/compare/v1.174.0...v1.175.0) (2024-05-13)
 
 
