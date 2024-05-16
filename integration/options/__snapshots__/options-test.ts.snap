@@ -10566,7 +10566,7 @@ exports[`options generates types correctly 1`] = `
     ],
     "name": "options.proto",
     "options": {
-      "ccEnableArenas": false,
+      "ccEnableArenas": true,
       "ccGenericServices": false,
       "csharpNamespace": "",
       "deprecated": false,
