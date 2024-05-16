@@ -1,3 +1,10 @@
+# [1.176.0](https://github.com/stephenh/ts-proto/compare/v1.175.1...v1.176.0) (2024-05-16)
+
+
+### Features
+
+* Bump ts-proto-descriptors to latest ts-proto. ([#1043](https://github.com/stephenh/ts-proto/issues/1043)) ([0b06554](https://github.com/stephenh/ts-proto/commit/0b065540d8fb4a3c1254a876d2be0dd48ac3ba66)), closes [#1042](https://github.com/stephenh/ts-proto/issues/1042)
+
 ## [1.175.1](https://github.com/stephenh/ts-proto/compare/v1.175.0...v1.175.1) (2024-05-15)
 
 
