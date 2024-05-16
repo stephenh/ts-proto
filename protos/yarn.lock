@@ -101,12 +101,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dprint-node@npm:^1.0.7":
-  version: 1.0.7
-  resolution: "dprint-node@npm:1.0.7"
+"dprint-node@npm:^1.0.8":
+  version: 1.0.8
+  resolution: "dprint-node@npm:1.0.8"
   dependencies:
     detect-libc: ^1.0.3
-  checksum: cd29f8e2b7de334273b4f53d24072718139635408b015963bcc80829cc785a84591462585b5b569791c8b1420c5672bec7499bda70d7298c58c8a3f43796e659
+  checksum: ac53b71296d155664319877f0e8c9fe94e084457ce9aae68081b9dd7165916f2829222923c59b1399d95680362f18a8da5994e7f76a8f52035e02bbd14ba76bc
   languageName: node
   linkType: hard
 
@@ -137,47 +137,37 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-poet@npm:^6.5.0":
-  version: 6.5.0
-  resolution: "ts-poet@npm:6.5.0"
+"ts-poet@npm:^6.7.0":
+  version: 6.9.0
+  resolution: "ts-poet@npm:6.9.0"
   dependencies:
-    dprint-node: ^1.0.7
-  checksum: 1a3705c7864cb0dc6f9305884a91a6582fdd93257977324cda8ea7e3e5dbd7525cbc3fb4d5753a088356a4b8b3fb9245d83c244740f52881725a79ab36d0d168
+    dprint-node: ^1.0.8
+  checksum: 04ee64e2e04614d13646fe08679e2e28993fdd14f4dd822d6993d7d8a93a9e77448f4e31d1b47d42d95f40b04b8adbbe187140be2b9a2027d0fcf151bffffac8
   languageName: node
   linkType: hard
 
-"ts-proto-descriptors@npm:1.13.0":
-  version: 1.13.0
-  resolution: "ts-proto-descriptors@npm:1.13.0"
-  dependencies:
-    long: ^5.0.0
-    protobufjs: ^7.2.4
-  checksum: 5979d706d91cf3868a6a41ad182c679adc4ec79094d5f679a98c7e710c905f602cfe1d5d225140b98f70deaa4e920dfa3a7b259c1849e8fa1f2fde2b2ce2eb10
-  languageName: node
-  linkType: hard
-
-"ts-proto-descriptors@workspace:.":
+"ts-proto-descriptors@1.15.0, ts-proto-descriptors@workspace:.":
   version: 0.0.0-use.local
   resolution: "ts-proto-descriptors@workspace:."
   dependencies:
     long: ^5.2.3
     protobufjs: ^7.2.4
-    ts-proto: ^1.155.0
+    ts-proto: ^1.175.1
     typescript: ^5.1.3
   languageName: unknown
   linkType: soft
 
-"ts-proto@npm:^1.155.0":
-  version: 1.155.0
-  resolution: "ts-proto@npm:1.155.0"
+"ts-proto@npm:^1.175.1":
+  version: 1.175.1
+  resolution: "ts-proto@npm:1.175.1"
   dependencies:
     case-anything: ^2.1.13
     protobufjs: ^7.2.4
-    ts-poet: ^6.5.0
-    ts-proto-descriptors: 1.13.0
+    ts-poet: ^6.7.0
+    ts-proto-descriptors: 1.15.0
   bin:
     protoc-gen-ts_proto: protoc-gen-ts_proto
-  checksum: e159bd3e7539c98e362fc3ab10a8bb96fabf1f9c10d80ace794608910f9ac98102f2dbcaeb075b825951dac8d0c642d69ea1bdcc7841cce79520eb7e55983ae1
+  checksum: 08b1736dab4bbeaeed59df8ff64feb5184970058a830469876b39ef8d9f4d1ce3c408c601ed33ebff0867059ce32a23a97f9284cb1c2cf6ad5c665504ed865e3
   languageName: node
   linkType: hard
 
