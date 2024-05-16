@@ -70,7 +70,7 @@
     "case-anything": "^2.1.13",
     "protobufjs": "^7.2.4",
     "ts-poet": "^6.7.0",
-    "ts-proto-descriptors": "1.16.0-alpha.0"
+    "ts-proto-descriptors": "1.16.0"
   },
   "packageManager": "yarn@3.6.0"
 }
