@@ -1,4 +1,4 @@
-import { maybeSnakeToCamel, camelCaseGrpc } from "../src/case";
+import { maybeSnakeToCamel, camelCaseGrpc, camelToSnake } from "../src/case";
 import { Options, optionsFromParameter } from "../src/options";
 import { getFieldJsonName } from "../src/utils";
 
@@ -49,6 +49,14 @@ describe("case", () => {
 
   it("converts string to camel case respecting word separation, getAPIValue === getApiValue", () => {
     expect(camelCaseGrpc("GetAPIValue")).toEqual("getApiValue");
+  });
+
+  it("converts simple string to snake case, getApiValue === GET_API_VALUE", () => {
+    expect(camelToSnake("GetApiValue")).toEqual("GET_API_VALUE");
+  });
+
+  it("converts string to snake case respecting word separation, getAPIValue === GET_API_VALUE", () => {
+    expect(camelToSnake("getAPIValue")).toEqual("GET_API_VALUE");
   });
 
   describe("getFieldJsonName", () => {
