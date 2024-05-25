@@ -1,3 +1,10 @@
+## [1.176.1](https://github.com/stephenh/ts-proto/compare/v1.176.0...v1.176.1) (2024-05-25)
+
+
+### Bug Fixes
+
+* camelToSnake to respect uppercase words, such as "GetAPIValue" -> "GET_API_VALUE" ([#1046](https://github.com/stephenh/ts-proto/issues/1046)) ([d2e75cd](https://github.com/stephenh/ts-proto/commit/d2e75cd14cdf3bc0c35f59bf8e8a095c57e9c040))
+
 # [1.176.0](https://github.com/stephenh/ts-proto/compare/v1.175.1...v1.176.0) (2024-05-16)
 
 
