@@ -301,7 +301,7 @@ export const protoMetadata: ProtoMetadata = {
       "pyGenericServices": false,
       "phpGenericServices": false,
       "deprecated": false,
-      "ccEnableArenas": true,
+      "ccEnableArenas": false,
       "objcClassPrefix": "",
       "csharpNamespace": "",
       "swiftPrefix": "",
