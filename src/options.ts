@@ -101,6 +101,7 @@ export type Options = {
   disableProto2DefaultValues: boolean;
   useNullAsOptional: boolean;
   annotateFilesWithVersion: boolean;
+  noDefaultsForOptionals: boolean;
 };
 
 export function defaultOptions(): Options {
@@ -167,6 +168,7 @@ export function defaultOptions(): Options {
     disableProto2DefaultValues: false,
     useNullAsOptional: false,
     annotateFilesWithVersion: true,
+    noDefaultsForOptionals: false
   };
 }
 

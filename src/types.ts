@@ -1,3 +1,4 @@
+import { Code, Import, code, imp } from "ts-poet";
 import {
   CodeGeneratorRequest,
   DescriptorProto,
@@ -11,21 +12,20 @@ import {
   MethodDescriptorProto,
   ServiceDescriptorProto,
 } from "ts-proto-descriptors";
-import { code, Code, imp, Import } from "ts-poet";
+import { uncapitalize } from "./case";
+import { Context } from "./context";
+import { getMemberName as getEnumMemberName } from "./enums";
 import { DateOption, EnvOption, LongOption, OneofOption, Options } from "./options";
-import { visit } from "./visit";
+import SourceInfo from "./sourceInfo";
 import {
-  fail,
   FormattedMethodDescriptor,
+  fail,
   impProto,
-  nullOrUndefined,
   maybePrefixPackage,
+  nullOrUndefined,
   withAndMaybeCheckIsNotNull,
 } from "./utils";
-import SourceInfo from "./sourceInfo";
-import { uncapitalize } from "./case";
-import { BaseContext, Context } from "./context";
-import { getMemberName as getEnumMemberName } from "./enums";
+import { visit } from "./visit";
 
 /** Based on https://github.com/dcodeIO/protobuf.js/blob/master/src/types.js#L37. */
 export function basicWireType(type: FieldDescriptorProto_Type): number {
@@ -213,6 +213,9 @@ export function getFieldOptionsJsType(
 
 export function defaultValue(ctx: Context, field: FieldDescriptorProto): any {
   const { typeMap, options, utils, currentFile } = ctx;
+
+  if(options.noDefaultsForOptionals) return undefined;
+
   const useDefaultValue = !currentFile.isProto3Syntax && !options.disableProto2DefaultValues && field.defaultValue;
   const numericDefaultVal = useDefaultValue ? field.defaultValue : 0;
   switch (field.type) {
@@ -296,10 +299,19 @@ export function notDefaultCheck(
   place: string,
 ): Code {
   const { typeMap, options, currentFile } = ctx;
+
   const isOptional = isOptionalProperty(field, messageOptions, options, currentFile.isProto3Syntax);
+
+  if(options.noDefaultsForOptionals) {
+    return isOptional
+    ? code`${place} !== undefined ${withAndMaybeCheckIsNotNull(options, place)}`
+    : code`${place} !== undefined`;
+  }
+
   const maybeNotUndefinedAnd = isOptional
     ? `${place} !== undefined ${withAndMaybeCheckIsNotNull(options, place)} &&`
     : "";
+
   switch (field.type) {
     case FieldDescriptorProto_Type.TYPE_DOUBLE:
     case FieldDescriptorProto_Type.TYPE_FLOAT:
@@ -414,6 +426,7 @@ export function isOptionalProperty(
   return (
     (optionalMessages && isMessage(field) && !isRepeated(field)) ||
     ((optionalAll || deprecatedOnly) && !messageOptions?.mapEntry) ||
+    (options.noDefaultsForOptionals && !isRepeated(field) && (isScalar(field) || isEnum(field))) ||
     // file is proto2, we have enabled proto2 optionals, and the field itself is optional
     (!isProto3Syntax &&
       field.label === FieldDescriptorProto_Label.LABEL_OPTIONAL &&

@@ -99,13 +99,12 @@ import {
   impFile,
   impProto,
   maybeAddComment,
-  nullOrUndefined,
   maybePrefixPackage,
+  nullOrUndefined,
   safeAccessor,
-  withOrMaybeCheckIsNull,
   withAndMaybeCheckIsNotNull,
   withOrMaybeCheckIsNotNull,
-  withAndMaybeCheckIsNull,
+  withOrMaybeCheckIsNull
 } from "./utils";
 import { visit, visitServices } from "./visit";
 
@@ -743,7 +742,7 @@ function makeTimestampMethods(
   let seconds: string | Code = "Math.trunc(date.getTime() / 1_000)";
   let toNumberCode: string | Code = "t.seconds";
   const makeToNumberCode = (methodCall: string) =>
-    `t.seconds${options.useOptionals === "all" ? "?" : ""}.${methodCall}`;
+    `t.seconds${options.useOptionals === "all" || options.noDefaultsForOptionals ? "?" : ""}.${methodCall}`;
 
   if (options.forceLong === LongOption.LONG) {
     toNumberCode = makeToNumberCode("toNumber()");
@@ -1249,10 +1248,14 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
               ${messageProperty} = ${generateMapType ? "new Map()" : "{}"};
             }`
           : "";
+
+        const ifValueCheck = `${varName}.value !== undefined ${withAndMaybeCheckIsNotNull(options, `${varName}.value`)}`;
+        const maybeIfKeyCheck = `${options.noDefaultsForOptionals ? ` && ${varName}.key !== undefined ${withAndMaybeCheckIsNotNull(options, `${varName}.key`)}`: ''}`
+
         chunks.push(code`
           ${tagCheck}
           const ${varName} = ${readSnippet};
-          if (${varName}.value !== undefined ${withAndMaybeCheckIsNotNull(options, `${varName}.value`)}) {
+          if (${ifValueCheck}${maybeIfKeyCheck}) {
             ${initializerSnippet}
             ${valueSetterSnippet};
           }
@@ -1631,11 +1634,13 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
           ? writeSnippet(`BigInt(${messageProperty})`)
           : writeSnippet(`${messageProperty}`);
 
+
       chunks.push(code`
         if (${notDefaultCheck(ctx, field, messageDesc.options, `${messageProperty}`)}) {
           ${body};
         }
       `);
+      
     } else {
       chunks.push(code`${writeSnippet(`${messageProperty}`)};`);
     }
