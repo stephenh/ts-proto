@@ -1,3 +1,10 @@
+## [1.176.2](https://github.com/stephenh/ts-proto/compare/v1.176.1...v1.176.2) (2024-06-04)
+
+
+### Bug Fixes
+
+* Fix snake casing numbers. ([#1052](https://github.com/stephenh/ts-proto/issues/1052)) ([f85a2f1](https://github.com/stephenh/ts-proto/commit/f85a2f1ed4e04143b96d6eaa3a589b16944d3239)), closes [#1048](https://github.com/stephenh/ts-proto/issues/1048)
+
 ## [1.176.1](https://github.com/stephenh/ts-proto/compare/v1.176.0...v1.176.1) (2024-05-25)
 
 
