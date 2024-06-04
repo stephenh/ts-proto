@@ -2,6 +2,7 @@
 // source: ui/simple.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as _m0 from "protobufjs/minimal";
 import {
   Simple as Simple2,
@@ -66,12 +67,12 @@ function createBaseSimple(): Simple {
 }
 
 export const Simple = {
-  encode(message: Simple, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Simple, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
     if (message.otherSimple !== undefined) {
-      Simple2.encode(message.otherSimple, writer.uint32(18).fork()).ldelim();
+      Simple2.encode(message.otherSimple, writer.uint32(18).fork()).join();
     }
     return writer;
   },
@@ -142,7 +143,7 @@ function createBaseSimpleEnums(): SimpleEnums {
 }
 
 export const SimpleEnums = {
-  encode(message: SimpleEnums, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: SimpleEnums, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.localEnum !== 0) {
       writer.uint32(8).int32(message.localEnum);
     }

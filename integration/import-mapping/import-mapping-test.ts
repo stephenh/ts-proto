@@ -15,6 +15,7 @@ describe("import-mapping", () => {
       "wkt/google/protobuf/struct",
       "./google/protobuf/timestamp",
       "protobufjs/minimal",
+      "@bufbuild/protobuf/wire",
       "@myorg/proto-npm-package",
     ];
     expect(actualImports.sort()).toEqual(expectedImports.sort());

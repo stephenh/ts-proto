@@ -2,6 +2,7 @@
 // source: example.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import { grpc } from "@improbable-eng/grpc-web";
 import { BrowserHeaders } from "browser-headers";
 import * as _m0 from "protobufjs/minimal";
@@ -104,7 +105,7 @@ function createBaseDashFlash(): DashFlash {
 }
 
 export const DashFlash = {
-  encode(message: DashFlash, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: DashFlash, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.msg !== "") {
       writer.uint32(10).string(message.msg);
     }
@@ -178,15 +179,15 @@ function createBaseDashUserSettingsState(): DashUserSettingsState {
 }
 
 export const DashUserSettingsState = {
-  encode(message: DashUserSettingsState, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: DashUserSettingsState, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.email !== "") {
       writer.uint32(10).string(message.email);
     }
     if (message.urls !== undefined) {
-      DashUserSettingsState_URLs.encode(message.urls, writer.uint32(50).fork()).ldelim();
+      DashUserSettingsState_URLs.encode(message.urls, writer.uint32(50).fork()).join();
     }
     for (const v of message.flashes) {
-      DashFlash.encode(v!, writer.uint32(58).fork()).ldelim();
+      DashFlash.encode(v!, writer.uint32(58).fork()).join();
     }
     return writer;
   },
@@ -269,7 +270,7 @@ function createBaseDashUserSettingsState_URLs(): DashUserSettingsState_URLs {
 }
 
 export const DashUserSettingsState_URLs = {
-  encode(message: DashUserSettingsState_URLs, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: DashUserSettingsState_URLs, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.connectGoogle !== "") {
       writer.uint32(10).string(message.connectGoogle);
     }
@@ -343,7 +344,7 @@ function createBaseDashCred(): DashCred {
 }
 
 export const DashCred = {
-  encode(message: DashCred, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: DashCred, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.description !== "") {
       writer.uint32(18).string(message.description);
     }
@@ -447,7 +448,7 @@ function createBaseDashAPICredsCreateReq(): DashAPICredsCreateReq {
 }
 
 export const DashAPICredsCreateReq = {
-  encode(message: DashAPICredsCreateReq, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: DashAPICredsCreateReq, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.description !== "") {
       writer.uint32(10).string(message.description);
     }
@@ -521,7 +522,7 @@ function createBaseDashAPICredsUpdateReq(): DashAPICredsUpdateReq {
 }
 
 export const DashAPICredsUpdateReq = {
-  encode(message: DashAPICredsUpdateReq, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: DashAPICredsUpdateReq, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.credSid !== "") {
       writer.uint32(10).string(message.credSid);
     }
@@ -625,7 +626,7 @@ function createBaseDashAPICredsDeleteReq(): DashAPICredsDeleteReq {
 }
 
 export const DashAPICredsDeleteReq = {
-  encode(message: DashAPICredsDeleteReq, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: DashAPICredsDeleteReq, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.credSid !== "") {
       writer.uint32(10).string(message.credSid);
     }
@@ -699,7 +700,7 @@ function createBaseEmpty(): Empty {
 }
 
 export const Empty = {
-  encode(_: Empty, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(_: Empty, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     return writer;
   },
 

@@ -2,6 +2,7 @@
 // source: simple.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as _m0 from "protobufjs/minimal";
 import {
   FooService as FooService2,
@@ -82,12 +83,12 @@ function createBaseSimple(): Simple {
 }
 
 export const Simple = {
-  encode(message: Simple, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Simple, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
     if (message.otherSimple !== undefined) {
-      Simple3.encode(message.otherSimple, writer.uint32(18).fork()).ldelim();
+      Simple3.encode(message.otherSimple, writer.uint32(18).fork()).join();
     }
     return writer;
   },
@@ -158,12 +159,12 @@ function createBaseDifferentSimple(): DifferentSimple {
 }
 
 export const DifferentSimple = {
-  encode(message: DifferentSimple, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: DifferentSimple, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
     if (message.otherOptionalSimple2 !== undefined) {
-      Simple3.encode(message.otherOptionalSimple2, writer.uint32(18).fork()).ldelim();
+      Simple3.encode(message.otherOptionalSimple2, writer.uint32(18).fork()).join();
     }
     return writer;
   },
@@ -236,7 +237,7 @@ function createBaseSimpleEnums(): SimpleEnums {
 }
 
 export const SimpleEnums = {
-  encode(message: SimpleEnums, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: SimpleEnums, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.localEnum !== 0) {
       writer.uint32(8).int32(message.localEnum);
     }
@@ -310,7 +311,7 @@ function createBaseFooServiceCreateRequest(): FooServiceCreateRequest {
 }
 
 export const FooServiceCreateRequest = {
-  encode(message: FooServiceCreateRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: FooServiceCreateRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.kind !== 0) {
       writer.uint32(8).int32(message.kind);
     }
@@ -367,7 +368,7 @@ function createBaseFooServiceCreateResponse(): FooServiceCreateResponse {
 }
 
 export const FooServiceCreateResponse = {
-  encode(message: FooServiceCreateResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: FooServiceCreateResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.kind !== 0) {
       writer.uint32(8).int32(message.kind);
     }

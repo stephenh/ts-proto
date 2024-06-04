@@ -2,6 +2,7 @@
 // source: value.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as _m0 from "protobufjs/minimal";
 import { ListValue, Struct, Value } from "./google/protobuf/struct";
 import { StringValue } from "./google/protobuf/wrappers";
@@ -21,21 +22,21 @@ function createBaseValueMessage(): ValueMessage {
 }
 
 export const ValueMessage = {
-  encode(message: ValueMessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: ValueMessage, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.value !== undefined) {
-      Value.encode(Value.wrap(message.value), writer.uint32(10).fork()).ldelim();
+      Value.encode(Value.wrap(message.value), writer.uint32(10).fork()).join();
     }
     if (message.anyList !== undefined) {
-      ListValue.encode(ListValue.wrap(message.anyList), writer.uint32(18).fork()).ldelim();
+      ListValue.encode(ListValue.wrap(message.anyList), writer.uint32(18).fork()).join();
     }
     for (const v of message.repeatedAny) {
-      Value.encode(Value.wrap(v!), writer.uint32(26).fork()).ldelim();
+      Value.encode(Value.wrap(v!), writer.uint32(26).fork()).join();
     }
     for (const v of message.repeatedStrings) {
-      StringValue.encode({ value: v!! }, writer.uint32(34).fork()).ldelim();
+      StringValue.encode({ value: v!! }, writer.uint32(34).fork()).join();
     }
     if (message.structValue !== undefined) {
-      Struct.encode(Struct.wrap(message.structValue), writer.uint32(42).fork()).ldelim();
+      Struct.encode(Struct.wrap(message.structValue), writer.uint32(42).fork()).join();
     }
     return writer;
   },

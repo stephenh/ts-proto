@@ -2,6 +2,7 @@
 // source: parent.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as _m0 from "protobufjs/minimal";
 import { Child, ChildEnum, childEnumFromJSON, childEnumToJSON } from "./child.pb";
 import { Timestamp } from "./google/protobuf/timestamp.pb";
@@ -19,15 +20,15 @@ function createBaseParent(): Parent {
 }
 
 export const Parent = {
-  encode(message: Parent, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Parent, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.child !== undefined) {
-      Child.encode(message.child, writer.uint32(10).fork()).ldelim();
+      Child.encode(message.child, writer.uint32(10).fork()).join();
     }
     if (message.childEnum !== 0) {
       writer.uint32(16).int32(message.childEnum);
     }
     if (message.createdAt !== undefined) {
-      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(26).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(26).fork()).join();
     }
     return writer;
   },

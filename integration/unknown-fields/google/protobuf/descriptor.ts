@@ -2,6 +2,7 @@
 // source: google/protobuf/descriptor.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as _m0 from "protobufjs/minimal";
 import Long = require("long");
 
@@ -987,20 +988,15 @@ function createBaseFileDescriptorSet(): FileDescriptorSet {
 }
 
 export const FileDescriptorSet = {
-  encode(message: FileDescriptorSet, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: FileDescriptorSet, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     for (const v of message.file) {
-      FileDescriptorProto.encode(v!, writer.uint32(10).fork()).ldelim();
+      FileDescriptorProto.encode(v!, writer.uint32(10).fork()).join();
     }
     if (message._unknownFields !== undefined) {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }
@@ -1060,7 +1056,7 @@ function createBaseFileDescriptorProto(): FileDescriptorProto {
 }
 
 export const FileDescriptorProto = {
-  encode(message: FileDescriptorProto, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: FileDescriptorProto, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== undefined && message.name !== "") {
       writer.uint32(10).string(message.name);
     }
@@ -1074,29 +1070,29 @@ export const FileDescriptorProto = {
     for (const v of message.publicDependency) {
       writer.int32(v);
     }
-    writer.ldelim();
+    writer.join();
     writer.uint32(90).fork();
     for (const v of message.weakDependency) {
       writer.int32(v);
     }
-    writer.ldelim();
+    writer.join();
     for (const v of message.messageType) {
-      DescriptorProto.encode(v!, writer.uint32(34).fork()).ldelim();
+      DescriptorProto.encode(v!, writer.uint32(34).fork()).join();
     }
     for (const v of message.enumType) {
-      EnumDescriptorProto.encode(v!, writer.uint32(42).fork()).ldelim();
+      EnumDescriptorProto.encode(v!, writer.uint32(42).fork()).join();
     }
     for (const v of message.service) {
-      ServiceDescriptorProto.encode(v!, writer.uint32(50).fork()).ldelim();
+      ServiceDescriptorProto.encode(v!, writer.uint32(50).fork()).join();
     }
     for (const v of message.extension) {
-      FieldDescriptorProto.encode(v!, writer.uint32(58).fork()).ldelim();
+      FieldDescriptorProto.encode(v!, writer.uint32(58).fork()).join();
     }
     if (message.options !== undefined) {
-      FileOptions.encode(message.options, writer.uint32(66).fork()).ldelim();
+      FileOptions.encode(message.options, writer.uint32(66).fork()).join();
     }
     if (message.sourceCodeInfo !== undefined) {
-      SourceCodeInfo.encode(message.sourceCodeInfo, writer.uint32(74).fork()).ldelim();
+      SourceCodeInfo.encode(message.sourceCodeInfo, writer.uint32(74).fork()).join();
     }
     if (message.syntax !== undefined && message.syntax !== "") {
       writer.uint32(98).string(message.syntax);
@@ -1105,12 +1101,7 @@ export const FileDescriptorProto = {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }
@@ -1265,33 +1256,33 @@ function createBaseDescriptorProto(): DescriptorProto {
 }
 
 export const DescriptorProto = {
-  encode(message: DescriptorProto, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: DescriptorProto, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== undefined && message.name !== "") {
       writer.uint32(10).string(message.name);
     }
     for (const v of message.field) {
-      FieldDescriptorProto.encode(v!, writer.uint32(18).fork()).ldelim();
+      FieldDescriptorProto.encode(v!, writer.uint32(18).fork()).join();
     }
     for (const v of message.extension) {
-      FieldDescriptorProto.encode(v!, writer.uint32(50).fork()).ldelim();
+      FieldDescriptorProto.encode(v!, writer.uint32(50).fork()).join();
     }
     for (const v of message.nestedType) {
-      DescriptorProto.encode(v!, writer.uint32(26).fork()).ldelim();
+      DescriptorProto.encode(v!, writer.uint32(26).fork()).join();
     }
     for (const v of message.enumType) {
-      EnumDescriptorProto.encode(v!, writer.uint32(34).fork()).ldelim();
+      EnumDescriptorProto.encode(v!, writer.uint32(34).fork()).join();
     }
     for (const v of message.extensionRange) {
-      DescriptorProto_ExtensionRange.encode(v!, writer.uint32(42).fork()).ldelim();
+      DescriptorProto_ExtensionRange.encode(v!, writer.uint32(42).fork()).join();
     }
     for (const v of message.oneofDecl) {
-      OneofDescriptorProto.encode(v!, writer.uint32(66).fork()).ldelim();
+      OneofDescriptorProto.encode(v!, writer.uint32(66).fork()).join();
     }
     if (message.options !== undefined) {
-      MessageOptions.encode(message.options, writer.uint32(58).fork()).ldelim();
+      MessageOptions.encode(message.options, writer.uint32(58).fork()).join();
     }
     for (const v of message.reservedRange) {
-      DescriptorProto_ReservedRange.encode(v!, writer.uint32(74).fork()).ldelim();
+      DescriptorProto_ReservedRange.encode(v!, writer.uint32(74).fork()).join();
     }
     for (const v of message.reservedName) {
       writer.uint32(82).string(v!);
@@ -1300,12 +1291,7 @@ export const DescriptorProto = {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }
@@ -1414,7 +1400,7 @@ function createBaseDescriptorProto_ExtensionRange(): DescriptorProto_ExtensionRa
 }
 
 export const DescriptorProto_ExtensionRange = {
-  encode(message: DescriptorProto_ExtensionRange, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: DescriptorProto_ExtensionRange, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.start !== undefined && message.start !== 0) {
       writer.uint32(8).int32(message.start);
     }
@@ -1422,18 +1408,13 @@ export const DescriptorProto_ExtensionRange = {
       writer.uint32(16).int32(message.end);
     }
     if (message.options !== undefined) {
-      ExtensionRangeOptions.encode(message.options, writer.uint32(26).fork()).ldelim();
+      ExtensionRangeOptions.encode(message.options, writer.uint32(26).fork()).join();
     }
     if (message._unknownFields !== undefined) {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }
@@ -1493,7 +1474,7 @@ function createBaseDescriptorProto_ReservedRange(): DescriptorProto_ReservedRang
 }
 
 export const DescriptorProto_ReservedRange = {
-  encode(message: DescriptorProto_ReservedRange, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: DescriptorProto_ReservedRange, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.start !== undefined && message.start !== 0) {
       writer.uint32(8).int32(message.start);
     }
@@ -1504,12 +1485,7 @@ export const DescriptorProto_ReservedRange = {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }
@@ -1562,20 +1538,15 @@ function createBaseExtensionRangeOptions(): ExtensionRangeOptions {
 }
 
 export const ExtensionRangeOptions = {
-  encode(message: ExtensionRangeOptions, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: ExtensionRangeOptions, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     for (const v of message.uninterpretedOption) {
-      UninterpretedOption.encode(v!, writer.uint32(7994).fork()).ldelim();
+      UninterpretedOption.encode(v!, writer.uint32(7994).fork()).join();
     }
     if (message._unknownFields !== undefined) {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }
@@ -1634,7 +1605,7 @@ function createBaseFieldDescriptorProto(): FieldDescriptorProto {
 }
 
 export const FieldDescriptorProto = {
-  encode(message: FieldDescriptorProto, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: FieldDescriptorProto, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== undefined && message.name !== "") {
       writer.uint32(10).string(message.name);
     }
@@ -1663,7 +1634,7 @@ export const FieldDescriptorProto = {
       writer.uint32(82).string(message.jsonName);
     }
     if (message.options !== undefined) {
-      FieldOptions.encode(message.options, writer.uint32(66).fork()).ldelim();
+      FieldOptions.encode(message.options, writer.uint32(66).fork()).join();
     }
     if (message.proto3Optional !== undefined && message.proto3Optional !== false) {
       writer.uint32(136).bool(message.proto3Optional);
@@ -1672,12 +1643,7 @@ export const FieldDescriptorProto = {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }
@@ -1793,23 +1759,18 @@ function createBaseOneofDescriptorProto(): OneofDescriptorProto {
 }
 
 export const OneofDescriptorProto = {
-  encode(message: OneofDescriptorProto, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: OneofDescriptorProto, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== undefined && message.name !== "") {
       writer.uint32(10).string(message.name);
     }
     if (message.options !== undefined) {
-      OneofOptions.encode(message.options, writer.uint32(18).fork()).ldelim();
+      OneofOptions.encode(message.options, writer.uint32(18).fork()).join();
     }
     if (message._unknownFields !== undefined) {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }
@@ -1862,18 +1823,18 @@ function createBaseEnumDescriptorProto(): EnumDescriptorProto {
 }
 
 export const EnumDescriptorProto = {
-  encode(message: EnumDescriptorProto, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: EnumDescriptorProto, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== undefined && message.name !== "") {
       writer.uint32(10).string(message.name);
     }
     for (const v of message.value) {
-      EnumValueDescriptorProto.encode(v!, writer.uint32(18).fork()).ldelim();
+      EnumValueDescriptorProto.encode(v!, writer.uint32(18).fork()).join();
     }
     if (message.options !== undefined) {
-      EnumOptions.encode(message.options, writer.uint32(26).fork()).ldelim();
+      EnumOptions.encode(message.options, writer.uint32(26).fork()).join();
     }
     for (const v of message.reservedRange) {
-      EnumDescriptorProto_EnumReservedRange.encode(v!, writer.uint32(34).fork()).ldelim();
+      EnumDescriptorProto_EnumReservedRange.encode(v!, writer.uint32(34).fork()).join();
     }
     for (const v of message.reservedName) {
       writer.uint32(42).string(v!);
@@ -1882,12 +1843,7 @@ export const EnumDescriptorProto = {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }
@@ -1961,7 +1917,7 @@ function createBaseEnumDescriptorProto_EnumReservedRange(): EnumDescriptorProto_
 }
 
 export const EnumDescriptorProto_EnumReservedRange = {
-  encode(message: EnumDescriptorProto_EnumReservedRange, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: EnumDescriptorProto_EnumReservedRange, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.start !== undefined && message.start !== 0) {
       writer.uint32(8).int32(message.start);
     }
@@ -1972,12 +1928,7 @@ export const EnumDescriptorProto_EnumReservedRange = {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }
@@ -2030,7 +1981,7 @@ function createBaseEnumValueDescriptorProto(): EnumValueDescriptorProto {
 }
 
 export const EnumValueDescriptorProto = {
-  encode(message: EnumValueDescriptorProto, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: EnumValueDescriptorProto, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== undefined && message.name !== "") {
       writer.uint32(10).string(message.name);
     }
@@ -2038,18 +1989,13 @@ export const EnumValueDescriptorProto = {
       writer.uint32(16).int32(message.number);
     }
     if (message.options !== undefined) {
-      EnumValueOptions.encode(message.options, writer.uint32(26).fork()).ldelim();
+      EnumValueOptions.encode(message.options, writer.uint32(26).fork()).join();
     }
     if (message._unknownFields !== undefined) {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }
@@ -2109,26 +2055,21 @@ function createBaseServiceDescriptorProto(): ServiceDescriptorProto {
 }
 
 export const ServiceDescriptorProto = {
-  encode(message: ServiceDescriptorProto, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: ServiceDescriptorProto, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== undefined && message.name !== "") {
       writer.uint32(10).string(message.name);
     }
     for (const v of message.method) {
-      MethodDescriptorProto.encode(v!, writer.uint32(18).fork()).ldelim();
+      MethodDescriptorProto.encode(v!, writer.uint32(18).fork()).join();
     }
     if (message.options !== undefined) {
-      ServiceOptions.encode(message.options, writer.uint32(26).fork()).ldelim();
+      ServiceOptions.encode(message.options, writer.uint32(26).fork()).join();
     }
     if (message._unknownFields !== undefined) {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }
@@ -2196,7 +2137,7 @@ function createBaseMethodDescriptorProto(): MethodDescriptorProto {
 }
 
 export const MethodDescriptorProto = {
-  encode(message: MethodDescriptorProto, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: MethodDescriptorProto, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== undefined && message.name !== "") {
       writer.uint32(10).string(message.name);
     }
@@ -2207,7 +2148,7 @@ export const MethodDescriptorProto = {
       writer.uint32(26).string(message.outputType);
     }
     if (message.options !== undefined) {
-      MethodOptions.encode(message.options, writer.uint32(34).fork()).ldelim();
+      MethodOptions.encode(message.options, writer.uint32(34).fork()).join();
     }
     if (message.clientStreaming !== undefined && message.clientStreaming !== false) {
       writer.uint32(40).bool(message.clientStreaming);
@@ -2219,12 +2160,7 @@ export const MethodDescriptorProto = {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }
@@ -2328,7 +2264,7 @@ function createBaseFileOptions(): FileOptions {
 }
 
 export const FileOptions = {
-  encode(message: FileOptions, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: FileOptions, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.javaPackage !== undefined && message.javaPackage !== "") {
       writer.uint32(10).string(message.javaPackage);
     }
@@ -2390,18 +2326,13 @@ export const FileOptions = {
       writer.uint32(362).string(message.rubyPackage);
     }
     for (const v of message.uninterpretedOption) {
-      UninterpretedOption.encode(v!, writer.uint32(7994).fork()).ldelim();
+      UninterpretedOption.encode(v!, writer.uint32(7994).fork()).join();
     }
     if (message._unknownFields !== undefined) {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }
@@ -2594,7 +2525,7 @@ function createBaseMessageOptions(): MessageOptions {
 }
 
 export const MessageOptions = {
-  encode(message: MessageOptions, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: MessageOptions, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.messageSetWireFormat !== undefined && message.messageSetWireFormat !== false) {
       writer.uint32(8).bool(message.messageSetWireFormat);
     }
@@ -2608,18 +2539,13 @@ export const MessageOptions = {
       writer.uint32(56).bool(message.mapEntry);
     }
     for (const v of message.uninterpretedOption) {
-      UninterpretedOption.encode(v!, writer.uint32(7994).fork()).ldelim();
+      UninterpretedOption.encode(v!, writer.uint32(7994).fork()).join();
     }
     if (message._unknownFields !== undefined) {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }
@@ -2702,7 +2628,7 @@ function createBaseFieldOptions(): FieldOptions {
 }
 
 export const FieldOptions = {
-  encode(message: FieldOptions, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: FieldOptions, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.ctype !== undefined && message.ctype !== 0) {
       writer.uint32(8).int32(message.ctype);
     }
@@ -2722,18 +2648,13 @@ export const FieldOptions = {
       writer.uint32(80).bool(message.weak);
     }
     for (const v of message.uninterpretedOption) {
-      UninterpretedOption.encode(v!, writer.uint32(7994).fork()).ldelim();
+      UninterpretedOption.encode(v!, writer.uint32(7994).fork()).join();
     }
     if (message._unknownFields !== undefined) {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }
@@ -2821,20 +2742,15 @@ function createBaseOneofOptions(): OneofOptions {
 }
 
 export const OneofOptions = {
-  encode(message: OneofOptions, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: OneofOptions, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     for (const v of message.uninterpretedOption) {
-      UninterpretedOption.encode(v!, writer.uint32(7994).fork()).ldelim();
+      UninterpretedOption.encode(v!, writer.uint32(7994).fork()).join();
     }
     if (message._unknownFields !== undefined) {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }
@@ -2880,7 +2796,7 @@ function createBaseEnumOptions(): EnumOptions {
 }
 
 export const EnumOptions = {
-  encode(message: EnumOptions, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: EnumOptions, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.allowAlias !== undefined && message.allowAlias !== false) {
       writer.uint32(16).bool(message.allowAlias);
     }
@@ -2888,18 +2804,13 @@ export const EnumOptions = {
       writer.uint32(24).bool(message.deprecated);
     }
     for (const v of message.uninterpretedOption) {
-      UninterpretedOption.encode(v!, writer.uint32(7994).fork()).ldelim();
+      UninterpretedOption.encode(v!, writer.uint32(7994).fork()).join();
     }
     if (message._unknownFields !== undefined) {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }
@@ -2959,23 +2870,18 @@ function createBaseEnumValueOptions(): EnumValueOptions {
 }
 
 export const EnumValueOptions = {
-  encode(message: EnumValueOptions, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: EnumValueOptions, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.deprecated !== undefined && message.deprecated !== false) {
       writer.uint32(8).bool(message.deprecated);
     }
     for (const v of message.uninterpretedOption) {
-      UninterpretedOption.encode(v!, writer.uint32(7994).fork()).ldelim();
+      UninterpretedOption.encode(v!, writer.uint32(7994).fork()).join();
     }
     if (message._unknownFields !== undefined) {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }
@@ -3028,23 +2934,18 @@ function createBaseServiceOptions(): ServiceOptions {
 }
 
 export const ServiceOptions = {
-  encode(message: ServiceOptions, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: ServiceOptions, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.deprecated !== undefined && message.deprecated !== false) {
       writer.uint32(264).bool(message.deprecated);
     }
     for (const v of message.uninterpretedOption) {
-      UninterpretedOption.encode(v!, writer.uint32(7994).fork()).ldelim();
+      UninterpretedOption.encode(v!, writer.uint32(7994).fork()).join();
     }
     if (message._unknownFields !== undefined) {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }
@@ -3097,7 +2998,7 @@ function createBaseMethodOptions(): MethodOptions {
 }
 
 export const MethodOptions = {
-  encode(message: MethodOptions, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: MethodOptions, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.deprecated !== undefined && message.deprecated !== false) {
       writer.uint32(264).bool(message.deprecated);
     }
@@ -3105,18 +3006,13 @@ export const MethodOptions = {
       writer.uint32(272).int32(message.idempotencyLevel);
     }
     for (const v of message.uninterpretedOption) {
-      UninterpretedOption.encode(v!, writer.uint32(7994).fork()).ldelim();
+      UninterpretedOption.encode(v!, writer.uint32(7994).fork()).join();
     }
     if (message._unknownFields !== undefined) {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }
@@ -3185,18 +3081,18 @@ function createBaseUninterpretedOption(): UninterpretedOption {
 }
 
 export const UninterpretedOption = {
-  encode(message: UninterpretedOption, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: UninterpretedOption, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     for (const v of message.name) {
-      UninterpretedOption_NamePart.encode(v!, writer.uint32(18).fork()).ldelim();
+      UninterpretedOption_NamePart.encode(v!, writer.uint32(18).fork()).join();
     }
     if (message.identifierValue !== undefined && message.identifierValue !== "") {
       writer.uint32(26).string(message.identifierValue);
     }
     if (message.positiveIntValue !== undefined && message.positiveIntValue !== 0) {
-      writer.uint32(32).uint64(message.positiveIntValue);
+      writer.uint32(32).uint64(message.positiveIntValue.toString());
     }
     if (message.negativeIntValue !== undefined && message.negativeIntValue !== 0) {
-      writer.uint32(40).int64(message.negativeIntValue);
+      writer.uint32(40).int64(message.negativeIntValue.toString());
     }
     if (message.doubleValue !== undefined && message.doubleValue !== 0) {
       writer.uint32(49).double(message.doubleValue);
@@ -3211,12 +3107,7 @@ export const UninterpretedOption = {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }
@@ -3304,7 +3195,7 @@ function createBaseUninterpretedOption_NamePart(): UninterpretedOption_NamePart 
 }
 
 export const UninterpretedOption_NamePart = {
-  encode(message: UninterpretedOption_NamePart, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: UninterpretedOption_NamePart, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.namePart !== "") {
       writer.uint32(10).string(message.namePart);
     }
@@ -3315,12 +3206,7 @@ export const UninterpretedOption_NamePart = {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }
@@ -3373,20 +3259,15 @@ function createBaseSourceCodeInfo(): SourceCodeInfo {
 }
 
 export const SourceCodeInfo = {
-  encode(message: SourceCodeInfo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: SourceCodeInfo, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     for (const v of message.location) {
-      SourceCodeInfo_Location.encode(v!, writer.uint32(10).fork()).ldelim();
+      SourceCodeInfo_Location.encode(v!, writer.uint32(10).fork()).join();
     }
     if (message._unknownFields !== undefined) {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }
@@ -3439,17 +3320,17 @@ function createBaseSourceCodeInfo_Location(): SourceCodeInfo_Location {
 }
 
 export const SourceCodeInfo_Location = {
-  encode(message: SourceCodeInfo_Location, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: SourceCodeInfo_Location, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     writer.uint32(10).fork();
     for (const v of message.path) {
       writer.int32(v);
     }
-    writer.ldelim();
+    writer.join();
     writer.uint32(18).fork();
     for (const v of message.span) {
       writer.int32(v);
     }
-    writer.ldelim();
+    writer.join();
     if (message.leadingComments !== undefined && message.leadingComments !== "") {
       writer.uint32(26).string(message.leadingComments);
     }
@@ -3463,12 +3344,7 @@ export const SourceCodeInfo_Location = {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }
@@ -3562,20 +3438,15 @@ function createBaseGeneratedCodeInfo(): GeneratedCodeInfo {
 }
 
 export const GeneratedCodeInfo = {
-  encode(message: GeneratedCodeInfo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: GeneratedCodeInfo, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     for (const v of message.annotation) {
-      GeneratedCodeInfo_Annotation.encode(v!, writer.uint32(10).fork()).ldelim();
+      GeneratedCodeInfo_Annotation.encode(v!, writer.uint32(10).fork()).join();
     }
     if (message._unknownFields !== undefined) {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }
@@ -3621,12 +3492,12 @@ function createBaseGeneratedCodeInfo_Annotation(): GeneratedCodeInfo_Annotation 
 }
 
 export const GeneratedCodeInfo_Annotation = {
-  encode(message: GeneratedCodeInfo_Annotation, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: GeneratedCodeInfo_Annotation, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     writer.uint32(10).fork();
     for (const v of message.path) {
       writer.int32(v);
     }
-    writer.ldelim();
+    writer.join();
     if (message.sourceFile !== undefined && message.sourceFile !== "") {
       writer.uint32(18).string(message.sourceFile);
     }
@@ -3640,12 +3511,7 @@ export const GeneratedCodeInfo_Annotation = {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }

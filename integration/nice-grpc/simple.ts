@@ -2,6 +2,7 @@
 // source: simple.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import type { CallContext, CallOptions } from "nice-grpc-common";
 import * as _m0 from "protobufjs/minimal";
 import { Empty } from "./google/protobuf/empty";
@@ -30,9 +31,9 @@ function createBaseTestMessage(): TestMessage {
 }
 
 export const TestMessage = {
-  encode(message: TestMessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: TestMessage, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.timestamp !== undefined) {
-      Timestamp.encode(toTimestamp(message.timestamp), writer.uint32(10).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.timestamp), writer.uint32(10).fork()).join();
     }
     return writer;
   },

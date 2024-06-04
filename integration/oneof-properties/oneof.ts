@@ -2,6 +2,7 @@
 // source: oneof.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "oneof";
@@ -96,7 +97,7 @@ function createBasePleaseChoose(): PleaseChoose {
 }
 
 export const PleaseChoose = {
-  encode(message: PleaseChoose, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: PleaseChoose, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
@@ -107,7 +108,7 @@ export const PleaseChoose = {
       writer.uint32(26).string(message.aString);
     }
     if (message.aMessage !== undefined) {
-      PleaseChoose_Submessage.encode(message.aMessage, writer.uint32(34).fork()).ldelim();
+      PleaseChoose_Submessage.encode(message.aMessage, writer.uint32(34).fork()).join();
     }
     if (message.aBool !== undefined) {
       writer.uint32(48).bool(message.aBool);
@@ -307,7 +308,7 @@ function createBasePleaseChoose_Submessage(): PleaseChoose_Submessage {
 }
 
 export const PleaseChoose_Submessage = {
-  encode(message: PleaseChoose_Submessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: PleaseChoose_Submessage, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }

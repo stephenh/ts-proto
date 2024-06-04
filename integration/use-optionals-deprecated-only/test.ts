@@ -2,6 +2,7 @@
 // source: test.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as _m0 from "protobufjs/minimal";
 import Long = require("long");
 
@@ -113,7 +114,7 @@ function createBaseOptionalsTest(): OptionalsTest {
 }
 
 export const OptionalsTest = {
-  encode(message: OptionalsTest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: OptionalsTest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.id !== 0) {
       writer.uint32(8).int32(message.id);
     }
@@ -121,7 +122,7 @@ export const OptionalsTest = {
       writer.uint32(16).int32(message.state);
     }
     if (message.long !== 0) {
-      writer.uint32(24).int64(message.long);
+      writer.uint32(24).int64(message.long.toString());
     }
     if (message.truth !== undefined && message.truth !== false) {
       writer.uint32(32).bool(message.truth);
@@ -136,29 +137,29 @@ export const OptionalsTest = {
     for (const v of message.repId) {
       writer.int32(v);
     }
-    writer.ldelim();
+    writer.join();
     if (message.repState !== undefined && message.repState.length !== 0) {
       writer.uint32(66).fork();
       for (const v of message.repState) {
         writer.int32(v);
       }
-      writer.ldelim();
+      writer.join();
     }
     writer.uint32(74).fork();
     for (const v of message.repStateV2) {
       writer.int32(v);
     }
-    writer.ldelim();
+    writer.join();
     writer.uint32(82).fork();
     for (const v of message.repLong) {
-      writer.int64(v);
+      writer.int64(v.toString());
     }
-    writer.ldelim();
+    writer.join();
     writer.uint32(90).fork();
     for (const v of message.repTruth) {
       writer.bool(v);
     }
-    writer.ldelim();
+    writer.join();
     for (const v of message.repDescription) {
       writer.uint32(98).string(v!);
     }
@@ -172,7 +173,7 @@ export const OptionalsTest = {
       writer.uint32(120).int32(message.optState);
     }
     if (message.optLong !== undefined) {
-      writer.uint32(128).int64(message.optLong);
+      writer.uint32(128).int64(message.optLong.toString());
     }
     if (message.optTruth !== undefined) {
       writer.uint32(136).bool(message.optTruth);
@@ -184,7 +185,7 @@ export const OptionalsTest = {
       writer.uint32(154).bytes(message.optData);
     }
     Object.entries(message.translations).forEach(([key, value]) => {
-      OptionalsTest_TranslationsEntry.encode({ key: key as any, value }, writer.uint32(162).fork()).ldelim();
+      OptionalsTest_TranslationsEntry.encode({ key: key as any, value }, writer.uint32(162).fork()).join();
     });
     return writer;
   },
@@ -547,7 +548,7 @@ function createBaseOptionalsTest_TranslationsEntry(): OptionalsTest_Translations
 }
 
 export const OptionalsTest_TranslationsEntry = {
-  encode(message: OptionalsTest_TranslationsEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: OptionalsTest_TranslationsEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.key !== "") {
       writer.uint32(10).string(message.key);
     }

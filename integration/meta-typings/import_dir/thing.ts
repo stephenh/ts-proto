@@ -2,6 +2,7 @@
 // source: import_dir/thing.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as _m0 from "protobufjs/minimal";
 import { FileDescriptorProto } from "ts-proto-descriptors";
 import { protoMetadata as protoMetadata1, Timestamp } from "../google/protobuf/timestamp";
@@ -17,9 +18,9 @@ function createBaseImportedThing(): ImportedThing {
 }
 
 export const ImportedThing = {
-  encode(message: ImportedThing, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: ImportedThing, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.createdAt !== undefined) {
-      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(10).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(10).fork()).join();
     }
     return writer;
   },

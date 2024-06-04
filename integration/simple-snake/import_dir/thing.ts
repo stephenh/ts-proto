@@ -2,6 +2,7 @@
 // source: import_dir/thing.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as _m0 from "protobufjs/minimal";
 import { Timestamp } from "../google/protobuf/timestamp";
 
@@ -16,9 +17,9 @@ function createBaseImportedThing(): ImportedThing {
 }
 
 export const ImportedThing = {
-  encode(message: ImportedThing, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: ImportedThing, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.created_at !== undefined) {
-      Timestamp.encode(toTimestamp(message.created_at), writer.uint32(10).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.created_at), writer.uint32(10).fork()).join();
     }
     return writer;
   },

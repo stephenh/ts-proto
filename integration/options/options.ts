@@ -2,6 +2,7 @@
 // source: options.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as _m0 from "protobufjs/minimal";
 import { FileDescriptorProto as FileDescriptorProto1 } from "ts-proto-descriptors";
 import { protoMetadata as protoMetadata1 } from "./google/protobuf/descriptor";
@@ -33,7 +34,7 @@ function createBaseMyMessage(): MyMessage {
 }
 
 export const MyMessage = {
-  encode(message: MyMessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: MyMessage, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.foo !== undefined) {
       writer.uint32(8).int32(message.foo);
     }
@@ -99,7 +100,7 @@ function createBaseRequestType(): RequestType {
 }
 
 export const RequestType = {
-  encode(_: RequestType, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(_: RequestType, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     return writer;
   },
 
@@ -125,7 +126,7 @@ function createBaseResponseType(): ResponseType {
 }
 
 export const ResponseType = {
-  encode(_: ResponseType, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(_: ResponseType, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     return writer;
   },
 

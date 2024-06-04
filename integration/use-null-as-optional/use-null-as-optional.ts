@@ -2,6 +2,7 @@
 // source: use-null-as-optional.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "useNullAsOptional";
@@ -27,7 +28,7 @@ function createBaseProfileInfo(): ProfileInfo {
 }
 
 export const ProfileInfo = {
-  encode(message: ProfileInfo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: ProfileInfo, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.id !== 0) {
       writer.uint32(8).int32(message.id);
     }
@@ -116,7 +117,7 @@ function createBaseUser(): User {
 }
 
 export const User = {
-  encode(message: User, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: User, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.id !== 0) {
       writer.uint32(8).int32(message.id);
     }
@@ -124,7 +125,7 @@ export const User = {
       writer.uint32(18).string(message.username);
     }
     if (message.profile !== undefined && message.profile !== null) {
-      ProfileInfo.encode(message.profile, writer.uint32(26).fork()).ldelim();
+      ProfileInfo.encode(message.profile, writer.uint32(26).fork()).join();
     }
     return writer;
   },
@@ -207,7 +208,7 @@ function createBaseUserById(): UserById {
 }
 
 export const UserById = {
-  encode(message: UserById, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: UserById, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.id !== 0) {
       writer.uint32(8).int32(message.id);
     }

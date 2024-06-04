@@ -2,6 +2,7 @@
 // source: ui.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "simple2";
@@ -55,7 +56,7 @@ function createBaseSimple(): Simple {
 }
 
 export const Simple = {
-  encode(message: Simple, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Simple, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.simple2Name !== "") {
       writer.uint32(10).string(message.simple2Name);
     }

@@ -3,6 +3,7 @@
 
 /* eslint-disable */
 import Long = require("long");
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "";
@@ -23,20 +24,15 @@ function createBaseMapBigInt(): MapBigInt {
 }
 
 export const MapBigInt = {
-  encode(message: MapBigInt, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: MapBigInt, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     (message.map || new Map()).forEach((value, key) => {
-      MapBigInt_MapEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).ldelim();
+      MapBigInt_MapEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).join();
     });
     if (message._unknownFields !== undefined) {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }
@@ -131,23 +127,18 @@ function createBaseMapBigInt_MapEntry(): MapBigInt_MapEntry {
 }
 
 export const MapBigInt_MapEntry = {
-  encode(message: MapBigInt_MapEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: MapBigInt_MapEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (!message.key.equals(Long.UZERO)) {
-      writer.uint32(9).fixed64(message.key);
+      writer.uint32(9).fixed64(message.key.toString());
     }
     if (!message.value.equals(Long.ZERO)) {
-      writer.uint32(16).int64(message.value);
+      writer.uint32(16).int64(message.value.toString());
     }
     if (message._unknownFields !== undefined) {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }

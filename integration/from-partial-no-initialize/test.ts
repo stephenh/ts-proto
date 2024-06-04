@@ -2,6 +2,7 @@
 // source: test.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "";
@@ -30,7 +31,7 @@ function createBaseTPartialMessage(): TPartialMessage {
 }
 
 export const TPartialMessage = {
-  encode(message: TPartialMessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: TPartialMessage, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.field !== undefined && message.field !== "") {
       writer.uint32(10).string(message.field);
     }
@@ -87,7 +88,7 @@ function createBaseTPartial(): TPartial {
 }
 
 export const TPartial = {
-  encode(message: TPartial, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: TPartial, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.number !== undefined && message.number !== 0) {
       writer.uint32(8).int32(message.number);
     }
@@ -95,14 +96,14 @@ export const TPartial = {
       writer.uint32(18).string(message.string);
     }
     Object.entries(message.map || {}).forEach(([key, value]) => {
-      TPartial_MapEntry.encode({ key: key as any, value }, writer.uint32(26).fork()).ldelim();
+      TPartial_MapEntry.encode({ key: key as any, value }, writer.uint32(26).fork()).join();
     });
     if (message.message !== undefined) {
-      TPartialMessage.encode(message.message, writer.uint32(34).fork()).ldelim();
+      TPartialMessage.encode(message.message, writer.uint32(34).fork()).join();
     }
     if (message.repeatedMessage !== undefined && message.repeatedMessage.length !== 0) {
       for (const v of message.repeatedMessage) {
-        TPartialMessage.encode(v!, writer.uint32(42).fork()).ldelim();
+        TPartialMessage.encode(v!, writer.uint32(42).fork()).join();
       }
     }
     if (message.repeatedString !== undefined && message.repeatedString.length !== 0) {
@@ -115,7 +116,7 @@ export const TPartial = {
       for (const v of message.repeatedNumber) {
         writer.int32(v);
       }
-      writer.ldelim();
+      writer.join();
     }
     return writer;
   },
@@ -298,7 +299,7 @@ function createBaseTPartial_MapEntry(): TPartial_MapEntry {
 }
 
 export const TPartial_MapEntry = {
-  encode(message: TPartial_MapEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: TPartial_MapEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.key !== "") {
       writer.uint32(10).string(message.key);
     }

@@ -915,8 +915,6 @@ function makeGrpcWebErrorClass(bytes: ReturnType<typeof makeByteUtils>) {
 }
 
 function makeExtensionClass(options: Options) {
-  const Reader = impFile(options, "Reader@protobufjs/minimal");
-  const Writer = impFile(options, "Writer@protobufjs/minimal");
   const Extension = conditionalOutput(
     "Extension",
     code`
@@ -1111,7 +1109,9 @@ function getDecodeReadSnippet(ctx: Context, field: FieldDescriptorProto) {
     readSnippet = code`reader.${toReaderCall(field)}()`;
     if (isBytes(field)) {
       if (options.env === EnvOption.NODE) {
-        readSnippet = code`${readSnippet} as Buffer`;
+        // TODO investigate
+        // readSnippet = code`${readSnippet} as Buffer`;
+        readSnippet = code`Buffer.from(${readSnippet})`;
       }
     } else if (basicLongWireType(field.type) !== undefined) {
       if (isJsTypeFieldOption(options, field)) {
@@ -1391,11 +1391,16 @@ function getEncodeWriteSnippet(ctx: Context, field: FieldDescriptorProto): (plac
     }
   } else if (isScalar(field) || isEnum(field)) {
     const tag = ((field.number << 3) | basicWireType(field.type)) >>> 0;
-    return (place) => code`writer.uint32(${tag}).${toReaderCall(field)}(${place})`;
+    // TODO migrate to BinaryReader
+    if (isLong(field)) {
+      return (place) => code`writer.uint32(${tag}).${toReaderCall(field)}(${place}.toString())`;
+    } else {
+      return (place) => code`writer.uint32(${tag}).${toReaderCall(field)}(${place})`;
+    }
   } else if (isObjectId(field) && options.useMongoObjectId) {
     const tag = ((field.number << 3) | 2) >>> 0;
     const type = basicTypeName(ctx, field, { keepValueType: true });
-    return (place) => code`${type}.encode(${utils.toProtoObjectId}(${place}), writer.uint32(${tag}).fork()).ldelim()`;
+    return (place) => code`${type}.encode(${utils.toProtoObjectId}(${place}), writer.uint32(${tag}).fork()).join()`;
   } else if (
     isTimestamp(field) &&
     (options.useDate === DateOption.DATE ||
@@ -1404,7 +1409,7 @@ function getEncodeWriteSnippet(ctx: Context, field: FieldDescriptorProto): (plac
   ) {
     const tag = ((field.number << 3) | 2) >>> 0;
     const type = basicTypeName(ctx, field, { keepValueType: true });
-    return (place) => code`${type}.encode(${utils.toTimestamp}(${place}), writer.uint32(${tag}).fork()).ldelim()`;
+    return (place) => code`${type}.encode(${utils.toTimestamp}(${place}), writer.uint32(${tag}).fork()).join()`;
   } else if (isValueType(ctx, field)) {
     const maybeTypeField = addTypeToMessages(options) ? `$type: '${field.typeName.slice(1)}',` : "";
 
@@ -1417,7 +1422,7 @@ function getEncodeWriteSnippet(ctx: Context, field: FieldDescriptorProto): (plac
     };
 
     const tag = ((field.number << 3) | 2) >>> 0;
-    return (place) => code`${type}.encode(${wrappedValue(place)}, writer.uint32(${tag}).fork()).ldelim()`;
+    return (place) => code`${type}.encode(${wrappedValue(place)}, writer.uint32(${tag}).fork()).join()`;
   } else if (isMessage(field)) {
     const type = basicTypeName(ctx, field);
 
@@ -1428,7 +1433,7 @@ function getEncodeWriteSnippet(ctx: Context, field: FieldDescriptorProto): (plac
     }
 
     const tag = ((field.number << 3) | 2) >>> 0;
-    return (place) => code`${type}.encode(${place}, writer.uint32(${tag}).fork()).ldelim()`;
+    return (place) => code`${type}.encode(${place}, writer.uint32(${tag}).fork()).join()`;
   } else {
     throw new Error(`Unhandled field ${field}`);
   }
@@ -1439,14 +1444,14 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
   const { options, utils, typeMap, currentFile } = ctx;
   const chunks: Code[] = [];
 
-  const Writer = impFile(ctx.options, "Writer@protobufjs/minimal");
+  const BinaryWriter = imp("BinaryWriter@@bufbuild/protobuf/wire");
 
   // create the basic function declaration
   chunks.push(code`
     encode(
       ${messageDesc.field.length > 0 || options.unknownFields ? "message" : "_"}: ${fullName},
-      writer: ${Writer} = ${Writer}.create(),
-    ): ${Writer} {
+      writer: ${BinaryWriter} = new ${BinaryWriter}(),
+    ): ${BinaryWriter} {
   `);
 
   const processedOneofs = new Set<number>();
@@ -1520,7 +1525,7 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
           for (const v of ${messageProperty}) {
             writer.${toReaderCall(field)}(${toNumber}(v));
           }
-          writer.ldelim();
+          writer.join();
         `;
         if (isOptional) {
           chunks.push(code`
@@ -1534,13 +1539,15 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
       } else {
         // Ideally we'd reuse `writeSnippet` but it has tagging embedded inside of it.
         const tag = ((field.number << 3) | 2) >>> 0;
-        const rhs = (x: string) => (isLong(field) && options.forceLong === LongOption.BIGINT ? `${x}.toString()` : x);
+        // TODO migrate to BinaryReader
+        // const rhs = (x: string) => (isLong(field) && options.forceLong === LongOption.BIGINT ? `${x}.toString()` : x);
+        const rhs = (x: string) => (isLong(field) ? `${x}.toString()` : x);
         let listWriteSnippet = code`
           writer.uint32(${tag}).fork();
           for (const v of ${messageProperty}) {
             writer.${toReaderCall(field)}(${rhs("v")});
           }
-          writer.ldelim();
+          writer.join();
         `;
 
         if (isLong(field) && options.forceLong === LongOption.BIGINT) {
@@ -1559,7 +1566,7 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
                   }
                   writer.${toReaderCall(field)}(${rhs("v")});
                 }
-                writer.ldelim();
+                writer.join();
               `;
               break;
             case "uint64":
@@ -1574,7 +1581,7 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
                   }
                   writer.${toReaderCall(field)}(${rhs("v")});
                 }
-                writer.ldelim();
+                writer.join();
               `;
               break;
             default:
@@ -1646,12 +1653,7 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)['_push'](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }`);
@@ -1741,7 +1743,7 @@ function generateExtension(ctx: Context, message: DescriptorProto | undefined, e
   chunks.push(code`packed: ${extension.options?.packed ? true : false},`);
 
   const Reader = impFile(ctx.options, "Reader@protobufjs/minimal");
-  const Writer = impFile(ctx.options, "Writer@protobufjs/minimal");
+  const BinaryWriter = imp("BinaryWriter@@bufbuild/protobuf/wire");
 
   if (
     ctx.options.outputEncodeMethods === true ||
@@ -1762,11 +1764,17 @@ function generateExtension(ctx: Context, message: DescriptorProto | undefined, e
       } else if (isLong(field) && options.forceLong === LongOption.BIGINT) {
         return (place) => code`writer.${toReaderCall(field)}(${place}.toString())`;
       } else if (isScalar(field) || isEnum(field)) {
-        return (place) => code`writer.${toReaderCall(field)}(${place})`;
+        // TODO migrate to BinaryReader
+        // return (place) => code`writer.${toReaderCall(field)}(${place})`;
+        if (isLong(field)) {
+          return (place) => code`writer.${toReaderCall(field)}(${place}.toString())`;
+        } else {
+          return (place) => code`writer.${toReaderCall(field)}(${place})`;
+        }
       } else if (isObjectId(field) && options.useMongoObjectId) {
         const type = basicTypeName(ctx, field, { keepValueType: true });
 
-        return (place) => code`${type}.encode(${utils.toProtoObjectId}(${place}), writer.fork()).ldelim()`;
+        return (place) => code`${type}.encode(${utils.toProtoObjectId}(${place}), writer.fork()).join()`;
       } else if (
         isTimestamp(field) &&
         (options.useDate === DateOption.DATE ||
@@ -1774,7 +1782,7 @@ function generateExtension(ctx: Context, message: DescriptorProto | undefined, e
           options.useDate === DateOption.STRING_NANO)
       ) {
         const type = basicTypeName(ctx, field, { keepValueType: true });
-        return (place) => code`${type}.encode(${utils.toTimestamp}(${place}), writer.fork()).ldelim()`;
+        return (place) => code`${type}.encode(${utils.toTimestamp}(${place}), writer.fork()).join()`;
       } else if (isValueType(ctx, field)) {
         const maybeTypeField = addTypeToMessages(options) ? `$type: '${field.typeName.slice(1)}',` : "";
 
@@ -1786,7 +1794,7 @@ function generateExtension(ctx: Context, message: DescriptorProto | undefined, e
           return code`{${maybeTypeField} value: ${place}!}`;
         };
 
-        return (place) => code`${type}.encode(${wrappedValue(place)}, writer.fork()).ldelim()`;
+        return (place) => code`${type}.encode(${wrappedValue(place)}, writer.fork()).join()`;
       } else if (isMessage(field)) {
         const type = basicTypeName(ctx, field);
 
@@ -1795,7 +1803,7 @@ function generateExtension(ctx: Context, message: DescriptorProto | undefined, e
           return (place) => code`${type}.encode(${place}, writer).uint32(${endTag})`;
         }
 
-        return (place) => code`${type}.encode(${place}, writer.fork()).ldelim()`;
+        return (place) => code`${type}.encode(${place}, writer.fork()).join()`;
       } else {
         throw new Error(`Unhandled field ${field}`);
       }
@@ -1807,36 +1815,39 @@ function generateExtension(ctx: Context, message: DescriptorProto | undefined, e
       if (packedTag === undefined) {
         chunks.push(code`
           for (const v of value) {
-            const writer = ${Writer}.create();
+            const writer = new ${BinaryWriter}();
             ${writeSnippet("v")};
             encoded.push(writer.finish());
           }
         `);
       } else {
+        // TODO migrate to BinaryReader
+        // const rhs = (x: string) =>
+        //   isLong(extension) && ctx.options.forceLong === LongOption.BIGINT ? `${x}.toString()` : x;
         const rhs = (x: string) =>
-          isLong(extension) && ctx.options.forceLong === LongOption.BIGINT ? `${x}.toString()` : x;
+          isLong(extension) ? `${x}.toString()` : x;
 
         chunks.push(code`
-          const writer = ${Writer}.create();
+          const writer = new ${BinaryWriter};
           writer.fork();
           for (const v of value) {
             ${writeSnippet(rhs("v"))};
           }
-          writer.ldelim();
+          writer.join();
           encoded.push(writer.finish());
         `);
       }
     } else if (isScalar(extension) || isEnum(extension)) {
       chunks.push(code`
         if (${notDefaultCheck(ctx, extension, message?.options, "value")}) {
-          const writer = ${Writer}.create();
+          const writer = new ${BinaryWriter};
           ${writeSnippet("value")};
           encoded.push(writer.finish());
         }
       `);
     } else {
       chunks.push(code`
-        const writer = ${Writer}.create();
+        const writer = new ${BinaryWriter};
         ${writeSnippet("value")};
         encoded.push(writer.finish());
       `);

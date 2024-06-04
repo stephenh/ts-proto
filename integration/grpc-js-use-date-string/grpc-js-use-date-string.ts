@@ -2,6 +2,7 @@
 // source: grpc-js-use-date-string.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import { ChannelCredentials, Client, makeGenericClientConstructor, Metadata } from "@grpc/grpc-js";
 import type {
   CallOptions,
@@ -25,9 +26,9 @@ function createBaseTimestampMessage(): TimestampMessage {
 }
 
 export const TimestampMessage = {
-  encode(message: TimestampMessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: TimestampMessage, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.timestamp !== undefined) {
-      Timestamp.encode(toTimestamp(message.timestamp), writer.uint32(10).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.timestamp), writer.uint32(10).fork()).join();
     }
     return writer;
   },

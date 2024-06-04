@@ -2,6 +2,7 @@
 // source: default-with-custom-metadata.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as _m0 from "protobufjs/minimal";
 import { Foo } from "./custom-metadata";
 
@@ -20,7 +21,7 @@ function createBaseGetBasicRequest(): GetBasicRequest {
 }
 
 export const GetBasicRequest = {
-  encode(message: GetBasicRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: GetBasicRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
@@ -77,7 +78,7 @@ function createBaseGetBasicResponse(): GetBasicResponse {
 }
 
 export const GetBasicResponse = {
-  encode(message: GetBasicResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: GetBasicResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }

@@ -2,6 +2,7 @@
 // source: observable.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as _m0 from "protobufjs/minimal";
 import { Observable } from "rxjs";
 
@@ -20,7 +21,7 @@ function createBaseProduceRequest(): ProduceRequest {
 }
 
 export const ProduceRequest = {
-  encode(message: ProduceRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: ProduceRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.ingredients !== "") {
       writer.uint32(10).string(message.ingredients);
     }
@@ -77,7 +78,7 @@ function createBaseProduceReply(): ProduceReply {
 }
 
 export const ProduceReply = {
-  encode(message: ProduceReply, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: ProduceReply, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.result !== "") {
       writer.uint32(10).string(message.result);
     }

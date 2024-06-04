@@ -2,6 +2,7 @@
 // source: global-this.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "simple";
@@ -35,7 +36,7 @@ function createBaseObject(): Object {
 }
 
 export const Object = {
-  encode(message: Object, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Object, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
@@ -92,7 +93,7 @@ function createBaseError(): Error {
 }
 
 export const Error = {
-  encode(message: Error, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Error, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
@@ -149,7 +150,7 @@ function createBaseString(): String {
 }
 
 export const String = {
-  encode(message: String, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: String, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.value !== "") {
       writer.uint32(10).string(message.value);
     }
@@ -206,7 +207,7 @@ function createBaseBoolean(): Boolean {
 }
 
 export const Boolean = {
-  encode(message: Boolean, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Boolean, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.value !== false) {
       writer.uint32(8).bool(message.value);
     }
@@ -263,7 +264,7 @@ function createBaseNumber(): Number {
 }
 
 export const Number = {
-  encode(message: Number, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Number, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.value !== 0) {
       writer.uint32(9).double(message.value);
     }
@@ -320,9 +321,9 @@ function createBaseArray(): Array {
 }
 
 export const Array = {
-  encode(message: Array, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Array, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     for (const v of message.values) {
-      String.encode(v!, writer.uint32(10).fork()).ldelim();
+      String.encode(v!, writer.uint32(10).fork()).join();
     }
     return writer;
   },

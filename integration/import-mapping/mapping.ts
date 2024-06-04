@@ -2,6 +2,7 @@
 // source: mapping.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import { Duration } from "@google/protobuf/duration";
 import { Empty } from "@google/protobuf/empty";
 import { VeryVerySecret } from "@myorg/proto-npm-package";
@@ -36,9 +37,9 @@ function createBaseWithEmtpy(): WithEmtpy {
 }
 
 export const WithEmtpy = {
-  encode(message: WithEmtpy, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: WithEmtpy, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.empty !== undefined) {
-      Empty.encode(message.empty, writer.uint32(10).fork()).ldelim();
+      Empty.encode(message.empty, writer.uint32(10).fork()).join();
     }
     return writer;
   },
@@ -93,9 +94,9 @@ function createBaseWithStruct(): WithStruct {
 }
 
 export const WithStruct = {
-  encode(message: WithStruct, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: WithStruct, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.strut !== undefined) {
-      Struct.encode(Struct.wrap(message.strut), writer.uint32(10).fork()).ldelim();
+      Struct.encode(Struct.wrap(message.strut), writer.uint32(10).fork()).join();
     }
     return writer;
   },
@@ -150,9 +151,9 @@ function createBaseWithTimestamp(): WithTimestamp {
 }
 
 export const WithTimestamp = {
-  encode(message: WithTimestamp, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: WithTimestamp, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.timestamp !== undefined) {
-      Timestamp.encode(toTimestamp(message.timestamp), writer.uint32(10).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.timestamp), writer.uint32(10).fork()).join();
     }
     return writer;
   },
@@ -207,21 +208,21 @@ function createBaseWithAll(): WithAll {
 }
 
 export const WithAll = {
-  encode(message: WithAll, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: WithAll, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.empty !== undefined) {
-      Empty.encode(message.empty, writer.uint32(10).fork()).ldelim();
+      Empty.encode(message.empty, writer.uint32(10).fork()).join();
     }
     if (message.strut !== undefined) {
-      Struct.encode(Struct.wrap(message.strut), writer.uint32(18).fork()).ldelim();
+      Struct.encode(Struct.wrap(message.strut), writer.uint32(18).fork()).join();
     }
     if (message.timestamp !== undefined) {
-      Timestamp.encode(toTimestamp(message.timestamp), writer.uint32(26).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.timestamp), writer.uint32(26).fork()).join();
     }
     if (message.duration !== undefined) {
-      Duration.encode(message.duration, writer.uint32(34).fork()).ldelim();
+      Duration.encode(message.duration, writer.uint32(34).fork()).join();
     }
     if (message.veryVerySecret !== undefined) {
-      VeryVerySecret.encode(message.veryVerySecret, writer.uint32(42).fork()).ldelim();
+      VeryVerySecret.encode(message.veryVerySecret, writer.uint32(42).fork()).join();
     }
     return writer;
   },

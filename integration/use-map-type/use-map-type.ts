@@ -2,6 +2,7 @@
 // source: use-map-type.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as _m0 from "protobufjs/minimal";
 import { Struct } from "./google/protobuf/struct";
 import { Timestamp } from "./google/protobuf/timestamp";
@@ -52,7 +53,7 @@ function createBaseEntity(): Entity {
 }
 
 export const Entity = {
-  encode(message: Entity, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Entity, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.id !== 0) {
       writer.uint32(8).int32(message.id);
     }
@@ -116,24 +117,24 @@ function createBaseMaps(): Maps {
 }
 
 export const Maps = {
-  encode(message: Maps, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Maps, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     message.strToEntity.forEach((value, key) => {
-      Maps_StrToEntityEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).ldelim();
+      Maps_StrToEntityEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).join();
     });
     message.int32ToInt32.forEach((value, key) => {
-      Maps_Int32ToInt32Entry.encode({ key: key as any, value }, writer.uint32(18).fork()).ldelim();
+      Maps_Int32ToInt32Entry.encode({ key: key as any, value }, writer.uint32(18).fork()).join();
     });
     message.stringToBytes.forEach((value, key) => {
-      Maps_StringToBytesEntry.encode({ key: key as any, value }, writer.uint32(26).fork()).ldelim();
+      Maps_StringToBytesEntry.encode({ key: key as any, value }, writer.uint32(26).fork()).join();
     });
     message.int64ToInt64.forEach((value, key) => {
-      Maps_Int64ToInt64Entry.encode({ key: key as any, value }, writer.uint32(34).fork()).ldelim();
+      Maps_Int64ToInt64Entry.encode({ key: key as any, value }, writer.uint32(34).fork()).join();
     });
     message.mapOfTimestamps.forEach((value, key) => {
-      Maps_MapOfTimestampsEntry.encode({ key: key as any, value }, writer.uint32(42).fork()).ldelim();
+      Maps_MapOfTimestampsEntry.encode({ key: key as any, value }, writer.uint32(42).fork()).join();
     });
     if (message.struct !== undefined) {
-      Struct.encode(Struct.wrap(message.struct), writer.uint32(50).fork()).ldelim();
+      Struct.encode(Struct.wrap(message.struct), writer.uint32(50).fork()).join();
     }
     return writer;
   },
@@ -345,12 +346,12 @@ function createBaseMaps_StrToEntityEntry(): Maps_StrToEntityEntry {
 }
 
 export const Maps_StrToEntityEntry = {
-  encode(message: Maps_StrToEntityEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Maps_StrToEntityEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.key !== "") {
       writer.uint32(10).string(message.key);
     }
     if (message.value !== undefined) {
-      Entity.encode(message.value, writer.uint32(18).fork()).ldelim();
+      Entity.encode(message.value, writer.uint32(18).fork()).join();
     }
     return writer;
   },
@@ -421,7 +422,7 @@ function createBaseMaps_Int32ToInt32Entry(): Maps_Int32ToInt32Entry {
 }
 
 export const Maps_Int32ToInt32Entry = {
-  encode(message: Maps_Int32ToInt32Entry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Maps_Int32ToInt32Entry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.key !== 0) {
       writer.uint32(8).int32(message.key);
     }
@@ -495,7 +496,7 @@ function createBaseMaps_StringToBytesEntry(): Maps_StringToBytesEntry {
 }
 
 export const Maps_StringToBytesEntry = {
-  encode(message: Maps_StringToBytesEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Maps_StringToBytesEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.key !== "") {
       writer.uint32(10).string(message.key);
     }
@@ -569,12 +570,12 @@ function createBaseMaps_Int64ToInt64Entry(): Maps_Int64ToInt64Entry {
 }
 
 export const Maps_Int64ToInt64Entry = {
-  encode(message: Maps_Int64ToInt64Entry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Maps_Int64ToInt64Entry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.key !== 0) {
-      writer.uint32(8).int64(message.key);
+      writer.uint32(8).int64(message.key.toString());
     }
     if (message.value !== 0) {
-      writer.uint32(16).int64(message.value);
+      writer.uint32(16).int64(message.value.toString());
     }
     return writer;
   },
@@ -643,12 +644,12 @@ function createBaseMaps_MapOfTimestampsEntry(): Maps_MapOfTimestampsEntry {
 }
 
 export const Maps_MapOfTimestampsEntry = {
-  encode(message: Maps_MapOfTimestampsEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Maps_MapOfTimestampsEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.key !== "") {
       writer.uint32(10).string(message.key);
     }
     if (message.value !== undefined) {
-      Timestamp.encode(toTimestamp(message.value), writer.uint32(18).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.value), writer.uint32(18).fork()).join();
     }
     return writer;
   },

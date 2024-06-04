@@ -2,6 +2,7 @@
 // source: bar.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as _m0 from "protobufjs/minimal";
 
 export interface Bar {
@@ -14,7 +15,7 @@ function createBaseBar(): Bar {
 }
 
 export const Bar = {
-  encode(message: Bar, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Bar, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }

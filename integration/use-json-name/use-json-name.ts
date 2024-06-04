@@ -2,6 +2,7 @@
 // source: use-json-name.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as _m0 from "protobufjs/minimal";
 import { Timestamp } from "./google/protobuf/timestamp";
 
@@ -46,7 +47,7 @@ function createBaseJsonName(): JsonName {
 }
 
 export const JsonName = {
-  encode(message: JsonName, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: JsonName, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.other_name !== "") {
       writer.uint32(10).string(message.other_name);
     }
@@ -54,7 +55,7 @@ export const JsonName = {
       writer.uint32(16).int32(message.other_age);
     }
     if (message.createdAt !== undefined) {
-      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(74).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(74).fork()).join();
     }
     if (message["hyphened-name"] !== "") {
       writer.uint32(26).string(message["hyphened-name"]);
@@ -81,7 +82,7 @@ export const JsonName = {
       writer.uint32(98).string(message._C);
     }
     if (message.d !== undefined) {
-      NstedOneOf.encode(message.d, writer.uint32(106).fork()).ldelim();
+      NstedOneOf.encode(message.d, writer.uint32(106).fork()).join();
     }
     if (message.noJsonName !== "") {
       writer.uint32(114).string(message.noJsonName);
@@ -287,7 +288,7 @@ function createBaseNstedOneOf(): NstedOneOf {
 }
 
 export const NstedOneOf = {
-  encode(message: NstedOneOf, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: NstedOneOf, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.nestedOneOfField !== undefined) {
       writer.uint32(10).string(message.nestedOneOfField);
     }

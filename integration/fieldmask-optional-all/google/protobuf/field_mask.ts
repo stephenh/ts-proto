@@ -2,6 +2,7 @@
 // source: google/protobuf/field_mask.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "google.protobuf";
@@ -216,7 +217,7 @@ function createBaseFieldMask(): FieldMask {
 }
 
 export const FieldMask = {
-  encode(message: FieldMask, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: FieldMask, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.paths !== undefined && message.paths.length !== 0) {
       for (const v of message.paths) {
         writer.uint32(10).string(v!);

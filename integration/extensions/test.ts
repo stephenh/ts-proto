@@ -2,6 +2,7 @@
 // source: test.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import Long = require("long");
 import * as _m0 from "protobufjs/minimal";
 
@@ -67,7 +68,7 @@ function createBaseExtendable(): Extendable {
 }
 
 export const Extendable = {
-  encode(message: Extendable, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Extendable, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.field !== undefined && message.field !== "") {
       writer.uint32(10).string(message.field);
     }
@@ -75,12 +76,7 @@ export const Extendable = {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }
@@ -211,8 +207,8 @@ export const Nested = {
     encode: (value: Nested[]): Uint8Array[] => {
       const encoded: Uint8Array[] = [];
       for (const v of value) {
-        const writer = _m0.Writer.create();
-        Nested.encode(v, writer.fork()).ldelim();
+        const writer = new BinaryWriter();
+        Nested.encode(v, writer.fork()).join();
         encoded.push(writer.finish());
       }
       return encoded;
@@ -228,7 +224,7 @@ export const Nested = {
     },
   },
 
-  encode(message: Nested, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Nested, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.field !== undefined && message.field !== "") {
       writer.uint32(10).string(message.field);
     }
@@ -236,12 +232,7 @@ export const Nested = {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }
@@ -312,7 +303,7 @@ function createBaseGroup(): Group {
 }
 
 export const Group = {
-  encode(message: Group, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Group, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== undefined && message.name !== "") {
       writer.uint32(10).string(message.name);
     }
@@ -323,12 +314,7 @@ export const Group = {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }
@@ -416,12 +402,12 @@ export const packed: Extension<number[]> = {
   packed: true,
   encode: (value: number[]): Uint8Array[] => {
     const encoded: Uint8Array[] = [];
-    const writer = _m0.Writer.create();
+    const writer = new BinaryWriter();
     writer.fork();
     for (const v of value) {
       writer.int32(v);
     }
-    writer.ldelim();
+    writer.join();
     encoded.push(writer.finish());
     return encoded;
   },
@@ -451,12 +437,12 @@ export const repeated: Extension<number[]> = {
   packed: false,
   encode: (value: number[]): Uint8Array[] => {
     const encoded: Uint8Array[] = [];
-    const writer = _m0.Writer.create();
+    const writer = new BinaryWriter();
     writer.fork();
     for (const v of value) {
       writer.int32(v);
     }
-    writer.ldelim();
+    writer.join();
     encoded.push(writer.finish());
     return encoded;
   },
@@ -486,7 +472,7 @@ export const bytes: Extension<Uint8Array> = {
   encode: (value: Uint8Array): Uint8Array[] => {
     const encoded: Uint8Array[] = [];
     if (value !== undefined && value.length !== 0) {
-      const writer = _m0.Writer.create();
+      const writer = new BinaryWriter();
       writer.bytes(value);
       encoded.push(writer.finish());
     }
@@ -506,7 +492,7 @@ export const string: Extension<string> = {
   encode: (value: string): Uint8Array[] => {
     const encoded: Uint8Array[] = [];
     if (value !== undefined && value !== "") {
-      const writer = _m0.Writer.create();
+      const writer = new BinaryWriter();
       writer.string(value);
       encoded.push(writer.finish());
     }
@@ -526,8 +512,8 @@ export const long: Extension<Long> = {
   encode: (value: Long): Uint8Array[] => {
     const encoded: Uint8Array[] = [];
     if (value !== undefined && !value.equals(Long.ZERO)) {
-      const writer = _m0.Writer.create();
-      writer.int64(value);
+      const writer = new BinaryWriter();
+      writer.int64(value.toString());
       encoded.push(writer.finish());
     }
     return encoded;
@@ -546,8 +532,8 @@ export const fixed: Extension<Long> = {
   encode: (value: Long): Uint8Array[] => {
     const encoded: Uint8Array[] = [];
     if (value !== undefined && !value.equals(Long.UZERO)) {
-      const writer = _m0.Writer.create();
-      writer.fixed64(value);
+      const writer = new BinaryWriter();
+      writer.fixed64(value.toString());
       encoded.push(writer.finish());
     }
     return encoded;
@@ -566,7 +552,7 @@ export const enumField: Extension<Enum> = {
   encode: (value: Enum): Uint8Array[] => {
     const encoded: Uint8Array[] = [];
     if (value !== undefined && value !== 0) {
-      const writer = _m0.Writer.create();
+      const writer = new BinaryWriter();
       writer.int32(value);
       encoded.push(writer.finish());
     }
@@ -585,7 +571,7 @@ export const group: Extension<Group> = {
   packed: false,
   encode: (value: Group): Uint8Array[] => {
     const encoded: Uint8Array[] = [];
-    const writer = _m0.Writer.create();
+    const writer = new BinaryWriter();
     Group.encode(value, writer).uint32(100);
     encoded.push(writer.finish());
     return encoded;

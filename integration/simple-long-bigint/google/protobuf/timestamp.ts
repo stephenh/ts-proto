@@ -2,6 +2,7 @@
 // source: google/protobuf/timestamp.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as _m0 from "protobufjs/minimal";
 import Long = require("long");
 
@@ -119,7 +120,7 @@ function createBaseTimestamp(): Timestamp {
 }
 
 export const Timestamp = {
-  encode(message: Timestamp, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Timestamp, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.seconds !== BigInt("0")) {
       if (BigInt.asIntN(64, message.seconds) !== message.seconds) {
         throw new globalThis.Error("value provided for field message.seconds of type int64 too large");

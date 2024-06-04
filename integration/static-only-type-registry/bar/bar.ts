@@ -2,6 +2,7 @@
 // source: bar/bar.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as _m0 from "protobufjs/minimal";
 import { Foo } from "../foo";
 import { messageTypeRegistry } from "../typeRegistry";
@@ -19,9 +20,9 @@ function createBaseBar(): Bar {
 export const Bar = {
   $type: "foo.bar.Bar" as const,
 
-  encode(message: Bar, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Bar, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.foo !== undefined) {
-      Foo.encode(message.foo, writer.uint32(10).fork()).ldelim();
+      Foo.encode(message.foo, writer.uint32(10).fork()).join();
     }
     return writer;
   },

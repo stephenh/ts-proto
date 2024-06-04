@@ -2,6 +2,7 @@
 // source: google/protobuf/compiler/plugin.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as _m0 from "protobufjs/minimal";
 import { FileDescriptorProto, GeneratedCodeInfo } from "../descriptor";
 import Long = require("long");
@@ -166,7 +167,7 @@ function createBaseVersion(): Version {
 }
 
 export const Version = {
-  encode(message: Version, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Version, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.major !== undefined && message.major !== 0) {
       writer.uint32(8).int32(message.major);
     }
@@ -183,12 +184,7 @@ export const Version = {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }
@@ -255,7 +251,7 @@ function createBaseCodeGeneratorRequest(): CodeGeneratorRequest {
 }
 
 export const CodeGeneratorRequest = {
-  encode(message: CodeGeneratorRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: CodeGeneratorRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     for (const v of message.fileToGenerate) {
       writer.uint32(10).string(v!);
     }
@@ -263,21 +259,16 @@ export const CodeGeneratorRequest = {
       writer.uint32(18).string(message.parameter);
     }
     for (const v of message.protoFile) {
-      FileDescriptorProto.encode(v!, writer.uint32(122).fork()).ldelim();
+      FileDescriptorProto.encode(v!, writer.uint32(122).fork()).join();
     }
     if (message.compilerVersion !== undefined) {
-      Version.encode(message.compilerVersion, writer.uint32(26).fork()).ldelim();
+      Version.encode(message.compilerVersion, writer.uint32(26).fork()).join();
     }
     if (message._unknownFields !== undefined) {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }
@@ -344,26 +335,21 @@ function createBaseCodeGeneratorResponse(): CodeGeneratorResponse {
 }
 
 export const CodeGeneratorResponse = {
-  encode(message: CodeGeneratorResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: CodeGeneratorResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.error !== undefined && message.error !== "") {
       writer.uint32(10).string(message.error);
     }
     if (message.supportedFeatures !== undefined && message.supportedFeatures !== 0) {
-      writer.uint32(16).uint64(message.supportedFeatures);
+      writer.uint32(16).uint64(message.supportedFeatures.toString());
     }
     for (const v of message.file) {
-      CodeGeneratorResponse_File.encode(v!, writer.uint32(122).fork()).ldelim();
+      CodeGeneratorResponse_File.encode(v!, writer.uint32(122).fork()).join();
     }
     if (message._unknownFields !== undefined) {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }
@@ -423,7 +409,7 @@ function createBaseCodeGeneratorResponse_File(): CodeGeneratorResponse_File {
 }
 
 export const CodeGeneratorResponse_File = {
-  encode(message: CodeGeneratorResponse_File, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: CodeGeneratorResponse_File, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== undefined && message.name !== "") {
       writer.uint32(10).string(message.name);
     }
@@ -434,18 +420,13 @@ export const CodeGeneratorResponse_File = {
       writer.uint32(122).string(message.content);
     }
     if (message.generatedCodeInfo !== undefined) {
-      GeneratedCodeInfo.encode(message.generatedCodeInfo, writer.uint32(130).fork()).ldelim();
+      GeneratedCodeInfo.encode(message.generatedCodeInfo, writer.uint32(130).fork()).join();
     }
     if (message._unknownFields !== undefined) {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }

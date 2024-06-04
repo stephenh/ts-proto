@@ -2,6 +2,7 @@
 // source: test.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "";
@@ -59,7 +60,7 @@ function createBaseGroupsOptionalTest(): GroupsOptionalTest {
 }
 
 export const GroupsOptionalTest = {
-  encode(message: GroupsOptionalTest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: GroupsOptionalTest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.int1 !== undefined && message.int1 !== 0) {
       writer.uint32(8).int32(message.int1);
     }
@@ -73,12 +74,7 @@ export const GroupsOptionalTest = {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }
@@ -177,7 +173,7 @@ function createBaseGroupsOptionalTest_Group(): GroupsOptionalTest_Group {
 }
 
 export const GroupsOptionalTest_Group = {
-  encode(message: GroupsOptionalTest_Group, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: GroupsOptionalTest_Group, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.key !== undefined && message.key !== "") {
       writer.uint32(10).string(message.key);
     }
@@ -188,12 +184,7 @@ export const GroupsOptionalTest_Group = {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }
@@ -278,13 +269,13 @@ function createBaseGroupsRepeatedTest(): GroupsRepeatedTest {
 }
 
 export const GroupsRepeatedTest = {
-  encode(message: GroupsRepeatedTest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: GroupsRepeatedTest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.int1 !== undefined && message.int1.length !== 0) {
       writer.uint32(10).fork();
       for (const v of message.int1) {
         writer.int32(v);
       }
-      writer.ldelim();
+      writer.join();
     }
     if (message.group !== undefined && message.group.length !== 0) {
       for (const v of message.group) {
@@ -296,18 +287,13 @@ export const GroupsRepeatedTest = {
       for (const v of message.int3) {
         writer.int32(v);
       }
-      writer.ldelim();
+      writer.join();
     }
     if (message._unknownFields !== undefined) {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }
@@ -441,7 +427,7 @@ function createBaseGroupsRepeatedTest_Group(): GroupsRepeatedTest_Group {
 }
 
 export const GroupsRepeatedTest_Group = {
-  encode(message: GroupsRepeatedTest_Group, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: GroupsRepeatedTest_Group, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.key !== undefined && message.key.length !== 0) {
       for (const v of message.key) {
         writer.uint32(10).string(v!);
@@ -456,12 +442,7 @@ export const GroupsRepeatedTest_Group = {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }
@@ -552,13 +533,13 @@ function createBaseGroupsNestedTest(): GroupsNestedTest {
 }
 
 export const GroupsNestedTest = {
-  encode(message: GroupsNestedTest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: GroupsNestedTest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.int1 !== undefined && message.int1.length !== 0) {
       writer.uint32(10).fork();
       for (const v of message.int1) {
         writer.int32(v);
       }
-      writer.ldelim();
+      writer.join();
     }
     if (message.group !== undefined && message.group.length !== 0) {
       for (const v of message.group) {
@@ -570,18 +551,13 @@ export const GroupsNestedTest = {
       for (const v of message.int3) {
         writer.int32(v);
       }
-      writer.ldelim();
+      writer.join();
     }
     if (message._unknownFields !== undefined) {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }
@@ -715,7 +691,7 @@ function createBaseGroupsNestedTest_Group(): GroupsNestedTest_Group {
 }
 
 export const GroupsNestedTest_Group = {
-  encode(message: GroupsNestedTest_Group, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: GroupsNestedTest_Group, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.nested !== undefined && message.nested.length !== 0) {
       for (const v of message.nested) {
         GroupsNestedTest_Group_Nested.encode(v!, writer.uint32(11)).uint32(12);
@@ -725,12 +701,7 @@ export const GroupsNestedTest_Group = {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }
@@ -808,7 +779,7 @@ function createBaseGroupsNestedTest_Group_Nested(): GroupsNestedTest_Group_Neste
 }
 
 export const GroupsNestedTest_Group_Nested = {
-  encode(message: GroupsNestedTest_Group_Nested, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: GroupsNestedTest_Group_Nested, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.nested2 !== undefined && message.nested2.length !== 0) {
       for (const v of message.nested2) {
         GroupsNestedTest_Group_Nested_Nested2.encode(v!, writer.uint32(19)).uint32(20);
@@ -818,12 +789,7 @@ export const GroupsNestedTest_Group_Nested = {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }
@@ -903,7 +869,7 @@ function createBaseGroupsNestedTest_Group_Nested_Nested2(): GroupsNestedTest_Gro
 }
 
 export const GroupsNestedTest_Group_Nested_Nested2 = {
-  encode(message: GroupsNestedTest_Group_Nested_Nested2, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: GroupsNestedTest_Group_Nested_Nested2, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.string1 !== undefined && message.string1 !== "") {
       writer.uint32(10).string(message.string1);
     }
@@ -911,12 +877,7 @@ export const GroupsNestedTest_Group_Nested_Nested2 = {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }

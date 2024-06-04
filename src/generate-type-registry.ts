@@ -1,4 +1,4 @@
-import { code, Code, joinCode } from "ts-poet";
+import { code, Code, imp, joinCode } from "ts-poet";
 import { BaseContext } from "./context";
 import { impFile } from "./utils";
 import { addTypeToMessages } from "./options";
@@ -39,10 +39,10 @@ function generateMessageType(ctx: BaseContext): Code {
   }
 
   if (ctx.options.outputEncodeMethods) {
-    const Writer = impFile(ctx.options, "Writer@protobufjs/minimal");
+    const BinaryWriter = imp("BinaryWriter@@bufbuild/protobuf/wire");
     const Reader = impFile(ctx.options, "Reader@protobufjs/minimal");
 
-    chunks.push(code`encode(message: Message, writer?: ${Writer}): ${Writer};`);
+    chunks.push(code`encode(message: Message, writer?: ${BinaryWriter}): ${BinaryWriter};`);
     chunks.push(code`decode(input: ${Reader} | Uint8Array, length?: number): Message;`);
   }
 

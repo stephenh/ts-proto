@@ -2,6 +2,7 @@
 // source: test.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as _m0 from "protobufjs/minimal";
 import Long = require("long");
 
@@ -23,20 +24,15 @@ function createBaseMapBigInt(): MapBigInt {
 }
 
 export const MapBigInt = {
-  encode(message: MapBigInt, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: MapBigInt, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     (message.map || new Map()).forEach((value, key) => {
-      MapBigInt_MapEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).ldelim();
+      MapBigInt_MapEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).join();
     });
     if (message._unknownFields !== undefined) {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }
@@ -131,7 +127,7 @@ function createBaseMapBigInt_MapEntry(): MapBigInt_MapEntry {
 }
 
 export const MapBigInt_MapEntry = {
-  encode(message: MapBigInt_MapEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: MapBigInt_MapEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.key !== BigInt("0")) {
       if (BigInt.asUintN(64, message.key) !== message.key) {
         throw new globalThis.Error("value provided for field message.key of type fixed64 too large");
@@ -148,12 +144,7 @@ export const MapBigInt_MapEntry = {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }

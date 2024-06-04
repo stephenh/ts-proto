@@ -2,6 +2,7 @@
 // source: oneof.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as _m0 from "protobufjs/minimal";
 import { Value } from "./google/protobuf/struct";
 
@@ -80,7 +81,7 @@ function createBasePleaseChoose(): PleaseChoose {
 }
 
 export const PleaseChoose = {
-  encode(message: PleaseChoose, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: PleaseChoose, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
@@ -92,7 +93,7 @@ export const PleaseChoose = {
         writer.uint32(26).string(message.choice.aString);
         break;
       case "aMessage":
-        PleaseChoose_Submessage.encode(message.choice.aMessage, writer.uint32(34).fork()).ldelim();
+        PleaseChoose_Submessage.encode(message.choice.aMessage, writer.uint32(34).fork()).join();
         break;
       case "aBool":
         writer.uint32(48).bool(message.choice.aBool);
@@ -122,7 +123,7 @@ export const PleaseChoose = {
       writer.uint32(98).bytes(message.signature);
     }
     if (message.value !== undefined) {
-      Value.encode(Value.wrap(message.value), writer.uint32(106).fork()).ldelim();
+      Value.encode(Value.wrap(message.value), writer.uint32(106).fork()).join();
     }
     return writer;
   },
@@ -364,7 +365,7 @@ function createBasePleaseChoose_Submessage(): PleaseChoose_Submessage {
 }
 
 export const PleaseChoose_Submessage = {
-  encode(message: PleaseChoose_Submessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: PleaseChoose_Submessage, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
@@ -421,7 +422,7 @@ function createBaseSimpleButOptional(): SimpleButOptional {
 }
 
 export const SimpleButOptional = {
-  encode(message: SimpleButOptional, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: SimpleButOptional, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== undefined) {
       writer.uint32(10).string(message.name);
     }

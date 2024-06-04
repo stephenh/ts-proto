@@ -2,6 +2,7 @@
 // source: fieldoption-jstype-with-forcelong-bigint.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as _m0 from "protobufjs/minimal";
 import Long = require("long");
 
@@ -18,7 +19,7 @@ function createBaseFieldOption(): FieldOption {
 }
 
 export const FieldOption = {
-  encode(message: FieldOption, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: FieldOption, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.normalField !== BigInt("0")) {
       if (BigInt.asIntN(64, message.normalField) !== message.normalField) {
         throw new globalThis.Error("value provided for field message.normalField of type int64 too large");

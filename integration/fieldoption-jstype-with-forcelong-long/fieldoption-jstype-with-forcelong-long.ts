@@ -3,6 +3,7 @@
 
 /* eslint-disable */
 import Long = require("long");
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "foo";
@@ -18,15 +19,15 @@ function createBaseFieldOption(): FieldOption {
 }
 
 export const FieldOption = {
-  encode(message: FieldOption, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: FieldOption, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (!message.normalField.equals(Long.ZERO)) {
-      writer.uint32(8).int64(message.normalField);
+      writer.uint32(8).int64(message.normalField.toString());
     }
     if (message.numberField !== 0) {
-      writer.uint32(16).int64(message.numberField);
+      writer.uint32(16).int64(message.numberField.toString());
     }
     if (message.stringField !== "0") {
-      writer.uint32(24).int64(message.stringField);
+      writer.uint32(24).int64(message.stringField.toString());
     }
     return writer;
   },

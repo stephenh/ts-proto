@@ -2,6 +2,7 @@
 // source: const-enum.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "";
@@ -82,12 +83,12 @@ function createBaseDividerData(): DividerData {
 }
 
 export const DividerData = {
-  encode(message: DividerData, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: DividerData, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.type !== DividerData_DividerType.DOUBLE) {
       writer.uint32(8).int32(dividerData_DividerTypeToNumber(message.type));
     }
     Object.entries(message.typeMap).forEach(([key, value]) => {
-      DividerData_TypeMapEntry.encode({ key: key as any, value }, writer.uint32(18).fork()).ldelim();
+      DividerData_TypeMapEntry.encode({ key: key as any, value }, writer.uint32(18).fork()).join();
     });
     return writer;
   },
@@ -178,7 +179,7 @@ function createBaseDividerData_TypeMapEntry(): DividerData_TypeMapEntry {
 }
 
 export const DividerData_TypeMapEntry = {
-  encode(message: DividerData_TypeMapEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: DividerData_TypeMapEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.key !== "") {
       writer.uint32(10).string(message.key);
     }

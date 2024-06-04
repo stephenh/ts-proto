@@ -2,6 +2,7 @@
 // source: hero.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import { handleBidiStreamingCall, Metadata } from "@grpc/grpc-js";
 import type { handleUnaryCall, UntypedServiceImplementation } from "@grpc/grpc-js";
 import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
@@ -35,7 +36,7 @@ function createBaseHeroById(): HeroById {
 }
 
 export const HeroById = {
-  encode(message: HeroById, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: HeroById, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.id !== 0) {
       writer.uint32(8).int32(message.id);
     }
@@ -71,7 +72,7 @@ function createBaseVillainById(): VillainById {
 }
 
 export const VillainById = {
-  encode(message: VillainById, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: VillainById, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.id !== 0) {
       writer.uint32(8).int32(message.id);
     }
@@ -107,7 +108,7 @@ function createBaseHero(): Hero {
 }
 
 export const Hero = {
-  encode(message: Hero, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Hero, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.id !== 0) {
       writer.uint32(8).int32(message.id);
     }
@@ -153,7 +154,7 @@ function createBaseVillain(): Villain {
 }
 
 export const Villain = {
-  encode(message: Villain, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Villain, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.id !== 0) {
       writer.uint32(8).int32(message.id);
     }

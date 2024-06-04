@@ -2,6 +2,7 @@
 // source: use-date-string.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as _m0 from "protobufjs/minimal";
 import { Timestamp } from "./google/protobuf/timestamp";
 
@@ -25,21 +26,21 @@ function createBaseTodo(): Todo {
 }
 
 export const Todo = {
-  encode(message: Todo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Todo, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
     if (message.timestamp !== undefined) {
-      Timestamp.encode(toTimestamp(message.timestamp), writer.uint32(18).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.timestamp), writer.uint32(18).fork()).join();
     }
     for (const v of message.repeatedTimestamp) {
-      Timestamp.encode(toTimestamp(v!), writer.uint32(26).fork()).ldelim();
+      Timestamp.encode(toTimestamp(v!), writer.uint32(26).fork()).join();
     }
     if (message.optionalTimestamp !== undefined) {
-      Timestamp.encode(toTimestamp(message.optionalTimestamp), writer.uint32(34).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.optionalTimestamp), writer.uint32(34).fork()).join();
     }
     Object.entries(message.mapOfTimestamps).forEach(([key, value]) => {
-      Todo_MapOfTimestampsEntry.encode({ key: key as any, value }, writer.uint32(42).fork()).ldelim();
+      Todo_MapOfTimestampsEntry.encode({ key: key as any, value }, writer.uint32(42).fork()).join();
     });
     return writer;
   },
@@ -168,12 +169,12 @@ function createBaseTodo_MapOfTimestampsEntry(): Todo_MapOfTimestampsEntry {
 }
 
 export const Todo_MapOfTimestampsEntry = {
-  encode(message: Todo_MapOfTimestampsEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Todo_MapOfTimestampsEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.key !== "") {
       writer.uint32(10).string(message.key);
     }
     if (message.value !== undefined) {
-      Timestamp.encode(toTimestamp(message.value), writer.uint32(18).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.value), writer.uint32(18).fork()).join();
     }
     return writer;
   },

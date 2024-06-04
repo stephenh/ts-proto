@@ -2,6 +2,7 @@
 // source: enums-as-literals-with-string-enums.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "";
@@ -86,7 +87,7 @@ function createBaseDividerData(): DividerData {
 }
 
 export const DividerData = {
-  encode(message: DividerData, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: DividerData, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.type !== DividerData_DividerType.DOUBLE) {
       writer.uint32(8).int32(dividerData_DividerTypeToNumber(message.type));
     }

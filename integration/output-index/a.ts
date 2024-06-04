@@ -2,6 +2,7 @@
 // source: a.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as _m0 from "protobufjs/minimal";
 
 export interface A {
@@ -13,7 +14,7 @@ function createBaseA(): A {
 }
 
 export const A = {
-  encode(message: A, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: A, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.a !== "") {
       writer.uint32(10).string(message.a);
     }

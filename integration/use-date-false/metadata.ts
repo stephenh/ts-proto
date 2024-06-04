@@ -2,6 +2,7 @@
 // source: metadata.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as _m0 from "protobufjs/minimal";
 import { Timestamp } from "./google/protobuf/timestamp";
 
@@ -16,9 +17,9 @@ function createBaseMetadata(): Metadata {
 }
 
 export const Metadata = {
-  encode(message: Metadata, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Metadata, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.lastEdited !== undefined) {
-      Timestamp.encode(message.lastEdited, writer.uint32(10).fork()).ldelim();
+      Timestamp.encode(message.lastEdited, writer.uint32(10).fork()).join();
     }
     return writer;
   },

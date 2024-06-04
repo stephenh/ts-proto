@@ -2,6 +2,7 @@
 // source: reserved-words.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "";
@@ -14,7 +15,7 @@ function createBaseRecord(): Record {
 }
 
 export const Record = {
-  encode(_: Record, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(_: Record, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     return writer;
   },
 

@@ -2,6 +2,7 @@
 // source: simple.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as _m0 from "protobufjs/minimal";
 import { Struct } from "./google/protobuf/struct";
 
@@ -21,9 +22,9 @@ function createBaseSimpleStruct(): SimpleStruct {
 }
 
 export const SimpleStruct = {
-  encode(message: SimpleStruct, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: SimpleStruct, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.simple_struct !== undefined) {
-      Struct.encode(Struct.wrap(message.simple_struct), writer.uint32(10).fork()).ldelim();
+      Struct.encode(Struct.wrap(message.simple_struct), writer.uint32(10).fork()).join();
     }
     return writer;
   },

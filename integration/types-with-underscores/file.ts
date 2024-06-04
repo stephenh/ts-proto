@@ -2,6 +2,7 @@
 // source: file.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "";
@@ -18,9 +19,9 @@ function createBaseBaz(): Baz {
 }
 
 export const Baz = {
-  encode(message: Baz, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Baz, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.foo !== undefined) {
-      FooBar.encode(message.foo, writer.uint32(10).fork()).ldelim();
+      FooBar.encode(message.foo, writer.uint32(10).fork()).join();
     }
     return writer;
   },
@@ -75,7 +76,7 @@ function createBaseFooBar(): FooBar {
 }
 
 export const FooBar = {
-  encode(_: FooBar, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(_: FooBar, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     return writer;
   },
 

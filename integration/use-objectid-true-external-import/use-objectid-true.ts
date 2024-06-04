@@ -2,6 +2,7 @@
 // source: use-objectid-true.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as mongodb from "mongodb";
 import * as _m0 from "protobufjs/minimal";
 import { ObjectId } from "./objectid/objectid";
@@ -26,21 +27,21 @@ function createBaseTodo(): Todo {
 }
 
 export const Todo = {
-  encode(message: Todo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Todo, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
     if (message.oid !== undefined) {
-      ObjectId.encode(toProtoObjectId(message.oid), writer.uint32(18).fork()).ldelim();
+      ObjectId.encode(toProtoObjectId(message.oid), writer.uint32(18).fork()).join();
     }
     for (const v of message.repeatedOid) {
-      ObjectId.encode(toProtoObjectId(v!), writer.uint32(26).fork()).ldelim();
+      ObjectId.encode(toProtoObjectId(v!), writer.uint32(26).fork()).join();
     }
     if (message.optionalOid !== undefined) {
-      ObjectId.encode(toProtoObjectId(message.optionalOid), writer.uint32(34).fork()).ldelim();
+      ObjectId.encode(toProtoObjectId(message.optionalOid), writer.uint32(34).fork()).join();
     }
     Object.entries(message.mapOfOids).forEach(([key, value]) => {
-      Todo_MapOfOidsEntry.encode({ key: key as any, value }, writer.uint32(42).fork()).ldelim();
+      Todo_MapOfOidsEntry.encode({ key: key as any, value }, writer.uint32(42).fork()).join();
     });
     return writer;
   },
@@ -171,12 +172,12 @@ function createBaseTodo_MapOfOidsEntry(): Todo_MapOfOidsEntry {
 }
 
 export const Todo_MapOfOidsEntry = {
-  encode(message: Todo_MapOfOidsEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Todo_MapOfOidsEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.key !== "") {
       writer.uint32(10).string(message.key);
     }
     if (message.value !== undefined) {
-      ObjectId.encode(toProtoObjectId(message.value), writer.uint32(18).fork()).ldelim();
+      ObjectId.encode(toProtoObjectId(message.value), writer.uint32(18).fork()).join();
     }
     return writer;
   },

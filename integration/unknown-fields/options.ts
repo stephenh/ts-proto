@@ -2,6 +2,7 @@
 // source: options.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "";
@@ -33,7 +34,7 @@ function createBaseMyMessage(): MyMessage {
 }
 
 export const MyMessage = {
-  encode(message: MyMessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: MyMessage, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.foo !== undefined) {
       writer.uint32(8).int32(message.foo);
     }
@@ -50,12 +51,7 @@ export const MyMessage = {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }
@@ -122,17 +118,12 @@ function createBaseRequestType(): RequestType {
 }
 
 export const RequestType = {
-  encode(message: RequestType, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: RequestType, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message._unknownFields !== undefined) {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }
@@ -171,17 +162,12 @@ function createBaseResponseType(): ResponseType {
 }
 
 export const ResponseType = {
-  encode(message: ResponseType, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: ResponseType, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message._unknownFields !== undefined) {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }

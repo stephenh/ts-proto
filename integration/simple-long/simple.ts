@@ -3,6 +3,7 @@
 
 /* eslint-disable */
 import Long = require("long");
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as _m0 from "protobufjs/minimal";
 import { BoolValue, Int32Value, Int64Value, StringValue } from "./google/protobuf/wrappers";
 
@@ -60,24 +61,24 @@ function createBaseSimpleWithWrappers(): SimpleWithWrappers {
 }
 
 export const SimpleWithWrappers = {
-  encode(message: SimpleWithWrappers, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: SimpleWithWrappers, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== undefined) {
-      StringValue.encode({ value: message.name! }, writer.uint32(10).fork()).ldelim();
+      StringValue.encode({ value: message.name! }, writer.uint32(10).fork()).join();
     }
     if (message.age !== undefined) {
-      Int32Value.encode({ value: message.age! }, writer.uint32(18).fork()).ldelim();
+      Int32Value.encode({ value: message.age! }, writer.uint32(18).fork()).join();
     }
     if (message.enabled !== undefined) {
-      BoolValue.encode({ value: message.enabled! }, writer.uint32(26).fork()).ldelim();
+      BoolValue.encode({ value: message.enabled! }, writer.uint32(26).fork()).join();
     }
     if (message.bananas !== undefined) {
-      Int64Value.encode({ value: message.bananas! }, writer.uint32(34).fork()).ldelim();
+      Int64Value.encode({ value: message.bananas! }, writer.uint32(34).fork()).join();
     }
     for (const v of message.coins) {
-      Int32Value.encode({ value: v!! }, writer.uint32(50).fork()).ldelim();
+      Int32Value.encode({ value: v!! }, writer.uint32(50).fork()).join();
     }
     for (const v of message.snacks) {
-      StringValue.encode({ value: v!! }, writer.uint32(58).fork()).ldelim();
+      StringValue.encode({ value: v!! }, writer.uint32(58).fork()).join();
     }
     return writer;
   },
@@ -196,15 +197,15 @@ function createBaseSimpleWithMap(): SimpleWithMap {
 }
 
 export const SimpleWithMap = {
-  encode(message: SimpleWithMap, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: SimpleWithMap, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     Object.entries(message.nameLookup).forEach(([key, value]) => {
-      SimpleWithMap_NameLookupEntry.encode({ key: key as any, value }, writer.uint32(18).fork()).ldelim();
+      SimpleWithMap_NameLookupEntry.encode({ key: key as any, value }, writer.uint32(18).fork()).join();
     });
     Object.entries(message.intLookup).forEach(([key, value]) => {
-      SimpleWithMap_IntLookupEntry.encode({ key: key as any, value }, writer.uint32(26).fork()).ldelim();
+      SimpleWithMap_IntLookupEntry.encode({ key: key as any, value }, writer.uint32(26).fork()).join();
     });
     message.longLookup.forEach((value, key) => {
-      SimpleWithMap_LongLookupEntry.encode({ key: key as any, value }, writer.uint32(34).fork()).ldelim();
+      SimpleWithMap_LongLookupEntry.encode({ key: key as any, value }, writer.uint32(34).fork()).join();
     });
     return writer;
   },
@@ -348,7 +349,7 @@ function createBaseSimpleWithMap_NameLookupEntry(): SimpleWithMap_NameLookupEntr
 }
 
 export const SimpleWithMap_NameLookupEntry = {
-  encode(message: SimpleWithMap_NameLookupEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: SimpleWithMap_NameLookupEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.key !== "") {
       writer.uint32(10).string(message.key);
     }
@@ -424,7 +425,7 @@ function createBaseSimpleWithMap_IntLookupEntry(): SimpleWithMap_IntLookupEntry 
 }
 
 export const SimpleWithMap_IntLookupEntry = {
-  encode(message: SimpleWithMap_IntLookupEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: SimpleWithMap_IntLookupEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.key !== 0) {
       writer.uint32(8).int32(message.key);
     }
@@ -498,12 +499,12 @@ function createBaseSimpleWithMap_LongLookupEntry(): SimpleWithMap_LongLookupEntr
 }
 
 export const SimpleWithMap_LongLookupEntry = {
-  encode(message: SimpleWithMap_LongLookupEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: SimpleWithMap_LongLookupEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (!message.key.equals(Long.ZERO)) {
-      writer.uint32(8).int64(message.key);
+      writer.uint32(8).int64(message.key.toString());
     }
     if (!message.value.equals(Long.ZERO)) {
-      writer.uint32(16).int64(message.value);
+      writer.uint32(16).int64(message.value.toString());
     }
     return writer;
   },
@@ -588,7 +589,7 @@ function createBaseNumbers(): Numbers {
 }
 
 export const Numbers = {
-  encode(message: Numbers, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Numbers, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.double !== 0) {
       writer.uint32(9).double(message.double);
     }
@@ -599,37 +600,37 @@ export const Numbers = {
       writer.uint32(24).int32(message.int32);
     }
     if (!message.int64.equals(Long.ZERO)) {
-      writer.uint32(32).int64(message.int64);
+      writer.uint32(32).int64(message.int64.toString());
     }
     if (message.uint32 !== 0) {
       writer.uint32(40).uint32(message.uint32);
     }
     if (!message.uint64.equals(Long.UZERO)) {
-      writer.uint32(48).uint64(message.uint64);
+      writer.uint32(48).uint64(message.uint64.toString());
     }
     if (message.sint32 !== 0) {
       writer.uint32(56).sint32(message.sint32);
     }
     if (!message.sint64.equals(Long.ZERO)) {
-      writer.uint32(64).sint64(message.sint64);
+      writer.uint32(64).sint64(message.sint64.toString());
     }
     if (message.fixed32 !== 0) {
       writer.uint32(77).fixed32(message.fixed32);
     }
     if (!message.fixed64.equals(Long.UZERO)) {
-      writer.uint32(81).fixed64(message.fixed64);
+      writer.uint32(81).fixed64(message.fixed64.toString());
     }
     if (message.sfixed32 !== 0) {
       writer.uint32(93).sfixed32(message.sfixed32);
     }
     if (!message.sfixed64.equals(Long.ZERO)) {
-      writer.uint32(97).sfixed64(message.sfixed64);
+      writer.uint32(97).sfixed64(message.sfixed64.toString());
     }
     writer.uint32(106).fork();
     for (const v of message.manyUint64) {
-      writer.uint64(v);
+      writer.uint64(v.toString());
     }
-    writer.ldelim();
+    writer.join();
     return writer;
   },
 

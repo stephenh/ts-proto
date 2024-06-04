@@ -2,6 +2,7 @@
 // source: something/something.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "something";
@@ -17,7 +18,7 @@ function createBaseSomething(): Something {
 }
 
 export const Something = {
-  encode(message: Something, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Something, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.hello !== "") {
       writer.uint32(10).string(message.hello);
     }
@@ -25,17 +26,12 @@ export const Something = {
     for (const v of message.foo) {
       writer.int32(v);
     }
-    writer.ldelim();
+    writer.join();
     if (message._unknownFields !== undefined) {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }

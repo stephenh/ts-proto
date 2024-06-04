@@ -2,6 +2,7 @@
 // source: test.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as _m0 from "protobufjs/minimal";
 import { Timestamp } from "./google/protobuf/timestamp";
 import Long = require("long");
@@ -110,18 +111,18 @@ function createBaseDefaultValuesTest(): DefaultValuesTest {
 }
 
 export const DefaultValuesTest = {
-  encode(message: DefaultValuesTest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: DefaultValuesTest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.id !== 0) {
       writer.uint32(8).int32(message.id);
     }
     if (message.child !== undefined) {
-      Child.encode(message.child, writer.uint32(18).fork()).ldelim();
+      Child.encode(message.child, writer.uint32(18).fork()).join();
     }
     if (message.state !== 0) {
       writer.uint32(24).int32(message.state);
     }
     if (message.long !== 0) {
-      writer.uint32(32).int64(message.long);
+      writer.uint32(32).int64(message.long.toString());
     }
     if (message.truth !== false) {
       writer.uint32(40).bool(message.truth);
@@ -136,25 +137,25 @@ export const DefaultValuesTest = {
     for (const v of message.repId) {
       writer.int32(v);
     }
-    writer.ldelim();
+    writer.join();
     for (const v of message.repChild) {
-      Child.encode(v!, writer.uint32(98).fork()).ldelim();
+      Child.encode(v!, writer.uint32(98).fork()).join();
     }
     writer.uint32(106).fork();
     for (const v of message.repState) {
       writer.int32(v);
     }
-    writer.ldelim();
+    writer.join();
     writer.uint32(114).fork();
     for (const v of message.repLong) {
-      writer.int64(v);
+      writer.int64(v.toString());
     }
-    writer.ldelim();
+    writer.join();
     writer.uint32(122).fork();
     for (const v of message.repTruth) {
       writer.bool(v);
     }
-    writer.ldelim();
+    writer.join();
     for (const v of message.repDescription) {
       writer.uint32(130).string(v!);
     }
@@ -165,13 +166,13 @@ export const DefaultValuesTest = {
       writer.uint32(168).int32(message.optId);
     }
     if (message.optChild !== undefined) {
-      Child.encode(message.optChild, writer.uint32(178).fork()).ldelim();
+      Child.encode(message.optChild, writer.uint32(178).fork()).join();
     }
     if (message.optState !== undefined) {
       writer.uint32(184).int32(message.optState);
     }
     if (message.optLong !== undefined) {
-      writer.uint32(192).int64(message.optLong);
+      writer.uint32(192).int64(message.optLong.toString());
     }
     if (message.optTruth !== undefined) {
       writer.uint32(200).bool(message.optTruth);
@@ -183,10 +184,10 @@ export const DefaultValuesTest = {
       writer.uint32(218).bytes(message.optData);
     }
     Object.entries(message.translations).forEach(([key, value]) => {
-      DefaultValuesTest_TranslationsEntry.encode({ key: key as any, value }, writer.uint32(242).fork()).ldelim();
+      DefaultValuesTest_TranslationsEntry.encode({ key: key as any, value }, writer.uint32(242).fork()).join();
     });
     if (message.timestamp !== undefined) {
-      Timestamp.encode(toTimestamp(message.timestamp), writer.uint32(250).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.timestamp), writer.uint32(250).fork()).join();
     }
     return writer;
   },
@@ -575,7 +576,7 @@ function createBaseDefaultValuesTest_TranslationsEntry(): DefaultValuesTest_Tran
 }
 
 export const DefaultValuesTest_TranslationsEntry = {
-  encode(message: DefaultValuesTest_TranslationsEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: DefaultValuesTest_TranslationsEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.key !== "") {
       writer.uint32(10).string(message.key);
     }
@@ -653,7 +654,7 @@ function createBaseChild(): Child {
 }
 
 export const Child = {
-  encode(_: Child, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(_: Child, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     return writer;
   },
 

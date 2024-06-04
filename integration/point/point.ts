@@ -2,6 +2,7 @@
 // source: point.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "";
@@ -21,7 +22,7 @@ function createBasePoint(): Point {
 }
 
 export const Point = {
-  encode(message: Point, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Point, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.lat !== 0) {
       writer.uint32(9).double(message.lat);
     }
@@ -95,12 +96,12 @@ function createBaseArea(): Area {
 }
 
 export const Area = {
-  encode(message: Area, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Area, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.nw !== undefined) {
-      Point.encode(message.nw, writer.uint32(10).fork()).ldelim();
+      Point.encode(message.nw, writer.uint32(10).fork()).join();
     }
     if (message.se !== undefined) {
-      Point.encode(message.se, writer.uint32(18).fork()).ldelim();
+      Point.encode(message.se, writer.uint32(18).fork()).join();
     }
     return writer;
   },

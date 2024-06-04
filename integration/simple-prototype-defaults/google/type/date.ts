@@ -2,6 +2,7 @@
 // source: google/type/date.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "google.type";
@@ -42,7 +43,7 @@ function createBaseDateMessage(): DateMessage {
 }
 
 export const DateMessage = {
-  encode(message: DateMessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: DateMessage, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.year !== 0) {
       writer.uint32(8).int32(message.year);
     }

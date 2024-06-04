@@ -2,6 +2,7 @@
 // source: simple.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import Long from "long";
 import _m0 from "protobufjs/minimal";
 
@@ -32,7 +33,7 @@ function createBaseSimple(): Simple {
 }
 
 export const Simple = {
-  encode(message: Simple, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Simple, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
@@ -119,7 +120,7 @@ function createBaseNumbers(): Numbers {
 }
 
 export const Numbers = {
-  encode(message: Numbers, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Numbers, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.double !== 0) {
       writer.uint32(9).double(message.double);
     }
@@ -130,31 +131,31 @@ export const Numbers = {
       writer.uint32(24).int32(message.int32);
     }
     if (message.int64 !== 0) {
-      writer.uint32(32).int64(message.int64);
+      writer.uint32(32).int64(message.int64.toString());
     }
     if (message.uint32 !== 0) {
       writer.uint32(40).uint32(message.uint32);
     }
     if (message.uint64 !== 0) {
-      writer.uint32(48).uint64(message.uint64);
+      writer.uint32(48).uint64(message.uint64.toString());
     }
     if (message.sint32 !== 0) {
       writer.uint32(56).sint32(message.sint32);
     }
     if (message.sint64 !== 0) {
-      writer.uint32(64).sint64(message.sint64);
+      writer.uint32(64).sint64(message.sint64.toString());
     }
     if (message.fixed32 !== 0) {
       writer.uint32(77).fixed32(message.fixed32);
     }
     if (message.fixed64 !== 0) {
-      writer.uint32(81).fixed64(message.fixed64);
+      writer.uint32(81).fixed64(message.fixed64.toString());
     }
     if (message.sfixed32 !== 0) {
       writer.uint32(93).sfixed32(message.sfixed32);
     }
     if (message.sfixed64 !== 0) {
-      writer.uint32(97).sfixed64(message.sfixed64);
+      writer.uint32(97).sfixed64(message.sfixed64.toString());
     }
     return writer;
   },

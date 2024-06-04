@@ -2,6 +2,7 @@
 // source: foo.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as _m0 from "protobufjs/minimal";
 import { Struct } from "./google/protobuf/struct";
 import { Timestamp } from "./google/protobuf/timestamp";
@@ -30,9 +31,9 @@ function createBaseFoo(): Foo {
 export const Foo = {
   $type: "foo.Foo" as const,
 
-  encode(message: Foo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Foo, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.timestamp !== undefined) {
-      Timestamp.encode(toTimestamp(message.timestamp), writer.uint32(10).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.timestamp), writer.uint32(10).fork()).join();
     }
     return writer;
   },
@@ -89,9 +90,9 @@ function createBaseFoo2(): Foo2 {
 export const Foo2 = {
   $type: "foo.Foo2" as const,
 
-  encode(message: Foo2, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Foo2, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.timestamp !== undefined) {
-      Timestamp.encode(toTimestamp(message.timestamp), writer.uint32(10).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.timestamp), writer.uint32(10).fork()).join();
     }
     return writer;
   },
@@ -148,9 +149,9 @@ function createBaseWithStruct(): WithStruct {
 export const WithStruct = {
   $type: "foo.WithStruct" as const,
 
-  encode(message: WithStruct, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: WithStruct, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.struct !== undefined) {
-      Struct.encode(Struct.wrap(message.struct), writer.uint32(10).fork()).ldelim();
+      Struct.encode(Struct.wrap(message.struct), writer.uint32(10).fork()).join();
     }
     return writer;
   },

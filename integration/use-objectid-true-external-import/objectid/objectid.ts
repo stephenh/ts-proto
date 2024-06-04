@@ -2,6 +2,7 @@
 // source: objectid/objectid.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "foo.objectid";
@@ -15,7 +16,7 @@ function createBaseObjectId(): ObjectId {
 }
 
 export const ObjectId = {
-  encode(message: ObjectId, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: ObjectId, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.value !== "") {
       writer.uint32(10).string(message.value);
     }

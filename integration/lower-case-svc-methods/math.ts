@@ -2,6 +2,7 @@
 // source: math.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as DataLoader from "dataloader";
 import * as hash from "object-hash";
 import * as _m0 from "protobufjs/minimal";
@@ -26,7 +27,7 @@ function createBaseNumPair(): NumPair {
 }
 
 export const NumPair = {
-  encode(message: NumPair, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: NumPair, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.num1 !== 0) {
       writer.uint32(9).double(message.num1);
     }
@@ -100,7 +101,7 @@ function createBaseNumSingle(): NumSingle {
 }
 
 export const NumSingle = {
-  encode(message: NumSingle, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: NumSingle, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.num !== 0) {
       writer.uint32(9).double(message.num);
     }
@@ -157,12 +158,12 @@ function createBaseNumbers(): Numbers {
 }
 
 export const Numbers = {
-  encode(message: Numbers, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Numbers, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     writer.uint32(10).fork();
     for (const v of message.num) {
       writer.double(v);
     }
-    writer.ldelim();
+    writer.join();
     return writer;
   },
 

@@ -2,6 +2,7 @@
 // source: batching.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as DataLoader from "dataloader";
 import * as hash from "object-hash";
 import * as _m0 from "protobufjs/minimal";
@@ -54,7 +55,7 @@ function createBaseBatchQueryRequest(): BatchQueryRequest {
 }
 
 export const BatchQueryRequest = {
-  encode(message: BatchQueryRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: BatchQueryRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     for (const v of message.ids) {
       writer.uint32(10).string(v!);
     }
@@ -111,9 +112,9 @@ function createBaseBatchQueryResponse(): BatchQueryResponse {
 }
 
 export const BatchQueryResponse = {
-  encode(message: BatchQueryResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: BatchQueryResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     for (const v of message.entities) {
-      Entity.encode(v!, writer.uint32(10).fork()).ldelim();
+      Entity.encode(v!, writer.uint32(10).fork()).join();
     }
     return writer;
   },
@@ -170,7 +171,7 @@ function createBaseBatchMapQueryRequest(): BatchMapQueryRequest {
 }
 
 export const BatchMapQueryRequest = {
-  encode(message: BatchMapQueryRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: BatchMapQueryRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     for (const v of message.ids) {
       writer.uint32(10).string(v!);
     }
@@ -227,9 +228,9 @@ function createBaseBatchMapQueryResponse(): BatchMapQueryResponse {
 }
 
 export const BatchMapQueryResponse = {
-  encode(message: BatchMapQueryResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: BatchMapQueryResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     Object.entries(message.entities).forEach(([key, value]) => {
-      BatchMapQueryResponse_EntitiesEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).ldelim();
+      BatchMapQueryResponse_EntitiesEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).join();
     });
     return writer;
   },
@@ -305,12 +306,12 @@ function createBaseBatchMapQueryResponse_EntitiesEntry(): BatchMapQueryResponse_
 }
 
 export const BatchMapQueryResponse_EntitiesEntry = {
-  encode(message: BatchMapQueryResponse_EntitiesEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: BatchMapQueryResponse_EntitiesEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.key !== "") {
       writer.uint32(10).string(message.key);
     }
     if (message.value !== undefined) {
-      Entity.encode(message.value, writer.uint32(18).fork()).ldelim();
+      Entity.encode(message.value, writer.uint32(18).fork()).join();
     }
     return writer;
   },
@@ -385,7 +386,7 @@ function createBaseGetOnlyMethodRequest(): GetOnlyMethodRequest {
 }
 
 export const GetOnlyMethodRequest = {
-  encode(message: GetOnlyMethodRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: GetOnlyMethodRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
@@ -442,9 +443,9 @@ function createBaseGetOnlyMethodResponse(): GetOnlyMethodResponse {
 }
 
 export const GetOnlyMethodResponse = {
-  encode(message: GetOnlyMethodResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: GetOnlyMethodResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.entity !== undefined) {
-      Entity.encode(message.entity, writer.uint32(10).fork()).ldelim();
+      Entity.encode(message.entity, writer.uint32(10).fork()).join();
     }
     return writer;
   },
@@ -501,7 +502,7 @@ function createBaseWriteMethodRequest(): WriteMethodRequest {
 }
 
 export const WriteMethodRequest = {
-  encode(message: WriteMethodRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: WriteMethodRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
@@ -558,7 +559,7 @@ function createBaseWriteMethodResponse(): WriteMethodResponse {
 }
 
 export const WriteMethodResponse = {
-  encode(_: WriteMethodResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(_: WriteMethodResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     return writer;
   },
 
@@ -601,7 +602,7 @@ function createBaseEntity(): Entity {
 }
 
 export const Entity = {
-  encode(message: Entity, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Entity, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }

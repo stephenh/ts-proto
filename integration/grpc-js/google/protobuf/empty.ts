@@ -2,6 +2,7 @@
 // source: google/protobuf/empty.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "google.protobuf";
@@ -25,7 +26,7 @@ function createBaseEmpty(): Empty {
 }
 
 export const Empty = {
-  encode(_: Empty, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(_: Empty, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     return writer;
   },
 

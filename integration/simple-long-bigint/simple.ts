@@ -2,6 +2,7 @@
 // source: simple.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as _m0 from "protobufjs/minimal";
 import { Timestamp } from "./google/protobuf/timestamp";
 import { UInt64Value } from "./google/protobuf/wrappers";
@@ -48,7 +49,7 @@ function createBaseNumbers(): Numbers {
 }
 
 export const Numbers = {
-  encode(message: Numbers, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Numbers, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.double !== 0) {
       writer.uint32(9).double(message.double);
     }
@@ -101,10 +102,10 @@ export const Numbers = {
       writer.uint32(97).sfixed64(message.sfixed64.toString());
     }
     if (message.guint64 !== undefined) {
-      UInt64Value.encode({ value: message.guint64! }, writer.uint32(106).fork()).ldelim();
+      UInt64Value.encode({ value: message.guint64! }, writer.uint32(106).fork()).join();
     }
     if (message.timestamp !== undefined) {
-      Timestamp.encode(toTimestamp(message.timestamp), writer.uint32(114).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.timestamp), writer.uint32(114).fork()).join();
     }
     writer.uint32(122).fork();
     for (const v of message.uint64s) {
@@ -113,7 +114,7 @@ export const Numbers = {
       }
       writer.uint64(v.toString());
     }
-    writer.ldelim();
+    writer.join();
     return writer;
   },
 

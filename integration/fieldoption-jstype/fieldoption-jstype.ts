@@ -2,6 +2,7 @@
 // source: fieldoption-jstype.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as _m0 from "protobufjs/minimal";
 import Long = require("long");
 
@@ -42,15 +43,15 @@ function createBaseInt64FieldOption(): Int64FieldOption {
 }
 
 export const Int64FieldOption = {
-  encode(message: Int64FieldOption, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Int64FieldOption, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.normalField !== 0) {
-      writer.uint32(8).int64(message.normalField);
+      writer.uint32(8).int64(message.normalField.toString());
     }
     if (message.numberField !== 0) {
-      writer.uint32(16).int64(message.numberField);
+      writer.uint32(16).int64(message.numberField.toString());
     }
     if (message.stringField !== "0") {
-      writer.uint32(24).int64(message.stringField);
+      writer.uint32(24).int64(message.stringField.toString());
     }
     return writer;
   },
@@ -131,15 +132,15 @@ function createBaseUInt64FieldOption(): UInt64FieldOption {
 }
 
 export const UInt64FieldOption = {
-  encode(message: UInt64FieldOption, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: UInt64FieldOption, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.normalField !== 0) {
-      writer.uint32(8).uint64(message.normalField);
+      writer.uint32(8).uint64(message.normalField.toString());
     }
     if (message.numberField !== 0) {
-      writer.uint32(16).uint64(message.numberField);
+      writer.uint32(16).uint64(message.numberField.toString());
     }
     if (message.stringField !== "0") {
-      writer.uint32(24).uint64(message.stringField);
+      writer.uint32(24).uint64(message.stringField.toString());
     }
     return writer;
   },
@@ -220,15 +221,15 @@ function createBaseSInt64FieldOption(): SInt64FieldOption {
 }
 
 export const SInt64FieldOption = {
-  encode(message: SInt64FieldOption, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: SInt64FieldOption, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.normalField !== 0) {
-      writer.uint32(8).sint64(message.normalField);
+      writer.uint32(8).sint64(message.normalField.toString());
     }
     if (message.numberField !== 0) {
-      writer.uint32(16).sint64(message.numberField);
+      writer.uint32(16).sint64(message.numberField.toString());
     }
     if (message.stringField !== "0") {
-      writer.uint32(24).sint64(message.stringField);
+      writer.uint32(24).sint64(message.stringField.toString());
     }
     return writer;
   },
@@ -309,15 +310,15 @@ function createBaseFixed64FieldOption(): Fixed64FieldOption {
 }
 
 export const Fixed64FieldOption = {
-  encode(message: Fixed64FieldOption, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Fixed64FieldOption, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.normalField !== 0) {
-      writer.uint32(9).fixed64(message.normalField);
+      writer.uint32(9).fixed64(message.normalField.toString());
     }
     if (message.numberField !== 0) {
-      writer.uint32(17).fixed64(message.numberField);
+      writer.uint32(17).fixed64(message.numberField.toString());
     }
     if (message.stringField !== "0") {
-      writer.uint32(25).fixed64(message.stringField);
+      writer.uint32(25).fixed64(message.stringField.toString());
     }
     return writer;
   },
@@ -398,15 +399,15 @@ function createBaseSFixed64FieldOption(): SFixed64FieldOption {
 }
 
 export const SFixed64FieldOption = {
-  encode(message: SFixed64FieldOption, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: SFixed64FieldOption, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.normalField !== 0) {
-      writer.uint32(9).sfixed64(message.normalField);
+      writer.uint32(9).sfixed64(message.normalField.toString());
     }
     if (message.numberField !== 0) {
-      writer.uint32(17).sfixed64(message.numberField);
+      writer.uint32(17).sfixed64(message.numberField.toString());
     }
     if (message.stringField !== "0") {
-      writer.uint32(25).sfixed64(message.stringField);
+      writer.uint32(25).sfixed64(message.stringField.toString());
     }
     return writer;
   },

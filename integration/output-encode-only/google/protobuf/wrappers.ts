@@ -2,7 +2,7 @@
 // source: google/protobuf/wrappers.proto
 
 /* eslint-disable */
-import * as _m0 from "protobufjs/minimal";
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 
 export const protobufPackage = "google.protobuf";
 
@@ -101,7 +101,7 @@ function createBaseDoubleValue(): DoubleValue {
 }
 
 export const DoubleValue = {
-  encode(message: DoubleValue, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: DoubleValue, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.value !== 0) {
       writer.uint32(9).double(message.value);
     }
@@ -114,7 +114,7 @@ function createBaseFloatValue(): FloatValue {
 }
 
 export const FloatValue = {
-  encode(message: FloatValue, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: FloatValue, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.value !== 0) {
       writer.uint32(13).float(message.value);
     }
@@ -127,9 +127,9 @@ function createBaseInt64Value(): Int64Value {
 }
 
 export const Int64Value = {
-  encode(message: Int64Value, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Int64Value, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.value !== 0) {
-      writer.uint32(8).int64(message.value);
+      writer.uint32(8).int64(message.value.toString());
     }
     return writer;
   },
@@ -140,9 +140,9 @@ function createBaseUInt64Value(): UInt64Value {
 }
 
 export const UInt64Value = {
-  encode(message: UInt64Value, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: UInt64Value, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.value !== 0) {
-      writer.uint32(8).uint64(message.value);
+      writer.uint32(8).uint64(message.value.toString());
     }
     return writer;
   },
@@ -153,7 +153,7 @@ function createBaseInt32Value(): Int32Value {
 }
 
 export const Int32Value = {
-  encode(message: Int32Value, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Int32Value, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.value !== 0) {
       writer.uint32(8).int32(message.value);
     }
@@ -166,7 +166,7 @@ function createBaseUInt32Value(): UInt32Value {
 }
 
 export const UInt32Value = {
-  encode(message: UInt32Value, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: UInt32Value, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.value !== 0) {
       writer.uint32(8).uint32(message.value);
     }
@@ -179,7 +179,7 @@ function createBaseBoolValue(): BoolValue {
 }
 
 export const BoolValue = {
-  encode(message: BoolValue, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: BoolValue, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.value !== false) {
       writer.uint32(8).bool(message.value);
     }
@@ -192,7 +192,7 @@ function createBaseStringValue(): StringValue {
 }
 
 export const StringValue = {
-  encode(message: StringValue, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: StringValue, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.value !== "") {
       writer.uint32(10).string(message.value);
     }
@@ -205,7 +205,7 @@ function createBaseBytesValue(): BytesValue {
 }
 
 export const BytesValue = {
-  encode(message: BytesValue, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: BytesValue, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.value.length !== 0) {
       writer.uint32(10).bytes(message.value);
     }

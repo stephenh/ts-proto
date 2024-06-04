@@ -2,6 +2,7 @@
 // source: point.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as _m0 from "protobufjs/minimal";
 import { BytesValue } from "./google/protobuf/wrappers";
 
@@ -17,12 +18,12 @@ function createBasePoint(): Point {
 }
 
 export const Point = {
-  encode(message: Point, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Point, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.data.length !== 0) {
       writer.uint32(10).bytes(message.data);
     }
     if (message.dataWrapped !== undefined) {
-      BytesValue.encode({ value: message.dataWrapped! }, writer.uint32(18).fork()).ldelim();
+      BytesValue.encode({ value: message.dataWrapped! }, writer.uint32(18).fork()).join();
     }
     return writer;
   },
@@ -39,7 +40,7 @@ export const Point = {
             break;
           }
 
-          message.data = reader.bytes() as Buffer;
+          message.data = Buffer.from(reader.bytes());
           continue;
         case 2:
           if (tag !== 18) {

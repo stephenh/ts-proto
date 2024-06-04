@@ -2,6 +2,7 @@
 // source: no-proto-package.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as _m0 from "protobufjs/minimal";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
@@ -20,7 +21,7 @@ function createBaseUser(): User {
 }
 
 export const User = {
-  encode(message: User, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: User, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
@@ -77,7 +78,7 @@ function createBaseEmpty(): Empty {
 }
 
 export const Empty = {
-  encode(_: Empty, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(_: Empty, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     return writer;
   },
 

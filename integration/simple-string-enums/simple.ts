@@ -2,6 +2,7 @@
 // source: simple.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as _m0 from "protobufjs/minimal";
 import { NullValue, nullValueFromJSON, nullValueToJSON, nullValueToNumber } from "./google/protobuf/struct";
 
@@ -78,7 +79,7 @@ function createBaseSimple(): Simple {
 }
 
 export const Simple = {
-  encode(message: Simple, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Simple, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
@@ -89,12 +90,12 @@ export const Simple = {
     for (const v of message.states) {
       writer.int32(stateEnumToNumber(v));
     }
-    writer.ldelim();
+    writer.join();
     if (message.nullValue !== NullValue.NULL_VALUE) {
       writer.uint32(48).int32(nullValueToNumber(message.nullValue));
     }
     Object.entries(message.stateMap).forEach(([key, value]) => {
-      Simple_StateMapEntry.encode({ key: key as any, value }, writer.uint32(58).fork()).ldelim();
+      Simple_StateMapEntry.encode({ key: key as any, value }, writer.uint32(58).fork()).join();
     });
     return writer;
   },
@@ -231,7 +232,7 @@ function createBaseSimple_StateMapEntry(): Simple_StateMapEntry {
 }
 
 export const Simple_StateMapEntry = {
-  encode(message: Simple_StateMapEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Simple_StateMapEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.key !== "") {
       writer.uint32(10).string(message.key);
     }

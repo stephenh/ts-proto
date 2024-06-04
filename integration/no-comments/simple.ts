@@ -2,6 +2,7 @@
 // source: simple.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "simple";
@@ -23,7 +24,7 @@ function createBaseSimple(): Simple {
 }
 
 export const Simple = {
-  encode(message: Simple, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Simple, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
@@ -31,7 +32,7 @@ export const Simple = {
       writer.uint32(16).int32(message.age);
     }
     if (message.child !== undefined) {
-      Child.encode(message.child, writer.uint32(26).fork()).ldelim();
+      Child.encode(message.child, writer.uint32(26).fork()).join();
     }
     if (message.testField !== "") {
       writer.uint32(34).string(message.testField);
@@ -142,7 +143,7 @@ function createBaseChild(): Child {
 }
 
 export const Child = {
-  encode(message: Child, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Child, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }

@@ -2,6 +2,7 @@
 // source: vector_tile.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as _m0 from "protobufjs/minimal";
 import Long = require("long");
 
@@ -87,9 +88,9 @@ function createBaseTile(): Tile {
 }
 
 export const Tile = {
-  encode(message: Tile, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Tile, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     for (const v of message.layers) {
-      Tile_Layer.encode(v!, writer.uint32(26).fork()).ldelim();
+      Tile_Layer.encode(v!, writer.uint32(26).fork()).join();
     }
     return writer;
   },
@@ -146,7 +147,7 @@ function createBaseTile_Value(): Tile_Value {
 }
 
 export const Tile_Value = {
-  encode(message: Tile_Value, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Tile_Value, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.stringValue !== undefined && message.stringValue !== "") {
       writer.uint32(10).string(message.stringValue);
     }
@@ -157,13 +158,13 @@ export const Tile_Value = {
       writer.uint32(25).double(message.doubleValue);
     }
     if (message.intValue !== undefined && message.intValue !== 0) {
-      writer.uint32(32).int64(message.intValue);
+      writer.uint32(32).int64(message.intValue.toString());
     }
     if (message.uintValue !== undefined && message.uintValue !== 0) {
-      writer.uint32(40).uint64(message.uintValue);
+      writer.uint32(40).uint64(message.uintValue.toString());
     }
     if (message.sintValue !== undefined && message.sintValue !== 0) {
-      writer.uint32(48).sint64(message.sintValue);
+      writer.uint32(48).sint64(message.sintValue.toString());
     }
     if (message.boolValue !== undefined && message.boolValue !== false) {
       writer.uint32(56).bool(message.boolValue);
@@ -295,15 +296,15 @@ function createBaseTile_Feature(): Tile_Feature {
 }
 
 export const Tile_Feature = {
-  encode(message: Tile_Feature, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Tile_Feature, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.id !== undefined && message.id !== 0) {
-      writer.uint32(8).uint64(message.id);
+      writer.uint32(8).uint64(message.id.toString());
     }
     writer.uint32(18).fork();
     for (const v of message.tags) {
       writer.uint32(v);
     }
-    writer.ldelim();
+    writer.join();
     if (message.type !== undefined && message.type !== 0) {
       writer.uint32(24).int32(message.type);
     }
@@ -311,7 +312,7 @@ export const Tile_Feature = {
     for (const v of message.geometry) {
       writer.uint32(v);
     }
-    writer.ldelim();
+    writer.join();
     return writer;
   },
 
@@ -423,7 +424,7 @@ function createBaseTile_Layer(): Tile_Layer {
 }
 
 export const Tile_Layer = {
-  encode(message: Tile_Layer, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Tile_Layer, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.version !== 1) {
       writer.uint32(120).uint32(message.version);
     }
@@ -431,13 +432,13 @@ export const Tile_Layer = {
       writer.uint32(10).string(message.name);
     }
     for (const v of message.features) {
-      Tile_Feature.encode(v!, writer.uint32(18).fork()).ldelim();
+      Tile_Feature.encode(v!, writer.uint32(18).fork()).join();
     }
     for (const v of message.keys) {
       writer.uint32(26).string(v!);
     }
     for (const v of message.values) {
-      Tile_Value.encode(v!, writer.uint32(34).fork()).ldelim();
+      Tile_Value.encode(v!, writer.uint32(34).fork()).join();
     }
     if (message.extent !== undefined && message.extent !== 4096) {
       writer.uint32(40).uint32(message.extent);

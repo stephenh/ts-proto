@@ -2,6 +2,7 @@
 // source: google/protobuf/timestamp.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as _m0 from "protobufjs/minimal";
 import { messageTypeRegistry } from "../../typeRegistry";
 import Long = require("long");
@@ -122,9 +123,9 @@ function createBaseTimestamp(): Timestamp {
 export const Timestamp = {
   $type: "google.protobuf.Timestamp" as const,
 
-  encode(message: Timestamp, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Timestamp, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.seconds !== 0) {
-      writer.uint32(8).int64(message.seconds);
+      writer.uint32(8).int64(message.seconds.toString());
     }
     if (message.nanos !== 0) {
       writer.uint32(16).int32(message.nanos);
