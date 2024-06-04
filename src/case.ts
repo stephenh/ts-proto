@@ -1,4 +1,4 @@
-import { camelCase as camelCaseAnything, snakeCase as snakeCaseAnything } from "case-anything";
+import { camelCase as camelCaseAnything } from "case-anything";
 
 import { Options } from "./options";
 
@@ -24,7 +24,14 @@ export function snakeToCamel(s: string): string {
 }
 
 export function camelToSnake(s: string): string {
-  return snakeCaseAnything(s).toUpperCase();
+  return (
+    s
+      // any number or little-char -> big char
+      .replace(/[a-z0-9]([A-Z])/g, (m) => m[0] + "_" + m[1])
+      // any multiple big char -> next word
+      .replace(/[A-Z]([A-Z][a-z])/g, (m) => m[0] + "_" + m.substring(1))
+      .toUpperCase()
+  );
 }
 
 export function capitalize(s: string): string {
