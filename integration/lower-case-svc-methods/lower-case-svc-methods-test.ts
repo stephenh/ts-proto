@@ -20,7 +20,7 @@ describe('lower-case-svc-methods', () => {
     const client = new MathServiceClientImpl(rpc);
     client.absoluteValue(ctx, {num: -1});
 
-    expect(rpc.request).toBeCalledWith(ctx, 'MathService', 'AbsoluteValue', expect.any(Buffer));
+    expect(rpc.request).toBeCalledWith(ctx, 'MathService', 'AbsoluteValue', expect.any(Uint8Array));
   });
   it('lower-caseifies batch functions', () => {
     const rpc = getRpc(), ctx = getContext();
