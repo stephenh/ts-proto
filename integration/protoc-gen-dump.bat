@@ -1,1 +1,0 @@
-@bash protoc-gen-dump
