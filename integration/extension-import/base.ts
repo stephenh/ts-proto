@@ -2,6 +2,7 @@
 // source: base.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import _m0 from "protobufjs/minimal";
 
 export interface Extendable {
@@ -13,7 +14,7 @@ function createBaseExtendable(): Extendable {
 }
 
 export const Extendable = {
-  encode(message: Extendable, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Extendable, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.field !== "") {
       writer.uint32(10).string(message.field);
     }
