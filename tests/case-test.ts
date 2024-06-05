@@ -59,6 +59,10 @@ describe("case", () => {
     expect(camelToSnake("getAPIValue")).toEqual("GET_API_VALUE");
   });
 
+  it("converts string to snake case respecting number separation, getV1Foo === GET_V1_FOO", () => {
+    expect(camelToSnake("getV1Foo")).toEqual("GET_V1_FOO");
+  });
+
   describe("getFieldJsonName", () => {
     it("keeps snake case when jsonName is probably not set", () => {
       expect(getFieldJsonName({ name: "foo_bar", jsonName: "fooBar" }, { snakeToCamel: [], useJsonName: false })).toBe(

@@ -687,8 +687,7 @@ The commands below assume you have **Docker** installed. If you are using OS X, 
 - Run `yarn build:test` to generate the test files.
   > _This runs the following commands:_
   >
-  > - `proto2bin` — Converts integration test `.proto` files to `.bin`.
-  > - `bin2ts` — Runs `ts-proto` on the `.bin` files to generate `.ts` files.
+  > - `proto2ts` — Runs `ts-proto` on the `integration/**/*.proto` files to generate `.ts` files.
   > - `proto2pbjs` — Generates a reference implementation using `pbjs` for testing compatibility.
 - Run `yarn test`
 
@@ -704,8 +703,8 @@ The commands below assume you have **Docker** installed. If you are using OS X, 
   - Add/update a `integration/your-new-test/some-test.ts` unit test, even if it's as trivial as just making sure the generated code compiles
 - Modify the `ts-proto` code generation logic:
   - Most important logic is found in [src/main.ts](src/main.ts).
-  - After any changes to `src/*.ts` files, run `yarn bin2ts` to re-codegen all integration tests
-    - Or `yarn bin2ts your-new-test` to re-codegen a specific test
+  - After any changes to `src/*.ts` files, run `yarn proto2ts` to re-codegen all integration tests
+    - Or `yarn proto2ts your-new-test` to re-codegen a specific test
     - Again leaving `yarn watch` running should "just do the right thing"
 - Run `yarn test` to verify your changes pass all existing tests
 - Commit and submit a PR

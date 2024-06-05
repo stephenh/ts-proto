@@ -25,7 +25,7 @@ jobs:
       - name: Prepare Integration
         run: ./integration/pbjs.sh
       - name: Codegen
-        run: yarn bin2ts
+        run: yarn proto2ts
       # This will fail if any git-tracked file has changed
       - name: Diff Output
         run: git status && git diff --exit-code

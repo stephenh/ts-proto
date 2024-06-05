@@ -24,13 +24,12 @@ function main() {
   if (process.argv.includes("-h") || process.argv.includes("--help")) showHelp();
   showSettings(tests);
 
-  chokidar.watch("integration/*/*.proto", watchOptions).on("all", integrationHandler(yarn, "proto2bin"));
+  chokidar.watch("integration/*/*.proto", watchOptions).on("all", integrationHandler(yarn, "proto2ts"));
   chokidar.watch("integration/*/*.proto", watchOptions).on("all", integrationHandler(yarn, "proto2pbjs"));
-  chokidar.watch("integration/*/*.bin", watchOptions).on("all", integrationHandler(yarn, "bin2ts"));
-  chokidar.watch("src/**/*.ts", watchOptions).on("change", srcHandler(yarn, "bin2ts", tests));
+  chokidar.watch("src/**/*.ts", watchOptions).on("change", srcHandler(yarn, "proto2ts", tests));
 
   setupKeys({
-    [""]: () => yarnRun(yarn, "bin2ts", "enter"),
+    [""]: () => yarnRun(yarn, "proto2ts", "enter"),
     ["q"]: () => process.exit(),
     ["\u0003"]: () => process.exit(), // ctrl-c
   });
@@ -61,7 +60,7 @@ Options:
     -h, --help    Show this help message.
     --polling     Use polling instead of native watchers.
     TEST          Regenerate the specified TEST(s) when implementation files change.
-                  Equivalent to running 'yarn bin2ts TEST' manually each time.
+                  Equivalent to running 'yarn proto2ts TEST' manually each time.
     
 Examples:
     $ yarn watch
