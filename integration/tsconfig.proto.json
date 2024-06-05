@@ -15,6 +15,7 @@
     "angular",
     "batching-with-context-esModuleInterop",
     "import-mapping/mapping.ts",
+    "extension-import",
     "simple-esmodule-interop",
     "fieldoption-jstype*"
   ]
