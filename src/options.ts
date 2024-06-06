@@ -168,7 +168,7 @@ export function defaultOptions(): Options {
     disableProto2DefaultValues: false,
     useNullAsOptional: false,
     annotateFilesWithVersion: true,
-    noDefaultsForOptionals: false
+    noDefaultsForOptionals: false,
   };
 }
 

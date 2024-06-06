@@ -214,8 +214,8 @@ export function getFieldOptionsJsType(
 export function defaultValue(ctx: Context, field: FieldDescriptorProto): any {
   const { typeMap, options, utils, currentFile } = ctx;
 
-  if(options.noDefaultsForOptionals){
-    return options.useNullAsOptional ? null : undefined; 
+  if (options.noDefaultsForOptionals) {
+    return options.useNullAsOptional ? null : undefined;
   }
 
   const useDefaultValue = !currentFile.isProto3Syntax && !options.disableProto2DefaultValues && field.defaultValue;
@@ -304,10 +304,10 @@ export function notDefaultCheck(
 
   const isOptional = isOptionalProperty(field, messageOptions, options, currentFile.isProto3Syntax);
 
-  if(options.noDefaultsForOptionals) {
+  if (options.noDefaultsForOptionals) {
     return isOptional
-    ? code`${place} !== undefined ${withAndMaybeCheckIsNotNull(options, place)}`
-    : code`${place} !== undefined`;
+      ? code`${place} !== undefined ${withAndMaybeCheckIsNotNull(options, place)}`
+      : code`${place} !== undefined`;
   }
 
   const maybeNotUndefinedAnd = isOptional

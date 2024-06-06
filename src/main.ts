@@ -104,7 +104,7 @@ import {
   safeAccessor,
   withAndMaybeCheckIsNotNull,
   withOrMaybeCheckIsNotNull,
-  withOrMaybeCheckIsNull
+  withOrMaybeCheckIsNull,
 } from "./utils";
 import { visit, visitServices } from "./visit";
 
@@ -1249,8 +1249,15 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
             }`
           : "";
 
-        const ifValueCheck = `${varName}.value !== undefined ${withAndMaybeCheckIsNotNull(options, `${varName}.value`)}`;
-        const maybeIfKeyCheck = `${options.noDefaultsForOptionals ? ` && ${varName}.key !== undefined ${withAndMaybeCheckIsNotNull(options, `${varName}.key`)}`: ''}`
+        const ifValueCheck = `${varName}.value !== undefined ${withAndMaybeCheckIsNotNull(
+          options,
+          `${varName}.value`,
+        )}`;
+        const maybeIfKeyCheck = `${
+          options.noDefaultsForOptionals
+            ? ` && ${varName}.key !== undefined ${withAndMaybeCheckIsNotNull(options, `${varName}.key`)}`
+            : ""
+        }`;
 
         chunks.push(code`
           ${tagCheck}
@@ -1634,13 +1641,11 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
           ? writeSnippet(`BigInt(${messageProperty})`)
           : writeSnippet(`${messageProperty}`);
 
-
       chunks.push(code`
         if (${notDefaultCheck(ctx, field, messageDesc.options, `${messageProperty}`)}) {
           ${body};
         }
       `);
-      
     } else {
       chunks.push(code`${writeSnippet(`${messageProperty}`)};`);
     }
