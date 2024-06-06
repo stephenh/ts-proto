@@ -7,7 +7,6 @@ import { Timestamp } from "./google/protobuf/timestamp";
 import { BoolValue, BytesValue, Int32Value, StringValue } from "./google/protobuf/wrappers";
 import { DateMessage } from "./google/type/date";
 import { ImportedThing } from "./import_dir/thing";
-import Long = require("long");
 
 export const protobufPackage = "simple";
 
@@ -2974,16 +2973,15 @@ function fromJsonTimestamp(o: any): Date {
   }
 }
 
-function longToNumber(long: Long): number {
-  if (long.gt(globalThis.Number.MAX_SAFE_INTEGER)) {
+function longToNumber(int64: { toString(): string }): number {
+  const num = globalThis.Number(int64.toString());
+  if (num > globalThis.Number.MAX_SAFE_INTEGER) {
     throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
-  return long.toNumber();
-}
-
-if (_m0.util.Long !== Long) {
-  _m0.util.Long = Long as any;
-  _m0.configure();
+  if (num < globalThis.Number.MIN_SAFE_INTEGER) {
+    throw new globalThis.Error("Value is smaller than Number.MIN_SAFE_INTEGER");
+  }
+  return num;
 }
 
 function isObject(value: any): boolean {

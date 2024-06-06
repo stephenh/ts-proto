@@ -497,7 +497,6 @@ function makeLongUtils(options: Options, bytes: ReturnType<typeof makeByteUtils>
     `,
   );
 
-  // TODO This is unused?
   const numberToLong = conditionalOutput(
     "numberToLong",
     code`
@@ -510,8 +509,8 @@ function makeLongUtils(options: Options, bytes: ReturnType<typeof makeByteUtils>
   const longToString = conditionalOutput(
     "longToString",
     code`
-      function longToString(long: ${Long}) {
-        return long.toString();
+      function longToString(int64: { toString(): string }) {
+        return int64.toString();
       }
     `,
   );
@@ -519,8 +518,8 @@ function makeLongUtils(options: Options, bytes: ReturnType<typeof makeByteUtils>
   const longToBigint = conditionalOutput(
     "longToBigint",
     code`
-      function longToBigint(long: ${Long}) {
-        return BigInt(long.toString());
+      function longToBigint(int64: { toString(): string }) {
+        return typeof int64 == "bigint" ? int64 : ${bytes.globalThis}.BigInt(int64.toString());
       }
     `,
   );
@@ -528,11 +527,15 @@ function makeLongUtils(options: Options, bytes: ReturnType<typeof makeByteUtils>
   const longToNumber = conditionalOutput(
     "longToNumber",
     code`
-      function longToNumber(long: ${Long}): number {
-        if (long.gt(${bytes.globalThis}.Number.MAX_SAFE_INTEGER)) {
+      function longToNumber(int64: { toString(): string }): number {
+        const num = ${bytes.globalThis}.Number(int64.toString());
+        if (num > ${bytes.globalThis}.Number.MAX_SAFE_INTEGER) {
           throw new ${bytes.globalThis}.Error("Value is larger than Number.MAX_SAFE_INTEGER")
         }
-        return long.toNumber();
+        if (num < ${bytes.globalThis}.Number.MIN_SAFE_INTEGER) {
+          throw new ${bytes.globalThis}.Error("Value is smaller than Number.MIN_SAFE_INTEGER")
+        }
+        return num;
       }
     `,
   );

@@ -3,7 +3,6 @@
 
 /* eslint-disable */
 import * as _m0 from "protobufjs/minimal";
-import Long = require("long");
 
 export const protobufPackage = "";
 
@@ -245,13 +244,8 @@ type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
-function longToBigint(long: Long) {
-  return BigInt(long.toString());
-}
-
-if (_m0.util.Long !== Long) {
-  _m0.util.Long = Long as any;
-  _m0.configure();
+function longToBigint(int64: { toString(): string }) {
+  return typeof int64 == "bigint" ? int64 : globalThis.BigInt(int64.toString());
 }
 
 function isObject(value: any): boolean {

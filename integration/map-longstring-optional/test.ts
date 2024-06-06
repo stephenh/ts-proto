@@ -3,7 +3,6 @@
 
 /* eslint-disable */
 import * as _m0 from "protobufjs/minimal";
-import Long = require("long");
 
 export const protobufPackage = "";
 
@@ -239,13 +238,8 @@ type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
-function longToString(long: Long) {
-  return long.toString();
-}
-
-if (_m0.util.Long !== Long) {
-  _m0.util.Long = Long as any;
-  _m0.configure();
+function longToString(int64: { toString(): string }) {
+  return int64.toString();
 }
 
 function isObject(value: any): boolean {

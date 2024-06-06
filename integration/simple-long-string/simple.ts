@@ -5,7 +5,6 @@
 import * as _m0 from "protobufjs/minimal";
 import { Timestamp } from "./google/protobuf/timestamp";
 import { UInt64Value } from "./google/protobuf/wrappers";
-import Long = require("long");
 
 export const protobufPackage = "simple";
 
@@ -329,13 +328,8 @@ function fromJsonTimestamp(o: any): Date {
   }
 }
 
-function longToString(long: Long) {
-  return long.toString();
-}
-
-if (_m0.util.Long !== Long) {
-  _m0.util.Long = Long as any;
-  _m0.configure();
+function longToString(int64: { toString(): string }) {
+  return int64.toString();
 }
 
 function isSet(value: any): boolean {
