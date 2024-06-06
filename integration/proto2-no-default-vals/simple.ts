@@ -321,7 +321,7 @@ export const OptionalsTest = {
           break;
         case 4:
           if (tag === 32) {
-            message.repLong.push(longToNumber(reader.int64() as Long));
+            message.repLong.push(longToNumber(reader.int64()));
 
             continue;
           }
@@ -329,7 +329,7 @@ export const OptionalsTest = {
           if (tag === 34) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
-              message.repLong.push(longToNumber(reader.int64() as Long));
+              message.repLong.push(longToNumber(reader.int64()));
             }
 
             continue;
@@ -410,7 +410,7 @@ export const OptionalsTest = {
             break;
           }
 
-          message.optLong = longToNumber(reader.int64() as Long);
+          message.optLong = longToNumber(reader.int64());
           continue;
         case 15:
           if (tag !== 120) {
@@ -466,7 +466,7 @@ export const OptionalsTest = {
             break;
           }
 
-          message.reqLong = longToNumber(reader.int64() as Long);
+          message.reqLong = longToNumber(reader.int64());
           continue;
         case 25:
           if (tag !== 200) {
@@ -515,7 +515,7 @@ export const OptionalsTest = {
             break;
           }
 
-          message.reqDefvalLong = longToNumber(reader.int64() as Long);
+          message.reqDefvalLong = longToNumber(reader.int64());
           continue;
         case 35:
           if (tag !== 280) {
@@ -564,7 +564,7 @@ export const OptionalsTest = {
             break;
           }
 
-          message.optDefvalLong = longToNumber(reader.int64() as Long);
+          message.optDefvalLong = longToNumber(reader.int64());
           continue;
         case 45:
           if (tag !== 360) {

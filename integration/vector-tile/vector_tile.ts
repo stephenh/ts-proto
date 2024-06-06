@@ -203,21 +203,21 @@ export const Tile_Value = {
             break;
           }
 
-          message.intValue = longToNumber(reader.int64() as Long);
+          message.intValue = longToNumber(reader.int64());
           continue;
         case 5:
           if (tag !== 40) {
             break;
           }
 
-          message.uintValue = longToNumber(reader.uint64() as Long);
+          message.uintValue = longToNumber(reader.uint64());
           continue;
         case 6:
           if (tag !== 48) {
             break;
           }
 
-          message.sintValue = longToNumber(reader.sint64() as Long);
+          message.sintValue = longToNumber(reader.sint64());
           continue;
         case 7:
           if (tag !== 56) {
@@ -326,7 +326,7 @@ export const Tile_Feature = {
             break;
           }
 
-          message.id = longToNumber(reader.uint64() as Long);
+          message.id = longToNumber(reader.uint64());
           continue;
         case 2:
           if (tag === 16) {

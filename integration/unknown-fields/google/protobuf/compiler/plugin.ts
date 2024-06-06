@@ -388,7 +388,7 @@ export const CodeGeneratorResponse = {
             break;
           }
 
-          message.supportedFeatures = longToNumber(reader.uint64() as Long);
+          message.supportedFeatures = longToNumber(reader.uint64());
           continue;
         case 15:
           if (tag !== 122) {

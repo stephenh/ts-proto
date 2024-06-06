@@ -223,7 +223,7 @@ export const DefaultValuesTest = {
             break;
           }
 
-          message.long = longToNumber(reader.int64() as Long);
+          message.long = longToNumber(reader.int64());
           continue;
         case 5:
           if (tag !== 40) {
@@ -289,7 +289,7 @@ export const DefaultValuesTest = {
           break;
         case 14:
           if (tag === 112) {
-            message.repLong.push(longToNumber(reader.int64() as Long));
+            message.repLong.push(longToNumber(reader.int64()));
 
             continue;
           }
@@ -297,7 +297,7 @@ export const DefaultValuesTest = {
           if (tag === 114) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
-              message.repLong.push(longToNumber(reader.int64() as Long));
+              message.repLong.push(longToNumber(reader.int64()));
             }
 
             continue;
@@ -361,7 +361,7 @@ export const DefaultValuesTest = {
             break;
           }
 
-          message.optLong = longToNumber(reader.int64() as Long);
+          message.optLong = longToNumber(reader.int64());
           continue;
         case 25:
           if (tag !== 200) {

@@ -2012,14 +2012,14 @@ export const SimpleWithMap_LongLookupEntry = {
             break;
           }
 
-          message.key = longToNumber(reader.int64() as Long);
+          message.key = longToNumber(reader.int64());
           continue;
         case 2:
           if (tag !== 16) {
             break;
           }
 
-          message.value = longToNumber(reader.int64() as Long);
+          message.value = longToNumber(reader.int64());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -2095,7 +2095,7 @@ export const SimpleWithMap_BoolLookupEntry = {
             break;
           }
 
-          message.value = longToNumber(reader.int64() as Long);
+          message.value = longToNumber(reader.int64());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -2662,7 +2662,7 @@ export const Numbers = {
             break;
           }
 
-          message.int64 = longToNumber(reader.int64() as Long);
+          message.int64 = longToNumber(reader.int64());
           continue;
         case 5:
           if (tag !== 40) {
@@ -2676,7 +2676,7 @@ export const Numbers = {
             break;
           }
 
-          message.uint64 = longToNumber(reader.uint64() as Long);
+          message.uint64 = longToNumber(reader.uint64());
           continue;
         case 7:
           if (tag !== 56) {
@@ -2690,7 +2690,7 @@ export const Numbers = {
             break;
           }
 
-          message.sint64 = longToNumber(reader.sint64() as Long);
+          message.sint64 = longToNumber(reader.sint64());
           continue;
         case 9:
           if (tag !== 77) {
@@ -2704,7 +2704,7 @@ export const Numbers = {
             break;
           }
 
-          message.fixed64 = longToNumber(reader.fixed64() as Long);
+          message.fixed64 = longToNumber(reader.fixed64());
           continue;
         case 11:
           if (tag !== 93) {
@@ -2718,7 +2718,7 @@ export const Numbers = {
             break;
           }
 
-          message.sfixed64 = longToNumber(reader.sfixed64() as Long);
+          message.sfixed64 = longToNumber(reader.sfixed64());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {

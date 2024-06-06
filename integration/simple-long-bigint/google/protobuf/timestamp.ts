@@ -143,7 +143,7 @@ export const Timestamp = {
             break;
           }
 
-          message.seconds = longToBigint(reader.int64() as Long);
+          message.seconds = longToBigint(reader.int64());
           continue;
         case 2:
           if (tag !== 16) {

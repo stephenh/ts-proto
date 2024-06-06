@@ -124,7 +124,7 @@ export const Numbers = {
             break;
           }
 
-          message.int64 = longToString(reader.int64() as Long);
+          message.int64 = longToString(reader.int64());
           continue;
         case 5:
           if (tag !== 40) {
@@ -138,7 +138,7 @@ export const Numbers = {
             break;
           }
 
-          message.uint64 = longToString(reader.uint64() as Long);
+          message.uint64 = longToString(reader.uint64());
           continue;
         case 7:
           if (tag !== 56) {
@@ -152,7 +152,7 @@ export const Numbers = {
             break;
           }
 
-          message.sint64 = longToString(reader.sint64() as Long);
+          message.sint64 = longToString(reader.sint64());
           continue;
         case 9:
           if (tag !== 77) {
@@ -166,7 +166,7 @@ export const Numbers = {
             break;
           }
 
-          message.fixed64 = longToString(reader.fixed64() as Long);
+          message.fixed64 = longToString(reader.fixed64());
           continue;
         case 11:
           if (tag !== 93) {
@@ -180,7 +180,7 @@ export const Numbers = {
             break;
           }
 
-          message.sfixed64 = longToString(reader.sfixed64() as Long);
+          message.sfixed64 = longToString(reader.sfixed64());
           continue;
         case 13:
           if (tag !== 106) {

@@ -165,14 +165,14 @@ export const MapBigInt_MapEntry = {
             break;
           }
 
-          message.key = longToString(reader.fixed64() as Long);
+          message.key = longToString(reader.fixed64());
           continue;
         case 2:
           if (tag !== 16) {
             break;
           }
 
-          message.value = longToString(reader.int64() as Long);
+          message.value = longToString(reader.int64());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {

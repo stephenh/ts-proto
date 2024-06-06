@@ -590,14 +590,14 @@ export const Maps_Int64ToInt64Entry = {
             break;
           }
 
-          message.key = longToNumber(reader.int64() as Long);
+          message.key = longToNumber(reader.int64());
           continue;
         case 2:
           if (tag !== 16) {
             break;
           }
 
-          message.value = longToNumber(reader.int64() as Long);
+          message.value = longToNumber(reader.int64());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
