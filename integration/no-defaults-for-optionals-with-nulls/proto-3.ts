@@ -23,9 +23,9 @@ export interface Proto3TestMessage_MapValueEntry {
 
 function createBaseProto3TestMessage(): Proto3TestMessage {
   return {
-    boolValue: undefined,
-    intValue: undefined,
-    stringValue: undefined,
+    boolValue: null,
+    intValue: null,
+    stringValue: null,
     optionalBoolValue: null,
     optionalIntValue: null,
     optionalStringValue: null,
@@ -129,9 +129,9 @@ export const Proto3TestMessage = {
 
   fromJSON(object: any): Proto3TestMessage {
     return {
-      boolValue: isSet(object.boolValue) ? globalThis.Boolean(object.boolValue) : undefined,
-      intValue: isSet(object.intValue) ? globalThis.Number(object.intValue) : undefined,
-      stringValue: isSet(object.stringValue) ? globalThis.String(object.stringValue) : undefined,
+      boolValue: isSet(object.boolValue) ? globalThis.Boolean(object.boolValue) : null,
+      intValue: isSet(object.intValue) ? globalThis.Number(object.intValue) : null,
+      stringValue: isSet(object.stringValue) ? globalThis.String(object.stringValue) : null,
       optionalBoolValue: isSet(object.optionalBoolValue) ? globalThis.Boolean(object.optionalBoolValue) : null,
       optionalIntValue: isSet(object.optionalIntValue) ? globalThis.Number(object.optionalIntValue) : null,
       optionalStringValue: isSet(object.optionalStringValue) ? globalThis.String(object.optionalStringValue) : null,
@@ -181,9 +181,9 @@ export const Proto3TestMessage = {
   },
   fromPartial<I extends Exact<DeepPartial<Proto3TestMessage>, I>>(object: I): Proto3TestMessage {
     const message = createBaseProto3TestMessage();
-    message.boolValue = object.boolValue ?? undefined;
-    message.intValue = object.intValue ?? undefined;
-    message.stringValue = object.stringValue ?? undefined;
+    message.boolValue = object.boolValue ?? null;
+    message.intValue = object.intValue ?? null;
+    message.stringValue = object.stringValue ?? null;
     message.optionalBoolValue = object.optionalBoolValue ?? undefined;
     message.optionalIntValue = object.optionalIntValue ?? undefined;
     message.optionalStringValue = object.optionalStringValue ?? undefined;
@@ -198,7 +198,7 @@ export const Proto3TestMessage = {
 };
 
 function createBaseProto3TestMessage_MapValueEntry(): Proto3TestMessage_MapValueEntry {
-  return { key: undefined, value: undefined };
+  return { key: null, value: null };
 }
 
 export const Proto3TestMessage_MapValueEntry = {
@@ -244,8 +244,8 @@ export const Proto3TestMessage_MapValueEntry = {
 
   fromJSON(object: any): Proto3TestMessage_MapValueEntry {
     return {
-      key: isSet(object.key) ? globalThis.String(object.key) : undefined,
-      value: isSet(object.value) ? globalThis.String(object.value) : undefined,
+      key: isSet(object.key) ? globalThis.String(object.key) : null,
+      value: isSet(object.value) ? globalThis.String(object.value) : null,
     };
   },
 
@@ -267,8 +267,8 @@ export const Proto3TestMessage_MapValueEntry = {
     object: I,
   ): Proto3TestMessage_MapValueEntry {
     const message = createBaseProto3TestMessage_MapValueEntry();
-    message.key = object.key ?? undefined;
-    message.value = object.value ?? undefined;
+    message.key = object.key ?? null;
+    message.value = object.value ?? null;
     return message;
   },
 };

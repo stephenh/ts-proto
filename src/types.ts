@@ -214,7 +214,9 @@ export function getFieldOptionsJsType(
 export function defaultValue(ctx: Context, field: FieldDescriptorProto): any {
   const { typeMap, options, utils, currentFile } = ctx;
 
-  if(options.noDefaultsForOptionals) return undefined;
+  if(options.noDefaultsForOptionals){
+    return options.useNullAsOptional ? null : undefined; 
+  }
 
   const useDefaultValue = !currentFile.isProto3Syntax && !options.disableProto2DefaultValues && field.defaultValue;
   const numericDefaultVal = useDefaultValue ? field.defaultValue : 0;
