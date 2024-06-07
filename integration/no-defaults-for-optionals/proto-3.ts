@@ -2,6 +2,7 @@
 // source: proto-3.proto
 
 /* eslint-disable */
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "omit";
@@ -34,7 +35,7 @@ function createBaseProto3TestMessage(): Proto3TestMessage {
 }
 
 export const Proto3TestMessage = {
-  encode(message: Proto3TestMessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Proto3TestMessage, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.boolValue !== undefined) {
       writer.uint32(8).bool(message.boolValue);
     }
@@ -54,7 +55,7 @@ export const Proto3TestMessage = {
       writer.uint32(50).string(message.optionalStringValue);
     }
     Object.entries(message.mapValue).forEach(([key, value]) => {
-      Proto3TestMessage_MapValueEntry.encode({ key: key as any, value }, writer.uint32(58).fork()).ldelim();
+      Proto3TestMessage_MapValueEntry.encode({ key: key as any, value }, writer.uint32(58).fork()).join();
     });
     return writer;
   },
@@ -204,7 +205,7 @@ function createBaseProto3TestMessage_MapValueEntry(): Proto3TestMessage_MapValue
 }
 
 export const Proto3TestMessage_MapValueEntry = {
-  encode(message: Proto3TestMessage_MapValueEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Proto3TestMessage_MapValueEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.key !== undefined) {
       writer.uint32(10).string(message.key);
     }
