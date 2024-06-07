@@ -508,8 +508,8 @@ function makeLongUtils(options: Options, bytes: ReturnType<typeof makeByteUtils>
   const longToString = conditionalOutput(
     "longToString",
     code`
-      function longToString(long: ${Long}) {
-        return long.toString();
+      function longToString(int64: bigint | string) {
+        return int64.toString();
       }
     `,
   );
@@ -517,8 +517,8 @@ function makeLongUtils(options: Options, bytes: ReturnType<typeof makeByteUtils>
   const longToBigint = conditionalOutput(
     "longToBigint",
     code`
-      function longToBigint(long: ${Long}) {
-        return BigInt(long.toString());
+      function longToBigint(int64: bigint | string) {
+        return typeof int64 == "bigint" ? int64 : ${bytes.globalThis}.BigInt(int64.toString());
       }
     `,
   );
@@ -526,14 +526,15 @@ function makeLongUtils(options: Options, bytes: ReturnType<typeof makeByteUtils>
   const longToNumber = conditionalOutput(
     "longToNumber",
     code`
-      function longToNumber(long: ${Long}): number {
-        if (long.gt(${bytes.globalThis}.Number.MAX_SAFE_INTEGER)) {
+      function longToNumber(int64: { toString(): string }): number {
+        const num = ${bytes.globalThis}.Number(int64.toString());
+        if (num > ${bytes.globalThis}.Number.MAX_SAFE_INTEGER) {
           throw new ${bytes.globalThis}.Error("Value is larger than Number.MAX_SAFE_INTEGER")
         }
-        if (long.lt(${bytes.globalThis}.Number.MIN_SAFE_INTEGER)) {
+        if (num < ${bytes.globalThis}.Number.MIN_SAFE_INTEGER) {
           throw new ${bytes.globalThis}.Error("Value is smaller than Number.MIN_SAFE_INTEGER")
         }
-        return long.toNumber();
+        return num;
       }
     `,
   );
@@ -1110,28 +1111,34 @@ function getDecodeReadSnippet(ctx: Context, field: FieldDescriptorProto) {
     readSnippet = code`reader.${toReaderCall(field)}()`;
     if (isBytes(field)) {
       if (options.env === EnvOption.NODE) {
-        // TODO investigate
-        // readSnippet = code`${readSnippet} as Buffer`;
         readSnippet = code`Buffer.from(${readSnippet})`;
       }
     } else if (basicLongWireType(field.type) !== undefined) {
       if (isJsTypeFieldOption(options, field)) {
         switch (field!.options!.jstype) {
           case FieldOptions_JSType.JS_NUMBER:
-            readSnippet = code`${utils.longToNumber}(${readSnippet} as Long)`;
+            readSnippet = code`${utils.longToNumber}(${readSnippet})`;
             break;
           case FieldOptions_JSType.JS_STRING:
-            readSnippet = code`${utils.longToString}(${readSnippet} as Long)`;
+            readSnippet = code`${utils.longToString}(${readSnippet})`;
             break;
         }
       } else if (options.forceLong === LongOption.LONG) {
-        readSnippet = code`${readSnippet} as Long`;
+        switch (field.type) {
+          case FieldDescriptorProto_Type.TYPE_UINT64:
+          case FieldDescriptorProto_Type.TYPE_FIXED64:
+            readSnippet = code`${utils.Long}.fromString(${readSnippet}.toString(), true)`;
+            break;
+          default:
+            readSnippet = code`${utils.Long}.fromString(${readSnippet}.toString())`;
+            break;
+        }
       } else if (options.forceLong === LongOption.STRING) {
-        readSnippet = code`${utils.longToString}(${readSnippet} as Long)`;
+        readSnippet = code`${utils.longToString}(${readSnippet})`;
       } else if (options.forceLong === LongOption.BIGINT) {
-        readSnippet = code`${utils.longToBigint}(${readSnippet} as Long)`;
+        readSnippet = code`${utils.longToBigint}(${readSnippet})`;
       } else {
-        readSnippet = code`${utils.longToNumber}(${readSnippet} as Long)`;
+        readSnippet = code`${utils.longToNumber}(${readSnippet})`;
       }
     } else if (isEnum(field)) {
       if (options.stringEnums) {
@@ -1187,15 +1194,15 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
     createBase = code`Object.create(${createBase}) as ${fullName}`;
   }
 
-  const Reader = impFile(ctx.options, "Reader@protobufjs/minimal");
+  const BinaryReader = imp("BinaryReader@@bufbuild/protobuf/wire");
 
   // create the basic function declaration
   chunks.push(code`
     decode(
-      input: ${Reader} | Uint8Array,
+      input: ${BinaryReader} | Uint8Array,
       length?: number,
     ): ${fullName} {
-      const reader = input instanceof ${Reader} ? input : ${Reader}.create(input);
+      const reader = input instanceof ${BinaryReader} ? input : new ${BinaryReader}(input);
       let end = length === undefined ? reader.len : reader.pos + length;
   `);
 
@@ -1347,10 +1354,8 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
     }
 
     chunks.push(code`
-      const startPos = reader.pos;
-      reader.skipType(tag & 7);
-      const buf = reader.buf.slice(startPos, reader.pos);
-
+      const buf = reader.skip(tag & 7);
+      
       ${unknownFieldsInitializerSnippet}
       const list = message._unknownFields${maybeNonNullAssertion}[tag];
 
@@ -1362,7 +1367,7 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
     `);
   } else {
     chunks.push(code`
-        reader.skipType(tag & 7);
+        reader.skip(tag & 7);
     `);
   }
 
@@ -1391,24 +1396,22 @@ function getEncodeWriteSnippet(ctx: Context, field: FieldDescriptorProto): (plac
         return (place, placeAlt) => code`if (BigInt.asIntN(64, ${place}) !== ${placeAlt ?? place}) {
           throw new ${utils.globalThis}.Error('value provided for field ${place} of type ${fieldType} too large');
         }
-        writer.uint32(${tag}).${toReaderCall(field)}(${place}.toString())`;
+        writer.uint32(${tag}).${toReaderCall(field)}(${place})`;
       case "uint64":
       case "fixed64":
         return (place, placeAlt) => code`if (BigInt.asUintN(64, ${place}) !== ${placeAlt ?? place}) {
           throw new ${utils.globalThis}.Error('value provided for field ${place} of type ${fieldType} too large');
         }
-        writer.uint32(${tag}).${toReaderCall(field)}(${place}.toString())`;
+        writer.uint32(${tag}).${toReaderCall(field)}(${place})`;
       default:
         throw new Error(`unexpected BigInt type: ${fieldType}`);
     }
   } else if (isScalar(field) || isEnum(field)) {
     const tag = ((field.number << 3) | basicWireType(field.type)) >>> 0;
-    // TODO migrate to BinaryReader
-    if (isLong(field)) {
+    if (isLong(field) && options.forceLong === LongOption.LONG) {
       return (place) => code`writer.uint32(${tag}).${toReaderCall(field)}(${place}.toString())`;
-    } else {
-      return (place) => code`writer.uint32(${tag}).${toReaderCall(field)}(${place})`;
     }
+    return (place) => code`writer.uint32(${tag}).${toReaderCall(field)}(${place})`;
   } else if (isObjectId(field) && options.useMongoObjectId) {
     const tag = ((field.number << 3) | 2) >>> 0;
     const type = basicTypeName(ctx, field, { keepValueType: true });
@@ -1551,9 +1554,7 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
       } else {
         // Ideally we'd reuse `writeSnippet` but it has tagging embedded inside of it.
         const tag = ((field.number << 3) | 2) >>> 0;
-        // TODO migrate to BinaryReader
-        // const rhs = (x: string) => (isLong(field) && options.forceLong === LongOption.BIGINT ? `${x}.toString()` : x);
-        const rhs = (x: string) => (isLong(field) ? `${x}.toString()` : x);
+        const rhs = (x: string) => (isLong(field) && options.forceLong === LongOption.LONG ? `${x}.toString()` : x);
         let listWriteSnippet = code`
           writer.uint32(${tag}).fork();
           for (const v of ${messageProperty}) {
@@ -1754,7 +1755,7 @@ function generateExtension(ctx: Context, message: DescriptorProto | undefined, e
   chunks.push(code`repeated: ${extension.label == FieldDescriptorProto_Label.LABEL_REPEATED},`);
   chunks.push(code`packed: ${extension.options?.packed ? true : false},`);
 
-  const Reader = impFile(ctx.options, "Reader@protobufjs/minimal");
+  const BinaryReader = imp("BinaryReader@@bufbuild/protobuf/wire");
   const BinaryWriter = imp("BinaryWriter@@bufbuild/protobuf/wire");
 
   if (
@@ -1776,9 +1777,7 @@ function generateExtension(ctx: Context, message: DescriptorProto | undefined, e
       } else if (isLong(field) && options.forceLong === LongOption.BIGINT) {
         return (place) => code`writer.${toReaderCall(field)}(${place}.toString())`;
       } else if (isScalar(field) || isEnum(field)) {
-        // TODO migrate to BinaryReader
-        // return (place) => code`writer.${toReaderCall(field)}(${place})`;
-        if (isLong(field)) {
+        if (isLong(field) && options.forceLong === LongOption.LONG) {
           return (place) => code`writer.${toReaderCall(field)}(${place}.toString())`;
         } else {
           return (place) => code`writer.${toReaderCall(field)}(${place})`;
@@ -1833,11 +1832,8 @@ function generateExtension(ctx: Context, message: DescriptorProto | undefined, e
           }
         `);
       } else {
-        // TODO migrate to BinaryReader
-        // const rhs = (x: string) =>
-        //   isLong(extension) && ctx.options.forceLong === LongOption.BIGINT ? `${x}.toString()` : x;
         const rhs = (x: string) =>
-          isLong(extension) ? `${x}.toString()` : x;
+          isLong(extension) && ctx.options.forceLong === LongOption.LONG ? `${x}.toString()` : x;
 
         chunks.push(code`
           const writer = new ${BinaryWriter};
@@ -1883,7 +1879,7 @@ function generateExtension(ctx: Context, message: DescriptorProto | undefined, e
       // start loop over all buffers
       chunks.push(code`
         for (const buffer of input) {
-          const reader = ${Reader}.create(buffer);
+          const reader = new ${BinaryReader}(buffer);
       `);
 
       if (packedType(extension.type) === undefined) {
@@ -1912,7 +1908,7 @@ function generateExtension(ctx: Context, message: DescriptorProto | undefined, e
     } else {
       // pick the last entry, since it overrides all previous entries if not repeated
       chunks.push(code`
-          const reader = ${Reader}.create(input[input.length -1] ?? ${ctx.utils.fail}());
+          const reader = new ${BinaryReader}(input[input.length -1] ?? ${ctx.utils.fail}());
           return ${readSnippet};
         },
       `);

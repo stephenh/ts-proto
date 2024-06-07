@@ -39,11 +39,11 @@ function generateMessageType(ctx: BaseContext): Code {
   }
 
   if (ctx.options.outputEncodeMethods) {
+    const BinaryReader = imp("BinaryReader@@bufbuild/protobuf/wire");
     const BinaryWriter = imp("BinaryWriter@@bufbuild/protobuf/wire");
-    const Reader = impFile(ctx.options, "Reader@protobufjs/minimal");
 
     chunks.push(code`encode(message: Message, writer?: ${BinaryWriter}): ${BinaryWriter};`);
-    chunks.push(code`decode(input: ${Reader} | Uint8Array, length?: number): Message;`);
+    chunks.push(code`decode(input: ${BinaryReader} | Uint8Array, length?: number): Message;`);
   }
 
   if (ctx.options.outputJsonMethods) {
