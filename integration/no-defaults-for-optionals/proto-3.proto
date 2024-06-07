@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package omit;
+
+message Proto3TestMessage {
+    bool boolValue = 1;
+    int32 intValue = 2;
+    string stringValue = 3;
+
+    optional bool optionalBoolValue = 4;
+    optional int32 optionalIntValue = 5;
+    optional string optionalStringValue = 6;
+
+    map<string, string> mapValue = 7;
+}

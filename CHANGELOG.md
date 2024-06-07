@@ -1,3 +1,17 @@
+# [1.177.0](https://github.com/stephenh/ts-proto/compare/v1.176.3...v1.177.0) (2024-06-07)
+
+
+### Features
+
+* add option `noDefaultsForOptionals` ([#1051](https://github.com/stephenh/ts-proto/issues/1051)) ([41d1020](https://github.com/stephenh/ts-proto/commit/41d10205bf68468c37cf69e58dc4c4fdbfffcf5b))
+
+## [1.176.3](https://github.com/stephenh/ts-proto/compare/v1.176.2...v1.176.3) (2024-06-07)
+
+
+### Bug Fixes
+
+* Add check for lower bound with forceLong=number ([#1057](https://github.com/stephenh/ts-proto/issues/1057)) ([01ef3c3](https://github.com/stephenh/ts-proto/commit/01ef3c3bb2a6ebb5b15fe8acfdc73f50b19a5a38))
+
 ## [1.176.2](https://github.com/stephenh/ts-proto/compare/v1.176.1...v1.176.2) (2024-06-04)
 
 
