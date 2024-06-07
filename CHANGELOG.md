@@ -1,3 +1,10 @@
+# [1.177.0](https://github.com/stephenh/ts-proto/compare/v1.176.3...v1.177.0) (2024-06-07)
+
+
+### Features
+
+* add option `noDefaultsForOptionals` ([#1051](https://github.com/stephenh/ts-proto/issues/1051)) ([41d1020](https://github.com/stephenh/ts-proto/commit/41d10205bf68468c37cf69e58dc4c4fdbfffcf5b))
+
 ## [1.176.3](https://github.com/stephenh/ts-proto/compare/v1.176.2...v1.176.3) (2024-06-07)
 
 
