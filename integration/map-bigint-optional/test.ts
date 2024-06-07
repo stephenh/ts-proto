@@ -159,14 +159,14 @@ export const MapBigInt_MapEntry = {
             break;
           }
 
-          message.key = longToBigint(reader.fixed64());
+          message.key = reader.fixed64() as bigint;
           continue;
         case 2:
           if (tag !== 16) {
             break;
           }
 
-          message.value = longToBigint(reader.int64());
+          message.value = reader.int64() as bigint;
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -229,10 +229,6 @@ export type DeepPartial<T> = T extends Builtin ? T
 type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
-
-function longToBigint(int64: bigint | string) {
-  return typeof int64 == "bigint" ? int64 : globalThis.BigInt(int64.toString());
-}
 
 function isObject(value: any): boolean {
   return typeof value === "object" && value !== null;

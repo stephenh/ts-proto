@@ -514,15 +514,6 @@ function makeLongUtils(options: Options, bytes: ReturnType<typeof makeByteUtils>
     `,
   );
 
-  const longToBigint = conditionalOutput(
-    "longToBigint",
-    code`
-      function longToBigint(int64: bigint | string) {
-        return typeof int64 == "bigint" ? int64 : ${bytes.globalThis}.BigInt(int64.toString());
-      }
-    `,
-  );
-
   const longToNumber = conditionalOutput(
     "longToNumber",
     code`
@@ -539,7 +530,7 @@ function makeLongUtils(options: Options, bytes: ReturnType<typeof makeByteUtils>
     `,
   );
 
-  return { numberToLong, longToNumber, longToString, longToBigint, Long };
+  return { numberToLong, longToNumber, longToString, Long };
 }
 
 function makeByteUtils(options: Options) {
@@ -1136,7 +1127,7 @@ function getDecodeReadSnippet(ctx: Context, field: FieldDescriptorProto) {
       } else if (options.forceLong === LongOption.STRING) {
         readSnippet = code`${utils.longToString}(${readSnippet})`;
       } else if (options.forceLong === LongOption.BIGINT) {
-        readSnippet = code`${utils.longToBigint}(${readSnippet})`;
+        readSnippet = code`${readSnippet} as bigint`;
       } else {
         readSnippet = code`${utils.longToNumber}(${readSnippet})`;
       }

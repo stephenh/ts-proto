@@ -149,7 +149,7 @@ export const Numbers = {
             break;
           }
 
-          message.int64 = longToBigint(reader.int64());
+          message.int64 = reader.int64() as bigint;
           continue;
         case 5:
           if (tag !== 40) {
@@ -163,7 +163,7 @@ export const Numbers = {
             break;
           }
 
-          message.uint64 = longToBigint(reader.uint64());
+          message.uint64 = reader.uint64() as bigint;
           continue;
         case 7:
           if (tag !== 56) {
@@ -177,7 +177,7 @@ export const Numbers = {
             break;
           }
 
-          message.sint64 = longToBigint(reader.sint64());
+          message.sint64 = reader.sint64() as bigint;
           continue;
         case 9:
           if (tag !== 77) {
@@ -191,7 +191,7 @@ export const Numbers = {
             break;
           }
 
-          message.fixed64 = longToBigint(reader.fixed64());
+          message.fixed64 = reader.fixed64() as bigint;
           continue;
         case 11:
           if (tag !== 93) {
@@ -205,7 +205,7 @@ export const Numbers = {
             break;
           }
 
-          message.sfixed64 = longToBigint(reader.sfixed64());
+          message.sfixed64 = reader.sfixed64() as bigint;
           continue;
         case 13:
           if (tag !== 106) {
@@ -223,7 +223,7 @@ export const Numbers = {
           continue;
         case 15:
           if (tag === 120) {
-            message.uint64s.push(longToBigint(reader.uint64()));
+            message.uint64s.push(reader.uint64() as bigint);
 
             continue;
           }
@@ -231,7 +231,7 @@ export const Numbers = {
           if (tag === 122) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
-              message.uint64s.push(longToBigint(reader.uint64()));
+              message.uint64s.push(reader.uint64() as bigint);
             }
 
             continue;
@@ -373,10 +373,6 @@ function fromJsonTimestamp(o: any): Date {
   } else {
     return fromTimestamp(Timestamp.fromJSON(o));
   }
-}
-
-function longToBigint(int64: bigint | string) {
-  return typeof int64 == "bigint" ? int64 : globalThis.BigInt(int64.toString());
 }
 
 function isSet(value: any): boolean {

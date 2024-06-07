@@ -143,7 +143,7 @@ export const Timestamp = {
             break;
           }
 
-          message.seconds = longToBigint(reader.int64());
+          message.seconds = reader.int64() as bigint;
           continue;
         case 2:
           if (tag !== 16) {
@@ -201,10 +201,6 @@ export type DeepPartial<T> = T extends Builtin ? T
 type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
-
-function longToBigint(int64: bigint | string) {
-  return typeof int64 == "bigint" ? int64 : globalThis.BigInt(int64.toString());
-}
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;

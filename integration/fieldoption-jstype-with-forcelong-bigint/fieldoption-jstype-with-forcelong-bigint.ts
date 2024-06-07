@@ -51,7 +51,7 @@ export const FieldOption = {
             break;
           }
 
-          message.normalField = longToBigint(reader.int64());
+          message.normalField = reader.int64() as bigint;
           continue;
         case 2:
           if (tag !== 16) {
@@ -135,10 +135,6 @@ function longToNumber(int64: { toString(): string }): number {
 
 function longToString(int64: bigint | string) {
   return int64.toString();
-}
-
-function longToBigint(int64: bigint | string) {
-  return typeof int64 == "bigint" ? int64 : globalThis.BigInt(int64.toString());
 }
 
 function isSet(value: any): boolean {
