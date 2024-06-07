@@ -376,10 +376,9 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
   ) {
     if (options.outputClientImpl === true) {
       chunks.push(generateRpcType(ctx, hasStreamingMethods));
-      if (options.outputClientImpl) {
+      if (options.outputGenericClientImpl && !options.onlyTypes) {
         chunks.push(generateCodecType(ctx));
       }
-      chunks.push(generateRpcType(ctx, hasStreamingMethods));
     } else if (options.outputClientImpl === "grpc-web") {
       chunks.push(addGrpcWebMisc(ctx, hasServerStreamingMethods));
     }

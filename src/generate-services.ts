@@ -470,28 +470,33 @@ export function generateRpcType(ctx: Context, hasStreamingMethods: boolean): Cod
 
   if (hasStreamingMethods) {
     const observable = observableType(ctx, true);
-    methods.push([code`clientStreamingRequest`, code`${observable}<Uint8Array>`, code`Promise<Uint8Array>`]);
-    methods.push([code`serverStreamingRequest`, code`Uint8Array`, code`${observable}<Uint8Array>`]);
-    methods.push([
-      code`bidirectionalStreamingRequest`,
-      code`${observable}<Uint8Array>`,
-      code`${observable}<Uint8Array>`,
-    ]);
+    if (options.outputGenericClientImpl) {
+      methods.push([code`clientStreamingRequest<Req, Res>`, code`${observable}<Req>, requestCodec: Codec<Req>, responseCodec: Codec<Res>`, code`Promise<Res>`]);
+      methods.push([code`serverStreamingRequest<Req, Res>`, code`Req, requestCodec: Codec<Req>, responseCodec: Codec<Res>`, code`${observable}<Res>`]);
+      methods.push([
+        code`bidirectionalStreamingRequest<Req, Res>`,
+        code`${observable}<Req>, requestCodec: Codec<Req>, responseCodec: Codec<Res>`,
+        code`${observable}<Res>`,
+      ]);
+    } else {
+      methods.push([code`clientStreamingRequest`, code`${observable}<Uint8Array>`, code`Promise<Uint8Array>`]);
+      methods.push([code`serverStreamingRequest`, code`Uint8Array`, code`${observable}<Uint8Array>`]);
+      methods.push([
+        code`bidirectionalStreamingRequest`,
+        code`${observable}<Uint8Array>`,
+        code`${observable}<Uint8Array>`,
+      ]);
+    }
   }
   const chunks: Code[] = [];
-  // if (options.outputGenericClientImpl) {
-  //   // FIXME: This won't work with context as is
-  //   chunks.push(code`    interface Rpc<T>${maybeContext} {`);
-  // } else {
-    chunks.push(code`    interface Rpc${maybeContext} {`);
-  // }
+  chunks.push(code`    interface Rpc${maybeContext} {`);
   methods.forEach((method) => {
     chunks.push(code`
       ${method[0]}(
         ${maybeContextParam}
         service: string,
         method: string,
-        ${options.outputGenericClientImpl ? `data` : `req`}: ${method[1]},
+        ${options.outputGenericClientImpl ? `req` : `data`}: ${method[1]},
         ${maybeMetadataParam}
         ${maybeAbortSignalParam}
       ): ${method[2]};`);
@@ -502,16 +507,24 @@ export function generateRpcType(ctx: Context, hasStreamingMethods: boolean): Cod
 }
 
 export function generateCodecType(ctx: Context): Code {
-  const { options } = ctx;
+  const {options} = ctx;
 
   // TODO: respect options for only having some types
   const chunks: Code[] = [];
-  chunks.push(code`interface Codec<T> {`);
-  chunks.push(code`fromJSON(object: any): T`);
-  chunks.push(code`fromPartial(object: DeepPartial<T>): T`);
-  chunks.push(code`toJSON(message: T): unknown`);
+  chunks.push(code`export interface Codec<T> {`);
+  if (options.outputEncodeMethods) {
+    chunks.push(code`  encode(message: T, writer: Writer = Writer.create()): Writer`);
+    chunks.push(code`  decode(input: Uint8Array | Reader, length?: number): T`);
+  }
+  if (options.outputJsonMethods) {
+    chunks.push(code`  fromJSON(object: any): T`);
+    chunks.push(code`  toJSON(message: T): unknown`);
+  }
+  if (options.outputPartialMethods) {
+    chunks.push(code`  fromPartial(object: DeepPartial<T>): T`);
+  }
   chunks.push(code`}`);
-  return joinCode(chunks, { on: "\n" });
+  return joinCode(chunks, {on: "\n"});
 }
 
 export function generateDataLoadersType(): Code {
