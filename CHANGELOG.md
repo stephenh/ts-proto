@@ -1,3 +1,10 @@
+## [1.176.3](https://github.com/stephenh/ts-proto/compare/v1.176.2...v1.176.3) (2024-06-07)
+
+
+### Bug Fixes
+
+* Add check for lower bound with forceLong=number ([#1057](https://github.com/stephenh/ts-proto/issues/1057)) ([01ef3c3](https://github.com/stephenh/ts-proto/commit/01ef3c3bb2a6ebb5b15fe8acfdc73f50b19a5a38))
+
 ## [1.176.2](https://github.com/stephenh/ts-proto/compare/v1.176.1...v1.176.2) (2024-06-04)
 
 
