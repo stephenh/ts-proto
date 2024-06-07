@@ -75,7 +75,7 @@ export type Options = {
   unrecognizedEnumName: string;
   unrecognizedEnumValue: number;
   exportCommonSymbols: boolean;
-  outputSchema: boolean;
+  outputSchema: boolean | "no-file-descriptor";
   onlyTypes: boolean;
   emitImportedFiles: boolean;
   useAbortSignal: boolean;
