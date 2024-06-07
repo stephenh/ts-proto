@@ -3,6 +3,7 @@
 
 /* eslint-disable */
 import * as _m0 from "protobufjs/minimal";
+import Long = require("long");
 
 export const protobufPackage = "foo";
 
@@ -122,8 +123,8 @@ type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
-function longToNumber(int64: { toString(): string }): number {
-  const num = globalThis.Number(int64.toString());
+function longToNumber(long: Long): number {
+  const num = long.toNumber();
   if (num > globalThis.Number.MAX_SAFE_INTEGER) {
     throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
@@ -133,12 +134,17 @@ function longToNumber(int64: { toString(): string }): number {
   return num;
 }
 
-function longToString(int64: { toString(): string }) {
-  return int64.toString();
+function longToString(long: Long) {
+  return long.toString();
 }
 
-function longToBigint(int64: { toString(): string }) {
-  return typeof int64 == "bigint" ? int64 : globalThis.BigInt(int64.toString());
+function longToBigint(long: Long) {
+  return BigInt(long.toString());
+}
+
+if (_m0.util.Long !== Long) {
+  _m0.util.Long = Long as any;
+  _m0.configure();
 }
 
 function isSet(value: any): boolean {
