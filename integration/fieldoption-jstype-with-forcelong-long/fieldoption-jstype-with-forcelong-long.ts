@@ -57,7 +57,7 @@ export const FieldOption = {
             break;
           }
 
-          message.stringField = longToString(reader.int64());
+          message.stringField = reader.int64().toString();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -125,10 +125,6 @@ function longToNumber(int64: { toString(): string }): number {
     throw new globalThis.Error("Value is smaller than Number.MIN_SAFE_INTEGER");
   }
   return num;
-}
-
-function longToString(int64: bigint | string) {
-  return int64.toString();
 }
 
 function isSet(value: any): boolean {

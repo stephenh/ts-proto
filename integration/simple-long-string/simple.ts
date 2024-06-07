@@ -124,7 +124,7 @@ export const Numbers = {
             break;
           }
 
-          message.int64 = longToString(reader.int64());
+          message.int64 = reader.int64().toString();
           continue;
         case 5:
           if (tag !== 40) {
@@ -138,7 +138,7 @@ export const Numbers = {
             break;
           }
 
-          message.uint64 = longToString(reader.uint64());
+          message.uint64 = reader.uint64().toString();
           continue;
         case 7:
           if (tag !== 56) {
@@ -152,7 +152,7 @@ export const Numbers = {
             break;
           }
 
-          message.sint64 = longToString(reader.sint64());
+          message.sint64 = reader.sint64().toString();
           continue;
         case 9:
           if (tag !== 77) {
@@ -166,7 +166,7 @@ export const Numbers = {
             break;
           }
 
-          message.fixed64 = longToString(reader.fixed64());
+          message.fixed64 = reader.fixed64().toString();
           continue;
         case 11:
           if (tag !== 93) {
@@ -180,7 +180,7 @@ export const Numbers = {
             break;
           }
 
-          message.sfixed64 = longToString(reader.sfixed64());
+          message.sfixed64 = reader.sfixed64().toString();
           continue;
         case 13:
           if (tag !== 106) {
@@ -326,10 +326,6 @@ function fromJsonTimestamp(o: any): Date {
   } else {
     return fromTimestamp(Timestamp.fromJSON(o));
   }
-}
-
-function longToString(int64: bigint | string) {
-  return int64.toString();
 }
 
 function isSet(value: any): boolean {

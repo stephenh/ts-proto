@@ -80,7 +80,7 @@ export const Int64FieldOption = {
             break;
           }
 
-          message.stringField = longToString(reader.int64());
+          message.stringField = reader.int64().toString();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -169,7 +169,7 @@ export const UInt64FieldOption = {
             break;
           }
 
-          message.stringField = longToString(reader.uint64());
+          message.stringField = reader.uint64().toString();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -258,7 +258,7 @@ export const SInt64FieldOption = {
             break;
           }
 
-          message.stringField = longToString(reader.sint64());
+          message.stringField = reader.sint64().toString();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -347,7 +347,7 @@ export const Fixed64FieldOption = {
             break;
           }
 
-          message.stringField = longToString(reader.fixed64());
+          message.stringField = reader.fixed64().toString();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -436,7 +436,7 @@ export const SFixed64FieldOption = {
             break;
           }
 
-          message.stringField = longToString(reader.sfixed64());
+          message.stringField = reader.sfixed64().toString();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -502,10 +502,6 @@ function longToNumber(int64: { toString(): string }): number {
     throw new globalThis.Error("Value is smaller than Number.MIN_SAFE_INTEGER");
   }
   return num;
-}
-
-function longToString(int64: bigint | string) {
-  return int64.toString();
 }
 
 function isSet(value: any): boolean {

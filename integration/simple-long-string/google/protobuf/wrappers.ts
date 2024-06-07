@@ -234,7 +234,7 @@ export const Int64Value = {
             break;
           }
 
-          message.value = longToString(reader.int64());
+          message.value = reader.int64().toString();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -291,7 +291,7 @@ export const UInt64Value = {
             break;
           }
 
-          message.value = longToString(reader.uint64());
+          message.value = reader.uint64().toString();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -645,10 +645,6 @@ export type DeepPartial<T> = T extends Builtin ? T
 type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
-
-function longToString(int64: bigint | string) {
-  return int64.toString();
-}
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;

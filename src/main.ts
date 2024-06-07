@@ -488,15 +488,6 @@ function makeLongUtils(options: Options, bytes: ReturnType<typeof makeByteUtils>
     `,
   );
 
-  const longToString = conditionalOutput(
-    "longToString",
-    code`
-      function longToString(int64: bigint | string) {
-        return int64.toString();
-      }
-    `,
-  );
-
   const longToNumber = conditionalOutput(
     "longToNumber",
     code`
@@ -513,7 +504,7 @@ function makeLongUtils(options: Options, bytes: ReturnType<typeof makeByteUtils>
     `,
   );
 
-  return { numberToLong, longToNumber, longToString, Long };
+  return { numberToLong, longToNumber, Long };
 }
 
 function makeByteUtils(options: Options) {
@@ -1094,7 +1085,7 @@ function getDecodeReadSnippet(ctx: Context, field: FieldDescriptorProto) {
             readSnippet = code`${utils.longToNumber}(${readSnippet})`;
             break;
           case FieldOptions_JSType.JS_STRING:
-            readSnippet = code`${utils.longToString}(${readSnippet})`;
+            readSnippet = code`${readSnippet}.toString()`;
             break;
         }
       } else if (options.forceLong === LongOption.LONG) {
@@ -1108,7 +1099,7 @@ function getDecodeReadSnippet(ctx: Context, field: FieldDescriptorProto) {
             break;
         }
       } else if (options.forceLong === LongOption.STRING) {
-        readSnippet = code`${utils.longToString}(${readSnippet})`;
+        readSnippet = code`${readSnippet}.toString()`;
       } else if (options.forceLong === LongOption.BIGINT) {
         readSnippet = code`${readSnippet} as bigint`;
       } else {
