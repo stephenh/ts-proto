@@ -37,7 +37,7 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
 
     export interface ProtoMetadata {
       ${
-        ctx.options.outputSchema !== "no-file-descriptor" ? `fileDescriptor: ${fileDescriptorProto};\n` : ""
+        ctx.options.outputSchema !== "no-file-descriptor" ? code`fileDescriptor: ${fileDescriptorProto};\n` : ""
       }references: { [key: string]: any };
       dependencies?: ProtoMetadata[];
       options?: {
@@ -184,7 +184,7 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
     export const ${def("protoMetadata")}: ProtoMetadata = {
       ${
         ctx.options.outputSchema !== "no-file-descriptor"
-          ? `fileDescriptor: ${fileDescriptorProto}.fromPartial(${descriptor}),\n`
+          ? code`fileDescriptor: ${fileDescriptorProto}.fromPartial(${descriptor}),\n`
           : ""
       }references: { ${joinCode(references, { on: "," })} },
       dependencies: [${joinCode(dependencies, { on: "," })}],
