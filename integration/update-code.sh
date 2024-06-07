@@ -23,11 +23,12 @@ for TEST in $TESTS; do
     PARAMETERS=""
   fi
 
+  PROTO_FILES=$(find . -name '*.proto' -type f)
   NODE_OPTIONS="--import tsx" protoc --experimental_allow_proto3_optional \
     "--plugin=$PLUGIN_PATH" \
     --ts_proto_opt="annotateFilesWithVersion=false,${PARAMETERS}" \
     --ts_proto_out=./ \
-    ./*.proto
+    $PROTO_FILES
 
   echo ""
   echo ""
