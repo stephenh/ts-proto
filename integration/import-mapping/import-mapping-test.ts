@@ -14,7 +14,6 @@ describe("import-mapping", () => {
       "@google/protobuf/empty",
       "wkt/google/protobuf/struct",
       "./google/protobuf/timestamp",
-      "protobufjs/minimal",
       "@bufbuild/protobuf/wire",
       "@myorg/proto-npm-package",
     ];

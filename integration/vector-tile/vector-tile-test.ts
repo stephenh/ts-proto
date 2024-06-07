@@ -1,4 +1,4 @@
-import { Reader } from "protobufjs/minimal";
+import { BinaryReader } from "@bufbuild/protobuf/wire";
 import { vector_tile } from "./pbjs";
 import { Tile_Value } from "./vector_tile";
 import IValue = vector_tile.Tile.IValue;
@@ -15,7 +15,7 @@ describe("vector-tile", () => {
       stringValue: "",
       uintValue: 2_000,
     };
-    const v2 = Tile_Value.decode(Reader.create(PbValue.encode(PbValue.fromObject(v1)).finish()));
+    const v2 = Tile_Value.decode(new BinaryReader(PbValue.encode(PbValue.fromObject(v1)).finish()));
     expect(v2).toEqual(v1);
   });
 
