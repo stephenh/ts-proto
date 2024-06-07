@@ -4,7 +4,6 @@
 /* eslint-disable */
 import Long = require("long");
 import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
-import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "foo";
 
@@ -130,11 +129,6 @@ function longToNumber(int64: { toString(): string }): number {
 
 function longToString(int64: bigint | string) {
   return int64.toString();
-}
-
-if (_m0.util.Long !== Long) {
-  _m0.util.Long = Long as any;
-  _m0.configure();
 }
 
 function isSet(value: any): boolean {

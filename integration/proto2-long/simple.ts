@@ -4,7 +4,6 @@
 /* eslint-disable */
 import Long = require("long");
 import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
-import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "simple";
 
@@ -1023,11 +1022,6 @@ export type DeepPartial<T> = T extends Builtin ? T
 type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
-
-if (_m0.util.Long !== Long) {
-  _m0.util.Long = Long as any;
-  _m0.configure();
-}
 
 function isObject(value: any): boolean {
   return typeof value === "object" && value !== null;

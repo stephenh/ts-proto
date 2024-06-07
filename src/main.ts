@@ -477,24 +477,7 @@ function makeProtobufStructWrapper(options: Options) {
 }
 
 function makeLongUtils(options: Options, bytes: ReturnType<typeof makeByteUtils>) {
-  // Regardless of which `forceLong` config option we're using, we always use
-  // the `long` library to either represent or at least sanity-check 64-bit values
-  const util = impFile(options, `util@protobufjs/minimal`);
-  const configure = impFile(options, `configure@protobufjs/minimal`);
-  const LongImp = imp("Long=long");
-
-  // Instead of exposing `LongImp` directly, let callers think that they are getting the
-  // `imp(Long)` but really it is that + our long initialization snippet. This means the
-  // initialization code will only be emitted in files that actually use the Long import.
-  const Long = conditionalOutput(
-    "Long",
-    code`
-      if (${util}.Long !== ${LongImp}) {
-        ${util}.Long = ${LongImp} as any;
-        ${configure}();
-      }
-    `,
-  );
+  const Long = imp("Long=long");
 
   const numberToLong = conditionalOutput(
     "numberToLong",

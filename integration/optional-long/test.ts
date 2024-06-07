@@ -5,7 +5,6 @@
 import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 import { Timestamp } from "./google/protobuf/timestamp";
 import Long = require("long");
-import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "";
 
@@ -106,11 +105,6 @@ function fromJsonTimestamp(o: any): Date {
 
 function numberToLong(number: number) {
   return Long.fromNumber(number);
-}
-
-if (_m0.util.Long !== Long) {
-  _m0.util.Long = Long as any;
-  _m0.configure();
 }
 
 function isSet(value: any): boolean {
