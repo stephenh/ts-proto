@@ -528,10 +528,10 @@ function makeLongUtils(options: Options, bytes: ReturnType<typeof makeByteUtils>
     "longToNumber",
     code`
       function longToNumber(long: ${Long}): number {
-        if (long.gt(globalThis.Number.MAX_SAFE_INTEGER)) {
+        if (long.gt(${bytes.globalThis}.Number.MAX_SAFE_INTEGER)) {
           throw new ${bytes.globalThis}.Error("Value is larger than Number.MAX_SAFE_INTEGER")
         }
-        if (long.lt(globalThis.Number.MIN_SAFE_INTEGER)) {
+        if (long.lt(${bytes.globalThis}.Number.MIN_SAFE_INTEGER)) {
           throw new ${bytes.globalThis}.Error("Value is smaller than Number.MIN_SAFE_INTEGER")
         }
         return long.toNumber();
