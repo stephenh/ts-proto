@@ -30,6 +30,7 @@ import {
   generateDataLoaderOptionsType,
   generateDataLoadersType,
   generateRpcType,
+  generateCodecType,
   generateService,
   generateServiceClientImpl,
 } from "./generate-services";
@@ -374,6 +375,10 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
     fileDesc.service.length > 0
   ) {
     if (options.outputClientImpl === true) {
+      chunks.push(generateRpcType(ctx, hasStreamingMethods));
+      if (options.outputClientImpl) {
+        chunks.push(generateCodecType(ctx));
+      }
       chunks.push(generateRpcType(ctx, hasStreamingMethods));
     } else if (options.outputClientImpl === "grpc-web") {
       chunks.push(addGrpcWebMisc(ctx, hasServerStreamingMethods));

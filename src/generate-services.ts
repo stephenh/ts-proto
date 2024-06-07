@@ -145,7 +145,7 @@ function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProt
       "encodedRequest",
     )}; return encodedRequest}`;
   }
-  let decode = code`${rawOutputType}.decode(${Reader}.create(data))`;
+  let decode = options.outputGenericClientImpl ? code`${rawOutputType}.fromJSON(JSON.parse(data))` : code`${rawOutputType}.decode(${Reader}.create(data))`;
   if (options.rpcAfterResponse) {
     decode = code`
       const response = ${rawOutputType}.decode(${Reader}.create(data));
@@ -187,6 +187,23 @@ function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProt
     rpcMethod = "request";
   }
 
+  if (options.outputGenericClientImpl) {
+    // FIXME: This is basically a hack
+    return code`
+    ${methodDesc.formattedName}(
+      ${joinCode(params, { on: "," })}
+    ): ${responsePromiseOrObservable(ctx, methodDesc)} {
+      return this.rpc.${rpcMethod}(
+        ${maybeCtx}
+        this.service,
+        "${methodDesc.name}",
+        request,
+        ${inputType},
+        ${responseType(ctx, methodDesc, { keepValueType: true })}
+      );
+    }
+  ` 
+  }
   return code`
     ${methodDesc.formattedName}(
       ${joinCode(params, { on: "," })}
@@ -427,7 +444,13 @@ export function generateRpcType(ctx: Context, hasStreamingMethods: boolean): Cod
   const maybeContextParam = options.context ? "ctx: Context," : "";
   const maybeMetadataParam = options.metadataType || options.addGrpcMetadata ? `metadata?: ${metadataType},` : "";
   const maybeAbortSignalParam = options.useAbortSignal ? "abortSignal?: AbortSignal," : "";
-  const methods = [[code`request`, code`Uint8Array`, code`Promise<Uint8Array>`]];
+  
+  const methods: Code[][]= [];
+  if (options.outputGenericClientImpl) {
+    methods.push([code`request<Req, Res>`, code`Req, requestCodec: Codec<Req>, responseCodec: Codec<Res>`, code`Promise<Res>`]);
+  } else {
+    methods.push([code`request`, code`Uint8Array`, code`Promise<Uint8Array>`]);
+  }
   const additionalMethods = [];
   if (options.rpcBeforeRequest) {
     additionalMethods.push(
@@ -456,20 +479,38 @@ export function generateRpcType(ctx: Context, hasStreamingMethods: boolean): Cod
     ]);
   }
   const chunks: Code[] = [];
-  chunks.push(code`    interface Rpc${maybeContext} {`);
+  // if (options.outputGenericClientImpl) {
+  //   // FIXME: This won't work with context as is
+  //   chunks.push(code`    interface Rpc<T>${maybeContext} {`);
+  // } else {
+    chunks.push(code`    interface Rpc${maybeContext} {`);
+  // }
   methods.forEach((method) => {
     chunks.push(code`
       ${method[0]}(
         ${maybeContextParam}
         service: string,
         method: string,
-        data: ${method[1]},
+        ${options.outputGenericClientImpl ? `data` : `req`}: ${method[1]},
         ${maybeMetadataParam}
         ${maybeAbortSignalParam}
       ): ${method[2]};`);
   });
   additionalMethods.forEach((method) => chunks.push(method));
   chunks.push(code`    }`);
+  return joinCode(chunks, { on: "\n" });
+}
+
+export function generateCodecType(ctx: Context): Code {
+  const { options } = ctx;
+
+  // TODO: respect options for only having some types
+  const chunks: Code[] = [];
+  chunks.push(code`interface Codec<T> {`);
+  chunks.push(code`fromJSON(object: any): T`);
+  chunks.push(code`fromPartial(object: DeepPartial<T>): T`);
+  chunks.push(code`toJSON(message: T): unknown`);
+  chunks.push(code`}`);
   return joinCode(chunks, { on: "\n" });
 }
 
