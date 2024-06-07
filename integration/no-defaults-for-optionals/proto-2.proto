@@ -1,0 +1,11 @@
+syntax = "proto2";
+
+package omit;
+
+message Proto2TestMessage {
+    optional bool boolValue = 1;
+    optional int32 intValue = 2;
+    optional string stringValue = 3;
+    
+    map<string, string> mapValue = 4;
+}
