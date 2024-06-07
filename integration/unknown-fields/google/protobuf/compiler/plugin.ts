@@ -2,10 +2,8 @@
 // source: google/protobuf/compiler/plugin.proto
 
 /* eslint-disable */
-import { BinaryWriter } from "@bufbuild/protobuf/wire";
-import * as _m0 from "protobufjs/minimal";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 import { FileDescriptorProto, GeneratedCodeInfo } from "../descriptor";
-import Long = require("long");
 
 export const protobufPackage = "google.protobuf.compiler";
 
@@ -191,8 +189,8 @@ export const Version = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Version {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Version {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseVersion();
     while (reader.pos < end) {
@@ -230,9 +228,7 @@ export const Version = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      const startPos = reader.pos;
-      reader.skipType(tag & 7);
-      const buf = reader.buf.slice(startPos, reader.pos);
+      const buf = reader.skip(tag & 7);
 
       const list = message._unknownFields![tag];
 
@@ -275,8 +271,8 @@ export const CodeGeneratorRequest = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): CodeGeneratorRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): CodeGeneratorRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCodeGeneratorRequest();
     while (reader.pos < end) {
@@ -314,9 +310,7 @@ export const CodeGeneratorRequest = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      const startPos = reader.pos;
-      reader.skipType(tag & 7);
-      const buf = reader.buf.slice(startPos, reader.pos);
+      const buf = reader.skip(tag & 7);
 
       const list = message._unknownFields![tag];
 
@@ -340,7 +334,7 @@ export const CodeGeneratorResponse = {
       writer.uint32(10).string(message.error);
     }
     if (message.supportedFeatures !== undefined && message.supportedFeatures !== 0) {
-      writer.uint32(16).uint64(message.supportedFeatures.toString());
+      writer.uint32(16).uint64(message.supportedFeatures);
     }
     for (const v of message.file) {
       CodeGeneratorResponse_File.encode(v!, writer.uint32(122).fork()).join();
@@ -356,8 +350,8 @@ export const CodeGeneratorResponse = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): CodeGeneratorResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): CodeGeneratorResponse {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCodeGeneratorResponse();
     while (reader.pos < end) {
@@ -375,7 +369,7 @@ export const CodeGeneratorResponse = {
             break;
           }
 
-          message.supportedFeatures = longToNumber(reader.uint64() as Long);
+          message.supportedFeatures = longToNumber(reader.uint64());
           continue;
         case 15:
           if (tag !== 122) {
@@ -388,9 +382,7 @@ export const CodeGeneratorResponse = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      const startPos = reader.pos;
-      reader.skipType(tag & 7);
-      const buf = reader.buf.slice(startPos, reader.pos);
+      const buf = reader.skip(tag & 7);
 
       const list = message._unknownFields![tag];
 
@@ -433,8 +425,8 @@ export const CodeGeneratorResponse_File = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): CodeGeneratorResponse_File {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): CodeGeneratorResponse_File {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCodeGeneratorResponse_File();
     while (reader.pos < end) {
@@ -472,9 +464,7 @@ export const CodeGeneratorResponse_File = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      const startPos = reader.pos;
-      reader.skipType(tag & 7);
-      const buf = reader.buf.slice(startPos, reader.pos);
+      const buf = reader.skip(tag & 7);
 
       const list = message._unknownFields![tag];
 
@@ -488,17 +478,13 @@ export const CodeGeneratorResponse_File = {
   },
 };
 
-function longToNumber(long: Long): number {
-  if (long.gt(globalThis.Number.MAX_SAFE_INTEGER)) {
+function longToNumber(int64: { toString(): string }): number {
+  const num = globalThis.Number(int64.toString());
+  if (num > globalThis.Number.MAX_SAFE_INTEGER) {
     throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
-  if (long.lt(globalThis.Number.MIN_SAFE_INTEGER)) {
+  if (num < globalThis.Number.MIN_SAFE_INTEGER) {
     throw new globalThis.Error("Value is smaller than Number.MIN_SAFE_INTEGER");
   }
-  return long.toNumber();
-}
-
-if (_m0.util.Long !== Long) {
-  _m0.util.Long = Long as any;
-  _m0.configure();
+  return num;
 }

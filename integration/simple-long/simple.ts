@@ -3,7 +3,7 @@
 
 /* eslint-disable */
 import Long = require("long");
-import { BinaryWriter } from "@bufbuild/protobuf/wire";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as _m0 from "protobufjs/minimal";
 import { BoolValue, Int32Value, Int64Value, StringValue } from "./google/protobuf/wrappers";
 
@@ -83,8 +83,8 @@ export const SimpleWithWrappers = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): SimpleWithWrappers {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): SimpleWithWrappers {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithWrappers();
     while (reader.pos < end) {
@@ -136,7 +136,7 @@ export const SimpleWithWrappers = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -210,8 +210,8 @@ export const SimpleWithMap = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): SimpleWithMap {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): SimpleWithMap {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithMap();
     while (reader.pos < end) {
@@ -251,7 +251,7 @@ export const SimpleWithMap = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -359,8 +359,8 @@ export const SimpleWithMap_NameLookupEntry = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): SimpleWithMap_NameLookupEntry {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): SimpleWithMap_NameLookupEntry {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithMap_NameLookupEntry();
     while (reader.pos < end) {
@@ -384,7 +384,7 @@ export const SimpleWithMap_NameLookupEntry = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -435,8 +435,8 @@ export const SimpleWithMap_IntLookupEntry = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): SimpleWithMap_IntLookupEntry {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): SimpleWithMap_IntLookupEntry {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithMap_IntLookupEntry();
     while (reader.pos < end) {
@@ -460,7 +460,7 @@ export const SimpleWithMap_IntLookupEntry = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -509,8 +509,8 @@ export const SimpleWithMap_LongLookupEntry = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): SimpleWithMap_LongLookupEntry {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): SimpleWithMap_LongLookupEntry {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithMap_LongLookupEntry();
     while (reader.pos < end) {
@@ -521,20 +521,20 @@ export const SimpleWithMap_LongLookupEntry = {
             break;
           }
 
-          message.key = reader.int64() as Long;
+          message.key = Long.fromString(reader.int64().toString());
           continue;
         case 2:
           if (tag !== 16) {
             break;
           }
 
-          message.value = reader.int64() as Long;
+          message.value = Long.fromString(reader.int64().toString());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -634,8 +634,8 @@ export const Numbers = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Numbers {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Numbers {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNumbers();
     while (reader.pos < end) {
@@ -667,7 +667,7 @@ export const Numbers = {
             break;
           }
 
-          message.int64 = reader.int64() as Long;
+          message.int64 = Long.fromString(reader.int64().toString());
           continue;
         case 5:
           if (tag !== 40) {
@@ -681,7 +681,7 @@ export const Numbers = {
             break;
           }
 
-          message.uint64 = reader.uint64() as Long;
+          message.uint64 = Long.fromString(reader.uint64().toString(), true);
           continue;
         case 7:
           if (tag !== 56) {
@@ -695,7 +695,7 @@ export const Numbers = {
             break;
           }
 
-          message.sint64 = reader.sint64() as Long;
+          message.sint64 = Long.fromString(reader.sint64().toString());
           continue;
         case 9:
           if (tag !== 77) {
@@ -709,7 +709,7 @@ export const Numbers = {
             break;
           }
 
-          message.fixed64 = reader.fixed64() as Long;
+          message.fixed64 = Long.fromString(reader.fixed64().toString(), true);
           continue;
         case 11:
           if (tag !== 93) {
@@ -723,11 +723,11 @@ export const Numbers = {
             break;
           }
 
-          message.sfixed64 = reader.sfixed64() as Long;
+          message.sfixed64 = Long.fromString(reader.sfixed64().toString());
           continue;
         case 13:
           if (tag === 104) {
-            message.manyUint64.push(reader.uint64() as Long);
+            message.manyUint64.push(Long.fromString(reader.uint64().toString(), true));
 
             continue;
           }
@@ -735,7 +735,7 @@ export const Numbers = {
           if (tag === 106) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
-              message.manyUint64.push(reader.uint64() as Long);
+              message.manyUint64.push(Long.fromString(reader.uint64().toString(), true));
             }
 
             continue;
@@ -746,7 +746,7 @@ export const Numbers = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -857,14 +857,15 @@ type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
-function longToNumber(long: Long): number {
-  if (long.gt(globalThis.Number.MAX_SAFE_INTEGER)) {
+function longToNumber(int64: { toString(): string }): number {
+  const num = globalThis.Number(int64.toString());
+  if (num > globalThis.Number.MAX_SAFE_INTEGER) {
     throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
-  if (long.lt(globalThis.Number.MIN_SAFE_INTEGER)) {
+  if (num < globalThis.Number.MIN_SAFE_INTEGER) {
     throw new globalThis.Error("Value is smaller than Number.MIN_SAFE_INTEGER");
   }
-  return long.toNumber();
+  return num;
 }
 
 if (_m0.util.Long !== Long) {

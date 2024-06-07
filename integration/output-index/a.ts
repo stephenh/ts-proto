@@ -2,8 +2,7 @@
 // source: a.proto
 
 /* eslint-disable */
-import { BinaryWriter } from "@bufbuild/protobuf/wire";
-import * as _m0 from "protobufjs/minimal";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
 export interface A {
   a: string;
@@ -21,8 +20,8 @@ export const A = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): A {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): A {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseA();
     while (reader.pos < end) {
@@ -39,7 +38,7 @@ export const A = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },

@@ -2,8 +2,7 @@
 // source: simple.proto
 
 /* eslint-disable */
-import { BinaryWriter } from "@bufbuild/protobuf/wire";
-import * as _m0 from "protobufjs/minimal";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
 export const protobufPackage = "basic";
 
@@ -27,8 +26,8 @@ export const GetBasicRequest = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): GetBasicRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): GetBasicRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetBasicRequest();
     while (reader.pos < end) {
@@ -45,7 +44,7 @@ export const GetBasicRequest = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -84,8 +83,8 @@ export const GetBasicResponse = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): GetBasicResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): GetBasicResponse {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetBasicResponse();
     while (reader.pos < end) {
@@ -102,7 +101,7 @@ export const GetBasicResponse = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -147,7 +146,7 @@ export class BasicServiceClientImpl implements BasicService {
     const promise = this.rpc.request(this.service, "GetBasic", data);
     return promise.then((data) => {
       try {
-        const response = GetBasicResponse.decode(_m0.Reader.create(data));
+        const response = GetBasicResponse.decode(new BinaryReader(data));
         if (this.rpc.afterResponse) {
           this.rpc.afterResponse(this.service, "GetBasic", response);
         }

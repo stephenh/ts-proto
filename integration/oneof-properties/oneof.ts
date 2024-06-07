@@ -2,8 +2,7 @@
 // source: oneof.proto
 
 /* eslint-disable */
-import { BinaryWriter } from "@bufbuild/protobuf/wire";
-import * as _m0 from "protobufjs/minimal";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
 export const protobufPackage = "oneof";
 
@@ -134,8 +133,8 @@ export const PleaseChoose = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): PleaseChoose {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): PleaseChoose {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePleaseChoose();
     while (reader.pos < end) {
@@ -222,7 +221,7 @@ export const PleaseChoose = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -315,8 +314,8 @@ export const PleaseChoose_Submessage = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): PleaseChoose_Submessage {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): PleaseChoose_Submessage {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePleaseChoose_Submessage();
     while (reader.pos < end) {
@@ -333,7 +332,7 @@ export const PleaseChoose_Submessage = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },

@@ -2,8 +2,7 @@
 // source: foo.proto
 
 /* eslint-disable */
-import { BinaryWriter } from "@bufbuild/protobuf/wire";
-import * as _m0 from "protobufjs/minimal";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 import { Struct } from "./google/protobuf/struct";
 import { Timestamp } from "./google/protobuf/timestamp";
 import { messageTypeRegistry } from "./typeRegistry";
@@ -39,8 +38,8 @@ export const Foo = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Foo {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Foo {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFoo();
     while (reader.pos < end) {
@@ -57,7 +56,7 @@ export const Foo = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -100,8 +99,8 @@ export const Foo2 = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Foo2 {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Foo2 {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFoo2();
     while (reader.pos < end) {
@@ -118,7 +117,7 @@ export const Foo2 = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -161,8 +160,8 @@ export const WithStruct = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): WithStruct {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): WithStruct {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseWithStruct();
     while (reader.pos < end) {
@@ -179,7 +178,7 @@ export const WithStruct = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },

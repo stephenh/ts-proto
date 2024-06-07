@@ -2,9 +2,8 @@
 // source: default-with-metadata.proto
 
 /* eslint-disable */
-import { BinaryWriter } from "@bufbuild/protobuf/wire";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 import { Metadata } from "@grpc/grpc-js";
-import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "basic";
 
@@ -28,8 +27,8 @@ export const GetBasicRequest = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): GetBasicRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): GetBasicRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetBasicRequest();
     while (reader.pos < end) {
@@ -46,7 +45,7 @@ export const GetBasicRequest = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -85,8 +84,8 @@ export const GetBasicResponse = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): GetBasicResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): GetBasicResponse {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetBasicResponse();
     while (reader.pos < end) {
@@ -103,7 +102,7 @@ export const GetBasicResponse = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -146,7 +145,7 @@ export class BasicServiceClientImpl implements BasicService {
   GetBasic(request: GetBasicRequest, metadata?: Metadata): Promise<GetBasicResponse> {
     const data = GetBasicRequest.encode(request).finish();
     const promise = this.rpc.request(this.service, "GetBasic", data, metadata);
-    return promise.then((data) => GetBasicResponse.decode(_m0.Reader.create(data)));
+    return promise.then((data) => GetBasicResponse.decode(new BinaryReader(data)));
   }
 }
 

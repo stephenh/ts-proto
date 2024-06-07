@@ -2,9 +2,7 @@
 // source: fieldoption-jstype.proto
 
 /* eslint-disable */
-import { BinaryWriter } from "@bufbuild/protobuf/wire";
-import * as _m0 from "protobufjs/minimal";
-import Long = require("long");
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
 export const protobufPackage = "int64";
 
@@ -45,19 +43,19 @@ function createBaseInt64FieldOption(): Int64FieldOption {
 export const Int64FieldOption = {
   encode(message: Int64FieldOption, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.normalField !== 0) {
-      writer.uint32(8).int64(message.normalField.toString());
+      writer.uint32(8).int64(message.normalField);
     }
     if (message.numberField !== 0) {
-      writer.uint32(16).int64(message.numberField.toString());
+      writer.uint32(16).int64(message.numberField);
     }
     if (message.stringField !== "0") {
-      writer.uint32(24).int64(message.stringField.toString());
+      writer.uint32(24).int64(message.stringField);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Int64FieldOption {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Int64FieldOption {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseInt64FieldOption();
     while (reader.pos < end) {
@@ -68,27 +66,27 @@ export const Int64FieldOption = {
             break;
           }
 
-          message.normalField = longToNumber(reader.int64() as Long);
+          message.normalField = longToNumber(reader.int64());
           continue;
         case 2:
           if (tag !== 16) {
             break;
           }
 
-          message.numberField = longToNumber(reader.int64() as Long);
+          message.numberField = longToNumber(reader.int64());
           continue;
         case 3:
           if (tag !== 24) {
             break;
           }
 
-          message.stringField = longToString(reader.int64() as Long);
+          message.stringField = longToString(reader.int64());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -134,19 +132,19 @@ function createBaseUInt64FieldOption(): UInt64FieldOption {
 export const UInt64FieldOption = {
   encode(message: UInt64FieldOption, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.normalField !== 0) {
-      writer.uint32(8).uint64(message.normalField.toString());
+      writer.uint32(8).uint64(message.normalField);
     }
     if (message.numberField !== 0) {
-      writer.uint32(16).uint64(message.numberField.toString());
+      writer.uint32(16).uint64(message.numberField);
     }
     if (message.stringField !== "0") {
-      writer.uint32(24).uint64(message.stringField.toString());
+      writer.uint32(24).uint64(message.stringField);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): UInt64FieldOption {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): UInt64FieldOption {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUInt64FieldOption();
     while (reader.pos < end) {
@@ -157,27 +155,27 @@ export const UInt64FieldOption = {
             break;
           }
 
-          message.normalField = longToNumber(reader.uint64() as Long);
+          message.normalField = longToNumber(reader.uint64());
           continue;
         case 2:
           if (tag !== 16) {
             break;
           }
 
-          message.numberField = longToNumber(reader.uint64() as Long);
+          message.numberField = longToNumber(reader.uint64());
           continue;
         case 3:
           if (tag !== 24) {
             break;
           }
 
-          message.stringField = longToString(reader.uint64() as Long);
+          message.stringField = longToString(reader.uint64());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -223,19 +221,19 @@ function createBaseSInt64FieldOption(): SInt64FieldOption {
 export const SInt64FieldOption = {
   encode(message: SInt64FieldOption, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.normalField !== 0) {
-      writer.uint32(8).sint64(message.normalField.toString());
+      writer.uint32(8).sint64(message.normalField);
     }
     if (message.numberField !== 0) {
-      writer.uint32(16).sint64(message.numberField.toString());
+      writer.uint32(16).sint64(message.numberField);
     }
     if (message.stringField !== "0") {
-      writer.uint32(24).sint64(message.stringField.toString());
+      writer.uint32(24).sint64(message.stringField);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): SInt64FieldOption {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): SInt64FieldOption {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSInt64FieldOption();
     while (reader.pos < end) {
@@ -246,27 +244,27 @@ export const SInt64FieldOption = {
             break;
           }
 
-          message.normalField = longToNumber(reader.sint64() as Long);
+          message.normalField = longToNumber(reader.sint64());
           continue;
         case 2:
           if (tag !== 16) {
             break;
           }
 
-          message.numberField = longToNumber(reader.sint64() as Long);
+          message.numberField = longToNumber(reader.sint64());
           continue;
         case 3:
           if (tag !== 24) {
             break;
           }
 
-          message.stringField = longToString(reader.sint64() as Long);
+          message.stringField = longToString(reader.sint64());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -312,19 +310,19 @@ function createBaseFixed64FieldOption(): Fixed64FieldOption {
 export const Fixed64FieldOption = {
   encode(message: Fixed64FieldOption, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.normalField !== 0) {
-      writer.uint32(9).fixed64(message.normalField.toString());
+      writer.uint32(9).fixed64(message.normalField);
     }
     if (message.numberField !== 0) {
-      writer.uint32(17).fixed64(message.numberField.toString());
+      writer.uint32(17).fixed64(message.numberField);
     }
     if (message.stringField !== "0") {
-      writer.uint32(25).fixed64(message.stringField.toString());
+      writer.uint32(25).fixed64(message.stringField);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Fixed64FieldOption {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Fixed64FieldOption {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFixed64FieldOption();
     while (reader.pos < end) {
@@ -335,27 +333,27 @@ export const Fixed64FieldOption = {
             break;
           }
 
-          message.normalField = longToNumber(reader.fixed64() as Long);
+          message.normalField = longToNumber(reader.fixed64());
           continue;
         case 2:
           if (tag !== 17) {
             break;
           }
 
-          message.numberField = longToNumber(reader.fixed64() as Long);
+          message.numberField = longToNumber(reader.fixed64());
           continue;
         case 3:
           if (tag !== 25) {
             break;
           }
 
-          message.stringField = longToString(reader.fixed64() as Long);
+          message.stringField = longToString(reader.fixed64());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -401,19 +399,19 @@ function createBaseSFixed64FieldOption(): SFixed64FieldOption {
 export const SFixed64FieldOption = {
   encode(message: SFixed64FieldOption, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.normalField !== 0) {
-      writer.uint32(9).sfixed64(message.normalField.toString());
+      writer.uint32(9).sfixed64(message.normalField);
     }
     if (message.numberField !== 0) {
-      writer.uint32(17).sfixed64(message.numberField.toString());
+      writer.uint32(17).sfixed64(message.numberField);
     }
     if (message.stringField !== "0") {
-      writer.uint32(25).sfixed64(message.stringField.toString());
+      writer.uint32(25).sfixed64(message.stringField);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): SFixed64FieldOption {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): SFixed64FieldOption {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSFixed64FieldOption();
     while (reader.pos < end) {
@@ -424,27 +422,27 @@ export const SFixed64FieldOption = {
             break;
           }
 
-          message.normalField = longToNumber(reader.sfixed64() as Long);
+          message.normalField = longToNumber(reader.sfixed64());
           continue;
         case 2:
           if (tag !== 17) {
             break;
           }
 
-          message.numberField = longToNumber(reader.sfixed64() as Long);
+          message.numberField = longToNumber(reader.sfixed64());
           continue;
         case 3:
           if (tag !== 25) {
             break;
           }
 
-          message.stringField = longToString(reader.sfixed64() as Long);
+          message.stringField = longToString(reader.sfixed64());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -495,23 +493,19 @@ type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
-function longToNumber(long: Long): number {
-  if (long.gt(globalThis.Number.MAX_SAFE_INTEGER)) {
+function longToNumber(int64: { toString(): string }): number {
+  const num = globalThis.Number(int64.toString());
+  if (num > globalThis.Number.MAX_SAFE_INTEGER) {
     throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
-  if (long.lt(globalThis.Number.MIN_SAFE_INTEGER)) {
+  if (num < globalThis.Number.MIN_SAFE_INTEGER) {
     throw new globalThis.Error("Value is smaller than Number.MIN_SAFE_INTEGER");
   }
-  return long.toNumber();
+  return num;
 }
 
-function longToString(long: Long) {
-  return long.toString();
-}
-
-if (_m0.util.Long !== Long) {
-  _m0.util.Long = Long as any;
-  _m0.configure();
+function longToString(int64: bigint | string) {
+  return int64.toString();
 }
 
 function isSet(value: any): boolean {

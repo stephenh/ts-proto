@@ -3,7 +3,7 @@
 
 /* eslint-disable */
 import Long = require("long");
-import { BinaryWriter } from "@bufbuild/protobuf/wire";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "simple";
@@ -273,8 +273,8 @@ export const OptionalsTest = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): OptionalsTest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): OptionalsTest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseOptionalsTest();
     while (reader.pos < end) {
@@ -323,7 +323,7 @@ export const OptionalsTest = {
           break;
         case 4:
           if (tag === 32) {
-            message.repLong.push(reader.int64() as Long);
+            message.repLong.push(Long.fromString(reader.int64().toString()));
 
             continue;
           }
@@ -331,7 +331,7 @@ export const OptionalsTest = {
           if (tag === 34) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
-              message.repLong.push(reader.int64() as Long);
+              message.repLong.push(Long.fromString(reader.int64().toString()));
             }
 
             continue;
@@ -412,7 +412,7 @@ export const OptionalsTest = {
             break;
           }
 
-          message.optLong = reader.int64() as Long;
+          message.optLong = Long.fromString(reader.int64().toString());
           continue;
         case 15:
           if (tag !== 120) {
@@ -468,7 +468,7 @@ export const OptionalsTest = {
             break;
           }
 
-          message.reqLong = reader.int64() as Long;
+          message.reqLong = Long.fromString(reader.int64().toString());
           continue;
         case 25:
           if (tag !== 200) {
@@ -517,7 +517,7 @@ export const OptionalsTest = {
             break;
           }
 
-          message.reqDefvalLong = reader.int64() as Long;
+          message.reqDefvalLong = Long.fromString(reader.int64().toString());
           continue;
         case 35:
           if (tag !== 280) {
@@ -566,7 +566,7 @@ export const OptionalsTest = {
             break;
           }
 
-          message.optDefvalLong = reader.int64() as Long;
+          message.optDefvalLong = Long.fromString(reader.int64().toString());
           continue;
         case 45:
           if (tag !== 360) {
@@ -610,7 +610,7 @@ export const OptionalsTest = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -883,8 +883,8 @@ export const OptionalsTest_TranslationsEntry = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): OptionalsTest_TranslationsEntry {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): OptionalsTest_TranslationsEntry {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseOptionalsTest_TranslationsEntry();
     while (reader.pos < end) {
@@ -908,7 +908,7 @@ export const OptionalsTest_TranslationsEntry = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -953,8 +953,8 @@ export const Child = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Child {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Child {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseChild();
     while (reader.pos < end) {
@@ -964,7 +964,7 @@ export const Child = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },

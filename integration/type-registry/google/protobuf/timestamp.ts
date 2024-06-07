@@ -2,10 +2,8 @@
 // source: google/protobuf/timestamp.proto
 
 /* eslint-disable */
-import { BinaryWriter } from "@bufbuild/protobuf/wire";
-import * as _m0 from "protobufjs/minimal";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 import { messageTypeRegistry } from "../../typeRegistry";
-import Long = require("long");
 
 export const protobufPackage = "google.protobuf";
 
@@ -126,7 +124,7 @@ export const Timestamp = {
 
   encode(message: Timestamp, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.seconds !== 0) {
-      writer.uint32(8).int64(message.seconds.toString());
+      writer.uint32(8).int64(message.seconds);
     }
     if (message.nanos !== 0) {
       writer.uint32(16).int32(message.nanos);
@@ -134,8 +132,8 @@ export const Timestamp = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Timestamp {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Timestamp {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTimestamp();
     while (reader.pos < end) {
@@ -146,7 +144,7 @@ export const Timestamp = {
             break;
           }
 
-          message.seconds = longToNumber(reader.int64() as Long);
+          message.seconds = longToNumber(reader.int64());
           continue;
         case 2:
           if (tag !== 16) {
@@ -159,7 +157,7 @@ export const Timestamp = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -208,19 +206,15 @@ type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P> | "$type">]: never };
 
-function longToNumber(long: Long): number {
-  if (long.gt(globalThis.Number.MAX_SAFE_INTEGER)) {
+function longToNumber(int64: { toString(): string }): number {
+  const num = globalThis.Number(int64.toString());
+  if (num > globalThis.Number.MAX_SAFE_INTEGER) {
     throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
-  if (long.lt(globalThis.Number.MIN_SAFE_INTEGER)) {
+  if (num < globalThis.Number.MIN_SAFE_INTEGER) {
     throw new globalThis.Error("Value is smaller than Number.MIN_SAFE_INTEGER");
   }
-  return long.toNumber();
-}
-
-if (_m0.util.Long !== Long) {
-  _m0.util.Long = Long as any;
-  _m0.configure();
+  return num;
 }
 
 function isSet(value: any): boolean {

@@ -2,9 +2,7 @@
 // source: vector_tile.proto
 
 /* eslint-disable */
-import { BinaryWriter } from "@bufbuild/protobuf/wire";
-import * as _m0 from "protobufjs/minimal";
-import Long = require("long");
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
 export const protobufPackage = "vector_tile";
 
@@ -95,8 +93,8 @@ export const Tile = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Tile {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Tile {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTile();
     while (reader.pos < end) {
@@ -113,7 +111,7 @@ export const Tile = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -158,13 +156,13 @@ export const Tile_Value = {
       writer.uint32(25).double(message.doubleValue);
     }
     if (message.intValue !== undefined && message.intValue !== 0) {
-      writer.uint32(32).int64(message.intValue.toString());
+      writer.uint32(32).int64(message.intValue);
     }
     if (message.uintValue !== undefined && message.uintValue !== 0) {
-      writer.uint32(40).uint64(message.uintValue.toString());
+      writer.uint32(40).uint64(message.uintValue);
     }
     if (message.sintValue !== undefined && message.sintValue !== 0) {
-      writer.uint32(48).sint64(message.sintValue.toString());
+      writer.uint32(48).sint64(message.sintValue);
     }
     if (message.boolValue !== undefined && message.boolValue !== false) {
       writer.uint32(56).bool(message.boolValue);
@@ -172,8 +170,8 @@ export const Tile_Value = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Tile_Value {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Tile_Value {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTile_Value();
     while (reader.pos < end) {
@@ -205,21 +203,21 @@ export const Tile_Value = {
             break;
           }
 
-          message.intValue = longToNumber(reader.int64() as Long);
+          message.intValue = longToNumber(reader.int64());
           continue;
         case 5:
           if (tag !== 40) {
             break;
           }
 
-          message.uintValue = longToNumber(reader.uint64() as Long);
+          message.uintValue = longToNumber(reader.uint64());
           continue;
         case 6:
           if (tag !== 48) {
             break;
           }
 
-          message.sintValue = longToNumber(reader.sint64() as Long);
+          message.sintValue = longToNumber(reader.sint64());
           continue;
         case 7:
           if (tag !== 56) {
@@ -232,7 +230,7 @@ export const Tile_Value = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -298,7 +296,7 @@ function createBaseTile_Feature(): Tile_Feature {
 export const Tile_Feature = {
   encode(message: Tile_Feature, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.id !== undefined && message.id !== 0) {
-      writer.uint32(8).uint64(message.id.toString());
+      writer.uint32(8).uint64(message.id);
     }
     writer.uint32(18).fork();
     for (const v of message.tags) {
@@ -316,8 +314,8 @@ export const Tile_Feature = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Tile_Feature {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Tile_Feature {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTile_Feature();
     while (reader.pos < end) {
@@ -328,7 +326,7 @@ export const Tile_Feature = {
             break;
           }
 
-          message.id = longToNumber(reader.uint64() as Long);
+          message.id = longToNumber(reader.uint64());
           continue;
         case 2:
           if (tag === 16) {
@@ -375,7 +373,7 @@ export const Tile_Feature = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -446,8 +444,8 @@ export const Tile_Layer = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Tile_Layer {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Tile_Layer {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTile_Layer();
     while (reader.pos < end) {
@@ -499,7 +497,7 @@ export const Tile_Layer = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -567,19 +565,15 @@ type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
-function longToNumber(long: Long): number {
-  if (long.gt(globalThis.Number.MAX_SAFE_INTEGER)) {
+function longToNumber(int64: { toString(): string }): number {
+  const num = globalThis.Number(int64.toString());
+  if (num > globalThis.Number.MAX_SAFE_INTEGER) {
     throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
-  if (long.lt(globalThis.Number.MIN_SAFE_INTEGER)) {
+  if (num < globalThis.Number.MIN_SAFE_INTEGER) {
     throw new globalThis.Error("Value is smaller than Number.MIN_SAFE_INTEGER");
   }
-  return long.toNumber();
-}
-
-if (_m0.util.Long !== Long) {
-  _m0.util.Long = Long as any;
-  _m0.configure();
+  return num;
 }
 
 function isSet(value: any): boolean {

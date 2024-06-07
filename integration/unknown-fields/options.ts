@@ -2,8 +2,7 @@
 // source: options.proto
 
 /* eslint-disable */
-import { BinaryWriter } from "@bufbuild/protobuf/wire";
-import * as _m0 from "protobufjs/minimal";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
 export const protobufPackage = "";
 
@@ -58,8 +57,8 @@ export const MyMessage = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): MyMessage {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): MyMessage {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMyMessage();
     while (reader.pos < end) {
@@ -97,9 +96,7 @@ export const MyMessage = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      const startPos = reader.pos;
-      reader.skipType(tag & 7);
-      const buf = reader.buf.slice(startPos, reader.pos);
+      const buf = reader.skip(tag & 7);
 
       const list = message._unknownFields![tag];
 
@@ -130,8 +127,8 @@ export const RequestType = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): RequestType {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): RequestType {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseRequestType();
     while (reader.pos < end) {
@@ -141,9 +138,7 @@ export const RequestType = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      const startPos = reader.pos;
-      reader.skipType(tag & 7);
-      const buf = reader.buf.slice(startPos, reader.pos);
+      const buf = reader.skip(tag & 7);
 
       const list = message._unknownFields![tag];
 
@@ -174,8 +169,8 @@ export const ResponseType = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ResponseType {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): ResponseType {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseResponseType();
     while (reader.pos < end) {
@@ -185,9 +180,7 @@ export const ResponseType = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      const startPos = reader.pos;
-      reader.skipType(tag & 7);
-      const buf = reader.buf.slice(startPos, reader.pos);
+      const buf = reader.skip(tag & 7);
 
       const list = message._unknownFields![tag];
 
@@ -217,7 +210,7 @@ export class MyServiceClientImpl implements MyService {
   MyMethod(request: RequestType): Promise<ResponseType> {
     const data = RequestType.encode(request).finish();
     const promise = this.rpc.request(this.service, "MyMethod", data);
-    return promise.then((data) => ResponseType.decode(_m0.Reader.create(data)));
+    return promise.then((data) => ResponseType.decode(new BinaryReader(data)));
   }
 }
 

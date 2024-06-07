@@ -2,7 +2,7 @@
 // source: wrappers-regression.proto
 
 /* eslint-disable */
-import * as _m0 from "protobufjs/minimal";
+import { BinaryReader } from "@bufbuild/protobuf/wire";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { Empty } from "./google/protobuf/empty";
@@ -33,25 +33,25 @@ export class ClockClientImpl implements Clock {
   Now(request: Empty): Promise<Timestamp> {
     const data = Empty.encode(request).finish();
     const promise = this.rpc.request(this.service, "Now", data);
-    return promise.then((data) => Timestamp.decode(_m0.Reader.create(data)));
+    return promise.then((data) => Timestamp.decode(new BinaryReader(data)));
   }
 
   NowString(request: StringValue): Promise<StringValue> {
     const data = StringValue.encode(request).finish();
     const promise = this.rpc.request(this.service, "NowString", data);
-    return promise.then((data) => StringValue.decode(_m0.Reader.create(data)));
+    return promise.then((data) => StringValue.decode(new BinaryReader(data)));
   }
 
   NowStringStream(request: Observable<StringValue>): Observable<StringValue> {
     const data = request.pipe(map((request) => StringValue.encode(request).finish()));
     const result = this.rpc.bidirectionalStreamingRequest(this.service, "NowStringStream", data);
-    return result.pipe(map((data) => StringValue.decode(_m0.Reader.create(data))));
+    return result.pipe(map((data) => StringValue.decode(new BinaryReader(data))));
   }
 
   NowBool(request: Empty): Promise<BoolValue> {
     const data = Empty.encode(request).finish();
     const promise = this.rpc.request(this.service, "NowBool", data);
-    return promise.then((data) => BoolValue.decode(_m0.Reader.create(data)));
+    return promise.then((data) => BoolValue.decode(new BinaryReader(data)));
   }
 }
 

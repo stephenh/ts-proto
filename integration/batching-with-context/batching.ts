@@ -2,10 +2,9 @@
 // source: batching.proto
 
 /* eslint-disable */
-import { BinaryWriter } from "@bufbuild/protobuf/wire";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as DataLoader from "dataloader";
 import * as hash from "object-hash";
-import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "batching";
 
@@ -62,8 +61,8 @@ export const BatchQueryRequest = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): BatchQueryRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): BatchQueryRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseBatchQueryRequest();
     while (reader.pos < end) {
@@ -80,7 +79,7 @@ export const BatchQueryRequest = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -119,8 +118,8 @@ export const BatchQueryResponse = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): BatchQueryResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): BatchQueryResponse {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseBatchQueryResponse();
     while (reader.pos < end) {
@@ -137,7 +136,7 @@ export const BatchQueryResponse = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -178,8 +177,8 @@ export const BatchMapQueryRequest = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): BatchMapQueryRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): BatchMapQueryRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseBatchMapQueryRequest();
     while (reader.pos < end) {
@@ -196,7 +195,7 @@ export const BatchMapQueryRequest = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -235,8 +234,8 @@ export const BatchMapQueryResponse = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): BatchMapQueryResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): BatchMapQueryResponse {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseBatchMapQueryResponse();
     while (reader.pos < end) {
@@ -256,7 +255,7 @@ export const BatchMapQueryResponse = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -316,8 +315,8 @@ export const BatchMapQueryResponse_EntitiesEntry = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): BatchMapQueryResponse_EntitiesEntry {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): BatchMapQueryResponse_EntitiesEntry {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseBatchMapQueryResponse_EntitiesEntry();
     while (reader.pos < end) {
@@ -341,7 +340,7 @@ export const BatchMapQueryResponse_EntitiesEntry = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -393,8 +392,8 @@ export const GetOnlyMethodRequest = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): GetOnlyMethodRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): GetOnlyMethodRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetOnlyMethodRequest();
     while (reader.pos < end) {
@@ -411,7 +410,7 @@ export const GetOnlyMethodRequest = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -450,8 +449,8 @@ export const GetOnlyMethodResponse = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): GetOnlyMethodResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): GetOnlyMethodResponse {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetOnlyMethodResponse();
     while (reader.pos < end) {
@@ -468,7 +467,7 @@ export const GetOnlyMethodResponse = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -509,8 +508,8 @@ export const WriteMethodRequest = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): WriteMethodRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): WriteMethodRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseWriteMethodRequest();
     while (reader.pos < end) {
@@ -527,7 +526,7 @@ export const WriteMethodRequest = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -563,8 +562,8 @@ export const WriteMethodResponse = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): WriteMethodResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): WriteMethodResponse {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseWriteMethodResponse();
     while (reader.pos < end) {
@@ -574,7 +573,7 @@ export const WriteMethodResponse = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -612,8 +611,8 @@ export const Entity = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Entity {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Entity {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEntity();
     while (reader.pos < end) {
@@ -637,7 +636,7 @@ export const Entity = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -707,7 +706,7 @@ export class EntityServiceClientImpl<Context extends DataLoaders> implements Ent
   BatchQuery(ctx: Context, request: BatchQueryRequest): Promise<BatchQueryResponse> {
     const data = BatchQueryRequest.encode(request).finish();
     const promise = this.rpc.request(ctx, this.service, "BatchQuery", data);
-    return promise.then((data) => BatchQueryResponse.decode(_m0.Reader.create(data)));
+    return promise.then((data) => BatchQueryResponse.decode(new BinaryReader(data)));
   }
 
   GetMapQuery(ctx: Context, id: string): Promise<Entity> {
@@ -725,7 +724,7 @@ export class EntityServiceClientImpl<Context extends DataLoaders> implements Ent
   BatchMapQuery(ctx: Context, request: BatchMapQueryRequest): Promise<BatchMapQueryResponse> {
     const data = BatchMapQueryRequest.encode(request).finish();
     const promise = this.rpc.request(ctx, this.service, "BatchMapQuery", data);
-    return promise.then((data) => BatchMapQueryResponse.decode(_m0.Reader.create(data)));
+    return promise.then((data) => BatchMapQueryResponse.decode(new BinaryReader(data)));
   }
 
   GetOnlyMethod(ctx: Context, request: GetOnlyMethodRequest): Promise<GetOnlyMethodResponse> {
@@ -734,7 +733,7 @@ export class EntityServiceClientImpl<Context extends DataLoaders> implements Ent
         const responses = requests.map(async (request) => {
           const data = GetOnlyMethodRequest.encode(request).finish();
           const response = await this.rpc.request(ctx, "batching.EntityService", "GetOnlyMethod", data);
-          return GetOnlyMethodResponse.decode(_m0.Reader.create(response));
+          return GetOnlyMethodResponse.decode(new BinaryReader(response));
         });
         return Promise.all(responses);
       }, { cacheKeyFn: hash, ...ctx.rpcDataLoaderOptions });
@@ -745,7 +744,7 @@ export class EntityServiceClientImpl<Context extends DataLoaders> implements Ent
   WriteMethod(ctx: Context, request: WriteMethodRequest): Promise<WriteMethodResponse> {
     const data = WriteMethodRequest.encode(request).finish();
     const promise = this.rpc.request(ctx, this.service, "WriteMethod", data);
-    return promise.then((data) => WriteMethodResponse.decode(_m0.Reader.create(data)));
+    return promise.then((data) => WriteMethodResponse.decode(new BinaryReader(data)));
   }
 }
 

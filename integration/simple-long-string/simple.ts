@@ -2,11 +2,9 @@
 // source: simple.proto
 
 /* eslint-disable */
-import { BinaryWriter } from "@bufbuild/protobuf/wire";
-import * as _m0 from "protobufjs/minimal";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 import { Timestamp } from "./google/protobuf/timestamp";
 import { UInt64Value } from "./google/protobuf/wrappers";
-import Long = require("long");
 
 export const protobufPackage = "simple";
 
@@ -58,31 +56,31 @@ export const Numbers = {
       writer.uint32(24).int32(message.int32);
     }
     if (message.int64 !== "0") {
-      writer.uint32(32).int64(message.int64.toString());
+      writer.uint32(32).int64(message.int64);
     }
     if (message.uint32 !== 0) {
       writer.uint32(40).uint32(message.uint32);
     }
     if (message.uint64 !== "0") {
-      writer.uint32(48).uint64(message.uint64.toString());
+      writer.uint32(48).uint64(message.uint64);
     }
     if (message.sint32 !== 0) {
       writer.uint32(56).sint32(message.sint32);
     }
     if (message.sint64 !== "0") {
-      writer.uint32(64).sint64(message.sint64.toString());
+      writer.uint32(64).sint64(message.sint64);
     }
     if (message.fixed32 !== 0) {
       writer.uint32(77).fixed32(message.fixed32);
     }
     if (message.fixed64 !== "0") {
-      writer.uint32(81).fixed64(message.fixed64.toString());
+      writer.uint32(81).fixed64(message.fixed64);
     }
     if (message.sfixed32 !== 0) {
       writer.uint32(93).sfixed32(message.sfixed32);
     }
     if (message.sfixed64 !== "0") {
-      writer.uint32(97).sfixed64(message.sfixed64.toString());
+      writer.uint32(97).sfixed64(message.sfixed64);
     }
     if (message.guint64 !== undefined) {
       UInt64Value.encode({ value: message.guint64! }, writer.uint32(106).fork()).join();
@@ -93,8 +91,8 @@ export const Numbers = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Numbers {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Numbers {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNumbers();
     while (reader.pos < end) {
@@ -126,7 +124,7 @@ export const Numbers = {
             break;
           }
 
-          message.int64 = longToString(reader.int64() as Long);
+          message.int64 = longToString(reader.int64());
           continue;
         case 5:
           if (tag !== 40) {
@@ -140,7 +138,7 @@ export const Numbers = {
             break;
           }
 
-          message.uint64 = longToString(reader.uint64() as Long);
+          message.uint64 = longToString(reader.uint64());
           continue;
         case 7:
           if (tag !== 56) {
@@ -154,7 +152,7 @@ export const Numbers = {
             break;
           }
 
-          message.sint64 = longToString(reader.sint64() as Long);
+          message.sint64 = longToString(reader.sint64());
           continue;
         case 9:
           if (tag !== 77) {
@@ -168,7 +166,7 @@ export const Numbers = {
             break;
           }
 
-          message.fixed64 = longToString(reader.fixed64() as Long);
+          message.fixed64 = longToString(reader.fixed64());
           continue;
         case 11:
           if (tag !== 93) {
@@ -182,7 +180,7 @@ export const Numbers = {
             break;
           }
 
-          message.sfixed64 = longToString(reader.sfixed64() as Long);
+          message.sfixed64 = longToString(reader.sfixed64());
           continue;
         case 13:
           if (tag !== 106) {
@@ -202,7 +200,7 @@ export const Numbers = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -330,13 +328,8 @@ function fromJsonTimestamp(o: any): Date {
   }
 }
 
-function longToString(long: Long) {
-  return long.toString();
-}
-
-if (_m0.util.Long !== Long) {
-  _m0.util.Long = Long as any;
-  _m0.configure();
+function longToString(int64: bigint | string) {
+  return int64.toString();
 }
 
 function isSet(value: any): boolean {

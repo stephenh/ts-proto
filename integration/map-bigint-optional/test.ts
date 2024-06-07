@@ -2,9 +2,7 @@
 // source: test.proto
 
 /* eslint-disable */
-import { BinaryWriter } from "@bufbuild/protobuf/wire";
-import * as _m0 from "protobufjs/minimal";
-import Long = require("long");
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
 export const protobufPackage = "";
 
@@ -39,8 +37,8 @@ export const MapBigInt = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): MapBigInt {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): MapBigInt {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMapBigInt();
     while (reader.pos < end) {
@@ -63,9 +61,7 @@ export const MapBigInt = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      const startPos = reader.pos;
-      reader.skipType(tag & 7);
-      const buf = reader.buf.slice(startPos, reader.pos);
+      const buf = reader.skip(tag & 7);
 
       if (message._unknownFields === undefined) {
         message._unknownFields = {};
@@ -132,13 +128,13 @@ export const MapBigInt_MapEntry = {
       if (BigInt.asUintN(64, message.key) !== message.key) {
         throw new globalThis.Error("value provided for field message.key of type fixed64 too large");
       }
-      writer.uint32(9).fixed64(message.key.toString());
+      writer.uint32(9).fixed64(message.key);
     }
     if (message.value !== BigInt("0")) {
       if (BigInt.asIntN(64, message.value) !== message.value) {
         throw new globalThis.Error("value provided for field message.value of type int64 too large");
       }
-      writer.uint32(16).int64(message.value.toString());
+      writer.uint32(16).int64(message.value);
     }
     if (message._unknownFields !== undefined) {
       for (const [key, values] of Object.entries(message._unknownFields)) {
@@ -151,8 +147,8 @@ export const MapBigInt_MapEntry = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): MapBigInt_MapEntry {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): MapBigInt_MapEntry {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMapBigInt_MapEntry();
     while (reader.pos < end) {
@@ -163,22 +159,20 @@ export const MapBigInt_MapEntry = {
             break;
           }
 
-          message.key = longToBigint(reader.fixed64() as Long);
+          message.key = longToBigint(reader.fixed64());
           continue;
         case 2:
           if (tag !== 16) {
             break;
           }
 
-          message.value = longToBigint(reader.int64() as Long);
+          message.value = longToBigint(reader.int64());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      const startPos = reader.pos;
-      reader.skipType(tag & 7);
-      const buf = reader.buf.slice(startPos, reader.pos);
+      const buf = reader.skip(tag & 7);
 
       if (message._unknownFields === undefined) {
         message._unknownFields = {};
@@ -236,13 +230,8 @@ type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
-function longToBigint(long: Long) {
-  return BigInt(long.toString());
-}
-
-if (_m0.util.Long !== Long) {
-  _m0.util.Long = Long as any;
-  _m0.configure();
+function longToBigint(int64: bigint | string) {
+  return typeof int64 == "bigint" ? int64 : globalThis.BigInt(int64.toString());
 }
 
 function isObject(value: any): boolean {

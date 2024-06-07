@@ -2,8 +2,7 @@
 // source: hero.proto
 
 /* eslint-disable */
-import { BinaryWriter } from "@bufbuild/protobuf/wire";
-import * as _m0 from "protobufjs/minimal";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { Foo } from "./some-file";
@@ -40,8 +39,8 @@ export const HeroById = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): HeroById {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): HeroById {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseHeroById();
     while (reader.pos < end) {
@@ -58,7 +57,7 @@ export const HeroById = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -97,8 +96,8 @@ export const VillainById = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): VillainById {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): VillainById {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseVillainById();
     while (reader.pos < end) {
@@ -115,7 +114,7 @@ export const VillainById = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -157,8 +156,8 @@ export const Hero = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Hero {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Hero {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseHero();
     while (reader.pos < end) {
@@ -182,7 +181,7 @@ export const Hero = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -231,8 +230,8 @@ export const Villain = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Villain {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Villain {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseVillain();
     while (reader.pos < end) {
@@ -256,7 +255,7 @@ export const Villain = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -310,19 +309,19 @@ export class HeroServiceClientImpl implements HeroService {
   FindOneHero(request: HeroById, metadata?: Foo): Promise<Hero> {
     const data = HeroById.encode(request).finish();
     const promise = this.rpc.request(this.service, "FindOneHero", data);
-    return promise.then((data) => Hero.decode(_m0.Reader.create(data)));
+    return promise.then((data) => Hero.decode(new BinaryReader(data)));
   }
 
   FindOneVillain(request: VillainById, metadata?: Foo): Promise<Villain> {
     const data = VillainById.encode(request).finish();
     const promise = this.rpc.request(this.service, "FindOneVillain", data);
-    return promise.then((data) => Villain.decode(_m0.Reader.create(data)));
+    return promise.then((data) => Villain.decode(new BinaryReader(data)));
   }
 
   FindManyVillain(request: Observable<VillainById>, metadata?: Foo): Observable<Villain> {
     const data = request.pipe(map((request) => VillainById.encode(request).finish()));
     const result = this.rpc.bidirectionalStreamingRequest(this.service, "FindManyVillain", data);
-    return result.pipe(map((data) => Villain.decode(_m0.Reader.create(data))));
+    return result.pipe(map((data) => Villain.decode(new BinaryReader(data))));
   }
 }
 

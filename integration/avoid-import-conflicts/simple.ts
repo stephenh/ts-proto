@@ -2,8 +2,7 @@
 // source: simple.proto
 
 /* eslint-disable */
-import { BinaryWriter } from "@bufbuild/protobuf/wire";
-import * as _m0 from "protobufjs/minimal";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 import {
   FooService as FooService2,
   fooServiceFromJSON,
@@ -93,8 +92,8 @@ export const Simple = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Simple {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Simple {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimple();
     while (reader.pos < end) {
@@ -118,7 +117,7 @@ export const Simple = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -169,8 +168,8 @@ export const DifferentSimple = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): DifferentSimple {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): DifferentSimple {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDifferentSimple();
     while (reader.pos < end) {
@@ -194,7 +193,7 @@ export const DifferentSimple = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -247,8 +246,8 @@ export const SimpleEnums = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): SimpleEnums {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): SimpleEnums {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleEnums();
     while (reader.pos < end) {
@@ -272,7 +271,7 @@ export const SimpleEnums = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -318,8 +317,8 @@ export const FooServiceCreateRequest = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): FooServiceCreateRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): FooServiceCreateRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFooServiceCreateRequest();
     while (reader.pos < end) {
@@ -336,7 +335,7 @@ export const FooServiceCreateRequest = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -375,8 +374,8 @@ export const FooServiceCreateResponse = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): FooServiceCreateResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): FooServiceCreateResponse {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFooServiceCreateResponse();
     while (reader.pos < end) {
@@ -393,7 +392,7 @@ export const FooServiceCreateResponse = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -436,7 +435,7 @@ export class FooServiceClientImpl implements FooService {
   Create(request: FooServiceCreateRequest): Promise<FooServiceCreateResponse> {
     const data = FooServiceCreateRequest.encode(request).finish();
     const promise = this.rpc.request(this.service, "Create", data);
-    return promise.then((data) => FooServiceCreateResponse.decode(_m0.Reader.create(data)));
+    return promise.then((data) => FooServiceCreateResponse.decode(new BinaryReader(data)));
   }
 }
 

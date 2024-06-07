@@ -2,10 +2,9 @@
 // source: math.proto
 
 /* eslint-disable */
-import { BinaryWriter } from "@bufbuild/protobuf/wire";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as DataLoader from "dataloader";
 import * as hash from "object-hash";
-import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "";
 
@@ -37,8 +36,8 @@ export const NumPair = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): NumPair {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): NumPair {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNumPair();
     while (reader.pos < end) {
@@ -62,7 +61,7 @@ export const NumPair = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -108,8 +107,8 @@ export const NumSingle = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): NumSingle {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): NumSingle {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNumSingle();
     while (reader.pos < end) {
@@ -126,7 +125,7 @@ export const NumSingle = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -167,8 +166,8 @@ export const Numbers = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Numbers {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Numbers {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNumbers();
     while (reader.pos < end) {
@@ -195,7 +194,7 @@ export const Numbers = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -243,13 +242,13 @@ export class MathServiceClientImpl<Context extends DataLoaders> implements MathS
   add(ctx: Context, request: NumPair): Promise<NumSingle> {
     const data = NumPair.encode(request).finish();
     const promise = this.rpc.request(ctx, this.service, "Add", data);
-    return promise.then((data) => NumSingle.decode(_m0.Reader.create(data)));
+    return promise.then((data) => NumSingle.decode(new BinaryReader(data)));
   }
 
   absoluteValue(ctx: Context, request: NumSingle): Promise<NumSingle> {
     const data = NumSingle.encode(request).finish();
     const promise = this.rpc.request(ctx, this.service, "AbsoluteValue", data);
-    return promise.then((data) => NumSingle.decode(_m0.Reader.create(data)));
+    return promise.then((data) => NumSingle.decode(new BinaryReader(data)));
   }
 
   getDouble(ctx: Context, nu: number): Promise<number> {
@@ -265,7 +264,7 @@ export class MathServiceClientImpl<Context extends DataLoaders> implements MathS
   batchDouble(ctx: Context, request: Numbers): Promise<Numbers> {
     const data = Numbers.encode(request).finish();
     const promise = this.rpc.request(ctx, this.service, "BatchDouble", data);
-    return promise.then((data) => Numbers.decode(_m0.Reader.create(data)));
+    return promise.then((data) => Numbers.decode(new BinaryReader(data)));
   }
 }
 

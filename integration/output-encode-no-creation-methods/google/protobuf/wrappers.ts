@@ -117,7 +117,7 @@ export const FloatValue = {
 export const Int64Value = {
   encode(message: Int64Value, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.value !== 0) {
-      writer.uint32(8).int64(message.value.toString());
+      writer.uint32(8).int64(message.value);
     }
     return writer;
   },
@@ -126,7 +126,7 @@ export const Int64Value = {
 export const UInt64Value = {
   encode(message: UInt64Value, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.value !== 0) {
-      writer.uint32(8).uint64(message.value.toString());
+      writer.uint32(8).uint64(message.value);
     }
     return writer;
   },

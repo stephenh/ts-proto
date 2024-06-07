@@ -3,7 +3,7 @@
 
 /* eslint-disable */
 import Long = require("long");
-import { BinaryWriter } from "@bufbuild/protobuf/wire";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "foo";
@@ -32,8 +32,8 @@ export const FieldOption = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): FieldOption {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): FieldOption {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFieldOption();
     while (reader.pos < end) {
@@ -44,27 +44,27 @@ export const FieldOption = {
             break;
           }
 
-          message.normalField = reader.int64() as Long;
+          message.normalField = Long.fromString(reader.int64().toString());
           continue;
         case 2:
           if (tag !== 16) {
             break;
           }
 
-          message.numberField = longToNumber(reader.int64() as Long);
+          message.numberField = longToNumber(reader.int64());
           continue;
         case 3:
           if (tag !== 24) {
             break;
           }
 
-          message.stringField = longToString(reader.int64() as Long);
+          message.stringField = longToString(reader.int64());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -117,18 +117,19 @@ type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
-function longToNumber(long: Long): number {
-  if (long.gt(globalThis.Number.MAX_SAFE_INTEGER)) {
+function longToNumber(int64: { toString(): string }): number {
+  const num = globalThis.Number(int64.toString());
+  if (num > globalThis.Number.MAX_SAFE_INTEGER) {
     throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
-  if (long.lt(globalThis.Number.MIN_SAFE_INTEGER)) {
+  if (num < globalThis.Number.MIN_SAFE_INTEGER) {
     throw new globalThis.Error("Value is smaller than Number.MIN_SAFE_INTEGER");
   }
-  return long.toNumber();
+  return num;
 }
 
-function longToString(long: Long) {
-  return long.toString();
+function longToString(int64: bigint | string) {
+  return int64.toString();
 }
 
 if (_m0.util.Long !== Long) {

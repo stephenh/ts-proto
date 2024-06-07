@@ -2,9 +2,7 @@
 // source: simple.proto
 
 /* eslint-disable */
-import { BinaryWriter } from "@bufbuild/protobuf/wire";
-import Long from "long";
-import _m0 from "protobufjs/minimal";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
 export const protobufPackage = "simple";
 
@@ -43,8 +41,8 @@ export const Simple = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Simple {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Simple {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimple();
     while (reader.pos < end) {
@@ -68,7 +66,7 @@ export const Simple = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -131,37 +129,37 @@ export const Numbers = {
       writer.uint32(24).int32(message.int32);
     }
     if (message.int64 !== 0) {
-      writer.uint32(32).int64(message.int64.toString());
+      writer.uint32(32).int64(message.int64);
     }
     if (message.uint32 !== 0) {
       writer.uint32(40).uint32(message.uint32);
     }
     if (message.uint64 !== 0) {
-      writer.uint32(48).uint64(message.uint64.toString());
+      writer.uint32(48).uint64(message.uint64);
     }
     if (message.sint32 !== 0) {
       writer.uint32(56).sint32(message.sint32);
     }
     if (message.sint64 !== 0) {
-      writer.uint32(64).sint64(message.sint64.toString());
+      writer.uint32(64).sint64(message.sint64);
     }
     if (message.fixed32 !== 0) {
       writer.uint32(77).fixed32(message.fixed32);
     }
     if (message.fixed64 !== 0) {
-      writer.uint32(81).fixed64(message.fixed64.toString());
+      writer.uint32(81).fixed64(message.fixed64);
     }
     if (message.sfixed32 !== 0) {
       writer.uint32(93).sfixed32(message.sfixed32);
     }
     if (message.sfixed64 !== 0) {
-      writer.uint32(97).sfixed64(message.sfixed64.toString());
+      writer.uint32(97).sfixed64(message.sfixed64);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Numbers {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Numbers {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNumbers();
     while (reader.pos < end) {
@@ -193,7 +191,7 @@ export const Numbers = {
             break;
           }
 
-          message.int64 = longToNumber(reader.int64() as Long);
+          message.int64 = longToNumber(reader.int64());
           continue;
         case 5:
           if (tag !== 40) {
@@ -207,7 +205,7 @@ export const Numbers = {
             break;
           }
 
-          message.uint64 = longToNumber(reader.uint64() as Long);
+          message.uint64 = longToNumber(reader.uint64());
           continue;
         case 7:
           if (tag !== 56) {
@@ -221,7 +219,7 @@ export const Numbers = {
             break;
           }
 
-          message.sint64 = longToNumber(reader.sint64() as Long);
+          message.sint64 = longToNumber(reader.sint64());
           continue;
         case 9:
           if (tag !== 77) {
@@ -235,7 +233,7 @@ export const Numbers = {
             break;
           }
 
-          message.fixed64 = longToNumber(reader.fixed64() as Long);
+          message.fixed64 = longToNumber(reader.fixed64());
           continue;
         case 11:
           if (tag !== 93) {
@@ -249,13 +247,13 @@ export const Numbers = {
             break;
           }
 
-          message.sfixed64 = longToNumber(reader.sfixed64() as Long);
+          message.sfixed64 = longToNumber(reader.sfixed64());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -351,19 +349,15 @@ type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
-function longToNumber(long: Long): number {
-  if (long.gt(globalThis.Number.MAX_SAFE_INTEGER)) {
+function longToNumber(int64: { toString(): string }): number {
+  const num = globalThis.Number(int64.toString());
+  if (num > globalThis.Number.MAX_SAFE_INTEGER) {
     throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
-  if (long.lt(globalThis.Number.MIN_SAFE_INTEGER)) {
+  if (num < globalThis.Number.MIN_SAFE_INTEGER) {
     throw new globalThis.Error("Value is smaller than Number.MIN_SAFE_INTEGER");
   }
-  return long.toNumber();
-}
-
-if (_m0.util.Long !== Long) {
-  _m0.util.Long = Long as any;
-  _m0.configure();
+  return num;
 }
 
 function isSet(value: any): boolean {

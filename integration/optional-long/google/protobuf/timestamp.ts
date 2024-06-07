@@ -2,7 +2,7 @@
 // source: google/protobuf/timestamp.proto
 
 /* eslint-disable */
-import { BinaryWriter } from "@bufbuild/protobuf/wire";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 import Long = require("long");
 import * as _m0 from "protobufjs/minimal";
 
@@ -132,8 +132,8 @@ export const Timestamp = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Timestamp {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Timestamp {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTimestamp();
     while (reader.pos < end) {
@@ -144,7 +144,7 @@ export const Timestamp = {
             break;
           }
 
-          message.seconds = reader.int64() as Long;
+          message.seconds = Long.fromString(reader.int64().toString());
           continue;
         case 2:
           if (tag !== 16) {
@@ -157,7 +157,7 @@ export const Timestamp = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },

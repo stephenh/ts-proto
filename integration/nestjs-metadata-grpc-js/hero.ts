@@ -2,11 +2,10 @@
 // source: hero.proto
 
 /* eslint-disable */
-import { BinaryWriter } from "@bufbuild/protobuf/wire";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 import { handleBidiStreamingCall, Metadata } from "@grpc/grpc-js";
 import type { handleUnaryCall, UntypedServiceImplementation } from "@grpc/grpc-js";
 import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
-import * as _m0 from "protobufjs/minimal";
 import { Observable } from "rxjs";
 
 export const protobufPackage = "hero";
@@ -43,8 +42,8 @@ export const HeroById = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): HeroById {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): HeroById {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseHeroById();
     while (reader.pos < end) {
@@ -61,7 +60,7 @@ export const HeroById = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -79,8 +78,8 @@ export const VillainById = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): VillainById {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): VillainById {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseVillainById();
     while (reader.pos < end) {
@@ -97,7 +96,7 @@ export const VillainById = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -118,8 +117,8 @@ export const Hero = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Hero {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Hero {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseHero();
     while (reader.pos < end) {
@@ -143,7 +142,7 @@ export const Hero = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -164,8 +163,8 @@ export const Villain = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Villain {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Villain {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseVillain();
     while (reader.pos < end) {
@@ -189,7 +188,7 @@ export const Villain = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },

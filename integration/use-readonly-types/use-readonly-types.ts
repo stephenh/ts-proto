@@ -2,8 +2,7 @@
 // source: use-readonly-types.proto
 
 /* eslint-disable */
-import { BinaryWriter } from "@bufbuild/protobuf/wire";
-import * as _m0 from "protobufjs/minimal";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 import { FieldMask } from "./google/protobuf/field_mask";
 import { ListValue, Struct } from "./google/protobuf/struct";
 
@@ -91,8 +90,8 @@ export const Entity = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Entity {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Entity {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEntity() as any;
     while (reader.pos < end) {
@@ -196,7 +195,7 @@ export const Entity = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -313,8 +312,8 @@ export const SubEntity = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): SubEntity {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): SubEntity {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSubEntity() as any;
     while (reader.pos < end) {
@@ -331,7 +330,7 @@ export const SubEntity = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },

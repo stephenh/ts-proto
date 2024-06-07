@@ -2,13 +2,11 @@
 // source: simple.proto
 
 /* eslint-disable */
-import { BinaryWriter } from "@bufbuild/protobuf/wire";
-import * as _m0 from "protobufjs/minimal";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 import { Timestamp } from "./google/protobuf/timestamp";
 import { BoolValue, BytesValue, Int32Value, StringValue } from "./google/protobuf/wrappers";
 import { DateMessage } from "./google/type/date";
 import { ImportedThing } from "./import_dir/thing";
-import Long = require("long");
 
 export const protobufPackage = "simple";
 
@@ -381,8 +379,8 @@ export const Simple = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Simple {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Simple {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimple();
     while (reader.pos < end) {
@@ -510,7 +508,7 @@ export const Simple = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -627,8 +625,8 @@ export const Child = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Child {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Child {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseChild();
     while (reader.pos < end) {
@@ -652,7 +650,7 @@ export const Child = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -704,8 +702,8 @@ export const Nested = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Nested {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Nested {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNested();
     while (reader.pos < end) {
@@ -736,7 +734,7 @@ export const Nested = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -792,8 +790,8 @@ export const Nested_InnerMessage = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Nested_InnerMessage {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Nested_InnerMessage {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNested_InnerMessage();
     while (reader.pos < end) {
@@ -817,7 +815,7 @@ export const Nested_InnerMessage = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -865,8 +863,8 @@ export const Nested_InnerMessage_DeepMessage = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Nested_InnerMessage_DeepMessage {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Nested_InnerMessage_DeepMessage {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNested_InnerMessage_DeepMessage();
     while (reader.pos < end) {
@@ -883,7 +881,7 @@ export const Nested_InnerMessage_DeepMessage = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -927,8 +925,8 @@ export const OneOfMessage = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): OneOfMessage {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): OneOfMessage {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseOneOfMessage();
     while (reader.pos < end) {
@@ -952,7 +950,7 @@ export const OneOfMessage = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -1013,8 +1011,8 @@ export const SimpleWithWrappers = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): SimpleWithWrappers {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): SimpleWithWrappers {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithWrappers();
     while (reader.pos < end) {
@@ -1066,7 +1064,7 @@ export const SimpleWithWrappers = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -1132,8 +1130,8 @@ export const Entity = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Entity {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Entity {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEntity();
     while (reader.pos < end) {
@@ -1150,7 +1148,7 @@ export const Entity = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -1221,8 +1219,8 @@ export const SimpleWithMap = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): SimpleWithMap {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): SimpleWithMap {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithMap();
     while (reader.pos < end) {
@@ -1312,7 +1310,7 @@ export const SimpleWithMap = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -1542,8 +1540,8 @@ export const SimpleWithMap_EntitiesByIdEntry = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): SimpleWithMap_EntitiesByIdEntry {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): SimpleWithMap_EntitiesByIdEntry {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithMap_EntitiesByIdEntry();
     while (reader.pos < end) {
@@ -1567,7 +1565,7 @@ export const SimpleWithMap_EntitiesByIdEntry = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -1620,8 +1618,8 @@ export const SimpleWithMap_NameLookupEntry = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): SimpleWithMap_NameLookupEntry {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): SimpleWithMap_NameLookupEntry {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithMap_NameLookupEntry();
     while (reader.pos < end) {
@@ -1645,7 +1643,7 @@ export const SimpleWithMap_NameLookupEntry = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -1696,8 +1694,8 @@ export const SimpleWithMap_IntLookupEntry = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): SimpleWithMap_IntLookupEntry {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): SimpleWithMap_IntLookupEntry {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithMap_IntLookupEntry();
     while (reader.pos < end) {
@@ -1721,7 +1719,7 @@ export const SimpleWithMap_IntLookupEntry = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -1770,8 +1768,8 @@ export const SimpleWithMap_MapOfTimestampsEntry = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): SimpleWithMap_MapOfTimestampsEntry {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): SimpleWithMap_MapOfTimestampsEntry {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithMap_MapOfTimestampsEntry();
     while (reader.pos < end) {
@@ -1795,7 +1793,7 @@ export const SimpleWithMap_MapOfTimestampsEntry = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -1848,8 +1846,8 @@ export const SimpleWithMap_MapOfBytesEntry = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): SimpleWithMap_MapOfBytesEntry {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): SimpleWithMap_MapOfBytesEntry {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithMap_MapOfBytesEntry();
     while (reader.pos < end) {
@@ -1873,7 +1871,7 @@ export const SimpleWithMap_MapOfBytesEntry = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -1924,8 +1922,8 @@ export const SimpleWithMap_MapOfStringValuesEntry = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): SimpleWithMap_MapOfStringValuesEntry {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): SimpleWithMap_MapOfStringValuesEntry {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithMap_MapOfStringValuesEntry();
     while (reader.pos < end) {
@@ -1949,7 +1947,7 @@ export const SimpleWithMap_MapOfStringValuesEntry = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -1994,16 +1992,16 @@ function createBaseSimpleWithMap_LongLookupEntry(): SimpleWithMap_LongLookupEntr
 export const SimpleWithMap_LongLookupEntry = {
   encode(message: SimpleWithMap_LongLookupEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.key !== 0) {
-      writer.uint32(8).int64(message.key.toString());
+      writer.uint32(8).int64(message.key);
     }
     if (message.value !== 0) {
-      writer.uint32(16).int64(message.value.toString());
+      writer.uint32(16).int64(message.value);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): SimpleWithMap_LongLookupEntry {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): SimpleWithMap_LongLookupEntry {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithMap_LongLookupEntry();
     while (reader.pos < end) {
@@ -2014,20 +2012,20 @@ export const SimpleWithMap_LongLookupEntry = {
             break;
           }
 
-          message.key = longToNumber(reader.int64() as Long);
+          message.key = longToNumber(reader.int64());
           continue;
         case 2:
           if (tag !== 16) {
             break;
           }
 
-          message.value = longToNumber(reader.int64() as Long);
+          message.value = longToNumber(reader.int64());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -2073,13 +2071,13 @@ export const SimpleWithMap_BoolLookupEntry = {
       writer.uint32(8).bool(message.key);
     }
     if (message.value !== 0) {
-      writer.uint32(16).int64(message.value.toString());
+      writer.uint32(16).int64(message.value);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): SimpleWithMap_BoolLookupEntry {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): SimpleWithMap_BoolLookupEntry {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithMap_BoolLookupEntry();
     while (reader.pos < end) {
@@ -2097,13 +2095,13 @@ export const SimpleWithMap_BoolLookupEntry = {
             break;
           }
 
-          message.value = longToNumber(reader.int64() as Long);
+          message.value = longToNumber(reader.int64());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -2151,8 +2149,8 @@ export const SimpleWithSnakeCaseMap = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): SimpleWithSnakeCaseMap {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): SimpleWithSnakeCaseMap {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithSnakeCaseMap();
     while (reader.pos < end) {
@@ -2172,7 +2170,7 @@ export const SimpleWithSnakeCaseMap = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -2235,8 +2233,8 @@ export const SimpleWithSnakeCaseMap_EntitiesByIdEntry = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): SimpleWithSnakeCaseMap_EntitiesByIdEntry {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): SimpleWithSnakeCaseMap_EntitiesByIdEntry {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithSnakeCaseMap_EntitiesByIdEntry();
     while (reader.pos < end) {
@@ -2260,7 +2258,7 @@ export const SimpleWithSnakeCaseMap_EntitiesByIdEntry = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -2312,8 +2310,8 @@ export const SimpleWithMapOfEnums = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): SimpleWithMapOfEnums {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): SimpleWithMapOfEnums {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithMapOfEnums();
     while (reader.pos < end) {
@@ -2333,7 +2331,7 @@ export const SimpleWithMapOfEnums = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -2396,8 +2394,8 @@ export const SimpleWithMapOfEnums_EnumsByIdEntry = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): SimpleWithMapOfEnums_EnumsByIdEntry {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): SimpleWithMapOfEnums_EnumsByIdEntry {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleWithMapOfEnums_EnumsByIdEntry();
     while (reader.pos < end) {
@@ -2421,7 +2419,7 @@ export const SimpleWithMapOfEnums_EnumsByIdEntry = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -2471,8 +2469,8 @@ export const PingRequest = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): PingRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): PingRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePingRequest();
     while (reader.pos < end) {
@@ -2489,7 +2487,7 @@ export const PingRequest = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -2528,8 +2526,8 @@ export const PingResponse = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): PingResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): PingResponse {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePingResponse();
     while (reader.pos < end) {
@@ -2546,7 +2544,7 @@ export const PingResponse = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -2602,37 +2600,37 @@ export const Numbers = {
       writer.uint32(24).int32(message.int32);
     }
     if (message.int64 !== 0) {
-      writer.uint32(32).int64(message.int64.toString());
+      writer.uint32(32).int64(message.int64);
     }
     if (message.uint32 !== 0) {
       writer.uint32(40).uint32(message.uint32);
     }
     if (message.uint64 !== 0) {
-      writer.uint32(48).uint64(message.uint64.toString());
+      writer.uint32(48).uint64(message.uint64);
     }
     if (message.sint32 !== 0) {
       writer.uint32(56).sint32(message.sint32);
     }
     if (message.sint64 !== 0) {
-      writer.uint32(64).sint64(message.sint64.toString());
+      writer.uint32(64).sint64(message.sint64);
     }
     if (message.fixed32 !== 0) {
       writer.uint32(77).fixed32(message.fixed32);
     }
     if (message.fixed64 !== 0) {
-      writer.uint32(81).fixed64(message.fixed64.toString());
+      writer.uint32(81).fixed64(message.fixed64);
     }
     if (message.sfixed32 !== 0) {
       writer.uint32(93).sfixed32(message.sfixed32);
     }
     if (message.sfixed64 !== 0) {
-      writer.uint32(97).sfixed64(message.sfixed64.toString());
+      writer.uint32(97).sfixed64(message.sfixed64);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Numbers {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Numbers {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNumbers();
     while (reader.pos < end) {
@@ -2664,7 +2662,7 @@ export const Numbers = {
             break;
           }
 
-          message.int64 = longToNumber(reader.int64() as Long);
+          message.int64 = longToNumber(reader.int64());
           continue;
         case 5:
           if (tag !== 40) {
@@ -2678,7 +2676,7 @@ export const Numbers = {
             break;
           }
 
-          message.uint64 = longToNumber(reader.uint64() as Long);
+          message.uint64 = longToNumber(reader.uint64());
           continue;
         case 7:
           if (tag !== 56) {
@@ -2692,7 +2690,7 @@ export const Numbers = {
             break;
           }
 
-          message.sint64 = longToNumber(reader.sint64() as Long);
+          message.sint64 = longToNumber(reader.sint64());
           continue;
         case 9:
           if (tag !== 77) {
@@ -2706,7 +2704,7 @@ export const Numbers = {
             break;
           }
 
-          message.fixed64 = longToNumber(reader.fixed64() as Long);
+          message.fixed64 = longToNumber(reader.fixed64());
           continue;
         case 11:
           if (tag !== 93) {
@@ -2720,13 +2718,13 @@ export const Numbers = {
             break;
           }
 
-          message.sfixed64 = longToNumber(reader.sfixed64() as Long);
+          message.sfixed64 = longToNumber(reader.sfixed64());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -2848,8 +2846,8 @@ export const SimpleButOptional = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): SimpleButOptional {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): SimpleButOptional {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleButOptional();
     while (reader.pos < end) {
@@ -2908,7 +2906,7 @@ export const SimpleButOptional = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -2980,8 +2978,8 @@ export const Empty = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Empty {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Empty {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEmpty();
     while (reader.pos < end) {
@@ -2991,7 +2989,7 @@ export const Empty = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -3030,7 +3028,7 @@ export class PingServiceClientImpl implements PingService {
   ping(request: PingRequest): Promise<PingResponse> {
     const data = PingRequest.encode(request).finish();
     const promise = this.rpc.request(this.service, "ping", data);
-    return promise.then((data) => PingResponse.decode(_m0.Reader.create(data)));
+    return promise.then((data) => PingResponse.decode(new BinaryReader(data)));
   }
 }
 
@@ -3097,19 +3095,15 @@ function fromJsonTimestamp(o: any): Date {
   }
 }
 
-function longToNumber(long: Long): number {
-  if (long.gt(globalThis.Number.MAX_SAFE_INTEGER)) {
+function longToNumber(int64: { toString(): string }): number {
+  const num = globalThis.Number(int64.toString());
+  if (num > globalThis.Number.MAX_SAFE_INTEGER) {
     throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
-  if (long.lt(globalThis.Number.MIN_SAFE_INTEGER)) {
+  if (num < globalThis.Number.MIN_SAFE_INTEGER) {
     throw new globalThis.Error("Value is smaller than Number.MIN_SAFE_INTEGER");
   }
-  return long.toNumber();
-}
-
-if (_m0.util.Long !== Long) {
-  _m0.util.Long = Long as any;
-  _m0.configure();
+  return num;
 }
 
 function isObject(value: any): boolean {

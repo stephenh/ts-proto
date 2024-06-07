@@ -2,8 +2,7 @@
 // source: test.proto
 
 /* eslint-disable */
-import { BinaryWriter } from "@bufbuild/protobuf/wire";
-import * as _m0 from "protobufjs/minimal";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
 export const protobufPackage = "";
 
@@ -38,8 +37,8 @@ export const TPartialMessage = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): TPartialMessage {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): TPartialMessage {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTPartialMessage();
     while (reader.pos < end) {
@@ -56,7 +55,7 @@ export const TPartialMessage = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -121,8 +120,8 @@ export const TPartial = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): TPartial {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): TPartial {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTPartial();
     while (reader.pos < end) {
@@ -209,7 +208,7 @@ export const TPartial = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -309,8 +308,8 @@ export const TPartial_MapEntry = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): TPartial_MapEntry {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): TPartial_MapEntry {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTPartial_MapEntry();
     while (reader.pos < end) {
@@ -334,7 +333,7 @@ export const TPartial_MapEntry = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },

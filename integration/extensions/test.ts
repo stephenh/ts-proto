@@ -2,7 +2,7 @@
 // source: test.proto
 
 /* eslint-disable */
-import { BinaryWriter } from "@bufbuild/protobuf/wire";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 import Long = require("long");
 import * as _m0 from "protobufjs/minimal";
 
@@ -103,8 +103,8 @@ export const Extendable = {
     }
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Extendable {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Extendable {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseExtendable();
     while (reader.pos < end) {
@@ -121,9 +121,7 @@ export const Extendable = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      const startPos = reader.pos;
-      reader.skipType(tag & 7);
-      const buf = reader.buf.slice(startPos, reader.pos);
+      const buf = reader.skip(tag & 7);
 
       if (message._unknownFields === undefined) {
         message._unknownFields = {};
@@ -216,7 +214,7 @@ export const Nested = {
     decode: (tag: number, input: Uint8Array[]): Nested[] => {
       const values: Nested[] = [];
       for (const buffer of input) {
-        const reader = _m0.Reader.create(buffer);
+        const reader = new BinaryReader(buffer);
         values.push(Nested.decode(reader, reader.uint32()));
       }
 
@@ -239,8 +237,8 @@ export const Nested = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Nested {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Nested {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNested();
     while (reader.pos < end) {
@@ -257,9 +255,7 @@ export const Nested = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      const startPos = reader.pos;
-      reader.skipType(tag & 7);
-      const buf = reader.buf.slice(startPos, reader.pos);
+      const buf = reader.skip(tag & 7);
 
       if (message._unknownFields === undefined) {
         message._unknownFields = {};
@@ -321,8 +317,8 @@ export const Group = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Group {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Group {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGroup();
     while (reader.pos < end) {
@@ -346,9 +342,7 @@ export const Group = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      const startPos = reader.pos;
-      reader.skipType(tag & 7);
-      const buf = reader.buf.slice(startPos, reader.pos);
+      const buf = reader.skip(tag & 7);
 
       if (message._unknownFields === undefined) {
         message._unknownFields = {};
@@ -414,7 +408,7 @@ export const packed: Extension<number[]> = {
   decode: (tag: number, input: Uint8Array[]): number[] => {
     const values: number[] = [];
     for (const buffer of input) {
-      const reader = _m0.Reader.create(buffer);
+      const reader = new BinaryReader(buffer);
       if (tag == 42) {
         const end2 = reader.uint32() + reader.pos;
         while (reader.pos < end2) {
@@ -449,7 +443,7 @@ export const repeated: Extension<number[]> = {
   decode: (tag: number, input: Uint8Array[]): number[] => {
     const values: number[] = [];
     for (const buffer of input) {
-      const reader = _m0.Reader.create(buffer);
+      const reader = new BinaryReader(buffer);
       if (tag == 50) {
         const end2 = reader.uint32() + reader.pos;
         while (reader.pos < end2) {
@@ -479,7 +473,7 @@ export const bytes: Extension<Uint8Array> = {
     return encoded;
   },
   decode: (tag: number, input: Uint8Array[]): Uint8Array => {
-    const reader = _m0.Reader.create(input[input.length - 1] ?? fail());
+    const reader = new BinaryReader(input[input.length - 1] ?? fail());
     return reader.bytes();
   },
 };
@@ -499,7 +493,7 @@ export const string: Extension<string> = {
     return encoded;
   },
   decode: (tag: number, input: Uint8Array[]): string => {
-    const reader = _m0.Reader.create(input[input.length - 1] ?? fail());
+    const reader = new BinaryReader(input[input.length - 1] ?? fail());
     return reader.string();
   },
 };
@@ -519,8 +513,8 @@ export const long: Extension<Long> = {
     return encoded;
   },
   decode: (tag: number, input: Uint8Array[]): Long => {
-    const reader = _m0.Reader.create(input[input.length - 1] ?? fail());
-    return reader.int64() as Long;
+    const reader = new BinaryReader(input[input.length - 1] ?? fail());
+    return Long.fromString(reader.int64().toString());
   },
 };
 
@@ -539,8 +533,8 @@ export const fixed: Extension<Long> = {
     return encoded;
   },
   decode: (tag: number, input: Uint8Array[]): Long => {
-    const reader = _m0.Reader.create(input[input.length - 1] ?? fail());
-    return reader.fixed64() as Long;
+    const reader = new BinaryReader(input[input.length - 1] ?? fail());
+    return Long.fromString(reader.fixed64().toString(), true);
   },
 };
 
@@ -559,7 +553,7 @@ export const enumField: Extension<Enum> = {
     return encoded;
   },
   decode: (tag: number, input: Uint8Array[]): Enum => {
-    const reader = _m0.Reader.create(input[input.length - 1] ?? fail());
+    const reader = new BinaryReader(input[input.length - 1] ?? fail());
     return reader.int32() as any;
   },
 };
@@ -577,7 +571,7 @@ export const group: Extension<Group> = {
     return encoded;
   },
   decode: (tag: number, input: Uint8Array[]): Group => {
-    const reader = _m0.Reader.create(input[input.length - 1] ?? fail());
+    const reader = new BinaryReader(input[input.length - 1] ?? fail());
     return Group.decode(reader);
   },
 };

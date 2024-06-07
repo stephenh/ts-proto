@@ -2,11 +2,10 @@
 // source: mapping.proto
 
 /* eslint-disable */
-import { BinaryWriter } from "@bufbuild/protobuf/wire";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 import { Duration } from "@google/protobuf/duration";
 import { Empty } from "@google/protobuf/empty";
 import { VeryVerySecret } from "@myorg/proto-npm-package";
-import * as _m0 from "protobufjs/minimal";
 import { Struct } from "wkt/google/protobuf/struct";
 import { Timestamp } from "./google/protobuf/timestamp";
 
@@ -44,8 +43,8 @@ export const WithEmtpy = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): WithEmtpy {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): WithEmtpy {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseWithEmtpy();
     while (reader.pos < end) {
@@ -62,7 +61,7 @@ export const WithEmtpy = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -101,8 +100,8 @@ export const WithStruct = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): WithStruct {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): WithStruct {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseWithStruct();
     while (reader.pos < end) {
@@ -119,7 +118,7 @@ export const WithStruct = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -158,8 +157,8 @@ export const WithTimestamp = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): WithTimestamp {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): WithTimestamp {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseWithTimestamp();
     while (reader.pos < end) {
@@ -176,7 +175,7 @@ export const WithTimestamp = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -227,8 +226,8 @@ export const WithAll = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): WithAll {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): WithAll {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseWithAll();
     while (reader.pos < end) {
@@ -273,7 +272,7 @@ export const WithAll = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
