@@ -3248,14 +3248,14 @@ export const UninterpretedOption = {
             break;
           }
 
-          message.positiveIntValue = longToNumber(reader.uint64());
+          message.positiveIntValue = longToNumber(reader.uint64() as Long);
           continue;
         case 5:
           if (tag !== 40) {
             break;
           }
 
-          message.negativeIntValue = longToNumber(reader.int64());
+          message.negativeIntValue = longToNumber(reader.int64() as Long);
           continue;
         case 6:
           if (tag !== 49) {

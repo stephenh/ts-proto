@@ -50,14 +50,14 @@ export const FieldOption = {
             break;
           }
 
-          message.numberField = longToNumber(reader.int64());
+          message.numberField = longToNumber(reader.int64() as Long);
           continue;
         case 3:
           if (tag !== 24) {
             break;
           }
 
-          message.stringField = longToString(reader.int64());
+          message.stringField = longToString(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {

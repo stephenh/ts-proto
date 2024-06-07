@@ -66,21 +66,21 @@ export const Int64FieldOption = {
             break;
           }
 
-          message.normalField = longToNumber(reader.int64());
+          message.normalField = longToNumber(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 16) {
             break;
           }
 
-          message.numberField = longToNumber(reader.int64());
+          message.numberField = longToNumber(reader.int64() as Long);
           continue;
         case 3:
           if (tag !== 24) {
             break;
           }
 
-          message.stringField = longToString(reader.int64());
+          message.stringField = longToString(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -155,21 +155,21 @@ export const UInt64FieldOption = {
             break;
           }
 
-          message.normalField = longToNumber(reader.uint64());
+          message.normalField = longToNumber(reader.uint64() as Long);
           continue;
         case 2:
           if (tag !== 16) {
             break;
           }
 
-          message.numberField = longToNumber(reader.uint64());
+          message.numberField = longToNumber(reader.uint64() as Long);
           continue;
         case 3:
           if (tag !== 24) {
             break;
           }
 
-          message.stringField = longToString(reader.uint64());
+          message.stringField = longToString(reader.uint64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -244,21 +244,21 @@ export const SInt64FieldOption = {
             break;
           }
 
-          message.normalField = longToNumber(reader.sint64());
+          message.normalField = longToNumber(reader.sint64() as Long);
           continue;
         case 2:
           if (tag !== 16) {
             break;
           }
 
-          message.numberField = longToNumber(reader.sint64());
+          message.numberField = longToNumber(reader.sint64() as Long);
           continue;
         case 3:
           if (tag !== 24) {
             break;
           }
 
-          message.stringField = longToString(reader.sint64());
+          message.stringField = longToString(reader.sint64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -333,21 +333,21 @@ export const Fixed64FieldOption = {
             break;
           }
 
-          message.normalField = longToNumber(reader.fixed64());
+          message.normalField = longToNumber(reader.fixed64() as Long);
           continue;
         case 2:
           if (tag !== 17) {
             break;
           }
 
-          message.numberField = longToNumber(reader.fixed64());
+          message.numberField = longToNumber(reader.fixed64() as Long);
           continue;
         case 3:
           if (tag !== 25) {
             break;
           }
 
-          message.stringField = longToString(reader.fixed64());
+          message.stringField = longToString(reader.fixed64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -422,21 +422,21 @@ export const SFixed64FieldOption = {
             break;
           }
 
-          message.normalField = longToNumber(reader.sfixed64());
+          message.normalField = longToNumber(reader.sfixed64() as Long);
           continue;
         case 2:
           if (tag !== 17) {
             break;
           }
 
-          message.numberField = longToNumber(reader.sfixed64());
+          message.numberField = longToNumber(reader.sfixed64() as Long);
           continue;
         case 3:
           if (tag !== 25) {
             break;
           }
 
-          message.stringField = longToString(reader.sfixed64());
+          message.stringField = longToString(reader.sfixed64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {

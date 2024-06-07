@@ -1120,20 +1120,20 @@ function getDecodeReadSnippet(ctx: Context, field: FieldDescriptorProto) {
       if (isJsTypeFieldOption(options, field)) {
         switch (field!.options!.jstype) {
           case FieldOptions_JSType.JS_NUMBER:
-            readSnippet = code`${utils.longToNumber}(${readSnippet})`;
+            readSnippet = code`${utils.longToNumber}(${readSnippet} as Long)`;
             break;
           case FieldOptions_JSType.JS_STRING:
-            readSnippet = code`${utils.longToString}(${readSnippet})`;
+            readSnippet = code`${utils.longToString}(${readSnippet} as Long)`;
             break;
         }
       } else if (options.forceLong === LongOption.LONG) {
         readSnippet = code`${readSnippet} as Long`;
       } else if (options.forceLong === LongOption.STRING) {
-        readSnippet = code`${utils.longToString}(${readSnippet})`;
+        readSnippet = code`${utils.longToString}(${readSnippet} as Long)`;
       } else if (options.forceLong === LongOption.BIGINT) {
-        readSnippet = code`${utils.longToBigint}(${readSnippet})`;
+        readSnippet = code`${utils.longToBigint}(${readSnippet} as Long)`;
       } else {
-        readSnippet = code`${utils.longToNumber}(${readSnippet})`;
+        readSnippet = code`${utils.longToNumber}(${readSnippet} as Long)`;
       }
     } else if (isEnum(field)) {
       if (options.stringEnums) {

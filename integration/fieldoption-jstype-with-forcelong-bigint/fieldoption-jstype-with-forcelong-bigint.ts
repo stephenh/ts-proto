@@ -51,21 +51,21 @@ export const FieldOption = {
             break;
           }
 
-          message.normalField = longToBigint(reader.int64());
+          message.normalField = longToBigint(reader.int64() as Long);
           continue;
         case 2:
           if (tag !== 16) {
             break;
           }
 
-          message.numberField = longToNumber(reader.int64());
+          message.numberField = longToNumber(reader.int64() as Long);
           continue;
         case 3:
           if (tag !== 24) {
             break;
           }
 
-          message.stringField = longToString(reader.int64());
+          message.stringField = longToString(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {

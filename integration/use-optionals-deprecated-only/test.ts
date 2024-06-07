@@ -214,7 +214,7 @@ export const OptionalsTest = {
             break;
           }
 
-          message.long = longToNumber(reader.int64());
+          message.long = longToNumber(reader.int64() as Long);
           continue;
         case 4:
           if (tag !== 32) {
@@ -290,7 +290,7 @@ export const OptionalsTest = {
           break;
         case 10:
           if (tag === 80) {
-            message.repLong!.push(longToNumber(reader.int64()));
+            message.repLong!.push(longToNumber(reader.int64() as Long));
 
             continue;
           }
@@ -298,7 +298,7 @@ export const OptionalsTest = {
           if (tag === 82) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
-              message.repLong!.push(longToNumber(reader.int64()));
+              message.repLong!.push(longToNumber(reader.int64() as Long));
             }
 
             continue;
@@ -355,7 +355,7 @@ export const OptionalsTest = {
             break;
           }
 
-          message.optLong = longToNumber(reader.int64());
+          message.optLong = longToNumber(reader.int64() as Long);
           continue;
         case 17:
           if (tag !== 136) {

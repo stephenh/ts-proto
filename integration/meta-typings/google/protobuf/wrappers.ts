@@ -193,7 +193,7 @@ export const Int64Value = {
             break;
           }
 
-          message.value = longToNumber(reader.int64());
+          message.value = longToNumber(reader.int64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
@@ -229,7 +229,7 @@ export const UInt64Value = {
             break;
           }
 
-          message.value = longToNumber(reader.uint64());
+          message.value = longToNumber(reader.uint64() as Long);
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
