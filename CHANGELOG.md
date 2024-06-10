@@ -1,3 +1,10 @@
+# [1.178.0](https://github.com/stephenh/ts-proto/compare/v1.177.0...v1.178.0) (2024-06-07)
+
+
+### Features
+
+* `no-file-descriptor` setting for outputSchema option ([#1047](https://github.com/stephenh/ts-proto/issues/1047)) ([c54f06c](https://github.com/stephenh/ts-proto/commit/c54f06c4a7dd766abf3f91932b1e4cdf38b7f346))
+
 # [1.177.0](https://github.com/stephenh/ts-proto/compare/v1.176.3...v1.177.0) (2024-06-07)
 
 

@@ -434,7 +434,7 @@ Generated code will be placed in the Gradle build directory.
 
 - With `--ts_proto_opt=annotateFilesWithVersion=false`, the generated files will not contain the versions of `protoc` and `ts-proto` used to generate the file. This option is normally set to `true`, such that files list the versions used.
 
-- With `--ts_proto_opt=outputSchema=true`, meta typings will be generated that can later be used in other code generators.
+- With `--ts_proto_opt=outputSchema=true`, meta typings will be generated that can later be used in other code generators. If outputSchema is instead specified to be `no-file-descriptor` then we do not include the file descriptor in the generated schema. This is useful if you are trying to minimize the size of the generated schema.
 
 - With `--ts_proto_opt=outputTypeAnnotations=true`, each message will be given a `$type` field containing its fully-qualified name. You can use `--ts_proto_opt=outputTypeAnnotations=static-only` to omit it from the `interface` declaration, or `--ts_proto_opt=outputTypeAnnotations=optional` to make it an optional property on the `interface` definition. The latter option may be useful if you want to use the `$type` field for runtime type checking on responses from a server.
 
