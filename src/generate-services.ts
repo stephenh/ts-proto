@@ -445,15 +445,17 @@ export function generateRpcType(ctx: Context, hasStreamingMethods: boolean): Cod
   const maybeMetadataParam = options.metadataType || options.addGrpcMetadata ? `metadata?: ${metadataType},` : "";
   const maybeAbortSignalParam = options.useAbortSignal ? "abortSignal?: AbortSignal," : "";
   const messageType = impFile(options, "MessageType@./typeRegistry");
-  const maybeAddMessageTypes = options.outputClientImpl === "generic" ? code`reqType: ${messageType}, respType: ${messageType},` : code``;
   
-  const requestType = options.outputClientImpl === "generic" ? "Req" : "Uint8Array";
-  const responseType = options.outputClientImpl === "generic" ? "Res" : "Uint8Array";
-  const typeParameters = options.outputClientImpl === "generic" ? "<Req, Res>" : "";
-  const requestParam = options.outputClientImpl === "generic" ? "request" : "data";
+  const outputGenericClient = options.outputClientImpl === "generic";
+  
+  const maybeMessageTypeParams = outputGenericClient ? code`reqType: ${messageType}, respType: ${messageType},` : code``;
+  const maybeTypeParameters = outputGenericClient  ? "<Req, Res>" : "";
+  const requestType = outputGenericClient ? "Req" : "Uint8Array";
+  const responseType = outputGenericClient ? "Res" : "Uint8Array";
+  const requestParam = outputGenericClient ? "request" : "data";
   
   const methods: Code[][]= [];
-  methods.push([code`request${typeParameters}`, code`${requestType}`, code`Promise<${responseType}>`]);
+  methods.push([code`request${maybeTypeParameters}`, code`${requestType}`, code`Promise<${responseType}>`]);
   const additionalMethods = [];
   if (options.rpcBeforeRequest) {
     additionalMethods.push(
@@ -473,10 +475,10 @@ export function generateRpcType(ctx: Context, hasStreamingMethods: boolean): Cod
 
   if (hasStreamingMethods) {
     const observable = observableType(ctx, true);
-    methods.push([code`clientStreamingRequest${typeParameters}`, code`${observable}<${requestType}>`, code`Promise<${responseType}>`]);
-    methods.push([code`serverStreamingRequest${typeParameters}`, code`${requestType}`, code`${observable}<${responseType}>`]);
+    methods.push([code`clientStreamingRequest${maybeTypeParameters}`, code`${observable}<${requestType}>`, code`Promise<${responseType}>`]);
+    methods.push([code`serverStreamingRequest${maybeTypeParameters}`, code`${requestType}`, code`${observable}<${responseType}>`]);
     methods.push([
-      code`bidirectionalStreamingRequest${typeParameters}`,
+      code`bidirectionalStreamingRequest${maybeTypeParameters}`,
       code`${observable}<${requestType}>`,
       code`${observable}<${responseType}>`,
     ]);
@@ -491,7 +493,7 @@ export function generateRpcType(ctx: Context, hasStreamingMethods: boolean): Cod
         service: string,
         method: string,
         ${requestParam}: ${method[1]},
-        ${maybeAddMessageTypes}
+        ${maybeMessageTypeParams}
         ${maybeMetadataParam}
         ${maybeAbortSignalParam}
       ): ${method[2]};`);
@@ -499,30 +501,6 @@ export function generateRpcType(ctx: Context, hasStreamingMethods: boolean): Cod
   additionalMethods.forEach((method) => chunks.push(method));
   chunks.push(code`    }`);
   return joinCode(chunks, { on: "\n" });
-}
-
-export function generateCodecType(ctx: Context): Code {
-  const {options} = ctx;
-
-  const Reader = impFile(ctx.options, "Reader@protobufjs/minimal");
-  const Writer = impFile(ctx.options, "Writer@protobufjs/minimal");
-
-  // TODO: respect options for only having some types
-  const chunks: Code[] = [];
-  chunks.push(code`export interface Codec<T> {`);
-  if (options.outputEncodeMethods) {
-    chunks.push(code`  encode(message: T, writer: ${Writer}): ${Writer}`);
-    chunks.push(code`  decode(input: Uint8Array | ${Reader}, length?: number): T`);
-  }
-  if (options.outputJsonMethods) {
-    chunks.push(code`  fromJSON(object: any): T`);
-    chunks.push(code`  toJSON(message: T): unknown`);
-  }
-  if (options.outputPartialMethods) {
-    chunks.push(code`  fromPartial(object: DeepPartial<T>): T`);
-  }
-  chunks.push(code`}`);
-  return joinCode(chunks, {on: "\n"});
 }
 
 export function generateDataLoadersType(): Code {

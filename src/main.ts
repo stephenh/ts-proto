@@ -30,7 +30,6 @@ import {
   generateDataLoaderOptionsType,
   generateDataLoadersType,
   generateRpcType,
-  generateCodecType,
   generateService,
   generateServiceClientImpl,
 } from "./generate-services";
@@ -345,7 +344,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
         // interfaces are fairly similar so we share the same service interface.
         chunks.push(generateService(ctx, fileDesc, sInfo, serviceDesc));
 
-        if (options.outputClientImpl === true) {
+        if (options.outputClientImpl === true || options.outputClientImpl === "generic") {
           chunks.push(generateServiceClientImpl(ctx, fileDesc, serviceDesc));
         } else if (options.outputClientImpl === "grpc-web") {
           chunks.push(generateGrpcClientImpl(ctx, fileDesc, serviceDesc));
@@ -358,9 +357,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
               hasServerStreamingMethods = true;
             }
           });
-        } else if (options.outputClientImpl === "generic") {
-          chunks.push(generateServiceClientImpl(ctx, fileDesc, serviceDesc));
-        }
+        } 
       }
     });
 
@@ -376,14 +373,11 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
     options.outputClientImpl &&
     fileDesc.service.length > 0
   ) {
-    if (options.outputClientImpl === true) {
+    if (options.outputClientImpl === true || options.outputClientImpl === "generic") {
       chunks.push(generateRpcType(ctx, hasStreamingMethods));
     } else if (options.outputClientImpl === "grpc-web") {
       chunks.push(addGrpcWebMisc(ctx, hasServerStreamingMethods));
-    } else if (options.outputClientImpl === "generic") {
-      chunks.push(generateRpcType(ctx, hasStreamingMethods));
-      chunks.push(generateCodecType(ctx));
-    }
+    } 
   }
 
   if (options.context) {
