@@ -247,7 +247,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
             }
           }
         }
-        if (options.useAsyncIterable) {
+        if (options.useAsyncIterable && options.outputClientImpl !== "generic") {
           staticMembers.push(generateEncodeTransform(ctx.utils, fullName));
           staticMembers.push(generateDecodeTransform(ctx.utils, fullName));
         }

@@ -92,5 +92,4 @@ describe('generic-client', () => {
 
     expect(rpc.bidirectionalStreamingRequest).toHaveBeenCalledWith(BasicServiceServiceName, "BidiStreaming", clientStream, GetBasicRequest, GetBasicResponse);
   });
-  // FIXME: Add tests which verifies before/after rpc methods are called
 });
