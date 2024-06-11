@@ -206,12 +206,12 @@ function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProt
     if (options.rpcBeforeRequest) {
       beforeRequest = generateBeforeRequest(methodDesc.name);
       if (methodDesc.clientStreaming) {
-        beforeRequest = code`const reqStream = request.pipe(${imp("map@rxjs/operators")}(request => {${beforeRequest}}))`;
+        beforeRequest = code`const reqStream = request.pipe(${imp("map@rxjs/operators")}(request => {${beforeRequest} return request;}))`;
         requestParamName = 'reqStream';
       }
     }
 
-    let requestInvocation = code`this.rpc.${rpcMethod}(
+    let requestInvocation = code`this.rpc.${rpcMethod}<${rawInputType},${responseType(ctx, methodDesc, {keepValueType: true})}>(
           ${maybeCtx}
           this.service,
           "${methodDesc.name}",
@@ -228,6 +228,9 @@ function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProt
       }
       return response;
     `;
+      if (methodDesc.serverStreaming) {
+        afterRequest = code`return response.pipe(request => {${afterRequest}})`;
+      }
     } else {
       requestInvocation = code `return ${requestInvocation}`;
     }
