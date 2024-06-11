@@ -125,7 +125,7 @@ function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProt
   const maybeMetadata = options.addGrpcMetadata ? "metadata," : "";
   const maybeAbortSignal = options.useAbortSignal ? "abortSignal || undefined," : "";
 
-  let errorHandler;
+  let errorHandler: Code;
   if (options.rpcErrorHandler) {
     errorHandler = code`
       if (this.rpc.handleError) {
@@ -133,47 +133,6 @@ function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProt
       }
       return Promise.reject(error);
     `;
-  }
-
-  let encode = code`${rawInputType}.encode(request).finish()`;
-  let beforeRequest;
-  if (options.rpcBeforeRequest && !methodDesc.clientStreaming) {
-    beforeRequest = generateBeforeRequest(methodDesc.name);
-  } else if (methodDesc.clientStreaming && options.rpcBeforeRequest) {
-    encode = code`{const encodedRequest = ${encode}; ${generateBeforeRequest(
-      methodDesc.name,
-      "encodedRequest",
-    )}; return encodedRequest}`;
-  }
-  let decode = code`${rawOutputType}.decode(${Reader}.create(data))`;
-  if (options.rpcAfterResponse) {
-    decode = code`
-      const response = ${rawOutputType}.decode(${Reader}.create(data));
-      if (this.rpc.afterResponse) {
-        this.rpc.afterResponse(this.service, "${methodDesc.name}", response);
-      }
-      return response;
-    `;
-  }
-
-  // if (options.useDate && rawOutputType.toString().includes("Timestamp")) {
-  //   decode = code`data => ${utils.fromTimestamp}(${rawOutputType}.decode(${Reader}.create(data)))`;
-  // }
-  if (methodDesc.clientStreaming) {
-    if (options.useAsyncIterable) {
-      encode = code`${rawInputType}.encodeTransform(request)`;
-    } else {
-      encode = code`request.pipe(${imp("map@rxjs/operators")}(request => ${encode}))`;
-    }
-  }
-
-  const returnStatement = createDefaultServiceReturn(ctx, methodDesc, decode, errorHandler);
-
-  let returnVariable: string;
-  if (options.returnObservable || methodDesc.serverStreaming) {
-    returnVariable = "result";
-  } else {
-    returnVariable = "promise";
   }
 
   let rpcMethod: string;
@@ -187,28 +146,49 @@ function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProt
     rpcMethod = "request";
   }
 
-  if (options.outputClientImpl === "generic") {
-    // FIXME: This is basically a hack
-    return code`
-    ${methodDesc.formattedName}(
-      ${joinCode(params, { on: "," })}
-    ): ${responsePromiseOrObservable(ctx, methodDesc)} {
-      return this.rpc.${rpcMethod}(
-        ${maybeCtx}
-        this.service,
-        "${methodDesc.name}",
-        request,
-        ${rawInputType},
-        ${responseType(ctx, methodDesc, { keepValueType: true })}
-      );
+  function generateRpcBody() : Code {
+    let encode = code`${rawInputType}.encode(request).finish()`;
+    let beforeRequest;
+    if (options.rpcBeforeRequest && !methodDesc.clientStreaming) {
+      beforeRequest = generateBeforeRequest(methodDesc.name);
+    } else if (methodDesc.clientStreaming && options.rpcBeforeRequest) {
+      encode = code`{const encodedRequest = ${encode}; ${generateBeforeRequest(
+          methodDesc.name,
+          "encodedRequest",
+      )}; return encodedRequest}`;
     }
-  ` 
-  }
-  return code`
-    ${methodDesc.formattedName}(
-      ${joinCode(params, { on: "," })}
-    ): ${responsePromiseOrObservable(ctx, methodDesc)} {
-      const data = ${encode}; ${beforeRequest ? beforeRequest : ""}
+    let decode = code`${rawOutputType}.decode(${Reader}.create(data))`;
+    if (options.rpcAfterResponse) {
+      decode = code`
+      const response = ${rawOutputType}.decode(${Reader}.create(data));
+      if (this.rpc.afterResponse) {
+        this.rpc.afterResponse(this.service, "${methodDesc.name}", response);
+      }
+      return response;
+    `;
+    }
+
+    // if (options.useDate && rawOutputType.toString().includes("Timestamp")) {
+    //   decode = code`data => ${utils.fromTimestamp}(${rawOutputType}.decode(${Reader}.create(data)))`;
+    // }
+    if (methodDesc.clientStreaming) {
+      if (options.useAsyncIterable) {
+        encode = code`${rawInputType}.encodeTransform(request)`;
+      } else {
+        encode = code`request.pipe(${imp("map@rxjs/operators")}(request => ${encode}))`;
+      }
+    }
+
+    const returnStatement = createDefaultServiceReturn(ctx, methodDesc, decode, errorHandler);
+
+    let returnVariable: string;
+    if (options.returnObservable || methodDesc.serverStreaming) {
+      returnVariable = "result";
+    } else {
+      returnVariable = "promise";
+    }
+
+    return code`      const data = ${encode}; ${beforeRequest ? beforeRequest : ""}
       const ${returnVariable} = this.rpc.${rpcMethod}(
         ${maybeCtx}
         this.service,
@@ -217,7 +197,71 @@ function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProt
         ${maybeMetadata}
         ${maybeAbortSignal}
       );
-      return ${returnStatement};
+      return ${returnStatement};`
+  }
+
+  function generateGenericRpcBody(): Code {
+    let beforeRequest = code``;
+    let requestParamName = 'request';
+    if (options.rpcBeforeRequest) {
+      beforeRequest = generateBeforeRequest(methodDesc.name);
+      if (methodDesc.clientStreaming) {
+        beforeRequest = code`const reqStream = request.pipe(${imp("map@rxjs/operators")}(request => {${beforeRequest}}))`;
+        requestParamName = 'reqStream';
+      }
+    }
+
+    let requestInvocation = code`this.rpc.${rpcMethod}(
+          ${maybeCtx}
+          this.service,
+          "${methodDesc.name}",
+          ${requestParamName},
+          ${rawInputType},
+          ${responseType(ctx, methodDesc, {keepValueType: true})});`;
+      
+    let afterRequest = code``;
+    if (options.rpcAfterResponse) {
+      requestInvocation = code`const response = ${requestInvocation}`;
+      afterRequest = code`
+      if (this.rpc.afterResponse) {
+        this.rpc.afterResponse(this.service, "${methodDesc.name}", response);
+      }
+      return response;
+    `;
+    } else {
+      requestInvocation = code `return ${requestInvocation}`;
+    }
+
+    // if (options.useDate && rawOutputType.toString().includes("Timestamp")) {
+    //   decode = code`data => ${utils.fromTimestamp}(${rawOutputType}.decode(${Reader}.create(data)))`;
+    // }
+    // if (methodDesc.clientStreaming) {
+      // if (options.useAsyncIterable) {
+      //   encode = code`${rawInputType}.encodeTransform(request)`;
+      // } else {
+    //   }
+    // }
+
+    // const returnStatement = createDefaultServiceReturn(ctx, methodDesc, decode, errorHandler);
+
+    // let returnVariable: string;
+    // if (options.returnObservable || methodDesc.serverStreaming) {
+    //   returnVariable = "result";
+    // } else {
+    //   returnVariable = "promise";
+    // }
+
+    return code`${beforeRequest}
+        ${requestInvocation}
+        ${afterRequest}`;
+  }
+  
+  const body = options.outputClientImpl === "generic" ? generateGenericRpcBody() : generateRpcBody();
+  return code`
+    ${methodDesc.formattedName}(
+      ${joinCode(params, { on: "," })}
+    ): ${responsePromiseOrObservable(ctx, methodDesc)} {
+      ${body}
     }
   `;
 }
