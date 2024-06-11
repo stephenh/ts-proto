@@ -358,6 +358,8 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
               hasServerStreamingMethods = true;
             }
           });
+        } else if (options.outputClientImpl === "generic") {
+          chunks.push(generateServiceClientImpl(ctx, fileDesc, serviceDesc));
         }
       }
     });
@@ -376,11 +378,11 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
   ) {
     if (options.outputClientImpl === true) {
       chunks.push(generateRpcType(ctx, hasStreamingMethods));
-      if (options.outputGenericClientImpl && !options.onlyTypes) {
-        chunks.push(generateCodecType(ctx));
-      }
     } else if (options.outputClientImpl === "grpc-web") {
       chunks.push(addGrpcWebMisc(ctx, hasServerStreamingMethods));
+    } else if (options.outputClientImpl === "generic") {
+      chunks.push(generateRpcType(ctx, hasStreamingMethods));
+      chunks.push(generateCodecType(ctx));
     }
   }
 

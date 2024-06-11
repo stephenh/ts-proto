@@ -62,7 +62,7 @@ export type Options = {
   constEnums: boolean;
   removeEnumPrefix: boolean;
   enumsAsLiterals: boolean;
-  outputClientImpl: boolean | "grpc-web";
+  outputClientImpl: boolean | "grpc-web" | "generic";
   outputServices: ServiceOption[];
   addGrpcMetadata: boolean;
   metadataType: string | undefined;
@@ -102,7 +102,6 @@ export type Options = {
   useNullAsOptional: boolean;
   annotateFilesWithVersion: boolean;
   noDefaultsForOptionals: boolean;
-  outputGenericClientImpl: boolean;
 };
 
 export function defaultOptions(): Options {
@@ -170,7 +169,6 @@ export function defaultOptions(): Options {
     useNullAsOptional: false,
     annotateFilesWithVersion: true,
     noDefaultsForOptionals: false,
-    outputGenericClientImpl: false,
   };
 }
 
@@ -283,6 +281,10 @@ export function optionsFromParameter(parameter: string | undefined): Options {
   if (options.unrecognizedEnumValue) {
     // Make sure to cast number options to an actual number
     options.unrecognizedEnumValue = Number(options.unrecognizedEnumValue);
+  }
+  
+  if (options.outputClientImpl === "generic") {
+    options.outputTypeRegistry = true;
   }
 
   return options;

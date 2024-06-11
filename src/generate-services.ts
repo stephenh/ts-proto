@@ -145,7 +145,7 @@ function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProt
       "encodedRequest",
     )}; return encodedRequest}`;
   }
-  let decode = options.outputGenericClientImpl ? code`${rawOutputType}.fromJSON(JSON.parse(data))` : code`${rawOutputType}.decode(${Reader}.create(data))`;
+  let decode = code`${rawOutputType}.decode(${Reader}.create(data))`;
   if (options.rpcAfterResponse) {
     decode = code`
       const response = ${rawOutputType}.decode(${Reader}.create(data));
@@ -187,7 +187,7 @@ function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProt
     rpcMethod = "request";
   }
 
-  if (options.outputGenericClientImpl) {
+  if (options.outputClientImpl === "generic") {
     // FIXME: This is basically a hack
     return code`
     ${methodDesc.formattedName}(
@@ -198,7 +198,7 @@ function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProt
         this.service,
         "${methodDesc.name}",
         request,
-        ${inputType},
+        ${rawInputType},
         ${responseType(ctx, methodDesc, { keepValueType: true })}
       );
     }
@@ -444,13 +444,16 @@ export function generateRpcType(ctx: Context, hasStreamingMethods: boolean): Cod
   const maybeContextParam = options.context ? "ctx: Context," : "";
   const maybeMetadataParam = options.metadataType || options.addGrpcMetadata ? `metadata?: ${metadataType},` : "";
   const maybeAbortSignalParam = options.useAbortSignal ? "abortSignal?: AbortSignal," : "";
+  const messageType = impFile(options, "MessageType@./typeRegistry");
+  const maybeAddMessageTypes = options.outputClientImpl === "generic" ? code`reqType: ${messageType}, respType: ${messageType},` : code``;
+  
+  const requestType = options.outputClientImpl === "generic" ? "Req" : "Uint8Array";
+  const responseType = options.outputClientImpl === "generic" ? "Res" : "Uint8Array";
+  const typeParameters = options.outputClientImpl === "generic" ? "<Req, Res>" : "";
+  const requestParam = options.outputClientImpl === "generic" ? "request" : "data";
   
   const methods: Code[][]= [];
-  if (options.outputGenericClientImpl) {
-    methods.push([code`request<Req, Res>`, code`Req, requestCodec: Codec<Req>, responseCodec: Codec<Res>`, code`Promise<Res>`]);
-  } else {
-    methods.push([code`request`, code`Uint8Array`, code`Promise<Uint8Array>`]);
-  }
+  methods.push([code`request${typeParameters}`, code`${requestType}`, code`Promise<${responseType}>`]);
   const additionalMethods = [];
   if (options.rpcBeforeRequest) {
     additionalMethods.push(
@@ -470,24 +473,15 @@ export function generateRpcType(ctx: Context, hasStreamingMethods: boolean): Cod
 
   if (hasStreamingMethods) {
     const observable = observableType(ctx, true);
-    if (options.outputGenericClientImpl) {
-      methods.push([code`clientStreamingRequest<Req, Res>`, code`${observable}<Req>, requestCodec: Codec<Req>, responseCodec: Codec<Res>`, code`Promise<Res>`]);
-      methods.push([code`serverStreamingRequest<Req, Res>`, code`Req, requestCodec: Codec<Req>, responseCodec: Codec<Res>`, code`${observable}<Res>`]);
-      methods.push([
-        code`bidirectionalStreamingRequest<Req, Res>`,
-        code`${observable}<Req>, requestCodec: Codec<Req>, responseCodec: Codec<Res>`,
-        code`${observable}<Res>`,
-      ]);
-    } else {
-      methods.push([code`clientStreamingRequest`, code`${observable}<Uint8Array>`, code`Promise<Uint8Array>`]);
-      methods.push([code`serverStreamingRequest`, code`Uint8Array`, code`${observable}<Uint8Array>`]);
-      methods.push([
-        code`bidirectionalStreamingRequest`,
-        code`${observable}<Uint8Array>`,
-        code`${observable}<Uint8Array>`,
-      ]);
-    }
+    methods.push([code`clientStreamingRequest${typeParameters}`, code`${observable}<${requestType}>`, code`Promise<${responseType}>`]);
+    methods.push([code`serverStreamingRequest${typeParameters}`, code`${requestType}`, code`${observable}<${responseType}>`]);
+    methods.push([
+      code`bidirectionalStreamingRequest${typeParameters}`,
+      code`${observable}<${requestType}>`,
+      code`${observable}<${responseType}>`,
+    ]);
   }
+
   const chunks: Code[] = [];
   chunks.push(code`    interface Rpc${maybeContext} {`);
   methods.forEach((method) => {
@@ -496,7 +490,8 @@ export function generateRpcType(ctx: Context, hasStreamingMethods: boolean): Cod
         ${maybeContextParam}
         service: string,
         method: string,
-        ${options.outputGenericClientImpl ? `req` : `data`}: ${method[1]},
+        ${requestParam}: ${method[1]},
+        ${maybeAddMessageTypes}
         ${maybeMetadataParam}
         ${maybeAbortSignalParam}
       ): ${method[2]};`);
@@ -509,12 +504,15 @@ export function generateRpcType(ctx: Context, hasStreamingMethods: boolean): Cod
 export function generateCodecType(ctx: Context): Code {
   const {options} = ctx;
 
+  const Reader = impFile(ctx.options, "Reader@protobufjs/minimal");
+  const Writer = impFile(ctx.options, "Writer@protobufjs/minimal");
+
   // TODO: respect options for only having some types
   const chunks: Code[] = [];
   chunks.push(code`export interface Codec<T> {`);
   if (options.outputEncodeMethods) {
-    chunks.push(code`  encode(message: T, writer: Writer = Writer.create()): Writer`);
-    chunks.push(code`  decode(input: Uint8Array | Reader, length?: number): T`);
+    chunks.push(code`  encode(message: T, writer: ${Writer}): ${Writer}`);
+    chunks.push(code`  decode(input: Uint8Array | ${Reader}, length?: number): T`);
   }
   if (options.outputJsonMethods) {
     chunks.push(code`  fromJSON(object: any): T`);
