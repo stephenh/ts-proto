@@ -282,7 +282,7 @@ export function optionsFromParameter(parameter: string | undefined): Options {
     // Make sure to cast number options to an actual number
     options.unrecognizedEnumValue = Number(options.unrecognizedEnumValue);
   }
-  
+
   if (options.outputClientImpl === "generic") {
     options.outputTypeRegistry = true;
   }

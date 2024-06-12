@@ -357,7 +357,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
               hasServerStreamingMethods = true;
             }
           });
-        } 
+        }
       }
     });
 
@@ -377,7 +377,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
       chunks.push(generateRpcType(ctx, hasStreamingMethods));
     } else if (options.outputClientImpl === "grpc-web") {
       chunks.push(addGrpcWebMisc(ctx, hasServerStreamingMethods));
-    } 
+    }
   }
 
   if (options.context) {

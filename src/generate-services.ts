@@ -147,22 +147,22 @@ function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProt
   }
   rpcMethod = `this.rpc.${rpcMethod}`;
   const service = "this.service";
-  
+
   const invokeAfterResponse = code`
       if (this.rpc.afterResponse) {
         this.rpc.afterResponse(this.service, "${methodDesc.name}", response);
       }
-      return response;`
-  
-  function generateBinaryRpcBody() : Code {
+      return response;`;
+
+  function generateBinaryRpcBody(): Code {
     let encode = code`${rawInputType}.encode(request).finish()`;
     let beforeRequest;
     if (options.rpcBeforeRequest && !methodDesc.clientStreaming) {
       beforeRequest = generateBeforeRequest(methodDesc.name);
     } else if (methodDesc.clientStreaming && options.rpcBeforeRequest) {
       encode = code`{const encodedRequest = ${encode}; ${generateBeforeRequest(
-          methodDesc.name,
-          "encodedRequest",
+        methodDesc.name,
+        "encodedRequest",
       )}; return encodedRequest}`;
     }
     let decode = code`${rawOutputType}.decode(${Reader}.create(data))`;
@@ -201,45 +201,54 @@ function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProt
         ${maybeMetadata}
         ${maybeAbortSignal}
       );
-      return ${returnStatement};`
+      return ${returnStatement};`;
   }
 
   function generateGenericRpcBody(): Code {
     let beforeRequest = code``;
-    let requestParamName = 'request';
+    let requestParamName = "request";
     if (options.rpcBeforeRequest) {
       beforeRequest = generateBeforeRequest(methodDesc.name);
       if (methodDesc.clientStreaming && !options.useAsyncIterable) {
-        beforeRequest = code`const reqStream = request.pipe(${imp("map@rxjs/operators")}(${arrowFunction("request", code`${beforeRequest} return request;`, false)}))`;
-        requestParamName = 'reqStream';
+        beforeRequest = code`const reqStream = request.pipe(${imp("map@rxjs/operators")}(${arrowFunction(
+          "request",
+          code`${beforeRequest} return request;`,
+          false,
+        )}))`;
+        requestParamName = "reqStream";
       }
     }
 
-    let requestInvocation = code`${rpcMethod}<${rawInputType},${responseType(ctx, methodDesc, {keepValueType: true})}>(
+    let requestInvocation = code`${rpcMethod}<${rawInputType},${responseType(ctx, methodDesc, {
+      keepValueType: true,
+    })}>(
           ${maybeCtx}
           ${service},
           "${methodDesc.name}",
           ${requestParamName},
           ${rawInputType},
-          ${responseType(ctx, methodDesc, {keepValueType: true})})`;
-
+          ${responseType(ctx, methodDesc, { keepValueType: true })})`;
 
     function generateAfterResponse(): Code {
       // Nothing to do if there's no error handling or rpc after response
       if (!(options.rpcAfterResponse || errorHandler)) {
-        return code``
+        return code``;
       }
-      // if we're using async iterables with a server streaming method, we don't support afterResponse/error handling, 
+      // if we're using async iterables with a server streaming method, we don't support afterResponse/error handling,
       // just like with the opinionated client
       if (methodDesc.serverStreaming && options.useAsyncIterable) {
-        return code``
+        return code``;
       }
-      
+
       let afterResponse = code`return response`;
       let afterResponseTail = code``;
       if (options.rpcAfterResponse) {
         if (methodDesc.serverStreaming) {
-          afterResponseTail = code`.pipe(${imp("map@rxjs/operators")}(${arrowFunction("response", invokeAfterResponse, false)}))`;
+          afterResponseTail = code`.pipe(${imp("map@rxjs/operators")}(${arrowFunction(
+            "response",
+            invokeAfterResponse,
+            false,
+          )}))`;
         } else {
           afterResponseTail = code`.then(${arrowFunction("response", invokeAfterResponse, false)})`;
         }
@@ -249,7 +258,7 @@ function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProt
       if (errorHandler && !methodDesc.serverStreaming) {
         afterResponseTail = code`${afterResponseTail}.catch(${arrowFunction("error", errorHandler, false)})`;
       }
-      
+
       if (afterResponseTail.toString().length === 0) {
         return code``;
       }
@@ -262,12 +271,12 @@ function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProt
     } else {
       requestInvocation = code`const response = ${requestInvocation}`;
     }
-    
+
     return code`${beforeRequest}
         ${requestInvocation}
         ${afterResponse}`;
   }
-  
+
   const body = options.outputClientImpl === "generic" ? generateGenericRpcBody() : generateBinaryRpcBody();
   return code`
     ${methodDesc.formattedName}(
@@ -461,11 +470,13 @@ function generateCachingRpcMethod(
       ${inputType},
       ${outputType}
       );
-      `
+      `;
   } else {
     body = code`const data = ${inputType}.encode(request).finish()
-          const response = await this.rpc.request(ctx, "${maybePrefixPackage(fileDesc, serviceDesc.name)}", "${methodDesc.name}", data);
-          return ${outputType}.decode(${Reader}.create(response));`
+          const response = await this.rpc.request(ctx, "${maybePrefixPackage(fileDesc, serviceDesc.name)}", "${
+      methodDesc.name
+    }", data);
+          return ${outputType}.decode(${Reader}.create(response));`;
   }
   const lambda = code`
     (requests) => {
@@ -513,16 +524,18 @@ export function generateRpcType(ctx: Context, hasStreamingMethods: boolean): Cod
   const maybeMetadataParam = options.metadataType || options.addGrpcMetadata ? `metadata?: ${metadataType},` : "";
   const maybeAbortSignalParam = options.useAbortSignal ? "abortSignal?: AbortSignal," : "";
   const messageType = impFile(options, "MessageType@./typeRegistry");
-  
+
   const outputGenericClient = options.outputClientImpl === "generic";
-  
-  const maybeMessageTypeParams = outputGenericClient ? code`reqType: ${messageType}, respType: ${messageType},` : code``;
-  const maybeTypeParameters = outputGenericClient  ? "<Req, Res>" : "";
+
+  const maybeMessageTypeParams = outputGenericClient
+    ? code`reqType: ${messageType}, respType: ${messageType},`
+    : code``;
+  const maybeTypeParameters = outputGenericClient ? "<Req, Res>" : "";
   const requestType = outputGenericClient ? "Req" : "Uint8Array";
   const responseType = outputGenericClient ? "Res" : "Uint8Array";
   const requestParam = outputGenericClient ? "request" : "data";
-  
-  const methods: Code[][]= [];
+
+  const methods: Code[][] = [];
   methods.push([code`request${maybeTypeParameters}`, code`${requestType}`, code`Promise<${responseType}>`]);
   const additionalMethods = [];
   if (options.rpcBeforeRequest) {
@@ -543,8 +556,16 @@ export function generateRpcType(ctx: Context, hasStreamingMethods: boolean): Cod
 
   if (hasStreamingMethods) {
     const observable = observableType(ctx, true);
-    methods.push([code`clientStreamingRequest${maybeTypeParameters}`, code`${observable}<${requestType}>`, code`Promise<${responseType}>`]);
-    methods.push([code`serverStreamingRequest${maybeTypeParameters}`, code`${requestType}`, code`${observable}<${responseType}>`]);
+    methods.push([
+      code`clientStreamingRequest${maybeTypeParameters}`,
+      code`${observable}<${requestType}>`,
+      code`Promise<${responseType}>`,
+    ]);
+    methods.push([
+      code`serverStreamingRequest${maybeTypeParameters}`,
+      code`${requestType}`,
+      code`${observable}<${responseType}>`,
+    ]);
     methods.push([
       code`bidirectionalStreamingRequest${maybeTypeParameters}`,
       code`${observable}<${requestType}>`,
