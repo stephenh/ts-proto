@@ -148,8 +148,7 @@ function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProt
   rpcMethod = `this.rpc.${rpcMethod}`;
   const service = "this.service";
 
-  const invokeAfterResponse = code`
-      if (this.rpc.afterResponse) {
+  const invokeAfterResponse = code`if (this.rpc.afterResponse) {
         this.rpc.afterResponse(this.service, "${methodDesc.name}", response);
       }
       return response;`;
