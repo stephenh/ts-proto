@@ -1,95 +1,61 @@
 import {
-  BasicServiceClientImpl,
-  BasicServiceServiceName,
-  GetBasicRequest,
-  GetBasicResponse,
+    BasicServiceClientImpl,
+    BasicServiceServiceName,
+    GetBasicRequest,
+    GetBasicResponse,
 } from './generic-client';
-import {Observable} from "rxjs";
-// import {EMPTY, Observable} from 'rxjs';
-// import { NodeHttpTransport } from '@improbable-eng/grpc-web-node-http-transport';
 
-describe('generic-client', () => {
-  it('at least compiles', () => {
-    const rpc = {
-      request: jest.fn(),
-      clientStreamingRequest: jest.fn(),
-      serverStreamingRequest: jest.fn(),
-      bidirectionalStreamingRequest: jest.fn(),
+describe('generic-client with asyncIterable and before/after', () => {
+    let rpc = {
+        request: jest.fn(),
+        clientStreamingRequest: jest.fn(),
+        serverStreamingRequest: jest.fn(),
+        bidirectionalStreamingRequest: jest.fn(),
     };
-    const client = new BasicServiceClientImpl(rpc);
-    client.Unary(GetBasicRequest.fromPartial({}));
-  });
-  it('binds rpc function', () => {
-    const rpc = {
-      request: jest.fn(),
-      clientStreamingRequest: jest.fn(),
-      serverStreamingRequest: jest.fn(),
-      bidirectionalStreamingRequest: jest.fn(),
-    };
-    const client = new BasicServiceClientImpl(rpc);
-    const unary = client.Unary;
-    unary(GetBasicRequest.fromPartial({}));
-  });
-  it('correctly invokes request on Rpc', () => {
-    const rpc = {
-      request: jest.fn(),
-      clientStreamingRequest: jest.fn(),
-      serverStreamingRequest: jest.fn(),
-      bidirectionalStreamingRequest: jest.fn(),
-    };
-    const client = new BasicServiceClientImpl(rpc);
-
-    const req = GetBasicRequest.fromPartial({ name: 'Joe' });
-    client.Unary(GetBasicRequest.fromPartial({ name: 'Joe' }));
-    
-    expect(rpc.request).toHaveBeenCalledWith(BasicServiceServiceName, "Unary", req, GetBasicRequest, GetBasicResponse);
-  });
-  it('correctly invokes clientStreamingRequest on Rpc', () => {
-    const rpc = {
-      request: jest.fn(),
-      clientStreamingRequest: jest.fn(),
-      serverStreamingRequest: jest.fn(),
-      bidirectionalStreamingRequest: jest.fn(),
-    };
-    const client = new BasicServiceClientImpl(rpc);
-
-    const clientStream = new Observable<GetBasicRequest>((subscriber) => {
-      subscriber.next(GetBasicRequest.fromPartial({ name: 'Test Foo'}));
-      subscriber.complete();
+    const expectedResponse = GetBasicResponse.fromPartial({ resp: 'Rowan' });
+    const request = GetBasicRequest.fromPartial({ name: 'Finn' });
+    beforeEach(() => {
+        jest.clearAllMocks();
     });
-    client.ClientStreaming(clientStream);
 
-    expect(rpc.clientStreamingRequest).toHaveBeenCalledWith(BasicServiceServiceName, "ClientStreaming", clientStream, GetBasicRequest, GetBasicResponse);
-  });
-  it('correctly invokes serverStreamingRequest call on Rpc', () => {
-    const rpc = {
-      request: jest.fn(),
-      clientStreamingRequest: jest.fn(),
-      serverStreamingRequest: jest.fn(),
-      bidirectionalStreamingRequest: jest.fn(),
-    };
-    const client = new BasicServiceClientImpl(rpc);
+    let beforeRequest =  jest.fn();
+    let afterResponse = jest.fn();
 
-    const req = GetBasicRequest.fromPartial({ name: 'Joe' });
-    client.ServerStreaming(GetBasicRequest.fromPartial({ name: 'Joe' }));
+    it('correctly invokes afterResponse and clientStreamingRequest methods on Rpc', () => {
+        rpc.clientStreamingRequest.mockReturnValue(Promise.resolve(expectedResponse));
 
-    expect(rpc.serverStreamingRequest).toHaveBeenCalledWith(BasicServiceServiceName, "ServerStreaming", req, GetBasicRequest, GetBasicResponse);
-  });
-  it('correctly invokes bidirectionalStreamingRequest on Rpc', () => {
-    const rpc = {
-      request: jest.fn(),
-      clientStreamingRequest: jest.fn(),
-      serverStreamingRequest: jest.fn(),
-      bidirectionalStreamingRequest: jest.fn(),
-    };
-    const client = new BasicServiceClientImpl(rpc);
+        const client = new BasicServiceClientImpl({...rpc, beforeRequest: beforeRequest, afterResponse: afterResponse});
+        const asyncIterable = (async function*() {}())
+        const promise = client.ClientStreaming(asyncIterable);
 
-    const clientStream = new Observable<GetBasicRequest>((subscriber) => {
-      subscriber.next(GetBasicRequest.fromPartial({ name: 'Test Foo'}));
-      subscriber.complete();
+        expect(rpc.clientStreamingRequest).toHaveBeenCalledWith(BasicServiceServiceName, "ClientStreaming", asyncIterable, GetBasicRequest, GetBasicResponse);
+        return promise.then((res) => {
+            expect(res).toBe(expectedResponse);
+            expect(afterResponse).toHaveBeenCalledWith(BasicServiceServiceName, "ClientStreaming", expectedResponse);
+        });
     });
-    client.BidiStreaming(clientStream);
+    it('correctly invokes beforeRequest and serverStreamingRequest methods on Rpc', () => {
+        const asyncIterable = (async function*() {}())
+        rpc.serverStreamingRequest.mockReturnValue(asyncIterable);
 
-    expect(rpc.bidirectionalStreamingRequest).toHaveBeenCalledWith(BasicServiceServiceName, "BidiStreaming", clientStream, GetBasicRequest, GetBasicResponse);
-  });
+        const client = new BasicServiceClientImpl({...rpc, beforeRequest: beforeRequest, afterResponse: afterResponse});
+
+        const resp = client.ServerStreaming(request);
+
+        expect(beforeRequest).toHaveBeenCalledWith(BasicServiceServiceName, "ServerStreaming", request);
+        expect(rpc.serverStreamingRequest).toHaveBeenCalledWith(BasicServiceServiceName, "ServerStreaming", request, GetBasicRequest, GetBasicResponse);
+        expect(resp).toBe(asyncIterable);
+    });
+    it('correctly invokes bidirectionalStreamingRequest on Rpc', () => {
+        const response = (async function*() {}())
+        rpc.bidirectionalStreamingRequest.mockReturnValue(response);
+
+        const client = new BasicServiceClientImpl({...rpc, beforeRequest: beforeRequest, afterResponse: afterResponse});
+
+        const req= (async function*() {}())
+        const resp = client.BidiStreaming(req)
+
+        expect(rpc.bidirectionalStreamingRequest).toHaveBeenCalledWith(BasicServiceServiceName, "BidiStreaming", req, GetBasicRequest, GetBasicResponse);
+        expect(resp).toBe(response);
+    });
 });

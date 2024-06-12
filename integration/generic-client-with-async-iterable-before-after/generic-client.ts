@@ -169,29 +169,25 @@ export class BasicServiceClientImpl implements BasicService {
       GetBasicRequest,
       GetBasicResponse,
     );
-
-    if (this.rpc.afterResponse) {
-      this.rpc.afterResponse(this.service, "Unary", response);
-    }
-    return response;
+    return response.then((response) => {
+      if (this.rpc.afterResponse) {
+        this.rpc.afterResponse(this.service, "Unary", response);
+      }
+      return response;
+    });
   }
 
   ServerStreaming(request: GetBasicRequest): AsyncIterable<GetBasicResponse> {
     if (this.rpc.beforeRequest) {
       this.rpc.beforeRequest(this.service, "ServerStreaming", request);
     }
-    const response = this.rpc.serverStreamingRequest<GetBasicRequest, GetBasicResponse>(
+    return this.rpc.serverStreamingRequest<GetBasicRequest, GetBasicResponse>(
       this.service,
       "ServerStreaming",
       request,
       GetBasicRequest,
       GetBasicResponse,
     );
-
-    if (this.rpc.afterResponse) {
-      this.rpc.afterResponse(this.service, "ServerStreaming", response);
-    }
-    return response;
   }
 
   ClientStreaming(request: AsyncIterable<GetBasicRequest>): Promise<GetBasicResponse> {
@@ -205,29 +201,25 @@ export class BasicServiceClientImpl implements BasicService {
       GetBasicRequest,
       GetBasicResponse,
     );
-
-    if (this.rpc.afterResponse) {
-      this.rpc.afterResponse(this.service, "ClientStreaming", response);
-    }
-    return response;
+    return response.then((response) => {
+      if (this.rpc.afterResponse) {
+        this.rpc.afterResponse(this.service, "ClientStreaming", response);
+      }
+      return response;
+    });
   }
 
   BidiStreaming(request: AsyncIterable<GetBasicRequest>): AsyncIterable<GetBasicResponse> {
     if (this.rpc.beforeRequest) {
       this.rpc.beforeRequest(this.service, "BidiStreaming", request);
     }
-    const response = this.rpc.bidirectionalStreamingRequest<GetBasicRequest, GetBasicResponse>(
+    return this.rpc.bidirectionalStreamingRequest<GetBasicRequest, GetBasicResponse>(
       this.service,
       "BidiStreaming",
       request,
       GetBasicRequest,
       GetBasicResponse,
     );
-
-    if (this.rpc.afterResponse) {
-      this.rpc.afterResponse(this.service, "BidiStreaming", response);
-    }
-    return response;
   }
 }
 

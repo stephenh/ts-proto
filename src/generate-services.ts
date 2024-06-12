@@ -220,16 +220,17 @@ function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProt
           ${responseType(ctx, methodDesc, {keepValueType: true})});`;
       
     let afterRequest = code``;
-    if (options.rpcAfterResponse) {
+    if (options.rpcAfterResponse && !(methodDesc.serverStreaming && options.useAsyncIterable)) {
       requestInvocation = code`const response = ${requestInvocation}`;
       afterRequest = code`
       if (this.rpc.afterResponse) {
         this.rpc.afterResponse(this.service, "${methodDesc.name}", response);
       }
-      return response;
-    `;
-      if (methodDesc.serverStreaming && !options.useAsyncIterable) {
-        afterRequest = code`return response.pipe(request => {${afterRequest}})`;
+      return response;`;
+      if (methodDesc.serverStreaming) {
+        afterRequest = code`return response.pipe(${imp("map@rxjs/operators")}(response => {${afterRequest}}))`;
+      } else {
+        afterRequest = code`return response.then(response => {${afterRequest}})`;
       }
     } else {
       requestInvocation = code `return ${requestInvocation}`;
