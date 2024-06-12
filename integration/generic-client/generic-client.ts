@@ -160,19 +160,37 @@ export class BasicServiceClientImpl implements BasicService {
     this.BidiStreaming = this.BidiStreaming.bind(this);
   }
   Unary(request: GetBasicRequest): Promise<GetBasicResponse> {
-    return this.rpc.request(this.service, "Unary", request, GetBasicRequest, GetBasicResponse);
+    return this.rpc.request<GetBasicRequest, GetBasicResponse>(
+      this.service,
+      "Unary",
+      request,
+      GetBasicRequest,
+      GetBasicResponse,
+    );
   }
 
   ServerStreaming(request: GetBasicRequest): Observable<GetBasicResponse> {
-    return this.rpc.serverStreamingRequest(this.service, "ServerStreaming", request, GetBasicRequest, GetBasicResponse);
+    return this.rpc.serverStreamingRequest<GetBasicRequest, GetBasicResponse>(
+      this.service,
+      "ServerStreaming",
+      request,
+      GetBasicRequest,
+      GetBasicResponse,
+    );
   }
 
   ClientStreaming(request: Observable<GetBasicRequest>): Promise<GetBasicResponse> {
-    return this.rpc.clientStreamingRequest(this.service, "ClientStreaming", request, GetBasicRequest, GetBasicResponse);
+    return this.rpc.clientStreamingRequest<GetBasicRequest, GetBasicResponse>(
+      this.service,
+      "ClientStreaming",
+      request,
+      GetBasicRequest,
+      GetBasicResponse,
+    );
   }
 
   BidiStreaming(request: Observable<GetBasicRequest>): Observable<GetBasicResponse> {
-    return this.rpc.bidirectionalStreamingRequest(
+    return this.rpc.bidirectionalStreamingRequest<GetBasicRequest, GetBasicResponse>(
       this.service,
       "BidiStreaming",
       request,
