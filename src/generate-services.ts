@@ -443,14 +443,26 @@ function generateCachingRpcMethod(
   const outputType = responseType(ctx, methodDesc);
   const uniqueIdentifier = `${maybePrefixPackage(fileDesc, serviceDesc.name)}.${methodDesc.name}`;
   const Reader = impFile(ctx.options, "Reader@protobufjs/minimal");
+  let body;
+  if (options.outputClientImpl === "generic") {
+    body = code`return this.rpc.request<${inputType}, ${outputType}>(
+      ctx, 
+      "${maybePrefixPackage(fileDesc, serviceDesc.name)}",
+      "${methodDesc.name}",
+      request,
+      ${inputType},
+      ${outputType}
+      );
+      `
+  } else {
+    body = code`const data = ${inputType}.encode(request).finish()
+          const response = await this.rpc.request(ctx, "${maybePrefixPackage(fileDesc, serviceDesc.name)}", "${methodDesc.name}", data);
+          return ${outputType}.decode(${Reader}.create(response));`
+  }
   const lambda = code`
     (requests) => {
       const responses = requests.map(async request => {
-        const data = ${inputType}.encode(request).finish()
-        const response = await this.rpc.request(ctx, "${maybePrefixPackage(fileDesc, serviceDesc.name)}", "${
-    methodDesc.name
-  }", data);
-        return ${outputType}.decode(${Reader}.create(response));
+        ${body}
       });
       return Promise.all(responses);
     }
