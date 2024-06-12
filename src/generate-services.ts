@@ -145,8 +145,16 @@ function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProt
   } else {
     rpcMethod = "request";
   }
-
-  function generateRpcBody() : Code {
+  rpcMethod = `this.rpc.${rpcMethod}`;
+  const service = "this.service";
+  
+  const invokeAfterResponse = code`
+      if (this.rpc.afterResponse) {
+        this.rpc.afterResponse(this.service, "${methodDesc.name}", response);
+      }
+      return response;`
+  
+  function generateBinaryRpcBody() : Code {
     let encode = code`${rawInputType}.encode(request).finish()`;
     let beforeRequest;
     if (options.rpcBeforeRequest && !methodDesc.clientStreaming) {
@@ -161,11 +169,7 @@ function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProt
     if (options.rpcAfterResponse) {
       decode = code`
       const response = ${rawOutputType}.decode(${Reader}.create(data));
-      if (this.rpc.afterResponse) {
-        this.rpc.afterResponse(this.service, "${methodDesc.name}", response);
-      }
-      return response;
-    `;
+      ${invokeAfterResponse}`;
     }
 
     // if (options.useDate && rawOutputType.toString().includes("Timestamp")) {
@@ -189,9 +193,9 @@ function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProt
     }
 
     return code`      const data = ${encode}; ${beforeRequest ? beforeRequest : ""}
-      const ${returnVariable} = this.rpc.${rpcMethod}(
+      const ${returnVariable} = ${rpcMethod}(
         ${maybeCtx}
-        this.service,
+        ${service},
         "${methodDesc.name}",
         data,
         ${maybeMetadata}
@@ -206,61 +210,65 @@ function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProt
     if (options.rpcBeforeRequest) {
       beforeRequest = generateBeforeRequest(methodDesc.name);
       if (methodDesc.clientStreaming && !options.useAsyncIterable) {
-        beforeRequest = code`const reqStream = request.pipe(${imp("map@rxjs/operators")}(request => {${beforeRequest} return request;}))`;
+        beforeRequest = code`const reqStream = request.pipe(${imp("map@rxjs/operators")}(${arrowFunction("request", code`${beforeRequest} return request;`, false)}))`;
         requestParamName = 'reqStream';
       }
     }
 
-    let requestInvocation = code`this.rpc.${rpcMethod}<${rawInputType},${responseType(ctx, methodDesc, {keepValueType: true})}>(
+    let requestInvocation = code`${rpcMethod}<${rawInputType},${responseType(ctx, methodDesc, {keepValueType: true})}>(
           ${maybeCtx}
-          this.service,
+          ${service},
           "${methodDesc.name}",
           ${requestParamName},
           ${rawInputType},
-          ${responseType(ctx, methodDesc, {keepValueType: true})});`;
+          ${responseType(ctx, methodDesc, {keepValueType: true})})`;
+
+
+    function generateAfterResponse(): Code {
+      // Nothing to do if there's no error handling or rpc after response
+      if (!(options.rpcAfterResponse || errorHandler)) {
+        return code``
+      }
+      // if we're using async iterables with a server streaming method, we don't support afterResponse/error handling, 
+      // just like with the opinionated client
+      if (methodDesc.serverStreaming && options.useAsyncIterable) {
+        return code``
+      }
       
-    let afterRequest = code``;
-    if (options.rpcAfterResponse && !(methodDesc.serverStreaming && options.useAsyncIterable)) {
-      requestInvocation = code`const response = ${requestInvocation}`;
-      afterRequest = code`
-      if (this.rpc.afterResponse) {
-        this.rpc.afterResponse(this.service, "${methodDesc.name}", response);
+      let afterResponse = code`return response`;
+      let afterResponseTail = code``;
+      if (options.rpcAfterResponse) {
+        if (methodDesc.serverStreaming) {
+          afterResponseTail = code`.pipe(${imp("map@rxjs/operators")}(${arrowFunction("response", invokeAfterResponse, false)}))`;
+        } else {
+          afterResponseTail = code`.then(${arrowFunction("response", invokeAfterResponse, false)})`;
+        }
       }
-      return response;`;
-      if (methodDesc.serverStreaming) {
-        afterRequest = code`return response.pipe(${imp("map@rxjs/operators")}(response => {${afterRequest}}))`;
-      } else {
-        afterRequest = code`return response.then(response => {${afterRequest}})`;
+
+      // Only invoke error handler for non-server streaming methods
+      if (errorHandler && !methodDesc.serverStreaming) {
+        afterResponseTail = code`${afterResponseTail}.catch(${arrowFunction("error", errorHandler, false)})`;
       }
-    } else {
-      requestInvocation = code `return ${requestInvocation}`;
+      
+      if (afterResponseTail.toString().length === 0) {
+        return code``;
+      }
+      return code`${afterResponse}${afterResponseTail}`;
     }
 
-    // if (options.useDate && rawOutputType.toString().includes("Timestamp")) {
-    //   decode = code`data => ${utils.fromTimestamp}(${rawOutputType}.decode(${Reader}.create(data)))`;
-    // }
-    // if (methodDesc.clientStreaming) {
-      // if (options.useAsyncIterable) {
-      //   encode = code`${rawInputType}.encodeTransform(request)`;
-      // } else {
-    //   }
-    // }
-
-    // const returnStatement = createDefaultServiceReturn(ctx, methodDesc, decode, errorHandler);
-
-    // let returnVariable: string;
-    // if (options.returnObservable || methodDesc.serverStreaming) {
-    //   returnVariable = "result";
-    // } else {
-    //   returnVariable = "promise";
-    // }
-
+    const afterResponse = generateAfterResponse();
+    if (afterResponse.toString().length === 0) {
+      requestInvocation = code`return ${requestInvocation}`;
+    } else {
+      requestInvocation = code`const response = ${requestInvocation}`;
+    }
+    
     return code`${beforeRequest}
         ${requestInvocation}
-        ${afterRequest}`;
+        ${afterResponse}`;
   }
   
-  const body = options.outputClientImpl === "generic" ? generateGenericRpcBody() : generateRpcBody();
+  const body = options.outputClientImpl === "generic" ? generateGenericRpcBody() : generateBinaryRpcBody();
   return code`
     ${methodDesc.formattedName}(
       ${joinCode(params, { on: "," })}
