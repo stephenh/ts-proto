@@ -1,0 +1,60 @@
+syntax = "proto3";
+package oneof;
+
+import "google/protobuf/struct.proto";
+
+message PleaseChoose {
+
+  string name = 1;
+
+  message Submessage {
+    string name = 1;
+  }
+
+  enum StateEnum {
+    UNKNOWN = 0;
+    ON = 2;
+    OFF = 3;
+  }
+
+  // Please to be choosing one of the fields within this oneof clause.
+  // This text exists to ensure we transpose comments correctly.
+  oneof choice {
+
+    // Use this if you want a number. Numbers are great. Who doesn't
+    // like them?
+    double a_number = 2;
+
+    // Use this if you want a string. Strings are also nice. Not as
+    // nice as numbers, but what are you going to do...
+    string a_string = 3;
+
+    Submessage a_message = 4;
+
+    // We also added a bool option! This was added after the 'age'
+    // field, so it has a higher number.
+    bool a_bool = 6;
+
+    bytes buncha_bytes = 10;
+
+    StateEnum anEnum = 11;
+  }
+
+  uint32 age = 5;
+
+  oneof either_or {
+    string either = 7;
+    string or = 8;
+    string third_option = 9;
+  }
+
+  bytes signature = 12;
+
+  google.protobuf.Value value = 13;
+}
+
+/** For testing proto3's field presence feature. */
+message SimpleButOptional {
+  optional string name = 1;
+  optional int32 age = 2;
+}

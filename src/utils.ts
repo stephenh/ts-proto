@@ -9,7 +9,7 @@ import {
 } from "ts-proto-descriptors";
 import ReadStream = NodeJS.ReadStream;
 import { SourceDescription } from "./sourceInfo";
-import { Options, ServiceOption } from "./options";
+import { OneofOption, Options, ServiceOption } from "./options";
 import { camelCaseGrpc, maybeSnakeToCamel, snakeToCamel } from "./case";
 
 export function protoFilesToGenerate(request: CodeGeneratorRequest): FileDescriptorProto[] {
@@ -305,6 +305,10 @@ export function maybeCheckIsNotNull(options: Pick<Options, "useNullAsOptional">,
 }
 export function maybeCheckIsNull(options: Pick<Options, "useNullAsOptional">, typeName: string, prefix?: string) {
   return options.useNullAsOptional ? ` ${prefix} ${typeName} === null` : "";
+}
+
+export function oneofValueName(fieldName: string, options:Options) {
+  return (options.oneof === OneofOption.UNIONS) ? fieldName : 'value';
 }
 
 export function withOrMaybeCheckIsNotNull(options: Pick<Options, "useNullAsOptional">, typeName: string) {

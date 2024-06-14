@@ -28,6 +28,7 @@ export enum EnvOption {
 export enum OneofOption {
   PROPERTIES = "properties",
   UNIONS = "unions",
+  UNIONS_VALUE = "unions-value",
 }
 
 export enum ServiceOption {
