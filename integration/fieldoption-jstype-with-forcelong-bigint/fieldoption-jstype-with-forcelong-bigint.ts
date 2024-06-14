@@ -14,12 +14,12 @@ export interface FieldOption {
 }
 
 function createBaseFieldOption(): FieldOption {
-  return { normalField: BigInt("0"), numberField: 0, stringField: "0" };
+  return { normalField: 0n, numberField: 0, stringField: "0" };
 }
 
 export const FieldOption = {
   encode(message: FieldOption, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.normalField !== BigInt("0")) {
+    if (message.normalField !== 0n) {
       if (BigInt.asIntN(64, message.normalField) !== message.normalField) {
         throw new globalThis.Error("value provided for field message.normalField of type int64 too large");
       }
@@ -79,7 +79,7 @@ export const FieldOption = {
 
   fromJSON(object: any): FieldOption {
     return {
-      normalField: isSet(object.normalField) ? BigInt(object.normalField) : BigInt("0"),
+      normalField: isSet(object.normalField) ? BigInt(object.normalField) : 0n,
       numberField: isSet(object.numberField) ? globalThis.Number(object.numberField) : 0,
       stringField: isSet(object.stringField) ? globalThis.String(object.stringField) : "0",
     };
@@ -87,7 +87,7 @@ export const FieldOption = {
 
   toJSON(message: FieldOption): unknown {
     const obj: any = {};
-    if (message.normalField !== BigInt("0")) {
+    if (message.normalField !== 0n) {
       obj.normalField = message.normalField.toString();
     }
     if (message.numberField !== 0) {
@@ -104,7 +104,7 @@ export const FieldOption = {
   },
   fromPartial<I extends Exact<DeepPartial<FieldOption>, I>>(object: I): FieldOption {
     const message = createBaseFieldOption();
-    message.normalField = object.normalField ?? BigInt("0");
+    message.normalField = object.normalField ?? 0n;
     message.numberField = object.numberField ?? 0;
     message.stringField = object.stringField ?? "0";
     return message;

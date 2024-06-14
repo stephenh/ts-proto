@@ -102,6 +102,7 @@ export type Options = {
   useNullAsOptional: boolean;
   annotateFilesWithVersion: boolean;
   noDefaultsForOptionals: boolean;
+  bigIntLiteral: boolean;
 };
 
 export function defaultOptions(): Options {
@@ -169,6 +170,7 @@ export function defaultOptions(): Options {
     useNullAsOptional: false,
     annotateFilesWithVersion: true,
     noDefaultsForOptionals: false,
+    bigIntLiteral: true,
   };
 }
 

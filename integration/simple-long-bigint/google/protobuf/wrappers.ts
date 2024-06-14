@@ -212,12 +212,12 @@ export const FloatValue = {
 };
 
 function createBaseInt64Value(): Int64Value {
-  return { value: BigInt("0") };
+  return { value: 0n };
 }
 
 export const Int64Value = {
   encode(message: Int64Value, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.value !== BigInt("0")) {
+    if (message.value !== 0n) {
       if (BigInt.asIntN(64, message.value) !== message.value) {
         throw new globalThis.Error("value provided for field message.value of type int64 too large");
       }
@@ -250,12 +250,12 @@ export const Int64Value = {
   },
 
   fromJSON(object: any): Int64Value {
-    return { value: isSet(object.value) ? BigInt(object.value) : BigInt("0") };
+    return { value: isSet(object.value) ? BigInt(object.value) : 0n };
   },
 
   toJSON(message: Int64Value): unknown {
     const obj: any = {};
-    if (message.value !== BigInt("0")) {
+    if (message.value !== 0n) {
       obj.value = message.value.toString();
     }
     return obj;
@@ -266,18 +266,18 @@ export const Int64Value = {
   },
   fromPartial<I extends Exact<DeepPartial<Int64Value>, I>>(object: I): Int64Value {
     const message = createBaseInt64Value();
-    message.value = object.value ?? BigInt("0");
+    message.value = object.value ?? 0n;
     return message;
   },
 };
 
 function createBaseUInt64Value(): UInt64Value {
-  return { value: BigInt("0") };
+  return { value: 0n };
 }
 
 export const UInt64Value = {
   encode(message: UInt64Value, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
-    if (message.value !== BigInt("0")) {
+    if (message.value !== 0n) {
       if (BigInt.asUintN(64, message.value) !== message.value) {
         throw new globalThis.Error("value provided for field message.value of type uint64 too large");
       }
@@ -310,12 +310,12 @@ export const UInt64Value = {
   },
 
   fromJSON(object: any): UInt64Value {
-    return { value: isSet(object.value) ? BigInt(object.value) : BigInt("0") };
+    return { value: isSet(object.value) ? BigInt(object.value) : 0n };
   },
 
   toJSON(message: UInt64Value): unknown {
     const obj: any = {};
-    if (message.value !== BigInt("0")) {
+    if (message.value !== 0n) {
       obj.value = message.value.toString();
     }
     return obj;
@@ -326,7 +326,7 @@ export const UInt64Value = {
   },
   fromPartial<I extends Exact<DeepPartial<UInt64Value>, I>>(object: I): UInt64Value {
     const message = createBaseUInt64Value();
-    message.value = object.value ?? BigInt("0");
+    message.value = object.value ?? 0n;
     return message;
   },
 };
