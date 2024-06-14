@@ -212,6 +212,26 @@ export function generateWrapShallow(ctx: Context, fullProtoTypeName: string, fie
         }
         return result;
     }`);
+    } else if (ctx.options.oneof === OneofOption.UNIONS_VALUE) {
+      chunks.push(code`wrap(value: any): Value {
+        const result = createBaseValue()${maybeAsAny(ctx.options)};
+        if (value === null) {
+          result.kind = {$case: '${fieldNames.nullValue}', value };
+        } else if (typeof value === 'boolean') {
+          result.kind = {$case: '${fieldNames.boolValue}', value };
+        } else if (typeof value === 'number') {
+          result.kind = {$case: '${fieldNames.numberValue}', value };
+        } else if (typeof value === 'string') {
+          result.kind = {$case: '${fieldNames.stringValue}', value };
+        } else if (${ctx.utils.globalThis}.Array.isArray(value)) {
+          result.kind = {$case: '${fieldNames.listValue}', value };
+        } else if (typeof value === 'object') {
+          result.kind = {$case: '${fieldNames.structValue}', value };
+        } else if (typeof value !== 'undefined') {
+          throw new ${ctx.utils.globalThis}.Error('Unsupported any value type: ' + typeof value);
+        }
+        return result;
+    }`);
     } else {
       chunks.push(code`wrap(value: any): Value {
         const result = createBaseValue()${maybeAsAny(ctx.options)};
@@ -304,6 +324,10 @@ export function generateUnwrapShallow(ctx: Context, fullProtoTypeName: string, f
         } else {
           return undefined;
         }
+      }`);
+    } else if (ctx.options.oneof === OneofOption.UNIONS_VALUE) {
+      chunks.push(code`unwrap(message: Value): string | number | boolean | Object | null | Array<any> | undefined {
+        return message.kind?.value;
       }`);
     } else {
       chunks.push(code`unwrap(message: any): string | number | boolean | Object | null | Array<any> | undefined {

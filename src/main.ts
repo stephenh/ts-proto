@@ -646,6 +646,11 @@ function makeDeepPartial(options: Options, longs: ReturnType<typeof makeLongUtil
       : T extends { ${maybeReadonly(options)}$case: string }
       ? { [K in keyof Omit<T, '$case'>]?: DeepPartial<T[K]> } & { ${maybeReadonly(options)}$case: T['$case'] }
     `;
+  } else if (options.oneof === OneofOption.UNIONS_VALUE) {
+    oneofCase = `
+      : T extends { ${maybeReadonly(options)}$case: string; value: unknown; }
+      ? { ${maybeReadonly(options)}$case: T['$case']; value?: DeepPartial<T['value']>; }
+    `;
   }
 
   const maybeExport = options.exportCommonSymbols ? "export" : "";
@@ -2517,8 +2522,8 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
       const oneofName = maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options);
       const oneofNameWithMessage = getPropertyAccessor("message", oneofName);
       const oneofNameWithObject = getPropertyAccessor("object", oneofName);
-      const v = readSnippet(`${oneofNameWithObject}.${fieldName}`);
       const valueName = oneofValueName(fieldName, options);
+      const v = readSnippet(`${oneofNameWithObject}.${valueName}`);
       chunks.push(code`
         if (
           ${oneofNameWithObject}?.$case === '${fieldName}'

@@ -401,22 +401,22 @@ export const Value = {
   fromPartial<I extends Exact<DeepPartial<Value>, I>>(object: I): Value {
     const message = createBaseValue();
     if (object.kind?.$case === "nullValue" && object.kind?.value !== undefined && object.kind?.value !== null) {
-      message.kind = { $case: "nullValue", value: object.kind.nullValue };
+      message.kind = { $case: "nullValue", value: object.kind.value };
     }
     if (object.kind?.$case === "numberValue" && object.kind?.value !== undefined && object.kind?.value !== null) {
-      message.kind = { $case: "numberValue", value: object.kind.numberValue };
+      message.kind = { $case: "numberValue", value: object.kind.value };
     }
     if (object.kind?.$case === "stringValue" && object.kind?.value !== undefined && object.kind?.value !== null) {
-      message.kind = { $case: "stringValue", value: object.kind.stringValue };
+      message.kind = { $case: "stringValue", value: object.kind.value };
     }
     if (object.kind?.$case === "boolValue" && object.kind?.value !== undefined && object.kind?.value !== null) {
-      message.kind = { $case: "boolValue", value: object.kind.boolValue };
+      message.kind = { $case: "boolValue", value: object.kind.value };
     }
     if (object.kind?.$case === "structValue" && object.kind?.value !== undefined && object.kind?.value !== null) {
-      message.kind = { $case: "structValue", value: object.kind.structValue };
+      message.kind = { $case: "structValue", value: object.kind.value };
     }
     if (object.kind?.$case === "listValue" && object.kind?.value !== undefined && object.kind?.value !== null) {
-      message.kind = { $case: "listValue", value: object.kind.listValue };
+      message.kind = { $case: "listValue", value: object.kind.value };
     }
     return message;
   },
@@ -424,38 +424,25 @@ export const Value = {
   wrap(value: any): Value {
     const result = createBaseValue();
     if (value === null) {
-      result.nullValue = NullValue.NULL_VALUE;
+      result.kind = { $case: "nullValue", value };
     } else if (typeof value === "boolean") {
-      result.boolValue = value;
+      result.kind = { $case: "boolValue", value };
     } else if (typeof value === "number") {
-      result.numberValue = value;
+      result.kind = { $case: "numberValue", value };
     } else if (typeof value === "string") {
-      result.stringValue = value;
+      result.kind = { $case: "stringValue", value };
     } else if (globalThis.Array.isArray(value)) {
-      result.listValue = value;
+      result.kind = { $case: "listValue", value };
     } else if (typeof value === "object") {
-      result.structValue = value;
+      result.kind = { $case: "structValue", value };
     } else if (typeof value !== "undefined") {
       throw new globalThis.Error("Unsupported any value type: " + typeof value);
     }
     return result;
   },
 
-  unwrap(message: any): string | number | boolean | Object | null | Array<any> | undefined {
-    if (message.stringValue !== undefined) {
-      return message.stringValue;
-    } else if (message?.numberValue !== undefined) {
-      return message.numberValue;
-    } else if (message?.boolValue !== undefined) {
-      return message.boolValue;
-    } else if (message?.structValue !== undefined) {
-      return message.structValue as any;
-    } else if (message?.listValue !== undefined) {
-      return message.listValue;
-    } else if (message?.nullValue !== undefined) {
-      return null;
-    }
-    return undefined;
+  unwrap(message: Value): string | number | boolean | Object | null | Array<any> | undefined {
+    return message.kind?.value;
   },
 };
 
@@ -535,6 +522,7 @@ type Builtin = Date | Function | Uint8Array | string | number | boolean | undefi
 export type DeepPartial<T> = T extends Builtin ? T
   : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends { $case: string; value: unknown } ? { $case: T["$case"]; value?: DeepPartial<T["value"]> }
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 

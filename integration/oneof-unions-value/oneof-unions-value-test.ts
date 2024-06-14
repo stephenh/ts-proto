@@ -3,7 +3,7 @@ import * as pbjs from "./pbjs";
 import pbjsValue = pbjs.google.protobuf.Value;
 import { Value } from "./google/protobuf/struct";
 
-describe('oneof=unions', () => {
+describe('oneof=unions-value', () => {
   it('generates types correctly', () => {
     const alice: PleaseChoose = {
       name: 'Alice',
@@ -14,14 +14,14 @@ describe('oneof=unions', () => {
     const bob: PleaseChoose = {
       name: 'Bob',
       age: 42,
-      choice: { $case: 'aNumber', aNumber: 132 },
+      choice: { $case: 'aNumber', value: 132 },
       signature: new Uint8Array([0xab, 0xcd]),
       value: 'Bob'
     };
     const charlie: PleaseChoose = {
       name: 'Charlie',
       age: 42,
-      choice: { $case: 'aMessage', aMessage: { name: 'charlie' } },
+      choice: { $case: 'aMessage', value: { name: 'charlie' } },
       signature: new Uint8Array([0xab, 0xcd]),
       value: 'Charlie'
     };
@@ -40,8 +40,8 @@ describe('oneof=unions', () => {
     expect(decoded).toEqual({
       name: 'Debbie',
       age: 37,
-      choice: { $case: 'aBool', aBool: true },
-      eitherOr: { $case: 'or', or: 'perhaps not' },
+      choice: { $case: 'aBool', value: true },
+      eitherOr: { $case: 'or', value: 'perhaps not' },
       signature: new Uint8Array(0),
       value: 'Debbie'
     });
@@ -51,8 +51,8 @@ describe('oneof=unions', () => {
     let encoded = PleaseChoose.encode({
       name: 'Debbie',
       age: 37,
-      choice: { $case: 'aBool', aBool: true },
-      eitherOr: { $case: 'or', or: 'perhaps not' },
+      choice: { $case: 'aBool', value: true },
+      eitherOr: { $case: 'or', value: 'perhaps not' },
       signature: new Uint8Array([0xab, 0xcd]),
       value: 'Debbie'
     }).finish();
@@ -78,15 +78,15 @@ describe('oneof=unions', () => {
     let partial = PleaseChoose.fromPartial({
       name: 'Debbie',
       age: 37,
-      choice: { $case: 'aBool', aBool: true },
-      eitherOr: { $case: 'or', or: 'perhaps not' },
+      choice: { $case: 'aBool', value: true },
+      eitherOr: { $case: 'or', value: 'perhaps not' },
       signature: new Uint8Array([0xab, 0xcd]),
     });
     expect(partial).toEqual({
       name: 'Debbie',
       age: 37,
-      choice: { $case: 'aBool', aBool: true },
-      eitherOr: { $case: 'or', or: 'perhaps not' },
+      choice: { $case: 'aBool', value: true },
+      eitherOr: { $case: 'or', value: 'perhaps not' },
       signature: new Uint8Array([0xab, 0xcd]),
     });
   });
@@ -95,8 +95,8 @@ describe('oneof=unions', () => {
     let debbie: PleaseChoose = {
       name: 'Debbie',
       age: 37,
-      choice: { $case: 'aBool', aBool: true },
-      eitherOr: { $case: 'or', or: 'perhaps not' },
+      choice: { $case: 'aBool', value: true },
+      eitherOr: { $case: 'or', value: 'perhaps not' },
       signature: new Uint8Array([0xab, 0xcd]),
       value: undefined
     };
@@ -112,8 +112,8 @@ describe('oneof=unions', () => {
     let debbie: PleaseChoose = {
       name: 'Debbie',
       age: 37,
-      choice: { $case: 'aBool', aBool: true },
-      eitherOr: { $case: 'or', or: 'perhaps not' },
+      choice: { $case: 'aBool', value: true },
+      eitherOr: { $case: 'or', value: 'perhaps not' },
       signature: new Uint8Array([0xab, 0xcd]),
       value: 'Debbie'
     };
@@ -130,7 +130,7 @@ describe('oneof=unions', () => {
     let obj: PleaseChoose = {
       name: 'Debbie',
       age: 37,
-      choice: { $case: 'aNumber', aNumber: 42 },
+      choice: { $case: 'aNumber', value: 42 },
       signature: Buffer.from([0xab, 0xcd]),
       value: 'Debbie'
     };

@@ -308,7 +308,7 @@ export function maybeCheckIsNull(options: Pick<Options, "useNullAsOptional">, ty
 }
 
 export function oneofValueName(fieldName: string, options: Pick<Options, "oneof">) {
-  return (options.oneof === OneofOption.UNIONS) ? fieldName : 'value';
+  return options.oneof === OneofOption.UNIONS ? fieldName : "value";
 }
 
 export function withOrMaybeCheckIsNotNull(options: Pick<Options, "useNullAsOptional">, typeName: string) {

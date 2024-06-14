@@ -314,38 +314,38 @@ export const PleaseChoose = {
     const message = createBasePleaseChoose();
     message.name = object.name ?? "";
     if (object.choice?.$case === "aNumber" && object.choice?.value !== undefined && object.choice?.value !== null) {
-      message.choice = { $case: "aNumber", value: object.choice.aNumber };
+      message.choice = { $case: "aNumber", value: object.choice.value };
     }
     if (object.choice?.$case === "aString" && object.choice?.value !== undefined && object.choice?.value !== null) {
-      message.choice = { $case: "aString", value: object.choice.aString };
+      message.choice = { $case: "aString", value: object.choice.value };
     }
     if (object.choice?.$case === "aMessage" && object.choice?.value !== undefined && object.choice?.value !== null) {
-      message.choice = { $case: "aMessage", value: PleaseChoose_Submessage.fromPartial(object.choice.aMessage) };
+      message.choice = { $case: "aMessage", value: PleaseChoose_Submessage.fromPartial(object.choice.value) };
     }
     if (object.choice?.$case === "aBool" && object.choice?.value !== undefined && object.choice?.value !== null) {
-      message.choice = { $case: "aBool", value: object.choice.aBool };
+      message.choice = { $case: "aBool", value: object.choice.value };
     }
     if (object.choice?.$case === "bunchaBytes" && object.choice?.value !== undefined && object.choice?.value !== null) {
-      message.choice = { $case: "bunchaBytes", value: object.choice.bunchaBytes };
+      message.choice = { $case: "bunchaBytes", value: object.choice.value };
     }
     if (object.choice?.$case === "anEnum" && object.choice?.value !== undefined && object.choice?.value !== null) {
-      message.choice = { $case: "anEnum", value: object.choice.anEnum };
+      message.choice = { $case: "anEnum", value: object.choice.value };
     }
     message.age = object.age ?? 0;
     if (
       object.eitherOr?.$case === "either" && object.eitherOr?.value !== undefined && object.eitherOr?.value !== null
     ) {
-      message.eitherOr = { $case: "either", value: object.eitherOr.either };
+      message.eitherOr = { $case: "either", value: object.eitherOr.value };
     }
     if (object.eitherOr?.$case === "or" && object.eitherOr?.value !== undefined && object.eitherOr?.value !== null) {
-      message.eitherOr = { $case: "or", value: object.eitherOr.or };
+      message.eitherOr = { $case: "or", value: object.eitherOr.value };
     }
     if (
       object.eitherOr?.$case === "thirdOption" &&
       object.eitherOr?.value !== undefined &&
       object.eitherOr?.value !== null
     ) {
-      message.eitherOr = { $case: "thirdOption", value: object.eitherOr.thirdOption };
+      message.eitherOr = { $case: "thirdOption", value: object.eitherOr.value };
     }
     message.signature = object.signature ?? new Uint8Array(0);
     message.value = object.value ?? undefined;
@@ -514,6 +514,7 @@ type Builtin = Date | Function | Uint8Array | string | number | boolean | undefi
 export type DeepPartial<T> = T extends Builtin ? T
   : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
   : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends { $case: string; value: unknown } ? { $case: T["$case"]; value?: DeepPartial<T["value"]> }
   : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
