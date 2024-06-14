@@ -12,7 +12,7 @@
     "importHelpers": true,
     "target": "es2015",
     "lib": [
-      "es2020",
+      "es2018",
       "dom"
     ]
   },
