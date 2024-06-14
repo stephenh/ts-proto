@@ -62,7 +62,7 @@ describe('oneof=unions', () => {
       aBool: true,
       age: 37,
       or: 'perhaps not',
-      signature: Buffer.from([0xab, 0xcd]),
+      signature: new Uint8Array([0xab, 0xcd]),
       value: new pbjsValue({ stringValue: 'Debbie' })
     });
   });
@@ -131,7 +131,7 @@ describe('oneof=unions', () => {
       name: 'Debbie',
       age: 37,
       choice: { $case: 'aNumber', aNumber: 42 },
-      signature: Buffer.from([0xab, 0xcd]),
+      signature: new Uint8Array([0xab, 0xcd]),
       value: 'Debbie'
     };
     let encoded = PleaseChoose.encode(obj).finish();

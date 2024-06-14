@@ -2,7 +2,7 @@
 // source: use-readonly-types.proto
 
 /* eslint-disable */
-import * as _m0 from "protobufjs/minimal";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 import { FieldMask } from "./google/protobuf/field_mask";
 import { ListValue, Struct } from "./google/protobuf/struct";
 
@@ -46,7 +46,7 @@ function createBaseEntity(): Entity {
 }
 
 export const Entity = {
-  encode(message: Entity, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Entity, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.intVal !== 0) {
       writer.uint32(8).int32(message.intVal);
     }
@@ -57,27 +57,27 @@ export const Entity = {
     for (const v of message.intArray) {
       writer.int32(v);
     }
-    writer.ldelim();
+    writer.join();
     for (const v of message.stringArray) {
       writer.uint32(34).string(v!);
     }
     if (message.subEntity !== undefined) {
-      SubEntity.encode(message.subEntity, writer.uint32(42).fork()).ldelim();
+      SubEntity.encode(message.subEntity, writer.uint32(42).fork()).join();
     }
     for (const v of message.subEntityArray) {
-      SubEntity.encode(v!, writer.uint32(50).fork()).ldelim();
+      SubEntity.encode(v!, writer.uint32(50).fork()).join();
     }
     if (message.optionalIntVal !== undefined) {
       writer.uint32(56).int32(message.optionalIntVal);
     }
     if (message.fieldMask !== undefined) {
-      FieldMask.encode(FieldMask.wrap(message.fieldMask), writer.uint32(66).fork()).ldelim();
+      FieldMask.encode(FieldMask.wrap(message.fieldMask), writer.uint32(66).fork()).join();
     }
     if (message.listValue !== undefined) {
-      ListValue.encode(ListValue.wrap(message.listValue), writer.uint32(74).fork()).ldelim();
+      ListValue.encode(ListValue.wrap(message.listValue), writer.uint32(74).fork()).join();
     }
     if (message.structValue !== undefined) {
-      Struct.encode(Struct.wrap(message.structValue), writer.uint32(82).fork()).ldelim();
+      Struct.encode(Struct.wrap(message.structValue), writer.uint32(82).fork()).join();
     }
     switch (message.oneOfValue?.$case) {
       case "theStringValue":
@@ -90,8 +90,8 @@ export const Entity = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Entity {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Entity {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEntity() as any;
     while (reader.pos < end) {
@@ -195,7 +195,7 @@ export const Entity = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -305,15 +305,15 @@ function createBaseSubEntity(): SubEntity {
 }
 
 export const SubEntity = {
-  encode(message: SubEntity, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: SubEntity, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.subVal !== 0) {
       writer.uint32(8).int32(message.subVal);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): SubEntity {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): SubEntity {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSubEntity() as any;
     while (reader.pos < end) {
@@ -330,7 +330,7 @@ export const SubEntity = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },

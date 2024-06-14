@@ -2,7 +2,7 @@
 // source: use-null-as-optional.proto
 
 /* eslint-disable */
-import * as _m0 from "protobufjs/minimal";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
 export const protobufPackage = "useNullAsOptional";
 
@@ -27,7 +27,7 @@ function createBaseProfileInfo(): ProfileInfo {
 }
 
 export const ProfileInfo = {
-  encode(message: ProfileInfo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: ProfileInfo, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.id !== 0) {
       writer.uint32(8).int32(message.id);
     }
@@ -40,8 +40,8 @@ export const ProfileInfo = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ProfileInfo {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): ProfileInfo {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseProfileInfo();
     while (reader.pos < end) {
@@ -72,7 +72,7 @@ export const ProfileInfo = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -116,7 +116,7 @@ function createBaseUser(): User {
 }
 
 export const User = {
-  encode(message: User, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: User, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.id !== 0) {
       writer.uint32(8).int32(message.id);
     }
@@ -124,13 +124,13 @@ export const User = {
       writer.uint32(18).string(message.username);
     }
     if (message.profile !== undefined && message.profile !== null) {
-      ProfileInfo.encode(message.profile, writer.uint32(26).fork()).ldelim();
+      ProfileInfo.encode(message.profile, writer.uint32(26).fork()).join();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): User {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): User {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUser();
     while (reader.pos < end) {
@@ -161,7 +161,7 @@ export const User = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -207,15 +207,15 @@ function createBaseUserById(): UserById {
 }
 
 export const UserById = {
-  encode(message: UserById, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: UserById, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.id !== 0) {
       writer.uint32(8).int32(message.id);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): UserById {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): UserById {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseUserById();
     while (reader.pos < end) {
@@ -232,7 +232,7 @@ export const UserById = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -275,7 +275,7 @@ export class HeroServiceClientImpl implements HeroService {
   FindOneHero(request: UserById): Promise<User> {
     const data = UserById.encode(request).finish();
     const promise = this.rpc.request(this.service, "FindOneHero", data);
-    return promise.then((data) => User.decode(_m0.Reader.create(data)));
+    return promise.then((data) => User.decode(new BinaryReader(data)));
   }
 }
 

@@ -2,9 +2,8 @@
 // source: test.proto
 
 /* eslint-disable */
-import * as _m0 from "protobufjs/minimal";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 import { Timestamp } from "./google/protobuf/timestamp";
-import Long = require("long");
 
 export const protobufPackage = "defaultvalues";
 
@@ -110,12 +109,12 @@ function createBaseDefaultValuesTest(): DefaultValuesTest {
 }
 
 export const DefaultValuesTest = {
-  encode(message: DefaultValuesTest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: DefaultValuesTest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.id !== 0) {
       writer.uint32(8).int32(message.id);
     }
     if (message.child !== undefined) {
-      Child.encode(message.child, writer.uint32(18).fork()).ldelim();
+      Child.encode(message.child, writer.uint32(18).fork()).join();
     }
     if (message.state !== 0) {
       writer.uint32(24).int32(message.state);
@@ -136,25 +135,25 @@ export const DefaultValuesTest = {
     for (const v of message.repId) {
       writer.int32(v);
     }
-    writer.ldelim();
+    writer.join();
     for (const v of message.repChild) {
-      Child.encode(v!, writer.uint32(98).fork()).ldelim();
+      Child.encode(v!, writer.uint32(98).fork()).join();
     }
     writer.uint32(106).fork();
     for (const v of message.repState) {
       writer.int32(v);
     }
-    writer.ldelim();
+    writer.join();
     writer.uint32(114).fork();
     for (const v of message.repLong) {
       writer.int64(v);
     }
-    writer.ldelim();
+    writer.join();
     writer.uint32(122).fork();
     for (const v of message.repTruth) {
       writer.bool(v);
     }
-    writer.ldelim();
+    writer.join();
     for (const v of message.repDescription) {
       writer.uint32(130).string(v!);
     }
@@ -165,7 +164,7 @@ export const DefaultValuesTest = {
       writer.uint32(168).int32(message.optId);
     }
     if (message.optChild !== undefined) {
-      Child.encode(message.optChild, writer.uint32(178).fork()).ldelim();
+      Child.encode(message.optChild, writer.uint32(178).fork()).join();
     }
     if (message.optState !== undefined) {
       writer.uint32(184).int32(message.optState);
@@ -183,16 +182,16 @@ export const DefaultValuesTest = {
       writer.uint32(218).bytes(message.optData);
     }
     Object.entries(message.translations).forEach(([key, value]) => {
-      DefaultValuesTest_TranslationsEntry.encode({ key: key as any, value }, writer.uint32(242).fork()).ldelim();
+      DefaultValuesTest_TranslationsEntry.encode({ key: key as any, value }, writer.uint32(242).fork()).join();
     });
     if (message.timestamp !== undefined) {
-      Timestamp.encode(toTimestamp(message.timestamp), writer.uint32(250).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.timestamp), writer.uint32(250).fork()).join();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): DefaultValuesTest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): DefaultValuesTest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDefaultValuesTest();
     while (reader.pos < end) {
@@ -224,7 +223,7 @@ export const DefaultValuesTest = {
             break;
           }
 
-          message.long = longToNumber(reader.int64() as Long);
+          message.long = longToNumber(reader.int64());
           continue;
         case 5:
           if (tag !== 40) {
@@ -290,7 +289,7 @@ export const DefaultValuesTest = {
           break;
         case 14:
           if (tag === 112) {
-            message.repLong.push(longToNumber(reader.int64() as Long));
+            message.repLong.push(longToNumber(reader.int64()));
 
             continue;
           }
@@ -298,7 +297,7 @@ export const DefaultValuesTest = {
           if (tag === 114) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
-              message.repLong.push(longToNumber(reader.int64() as Long));
+              message.repLong.push(longToNumber(reader.int64()));
             }
 
             continue;
@@ -362,7 +361,7 @@ export const DefaultValuesTest = {
             break;
           }
 
-          message.optLong = longToNumber(reader.int64() as Long);
+          message.optLong = longToNumber(reader.int64());
           continue;
         case 25:
           if (tag !== 200) {
@@ -406,7 +405,7 @@ export const DefaultValuesTest = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -575,7 +574,7 @@ function createBaseDefaultValuesTest_TranslationsEntry(): DefaultValuesTest_Tran
 }
 
 export const DefaultValuesTest_TranslationsEntry = {
-  encode(message: DefaultValuesTest_TranslationsEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: DefaultValuesTest_TranslationsEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.key !== "") {
       writer.uint32(10).string(message.key);
     }
@@ -585,8 +584,8 @@ export const DefaultValuesTest_TranslationsEntry = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): DefaultValuesTest_TranslationsEntry {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): DefaultValuesTest_TranslationsEntry {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDefaultValuesTest_TranslationsEntry();
     while (reader.pos < end) {
@@ -610,7 +609,7 @@ export const DefaultValuesTest_TranslationsEntry = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -653,12 +652,12 @@ function createBaseChild(): Child {
 }
 
 export const Child = {
-  encode(_: Child, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(_: Child, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Child {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Child {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseChild();
     while (reader.pos < end) {
@@ -668,7 +667,7 @@ export const Child = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -750,19 +749,15 @@ function fromJsonTimestamp(o: any): Date {
   }
 }
 
-function longToNumber(long: Long): number {
-  if (long.gt(globalThis.Number.MAX_SAFE_INTEGER)) {
+function longToNumber(int64: { toString(): string }): number {
+  const num = globalThis.Number(int64.toString());
+  if (num > globalThis.Number.MAX_SAFE_INTEGER) {
     throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
-  if (long.lt(globalThis.Number.MIN_SAFE_INTEGER)) {
+  if (num < globalThis.Number.MIN_SAFE_INTEGER) {
     throw new globalThis.Error("Value is smaller than Number.MIN_SAFE_INTEGER");
   }
-  return long.toNumber();
-}
-
-if (_m0.util.Long !== Long) {
-  _m0.util.Long = Long as any;
-  _m0.configure();
+  return num;
 }
 
 function isObject(value: any): boolean {

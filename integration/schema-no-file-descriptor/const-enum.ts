@@ -2,7 +2,7 @@
 // source: const-enum.proto
 
 /* eslint-disable */
-import * as _m0 from "protobufjs/minimal";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
 export const protobufPackage = "";
 
@@ -66,18 +66,18 @@ function createBaseDividerData(): DividerData {
 }
 
 export const DividerData = {
-  encode(message: DividerData, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: DividerData, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.type !== 0) {
       writer.uint32(8).int32(message.type);
     }
     Object.entries(message.typeMap).forEach(([key, value]) => {
-      DividerData_TypeMapEntry.encode({ key: key as any, value }, writer.uint32(18).fork()).ldelim();
+      DividerData_TypeMapEntry.encode({ key: key as any, value }, writer.uint32(18).fork()).join();
     });
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): DividerData {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): DividerData {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDividerData();
     while (reader.pos < end) {
@@ -104,7 +104,7 @@ export const DividerData = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -162,7 +162,7 @@ function createBaseDividerData_TypeMapEntry(): DividerData_TypeMapEntry {
 }
 
 export const DividerData_TypeMapEntry = {
-  encode(message: DividerData_TypeMapEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: DividerData_TypeMapEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.key !== "") {
       writer.uint32(10).string(message.key);
     }
@@ -172,8 +172,8 @@ export const DividerData_TypeMapEntry = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): DividerData_TypeMapEntry {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): DividerData_TypeMapEntry {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDividerData_TypeMapEntry();
     while (reader.pos < end) {
@@ -197,7 +197,7 @@ export const DividerData_TypeMapEntry = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },

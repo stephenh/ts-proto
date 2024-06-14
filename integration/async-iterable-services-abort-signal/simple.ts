@@ -2,7 +2,7 @@
 // source: simple.proto
 
 /* eslint-disable */
-import * as _m0 from "protobufjs/minimal";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
 export const protobufPackage = "simple";
 
@@ -16,15 +16,15 @@ function createBaseEchoMsg(): EchoMsg {
 }
 
 export const EchoMsg = {
-  encode(message: EchoMsg, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: EchoMsg, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.body !== "") {
       writer.uint32(10).string(message.body);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): EchoMsg {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): EchoMsg {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEchoMsg();
     while (reader.pos < end) {
@@ -41,7 +41,7 @@ export const EchoMsg = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -127,7 +127,7 @@ export class EchoerClientImpl implements Echoer {
   Echo(request: EchoMsg, abortSignal?: AbortSignal): Promise<EchoMsg> {
     const data = EchoMsg.encode(request).finish();
     const promise = this.rpc.request(this.service, "Echo", data, abortSignal || undefined);
-    return promise.then((data) => EchoMsg.decode(_m0.Reader.create(data)));
+    return promise.then((data) => EchoMsg.decode(new BinaryReader(data)));
   }
 
   EchoServerStream(request: EchoMsg, abortSignal?: AbortSignal): AsyncIterable<EchoMsg> {
@@ -139,7 +139,7 @@ export class EchoerClientImpl implements Echoer {
   EchoClientStream(request: AsyncIterable<EchoMsg>, abortSignal?: AbortSignal): Promise<EchoMsg> {
     const data = EchoMsg.encodeTransform(request);
     const promise = this.rpc.clientStreamingRequest(this.service, "EchoClientStream", data, abortSignal || undefined);
-    return promise.then((data) => EchoMsg.decode(_m0.Reader.create(data)));
+    return promise.then((data) => EchoMsg.decode(new BinaryReader(data)));
   }
 
   EchoBidiStream(request: AsyncIterable<EchoMsg>, abortSignal?: AbortSignal): AsyncIterable<EchoMsg> {

@@ -22,7 +22,7 @@ describe("use-map-type", () => {
     expect(decoded).toEqual({
       strToEntity: m.strToEntity,
       int32ToInt32: m.int32ToInt32,
-      stringToBytes: new Map([["bar", Buffer.from(new TextEncoder().encode("buz"))]]),
+      stringToBytes: new Map([["bar", new TextEncoder().encode("buz")]]),
       int64ToInt64: m.int64ToInt64,
       mapOfTimestamps: m.mapOfTimestamps,
       struct: { foo: 1 },

@@ -2,7 +2,7 @@
 // source: use-date-string.proto
 
 /* eslint-disable */
-import * as _m0 from "protobufjs/minimal";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 import { Timestamp } from "./google/protobuf/timestamp";
 
 export const protobufPackage = "";
@@ -25,27 +25,27 @@ function createBaseTodo(): Todo {
 }
 
 export const Todo = {
-  encode(message: Todo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Todo, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
     if (message.timestamp !== undefined) {
-      Timestamp.encode(toTimestamp(message.timestamp), writer.uint32(18).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.timestamp), writer.uint32(18).fork()).join();
     }
     for (const v of message.repeatedTimestamp) {
-      Timestamp.encode(toTimestamp(v!), writer.uint32(26).fork()).ldelim();
+      Timestamp.encode(toTimestamp(v!), writer.uint32(26).fork()).join();
     }
     if (message.optionalTimestamp !== undefined) {
-      Timestamp.encode(toTimestamp(message.optionalTimestamp), writer.uint32(34).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.optionalTimestamp), writer.uint32(34).fork()).join();
     }
     Object.entries(message.mapOfTimestamps).forEach(([key, value]) => {
-      Todo_MapOfTimestampsEntry.encode({ key: key as any, value }, writer.uint32(42).fork()).ldelim();
+      Todo_MapOfTimestampsEntry.encode({ key: key as any, value }, writer.uint32(42).fork()).join();
     });
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Todo {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Todo {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTodo();
     while (reader.pos < end) {
@@ -93,7 +93,7 @@ export const Todo = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -168,18 +168,18 @@ function createBaseTodo_MapOfTimestampsEntry(): Todo_MapOfTimestampsEntry {
 }
 
 export const Todo_MapOfTimestampsEntry = {
-  encode(message: Todo_MapOfTimestampsEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Todo_MapOfTimestampsEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.key !== "") {
       writer.uint32(10).string(message.key);
     }
     if (message.value !== undefined) {
-      Timestamp.encode(toTimestamp(message.value), writer.uint32(18).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.value), writer.uint32(18).fork()).join();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Todo_MapOfTimestampsEntry {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Todo_MapOfTimestampsEntry {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTodo_MapOfTimestampsEntry();
     while (reader.pos < end) {
@@ -203,7 +203,7 @@ export const Todo_MapOfTimestampsEntry = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },

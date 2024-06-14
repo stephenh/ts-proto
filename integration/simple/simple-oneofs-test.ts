@@ -1,4 +1,4 @@
-import { Reader } from "protobufjs";
+import { BinaryReader } from "@bufbuild/protobuf/wire";
 import { OneOfMessage } from "./simple";
 import { simple as pbjs } from "./pbjs";
 import PbOneOfMessage = pbjs.OneOfMessage;
@@ -21,7 +21,7 @@ describe("simple", () => {
     const s1 = PbOneOfMessage.fromObject({
       last: "smith",
     });
-    const s2 = OneOfMessage.decode(Reader.create(PbOneOfMessage.encode(s1).finish()));
+    const s2 = OneOfMessage.decode(new BinaryReader(PbOneOfMessage.encode(s1).finish()));
     expect(s2).toMatchInlineSnapshot(`
       {
         "first": undefined,
@@ -45,7 +45,7 @@ describe("simple", () => {
       last: "smith",
     });
     const fromJson = s1.toJSON() as OneOfMessage;
-    const fromPb = OneOfMessage.decode(Reader.create(PbOneOfMessage.encode(s1).finish()));
+    const fromPb = OneOfMessage.decode(new BinaryReader(PbOneOfMessage.encode(s1).finish()));
     expect(fromJson).toEqual(fromPb);
   });
 });

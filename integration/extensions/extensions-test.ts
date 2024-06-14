@@ -37,8 +37,8 @@ describe("extensions-test", () => {
       field: "repeated",
 
       _unknownFields: {
-        [(6 << 3) | 2]: [Buffer.from([1, 1]), Buffer.from([1, 1])],
-        [(6 << 3) | 0]: [Buffer.from([2]), Buffer.from([3]), Buffer.from([5])],
+        [(6 << 3) | 2]: [new Uint8Array([1, 1]), new Uint8Array([1, 1])],
+        [(6 << 3) | 0]: [new Uint8Array([2]), new Uint8Array([3]), new Uint8Array([5])],
       },
     };
 
@@ -67,7 +67,7 @@ describe("extensions-test", () => {
       field: "various",
     };
 
-    const bytesExtensionData = Buffer.from([2, 3, 5, 7, 11]);
+    const bytesExtensionData = new Uint8Array([2, 3, 5, 7, 11]);
     const stringExtensionData = "this is a string";
     const longExtensionData = new Long(0x89abcdef, 0x01234567, false);
     const fixedExtensionData = new Long(0x01234567, 0x89abcdef, true);

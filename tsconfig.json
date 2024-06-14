@@ -8,7 +8,12 @@
     "skipLibCheck": true,
     "experimentalDecorators": true,
     "declaration": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "paths": {
+      // For all code in src and integration, redirect imports from
+      // the npm package to the local sources.
+      "ts-proto-descriptors": ["./protos/index.ts"]
+    }
   },
   "include": ["src"]
 }

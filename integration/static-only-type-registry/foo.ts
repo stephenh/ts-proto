@@ -2,7 +2,7 @@
 // source: foo.proto
 
 /* eslint-disable */
-import * as _m0 from "protobufjs/minimal";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 import { Struct } from "./google/protobuf/struct";
 import { Timestamp } from "./google/protobuf/timestamp";
 import { messageTypeRegistry } from "./typeRegistry";
@@ -28,15 +28,15 @@ function createBaseFoo(): Foo {
 export const Foo = {
   $type: "foo.Foo" as const,
 
-  encode(message: Foo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Foo, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.timestamp !== undefined) {
-      Timestamp.encode(toTimestamp(message.timestamp), writer.uint32(10).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.timestamp), writer.uint32(10).fork()).join();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Foo {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Foo {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFoo();
     while (reader.pos < end) {
@@ -53,7 +53,7 @@ export const Foo = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -89,15 +89,15 @@ function createBaseFoo2(): Foo2 {
 export const Foo2 = {
   $type: "foo.Foo2" as const,
 
-  encode(message: Foo2, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Foo2, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.timestamp !== undefined) {
-      Timestamp.encode(toTimestamp(message.timestamp), writer.uint32(10).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.timestamp), writer.uint32(10).fork()).join();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Foo2 {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Foo2 {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFoo2();
     while (reader.pos < end) {
@@ -114,7 +114,7 @@ export const Foo2 = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -150,15 +150,15 @@ function createBaseWithStruct(): WithStruct {
 export const WithStruct = {
   $type: "foo.WithStruct" as const,
 
-  encode(message: WithStruct, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: WithStruct, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.struct !== undefined) {
-      Struct.encode(Struct.wrap(message.struct), writer.uint32(10).fork()).ldelim();
+      Struct.encode(Struct.wrap(message.struct), writer.uint32(10).fork()).join();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): WithStruct {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): WithStruct {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseWithStruct();
     while (reader.pos < end) {
@@ -175,7 +175,7 @@ export const WithStruct = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },

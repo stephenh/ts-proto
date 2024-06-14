@@ -1,4 +1,4 @@
-import { Reader } from "protobufjs";
+import { BinaryReader } from "@bufbuild/protobuf/wire";
 import {
   protobufPackage,
   Child_Type,
@@ -71,7 +71,7 @@ describe("simple", () => {
       blobs: [],
       enabled: true,
     };
-    const s2 = Simple.decode(Reader.create(PbSimple.encode(PbSimple.fromObject(s1)).finish()));
+    const s2 = Simple.decode(new BinaryReader(PbSimple.encode(PbSimple.fromObject(s1)).finish()));
     expect(s2).toEqual({
       ...s1,
       blob: new Uint8Array(0),
@@ -114,7 +114,7 @@ describe("simple", () => {
 
   it("can decode and fallback to default values", () => {
     const s1: ISimple = {};
-    const s2 = Simple.decode(Reader.create(PbSimple.encode(PbSimple.fromObject(s1)).finish()));
+    const s2 = Simple.decode(new BinaryReader(PbSimple.encode(PbSimple.fromObject(s1)).finish()));
     expect(s2.name).toEqual("");
     expect(s2.hasOwnProperty("name")).toEqual(true);
     expect(s2.age).toEqual(0);
@@ -168,7 +168,7 @@ describe("simple", () => {
       }),
       state: PbNested_InnerEnum.GOOD,
     };
-    const s2 = Nested.decode(Reader.create(PbNested.encode(PbNested.fromObject(s1)).finish()));
+    const s2 = Nested.decode(new BinaryReader(PbNested.encode(PbNested.fromObject(s1)).finish()));
     expect(s2).toEqual(s1);
   });
 
@@ -303,7 +303,7 @@ describe("simple", () => {
       },
       intLookup: { 1: 2, 2: 0 },
     });
-    const s2 = SimpleWithMap.decode(new Reader(PbSimpleWithMap.encode(s1).finish()));
+    const s2 = SimpleWithMap.decode(new BinaryReader(PbSimpleWithMap.encode(s1).finish()));
     expect(s2).toEqual({
       ...s1,
       nameLookup: {},

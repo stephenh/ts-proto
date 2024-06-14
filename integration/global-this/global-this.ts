@@ -2,7 +2,7 @@
 // source: global-this.proto
 
 /* eslint-disable */
-import * as _m0 from "protobufjs/minimal";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
 export const protobufPackage = "simple";
 
@@ -35,15 +35,15 @@ function createBaseObject(): Object {
 }
 
 export const Object = {
-  encode(message: Object, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Object, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Object {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Object {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseObject();
     while (reader.pos < end) {
@@ -60,7 +60,7 @@ export const Object = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -92,15 +92,15 @@ function createBaseError(): Error {
 }
 
 export const Error = {
-  encode(message: Error, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Error, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Error {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Error {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseError();
     while (reader.pos < end) {
@@ -117,7 +117,7 @@ export const Error = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -149,15 +149,15 @@ function createBaseString(): String {
 }
 
 export const String = {
-  encode(message: String, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: String, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.value !== "") {
       writer.uint32(10).string(message.value);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): String {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): String {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseString();
     while (reader.pos < end) {
@@ -174,7 +174,7 @@ export const String = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -206,15 +206,15 @@ function createBaseBoolean(): Boolean {
 }
 
 export const Boolean = {
-  encode(message: Boolean, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Boolean, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.value !== false) {
       writer.uint32(8).bool(message.value);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Boolean {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Boolean {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseBoolean();
     while (reader.pos < end) {
@@ -231,7 +231,7 @@ export const Boolean = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -263,15 +263,15 @@ function createBaseNumber(): Number {
 }
 
 export const Number = {
-  encode(message: Number, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Number, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.value !== 0) {
       writer.uint32(9).double(message.value);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Number {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Number {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNumber();
     while (reader.pos < end) {
@@ -288,7 +288,7 @@ export const Number = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -320,15 +320,15 @@ function createBaseArray(): Array {
 }
 
 export const Array = {
-  encode(message: Array, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Array, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     for (const v of message.values) {
-      String.encode(v!, writer.uint32(10).fork()).ldelim();
+      String.encode(v!, writer.uint32(10).fork()).join();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Array {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Array {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseArray();
     while (reader.pos < end) {
@@ -345,7 +345,7 @@ export const Array = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },

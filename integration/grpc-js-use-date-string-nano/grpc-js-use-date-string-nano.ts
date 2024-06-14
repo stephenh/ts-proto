@@ -2,6 +2,7 @@
 // source: grpc-js-use-date-string-nano.proto
 
 /* eslint-disable */
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 import { ChannelCredentials, Client, makeGenericClientConstructor, Metadata } from "@grpc/grpc-js";
 import type {
   CallOptions,
@@ -12,7 +13,6 @@ import type {
   UntypedServiceImplementation,
 } from "@grpc/grpc-js";
 import NanoDate from "nano-date";
-import * as _m0 from "protobufjs/minimal";
 import { Timestamp } from "./google/protobuf/timestamp";
 
 export const protobufPackage = "simple";
@@ -26,15 +26,15 @@ function createBaseTimestampMessage(): TimestampMessage {
 }
 
 export const TimestampMessage = {
-  encode(message: TimestampMessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: TimestampMessage, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.timestamp !== undefined) {
-      Timestamp.encode(toTimestamp(message.timestamp), writer.uint32(10).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.timestamp), writer.uint32(10).fork()).join();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): TimestampMessage {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): TimestampMessage {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTimestampMessage();
     while (reader.pos < end) {
@@ -51,7 +51,7 @@ export const TimestampMessage = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },

@@ -2,10 +2,9 @@
 // source: simple.proto
 
 /* eslint-disable */
-import * as _m0 from "protobufjs/minimal";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 import { Timestamp } from "./google/protobuf/timestamp";
 import { UInt64Value } from "./google/protobuf/wrappers";
-import Long = require("long");
 
 export const protobufPackage = "simple";
 
@@ -46,7 +45,7 @@ function createBaseNumbers(): Numbers {
 }
 
 export const Numbers = {
-  encode(message: Numbers, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Numbers, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.double !== 0) {
       writer.uint32(9).double(message.double);
     }
@@ -84,16 +83,16 @@ export const Numbers = {
       writer.uint32(97).sfixed64(message.sfixed64);
     }
     if (message.guint64 !== undefined) {
-      UInt64Value.encode({ value: message.guint64! }, writer.uint32(106).fork()).ldelim();
+      UInt64Value.encode({ value: message.guint64! }, writer.uint32(106).fork()).join();
     }
     if (message.timestamp !== undefined) {
-      Timestamp.encode(toTimestamp(message.timestamp), writer.uint32(114).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.timestamp), writer.uint32(114).fork()).join();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Numbers {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Numbers {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNumbers();
     while (reader.pos < end) {
@@ -125,7 +124,7 @@ export const Numbers = {
             break;
           }
 
-          message.int64 = longToString(reader.int64() as Long);
+          message.int64 = reader.int64().toString();
           continue;
         case 5:
           if (tag !== 40) {
@@ -139,7 +138,7 @@ export const Numbers = {
             break;
           }
 
-          message.uint64 = longToString(reader.uint64() as Long);
+          message.uint64 = reader.uint64().toString();
           continue;
         case 7:
           if (tag !== 56) {
@@ -153,7 +152,7 @@ export const Numbers = {
             break;
           }
 
-          message.sint64 = longToString(reader.sint64() as Long);
+          message.sint64 = reader.sint64().toString();
           continue;
         case 9:
           if (tag !== 77) {
@@ -167,7 +166,7 @@ export const Numbers = {
             break;
           }
 
-          message.fixed64 = longToString(reader.fixed64() as Long);
+          message.fixed64 = reader.fixed64().toString();
           continue;
         case 11:
           if (tag !== 93) {
@@ -181,7 +180,7 @@ export const Numbers = {
             break;
           }
 
-          message.sfixed64 = longToString(reader.sfixed64() as Long);
+          message.sfixed64 = reader.sfixed64().toString();
           continue;
         case 13:
           if (tag !== 106) {
@@ -201,7 +200,7 @@ export const Numbers = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -327,15 +326,6 @@ function fromJsonTimestamp(o: any): Date {
   } else {
     return fromTimestamp(Timestamp.fromJSON(o));
   }
-}
-
-function longToString(long: Long) {
-  return long.toString();
-}
-
-if (_m0.util.Long !== Long) {
-  _m0.util.Long = Long as any;
-  _m0.configure();
 }
 
 function isSet(value: any): boolean {

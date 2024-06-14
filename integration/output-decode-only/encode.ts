@@ -2,7 +2,7 @@
 // source: encode.proto
 
 /* eslint-disable */
-import * as _m0 from "protobufjs/minimal";
+import { BinaryReader } from "@bufbuild/protobuf/wire";
 
 export const protobufPackage = "";
 
@@ -15,8 +15,8 @@ function createBaseEncode(): Encode {
 }
 
 export const Encode = {
-  decode(input: _m0.Reader | Uint8Array, length?: number): Encode {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Encode {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEncode();
     while (reader.pos < end) {
@@ -33,7 +33,7 @@ export const Encode = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
