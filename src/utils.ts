@@ -307,7 +307,7 @@ export function maybeCheckIsNull(options: Pick<Options, "useNullAsOptional">, ty
   return options.useNullAsOptional ? ` ${prefix} ${typeName} === null` : "";
 }
 
-export function oneofValueName(fieldName: string, options:Options) {
+export function oneofValueName(fieldName: string, options: Pick<Options, "oneof">) {
   return (options.oneof === OneofOption.UNIONS) ? fieldName : 'value';
 }
 
