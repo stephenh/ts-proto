@@ -55,6 +55,7 @@
     "nice-grpc": "^2.1.4",
     "object-hash": "^3.0.0",
     "prettier": "^2.8.8",
+    "protobufjs": "^7.2.4",
     "protobufjs-cli": "^1.1.1",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
@@ -67,7 +68,6 @@
   "dependencies": {
     "@bufbuild/protobuf": "2.0.0-alpha.4",
     "case-anything": "^2.1.13",
-    "protobufjs": "^7.2.4",
     "ts-poet": "^6.7.0",
     "ts-proto-descriptors": "1.16.0"
   },
