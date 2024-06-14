@@ -1,7 +1,7 @@
 {
   "extends": ["../tsconfig.json", "@tsconfig/strictest/tsconfig.json"],
   "compilerOptions": {
-    "lib": ["es2018", "DOM"],
+    "lib": ["es2020", "DOM"],
     "esModuleInterop": false,
     "noUnusedParameters": false,
     "noUnusedLocals": false

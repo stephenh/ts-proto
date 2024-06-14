@@ -19,7 +19,6 @@ import { DateOption, EnvOption, LongOption, OneofOption, Options } from "./optio
 import SourceInfo from "./sourceInfo";
 import {
   FormattedMethodDescriptor,
-  bigIntLiteral,
   fail,
   impProto,
   maybePrefixPackage,
