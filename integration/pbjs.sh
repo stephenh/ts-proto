@@ -100,6 +100,11 @@ if match "oneof-unions"; then
   yarn run pbts --no-comments -o integration/oneof-unions/pbjs.d.ts integration/oneof-unions/pbjs.js
 fi
 
+if match "oneof-unions-value"; then
+  yarn run pbjs --force-message --force-number -t static-module -o integration/oneof-unions-value/pbjs.js integration/oneof-unions-value/oneof.proto
+  yarn run pbts --no-comments -o integration/oneof-unions-value/pbjs.d.ts integration/oneof-unions-value/pbjs.js
+fi
+
 if match "struct"; then
   yarn run pbjs --force-message --force-number -t static-module -o integration/struct/pbjs.js integration/struct/struct.proto
   yarn run pbts --no-comments -o integration/struct/pbjs.d.ts integration/struct/pbjs.js

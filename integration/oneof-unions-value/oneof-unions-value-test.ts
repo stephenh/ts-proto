@@ -1,7 +1,6 @@
 import { PleaseChoose } from './oneof';
 import * as pbjs from "./pbjs";
 import pbjsValue = pbjs.google.protobuf.Value;
-import { Value } from "./google/protobuf/struct";
 
 describe('oneof=unions-value', () => {
   it('generates types correctly', () => {
