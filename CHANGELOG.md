@@ -1,3 +1,10 @@
+# [1.179.0](https://github.com/stephenh/ts-proto/compare/v1.178.0...v1.179.0) (2024-06-15)
+
+
+### Features
+
+* bigIntLiteral option for using BigInt literals ([#1063](https://github.com/stephenh/ts-proto/issues/1063)) ([b89fbcb](https://github.com/stephenh/ts-proto/commit/b89fbcb1f99ccfcd1f06551286c2459e44a3bac2)), closes [#928](https://github.com/stephenh/ts-proto/issues/928) [#932](https://github.com/stephenh/ts-proto/issues/932)
+
 # [1.178.0](https://github.com/stephenh/ts-proto/compare/v1.177.0...v1.178.0) (2024-06-07)
 
 
