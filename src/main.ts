@@ -101,6 +101,7 @@ import {
   maybeAddComment,
   maybePrefixPackage,
   nullOrUndefined,
+  oneofValueName,
   safeAccessor,
   withAndMaybeCheckIsNotNull,
   withOrMaybeCheckIsNotNull,
@@ -645,6 +646,11 @@ function makeDeepPartial(options: Options, longs: ReturnType<typeof makeLongUtil
       : T extends { ${maybeReadonly(options)}$case: string }
       ? { [K in keyof Omit<T, '$case'>]?: DeepPartial<T[K]> } & { ${maybeReadonly(options)}$case: T['$case'] }
     `;
+  } else if (options.oneof === OneofOption.UNIONS_VALUE) {
+    oneofCase = `
+      : T extends { ${maybeReadonly(options)}$case: string; value: unknown; }
+      ? { ${maybeReadonly(options)}$case: T['$case']; value?: DeepPartial<T['value']>; }
+    `;
   }
 
   const maybeExport = options.exportCommonSymbols ? "export" : "";
@@ -1010,7 +1016,8 @@ function generateOneofProperty(
     fields.map((f) => {
       let fieldName = maybeSnakeToCamel(f.name, options);
       let typeName = toTypeName(ctx, messageDesc, f);
-      return code`{ ${mbReadonly}$case: '${fieldName}', ${mbReadonly}${fieldName}: ${typeName} }`;
+      let valueName = oneofValueName(fieldName, options);
+      return code`{ ${mbReadonly}$case: '${fieldName}', ${mbReadonly}${valueName}: ${typeName} }`;
     }),
     { on: " | " },
   );
@@ -1311,9 +1318,10 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
       const oneofNameWithMessage = options.useJsonName
         ? messageProperty
         : getPropertyAccessor("message", maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options));
+      const valueName = oneofValueName(fieldName, options);
       chunks.push(code`
         ${tagCheck}
-        ${oneofNameWithMessage} = { $case: '${fieldName}', ${fieldName}: ${readSnippet} };
+        ${oneofNameWithMessage} = { $case: '${fieldName}', ${valueName}: ${readSnippet} };
       `);
     } else {
       chunks.push(code`
@@ -1617,8 +1625,9 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
         for (const oneOfField of oneOfFieldsDict[field.oneofIndex]) {
           const writeSnippet = getEncodeWriteSnippet(ctx, oneOfField);
           const oneOfFieldName = maybeSnakeToCamel(oneOfField.name, ctx.options);
+          const valueName = oneofValueName(oneOfFieldName, ctx.options);
           chunks.push(code`case "${oneOfFieldName}":
-            ${writeSnippet(`${oneofNameWithMessage}.${oneOfFieldName}`)};
+            ${writeSnippet(`${oneofNameWithMessage}.${valueName}`)};
             break;`);
         }
         chunks.push(code`}`);
@@ -2127,8 +2136,9 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
         chunks.push(code`${fieldName}: `);
       }
 
+      const valueName = oneofValueName(fieldKey, options);
       const ternaryIf = code`${ctx.utils.isSet}(${jsonProperty})`;
-      const ternaryThen = code`{ $case: '${fieldName}', ${fieldKey}: ${readSnippet(`${jsonProperty}`)}`;
+      const ternaryThen = code`{ $case: '${fieldName}', ${valueName}: ${readSnippet(`${jsonProperty}`)}`;
       chunks.push(code`${ternaryIf} ? ${ternaryThen}} : `);
 
       if (field === lastCase) {
@@ -2334,9 +2344,10 @@ function generateToJson(
       const oneofNameWithMessage = options.useJsonName
         ? messageProperty
         : getPropertyAccessor("message", maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options));
+      const valueName = oneofValueName(fieldName, options);
       chunks.push(code`
         if (${oneofNameWithMessage}?.$case === '${fieldName}') {
-          ${jsonProperty} = ${readSnippet(`${oneofNameWithMessage}.${fieldName}`)};
+          ${jsonProperty} = ${readSnippet(`${oneofNameWithMessage}.${valueName}`)};
         }
       `);
     } else {
@@ -2511,14 +2522,15 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
       const oneofName = maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options);
       const oneofNameWithMessage = getPropertyAccessor("message", oneofName);
       const oneofNameWithObject = getPropertyAccessor("object", oneofName);
-      const v = readSnippet(`${oneofNameWithObject}.${fieldName}`);
+      const valueName = oneofValueName(fieldName, options);
+      const v = readSnippet(`${oneofNameWithObject}.${valueName}`);
       chunks.push(code`
         if (
           ${oneofNameWithObject}?.$case === '${fieldName}'
-          && ${oneofNameWithObject}?.${fieldName} !== undefined
-          && ${oneofNameWithObject}?.${fieldName} !== null
+          && ${oneofNameWithObject}?.${valueName} !== undefined
+          && ${oneofNameWithObject}?.${valueName} !== null
         ) {
-          ${oneofNameWithMessage} = { $case: '${fieldName}', ${fieldName}: ${v} };
+          ${oneofNameWithMessage} = { $case: '${fieldName}', ${valueName}: ${v} };
         }
       `);
     } else if (readSnippet(`x`).toCodeString([]) == "x") {
