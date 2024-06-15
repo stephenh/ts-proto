@@ -1,3 +1,10 @@
+# [1.180.0](https://github.com/stephenh/ts-proto/compare/v1.179.0...v1.180.0) (2024-06-15)
+
+
+### Features
+
+* oneof=unions-value to use the same field name for oneof cases ([#1062](https://github.com/stephenh/ts-proto/issues/1062)) ([7493090](https://github.com/stephenh/ts-proto/commit/74930908cc8e5292577a793b7ae06c3721225ac3)), closes [#1060](https://github.com/stephenh/ts-proto/issues/1060)
+
 # [1.179.0](https://github.com/stephenh/ts-proto/compare/v1.178.0...v1.179.0) (2024-06-15)
 
 
