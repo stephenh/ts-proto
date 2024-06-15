@@ -551,6 +551,8 @@ Generated code will be placed in the Gradle build directory.
 
 - With `--ts_proto_opt=comments=false`, comments won't be copied from the proto files to the generated code.
 
+- With `--ts_proto_opt=bigIntLiteral=false`, the generated code will use `BigInt("0")` instead of `0n` for BigInt literals. BigInt literals aren't supported by TypeScript when the "target" compiler option set to something older than "ES2020".
+
 - With `--ts_proto_opt=useNullAsOptional=true`, `undefined` values will be converted to `null`, and if you use `optional` label in your `.proto` file, the field will have `undefined` type as well. for example:
 
 ```protobuf
@@ -603,7 +605,7 @@ export interface User {
 }
 ```
 
-- With `--ts_proto_opt=noDefaultsForOptionals=true`, `undefined` primitive values will not be defaulted as per the protobuf spec. Additionally unlike the standard behavior, when a field is set to it's standard default value, it *will* be encoded allowing it to be sent over the wire and distinguished from undefined values. For example if a message does not set a boolean value, ordinarily this would be defaulted to `false` which is different to it being undefined. 
+- With `--ts_proto_opt=noDefaultsForOptionals=true`, `undefined` primitive values will not be defaulted as per the protobuf spec. Additionally unlike the standard behavior, when a field is set to it's standard default value, it *will* be encoded allowing it to be sent over the wire and distinguished from undefined values. For example if a message does not set a boolean value, ordinarily this would be defaulted to `false` which is different to it being undefined.
 
 This option allows the library to act in a compatible way with the [Wire implementation](https://square.github.io/wire/) maintained and used by Square/Block. Note: this option should only be used in combination with other client/server code generated using Wire or ts-proto with this option enabled.
 

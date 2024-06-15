@@ -272,7 +272,7 @@ export function defaultValue(ctx: Context, field: FieldDescriptorProto): any {
       } else if (options.forceLong === LongOption.STRING) {
         return `"${numericDefaultVal}"`;
       } else if (options.forceLong === LongOption.BIGINT) {
-        return `BigInt("${numericDefaultVal}")`;
+        return options.bigIntLiteral ? code`${numericDefaultVal}n` : code`BigInt("${numericDefaultVal}")`;
       } else {
         return numericDefaultVal;
       }
