@@ -772,7 +772,7 @@ Will generate a `Foo` type with two fields: `field_a: string | undefined;` and `
 
 With this output, you'll have to check both `if object.field_a` and `if object.field_b`, and if you set one, you'll have to remember to unset the other.
 
-Instead, we recommend using the `oneof=unions-value` option, which will change the output to be an Abstract Data Type/ADT like:
+Instead, we recommend using the `oneof=unions-value` option, which will change the output to be an Algebraic Data Type/ADT like:
 
 ```typescript
 interface YourMessage {
