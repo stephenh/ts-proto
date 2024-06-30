@@ -1023,7 +1023,7 @@ function generateOneofProperty(
   );
 
   const name = maybeSnakeToCamel(messageDesc.oneofDecl[oneofIndex].name, options);
-  return code`${mbReadonly}${name}?: ${unionType} | ${nullOrUndefined(options)},`;
+  return code`${mbReadonly}${name}${ctx.options.useStrictUndefined ? '' : '?'}: ${unionType}${ctx.options.useStrictUndefined ? '' : ` | ${nullOrUndefined(options)}`},`;
 
   /*
   // Ideally we'd put the comments for each oneof field next to the anonymous
@@ -1105,7 +1105,7 @@ function generateBaseInstanceFactory(
 
   return code`
     function createBase${fullName}(): ${fullName} {
-      return { ${joinCode(fields, { on: "," })} };
+      return { ${joinCode(fields, { on: "," })} }${options.useStrictUndefined ? `as unknown as ${fullName}` : ''};
     }
   `;
 }
@@ -1938,7 +1938,7 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
 
   // create the basic function declaration
   chunks.push(code`
-    fromJSON(${messageDesc.field.length > 0 ? "object" : "_"}: any): ${fullName} {
+    fromJSON(${messageDesc.field.length > 0 ? "object" : "_"}: any): ${ctx.options.useStrictUndefined ? `DeepPartial<${fullName}>` : fullName} {
       return {
   `);
 
@@ -2376,13 +2376,13 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
   // create the create function definition
   if (ctx.options.useExactTypes) {
     chunks.push(code`
-      create<I extends ${utils.Exact}<${utils.DeepPartial}<${fullName}>, I>>(base?: I): ${fullName} {
+      create<I extends ${utils.Exact}<${utils.DeepPartial}<${fullName}>, I>>(base?: I):  ${options.useStrictUndefined ? `DeepPartial<${fullName}>` : fullName} {
         return ${fullName}.fromPartial(base ?? ({} as any));
       },
     `);
   } else {
     chunks.push(code`
-      create(base?: ${utils.DeepPartial}<${fullName}>): ${fullName} {
+      create(base?: ${utils.DeepPartial}<${fullName}>):  ${options.useStrictUndefined ? `DeepPartial<${fullName}>` : fullName} {
         return ${fullName}.fromPartial(base ?? {});
       },
     `);
@@ -2393,11 +2393,11 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
 
   if (ctx.options.useExactTypes) {
     chunks.push(code`
-      fromPartial<I extends ${utils.Exact}<${utils.DeepPartial}<${fullName}>, I>>(${paramName}: I): ${fullName} {
+      fromPartial<I extends ${utils.Exact}<${utils.DeepPartial}<${fullName}>, I>>(${paramName}: I): ${options.useStrictUndefined ? `DeepPartial<${fullName}>` : fullName} {
     `);
   } else {
     chunks.push(code`
-      fromPartial(${paramName}: ${utils.DeepPartial}<${fullName}>): ${fullName} {
+      fromPartial(${paramName}: ${utils.DeepPartial}<${fullName}>): ${options.useStrictUndefined ? `DeepPartial<${fullName}>` : fullName} {
     `);
   }
 
@@ -2538,12 +2538,20 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
       const fallback = isWithinOneOf(field) || noDefaultValue ? "undefined" : defaultValue(ctx, field);
       chunks.push(code`${messageProperty} = ${objectProperty} ?? ${fallback};`);
     } else {
-      const fallback = isWithinOneOf(field) || noDefaultValue ? "undefined" : defaultValue(ctx, field);
-      chunks.push(code`
+      if(options.useStrictUndefined) {
+        chunks.push(code`
+        if (${objectProperty} !== undefined && ${objectProperty} !== null) {
+          ${messageProperty} = ${readSnippet(`${objectProperty}`)};
+        }
+        `);
+      } else {
+        const fallback = isWithinOneOf(field) || noDefaultValue ? "undefined" : defaultValue(ctx, field);
+        chunks.push(code`
         ${messageProperty} = (${objectProperty} !== undefined && ${objectProperty} !== null)
           ? ${readSnippet(`${objectProperty}`)}
           : ${fallback};
       `);
+      }
     }
   });
 
