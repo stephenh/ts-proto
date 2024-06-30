@@ -71,6 +71,7 @@ describe("options", () => {
         "usePrototypeForDefaults": false,
         "useReadonlyTypes": false,
         "useSnakeTypeName": true,
+        "useStrictUndefined": false,
       }
     `);
   });

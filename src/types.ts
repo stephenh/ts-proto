@@ -693,7 +693,7 @@ export function toTypeName(
 ): Code {
   function finalize(type: Code, isOptional: boolean) {
     if (isOptional) {
-      return code`${type} | ${nullOrUndefined(ctx.options, field.proto3Optional)}`;
+      return code`${type}${ctx.options.useStrictUndefined ? '' : ` | ${nullOrUndefined(ctx.options, field.proto3Optional)}`}`;
     }
     return type;
   }

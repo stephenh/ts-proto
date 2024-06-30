@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+message UseStrictUndefined {
+  message Inner {
+  }
+
+  message A {
+  }
+
+  message B {
+  }
+
+  Inner inner = 1;
+  oneof value {
+    A a = 2;
+    B b = 3;
+  }
+}
