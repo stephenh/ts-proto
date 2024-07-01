@@ -1,0 +1,1 @@
+typePrefix=Prefix,typeSuffix=Suffix

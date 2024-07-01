@@ -39,8 +39,9 @@ export function visit(
     const protoFullName = protoPrefix + enumDesc.name;
     // I.e. FooBar_ZazInner
     const tsFullName = tsPrefix + maybeSnakeToCamel(enumDesc.name, options);
+    const tsFullNameWithAffixes = `${options.typePrefix}${tsFullName}${options.typeSuffix}`;
     const nestedSourceInfo = sourceInfo.open(childEnumType, index);
-    enumFn(tsFullName, enumDesc, nestedSourceInfo, protoFullName);
+    enumFn(tsFullNameWithAffixes, enumDesc, nestedSourceInfo, protoFullName);
   });
 
   const messages = "messageType" in proto ? proto.messageType : proto.nestedType;
@@ -51,8 +52,9 @@ export function visit(
     const protoFullName = protoPrefix + message.name;
     // I.e. FooBar_ZazInner
     const tsFullName = tsPrefix + maybeSnakeToCamel(messageName(message), options);
+    const tsFullNameWithAffixes = `${options.typePrefix}${tsFullName}${options.typeSuffix}`;
     const nestedSourceInfo = sourceInfo.open(childType, index);
-    messageFn(tsFullName, message, nestedSourceInfo, protoFullName);
+    messageFn(tsFullNameWithAffixes, message, nestedSourceInfo, protoFullName);
     const delim = options.useSnakeTypeName ? "_" : "";
     visit(message, nestedSourceInfo, messageFn, options, enumFn, tsFullName + delim, protoFullName + ".");
   });
