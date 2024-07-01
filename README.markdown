@@ -411,7 +411,10 @@ Generated code will be placed in the Gradle build directory.
   (Note that this only uses the grpc-web runtime, you don't need to use any of their generated code, i.e. the ts-proto output replaces their `ts-protoc-gen` output.)
 
   You'll need to add the `@improbable-eng/grpc-web` and a transport to your project's `package.json`; see the `integration/grpc-web` directory for a working example. Also see [#504](https://github.com/stephenh/ts-proto/issues/504) for integrating with [grpc-web-devtools](https://github.com/SafetyCulture/grpc-web-devtools).
+- With `--ts_proto_opt=outputClientImpl=generic`, the client implementations, i.e. `FooServiceClientImpl`, will leverage an Rpc client which makes no assumptions about the format or method of transport. The Rpc interface instead gets a reference to the Protobuf request message instance, as well as `MessageType` instances for the request and response in order to serialize/deserialize those as the Rpc instance sees fit.
 
+  Implies `--ts_proto_opt=outputTypeRegistry=true`, as the generated `MessageType` interface is used in the `Rpc` definition.
+  
 - With `--ts_proto_opt=returnObservable=true`, the return type of service methods will be `Observable<T>` instead of `Promise<T>`.
 
 - With`--ts_proto_opt=addGrpcMetadata=true`, the last argument of service methods will accept the grpc `Metadata` type, which contains additional information with the call (i.e. access tokens/etc.).
