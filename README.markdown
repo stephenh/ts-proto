@@ -555,6 +555,10 @@ Generated code will be placed in the Gradle build directory.
 
 - With `--ts_proto_opt=useNullAsOptional=true`, `undefined` values will be converted to `null`, and if you use `optional` label in your `.proto` file, the field will have `undefined` type as well. for example:
 
+- With `--ts_proto_opt=typePrefix=MyPrefix`, the generated interfaces, enums, and factories will have a prefix of `MyPrefix` in their names.
+
+- With `--ts_proto_opt=typeSuffix=MySuffix`, the generated interfaces, enums, and factories will have a suffix of `MySuffix` in their names.
+
 ```protobuf
 message ProfileInfo {
     int32 id = 1;

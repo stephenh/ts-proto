@@ -51,6 +51,8 @@ describe("options", () => {
           "keys",
         ],
         "stringEnums": false,
+        "typePrefix": "",
+        "typeSuffix": "",
         "unknownFields": false,
         "unrecognizedEnum": true,
         "unrecognizedEnumName": "UNRECOGNIZED",

@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package affixes;
+
+message AwesomeMessage {
+  message Inner {
+  }
+}
+
+enum AwesomeEnum {
+  AWESOME_ENUM_AWESOME = 0;
+  AWESOME_ENUM_COOL = 1;
+  AWESOME_ENUM_JUST_OKAY = 2;
+}
+
+service AwesomeService {
+}
