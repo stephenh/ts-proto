@@ -1,3 +1,10 @@
+# [1.181.0](https://github.com/stephenh/ts-proto/compare/v1.180.0...v1.181.0) (2024-07-01)
+
+
+### Features
+
+* added the "typePrefix" and "typeSuffix" options. ([#1069](https://github.com/stephenh/ts-proto/issues/1069)) ([ab515cd](https://github.com/stephenh/ts-proto/commit/ab515cda322baeb94c7588117e4bb5bee6281874)), closes [#1033](https://github.com/stephenh/ts-proto/issues/1033)
+
 # [1.180.0](https://github.com/stephenh/ts-proto/compare/v1.179.0...v1.180.0) (2024-06-15)
 
 
