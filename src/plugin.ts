@@ -5,7 +5,7 @@ import {
   FileDescriptorProto,
 } from "ts-proto-descriptors";
 import { promisify } from "util";
-import { generateIndexFiles, getVersions, protoFilesToGenerate, readToBuffer } from "./utils";
+import { generateIndexFiles, getVersions, protoFilesToGenerate, readToBuffer, TYPE_REGISTRY_FILENAME } from "./utils";
 import { generateFile, makeUtils } from "./main";
 import { createTypeMap } from "./types";
 import { BaseContext, createFileContext } from "./context";
@@ -60,11 +60,13 @@ async function main() {
     const utils = makeUtils(options);
     const ctx: BaseContext = { options, typeMap, utils };
 
-    const path = "typeRegistry.ts";
     const code = generateTypeRegistry(ctx);
 
-    const content = code.toString({ ...getTsPoetOpts(options, tsProtoVersion, protocVersion), path });
-    files.push({ name: path, content });
+    const content = code.toString({
+      ...getTsPoetOpts(options, tsProtoVersion, protocVersion),
+      path: TYPE_REGISTRY_FILENAME,
+    });
+    files.push({ name: TYPE_REGISTRY_FILENAME, content });
   }
 
   if (options.outputIndex) {
@@ -93,3 +95,5 @@ main()
     process.stderr.write(e.stack);
     process.exit(1);
   });
+
+export { TYPE_REGISTRY_FILENAME };
