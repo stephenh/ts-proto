@@ -104,6 +104,7 @@ export type Options = {
   annotateFilesWithVersion: boolean;
   noDefaultsForOptionals: boolean;
   bigIntLiteral: boolean;
+  exportTypeRegistry: boolean;
 };
 
 export function defaultOptions(): Options {
@@ -172,6 +173,7 @@ export function defaultOptions(): Options {
     annotateFilesWithVersion: true,
     noDefaultsForOptionals: false,
     bigIntLiteral: true,
+    exportTypeRegistry: false,
   };
 }
 
@@ -284,6 +286,10 @@ export function optionsFromParameter(parameter: string | undefined): Options {
   if (options.unrecognizedEnumValue) {
     // Make sure to cast number options to an actual number
     options.unrecognizedEnumValue = Number(options.unrecognizedEnumValue);
+  }
+
+  if (!options.outputTypeRegistry) {
+    options.exportTypeRegistry = false;
   }
 
   return options;

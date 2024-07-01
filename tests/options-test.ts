@@ -20,6 +20,7 @@ describe("options", () => {
         "env": "both",
         "esModuleInterop": false,
         "exportCommonSymbols": true,
+        "exportTypeRegistry": false,
         "fileSuffix": "",
         "forceLong": "number",
         "globalThisPolyfill": false,

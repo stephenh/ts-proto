@@ -12,6 +12,8 @@ import { SourceDescription } from "./sourceInfo";
 import { OneofOption, Options, ServiceOption } from "./options";
 import { camelCaseGrpc, maybeSnakeToCamel, snakeToCamel } from "./case";
 
+export const TYPE_REGISTRY_FILENAME: string = "typeRegistry.ts";
+
 export function protoFilesToGenerate(request: CodeGeneratorRequest): FileDescriptorProto[] {
   return request.protoFile.filter((f) => request.fileToGenerate.includes(f.name));
 }
@@ -45,6 +47,10 @@ export function generateIndexFiles(files: FileDescriptorProto[], options: Option
       return branch.leaves[part];
     }, packageTree);
     branch.chunks.push(code`export * from "./${moduleName + options.importSuffix}";`);
+  }
+
+  if (options.exportTypeRegistry) {
+    packageTree.chunks.push(code`export * from "./${TYPE_REGISTRY_FILENAME}";`);
   }
 
   const indexFiles: [string, Code][] = [];

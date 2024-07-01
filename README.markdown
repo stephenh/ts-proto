@@ -555,6 +555,8 @@ Generated code will be placed in the Gradle build directory.
 
 - With `--ts_proto_opt=useNullAsOptional=true`, `undefined` values will be converted to `null`, and if you use `optional` label in your `.proto` file, the field will have `undefined` type as well. for example:
 
+- With `--ts_proto_opt=exportTypeRegistry=true`, the generated `index.ts` will export the `typeRegistry.ts` file, only if `outputTypeRegistry=true`.
+
 ```protobuf
 message ProfileInfo {
     int32 id = 1;
