@@ -37,13 +37,13 @@ export interface HeroServiceClient {
 }
 
 export interface HeroServiceController {
-  findOneHero(request: HeroById, metadata: Metadata, ...rest: any): Promise<Hero> | Observable<Hero> | Hero;
+  findOneHero(request: HeroById, metadata: Metadata, ...rest: any): Promise<Hero> | Hero;
 
   findOneVillain(
     request: VillainById,
     metadata: Metadata,
     ...rest: any
-  ): Promise<Villain> | Observable<Villain> | Villain;
+  ): Promise<Villain> | Villain;
 
   findManyVillain(request: Observable<VillainById>, metadata: Metadata, ...rest: any): Observable<Villain>;
 }
