@@ -8,8 +8,6 @@ import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
 import * as _m0 from "protobufjs/minimal";
 import { Observable } from "rxjs";
 
-export const protobufPackage = "hero";
-
 export interface HeroById {
   id: number;
 }
