@@ -2114,15 +2114,15 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
       } else {
         const fallback = noDefaultValue ? nullOrUndefined(options) : "[]";
 
-        const readValueSnippet = readSnippet("e");
-        if (readValueSnippet.toString() === code`e`.toString()) {
+        const needMap = readSnippet("e").toString() !== code`e`.toString();
+        if (!needMap) {
           chunks.push(
             code`${fieldKey}: ${ctx.utils.globalThis}.Array.isArray(${jsonPropertyOptional}) ? [...${jsonProperty}] : [],`,
           );
         } else {
           // Explicit `any` type required to make TS with noImplicitAny happy. `object` is also `any` here.
           chunks.push(code`
-            ${fieldKey}: ${ctx.utils.globalThis}.Array.isArray(${jsonPropertyOptional}) ? ${jsonProperty}.map((e: any) => ${readValueSnippet}): ${fallback},
+            ${fieldKey}: ${ctx.utils.globalThis}.Array.isArray(${jsonPropertyOptional}) ? ${jsonProperty}.map((e: any) => ${readSnippet("e")}): ${fallback},
           `);
         }
       }
@@ -2332,8 +2332,8 @@ function generateToJson(
       }
     } else if (isRepeated(field)) {
       // Arrays might need their elements transformed
-      const transformElement = readSnippet("e");
-      const maybeMap = transformElement.toCodeString([]) !== "e" ? code`.map(e => ${transformElement})` : "";
+      const needMap = readSnippet("e").toCodeString([]) !== "e";
+      const maybeMap = needMap ? code`.map(e => ${readSnippet("e")})` : "";
       chunks.push(code`
         if (${messageProperty}?.length) {
           ${jsonProperty} = ${messageProperty}${maybeMap};
