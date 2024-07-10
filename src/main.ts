@@ -2122,7 +2122,9 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
         } else {
           // Explicit `any` type required to make TS with noImplicitAny happy. `object` is also `any` here.
           chunks.push(code`
-            ${fieldKey}: ${ctx.utils.globalThis}.Array.isArray(${jsonPropertyOptional}) ? ${jsonProperty}.map((e: any) => ${readSnippet("e")}): ${fallback},
+            ${fieldKey}: ${
+            ctx.utils.globalThis
+          }.Array.isArray(${jsonPropertyOptional}) ? ${jsonProperty}.map((e: any) => ${readSnippet("e")}): ${fallback},
           `);
         }
       }
