@@ -19,10 +19,10 @@
 - [Highlights](#highlights)
 - [Auto-Batching / N+1 Prevention](#auto-batching--n1-prevention)
 - [Usage](#usage)
-  - [Supported options](#supported-options)
-  - [NestJS Support](#nestjs-support)
-  - [Watch Mode](#watch-mode)
-  - [Basic gRPC implementation](#basic-grpc-implementation)
+    - [Supported options](#supported-options)
+    - [NestJS Support](#nestjs-support)
+    - [Watch Mode](#watch-mode)
+    - [Basic gRPC implementation](#basic-grpc-implementation)
 - [Sponsors](#sponsors)
 - [Development](#development)
 - [Assumptions](#assumptions)
@@ -703,6 +703,14 @@ The commands below assume you have **Docker** installed. If you are using OS X, 
   > - `proto2ts` — Runs `ts-proto` on the `integration/**/*.proto` files to generate `.ts` files.
   > - `proto2pbjs` — Generates a reference implementation using `pbjs` for testing compatibility.
 - Run `yarn test`
+
+**Vendor**
+
+To update [vendor](./vendor/) code
+
+1. Install [Code Generator Plugins](https://github.com/grpc/grpc-web?tab=readme-ov-file#code-generator-plugins)
+2. Update the commit id in [Makefile](./Makefile).
+3. Run `make build-vendor`.
 
 **Workflow**
 

@@ -1,8 +1,13 @@
 .PHONY: build-vendor
 build-vendor:
 	@rm -rf third_party
-	@mkdir third_party
-	@cd third_party && git clone git@github.com:googleapis/googleapis.git --depth=1 && cd ..
+	@mkdir -p third_party/googleapis
+	@cd third_party/googleapis && \
+		git init && \
+		git remote add origin git@github.com:googleapis/googleapis.git && \
+		git fetch origin 47947b2fb9bdde9b02a7dd173a5077a1cc2beb25 && \
+		git checkout FETCH_HEAD && \
+		cd ../..
 	@rm -rf vendor
 	@mkdir vendor
 	@protoc \
