@@ -4,6 +4,7 @@ import {
   CodeGeneratorResponse_Feature,
   FileDescriptorProto,
 } from "ts-proto-descriptors";
+import { CodeGeneratorRequest as GoogleCodeGeneratorRequest } from "google-protobuf/google/protobuf/compiler/plugin_pb";
 import { promisify } from "util";
 import { generateIndexFiles, getVersions, protoFilesToGenerate, readToBuffer } from "./utils";
 import { generateFile, makeUtils } from "./main";
@@ -24,7 +25,20 @@ async function main() {
   const options = optionsFromParameter(request.parameter);
   const typeMap = createTypeMap(request, options);
   const utils = makeUtils(options);
-  const ctx: BaseContext = { typeMap, options, utils };
+  let fileDescriptorProtoMap: BaseContext["fileDescriptorProtoMap"] = undefined;
+
+  if (options.http) {
+    const input = new Uint8Array(stdin.length);
+    input.set(stdin);
+    fileDescriptorProtoMap = {};
+    GoogleCodeGeneratorRequest.deserializeBinary(input)
+      .getProtoFileList()
+      .forEach((descriptor) => {
+        fileDescriptorProtoMap![descriptor.getName()!] = descriptor;
+      });
+  }
+
+  const ctx: BaseContext = { typeMap, options, utils, fileDescriptorProtoMap };
 
   let filesToGenerate: FileDescriptorProto[];
 
@@ -58,7 +72,7 @@ async function main() {
 
   if (options.outputTypeRegistry) {
     const utils = makeUtils(options);
-    const ctx: BaseContext = { options, typeMap, utils };
+    const ctx: BaseContext = { options, typeMap, utils, fileDescriptorProtoMap };
 
     const path = "typeRegistry.ts";
     const code = generateTypeRegistry(ctx);

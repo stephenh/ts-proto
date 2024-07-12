@@ -23,6 +23,7 @@ describe("options", () => {
         "fileSuffix": "",
         "forceLong": "number",
         "globalThisPolyfill": false,
+        "http": false,
         "importSuffix": "",
         "initializeFieldsAsUndefined": false,
         "lowerCaseServiceMethods": true,

@@ -108,6 +108,7 @@ import {
   withOrMaybeCheckIsNull,
 } from "./utils";
 import { visit, visitServices } from "./visit";
+import { generateHttpService } from "./generate-http";
 
 export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [string, Code] {
   const { options, utils } = ctx;
@@ -330,6 +331,10 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
         serviceConstName = `${camelToSnake(serviceDesc.name)}_SERVICE_NAME`;
       }
       chunks.push(code`export const ${serviceConstName} = "${serviceDesc.name}";`);
+    }
+
+    if (options.http) {
+      chunks.push(generateHttpService(ctx, fileDesc, sInfo, serviceDesc));
     }
 
     const uniqueServices = [...new Set(options.outputServices)].sort();

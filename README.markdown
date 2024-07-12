@@ -28,6 +28,7 @@
 - [Assumptions](#assumptions)
 - [Todo](#todo)
 - [OneOf Handling](#oneof-handling)
+  - [OneOf Type Helpers](#oneof-type-helpers)
 - [Default values and unset fields](#default-values-and-unset-fields)
 - [Well-Known Types](#well-known-types)
   - [Wrapper Types](#wrapper-types)
@@ -146,8 +147,6 @@ If you'd like an out-of-the-box RPC framework built on top of ts-proto, there ar
 - [starpc](https://github.com/aperturerobotics/starpc)
 
 (Note for potential contributors, if you develop other frameworks/mini-frameworks, or even blog posts/tutorials, on using `ts-proto`, we're happy to link to them.)
-
-We also don't support clients for `google.api.http`-based [Google Cloud](https://cloud.google.com/endpoints/docs/grpc/transcoding) APIs, see [#948](https://github.com/stephenh/ts-proto/issues/948) if you'd like to submit a PR.
 
 # Example Types
 
@@ -428,6 +427,10 @@ Generated code will be placed in the Gradle build directory.
 
   Note that `addGrpcMetadata`, `addNestjsRestParameter` and `returnObservable` will still be false.
 
+- With `--ts_proto_opt=http=true`, the defaults will change to generate http friendly types & service metadata that can be used to create your own http client. See the [http readme](HTTP.markdown) for more information and implementation examples.
+
+  Specifically `outputEncodeMethods`, `outputJsonMethods`, and `outputClientImpl` will all be false, `lowerCaseServiceMethods` will be true and `outputServices` will be ignored.
+
 - With `--ts_proto_opt=useDate=false`, fields of type `google.protobuf.Timestamp` will not be mapped to type `Date` in the generated types. See [Timestamp](#timestamp) for more details.
 
 - With `--ts_proto_opt=useMongoObjectId=true`, fields of a type called ObjectId where the message is constructed to have on field called value that is a string will be mapped to type `mongodb.ObjectId` in the generated types. This will require your project to install the mongodb npm package. See [ObjectId](#objectid) for more details.
@@ -609,10 +612,9 @@ export interface User {
 }
 ```
 
-- With `--ts_proto_opt=noDefaultsForOptionals=true`, `undefined` primitive values will not be defaulted as per the protobuf spec. Additionally unlike the standard behavior, when a field is set to it's standard default value, it *will* be encoded allowing it to be sent over the wire and distinguished from undefined values. For example if a message does not set a boolean value, ordinarily this would be defaulted to `false` which is different to it being undefined.
+- With `--ts_proto_opt=noDefaultsForOptionals=true`, `undefined` primitive values will not be defaulted as per the protobuf spec. Additionally unlike the standard behavior, when a field is set to it's standard default value, it _will_ be encoded allowing it to be sent over the wire and distinguished from undefined values. For example if a message does not set a boolean value, ordinarily this would be defaulted to `false` which is different to it being undefined.
 
 This option allows the library to act in a compatible way with the [Wire implementation](https://square.github.io/wire/) maintained and used by Square/Block. Note: this option should only be used in combination with other client/server code generated using Wire or ts-proto with this option enabled.
-
 
 ### NestJS Support
 
@@ -832,10 +834,10 @@ For comparison, the equivalents for `oneof=unions-value`:
 
 ```ts
 /** Extracts all the case names from a oneOf field. */
-type OneOfCases<T> = T['$case'];
+type OneOfCases<T> = T["$case"];
 
 /** Extracts a union of all the value types from a oneOf field */
-type OneOfValues<T> = T['value'];
+type OneOfValues<T> = T["value"];
 
 /** Extracts the specific type of a oneOf case based on its field name */
 type OneOfCase<T, K extends OneOfCases<T>> = T extends {

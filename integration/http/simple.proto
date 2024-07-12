@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+import "google/api/annotations.proto";
+
+service Messaging {
+  rpc GetMessage(GetMessageRequest) returns (GetMessageResponse) {
+    option (google.api.http) = {
+        get:"/v1/messages/{message_id}"
+    };
+  }
+  rpc CreateMessage(CreateMessageRequest) returns (CreateMessageResponse) {
+    option (google.api.http) = {
+        post:"/v1/messages/{message_id}"
+        body: "message"
+    };
+  }
+  rpc UpdateMessage(CreateMessageRequest) returns (CreateMessageResponse) {
+    option (google.api.http) = {
+        post:"/v1/messages/{message_id}"
+        body: "*"
+    };
+  }
+}
+
+message GetMessageRequest {
+  string message_id = 1;
+}
+message GetMessageResponse {
+  string message = 1;
+}
+
+message CreateMessageRequest {
+  string message_id = 1;
+  string message = 2; // mapped to the body
+}
+
+message CreateMessageResponse {}

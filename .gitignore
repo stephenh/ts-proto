@@ -8,6 +8,7 @@ build/
 coverage/
 yarn-error.log
 .DS_Store
+third_party
 
 # Yarn
 .pnp.*
