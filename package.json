@@ -22,7 +22,8 @@
     "watch": "tsx integration/watch.ts"
   },
   "files": [
-    "build"
+    "build",
+    "vendor"
   ],
   "keywords": [],
   "author": "",
