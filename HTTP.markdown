@@ -10,19 +10,19 @@ import "google/api/annotations.proto";
 service Messaging {
   rpc GetMessage(GetMessageRequest) returns (GetMessageResponse) {
     option (google.api.http) = {
-        get:"/v1/messages/{message_id}"
+      get:"/v1/messages/{message_id}"
     };
   }
   rpc CreateMessage(CreateMessageRequest) returns (CreateMessageResponse) {
     option (google.api.http) = {
-        post:"/v1/messages/{message_id}"
-        body: "message"
+      post:"/v1/messages/{message_id}"
+      body: "message"
     };
   }
   rpc UpdateMessage(CreateMessageRequest) returns (CreateMessageResponse) {
     option (google.api.http) = {
-        post:"/v1/messages/{message_id}"
-        body: "*"
+      post:"/v1/messages/{message_id}"
+      body: "*"
     };
   }
 }
