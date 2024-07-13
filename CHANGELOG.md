@@ -1,3 +1,10 @@
+## [1.181.1](https://github.com/stephenh/ts-proto/compare/v1.181.0...v1.181.1) (2024-07-13)
+
+
+### Bug Fixes
+
+* Incorrect message names in the generated code for repeated fields ([#1073](https://github.com/stephenh/ts-proto/issues/1073)) ([8a95d8e](https://github.com/stephenh/ts-proto/commit/8a95d8e0983a38e604b6990461e726db566ff311)), closes [#1072](https://github.com/stephenh/ts-proto/issues/1072)
+
 # [1.181.0](https://github.com/stephenh/ts-proto/compare/v1.180.0...v1.181.0) (2024-07-01)
 
 
