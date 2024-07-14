@@ -1,0 +1,17 @@
+syntax = "proto3";
+package basic;
+
+message GetBasicRequest {
+  string name = 1;
+}
+
+message GetBasicResponse {
+  string resp = 1;
+}
+
+service BasicService {
+  rpc Unary (GetBasicRequest) returns (GetBasicResponse) {}
+  rpc ServerStreaming (GetBasicRequest) returns (stream GetBasicResponse) {}
+  rpc ClientStreaming (stream GetBasicRequest) returns (GetBasicResponse) {}
+  rpc BidiStreaming (stream GetBasicRequest) returns (stream GetBasicResponse) {}
+}
