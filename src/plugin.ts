@@ -4,7 +4,6 @@ import {
   CodeGeneratorResponse_Feature,
   FileDescriptorProto,
 } from "ts-proto-descriptors";
-import { CodeGeneratorRequest as GoogleCodeGeneratorRequest } from "google-protobuf/google/protobuf/compiler/plugin_pb";
 import { promisify } from "util";
 import { generateIndexFiles, getVersions, protoFilesToGenerate, readToBuffer } from "./utils";
 import { generateFile, makeUtils } from "./main";
@@ -31,7 +30,8 @@ async function main() {
     const input = new Uint8Array(stdin.length);
     input.set(stdin);
     fileDescriptorProtoMap = {};
-    GoogleCodeGeneratorRequest.deserializeBinary(input)
+    const PluginPb = await import("./google-protobuf");
+    PluginPb.CodeGeneratorRequest.deserializeBinary(input)
       .getProtoFileList()
       .forEach((descriptor) => {
         fileDescriptorProtoMap![descriptor.getName()!] = descriptor;

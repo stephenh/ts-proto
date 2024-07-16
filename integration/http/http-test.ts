@@ -5,25 +5,34 @@ import { Messaging, GetMessageRequest, GetMessageResponse } from "./simple";
 
 describe("http-test", () => {
   it("compiles", () => {
-    expect(Messaging.getMessage).toStrictEqual({
-      path: "/v1/messages/{message_id}",
-      method: "get",
-      request: undefined,
-      response: undefined,
-    });
-    expect(Messaging.createMessage).toStrictEqual({
-      path: "/v1/messages/{message_id}",
-      method: "post",
-      body: "message",
-      request: undefined,
-      response: undefined,
-    });
-    expect(Messaging.updateMessage).toStrictEqual({
-      path: "/v1/messages/{message_id}",
-      method: "post",
-      body: "*",
-      request: undefined,
-      response: undefined,
+    expect(Messaging).toStrictEqual({
+      getMessage: {
+        path: "/v1/messages/{message_id}",
+        method: "get",
+        requestType: undefined,
+        responseType: undefined,
+      },
+      createMessage: {
+        path: "/v1/messages/{message_id}",
+        method: "post",
+        body: "message",
+        requestType: undefined,
+        responseType: undefined,
+      },
+      updateMessage: {
+        path: "/v1/messages/{message_id}",
+        method: "patch",
+        body: "*",
+        requestType: undefined,
+        responseType: undefined,
+      },
+      deleteMessage: {
+        path: "/v1/messages/{message_id}",
+        method: "delete",
+        body: "*",
+        requestType: undefined,
+        responseType: undefined,
+      },
     });
 
     // Test that the request and response types are correctly typed
@@ -34,7 +43,7 @@ describe("http-test", () => {
     const response: GetMessageResponse = {
       message: "hello",
     };
-    copy.request = request;
-    copy.response = response;
+    copy.requestType = request;
+    copy.responseType = response;
   });
 });

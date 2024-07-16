@@ -1,8 +1,8 @@
 .PHONY: build-vendor
 build-vendor:
-	@rm -rf third_party
-	@mkdir -p third_party/googleapis
-	@cd third_party/googleapis && \
+	@rm -rf tmp
+	@mkdir -p tmp/googleapis
+	@cd tmp/googleapis && \
 		git init && \
 		git remote add origin git@github.com:googleapis/googleapis.git && \
 		git fetch origin 47947b2fb9bdde9b02a7dd173a5077a1cc2beb25 && \
@@ -12,6 +12,6 @@ build-vendor:
 	@mkdir vendor
 	@protoc \
 	  --js_out=import_style=commonjs,binary:vendor \
-		-I third_party/googleapis \
-		third_party/googleapis/google/api/http.proto third_party/googleapis/google/api/annotations.proto
-	@rm -rf third_party
+		-I tmp/googleapis \
+		tmp/googleapis/google/api/http.proto tmp/googleapis/google/api/annotations.proto
+	@rm -rf tmp

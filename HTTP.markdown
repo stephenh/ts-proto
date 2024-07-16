@@ -21,7 +21,7 @@ service Messaging {
   }
   rpc UpdateMessage(CreateMessageRequest) returns (CreateMessageResponse) {
     option (google.api.http) = {
-      post:"/v1/messages/{message_id}"
+      patch:"/v1/messages/{message_id}"
       body: "*"
     };
   }
@@ -66,24 +66,24 @@ export const Messaging = {
   getMessage: {
     path: "/v1/messages/{message_id}",
     method: "get",
-    request: undefined as GetMessageRequest | undefined,
-    response: undefined as GetMessageResponse | undefined,
+    requestType: undefined as GetMessageRequest,
+    responseType: undefined as GetMessageResponse,
   },
 
   createMessage: {
     path: "/v1/messages/{message_id}",
     method: "post",
     body: "message",
-    request: undefined as CreateMessageRequest | undefined,
-    response: undefined as CreateMessageResponse | undefined,
+    requestType: undefined as CreateMessageRequest,
+    responseType: undefined as CreateMessageResponse,
   },
 
   updateMessage: {
     path: "/v1/messages/{message_id}",
-    method: "post",
+    method: "patch",
     body: "*",
-    request: undefined as CreateMessageRequest | undefined,
-    response: undefined as CreateMessageResponse | undefined,
+    requestType: undefined as CreateMessageRequest,
+    responseType: undefined as CreateMessageResponse,
   },
 };
 ```
@@ -93,10 +93,10 @@ export const Messaging = {
 ```typescript
 // This is just an example, do not use it directly.
 function createApi<T extends { path: string; method: "get"; request?: unknown; response?: unknown }>(config: T) {
-  return function api(request: NonNullable<T["request"]>): Promise<NonNullable<T["response"]>> {
-    const path = config.path.replace("{message_id}", request.messageId);
+  return function api(payload: T["requestType"]): Promise<T["responseType"]> {
+    const path = config.path.replace("{message_id}", payload.messageId);
     const method = config.method;
-    const body = method === "get" ? undefined : JSON.stringify({ message: request.message });
+    const body = method === "get" ? undefined : JSON.stringify({ message: payload.message });
 
     return fetch(path, { method, body });
   };

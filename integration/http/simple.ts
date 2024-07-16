@@ -26,23 +26,31 @@ export const Messaging = {
   getMessage: {
     path: "/v1/messages/{message_id}",
     method: "get",
-    request: undefined as GetMessageRequest | undefined,
-    response: undefined as GetMessageResponse | undefined,
+    requestType: undefined as unknown as GetMessageRequest,
+    responseType: undefined as unknown as GetMessageResponse,
   },
 
   createMessage: {
     path: "/v1/messages/{message_id}",
     method: "post",
     body: "message",
-    request: undefined as CreateMessageRequest | undefined,
-    response: undefined as CreateMessageResponse | undefined,
+    requestType: undefined as unknown as CreateMessageRequest,
+    responseType: undefined as unknown as CreateMessageResponse,
   },
 
   updateMessage: {
     path: "/v1/messages/{message_id}",
-    method: "post",
+    method: "patch",
     body: "*",
-    request: undefined as CreateMessageRequest | undefined,
-    response: undefined as CreateMessageResponse | undefined,
+    requestType: undefined as unknown as CreateMessageRequest,
+    responseType: undefined as unknown as CreateMessageResponse,
+  },
+
+  deleteMessage: {
+    path: "/v1/messages/{message_id}",
+    method: "delete",
+    body: "*",
+    requestType: undefined as unknown as GetMessageRequest,
+    responseType: undefined as unknown as CreateMessageResponse,
   },
 };

@@ -4,7 +4,6 @@ import { requestType, responseType } from "./types";
 import SourceInfo from "./sourceInfo";
 import { assertInstanceOf, FormattedMethodDescriptor } from "./utils";
 import { Context } from "./context";
-require("../vendor/google/api/annotations_pb");
 
 interface HTTPRule {
   get: string;
@@ -12,21 +11,20 @@ interface HTTPRule {
   post: string;
   pb_delete: string;
   patch: string;
+  option: string;
   body: "*" | string;
 }
 
 function mapHTTPOptions(http: HTTPRule) {
-  for (const method of ["post", "put", "get", "pb_delete", "patch"] as const) {
+  for (const method of ["get", "post", "put", "pb_delete", "patch", "option"] as const) {
     if (http[method]) {
       return {
-        method: method,
+        method: method === "pb_delete" ? "delete" : method,
         path: http[method],
         body: http.body,
       };
     }
   }
-
-  throw new Error("No HTTP method found");
 }
 
 export function generateHttpService(
@@ -41,18 +39,18 @@ export function generateHttpService(
     return service.name === serviceDesc.name;
   })?.methodList;
 
-  const httpOptions: Record<string, ReturnType<typeof mapHTTPOptions>> = {};
+  const httpOptions: Record<string, ReturnType<typeof mapHTTPOptions> | undefined> = {};
   let hasHttpOptions = false;
 
   if (methodList) {
     serviceDesc.method.forEach((methodDesc, i) => {
-      // @ts-expect-error
-      const http = methodList[i]?.options?.http as HTTPRule | undefined;
+      const http = (methodList[i]?.options as { http?: HTTPRule } | undefined)?.http as HTTPRule | undefined;
+      const httpOption = http ? mapHTTPOptions(http) : undefined;
 
-      if (http) {
+      if (httpOption) {
         hasHttpOptions = true;
         assertInstanceOf(methodDesc, FormattedMethodDescriptor);
-        httpOptions[methodDesc.formattedName] = mapHTTPOptions(http);
+        httpOptions[methodDesc.formattedName] = httpOption;
       }
     });
   }
@@ -65,12 +63,17 @@ export function generateHttpService(
     serviceDesc.method.forEach((methodDesc) => {
       assertInstanceOf(methodDesc, FormattedMethodDescriptor);
       const httpMethod = httpOptions[methodDesc.formattedName];
+
+      if (!httpMethod) {
+        return;
+      }
+
       chunks.push(code`
         ${methodDesc.formattedName}: {
           path: "${httpMethod.path}",
           method: "${httpMethod.method}",${httpMethod.body ? `\nbody: "${httpMethod.body}",` : ""}
-          request: undefined as ${requestType(ctx, methodDesc)} | undefined,
-          response: undefined as ${responseType(ctx, methodDesc)} | undefined,
+          requestType: undefined as unknown as ${requestType(ctx, methodDesc)},
+          responseType: undefined as unknown as ${responseType(ctx, methodDesc)},
         },
       `);
     });
