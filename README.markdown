@@ -19,10 +19,10 @@
 - [Highlights](#highlights)
 - [Auto-Batching / N+1 Prevention](#auto-batching--n1-prevention)
 - [Usage](#usage)
-    - [Supported options](#supported-options)
-    - [NestJS Support](#nestjs-support)
-    - [Watch Mode](#watch-mode)
-    - [Basic gRPC implementation](#basic-grpc-implementation)
+  - [Supported options](#supported-options)
+  - [NestJS Support](#nestjs-support)
+  - [Watch Mode](#watch-mode)
+  - [Basic gRPC implementation](#basic-grpc-implementation)
 - [Sponsors](#sponsors)
 - [Development](#development)
 - [Assumptions](#assumptions)
@@ -612,9 +612,10 @@ export interface User {
 }
 ```
 
-- With `--ts_proto_opt=noDefaultsForOptionals=true`, `undefined` primitive values will not be defaulted as per the protobuf spec. Additionally unlike the standard behavior, when a field is set to it's standard default value, it _will_ be encoded allowing it to be sent over the wire and distinguished from undefined values. For example if a message does not set a boolean value, ordinarily this would be defaulted to `false` which is different to it being undefined.
+- With `--ts_proto_opt=noDefaultsForOptionals=true`, `undefined` primitive values will not be defaulted as per the protobuf spec. Additionally unlike the standard behavior, when a field is set to it's standard default value, it *will* be encoded allowing it to be sent over the wire and distinguished from undefined values. For example if a message does not set a boolean value, ordinarily this would be defaulted to `false` which is different to it being undefined.
 
 This option allows the library to act in a compatible way with the [Wire implementation](https://square.github.io/wire/) maintained and used by Square/Block. Note: this option should only be used in combination with other client/server code generated using Wire or ts-proto with this option enabled.
+
 
 ### NestJS Support
 
@@ -842,10 +843,10 @@ For comparison, the equivalents for `oneof=unions-value`:
 
 ```ts
 /** Extracts all the case names from a oneOf field. */
-type OneOfCases<T> = T["$case"];
+type OneOfCases<T> = T['$case'];
 
 /** Extracts a union of all the value types from a oneOf field */
-type OneOfValues<T> = T["value"];
+type OneOfValues<T> = T['value'];
 
 /** Extracts the specific type of a oneOf case based on its field name */
 type OneOfCase<T, K extends OneOfCases<T>> = T extends {
