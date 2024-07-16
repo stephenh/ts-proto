@@ -28,7 +28,6 @@
 - [Assumptions](#assumptions)
 - [Todo](#todo)
 - [OneOf Handling](#oneof-handling)
-  - [OneOf Type Helpers](#oneof-type-helpers)
 - [Default values and unset fields](#default-values-and-unset-fields)
 - [Well-Known Types](#well-known-types)
   - [Wrapper Types](#wrapper-types)
