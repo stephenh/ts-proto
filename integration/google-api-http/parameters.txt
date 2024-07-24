@@ -1,1 +1,1 @@
-outputClientImpl=false,outputEncodeMethods=false,outputJsonMethods=false,outputServices=generic-definitions
+onlyTypes=true,outputServices=generic-google-api-http-definitions

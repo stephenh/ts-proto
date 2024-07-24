@@ -22,37 +22,32 @@ export interface CreateMessageRequest {
 export interface CreateMessageResponse {
 }
 
-export type MessagingDefinition = typeof MessagingDefinition;
-export const MessagingDefinition = {
-  name: "Messaging",
-  fullName: "Messaging",
-  methods: {
-    getMessage: {
-      path: "/v1/messages/{message_id}",
-      method: "get",
-      requestType: undefined as unknown as GetMessageRequest,
-      responseType: undefined as unknown as GetMessageResponse,
-    },
-    createMessage: {
-      path: "/v1/messages/{message_id}",
-      method: "post",
-      body: "message",
-      requestType: undefined as unknown as CreateMessageRequest,
-      responseType: undefined as unknown as CreateMessageResponse,
-    },
-    updateMessage: {
-      path: "/v1/messages/{message_id}",
-      method: "patch",
-      body: "*",
-      requestType: undefined as unknown as CreateMessageRequest,
-      responseType: undefined as unknown as CreateMessageResponse,
-    },
-    deleteMessage: {
-      path: "/v1/messages/{message_id}",
-      method: "delete",
-      body: "*",
-      requestType: undefined as unknown as GetMessageRequest,
-      responseType: undefined as unknown as CreateMessageResponse,
-    },
+export const Messaging = {
+  GetMessage: {
+    path: "/v1/messages/{message_id}",
+    method: "get",
+    requestType: undefined as unknown as GetMessageRequest,
+    responseType: undefined as unknown as GetMessageResponse,
   },
-} as const;
+  CreateMessage: {
+    path: "/v1/messages/{message_id}",
+    method: "post",
+    body: "message",
+    requestType: undefined as unknown as CreateMessageRequest,
+    responseType: undefined as unknown as CreateMessageResponse,
+  },
+  UpdateMessage: {
+    path: "/v1/messages/{message_id}",
+    method: "patch",
+    body: "*",
+    requestType: undefined as unknown as CreateMessageRequest,
+    responseType: undefined as unknown as CreateMessageResponse,
+  },
+  DeleteMessage: {
+    path: "/v1/messages/{message_id}",
+    method: "delete",
+    body: "*",
+    requestType: undefined as unknown as GetMessageRequest,
+    responseType: undefined as unknown as CreateMessageResponse,
+  },
+};
