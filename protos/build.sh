@@ -8,6 +8,8 @@ protoc \
   --ts_proto_out=. \
   --ts_proto_opt=esModuleInterop=true,useExactTypes=false,initializeFieldsAsUndefined=false,exportCommonSymbols=false,unknownFields=true,usePrototypeForDefaults=true,outputExtensions=true,disableProto2Optionals=true \
   ./google/protobuf/descriptor.proto \
+  ./google/api/annotations.proto \
+  ./google/api/http.proto \
   ./google/protobuf/compiler/plugin.proto
 
 ./node_modules/.bin/tsc -p tsconfig.json
