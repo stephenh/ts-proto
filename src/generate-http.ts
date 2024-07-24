@@ -1,27 +1,21 @@
-import { FileDescriptorProto, ServiceDescriptorProto } from "ts-proto-descriptors";
+import { FileDescriptorProto, ServiceDescriptorProto, MethodOptions } from "ts-proto-descriptors";
 import { Code, code, joinCode } from "ts-poet";
 import { requestType, responseType } from "./types";
 import SourceInfo from "./sourceInfo";
 import { assertInstanceOf, FormattedMethodDescriptor } from "./utils";
 import { Context } from "./context";
 
-interface HTTPRule {
-  get: string;
-  put: string;
-  post: string;
-  pb_delete: string;
-  patch: string;
-  option: string;
-  body: "*" | string;
-}
+function findHttpRule(httpRule: MethodOptions["httpRule"]) {
+  if (!httpRule) {
+    return;
+  }
 
-function mapHTTPOptions(http: HTTPRule) {
-  for (const method of ["get", "post", "put", "pb_delete", "patch", "option"] as const) {
-    if (http[method]) {
+  for (const method of ["get", "post", "put", "delete", "patch"] as const) {
+    if (httpRule[method]) {
       return {
-        method: method === "pb_delete" ? "delete" : method,
-        path: http[method],
-        body: http.body,
+        method: method,
+        path: httpRule[method],
+        body: httpRule.body,
       };
     }
   }
@@ -29,49 +23,42 @@ function mapHTTPOptions(http: HTTPRule) {
 
 export function generateHttpService(
   ctx: Context,
-  fileDesc: FileDescriptorProto,
+  _fileDesc: FileDescriptorProto,
   _sourceInfo: SourceInfo,
   serviceDesc: ServiceDescriptorProto,
 ): Code {
   const chunks: Code[] = [];
 
-  const methodList = ctx.fileDescriptorProtoMap![fileDesc.name].toObject().serviceList.find((service) => {
-    return service.name === serviceDesc.name;
-  })?.methodList;
+  const httpRules: Record<string, ReturnType<typeof findHttpRule> | undefined> = {};
+  let hasHttpRule = false;
 
-  const httpOptions: Record<string, ReturnType<typeof mapHTTPOptions> | undefined> = {};
-  let hasHttpOptions = false;
+  serviceDesc.method.forEach((methodDesc) => {
+    const httpRule = findHttpRule(methodDesc.options?.httpRule);
 
-  if (methodList) {
-    serviceDesc.method.forEach((methodDesc, i) => {
-      const http = (methodList[i]?.options as { http?: HTTPRule } | undefined)?.http as HTTPRule | undefined;
-      const httpOption = http ? mapHTTPOptions(http) : undefined;
+    if (httpRule) {
+      hasHttpRule = true;
+      assertInstanceOf(methodDesc, FormattedMethodDescriptor);
+      httpRules[methodDesc.formattedName] = httpRule;
+    }
+  });
 
-      if (httpOption) {
-        hasHttpOptions = true;
-        assertInstanceOf(methodDesc, FormattedMethodDescriptor);
-        httpOptions[methodDesc.formattedName] = httpOption;
-      }
-    });
-  }
-
-  if (hasHttpOptions) {
+  if (hasHttpRule) {
     chunks.push(code`
       export const ${serviceDesc.name} = {
     `);
 
     serviceDesc.method.forEach((methodDesc) => {
       assertInstanceOf(methodDesc, FormattedMethodDescriptor);
-      const httpMethod = httpOptions[methodDesc.formattedName];
+      const httpRule = httpRules[methodDesc.formattedName];
 
-      if (!httpMethod) {
+      if (!httpRule) {
         return;
       }
 
       chunks.push(code`
         ${methodDesc.formattedName}: {
-          path: "${httpMethod.path}",
-          method: "${httpMethod.method}",${httpMethod.body ? `\nbody: "${httpMethod.body}",` : ""}
+          path: "${httpRule.path}",
+          method: "${httpRule.method}",${httpRule.body ? `\nbody: "${httpRule.body}",` : ""}
           requestType: undefined as unknown as ${requestType(ctx, methodDesc)},
           responseType: undefined as unknown as ${responseType(ctx, methodDesc)},
         },

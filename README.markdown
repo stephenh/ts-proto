@@ -704,14 +704,6 @@ The commands below assume you have **Docker** installed. If you are using OS X, 
   > - `proto2pbjs` — Generates a reference implementation using `pbjs` for testing compatibility.
 - Run `yarn test`
 
-**Vendor**
-
-To update [vendor](./vendor/) code
-
-1. Install [Code Generator Plugins](https://github.com/grpc/grpc-web?tab=readme-ov-file#code-generator-plugins)
-2. Update the commit id in [Makefile](./Makefile#L8).
-3. Run `make build-vendor`.
-
 **Workflow**
 
 - Add/update an integration test for your use case

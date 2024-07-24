@@ -24,21 +24,7 @@ async function main() {
   const options = optionsFromParameter(request.parameter);
   const typeMap = createTypeMap(request, options);
   const utils = makeUtils(options);
-  let fileDescriptorProtoMap: BaseContext["fileDescriptorProtoMap"] = undefined;
-
-  if (options.http) {
-    const input = new Uint8Array(stdin.length);
-    input.set(stdin);
-    fileDescriptorProtoMap = {};
-    const PluginPb = await import("./google-protobuf");
-    PluginPb.CodeGeneratorRequest.deserializeBinary(input)
-      .getProtoFileList()
-      .forEach((descriptor) => {
-        fileDescriptorProtoMap![descriptor.getName()!] = descriptor;
-      });
-  }
-
-  const ctx: BaseContext = { typeMap, options, utils, fileDescriptorProtoMap };
+  const ctx: BaseContext = { typeMap, options, utils };
 
   let filesToGenerate: FileDescriptorProto[];
 
@@ -72,7 +58,7 @@ async function main() {
 
   if (options.outputTypeRegistry) {
     const utils = makeUtils(options);
-    const ctx: BaseContext = { options, typeMap, utils, fileDescriptorProtoMap };
+    const ctx: BaseContext = { options, typeMap, utils };
 
     const path = "typeRegistry.ts";
     const code = generateTypeRegistry(ctx);

@@ -8,7 +8,6 @@ build/
 coverage/
 yarn-error.log
 .DS_Store
-tmp/
 
 # Yarn
 .pnp.*

@@ -22,8 +22,7 @@
     "watch": "tsx integration/watch.ts"
   },
   "files": [
-    "build",
-    "vendor"
+    "build"
   ],
   "keywords": [],
   "author": "",
@@ -44,7 +43,6 @@
     "@semantic-release/npm": "^10.0.4",
     "@semantic-release/release-notes-generator": "^11.0.4",
     "@tsconfig/strictest": "^2.0.1",
-    "@types/google-protobuf": "^3.15.12",
     "@types/jest": "^29.5.3",
     "@types/node": "^16.18.38",
     "@types/object-hash": "^3.0.2",
@@ -68,7 +66,6 @@
   },
   "dependencies": {
     "case-anything": "^2.1.13",
-    "google-protobuf": "^3.21.2",
     "protobufjs": "^7.2.4",
     "ts-poet": "^6.7.0",
     "ts-proto-descriptors": "1.16.0"
