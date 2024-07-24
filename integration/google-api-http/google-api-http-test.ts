@@ -1,11 +1,11 @@
 /**
  * @jest-environment node
  */
-import { Messaging, GetMessageRequest, GetMessageResponse } from "./simple";
+import { MessagingDefinition, GetMessageRequest, GetMessageResponse } from "./simple";
 
-describe("http-test", () => {
+describe("google-api-http-test", () => {
   it("compiles", () => {
-    expect(Messaging).toStrictEqual({
+    expect(MessagingDefinition.methods).toStrictEqual({
       getMessage: {
         path: "/v1/messages/{message_id}",
         method: "get",
@@ -36,7 +36,7 @@ describe("http-test", () => {
     });
 
     // Test that the request and response types are correctly typed
-    const copy = { ...Messaging.getMessage };
+    const copy = { ...MessagingDefinition.methods.getMessage };
     const request: GetMessageRequest = {
       messageId: "1",
     };

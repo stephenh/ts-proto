@@ -71,7 +71,6 @@ export type Options = {
   returnObservable: boolean;
   lowerCaseServiceMethods: boolean;
   nestJs: boolean;
-  http: boolean;
   env: EnvOption;
   unrecognizedEnum: boolean;
   unrecognizedEnumName: string;
@@ -142,7 +141,6 @@ export function defaultOptions(): Options {
     metadataType: undefined,
     addNestjsRestParameter: false,
     nestJs: false,
-    http: false,
     env: EnvOption.BOTH,
     unrecognizedEnum: true,
     unrecognizedEnumName: "UNRECOGNIZED",
@@ -190,23 +188,12 @@ const nestJsOptions: Partial<Options> = {
   useDate: DateOption.TIMESTAMP,
 };
 
-const httpOptions: Partial<Options> = {
-  lowerCaseServiceMethods: true,
-  outputEncodeMethods: false,
-  outputJsonMethods: false,
-  outputPartialMethods: false,
-  outputClientImpl: false,
-  outputServices: false as any,
-};
-
 export function optionsFromParameter(parameter: string | undefined): Options {
   const options = defaultOptions();
   if (parameter) {
     const parsed = parseParameter(parameter);
     if (parsed.nestJs) {
       Object.assign(options, nestJsOptions);
-    } else if (parsed.http) {
-      Object.assign(options, httpOptions);
     }
     Object.assign(options, parsed);
   }

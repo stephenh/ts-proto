@@ -340,3 +340,19 @@ export async function getVersions(request: CodeGeneratorRequest) {
     tsProtoVersion,
   };
 }
+
+export function findHttpRule(httpRule: MethodOptions["httpRule"]) {
+  if (!httpRule) {
+    return;
+  }
+
+  for (const method of ["get", "post", "put", "delete", "patch"] as const) {
+    if (httpRule[method]) {
+      return {
+        method: method,
+        path: httpRule[method],
+        body: httpRule.body,
+      };
+    }
+  }
+}

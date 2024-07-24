@@ -10,7 +10,7 @@ import { uncapitalize } from "./case";
 import { Context } from "./context";
 import SourceInfo, { Fields } from "./sourceInfo";
 import { messageToTypeName } from "./types";
-import { maybeAddComment, maybePrefixPackage } from "./utils";
+import { maybeAddComment, maybePrefixPackage, findHttpRule } from "./utils";
 
 /**
  * Generates a framework-agnostic service descriptor.
@@ -63,6 +63,19 @@ export function generateGenericServiceDefinition(
 function generateMethodDefinition(ctx: Context, methodDesc: MethodDescriptorProto) {
   const inputType = messageToTypeName(ctx, methodDesc.inputType, { keepValueType: true });
   const outputType = messageToTypeName(ctx, methodDesc.outputType, { keepValueType: true });
+
+  const httpRule = findHttpRule(methodDesc.options?.httpRule);
+
+  if (httpRule) {
+    return code`
+      {
+        path: "${httpRule.path}",
+        method: "${httpRule.method}",${httpRule.body ? `\nbody: "${httpRule.body}",` : ""}
+        requestType: undefined as unknown as ${inputType},
+        responseType: undefined as unknown as ${outputType},
+      }
+  `;
+  }
 
   return code`
     {

@@ -426,10 +426,6 @@ Generated code will be placed in the Gradle build directory.
 
   Note that `addGrpcMetadata`, `addNestjsRestParameter` and `returnObservable` will still be false.
 
-- With `--ts_proto_opt=http=true`, the defaults will change to generate http friendly types & service metadata that can be used to create your own http client. See the [http readme](HTTP.markdown) for more information and implementation examples.
-
-  Specifically `outputEncodeMethods`, `outputJsonMethods`, and `outputClientImpl` will all be false, `lowerCaseServiceMethods` will be true and `outputServices` will be ignored.
-
 - With `--ts_proto_opt=useDate=false`, fields of type `google.protobuf.Timestamp` will not be mapped to type `Date` in the generated types. See [Timestamp](#timestamp) for more details.
 
 - With `--ts_proto_opt=useMongoObjectId=true`, fields of a type called ObjectId where the message is constructed to have on field called value that is a string will be mapped to type `mongodb.ObjectId` in the generated types. This will require your project to install the mongodb npm package. See [ObjectId](#objectid) for more details.
