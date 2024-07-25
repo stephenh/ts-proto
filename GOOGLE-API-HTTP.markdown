@@ -7,7 +7,7 @@ Please refer to [integration/google-api-http](./integration/google-api-http) for
 ## Client implementation example
 
 ```typescript
-// This is just an example, please test it to see if it works for you.
+// This is just a basic implementation, please test it to see if it works for you.
 function createApi<
   S extends Record<string, { path: string; method: string; body?: string; requestType: any; responseType: any }>,
 >(
@@ -21,16 +21,45 @@ function createApi<
         name,
         async (payload: typeof endpointDef.requestType): Promise<typeof endpointDef.responseType> => {
           const bodyKey = endpointDef.body;
-          const payloadClone = bodyKey === "*" ? JSON.parse(JSON.stringify(payload)) : null;
-          const path = endpointDef.path.replace(/\{([^\}]+)\}/g, (_, key) => {
-            delete payloadClone[key];
-            return payload[key];
-          });
+          const hasFieldsInPath = endpointDef.path.includes("{");
+          const payloadClone =
+            hasFieldsInPath || (bodyKey && bodyKey !== "*") ? JSON.parse(JSON.stringify(payload)) : undefined;
+
+          // Spec: https://cloud.google.com/service-infrastructure/docs/service-management/reference/rpc/google.api#path-template-syntax
+          // This code only handles simple cases.
+          let path = hasFieldsInPath
+            ? endpointDef.path.replace(/\{([^\}]+)\}/g, (_, fieldRef) => {
+                let deleteKey: string;
+                let result: string;
+
+                if (fieldRef.includes("=")) {
+                  // Handle path template like "/v1/{name=messages/*}"
+                  const [key, value] = fieldRef.split("=");
+                  deleteKey = key;
+                  result = value.replace("*", payload[key]);
+                } else {
+                  // Handle path template like "/v1/messages/{message_id}"
+                  deleteKey = fieldRef;
+                  result = payload[fieldRef];
+                }
+
+                delete payloadClone[deleteKey];
+                return result;
+              })
+            : endpointDef.path;
+
           let body: string | undefined = undefined;
+
           if (bodyKey === "*") {
-            body = JSON.stringify(payloadClone);
+            body = JSON.stringify(payloadClone ?? payload);
           } else if (bodyKey) {
             body = JSON.stringify({ [bodyKey]: payload[bodyKey] });
+            delete payloadClone[bodyKey];
+          }
+
+          const qs = new URLSearchParams(payloadClone ?? payload).toString();
+          if (qs) {
+            path += "?" + qs;
           }
 
           return fetcher({ path, method: endpointDef.method, body });
