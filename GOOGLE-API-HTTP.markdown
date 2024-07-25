@@ -42,11 +42,14 @@ function createApi<
               })
             : endpointDef.path;
 
+          if (bodyKey === "*") {
+            const body = JSON.stringify(payloadClone ?? payload);
+            return fetcher({ path, method: endpointDef.method, body });
+          }
+
           let body: string | undefined = undefined;
 
-          if (bodyKey === "*") {
-            body = JSON.stringify(payloadClone ?? payload);
-          } else if (bodyKey) {
+          if (bodyKey) {
             body = JSON.stringify({ [bodyKey]: payload[bodyKey] });
             delete payloadClone[bodyKey];
           }
