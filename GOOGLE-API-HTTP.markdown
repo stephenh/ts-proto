@@ -29,22 +29,16 @@ function createApi<
           // This code only handles simple cases.
           let path = hasFieldsInPath
             ? endpointDef.path.replace(/\{([^\}]+)\}/g, (_, fieldRef) => {
-                let deleteKey: string;
-                let result: string;
-
                 if (fieldRef.includes("=")) {
                   // Handle path template like "/v1/{name=messages/*}"
                   const [key, value] = fieldRef.split("=");
-                  deleteKey = key;
-                  result = value.replace("*", payload[key]);
+                  delete payloadClone[key];
+                  return value.replace("*", payload[key]);
                 } else {
                   // Handle path template like "/v1/messages/{message_id}"
-                  deleteKey = fieldRef;
-                  result = payload[fieldRef];
+                  delete payloadClone[fieldRef];
+                  return payload[fieldRef];
                 }
-
-                delete payloadClone[deleteKey];
-                return result;
               })
             : endpointDef.path;
 
