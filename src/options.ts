@@ -35,6 +35,7 @@ export enum ServiceOption {
   GRPC = "grpc-js",
   NICE_GRPC = "nice-grpc",
   GENERIC = "generic-definitions",
+  GENERIC_GOOGLE_API_HTTP = "generic-google-api-http-definitions",
   DEFAULT = "default",
   NONE = "none",
 }

@@ -147,8 +147,6 @@ If you'd like an out-of-the-box RPC framework built on top of ts-proto, there ar
 
 (Note for potential contributors, if you develop other frameworks/mini-frameworks, or even blog posts/tutorials, on using `ts-proto`, we're happy to link to them.)
 
-We also don't support clients for `google.api.http`-based [Google Cloud](https://cloud.google.com/endpoints/docs/grpc/transcoding) APIs, see [#948](https://github.com/stephenh/ts-proto/issues/948) if you'd like to submit a PR.
-
 # Example Types
 
 The generated types are "just data", i.e.:
@@ -443,6 +441,10 @@ Generated code will be placed in the Gradle build directory.
 - With `--ts_proto_opt=outputServices=grpc-js`, ts-proto will output service definitions and server / client stubs in [grpc-js](https://github.com/grpc/grpc-node/tree/master/packages/grpc-js) format.
 
 - With `--ts_proto_opt=outputServices=generic-definitions`, ts-proto will output generic (framework-agnostic) service definitions. These definitions contain descriptors for each method with links to request and response types, which allows to generate server and client stubs at runtime, and also generate strong types for them at compile time. An example of a library that uses this approach is [nice-grpc](https://github.com/deeplay-io/nice-grpc).
+
+- With `--ts_proto_opt=outputServices=generic-google-api-http-definitions`, ts-proto will output generic (framework-agnostic) service definitions from [google.api.http](https://cloud.google.com/endpoints/docs/grpc/transcoding). These definitions contain descriptors for each method with links to request and response types, which allows to implement a http client based on it. For more information see the [google.api.http readme](GOOGLE-API-HTTP.markdown).
+
+  (Requires `onlyTypes=true`.)
 
 - With `--ts_proto_opt=outputServices=nice-grpc`, ts-proto will output server and client stubs for [nice-grpc](https://github.com/deeplay-io/nice-grpc). This should be used together with generic definitions, i.e. you should specify two options: `outputServices=nice-grpc,outputServices=generic-definitions`.
 

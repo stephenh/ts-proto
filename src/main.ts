@@ -108,6 +108,7 @@ import {
   withOrMaybeCheckIsNull,
 } from "./utils";
 import { visit, visitServices } from "./visit";
+import { generateGenericGoogleApiHttpServiceDefinition } from "./generate-generic-google-api-http-service-definition";
 
 export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [string, Code] {
   const { options, utils } = ctx;
@@ -340,6 +341,8 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
         chunks.push(generateNiceGrpcService(ctx, fileDesc, sInfo, serviceDesc));
       } else if (outputService === ServiceOption.GENERIC) {
         chunks.push(generateGenericServiceDefinition(ctx, fileDesc, sInfo, serviceDesc));
+      } else if (outputService === ServiceOption.GENERIC_GOOGLE_API_HTTP) {
+        chunks.push(generateGenericGoogleApiHttpServiceDefinition(ctx, serviceDesc));
       } else if (outputService === ServiceOption.DEFAULT) {
         // This service could be Twirp or grpc-web or JSON (maybe). So far all of their
         // interfaces are fairly similar so we share the same service interface.

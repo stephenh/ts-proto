@@ -1,0 +1,1 @@
+onlyTypes=true,outputServices=generic-google-api-http-definitions
