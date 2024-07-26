@@ -22,10 +22,22 @@ function createApi<
       return [
         name,
         async (payload: typeof endpointDef.requestType): Promise<typeof endpointDef.responseType> => {
-          const { method } = endpointDef;
+          const { method, body: bodyKey } = endpointDef;
           const pathTemplate = new PathTemplate(endpointDef.path);
           const path = pathTemplate.render(payload);
           const remainPayload = excludeKeys(payload, Object.keys(pathTemplate.match(path)));
+
+          if (bodyKey === "*") {
+            const body = JSON.stringify(remainPayload);
+            return fetcher({ path, method, body });
+          }
+
+          let body: string | undefined = undefined;
+
+          if (bodyKey) {
+            body = JSON.stringify({ [bodyKey]: payload[bodyKey] });
+            delete remainPayload[bodyKey];
+          }
 
           const qs = new URLSearchParams(remainPayload).toString();
           if (qs) {
