@@ -20,65 +20,64 @@ function createApi<
       return [
         name,
         async (payload: typeof endpointDef.requestType): Promise<typeof endpointDef.responseType> => {
+          payload = { ...payload };
+          const { method } = endpointDef;
           const bodyKey = endpointDef.body;
-          const hasFieldsInPath = endpointDef.path.includes("{");
-          const payloadClone =
-            hasFieldsInPath || (bodyKey && bodyKey !== "*") ? JSON.parse(JSON.stringify(payload)) : undefined;
 
-          // Spec: https://cloud.google.com/service-infrastructure/docs/service-management/reference/rpc/google.api#path-template-syntax
-          // This code only handles simple cases.
-          let path = hasFieldsInPath
-            ? endpointDef.path.replace(/\{([^\}]+)\}/g, (_, fieldRef) => {
-                if (fieldRef.includes("=")) {
-                  // Handle path template like "/v1/{name=messages/*}"
-                  const [key, value] = fieldRef.split("=");
-                  delete payloadClone[key];
-                  return value.replace("*", payload[key]);
-                } else {
-                  // Handle path template like "/v1/messages/{message_id}"
-                  delete payloadClone[fieldRef];
-                  return payload[fieldRef];
-                }
-              })
-            : endpointDef.path;
+          // Path template syntax: https://cloud.google.com/service-infrastructure/docs/service-management/reference/rpc/google.api#path-template-syntax
+          // This code only handles the simplest case. Please extend it if you need more complex path templates.
+          if (/(=|\*|\.|:)/.test(path)) {
+            throw new Error(`Unsupported path template syntax: ${path}.`);
+          }
+
+          let path = endpointDef.path.replace(/\{([^\}]+)\}/g, (_, fieldPath) => {
+            // Handle path template like "/v1/messages/{message_id}"
+            delete payload[fieldPath];
+            return payload[fieldPath];
+          });
 
           if (bodyKey === "*") {
-            const body = JSON.stringify(payloadClone ?? payload);
-            return fetcher({ path, method: endpointDef.method, body });
+            const body = JSON.stringify(payload);
+            return fetcher({ path, method, body });
           }
 
           let body: string | undefined = undefined;
 
           if (bodyKey) {
             body = JSON.stringify({ [bodyKey]: payload[bodyKey] });
-            delete payloadClone[bodyKey];
+            delete payload[bodyKey];
           }
 
-          const qs = new URLSearchParams(payloadClone ?? payload).toString();
+          const qs = new URLSearchParams(payload).toString();
           if (qs) {
             path += "?" + qs;
           }
 
-          return fetcher({ path, method: endpointDef.method, body });
+          return fetcher({ path, method, body });
         },
       ];
     }),
   );
 }
 
-const fetcher = (input: { path: string; method: string; body?: string }) => {
+async function fetcher(input: { path: string; method: string; body?: string }) {
   const url = "http://localhost:8080" + input.path;
   const init: RequestInit = {
     method: input.method,
     headers: {
       "Content-Type": "application/json",
     },
+    body: input.body,
   };
-  if (input.body) {
-    init.body = input.body;
+
+  const res = await fetch(url, init);
+
+  if (res.ok) {
+    return await res.json();
   }
-  return fetch(url, init).then((res) => res.json());
-};
+
+  throw new Error(`Failed to fetch ${url}: ${res.status} ${res.statusText}`);
+}
 
 const api = createApi(fetcher, Messaging);
 
