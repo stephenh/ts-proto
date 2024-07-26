@@ -33,7 +33,7 @@ function createApi<
           let path = endpointDef.path.replace(/\{([^\}]+)\}/g, (_, fieldPath) => {
             // Handle path template like "/v1/messages/{message_id}"
             delete payload[fieldPath];
-            return payload[fieldPath];
+            return encodeURIComponent(payload[fieldPath]);
           });
 
           if (bodyKey === "*") {
