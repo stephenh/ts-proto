@@ -7,7 +7,9 @@ Please refer to [integration/google-api-http](./integration/google-api-http) for
 ## Client implementation example
 
 ```typescript
-// This is just a basic implementation, please test it to see if it works for you.
+import { PathTemplate } from "google-gax";
+import { excludeKeys } from "filter-obj";
+
 function createApi<
   S extends Record<string, { path: string; method: string; body?: string; requestType: any; responseType: any }>,
 >(
@@ -20,35 +22,12 @@ function createApi<
       return [
         name,
         async (payload: typeof endpointDef.requestType): Promise<typeof endpointDef.responseType> => {
-          payload = { ...payload };
           const { method } = endpointDef;
-          const bodyKey = endpointDef.body;
+          const pathTemplate = new PathTemplate(endpointDef.path);
+          const path = pathTemplate.render(payload);
+          const remainPayload = excludeKeys(payload, Object.keys(pathTemplate.match(path)));
 
-          // Path template syntax: https://cloud.google.com/service-infrastructure/docs/service-management/reference/rpc/google.api#path-template-syntax
-          // This code only handles the simplest case. Please extend it if you need more complex path templates.
-          if (/(=|\*|\.|:)/.test(path)) {
-            throw new Error(`Unsupported path template syntax: ${path}.`);
-          }
-
-          let path = endpointDef.path.replace(/\{([^\}]+)\}/g, (_, fieldPath) => {
-            // Handle path template like "/v1/messages/{message_id}"
-            delete payload[fieldPath];
-            return encodeURIComponent(payload[fieldPath]);
-          });
-
-          if (bodyKey === "*") {
-            const body = JSON.stringify(payload);
-            return fetcher({ path, method, body });
-          }
-
-          let body: string | undefined = undefined;
-
-          if (bodyKey) {
-            body = JSON.stringify({ [bodyKey]: payload[bodyKey] });
-            delete payload[bodyKey];
-          }
-
-          const qs = new URLSearchParams(payload).toString();
+          const qs = new URLSearchParams(remainPayload).toString();
           if (qs) {
             path += "?" + qs;
           }
