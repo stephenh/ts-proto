@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+import "google/protobuf/wrappers.proto";
+
+message EncodeWithDecodeMethod {
+  string encode = 1;
+}
+
+message EncodeDontGenerateDecodeMethod {
+  string encode_dont_generate_decode_method = 1;
+}

@@ -32,6 +32,8 @@ describe("options", () => {
         "oneof": "properties",
         "onlyTypes": false,
         "outputClientImpl": false,
+        "outputDecodeIncludeTypes": "",
+        "outputEncodeIncludeTypes": "",
         "outputEncodeMethods": false,
         "outputExtensions": false,
         "outputIndex": false,

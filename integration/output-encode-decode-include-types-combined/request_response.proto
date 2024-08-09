@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+import "google/protobuf/wrappers.proto";
+
+message Request {
+  string request_id = 1;
+}
+
+message Response {
+  string response_id = 1;
+}

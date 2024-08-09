@@ -1,0 +1,1 @@
+outputEncodeMethods=true,outputPartialMethods=false,outputJsonMethods=false,nestJs=false,outputEncodeIncludeTypes=^Request$,outputDecodeIncludeTypes=^Response$
