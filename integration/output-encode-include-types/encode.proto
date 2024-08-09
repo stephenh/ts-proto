@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+import "google/protobuf/wrappers.proto";
+
+message Encode {
+  string encode = 1;
+}
+
+message DontInclude {
+  string encode = 1;
+}

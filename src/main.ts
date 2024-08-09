@@ -230,9 +230,10 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
 
         if (options.outputEncodeMethods) {
           if (
-            options.outputEncodeMethods === true ||
-            options.outputEncodeMethods === "encode-only" ||
-            options.outputEncodeMethods === "encode-no-creation"
+            (options.outputEncodeMethods === true ||
+              options.outputEncodeMethods === "encode-only" ||
+              options.outputEncodeMethods === "encode-no-creation") &&
+            (options.outputEncodeIncludeTypes === "" || new RegExp(options.outputEncodeIncludeTypes).test(fullName))
           ) {
             staticMembers.push(generateEncode(ctx, fullName, message));
 
@@ -240,7 +241,10 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
               staticMembers.push(generateSetExtension(ctx, fullName));
             }
           }
-          if (options.outputEncodeMethods === true || options.outputEncodeMethods === "decode-only") {
+          if (
+            (options.outputEncodeMethods === true || options.outputEncodeMethods === "decode-only") &&
+            (options.outputDecodeIncludeTypes === "" || new RegExp(options.outputDecodeIncludeTypes).test(fullName))
+          ) {
             staticMembers.push(generateDecode(ctx, fullName, message));
 
             if (options.outputExtensions && options.unknownFields && message.extensionRange.length) {

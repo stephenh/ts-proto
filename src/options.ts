@@ -55,6 +55,8 @@ export type Options = {
   fileSuffix: string;
   importSuffix: string;
   outputEncodeMethods: true | false | "encode-only" | "decode-only" | "encode-no-creation";
+  outputEncodeIncludeTypes: string;
+  outputDecodeIncludeTypes: string;
   outputJsonMethods: true | false | "to-only" | "from-only";
   outputPartialMethods: boolean;
   outputTypeAnnotations: boolean | "static-only" | "optional";
@@ -126,6 +128,8 @@ export function defaultOptions(): Options {
     importSuffix: "",
     lowerCaseServiceMethods: false,
     outputEncodeMethods: true,
+    outputEncodeIncludeTypes: "",
+    outputDecodeIncludeTypes: "",
     outputJsonMethods: true,
     outputPartialMethods: true,
     outputTypeAnnotations: false,
