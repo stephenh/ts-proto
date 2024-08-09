@@ -233,7 +233,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
             (options.outputEncodeMethods === true ||
               options.outputEncodeMethods === "encode-only" ||
               options.outputEncodeMethods === "encode-no-creation") &&
-            (options.outputEncodeIncludeTypes === "" || new RegExp(options.outputEncodeIncludeTypes).test(fullName))
+            (options.outputEncodeIncludeTypes === "" || new RegExp(options.outputEncodeIncludeTypes).test(fullTypeName))
           ) {
             staticMembers.push(generateEncode(ctx, fullName, message));
 
@@ -243,7 +243,7 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
           }
           if (
             (options.outputEncodeMethods === true || options.outputEncodeMethods === "decode-only") &&
-            (options.outputDecodeIncludeTypes === "" || new RegExp(options.outputDecodeIncludeTypes).test(fullName))
+            (options.outputDecodeIncludeTypes === "" || new RegExp(options.outputDecodeIncludeTypes).test(fullTypeName))
           ) {
             staticMembers.push(generateDecode(ctx, fullName, message));
 
