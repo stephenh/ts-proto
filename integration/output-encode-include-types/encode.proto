@@ -6,6 +6,6 @@ message Encode {
   string encode = 1;
 }
 
-message DontInclude {
-  string encode = 1;
+message DontGenerateEncode {
+  string dont_generate_encode = 1;
 }

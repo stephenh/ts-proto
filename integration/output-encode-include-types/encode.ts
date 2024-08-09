@@ -10,6 +10,10 @@ export interface Encode {
   encode: string;
 }
 
+export interface DontGenerateEncode {
+  dontGenerateEncode: string;
+}
+
 function createBaseEncode(): Encode {
   return { encode: "" };
 }
@@ -22,3 +26,7 @@ export const Encode = {
     return writer;
   },
 };
+
+function createBaseDontGenerateEncode(): DontGenerateEncode {
+  return { dontGenerateEncode: "" };
+}
