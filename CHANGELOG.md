@@ -1,3 +1,31 @@
+## [1.181.1](https://github.com/stephenh/ts-proto/compare/v1.181.0...v1.181.1) (2024-07-13)
+
+
+### Bug Fixes
+
+* Incorrect message names in the generated code for repeated fields ([#1073](https://github.com/stephenh/ts-proto/issues/1073)) ([8a95d8e](https://github.com/stephenh/ts-proto/commit/8a95d8e0983a38e604b6990461e726db566ff311)), closes [#1072](https://github.com/stephenh/ts-proto/issues/1072)
+
+# [1.181.0](https://github.com/stephenh/ts-proto/compare/v1.180.0...v1.181.0) (2024-07-01)
+
+
+### Features
+
+* added the "typePrefix" and "typeSuffix" options. ([#1069](https://github.com/stephenh/ts-proto/issues/1069)) ([ab515cd](https://github.com/stephenh/ts-proto/commit/ab515cda322baeb94c7588117e4bb5bee6281874)), closes [#1033](https://github.com/stephenh/ts-proto/issues/1033)
+
+# [1.180.0](https://github.com/stephenh/ts-proto/compare/v1.179.0...v1.180.0) (2024-06-15)
+
+
+### Features
+
+* oneof=unions-value to use the same field name for oneof cases ([#1062](https://github.com/stephenh/ts-proto/issues/1062)) ([7493090](https://github.com/stephenh/ts-proto/commit/74930908cc8e5292577a793b7ae06c3721225ac3)), closes [#1060](https://github.com/stephenh/ts-proto/issues/1060)
+
+# [1.179.0](https://github.com/stephenh/ts-proto/compare/v1.178.0...v1.179.0) (2024-06-15)
+
+
+### Features
+
+* bigIntLiteral option for using BigInt literals ([#1063](https://github.com/stephenh/ts-proto/issues/1063)) ([b89fbcb](https://github.com/stephenh/ts-proto/commit/b89fbcb1f99ccfcd1f06551286c2459e44a3bac2)), closes [#928](https://github.com/stephenh/ts-proto/issues/928) [#932](https://github.com/stephenh/ts-proto/issues/932)
+
 # [1.178.0](https://github.com/stephenh/ts-proto/compare/v1.177.0...v1.178.0) (2024-06-07)
 
 

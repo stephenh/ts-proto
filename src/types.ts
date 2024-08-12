@@ -272,7 +272,7 @@ export function defaultValue(ctx: Context, field: FieldDescriptorProto): any {
       } else if (options.forceLong === LongOption.STRING) {
         return `"${numericDefaultVal}"`;
       } else if (options.forceLong === LongOption.BIGINT) {
-        return `BigInt("${numericDefaultVal}")`;
+        return options.bigIntLiteral ? code`${numericDefaultVal}n` : code`BigInt("${numericDefaultVal}")`;
       } else {
         return numericDefaultVal;
       }
@@ -462,7 +462,11 @@ export function isWithinOneOf(field: FieldDescriptorProto): boolean {
 }
 
 export function isWithinOneOfThatShouldBeUnion(options: Options, field: FieldDescriptorProto): boolean {
-  return isWithinOneOf(field) && options.oneof === OneofOption.UNIONS && !field.proto3Optional;
+  return (
+    isWithinOneOf(field) &&
+    (options.oneof === OneofOption.UNIONS || options.oneof === OneofOption.UNIONS_VALUE) &&
+    !field.proto3Optional
+  );
 }
 
 export function isRepeated(field: FieldDescriptorProto): boolean {

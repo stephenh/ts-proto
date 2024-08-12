@@ -114,12 +114,12 @@ export interface Timestamp {
 }
 
 function createBaseTimestamp(): Timestamp {
-  return { seconds: 0n, nanos: 0 };
+  return { seconds: BigInt("0"), nanos: 0 };
 }
 
 export const Timestamp = {
   encode(message: Timestamp, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.seconds !== 0n) {
+    if (message.seconds !== BigInt("0")) {
       if (BigInt.asIntN(64, message.seconds) !== message.seconds) {
         throw new globalThis.Error("value provided for field message.seconds of type int64 too large");
       }
@@ -163,14 +163,14 @@ export const Timestamp = {
 
   fromJSON(object: any): Timestamp {
     return {
-      seconds: isSet(object.seconds) ? BigInt(object.seconds) : 0n,
+      seconds: isSet(object.seconds) ? BigInt(object.seconds) : BigInt("0"),
       nanos: isSet(object.nanos) ? globalThis.Number(object.nanos) : 0,
     };
   },
 
   toJSON(message: Timestamp): unknown {
     const obj: any = {};
-    if (message.seconds !== 0n) {
+    if (message.seconds !== BigInt("0")) {
       obj.seconds = message.seconds.toString();
     }
     if (message.nanos !== 0) {
@@ -184,7 +184,7 @@ export const Timestamp = {
   },
   fromPartial<I extends Exact<DeepPartial<Timestamp>, I>>(object: I): Timestamp {
     const message = createBaseTimestamp();
-    message.seconds = object.seconds ?? 0n;
+    message.seconds = object.seconds ?? BigInt("0");
     message.nanos = object.nanos ?? 0;
     return message;
   },

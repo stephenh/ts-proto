@@ -28,6 +28,7 @@ export enum EnvOption {
 export enum OneofOption {
   PROPERTIES = "properties",
   UNIONS = "unions",
+  UNIONS_VALUE = "unions-value",
 }
 
 export enum ServiceOption {
@@ -102,6 +103,9 @@ export type Options = {
   useNullAsOptional: boolean;
   annotateFilesWithVersion: boolean;
   noDefaultsForOptionals: boolean;
+  bigIntLiteral: boolean;
+  typePrefix: string;
+  typeSuffix: string;
 };
 
 export function defaultOptions(): Options {
@@ -169,6 +173,9 @@ export function defaultOptions(): Options {
     useNullAsOptional: false,
     annotateFilesWithVersion: true,
     noDefaultsForOptionals: false,
+    bigIntLiteral: true,
+    typePrefix: "",
+    typeSuffix: "",
   };
 }
 

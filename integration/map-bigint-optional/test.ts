@@ -119,18 +119,18 @@ export const MapBigInt = {
 };
 
 function createBaseMapBigInt_MapEntry(): MapBigInt_MapEntry {
-  return { key: BigInt("0"), value: BigInt("0") };
+  return { key: 0n, value: 0n };
 }
 
 export const MapBigInt_MapEntry = {
   encode(message: MapBigInt_MapEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.key !== BigInt("0")) {
+    if (message.key !== 0n) {
       if (BigInt.asUintN(64, message.key) !== message.key) {
         throw new globalThis.Error("value provided for field message.key of type fixed64 too large");
       }
       writer.uint32(9).fixed64(message.key);
     }
-    if (message.value !== BigInt("0")) {
+    if (message.value !== 0n) {
       if (BigInt.asIntN(64, message.value) !== message.value) {
         throw new globalThis.Error("value provided for field message.value of type int64 too large");
       }
@@ -190,18 +190,15 @@ export const MapBigInt_MapEntry = {
   },
 
   fromJSON(object: any): MapBigInt_MapEntry {
-    return {
-      key: isSet(object.key) ? BigInt(object.key) : BigInt("0"),
-      value: isSet(object.value) ? BigInt(object.value) : BigInt("0"),
-    };
+    return { key: isSet(object.key) ? BigInt(object.key) : 0n, value: isSet(object.value) ? BigInt(object.value) : 0n };
   },
 
   toJSON(message: MapBigInt_MapEntry): unknown {
     const obj: any = {};
-    if (message.key !== BigInt("0")) {
+    if (message.key !== 0n) {
       obj.key = message.key.toString();
     }
-    if (message.value !== BigInt("0")) {
+    if (message.value !== 0n) {
       obj.value = message.value.toString();
     }
     return obj;
@@ -212,8 +209,8 @@ export const MapBigInt_MapEntry = {
   },
   fromPartial<I extends Exact<DeepPartial<MapBigInt_MapEntry>, I>>(object: I): MapBigInt_MapEntry {
     const message = createBaseMapBigInt_MapEntry();
-    message.key = object.key ?? BigInt("0");
-    message.value = object.value ?? BigInt("0");
+    message.key = object.key ?? 0n;
+    message.value = object.value ?? 0n;
     return message;
   },
 };

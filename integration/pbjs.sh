@@ -50,6 +50,11 @@ if match "simple-long-bigint"; then
   yarn run pbts --no-comments -o integration/simple-long-bigint/pbjs.d.ts integration/simple-long-bigint/pbjs.js
 fi
 
+if match "simple-long-bigint-noliteral"; then
+  yarn run pbjs --force-message --force-long -t static-module -o integration/simple-long-bigint-noliteral/pbjs.js integration/simple-long-bigint-noliteral/simple.proto
+  yarn run pbts --no-comments -o integration/simple-long-bigint-noliteral/pbjs.d.ts integration/simple-long-bigint-noliteral/pbjs.js
+fi
+
 if match "vector-tile"; then
   yarn run pbjs --force-message --force-number -t static-module -o integration/vector-tile/pbjs.js integration/vector-tile/vector_tile.proto
   yarn run pbts --no-comments -o integration/vector-tile/pbjs.d.ts integration/vector-tile/pbjs.js
@@ -98,6 +103,11 @@ fi
 if match "oneof-unions"; then
   yarn run pbjs --force-message --force-number -t static-module -o integration/oneof-unions/pbjs.js integration/oneof-unions/oneof.proto
   yarn run pbts --no-comments -o integration/oneof-unions/pbjs.d.ts integration/oneof-unions/pbjs.js
+fi
+
+if match "oneof-unions-value"; then
+  yarn run pbjs --force-message --force-number -t static-module -o integration/oneof-unions-value/pbjs.js integration/oneof-unions-value/oneof.proto
+  yarn run pbts --no-comments -o integration/oneof-unions-value/pbjs.d.ts integration/oneof-unions-value/pbjs.js
 fi
 
 if match "struct"; then

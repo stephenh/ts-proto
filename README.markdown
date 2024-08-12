@@ -551,7 +551,13 @@ Generated code will be placed in the Gradle build directory.
 
 - With `--ts_proto_opt=comments=false`, comments won't be copied from the proto files to the generated code.
 
+- With `--ts_proto_opt=bigIntLiteral=false`, the generated code will use `BigInt("0")` instead of `0n` for BigInt literals. BigInt literals aren't supported by TypeScript when the "target" compiler option set to something older than "ES2020".
+
 - With `--ts_proto_opt=useNullAsOptional=true`, `undefined` values will be converted to `null`, and if you use `optional` label in your `.proto` file, the field will have `undefined` type as well. for example:
+
+- With `--ts_proto_opt=typePrefix=MyPrefix`, the generated interfaces, enums, and factories will have a prefix of `MyPrefix` in their names.
+
+- With `--ts_proto_opt=typeSuffix=MySuffix`, the generated interfaces, enums, and factories will have a suffix of `MySuffix` in their names.
 
 ```protobuf
 message ProfileInfo {
@@ -603,7 +609,7 @@ export interface User {
 }
 ```
 
-- With `--ts_proto_opt=noDefaultsForOptionals=true`, `undefined` primitive values will not be defaulted as per the protobuf spec. Additionally unlike the standard behavior, when a field is set to it's standard default value, it *will* be encoded allowing it to be sent over the wire and distinguished from undefined values. For example if a message does not set a boolean value, ordinarily this would be defaulted to `false` which is different to it being undefined. 
+- With `--ts_proto_opt=noDefaultsForOptionals=true`, `undefined` primitive values will not be defaulted as per the protobuf spec. Additionally unlike the standard behavior, when a field is set to it's standard default value, it *will* be encoded allowing it to be sent over the wire and distinguished from undefined values. For example if a message does not set a boolean value, ordinarily this would be defaulted to `false` which is different to it being undefined.
 
 This option allows the library to act in a compatible way with the [Wire implementation](https://square.github.io/wire/) maintained and used by Square/Block. Note: this option should only be used in combination with other client/server code generated using Wire or ts-proto with this option enabled.
 
@@ -752,7 +758,7 @@ ts-protoc --ts_proto_out=./output -I=./protos ./protoc/*.proto
 # Todo
 
 - Support the string-based encoding of duration in `fromJSON`/`toJSON`
-- Make `oneof=unions` the default behavior in 2.0
+- Make `oneof=unions-value` the default behavior in 2.0
 - Probably change `forceLong` default in 2.0, should default to `forceLong=long`
 - Make `esModuleInterop=true` the default in 2.0
 
@@ -770,11 +776,11 @@ Will generate a `Foo` type with two fields: `field_a: string | undefined;` and `
 
 With this output, you'll have to check both `if object.field_a` and `if object.field_b`, and if you set one, you'll have to remember to unset the other.
 
-Instead, we recommend using the `oneof=unions` option, which will change the output to be an Abstract Data Type/ADT like:
+Instead, we recommend using the `oneof=unions-value` option, which will change the output to be an Algebraic Data Type/ADT like:
 
 ```typescript
 interface YourMessage {
-  eitherField?: { $case: "field_a"; field_a: string } | { $case: "field_b"; field_b: string };
+  eitherField?: { $case: "field_a"; value: string } | { $case: "field_b"; value: string };
 }
 ```
 
@@ -782,11 +788,21 @@ As this will automatically enforce only one of `field_a` or `field_b` "being set
 
 (Note that `eitherField` is optional b/c `oneof` in Protobuf means "at most one field" is set, and does not mean one of the fields _must_ be set.)
 
-In ts-proto's currently-unscheduled 2.x release, `oneof=unions` will become the default behavior.
+In ts-proto's currently-unscheduled 2.x release, `oneof=unions-value` will become the default behavior.
+
+There is also a `oneof=unions` option, which generates a union where the field names are included in each option:
+
+```typescript
+interface YourMessage {
+  eitherField?: { $case: "field_a"; field_a: string } | { $case: "field_b"; field_b: string };
+}
+```
+
+This is no longer recommended as it can be difficult to write code and types to handle multiple oneof options:
 
 ## OneOf Type Helpers
 
-The following helper types may make it easier to work with the types generated from `oneof=unions`:
+The following helper types may make it easier to work with the types generated from `oneof=unions`, though they are generally not needed if you use `oneof=unions-value`:
 
 ```ts
 /** Extracts all the case names from a oneOf field. */
@@ -797,18 +813,44 @@ type OneOfValues<T> = T extends { $case: infer U extends string; [key: string]: 
 
 /** Extracts the specific type of a oneOf case based on its field name */
 type OneOfCase<T, K extends OneOfCases<T>> = T extends {
+  $case: K;
+  [key: string]: unknown;
+}
+  ? T
+  : never;
+
+/** Extracts the specific type of a value type from a oneOf field */
+type OneOfValue<T, K extends OneOfCases<T>> = T extends {
   $case: infer U extends K;
   [key: string]: unknown;
 }
   ? T[U]
   : never;
+```
 
-/** Extracts the specific type of a value type from a oneOf field */
-export type OneOfValue<T, K extends OneOfCases<T>> = T extends {
+For comparison, the equivalents for `oneof=unions-value`:
+
+```ts
+/** Extracts all the case names from a oneOf field. */
+type OneOfCases<T> = T['$case'];
+
+/** Extracts a union of all the value types from a oneOf field */
+type OneOfValues<T> = T['value'];
+
+/** Extracts the specific type of a oneOf case based on its field name */
+type OneOfCase<T, K extends OneOfCases<T>> = T extends {
   $case: K;
   [key: string]: unknown;
 }
   ? T
+  : never;
+
+/** Extracts the specific type of a value type from a oneOf field */
+type OneOfValue<T, K extends OneOfCases<T>> = T extends {
+  $case: infer U extends K;
+  value: unknown;
+}
+  ? T[U]
   : never;
 ```
 
