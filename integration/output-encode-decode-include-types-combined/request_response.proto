@@ -4,6 +4,12 @@ import "google/protobuf/wrappers.proto";
 
 message Request {
   string request_id = 1;
+
+  message Nested {
+    string more_data = 1;
+  }
+
+  Nested nested = 2;
 }
 
 message Response {
