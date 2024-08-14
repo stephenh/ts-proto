@@ -66,7 +66,7 @@
     "uglify-js": "^3.17.4"
   },
   "dependencies": {
-    "@bufbuild/protobuf": "2.0.0-alpha.4",
+    "@bufbuild/protobuf": "^2.0.0",
     "case-anything": "^2.1.13",
     "ts-poet": "^6.7.0",
     "ts-proto-descriptors": "1.16.0"

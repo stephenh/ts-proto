@@ -12,7 +12,7 @@
     "dist/"
   ],
   "dependencies": {
-    "@bufbuild/protobuf": "2.0.0-alpha.4"
+    "@bufbuild/protobuf": "^2.0.0"
   },
   "devDependencies": {
     "ts-proto": "^1.175.1",
