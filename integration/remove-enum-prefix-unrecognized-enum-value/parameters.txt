@@ -1,0 +1,1 @@
+removeEnumPrefix=true,unrecognizedEnumValue=0
