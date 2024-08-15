@@ -2,7 +2,7 @@
 // source: google/type/date.proto
 
 /* eslint-disable */
-import * as _m0 from "protobufjs/minimal";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 import { FileDescriptorProto } from "ts-proto-descriptors";
 
 export const protobufPackage = "google.type";
@@ -43,7 +43,7 @@ function createBaseDateMessage(): DateMessage {
 }
 
 export const DateMessage = {
-  encode(message: DateMessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: DateMessage, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.year !== 0) {
       writer.uint32(8).int32(message.year);
     }
@@ -56,8 +56,8 @@ export const DateMessage = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): DateMessage {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): DateMessage {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDateMessage();
     while (reader.pos < end) {
@@ -88,7 +88,7 @@ export const DateMessage = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },

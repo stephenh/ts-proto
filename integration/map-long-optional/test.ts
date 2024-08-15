@@ -3,7 +3,7 @@
 
 /* eslint-disable */
 import Long = require("long");
-import * as _m0 from "protobufjs/minimal";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
 export const protobufPackage = "";
 
@@ -23,28 +23,23 @@ function createBaseMapBigInt(): MapBigInt {
 }
 
 export const MapBigInt = {
-  encode(message: MapBigInt, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: MapBigInt, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     (message.map || new Map()).forEach((value, key) => {
-      MapBigInt_MapEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).ldelim();
+      MapBigInt_MapEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).join();
     });
     if (message._unknownFields !== undefined) {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): MapBigInt {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): MapBigInt {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMapBigInt();
     while (reader.pos < end) {
@@ -67,9 +62,7 @@ export const MapBigInt = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      const startPos = reader.pos;
-      reader.skipType(tag & 7);
-      const buf = reader.buf.slice(startPos, reader.pos);
+      const buf = reader.skip(tag & 7);
 
       if (message._unknownFields === undefined) {
         message._unknownFields = {};
@@ -131,31 +124,26 @@ function createBaseMapBigInt_MapEntry(): MapBigInt_MapEntry {
 }
 
 export const MapBigInt_MapEntry = {
-  encode(message: MapBigInt_MapEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: MapBigInt_MapEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (!message.key.equals(Long.UZERO)) {
-      writer.uint32(9).fixed64(message.key);
+      writer.uint32(9).fixed64(message.key.toString());
     }
     if (!message.value.equals(Long.ZERO)) {
-      writer.uint32(16).int64(message.value);
+      writer.uint32(16).int64(message.value.toString());
     }
     if (message._unknownFields !== undefined) {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): MapBigInt_MapEntry {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): MapBigInt_MapEntry {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMapBigInt_MapEntry();
     while (reader.pos < end) {
@@ -166,22 +154,20 @@ export const MapBigInt_MapEntry = {
             break;
           }
 
-          message.key = reader.fixed64() as Long;
+          message.key = Long.fromString(reader.fixed64().toString(), true);
           continue;
         case 2:
           if (tag !== 16) {
             break;
           }
 
-          message.value = reader.int64() as Long;
+          message.value = Long.fromString(reader.int64().toString());
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      const startPos = reader.pos;
-      reader.skipType(tag & 7);
-      const buf = reader.buf.slice(startPos, reader.pos);
+      const buf = reader.skip(tag & 7);
 
       if (message._unknownFields === undefined) {
         message._unknownFields = {};
@@ -239,19 +225,15 @@ type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
-function longToNumber(long: Long): number {
-  if (long.gt(globalThis.Number.MAX_SAFE_INTEGER)) {
+function longToNumber(int64: { toString(): string }): number {
+  const num = globalThis.Number(int64.toString());
+  if (num > globalThis.Number.MAX_SAFE_INTEGER) {
     throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
-  if (long.lt(globalThis.Number.MIN_SAFE_INTEGER)) {
+  if (num < globalThis.Number.MIN_SAFE_INTEGER) {
     throw new globalThis.Error("Value is smaller than Number.MIN_SAFE_INTEGER");
   }
-  return long.toNumber();
-}
-
-if (_m0.util.Long !== Long) {
-  _m0.util.Long = Long as any;
-  _m0.configure();
+  return num;
 }
 
 function isObject(value: any): boolean {

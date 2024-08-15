@@ -8,12 +8,12 @@ describe('groups-test', () => {
         key: 'hello',
         value: 'world',
         _unknownFields: {
-          [(20 << 3) | 2]: [Buffer.from([2, 20, 21])]
+          [(20 << 3) | 2]: [new Uint8Array([2, 20, 21])]
         }
       },
       int3: 7,
       _unknownFields: {
-        [(24 << 3) | 2]: [Buffer.from([0])]
+        [(24 << 3) | 2]: [new Uint8Array([0])]
       }
     };
 
@@ -28,12 +28,12 @@ describe('groups-test', () => {
       group: {
         value: 'key',
         _unknownFields: {
-          [(15 << 3) | 2]: [Buffer.from([2, 1, 2])]
+          [(15 << 3) | 2]: [new Uint8Array([2, 1, 2])]
         }
       },
       int3: 20,
       _unknownFields: {
-        [(10 << 3) | 2]: [Buffer.from([3, 4, 5, 6])]
+        [(10 << 3) | 2]: [new Uint8Array([3, 4, 5, 6])]
       }
     };
 
@@ -44,12 +44,12 @@ describe('groups-test', () => {
       group: {
         value: 'key',
         _unknownFields: {
-          [(15 << 3) | 2]: [Buffer.from([2, 1, 2])]
+          [(15 << 3) | 2]: [new Uint8Array([2, 1, 2])]
         }
       },
       int3: 20,
       _unknownFields: {
-        [(10 << 3) | 2]: [Buffer.from([3, 4, 5, 6])]
+        [(10 << 3) | 2]: [new Uint8Array([3, 4, 5, 6])]
       }
     });
   });
@@ -61,12 +61,12 @@ describe('groups-test', () => {
         {
           value: ['key'],
           _unknownFields: {
-            [(10 << 3) | 2]: [Buffer.from([2, 0xa, 0xb])]
+            [(10 << 3) | 2]: [new Uint8Array([2, 0xa, 0xb])]
           }
         },
       ],
       _unknownFields: {
-        [(27 << 3) | 2]: [Buffer.from([2, 0x10, 0x20])]
+        [(27 << 3) | 2]: [new Uint8Array([2, 0x10, 0x20])]
       }
     };
 
@@ -79,12 +79,12 @@ describe('groups-test', () => {
         {
           value: ['key'],
           _unknownFields: {
-            [(10 << 3) | 2]: [Buffer.from([2, 0xa, 0xb])]
+            [(10 << 3) | 2]: [new Uint8Array([2, 0xa, 0xb])]
           }
         },
       ],
       _unknownFields: {
-        [(27 << 3) | 2]: [Buffer.from([2, 0x10, 0x20])]
+        [(27 << 3) | 2]: [new Uint8Array([2, 0x10, 0x20])]
       }
     });
   });
@@ -99,29 +99,29 @@ describe('groups-test', () => {
                 {
                   string1: 'hello world',
                   _unknownFields: {
-                    [(9 << 3) | 2]: [Buffer.from([3, 9, 10, 11])]
+                    [(9 << 3) | 2]: [new Uint8Array([3, 9, 10, 11])]
                   }
                 },
                 {
                   string1: 'value2',
                   _unknownFields: {
-                    [(10 << 3) | 2]: [Buffer.from([4, 10, 11, 12, 13])]
+                    [(10 << 3) | 2]: [new Uint8Array([4, 10, 11, 12, 13])]
                   }
                 }
               ],
               _unknownFields: {
-                [(50 << 3) | 2]: [Buffer.from([0])]
+                [(50 << 3) | 2]: [new Uint8Array([0])]
               }
             }
           ],
           _unknownFields: {
-            [(65 << 3) | 2]: [Buffer.from([2, 12, 34])]
+            [(65 << 3) | 2]: [new Uint8Array([2, 12, 34])]
           }
         },
       ],
       int3: [3, 4, 5, 6],
       _unknownFields: {
-        [(55 << 3) | 2]: [Buffer.from([3, 6, 5, 4])]
+        [(55 << 3) | 2]: [new Uint8Array([3, 6, 5, 4])]
       }
     };
 

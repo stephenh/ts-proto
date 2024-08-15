@@ -1,4 +1,4 @@
-import { Reader } from "protobufjs";
+import { BinaryReader } from "@bufbuild/protobuf/wire";
 import { StructMessage } from "./struct";
 
 import { StructMessage as PbStructMessage } from "./pbjs";
@@ -14,7 +14,7 @@ let data = {
 describe("struct", () => {
   it("can encode objects", () => {
     const s1 = StructMessage.fromJSON(data);
-    const s2 = PbStructMessage.decode(Reader.create(StructMessage.encode(s1).finish()));
+    const s2 = PbStructMessage.decode(StructMessage.encode(s1).finish());
 
     expect(s2).toMatchInlineSnapshot(`
       {
@@ -56,7 +56,7 @@ describe("struct", () => {
   it("can decode objects", () => {
     let message = StructMessage.fromJSON(data);
     let encodedValue = StructMessage.encode(message).finish();
-    const decodedValue = StructMessage.decode(Reader.create(encodedValue));
+    const decodedValue = StructMessage.decode(new BinaryReader(encodedValue));
 
     expect(StructMessage.toJSON(decodedValue)).toEqual(data);
   });

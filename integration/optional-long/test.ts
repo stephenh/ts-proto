@@ -2,7 +2,7 @@
 // source: test.proto
 
 /* eslint-disable */
-import * as _m0 from "protobufjs/minimal";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 import { Timestamp } from "./google/protobuf/timestamp";
 import Long = require("long");
 
@@ -17,15 +17,15 @@ function createBaseExample(): Example {
 }
 
 export const Example = {
-  encode(message: Example, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Example, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.datetime !== undefined) {
-      Timestamp.encode(toTimestamp(message.datetime), writer.uint32(10).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.datetime), writer.uint32(10).fork()).join();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Example {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Example {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseExample();
     while (reader.pos < end) {
@@ -42,7 +42,7 @@ export const Example = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -105,11 +105,6 @@ function fromJsonTimestamp(o: any): Date {
 
 function numberToLong(number: number) {
   return Long.fromNumber(number);
-}
-
-if (_m0.util.Long !== Long) {
-  _m0.util.Long = Long as any;
-  _m0.configure();
 }
 
 function isSet(value: any): boolean {

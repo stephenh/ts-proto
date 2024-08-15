@@ -2,7 +2,7 @@
 // source: something/something.proto
 
 /* eslint-disable */
-import * as _m0 from "protobufjs/minimal";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 import { FileDescriptorProto as FileDescriptorProto1 } from "ts-proto-descriptors";
 import { protoMetadata as protoMetadata1 } from "../google/protobuf/descriptor";
 
@@ -18,7 +18,7 @@ function createBaseSomething(): Something {
 }
 
 export const Something = {
-  encode(message: Something, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Something, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.hello !== "") {
       writer.uint32(10).string(message.hello);
     }
@@ -26,12 +26,12 @@ export const Something = {
     for (const v of message.foo) {
       writer.int32(v);
     }
-    writer.ldelim();
+    writer.join();
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Something {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Something {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSomething();
     while (reader.pos < end) {
@@ -65,7 +65,7 @@ export const Something = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },

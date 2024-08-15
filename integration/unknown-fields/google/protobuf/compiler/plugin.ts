@@ -2,9 +2,8 @@
 // source: google/protobuf/compiler/plugin.proto
 
 /* eslint-disable */
-import * as _m0 from "protobufjs/minimal";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 import { FileDescriptorProto, GeneratedCodeInfo } from "../descriptor";
-import Long = require("long");
 
 export const protobufPackage = "google.protobuf.compiler";
 
@@ -166,7 +165,7 @@ function createBaseVersion(): Version {
 }
 
 export const Version = {
-  encode(message: Version, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Version, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.major !== undefined && message.major !== 0) {
       writer.uint32(8).int32(message.major);
     }
@@ -183,20 +182,15 @@ export const Version = {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Version {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Version {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseVersion();
     while (reader.pos < end) {
@@ -234,9 +228,7 @@ export const Version = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      const startPos = reader.pos;
-      reader.skipType(tag & 7);
-      const buf = reader.buf.slice(startPos, reader.pos);
+      const buf = reader.skip(tag & 7);
 
       const list = message._unknownFields![tag];
 
@@ -255,7 +247,7 @@ function createBaseCodeGeneratorRequest(): CodeGeneratorRequest {
 }
 
 export const CodeGeneratorRequest = {
-  encode(message: CodeGeneratorRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: CodeGeneratorRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     for (const v of message.fileToGenerate) {
       writer.uint32(10).string(v!);
     }
@@ -263,29 +255,24 @@ export const CodeGeneratorRequest = {
       writer.uint32(18).string(message.parameter);
     }
     for (const v of message.protoFile) {
-      FileDescriptorProto.encode(v!, writer.uint32(122).fork()).ldelim();
+      FileDescriptorProto.encode(v!, writer.uint32(122).fork()).join();
     }
     if (message.compilerVersion !== undefined) {
-      Version.encode(message.compilerVersion, writer.uint32(26).fork()).ldelim();
+      Version.encode(message.compilerVersion, writer.uint32(26).fork()).join();
     }
     if (message._unknownFields !== undefined) {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): CodeGeneratorRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): CodeGeneratorRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCodeGeneratorRequest();
     while (reader.pos < end) {
@@ -323,9 +310,7 @@ export const CodeGeneratorRequest = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      const startPos = reader.pos;
-      reader.skipType(tag & 7);
-      const buf = reader.buf.slice(startPos, reader.pos);
+      const buf = reader.skip(tag & 7);
 
       const list = message._unknownFields![tag];
 
@@ -344,7 +329,7 @@ function createBaseCodeGeneratorResponse(): CodeGeneratorResponse {
 }
 
 export const CodeGeneratorResponse = {
-  encode(message: CodeGeneratorResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: CodeGeneratorResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.error !== undefined && message.error !== "") {
       writer.uint32(10).string(message.error);
     }
@@ -352,26 +337,21 @@ export const CodeGeneratorResponse = {
       writer.uint32(16).uint64(message.supportedFeatures);
     }
     for (const v of message.file) {
-      CodeGeneratorResponse_File.encode(v!, writer.uint32(122).fork()).ldelim();
+      CodeGeneratorResponse_File.encode(v!, writer.uint32(122).fork()).join();
     }
     if (message._unknownFields !== undefined) {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): CodeGeneratorResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): CodeGeneratorResponse {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCodeGeneratorResponse();
     while (reader.pos < end) {
@@ -389,7 +369,7 @@ export const CodeGeneratorResponse = {
             break;
           }
 
-          message.supportedFeatures = longToNumber(reader.uint64() as Long);
+          message.supportedFeatures = longToNumber(reader.uint64());
           continue;
         case 15:
           if (tag !== 122) {
@@ -402,9 +382,7 @@ export const CodeGeneratorResponse = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      const startPos = reader.pos;
-      reader.skipType(tag & 7);
-      const buf = reader.buf.slice(startPos, reader.pos);
+      const buf = reader.skip(tag & 7);
 
       const list = message._unknownFields![tag];
 
@@ -423,7 +401,7 @@ function createBaseCodeGeneratorResponse_File(): CodeGeneratorResponse_File {
 }
 
 export const CodeGeneratorResponse_File = {
-  encode(message: CodeGeneratorResponse_File, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: CodeGeneratorResponse_File, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== undefined && message.name !== "") {
       writer.uint32(10).string(message.name);
     }
@@ -434,26 +412,21 @@ export const CodeGeneratorResponse_File = {
       writer.uint32(122).string(message.content);
     }
     if (message.generatedCodeInfo !== undefined) {
-      GeneratedCodeInfo.encode(message.generatedCodeInfo, writer.uint32(130).fork()).ldelim();
+      GeneratedCodeInfo.encode(message.generatedCodeInfo, writer.uint32(130).fork()).join();
     }
     if (message._unknownFields !== undefined) {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): CodeGeneratorResponse_File {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): CodeGeneratorResponse_File {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseCodeGeneratorResponse_File();
     while (reader.pos < end) {
@@ -491,9 +464,7 @@ export const CodeGeneratorResponse_File = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      const startPos = reader.pos;
-      reader.skipType(tag & 7);
-      const buf = reader.buf.slice(startPos, reader.pos);
+      const buf = reader.skip(tag & 7);
 
       const list = message._unknownFields![tag];
 
@@ -507,17 +478,13 @@ export const CodeGeneratorResponse_File = {
   },
 };
 
-function longToNumber(long: Long): number {
-  if (long.gt(globalThis.Number.MAX_SAFE_INTEGER)) {
+function longToNumber(int64: { toString(): string }): number {
+  const num = globalThis.Number(int64.toString());
+  if (num > globalThis.Number.MAX_SAFE_INTEGER) {
     throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
-  if (long.lt(globalThis.Number.MIN_SAFE_INTEGER)) {
+  if (num < globalThis.Number.MIN_SAFE_INTEGER) {
     throw new globalThis.Error("Value is smaller than Number.MIN_SAFE_INTEGER");
   }
-  return long.toNumber();
-}
-
-if (_m0.util.Long !== Long) {
-  _m0.util.Long = Long as any;
-  _m0.configure();
+  return num;
 }

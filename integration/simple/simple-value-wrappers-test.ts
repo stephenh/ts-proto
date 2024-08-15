@@ -1,4 +1,4 @@
-import { Reader } from "protobufjs";
+import { BinaryReader } from "@bufbuild/protobuf/wire";
 import { SimpleWithWrappers } from "./simple";
 import { google, simple as pbjs } from "./pbjs";
 import PbSimpleWithWrappers = pbjs.SimpleWithWrappers;
@@ -15,7 +15,7 @@ describe("simple value types", () => {
       snacks: ["a", "b"],
       id: new Uint8Array([1, 2, 3, 4]),
     };
-    const s2 = PbSimpleWithWrappers.decode(Reader.create(SimpleWithWrappers.encode(s1).finish()));
+    const s2 = PbSimpleWithWrappers.decode(SimpleWithWrappers.encode(s1).finish());
     // pbjs toJSON still uses the wrapper objects, so we can't compare directly against s1
     expect(s2).toMatchInlineSnapshot(`
       {
@@ -60,7 +60,7 @@ describe("simple value types", () => {
       snacks: [],
       id: undefined,
     };
-    const s2 = PbSimpleWithWrappers.decode(Reader.create(SimpleWithWrappers.encode(s1).finish()));
+    const s2 = PbSimpleWithWrappers.decode(SimpleWithWrappers.encode(s1).finish());
     // pbjs toJSON still uses the wrapper objects, so we can't compare directly against s1
     expect(s2).toMatchInlineSnapshot(`{}`);
   });
@@ -70,7 +70,7 @@ describe("simple value types", () => {
       name: PbStringValue.create({ value: "asdf" }),
       age: PbInt32Value.create({ value: 1 }),
     });
-    const s2 = SimpleWithWrappers.decode(Reader.create(PbSimpleWithWrappers.encode(s1).finish()));
+    const s2 = SimpleWithWrappers.decode(new BinaryReader(PbSimpleWithWrappers.encode(s1).finish()));
     expect(s2).toMatchInlineSnapshot(`
       {
         "age": 1,
@@ -85,7 +85,7 @@ describe("simple value types", () => {
 
   it("can decode null value wrappers as proto", () => {
     const s1 = PbSimpleWithWrappers.create({});
-    const s2 = SimpleWithWrappers.decode(Reader.create(PbSimpleWithWrappers.encode(s1).finish()));
+    const s2 = SimpleWithWrappers.decode(new BinaryReader(PbSimpleWithWrappers.encode(s1).finish()));
     expect(s2).toMatchInlineSnapshot(`
       {
         "age": undefined,

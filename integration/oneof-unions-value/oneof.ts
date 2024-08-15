@@ -2,7 +2,7 @@
 // source: oneof.proto
 
 /* eslint-disable */
-import * as _m0 from "protobufjs/minimal";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 import { Value } from "./google/protobuf/struct";
 
 export const protobufPackage = "oneof";
@@ -80,7 +80,7 @@ function createBasePleaseChoose(): PleaseChoose {
 }
 
 export const PleaseChoose = {
-  encode(message: PleaseChoose, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: PleaseChoose, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
@@ -92,7 +92,7 @@ export const PleaseChoose = {
         writer.uint32(26).string(message.choice.value);
         break;
       case "aMessage":
-        PleaseChoose_Submessage.encode(message.choice.value, writer.uint32(34).fork()).ldelim();
+        PleaseChoose_Submessage.encode(message.choice.value, writer.uint32(34).fork()).join();
         break;
       case "aBool":
         writer.uint32(48).bool(message.choice.value);
@@ -122,13 +122,13 @@ export const PleaseChoose = {
       writer.uint32(98).bytes(message.signature);
     }
     if (message.value !== undefined) {
-      Value.encode(Value.wrap(message.value), writer.uint32(106).fork()).ldelim();
+      Value.encode(Value.wrap(message.value), writer.uint32(106).fork()).join();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): PleaseChoose {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): PleaseChoose {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePleaseChoose();
     while (reader.pos < end) {
@@ -229,7 +229,7 @@ export const PleaseChoose = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -358,15 +358,15 @@ function createBasePleaseChoose_Submessage(): PleaseChoose_Submessage {
 }
 
 export const PleaseChoose_Submessage = {
-  encode(message: PleaseChoose_Submessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: PleaseChoose_Submessage, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): PleaseChoose_Submessage {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): PleaseChoose_Submessage {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePleaseChoose_Submessage();
     while (reader.pos < end) {
@@ -383,7 +383,7 @@ export const PleaseChoose_Submessage = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -415,7 +415,7 @@ function createBaseSimpleButOptional(): SimpleButOptional {
 }
 
 export const SimpleButOptional = {
-  encode(message: SimpleButOptional, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: SimpleButOptional, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== undefined) {
       writer.uint32(10).string(message.name);
     }
@@ -425,8 +425,8 @@ export const SimpleButOptional = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): SimpleButOptional {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): SimpleButOptional {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleButOptional();
     while (reader.pos < end) {
@@ -450,7 +450,7 @@ export const SimpleButOptional = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },

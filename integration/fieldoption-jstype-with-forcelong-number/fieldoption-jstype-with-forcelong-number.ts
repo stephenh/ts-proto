@@ -2,8 +2,7 @@
 // source: fieldoption-jstype-with-forcelong-number.proto
 
 /* eslint-disable */
-import * as _m0 from "protobufjs/minimal";
-import Long = require("long");
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
 export const protobufPackage = "foo";
 
@@ -18,7 +17,7 @@ function createBaseFieldOption(): FieldOption {
 }
 
 export const FieldOption = {
-  encode(message: FieldOption, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: FieldOption, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.normalField !== 0) {
       writer.uint32(8).int64(message.normalField);
     }
@@ -31,8 +30,8 @@ export const FieldOption = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): FieldOption {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): FieldOption {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseFieldOption();
     while (reader.pos < end) {
@@ -43,27 +42,27 @@ export const FieldOption = {
             break;
           }
 
-          message.normalField = longToNumber(reader.int64() as Long);
+          message.normalField = longToNumber(reader.int64());
           continue;
         case 2:
           if (tag !== 16) {
             break;
           }
 
-          message.numberField = longToNumber(reader.int64() as Long);
+          message.numberField = longToNumber(reader.int64());
           continue;
         case 3:
           if (tag !== 24) {
             break;
           }
 
-          message.stringField = longToString(reader.int64() as Long);
+          message.stringField = reader.int64().toString();
           continue;
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -114,23 +113,15 @@ type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
-function longToNumber(long: Long): number {
-  if (long.gt(globalThis.Number.MAX_SAFE_INTEGER)) {
+function longToNumber(int64: { toString(): string }): number {
+  const num = globalThis.Number(int64.toString());
+  if (num > globalThis.Number.MAX_SAFE_INTEGER) {
     throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
-  if (long.lt(globalThis.Number.MIN_SAFE_INTEGER)) {
+  if (num < globalThis.Number.MIN_SAFE_INTEGER) {
     throw new globalThis.Error("Value is smaller than Number.MIN_SAFE_INTEGER");
   }
-  return long.toNumber();
-}
-
-function longToString(long: Long) {
-  return long.toString();
-}
-
-if (_m0.util.Long !== Long) {
-  _m0.util.Long = Long as any;
-  _m0.configure();
+  return num;
 }
 
 function isSet(value: any): boolean {

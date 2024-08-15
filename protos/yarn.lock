@@ -5,6 +5,13 @@ __metadata:
   version: 6
   cacheKey: 8
 
+"@bufbuild/protobuf@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "@bufbuild/protobuf@npm:2.0.0"
+  checksum: 761484bff8edb78fa30d4ce9e8157f9cfb7941dd885469805c894dfff360edfb912b244f6f23f2ed1d182834082f1b79f00ae1765acfa34903b03192f65dbfaa
+  languageName: node
+  linkType: hard
+
 "@protobufjs/aspromise@npm:^1.1.1, @protobufjs/aspromise@npm:^1.1.2":
   version: 1.1.2
   resolution: "@protobufjs/aspromise@npm:1.1.2"
@@ -146,12 +153,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-proto-descriptors@1.15.0, ts-proto-descriptors@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "ts-proto-descriptors@workspace:."
+"ts-proto-descriptors@npm:1.15.0":
+  version: 1.15.0
+  resolution: "ts-proto-descriptors@npm:1.15.0"
   dependencies:
     long: ^5.2.3
     protobufjs: ^7.2.4
+  checksum: 50e77d7c89dc52e9e74ee859e3232cece527d59ddcce515852059df70b4d80b49e73eb65166ec87f6f9238cadc2c77eb05695724f82aa4501bc2378fb2457643
+  languageName: node
+  linkType: hard
+
+"ts-proto-descriptors@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "ts-proto-descriptors@workspace:."
+  dependencies:
+    "@bufbuild/protobuf": ^2.0.0
     ts-proto: ^1.175.1
     typescript: ^5.1.3
   languageName: unknown

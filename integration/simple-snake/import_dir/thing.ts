@@ -2,7 +2,7 @@
 // source: import_dir/thing.proto
 
 /* eslint-disable */
-import * as _m0 from "protobufjs/minimal";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 import { Timestamp } from "../google/protobuf/timestamp";
 
 export const protobufPackage = "simple";
@@ -16,15 +16,15 @@ function createBaseImportedThing(): ImportedThing {
 }
 
 export const ImportedThing = {
-  encode(message: ImportedThing, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: ImportedThing, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.created_at !== undefined) {
-      Timestamp.encode(toTimestamp(message.created_at), writer.uint32(10).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.created_at), writer.uint32(10).fork()).join();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ImportedThing {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): ImportedThing {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseImportedThing();
     while (reader.pos < end) {
@@ -41,7 +41,7 @@ export const ImportedThing = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },

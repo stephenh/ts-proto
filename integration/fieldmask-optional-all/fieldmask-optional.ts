@@ -2,7 +2,7 @@
 // source: fieldmask-optional.proto
 
 /* eslint-disable */
-import * as _m0 from "protobufjs/minimal";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 import { FieldMask } from "./google/protobuf/field_mask";
 
 export const protobufPackage = "";
@@ -16,15 +16,15 @@ function createBaseExample(): Example {
 }
 
 export const Example = {
-  encode(message: Example, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Example, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.mask !== undefined) {
-      FieldMask.encode(FieldMask.wrap(message.mask), writer.uint32(10).fork()).ldelim();
+      FieldMask.encode(FieldMask.wrap(message.mask), writer.uint32(10).fork()).join();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Example {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Example {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseExample();
     while (reader.pos < end) {
@@ -41,7 +41,7 @@ export const Example = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },

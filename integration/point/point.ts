@@ -2,7 +2,7 @@
 // source: point.proto
 
 /* eslint-disable */
-import * as _m0 from "protobufjs/minimal";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
 export const protobufPackage = "";
 
@@ -21,7 +21,7 @@ function createBasePoint(): Point {
 }
 
 export const Point = {
-  encode(message: Point, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Point, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.lat !== 0) {
       writer.uint32(9).double(message.lat);
     }
@@ -31,8 +31,8 @@ export const Point = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Point {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Point {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePoint();
     while (reader.pos < end) {
@@ -56,7 +56,7 @@ export const Point = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -95,18 +95,18 @@ function createBaseArea(): Area {
 }
 
 export const Area = {
-  encode(message: Area, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Area, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.nw !== undefined) {
-      Point.encode(message.nw, writer.uint32(10).fork()).ldelim();
+      Point.encode(message.nw, writer.uint32(10).fork()).join();
     }
     if (message.se !== undefined) {
-      Point.encode(message.se, writer.uint32(18).fork()).ldelim();
+      Point.encode(message.se, writer.uint32(18).fork()).join();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Area {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Area {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseArea();
     while (reader.pos < end) {
@@ -130,7 +130,7 @@ export const Area = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },

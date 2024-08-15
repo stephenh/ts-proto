@@ -2,7 +2,7 @@
 // source: use-json-name.proto
 
 /* eslint-disable */
-import * as _m0 from "protobufjs/minimal";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 import { Timestamp } from "./google/protobuf/timestamp";
 
 export const protobufPackage = "json_name";
@@ -46,7 +46,7 @@ function createBaseJsonName(): JsonName {
 }
 
 export const JsonName = {
-  encode(message: JsonName, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: JsonName, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.other_name !== "") {
       writer.uint32(10).string(message.other_name);
     }
@@ -54,7 +54,7 @@ export const JsonName = {
       writer.uint32(16).int32(message.other_age);
     }
     if (message.createdAt !== undefined) {
-      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(74).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(74).fork()).join();
     }
     if (message["hyphened-name"] !== "") {
       writer.uint32(26).string(message["hyphened-name"]);
@@ -81,7 +81,7 @@ export const JsonName = {
       writer.uint32(98).string(message._C);
     }
     if (message.d !== undefined) {
-      NstedOneOf.encode(message.d, writer.uint32(106).fork()).ldelim();
+      NstedOneOf.encode(message.d, writer.uint32(106).fork()).join();
     }
     if (message.noJsonName !== "") {
       writer.uint32(114).string(message.noJsonName);
@@ -89,8 +89,8 @@ export const JsonName = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): JsonName {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): JsonName {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseJsonName();
     while (reader.pos < end) {
@@ -191,7 +191,7 @@ export const JsonName = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -287,15 +287,15 @@ function createBaseNstedOneOf(): NstedOneOf {
 }
 
 export const NstedOneOf = {
-  encode(message: NstedOneOf, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: NstedOneOf, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.nestedOneOfField !== undefined) {
       writer.uint32(10).string(message.nestedOneOfField);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): NstedOneOf {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): NstedOneOf {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNstedOneOf();
     while (reader.pos < end) {
@@ -312,7 +312,7 @@ export const NstedOneOf = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },

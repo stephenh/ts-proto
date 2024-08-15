@@ -109,7 +109,7 @@ export function generateService(
 function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProto): Code {
   assertInstanceOf(methodDesc, FormattedMethodDescriptor);
   const { options } = ctx;
-  const Reader = impFile(ctx.options, "Reader@protobufjs/minimal");
+  const BinaryReader = imp("BinaryReader@@bufbuild/protobuf/wire");
   const rawInputType = rawRequestType(ctx, methodDesc, { keepValueType: true });
   const inputType = requestType(ctx, methodDesc);
   const rawOutputType = responseType(ctx, methodDesc, { keepValueType: true });
@@ -145,10 +145,10 @@ function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProt
       "encodedRequest",
     )}; return encodedRequest}`;
   }
-  let decode = code`${rawOutputType}.decode(${Reader}.create(data))`;
+  let decode = code`${rawOutputType}.decode(new ${BinaryReader}(data))`;
   if (options.rpcAfterResponse) {
     decode = code`
-      const response = ${rawOutputType}.decode(${Reader}.create(data));
+      const response = ${rawOutputType}.decode(new ${BinaryReader}(data));
       if (this.rpc.afterResponse) {
         this.rpc.afterResponse(this.service, "${methodDesc.name}", response);
       }
@@ -157,7 +157,7 @@ function generateRegularRpcMethod(ctx: Context, methodDesc: MethodDescriptorProt
   }
 
   // if (options.useDate && rawOutputType.toString().includes("Timestamp")) {
-  //   decode = code`data => ${utils.fromTimestamp}(${rawOutputType}.decode(${Reader}.create(data)))`;
+  //   decode = code`data => ${utils.fromTimestamp}(${rawOutputType}.decode(new ${BinaryReader}(data)))`;
   // }
   if (methodDesc.clientStreaming) {
     if (options.useAsyncIterable) {
@@ -377,7 +377,7 @@ function generateCachingRpcMethod(
   const inputType = requestType(ctx, methodDesc);
   const outputType = responseType(ctx, methodDesc);
   const uniqueIdentifier = `${maybePrefixPackage(fileDesc, serviceDesc.name)}.${methodDesc.name}`;
-  const Reader = impFile(ctx.options, "Reader@protobufjs/minimal");
+  const BinaryReader = imp("BinaryReader@@bufbuild/protobuf/wire");
   const lambda = code`
     (requests) => {
       const responses = requests.map(async request => {
@@ -385,7 +385,7 @@ function generateCachingRpcMethod(
         const response = await this.rpc.request(ctx, "${maybePrefixPackage(fileDesc, serviceDesc.name)}", "${
     methodDesc.name
   }", data);
-        return ${outputType}.decode(${Reader}.create(response));
+        return ${outputType}.decode(new ${BinaryReader}(response));
       });
       return Promise.all(responses);
     }

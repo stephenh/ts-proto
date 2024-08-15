@@ -10,13 +10,13 @@ describe('useOptionals=deprecatedOnly', () => {
       repLong: [11, 12],
       repTruth: [true, false],
       repDescription: ["hello", "world"],
-      repData: [Buffer.alloc(3).fill(0x33), Buffer.alloc(4).fill(0x34), Buffer.alloc(5).fill(0x35)],
+      repData: [new Uint8Array(3).fill(0x33), new Uint8Array(4).fill(0x34), new Uint8Array(5).fill(0x35)],
 
       optId: 2,
       optLong: 13,
       optTruth: true,
       optDescription: "mumble",
-      optData: Buffer.alloc(6).fill(0x36),
+      optData: new Uint8Array(6).fill(0x36),
 
       translations: {
         "hello": "hallo",
@@ -39,13 +39,13 @@ describe('useOptionals=deprecatedOnly', () => {
       repLong: [11, 12],
       repTruth: [true, false],
       repDescription: ["hello", "world"],
-      repData: [Buffer.alloc(3).fill(0x33), Buffer.alloc(4).fill(0x34), Buffer.alloc(5).fill(0x35)],
+      repData: [new Uint8Array(3).fill(0x33), new Uint8Array(4).fill(0x34), new Uint8Array(5).fill(0x35)],
 
       optId: 2,
       optLong: 13,
       optTruth: true,
       optDescription: "mumble",
-      optData: Buffer.alloc(6).fill(0x36),
+      optData: new Uint8Array(6).fill(0x36),
 
       translations: {
         "hello": "hallo",
