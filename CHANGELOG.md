@@ -1,3 +1,10 @@
+## [1.181.2](https://github.com/stephenh/ts-proto/compare/v1.181.1...v1.181.2) (2024-08-15)
+
+
+### Bug Fixes
+
+* toJSON Function with `removeEnumPrefix=true` and `unrecognizedEnumValue=0` Options ([#1089](https://github.com/stephenh/ts-proto/issues/1089)) ([2401490](https://github.com/stephenh/ts-proto/commit/24014908f814e2720b9c2b9bd2ae1773be880a16)), closes [#1086](https://github.com/stephenh/ts-proto/issues/1086) [#1086](https://github.com/stephenh/ts-proto/issues/1086)
+
 ## [1.181.1](https://github.com/stephenh/ts-proto/compare/v1.181.0...v1.181.1) (2024-07-13)
 
 
