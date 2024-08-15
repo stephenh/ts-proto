@@ -5,7 +5,7 @@ import { uncapitalize, camelToSnake } from "./case";
 import SourceInfo, { Fields } from "./sourceInfo";
 import { Context } from "./context";
 
-type UnrecognizedEnum = { present: false } | { present: true; name: string, originalName: string };
+type UnrecognizedEnum = { present: false } | { present: true; name: string; originalName: string };
 
 // Output the `enum { Foo, A = 0, B = 1 }`
 export function generateEnum(
