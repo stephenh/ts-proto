@@ -37,7 +37,7 @@ export function fooToJSON(object: Foo): string {
     case Foo.BAZ:
       return "FOO_BAZ";
     default:
-      return "UNSPECIFIED";
+      return "FOO_UNSPECIFIED";
   }
 }
 
@@ -72,7 +72,7 @@ export function barToJSON(object: Bar): string {
     case Bar.QUX:
       return "QUX";
     default:
-      return "UNSPECIFIED";
+      return "BAR_UNSPECIFIED";
   }
 }
 
@@ -114,7 +114,7 @@ export function withNestedEnum_BazToJSON(object: WithNestedEnum_Baz): string {
     case WithNestedEnum_Baz.TWO:
       return "BAZ_TWO";
     default:
-      return "UNSPECIFIED";
+      return "BAZ_UNSPECIFIED";
   }
 }
 
@@ -149,7 +149,7 @@ export function withNestedEnum_QuxToJSON(object: WithNestedEnum_Qux): string {
     case WithNestedEnum_Qux.TWO:
       return "TWO";
     default:
-      return "UNSPECIFIED";
+      return "QUX_UNSPECIFIED";
   }
 }
 
