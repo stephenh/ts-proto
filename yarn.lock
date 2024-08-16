@@ -2951,6 +2951,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"conventional-changelog-conventionalcommits@npm:^8.0.0":
+  version: 8.0.0
+  resolution: "conventional-changelog-conventionalcommits@npm:8.0.0"
+  dependencies:
+    compare-func: "npm:^2.0.0"
+  checksum: 10/23122a76c69ebe7490968f7c0779b0a6b73011eebbad0563ac5571c6015319acf13bb8dca178d7a5484f10b64744ae7ba35d40f71a8bdc5430e73dd7e032f45d
+  languageName: node
+  linkType: hard
+
 "conventional-changelog-writer@npm:^8.0.0":
   version: 8.0.0
   resolution: "conventional-changelog-writer@npm:8.0.0"
@@ -8053,6 +8062,7 @@ __metadata:
     "@types/object-hash": "npm:^3.0.2"
     case-anything: "npm:^2.1.13"
     chokidar: "npm:^3.5.3"
+    conventional-changelog-conventionalcommits: "npm:^8.0.0"
     dataloader: "npm:^2.2.2"
     jest: "npm:^29.6.1"
     jest-ts-webcompat-resolver: "npm:^1.0.0"
