@@ -5,6 +5,26 @@
 
 > `ts-proto` transforms your `.proto` files into strongly-typed, idiomatic TypeScript files!
 
+## ts-proto 2.x Release Notes
+
+The 2.x release of ts-proto migrated the low-level Protobuf serializing that its `encode` and `decode` method use from the venerable, but aging & stagnant, `protobufjs` package to `@bufbuild/protobuf`.
+
+If you only used the `encode` and `decode` methods, this should largely be a non-breaking change.
+
+However, if you used any code that used the old `protobufjs` `Writer` or `Reader` classes, you'll need to update your code to use the new `@bufbuild/protobuf` classes:
+
+```
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
+```
+
+If migrating to `@bufbuild/protobuf` is a blocker for you, you can pin your `ts-proto` version to `1.x`.
+
+**Disclaimer & apology:** I had intended to release ts-proto 2.x as an alpha release, but didn't get the semantic-release config correct, and so ts-proto 2.x was published as a major release without a proper alpha/beta cycle.
+
+If you could file reports (or better PRs!) for any issues you come across while the release is still fresh, that would be greatly appreciated.
+
+Any tips or tricks for others on the migration would also be appreciated! 
+
 ## Table of contents
 
 - [ts-proto](#ts-proto)
