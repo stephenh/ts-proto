@@ -71,5 +71,5 @@
     "ts-poet": "^6.7.0",
     "ts-proto-descriptors": "1.16.0"
   },
-  "packageManager": "yarn@3.6.0"
+  "packageManager": "yarn@4.4.0"
 }
