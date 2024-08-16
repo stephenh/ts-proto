@@ -1,3 +1,5 @@
+# [2.0.0](https://github.com/stephenh/ts-proto/compare/v1.181.2...v2.0.0) (2024-08-16)
+
 ## [1.181.2](https://github.com/stephenh/ts-proto/compare/v1.181.1...v1.181.2) (2024-08-15)
 
 
