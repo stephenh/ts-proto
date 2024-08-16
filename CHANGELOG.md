@@ -1,3 +1,10 @@
+## [2.0.2](https://github.com/stephenh/ts-proto/compare/v2.0.1...v2.0.2) (2024-08-16)
+
+
+### Bug Fixes
+
+* Fix version loading in new dist layout. ([#1091](https://github.com/stephenh/ts-proto/issues/1091)) ([f1c23d2](https://github.com/stephenh/ts-proto/commit/f1c23d2eab096b7c6b2decd9f0886b5300c52712))
+
 ## [2.0.1](https://github.com/stephenh/ts-proto/compare/v2.0.0...v2.0.1) (2024-08-16)
 
 
