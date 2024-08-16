@@ -2,7 +2,7 @@
   "name": "ts-proto",
   "version": "2.0.0",
   "description": "",
-  "main": "build/plugin.js",
+  "main": "build/src/plugin.js",
   "repository": "github:stephenh/ts-proto",
   "bin": {
     "protoc-gen-ts_proto": "./protoc-gen-ts_proto"
