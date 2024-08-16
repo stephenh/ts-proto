@@ -331,7 +331,7 @@ export async function getVersions(request: CodeGeneratorRequest) {
     protocVersion = `v${major}.${minor}.${patch}`;
   }
 
-  const path: string = "../package.json";
+  const path: string = "../../package.json";
   const packageJson = await import(path);
   const tsProtoVersion = `v${packageJson?.version ?? "unknown"}`;
 
