@@ -1,3 +1,10 @@
+## [2.0.1](https://github.com/stephenh/ts-proto/compare/v2.0.0...v2.0.1) (2024-08-16)
+
+
+### Bug Fixes
+
+* Fix build from typescript bump. ([3ecd498](https://github.com/stephenh/ts-proto/commit/3ecd4986063952ae06c6136fbd9ae0cfc75212d8))
+
 # [2.0.0](https://github.com/stephenh/ts-proto/compare/v1.181.2...v2.0.0) (2024-08-16)
 
 ## [1.181.2](https://github.com/stephenh/ts-proto/compare/v1.181.1...v1.181.2) (2024-08-15)
