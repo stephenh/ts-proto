@@ -662,6 +662,11 @@ interface Rpc {
 If you're working with gRPC, a simple implementation could look like this:
 
 ```ts
+const conn = new grpc.Client(
+  "localhost:8765",
+  grpc.credentials.createInsecure()
+);
+
 type RpcImpl = (service: string, method: string, data: Uint8Array) => Promise<Uint8Array>;
 
 const sendRequest: RpcImpl = (service, method, data) => {
