@@ -1,0 +1,18 @@
+syntax = "proto3";
+package simple;
+
+import "google/protobuf/descriptor.proto";
+
+extend google.protobuf.EnumValueOptions {
+	string string_value = 1234;
+}
+
+// Test doc comment
+message Test {
+  TestEnum enum = 1;
+}
+
+enum TestEnum {
+  VALUE_A = 0 [(string_value) = "A"];
+  VALUE_B = 1 [(string_value) = "B"];
+}

@@ -3067,7 +3067,7 @@ export interface ProtoMetadata {
   };
 }
 
-export const protoMetadata: ProtoMetadata = {
+export const protoMetadata = {
   fileDescriptor: {
     "name": "google/protobuf/descriptor.proto",
     "package": "google.protobuf",
@@ -5874,7 +5874,7 @@ export const protoMetadata: ProtoMetadata = {
     ".google.protobuf.GeneratedCodeInfo.Annotation": GeneratedCodeInfo_Annotation,
   },
   dependencies: [],
-};
+} as const satisfies ProtoMetadata;
 
 function longToNumber(int64: { toString(): string }): number {
   const num = globalThis.Number(int64.toString());

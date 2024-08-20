@@ -456,6 +456,8 @@ Generated code will be placed in the Gradle build directory.
 
 - With `--ts_proto_opt=outputSchema=true`, meta typings will be generated that can later be used in other code generators. If outputSchema is instead specified to be `no-file-descriptor` then we do not include the file descriptor in the generated schema. This is useful if you are trying to minimize the size of the generated schema.
 
+- With `--ts_proto_opt=outputSchemaAsConst=true`, the `protoMetadata` export of `outputSchema=true` is declared using `as const` and `satisfies` (supported by TypeScript since [4.9](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-9.html#the-satisfies-operator)), providing more detailed type information.
+
 - With `--ts_proto_opt=outputTypeAnnotations=true`, each message will be given a `$type` field containing its fully-qualified name. You can use `--ts_proto_opt=outputTypeAnnotations=static-only` to omit it from the `interface` declaration, or `--ts_proto_opt=outputTypeAnnotations=optional` to make it an optional property on the `interface` definition. The latter option may be useful if you want to use the `$type` field for runtime type checking on responses from a server.
 
 - With `--ts_proto_opt=outputTypeRegistry=true`, the type registry will be generated that can be used to resolve message types by fully-qualified name. Also, each message will be given a `$type` field containing its fully-qualified name.

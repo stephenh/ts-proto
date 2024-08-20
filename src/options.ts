@@ -77,6 +77,7 @@ export type Options = {
   unrecognizedEnumValue: number;
   exportCommonSymbols: boolean;
   outputSchema: boolean | "no-file-descriptor";
+  outputSchemaAsConst: boolean;
   onlyTypes: boolean;
   emitImportedFiles: boolean;
   useAbortSignal: boolean;
@@ -147,6 +148,7 @@ export function defaultOptions(): Options {
     unrecognizedEnumValue: -1,
     exportCommonSymbols: true,
     outputSchema: false,
+    outputSchemaAsConst: false,
     onlyTypes: false,
     emitImportedFiles: true,
     useExactTypes: true,

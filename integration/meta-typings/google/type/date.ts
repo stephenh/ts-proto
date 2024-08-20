@@ -116,7 +116,7 @@ export interface ProtoMetadata {
 }
 
 export const protoMetadata: ProtoMetadata = {
-  fileDescriptor: FileDescriptorProto.fromPartial({
+  fileDescriptor: {
     "name": "google/type/date.proto",
     "package": "google.type",
     "dependency": [],
@@ -227,7 +227,7 @@ export const protoMetadata: ProtoMetadata = {
       }],
     },
     "syntax": "proto3",
-  }),
+  },
   references: { ".google.type.DateMessage": DateMessage },
   dependencies: [],
 };

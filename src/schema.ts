@@ -181,11 +181,9 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
   });
 
   chunks.push(code`
-    export const ${def("protoMetadata")}: ProtoMetadata = {
+    export const ${def("protoMetadata")}${options.outputSchemaAsConst ? "" : ": ProtoMetadata"} = {
       ${
-        ctx.options.outputSchema !== "no-file-descriptor"
-          ? code`fileDescriptor: ${fileDescriptorProto}.fromPartial(${descriptor}),\n`
-          : ""
+        ctx.options.outputSchema !== "no-file-descriptor" ? code`fileDescriptor: ${descriptor},\n` : ""
       }references: { ${joinCode(references, { on: "," })} },
       dependencies: [${joinCode(dependencies, { on: "," })}],
       ${
@@ -198,7 +196,7 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
         }`
           : ""
       }
-    }
+    }${options.outputSchemaAsConst ? " as const satisfies ProtoMetadata" : ""}
   `);
 
   return chunks;

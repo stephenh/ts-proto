@@ -1628,7 +1628,7 @@ export interface ProtoMetadata {
 }
 
 export const protoMetadata: ProtoMetadata = {
-  fileDescriptor: FileDescriptorProto.fromPartial({
+  fileDescriptor: {
     "name": "simple.proto",
     "package": "simple",
     "dependency": [
@@ -2919,7 +2919,7 @@ export const protoMetadata: ProtoMetadata = {
       }],
     },
     "syntax": "proto3",
-  }),
+  },
   references: {
     ".simple.StateEnum": StateEnum,
     ".simple.Simple": Simple,

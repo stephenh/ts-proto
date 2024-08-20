@@ -70,7 +70,7 @@ export interface ProtoMetadata {
 }
 
 export const protoMetadata: ProtoMetadata = {
-  fileDescriptor: FileDescriptorProto.fromPartial({
+  fileDescriptor: {
     "name": "import_dir/thing.proto",
     "package": "simple",
     "dependency": ["google/protobuf/timestamp.proto"],
@@ -106,7 +106,7 @@ export const protoMetadata: ProtoMetadata = {
     "options": undefined,
     "sourceCodeInfo": { "location": [] },
     "syntax": "proto3",
-  }),
+  },
   references: { ".simple.ImportedThing": ImportedThing },
   dependencies: [protoMetadata1],
 };
