@@ -1,3 +1,10 @@
+## [2.0.3](https://github.com/stephenh/ts-proto/compare/v2.0.2...v2.0.3) (2024-08-21)
+
+
+### Bug Fixes
+
+* Fix running yarn:test locally. ([#1097](https://github.com/stephenh/ts-proto/issues/1097)) ([30385ed](https://github.com/stephenh/ts-proto/commit/30385edd565d873d550df765dac9570c125bef2c))
+
 ## [2.0.2](https://github.com/stephenh/ts-proto/compare/v2.0.1...v2.0.2) (2024-08-16)
 
 
