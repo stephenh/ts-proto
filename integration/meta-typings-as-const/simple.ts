@@ -147,11 +147,6 @@ export const protoMetadata = {
   references: { ".simple.TestEnum": TestEnum, ".simple.Test": Test },
   dependencies: [protoMetadata1],
   options: {
-    enums: {
-      "TestEnum": {
-        options: undefined,
-        values: { "VALUE_A": { "string_value": "A" }, "VALUE_B": { "string_value": "B" } },
-      },
-    },
+    enums: { "TestEnum": { values: { "VALUE_A": { "string_value": "A" }, "VALUE_B": { "string_value": "B" } } } },
   },
 } as const satisfies ProtoMetadata;

@@ -140,7 +140,7 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
     if (methodsOptions.length > 0 || serviceOptions) {
       servicesOptions.push(code`
         '${service.name}': {
-          options: ${serviceOptions},
+          ${serviceOptions ? code`options: ${serviceOptions},` : ""}
           methods: {${joinCode(methodsOptions, { on: "," })}}
         }
       `);
@@ -173,7 +173,7 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
     if (valuesOptions.length > 0 || enumOptions) {
       enumsOptions.push(code`
         '${Enum.name}': {
-          options: ${enumOptions},
+          ${enumOptions ? code`options: ${enumOptions},` : ""}
           values: {${joinCode(valuesOptions, { on: "," })}}
         }
       `);
