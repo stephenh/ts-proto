@@ -70,7 +70,7 @@
     "@bufbuild/protobuf": "^2.0.0",
     "case-anything": "^2.1.13",
     "ts-poet": "^6.7.0",
-    "ts-proto-descriptors": "1.16.0"
+    "ts-proto-descriptors": "2.0.0"
   },
   "packageManager": "yarn@4.4.0"
 }
