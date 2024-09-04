@@ -41,9 +41,7 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
     };
 
     export interface ProtoMetadata {
-      ${
-        outputFileDescriptor ? code`fileDescriptor: ${fileDescriptorProto};\n` : ""
-      }references: { [key: string]: any };
+      ${outputFileDescriptor ? code`fileDescriptor: ${fileDescriptorProto};\n` : ""}references: { [key: string]: any };
       dependencies?: ProtoMetadata[];
       options?: {
         options?: { [key: string]: any };
@@ -187,9 +185,9 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
 
   chunks.push(code`
     export const ${def("protoMetadata")}${outputAsConst ? "" : ": ProtoMetadata"} = {
-      ${
-        outputFileDescriptor ? code`fileDescriptor: ${descriptor},\n` : ""
-      }references: { ${joinCode(references, { on: "," })} },
+      ${outputFileDescriptor ? code`fileDescriptor: ${descriptor},\n` : ""}references: { ${joinCode(references, {
+    on: ",",
+  })} },
       dependencies: [${joinCode(dependencies, { on: "," })}],
       ${
         fileOptions || messagesOptions.length > 0 || servicesOptions.length > 0 || enumsOptions.length > 0

@@ -244,10 +244,10 @@ export function optionsFromParameter(parameter: string | undefined): Options {
 
   // Handle outputSchema=true
   if ((options.outputSchema as any) === true) {
-    options.outputSchema = []
+    options.outputSchema = [];
   }
   if (typeof options.outputSchema === "string") {
-    options.outputSchema = [options.outputSchema]
+    options.outputSchema = [options.outputSchema];
   }
 
   if ((options.useDate as any) === true) {
