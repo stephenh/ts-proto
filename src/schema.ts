@@ -11,6 +11,7 @@ import SourceInfo from "./sourceInfo";
 import { impFile, maybePrefixPackage } from "./utils";
 import { basicTypeName, toReaderCall } from "./types";
 import { BinaryReader } from "@bufbuild/protobuf/wire";
+import { OutputSchemaOption } from "./options";
 
 const fileDescriptorProto = imp("FileDescriptorProto@ts-proto-descriptors");
 
@@ -27,6 +28,10 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
     extensionCache[extension.extendee][extension.number] = extension;
   });
 
+  const outputSchemaOptions = ctx.options.outputSchema ? ctx.options.outputSchema : [];
+  const outputFileDescriptor = !outputSchemaOptions.includes(OutputSchemaOption.NO_FILE_DESCRIPTOR);
+  const outputAsConst = outputSchemaOptions.includes(OutputSchemaOption.CONST);
+
   chunks.push(code`
     type ProtoMetaMessageOptions = {
       options?: { [key: string]: any };
@@ -36,9 +41,7 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
     };
 
     export interface ProtoMetadata {
-      ${
-        ctx.options.outputSchema !== "no-file-descriptor" ? code`fileDescriptor: ${fileDescriptorProto};\n` : ""
-      }references: { [key: string]: any };
+      ${outputFileDescriptor ? code`fileDescriptor: ${fileDescriptorProto};\n` : ""}references: { [key: string]: any };
       dependencies?: ProtoMetadata[];
       options?: {
         options?: { [key: string]: any };
@@ -140,7 +143,7 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
     if (methodsOptions.length > 0 || serviceOptions) {
       servicesOptions.push(code`
         '${service.name}': {
-          options: ${serviceOptions},
+          ${serviceOptions ? code`options: ${serviceOptions},` : ""}
           methods: {${joinCode(methodsOptions, { on: "," })}}
         }
       `);
@@ -173,7 +176,7 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
     if (valuesOptions.length > 0 || enumOptions) {
       enumsOptions.push(code`
         '${Enum.name}': {
-          options: ${enumOptions},
+          ${enumOptions ? code`options: ${enumOptions},` : ""}
           values: {${joinCode(valuesOptions, { on: "," })}}
         }
       `);
@@ -181,12 +184,10 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
   });
 
   chunks.push(code`
-    export const ${def("protoMetadata")}: ProtoMetadata = {
-      ${
-        ctx.options.outputSchema !== "no-file-descriptor"
-          ? code`fileDescriptor: ${fileDescriptorProto}.fromPartial(${descriptor}),\n`
-          : ""
-      }references: { ${joinCode(references, { on: "," })} },
+    export const ${def("protoMetadata")}${outputAsConst ? "" : ": ProtoMetadata"} = {
+      ${outputFileDescriptor ? code`fileDescriptor: ${descriptor},\n` : ""}references: { ${joinCode(references, {
+    on: ",",
+  })} },
       dependencies: [${joinCode(dependencies, { on: "," })}],
       ${
         fileOptions || messagesOptions.length > 0 || servicesOptions.length > 0 || enumsOptions.length > 0
@@ -198,7 +199,7 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
         }`
           : ""
       }
-    }
+    }${outputAsConst ? " as const satisfies ProtoMetadata" : ""}
   `);
 
   return chunks;

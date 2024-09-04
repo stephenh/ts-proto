@@ -976,7 +976,7 @@ export interface ProtoMetadata {
 }
 
 export const protoMetadata: ProtoMetadata = {
-  fileDescriptor: FileDescriptorProto1.fromPartial({
+  fileDescriptor: {
     "name": "google/protobuf/descriptor.proto",
     "package": "google.protobuf",
     "dependency": [],
@@ -3745,7 +3745,7 @@ export const protoMetadata: ProtoMetadata = {
       }],
     },
     "syntax": "",
-  }),
+  },
   references: {
     ".google.protobuf.FieldDescriptorProto.Type": FieldDescriptorProto_Type,
     ".google.protobuf.FieldDescriptorProto.Label": FieldDescriptorProto_Label,

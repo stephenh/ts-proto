@@ -182,7 +182,7 @@ export interface ProtoMetadata {
 }
 
 export const protoMetadata: ProtoMetadata = {
-  fileDescriptor: FileDescriptorProto.fromPartial({
+  fileDescriptor: {
     "name": "google/protobuf/timestamp.proto",
     "package": "google.protobuf",
     "dependency": [],
@@ -275,7 +275,7 @@ export const protoMetadata: ProtoMetadata = {
       }],
     },
     "syntax": "proto3",
-  }),
+  },
   references: { ".google.protobuf.Timestamp": Timestamp },
   dependencies: [],
 };

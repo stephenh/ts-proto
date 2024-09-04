@@ -443,7 +443,7 @@ export interface ProtoMetadata {
 }
 
 export const protoMetadata: ProtoMetadata = {
-  fileDescriptor: FileDescriptorProto.fromPartial({
+  fileDescriptor: {
     "name": "google/protobuf/wrappers.proto",
     "package": "google.protobuf",
     "dependency": [],
@@ -804,7 +804,7 @@ export const protoMetadata: ProtoMetadata = {
       }],
     },
     "syntax": "proto3",
-  }),
+  },
   references: {
     ".google.protobuf.DoubleValue": DoubleValue,
     ".google.protobuf.FloatValue": FloatValue,

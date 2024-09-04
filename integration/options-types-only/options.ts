@@ -53,7 +53,7 @@ export interface ProtoMetadata {
 }
 
 export const protoMetadata: ProtoMetadata = {
-  fileDescriptor: FileDescriptorProto1.fromPartial({
+  fileDescriptor: {
     "name": "options.proto",
     "package": "",
     "dependency": ["google/protobuf/descriptor.proto", "something/something.proto"],
@@ -313,7 +313,7 @@ export const protoMetadata: ProtoMetadata = {
     },
     "sourceCodeInfo": { "location": [] },
     "syntax": "proto3",
-  }),
+  },
   references: { ".MyEnum": MyEnum },
   dependencies: [protoMetadata1, protoMetadata2],
   options: {
