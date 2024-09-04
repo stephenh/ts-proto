@@ -1,3 +1,10 @@
+## [2.0.4](https://github.com/stephenh/ts-proto/compare/v2.0.3...v2.0.4) (2024-09-04)
+
+
+### Bug Fixes
+
+* Bump ts-proto-descriptors. ([#1102](https://github.com/stephenh/ts-proto/issues/1102)) ([3d1cd61](https://github.com/stephenh/ts-proto/commit/3d1cd61ed7bbac4d6dc7353c49d0732aad22a504)), closes [#1101](https://github.com/stephenh/ts-proto/issues/1101)
+
 ## [2.0.3](https://github.com/stephenh/ts-proto/compare/v2.0.2...v2.0.3) (2024-08-21)
 
 
