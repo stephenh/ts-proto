@@ -38,7 +38,6 @@ describe("options", () => {
         "outputJsonMethods": true,
         "outputPartialMethods": false,
         "outputSchema": false,
-        "outputSchemaAsConst": false,
         "outputServices": [],
         "outputTypeAnnotations": false,
         "outputTypeRegistry": false,

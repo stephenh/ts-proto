@@ -11,6 +11,7 @@ import SourceInfo from "./sourceInfo";
 import { impFile, maybePrefixPackage } from "./utils";
 import { basicTypeName, toReaderCall } from "./types";
 import { BinaryReader } from "@bufbuild/protobuf/wire";
+import { OutputSchemaOption } from "./options";
 
 const fileDescriptorProto = imp("FileDescriptorProto@ts-proto-descriptors");
 
@@ -27,6 +28,10 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
     extensionCache[extension.extendee][extension.number] = extension;
   });
 
+  const outputSchemaOptions = ctx.options.outputSchema ? ctx.options.outputSchema : [];
+  const outputFileDescriptor = !outputSchemaOptions.includes(OutputSchemaOption.NO_FILE_DESCRIPTOR);
+  const outputAsConst = outputSchemaOptions.includes(OutputSchemaOption.CONST);
+
   chunks.push(code`
     type ProtoMetaMessageOptions = {
       options?: { [key: string]: any };
@@ -37,7 +42,7 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
 
     export interface ProtoMetadata {
       ${
-        ctx.options.outputSchema !== "no-file-descriptor" ? code`fileDescriptor: ${fileDescriptorProto};\n` : ""
+        outputFileDescriptor ? code`fileDescriptor: ${fileDescriptorProto};\n` : ""
       }references: { [key: string]: any };
       dependencies?: ProtoMetadata[];
       options?: {
@@ -181,9 +186,9 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
   });
 
   chunks.push(code`
-    export const ${def("protoMetadata")}${options.outputSchemaAsConst ? "" : ": ProtoMetadata"} = {
+    export const ${def("protoMetadata")}${outputAsConst ? "" : ": ProtoMetadata"} = {
       ${
-        ctx.options.outputSchema !== "no-file-descriptor" ? code`fileDescriptor: ${descriptor},\n` : ""
+        outputFileDescriptor ? code`fileDescriptor: ${descriptor},\n` : ""
       }references: { ${joinCode(references, { on: "," })} },
       dependencies: [${joinCode(dependencies, { on: "," })}],
       ${
@@ -196,7 +201,7 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
         }`
           : ""
       }
-    }${options.outputSchemaAsConst ? " as const satisfies ProtoMetadata" : ""}
+    }${outputAsConst ? " as const satisfies ProtoMetadata" : ""}
   `);
 
   return chunks;
