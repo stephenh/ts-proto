@@ -1,3 +1,10 @@
+# [2.1.0](https://github.com/stephenh/ts-proto/compare/v2.0.4...v2.1.0) (2024-09-04)
+
+
+### Features
+
+* option to declare schema as const ([#1096](https://github.com/stephenh/ts-proto/issues/1096)) ([4cc1a1e](https://github.com/stephenh/ts-proto/commit/4cc1a1e4238cf628591414c02d39bd76dc75fb3a))
+
 ## [2.0.4](https://github.com/stephenh/ts-proto/compare/v2.0.3...v2.0.4) (2024-09-04)
 
 
