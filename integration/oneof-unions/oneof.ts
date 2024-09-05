@@ -79,7 +79,7 @@ function createBasePleaseChoose(): PleaseChoose {
   return { name: "", choice: undefined, age: 0, eitherOr: undefined, signature: new Uint8Array(0), value: undefined };
 }
 
-export const PleaseChoose = {
+export const PleaseChoose: MessageFns<PleaseChoose> = {
   encode(message: PleaseChoose, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
@@ -363,7 +363,7 @@ function createBasePleaseChoose_Submessage(): PleaseChoose_Submessage {
   return { name: "" };
 }
 
-export const PleaseChoose_Submessage = {
+export const PleaseChoose_Submessage: MessageFns<PleaseChoose_Submessage> = {
   encode(message: PleaseChoose_Submessage, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
@@ -420,7 +420,7 @@ function createBaseSimpleButOptional(): SimpleButOptional {
   return { name: undefined, age: undefined };
 }
 
-export const SimpleButOptional = {
+export const SimpleButOptional: MessageFns<SimpleButOptional> = {
   encode(message: SimpleButOptional, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== undefined) {
       writer.uint32(10).string(message.name);
@@ -530,4 +530,13 @@ export type Exact<P, I extends P> = P extends Builtin ? P
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+  fromJSON(object: any): T;
+  toJSON(message: T): unknown;
+  create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
+  fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
 }

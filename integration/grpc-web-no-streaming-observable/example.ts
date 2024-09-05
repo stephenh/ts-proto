@@ -78,7 +78,7 @@ function createBaseDashFlash(): DashFlash {
   return { msg: "", type: 0 };
 }
 
-export const DashFlash = {
+export const DashFlash: MessageFns<DashFlash> = {
   encode(message: DashFlash, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.msg !== "") {
       writer.uint32(10).string(message.msg);
@@ -152,7 +152,7 @@ function createBaseDashUserSettingsState(): DashUserSettingsState {
   return { email: "", urls: undefined, flashes: [] };
 }
 
-export const DashUserSettingsState = {
+export const DashUserSettingsState: MessageFns<DashUserSettingsState> = {
   encode(message: DashUserSettingsState, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.email !== "") {
       writer.uint32(10).string(message.email);
@@ -243,7 +243,7 @@ function createBaseDashUserSettingsState_URLs(): DashUserSettingsState_URLs {
   return { connectGoogle: "", connectGithub: "" };
 }
 
-export const DashUserSettingsState_URLs = {
+export const DashUserSettingsState_URLs: MessageFns<DashUserSettingsState_URLs> = {
   encode(message: DashUserSettingsState_URLs, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.connectGoogle !== "") {
       writer.uint32(10).string(message.connectGoogle);
@@ -317,7 +317,7 @@ function createBaseEmpty(): Empty {
   return {};
 }
 
-export const Empty = {
+export const Empty: MessageFns<Empty> = {
   encode(_: Empty, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     return writer;
   },
@@ -491,4 +491,13 @@ export class GrpcWebError extends globalThis.Error {
   constructor(message: string, public code: grpc.Code, public metadata: grpc.Metadata) {
     super(message);
   }
+}
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+  fromJSON(object: any): T;
+  toJSON(message: T): unknown;
+  create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
+  fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
 }

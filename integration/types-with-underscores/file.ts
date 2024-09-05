@@ -17,7 +17,7 @@ function createBaseBaz(): Baz {
   return { foo: undefined };
 }
 
-export const Baz = {
+export const Baz: MessageFns<Baz> = {
   encode(message: Baz, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.foo !== undefined) {
       FooBar.encode(message.foo, writer.uint32(10).fork()).join();
@@ -74,7 +74,7 @@ function createBaseFooBar(): FooBar {
   return {};
 }
 
-export const FooBar = {
+export const FooBar: MessageFns<FooBar> = {
   encode(_: FooBar, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     return writer;
   },
@@ -127,4 +127,13 @@ export type Exact<P, I extends P> = P extends Builtin ? P
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+  fromJSON(object: any): T;
+  toJSON(message: T): unknown;
+  create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
+  fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
 }

@@ -15,7 +15,7 @@ function createBaseStructMessage(): StructMessage {
   return { value: undefined };
 }
 
-export const StructMessage = {
+export const StructMessage: MessageFns<StructMessage> = {
   encode(message: StructMessage, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.value !== undefined) {
       Struct.encode(Struct.wrap(message.value), writer.uint32(10).fork()).join();
@@ -82,4 +82,13 @@ export type Exact<P, I extends P> = P extends Builtin ? P
 
 function isObject(value: any): boolean {
   return typeof value === "object" && value !== null;
+}
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+  fromJSON(object: any): T;
+  toJSON(message: T): unknown;
+  create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
+  fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
 }

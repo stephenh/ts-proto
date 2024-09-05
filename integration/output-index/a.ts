@@ -12,7 +12,7 @@ function createBaseA(): A {
   return { a: "" };
 }
 
-export const A = {
+export const A: MessageFns<A> = {
   encode(message: A, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.a !== "") {
       writer.uint32(10).string(message.a);
@@ -79,4 +79,13 @@ type Exact<P, I extends P> = P extends Builtin ? P
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+  fromJSON(object: any): T;
+  toJSON(message: T): unknown;
+  create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
+  fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
 }

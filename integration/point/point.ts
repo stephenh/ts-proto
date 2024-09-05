@@ -20,7 +20,7 @@ function createBasePoint(): Point {
   return { lat: 0, lng: 0 };
 }
 
-export const Point = {
+export const Point: MessageFns<Point> = {
   encode(message: Point, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.lat !== 0) {
       writer.uint32(9).double(message.lat);
@@ -94,7 +94,7 @@ function createBaseArea(): Area {
   return { nw: undefined, se: undefined };
 }
 
-export const Area = {
+export const Area: MessageFns<Area> = {
   encode(message: Area, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.nw !== undefined) {
       Point.encode(message.nw, writer.uint32(10).fork()).join();
@@ -178,4 +178,13 @@ export type Exact<P, I extends P> = P extends Builtin ? P
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+  fromJSON(object: any): T;
+  toJSON(message: T): unknown;
+  create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
+  fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
 }

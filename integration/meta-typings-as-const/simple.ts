@@ -23,7 +23,7 @@ function createBaseTest(): Test {
   return { enum: 0 };
 }
 
-export const Test = {
+export const Test: MessageFns<Test> = {
   encode(message: Test, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.enum !== 0) {
       writer.uint32(8).int32(message.enum);
@@ -150,3 +150,8 @@ export const protoMetadata = {
     enums: { "TestEnum": { values: { "VALUE_A": { "string_value": "A" }, "VALUE_B": { "string_value": "B" } } } },
   },
 } as const satisfies ProtoMetadata;
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+}

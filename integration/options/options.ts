@@ -32,7 +32,7 @@ function createBaseMyMessage(): MyMessage {
   return { foo: undefined, foo2: undefined, bar: undefined, quux: undefined };
 }
 
-export const MyMessage = {
+export const MyMessage: MessageFns<MyMessage> = {
   encode(message: MyMessage, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.foo !== undefined) {
       writer.uint32(8).int32(message.foo);
@@ -98,7 +98,7 @@ function createBaseRequestType(): RequestType {
   return {};
 }
 
-export const RequestType = {
+export const RequestType: MessageFns<RequestType> = {
   encode(_: RequestType, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     return writer;
   },
@@ -124,7 +124,7 @@ function createBaseResponseType(): ResponseType {
   return {};
 }
 
-export const ResponseType = {
+export const ResponseType: MessageFns<ResponseType> = {
   encode(_: ResponseType, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     return writer;
   },
@@ -486,3 +486,8 @@ export const protoMetadata: ProtoMetadata = {
     enums: { "MyEnum": { options: { "my_enum_option": true }, values: { "FOO": { "my_enum_value_option": 321 } } } },
   },
 };
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+}

@@ -45,7 +45,7 @@ function createBaseEntity(): Entity {
   };
 }
 
-export const Entity = {
+export const Entity: MessageFns<Entity> = {
   encode(message: Entity, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.intVal !== 0) {
       writer.uint32(8).int32(message.intVal);
@@ -304,7 +304,7 @@ function createBaseSubEntity(): SubEntity {
   return { subVal: 0 };
 }
 
-export const SubEntity = {
+export const SubEntity: MessageFns<SubEntity> = {
   encode(message: SubEntity, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.subVal !== 0) {
       writer.uint32(8).int32(message.subVal);
@@ -377,4 +377,13 @@ function isObject(value: any): boolean {
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+  fromJSON(object: any): T;
+  toJSON(message: T): unknown;
+  create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
+  fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
 }

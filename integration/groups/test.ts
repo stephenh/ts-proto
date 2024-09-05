@@ -58,7 +58,7 @@ function createBaseGroupsOptionalTest(): GroupsOptionalTest {
   return {};
 }
 
-export const GroupsOptionalTest = {
+export const GroupsOptionalTest: MessageFns<GroupsOptionalTest> = {
   encode(message: GroupsOptionalTest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.int1 !== undefined && message.int1 !== 0) {
       writer.uint32(8).int32(message.int1);
@@ -169,7 +169,7 @@ function createBaseGroupsOptionalTest_Group(): GroupsOptionalTest_Group {
   return {};
 }
 
-export const GroupsOptionalTest_Group = {
+export const GroupsOptionalTest_Group: MessageFns<GroupsOptionalTest_Group> = {
   encode(message: GroupsOptionalTest_Group, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.key !== undefined && message.key !== "") {
       writer.uint32(10).string(message.key);
@@ -263,7 +263,7 @@ function createBaseGroupsRepeatedTest(): GroupsRepeatedTest {
   return {};
 }
 
-export const GroupsRepeatedTest = {
+export const GroupsRepeatedTest: MessageFns<GroupsRepeatedTest> = {
   encode(message: GroupsRepeatedTest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.int1 !== undefined && message.int1.length !== 0) {
       writer.uint32(10).fork();
@@ -419,7 +419,7 @@ function createBaseGroupsRepeatedTest_Group(): GroupsRepeatedTest_Group {
   return {};
 }
 
-export const GroupsRepeatedTest_Group = {
+export const GroupsRepeatedTest_Group: MessageFns<GroupsRepeatedTest_Group> = {
   encode(message: GroupsRepeatedTest_Group, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.key !== undefined && message.key.length !== 0) {
       for (const v of message.key) {
@@ -523,7 +523,7 @@ function createBaseGroupsNestedTest(): GroupsNestedTest {
   return {};
 }
 
-export const GroupsNestedTest = {
+export const GroupsNestedTest: MessageFns<GroupsNestedTest> = {
   encode(message: GroupsNestedTest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.int1 !== undefined && message.int1.length !== 0) {
       writer.uint32(10).fork();
@@ -679,7 +679,7 @@ function createBaseGroupsNestedTest_Group(): GroupsNestedTest_Group {
   return {};
 }
 
-export const GroupsNestedTest_Group = {
+export const GroupsNestedTest_Group: MessageFns<GroupsNestedTest_Group> = {
   encode(message: GroupsNestedTest_Group, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.nested !== undefined && message.nested.length !== 0) {
       for (const v of message.nested) {
@@ -765,7 +765,7 @@ function createBaseGroupsNestedTest_Group_Nested(): GroupsNestedTest_Group_Neste
   return {};
 }
 
-export const GroupsNestedTest_Group_Nested = {
+export const GroupsNestedTest_Group_Nested: MessageFns<GroupsNestedTest_Group_Nested> = {
   encode(message: GroupsNestedTest_Group_Nested, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.nested2 !== undefined && message.nested2.length !== 0) {
       for (const v of message.nested2) {
@@ -853,7 +853,7 @@ function createBaseGroupsNestedTest_Group_Nested_Nested2(): GroupsNestedTest_Gro
   return {};
 }
 
-export const GroupsNestedTest_Group_Nested_Nested2 = {
+export const GroupsNestedTest_Group_Nested_Nested2: MessageFns<GroupsNestedTest_Group_Nested_Nested2> = {
   encode(message: GroupsNestedTest_Group_Nested_Nested2, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.string1 !== undefined && message.string1 !== "") {
       writer.uint32(10).string(message.string1);
@@ -944,4 +944,13 @@ export type Exact<P, I extends P> = P extends Builtin ? P
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+  fromJSON(object: any): T;
+  toJSON(message: T): unknown;
+  create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
+  fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
 }

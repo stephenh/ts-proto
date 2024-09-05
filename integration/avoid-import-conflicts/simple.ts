@@ -81,7 +81,7 @@ function createBaseSimple(): Simple {
   return { name: "", otherSimple: undefined };
 }
 
-export const Simple = {
+export const Simple: MessageFns<Simple> = {
   encode(message: Simple, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
@@ -157,7 +157,7 @@ function createBaseDifferentSimple(): DifferentSimple {
   return { name: "", otherOptionalSimple2: undefined };
 }
 
-export const DifferentSimple = {
+export const DifferentSimple: MessageFns<DifferentSimple> = {
   encode(message: DifferentSimple, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
@@ -235,7 +235,7 @@ function createBaseSimpleEnums(): SimpleEnums {
   return { localEnum: 0, importEnum: 0 };
 }
 
-export const SimpleEnums = {
+export const SimpleEnums: MessageFns<SimpleEnums> = {
   encode(message: SimpleEnums, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.localEnum !== 0) {
       writer.uint32(8).int32(message.localEnum);
@@ -309,7 +309,7 @@ function createBaseFooServiceCreateRequest(): FooServiceCreateRequest {
   return { kind: 0 };
 }
 
-export const FooServiceCreateRequest = {
+export const FooServiceCreateRequest: MessageFns<FooServiceCreateRequest> = {
   encode(message: FooServiceCreateRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.kind !== 0) {
       writer.uint32(8).int32(message.kind);
@@ -366,7 +366,7 @@ function createBaseFooServiceCreateResponse(): FooServiceCreateResponse {
   return { kind: 0 };
 }
 
-export const FooServiceCreateResponse = {
+export const FooServiceCreateResponse: MessageFns<FooServiceCreateResponse> = {
   encode(message: FooServiceCreateResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.kind !== 0) {
       writer.uint32(8).int32(message.kind);
@@ -457,4 +457,13 @@ export type Exact<P, I extends P> = P extends Builtin ? P
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+  fromJSON(object: any): T;
+  toJSON(message: T): unknown;
+  create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
+  fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
 }

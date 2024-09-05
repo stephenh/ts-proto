@@ -41,7 +41,7 @@ function createBaseDateMessage(): DateMessage {
   return { year: 0, month: 0, day: 0 };
 }
 
-export const DateMessage = {
+export const DateMessage: MessageFns<DateMessage> = {
   encode(message: DateMessage, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.year !== 0) {
       writer.uint32(8).int32(message.year);
@@ -140,4 +140,13 @@ export type Exact<P, I extends P> = P extends Builtin ? P
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+  fromJSON(object: any): T;
+  toJSON(message: T): unknown;
+  create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
+  fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
 }

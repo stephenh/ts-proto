@@ -164,7 +164,7 @@ function createBaseVersion(): Version {
   return { major: 0, minor: 0, patch: 0, suffix: "", _unknownFields: {} };
 }
 
-export const Version = {
+export const Version: MessageFns<Version> = {
   encode(message: Version, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.major !== undefined && message.major !== 0) {
       writer.uint32(8).int32(message.major);
@@ -246,7 +246,7 @@ function createBaseCodeGeneratorRequest(): CodeGeneratorRequest {
   return { fileToGenerate: [], parameter: "", protoFile: [], compilerVersion: undefined, _unknownFields: {} };
 }
 
-export const CodeGeneratorRequest = {
+export const CodeGeneratorRequest: MessageFns<CodeGeneratorRequest> = {
   encode(message: CodeGeneratorRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     for (const v of message.fileToGenerate) {
       writer.uint32(10).string(v!);
@@ -328,7 +328,7 @@ function createBaseCodeGeneratorResponse(): CodeGeneratorResponse {
   return { error: "", supportedFeatures: 0, file: [], _unknownFields: {} };
 }
 
-export const CodeGeneratorResponse = {
+export const CodeGeneratorResponse: MessageFns<CodeGeneratorResponse> = {
   encode(message: CodeGeneratorResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.error !== undefined && message.error !== "") {
       writer.uint32(10).string(message.error);
@@ -400,7 +400,7 @@ function createBaseCodeGeneratorResponse_File(): CodeGeneratorResponse_File {
   return { name: "", insertionPoint: "", content: "", generatedCodeInfo: undefined, _unknownFields: {} };
 }
 
-export const CodeGeneratorResponse_File = {
+export const CodeGeneratorResponse_File: MessageFns<CodeGeneratorResponse_File> = {
   encode(message: CodeGeneratorResponse_File, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== undefined && message.name !== "") {
       writer.uint32(10).string(message.name);
@@ -487,4 +487,9 @@ function longToNumber(int64: { toString(): string }): number {
     throw new globalThis.Error("Value is smaller than Number.MIN_SAFE_INTEGER");
   }
   return num;
+}
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
 }

@@ -85,7 +85,7 @@ function createBaseTile(): Tile {
   return { layers: [] };
 }
 
-export const Tile = {
+export const Tile: MessageFns<Tile> = {
   encode(message: Tile, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     for (const v of message.layers) {
       Tile_Layer.encode(v!, writer.uint32(26).fork()).join();
@@ -144,7 +144,7 @@ function createBaseTile_Value(): Tile_Value {
   return { stringValue: "", floatValue: 0, doubleValue: 0, intValue: 0, uintValue: 0, sintValue: 0, boolValue: false };
 }
 
-export const Tile_Value = {
+export const Tile_Value: MessageFns<Tile_Value> = {
   encode(message: Tile_Value, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.stringValue !== undefined && message.stringValue !== "") {
       writer.uint32(10).string(message.stringValue);
@@ -293,7 +293,7 @@ function createBaseTile_Feature(): Tile_Feature {
   return { id: 0, tags: [], type: 0, geometry: [] };
 }
 
-export const Tile_Feature = {
+export const Tile_Feature: MessageFns<Tile_Feature> = {
   encode(message: Tile_Feature, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.id !== undefined && message.id !== 0) {
       writer.uint32(8).uint64(message.id);
@@ -421,7 +421,7 @@ function createBaseTile_Layer(): Tile_Layer {
   return { version: 1, name: "", features: [], keys: [], values: [], extent: 4096 };
 }
 
-export const Tile_Layer = {
+export const Tile_Layer: MessageFns<Tile_Layer> = {
   encode(message: Tile_Layer, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.version !== 1) {
       writer.uint32(120).uint32(message.version);
@@ -578,4 +578,13 @@ function longToNumber(int64: { toString(): string }): number {
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+  fromJSON(object: any): T;
+  toJSON(message: T): unknown;
+  create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
+  fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
 }

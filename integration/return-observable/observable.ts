@@ -19,7 +19,7 @@ function createBaseProduceRequest(): ProduceRequest {
   return { ingredients: "" };
 }
 
-export const ProduceRequest = {
+export const ProduceRequest: MessageFns<ProduceRequest> = {
   encode(message: ProduceRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.ingredients !== "") {
       writer.uint32(10).string(message.ingredients);
@@ -76,7 +76,7 @@ function createBaseProduceReply(): ProduceReply {
   return { result: "" };
 }
 
-export const ProduceReply = {
+export const ProduceReply: MessageFns<ProduceReply> = {
   encode(message: ProduceReply, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.result !== "") {
       writer.uint32(10).string(message.result);
@@ -147,4 +147,13 @@ export type Exact<P, I extends P> = P extends Builtin ? P
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+  fromJSON(object: any): T;
+  toJSON(message: T): unknown;
+  create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
+  fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
 }

@@ -108,7 +108,7 @@ function createBaseStruct(): Struct {
   return { fields: {} };
 }
 
-export const Struct = {
+export const Struct: MessageFns<Struct, "google.protobuf.Struct"> & StructWrapperFns = {
   $type: "google.protobuf.Struct" as const,
 
   encode(message: Struct, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
@@ -216,7 +216,7 @@ function createBaseStruct_FieldsEntry(): Struct_FieldsEntry {
   return { key: "", value: undefined };
 }
 
-export const Struct_FieldsEntry = {
+export const Struct_FieldsEntry: MessageFns<Struct_FieldsEntry, "google.protobuf.Struct.FieldsEntry"> = {
   $type: "google.protobuf.Struct.FieldsEntry" as const,
 
   encode(message: Struct_FieldsEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
@@ -301,7 +301,7 @@ function createBaseValue(): Value {
   };
 }
 
-export const Value = {
+export const Value: MessageFns<Value, "google.protobuf.Value"> & AnyValueWrapperFns = {
   $type: "google.protobuf.Value" as const,
 
   encode(message: Value, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
@@ -476,7 +476,7 @@ function createBaseListValue(): ListValue {
   return { values: [] };
 }
 
-export const ListValue = {
+export const ListValue: MessageFns<ListValue, "google.protobuf.ListValue"> & ListValueWrapperFns = {
   $type: "google.protobuf.ListValue" as const,
 
   encode(message: ListValue, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
@@ -565,4 +565,29 @@ function isObject(value: any): boolean {
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+export interface MessageFns<T, V extends string> {
+  readonly $type: V;
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+  fromJSON(object: any): T;
+  toJSON(message: T): unknown;
+  create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
+  fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
+}
+
+export interface StructWrapperFns {
+  wrap(object: { [key: string]: any } | undefined): Struct;
+  unwrap(message: Struct): { [key: string]: any };
+}
+
+export interface AnyValueWrapperFns {
+  wrap(value: any): Value;
+  unwrap(message: any): string | number | boolean | Object | null | Array<any> | undefined;
+}
+
+export interface ListValueWrapperFns {
+  wrap(array: Array<any> | undefined): ListValue;
+  unwrap(message: ListValue): Array<any>;
 }

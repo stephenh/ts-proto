@@ -29,7 +29,7 @@ function createBaseTPartialMessage(): TPartialMessage {
   return {};
 }
 
-export const TPartialMessage = {
+export const TPartialMessage: MessageFns<TPartialMessage> = {
   encode(message: TPartialMessage, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.field !== undefined && message.field !== "") {
       writer.uint32(10).string(message.field);
@@ -86,7 +86,7 @@ function createBaseTPartial(): TPartial {
   return {};
 }
 
-export const TPartial = {
+export const TPartial: MessageFns<TPartial> = {
   encode(message: TPartial, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.number !== undefined && message.number !== 0) {
       writer.uint32(8).int32(message.number);
@@ -297,7 +297,7 @@ function createBaseTPartial_MapEntry(): TPartial_MapEntry {
   return { key: "", value: "" };
 }
 
-export const TPartial_MapEntry = {
+export const TPartial_MapEntry: MessageFns<TPartial_MapEntry> = {
   encode(message: TPartial_MapEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.key !== "") {
       writer.uint32(10).string(message.key);
@@ -385,4 +385,13 @@ function isObject(value: any): boolean {
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+  fromJSON(object: any): T;
+  toJSON(message: T): unknown;
+  create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
+  fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
 }

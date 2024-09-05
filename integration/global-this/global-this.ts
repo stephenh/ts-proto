@@ -34,7 +34,7 @@ function createBaseObject(): Object {
   return { name: "" };
 }
 
-export const Object = {
+export const Object: MessageFns<Object> = {
   encode(message: Object, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
@@ -91,7 +91,7 @@ function createBaseError(): Error {
   return { name: "" };
 }
 
-export const Error = {
+export const Error: MessageFns<Error> = {
   encode(message: Error, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
@@ -148,7 +148,7 @@ function createBaseString(): String {
   return { value: "" };
 }
 
-export const String = {
+export const String: MessageFns<String> = {
   encode(message: String, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.value !== "") {
       writer.uint32(10).string(message.value);
@@ -205,7 +205,7 @@ function createBaseBoolean(): Boolean {
   return { value: false };
 }
 
-export const Boolean = {
+export const Boolean: MessageFns<Boolean> = {
   encode(message: Boolean, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.value !== false) {
       writer.uint32(8).bool(message.value);
@@ -262,7 +262,7 @@ function createBaseNumber(): Number {
   return { value: 0 };
 }
 
-export const Number = {
+export const Number: MessageFns<Number> = {
   encode(message: Number, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.value !== 0) {
       writer.uint32(9).double(message.value);
@@ -319,7 +319,7 @@ function createBaseArray(): Array {
   return { values: [] };
 }
 
-export const Array = {
+export const Array: MessageFns<Array> = {
   encode(message: Array, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     for (const v of message.values) {
       String.encode(v!, writer.uint32(10).fork()).join();
@@ -405,4 +405,13 @@ export type Exact<P, I extends P> = P extends Builtin ? P
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+  fromJSON(object: any): T;
+  toJSON(message: T): unknown;
+  create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
+  fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
 }

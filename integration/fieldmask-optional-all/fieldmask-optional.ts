@@ -15,7 +15,7 @@ function createBaseExample(): Example {
   return { mask: undefined };
 }
 
-export const Example = {
+export const Example: MessageFns<Example> = {
   encode(message: Example, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.mask !== undefined) {
       FieldMask.encode(FieldMask.wrap(message.mask), writer.uint32(10).fork()).join();
@@ -82,4 +82,13 @@ export type Exact<P, I extends P> = P extends Builtin ? P
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+  fromJSON(object: any): T;
+  toJSON(message: T): unknown;
+  create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
+  fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
 }

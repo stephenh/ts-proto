@@ -100,7 +100,7 @@ function createBaseDashFlash(): DashFlash {
   return { msg: "", type: 0 };
 }
 
-export const DashFlash = {
+export const DashFlash: MessageFns<DashFlash> = {
   encode(message: DashFlash, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.msg !== "") {
       writer.uint32(10).string(message.msg);
@@ -174,7 +174,7 @@ function createBaseDashUserSettingsState(): DashUserSettingsState {
   return { email: "", urls: undefined, flashes: [] };
 }
 
-export const DashUserSettingsState = {
+export const DashUserSettingsState: MessageFns<DashUserSettingsState> = {
   encode(message: DashUserSettingsState, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.email !== "") {
       writer.uint32(10).string(message.email);
@@ -265,7 +265,7 @@ function createBaseDashUserSettingsState_URLs(): DashUserSettingsState_URLs {
   return { connectGoogle: "", connectGithub: "" };
 }
 
-export const DashUserSettingsState_URLs = {
+export const DashUserSettingsState_URLs: MessageFns<DashUserSettingsState_URLs> = {
   encode(message: DashUserSettingsState_URLs, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.connectGoogle !== "") {
       writer.uint32(10).string(message.connectGoogle);
@@ -339,7 +339,7 @@ function createBaseDashCred(): DashCred {
   return { description: "", metadata: "", token: "", id: "" };
 }
 
-export const DashCred = {
+export const DashCred: MessageFns<DashCred> = {
   encode(message: DashCred, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.description !== "") {
       writer.uint32(18).string(message.description);
@@ -443,7 +443,7 @@ function createBaseDashAPICredsCreateReq(): DashAPICredsCreateReq {
   return { description: "", metadata: "" };
 }
 
-export const DashAPICredsCreateReq = {
+export const DashAPICredsCreateReq: MessageFns<DashAPICredsCreateReq> = {
   encode(message: DashAPICredsCreateReq, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.description !== "") {
       writer.uint32(10).string(message.description);
@@ -517,7 +517,7 @@ function createBaseDashAPICredsUpdateReq(): DashAPICredsUpdateReq {
   return { credSid: "", description: "", metadata: "", id: "" };
 }
 
-export const DashAPICredsUpdateReq = {
+export const DashAPICredsUpdateReq: MessageFns<DashAPICredsUpdateReq> = {
   encode(message: DashAPICredsUpdateReq, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.credSid !== "") {
       writer.uint32(10).string(message.credSid);
@@ -621,7 +621,7 @@ function createBaseDashAPICredsDeleteReq(): DashAPICredsDeleteReq {
   return { credSid: "", id: "" };
 }
 
-export const DashAPICredsDeleteReq = {
+export const DashAPICredsDeleteReq: MessageFns<DashAPICredsDeleteReq> = {
   encode(message: DashAPICredsDeleteReq, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.credSid !== "") {
       writer.uint32(10).string(message.credSid);
@@ -695,7 +695,7 @@ function createBaseEmpty(): Empty {
   return {};
 }
 
-export const Empty = {
+export const Empty: MessageFns<Empty> = {
   encode(_: Empty, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     return writer;
   },
@@ -824,4 +824,13 @@ export type Exact<P, I extends P> = P extends Builtin ? P
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+  fromJSON(object: any): T;
+  toJSON(message: T): unknown;
+  create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
+  fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
 }

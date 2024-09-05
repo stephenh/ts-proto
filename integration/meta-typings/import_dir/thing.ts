@@ -16,7 +16,7 @@ function createBaseImportedThing(): ImportedThing {
   return { createdAt: undefined };
 }
 
-export const ImportedThing = {
+export const ImportedThing: MessageFns<ImportedThing> = {
   encode(message: ImportedThing, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.createdAt !== undefined) {
       Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(10).fork()).join();
@@ -121,4 +121,9 @@ function fromTimestamp(t: Timestamp): Date {
   let millis = (t.seconds || 0) * 1_000;
   millis += (t.nanos || 0) / 1_000_000;
   return new globalThis.Date(millis);
+}
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
 }

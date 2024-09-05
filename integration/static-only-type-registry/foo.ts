@@ -25,7 +25,7 @@ function createBaseFoo(): Foo {
   return { timestamp: undefined };
 }
 
-export const Foo = {
+export const Foo: MessageFns<Foo, "foo.Foo"> = {
   $type: "foo.Foo" as const,
 
   encode(message: Foo, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
@@ -86,7 +86,7 @@ function createBaseFoo2(): Foo2 {
   return { timestamp: undefined };
 }
 
-export const Foo2 = {
+export const Foo2: MessageFns<Foo2, "foo.Foo2"> = {
   $type: "foo.Foo2" as const,
 
   encode(message: Foo2, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
@@ -147,7 +147,7 @@ function createBaseWithStruct(): WithStruct {
   return { struct: undefined };
 }
 
-export const WithStruct = {
+export const WithStruct: MessageFns<WithStruct, "foo.WithStruct"> = {
   $type: "foo.WithStruct" as const,
 
   encode(message: WithStruct, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
@@ -244,4 +244,14 @@ function isObject(value: any): boolean {
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+export interface MessageFns<T, V extends string> {
+  readonly $type: V;
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+  fromJSON(object: any): T;
+  toJSON(message: T): unknown;
+  create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
+  fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
 }

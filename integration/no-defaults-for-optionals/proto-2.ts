@@ -22,7 +22,7 @@ function createBaseProto2TestMessage(): Proto2TestMessage {
   return { boolValue: undefined, intValue: undefined, stringValue: undefined, mapValue: {} };
 }
 
-export const Proto2TestMessage = {
+export const Proto2TestMessage: MessageFns<Proto2TestMessage> = {
   encode(message: Proto2TestMessage, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.boolValue !== undefined) {
       writer.uint32(8).bool(message.boolValue);
@@ -145,7 +145,7 @@ function createBaseProto2TestMessage_MapValueEntry(): Proto2TestMessage_MapValue
   return { key: undefined, value: undefined };
 }
 
-export const Proto2TestMessage_MapValueEntry = {
+export const Proto2TestMessage_MapValueEntry: MessageFns<Proto2TestMessage_MapValueEntry> = {
   encode(message: Proto2TestMessage_MapValueEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.key !== undefined) {
       writer.uint32(10).string(message.key);
@@ -235,4 +235,13 @@ function isObject(value: any): boolean {
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+  fromJSON(object: any): T;
+  toJSON(message: T): unknown;
+  create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
+  fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
 }

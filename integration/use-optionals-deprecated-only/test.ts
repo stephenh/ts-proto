@@ -111,7 +111,7 @@ function createBaseOptionalsTest(): OptionalsTest {
   };
 }
 
-export const OptionalsTest = {
+export const OptionalsTest: MessageFns<OptionalsTest> = {
   encode(message: OptionalsTest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.id !== 0) {
       writer.uint32(8).int32(message.id);
@@ -545,7 +545,7 @@ function createBaseOptionalsTest_TranslationsEntry(): OptionalsTest_Translations
   return { key: "", value: "" };
 }
 
-export const OptionalsTest_TranslationsEntry = {
+export const OptionalsTest_TranslationsEntry: MessageFns<OptionalsTest_TranslationsEntry> = {
   encode(message: OptionalsTest_TranslationsEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.key !== "") {
       writer.uint32(10).string(message.key);
@@ -671,4 +671,13 @@ function isObject(value: any): boolean {
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+  fromJSON(object: any): T;
+  toJSON(message: T): unknown;
+  create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
+  fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
 }

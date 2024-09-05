@@ -9,7 +9,7 @@ export interface Encode {
   encode: string;
 }
 
-export const Encode = {
+export const Encode: MessageFns<Encode> = {
   fromJSON(object: any): Encode {
     return { encode: isSet(object.encode) ? globalThis.String(object.encode) : "" };
   },
@@ -17,4 +17,8 @@ export const Encode = {
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+export interface MessageFns<T> {
+  fromJSON(object: any): T;
 }

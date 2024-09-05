@@ -40,7 +40,7 @@ function createBaseInt64FieldOption(): Int64FieldOption {
   return { normalField: 0, numberField: 0, stringField: "0" };
 }
 
-export const Int64FieldOption = {
+export const Int64FieldOption: MessageFns<Int64FieldOption> = {
   encode(message: Int64FieldOption, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.normalField !== 0) {
       writer.uint32(8).int64(message.normalField);
@@ -129,7 +129,7 @@ function createBaseUInt64FieldOption(): UInt64FieldOption {
   return { normalField: 0, numberField: 0, stringField: "0" };
 }
 
-export const UInt64FieldOption = {
+export const UInt64FieldOption: MessageFns<UInt64FieldOption> = {
   encode(message: UInt64FieldOption, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.normalField !== 0) {
       writer.uint32(8).uint64(message.normalField);
@@ -218,7 +218,7 @@ function createBaseSInt64FieldOption(): SInt64FieldOption {
   return { normalField: 0, numberField: 0, stringField: "0" };
 }
 
-export const SInt64FieldOption = {
+export const SInt64FieldOption: MessageFns<SInt64FieldOption> = {
   encode(message: SInt64FieldOption, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.normalField !== 0) {
       writer.uint32(8).sint64(message.normalField);
@@ -307,7 +307,7 @@ function createBaseFixed64FieldOption(): Fixed64FieldOption {
   return { normalField: 0, numberField: 0, stringField: "0" };
 }
 
-export const Fixed64FieldOption = {
+export const Fixed64FieldOption: MessageFns<Fixed64FieldOption> = {
   encode(message: Fixed64FieldOption, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.normalField !== 0) {
       writer.uint32(9).fixed64(message.normalField);
@@ -396,7 +396,7 @@ function createBaseSFixed64FieldOption(): SFixed64FieldOption {
   return { normalField: 0, numberField: 0, stringField: "0" };
 }
 
-export const SFixed64FieldOption = {
+export const SFixed64FieldOption: MessageFns<SFixed64FieldOption> = {
   encode(message: SFixed64FieldOption, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.normalField !== 0) {
       writer.uint32(9).sfixed64(message.normalField);
@@ -506,4 +506,13 @@ function longToNumber(int64: { toString(): string }): number {
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+  fromJSON(object: any): T;
+  toJSON(message: T): unknown;
+  create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
+  fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
 }

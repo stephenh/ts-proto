@@ -32,7 +32,7 @@ function createBaseMyMessage(): MyMessage {
   return { foo: undefined, foo2: undefined, bar: undefined, quux: undefined, _unknownFields: {} };
 }
 
-export const MyMessage = {
+export const MyMessage: MessageFns<MyMessage> = {
   encode(message: MyMessage, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.foo !== undefined) {
       writer.uint32(8).int32(message.foo);
@@ -114,7 +114,7 @@ function createBaseRequestType(): RequestType {
   return { _unknownFields: {} };
 }
 
-export const RequestType = {
+export const RequestType: MessageFns<RequestType> = {
   encode(message: RequestType, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message._unknownFields !== undefined) {
       for (const [key, values] of Object.entries(message._unknownFields)) {
@@ -156,7 +156,7 @@ function createBaseResponseType(): ResponseType {
   return { _unknownFields: {} };
 }
 
-export const ResponseType = {
+export const ResponseType: MessageFns<ResponseType> = {
   encode(message: ResponseType, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message._unknownFields !== undefined) {
       for (const [key, values] of Object.entries(message._unknownFields)) {
@@ -216,4 +216,9 @@ export class MyServiceClientImpl implements MyService {
 
 interface Rpc {
   request(service: string, method: string, data: Uint8Array): Promise<Uint8Array>;
+}
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
 }

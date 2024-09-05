@@ -95,7 +95,7 @@ export interface BytesValue {
   value: Uint8Array;
 }
 
-export const DoubleValue = {
+export const DoubleValue: MessageFns<DoubleValue> = {
   toJSON(message: DoubleValue): unknown {
     const obj: any = {};
     if (message.value !== 0) {
@@ -105,7 +105,7 @@ export const DoubleValue = {
   },
 };
 
-export const FloatValue = {
+export const FloatValue: MessageFns<FloatValue> = {
   toJSON(message: FloatValue): unknown {
     const obj: any = {};
     if (message.value !== 0) {
@@ -115,7 +115,7 @@ export const FloatValue = {
   },
 };
 
-export const Int64Value = {
+export const Int64Value: MessageFns<Int64Value> = {
   toJSON(message: Int64Value): unknown {
     const obj: any = {};
     if (message.value !== 0) {
@@ -125,7 +125,7 @@ export const Int64Value = {
   },
 };
 
-export const UInt64Value = {
+export const UInt64Value: MessageFns<UInt64Value> = {
   toJSON(message: UInt64Value): unknown {
     const obj: any = {};
     if (message.value !== 0) {
@@ -135,7 +135,7 @@ export const UInt64Value = {
   },
 };
 
-export const Int32Value = {
+export const Int32Value: MessageFns<Int32Value> = {
   toJSON(message: Int32Value): unknown {
     const obj: any = {};
     if (message.value !== 0) {
@@ -145,7 +145,7 @@ export const Int32Value = {
   },
 };
 
-export const UInt32Value = {
+export const UInt32Value: MessageFns<UInt32Value> = {
   toJSON(message: UInt32Value): unknown {
     const obj: any = {};
     if (message.value !== 0) {
@@ -155,7 +155,7 @@ export const UInt32Value = {
   },
 };
 
-export const BoolValue = {
+export const BoolValue: MessageFns<BoolValue> = {
   toJSON(message: BoolValue): unknown {
     const obj: any = {};
     if (message.value !== false) {
@@ -165,7 +165,7 @@ export const BoolValue = {
   },
 };
 
-export const StringValue = {
+export const StringValue: MessageFns<StringValue> = {
   toJSON(message: StringValue): unknown {
     const obj: any = {};
     if (message.value !== "") {
@@ -175,7 +175,7 @@ export const StringValue = {
   },
 };
 
-export const BytesValue = {
+export const BytesValue: MessageFns<BytesValue> = {
   toJSON(message: BytesValue): unknown {
     const obj: any = {};
     if (message.value.length !== 0) {
@@ -195,4 +195,8 @@ function base64FromBytes(arr: Uint8Array): string {
     });
     return globalThis.btoa(bin.join(""));
   }
+}
+
+export interface MessageFns<T> {
+  toJSON(message: T): unknown;
 }
