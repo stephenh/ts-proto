@@ -1,3 +1,10 @@
+# [2.2.0](https://github.com/stephenh/ts-proto/compare/v2.1.0...v2.2.0) (2024-09-06)
+
+
+### Features
+
+* Add interface for static message methods ([#1104](https://github.com/stephenh/ts-proto/issues/1104)) ([faa33b6](https://github.com/stephenh/ts-proto/commit/faa33b6f5170cabe4010c95d5f0a68b9f04f686b))
+
 # [2.1.0](https://github.com/stephenh/ts-proto/compare/v2.0.4...v2.1.0) (2024-09-04)
 
 
