@@ -61,6 +61,7 @@ import {
   getEnumMethod,
   getFieldOptionsJsType,
   isAnyValueType,
+  isAnyValueTypeName,
   isBytes,
   isBytesValueType,
   isEnum,
@@ -68,6 +69,7 @@ import {
   isFieldMaskTypeName,
   isJsTypeFieldOption,
   isListValueType,
+  isListValueTypeName,
   isLong,
   isLongValueType,
   isMapType,
@@ -78,6 +80,7 @@ import {
   isRepeated,
   isScalar,
   isStructType,
+  isStructTypeName,
   isTimestamp,
   isValueType,
   isWholeNumber,
@@ -216,7 +219,8 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
 
         const staticMembers: Code[] = [];
 
-        if (options.outputTypeAnnotations || options.outputTypeRegistry) {
+        const hasTypeMember = options.outputTypeAnnotations || options.outputTypeRegistry;
+        if (hasTypeMember) {
           staticMembers.push(code`$type: '${fullTypeName}' as const`);
         }
 
@@ -281,8 +285,38 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
         }
 
         if (staticMembers.length > 0) {
+          const messageFnsTypeParameters = [fullName, hasTypeMember && `'${fullTypeName}'`]
+            .filter((p) => !!p)
+            .join(", ");
+
+          const interfaces: Code[] = [code`${utils.MessageFns}<${messageFnsTypeParameters}>`];
+          if (
+            options.outputEncodeMethods &&
+            options.outputExtensions &&
+            options.unknownFields &&
+            message.extensionRange.length
+          ) {
+            interfaces.push(code`${utils.ExtensionFns}<${fullName}>`);
+          }
+          if (isStructTypeName(fullTypeName)) {
+            interfaces.push(code`${utils.StructWrapperFns}`);
+          } else if (isAnyValueTypeName(fullTypeName)) {
+            interfaces.push(code`${utils.AnyValueWrapperFns}`);
+          } else if (isListValueTypeName(fullTypeName)) {
+            interfaces.push(code`${utils.ListValueWrapperFns}`);
+          } else if (isFieldMaskTypeName(fullTypeName)) {
+            interfaces.push(code`${utils.FieldMaskWrapperFns}`);
+          }
+          if (options.outputExtensions) {
+            for (const extension of message.extension) {
+              const name = maybeSnakeToCamel(extension.name, ctx.options);
+              const type = toTypeName(ctx, message, extension);
+              interfaces.push(code`${utils.ExtensionHolder}<"${name}", ${type}>`);
+            }
+          }
+
           chunks.push(code`
-            export const ${def(fullName)} = {
+            export const ${def(fullName)}: ${joinCode(interfaces, { on: " & " })} = {
               ${joinCode(staticMembers, { on: ",\n\n" })}
             };
           `);
@@ -431,23 +465,27 @@ export type Utils = ReturnType<typeof makeDeepPartial> &
   ReturnType<typeof makeNiceGrpcServerStreamingMethodResult> &
   ReturnType<typeof makeGrpcWebErrorClass> &
   ReturnType<typeof makeExtensionClass> &
-  ReturnType<typeof makeAssertionUtils>;
+  ReturnType<typeof makeAssertionUtils> &
+  ReturnType<typeof makeMessageFns>;
 
 /** These are runtime utility methods used by the generated code. */
 export function makeUtils(options: Options): Utils {
   const bytes = makeByteUtils(options);
   const longs = makeLongUtils(options, bytes);
+  const deepPartial = makeDeepPartial(options, longs);
+  const extension = makeExtensionClass(options);
   return {
     ...bytes,
-    ...makeDeepPartial(options, longs),
+    ...deepPartial,
     ...makeObjectIdMethods(),
     ...makeTimestampMethods(options, longs, bytes),
     ...longs,
     ...makeComparisonUtils(),
     ...makeNiceGrpcServerStreamingMethodResult(options),
     ...makeGrpcWebErrorClass(bytes),
-    ...makeExtensionClass(options),
+    ...extension,
     ...makeAssertionUtils(bytes),
+    ...makeMessageFns(options, deepPartial, extension),
   };
 }
 
@@ -663,6 +701,164 @@ function makeDeepPartial(options: Options, longs: ReturnType<typeof makeLongUtil
   );
 
   return { Builtin, DeepPartial, Exact };
+}
+
+function makeMessageFns(
+  options: Options,
+  deepPartial: ReturnType<typeof makeDeepPartial>,
+  extension: ReturnType<typeof makeExtensionClass>,
+) {
+  const BinaryWriter = imp("BinaryWriter@@bufbuild/protobuf/wire");
+  const BinaryReader = imp("BinaryReader@@bufbuild/protobuf/wire");
+  const { Exact, DeepPartial } = deepPartial;
+  const { Extension } = extension;
+  const commonStaticMembers: Code[] = [];
+  const extensionStaticMembers = [];
+
+  const hasTypeMember = options.outputTypeAnnotations || options.outputTypeRegistry;
+  if (hasTypeMember) {
+    commonStaticMembers.push(code`readonly $type: V;`);
+  }
+
+  if (options.outputEncodeMethods) {
+    if (
+      options.outputEncodeMethods === true ||
+      options.outputEncodeMethods === "encode-only" ||
+      options.outputEncodeMethods === "encode-no-creation"
+    ) {
+      commonStaticMembers.push(code`
+        encode(message: T, writer?: ${BinaryWriter}): ${BinaryWriter};
+      `);
+
+      if (options.outputExtensions && options.unknownFields) {
+        extensionStaticMembers.push(code`
+          setExtension<E>(message: T, extension: ${Extension}<E>, value: E): void;
+        `);
+      }
+    }
+    if (options.outputEncodeMethods === true || options.outputEncodeMethods === "decode-only") {
+      commonStaticMembers.push(code`
+        decode(input: ${BinaryReader} | Uint8Array, length?: number): T;
+      `);
+      if (options.outputExtensions && options.unknownFields) {
+        extensionStaticMembers.push(code`
+          getExtension<E>(message: T, extension: ${Extension}<E>): E | undefined;
+        `);
+      }
+    }
+  }
+
+  if (options.useAsyncIterable) {
+    commonStaticMembers.push(code`
+      encodeTransform(
+        source: AsyncIterable<T | T[]> | Iterable<T | T[]>
+      ): AsyncIterable<Uint8Array>;
+    `);
+    commonStaticMembers.push(code`
+      decodeTransform(
+        source: AsyncIterable<Uint8Array | Uint8Array[]> | Iterable<Uint8Array | Uint8Array[]>
+      ): AsyncIterable<T>;
+    `);
+  }
+
+  if (options.outputJsonMethods) {
+    if (options.outputJsonMethods === true || options.outputJsonMethods === "from-only") {
+      commonStaticMembers.push(code`fromJSON(object: any): T;`);
+    }
+    if (options.outputJsonMethods === true || options.outputJsonMethods === "to-only") {
+      commonStaticMembers.push(code`toJSON(message: T): unknown;`);
+    }
+  }
+
+  if (options.outputPartialMethods) {
+    if (options.useExactTypes) {
+      commonStaticMembers.push(code`create<I extends ${Exact}<${DeepPartial}<T>, I>>(base?: I): T;`);
+      commonStaticMembers.push(code`fromPartial<I extends ${Exact}<${DeepPartial}<T>, I>>(object: I): T;`);
+    } else {
+      commonStaticMembers.push(code`create(base?: DeepPartial<T>): T;`);
+      commonStaticMembers.push(code`fromPartial(object: DeepPartial<T>): T;`);
+    }
+  }
+
+  const maybeExport = options.exportCommonSymbols ? "export" : "";
+  const MessageFns = conditionalOutput(
+    "MessageFns",
+    code`
+      ${maybeExport} interface MessageFns<T${hasTypeMember ? ", V extends string" : ""}> {
+        ${joinCode(commonStaticMembers, { on: "\n" })}
+      }
+    `,
+  );
+
+  const ExtensionFns = conditionalOutput(
+    "ExtensionFns",
+    code`
+      ${maybeExport} interface ExtensionFns<T> {
+        ${joinCode(extensionStaticMembers, { on: "\n" })}
+      }
+    `,
+  );
+
+  const ExtensionHolder = conditionalOutput(
+    "ExtensionHolder",
+    code`
+      ${maybeExport} type ExtensionHolder<T extends string, V> = {
+        [key in T]: Extension<V>;
+      }
+    `,
+  );
+
+  const StructWrapperFns = conditionalOutput(
+    "StructWrapperFns",
+    code`
+      ${maybeExport} interface StructWrapperFns {
+        wrap(object: {[key: string]: any} | undefined): Struct;
+        unwrap(message: Struct): {[key: string]: any};
+      }
+    `,
+  );
+
+  const AnyValueWrapperFns = conditionalOutput(
+    "AnyValueWrapperFns",
+    code`
+      ${maybeExport} interface AnyValueWrapperFns {
+        wrap(value: any): Value;
+        unwrap(message: any): string | number | boolean | Object | null | Array<any> | undefined;
+      }
+    `,
+  );
+
+  const ListValueWrapperFns = conditionalOutput(
+    "ListValueWrapperFns",
+    code`
+      ${maybeExport} interface ListValueWrapperFns {
+        wrap(array: ${options.useReadonlyTypes ? "Readonly" : ""}Array<any> | undefined): ListValue;
+        unwrap(message: ${options.useReadonlyTypes ? "any" : "ListValue"}): Array<any>;
+      }
+    `,
+  );
+
+  const FieldMaskWrapperFns = conditionalOutput(
+    "FieldMaskWrapperFns",
+    code`
+      ${maybeExport} interface FieldMaskWrapperFns {
+        wrap(paths: ${options.useReadonlyTypes ? "readonly" : ""} string[]): FieldMask;
+        unwrap(message: ${options.useReadonlyTypes ? "any" : "FieldMask"}): string[] ${
+      options.useOptionals === "all" ? "| undefined" : ""
+    };
+      }
+    `,
+  );
+
+  return {
+    MessageFns,
+    ExtensionFns,
+    ExtensionHolder,
+    StructWrapperFns,
+    AnyValueWrapperFns,
+    ListValueWrapperFns,
+    FieldMaskWrapperFns,
+  };
 }
 
 function makeObjectIdMethods() {

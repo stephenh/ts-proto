@@ -59,7 +59,7 @@ function createBaseSimpleWithWrappers(): SimpleWithWrappers {
   return { name: undefined, age: undefined, enabled: undefined, bananas: undefined, coins: [], snacks: [] };
 }
 
-export const SimpleWithWrappers = {
+export const SimpleWithWrappers: MessageFns<SimpleWithWrappers> = {
   encode(message: SimpleWithWrappers, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== undefined) {
       StringValue.encode({ value: message.name! }, writer.uint32(10).fork()).join();
@@ -195,7 +195,7 @@ function createBaseSimpleWithMap(): SimpleWithMap {
   return { nameLookup: {}, intLookup: {}, longLookup: new Map() };
 }
 
-export const SimpleWithMap = {
+export const SimpleWithMap: MessageFns<SimpleWithMap> = {
   encode(message: SimpleWithMap, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     Object.entries(message.nameLookup).forEach(([key, value]) => {
       SimpleWithMap_NameLookupEntry.encode({ key: key as any, value }, writer.uint32(18).fork()).join();
@@ -347,7 +347,7 @@ function createBaseSimpleWithMap_NameLookupEntry(): SimpleWithMap_NameLookupEntr
   return { key: "", value: "" };
 }
 
-export const SimpleWithMap_NameLookupEntry = {
+export const SimpleWithMap_NameLookupEntry: MessageFns<SimpleWithMap_NameLookupEntry> = {
   encode(message: SimpleWithMap_NameLookupEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.key !== "") {
       writer.uint32(10).string(message.key);
@@ -423,7 +423,7 @@ function createBaseSimpleWithMap_IntLookupEntry(): SimpleWithMap_IntLookupEntry 
   return { key: 0, value: 0 };
 }
 
-export const SimpleWithMap_IntLookupEntry = {
+export const SimpleWithMap_IntLookupEntry: MessageFns<SimpleWithMap_IntLookupEntry> = {
   encode(message: SimpleWithMap_IntLookupEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.key !== 0) {
       writer.uint32(8).int32(message.key);
@@ -497,7 +497,7 @@ function createBaseSimpleWithMap_LongLookupEntry(): SimpleWithMap_LongLookupEntr
   return { key: Long.ZERO, value: Long.ZERO };
 }
 
-export const SimpleWithMap_LongLookupEntry = {
+export const SimpleWithMap_LongLookupEntry: MessageFns<SimpleWithMap_LongLookupEntry> = {
   encode(message: SimpleWithMap_LongLookupEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (!message.key.equals(Long.ZERO)) {
       writer.uint32(8).int64(message.key.toString());
@@ -587,7 +587,7 @@ function createBaseNumbers(): Numbers {
   };
 }
 
-export const Numbers = {
+export const Numbers: MessageFns<Numbers> = {
   encode(message: Numbers, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.double !== 0) {
       writer.uint32(9).double(message.double);
@@ -873,4 +873,13 @@ function isObject(value: any): boolean {
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+  fromJSON(object: any): T;
+  toJSON(message: T): unknown;
+  create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
+  fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
 }

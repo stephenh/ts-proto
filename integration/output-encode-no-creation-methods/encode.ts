@@ -10,7 +10,7 @@ export interface Encode {
   encode: string;
 }
 
-export const Encode = {
+export const Encode: MessageFns<Encode> = {
   encode(message: Encode, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.encode !== "") {
       writer.uint32(10).string(message.encode);
@@ -18,3 +18,7 @@ export const Encode = {
     return writer;
   },
 };
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+}

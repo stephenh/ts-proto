@@ -47,7 +47,7 @@ function createBaseIssue56(): Issue56 {
   return { test: 1 };
 }
 
-export const Issue56 = {
+export const Issue56: MessageFns<Issue56> = {
   encode(message: Issue56, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.test !== 1) {
       writer.uint32(8).int32(message.test);
@@ -114,4 +114,13 @@ export type Exact<P, I extends P> = P extends Builtin ? P
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+  fromJSON(object: any): T;
+  toJSON(message: T): unknown;
+  create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
+  fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
 }

@@ -117,7 +117,7 @@ function createBaseTimestamp(): Timestamp {
   return { seconds: 0, nanos: 0 };
 }
 
-export const Timestamp = {
+export const Timestamp: MessageFns<Timestamp, "google.protobuf.Timestamp"> = {
   $type: "google.protobuf.Timestamp" as const,
 
   encode(message: Timestamp, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
@@ -214,4 +214,14 @@ function longToNumber(int64: { toString(): string }): number {
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+export interface MessageFns<T, V extends string> {
+  readonly $type: V;
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+  fromJSON(object: any): T;
+  toJSON(message: T): unknown;
+  create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
+  fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
 }

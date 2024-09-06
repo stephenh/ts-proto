@@ -101,7 +101,7 @@ function createBaseDoubleValue(): DoubleValue {
   return { value: 0 };
 }
 
-export const DoubleValue = {
+export const DoubleValue: MessageFns<DoubleValue> = {
   encode(message: DoubleValue, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.value !== 0) {
       writer.uint32(9).double(message.value);
@@ -158,7 +158,7 @@ function createBaseFloatValue(): FloatValue {
   return { value: 0 };
 }
 
-export const FloatValue = {
+export const FloatValue: MessageFns<FloatValue> = {
   encode(message: FloatValue, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.value !== 0) {
       writer.uint32(13).float(message.value);
@@ -215,7 +215,7 @@ function createBaseInt64Value(): Int64Value {
   return { value: Long.ZERO };
 }
 
-export const Int64Value = {
+export const Int64Value: MessageFns<Int64Value> = {
   encode(message: Int64Value, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (!message.value.equals(Long.ZERO)) {
       writer.uint32(8).int64(message.value.toString());
@@ -272,7 +272,7 @@ function createBaseUInt64Value(): UInt64Value {
   return { value: Long.UZERO };
 }
 
-export const UInt64Value = {
+export const UInt64Value: MessageFns<UInt64Value> = {
   encode(message: UInt64Value, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (!message.value.equals(Long.UZERO)) {
       writer.uint32(8).uint64(message.value.toString());
@@ -329,7 +329,7 @@ function createBaseInt32Value(): Int32Value {
   return { value: 0 };
 }
 
-export const Int32Value = {
+export const Int32Value: MessageFns<Int32Value> = {
   encode(message: Int32Value, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.value !== 0) {
       writer.uint32(8).int32(message.value);
@@ -386,7 +386,7 @@ function createBaseUInt32Value(): UInt32Value {
   return { value: 0 };
 }
 
-export const UInt32Value = {
+export const UInt32Value: MessageFns<UInt32Value> = {
   encode(message: UInt32Value, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.value !== 0) {
       writer.uint32(8).uint32(message.value);
@@ -443,7 +443,7 @@ function createBaseBoolValue(): BoolValue {
   return { value: false };
 }
 
-export const BoolValue = {
+export const BoolValue: MessageFns<BoolValue> = {
   encode(message: BoolValue, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.value !== false) {
       writer.uint32(8).bool(message.value);
@@ -500,7 +500,7 @@ function createBaseStringValue(): StringValue {
   return { value: "" };
 }
 
-export const StringValue = {
+export const StringValue: MessageFns<StringValue> = {
   encode(message: StringValue, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.value !== "") {
       writer.uint32(10).string(message.value);
@@ -557,7 +557,7 @@ function createBaseBytesValue(): BytesValue {
   return { value: new Uint8Array(0) };
 }
 
-export const BytesValue = {
+export const BytesValue: MessageFns<BytesValue> = {
   encode(message: BytesValue, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.value.length !== 0) {
       writer.uint32(10).bytes(message.value);
@@ -649,4 +649,13 @@ export type Exact<P, I extends P> = P extends Builtin ? P
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+  fromJSON(object: any): T;
+  toJSON(message: T): unknown;
+  create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
+  fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
 }

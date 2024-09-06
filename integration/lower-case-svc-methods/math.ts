@@ -25,7 +25,7 @@ function createBaseNumPair(): NumPair {
   return { num1: 0, num2: 0 };
 }
 
-export const NumPair = {
+export const NumPair: MessageFns<NumPair> = {
   encode(message: NumPair, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.num1 !== 0) {
       writer.uint32(9).double(message.num1);
@@ -99,7 +99,7 @@ function createBaseNumSingle(): NumSingle {
   return { num: 0 };
 }
 
-export const NumSingle = {
+export const NumSingle: MessageFns<NumSingle> = {
   encode(message: NumSingle, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.num !== 0) {
       writer.uint32(9).double(message.num);
@@ -156,7 +156,7 @@ function createBaseNumbers(): Numbers {
   return { num: [] };
 }
 
-export const Numbers = {
+export const Numbers: MessageFns<Numbers> = {
   encode(message: Numbers, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     writer.uint32(10).fork();
     for (const v of message.num) {
@@ -295,4 +295,13 @@ export type Exact<P, I extends P> = P extends Builtin ? P
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+  fromJSON(object: any): T;
+  toJSON(message: T): unknown;
+  create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
+  fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
 }

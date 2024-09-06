@@ -15,7 +15,7 @@ function createBaseEchoMsg(): EchoMsg {
   return { body: "" };
 }
 
-export const EchoMsg = {
+export const EchoMsg: MessageFns<EchoMsg> = {
   encode(message: EchoMsg, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.body !== "") {
       writer.uint32(10).string(message.body);
@@ -174,4 +174,17 @@ export type Exact<P, I extends P> = P extends Builtin ? P
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+  encodeTransform(source: AsyncIterable<T | T[]> | Iterable<T | T[]>): AsyncIterable<Uint8Array>;
+  decodeTransform(
+    source: AsyncIterable<Uint8Array | Uint8Array[]> | Iterable<Uint8Array | Uint8Array[]>,
+  ): AsyncIterable<T>;
+  fromJSON(object: any): T;
+  toJSON(message: T): unknown;
+  create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
+  fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
 }

@@ -17,7 +17,7 @@ function createBaseSomething(): Something {
   return { hello: "", foo: [] };
 }
 
-export const Something = {
+export const Something: MessageFns<Something> = {
   encode(message: Something, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.hello !== "") {
       writer.uint32(10).string(message.hello);
@@ -157,3 +157,8 @@ export const protoMetadata: ProtoMetadata = {
   references: { ".something.Something": Something },
   dependencies: [protoMetadata1],
 };
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+}

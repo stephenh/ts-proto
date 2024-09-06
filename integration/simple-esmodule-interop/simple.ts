@@ -30,7 +30,7 @@ function createBaseSimple(): Simple {
   return { name: "", age: 0 };
 }
 
-export const Simple = {
+export const Simple: MessageFns<Simple> = {
   encode(message: Simple, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
@@ -117,7 +117,7 @@ function createBaseNumbers(): Numbers {
   };
 }
 
-export const Numbers = {
+export const Numbers: MessageFns<Numbers> = {
   encode(message: Numbers, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.double !== 0) {
       writer.uint32(9).double(message.double);
@@ -362,4 +362,13 @@ function longToNumber(int64: { toString(): string }): number {
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+  fromJSON(object: any): T;
+  toJSON(message: T): unknown;
+  create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
+  fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
 }

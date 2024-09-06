@@ -35,7 +35,7 @@ function createBaseWithEmtpy(): WithEmtpy {
   return { empty: undefined };
 }
 
-export const WithEmtpy = {
+export const WithEmtpy: MessageFns<WithEmtpy> = {
   encode(message: WithEmtpy, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.empty !== undefined) {
       Empty.encode(message.empty, writer.uint32(10).fork()).join();
@@ -92,7 +92,7 @@ function createBaseWithStruct(): WithStruct {
   return { strut: undefined };
 }
 
-export const WithStruct = {
+export const WithStruct: MessageFns<WithStruct> = {
   encode(message: WithStruct, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.strut !== undefined) {
       Struct.encode(Struct.wrap(message.strut), writer.uint32(10).fork()).join();
@@ -149,7 +149,7 @@ function createBaseWithTimestamp(): WithTimestamp {
   return { timestamp: undefined };
 }
 
-export const WithTimestamp = {
+export const WithTimestamp: MessageFns<WithTimestamp> = {
   encode(message: WithTimestamp, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.timestamp !== undefined) {
       Timestamp.encode(toTimestamp(message.timestamp), writer.uint32(10).fork()).join();
@@ -206,7 +206,7 @@ function createBaseWithAll(): WithAll {
   return { empty: undefined, strut: undefined, timestamp: undefined, duration: undefined, veryVerySecret: undefined };
 }
 
-export const WithAll = {
+export const WithAll: MessageFns<WithAll> = {
   encode(message: WithAll, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.empty !== undefined) {
       Empty.encode(message.empty, writer.uint32(10).fork()).join();
@@ -365,4 +365,13 @@ function isObject(value: any): boolean {
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+  fromJSON(object: any): T;
+  toJSON(message: T): unknown;
+  create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
+  fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
 }

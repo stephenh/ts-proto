@@ -40,7 +40,7 @@ function createBaseSimple(): Simple {
   return { name: "", age: 0, child: undefined, testField: "", testNotDeprecated: "" };
 }
 
-export const Simple = {
+export const Simple: MessageFns<Simple> = {
   encode(message: Simple, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
@@ -159,7 +159,7 @@ function createBaseChild(): Child {
   return { name: "" };
 }
 
-export const Child = {
+export const Child: MessageFns<Child> = {
   encode(message: Child, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
@@ -226,4 +226,13 @@ export type Exact<P, I extends P> = P extends Builtin ? P
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+  fromJSON(object: any): T;
+  toJSON(message: T): unknown;
+  create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
+  fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
 }

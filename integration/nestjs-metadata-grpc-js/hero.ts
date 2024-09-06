@@ -34,7 +34,7 @@ function createBaseHeroById(): HeroById {
   return { id: 0 };
 }
 
-export const HeroById = {
+export const HeroById: MessageFns<HeroById> = {
   encode(message: HeroById, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.id !== 0) {
       writer.uint32(8).int32(message.id);
@@ -70,7 +70,7 @@ function createBaseVillainById(): VillainById {
   return { id: 0 };
 }
 
-export const VillainById = {
+export const VillainById: MessageFns<VillainById> = {
   encode(message: VillainById, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.id !== 0) {
       writer.uint32(8).int32(message.id);
@@ -106,7 +106,7 @@ function createBaseHero(): Hero {
   return { id: 0, name: "" };
 }
 
-export const Hero = {
+export const Hero: MessageFns<Hero> = {
   encode(message: Hero, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.id !== 0) {
       writer.uint32(8).int32(message.id);
@@ -152,7 +152,7 @@ function createBaseVillain(): Villain {
   return { id: 0, name: "" };
 }
 
-export const Villain = {
+export const Villain: MessageFns<Villain> = {
   encode(message: Villain, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.id !== 0) {
       writer.uint32(8).int32(message.id);
@@ -262,4 +262,9 @@ export interface HeroServiceServer extends UntypedServiceImplementation {
   findOneHero: handleUnaryCall<HeroById, Hero>;
   findOneVillain: handleUnaryCall<VillainById, Villain>;
   findManyVillain: handleBidiStreamingCall<VillainById, Villain>;
+}
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
 }

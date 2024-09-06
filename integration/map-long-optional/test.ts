@@ -22,7 +22,7 @@ function createBaseMapBigInt(): MapBigInt {
   return {};
 }
 
-export const MapBigInt = {
+export const MapBigInt: MessageFns<MapBigInt> = {
   encode(message: MapBigInt, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     (message.map || new Map()).forEach((value, key) => {
       MapBigInt_MapEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).join();
@@ -123,7 +123,7 @@ function createBaseMapBigInt_MapEntry(): MapBigInt_MapEntry {
   return { key: Long.UZERO, value: Long.ZERO };
 }
 
-export const MapBigInt_MapEntry = {
+export const MapBigInt_MapEntry: MessageFns<MapBigInt_MapEntry> = {
   encode(message: MapBigInt_MapEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (!message.key.equals(Long.UZERO)) {
       writer.uint32(9).fixed64(message.key.toString());
@@ -242,4 +242,13 @@ function isObject(value: any): boolean {
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+  fromJSON(object: any): T;
+  toJSON(message: T): unknown;
+  create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
+  fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
 }

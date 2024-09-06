@@ -15,7 +15,7 @@ function createBaseFoo(): Foo {
   return { bar: "", baz: "" };
 }
 
-export const Foo = {
+export const Foo: MessageFns<Foo> = {
   encode(message: Foo, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.bar !== "") {
       writer.uint32(10).string(message.bar);
@@ -95,4 +95,13 @@ export type DeepPartial<T> = T extends Builtin ? T
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+  fromJSON(object: any): T;
+  toJSON(message: T): unknown;
+  create(base?: DeepPartial<T>): T;
+  fromPartial(object: DeepPartial<T>): T;
 }

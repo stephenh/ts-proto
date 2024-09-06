@@ -100,7 +100,7 @@ function createBaseDoubleValue(): DoubleValue {
   return { value: 0 };
 }
 
-export const DoubleValue = {
+export const DoubleValue: MessageFns<DoubleValue> = {
   decode(input: BinaryReader | Uint8Array, length?: number): DoubleValue {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
@@ -129,7 +129,7 @@ function createBaseFloatValue(): FloatValue {
   return { value: 0 };
 }
 
-export const FloatValue = {
+export const FloatValue: MessageFns<FloatValue> = {
   decode(input: BinaryReader | Uint8Array, length?: number): FloatValue {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
@@ -158,7 +158,7 @@ function createBaseInt64Value(): Int64Value {
   return { value: 0 };
 }
 
-export const Int64Value = {
+export const Int64Value: MessageFns<Int64Value> = {
   decode(input: BinaryReader | Uint8Array, length?: number): Int64Value {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
@@ -187,7 +187,7 @@ function createBaseUInt64Value(): UInt64Value {
   return { value: 0 };
 }
 
-export const UInt64Value = {
+export const UInt64Value: MessageFns<UInt64Value> = {
   decode(input: BinaryReader | Uint8Array, length?: number): UInt64Value {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
@@ -216,7 +216,7 @@ function createBaseInt32Value(): Int32Value {
   return { value: 0 };
 }
 
-export const Int32Value = {
+export const Int32Value: MessageFns<Int32Value> = {
   decode(input: BinaryReader | Uint8Array, length?: number): Int32Value {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
@@ -245,7 +245,7 @@ function createBaseUInt32Value(): UInt32Value {
   return { value: 0 };
 }
 
-export const UInt32Value = {
+export const UInt32Value: MessageFns<UInt32Value> = {
   decode(input: BinaryReader | Uint8Array, length?: number): UInt32Value {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
@@ -274,7 +274,7 @@ function createBaseBoolValue(): BoolValue {
   return { value: false };
 }
 
-export const BoolValue = {
+export const BoolValue: MessageFns<BoolValue> = {
   decode(input: BinaryReader | Uint8Array, length?: number): BoolValue {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
@@ -303,7 +303,7 @@ function createBaseStringValue(): StringValue {
   return { value: "" };
 }
 
-export const StringValue = {
+export const StringValue: MessageFns<StringValue> = {
   decode(input: BinaryReader | Uint8Array, length?: number): StringValue {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
@@ -332,7 +332,7 @@ function createBaseBytesValue(): BytesValue {
   return { value: new Uint8Array(0) };
 }
 
-export const BytesValue = {
+export const BytesValue: MessageFns<BytesValue> = {
   decode(input: BinaryReader | Uint8Array, length?: number): BytesValue {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
@@ -366,4 +366,8 @@ function longToNumber(int64: { toString(): string }): number {
     throw new globalThis.Error("Value is smaller than Number.MIN_SAFE_INTEGER");
   }
   return num;
+}
+
+export interface MessageFns<T> {
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
 }

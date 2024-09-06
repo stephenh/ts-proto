@@ -985,7 +985,7 @@ function createBaseFileDescriptorSet(): FileDescriptorSet {
   return { file: [], _unknownFields: {} };
 }
 
-export const FileDescriptorSet = {
+export const FileDescriptorSet: MessageFns<FileDescriptorSet> = {
   encode(message: FileDescriptorSet, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     for (const v of message.file) {
       FileDescriptorProto.encode(v!, writer.uint32(10).fork()).join();
@@ -1051,7 +1051,7 @@ function createBaseFileDescriptorProto(): FileDescriptorProto {
   };
 }
 
-export const FileDescriptorProto = {
+export const FileDescriptorProto: MessageFns<FileDescriptorProto> = {
   encode(message: FileDescriptorProto, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== undefined && message.name !== "") {
       writer.uint32(10).string(message.name);
@@ -1249,7 +1249,7 @@ function createBaseDescriptorProto(): DescriptorProto {
   };
 }
 
-export const DescriptorProto = {
+export const DescriptorProto: MessageFns<DescriptorProto> = {
   encode(message: DescriptorProto, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== undefined && message.name !== "") {
       writer.uint32(10).string(message.name);
@@ -1391,7 +1391,7 @@ function createBaseDescriptorProto_ExtensionRange(): DescriptorProto_ExtensionRa
   return { start: 0, end: 0, options: undefined, _unknownFields: {} };
 }
 
-export const DescriptorProto_ExtensionRange = {
+export const DescriptorProto_ExtensionRange: MessageFns<DescriptorProto_ExtensionRange> = {
   encode(message: DescriptorProto_ExtensionRange, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.start !== undefined && message.start !== 0) {
       writer.uint32(8).int32(message.start);
@@ -1463,7 +1463,7 @@ function createBaseDescriptorProto_ReservedRange(): DescriptorProto_ReservedRang
   return { start: 0, end: 0, _unknownFields: {} };
 }
 
-export const DescriptorProto_ReservedRange = {
+export const DescriptorProto_ReservedRange: MessageFns<DescriptorProto_ReservedRange> = {
   encode(message: DescriptorProto_ReservedRange, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.start !== undefined && message.start !== 0) {
       writer.uint32(8).int32(message.start);
@@ -1525,7 +1525,7 @@ function createBaseExtensionRangeOptions(): ExtensionRangeOptions {
   return { uninterpretedOption: [], _unknownFields: {} };
 }
 
-export const ExtensionRangeOptions = {
+export const ExtensionRangeOptions: MessageFns<ExtensionRangeOptions> = {
   encode(message: ExtensionRangeOptions, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     for (const v of message.uninterpretedOption) {
       UninterpretedOption.encode(v!, writer.uint32(7994).fork()).join();
@@ -1590,7 +1590,7 @@ function createBaseFieldDescriptorProto(): FieldDescriptorProto {
   };
 }
 
-export const FieldDescriptorProto = {
+export const FieldDescriptorProto: MessageFns<FieldDescriptorProto> = {
   encode(message: FieldDescriptorProto, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== undefined && message.name !== "") {
       writer.uint32(10).string(message.name);
@@ -1742,7 +1742,7 @@ function createBaseOneofDescriptorProto(): OneofDescriptorProto {
   return { name: "", options: undefined, _unknownFields: {} };
 }
 
-export const OneofDescriptorProto = {
+export const OneofDescriptorProto: MessageFns<OneofDescriptorProto> = {
   encode(message: OneofDescriptorProto, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== undefined && message.name !== "") {
       writer.uint32(10).string(message.name);
@@ -1804,7 +1804,7 @@ function createBaseEnumDescriptorProto(): EnumDescriptorProto {
   return { name: "", value: [], options: undefined, reservedRange: [], reservedName: [], _unknownFields: {} };
 }
 
-export const EnumDescriptorProto = {
+export const EnumDescriptorProto: MessageFns<EnumDescriptorProto> = {
   encode(message: EnumDescriptorProto, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== undefined && message.name !== "") {
       writer.uint32(10).string(message.name);
@@ -1896,7 +1896,7 @@ function createBaseEnumDescriptorProto_EnumReservedRange(): EnumDescriptorProto_
   return { start: 0, end: 0, _unknownFields: {} };
 }
 
-export const EnumDescriptorProto_EnumReservedRange = {
+export const EnumDescriptorProto_EnumReservedRange: MessageFns<EnumDescriptorProto_EnumReservedRange> = {
   encode(message: EnumDescriptorProto_EnumReservedRange, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.start !== undefined && message.start !== 0) {
       writer.uint32(8).int32(message.start);
@@ -1958,7 +1958,7 @@ function createBaseEnumValueDescriptorProto(): EnumValueDescriptorProto {
   return { name: "", number: 0, options: undefined, _unknownFields: {} };
 }
 
-export const EnumValueDescriptorProto = {
+export const EnumValueDescriptorProto: MessageFns<EnumValueDescriptorProto> = {
   encode(message: EnumValueDescriptorProto, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== undefined && message.name !== "") {
       writer.uint32(10).string(message.name);
@@ -2030,7 +2030,7 @@ function createBaseServiceDescriptorProto(): ServiceDescriptorProto {
   return { name: "", method: [], options: undefined, _unknownFields: {} };
 }
 
-export const ServiceDescriptorProto = {
+export const ServiceDescriptorProto: MessageFns<ServiceDescriptorProto> = {
   encode(message: ServiceDescriptorProto, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== undefined && message.name !== "") {
       writer.uint32(10).string(message.name);
@@ -2110,7 +2110,7 @@ function createBaseMethodDescriptorProto(): MethodDescriptorProto {
   };
 }
 
-export const MethodDescriptorProto = {
+export const MethodDescriptorProto: MessageFns<MethodDescriptorProto> = {
   encode(message: MethodDescriptorProto, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== undefined && message.name !== "") {
       writer.uint32(10).string(message.name);
@@ -2235,7 +2235,7 @@ function createBaseFileOptions(): FileOptions {
   };
 }
 
-export const FileOptions = {
+export const FileOptions: MessageFns<FileOptions> = {
   encode(message: FileOptions, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.javaPackage !== undefined && message.javaPackage !== "") {
       writer.uint32(10).string(message.javaPackage);
@@ -2494,7 +2494,7 @@ function createBaseMessageOptions(): MessageOptions {
   };
 }
 
-export const MessageOptions = {
+export const MessageOptions: MessageFns<MessageOptions> = {
   encode(message: MessageOptions, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.messageSetWireFormat !== undefined && message.messageSetWireFormat !== false) {
       writer.uint32(8).bool(message.messageSetWireFormat);
@@ -2595,7 +2595,7 @@ function createBaseFieldOptions(): FieldOptions {
   };
 }
 
-export const FieldOptions = {
+export const FieldOptions: MessageFns<FieldOptions> = {
   encode(message: FieldOptions, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.ctype !== undefined && message.ctype !== 0) {
       writer.uint32(8).int32(message.ctype);
@@ -2707,7 +2707,7 @@ function createBaseOneofOptions(): OneofOptions {
   return { uninterpretedOption: [], _unknownFields: {} };
 }
 
-export const OneofOptions = {
+export const OneofOptions: MessageFns<OneofOptions> = {
   encode(message: OneofOptions, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     for (const v of message.uninterpretedOption) {
       UninterpretedOption.encode(v!, writer.uint32(7994).fork()).join();
@@ -2759,7 +2759,7 @@ function createBaseEnumOptions(): EnumOptions {
   return { allowAlias: false, deprecated: false, uninterpretedOption: [], _unknownFields: {} };
 }
 
-export const EnumOptions = {
+export const EnumOptions: MessageFns<EnumOptions> = {
   encode(message: EnumOptions, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.allowAlias !== undefined && message.allowAlias !== false) {
       writer.uint32(16).bool(message.allowAlias);
@@ -2831,7 +2831,7 @@ function createBaseEnumValueOptions(): EnumValueOptions {
   return { deprecated: false, uninterpretedOption: [], _unknownFields: {} };
 }
 
-export const EnumValueOptions = {
+export const EnumValueOptions: MessageFns<EnumValueOptions> = {
   encode(message: EnumValueOptions, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.deprecated !== undefined && message.deprecated !== false) {
       writer.uint32(8).bool(message.deprecated);
@@ -2893,7 +2893,7 @@ function createBaseServiceOptions(): ServiceOptions {
   return { deprecated: false, uninterpretedOption: [], _unknownFields: {} };
 }
 
-export const ServiceOptions = {
+export const ServiceOptions: MessageFns<ServiceOptions> = {
   encode(message: ServiceOptions, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.deprecated !== undefined && message.deprecated !== false) {
       writer.uint32(264).bool(message.deprecated);
@@ -2955,7 +2955,7 @@ function createBaseMethodOptions(): MethodOptions {
   return { deprecated: false, idempotencyLevel: 0, uninterpretedOption: [], _unknownFields: {} };
 }
 
-export const MethodOptions = {
+export const MethodOptions: MessageFns<MethodOptions> = {
   encode(message: MethodOptions, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.deprecated !== undefined && message.deprecated !== false) {
       writer.uint32(264).bool(message.deprecated);
@@ -3036,7 +3036,7 @@ function createBaseUninterpretedOption(): UninterpretedOption {
   };
 }
 
-export const UninterpretedOption = {
+export const UninterpretedOption: MessageFns<UninterpretedOption> = {
   encode(message: UninterpretedOption, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     for (const v of message.name) {
       UninterpretedOption_NamePart.encode(v!, writer.uint32(18).fork()).join();
@@ -3148,7 +3148,7 @@ function createBaseUninterpretedOption_NamePart(): UninterpretedOption_NamePart 
   return { namePart: "", isExtension: false, _unknownFields: {} };
 }
 
-export const UninterpretedOption_NamePart = {
+export const UninterpretedOption_NamePart: MessageFns<UninterpretedOption_NamePart> = {
   encode(message: UninterpretedOption_NamePart, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.namePart !== "") {
       writer.uint32(10).string(message.namePart);
@@ -3210,7 +3210,7 @@ function createBaseSourceCodeInfo(): SourceCodeInfo {
   return { location: [], _unknownFields: {} };
 }
 
-export const SourceCodeInfo = {
+export const SourceCodeInfo: MessageFns<SourceCodeInfo> = {
   encode(message: SourceCodeInfo, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     for (const v of message.location) {
       SourceCodeInfo_Location.encode(v!, writer.uint32(10).fork()).join();
@@ -3269,7 +3269,7 @@ function createBaseSourceCodeInfo_Location(): SourceCodeInfo_Location {
   };
 }
 
-export const SourceCodeInfo_Location = {
+export const SourceCodeInfo_Location: MessageFns<SourceCodeInfo_Location> = {
   encode(message: SourceCodeInfo_Location, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     writer.uint32(10).fork();
     for (const v of message.path) {
@@ -3385,7 +3385,7 @@ function createBaseGeneratedCodeInfo(): GeneratedCodeInfo {
   return { annotation: [], _unknownFields: {} };
 }
 
-export const GeneratedCodeInfo = {
+export const GeneratedCodeInfo: MessageFns<GeneratedCodeInfo> = {
   encode(message: GeneratedCodeInfo, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     for (const v of message.annotation) {
       GeneratedCodeInfo_Annotation.encode(v!, writer.uint32(10).fork()).join();
@@ -3437,7 +3437,7 @@ function createBaseGeneratedCodeInfo_Annotation(): GeneratedCodeInfo_Annotation 
   return { path: [], sourceFile: "", begin: 0, end: 0, _unknownFields: {} };
 }
 
-export const GeneratedCodeInfo_Annotation = {
+export const GeneratedCodeInfo_Annotation: MessageFns<GeneratedCodeInfo_Annotation> = {
   encode(message: GeneratedCodeInfo_Annotation, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     writer.uint32(10).fork();
     for (const v of message.path) {
@@ -3536,4 +3536,9 @@ function longToNumber(int64: { toString(): string }): number {
     throw new globalThis.Error("Value is smaller than Number.MIN_SAFE_INTEGER");
   }
   return num;
+}
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
 }

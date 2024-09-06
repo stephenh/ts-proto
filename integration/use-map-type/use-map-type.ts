@@ -50,7 +50,7 @@ function createBaseEntity(): Entity {
   return { id: 0 };
 }
 
-export const Entity = {
+export const Entity: MessageFns<Entity> = {
   encode(message: Entity, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.id !== 0) {
       writer.uint32(8).int32(message.id);
@@ -114,7 +114,7 @@ function createBaseMaps(): Maps {
   };
 }
 
-export const Maps = {
+export const Maps: MessageFns<Maps> = {
   encode(message: Maps, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     message.strToEntity.forEach((value, key) => {
       Maps_StrToEntityEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).join();
@@ -343,7 +343,7 @@ function createBaseMaps_StrToEntityEntry(): Maps_StrToEntityEntry {
   return { key: "", value: undefined };
 }
 
-export const Maps_StrToEntityEntry = {
+export const Maps_StrToEntityEntry: MessageFns<Maps_StrToEntityEntry> = {
   encode(message: Maps_StrToEntityEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.key !== "") {
       writer.uint32(10).string(message.key);
@@ -419,7 +419,7 @@ function createBaseMaps_Int32ToInt32Entry(): Maps_Int32ToInt32Entry {
   return { key: 0, value: 0 };
 }
 
-export const Maps_Int32ToInt32Entry = {
+export const Maps_Int32ToInt32Entry: MessageFns<Maps_Int32ToInt32Entry> = {
   encode(message: Maps_Int32ToInt32Entry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.key !== 0) {
       writer.uint32(8).int32(message.key);
@@ -493,7 +493,7 @@ function createBaseMaps_StringToBytesEntry(): Maps_StringToBytesEntry {
   return { key: "", value: new Uint8Array(0) };
 }
 
-export const Maps_StringToBytesEntry = {
+export const Maps_StringToBytesEntry: MessageFns<Maps_StringToBytesEntry> = {
   encode(message: Maps_StringToBytesEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.key !== "") {
       writer.uint32(10).string(message.key);
@@ -567,7 +567,7 @@ function createBaseMaps_Int64ToInt64Entry(): Maps_Int64ToInt64Entry {
   return { key: 0, value: 0 };
 }
 
-export const Maps_Int64ToInt64Entry = {
+export const Maps_Int64ToInt64Entry: MessageFns<Maps_Int64ToInt64Entry> = {
   encode(message: Maps_Int64ToInt64Entry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.key !== 0) {
       writer.uint32(8).int64(message.key);
@@ -641,7 +641,7 @@ function createBaseMaps_MapOfTimestampsEntry(): Maps_MapOfTimestampsEntry {
   return { key: "", value: undefined };
 }
 
-export const Maps_MapOfTimestampsEntry = {
+export const Maps_MapOfTimestampsEntry: MessageFns<Maps_MapOfTimestampsEntry> = {
   encode(message: Maps_MapOfTimestampsEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.key !== "") {
       writer.uint32(10).string(message.key);
@@ -787,4 +787,13 @@ function isObject(value: any): boolean {
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+  fromJSON(object: any): T;
+  toJSON(message: T): unknown;
+  create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
+  fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
 }

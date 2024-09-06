@@ -14,7 +14,7 @@ function createBaseEncode(): Encode {
   return { encode: "" };
 }
 
-export const Encode = {
+export const Encode: MessageFns<Encode> = {
   decode(input: BinaryReader | Uint8Array, length?: number): Encode {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
@@ -38,3 +38,7 @@ export const Encode = {
     return message;
   },
 };
+
+export interface MessageFns<T> {
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+}

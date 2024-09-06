@@ -66,7 +66,7 @@ function createBaseExtendable(): Extendable {
   return {};
 }
 
-export const Extendable = {
+export const Extendable: MessageFns<Extendable> & ExtensionFns<Extendable> = {
   encode(message: Extendable, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.field !== undefined && message.field !== "") {
       writer.uint32(10).string(message.field);
@@ -195,7 +195,7 @@ function createBaseNested(): Nested {
   return {};
 }
 
-export const Nested = {
+export const Nested: MessageFns<Nested> & ExtensionHolder<"message", Nested[]> = {
   message: <Extension<Nested[]>> {
     number: 4,
     tag: 34,
@@ -297,7 +297,7 @@ function createBaseGroup(): Group {
   return {};
 }
 
-export const Group = {
+export const Group: MessageFns<Group> = {
   encode(message: Group, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== undefined && message.name !== "") {
       writer.uint32(10).string(message.name);
@@ -604,3 +604,19 @@ export interface Extension<T> {
 function fail(message?: string): never {
   throw new globalThis.Error(message ?? "Failed");
 }
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+  fromJSON(object: any): T;
+  toJSON(message: T): unknown;
+  create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
+  fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
+}
+
+export interface ExtensionFns<T> {
+  setExtension<E>(message: T, extension: Extension<E>, value: E): void;
+  getExtension<E>(message: T, extension: Extension<E>): E | undefined;
+}
+
+export type ExtensionHolder<T extends string, V> = { [key in T]: Extension<V> };

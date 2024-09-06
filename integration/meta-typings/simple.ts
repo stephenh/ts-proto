@@ -212,7 +212,7 @@ function createBaseSimple(): Simple {
   };
 }
 
-export const Simple = {
+export const Simple: MessageFns<Simple> = {
   encode(message: Simple, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
@@ -392,7 +392,7 @@ function createBaseChild(): Child {
   return { name: "", type: 0 };
 }
 
-export const Child = {
+export const Child: MessageFns<Child> = {
   encode(message: Child, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
@@ -438,7 +438,7 @@ function createBaseNested(): Nested {
   return { name: "", message: undefined, state: 0 };
 }
 
-export const Nested = {
+export const Nested: MessageFns<Nested> = {
   encode(message: Nested, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
@@ -494,7 +494,7 @@ function createBaseNested_InnerMessage(): Nested_InnerMessage {
   return { name: "", deep: undefined };
 }
 
-export const Nested_InnerMessage = {
+export const Nested_InnerMessage: MessageFns<Nested_InnerMessage> = {
   encode(message: Nested_InnerMessage, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
@@ -540,7 +540,7 @@ function createBaseNested_InnerMessage_DeepMessage(): Nested_InnerMessage_DeepMe
   return { name: "" };
 }
 
-export const Nested_InnerMessage_DeepMessage = {
+export const Nested_InnerMessage_DeepMessage: MessageFns<Nested_InnerMessage_DeepMessage> = {
   encode(message: Nested_InnerMessage_DeepMessage, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
@@ -576,7 +576,7 @@ function createBaseOneOfMessage(): OneOfMessage {
   return { first: undefined, last: undefined };
 }
 
-export const OneOfMessage = {
+export const OneOfMessage: MessageFns<OneOfMessage> = {
   encode(message: OneOfMessage, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.first !== undefined) {
       writer.uint32(10).string(message.first);
@@ -622,7 +622,7 @@ function createBaseSimpleWithWrappers(): SimpleWithWrappers {
   return { name: undefined, age: undefined, enabled: undefined, coins: [], snacks: [] };
 }
 
-export const SimpleWithWrappers = {
+export const SimpleWithWrappers: MessageFns<SimpleWithWrappers> = {
   encode(message: SimpleWithWrappers, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== undefined) {
       StringValue.encode({ value: message.name! }, writer.uint32(10).fork()).join();
@@ -698,7 +698,7 @@ function createBaseEntity(): Entity {
   return { id: 0 };
 }
 
-export const Entity = {
+export const Entity: MessageFns<Entity> = {
   encode(message: Entity, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.id !== 0) {
       writer.uint32(8).int32(message.id);
@@ -734,7 +734,7 @@ function createBaseSimpleWithMap(): SimpleWithMap {
   return { entitiesById: {}, nameLookup: {}, intLookup: {}, mapOfTimestamps: {}, mapOfBytes: {} };
 }
 
-export const SimpleWithMap = {
+export const SimpleWithMap: MessageFns<SimpleWithMap> = {
   encode(message: SimpleWithMap, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     Object.entries(message.entitiesById).forEach(([key, value]) => {
       SimpleWithMap_EntitiesByIdEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).join();
@@ -825,7 +825,7 @@ function createBaseSimpleWithMap_EntitiesByIdEntry(): SimpleWithMap_EntitiesById
   return { key: 0, value: undefined };
 }
 
-export const SimpleWithMap_EntitiesByIdEntry = {
+export const SimpleWithMap_EntitiesByIdEntry: MessageFns<SimpleWithMap_EntitiesByIdEntry> = {
   encode(message: SimpleWithMap_EntitiesByIdEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.key !== 0) {
       writer.uint32(8).int32(message.key);
@@ -871,7 +871,7 @@ function createBaseSimpleWithMap_NameLookupEntry(): SimpleWithMap_NameLookupEntr
   return { key: "", value: "" };
 }
 
-export const SimpleWithMap_NameLookupEntry = {
+export const SimpleWithMap_NameLookupEntry: MessageFns<SimpleWithMap_NameLookupEntry> = {
   encode(message: SimpleWithMap_NameLookupEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.key !== "") {
       writer.uint32(10).string(message.key);
@@ -917,7 +917,7 @@ function createBaseSimpleWithMap_IntLookupEntry(): SimpleWithMap_IntLookupEntry 
   return { key: 0, value: 0 };
 }
 
-export const SimpleWithMap_IntLookupEntry = {
+export const SimpleWithMap_IntLookupEntry: MessageFns<SimpleWithMap_IntLookupEntry> = {
   encode(message: SimpleWithMap_IntLookupEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.key !== 0) {
       writer.uint32(8).int32(message.key);
@@ -963,7 +963,7 @@ function createBaseSimpleWithMap_MapOfTimestampsEntry(): SimpleWithMap_MapOfTime
   return { key: "", value: undefined };
 }
 
-export const SimpleWithMap_MapOfTimestampsEntry = {
+export const SimpleWithMap_MapOfTimestampsEntry: MessageFns<SimpleWithMap_MapOfTimestampsEntry> = {
   encode(message: SimpleWithMap_MapOfTimestampsEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.key !== "") {
       writer.uint32(10).string(message.key);
@@ -1009,7 +1009,7 @@ function createBaseSimpleWithMap_MapOfBytesEntry(): SimpleWithMap_MapOfBytesEntr
   return { key: "", value: new Uint8Array(0) };
 }
 
-export const SimpleWithMap_MapOfBytesEntry = {
+export const SimpleWithMap_MapOfBytesEntry: MessageFns<SimpleWithMap_MapOfBytesEntry> = {
   encode(message: SimpleWithMap_MapOfBytesEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.key !== "") {
       writer.uint32(10).string(message.key);
@@ -1055,7 +1055,7 @@ function createBaseSimpleWithSnakeCaseMap(): SimpleWithSnakeCaseMap {
   return { entitiesById: {} };
 }
 
-export const SimpleWithSnakeCaseMap = {
+export const SimpleWithSnakeCaseMap: MessageFns<SimpleWithSnakeCaseMap> = {
   encode(message: SimpleWithSnakeCaseMap, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     Object.entries(message.entitiesById).forEach(([key, value]) => {
       SimpleWithSnakeCaseMap_EntitiesByIdEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).join();
@@ -1094,7 +1094,7 @@ function createBaseSimpleWithSnakeCaseMap_EntitiesByIdEntry(): SimpleWithSnakeCa
   return { key: 0, value: undefined };
 }
 
-export const SimpleWithSnakeCaseMap_EntitiesByIdEntry = {
+export const SimpleWithSnakeCaseMap_EntitiesByIdEntry: MessageFns<SimpleWithSnakeCaseMap_EntitiesByIdEntry> = {
   encode(message: SimpleWithSnakeCaseMap_EntitiesByIdEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.key !== 0) {
       writer.uint32(8).int32(message.key);
@@ -1140,7 +1140,7 @@ function createBaseSimpleWithMapOfEnums(): SimpleWithMapOfEnums {
   return { enumsById: {} };
 }
 
-export const SimpleWithMapOfEnums = {
+export const SimpleWithMapOfEnums: MessageFns<SimpleWithMapOfEnums> = {
   encode(message: SimpleWithMapOfEnums, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     Object.entries(message.enumsById).forEach(([key, value]) => {
       SimpleWithMapOfEnums_EnumsByIdEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).join();
@@ -1179,7 +1179,7 @@ function createBaseSimpleWithMapOfEnums_EnumsByIdEntry(): SimpleWithMapOfEnums_E
   return { key: 0, value: 0 };
 }
 
-export const SimpleWithMapOfEnums_EnumsByIdEntry = {
+export const SimpleWithMapOfEnums_EnumsByIdEntry: MessageFns<SimpleWithMapOfEnums_EnumsByIdEntry> = {
   encode(message: SimpleWithMapOfEnums_EnumsByIdEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.key !== 0) {
       writer.uint32(8).int32(message.key);
@@ -1225,7 +1225,7 @@ function createBasePingRequest(): PingRequest {
   return { input: "" };
 }
 
-export const PingRequest = {
+export const PingRequest: MessageFns<PingRequest> = {
   encode(message: PingRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.input !== "") {
       writer.uint32(10).string(message.input);
@@ -1261,7 +1261,7 @@ function createBasePingResponse(): PingResponse {
   return { output: "" };
 }
 
-export const PingResponse = {
+export const PingResponse: MessageFns<PingResponse> = {
   encode(message: PingResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.output !== "") {
       writer.uint32(10).string(message.output);
@@ -1310,7 +1310,7 @@ function createBaseNumbers(): Numbers {
   };
 }
 
-export const Numbers = {
+export const Numbers: MessageFns<Numbers> = {
   encode(message: Numbers, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.double !== 0) {
       writer.uint32(9).double(message.double);
@@ -1464,7 +1464,7 @@ function createBaseSimpleButOptional(): SimpleButOptional {
   };
 }
 
-export const SimpleButOptional = {
+export const SimpleButOptional: MessageFns<SimpleButOptional> = {
   encode(message: SimpleButOptional, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== undefined) {
       writer.uint32(10).string(message.name);
@@ -1560,7 +1560,7 @@ function createBaseEmpty(): Empty {
   return {};
 }
 
-export const Empty = {
+export const Empty: MessageFns<Empty> = {
   encode(_: Empty, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     return writer;
   },
@@ -2973,4 +2973,9 @@ function longToNumber(int64: { toString(): string }): number {
     throw new globalThis.Error("Value is smaller than Number.MIN_SAFE_INTEGER");
   }
   return num;
+}
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
 }

@@ -51,7 +51,7 @@ function createBaseBatchQueryRequest(): BatchQueryRequest {
   return { ids: [] };
 }
 
-export const BatchQueryRequest = {
+export const BatchQueryRequest: MessageFns<BatchQueryRequest> = {
   encode(message: BatchQueryRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     for (const v of message.ids) {
       writer.uint32(10).string(v!);
@@ -108,7 +108,7 @@ function createBaseBatchQueryResponse(): BatchQueryResponse {
   return { entities: [] };
 }
 
-export const BatchQueryResponse = {
+export const BatchQueryResponse: MessageFns<BatchQueryResponse> = {
   encode(message: BatchQueryResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     for (const v of message.entities) {
       Entity.encode(v!, writer.uint32(10).fork()).join();
@@ -167,7 +167,7 @@ function createBaseBatchMapQueryRequest(): BatchMapQueryRequest {
   return { ids: [] };
 }
 
-export const BatchMapQueryRequest = {
+export const BatchMapQueryRequest: MessageFns<BatchMapQueryRequest> = {
   encode(message: BatchMapQueryRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     for (const v of message.ids) {
       writer.uint32(10).string(v!);
@@ -224,7 +224,7 @@ function createBaseBatchMapQueryResponse(): BatchMapQueryResponse {
   return { entities: {} };
 }
 
-export const BatchMapQueryResponse = {
+export const BatchMapQueryResponse: MessageFns<BatchMapQueryResponse> = {
   encode(message: BatchMapQueryResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     Object.entries(message.entities).forEach(([key, value]) => {
       BatchMapQueryResponse_EntitiesEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).join();
@@ -302,7 +302,7 @@ function createBaseBatchMapQueryResponse_EntitiesEntry(): BatchMapQueryResponse_
   return { key: "", value: undefined };
 }
 
-export const BatchMapQueryResponse_EntitiesEntry = {
+export const BatchMapQueryResponse_EntitiesEntry: MessageFns<BatchMapQueryResponse_EntitiesEntry> = {
   encode(message: BatchMapQueryResponse_EntitiesEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.key !== "") {
       writer.uint32(10).string(message.key);
@@ -382,7 +382,7 @@ function createBaseGetOnlyMethodRequest(): GetOnlyMethodRequest {
   return { id: "" };
 }
 
-export const GetOnlyMethodRequest = {
+export const GetOnlyMethodRequest: MessageFns<GetOnlyMethodRequest> = {
   encode(message: GetOnlyMethodRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.id !== "") {
       writer.uint32(10).string(message.id);
@@ -439,7 +439,7 @@ function createBaseGetOnlyMethodResponse(): GetOnlyMethodResponse {
   return { entity: undefined };
 }
 
-export const GetOnlyMethodResponse = {
+export const GetOnlyMethodResponse: MessageFns<GetOnlyMethodResponse> = {
   encode(message: GetOnlyMethodResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.entity !== undefined) {
       Entity.encode(message.entity, writer.uint32(10).fork()).join();
@@ -498,7 +498,7 @@ function createBaseWriteMethodRequest(): WriteMethodRequest {
   return { id: "" };
 }
 
-export const WriteMethodRequest = {
+export const WriteMethodRequest: MessageFns<WriteMethodRequest> = {
   encode(message: WriteMethodRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.id !== "") {
       writer.uint32(10).string(message.id);
@@ -555,7 +555,7 @@ function createBaseWriteMethodResponse(): WriteMethodResponse {
   return {};
 }
 
-export const WriteMethodResponse = {
+export const WriteMethodResponse: MessageFns<WriteMethodResponse> = {
   encode(_: WriteMethodResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     return writer;
   },
@@ -598,7 +598,7 @@ function createBaseEntity(): Entity {
   return { id: "", name: "" };
 }
 
-export const Entity = {
+export const Entity: MessageFns<Entity> = {
   encode(message: Entity, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.id !== "") {
       writer.uint32(10).string(message.id);
@@ -736,4 +736,13 @@ function isObject(value: any): boolean {
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+  fromJSON(object: any): T;
+  toJSON(message: T): unknown;
+  create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
+  fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
 }

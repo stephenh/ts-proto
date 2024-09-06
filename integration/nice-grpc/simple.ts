@@ -29,7 +29,7 @@ function createBaseTestMessage(): TestMessage {
   return { timestamp: undefined };
 }
 
-export const TestMessage = {
+export const TestMessage: MessageFns<TestMessage> = {
   encode(message: TestMessage, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.timestamp !== undefined) {
       Timestamp.encode(toTimestamp(message.timestamp), writer.uint32(10).fork()).join();
@@ -409,3 +409,12 @@ function isSet(value: any): boolean {
 }
 
 export type ServerStreamingMethodResult<Response> = { [Symbol.asyncIterator](): AsyncIterator<Response, void> };
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+  fromJSON(object: any): T;
+  toJSON(message: T): unknown;
+  create(base?: DeepPartial<T>): T;
+  fromPartial(object: DeepPartial<T>): T;
+}

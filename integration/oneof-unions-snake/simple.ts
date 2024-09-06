@@ -20,7 +20,7 @@ function createBaseSimpleStruct(): SimpleStruct {
   return { simple_struct: undefined };
 }
 
-export const SimpleStruct = {
+export const SimpleStruct: MessageFns<SimpleStruct> = {
   encode(message: SimpleStruct, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.simple_struct !== undefined) {
       Struct.encode(Struct.wrap(message.simple_struct), writer.uint32(10).fork()).join();
@@ -88,4 +88,13 @@ export type Exact<P, I extends P> = P extends Builtin ? P
 
 function isObject(value: any): boolean {
   return typeof value === "object" && value !== null;
+}
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+  fromJSON(object: any): T;
+  toJSON(message: T): unknown;
+  create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
+  fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
 }

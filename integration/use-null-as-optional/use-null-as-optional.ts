@@ -26,7 +26,7 @@ function createBaseProfileInfo(): ProfileInfo {
   return { id: 0, bio: "", phone: "" };
 }
 
-export const ProfileInfo = {
+export const ProfileInfo: MessageFns<ProfileInfo> = {
   encode(message: ProfileInfo, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.id !== 0) {
       writer.uint32(8).int32(message.id);
@@ -115,7 +115,7 @@ function createBaseUser(): User {
   return { id: 0, username: "", profile: null };
 }
 
-export const User = {
+export const User: MessageFns<User> = {
   encode(message: User, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.id !== 0) {
       writer.uint32(8).int32(message.id);
@@ -206,7 +206,7 @@ function createBaseUserById(): UserById {
   return { id: 0 };
 }
 
-export const UserById = {
+export const UserById: MessageFns<UserById> = {
   encode(message: UserById, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.id !== 0) {
       writer.uint32(8).int32(message.id);
@@ -297,4 +297,13 @@ export type Exact<P, I extends P> = P extends Builtin ? P
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+  fromJSON(object: any): T;
+  toJSON(message: T): unknown;
+  create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
+  fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
 }

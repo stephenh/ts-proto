@@ -9,7 +9,7 @@ export interface Encode {
   encode: string;
 }
 
-export const Encode = {
+export const Encode: MessageFns<Encode> = {
   toJSON(message: Encode): unknown {
     const obj: any = {};
     if (message.encode !== "") {
@@ -18,3 +18,7 @@ export const Encode = {
     return obj;
   },
 };
+
+export interface MessageFns<T> {
+  toJSON(message: T): unknown;
+}
