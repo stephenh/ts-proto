@@ -2854,7 +2854,7 @@ export const protoMetadata: ProtoMetadata = {
         "leadingComments": "* Example comment on the Simple message ",
         "trailingComments": "",
         "leadingDetachedComments": [
-          " This comment is seperated by a blank non-comment line, and will detatch from \n the following comment on the message Simple.\n",
+          " This comment is separated by a blank non-comment line, and will detach from \n the following comment on the message Simple.\n",
         ],
       }, {
         "path": [4, 0, 2, 0],

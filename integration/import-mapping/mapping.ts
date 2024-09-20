@@ -11,7 +11,7 @@ import { Timestamp } from "./google/protobuf/timestamp";
 
 export const protobufPackage = "import_mapping";
 
-export interface WithEmtpy {
+export interface WithEmpty {
   empty: Empty | undefined;
 }
 
@@ -31,22 +31,22 @@ export interface WithAll {
   veryVerySecret: VeryVerySecret | undefined;
 }
 
-function createBaseWithEmtpy(): WithEmtpy {
+function createBaseWithEmpty(): WithEmpty {
   return { empty: undefined };
 }
 
-export const WithEmtpy: MessageFns<WithEmtpy> = {
-  encode(message: WithEmtpy, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+export const WithEmpty: MessageFns<WithEmpty> = {
+  encode(message: WithEmpty, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.empty !== undefined) {
       Empty.encode(message.empty, writer.uint32(10).fork()).join();
     }
     return writer;
   },
 
-  decode(input: BinaryReader | Uint8Array, length?: number): WithEmtpy {
+  decode(input: BinaryReader | Uint8Array, length?: number): WithEmpty {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseWithEmtpy();
+    const message = createBaseWithEmpty();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -66,11 +66,11 @@ export const WithEmtpy: MessageFns<WithEmtpy> = {
     return message;
   },
 
-  fromJSON(object: any): WithEmtpy {
+  fromJSON(object: any): WithEmpty {
     return { empty: isSet(object.empty) ? Empty.fromJSON(object.empty) : undefined };
   },
 
-  toJSON(message: WithEmtpy): unknown {
+  toJSON(message: WithEmpty): unknown {
     const obj: any = {};
     if (message.empty !== undefined) {
       obj.empty = Empty.toJSON(message.empty);
@@ -78,11 +78,11 @@ export const WithEmtpy: MessageFns<WithEmtpy> = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<WithEmtpy>, I>>(base?: I): WithEmtpy {
-    return WithEmtpy.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<WithEmpty>, I>>(base?: I): WithEmpty {
+    return WithEmpty.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<WithEmtpy>, I>>(object: I): WithEmtpy {
-    const message = createBaseWithEmtpy();
+  fromPartial<I extends Exact<DeepPartial<WithEmpty>, I>>(object: I): WithEmpty {
+    const message = createBaseWithEmpty();
     message.empty = (object.empty !== undefined && object.empty !== null) ? Empty.fromPartial(object.empty) : undefined;
     return message;
   },

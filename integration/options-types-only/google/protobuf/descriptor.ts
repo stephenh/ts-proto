@@ -166,7 +166,7 @@ export interface FieldDescriptorProto {
    * If true, this is a proto3 "optional". When a proto3 field is optional, it
    * tracks presence regardless of field type.
    *
-   * When proto3_optional is true, this field must be belong to a oneof to
+   * When proto3_optional is true, this field must belong to a oneof to
    * signal to old proto3 clients that presence is tracked for this field. This
    * oneof is known as a "synthetic" oneof, and this field must be its sole
    * member (each proto3 optional field gets its own synthetic oneof). Synthetic
@@ -428,7 +428,7 @@ export interface FileOptions {
   /**
    * By default Swift generators will take the proto package and CamelCase it
    * replacing '.' with underscore and use that to prefix the types/symbols
-   * defined. When this options is provided, they will use this value instead
+   * defined. When this option is provided, they will use this value instead
    * to prefix the types/symbols defined.
    */
   swiftPrefix?:
@@ -741,7 +741,7 @@ export enum MethodOptions_IdempotencyLevel {
 }
 
 /**
- * A message representing a option the parser does not recognize. This only
+ * A message representing an option the parser does not recognize. This only
  * appears in options protos created by the compiler::Parser class.
  * DescriptorPool resolves these when building Descriptor objects. Therefore,
  * options protos in descriptor objects (e.g. returned by Descriptor::options(),
@@ -3152,7 +3152,7 @@ export const protoMetadata: ProtoMetadata = {
         "path": [4, 4, 2, 10],
         "span": [237, 2, 37],
         "leadingComments":
-          ' If true, this is a proto3 "optional". When a proto3 field is optional, it\n tracks presence regardless of field type.\n\n When proto3_optional is true, this field must be belong to a oneof to\n signal to old proto3 clients that presence is tracked for this field. This\n oneof is known as a "synthetic" oneof, and this field must be its sole\n member (each proto3 optional field gets its own synthetic oneof). Synthetic\n oneofs exist in the descriptor only, and do not generate any API. Synthetic\n oneofs must be ordered after all "real" oneofs.\n\n For message fields, proto3_optional doesn\'t create any semantic change,\n since non-repeated message fields always track presence. However it still\n indicates the semantic detail of whether the user wrote "optional" or not.\n This can be useful for round-tripping the .proto file. For consistency we\n give message fields a synthetic oneof also, even though it is not required\n to track presence. This is especially important because the parser can\'t\n tell if a field is a message or an enum, so it must always create a\n synthetic oneof.\n\n Proto2 optional fields do not set this flag, because they already indicate\n optional with `LABEL_OPTIONAL`.\n',
+          ' If true, this is a proto3 "optional". When a proto3 field is optional, it\n tracks presence regardless of field type.\n\n When proto3_optional is true, this field must belong to a oneof to\n signal to old proto3 clients that presence is tracked for this field. This\n oneof is known as a "synthetic" oneof, and this field must be its sole\n member (each proto3 optional field gets its own synthetic oneof). Synthetic\n oneofs exist in the descriptor only, and do not generate any API. Synthetic\n oneofs must be ordered after all "real" oneofs.\n\n For message fields, proto3_optional doesn\'t create any semantic change,\n since non-repeated message fields always track presence. However it still\n indicates the semantic detail of whether the user wrote "optional" or not.\n This can be useful for round-tripping the .proto file. For consistency we\n give message fields a synthetic oneof also, even though it is not required\n to track presence. This is especially important because the parser can\'t\n tell if a field is a message or an enum, so it must always create a\n synthetic oneof.\n\n Proto2 optional fields do not set this flag, because they already indicate\n optional with `LABEL_OPTIONAL`.\n',
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
@@ -3340,7 +3340,7 @@ export const protoMetadata: ProtoMetadata = {
         "path": [4, 10, 2, 15],
         "span": [433, 2, 36],
         "leadingComments":
-          " By default Swift generators will take the proto package and CamelCase it\n replacing '.' with underscore and use that to prefix the types/symbols\n defined. When this options is provided, they will use this value instead\n to prefix the types/symbols defined.\n",
+          " By default Swift generators will take the proto package and CamelCase it\n replacing '.' with underscore and use that to prefix the types/symbols\n defined. When this option is provided, they will use this value instead\n to prefix the types/symbols defined.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
@@ -3647,7 +3647,7 @@ export const protoMetadata: ProtoMetadata = {
         "path": [4, 18],
         "span": [728, 0, 748, 1],
         "leadingComments":
-          " A message representing a option the parser does not recognize. This only\n appears in options protos created by the compiler::Parser class.\n DescriptorPool resolves these when building Descriptor objects. Therefore,\n options protos in descriptor objects (e.g. returned by Descriptor::options(),\n or produced by Descriptor::CopyTo()) will never have UninterpretedOptions\n in them.\n",
+          " A message representing an option the parser does not recognize. This only\n appears in options protos created by the compiler::Parser class.\n DescriptorPool resolves these when building Descriptor objects. Therefore,\n options protos in descriptor objects (e.g. returned by Descriptor::options(),\n or produced by Descriptor::CopyTo()) will never have UninterpretedOptions\n in them.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {

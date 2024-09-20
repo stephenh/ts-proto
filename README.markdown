@@ -118,7 +118,7 @@ plugins:
     path: ../node_modules/ts-proto/protoc-gen-ts_proto
 ```
 
-To prevent `buf push` from reading irrelevent `.proto` files, configure `buf.yaml` like so:
+To prevent `buf push` from reading irrelevant `.proto` files, configure `buf.yaml` like so:
 
 ```yaml
 build:
@@ -150,7 +150,7 @@ In terms of the code that `ts-proto` generates, the general goals are:
 
 - Idiomatic TypeScript/ES6 types
   - `ts-proto` is a clean break from either the built-in Google/Java-esque JS code of `protoc` or the "make `.d.ts` files the `*.js` comments" approach of `protobufjs`
-  - (Techically the `protobufjs/minimal` package is used for actually reading/writing bytes.)
+  - (Technically the `protobufjs/minimal` package is used for actually reading/writing bytes.)
 - TypeScript-first output
 - Interfaces over classes
   - As much as possible, types are just interfaces, so you can work with messages just like regular hashes/data structures.
@@ -248,7 +248,7 @@ creating a class and calling the right getters/setters.
 
 (Note: this is currently only supported by the Twirp clients.)
 
-If you're using ts-proto's clients to call backend micro-services, similar to the N+1 problem in SQL applications, it is easy for micro-service clients to (when serving an individual request) inadvertantly trigger multiple separate RPC calls for "get book 1", "get book 2", "get book 3", that should really be batched into a single "get books [1, 2, 3]" (assuming the backend supports a batch-oriented RPC method).
+If you're using ts-proto's clients to call backend micro-services, similar to the N+1 problem in SQL applications, it is easy for micro-service clients to (when serving an individual request) inadvertently trigger multiple separate RPC calls for "get book 1", "get book 2", "get book 3", that should really be batched into a single "get books [1, 2, 3]" (assuming the backend supports a batch-oriented RPC method).
 
 ts-proto can help with this, and essentially auto-batch your individual "get book" calls into batched "get books" calls.
 
@@ -262,7 +262,7 @@ For ts-proto to do this, you need to implement your service's RPC methods with t
 
 When ts-proto recognizes methods of this pattern, it will automatically create a "non-batch" version of `<OperationName>` for the client, i.e. `client.Get<OperationName>`, that takes a single id and returns a single result.
 
-This provides the client code with the illusion that it can make individual `Get<OperationName>` calls (which is generally preferrable/easier when implementing the client's business logic), but the actual implementation that ts-proto provides will end up making `Batch<OperationName>` calls to the backend service.
+This provides the client code with the illusion that it can make individual `Get<OperationName>` calls (which is generally preferable/easier when implementing the client's business logic), but the actual implementation that ts-proto provides will end up making `Batch<OperationName>` calls to the backend service.
 
 You also need to enable the `useContext=true` build-time parameter, which gives all client methods a Go-style `ctx` parameter, with a `getDataLoaders` method that lets ts-proto cache/resolve request-scoped [DataLoaders](https://github.com/graphql/dataloader), which provide the fundamental auto-batch detection/flushing behavior.
 
@@ -325,7 +325,7 @@ Generated code will be placed in the Gradle build directory.
 
   The default behavior is `forceLong=number`, which will internally still use the `long` library to encode/decode values on the wire (so you will still see a `util.Long = Long` line in your output), but will convert the `long` values to `number` automatically for you. Note that a runtime error is thrown if, while doing this conversion, a 64-bit value is larger than can be correctly stored as a `number`.
 
-- With `--ts_proto_opt=useJsTypeOverride`, 64-bit numbers will be ouput as the [FieldOption.JSType](https://protobuf.dev/reference/java/api-docs/com/google/protobuf/DescriptorProtos.FieldOptions.JSType) specified on the field. This takes precendence over the `forceLong` option provided.
+- With `--ts_proto_opt=useJsTypeOverride`, 64-bit numbers will be output as the [FieldOption.JSType](https://protobuf.dev/reference/java/api-docs/com/google/protobuf/DescriptorProtos.FieldOptions.JSType) specified on the field. This takes precedence over the `forceLong` option provided.
 
 - With `--ts_proto_opt=esModuleInterop=true` changes output to be `esModuleInterop` compliant.
 
@@ -438,7 +438,7 @@ Generated code will be placed in the Gradle build directory.
 
   (Requires `nestJs=true`.)
 
-- With`--ts_proto_opt=addNestjsRestParameter=true`, the last argument of service methods will be an rest parameter with type any. This way you can use custom decorators you could normally use in nestjs.
+- With`--ts_proto_opt=addNestjsRestParameter=true`, the last argument of service methods will be a rest parameter with type any. This way you can use custom decorators you could normally use in nestjs.
 
   (Requires `nestJs=true`.)
 
@@ -476,11 +476,11 @@ Generated code will be placed in the Gradle build directory.
 
 - With `--ts_proto_opt=outputServices=false`, or `=none`, ts-proto will output NO service definitions.
 
-- With `--ts_proto_opt=rpcBeforeRequest=true`, ts-proto will add a function definition to the Rpc interface definition with the signature: `beforeRequest(service: string, message: string, request: <RequestType>)`. It will will also automatically set `outputServices=default`. Each of the Service's methods will call `beforeRequest` before performing it's request.
+- With `--ts_proto_opt=rpcBeforeRequest=true`, ts-proto will add a function definition to the Rpc interface definition with the signature: `beforeRequest(service: string, message: string, request: <RequestType>)`. It will also automatically set `outputServices=default`. Each of the Service's methods will call `beforeRequest` before performing its request.
 
-- With `--ts_proto_opt=rpcAfterResponse=true`, ts-proto will add a function definition to the Rpc interface definition with the signature: `afterResponse(service: string, message: string, response: <ResponseType>)`. It will will also automatically set `outputServices=default`. Each of the Service's methods will call `afterResponse` before returning the response.
+- With `--ts_proto_opt=rpcAfterResponse=true`, ts-proto will add a function definition to the Rpc interface definition with the signature: `afterResponse(service: string, message: string, response: <ResponseType>)`. It will also automatically set `outputServices=default`. Each of the Service's methods will call `afterResponse` before returning the response.
 
-- With `--ts_proto_opt=rpcErrorHandler=true`, ts-proto will add a function definition to the Rpc interface definition with the signature: `handleError(service: string, message: string, error: Error)`. It will will also automatically set `outputServices=default`.
+- With `--ts_proto_opt=rpcErrorHandler=true`, ts-proto will add a function definition to the Rpc interface definition with the signature: `handleError(service: string, message: string, error: Error)`. It will also automatically set `outputServices=default`.
 
 - With `--ts_proto_opt=useAbortSignal=true`, the generated services will accept an `AbortSignal` to cancel RPC calls.
 
@@ -522,7 +522,7 @@ Generated code will be placed in the Gradle build directory.
 
 - With `--ts_proto_opt=useNumericEnumForJson=true`, the JSON converter (`toJSON`) will encode enum values as int, rather than a string literal.
 
-- With `--ts_proto_opt=initializeFieldsAsUndefined=false`, all optional field initializers will be omited from the generated base instances.
+- With `--ts_proto_opt=initializeFieldsAsUndefined=false`, all optional field initializers will be omitted from the generated base instances.
 
 - With `--ts_proto_opt=disableProto2Optionals=true`, all optional fields on proto2 files will not be set to be optional. Please note that this flag is primarily for preserving ts-proto's legacy handling of proto2 files, to avoid breaking changes, and as a result, it is not intended to be used moving forward.
 
@@ -533,14 +533,14 @@ Generated code will be placed in the Gradle build directory.
   - `Mfoo/bar.proto=@myorg/some-lib` will map `foo/bar.proto` imports into `import ... from '@myorg/some-lib'`.
   - `Mfoo/bar.proto=./some/local/lib` will map `foo/bar.proto` imports into `import ... from './some/local/lib'`.
   - `Mfoo/bar.proto=some-modules/some-lib` will map `foo/bar.proto` imports into `import ... from 'some-module/some-lib'`.
-  - **Note**: Uses are accummulated, so multiple values are expected in the form of `--ts_proto_opt=M... --ts_proto_opt=M...` (one `ts_proto_opt` per mapping).
+  - **Note**: Uses are accumulated, so multiple values are expected in the form of `--ts_proto_opt=M... --ts_proto_opt=M...` (one `ts_proto_opt` per mapping).
   - **Note**: Proto files that match mapped imports **will not be generated**.
 
 - With `--ts_proto_opt=useMapType=true`, the generated code for protobuf `map<key_type, value_type>` will become `Map<key_type, value_type>` that uses JavaScript Map type.
 
   The default behavior is `useMapType=false`, which makes it generate the code for protobuf `map<key_type, value_type` with the key-value pair like `{[key: key_type]: value_type}`.
 
-- With `--ts_proto_opt=useReadonlyTypes=true`, the generated types will be declared as immutable using typescript's `readonly` modifer.
+- With `--ts_proto_opt=useReadonlyTypes=true`, the generated types will be declared as immutable using typescript's `readonly` modifier.
 
 - With `--ts_proto_opt=useSnakeTypeName=false` will remove snake casing from types.
 
@@ -633,7 +633,7 @@ export interface User {
 }
 ```
 
-- With `--ts_proto_opt=noDefaultsForOptionals=true`, `undefined` primitive values will not be defaulted as per the protobuf spec. Additionally unlike the standard behavior, when a field is set to it's standard default value, it *will* be encoded allowing it to be sent over the wire and distinguished from undefined values. For example if a message does not set a boolean value, ordinarily this would be defaulted to `false` which is different to it being undefined.
+- With `--ts_proto_opt=noDefaultsForOptionals=true`, `undefined` primitive values will not be defaulted as per the protobuf spec. Additionally unlike the standard behavior, when a field is set to its standard default value, it *will* be encoded allowing it to be sent over the wire and distinguished from undefined values. For example if a message does not set a boolean value, ordinarily this would be defaulted to `false` which is different to it being undefined.
 
 This option allows the library to act in a compatible way with the [Wire implementation](https://square.github.io/wire/) maintained and used by Square/Block. Note: this option should only be used in combination with other client/server code generated using Wire or ts-proto with this option enabled.
 

@@ -112,7 +112,7 @@ export class AppService implements OnModuleInit {
 
   (Requires `nestJs=true`.)
 
-- With`--ts_proto_opt=addNestjsRestParameter=true`, the last argument of service methods will be an rest parameter with type any. This way you can use custom decorators you could normally use in nestjs.
+- With`--ts_proto_opt=addNestjsRestParameter=true`, the last argument of service methods will be a rest parameter with type any. This way you can use custom decorators you could normally use in nestjs.
 
   (Requires `nestJs=true`.)
 

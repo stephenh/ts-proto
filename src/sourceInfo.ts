@@ -106,12 +106,12 @@ export default class SourceInfo implements SourceDescription {
     return this.selfDescription.trailingComments;
   }
 
-  /** Detached comments are those preceeding but separated by a blank non-comment line */
+  /** Detached comments are those preceding but separated by a blank non-comment line */
   get leadingDetachedComments() {
     return this.selfDescription.leadingDetachedComments;
   }
 
-  /** Return the source info for the field id and index specficied */
+  /** Return the source info for the field id and index specified */
   lookup(type: FieldID, index?: number): SourceDescription {
     if (index === undefined) {
       return this.sourceCode[`${type}`] || new EmptyDescription();
@@ -119,7 +119,7 @@ export default class SourceInfo implements SourceDescription {
     return this.sourceCode[`${type}.${index}`] || new EmptyDescription();
   }
 
-  /** Returns a new SourceInfo class representing the field id and index specficied */
+  /** Returns a new SourceInfo class representing the field id and index specified */
   open(type: FieldID, index: number): SourceInfo {
     const prefix = `${type}.${index}.`;
     const map: SourceInfoMap = {};

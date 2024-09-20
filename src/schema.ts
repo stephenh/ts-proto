@@ -248,9 +248,9 @@ function encodedOptionsToOptions(
       // getExtensionValue is to decode the encoded value into a message, but this
       // Message.decode(...) method is not always included in the generated code.
       // We should fix this so that we can always create an option definition by
-      // somehow premptively decoding the encoded value and then inserting it into
-      // the option defintion.
-      // please refer to inteegration/options-types-only to see this in action
+      // somehow preemptively decoding the encoded value and then inserting it into
+      // the option definition.
+      // please refer to integration/options-types-only to see this in action
       resultOptions.push(getExtensionValue(ctx, extension, value));
     }
   }
