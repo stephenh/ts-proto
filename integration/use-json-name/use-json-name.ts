@@ -19,11 +19,11 @@ export interface JsonName {
   A?: string | undefined;
   b?: string | undefined;
   _C?: string | undefined;
-  d?: NstedOneOf | undefined;
+  d?: NestedOneOf | undefined;
   noJsonName: string;
 }
 
-export interface NstedOneOf {
+export interface NestedOneOf {
   nestedOneOfField?: string | undefined;
 }
 
@@ -81,7 +81,7 @@ export const JsonName: MessageFns<JsonName> = {
       writer.uint32(98).string(message._C);
     }
     if (message.d !== undefined) {
-      NstedOneOf.encode(message.d, writer.uint32(106).fork()).join();
+      NestedOneOf.encode(message.d, writer.uint32(106).fork()).join();
     }
     if (message.noJsonName !== "") {
       writer.uint32(114).string(message.noJsonName);
@@ -178,7 +178,7 @@ export const JsonName: MessageFns<JsonName> = {
             break;
           }
 
-          message.d = NstedOneOf.decode(reader, reader.uint32());
+          message.d = NestedOneOf.decode(reader, reader.uint32());
           continue;
         case 14:
           if (tag !== 114) {
@@ -211,7 +211,7 @@ export const JsonName: MessageFns<JsonName> = {
       A: isSet(object.A) ? globalThis.String(object.A) : undefined,
       b: isSet(object.b) ? globalThis.String(object.b) : undefined,
       _C: isSet(object._C) ? globalThis.String(object._C) : undefined,
-      d: isSet(object.d) ? NstedOneOf.fromJSON(object.d) : undefined,
+      d: isSet(object.d) ? NestedOneOf.fromJSON(object.d) : undefined,
       noJsonName: isSet(object.noJsonName) ? globalThis.String(object.noJsonName) : "",
     };
   },
@@ -252,7 +252,7 @@ export const JsonName: MessageFns<JsonName> = {
       obj._C = message._C;
     }
     if (message.d !== undefined) {
-      obj.d = NstedOneOf.toJSON(message.d);
+      obj.d = NestedOneOf.toJSON(message.d);
     }
     if (message.noJsonName !== "") {
       obj.noJsonName = message.noJsonName;
@@ -276,28 +276,28 @@ export const JsonName: MessageFns<JsonName> = {
     message.A = object.A ?? undefined;
     message.b = object.b ?? undefined;
     message._C = object._C ?? undefined;
-    message.d = (object.d !== undefined && object.d !== null) ? NstedOneOf.fromPartial(object.d) : undefined;
+    message.d = (object.d !== undefined && object.d !== null) ? NestedOneOf.fromPartial(object.d) : undefined;
     message.noJsonName = object.noJsonName ?? "";
     return message;
   },
 };
 
-function createBaseNstedOneOf(): NstedOneOf {
+function createBaseNestedOneOf(): NestedOneOf {
   return { nestedOneOfField: undefined };
 }
 
-export const NstedOneOf: MessageFns<NstedOneOf> = {
-  encode(message: NstedOneOf, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+export const NestedOneOf: MessageFns<NestedOneOf> = {
+  encode(message: NestedOneOf, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.nestedOneOfField !== undefined) {
       writer.uint32(10).string(message.nestedOneOfField);
     }
     return writer;
   },
 
-  decode(input: BinaryReader | Uint8Array, length?: number): NstedOneOf {
+  decode(input: BinaryReader | Uint8Array, length?: number): NestedOneOf {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseNstedOneOf();
+    const message = createBaseNestedOneOf();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
@@ -317,13 +317,13 @@ export const NstedOneOf: MessageFns<NstedOneOf> = {
     return message;
   },
 
-  fromJSON(object: any): NstedOneOf {
+  fromJSON(object: any): NestedOneOf {
     return {
       nestedOneOfField: isSet(object.nestedOneOfField) ? globalThis.String(object.nestedOneOfField) : undefined,
     };
   },
 
-  toJSON(message: NstedOneOf): unknown {
+  toJSON(message: NestedOneOf): unknown {
     const obj: any = {};
     if (message.nestedOneOfField !== undefined) {
       obj.nestedOneOfField = message.nestedOneOfField;
@@ -331,11 +331,11 @@ export const NstedOneOf: MessageFns<NstedOneOf> = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<NstedOneOf>, I>>(base?: I): NstedOneOf {
-    return NstedOneOf.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<NestedOneOf>, I>>(base?: I): NestedOneOf {
+    return NestedOneOf.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<NstedOneOf>, I>>(object: I): NstedOneOf {
-    const message = createBaseNstedOneOf();
+  fromPartial<I extends Exact<DeepPartial<NestedOneOf>, I>>(object: I): NestedOneOf {
+    const message = createBaseNestedOneOf();
     message.nestedOneOfField = object.nestedOneOfField ?? undefined;
     return message;
   },

@@ -17,12 +17,12 @@ message JsonName {
     string a = 10 [json_name = "A"];
     string B = 11 [json_name = "b"];
     string _c = 12 [json_name = "_C"];
-    NstedOneOf d = 13 [json_name = "d"];
+    NestedOneOf d = 13 [json_name = "d"];
   };
   string noJsonName = 14;
 };
 
-message NstedOneOf {
+message NestedOneOf {
   oneof nestedOneOf {
     string nestedOneOf_field = 1;
   }

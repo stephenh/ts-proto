@@ -285,7 +285,7 @@ export function generateServiceClientImpl(
 
   // Create a method for each FooService method
   for (const methodDesc of serviceDesc.method) {
-    // See if this this fuzzy matches to a batchable method
+    // See if this fuzzy matches to a batchable method
     if (options.context) {
       const batchMethod = detectBatchMethod(ctx, fileDesc, serviceDesc, methodDesc);
       if (batchMethod) {

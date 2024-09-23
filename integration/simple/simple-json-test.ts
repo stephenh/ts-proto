@@ -24,7 +24,7 @@ describe("simple json", () => {
     // when it goes to json and back to us
     const s2 = Simple.fromJSON(PbSimple.fromObject(s1).toJSON());
     // then it matches the original pbjs object
-    // (even though its really our object/representation
+    // (even though it's really our object/representation
     expect(s2).toEqual({
       ...s1,
       birthday: undefined,

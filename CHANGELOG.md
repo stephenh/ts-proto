@@ -586,7 +586,7 @@
 
 ### Features
 
-* Add static-only variant to to outputTypeAnnotations option ([#858](https://github.com/stephenh/ts-proto/issues/858)) ([d7c4af7](https://github.com/stephenh/ts-proto/commit/d7c4af7e068200b30cf773703ef906595aec6042))
+* Add static-only variant to outputTypeAnnotations option ([#858](https://github.com/stephenh/ts-proto/issues/858)) ([d7c4af7](https://github.com/stephenh/ts-proto/commit/d7c4af7e068200b30cf773703ef906595aec6042))
 
 ## [1.150.1](https://github.com/stephenh/ts-proto/compare/v1.150.0...v1.150.1) (2023-06-23)
 
@@ -766,7 +766,7 @@
 
 ### Features
 
-* add create utility function to message defintions ([#760](https://github.com/stephenh/ts-proto/issues/760)) ([44fc7b2](https://github.com/stephenh/ts-proto/commit/44fc7b23ae72ec9c4fca86bee9a9774be097c058))
+* add create utility function to message definitions ([#760](https://github.com/stephenh/ts-proto/issues/760)) ([44fc7b2](https://github.com/stephenh/ts-proto/commit/44fc7b23ae72ec9c4fca86bee9a9774be097c058))
 
 ## [1.137.2](https://github.com/stephenh/ts-proto/compare/v1.137.1...v1.137.2) (2023-01-09)
 
@@ -1005,7 +1005,7 @@
 
 ### Bug Fixes
 
-* Revert "feat: support grpc-web client straming ([#617](https://github.com/stephenh/ts-proto/issues/617))" ([#632](https://github.com/stephenh/ts-proto/issues/632)) ([2f4ecc7](https://github.com/stephenh/ts-proto/commit/2f4ecc7434df6b8f2ff08b929f9032170b04e858))
+* Revert "feat: support grpc-web client streaming ([#617](https://github.com/stephenh/ts-proto/issues/617))" ([#632](https://github.com/stephenh/ts-proto/issues/632)) ([2f4ecc7](https://github.com/stephenh/ts-proto/commit/2f4ecc7434df6b8f2ff08b929f9032170b04e858))
 
 # [1.121.0](https://github.com/stephenh/ts-proto/compare/v1.120.0...v1.121.0) (2022-07-28)
 
@@ -1026,7 +1026,7 @@
 
 ### Features
 
-* support grpc-web client straming ([#617](https://github.com/stephenh/ts-proto/issues/617)) ([d3e7f1f](https://github.com/stephenh/ts-proto/commit/d3e7f1f4aac12db87c54d6357e557a351c96a2ca))
+* support grpc-web client streaming ([#617](https://github.com/stephenh/ts-proto/issues/617)) ([d3e7f1f](https://github.com/stephenh/ts-proto/commit/d3e7f1f4aac12db87c54d6357e557a351c96a2ca))
 
 # [1.118.0](https://github.com/stephenh/ts-proto/compare/v1.117.1...v1.118.0) (2022-07-19)
 
@@ -1198,7 +1198,7 @@
 
 ### Features
 
-* When outputing service and service definition implementations, include types. Eg, before:
+* When outputting service and service definition implementations, include types. Eg, before:
 
   ```ts
   export const TestDefinition = {
@@ -1471,7 +1471,7 @@
 
 ### Bug Fixes
 
-* support mutliple options in snakeToCamel flag  ([#429](https://github.com/stephenh/ts-proto/issues/429)) ([cff6674](https://github.com/stephenh/ts-proto/commit/cff667406cba21676546fd91b04cf2cbc571ed7d)), closes [#423](https://github.com/stephenh/ts-proto/issues/423)
+* support multiple options in snakeToCamel flag  ([#429](https://github.com/stephenh/ts-proto/issues/429)) ([cff6674](https://github.com/stephenh/ts-proto/commit/cff667406cba21676546fd91b04cf2cbc571ed7d)), closes [#423](https://github.com/stephenh/ts-proto/issues/423)
 
 ## [1.93.2](https://github.com/stephenh/ts-proto/compare/v1.93.1...v1.93.2) (2021-12-09)
 
@@ -2049,7 +2049,7 @@ avoid being a breaking change.
 
 ## v1.21.5
 
-* Drop drop falsey values in maps in `decode` and `fromPartial`. Fixes #79. (@timostamm)
+* Drop falsey values in maps in `decode` and `fromPartial`. Fixes #79. (@timostamm)
 
 ## v1.21.4
 
