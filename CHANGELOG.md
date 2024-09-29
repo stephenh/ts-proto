@@ -1,3 +1,10 @@
+## [2.2.1](https://github.com/stephenh/ts-proto/compare/v2.2.0...v2.2.1) (2024-09-29)
+
+
+### Bug Fixes
+
+* Compilation error for nested repeated fields with `useOptionals=all` ([#1113](https://github.com/stephenh/ts-proto/issues/1113)) ([e89fc51](https://github.com/stephenh/ts-proto/commit/e89fc51fcc3ba494a81884cc136779202d3f1e16)), closes [#1112](https://github.com/stephenh/ts-proto/issues/1112)
+
 # [2.2.0](https://github.com/stephenh/ts-proto/compare/v2.1.0...v2.2.0) (2024-09-06)
 
 
