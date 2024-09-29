@@ -66,13 +66,14 @@ export const BatchQueryRequest: MessageFns<BatchQueryRequest> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.ids.push(reader.string());
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -123,13 +124,14 @@ export const BatchQueryResponse: MessageFns<BatchQueryResponse> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.entities.push(Entity.decode(reader, reader.uint32()));
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -182,13 +184,14 @@ export const BatchMapQueryRequest: MessageFns<BatchMapQueryRequest> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.ids.push(reader.string());
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -239,7 +242,7 @@ export const BatchMapQueryResponse: MessageFns<BatchMapQueryResponse> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
@@ -249,6 +252,7 @@ export const BatchMapQueryResponse: MessageFns<BatchMapQueryResponse> = {
             message.entities[entry1.key] = entry1.value;
           }
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -320,20 +324,22 @@ export const BatchMapQueryResponse_EntitiesEntry: MessageFns<BatchMapQueryRespon
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.key = reader.string();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
 
           message.value = Entity.decode(reader, reader.uint32());
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -397,13 +403,14 @@ export const GetOnlyMethodRequest: MessageFns<GetOnlyMethodRequest> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.id = reader.string();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -454,13 +461,14 @@ export const GetOnlyMethodResponse: MessageFns<GetOnlyMethodResponse> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.entity = Entity.decode(reader, reader.uint32());
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -513,13 +521,14 @@ export const WriteMethodRequest: MessageFns<WriteMethodRequest> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.id = reader.string();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -616,20 +625,22 @@ export const Entity: MessageFns<Entity> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.id = reader.string();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
 
           message.name = reader.string();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;

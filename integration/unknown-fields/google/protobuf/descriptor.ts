@@ -1008,13 +1008,14 @@ export const FileDescriptorSet: MessageFns<FileDescriptorSet> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.file.push(FileDescriptorProto.decode(reader, reader.uint32()));
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1111,28 +1112,31 @@ export const FileDescriptorProto: MessageFns<FileDescriptorProto> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.name = reader.string();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
 
           message.package = reader.string();
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag !== 26) {
             break;
           }
 
           message.dependency.push(reader.string());
           continue;
-        case 10:
+        }
+        case 10: {
           if (tag === 80) {
             message.publicDependency.push(reader.int32());
 
@@ -1149,7 +1153,8 @@ export const FileDescriptorProto: MessageFns<FileDescriptorProto> = {
           }
 
           break;
-        case 11:
+        }
+        case 11: {
           if (tag === 88) {
             message.weakDependency.push(reader.int32());
 
@@ -1166,55 +1171,63 @@ export const FileDescriptorProto: MessageFns<FileDescriptorProto> = {
           }
 
           break;
-        case 4:
+        }
+        case 4: {
           if (tag !== 34) {
             break;
           }
 
           message.messageType.push(DescriptorProto.decode(reader, reader.uint32()));
           continue;
-        case 5:
+        }
+        case 5: {
           if (tag !== 42) {
             break;
           }
 
           message.enumType.push(EnumDescriptorProto.decode(reader, reader.uint32()));
           continue;
-        case 6:
+        }
+        case 6: {
           if (tag !== 50) {
             break;
           }
 
           message.service.push(ServiceDescriptorProto.decode(reader, reader.uint32()));
           continue;
-        case 7:
+        }
+        case 7: {
           if (tag !== 58) {
             break;
           }
 
           message.extension.push(FieldDescriptorProto.decode(reader, reader.uint32()));
           continue;
-        case 8:
+        }
+        case 8: {
           if (tag !== 66) {
             break;
           }
 
           message.options = FileOptions.decode(reader, reader.uint32());
           continue;
-        case 9:
+        }
+        case 9: {
           if (tag !== 74) {
             break;
           }
 
           message.sourceCodeInfo = SourceCodeInfo.decode(reader, reader.uint32());
           continue;
-        case 12:
+        }
+        case 12: {
           if (tag !== 98) {
             break;
           }
 
           message.syntax = reader.string();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1299,76 +1312,86 @@ export const DescriptorProto: MessageFns<DescriptorProto> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.name = reader.string();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
 
           message.field.push(FieldDescriptorProto.decode(reader, reader.uint32()));
           continue;
-        case 6:
+        }
+        case 6: {
           if (tag !== 50) {
             break;
           }
 
           message.extension.push(FieldDescriptorProto.decode(reader, reader.uint32()));
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag !== 26) {
             break;
           }
 
           message.nestedType.push(DescriptorProto.decode(reader, reader.uint32()));
           continue;
-        case 4:
+        }
+        case 4: {
           if (tag !== 34) {
             break;
           }
 
           message.enumType.push(EnumDescriptorProto.decode(reader, reader.uint32()));
           continue;
-        case 5:
+        }
+        case 5: {
           if (tag !== 42) {
             break;
           }
 
           message.extensionRange.push(DescriptorProto_ExtensionRange.decode(reader, reader.uint32()));
           continue;
-        case 8:
+        }
+        case 8: {
           if (tag !== 66) {
             break;
           }
 
           message.oneofDecl.push(OneofDescriptorProto.decode(reader, reader.uint32()));
           continue;
-        case 7:
+        }
+        case 7: {
           if (tag !== 58) {
             break;
           }
 
           message.options = MessageOptions.decode(reader, reader.uint32());
           continue;
-        case 9:
+        }
+        case 9: {
           if (tag !== 74) {
             break;
           }
 
           message.reservedRange.push(DescriptorProto_ReservedRange.decode(reader, reader.uint32()));
           continue;
-        case 10:
+        }
+        case 10: {
           if (tag !== 82) {
             break;
           }
 
           message.reservedName.push(reader.string());
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1420,27 +1443,30 @@ export const DescriptorProto_ExtensionRange: MessageFns<DescriptorProto_Extensio
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 8) {
             break;
           }
 
           message.start = reader.int32();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 16) {
             break;
           }
 
           message.end = reader.int32();
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag !== 26) {
             break;
           }
 
           message.options = ExtensionRangeOptions.decode(reader, reader.uint32());
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1489,20 +1515,22 @@ export const DescriptorProto_ReservedRange: MessageFns<DescriptorProto_ReservedR
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 8) {
             break;
           }
 
           message.start = reader.int32();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 16) {
             break;
           }
 
           message.end = reader.int32();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1548,13 +1576,14 @@ export const ExtensionRangeOptions: MessageFns<ExtensionRangeOptions> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 999:
+        case 999: {
           if (tag !== 7994) {
             break;
           }
 
           message.uninterpretedOption.push(UninterpretedOption.decode(reader, reader.uint32()));
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1643,83 +1672,94 @@ export const FieldDescriptorProto: MessageFns<FieldDescriptorProto> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.name = reader.string();
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag !== 24) {
             break;
           }
 
           message.number = reader.int32();
           continue;
-        case 4:
+        }
+        case 4: {
           if (tag !== 32) {
             break;
           }
 
           message.label = reader.int32() as any;
           continue;
-        case 5:
+        }
+        case 5: {
           if (tag !== 40) {
             break;
           }
 
           message.type = reader.int32() as any;
           continue;
-        case 6:
+        }
+        case 6: {
           if (tag !== 50) {
             break;
           }
 
           message.typeName = reader.string();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
 
           message.extendee = reader.string();
           continue;
-        case 7:
+        }
+        case 7: {
           if (tag !== 58) {
             break;
           }
 
           message.defaultValue = reader.string();
           continue;
-        case 9:
+        }
+        case 9: {
           if (tag !== 72) {
             break;
           }
 
           message.oneofIndex = reader.int32();
           continue;
-        case 10:
+        }
+        case 10: {
           if (tag !== 82) {
             break;
           }
 
           message.jsonName = reader.string();
           continue;
-        case 8:
+        }
+        case 8: {
           if (tag !== 66) {
             break;
           }
 
           message.options = FieldOptions.decode(reader, reader.uint32());
           continue;
-        case 17:
+        }
+        case 17: {
           if (tag !== 136) {
             break;
           }
 
           message.proto3Optional = reader.bool();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1768,20 +1808,22 @@ export const OneofDescriptorProto: MessageFns<OneofDescriptorProto> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.name = reader.string();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
 
           message.options = OneofOptions.decode(reader, reader.uint32());
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1839,41 +1881,46 @@ export const EnumDescriptorProto: MessageFns<EnumDescriptorProto> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.name = reader.string();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
 
           message.value.push(EnumValueDescriptorProto.decode(reader, reader.uint32()));
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag !== 26) {
             break;
           }
 
           message.options = EnumOptions.decode(reader, reader.uint32());
           continue;
-        case 4:
+        }
+        case 4: {
           if (tag !== 34) {
             break;
           }
 
           message.reservedRange.push(EnumDescriptorProto_EnumReservedRange.decode(reader, reader.uint32()));
           continue;
-        case 5:
+        }
+        case 5: {
           if (tag !== 42) {
             break;
           }
 
           message.reservedName.push(reader.string());
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1922,20 +1969,22 @@ export const EnumDescriptorProto_EnumReservedRange: MessageFns<EnumDescriptorPro
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 8) {
             break;
           }
 
           message.start = reader.int32();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 16) {
             break;
           }
 
           message.end = reader.int32();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1987,27 +2036,30 @@ export const EnumValueDescriptorProto: MessageFns<EnumValueDescriptorProto> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.name = reader.string();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 16) {
             break;
           }
 
           message.number = reader.int32();
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag !== 26) {
             break;
           }
 
           message.options = EnumValueOptions.decode(reader, reader.uint32());
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -2059,27 +2111,30 @@ export const ServiceDescriptorProto: MessageFns<ServiceDescriptorProto> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.name = reader.string();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
 
           message.method.push(MethodDescriptorProto.decode(reader, reader.uint32()));
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag !== 26) {
             break;
           }
 
           message.options = ServiceOptions.decode(reader, reader.uint32());
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -2148,48 +2203,54 @@ export const MethodDescriptorProto: MessageFns<MethodDescriptorProto> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.name = reader.string();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
 
           message.inputType = reader.string();
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag !== 26) {
             break;
           }
 
           message.outputType = reader.string();
           continue;
-        case 4:
+        }
+        case 4: {
           if (tag !== 34) {
             break;
           }
 
           message.options = MethodOptions.decode(reader, reader.uint32());
           continue;
-        case 5:
+        }
+        case 5: {
           if (tag !== 40) {
             break;
           }
 
           message.clientStreaming = reader.bool();
           continue;
-        case 6:
+        }
+        case 6: {
           if (tag !== 48) {
             break;
           }
 
           message.serverStreaming = reader.bool();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -2318,153 +2379,174 @@ export const FileOptions: MessageFns<FileOptions> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.javaPackage = reader.string();
           continue;
-        case 8:
+        }
+        case 8: {
           if (tag !== 66) {
             break;
           }
 
           message.javaOuterClassname = reader.string();
           continue;
-        case 10:
+        }
+        case 10: {
           if (tag !== 80) {
             break;
           }
 
           message.javaMultipleFiles = reader.bool();
           continue;
-        case 20:
+        }
+        case 20: {
           if (tag !== 160) {
             break;
           }
 
           message.javaGenerateEqualsAndHash = reader.bool();
           continue;
-        case 27:
+        }
+        case 27: {
           if (tag !== 216) {
             break;
           }
 
           message.javaStringCheckUtf8 = reader.bool();
           continue;
-        case 9:
+        }
+        case 9: {
           if (tag !== 72) {
             break;
           }
 
           message.optimizeFor = reader.int32() as any;
           continue;
-        case 11:
+        }
+        case 11: {
           if (tag !== 90) {
             break;
           }
 
           message.goPackage = reader.string();
           continue;
-        case 16:
+        }
+        case 16: {
           if (tag !== 128) {
             break;
           }
 
           message.ccGenericServices = reader.bool();
           continue;
-        case 17:
+        }
+        case 17: {
           if (tag !== 136) {
             break;
           }
 
           message.javaGenericServices = reader.bool();
           continue;
-        case 18:
+        }
+        case 18: {
           if (tag !== 144) {
             break;
           }
 
           message.pyGenericServices = reader.bool();
           continue;
-        case 42:
+        }
+        case 42: {
           if (tag !== 336) {
             break;
           }
 
           message.phpGenericServices = reader.bool();
           continue;
-        case 23:
+        }
+        case 23: {
           if (tag !== 184) {
             break;
           }
 
           message.deprecated = reader.bool();
           continue;
-        case 31:
+        }
+        case 31: {
           if (tag !== 248) {
             break;
           }
 
           message.ccEnableArenas = reader.bool();
           continue;
-        case 36:
+        }
+        case 36: {
           if (tag !== 290) {
             break;
           }
 
           message.objcClassPrefix = reader.string();
           continue;
-        case 37:
+        }
+        case 37: {
           if (tag !== 298) {
             break;
           }
 
           message.csharpNamespace = reader.string();
           continue;
-        case 39:
+        }
+        case 39: {
           if (tag !== 314) {
             break;
           }
 
           message.swiftPrefix = reader.string();
           continue;
-        case 40:
+        }
+        case 40: {
           if (tag !== 322) {
             break;
           }
 
           message.phpClassPrefix = reader.string();
           continue;
-        case 41:
+        }
+        case 41: {
           if (tag !== 330) {
             break;
           }
 
           message.phpNamespace = reader.string();
           continue;
-        case 44:
+        }
+        case 44: {
           if (tag !== 354) {
             break;
           }
 
           message.phpMetadataNamespace = reader.string();
           continue;
-        case 45:
+        }
+        case 45: {
           if (tag !== 362) {
             break;
           }
 
           message.rubyPackage = reader.string();
           continue;
-        case 999:
+        }
+        case 999: {
           if (tag !== 7994) {
             break;
           }
 
           message.uninterpretedOption.push(UninterpretedOption.decode(reader, reader.uint32()));
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -2529,41 +2611,46 @@ export const MessageOptions: MessageFns<MessageOptions> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 8) {
             break;
           }
 
           message.messageSetWireFormat = reader.bool();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 16) {
             break;
           }
 
           message.noStandardDescriptorAccessor = reader.bool();
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag !== 24) {
             break;
           }
 
           message.deprecated = reader.bool();
           continue;
-        case 7:
+        }
+        case 7: {
           if (tag !== 56) {
             break;
           }
 
           message.mapEntry = reader.bool();
           continue;
-        case 999:
+        }
+        case 999: {
           if (tag !== 7994) {
             break;
           }
 
           message.uninterpretedOption.push(UninterpretedOption.decode(reader, reader.uint32()));
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -2636,55 +2723,62 @@ export const FieldOptions: MessageFns<FieldOptions> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 8) {
             break;
           }
 
           message.ctype = reader.int32() as any;
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 16) {
             break;
           }
 
           message.packed = reader.bool();
           continue;
-        case 6:
+        }
+        case 6: {
           if (tag !== 48) {
             break;
           }
 
           message.jstype = reader.int32() as any;
           continue;
-        case 5:
+        }
+        case 5: {
           if (tag !== 40) {
             break;
           }
 
           message.lazy = reader.bool();
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag !== 24) {
             break;
           }
 
           message.deprecated = reader.bool();
           continue;
-        case 10:
+        }
+        case 10: {
           if (tag !== 80) {
             break;
           }
 
           message.weak = reader.bool();
           continue;
-        case 999:
+        }
+        case 999: {
           if (tag !== 7994) {
             break;
           }
 
           message.uninterpretedOption.push(UninterpretedOption.decode(reader, reader.uint32()));
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -2730,13 +2824,14 @@ export const OneofOptions: MessageFns<OneofOptions> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 999:
+        case 999: {
           if (tag !== 7994) {
             break;
           }
 
           message.uninterpretedOption.push(UninterpretedOption.decode(reader, reader.uint32()));
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -2788,27 +2883,30 @@ export const EnumOptions: MessageFns<EnumOptions> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 2:
+        case 2: {
           if (tag !== 16) {
             break;
           }
 
           message.allowAlias = reader.bool();
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag !== 24) {
             break;
           }
 
           message.deprecated = reader.bool();
           continue;
-        case 999:
+        }
+        case 999: {
           if (tag !== 7994) {
             break;
           }
 
           message.uninterpretedOption.push(UninterpretedOption.decode(reader, reader.uint32()));
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -2857,20 +2955,22 @@ export const EnumValueOptions: MessageFns<EnumValueOptions> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 8) {
             break;
           }
 
           message.deprecated = reader.bool();
           continue;
-        case 999:
+        }
+        case 999: {
           if (tag !== 7994) {
             break;
           }
 
           message.uninterpretedOption.push(UninterpretedOption.decode(reader, reader.uint32()));
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -2919,20 +3019,22 @@ export const ServiceOptions: MessageFns<ServiceOptions> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 33:
+        case 33: {
           if (tag !== 264) {
             break;
           }
 
           message.deprecated = reader.bool();
           continue;
-        case 999:
+        }
+        case 999: {
           if (tag !== 7994) {
             break;
           }
 
           message.uninterpretedOption.push(UninterpretedOption.decode(reader, reader.uint32()));
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -2984,27 +3086,30 @@ export const MethodOptions: MessageFns<MethodOptions> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 33:
+        case 33: {
           if (tag !== 264) {
             break;
           }
 
           message.deprecated = reader.bool();
           continue;
-        case 34:
+        }
+        case 34: {
           if (tag !== 272) {
             break;
           }
 
           message.idempotencyLevel = reader.int32() as any;
           continue;
-        case 999:
+        }
+        case 999: {
           if (tag !== 7994) {
             break;
           }
 
           message.uninterpretedOption.push(UninterpretedOption.decode(reader, reader.uint32()));
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -3077,55 +3182,62 @@ export const UninterpretedOption: MessageFns<UninterpretedOption> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 2:
+        case 2: {
           if (tag !== 18) {
             break;
           }
 
           message.name.push(UninterpretedOption_NamePart.decode(reader, reader.uint32()));
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag !== 26) {
             break;
           }
 
           message.identifierValue = reader.string();
           continue;
-        case 4:
+        }
+        case 4: {
           if (tag !== 32) {
             break;
           }
 
           message.positiveIntValue = longToNumber(reader.uint64());
           continue;
-        case 5:
+        }
+        case 5: {
           if (tag !== 40) {
             break;
           }
 
           message.negativeIntValue = longToNumber(reader.int64());
           continue;
-        case 6:
+        }
+        case 6: {
           if (tag !== 49) {
             break;
           }
 
           message.doubleValue = reader.double();
           continue;
-        case 7:
+        }
+        case 7: {
           if (tag !== 58) {
             break;
           }
 
           message.stringValue = reader.bytes();
           continue;
-        case 8:
+        }
+        case 8: {
           if (tag !== 66) {
             break;
           }
 
           message.aggregateValue = reader.string();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -3174,20 +3286,22 @@ export const UninterpretedOption_NamePart: MessageFns<UninterpretedOption_NamePa
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.namePart = reader.string();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 16) {
             break;
           }
 
           message.isExtension = reader.bool();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -3233,13 +3347,14 @@ export const SourceCodeInfo: MessageFns<SourceCodeInfo> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.location.push(SourceCodeInfo_Location.decode(reader, reader.uint32()));
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -3308,7 +3423,7 @@ export const SourceCodeInfo_Location: MessageFns<SourceCodeInfo_Location> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag === 8) {
             message.path.push(reader.int32());
 
@@ -3325,7 +3440,8 @@ export const SourceCodeInfo_Location: MessageFns<SourceCodeInfo_Location> = {
           }
 
           break;
-        case 2:
+        }
+        case 2: {
           if (tag === 16) {
             message.span.push(reader.int32());
 
@@ -3342,27 +3458,31 @@ export const SourceCodeInfo_Location: MessageFns<SourceCodeInfo_Location> = {
           }
 
           break;
-        case 3:
+        }
+        case 3: {
           if (tag !== 26) {
             break;
           }
 
           message.leadingComments = reader.string();
           continue;
-        case 4:
+        }
+        case 4: {
           if (tag !== 34) {
             break;
           }
 
           message.trailingComments = reader.string();
           continue;
-        case 6:
+        }
+        case 6: {
           if (tag !== 50) {
             break;
           }
 
           message.leadingDetachedComments.push(reader.string());
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -3408,13 +3528,14 @@ export const GeneratedCodeInfo: MessageFns<GeneratedCodeInfo> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.annotation.push(GeneratedCodeInfo_Annotation.decode(reader, reader.uint32()));
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -3471,7 +3592,7 @@ export const GeneratedCodeInfo_Annotation: MessageFns<GeneratedCodeInfo_Annotati
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag === 8) {
             message.path.push(reader.int32());
 
@@ -3488,27 +3609,31 @@ export const GeneratedCodeInfo_Annotation: MessageFns<GeneratedCodeInfo_Annotati
           }
 
           break;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
 
           message.sourceFile = reader.string();
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag !== 24) {
             break;
           }
 
           message.begin = reader.int32();
           continue;
-        case 4:
+        }
+        case 4: {
           if (tag !== 32) {
             break;
           }
 
           message.end = reader.int32();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;

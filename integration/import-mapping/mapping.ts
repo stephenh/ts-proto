@@ -50,13 +50,14 @@ export const WithEmpty: MessageFns<WithEmpty> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.empty = Empty.decode(reader, reader.uint32());
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -107,13 +108,14 @@ export const WithStruct: MessageFns<WithStruct> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.strut = Struct.unwrap(Struct.decode(reader, reader.uint32()));
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -164,13 +166,14 @@ export const WithTimestamp: MessageFns<WithTimestamp> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.timestamp = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -233,41 +236,46 @@ export const WithAll: MessageFns<WithAll> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.empty = Empty.decode(reader, reader.uint32());
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
 
           message.strut = Struct.unwrap(Struct.decode(reader, reader.uint32()));
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag !== 26) {
             break;
           }
 
           message.timestamp = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
-        case 4:
+        }
+        case 4: {
           if (tag !== 34) {
             break;
           }
 
           message.duration = Duration.decode(reader, reader.uint32());
           continue;
-        case 5:
+        }
+        case 5: {
           if (tag !== 42) {
             break;
           }
 
           message.veryVerySecret = VeryVerySecret.decode(reader, reader.uint32());
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;

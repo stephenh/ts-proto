@@ -1,0 +1,7 @@
+syntax = "proto3";
+
+import "google/protobuf/wrappers.proto";
+
+message NestedList { repeated google.protobuf.StringValue a_string = 1; }
+
+message Example { NestedList list = 1; }

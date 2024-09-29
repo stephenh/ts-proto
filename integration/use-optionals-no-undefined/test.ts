@@ -187,56 +187,63 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 8) {
             break;
           }
 
           message.id = reader.int32();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
 
           message.child = Child.decode(reader, reader.uint32());
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag !== 24) {
             break;
           }
 
           message.state = reader.int32() as any;
           continue;
-        case 4:
+        }
+        case 4: {
           if (tag !== 32) {
             break;
           }
 
           message.long = longToNumber(reader.int64());
           continue;
-        case 5:
+        }
+        case 5: {
           if (tag !== 40) {
             break;
           }
 
           message.truth = reader.bool();
           continue;
-        case 6:
+        }
+        case 6: {
           if (tag !== 50) {
             break;
           }
 
           message.description = reader.string();
           continue;
-        case 7:
+        }
+        case 7: {
           if (tag !== 58) {
             break;
           }
 
           message.data = reader.bytes();
           continue;
-        case 11:
+        }
+        case 11: {
           if (tag === 88) {
             if (message.repId === undefined) {
               message.repId = [];
@@ -259,7 +266,8 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
           }
 
           break;
-        case 12:
+        }
+        case 12: {
           if (tag !== 98) {
             break;
           }
@@ -267,9 +275,13 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
           if (message.repChild === undefined) {
             message.repChild = [];
           }
-          message.repChild!.push(Child.decode(reader, reader.uint32()));
+          const el = Child.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.repChild!.push(el);
+          }
           continue;
-        case 13:
+        }
+        case 13: {
           if (tag === 104) {
             if (message.repState === undefined) {
               message.repState = [];
@@ -292,7 +304,8 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
           }
 
           break;
-        case 14:
+        }
+        case 14: {
           if (tag === 112) {
             if (message.repLong === undefined) {
               message.repLong = [];
@@ -315,7 +328,8 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
           }
 
           break;
-        case 15:
+        }
+        case 15: {
           if (tag === 120) {
             if (message.repTruth === undefined) {
               message.repTruth = [];
@@ -338,7 +352,8 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
           }
 
           break;
-        case 16:
+        }
+        case 16: {
           if (tag !== 130) {
             break;
           }
@@ -346,9 +361,13 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
           if (message.repDescription === undefined) {
             message.repDescription = [];
           }
-          message.repDescription!.push(reader.string());
+          const el = reader.string();
+          if (el !== undefined) {
+            message.repDescription!.push(el);
+          }
           continue;
-        case 17:
+        }
+        case 17: {
           if (tag !== 138) {
             break;
           }
@@ -356,58 +375,69 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
           if (message.repData === undefined) {
             message.repData = [];
           }
-          message.repData!.push(reader.bytes());
+          const el = reader.bytes();
+          if (el !== undefined) {
+            message.repData!.push(el);
+          }
           continue;
-        case 21:
+        }
+        case 21: {
           if (tag !== 168) {
             break;
           }
 
           message.optId = reader.int32();
           continue;
-        case 22:
+        }
+        case 22: {
           if (tag !== 178) {
             break;
           }
 
           message.optChild = Child.decode(reader, reader.uint32());
           continue;
-        case 23:
+        }
+        case 23: {
           if (tag !== 184) {
             break;
           }
 
           message.optState = reader.int32() as any;
           continue;
-        case 24:
+        }
+        case 24: {
           if (tag !== 192) {
             break;
           }
 
           message.optLong = longToNumber(reader.int64());
           continue;
-        case 25:
+        }
+        case 25: {
           if (tag !== 200) {
             break;
           }
 
           message.optTruth = reader.bool();
           continue;
-        case 26:
+        }
+        case 26: {
           if (tag !== 210) {
             break;
           }
 
           message.optDescription = reader.string();
           continue;
-        case 27:
+        }
+        case 27: {
           if (tag !== 218) {
             break;
           }
 
           message.optData = reader.bytes();
           continue;
-        case 30:
+        }
+        case 30: {
           if (tag !== 242) {
             break;
           }
@@ -420,13 +450,15 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
             message.translations![entry30.key] = entry30.value;
           }
           continue;
-        case 32:
+        }
+        case 32: {
           if (tag !== 258) {
             break;
           }
 
           message.struct = Struct.unwrap(Struct.decode(reader, reader.uint32()));
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -624,20 +656,22 @@ export const OptionalsTest_TranslationsEntry: MessageFns<OptionalsTest_Translati
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.key = reader.string();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
 
           message.value = reader.string();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;

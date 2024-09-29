@@ -238,34 +238,38 @@ export const WithNestedEnum: MessageFns<WithNestedEnum> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 8) {
             break;
           }
 
           message.foo = fooFromJSON(reader.int32());
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 16) {
             break;
           }
 
           message.Bar = barFromJSON(reader.int32());
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag !== 24) {
             break;
           }
 
           message.baz = withNestedEnum_BazFromJSON(reader.int32());
           continue;
-        case 4:
+        }
+        case 4: {
           if (tag !== 32) {
             break;
           }
 
           message.qux = withNestedEnum_QuxFromJSON(reader.int32());
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;

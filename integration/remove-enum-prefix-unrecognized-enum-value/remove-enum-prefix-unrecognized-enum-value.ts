@@ -181,34 +181,38 @@ export const WithNestedEnum: MessageFns<WithNestedEnum> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 8) {
             break;
           }
 
           message.foo = reader.int32() as any;
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 16) {
             break;
           }
 
           message.Bar = reader.int32() as any;
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag !== 24) {
             break;
           }
 
           message.baz = reader.int32() as any;
           continue;
-        case 4:
+        }
+        case 4: {
           if (tag !== 32) {
             break;
           }
 
           message.qux = reader.int32() as any;
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;

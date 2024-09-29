@@ -96,97 +96,110 @@ export const JsonName: MessageFns<JsonName> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.other_name = reader.string();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 16) {
             break;
           }
 
           message.other_age = reader.int32();
           continue;
-        case 9:
+        }
+        case 9: {
           if (tag !== 74) {
             break;
           }
 
           message.createdAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag !== 26) {
             break;
           }
 
           message["hyphened-name"] = reader.string();
           continue;
-        case 4:
+        }
+        case 4: {
           if (tag !== 34) {
             break;
           }
 
           message["name with spaces"] = reader.string();
           continue;
-        case 5:
+        }
+        case 5: {
           if (tag !== 42) {
             break;
           }
 
           message.$dollar = reader.string();
           continue;
-        case 6:
+        }
+        case 6: {
           if (tag !== 50) {
             break;
           }
 
           message.dollar$ = reader.string();
           continue;
-        case 7:
+        }
+        case 7: {
           if (tag !== 58) {
             break;
           }
 
           message["hyphen-list"].push(reader.string());
           continue;
-        case 10:
+        }
+        case 10: {
           if (tag !== 82) {
             break;
           }
 
           message.A = reader.string();
           continue;
-        case 11:
+        }
+        case 11: {
           if (tag !== 90) {
             break;
           }
 
           message.b = reader.string();
           continue;
-        case 12:
+        }
+        case 12: {
           if (tag !== 98) {
             break;
           }
 
           message._C = reader.string();
           continue;
-        case 13:
+        }
+        case 13: {
           if (tag !== 106) {
             break;
           }
 
           message.d = NestedOneOf.decode(reader, reader.uint32());
           continue;
-        case 14:
+        }
+        case 14: {
           if (tag !== 114) {
             break;
           }
 
           message.noJsonName = reader.string();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -301,13 +314,14 @@ export const NestedOneOf: MessageFns<NestedOneOf> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.nestedOneOfField = reader.string();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;

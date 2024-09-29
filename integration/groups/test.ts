@@ -87,27 +87,30 @@ export const GroupsOptionalTest: MessageFns<GroupsOptionalTest> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 8) {
             break;
           }
 
           message.int1 = reader.int32();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 19) {
             break;
           }
 
           message.group = GroupsOptionalTest_Group.decode(reader);
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag !== 24) {
             break;
           }
 
           message.int3 = reader.int32();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -195,20 +198,22 @@ export const GroupsOptionalTest_Group: MessageFns<GroupsOptionalTest_Group> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.key = reader.string();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
 
           message.value = reader.string();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -302,7 +307,7 @@ export const GroupsRepeatedTest: MessageFns<GroupsRepeatedTest> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag === 8) {
             if (message.int1 === undefined) {
               message.int1 = [];
@@ -325,7 +330,8 @@ export const GroupsRepeatedTest: MessageFns<GroupsRepeatedTest> = {
           }
 
           break;
-        case 2:
+        }
+        case 2: {
           if (tag !== 19) {
             break;
           }
@@ -333,9 +339,13 @@ export const GroupsRepeatedTest: MessageFns<GroupsRepeatedTest> = {
           if (message.group === undefined) {
             message.group = [];
           }
-          message.group!.push(GroupsRepeatedTest_Group.decode(reader));
+          const el = GroupsRepeatedTest_Group.decode(reader);
+          if (el !== undefined) {
+            message.group!.push(el);
+          }
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag === 24) {
             if (message.int3 === undefined) {
               message.int3 = [];
@@ -358,6 +368,7 @@ export const GroupsRepeatedTest: MessageFns<GroupsRepeatedTest> = {
           }
 
           break;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -449,7 +460,7 @@ export const GroupsRepeatedTest_Group: MessageFns<GroupsRepeatedTest_Group> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
@@ -457,9 +468,13 @@ export const GroupsRepeatedTest_Group: MessageFns<GroupsRepeatedTest_Group> = {
           if (message.key === undefined) {
             message.key = [];
           }
-          message.key!.push(reader.string());
+          const el = reader.string();
+          if (el !== undefined) {
+            message.key!.push(el);
+          }
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
@@ -467,8 +482,12 @@ export const GroupsRepeatedTest_Group: MessageFns<GroupsRepeatedTest_Group> = {
           if (message.value === undefined) {
             message.value = [];
           }
-          message.value!.push(reader.string());
+          const el = reader.string();
+          if (el !== undefined) {
+            message.value!.push(el);
+          }
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -562,7 +581,7 @@ export const GroupsNestedTest: MessageFns<GroupsNestedTest> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag === 8) {
             if (message.int1 === undefined) {
               message.int1 = [];
@@ -585,7 +604,8 @@ export const GroupsNestedTest: MessageFns<GroupsNestedTest> = {
           }
 
           break;
-        case 2:
+        }
+        case 2: {
           if (tag !== 19) {
             break;
           }
@@ -593,9 +613,13 @@ export const GroupsNestedTest: MessageFns<GroupsNestedTest> = {
           if (message.group === undefined) {
             message.group = [];
           }
-          message.group!.push(GroupsNestedTest_Group.decode(reader));
+          const el = GroupsNestedTest_Group.decode(reader);
+          if (el !== undefined) {
+            message.group!.push(el);
+          }
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag === 24) {
             if (message.int3 === undefined) {
               message.int3 = [];
@@ -618,6 +642,7 @@ export const GroupsNestedTest: MessageFns<GroupsNestedTest> = {
           }
 
           break;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -704,7 +729,7 @@ export const GroupsNestedTest_Group: MessageFns<GroupsNestedTest_Group> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 11) {
             break;
           }
@@ -712,8 +737,12 @@ export const GroupsNestedTest_Group: MessageFns<GroupsNestedTest_Group> = {
           if (message.nested === undefined) {
             message.nested = [];
           }
-          message.nested!.push(GroupsNestedTest_Group_Nested.decode(reader));
+          const el = GroupsNestedTest_Group_Nested.decode(reader);
+          if (el !== undefined) {
+            message.nested!.push(el);
+          }
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -790,7 +819,7 @@ export const GroupsNestedTest_Group_Nested: MessageFns<GroupsNestedTest_Group_Ne
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 2:
+        case 2: {
           if (tag !== 19) {
             break;
           }
@@ -798,8 +827,12 @@ export const GroupsNestedTest_Group_Nested: MessageFns<GroupsNestedTest_Group_Ne
           if (message.nested2 === undefined) {
             message.nested2 = [];
           }
-          message.nested2!.push(GroupsNestedTest_Group_Nested_Nested2.decode(reader));
+          const el = GroupsNestedTest_Group_Nested_Nested2.decode(reader);
+          if (el !== undefined) {
+            message.nested2!.push(el);
+          }
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -876,13 +909,14 @@ export const GroupsNestedTest_Group_Nested_Nested2: MessageFns<GroupsNestedTest_
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.string1 = reader.string();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;

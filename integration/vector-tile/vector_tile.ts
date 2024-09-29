@@ -100,13 +100,14 @@ export const Tile: MessageFns<Tile> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 3:
+        case 3: {
           if (tag !== 26) {
             break;
           }
 
           message.layers.push(Tile_Layer.decode(reader, reader.uint32()));
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -177,55 +178,62 @@ export const Tile_Value: MessageFns<Tile_Value> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.stringValue = reader.string();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 21) {
             break;
           }
 
           message.floatValue = reader.float();
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag !== 25) {
             break;
           }
 
           message.doubleValue = reader.double();
           continue;
-        case 4:
+        }
+        case 4: {
           if (tag !== 32) {
             break;
           }
 
           message.intValue = longToNumber(reader.int64());
           continue;
-        case 5:
+        }
+        case 5: {
           if (tag !== 40) {
             break;
           }
 
           message.uintValue = longToNumber(reader.uint64());
           continue;
-        case 6:
+        }
+        case 6: {
           if (tag !== 48) {
             break;
           }
 
           message.sintValue = longToNumber(reader.sint64());
           continue;
-        case 7:
+        }
+        case 7: {
           if (tag !== 56) {
             break;
           }
 
           message.boolValue = reader.bool();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -321,14 +329,15 @@ export const Tile_Feature: MessageFns<Tile_Feature> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 8) {
             break;
           }
 
           message.id = longToNumber(reader.uint64());
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag === 16) {
             message.tags.push(reader.uint32());
 
@@ -345,14 +354,16 @@ export const Tile_Feature: MessageFns<Tile_Feature> = {
           }
 
           break;
-        case 3:
+        }
+        case 3: {
           if (tag !== 24) {
             break;
           }
 
           message.type = reader.int32() as any;
           continue;
-        case 4:
+        }
+        case 4: {
           if (tag === 32) {
             message.geometry.push(reader.uint32());
 
@@ -369,6 +380,7 @@ export const Tile_Feature: MessageFns<Tile_Feature> = {
           }
 
           break;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -451,48 +463,54 @@ export const Tile_Layer: MessageFns<Tile_Layer> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 15:
+        case 15: {
           if (tag !== 120) {
             break;
           }
 
           message.version = reader.uint32();
           continue;
-        case 1:
+        }
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.name = reader.string();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
 
           message.features.push(Tile_Feature.decode(reader, reader.uint32()));
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag !== 26) {
             break;
           }
 
           message.keys.push(reader.string());
           continue;
-        case 4:
+        }
+        case 4: {
           if (tag !== 34) {
             break;
           }
 
           message.values.push(Tile_Value.decode(reader, reader.uint32()));
           continue;
-        case 5:
+        }
+        case 5: {
           if (tag !== 40) {
             break;
           }
 
           message.extent = reader.uint32();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;

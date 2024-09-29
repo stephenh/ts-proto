@@ -47,27 +47,30 @@ export const ProfileInfo: MessageFns<ProfileInfo> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 8) {
             break;
           }
 
           message.id = reader.int32();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
 
           message.bio = reader.string();
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag !== 26) {
             break;
           }
 
           message.phone = reader.string();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -136,27 +139,30 @@ export const User: MessageFns<User> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 8) {
             break;
           }
 
           message.id = reader.int32();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
 
           message.username = reader.string();
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag !== 26) {
             break;
           }
 
           message.profile = ProfileInfo.decode(reader, reader.uint32());
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -221,13 +227,14 @@ export const UserById: MessageFns<UserById> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 8) {
             break;
           }
 
           message.id = reader.int32();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;

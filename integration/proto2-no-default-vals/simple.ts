@@ -278,7 +278,7 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag === 8) {
             message.repId.push(reader.int32());
 
@@ -295,14 +295,16 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
           }
 
           break;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
 
           message.repChild.push(Child.decode(reader, reader.uint32()));
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag === 24) {
             message.repState.push(reader.int32() as any);
 
@@ -319,7 +321,8 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
           }
 
           break;
-        case 4:
+        }
+        case 4: {
           if (tag === 32) {
             message.repLong.push(longToNumber(reader.int64()));
 
@@ -336,7 +339,8 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
           }
 
           break;
-        case 5:
+        }
+        case 5: {
           if (tag === 40) {
             message.repTruth.push(reader.bool());
 
@@ -353,21 +357,24 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
           }
 
           break;
-        case 6:
+        }
+        case 6: {
           if (tag !== 50) {
             break;
           }
 
           message.repDescription.push(reader.string());
           continue;
-        case 7:
+        }
+        case 7: {
           if (tag !== 58) {
             break;
           }
 
           message.repData.push(reader.bytes());
           continue;
-        case 8:
+        }
+        case 8: {
           if (tag === 69) {
             message.repFloat.push(reader.float());
 
@@ -384,217 +391,248 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
           }
 
           break;
-        case 11:
+        }
+        case 11: {
           if (tag !== 88) {
             break;
           }
 
           message.optId = reader.int32();
           continue;
-        case 12:
+        }
+        case 12: {
           if (tag !== 98) {
             break;
           }
 
           message.optChild = Child.decode(reader, reader.uint32());
           continue;
-        case 13:
+        }
+        case 13: {
           if (tag !== 104) {
             break;
           }
 
           message.optState = reader.int32() as any;
           continue;
-        case 14:
+        }
+        case 14: {
           if (tag !== 112) {
             break;
           }
 
           message.optLong = longToNumber(reader.int64());
           continue;
-        case 15:
+        }
+        case 15: {
           if (tag !== 120) {
             break;
           }
 
           message.optTruth = reader.bool();
           continue;
-        case 16:
+        }
+        case 16: {
           if (tag !== 130) {
             break;
           }
 
           message.optDescription = reader.string();
           continue;
-        case 17:
+        }
+        case 17: {
           if (tag !== 138) {
             break;
           }
 
           message.optData = reader.bytes();
           continue;
-        case 18:
+        }
+        case 18: {
           if (tag !== 149) {
             break;
           }
 
           message.optFloat = reader.float();
           continue;
-        case 21:
+        }
+        case 21: {
           if (tag !== 168) {
             break;
           }
 
           message.reqId = reader.int32();
           continue;
-        case 22:
+        }
+        case 22: {
           if (tag !== 178) {
             break;
           }
 
           message.reqChild = Child.decode(reader, reader.uint32());
           continue;
-        case 23:
+        }
+        case 23: {
           if (tag !== 184) {
             break;
           }
 
           message.reqState = reader.int32() as any;
           continue;
-        case 24:
+        }
+        case 24: {
           if (tag !== 192) {
             break;
           }
 
           message.reqLong = longToNumber(reader.int64());
           continue;
-        case 25:
+        }
+        case 25: {
           if (tag !== 200) {
             break;
           }
 
           message.reqTruth = reader.bool();
           continue;
-        case 26:
+        }
+        case 26: {
           if (tag !== 210) {
             break;
           }
 
           message.reqDescription = reader.string();
           continue;
-        case 27:
+        }
+        case 27: {
           if (tag !== 218) {
             break;
           }
 
           message.reqData = reader.bytes();
           continue;
-        case 28:
+        }
+        case 28: {
           if (tag !== 229) {
             break;
           }
 
           message.reqFloat = reader.float();
           continue;
-        case 31:
+        }
+        case 31: {
           if (tag !== 248) {
             break;
           }
 
           message.reqDefvalId = reader.int32();
           continue;
-        case 33:
+        }
+        case 33: {
           if (tag !== 264) {
             break;
           }
 
           message.reqDefvalState = reader.int32() as any;
           continue;
-        case 34:
+        }
+        case 34: {
           if (tag !== 272) {
             break;
           }
 
           message.reqDefvalLong = longToNumber(reader.int64());
           continue;
-        case 35:
+        }
+        case 35: {
           if (tag !== 280) {
             break;
           }
 
           message.reqDefvalTruth = reader.bool();
           continue;
-        case 36:
+        }
+        case 36: {
           if (tag !== 290) {
             break;
           }
 
           message.reqDefvalDescription = reader.string();
           continue;
-        case 37:
+        }
+        case 37: {
           if (tag !== 298) {
             break;
           }
 
           message.reqDefvalData = reader.bytes();
           continue;
-        case 38:
+        }
+        case 38: {
           if (tag !== 309) {
             break;
           }
 
           message.reqDefvalFloat = reader.float();
           continue;
-        case 41:
+        }
+        case 41: {
           if (tag !== 328) {
             break;
           }
 
           message.optDefvalId = reader.int32();
           continue;
-        case 43:
+        }
+        case 43: {
           if (tag !== 344) {
             break;
           }
 
           message.optDefvalState = reader.int32() as any;
           continue;
-        case 44:
+        }
+        case 44: {
           if (tag !== 352) {
             break;
           }
 
           message.optDefvalLong = longToNumber(reader.int64());
           continue;
-        case 45:
+        }
+        case 45: {
           if (tag !== 360) {
             break;
           }
 
           message.optDefvalTruth = reader.bool();
           continue;
-        case 46:
+        }
+        case 46: {
           if (tag !== 370) {
             break;
           }
 
           message.optDefvalDescription = reader.string();
           continue;
-        case 47:
+        }
+        case 47: {
           if (tag !== 378) {
             break;
           }
 
           message.optDefvalData = reader.bytes();
           continue;
-        case 48:
+        }
+        case 48: {
           if (tag !== 389) {
             break;
           }
 
           message.optDefvalFloat = reader.float();
           continue;
-        case 50:
+        }
+        case 50: {
           if (tag !== 402) {
             break;
           }
@@ -604,6 +642,7 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
             message.translations[entry50.key] = entry50.value;
           }
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -876,20 +915,22 @@ export const OptionalsTest_TranslationsEntry: MessageFns<OptionalsTest_Translati
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.key = reader.string();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
 
           message.value = reader.string();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;

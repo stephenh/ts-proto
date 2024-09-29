@@ -43,20 +43,22 @@ export const NumPair: MessageFns<NumPair> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 9) {
             break;
           }
 
           message.num1 = reader.double();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 17) {
             break;
           }
 
           message.num2 = reader.double();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -114,13 +116,14 @@ export const NumSingle: MessageFns<NumSingle> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 9) {
             break;
           }
 
           message.num = reader.double();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -173,7 +176,7 @@ export const Numbers: MessageFns<Numbers> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag === 9) {
             message.num.push(reader.double());
 
@@ -190,6 +193,7 @@ export const Numbers: MessageFns<Numbers> = {
           }
 
           break;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;

@@ -61,27 +61,30 @@ export const Int64FieldOption: MessageFns<Int64FieldOption> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 8) {
             break;
           }
 
           message.normalField = longToNumber(reader.int64());
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 16) {
             break;
           }
 
           message.numberField = longToNumber(reader.int64());
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag !== 24) {
             break;
           }
 
           message.stringField = reader.int64().toString();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -150,27 +153,30 @@ export const UInt64FieldOption: MessageFns<UInt64FieldOption> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 8) {
             break;
           }
 
           message.normalField = longToNumber(reader.uint64());
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 16) {
             break;
           }
 
           message.numberField = longToNumber(reader.uint64());
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag !== 24) {
             break;
           }
 
           message.stringField = reader.uint64().toString();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -239,27 +245,30 @@ export const SInt64FieldOption: MessageFns<SInt64FieldOption> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 8) {
             break;
           }
 
           message.normalField = longToNumber(reader.sint64());
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 16) {
             break;
           }
 
           message.numberField = longToNumber(reader.sint64());
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag !== 24) {
             break;
           }
 
           message.stringField = reader.sint64().toString();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -328,27 +337,30 @@ export const Fixed64FieldOption: MessageFns<Fixed64FieldOption> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 9) {
             break;
           }
 
           message.normalField = longToNumber(reader.fixed64());
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 17) {
             break;
           }
 
           message.numberField = longToNumber(reader.fixed64());
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag !== 25) {
             break;
           }
 
           message.stringField = reader.fixed64().toString();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -417,27 +429,30 @@ export const SFixed64FieldOption: MessageFns<SFixed64FieldOption> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 9) {
             break;
           }
 
           message.normalField = longToNumber(reader.sfixed64());
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 17) {
             break;
           }
 
           message.numberField = longToNumber(reader.sfixed64());
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag !== 25) {
             break;
           }
 
           message.stringField = reader.sfixed64().toString();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
