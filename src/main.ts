@@ -1387,7 +1387,7 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
   messageDesc.field.forEach((field) => {
     const fieldName = getFieldName(field, options);
     const messageProperty = getPropertyAccessor("message", fieldName);
-    chunks.push(code`case ${field.number}:`);
+    chunks.push(code`case ${field.number}: {`);
 
     const tag = ((field.number << 3) | basicWireType(field.type)) >>> 0;
     const tagCheck = code`
@@ -1452,11 +1452,22 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
             }`
           : "";
         if (packedType(field.type) === undefined) {
-          chunks.push(code`
-            ${tagCheck}
-            ${initializerSnippet}
-            ${messageProperty}${maybeNonNullAssertion}.push(${readSnippet});
-          `);
+          if (options.useOptionals === "all") {
+            chunks.push(code`
+              ${tagCheck}
+              ${initializerSnippet}
+              const el = ${readSnippet};
+              if (el !== undefined) {
+                ${messageProperty}${maybeNonNullAssertion}.push(el);
+              }
+            `);
+          } else {
+            chunks.push(code`
+              ${tagCheck}
+              ${initializerSnippet}
+              ${messageProperty}${maybeNonNullAssertion}.push(${readSnippet});
+            `);
+          }
         } else {
           const packedTag = ((field.number << 3) | 2) >>> 0;
 
@@ -1479,7 +1490,7 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
             }
 
             break;
-          `);
+          }`);
         }
       }
     } else if (isWithinOneOfThatShouldBeUnion(options, field)) {
@@ -1499,7 +1510,7 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
     }
 
     if (!isRepeated(field) || packedType(field.type) === undefined) {
-      chunks.push(code`continue;`);
+      chunks.push(code`continue; }`);
     }
   });
 

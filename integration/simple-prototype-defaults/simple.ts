@@ -375,49 +375,55 @@ export const Simple: MessageFns<Simple> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.name = reader.string();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 16) {
             break;
           }
 
           message.age = reader.int32();
           continue;
-        case 9:
+        }
+        case 9: {
           if (tag !== 74) {
             break;
           }
 
           message.createdAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag !== 26) {
             break;
           }
 
           message.child = Child.decode(reader, reader.uint32());
           continue;
-        case 4:
+        }
+        case 4: {
           if (tag !== 32) {
             break;
           }
 
           message.state = reader.int32() as any;
           continue;
-        case 5:
+        }
+        case 5: {
           if (tag !== 42) {
             break;
           }
 
           message.grandChildren.push(Child.decode(reader, reader.uint32()));
           continue;
-        case 6:
+        }
+        case 6: {
           if (tag === 48) {
             message.coins.push(reader.int32());
 
@@ -434,14 +440,16 @@ export const Simple: MessageFns<Simple> = {
           }
 
           break;
-        case 7:
+        }
+        case 7: {
           if (tag !== 58) {
             break;
           }
 
           message.snacks.push(reader.string());
           continue;
-        case 8:
+        }
+        case 8: {
           if (tag === 64) {
             message.oldStates.push(reader.int32() as any);
 
@@ -458,34 +466,39 @@ export const Simple: MessageFns<Simple> = {
           }
 
           break;
-        case 10:
+        }
+        case 10: {
           if (tag !== 82) {
             break;
           }
 
           message.thing = ImportedThing.decode(reader, reader.uint32());
           continue;
-        case 11:
+        }
+        case 11: {
           if (tag !== 90) {
             break;
           }
 
           message.blobs.push(reader.bytes());
           continue;
-        case 12:
+        }
+        case 12: {
           if (tag !== 98) {
             break;
           }
 
           message.birthday = DateMessage.decode(reader, reader.uint32());
           continue;
-        case 13:
+        }
+        case 13: {
           if (tag !== 106) {
             break;
           }
 
           message.blob = reader.bytes();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -609,20 +622,22 @@ export const Child: MessageFns<Child> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.name = reader.string();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 16) {
             break;
           }
 
           message.type = reader.int32() as any;
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -686,27 +701,30 @@ export const Nested: MessageFns<Nested> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.name = reader.string();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
 
           message.message = Nested_InnerMessage.decode(reader, reader.uint32());
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag !== 24) {
             break;
           }
 
           message.state = reader.int32() as any;
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -774,20 +792,22 @@ export const Nested_InnerMessage: MessageFns<Nested_InnerMessage> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.name = reader.string();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
 
           message.deep = Nested_InnerMessage_DeepMessage.decode(reader, reader.uint32());
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -847,13 +867,14 @@ export const Nested_InnerMessage_DeepMessage: MessageFns<Nested_InnerMessage_Dee
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.name = reader.string();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -909,20 +930,22 @@ export const OneOfMessage: MessageFns<OneOfMessage> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.first = reader.string();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
 
           message.last = reader.string();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -995,48 +1018,54 @@ export const SimpleWithWrappers: MessageFns<SimpleWithWrappers> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.name = StringValue.decode(reader, reader.uint32()).value;
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
 
           message.age = Int32Value.decode(reader, reader.uint32()).value;
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag !== 26) {
             break;
           }
 
           message.enabled = BoolValue.decode(reader, reader.uint32()).value;
           continue;
-        case 6:
+        }
+        case 6: {
           if (tag !== 50) {
             break;
           }
 
           message.coins.push(Int32Value.decode(reader, reader.uint32()).value);
           continue;
-        case 7:
+        }
+        case 7: {
           if (tag !== 58) {
             break;
           }
 
           message.snacks.push(StringValue.decode(reader, reader.uint32()).value);
           continue;
-        case 8:
+        }
+        case 8: {
           if (tag !== 66) {
             break;
           }
 
           message.id = BytesValue.decode(reader, reader.uint32()).value;
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1114,13 +1143,14 @@ export const Entity: MessageFns<Entity> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 8) {
             break;
           }
 
           message.id = reader.int32();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1199,7 +1229,7 @@ export const SimpleWithMap: MessageFns<SimpleWithMap> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
@@ -1209,7 +1239,8 @@ export const SimpleWithMap: MessageFns<SimpleWithMap> = {
             message.entitiesById[entry1.key] = entry1.value;
           }
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
@@ -1219,7 +1250,8 @@ export const SimpleWithMap: MessageFns<SimpleWithMap> = {
             message.nameLookup[entry2.key] = entry2.value;
           }
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag !== 26) {
             break;
           }
@@ -1229,7 +1261,8 @@ export const SimpleWithMap: MessageFns<SimpleWithMap> = {
             message.intLookup[entry3.key] = entry3.value;
           }
           continue;
-        case 4:
+        }
+        case 4: {
           if (tag !== 34) {
             break;
           }
@@ -1239,7 +1272,8 @@ export const SimpleWithMap: MessageFns<SimpleWithMap> = {
             message.mapOfTimestamps[entry4.key] = entry4.value;
           }
           continue;
-        case 5:
+        }
+        case 5: {
           if (tag !== 42) {
             break;
           }
@@ -1249,7 +1283,8 @@ export const SimpleWithMap: MessageFns<SimpleWithMap> = {
             message.mapOfBytes[entry5.key] = entry5.value;
           }
           continue;
-        case 6:
+        }
+        case 6: {
           if (tag !== 50) {
             break;
           }
@@ -1259,7 +1294,8 @@ export const SimpleWithMap: MessageFns<SimpleWithMap> = {
             message.mapOfStringValues[entry6.key] = entry6.value;
           }
           continue;
-        case 7:
+        }
+        case 7: {
           if (tag !== 58) {
             break;
           }
@@ -1269,6 +1305,7 @@ export const SimpleWithMap: MessageFns<SimpleWithMap> = {
             message.longLookup[entry7.key] = entry7.value;
           }
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1489,20 +1526,22 @@ export const SimpleWithMap_EntitiesByIdEntry: MessageFns<SimpleWithMap_EntitiesB
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 8) {
             break;
           }
 
           message.key = reader.int32();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
 
           message.value = Entity.decode(reader, reader.uint32());
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1567,20 +1606,22 @@ export const SimpleWithMap_NameLookupEntry: MessageFns<SimpleWithMap_NameLookupE
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.key = reader.string();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
 
           message.value = reader.string();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1643,20 +1684,22 @@ export const SimpleWithMap_IntLookupEntry: MessageFns<SimpleWithMap_IntLookupEnt
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 8) {
             break;
           }
 
           message.key = reader.int32();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 16) {
             break;
           }
 
           message.value = reader.int32();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1717,20 +1760,22 @@ export const SimpleWithMap_MapOfTimestampsEntry: MessageFns<SimpleWithMap_MapOfT
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.key = reader.string();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
 
           message.value = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1795,20 +1840,22 @@ export const SimpleWithMap_MapOfBytesEntry: MessageFns<SimpleWithMap_MapOfBytesE
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.key = reader.string();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
 
           message.value = reader.bytes();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1873,20 +1920,22 @@ export const SimpleWithMap_MapOfStringValuesEntry: MessageFns<SimpleWithMap_MapO
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.key = reader.string();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
 
           message.value = StringValue.decode(reader, reader.uint32()).value;
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -1953,20 +2002,22 @@ export const SimpleWithMap_LongLookupEntry: MessageFns<SimpleWithMap_LongLookupE
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 8) {
             break;
           }
 
           message.key = longToNumber(reader.int64());
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 16) {
             break;
           }
 
           message.value = longToNumber(reader.int64());
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -2026,7 +2077,7 @@ export const SimpleWithSnakeCaseMap: MessageFns<SimpleWithSnakeCaseMap> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
@@ -2036,6 +2087,7 @@ export const SimpleWithSnakeCaseMap: MessageFns<SimpleWithSnakeCaseMap> = {
             message.entitiesById[entry1.key] = entry1.value;
           }
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -2112,20 +2164,22 @@ export const SimpleWithSnakeCaseMap_EntitiesByIdEntry: MessageFns<SimpleWithSnak
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 8) {
             break;
           }
 
           message.key = reader.int32();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
 
           message.value = Entity.decode(reader, reader.uint32());
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -2191,7 +2245,7 @@ export const SimpleWithMapOfEnums: MessageFns<SimpleWithMapOfEnums> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
@@ -2201,6 +2255,7 @@ export const SimpleWithMapOfEnums: MessageFns<SimpleWithMapOfEnums> = {
             message.enumsById[entry1.key] = entry1.value;
           }
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -2277,20 +2332,22 @@ export const SimpleWithMapOfEnums_EnumsByIdEntry: MessageFns<SimpleWithMapOfEnum
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 8) {
             break;
           }
 
           message.key = reader.int32();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 16) {
             break;
           }
 
           message.value = reader.int32() as any;
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -2354,13 +2411,14 @@ export const PingRequest: MessageFns<PingRequest> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.input = reader.string();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -2411,13 +2469,14 @@ export const PingResponse: MessageFns<PingResponse> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.output = reader.string();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -2514,90 +2573,102 @@ export const Numbers: MessageFns<Numbers> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 9) {
             break;
           }
 
           message.double = reader.double();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 21) {
             break;
           }
 
           message.float = reader.float();
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag !== 24) {
             break;
           }
 
           message.int32 = reader.int32();
           continue;
-        case 4:
+        }
+        case 4: {
           if (tag !== 32) {
             break;
           }
 
           message.int64 = longToNumber(reader.int64());
           continue;
-        case 5:
+        }
+        case 5: {
           if (tag !== 40) {
             break;
           }
 
           message.uint32 = reader.uint32();
           continue;
-        case 6:
+        }
+        case 6: {
           if (tag !== 48) {
             break;
           }
 
           message.uint64 = longToNumber(reader.uint64());
           continue;
-        case 7:
+        }
+        case 7: {
           if (tag !== 56) {
             break;
           }
 
           message.sint32 = reader.sint32();
           continue;
-        case 8:
+        }
+        case 8: {
           if (tag !== 64) {
             break;
           }
 
           message.sint64 = longToNumber(reader.sint64());
           continue;
-        case 9:
+        }
+        case 9: {
           if (tag !== 77) {
             break;
           }
 
           message.fixed32 = reader.fixed32();
           continue;
-        case 10:
+        }
+        case 10: {
           if (tag !== 81) {
             break;
           }
 
           message.fixed64 = longToNumber(reader.fixed64());
           continue;
-        case 11:
+        }
+        case 11: {
           if (tag !== 93) {
             break;
           }
 
           message.sfixed32 = reader.sfixed32();
           continue;
-        case 12:
+        }
+        case 12: {
           if (tag !== 97) {
             break;
           }
 
           message.sfixed64 = longToNumber(reader.sfixed64());
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -2731,55 +2802,62 @@ export const SimpleButOptional: MessageFns<SimpleButOptional> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.name = reader.string();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 16) {
             break;
           }
 
           message.age = reader.int32();
           continue;
-        case 9:
+        }
+        case 9: {
           if (tag !== 74) {
             break;
           }
 
           message.createdAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag !== 26) {
             break;
           }
 
           message.child = Child.decode(reader, reader.uint32());
           continue;
-        case 4:
+        }
+        case 4: {
           if (tag !== 32) {
             break;
           }
 
           message.state = reader.int32() as any;
           continue;
-        case 10:
+        }
+        case 10: {
           if (tag !== 82) {
             break;
           }
 
           message.thing = ImportedThing.decode(reader, reader.uint32());
           continue;
-        case 12:
+        }
+        case 12: {
           if (tag !== 98) {
             break;
           }
 
           message.birthday = DateMessage.decode(reader, reader.uint32());
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;

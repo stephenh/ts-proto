@@ -196,34 +196,38 @@ export const Version: MessageFns<Version> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 8) {
             break;
           }
 
           message.major = reader.int32();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 16) {
             break;
           }
 
           message.minor = reader.int32();
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag !== 24) {
             break;
           }
 
           message.patch = reader.int32();
           continue;
-        case 4:
+        }
+        case 4: {
           if (tag !== 34) {
             break;
           }
 
           message.suffix = reader.string();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -278,34 +282,38 @@ export const CodeGeneratorRequest: MessageFns<CodeGeneratorRequest> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.fileToGenerate.push(reader.string());
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
 
           message.parameter = reader.string();
           continue;
-        case 15:
+        }
+        case 15: {
           if (tag !== 122) {
             break;
           }
 
           message.protoFile.push(FileDescriptorProto.decode(reader, reader.uint32()));
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag !== 26) {
             break;
           }
 
           message.compilerVersion = Version.decode(reader, reader.uint32());
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -357,27 +365,30 @@ export const CodeGeneratorResponse: MessageFns<CodeGeneratorResponse> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.error = reader.string();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 16) {
             break;
           }
 
           message.supportedFeatures = longToNumber(reader.uint64());
           continue;
-        case 15:
+        }
+        case 15: {
           if (tag !== 122) {
             break;
           }
 
           message.file.push(CodeGeneratorResponse_File.decode(reader, reader.uint32()));
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -432,34 +443,38 @@ export const CodeGeneratorResponse_File: MessageFns<CodeGeneratorResponse_File> 
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.name = reader.string();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
 
           message.insertionPoint = reader.string();
           continue;
-        case 15:
+        }
+        case 15: {
           if (tag !== 122) {
             break;
           }
 
           message.content = reader.string();
           continue;
-        case 16:
+        }
+        case 16: {
           if (tag !== 130) {
             break;
           }
 
           message.generatedCodeInfo = GeneratedCodeInfo.decode(reader, reader.uint32());
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;

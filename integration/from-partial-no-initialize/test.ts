@@ -44,13 +44,14 @@ export const TPartialMessage: MessageFns<TPartialMessage> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.field = reader.string();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -127,21 +128,23 @@ export const TPartial: MessageFns<TPartial> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 8) {
             break;
           }
 
           message.number = reader.int32();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
 
           message.string = reader.string();
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag !== 26) {
             break;
           }
@@ -154,14 +157,16 @@ export const TPartial: MessageFns<TPartial> = {
             message.map![entry3.key] = entry3.value;
           }
           continue;
-        case 4:
+        }
+        case 4: {
           if (tag !== 34) {
             break;
           }
 
           message.message = TPartialMessage.decode(reader, reader.uint32());
           continue;
-        case 5:
+        }
+        case 5: {
           if (tag !== 42) {
             break;
           }
@@ -169,9 +174,13 @@ export const TPartial: MessageFns<TPartial> = {
           if (message.repeatedMessage === undefined) {
             message.repeatedMessage = [];
           }
-          message.repeatedMessage!.push(TPartialMessage.decode(reader, reader.uint32()));
+          const el = TPartialMessage.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.repeatedMessage!.push(el);
+          }
           continue;
-        case 6:
+        }
+        case 6: {
           if (tag !== 50) {
             break;
           }
@@ -179,9 +188,13 @@ export const TPartial: MessageFns<TPartial> = {
           if (message.repeatedString === undefined) {
             message.repeatedString = [];
           }
-          message.repeatedString!.push(reader.string());
+          const el = reader.string();
+          if (el !== undefined) {
+            message.repeatedString!.push(el);
+          }
           continue;
-        case 7:
+        }
+        case 7: {
           if (tag === 56) {
             if (message.repeatedNumber === undefined) {
               message.repeatedNumber = [];
@@ -204,6 +217,7 @@ export const TPartial: MessageFns<TPartial> = {
           }
 
           break;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -315,20 +329,22 @@ export const TPartial_MapEntry: MessageFns<TPartial_MapEntry> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.key = reader.string();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
 
           message.value = reader.string();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;

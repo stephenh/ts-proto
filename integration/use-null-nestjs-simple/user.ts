@@ -24,7 +24,7 @@ export interface User {
   username: string;
   /**
    * ProfileInfo will be optional in typescript, the type will be ProfileInfo | null | undefined
-   * this is needed in cases where you don't want to provide any value for the profile.
+   * this is needed in cases where you don't wanna provide any value for the profile.
    */
   profile?:
     | ProfileInfo

@@ -44,7 +44,7 @@ export const MapBigInt: MessageFns<MapBigInt> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
@@ -57,6 +57,7 @@ export const MapBigInt: MessageFns<MapBigInt> = {
             message.map!.set(entry1.key, entry1.value);
           }
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -154,20 +155,22 @@ export const MapBigInt_MapEntry: MessageFns<MapBigInt_MapEntry> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 9) {
             break;
           }
 
           message.key = reader.fixed64() as bigint;
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 16) {
             break;
           }
 
           message.value = reader.int64() as bigint;
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;

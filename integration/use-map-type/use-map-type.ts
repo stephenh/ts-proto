@@ -65,13 +65,14 @@ export const Entity: MessageFns<Entity> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 8) {
             break;
           }
 
           message.id = reader.int32();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -144,7 +145,7 @@ export const Maps: MessageFns<Maps> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
@@ -154,7 +155,8 @@ export const Maps: MessageFns<Maps> = {
             message.strToEntity.set(entry1.key, entry1.value);
           }
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
@@ -164,7 +166,8 @@ export const Maps: MessageFns<Maps> = {
             message.int32ToInt32.set(entry2.key, entry2.value);
           }
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag !== 26) {
             break;
           }
@@ -174,7 +177,8 @@ export const Maps: MessageFns<Maps> = {
             message.stringToBytes.set(entry3.key, entry3.value);
           }
           continue;
-        case 4:
+        }
+        case 4: {
           if (tag !== 34) {
             break;
           }
@@ -184,7 +188,8 @@ export const Maps: MessageFns<Maps> = {
             message.int64ToInt64.set(entry4.key, entry4.value);
           }
           continue;
-        case 5:
+        }
+        case 5: {
           if (tag !== 42) {
             break;
           }
@@ -194,13 +199,15 @@ export const Maps: MessageFns<Maps> = {
             message.mapOfTimestamps.set(entry5.key, entry5.value);
           }
           continue;
-        case 6:
+        }
+        case 6: {
           if (tag !== 50) {
             break;
           }
 
           message.struct = Struct.unwrap(Struct.decode(reader, reader.uint32()));
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -361,20 +368,22 @@ export const Maps_StrToEntityEntry: MessageFns<Maps_StrToEntityEntry> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.key = reader.string();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
 
           message.value = Entity.decode(reader, reader.uint32());
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -437,20 +446,22 @@ export const Maps_Int32ToInt32Entry: MessageFns<Maps_Int32ToInt32Entry> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 8) {
             break;
           }
 
           message.key = reader.int32();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 16) {
             break;
           }
 
           message.value = reader.int32();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -511,20 +522,22 @@ export const Maps_StringToBytesEntry: MessageFns<Maps_StringToBytesEntry> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.key = reader.string();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
 
           message.value = reader.bytes();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -585,20 +598,22 @@ export const Maps_Int64ToInt64Entry: MessageFns<Maps_Int64ToInt64Entry> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 8) {
             break;
           }
 
           message.key = longToNumber(reader.int64());
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 16) {
             break;
           }
 
           message.value = longToNumber(reader.int64());
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -659,20 +674,22 @@ export const Maps_MapOfTimestampsEntry: MessageFns<Maps_MapOfTimestampsEntry> = 
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.key = reader.string();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
 
           message.value = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;

@@ -99,14 +99,15 @@ export const DividerData: MessageFns<DividerData> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 8) {
             break;
           }
 
           message.type = dividerData_DividerTypeFromJSON(reader.int32());
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
@@ -116,6 +117,7 @@ export const DividerData: MessageFns<DividerData> = {
             message.typeMap[entry2.key] = entry2.value;
           }
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -195,20 +197,22 @@ export const DividerData_TypeMapEntry: MessageFns<DividerData_TypeMapEntry> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.key = reader.string();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 16) {
             break;
           }
 
           message.value = dividerData_DividerTypeFromJSON(reader.int32());
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
