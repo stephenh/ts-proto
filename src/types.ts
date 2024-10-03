@@ -692,7 +692,7 @@ export function toTypeName(
   ensureOptional = false,
 ): Code {
   function finalize(type: Code, isOptional: boolean) {
-    if (isOptional) {
+    if (isOptional && field.label !== FieldDescriptorProto_Label.LABEL_REQUIRED) {
       return code`${type} | ${nullOrUndefined(ctx.options, field.proto3Optional)}`;
     }
     return type;
