@@ -1,3 +1,10 @@
+## [2.2.2](https://github.com/stephenh/ts-proto/compare/v2.2.1...v2.2.2) (2024-10-04)
+
+
+### Bug Fixes
+
+* prefix and suffixes were not being applied to to/fromTimestamp resulting in compile error ([#1118](https://github.com/stephenh/ts-proto/issues/1118)) ([22c2905](https://github.com/stephenh/ts-proto/commit/22c2905ca53c88bdb2802386d414d584a451aa4c))
+
 ## [2.2.1](https://github.com/stephenh/ts-proto/compare/v2.2.0...v2.2.1) (2024-09-29)
 
 
