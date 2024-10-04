@@ -3,6 +3,8 @@
 
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
+import { PrefixTimestampSuffix } from "./google/protobuf/timestamp";
+import { PrefixUInt64ValueSuffix } from "./google/protobuf/wrappers";
 
 export const protobufPackage = "affixes";
 
@@ -49,6 +51,11 @@ export interface PrefixAwesomeMessageSuffix {
 }
 
 export interface PrefixAwesomeMessage_InnerSuffix {
+}
+
+export interface PrefixGoogleSuffix {
+  guint64: number | undefined;
+  timestamp: Date | undefined;
 }
 
 function createBasePrefixAwesomeMessageSuffix(): PrefixAwesomeMessageSuffix {
@@ -141,6 +148,82 @@ export const PrefixAwesomeMessage_InnerSuffix: MessageFns<PrefixAwesomeMessage_I
   },
 };
 
+function createBasePrefixGoogleSuffix(): PrefixGoogleSuffix {
+  return { guint64: undefined, timestamp: undefined };
+}
+
+export const PrefixGoogleSuffix: MessageFns<PrefixGoogleSuffix> = {
+  encode(message: PrefixGoogleSuffix, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.guint64 !== undefined) {
+      PrefixUInt64ValueSuffix.encode({ value: message.guint64! }, writer.uint32(106).fork()).join();
+    }
+    if (message.timestamp !== undefined) {
+      PrefixTimestampSuffix.encode(toTimestamp(message.timestamp), writer.uint32(114).fork()).join();
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): PrefixGoogleSuffix {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBasePrefixGoogleSuffix();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 13: {
+          if (tag !== 106) {
+            break;
+          }
+
+          message.guint64 = PrefixUInt64ValueSuffix.decode(reader, reader.uint32()).value;
+          continue;
+        }
+        case 14: {
+          if (tag !== 114) {
+            break;
+          }
+
+          message.timestamp = fromTimestamp(PrefixTimestampSuffix.decode(reader, reader.uint32()));
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): PrefixGoogleSuffix {
+    return {
+      guint64: isSet(object.guint64) ? Number(object.guint64) : undefined,
+      timestamp: isSet(object.timestamp) ? fromJsonTimestamp(object.timestamp) : undefined,
+    };
+  },
+
+  toJSON(message: PrefixGoogleSuffix): unknown {
+    const obj: any = {};
+    if (message.guint64 !== undefined) {
+      obj.guint64 = message.guint64;
+    }
+    if (message.timestamp !== undefined) {
+      obj.timestamp = message.timestamp.toISOString();
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<PrefixGoogleSuffix>, I>>(base?: I): PrefixGoogleSuffix {
+    return PrefixGoogleSuffix.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<PrefixGoogleSuffix>, I>>(object: I): PrefixGoogleSuffix {
+    const message = createBasePrefixGoogleSuffix();
+    message.guint64 = object.guint64 ?? undefined;
+    message.timestamp = object.timestamp ?? undefined;
+    return message;
+  },
+};
+
 export interface AwesomeService {
 }
 
@@ -169,6 +252,32 @@ export type DeepPartial<T> = T extends Builtin ? T
 type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
+
+function toTimestamp(date: Date): PrefixTimestampSuffix {
+  const seconds = Math.trunc(date.getTime() / 1_000);
+  const nanos = (date.getTime() % 1_000) * 1_000_000;
+  return { seconds, nanos };
+}
+
+function fromTimestamp(t: PrefixTimestampSuffix): Date {
+  let millis = (t.seconds || 0) * 1_000;
+  millis += (t.nanos || 0) / 1_000_000;
+  return new globalThis.Date(millis);
+}
+
+function fromJsonTimestamp(o: any): Date {
+  if (o instanceof globalThis.Date) {
+    return o;
+  } else if (typeof o === "string") {
+    return new globalThis.Date(o);
+  } else {
+    return fromTimestamp(PrefixTimestampSuffix.fromJSON(o));
+  }
+}
+
+function isSet(value: any): boolean {
+  return value !== null && value !== undefined;
+}
 
 export interface MessageFns<T> {
   encode(message: T, writer?: BinaryWriter): BinaryWriter;

@@ -1,0 +1,6 @@
+syntax = "proto3";
+import "google/protobuf/timestamp.proto";
+
+message SuffixType {
+  google.protobuf.Timestamp created_at = 9;
+}

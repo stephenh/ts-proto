@@ -1,0 +1,1 @@
+typeSuffix=GRPCS,typePrefix=GRPCP
