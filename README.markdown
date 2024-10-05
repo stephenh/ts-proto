@@ -28,6 +28,7 @@ Any tips or tricks for others on the migration would also be appreciated!
 ## Table of contents
 
 - [ts-proto](#ts-proto)
+  - [ts-proto 2.x Release Notes](#ts-proto-2x-release-notes)
   - [Table of contents](#table-of-contents)
 - [Overview](#overview)
 - [QuickStart](#quickstart)
@@ -39,15 +40,17 @@ Any tips or tricks for others on the migration would also be appreciated!
 - [Highlights](#highlights)
 - [Auto-Batching / N+1 Prevention](#auto-batching--n1-prevention)
 - [Usage](#usage)
-  - [Supported options](#supported-options)
-  - [NestJS Support](#nestjs-support)
-  - [Watch Mode](#watch-mode)
-  - [Basic gRPC implementation](#basic-grpc-implementation)
+    - [Supported options](#supported-options)
+    - [`proto2` vs `proto3`](#proto2-vs-proto3)
+    - [NestJS Support](#nestjs-support)
+    - [Watch Mode](#watch-mode)
+    - [Basic gRPC implementation](#basic-grpc-implementation)
 - [Sponsors](#sponsors)
 - [Development](#development)
 - [Assumptions](#assumptions)
 - [Todo](#todo)
 - [OneOf Handling](#oneof-handling)
+  - [OneOf Type Helpers](#oneof-type-helpers)
 - [Default values and unset fields](#default-values-and-unset-fields)
 - [Well-Known Types](#well-known-types)
   - [Wrapper Types](#wrapper-types)
@@ -637,6 +640,67 @@ export interface User {
 
 This option allows the library to act in a compatible way with the [Wire implementation](https://square.github.io/wire/) maintained and used by Square/Block. Note: this option should only be used in combination with other client/server code generated using Wire or ts-proto with this option enabled.
 
+### `proto2` vs `proto3`
+
+By declaring `syntax = "proto2";` at the top of your `.proto` file, you automatically opt-in to the `proto2` syntax which differs from the default of `proto3` and the generated code is slightly different too.
+
+Take this `proto2` file for example:
+
+```proto
+syntax = "proto2";
+
+message Test {
+  required Child child_a = 1;
+  required uint32 child_b = 2;
+  optional uint32 child_c = 3;
+}
+
+message Child {
+  required string name = 1;
+}
+```
+
+Note how we have to explicitly declare wether each field is `required` or `optional`. `ts-proto`'s generated code will reflect this:
+
+```ts
+export interface Test {
+  child_a: Child; // no "| undefined" for required message fields
+  child_b: number;
+  child_c: number | undefined; // "| undefined" because the default is now undefined, not 0
+}
+
+export interface Child {
+  value: string;
+}
+```
+
+Calling the correspoding `createBase` functions will also reflect the now required message:
+
+```ts
+function createBaseTest(): Test {
+  // child_a now calls createBaseChild() instead of just being undefined
+  return { child_a: createBaseChild(), child_b: 0, child_c: undefined };
+}
+```
+
+`fromJSON` will throw an error if you don't set all required fields:
+
+```ts
+Test.fromJSON({ child_a: { name: "foo" }, child_c: 1 });
+// TypeError: Required field Test.child_b is not set
+```
+
+And, lastly, the `decode` function (or any utility for that matter) will not populate the `optional` fields with their default value; rather, `undefined` is used:
+
+```ts
+const encoded = Test.encode({ child_a: { name: 'hello world' }, child_b: 1234 }).finish();
+const decoded = Test.decode(encoded);
+console.log(decoded);
+// you get:
+// { child_a: { name: 'hello world' }, child_b: 1234, child_c: undefined }
+// instead of what you would get in proto3:
+// { child_a: { name: 'hello world' }, child_b: 1234, child_c: 0 }
+```
 
 ### NestJS Support
 
