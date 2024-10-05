@@ -1234,6 +1234,7 @@ function generateBaseInstanceFactory(
 ): Code {
   const { options, currentFile } = ctx;
   const fields: Code[] = [];
+  const keyValuePair = isKeyValuePair(messageDesc.field);
 
   // When oneof=unions, we generate a single property with an ADT per `oneof` clause.
   const processedOneofs = new Set<number>();
@@ -1260,15 +1261,23 @@ function generateBaseInstanceFactory(
     }
 
     const fieldKey = safeAccessor(getFieldName(field, options));
-    const val = isWithinOneOf(field)
-      ? nullOrUndefined(options)
-      : isMapType(ctx, messageDesc, field)
-      ? shouldGenerateJSMapType(ctx, messageDesc, field)
-        ? "new Map()"
-        : "{}"
-      : isRepeated(field)
-      ? "[]"
-      : defaultValue(ctx, field);
+    let val;
+
+    if (keyValuePair) {
+      val = '""';
+    } else if (isWithinOneOf(field)) {
+      val = nullOrUndefined(options);
+    } else if (isMapType(ctx, messageDesc, field)) {
+      if (shouldGenerateJSMapType(ctx, messageDesc, field)) {
+        val = "new Map()";
+      } else {
+        val = "{}";
+      }
+    } else if (isRepeated(field)) {
+      val = "[]";
+    } else {
+      val = defaultValue(ctx, field);
+    }
 
     fields.push(code`${fieldKey}: ${val}`);
   }
