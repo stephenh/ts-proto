@@ -60,7 +60,7 @@ export function visit(
   });
 }
 
-const builtInNames = ["Date"];
+const builtInNames = ["Date", "Function"];
 
 /** Potentially suffixes `Message` to names to avoid conflicts, i.e. with `Date`. */
 function messageName(message: DescriptorProto): string {
