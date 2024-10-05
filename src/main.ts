@@ -68,6 +68,7 @@ import {
   isFieldMaskType,
   isFieldMaskTypeName,
   isJsTypeFieldOption,
+  isKeyValuePair,
   isListValueType,
   isListValueTypeName,
   isLong,
@@ -2744,9 +2745,22 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
         }
       `);
     } else if (readSnippet(`x`).toCodeString([]) == "x") {
-      // An optimized case of the else below that works when `readSnippet` returns the plain input
-      const fallback = isWithinOneOf(field) || noDefaultValue ? "undefined" : defaultValue(ctx, field);
-      chunks.push(code`${messageProperty} = ${objectProperty} ?? ${fallback};`);
+      if (
+        ctx.currentFile.isProto3Syntax ||
+        (
+          // proto2 optional label should be trated the same as any field in proto3
+          field.label === FieldDescriptorProto_Label.LABEL_OPTIONAL
+          // key-value pairs (the ones with the "Entry" suffix) have an optional label for some reason
+          // so detect a pair and force it to be defined
+          && !isKeyValuePair(messageDesc.field)
+        )
+      ) {
+        // An optimized case of the else below that works when `readSnippet` returns the plain input
+        const fallback = isWithinOneOf(field) || noDefaultValue ? "undefined" : defaultValue(ctx, field);
+        chunks.push(code`${messageProperty} = ${objectProperty} ?? ${fallback};`);
+      } else {
+        chunks.push(code`${messageProperty} = ${ctx.utils.assertSet}('${fullName}.${fieldName}', ${objectProperty});`);
+      }
     } else {
       const fallback = isWithinOneOf(field) || noDefaultValue ? "undefined" : defaultValue(ctx, field);
       chunks.push(code`

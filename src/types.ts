@@ -475,6 +475,18 @@ export function isWithinOneOfThatShouldBeUnion(options: Options, field: FieldDes
   );
 }
 
+export function isKeyValuePair(fields: FieldDescriptorProto[]) {
+  return fields.length === 2 &&
+    fields[0].name === "key" &&
+    fields[0].number === 1 &&
+    fields[0].type === FieldDescriptorProto_Type.TYPE_STRING &&
+    fields[0].label === FieldDescriptorProto_Label.LABEL_OPTIONAL &&
+    fields[1].name === "value" &&
+    fields[1].number === 2 &&
+    fields[1].type === FieldDescriptorProto_Type.TYPE_STRING &&
+    fields[1].label === FieldDescriptorProto_Label.LABEL_OPTIONAL;
+}
+
 export function isRepeated(field: FieldDescriptorProto): boolean {
   return field.label === FieldDescriptorProto_Label.LABEL_REPEATED;
 }
