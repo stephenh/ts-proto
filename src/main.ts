@@ -1264,7 +1264,7 @@ function generateBaseInstanceFactory(
     let val;
 
     if (keyValuePair) {
-      val = '""';
+      val = defaultValue(ctx, { ...field, label: FieldDescriptorProto_Label.LABEL_REQUIRED });
     } else if (isWithinOneOf(field)) {
       val = nullOrUndefined(options);
     } else if (isMapType(ctx, messageDesc, field)) {
@@ -2759,7 +2759,7 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
       let fallback 
 
       if (keyValuePair) {
-        fallback = '""'
+        fallback = defaultValue(ctx, { ...field, label: FieldDescriptorProto_Label.LABEL_REQUIRED })
       } else {
         fallback = isWithinOneOf(field) || noDefaultValue ? "undefined" : defaultValue(ctx, field);
       }
