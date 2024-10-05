@@ -1046,7 +1046,20 @@ function makeComparisonUtils() {
     }`,
   );
 
-  return { isObject, isSet };
+  const assertSet = conditionalOutput(
+    "assertSet",
+    code`
+      function assertSet<T>(field: string, value: T | undefined): T {
+        if (!${isSet}(value)) {
+          throw new Error(\`Required field \${field} is not set\`);
+        }
+
+        return value as T;
+      }
+    `
+  )
+
+  return { isObject, isSet, assertSet };
 }
 
 function makeNiceGrpcServerStreamingMethodResult(options: Options) {
@@ -2148,7 +2161,7 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
     const jsonPropertyOptional = getPropertyAccessor("object", jsonName, true);
 
     // get code that extracts value from incoming object
-    const readSnippet = (from: string): Code => {
+    const readSnippet = (from: Code): Code => {
       if (isEnum(field)) {
         const fromJson = getEnumMethod(ctx, field.typeName, "FromJSON");
         return code`${fromJson}(${from})`;
@@ -2273,7 +2286,7 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
           chunks.push(code`
             ${fieldKey}: ${ctx.utils.isObject}(${jsonProperty})
               ? Object.entries(${jsonProperty}).reduce<${fieldType}>((acc, [key, value]) => {
-                  acc.set(${i}, ${readSnippet("value")});
+                  acc.set(${i}, ${readSnippet(code`value`)});
                   return acc;
                 }, new Map())
               : ${fallback},
@@ -2284,7 +2297,7 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
           chunks.push(code`
             ${fieldKey}: ${ctx.utils.isObject}(${jsonProperty})
               ? Object.entries(${jsonProperty}).reduce<${fieldType}>((acc, [key, value]) => {
-                  acc[${i}] = ${readSnippet("value")};
+                  acc[${i}] = ${readSnippet(code`value`)};
                   return acc;
                 }, {})
               : ${fallback},
@@ -2293,7 +2306,7 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
       } else {
         const fallback = noDefaultValue ? nullOrUndefined(options) : "[]";
 
-        const needMap = readSnippet("e").toString() !== code`e`.toString();
+        const needMap = readSnippet(code`e`).toString() !== code`e`.toString();
         if (!needMap) {
           chunks.push(
             code`${fieldKey}: ${ctx.utils.globalThis}.Array.isArray(${jsonPropertyOptional}) ? [...${jsonProperty}] : [],`,
@@ -2303,7 +2316,7 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
           chunks.push(code`
             ${fieldKey}: ${
             ctx.utils.globalThis
-          }.Array.isArray(${jsonPropertyOptional}) ? ${jsonProperty}.map((e: any) => ${readSnippet("e")}): ${fallback},
+          }.Array.isArray(${jsonPropertyOptional}) ? ${jsonProperty}.map((e: any) => ${readSnippet(code`e`)}): ${fallback},
           `);
         }
       }
@@ -2319,7 +2332,7 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
 
       const valueName = oneofValueName(fieldKey, options);
       const ternaryIf = code`${ctx.utils.isSet}(${jsonProperty})`;
-      const ternaryThen = code`{ $case: '${fieldName}', ${valueName}: ${readSnippet(`${jsonProperty}`)}`;
+      const ternaryThen = code`{ $case: '${fieldName}', ${valueName}: ${readSnippet(code`${jsonProperty}`)}`;
       chunks.push(code`${ternaryIf} ? ${ternaryThen}} : `);
 
       if (field === lastCase) {
@@ -2327,28 +2340,40 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
       }
     } else if (isAnyValueType(field)) {
       chunks.push(code`${fieldKey}: ${ctx.utils.isSet}(${jsonPropertyOptional})
-        ? ${readSnippet(`${jsonProperty}`)}
+        ? ${readSnippet(code`${jsonProperty}`)}
         : ${nullOrUndefined(options)},
       `);
     } else if (isStructType(field)) {
       chunks.push(
         code`${fieldKey}: ${ctx.utils.isObject}(${jsonProperty})
-          ? ${readSnippet(`${jsonProperty}`)}
+          ? ${readSnippet(code`${jsonProperty}`)}
           : ${nullOrUndefined(options)},`,
       );
     } else if (isListValueType(field)) {
       chunks.push(code`
         ${fieldKey}: ${ctx.utils.globalThis}.Array.isArray(${jsonProperty})
-          ? ${readSnippet(`${jsonProperty}`)}
+          ? ${readSnippet(code`${jsonProperty}`)}
           : ${nullOrUndefined(options)},
       `);
     } else {
-      const fallback = isWithinOneOf(field) || noDefaultValue ? nullOrUndefined(options) : defaultValue(ctx, field);
-      chunks.push(code`
-        ${fieldKey}: ${ctx.utils.isSet}(${jsonProperty})
-          ? ${readSnippet(`${jsonProperty}`)}
-          : ${fallback},
-      `);
+      if (ctx.currentFile.isProto3Syntax) {
+        const fallback = isWithinOneOf(field) || noDefaultValue ? nullOrUndefined(options) : defaultValue(ctx, field);
+        chunks.push(code`
+          ${fieldKey}: ${ctx.utils.isSet}(${jsonProperty})
+            ? ${readSnippet(code`${jsonProperty}`)}
+            : ${fallback},
+        `);
+      } else if (field.label === FieldDescriptorProto_Label.LABEL_REQUIRED) {
+        chunks.push(code`${fieldKey}: ${
+          readSnippet(code`${ctx.utils.assertSet}('${fullName}.${fieldName}', ${jsonProperty})`)
+        },`);
+      } else if (field.label === FieldDescriptorProto_Label.LABEL_OPTIONAL) {
+        chunks.push(code`
+          ${fieldKey}: ${ctx.utils.isSet}(${jsonProperty})
+            ? ${readSnippet(code`${jsonProperty}`)}
+            : undefined,
+        `);
+      }
     }
   });
   // and then wrap up the switch/while/return
