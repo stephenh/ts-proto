@@ -2132,6 +2132,7 @@ function generateExtension(ctx: Context, message: DescriptorProto | undefined, e
 function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, messageDesc: DescriptorProto): Code {
   const { options, utils, currentFile } = ctx;
   const chunks: Code[] = [];
+  const keyValuePair = isKeyValuePair(messageDesc.field);
 
   // create the basic function declaration
   chunks.push(code`
@@ -2368,7 +2369,7 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
             ? ${readSnippet(code`${jsonProperty}`)}
             : ${fallback},
         `);
-      } else if (field.label === FieldDescriptorProto_Label.LABEL_REQUIRED) {
+      } else if (field.label === FieldDescriptorProto_Label.LABEL_REQUIRED || keyValuePair) {
         chunks.push(code`${fieldKey}: ${
           readSnippet(code`${ctx.utils.assertSet}('${fullName}.${fieldName}', ${jsonProperty})`)
         },`);
@@ -2583,6 +2584,7 @@ function generateToJson(
 function generateFromPartial(ctx: Context, fullName: string, messageDesc: DescriptorProto): Code {
   const { options, utils } = ctx;
   const chunks: Code[] = [];
+  const keyValuePair = isKeyValuePair(messageDesc.field);
 
   // create the create function definition
   if (ctx.options.useExactTypes) {
@@ -2752,7 +2754,7 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
           field.label === FieldDescriptorProto_Label.LABEL_OPTIONAL
           // key-value pairs (the ones with the "Entry" suffix) have an optional label for some reason
           // so detect a pair and force it to be defined
-          && !isKeyValuePair(messageDesc.field)
+          && !keyValuePair
         )
       ) {
         // An optimized case of the else below that works when `readSnippet` returns the plain input
