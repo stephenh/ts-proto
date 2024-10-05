@@ -863,23 +863,23 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
     message.optDescription = object.optDescription ?? undefined;
     message.optData = object.optData ?? undefined;
     message.optFloat = object.optFloat ?? undefined;
-    message.reqId = assertSet("OptionalsTest.reqId", object.reqId);
+    message.reqId = object.reqId ?? 0;
     message.reqChild = (object.reqChild !== undefined && object.reqChild !== null)
       ? Child.fromPartial(object.reqChild)
       : createBaseChild();
-    message.reqState = assertSet("OptionalsTest.reqState", object.reqState);
-    message.reqLong = assertSet("OptionalsTest.reqLong", object.reqLong);
-    message.reqTruth = assertSet("OptionalsTest.reqTruth", object.reqTruth);
-    message.reqDescription = assertSet("OptionalsTest.reqDescription", object.reqDescription);
-    message.reqData = assertSet("OptionalsTest.reqData", object.reqData);
-    message.reqFloat = assertSet("OptionalsTest.reqFloat", object.reqFloat);
-    message.reqDefvalId = assertSet("OptionalsTest.reqDefvalId", object.reqDefvalId);
-    message.reqDefvalState = assertSet("OptionalsTest.reqDefvalState", object.reqDefvalState);
-    message.reqDefvalLong = assertSet("OptionalsTest.reqDefvalLong", object.reqDefvalLong);
-    message.reqDefvalTruth = assertSet("OptionalsTest.reqDefvalTruth", object.reqDefvalTruth);
-    message.reqDefvalDescription = assertSet("OptionalsTest.reqDefvalDescription", object.reqDefvalDescription);
-    message.reqDefvalData = assertSet("OptionalsTest.reqDefvalData", object.reqDefvalData);
-    message.reqDefvalFloat = assertSet("OptionalsTest.reqDefvalFloat", object.reqDefvalFloat);
+    message.reqState = object.reqState ?? 0;
+    message.reqLong = object.reqLong ?? 0;
+    message.reqTruth = object.reqTruth ?? false;
+    message.reqDescription = object.reqDescription ?? "";
+    message.reqData = object.reqData ?? new Uint8Array(0);
+    message.reqFloat = object.reqFloat ?? 0;
+    message.reqDefvalId = object.reqDefvalId ?? 100;
+    message.reqDefvalState = object.reqDefvalState ?? 2;
+    message.reqDefvalLong = object.reqDefvalLong ?? 7812378193;
+    message.reqDefvalTruth = object.reqDefvalTruth ?? true;
+    message.reqDefvalDescription = object.reqDefvalDescription ?? "Some description";
+    message.reqDefvalData = object.reqDefvalData ?? new Uint8Array(0);
+    message.reqDefvalFloat = object.reqDefvalFloat ?? 0.12354;
     message.optDefvalId = object.optDefvalId ?? undefined;
     message.optDefvalState = object.optDefvalState ?? undefined;
     message.optDefvalLong = object.optDefvalLong ?? undefined;
@@ -972,8 +972,8 @@ export const OptionalsTest_TranslationsEntry: MessageFns<OptionalsTest_Translati
     object: I,
   ): OptionalsTest_TranslationsEntry {
     const message = createBaseOptionalsTest_TranslationsEntry();
-    message.key = assertSet("OptionalsTest_TranslationsEntry.key", object.key);
-    message.value = assertSet("OptionalsTest_TranslationsEntry.value", object.value);
+    message.key = object.key ?? "";
+    message.value = object.value ?? "";
     return message;
   },
 };
