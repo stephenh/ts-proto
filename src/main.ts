@@ -1051,7 +1051,7 @@ function makeComparisonUtils() {
     code`
       function assertSet<T>(field: string, value: T | undefined): T {
         if (!${isSet}(value)) {
-          throw new Error(\`Required field \${field} is not set\`);
+          throw new TypeError(\`Required field \${field} is not set\`);
         }
 
         return value as T;
