@@ -906,7 +906,11 @@ function makeTimestampMethods(
   longs: ReturnType<typeof makeLongUtils>,
   bytes: ReturnType<typeof makeByteUtils>,
 ) {
-  const Timestamp = impProto(options, "google/protobuf/timestamp", "Timestamp");
+  const Timestamp = impProto(
+    options,
+    "google/protobuf/timestamp",
+    `${options.typePrefix}Timestamp${options.typeSuffix}`,
+  );
   const NanoDate = imp("NanoDate=nano-date");
 
   let seconds: string | Code = "Math.trunc(date.getTime() / 1_000)";
@@ -1009,12 +1013,12 @@ function makeTimestampMethods(
           } else if (typeof o === "string") {
             return new ${bytes.globalThis}.Date(o);
           } else {
-            return ${fromTimestamp}(Timestamp.fromJSON(o));
+            return ${fromTimestamp}(${options.typePrefix}Timestamp${options.typeSuffix}.fromJSON(o));
           }
         }
       `
       : code`
-        function fromJsonTimestamp(o: any): Timestamp {
+        function fromJsonTimestamp(o: any): ${options.typePrefix}Timestamp${options.typeSuffix} {
           if (o instanceof ${bytes.globalThis}.Date) {
             return ${toTimestamp}(o);
           } else if (typeof o === "string") {
