@@ -1,3 +1,10 @@
+## [2.2.3](https://github.com/stephenh/ts-proto/compare/v2.2.2...v2.2.3) (2024-10-06)
+
+
+### Bug Fixes
+
+* Don't fail on Function message names ([#1119](https://github.com/stephenh/ts-proto/issues/1119)) ([da048a1](https://github.com/stephenh/ts-proto/commit/da048a1e78cdc1baa228700c40a944652998d2a1)), closes [#1110](https://github.com/stephenh/ts-proto/issues/1110)
+
 ## [2.2.2](https://github.com/stephenh/ts-proto/compare/v2.2.1...v2.2.2) (2024-10-04)
 
 
