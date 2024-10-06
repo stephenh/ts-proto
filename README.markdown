@@ -408,6 +408,14 @@ Generated code will be placed in the Gradle build directory.
 
   This is useful if you want "only types".
 
+- With `--ts_proto_opt=outputEncodeIncludeTypes=regex`, the `Message.encode` method will only be output for types whose name matches the provided regular expression.
+
+  This is useful if you want to limit `encode` methods to only select types.
+
+- With `--ts_proto_opt=outputDecodeIncludeTypes=regex`, the `Message.decode` method will only be output for types whose name matches the provided regular expression.
+
+  This is useful if you want to limit `decode` methods to only select types.
+
 - With `--ts_proto_opt=outputJsonMethods=false`, the `Message.fromJSON` and `Message.toJSON` methods for working with JSON-coded data will not be output.
 
   This is also useful if you want "only types".
