@@ -25,5 +25,12 @@ message Function {
     string name = 2;
 }
 
+message Nested {
+  message Function {
+      string namespace = 1;
+      string name = 2;
+  }
+}
+
 service APIService {
 }

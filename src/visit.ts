@@ -39,7 +39,7 @@ export function visit(
     const protoFullName = protoPrefix + enumDesc.name;
     // I.e. FooBar_ZazInner
     const tsFullName = tsPrefix + maybeSnakeToCamel(enumDesc.name, options);
-    const tsFullNameWithAffixes = `${options.typePrefix}${tsFullName}${options.typeSuffix}`;
+    const tsFullNameWithAffixes = messageName(`${options.typePrefix}${tsFullName}${options.typeSuffix}`);
     const nestedSourceInfo = sourceInfo.open(childEnumType, index);
     enumFn(tsFullNameWithAffixes, enumDesc, nestedSourceInfo, protoFullName);
   });
@@ -51,8 +51,8 @@ export function visit(
     // I.e. Foo_Bar.Zaz_Inner
     const protoFullName = protoPrefix + message.name;
     // I.e. FooBar_ZazInner
-    const tsFullName = tsPrefix + maybeSnakeToCamel(messageName(message), options);
-    const tsFullNameWithAffixes = `${options.typePrefix}${tsFullName}${options.typeSuffix}`;
+    const tsFullName = tsPrefix + maybeSnakeToCamel(message.name, options);
+    const tsFullNameWithAffixes = messageName(`${options.typePrefix}${tsFullName}${options.typeSuffix}`);
     const nestedSourceInfo = sourceInfo.open(childType, index);
     messageFn(tsFullNameWithAffixes, message, nestedSourceInfo, protoFullName);
     const delim = options.useSnakeTypeName ? "_" : "";
@@ -63,8 +63,7 @@ export function visit(
 const builtInNames = ["Date", "Function"];
 
 /** Potentially suffixes `Message` to names to avoid conflicts, i.e. with `Date`. */
-function messageName(message: DescriptorProto): string {
-  const { name } = message;
+function messageName(name: string): string {
   return builtInNames.includes(name) ? `${name}Message` : name;
 }
 
