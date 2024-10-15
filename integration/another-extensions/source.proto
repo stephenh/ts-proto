@@ -1,0 +1,42 @@
+syntax = "proto2";
+
+package some.proto;
+
+
+enum Feeling {
+  INVALID_FEELING = 0;
+  POSITIVE = 1;
+  NEGATIVE = 2;
+  UNKNOWN = 3;
+}
+
+
+message Event {
+      extensions 100 to max;
+
+      enum Type {
+    SKIPPED = 0;
+    EMAIL = 1;
+    CONVERSATION = 2;
+  }
+
+      required Type type = 1;
+      optional string contact_token = 2 [deprecated = true];
+      required string event_token = 3;
+
+      optional bool should_delete = 12 [default = false];
+}
+
+message FeedbackConversation {
+  extend Event {
+    optional Feeling feeling = 200;
+    optional string some_token = 202;
+  }
+}
+
+message MarketingEmail {
+      extend Event {
+    optional string another_token = 100;
+    optional uint64 some_id = 102;
+  }
+}
