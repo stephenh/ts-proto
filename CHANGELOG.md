@@ -1,3 +1,10 @@
+## [2.2.4](https://github.com/stephenh/ts-proto/compare/v2.2.3...v2.2.4) (2024-10-15)
+
+
+### Bug Fixes
+
+* Unbreak a use case for [#1110](https://github.com/stephenh/ts-proto/issues/1110) / fix for [#1121](https://github.com/stephenh/ts-proto/issues/1121) ([#1123](https://github.com/stephenh/ts-proto/issues/1123)) ([476e99b](https://github.com/stephenh/ts-proto/commit/476e99bcbc651cec1946d0dbad09dc9aea3224ff))
+
 ## [2.2.3](https://github.com/stephenh/ts-proto/compare/v2.2.2...v2.2.3) (2024-10-06)
 
 
