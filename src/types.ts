@@ -214,7 +214,10 @@ export function getFieldOptionsJsType(
 export function defaultValue(ctx: Context, field: FieldDescriptorProto): any {
   const { typeMap, options, utils, currentFile } = ctx;
 
-  if (options.noDefaultsForOptionals) {
+  if (
+    options.noDefaultsForOptionals ||
+    (!ctx.currentFile.isProto3Syntax && field.label === FieldDescriptorProto_Label.LABEL_OPTIONAL))
+  {
     return options.useNullAsOptional ? null : undefined;
   }
 
@@ -287,6 +290,9 @@ export function defaultValue(ctx: Context, field: FieldDescriptorProto): any {
       }
       return "new Uint8Array(0)";
     case FieldDescriptorProto_Type.TYPE_MESSAGE:
+      if (!ctx.currentFile.isProto3Syntax) {
+        return code`createBase${messageToTypeName(ctx, field.typeName)}()`;
+      }
     case FieldDescriptorProto_Type.TYPE_GROUP:
     default:
       return nullOrUndefined(options);
@@ -467,6 +473,16 @@ export function isWithinOneOfThatShouldBeUnion(options: Options, field: FieldDes
     (options.oneof === OneofOption.UNIONS || options.oneof === OneofOption.UNIONS_VALUE) &&
     !field.proto3Optional
   );
+}
+
+export function isKeyValuePair(fields: FieldDescriptorProto[]) {
+  return fields.length === 2 &&
+    fields[0].name === "key" &&
+    fields[0].number === 1 &&
+    fields[0].label === FieldDescriptorProto_Label.LABEL_OPTIONAL &&
+    fields[1].name === "value" &&
+    fields[1].number === 2 &&
+    fields[1].label === FieldDescriptorProto_Label.LABEL_OPTIONAL;
 }
 
 export function isRepeated(field: FieldDescriptorProto): boolean {
@@ -692,7 +708,7 @@ export function toTypeName(
   ensureOptional = false,
 ): Code {
   function finalize(type: Code, isOptional: boolean) {
-    if (isOptional) {
+    if (isOptional && field.label !== FieldDescriptorProto_Label.LABEL_REQUIRED) {
       return code`${type} | ${nullOrUndefined(ctx.options, field.proto3Optional)}`;
     }
     return type;
