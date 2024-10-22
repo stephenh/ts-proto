@@ -1,3 +1,10 @@
+## [2.2.5](https://github.com/stephenh/ts-proto/compare/v2.2.4...v2.2.5) (2024-10-22)
+
+
+### Bug Fixes
+
+* Added null propagation and guard ([#1127](https://github.com/stephenh/ts-proto/issues/1127)) ([86637fa](https://github.com/stephenh/ts-proto/commit/86637fa6c39ddcc09cab3c486c34b7a52adaf694))
+
 ## [2.2.4](https://github.com/stephenh/ts-proto/compare/v2.2.3...v2.2.4) (2024-10-15)
 
 
