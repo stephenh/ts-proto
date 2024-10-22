@@ -239,8 +239,8 @@ function encodedOptionsToOptions(
   const resultOptions: Code[] = [];
   for (const key in encodedOptions) {
     const value = encodedOptions[key];
-    const extension = extensionCache[extendee][parseInt(key, 10) >>> 3];
-    if (shouldAddOptionDefinition(ctx, extension)) {
+    const extension = extensionCache[extendee]?.[parseInt(key, 10) >>> 3];
+    if (extension && shouldAddOptionDefinition(ctx, extension)) {
       // todo: we should be able to create an option definition ALWAYS, however,
       // we currently cannot do that because the if the extension is a sub-message
       // (and thus, not just a straightforward value), we don't have an JSON object
