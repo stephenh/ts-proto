@@ -120,7 +120,7 @@ describe("vector-tile", () => {
     };
     expect(Tile_Value.fromJSON(tile)).toMatchInlineSnapshot(`
       {
-        "boolValue": false,
+        "boolValue": undefined,
         "doubleValue": Infinity,
         "floatValue": NaN,
         "intValue": 0,
