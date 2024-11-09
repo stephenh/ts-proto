@@ -2,7 +2,7 @@ import { readFile } from "fs";
 import { promisify } from "util";
 import { CodeGeneratorRequest } from "./google/protobuf/compiler/plugin";
 
-describe.skip("unknown-fields", () => {
+describe("unknown-fields", () => {
   it("decodes unknown fields", async () => {
     const stdin = await promisify(readFile)(__dirname + "/options.bin");
     const request = CodeGeneratorRequest.decode(stdin);
