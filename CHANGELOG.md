@@ -1,3 +1,24 @@
+## [2.2.5](https://github.com/stephenh/ts-proto/compare/v2.2.4...v2.2.5) (2024-10-22)
+
+
+### Bug Fixes
+
+* Added null propagation and guard ([#1127](https://github.com/stephenh/ts-proto/issues/1127)) ([86637fa](https://github.com/stephenh/ts-proto/commit/86637fa6c39ddcc09cab3c486c34b7a52adaf694))
+
+## [2.2.4](https://github.com/stephenh/ts-proto/compare/v2.2.3...v2.2.4) (2024-10-15)
+
+
+### Bug Fixes
+
+* Unbreak a use case for [#1110](https://github.com/stephenh/ts-proto/issues/1110) / fix for [#1121](https://github.com/stephenh/ts-proto/issues/1121) ([#1123](https://github.com/stephenh/ts-proto/issues/1123)) ([476e99b](https://github.com/stephenh/ts-proto/commit/476e99bcbc651cec1946d0dbad09dc9aea3224ff))
+
+## [2.2.3](https://github.com/stephenh/ts-proto/compare/v2.2.2...v2.2.3) (2024-10-06)
+
+
+### Bug Fixes
+
+* Don't fail on Function message names ([#1119](https://github.com/stephenh/ts-proto/issues/1119)) ([da048a1](https://github.com/stephenh/ts-proto/commit/da048a1e78cdc1baa228700c40a944652998d2a1)), closes [#1110](https://github.com/stephenh/ts-proto/issues/1110)
+
 ## [2.2.2](https://github.com/stephenh/ts-proto/compare/v2.2.1...v2.2.2) (2024-10-04)
 
 
