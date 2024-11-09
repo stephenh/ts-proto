@@ -105,14 +105,14 @@ function createBaseOptionalsTest(): OptionalsTest {
     repDescription: [],
     repData: [],
     repFloat: [],
-    optId: undefined,
-    optChild: undefined,
-    optState: undefined,
-    optLong: undefined,
-    optTruth: undefined,
-    optDescription: undefined,
-    optData: undefined,
-    optFloat: undefined,
+    optId: 0,
+    optChild: createBaseChild(),
+    optState: 0,
+    optLong: 0,
+    optTruth: false,
+    optDescription: "",
+    optData: new Uint8Array(0),
+    optFloat: 0,
     reqId: 0,
     reqChild: createBaseChild(),
     reqState: 0,
@@ -128,13 +128,13 @@ function createBaseOptionalsTest(): OptionalsTest {
     reqDefvalDescription: "Some description",
     reqDefvalData: new Uint8Array(0),
     reqDefvalFloat: 0.12354,
-    optDefvalId: undefined,
-    optDefvalState: undefined,
-    optDefvalLong: undefined,
-    optDefvalTruth: undefined,
-    optDefvalDescription: undefined,
-    optDefvalData: undefined,
-    optDefvalFloat: undefined,
+    optDefvalId: 100,
+    optDefvalState: 2,
+    optDefvalLong: 7812378193,
+    optDefvalTruth: true,
+    optDefvalDescription: "Some description",
+    optDefvalData: new Uint8Array(0),
+    optDefvalFloat: 0.12354,
     translations: {},
   };
 }
@@ -175,7 +175,7 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
       writer.float(v);
     }
     writer.join();
-    if (message.optId !== undefined) {
+    if (message.optId !== 0) {
       writer.uint32(88).int32(message.optId);
     }
     if (message.optChild !== undefined) {
@@ -184,19 +184,19 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
     if (message.optState !== 0) {
       writer.uint32(104).int32(message.optState);
     }
-    if (message.optLong !== undefined) {
+    if (message.optLong !== 0) {
       writer.uint32(112).int64(message.optLong);
     }
-    if (message.optTruth !== undefined) {
+    if (message.optTruth !== false) {
       writer.uint32(120).bool(message.optTruth);
     }
-    if (message.optDescription !== undefined) {
+    if (message.optDescription !== "") {
       writer.uint32(130).string(message.optDescription);
     }
     if (message.optData.length !== 0) {
       writer.uint32(138).bytes(message.optData);
     }
-    if (message.optFloat !== undefined) {
+    if (message.optFloat !== 0) {
       writer.uint32(149).float(message.optFloat);
     }
     if (message.reqId !== 0) {
@@ -244,25 +244,25 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
     if (message.reqDefvalFloat !== 0.12354) {
       writer.uint32(309).float(message.reqDefvalFloat);
     }
-    if (message.optDefvalId !== undefined) {
+    if (message.optDefvalId !== 100) {
       writer.uint32(328).int32(message.optDefvalId);
     }
-    if (message.optDefvalState !== 0) {
+    if (message.optDefvalState !== 2) {
       writer.uint32(344).int32(message.optDefvalState);
     }
-    if (message.optDefvalLong !== undefined) {
+    if (message.optDefvalLong !== 7812378193) {
       writer.uint32(352).int64(message.optDefvalLong);
     }
-    if (message.optDefvalTruth !== undefined) {
+    if (message.optDefvalTruth !== true) {
       writer.uint32(360).bool(message.optDefvalTruth);
     }
-    if (message.optDefvalDescription !== undefined) {
+    if (message.optDefvalDescription !== "Some description") {
       writer.uint32(370).string(message.optDefvalDescription);
     }
     if (message.optDefvalData.length !== 0) {
       writer.uint32(378).bytes(message.optDefvalData);
     }
-    if (message.optDefvalFloat !== undefined) {
+    if (message.optDefvalFloat !== 0.12354) {
       writer.uint32(389).float(message.optDefvalFloat);
     }
     Object.entries(message.translations).forEach(([key, value]) => {
@@ -735,7 +735,7 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
     if (message.repFloat?.length) {
       obj.repFloat = message.repFloat;
     }
-    if (message.optId !== undefined) {
+    if (message.optId !== 0) {
       obj.optId = Math.round(message.optId);
     }
     if (message.optChild !== undefined) {
@@ -744,19 +744,19 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
     if (message.optState !== 0) {
       obj.optState = stateEnumToJSON(message.optState);
     }
-    if (message.optLong !== undefined) {
+    if (message.optLong !== 0) {
       obj.optLong = Math.round(message.optLong);
     }
-    if (message.optTruth !== undefined) {
+    if (message.optTruth !== false) {
       obj.optTruth = message.optTruth;
     }
-    if (message.optDescription !== undefined) {
+    if (message.optDescription !== "") {
       obj.optDescription = message.optDescription;
     }
     if (message.optData.length !== 0) {
       obj.optData = base64FromBytes(message.optData);
     }
-    if (message.optFloat !== undefined) {
+    if (message.optFloat !== 0) {
       obj.optFloat = message.optFloat;
     }
     if (message.reqId !== 0) {
@@ -804,25 +804,25 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
     if (message.reqDefvalFloat !== 0.12354) {
       obj.reqDefvalFloat = message.reqDefvalFloat;
     }
-    if (message.optDefvalId !== undefined) {
+    if (message.optDefvalId !== 100) {
       obj.optDefvalId = Math.round(message.optDefvalId);
     }
-    if (message.optDefvalState !== 0) {
+    if (message.optDefvalState !== 2) {
       obj.optDefvalState = stateEnumToJSON(message.optDefvalState);
     }
-    if (message.optDefvalLong !== undefined) {
+    if (message.optDefvalLong !== 7812378193) {
       obj.optDefvalLong = Math.round(message.optDefvalLong);
     }
-    if (message.optDefvalTruth !== undefined) {
+    if (message.optDefvalTruth !== true) {
       obj.optDefvalTruth = message.optDefvalTruth;
     }
-    if (message.optDefvalDescription !== undefined) {
+    if (message.optDefvalDescription !== "Some description") {
       obj.optDefvalDescription = message.optDefvalDescription;
     }
     if (message.optDefvalData.length !== 0) {
       obj.optDefvalData = base64FromBytes(message.optDefvalData);
     }
-    if (message.optDefvalFloat !== undefined) {
+    if (message.optDefvalFloat !== 0.12354) {
       obj.optDefvalFloat = message.optDefvalFloat;
     }
     if (message.translations) {
@@ -850,16 +850,16 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
     message.repDescription = object.repDescription?.map((e) => e) || [];
     message.repData = object.repData?.map((e) => e) || [];
     message.repFloat = object.repFloat?.map((e) => e) || [];
-    message.optId = object.optId ?? undefined;
+    message.optId = object.optId ?? 0;
     message.optChild = (object.optChild !== undefined && object.optChild !== null)
       ? Child.fromPartial(object.optChild)
-      : undefined;
-    message.optState = object.optState ?? undefined;
-    message.optLong = object.optLong ?? undefined;
-    message.optTruth = object.optTruth ?? undefined;
-    message.optDescription = object.optDescription ?? undefined;
-    message.optData = object.optData ?? undefined;
-    message.optFloat = object.optFloat ?? undefined;
+      : createBaseChild();
+    message.optState = object.optState ?? 0;
+    message.optLong = object.optLong ?? 0;
+    message.optTruth = object.optTruth ?? false;
+    message.optDescription = object.optDescription ?? "";
+    message.optData = object.optData ?? new Uint8Array(0);
+    message.optFloat = object.optFloat ?? 0;
     message.reqId = object.reqId ?? 0;
     message.reqChild = (object.reqChild !== undefined && object.reqChild !== null)
       ? Child.fromPartial(object.reqChild)
@@ -877,13 +877,13 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
     message.reqDefvalDescription = object.reqDefvalDescription ?? "Some description";
     message.reqDefvalData = object.reqDefvalData ?? new Uint8Array(0);
     message.reqDefvalFloat = object.reqDefvalFloat ?? 0.12354;
-    message.optDefvalId = object.optDefvalId ?? undefined;
-    message.optDefvalState = object.optDefvalState ?? undefined;
-    message.optDefvalLong = object.optDefvalLong ?? undefined;
-    message.optDefvalTruth = object.optDefvalTruth ?? undefined;
-    message.optDefvalDescription = object.optDefvalDescription ?? undefined;
-    message.optDefvalData = object.optDefvalData ?? undefined;
-    message.optDefvalFloat = object.optDefvalFloat ?? undefined;
+    message.optDefvalId = object.optDefvalId ?? 100;
+    message.optDefvalState = object.optDefvalState ?? 2;
+    message.optDefvalLong = object.optDefvalLong ?? 7812378193;
+    message.optDefvalTruth = object.optDefvalTruth ?? true;
+    message.optDefvalDescription = object.optDefvalDescription ?? "Some description";
+    message.optDefvalData = object.optDefvalData ?? new Uint8Array(0);
+    message.optDefvalFloat = object.optDefvalFloat ?? 0.12354;
     message.translations = Object.entries(object.translations ?? {}).reduce<{ [key: string]: string }>(
       (acc, [key, value]) => {
         if (value !== undefined) {
@@ -903,10 +903,10 @@ function createBaseOptionalsTest_TranslationsEntry(): OptionalsTest_Translations
 
 export const OptionalsTest_TranslationsEntry: MessageFns<OptionalsTest_TranslationsEntry> = {
   encode(message: OptionalsTest_TranslationsEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.key !== undefined) {
+    if (message.key !== "") {
       writer.uint32(10).string(message.key);
     }
-    if (message.value !== undefined) {
+    if (message.value !== "") {
       writer.uint32(18).string(message.value);
     }
     return writer;
@@ -953,10 +953,10 @@ export const OptionalsTest_TranslationsEntry: MessageFns<OptionalsTest_Translati
 
   toJSON(message: OptionalsTest_TranslationsEntry): unknown {
     const obj: any = {};
-    if (message.key !== undefined) {
+    if (message.key !== "") {
       obj.key = message.key;
     }
-    if (message.value !== undefined) {
+    if (message.value !== "") {
       obj.value = message.value;
     }
     return obj;

@@ -216,7 +216,12 @@ export function defaultValue(ctx: Context, field: FieldDescriptorProto): any {
 
   if (
     options.noDefaultsForOptionals ||
-    (!ctx.currentFile.isProto3Syntax && field.label === FieldDescriptorProto_Label.LABEL_OPTIONAL))
+    (
+      !ctx.currentFile.isProto3Syntax &&
+      field.label === FieldDescriptorProto_Label.LABEL_OPTIONAL &&
+      !ctx.options.disableProto2Optionals
+    )
+  )
   {
     return options.useNullAsOptional ? null : undefined;
   }
