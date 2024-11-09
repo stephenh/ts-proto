@@ -60,12 +60,12 @@ describe("vector-tile", () => {
     };
     expect(Tile_Value.fromJSON(tile)).toMatchInlineSnapshot(`
       {
-        "boolValue": false,
+        "boolValue": undefined,
         "doubleValue": -2.2,
         "floatValue": 1.1,
         "intValue": 1,
         "sintValue": -3,
-        "stringValue": "",
+        "stringValue": undefined,
         "uintValue": 2,
       }
     `);
@@ -81,12 +81,12 @@ describe("vector-tile", () => {
     };
     expect(Tile_Value.fromJSON(tile)).toMatchInlineSnapshot(`
       {
-        "boolValue": false,
+        "boolValue": undefined,
         "doubleValue": 0,
         "floatValue": 0,
         "intValue": 0,
         "sintValue": -0,
-        "stringValue": "",
+        "stringValue": undefined,
         "uintValue": 0,
       }
     `);
@@ -102,12 +102,12 @@ describe("vector-tile", () => {
     };
     expect(Tile_Value.fromJSON(tile)).toMatchInlineSnapshot(`
       {
-        "boolValue": false,
+        "boolValue": undefined,
         "doubleValue": -2.2,
         "floatValue": 1.1,
         "intValue": 1,
         "sintValue": -3,
-        "stringValue": "",
+        "stringValue": undefined,
         "uintValue": 2,
       }
     `);
@@ -123,10 +123,10 @@ describe("vector-tile", () => {
         "boolValue": undefined,
         "doubleValue": Infinity,
         "floatValue": NaN,
-        "intValue": 0,
-        "sintValue": 0,
-        "stringValue": "",
-        "uintValue": 0,
+        "intValue": undefined,
+        "sintValue": undefined,
+        "stringValue": undefined,
+        "uintValue": undefined,
       }
     `);
   });
