@@ -2378,7 +2378,11 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
             ? ${readSnippet(code`${jsonProperty}`)}
             : ${fallback},
         `);
-      } else if (field.label === FieldDescriptorProto_Label.LABEL_REQUIRED || keyValuePair) {
+      } else if (
+        field.label === FieldDescriptorProto_Label.LABEL_REQUIRED ||
+        keyValuePair ||
+        ctx.options.disableProto2Optionals
+      ) {
         chunks.push(code`${fieldKey}: ${
           readSnippet(code`${ctx.utils.assertSet}('${fullName}.${fieldName}', ${jsonProperty})`)
         },`);
