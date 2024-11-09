@@ -126,10 +126,10 @@ function createBaseMapBigInt_MapEntry(): MapBigInt_MapEntry {
 
 export const MapBigInt_MapEntry: MessageFns<MapBigInt_MapEntry> = {
   encode(message: MapBigInt_MapEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (!message.key.equals(undefined)) {
+    if (message.key !== undefined) {
       writer.uint32(9).fixed64(message.key.toString());
     }
-    if (!message.value.equals(undefined)) {
+    if (message.value !== undefined) {
       writer.uint32(16).int64(message.value.toString());
     }
     if (message._unknownFields !== undefined) {
@@ -196,10 +196,10 @@ export const MapBigInt_MapEntry: MessageFns<MapBigInt_MapEntry> = {
 
   toJSON(message: MapBigInt_MapEntry): unknown {
     const obj: any = {};
-    if (!message.key.equals(undefined)) {
+    if (message.key !== undefined) {
       obj.key = (message.key || undefined).toString();
     }
-    if (!message.value.equals(undefined)) {
+    if (message.value !== undefined) {
       obj.value = (message.value || undefined).toString();
     }
     return obj;

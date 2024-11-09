@@ -351,7 +351,7 @@ export function notDefaultCheck(
     case FieldDescriptorProto_Type.TYPE_INT64:
     case FieldDescriptorProto_Type.TYPE_SINT64:
     case FieldDescriptorProto_Type.TYPE_SFIXED64:
-      if (options.forceLong === LongOption.LONG && !isJsTypeFieldOption(options, field)) {
+      if (options.forceLong === LongOption.LONG && !isJsTypeFieldOption(options, field) && ctx.currentFile.isProto3Syntax) {
         return code`${maybeNotUndefinedAnd} !${place}.equals(${defaultValue(ctx, field)})`;
       } else {
         return code`${maybeNotUndefinedAnd} ${place} !== ${defaultValue(ctx, field)}`;

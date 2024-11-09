@@ -508,7 +508,7 @@ export const long: Extension<Long> = {
   packed: false,
   encode: (value: Long): Uint8Array[] => {
     const encoded: Uint8Array[] = [];
-    if (value !== undefined && !value.equals(undefined)) {
+    if (value !== undefined && value !== undefined) {
       const writer = new BinaryWriter();
       writer.int64(value.toString());
       encoded.push(writer.finish());
@@ -528,7 +528,7 @@ export const fixed: Extension<Long> = {
   packed: false,
   encode: (value: Long): Uint8Array[] => {
     const encoded: Uint8Array[] = [];
-    if (value !== undefined && !value.equals(undefined)) {
+    if (value !== undefined && value !== undefined) {
       const writer = new BinaryWriter();
       writer.fixed64(value.toString());
       encoded.push(writer.finish());

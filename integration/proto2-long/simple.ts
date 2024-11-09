@@ -93,7 +93,8 @@ export interface OptionalsTest_TranslationsEntry {
   value: string;
 }
 
-export interface Child {}
+export interface Child {
+}
 
 function createBaseOptionalsTest(): OptionalsTest {
   return {
@@ -184,7 +185,7 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
     if (message.optState !== undefined && message.optState !== 0) {
       writer.uint32(104).int32(message.optState);
     }
-    if (message.optLong !== undefined && !message.optLong.equals(undefined)) {
+    if (message.optLong !== undefined && message.optLong !== undefined) {
       writer.uint32(112).int64(message.optLong.toString());
     }
     if (message.optTruth !== undefined && message.optTruth !== undefined) {
@@ -208,7 +209,7 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
     if (message.reqState !== 0) {
       writer.uint32(184).int32(message.reqState);
     }
-    if (!message.reqLong.equals(Long.ZERO)) {
+    if (message.reqLong !== Long.ZERO) {
       writer.uint32(192).int64(message.reqLong.toString());
     }
     if (message.reqTruth !== false) {
@@ -229,7 +230,7 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
     if (message.reqDefvalState !== 2) {
       writer.uint32(264).int32(message.reqDefvalState);
     }
-    if (!message.reqDefvalLong.equals(Long.fromNumber(7812378193))) {
+    if (message.reqDefvalLong !== Long.fromNumber(7812378193)) {
       writer.uint32(272).int64(message.reqDefvalLong.toString());
     }
     if (message.reqDefvalTruth !== true) {
@@ -250,7 +251,7 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
     if (message.optDefvalState !== undefined && message.optDefvalState !== 0) {
       writer.uint32(344).int32(message.optDefvalState);
     }
-    if (message.optDefvalLong !== undefined && !message.optDefvalLong.equals(undefined)) {
+    if (message.optDefvalLong !== undefined && message.optDefvalLong !== undefined) {
       writer.uint32(352).int64(message.optDefvalLong.toString());
     }
     if (message.optDefvalTruth !== undefined && message.optDefvalTruth !== undefined) {
@@ -702,9 +703,9 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
       optDefvalFloat: isSet(object.optDefvalFloat) ? globalThis.Number(object.optDefvalFloat) : undefined,
       translations: isObject(object.translations)
         ? Object.entries(object.translations).reduce<{ [key: string]: string }>((acc, [key, value]) => {
-            acc[key] = String(value);
-            return acc;
-          }, {})
+          acc[key] = String(value);
+          return acc;
+        }, {})
         : {},
     };
   },
@@ -744,7 +745,7 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
     if (message.optState !== undefined && message.optState !== 0) {
       obj.optState = stateEnumToJSON(message.optState);
     }
-    if (message.optLong !== undefined && !message.optLong.equals(undefined)) {
+    if (message.optLong !== undefined && message.optLong !== undefined) {
       obj.optLong = (message.optLong || undefined).toString();
     }
     if (message.optTruth !== undefined && message.optTruth !== undefined) {
@@ -768,7 +769,7 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
     if (message.reqState !== 0) {
       obj.reqState = stateEnumToJSON(message.reqState);
     }
-    if (!message.reqLong.equals(Long.ZERO)) {
+    if (message.reqLong !== Long.ZERO) {
       obj.reqLong = (message.reqLong || Long.ZERO).toString();
     }
     if (message.reqTruth !== false) {
@@ -789,7 +790,7 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
     if (message.reqDefvalState !== 2) {
       obj.reqDefvalState = stateEnumToJSON(message.reqDefvalState);
     }
-    if (!message.reqDefvalLong.equals(Long.fromNumber(7812378193))) {
+    if (message.reqDefvalLong !== Long.fromNumber(7812378193)) {
       obj.reqDefvalLong = (message.reqDefvalLong || Long.fromNumber(7812378193)).toString();
     }
     if (message.reqDefvalTruth !== true) {
@@ -810,7 +811,7 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
     if (message.optDefvalState !== undefined && message.optDefvalState !== 0) {
       obj.optDefvalState = stateEnumToJSON(message.optDefvalState);
     }
-    if (message.optDefvalLong !== undefined && !message.optDefvalLong.equals(undefined)) {
+    if (message.optDefvalLong !== undefined && message.optDefvalLong !== undefined) {
       obj.optDefvalLong = (message.optDefvalLong || undefined).toString();
     }
     if (message.optDefvalTruth !== undefined && message.optDefvalTruth !== undefined) {
@@ -851,43 +852,43 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
     message.repData = object.repData?.map((e) => e) || [];
     message.repFloat = object.repFloat?.map((e) => e) || [];
     message.optId = object.optId ?? undefined;
-    message.optChild =
-      object.optChild !== undefined && object.optChild !== null ? Child.fromPartial(object.optChild) : undefined;
+    message.optChild = (object.optChild !== undefined && object.optChild !== null)
+      ? Child.fromPartial(object.optChild)
+      : undefined;
     message.optState = object.optState ?? undefined;
-    message.optLong =
-      object.optLong !== undefined && object.optLong !== null ? Long.fromValue(object.optLong) : undefined;
+    message.optLong = (object.optLong !== undefined && object.optLong !== null)
+      ? Long.fromValue(object.optLong)
+      : undefined;
     message.optTruth = object.optTruth ?? undefined;
     message.optDescription = object.optDescription ?? undefined;
     message.optData = object.optData ?? undefined;
     message.optFloat = object.optFloat ?? undefined;
     message.reqId = object.reqId ?? 0;
-    message.reqChild =
-      object.reqChild !== undefined && object.reqChild !== null
-        ? Child.fromPartial(object.reqChild)
-        : createBaseChild();
+    message.reqChild = (object.reqChild !== undefined && object.reqChild !== null)
+      ? Child.fromPartial(object.reqChild)
+      : createBaseChild();
     message.reqState = object.reqState ?? 0;
-    message.reqLong =
-      object.reqLong !== undefined && object.reqLong !== null ? Long.fromValue(object.reqLong) : Long.ZERO;
+    message.reqLong = (object.reqLong !== undefined && object.reqLong !== null)
+      ? Long.fromValue(object.reqLong)
+      : Long.ZERO;
     message.reqTruth = object.reqTruth ?? false;
     message.reqDescription = object.reqDescription ?? "";
     message.reqData = object.reqData ?? new Uint8Array(0);
     message.reqFloat = object.reqFloat ?? 0;
     message.reqDefvalId = object.reqDefvalId ?? 100;
     message.reqDefvalState = object.reqDefvalState ?? 2;
-    message.reqDefvalLong =
-      object.reqDefvalLong !== undefined && object.reqDefvalLong !== null
-        ? Long.fromValue(object.reqDefvalLong)
-        : Long.fromNumber(7812378193);
+    message.reqDefvalLong = (object.reqDefvalLong !== undefined && object.reqDefvalLong !== null)
+      ? Long.fromValue(object.reqDefvalLong)
+      : Long.fromNumber(7812378193);
     message.reqDefvalTruth = object.reqDefvalTruth ?? true;
     message.reqDefvalDescription = object.reqDefvalDescription ?? "Some description";
     message.reqDefvalData = object.reqDefvalData ?? new Uint8Array(0);
     message.reqDefvalFloat = object.reqDefvalFloat ?? 0.12354;
     message.optDefvalId = object.optDefvalId ?? undefined;
     message.optDefvalState = object.optDefvalState ?? undefined;
-    message.optDefvalLong =
-      object.optDefvalLong !== undefined && object.optDefvalLong !== null
-        ? Long.fromValue(object.optDefvalLong)
-        : undefined;
+    message.optDefvalLong = (object.optDefvalLong !== undefined && object.optDefvalLong !== null)
+      ? Long.fromValue(object.optDefvalLong)
+      : undefined;
     message.optDefvalTruth = object.optDefvalTruth ?? undefined;
     message.optDefvalDescription = object.optDefvalDescription ?? undefined;
     message.optDefvalData = object.optDefvalData ?? undefined;
@@ -1053,21 +1054,14 @@ function base64FromBytes(arr: Uint8Array): string {
 
 type Builtin = Date | Function | Uint8Array | string | number | boolean | undefined;
 
-export type DeepPartial<T> = T extends Builtin
-  ? T
-  : T extends Long
-  ? string | number | Long
-  : T extends globalThis.Array<infer U>
-  ? globalThis.Array<DeepPartial<U>>
-  : T extends ReadonlyArray<infer U>
-  ? ReadonlyArray<DeepPartial<U>>
-  : T extends {}
-  ? { [K in keyof T]?: DeepPartial<T[K]> }
+export type DeepPartial<T> = T extends Builtin ? T
+  : T extends Long ? string | number | Long : T extends globalThis.Array<infer U> ? globalThis.Array<DeepPartial<U>>
+  : T extends ReadonlyArray<infer U> ? ReadonlyArray<DeepPartial<U>>
+  : T extends {} ? { [K in keyof T]?: DeepPartial<T[K]> }
   : Partial<T>;
 
 type KeysOfUnion<T> = T extends T ? keyof T : never;
-export type Exact<P, I extends P> = P extends Builtin
-  ? P
+export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
 function isObject(value: any): boolean {
