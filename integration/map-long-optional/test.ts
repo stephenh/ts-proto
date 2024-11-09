@@ -210,8 +210,8 @@ export const MapBigInt_MapEntry: MessageFns<MapBigInt_MapEntry> = {
   },
   fromPartial<I extends Exact<DeepPartial<MapBigInt_MapEntry>, I>>(object: I): MapBigInt_MapEntry {
     const message = createBaseMapBigInt_MapEntry();
-    message.key = (object.key !== undefined && object.key !== null) ? Long.fromValue(object.key) : undefined;
-    message.value = (object.value !== undefined && object.value !== null) ? Long.fromValue(object.value) : undefined;
+    message.key = (object.key !== undefined && object.key !== null) ? Long.fromValue(object.key) : Long.UZERO;
+    message.value = (object.value !== undefined && object.value !== null) ? Long.fromValue(object.value) : Long.ZERO;
     return message;
   },
 };

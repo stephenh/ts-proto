@@ -2759,23 +2759,24 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
           ${oneofNameWithMessage} = { $case: '${fieldName}', ${valueName}: ${v} };
         }
       `);
-    } else if (readSnippet(`x`).toCodeString([]) == "x") {
-      let fallback 
+    } else {
+      let fallback;
 
       if (keyValuePair) {
-        fallback = defaultValue(ctx, { ...field, label: FieldDescriptorProto_Label.LABEL_REQUIRED })
+        fallback = defaultValue(ctx, { ...field, label: FieldDescriptorProto_Label.LABEL_REQUIRED });
       } else {
         fallback = isWithinOneOf(field) || noDefaultValue ? "undefined" : defaultValue(ctx, field);
       }
 
-      chunks.push(code`${messageProperty} = ${objectProperty} ?? ${fallback};`);
-    } else {
-      const fallback = isWithinOneOf(field) || noDefaultValue ? "undefined" : defaultValue(ctx, field);
-      chunks.push(code`
-        ${messageProperty} = (${objectProperty} !== undefined && ${objectProperty} !== null)
-          ? ${readSnippet(`${objectProperty}`)}
-          : ${fallback};
-      `);
+      if (readSnippet(`x`).toCodeString([]) == "x") {
+        chunks.push(code`${messageProperty} = ${objectProperty} ?? ${fallback};`);
+      } else {
+        chunks.push(code`
+          ${messageProperty} = (${objectProperty} !== undefined && ${objectProperty} !== null)
+            ? ${readSnippet(`${objectProperty}`)}
+            : ${fallback};
+        `);
+      }
     }
   });
 
