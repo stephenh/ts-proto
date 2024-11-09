@@ -161,21 +161,21 @@ export interface CodeGeneratorResponse_File {
 }
 
 function createBaseVersion(): Version {
-  return { major: 0, minor: 0, patch: 0, suffix: "", _unknownFields: {} };
+  return { major: undefined, minor: undefined, patch: undefined, suffix: undefined, _unknownFields: {} };
 }
 
 export const Version: MessageFns<Version> = {
   encode(message: Version, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.major !== undefined && message.major !== 0) {
+    if (message.major !== undefined && message.major !== undefined) {
       writer.uint32(8).int32(message.major);
     }
-    if (message.minor !== undefined && message.minor !== 0) {
+    if (message.minor !== undefined && message.minor !== undefined) {
       writer.uint32(16).int32(message.minor);
     }
-    if (message.patch !== undefined && message.patch !== 0) {
+    if (message.patch !== undefined && message.patch !== undefined) {
       writer.uint32(24).int32(message.patch);
     }
-    if (message.suffix !== undefined && message.suffix !== "") {
+    if (message.suffix !== undefined && message.suffix !== undefined) {
       writer.uint32(34).string(message.suffix);
     }
     if (message._unknownFields !== undefined) {
@@ -247,7 +247,7 @@ export const Version: MessageFns<Version> = {
 };
 
 function createBaseCodeGeneratorRequest(): CodeGeneratorRequest {
-  return { fileToGenerate: [], parameter: "", protoFile: [], compilerVersion: undefined, _unknownFields: {} };
+  return { fileToGenerate: [], parameter: undefined, protoFile: [], compilerVersion: undefined, _unknownFields: {} };
 }
 
 export const CodeGeneratorRequest: MessageFns<CodeGeneratorRequest> = {
@@ -255,7 +255,7 @@ export const CodeGeneratorRequest: MessageFns<CodeGeneratorRequest> = {
     for (const v of message.fileToGenerate) {
       writer.uint32(10).string(v!);
     }
-    if (message.parameter !== undefined && message.parameter !== "") {
+    if (message.parameter !== undefined && message.parameter !== undefined) {
       writer.uint32(18).string(message.parameter);
     }
     for (const v of message.protoFile) {
@@ -333,15 +333,15 @@ export const CodeGeneratorRequest: MessageFns<CodeGeneratorRequest> = {
 };
 
 function createBaseCodeGeneratorResponse(): CodeGeneratorResponse {
-  return { error: "", supportedFeatures: 0, file: [], _unknownFields: {} };
+  return { error: undefined, supportedFeatures: undefined, file: [], _unknownFields: {} };
 }
 
 export const CodeGeneratorResponse: MessageFns<CodeGeneratorResponse> = {
   encode(message: CodeGeneratorResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.error !== undefined && message.error !== "") {
+    if (message.error !== undefined && message.error !== undefined) {
       writer.uint32(10).string(message.error);
     }
-    if (message.supportedFeatures !== undefined && message.supportedFeatures !== 0) {
+    if (message.supportedFeatures !== undefined && message.supportedFeatures !== undefined) {
       writer.uint32(16).uint64(message.supportedFeatures);
     }
     for (const v of message.file) {
@@ -408,18 +408,24 @@ export const CodeGeneratorResponse: MessageFns<CodeGeneratorResponse> = {
 };
 
 function createBaseCodeGeneratorResponse_File(): CodeGeneratorResponse_File {
-  return { name: "", insertionPoint: "", content: "", generatedCodeInfo: undefined, _unknownFields: {} };
+  return {
+    name: undefined,
+    insertionPoint: undefined,
+    content: undefined,
+    generatedCodeInfo: undefined,
+    _unknownFields: {},
+  };
 }
 
 export const CodeGeneratorResponse_File: MessageFns<CodeGeneratorResponse_File> = {
   encode(message: CodeGeneratorResponse_File, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.name !== undefined && message.name !== "") {
+    if (message.name !== undefined && message.name !== undefined) {
       writer.uint32(10).string(message.name);
     }
-    if (message.insertionPoint !== undefined && message.insertionPoint !== "") {
+    if (message.insertionPoint !== undefined && message.insertionPoint !== undefined) {
       writer.uint32(18).string(message.insertionPoint);
     }
-    if (message.content !== undefined && message.content !== "") {
+    if (message.content !== undefined && message.content !== undefined) {
       writer.uint32(122).string(message.content);
     }
     if (message.generatedCodeInfo !== undefined) {

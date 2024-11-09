@@ -7,7 +7,7 @@ import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 export const protobufPackage = "";
 
 export interface TPartialMessage {
-  field?: string | undefined;
+  field?: string;
 }
 
 export interface TPartial {
@@ -62,7 +62,7 @@ export const TPartialMessage: MessageFns<TPartialMessage> = {
   },
 
   fromJSON(object: any): TPartialMessage {
-    return { field: isSet(object.field) ? globalThis.String(object.field) : undefined };
+    return { field: globalThis.String(assertSet("TPartialMessage.field", object.field)) };
   },
 
   toJSON(message: TPartialMessage): unknown {
@@ -89,10 +89,10 @@ function createBaseTPartial(): TPartial {
 
 export const TPartial: MessageFns<TPartial> = {
   encode(message: TPartial, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.number !== undefined && message.number !== 0) {
+    if (message.number !== undefined && message.number !== undefined) {
       writer.uint32(8).int32(message.number);
     }
-    if (message.string !== undefined && message.string !== "") {
+    if (message.string !== undefined && message.string !== undefined) {
       writer.uint32(18).string(message.string);
     }
     Object.entries(message.map || {}).forEach(([key, value]) => {
@@ -252,10 +252,10 @@ export const TPartial: MessageFns<TPartial> = {
 
   toJSON(message: TPartial): unknown {
     const obj: any = {};
-    if (message.number !== undefined && message.number !== 0) {
+    if (message.number !== undefined && message.number !== undefined) {
       obj.number = Math.round(message.number);
     }
-    if (message.string !== undefined && message.string !== "") {
+    if (message.string !== undefined && message.string !== undefined) {
       obj.string = message.string;
     }
     if (message.map) {
@@ -313,10 +313,10 @@ function createBaseTPartial_MapEntry(): TPartial_MapEntry {
 
 export const TPartial_MapEntry: MessageFns<TPartial_MapEntry> = {
   encode(message: TPartial_MapEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.key !== "") {
+    if (message.key !== undefined) {
       writer.uint32(10).string(message.key);
     }
-    if (message.value !== "") {
+    if (message.value !== undefined) {
       writer.uint32(18).string(message.value);
     }
     return writer;
@@ -356,17 +356,17 @@ export const TPartial_MapEntry: MessageFns<TPartial_MapEntry> = {
 
   fromJSON(object: any): TPartial_MapEntry {
     return {
-      key: isSet(object.key) ? globalThis.String(object.key) : "",
-      value: isSet(object.value) ? globalThis.String(object.value) : "",
+      key: globalThis.String(assertSet("TPartial_MapEntry.key", object.key)),
+      value: globalThis.String(assertSet("TPartial_MapEntry.value", object.value)),
     };
   },
 
   toJSON(message: TPartial_MapEntry): unknown {
     const obj: any = {};
-    if (message.key !== "") {
+    if (message.key !== undefined) {
       obj.key = message.key;
     }
-    if (message.value !== "") {
+    if (message.value !== undefined) {
       obj.value = message.value;
     }
     return obj;
@@ -401,6 +401,14 @@ function isObject(value: any): boolean {
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+function assertSet<T>(field: string, value: T | undefined): T {
+  if (!isSet(value)) {
+    throw new TypeError(`Required field ${field} is not set`);
+  }
+
+  return value as T;
 }
 
 export interface MessageFns<T> {

@@ -92,9 +92,9 @@ export const Proto2TestMessage: MessageFns<Proto2TestMessage> = {
 
   fromJSON(object: any): Proto2TestMessage {
     return {
-      boolValue: isSet(object.boolValue) ? globalThis.Boolean(object.boolValue) : null,
-      intValue: isSet(object.intValue) ? globalThis.Number(object.intValue) : null,
-      stringValue: isSet(object.stringValue) ? globalThis.String(object.stringValue) : null,
+      boolValue: isSet(object.boolValue) ? globalThis.Boolean(object.boolValue) : undefined,
+      intValue: isSet(object.intValue) ? globalThis.Number(object.intValue) : undefined,
+      stringValue: isSet(object.stringValue) ? globalThis.String(object.stringValue) : undefined,
       mapValue: isObject(object.mapValue)
         ? Object.entries(object.mapValue).reduce<{ [key: string]: string }>((acc, [key, value]) => {
           acc[key] = String(value);
@@ -194,8 +194,8 @@ export const Proto2TestMessage_MapValueEntry: MessageFns<Proto2TestMessage_MapVa
 
   fromJSON(object: any): Proto2TestMessage_MapValueEntry {
     return {
-      key: isSet(object.key) ? globalThis.String(object.key) : null,
-      value: isSet(object.value) ? globalThis.String(object.value) : null,
+      key: globalThis.String(assertSet("Proto2TestMessage_MapValueEntry.key", object.key)),
+      value: globalThis.String(assertSet("Proto2TestMessage_MapValueEntry.value", object.value)),
     };
   },
 
@@ -241,6 +241,14 @@ function isObject(value: any): boolean {
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+function assertSet<T>(field: string, value: T | undefined): T {
+  if (!isSet(value)) {
+    throw new TypeError(`Required field ${field} is not set`);
+  }
+
+  return value as T;
 }
 
 export interface MessageFns<T> {

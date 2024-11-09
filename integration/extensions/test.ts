@@ -47,12 +47,12 @@ export function enumToJSON(object: Enum): string {
 }
 
 export interface Extendable {
-  field?: string | undefined;
+  field?: string;
   _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
 export interface Nested {
-  field?: string | undefined;
+  field?: string;
   _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
@@ -171,7 +171,7 @@ export const Extendable: MessageFns<Extendable> & ExtensionFns<Extendable> = {
   },
 
   fromJSON(object: any): Extendable {
-    return { field: isSet(object.field) ? globalThis.String(object.field) : undefined };
+    return { field: globalThis.String(assertSet("Extendable.field", object.field)) };
   },
 
   toJSON(message: Extendable): unknown {
@@ -274,7 +274,7 @@ export const Nested: MessageFns<Nested> & ExtensionHolder<"message", Nested[]> =
   },
 
   fromJSON(object: any): Nested {
-    return { field: isSet(object.field) ? globalThis.String(object.field) : undefined };
+    return { field: globalThis.String(assertSet("Nested.field", object.field)) };
   },
 
   toJSON(message: Nested): unknown {
@@ -301,10 +301,10 @@ function createBaseGroup(): Group {
 
 export const Group: MessageFns<Group> = {
   encode(message: Group, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.name !== undefined && message.name !== "") {
+    if (message.name !== undefined && message.name !== undefined) {
       writer.uint32(10).string(message.name);
     }
-    if (message.value !== undefined && message.value !== "") {
+    if (message.value !== undefined && message.value !== undefined) {
       writer.uint32(18).string(message.value);
     }
     if (message._unknownFields !== undefined) {
@@ -371,10 +371,10 @@ export const Group: MessageFns<Group> = {
 
   toJSON(message: Group): unknown {
     const obj: any = {};
-    if (message.name !== undefined && message.name !== "") {
+    if (message.name !== undefined && message.name !== undefined) {
       obj.name = message.name;
     }
-    if (message.value !== undefined && message.value !== "") {
+    if (message.value !== undefined && message.value !== undefined) {
       obj.value = message.value;
     }
     return obj;
@@ -488,7 +488,7 @@ export const string: Extension<string> = {
   packed: false,
   encode: (value: string): Uint8Array[] => {
     const encoded: Uint8Array[] = [];
-    if (value !== undefined && value !== "") {
+    if (value !== undefined && value !== undefined) {
       const writer = new BinaryWriter();
       writer.string(value);
       encoded.push(writer.finish());
@@ -508,7 +508,7 @@ export const long: Extension<Long> = {
   packed: false,
   encode: (value: Long): Uint8Array[] => {
     const encoded: Uint8Array[] = [];
-    if (value !== undefined && !value.equals(Long.ZERO)) {
+    if (value !== undefined && !value.equals(undefined)) {
       const writer = new BinaryWriter();
       writer.int64(value.toString());
       encoded.push(writer.finish());
@@ -528,7 +528,7 @@ export const fixed: Extension<Long> = {
   packed: false,
   encode: (value: Long): Uint8Array[] => {
     const encoded: Uint8Array[] = [];
-    if (value !== undefined && !value.equals(Long.UZERO)) {
+    if (value !== undefined && !value.equals(undefined)) {
       const writer = new BinaryWriter();
       writer.fixed64(value.toString());
       encoded.push(writer.finish());
@@ -593,6 +593,14 @@ export type Exact<P, I extends P> = P extends Builtin ? P
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+function assertSet<T>(field: string, value: T | undefined): T {
+  if (!isSet(value)) {
+    throw new TypeError(`Required field ${field} is not set`);
+  }
+
+  return value as T;
 }
 
 export interface Extension<T> {

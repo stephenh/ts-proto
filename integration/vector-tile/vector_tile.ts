@@ -142,30 +142,38 @@ export const Tile: MessageFns<Tile> = {
 };
 
 function createBaseTile_Value(): Tile_Value {
-  return { stringValue: "", floatValue: 0, doubleValue: 0, intValue: 0, uintValue: 0, sintValue: 0, boolValue: false };
+  return {
+    stringValue: undefined,
+    floatValue: undefined,
+    doubleValue: undefined,
+    intValue: undefined,
+    uintValue: undefined,
+    sintValue: undefined,
+    boolValue: undefined,
+  };
 }
 
 export const Tile_Value: MessageFns<Tile_Value> = {
   encode(message: Tile_Value, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.stringValue !== undefined && message.stringValue !== "") {
+    if (message.stringValue !== undefined && message.stringValue !== undefined) {
       writer.uint32(10).string(message.stringValue);
     }
-    if (message.floatValue !== undefined && message.floatValue !== 0) {
+    if (message.floatValue !== undefined && message.floatValue !== undefined) {
       writer.uint32(21).float(message.floatValue);
     }
-    if (message.doubleValue !== undefined && message.doubleValue !== 0) {
+    if (message.doubleValue !== undefined && message.doubleValue !== undefined) {
       writer.uint32(25).double(message.doubleValue);
     }
-    if (message.intValue !== undefined && message.intValue !== 0) {
+    if (message.intValue !== undefined && message.intValue !== undefined) {
       writer.uint32(32).int64(message.intValue);
     }
-    if (message.uintValue !== undefined && message.uintValue !== 0) {
+    if (message.uintValue !== undefined && message.uintValue !== undefined) {
       writer.uint32(40).uint64(message.uintValue);
     }
-    if (message.sintValue !== undefined && message.sintValue !== 0) {
+    if (message.sintValue !== undefined && message.sintValue !== undefined) {
       writer.uint32(48).sint64(message.sintValue);
     }
-    if (message.boolValue !== undefined && message.boolValue !== false) {
+    if (message.boolValue !== undefined && message.boolValue !== undefined) {
       writer.uint32(56).bool(message.boolValue);
     }
     return writer;
@@ -245,37 +253,37 @@ export const Tile_Value: MessageFns<Tile_Value> = {
 
   fromJSON(object: any): Tile_Value {
     return {
-      stringValue: isSet(object.stringValue) ? globalThis.String(object.stringValue) : "",
-      floatValue: isSet(object.floatValue) ? globalThis.Number(object.floatValue) : 0,
-      doubleValue: isSet(object.doubleValue) ? globalThis.Number(object.doubleValue) : 0,
-      intValue: isSet(object.intValue) ? globalThis.Number(object.intValue) : 0,
-      uintValue: isSet(object.uintValue) ? globalThis.Number(object.uintValue) : 0,
-      sintValue: isSet(object.sintValue) ? globalThis.Number(object.sintValue) : 0,
-      boolValue: isSet(object.boolValue) ? globalThis.Boolean(object.boolValue) : false,
+      stringValue: isSet(object.stringValue) ? globalThis.String(object.stringValue) : undefined,
+      floatValue: isSet(object.floatValue) ? globalThis.Number(object.floatValue) : undefined,
+      doubleValue: isSet(object.doubleValue) ? globalThis.Number(object.doubleValue) : undefined,
+      intValue: isSet(object.intValue) ? globalThis.Number(object.intValue) : undefined,
+      uintValue: isSet(object.uintValue) ? globalThis.Number(object.uintValue) : undefined,
+      sintValue: isSet(object.sintValue) ? globalThis.Number(object.sintValue) : undefined,
+      boolValue: isSet(object.boolValue) ? globalThis.Boolean(object.boolValue) : undefined,
     };
   },
 
   toJSON(message: Tile_Value): unknown {
     const obj: any = {};
-    if (message.stringValue !== undefined && message.stringValue !== "") {
+    if (message.stringValue !== undefined && message.stringValue !== undefined) {
       obj.stringValue = message.stringValue;
     }
-    if (message.floatValue !== undefined && message.floatValue !== 0) {
+    if (message.floatValue !== undefined && message.floatValue !== undefined) {
       obj.floatValue = message.floatValue;
     }
-    if (message.doubleValue !== undefined && message.doubleValue !== 0) {
+    if (message.doubleValue !== undefined && message.doubleValue !== undefined) {
       obj.doubleValue = message.doubleValue;
     }
-    if (message.intValue !== undefined && message.intValue !== 0) {
+    if (message.intValue !== undefined && message.intValue !== undefined) {
       obj.intValue = Math.round(message.intValue);
     }
-    if (message.uintValue !== undefined && message.uintValue !== 0) {
+    if (message.uintValue !== undefined && message.uintValue !== undefined) {
       obj.uintValue = Math.round(message.uintValue);
     }
-    if (message.sintValue !== undefined && message.sintValue !== 0) {
+    if (message.sintValue !== undefined && message.sintValue !== undefined) {
       obj.sintValue = Math.round(message.sintValue);
     }
-    if (message.boolValue !== undefined && message.boolValue !== false) {
+    if (message.boolValue !== undefined && message.boolValue !== undefined) {
       obj.boolValue = message.boolValue;
     }
     return obj;
@@ -286,24 +294,24 @@ export const Tile_Value: MessageFns<Tile_Value> = {
   },
   fromPartial<I extends Exact<DeepPartial<Tile_Value>, I>>(object: I): Tile_Value {
     const message = createBaseTile_Value();
-    message.stringValue = object.stringValue ?? "";
-    message.floatValue = object.floatValue ?? 0;
-    message.doubleValue = object.doubleValue ?? 0;
-    message.intValue = object.intValue ?? 0;
-    message.uintValue = object.uintValue ?? 0;
-    message.sintValue = object.sintValue ?? 0;
-    message.boolValue = object.boolValue ?? false;
+    message.stringValue = object.stringValue ?? undefined;
+    message.floatValue = object.floatValue ?? undefined;
+    message.doubleValue = object.doubleValue ?? undefined;
+    message.intValue = object.intValue ?? undefined;
+    message.uintValue = object.uintValue ?? undefined;
+    message.sintValue = object.sintValue ?? undefined;
+    message.boolValue = object.boolValue ?? undefined;
     return message;
   },
 };
 
 function createBaseTile_Feature(): Tile_Feature {
-  return { id: 0, tags: [], type: 0, geometry: [] };
+  return { id: undefined, tags: [], type: undefined, geometry: [] };
 }
 
 export const Tile_Feature: MessageFns<Tile_Feature> = {
   encode(message: Tile_Feature, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.id !== undefined && message.id !== 0) {
+    if (message.id !== undefined && message.id !== undefined) {
       writer.uint32(8).uint64(message.id);
     }
     writer.uint32(18).fork();
@@ -392,16 +400,16 @@ export const Tile_Feature: MessageFns<Tile_Feature> = {
 
   fromJSON(object: any): Tile_Feature {
     return {
-      id: isSet(object.id) ? globalThis.Number(object.id) : 0,
+      id: isSet(object.id) ? globalThis.Number(object.id) : undefined,
       tags: globalThis.Array.isArray(object?.tags) ? object.tags.map((e: any) => globalThis.Number(e)) : [],
-      type: isSet(object.type) ? tile_GeomTypeFromJSON(object.type) : 0,
+      type: isSet(object.type) ? tile_GeomTypeFromJSON(object.type) : undefined,
       geometry: globalThis.Array.isArray(object?.geometry) ? object.geometry.map((e: any) => globalThis.Number(e)) : [],
     };
   },
 
   toJSON(message: Tile_Feature): unknown {
     const obj: any = {};
-    if (message.id !== undefined && message.id !== 0) {
+    if (message.id !== undefined && message.id !== undefined) {
       obj.id = Math.round(message.id);
     }
     if (message.tags?.length) {
@@ -421,16 +429,16 @@ export const Tile_Feature: MessageFns<Tile_Feature> = {
   },
   fromPartial<I extends Exact<DeepPartial<Tile_Feature>, I>>(object: I): Tile_Feature {
     const message = createBaseTile_Feature();
-    message.id = object.id ?? 0;
+    message.id = object.id ?? undefined;
     message.tags = object.tags?.map((e) => e) || [];
-    message.type = object.type ?? 0;
+    message.type = object.type ?? undefined;
     message.geometry = object.geometry?.map((e) => e) || [];
     return message;
   },
 };
 
 function createBaseTile_Layer(): Tile_Layer {
-  return { version: 1, name: "", features: [], keys: [], values: [], extent: 4096 };
+  return { version: 1, name: "", features: [], keys: [], values: [], extent: undefined };
 }
 
 export const Tile_Layer: MessageFns<Tile_Layer> = {
@@ -450,7 +458,7 @@ export const Tile_Layer: MessageFns<Tile_Layer> = {
     for (const v of message.values) {
       Tile_Value.encode(v!, writer.uint32(34).fork()).join();
     }
-    if (message.extent !== undefined && message.extent !== 4096) {
+    if (message.extent !== undefined && message.extent !== undefined) {
       writer.uint32(40).uint32(message.extent);
     }
     return writer;
@@ -522,14 +530,14 @@ export const Tile_Layer: MessageFns<Tile_Layer> = {
 
   fromJSON(object: any): Tile_Layer {
     return {
-      version: isSet(object.version) ? globalThis.Number(object.version) : 1,
-      name: isSet(object.name) ? globalThis.String(object.name) : "",
+      version: globalThis.Number(assertSet("Tile_Layer.version", object.version)),
+      name: globalThis.String(assertSet("Tile_Layer.name", object.name)),
       features: globalThis.Array.isArray(object?.features)
         ? object.features.map((e: any) => Tile_Feature.fromJSON(e))
         : [],
       keys: globalThis.Array.isArray(object?.keys) ? object.keys.map((e: any) => globalThis.String(e)) : [],
       values: globalThis.Array.isArray(object?.values) ? object.values.map((e: any) => Tile_Value.fromJSON(e)) : [],
-      extent: isSet(object.extent) ? globalThis.Number(object.extent) : 4096,
+      extent: isSet(object.extent) ? globalThis.Number(object.extent) : undefined,
     };
   },
 
@@ -550,7 +558,7 @@ export const Tile_Layer: MessageFns<Tile_Layer> = {
     if (message.values?.length) {
       obj.values = message.values.map((e) => Tile_Value.toJSON(e));
     }
-    if (message.extent !== undefined && message.extent !== 4096) {
+    if (message.extent !== undefined && message.extent !== undefined) {
       obj.extent = Math.round(message.extent);
     }
     return obj;
@@ -566,7 +574,7 @@ export const Tile_Layer: MessageFns<Tile_Layer> = {
     message.features = object.features?.map((e) => Tile_Feature.fromPartial(e)) || [];
     message.keys = object.keys?.map((e) => e) || [];
     message.values = object.values?.map((e) => Tile_Value.fromPartial(e)) || [];
-    message.extent = object.extent ?? 4096;
+    message.extent = object.extent ?? undefined;
     return message;
   },
 };
@@ -596,6 +604,14 @@ function longToNumber(int64: { toString(): string }): number {
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+function assertSet<T>(field: string, value: T | undefined): T {
+  if (!isSet(value)) {
+    throw new TypeError(`Required field ${field} is not set`);
+  }
+
+  return value as T;
 }
 
 export interface MessageFns<T> {

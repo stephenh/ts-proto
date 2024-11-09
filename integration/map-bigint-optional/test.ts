@@ -125,13 +125,13 @@ function createBaseMapBigInt_MapEntry(): MapBigInt_MapEntry {
 
 export const MapBigInt_MapEntry: MessageFns<MapBigInt_MapEntry> = {
   encode(message: MapBigInt_MapEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.key !== 0n) {
+    if (message.key !== undefined) {
       if (BigInt.asUintN(64, message.key) !== message.key) {
         throw new globalThis.Error("value provided for field message.key of type fixed64 too large");
       }
       writer.uint32(9).fixed64(message.key);
     }
-    if (message.value !== 0n) {
+    if (message.value !== undefined) {
       if (BigInt.asIntN(64, message.value) !== message.value) {
         throw new globalThis.Error("value provided for field message.value of type int64 too large");
       }
@@ -193,15 +193,18 @@ export const MapBigInt_MapEntry: MessageFns<MapBigInt_MapEntry> = {
   },
 
   fromJSON(object: any): MapBigInt_MapEntry {
-    return { key: isSet(object.key) ? BigInt(object.key) : 0n, value: isSet(object.value) ? BigInt(object.value) : 0n };
+    return {
+      key: BigInt(assertSet("MapBigInt_MapEntry.key", object.key)),
+      value: BigInt(assertSet("MapBigInt_MapEntry.value", object.value)),
+    };
   },
 
   toJSON(message: MapBigInt_MapEntry): unknown {
     const obj: any = {};
-    if (message.key !== 0n) {
+    if (message.key !== undefined) {
       obj.key = message.key.toString();
     }
-    if (message.value !== 0n) {
+    if (message.value !== undefined) {
       obj.value = message.value.toString();
     }
     return obj;
@@ -236,6 +239,14 @@ function isObject(value: any): boolean {
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+function assertSet<T>(field: string, value: T | undefined): T {
+  if (!isSet(value)) {
+    throw new TypeError(`Required field ${field} is not set`);
+  }
+
+  return value as T;
 }
 
 export interface MessageFns<T> {

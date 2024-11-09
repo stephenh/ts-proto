@@ -1036,8 +1036,8 @@ export const FileDescriptorSet: MessageFns<FileDescriptorSet> = {
 
 function createBaseFileDescriptorProto(): FileDescriptorProto {
   return {
-    name: "",
-    package: "",
+    name: undefined,
+    package: undefined,
     dependency: [],
     publicDependency: [],
     weakDependency: [],
@@ -1047,17 +1047,17 @@ function createBaseFileDescriptorProto(): FileDescriptorProto {
     extension: [],
     options: undefined,
     sourceCodeInfo: undefined,
-    syntax: "",
+    syntax: undefined,
     _unknownFields: {},
   };
 }
 
 export const FileDescriptorProto: MessageFns<FileDescriptorProto> = {
   encode(message: FileDescriptorProto, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.name !== undefined && message.name !== "") {
+    if (message.name !== undefined && message.name !== undefined) {
       writer.uint32(10).string(message.name);
     }
-    if (message.package !== undefined && message.package !== "") {
+    if (message.package !== undefined && message.package !== undefined) {
       writer.uint32(18).string(message.package);
     }
     for (const v of message.dependency) {
@@ -1091,7 +1091,7 @@ export const FileDescriptorProto: MessageFns<FileDescriptorProto> = {
     if (message.sourceCodeInfo !== undefined) {
       SourceCodeInfo.encode(message.sourceCodeInfo, writer.uint32(74).fork()).join();
     }
-    if (message.syntax !== undefined && message.syntax !== "") {
+    if (message.syntax !== undefined && message.syntax !== undefined) {
       writer.uint32(98).string(message.syntax);
     }
     if (message._unknownFields !== undefined) {
@@ -1248,7 +1248,7 @@ export const FileDescriptorProto: MessageFns<FileDescriptorProto> = {
 
 function createBaseDescriptorProto(): DescriptorProto {
   return {
-    name: "",
+    name: undefined,
     field: [],
     extension: [],
     nestedType: [],
@@ -1264,7 +1264,7 @@ function createBaseDescriptorProto(): DescriptorProto {
 
 export const DescriptorProto: MessageFns<DescriptorProto> = {
   encode(message: DescriptorProto, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.name !== undefined && message.name !== "") {
+    if (message.name !== undefined && message.name !== undefined) {
       writer.uint32(10).string(message.name);
     }
     for (const v of message.field) {
@@ -1411,15 +1411,15 @@ export const DescriptorProto: MessageFns<DescriptorProto> = {
 };
 
 function createBaseDescriptorProto_ExtensionRange(): DescriptorProto_ExtensionRange {
-  return { start: 0, end: 0, options: undefined, _unknownFields: {} };
+  return { start: undefined, end: undefined, options: undefined, _unknownFields: {} };
 }
 
 export const DescriptorProto_ExtensionRange: MessageFns<DescriptorProto_ExtensionRange> = {
   encode(message: DescriptorProto_ExtensionRange, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.start !== undefined && message.start !== 0) {
+    if (message.start !== undefined && message.start !== undefined) {
       writer.uint32(8).int32(message.start);
     }
-    if (message.end !== undefined && message.end !== 0) {
+    if (message.end !== undefined && message.end !== undefined) {
       writer.uint32(16).int32(message.end);
     }
     if (message.options !== undefined) {
@@ -1486,15 +1486,15 @@ export const DescriptorProto_ExtensionRange: MessageFns<DescriptorProto_Extensio
 };
 
 function createBaseDescriptorProto_ReservedRange(): DescriptorProto_ReservedRange {
-  return { start: 0, end: 0, _unknownFields: {} };
+  return { start: undefined, end: undefined, _unknownFields: {} };
 }
 
 export const DescriptorProto_ReservedRange: MessageFns<DescriptorProto_ReservedRange> = {
   encode(message: DescriptorProto_ReservedRange, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.start !== undefined && message.start !== 0) {
+    if (message.start !== undefined && message.start !== undefined) {
       writer.uint32(8).int32(message.start);
     }
-    if (message.end !== undefined && message.end !== 0) {
+    if (message.end !== undefined && message.end !== undefined) {
       writer.uint32(16).int32(message.end);
     }
     if (message._unknownFields !== undefined) {
@@ -1604,27 +1604,27 @@ export const ExtensionRangeOptions: MessageFns<ExtensionRangeOptions> = {
 
 function createBaseFieldDescriptorProto(): FieldDescriptorProto {
   return {
-    name: "",
-    number: 0,
-    label: 1,
-    type: 1,
-    typeName: "",
-    extendee: "",
-    defaultValue: "",
-    oneofIndex: 0,
-    jsonName: "",
+    name: undefined,
+    number: undefined,
+    label: undefined,
+    type: undefined,
+    typeName: undefined,
+    extendee: undefined,
+    defaultValue: undefined,
+    oneofIndex: undefined,
+    jsonName: undefined,
     options: undefined,
-    proto3Optional: false,
+    proto3Optional: undefined,
     _unknownFields: {},
   };
 }
 
 export const FieldDescriptorProto: MessageFns<FieldDescriptorProto> = {
   encode(message: FieldDescriptorProto, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.name !== undefined && message.name !== "") {
+    if (message.name !== undefined && message.name !== undefined) {
       writer.uint32(10).string(message.name);
     }
-    if (message.number !== undefined && message.number !== 0) {
+    if (message.number !== undefined && message.number !== undefined) {
       writer.uint32(24).int32(message.number);
     }
     if (message.label !== undefined && message.label !== 1) {
@@ -1633,25 +1633,25 @@ export const FieldDescriptorProto: MessageFns<FieldDescriptorProto> = {
     if (message.type !== undefined && message.type !== 1) {
       writer.uint32(40).int32(message.type);
     }
-    if (message.typeName !== undefined && message.typeName !== "") {
+    if (message.typeName !== undefined && message.typeName !== undefined) {
       writer.uint32(50).string(message.typeName);
     }
-    if (message.extendee !== undefined && message.extendee !== "") {
+    if (message.extendee !== undefined && message.extendee !== undefined) {
       writer.uint32(18).string(message.extendee);
     }
-    if (message.defaultValue !== undefined && message.defaultValue !== "") {
+    if (message.defaultValue !== undefined && message.defaultValue !== undefined) {
       writer.uint32(58).string(message.defaultValue);
     }
-    if (message.oneofIndex !== undefined && message.oneofIndex !== 0) {
+    if (message.oneofIndex !== undefined && message.oneofIndex !== undefined) {
       writer.uint32(72).int32(message.oneofIndex);
     }
-    if (message.jsonName !== undefined && message.jsonName !== "") {
+    if (message.jsonName !== undefined && message.jsonName !== undefined) {
       writer.uint32(82).string(message.jsonName);
     }
     if (message.options !== undefined) {
       FieldOptions.encode(message.options, writer.uint32(66).fork()).join();
     }
-    if (message.proto3Optional !== undefined && message.proto3Optional !== false) {
+    if (message.proto3Optional !== undefined && message.proto3Optional !== undefined) {
       writer.uint32(136).bool(message.proto3Optional);
     }
     if (message._unknownFields !== undefined) {
@@ -1779,12 +1779,12 @@ export const FieldDescriptorProto: MessageFns<FieldDescriptorProto> = {
 };
 
 function createBaseOneofDescriptorProto(): OneofDescriptorProto {
-  return { name: "", options: undefined, _unknownFields: {} };
+  return { name: undefined, options: undefined, _unknownFields: {} };
 }
 
 export const OneofDescriptorProto: MessageFns<OneofDescriptorProto> = {
   encode(message: OneofDescriptorProto, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.name !== undefined && message.name !== "") {
+    if (message.name !== undefined && message.name !== undefined) {
       writer.uint32(10).string(message.name);
     }
     if (message.options !== undefined) {
@@ -1843,12 +1843,12 @@ export const OneofDescriptorProto: MessageFns<OneofDescriptorProto> = {
 };
 
 function createBaseEnumDescriptorProto(): EnumDescriptorProto {
-  return { name: "", value: [], options: undefined, reservedRange: [], reservedName: [], _unknownFields: {} };
+  return { name: undefined, value: [], options: undefined, reservedRange: [], reservedName: [], _unknownFields: {} };
 }
 
 export const EnumDescriptorProto: MessageFns<EnumDescriptorProto> = {
   encode(message: EnumDescriptorProto, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.name !== undefined && message.name !== "") {
+    if (message.name !== undefined && message.name !== undefined) {
       writer.uint32(10).string(message.name);
     }
     for (const v of message.value) {
@@ -1940,15 +1940,15 @@ export const EnumDescriptorProto: MessageFns<EnumDescriptorProto> = {
 };
 
 function createBaseEnumDescriptorProto_EnumReservedRange(): EnumDescriptorProto_EnumReservedRange {
-  return { start: 0, end: 0, _unknownFields: {} };
+  return { start: undefined, end: undefined, _unknownFields: {} };
 }
 
 export const EnumDescriptorProto_EnumReservedRange: MessageFns<EnumDescriptorProto_EnumReservedRange> = {
   encode(message: EnumDescriptorProto_EnumReservedRange, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.start !== undefined && message.start !== 0) {
+    if (message.start !== undefined && message.start !== undefined) {
       writer.uint32(8).int32(message.start);
     }
-    if (message.end !== undefined && message.end !== 0) {
+    if (message.end !== undefined && message.end !== undefined) {
       writer.uint32(16).int32(message.end);
     }
     if (message._unknownFields !== undefined) {
@@ -2004,15 +2004,15 @@ export const EnumDescriptorProto_EnumReservedRange: MessageFns<EnumDescriptorPro
 };
 
 function createBaseEnumValueDescriptorProto(): EnumValueDescriptorProto {
-  return { name: "", number: 0, options: undefined, _unknownFields: {} };
+  return { name: undefined, number: undefined, options: undefined, _unknownFields: {} };
 }
 
 export const EnumValueDescriptorProto: MessageFns<EnumValueDescriptorProto> = {
   encode(message: EnumValueDescriptorProto, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.name !== undefined && message.name !== "") {
+    if (message.name !== undefined && message.name !== undefined) {
       writer.uint32(10).string(message.name);
     }
-    if (message.number !== undefined && message.number !== 0) {
+    if (message.number !== undefined && message.number !== undefined) {
       writer.uint32(16).int32(message.number);
     }
     if (message.options !== undefined) {
@@ -2079,12 +2079,12 @@ export const EnumValueDescriptorProto: MessageFns<EnumValueDescriptorProto> = {
 };
 
 function createBaseServiceDescriptorProto(): ServiceDescriptorProto {
-  return { name: "", method: [], options: undefined, _unknownFields: {} };
+  return { name: undefined, method: [], options: undefined, _unknownFields: {} };
 }
 
 export const ServiceDescriptorProto: MessageFns<ServiceDescriptorProto> = {
   encode(message: ServiceDescriptorProto, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.name !== undefined && message.name !== "") {
+    if (message.name !== undefined && message.name !== undefined) {
       writer.uint32(10).string(message.name);
     }
     for (const v of message.method) {
@@ -2155,34 +2155,34 @@ export const ServiceDescriptorProto: MessageFns<ServiceDescriptorProto> = {
 
 function createBaseMethodDescriptorProto(): MethodDescriptorProto {
   return {
-    name: "",
-    inputType: "",
-    outputType: "",
+    name: undefined,
+    inputType: undefined,
+    outputType: undefined,
     options: undefined,
-    clientStreaming: false,
-    serverStreaming: false,
+    clientStreaming: undefined,
+    serverStreaming: undefined,
     _unknownFields: {},
   };
 }
 
 export const MethodDescriptorProto: MessageFns<MethodDescriptorProto> = {
   encode(message: MethodDescriptorProto, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.name !== undefined && message.name !== "") {
+    if (message.name !== undefined && message.name !== undefined) {
       writer.uint32(10).string(message.name);
     }
-    if (message.inputType !== undefined && message.inputType !== "") {
+    if (message.inputType !== undefined && message.inputType !== undefined) {
       writer.uint32(18).string(message.inputType);
     }
-    if (message.outputType !== undefined && message.outputType !== "") {
+    if (message.outputType !== undefined && message.outputType !== undefined) {
       writer.uint32(26).string(message.outputType);
     }
     if (message.options !== undefined) {
       MethodOptions.encode(message.options, writer.uint32(34).fork()).join();
     }
-    if (message.clientStreaming !== undefined && message.clientStreaming !== false) {
+    if (message.clientStreaming !== undefined && message.clientStreaming !== undefined) {
       writer.uint32(40).bool(message.clientStreaming);
     }
-    if (message.serverStreaming !== undefined && message.serverStreaming !== false) {
+    if (message.serverStreaming !== undefined && message.serverStreaming !== undefined) {
       writer.uint32(48).bool(message.serverStreaming);
     }
     if (message._unknownFields !== undefined) {
@@ -2271,26 +2271,26 @@ export const MethodDescriptorProto: MessageFns<MethodDescriptorProto> = {
 
 function createBaseFileOptions(): FileOptions {
   return {
-    javaPackage: "",
-    javaOuterClassname: "",
-    javaMultipleFiles: false,
-    javaGenerateEqualsAndHash: false,
-    javaStringCheckUtf8: false,
-    optimizeFor: 1,
-    goPackage: "",
-    ccGenericServices: false,
-    javaGenericServices: false,
-    pyGenericServices: false,
-    phpGenericServices: false,
-    deprecated: false,
-    ccEnableArenas: true,
-    objcClassPrefix: "",
-    csharpNamespace: "",
-    swiftPrefix: "",
-    phpClassPrefix: "",
-    phpNamespace: "",
-    phpMetadataNamespace: "",
-    rubyPackage: "",
+    javaPackage: undefined,
+    javaOuterClassname: undefined,
+    javaMultipleFiles: undefined,
+    javaGenerateEqualsAndHash: undefined,
+    javaStringCheckUtf8: undefined,
+    optimizeFor: undefined,
+    goPackage: undefined,
+    ccGenericServices: undefined,
+    javaGenericServices: undefined,
+    pyGenericServices: undefined,
+    phpGenericServices: undefined,
+    deprecated: undefined,
+    ccEnableArenas: undefined,
+    objcClassPrefix: undefined,
+    csharpNamespace: undefined,
+    swiftPrefix: undefined,
+    phpClassPrefix: undefined,
+    phpNamespace: undefined,
+    phpMetadataNamespace: undefined,
+    rubyPackage: undefined,
     uninterpretedOption: [],
     _unknownFields: {},
   };
@@ -2298,64 +2298,64 @@ function createBaseFileOptions(): FileOptions {
 
 export const FileOptions: MessageFns<FileOptions> = {
   encode(message: FileOptions, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.javaPackage !== undefined && message.javaPackage !== "") {
+    if (message.javaPackage !== undefined && message.javaPackage !== undefined) {
       writer.uint32(10).string(message.javaPackage);
     }
-    if (message.javaOuterClassname !== undefined && message.javaOuterClassname !== "") {
+    if (message.javaOuterClassname !== undefined && message.javaOuterClassname !== undefined) {
       writer.uint32(66).string(message.javaOuterClassname);
     }
-    if (message.javaMultipleFiles !== undefined && message.javaMultipleFiles !== false) {
+    if (message.javaMultipleFiles !== undefined && message.javaMultipleFiles !== undefined) {
       writer.uint32(80).bool(message.javaMultipleFiles);
     }
-    if (message.javaGenerateEqualsAndHash !== undefined && message.javaGenerateEqualsAndHash !== false) {
+    if (message.javaGenerateEqualsAndHash !== undefined && message.javaGenerateEqualsAndHash !== undefined) {
       writer.uint32(160).bool(message.javaGenerateEqualsAndHash);
     }
-    if (message.javaStringCheckUtf8 !== undefined && message.javaStringCheckUtf8 !== false) {
+    if (message.javaStringCheckUtf8 !== undefined && message.javaStringCheckUtf8 !== undefined) {
       writer.uint32(216).bool(message.javaStringCheckUtf8);
     }
     if (message.optimizeFor !== undefined && message.optimizeFor !== 1) {
       writer.uint32(72).int32(message.optimizeFor);
     }
-    if (message.goPackage !== undefined && message.goPackage !== "") {
+    if (message.goPackage !== undefined && message.goPackage !== undefined) {
       writer.uint32(90).string(message.goPackage);
     }
-    if (message.ccGenericServices !== undefined && message.ccGenericServices !== false) {
+    if (message.ccGenericServices !== undefined && message.ccGenericServices !== undefined) {
       writer.uint32(128).bool(message.ccGenericServices);
     }
-    if (message.javaGenericServices !== undefined && message.javaGenericServices !== false) {
+    if (message.javaGenericServices !== undefined && message.javaGenericServices !== undefined) {
       writer.uint32(136).bool(message.javaGenericServices);
     }
-    if (message.pyGenericServices !== undefined && message.pyGenericServices !== false) {
+    if (message.pyGenericServices !== undefined && message.pyGenericServices !== undefined) {
       writer.uint32(144).bool(message.pyGenericServices);
     }
-    if (message.phpGenericServices !== undefined && message.phpGenericServices !== false) {
+    if (message.phpGenericServices !== undefined && message.phpGenericServices !== undefined) {
       writer.uint32(336).bool(message.phpGenericServices);
     }
-    if (message.deprecated !== undefined && message.deprecated !== false) {
+    if (message.deprecated !== undefined && message.deprecated !== undefined) {
       writer.uint32(184).bool(message.deprecated);
     }
-    if (message.ccEnableArenas !== undefined && message.ccEnableArenas !== true) {
+    if (message.ccEnableArenas !== undefined && message.ccEnableArenas !== undefined) {
       writer.uint32(248).bool(message.ccEnableArenas);
     }
-    if (message.objcClassPrefix !== undefined && message.objcClassPrefix !== "") {
+    if (message.objcClassPrefix !== undefined && message.objcClassPrefix !== undefined) {
       writer.uint32(290).string(message.objcClassPrefix);
     }
-    if (message.csharpNamespace !== undefined && message.csharpNamespace !== "") {
+    if (message.csharpNamespace !== undefined && message.csharpNamespace !== undefined) {
       writer.uint32(298).string(message.csharpNamespace);
     }
-    if (message.swiftPrefix !== undefined && message.swiftPrefix !== "") {
+    if (message.swiftPrefix !== undefined && message.swiftPrefix !== undefined) {
       writer.uint32(314).string(message.swiftPrefix);
     }
-    if (message.phpClassPrefix !== undefined && message.phpClassPrefix !== "") {
+    if (message.phpClassPrefix !== undefined && message.phpClassPrefix !== undefined) {
       writer.uint32(322).string(message.phpClassPrefix);
     }
-    if (message.phpNamespace !== undefined && message.phpNamespace !== "") {
+    if (message.phpNamespace !== undefined && message.phpNamespace !== undefined) {
       writer.uint32(330).string(message.phpNamespace);
     }
-    if (message.phpMetadataNamespace !== undefined && message.phpMetadataNamespace !== "") {
+    if (message.phpMetadataNamespace !== undefined && message.phpMetadataNamespace !== undefined) {
       writer.uint32(354).string(message.phpMetadataNamespace);
     }
-    if (message.rubyPackage !== undefined && message.rubyPackage !== "") {
+    if (message.rubyPackage !== undefined && message.rubyPackage !== undefined) {
       writer.uint32(362).string(message.rubyPackage);
     }
     for (const v of message.uninterpretedOption) {
@@ -2567,10 +2567,10 @@ export const FileOptions: MessageFns<FileOptions> = {
 
 function createBaseMessageOptions(): MessageOptions {
   return {
-    messageSetWireFormat: false,
-    noStandardDescriptorAccessor: false,
-    deprecated: false,
-    mapEntry: false,
+    messageSetWireFormat: undefined,
+    noStandardDescriptorAccessor: undefined,
+    deprecated: undefined,
+    mapEntry: undefined,
     uninterpretedOption: [],
     _unknownFields: {},
   };
@@ -2578,16 +2578,16 @@ function createBaseMessageOptions(): MessageOptions {
 
 export const MessageOptions: MessageFns<MessageOptions> = {
   encode(message: MessageOptions, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.messageSetWireFormat !== undefined && message.messageSetWireFormat !== false) {
+    if (message.messageSetWireFormat !== undefined && message.messageSetWireFormat !== undefined) {
       writer.uint32(8).bool(message.messageSetWireFormat);
     }
-    if (message.noStandardDescriptorAccessor !== undefined && message.noStandardDescriptorAccessor !== false) {
+    if (message.noStandardDescriptorAccessor !== undefined && message.noStandardDescriptorAccessor !== undefined) {
       writer.uint32(16).bool(message.noStandardDescriptorAccessor);
     }
-    if (message.deprecated !== undefined && message.deprecated !== false) {
+    if (message.deprecated !== undefined && message.deprecated !== undefined) {
       writer.uint32(24).bool(message.deprecated);
     }
-    if (message.mapEntry !== undefined && message.mapEntry !== false) {
+    if (message.mapEntry !== undefined && message.mapEntry !== undefined) {
       writer.uint32(56).bool(message.mapEntry);
     }
     for (const v of message.uninterpretedOption) {
@@ -2671,12 +2671,12 @@ export const MessageOptions: MessageFns<MessageOptions> = {
 
 function createBaseFieldOptions(): FieldOptions {
   return {
-    ctype: 0,
-    packed: false,
-    jstype: 0,
-    lazy: false,
-    deprecated: false,
-    weak: false,
+    ctype: undefined,
+    packed: undefined,
+    jstype: undefined,
+    lazy: undefined,
+    deprecated: undefined,
+    weak: undefined,
     uninterpretedOption: [],
     _unknownFields: {},
   };
@@ -2687,19 +2687,19 @@ export const FieldOptions: MessageFns<FieldOptions> = {
     if (message.ctype !== undefined && message.ctype !== 0) {
       writer.uint32(8).int32(message.ctype);
     }
-    if (message.packed !== undefined && message.packed !== false) {
+    if (message.packed !== undefined && message.packed !== undefined) {
       writer.uint32(16).bool(message.packed);
     }
     if (message.jstype !== undefined && message.jstype !== 0) {
       writer.uint32(48).int32(message.jstype);
     }
-    if (message.lazy !== undefined && message.lazy !== false) {
+    if (message.lazy !== undefined && message.lazy !== undefined) {
       writer.uint32(40).bool(message.lazy);
     }
-    if (message.deprecated !== undefined && message.deprecated !== false) {
+    if (message.deprecated !== undefined && message.deprecated !== undefined) {
       writer.uint32(24).bool(message.deprecated);
     }
-    if (message.weak !== undefined && message.weak !== false) {
+    if (message.weak !== undefined && message.weak !== undefined) {
       writer.uint32(80).bool(message.weak);
     }
     for (const v of message.uninterpretedOption) {
@@ -2851,15 +2851,15 @@ export const OneofOptions: MessageFns<OneofOptions> = {
 };
 
 function createBaseEnumOptions(): EnumOptions {
-  return { allowAlias: false, deprecated: false, uninterpretedOption: [], _unknownFields: {} };
+  return { allowAlias: undefined, deprecated: undefined, uninterpretedOption: [], _unknownFields: {} };
 }
 
 export const EnumOptions: MessageFns<EnumOptions> = {
   encode(message: EnumOptions, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.allowAlias !== undefined && message.allowAlias !== false) {
+    if (message.allowAlias !== undefined && message.allowAlias !== undefined) {
       writer.uint32(16).bool(message.allowAlias);
     }
-    if (message.deprecated !== undefined && message.deprecated !== false) {
+    if (message.deprecated !== undefined && message.deprecated !== undefined) {
       writer.uint32(24).bool(message.deprecated);
     }
     for (const v of message.uninterpretedOption) {
@@ -2926,12 +2926,12 @@ export const EnumOptions: MessageFns<EnumOptions> = {
 };
 
 function createBaseEnumValueOptions(): EnumValueOptions {
-  return { deprecated: false, uninterpretedOption: [], _unknownFields: {} };
+  return { deprecated: undefined, uninterpretedOption: [], _unknownFields: {} };
 }
 
 export const EnumValueOptions: MessageFns<EnumValueOptions> = {
   encode(message: EnumValueOptions, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.deprecated !== undefined && message.deprecated !== false) {
+    if (message.deprecated !== undefined && message.deprecated !== undefined) {
       writer.uint32(8).bool(message.deprecated);
     }
     for (const v of message.uninterpretedOption) {
@@ -2990,12 +2990,12 @@ export const EnumValueOptions: MessageFns<EnumValueOptions> = {
 };
 
 function createBaseServiceOptions(): ServiceOptions {
-  return { deprecated: false, uninterpretedOption: [], _unknownFields: {} };
+  return { deprecated: undefined, uninterpretedOption: [], _unknownFields: {} };
 }
 
 export const ServiceOptions: MessageFns<ServiceOptions> = {
   encode(message: ServiceOptions, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.deprecated !== undefined && message.deprecated !== false) {
+    if (message.deprecated !== undefined && message.deprecated !== undefined) {
       writer.uint32(264).bool(message.deprecated);
     }
     for (const v of message.uninterpretedOption) {
@@ -3054,12 +3054,12 @@ export const ServiceOptions: MessageFns<ServiceOptions> = {
 };
 
 function createBaseMethodOptions(): MethodOptions {
-  return { deprecated: false, idempotencyLevel: 0, uninterpretedOption: [], _unknownFields: {} };
+  return { deprecated: undefined, idempotencyLevel: undefined, uninterpretedOption: [], _unknownFields: {} };
 }
 
 export const MethodOptions: MessageFns<MethodOptions> = {
   encode(message: MethodOptions, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.deprecated !== undefined && message.deprecated !== false) {
+    if (message.deprecated !== undefined && message.deprecated !== undefined) {
       writer.uint32(264).bool(message.deprecated);
     }
     if (message.idempotencyLevel !== undefined && message.idempotencyLevel !== 0) {
@@ -3131,12 +3131,12 @@ export const MethodOptions: MessageFns<MethodOptions> = {
 function createBaseUninterpretedOption(): UninterpretedOption {
   return {
     name: [],
-    identifierValue: "",
-    positiveIntValue: 0,
-    negativeIntValue: 0,
-    doubleValue: 0,
-    stringValue: new Uint8Array(0),
-    aggregateValue: "",
+    identifierValue: undefined,
+    positiveIntValue: undefined,
+    negativeIntValue: undefined,
+    doubleValue: undefined,
+    stringValue: undefined,
+    aggregateValue: undefined,
     _unknownFields: {},
   };
 }
@@ -3146,22 +3146,22 @@ export const UninterpretedOption: MessageFns<UninterpretedOption> = {
     for (const v of message.name) {
       UninterpretedOption_NamePart.encode(v!, writer.uint32(18).fork()).join();
     }
-    if (message.identifierValue !== undefined && message.identifierValue !== "") {
+    if (message.identifierValue !== undefined && message.identifierValue !== undefined) {
       writer.uint32(26).string(message.identifierValue);
     }
-    if (message.positiveIntValue !== undefined && message.positiveIntValue !== 0) {
+    if (message.positiveIntValue !== undefined && message.positiveIntValue !== undefined) {
       writer.uint32(32).uint64(message.positiveIntValue);
     }
-    if (message.negativeIntValue !== undefined && message.negativeIntValue !== 0) {
+    if (message.negativeIntValue !== undefined && message.negativeIntValue !== undefined) {
       writer.uint32(40).int64(message.negativeIntValue);
     }
-    if (message.doubleValue !== undefined && message.doubleValue !== 0) {
+    if (message.doubleValue !== undefined && message.doubleValue !== undefined) {
       writer.uint32(49).double(message.doubleValue);
     }
     if (message.stringValue !== undefined && message.stringValue.length !== 0) {
       writer.uint32(58).bytes(message.stringValue);
     }
-    if (message.aggregateValue !== undefined && message.aggregateValue !== "") {
+    if (message.aggregateValue !== undefined && message.aggregateValue !== undefined) {
       writer.uint32(66).string(message.aggregateValue);
     }
     if (message._unknownFields !== undefined) {
@@ -3377,8 +3377,8 @@ function createBaseSourceCodeInfo_Location(): SourceCodeInfo_Location {
   return {
     path: [],
     span: [],
-    leadingComments: "",
-    trailingComments: "",
+    leadingComments: undefined,
+    trailingComments: undefined,
     leadingDetachedComments: [],
     _unknownFields: {},
   };
@@ -3396,10 +3396,10 @@ export const SourceCodeInfo_Location: MessageFns<SourceCodeInfo_Location> = {
       writer.int32(v);
     }
     writer.join();
-    if (message.leadingComments !== undefined && message.leadingComments !== "") {
+    if (message.leadingComments !== undefined && message.leadingComments !== undefined) {
       writer.uint32(26).string(message.leadingComments);
     }
-    if (message.trailingComments !== undefined && message.trailingComments !== "") {
+    if (message.trailingComments !== undefined && message.trailingComments !== undefined) {
       writer.uint32(34).string(message.trailingComments);
     }
     for (const v of message.leadingDetachedComments) {
@@ -3555,7 +3555,7 @@ export const GeneratedCodeInfo: MessageFns<GeneratedCodeInfo> = {
 };
 
 function createBaseGeneratedCodeInfo_Annotation(): GeneratedCodeInfo_Annotation {
-  return { path: [], sourceFile: "", begin: 0, end: 0, _unknownFields: {} };
+  return { path: [], sourceFile: undefined, begin: undefined, end: undefined, _unknownFields: {} };
 }
 
 export const GeneratedCodeInfo_Annotation: MessageFns<GeneratedCodeInfo_Annotation> = {
@@ -3565,13 +3565,13 @@ export const GeneratedCodeInfo_Annotation: MessageFns<GeneratedCodeInfo_Annotati
       writer.int32(v);
     }
     writer.join();
-    if (message.sourceFile !== undefined && message.sourceFile !== "") {
+    if (message.sourceFile !== undefined && message.sourceFile !== undefined) {
       writer.uint32(18).string(message.sourceFile);
     }
-    if (message.begin !== undefined && message.begin !== 0) {
+    if (message.begin !== undefined && message.begin !== undefined) {
       writer.uint32(24).int32(message.begin);
     }
-    if (message.end !== undefined && message.end !== 0) {
+    if (message.end !== undefined && message.end !== undefined) {
       writer.uint32(32).int32(message.end);
     }
     if (message._unknownFields !== undefined) {

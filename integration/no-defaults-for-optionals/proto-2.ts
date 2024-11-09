@@ -194,8 +194,8 @@ export const Proto2TestMessage_MapValueEntry: MessageFns<Proto2TestMessage_MapVa
 
   fromJSON(object: any): Proto2TestMessage_MapValueEntry {
     return {
-      key: isSet(object.key) ? globalThis.String(object.key) : undefined,
-      value: isSet(object.value) ? globalThis.String(object.value) : undefined,
+      key: globalThis.String(assertSet("Proto2TestMessage_MapValueEntry.key", object.key)),
+      value: globalThis.String(assertSet("Proto2TestMessage_MapValueEntry.value", object.value)),
     };
   },
 
@@ -241,6 +241,14 @@ function isObject(value: any): boolean {
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+function assertSet<T>(field: string, value: T | undefined): T {
+  if (!isSet(value)) {
+    throw new TypeError(`Required field ${field} is not set`);
+  }
+
+  return value as T;
 }
 
 export interface MessageFns<T> {

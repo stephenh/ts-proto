@@ -50,7 +50,7 @@ export interface GroupsNestedTest_Group_Nested {
 }
 
 export interface GroupsNestedTest_Group_Nested_Nested2 {
-  string1?: string | undefined;
+  string1?: string;
   _unknownFields?: { [key: number]: Uint8Array[] } | undefined;
 }
 
@@ -60,13 +60,13 @@ function createBaseGroupsOptionalTest(): GroupsOptionalTest {
 
 export const GroupsOptionalTest: MessageFns<GroupsOptionalTest> = {
   encode(message: GroupsOptionalTest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.int1 !== undefined && message.int1 !== 0) {
+    if (message.int1 !== undefined && message.int1 !== undefined) {
       writer.uint32(8).int32(message.int1);
     }
     if (message.group !== undefined) {
       GroupsOptionalTest_Group.encode(message.group, writer.uint32(19)).uint32(20);
     }
-    if (message.int3 !== undefined && message.int3 !== 0) {
+    if (message.int3 !== undefined && message.int3 !== undefined) {
       writer.uint32(24).int32(message.int3);
     }
     if (message._unknownFields !== undefined) {
@@ -142,13 +142,13 @@ export const GroupsOptionalTest: MessageFns<GroupsOptionalTest> = {
 
   toJSON(message: GroupsOptionalTest): unknown {
     const obj: any = {};
-    if (message.int1 !== undefined && message.int1 !== 0) {
+    if (message.int1 !== undefined && message.int1 !== undefined) {
       obj.int1 = Math.round(message.int1);
     }
     if (message.group !== undefined) {
       obj.group = GroupsOptionalTest_Group.toJSON(message.group);
     }
-    if (message.int3 !== undefined && message.int3 !== 0) {
+    if (message.int3 !== undefined && message.int3 !== undefined) {
       obj.int3 = Math.round(message.int3);
     }
     return obj;
@@ -174,10 +174,10 @@ function createBaseGroupsOptionalTest_Group(): GroupsOptionalTest_Group {
 
 export const GroupsOptionalTest_Group: MessageFns<GroupsOptionalTest_Group> = {
   encode(message: GroupsOptionalTest_Group, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.key !== undefined && message.key !== "") {
+    if (message.key !== undefined && message.key !== undefined) {
       writer.uint32(10).string(message.key);
     }
-    if (message.value !== undefined && message.value !== "") {
+    if (message.value !== undefined && message.value !== undefined) {
       writer.uint32(18).string(message.value);
     }
     if (message._unknownFields !== undefined) {
@@ -237,17 +237,17 @@ export const GroupsOptionalTest_Group: MessageFns<GroupsOptionalTest_Group> = {
 
   fromJSON(object: any): GroupsOptionalTest_Group {
     return {
-      key: isSet(object.key) ? globalThis.String(object.key) : undefined,
-      value: isSet(object.value) ? globalThis.String(object.value) : undefined,
+      key: globalThis.String(assertSet("GroupsOptionalTest_Group.key", object.key)),
+      value: globalThis.String(assertSet("GroupsOptionalTest_Group.value", object.value)),
     };
   },
 
   toJSON(message: GroupsOptionalTest_Group): unknown {
     const obj: any = {};
-    if (message.key !== undefined && message.key !== "") {
+    if (message.key !== undefined && message.key !== undefined) {
       obj.key = message.key;
     }
-    if (message.value !== undefined && message.value !== "") {
+    if (message.value !== undefined && message.value !== undefined) {
       obj.value = message.value;
     }
     return obj;
@@ -258,8 +258,8 @@ export const GroupsOptionalTest_Group: MessageFns<GroupsOptionalTest_Group> = {
   },
   fromPartial<I extends Exact<DeepPartial<GroupsOptionalTest_Group>, I>>(object: I): GroupsOptionalTest_Group {
     const message = createBaseGroupsOptionalTest_Group();
-    message.key = object.key ?? undefined;
-    message.value = object.value ?? undefined;
+    message.key = object.key ?? "";
+    message.value = object.value ?? "";
     return message;
   },
 };
@@ -939,7 +939,7 @@ export const GroupsNestedTest_Group_Nested_Nested2: MessageFns<GroupsNestedTest_
   },
 
   fromJSON(object: any): GroupsNestedTest_Group_Nested_Nested2 {
-    return { string1: isSet(object.string1) ? globalThis.String(object.string1) : undefined };
+    return { string1: globalThis.String(assertSet("GroupsNestedTest_Group_Nested_Nested2.string1", object.string1)) };
   },
 
   toJSON(message: GroupsNestedTest_Group_Nested_Nested2): unknown {
@@ -978,6 +978,14 @@ export type Exact<P, I extends P> = P extends Builtin ? P
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+function assertSet<T>(field: string, value: T | undefined): T {
+  if (!isSet(value)) {
+    throw new TypeError(`Required field ${field} is not set`);
+  }
+
+  return value as T;
 }
 
 export interface MessageFns<T> {

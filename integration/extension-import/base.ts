@@ -45,7 +45,7 @@ export const Extendable: MessageFns<Extendable> = {
   },
 
   fromJSON(object: any): Extendable {
-    return { field: isSet(object.field) ? globalThis.String(object.field) : "" };
+    return { field: globalThis.String(assertSet("Extendable.field", object.field)) };
   },
 
   toJSON(message: Extendable): unknown {
@@ -80,6 +80,14 @@ type Exact<P, I extends P> = P extends Builtin ? P
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+function assertSet<T>(field: string, value: T | undefined): T {
+  if (!isSet(value)) {
+    throw new TypeError(`Required field ${field} is not set`);
+  }
+
+  return value as T;
 }
 
 interface MessageFns<T> {
