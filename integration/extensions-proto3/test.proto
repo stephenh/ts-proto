@@ -1,0 +1,56 @@
+syntax = "proto3";
+import "google/protobuf/descriptor.proto";
+import "google/protobuf/empty.proto";
+
+
+message ServiceInfo {
+  repeated string required_headers = 1;
+  int32 maximum_message_size_bytes = 2;
+}
+
+extend google.protobuf.ServiceOptions {
+  ServiceInfo service_info = 1001;
+}
+
+message ResponseInfo {
+  repeated int32 expected_error_codes = 1;
+}
+
+extend google.protobuf.MethodOptions {
+  ResponseInfo response_info = 1002;
+}
+
+
+message MessageInfo {
+  string entity_table =  1;
+}
+
+extend google.protobuf.MessageOptions {
+  MessageInfo message_info = 1003;
+}
+
+extend google.protobuf.FieldOptions {
+  int32 max_length = 1004;
+}
+
+service ExtensionService {
+  option (service_info) = {
+    required_headers: ["authorization"],
+    maximum_message_size_bytes: 2000000,
+  };
+
+  rpc Unary (UnaryRequest) returns (google.protobuf.Empty) {
+    option (response_info) = {
+      expected_error_codes: [101, 102],
+    };
+  }
+
+}
+
+message UnaryRequest {
+  option (message_info) = {
+    entity_table: "unary_messages";
+  };
+
+  string message = 1 [(max_length) = 280];
+}
