@@ -472,7 +472,7 @@ export const protoMetadata: ProtoMetadata = {
         options: { "my_message_option": 1234 },
         fields: {
           "foo": { "my_field_option": 4.5 },
-          "foo_2": { "something": Something.decode(Buffer.from("CgV3b3JsZBIDe9kC", "base64")) },
+          "foo_2": { "something": Something.decode(bytesFromBase64("CgV3b3JsZBIDe9kC")) },
         },
         oneof: { "qux": { "my_oneof_option": 42 } },
       },
@@ -482,7 +482,7 @@ export const protoMetadata: ProtoMetadata = {
         options: { "my_service_option": 0 },
         methods: {
           "MyMethod": {
-            "my_method_option": MyMessage.decode(Buffer.from("CJYBEJYBGgtTb21lIHN0cmluZyILU29tZSBzdHJpbmc=", "base64")),
+            "my_method_option": MyMessage.decode(bytesFromBase64("CJYBEJYBGgtTb21lIHN0cmluZyILU29tZSBzdHJpbmc=")),
           },
         },
       },
@@ -490,6 +490,19 @@ export const protoMetadata: ProtoMetadata = {
     enums: { "MyEnum": { options: { "my_enum_option": true }, values: { "FOO": { "my_enum_value_option": 321 } } } },
   },
 };
+
+function bytesFromBase64(b64: string): Uint8Array {
+  if ((globalThis as any).Buffer) {
+    return Uint8Array.from(globalThis.Buffer.from(b64, "base64"));
+  } else {
+    const bin = globalThis.atob(b64);
+    const arr = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; ++i) {
+      arr[i] = bin.charCodeAt(i);
+    }
+    return arr;
+  }
+}
 
 export interface MessageFns<T> {
   encode(message: T, writer?: BinaryWriter): BinaryWriter;
