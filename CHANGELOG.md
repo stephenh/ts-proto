@@ -1,3 +1,10 @@
+## [2.2.6](https://github.com/stephenh/ts-proto/compare/v2.2.5...v2.2.6) (2024-11-11)
+
+
+### Bug Fixes
+
+* **Schema generation:** ensure Buffer api is only used when in nodejs environment ([#1134](https://github.com/stephenh/ts-proto/issues/1134)) ([49035a4](https://github.com/stephenh/ts-proto/commit/49035a47e1d859563c631267ea7e1724cbf2c4a8))
+
 ## [2.2.5](https://github.com/stephenh/ts-proto/compare/v2.2.4...v2.2.5) (2024-10-22)
 
 
