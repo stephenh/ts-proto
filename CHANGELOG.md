@@ -1,3 +1,10 @@
+## [2.2.7](https://github.com/stephenh/ts-proto/compare/v2.2.6...v2.2.7) (2024-11-11)
+
+
+### Bug Fixes
+
+* problem with verbatimModuleSyntax for grpc-js ([#1132](https://github.com/stephenh/ts-proto/issues/1132)) ([bedfa31](https://github.com/stephenh/ts-proto/commit/bedfa317e7b115d10ee3de897eae2490b5eccdc9))
+
 ## [2.2.6](https://github.com/stephenh/ts-proto/compare/v2.2.5...v2.2.6) (2024-11-11)
 
 
