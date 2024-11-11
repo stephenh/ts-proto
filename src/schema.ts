@@ -11,7 +11,7 @@ import SourceInfo from "./sourceInfo";
 import { impFile, maybePrefixPackage } from "./utils";
 import { basicTypeName, toReaderCall } from "./types";
 import { BinaryReader } from "@bufbuild/protobuf/wire";
-import { OutputSchemaOption } from "./options";
+import { EnvOption, OutputSchemaOption } from "./options";
 
 const fileDescriptorProto = imp("FileDescriptorProto@ts-proto-descriptors");
 
@@ -216,7 +216,11 @@ function getExtensionValue(ctx: Context, extension: FieldDescriptorProto, data: 
       }),
     );
     const result = resultBuffer.toString("base64");
-    return code`'${extension.name}': ${typeName}.decode(Buffer.from('${result}', 'base64'))`;
+    const encoded =
+      ctx.options.env === EnvOption.NODE
+        ? code`Buffer.from('${result}', 'base64')`
+        : code`${ctx.utils.bytesFromBase64}("${result}")`;
+    return code`'${extension.name}': ${typeName}.decode(${encoded})`;
   } else {
     const reader = new BinaryReader(data[0]);
     let value = (reader as any)[toReaderCall(extension)]();
