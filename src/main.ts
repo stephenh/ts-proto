@@ -1174,41 +1174,38 @@ function generateOneofProperty(
   sourceInfo: SourceInfo,
 ): Code {
   const { options } = ctx;
-  const fields = messageDesc.field.filter((field) => isWithinOneOf(field) && field.oneofIndex === oneofIndex);
+  const fields = messageDesc.field
+    .map((field, index) => ({ index, field }))
+    .filter((item) => isWithinOneOf(item.field) && item.field.oneofIndex === oneofIndex);
+
   const mbReadonly = maybeReadonly(options);
+  const info = sourceInfo.lookup(Fields.message.oneof_decl, oneofIndex);
+  let outerComments: Code[] = [];
+  maybeAddComment(options, info, outerComments);
+
   const unionType = joinCode(
-    fields.map((f) => {
-      let fieldName = maybeSnakeToCamel(f.name, options);
-      let typeName = toTypeName(ctx, messageDesc, f);
+    fields.flatMap((f) => {
+      const fieldInfo = sourceInfo.lookup(Fields.message.field, f.index);
+      let fieldName = maybeSnakeToCamel(f.field.name, options);
+      let typeName = toTypeName(ctx, messageDesc, f.field);
       let valueName = oneofValueName(fieldName, options);
-      return code`{ ${mbReadonly}$case: '${fieldName}', ${mbReadonly}${valueName}: ${typeName} }`;
-    }),
-    { on: " | " },
+      let fieldComments: Code[] = [];
+      maybeAddComment(options, fieldInfo, fieldComments);
+
+      const combinedComments = fieldComments.join('\n');
+      return code`| // \n ${combinedComments} { ${mbReadonly}$case: '${fieldName}', ${mbReadonly}${valueName}: ${typeName} }`;
+    })
   );
 
   const name = maybeSnakeToCamel(messageDesc.oneofDecl[oneofIndex].name, options);
-  return code`${mbReadonly}${name}?: ${unionType} | ${nullOrUndefined(options)},`;
-
-  /*
-  // Ideally we'd put the comments for each oneof field next to the anonymous
-  // type we've created in the type union above, but ts-poet currently lacks
-  // that ability. For now just concatenate all comments into one big one.
-  let comments: Array<string> = [];
-  const info = sourceInfo.lookup(Fields.message.oneof_decl, oneofIndex);
-  maybeAddComment(options, info, (text) => comments.push(text));
-  messageDesc.field.forEach((field, index) => {
-    if (!isWithinOneOf(field) || field.oneofIndex !== oneofIndex) {
-      return;
-    }
-    const info = sourceInfo.lookup(Fields.message.field, index);
-    const name = maybeSnakeToCamel(field.name, options);
-    maybeAddComment(options, info, (text) => comments.push(name + '\n' + text));
-  });
-  if (comments.length) {
-    prop = prop.addJavadoc(comments.join('\n'));
-  }
-  return prop;
-  */
+  return joinCode(
+    [
+      ...outerComments,
+      code`${mbReadonly}${name}?:`,
+      unionType,
+      code`| ${nullOrUndefined(options)},`,
+    ]
+  );
 }
 
 // Create a function that constructs 'base' instance with default values for decode to use as a prototype
