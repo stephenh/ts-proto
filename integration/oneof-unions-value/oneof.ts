@@ -12,7 +12,8 @@ export interface PleaseChoose {
   /**
    * Please to be choosing one of the fields within this oneof clause.
    * This text exists to ensure we transpose comments correctly.
-   */ choice?:
+   */
+  choice?:
     | //
     /**
      * Use this if you want a number. Numbers are great. Who doesn't

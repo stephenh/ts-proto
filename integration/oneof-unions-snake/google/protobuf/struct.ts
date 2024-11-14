@@ -69,7 +69,8 @@ export interface Struct_FieldsEntry {
  * The JSON representation for `Value` is JSON value.
  */
 export interface Value {
-  /** The kind of value. */ kind?:
+  /** The kind of value. */
+  kind?:
     | //
     /** Represents a null value. */
     { $case: "null_value"; null_value: NullValue }
