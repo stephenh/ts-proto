@@ -69,13 +69,25 @@ export interface Struct_FieldsEntry {
  * The JSON representation for `Value` is JSON value.
  */
 export interface Value {
-  kind?:
-    | { $case: "nullValue"; value: NullValue }
-    | { $case: "numberValue"; value: number }
-    | { $case: "stringValue"; value: string }
-    | { $case: "boolValue"; value: boolean }
-    | { $case: "structValue"; value: { [key: string]: any } | undefined }
-    | { $case: "listValue"; value: Array<any> | undefined }
+  /** The kind of value. */ kind?:
+    | //
+    /** Represents a null value. */
+    { $case: "nullValue"; value: NullValue }
+    | //
+    /** Represents a double value. */
+    { $case: "numberValue"; value: number }
+    | //
+    /** Represents a string value. */
+    { $case: "stringValue"; value: string }
+    | //
+    /** Represents a boolean value. */
+    { $case: "boolValue"; value: boolean }
+    | //
+    /** Represents a structured value. */
+    { $case: "structValue"; value: { [key: string]: any } | undefined }
+    | //
+    /** Represents a repeated `Value`. */
+    { $case: "listValue"; value: Array<any> | undefined }
     | undefined;
 }
 

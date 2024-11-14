@@ -69,13 +69,25 @@ export interface Struct_FieldsEntry {
  * The JSON representation for `Value` is JSON value.
  */
 export interface Value {
-  readonly kind?:
-    | { readonly $case: "nullValue"; readonly nullValue: NullValue }
-    | { readonly $case: "numberValue"; readonly numberValue: number }
-    | { readonly $case: "stringValue"; readonly stringValue: string }
-    | { readonly $case: "boolValue"; readonly boolValue: boolean }
-    | { readonly $case: "structValue"; readonly structValue: { readonly [key: string]: any } | undefined }
-    | { readonly $case: "listValue"; readonly listValue: ReadonlyArray<any> | undefined }
+  /** The kind of value. */ readonly kind?:
+    | //
+    /** Represents a null value. */
+    { readonly $case: "nullValue"; readonly nullValue: NullValue }
+    | //
+    /** Represents a double value. */
+    { readonly $case: "numberValue"; readonly numberValue: number }
+    | //
+    /** Represents a string value. */
+    { readonly $case: "stringValue"; readonly stringValue: string }
+    | //
+    /** Represents a boolean value. */
+    { readonly $case: "boolValue"; readonly boolValue: boolean }
+    | //
+    /** Represents a structured value. */
+    { readonly $case: "structValue"; readonly structValue: { readonly [key: string]: any } | undefined }
+    | //
+    /** Represents a repeated `Value`. */
+    { readonly $case: "listValue"; readonly listValue: ReadonlyArray<any> | undefined }
     | undefined;
 }
 

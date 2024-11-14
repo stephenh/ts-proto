@@ -9,19 +9,44 @@ export const protobufPackage = "oneof";
 
 export interface PleaseChoose {
   name: string;
-  choice?:
-    | { $case: "aNumber"; aNumber: number }
-    | { $case: "aString"; aString: string }
-    | { $case: "aMessage"; aMessage: PleaseChoose_Submessage }
-    | { $case: "aBool"; aBool: boolean }
-    | { $case: "bunchaBytes"; bunchaBytes: Uint8Array }
-    | { $case: "anEnum"; anEnum: PleaseChoose_StateEnum }
+  /**
+   * Please to be choosing one of the fields within this oneof clause.
+   * This text exists to ensure we transpose comments correctly.
+   */ choice?:
+    | //
+    /**
+     * Use this if you want a number. Numbers are great. Who doesn't
+     * like them?
+     */
+    { $case: "aNumber"; aNumber: number }
+    | //
+    /**
+     * Use this if you want a string. Strings are also nice. Not as
+     * nice as numbers, but what are you going to do...
+     */
+    { $case: "aString"; aString: string }
+    | //
+    { $case: "aMessage"; aMessage: PleaseChoose_Submessage }
+    | //
+    /**
+     * We also added a bool option! This was added after the 'age'
+     * field, so it has a higher number.
+     */
+    { $case: "aBool"; aBool: boolean }
+    | //
+    { $case: "bunchaBytes"; bunchaBytes: Uint8Array }
+    | //
+    { $case: "anEnum"; anEnum: PleaseChoose_StateEnum }
     | undefined;
   age: number;
-  eitherOr?: { $case: "either"; either: string } | { $case: "or"; or: string } | {
-    $case: "thirdOption";
-    thirdOption: string;
-  } | undefined;
+  eitherOr?:
+    | //
+    { $case: "either"; either: string }
+    | //
+    { $case: "or"; or: string }
+    | //
+    { $case: "thirdOption"; thirdOption: string }
+    | undefined;
   signature: Uint8Array;
   value: any | undefined;
 }
