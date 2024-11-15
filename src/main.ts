@@ -664,8 +664,9 @@ function makeDeepPartial(options: Options, longs: ReturnType<typeof makeLongUtil
 
   const Builtin = conditionalOutput(
     "Builtin",
-    code`type Builtin = Date | Function | Uint8Array | string | number | boolean |${options.forceLong === LongOption.BIGINT ? " bigint |" : ""
-      } undefined;`,
+    code`type Builtin = Date | Function | Uint8Array | string | number | boolean |${
+      options.forceLong === LongOption.BIGINT ? " bigint |" : ""
+    } undefined;`,
   );
 
   // Based on https://github.com/sindresorhus/type-fest/pull/259
@@ -842,8 +843,9 @@ function makeMessageFns(
     code`
       ${maybeExport} interface FieldMaskWrapperFns {
         wrap(paths: ${options.useReadonlyTypes ? "readonly" : ""} string[]): FieldMask;
-        unwrap(message: ${options.useReadonlyTypes ? "any" : "FieldMask"}): string[] ${options.useOptionals === "all" ? "| undefined" : ""
-      };
+        unwrap(message: ${options.useReadonlyTypes ? "any" : "FieldMask"}): string[] ${
+      options.useOptionals === "all" ? "| undefined" : ""
+    };
       }
     `,
   );
@@ -941,7 +943,7 @@ function makeTimestampMethods(
           }
         `
       : options.useDate === DateOption.STRING_NANO
-        ? code`
+      ? code`
           function toTimestamp(dateStr: string): ${Timestamp} {
             const nanoDate = new ${NanoDate}(dateStr);
 
@@ -957,7 +959,7 @@ function makeTimestampMethods(
             return { ${maybeTypeField} seconds, nanos };
           }
         `
-        : code`
+      : code`
           function toTimestamp(date: Date): ${Timestamp} {
             const seconds = ${seconds};
             const nanos = (date.getTime() % 1_000) * 1_000_000;
@@ -977,7 +979,7 @@ function makeTimestampMethods(
           }
         `
       : options.useDate === DateOption.STRING_NANO
-        ? code`
+      ? code`
           function fromTimestamp(t: ${Timestamp}): string {
             const seconds = ${toNumberCode} || 0;
             const nanos = (t.nanos || 0) % 1_000;
@@ -992,7 +994,7 @@ function makeTimestampMethods(
             return nanoDate.toISOStringFull();
           }
         `
-        : code`
+      : code`
           function fromTimestamp(t: ${Timestamp}): Date {
             let millis = (${toNumberCode} || 0) * 1_000;
             millis += (t.nanos || 0) / 1_000_000;
@@ -1196,7 +1198,9 @@ function generateOneofProperty(
   );
 
   const name = maybeSnakeToCamel(messageDesc.oneofDecl[oneofIndex].name, options);
-  return joinCode([...outerComments, code`${mbReadonly}${name}?:`, unionType, code`| ${nullOrUndefined(options)},`], { on: "\n" });
+  return joinCode([...outerComments, code`${mbReadonly}${name}?:`, unionType, code`| ${nullOrUndefined(options)},`], {
+    on: "\n",
+  });
 }
 
 // Create a function that constructs 'base' instance with default values for decode to use as a prototype
@@ -1237,12 +1241,12 @@ function generateBaseInstanceFactory(
     const val = isWithinOneOf(field)
       ? nullOrUndefined(options)
       : isMapType(ctx, messageDesc, field)
-        ? shouldGenerateJSMapType(ctx, messageDesc, field)
-          ? "new Map()"
-          : "{}"
-        : isRepeated(field)
-          ? "[]"
-          : defaultValue(ctx, field);
+      ? shouldGenerateJSMapType(ctx, messageDesc, field)
+        ? "new Map()"
+        : "{}"
+      : isRepeated(field)
+      ? "[]"
+      : defaultValue(ctx, field);
 
     fields.push(code`${fieldKey}: ${val}`);
   }
@@ -1422,10 +1426,11 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
           options,
           `${varName}.value`,
         )}`;
-        const maybeIfKeyCheck = `${options.noDefaultsForOptionals
+        const maybeIfKeyCheck = `${
+          options.noDefaultsForOptionals
             ? ` && ${varName}.key !== undefined ${withAndMaybeCheckIsNotNull(options, `${varName}.key`)}`
             : ""
-          }`;
+        }`;
 
         chunks.push(code`
           ${tagCheck}
@@ -1744,8 +1749,9 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
                 writer.uint32(${tag}).fork();
                 for (const v of ${messageProperty}) {
                   if (BigInt.asIntN(64, v) !== v) {
-                    throw new ${utils.globalThis
-                }.Error('a value provided in array field ${fieldName} of type ${fieldType} is too large');
+                    throw new ${
+                      utils.globalThis
+                    }.Error('a value provided in array field ${fieldName} of type ${fieldType} is too large');
                   }
                   writer.${toReaderCall(field)}(${rhs("v")});
                 }
@@ -1758,8 +1764,9 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
                 writer.uint32(${tag}).fork();
                 for (const v of ${messageProperty}) {
                   if (BigInt.asUintN(64, v) !== v) {
-                    throw new ${utils.globalThis
-                }.Error('a value provided in array field ${fieldName} of type ${fieldType} is too large');
+                    throw new ${
+                      utils.globalThis
+                    }.Error('a value provided in array field ${fieldName} of type ${fieldType} is too large');
                   }
                   writer.${toReaderCall(field)}(${rhs("v")});
                 }
@@ -2290,8 +2297,9 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
         } else {
           // Explicit `any` type required to make TS with noImplicitAny happy. `object` is also `any` here.
           chunks.push(code`
-            ${fieldKey}: ${ctx.utils.globalThis
-            }.Array.isArray(${jsonPropertyOptional}) ? ${jsonProperty}.map((e: any) => ${readSnippet("e")}): ${fallback},
+            ${fieldKey}: ${
+            ctx.utils.globalThis
+          }.Array.isArray(${jsonPropertyOptional}) ? ${jsonProperty}.map((e: any) => ${readSnippet("e")}): ${fallback},
           `);
         }
       }
