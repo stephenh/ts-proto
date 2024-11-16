@@ -1,3 +1,10 @@
+# [2.3.0](https://github.com/stephenh/ts-proto/compare/v2.2.7...v2.3.0) (2024-11-16)
+
+
+### Features
+
+* add support for comments on union fields in generateOneofProperty ([#1136](https://github.com/stephenh/ts-proto/issues/1136)) ([c933c9c](https://github.com/stephenh/ts-proto/commit/c933c9c46dbaa278b33b16270bab51063ccb513c)), closes [#1122](https://github.com/stephenh/ts-proto/issues/1122)
+
 ## [2.2.7](https://github.com/stephenh/ts-proto/compare/v2.2.6...v2.2.7) (2024-11-11)
 
 
