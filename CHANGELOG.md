@@ -1,3 +1,10 @@
+# [2.4.0](https://github.com/stephenh/ts-proto/compare/v2.3.0...v2.4.0) (2024-11-25)
+
+
+### Features
+
+* Avoid adding empty trailing comments to oneof unions ([#1140](https://github.com/stephenh/ts-proto/issues/1140)) ([5359e8d](https://github.com/stephenh/ts-proto/commit/5359e8d4b08ad114080f04ec8327bb2379dddd86)), closes [#1136](https://github.com/stephenh/ts-proto/issues/1136)
+
 # [2.3.0](https://github.com/stephenh/ts-proto/compare/v2.2.7...v2.3.0) (2024-11-16)
 
 
