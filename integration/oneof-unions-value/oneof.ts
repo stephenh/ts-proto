@@ -26,28 +26,21 @@ export interface PleaseChoose {
      * nice as numbers, but what are you going to do...
      */
     { $case: "aString"; value: string }
-    | //
-    { $case: "aMessage"; value: PleaseChoose_Submessage }
+    | { $case: "aMessage"; value: PleaseChoose_Submessage }
     | //
     /**
      * We also added a bool option! This was added after the 'age'
      * field, so it has a higher number.
      */
     { $case: "aBool"; value: boolean }
-    | //
-    { $case: "bunchaBytes"; value: Uint8Array }
-    | //
-    { $case: "anEnum"; value: PleaseChoose_StateEnum }
+    | { $case: "bunchaBytes"; value: Uint8Array }
+    | { $case: "anEnum"; value: PleaseChoose_StateEnum }
     | undefined;
   age: number;
-  eitherOr?:
-    | //
-    { $case: "either"; value: string }
-    | //
-    { $case: "or"; value: string }
-    | //
-    { $case: "thirdOption"; value: string }
-    | undefined;
+  eitherOr?: { $case: "either"; value: string } | { $case: "or"; value: string } | {
+    $case: "thirdOption";
+    value: string;
+  } | undefined;
   signature: Uint8Array;
   value: any | undefined;
 }

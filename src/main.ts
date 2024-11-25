@@ -1193,7 +1193,9 @@ function generateOneofProperty(
       maybeAddComment(options, fieldInfo, fieldComments);
 
       const combinedComments = fieldComments.join("\n");
-      return code`| // \n ${combinedComments} { ${mbReadonly}$case: '${fieldName}', ${mbReadonly}${valueName}: ${typeName} }`;
+      return code`|${
+        combinedComments ? " // " : ""
+      }\n ${combinedComments} { ${mbReadonly}$case: '${fieldName}', ${mbReadonly}${valueName}: ${typeName} }`;
     }),
   );
 
@@ -1531,7 +1533,7 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
 
     chunks.push(code`
       const buf = reader.skip(tag & 7);
-      
+
       ${unknownFieldsInitializerSnippet}
       const list = message._unknownFields${maybeNonNullAssertion}[tag];
 
