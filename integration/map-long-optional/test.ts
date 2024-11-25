@@ -126,10 +126,10 @@ function createBaseMapBigInt_MapEntry(): MapBigInt_MapEntry {
 
 export const MapBigInt_MapEntry: MessageFns<MapBigInt_MapEntry> = {
   encode(message: MapBigInt_MapEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (!message.key.equals(Long.UZERO)) {
+    if (message.key !== undefined) {
       writer.uint32(9).fixed64(message.key.toString());
     }
-    if (!message.value.equals(Long.ZERO)) {
+    if (message.value !== undefined) {
       writer.uint32(16).int64(message.value.toString());
     }
     if (message._unknownFields !== undefined) {
@@ -189,18 +189,18 @@ export const MapBigInt_MapEntry: MessageFns<MapBigInt_MapEntry> = {
 
   fromJSON(object: any): MapBigInt_MapEntry {
     return {
-      key: isSet(object.key) ? Long.fromValue(object.key) : Long.UZERO,
-      value: isSet(object.value) ? Long.fromValue(object.value) : Long.ZERO,
+      key: Long.fromValue(assertSet("MapBigInt_MapEntry.key", object.key)),
+      value: Long.fromValue(assertSet("MapBigInt_MapEntry.value", object.value)),
     };
   },
 
   toJSON(message: MapBigInt_MapEntry): unknown {
     const obj: any = {};
-    if (!message.key.equals(Long.UZERO)) {
-      obj.key = (message.key || Long.UZERO).toString();
+    if (message.key !== undefined) {
+      obj.key = (message.key || undefined).toString();
     }
-    if (!message.value.equals(Long.ZERO)) {
-      obj.value = (message.value || Long.ZERO).toString();
+    if (message.value !== undefined) {
+      obj.value = (message.value || undefined).toString();
     }
     return obj;
   },
@@ -245,6 +245,14 @@ function isObject(value: any): boolean {
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+function assertSet<T>(field: string, value: T | undefined): T {
+  if (!isSet(value)) {
+    throw new TypeError(`Required field ${field} is not set`);
+  }
+
+  return value as T;
 }
 
 export interface MessageFns<T> {

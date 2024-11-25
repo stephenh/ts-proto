@@ -63,7 +63,7 @@ export interface OptionalsTest {
   optData: Uint8Array;
   optFloat: number;
   reqId: number;
-  reqChild: Child | undefined;
+  reqChild: Child;
   reqState: StateEnum;
   reqLong: number;
   reqTruth: boolean;
@@ -106,7 +106,7 @@ function createBaseOptionalsTest(): OptionalsTest {
     repData: [],
     repFloat: [],
     optId: 0,
-    optChild: undefined,
+    optChild: createBaseChild(),
     optState: 0,
     optLong: 0,
     optTruth: false,
@@ -114,7 +114,7 @@ function createBaseOptionalsTest(): OptionalsTest {
     optData: new Uint8Array(0),
     optFloat: 0,
     reqId: 0,
-    reqChild: undefined,
+    reqChild: createBaseChild(),
     reqState: 0,
     reqLong: 0,
     reqTruth: false,
@@ -666,40 +666,40 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
         : [],
       repData: globalThis.Array.isArray(object?.repData) ? object.repData.map((e: any) => bytesFromBase64(e)) : [],
       repFloat: globalThis.Array.isArray(object?.repFloat) ? object.repFloat.map((e: any) => globalThis.Number(e)) : [],
-      optId: isSet(object.optId) ? globalThis.Number(object.optId) : 0,
-      optChild: isSet(object.optChild) ? Child.fromJSON(object.optChild) : undefined,
-      optState: isSet(object.optState) ? stateEnumFromJSON(object.optState) : 0,
-      optLong: isSet(object.optLong) ? globalThis.Number(object.optLong) : 0,
-      optTruth: isSet(object.optTruth) ? globalThis.Boolean(object.optTruth) : false,
-      optDescription: isSet(object.optDescription) ? globalThis.String(object.optDescription) : "",
-      optData: isSet(object.optData) ? bytesFromBase64(object.optData) : new Uint8Array(0),
-      optFloat: isSet(object.optFloat) ? globalThis.Number(object.optFloat) : 0,
-      reqId: isSet(object.reqId) ? globalThis.Number(object.reqId) : 0,
-      reqChild: isSet(object.reqChild) ? Child.fromJSON(object.reqChild) : undefined,
-      reqState: isSet(object.reqState) ? stateEnumFromJSON(object.reqState) : 0,
-      reqLong: isSet(object.reqLong) ? globalThis.Number(object.reqLong) : 0,
-      reqTruth: isSet(object.reqTruth) ? globalThis.Boolean(object.reqTruth) : false,
-      reqDescription: isSet(object.reqDescription) ? globalThis.String(object.reqDescription) : "",
-      reqData: isSet(object.reqData) ? bytesFromBase64(object.reqData) : new Uint8Array(0),
-      reqFloat: isSet(object.reqFloat) ? globalThis.Number(object.reqFloat) : 0,
-      reqDefvalId: isSet(object.reqDefvalId) ? globalThis.Number(object.reqDefvalId) : 100,
-      reqDefvalState: isSet(object.reqDefvalState) ? stateEnumFromJSON(object.reqDefvalState) : 2,
-      reqDefvalLong: isSet(object.reqDefvalLong) ? globalThis.Number(object.reqDefvalLong) : 7812378193,
-      reqDefvalTruth: isSet(object.reqDefvalTruth) ? globalThis.Boolean(object.reqDefvalTruth) : true,
-      reqDefvalDescription: isSet(object.reqDefvalDescription)
-        ? globalThis.String(object.reqDefvalDescription)
-        : "Some description",
-      reqDefvalData: isSet(object.reqDefvalData) ? bytesFromBase64(object.reqDefvalData) : new Uint8Array(0),
-      reqDefvalFloat: isSet(object.reqDefvalFloat) ? globalThis.Number(object.reqDefvalFloat) : 0.12354,
-      optDefvalId: isSet(object.optDefvalId) ? globalThis.Number(object.optDefvalId) : 100,
-      optDefvalState: isSet(object.optDefvalState) ? stateEnumFromJSON(object.optDefvalState) : 2,
-      optDefvalLong: isSet(object.optDefvalLong) ? globalThis.Number(object.optDefvalLong) : 7812378193,
-      optDefvalTruth: isSet(object.optDefvalTruth) ? globalThis.Boolean(object.optDefvalTruth) : true,
-      optDefvalDescription: isSet(object.optDefvalDescription)
-        ? globalThis.String(object.optDefvalDescription)
-        : "Some description",
-      optDefvalData: isSet(object.optDefvalData) ? bytesFromBase64(object.optDefvalData) : new Uint8Array(0),
-      optDefvalFloat: isSet(object.optDefvalFloat) ? globalThis.Number(object.optDefvalFloat) : 0.12354,
+      optId: globalThis.Number(assertSet("OptionalsTest.optId", object.optId)),
+      optChild: Child.fromJSON(assertSet("OptionalsTest.optChild", object.optChild)),
+      optState: stateEnumFromJSON(assertSet("OptionalsTest.optState", object.optState)),
+      optLong: globalThis.Number(assertSet("OptionalsTest.optLong", object.optLong)),
+      optTruth: globalThis.Boolean(assertSet("OptionalsTest.optTruth", object.optTruth)),
+      optDescription: globalThis.String(assertSet("OptionalsTest.optDescription", object.optDescription)),
+      optData: bytesFromBase64(assertSet("OptionalsTest.optData", object.optData)),
+      optFloat: globalThis.Number(assertSet("OptionalsTest.optFloat", object.optFloat)),
+      reqId: globalThis.Number(assertSet("OptionalsTest.reqId", object.reqId)),
+      reqChild: Child.fromJSON(assertSet("OptionalsTest.reqChild", object.reqChild)),
+      reqState: stateEnumFromJSON(assertSet("OptionalsTest.reqState", object.reqState)),
+      reqLong: globalThis.Number(assertSet("OptionalsTest.reqLong", object.reqLong)),
+      reqTruth: globalThis.Boolean(assertSet("OptionalsTest.reqTruth", object.reqTruth)),
+      reqDescription: globalThis.String(assertSet("OptionalsTest.reqDescription", object.reqDescription)),
+      reqData: bytesFromBase64(assertSet("OptionalsTest.reqData", object.reqData)),
+      reqFloat: globalThis.Number(assertSet("OptionalsTest.reqFloat", object.reqFloat)),
+      reqDefvalId: globalThis.Number(assertSet("OptionalsTest.reqDefvalId", object.reqDefvalId)),
+      reqDefvalState: stateEnumFromJSON(assertSet("OptionalsTest.reqDefvalState", object.reqDefvalState)),
+      reqDefvalLong: globalThis.Number(assertSet("OptionalsTest.reqDefvalLong", object.reqDefvalLong)),
+      reqDefvalTruth: globalThis.Boolean(assertSet("OptionalsTest.reqDefvalTruth", object.reqDefvalTruth)),
+      reqDefvalDescription: globalThis.String(
+        assertSet("OptionalsTest.reqDefvalDescription", object.reqDefvalDescription),
+      ),
+      reqDefvalData: bytesFromBase64(assertSet("OptionalsTest.reqDefvalData", object.reqDefvalData)),
+      reqDefvalFloat: globalThis.Number(assertSet("OptionalsTest.reqDefvalFloat", object.reqDefvalFloat)),
+      optDefvalId: globalThis.Number(assertSet("OptionalsTest.optDefvalId", object.optDefvalId)),
+      optDefvalState: stateEnumFromJSON(assertSet("OptionalsTest.optDefvalState", object.optDefvalState)),
+      optDefvalLong: globalThis.Number(assertSet("OptionalsTest.optDefvalLong", object.optDefvalLong)),
+      optDefvalTruth: globalThis.Boolean(assertSet("OptionalsTest.optDefvalTruth", object.optDefvalTruth)),
+      optDefvalDescription: globalThis.String(
+        assertSet("OptionalsTest.optDefvalDescription", object.optDefvalDescription),
+      ),
+      optDefvalData: bytesFromBase64(assertSet("OptionalsTest.optDefvalData", object.optDefvalData)),
+      optDefvalFloat: globalThis.Number(assertSet("OptionalsTest.optDefvalFloat", object.optDefvalFloat)),
       translations: isObject(object.translations)
         ? Object.entries(object.translations).reduce<{ [key: string]: string }>((acc, [key, value]) => {
           acc[key] = String(value);
@@ -853,7 +853,7 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
     message.optId = object.optId ?? 0;
     message.optChild = (object.optChild !== undefined && object.optChild !== null)
       ? Child.fromPartial(object.optChild)
-      : undefined;
+      : createBaseChild();
     message.optState = object.optState ?? 0;
     message.optLong = object.optLong ?? 0;
     message.optTruth = object.optTruth ?? false;
@@ -863,7 +863,7 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
     message.reqId = object.reqId ?? 0;
     message.reqChild = (object.reqChild !== undefined && object.reqChild !== null)
       ? Child.fromPartial(object.reqChild)
-      : undefined;
+      : createBaseChild();
     message.reqState = object.reqState ?? 0;
     message.reqLong = object.reqLong ?? 0;
     message.reqTruth = object.reqTruth ?? false;
@@ -946,8 +946,8 @@ export const OptionalsTest_TranslationsEntry: MessageFns<OptionalsTest_Translati
 
   fromJSON(object: any): OptionalsTest_TranslationsEntry {
     return {
-      key: isSet(object.key) ? globalThis.String(object.key) : "",
-      value: isSet(object.value) ? globalThis.String(object.value) : "",
+      key: globalThis.String(assertSet("OptionalsTest_TranslationsEntry.key", object.key)),
+      value: globalThis.String(assertSet("OptionalsTest_TranslationsEntry.value", object.value)),
     };
   },
 
@@ -1072,6 +1072,14 @@ function isObject(value: any): boolean {
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+function assertSet<T>(field: string, value: T | undefined): T {
+  if (!isSet(value)) {
+    throw new TypeError(`Required field ${field} is not set`);
+  }
+
+  return value as T;
 }
 
 export interface MessageFns<T> {

@@ -63,7 +63,7 @@ export interface OptionalsTest {
   optData?: Uint8Array | undefined;
   optFloat?: number | undefined;
   reqId: number;
-  reqChild: Child | undefined;
+  reqChild: Child;
   reqState: StateEnum;
   reqLong: number;
   reqTruth: boolean;
@@ -105,16 +105,16 @@ function createBaseOptionalsTest(): OptionalsTest {
     repDescription: [],
     repData: [],
     repFloat: [],
-    optId: 0,
+    optId: undefined,
     optChild: undefined,
-    optState: 0,
-    optLong: 0,
-    optTruth: false,
-    optDescription: "",
-    optData: new Uint8Array(0),
-    optFloat: 0,
+    optState: undefined,
+    optLong: undefined,
+    optTruth: undefined,
+    optDescription: undefined,
+    optData: undefined,
+    optFloat: undefined,
     reqId: 0,
-    reqChild: undefined,
+    reqChild: createBaseChild(),
     reqState: 0,
     reqLong: 0,
     reqTruth: false,
@@ -128,13 +128,13 @@ function createBaseOptionalsTest(): OptionalsTest {
     reqDefvalDescription: "Some description",
     reqDefvalData: new Uint8Array(0),
     reqDefvalFloat: 0.12354,
-    optDefvalId: 100,
-    optDefvalState: 2,
-    optDefvalLong: 7812378193,
-    optDefvalTruth: true,
-    optDefvalDescription: "Some description",
-    optDefvalData: new Uint8Array(0),
-    optDefvalFloat: 0.12354,
+    optDefvalId: undefined,
+    optDefvalState: undefined,
+    optDefvalLong: undefined,
+    optDefvalTruth: undefined,
+    optDefvalDescription: undefined,
+    optDefvalData: undefined,
+    optDefvalFloat: undefined,
     translations: {},
   };
 }
@@ -175,7 +175,7 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
       writer.float(v);
     }
     writer.join();
-    if (message.optId !== undefined && message.optId !== 0) {
+    if (message.optId !== undefined && message.optId !== undefined) {
       writer.uint32(88).int32(message.optId);
     }
     if (message.optChild !== undefined) {
@@ -184,19 +184,19 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
     if (message.optState !== undefined && message.optState !== 0) {
       writer.uint32(104).int32(message.optState);
     }
-    if (message.optLong !== undefined && message.optLong !== 0) {
+    if (message.optLong !== undefined && message.optLong !== undefined) {
       writer.uint32(112).int64(message.optLong);
     }
-    if (message.optTruth !== undefined && message.optTruth !== false) {
+    if (message.optTruth !== undefined && message.optTruth !== undefined) {
       writer.uint32(120).bool(message.optTruth);
     }
-    if (message.optDescription !== undefined && message.optDescription !== "") {
+    if (message.optDescription !== undefined && message.optDescription !== undefined) {
       writer.uint32(130).string(message.optDescription);
     }
     if (message.optData !== undefined && message.optData.length !== 0) {
       writer.uint32(138).bytes(message.optData);
     }
-    if (message.optFloat !== undefined && message.optFloat !== 0) {
+    if (message.optFloat !== undefined && message.optFloat !== undefined) {
       writer.uint32(149).float(message.optFloat);
     }
     if (message.reqId !== 0) {
@@ -244,25 +244,25 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
     if (message.reqDefvalFloat !== 0.12354) {
       writer.uint32(309).float(message.reqDefvalFloat);
     }
-    if (message.optDefvalId !== undefined && message.optDefvalId !== 100) {
+    if (message.optDefvalId !== undefined && message.optDefvalId !== undefined) {
       writer.uint32(328).int32(message.optDefvalId);
     }
-    if (message.optDefvalState !== undefined && message.optDefvalState !== 2) {
+    if (message.optDefvalState !== undefined && message.optDefvalState !== 0) {
       writer.uint32(344).int32(message.optDefvalState);
     }
-    if (message.optDefvalLong !== undefined && message.optDefvalLong !== 7812378193) {
+    if (message.optDefvalLong !== undefined && message.optDefvalLong !== undefined) {
       writer.uint32(352).int64(message.optDefvalLong);
     }
-    if (message.optDefvalTruth !== undefined && message.optDefvalTruth !== true) {
+    if (message.optDefvalTruth !== undefined && message.optDefvalTruth !== undefined) {
       writer.uint32(360).bool(message.optDefvalTruth);
     }
-    if (message.optDefvalDescription !== undefined && message.optDefvalDescription !== "Some description") {
+    if (message.optDefvalDescription !== undefined && message.optDefvalDescription !== undefined) {
       writer.uint32(370).string(message.optDefvalDescription);
     }
     if (message.optDefvalData !== undefined && message.optDefvalData.length !== 0) {
       writer.uint32(378).bytes(message.optDefvalData);
     }
-    if (message.optDefvalFloat !== undefined && message.optDefvalFloat !== 0.12354) {
+    if (message.optDefvalFloat !== undefined && message.optDefvalFloat !== undefined) {
       writer.uint32(389).float(message.optDefvalFloat);
     }
     Object.entries(message.translations).forEach(([key, value]) => {
@@ -666,40 +666,40 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
         : [],
       repData: globalThis.Array.isArray(object?.repData) ? object.repData.map((e: any) => bytesFromBase64(e)) : [],
       repFloat: globalThis.Array.isArray(object?.repFloat) ? object.repFloat.map((e: any) => globalThis.Number(e)) : [],
-      optId: isSet(object.optId) ? globalThis.Number(object.optId) : 0,
+      optId: isSet(object.optId) ? globalThis.Number(object.optId) : undefined,
       optChild: isSet(object.optChild) ? Child.fromJSON(object.optChild) : undefined,
-      optState: isSet(object.optState) ? stateEnumFromJSON(object.optState) : 0,
-      optLong: isSet(object.optLong) ? globalThis.Number(object.optLong) : 0,
-      optTruth: isSet(object.optTruth) ? globalThis.Boolean(object.optTruth) : false,
-      optDescription: isSet(object.optDescription) ? globalThis.String(object.optDescription) : "",
-      optData: isSet(object.optData) ? bytesFromBase64(object.optData) : new Uint8Array(0),
-      optFloat: isSet(object.optFloat) ? globalThis.Number(object.optFloat) : 0,
-      reqId: isSet(object.reqId) ? globalThis.Number(object.reqId) : 0,
-      reqChild: isSet(object.reqChild) ? Child.fromJSON(object.reqChild) : undefined,
-      reqState: isSet(object.reqState) ? stateEnumFromJSON(object.reqState) : 0,
-      reqLong: isSet(object.reqLong) ? globalThis.Number(object.reqLong) : 0,
-      reqTruth: isSet(object.reqTruth) ? globalThis.Boolean(object.reqTruth) : false,
-      reqDescription: isSet(object.reqDescription) ? globalThis.String(object.reqDescription) : "",
-      reqData: isSet(object.reqData) ? bytesFromBase64(object.reqData) : new Uint8Array(0),
-      reqFloat: isSet(object.reqFloat) ? globalThis.Number(object.reqFloat) : 0,
-      reqDefvalId: isSet(object.reqDefvalId) ? globalThis.Number(object.reqDefvalId) : 100,
-      reqDefvalState: isSet(object.reqDefvalState) ? stateEnumFromJSON(object.reqDefvalState) : 2,
-      reqDefvalLong: isSet(object.reqDefvalLong) ? globalThis.Number(object.reqDefvalLong) : 7812378193,
-      reqDefvalTruth: isSet(object.reqDefvalTruth) ? globalThis.Boolean(object.reqDefvalTruth) : true,
-      reqDefvalDescription: isSet(object.reqDefvalDescription)
-        ? globalThis.String(object.reqDefvalDescription)
-        : "Some description",
-      reqDefvalData: isSet(object.reqDefvalData) ? bytesFromBase64(object.reqDefvalData) : new Uint8Array(0),
-      reqDefvalFloat: isSet(object.reqDefvalFloat) ? globalThis.Number(object.reqDefvalFloat) : 0.12354,
-      optDefvalId: isSet(object.optDefvalId) ? globalThis.Number(object.optDefvalId) : 100,
-      optDefvalState: isSet(object.optDefvalState) ? stateEnumFromJSON(object.optDefvalState) : 2,
-      optDefvalLong: isSet(object.optDefvalLong) ? globalThis.Number(object.optDefvalLong) : 7812378193,
-      optDefvalTruth: isSet(object.optDefvalTruth) ? globalThis.Boolean(object.optDefvalTruth) : true,
+      optState: isSet(object.optState) ? stateEnumFromJSON(object.optState) : undefined,
+      optLong: isSet(object.optLong) ? globalThis.Number(object.optLong) : undefined,
+      optTruth: isSet(object.optTruth) ? globalThis.Boolean(object.optTruth) : undefined,
+      optDescription: isSet(object.optDescription) ? globalThis.String(object.optDescription) : undefined,
+      optData: isSet(object.optData) ? bytesFromBase64(object.optData) : undefined,
+      optFloat: isSet(object.optFloat) ? globalThis.Number(object.optFloat) : undefined,
+      reqId: globalThis.Number(assertSet("OptionalsTest.reqId", object.reqId)),
+      reqChild: Child.fromJSON(assertSet("OptionalsTest.reqChild", object.reqChild)),
+      reqState: stateEnumFromJSON(assertSet("OptionalsTest.reqState", object.reqState)),
+      reqLong: globalThis.Number(assertSet("OptionalsTest.reqLong", object.reqLong)),
+      reqTruth: globalThis.Boolean(assertSet("OptionalsTest.reqTruth", object.reqTruth)),
+      reqDescription: globalThis.String(assertSet("OptionalsTest.reqDescription", object.reqDescription)),
+      reqData: bytesFromBase64(assertSet("OptionalsTest.reqData", object.reqData)),
+      reqFloat: globalThis.Number(assertSet("OptionalsTest.reqFloat", object.reqFloat)),
+      reqDefvalId: globalThis.Number(assertSet("OptionalsTest.reqDefvalId", object.reqDefvalId)),
+      reqDefvalState: stateEnumFromJSON(assertSet("OptionalsTest.reqDefvalState", object.reqDefvalState)),
+      reqDefvalLong: globalThis.Number(assertSet("OptionalsTest.reqDefvalLong", object.reqDefvalLong)),
+      reqDefvalTruth: globalThis.Boolean(assertSet("OptionalsTest.reqDefvalTruth", object.reqDefvalTruth)),
+      reqDefvalDescription: globalThis.String(
+        assertSet("OptionalsTest.reqDefvalDescription", object.reqDefvalDescription),
+      ),
+      reqDefvalData: bytesFromBase64(assertSet("OptionalsTest.reqDefvalData", object.reqDefvalData)),
+      reqDefvalFloat: globalThis.Number(assertSet("OptionalsTest.reqDefvalFloat", object.reqDefvalFloat)),
+      optDefvalId: isSet(object.optDefvalId) ? globalThis.Number(object.optDefvalId) : undefined,
+      optDefvalState: isSet(object.optDefvalState) ? stateEnumFromJSON(object.optDefvalState) : undefined,
+      optDefvalLong: isSet(object.optDefvalLong) ? globalThis.Number(object.optDefvalLong) : undefined,
+      optDefvalTruth: isSet(object.optDefvalTruth) ? globalThis.Boolean(object.optDefvalTruth) : undefined,
       optDefvalDescription: isSet(object.optDefvalDescription)
         ? globalThis.String(object.optDefvalDescription)
-        : "Some description",
-      optDefvalData: isSet(object.optDefvalData) ? bytesFromBase64(object.optDefvalData) : new Uint8Array(0),
-      optDefvalFloat: isSet(object.optDefvalFloat) ? globalThis.Number(object.optDefvalFloat) : 0.12354,
+        : undefined,
+      optDefvalData: isSet(object.optDefvalData) ? bytesFromBase64(object.optDefvalData) : undefined,
+      optDefvalFloat: isSet(object.optDefvalFloat) ? globalThis.Number(object.optDefvalFloat) : undefined,
       translations: isObject(object.translations)
         ? Object.entries(object.translations).reduce<{ [key: string]: string }>((acc, [key, value]) => {
           acc[key] = String(value);
@@ -735,7 +735,7 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
     if (message.repFloat?.length) {
       obj.repFloat = message.repFloat;
     }
-    if (message.optId !== undefined && message.optId !== 0) {
+    if (message.optId !== undefined && message.optId !== undefined) {
       obj.optId = Math.round(message.optId);
     }
     if (message.optChild !== undefined) {
@@ -744,19 +744,19 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
     if (message.optState !== undefined && message.optState !== 0) {
       obj.optState = stateEnumToJSON(message.optState);
     }
-    if (message.optLong !== undefined && message.optLong !== 0) {
+    if (message.optLong !== undefined && message.optLong !== undefined) {
       obj.optLong = Math.round(message.optLong);
     }
-    if (message.optTruth !== undefined && message.optTruth !== false) {
+    if (message.optTruth !== undefined && message.optTruth !== undefined) {
       obj.optTruth = message.optTruth;
     }
-    if (message.optDescription !== undefined && message.optDescription !== "") {
+    if (message.optDescription !== undefined && message.optDescription !== undefined) {
       obj.optDescription = message.optDescription;
     }
     if (message.optData !== undefined && message.optData.length !== 0) {
       obj.optData = base64FromBytes(message.optData);
     }
-    if (message.optFloat !== undefined && message.optFloat !== 0) {
+    if (message.optFloat !== undefined && message.optFloat !== undefined) {
       obj.optFloat = message.optFloat;
     }
     if (message.reqId !== 0) {
@@ -804,25 +804,25 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
     if (message.reqDefvalFloat !== 0.12354) {
       obj.reqDefvalFloat = message.reqDefvalFloat;
     }
-    if (message.optDefvalId !== undefined && message.optDefvalId !== 100) {
+    if (message.optDefvalId !== undefined && message.optDefvalId !== undefined) {
       obj.optDefvalId = Math.round(message.optDefvalId);
     }
-    if (message.optDefvalState !== undefined && message.optDefvalState !== 2) {
+    if (message.optDefvalState !== undefined && message.optDefvalState !== 0) {
       obj.optDefvalState = stateEnumToJSON(message.optDefvalState);
     }
-    if (message.optDefvalLong !== undefined && message.optDefvalLong !== 7812378193) {
+    if (message.optDefvalLong !== undefined && message.optDefvalLong !== undefined) {
       obj.optDefvalLong = Math.round(message.optDefvalLong);
     }
-    if (message.optDefvalTruth !== undefined && message.optDefvalTruth !== true) {
+    if (message.optDefvalTruth !== undefined && message.optDefvalTruth !== undefined) {
       obj.optDefvalTruth = message.optDefvalTruth;
     }
-    if (message.optDefvalDescription !== undefined && message.optDefvalDescription !== "Some description") {
+    if (message.optDefvalDescription !== undefined && message.optDefvalDescription !== undefined) {
       obj.optDefvalDescription = message.optDefvalDescription;
     }
     if (message.optDefvalData !== undefined && message.optDefvalData.length !== 0) {
       obj.optDefvalData = base64FromBytes(message.optDefvalData);
     }
-    if (message.optDefvalFloat !== undefined && message.optDefvalFloat !== 0.12354) {
+    if (message.optDefvalFloat !== undefined && message.optDefvalFloat !== undefined) {
       obj.optDefvalFloat = message.optDefvalFloat;
     }
     if (message.translations) {
@@ -850,20 +850,20 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
     message.repDescription = object.repDescription?.map((e) => e) || [];
     message.repData = object.repData?.map((e) => e) || [];
     message.repFloat = object.repFloat?.map((e) => e) || [];
-    message.optId = object.optId ?? 0;
+    message.optId = object.optId ?? undefined;
     message.optChild = (object.optChild !== undefined && object.optChild !== null)
       ? Child.fromPartial(object.optChild)
       : undefined;
-    message.optState = object.optState ?? 0;
-    message.optLong = object.optLong ?? 0;
-    message.optTruth = object.optTruth ?? false;
-    message.optDescription = object.optDescription ?? "";
-    message.optData = object.optData ?? new Uint8Array(0);
-    message.optFloat = object.optFloat ?? 0;
+    message.optState = object.optState ?? undefined;
+    message.optLong = object.optLong ?? undefined;
+    message.optTruth = object.optTruth ?? undefined;
+    message.optDescription = object.optDescription ?? undefined;
+    message.optData = object.optData ?? undefined;
+    message.optFloat = object.optFloat ?? undefined;
     message.reqId = object.reqId ?? 0;
     message.reqChild = (object.reqChild !== undefined && object.reqChild !== null)
       ? Child.fromPartial(object.reqChild)
-      : undefined;
+      : createBaseChild();
     message.reqState = object.reqState ?? 0;
     message.reqLong = object.reqLong ?? 0;
     message.reqTruth = object.reqTruth ?? false;
@@ -877,13 +877,13 @@ export const OptionalsTest: MessageFns<OptionalsTest> = {
     message.reqDefvalDescription = object.reqDefvalDescription ?? "Some description";
     message.reqDefvalData = object.reqDefvalData ?? new Uint8Array(0);
     message.reqDefvalFloat = object.reqDefvalFloat ?? 0.12354;
-    message.optDefvalId = object.optDefvalId ?? 100;
-    message.optDefvalState = object.optDefvalState ?? 2;
-    message.optDefvalLong = object.optDefvalLong ?? 7812378193;
-    message.optDefvalTruth = object.optDefvalTruth ?? true;
-    message.optDefvalDescription = object.optDefvalDescription ?? "Some description";
-    message.optDefvalData = object.optDefvalData ?? new Uint8Array(0);
-    message.optDefvalFloat = object.optDefvalFloat ?? 0.12354;
+    message.optDefvalId = object.optDefvalId ?? undefined;
+    message.optDefvalState = object.optDefvalState ?? undefined;
+    message.optDefvalLong = object.optDefvalLong ?? undefined;
+    message.optDefvalTruth = object.optDefvalTruth ?? undefined;
+    message.optDefvalDescription = object.optDefvalDescription ?? undefined;
+    message.optDefvalData = object.optDefvalData ?? undefined;
+    message.optDefvalFloat = object.optDefvalFloat ?? undefined;
     message.translations = Object.entries(object.translations ?? {}).reduce<{ [key: string]: string }>(
       (acc, [key, value]) => {
         if (value !== undefined) {
@@ -903,10 +903,10 @@ function createBaseOptionalsTest_TranslationsEntry(): OptionalsTest_Translations
 
 export const OptionalsTest_TranslationsEntry: MessageFns<OptionalsTest_TranslationsEntry> = {
   encode(message: OptionalsTest_TranslationsEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.key !== "") {
+    if (message.key !== undefined) {
       writer.uint32(10).string(message.key);
     }
-    if (message.value !== "") {
+    if (message.value !== undefined) {
       writer.uint32(18).string(message.value);
     }
     return writer;
@@ -946,17 +946,17 @@ export const OptionalsTest_TranslationsEntry: MessageFns<OptionalsTest_Translati
 
   fromJSON(object: any): OptionalsTest_TranslationsEntry {
     return {
-      key: isSet(object.key) ? globalThis.String(object.key) : "",
-      value: isSet(object.value) ? globalThis.String(object.value) : "",
+      key: globalThis.String(assertSet("OptionalsTest_TranslationsEntry.key", object.key)),
+      value: globalThis.String(assertSet("OptionalsTest_TranslationsEntry.value", object.value)),
     };
   },
 
   toJSON(message: OptionalsTest_TranslationsEntry): unknown {
     const obj: any = {};
-    if (message.key !== "") {
+    if (message.key !== undefined) {
       obj.key = message.key;
     }
-    if (message.value !== "") {
+    if (message.value !== undefined) {
       obj.value = message.value;
     }
     return obj;
@@ -1072,6 +1072,14 @@ function isObject(value: any): boolean {
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+function assertSet<T>(field: string, value: T | undefined): T {
+  if (!isSet(value)) {
+    throw new TypeError(`Required field ${field} is not set`);
+  }
+
+  return value as T;
 }
 
 export interface MessageFns<T> {

@@ -80,7 +80,7 @@ export const Issue56: MessageFns<Issue56> = {
   },
 
   fromJSON(object: any): Issue56 {
-    return { test: isSet(object.test) ? enumWithoutZeroFromJSON(object.test) : 1 };
+    return { test: enumWithoutZeroFromJSON(assertSet("Issue56.test", object.test)) };
   },
 
   toJSON(message: Issue56): unknown {
@@ -115,6 +115,14 @@ export type Exact<P, I extends P> = P extends Builtin ? P
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+function assertSet<T>(field: string, value: T | undefined): T {
+  if (!isSet(value)) {
+    throw new TypeError(`Required field ${field} is not set`);
+  }
+
+  return value as T;
 }
 
 export interface MessageFns<T> {
