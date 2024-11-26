@@ -1,3 +1,10 @@
+## [2.4.1](https://github.com/stephenh/ts-proto/compare/v2.4.0...v2.4.1) (2024-11-26)
+
+
+### Performance Improvements
+
+* Generating "else if" where applicable ([#1141](https://github.com/stephenh/ts-proto/issues/1141)) ([4a8018c](https://github.com/stephenh/ts-proto/commit/4a8018c915dabbc83629f021a2899ade55b6c8de))
+
 # [2.4.0](https://github.com/stephenh/ts-proto/compare/v2.3.0...v2.4.0) (2024-11-25)
 
 
