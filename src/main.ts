@@ -2394,6 +2394,8 @@ function generateToJson(
       const obj: any = {};
   `);
 
+  let currentIfTarget = "";
+
   // then add a case for each field
   messageDesc.field.forEach((field) => {
     const fieldName = getFieldName(field, options);
@@ -2525,10 +2527,13 @@ function generateToJson(
         : getPropertyAccessor("message", maybeSnakeToCamel(messageDesc.oneofDecl[field.oneofIndex].name, options));
       const valueName = oneofValueName(fieldName, options);
       chunks.push(code`
-        if (${oneofNameWithMessage}?.$case === '${fieldName}') {
+        ${
+          currentIfTarget === oneofNameWithMessage ? "else " : ""
+        }if (${oneofNameWithMessage}?.$case === '${fieldName}') {
           ${jsonProperty} = ${readSnippet(`${oneofNameWithMessage}.${valueName}`)};
         }
       `);
+      currentIfTarget = oneofNameWithMessage;
     } else {
       let emitDefaultValuesForJson = ctx.options.emitDefaultValues.includes("json-methods");
       const check =
@@ -2586,6 +2591,8 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
   }
 
   chunks.push(code`const message = ${createBase}${maybeAsAny(options)};`);
+
+  let currentIfTarget = "";
 
   // add a check for each incoming field
   messageDesc.field.forEach((field) => {
@@ -2704,7 +2711,7 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
       const valueName = oneofValueName(fieldName, options);
       const v = readSnippet(`${oneofNameWithObject}.${valueName}`);
       chunks.push(code`
-        if (
+        ${currentIfTarget === oneofNameWithObject ? "else " : ""}if (
           ${oneofNameWithObject}?.$case === '${fieldName}'
           && ${oneofNameWithObject}?.${valueName} !== undefined
           && ${oneofNameWithObject}?.${valueName} !== null
@@ -2712,6 +2719,7 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
           ${oneofNameWithMessage} = { $case: '${fieldName}', ${valueName}: ${v} };
         }
       `);
+      currentIfTarget = oneofNameWithObject;
     } else if (readSnippet(`x`).toCodeString([]) == "x") {
       // An optimized case of the else below that works when `readSnippet` returns the plain input
       const fallback = isWithinOneOf(field) || noDefaultValue ? "undefined" : defaultValue(ctx, field);
