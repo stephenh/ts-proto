@@ -270,8 +270,7 @@ export const Entity: MessageFns<Entity> = {
     }
     if (message.oneOfValue?.$case === "theStringValue") {
       obj.theStringValue = message.oneOfValue.theStringValue;
-    }
-    if (message.oneOfValue?.$case === "theIntValue") {
+    } else if (message.oneOfValue?.$case === "theIntValue") {
       obj.theIntValue = Math.round(message.oneOfValue.theIntValue);
     }
     return obj;
@@ -300,8 +299,7 @@ export const Entity: MessageFns<Entity> = {
       object.oneOfValue?.theStringValue !== null
     ) {
       message.oneOfValue = { $case: "theStringValue", theStringValue: object.oneOfValue.theStringValue };
-    }
-    if (
+    } else if (
       object.oneOfValue?.$case === "theIntValue" &&
       object.oneOfValue?.theIntValue !== undefined &&
       object.oneOfValue?.theIntValue !== null
