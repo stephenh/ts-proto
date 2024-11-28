@@ -2592,13 +2592,19 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
 
   chunks.push(code`const message = ${createBase}${maybeAsAny(options)};`);
 
-  let currentIfTarget = "";
+  let currentSwitchTarget: string | undefined;
 
   // add a check for each incoming field
   messageDesc.field.forEach((field) => {
     const fieldName = getFieldName(field, options);
     const messageProperty = getPropertyAccessor("message", fieldName);
     const objectProperty = getPropertyAccessor("object", fieldName);
+
+    if (currentSwitchTarget && !isWithinOneOfThatShouldBeUnion(options, field)) {
+      // We are exiting a switch, we need to close it
+      chunks.push(code`}`);
+      currentSwitchTarget = undefined;
+    }
 
     const readSnippet = (from: string): Code => {
       if (
@@ -2710,16 +2716,25 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
       const oneofNameWithObject = getPropertyAccessor("object", oneofName);
       const valueName = oneofValueName(fieldName, options);
       const v = readSnippet(`${oneofNameWithObject}.${valueName}`);
+
+      // If we are entering a new switch, close the previous one
+      if (currentSwitchTarget !== undefined && currentSwitchTarget !== oneofNameWithObject) {
+        chunks.push(code`}`);
+        currentSwitchTarget = undefined;
+      }
+      if (currentSwitchTarget === undefined) {
+        chunks.push(code`switch (${oneofNameWithObject}?.$case) {`);
+      }
       chunks.push(code`
-        ${currentIfTarget === oneofNameWithObject ? "else " : ""}if (
-          ${oneofNameWithObject}?.$case === '${fieldName}'
-          && ${oneofNameWithObject}?.${valueName} !== undefined
-          && ${oneofNameWithObject}?.${valueName} !== null
-        ) {
-          ${oneofNameWithMessage} = { $case: '${fieldName}', ${valueName}: ${v} };
+        case '${fieldName}': {
+          if (${oneofNameWithObject}?.${valueName} !== undefined
+              && ${oneofNameWithObject}?.${valueName} !== null) {
+            ${oneofNameWithMessage} = { $case: '${fieldName}', ${valueName}: ${v} };
+          }
+          break;
         }
       `);
-      currentIfTarget = oneofNameWithObject;
+      currentSwitchTarget = oneofNameWithObject;
     } else if (readSnippet(`x`).toCodeString([]) == "x") {
       // An optimized case of the else below that works when `readSnippet` returns the plain input
       const fallback = isWithinOneOf(field) || noDefaultValue ? "undefined" : defaultValue(ctx, field);
@@ -2733,6 +2748,12 @@ function generateFromPartial(ctx: Context, fullName: string, messageDesc: Descri
       `);
     }
   });
+
+  if (currentSwitchTarget) {
+    // We are exiting a switch, we need to close it
+    chunks.push(code`}`);
+    currentSwitchTarget = "";
+  }
 
   // and then wrap up the switch/while/return
   chunks.push(code`return message;`);

@@ -420,36 +420,43 @@ export const Value: MessageFns<Value> & AnyValueWrapperFns = {
   },
   fromPartial<I extends Exact<DeepPartial<Value>, I>>(object: I): Value {
     const message = createBaseValue();
-    if (
-      object.kind?.$case === "null_value" && object.kind?.null_value !== undefined && object.kind?.null_value !== null
-    ) {
-      message.kind = { $case: "null_value", null_value: object.kind.null_value };
-    } else if (
-      object.kind?.$case === "number_value" &&
-      object.kind?.number_value !== undefined &&
-      object.kind?.number_value !== null
-    ) {
-      message.kind = { $case: "number_value", number_value: object.kind.number_value };
-    } else if (
-      object.kind?.$case === "string_value" &&
-      object.kind?.string_value !== undefined &&
-      object.kind?.string_value !== null
-    ) {
-      message.kind = { $case: "string_value", string_value: object.kind.string_value };
-    } else if (
-      object.kind?.$case === "bool_value" && object.kind?.bool_value !== undefined && object.kind?.bool_value !== null
-    ) {
-      message.kind = { $case: "bool_value", bool_value: object.kind.bool_value };
-    } else if (
-      object.kind?.$case === "struct_value" &&
-      object.kind?.struct_value !== undefined &&
-      object.kind?.struct_value !== null
-    ) {
-      message.kind = { $case: "struct_value", struct_value: object.kind.struct_value };
-    } else if (
-      object.kind?.$case === "list_value" && object.kind?.list_value !== undefined && object.kind?.list_value !== null
-    ) {
-      message.kind = { $case: "list_value", list_value: object.kind.list_value };
+    switch (object.kind?.$case) {
+      case "null_value": {
+        if (object.kind?.null_value !== undefined && object.kind?.null_value !== null) {
+          message.kind = { $case: "null_value", null_value: object.kind.null_value };
+        }
+        break;
+      }
+      case "number_value": {
+        if (object.kind?.number_value !== undefined && object.kind?.number_value !== null) {
+          message.kind = { $case: "number_value", number_value: object.kind.number_value };
+        }
+        break;
+      }
+      case "string_value": {
+        if (object.kind?.string_value !== undefined && object.kind?.string_value !== null) {
+          message.kind = { $case: "string_value", string_value: object.kind.string_value };
+        }
+        break;
+      }
+      case "bool_value": {
+        if (object.kind?.bool_value !== undefined && object.kind?.bool_value !== null) {
+          message.kind = { $case: "bool_value", bool_value: object.kind.bool_value };
+        }
+        break;
+      }
+      case "struct_value": {
+        if (object.kind?.struct_value !== undefined && object.kind?.struct_value !== null) {
+          message.kind = { $case: "struct_value", struct_value: object.kind.struct_value };
+        }
+        break;
+      }
+      case "list_value": {
+        if (object.kind?.list_value !== undefined && object.kind?.list_value !== null) {
+          message.kind = { $case: "list_value", list_value: object.kind.list_value };
+        }
+        break;
+      }
     }
     return message;
   },

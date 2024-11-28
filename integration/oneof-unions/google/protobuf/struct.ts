@@ -417,34 +417,43 @@ export const Value: MessageFns<Value> & AnyValueWrapperFns = {
   },
   fromPartial<I extends Exact<DeepPartial<Value>, I>>(object: I): Value {
     const message = createBaseValue();
-    if (object.kind?.$case === "nullValue" && object.kind?.nullValue !== undefined && object.kind?.nullValue !== null) {
-      message.kind = { $case: "nullValue", nullValue: object.kind.nullValue };
-    } else if (
-      object.kind?.$case === "numberValue" &&
-      object.kind?.numberValue !== undefined &&
-      object.kind?.numberValue !== null
-    ) {
-      message.kind = { $case: "numberValue", numberValue: object.kind.numberValue };
-    } else if (
-      object.kind?.$case === "stringValue" &&
-      object.kind?.stringValue !== undefined &&
-      object.kind?.stringValue !== null
-    ) {
-      message.kind = { $case: "stringValue", stringValue: object.kind.stringValue };
-    } else if (
-      object.kind?.$case === "boolValue" && object.kind?.boolValue !== undefined && object.kind?.boolValue !== null
-    ) {
-      message.kind = { $case: "boolValue", boolValue: object.kind.boolValue };
-    } else if (
-      object.kind?.$case === "structValue" &&
-      object.kind?.structValue !== undefined &&
-      object.kind?.structValue !== null
-    ) {
-      message.kind = { $case: "structValue", structValue: object.kind.structValue };
-    } else if (
-      object.kind?.$case === "listValue" && object.kind?.listValue !== undefined && object.kind?.listValue !== null
-    ) {
-      message.kind = { $case: "listValue", listValue: object.kind.listValue };
+    switch (object.kind?.$case) {
+      case "nullValue": {
+        if (object.kind?.nullValue !== undefined && object.kind?.nullValue !== null) {
+          message.kind = { $case: "nullValue", nullValue: object.kind.nullValue };
+        }
+        break;
+      }
+      case "numberValue": {
+        if (object.kind?.numberValue !== undefined && object.kind?.numberValue !== null) {
+          message.kind = { $case: "numberValue", numberValue: object.kind.numberValue };
+        }
+        break;
+      }
+      case "stringValue": {
+        if (object.kind?.stringValue !== undefined && object.kind?.stringValue !== null) {
+          message.kind = { $case: "stringValue", stringValue: object.kind.stringValue };
+        }
+        break;
+      }
+      case "boolValue": {
+        if (object.kind?.boolValue !== undefined && object.kind?.boolValue !== null) {
+          message.kind = { $case: "boolValue", boolValue: object.kind.boolValue };
+        }
+        break;
+      }
+      case "structValue": {
+        if (object.kind?.structValue !== undefined && object.kind?.structValue !== null) {
+          message.kind = { $case: "structValue", structValue: object.kind.structValue };
+        }
+        break;
+      }
+      case "listValue": {
+        if (object.kind?.listValue !== undefined && object.kind?.listValue !== null) {
+          message.kind = { $case: "listValue", listValue: object.kind.listValue };
+        }
+        break;
+      }
     }
     return message;
   },

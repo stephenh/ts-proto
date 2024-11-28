@@ -293,18 +293,19 @@ export const Entity: MessageFns<Entity> = {
     message.fieldMask = object.fieldMask ?? undefined;
     message.listValue = object.listValue ?? undefined;
     message.structValue = object.structValue ?? undefined;
-    if (
-      object.oneOfValue?.$case === "theStringValue" &&
-      object.oneOfValue?.theStringValue !== undefined &&
-      object.oneOfValue?.theStringValue !== null
-    ) {
-      message.oneOfValue = { $case: "theStringValue", theStringValue: object.oneOfValue.theStringValue };
-    } else if (
-      object.oneOfValue?.$case === "theIntValue" &&
-      object.oneOfValue?.theIntValue !== undefined &&
-      object.oneOfValue?.theIntValue !== null
-    ) {
-      message.oneOfValue = { $case: "theIntValue", theIntValue: object.oneOfValue.theIntValue };
+    switch (object.oneOfValue?.$case) {
+      case "theStringValue": {
+        if (object.oneOfValue?.theStringValue !== undefined && object.oneOfValue?.theStringValue !== null) {
+          message.oneOfValue = { $case: "theStringValue", theStringValue: object.oneOfValue.theStringValue };
+        }
+        break;
+      }
+      case "theIntValue": {
+        if (object.oneOfValue?.theIntValue !== undefined && object.oneOfValue?.theIntValue !== null) {
+          message.oneOfValue = { $case: "theIntValue", theIntValue: object.oneOfValue.theIntValue };
+        }
+        break;
+      }
     }
     return message;
   },
