@@ -1,3 +1,10 @@
+## [2.4.2](https://github.com/stephenh/ts-proto/compare/v2.4.1...v2.4.2) (2024-11-28)
+
+
+### Performance Improvements
+
+* Replacing "else if" with a "switch case" statement to improve Typescript performance ([#1142](https://github.com/stephenh/ts-proto/issues/1142)) ([de1a616](https://github.com/stephenh/ts-proto/commit/de1a616d24a90ef7b281c9e8966556adfa156ebb)), closes [#1135](https://github.com/stephenh/ts-proto/issues/1135) [#1141](https://github.com/stephenh/ts-proto/issues/1141)
+
 ## [2.4.1](https://github.com/stephenh/ts-proto/compare/v2.4.0...v2.4.1) (2024-11-26)
 
 
