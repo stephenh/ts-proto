@@ -338,44 +338,64 @@ export const PleaseChoose: MessageFns<PleaseChoose> = {
   fromPartial<I extends Exact<DeepPartial<PleaseChoose>, I>>(object: I): PleaseChoose {
     const message = createBasePleaseChoose();
     message.name = object.name ?? "";
-    if (object.choice?.$case === "aNumber" && object.choice?.aNumber !== undefined && object.choice?.aNumber !== null) {
-      message.choice = { $case: "aNumber", aNumber: object.choice.aNumber };
-    } else if (
-      object.choice?.$case === "aString" && object.choice?.aString !== undefined && object.choice?.aString !== null
-    ) {
-      message.choice = { $case: "aString", aString: object.choice.aString };
-    } else if (
-      object.choice?.$case === "aMessage" && object.choice?.aMessage !== undefined && object.choice?.aMessage !== null
-    ) {
-      message.choice = { $case: "aMessage", aMessage: PleaseChoose_Submessage.fromPartial(object.choice.aMessage) };
-    } else if (
-      object.choice?.$case === "aBool" && object.choice?.aBool !== undefined && object.choice?.aBool !== null
-    ) {
-      message.choice = { $case: "aBool", aBool: object.choice.aBool };
-    } else if (
-      object.choice?.$case === "bunchaBytes" &&
-      object.choice?.bunchaBytes !== undefined &&
-      object.choice?.bunchaBytes !== null
-    ) {
-      message.choice = { $case: "bunchaBytes", bunchaBytes: object.choice.bunchaBytes };
-    } else if (
-      object.choice?.$case === "anEnum" && object.choice?.anEnum !== undefined && object.choice?.anEnum !== null
-    ) {
-      message.choice = { $case: "anEnum", anEnum: object.choice.anEnum };
+    switch (object.choice?.$case) {
+      case "aNumber": {
+        if (object.choice?.aNumber !== undefined && object.choice?.aNumber !== null) {
+          message.choice = { $case: "aNumber", aNumber: object.choice.aNumber };
+        }
+        break;
+      }
+      case "aString": {
+        if (object.choice?.aString !== undefined && object.choice?.aString !== null) {
+          message.choice = { $case: "aString", aString: object.choice.aString };
+        }
+        break;
+      }
+      case "aMessage": {
+        if (object.choice?.aMessage !== undefined && object.choice?.aMessage !== null) {
+          message.choice = { $case: "aMessage", aMessage: PleaseChoose_Submessage.fromPartial(object.choice.aMessage) };
+        }
+        break;
+      }
+      case "aBool": {
+        if (object.choice?.aBool !== undefined && object.choice?.aBool !== null) {
+          message.choice = { $case: "aBool", aBool: object.choice.aBool };
+        }
+        break;
+      }
+      case "bunchaBytes": {
+        if (object.choice?.bunchaBytes !== undefined && object.choice?.bunchaBytes !== null) {
+          message.choice = { $case: "bunchaBytes", bunchaBytes: object.choice.bunchaBytes };
+        }
+        break;
+      }
+      case "anEnum": {
+        if (object.choice?.anEnum !== undefined && object.choice?.anEnum !== null) {
+          message.choice = { $case: "anEnum", anEnum: object.choice.anEnum };
+        }
+        break;
+      }
     }
     message.age = object.age ?? 0;
-    if (
-      object.eitherOr?.$case === "either" && object.eitherOr?.either !== undefined && object.eitherOr?.either !== null
-    ) {
-      message.eitherOr = { $case: "either", either: object.eitherOr.either };
-    } else if (object.eitherOr?.$case === "or" && object.eitherOr?.or !== undefined && object.eitherOr?.or !== null) {
-      message.eitherOr = { $case: "or", or: object.eitherOr.or };
-    } else if (
-      object.eitherOr?.$case === "thirdOption" &&
-      object.eitherOr?.thirdOption !== undefined &&
-      object.eitherOr?.thirdOption !== null
-    ) {
-      message.eitherOr = { $case: "thirdOption", thirdOption: object.eitherOr.thirdOption };
+    switch (object.eitherOr?.$case) {
+      case "either": {
+        if (object.eitherOr?.either !== undefined && object.eitherOr?.either !== null) {
+          message.eitherOr = { $case: "either", either: object.eitherOr.either };
+        }
+        break;
+      }
+      case "or": {
+        if (object.eitherOr?.or !== undefined && object.eitherOr?.or !== null) {
+          message.eitherOr = { $case: "or", or: object.eitherOr.or };
+        }
+        break;
+      }
+      case "thirdOption": {
+        if (object.eitherOr?.thirdOption !== undefined && object.eitherOr?.thirdOption !== null) {
+          message.eitherOr = { $case: "thirdOption", thirdOption: object.eitherOr.thirdOption };
+        }
+        break;
+      }
     }
     message.signature = object.signature ?? new Uint8Array(0);
     message.value = object.value ?? undefined;
