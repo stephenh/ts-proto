@@ -210,12 +210,11 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
 
         // Only decode, fromPartial, and wrap use the createBase method
         if (
-          (
-            options.outputEncodeMethods &&
+          (options.outputEncodeMethods &&
             options.outputEncodeMethods !== "encode-no-creation" &&
             options.outputEncodeMethods !== "encode-only" &&
-            (options.outputDecodeIncludeTypes === "" || new RegExp(options.outputDecodeIncludeTypes).test(fullTypeName))
-          ) ||
+            (options.outputDecodeIncludeTypes === "" ||
+              new RegExp(options.outputDecodeIncludeTypes).test(fullTypeName))) ||
           options.outputPartialMethods ||
           outputWrapAndUnwrap
         ) {
@@ -239,11 +238,14 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
 
         if (options.outputEncodeMethods) {
           if (
-            (options.outputEncodeMethods === true ||
-              options.outputEncodeMethods === "encode-only" ||
-              options.outputEncodeMethods === "encode-no-creation")
+            options.outputEncodeMethods === true ||
+            options.outputEncodeMethods === "encode-only" ||
+            options.outputEncodeMethods === "encode-no-creation"
           ) {
-            if (options.outputEncodeIncludeTypes === "" || new RegExp(options.outputEncodeIncludeTypes).test(fullTypeName)) {
+            if (
+              options.outputEncodeIncludeTypes === "" ||
+              new RegExp(options.outputEncodeIncludeTypes).test(fullTypeName)
+            ) {
               staticMembers.push(generateEncode(ctx, fullName, message));
 
               if (options.outputExtensions && options.unknownFields && message.extensionRange.length) {
@@ -255,7 +257,10 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
           }
 
           if (options.outputEncodeMethods === true || options.outputEncodeMethods === "decode-only") {
-            if (options.outputDecodeIncludeTypes === "" || new RegExp(options.outputDecodeIncludeTypes).test(fullTypeName)) {
+            if (
+              options.outputDecodeIncludeTypes === "" ||
+              new RegExp(options.outputDecodeIncludeTypes).test(fullTypeName)
+            ) {
               staticMembers.push(generateDecode(ctx, fullName, message));
 
               if (options.outputExtensions && options.unknownFields && message.extensionRange.length) {
