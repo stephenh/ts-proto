@@ -96,10 +96,6 @@ export interface BytesValue {
   value: Uint8Array;
 }
 
-function createBaseDoubleValue(): DoubleValue {
-  return { value: 0 };
-}
-
 export const DoubleValue: MessageFns<DoubleValue> = {
   encode(message: DoubleValue, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.value !== 0) {
@@ -108,10 +104,6 @@ export const DoubleValue: MessageFns<DoubleValue> = {
     return writer;
   },
 };
-
-function createBaseFloatValue(): FloatValue {
-  return { value: 0 };
-}
 
 export const FloatValue: MessageFns<FloatValue> = {
   encode(message: FloatValue, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
@@ -122,10 +114,6 @@ export const FloatValue: MessageFns<FloatValue> = {
   },
 };
 
-function createBaseInt64Value(): Int64Value {
-  return { value: 0 };
-}
-
 export const Int64Value: MessageFns<Int64Value> = {
   encode(message: Int64Value, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.value !== 0) {
@@ -134,10 +122,6 @@ export const Int64Value: MessageFns<Int64Value> = {
     return writer;
   },
 };
-
-function createBaseUInt64Value(): UInt64Value {
-  return { value: 0 };
-}
 
 export const UInt64Value: MessageFns<UInt64Value> = {
   encode(message: UInt64Value, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
@@ -148,10 +132,6 @@ export const UInt64Value: MessageFns<UInt64Value> = {
   },
 };
 
-function createBaseInt32Value(): Int32Value {
-  return { value: 0 };
-}
-
 export const Int32Value: MessageFns<Int32Value> = {
   encode(message: Int32Value, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.value !== 0) {
@@ -160,10 +140,6 @@ export const Int32Value: MessageFns<Int32Value> = {
     return writer;
   },
 };
-
-function createBaseUInt32Value(): UInt32Value {
-  return { value: 0 };
-}
 
 export const UInt32Value: MessageFns<UInt32Value> = {
   encode(message: UInt32Value, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
@@ -174,10 +150,6 @@ export const UInt32Value: MessageFns<UInt32Value> = {
   },
 };
 
-function createBaseBoolValue(): BoolValue {
-  return { value: false };
-}
-
 export const BoolValue: MessageFns<BoolValue> = {
   encode(message: BoolValue, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.value !== false) {
@@ -187,10 +159,6 @@ export const BoolValue: MessageFns<BoolValue> = {
   },
 };
 
-function createBaseStringValue(): StringValue {
-  return { value: "" };
-}
-
 export const StringValue: MessageFns<StringValue> = {
   encode(message: StringValue, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.value !== "") {
@@ -199,10 +167,6 @@ export const StringValue: MessageFns<StringValue> = {
     return writer;
   },
 };
-
-function createBaseBytesValue(): BytesValue {
-  return { value: new Uint8Array(0) };
-}
 
 export const BytesValue: MessageFns<BytesValue> = {
   encode(message: BytesValue, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {

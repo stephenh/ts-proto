@@ -10,10 +10,6 @@ export interface Encode {
   encode: string;
 }
 
-function createBaseEncode(): Encode {
-  return { encode: "" };
-}
-
 export const Encode: MessageFns<Encode> = {
   encode(message: Encode, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.encode !== "") {

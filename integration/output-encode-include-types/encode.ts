@@ -14,10 +14,6 @@ export interface DontGenerateEncode {
   dontGenerateEncode: string;
 }
 
-function createBaseEncode(): Encode {
-  return { encode: "" };
-}
-
 export const Encode: MessageFns<Encode> = {
   encode(message: Encode, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.encode !== "") {
@@ -26,10 +22,6 @@ export const Encode: MessageFns<Encode> = {
     return writer;
   },
 };
-
-function createBaseDontGenerateEncode(): DontGenerateEncode {
-  return { dontGenerateEncode: "" };
-}
 
 export interface MessageFns<T> {
   encode(message: T, writer?: BinaryWriter): BinaryWriter;

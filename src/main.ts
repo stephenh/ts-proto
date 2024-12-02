@@ -210,7 +210,12 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
 
         // Only decode, fromPartial, and wrap use the createBase method
         if (
-          (options.outputEncodeMethods && options.outputEncodeMethods !== "encode-no-creation") ||
+          (
+            options.outputEncodeMethods &&
+            options.outputEncodeMethods !== "encode-no-creation" &&
+            options.outputEncodeMethods !== "encode-only" &&
+            (options.outputDecodeIncludeTypes === "" || new RegExp(options.outputDecodeIncludeTypes).test(fullTypeName))
+          ) ||
           options.outputPartialMethods ||
           outputWrapAndUnwrap
         ) {

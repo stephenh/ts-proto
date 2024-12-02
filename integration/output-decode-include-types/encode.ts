@@ -44,10 +44,6 @@ export const EncodeWithDecodeMethod: MessageFns<EncodeWithDecodeMethod> = {
   },
 };
 
-function createBaseEncodeDontGenerateDecodeMethod(): EncodeDontGenerateDecodeMethod {
-  return { encodeDontGenerateDecodeMethod: "" };
-}
-
 export interface MessageFns<T> {
   decode(input: BinaryReader | Uint8Array, length?: number): T;
 }

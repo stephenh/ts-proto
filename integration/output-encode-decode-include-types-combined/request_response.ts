@@ -19,10 +19,6 @@ export interface Response {
   responseId: string;
 }
 
-function createBaseRequest(): Request {
-  return { requestId: "", nested: undefined };
-}
-
 export const Request: MessageFns<Request> = {
   encode(message: Request, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.requestId !== "") {
@@ -38,10 +34,6 @@ export const Request: MessageFns<Request> = {
     throw new Error("decode not generated for Request");
   },
 };
-
-function createBaseRequest_Nested(): Request_Nested {
-  return { moreData: "" };
-}
 
 export const Request_Nested: MessageFns<Request_Nested> = {
   encode(message: Request_Nested, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
