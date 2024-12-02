@@ -2,7 +2,7 @@
 // source: request_response.proto
 
 /* eslint-disable */
-import * as _m0 from "protobufjs/minimal";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
 export const protobufPackage = "";
 
@@ -23,13 +23,13 @@ function createBaseRequest(): Request {
   return { requestId: "", nested: undefined };
 }
 
-export const Request = {
-  encode(message: Request, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const Request: MessageFns<Request> = {
+  encode(message: Request, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.requestId !== "") {
       writer.uint32(10).string(message.requestId);
     }
     if (message.nested !== undefined) {
-      Request_Nested.encode(message.nested, writer.uint32(18).fork()).ldelim();
+      Request_Nested.encode(message.nested, writer.uint32(18).fork()).join();
     }
     return writer;
   },
@@ -39,8 +39,8 @@ function createBaseRequest_Nested(): Request_Nested {
   return { moreData: "" };
 }
 
-export const Request_Nested = {
-  encode(message: Request_Nested, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const Request_Nested: MessageFns<Request_Nested> = {
+  encode(message: Request_Nested, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.moreData !== "") {
       writer.uint32(10).string(message.moreData);
     }
@@ -52,27 +52,33 @@ function createBaseResponse(): Response {
   return { responseId: "" };
 }
 
-export const Response = {
-  decode(input: _m0.Reader | Uint8Array, length?: number): Response {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+export const Response: MessageFns<Response> = {
+  decode(input: BinaryReader | Uint8Array, length?: number): Response {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.responseId = reader.string();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
 };
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+}
