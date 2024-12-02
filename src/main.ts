@@ -236,26 +236,32 @@ export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [stri
           if (
             (options.outputEncodeMethods === true ||
               options.outputEncodeMethods === "encode-only" ||
-              options.outputEncodeMethods === "encode-no-creation") &&
-            (options.outputEncodeIncludeTypes === "" || new RegExp(options.outputEncodeIncludeTypes).test(fullTypeName))
+              options.outputEncodeMethods === "encode-no-creation")
           ) {
-            staticMembers.push(generateEncode(ctx, fullName, message));
+            if (options.outputEncodeIncludeTypes === "" || new RegExp(options.outputEncodeIncludeTypes).test(fullTypeName)) {
+              staticMembers.push(generateEncode(ctx, fullName, message));
 
-            if (options.outputExtensions && options.unknownFields && message.extensionRange.length) {
-              staticMembers.push(generateSetExtension(ctx, fullName));
+              if (options.outputExtensions && options.unknownFields && message.extensionRange.length) {
+                staticMembers.push(generateSetExtension(ctx, fullName));
+              }
+            } else if (options.outputEncodeMethods === true) {
+              staticMembers.push(generateEmptyEncode(fullName));
             }
           }
-          if (
-            (options.outputEncodeMethods === true || options.outputEncodeMethods === "decode-only") &&
-            (options.outputDecodeIncludeTypes === "" || new RegExp(options.outputDecodeIncludeTypes).test(fullTypeName))
-          ) {
-            staticMembers.push(generateDecode(ctx, fullName, message));
 
-            if (options.outputExtensions && options.unknownFields && message.extensionRange.length) {
-              staticMembers.push(generateGetExtension(ctx, fullName));
+          if (options.outputEncodeMethods === true || options.outputEncodeMethods === "decode-only") {
+            if (options.outputDecodeIncludeTypes === "" || new RegExp(options.outputDecodeIncludeTypes).test(fullTypeName)) {
+              staticMembers.push(generateDecode(ctx, fullName, message));
+
+              if (options.outputExtensions && options.unknownFields && message.extensionRange.length) {
+                staticMembers.push(generateGetExtension(ctx, fullName));
+              }
+            } else if (options.outputEncodeMethods === true) {
+              staticMembers.push(generateEmptyDecode(fullName));
             }
           }
         }
+
         if (options.useAsyncIterable) {
           staticMembers.push(generateEncodeTransform(ctx.utils, fullName));
           staticMembers.push(generateDecodeTransform(ctx.utils, fullName));
@@ -1354,6 +1360,19 @@ function getDecodeReadSnippet(ctx: Context, field: FieldDescriptorProto) {
   return readSnippet;
 }
 
+function generateEmptyDecode(fullName: string): Code {
+  const BinaryReader = imp("BinaryReader@@bufbuild/protobuf/wire");
+
+  return code`
+    decode(
+      _: ${BinaryReader} | Uint8Array,
+      length?: number,
+    ): ${fullName} {
+      throw new Error('decode not generated for ${fullName}');
+    }
+  `;
+}
+
 /** Creates a function to decode a message by loop overing the tags. */
 function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorProto): Code {
   const { options, currentFile } = ctx;
@@ -1634,6 +1653,19 @@ function getEncodeWriteSnippet(ctx: Context, field: FieldDescriptorProto): (plac
   } else {
     throw new Error(`Unhandled field ${field}`);
   }
+}
+
+function generateEmptyEncode(fullName: string): Code {
+  const BinaryWriter = imp("BinaryWriter@@bufbuild/protobuf/wire");
+
+  return code`
+  encode(
+    _: ${fullName},
+    writer: ${BinaryWriter} = new ${BinaryWriter}(),
+  ): ${BinaryWriter} {
+    throw new Error('encode not generated for ${fullName}');
+  }
+  `;
 }
 
 /** Creates a function to encode a message by loop overing the tags. */

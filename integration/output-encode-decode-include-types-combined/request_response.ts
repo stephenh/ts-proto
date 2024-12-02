@@ -33,6 +33,10 @@ export const Request: MessageFns<Request> = {
     }
     return writer;
   },
+
+  decode(_: BinaryReader | Uint8Array, length?: number): Request {
+    throw new Error("decode not generated for Request");
+  },
 };
 
 function createBaseRequest_Nested(): Request_Nested {
@@ -46,6 +50,10 @@ export const Request_Nested: MessageFns<Request_Nested> = {
     }
     return writer;
   },
+
+  decode(_: BinaryReader | Uint8Array, length?: number): Request_Nested {
+    throw new Error("decode not generated for Request_Nested");
+  },
 };
 
 function createBaseResponse(): Response {
@@ -53,6 +61,10 @@ function createBaseResponse(): Response {
 }
 
 export const Response: MessageFns<Response> = {
+  encode(_: Response, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    throw new Error("encode not generated for Response");
+  },
+
   decode(input: BinaryReader | Uint8Array, length?: number): Response {
     const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
