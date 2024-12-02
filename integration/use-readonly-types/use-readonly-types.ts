@@ -2,7 +2,7 @@
 // source: use-readonly-types.proto
 
 /* eslint-disable */
-import * as _m0 from "protobufjs/minimal";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 import { FieldMask } from "./google/protobuf/field_mask";
 import { ListValue, Struct } from "./google/protobuf/struct";
 
@@ -45,8 +45,8 @@ function createBaseEntity(): Entity {
   };
 }
 
-export const Entity = {
-  encode(message: Entity, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const Entity: MessageFns<Entity> = {
+  encode(message: Entity, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.intVal !== 0) {
       writer.uint32(8).int32(message.intVal);
     }
@@ -57,27 +57,27 @@ export const Entity = {
     for (const v of message.intArray) {
       writer.int32(v);
     }
-    writer.ldelim();
+    writer.join();
     for (const v of message.stringArray) {
       writer.uint32(34).string(v!);
     }
     if (message.subEntity !== undefined) {
-      SubEntity.encode(message.subEntity, writer.uint32(42).fork()).ldelim();
+      SubEntity.encode(message.subEntity, writer.uint32(42).fork()).join();
     }
     for (const v of message.subEntityArray) {
-      SubEntity.encode(v!, writer.uint32(50).fork()).ldelim();
+      SubEntity.encode(v!, writer.uint32(50).fork()).join();
     }
     if (message.optionalIntVal !== undefined) {
       writer.uint32(56).int32(message.optionalIntVal);
     }
     if (message.fieldMask !== undefined) {
-      FieldMask.encode(FieldMask.wrap(message.fieldMask), writer.uint32(66).fork()).ldelim();
+      FieldMask.encode(FieldMask.wrap(message.fieldMask), writer.uint32(66).fork()).join();
     }
     if (message.listValue !== undefined) {
-      ListValue.encode(ListValue.wrap(message.listValue), writer.uint32(74).fork()).ldelim();
+      ListValue.encode(ListValue.wrap(message.listValue), writer.uint32(74).fork()).join();
     }
     if (message.structValue !== undefined) {
-      Struct.encode(Struct.wrap(message.structValue), writer.uint32(82).fork()).ldelim();
+      Struct.encode(Struct.wrap(message.structValue), writer.uint32(82).fork()).join();
     }
     switch (message.oneOfValue?.$case) {
       case "theStringValue":
@@ -90,28 +90,30 @@ export const Entity = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Entity {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Entity {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEntity() as any;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 8) {
             break;
           }
 
           message.intVal = reader.int32();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
 
           message.stringVal = reader.string();
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag === 24) {
             message.intArray.push(reader.int32());
 
@@ -128,74 +130,84 @@ export const Entity = {
           }
 
           break;
-        case 4:
+        }
+        case 4: {
           if (tag !== 34) {
             break;
           }
 
           message.stringArray.push(reader.string());
           continue;
-        case 5:
+        }
+        case 5: {
           if (tag !== 42) {
             break;
           }
 
           message.subEntity = SubEntity.decode(reader, reader.uint32());
           continue;
-        case 6:
+        }
+        case 6: {
           if (tag !== 50) {
             break;
           }
 
           message.subEntityArray.push(SubEntity.decode(reader, reader.uint32()));
           continue;
-        case 7:
+        }
+        case 7: {
           if (tag !== 56) {
             break;
           }
 
           message.optionalIntVal = reader.int32();
           continue;
-        case 8:
+        }
+        case 8: {
           if (tag !== 66) {
             break;
           }
 
           message.fieldMask = FieldMask.unwrap(FieldMask.decode(reader, reader.uint32()));
           continue;
-        case 9:
+        }
+        case 9: {
           if (tag !== 74) {
             break;
           }
 
           message.listValue = ListValue.unwrap(ListValue.decode(reader, reader.uint32()));
           continue;
-        case 10:
+        }
+        case 10: {
           if (tag !== 82) {
             break;
           }
 
           message.structValue = Struct.unwrap(Struct.decode(reader, reader.uint32()));
           continue;
-        case 11:
+        }
+        case 11: {
           if (tag !== 90) {
             break;
           }
 
           message.oneOfValue = { $case: "theStringValue", theStringValue: reader.string() };
           continue;
-        case 12:
+        }
+        case 12: {
           if (tag !== 96) {
             break;
           }
 
           message.oneOfValue = { $case: "theIntValue", theIntValue: reader.int32() };
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -258,8 +270,7 @@ export const Entity = {
     }
     if (message.oneOfValue?.$case === "theStringValue") {
       obj.theStringValue = message.oneOfValue.theStringValue;
-    }
-    if (message.oneOfValue?.$case === "theIntValue") {
+    } else if (message.oneOfValue?.$case === "theIntValue") {
       obj.theIntValue = Math.round(message.oneOfValue.theIntValue);
     }
     return obj;
@@ -282,19 +293,19 @@ export const Entity = {
     message.fieldMask = object.fieldMask ?? undefined;
     message.listValue = object.listValue ?? undefined;
     message.structValue = object.structValue ?? undefined;
-    if (
-      object.oneOfValue?.$case === "theStringValue" &&
-      object.oneOfValue?.theStringValue !== undefined &&
-      object.oneOfValue?.theStringValue !== null
-    ) {
-      message.oneOfValue = { $case: "theStringValue", theStringValue: object.oneOfValue.theStringValue };
-    }
-    if (
-      object.oneOfValue?.$case === "theIntValue" &&
-      object.oneOfValue?.theIntValue !== undefined &&
-      object.oneOfValue?.theIntValue !== null
-    ) {
-      message.oneOfValue = { $case: "theIntValue", theIntValue: object.oneOfValue.theIntValue };
+    switch (object.oneOfValue?.$case) {
+      case "theStringValue": {
+        if (object.oneOfValue?.theStringValue !== undefined && object.oneOfValue?.theStringValue !== null) {
+          message.oneOfValue = { $case: "theStringValue", theStringValue: object.oneOfValue.theStringValue };
+        }
+        break;
+      }
+      case "theIntValue": {
+        if (object.oneOfValue?.theIntValue !== undefined && object.oneOfValue?.theIntValue !== null) {
+          message.oneOfValue = { $case: "theIntValue", theIntValue: object.oneOfValue.theIntValue };
+        }
+        break;
+      }
     }
     return message;
   },
@@ -304,33 +315,34 @@ function createBaseSubEntity(): SubEntity {
   return { subVal: 0 };
 }
 
-export const SubEntity = {
-  encode(message: SubEntity, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const SubEntity: MessageFns<SubEntity> = {
+  encode(message: SubEntity, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.subVal !== 0) {
       writer.uint32(8).int32(message.subVal);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): SubEntity {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): SubEntity {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSubEntity() as any;
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 8) {
             break;
           }
 
           message.subVal = reader.int32();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -377,4 +389,13 @@ function isObject(value: any): boolean {
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+  fromJSON(object: any): T;
+  toJSON(message: T): unknown;
+  create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
+  fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
 }

@@ -3,7 +3,7 @@
 
 /* eslint-disable */
 import Long = require("long");
-import * as _m0 from "protobufjs/minimal";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
 export const protobufPackage = "";
 
@@ -66,8 +66,8 @@ function createBaseExtendable(): Extendable {
   return {};
 }
 
-export const Extendable = {
-  encode(message: Extendable, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const Extendable: MessageFns<Extendable> & ExtensionFns<Extendable> = {
+  encode(message: Extendable, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.field !== undefined && message.field !== "") {
       writer.uint32(10).string(message.field);
     }
@@ -75,12 +75,7 @@ export const Extendable = {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }
@@ -107,27 +102,26 @@ export const Extendable = {
     }
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Extendable {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Extendable {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseExtendable();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.field = reader.string();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      const startPos = reader.pos;
-      reader.skipType(tag & 7);
-      const buf = reader.buf.slice(startPos, reader.pos);
+      const buf = reader.skip(tag & 7);
 
       if (message._unknownFields === undefined) {
         message._unknownFields = {};
@@ -202,7 +196,7 @@ function createBaseNested(): Nested {
   return {};
 }
 
-export const Nested = {
+export const Nested: MessageFns<Nested> & ExtensionHolder<"message", Nested[]> = {
   message: <Extension<Nested[]>> {
     number: 4,
     tag: 34,
@@ -211,8 +205,8 @@ export const Nested = {
     encode: (value: Nested[]): Uint8Array[] => {
       const encoded: Uint8Array[] = [];
       for (const v of value) {
-        const writer = _m0.Writer.create();
-        Nested.encode(v, writer.fork()).ldelim();
+        const writer = new BinaryWriter();
+        Nested.encode(v, writer.fork()).join();
         encoded.push(writer.finish());
       }
       return encoded;
@@ -220,7 +214,7 @@ export const Nested = {
     decode: (tag: number, input: Uint8Array[]): Nested[] => {
       const values: Nested[] = [];
       for (const buffer of input) {
-        const reader = _m0.Reader.create(buffer);
+        const reader = new BinaryReader(buffer);
         values.push(Nested.decode(reader, reader.uint32()));
       }
 
@@ -228,7 +222,7 @@ export const Nested = {
     },
   },
 
-  encode(message: Nested, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+  encode(message: Nested, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.field !== undefined && message.field !== "") {
       writer.uint32(10).string(message.field);
     }
@@ -236,39 +230,33 @@ export const Nested = {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Nested {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Nested {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNested();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.field = reader.string();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      const startPos = reader.pos;
-      reader.skipType(tag & 7);
-      const buf = reader.buf.slice(startPos, reader.pos);
+      const buf = reader.skip(tag & 7);
 
       if (message._unknownFields === undefined) {
         message._unknownFields = {};
@@ -311,8 +299,8 @@ function createBaseGroup(): Group {
   return {};
 }
 
-export const Group = {
-  encode(message: Group, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const Group: MessageFns<Group> = {
+  encode(message: Group, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== undefined && message.name !== "") {
       writer.uint32(10).string(message.name);
     }
@@ -323,46 +311,41 @@ export const Group = {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Group {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Group {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGroup();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.name = reader.string();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
 
           message.value = reader.string();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      const startPos = reader.pos;
-      reader.skipType(tag & 7);
-      const buf = reader.buf.slice(startPos, reader.pos);
+      const buf = reader.skip(tag & 7);
 
       if (message._unknownFields === undefined) {
         message._unknownFields = {};
@@ -416,19 +399,19 @@ export const packed: Extension<number[]> = {
   packed: true,
   encode: (value: number[]): Uint8Array[] => {
     const encoded: Uint8Array[] = [];
-    const writer = _m0.Writer.create();
+    const writer = new BinaryWriter();
     writer.fork();
     for (const v of value) {
       writer.int32(v);
     }
-    writer.ldelim();
+    writer.join();
     encoded.push(writer.finish());
     return encoded;
   },
   decode: (tag: number, input: Uint8Array[]): number[] => {
     const values: number[] = [];
     for (const buffer of input) {
-      const reader = _m0.Reader.create(buffer);
+      const reader = new BinaryReader(buffer);
       if (tag == 42) {
         const end2 = reader.uint32() + reader.pos;
         while (reader.pos < end2) {
@@ -451,19 +434,19 @@ export const repeated: Extension<number[]> = {
   packed: false,
   encode: (value: number[]): Uint8Array[] => {
     const encoded: Uint8Array[] = [];
-    const writer = _m0.Writer.create();
+    const writer = new BinaryWriter();
     writer.fork();
     for (const v of value) {
       writer.int32(v);
     }
-    writer.ldelim();
+    writer.join();
     encoded.push(writer.finish());
     return encoded;
   },
   decode: (tag: number, input: Uint8Array[]): number[] => {
     const values: number[] = [];
     for (const buffer of input) {
-      const reader = _m0.Reader.create(buffer);
+      const reader = new BinaryReader(buffer);
       if (tag == 50) {
         const end2 = reader.uint32() + reader.pos;
         while (reader.pos < end2) {
@@ -486,14 +469,14 @@ export const bytes: Extension<Uint8Array> = {
   encode: (value: Uint8Array): Uint8Array[] => {
     const encoded: Uint8Array[] = [];
     if (value !== undefined && value.length !== 0) {
-      const writer = _m0.Writer.create();
+      const writer = new BinaryWriter();
       writer.bytes(value);
       encoded.push(writer.finish());
     }
     return encoded;
   },
   decode: (tag: number, input: Uint8Array[]): Uint8Array => {
-    const reader = _m0.Reader.create(input[input.length - 1] ?? fail());
+    const reader = new BinaryReader(input[input.length - 1] ?? fail());
     return reader.bytes();
   },
 };
@@ -506,14 +489,14 @@ export const string: Extension<string> = {
   encode: (value: string): Uint8Array[] => {
     const encoded: Uint8Array[] = [];
     if (value !== undefined && value !== "") {
-      const writer = _m0.Writer.create();
+      const writer = new BinaryWriter();
       writer.string(value);
       encoded.push(writer.finish());
     }
     return encoded;
   },
   decode: (tag: number, input: Uint8Array[]): string => {
-    const reader = _m0.Reader.create(input[input.length - 1] ?? fail());
+    const reader = new BinaryReader(input[input.length - 1] ?? fail());
     return reader.string();
   },
 };
@@ -526,15 +509,15 @@ export const long: Extension<Long> = {
   encode: (value: Long): Uint8Array[] => {
     const encoded: Uint8Array[] = [];
     if (value !== undefined && !value.equals(Long.ZERO)) {
-      const writer = _m0.Writer.create();
-      writer.int64(value);
+      const writer = new BinaryWriter();
+      writer.int64(value.toString());
       encoded.push(writer.finish());
     }
     return encoded;
   },
   decode: (tag: number, input: Uint8Array[]): Long => {
-    const reader = _m0.Reader.create(input[input.length - 1] ?? fail());
-    return reader.int64() as Long;
+    const reader = new BinaryReader(input[input.length - 1] ?? fail());
+    return Long.fromString(reader.int64().toString());
   },
 };
 
@@ -546,15 +529,15 @@ export const fixed: Extension<Long> = {
   encode: (value: Long): Uint8Array[] => {
     const encoded: Uint8Array[] = [];
     if (value !== undefined && !value.equals(Long.UZERO)) {
-      const writer = _m0.Writer.create();
-      writer.fixed64(value);
+      const writer = new BinaryWriter();
+      writer.fixed64(value.toString());
       encoded.push(writer.finish());
     }
     return encoded;
   },
   decode: (tag: number, input: Uint8Array[]): Long => {
-    const reader = _m0.Reader.create(input[input.length - 1] ?? fail());
-    return reader.fixed64() as Long;
+    const reader = new BinaryReader(input[input.length - 1] ?? fail());
+    return Long.fromString(reader.fixed64().toString(), true);
   },
 };
 
@@ -566,14 +549,14 @@ export const enumField: Extension<Enum> = {
   encode: (value: Enum): Uint8Array[] => {
     const encoded: Uint8Array[] = [];
     if (value !== undefined && value !== 0) {
-      const writer = _m0.Writer.create();
+      const writer = new BinaryWriter();
       writer.int32(value);
       encoded.push(writer.finish());
     }
     return encoded;
   },
   decode: (tag: number, input: Uint8Array[]): Enum => {
-    const reader = _m0.Reader.create(input[input.length - 1] ?? fail());
+    const reader = new BinaryReader(input[input.length - 1] ?? fail());
     return reader.int32() as any;
   },
 };
@@ -585,13 +568,13 @@ export const group: Extension<Group> = {
   packed: false,
   encode: (value: Group): Uint8Array[] => {
     const encoded: Uint8Array[] = [];
-    const writer = _m0.Writer.create();
+    const writer = new BinaryWriter();
     Group.encode(value, writer).uint32(100);
     encoded.push(writer.finish());
     return encoded;
   },
   decode: (tag: number, input: Uint8Array[]): Group => {
-    const reader = _m0.Reader.create(input[input.length - 1] ?? fail());
+    const reader = new BinaryReader(input[input.length - 1] ?? fail());
     return Group.decode(reader);
   },
 };
@@ -607,11 +590,6 @@ export type DeepPartial<T> = T extends Builtin ? T
 type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
-
-if (_m0.util.Long !== Long) {
-  _m0.util.Long = Long as any;
-  _m0.configure();
-}
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
@@ -630,3 +608,19 @@ export interface Extension<T> {
 function fail(message?: string): never {
   throw new globalThis.Error(message ?? "Failed");
 }
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+  fromJSON(object: any): T;
+  toJSON(message: T): unknown;
+  create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
+  fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
+}
+
+export interface ExtensionFns<T> {
+  setExtension<E>(message: T, extension: Extension<E>, value: E): void;
+  getExtension<E>(message: T, extension: Extension<E>): E | undefined;
+}
+
+export type ExtensionHolder<T extends string, V> = { [key in T]: Extension<V> };

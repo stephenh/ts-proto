@@ -2,18 +2,37 @@
 // source: oneof.proto
 
 /* eslint-disable */
-import * as _m0 from "protobufjs/minimal";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 import { Value } from "./google/protobuf/struct";
 
 export const protobufPackage = "oneof";
 
 export interface PleaseChoose {
   name: string;
+  /**
+   * Please to be choosing one of the fields within this oneof clause.
+   * This text exists to ensure we transpose comments correctly.
+   */
   choice?:
-    | { $case: "aNumber"; value: number }
-    | { $case: "aString"; value: string }
+    | //
+    /**
+     * Use this if you want a number. Numbers are great. Who doesn't
+     * like them?
+     */
+    { $case: "aNumber"; value: number }
+    | //
+    /**
+     * Use this if you want a string. Strings are also nice. Not as
+     * nice as numbers, but what are you going to do...
+     */
+    { $case: "aString"; value: string }
     | { $case: "aMessage"; value: PleaseChoose_Submessage }
-    | { $case: "aBool"; value: boolean }
+    | //
+    /**
+     * We also added a bool option! This was added after the 'age'
+     * field, so it has a higher number.
+     */
+    { $case: "aBool"; value: boolean }
     | { $case: "bunchaBytes"; value: Uint8Array }
     | { $case: "anEnum"; value: PleaseChoose_StateEnum }
     | undefined;
@@ -79,8 +98,8 @@ function createBasePleaseChoose(): PleaseChoose {
   return { name: "", choice: undefined, age: 0, eitherOr: undefined, signature: new Uint8Array(0), value: undefined };
 }
 
-export const PleaseChoose = {
-  encode(message: PleaseChoose, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const PleaseChoose: MessageFns<PleaseChoose> = {
+  encode(message: PleaseChoose, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
@@ -92,7 +111,7 @@ export const PleaseChoose = {
         writer.uint32(26).string(message.choice.value);
         break;
       case "aMessage":
-        PleaseChoose_Submessage.encode(message.choice.value, writer.uint32(34).fork()).ldelim();
+        PleaseChoose_Submessage.encode(message.choice.value, writer.uint32(34).fork()).join();
         break;
       case "aBool":
         writer.uint32(48).bool(message.choice.value);
@@ -122,114 +141,127 @@ export const PleaseChoose = {
       writer.uint32(98).bytes(message.signature);
     }
     if (message.value !== undefined) {
-      Value.encode(Value.wrap(message.value), writer.uint32(106).fork()).ldelim();
+      Value.encode(Value.wrap(message.value), writer.uint32(106).fork()).join();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): PleaseChoose {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): PleaseChoose {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePleaseChoose();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.name = reader.string();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 17) {
             break;
           }
 
           message.choice = { $case: "aNumber", value: reader.double() };
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag !== 26) {
             break;
           }
 
           message.choice = { $case: "aString", value: reader.string() };
           continue;
-        case 4:
+        }
+        case 4: {
           if (tag !== 34) {
             break;
           }
 
           message.choice = { $case: "aMessage", value: PleaseChoose_Submessage.decode(reader, reader.uint32()) };
           continue;
-        case 6:
+        }
+        case 6: {
           if (tag !== 48) {
             break;
           }
 
           message.choice = { $case: "aBool", value: reader.bool() };
           continue;
-        case 10:
+        }
+        case 10: {
           if (tag !== 82) {
             break;
           }
 
           message.choice = { $case: "bunchaBytes", value: reader.bytes() };
           continue;
-        case 11:
+        }
+        case 11: {
           if (tag !== 88) {
             break;
           }
 
           message.choice = { $case: "anEnum", value: reader.int32() as any };
           continue;
-        case 5:
+        }
+        case 5: {
           if (tag !== 40) {
             break;
           }
 
           message.age = reader.uint32();
           continue;
-        case 7:
+        }
+        case 7: {
           if (tag !== 58) {
             break;
           }
 
           message.eitherOr = { $case: "either", value: reader.string() };
           continue;
-        case 8:
+        }
+        case 8: {
           if (tag !== 66) {
             break;
           }
 
           message.eitherOr = { $case: "or", value: reader.string() };
           continue;
-        case 9:
+        }
+        case 9: {
           if (tag !== 74) {
             break;
           }
 
           message.eitherOr = { $case: "thirdOption", value: reader.string() };
           continue;
-        case 12:
+        }
+        case 12: {
           if (tag !== 98) {
             break;
           }
 
           message.signature = reader.bytes();
           continue;
-        case 13:
+        }
+        case 13: {
           if (tag !== 106) {
             break;
           }
 
           message.value = Value.unwrap(Value.decode(reader, reader.uint32()));
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -270,20 +302,15 @@ export const PleaseChoose = {
     }
     if (message.choice?.$case === "aNumber") {
       obj.aNumber = message.choice.value;
-    }
-    if (message.choice?.$case === "aString") {
+    } else if (message.choice?.$case === "aString") {
       obj.aString = message.choice.value;
-    }
-    if (message.choice?.$case === "aMessage") {
+    } else if (message.choice?.$case === "aMessage") {
       obj.aMessage = PleaseChoose_Submessage.toJSON(message.choice.value);
-    }
-    if (message.choice?.$case === "aBool") {
+    } else if (message.choice?.$case === "aBool") {
       obj.aBool = message.choice.value;
-    }
-    if (message.choice?.$case === "bunchaBytes") {
+    } else if (message.choice?.$case === "bunchaBytes") {
       obj.bunchaBytes = base64FromBytes(message.choice.value);
-    }
-    if (message.choice?.$case === "anEnum") {
+    } else if (message.choice?.$case === "anEnum") {
       obj.anEnum = pleaseChoose_StateEnumToJSON(message.choice.value);
     }
     if (message.age !== 0) {
@@ -291,11 +318,9 @@ export const PleaseChoose = {
     }
     if (message.eitherOr?.$case === "either") {
       obj.either = message.eitherOr.value;
-    }
-    if (message.eitherOr?.$case === "or") {
+    } else if (message.eitherOr?.$case === "or") {
       obj.or = message.eitherOr.value;
-    }
-    if (message.eitherOr?.$case === "thirdOption") {
+    } else if (message.eitherOr?.$case === "thirdOption") {
       obj.thirdOption = message.eitherOr.value;
     }
     if (message.signature.length !== 0) {
@@ -313,39 +338,64 @@ export const PleaseChoose = {
   fromPartial<I extends Exact<DeepPartial<PleaseChoose>, I>>(object: I): PleaseChoose {
     const message = createBasePleaseChoose();
     message.name = object.name ?? "";
-    if (object.choice?.$case === "aNumber" && object.choice?.value !== undefined && object.choice?.value !== null) {
-      message.choice = { $case: "aNumber", value: object.choice.value };
-    }
-    if (object.choice?.$case === "aString" && object.choice?.value !== undefined && object.choice?.value !== null) {
-      message.choice = { $case: "aString", value: object.choice.value };
-    }
-    if (object.choice?.$case === "aMessage" && object.choice?.value !== undefined && object.choice?.value !== null) {
-      message.choice = { $case: "aMessage", value: PleaseChoose_Submessage.fromPartial(object.choice.value) };
-    }
-    if (object.choice?.$case === "aBool" && object.choice?.value !== undefined && object.choice?.value !== null) {
-      message.choice = { $case: "aBool", value: object.choice.value };
-    }
-    if (object.choice?.$case === "bunchaBytes" && object.choice?.value !== undefined && object.choice?.value !== null) {
-      message.choice = { $case: "bunchaBytes", value: object.choice.value };
-    }
-    if (object.choice?.$case === "anEnum" && object.choice?.value !== undefined && object.choice?.value !== null) {
-      message.choice = { $case: "anEnum", value: object.choice.value };
+    switch (object.choice?.$case) {
+      case "aNumber": {
+        if (object.choice?.value !== undefined && object.choice?.value !== null) {
+          message.choice = { $case: "aNumber", value: object.choice.value };
+        }
+        break;
+      }
+      case "aString": {
+        if (object.choice?.value !== undefined && object.choice?.value !== null) {
+          message.choice = { $case: "aString", value: object.choice.value };
+        }
+        break;
+      }
+      case "aMessage": {
+        if (object.choice?.value !== undefined && object.choice?.value !== null) {
+          message.choice = { $case: "aMessage", value: PleaseChoose_Submessage.fromPartial(object.choice.value) };
+        }
+        break;
+      }
+      case "aBool": {
+        if (object.choice?.value !== undefined && object.choice?.value !== null) {
+          message.choice = { $case: "aBool", value: object.choice.value };
+        }
+        break;
+      }
+      case "bunchaBytes": {
+        if (object.choice?.value !== undefined && object.choice?.value !== null) {
+          message.choice = { $case: "bunchaBytes", value: object.choice.value };
+        }
+        break;
+      }
+      case "anEnum": {
+        if (object.choice?.value !== undefined && object.choice?.value !== null) {
+          message.choice = { $case: "anEnum", value: object.choice.value };
+        }
+        break;
+      }
     }
     message.age = object.age ?? 0;
-    if (
-      object.eitherOr?.$case === "either" && object.eitherOr?.value !== undefined && object.eitherOr?.value !== null
-    ) {
-      message.eitherOr = { $case: "either", value: object.eitherOr.value };
-    }
-    if (object.eitherOr?.$case === "or" && object.eitherOr?.value !== undefined && object.eitherOr?.value !== null) {
-      message.eitherOr = { $case: "or", value: object.eitherOr.value };
-    }
-    if (
-      object.eitherOr?.$case === "thirdOption" &&
-      object.eitherOr?.value !== undefined &&
-      object.eitherOr?.value !== null
-    ) {
-      message.eitherOr = { $case: "thirdOption", value: object.eitherOr.value };
+    switch (object.eitherOr?.$case) {
+      case "either": {
+        if (object.eitherOr?.value !== undefined && object.eitherOr?.value !== null) {
+          message.eitherOr = { $case: "either", value: object.eitherOr.value };
+        }
+        break;
+      }
+      case "or": {
+        if (object.eitherOr?.value !== undefined && object.eitherOr?.value !== null) {
+          message.eitherOr = { $case: "or", value: object.eitherOr.value };
+        }
+        break;
+      }
+      case "thirdOption": {
+        if (object.eitherOr?.value !== undefined && object.eitherOr?.value !== null) {
+          message.eitherOr = { $case: "thirdOption", value: object.eitherOr.value };
+        }
+        break;
+      }
     }
     message.signature = object.signature ?? new Uint8Array(0);
     message.value = object.value ?? undefined;
@@ -357,33 +407,34 @@ function createBasePleaseChoose_Submessage(): PleaseChoose_Submessage {
   return { name: "" };
 }
 
-export const PleaseChoose_Submessage = {
-  encode(message: PleaseChoose_Submessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const PleaseChoose_Submessage: MessageFns<PleaseChoose_Submessage> = {
+  encode(message: PleaseChoose_Submessage, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== "") {
       writer.uint32(10).string(message.name);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): PleaseChoose_Submessage {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): PleaseChoose_Submessage {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBasePleaseChoose_Submessage();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.name = reader.string();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -414,8 +465,8 @@ function createBaseSimpleButOptional(): SimpleButOptional {
   return { name: undefined, age: undefined };
 }
 
-export const SimpleButOptional = {
-  encode(message: SimpleButOptional, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const SimpleButOptional: MessageFns<SimpleButOptional> = {
+  encode(message: SimpleButOptional, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.name !== undefined) {
       writer.uint32(10).string(message.name);
     }
@@ -425,32 +476,34 @@ export const SimpleButOptional = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): SimpleButOptional {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): SimpleButOptional {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseSimpleButOptional();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.name = reader.string();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 16) {
             break;
           }
 
           message.age = reader.int32();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -524,4 +577,13 @@ export type Exact<P, I extends P> = P extends Builtin ? P
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+  fromJSON(object: any): T;
+  toJSON(message: T): unknown;
+  create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
+  fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
 }

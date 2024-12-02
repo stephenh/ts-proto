@@ -2,8 +2,8 @@
 // source: use-objectid-true.proto
 
 /* eslint-disable */
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as mongodb from "mongodb";
-import * as _m0 from "protobufjs/minimal";
 import { ObjectId } from "./objectid/objectid";
 
 export const protobufPackage = "foo";
@@ -25,62 +25,66 @@ function createBaseTodo(): Todo {
   return { id: "", oid: undefined, repeatedOid: [], optionalOid: undefined, mapOfOids: {} };
 }
 
-export const Todo = {
-  encode(message: Todo, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const Todo: MessageFns<Todo> = {
+  encode(message: Todo, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
     if (message.oid !== undefined) {
-      ObjectId.encode(toProtoObjectId(message.oid), writer.uint32(18).fork()).ldelim();
+      ObjectId.encode(toProtoObjectId(message.oid), writer.uint32(18).fork()).join();
     }
     for (const v of message.repeatedOid) {
-      ObjectId.encode(toProtoObjectId(v!), writer.uint32(26).fork()).ldelim();
+      ObjectId.encode(toProtoObjectId(v!), writer.uint32(26).fork()).join();
     }
     if (message.optionalOid !== undefined) {
-      ObjectId.encode(toProtoObjectId(message.optionalOid), writer.uint32(34).fork()).ldelim();
+      ObjectId.encode(toProtoObjectId(message.optionalOid), writer.uint32(34).fork()).join();
     }
     Object.entries(message.mapOfOids).forEach(([key, value]) => {
-      Todo_MapOfOidsEntry.encode({ key: key as any, value }, writer.uint32(42).fork()).ldelim();
+      Todo_MapOfOidsEntry.encode({ key: key as any, value }, writer.uint32(42).fork()).join();
     });
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Todo {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Todo {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTodo();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.id = reader.string();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
 
           message.oid = fromProtoObjectId(ObjectId.decode(reader, reader.uint32()));
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag !== 26) {
             break;
           }
 
           message.repeatedOid.push(fromProtoObjectId(ObjectId.decode(reader, reader.uint32())));
           continue;
-        case 4:
+        }
+        case 4: {
           if (tag !== 34) {
             break;
           }
 
           message.optionalOid = fromProtoObjectId(ObjectId.decode(reader, reader.uint32()));
           continue;
-        case 5:
+        }
+        case 5: {
           if (tag !== 42) {
             break;
           }
@@ -90,11 +94,12 @@ export const Todo = {
             message.mapOfOids[entry5.key] = entry5.value;
           }
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -170,43 +175,45 @@ function createBaseTodo_MapOfOidsEntry(): Todo_MapOfOidsEntry {
   return { key: "", value: undefined };
 }
 
-export const Todo_MapOfOidsEntry = {
-  encode(message: Todo_MapOfOidsEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const Todo_MapOfOidsEntry: MessageFns<Todo_MapOfOidsEntry> = {
+  encode(message: Todo_MapOfOidsEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.key !== "") {
       writer.uint32(10).string(message.key);
     }
     if (message.value !== undefined) {
-      ObjectId.encode(toProtoObjectId(message.value), writer.uint32(18).fork()).ldelim();
+      ObjectId.encode(toProtoObjectId(message.value), writer.uint32(18).fork()).join();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Todo_MapOfOidsEntry {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Todo_MapOfOidsEntry {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTodo_MapOfOidsEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.key = reader.string();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
 
           message.value = fromProtoObjectId(ObjectId.decode(reader, reader.uint32()));
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -279,4 +286,13 @@ function isObject(value: any): boolean {
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+  fromJSON(object: any): T;
+  toJSON(message: T): unknown;
+  create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
+  fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
 }

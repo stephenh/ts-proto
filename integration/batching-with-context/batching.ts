@@ -2,9 +2,9 @@
 // source: batching.proto
 
 /* eslint-disable */
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 import * as DataLoader from "dataloader";
 import * as hash from "object-hash";
-import * as _m0 from "protobufjs/minimal";
 
 export const protobufPackage = "batching";
 
@@ -53,33 +53,34 @@ function createBaseBatchQueryRequest(): BatchQueryRequest {
   return { ids: [] };
 }
 
-export const BatchQueryRequest = {
-  encode(message: BatchQueryRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const BatchQueryRequest: MessageFns<BatchQueryRequest> = {
+  encode(message: BatchQueryRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     for (const v of message.ids) {
       writer.uint32(10).string(v!);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): BatchQueryRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): BatchQueryRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseBatchQueryRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.ids.push(reader.string());
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -110,33 +111,34 @@ function createBaseBatchQueryResponse(): BatchQueryResponse {
   return { entities: [] };
 }
 
-export const BatchQueryResponse = {
-  encode(message: BatchQueryResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const BatchQueryResponse: MessageFns<BatchQueryResponse> = {
+  encode(message: BatchQueryResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     for (const v of message.entities) {
-      Entity.encode(v!, writer.uint32(10).fork()).ldelim();
+      Entity.encode(v!, writer.uint32(10).fork()).join();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): BatchQueryResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): BatchQueryResponse {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseBatchQueryResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.entities.push(Entity.decode(reader, reader.uint32()));
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -169,33 +171,34 @@ function createBaseBatchMapQueryRequest(): BatchMapQueryRequest {
   return { ids: [] };
 }
 
-export const BatchMapQueryRequest = {
-  encode(message: BatchMapQueryRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const BatchMapQueryRequest: MessageFns<BatchMapQueryRequest> = {
+  encode(message: BatchMapQueryRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     for (const v of message.ids) {
       writer.uint32(10).string(v!);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): BatchMapQueryRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): BatchMapQueryRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseBatchMapQueryRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.ids.push(reader.string());
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -226,22 +229,22 @@ function createBaseBatchMapQueryResponse(): BatchMapQueryResponse {
   return { entities: {} };
 }
 
-export const BatchMapQueryResponse = {
-  encode(message: BatchMapQueryResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const BatchMapQueryResponse: MessageFns<BatchMapQueryResponse> = {
+  encode(message: BatchMapQueryResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     Object.entries(message.entities).forEach(([key, value]) => {
-      BatchMapQueryResponse_EntitiesEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).ldelim();
+      BatchMapQueryResponse_EntitiesEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).join();
     });
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): BatchMapQueryResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): BatchMapQueryResponse {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseBatchMapQueryResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
@@ -251,11 +254,12 @@ export const BatchMapQueryResponse = {
             message.entities[entry1.key] = entry1.value;
           }
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -304,43 +308,45 @@ function createBaseBatchMapQueryResponse_EntitiesEntry(): BatchMapQueryResponse_
   return { key: "", value: undefined };
 }
 
-export const BatchMapQueryResponse_EntitiesEntry = {
-  encode(message: BatchMapQueryResponse_EntitiesEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const BatchMapQueryResponse_EntitiesEntry: MessageFns<BatchMapQueryResponse_EntitiesEntry> = {
+  encode(message: BatchMapQueryResponse_EntitiesEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.key !== "") {
       writer.uint32(10).string(message.key);
     }
     if (message.value !== undefined) {
-      Entity.encode(message.value, writer.uint32(18).fork()).ldelim();
+      Entity.encode(message.value, writer.uint32(18).fork()).join();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): BatchMapQueryResponse_EntitiesEntry {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): BatchMapQueryResponse_EntitiesEntry {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseBatchMapQueryResponse_EntitiesEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.key = reader.string();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
 
           message.value = Entity.decode(reader, reader.uint32());
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -384,33 +390,34 @@ function createBaseGetOnlyMethodRequest(): GetOnlyMethodRequest {
   return { id: "" };
 }
 
-export const GetOnlyMethodRequest = {
-  encode(message: GetOnlyMethodRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const GetOnlyMethodRequest: MessageFns<GetOnlyMethodRequest> = {
+  encode(message: GetOnlyMethodRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): GetOnlyMethodRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): GetOnlyMethodRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetOnlyMethodRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.id = reader.string();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -441,33 +448,34 @@ function createBaseGetOnlyMethodResponse(): GetOnlyMethodResponse {
   return { entity: undefined };
 }
 
-export const GetOnlyMethodResponse = {
-  encode(message: GetOnlyMethodResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const GetOnlyMethodResponse: MessageFns<GetOnlyMethodResponse> = {
+  encode(message: GetOnlyMethodResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.entity !== undefined) {
-      Entity.encode(message.entity, writer.uint32(10).fork()).ldelim();
+      Entity.encode(message.entity, writer.uint32(10).fork()).join();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): GetOnlyMethodResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): GetOnlyMethodResponse {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGetOnlyMethodResponse();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.entity = Entity.decode(reader, reader.uint32());
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -500,33 +508,34 @@ function createBaseWriteMethodRequest(): WriteMethodRequest {
   return { id: "" };
 }
 
-export const WriteMethodRequest = {
-  encode(message: WriteMethodRequest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const WriteMethodRequest: MessageFns<WriteMethodRequest> = {
+  encode(message: WriteMethodRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): WriteMethodRequest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): WriteMethodRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseWriteMethodRequest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.id = reader.string();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -557,13 +566,13 @@ function createBaseWriteMethodResponse(): WriteMethodResponse {
   return {};
 }
 
-export const WriteMethodResponse = {
-  encode(_: WriteMethodResponse, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const WriteMethodResponse: MessageFns<WriteMethodResponse> = {
+  encode(_: WriteMethodResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): WriteMethodResponse {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): WriteMethodResponse {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseWriteMethodResponse();
     while (reader.pos < end) {
@@ -573,7 +582,7 @@ export const WriteMethodResponse = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -600,8 +609,8 @@ function createBaseEntity(): Entity {
   return { id: "", name: "" };
 }
 
-export const Entity = {
-  encode(message: Entity, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const Entity: MessageFns<Entity> = {
+  encode(message: Entity, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.id !== "") {
       writer.uint32(10).string(message.id);
     }
@@ -611,32 +620,34 @@ export const Entity = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Entity {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Entity {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEntity();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.id = reader.string();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
 
           message.name = reader.string();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -706,7 +717,7 @@ export class EntityServiceClientImpl<Context extends DataLoaders> implements Ent
   BatchQuery(ctx: Context, request: BatchQueryRequest): Promise<BatchQueryResponse> {
     const data = BatchQueryRequest.encode(request).finish();
     const promise = this.rpc.request(ctx, this.service, "BatchQuery", data);
-    return promise.then((data) => BatchQueryResponse.decode(_m0.Reader.create(data)));
+    return promise.then((data) => BatchQueryResponse.decode(new BinaryReader(data)));
   }
 
   GetMapQuery(ctx: Context, id: string): Promise<Entity> {
@@ -724,7 +735,7 @@ export class EntityServiceClientImpl<Context extends DataLoaders> implements Ent
   BatchMapQuery(ctx: Context, request: BatchMapQueryRequest): Promise<BatchMapQueryResponse> {
     const data = BatchMapQueryRequest.encode(request).finish();
     const promise = this.rpc.request(ctx, this.service, "BatchMapQuery", data);
-    return promise.then((data) => BatchMapQueryResponse.decode(_m0.Reader.create(data)));
+    return promise.then((data) => BatchMapQueryResponse.decode(new BinaryReader(data)));
   }
 
   GetOnlyMethod(ctx: Context, request: GetOnlyMethodRequest): Promise<GetOnlyMethodResponse> {
@@ -733,7 +744,7 @@ export class EntityServiceClientImpl<Context extends DataLoaders> implements Ent
         const responses = requests.map(async (request) => {
           const data = GetOnlyMethodRequest.encode(request).finish();
           const response = await this.rpc.request(ctx, "batching.EntityService", "GetOnlyMethod", data);
-          return GetOnlyMethodResponse.decode(_m0.Reader.create(response));
+          return GetOnlyMethodResponse.decode(new BinaryReader(response));
         });
         return Promise.all(responses);
       }, { cacheKeyFn: hash, ...ctx.rpcDataLoaderOptions });
@@ -744,7 +755,7 @@ export class EntityServiceClientImpl<Context extends DataLoaders> implements Ent
   WriteMethod(ctx: Context, request: WriteMethodRequest): Promise<WriteMethodResponse> {
     const data = WriteMethodRequest.encode(request).finish();
     const promise = this.rpc.request(ctx, this.service, "WriteMethod", data);
-    return promise.then((data) => WriteMethodResponse.decode(_m0.Reader.create(data)));
+    return promise.then((data) => WriteMethodResponse.decode(new BinaryReader(data)));
   }
 }
 
@@ -783,4 +794,13 @@ function isSet(value: any): boolean {
 
 function fail(message?: string): never {
   throw new globalThis.Error(message ?? "Failed");
+}
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+  fromJSON(object: any): T;
+  toJSON(message: T): unknown;
+  create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
+  fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
 }

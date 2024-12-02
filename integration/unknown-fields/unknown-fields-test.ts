@@ -407,7 +407,18 @@ describe("unknown-fields", () => {
     `);
 
     const encoded = CodeGeneratorRequest.encode(request).finish();
-    const secondRequest = CodeGeneratorRequest.decode(encoded);
+    // TODO remove Buffer.from after migrating to BinaryReader
+    // Context:
+    // - decode() with protobuf.js' Reader will populate unknown fields with Buffers when it's
+    //   reading from a Buffer, and populate them with Uint8Arrays if it's reading from a Uint8Array.
+    // - Before encode() was updated to use BinaryWriter, `encoded` was a Buffer, now it is a
+    //   plain Uint8Array.
+    // - This causes the comparison below to fail, because we're decoding the first request from
+    //   stdin (a Buffer), and the second request from a Uint8Array.
+    // To fix the broken test, we simply convert `encoded` to a Buffer. Migrating to BinaryReader
+    // will always use Uint8Array for unknown fields.
+    // const secondRequest = CodeGeneratorRequest.decode(encoded);
+    const secondRequest = CodeGeneratorRequest.decode(Buffer.from(encoded));
 
     expect(request).toStrictEqual(secondRequest);
   });

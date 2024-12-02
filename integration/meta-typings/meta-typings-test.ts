@@ -2767,7 +2767,7 @@ describe("simple", () => {
               {
                 "leadingComments": "* Example comment on the Simple message ",
                 "leadingDetachedComments": [
-                  " This comment is seperated by a blank non-comment line, and will detatch from 
+                  " This comment is separated by a blank non-comment line, and will detach from 
        the following comment on the message Simple.
       ",
                 ],

@@ -13,7 +13,7 @@ function createBaseMessage(): Message {
   return { data: new Uint8Array(0) };
 }
 
-export const Message = {
+export const Message: MessageFns<Message> = {
   fromJSON(object: any): Message {
     return { data: isSet(object.data) ? bytesFromBase64(object.data) : new Uint8Array(0) };
   },
@@ -75,4 +75,11 @@ export type Exact<P, I extends P> = P extends Builtin ? P
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+export interface MessageFns<T> {
+  fromJSON(object: any): T;
+  toJSON(message: T): unknown;
+  create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
+  fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
 }

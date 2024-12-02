@@ -2,7 +2,7 @@
 // source: options.proto
 
 /* eslint-disable */
-import * as _m0 from "protobufjs/minimal";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 import { FileDescriptorProto as FileDescriptorProto1 } from "ts-proto-descriptors";
 import { protoMetadata as protoMetadata1 } from "./google/protobuf/descriptor";
 import { protoMetadata as protoMetadata2, Something } from "./something/something";
@@ -32,8 +32,8 @@ function createBaseMyMessage(): MyMessage {
   return { foo: undefined, foo2: undefined, bar: undefined, quux: undefined };
 }
 
-export const MyMessage = {
-  encode(message: MyMessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const MyMessage: MessageFns<MyMessage> = {
+  encode(message: MyMessage, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.foo !== undefined) {
       writer.uint32(8).int32(message.foo);
     }
@@ -49,46 +49,50 @@ export const MyMessage = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): MyMessage {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): MyMessage {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseMyMessage();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 8) {
             break;
           }
 
           message.foo = reader.int32();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 16) {
             break;
           }
 
           message.foo2 = reader.int32();
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag !== 26) {
             break;
           }
 
           message.bar = reader.string();
           continue;
-        case 4:
+        }
+        case 4: {
           if (tag !== 34) {
             break;
           }
 
           message.quux = reader.string();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -98,13 +102,13 @@ function createBaseRequestType(): RequestType {
   return {};
 }
 
-export const RequestType = {
-  encode(_: RequestType, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const RequestType: MessageFns<RequestType> = {
+  encode(_: RequestType, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): RequestType {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): RequestType {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseRequestType();
     while (reader.pos < end) {
@@ -114,7 +118,7 @@ export const RequestType = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -124,13 +128,13 @@ function createBaseResponseType(): ResponseType {
   return {};
 }
 
-export const ResponseType = {
-  encode(_: ResponseType, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const ResponseType: MessageFns<ResponseType> = {
+  encode(_: ResponseType, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ResponseType {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): ResponseType {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseResponseType();
     while (reader.pos < end) {
@@ -140,7 +144,7 @@ export const ResponseType = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -162,7 +166,7 @@ export class MyServiceClientImpl implements MyService {
   MyMethod(request: RequestType): Promise<ResponseType> {
     const data = RequestType.encode(request).finish();
     const promise = this.rpc.request(this.service, "MyMethod", data);
-    return promise.then((data) => ResponseType.decode(_m0.Reader.create(data)));
+    return promise.then((data) => ResponseType.decode(new BinaryReader(data)));
   }
 }
 
@@ -192,7 +196,7 @@ export interface ProtoMetadata {
 }
 
 export const protoMetadata: ProtoMetadata = {
-  fileDescriptor: FileDescriptorProto1.fromPartial({
+  fileDescriptor: {
     "name": "options.proto",
     "package": "",
     "dependency": ["google/protobuf/descriptor.proto", "something/something.proto"],
@@ -452,7 +456,7 @@ export const protoMetadata: ProtoMetadata = {
     },
     "sourceCodeInfo": { "location": [] },
     "syntax": "proto3",
-  }),
+  },
   references: {
     ".MyEnum": MyEnum,
     ".MyMessage": MyMessage,
@@ -468,7 +472,7 @@ export const protoMetadata: ProtoMetadata = {
         options: { "my_message_option": 1234 },
         fields: {
           "foo": { "my_field_option": 4.5 },
-          "foo_2": { "something": Something.decode(Buffer.from("CgV3b3JsZBIDe9kC", "base64")) },
+          "foo_2": { "something": Something.decode(bytesFromBase64("CgV3b3JsZBIDe9kC")) },
         },
         oneof: { "qux": { "my_oneof_option": 42 } },
       },
@@ -478,7 +482,7 @@ export const protoMetadata: ProtoMetadata = {
         options: { "my_service_option": 0 },
         methods: {
           "MyMethod": {
-            "my_method_option": MyMessage.decode(Buffer.from("CJYBEJYBGgtTb21lIHN0cmluZyILU29tZSBzdHJpbmc=", "base64")),
+            "my_method_option": MyMessage.decode(bytesFromBase64("CJYBEJYBGgtTb21lIHN0cmluZyILU29tZSBzdHJpbmc=")),
           },
         },
       },
@@ -486,3 +490,21 @@ export const protoMetadata: ProtoMetadata = {
     enums: { "MyEnum": { options: { "my_enum_option": true }, values: { "FOO": { "my_enum_value_option": 321 } } } },
   },
 };
+
+function bytesFromBase64(b64: string): Uint8Array {
+  if ((globalThis as any).Buffer) {
+    return Uint8Array.from(globalThis.Buffer.from(b64, "base64"));
+  } else {
+    const bin = globalThis.atob(b64);
+    const arr = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; ++i) {
+      arr[i] = bin.charCodeAt(i);
+    }
+    return arr;
+  }
+}
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+}

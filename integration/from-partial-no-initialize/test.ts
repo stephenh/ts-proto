@@ -2,7 +2,7 @@
 // source: test.proto
 
 /* eslint-disable */
-import * as _m0 from "protobufjs/minimal";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
 export const protobufPackage = "";
 
@@ -29,33 +29,34 @@ function createBaseTPartialMessage(): TPartialMessage {
   return {};
 }
 
-export const TPartialMessage = {
-  encode(message: TPartialMessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const TPartialMessage: MessageFns<TPartialMessage> = {
+  encode(message: TPartialMessage, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.field !== undefined && message.field !== "") {
       writer.uint32(10).string(message.field);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): TPartialMessage {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): TPartialMessage {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTPartialMessage();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.field = reader.string();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -86,8 +87,8 @@ function createBaseTPartial(): TPartial {
   return {};
 }
 
-export const TPartial = {
-  encode(message: TPartial, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const TPartial: MessageFns<TPartial> = {
+  encode(message: TPartial, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.number !== undefined && message.number !== 0) {
       writer.uint32(8).int32(message.number);
     }
@@ -95,14 +96,14 @@ export const TPartial = {
       writer.uint32(18).string(message.string);
     }
     Object.entries(message.map || {}).forEach(([key, value]) => {
-      TPartial_MapEntry.encode({ key: key as any, value }, writer.uint32(26).fork()).ldelim();
+      TPartial_MapEntry.encode({ key: key as any, value }, writer.uint32(26).fork()).join();
     });
     if (message.message !== undefined) {
-      TPartialMessage.encode(message.message, writer.uint32(34).fork()).ldelim();
+      TPartialMessage.encode(message.message, writer.uint32(34).fork()).join();
     }
     if (message.repeatedMessage !== undefined && message.repeatedMessage.length !== 0) {
       for (const v of message.repeatedMessage) {
-        TPartialMessage.encode(v!, writer.uint32(42).fork()).ldelim();
+        TPartialMessage.encode(v!, writer.uint32(42).fork()).join();
       }
     }
     if (message.repeatedString !== undefined && message.repeatedString.length !== 0) {
@@ -115,33 +116,35 @@ export const TPartial = {
       for (const v of message.repeatedNumber) {
         writer.int32(v);
       }
-      writer.ldelim();
+      writer.join();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): TPartial {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): TPartial {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTPartial();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 8) {
             break;
           }
 
           message.number = reader.int32();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
 
           message.string = reader.string();
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag !== 26) {
             break;
           }
@@ -154,14 +157,16 @@ export const TPartial = {
             message.map![entry3.key] = entry3.value;
           }
           continue;
-        case 4:
+        }
+        case 4: {
           if (tag !== 34) {
             break;
           }
 
           message.message = TPartialMessage.decode(reader, reader.uint32());
           continue;
-        case 5:
+        }
+        case 5: {
           if (tag !== 42) {
             break;
           }
@@ -169,9 +174,13 @@ export const TPartial = {
           if (message.repeatedMessage === undefined) {
             message.repeatedMessage = [];
           }
-          message.repeatedMessage!.push(TPartialMessage.decode(reader, reader.uint32()));
+          const el = TPartialMessage.decode(reader, reader.uint32());
+          if (el !== undefined) {
+            message.repeatedMessage!.push(el);
+          }
           continue;
-        case 6:
+        }
+        case 6: {
           if (tag !== 50) {
             break;
           }
@@ -179,9 +188,13 @@ export const TPartial = {
           if (message.repeatedString === undefined) {
             message.repeatedString = [];
           }
-          message.repeatedString!.push(reader.string());
+          const el = reader.string();
+          if (el !== undefined) {
+            message.repeatedString!.push(el);
+          }
           continue;
-        case 7:
+        }
+        case 7: {
           if (tag === 56) {
             if (message.repeatedNumber === undefined) {
               message.repeatedNumber = [];
@@ -204,11 +217,12 @@ export const TPartial = {
           }
 
           break;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -297,8 +311,8 @@ function createBaseTPartial_MapEntry(): TPartial_MapEntry {
   return { key: "", value: "" };
 }
 
-export const TPartial_MapEntry = {
-  encode(message: TPartial_MapEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const TPartial_MapEntry: MessageFns<TPartial_MapEntry> = {
+  encode(message: TPartial_MapEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.key !== "") {
       writer.uint32(10).string(message.key);
     }
@@ -308,32 +322,34 @@ export const TPartial_MapEntry = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): TPartial_MapEntry {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): TPartial_MapEntry {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseTPartial_MapEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.key = reader.string();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
 
           message.value = reader.string();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -385,4 +401,13 @@ function isObject(value: any): boolean {
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+  fromJSON(object: any): T;
+  toJSON(message: T): unknown;
+  create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
+  fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
 }

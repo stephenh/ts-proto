@@ -2,7 +2,7 @@
 // source: google/type/date.proto
 
 /* eslint-disable */
-import * as _m0 from "protobufjs/minimal";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 import { FileDescriptorProto } from "ts-proto-descriptors";
 
 export const protobufPackage = "google.type";
@@ -42,8 +42,8 @@ function createBaseDateMessage(): DateMessage {
   return { year: 0, month: 0, day: 0 };
 }
 
-export const DateMessage = {
-  encode(message: DateMessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const DateMessage: MessageFns<DateMessage> = {
+  encode(message: DateMessage, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.year !== 0) {
       writer.uint32(8).int32(message.year);
     }
@@ -56,39 +56,42 @@ export const DateMessage = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): DateMessage {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): DateMessage {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDateMessage();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 8) {
             break;
           }
 
           message.year = reader.int32();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 16) {
             break;
           }
 
           message.month = reader.int32();
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag !== 24) {
             break;
           }
 
           message.day = reader.int32();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -116,7 +119,7 @@ export interface ProtoMetadata {
 }
 
 export const protoMetadata: ProtoMetadata = {
-  fileDescriptor: FileDescriptorProto.fromPartial({
+  fileDescriptor: {
     "name": "google/type/date.proto",
     "package": "google.type",
     "dependency": [],
@@ -227,7 +230,12 @@ export const protoMetadata: ProtoMetadata = {
       }],
     },
     "syntax": "proto3",
-  }),
+  },
   references: { ".google.type.DateMessage": DateMessage },
   dependencies: [],
 };
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+}

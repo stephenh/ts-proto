@@ -32,9 +32,13 @@ export function test_TestTypeToJSON(object: Test_TestType): string {
   }
 }
 
-export const Test = {
+export const Test: MessageFns<Test> = {
   toJSON(_: Test): unknown {
     const obj: any = {};
     return obj;
   },
 };
+
+export interface MessageFns<T> {
+  toJSON(message: T): unknown;
+}

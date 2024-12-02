@@ -2,7 +2,7 @@
 // source: proto-2.proto
 
 /* eslint-disable */
-import * as _m0 from "protobufjs/minimal";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
 export const protobufPackage = "omit";
 
@@ -22,8 +22,8 @@ function createBaseProto2TestMessage(): Proto2TestMessage {
   return { boolValue: null, intValue: null, stringValue: null, mapValue: {} };
 }
 
-export const Proto2TestMessage = {
-  encode(message: Proto2TestMessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const Proto2TestMessage: MessageFns<Proto2TestMessage> = {
+  encode(message: Proto2TestMessage, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.boolValue !== undefined && message.boolValue !== null) {
       writer.uint32(8).bool(message.boolValue);
     }
@@ -34,40 +34,43 @@ export const Proto2TestMessage = {
       writer.uint32(26).string(message.stringValue);
     }
     Object.entries(message.mapValue).forEach(([key, value]) => {
-      Proto2TestMessage_MapValueEntry.encode({ key: key as any, value }, writer.uint32(34).fork()).ldelim();
+      Proto2TestMessage_MapValueEntry.encode({ key: key as any, value }, writer.uint32(34).fork()).join();
     });
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Proto2TestMessage {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Proto2TestMessage {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseProto2TestMessage();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 8) {
             break;
           }
 
           message.boolValue = reader.bool();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 16) {
             break;
           }
 
           message.intValue = reader.int32();
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag !== 26) {
             break;
           }
 
           message.stringValue = reader.string();
           continue;
-        case 4:
+        }
+        case 4: {
           if (tag !== 34) {
             break;
           }
@@ -77,11 +80,12 @@ export const Proto2TestMessage = {
             message.mapValue[entry4.key] = entry4.value;
           }
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -145,8 +149,8 @@ function createBaseProto2TestMessage_MapValueEntry(): Proto2TestMessage_MapValue
   return { key: null, value: null };
 }
 
-export const Proto2TestMessage_MapValueEntry = {
-  encode(message: Proto2TestMessage_MapValueEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const Proto2TestMessage_MapValueEntry: MessageFns<Proto2TestMessage_MapValueEntry> = {
+  encode(message: Proto2TestMessage_MapValueEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.key !== undefined && message.key !== null) {
       writer.uint32(10).string(message.key);
     }
@@ -156,32 +160,34 @@ export const Proto2TestMessage_MapValueEntry = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Proto2TestMessage_MapValueEntry {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Proto2TestMessage_MapValueEntry {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseProto2TestMessage_MapValueEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.key = reader.string();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
 
           message.value = reader.string();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -235,4 +241,13 @@ function isObject(value: any): boolean {
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+  fromJSON(object: any): T;
+  toJSON(message: T): unknown;
+  create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
+  fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
 }

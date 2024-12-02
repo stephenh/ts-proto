@@ -5,7 +5,7 @@ import { uncapitalize, camelToSnake } from "./case";
 import SourceInfo, { Fields } from "./sourceInfo";
 import { Context } from "./context";
 
-type UnrecognizedEnum = { present: false } | { present: true; name: string };
+type UnrecognizedEnum = { present: false } | { present: true; name: string; originalName: string };
 
 // Output the `enum { Foo, A = 0, B = 1 }`
 export function generateEnum(
@@ -33,7 +33,7 @@ export function generateEnum(
     const valueName = getValueName(ctx, fullName, valueDesc);
     const memberName = getMemberName(ctx, enumDesc, valueDesc);
     if (valueDesc.number === options.unrecognizedEnumValue) {
-      unrecognizedEnum = { present: true, name: memberName };
+      unrecognizedEnum = { present: true, name: memberName, originalName: valueName };
     }
     maybeAddComment(options, info, chunks, valueDesc.options?.deprecated, `${memberName} - `);
     chunks.push(
@@ -196,7 +196,7 @@ export function generateEnumToJson(
     } else {
       chunks.push(code`
       default:
-        return "${unrecognizedEnum.name}";
+        return "${unrecognizedEnum.originalName}";
     `);
     }
   } else {

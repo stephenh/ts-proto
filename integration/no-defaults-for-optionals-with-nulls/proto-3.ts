@@ -2,7 +2,7 @@
 // source: proto-3.proto
 
 /* eslint-disable */
-import * as _m0 from "protobufjs/minimal";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
 export const protobufPackage = "omit";
 
@@ -33,8 +33,8 @@ function createBaseProto3TestMessage(): Proto3TestMessage {
   };
 }
 
-export const Proto3TestMessage = {
-  encode(message: Proto3TestMessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const Proto3TestMessage: MessageFns<Proto3TestMessage> = {
+  encode(message: Proto3TestMessage, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.boolValue !== undefined && message.boolValue !== null) {
       writer.uint32(8).bool(message.boolValue);
     }
@@ -54,61 +54,67 @@ export const Proto3TestMessage = {
       writer.uint32(50).string(message.optionalStringValue);
     }
     Object.entries(message.mapValue).forEach(([key, value]) => {
-      Proto3TestMessage_MapValueEntry.encode({ key: key as any, value }, writer.uint32(58).fork()).ldelim();
+      Proto3TestMessage_MapValueEntry.encode({ key: key as any, value }, writer.uint32(58).fork()).join();
     });
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Proto3TestMessage {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Proto3TestMessage {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseProto3TestMessage();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 8) {
             break;
           }
 
           message.boolValue = reader.bool();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 16) {
             break;
           }
 
           message.intValue = reader.int32();
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag !== 26) {
             break;
           }
 
           message.stringValue = reader.string();
           continue;
-        case 4:
+        }
+        case 4: {
           if (tag !== 32) {
             break;
           }
 
           message.optionalBoolValue = reader.bool();
           continue;
-        case 5:
+        }
+        case 5: {
           if (tag !== 40) {
             break;
           }
 
           message.optionalIntValue = reader.int32();
           continue;
-        case 6:
+        }
+        case 6: {
           if (tag !== 50) {
             break;
           }
 
           message.optionalStringValue = reader.string();
           continue;
-        case 7:
+        }
+        case 7: {
           if (tag !== 58) {
             break;
           }
@@ -118,11 +124,12 @@ export const Proto3TestMessage = {
             message.mapValue[entry7.key] = entry7.value;
           }
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -201,8 +208,8 @@ function createBaseProto3TestMessage_MapValueEntry(): Proto3TestMessage_MapValue
   return { key: null, value: null };
 }
 
-export const Proto3TestMessage_MapValueEntry = {
-  encode(message: Proto3TestMessage_MapValueEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const Proto3TestMessage_MapValueEntry: MessageFns<Proto3TestMessage_MapValueEntry> = {
+  encode(message: Proto3TestMessage_MapValueEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.key !== undefined && message.key !== null) {
       writer.uint32(10).string(message.key);
     }
@@ -212,32 +219,34 @@ export const Proto3TestMessage_MapValueEntry = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Proto3TestMessage_MapValueEntry {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Proto3TestMessage_MapValueEntry {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseProto3TestMessage_MapValueEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.key = reader.string();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
 
           message.value = reader.string();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -291,4 +300,13 @@ function isObject(value: any): boolean {
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+  fromJSON(object: any): T;
+  toJSON(message: T): unknown;
+  create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
+  fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
 }

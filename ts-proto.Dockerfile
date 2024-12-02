@@ -7,7 +7,7 @@ COPY . .
 RUN yarn install
 RUN yarn build
 
-# clean all depencies
+# clean all dependencies
 RUN rm -rf node_modules
 RUN yarn cache clean
 

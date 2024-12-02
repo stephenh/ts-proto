@@ -70,7 +70,7 @@ export function generateDecoder(ctx: Context, typeName: string): Code {
   let TypeValue: Import;
 
   if (name == "Timestamp") {
-    TypeValue = impProto(ctx.options, "google/protobuf/timestamp", name);
+    TypeValue = impProto(ctx.options, "google/protobuf/timestamp", options.typePrefix + name + options.typeSuffix);
 
     const decoder = code`${TypeValue}.decode(value)`;
     if (

@@ -2,7 +2,7 @@
 // source: example.proto
 
 /* eslint-disable */
-import * as _m0 from "protobufjs/minimal";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { StringValue } from "./google/protobuf/wrappers";
@@ -101,8 +101,8 @@ function createBaseDashFlash(): DashFlash {
   return { msg: "", type: 0 };
 }
 
-export const DashFlash = {
-  encode(message: DashFlash, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const DashFlash: MessageFns<DashFlash> = {
+  encode(message: DashFlash, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.msg !== "") {
       writer.uint32(10).string(message.msg);
     }
@@ -112,32 +112,34 @@ export const DashFlash = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): DashFlash {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): DashFlash {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDashFlash();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.msg = reader.string();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 16) {
             break;
           }
 
           message.type = reader.int32() as any;
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -175,53 +177,56 @@ function createBaseDashUserSettingsState(): DashUserSettingsState {
   return { email: "", urls: undefined, flashes: [] };
 }
 
-export const DashUserSettingsState = {
-  encode(message: DashUserSettingsState, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const DashUserSettingsState: MessageFns<DashUserSettingsState> = {
+  encode(message: DashUserSettingsState, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.email !== "") {
       writer.uint32(10).string(message.email);
     }
     if (message.urls !== undefined) {
-      DashUserSettingsState_URLs.encode(message.urls, writer.uint32(50).fork()).ldelim();
+      DashUserSettingsState_URLs.encode(message.urls, writer.uint32(50).fork()).join();
     }
     for (const v of message.flashes) {
-      DashFlash.encode(v!, writer.uint32(58).fork()).ldelim();
+      DashFlash.encode(v!, writer.uint32(58).fork()).join();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): DashUserSettingsState {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): DashUserSettingsState {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDashUserSettingsState();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.email = reader.string();
           continue;
-        case 6:
+        }
+        case 6: {
           if (tag !== 50) {
             break;
           }
 
           message.urls = DashUserSettingsState_URLs.decode(reader, reader.uint32());
           continue;
-        case 7:
+        }
+        case 7: {
           if (tag !== 58) {
             break;
           }
 
           message.flashes.push(DashFlash.decode(reader, reader.uint32()));
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -266,8 +271,8 @@ function createBaseDashUserSettingsState_URLs(): DashUserSettingsState_URLs {
   return { connectGoogle: "", connectGithub: "" };
 }
 
-export const DashUserSettingsState_URLs = {
-  encode(message: DashUserSettingsState_URLs, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const DashUserSettingsState_URLs: MessageFns<DashUserSettingsState_URLs> = {
+  encode(message: DashUserSettingsState_URLs, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.connectGoogle !== "") {
       writer.uint32(10).string(message.connectGoogle);
     }
@@ -277,32 +282,34 @@ export const DashUserSettingsState_URLs = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): DashUserSettingsState_URLs {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): DashUserSettingsState_URLs {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDashUserSettingsState_URLs();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.connectGoogle = reader.string();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
 
           message.connectGithub = reader.string();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -340,8 +347,8 @@ function createBaseDashCred(): DashCred {
   return { description: "", metadata: "", token: "", id: "" };
 }
 
-export const DashCred = {
-  encode(message: DashCred, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const DashCred: MessageFns<DashCred> = {
+  encode(message: DashCred, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.description !== "") {
       writer.uint32(18).string(message.description);
     }
@@ -357,46 +364,50 @@ export const DashCred = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): DashCred {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): DashCred {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDashCred();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 2:
+        case 2: {
           if (tag !== 18) {
             break;
           }
 
           message.description = reader.string();
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag !== 26) {
             break;
           }
 
           message.metadata = reader.string();
           continue;
-        case 4:
+        }
+        case 4: {
           if (tag !== 34) {
             break;
           }
 
           message.token = reader.string();
           continue;
-        case 7:
+        }
+        case 7: {
           if (tag !== 58) {
             break;
           }
 
           message.id = reader.string();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -444,8 +455,8 @@ function createBaseDashAPICredsCreateReq(): DashAPICredsCreateReq {
   return { description: "", metadata: "" };
 }
 
-export const DashAPICredsCreateReq = {
-  encode(message: DashAPICredsCreateReq, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const DashAPICredsCreateReq: MessageFns<DashAPICredsCreateReq> = {
+  encode(message: DashAPICredsCreateReq, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.description !== "") {
       writer.uint32(10).string(message.description);
     }
@@ -455,32 +466,34 @@ export const DashAPICredsCreateReq = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): DashAPICredsCreateReq {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): DashAPICredsCreateReq {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDashAPICredsCreateReq();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.description = reader.string();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
 
           message.metadata = reader.string();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -518,8 +531,8 @@ function createBaseDashAPICredsUpdateReq(): DashAPICredsUpdateReq {
   return { credSid: "", description: "", metadata: "", id: "" };
 }
 
-export const DashAPICredsUpdateReq = {
-  encode(message: DashAPICredsUpdateReq, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const DashAPICredsUpdateReq: MessageFns<DashAPICredsUpdateReq> = {
+  encode(message: DashAPICredsUpdateReq, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.credSid !== "") {
       writer.uint32(10).string(message.credSid);
     }
@@ -535,46 +548,50 @@ export const DashAPICredsUpdateReq = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): DashAPICredsUpdateReq {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): DashAPICredsUpdateReq {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDashAPICredsUpdateReq();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.credSid = reader.string();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
 
           message.description = reader.string();
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag !== 26) {
             break;
           }
 
           message.metadata = reader.string();
           continue;
-        case 5:
+        }
+        case 5: {
           if (tag !== 42) {
             break;
           }
 
           message.id = reader.string();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -622,8 +639,8 @@ function createBaseDashAPICredsDeleteReq(): DashAPICredsDeleteReq {
   return { credSid: "", id: "" };
 }
 
-export const DashAPICredsDeleteReq = {
-  encode(message: DashAPICredsDeleteReq, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const DashAPICredsDeleteReq: MessageFns<DashAPICredsDeleteReq> = {
+  encode(message: DashAPICredsDeleteReq, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.credSid !== "") {
       writer.uint32(10).string(message.credSid);
     }
@@ -633,32 +650,34 @@ export const DashAPICredsDeleteReq = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): DashAPICredsDeleteReq {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): DashAPICredsDeleteReq {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseDashAPICredsDeleteReq();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.credSid = reader.string();
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag !== 26) {
             break;
           }
 
           message.id = reader.string();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -696,13 +715,13 @@ function createBaseEmpty(): Empty {
   return {};
 }
 
-export const Empty = {
-  encode(_: Empty, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const Empty: MessageFns<Empty> = {
+  encode(_: Empty, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Empty {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Empty {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEmpty();
     while (reader.pos < end) {
@@ -712,7 +731,7 @@ export const Empty = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -761,7 +780,7 @@ export class DashStateClientImpl implements DashState {
     const promise = this.rpc.request(this.service, "UserSettings", data);
     return promise.then((data) => {
       try {
-        const response = DashUserSettingsState.decode(_m0.Reader.create(data));
+        const response = DashUserSettingsState.decode(new BinaryReader(data));
         if (this.rpc.afterResponse) {
           this.rpc.afterResponse(this.service, "UserSettings", response);
         }
@@ -785,7 +804,7 @@ export class DashStateClientImpl implements DashState {
     const result = this.rpc.serverStreamingRequest(this.service, "ActiveUserSettingsStream", data);
     return result.pipe(map((data) => {
       try {
-        const response = DashUserSettingsState.decode(_m0.Reader.create(data));
+        const response = DashUserSettingsState.decode(new BinaryReader(data));
         if (this.rpc.afterResponse) {
           this.rpc.afterResponse(this.service, "ActiveUserSettingsStream", response);
         }
@@ -807,7 +826,7 @@ export class DashStateClientImpl implements DashState {
     const result = this.rpc.bidirectionalStreamingRequest(this.service, "ChangeUserSettingsStream", data);
     return result.pipe(map((data) => {
       try {
-        const response = DashUserSettingsState.decode(_m0.Reader.create(data));
+        const response = DashUserSettingsState.decode(new BinaryReader(data));
         if (this.rpc.afterResponse) {
           this.rpc.afterResponse(this.service, "ChangeUserSettingsStream", response);
         }
@@ -884,7 +903,7 @@ export class DashAPICredsClientImpl implements DashAPICreds {
     const promise = this.rpc.request(this.service, "Create", data);
     return promise.then((data) => {
       try {
-        const response = DashCred.decode(_m0.Reader.create(data));
+        const response = DashCred.decode(new BinaryReader(data));
         if (this.rpc.afterResponse) {
           this.rpc.afterResponse(this.service, "Create", response);
         }
@@ -908,7 +927,7 @@ export class DashAPICredsClientImpl implements DashAPICreds {
     const promise = this.rpc.request(this.service, "Update", data);
     return promise.then((data) => {
       try {
-        const response = DashCred.decode(_m0.Reader.create(data));
+        const response = DashCred.decode(new BinaryReader(data));
         if (this.rpc.afterResponse) {
           this.rpc.afterResponse(this.service, "Update", response);
         }
@@ -932,7 +951,7 @@ export class DashAPICredsClientImpl implements DashAPICreds {
     const promise = this.rpc.request(this.service, "Delete", data);
     return promise.then((data) => {
       try {
-        const response = DashCred.decode(_m0.Reader.create(data));
+        const response = DashCred.decode(new BinaryReader(data));
         if (this.rpc.afterResponse) {
           this.rpc.afterResponse(this.service, "Delete", response);
         }
@@ -956,7 +975,7 @@ export class DashAPICredsClientImpl implements DashAPICreds {
     const promise = this.rpc.request(this.service, "Uppercase", data);
     return promise.then((data) => {
       try {
-        const response = StringValue.decode(_m0.Reader.create(data));
+        const response = StringValue.decode(new BinaryReader(data));
         if (this.rpc.afterResponse) {
           this.rpc.afterResponse(this.service, "Uppercase", response);
         }
@@ -1042,4 +1061,13 @@ export type Exact<P, I extends P> = P extends Builtin ? P
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+  fromJSON(object: any): T;
+  toJSON(message: T): unknown;
+  create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
+  fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
 }

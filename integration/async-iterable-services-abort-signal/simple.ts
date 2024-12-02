@@ -2,7 +2,7 @@
 // source: simple.proto
 
 /* eslint-disable */
-import * as _m0 from "protobufjs/minimal";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
 export const protobufPackage = "simple";
 
@@ -15,33 +15,34 @@ function createBaseEchoMsg(): EchoMsg {
   return { body: "" };
 }
 
-export const EchoMsg = {
-  encode(message: EchoMsg, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const EchoMsg: MessageFns<EchoMsg> = {
+  encode(message: EchoMsg, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.body !== "") {
       writer.uint32(10).string(message.body);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): EchoMsg {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): EchoMsg {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseEchoMsg();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.body = reader.string();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -127,7 +128,7 @@ export class EchoerClientImpl implements Echoer {
   Echo(request: EchoMsg, abortSignal?: AbortSignal): Promise<EchoMsg> {
     const data = EchoMsg.encode(request).finish();
     const promise = this.rpc.request(this.service, "Echo", data, abortSignal || undefined);
-    return promise.then((data) => EchoMsg.decode(_m0.Reader.create(data)));
+    return promise.then((data) => EchoMsg.decode(new BinaryReader(data)));
   }
 
   EchoServerStream(request: EchoMsg, abortSignal?: AbortSignal): AsyncIterable<EchoMsg> {
@@ -139,7 +140,7 @@ export class EchoerClientImpl implements Echoer {
   EchoClientStream(request: AsyncIterable<EchoMsg>, abortSignal?: AbortSignal): Promise<EchoMsg> {
     const data = EchoMsg.encodeTransform(request);
     const promise = this.rpc.clientStreamingRequest(this.service, "EchoClientStream", data, abortSignal || undefined);
-    return promise.then((data) => EchoMsg.decode(_m0.Reader.create(data)));
+    return promise.then((data) => EchoMsg.decode(new BinaryReader(data)));
   }
 
   EchoBidiStream(request: AsyncIterable<EchoMsg>, abortSignal?: AbortSignal): AsyncIterable<EchoMsg> {
@@ -190,4 +191,17 @@ export type Exact<P, I extends P> = P extends Builtin ? P
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+  encodeTransform(source: AsyncIterable<T | T[]> | Iterable<T | T[]>): AsyncIterable<Uint8Array>;
+  decodeTransform(
+    source: AsyncIterable<Uint8Array | Uint8Array[]> | Iterable<Uint8Array | Uint8Array[]>,
+  ): AsyncIterable<T>;
+  fromJSON(object: any): T;
+  toJSON(message: T): unknown;
+  create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
+  fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
 }

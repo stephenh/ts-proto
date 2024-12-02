@@ -39,6 +39,12 @@ export enum ServiceOption {
   NONE = "none",
 }
 
+export enum OutputSchemaOption {
+  TRUE = "true",
+  NO_FILE_DESCRIPTOR = "no-file-descriptor",
+  CONST = "const",
+}
+
 export type Options = {
   context: boolean;
   snakeToCamel: Array<"json" | "keys">;
@@ -78,7 +84,7 @@ export type Options = {
   unrecognizedEnumName: string;
   unrecognizedEnumValue: number;
   exportCommonSymbols: boolean;
-  outputSchema: boolean | "no-file-descriptor";
+  outputSchema: false | OutputSchemaOption[];
   onlyTypes: boolean;
   emitImportedFiles: boolean;
   useAbortSignal: boolean;
@@ -238,6 +244,14 @@ export function optionsFromParameter(parameter: string | undefined): Options {
   // If using nestJs + other services, add the encode methods back
   if (options.nestJs && options.outputServices.length > 0) {
     options.outputEncodeMethods = true;
+  }
+
+  // Handle outputSchema=true
+  if ((options.outputSchema as any) === true) {
+    options.outputSchema = [];
+  }
+  if (typeof options.outputSchema === "string") {
+    options.outputSchema = [options.outputSchema];
   }
 
   if ((options.useDate as any) === true) {

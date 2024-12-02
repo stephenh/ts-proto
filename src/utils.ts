@@ -330,13 +330,17 @@ export async function getVersions(request: CodeGeneratorRequest) {
     const { major, minor, patch } = request.compilerVersion;
     protocVersion = `v${major}.${minor}.${patch}`;
   }
-
-  const path: string = "../package.json";
-  const packageJson = await import(path);
+  const packageJson = await readPackageJson();
   const tsProtoVersion = `v${packageJson?.version ?? "unknown"}`;
+  return { protocVersion, tsProtoVersion };
+}
 
-  return {
-    protocVersion,
-    tsProtoVersion,
-  };
+/** Read from the distributed package.json file, or our local package.json when running ts-proto tests locally. */
+async function readPackageJson(): Promise<any> {
+  try {
+    // Use `as string` to disable hints that the path doesn't exist
+    return await import("../../package.json" as string);
+  } catch (e) {
+    return await import("../package.json" as string);
+  }
 }

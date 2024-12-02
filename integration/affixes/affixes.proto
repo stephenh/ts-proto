@@ -1,4 +1,6 @@
 syntax = "proto3";
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/timestamp.proto";
 
 package affixes;
 
@@ -14,4 +16,9 @@ enum AwesomeEnum {
 }
 
 service AwesomeService {
+}
+
+message Google {
+  google.protobuf.UInt64Value guint64 = 13;
+  google.protobuf.Timestamp timestamp = 14;
 }

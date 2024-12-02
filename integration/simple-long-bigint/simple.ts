@@ -2,10 +2,9 @@
 // source: simple.proto
 
 /* eslint-disable */
-import * as _m0 from "protobufjs/minimal";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 import { Timestamp } from "./google/protobuf/timestamp";
 import { UInt64Value } from "./google/protobuf/wrappers";
-import Long = require("long");
 
 export const protobufPackage = "simple";
 
@@ -47,8 +46,8 @@ function createBaseNumbers(): Numbers {
   };
 }
 
-export const Numbers = {
-  encode(message: Numbers, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const Numbers: MessageFns<Numbers> = {
+  encode(message: Numbers, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.double !== 0) {
       writer.uint32(9).double(message.double);
     }
@@ -62,7 +61,7 @@ export const Numbers = {
       if (BigInt.asIntN(64, message.int64) !== message.int64) {
         throw new globalThis.Error("value provided for field message.int64 of type int64 too large");
       }
-      writer.uint32(32).int64(message.int64.toString());
+      writer.uint32(32).int64(message.int64);
     }
     if (message.uint32 !== 0) {
       writer.uint32(40).uint32(message.uint32);
@@ -71,7 +70,7 @@ export const Numbers = {
       if (BigInt.asUintN(64, message.uint64) !== message.uint64) {
         throw new globalThis.Error("value provided for field message.uint64 of type uint64 too large");
       }
-      writer.uint32(48).uint64(message.uint64.toString());
+      writer.uint32(48).uint64(message.uint64);
     }
     if (message.sint32 !== 0) {
       writer.uint32(56).sint32(message.sint32);
@@ -80,7 +79,7 @@ export const Numbers = {
       if (BigInt.asIntN(64, message.sint64) !== message.sint64) {
         throw new globalThis.Error("value provided for field message.sint64 of type sint64 too large");
       }
-      writer.uint32(64).sint64(message.sint64.toString());
+      writer.uint32(64).sint64(message.sint64);
     }
     if (message.fixed32 !== 0) {
       writer.uint32(77).fixed32(message.fixed32);
@@ -89,7 +88,7 @@ export const Numbers = {
       if (BigInt.asUintN(64, message.fixed64) !== message.fixed64) {
         throw new globalThis.Error("value provided for field message.fixed64 of type fixed64 too large");
       }
-      writer.uint32(81).fixed64(message.fixed64.toString());
+      writer.uint32(81).fixed64(message.fixed64);
     }
     if (message.sfixed32 !== 0) {
       writer.uint32(93).sfixed32(message.sfixed32);
@@ -98,133 +97,147 @@ export const Numbers = {
       if (BigInt.asIntN(64, message.sfixed64) !== message.sfixed64) {
         throw new globalThis.Error("value provided for field message.sfixed64 of type sfixed64 too large");
       }
-      writer.uint32(97).sfixed64(message.sfixed64.toString());
+      writer.uint32(97).sfixed64(message.sfixed64);
     }
     if (message.guint64 !== undefined) {
-      UInt64Value.encode({ value: message.guint64! }, writer.uint32(106).fork()).ldelim();
+      UInt64Value.encode({ value: message.guint64! }, writer.uint32(106).fork()).join();
     }
     if (message.timestamp !== undefined) {
-      Timestamp.encode(toTimestamp(message.timestamp), writer.uint32(114).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.timestamp), writer.uint32(114).fork()).join();
     }
     writer.uint32(122).fork();
     for (const v of message.uint64s) {
       if (BigInt.asUintN(64, v) !== v) {
         throw new globalThis.Error("a value provided in array field uint64s of type uint64 is too large");
       }
-      writer.uint64(v.toString());
+      writer.uint64(v);
     }
-    writer.ldelim();
+    writer.join();
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Numbers {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Numbers {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseNumbers();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 9) {
             break;
           }
 
           message.double = reader.double();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 21) {
             break;
           }
 
           message.float = reader.float();
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag !== 24) {
             break;
           }
 
           message.int32 = reader.int32();
           continue;
-        case 4:
+        }
+        case 4: {
           if (tag !== 32) {
             break;
           }
 
-          message.int64 = longToBigint(reader.int64() as Long);
+          message.int64 = reader.int64() as bigint;
           continue;
-        case 5:
+        }
+        case 5: {
           if (tag !== 40) {
             break;
           }
 
           message.uint32 = reader.uint32();
           continue;
-        case 6:
+        }
+        case 6: {
           if (tag !== 48) {
             break;
           }
 
-          message.uint64 = longToBigint(reader.uint64() as Long);
+          message.uint64 = reader.uint64() as bigint;
           continue;
-        case 7:
+        }
+        case 7: {
           if (tag !== 56) {
             break;
           }
 
           message.sint32 = reader.sint32();
           continue;
-        case 8:
+        }
+        case 8: {
           if (tag !== 64) {
             break;
           }
 
-          message.sint64 = longToBigint(reader.sint64() as Long);
+          message.sint64 = reader.sint64() as bigint;
           continue;
-        case 9:
+        }
+        case 9: {
           if (tag !== 77) {
             break;
           }
 
           message.fixed32 = reader.fixed32();
           continue;
-        case 10:
+        }
+        case 10: {
           if (tag !== 81) {
             break;
           }
 
-          message.fixed64 = longToBigint(reader.fixed64() as Long);
+          message.fixed64 = reader.fixed64() as bigint;
           continue;
-        case 11:
+        }
+        case 11: {
           if (tag !== 93) {
             break;
           }
 
           message.sfixed32 = reader.sfixed32();
           continue;
-        case 12:
+        }
+        case 12: {
           if (tag !== 97) {
             break;
           }
 
-          message.sfixed64 = longToBigint(reader.sfixed64() as Long);
+          message.sfixed64 = reader.sfixed64() as bigint;
           continue;
-        case 13:
+        }
+        case 13: {
           if (tag !== 106) {
             break;
           }
 
           message.guint64 = UInt64Value.decode(reader, reader.uint32()).value;
           continue;
-        case 14:
+        }
+        case 14: {
           if (tag !== 114) {
             break;
           }
 
           message.timestamp = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
-        case 15:
+        }
+        case 15: {
           if (tag === 120) {
-            message.uint64s.push(longToBigint(reader.uint64() as Long));
+            message.uint64s.push(reader.uint64() as bigint);
 
             continue;
           }
@@ -232,18 +245,19 @@ export const Numbers = {
           if (tag === 122) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
-              message.uint64s.push(longToBigint(reader.uint64() as Long));
+              message.uint64s.push(reader.uint64() as bigint);
             }
 
             continue;
           }
 
           break;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -376,15 +390,15 @@ function fromJsonTimestamp(o: any): Date {
   }
 }
 
-function longToBigint(long: Long) {
-  return BigInt(long.toString());
-}
-
-if (_m0.util.Long !== Long) {
-  _m0.util.Long = Long as any;
-  _m0.configure();
-}
-
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+  fromJSON(object: any): T;
+  toJSON(message: T): unknown;
+  create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
+  fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
 }

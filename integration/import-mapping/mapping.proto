@@ -8,7 +8,7 @@ import "google/protobuf/struct.proto"; // mapped to wkt/...
 import "google/protobuf/timestamp.proto"; // not mapped
 import "some/internal/repo/very_private.proto"; // mapped to @myorg/proto-npm-package
 
-message WithEmtpy {
+message WithEmpty {
     google.protobuf.Empty empty = 1;
 }
 

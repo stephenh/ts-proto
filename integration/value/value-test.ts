@@ -1,4 +1,3 @@
-import { Reader } from "protobufjs";
 import { ValueMessage } from "./value";
 
 import { ValueMessage as PbValueMessage } from "./pbjs";
@@ -12,7 +11,7 @@ describe("values", () => {
       nullValue: null,
     });
 
-    const s2 = PbValueMessage.decode(Reader.create(ValueMessage.encode(s1).finish()));
+    const s2 = PbValueMessage.decode(ValueMessage.encode(s1).finish());
 
     expect(s2).toMatchInlineSnapshot(`
       {

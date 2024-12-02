@@ -3,7 +3,7 @@
 
 /* eslint-disable */
 import Long = require("long");
-import * as _m0 from "protobufjs/minimal";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
 export const protobufPackage = "simple";
 
@@ -140,31 +140,31 @@ function createBaseOptionalsTest(): OptionalsTest {
   };
 }
 
-export const OptionalsTest = {
-  encode(message: OptionalsTest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const OptionalsTest: MessageFns<OptionalsTest> = {
+  encode(message: OptionalsTest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     writer.uint32(10).fork();
     for (const v of message.repId) {
       writer.int32(v);
     }
-    writer.ldelim();
+    writer.join();
     for (const v of message.repChild) {
-      Child.encode(v!, writer.uint32(18).fork()).ldelim();
+      Child.encode(v!, writer.uint32(18).fork()).join();
     }
     writer.uint32(26).fork();
     for (const v of message.repState) {
       writer.int32(v);
     }
-    writer.ldelim();
+    writer.join();
     writer.uint32(34).fork();
     for (const v of message.repLong) {
-      writer.int64(v);
+      writer.int64(v.toString());
     }
-    writer.ldelim();
+    writer.join();
     writer.uint32(42).fork();
     for (const v of message.repTruth) {
       writer.bool(v);
     }
-    writer.ldelim();
+    writer.join();
     for (const v of message.repDescription) {
       writer.uint32(50).string(v!);
     }
@@ -175,18 +175,18 @@ export const OptionalsTest = {
     for (const v of message.repFloat) {
       writer.float(v);
     }
-    writer.ldelim();
+    writer.join();
     if (message.optId !== undefined && message.optId !== 0) {
       writer.uint32(88).int32(message.optId);
     }
     if (message.optChild !== undefined) {
-      Child.encode(message.optChild, writer.uint32(98).fork()).ldelim();
+      Child.encode(message.optChild, writer.uint32(98).fork()).join();
     }
     if (message.optState !== undefined && message.optState !== 0) {
       writer.uint32(104).int32(message.optState);
     }
     if (message.optLong !== undefined && !message.optLong.equals(Long.ZERO)) {
-      writer.uint32(112).int64(message.optLong);
+      writer.uint32(112).int64(message.optLong.toString());
     }
     if (message.optTruth !== undefined && message.optTruth !== false) {
       writer.uint32(120).bool(message.optTruth);
@@ -204,13 +204,13 @@ export const OptionalsTest = {
       writer.uint32(168).int32(message.reqId);
     }
     if (message.reqChild !== undefined) {
-      Child.encode(message.reqChild, writer.uint32(178).fork()).ldelim();
+      Child.encode(message.reqChild, writer.uint32(178).fork()).join();
     }
     if (message.reqState !== 0) {
       writer.uint32(184).int32(message.reqState);
     }
     if (!message.reqLong.equals(Long.ZERO)) {
-      writer.uint32(192).int64(message.reqLong);
+      writer.uint32(192).int64(message.reqLong.toString());
     }
     if (message.reqTruth !== false) {
       writer.uint32(200).bool(message.reqTruth);
@@ -231,7 +231,7 @@ export const OptionalsTest = {
       writer.uint32(264).int32(message.reqDefvalState);
     }
     if (!message.reqDefvalLong.equals(Long.fromNumber(7812378193))) {
-      writer.uint32(272).int64(message.reqDefvalLong);
+      writer.uint32(272).int64(message.reqDefvalLong.toString());
     }
     if (message.reqDefvalTruth !== true) {
       writer.uint32(280).bool(message.reqDefvalTruth);
@@ -252,7 +252,7 @@ export const OptionalsTest = {
       writer.uint32(344).int32(message.optDefvalState);
     }
     if (message.optDefvalLong !== undefined && !message.optDefvalLong.equals(Long.fromNumber(7812378193))) {
-      writer.uint32(352).int64(message.optDefvalLong);
+      writer.uint32(352).int64(message.optDefvalLong.toString());
     }
     if (message.optDefvalTruth !== undefined && message.optDefvalTruth !== true) {
       writer.uint32(360).bool(message.optDefvalTruth);
@@ -267,19 +267,19 @@ export const OptionalsTest = {
       writer.uint32(389).float(message.optDefvalFloat);
     }
     Object.entries(message.translations).forEach(([key, value]) => {
-      OptionalsTest_TranslationsEntry.encode({ key: key as any, value }, writer.uint32(402).fork()).ldelim();
+      OptionalsTest_TranslationsEntry.encode({ key: key as any, value }, writer.uint32(402).fork()).join();
     });
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): OptionalsTest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): OptionalsTest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseOptionalsTest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag === 8) {
             message.repId.push(reader.int32());
 
@@ -296,14 +296,16 @@ export const OptionalsTest = {
           }
 
           break;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
 
           message.repChild.push(Child.decode(reader, reader.uint32()));
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag === 24) {
             message.repState.push(reader.int32() as any);
 
@@ -320,9 +322,10 @@ export const OptionalsTest = {
           }
 
           break;
-        case 4:
+        }
+        case 4: {
           if (tag === 32) {
-            message.repLong.push(reader.int64() as Long);
+            message.repLong.push(Long.fromString(reader.int64().toString()));
 
             continue;
           }
@@ -330,14 +333,15 @@ export const OptionalsTest = {
           if (tag === 34) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
-              message.repLong.push(reader.int64() as Long);
+              message.repLong.push(Long.fromString(reader.int64().toString()));
             }
 
             continue;
           }
 
           break;
-        case 5:
+        }
+        case 5: {
           if (tag === 40) {
             message.repTruth.push(reader.bool());
 
@@ -354,21 +358,24 @@ export const OptionalsTest = {
           }
 
           break;
-        case 6:
+        }
+        case 6: {
           if (tag !== 50) {
             break;
           }
 
           message.repDescription.push(reader.string());
           continue;
-        case 7:
+        }
+        case 7: {
           if (tag !== 58) {
             break;
           }
 
           message.repData.push(reader.bytes());
           continue;
-        case 8:
+        }
+        case 8: {
           if (tag === 69) {
             message.repFloat.push(reader.float());
 
@@ -385,217 +392,248 @@ export const OptionalsTest = {
           }
 
           break;
-        case 11:
+        }
+        case 11: {
           if (tag !== 88) {
             break;
           }
 
           message.optId = reader.int32();
           continue;
-        case 12:
+        }
+        case 12: {
           if (tag !== 98) {
             break;
           }
 
           message.optChild = Child.decode(reader, reader.uint32());
           continue;
-        case 13:
+        }
+        case 13: {
           if (tag !== 104) {
             break;
           }
 
           message.optState = reader.int32() as any;
           continue;
-        case 14:
+        }
+        case 14: {
           if (tag !== 112) {
             break;
           }
 
-          message.optLong = reader.int64() as Long;
+          message.optLong = Long.fromString(reader.int64().toString());
           continue;
-        case 15:
+        }
+        case 15: {
           if (tag !== 120) {
             break;
           }
 
           message.optTruth = reader.bool();
           continue;
-        case 16:
+        }
+        case 16: {
           if (tag !== 130) {
             break;
           }
 
           message.optDescription = reader.string();
           continue;
-        case 17:
+        }
+        case 17: {
           if (tag !== 138) {
             break;
           }
 
           message.optData = reader.bytes();
           continue;
-        case 18:
+        }
+        case 18: {
           if (tag !== 149) {
             break;
           }
 
           message.optFloat = reader.float();
           continue;
-        case 21:
+        }
+        case 21: {
           if (tag !== 168) {
             break;
           }
 
           message.reqId = reader.int32();
           continue;
-        case 22:
+        }
+        case 22: {
           if (tag !== 178) {
             break;
           }
 
           message.reqChild = Child.decode(reader, reader.uint32());
           continue;
-        case 23:
+        }
+        case 23: {
           if (tag !== 184) {
             break;
           }
 
           message.reqState = reader.int32() as any;
           continue;
-        case 24:
+        }
+        case 24: {
           if (tag !== 192) {
             break;
           }
 
-          message.reqLong = reader.int64() as Long;
+          message.reqLong = Long.fromString(reader.int64().toString());
           continue;
-        case 25:
+        }
+        case 25: {
           if (tag !== 200) {
             break;
           }
 
           message.reqTruth = reader.bool();
           continue;
-        case 26:
+        }
+        case 26: {
           if (tag !== 210) {
             break;
           }
 
           message.reqDescription = reader.string();
           continue;
-        case 27:
+        }
+        case 27: {
           if (tag !== 218) {
             break;
           }
 
           message.reqData = reader.bytes();
           continue;
-        case 28:
+        }
+        case 28: {
           if (tag !== 229) {
             break;
           }
 
           message.reqFloat = reader.float();
           continue;
-        case 31:
+        }
+        case 31: {
           if (tag !== 248) {
             break;
           }
 
           message.reqDefvalId = reader.int32();
           continue;
-        case 33:
+        }
+        case 33: {
           if (tag !== 264) {
             break;
           }
 
           message.reqDefvalState = reader.int32() as any;
           continue;
-        case 34:
+        }
+        case 34: {
           if (tag !== 272) {
             break;
           }
 
-          message.reqDefvalLong = reader.int64() as Long;
+          message.reqDefvalLong = Long.fromString(reader.int64().toString());
           continue;
-        case 35:
+        }
+        case 35: {
           if (tag !== 280) {
             break;
           }
 
           message.reqDefvalTruth = reader.bool();
           continue;
-        case 36:
+        }
+        case 36: {
           if (tag !== 290) {
             break;
           }
 
           message.reqDefvalDescription = reader.string();
           continue;
-        case 37:
+        }
+        case 37: {
           if (tag !== 298) {
             break;
           }
 
           message.reqDefvalData = reader.bytes();
           continue;
-        case 38:
+        }
+        case 38: {
           if (tag !== 309) {
             break;
           }
 
           message.reqDefvalFloat = reader.float();
           continue;
-        case 41:
+        }
+        case 41: {
           if (tag !== 328) {
             break;
           }
 
           message.optDefvalId = reader.int32();
           continue;
-        case 43:
+        }
+        case 43: {
           if (tag !== 344) {
             break;
           }
 
           message.optDefvalState = reader.int32() as any;
           continue;
-        case 44:
+        }
+        case 44: {
           if (tag !== 352) {
             break;
           }
 
-          message.optDefvalLong = reader.int64() as Long;
+          message.optDefvalLong = Long.fromString(reader.int64().toString());
           continue;
-        case 45:
+        }
+        case 45: {
           if (tag !== 360) {
             break;
           }
 
           message.optDefvalTruth = reader.bool();
           continue;
-        case 46:
+        }
+        case 46: {
           if (tag !== 370) {
             break;
           }
 
           message.optDefvalDescription = reader.string();
           continue;
-        case 47:
+        }
+        case 47: {
           if (tag !== 378) {
             break;
           }
 
           message.optDefvalData = reader.bytes();
           continue;
-        case 48:
+        }
+        case 48: {
           if (tag !== 389) {
             break;
           }
 
           message.optDefvalFloat = reader.float();
           continue;
-        case 50:
+        }
+        case 50: {
           if (tag !== 402) {
             break;
           }
@@ -605,11 +643,12 @@ export const OptionalsTest = {
             message.translations[entry50.key] = entry50.value;
           }
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -871,8 +910,8 @@ function createBaseOptionalsTest_TranslationsEntry(): OptionalsTest_Translations
   return { key: "", value: "" };
 }
 
-export const OptionalsTest_TranslationsEntry = {
-  encode(message: OptionalsTest_TranslationsEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const OptionalsTest_TranslationsEntry: MessageFns<OptionalsTest_TranslationsEntry> = {
+  encode(message: OptionalsTest_TranslationsEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.key !== "") {
       writer.uint32(10).string(message.key);
     }
@@ -882,32 +921,34 @@ export const OptionalsTest_TranslationsEntry = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): OptionalsTest_TranslationsEntry {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): OptionalsTest_TranslationsEntry {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseOptionalsTest_TranslationsEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.key = reader.string();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
 
           message.value = reader.string();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -947,13 +988,13 @@ function createBaseChild(): Child {
   return {};
 }
 
-export const Child = {
-  encode(_: Child, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const Child: MessageFns<Child> = {
+  encode(_: Child, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Child {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Child {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseChild();
     while (reader.pos < end) {
@@ -963,7 +1004,7 @@ export const Child = {
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -1023,15 +1064,19 @@ type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
-if (_m0.util.Long !== Long) {
-  _m0.util.Long = Long as any;
-  _m0.configure();
-}
-
 function isObject(value: any): boolean {
   return typeof value === "object" && value !== null;
 }
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+  fromJSON(object: any): T;
+  toJSON(message: T): unknown;
+  create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
+  fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
 }

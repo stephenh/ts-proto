@@ -2,7 +2,7 @@
 // source: use-json-name.proto
 
 /* eslint-disable */
-import * as _m0 from "protobufjs/minimal";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 import { Timestamp } from "./google/protobuf/timestamp";
 
 export const protobufPackage = "json_name";
@@ -19,11 +19,11 @@ export interface JsonName {
   A?: string | undefined;
   b?: string | undefined;
   _C?: string | undefined;
-  d?: NstedOneOf | undefined;
+  d?: NestedOneOf | undefined;
   noJsonName: string;
 }
 
-export interface NstedOneOf {
+export interface NestedOneOf {
   nestedOneOfField?: string | undefined;
 }
 
@@ -45,8 +45,8 @@ function createBaseJsonName(): JsonName {
   };
 }
 
-export const JsonName = {
-  encode(message: JsonName, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const JsonName: MessageFns<JsonName> = {
+  encode(message: JsonName, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.other_name !== "") {
       writer.uint32(10).string(message.other_name);
     }
@@ -54,7 +54,7 @@ export const JsonName = {
       writer.uint32(16).int32(message.other_age);
     }
     if (message.createdAt !== undefined) {
-      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(74).fork()).ldelim();
+      Timestamp.encode(toTimestamp(message.createdAt), writer.uint32(74).fork()).join();
     }
     if (message["hyphened-name"] !== "") {
       writer.uint32(26).string(message["hyphened-name"]);
@@ -81,7 +81,7 @@ export const JsonName = {
       writer.uint32(98).string(message._C);
     }
     if (message.d !== undefined) {
-      NstedOneOf.encode(message.d, writer.uint32(106).fork()).ldelim();
+      NestedOneOf.encode(message.d, writer.uint32(106).fork()).join();
     }
     if (message.noJsonName !== "") {
       writer.uint32(114).string(message.noJsonName);
@@ -89,109 +89,122 @@ export const JsonName = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): JsonName {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): JsonName {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseJsonName();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.other_name = reader.string();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 16) {
             break;
           }
 
           message.other_age = reader.int32();
           continue;
-        case 9:
+        }
+        case 9: {
           if (tag !== 74) {
             break;
           }
 
           message.createdAt = fromTimestamp(Timestamp.decode(reader, reader.uint32()));
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag !== 26) {
             break;
           }
 
           message["hyphened-name"] = reader.string();
           continue;
-        case 4:
+        }
+        case 4: {
           if (tag !== 34) {
             break;
           }
 
           message["name with spaces"] = reader.string();
           continue;
-        case 5:
+        }
+        case 5: {
           if (tag !== 42) {
             break;
           }
 
           message.$dollar = reader.string();
           continue;
-        case 6:
+        }
+        case 6: {
           if (tag !== 50) {
             break;
           }
 
           message.dollar$ = reader.string();
           continue;
-        case 7:
+        }
+        case 7: {
           if (tag !== 58) {
             break;
           }
 
           message["hyphen-list"].push(reader.string());
           continue;
-        case 10:
+        }
+        case 10: {
           if (tag !== 82) {
             break;
           }
 
           message.A = reader.string();
           continue;
-        case 11:
+        }
+        case 11: {
           if (tag !== 90) {
             break;
           }
 
           message.b = reader.string();
           continue;
-        case 12:
+        }
+        case 12: {
           if (tag !== 98) {
             break;
           }
 
           message._C = reader.string();
           continue;
-        case 13:
+        }
+        case 13: {
           if (tag !== 106) {
             break;
           }
 
-          message.d = NstedOneOf.decode(reader, reader.uint32());
+          message.d = NestedOneOf.decode(reader, reader.uint32());
           continue;
-        case 14:
+        }
+        case 14: {
           if (tag !== 114) {
             break;
           }
 
           message.noJsonName = reader.string();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -211,7 +224,7 @@ export const JsonName = {
       A: isSet(object.A) ? globalThis.String(object.A) : undefined,
       b: isSet(object.b) ? globalThis.String(object.b) : undefined,
       _C: isSet(object._C) ? globalThis.String(object._C) : undefined,
-      d: isSet(object.d) ? NstedOneOf.fromJSON(object.d) : undefined,
+      d: isSet(object.d) ? NestedOneOf.fromJSON(object.d) : undefined,
       noJsonName: isSet(object.noJsonName) ? globalThis.String(object.noJsonName) : "",
     };
   },
@@ -252,7 +265,7 @@ export const JsonName = {
       obj._C = message._C;
     }
     if (message.d !== undefined) {
-      obj.d = NstedOneOf.toJSON(message.d);
+      obj.d = NestedOneOf.toJSON(message.d);
     }
     if (message.noJsonName !== "") {
       obj.noJsonName = message.noJsonName;
@@ -276,54 +289,55 @@ export const JsonName = {
     message.A = object.A ?? undefined;
     message.b = object.b ?? undefined;
     message._C = object._C ?? undefined;
-    message.d = (object.d !== undefined && object.d !== null) ? NstedOneOf.fromPartial(object.d) : undefined;
+    message.d = (object.d !== undefined && object.d !== null) ? NestedOneOf.fromPartial(object.d) : undefined;
     message.noJsonName = object.noJsonName ?? "";
     return message;
   },
 };
 
-function createBaseNstedOneOf(): NstedOneOf {
+function createBaseNestedOneOf(): NestedOneOf {
   return { nestedOneOfField: undefined };
 }
 
-export const NstedOneOf = {
-  encode(message: NstedOneOf, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const NestedOneOf: MessageFns<NestedOneOf> = {
+  encode(message: NestedOneOf, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.nestedOneOfField !== undefined) {
       writer.uint32(10).string(message.nestedOneOfField);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): NstedOneOf {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): NestedOneOf {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
-    const message = createBaseNstedOneOf();
+    const message = createBaseNestedOneOf();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.nestedOneOfField = reader.string();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
 
-  fromJSON(object: any): NstedOneOf {
+  fromJSON(object: any): NestedOneOf {
     return {
       nestedOneOfField: isSet(object.nestedOneOfField) ? globalThis.String(object.nestedOneOfField) : undefined,
     };
   },
 
-  toJSON(message: NstedOneOf): unknown {
+  toJSON(message: NestedOneOf): unknown {
     const obj: any = {};
     if (message.nestedOneOfField !== undefined) {
       obj.nestedOneOfField = message.nestedOneOfField;
@@ -331,11 +345,11 @@ export const NstedOneOf = {
     return obj;
   },
 
-  create<I extends Exact<DeepPartial<NstedOneOf>, I>>(base?: I): NstedOneOf {
-    return NstedOneOf.fromPartial(base ?? ({} as any));
+  create<I extends Exact<DeepPartial<NestedOneOf>, I>>(base?: I): NestedOneOf {
+    return NestedOneOf.fromPartial(base ?? ({} as any));
   },
-  fromPartial<I extends Exact<DeepPartial<NstedOneOf>, I>>(object: I): NstedOneOf {
-    const message = createBaseNstedOneOf();
+  fromPartial<I extends Exact<DeepPartial<NestedOneOf>, I>>(object: I): NestedOneOf {
+    const message = createBaseNestedOneOf();
     message.nestedOneOfField = object.nestedOneOfField ?? undefined;
     return message;
   },
@@ -377,4 +391,13 @@ function fromJsonTimestamp(o: any): Date {
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+  fromJSON(object: any): T;
+  toJSON(message: T): unknown;
+  create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
+  fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
 }

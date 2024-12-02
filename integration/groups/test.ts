@@ -2,7 +2,7 @@
 // source: test.proto
 
 /* eslint-disable */
-import * as _m0 from "protobufjs/minimal";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
 export const protobufPackage = "";
 
@@ -58,8 +58,8 @@ function createBaseGroupsOptionalTest(): GroupsOptionalTest {
   return {};
 }
 
-export const GroupsOptionalTest = {
-  encode(message: GroupsOptionalTest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const GroupsOptionalTest: MessageFns<GroupsOptionalTest> = {
+  encode(message: GroupsOptionalTest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.int1 !== undefined && message.int1 !== 0) {
       writer.uint32(8).int32(message.int1);
     }
@@ -73,53 +73,49 @@ export const GroupsOptionalTest = {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): GroupsOptionalTest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): GroupsOptionalTest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGroupsOptionalTest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 8) {
             break;
           }
 
           message.int1 = reader.int32();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 19) {
             break;
           }
 
           message.group = GroupsOptionalTest_Group.decode(reader);
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag !== 24) {
             break;
           }
 
           message.int3 = reader.int32();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      const startPos = reader.pos;
-      reader.skipType(tag & 7);
-      const buf = reader.buf.slice(startPos, reader.pos);
+      const buf = reader.skip(tag & 7);
 
       if (message._unknownFields === undefined) {
         message._unknownFields = {};
@@ -176,8 +172,8 @@ function createBaseGroupsOptionalTest_Group(): GroupsOptionalTest_Group {
   return {};
 }
 
-export const GroupsOptionalTest_Group = {
-  encode(message: GroupsOptionalTest_Group, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const GroupsOptionalTest_Group: MessageFns<GroupsOptionalTest_Group> = {
+  encode(message: GroupsOptionalTest_Group, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.key !== undefined && message.key !== "") {
       writer.uint32(10).string(message.key);
     }
@@ -188,46 +184,41 @@ export const GroupsOptionalTest_Group = {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): GroupsOptionalTest_Group {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): GroupsOptionalTest_Group {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGroupsOptionalTest_Group();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.key = reader.string();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
 
           message.value = reader.string();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      const startPos = reader.pos;
-      reader.skipType(tag & 7);
-      const buf = reader.buf.slice(startPos, reader.pos);
+      const buf = reader.skip(tag & 7);
 
       if (message._unknownFields === undefined) {
         message._unknownFields = {};
@@ -277,14 +268,14 @@ function createBaseGroupsRepeatedTest(): GroupsRepeatedTest {
   return {};
 }
 
-export const GroupsRepeatedTest = {
-  encode(message: GroupsRepeatedTest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const GroupsRepeatedTest: MessageFns<GroupsRepeatedTest> = {
+  encode(message: GroupsRepeatedTest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.int1 !== undefined && message.int1.length !== 0) {
       writer.uint32(10).fork();
       for (const v of message.int1) {
         writer.int32(v);
       }
-      writer.ldelim();
+      writer.join();
     }
     if (message.group !== undefined && message.group.length !== 0) {
       for (const v of message.group) {
@@ -296,32 +287,27 @@ export const GroupsRepeatedTest = {
       for (const v of message.int3) {
         writer.int32(v);
       }
-      writer.ldelim();
+      writer.join();
     }
     if (message._unknownFields !== undefined) {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): GroupsRepeatedTest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): GroupsRepeatedTest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGroupsRepeatedTest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag === 8) {
             if (message.int1 === undefined) {
               message.int1 = [];
@@ -344,7 +330,8 @@ export const GroupsRepeatedTest = {
           }
 
           break;
-        case 2:
+        }
+        case 2: {
           if (tag !== 19) {
             break;
           }
@@ -352,9 +339,13 @@ export const GroupsRepeatedTest = {
           if (message.group === undefined) {
             message.group = [];
           }
-          message.group!.push(GroupsRepeatedTest_Group.decode(reader));
+          const el = GroupsRepeatedTest_Group.decode(reader);
+          if (el !== undefined) {
+            message.group!.push(el);
+          }
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag === 24) {
             if (message.int3 === undefined) {
               message.int3 = [];
@@ -377,13 +368,12 @@ export const GroupsRepeatedTest = {
           }
 
           break;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      const startPos = reader.pos;
-      reader.skipType(tag & 7);
-      const buf = reader.buf.slice(startPos, reader.pos);
+      const buf = reader.skip(tag & 7);
 
       if (message._unknownFields === undefined) {
         message._unknownFields = {};
@@ -440,8 +430,8 @@ function createBaseGroupsRepeatedTest_Group(): GroupsRepeatedTest_Group {
   return {};
 }
 
-export const GroupsRepeatedTest_Group = {
-  encode(message: GroupsRepeatedTest_Group, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const GroupsRepeatedTest_Group: MessageFns<GroupsRepeatedTest_Group> = {
+  encode(message: GroupsRepeatedTest_Group, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.key !== undefined && message.key.length !== 0) {
       for (const v of message.key) {
         writer.uint32(10).string(v!);
@@ -456,26 +446,21 @@ export const GroupsRepeatedTest_Group = {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): GroupsRepeatedTest_Group {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): GroupsRepeatedTest_Group {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGroupsRepeatedTest_Group();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
@@ -483,9 +468,13 @@ export const GroupsRepeatedTest_Group = {
           if (message.key === undefined) {
             message.key = [];
           }
-          message.key!.push(reader.string());
+          const el = reader.string();
+          if (el !== undefined) {
+            message.key!.push(el);
+          }
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
@@ -493,15 +482,17 @@ export const GroupsRepeatedTest_Group = {
           if (message.value === undefined) {
             message.value = [];
           }
-          message.value!.push(reader.string());
+          const el = reader.string();
+          if (el !== undefined) {
+            message.value!.push(el);
+          }
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      const startPos = reader.pos;
-      reader.skipType(tag & 7);
-      const buf = reader.buf.slice(startPos, reader.pos);
+      const buf = reader.skip(tag & 7);
 
       if (message._unknownFields === undefined) {
         message._unknownFields = {};
@@ -551,14 +542,14 @@ function createBaseGroupsNestedTest(): GroupsNestedTest {
   return {};
 }
 
-export const GroupsNestedTest = {
-  encode(message: GroupsNestedTest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const GroupsNestedTest: MessageFns<GroupsNestedTest> = {
+  encode(message: GroupsNestedTest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.int1 !== undefined && message.int1.length !== 0) {
       writer.uint32(10).fork();
       for (const v of message.int1) {
         writer.int32(v);
       }
-      writer.ldelim();
+      writer.join();
     }
     if (message.group !== undefined && message.group.length !== 0) {
       for (const v of message.group) {
@@ -570,32 +561,27 @@ export const GroupsNestedTest = {
       for (const v of message.int3) {
         writer.int32(v);
       }
-      writer.ldelim();
+      writer.join();
     }
     if (message._unknownFields !== undefined) {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): GroupsNestedTest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): GroupsNestedTest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGroupsNestedTest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag === 8) {
             if (message.int1 === undefined) {
               message.int1 = [];
@@ -618,7 +604,8 @@ export const GroupsNestedTest = {
           }
 
           break;
-        case 2:
+        }
+        case 2: {
           if (tag !== 19) {
             break;
           }
@@ -626,9 +613,13 @@ export const GroupsNestedTest = {
           if (message.group === undefined) {
             message.group = [];
           }
-          message.group!.push(GroupsNestedTest_Group.decode(reader));
+          const el = GroupsNestedTest_Group.decode(reader);
+          if (el !== undefined) {
+            message.group!.push(el);
+          }
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag === 24) {
             if (message.int3 === undefined) {
               message.int3 = [];
@@ -651,13 +642,12 @@ export const GroupsNestedTest = {
           }
 
           break;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      const startPos = reader.pos;
-      reader.skipType(tag & 7);
-      const buf = reader.buf.slice(startPos, reader.pos);
+      const buf = reader.skip(tag & 7);
 
       if (message._unknownFields === undefined) {
         message._unknownFields = {};
@@ -714,8 +704,8 @@ function createBaseGroupsNestedTest_Group(): GroupsNestedTest_Group {
   return {};
 }
 
-export const GroupsNestedTest_Group = {
-  encode(message: GroupsNestedTest_Group, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const GroupsNestedTest_Group: MessageFns<GroupsNestedTest_Group> = {
+  encode(message: GroupsNestedTest_Group, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.nested !== undefined && message.nested.length !== 0) {
       for (const v of message.nested) {
         GroupsNestedTest_Group_Nested.encode(v!, writer.uint32(11)).uint32(12);
@@ -725,26 +715,21 @@ export const GroupsNestedTest_Group = {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): GroupsNestedTest_Group {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): GroupsNestedTest_Group {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGroupsNestedTest_Group();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 11) {
             break;
           }
@@ -752,15 +737,17 @@ export const GroupsNestedTest_Group = {
           if (message.nested === undefined) {
             message.nested = [];
           }
-          message.nested!.push(GroupsNestedTest_Group_Nested.decode(reader));
+          const el = GroupsNestedTest_Group_Nested.decode(reader);
+          if (el !== undefined) {
+            message.nested!.push(el);
+          }
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      const startPos = reader.pos;
-      reader.skipType(tag & 7);
-      const buf = reader.buf.slice(startPos, reader.pos);
+      const buf = reader.skip(tag & 7);
 
       if (message._unknownFields === undefined) {
         message._unknownFields = {};
@@ -807,8 +794,8 @@ function createBaseGroupsNestedTest_Group_Nested(): GroupsNestedTest_Group_Neste
   return {};
 }
 
-export const GroupsNestedTest_Group_Nested = {
-  encode(message: GroupsNestedTest_Group_Nested, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const GroupsNestedTest_Group_Nested: MessageFns<GroupsNestedTest_Group_Nested> = {
+  encode(message: GroupsNestedTest_Group_Nested, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.nested2 !== undefined && message.nested2.length !== 0) {
       for (const v of message.nested2) {
         GroupsNestedTest_Group_Nested_Nested2.encode(v!, writer.uint32(19)).uint32(20);
@@ -818,26 +805,21 @@ export const GroupsNestedTest_Group_Nested = {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): GroupsNestedTest_Group_Nested {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): GroupsNestedTest_Group_Nested {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGroupsNestedTest_Group_Nested();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 2:
+        case 2: {
           if (tag !== 19) {
             break;
           }
@@ -845,15 +827,17 @@ export const GroupsNestedTest_Group_Nested = {
           if (message.nested2 === undefined) {
             message.nested2 = [];
           }
-          message.nested2!.push(GroupsNestedTest_Group_Nested_Nested2.decode(reader));
+          const el = GroupsNestedTest_Group_Nested_Nested2.decode(reader);
+          if (el !== undefined) {
+            message.nested2!.push(el);
+          }
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      const startPos = reader.pos;
-      reader.skipType(tag & 7);
-      const buf = reader.buf.slice(startPos, reader.pos);
+      const buf = reader.skip(tag & 7);
 
       if (message._unknownFields === undefined) {
         message._unknownFields = {};
@@ -902,8 +886,8 @@ function createBaseGroupsNestedTest_Group_Nested_Nested2(): GroupsNestedTest_Gro
   return {};
 }
 
-export const GroupsNestedTest_Group_Nested_Nested2 = {
-  encode(message: GroupsNestedTest_Group_Nested_Nested2, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const GroupsNestedTest_Group_Nested_Nested2: MessageFns<GroupsNestedTest_Group_Nested_Nested2> = {
+  encode(message: GroupsNestedTest_Group_Nested_Nested2, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.string1 !== undefined && message.string1 !== "") {
       writer.uint32(10).string(message.string1);
     }
@@ -911,39 +895,33 @@ export const GroupsNestedTest_Group_Nested_Nested2 = {
       for (const [key, values] of Object.entries(message._unknownFields)) {
         const tag = parseInt(key, 10);
         for (const value of values) {
-          writer.uint32(tag);
-          (writer as any)["_push"](
-            (val: Uint8Array, buf: Buffer, pos: number) => buf.set(val, pos),
-            value.length,
-            value,
-          );
+          writer.uint32(tag).raw(value);
         }
       }
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): GroupsNestedTest_Group_Nested_Nested2 {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): GroupsNestedTest_Group_Nested_Nested2 {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseGroupsNestedTest_Group_Nested_Nested2();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.string1 = reader.string();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      const startPos = reader.pos;
-      reader.skipType(tag & 7);
-      const buf = reader.buf.slice(startPos, reader.pos);
+      const buf = reader.skip(tag & 7);
 
       if (message._unknownFields === undefined) {
         message._unknownFields = {};
@@ -1000,4 +978,13 @@ export type Exact<P, I extends P> = P extends Builtin ? P
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+  fromJSON(object: any): T;
+  toJSON(message: T): unknown;
+  create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
+  fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
 }

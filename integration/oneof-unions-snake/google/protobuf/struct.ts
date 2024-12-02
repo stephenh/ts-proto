@@ -2,7 +2,7 @@
 // source: google/protobuf/struct.proto
 
 /* eslint-disable */
-import * as _m0 from "protobufjs/minimal";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
 export const protobufPackage = "google.protobuf";
 
@@ -69,13 +69,26 @@ export interface Struct_FieldsEntry {
  * The JSON representation for `Value` is JSON value.
  */
 export interface Value {
+  /** The kind of value. */
   kind?:
-    | { $case: "null_value"; null_value: NullValue }
-    | { $case: "number_value"; number_value: number }
-    | { $case: "string_value"; string_value: string }
-    | { $case: "bool_value"; bool_value: boolean }
-    | { $case: "struct_value"; struct_value: { [key: string]: any } | undefined }
-    | { $case: "list_value"; list_value: Array<any> | undefined }
+    | //
+    /** Represents a null value. */
+    { $case: "null_value"; null_value: NullValue }
+    | //
+    /** Represents a double value. */
+    { $case: "number_value"; number_value: number }
+    | //
+    /** Represents a string value. */
+    { $case: "string_value"; string_value: string }
+    | //
+    /** Represents a boolean value. */
+    { $case: "bool_value"; bool_value: boolean }
+    | //
+    /** Represents a structured value. */
+    { $case: "struct_value"; struct_value: { [key: string]: any } | undefined }
+    | //
+    /** Represents a repeated `Value`. */
+    { $case: "list_value"; list_value: Array<any> | undefined }
     | undefined;
 }
 
@@ -93,24 +106,24 @@ function createBaseStruct(): Struct {
   return { fields: {} };
 }
 
-export const Struct = {
-  encode(message: Struct, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const Struct: MessageFns<Struct> & StructWrapperFns = {
+  encode(message: Struct, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     Object.entries(message.fields).forEach(([key, value]) => {
       if (value !== undefined) {
-        Struct_FieldsEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).ldelim();
+        Struct_FieldsEntry.encode({ key: key as any, value }, writer.uint32(10).fork()).join();
       }
     });
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Struct {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Struct {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStruct();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
@@ -120,11 +133,12 @@ export const Struct = {
             message.fields[entry1.key] = entry1.value;
           }
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -197,43 +211,45 @@ function createBaseStruct_FieldsEntry(): Struct_FieldsEntry {
   return { key: "", value: undefined };
 }
 
-export const Struct_FieldsEntry = {
-  encode(message: Struct_FieldsEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const Struct_FieldsEntry: MessageFns<Struct_FieldsEntry> = {
+  encode(message: Struct_FieldsEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.key !== "") {
       writer.uint32(10).string(message.key);
     }
     if (message.value !== undefined) {
-      Value.encode(Value.wrap(message.value), writer.uint32(18).fork()).ldelim();
+      Value.encode(Value.wrap(message.value), writer.uint32(18).fork()).join();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Struct_FieldsEntry {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Struct_FieldsEntry {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseStruct_FieldsEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.key = reader.string();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
 
           message.value = Value.unwrap(Value.decode(reader, reader.uint32()));
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -271,8 +287,8 @@ function createBaseValue(): Value {
   return { kind: undefined };
 }
 
-export const Value = {
-  encode(message: Value, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const Value: MessageFns<Value> & AnyValueWrapperFns = {
+  encode(message: Value, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     switch (message.kind?.$case) {
       case "null_value":
         writer.uint32(8).int32(message.kind.null_value);
@@ -287,58 +303,63 @@ export const Value = {
         writer.uint32(32).bool(message.kind.bool_value);
         break;
       case "struct_value":
-        Struct.encode(Struct.wrap(message.kind.struct_value), writer.uint32(42).fork()).ldelim();
+        Struct.encode(Struct.wrap(message.kind.struct_value), writer.uint32(42).fork()).join();
         break;
       case "list_value":
-        ListValue.encode(ListValue.wrap(message.kind.list_value), writer.uint32(50).fork()).ldelim();
+        ListValue.encode(ListValue.wrap(message.kind.list_value), writer.uint32(50).fork()).join();
         break;
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Value {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Value {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseValue();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 8) {
             break;
           }
 
           message.kind = { $case: "null_value", null_value: reader.int32() as any };
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 17) {
             break;
           }
 
           message.kind = { $case: "number_value", number_value: reader.double() };
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag !== 26) {
             break;
           }
 
           message.kind = { $case: "string_value", string_value: reader.string() };
           continue;
-        case 4:
+        }
+        case 4: {
           if (tag !== 32) {
             break;
           }
 
           message.kind = { $case: "bool_value", bool_value: reader.bool() };
           continue;
-        case 5:
+        }
+        case 5: {
           if (tag !== 42) {
             break;
           }
 
           message.kind = { $case: "struct_value", struct_value: Struct.unwrap(Struct.decode(reader, reader.uint32())) };
           continue;
-        case 6:
+        }
+        case 6: {
           if (tag !== 50) {
             break;
           }
@@ -348,11 +369,12 @@ export const Value = {
             list_value: ListValue.unwrap(ListValue.decode(reader, reader.uint32())),
           };
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -379,20 +401,15 @@ export const Value = {
     const obj: any = {};
     if (message.kind?.$case === "null_value") {
       obj.null_value = nullValueToJSON(message.kind.null_value);
-    }
-    if (message.kind?.$case === "number_value") {
+    } else if (message.kind?.$case === "number_value") {
       obj.number_value = message.kind.number_value;
-    }
-    if (message.kind?.$case === "string_value") {
+    } else if (message.kind?.$case === "string_value") {
       obj.string_value = message.kind.string_value;
-    }
-    if (message.kind?.$case === "bool_value") {
+    } else if (message.kind?.$case === "bool_value") {
       obj.bool_value = message.kind.bool_value;
-    }
-    if (message.kind?.$case === "struct_value") {
+    } else if (message.kind?.$case === "struct_value") {
       obj.struct_value = message.kind.struct_value;
-    }
-    if (message.kind?.$case === "list_value") {
+    } else if (message.kind?.$case === "list_value") {
       obj.list_value = message.kind.list_value;
     }
     return obj;
@@ -403,41 +420,43 @@ export const Value = {
   },
   fromPartial<I extends Exact<DeepPartial<Value>, I>>(object: I): Value {
     const message = createBaseValue();
-    if (
-      object.kind?.$case === "null_value" && object.kind?.null_value !== undefined && object.kind?.null_value !== null
-    ) {
-      message.kind = { $case: "null_value", null_value: object.kind.null_value };
-    }
-    if (
-      object.kind?.$case === "number_value" &&
-      object.kind?.number_value !== undefined &&
-      object.kind?.number_value !== null
-    ) {
-      message.kind = { $case: "number_value", number_value: object.kind.number_value };
-    }
-    if (
-      object.kind?.$case === "string_value" &&
-      object.kind?.string_value !== undefined &&
-      object.kind?.string_value !== null
-    ) {
-      message.kind = { $case: "string_value", string_value: object.kind.string_value };
-    }
-    if (
-      object.kind?.$case === "bool_value" && object.kind?.bool_value !== undefined && object.kind?.bool_value !== null
-    ) {
-      message.kind = { $case: "bool_value", bool_value: object.kind.bool_value };
-    }
-    if (
-      object.kind?.$case === "struct_value" &&
-      object.kind?.struct_value !== undefined &&
-      object.kind?.struct_value !== null
-    ) {
-      message.kind = { $case: "struct_value", struct_value: object.kind.struct_value };
-    }
-    if (
-      object.kind?.$case === "list_value" && object.kind?.list_value !== undefined && object.kind?.list_value !== null
-    ) {
-      message.kind = { $case: "list_value", list_value: object.kind.list_value };
+    switch (object.kind?.$case) {
+      case "null_value": {
+        if (object.kind?.null_value !== undefined && object.kind?.null_value !== null) {
+          message.kind = { $case: "null_value", null_value: object.kind.null_value };
+        }
+        break;
+      }
+      case "number_value": {
+        if (object.kind?.number_value !== undefined && object.kind?.number_value !== null) {
+          message.kind = { $case: "number_value", number_value: object.kind.number_value };
+        }
+        break;
+      }
+      case "string_value": {
+        if (object.kind?.string_value !== undefined && object.kind?.string_value !== null) {
+          message.kind = { $case: "string_value", string_value: object.kind.string_value };
+        }
+        break;
+      }
+      case "bool_value": {
+        if (object.kind?.bool_value !== undefined && object.kind?.bool_value !== null) {
+          message.kind = { $case: "bool_value", bool_value: object.kind.bool_value };
+        }
+        break;
+      }
+      case "struct_value": {
+        if (object.kind?.struct_value !== undefined && object.kind?.struct_value !== null) {
+          message.kind = { $case: "struct_value", struct_value: object.kind.struct_value };
+        }
+        break;
+      }
+      case "list_value": {
+        if (object.kind?.list_value !== undefined && object.kind?.list_value !== null) {
+          message.kind = { $case: "list_value", list_value: object.kind.list_value };
+        }
+        break;
+      }
     }
     return message;
   },
@@ -485,33 +504,34 @@ function createBaseListValue(): ListValue {
   return { values: [] };
 }
 
-export const ListValue = {
-  encode(message: ListValue, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const ListValue: MessageFns<ListValue> & ListValueWrapperFns = {
+  encode(message: ListValue, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     for (const v of message.values) {
-      Value.encode(Value.wrap(v!), writer.uint32(10).fork()).ldelim();
+      Value.encode(Value.wrap(v!), writer.uint32(10).fork()).join();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ListValue {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): ListValue {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseListValue();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.values.push(Value.unwrap(Value.decode(reader, reader.uint32())));
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -571,4 +591,28 @@ function isObject(value: any): boolean {
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+  fromJSON(object: any): T;
+  toJSON(message: T): unknown;
+  create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
+  fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
+}
+
+export interface StructWrapperFns {
+  wrap(object: { [key: string]: any } | undefined): Struct;
+  unwrap(message: Struct): { [key: string]: any };
+}
+
+export interface AnyValueWrapperFns {
+  wrap(value: any): Value;
+  unwrap(message: any): string | number | boolean | Object | null | Array<any> | undefined;
+}
+
+export interface ListValueWrapperFns {
+  wrap(array: Array<any> | undefined): ListValue;
+  unwrap(message: ListValue): Array<any>;
 }

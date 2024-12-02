@@ -1,4 +1,4 @@
-import { Reader } from "protobufjs";
+import { BinaryReader } from "@bufbuild/protobuf/wire";
 import { Numbers } from "./simple";
 import { simple as pbjs } from "./pbjs";
 import INumbers = pbjs.INumbers;
@@ -38,7 +38,7 @@ describe("number", () => {
       sfixed32: 11,
       sfixed64: 12,
     };
-    const s2 = Numbers.decode(Reader.create(PbNumbers.encode(PbNumbers.fromObject(s1)).finish()));
+    const s2 = Numbers.decode(new BinaryReader(PbNumbers.encode(PbNumbers.fromObject(s1)).finish()));
     expect(s2).toEqual(s1);
     expect(typeof s2.uint32).toEqual("number");
     expect(typeof s2.int64).toEqual("number");
@@ -69,7 +69,7 @@ describe("number", () => {
 
   it("can decode and fallback to default values", () => {
     const s1: INumbers = {};
-    const s2 = Numbers.decode(Reader.create(PbNumbers.encode(PbNumbers.fromObject(s1)).finish()));
+    const s2 = Numbers.decode(new BinaryReader(PbNumbers.encode(PbNumbers.fromObject(s1)).finish()));
     expect(s2.double).toEqual(0);
     expect(s2.float).toEqual(0);
     expect(s2.int32).toEqual(0);

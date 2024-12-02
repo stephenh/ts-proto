@@ -1,8 +1,8 @@
 {
   "name": "ts-proto",
-  "version": "1.181.1",
+  "version": "2.4.2",
   "description": "",
-  "main": "build/plugin.js",
+  "main": "build/src/plugin.js",
   "repository": "github:stephenh/ts-proto",
   "bin": {
     "protoc-gen-ts_proto": "./protoc-gen-ts_proto"
@@ -36,17 +36,18 @@
     "@nestjs/core": "^9.4.3",
     "@nestjs/microservices": "^9.4.3",
     "@semantic-release/changelog": "^6.0.3",
-    "@semantic-release/commit-analyzer": "^10.0.1",
+    "@semantic-release/commit-analyzer": "^13.0.0",
     "@semantic-release/exec": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
-    "@semantic-release/github": "^9.0.3",
-    "@semantic-release/npm": "^10.0.4",
-    "@semantic-release/release-notes-generator": "^11.0.4",
+    "@semantic-release/github": "^10.1.6",
+    "@semantic-release/npm": "^12.0.1",
+    "@semantic-release/release-notes-generator": "^14.0.1",
     "@tsconfig/strictest": "^2.0.1",
     "@types/jest": "^29.5.3",
     "@types/node": "^16.18.38",
     "@types/object-hash": "^3.0.2",
     "chokidar": "^3.5.3",
+    "conventional-changelog-conventionalcommits": "^8.0.0",
     "dataloader": "^2.2.2",
     "jest": "^29.6.1",
     "jest-ts-webcompat-resolver": "^1.0.0",
@@ -55,20 +56,21 @@
     "nice-grpc": "^2.1.4",
     "object-hash": "^3.0.0",
     "prettier": "^2.8.8",
+    "protobufjs": "^7.2.4",
     "protobufjs-cli": "^1.1.1",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
-    "semantic-release": "^21.0.7",
+    "semantic-release": "^24.0.0",
     "ts-jest": "^29.1.1",
-    "tsx": "^4.11.2",
-    "typescript": "^5.1.6",
+    "tsx": "^4.17.0",
+    "typescript": "^5.5.4",
     "uglify-js": "^3.17.4"
   },
   "dependencies": {
+    "@bufbuild/protobuf": "^2.0.0",
     "case-anything": "^2.1.13",
-    "protobufjs": "^7.2.4",
     "ts-poet": "^6.7.0",
-    "ts-proto-descriptors": "1.16.0"
+    "ts-proto-descriptors": "2.0.0"
   },
-  "packageManager": "yarn@3.6.0"
+  "packageManager": "yarn@4.4.0"
 }

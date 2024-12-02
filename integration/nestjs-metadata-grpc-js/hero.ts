@@ -2,10 +2,10 @@
 // source: hero.proto
 
 /* eslint-disable */
-import { handleBidiStreamingCall, Metadata } from "@grpc/grpc-js";
-import type { handleUnaryCall, UntypedServiceImplementation } from "@grpc/grpc-js";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
+import { Metadata } from "@grpc/grpc-js";
+import type { handleBidiStreamingCall, handleUnaryCall, UntypedServiceImplementation } from "@grpc/grpc-js";
 import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
-import * as _m0 from "protobufjs/minimal";
 import { Observable } from "rxjs";
 
 export const protobufPackage = "hero";
@@ -34,33 +34,34 @@ function createBaseHeroById(): HeroById {
   return { id: 0 };
 }
 
-export const HeroById = {
-  encode(message: HeroById, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const HeroById: MessageFns<HeroById> = {
+  encode(message: HeroById, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.id !== 0) {
       writer.uint32(8).int32(message.id);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): HeroById {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): HeroById {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseHeroById();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 8) {
             break;
           }
 
           message.id = reader.int32();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -70,33 +71,34 @@ function createBaseVillainById(): VillainById {
   return { id: 0 };
 }
 
-export const VillainById = {
-  encode(message: VillainById, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const VillainById: MessageFns<VillainById> = {
+  encode(message: VillainById, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.id !== 0) {
       writer.uint32(8).int32(message.id);
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): VillainById {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): VillainById {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseVillainById();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 8) {
             break;
           }
 
           message.id = reader.int32();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -106,8 +108,8 @@ function createBaseHero(): Hero {
   return { id: 0, name: "" };
 }
 
-export const Hero = {
-  encode(message: Hero, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const Hero: MessageFns<Hero> = {
+  encode(message: Hero, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.id !== 0) {
       writer.uint32(8).int32(message.id);
     }
@@ -117,32 +119,34 @@ export const Hero = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Hero {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Hero {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseHero();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 8) {
             break;
           }
 
           message.id = reader.int32();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
 
           message.name = reader.string();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -152,8 +156,8 @@ function createBaseVillain(): Villain {
   return { id: 0, name: "" };
 }
 
-export const Villain = {
-  encode(message: Villain, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const Villain: MessageFns<Villain> = {
+  encode(message: Villain, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.id !== 0) {
       writer.uint32(8).int32(message.id);
     }
@@ -163,32 +167,34 @@ export const Villain = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): Villain {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): Villain {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseVillain();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 8) {
             break;
           }
 
           message.id = reader.int32();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
 
           message.name = reader.string();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -262,4 +268,9 @@ export interface HeroServiceServer extends UntypedServiceImplementation {
   findOneHero: handleUnaryCall<HeroById, Hero>;
   findOneVillain: handleUnaryCall<VillainById, Villain>;
   findManyVillain: handleBidiStreamingCall<VillainById, Villain>;
+}
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
 }

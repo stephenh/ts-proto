@@ -95,55 +95,55 @@ export interface BytesValue {
   value: Uint8Array;
 }
 
-export const DoubleValue = {
+export const DoubleValue: MessageFns<DoubleValue> = {
   fromJSON(object: any): DoubleValue {
     return { value: isSet(object.value) ? globalThis.Number(object.value) : 0 };
   },
 };
 
-export const FloatValue = {
+export const FloatValue: MessageFns<FloatValue> = {
   fromJSON(object: any): FloatValue {
     return { value: isSet(object.value) ? globalThis.Number(object.value) : 0 };
   },
 };
 
-export const Int64Value = {
+export const Int64Value: MessageFns<Int64Value> = {
   fromJSON(object: any): Int64Value {
     return { value: isSet(object.value) ? globalThis.Number(object.value) : 0 };
   },
 };
 
-export const UInt64Value = {
+export const UInt64Value: MessageFns<UInt64Value> = {
   fromJSON(object: any): UInt64Value {
     return { value: isSet(object.value) ? globalThis.Number(object.value) : 0 };
   },
 };
 
-export const Int32Value = {
+export const Int32Value: MessageFns<Int32Value> = {
   fromJSON(object: any): Int32Value {
     return { value: isSet(object.value) ? globalThis.Number(object.value) : 0 };
   },
 };
 
-export const UInt32Value = {
+export const UInt32Value: MessageFns<UInt32Value> = {
   fromJSON(object: any): UInt32Value {
     return { value: isSet(object.value) ? globalThis.Number(object.value) : 0 };
   },
 };
 
-export const BoolValue = {
+export const BoolValue: MessageFns<BoolValue> = {
   fromJSON(object: any): BoolValue {
     return { value: isSet(object.value) ? globalThis.Boolean(object.value) : false };
   },
 };
 
-export const StringValue = {
+export const StringValue: MessageFns<StringValue> = {
   fromJSON(object: any): StringValue {
     return { value: isSet(object.value) ? globalThis.String(object.value) : "" };
   },
 };
 
-export const BytesValue = {
+export const BytesValue: MessageFns<BytesValue> = {
   fromJSON(object: any): BytesValue {
     return { value: isSet(object.value) ? bytesFromBase64(object.value) : new Uint8Array(0) };
   },
@@ -164,4 +164,8 @@ function bytesFromBase64(b64: string): Uint8Array {
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+export interface MessageFns<T> {
+  fromJSON(object: any): T;
 }

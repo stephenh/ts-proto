@@ -2,7 +2,7 @@
 // source: encode.proto
 
 /* eslint-disable */
-import * as _m0 from "protobufjs/minimal";
+import { BinaryWriter } from "@bufbuild/protobuf/wire";
 
 export const protobufPackage = "";
 
@@ -10,11 +10,15 @@ export interface Encode {
   encode: string;
 }
 
-export const Encode = {
-  encode(message: Encode, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const Encode: MessageFns<Encode> = {
+  encode(message: Encode, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.encode !== "") {
       writer.uint32(10).string(message.encode);
     }
     return writer;
   },
 };
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+}

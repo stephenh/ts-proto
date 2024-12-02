@@ -10,7 +10,8 @@ import { Context } from "./context";
 import SourceInfo from "./sourceInfo";
 import { impFile, maybePrefixPackage } from "./utils";
 import { basicTypeName, toReaderCall } from "./types";
-import { Reader } from "protobufjs/minimal";
+import { BinaryReader } from "@bufbuild/protobuf/wire";
+import { EnvOption, OutputSchemaOption } from "./options";
 
 const fileDescriptorProto = imp("FileDescriptorProto@ts-proto-descriptors");
 
@@ -27,6 +28,10 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
     extensionCache[extension.extendee][extension.number] = extension;
   });
 
+  const outputSchemaOptions = ctx.options.outputSchema ? ctx.options.outputSchema : [];
+  const outputFileDescriptor = !outputSchemaOptions.includes(OutputSchemaOption.NO_FILE_DESCRIPTOR);
+  const outputAsConst = outputSchemaOptions.includes(OutputSchemaOption.CONST);
+
   chunks.push(code`
     type ProtoMetaMessageOptions = {
       options?: { [key: string]: any };
@@ -36,9 +41,7 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
     };
 
     export interface ProtoMetadata {
-      ${
-        ctx.options.outputSchema !== "no-file-descriptor" ? code`fileDescriptor: ${fileDescriptorProto};\n` : ""
-      }references: { [key: string]: any };
+      ${outputFileDescriptor ? code`fileDescriptor: ${fileDescriptorProto};\n` : ""}references: { [key: string]: any };
       dependencies?: ProtoMetadata[];
       options?: {
         options?: { [key: string]: any };
@@ -140,7 +143,7 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
     if (methodsOptions.length > 0 || serviceOptions) {
       servicesOptions.push(code`
         '${service.name}': {
-          options: ${serviceOptions},
+          ${serviceOptions ? code`options: ${serviceOptions},` : ""}
           methods: {${joinCode(methodsOptions, { on: "," })}}
         }
       `);
@@ -173,7 +176,7 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
     if (valuesOptions.length > 0 || enumOptions) {
       enumsOptions.push(code`
         '${Enum.name}': {
-          options: ${enumOptions},
+          ${enumOptions ? code`options: ${enumOptions},` : ""}
           values: {${joinCode(valuesOptions, { on: "," })}}
         }
       `);
@@ -181,12 +184,10 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
   });
 
   chunks.push(code`
-    export const ${def("protoMetadata")}: ProtoMetadata = {
-      ${
-        ctx.options.outputSchema !== "no-file-descriptor"
-          ? code`fileDescriptor: ${fileDescriptorProto}.fromPartial(${descriptor}),\n`
-          : ""
-      }references: { ${joinCode(references, { on: "," })} },
+    export const ${def("protoMetadata")}${outputAsConst ? "" : ": ProtoMetadata"} = {
+      ${outputFileDescriptor ? code`fileDescriptor: ${descriptor},\n` : ""}references: { ${joinCode(references, {
+    on: ",",
+  })} },
       dependencies: [${joinCode(dependencies, { on: "," })}],
       ${
         fileOptions || messagesOptions.length > 0 || servicesOptions.length > 0 || enumsOptions.length > 0
@@ -198,7 +199,7 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
         }`
           : ""
       }
-    }
+    }${outputAsConst ? " as const satisfies ProtoMetadata" : ""}
   `);
 
   return chunks;
@@ -210,15 +211,18 @@ function getExtensionValue(ctx: Context, extension: FieldDescriptorProto, data: 
     const resultBuffer = Buffer.concat(
       data.map((d) => {
         // Skip length byte
-        const reader = new Reader(d);
-        reader.uint32();
-        return (reader.buf as Buffer).slice(reader.pos);
+        const bytes = new BinaryReader(d).bytes();
+        return Buffer.from(bytes);
       }),
     );
     const result = resultBuffer.toString("base64");
-    return code`'${extension.name}': ${typeName}.decode(Buffer.from('${result}', 'base64'))`;
+    const encoded =
+      ctx.options.env === EnvOption.NODE
+        ? code`Buffer.from('${result}', 'base64')`
+        : code`${ctx.utils.bytesFromBase64}("${result}")`;
+    return code`'${extension.name}': ${typeName}.decode(${encoded})`;
   } else {
-    const reader = new Reader(data[0]);
+    const reader = new BinaryReader(data[0]);
     let value = (reader as any)[toReaderCall(extension)]();
     if (typeof value === "string") {
       value = code`"${value}"`;
@@ -239,8 +243,8 @@ function encodedOptionsToOptions(
   const resultOptions: Code[] = [];
   for (const key in encodedOptions) {
     const value = encodedOptions[key];
-    const extension = extensionCache[extendee][parseInt(key, 10) >>> 3];
-    if (shouldAddOptionDefinition(ctx, extension)) {
+    const extension = extensionCache[extendee]?.[parseInt(key, 10) >>> 3];
+    if (extension && shouldAddOptionDefinition(ctx, extension)) {
       // todo: we should be able to create an option definition ALWAYS, however,
       // we currently cannot do that because the if the extension is a sub-message
       // (and thus, not just a straightforward value), we don't have an JSON object
@@ -248,9 +252,9 @@ function encodedOptionsToOptions(
       // getExtensionValue is to decode the encoded value into a message, but this
       // Message.decode(...) method is not always included in the generated code.
       // We should fix this so that we can always create an option definition by
-      // somehow premptively decoding the encoded value and then inserting it into
-      // the option defintion.
-      // please refer to inteegration/options-types-only to see this in action
+      // somehow preemptively decoding the encoded value and then inserting it into
+      // the option definition.
+      // please refer to integration/options-types-only to see this in action
       resultOptions.push(getExtensionValue(ctx, extension, value));
     }
   }

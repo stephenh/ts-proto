@@ -2,7 +2,7 @@
 // source: remove-enum-prefix.proto
 
 /* eslint-disable */
-import * as _m0 from "protobufjs/minimal";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
 export const protobufPackage = "";
 
@@ -157,8 +157,8 @@ function createBaseWithNestedEnum(): WithNestedEnum {
   return { foo: 0, Bar: 0, baz: 0, qux: 0 };
 }
 
-export const WithNestedEnum = {
-  encode(message: WithNestedEnum, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const WithNestedEnum: MessageFns<WithNestedEnum> = {
+  encode(message: WithNestedEnum, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.foo !== 0) {
       writer.uint32(8).int32(message.foo);
     }
@@ -174,46 +174,50 @@ export const WithNestedEnum = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): WithNestedEnum {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): WithNestedEnum {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseWithNestedEnum();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 8) {
             break;
           }
 
           message.foo = reader.int32() as any;
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 16) {
             break;
           }
 
           message.Bar = reader.int32() as any;
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag !== 24) {
             break;
           }
 
           message.baz = reader.int32() as any;
           continue;
-        case 4:
+        }
+        case 4: {
           if (tag !== 32) {
             break;
           }
 
           message.qux = reader.int32() as any;
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -271,4 +275,13 @@ export type Exact<P, I extends P> = P extends Builtin ? P
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+  fromJSON(object: any): T;
+  toJSON(message: T): unknown;
+  create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
+  fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
 }

@@ -1,3 +1,131 @@
+## [2.4.2](https://github.com/stephenh/ts-proto/compare/v2.4.1...v2.4.2) (2024-11-28)
+
+
+### Performance Improvements
+
+* Replacing "else if" with a "switch case" statement to improve Typescript performance ([#1142](https://github.com/stephenh/ts-proto/issues/1142)) ([de1a616](https://github.com/stephenh/ts-proto/commit/de1a616d24a90ef7b281c9e8966556adfa156ebb)), closes [#1135](https://github.com/stephenh/ts-proto/issues/1135) [#1141](https://github.com/stephenh/ts-proto/issues/1141)
+
+## [2.4.1](https://github.com/stephenh/ts-proto/compare/v2.4.0...v2.4.1) (2024-11-26)
+
+
+### Performance Improvements
+
+* Generating "else if" where applicable ([#1141](https://github.com/stephenh/ts-proto/issues/1141)) ([4a8018c](https://github.com/stephenh/ts-proto/commit/4a8018c915dabbc83629f021a2899ade55b6c8de))
+
+# [2.4.0](https://github.com/stephenh/ts-proto/compare/v2.3.0...v2.4.0) (2024-11-25)
+
+
+### Features
+
+* Avoid adding empty trailing comments to oneof unions ([#1140](https://github.com/stephenh/ts-proto/issues/1140)) ([5359e8d](https://github.com/stephenh/ts-proto/commit/5359e8d4b08ad114080f04ec8327bb2379dddd86)), closes [#1136](https://github.com/stephenh/ts-proto/issues/1136)
+
+# [2.3.0](https://github.com/stephenh/ts-proto/compare/v2.2.7...v2.3.0) (2024-11-16)
+
+
+### Features
+
+* add support for comments on union fields in generateOneofProperty ([#1136](https://github.com/stephenh/ts-proto/issues/1136)) ([c933c9c](https://github.com/stephenh/ts-proto/commit/c933c9c46dbaa278b33b16270bab51063ccb513c)), closes [#1122](https://github.com/stephenh/ts-proto/issues/1122)
+
+## [2.2.7](https://github.com/stephenh/ts-proto/compare/v2.2.6...v2.2.7) (2024-11-11)
+
+
+### Bug Fixes
+
+* problem with verbatimModuleSyntax for grpc-js ([#1132](https://github.com/stephenh/ts-proto/issues/1132)) ([bedfa31](https://github.com/stephenh/ts-proto/commit/bedfa317e7b115d10ee3de897eae2490b5eccdc9))
+
+## [2.2.6](https://github.com/stephenh/ts-proto/compare/v2.2.5...v2.2.6) (2024-11-11)
+
+
+### Bug Fixes
+
+* **Schema generation:** ensure Buffer api is only used when in nodejs environment ([#1134](https://github.com/stephenh/ts-proto/issues/1134)) ([49035a4](https://github.com/stephenh/ts-proto/commit/49035a47e1d859563c631267ea7e1724cbf2c4a8))
+
+## [2.2.5](https://github.com/stephenh/ts-proto/compare/v2.2.4...v2.2.5) (2024-10-22)
+
+
+### Bug Fixes
+
+* Added null propagation and guard ([#1127](https://github.com/stephenh/ts-proto/issues/1127)) ([86637fa](https://github.com/stephenh/ts-proto/commit/86637fa6c39ddcc09cab3c486c34b7a52adaf694))
+
+## [2.2.4](https://github.com/stephenh/ts-proto/compare/v2.2.3...v2.2.4) (2024-10-15)
+
+
+### Bug Fixes
+
+* Unbreak a use case for [#1110](https://github.com/stephenh/ts-proto/issues/1110) / fix for [#1121](https://github.com/stephenh/ts-proto/issues/1121) ([#1123](https://github.com/stephenh/ts-proto/issues/1123)) ([476e99b](https://github.com/stephenh/ts-proto/commit/476e99bcbc651cec1946d0dbad09dc9aea3224ff))
+
+## [2.2.3](https://github.com/stephenh/ts-proto/compare/v2.2.2...v2.2.3) (2024-10-06)
+
+
+### Bug Fixes
+
+* Don't fail on Function message names ([#1119](https://github.com/stephenh/ts-proto/issues/1119)) ([da048a1](https://github.com/stephenh/ts-proto/commit/da048a1e78cdc1baa228700c40a944652998d2a1)), closes [#1110](https://github.com/stephenh/ts-proto/issues/1110)
+
+## [2.2.2](https://github.com/stephenh/ts-proto/compare/v2.2.1...v2.2.2) (2024-10-04)
+
+
+### Bug Fixes
+
+* prefix and suffixes were not being applied to to/fromTimestamp resulting in compile error ([#1118](https://github.com/stephenh/ts-proto/issues/1118)) ([22c2905](https://github.com/stephenh/ts-proto/commit/22c2905ca53c88bdb2802386d414d584a451aa4c))
+
+## [2.2.1](https://github.com/stephenh/ts-proto/compare/v2.2.0...v2.2.1) (2024-09-29)
+
+
+### Bug Fixes
+
+* Compilation error for nested repeated fields with `useOptionals=all` ([#1113](https://github.com/stephenh/ts-proto/issues/1113)) ([e89fc51](https://github.com/stephenh/ts-proto/commit/e89fc51fcc3ba494a81884cc136779202d3f1e16)), closes [#1112](https://github.com/stephenh/ts-proto/issues/1112)
+
+# [2.2.0](https://github.com/stephenh/ts-proto/compare/v2.1.0...v2.2.0) (2024-09-06)
+
+
+### Features
+
+* Add interface for static message methods ([#1104](https://github.com/stephenh/ts-proto/issues/1104)) ([faa33b6](https://github.com/stephenh/ts-proto/commit/faa33b6f5170cabe4010c95d5f0a68b9f04f686b))
+
+# [2.1.0](https://github.com/stephenh/ts-proto/compare/v2.0.4...v2.1.0) (2024-09-04)
+
+
+### Features
+
+* option to declare schema as const ([#1096](https://github.com/stephenh/ts-proto/issues/1096)) ([4cc1a1e](https://github.com/stephenh/ts-proto/commit/4cc1a1e4238cf628591414c02d39bd76dc75fb3a))
+
+## [2.0.4](https://github.com/stephenh/ts-proto/compare/v2.0.3...v2.0.4) (2024-09-04)
+
+
+### Bug Fixes
+
+* Bump ts-proto-descriptors. ([#1102](https://github.com/stephenh/ts-proto/issues/1102)) ([3d1cd61](https://github.com/stephenh/ts-proto/commit/3d1cd61ed7bbac4d6dc7353c49d0732aad22a504)), closes [#1101](https://github.com/stephenh/ts-proto/issues/1101)
+
+## [2.0.3](https://github.com/stephenh/ts-proto/compare/v2.0.2...v2.0.3) (2024-08-21)
+
+
+### Bug Fixes
+
+* Fix running yarn:test locally. ([#1097](https://github.com/stephenh/ts-proto/issues/1097)) ([30385ed](https://github.com/stephenh/ts-proto/commit/30385edd565d873d550df765dac9570c125bef2c))
+
+## [2.0.2](https://github.com/stephenh/ts-proto/compare/v2.0.1...v2.0.2) (2024-08-16)
+
+
+### Bug Fixes
+
+* Fix version loading in new dist layout. ([#1091](https://github.com/stephenh/ts-proto/issues/1091)) ([f1c23d2](https://github.com/stephenh/ts-proto/commit/f1c23d2eab096b7c6b2decd9f0886b5300c52712))
+
+## [2.0.1](https://github.com/stephenh/ts-proto/compare/v2.0.0...v2.0.1) (2024-08-16)
+
+
+### Bug Fixes
+
+* Fix build from typescript bump. ([3ecd498](https://github.com/stephenh/ts-proto/commit/3ecd4986063952ae06c6136fbd9ae0cfc75212d8))
+
+# [2.0.0](https://github.com/stephenh/ts-proto/compare/v1.181.2...v2.0.0) (2024-08-16)
+
+## [1.181.2](https://github.com/stephenh/ts-proto/compare/v1.181.1...v1.181.2) (2024-08-15)
+
+
+### Bug Fixes
+
+* toJSON Function with `removeEnumPrefix=true` and `unrecognizedEnumValue=0` Options ([#1089](https://github.com/stephenh/ts-proto/issues/1089)) ([2401490](https://github.com/stephenh/ts-proto/commit/24014908f814e2720b9c2b9bd2ae1773be880a16)), closes [#1086](https://github.com/stephenh/ts-proto/issues/1086) [#1086](https://github.com/stephenh/ts-proto/issues/1086)
+
 ## [1.181.1](https://github.com/stephenh/ts-proto/compare/v1.181.0...v1.181.1) (2024-07-13)
 
 
@@ -535,7 +663,7 @@
 
 ### Features
 
-* Add static-only variant to to outputTypeAnnotations option ([#858](https://github.com/stephenh/ts-proto/issues/858)) ([d7c4af7](https://github.com/stephenh/ts-proto/commit/d7c4af7e068200b30cf773703ef906595aec6042))
+* Add static-only variant to outputTypeAnnotations option ([#858](https://github.com/stephenh/ts-proto/issues/858)) ([d7c4af7](https://github.com/stephenh/ts-proto/commit/d7c4af7e068200b30cf773703ef906595aec6042))
 
 ## [1.150.1](https://github.com/stephenh/ts-proto/compare/v1.150.0...v1.150.1) (2023-06-23)
 
@@ -715,7 +843,7 @@
 
 ### Features
 
-* add create utility function to message defintions ([#760](https://github.com/stephenh/ts-proto/issues/760)) ([44fc7b2](https://github.com/stephenh/ts-proto/commit/44fc7b23ae72ec9c4fca86bee9a9774be097c058))
+* add create utility function to message definitions ([#760](https://github.com/stephenh/ts-proto/issues/760)) ([44fc7b2](https://github.com/stephenh/ts-proto/commit/44fc7b23ae72ec9c4fca86bee9a9774be097c058))
 
 ## [1.137.2](https://github.com/stephenh/ts-proto/compare/v1.137.1...v1.137.2) (2023-01-09)
 
@@ -954,7 +1082,7 @@
 
 ### Bug Fixes
 
-* Revert "feat: support grpc-web client straming ([#617](https://github.com/stephenh/ts-proto/issues/617))" ([#632](https://github.com/stephenh/ts-proto/issues/632)) ([2f4ecc7](https://github.com/stephenh/ts-proto/commit/2f4ecc7434df6b8f2ff08b929f9032170b04e858))
+* Revert "feat: support grpc-web client streaming ([#617](https://github.com/stephenh/ts-proto/issues/617))" ([#632](https://github.com/stephenh/ts-proto/issues/632)) ([2f4ecc7](https://github.com/stephenh/ts-proto/commit/2f4ecc7434df6b8f2ff08b929f9032170b04e858))
 
 # [1.121.0](https://github.com/stephenh/ts-proto/compare/v1.120.0...v1.121.0) (2022-07-28)
 
@@ -975,7 +1103,7 @@
 
 ### Features
 
-* support grpc-web client straming ([#617](https://github.com/stephenh/ts-proto/issues/617)) ([d3e7f1f](https://github.com/stephenh/ts-proto/commit/d3e7f1f4aac12db87c54d6357e557a351c96a2ca))
+* support grpc-web client streaming ([#617](https://github.com/stephenh/ts-proto/issues/617)) ([d3e7f1f](https://github.com/stephenh/ts-proto/commit/d3e7f1f4aac12db87c54d6357e557a351c96a2ca))
 
 # [1.118.0](https://github.com/stephenh/ts-proto/compare/v1.117.1...v1.118.0) (2022-07-19)
 
@@ -1147,7 +1275,7 @@
 
 ### Features
 
-* When outputing service and service definition implementations, include types. Eg, before:
+* When outputting service and service definition implementations, include types. Eg, before:
 
   ```ts
   export const TestDefinition = {
@@ -1420,7 +1548,7 @@
 
 ### Bug Fixes
 
-* support mutliple options in snakeToCamel flag  ([#429](https://github.com/stephenh/ts-proto/issues/429)) ([cff6674](https://github.com/stephenh/ts-proto/commit/cff667406cba21676546fd91b04cf2cbc571ed7d)), closes [#423](https://github.com/stephenh/ts-proto/issues/423)
+* support multiple options in snakeToCamel flag  ([#429](https://github.com/stephenh/ts-proto/issues/429)) ([cff6674](https://github.com/stephenh/ts-proto/commit/cff667406cba21676546fd91b04cf2cbc571ed7d)), closes [#423](https://github.com/stephenh/ts-proto/issues/423)
 
 ## [1.93.2](https://github.com/stephenh/ts-proto/compare/v1.93.1...v1.93.2) (2021-12-09)
 
@@ -1998,7 +2126,7 @@ avoid being a breaking change.
 
 ## v1.21.5
 
-* Drop drop falsey values in maps in `decode` and `fromPartial`. Fixes #79. (@timostamm)
+* Drop falsey values in maps in `decode` and `fromPartial`. Fixes #79. (@timostamm)
 
 ## v1.21.4
 

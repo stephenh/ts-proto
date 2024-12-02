@@ -2,8 +2,7 @@
 // source: test.proto
 
 /* eslint-disable */
-import * as _m0 from "protobufjs/minimal";
-import Long = require("long");
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 
 export const protobufPackage = "optionalstest";
 
@@ -112,8 +111,8 @@ function createBaseOptionalsTest(): OptionalsTest {
   };
 }
 
-export const OptionalsTest = {
-  encode(message: OptionalsTest, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const OptionalsTest: MessageFns<OptionalsTest> = {
+  encode(message: OptionalsTest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.id !== 0) {
       writer.uint32(8).int32(message.id);
     }
@@ -136,29 +135,29 @@ export const OptionalsTest = {
     for (const v of message.repId) {
       writer.int32(v);
     }
-    writer.ldelim();
+    writer.join();
     if (message.repState !== undefined && message.repState.length !== 0) {
       writer.uint32(66).fork();
       for (const v of message.repState) {
         writer.int32(v);
       }
-      writer.ldelim();
+      writer.join();
     }
     writer.uint32(74).fork();
     for (const v of message.repStateV2) {
       writer.int32(v);
     }
-    writer.ldelim();
+    writer.join();
     writer.uint32(82).fork();
     for (const v of message.repLong) {
       writer.int64(v);
     }
-    writer.ldelim();
+    writer.join();
     writer.uint32(90).fork();
     for (const v of message.repTruth) {
       writer.bool(v);
     }
-    writer.ldelim();
+    writer.join();
     for (const v of message.repDescription) {
       writer.uint32(98).string(v!);
     }
@@ -184,61 +183,67 @@ export const OptionalsTest = {
       writer.uint32(154).bytes(message.optData);
     }
     Object.entries(message.translations).forEach(([key, value]) => {
-      OptionalsTest_TranslationsEntry.encode({ key: key as any, value }, writer.uint32(162).fork()).ldelim();
+      OptionalsTest_TranslationsEntry.encode({ key: key as any, value }, writer.uint32(162).fork()).join();
     });
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): OptionalsTest {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): OptionalsTest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseOptionalsTest();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 8) {
             break;
           }
 
           message.id = reader.int32();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 16) {
             break;
           }
 
           message.state = reader.int32() as any;
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag !== 24) {
             break;
           }
 
-          message.long = longToNumber(reader.int64() as Long);
+          message.long = longToNumber(reader.int64());
           continue;
-        case 4:
+        }
+        case 4: {
           if (tag !== 32) {
             break;
           }
 
           message.truth = reader.bool();
           continue;
-        case 5:
+        }
+        case 5: {
           if (tag !== 42) {
             break;
           }
 
           message.description = reader.string();
           continue;
-        case 6:
+        }
+        case 6: {
           if (tag !== 50) {
             break;
           }
 
           message.data = reader.bytes();
           continue;
-        case 7:
+        }
+        case 7: {
           if (tag === 56) {
             message.repId!.push(reader.int32());
 
@@ -255,7 +260,8 @@ export const OptionalsTest = {
           }
 
           break;
-        case 8:
+        }
+        case 8: {
           if (tag === 64) {
             message.repState!.push(reader.int32() as any);
 
@@ -272,7 +278,8 @@ export const OptionalsTest = {
           }
 
           break;
-        case 9:
+        }
+        case 9: {
           if (tag === 72) {
             message.repStateV2!.push(reader.int32() as any);
 
@@ -289,9 +296,10 @@ export const OptionalsTest = {
           }
 
           break;
-        case 10:
+        }
+        case 10: {
           if (tag === 80) {
-            message.repLong!.push(longToNumber(reader.int64() as Long));
+            message.repLong!.push(longToNumber(reader.int64()));
 
             continue;
           }
@@ -299,14 +307,15 @@ export const OptionalsTest = {
           if (tag === 82) {
             const end2 = reader.uint32() + reader.pos;
             while (reader.pos < end2) {
-              message.repLong!.push(longToNumber(reader.int64() as Long));
+              message.repLong!.push(longToNumber(reader.int64()));
             }
 
             continue;
           }
 
           break;
-        case 11:
+        }
+        case 11: {
           if (tag === 88) {
             message.repTruth!.push(reader.bool());
 
@@ -323,63 +332,72 @@ export const OptionalsTest = {
           }
 
           break;
-        case 12:
+        }
+        case 12: {
           if (tag !== 98) {
             break;
           }
 
           message.repDescription!.push(reader.string());
           continue;
-        case 13:
+        }
+        case 13: {
           if (tag !== 106) {
             break;
           }
 
           message.repData!.push(reader.bytes());
           continue;
-        case 14:
+        }
+        case 14: {
           if (tag !== 112) {
             break;
           }
 
           message.optId = reader.int32();
           continue;
-        case 15:
+        }
+        case 15: {
           if (tag !== 120) {
             break;
           }
 
           message.optState = reader.int32() as any;
           continue;
-        case 16:
+        }
+        case 16: {
           if (tag !== 128) {
             break;
           }
 
-          message.optLong = longToNumber(reader.int64() as Long);
+          message.optLong = longToNumber(reader.int64());
           continue;
-        case 17:
+        }
+        case 17: {
           if (tag !== 136) {
             break;
           }
 
           message.optTruth = reader.bool();
           continue;
-        case 18:
+        }
+        case 18: {
           if (tag !== 146) {
             break;
           }
 
           message.optDescription = reader.string();
           continue;
-        case 19:
+        }
+        case 19: {
           if (tag !== 154) {
             break;
           }
 
           message.optData = reader.bytes();
           continue;
-        case 20:
+        }
+        case 20: {
           if (tag !== 162) {
             break;
           }
@@ -389,11 +407,12 @@ export const OptionalsTest = {
             message.translations![entry20.key] = entry20.value;
           }
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -546,8 +565,8 @@ function createBaseOptionalsTest_TranslationsEntry(): OptionalsTest_Translations
   return { key: "", value: "" };
 }
 
-export const OptionalsTest_TranslationsEntry = {
-  encode(message: OptionalsTest_TranslationsEntry, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const OptionalsTest_TranslationsEntry: MessageFns<OptionalsTest_TranslationsEntry> = {
+  encode(message: OptionalsTest_TranslationsEntry, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.key !== "") {
       writer.uint32(10).string(message.key);
     }
@@ -557,32 +576,34 @@ export const OptionalsTest_TranslationsEntry = {
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): OptionalsTest_TranslationsEntry {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): OptionalsTest_TranslationsEntry {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseOptionalsTest_TranslationsEntry();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.key = reader.string();
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
 
           message.value = reader.string();
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -655,19 +676,15 @@ type KeysOfUnion<T> = T extends T ? keyof T : never;
 export type Exact<P, I extends P> = P extends Builtin ? P
   : P & { [K in keyof P]: Exact<P[K], I[K]> } & { [K in Exclude<keyof I, KeysOfUnion<P>>]: never };
 
-function longToNumber(long: Long): number {
-  if (long.gt(globalThis.Number.MAX_SAFE_INTEGER)) {
+function longToNumber(int64: { toString(): string }): number {
+  const num = globalThis.Number(int64.toString());
+  if (num > globalThis.Number.MAX_SAFE_INTEGER) {
     throw new globalThis.Error("Value is larger than Number.MAX_SAFE_INTEGER");
   }
-  if (long.lt(globalThis.Number.MIN_SAFE_INTEGER)) {
+  if (num < globalThis.Number.MIN_SAFE_INTEGER) {
     throw new globalThis.Error("Value is smaller than Number.MIN_SAFE_INTEGER");
   }
-  return long.toNumber();
-}
-
-if (_m0.util.Long !== Long) {
-  _m0.util.Long = Long as any;
-  _m0.configure();
+  return num;
 }
 
 function isObject(value: any): boolean {
@@ -676,4 +693,13 @@ function isObject(value: any): boolean {
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+  fromJSON(object: any): T;
+  toJSON(message: T): unknown;
+  create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
+  fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
 }

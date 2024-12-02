@@ -2,7 +2,7 @@
 // source: value.proto
 
 /* eslint-disable */
-import * as _m0 from "protobufjs/minimal";
+import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
 import { ListValue, Struct, Value } from "./google/protobuf/struct";
 import { StringValue } from "./google/protobuf/wrappers";
 
@@ -20,73 +20,78 @@ function createBaseValueMessage(): ValueMessage {
   return { value: undefined, anyList: undefined, repeatedAny: [], repeatedStrings: [], structValue: undefined };
 }
 
-export const ValueMessage = {
-  encode(message: ValueMessage, writer: _m0.Writer = _m0.Writer.create()): _m0.Writer {
+export const ValueMessage: MessageFns<ValueMessage> = {
+  encode(message: ValueMessage, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.value !== undefined) {
-      Value.encode(Value.wrap(message.value), writer.uint32(10).fork()).ldelim();
+      Value.encode(Value.wrap(message.value), writer.uint32(10).fork()).join();
     }
     if (message.anyList !== undefined) {
-      ListValue.encode(ListValue.wrap(message.anyList), writer.uint32(18).fork()).ldelim();
+      ListValue.encode(ListValue.wrap(message.anyList), writer.uint32(18).fork()).join();
     }
     for (const v of message.repeatedAny) {
-      Value.encode(Value.wrap(v!), writer.uint32(26).fork()).ldelim();
+      Value.encode(Value.wrap(v!), writer.uint32(26).fork()).join();
     }
     for (const v of message.repeatedStrings) {
-      StringValue.encode({ value: v!! }, writer.uint32(34).fork()).ldelim();
+      StringValue.encode({ value: v!! }, writer.uint32(34).fork()).join();
     }
     if (message.structValue !== undefined) {
-      Struct.encode(Struct.wrap(message.structValue), writer.uint32(42).fork()).ldelim();
+      Struct.encode(Struct.wrap(message.structValue), writer.uint32(42).fork()).join();
     }
     return writer;
   },
 
-  decode(input: _m0.Reader | Uint8Array, length?: number): ValueMessage {
-    const reader = input instanceof _m0.Reader ? input : _m0.Reader.create(input);
+  decode(input: BinaryReader | Uint8Array, length?: number): ValueMessage {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
     let end = length === undefined ? reader.len : reader.pos + length;
     const message = createBaseValueMessage();
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 1:
+        case 1: {
           if (tag !== 10) {
             break;
           }
 
           message.value = Value.unwrap(Value.decode(reader, reader.uint32()));
           continue;
-        case 2:
+        }
+        case 2: {
           if (tag !== 18) {
             break;
           }
 
           message.anyList = ListValue.unwrap(ListValue.decode(reader, reader.uint32()));
           continue;
-        case 3:
+        }
+        case 3: {
           if (tag !== 26) {
             break;
           }
 
           message.repeatedAny.push(Value.unwrap(Value.decode(reader, reader.uint32())));
           continue;
-        case 4:
+        }
+        case 4: {
           if (tag !== 34) {
             break;
           }
 
           message.repeatedStrings.push(StringValue.decode(reader, reader.uint32()).value);
           continue;
-        case 5:
+        }
+        case 5: {
           if (tag !== 42) {
             break;
           }
 
           message.structValue = Struct.unwrap(Struct.decode(reader, reader.uint32()));
           continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
       }
-      reader.skipType(tag & 7);
+      reader.skip(tag & 7);
     }
     return message;
   },
@@ -155,4 +160,13 @@ function isObject(value: any): boolean {
 
 function isSet(value: any): boolean {
   return value !== null && value !== undefined;
+}
+
+export interface MessageFns<T> {
+  encode(message: T, writer?: BinaryWriter): BinaryWriter;
+  decode(input: BinaryReader | Uint8Array, length?: number): T;
+  fromJSON(object: any): T;
+  toJSON(message: T): unknown;
+  create<I extends Exact<DeepPartial<T>, I>>(base?: I): T;
+  fromPartial<I extends Exact<DeepPartial<T>, I>>(object: I): T;
 }

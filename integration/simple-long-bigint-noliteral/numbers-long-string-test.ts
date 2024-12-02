@@ -1,4 +1,3 @@
-import { Reader } from "protobufjs";
 import Long = require("long");
 import { Numbers } from "./simple";
 import { simple as pbjs, google } from "./pbjs";
@@ -6,6 +5,7 @@ import INumbers = pbjs.INumbers;
 import PbNumbers = pbjs.Numbers;
 import UInt64Value = google.protobuf.UInt64Value;
 import PbTimestamp = google.protobuf.Timestamp;
+import { BinaryReader } from "@bufbuild/protobuf/wire";
 
 
 // 18_446_744_073_709_551_615n
@@ -76,7 +76,7 @@ describe("number", () => {
       timestamp: new Date("1970-01-01T00:00:01.007000001Z"),
       uint64s: [BigInt("14"), BigInt("15"), BigInt("16")],
     };
-    const s2 = Numbers.decode(Reader.create(PbNumbers.encode(PbNumbers.fromObject(s1)).finish()));
+    const s2 = Numbers.decode(new BinaryReader(PbNumbers.encode(PbNumbers.fromObject(s1)).finish()));
     expect(s2).toEqual(expected);
   });
 
@@ -126,7 +126,7 @@ describe("number", () => {
 
   it("can decode and fallback to default values", () => {
     const s1: INumbers = {};
-    const s2 = Numbers.decode(Reader.create(PbNumbers.encode(PbNumbers.fromObject(s1)).finish()));
+    const s2 = Numbers.decode(new BinaryReader(PbNumbers.encode(PbNumbers.fromObject(s1)).finish()));
     expect(s2.double).toEqual(0);
     expect(s2.float).toEqual(0);
     expect(s2.int32).toEqual(0);

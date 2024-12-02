@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+message UserRule {
+    // just some fake rule for testing
+    string UUID = 1 [json_name = "uuid"];
+}
+
+message Object {
+    string namespace = 1;
+    string name = 2;
+}
+
+message Boolean {
+    string namespace = 1;
+    string name = 2;
+}
+
+message Symbol {
+    string namespace = 1;
+    string name = 2;
+}
+
+message Function {
+    string namespace = 1;
+    string name = 2;
+}
+
+message Nested {
+  message Function {
+      string namespace = 1;
+      string name = 2;
+  }
+}
+
+service APIService {
+}
