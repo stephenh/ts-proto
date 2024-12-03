@@ -10,6 +10,10 @@ export interface Encode {
   encode: string;
 }
 
+export interface DontGenerateEncode {
+  dontGenerateEncode: string;
+}
+
 export const Encode: MessageFns<Encode> = {
   encode(message: Encode, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.encode !== "") {
