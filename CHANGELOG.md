@@ -1,3 +1,10 @@
+# [2.5.0](https://github.com/stephenh/ts-proto/compare/v2.4.2...v2.5.0) (2024-12-03)
+
+
+### Features
+
+* Add options to limit generation of encode and decode methods to only specific message types ([#1085](https://github.com/stephenh/ts-proto/issues/1085)) ([c7372fa](https://github.com/stephenh/ts-proto/commit/c7372fab20cdac0199b79fd861e6b08113aba145)), closes [#1084](https://github.com/stephenh/ts-proto/issues/1084)
+
 ## [2.4.2](https://github.com/stephenh/ts-proto/compare/v2.4.1...v2.4.2) (2024-11-28)
 
 
