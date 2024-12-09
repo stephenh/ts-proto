@@ -1044,7 +1044,7 @@ function makeTimestampMethods(
           } else if (typeof o === "string") {
             return ${toTimestamp}(new ${bytes.globalThis}.Date(o));
           } else {
-            return Timestamp.fromJSON(o);
+            return ${options.typePrefix}Timestamp${options.typeSuffix}.fromJSON(o);
           }
         }
       `,
