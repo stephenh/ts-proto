@@ -28,9 +28,11 @@ jobs:
         run: ./integration/pbjs.sh
       - name: Codegen
         run: yarn proto2ts
-      # This will fail if any git-tracked file has changed
+      # This will fail if any git-tracked file have changed
       - name: Diff Output
-        run: git status && git diff --exit-code
+        run: |
+          git add .
+          git status && git diff --cached --exit-code
       - name: test
         run: yarn test
         env:
