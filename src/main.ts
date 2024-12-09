@@ -109,6 +109,7 @@ import {
   withAndMaybeCheckIsNotNull,
   withOrMaybeCheckIsNotNull,
   withOrMaybeCheckIsNull,
+  wrapTypeName,
 } from "./utils";
 import { visit, visitServices } from "./visit";
 
@@ -527,7 +528,7 @@ function makeProtobufTimestampWrapper() {
 
 function makeProtobufStructWrapper(options: Options) {
   const wrappers = imp("wrappers@protobufjs");
-  const Struct = impProto(options, "google/protobuf/struct", "Struct");
+  const Struct = impProto(options, "google/protobuf/struct", wrapTypeName(options, "Struct"));
   return code`
     ${wrappers}['.google.protobuf.Struct'] = {
       fromObject: ${Struct}.wrap,
@@ -832,8 +833,8 @@ function makeMessageFns(
     "StructWrapperFns",
     code`
       ${maybeExport} interface StructWrapperFns {
-        wrap(object: {[key: string]: any} | undefined): Struct;
-        unwrap(message: Struct): {[key: string]: any};
+        wrap(object: {[key: string]: any} | undefined): ${wrapTypeName(options, "Struct")};
+        unwrap(message: ${wrapTypeName(options, "Struct")}): {[key: string]: any};
       }
     `,
   );
@@ -842,7 +843,7 @@ function makeMessageFns(
     "AnyValueWrapperFns",
     code`
       ${maybeExport} interface AnyValueWrapperFns {
-        wrap(value: any): Value;
+        wrap(value: any): ${wrapTypeName(options, "Value")};
         unwrap(message: any): string | number | boolean | Object | null | Array<any> | undefined;
       }
     `,
@@ -852,8 +853,11 @@ function makeMessageFns(
     "ListValueWrapperFns",
     code`
       ${maybeExport} interface ListValueWrapperFns {
-        wrap(array: ${options.useReadonlyTypes ? "Readonly" : ""}Array<any> | undefined): ListValue;
-        unwrap(message: ${options.useReadonlyTypes ? "any" : "ListValue"}): Array<any>;
+        wrap(array: ${options.useReadonlyTypes ? "Readonly" : ""}Array<any> | undefined): ${wrapTypeName(
+      options,
+      "ListValue",
+    )};
+        unwrap(message: ${options.useReadonlyTypes ? "any" : wrapTypeName(options, "ListValue")}): Array<any>;
       }
     `,
   );
@@ -862,8 +866,8 @@ function makeMessageFns(
     "FieldMaskWrapperFns",
     code`
       ${maybeExport} interface FieldMaskWrapperFns {
-        wrap(paths: ${options.useReadonlyTypes ? "readonly" : ""} string[]): FieldMask;
-        unwrap(message: ${options.useReadonlyTypes ? "any" : "FieldMask"}): string[] ${
+        wrap(paths: ${options.useReadonlyTypes ? "readonly" : ""} string[]): ${wrapTypeName(options, "FieldMask")};
+        unwrap(message: ${options.useReadonlyTypes ? "any" : wrapTypeName(options, "FieldMask")}): string[] ${
       options.useOptionals === "all" ? "| undefined" : ""
     };
       }
@@ -926,11 +930,7 @@ function makeTimestampMethods(
   longs: ReturnType<typeof makeLongUtils>,
   bytes: ReturnType<typeof makeByteUtils>,
 ) {
-  const Timestamp = impProto(
-    options,
-    "google/protobuf/timestamp",
-    `${options.typePrefix}Timestamp${options.typeSuffix}`,
-  );
+  const Timestamp = impProto(options, "google/protobuf/timestamp", wrapTypeName(options, "Timestamp"));
   const NanoDate = imp("NanoDate=nano-date");
 
   let seconds: string | Code = "Math.trunc(date.getTime() / 1_000)";
@@ -1033,12 +1033,12 @@ function makeTimestampMethods(
           } else if (typeof o === "string") {
             return new ${bytes.globalThis}.Date(o);
           } else {
-            return ${fromTimestamp}(${options.typePrefix}Timestamp${options.typeSuffix}.fromJSON(o));
+            return ${fromTimestamp}(${wrapTypeName(options, "Timestamp")}.fromJSON(o));
           }
         }
       `
       : code`
-        function fromJsonTimestamp(o: any): ${options.typePrefix}Timestamp${options.typeSuffix} {
+        function fromJsonTimestamp(o: any): ${wrapTypeName(options, "Timestamp")} {
           if (o instanceof ${bytes.globalThis}.Date) {
             return ${toTimestamp}(o);
           } else if (typeof o === "string") {

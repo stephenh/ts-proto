@@ -1,5 +1,6 @@
 import { Context } from "./context";
 import { code, Code } from "ts-poet";
+import { wrapTypeName } from "./utils";
 import { isAnyValueTypeName, isFieldMaskTypeName, isListValueTypeName, isStructTypeName } from "./types";
 import { OneofOption, Options } from "./options";
 
@@ -30,16 +31,16 @@ export function isWrapperType(fullProtoTypeName: string): boolean {
 export function generateWrapDeep(ctx: Context, fullProtoTypeName: string, fieldNames: StructFieldNames): Code[] {
   const chunks: Code[] = [];
   if (isStructTypeName(fullProtoTypeName)) {
-    let setStatement = "struct.fields[key] = Value.wrap(object[key]);";
+    let setStatement = `struct.fields[key] = ${wrapTypeName(ctx.options, "Value")}.wrap(object[key]);`;
     let defaultFields = "struct.fields ??= {};";
     if (ctx.options.useMapType) {
-      setStatement = "struct.fields.set(key, Value.wrap(object[key]));";
+      setStatement = `struct.fields.set(key, ${wrapTypeName(ctx.options, "Value")}.wrap(object[key]));`;
       defaultFields = "struct.fields ??= new Map<string, any | undefined>();";
     }
     if (ctx.options.useOptionals !== "all") defaultFields = "";
 
-    chunks.push(code`wrap(object: {[key: string]: any} | undefined): Struct {
-      const struct = createBaseStruct();
+    chunks.push(code`wrap(object: {[key: string]: any} | undefined): ${wrapTypeName(ctx.options, "Struct")} {
+      const struct = createBase${wrapTypeName(ctx.options, "Struct")}();
       ${defaultFields}
       if (object !== undefined) {
         for (const key of Object.keys(object)) {
@@ -52,10 +53,10 @@ export function generateWrapDeep(ctx: Context, fullProtoTypeName: string, fieldN
 
   if (isAnyValueTypeName(fullProtoTypeName)) {
     // Turn ts-proto representation --> proto representation
-    chunks.push(code`wrap(value: any): Value {
+    chunks.push(code`wrap(value: any): ${wrapTypeName(ctx.options, "Value")} {
       const result = {} as any;
       if (value === null) {
-        result.${fieldNames.nullValue} = NullValue.NULL_VALUE;
+        result.${fieldNames.nullValue} = ${wrapTypeName(ctx.options, "NullValue")}.NULL_VALUE;
       } else if (typeof value === 'boolean') {
         result.${fieldNames.boolValue} = value;
       } else if (typeof value === 'number') {
@@ -63,9 +64,9 @@ export function generateWrapDeep(ctx: Context, fullProtoTypeName: string, fieldN
       } else if (typeof value === 'string') {
         result.${fieldNames.stringValue} = value;
       } else if (${ctx.utils.globalThis}.Array.isArray(value)) {
-        result.${fieldNames.listValue} = ListValue.wrap(value);
+        result.${fieldNames.listValue} = ${wrapTypeName(ctx.options, "ListValue")}.wrap(value);
       } else if (typeof value === 'object') {
-        result.${fieldNames.structValue} = Struct.wrap(value);
+        result.${fieldNames.structValue} = ${wrapTypeName(ctx.options, "Struct")}.wrap(value);
       } else if (typeof value !== 'undefined') {
         throw new ${ctx.utils.globalThis}.Error('Unsupported any value type: ' + typeof value);
       }
@@ -75,16 +76,16 @@ export function generateWrapDeep(ctx: Context, fullProtoTypeName: string, fieldN
 
   if (isListValueTypeName(fullProtoTypeName)) {
     const maybeReadyOnly = ctx.options.useReadonlyTypes ? "Readonly" : "";
-    chunks.push(code`wrap(array: ${maybeReadyOnly}Array<any> | undefined): ListValue {
-      const result = createBaseListValue()${maybeAsAny(ctx.options)};
-      result.values = (array ?? []).map(Value.wrap);
+    chunks.push(code`wrap(array: ${maybeReadyOnly}Array<any> | undefined): ${wrapTypeName(ctx.options, "ListValue")} {
+      const result = createBase${wrapTypeName(ctx.options, "ListValue")}()${maybeAsAny(ctx.options)};
+      result.values = (array ?? []).map(${wrapTypeName(ctx.options, "Value")}.wrap);
       return result;
     }`);
   }
 
   if (isFieldMaskTypeName(fullProtoTypeName)) {
-    chunks.push(code`wrap(paths: ${maybeReadonly(ctx.options)} string[]): FieldMask {
-      const result = createBaseFieldMask()${maybeAsAny(ctx.options)};
+    chunks.push(code`wrap(paths: ${maybeReadonly(ctx.options)} string[]): ${wrapTypeName(ctx.options, "FieldMask")} {
+      const result = createBase${wrapTypeName(ctx.options, "FieldMask")}()${maybeAsAny(ctx.options)};
       result.paths = paths;
       return result;
     }`);
@@ -102,7 +103,7 @@ export function generateUnwrapDeep(ctx: Context, fullProtoTypeName: string, fiel
   const chunks: Code[] = [];
   if (isStructTypeName(fullProtoTypeName)) {
     if (ctx.options.useMapType) {
-      chunks.push(code`unwrap(message: Struct): {[key: string]: any} {
+      chunks.push(code`unwrap(message: ${wrapTypeName(ctx.options, "Struct")}: {[key: string]: any} {
         const object: { [key: string]: any } = {};
         if (message.fields) {
           for (const key of message.fields.keys()) {
@@ -112,7 +113,7 @@ export function generateUnwrapDeep(ctx: Context, fullProtoTypeName: string, fiel
         return object;
       }`);
     } else {
-      chunks.push(code`unwrap(message: Struct): {[key: string]: any} {
+      chunks.push(code`unwrap(message: ${wrapTypeName(ctx.options, "Struct")}): {[key: string]: any} {
         const object: { [key: string]: any } = {};
         if (message.fields) {
           for (const key of Object.keys(message.fields)) {
@@ -131,14 +132,18 @@ export function generateUnwrapDeep(ctx: Context, fullProtoTypeName: string, fiel
     chunks.push(code`unwrap(message: any): string | number | boolean | Object | null | Array<any> | undefined {
       if (message?.hasOwnProperty('${fieldNames.stringValue}') && message.${fieldNames.stringValue} !== undefined) {
         return message.${fieldNames.stringValue};
-      } else if (message?.hasOwnProperty('${fieldNames.numberValue}') && message?.${fieldNames.numberValue} !== undefined) {
+      } else if (message?.hasOwnProperty('${fieldNames.numberValue}') && message?.${
+      fieldNames.numberValue
+    } !== undefined) {
         return message.${fieldNames.numberValue};
       } else if (message?.hasOwnProperty('${fieldNames.boolValue}') && message?.${fieldNames.boolValue} !== undefined) {
         return message.${fieldNames.boolValue};
-      } else if (message?.hasOwnProperty('${fieldNames.structValue}') && message?.${fieldNames.structValue} !== undefined) {
-        return Struct.unwrap(message.${fieldNames.structValue} as any);
+      } else if (message?.hasOwnProperty('${fieldNames.structValue}') && message?.${
+      fieldNames.structValue
+    } !== undefined) {
+        return ${wrapTypeName(ctx.options, "Struct")}.unwrap(message.${fieldNames.structValue} as any);
       } else if (message?.hasOwnProperty('${fieldNames.listValue}') && message?.${fieldNames.listValue} !== undefined) {
-        return ListValue.unwrap(message.${fieldNames.listValue});
+        return ${wrapTypeName(ctx.options, "ListValue")}.unwrap(message.${fieldNames.listValue});
       } else if (message?.hasOwnProperty('${fieldNames.nullValue}') && message?.${fieldNames.nullValue} !== undefined) {
         return null;
       }
@@ -147,7 +152,9 @@ export function generateUnwrapDeep(ctx: Context, fullProtoTypeName: string, fiel
   }
 
   if (isListValueTypeName(fullProtoTypeName)) {
-    chunks.push(code`unwrap(message: ${ctx.options.useReadonlyTypes ? "any" : "ListValue"}): Array<any> {
+    chunks.push(code`unwrap(message: ${
+      ctx.options.useReadonlyTypes ? "any" : wrapTypeName(ctx.options, "ListValue")
+    }): Array<any> {
       if (message?.hasOwnProperty('values') && ${ctx.utils.globalThis}.Array.isArray(message.values)) {
         return message.values.map(Value.unwrap);
       } else {
@@ -179,8 +186,8 @@ export function generateWrapShallow(ctx: Context, fullProtoTypeName: string, fie
     }
     if (ctx.options.useOptionals !== "all") defaultFields = "";
 
-    chunks.push(code`wrap(object: {[key: string]: any} | undefined): Struct {
-      const struct = createBaseStruct();
+    chunks.push(code`wrap(object: {[key: string]: any} | undefined): ${wrapTypeName(ctx.options, "Struct")} {
+      const struct = createBase${wrapTypeName(ctx.options, "Struct")}();
       ${defaultFields}
       if (object !== undefined) {
         for (const key of Object.keys(object)) {
@@ -193,10 +200,13 @@ export function generateWrapShallow(ctx: Context, fullProtoTypeName: string, fie
 
   if (isAnyValueTypeName(fullProtoTypeName)) {
     if (ctx.options.oneof === OneofOption.UNIONS) {
-      chunks.push(code`wrap(value: any): Value {
-        const result = createBaseValue()${maybeAsAny(ctx.options)};
+      chunks.push(code`wrap(value: any): ${wrapTypeName(ctx.options, "Value")} {
+        const result = createBase${wrapTypeName(ctx.options, "Value")}()${maybeAsAny(ctx.options)};
         if (value === null) {
-          result.kind = {$case: '${fieldNames.nullValue}', ${fieldNames.nullValue}: NullValue.NULL_VALUE};
+          result.kind = {$case: '${fieldNames.nullValue}', ${fieldNames.nullValue}: ${wrapTypeName(
+        ctx.options,
+        "NullValue",
+      )}.NULL_VALUE};
         } else if (typeof value === 'boolean') {
           result.kind = {$case: '${fieldNames.boolValue}', ${fieldNames.boolValue}: value};
         } else if (typeof value === 'number') {
@@ -213,8 +223,8 @@ export function generateWrapShallow(ctx: Context, fullProtoTypeName: string, fie
         return result;
     }`);
     } else if (ctx.options.oneof === OneofOption.UNIONS_VALUE) {
-      chunks.push(code`wrap(value: any): Value {
-        const result = createBaseValue()${maybeAsAny(ctx.options)};
+      chunks.push(code`wrap(value: any): ${wrapTypeName(ctx.options, "Value")} {
+        const result = createBase${wrapTypeName(ctx.options, "Value")}()${maybeAsAny(ctx.options)};
         if (value === null) {
           result.kind = {$case: '${fieldNames.nullValue}', value };
         } else if (typeof value === 'boolean') {
@@ -233,10 +243,10 @@ export function generateWrapShallow(ctx: Context, fullProtoTypeName: string, fie
         return result;
     }`);
     } else {
-      chunks.push(code`wrap(value: any): Value {
-        const result = createBaseValue()${maybeAsAny(ctx.options)};
+      chunks.push(code`wrap(value: any): ${wrapTypeName(ctx.options, "Value")} {
+        const result = createBase${wrapTypeName(ctx.options, "Value")}()${maybeAsAny(ctx.options)};
         if (value === null) {
-          result.${fieldNames.nullValue} = NullValue.NULL_VALUE;
+          result.${fieldNames.nullValue} = ${wrapTypeName(ctx.options, "NullValue")}.NULL_VALUE;
         } else if (typeof value === 'boolean') {
           result.${fieldNames.boolValue} = value;
         } else if (typeof value === 'number') {
@@ -257,16 +267,16 @@ export function generateWrapShallow(ctx: Context, fullProtoTypeName: string, fie
 
   if (isListValueTypeName(fullProtoTypeName)) {
     const maybeReadyOnly = ctx.options.useReadonlyTypes ? "Readonly" : "";
-    chunks.push(code`wrap(array: ${maybeReadyOnly}Array<any> | undefined): ListValue {
-      const result = createBaseListValue()${maybeAsAny(ctx.options)};
+    chunks.push(code`wrap(array: ${maybeReadyOnly}Array<any> | undefined): ${wrapTypeName(ctx.options, "ListValue")} {
+      const result = createBase${wrapTypeName(ctx.options, "ListValue")}()${maybeAsAny(ctx.options)};
       result.values = array ?? [];
       return result;
     }`);
   }
 
   if (isFieldMaskTypeName(fullProtoTypeName)) {
-    chunks.push(code`wrap(paths: ${maybeReadonly(ctx.options)} string[]): FieldMask {
-      const result = createBaseFieldMask()${maybeAsAny(ctx.options)};
+    chunks.push(code`wrap(paths: ${maybeReadonly(ctx.options)} string[]): ${wrapTypeName(ctx.options, "FieldMask")} {
+      const result = createBase${wrapTypeName(ctx.options, "FieldMask")}()${maybeAsAny(ctx.options)};
       result.paths = paths;
       return result;
     }`);
@@ -284,7 +294,7 @@ export function generateUnwrapShallow(ctx: Context, fullProtoTypeName: string, f
   const chunks: Code[] = [];
   if (isStructTypeName(fullProtoTypeName)) {
     if (ctx.options.useMapType) {
-      chunks.push(code`unwrap(message: Struct): {[key: string]: any} {
+      chunks.push(code`unwrap(message: ${wrapTypeName(ctx.options, "Struct")}): {[key: string]: any} {
         const object: { [key: string]: any } = {};
         if (message.fields) {
           for (const key of message.fields.keys()) {
@@ -294,7 +304,7 @@ export function generateUnwrapShallow(ctx: Context, fullProtoTypeName: string, f
         return object;
       }`);
     } else {
-      chunks.push(code`unwrap(message: Struct): {[key: string]: any} {
+      chunks.push(code`unwrap(message: ${wrapTypeName(ctx.options, "Struct")}): {[key: string]: any} {
         const object: { [key: string]: any } = {};
         if (message.fields) {
           for (const key of Object.keys(message.fields)) {
@@ -308,7 +318,10 @@ export function generateUnwrapShallow(ctx: Context, fullProtoTypeName: string, f
 
   if (isAnyValueTypeName(fullProtoTypeName)) {
     if (ctx.options.oneof === OneofOption.UNIONS) {
-      chunks.push(code`unwrap(message: Value): string | number | boolean | Object | null | Array<any> | undefined {
+      chunks.push(code`unwrap(message: ${wrapTypeName(
+        ctx.options,
+        "Value",
+      )}): string | number | boolean | Object | null | Array<any> | undefined {
         if (message.kind?.$case === '${fieldNames.nullValue}') {
           return null;
         } else if (message.kind?.$case === '${fieldNames.numberValue}') {
@@ -326,7 +339,10 @@ export function generateUnwrapShallow(ctx: Context, fullProtoTypeName: string, f
         }
       }`);
     } else if (ctx.options.oneof === OneofOption.UNIONS_VALUE) {
-      chunks.push(code`unwrap(message: Value): string | number | boolean | Object | null | Array<any> | undefined {
+      chunks.push(code`unwrap(message: ${wrapTypeName(
+        ctx.options,
+        "Value",
+      )}): string | number | boolean | Object | null | Array<any> | undefined {
         return message.kind?.value;
       }`);
     } else {
@@ -350,7 +366,9 @@ export function generateUnwrapShallow(ctx: Context, fullProtoTypeName: string, f
   }
 
   if (isListValueTypeName(fullProtoTypeName)) {
-    chunks.push(code`unwrap(message: ${ctx.options.useReadonlyTypes ? "any" : "ListValue"}): Array<any> {
+    chunks.push(code`unwrap(message: ${
+      ctx.options.useReadonlyTypes ? "any" : wrapTypeName(ctx.options, "ListValue")
+    }): Array<any> {
       if (message?.hasOwnProperty('values') && ${ctx.utils.globalThis}.Array.isArray(message.values)) {
         return message.values;
       } else {
@@ -370,7 +388,9 @@ function generateFieldMaskUnwrap(ctx: Context): Code {
   const returnType = ctx.options.useOptionals === "all" ? "string[] | undefined" : "string[]";
   const pathModifier = ctx.options.useOptionals === "all" ? "?" : "";
 
-  return code`unwrap(message: ${ctx.options.useReadonlyTypes ? "any" : "FieldMask"}): ${returnType} {
+  return code`unwrap(message: ${
+    ctx.options.useReadonlyTypes ? "any" : wrapTypeName(ctx.options, "FieldMask")
+  }): ${returnType} {
     return message${pathModifier}.paths;
   }`;
 }

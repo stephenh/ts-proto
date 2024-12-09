@@ -1,6 +1,12 @@
 syntax = "proto3";
+
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/struct.proto";
+import "google/protobuf/field_mask.proto";
 
 message SuffixType {
-  google.protobuf.Timestamp created_at = 9;
+  google.protobuf.Timestamp created_at = 1;
+  google.protobuf.FieldMask mask = 2;
+  google.protobuf.Struct struct = 3;
+  google.protobuf.ListValue listValue = 4;
 }

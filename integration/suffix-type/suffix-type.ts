@@ -3,22 +3,36 @@
 
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
+import { GRPCPFieldMaskGRPCS } from "./google/protobuf/field_mask";
+import { GRPCPListValueGRPCS, GRPCPStructGRPCS } from "./google/protobuf/struct";
 import { GRPCPTimestampGRPCS } from "./google/protobuf/timestamp";
 
 export const protobufPackage = "";
 
 export interface GRPCPSuffixTypeGRPCS {
   createdAt: Date | undefined;
+  mask: string[] | undefined;
+  struct: { [key: string]: any } | undefined;
+  listValue: Array<any> | undefined;
 }
 
 function createBaseGRPCPSuffixTypeGRPCS(): GRPCPSuffixTypeGRPCS {
-  return { createdAt: undefined };
+  return { createdAt: undefined, mask: undefined, struct: undefined, listValue: undefined };
 }
 
 export const GRPCPSuffixTypeGRPCS: MessageFns<GRPCPSuffixTypeGRPCS> = {
   encode(message: GRPCPSuffixTypeGRPCS, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.createdAt !== undefined) {
-      GRPCPTimestampGRPCS.encode(toTimestamp(message.createdAt), writer.uint32(74).fork()).join();
+      GRPCPTimestampGRPCS.encode(toTimestamp(message.createdAt), writer.uint32(10).fork()).join();
+    }
+    if (message.mask !== undefined) {
+      GRPCPFieldMaskGRPCS.encode(GRPCPFieldMaskGRPCS.wrap(message.mask), writer.uint32(18).fork()).join();
+    }
+    if (message.struct !== undefined) {
+      GRPCPStructGRPCS.encode(GRPCPStructGRPCS.wrap(message.struct), writer.uint32(26).fork()).join();
+    }
+    if (message.listValue !== undefined) {
+      GRPCPListValueGRPCS.encode(GRPCPListValueGRPCS.wrap(message.listValue), writer.uint32(34).fork()).join();
     }
     return writer;
   },
@@ -30,12 +44,36 @@ export const GRPCPSuffixTypeGRPCS: MessageFns<GRPCPSuffixTypeGRPCS> = {
     while (reader.pos < end) {
       const tag = reader.uint32();
       switch (tag >>> 3) {
-        case 9: {
-          if (tag !== 74) {
+        case 1: {
+          if (tag !== 10) {
             break;
           }
 
           message.createdAt = fromTimestamp(GRPCPTimestampGRPCS.decode(reader, reader.uint32()));
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.mask = GRPCPFieldMaskGRPCS.unwrap(GRPCPFieldMaskGRPCS.decode(reader, reader.uint32()));
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.struct = GRPCPStructGRPCS.unwrap(GRPCPStructGRPCS.decode(reader, reader.uint32()));
+          continue;
+        }
+        case 4: {
+          if (tag !== 34) {
+            break;
+          }
+
+          message.listValue = GRPCPListValueGRPCS.unwrap(GRPCPListValueGRPCS.decode(reader, reader.uint32()));
           continue;
         }
       }
@@ -48,13 +86,27 @@ export const GRPCPSuffixTypeGRPCS: MessageFns<GRPCPSuffixTypeGRPCS> = {
   },
 
   fromJSON(object: any): GRPCPSuffixTypeGRPCS {
-    return { createdAt: isSet(object.createdAt) ? fromJsonTimestamp(object.createdAt) : undefined };
+    return {
+      createdAt: isSet(object.createdAt) ? fromJsonTimestamp(object.createdAt) : undefined,
+      mask: isSet(object.mask) ? GRPCPFieldMaskGRPCS.unwrap(GRPCPFieldMaskGRPCS.fromJSON(object.mask)) : undefined,
+      struct: isObject(object.struct) ? object.struct : undefined,
+      listValue: globalThis.Array.isArray(object.listValue) ? [...object.listValue] : undefined,
+    };
   },
 
   toJSON(message: GRPCPSuffixTypeGRPCS): unknown {
     const obj: any = {};
     if (message.createdAt !== undefined) {
       obj.createdAt = message.createdAt.toISOString();
+    }
+    if (message.mask !== undefined) {
+      obj.mask = GRPCPFieldMaskGRPCS.toJSON(GRPCPFieldMaskGRPCS.wrap(message.mask));
+    }
+    if (message.struct !== undefined) {
+      obj.struct = message.struct;
+    }
+    if (message.listValue !== undefined) {
+      obj.listValue = message.listValue;
     }
     return obj;
   },
@@ -65,6 +117,9 @@ export const GRPCPSuffixTypeGRPCS: MessageFns<GRPCPSuffixTypeGRPCS> = {
   fromPartial<I extends Exact<DeepPartial<GRPCPSuffixTypeGRPCS>, I>>(object: I): GRPCPSuffixTypeGRPCS {
     const message = createBaseGRPCPSuffixTypeGRPCS();
     message.createdAt = object.createdAt ?? undefined;
+    message.mask = object.mask ?? undefined;
+    message.struct = object.struct ?? undefined;
+    message.listValue = object.listValue ?? undefined;
     return message;
   },
 };
@@ -101,6 +156,10 @@ function fromJsonTimestamp(o: any): Date {
   } else {
     return fromTimestamp(GRPCPTimestampGRPCS.fromJSON(o));
   }
+}
+
+function isObject(value: any): boolean {
+  return typeof value === "object" && value !== null;
 }
 
 function isSet(value: any): boolean {
