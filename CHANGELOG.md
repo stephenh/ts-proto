@@ -1,3 +1,10 @@
+# [2.6.0](https://github.com/stephenh/ts-proto/compare/v2.5.1...v2.6.0) (2024-12-09)
+
+
+### Features
+
+* Make sure all types support prefix/suffix ([#1148](https://github.com/stephenh/ts-proto/issues/1148)) ([ddf2122](https://github.com/stephenh/ts-proto/commit/ddf21224d76f63e28e915889aa931c170cde4734))
+
 ## [2.5.1](https://github.com/stephenh/ts-proto/compare/v2.5.0...v2.5.1) (2024-12-09)
 
 
