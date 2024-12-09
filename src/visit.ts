@@ -4,6 +4,7 @@ import {
   FileDescriptorProto,
   ServiceDescriptorProto,
 } from "ts-proto-descriptors";
+import { wrapTypeName } from "./utils";
 import SourceInfo, { Fields } from "./sourceInfo";
 import { Options } from "./options";
 import { maybeSnakeToCamel } from "./case";
@@ -39,7 +40,7 @@ export function visit(
     const protoFullName = protoPrefix + enumDesc.name;
     // I.e. FooBar_ZazInner
     const tsFullName = tsPrefix + maybeSnakeToCamel(enumDesc.name, options);
-    const tsFullNameWithAffixes = messageName(`${options.typePrefix}${tsFullName}${options.typeSuffix}`);
+    const tsFullNameWithAffixes = messageName(wrapTypeName(options, tsFullName));
     const nestedSourceInfo = sourceInfo.open(childEnumType, index);
     enumFn(tsFullNameWithAffixes, enumDesc, nestedSourceInfo, protoFullName);
   });
@@ -52,7 +53,7 @@ export function visit(
     const protoFullName = protoPrefix + message.name;
     // I.e. FooBar_ZazInner
     const tsFullName = tsPrefix + maybeSnakeToCamel(message.name, options);
-    const tsFullNameWithAffixes = messageName(`${options.typePrefix}${tsFullName}${options.typeSuffix}`);
+    const tsFullNameWithAffixes = messageName(wrapTypeName(options, tsFullName));
     const nestedSourceInfo = sourceInfo.open(childType, index);
     messageFn(tsFullNameWithAffixes, message, nestedSourceInfo, protoFullName);
     const delim = options.useSnakeTypeName ? "_" : "";

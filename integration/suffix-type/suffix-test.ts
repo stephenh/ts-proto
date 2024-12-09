@@ -4,6 +4,9 @@ describe("suffix", () => {
   it("generates types correctly", () => {
     const obj: GRPCPSuffixTypeGRPCS = {
       createdAt: new Date("2011-10-05T14:48:00.000Z"),
+      mask: undefined,
+      struct: undefined,
+      listValue: undefined,
     };
     expect(obj).toBeTruthy();
 

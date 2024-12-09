@@ -344,3 +344,7 @@ async function readPackageJson(): Promise<any> {
     return await import("../package.json" as string);
   }
 }
+
+export function wrapTypeName(options: Options, name: string) {
+  return options.typePrefix + name + options.typeSuffix;
+}

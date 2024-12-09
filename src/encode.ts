@@ -2,7 +2,7 @@ import { Context } from "./context";
 import { code, Code, Import } from "ts-poet";
 import { messageToTypeName, wrapperTypeName } from "./types";
 import { DateOption, LongOption } from "./options";
-import { impProto } from "./utils";
+import { impProto, wrapTypeName } from "./utils";
 
 export function generateEncoder(ctx: Context, typeName: string): Code {
   const name = wrapperTypeName(typeName);
@@ -11,7 +11,7 @@ export function generateEncoder(ctx: Context, typeName: string): Code {
   }
 
   if (name == "Timestamp") {
-    const TimestampValue = impProto(ctx.options, "google/protobuf/timestamp", name);
+    const TimestampValue = impProto(ctx.options, "google/protobuf/timestamp", wrapTypeName(ctx.options, name));
 
     let value = code`value`;
     if (
@@ -25,16 +25,16 @@ export function generateEncoder(ctx: Context, typeName: string): Code {
   }
 
   if (name == "Struct" || name == "Value") {
-    const StructType = impProto(ctx.options, "google/protobuf/struct", name);
+    const StructType = impProto(ctx.options, "google/protobuf/struct", wrapTypeName(ctx.options, name));
     return code`${StructType}.encode(${StructType}.wrap(value)).finish()`;
   }
 
   if (name == "ListValue") {
-    const ListValueType = impProto(ctx.options, "google/protobuf/struct", name);
+    const ListValueType = impProto(ctx.options, "google/protobuf/struct", wrapTypeName(ctx.options, name));
     return code`${ListValueType}.encode({values: value ?? []}).finish()`;
   }
 
-  const TypeValue = impProto(ctx.options, "google/protobuf/wrappers", name);
+  const TypeValue = impProto(ctx.options, "google/protobuf/wrappers", wrapTypeName(ctx.options, name));
 
   switch (name) {
     case "StringValue":
@@ -70,7 +70,7 @@ export function generateDecoder(ctx: Context, typeName: string): Code {
   let TypeValue: Import;
 
   if (name == "Timestamp") {
-    TypeValue = impProto(ctx.options, "google/protobuf/timestamp", options.typePrefix + name + options.typeSuffix);
+    TypeValue = impProto(ctx.options, "google/protobuf/timestamp", wrapTypeName(ctx.options, name));
 
     const decoder = code`${TypeValue}.decode(value)`;
     if (
@@ -84,11 +84,11 @@ export function generateDecoder(ctx: Context, typeName: string): Code {
   }
 
   if (name == "Struct" || name == "ListValue" || name == "Value") {
-    TypeValue = impProto(ctx.options, "google/protobuf/struct", name);
+    TypeValue = impProto(ctx.options, "google/protobuf/struct", wrapTypeName(ctx.options, name));
     return code`${TypeValue}.unwrap(${TypeValue}.decode(value))`;
   }
 
-  TypeValue = impProto(ctx.options, "google/protobuf/wrappers", name);
+  TypeValue = impProto(ctx.options, "google/protobuf/wrappers", wrapTypeName(ctx.options, name));
 
   return code`${TypeValue}.decode(value).value`;
 }
