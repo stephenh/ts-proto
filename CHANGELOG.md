@@ -1,3 +1,10 @@
+## [2.5.1](https://github.com/stephenh/ts-proto/compare/v2.5.0...v2.5.1) (2024-12-09)
+
+
+### Bug Fixes
+
+* google protobuf timestamps don't properly get suffixed when useDate=false and prefix/suffix ([#1146](https://github.com/stephenh/ts-proto/issues/1146)) ([53f799e](https://github.com/stephenh/ts-proto/commit/53f799e34b75940aeafec0fafa50f3bd5849dcad))
+
 # [2.5.0](https://github.com/stephenh/ts-proto/compare/v2.4.2...v2.5.0) (2024-12-03)
 
 
