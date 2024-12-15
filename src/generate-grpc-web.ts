@@ -1,5 +1,5 @@
 import { MethodDescriptorProto, FileDescriptorProto, ServiceDescriptorProto } from "ts-proto-descriptors";
-import { rawRequestType, requestType, responsePromiseOrObservable, responseType, observableType } from "./types";
+import { rawRequestType, requestType, responsePromiseOrObservable, responseType, observableType, valueTypeName} from "./types";
 import { Code, code, imp, joinCode } from "ts-poet";
 import { Context } from "./context";
 import { assertInstanceOf, FormattedMethodDescriptor, maybePrefixPackage } from "./utils";
@@ -50,8 +50,10 @@ function generateRpcMethod(ctx: Context, serviceDesc: ServiceDescriptorProto, me
   assertInstanceOf(methodDesc, FormattedMethodDescriptor);
   const { options } = ctx;
   const { useAbortSignal } = options;
-  const requestMessage = requestType(ctx, methodDesc, false);
-  const inputType = requestType(ctx, methodDesc, true);
+  const isValueType = valueTypeName(ctx, methodDesc.inputType) !== undefined;
+  const inputType = requestType(ctx, methodDesc, true && !isValueType, false);
+  const inputValue = isValueType ? '{ value: request }' : 'request';
+  const requestMessage = requestType(ctx, methodDesc, false, true);
   const returns = responsePromiseOrObservable(ctx, methodDesc);
 
   if (methodDesc.clientStreaming) {
@@ -75,7 +77,7 @@ function generateRpcMethod(ctx: Context, serviceDesc: ServiceDescriptorProto, me
     ): ${returns} {
       return this.rpc.${method}(
         ${methodDescName(serviceDesc, methodDesc)},
-        ${requestMessage}.fromPartial(request),
+        ${requestMessage}.fromPartial(${inputValue}),
         metadata,
         ${useAbortSignal ? "abortSignal," : ""}
       );
