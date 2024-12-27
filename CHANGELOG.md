@@ -1,3 +1,10 @@
+## [2.6.1](https://github.com/stephenh/ts-proto/compare/v2.6.0...v2.6.1) (2024-12-27)
+
+
+### Bug Fixes
+
+* update basic grpc implementation ([#1153](https://github.com/stephenh/ts-proto/issues/1153)) ([6ec7909](https://github.com/stephenh/ts-proto/commit/6ec7909f65c87c01c51468f1df898b33dad9fd8e))
+
 # [2.6.0](https://github.com/stephenh/ts-proto/compare/v2.5.1...v2.6.0) (2024-12-09)
 
 
