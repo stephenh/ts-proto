@@ -701,8 +701,8 @@ const sendRequest: RpcImpl = (service, method, data) => {
       return argument;
     }
 
-    // Using passThrough as the serialize and deserialize functions
-    conn.makeUnaryRequest(path, passThrough, passThrough, data, resultCallback);
+    // Using passThrough as the deserialize functions
+    conn.makeUnaryRequest(path, d => Buffer.from(d), passThrough, data, resultCallback);
   });
 };
 
