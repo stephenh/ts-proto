@@ -42,7 +42,8 @@ import {
 } from "./generate-struct-wrappers";
 import {
   addTypeToMessages,
-  DateOption, DurationOption,
+  DateOption,
+  DurationOption,
   EnvOption,
   JsonTimestampOption,
   LongOption,
@@ -2430,7 +2431,7 @@ function generateCanonicalToJson(
     }
   `;
   }
-  if (fullProtobufTypeName === 'google.protobuf.Duration' && useDuration === DurationOption.STRING) {
+  if (fullProtobufTypeName === "google.protobuf.Duration" && useDuration === DurationOption.STRING) {
     return code`
     toJSON(message: ${fullName}): string {
         const secs = Number(message.seconds);
