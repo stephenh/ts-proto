@@ -19,6 +19,11 @@ export enum JsonTimestampOption {
   RAW = "raw",
 }
 
+export enum DurationOption {
+  DURATION = "duration",
+  STRING = "string",
+}
+
 export enum EnvOption {
   NODE = "node",
   BROWSER = "browser",
@@ -114,6 +119,7 @@ export type Options = {
   bigIntLiteral: boolean;
   typePrefix: string;
   typeSuffix: string;
+  useDuration: DurationOption;
 };
 
 export function defaultOptions(): Options {
@@ -186,6 +192,7 @@ export function defaultOptions(): Options {
     bigIntLiteral: true,
     typePrefix: "",
     typeSuffix: "",
+    useDuration: DurationOption.DURATION,
   };
 }
 

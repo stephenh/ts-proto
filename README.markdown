@@ -645,6 +645,7 @@ export interface User {
 
 This option allows the library to act in a compatible way with the [Wire implementation](https://square.github.io/wire/) maintained and used by Square/Block. Note: this option should only be used in combination with other client/server code generated using Wire or ts-proto with this option enabled.
 
+- With `--ts_proto_opt=useDuration=string`, the generated code will use the `string` type for `google.protobuf.Duration` instead of `{seconds: number, nano: number}`.
 
 ### NestJS Support
 
@@ -794,7 +795,6 @@ ts-protoc --ts_proto_out=./output -I=./protos ./protoc/*.proto
 
 # Todo
 
-- Support the string-based encoding of duration in `fromJSON`/`toJSON`
 - Make `oneof=unions-value` the default behavior in 2.0
 - Probably change `forceLong` default in 2.0, should default to `forceLong=long`
 - Make `esModuleInterop=true` the default in 2.0
