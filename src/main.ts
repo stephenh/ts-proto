@@ -43,6 +43,7 @@ import {
 import {
   addTypeToMessages,
   DateOption,
+  DurationOption,
   EnvOption,
   JsonTimestampOption,
   LongOption,
@@ -2159,6 +2160,20 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
   const { options, utils, currentFile } = ctx;
   const chunks: Code[] = [];
 
+  // Handle Duration string format as a special case
+  if (fullTypeName === "google.protobuf.Duration" && ctx.options.useDuration === DurationOption.STRING) {
+    return code`
+      fromJSON(object: string): ${fullName} {
+        const match = object.match(/^(-?[0-9.]+)s$/);
+        if (!match) throw new Error('Invalid duration string');
+        const seconds = Number(match[1]);
+        const wholeSeconds = Math.trunc(seconds);
+        const nanos = Math.round((seconds - wholeSeconds) * 1e9);
+        return { seconds: wholeSeconds, nanos };
+      }
+    `;
+  }
+
   // create the basic function declaration
   chunks.push(code`
     fromJSON(${messageDesc.field.length > 0 ? "object" : "_"}: any): ${fullName} {
@@ -2404,7 +2419,7 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
 function generateCanonicalToJson(
   fullName: string,
   fullProtobufTypeName: string,
-  { useOptionals, useNullAsOptional }: Options,
+  { useOptionals, useNullAsOptional, useDuration }: Options,
 ): Code | undefined {
   if (isFieldMaskTypeName(fullProtobufTypeName)) {
     const returnType = useOptionals === "all" ? `string | ${nullOrUndefined({ useNullAsOptional })}` : "string";
@@ -2415,6 +2430,15 @@ function generateCanonicalToJson(
       return message.paths${pathModifier}.join(',');
     }
   `;
+  }
+  if (fullProtobufTypeName === "google.protobuf.Duration" && useDuration === DurationOption.STRING) {
+    return code`
+    toJSON(message: ${fullName}): string {
+        const secs = Number(message.seconds);
+        const nanos = message.nanos;
+        return \`\${secs + nanos/1e9}s\`;
+    }
+    `;
   }
   return undefined;
 }
