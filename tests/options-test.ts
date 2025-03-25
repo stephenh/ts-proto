@@ -62,6 +62,7 @@ describe("options", () => {
         "useAbortSignal": false,
         "useAsyncIterable": false,
         "useDate": "timestamp",
+        "useDuration": "duration",
         "useExactTypes": true,
         "useJsTypeOverride": false,
         "useJsonName": false,
