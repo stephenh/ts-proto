@@ -1,3 +1,10 @@
+# [2.7.0](https://github.com/stephenh/ts-proto/compare/v2.6.1...v2.7.0) (2025-03-25)
+
+
+### Features
+
+* Support string form of duration ([#1168](https://github.com/stephenh/ts-proto/issues/1168)) ([8308893](https://github.com/stephenh/ts-proto/commit/83088930554319c7f35805c25295520918b7b09f))
+
 ## [2.6.1](https://github.com/stephenh/ts-proto/compare/v2.6.0...v2.6.1) (2024-12-27)
 
 
