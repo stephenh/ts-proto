@@ -1,1 +1,1 @@
-nestJs=true,addGrpcMetadata=true
+nestJs=true,addGrpcMetadata=true,metadataType=Foo@./some-file

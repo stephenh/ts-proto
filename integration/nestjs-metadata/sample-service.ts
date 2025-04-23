@@ -1,13 +1,13 @@
 import { HeroServiceController, HeroById, Hero, Villain, VillainById } from './hero';
-import { Metadata } from '@grpc/grpc-js';
 import { Observable, Subject } from 'rxjs';
+import { Foo } from './some-file';
 
 export class SampleService implements HeroServiceController {
-  findOneHero(request: HeroById, metadata?: Metadata): Promise<Hero> {
+  findOneHero(request: HeroById, metadata?: Foo): Promise<Hero> {
     return Promise.resolve({ id: 1, name: 'test' });
   }
 
-  findOneVillain(request: VillainById, metadata?: Metadata): Promise<Villain> {
+  findOneVillain(request: VillainById, metadata?: Foo): Promise<Villain> {
     return Promise.resolve({ id: 1, name: 'test' });
   }
 
