@@ -8,6 +8,9 @@
     "protoc-gen-ts_proto": "./protoc-gen-ts_proto"
   },
   "types": "build/index.d.ts",
+  "workspaces": [
+    "sjzy-ts-proto"
+  ],
   "scripts": {
     "build": "yarn tsc",
     "build:test": "yarn proto2ts && yarn proto2pbjs",
