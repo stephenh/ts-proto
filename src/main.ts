@@ -113,6 +113,7 @@ import {
   wrapTypeName,
 } from "./utils";
 import { visit, visitServices } from "./visit";
+import { camelCase } from "case-anything";
 
 export function generateFile(ctx: Context, fileDesc: FileDescriptorProto): [string, Code] {
   const { options, utils } = ctx;
@@ -1207,7 +1208,7 @@ function generateOneofProperty(
   const unionType = joinCode(
     fields.flatMap((f) => {
       const fieldInfo = sourceInfo.lookup(Fields.message.field, f.index);
-      let fieldName = maybeSnakeToCamel(f.field.name, options);
+      let fieldName = camelCase(maybeSnakeToCamel(f.field.name, options));
       let typeName = toTypeName(ctx, messageDesc, f.field);
       let valueName = oneofValueName(fieldName, options);
       let fieldComments: Code[] = [];
@@ -1220,7 +1221,8 @@ function generateOneofProperty(
     }),
   );
 
-  const name = maybeSnakeToCamel(messageDesc.oneofDecl[oneofIndex].name, options);
+  /** 下划线转驼峰， 驼峰转小驼峰 */
+  const name = camelCase(maybeSnakeToCamel(messageDesc.oneofDecl[oneofIndex].name, options));
   return joinCode([...outerComments, code`${mbReadonly}${name}?:`, unionType, code`| ${nullOrUndefined(options)},`], {
     on: "\n",
   });
@@ -2262,7 +2264,7 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
         } else if (isBytesValueType(field)) {
           return code`new ${capitalize(valueType.toCodeString([]))}(${from})`;
         } else {
-          return code`${capitalize(valueType.toCodeString([]))}(${from})`;
+          return code`globalThis.${capitalize(valueType.toCodeString([]))}(${from})`;
         }
       } else if (isMessage(field)) {
         if (isRepeated(field) && isMapType(ctx, messageDesc, field)) {

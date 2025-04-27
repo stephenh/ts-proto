@@ -11,6 +11,7 @@ import ReadStream = NodeJS.ReadStream;
 import { SourceDescription } from "./sourceInfo";
 import { OneofOption, Options, ServiceOption } from "./options";
 import { camelCaseGrpc, maybeSnakeToCamel, snakeToCamel } from "./case";
+import { camelCase } from "case-anything";
 
 export function protoFilesToGenerate(request: CodeGeneratorRequest): FileDescriptorProto[] {
   return request.protoFile.filter((f) => request.fileToGenerate.includes(f.name));
@@ -241,7 +242,14 @@ export function getFieldName(
   if (options.useJsonName) {
     return field.jsonName;
   }
-  return maybeSnakeToCamel(field.name, options);
+  return camelCase(maybeSnakeToCamel(field.name, options));
+}
+
+// 如果有前端的关键字就添加一个前缀
+export function filterJsKey(str: string): string {
+  const keys = ['string', 'number', 'boolean']
+  const fullName = keys.includes(camelCase(str)) ? `proto_${str}` : str;
+  return fullName;
 }
 
 /**
