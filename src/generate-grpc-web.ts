@@ -88,6 +88,7 @@ export function generateGrpcServiceDesc(fileDesc: FileDescriptorProto, serviceDe
   return code`
     export const ${serviceDesc.name}Desc = {
       serviceName: "${maybePrefixPackage(fileDesc, serviceDesc.name)}",
+      servicePackage: "${fileDesc.package}"
     };
   `;
 }
@@ -217,7 +218,7 @@ function generateGrpcWebImpl(ctx: Context, returnObservable: boolean, hasStreami
     export class GrpcWebImpl {
       private host: string;
       private options: ${options};
-      
+
       constructor(host: string, options: ${options}) {
         this.host = host;
         this.options = options;
@@ -328,7 +329,7 @@ function createObservableUnaryMethod(ctx: Context): Code {
       ${maybeAbortSignal}
 
       }).pipe(${take}(1));
-    } 
+    }
   `;
 }
 
@@ -386,7 +387,7 @@ function createInvokeMethod(ctx: Context) {
                 return;
               }
 
-              abortSignal.removeEventListener('abort', abort); 
+              abortSignal.removeEventListener('abort', abort);
               client.close();
             });
           } else {
