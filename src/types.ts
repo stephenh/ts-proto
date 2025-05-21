@@ -20,6 +20,7 @@ import SourceInfo from "./sourceInfo";
 import {
   FormattedMethodDescriptor,
   fail,
+  impCreateBase,
   impProto,
   maybePrefixPackage,
   nullOrUndefined,
@@ -296,7 +297,8 @@ export function defaultValue(ctx: Context, field: FieldDescriptorProto): any {
       return "new Uint8Array(0)";
     case FieldDescriptorProto_Type.TYPE_MESSAGE:
       if (!ctx.currentFile.isProto3Syntax) {
-        return code`createBase${messageToTypeName(ctx, field.typeName)}()`;
+        const [module, type] = toModuleAndType(ctx.typeMap, field.typeName)
+        return code`${impCreateBase(options, module, type)}()`;
       }
     case FieldDescriptorProto_Type.TYPE_GROUP:
     default:

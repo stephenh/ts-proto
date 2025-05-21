@@ -7,10 +7,10 @@ import {
   MethodDescriptorProto,
   MethodOptions,
 } from "ts-proto-descriptors";
-import ReadStream = NodeJS.ReadStream;
-import { SourceDescription } from "./sourceInfo";
-import { OneofOption, Options, ServiceOption } from "./options";
 import { camelCaseGrpc, maybeSnakeToCamel, snakeToCamel } from "./case";
+import { OneofOption, Options, ServiceOption } from "./options";
+import { SourceDescription } from "./sourceInfo";
+import ReadStream = NodeJS.ReadStream;
 
 export function protoFilesToGenerate(request: CodeGeneratorRequest): FileDescriptorProto[] {
   return request.protoFile.filter((f) => request.fileToGenerate.includes(f.name));
@@ -280,6 +280,15 @@ export function impProto(options: Options, module: string, type: string): Import
     return imp(`${prefix}${type}@${options.M[protoFile]}`);
   }
   return imp(`${prefix}${type}@./${module}${options.fileSuffix}${options.importSuffix}`);
+}
+
+export function impCreateBase(options: Options, module: string, type: string): Import {
+  const prefix = options.onlyTypes ? "t:" : "";
+  const protoFile = `${module}.proto`;
+  if (options.M[protoFile]) {
+    return imp(`createBase${prefix}${type}@${options.M[protoFile]}`);
+  }
+  return imp(`createBase${prefix}${type}@./${module}${options.fileSuffix}${options.importSuffix}`);
 }
 
 export function tryCatchBlock(tryBlock: Code | string, handleErrorBlock: Code | string): Code {
