@@ -138,7 +138,7 @@ export const protoMetadata = {
       "location": [{
         "path": [4, 0],
         "span": [10, 0, 12, 1],
-        "leadingComments": " Test doc comment\r\n",
+        "leadingComments": " Test doc comment\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }],

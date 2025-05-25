@@ -2916,7 +2916,7 @@ export const protoMetadata: ProtoMetadata = {
         "path": [12],
         "span": [2, 0, 18],
         "leadingComments":
-          " Adding a comment to the syntax will become the first\r\n comment in the output source file.\r\n",
+          " Adding a comment to the syntax will become the first\n comment in the output source file.\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
@@ -2925,12 +2925,12 @@ export const protoMetadata: ProtoMetadata = {
         "leadingComments": "* Example comment on the Simple message ",
         "trailingComments": "",
         "leadingDetachedComments": [
-          " This comment is separated by a blank non-comment line, and will detach from \r\n the following comment on the message Simple.\r\n",
+          " This comment is separated by a blank non-comment line, and will detach from \n the following comment on the message Simple.\n",
         ],
       }, {
         "path": [4, 0, 2, 0],
         "span": [15, 2, 18],
-        "leadingComments": " Name field\r\n",
+        "leadingComments": " Name field\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
@@ -2943,18 +2943,18 @@ export const protoMetadata: ProtoMetadata = {
         "path": [4, 0, 2, 2],
         "span": [18, 2, 43],
         "leadingComments": "",
-        "trailingComments": " This comment will also attach\r\n",
+        "trailingComments": " This comment will also attach\n",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 0, 2, 9],
         "span": [26, 2, 27],
-        "leadingComments": " A thing (imported from thing)\r\n",
+        "leadingComments": " A thing (imported from thing)\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 2, 3, 0],
         "span": [54, 2, 61, 3],
-        "leadingComments": " Comment for a nested message */\r\n",
+        "leadingComments": " Comment for a nested message */\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
@@ -2966,7 +2966,7 @@ export const protoMetadata: ProtoMetadata = {
       }, {
         "path": [4, 12, 2, 0],
         "span": [135, 2, 27],
-        "leadingComments": " Name field\r\n",
+        "leadingComments": " Name field\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }, {
@@ -2979,12 +2979,12 @@ export const protoMetadata: ProtoMetadata = {
         "path": [4, 12, 2, 2],
         "span": [138, 2, 52],
         "leadingComments": "",
-        "trailingComments": " This comment will also attach\r\n",
+        "trailingComments": " This comment will also attach\n",
         "leadingDetachedComments": [],
       }, {
         "path": [4, 12, 2, 5],
         "span": [142, 2, 36],
-        "leadingComments": " A thing (imported from thing)\r\n",
+        "leadingComments": " A thing (imported from thing)\n",
         "trailingComments": "",
         "leadingDetachedComments": [],
       }],
