@@ -1,3 +1,10 @@
+## [2.7.2](https://github.com/stephenh/ts-proto/compare/v2.7.1...v2.7.2) (2025-05-30)
+
+
+### Bug Fixes
+
+* types export path ([#1163](https://github.com/stephenh/ts-proto/issues/1163)) ([2b4d1eb](https://github.com/stephenh/ts-proto/commit/2b4d1eb05bb2c8c8a0e340cd7e7cf2e4fe734d40))
+
 ## [2.7.1](https://github.com/stephenh/ts-proto/compare/v2.7.0...v2.7.1) (2025-05-30)
 
 
