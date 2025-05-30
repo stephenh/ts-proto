@@ -133,14 +133,14 @@ export function generateUnwrapDeep(ctx: Context, fullProtoTypeName: string, fiel
       if (message?.hasOwnProperty('${fieldNames.stringValue}') && message.${fieldNames.stringValue} !== undefined) {
         return message.${fieldNames.stringValue};
       } else if (message?.hasOwnProperty('${fieldNames.numberValue}') && message?.${
-      fieldNames.numberValue
-    } !== undefined) {
+        fieldNames.numberValue
+      } !== undefined) {
         return message.${fieldNames.numberValue};
       } else if (message?.hasOwnProperty('${fieldNames.boolValue}') && message?.${fieldNames.boolValue} !== undefined) {
         return message.${fieldNames.boolValue};
       } else if (message?.hasOwnProperty('${fieldNames.structValue}') && message?.${
-      fieldNames.structValue
-    } !== undefined) {
+        fieldNames.structValue
+      } !== undefined) {
         return ${wrapTypeName(ctx.options, "Struct")}.unwrap(message.${fieldNames.structValue} as any);
       } else if (message?.hasOwnProperty('${fieldNames.listValue}') && message?.${fieldNames.listValue} !== undefined) {
         return ${wrapTypeName(ctx.options, "ListValue")}.unwrap(message.${fieldNames.listValue});
@@ -204,9 +204,9 @@ export function generateWrapShallow(ctx: Context, fullProtoTypeName: string, fie
         const result = createBase${wrapTypeName(ctx.options, "Value")}()${maybeAsAny(ctx.options)};
         if (value === null) {
           result.kind = {$case: '${fieldNames.nullValue}', ${fieldNames.nullValue}: ${wrapTypeName(
-        ctx.options,
-        "NullValue",
-      )}.NULL_VALUE};
+            ctx.options,
+            "NullValue",
+          )}.NULL_VALUE};
         } else if (typeof value === 'boolean') {
           result.kind = {$case: '${fieldNames.boolValue}', ${fieldNames.boolValue}: value};
         } else if (typeof value === 'number') {

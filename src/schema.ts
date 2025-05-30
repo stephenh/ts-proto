@@ -186,8 +186,8 @@ export function generateSchema(ctx: Context, fileDesc: FileDescriptorProto, sour
   chunks.push(code`
     export const ${def("protoMetadata")}${outputAsConst ? "" : ": ProtoMetadata"} = {
       ${outputFileDescriptor ? code`fileDescriptor: ${descriptor},\n` : ""}references: { ${joinCode(references, {
-    on: ",",
-  })} },
+        on: ",",
+      })} },
       dependencies: [${joinCode(dependencies, { on: "," })}],
       ${
         fileOptions || messagesOptions.length > 0 || servicesOptions.length > 0 || enumsOptions.length > 0
