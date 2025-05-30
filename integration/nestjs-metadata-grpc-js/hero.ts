@@ -3,8 +3,12 @@
 
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
-import { Metadata } from "@grpc/grpc-js";
-import type { handleBidiStreamingCall, handleUnaryCall, UntypedServiceImplementation } from "@grpc/grpc-js";
+import {
+  type handleBidiStreamingCall,
+  type handleUnaryCall,
+  Metadata,
+  type UntypedServiceImplementation,
+} from "@grpc/grpc-js";
 import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
 import { Observable } from "rxjs";
 
