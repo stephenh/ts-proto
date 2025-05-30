@@ -1,3 +1,10 @@
+## [2.7.1](https://github.com/stephenh/ts-proto/compare/v2.7.0...v2.7.1) (2025-05-30)
+
+
+### Bug Fixes
+
+* Bump ts-poet for dts imports. ([#1189](https://github.com/stephenh/ts-proto/issues/1189)) ([0b6400f](https://github.com/stephenh/ts-proto/commit/0b6400f9da74a0514af56eda397e0b5573d85e27)), closes [#1184](https://github.com/stephenh/ts-proto/issues/1184)
+
 # [2.7.0](https://github.com/stephenh/ts-proto/compare/v2.6.1...v2.7.0) (2025-03-25)
 
 
