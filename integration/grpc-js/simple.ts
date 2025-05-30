@@ -3,20 +3,23 @@
 
 /* eslint-disable */
 import { BinaryReader, BinaryWriter } from "@bufbuild/protobuf/wire";
-import { ChannelCredentials, Client, makeGenericClientConstructor, Metadata } from "@grpc/grpc-js";
-import type {
-  CallOptions,
-  ClientDuplexStream,
-  ClientOptions,
-  ClientReadableStream,
-  ClientUnaryCall,
-  ClientWritableStream,
-  handleBidiStreamingCall,
-  handleClientStreamingCall,
-  handleServerStreamingCall,
-  handleUnaryCall,
-  ServiceError,
-  UntypedServiceImplementation,
+import {
+  type CallOptions,
+  ChannelCredentials,
+  Client,
+  type ClientDuplexStream,
+  type ClientOptions,
+  type ClientReadableStream,
+  type ClientUnaryCall,
+  type ClientWritableStream,
+  type handleBidiStreamingCall,
+  type handleClientStreamingCall,
+  type handleServerStreamingCall,
+  type handleUnaryCall,
+  makeGenericClientConstructor,
+  Metadata,
+  type ServiceError,
+  type UntypedServiceImplementation,
 } from "@grpc/grpc-js";
 import { Empty } from "./google/protobuf/empty";
 import { ListValue, Struct, Value } from "./google/protobuf/struct";
