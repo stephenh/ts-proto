@@ -855,9 +855,9 @@ function makeMessageFns(
     code`
       ${maybeExport} interface ListValueWrapperFns {
         wrap(array: ${options.useReadonlyTypes ? "Readonly" : ""}Array<any> | undefined): ${wrapTypeName(
-      options,
-      "ListValue",
-    )};
+          options,
+          "ListValue",
+        )};
         unwrap(message: ${options.useReadonlyTypes ? "any" : wrapTypeName(options, "ListValue")}): Array<any>;
       }
     `,
@@ -869,8 +869,8 @@ function makeMessageFns(
       ${maybeExport} interface FieldMaskWrapperFns {
         wrap(paths: ${options.useReadonlyTypes ? "readonly" : ""} string[]): ${wrapTypeName(options, "FieldMask")};
         unwrap(message: ${options.useReadonlyTypes ? "any" : wrapTypeName(options, "FieldMask")}): string[] ${
-      options.useOptionals === "all" ? "| undefined" : ""
-    };
+          options.useOptionals === "all" ? "| undefined" : ""
+        };
       }
     `,
   );
@@ -964,7 +964,7 @@ function makeTimestampMethods(
           }
         `
       : options.useDate === DateOption.STRING_NANO
-      ? code`
+        ? code`
           function toTimestamp(dateStr: string): ${Timestamp} {
             const nanoDate = new ${NanoDate}(dateStr);
 
@@ -980,7 +980,7 @@ function makeTimestampMethods(
             return { ${maybeTypeField} seconds, nanos };
           }
         `
-      : code`
+        : code`
           function toTimestamp(date: Date): ${Timestamp} {
             const seconds = ${seconds};
             const nanos = (date.getTime() % 1_000) * 1_000_000;
@@ -1000,7 +1000,7 @@ function makeTimestampMethods(
           }
         `
       : options.useDate === DateOption.STRING_NANO
-      ? code`
+        ? code`
           function fromTimestamp(t: ${Timestamp}): string {
             const seconds = ${toNumberCode} || 0;
             const nanos = (t.nanos || 0) % 1_000;
@@ -1015,7 +1015,7 @@ function makeTimestampMethods(
             return nanoDate.toISOStringFull();
           }
         `
-      : code`
+        : code`
           function fromTimestamp(t: ${Timestamp}): Date {
             let millis = (${toNumberCode} || 0) * 1_000;
             millis += (t.nanos || 0) / 1_000_000;
@@ -1264,12 +1264,12 @@ function generateBaseInstanceFactory(
     const val = isWithinOneOf(field)
       ? nullOrUndefined(options)
       : isMapType(ctx, messageDesc, field)
-      ? shouldGenerateJSMapType(ctx, messageDesc, field)
-        ? "new Map()"
-        : "{}"
-      : isRepeated(field)
-      ? "[]"
-      : defaultValue(ctx, field);
+        ? shouldGenerateJSMapType(ctx, messageDesc, field)
+          ? "new Map()"
+          : "{}"
+        : isRepeated(field)
+          ? "[]"
+          : defaultValue(ctx, field);
 
     fields.push(code`${fieldKey}: ${val}`);
   }
@@ -1697,10 +1697,9 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
   const processedOneofs = new Set<number>();
   const oneOfFieldsDict = messageDesc.field
     .filter((field) => isWithinOneOfThatShouldBeUnion(options, field))
-    .reduce<{ [key: number]: FieldDescriptorProto[] }>(
-      (result, field) => ((result[field.oneofIndex] || (result[field.oneofIndex] = [])).push(field), result),
-      {},
-    );
+    .reduce<{
+      [key: number]: FieldDescriptorProto[];
+    }>((result, field) => ((result[field.oneofIndex] || (result[field.oneofIndex] = [])).push(field), result), {});
 
   // then add a case for each field
   messageDesc.field.forEach((field) => {
@@ -1829,9 +1828,9 @@ function generateEncode(ctx: Context, fullName: string, messageDesc: DescriptorP
         if (isOptional) {
           chunks.push(code`
             if (${messageProperty} !== undefined ${withAndMaybeCheckIsNotNull(
-            options,
-            messageProperty,
-          )} && ${messageProperty}.length !== 0) {
+              options,
+              messageProperty,
+            )} && ${messageProperty}.length !== 0) {
               ${listWriteSnippet}
             }
           `);
@@ -2361,8 +2360,8 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
           // Explicit `any` type required to make TS with noImplicitAny happy. `object` is also `any` here.
           chunks.push(code`
             ${fieldKey}: ${
-            ctx.utils.globalThis
-          }.Array.isArray(${jsonPropertyOptional}) ? ${jsonProperty}.map((e: any) => ${readSnippet("e")}): ${fallback},
+              ctx.utils.globalThis
+            }.Array.isArray(${jsonPropertyOptional}) ? ${jsonProperty}.map((e: any) => ${readSnippet("e")}): ${fallback},
           `);
         }
       }

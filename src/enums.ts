@@ -44,8 +44,8 @@ export function generateEnum(
   if (options.unrecognizedEnum && !unrecognizedEnum.present) {
     chunks.push(code`
       ${options.unrecognizedEnumName} ${delimiter} ${
-      options.stringEnums ? `"${options.unrecognizedEnumName}"` : options.unrecognizedEnumValue.toString()
-    },`);
+        options.stringEnums ? `"${options.unrecognizedEnumName}"` : options.unrecognizedEnumValue.toString()
+      },`);
   }
 
   if (options.enumsAsLiterals) {
