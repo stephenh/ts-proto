@@ -2,9 +2,9 @@
 // source: hero.proto
 
 /* eslint-disable */
-import { Metadata } from "@grpc/grpc-js";
 import { GrpcMethod, GrpcStreamMethod } from "@nestjs/microservices";
 import { Observable } from "rxjs";
+import { Foo } from "./some-file";
 
 export const protobufPackage = "hero";
 
@@ -29,19 +29,19 @@ export interface Villain {
 export const HERO_PACKAGE_NAME = "hero";
 
 export interface HeroServiceClient {
-  findOneHero(request: HeroById, metadata?: Metadata): Observable<Hero>;
+  findOneHero(request: HeroById, metadata?: Foo): Observable<Hero>;
 
-  findOneVillain(request: VillainById, metadata?: Metadata): Observable<Villain>;
+  findOneVillain(request: VillainById, metadata?: Foo): Observable<Villain>;
 
-  findManyVillain(request: Observable<VillainById>, metadata?: Metadata): Observable<Villain>;
+  findManyVillain(request: Observable<VillainById>, metadata?: Foo): Observable<Villain>;
 }
 
 export interface HeroServiceController {
-  findOneHero(request: HeroById, metadata?: Metadata): Promise<Hero> | Observable<Hero> | Hero;
+  findOneHero(request: HeroById, metadata?: Foo): Promise<Hero> | Observable<Hero> | Hero;
 
-  findOneVillain(request: VillainById, metadata?: Metadata): Promise<Villain> | Observable<Villain> | Villain;
+  findOneVillain(request: VillainById, metadata?: Foo): Promise<Villain> | Observable<Villain> | Villain;
 
-  findManyVillain(request: Observable<VillainById>, metadata?: Metadata): Observable<Villain>;
+  findManyVillain(request: Observable<VillainById>, metadata?: Foo): Observable<Villain>;
 }
 
 export function HeroServiceControllerMethods() {

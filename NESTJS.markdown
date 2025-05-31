@@ -112,6 +112,8 @@ export class AppService implements OnModuleInit {
 
   (Requires `nestJs=true`.)
 
+- With `--ts_proto_opt=metadataType=Foo@./some-file`, ts-proto add a generic (framework-agnostic) metadata field to the nestjs service definition.
+
 - With`--ts_proto_opt=addNestjsRestParameter=true`, the last argument of service methods will be a rest parameter with type any. This way you can use custom decorators you could normally use in nestjs.
 
   (Requires `nestJs=true`.)
