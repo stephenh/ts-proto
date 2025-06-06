@@ -87,12 +87,12 @@ function generateServiceDefinition(
         path: '/${maybePrefixPackage(fileDesc, serviceDesc.name)}/${methodDesc.name}',
         requestStream: ${methodDesc.clientStreaming},
         responseStream: ${methodDesc.serverStreaming},
-        requestSerialize: (value: ${inputType}) =>
+        requestSerialize: (value: ${inputType}): Buffer =>
           Buffer.from(${inputEncoder}),
-        requestDeserialize: (value: Buffer) => ${inputDecoder},
-        responseSerialize: (value: ${outputType}) =>
+        requestDeserialize: (value: Buffer): ${inputType} => ${inputDecoder},
+        responseSerialize: (value: ${outputType}): Buffer =>
           Buffer.from(${outputEncoder}),
-        responseDeserialize: (value: Buffer) => ${outputDecoder},
+        responseDeserialize: (value: Buffer): ${outputType} => ${outputDecoder},
       },
     `);
   }
