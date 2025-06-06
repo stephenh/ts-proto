@@ -116,202 +116,223 @@ export const TestService = {
     path: "/simple.Test/Unary",
     requestStream: false,
     responseStream: false,
-    requestSerialize: (value: Empty) => Buffer.from(Empty.encode(value).finish()),
-    requestDeserialize: (value: Buffer) => Empty.decode(value),
-    responseSerialize: (value: Empty) => Buffer.from(Empty.encode(value).finish()),
-    responseDeserialize: (value: Buffer) => Empty.decode(value),
+    requestSerialize: (value: Empty): Buffer => Buffer.from(Empty.encode(value).finish()),
+    requestDeserialize: (value: Buffer): Empty => Empty.decode(value),
+    responseSerialize: (value: Empty): Buffer => Buffer.from(Empty.encode(value).finish()),
+    responseDeserialize: (value: Buffer): Empty => Empty.decode(value),
   },
   unaryStringValue: {
     path: "/simple.Test/UnaryStringValue",
     requestStream: false,
     responseStream: false,
-    requestSerialize: (value: string | undefined) => Buffer.from(StringValue.encode({ value: value ?? "" }).finish()),
-    requestDeserialize: (value: Buffer) => StringValue.decode(value).value,
-    responseSerialize: (value: string | undefined) => Buffer.from(StringValue.encode({ value: value ?? "" }).finish()),
-    responseDeserialize: (value: Buffer) => StringValue.decode(value).value,
+    requestSerialize: (value: string | undefined): Buffer =>
+      Buffer.from(StringValue.encode({ value: value ?? "" }).finish()),
+    requestDeserialize: (value: Buffer): string | undefined => StringValue.decode(value).value,
+    responseSerialize: (value: string | undefined): Buffer =>
+      Buffer.from(StringValue.encode({ value: value ?? "" }).finish()),
+    responseDeserialize: (value: Buffer): string | undefined => StringValue.decode(value).value,
   },
   unaryInt64Value: {
     path: "/simple.Test/UnaryInt64Value",
     requestStream: false,
     responseStream: false,
-    requestSerialize: (value: number | undefined) => Buffer.from(Int64Value.encode({ value: value ?? 0 }).finish()),
-    requestDeserialize: (value: Buffer) => Int64Value.decode(value).value,
-    responseSerialize: (value: number | undefined) => Buffer.from(Int64Value.encode({ value: value ?? 0 }).finish()),
-    responseDeserialize: (value: Buffer) => Int64Value.decode(value).value,
+    requestSerialize: (value: number | undefined): Buffer =>
+      Buffer.from(Int64Value.encode({ value: value ?? 0 }).finish()),
+    requestDeserialize: (value: Buffer): number | undefined => Int64Value.decode(value).value,
+    responseSerialize: (value: number | undefined): Buffer =>
+      Buffer.from(Int64Value.encode({ value: value ?? 0 }).finish()),
+    responseDeserialize: (value: Buffer): number | undefined => Int64Value.decode(value).value,
   },
   unaryUint64Value: {
     path: "/simple.Test/UnaryUint64Value",
     requestStream: false,
     responseStream: false,
-    requestSerialize: (value: number | undefined) => Buffer.from(UInt64Value.encode({ value: value ?? 0 }).finish()),
-    requestDeserialize: (value: Buffer) => UInt64Value.decode(value).value,
-    responseSerialize: (value: number | undefined) => Buffer.from(UInt64Value.encode({ value: value ?? 0 }).finish()),
-    responseDeserialize: (value: Buffer) => UInt64Value.decode(value).value,
+    requestSerialize: (value: number | undefined): Buffer =>
+      Buffer.from(UInt64Value.encode({ value: value ?? 0 }).finish()),
+    requestDeserialize: (value: Buffer): number | undefined => UInt64Value.decode(value).value,
+    responseSerialize: (value: number | undefined): Buffer =>
+      Buffer.from(UInt64Value.encode({ value: value ?? 0 }).finish()),
+    responseDeserialize: (value: Buffer): number | undefined => UInt64Value.decode(value).value,
   },
   unaryInt32Value: {
     path: "/simple.Test/UnaryInt32Value",
     requestStream: false,
     responseStream: false,
-    requestSerialize: (value: number | undefined) => Buffer.from(Int32Value.encode({ value: value ?? 0 }).finish()),
-    requestDeserialize: (value: Buffer) => Int32Value.decode(value).value,
-    responseSerialize: (value: number | undefined) => Buffer.from(Int32Value.encode({ value: value ?? 0 }).finish()),
-    responseDeserialize: (value: Buffer) => Int32Value.decode(value).value,
+    requestSerialize: (value: number | undefined): Buffer =>
+      Buffer.from(Int32Value.encode({ value: value ?? 0 }).finish()),
+    requestDeserialize: (value: Buffer): number | undefined => Int32Value.decode(value).value,
+    responseSerialize: (value: number | undefined): Buffer =>
+      Buffer.from(Int32Value.encode({ value: value ?? 0 }).finish()),
+    responseDeserialize: (value: Buffer): number | undefined => Int32Value.decode(value).value,
   },
   unaryUInt32Value: {
     path: "/simple.Test/UnaryUInt32Value",
     requestStream: false,
     responseStream: false,
-    requestSerialize: (value: number | undefined) => Buffer.from(UInt32Value.encode({ value: value ?? 0 }).finish()),
-    requestDeserialize: (value: Buffer) => UInt32Value.decode(value).value,
-    responseSerialize: (value: number | undefined) => Buffer.from(UInt32Value.encode({ value: value ?? 0 }).finish()),
-    responseDeserialize: (value: Buffer) => UInt32Value.decode(value).value,
+    requestSerialize: (value: number | undefined): Buffer =>
+      Buffer.from(UInt32Value.encode({ value: value ?? 0 }).finish()),
+    requestDeserialize: (value: Buffer): number | undefined => UInt32Value.decode(value).value,
+    responseSerialize: (value: number | undefined): Buffer =>
+      Buffer.from(UInt32Value.encode({ value: value ?? 0 }).finish()),
+    responseDeserialize: (value: Buffer): number | undefined => UInt32Value.decode(value).value,
   },
   unaryBytesValue: {
     path: "/simple.Test/UnaryBytesValue",
     requestStream: false,
     responseStream: false,
-    requestSerialize: (value: Uint8Array | undefined) =>
+    requestSerialize: (value: Uint8Array | undefined): Buffer =>
       Buffer.from(BytesValue.encode({ value: value ?? new Uint8Array(0) }).finish()),
-    requestDeserialize: (value: Buffer) => BytesValue.decode(value).value,
-    responseSerialize: (value: Uint8Array | undefined) =>
+    requestDeserialize: (value: Buffer): Uint8Array | undefined => BytesValue.decode(value).value,
+    responseSerialize: (value: Uint8Array | undefined): Buffer =>
       Buffer.from(BytesValue.encode({ value: value ?? new Uint8Array(0) }).finish()),
-    responseDeserialize: (value: Buffer) => BytesValue.decode(value).value,
+    responseDeserialize: (value: Buffer): Uint8Array | undefined => BytesValue.decode(value).value,
   },
   unaryFloatValue: {
     path: "/simple.Test/UnaryFloatValue",
     requestStream: false,
     responseStream: false,
-    requestSerialize: (value: number | undefined) => Buffer.from(FloatValue.encode({ value: value ?? 0 }).finish()),
-    requestDeserialize: (value: Buffer) => FloatValue.decode(value).value,
-    responseSerialize: (value: number | undefined) => Buffer.from(FloatValue.encode({ value: value ?? 0 }).finish()),
-    responseDeserialize: (value: Buffer) => FloatValue.decode(value).value,
+    requestSerialize: (value: number | undefined): Buffer =>
+      Buffer.from(FloatValue.encode({ value: value ?? 0 }).finish()),
+    requestDeserialize: (value: Buffer): number | undefined => FloatValue.decode(value).value,
+    responseSerialize: (value: number | undefined): Buffer =>
+      Buffer.from(FloatValue.encode({ value: value ?? 0 }).finish()),
+    responseDeserialize: (value: Buffer): number | undefined => FloatValue.decode(value).value,
   },
   unaryDoubleValue: {
     path: "/simple.Test/UnaryDoubleValue",
     requestStream: false,
     responseStream: false,
-    requestSerialize: (value: number | undefined) => Buffer.from(DoubleValue.encode({ value: value ?? 0 }).finish()),
-    requestDeserialize: (value: Buffer) => DoubleValue.decode(value).value,
-    responseSerialize: (value: number | undefined) => Buffer.from(DoubleValue.encode({ value: value ?? 0 }).finish()),
-    responseDeserialize: (value: Buffer) => DoubleValue.decode(value).value,
+    requestSerialize: (value: number | undefined): Buffer =>
+      Buffer.from(DoubleValue.encode({ value: value ?? 0 }).finish()),
+    requestDeserialize: (value: Buffer): number | undefined => DoubleValue.decode(value).value,
+    responseSerialize: (value: number | undefined): Buffer =>
+      Buffer.from(DoubleValue.encode({ value: value ?? 0 }).finish()),
+    responseDeserialize: (value: Buffer): number | undefined => DoubleValue.decode(value).value,
   },
   unaryBoolValue: {
     path: "/simple.Test/UnaryBoolValue",
     requestStream: false,
     responseStream: false,
-    requestSerialize: (value: boolean | undefined) => Buffer.from(BoolValue.encode({ value: value ?? false }).finish()),
-    requestDeserialize: (value: Buffer) => BoolValue.decode(value).value,
-    responseSerialize: (value: boolean | undefined) =>
+    requestSerialize: (value: boolean | undefined): Buffer =>
       Buffer.from(BoolValue.encode({ value: value ?? false }).finish()),
-    responseDeserialize: (value: Buffer) => BoolValue.decode(value).value,
+    requestDeserialize: (value: Buffer): boolean | undefined => BoolValue.decode(value).value,
+    responseSerialize: (value: boolean | undefined): Buffer =>
+      Buffer.from(BoolValue.encode({ value: value ?? false }).finish()),
+    responseDeserialize: (value: Buffer): boolean | undefined => BoolValue.decode(value).value,
   },
   unaryTimestamp: {
     path: "/simple.Test/UnaryTimestamp",
     requestStream: false,
     responseStream: false,
-    requestSerialize: (value: Date) => Buffer.from(Timestamp.encode(toTimestamp(value)).finish()),
-    requestDeserialize: (value: Buffer) => fromTimestamp(Timestamp.decode(value)),
-    responseSerialize: (value: Date) => Buffer.from(Timestamp.encode(toTimestamp(value)).finish()),
-    responseDeserialize: (value: Buffer) => fromTimestamp(Timestamp.decode(value)),
+    requestSerialize: (value: Date): Buffer => Buffer.from(Timestamp.encode(toTimestamp(value)).finish()),
+    requestDeserialize: (value: Buffer): Date => fromTimestamp(Timestamp.decode(value)),
+    responseSerialize: (value: Date): Buffer => Buffer.from(Timestamp.encode(toTimestamp(value)).finish()),
+    responseDeserialize: (value: Buffer): Date => fromTimestamp(Timestamp.decode(value)),
   },
   struct: {
     path: "/simple.Test/Struct",
     requestStream: false,
     responseStream: false,
-    requestSerialize: (value: { [key: string]: any } | undefined) =>
+    requestSerialize: (value: { [key: string]: any } | undefined): Buffer =>
       Buffer.from(Struct.encode(Struct.wrap(value)).finish()),
-    requestDeserialize: (value: Buffer) => Struct.unwrap(Struct.decode(value)),
-    responseSerialize: (value: { [key: string]: any } | undefined) =>
+    requestDeserialize: (value: Buffer): { [key: string]: any } | undefined => Struct.unwrap(Struct.decode(value)),
+    responseSerialize: (value: { [key: string]: any } | undefined): Buffer =>
       Buffer.from(Struct.encode(Struct.wrap(value)).finish()),
-    responseDeserialize: (value: Buffer) => Struct.unwrap(Struct.decode(value)),
+    responseDeserialize: (value: Buffer): { [key: string]: any } | undefined => Struct.unwrap(Struct.decode(value)),
   },
   value: {
     path: "/simple.Test/Value",
     requestStream: false,
     responseStream: false,
-    requestSerialize: (value: any | undefined) => Buffer.from(Value.encode(Value.wrap(value)).finish()),
-    requestDeserialize: (value: Buffer) => Value.unwrap(Value.decode(value)),
-    responseSerialize: (value: any | undefined) => Buffer.from(Value.encode(Value.wrap(value)).finish()),
-    responseDeserialize: (value: Buffer) => Value.unwrap(Value.decode(value)),
+    requestSerialize: (value: any | undefined): Buffer => Buffer.from(Value.encode(Value.wrap(value)).finish()),
+    requestDeserialize: (value: Buffer): any | undefined => Value.unwrap(Value.decode(value)),
+    responseSerialize: (value: any | undefined): Buffer => Buffer.from(Value.encode(Value.wrap(value)).finish()),
+    responseDeserialize: (value: Buffer): any | undefined => Value.unwrap(Value.decode(value)),
   },
   listValue: {
     path: "/simple.Test/ListValue",
     requestStream: false,
     responseStream: false,
-    requestSerialize: (value: Array<any> | undefined) =>
+    requestSerialize: (value: Array<any> | undefined): Buffer =>
       Buffer.from(ListValue.encode({ values: value ?? [] }).finish()),
-    requestDeserialize: (value: Buffer) => ListValue.unwrap(ListValue.decode(value)),
-    responseSerialize: (value: Array<any> | undefined) =>
+    requestDeserialize: (value: Buffer): Array<any> | undefined => ListValue.unwrap(ListValue.decode(value)),
+    responseSerialize: (value: Array<any> | undefined): Buffer =>
       Buffer.from(ListValue.encode({ values: value ?? [] }).finish()),
-    responseDeserialize: (value: Buffer) => ListValue.unwrap(ListValue.decode(value)),
+    responseDeserialize: (value: Buffer): Array<any> | undefined => ListValue.unwrap(ListValue.decode(value)),
   },
   /** Server Streaming */
   serverStreaming: {
     path: "/simple.Test/ServerStreaming",
     requestStream: false,
     responseStream: true,
-    requestSerialize: (value: TestMessage) => Buffer.from(TestMessage.encode(value).finish()),
-    requestDeserialize: (value: Buffer) => TestMessage.decode(value),
-    responseSerialize: (value: TestMessage) => Buffer.from(TestMessage.encode(value).finish()),
-    responseDeserialize: (value: Buffer) => TestMessage.decode(value),
+    requestSerialize: (value: TestMessage): Buffer => Buffer.from(TestMessage.encode(value).finish()),
+    requestDeserialize: (value: Buffer): TestMessage => TestMessage.decode(value),
+    responseSerialize: (value: TestMessage): Buffer => Buffer.from(TestMessage.encode(value).finish()),
+    responseDeserialize: (value: Buffer): TestMessage => TestMessage.decode(value),
   },
   serverStreamingStringValue: {
     path: "/simple.Test/ServerStreamingStringValue",
     requestStream: false,
     responseStream: true,
-    requestSerialize: (value: string | undefined) => Buffer.from(StringValue.encode({ value: value ?? "" }).finish()),
-    requestDeserialize: (value: Buffer) => StringValue.decode(value).value,
-    responseSerialize: (value: string | undefined) => Buffer.from(StringValue.encode({ value: value ?? "" }).finish()),
-    responseDeserialize: (value: Buffer) => StringValue.decode(value).value,
+    requestSerialize: (value: string | undefined): Buffer =>
+      Buffer.from(StringValue.encode({ value: value ?? "" }).finish()),
+    requestDeserialize: (value: Buffer): string | undefined => StringValue.decode(value).value,
+    responseSerialize: (value: string | undefined): Buffer =>
+      Buffer.from(StringValue.encode({ value: value ?? "" }).finish()),
+    responseDeserialize: (value: Buffer): string | undefined => StringValue.decode(value).value,
   },
   serverStreamingStruct: {
     path: "/simple.Test/ServerStreamingStruct",
     requestStream: false,
     responseStream: true,
-    requestSerialize: (value: { [key: string]: any } | undefined) =>
+    requestSerialize: (value: { [key: string]: any } | undefined): Buffer =>
       Buffer.from(Struct.encode(Struct.wrap(value)).finish()),
-    requestDeserialize: (value: Buffer) => Struct.unwrap(Struct.decode(value)),
-    responseSerialize: (value: { [key: string]: any } | undefined) =>
+    requestDeserialize: (value: Buffer): { [key: string]: any } | undefined => Struct.unwrap(Struct.decode(value)),
+    responseSerialize: (value: { [key: string]: any } | undefined): Buffer =>
       Buffer.from(Struct.encode(Struct.wrap(value)).finish()),
-    responseDeserialize: (value: Buffer) => Struct.unwrap(Struct.decode(value)),
+    responseDeserialize: (value: Buffer): { [key: string]: any } | undefined => Struct.unwrap(Struct.decode(value)),
   },
   /** Client Streaming */
   clientStreaming: {
     path: "/simple.Test/ClientStreaming",
     requestStream: true,
     responseStream: false,
-    requestSerialize: (value: TestMessage) => Buffer.from(TestMessage.encode(value).finish()),
-    requestDeserialize: (value: Buffer) => TestMessage.decode(value),
-    responseSerialize: (value: TestMessage) => Buffer.from(TestMessage.encode(value).finish()),
-    responseDeserialize: (value: Buffer) => TestMessage.decode(value),
+    requestSerialize: (value: TestMessage): Buffer => Buffer.from(TestMessage.encode(value).finish()),
+    requestDeserialize: (value: Buffer): TestMessage => TestMessage.decode(value),
+    responseSerialize: (value: TestMessage): Buffer => Buffer.from(TestMessage.encode(value).finish()),
+    responseDeserialize: (value: Buffer): TestMessage => TestMessage.decode(value),
   },
   clientStreamingStringValue: {
     path: "/simple.Test/ClientStreamingStringValue",
     requestStream: true,
     responseStream: false,
-    requestSerialize: (value: string | undefined) => Buffer.from(StringValue.encode({ value: value ?? "" }).finish()),
-    requestDeserialize: (value: Buffer) => StringValue.decode(value).value,
-    responseSerialize: (value: string | undefined) => Buffer.from(StringValue.encode({ value: value ?? "" }).finish()),
-    responseDeserialize: (value: Buffer) => StringValue.decode(value).value,
+    requestSerialize: (value: string | undefined): Buffer =>
+      Buffer.from(StringValue.encode({ value: value ?? "" }).finish()),
+    requestDeserialize: (value: Buffer): string | undefined => StringValue.decode(value).value,
+    responseSerialize: (value: string | undefined): Buffer =>
+      Buffer.from(StringValue.encode({ value: value ?? "" }).finish()),
+    responseDeserialize: (value: Buffer): string | undefined => StringValue.decode(value).value,
   },
   /** Bidi Streaming */
   bidiStreaming: {
     path: "/simple.Test/BidiStreaming",
     requestStream: true,
     responseStream: true,
-    requestSerialize: (value: TestMessage) => Buffer.from(TestMessage.encode(value).finish()),
-    requestDeserialize: (value: Buffer) => TestMessage.decode(value),
-    responseSerialize: (value: TestMessage) => Buffer.from(TestMessage.encode(value).finish()),
-    responseDeserialize: (value: Buffer) => TestMessage.decode(value),
+    requestSerialize: (value: TestMessage): Buffer => Buffer.from(TestMessage.encode(value).finish()),
+    requestDeserialize: (value: Buffer): TestMessage => TestMessage.decode(value),
+    responseSerialize: (value: TestMessage): Buffer => Buffer.from(TestMessage.encode(value).finish()),
+    responseDeserialize: (value: Buffer): TestMessage => TestMessage.decode(value),
   },
   bidiStreamingStringValue: {
     path: "/simple.Test/BidiStreamingStringValue",
     requestStream: true,
     responseStream: true,
-    requestSerialize: (value: string | undefined) => Buffer.from(StringValue.encode({ value: value ?? "" }).finish()),
-    requestDeserialize: (value: Buffer) => StringValue.decode(value).value,
-    responseSerialize: (value: string | undefined) => Buffer.from(StringValue.encode({ value: value ?? "" }).finish()),
-    responseDeserialize: (value: Buffer) => StringValue.decode(value).value,
+    requestSerialize: (value: string | undefined): Buffer =>
+      Buffer.from(StringValue.encode({ value: value ?? "" }).finish()),
+    requestDeserialize: (value: Buffer): string | undefined => StringValue.decode(value).value,
+    responseSerialize: (value: string | undefined): Buffer =>
+      Buffer.from(StringValue.encode({ value: value ?? "" }).finish()),
+    responseDeserialize: (value: Buffer): string | undefined => StringValue.decode(value).value,
   },
 } as const;
 
