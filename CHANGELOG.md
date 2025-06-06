@@ -1,3 +1,10 @@
+## [2.7.3](https://github.com/stephenh/ts-proto/compare/v2.7.2...v2.7.3) (2025-06-06)
+
+
+### Bug Fixes
+
+* improve type safety in service definition ([#1193](https://github.com/stephenh/ts-proto/issues/1193)) ([d4bc002](https://github.com/stephenh/ts-proto/commit/d4bc00226d0a6cee7d1b39f502cf3649afb79bc0))
+
 ## [2.7.2](https://github.com/stephenh/ts-proto/compare/v2.7.1...v2.7.2) (2025-05-30)
 
 
