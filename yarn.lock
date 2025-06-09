@@ -1886,6 +1886,56 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@sjzy/ts-proto@workspace:sjzy-ts-proto":
+  version: 0.0.0-use.local
+  resolution: "@sjzy/ts-proto@workspace:sjzy-ts-proto"
+  dependencies:
+    "@bufbuild/protobuf": "npm:^2.0.0"
+    "@grpc/grpc-js": "npm:^1.8.17"
+    "@grpc/proto-loader": "npm:^0.7.8"
+    "@improbable-eng/grpc-web": "npm:^0.14.1"
+    "@improbable-eng/grpc-web-node-http-transport": "npm:^0.14.1"
+    "@nestjs/common": "npm:^9.4.3"
+    "@nestjs/core": "npm:^9.4.3"
+    "@nestjs/microservices": "npm:^9.4.3"
+    "@semantic-release/changelog": "npm:^6.0.3"
+    "@semantic-release/commit-analyzer": "npm:^13.0.0"
+    "@semantic-release/exec": "npm:^6.0.3"
+    "@semantic-release/git": "npm:^10.0.1"
+    "@semantic-release/github": "npm:^10.1.6"
+    "@semantic-release/npm": "npm:^12.0.1"
+    "@semantic-release/release-notes-generator": "npm:^14.0.1"
+    "@tsconfig/strictest": "npm:^2.0.1"
+    "@types/jest": "npm:^29.5.3"
+    "@types/node": "npm:^16.18.38"
+    "@types/object-hash": "npm:^3.0.2"
+    case-anything: "npm:^2.1.13"
+    chokidar: "npm:^3.5.3"
+    conventional-changelog-conventionalcommits: "npm:^8.0.0"
+    dataloader: "npm:^2.2.2"
+    jest: "npm:^29.6.1"
+    jest-ts-webcompat-resolver: "npm:^1.0.0"
+    mongodb: "npm:^5.7.0"
+    nano-date: "npm:^4.1.0"
+    nice-grpc: "npm:^2.1.4"
+    object-hash: "npm:^3.0.0"
+    prettier: "npm:^2.8.8"
+    protobufjs: "npm:^7.2.4"
+    protobufjs-cli: "npm:^1.1.1"
+    reflect-metadata: "npm:^0.1.13"
+    rxjs: "npm:^7.8.1"
+    semantic-release: "npm:^24.0.0"
+    ts-jest: "npm:^29.1.1"
+    ts-poet: "npm:^6.7.0"
+    ts-proto-descriptors: "npm:2.0.0"
+    tsx: "npm:^4.17.0"
+    typescript: "npm:^5.5.4"
+    uglify-js: "npm:^3.17.4"
+  bin:
+    protoc-gen-ts_proto: ./protoc-gen-ts_proto
+  languageName: unknown
+  linkType: soft
+
 "@tootallnate/once@npm:2":
   version: 2.0.0
   resolution: "@tootallnate/once@npm:2.0.0"

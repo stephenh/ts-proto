@@ -2286,7 +2286,7 @@ function generateFromJson(ctx: Context, fullName: string, fullTypeName: string, 
               return code`${fromJson}(${from})`;
             } else {
               const cstr = capitalize(valueType.toCodeString([]));
-              return code`${cstr}(${from})`;
+              return code`globalThis.${cstr}(${from})`;
             }
           } else if (isObjectId(valueField) && options.useMongoObjectId) {
             return code`${utils.fromJsonObjectId}(${from})`;
