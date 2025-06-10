@@ -101,7 +101,7 @@ export function basicTypeName(
     case FieldDescriptorProto_Type.TYPE_FIXED64:
     case FieldDescriptorProto_Type.TYPE_SFIXED64:
       return isJsTypeFieldOption(options, field)
-        ? jsTypeName(field) ?? longTypeName(ctx)
+        ? (jsTypeName(field) ?? longTypeName(ctx))
         : // this handles 2^53, Long is only needed for 2^64; this is effectively pbjs's forceNumber
           longTypeName(ctx);
     case FieldDescriptorProto_Type.TYPE_BOOL:
@@ -572,8 +572,8 @@ export function valueTypeName(ctx: Context, typeName: string): Code | undefined 
       return ctx.options.env === EnvOption.NODE
         ? code`Buffer`
         : ctx.options.useJsonWireFormat
-        ? code`string`
-        : code`Uint8Array`;
+          ? code`string`
+          : code`Uint8Array`;
     case ".google.protobuf.ListValue":
       return ctx.options.useReadonlyTypes ? code`ReadonlyArray<any>` : code`Array<any>`;
     case ".google.protobuf.Value":
@@ -584,8 +584,8 @@ export function valueTypeName(ctx: Context, typeName: string): Code | undefined 
       return ctx.options.useJsonWireFormat
         ? code`string`
         : ctx.options.useReadonlyTypes
-        ? code`readonly string[]`
-        : code`string[]`;
+          ? code`readonly string[]`
+          : code`string[]`;
     case ".google.protobuf.Duration":
       return ctx.options.useJsonWireFormat ? code`string` : undefined;
     case ".google.protobuf.Timestamp":
