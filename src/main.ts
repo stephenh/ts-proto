@@ -1403,7 +1403,7 @@ function generateDecode(ctx: Context, fullName: string, messageDesc: DescriptorP
       length?: number,
     ): ${fullName} {
       const reader = input instanceof ${BinaryReader} ? input : new ${BinaryReader}(input);
-      let end = length === undefined ? reader.len : reader.pos + length;
+      const end = length === undefined ? reader.len : reader.pos + length;
   `);
 
   chunks.push(code`const message = ${createBase}${maybeAsAny(options)};`);
